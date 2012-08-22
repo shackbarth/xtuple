@@ -1,399 +1,435 @@
 
 // minifier: path aliases
 
-enyo.path.addPaths({underscore: "/Users/cole/Devel/xtuple/git/clinuz/client/enyo/tools/../../lib/underscore/", backbone: "/Users/cole/Devel/xtuple/git/clinuz/client/enyo/tools/../../lib/backbone/", underscore: "/Users/cole/Devel/xtuple/git/clinuz/client/enyo/tools/../../lib/underscore/", backbone_relational: "/Users/cole/Devel/xtuple/git/clinuz/client/enyo/tools/../../lib/backbone_relational/", backbone: "/Users/cole/Devel/xtuple/git/clinuz/client/enyo/tools/../../lib/backbone/", underscore: "/Users/cole/Devel/xtuple/git/clinuz/client/enyo/tools/../../lib/underscore/", layout: "/Users/cole/Devel/xtuple/git/clinuz/client/enyo/tools/../../lib/layout/", onyx: "/Users/cole/Devel/xtuple/git/clinuz/client/enyo/tools/../../lib/onyx/", onyx: "/Users/cole/Devel/xtuple/git/clinuz/client/enyo/tools/../../lib/onyx/source/", globalize: "/Users/cole/Devel/xtuple/git/clinuz/client/enyo/tools/../../lib/globalize/", date_format: "/Users/cole/Devel/xtuple/git/clinuz/client/enyo/tools/../../lib/date_format/", socket.io: "/Users/cole/Devel/xtuple/git/clinuz/client/enyo/tools/../../lib/socket.io/", xt: "../source/xt/", xm: "../source/xm/", xv: "../source/xv/"});
+enyo.path.addPaths({underscore: "/Users/cole/Devel/xtuple/git/clinuz/client/enyo/tools/../../lib/underscore/", backbone: "/Users/cole/Devel/xtuple/git/clinuz/client/enyo/tools/../../lib/backbone/", backbone_relational: "/Users/cole/Devel/xtuple/git/clinuz/client/enyo/tools/../../lib/backbone_relational/", layout: "/Users/cole/Devel/xtuple/git/clinuz/client/enyo/tools/../../lib/layout/", onyx: "/Users/cole/Devel/xtuple/git/clinuz/client/enyo/tools/../../lib/onyx/", onyx: "/Users/cole/Devel/xtuple/git/clinuz/client/enyo/tools/../../lib/onyx/source/", globalize: "/Users/cole/Devel/xtuple/git/clinuz/client/enyo/tools/../../lib/globalize/", date_format: "/Users/cole/Devel/xtuple/git/clinuz/client/enyo/tools/../../lib/date_format/", socket_io: "/Users/cole/Devel/xtuple/git/clinuz/client/enyo/tools/../../lib/socket_io/", xt: "../source/xt/", xm: "../source/xm/", xv: "../source/xv/"});
 
-// underscore-min.js
+// underscore.js
 
 (function() {
-function a(b, c, d) {
-if (b === c) return 0 !== b || 1 / b == 1 / c;
-if (null == b || null == c) return b === c;
-b._chain && (b = b._wrapped), c._chain && (c = c._wrapped);
-if (b.isEqual && v.isFunction(b.isEqual)) return b.isEqual(c);
-if (c.isEqual && v.isFunction(c.isEqual)) return c.isEqual(b);
-var e = i.call(b);
-if (e != i.call(c)) return !1;
-switch (e) {
-case "[object String]":
-return b == "" + c;
-case "[object Number]":
-return b != +b ? c != +c : 0 == b ? 1 / b == 1 / c : b == +c;
-case "[object Date]":
-case "[object Boolean]":
-return +b == +c;
-case "[object RegExp]":
-return b.source == c.source && b.global == c.global && b.multiline == c.multiline && b.ignoreCase == c.ignoreCase;
-}
-if ("object" != typeof b || "object" != typeof c) return !1;
-for (var f = d.length; f--; ) if (d[f] == b) return !0;
-d.push(b);
-var f = 0, g = !0;
-if ("[object Array]" == e) {
-if (f = b.length, g = f == c.length) for (; f-- && (g = f in b == f in c && a(b[f], c[f], d)); ) ;
-} else {
-if ("constructor" in b != "constructor" in c || b.constructor != c.constructor) return !1;
-for (var h in b) if (v.has(b, h) && (f++, !(g = v.has(c, h) && a(b[h], c[h], d)))) break;
-if (g) {
-for (h in c) if (v.has(c, h) && !(f--)) break;
-g = !f;
-}
-}
-return d.pop(), g;
-}
-var b = this, c = b._, d = {}, e = Array.prototype, f = Object.prototype, g = e.slice, h = e.unshift, i = f.toString, j = f.hasOwnProperty, k = e.forEach, l = e.map, m = e.reduce, n = e.reduceRight, o = e.filter, p = e.every, q = e.some, r = e.indexOf, s = e.lastIndexOf, f = Array.isArray, t = Object.keys, u = Function.prototype.bind, v = function(a) {
-return new G(a);
+var e = this, t = e._, n = {}, r = Array.prototype, i = Object.prototype, s = Function.prototype, o = r.push, u = r.slice, a = r.unshift, f = i.toString, l = i.hasOwnProperty, c = r.forEach, h = r.map, p = r.reduce, d = r.reduceRight, v = r.filter, m = r.every, g = r.some, y = r.indexOf, b = r.lastIndexOf, w = Array.isArray, E = Object.keys, S = s.bind, x = function(e) {
+return new q(e);
 };
-"undefined" != typeof exports ? ("undefined" != typeof module && module.exports && (exports = module.exports = v), exports._ = v) : b._ = v, v.VERSION = "1.3.3";
-var w = v.each = v.forEach = function(a, b, c) {
-if (a != null) if (k && a.forEach === k) a.forEach(b, c); else if (a.length === +a.length) {
-for (var e = 0, f = a.length; e < f; e++) if (e in a && b.call(c, a[e], e, a) === d) break;
-} else for (e in a) if (v.has(a, e) && b.call(c, a[e], e, a) === d) break;
+typeof exports != "undefined" ? (typeof module != "undefined" && module.exports && (exports = module.exports = x), exports._ = x) : e._ = x, x.VERSION = "1.3.3";
+var T = x.each = x.forEach = function(e, t, r) {
+if (e == null) return;
+if (c && e.forEach === c) e.forEach(t, r); else if (e.length === +e.length) {
+for (var i = 0, s = e.length; i < s; i++) if (t.call(r, e[i], i, e) === n) return;
+} else for (var o in e) if (x.has(e, o) && t.call(r, e[o], o, e) === n) return;
 };
-v.map = v.collect = function(a, b, c) {
-var d = [];
-return a == null ? d : l && a.map === l ? a.map(b, c) : (w(a, function(a, e, f) {
-d[d.length] = b.call(c, a, e, f);
-}), a.length === +a.length && (d.length = a.length), d);
-}, v.reduce = v.foldl = v.inject = function(a, b, c, d) {
-var e = arguments.length > 2;
-a == null && (a = []);
-if (m && a.reduce === m) return d && (b = v.bind(b, d)), e ? a.reduce(b, c) : a.reduce(b);
-w(a, function(a, f, g) {
-e ? c = b.call(d, c, a, f, g) : (c = a, e = !0);
+x.map = x.collect = function(e, t, n) {
+var r = [];
+return e == null ? r : h && e.map === h ? e.map(t, n) : (T(e, function(e, i, s) {
+r[r.length] = t.call(n, e, i, s);
+}), r);
+}, x.reduce = x.foldl = x.inject = function(e, t, n, r) {
+var i = arguments.length > 2;
+e == null && (e = []);
+if (p && e.reduce === p) return r && (t = x.bind(t, r)), i ? e.reduce(t, n) : e.reduce(t);
+T(e, function(e, s, o) {
+i ? n = t.call(r, n, e, s, o) : (n = e, i = !0);
 });
-if (!e) throw new TypeError("Reduce of empty array with no initial value");
-return c;
-}, v.reduceRight = v.foldr = function(a, b, c, d) {
-var e = arguments.length > 2;
-a == null && (a = []);
-if (n && a.reduceRight === n) return d && (b = v.bind(b, d)), e ? a.reduceRight(b, c) : a.reduceRight(b);
-var f = v.toArray(a).reverse();
-return d && !e && (b = v.bind(b, d)), e ? v.reduce(f, b, c, d) : v.reduce(f, b);
-}, v.find = v.detect = function(a, b, c) {
-var d;
-return x(a, function(a, e, f) {
-if (b.call(c, a, e, f)) return d = a, !0;
-}), d;
-}, v.filter = v.select = function(a, b, c) {
-var d = [];
-return a == null ? d : o && a.filter === o ? a.filter(b, c) : (w(a, function(a, e, f) {
-b.call(c, a, e, f) && (d[d.length] = a);
-}), d);
-}, v.reject = function(a, b, c) {
-var d = [];
-return a == null ? d : (w(a, function(a, e, f) {
-b.call(c, a, e, f) || (d[d.length] = a);
-}), d);
-}, v.every = v.all = function(a, b, c) {
-var e = !0;
-return a == null ? e : p && a.every === p ? a.every(b, c) : (w(a, function(a, f, g) {
-if (!(e = e && b.call(c, a, f, g))) return d;
-}), !!e);
+if (!i) throw new TypeError("Reduce of empty array with no initial value");
+return n;
+}, x.reduceRight = x.foldr = function(e, t, n, r) {
+var i = arguments.length > 2;
+e == null && (e = []);
+if (d && e.reduceRight === d) return r && (t = x.bind(t, r)), i ? e.reduceRight(t, n) : e.reduceRight(t);
+var s = x.toArray(e).reverse();
+return r && !i && (t = x.bind(t, r)), i ? x.reduce(s, t, n, r) : x.reduce(s, t);
+}, x.find = x.detect = function(e, t, n) {
+var r;
+return N(e, function(e, i, s) {
+if (t.call(n, e, i, s)) return r = e, !0;
+}), r;
+}, x.filter = x.select = function(e, t, n) {
+var r = [];
+return e == null ? r : v && e.filter === v ? e.filter(t, n) : (T(e, function(e, i, s) {
+t.call(n, e, i, s) && (r[r.length] = e);
+}), r);
+}, x.reject = function(e, t, n) {
+var r = [];
+return e == null ? r : (T(e, function(e, i, s) {
+t.call(n, e, i, s) || (r[r.length] = e);
+}), r);
+}, x.every = x.all = function(e, t, r) {
+var i = !0;
+return e == null ? i : m && e.every === m ? e.every(t, r) : (T(e, function(e, s, o) {
+if (!(i = i && t.call(r, e, s, o))) return n;
+}), !!i);
 };
-var x = v.some = v.any = function(a, b, c) {
-b || (b = v.identity);
-var e = !1;
-return a == null ? e : q && a.some === q ? a.some(b, c) : (w(a, function(a, f, g) {
-if (e || (e = b.call(c, a, f, g))) return d;
-}), !!e);
+var N = x.some = x.any = function(e, t, r) {
+t || (t = x.identity);
+var i = !1;
+return e == null ? i : g && e.some === g ? e.some(t, r) : (T(e, function(e, s, o) {
+if (i || (i = t.call(r, e, s, o))) return n;
+}), !!i);
 };
-v.include = v.contains = function(a, b) {
-var c = !1;
-return a == null ? c : r && a.indexOf === r ? a.indexOf(b) != -1 : c = x(a, function(a) {
-return a === b;
+x.include = x.contains = function(e, t) {
+var n = !1;
+return e == null ? n : y && e.indexOf === y ? e.indexOf(t) != -1 : (n = N(e, function(e) {
+return e === t;
+}), n);
+}, x.invoke = function(e, t) {
+var n = u.call(arguments, 2);
+return x.map(e, function(e) {
+return (x.isFunction(t) ? t : e[t]).apply(e, n);
 });
-}, v.invoke = function(a, b) {
-var c = g.call(arguments, 2);
-return v.map(a, function(a) {
-return (v.isFunction(b) ? b || a : a[b]).apply(a, c);
+}, x.pluck = function(e, t) {
+return x.map(e, function(e) {
+return e[t];
 });
-}, v.pluck = function(a, b) {
-return v.map(a, function(a) {
-return a[b];
-});
-}, v.max = function(a, b, c) {
-if (!b && v.isArray(a) && a[0] === +a[0]) return Math.max.apply(Math, a);
-if (!b && v.isEmpty(a)) return -Infinity;
-var d = {
+}, x.max = function(e, t, n) {
+if (!t && x.isArray(e) && e[0] === +e[0] && e.length < 65535) return Math.max.apply(Math, e);
+if (!t && x.isEmpty(e)) return -Infinity;
+var r = {
 computed: -Infinity
 };
-return w(a, function(a, e, f) {
-e = b ? b.call(c, a, e, f) : a, e >= d.computed && (d = {
-value: a,
-computed: e
+return T(e, function(e, i, s) {
+var o = t ? t.call(n, e, i, s) : e;
+o >= r.computed && (r = {
+value: e,
+computed: o
 });
-}), d.value;
-}, v.min = function(a, b, c) {
-if (!b && v.isArray(a) && a[0] === +a[0]) return Math.min.apply(Math, a);
-if (!b && v.isEmpty(a)) return Infinity;
-var d = {
+}), r.value;
+}, x.min = function(e, t, n) {
+if (!t && x.isArray(e) && e[0] === +e[0] && e.length < 65535) return Math.min.apply(Math, e);
+if (!t && x.isEmpty(e)) return Infinity;
+var r = {
 computed: Infinity
 };
-return w(a, function(a, e, f) {
-e = b ? b.call(c, a, e, f) : a, e < d.computed && (d = {
-value: a,
-computed: e
+return T(e, function(e, i, s) {
+var o = t ? t.call(n, e, i, s) : e;
+o < r.computed && (r = {
+value: e,
+computed: o
 });
-}), d.value;
-}, v.shuffle = function(a) {
-var b = [], c;
-return w(a, function(a, d) {
-c = Math.floor(Math.random() * (d + 1)), b[d] = b[c], b[c] = a;
-}), b;
-}, v.sortBy = function(a, b, c) {
-var d = v.isFunction(b) ? b : function(a) {
-return a[b];
-};
-return v.pluck(v.map(a, function(a, b, e) {
+}), r.value;
+}, x.shuffle = function(e) {
+var t, n = 0, r = [];
+return T(e, function(e) {
+t = Math.floor(Math.random() * ++n), r[n - 1] = r[t], r[t] = e;
+}), r;
+}, x.sortBy = function(e, t, n) {
+var r = C(e, t);
+return x.pluck(x.map(e, function(e, t, i) {
 return {
-value: a,
-criteria: d.call(c, a, b, e)
+value: e,
+criteria: r.call(n, e, t, i)
 };
-}).sort(function(a, b) {
-var c = a.criteria, d = b.criteria;
-return c === void 0 ? 1 : d === void 0 ? -1 : c < d ? -1 : c > d ? 1 : 0;
+}).sort(function(e, t) {
+var n = e.criteria, r = t.criteria;
+return n === void 0 ? 1 : r === void 0 ? -1 : n < r ? -1 : n > r ? 1 : 0;
 }), "value");
-}, v.groupBy = function(a, b) {
-var c = {}, d = v.isFunction(b) ? b : function(a) {
-return a[b];
 };
-return w(a, function(a, b) {
-var e = d(a, b);
-(c[e] || (c[e] = [])).push(a);
-}), c;
-}, v.sortedIndex = function(a, b, c) {
-c || (c = v.identity);
-for (var d = 0, e = a.length; d < e; ) {
-var f = d + e >> 1;
-c(a[f]) < c(b) ? d = f + 1 : e = f;
+var C = function(e, t) {
+return x.isFunction(t) ? t : function(e) {
+return e[t];
+};
+}, k = function(e, t, n) {
+var r = {}, i = C(e, t);
+return T(e, function(e, t) {
+var s = i(e, t);
+n(r, s, e);
+}), r;
+};
+x.groupBy = function(e, t) {
+return k(e, t, function(e, t, n) {
+(e[t] || (e[t] = [])).push(n);
+});
+}, x.countBy = function(e, t) {
+return k(e, t, function(e, t, n) {
+e[t] || (e[t] = 0), e[t]++;
+});
+}, x.sortedIndex = function(e, t, n) {
+n || (n = x.identity);
+var r = n(t), i = 0, s = e.length;
+while (i < s) {
+var o = i + s >> 1;
+n(e[o]) < r ? i = o + 1 : s = o;
 }
-return d;
-}, v.toArray = function(a) {
-return a ? v.isArray(a) || v.isArguments(a) ? g.call(a) : a.toArray && v.isFunction(a.toArray) ? a.toArray() : v.values(a) : [];
-}, v.size = function(a) {
-return v.isArray(a) ? a.length : v.keys(a).length;
-}, v.first = v.head = v.take = function(a, b, c) {
-return b != null && !c ? g.call(a, 0, b) : a[0];
-}, v.initial = function(a, b, c) {
-return g.call(a, 0, a.length - (b == null || c ? 1 : b));
-}, v.last = function(a, b, c) {
-return b != null && !c ? g.call(a, Math.max(a.length - b, 0)) : a[a.length - 1];
-}, v.rest = v.tail = function(a, b, c) {
-return g.call(a, b == null || c ? 1 : b);
-}, v.compact = function(a) {
-return v.filter(a, function(a) {
-return !!a;
+return i;
+}, x.toArray = function(e) {
+return e ? x.isArray(e) ? u.call(e) : x.isArguments(e) ? u.call(e) : e.toArray && x.isFunction(e.toArray) ? e.toArray() : x.values(e) : [];
+}, x.size = function(e) {
+return x.isArray(e) ? e.length : x.keys(e).length;
+}, x.first = x.head = x.take = function(e, t, n) {
+return t != null && !n ? u.call(e, 0, t) : e[0];
+}, x.initial = function(e, t, n) {
+return u.call(e, 0, e.length - (t == null || n ? 1 : t));
+}, x.last = function(e, t, n) {
+return t != null && !n ? u.call(e, Math.max(e.length - t, 0)) : e[e.length - 1];
+}, x.rest = x.tail = function(e, t, n) {
+return u.call(e, t == null || n ? 1 : t);
+}, x.compact = function(e) {
+return x.filter(e, function(e) {
+return !!e;
 });
-}, v.flatten = function(a, b) {
-return v.reduce(a, function(a, c) {
-return v.isArray(c) ? a.concat(b ? c : v.flatten(c)) : (a[a.length] = c, a);
-}, []);
-}, v.without = function(a) {
-return v.difference(a, g.call(arguments, 1));
-}, v.uniq = v.unique = function(a, b, c) {
-var c = c ? v.map(a, c) : a, d = [];
-return a.length < 3 && (b = !0), v.reduce(c, function(c, e, f) {
-if (b ? v.last(c) !== e || !c.length : !v.include(c, e)) c.push(e), d.push(a[f]);
-return c;
-}, []), d;
-}, v.union = function() {
-return v.uniq(v.flatten(arguments, !0));
-}, v.intersection = v.intersect = function(a) {
-var b = g.call(arguments, 1);
-return v.filter(v.uniq(a), function(a) {
-return v.every(b, function(b) {
-return v.indexOf(b, a) >= 0;
-});
-});
-}, v.difference = function(a) {
-var b = v.flatten(g.call(arguments, 1), !0);
-return v.filter(a, function(a) {
-return !v.include(b, a);
-});
-}, v.zip = function() {
-for (var a = g.call(arguments), b = v.max(v.pluck(a, "length")), c = Array(b), d = 0; d < b; d++) c[d] = v.pluck(a, "" + d);
-return c;
-}, v.indexOf = function(a, b, c) {
-if (a == null) return -1;
-var d;
-if (c) return c = v.sortedIndex(a, b), a[c] === b ? c : -1;
-if (r && a.indexOf === r) return a.indexOf(b);
-c = 0;
-for (d = a.length; c < d; c++) if (c in a && a[c] === b) return c;
-return -1;
-}, v.lastIndexOf = function(a, b) {
-if (a == null) return -1;
-if (s && a.lastIndexOf === s) return a.lastIndexOf(b);
-for (var c = a.length; c--; ) if (c in a && a[c] === b) return c;
-return -1;
-}, v.range = function(a, b, c) {
-arguments.length <= 1 && (b = a || 0, a = 0);
-for (var c = arguments[2] || 1, d = Math.max(Math.ceil((b - a) / c), 0), e = 0, f = Array(d); e < d; ) f[e++] = a, a += c;
-return f;
 };
-var y = function() {};
-v.bind = function(a, b) {
-var c, d;
-if (a.bind === u && u) return u.apply(a, g.call(arguments, 1));
-if (!v.isFunction(a)) throw new TypeError;
-return d = g.call(arguments, 2), c = function() {
-if (this instanceof c) {
-y.prototype = a.prototype;
-var e = new y, f = a.apply(e, d.concat(g.call(arguments)));
-return Object(f) === f ? f : e;
+var L = function(e, t, n) {
+return T(e, function(e) {
+x.isArray(e) ? t ? o.apply(n, e) : L(e, t, n) : n.push(e);
+}), n;
+};
+x.flatten = function(e, t) {
+return L(e, t, []);
+}, x.without = function(e) {
+return x.difference(e, u.call(arguments, 1));
+}, x.uniq = x.unique = function(e, t, n) {
+var r = n ? x.map(e, n) : e, i = [];
+return x.reduce(r, function(n, r, s) {
+if (t ? x.last(n) !== r || !n.length : !x.include(n, r)) n.push(r), i.push(e[s]);
+return n;
+}, []), i;
+}, x.union = function() {
+return x.uniq(L(arguments, !0, []));
+}, x.intersection = function(e) {
+var t = u.call(arguments, 1);
+return x.filter(x.uniq(e), function(e) {
+return x.every(t, function(t) {
+return x.indexOf(t, e) >= 0;
+});
+});
+}, x.difference = function(e) {
+var t = L(u.call(arguments, 1), !0, []);
+return x.filter(e, function(e) {
+return !x.include(t, e);
+});
+}, x.zip = function() {
+var e = u.call(arguments), t = x.max(x.pluck(e, "length")), n = new Array(t);
+for (var r = 0; r < t; r++) n[r] = x.pluck(e, "" + r);
+return n;
+}, x.zipObject = function(e, t) {
+var n = {};
+for (var r = 0, i = e.length; r < i; r++) n[e[r]] = t[r];
+return n;
+}, x.indexOf = function(e, t, n) {
+if (e == null) return -1;
+var r, i;
+if (n) return r = x.sortedIndex(e, t), e[r] === t ? r : -1;
+if (y && e.indexOf === y) return e.indexOf(t);
+for (r = 0, i = e.length; r < i; r++) if (e[r] === t) return r;
+return -1;
+}, x.lastIndexOf = function(e, t) {
+if (e == null) return -1;
+if (b && e.lastIndexOf === b) return e.lastIndexOf(t);
+var n = e.length;
+while (n--) if (e[n] === t) return n;
+return -1;
+}, x.range = function(e, t, n) {
+arguments.length <= 1 && (t = e || 0, e = 0), n = arguments[2] || 1;
+var r = Math.max(Math.ceil((t - e) / n), 0), i = 0, s = new Array(r);
+while (i < r) s[i++] = e, e += n;
+return s;
+};
+var A = function() {};
+x.bind = function(t, n) {
+var r, i;
+if (t.bind === S && S) return S.apply(t, u.call(arguments, 1));
+if (!x.isFunction(t)) throw new TypeError;
+return i = u.call(arguments, 2), r = function() {
+if (this instanceof r) {
+A.prototype = t.prototype;
+var e = new A, s = t.apply(e, i.concat(u.call(arguments)));
+return Object(s) === s ? s : e;
 }
-return a.apply(b, d.concat(g.call(arguments)));
+return t.apply(n, i.concat(u.call(arguments)));
 };
-}, v.bindAll = function(a) {
-var b = g.call(arguments, 1);
-return b.length == 0 && (b = v.functions(a)), w(b, function(b) {
-a[b] = v.bind(a[b], a);
-}), a;
-}, v.memoize = function(a, b) {
-var c = {};
-return b || (b = v.identity), function() {
-var d = b.apply(this, arguments);
-return v.has(c, d) ? c[d] : c[d] = a.apply(this, arguments);
+}, x.bindAll = function(e) {
+var t = u.call(arguments, 1);
+return t.length == 0 && (t = x.functions(e)), T(t, function(t) {
+e[t] = x.bind(e[t], e);
+}), e;
+}, x.memoize = function(e, t) {
+var n = {};
+return t || (t = x.identity), function() {
+var r = t.apply(this, arguments);
+return x.has(n, r) ? n[r] : n[r] = e.apply(this, arguments);
 };
-}, v.delay = function(a, b) {
-var c = g.call(arguments, 2);
+}, x.delay = function(e, t) {
+var n = u.call(arguments, 2);
 return setTimeout(function() {
-return a.apply(null, c);
-}, b);
-}, v.defer = function(a) {
-return v.delay.apply(v, [ a, 1 ].concat(g.call(arguments, 1)));
-}, v.throttle = function(a, b) {
-var c, d, e, f, g, h, i = v.debounce(function() {
-g = f = !1;
-}, b);
+return e.apply(null, n);
+}, t);
+}, x.defer = function(e) {
+return x.delay.apply(x, [ e, 1 ].concat(u.call(arguments, 1)));
+}, x.throttle = function(e, t) {
+var n, r, i, s, o, u, a = x.debounce(function() {
+o = s = !1;
+}, t);
 return function() {
-return c = this, d = arguments, e || (e = setTimeout(function() {
-e = null, g && a.apply(c, d), i();
-}, b)), f ? g = !0 : h = a.apply(c, d), i(), f = !0, h;
+n = this, r = arguments;
+var f = function() {
+i = null, o && e.apply(n, r), a();
 };
-}, v.debounce = function(a, b, c) {
-var d;
+return i || (i = setTimeout(f, t)), s ? o = !0 : (s = !0, u = e.apply(n, r)), a(), u;
+};
+}, x.debounce = function(e, t, n) {
+var r;
 return function() {
-var e = this, f = arguments;
-c && !d && a.apply(e, f), clearTimeout(d), d = setTimeout(function() {
-d = null, c || a.apply(e, f);
-}, b);
+var i = this, s = arguments, o = function() {
+r = null, n || e.apply(i, s);
+}, u = n && !r;
+clearTimeout(r), r = setTimeout(o, t), u && e.apply(i, s);
 };
-}, v.once = function(a) {
-var b = !1, c;
+}, x.once = function(e) {
+var t = !1, n;
 return function() {
-return b ? c : (b = !0, c = a.apply(this, arguments));
+return t ? n : (t = !0, n = e.apply(this, arguments));
 };
-}, v.wrap = function(a, b) {
+}, x.wrap = function(e, t) {
 return function() {
-var c = [ a ].concat(g.call(arguments, 0));
-return b.apply(this, c);
+var n = [ e ].concat(u.call(arguments, 0));
+return t.apply(this, n);
 };
-}, v.compose = function() {
-var a = arguments;
+}, x.compose = function() {
+var e = arguments;
 return function() {
-for (var b = arguments, c = a.length - 1; c >= 0; c--) b = [ a[c].apply(this, b) ];
-return b[0];
+var t = arguments;
+for (var n = e.length - 1; n >= 0; n--) t = [ e[n].apply(this, t) ];
+return t[0];
 };
-}, v.after = function(a, b) {
-return a <= 0 ? b() : function() {
-if (--a < 1) return b.apply(this, arguments);
+}, x.after = function(e, t) {
+return e <= 0 ? t() : function() {
+if (--e < 1) return t.apply(this, arguments);
 };
-}, v.keys = t || function(a) {
-if (a !== Object(a)) throw new TypeError("Invalid object");
-var b = [], c;
-for (c in a) v.has(a, c) && (b[b.length] = c);
-return b;
-}, v.values = function(a) {
-return v.map(a, v.identity);
-}, v.functions = v.methods = function(a) {
-var b = [], c;
-for (c in a) v.isFunction(a[c]) && b.push(c);
-return b.sort();
-}, v.extend = function(a) {
-return w(g.call(arguments, 1), function(b) {
-for (var c in b) a[c] = b[c];
-}), a;
-}, v.pick = function(a) {
-var b = {};
-return w(v.flatten(g.call(arguments, 1)), function(c) {
-c in a && (b[c] = a[c]);
-}), b;
-}, v.defaults = function(a) {
-return w(g.call(arguments, 1), function(b) {
-for (var c in b) a[c] == null && (a[c] = b[c]);
-}), a;
-}, v.clone = function(a) {
-return v.isObject(a) ? v.isArray(a) ? a.slice() : v.extend({}, a) : a;
-}, v.tap = function(a, b) {
-return b(a), a;
-}, v.isEqual = function(b, c) {
-return a(b, c, []);
-}, v.isEmpty = function(a) {
-if (a == null) return !0;
-if (v.isArray(a) || v.isString(a)) return a.length === 0;
-for (var b in a) if (v.has(a, b)) return !1;
+}, x.keys = E || function(e) {
+if (e !== Object(e)) throw new TypeError("Invalid object");
+var t = [];
+for (var n in e) x.has(e, n) && (t[t.length] = n);
+return t;
+}, x.values = function(e) {
+return x.map(e, x.identity);
+}, x.functions = x.methods = function(e) {
+var t = [];
+for (var n in e) x.isFunction(e[n]) && t.push(n);
+return t.sort();
+}, x.extend = function(e) {
+return T(u.call(arguments, 1), function(t) {
+for (var n in t) e[n] = t[n];
+}), e;
+}, x.pick = function(e) {
+var t = {};
+return T(L(u.call(arguments, 1), !0, []), function(n) {
+n in e && (t[n] = e[n]);
+}), t;
+}, x.defaults = function(e) {
+return T(u.call(arguments, 1), function(t) {
+for (var n in t) e[n] == null && (e[n] = t[n]);
+}), e;
+}, x.clone = function(e) {
+return x.isObject(e) ? x.isArray(e) ? e.slice() : x.extend({}, e) : e;
+}, x.tap = function(e, t) {
+return t(e), e;
+};
+var O = function(e, t, n) {
+if (e === t) return e !== 0 || 1 / e == 1 / t;
+if (e == null || t == null) return e === t;
+e._chain && (e = e._wrapped), t._chain && (t = t._wrapped);
+if (e.isEqual && x.isFunction(e.isEqual)) return e.isEqual(t);
+if (t.isEqual && x.isFunction(t.isEqual)) return t.isEqual(e);
+var r = f.call(e);
+if (r != f.call(t)) return !1;
+switch (r) {
+case "[object String]":
+return e == String(t);
+case "[object Number]":
+return e != +e ? t != +t : e == 0 ? 1 / e == 1 / t : e == +t;
+case "[object Date]":
+case "[object Boolean]":
+return +e == +t;
+case "[object RegExp]":
+return e.source == t.source && e.global == t.global && e.multiline == t.multiline && e.ignoreCase == t.ignoreCase;
+}
+if (typeof e != "object" || typeof t != "object") return !1;
+var i = n.length;
+while (i--) if (n[i] == e) return !0;
+n.push(e);
+var s = 0, o = !0;
+if (r == "[object Array]") {
+s = e.length, o = s == t.length;
+if (o) while (s--) if (!(o = s in e == s in t && O(e[s], t[s], n))) break;
+} else {
+if ("constructor" in e != "constructor" in t || e.constructor != t.constructor) return !1;
+for (var u in e) if (x.has(e, u)) {
+s++;
+if (!(o = x.has(t, u) && O(e[u], t[u], n))) break;
+}
+if (o) {
+for (u in t) if (x.has(t, u) && !(s--)) break;
+o = !s;
+}
+}
+return n.pop(), o;
+};
+x.isEqual = function(e, t) {
+return O(e, t, []);
+}, x.isEmpty = function(e) {
+if (e == null) return !0;
+if (x.isArray(e) || x.isString(e)) return e.length === 0;
+for (var t in e) if (x.has(e, t)) return !1;
 return !0;
-}, v.isElement = function(a) {
-return !!a && a.nodeType == 1;
-}, v.isArray = f || function(a) {
-return i.call(a) == "[object Array]";
-}, v.isObject = function(a) {
-return a === Object(a);
-}, v.isArguments = function(a) {
-return i.call(a) == "[object Arguments]";
-}, v.isArguments(arguments) || (v.isArguments = function(a) {
-return !!a && !!v.has(a, "callee");
-}), v.isFunction = function(a) {
-return i.call(a) == "[object Function]";
-}, v.isString = function(a) {
-return i.call(a) == "[object String]";
-}, v.isNumber = function(a) {
-return i.call(a) == "[object Number]";
-}, v.isFinite = function(a) {
-return v.isNumber(a) && isFinite(a);
-}, v.isNaN = function(a) {
-return a !== a;
-}, v.isBoolean = function(a) {
-return a === !0 || a === !1 || i.call(a) == "[object Boolean]";
-}, v.isDate = function(a) {
-return i.call(a) == "[object Date]";
-}, v.isRegExp = function(a) {
-return i.call(a) == "[object RegExp]";
-}, v.isNull = function(a) {
-return a === null;
-}, v.isUndefined = function(a) {
-return a === void 0;
-}, v.has = function(a, b) {
-return j.call(a, b);
-}, v.noConflict = function() {
-return b._ = c, this;
-}, v.identity = function(a) {
-return a;
-}, v.times = function(a, b, c) {
-for (var d = 0; d < a; d++) b.call(c, d);
-}, v.escape = function(a) {
-return ("" + a).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;").replace(/\//g, "&#x2F;");
-}, v.result = function(a, b) {
-if (a == null) return null;
-var c = a[b];
-return v.isFunction(c) ? c.call(a) : c;
-}, v.mixin = function(a) {
-w(v.functions(a), function(b) {
-I(b, v[b] = a[b]);
+}, x.isElement = function(e) {
+return !!e && e.nodeType == 1;
+}, x.isArray = w || function(e) {
+return f.call(e) == "[object Array]";
+}, x.isObject = function(e) {
+return e === Object(e);
+}, T([ "Arguments", "Function", "String", "Number", "Date", "RegExp" ], function(e) {
+x["is" + e] = function(t) {
+return f.call(t) == "[object " + e + "]";
+};
+}), x.isArguments(arguments) || (x.isArguments = function(e) {
+return !!e && !!x.has(e, "callee");
+}), x.isFinite = function(e) {
+return x.isNumber(e) && isFinite(e);
+}, x.isNaN = function(e) {
+return e !== e;
+}, x.isBoolean = function(e) {
+return e === !0 || e === !1 || f.call(e) == "[object Boolean]";
+}, x.isNull = function(e) {
+return e === null;
+}, x.isUndefined = function(e) {
+return e === void 0;
+}, x.has = function(e, t) {
+return l.call(e, t);
+}, x.noConflict = function() {
+return e._ = t, this;
+}, x.identity = function(e) {
+return e;
+}, x.times = function(e, t, n) {
+for (var r = 0; r < e; r++) t.call(n, r);
+};
+var M = {
+"&": "&amp;",
+"<": "&lt;",
+">": "&gt;",
+'"': "&quot;",
+"'": "&#x27;",
+"/": "&#x2F;"
+}, _ = /[&<>"'\/]/g;
+x.escape = function(e) {
+return ("" + e).replace(_, function(e) {
+return M[e];
+});
+}, x.result = function(e, t) {
+if (e == null) return null;
+var n = e[t];
+return x.isFunction(n) ? n.call(e) : n;
+}, x.mixin = function(e) {
+T(x.functions(e), function(t) {
+U(t, x[t] = e[t]);
 });
 };
-var z = 0;
-v.uniqueId = function(a) {
-var b = z++;
-return a ? a + b : b;
-}, v.templateSettings = {
+var D = 0;
+x.uniqueId = function(e) {
+var t = D++;
+return e ? e + t : t;
+}, x.templateSettings = {
 evaluate: /<%([\s\S]+?)%>/g,
 interpolate: /<%=([\s\S]+?)%>/g,
 escape: /<%-([\s\S]+?)%>/g
 };
-var A = /.^/, B = {
+var P = /.^/, H = {
 "\\": "\\",
 "'": "'",
 r: "\r",
@@ -401,512 +437,60 @@ n: "\n",
 t: "	",
 u2028: "\u2028",
 u2029: "\u2029"
-}, C;
-for (C in B) B[B[C]] = C;
-var D = /\\|'|\r|\n|\t|\u2028|\u2029/g, E = /\\(\\|'|r|n|t|u2028|u2029)/g, F = function(a) {
-return a.replace(E, function(a, b) {
-return B[b];
+};
+for (var B in H) H[H[B]] = B;
+var j = /\\|'|\r|\n|\t|\u2028|\u2029/g, F = /\\(\\|'|r|n|t|u2028|u2029)/g, I = function(e) {
+return e.replace(F, function(e, t) {
+return H[t];
 });
 };
-v.template = function(a, b, c) {
-c = v.defaults(c || {}, v.templateSettings), a = "__p+='" + a.replace(D, function(a) {
-return "\\" + B[a];
-}).replace(c.escape || A, function(a, b) {
-return "'+\n_.escape(" + F(b) + ")+\n'";
-}).replace(c.interpolate || A, function(a, b) {
-return "'+\n(" + F(b) + ")+\n'";
-}).replace(c.evaluate || A, function(a, b) {
-return "';\n" + F(b) + "\n;__p+='";
-}) + "';\n", c.variable || (a = "with(obj||{}){\n" + a + "}\n");
-var a = "var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};\n" + a + "return __p;\n", d = new Function(c.variable || "obj", "_", a);
-return b ? d(b, v) : (b = function(a) {
-return d.call(this, a, v);
-}, b.source = "function(" + (c.variable || "obj") + "){\n" + a + "}", b);
-}, v.chain = function(a) {
-return v(a).chain();
+x.template = function(e, t, n) {
+n = x.defaults(n || {}, x.templateSettings);
+var r = "__p+='" + e.replace(j, function(e) {
+return "\\" + H[e];
+}).replace(n.escape || P, function(e, t) {
+return "'+\n((__t=(" + I(t) + "))==null?'':_.escape(__t))+\n'";
+}).replace(n.interpolate || P, function(e, t) {
+return "'+\n((__t=(" + I(t) + "))==null?'':__t)+\n'";
+}).replace(n.evaluate || P, function(e, t) {
+return "';\n" + I(t) + "\n__p+='";
+}) + "';\n";
+n.variable || (r = "with(obj||{}){\n" + r + "}\n"), r = "var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'')};\n" + r + "return __p;\n";
+var i = new Function(n.variable || "obj", "_", r);
+if (t) return i(t, x);
+var s = function(e) {
+return i.call(this, e, x);
 };
-var G = function(a) {
-this._wrapped = a;
+return s.source = "function(" + (n.variable || "obj") + "){\n" + r + "}", s;
+}, x.chain = function(e) {
+return x(e).chain();
 };
-v.prototype = G.prototype;
-var H = function(a, b) {
-return b ? v(a).chain() : a;
-}, I = function(a, b) {
-G.prototype[a] = function() {
-var a = g.call(arguments);
-return h.call(a, this._wrapped), H(b.apply(v, a), this._chain);
+var q = function(e) {
+this._wrapped = e;
+};
+x.prototype = q.prototype;
+var R = function(e, t) {
+return t ? x(e).chain() : e;
+}, U = function(e, t) {
+q.prototype[e] = function() {
+var e = u.call(arguments);
+return a.call(e, this._wrapped), R(t.apply(x, e), this._chain);
 };
 };
-v.mixin(v), w("pop,push,reverse,shift,sort,splice,unshift".split(","), function(a) {
-var b = e[a];
-G.prototype[a] = function() {
-var c = this._wrapped;
-b.apply(c, arguments);
-var d = c.length;
-return (a == "shift" || a == "splice") && d === 0 && delete c[0], H(c, this._chain);
+x.mixin(x), T([ "pop", "push", "reverse", "shift", "sort", "splice", "unshift" ], function(e) {
+var t = r[e];
+q.prototype[e] = function() {
+var n = this._wrapped;
+return t.apply(n, arguments), (e == "shift" || e == "splice") && n.length === 0 && delete n[0], R(n, this._chain);
 };
-}), w([ "concat", "join", "slice" ], function(a) {
-var b = e[a];
-G.prototype[a] = function() {
-return H(b.apply(this._wrapped, arguments), this._chain);
+}), T([ "concat", "join", "slice" ], function(e) {
+var t = r[e];
+q.prototype[e] = function() {
+return R(t.apply(this._wrapped, arguments), this._chain);
 };
-}), G.prototype.chain = function() {
+}), q.prototype.chain = function() {
 return this._chain = !0, this;
-}, G.prototype.value = function() {
-return this._wrapped;
-};
-}).call(this);
-
-// underscore-min.js
-
-(function() {
-function a(b, c, d) {
-if (b === c) return 0 !== b || 1 / b == 1 / c;
-if (null == b || null == c) return b === c;
-b._chain && (b = b._wrapped), c._chain && (c = c._wrapped);
-if (b.isEqual && v.isFunction(b.isEqual)) return b.isEqual(c);
-if (c.isEqual && v.isFunction(c.isEqual)) return c.isEqual(b);
-var e = i.call(b);
-if (e != i.call(c)) return !1;
-switch (e) {
-case "[object String]":
-return b == "" + c;
-case "[object Number]":
-return b != +b ? c != +c : 0 == b ? 1 / b == 1 / c : b == +c;
-case "[object Date]":
-case "[object Boolean]":
-return +b == +c;
-case "[object RegExp]":
-return b.source == c.source && b.global == c.global && b.multiline == c.multiline && b.ignoreCase == c.ignoreCase;
-}
-if ("object" != typeof b || "object" != typeof c) return !1;
-for (var f = d.length; f--; ) if (d[f] == b) return !0;
-d.push(b);
-var f = 0, g = !0;
-if ("[object Array]" == e) {
-if (f = b.length, g = f == c.length) for (; f-- && (g = f in b == f in c && a(b[f], c[f], d)); ) ;
-} else {
-if ("constructor" in b != "constructor" in c || b.constructor != c.constructor) return !1;
-for (var h in b) if (v.has(b, h) && (f++, !(g = v.has(c, h) && a(b[h], c[h], d)))) break;
-if (g) {
-for (h in c) if (v.has(c, h) && !(f--)) break;
-g = !f;
-}
-}
-return d.pop(), g;
-}
-var b = this, c = b._, d = {}, e = Array.prototype, f = Object.prototype, g = e.slice, h = e.unshift, i = f.toString, j = f.hasOwnProperty, k = e.forEach, l = e.map, m = e.reduce, n = e.reduceRight, o = e.filter, p = e.every, q = e.some, r = e.indexOf, s = e.lastIndexOf, f = Array.isArray, t = Object.keys, u = Function.prototype.bind, v = function(a) {
-return new G(a);
-};
-"undefined" != typeof exports ? ("undefined" != typeof module && module.exports && (exports = module.exports = v), exports._ = v) : b._ = v, v.VERSION = "1.3.3";
-var w = v.each = v.forEach = function(a, b, c) {
-if (a != null) if (k && a.forEach === k) a.forEach(b, c); else if (a.length === +a.length) {
-for (var e = 0, f = a.length; e < f; e++) if (e in a && b.call(c, a[e], e, a) === d) break;
-} else for (e in a) if (v.has(a, e) && b.call(c, a[e], e, a) === d) break;
-};
-v.map = v.collect = function(a, b, c) {
-var d = [];
-return a == null ? d : l && a.map === l ? a.map(b, c) : (w(a, function(a, e, f) {
-d[d.length] = b.call(c, a, e, f);
-}), a.length === +a.length && (d.length = a.length), d);
-}, v.reduce = v.foldl = v.inject = function(a, b, c, d) {
-var e = arguments.length > 2;
-a == null && (a = []);
-if (m && a.reduce === m) return d && (b = v.bind(b, d)), e ? a.reduce(b, c) : a.reduce(b);
-w(a, function(a, f, g) {
-e ? c = b.call(d, c, a, f, g) : (c = a, e = !0);
-});
-if (!e) throw new TypeError("Reduce of empty array with no initial value");
-return c;
-}, v.reduceRight = v.foldr = function(a, b, c, d) {
-var e = arguments.length > 2;
-a == null && (a = []);
-if (n && a.reduceRight === n) return d && (b = v.bind(b, d)), e ? a.reduceRight(b, c) : a.reduceRight(b);
-var f = v.toArray(a).reverse();
-return d && !e && (b = v.bind(b, d)), e ? v.reduce(f, b, c, d) : v.reduce(f, b);
-}, v.find = v.detect = function(a, b, c) {
-var d;
-return x(a, function(a, e, f) {
-if (b.call(c, a, e, f)) return d = a, !0;
-}), d;
-}, v.filter = v.select = function(a, b, c) {
-var d = [];
-return a == null ? d : o && a.filter === o ? a.filter(b, c) : (w(a, function(a, e, f) {
-b.call(c, a, e, f) && (d[d.length] = a);
-}), d);
-}, v.reject = function(a, b, c) {
-var d = [];
-return a == null ? d : (w(a, function(a, e, f) {
-b.call(c, a, e, f) || (d[d.length] = a);
-}), d);
-}, v.every = v.all = function(a, b, c) {
-var e = !0;
-return a == null ? e : p && a.every === p ? a.every(b, c) : (w(a, function(a, f, g) {
-if (!(e = e && b.call(c, a, f, g))) return d;
-}), !!e);
-};
-var x = v.some = v.any = function(a, b, c) {
-b || (b = v.identity);
-var e = !1;
-return a == null ? e : q && a.some === q ? a.some(b, c) : (w(a, function(a, f, g) {
-if (e || (e = b.call(c, a, f, g))) return d;
-}), !!e);
-};
-v.include = v.contains = function(a, b) {
-var c = !1;
-return a == null ? c : r && a.indexOf === r ? a.indexOf(b) != -1 : c = x(a, function(a) {
-return a === b;
-});
-}, v.invoke = function(a, b) {
-var c = g.call(arguments, 2);
-return v.map(a, function(a) {
-return (v.isFunction(b) ? b || a : a[b]).apply(a, c);
-});
-}, v.pluck = function(a, b) {
-return v.map(a, function(a) {
-return a[b];
-});
-}, v.max = function(a, b, c) {
-if (!b && v.isArray(a) && a[0] === +a[0]) return Math.max.apply(Math, a);
-if (!b && v.isEmpty(a)) return -Infinity;
-var d = {
-computed: -Infinity
-};
-return w(a, function(a, e, f) {
-e = b ? b.call(c, a, e, f) : a, e >= d.computed && (d = {
-value: a,
-computed: e
-});
-}), d.value;
-}, v.min = function(a, b, c) {
-if (!b && v.isArray(a) && a[0] === +a[0]) return Math.min.apply(Math, a);
-if (!b && v.isEmpty(a)) return Infinity;
-var d = {
-computed: Infinity
-};
-return w(a, function(a, e, f) {
-e = b ? b.call(c, a, e, f) : a, e < d.computed && (d = {
-value: a,
-computed: e
-});
-}), d.value;
-}, v.shuffle = function(a) {
-var b = [], c;
-return w(a, function(a, d) {
-c = Math.floor(Math.random() * (d + 1)), b[d] = b[c], b[c] = a;
-}), b;
-}, v.sortBy = function(a, b, c) {
-var d = v.isFunction(b) ? b : function(a) {
-return a[b];
-};
-return v.pluck(v.map(a, function(a, b, e) {
-return {
-value: a,
-criteria: d.call(c, a, b, e)
-};
-}).sort(function(a, b) {
-var c = a.criteria, d = b.criteria;
-return c === void 0 ? 1 : d === void 0 ? -1 : c < d ? -1 : c > d ? 1 : 0;
-}), "value");
-}, v.groupBy = function(a, b) {
-var c = {}, d = v.isFunction(b) ? b : function(a) {
-return a[b];
-};
-return w(a, function(a, b) {
-var e = d(a, b);
-(c[e] || (c[e] = [])).push(a);
-}), c;
-}, v.sortedIndex = function(a, b, c) {
-c || (c = v.identity);
-for (var d = 0, e = a.length; d < e; ) {
-var f = d + e >> 1;
-c(a[f]) < c(b) ? d = f + 1 : e = f;
-}
-return d;
-}, v.toArray = function(a) {
-return a ? v.isArray(a) || v.isArguments(a) ? g.call(a) : a.toArray && v.isFunction(a.toArray) ? a.toArray() : v.values(a) : [];
-}, v.size = function(a) {
-return v.isArray(a) ? a.length : v.keys(a).length;
-}, v.first = v.head = v.take = function(a, b, c) {
-return b != null && !c ? g.call(a, 0, b) : a[0];
-}, v.initial = function(a, b, c) {
-return g.call(a, 0, a.length - (b == null || c ? 1 : b));
-}, v.last = function(a, b, c) {
-return b != null && !c ? g.call(a, Math.max(a.length - b, 0)) : a[a.length - 1];
-}, v.rest = v.tail = function(a, b, c) {
-return g.call(a, b == null || c ? 1 : b);
-}, v.compact = function(a) {
-return v.filter(a, function(a) {
-return !!a;
-});
-}, v.flatten = function(a, b) {
-return v.reduce(a, function(a, c) {
-return v.isArray(c) ? a.concat(b ? c : v.flatten(c)) : (a[a.length] = c, a);
-}, []);
-}, v.without = function(a) {
-return v.difference(a, g.call(arguments, 1));
-}, v.uniq = v.unique = function(a, b, c) {
-var c = c ? v.map(a, c) : a, d = [];
-return a.length < 3 && (b = !0), v.reduce(c, function(c, e, f) {
-if (b ? v.last(c) !== e || !c.length : !v.include(c, e)) c.push(e), d.push(a[f]);
-return c;
-}, []), d;
-}, v.union = function() {
-return v.uniq(v.flatten(arguments, !0));
-}, v.intersection = v.intersect = function(a) {
-var b = g.call(arguments, 1);
-return v.filter(v.uniq(a), function(a) {
-return v.every(b, function(b) {
-return v.indexOf(b, a) >= 0;
-});
-});
-}, v.difference = function(a) {
-var b = v.flatten(g.call(arguments, 1), !0);
-return v.filter(a, function(a) {
-return !v.include(b, a);
-});
-}, v.zip = function() {
-for (var a = g.call(arguments), b = v.max(v.pluck(a, "length")), c = Array(b), d = 0; d < b; d++) c[d] = v.pluck(a, "" + d);
-return c;
-}, v.indexOf = function(a, b, c) {
-if (a == null) return -1;
-var d;
-if (c) return c = v.sortedIndex(a, b), a[c] === b ? c : -1;
-if (r && a.indexOf === r) return a.indexOf(b);
-c = 0;
-for (d = a.length; c < d; c++) if (c in a && a[c] === b) return c;
-return -1;
-}, v.lastIndexOf = function(a, b) {
-if (a == null) return -1;
-if (s && a.lastIndexOf === s) return a.lastIndexOf(b);
-for (var c = a.length; c--; ) if (c in a && a[c] === b) return c;
-return -1;
-}, v.range = function(a, b, c) {
-arguments.length <= 1 && (b = a || 0, a = 0);
-for (var c = arguments[2] || 1, d = Math.max(Math.ceil((b - a) / c), 0), e = 0, f = Array(d); e < d; ) f[e++] = a, a += c;
-return f;
-};
-var y = function() {};
-v.bind = function(a, b) {
-var c, d;
-if (a.bind === u && u) return u.apply(a, g.call(arguments, 1));
-if (!v.isFunction(a)) throw new TypeError;
-return d = g.call(arguments, 2), c = function() {
-if (this instanceof c) {
-y.prototype = a.prototype;
-var e = new y, f = a.apply(e, d.concat(g.call(arguments)));
-return Object(f) === f ? f : e;
-}
-return a.apply(b, d.concat(g.call(arguments)));
-};
-}, v.bindAll = function(a) {
-var b = g.call(arguments, 1);
-return b.length == 0 && (b = v.functions(a)), w(b, function(b) {
-a[b] = v.bind(a[b], a);
-}), a;
-}, v.memoize = function(a, b) {
-var c = {};
-return b || (b = v.identity), function() {
-var d = b.apply(this, arguments);
-return v.has(c, d) ? c[d] : c[d] = a.apply(this, arguments);
-};
-}, v.delay = function(a, b) {
-var c = g.call(arguments, 2);
-return setTimeout(function() {
-return a.apply(null, c);
-}, b);
-}, v.defer = function(a) {
-return v.delay.apply(v, [ a, 1 ].concat(g.call(arguments, 1)));
-}, v.throttle = function(a, b) {
-var c, d, e, f, g, h, i = v.debounce(function() {
-g = f = !1;
-}, b);
-return function() {
-return c = this, d = arguments, e || (e = setTimeout(function() {
-e = null, g && a.apply(c, d), i();
-}, b)), f ? g = !0 : h = a.apply(c, d), i(), f = !0, h;
-};
-}, v.debounce = function(a, b, c) {
-var d;
-return function() {
-var e = this, f = arguments;
-c && !d && a.apply(e, f), clearTimeout(d), d = setTimeout(function() {
-d = null, c || a.apply(e, f);
-}, b);
-};
-}, v.once = function(a) {
-var b = !1, c;
-return function() {
-return b ? c : (b = !0, c = a.apply(this, arguments));
-};
-}, v.wrap = function(a, b) {
-return function() {
-var c = [ a ].concat(g.call(arguments, 0));
-return b.apply(this, c);
-};
-}, v.compose = function() {
-var a = arguments;
-return function() {
-for (var b = arguments, c = a.length - 1; c >= 0; c--) b = [ a[c].apply(this, b) ];
-return b[0];
-};
-}, v.after = function(a, b) {
-return a <= 0 ? b() : function() {
-if (--a < 1) return b.apply(this, arguments);
-};
-}, v.keys = t || function(a) {
-if (a !== Object(a)) throw new TypeError("Invalid object");
-var b = [], c;
-for (c in a) v.has(a, c) && (b[b.length] = c);
-return b;
-}, v.values = function(a) {
-return v.map(a, v.identity);
-}, v.functions = v.methods = function(a) {
-var b = [], c;
-for (c in a) v.isFunction(a[c]) && b.push(c);
-return b.sort();
-}, v.extend = function(a) {
-return w(g.call(arguments, 1), function(b) {
-for (var c in b) a[c] = b[c];
-}), a;
-}, v.pick = function(a) {
-var b = {};
-return w(v.flatten(g.call(arguments, 1)), function(c) {
-c in a && (b[c] = a[c]);
-}), b;
-}, v.defaults = function(a) {
-return w(g.call(arguments, 1), function(b) {
-for (var c in b) a[c] == null && (a[c] = b[c]);
-}), a;
-}, v.clone = function(a) {
-return v.isObject(a) ? v.isArray(a) ? a.slice() : v.extend({}, a) : a;
-}, v.tap = function(a, b) {
-return b(a), a;
-}, v.isEqual = function(b, c) {
-return a(b, c, []);
-}, v.isEmpty = function(a) {
-if (a == null) return !0;
-if (v.isArray(a) || v.isString(a)) return a.length === 0;
-for (var b in a) if (v.has(a, b)) return !1;
-return !0;
-}, v.isElement = function(a) {
-return !!a && a.nodeType == 1;
-}, v.isArray = f || function(a) {
-return i.call(a) == "[object Array]";
-}, v.isObject = function(a) {
-return a === Object(a);
-}, v.isArguments = function(a) {
-return i.call(a) == "[object Arguments]";
-}, v.isArguments(arguments) || (v.isArguments = function(a) {
-return !!a && !!v.has(a, "callee");
-}), v.isFunction = function(a) {
-return i.call(a) == "[object Function]";
-}, v.isString = function(a) {
-return i.call(a) == "[object String]";
-}, v.isNumber = function(a) {
-return i.call(a) == "[object Number]";
-}, v.isFinite = function(a) {
-return v.isNumber(a) && isFinite(a);
-}, v.isNaN = function(a) {
-return a !== a;
-}, v.isBoolean = function(a) {
-return a === !0 || a === !1 || i.call(a) == "[object Boolean]";
-}, v.isDate = function(a) {
-return i.call(a) == "[object Date]";
-}, v.isRegExp = function(a) {
-return i.call(a) == "[object RegExp]";
-}, v.isNull = function(a) {
-return a === null;
-}, v.isUndefined = function(a) {
-return a === void 0;
-}, v.has = function(a, b) {
-return j.call(a, b);
-}, v.noConflict = function() {
-return b._ = c, this;
-}, v.identity = function(a) {
-return a;
-}, v.times = function(a, b, c) {
-for (var d = 0; d < a; d++) b.call(c, d);
-}, v.escape = function(a) {
-return ("" + a).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;").replace(/\//g, "&#x2F;");
-}, v.result = function(a, b) {
-if (a == null) return null;
-var c = a[b];
-return v.isFunction(c) ? c.call(a) : c;
-}, v.mixin = function(a) {
-w(v.functions(a), function(b) {
-I(b, v[b] = a[b]);
-});
-};
-var z = 0;
-v.uniqueId = function(a) {
-var b = z++;
-return a ? a + b : b;
-}, v.templateSettings = {
-evaluate: /<%([\s\S]+?)%>/g,
-interpolate: /<%=([\s\S]+?)%>/g,
-escape: /<%-([\s\S]+?)%>/g
-};
-var A = /.^/, B = {
-"\\": "\\",
-"'": "'",
-r: "\r",
-n: "\n",
-t: "	",
-u2028: "\u2028",
-u2029: "\u2029"
-}, C;
-for (C in B) B[B[C]] = C;
-var D = /\\|'|\r|\n|\t|\u2028|\u2029/g, E = /\\(\\|'|r|n|t|u2028|u2029)/g, F = function(a) {
-return a.replace(E, function(a, b) {
-return B[b];
-});
-};
-v.template = function(a, b, c) {
-c = v.defaults(c || {}, v.templateSettings), a = "__p+='" + a.replace(D, function(a) {
-return "\\" + B[a];
-}).replace(c.escape || A, function(a, b) {
-return "'+\n_.escape(" + F(b) + ")+\n'";
-}).replace(c.interpolate || A, function(a, b) {
-return "'+\n(" + F(b) + ")+\n'";
-}).replace(c.evaluate || A, function(a, b) {
-return "';\n" + F(b) + "\n;__p+='";
-}) + "';\n", c.variable || (a = "with(obj||{}){\n" + a + "}\n");
-var a = "var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};\n" + a + "return __p;\n", d = new Function(c.variable || "obj", "_", a);
-return b ? d(b, v) : (b = function(a) {
-return d.call(this, a, v);
-}, b.source = "function(" + (c.variable || "obj") + "){\n" + a + "}", b);
-}, v.chain = function(a) {
-return v(a).chain();
-};
-var G = function(a) {
-this._wrapped = a;
-};
-v.prototype = G.prototype;
-var H = function(a, b) {
-return b ? v(a).chain() : a;
-}, I = function(a, b) {
-G.prototype[a] = function() {
-var a = g.call(arguments);
-return h.call(a, this._wrapped), H(b.apply(v, a), this._chain);
-};
-};
-v.mixin(v), w("pop,push,reverse,shift,sort,splice,unshift".split(","), function(a) {
-var b = e[a];
-G.prototype[a] = function() {
-var c = this._wrapped;
-b.apply(c, arguments);
-var d = c.length;
-return (a == "shift" || a == "splice") && d === 0 && delete c[0], H(c, this._chain);
-};
-}), w([ "concat", "join", "slice" ], function(a) {
-var b = e[a];
-G.prototype[a] = function() {
-return H(b.apply(this._wrapped, arguments), this._chain);
-};
-}), G.prototype.chain = function() {
-return this._chain = !0, this;
-}, G.prototype.value = function() {
+}, q.prototype.value = function() {
 return this._wrapped;
 };
 }).call(this);
@@ -914,160 +498,160 @@ return this._wrapped;
 // backbone.js
 
 (function() {
-var a = this, b = a.Backbone, c = Array.prototype.splice, d;
-typeof exports != "undefined" ? d = exports : d = a.Backbone = {}, d.VERSION = "0.9.2";
-var e = a._;
-!e && typeof require != "undefined" && (e = require("underscore")), d.$ = a.jQuery || a.Zepto || a.ender, d.noConflict = function() {
-return a.Backbone = b, this;
-}, d.emulateHTTP = !1, d.emulateJSON = !1;
-var f = /\s+/, g = d.Events = {
-on: function(a, b, c) {
-var d, e, g;
-if (!b) return this;
-a = a.split(f), d = this._callbacks || (this._callbacks = {});
-while (e = a.shift()) g = d[e] || (d[e] = []), g.push(b, c);
+var e = this, t = e.Backbone, n = Array.prototype.splice, r;
+typeof exports != "undefined" ? r = exports : r = e.Backbone = {}, r.VERSION = "0.9.2";
+var i = e._;
+!i && typeof require != "undefined" && (i = require("underscore")), r.$ = e.jQuery || e.Zepto || e.ender, r.noConflict = function() {
+return e.Backbone = t, this;
+}, r.emulateHTTP = !1, r.emulateJSON = !1;
+var s = /\s+/, o = r.Events = {
+on: function(e, t, n) {
+var r, i, o;
+if (!t) return this;
+e = e.split(s), r = this._callbacks || (this._callbacks = {});
+while (i = e.shift()) o = r[i] || (r[i] = []), o.push(t, n);
 return this;
 },
-off: function(a, b, c) {
-var d, g, h, i;
-if (!(g = this._callbacks)) return this;
-if (!(a || b || c)) return delete this._callbacks, this;
-a = a ? a.split(f) : e.keys(g);
-while (d = a.shift()) {
-if (!(h = g[d]) || !b && !c) {
-delete g[d];
+off: function(e, t, n) {
+var r, o, u, a;
+if (!(o = this._callbacks)) return this;
+if (!(e || t || n)) return delete this._callbacks, this;
+e = e ? e.split(s) : i.keys(o);
+while (r = e.shift()) {
+if (!(u = o[r]) || !t && !n) {
+delete o[r];
 continue;
 }
-for (i = h.length - 2; i >= 0; i -= 2) b && h[i] !== b || c && h[i + 1] !== c || h.splice(i, 2);
+for (a = u.length - 2; a >= 0; a -= 2) t && u[a] !== t || n && u[a + 1] !== n || u.splice(a, 2);
 }
 return this;
 },
-trigger: function(a) {
-var b, c, d, e, g, h, i, j;
-if (!(c = this._callbacks)) return this;
-j = [], a = a.split(f);
-for (e = 1, g = arguments.length; e < g; e++) j[e - 1] = arguments[e];
-while (b = a.shift()) {
-if (i = c.all) i = i.slice();
-if (d = c[b]) d = d.slice();
-if (d) for (e = 0, g = d.length; e < g; e += 2) d[e].apply(d[e + 1] || this, j);
-if (i) {
-h = [ b ].concat(j);
-for (e = 0, g = i.length; e < g; e += 2) i[e].apply(i[e + 1] || this, h);
+trigger: function(e) {
+var t, n, r, i, o, u, a, f;
+if (!(n = this._callbacks)) return this;
+f = [], e = e.split(s);
+for (i = 1, o = arguments.length; i < o; i++) f[i - 1] = arguments[i];
+while (t = e.shift()) {
+if (a = n.all) a = a.slice();
+if (r = n[t]) r = r.slice();
+if (r) for (i = 0, o = r.length; i < o; i += 2) r[i].apply(r[i + 1] || this, f);
+if (a) {
+u = [ t ].concat(f);
+for (i = 0, o = a.length; i < o; i += 2) a[i].apply(a[i + 1] || this, u);
 }
 }
 return this;
 }
 };
-g.bind = g.on, g.unbind = g.off;
-var h = d.Model = function(a, b) {
-var c;
-a || (a = {}), b && b.collection && (this.collection = b.collection), b && b.parse && (a = this.parse(a));
-if (c = z(this, "defaults")) a = e.extend({}, c, a);
-this.attributes = {}, this._escapedAttributes = {}, this.cid = e.uniqueId("c"), this.changed = {}, this._silent = {}, this._pending = {}, this.set(a, {
+o.bind = o.on, o.unbind = o.off;
+var u = r.Model = function(e, t) {
+var n;
+e || (e = {}), t && t.collection && (this.collection = t.collection), t && t.parse && (e = this.parse(e));
+if (n = N(this, "defaults")) e = i.extend({}, n, e);
+this.attributes = {}, this._escapedAttributes = {}, this.cid = i.uniqueId("c"), this.changed = {}, this._silent = {}, this._pending = {}, this.set(e, {
 silent: !0
-}), this.changed = {}, this._silent = {}, this._pending = {}, this._previousAttributes = e.clone(this.attributes), this.initialize.apply(this, arguments);
+}), this.changed = {}, this._silent = {}, this._pending = {}, this._previousAttributes = i.clone(this.attributes), this.initialize.apply(this, arguments);
 };
-e.extend(h.prototype, g, {
+i.extend(u.prototype, o, {
 changed: null,
 _silent: null,
 _pending: null,
 idAttribute: "id",
 initialize: function() {},
-toJSON: function(a) {
-return e.clone(this.attributes);
+toJSON: function(e) {
+return i.clone(this.attributes);
 },
 sync: function() {
-return d.sync.apply(this, arguments);
+return r.sync.apply(this, arguments);
 },
-get: function(a) {
-return this.attributes[a];
+get: function(e) {
+return this.attributes[e];
 },
-escape: function(a) {
-var b;
-if (b = this._escapedAttributes[a]) return b;
-var c = this.get(a);
-return this._escapedAttributes[a] = e.escape(c == null ? "" : "" + c);
+escape: function(e) {
+var t;
+if (t = this._escapedAttributes[e]) return t;
+var n = this.get(e);
+return this._escapedAttributes[e] = i.escape(n == null ? "" : "" + n);
 },
-has: function(a) {
-return this.get(a) != null;
+has: function(e) {
+return this.get(e) != null;
 },
-set: function(a, b, c) {
-var d, f, g;
-e.isObject(a) || a == null ? (d = a, c = b) : (d = {}, d[a] = b), c || (c = {});
-if (!d) return this;
-d instanceof h && (d = d.attributes);
-if (c.unset) for (f in d) d[f] = void 0;
-if (!this._validate(d, c)) return !1;
-this.idAttribute in d && (this.id = d[this.idAttribute]);
-var i = c.changes = {}, j = this.attributes, k = this._escapedAttributes, l = this._previousAttributes || {};
-for (f in d) {
-g = d[f];
-if (!e.isEqual(j[f], g) || c.unset && e.has(j, f)) delete k[f], (c.silent ? this._silent : i)[f] = !0;
-c.unset ? delete j[f] : j[f] = g, !e.isEqual(l[f], g) || e.has(j, f) !== e.has(l, f) ? (this.changed[f] = g, c.silent || (this._pending[f] = !0)) : (delete this.changed[f], delete this._pending[f]);
+set: function(e, t, n) {
+var r, s, o;
+i.isObject(e) || e == null ? (r = e, n = t) : (r = {}, r[e] = t), n || (n = {});
+if (!r) return this;
+r instanceof u && (r = r.attributes);
+if (n.unset) for (s in r) r[s] = void 0;
+if (!this._validate(r, n)) return !1;
+this.idAttribute in r && (this.id = r[this.idAttribute]);
+var a = n.changes = {}, f = this.attributes, l = this._escapedAttributes, c = this._previousAttributes || {};
+for (s in r) {
+o = r[s];
+if (!i.isEqual(f[s], o) || n.unset && i.has(f, s)) delete l[s], (n.silent ? this._silent : a)[s] = !0;
+n.unset ? delete f[s] : f[s] = o, !i.isEqual(c[s], o) || i.has(f, s) !== i.has(c, s) ? (this.changed[s] = o, n.silent || (this._pending[s] = !0)) : (delete this.changed[s], delete this._pending[s]);
 }
-return c.silent || this.change(c), this;
+return n.silent || this.change(n), this;
 },
-unset: function(a, b) {
-return b = e.extend({}, b, {
+unset: function(e, t) {
+return t = i.extend({}, t, {
 unset: !0
-}), this.set(a, null, b);
+}), this.set(e, null, t);
 },
-clear: function(a) {
-return a = e.extend({}, a, {
+clear: function(e) {
+return e = i.extend({}, e, {
 unset: !0
-}), this.set(e.clone(this.attributes), a);
+}), this.set(i.clone(this.attributes), e);
 },
-fetch: function(a) {
-a = a ? e.clone(a) : {};
-var b = this, c = a.success;
-return a.success = function(d, e, f) {
-if (!b.set(b.parse(d, f), a)) return !1;
-c && c(b, d, a), b.trigger("sync", b, d, a);
-}, a.error = d.wrapError(a.error, b, a), this.sync("read", this, a);
+fetch: function(e) {
+e = e ? i.clone(e) : {};
+var t = this, n = e.success;
+return e.success = function(r, i, s) {
+if (!t.set(t.parse(r, s), e)) return !1;
+n && n(t, r, e), t.trigger("sync", t, r, e);
+}, e.error = r.wrapError(e.error, t, e), this.sync("read", this, e);
 },
-save: function(a, b, c) {
-var f, g, h;
-e.isObject(a) || a == null ? (f = a, c = b) : (f = {}, f[a] = b), c = c ? e.clone(c) : {};
-if (c.wait) {
-if (!this._validate(f, c)) return !1;
-g = e.clone(this.attributes);
+save: function(e, t, n) {
+var s, o, u;
+i.isObject(e) || e == null ? (s = e, n = t) : (s = {}, s[e] = t), n = n ? i.clone(n) : {};
+if (n.wait) {
+if (!this._validate(s, n)) return !1;
+o = i.clone(this.attributes);
 }
-var i = e.extend({}, c, {
+var a = i.extend({}, n, {
 silent: !0
 });
-if (f && !this.set(f, c.wait ? i : c)) return !1;
-if (!f && !this.isValid()) return !1;
-var j = this, k = c.success;
-c.success = function(a, b, d) {
-h = !0;
-var g = j.parse(a, d);
-c.wait && (g = e.extend(f || {}, g));
-if (!j.set(g, c)) return !1;
-k && k(j, a, c), j.trigger("sync", j, a, c);
-}, c.error = d.wrapError(c.error, j, c);
-var l = this.sync(this.isNew() ? "create" : "update", this, c);
-return !h && c.wait && (this.clear(i), this.set(g, i)), l;
+if (s && !this.set(s, n.wait ? a : n)) return !1;
+if (!s && !this.isValid()) return !1;
+var f = this, l = n.success;
+n.success = function(e, t, r) {
+u = !0;
+var o = f.parse(e, r);
+n.wait && (o = i.extend(s || {}, o));
+if (!f.set(o, n)) return !1;
+l && l(f, e, n), f.trigger("sync", f, e, n);
+}, n.error = r.wrapError(n.error, f, n);
+var c = this.sync(this.isNew() ? "create" : "update", this, n);
+return !u && n.wait && (this.clear(a), this.set(o, a)), c;
 },
-destroy: function(a) {
-a = a ? e.clone(a) : {};
-var b = this, c = a.success, f = function() {
-b.trigger("destroy", b, b.collection, a);
+destroy: function(e) {
+e = e ? i.clone(e) : {};
+var t = this, n = e.success, s = function() {
+t.trigger("destroy", t, t.collection, e);
 };
-a.success = function(d) {
-(a.wait || b.isNew()) && f(), c && c(b, d, a), b.isNew() || b.trigger("sync", b, d, a);
+e.success = function(r) {
+(e.wait || t.isNew()) && s(), n && n(t, r, e), t.isNew() || t.trigger("sync", t, r, e);
 };
-if (this.isNew()) return a.success(), !1;
-a.error = d.wrapError(a.error, b, a);
-var g = this.sync("delete", this, a);
-return a.wait || f(), g;
+if (this.isNew()) return e.success(), !1;
+e.error = r.wrapError(e.error, t, e);
+var o = this.sync("delete", this, e);
+return e.wait || s(), o;
 },
 url: function() {
-var a = z(this, "urlRoot") || z(this.collection, "url") || A();
-return this.isNew() ? a : a + (a.charAt(a.length - 1) === "/" ? "" : "/") + encodeURIComponent(this.id);
+var e = N(this, "urlRoot") || N(this.collection, "url") || C();
+return this.isNew() ? e : e + (e.charAt(e.length - 1) === "/" ? "" : "/") + encodeURIComponent(this.id);
 },
-parse: function(a, b) {
-return a;
+parse: function(e, t) {
+return e;
 },
 clone: function() {
 return new this.constructor(this.attributes);
@@ -1075,311 +659,311 @@ return new this.constructor(this.attributes);
 isNew: function() {
 return this.id == null;
 },
-change: function(a) {
-a || (a = {});
-var b = this._changing;
+change: function(e) {
+e || (e = {});
+var t = this._changing;
 this._changing = !0;
-for (var c in this._silent) this._pending[c] = !0;
-var d = e.extend({}, a.changes, this._silent);
+for (var n in this._silent) this._pending[n] = !0;
+var r = i.extend({}, e.changes, this._silent);
 this._silent = {};
-for (var c in d) this.trigger("change:" + c, this, this.get(c), a);
-if (b) return this;
-while (!e.isEmpty(this._pending)) {
-this._pending = {}, this.trigger("change", this, a);
-for (var c in this.changed) {
-if (this._pending[c] || this._silent[c]) continue;
-delete this.changed[c];
+for (var n in r) this.trigger("change:" + n, this, this.get(n), e);
+if (t) return this;
+while (!i.isEmpty(this._pending)) {
+this._pending = {}, this.trigger("change", this, e);
+for (var n in this.changed) {
+if (this._pending[n] || this._silent[n]) continue;
+delete this.changed[n];
 }
-this._previousAttributes = e.clone(this.attributes);
+this._previousAttributes = i.clone(this.attributes);
 }
 return this._changing = !1, this;
 },
-hasChanged: function(a) {
-return a == null ? !e.isEmpty(this.changed) : e.has(this.changed, a);
+hasChanged: function(e) {
+return e == null ? !i.isEmpty(this.changed) : i.has(this.changed, e);
 },
-changedAttributes: function(a) {
-if (!a) return this.hasChanged() ? e.clone(this.changed) : !1;
-var b, c = !1, d = this._previousAttributes;
-for (var f in a) {
-if (e.isEqual(d[f], b = a[f])) continue;
-(c || (c = {}))[f] = b;
+changedAttributes: function(e) {
+if (!e) return this.hasChanged() ? i.clone(this.changed) : !1;
+var t, n = !1, r = this._previousAttributes;
+for (var s in e) {
+if (i.isEqual(r[s], t = e[s])) continue;
+(n || (n = {}))[s] = t;
 }
-return c;
+return n;
 },
-previous: function(a) {
-return a == null || !this._previousAttributes ? null : this._previousAttributes[a];
+previous: function(e) {
+return e == null || !this._previousAttributes ? null : this._previousAttributes[e];
 },
 previousAttributes: function() {
-return e.clone(this._previousAttributes);
+return i.clone(this._previousAttributes);
 },
 isValid: function() {
 return !this.validate || !this.validate(this.attributes);
 },
-_validate: function(a, b) {
-if (b.silent || !this.validate) return !0;
-a = e.extend({}, this.attributes, a);
-var c = this.validate(a, b);
-return c ? (b && b.error ? b.error(this, c, b) : this.trigger("error", this, c, b), !1) : !0;
+_validate: function(e, t) {
+if (t.silent || !this.validate) return !0;
+e = i.extend({}, this.attributes, e);
+var n = this.validate(e, t);
+return n ? (t && t.error ? t.error(this, n, t) : this.trigger("error", this, n, t), !1) : !0;
 }
 });
-var i = d.Collection = function(a, b) {
-b || (b = {}), b.model && (this.model = b.model), b.comparator !== void 0 && (this.comparator = b.comparator), this._reset(), this.initialize.apply(this, arguments), a && this.reset(a, {
+var a = r.Collection = function(e, t) {
+t || (t = {}), t.model && (this.model = t.model), t.comparator !== void 0 && (this.comparator = t.comparator), this._reset(), this.initialize.apply(this, arguments), e && this.reset(e, {
 silent: !0,
-parse: b.parse
+parse: t.parse
 });
 };
-e.extend(i.prototype, g, {
-model: h,
+i.extend(a.prototype, o, {
+model: u,
 initialize: function() {},
-toJSON: function(a) {
-return this.map(function(b) {
-return b.toJSON(a);
+toJSON: function(e) {
+return this.map(function(t) {
+return t.toJSON(e);
 });
 },
 sync: function() {
-return d.sync.apply(this, arguments);
+return r.sync.apply(this, arguments);
 },
-add: function(a, b) {
-var d, f, g, h, i, j, k = {}, l = {}, m = [];
-b || (b = {}), a = e.isArray(a) ? a.slice() : [ a ];
-for (d = 0, g = a.length; d < g; d++) {
-if (!(h = a[d] = this._prepareModel(a[d], b))) throw new Error("Can't add an invalid model to a collection");
-i = h.cid, j = h.id;
-if (k[i] || this._byCid[i] || j != null && (l[j] || this._byId[j])) {
-m.push(d);
+add: function(e, t) {
+var r, s, o, u, a, f, l = {}, c = {}, h = [];
+t || (t = {}), e = i.isArray(e) ? e.slice() : [ e ];
+for (r = 0, o = e.length; r < o; r++) {
+if (!(u = e[r] = this._prepareModel(e[r], t))) throw new Error("Can't add an invalid model to a collection");
+a = u.cid, f = u.id;
+if (l[a] || this._byCid[a] || f != null && (c[f] || this._byId[f])) {
+h.push(r);
 continue;
 }
-k[i] = l[j] = h;
+l[a] = c[f] = u;
 }
-d = m.length;
-while (d--) m[d] = a.splice(m[d], 1)[0];
-for (d = 0, g = a.length; d < g; d++) (h = a[d]).on("all", this._onModelEvent, this), this._byCid[h.cid] = h, h.id != null && (this._byId[h.id] = h);
-this.length += g, f = b.at != null ? b.at : this.models.length, c.apply(this.models, [ f, 0 ].concat(a));
-if (b.merge) for (d = 0, g = m.length; d < g; d++) (h = this._byId[m[d].id]) && h.set(m[d], b);
-this.comparator && b.at == null && this.sort({
+r = h.length;
+while (r--) h[r] = e.splice(h[r], 1)[0];
+for (r = 0, o = e.length; r < o; r++) (u = e[r]).on("all", this._onModelEvent, this), this._byCid[u.cid] = u, u.id != null && (this._byId[u.id] = u);
+this.length += o, s = t.at != null ? t.at : this.models.length, n.apply(this.models, [ s, 0 ].concat(e));
+if (t.merge) for (r = 0, o = h.length; r < o; r++) (u = this._byId[h[r].id]) && u.set(h[r], t);
+this.comparator && t.at == null && this.sort({
 silent: !0
 });
-if (b.silent) return this;
-for (d = 0, g = this.models.length; d < g; d++) {
-if (!k[(h = this.models[d]).cid]) continue;
-b.index = d, h.trigger("add", h, this, b);
+if (t.silent) return this;
+for (r = 0, o = this.models.length; r < o; r++) {
+if (!l[(u = this.models[r]).cid]) continue;
+t.index = r, u.trigger("add", u, this, t);
 }
 return this;
 },
-remove: function(a, b) {
-var c, d, f, g;
-b || (b = {}), a = e.isArray(a) ? a.slice() : [ a ];
-for (c = 0, d = a.length; c < d; c++) {
-g = this.getByCid(a[c]) || this.get(a[c]);
-if (!g) continue;
-delete this._byId[g.id], delete this._byCid[g.cid], f = this.indexOf(g), this.models.splice(f, 1), this.length--, b.silent || (b.index = f, g.trigger("remove", g, this, b)), this._removeReference(g);
+remove: function(e, t) {
+var n, r, s, o;
+t || (t = {}), e = i.isArray(e) ? e.slice() : [ e ];
+for (n = 0, r = e.length; n < r; n++) {
+o = this.getByCid(e[n]) || this.get(e[n]);
+if (!o) continue;
+delete this._byId[o.id], delete this._byCid[o.cid], s = this.indexOf(o), this.models.splice(s, 1), this.length--, t.silent || (t.index = s, o.trigger("remove", o, this, t)), this._removeReference(o);
 }
 return this;
 },
-push: function(a, b) {
-return a = this._prepareModel(a, b), this.add(a, b), a;
+push: function(e, t) {
+return e = this._prepareModel(e, t), this.add(e, t), e;
 },
-pop: function(a) {
-var b = this.at(this.length - 1);
-return this.remove(b, a), b;
+pop: function(e) {
+var t = this.at(this.length - 1);
+return this.remove(t, e), t;
 },
-unshift: function(a, b) {
-return a = this._prepareModel(a, b), this.add(a, e.extend({
+unshift: function(e, t) {
+return e = this._prepareModel(e, t), this.add(e, i.extend({
 at: 0
-}, b)), a;
+}, t)), e;
 },
-shift: function(a) {
-var b = this.at(0);
-return this.remove(b, a), b;
+shift: function(e) {
+var t = this.at(0);
+return this.remove(t, e), t;
 },
-slice: function(a, b) {
-return this.models.slice(a, b);
+slice: function(e, t) {
+return this.models.slice(e, t);
 },
-get: function(a) {
-return a == null ? void 0 : this._byId[a.id != null ? a.id : a];
+get: function(e) {
+return e == null ? void 0 : this._byId[e.id != null ? e.id : e];
 },
-getByCid: function(a) {
-return a && this._byCid[a.cid || a];
+getByCid: function(e) {
+return e && this._byCid[e.cid || e];
 },
-at: function(a) {
-return this.models[a];
+at: function(e) {
+return this.models[e];
 },
-where: function(a) {
-return e.isEmpty(a) ? [] : this.filter(function(b) {
-for (var c in a) if (a[c] !== b.get(c)) return !1;
+where: function(e) {
+return i.isEmpty(e) ? [] : this.filter(function(t) {
+for (var n in e) if (e[n] !== t.get(n)) return !1;
 return !0;
 });
 },
-sort: function(a) {
-a || (a = {});
+sort: function(e) {
+e || (e = {});
 if (!this.comparator) throw new Error("Cannot sort a set without a comparator");
-var b = e.bind(this.comparator, this);
-return this.comparator.length === 1 ? this.models = this.sortBy(b) : this.models.sort(b), a.silent || this.trigger("reset", this, a), this;
+var t = i.bind(this.comparator, this);
+return this.comparator.length === 1 ? this.models = this.sortBy(t) : this.models.sort(t), e.silent || this.trigger("reset", this, e), this;
 },
-pluck: function(a) {
-return e.map(this.models, function(b) {
-return b.get(a);
+pluck: function(e) {
+return i.map(this.models, function(t) {
+return t.get(e);
 });
 },
-reset: function(a, b) {
-a || (a = []), b || (b = {});
-for (var c = 0, d = this.models.length; c < d; c++) this._removeReference(this.models[c]);
-return this._reset(), this.add(a, e.extend({
+reset: function(e, t) {
+e || (e = []), t || (t = {});
+for (var n = 0, r = this.models.length; n < r; n++) this._removeReference(this.models[n]);
+return this._reset(), this.add(e, i.extend({
 silent: !0
-}, b)), b.silent || this.trigger("reset", this, b), this;
+}, t)), t.silent || this.trigger("reset", this, t), this;
 },
-fetch: function(a) {
-a = a ? e.clone(a) : {}, a.parse === void 0 && (a.parse = !0);
-var b = this, c = a.success;
-return a.success = function(d, e, f) {
-b[a.add ? "add" : "reset"](b.parse(d, f), a), c && c(b, d, a), b.trigger("sync", b, d, a);
-}, a.error = d.wrapError(a.error, b, a), this.sync("read", this, a);
+fetch: function(e) {
+e = e ? i.clone(e) : {}, e.parse === void 0 && (e.parse = !0);
+var t = this, n = e.success;
+return e.success = function(r, i, s) {
+t[e.add ? "add" : "reset"](t.parse(r, s), e), n && n(t, r, e), t.trigger("sync", t, r, e);
+}, e.error = r.wrapError(e.error, t, e), this.sync("read", this, e);
 },
-create: function(a, b) {
-var c = this;
-b = b ? e.clone(b) : {}, a = this._prepareModel(a, b);
-if (!a) return !1;
-b.wait || c.add(a, b);
-var d = b.success;
-return b.success = function(a, b, e) {
-e.wait && c.add(a, e), d && d(a, b, e);
-}, a.save(null, b), a;
+create: function(e, t) {
+var n = this;
+t = t ? i.clone(t) : {}, e = this._prepareModel(e, t);
+if (!e) return !1;
+t.wait || n.add(e, t);
+var r = t.success;
+return t.success = function(e, t, i) {
+i.wait && n.add(e, i), r && r(e, t, i);
+}, e.save(null, t), e;
 },
-parse: function(a, b) {
-return a;
+parse: function(e, t) {
+return e;
 },
 clone: function() {
 return new this.constructor(this.models);
 },
 chain: function() {
-return e(this.models).chain();
+return i(this.models).chain();
 },
-_reset: function(a) {
+_reset: function(e) {
 this.length = 0, this.models = [], this._byId = {}, this._byCid = {};
 },
-_prepareModel: function(a, b) {
-if (a instanceof h) return a.collection || (a.collection = this), a;
-b || (b = {}), b.collection = this;
-var c = new this.model(a, b);
-return c._validate(c.attributes, b) ? c : !1;
+_prepareModel: function(e, t) {
+if (e instanceof u) return e.collection || (e.collection = this), e;
+t || (t = {}), t.collection = this;
+var n = new this.model(e, t);
+return n._validate(n.attributes, t) ? n : !1;
 },
-_removeReference: function(a) {
-this === a.collection && delete a.collection, a.off("all", this._onModelEvent, this);
+_removeReference: function(e) {
+this === e.collection && delete e.collection, e.off("all", this._onModelEvent, this);
 },
-_onModelEvent: function(a, b, c, d) {
-if ((a === "add" || a === "remove") && c !== this) return;
-a === "destroy" && this.remove(b, d), b && a === "change:" + b.idAttribute && (delete this._byId[b.previous(b.idAttribute)], b.id != null && (this._byId[b.id] = b)), this.trigger.apply(this, arguments);
+_onModelEvent: function(e, t, n, r) {
+if ((e === "add" || e === "remove") && n !== this) return;
+e === "destroy" && this.remove(t, r), t && e === "change:" + t.idAttribute && (delete this._byId[t.previous(t.idAttribute)], t.id != null && (this._byId[t.id] = t)), this.trigger.apply(this, arguments);
 }
 });
-var j = [ "forEach", "each", "map", "reduce", "reduceRight", "find", "detect", "filter", "select", "reject", "every", "all", "some", "any", "include", "contains", "invoke", "max", "min", "sortBy", "sortedIndex", "toArray", "size", "first", "initial", "rest", "last", "without", "indexOf", "shuffle", "lastIndexOf", "isEmpty", "groupBy" ];
-e.each(j, function(a) {
-i.prototype[a] = function() {
-return e[a].apply(e, [ this.models ].concat(e.toArray(arguments)));
+var f = [ "forEach", "each", "map", "reduce", "reduceRight", "find", "detect", "filter", "select", "reject", "every", "all", "some", "any", "include", "contains", "invoke", "max", "min", "sortBy", "sortedIndex", "toArray", "size", "first", "initial", "rest", "last", "without", "indexOf", "shuffle", "lastIndexOf", "isEmpty", "groupBy" ];
+i.each(f, function(e) {
+a.prototype[e] = function() {
+return i[e].apply(i, [ this.models ].concat(i.toArray(arguments)));
 };
 });
-var k = d.Router = function(a) {
-a || (a = {}), a.routes && (this.routes = a.routes), this._bindRoutes(), this.initialize.apply(this, arguments);
-}, l = /:\w+/g, m = /\*\w+/g, n = /[-[\]{}()+?.,\\^$|#\s]/g;
-e.extend(k.prototype, g, {
+var l = r.Router = function(e) {
+e || (e = {}), e.routes && (this.routes = e.routes), this._bindRoutes(), this.initialize.apply(this, arguments);
+}, c = /:\w+/g, h = /\*\w+/g, p = /[-[\]{}()+?.,\\^$|#\s]/g;
+i.extend(l.prototype, o, {
 initialize: function() {},
-route: function(a, b, c) {
-return d.history || (d.history = new o), e.isRegExp(a) || (a = this._routeToRegExp(a)), c || (c = this[b]), d.history.route(a, e.bind(function(e) {
-var f = this._extractParameters(a, e);
-c && c.apply(this, f), this.trigger.apply(this, [ "route:" + b ].concat(f)), d.history.trigger("route", this, b, f);
+route: function(e, t, n) {
+return r.history || (r.history = new d), i.isRegExp(e) || (e = this._routeToRegExp(e)), n || (n = this[t]), r.history.route(e, i.bind(function(i) {
+var s = this._extractParameters(e, i);
+n && n.apply(this, s), this.trigger.apply(this, [ "route:" + t ].concat(s)), r.history.trigger("route", this, t, s);
 }, this)), this;
 },
-navigate: function(a, b) {
-d.history.navigate(a, b);
+navigate: function(e, t) {
+r.history.navigate(e, t);
 },
 _bindRoutes: function() {
 if (!this.routes) return;
-var a = [];
-for (var b in this.routes) a.unshift([ b, this.routes[b] ]);
-for (var c = 0, d = a.length; c < d; c++) this.route(a[c][0], a[c][1], this[a[c][1]]);
+var e = [];
+for (var t in this.routes) e.unshift([ t, this.routes[t] ]);
+for (var n = 0, r = e.length; n < r; n++) this.route(e[n][0], e[n][1], this[e[n][1]]);
 },
-_routeToRegExp: function(a) {
-return a = a.replace(n, "\\$&").replace(l, "([^/]+)").replace(m, "(.*?)"), new RegExp("^" + a + "$");
+_routeToRegExp: function(e) {
+return e = e.replace(p, "\\$&").replace(c, "([^/]+)").replace(h, "(.*?)"), new RegExp("^" + e + "$");
 },
-_extractParameters: function(a, b) {
-return a.exec(b).slice(1);
+_extractParameters: function(e, t) {
+return e.exec(t).slice(1);
 }
 });
-var o = d.History = function(b) {
-this.handlers = [], e.bindAll(this, "checkUrl"), this.location = b && b.location || a.location, this.history = b && b.history || a.history;
-}, p = /^[#\/]/, q = /msie [\w.]+/, r = /\/$/;
-o.started = !1, e.extend(o.prototype, g, {
+var d = r.History = function(t) {
+this.handlers = [], i.bindAll(this, "checkUrl"), this.location = t && t.location || e.location, this.history = t && t.history || e.history;
+}, v = /^[#\/]/, m = /msie [\w.]+/, g = /\/$/;
+d.started = !1, i.extend(d.prototype, o, {
 interval: 50,
-getHash: function(a) {
-var b = (a || this).location.href.match(/#(.*)$/);
-return b ? b[1] : "";
+getHash: function(e) {
+var t = (e || this).location.href.match(/#(.*)$/);
+return t ? t[1] : "";
 },
-getFragment: function(a, b) {
-if (a == null) if (this._hasPushState || !this._wantsHashChange || b) {
-a = this.location.pathname;
-var c = this.options.root.replace(r, "");
-a.indexOf(c) || (a = a.substr(c.length));
-} else a = this.getHash();
-return decodeURIComponent(a.replace(p, ""));
+getFragment: function(e, t) {
+if (e == null) if (this._hasPushState || !this._wantsHashChange || t) {
+e = this.location.pathname;
+var n = this.options.root.replace(g, "");
+e.indexOf(n) || (e = e.substr(n.length));
+} else e = this.getHash();
+return decodeURIComponent(e.replace(v, ""));
 },
-start: function(a) {
-if (o.started) throw new Error("Backbone.history has already been started");
-o.started = !0, this.options = e.extend({}, {
+start: function(e) {
+if (d.started) throw new Error("Backbone.history has already been started");
+d.started = !0, this.options = i.extend({}, {
 root: "/"
-}, this.options, a), this._wantsHashChange = this.options.hashChange !== !1, this._wantsPushState = !!this.options.pushState, this._hasPushState = !!(this.options.pushState && this.history && this.history.pushState);
-var b = this.getFragment(), c = document.documentMode, f = q.exec(navigator.userAgent.toLowerCase()) && (!c || c <= 7);
-r.test(this.options.root) || (this.options.root += "/"), f && this._wantsHashChange && (this.iframe = d.$('<iframe src="javascript:0" tabindex="-1" />').hide().appendTo("body")[0].contentWindow, this.navigate(b)), this._hasPushState ? d.$(window).bind("popstate", this.checkUrl) : this._wantsHashChange && "onhashchange" in window && !f ? d.$(window).bind("hashchange", this.checkUrl) : this._wantsHashChange && (this._checkUrlInterval = setInterval(this.checkUrl, this.interval)), this.fragment = b;
-var g = this.location, h = g.pathname.replace(/[^/]$/, "$&/") === this.options.root && !g.search;
-if (this._wantsHashChange && this._wantsPushState && !this._hasPushState && !h) return this.fragment = this.getFragment(null, !0), this.location.replace(this.options.root + this.location.search + "#" + this.fragment), !0;
-this._wantsPushState && this._hasPushState && h && g.hash && (this.fragment = this.getHash().replace(p, ""), this.history.replaceState({}, document.title, g.protocol + "//" + g.host + this.options.root + this.fragment));
+}, this.options, e), this._wantsHashChange = this.options.hashChange !== !1, this._wantsPushState = !!this.options.pushState, this._hasPushState = !!(this.options.pushState && this.history && this.history.pushState);
+var t = this.getFragment(), n = document.documentMode, s = m.exec(navigator.userAgent.toLowerCase()) && (!n || n <= 7);
+g.test(this.options.root) || (this.options.root += "/"), s && this._wantsHashChange && (this.iframe = r.$('<iframe src="javascript:0" tabindex="-1" />').hide().appendTo("body")[0].contentWindow, this.navigate(t)), this._hasPushState ? r.$(window).bind("popstate", this.checkUrl) : this._wantsHashChange && "onhashchange" in window && !s ? r.$(window).bind("hashchange", this.checkUrl) : this._wantsHashChange && (this._checkUrlInterval = setInterval(this.checkUrl, this.interval)), this.fragment = t;
+var o = this.location, u = o.pathname.replace(/[^/]$/, "$&/") === this.options.root && !o.search;
+if (this._wantsHashChange && this._wantsPushState && !this._hasPushState && !u) return this.fragment = this.getFragment(null, !0), this.location.replace(this.options.root + this.location.search + "#" + this.fragment), !0;
+this._wantsPushState && this._hasPushState && u && o.hash && (this.fragment = this.getHash().replace(v, ""), this.history.replaceState({}, document.title, o.protocol + "//" + o.host + this.options.root + this.fragment));
 if (!this.options.silent) return this.loadUrl();
 },
 stop: function() {
-d.$(window).unbind("popstate", this.checkUrl).unbind("hashchange", this.checkUrl), clearInterval(this._checkUrlInterval), o.started = !1;
+r.$(window).unbind("popstate", this.checkUrl).unbind("hashchange", this.checkUrl), clearInterval(this._checkUrlInterval), d.started = !1;
 },
-route: function(a, b) {
+route: function(e, t) {
 this.handlers.unshift({
-route: a,
-callback: b
+route: e,
+callback: t
 });
 },
-checkUrl: function(a) {
-var b = this.getFragment();
-b === this.fragment && this.iframe && (b = this.getFragment(this.getHash(this.iframe)));
-if (b === this.fragment) return !1;
-this.iframe && this.navigate(b), this.loadUrl() || this.loadUrl(this.getHash());
+checkUrl: function(e) {
+var t = this.getFragment();
+t === this.fragment && this.iframe && (t = this.getFragment(this.getHash(this.iframe)));
+if (t === this.fragment) return !1;
+this.iframe && this.navigate(t), this.loadUrl() || this.loadUrl(this.getHash());
 },
-loadUrl: function(a) {
-var b = this.fragment = this.getFragment(a), c = e.any(this.handlers, function(a) {
-if (a.route.test(b)) return a.callback(b), !0;
+loadUrl: function(e) {
+var t = this.fragment = this.getFragment(e), n = i.any(this.handlers, function(e) {
+if (e.route.test(t)) return e.callback(t), !0;
 });
-return c;
+return n;
 },
-navigate: function(a, b) {
-if (!o.started) return !1;
-if (!b || b === !0) b = {
-trigger: b
+navigate: function(e, t) {
+if (!d.started) return !1;
+if (!t || t === !0) t = {
+trigger: t
 };
-var c = (a || "").replace(p, "");
-if (this.fragment === c) return;
-this.fragment = c;
-var d = (c.indexOf(this.options.root) !== 0 ? this.options.root : "") + c;
-if (this._hasPushState) this.history[b.replace ? "replaceState" : "pushState"]({}, document.title, d); else {
-if (!this._wantsHashChange) return this.location.assign(d);
-this._updateHash(this.location, c, b.replace), this.iframe && c !== this.getFragment(this.getHash(this.iframe)) && (b.replace || this.iframe.document.open().close(), this._updateHash(this.iframe.location, c, b.replace));
+var n = (e || "").replace(v, "");
+if (this.fragment === n) return;
+this.fragment = n;
+var r = (n.indexOf(this.options.root) !== 0 ? this.options.root : "") + n;
+if (this._hasPushState) this.history[t.replace ? "replaceState" : "pushState"]({}, document.title, r); else {
+if (!this._wantsHashChange) return this.location.assign(r);
+this._updateHash(this.location, n, t.replace), this.iframe && n !== this.getFragment(this.getHash(this.iframe)) && (t.replace || this.iframe.document.open().close(), this._updateHash(this.iframe.location, n, t.replace));
 }
-b.trigger && this.loadUrl(a);
+t.trigger && this.loadUrl(e);
 },
-_updateHash: function(a, b, c) {
-c ? a.replace(a.href.replace(/(javascript:|#).*$/, "") + "#" + b) : a.hash = b;
+_updateHash: function(e, t, n) {
+n ? e.replace(e.href.replace(/(javascript:|#).*$/, "") + "#" + t) : e.hash = t;
 }
 });
-var s = d.View = function(a) {
-this.cid = e.uniqueId("view"), this._configure(a || {}), this._ensureElement(), this.initialize.apply(this, arguments), this.delegateEvents();
-}, t = /^(\S+)\s*(.*)$/, u = [ "model", "collection", "el", "id", "attributes", "className", "tagName" ];
-e.extend(s.prototype, g, {
+var y = r.View = function(e) {
+this.cid = i.uniqueId("view"), this._configure(e || {}), this._ensureElement(), this.initialize.apply(this, arguments), this.delegateEvents();
+}, b = /^(\S+)\s*(.*)$/, w = [ "model", "collection", "el", "id", "attributes", "className", "tagName" ];
+i.extend(y.prototype, o, {
 tagName: "div",
-$: function(a) {
-return this.$el.find(a);
+$: function(e) {
+return this.$el.find(e);
 },
 initialize: function() {},
 render: function() {
@@ -1388,1099 +972,91 @@ return this;
 remove: function() {
 return this.$el.remove(), this;
 },
-make: function(a, b, c) {
-var e = document.createElement(a);
-return b && d.$(e).attr(b), c != null && d.$(e).html(c), e;
+make: function(e, t, n) {
+var i = document.createElement(e);
+return t && r.$(i).attr(t), n != null && r.$(i).html(n), i;
 },
-setElement: function(a, b) {
-return this.$el && this.undelegateEvents(), this.$el = a instanceof d.$ ? a : d.$(a), this.el = this.$el[0], b !== !1 && this.delegateEvents(), this;
+setElement: function(e, t) {
+return this.$el && this.undelegateEvents(), this.$el = e instanceof r.$ ? e : r.$(e), this.el = this.$el[0], t !== !1 && this.delegateEvents(), this;
 },
-delegateEvents: function(a) {
-if (!a && !(a = z(this, "events"))) return;
+delegateEvents: function(e) {
+if (!e && !(e = N(this, "events"))) return;
 this.undelegateEvents();
-for (var b in a) {
-var c = a[b];
-e.isFunction(c) || (c = this[a[b]]);
-if (!c) throw new Error('Method "' + a[b] + '" does not exist');
-var d = b.match(t), f = d[1], g = d[2];
-c = e.bind(c, this), f += ".delegateEvents" + this.cid, g === "" ? this.$el.bind(f, c) : this.$el.delegate(g, f, c);
+for (var t in e) {
+var n = e[t];
+i.isFunction(n) || (n = this[e[t]]);
+if (!n) throw new Error('Method "' + e[t] + '" does not exist');
+var r = t.match(b), s = r[1], o = r[2];
+n = i.bind(n, this), s += ".delegateEvents" + this.cid, o === "" ? this.$el.bind(s, n) : this.$el.delegate(o, s, n);
 }
 },
 undelegateEvents: function() {
 this.$el.unbind(".delegateEvents" + this.cid);
 },
-_configure: function(a) {
-this.options && (a = e.extend({}, this.options, a));
-for (var b = 0, c = u.length; b < c; b++) {
-var d = u[b];
-a[d] && (this[d] = a[d]);
+_configure: function(e) {
+this.options && (e = i.extend({}, this.options, e));
+for (var t = 0, n = w.length; t < n; t++) {
+var r = w[t];
+e[r] && (this[r] = e[r]);
 }
-this.options = a;
+this.options = e;
 },
 _ensureElement: function() {
 if (!this.el) {
-var a = e.extend({}, z(this, "attributes"));
-this.id && (a.id = this.id), this.className && (a["class"] = this.className), this.setElement(this.make(z(this, "tagName"), a), !1);
+var e = i.extend({}, N(this, "attributes"));
+this.id && (e.id = this.id), this.className && (e["class"] = this.className), this.setElement(this.make(N(this, "tagName"), e), !1);
 } else this.setElement(this.el, !1);
 }
 });
-var v = function(a, b) {
-return y(this, a, b);
+var E = function(e, t) {
+return T(this, e, t);
 };
-h.extend = i.extend = k.extend = s.extend = v;
-var w = {
+u.extend = a.extend = l.extend = y.extend = E;
+var S = {
 create: "POST",
 update: "PUT",
 "delete": "DELETE",
 read: "GET"
 };
-d.sync = function(a, b, c) {
-var f = w[a];
-c || (c = {});
-var g = {
-type: f,
+r.sync = function(e, t, n) {
+var s = S[e];
+n || (n = {});
+var o = {
+type: s,
 dataType: "json"
 };
-return c.url || (g.url = z(b, "url") || A()), !c.data && b && (a === "create" || a === "update") && (g.contentType = "application/json", g.data = JSON.stringify(b)), d.emulateJSON && (g.contentType = "application/x-www-form-urlencoded", g.data = g.data ? {
-model: g.data
-} : {}), d.emulateHTTP && (f === "PUT" || f === "DELETE") && (d.emulateJSON && (g.data._method = f), g.type = "POST", g.beforeSend = function(a) {
-a.setRequestHeader("X-HTTP-Method-Override", f);
-}), g.type !== "GET" && !d.emulateJSON && (g.processData = !1), d.ajax(e.extend(g, c));
-}, d.ajax = function() {
-return d.$.ajax.apply(d.$, arguments);
-}, d.wrapError = function(a, b, c) {
-return function(d, e) {
-e = d === b ? e : d, a ? a(b, e, c) : b.trigger("error", b, e, c);
+return n.url || (o.url = N(t, "url") || C()), !n.data && t && (e === "create" || e === "update") && (o.contentType = "application/json", o.data = JSON.stringify(t)), r.emulateJSON && (o.contentType = "application/x-www-form-urlencoded", o.data = o.data ? {
+model: o.data
+} : {}), r.emulateHTTP && (s === "PUT" || s === "DELETE") && (r.emulateJSON && (o.data._method = s), o.type = "POST", o.beforeSend = function(e) {
+e.setRequestHeader("X-HTTP-Method-Override", s);
+}), o.type !== "GET" && !r.emulateJSON && (o.processData = !1), r.ajax(i.extend(o, n));
+}, r.ajax = function() {
+return r.$.ajax.apply(r.$, arguments);
+}, r.wrapError = function(e, t, n) {
+return function(r, i) {
+i = r === t ? i : r, e ? e(t, i, n) : t.trigger("error", t, i, n);
 };
 };
-var x = function() {}, y = function(a, b, c) {
-var d;
-return b && b.hasOwnProperty("constructor") ? d = b.constructor : d = function() {
-a.apply(this, arguments);
-}, e.extend(d, a), x.prototype = a.prototype, d.prototype = new x, b && e.extend(d.prototype, b), c && e.extend(d, c), d.prototype.constructor = d, d.__super__ = a.prototype, d;
-}, z = function(a, b) {
-return !a || !a[b] ? null : e.isFunction(a[b]) ? a[b]() : a[b];
-}, A = function() {
-throw new Error('A "url" property or function must be specified');
-};
-}).call(this);
-
-// underscore-min.js
-
-(function() {
-function a(b, c, d) {
-if (b === c) return 0 !== b || 1 / b == 1 / c;
-if (null == b || null == c) return b === c;
-b._chain && (b = b._wrapped), c._chain && (c = c._wrapped);
-if (b.isEqual && v.isFunction(b.isEqual)) return b.isEqual(c);
-if (c.isEqual && v.isFunction(c.isEqual)) return c.isEqual(b);
-var e = i.call(b);
-if (e != i.call(c)) return !1;
-switch (e) {
-case "[object String]":
-return b == "" + c;
-case "[object Number]":
-return b != +b ? c != +c : 0 == b ? 1 / b == 1 / c : b == +c;
-case "[object Date]":
-case "[object Boolean]":
-return +b == +c;
-case "[object RegExp]":
-return b.source == c.source && b.global == c.global && b.multiline == c.multiline && b.ignoreCase == c.ignoreCase;
-}
-if ("object" != typeof b || "object" != typeof c) return !1;
-for (var f = d.length; f--; ) if (d[f] == b) return !0;
-d.push(b);
-var f = 0, g = !0;
-if ("[object Array]" == e) {
-if (f = b.length, g = f == c.length) for (; f-- && (g = f in b == f in c && a(b[f], c[f], d)); ) ;
-} else {
-if ("constructor" in b != "constructor" in c || b.constructor != c.constructor) return !1;
-for (var h in b) if (v.has(b, h) && (f++, !(g = v.has(c, h) && a(b[h], c[h], d)))) break;
-if (g) {
-for (h in c) if (v.has(c, h) && !(f--)) break;
-g = !f;
-}
-}
-return d.pop(), g;
-}
-var b = this, c = b._, d = {}, e = Array.prototype, f = Object.prototype, g = e.slice, h = e.unshift, i = f.toString, j = f.hasOwnProperty, k = e.forEach, l = e.map, m = e.reduce, n = e.reduceRight, o = e.filter, p = e.every, q = e.some, r = e.indexOf, s = e.lastIndexOf, f = Array.isArray, t = Object.keys, u = Function.prototype.bind, v = function(a) {
-return new G(a);
-};
-"undefined" != typeof exports ? ("undefined" != typeof module && module.exports && (exports = module.exports = v), exports._ = v) : b._ = v, v.VERSION = "1.3.3";
-var w = v.each = v.forEach = function(a, b, c) {
-if (a != null) if (k && a.forEach === k) a.forEach(b, c); else if (a.length === +a.length) {
-for (var e = 0, f = a.length; e < f; e++) if (e in a && b.call(c, a[e], e, a) === d) break;
-} else for (e in a) if (v.has(a, e) && b.call(c, a[e], e, a) === d) break;
-};
-v.map = v.collect = function(a, b, c) {
-var d = [];
-return a == null ? d : l && a.map === l ? a.map(b, c) : (w(a, function(a, e, f) {
-d[d.length] = b.call(c, a, e, f);
-}), a.length === +a.length && (d.length = a.length), d);
-}, v.reduce = v.foldl = v.inject = function(a, b, c, d) {
-var e = arguments.length > 2;
-a == null && (a = []);
-if (m && a.reduce === m) return d && (b = v.bind(b, d)), e ? a.reduce(b, c) : a.reduce(b);
-w(a, function(a, f, g) {
-e ? c = b.call(d, c, a, f, g) : (c = a, e = !0);
-});
-if (!e) throw new TypeError("Reduce of empty array with no initial value");
-return c;
-}, v.reduceRight = v.foldr = function(a, b, c, d) {
-var e = arguments.length > 2;
-a == null && (a = []);
-if (n && a.reduceRight === n) return d && (b = v.bind(b, d)), e ? a.reduceRight(b, c) : a.reduceRight(b);
-var f = v.toArray(a).reverse();
-return d && !e && (b = v.bind(b, d)), e ? v.reduce(f, b, c, d) : v.reduce(f, b);
-}, v.find = v.detect = function(a, b, c) {
-var d;
-return x(a, function(a, e, f) {
-if (b.call(c, a, e, f)) return d = a, !0;
-}), d;
-}, v.filter = v.select = function(a, b, c) {
-var d = [];
-return a == null ? d : o && a.filter === o ? a.filter(b, c) : (w(a, function(a, e, f) {
-b.call(c, a, e, f) && (d[d.length] = a);
-}), d);
-}, v.reject = function(a, b, c) {
-var d = [];
-return a == null ? d : (w(a, function(a, e, f) {
-b.call(c, a, e, f) || (d[d.length] = a);
-}), d);
-}, v.every = v.all = function(a, b, c) {
-var e = !0;
-return a == null ? e : p && a.every === p ? a.every(b, c) : (w(a, function(a, f, g) {
-if (!(e = e && b.call(c, a, f, g))) return d;
-}), !!e);
-};
-var x = v.some = v.any = function(a, b, c) {
-b || (b = v.identity);
-var e = !1;
-return a == null ? e : q && a.some === q ? a.some(b, c) : (w(a, function(a, f, g) {
-if (e || (e = b.call(c, a, f, g))) return d;
-}), !!e);
-};
-v.include = v.contains = function(a, b) {
-var c = !1;
-return a == null ? c : r && a.indexOf === r ? a.indexOf(b) != -1 : c = x(a, function(a) {
-return a === b;
-});
-}, v.invoke = function(a, b) {
-var c = g.call(arguments, 2);
-return v.map(a, function(a) {
-return (v.isFunction(b) ? b || a : a[b]).apply(a, c);
-});
-}, v.pluck = function(a, b) {
-return v.map(a, function(a) {
-return a[b];
-});
-}, v.max = function(a, b, c) {
-if (!b && v.isArray(a) && a[0] === +a[0]) return Math.max.apply(Math, a);
-if (!b && v.isEmpty(a)) return -Infinity;
-var d = {
-computed: -Infinity
-};
-return w(a, function(a, e, f) {
-e = b ? b.call(c, a, e, f) : a, e >= d.computed && (d = {
-value: a,
-computed: e
-});
-}), d.value;
-}, v.min = function(a, b, c) {
-if (!b && v.isArray(a) && a[0] === +a[0]) return Math.min.apply(Math, a);
-if (!b && v.isEmpty(a)) return Infinity;
-var d = {
-computed: Infinity
-};
-return w(a, function(a, e, f) {
-e = b ? b.call(c, a, e, f) : a, e < d.computed && (d = {
-value: a,
-computed: e
-});
-}), d.value;
-}, v.shuffle = function(a) {
-var b = [], c;
-return w(a, function(a, d) {
-c = Math.floor(Math.random() * (d + 1)), b[d] = b[c], b[c] = a;
-}), b;
-}, v.sortBy = function(a, b, c) {
-var d = v.isFunction(b) ? b : function(a) {
-return a[b];
-};
-return v.pluck(v.map(a, function(a, b, e) {
-return {
-value: a,
-criteria: d.call(c, a, b, e)
-};
-}).sort(function(a, b) {
-var c = a.criteria, d = b.criteria;
-return c === void 0 ? 1 : d === void 0 ? -1 : c < d ? -1 : c > d ? 1 : 0;
-}), "value");
-}, v.groupBy = function(a, b) {
-var c = {}, d = v.isFunction(b) ? b : function(a) {
-return a[b];
-};
-return w(a, function(a, b) {
-var e = d(a, b);
-(c[e] || (c[e] = [])).push(a);
-}), c;
-}, v.sortedIndex = function(a, b, c) {
-c || (c = v.identity);
-for (var d = 0, e = a.length; d < e; ) {
-var f = d + e >> 1;
-c(a[f]) < c(b) ? d = f + 1 : e = f;
-}
-return d;
-}, v.toArray = function(a) {
-return a ? v.isArray(a) || v.isArguments(a) ? g.call(a) : a.toArray && v.isFunction(a.toArray) ? a.toArray() : v.values(a) : [];
-}, v.size = function(a) {
-return v.isArray(a) ? a.length : v.keys(a).length;
-}, v.first = v.head = v.take = function(a, b, c) {
-return b != null && !c ? g.call(a, 0, b) : a[0];
-}, v.initial = function(a, b, c) {
-return g.call(a, 0, a.length - (b == null || c ? 1 : b));
-}, v.last = function(a, b, c) {
-return b != null && !c ? g.call(a, Math.max(a.length - b, 0)) : a[a.length - 1];
-}, v.rest = v.tail = function(a, b, c) {
-return g.call(a, b == null || c ? 1 : b);
-}, v.compact = function(a) {
-return v.filter(a, function(a) {
-return !!a;
-});
-}, v.flatten = function(a, b) {
-return v.reduce(a, function(a, c) {
-return v.isArray(c) ? a.concat(b ? c : v.flatten(c)) : (a[a.length] = c, a);
-}, []);
-}, v.without = function(a) {
-return v.difference(a, g.call(arguments, 1));
-}, v.uniq = v.unique = function(a, b, c) {
-var c = c ? v.map(a, c) : a, d = [];
-return a.length < 3 && (b = !0), v.reduce(c, function(c, e, f) {
-if (b ? v.last(c) !== e || !c.length : !v.include(c, e)) c.push(e), d.push(a[f]);
-return c;
-}, []), d;
-}, v.union = function() {
-return v.uniq(v.flatten(arguments, !0));
-}, v.intersection = v.intersect = function(a) {
-var b = g.call(arguments, 1);
-return v.filter(v.uniq(a), function(a) {
-return v.every(b, function(b) {
-return v.indexOf(b, a) >= 0;
-});
-});
-}, v.difference = function(a) {
-var b = v.flatten(g.call(arguments, 1), !0);
-return v.filter(a, function(a) {
-return !v.include(b, a);
-});
-}, v.zip = function() {
-for (var a = g.call(arguments), b = v.max(v.pluck(a, "length")), c = Array(b), d = 0; d < b; d++) c[d] = v.pluck(a, "" + d);
-return c;
-}, v.indexOf = function(a, b, c) {
-if (a == null) return -1;
-var d;
-if (c) return c = v.sortedIndex(a, b), a[c] === b ? c : -1;
-if (r && a.indexOf === r) return a.indexOf(b);
-c = 0;
-for (d = a.length; c < d; c++) if (c in a && a[c] === b) return c;
-return -1;
-}, v.lastIndexOf = function(a, b) {
-if (a == null) return -1;
-if (s && a.lastIndexOf === s) return a.lastIndexOf(b);
-for (var c = a.length; c--; ) if (c in a && a[c] === b) return c;
-return -1;
-}, v.range = function(a, b, c) {
-arguments.length <= 1 && (b = a || 0, a = 0);
-for (var c = arguments[2] || 1, d = Math.max(Math.ceil((b - a) / c), 0), e = 0, f = Array(d); e < d; ) f[e++] = a, a += c;
-return f;
-};
-var y = function() {};
-v.bind = function(a, b) {
-var c, d;
-if (a.bind === u && u) return u.apply(a, g.call(arguments, 1));
-if (!v.isFunction(a)) throw new TypeError;
-return d = g.call(arguments, 2), c = function() {
-if (this instanceof c) {
-y.prototype = a.prototype;
-var e = new y, f = a.apply(e, d.concat(g.call(arguments)));
-return Object(f) === f ? f : e;
-}
-return a.apply(b, d.concat(g.call(arguments)));
-};
-}, v.bindAll = function(a) {
-var b = g.call(arguments, 1);
-return b.length == 0 && (b = v.functions(a)), w(b, function(b) {
-a[b] = v.bind(a[b], a);
-}), a;
-}, v.memoize = function(a, b) {
-var c = {};
-return b || (b = v.identity), function() {
-var d = b.apply(this, arguments);
-return v.has(c, d) ? c[d] : c[d] = a.apply(this, arguments);
-};
-}, v.delay = function(a, b) {
-var c = g.call(arguments, 2);
-return setTimeout(function() {
-return a.apply(null, c);
-}, b);
-}, v.defer = function(a) {
-return v.delay.apply(v, [ a, 1 ].concat(g.call(arguments, 1)));
-}, v.throttle = function(a, b) {
-var c, d, e, f, g, h, i = v.debounce(function() {
-g = f = !1;
-}, b);
-return function() {
-return c = this, d = arguments, e || (e = setTimeout(function() {
-e = null, g && a.apply(c, d), i();
-}, b)), f ? g = !0 : h = a.apply(c, d), i(), f = !0, h;
-};
-}, v.debounce = function(a, b, c) {
-var d;
-return function() {
-var e = this, f = arguments;
-c && !d && a.apply(e, f), clearTimeout(d), d = setTimeout(function() {
-d = null, c || a.apply(e, f);
-}, b);
-};
-}, v.once = function(a) {
-var b = !1, c;
-return function() {
-return b ? c : (b = !0, c = a.apply(this, arguments));
-};
-}, v.wrap = function(a, b) {
-return function() {
-var c = [ a ].concat(g.call(arguments, 0));
-return b.apply(this, c);
-};
-}, v.compose = function() {
-var a = arguments;
-return function() {
-for (var b = arguments, c = a.length - 1; c >= 0; c--) b = [ a[c].apply(this, b) ];
-return b[0];
-};
-}, v.after = function(a, b) {
-return a <= 0 ? b() : function() {
-if (--a < 1) return b.apply(this, arguments);
-};
-}, v.keys = t || function(a) {
-if (a !== Object(a)) throw new TypeError("Invalid object");
-var b = [], c;
-for (c in a) v.has(a, c) && (b[b.length] = c);
-return b;
-}, v.values = function(a) {
-return v.map(a, v.identity);
-}, v.functions = v.methods = function(a) {
-var b = [], c;
-for (c in a) v.isFunction(a[c]) && b.push(c);
-return b.sort();
-}, v.extend = function(a) {
-return w(g.call(arguments, 1), function(b) {
-for (var c in b) a[c] = b[c];
-}), a;
-}, v.pick = function(a) {
-var b = {};
-return w(v.flatten(g.call(arguments, 1)), function(c) {
-c in a && (b[c] = a[c]);
-}), b;
-}, v.defaults = function(a) {
-return w(g.call(arguments, 1), function(b) {
-for (var c in b) a[c] == null && (a[c] = b[c]);
-}), a;
-}, v.clone = function(a) {
-return v.isObject(a) ? v.isArray(a) ? a.slice() : v.extend({}, a) : a;
-}, v.tap = function(a, b) {
-return b(a), a;
-}, v.isEqual = function(b, c) {
-return a(b, c, []);
-}, v.isEmpty = function(a) {
-if (a == null) return !0;
-if (v.isArray(a) || v.isString(a)) return a.length === 0;
-for (var b in a) if (v.has(a, b)) return !1;
-return !0;
-}, v.isElement = function(a) {
-return !!a && a.nodeType == 1;
-}, v.isArray = f || function(a) {
-return i.call(a) == "[object Array]";
-}, v.isObject = function(a) {
-return a === Object(a);
-}, v.isArguments = function(a) {
-return i.call(a) == "[object Arguments]";
-}, v.isArguments(arguments) || (v.isArguments = function(a) {
-return !!a && !!v.has(a, "callee");
-}), v.isFunction = function(a) {
-return i.call(a) == "[object Function]";
-}, v.isString = function(a) {
-return i.call(a) == "[object String]";
-}, v.isNumber = function(a) {
-return i.call(a) == "[object Number]";
-}, v.isFinite = function(a) {
-return v.isNumber(a) && isFinite(a);
-}, v.isNaN = function(a) {
-return a !== a;
-}, v.isBoolean = function(a) {
-return a === !0 || a === !1 || i.call(a) == "[object Boolean]";
-}, v.isDate = function(a) {
-return i.call(a) == "[object Date]";
-}, v.isRegExp = function(a) {
-return i.call(a) == "[object RegExp]";
-}, v.isNull = function(a) {
-return a === null;
-}, v.isUndefined = function(a) {
-return a === void 0;
-}, v.has = function(a, b) {
-return j.call(a, b);
-}, v.noConflict = function() {
-return b._ = c, this;
-}, v.identity = function(a) {
-return a;
-}, v.times = function(a, b, c) {
-for (var d = 0; d < a; d++) b.call(c, d);
-}, v.escape = function(a) {
-return ("" + a).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;").replace(/\//g, "&#x2F;");
-}, v.result = function(a, b) {
-if (a == null) return null;
-var c = a[b];
-return v.isFunction(c) ? c.call(a) : c;
-}, v.mixin = function(a) {
-w(v.functions(a), function(b) {
-I(b, v[b] = a[b]);
-});
-};
-var z = 0;
-v.uniqueId = function(a) {
-var b = z++;
-return a ? a + b : b;
-}, v.templateSettings = {
-evaluate: /<%([\s\S]+?)%>/g,
-interpolate: /<%=([\s\S]+?)%>/g,
-escape: /<%-([\s\S]+?)%>/g
-};
-var A = /.^/, B = {
-"\\": "\\",
-"'": "'",
-r: "\r",
-n: "\n",
-t: "	",
-u2028: "\u2028",
-u2029: "\u2029"
-}, C;
-for (C in B) B[B[C]] = C;
-var D = /\\|'|\r|\n|\t|\u2028|\u2029/g, E = /\\(\\|'|r|n|t|u2028|u2029)/g, F = function(a) {
-return a.replace(E, function(a, b) {
-return B[b];
-});
-};
-v.template = function(a, b, c) {
-c = v.defaults(c || {}, v.templateSettings), a = "__p+='" + a.replace(D, function(a) {
-return "\\" + B[a];
-}).replace(c.escape || A, function(a, b) {
-return "'+\n_.escape(" + F(b) + ")+\n'";
-}).replace(c.interpolate || A, function(a, b) {
-return "'+\n(" + F(b) + ")+\n'";
-}).replace(c.evaluate || A, function(a, b) {
-return "';\n" + F(b) + "\n;__p+='";
-}) + "';\n", c.variable || (a = "with(obj||{}){\n" + a + "}\n");
-var a = "var __p='';var print=function(){__p+=Array.prototype.join.call(arguments, '')};\n" + a + "return __p;\n", d = new Function(c.variable || "obj", "_", a);
-return b ? d(b, v) : (b = function(a) {
-return d.call(this, a, v);
-}, b.source = "function(" + (c.variable || "obj") + "){\n" + a + "}", b);
-}, v.chain = function(a) {
-return v(a).chain();
-};
-var G = function(a) {
-this._wrapped = a;
-};
-v.prototype = G.prototype;
-var H = function(a, b) {
-return b ? v(a).chain() : a;
-}, I = function(a, b) {
-G.prototype[a] = function() {
-var a = g.call(arguments);
-return h.call(a, this._wrapped), H(b.apply(v, a), this._chain);
-};
-};
-v.mixin(v), w("pop,push,reverse,shift,sort,splice,unshift".split(","), function(a) {
-var b = e[a];
-G.prototype[a] = function() {
-var c = this._wrapped;
-b.apply(c, arguments);
-var d = c.length;
-return (a == "shift" || a == "splice") && d === 0 && delete c[0], H(c, this._chain);
-};
-}), w([ "concat", "join", "slice" ], function(a) {
-var b = e[a];
-G.prototype[a] = function() {
-return H(b.apply(this._wrapped, arguments), this._chain);
-};
-}), G.prototype.chain = function() {
-return this._chain = !0, this;
-}, G.prototype.value = function() {
-return this._wrapped;
-};
-}).call(this);
-
-// backbone.js
-
-(function() {
-var a = this, b = a.Backbone, c = Array.prototype.splice, d;
-typeof exports != "undefined" ? d = exports : d = a.Backbone = {}, d.VERSION = "0.9.2";
-var e = a._;
-!e && typeof require != "undefined" && (e = require("underscore")), d.$ = a.jQuery || a.Zepto || a.ender, d.noConflict = function() {
-return a.Backbone = b, this;
-}, d.emulateHTTP = !1, d.emulateJSON = !1;
-var f = /\s+/, g = d.Events = {
-on: function(a, b, c) {
-var d, e, g;
-if (!b) return this;
-a = a.split(f), d = this._callbacks || (this._callbacks = {});
-while (e = a.shift()) g = d[e] || (d[e] = []), g.push(b, c);
-return this;
-},
-off: function(a, b, c) {
-var d, g, h, i;
-if (!(g = this._callbacks)) return this;
-if (!(a || b || c)) return delete this._callbacks, this;
-a = a ? a.split(f) : e.keys(g);
-while (d = a.shift()) {
-if (!(h = g[d]) || !b && !c) {
-delete g[d];
-continue;
-}
-for (i = h.length - 2; i >= 0; i -= 2) b && h[i] !== b || c && h[i + 1] !== c || h.splice(i, 2);
-}
-return this;
-},
-trigger: function(a) {
-var b, c, d, e, g, h, i, j;
-if (!(c = this._callbacks)) return this;
-j = [], a = a.split(f);
-for (e = 1, g = arguments.length; e < g; e++) j[e - 1] = arguments[e];
-while (b = a.shift()) {
-if (i = c.all) i = i.slice();
-if (d = c[b]) d = d.slice();
-if (d) for (e = 0, g = d.length; e < g; e += 2) d[e].apply(d[e + 1] || this, j);
-if (i) {
-h = [ b ].concat(j);
-for (e = 0, g = i.length; e < g; e += 2) i[e].apply(i[e + 1] || this, h);
-}
-}
-return this;
-}
-};
-g.bind = g.on, g.unbind = g.off;
-var h = d.Model = function(a, b) {
-var c;
-a || (a = {}), b && b.collection && (this.collection = b.collection), b && b.parse && (a = this.parse(a));
-if (c = z(this, "defaults")) a = e.extend({}, c, a);
-this.attributes = {}, this._escapedAttributes = {}, this.cid = e.uniqueId("c"), this.changed = {}, this._silent = {}, this._pending = {}, this.set(a, {
-silent: !0
-}), this.changed = {}, this._silent = {}, this._pending = {}, this._previousAttributes = e.clone(this.attributes), this.initialize.apply(this, arguments);
-};
-e.extend(h.prototype, g, {
-changed: null,
-_silent: null,
-_pending: null,
-idAttribute: "id",
-initialize: function() {},
-toJSON: function(a) {
-return e.clone(this.attributes);
-},
-sync: function() {
-return d.sync.apply(this, arguments);
-},
-get: function(a) {
-return this.attributes[a];
-},
-escape: function(a) {
-var b;
-if (b = this._escapedAttributes[a]) return b;
-var c = this.get(a);
-return this._escapedAttributes[a] = e.escape(c == null ? "" : "" + c);
-},
-has: function(a) {
-return this.get(a) != null;
-},
-set: function(a, b, c) {
-var d, f, g;
-e.isObject(a) || a == null ? (d = a, c = b) : (d = {}, d[a] = b), c || (c = {});
-if (!d) return this;
-d instanceof h && (d = d.attributes);
-if (c.unset) for (f in d) d[f] = void 0;
-if (!this._validate(d, c)) return !1;
-this.idAttribute in d && (this.id = d[this.idAttribute]);
-var i = c.changes = {}, j = this.attributes, k = this._escapedAttributes, l = this._previousAttributes || {};
-for (f in d) {
-g = d[f];
-if (!e.isEqual(j[f], g) || c.unset && e.has(j, f)) delete k[f], (c.silent ? this._silent : i)[f] = !0;
-c.unset ? delete j[f] : j[f] = g, !e.isEqual(l[f], g) || e.has(j, f) !== e.has(l, f) ? (this.changed[f] = g, c.silent || (this._pending[f] = !0)) : (delete this.changed[f], delete this._pending[f]);
-}
-return c.silent || this.change(c), this;
-},
-unset: function(a, b) {
-return b = e.extend({}, b, {
-unset: !0
-}), this.set(a, null, b);
-},
-clear: function(a) {
-return a = e.extend({}, a, {
-unset: !0
-}), this.set(e.clone(this.attributes), a);
-},
-fetch: function(a) {
-a = a ? e.clone(a) : {};
-var b = this, c = a.success;
-return a.success = function(d, e, f) {
-if (!b.set(b.parse(d, f), a)) return !1;
-c && c(b, d, a), b.trigger("sync", b, d, a);
-}, a.error = d.wrapError(a.error, b, a), this.sync("read", this, a);
-},
-save: function(a, b, c) {
-var f, g, h;
-e.isObject(a) || a == null ? (f = a, c = b) : (f = {}, f[a] = b), c = c ? e.clone(c) : {};
-if (c.wait) {
-if (!this._validate(f, c)) return !1;
-g = e.clone(this.attributes);
-}
-var i = e.extend({}, c, {
-silent: !0
-});
-if (f && !this.set(f, c.wait ? i : c)) return !1;
-if (!f && !this.isValid()) return !1;
-var j = this, k = c.success;
-c.success = function(a, b, d) {
-h = !0;
-var g = j.parse(a, d);
-c.wait && (g = e.extend(f || {}, g));
-if (!j.set(g, c)) return !1;
-k && k(j, a, c), j.trigger("sync", j, a, c);
-}, c.error = d.wrapError(c.error, j, c);
-var l = this.sync(this.isNew() ? "create" : "update", this, c);
-return !h && c.wait && (this.clear(i), this.set(g, i)), l;
-},
-destroy: function(a) {
-a = a ? e.clone(a) : {};
-var b = this, c = a.success, f = function() {
-b.trigger("destroy", b, b.collection, a);
-};
-a.success = function(d) {
-(a.wait || b.isNew()) && f(), c && c(b, d, a), b.isNew() || b.trigger("sync", b, d, a);
-};
-if (this.isNew()) return a.success(), !1;
-a.error = d.wrapError(a.error, b, a);
-var g = this.sync("delete", this, a);
-return a.wait || f(), g;
-},
-url: function() {
-var a = z(this, "urlRoot") || z(this.collection, "url") || A();
-return this.isNew() ? a : a + (a.charAt(a.length - 1) === "/" ? "" : "/") + encodeURIComponent(this.id);
-},
-parse: function(a, b) {
-return a;
-},
-clone: function() {
-return new this.constructor(this.attributes);
-},
-isNew: function() {
-return this.id == null;
-},
-change: function(a) {
-a || (a = {});
-var b = this._changing;
-this._changing = !0;
-for (var c in this._silent) this._pending[c] = !0;
-var d = e.extend({}, a.changes, this._silent);
-this._silent = {};
-for (var c in d) this.trigger("change:" + c, this, this.get(c), a);
-if (b) return this;
-while (!e.isEmpty(this._pending)) {
-this._pending = {}, this.trigger("change", this, a);
-for (var c in this.changed) {
-if (this._pending[c] || this._silent[c]) continue;
-delete this.changed[c];
-}
-this._previousAttributes = e.clone(this.attributes);
-}
-return this._changing = !1, this;
-},
-hasChanged: function(a) {
-return a == null ? !e.isEmpty(this.changed) : e.has(this.changed, a);
-},
-changedAttributes: function(a) {
-if (!a) return this.hasChanged() ? e.clone(this.changed) : !1;
-var b, c = !1, d = this._previousAttributes;
-for (var f in a) {
-if (e.isEqual(d[f], b = a[f])) continue;
-(c || (c = {}))[f] = b;
-}
-return c;
-},
-previous: function(a) {
-return a == null || !this._previousAttributes ? null : this._previousAttributes[a];
-},
-previousAttributes: function() {
-return e.clone(this._previousAttributes);
-},
-isValid: function() {
-return !this.validate || !this.validate(this.attributes);
-},
-_validate: function(a, b) {
-if (b.silent || !this.validate) return !0;
-a = e.extend({}, this.attributes, a);
-var c = this.validate(a, b);
-return c ? (b && b.error ? b.error(this, c, b) : this.trigger("error", this, c, b), !1) : !0;
-}
-});
-var i = d.Collection = function(a, b) {
-b || (b = {}), b.model && (this.model = b.model), b.comparator !== void 0 && (this.comparator = b.comparator), this._reset(), this.initialize.apply(this, arguments), a && this.reset(a, {
-silent: !0,
-parse: b.parse
-});
-};
-e.extend(i.prototype, g, {
-model: h,
-initialize: function() {},
-toJSON: function(a) {
-return this.map(function(b) {
-return b.toJSON(a);
-});
-},
-sync: function() {
-return d.sync.apply(this, arguments);
-},
-add: function(a, b) {
-var d, f, g, h, i, j, k = {}, l = {}, m = [];
-b || (b = {}), a = e.isArray(a) ? a.slice() : [ a ];
-for (d = 0, g = a.length; d < g; d++) {
-if (!(h = a[d] = this._prepareModel(a[d], b))) throw new Error("Can't add an invalid model to a collection");
-i = h.cid, j = h.id;
-if (k[i] || this._byCid[i] || j != null && (l[j] || this._byId[j])) {
-m.push(d);
-continue;
-}
-k[i] = l[j] = h;
-}
-d = m.length;
-while (d--) m[d] = a.splice(m[d], 1)[0];
-for (d = 0, g = a.length; d < g; d++) (h = a[d]).on("all", this._onModelEvent, this), this._byCid[h.cid] = h, h.id != null && (this._byId[h.id] = h);
-this.length += g, f = b.at != null ? b.at : this.models.length, c.apply(this.models, [ f, 0 ].concat(a));
-if (b.merge) for (d = 0, g = m.length; d < g; d++) (h = this._byId[m[d].id]) && h.set(m[d], b);
-this.comparator && b.at == null && this.sort({
-silent: !0
-});
-if (b.silent) return this;
-for (d = 0, g = this.models.length; d < g; d++) {
-if (!k[(h = this.models[d]).cid]) continue;
-b.index = d, h.trigger("add", h, this, b);
-}
-return this;
-},
-remove: function(a, b) {
-var c, d, f, g;
-b || (b = {}), a = e.isArray(a) ? a.slice() : [ a ];
-for (c = 0, d = a.length; c < d; c++) {
-g = this.getByCid(a[c]) || this.get(a[c]);
-if (!g) continue;
-delete this._byId[g.id], delete this._byCid[g.cid], f = this.indexOf(g), this.models.splice(f, 1), this.length--, b.silent || (b.index = f, g.trigger("remove", g, this, b)), this._removeReference(g);
-}
-return this;
-},
-push: function(a, b) {
-return a = this._prepareModel(a, b), this.add(a, b), a;
-},
-pop: function(a) {
-var b = this.at(this.length - 1);
-return this.remove(b, a), b;
-},
-unshift: function(a, b) {
-return a = this._prepareModel(a, b), this.add(a, e.extend({
-at: 0
-}, b)), a;
-},
-shift: function(a) {
-var b = this.at(0);
-return this.remove(b, a), b;
-},
-slice: function(a, b) {
-return this.models.slice(a, b);
-},
-get: function(a) {
-return a == null ? void 0 : this._byId[a.id != null ? a.id : a];
-},
-getByCid: function(a) {
-return a && this._byCid[a.cid || a];
-},
-at: function(a) {
-return this.models[a];
-},
-where: function(a) {
-return e.isEmpty(a) ? [] : this.filter(function(b) {
-for (var c in a) if (a[c] !== b.get(c)) return !1;
-return !0;
-});
-},
-sort: function(a) {
-a || (a = {});
-if (!this.comparator) throw new Error("Cannot sort a set without a comparator");
-var b = e.bind(this.comparator, this);
-return this.comparator.length === 1 ? this.models = this.sortBy(b) : this.models.sort(b), a.silent || this.trigger("reset", this, a), this;
-},
-pluck: function(a) {
-return e.map(this.models, function(b) {
-return b.get(a);
-});
-},
-reset: function(a, b) {
-a || (a = []), b || (b = {});
-for (var c = 0, d = this.models.length; c < d; c++) this._removeReference(this.models[c]);
-return this._reset(), this.add(a, e.extend({
-silent: !0
-}, b)), b.silent || this.trigger("reset", this, b), this;
-},
-fetch: function(a) {
-a = a ? e.clone(a) : {}, a.parse === void 0 && (a.parse = !0);
-var b = this, c = a.success;
-return a.success = function(d, e, f) {
-b[a.add ? "add" : "reset"](b.parse(d, f), a), c && c(b, d, a), b.trigger("sync", b, d, a);
-}, a.error = d.wrapError(a.error, b, a), this.sync("read", this, a);
-},
-create: function(a, b) {
-var c = this;
-b = b ? e.clone(b) : {}, a = this._prepareModel(a, b);
-if (!a) return !1;
-b.wait || c.add(a, b);
-var d = b.success;
-return b.success = function(a, b, e) {
-e.wait && c.add(a, e), d && d(a, b, e);
-}, a.save(null, b), a;
-},
-parse: function(a, b) {
-return a;
-},
-clone: function() {
-return new this.constructor(this.models);
-},
-chain: function() {
-return e(this.models).chain();
-},
-_reset: function(a) {
-this.length = 0, this.models = [], this._byId = {}, this._byCid = {};
-},
-_prepareModel: function(a, b) {
-if (a instanceof h) return a.collection || (a.collection = this), a;
-b || (b = {}), b.collection = this;
-var c = new this.model(a, b);
-return c._validate(c.attributes, b) ? c : !1;
-},
-_removeReference: function(a) {
-this === a.collection && delete a.collection, a.off("all", this._onModelEvent, this);
-},
-_onModelEvent: function(a, b, c, d) {
-if ((a === "add" || a === "remove") && c !== this) return;
-a === "destroy" && this.remove(b, d), b && a === "change:" + b.idAttribute && (delete this._byId[b.previous(b.idAttribute)], b.id != null && (this._byId[b.id] = b)), this.trigger.apply(this, arguments);
-}
-});
-var j = [ "forEach", "each", "map", "reduce", "reduceRight", "find", "detect", "filter", "select", "reject", "every", "all", "some", "any", "include", "contains", "invoke", "max", "min", "sortBy", "sortedIndex", "toArray", "size", "first", "initial", "rest", "last", "without", "indexOf", "shuffle", "lastIndexOf", "isEmpty", "groupBy" ];
-e.each(j, function(a) {
-i.prototype[a] = function() {
-return e[a].apply(e, [ this.models ].concat(e.toArray(arguments)));
-};
-});
-var k = d.Router = function(a) {
-a || (a = {}), a.routes && (this.routes = a.routes), this._bindRoutes(), this.initialize.apply(this, arguments);
-}, l = /:\w+/g, m = /\*\w+/g, n = /[-[\]{}()+?.,\\^$|#\s]/g;
-e.extend(k.prototype, g, {
-initialize: function() {},
-route: function(a, b, c) {
-return d.history || (d.history = new o), e.isRegExp(a) || (a = this._routeToRegExp(a)), c || (c = this[b]), d.history.route(a, e.bind(function(e) {
-var f = this._extractParameters(a, e);
-c && c.apply(this, f), this.trigger.apply(this, [ "route:" + b ].concat(f)), d.history.trigger("route", this, b, f);
-}, this)), this;
-},
-navigate: function(a, b) {
-d.history.navigate(a, b);
-},
-_bindRoutes: function() {
-if (!this.routes) return;
-var a = [];
-for (var b in this.routes) a.unshift([ b, this.routes[b] ]);
-for (var c = 0, d = a.length; c < d; c++) this.route(a[c][0], a[c][1], this[a[c][1]]);
-},
-_routeToRegExp: function(a) {
-return a = a.replace(n, "\\$&").replace(l, "([^/]+)").replace(m, "(.*?)"), new RegExp("^" + a + "$");
-},
-_extractParameters: function(a, b) {
-return a.exec(b).slice(1);
-}
-});
-var o = d.History = function(b) {
-this.handlers = [], e.bindAll(this, "checkUrl"), this.location = b && b.location || a.location, this.history = b && b.history || a.history;
-}, p = /^[#\/]/, q = /msie [\w.]+/, r = /\/$/;
-o.started = !1, e.extend(o.prototype, g, {
-interval: 50,
-getHash: function(a) {
-var b = (a || this).location.href.match(/#(.*)$/);
-return b ? b[1] : "";
-},
-getFragment: function(a, b) {
-if (a == null) if (this._hasPushState || !this._wantsHashChange || b) {
-a = this.location.pathname;
-var c = this.options.root.replace(r, "");
-a.indexOf(c) || (a = a.substr(c.length));
-} else a = this.getHash();
-return decodeURIComponent(a.replace(p, ""));
-},
-start: function(a) {
-if (o.started) throw new Error("Backbone.history has already been started");
-o.started = !0, this.options = e.extend({}, {
-root: "/"
-}, this.options, a), this._wantsHashChange = this.options.hashChange !== !1, this._wantsPushState = !!this.options.pushState, this._hasPushState = !!(this.options.pushState && this.history && this.history.pushState);
-var b = this.getFragment(), c = document.documentMode, f = q.exec(navigator.userAgent.toLowerCase()) && (!c || c <= 7);
-r.test(this.options.root) || (this.options.root += "/"), f && this._wantsHashChange && (this.iframe = d.$('<iframe src="javascript:0" tabindex="-1" />').hide().appendTo("body")[0].contentWindow, this.navigate(b)), this._hasPushState ? d.$(window).bind("popstate", this.checkUrl) : this._wantsHashChange && "onhashchange" in window && !f ? d.$(window).bind("hashchange", this.checkUrl) : this._wantsHashChange && (this._checkUrlInterval = setInterval(this.checkUrl, this.interval)), this.fragment = b;
-var g = this.location, h = g.pathname.replace(/[^/]$/, "$&/") === this.options.root && !g.search;
-if (this._wantsHashChange && this._wantsPushState && !this._hasPushState && !h) return this.fragment = this.getFragment(null, !0), this.location.replace(this.options.root + this.location.search + "#" + this.fragment), !0;
-this._wantsPushState && this._hasPushState && h && g.hash && (this.fragment = this.getHash().replace(p, ""), this.history.replaceState({}, document.title, g.protocol + "//" + g.host + this.options.root + this.fragment));
-if (!this.options.silent) return this.loadUrl();
-},
-stop: function() {
-d.$(window).unbind("popstate", this.checkUrl).unbind("hashchange", this.checkUrl), clearInterval(this._checkUrlInterval), o.started = !1;
-},
-route: function(a, b) {
-this.handlers.unshift({
-route: a,
-callback: b
-});
-},
-checkUrl: function(a) {
-var b = this.getFragment();
-b === this.fragment && this.iframe && (b = this.getFragment(this.getHash(this.iframe)));
-if (b === this.fragment) return !1;
-this.iframe && this.navigate(b), this.loadUrl() || this.loadUrl(this.getHash());
-},
-loadUrl: function(a) {
-var b = this.fragment = this.getFragment(a), c = e.any(this.handlers, function(a) {
-if (a.route.test(b)) return a.callback(b), !0;
-});
-return c;
-},
-navigate: function(a, b) {
-if (!o.started) return !1;
-if (!b || b === !0) b = {
-trigger: b
-};
-var c = (a || "").replace(p, "");
-if (this.fragment === c) return;
-this.fragment = c;
-var d = (c.indexOf(this.options.root) !== 0 ? this.options.root : "") + c;
-if (this._hasPushState) this.history[b.replace ? "replaceState" : "pushState"]({}, document.title, d); else {
-if (!this._wantsHashChange) return this.location.assign(d);
-this._updateHash(this.location, c, b.replace), this.iframe && c !== this.getFragment(this.getHash(this.iframe)) && (b.replace || this.iframe.document.open().close(), this._updateHash(this.iframe.location, c, b.replace));
-}
-b.trigger && this.loadUrl(a);
-},
-_updateHash: function(a, b, c) {
-c ? a.replace(a.href.replace(/(javascript:|#).*$/, "") + "#" + b) : a.hash = b;
-}
-});
-var s = d.View = function(a) {
-this.cid = e.uniqueId("view"), this._configure(a || {}), this._ensureElement(), this.initialize.apply(this, arguments), this.delegateEvents();
-}, t = /^(\S+)\s*(.*)$/, u = [ "model", "collection", "el", "id", "attributes", "className", "tagName" ];
-e.extend(s.prototype, g, {
-tagName: "div",
-$: function(a) {
-return this.$el.find(a);
-},
-initialize: function() {},
-render: function() {
-return this;
-},
-remove: function() {
-return this.$el.remove(), this;
-},
-make: function(a, b, c) {
-var e = document.createElement(a);
-return b && d.$(e).attr(b), c != null && d.$(e).html(c), e;
-},
-setElement: function(a, b) {
-return this.$el && this.undelegateEvents(), this.$el = a instanceof d.$ ? a : d.$(a), this.el = this.$el[0], b !== !1 && this.delegateEvents(), this;
-},
-delegateEvents: function(a) {
-if (!a && !(a = z(this, "events"))) return;
-this.undelegateEvents();
-for (var b in a) {
-var c = a[b];
-e.isFunction(c) || (c = this[a[b]]);
-if (!c) throw new Error('Method "' + a[b] + '" does not exist');
-var d = b.match(t), f = d[1], g = d[2];
-c = e.bind(c, this), f += ".delegateEvents" + this.cid, g === "" ? this.$el.bind(f, c) : this.$el.delegate(g, f, c);
-}
-},
-undelegateEvents: function() {
-this.$el.unbind(".delegateEvents" + this.cid);
-},
-_configure: function(a) {
-this.options && (a = e.extend({}, this.options, a));
-for (var b = 0, c = u.length; b < c; b++) {
-var d = u[b];
-a[d] && (this[d] = a[d]);
-}
-this.options = a;
-},
-_ensureElement: function() {
-if (!this.el) {
-var a = e.extend({}, z(this, "attributes"));
-this.id && (a.id = this.id), this.className && (a["class"] = this.className), this.setElement(this.make(z(this, "tagName"), a), !1);
-} else this.setElement(this.el, !1);
-}
-});
-var v = function(a, b) {
-return y(this, a, b);
-};
-h.extend = i.extend = k.extend = s.extend = v;
-var w = {
-create: "POST",
-update: "PUT",
-"delete": "DELETE",
-read: "GET"
-};
-d.sync = function(a, b, c) {
-var f = w[a];
-c || (c = {});
-var g = {
-type: f,
-dataType: "json"
-};
-return c.url || (g.url = z(b, "url") || A()), !c.data && b && (a === "create" || a === "update") && (g.contentType = "application/json", g.data = JSON.stringify(b)), d.emulateJSON && (g.contentType = "application/x-www-form-urlencoded", g.data = g.data ? {
-model: g.data
-} : {}), d.emulateHTTP && (f === "PUT" || f === "DELETE") && (d.emulateJSON && (g.data._method = f), g.type = "POST", g.beforeSend = function(a) {
-a.setRequestHeader("X-HTTP-Method-Override", f);
-}), g.type !== "GET" && !d.emulateJSON && (g.processData = !1), d.ajax(e.extend(g, c));
-}, d.ajax = function() {
-return d.$.ajax.apply(d.$, arguments);
-}, d.wrapError = function(a, b, c) {
-return function(d, e) {
-e = d === b ? e : d, a ? a(b, e, c) : b.trigger("error", b, e, c);
-};
-};
-var x = function() {}, y = function(a, b, c) {
-var d;
-return b && b.hasOwnProperty("constructor") ? d = b.constructor : d = function() {
-a.apply(this, arguments);
-}, e.extend(d, a), x.prototype = a.prototype, d.prototype = new x, b && e.extend(d.prototype, b), c && e.extend(d, c), d.prototype.constructor = d, d.__super__ = a.prototype, d;
-}, z = function(a, b) {
-return !a || !a[b] ? null : e.isFunction(a[b]) ? a[b]() : a[b];
-}, A = function() {
+var x = function() {}, T = function(e, t, n) {
+var r;
+return t && t.hasOwnProperty("constructor") ? r = t.constructor : r = function() {
+e.apply(this, arguments);
+}, i.extend(r, e), x.prototype = e.prototype, r.prototype = new x, t && i.extend(r.prototype, t), n && i.extend(r, n), r.prototype.constructor = r, r.__super__ = e.prototype, r;
+}, N = function(e, t) {
+return !e || !e[t] ? null : i.isFunction(e[t]) ? e[t]() : e[t];
+}, C = function() {
 throw new Error('A "url" property or function must be specified');
 };
 }).call(this);
 
 // backbone-relational.js
 
-(function(a) {
+(function(e) {
 "use strict";
-var b, c, d;
-typeof window == "undefined" ? (b = require("underscore"), c = require("backbone"), d = module.exports = c) : (b = window._, c = window.Backbone, d = window), c.Relational = {
+var t, n, r;
+typeof window == "undefined" ? (t = require("underscore"), n = require("backbone"), r = module.exports = n) : (t = window._, n = window.Backbone, r = window), n.Relational = {
 showWarnings: !0
-}, c.Semaphore = {
+}, n.Semaphore = {
 _permitsAvailable: null,
 _permitsUsed: 0,
 acquire: function() {
@@ -2494,16 +1070,16 @@ this._permitsUsed--;
 isLocked: function() {
 return this._permitsUsed > 0;
 },
-setAvailablePermits: function(a) {
-if (this._permitsUsed > a) throw new Error("Available permits cannot be less than used permits");
-this._permitsAvailable = a;
+setAvailablePermits: function(e) {
+if (this._permitsUsed > e) throw new Error("Available permits cannot be less than used permits");
+this._permitsAvailable = e;
 }
-}, c.BlockingQueue = function() {
+}, n.BlockingQueue = function() {
 this._queue = [];
-}, b.extend(c.BlockingQueue.prototype, c.Semaphore, {
+}, t.extend(n.BlockingQueue.prototype, n.Semaphore, {
 _queue: null,
-add: function(a) {
-this.isBlocked() ? this._queue.push(a) : a();
+add: function(e) {
+this.isBlocked() ? this._queue.push(e) : e();
 },
 process: function() {
 while (this._queue && this._queue.length) this._queue.shift()();
@@ -2517,108 +1093,108 @@ this.release(), this.isBlocked() || this.process();
 isBlocked: function() {
 return this.isLocked();
 }
-}), c.Relational.eventQueue = new c.BlockingQueue, c.Store = function() {
-this._collections = [], this._reverseRelations = [], this._subModels = [], this._modelScopes = [ d ];
-}, b.extend(c.Store.prototype, c.Events, {
-addModelScope: function(a) {
-this._modelScopes.push(a);
+}), n.Relational.eventQueue = new n.BlockingQueue, n.Store = function() {
+this._collections = [], this._reverseRelations = [], this._subModels = [], this._modelScopes = [ r ];
+}, t.extend(n.Store.prototype, n.Events, {
+addModelScope: function(e) {
+this._modelScopes.push(e);
 },
-addSubModels: function(a, b) {
+addSubModels: function(e, t) {
 this._subModels.push({
-superModelType: b,
-subModels: a
+superModelType: t,
+subModels: e
 });
 },
-setupSuperModel: function(a) {
-b.find(this._subModels, function(c) {
-return b.find(c.subModels, function(b, d) {
-var e = this.getObjectByName(b);
-if (a === e) return c.superModelType._subModels[d] = a, a._superModel = c.superModelType, a._subModelTypeValue = d, a._subModelTypeAttribute = c.superModelType.prototype.subModelTypeAttribute, !0;
+setupSuperModel: function(e) {
+t.find(this._subModels, function(n) {
+return t.find(n.subModels, function(t, r) {
+var i = this.getObjectByName(t);
+if (e === i) return n.superModelType._subModels[r] = e, e._superModel = n.superModelType, e._subModelTypeValue = r, e._subModelTypeAttribute = n.superModelType.prototype.subModelTypeAttribute, !0;
 }, this);
 }, this);
 },
-addReverseRelation: function(a) {
-var c = b.any(this._reverseRelations, function(c) {
-return b.all(a, function(a, b) {
-return a === c[b];
+addReverseRelation: function(e) {
+var n = t.any(this._reverseRelations, function(n) {
+return t.all(e, function(e, t) {
+return e === n[t];
 });
 });
-if (!c && a.model && a.type) {
-this._reverseRelations.push(a);
-var d = function(a, c) {
-a.prototype.relations || (a.prototype.relations = []), a.prototype.relations.push(c), b.each(a._subModels, function(a) {
-d(a, c);
+if (!n && e.model && e.type) {
+this._reverseRelations.push(e);
+var r = function(e, n) {
+e.prototype.relations || (e.prototype.relations = []), e.prototype.relations.push(n), t.each(e._subModels, function(e) {
+r(e, n);
 }, this);
 };
-d(a.model, a), this.retroFitRelation(a);
+r(e.model, e), this.retroFitRelation(e);
 }
 },
-retroFitRelation: function(a) {
-var b = this.getCollection(a.model);
-b.each(function(b) {
-if (!(b instanceof a.model)) return;
-new a.type(b, a);
+retroFitRelation: function(e) {
+var t = this.getCollection(e.model);
+t.each(function(t) {
+if (!(t instanceof e.model)) return;
+new e.type(t, e);
 }, this);
 },
-getCollection: function(a) {
-a instanceof c.RelationalModel && (a = a.constructor);
-var d = a;
-while (d._superModel) d = d._superModel;
-var e = b.detect(this._collections, function(a) {
-return a.model === d;
+getCollection: function(e) {
+e instanceof n.RelationalModel && (e = e.constructor);
+var r = e;
+while (r._superModel) r = r._superModel;
+var i = t.detect(this._collections, function(e) {
+return e.model === r;
 });
-return e || (e = this._createCollection(a)), e;
+return i || (i = this._createCollection(e)), i;
 },
-getObjectByName: function(a) {
-var c = a.split("."), d = null;
-return b.find(this._modelScopes, function(a) {
-d = b.reduce(c, function(a, b) {
-return a[b];
-}, a);
-if (d && d !== a) return !0;
-}, this), d;
+getObjectByName: function(e) {
+var n = e.split("."), r = null;
+return t.find(this._modelScopes, function(e) {
+r = t.reduce(n, function(e, t) {
+return e[t];
+}, e);
+if (r && r !== e) return !0;
+}, this), r;
 },
-_createCollection: function(a) {
-var b;
-return a instanceof c.RelationalModel && (a = a.constructor), a.prototype instanceof c.RelationalModel && (b = new c.Collection, b.model = a, this._collections.push(b)), b;
+_createCollection: function(e) {
+var t;
+return e instanceof n.RelationalModel && (e = e.constructor), e.prototype instanceof n.RelationalModel && (t = new n.Collection, t.model = e, this._collections.push(t)), t;
 },
-resolveIdForItem: function(a, d) {
-var e = b.isString(d) || b.isNumber(d) ? d : null;
-return e == null && (d instanceof c.RelationalModel ? e = d.id : b.isObject(d) && (e = d[a.prototype.idAttribute])), e;
+resolveIdForItem: function(e, r) {
+var i = t.isString(r) || t.isNumber(r) ? r : null;
+return i == null && (r instanceof n.RelationalModel ? i = r.id : t.isObject(r) && (i = r[e.prototype.idAttribute])), i;
 },
-find: function(a, b) {
-var c = this.resolveIdForItem(a, b), d = this.getCollection(a);
-if (d) {
-var e = d.get(c);
-if (e instanceof a) return e;
+find: function(e, t) {
+var n = this.resolveIdForItem(e, t), r = this.getCollection(e);
+if (r) {
+var i = r.get(n);
+if (i instanceof e) return i;
 }
 return null;
 },
-register: function(a) {
-var b = a.collection, c = this.getCollection(a);
-c && c.add(a), a.bind("destroy", this.unregister, this), a.collection = b;
+register: function(e) {
+var t = e.collection, n = this.getCollection(e);
+n && n.add(e), e.bind("destroy", this.unregister, this), e.collection = t;
 },
-update: function(a) {
-var b = this.getCollection(a);
-b._onModelEvent("change:" + a.idAttribute, a, b);
+update: function(e) {
+var t = this.getCollection(e);
+t._onModelEvent("change:" + e.idAttribute, e, t);
 },
-unregister: function(a) {
-a.unbind("destroy", this.unregister);
-var b = this.getCollection(a);
-b && b.remove(a);
+unregister: function(e) {
+e.unbind("destroy", this.unregister);
+var t = this.getCollection(e);
+t && t.remove(e);
 }
-}), c.Relational.store = new c.Store, c.Relation = function(a, d) {
-this.instance = a, d = b.isObject(d) ? d : {}, this.reverseRelation = b.defaults(d.reverseRelation || {}, this.options.reverseRelation), this.reverseRelation.type = b.isString(this.reverseRelation.type) ? c[this.reverseRelation.type] || c.Relational.store.getObjectByName(this.reverseRelation.type) : this.reverseRelation.type, this.model = d.model || this.instance.constructor, this.options = b.defaults(d, this.options, c.Relation.prototype.options), this.key = this.options.key, this.keySource = this.options.keySource || this.key, this.keyDestination = this.options.keyDestination || this.keySource || this.key, this.relatedModel = this.options.relatedModel, b.isString(this.relatedModel) && (this.relatedModel = c.Relational.store.getObjectByName(this.relatedModel));
+}), n.Relational.store = new n.Store, n.Relation = function(e, r) {
+this.instance = e, r = t.isObject(r) ? r : {}, this.reverseRelation = t.defaults(r.reverseRelation || {}, this.options.reverseRelation), this.reverseRelation.type = t.isString(this.reverseRelation.type) ? n[this.reverseRelation.type] || n.Relational.store.getObjectByName(this.reverseRelation.type) : this.reverseRelation.type, this.model = r.model || this.instance.constructor, this.options = t.defaults(r, this.options, n.Relation.prototype.options), this.key = this.options.key, this.keySource = this.options.keySource || this.key, this.keyDestination = this.options.keyDestination || this.keySource || this.key, this.relatedModel = this.options.relatedModel, t.isString(this.relatedModel) && (this.relatedModel = n.Relational.store.getObjectByName(this.relatedModel));
 if (!this.checkPreconditions()) return !1;
-a && (this.keyContents = this.instance.get(this.keySource), this.key !== this.keySource && this.instance.unset(this.keySource, {
+e && (this.keyContents = this.instance.get(this.keySource), this.key !== this.keySource && this.instance.unset(this.keySource, {
 silent: !0
-}), this.instance._relations.push(this)), !this.options.isAutoRelation && this.reverseRelation.type && this.reverseRelation.key && c.Relational.store.addReverseRelation(b.defaults({
+}), this.instance._relations.push(this)), !this.options.isAutoRelation && this.reverseRelation.type && this.reverseRelation.key && n.Relational.store.addReverseRelation(t.defaults({
 isAutoRelation: !0,
 model: this.relatedModel,
 relatedModel: this.model,
 reverseRelation: this.options
-}, this.reverseRelation)), b.bindAll(this, "_modelRemovedFromCollection", "_relatedModelAdded", "_relatedModelRemoved"), a && (this.initialize(), c.Relational.store.getCollection(this.instance).bind("relational:remove", this._modelRemovedFromCollection), c.Relational.store.getCollection(this.relatedModel).bind("relational:add", this._relatedModelAdded).bind("relational:remove", this._relatedModelRemoved));
-}, c.Relation.extend = c.Model.extend, b.extend(c.Relation.prototype, c.Events, c.Semaphore, {
+}, this.reverseRelation)), t.bindAll(this, "_modelRemovedFromCollection", "_relatedModelAdded", "_relatedModelRemoved"), e && (this.initialize(), n.Relational.store.getCollection(this.instance).bind("relational:remove", this._modelRemovedFromCollection), n.Relational.store.getCollection(this.relatedModel).bind("relational:add", this._relatedModelAdded).bind("relational:remove", this._relatedModelRemoved));
+}, n.Relation.extend = n.Model.extend, t.extend(n.Relation.prototype, n.Events, n.Semaphore, {
 options: {
 createModels: !0,
 includeInJSON: !0,
@@ -2630,239 +1206,239 @@ keyContents: null,
 relatedModel: null,
 reverseRelation: null,
 related: null,
-_relatedModelAdded: function(a, b, c) {
-var d = this;
-a.queue(function() {
-d.tryAddRelated(a, c);
+_relatedModelAdded: function(e, t, n) {
+var r = this;
+e.queue(function() {
+r.tryAddRelated(e, n);
 });
 },
-_relatedModelRemoved: function(a, b, c) {
-this.removeRelated(a, c);
+_relatedModelRemoved: function(e, t, n) {
+this.removeRelated(e, n);
 },
-_modelRemovedFromCollection: function(a) {
-a === this.instance && this.destroy();
+_modelRemovedFromCollection: function(e) {
+e === this.instance && this.destroy();
 },
 checkPreconditions: function() {
-var a = this.instance, d = this.key, e = this.model, f = this.relatedModel, g = c.Relational.showWarnings && typeof console != "undefined";
-if (!e || !d || !f) return g && console.warn("Relation=%o; no model, key or relatedModel (%o, %o, %o)", this, e, d, f), !1;
-if (e.prototype instanceof c.RelationalModel) {
-if (f.prototype instanceof c.RelationalModel) {
-if (this instanceof c.HasMany && this.reverseRelation.type === c.HasMany) return g && console.warn("Relation=%o; relation is a HasMany, and the reverseRelation is HasMany as well.", this), !1;
-if (a && a._relations.length) {
-var h = b.any(a._relations, function(a) {
-var b = this.reverseRelation.key && a.reverseRelation.key;
-return a.relatedModel === f && a.key === d && (!b || this.reverseRelation.key === a.reverseRelation.key);
+var e = this.instance, r = this.key, i = this.model, s = this.relatedModel, o = n.Relational.showWarnings && typeof console != "undefined";
+if (!i || !r || !s) return o && console.warn("Relation=%o; no model, key or relatedModel (%o, %o, %o)", this, i, r, s), !1;
+if (i.prototype instanceof n.RelationalModel) {
+if (s.prototype instanceof n.RelationalModel) {
+if (this instanceof n.HasMany && this.reverseRelation.type === n.HasMany) return o && console.warn("Relation=%o; relation is a HasMany, and the reverseRelation is HasMany as well.", this), !1;
+if (e && e._relations.length) {
+var u = t.any(e._relations, function(e) {
+var t = this.reverseRelation.key && e.reverseRelation.key;
+return e.relatedModel === s && e.key === r && (!t || this.reverseRelation.key === e.reverseRelation.key);
 }, this);
-if (h) return g && console.warn("Relation=%o between instance=%o.%s and relatedModel=%o.%s already exists", this, a, d, f, this.reverseRelation.key), !1;
+if (u) return o && console.warn("Relation=%o between instance=%o.%s and relatedModel=%o.%s already exists", this, e, r, s, this.reverseRelation.key), !1;
 }
 return !0;
 }
-return g && console.warn("Relation=%o; relatedModel does not inherit from Backbone.RelationalModel (%o)", this, f), !1;
+return o && console.warn("Relation=%o; relatedModel does not inherit from Backbone.RelationalModel (%o)", this, s), !1;
 }
-return g && console.warn("Relation=%o; model does not inherit from Backbone.RelationalModel (%o)", this, a), !1;
+return o && console.warn("Relation=%o; model does not inherit from Backbone.RelationalModel (%o)", this, e), !1;
 },
-setRelated: function(a, c) {
-this.related = a, this.instance.acquire(), this.instance.set(this.key, a, b.defaults(c || {}, {
+setRelated: function(e, n) {
+this.related = e, this.instance.acquire(), this.instance.set(this.key, e, t.defaults(n || {}, {
 silent: !0
 })), this.instance.release();
 },
-_isReverseRelation: function(a) {
-return a.instance instanceof this.relatedModel && this.reverseRelation.key === a.key && this.key === a.reverseRelation.key ? !0 : !1;
+_isReverseRelation: function(e) {
+return e.instance instanceof this.relatedModel && this.reverseRelation.key === e.key && this.key === e.reverseRelation.key ? !0 : !1;
 },
-getReverseRelations: function(a) {
-var c = [], d = b.isUndefined(a) ? this.related && (this.related.models || [ this.related ]) : [ a ];
-return b.each(d, function(a) {
-b.each(a.getRelations(), function(a) {
-this._isReverseRelation(a) && c.push(a);
+getReverseRelations: function(e) {
+var n = [], r = t.isUndefined(e) ? this.related && (this.related.models || [ this.related ]) : [ e ];
+return t.each(r, function(e) {
+t.each(e.getRelations(), function(e) {
+this._isReverseRelation(e) && n.push(e);
 }, this);
-}, this), c;
+}, this), n;
 },
-sanitizeOptions: function(a) {
-return a = a ? b.clone(a) : {}, a.silent && (a.silentChange = !0, delete a.silent), a;
+sanitizeOptions: function(e) {
+return e = e ? t.clone(e) : {}, e.silent && (e.silentChange = !0, delete e.silent), e;
 },
-unsanitizeOptions: function(a) {
-return a = a ? b.clone(a) : {}, a.silentChange && (a.silent = !0, delete a.silentChange), a;
+unsanitizeOptions: function(e) {
+return e = e ? t.clone(e) : {}, e.silentChange && (e.silent = !0, delete e.silentChange), e;
 },
 destroy: function() {
-c.Relational.store.getCollection(this.instance).unbind("relational:remove", this._modelRemovedFromCollection), c.Relational.store.getCollection(this.relatedModel).unbind("relational:add", this._relatedModelAdded).unbind("relational:remove", this._relatedModelRemoved), b.each(this.getReverseRelations(), function(a) {
-a.removeRelated(this.instance);
+n.Relational.store.getCollection(this.instance).unbind("relational:remove", this._modelRemovedFromCollection), n.Relational.store.getCollection(this.relatedModel).unbind("relational:add", this._relatedModelAdded).unbind("relational:remove", this._relatedModelRemoved), t.each(this.getReverseRelations(), function(e) {
+e.removeRelated(this.instance);
 }, this);
 }
-}), c.HasOne = c.Relation.extend({
+}), n.HasOne = n.Relation.extend({
 options: {
 reverseRelation: {
 type: "HasMany"
 }
 },
 initialize: function() {
-b.bindAll(this, "onChange"), this.instance.bind("relational:change:" + this.key, this.onChange);
-var a = this.findRelated({
+t.bindAll(this, "onChange"), this.instance.bind("relational:change:" + this.key, this.onChange);
+var e = this.findRelated({
 silent: !0
 });
-this.setRelated(a), b.each(this.getReverseRelations(), function(a) {
-a.addRelated(this.instance);
+this.setRelated(e), t.each(this.getReverseRelations(), function(e) {
+e.addRelated(this.instance);
 }, this);
 },
-findRelated: function(a) {
-var b = this.keyContents, c = null;
-return b instanceof this.relatedModel ? c = b : b && (c = this.relatedModel.findOrCreate(b, {
+findRelated: function(e) {
+var t = this.keyContents, n = null;
+return t instanceof this.relatedModel ? n = t : t && (n = this.relatedModel.findOrCreate(t, {
 create: this.options.createModels
-})), c;
+})), n;
 },
-onChange: function(a, d, e) {
+onChange: function(e, r, i) {
 if (this.isLocked()) return;
-this.acquire(), e = this.sanitizeOptions(e);
-var f = b.isUndefined(e._related), g = f ? this.related : e._related;
-if (f) {
-this.keyContents = d;
-if (d instanceof this.relatedModel) this.related = d; else if (d) {
-var h = this.findRelated(e);
-this.setRelated(h);
+this.acquire(), i = this.sanitizeOptions(i);
+var s = t.isUndefined(i._related), o = s ? this.related : i._related;
+if (s) {
+this.keyContents = r;
+if (r instanceof this.relatedModel) this.related = r; else if (r) {
+var u = this.findRelated(i);
+this.setRelated(u);
 } else this.setRelated(null);
 }
-g && this.related !== g && b.each(this.getReverseRelations(g), function(a) {
-a.removeRelated(this.instance, e);
-}, this), b.each(this.getReverseRelations(), function(a) {
-a.addRelated(this.instance, e);
+o && this.related !== o && t.each(this.getReverseRelations(o), function(e) {
+e.removeRelated(this.instance, i);
+}, this), t.each(this.getReverseRelations(), function(e) {
+e.addRelated(this.instance, i);
 }, this);
-if (!e.silentChange && this.related !== g) {
-var i = this;
-c.Relational.eventQueue.add(function() {
-i.instance.trigger("update:" + i.key, i.instance, i.related, e);
+if (!i.silentChange && this.related !== o) {
+var a = this;
+n.Relational.eventQueue.add(function() {
+a.instance.trigger("update:" + a.key, a.instance, a.related, i);
 });
 }
 this.release();
 },
-tryAddRelated: function(a, b) {
+tryAddRelated: function(e, t) {
 if (this.related) return;
-b = this.sanitizeOptions(b);
-var d = this.keyContents;
-if (d) {
-var e = c.Relational.store.resolveIdForItem(this.relatedModel, d);
-a.id === e && this.addRelated(a, b);
+t = this.sanitizeOptions(t);
+var r = this.keyContents;
+if (r) {
+var i = n.Relational.store.resolveIdForItem(this.relatedModel, r);
+e.id === i && this.addRelated(e, t);
 }
 },
-addRelated: function(a, b) {
-if (a !== this.related) {
-var c = this.related || null;
-this.setRelated(a), this.onChange(this.instance, a, {
-_related: c
+addRelated: function(e, t) {
+if (e !== this.related) {
+var n = this.related || null;
+this.setRelated(e), this.onChange(this.instance, e, {
+_related: n
 });
 }
 },
-removeRelated: function(a, b) {
+removeRelated: function(e, t) {
 if (!this.related) return;
-if (a === this.related) {
-var c = this.related || null;
-this.setRelated(null), this.onChange(this.instance, a, {
-_related: c
+if (e === this.related) {
+var n = this.related || null;
+this.setRelated(null), this.onChange(this.instance, e, {
+_related: n
 });
 }
 }
-}), c.HasMany = c.Relation.extend({
+}), n.HasMany = n.Relation.extend({
 collectionType: null,
 options: {
 reverseRelation: {
 type: "HasOne"
 },
-collectionType: c.Collection,
+collectionType: n.Collection,
 collectionKey: !0,
 collectionOptions: {}
 },
 initialize: function() {
-b.bindAll(this, "onChange", "handleAddition", "handleRemoval", "handleReset"), this.instance.bind("relational:change:" + this.key, this.onChange), this.collectionType = this.options.collectionType, b.isString(this.collectionType) && (this.collectionType = c.Relational.store.getObjectByName(this.collectionType));
-if (!this.collectionType.prototype instanceof c.Collection) throw new Error("collectionType must inherit from Backbone.Collection");
-this.keyContents instanceof c.Collection ? this.setRelated(this._prepareCollection(this.keyContents)) : this.setRelated(this._prepareCollection()), this.findRelated({
+t.bindAll(this, "onChange", "handleAddition", "handleRemoval", "handleReset"), this.instance.bind("relational:change:" + this.key, this.onChange), this.collectionType = this.options.collectionType, t.isString(this.collectionType) && (this.collectionType = n.Relational.store.getObjectByName(this.collectionType));
+if (!this.collectionType.prototype instanceof n.Collection) throw new Error("collectionType must inherit from Backbone.Collection");
+this.keyContents instanceof n.Collection ? this.setRelated(this._prepareCollection(this.keyContents)) : this.setRelated(this._prepareCollection()), this.findRelated({
 silent: !0
 });
 },
 _getCollectionOptions: function() {
-return b.isFunction(this.options.collectionOptions) ? this.options.collectionOptions(this.instance) : this.options.collectionOptions;
+return t.isFunction(this.options.collectionOptions) ? this.options.collectionOptions(this.instance) : this.options.collectionOptions;
 },
-_prepareCollection: function(a) {
+_prepareCollection: function(e) {
 this.related && this.related.unbind("relational:add", this.handleAddition).unbind("relational:remove", this.handleRemoval).unbind("relational:reset", this.handleReset);
-if (!a || !(a instanceof c.Collection)) a = new this.collectionType([], this._getCollectionOptions());
-a.model = this.relatedModel;
+if (!e || !(e instanceof n.Collection)) e = new this.collectionType([], this._getCollectionOptions());
+e.model = this.relatedModel;
 if (this.options.collectionKey) {
-var b = this.options.collectionKey === !0 ? this.options.reverseRelation.key : this.options.collectionKey;
-a[b] && a[b] !== this.instance ? c.Relational.showWarnings && typeof console != "undefined" && console.warn("Relation=%o; collectionKey=%s already exists on collection=%o", this, b, this.options.collectionKey) : b && (a[b] = this.instance);
+var t = this.options.collectionKey === !0 ? this.options.reverseRelation.key : this.options.collectionKey;
+e[t] && e[t] !== this.instance ? n.Relational.showWarnings && typeof console != "undefined" && console.warn("Relation=%o; collectionKey=%s already exists on collection=%o", this, t, this.options.collectionKey) : t && (e[t] = this.instance);
 }
-return a.bind("relational:add", this.handleAddition).bind("relational:remove", this.handleRemoval).bind("relational:reset", this.handleReset), a;
+return e.bind("relational:add", this.handleAddition).bind("relational:remove", this.handleRemoval).bind("relational:reset", this.handleReset), e;
 },
-findRelated: function(a) {
+findRelated: function(e) {
 if (this.keyContents) {
-var d = [];
-this.keyContents instanceof c.Collection ? d = this.keyContents.models : (this.keyContents = b.isArray(this.keyContents) ? this.keyContents : [ this.keyContents ], b.each(this.keyContents, function(a) {
-var b = null;
-a instanceof this.relatedModel ? b = a : b = this.relatedModel.findOrCreate(a, {
+var r = [];
+this.keyContents instanceof n.Collection ? r = this.keyContents.models : (this.keyContents = t.isArray(this.keyContents) ? this.keyContents : [ this.keyContents ], t.each(this.keyContents, function(e) {
+var t = null;
+e instanceof this.relatedModel ? t = e : t = this.relatedModel.findOrCreate(e, {
 create: this.options.createModels
-}), b && !this.related.getByCid(b) && !this.related.get(b) && d.push(b);
-}, this)), d.length && (a = this.unsanitizeOptions(a), this.related.add(d, a));
+}), t && !this.related.getByCid(t) && !this.related.get(t) && r.push(t);
+}, this)), r.length && (e = this.unsanitizeOptions(e), this.related.add(r, e));
 }
 },
-onChange: function(a, d, e) {
-e = this.sanitizeOptions(e), this.keyContents = d, b.each(this.getReverseRelations(), function(a) {
-a.removeRelated(this.instance, e);
+onChange: function(e, r, i) {
+i = this.sanitizeOptions(i), this.keyContents = r, t.each(this.getReverseRelations(), function(e) {
+e.removeRelated(this.instance, i);
 }, this);
-if (d instanceof c.Collection) this._prepareCollection(d), this.related = d; else {
-var f;
-this.related instanceof c.Collection ? (f = this.related, f.remove(f.models)) : f = this._prepareCollection(), this.setRelated(f), this.findRelated(e);
+if (r instanceof n.Collection) this._prepareCollection(r), this.related = r; else {
+var s;
+this.related instanceof n.Collection ? (s = this.related, s.remove(s.models)) : s = this._prepareCollection(), this.setRelated(s), this.findRelated(i);
 }
-b.each(this.getReverseRelations(), function(a) {
-a.addRelated(this.instance, e);
+t.each(this.getReverseRelations(), function(e) {
+e.addRelated(this.instance, i);
 }, this);
-var g = this;
-c.Relational.eventQueue.add(function() {
-!e.silentChange && g.instance.trigger("update:" + g.key, g.instance, g.related, e);
+var o = this;
+n.Relational.eventQueue.add(function() {
+!i.silentChange && o.instance.trigger("update:" + o.key, o.instance, o.related, i);
 });
 },
-tryAddRelated: function(a, d) {
-d = this.sanitizeOptions(d);
-if (!this.related.getByCid(a) && !this.related.get(a)) {
-var e = b.any(this.keyContents, function(b) {
-var d = c.Relational.store.resolveIdForItem(this.relatedModel, b);
-return d && d === a.id;
+tryAddRelated: function(e, r) {
+r = this.sanitizeOptions(r);
+if (!this.related.getByCid(e) && !this.related.get(e)) {
+var i = t.any(this.keyContents, function(t) {
+var r = n.Relational.store.resolveIdForItem(this.relatedModel, t);
+return r && r === e.id;
 }, this);
-e && this.related.add(a, d);
+i && this.related.add(e, r);
 }
 },
-handleAddition: function(a, d, e) {
-if (!(a instanceof c.Model)) return;
-e = this.sanitizeOptions(e), b.each(this.getReverseRelations(a), function(a) {
-a.addRelated(this.instance, e);
+handleAddition: function(e, r, i) {
+if (!(e instanceof n.Model)) return;
+i = this.sanitizeOptions(i), t.each(this.getReverseRelations(e), function(e) {
+e.addRelated(this.instance, i);
 }, this);
-var f = this;
-c.Relational.eventQueue.add(function() {
-!e.silentChange && f.instance.trigger("add:" + f.key, a, f.related, e);
+var s = this;
+n.Relational.eventQueue.add(function() {
+!i.silentChange && s.instance.trigger("add:" + s.key, e, s.related, i);
 });
 },
-handleRemoval: function(a, d, e) {
-if (!(a instanceof c.Model)) return;
-e = this.sanitizeOptions(e), b.each(this.getReverseRelations(a), function(a) {
-a.removeRelated(this.instance, e);
+handleRemoval: function(e, r, i) {
+if (!(e instanceof n.Model)) return;
+i = this.sanitizeOptions(i), t.each(this.getReverseRelations(e), function(e) {
+e.removeRelated(this.instance, i);
 }, this);
-var f = this;
-c.Relational.eventQueue.add(function() {
-!e.silentChange && f.instance.trigger("remove:" + f.key, a, f.related, e);
+var s = this;
+n.Relational.eventQueue.add(function() {
+!i.silentChange && s.instance.trigger("remove:" + s.key, e, s.related, i);
 });
 },
-handleReset: function(a, b) {
-b = this.sanitizeOptions(b);
-var d = this;
-c.Relational.eventQueue.add(function() {
-!b.silentChange && d.instance.trigger("reset:" + d.key, d.related, b);
+handleReset: function(e, t) {
+t = this.sanitizeOptions(t);
+var r = this;
+n.Relational.eventQueue.add(function() {
+!t.silentChange && r.instance.trigger("reset:" + r.key, r.related, t);
 });
 },
-addRelated: function(a, b) {
-var c = this;
-b = this.unsanitizeOptions(b), a.queue(function() {
-c.related && !c.related.getByCid(a) && !c.related.get(a) && c.related.add(a, b);
+addRelated: function(e, t) {
+var n = this;
+t = this.unsanitizeOptions(t), e.queue(function() {
+n.related && !n.related.getByCid(e) && !n.related.get(e) && n.related.add(e, t);
 });
 },
-removeRelated: function(a, b) {
-b = this.unsanitizeOptions(b), (this.related.getByCid(a) || this.related.get(a)) && this.related.remove(a, b);
+removeRelated: function(e, t) {
+t = this.unsanitizeOptions(t), (this.related.getByCid(e) || this.related.get(e)) && this.related.remove(e, t);
 }
-}), c.RelationalModel = c.Model.extend({
+}), n.RelationalModel = n.Model.extend({
 relations: null,
 _relations: null,
 _isInitialized: !1,
@@ -2870,240 +1446,240 @@ _deferProcessing: !1,
 _queue: null,
 subModelTypeAttribute: "type",
 subModelTypes: null,
-constructor: function(a, d) {
-var e = this;
-if (d && d.collection) {
+constructor: function(e, r) {
+var i = this;
+if (r && r.collection) {
 this._deferProcessing = !0;
-var f = function(a) {
-a === e && (e._deferProcessing = !1, e.processQueue(), d.collection.unbind("relational:add", f));
+var s = function(e) {
+e === i && (i._deferProcessing = !1, i.processQueue(), r.collection.unbind("relational:add", s));
 };
-d.collection.bind("relational:add", f), b.defer(function() {
-f(e);
+r.collection.bind("relational:add", s), t.defer(function() {
+s(i);
 });
 }
-this._queue = new c.BlockingQueue, this._queue.block(), c.Relational.eventQueue.block(), c.Model.apply(this, arguments), c.Relational.eventQueue.unblock();
+this._queue = new n.BlockingQueue, this._queue.block(), n.Relational.eventQueue.block(), n.Model.apply(this, arguments), n.Relational.eventQueue.unblock();
 },
-trigger: function(a) {
-if (a.length > 5 && "change" === a.substr(0, 6)) {
-var b = this, d = arguments;
-c.Relational.eventQueue.add(function() {
-c.Model.prototype.trigger.apply(b, d);
+trigger: function(e) {
+if (e.length > 5 && "change" === e.substr(0, 6)) {
+var t = this, r = arguments;
+n.Relational.eventQueue.add(function() {
+n.Model.prototype.trigger.apply(t, r);
 });
-} else c.Model.prototype.trigger.apply(this, arguments);
+} else n.Model.prototype.trigger.apply(this, arguments);
 return this;
 },
 initializeRelations: function() {
-this.acquire(), this._relations = [], b.each(this.relations, function(a) {
-var d = b.isString(a.type) ? c[a.type] || c.Relational.store.getObjectByName(a.type) : a.type;
-d && d.prototype instanceof c.Relation ? new d(this, a) : c.Relational.showWarnings && typeof console != "undefined" && console.warn("Relation=%o; missing or invalid type!", a);
+this.acquire(), this._relations = [], t.each(this.relations, function(e) {
+var r = t.isString(e.type) ? n[e.type] || n.Relational.store.getObjectByName(e.type) : e.type;
+r && r.prototype instanceof n.Relation ? new r(this, e) : n.Relational.showWarnings && typeof console != "undefined" && console.warn("Relation=%o; missing or invalid type!", e);
 }, this), this._isInitialized = !0, this.release(), this.processQueue();
 },
-updateRelations: function(a) {
-this._isInitialized && !this.isLocked() && b.each(this._relations, function(b) {
-var c = this.attributes[b.keySource] || this.attributes[b.key];
-b.related !== c && this.trigger("relational:change:" + b.key, this, c, a || {});
+updateRelations: function(e) {
+this._isInitialized && !this.isLocked() && t.each(this._relations, function(t) {
+var n = this.attributes[t.keySource] || this.attributes[t.key];
+t.related !== n && this.trigger("relational:change:" + t.key, this, n, e || {});
 }, this);
 },
-queue: function(a) {
-this._queue.add(a);
+queue: function(e) {
+this._queue.add(e);
 },
 processQueue: function() {
 this._isInitialized && !this._deferProcessing && this._queue.isBlocked() && this._queue.unblock();
 },
-getRelation: function(a) {
-return b.detect(this._relations, function(b) {
-if (b.key === a) return !0;
+getRelation: function(e) {
+return t.detect(this._relations, function(t) {
+if (t.key === e) return !0;
 }, this);
 },
 getRelations: function() {
 return this._relations;
 },
-fetchRelated: function(a, d, e) {
-d || (d = {});
-var f, g = [], h = this.getRelation(a), i = h && h.keyContents, j = i && b.select(b.isArray(i) ? i : [ i ], function(a) {
-var b = c.Relational.store.resolveIdForItem(h.relatedModel, a);
-return b && (e || !c.Relational.store.find(h.relatedModel, b));
+fetchRelated: function(e, r, i) {
+r || (r = {});
+var s, o = [], u = this.getRelation(e), a = u && u.keyContents, f = a && t.select(t.isArray(a) ? a : [ a ], function(e) {
+var t = n.Relational.store.resolveIdForItem(u.relatedModel, e);
+return t && (i || !n.Relational.store.find(u.relatedModel, t));
 }, this);
-if (j && j.length) {
-var k = b.map(j, function(a) {
-var c;
-if (b.isObject(a)) c = h.relatedModel.build(a); else {
-var d = {};
-d[h.relatedModel.prototype.idAttribute] = a, c = h.relatedModel.build(d);
+if (f && f.length) {
+var l = t.map(f, function(e) {
+var n;
+if (t.isObject(e)) n = u.relatedModel.build(e); else {
+var r = {};
+r[u.relatedModel.prototype.idAttribute] = e, n = u.relatedModel.build(r);
 }
-return c;
+return n;
 }, this);
-h.related instanceof c.Collection && b.isFunction(h.related.url) && (f = h.related.url(k));
-if (f && f !== h.related.url()) {
-var l = b.defaults({
+u.related instanceof n.Collection && t.isFunction(u.related.url) && (s = u.related.url(l));
+if (s && s !== u.related.url()) {
+var c = t.defaults({
 error: function() {
-var a = arguments;
-b.each(k, function(b) {
-b.trigger("destroy", b, b.collection, d), d.error && d.error.apply(b, a);
+var e = arguments;
+t.each(l, function(t) {
+t.trigger("destroy", t, t.collection, r), r.error && r.error.apply(t, e);
 });
 },
-url: f
-}, d, {
+url: s
+}, r, {
 add: !0
 });
-g = [ h.related.fetch(l) ];
-} else g = b.map(k, function(a) {
-var c = b.defaults({
+o = [ u.related.fetch(c) ];
+} else o = t.map(l, function(e) {
+var n = t.defaults({
 error: function() {
-a.trigger("destroy", a, a.collection, d), d.error && d.error.apply(a, arguments);
+e.trigger("destroy", e, e.collection, r), r.error && r.error.apply(e, arguments);
 }
-}, d);
-return a.fetch(c);
+}, r);
+return e.fetch(n);
 }, this);
 }
-return g;
+return o;
 },
-set: function(a, d, e) {
-c.Relational.eventQueue.block();
-var f;
-b.isObject(a) || a == null ? (f = a, e = d) : (f = {}, f[a] = d);
-var g = c.Model.prototype.set.apply(this, arguments);
-return !this._isInitialized && !this.isLocked() ? (this.constructor.initializeModelHierarchy(), c.Relational.store.register(this), this.initializeRelations()) : f && this.idAttribute in f && c.Relational.store.update(this), f && this.updateRelations(e), c.Relational.eventQueue.unblock(), g;
+set: function(e, r, i) {
+n.Relational.eventQueue.block();
+var s;
+t.isObject(e) || e == null ? (s = e, i = r) : (s = {}, s[e] = r);
+var o = n.Model.prototype.set.apply(this, arguments);
+return !this._isInitialized && !this.isLocked() ? (this.constructor.initializeModelHierarchy(), n.Relational.store.register(this), this.initializeRelations()) : s && this.idAttribute in s && n.Relational.store.update(this), s && this.updateRelations(i), n.Relational.eventQueue.unblock(), o;
 },
-unset: function(a, b) {
-c.Relational.eventQueue.block();
-var d = c.Model.prototype.unset.apply(this, arguments);
-return this.updateRelations(b), c.Relational.eventQueue.unblock(), d;
+unset: function(e, t) {
+n.Relational.eventQueue.block();
+var r = n.Model.prototype.unset.apply(this, arguments);
+return this.updateRelations(t), n.Relational.eventQueue.unblock(), r;
 },
-clear: function(a) {
-c.Relational.eventQueue.block();
-var b = c.Model.prototype.clear.apply(this, arguments);
-return this.updateRelations(a), c.Relational.eventQueue.unblock(), b;
+clear: function(e) {
+n.Relational.eventQueue.block();
+var t = n.Model.prototype.clear.apply(this, arguments);
+return this.updateRelations(e), n.Relational.eventQueue.unblock(), t;
 },
-change: function(a) {
-var b = this, d = arguments;
-c.Relational.eventQueue.add(function() {
-c.Model.prototype.change.apply(b, d);
+change: function(e) {
+var t = this, r = arguments;
+n.Relational.eventQueue.add(function() {
+n.Model.prototype.change.apply(t, r);
 });
 },
 clone: function() {
-var a = b.clone(this.attributes);
-return b.isUndefined(a[this.idAttribute]) || (a[this.idAttribute] = null), b.each(this.getRelations(), function(b) {
-delete a[b.key];
-}), new this.constructor(a);
+var e = t.clone(this.attributes);
+return t.isUndefined(e[this.idAttribute]) || (e[this.idAttribute] = null), t.each(this.getRelations(), function(t) {
+delete e[t.key];
+}), new this.constructor(e);
 },
 toJSON: function() {
 if (this.isLocked()) return this.id;
 this.acquire();
-var a = c.Model.prototype.toJSON.call(this);
-return this.constructor._superModel && !(this.constructor._subModelTypeAttribute in a) && (a[this.constructor._subModelTypeAttribute] = this.constructor._subModelTypeValue), b.each(this._relations, function(d) {
-var e = a[d.key];
-if (d.options.includeInJSON === !0) e && b.isFunction(e.toJSON) ? a[d.keyDestination] = e.toJSON() : a[d.keyDestination] = null; else if (b.isString(d.options.includeInJSON)) e instanceof c.Collection ? a[d.keyDestination] = e.pluck(d.options.includeInJSON) : e instanceof c.Model ? a[d.keyDestination] = e.get(d.options.includeInJSON) : a[d.keyDestination] = null; else if (b.isArray(d.options.includeInJSON)) if (e instanceof c.Collection) {
-var f = [];
-e.each(function(a) {
-var c = {};
-b.each(d.options.includeInJSON, function(b) {
-c[b] = a.get(b);
-}), f.push(c);
-}), a[d.keyDestination] = f;
-} else if (e instanceof c.Model) {
-var f = {};
-b.each(d.options.includeInJSON, function(a) {
-f[a] = e.get(a);
-}), a[d.keyDestination] = f;
-} else a[d.keyDestination] = null; else delete a[d.key];
-d.keyDestination !== d.key && delete a[d.key];
-}), this.release(), a;
+var e = n.Model.prototype.toJSON.call(this);
+return this.constructor._superModel && !(this.constructor._subModelTypeAttribute in e) && (e[this.constructor._subModelTypeAttribute] = this.constructor._subModelTypeValue), t.each(this._relations, function(r) {
+var i = e[r.key];
+if (r.options.includeInJSON === !0) i && t.isFunction(i.toJSON) ? e[r.keyDestination] = i.toJSON() : e[r.keyDestination] = null; else if (t.isString(r.options.includeInJSON)) i instanceof n.Collection ? e[r.keyDestination] = i.pluck(r.options.includeInJSON) : i instanceof n.Model ? e[r.keyDestination] = i.get(r.options.includeInJSON) : e[r.keyDestination] = null; else if (t.isArray(r.options.includeInJSON)) if (i instanceof n.Collection) {
+var s = [];
+i.each(function(e) {
+var n = {};
+t.each(r.options.includeInJSON, function(t) {
+n[t] = e.get(t);
+}), s.push(n);
+}), e[r.keyDestination] = s;
+} else if (i instanceof n.Model) {
+var s = {};
+t.each(r.options.includeInJSON, function(e) {
+s[e] = i.get(e);
+}), e[r.keyDestination] = s;
+} else e[r.keyDestination] = null; else delete e[r.key];
+r.keyDestination !== r.key && delete e[r.key];
+}), this.release(), e;
 }
 }, {
-setup: function(a) {
-this.prototype.relations = (this.prototype.relations || []).slice(0), this._subModels = {}, this._superModel = null, this.prototype.hasOwnProperty("subModelTypes") ? c.Relational.store.addSubModels(this.prototype.subModelTypes, this) : this.prototype.subModelTypes = null, b.each(this.prototype.relations, function(a) {
-a.model || (a.model = this);
-if (a.reverseRelation && a.model === this) {
-var d = !0;
-if (b.isString(a.relatedModel)) {
-var e = c.Relational.store.getObjectByName(a.relatedModel);
-d = e && e.prototype instanceof c.RelationalModel;
+setup: function(e) {
+this.prototype.relations = (this.prototype.relations || []).slice(0), this._subModels = {}, this._superModel = null, this.prototype.hasOwnProperty("subModelTypes") ? n.Relational.store.addSubModels(this.prototype.subModelTypes, this) : this.prototype.subModelTypes = null, t.each(this.prototype.relations, function(e) {
+e.model || (e.model = this);
+if (e.reverseRelation && e.model === this) {
+var r = !0;
+if (t.isString(e.relatedModel)) {
+var i = n.Relational.store.getObjectByName(e.relatedModel);
+r = i && i.prototype instanceof n.RelationalModel;
 }
-var f = b.isString(a.type) ? c[a.type] || c.Relational.store.getObjectByName(a.type) : a.type;
-d && f && f.prototype instanceof c.Relation && new f(null, a);
+var s = t.isString(e.type) ? n[e.type] || n.Relational.store.getObjectByName(e.type) : e.type;
+r && s && s.prototype instanceof n.Relation && new s(null, e);
 }
 }, this);
 },
-build: function(a, b) {
-var c = this;
+build: function(e, t) {
+var n = this;
 this.initializeModelHierarchy();
-if (this._subModels && this.prototype.subModelTypeAttribute in a) {
-var d = a[this.prototype.subModelTypeAttribute], e = this._subModels[d];
-e && (c = e);
+if (this._subModels && this.prototype.subModelTypeAttribute in e) {
+var r = e[this.prototype.subModelTypeAttribute], i = this._subModels[r];
+i && (n = i);
 }
-return new c(a, b);
+return new n(e, t);
 },
 initializeModelHierarchy: function() {
-if (b.isUndefined(this._superModel) || b.isNull(this._superModel)) {
-c.Relational.store.setupSuperModel(this);
+if (t.isUndefined(this._superModel) || t.isNull(this._superModel)) {
+n.Relational.store.setupSuperModel(this);
 if (this._superModel) {
 if (this._superModel.prototype.relations) {
-var a = b.any(this.prototype.relations, function(a) {
-return a.model && a.model !== this;
+var e = t.any(this.prototype.relations, function(e) {
+return e.model && e.model !== this;
 }, this);
-a || (this.prototype.relations = this._superModel.prototype.relations.concat(this.prototype.relations));
+e || (this.prototype.relations = this._superModel.prototype.relations.concat(this.prototype.relations));
 }
 } else this._superModel = !1;
 }
-this.prototype.subModelTypes && b.keys(this.prototype.subModelTypes).length !== b.keys(this._subModels).length && b.each(this.prototype.subModelTypes, function(a) {
-var b = c.Relational.store.getObjectByName(a);
-b && b.initializeModelHierarchy();
+this.prototype.subModelTypes && t.keys(this.prototype.subModelTypes).length !== t.keys(this._subModels).length && t.each(this.prototype.subModelTypes, function(e) {
+var t = n.Relational.store.getObjectByName(e);
+t && t.initializeModelHierarchy();
 });
 },
-findOrCreate: function(a, d) {
-var e = c.Relational.store.find(this, a);
-if (b.isObject(a)) if (e) e.set(a, d); else if (!d || d && d.create !== !1) e = this.build(a, d);
+findOrCreate: function(e, r) {
+var i = n.Relational.store.find(this, e);
+if (t.isObject(e)) if (i) i.set(e, r); else if (!r || r && r.create !== !1) i = this.build(e, r);
+return i;
+}
+}), t.extend(n.RelationalModel.prototype, n.Semaphore), n.Collection.prototype.__prepareModel = n.Collection.prototype._prepareModel, n.Collection.prototype._prepareModel = function(e, t) {
+t || (t = {});
+if (e instanceof n.Model) e.collection || (e.collection = this); else {
+var r = e;
+t.collection = this, typeof this.model.build != "undefined" ? e = this.model.build(r, t) : e = new this.model(r, t), e._validate(e.attributes, t) || (e = !1);
+}
 return e;
-}
-}), b.extend(c.RelationalModel.prototype, c.Semaphore), c.Collection.prototype.__prepareModel = c.Collection.prototype._prepareModel, c.Collection.prototype._prepareModel = function(a, b) {
-b || (b = {});
-if (a instanceof c.Model) a.collection || (a.collection = this); else {
-var d = a;
-b.collection = this, typeof this.model.build != "undefined" ? a = this.model.build(d, b) : a = new this.model(d, b), a._validate(a.attributes, b) || (a = !1);
-}
-return a;
 };
-var e = c.Collection.prototype.__add = c.Collection.prototype.add;
-c.Collection.prototype.add = function(a, d) {
-d || (d = {}), b.isArray(a) || (a = [ a ]);
-var f = [];
-return b.each(a, function(a) {
-if (!(a instanceof c.Model)) {
-var b = c.Relational.store.find(this.model, a[this.model.prototype.idAttribute]);
-b ? (b.set(b.parse ? b.parse(a) : a, d), a = b) : a = c.Collection.prototype._prepareModel.call(this, a, d);
+var i = n.Collection.prototype.__add = n.Collection.prototype.add;
+n.Collection.prototype.add = function(e, r) {
+r || (r = {}), t.isArray(e) || (e = [ e ]);
+var s = [];
+return t.each(e, function(e) {
+if (!(e instanceof n.Model)) {
+var t = n.Relational.store.find(this.model, e[this.model.prototype.idAttribute]);
+t ? (t.set(t.parse ? t.parse(e) : e, r), e = t) : e = n.Collection.prototype._prepareModel.call(this, e, r);
 }
-a instanceof c.Model && !this.get(a) && !this.getByCid(a) && f.push(a);
-}, this), f.length && (e.call(this, f, d), b.each(f, function(a) {
-this.trigger("relational:add", a, this, d);
+e instanceof n.Model && !this.get(e) && !this.getByCid(e) && s.push(e);
+}, this), s.length && (i.call(this, s, r), t.each(s, function(e) {
+this.trigger("relational:add", e, this, r);
 }, this)), this;
 };
-var f = c.Collection.prototype.__remove = c.Collection.prototype.remove;
-c.Collection.prototype.remove = function(a, d) {
-return d || (d = {}), b.isArray(a) ? a = a.slice(0) : a = [ a ], b.each(a, function(a) {
-a = this.getByCid(a) || this.get(a), a instanceof c.Model && (f.call(this, a, d), this.trigger("relational:remove", a, this, d));
+var s = n.Collection.prototype.__remove = n.Collection.prototype.remove;
+n.Collection.prototype.remove = function(e, r) {
+return r || (r = {}), t.isArray(e) ? e = e.slice(0) : e = [ e ], t.each(e, function(e) {
+e = this.getByCid(e) || this.get(e), e instanceof n.Model && (s.call(this, e, r), this.trigger("relational:remove", e, this, r));
 }, this), this;
 };
-var g = c.Collection.prototype.__reset = c.Collection.prototype.reset;
-c.Collection.prototype.reset = function(a, b) {
-return g.call(this, a, b), this.trigger("relational:reset", this, b), this;
+var o = n.Collection.prototype.__reset = n.Collection.prototype.reset;
+n.Collection.prototype.reset = function(e, t) {
+return o.call(this, e, t), this.trigger("relational:reset", this, t), this;
 };
-var h = c.Collection.prototype.__sort = c.Collection.prototype.sort;
-c.Collection.prototype.sort = function(a) {
-return h.call(this, a), this.trigger("relational:reset", this, a), this;
+var u = n.Collection.prototype.__sort = n.Collection.prototype.sort;
+n.Collection.prototype.sort = function(e) {
+return u.call(this, e), this.trigger("relational:reset", this, e), this;
 };
-var i = c.Collection.prototype.__trigger = c.Collection.prototype.trigger;
-c.Collection.prototype.trigger = function(a) {
-if (a === "add" || a === "remove" || a === "reset") {
-var d = this, e = arguments;
-a === "add" && (e = b.toArray(e), b.isObject(e[3]) && (e[3] = b.clone(e[3]))), c.Relational.eventQueue.add(function() {
-i.apply(d, e);
+var a = n.Collection.prototype.__trigger = n.Collection.prototype.trigger;
+n.Collection.prototype.trigger = function(e) {
+if (e === "add" || e === "remove" || e === "reset") {
+var r = this, i = arguments;
+e === "add" && (i = t.toArray(i), t.isObject(i[3]) && (i[3] = t.clone(i[3]))), n.Relational.eventQueue.add(function() {
+a.apply(r, i);
 });
-} else i.apply(this, arguments);
+} else a.apply(this, arguments);
 return this;
-}, c.RelationalModel.extend = function(a, b) {
-var d = c.Model.extend.apply(this, arguments);
-return d.setup(this), d;
+}, n.RelationalModel.extend = function(e, t) {
+var r = n.Model.extend.apply(this, arguments);
+return r.setup(this), r;
 };
 })();
 
@@ -3113,68 +1689,68 @@ enyo.kind({
 name: "enyo.FittableLayout",
 kind: "Layout",
 calcFitIndex: function() {
-for (var a = 0, b = this.container.children, c; c = b[a]; a++) if (c.fit && c.showing) return a;
+for (var e = 0, t = this.container.children, n; n = t[e]; e++) if (n.fit && n.showing) return e;
 },
 getFitControl: function() {
-var a = this.container.children, b = a[this.fitIndex];
-return b && b.fit && b.showing || (this.fitIndex = this.calcFitIndex(), b = a[this.fitIndex]), b;
+var e = this.container.children, t = e[this.fitIndex];
+return t && t.fit && t.showing || (this.fitIndex = this.calcFitIndex(), t = e[this.fitIndex]), t;
 },
 getLastControl: function() {
-var a = this.container.children, b = a.length - 1, c = a[b];
-while ((c = a[b]) && !c.showing) b--;
-return c;
+var e = this.container.children, t = e.length - 1, n = e[t];
+while ((n = e[t]) && !n.showing) t--;
+return n;
 },
-_reflow: function(a, b, c, d) {
+_reflow: function(e, t, n, r) {
 this.container.addRemoveClass("enyo-stretch", !this.container.noStretch);
-var e = this.getFitControl();
-if (!e) return;
-var f = 0, g = 0, h = 0, i, j = this.container.hasNode();
-j && (i = enyo.FittableLayout.calcPaddingExtents(j), f = j[b] - (i[c] + i[d]));
-var k = e.getBounds();
-g = k[c] - (i && i[c] || 0);
-var l = this.getLastControl();
-if (l) {
-var m = enyo.FittableLayout.getComputedStyleValue(l.hasNode(), "margin", d) || 0;
-if (l != e) {
-var n = l.getBounds(), o = k[c] + k[a], p = n[c] + n[a] + m;
-h = p - o;
-} else h = m;
+var i = this.getFitControl();
+if (!i) return;
+var s = 0, o = 0, u = 0, a, f = this.container.hasNode();
+f && (a = enyo.FittableLayout.calcPaddingExtents(f), s = f[t] - (a[n] + a[r]));
+var l = i.getBounds();
+o = l[n] - (a && a[n] || 0);
+var c = this.getLastControl();
+if (c) {
+var h = enyo.FittableLayout.getComputedStyleValue(c.hasNode(), "margin", r) || 0;
+if (c != i) {
+var p = c.getBounds(), d = l[n] + l[e], v = p[n] + p[e] + h;
+u = v - d;
+} else u = h;
 }
-var q = f - (g + h);
-e.applyStyle(a, q + "px");
+var m = s - (o + u);
+i.applyStyle(e, m + "px");
 },
 reflow: function() {
 this.orient == "h" ? this._reflow("width", "clientWidth", "left", "right") : this._reflow("height", "clientHeight", "top", "bottom");
 },
 statics: {
-_ieCssToPixelValue: function(a, b) {
-var c = b, d = a.style, e = d.left, f = a.runtimeStyle && a.runtimeStyle.left;
-return f && (a.runtimeStyle.left = a.currentStyle.left), d.left = c, c = d.pixelLeft, d.left = e, f && (d.runtimeStyle.left = f), c;
+_ieCssToPixelValue: function(e, t) {
+var n = t, r = e.style, i = r.left, s = e.runtimeStyle && e.runtimeStyle.left;
+return s && (e.runtimeStyle.left = e.currentStyle.left), r.left = n, n = r.pixelLeft, r.left = i, s && (r.runtimeStyle.left = s), n;
 },
 _pxMatch: /px/i,
-getComputedStyleValue: function(a, b, c, d) {
-var e = d || enyo.dom.getComputedStyle(a);
-if (e) return parseInt(e.getPropertyValue(b + "-" + c));
-if (a && a.currentStyle) {
-var f = a.currentStyle[b + enyo.cap(c)];
-return f.match(this._pxMatch) || (f = this._ieCssToPixelValue(a, f)), parseInt(f);
+getComputedStyleValue: function(e, t, n, r) {
+var i = r || enyo.dom.getComputedStyle(e);
+if (i) return parseInt(i.getPropertyValue(t + "-" + n));
+if (e && e.currentStyle) {
+var s = e.currentStyle[t + enyo.cap(n)];
+return s.match(this._pxMatch) || (s = this._ieCssToPixelValue(e, s)), parseInt(s);
 }
 return 0;
 },
-calcBoxExtents: function(a, b) {
-var c = enyo.dom.getComputedStyle(a);
+calcBoxExtents: function(e, t) {
+var n = enyo.dom.getComputedStyle(e);
 return {
-top: this.getComputedStyleValue(a, b, "top", c),
-right: this.getComputedStyleValue(a, b, "right", c),
-bottom: this.getComputedStyleValue(a, b, "bottom", c),
-left: this.getComputedStyleValue(a, b, "left", c)
+top: this.getComputedStyleValue(e, t, "top", n),
+right: this.getComputedStyleValue(e, t, "right", n),
+bottom: this.getComputedStyleValue(e, t, "bottom", n),
+left: this.getComputedStyleValue(e, t, "left", n)
 };
 },
-calcPaddingExtents: function(a) {
-return this.calcBoxExtents(a, "padding");
+calcPaddingExtents: function(e) {
+return this.calcBoxExtents(e, "padding");
 },
-calcMarginExtents: function(a) {
-return this.calcBoxExtents(a, "margin");
+calcMarginExtents: function(e) {
+return this.calcBoxExtents(e, "margin");
 }
 }
 }), enyo.kind({
@@ -3232,72 +1808,72 @@ this.inherited(arguments), this.multiSelectChanged();
 multiSelectChanged: function() {
 this.$.selection.setMulti(this.multiSelect);
 },
-setupItem: function(a) {
+setupItem: function(e) {
 this.doSetupItem({
-index: a,
-selected: this.isSelected(a)
+index: e,
+selected: this.isSelected(e)
 });
 },
 generateChildHtml: function() {
-var a = "";
+var e = "";
 this.index = null;
-for (var b = 0, c = 0; b < this.count; b++) c = this.rowOffset + (this.bottomUp ? this.count - b - 1 : b), this.setupItem(c), this.$.client.setAttribute("index", c), a += this.inherited(arguments), this.$.client.teardownRender();
-return a;
+for (var t = 0, n = 0; t < this.count; t++) n = this.rowOffset + (this.bottomUp ? this.count - t - 1 : t), this.setupItem(n), this.$.client.setAttribute("index", n), e += this.inherited(arguments), this.$.client.teardownRender();
+return e;
 },
-previewDomEvent: function(a) {
-var b = this.index = this.rowForEvent(a);
-a.rowIndex = a.index = b, a.flyweight = this;
+previewDomEvent: function(e) {
+var t = this.index = this.rowForEvent(e);
+e.rowIndex = e.index = t, e.flyweight = this;
 },
-decorateEvent: function(a, b, c) {
-var d = b && b.index != null ? b.index : this.index;
-b && d != null && (b.index = d, b.flyweight = this), this.inherited(arguments);
+decorateEvent: function(e, t, n) {
+var r = t && t.index != null ? t.index : this.index;
+t && r != null && (t.index = r, t.flyweight = this), this.inherited(arguments);
 },
-tap: function(a, b) {
-this.toggleSelected ? this.$.selection.toggle(b.index) : this.$.selection.select(b.index);
+tap: function(e, t) {
+this.toggleSelected ? this.$.selection.toggle(t.index) : this.$.selection.select(t.index);
 },
-selectDeselect: function(a, b) {
-this.renderRow(b.key);
+selectDeselect: function(e, t) {
+this.renderRow(t.key);
 },
 getSelection: function() {
 return this.$.selection;
 },
-isSelected: function(a) {
-return this.getSelection().isSelected(a);
+isSelected: function(e) {
+return this.getSelection().isSelected(e);
 },
-renderRow: function(a) {
-var b = this.fetchRowNode(a);
-b && (this.setupItem(a), b.innerHTML = this.$.client.generateChildHtml(), this.$.client.teardownChildren());
+renderRow: function(e) {
+var t = this.fetchRowNode(e);
+t && (this.setupItem(e), t.innerHTML = this.$.client.generateChildHtml(), this.$.client.teardownChildren());
 },
-fetchRowNode: function(a) {
+fetchRowNode: function(e) {
 if (this.hasNode()) {
-var b = this.node.querySelectorAll('[index="' + a + '"]');
-return b && b[0];
+var t = this.node.querySelectorAll('[index="' + e + '"]');
+return t && t[0];
 }
 },
-rowForEvent: function(a) {
-var b = a.target, c = this.hasNode().id;
-while (b && b.parentNode && b.id != c) {
-var d = b.getAttribute && b.getAttribute("index");
-if (d !== null) return Number(d);
-b = b.parentNode;
+rowForEvent: function(e) {
+var t = e.target, n = this.hasNode().id;
+while (t && t.parentNode && t.id != n) {
+var r = t.getAttribute && t.getAttribute("index");
+if (r !== null) return Number(r);
+t = t.parentNode;
 }
 return -1;
 },
-prepareRow: function(a) {
-var b = this.fetchRowNode(a);
-enyo.FlyweightRepeater.claimNode(this.$.client, b);
+prepareRow: function(e) {
+var t = this.fetchRowNode(e);
+enyo.FlyweightRepeater.claimNode(this.$.client, t);
 },
 lockRow: function() {
 this.$.client.teardownChildren();
 },
-performOnRow: function(a, b, c) {
-b && (this.prepareRow(a), enyo.call(c || null, b), this.lockRow());
+performOnRow: function(e, t, n) {
+t && (this.prepareRow(e), enyo.call(n || null, t), this.lockRow());
 },
 statics: {
-claimNode: function(a, b) {
-var c = b && b.querySelectorAll("#" + a.id);
-c = c && c[0], a.generated = Boolean(c || !a.tag), a.node = c, a.node && a.rendered();
-for (var d = 0, e = a.children, f; f = e[d]; d++) this.claimNode(f, b);
+claimNode: function(e, t) {
+var n = t && t.querySelectorAll("#" + e.id);
+n = n && n[0], e.generated = Boolean(n || !e.tag), e.node = n, e.node && e.rendered();
+for (var r = 0, i = e.children, s; s = i[r]; r++) this.claimNode(s, t);
 }
 }
 });
@@ -3370,63 +1946,63 @@ this.hasNode() && this.updateMetrics();
 },
 updateMetrics: function() {
 this.defaultPageHeight = this.rowsPerPage * (this.rowHeight || 100), this.pageCount = Math.ceil(this.count / this.rowsPerPage), this.portSize = 0;
-for (var a = 0; a < this.pageCount; a++) this.portSize += this.getPageHeight(a);
+for (var e = 0; e < this.pageCount; e++) this.portSize += this.getPageHeight(e);
 this.adjustPortSize();
 },
-generatePage: function(a, b) {
-this.page = a;
-var c = this.$.generator.rowOffset = this.rowsPerPage * this.page, d = this.$.generator.count = Math.min(this.count - c, this.rowsPerPage), e = this.$.generator.generateChildHtml();
-b.setContent(e);
-var f = b.getBounds().height;
-!this.rowHeight && f > 0 && (this.rowHeight = Math.floor(f / d), this.updateMetrics());
+generatePage: function(e, t) {
+this.page = e;
+var n = this.$.generator.rowOffset = this.rowsPerPage * this.page, r = this.$.generator.count = Math.min(this.count - n, this.rowsPerPage), i = this.$.generator.generateChildHtml();
+t.setContent(i);
+var s = t.getBounds().height;
+!this.rowHeight && s > 0 && (this.rowHeight = Math.floor(s / r), this.updateMetrics());
 if (!this.fixedHeight) {
-var g = this.getPageHeight(a);
-g != f && f > 0 && (this.pageHeights[a] = f, this.portSize += f - g);
+var o = this.getPageHeight(e);
+o != s && s > 0 && (this.pageHeights[e] = s, this.portSize += s - o);
 }
 },
-update: function(a) {
-var b = !1, c = this.positionToPageInfo(a), d = c.pos + this.scrollerHeight / 2, e = Math.floor(d / Math.max(c.height, this.scrollerHeight) + .5) + c.no, f = e % 2 == 0 ? e : e - 1;
-this.p0 != f && this.isPageInRange(f) && (this.generatePage(f, this.$.page0), this.positionPage(f, this.$.page0), this.p0 = f, b = !0), f = e % 2 == 0 ? Math.max(1, e - 1) : e, this.p1 != f && this.isPageInRange(f) && (this.generatePage(f, this.$.page1), this.positionPage(f, this.$.page1), this.p1 = f, b = !0), b && !this.fixedHeight && (this.adjustBottomPage(), this.adjustPortSize());
+update: function(e) {
+var t = !1, n = this.positionToPageInfo(e), r = n.pos + this.scrollerHeight / 2, i = Math.floor(r / Math.max(n.height, this.scrollerHeight) + .5) + n.no, s = i % 2 == 0 ? i : i - 1;
+this.p0 != s && this.isPageInRange(s) && (this.generatePage(s, this.$.page0), this.positionPage(s, this.$.page0), this.p0 = s, t = !0), s = i % 2 == 0 ? Math.max(1, i - 1) : i, this.p1 != s && this.isPageInRange(s) && (this.generatePage(s, this.$.page1), this.positionPage(s, this.$.page1), this.p1 = s, t = !0), t && !this.fixedHeight && (this.adjustBottomPage(), this.adjustPortSize());
 },
-updateForPosition: function(a) {
-this.update(this.calcPos(a));
+updateForPosition: function(e) {
+this.update(this.calcPos(e));
 },
-calcPos: function(a) {
-return this.bottomUp ? this.portSize - this.scrollerHeight - a : a;
+calcPos: function(e) {
+return this.bottomUp ? this.portSize - this.scrollerHeight - e : e;
 },
 adjustBottomPage: function() {
-var a = this.p0 >= this.p1 ? this.$.page0 : this.$.page1;
-this.positionPage(a.pageNo, a);
+var e = this.p0 >= this.p1 ? this.$.page0 : this.$.page1;
+this.positionPage(e.pageNo, e);
 },
 adjustPortSize: function() {
 this.scrollerHeight = this.getBounds().height;
-var a = Math.max(this.scrollerHeight, this.portSize);
-this.$.port.applyStyle("height", a + "px");
+var e = Math.max(this.scrollerHeight, this.portSize);
+this.$.port.applyStyle("height", e + "px");
 },
-positionPage: function(a, b) {
-b.pageNo = a;
-var c = this.pageToPosition(a);
-b.applyStyle(this.pageBound, c + "px");
+positionPage: function(e, t) {
+t.pageNo = e;
+var n = this.pageToPosition(e);
+t.applyStyle(this.pageBound, n + "px");
 },
-pageToPosition: function(a) {
-var b = 0, c = a;
-while (c > 0) c--, b += this.getPageHeight(c);
-return b;
+pageToPosition: function(e) {
+var t = 0, n = e;
+while (n > 0) n--, t += this.getPageHeight(n);
+return t;
 },
-positionToPageInfo: function(a) {
-var b = -1, c = this.calcPos(a), d = this.defaultPageHeight;
-while (c >= 0) b++, d = this.getPageHeight(b), c -= d;
+positionToPageInfo: function(e) {
+var t = -1, n = this.calcPos(e), r = this.defaultPageHeight;
+while (n >= 0) t++, r = this.getPageHeight(t), n -= r;
 return {
-no: b,
-height: d,
-pos: c + d
+no: t,
+height: r,
+pos: n + r
 };
 },
-isPageInRange: function(a) {
-return a == Math.max(0, Math.min(this.pageCount - 1, a));
+isPageInRange: function(e) {
+return e == Math.max(0, Math.min(this.pageCount - 1, e));
 },
-getPageHeight: function(a) {
-return this.pageHeights[a] || this.defaultPageHeight;
+getPageHeight: function(e) {
+return this.pageHeights[e] || this.defaultPageHeight;
 },
 invalidatePages: function() {
 this.p0 = this.p1 = null, this.$.page0.setContent(""), this.$.page1.setContent("");
@@ -3434,32 +2010,32 @@ this.p0 = this.p1 = null, this.$.page0.setContent(""), this.$.page1.setContent("
 invalidateMetrics: function() {
 this.pageHeights = [], this.rowHeight = 0, this.updateMetrics();
 },
-scroll: function(a, b) {
-var c = this.inherited(arguments);
-return this.update(this.getScrollTop()), c;
+scroll: function(e, t) {
+var n = this.inherited(arguments);
+return this.update(this.getScrollTop()), n;
 },
 scrollToBottom: function() {
 this.update(this.getScrollBounds().maxTop), this.inherited(arguments);
 },
-setScrollTop: function(a) {
-this.update(a), this.inherited(arguments), this.twiddle();
+setScrollTop: function(e) {
+this.update(e), this.inherited(arguments), this.twiddle();
 },
 getScrollPosition: function() {
 return this.calcPos(this.getScrollTop());
 },
-setScrollPosition: function(a) {
-this.setScrollTop(this.calcPos(a));
+setScrollPosition: function(e) {
+this.setScrollTop(this.calcPos(e));
 },
-scrollToRow: function(a) {
-var b = Math.floor(a / this.rowsPerPage), c = a % this.rowsPerPage, d = this.pageToPosition(b);
-this.updateForPosition(d), d = this.pageToPosition(b), this.setScrollPosition(d);
-if (b == this.p0 || b == this.p1) {
-var e = this.$.generator.fetchRowNode(a);
-if (e) {
-var f = e.offsetTop;
-this.bottomUp && (f = this.getPageHeight(b) - e.offsetHeight - f);
-var g = this.getScrollPosition() + f;
-this.setScrollPosition(g);
+scrollToRow: function(e) {
+var t = Math.floor(e / this.rowsPerPage), n = e % this.rowsPerPage, r = this.pageToPosition(t);
+this.updateForPosition(r), r = this.pageToPosition(t), this.setScrollPosition(r);
+if (t == this.p0 || t == this.p1) {
+var i = this.$.generator.fetchRowNode(e);
+if (i) {
+var s = i.offsetTop;
+this.bottomUp && (s = this.getPageHeight(t) - i.offsetHeight - s);
+var o = this.getScrollPosition() + s;
+this.setScrollPosition(o);
 }
 }
 },
@@ -3478,30 +2054,30 @@ this.getSelection().clear(), this.invalidateMetrics(), this.invalidatePages(), t
 getSelection: function() {
 return this.$.generator.getSelection();
 },
-select: function(a, b) {
-return this.getSelection().select(a, b);
+select: function(e, t) {
+return this.getSelection().select(e, t);
 },
-isSelected: function(a) {
-return this.$.generator.isSelected(a);
+isSelected: function(e) {
+return this.$.generator.isSelected(e);
 },
-renderRow: function(a) {
-this.$.generator.renderRow(a);
+renderRow: function(e) {
+this.$.generator.renderRow(e);
 },
-prepareRow: function(a) {
-this.$.generator.prepareRow(a);
+prepareRow: function(e) {
+this.$.generator.prepareRow(e);
 },
 lockRow: function() {
 this.$.generator.lockRow();
 },
-performOnRow: function(a, b, c) {
-this.$.generator.performOnRow(a, b, c);
+performOnRow: function(e, t, n) {
+this.$.generator.performOnRow(e, t, n);
 },
-animateFinish: function(a) {
+animateFinish: function(e) {
 return this.twiddle(), !0;
 },
 twiddle: function() {
-var a = this.getStrategy();
-enyo.call(a, "twiddle");
+var e = this.getStrategy();
+enyo.call(e, "twiddle");
 }
 });
 
@@ -3540,36 +2116,36 @@ pullingIconClass: "enyo-puller-arrow enyo-puller-arrow-down",
 pulledIconClass: "enyo-puller-arrow enyo-puller-arrow-up",
 loadingIconClass: "",
 create: function() {
-var a = {
+var e = {
 kind: "Puller",
 showing: !1,
 text: this.loadingMessage,
 iconClass: this.loadingIconClass,
 onCreate: "setPully"
 };
-this.listTools.splice(0, 0, a), this.inherited(arguments), this.setPulling();
+this.listTools.splice(0, 0, e), this.inherited(arguments), this.setPulling();
 },
 initComponents: function() {
 this.createChrome(this.pulldownTools), this.accel = enyo.dom.canAccelerate(), this.translation = this.accel ? "translate3d" : "translate", this.inherited(arguments);
 },
-setPully: function(a, b) {
-this.pully = b.originator;
+setPully: function(e, t) {
+this.pully = t.originator;
 },
 scrollStartHandler: function() {
 this.firedPullStart = !1, this.firedPull = !1, this.firedPullCancel = !1;
 },
-scrollHandler: function(a) {
+scrollHandler: function(e) {
 this.completingPull && this.pully.setShowing(!1);
-var b = this.getStrategy().$.scrollMath, c = b.y;
-b.isInOverScroll() && c > 0 && (enyo.dom.transformValue(this.$.pulldown, this.translation, "0," + c + "px" + (this.accel ? ",0" : "")), this.firedPullStart || (this.firedPullStart = !0, this.pullStart(), this.pullHeight = this.$.pulldown.getBounds().height), c > this.pullHeight && !this.firedPull && (this.firedPull = !0, this.firedPullCancel = !1, this.pull()), this.firedPull && !this.firedPullCancel && c < this.pullHeight && (this.firedPullCancel = !0, this.firedPull = !1, this.pullCancel()));
+var t = this.getStrategy().$.scrollMath, n = t.y;
+t.isInOverScroll() && n > 0 && (enyo.dom.transformValue(this.$.pulldown, this.translation, "0," + n + "px" + (this.accel ? ",0" : "")), this.firedPullStart || (this.firedPullStart = !0, this.pullStart(), this.pullHeight = this.$.pulldown.getBounds().height), n > this.pullHeight && !this.firedPull && (this.firedPull = !0, this.firedPullCancel = !1, this.pull()), this.firedPull && !this.firedPullCancel && n < this.pullHeight && (this.firedPullCancel = !0, this.firedPull = !1, this.pullCancel()));
 },
 scrollStopHandler: function() {
 this.completingPull && (this.completingPull = !1, this.doPullComplete());
 },
 dragfinish: function() {
 if (this.firedPull) {
-var a = this.getStrategy().$.scrollMath;
-a.setScrollY(a.y - this.pullHeight), this.pullRelease();
+var e = this.getStrategy().$.scrollMath;
+e.setScrollY(e.y - this.pullHeight), this.pullRelease();
 }
 },
 completePull: function() {
@@ -3669,22 +2245,22 @@ this.inherited(arguments), this.updateDragScalar();
 },
 canModifyUnit: function() {
 if (!this.canTransform) {
-var a = this.getInitialStyleValue(this.hasNode(), this.boundary);
-a.match(/px/i) && this.unit === "%" && (this.unitModifier = this.getBounds()[this.dimension]);
+var e = this.getInitialStyleValue(this.hasNode(), this.boundary);
+e.match(/px/i) && this.unit === "%" && (this.unitModifier = this.getBounds()[this.dimension]);
 }
 },
-getInitialStyleValue: function(a, b) {
-var c = enyo.dom.getComputedStyle(a);
-return c ? c.getPropertyValue(b) : a && a.currentStyle ? a.currentStyle[b] : "0";
+getInitialStyleValue: function(e, t) {
+var n = enyo.dom.getComputedStyle(e);
+return n ? n.getPropertyValue(t) : e && e.currentStyle ? e.currentStyle[t] : "0";
 },
-updateBounds: function(a, b) {
-var c = {};
-c[this.boundary] = a, this.setBounds(c, this.unit), this.setInlineStyles(a, b);
+updateBounds: function(e, t) {
+var n = {};
+n[this.boundary] = e, this.setBounds(n, this.unit), this.setInlineStyles(e, t);
 },
 updateDragScalar: function() {
 if (this.unit == "%") {
-var a = this.getBounds()[this.dimension];
-this.kDragScalar = a ? 100 / a : 1, this.canTransform || this.updateBounds(this.value, 100);
+var e = this.getBounds()[this.dimension];
+this.kDragScalar = e ? 100 / e : 1, this.canTransform || this.updateBounds(this.value, 100);
 }
 },
 transformChanged: function() {
@@ -3694,16 +2270,16 @@ acceleratedChanged: function() {
 enyo.platform.android > 2 || enyo.dom.accelerate(this, this.accelerated);
 },
 axisChanged: function() {
-var a = this.axis == "h";
-this.dragMoveProp = a ? "dx" : "dy", this.shouldDragProp = a ? "horizontal" : "vertical", this.transform = a ? "translateX" : "translateY", this.dimension = a ? "width" : "height", this.boundary = a ? "left" : "top";
+var e = this.axis == "h";
+this.dragMoveProp = e ? "dx" : "dy", this.shouldDragProp = e ? "horizontal" : "vertical", this.transform = e ? "translateX" : "translateY", this.dimension = e ? "width" : "height", this.boundary = e ? "left" : "top";
 },
-setInlineStyles: function(a, b) {
-var c = {};
-this.unitModifier ? (c[this.boundary] = this.percentToPixels(a, this.unitModifier), c[this.dimension] = this.unitModifier, this.setBounds(c)) : (b ? c[this.dimension] = b : c[this.boundary] = a, this.setBounds(c, this.unit));
+setInlineStyles: function(e, t) {
+var n = {};
+this.unitModifier ? (n[this.boundary] = this.percentToPixels(e, this.unitModifier), n[this.dimension] = this.unitModifier, this.setBounds(n)) : (t ? n[this.dimension] = t : n[this.boundary] = e, this.setBounds(n, this.unit));
 },
-valueChanged: function(a) {
-var b = this.value;
-this.isOob(b) && !this.isAnimating() && (this.value = this.overMoving ? this.dampValue(b) : this.clampValue(b)), enyo.platform.android > 2 && (this.value ? (a === 0 || a === undefined) && enyo.dom.accelerate(this, this.accelerated) : enyo.dom.accelerate(this, !1)), this.canTransform ? enyo.dom.transformValue(this, this.transform, this.value + this.unit) : this.setInlineStyles(this.value, !1), this.doChange();
+valueChanged: function(e) {
+var t = this.value;
+this.isOob(t) && !this.isAnimating() && (this.value = this.overMoving ? this.dampValue(t) : this.clampValue(t)), enyo.platform.android > 2 && (this.value ? (e === 0 || e === undefined) && enyo.dom.accelerate(this, this.accelerated) : enyo.dom.accelerate(this, !1)), this.canTransform ? enyo.dom.transformValue(this, this.transform, this.value + this.unit) : this.setInlineStyles(this.value, !1), this.doChange();
 },
 getAnimator: function() {
 return this.$.animator;
@@ -3720,58 +2296,58 @@ return this.min;
 calcMax: function() {
 return this.max;
 },
-clampValue: function(a) {
-var b = this.calcMin(), c = this.calcMax();
-return Math.max(b, Math.min(a, c));
+clampValue: function(e) {
+var t = this.calcMin(), n = this.calcMax();
+return Math.max(t, Math.min(e, n));
 },
-dampValue: function(a) {
-return this.dampBound(this.dampBound(a, this.min, 1), this.max, -1);
+dampValue: function(e) {
+return this.dampBound(this.dampBound(e, this.min, 1), this.max, -1);
 },
-dampBound: function(a, b, c) {
-var d = a;
-return d * c < b * c && (d = b + (d - b) / 4), d;
+dampBound: function(e, t, n) {
+var r = e;
+return r * n < t * n && (r = t + (r - t) / 4), r;
 },
-percentToPixels: function(a, b) {
-return Math.floor(b / 100 * a);
+percentToPixels: function(e, t) {
+return Math.floor(t / 100 * e);
 },
-pixelsToPercent: function(a) {
-var b = this.unitModifier ? this.getBounds()[this.dimension] : this.container.getBounds()[this.dimension];
-return a / b * 100;
+pixelsToPercent: function(e) {
+var t = this.unitModifier ? this.getBounds()[this.dimension] : this.container.getBounds()[this.dimension];
+return e / t * 100;
 },
-shouldDrag: function(a) {
-return this.draggable && a[this.shouldDragProp];
+shouldDrag: function(e) {
+return this.draggable && e[this.shouldDragProp];
 },
-isOob: function(a) {
-return a > this.calcMax() || a < this.calcMin();
+isOob: function(e) {
+return e > this.calcMax() || e < this.calcMin();
 },
-dragstart: function(a, b) {
-if (this.shouldDrag(b)) return b.preventDefault(), this.$.animator.stop(), b.dragInfo = {}, this.dragging = !0, this.drag0 = this.value, this.dragd0 = 0, this.preventDragPropagation;
+dragstart: function(e, t) {
+if (this.shouldDrag(t)) return t.preventDefault(), this.$.animator.stop(), t.dragInfo = {}, this.dragging = !0, this.drag0 = this.value, this.dragd0 = 0, this.preventDragPropagation;
 },
-drag: function(a, b) {
+drag: function(e, t) {
 if (this.dragging) {
-b.preventDefault();
-var c = this.canTransform ? b[this.dragMoveProp] * this.kDragScalar : this.pixelsToPercent(b[this.dragMoveProp]), d = this.drag0 + c, e = c - this.dragd0;
-return this.dragd0 = c, e && (b.dragInfo.minimizing = e < 0), this.setValue(d), this.preventDragPropagation;
+t.preventDefault();
+var n = this.canTransform ? t[this.dragMoveProp] * this.kDragScalar : this.pixelsToPercent(t[this.dragMoveProp]), r = this.drag0 + n, i = n - this.dragd0;
+return this.dragd0 = n, i && (t.dragInfo.minimizing = i < 0), this.setValue(r), this.preventDragPropagation;
 }
 },
-dragfinish: function(a, b) {
-if (this.dragging) return this.dragging = !1, this.completeDrag(b), b.preventTap(), this.preventDragPropagation;
+dragfinish: function(e, t) {
+if (this.dragging) return this.dragging = !1, this.completeDrag(t), t.preventTap(), this.preventDragPropagation;
 },
-completeDrag: function(a) {
-this.value !== this.calcMax() && this.value != this.calcMin() && this.animateToMinMax(a.dragInfo.minimizing);
+completeDrag: function(e) {
+this.value !== this.calcMax() && this.value != this.calcMin() && this.animateToMinMax(e.dragInfo.minimizing);
 },
 isAnimating: function() {
 return this.$.animator.isAnimating();
 },
-play: function(a, b) {
+play: function(e, t) {
 this.$.animator.play({
-startValue: a,
-endValue: b,
+startValue: e,
+endValue: t,
 node: this.hasNode()
 });
 },
-animateTo: function(a) {
-this.play(this.value, a);
+animateTo: function(e) {
+this.play(this.value, e);
 },
 animateToMin: function() {
 this.animateTo(this.calcMin());
@@ -3779,14 +2355,14 @@ this.animateTo(this.calcMin());
 animateToMax: function() {
 this.animateTo(this.calcMax());
 },
-animateToMinMax: function(a) {
-a ? this.animateToMin() : this.animateToMax();
+animateToMinMax: function(e) {
+e ? this.animateToMin() : this.animateToMax();
 },
-animatorStep: function(a) {
-return this.setValue(a.value), !0;
+animatorStep: function(e) {
+return this.setValue(e.value), !0;
 },
-animatorComplete: function(a) {
-return this.doAnimateFinish(a), !0;
+animatorComplete: function(e) {
+return this.doAnimateFinish(e), !0;
 },
 toggleMinMax: function() {
 this.animateToMinMax(!this.isAtMin());
@@ -3805,91 +2381,91 @@ dragDirectionProp: "xDirection",
 canDragProp: "horizontal",
 incrementalPoints: !1,
 destroy: function() {
-var a = this.container.getPanels();
-for (var b = 0, c; c = a[b]; b++) c._arranger = null;
+var e = this.container.getPanels();
+for (var t = 0, n; n = e[t]; t++) n._arranger = null;
 this.inherited(arguments);
 },
-arrange: function(a, b) {},
+arrange: function(e, t) {},
 size: function() {},
 start: function() {
-var a = this.container.fromIndex, b = this.container.toIndex, c = this.container.transitionPoints = [ a ];
+var e = this.container.fromIndex, t = this.container.toIndex, n = this.container.transitionPoints = [ e ];
 if (this.incrementalPoints) {
-var d = Math.abs(b - a) - 2, e = a;
-while (d >= 0) e += b < a ? -1 : 1, c.push(e), d--;
+var r = Math.abs(t - e) - 2, i = e;
+while (r >= 0) i += t < e ? -1 : 1, n.push(i), r--;
 }
-c.push(this.container.toIndex);
+n.push(this.container.toIndex);
 },
 finish: function() {},
-canDragEvent: function(a) {
-return a[this.canDragProp];
+canDragEvent: function(e) {
+return e[this.canDragProp];
 },
-calcDragDirection: function(a) {
-return a[this.dragDirectionProp];
+calcDragDirection: function(e) {
+return e[this.dragDirectionProp];
 },
-calcDrag: function(a) {
-return a[this.dragProp];
+calcDrag: function(e) {
+return e[this.dragProp];
 },
-drag: function(a, b, c, d, e) {
-var f = this.measureArrangementDelta(-a, b, c, d, e);
-return f;
+drag: function(e, t, n, r, i) {
+var s = this.measureArrangementDelta(-e, t, n, r, i);
+return s;
 },
-measureArrangementDelta: function(a, b, c, d, e) {
-var f = this.calcArrangementDifference(b, c, d, e), g = f ? a / Math.abs(f) : 0;
-return g *= this.container.fromIndex > this.container.toIndex ? -1 : 1, g;
+measureArrangementDelta: function(e, t, n, r, i) {
+var s = this.calcArrangementDifference(t, n, r, i), o = s ? e / Math.abs(s) : 0;
+return o *= this.container.fromIndex > this.container.toIndex ? -1 : 1, o;
 },
-calcArrangementDifference: function(a, b, c, d) {},
-_arrange: function(a) {
-var b = this.getOrderedControls(a);
-this.arrange(b, a);
+calcArrangementDifference: function(e, t, n, r) {},
+_arrange: function(e) {
+var t = this.getOrderedControls(e);
+this.arrange(t, e);
 },
-arrangeControl: function(a, b) {
-a._arranger = enyo.mixin(a._arranger || {}, b);
+arrangeControl: function(e, t) {
+e._arranger = enyo.mixin(e._arranger || {}, t);
 },
 flow: function() {
 this.c$ = [].concat(this.container.getPanels()), this.controlsIndex = 0;
-for (var a = 0, b = this.container.getPanels(), c; c = b[a]; a++) {
-enyo.dom.accelerate(c, this.accelerated);
+for (var e = 0, t = this.container.getPanels(), n; n = t[e]; e++) {
+enyo.dom.accelerate(n, this.accelerated);
 if (enyo.platform.safari) {
-var d = c.children;
-for (var e = 0, f; f = d[e]; e++) enyo.dom.accelerate(f, this.accelerated);
+var r = n.children;
+for (var i = 0, s; s = r[i]; i++) enyo.dom.accelerate(s, this.accelerated);
 }
 }
 },
 reflow: function() {
-var a = this.container.hasNode();
-this.containerBounds = a ? {
-width: a.clientWidth,
-height: a.clientHeight
+var e = this.container.hasNode();
+this.containerBounds = e ? {
+width: e.clientWidth,
+height: e.clientHeight
 } : {}, this.size();
 },
 flowArrangement: function() {
-var a = this.container.arrangement;
-if (a) for (var b = 0, c = this.container.getPanels(), d; d = c[b]; b++) this.flowControl(d, a[b]);
+var e = this.container.arrangement;
+if (e) for (var t = 0, n = this.container.getPanels(), r; r = n[t]; t++) this.flowControl(r, e[t]);
 },
-flowControl: function(a, b) {
-enyo.Arranger.positionControl(a, b);
-var c = b.opacity;
-c != null && enyo.Arranger.opacifyControl(a, c);
+flowControl: function(e, t) {
+enyo.Arranger.positionControl(e, t);
+var n = t.opacity;
+n != null && enyo.Arranger.opacifyControl(e, n);
 },
-getOrderedControls: function(a) {
-var b = Math.floor(a), c = b - this.controlsIndex, d = c > 0, e = this.c$ || [];
-for (var f = 0; f < Math.abs(c); f++) d ? e.push(e.shift()) : e.unshift(e.pop());
-return this.controlsIndex = b, e;
+getOrderedControls: function(e) {
+var t = Math.floor(e), n = t - this.controlsIndex, r = n > 0, i = this.c$ || [];
+for (var s = 0; s < Math.abs(n); s++) r ? i.push(i.shift()) : i.unshift(i.pop());
+return this.controlsIndex = t, i;
 },
 statics: {
-positionControl: function(a, b, c) {
-var d = c || "px";
+positionControl: function(e, t, n) {
+var r = n || "px";
 if (!this.updating) if (enyo.dom.canTransform() && !enyo.platform.android) {
-var e = b.left, f = b.top, e = enyo.isString(e) ? e : e && e + d, f = enyo.isString(f) ? f : f && f + d;
-enyo.dom.transform(a, {
-translateX: e || null,
-translateY: f || null
+var i = t.left, s = t.top, i = enyo.isString(i) ? i : i && i + r, s = enyo.isString(s) ? s : s && s + r;
+enyo.dom.transform(e, {
+translateX: i || null,
+translateY: s || null
 });
-} else a.setBounds(b, c);
+} else e.setBounds(t, n);
 },
-opacifyControl: function(a, b) {
-var c = b;
-c = c > .99 ? 1 : c < .01 ? 0 : c, enyo.platform.ie < 9 ? a.applyStyle("filter", "progid:DXImageTransform.Microsoft.Alpha(Opacity=" + c * 100 + ")") : a.applyStyle("opacity", c);
+opacifyControl: function(e, t) {
+var n = t;
+n = n > .99 ? 1 : n < .01 ? 0 : n, enyo.platform.ie < 9 ? e.applyStyle("filter", "progid:DXImageTransform.Microsoft.Alpha(Opacity=" + n * 100 + ")") : e.applyStyle("opacity", n);
 }
 }
 });
@@ -3900,30 +2476,30 @@ enyo.kind({
 name: "enyo.CardArranger",
 kind: "Arranger",
 layoutClass: "enyo-arranger enyo-arranger-fit",
-calcArrangementDifference: function(a, b, c, d) {
+calcArrangementDifference: function(e, t, n, r) {
 return this.containerBounds.width;
 },
-arrange: function(a, b) {
-for (var c = 0, d, e, f; d = a[c]; c++) f = c == 0 ? 1 : 0, this.arrangeControl(d, {
-opacity: f
+arrange: function(e, t) {
+for (var n = 0, r, i, s; r = e[n]; n++) s = n == 0 ? 1 : 0, this.arrangeControl(r, {
+opacity: s
 });
 },
 start: function() {
 this.inherited(arguments);
-var a = this.container.getPanels();
-for (var b = 0, c; c = a[b]; b++) {
-var d = c.showing;
-c.setShowing(b == this.container.fromIndex || b == this.container.toIndex), c.showing && !d && c.resized();
+var e = this.container.getPanels();
+for (var t = 0, n; n = e[t]; t++) {
+var r = n.showing;
+n.setShowing(t == this.container.fromIndex || t == this.container.toIndex), n.showing && !r && n.resized();
 }
 },
 finish: function() {
 this.inherited(arguments);
-var a = this.container.getPanels();
-for (var b = 0, c; c = a[b]; b++) c.setShowing(b == this.container.toIndex);
+var e = this.container.getPanels();
+for (var t = 0, n; n = e[t]; t++) n.setShowing(t == this.container.toIndex);
 },
 destroy: function() {
-var a = this.container.getPanels();
-for (var b = 0, c; c = a[b]; b++) enyo.Arranger.opacifyControl(c, 1), c.showing || c.setShowing(!0);
+var e = this.container.getPanels();
+for (var t = 0, n; n = e[t]; t++) enyo.Arranger.opacifyControl(n, 1), n.showing || n.setShowing(!0);
 this.inherited(arguments);
 }
 });
@@ -3934,28 +2510,28 @@ enyo.kind({
 name: "enyo.CardSlideInArranger",
 kind: "CardArranger",
 start: function() {
-var a = this.container.getPanels();
-for (var b = 0, c; c = a[b]; b++) {
-var d = c.showing;
-c.setShowing(b == this.container.fromIndex || b == this.container.toIndex), c.showing && !d && c.resized();
+var e = this.container.getPanels();
+for (var t = 0, n; n = e[t]; t++) {
+var r = n.showing;
+n.setShowing(t == this.container.fromIndex || t == this.container.toIndex), n.showing && !r && n.resized();
 }
-var e = this.container.fromIndex, b = this.container.toIndex;
-this.container.transitionPoints = [ b + "." + e + ".s", b + "." + e + ".f" ];
+var i = this.container.fromIndex, t = this.container.toIndex;
+this.container.transitionPoints = [ t + "." + i + ".s", t + "." + i + ".f" ];
 },
 finish: function() {
 this.inherited(arguments);
-var a = this.container.getPanels();
-for (var b = 0, c; c = a[b]; b++) c.setShowing(b == this.container.toIndex);
+var e = this.container.getPanels();
+for (var t = 0, n; n = e[t]; t++) n.setShowing(t == this.container.toIndex);
 },
-arrange: function(a, b) {
-var c = b.split("."), d = c[0], e = c[1], f = c[2] == "s", g = this.containerBounds.width;
-for (var h = 0, i = this.container.getPanels(), j, k; j = i[h]; h++) k = g, e == h && (k = f ? 0 : -g), d == h && (k = f ? g : 0), e == h && e == d && (k = 0), this.arrangeControl(j, {
-left: k
+arrange: function(e, t) {
+var n = t.split("."), r = n[0], i = n[1], s = n[2] == "s", o = this.containerBounds.width;
+for (var u = 0, a = this.container.getPanels(), f, l; f = a[u]; u++) l = o, i == u && (l = s ? 0 : -o), r == u && (l = s ? o : 0), i == u && i == r && (l = 0), this.arrangeControl(f, {
+left: l
 });
 },
 destroy: function() {
-var a = this.container.getPanels();
-for (var b = 0, c; c = a[b]; b++) enyo.Arranger.positionControl(c, {
+var e = this.container.getPanels();
+for (var t = 0, n; n = e[t]; t++) enyo.Arranger.positionControl(n, {
 left: null
 });
 this.inherited(arguments);
@@ -3968,61 +2544,61 @@ enyo.kind({
 name: "enyo.CarouselArranger",
 kind: "Arranger",
 size: function() {
-var a = this.container.getPanels(), b = this.containerPadding = this.container.hasNode() ? enyo.FittableLayout.calcPaddingExtents(this.container.node) : {}, c = this.containerBounds;
-c.height -= b.top + b.bottom, c.width -= b.left + b.right;
-var d;
-for (var e = 0, f = 0, g, h; h = a[e]; e++) g = enyo.FittableLayout.calcMarginExtents(h.hasNode()), h.width = h.getBounds().width, h.marginWidth = g.right + g.left, f += (h.fit ? 0 : h.width) + h.marginWidth, h.fit && (d = h);
-if (d) {
-var i = c.width - f;
-d.width = i >= 0 ? i : d.width;
+var e = this.container.getPanels(), t = this.containerPadding = this.container.hasNode() ? enyo.FittableLayout.calcPaddingExtents(this.container.node) : {}, n = this.containerBounds;
+n.height -= t.top + t.bottom, n.width -= t.left + t.right;
+var r;
+for (var i = 0, s = 0, o, u; u = e[i]; i++) o = enyo.FittableLayout.calcMarginExtents(u.hasNode()), u.width = u.getBounds().width, u.marginWidth = o.right + o.left, s += (u.fit ? 0 : u.width) + u.marginWidth, u.fit && (r = u);
+if (r) {
+var a = n.width - s;
+r.width = a >= 0 ? a : r.width;
 }
-for (var e = 0, j = b.left, g, h; h = a[e]; e++) h.setBounds({
-top: b.top,
-bottom: b.bottom,
-width: h.fit ? h.width : null
+for (var i = 0, f = t.left, o, u; u = e[i]; i++) u.setBounds({
+top: t.top,
+bottom: t.bottom,
+width: u.fit ? u.width : null
 });
 },
-arrange: function(a, b) {
-this.container.wrap ? this.arrangeWrap(a, b) : this.arrangeNoWrap(a, b);
+arrange: function(e, t) {
+this.container.wrap ? this.arrangeWrap(e, t) : this.arrangeNoWrap(e, t);
 },
-arrangeNoWrap: function(a, b) {
-var c = this.container.getPanels(), d = this.container.clamp(b), e = this.containerBounds.width;
-for (var f = d, g = 0, h; h = c[f]; f++) {
-g += h.width + h.marginWidth;
-if (g > e) break;
+arrangeNoWrap: function(e, t) {
+var n = this.container.getPanels(), r = this.container.clamp(t), i = this.containerBounds.width;
+for (var s = r, o = 0, u; u = n[s]; s++) {
+o += u.width + u.marginWidth;
+if (o > i) break;
 }
-var i = e - g, j = 0;
-if (i > 0) {
-var k = d;
-for (var f = d - 1, l = 0, h; h = c[f]; f--) {
-l += h.width + h.marginWidth;
-if (i - l <= 0) {
-j = i - l, d = f;
+var a = i - o, f = 0;
+if (a > 0) {
+var l = r;
+for (var s = r - 1, c = 0, u; u = n[s]; s--) {
+c += u.width + u.marginWidth;
+if (a - c <= 0) {
+f = a - c, r = s;
 break;
 }
 }
 }
-for (var f = 0, m = this.containerPadding.left + j, n, h; h = c[f]; f++) n = h.width + h.marginWidth, f < d ? this.arrangeControl(h, {
-left: -n
-}) : (this.arrangeControl(h, {
-left: Math.floor(m)
-}), m += n);
+for (var s = 0, h = this.containerPadding.left + f, p, u; u = n[s]; s++) p = u.width + u.marginWidth, s < r ? this.arrangeControl(u, {
+left: -p
+}) : (this.arrangeControl(u, {
+left: Math.floor(h)
+}), h += p);
 },
-arrangeWrap: function(a, b) {
-for (var c = 0, d = this.containerPadding.left, e, f; f = a[c]; c++) this.arrangeControl(f, {
-left: d
-}), d += f.width + f.marginWidth;
+arrangeWrap: function(e, t) {
+for (var n = 0, r = this.containerPadding.left, i, s; s = e[n]; n++) this.arrangeControl(s, {
+left: r
+}), r += s.width + s.marginWidth;
 },
-calcArrangementDifference: function(a, b, c, d) {
-var e = Math.abs(a % this.c$.length);
-return b[e].left - d[e].left;
+calcArrangementDifference: function(e, t, n, r) {
+var i = Math.abs(e % this.c$.length);
+return t[i].left - r[i].left;
 },
 destroy: function() {
-var a = this.container.getPanels();
-for (var b = 0, c; c = a[b]; b++) enyo.Arranger.positionControl(c, {
+var e = this.container.getPanels();
+for (var t = 0, n; n = e[t]; t++) enyo.Arranger.positionControl(n, {
 left: null,
 top: null
-}), c.applyStyle("top", null), c.applyStyle("bottom", null), c.applyStyle("left", null), c.applyStyle("width", null);
+}), n.applyStyle("top", null), n.applyStyle("bottom", null), n.applyStyle("left", null), n.applyStyle("width", null);
 this.inherited(arguments);
 }
 });
@@ -4036,36 +2612,36 @@ size: function() {
 this.clearLastSize(), this.inherited(arguments);
 },
 clearLastSize: function() {
-for (var a = 0, b = this.container.getPanels(), c; c = b[a]; a++) c._fit && a != b.length - 1 && (c.applyStyle("width", null), c._fit = null);
+for (var e = 0, t = this.container.getPanels(), n; n = t[e]; e++) n._fit && e != t.length - 1 && (n.applyStyle("width", null), n._fit = null);
 },
-arrange: function(a, b) {
-var c = this.container.getPanels();
-for (var d = 0, e = this.containerPadding.left, f, g; g = c[d]; d++) this.arrangeControl(g, {
-left: e
-}), d >= b && (e += g.width + g.marginWidth), d == c.length - 1 && b < 0 && this.arrangeControl(g, {
-left: e - b
+arrange: function(e, t) {
+var n = this.container.getPanels();
+for (var r = 0, i = this.containerPadding.left, s, o; o = n[r]; r++) this.arrangeControl(o, {
+left: i
+}), r >= t && (i += o.width + o.marginWidth), r == n.length - 1 && t < 0 && this.arrangeControl(o, {
+left: i - t
 });
 },
-calcArrangementDifference: function(a, b, c, d) {
-var e = this.container.getPanels().length - 1;
-return Math.abs(d[e].left - b[e].left);
+calcArrangementDifference: function(e, t, n, r) {
+var i = this.container.getPanels().length - 1;
+return Math.abs(r[i].left - t[i].left);
 },
-flowControl: function(a, b) {
+flowControl: function(e, t) {
 this.inherited(arguments);
 if (this.container.realtimeFit) {
-var c = this.container.getPanels(), d = c.length - 1, e = c[d];
-a == e && this.fitControl(a, b.left);
+var n = this.container.getPanels(), r = n.length - 1, i = n[r];
+e == i && this.fitControl(e, t.left);
 }
 },
 finish: function() {
 this.inherited(arguments);
 if (!this.container.realtimeFit && this.containerBounds) {
-var a = this.container.getPanels(), b = this.container.arrangement, c = a.length - 1, d = a[c];
-this.fitControl(d, b[c].left);
+var e = this.container.getPanels(), t = this.container.arrangement, n = e.length - 1, r = e[n];
+this.fitControl(r, t[n].left);
 }
 },
-fitControl: function(a, b) {
-a._fit = !0, a.applyStyle("width", this.containerBounds.width - b + "px"), a.resized();
+fitControl: function(e, t) {
+e._fit = !0, e.applyStyle("width", this.containerBounds.width - t + "px"), e.resized();
 }
 });
 
@@ -4082,23 +2658,23 @@ constructor: function() {
 this.inherited(arguments), this.margin = this.container.margin != null ? this.container.margin : this.margin;
 },
 size: function() {
-var a = this.container.getPanels(), b = this.containerBounds[this.axisSize], c = b - this.margin - this.margin;
-for (var d = 0, e, f; f = a[d]; d++) e = {}, e[this.axisSize] = c, e[this.offAxisSize] = "100%", f.setBounds(e);
+var e = this.container.getPanels(), t = this.containerBounds[this.axisSize], n = t - this.margin - this.margin;
+for (var r = 0, i, s; s = e[r]; r++) i = {}, i[this.axisSize] = n, i[this.offAxisSize] = "100%", s.setBounds(i);
 },
-arrange: function(a, b) {
-var c = Math.floor(this.container.getPanels().length / 2), d = this.getOrderedControls(Math.floor(b) - c), e = this.containerBounds[this.axisSize] - this.margin - this.margin, f = this.margin - e * c, g = (d.length - 1) / 2;
-for (var h = 0, i, j, k; i = d[h]; h++) j = {}, j[this.axisPosition] = f, j.opacity = h == 0 || h == d.length - 1 ? 0 : 1, this.arrangeControl(i, j), f += e;
+arrange: function(e, t) {
+var n = Math.floor(this.container.getPanels().length / 2), r = this.getOrderedControls(Math.floor(t) - n), i = this.containerBounds[this.axisSize] - this.margin - this.margin, s = this.margin - i * n, o = (r.length - 1) / 2;
+for (var u = 0, a, f, l; a = r[u]; u++) f = {}, f[this.axisPosition] = s, f.opacity = u === 0 || u == r.length - 1 ? 0 : 1, this.arrangeControl(a, f), s += i;
 },
-calcArrangementDifference: function(a, b, c, d) {
-var e = Math.abs(a % this.c$.length);
-return b[e][this.axisPosition] - d[e][this.axisPosition];
+calcArrangementDifference: function(e, t, n, r) {
+var i = Math.abs(e % this.c$.length);
+return t[i][this.axisPosition] - r[i][this.axisPosition];
 },
 destroy: function() {
-var a = this.container.getPanels();
-for (var b = 0, c; c = a[b]; b++) enyo.Arranger.positionControl(c, {
+var e = this.container.getPanels();
+for (var t = 0, n; n = e[t]; t++) enyo.Arranger.positionControl(n, {
 left: null,
 top: null
-}), enyo.Arranger.opacifyControl(c, 1), c.applyStyle("left", null), c.applyStyle("top", null), c.applyStyle("height", null), c.applyStyle("width", null);
+}), enyo.Arranger.opacifyControl(n, 1), n.applyStyle("left", null), n.applyStyle("top", null), n.applyStyle("height", null), n.applyStyle("width", null);
 this.inherited(arguments);
 }
 }), enyo.kind({
@@ -4116,36 +2692,36 @@ kind: "Arranger",
 incrementalPoints: !0,
 inc: 20,
 size: function() {
-var a = this.container.getPanels(), b = this.containerBounds, c = this.controlWidth = b.width / 3, d = this.controlHeight = b.height / 3;
-for (var e = 0, f; f = a[e]; e++) f.setBounds({
-width: c,
-height: d
+var e = this.container.getPanels(), t = this.containerBounds, n = this.controlWidth = t.width / 3, r = this.controlHeight = t.height / 3;
+for (var i = 0, s; s = e[i]; i++) s.setBounds({
+width: n,
+height: r
 });
 },
-arrange: function(a, b) {
-var c = this.inc;
-for (var d = 0, e = a.length, f; f = a[d]; d++) {
-var g = Math.cos(d / e * 2 * Math.PI) * d * c + this.controlWidth, h = Math.sin(d / e * 2 * Math.PI) * d * c + this.controlHeight;
-this.arrangeControl(f, {
-left: g,
-top: h
+arrange: function(e, t) {
+var n = this.inc;
+for (var r = 0, i = e.length, s; s = e[r]; r++) {
+var o = Math.cos(r / i * 2 * Math.PI) * r * n + this.controlWidth, u = Math.sin(r / i * 2 * Math.PI) * r * n + this.controlHeight;
+this.arrangeControl(s, {
+left: o,
+top: u
 });
 }
 },
 start: function() {
 this.inherited(arguments);
-var a = this.getOrderedControls(this.container.toIndex);
-for (var b = 0, c; c = a[b]; b++) c.applyStyle("z-index", a.length - b);
+var e = this.getOrderedControls(this.container.toIndex);
+for (var t = 0, n; n = e[t]; t++) n.applyStyle("z-index", e.length - t);
 },
-calcArrangementDifference: function(a, b, c, d) {
+calcArrangementDifference: function(e, t, n, r) {
 return this.controlWidth;
 },
 destroy: function() {
-var a = this.container.getPanels();
-for (var b = 0, c; c = a[b]; b++) c.applyStyle("z-index", null), enyo.Arranger.positionControl(c, {
+var e = this.container.getPanels();
+for (var t = 0, n; n = e[t]; t++) n.applyStyle("z-index", null), enyo.Arranger.positionControl(n, {
 left: null,
 top: null
-}), c.applyStyle("left", null), c.applyStyle("top", null), c.applyStyle("height", null), c.applyStyle("width", null);
+}), n.applyStyle("left", null), n.applyStyle("top", null), n.applyStyle("height", null), n.applyStyle("width", null);
 this.inherited(arguments);
 }
 }), enyo.kind({
@@ -4155,31 +2731,31 @@ incrementalPoints: !0,
 colWidth: 100,
 colHeight: 100,
 size: function() {
-var a = this.container.getPanels(), b = this.colWidth, c = this.colHeight;
-for (var d = 0, e; e = a[d]; d++) e.setBounds({
-width: b,
-height: c
+var e = this.container.getPanels(), t = this.colWidth, n = this.colHeight;
+for (var r = 0, i; i = e[r]; r++) i.setBounds({
+width: t,
+height: n
 });
 },
-arrange: function(a, b) {
-var c = this.colWidth, d = this.colHeight, e = Math.floor(this.containerBounds.width / c), f;
-for (var g = 0, h = 0; h < a.length; g++) for (var i = 0; i < e && (f = a[h]); i++, h++) this.arrangeControl(f, {
-left: c * i,
-top: d * g
+arrange: function(e, t) {
+var n = this.colWidth, r = this.colHeight, i = Math.max(1, Math.floor(this.containerBounds.width / n)), s;
+for (var o = 0, u = 0; u < e.length; o++) for (var a = 0; a < i && (s = e[u]); a++, u++) this.arrangeControl(s, {
+left: n * a,
+top: r * o
 });
 },
-flowControl: function(a, b) {
-this.inherited(arguments), enyo.Arranger.opacifyControl(a, b.top % this.colHeight != 0 ? .25 : 1);
+flowControl: function(e, t) {
+this.inherited(arguments), enyo.Arranger.opacifyControl(e, t.top % this.colHeight !== 0 ? .25 : 1);
 },
-calcArrangementDifference: function(a, b, c, d) {
+calcArrangementDifference: function(e, t, n, r) {
 return this.colWidth;
 },
 destroy: function() {
-var a = this.container.getPanels();
-for (var b = 0, c; c = a[b]; b++) enyo.Arranger.positionControl(c, {
+var e = this.container.getPanels();
+for (var t = 0, n; n = e[t]; t++) enyo.Arranger.positionControl(n, {
 left: null,
 top: null
-}), c.applyStyle("left", null), c.applyStyle("top", null), c.applyStyle("height", null), c.applyStyle("width", null);
+}), n.applyStyle("left", null), n.applyStyle("top", null), n.applyStyle("height", null), n.applyStyle("width", null);
 this.inherited(arguments);
 }
 });
@@ -4224,8 +2800,8 @@ this.setLayoutKind(this.arrangerKind);
 avoidFitChanged: function() {
 this.addRemoveClass("enyo-panels-fit-narrow", this.narrowFit);
 },
-removeControl: function(a) {
-this.inherited(arguments), this.controls.length > 1 && this.isPanel(a) && (this.setIndex(Math.max(this.index - 1, 0)), this.flow(), this.reflow());
+removeControl: function(e) {
+this.inherited(arguments), this.controls.length > 1 && this.isPanel(e) && (this.setIndex(Math.max(this.index - 1, 0)), this.flow(), this.reflow());
 },
 isPanel: function() {
 return !0;
@@ -4237,21 +2813,21 @@ reflow: function() {
 this.arrangements = [], this.inherited(arguments), this.refresh();
 },
 getPanels: function() {
-var a = this.controlParent || this;
-return a.children;
+var e = this.controlParent || this;
+return e.children;
 },
 getActive: function() {
-var a = this.getPanels();
-return a[this.index];
+var e = this.getPanels();
+return e[this.index];
 },
 getAnimator: function() {
 return this.$.animator;
 },
-setIndex: function(a) {
-this.setPropertyValue("index", a, "indexChanged");
+setIndex: function(e) {
+this.setPropertyValue("index", e, "indexChanged");
 },
-setIndexDirect: function(a) {
-this.setIndex(a), this.completed();
+setIndexDirect: function(e) {
+this.setIndex(e), this.completed();
 },
 previous: function() {
 this.setIndex(this.index - 1);
@@ -4259,54 +2835,54 @@ this.setIndex(this.index - 1);
 next: function() {
 this.setIndex(this.index + 1);
 },
-clamp: function(a) {
-var b = this.getPanels().length - 1;
-return this.wrap ? a : Math.max(0, Math.min(a, b));
+clamp: function(e) {
+var t = this.getPanels().length - 1;
+return this.wrap ? e : Math.max(0, Math.min(e, t));
 },
-indexChanged: function(a) {
-this.lastIndex = a, this.index = this.clamp(this.index), this.dragging || (this.$.animator.isAnimating() && this.completed(), this.$.animator.stop(), this.hasNode() && (this.animate ? (this.startTransition(), this.$.animator.play({
+indexChanged: function(e) {
+this.lastIndex = e, this.index = this.clamp(this.index), this.dragging || (this.$.animator.isAnimating() && this.completed(), this.$.animator.stop(), this.hasNode() && (this.animate ? (this.startTransition(), this.$.animator.play({
 startValue: this.fraction
 })) : this.refresh()));
 },
-step: function(a) {
-this.fraction = a.value, this.stepTransition();
+step: function(e) {
+this.fraction = e.value, this.stepTransition();
 },
 completed: function() {
 this.$.animator.isAnimating() && this.$.animator.stop(), this.fraction = 1, this.stepTransition(), this.finishTransition();
 },
-dragstart: function(a, b) {
-if (this.draggable && this.layout && this.layout.canDragEvent(b)) return b.preventDefault(), this.dragstartTransition(b), this.dragging = !0, this.$.animator.stop(), !0;
+dragstart: function(e, t) {
+if (this.draggable && this.layout && this.layout.canDragEvent(t)) return t.preventDefault(), this.dragstartTransition(t), this.dragging = !0, this.$.animator.stop(), !0;
 },
-drag: function(a, b) {
-this.dragging && (b.preventDefault(), this.dragTransition(b));
+drag: function(e, t) {
+this.dragging && (t.preventDefault(), this.dragTransition(t));
 },
-dragfinish: function(a, b) {
-this.dragging && (this.dragging = !1, b.preventTap(), this.dragfinishTransition(b));
+dragfinish: function(e, t) {
+this.dragging && (this.dragging = !1, t.preventTap(), this.dragfinishTransition(t));
 },
-dragstartTransition: function(a) {
+dragstartTransition: function(e) {
 if (!this.$.animator.isAnimating()) {
-var b = this.fromIndex = this.index;
-this.toIndex = b - (this.layout ? this.layout.calcDragDirection(a) : 0);
-} else this.verifyDragTransition(a);
+var t = this.fromIndex = this.index;
+this.toIndex = t - (this.layout ? this.layout.calcDragDirection(e) : 0);
+} else this.verifyDragTransition(e);
 this.fromIndex = this.clamp(this.fromIndex), this.toIndex = this.clamp(this.toIndex), this.fireTransitionStart(), this.layout && this.layout.start();
 },
-dragTransition: function(a) {
-var b = this.layout ? this.layout.calcDrag(a) : 0, c = this.transitionPoints, d = c[0], e = c[c.length - 1], f = this.fetchArrangement(d), g = this.fetchArrangement(e), h = this.layout ? this.layout.drag(b, d, f, e, g) : 0, i = b && !h;
-!i, this.fraction += h;
-var j = this.fraction;
-if (j > 1 || j < 0 || i) (j > 0 || i) && this.dragfinishTransition(a), this.dragstartTransition(a), this.fraction = 0;
+dragTransition: function(e) {
+var t = this.layout ? this.layout.calcDrag(e) : 0, n = this.transitionPoints, r = n[0], i = n[n.length - 1], s = this.fetchArrangement(r), o = this.fetchArrangement(i), u = this.layout ? this.layout.drag(t, r, s, i, o) : 0, a = t && !u;
+a, this.fraction += u;
+var f = this.fraction;
+if (f > 1 || f < 0 || a) (f > 0 || a) && this.dragfinishTransition(e), this.dragstartTransition(e), this.fraction = 0;
 this.stepTransition();
 },
-dragfinishTransition: function(a) {
-this.verifyDragTransition(a), this.setIndex(this.toIndex), this.dragging && this.fireTransitionFinish();
+dragfinishTransition: function(e) {
+this.verifyDragTransition(e), this.setIndex(this.toIndex), this.dragging && this.fireTransitionFinish();
 },
-verifyDragTransition: function(a) {
-var b = this.layout ? this.layout.calcDragDirection(a) : 0, c = Math.min(this.fromIndex, this.toIndex), d = Math.max(this.fromIndex, this.toIndex);
-if (b > 0) {
-var e = c;
-c = d, d = e;
+verifyDragTransition: function(e) {
+var t = this.layout ? this.layout.calcDragDirection(e) : 0, n = Math.min(this.fromIndex, this.toIndex), r = Math.max(this.fromIndex, this.toIndex);
+if (t > 0) {
+var i = n;
+n = r, r = i;
 }
-c != this.fromIndex && (this.fraction = 1 - this.fraction), this.fromIndex = c, this.toIndex = d;
+n != this.fromIndex && (this.fraction = 1 - this.fraction), this.fromIndex = n, this.toIndex = r;
 },
 refresh: function() {
 this.$.animator.isAnimating() && this.$.animator.stop(), this.startTransition(), this.fraction = 1, this.stepTransition(), this.finishTransition();
@@ -4318,48 +2894,48 @@ finishTransition: function() {
 this.layout && this.layout.finish(), this.transitionPoints = [], this.fraction = 0, this.fromIndex = this.toIndex = null, this.fireTransitionFinish();
 },
 fireTransitionStart: function() {
-var a = this.startTransitionInfo;
-this.hasNode() && (!a || a.fromIndex != this.fromIndex || a.toIndex != this.toIndex) && (this.startTransitionInfo = {
+var e = this.startTransitionInfo;
+this.hasNode() && (!e || e.fromIndex != this.fromIndex || e.toIndex != this.toIndex) && (this.startTransitionInfo = {
 fromIndex: this.fromIndex,
 toIndex: this.toIndex
 }, this.doTransitionStart(enyo.clone(this.startTransitionInfo)));
 },
 fireTransitionFinish: function() {
-var a = this.finishTransitionInfo;
-this.hasNode() && (!a || a.fromIndex != this.lastIndex || a.toIndex != this.index) && (this.finishTransitionInfo = {
+var e = this.finishTransitionInfo;
+this.hasNode() && (!e || e.fromIndex != this.lastIndex || e.toIndex != this.index) && (this.finishTransitionInfo = {
 fromIndex: this.lastIndex,
 toIndex: this.index
 }, this.doTransitionFinish(enyo.clone(this.finishTransitionInfo))), this.lastIndex = this.index;
 },
 stepTransition: function() {
 if (this.hasNode()) {
-var a = this.transitionPoints, b = (this.fraction || 0) * (a.length - 1), c = Math.floor(b);
-b -= c;
-var d = a[c], e = a[c + 1], f = this.fetchArrangement(d), g = this.fetchArrangement(e);
-this.arrangement = f && g ? enyo.Panels.lerp(f, g, b) : f || g, this.arrangement && this.layout && this.layout.flowArrangement();
+var e = this.transitionPoints, t = (this.fraction || 0) * (e.length - 1), n = Math.floor(t);
+t -= n;
+var r = e[n], i = e[n + 1], s = this.fetchArrangement(r), o = this.fetchArrangement(i);
+this.arrangement = s && o ? enyo.Panels.lerp(s, o, t) : s || o, this.arrangement && this.layout && this.layout.flowArrangement();
 }
 },
-fetchArrangement: function(a) {
-return a != null && !this.arrangements[a] && this.layout && (this.layout._arrange(a), this.arrangements[a] = this.readArrangement(this.getPanels())), this.arrangements[a];
+fetchArrangement: function(e) {
+return e != null && !this.arrangements[e] && this.layout && (this.layout._arrange(e), this.arrangements[e] = this.readArrangement(this.getPanels())), this.arrangements[e];
 },
-readArrangement: function(a) {
-var b = [];
-for (var c = 0, d = a, e; e = d[c]; c++) b.push(enyo.clone(e._arranger));
-return b;
+readArrangement: function(e) {
+var t = [];
+for (var n = 0, r = e, i; i = r[n]; n++) t.push(enyo.clone(i._arranger));
+return t;
 },
 statics: {
 isScreenNarrow: function() {
 return enyo.dom.getWindowWidth() <= 800;
 },
-lerp: function(a, b, c) {
-var d = [];
-for (var e = 0, f = enyo.keys(a), g; g = f[e]; e++) d.push(this.lerpObject(a[g], b[g], c));
-return d;
+lerp: function(e, t, n) {
+var r = [];
+for (var i = 0, s = enyo.keys(e), o; o = s[i]; i++) r.push(this.lerpObject(e[o], t[o], n));
+return r;
 },
-lerpObject: function(a, b, c) {
-var d = enyo.clone(a), e, f;
-if (b) for (var g in a) e = a[g], f = b[g], e != f && (d[g] = e - (e - f) * c);
-return d;
+lerpObject: function(e, t, n) {
+var r = enyo.clone(e), i, s;
+if (t) for (var o in e) i = e[o], s = t[o], i != s && (r[o] = i - (i - s) * n);
+return r;
 }
 }
 });
@@ -4437,22 +3013,22 @@ this.addRemoveClass("enyo-selected", this.selected);
 rendered: function() {
 this.inherited(arguments), this.expandable && !this.expanded && this.quickCollapse();
 },
-addNodes: function(a) {
+addNodes: function(e) {
 this.destroyClientControls();
-for (var b = 0, c; c = a[b]; b++) this.createComponent(c);
+for (var t = 0, n; n = e[t]; t++) this.createComponent(n);
 this.$.client.render();
 },
-addTextNodes: function(a) {
+addTextNodes: function(e) {
 this.destroyClientControls();
-for (var b = 0, c; c = a[b]; b++) this.createComponent({
-content: c
+for (var t = 0, n; n = e[t]; t++) this.createComponent({
+content: n
 });
 this.$.client.render();
 },
-tap: function(a, b) {
-return this.onlyIconExpands ? b.target == this.$.icon.hasNode() ? this.toggleExpanded() : this.doNodeTap() : (this.toggleExpanded(), this.doNodeTap()), !0;
+tap: function(e, t) {
+return this.onlyIconExpands ? t.target == this.$.icon.hasNode() ? this.toggleExpanded() : this.doNodeTap() : (this.toggleExpanded(), this.doNodeTap()), !0;
 },
-dblclick: function(a, b) {
+dblclick: function(e, t) {
 return this.doNodeDblClick(), !0;
 },
 toggleExpanded: function() {
@@ -4460,16 +3036,16 @@ this.setExpanded(!this.expanded);
 },
 quickCollapse: function() {
 this.removeClass("enyo-animate"), this.$.box.applyStyle("height", "0");
-var a = this.$.client.getBounds().height;
+var e = this.$.client.getBounds().height;
 this.$.client.setBounds({
-top: -a
+top: -e
 });
 },
 _expand: function() {
 this.addClass("enyo-animate");
-var a = this.$.client.getBounds().height;
+var e = this.$.client.getBounds().height;
 this.$.box.setBounds({
-height: a
+height: e
 }), this.$.client.setBounds({
 top: 0
 }), setTimeout(enyo.bind(this, function() {
@@ -4478,21 +3054,21 @@ this.expanded && (this.removeClass("enyo-animate"), this.$.box.applyStyle("heigh
 },
 _collapse: function() {
 this.removeClass("enyo-animate");
-var a = this.$.client.getBounds().height;
+var e = this.$.client.getBounds().height;
 this.$.box.setBounds({
-height: a
+height: e
 }), setTimeout(enyo.bind(this, function() {
 this.addClass("enyo-animate"), this.$.box.applyStyle("height", "0"), this.$.client.setBounds({
-top: -a
+top: -e
 });
 }), 25);
 },
-expandedChanged: function(a) {
+expandedChanged: function(e) {
 if (!this.expandable) this.expanded = !1; else {
-var b = {
+var t = {
 expanded: this.expanded
 };
-this.doExpand(b), b.wait || this.effectExpanded();
+this.doExpand(t), t.wait || this.effectExpanded();
 }
 },
 effectExpanded: function() {
@@ -4555,10 +3131,10 @@ handlers: {
 ondown: "downHandler",
 onclick: ""
 },
-downHandler: function(a, b) {
+downHandler: function(e, t) {
 return this.disabled || (this.setChecked(!this.getChecked()), this.bubble("onchange")), !0;
 },
-tap: function(a, b) {
+tap: function(e, t) {
 return !this.disabled;
 }
 });
@@ -4590,31 +3166,35 @@ this.createChrome(this.tools), this.inherited(arguments);
 openChanged: function() {
 this.$.client.show();
 if (this.hasNode()) if (this.$.animator.isAnimating()) this.$.animator.reverse(); else {
-var a = this.orient == "v", b = a ? "height" : "width", c = a ? "top" : "left";
-this.applyStyle(b, null);
-var d = this.hasNode()[a ? "scrollHeight" : "scrollWidth"];
+var e = this.orient == "v", t = e ? "height" : "width", n = e ? "top" : "left";
+this.applyStyle(t, null);
+var r = this.hasNode()[e ? "scrollHeight" : "scrollWidth"];
 this.$.animator.play({
-startValue: this.open ? 0 : d,
-endValue: this.open ? d : 0,
-dimension: b,
-position: c
+startValue: this.open ? 0 : r,
+endValue: this.open ? r : 0,
+dimension: t,
+position: n
 });
 } else this.$.client.setShowing(this.open);
 },
-animatorStep: function(a) {
+animatorStep: function(e) {
 if (this.hasNode()) {
-var b = a.dimension;
-this.node.style[b] = this.domStyles[b] = a.value + "px";
+var t = e.dimension;
+this.node.style[t] = this.domStyles[t] = e.value + "px";
 }
-var c = this.$.client.hasNode();
-if (c) {
-var d = a.position, e = this.open ? a.endValue : a.startValue;
-c.style[d] = this.$.client.domStyles[d] = a.value - e + "px";
+var n = this.$.client.hasNode();
+if (n) {
+var r = e.position, i = this.open ? e.endValue : e.startValue;
+n.style[r] = this.$.client.domStyles[r] = e.value - i + "px";
 }
 this.container && this.container.resized();
 },
 animatorEnd: function() {
-this.open || this.$.client.hide(), this.container && this.container.resized();
+if (!this.open) this.$.client.hide(); else {
+var e = this.orient == "v" ? "height" : "width", t = this.hasNode();
+t && (t.style[e] = this.$.client.domStyles[e] = null);
+}
+this.container && this.container.resized();
 }
 });
 
@@ -4661,14 +3241,14 @@ defaultZ: 120,
 showingChanged: function() {
 this.showing ? (onyx.Popup.count++, this.applyZIndex()) : onyx.Popup.count > 0 && onyx.Popup.count--, this.showHideScrim(this.showing), this.inherited(arguments);
 },
-showHideScrim: function(a) {
+showHideScrim: function(e) {
 if (this.floating && (this.scrim || this.modal && this.scrimWhenModal)) {
-var b = this.getScrim();
-if (a) {
-var c = this.getScrimZIndex();
-this._scrimZ = c, b.showAtZIndex(c);
-} else b.hideAtZIndex(this._scrimZ);
-enyo.call(b, "addRemoveClass", [ this.scrimClassName, b.showing ]);
+var t = this.getScrim();
+if (e) {
+var n = this.getScrimZIndex();
+this._scrimZ = n, t.showAtZIndex(n);
+} else t.hideAtZIndex(this._scrimZ);
+enyo.call(t, "addRemoveClass", [ this.scrimClassName, t.showing ]);
 }
 },
 getScrimZIndex: function() {
@@ -4681,8 +3261,8 @@ applyZIndex: function() {
 this._zIndex = onyx.Popup.count * 2 + this.findZIndex() + 1, this.applyStyle("z-index", this._zIndex);
 },
 findZIndex: function() {
-var a = this.defaultZ;
-return this._zIndex ? a = this._zIndex : this.hasNode() && (a = Number(enyo.dom.getComputedStyleValue(this.node, "z-index")) || a), this._zIndex = a;
+var e = this.defaultZ;
+return this._zIndex ? e = this._zIndex : this.hasNode() && (e = Number(enyo.dom.getComputedStyleValue(this.node, "z-index")) || e), this._zIndex = e;
 }
 });
 
@@ -4720,8 +3300,8 @@ this.addClass("onyx-focused");
 receiveBlur: function() {
 this.removeClass("onyx-focused");
 },
-disabledChange: function(a, b) {
-this.addRemoveClass("onyx-disabled", b.originator.disabled);
+disabledChange: function(e, t) {
+this.addRemoveClass("onyx-disabled", t.originator.disabled);
 }
 });
 
@@ -4750,16 +3330,16 @@ return this.cancelShow(), this.inherited(arguments);
 showingChanged: function() {
 this.cancelShow(), this.adjustPosition(!0), this.inherited(arguments);
 },
-applyPosition: function(a) {
-var b = "";
-for (n in a) b += n + ":" + a[n] + (isNaN(a[n]) ? "; " : "px; ");
-this.addStyles(b);
+applyPosition: function(e) {
+var t = "";
+for (n in e) t += n + ":" + e[n] + (isNaN(e[n]) ? "; " : "px; ");
+this.addStyles(t);
 },
-adjustPosition: function(a) {
+adjustPosition: function(e) {
 if (this.showing && this.hasNode()) {
-var b = this.node.getBoundingClientRect();
-b.top + b.height > window.innerHeight ? (this.addRemoveClass("below", !1), this.addRemoveClass("above", !0)) : (this.addRemoveClass("above", !1), this.addRemoveClass("below", !0)), b.left + b.width > window.innerWidth && (this.applyPosition({
-"margin-left": -b.width,
+var t = this.node.getBoundingClientRect();
+t.top + t.height > window.innerHeight ? (this.addRemoveClass("below", !1), this.addRemoveClass("above", !0)) : (this.addRemoveClass("above", !1), this.addRemoveClass("below", !0)), t.left + t.width > window.innerWidth && (this.applyPosition({
+"margin-left": -t.width,
 bottom: "auto"
 }), this.addRemoveClass("left-arrow", !1), this.addRemoveClass("right-arrow", !0));
 }
@@ -4810,8 +3390,8 @@ handlers: {
 onActivate: "activated",
 onHide: "menuHidden"
 },
-activated: function(a, b) {
-this.requestHideTooltip(), b.originator.active && (this.menuActive = !0, this.activator = b.originator, this.activator.addClass("active"), this.requestShowMenu());
+activated: function(e, t) {
+this.requestHideTooltip(), t.originator.active && (this.menuActive = !0, this.activator = t.originator, this.activator.addClass("active"), this.requestShowMenu());
 },
 requestShowMenu: function() {
 this.waterfallDown("onRequestShowMenu", {
@@ -4824,10 +3404,10 @@ this.waterfallDown("onRequestHideMenu");
 menuHidden: function() {
 this.menuActive = !1, this.activator && (this.activator.setActive(!1), this.activator.removeClass("active"));
 },
-enter: function(a) {
+enter: function(e) {
 this.menuActive || this.inherited(arguments);
 },
-leave: function(a, b) {
+leave: function(e, t) {
 this.menuActive || this.inherited(arguments);
 }
 });
@@ -4846,61 +3426,68 @@ onActivate: "itemActivated",
 onRequestShowMenu: "requestMenuShow",
 onRequestHideMenu: "requestHide"
 },
-itemActivated: function(a, b) {
-return b.originator.setActive(!1), !0;
+itemActivated: function(e, t) {
+return t.originator.setActive(!1), !0;
 },
 showingChanged: function() {
 this.inherited(arguments), this.adjustPosition(!0);
 },
-requestMenuShow: function(a, b) {
+requestMenuShow: function(e, t) {
 if (this.floating) {
-var c = b.activator.hasNode();
-if (c) {
-var d = this.activatorOffset = this.getPageOffset(c);
+var n = t.activator.hasNode();
+if (n) {
+var r = this.activatorOffset = this.getPageOffset(n);
 this.applyPosition({
-top: d.top + (this.showOnTop ? 0 : d.height),
-left: d.left,
-width: d.width
+top: r.top + (this.showOnTop ? 0 : r.height),
+left: r.left,
+width: r.width
 });
 }
 }
 return this.show(), !0;
 },
-applyPosition: function(a) {
-var b = "";
-for (n in a) b += n + ":" + a[n] + (isNaN(a[n]) ? "; " : "px; ");
-this.addStyles(b);
+applyPosition: function(e) {
+var t = "";
+for (n in e) t += n + ":" + e[n] + (isNaN(e[n]) ? "; " : "px; ");
+this.addStyles(t);
 },
-getPageOffset: function(a) {
-var b = a.getBoundingClientRect(), c = window.pageYOffset === undefined ? document.documentElement.scrollTop : window.pageYOffset, d = window.pageXOffset === undefined ? document.documentElement.scrollLeft : window.pageXOffset, e = b.height === undefined ? b.bottom - b.top : b.height, f = b.width === undefined ? b.right - b.left : b.width;
+getPageOffset: function(e) {
+var t = e.getBoundingClientRect(), n = window.pageYOffset === undefined ? document.documentElement.scrollTop : window.pageYOffset, r = window.pageXOffset === undefined ? document.documentElement.scrollLeft : window.pageXOffset, i = t.height === undefined ? t.bottom - t.top : t.height, s = t.width === undefined ? t.right - t.left : t.width;
 return {
-top: b.top + c,
-left: b.left + d,
-height: e,
-width: f
+top: t.top + n,
+left: t.left + r,
+height: i,
+width: s
 };
 },
-adjustPosition: function(a) {
+adjustPosition: function(e) {
 if (this.showing && this.hasNode()) {
 this.removeClass("onyx-menu-up"), this.floating ? enyo.noop : this.applyPosition({
 left: "auto"
 });
-var b = this.node.getBoundingClientRect(), c = b.height === undefined ? b.bottom - b.top : b.height, d = window.innerHeight === undefined ? document.documentElement.clientHeight : window.innerHeight, e = window.innerWidth === undefined ? document.documentElement.clientWidth : window.innerWidth;
-this.menuUp = b.top + c > d && d - b.bottom < b.top - c, this.addRemoveClass("onyx-menu-up", this.menuUp);
+var t = this.node.getBoundingClientRect(), n = t.height === undefined ? t.bottom - t.top : t.height, r = window.innerHeight === undefined ? document.documentElement.clientHeight : window.innerHeight, i = window.innerWidth === undefined ? document.documentElement.clientWidth : window.innerWidth;
+this.menuUp = t.top + n > r && r - t.bottom < t.top - n, this.addRemoveClass("onyx-menu-up", this.menuUp);
 if (this.floating) {
-var f = this.activatorOffset;
+var s = this.activatorOffset;
 this.menuUp ? this.applyPosition({
-top: f.top - c + (this.showOnTop ? f.height : 0),
+top: s.top - n + (this.showOnTop ? s.height : 0),
 bottom: "auto"
-}) : b.top < f.top && f.top + (a ? f.height : 0) + c < d && this.applyPosition({
-top: f.top + (this.showOnTop ? 0 : f.height),
+}) : t.top < s.top && s.top + (e ? s.height : 0) + n < r && this.applyPosition({
+top: s.top + (this.showOnTop ? 0 : s.height),
 bottom: "auto"
 });
 }
-b.right > e && (this.floating ? this.applyPosition({
-left: f.left - (b.left + b.width - e)
+t.right > i && (this.floating ? this.applyPosition({
+left: s.left - (t.left + t.width - i)
 }) : this.applyPosition({
-left: -(b.right - e)
+left: -(t.right - i)
+})), t.left < 0 && (this.floating ? this.applyPosition({
+left: 0,
+right: "auto"
+}) : this.getComputedStyleValue("right") == "auto" ? this.applyPosition({
+left: -t.left
+}) : this.applyPosition({
+right: t.left
 }));
 }
 },
@@ -4922,7 +3509,7 @@ classes: "onyx-menu-item",
 events: {
 onSelect: ""
 },
-tap: function(a) {
+tap: function(e) {
 this.inherited(arguments), this.bubble("onRequestHideMenu"), this.doSelect({
 selected: this,
 content: this.content
@@ -4940,8 +3527,8 @@ defaultKind: "onyx.PickerButton",
 handlers: {
 onChange: "change"
 },
-change: function(a, b) {
-this.waterfallDown("onChange", b);
+change: function(e, t) {
+this.waterfallDown("onChange", t);
 }
 });
 
@@ -4953,8 +3540,8 @@ kind: "onyx.Button",
 handlers: {
 onChange: "change"
 },
-change: function(a, b) {
-this.setContent(b.content);
+change: function(e, t) {
+this.setContent(t.content);
 }
 });
 
@@ -4994,14 +3581,14 @@ this.getScroller().setShowing(this.showing), this.inherited(arguments), this.sho
 scrollToSelected: function() {
 this.getScroller().scrollToControl(this.selected, !this.menuUp);
 },
-itemActivated: function(a, b) {
-return this.processActivatedItem(b.originator), this.inherited(arguments);
+itemActivated: function(e, t) {
+return this.processActivatedItem(t.originator), this.inherited(arguments);
 },
-processActivatedItem: function(a) {
-a.active && this.setSelected(a);
+processActivatedItem: function(e) {
+e.active && this.setSelected(e);
 },
-selectedChanged: function(a) {
-a && a.removeClass("selected"), this.selected && (this.selected.addClass("selected"), this.doChange({
+selectedChanged: function(e) {
+e && e.removeClass("selected"), this.selected && (this.selected.addClass("selected"), this.doChange({
 selected: this.selected,
 content: this.selected.content
 }));
@@ -5045,32 +3632,32 @@ rendered: function() {
 this.inherited(arguments), this.selectedChanged();
 },
 scrollToSelected: function() {
-var a = this.$.client.fetchRowNode(this.selected);
-this.getScroller().scrollToNode(a, !this.menuUp);
+var e = this.$.client.fetchRowNode(this.selected);
+this.getScroller().scrollToNode(e, !this.menuUp);
 },
 countChanged: function() {
 this.$.client.count = this.count;
 },
-processActivatedItem: function(a) {
-this.item = a;
+processActivatedItem: function(e) {
+this.item = e;
 },
-selectedChanged: function(a) {
+selectedChanged: function(e) {
 if (!this.item) return;
-a !== undefined && (this.item.removeClass("selected"), this.$.client.renderRow(a)), this.item.addClass("selected"), this.$.client.renderRow(this.selected), this.item.removeClass("selected");
-var b = this.$.client.fetchRowNode(this.selected);
+e !== undefined && (this.item.removeClass("selected"), this.$.client.renderRow(e)), this.item.addClass("selected"), this.$.client.renderRow(this.selected), this.item.removeClass("selected");
+var t = this.$.client.fetchRowNode(this.selected);
 this.doChange({
 selected: this.selected,
-content: b && b.textContent || this.item.content
+content: t && t.textContent || this.item.content
 });
 },
-itemTap: function(a, b) {
-this.setSelected(b.rowIndex), this.doSelect({
+itemTap: function(e, t) {
+this.setSelected(t.rowIndex), this.doSelect({
 selected: this.item,
 content: this.item.content
 });
 },
-itemSelect: function(a, b) {
-if (b.originator != this) return !0;
+itemSelect: function(e, t) {
+if (t.originator != this) return !0;
 }
 });
 
@@ -5141,25 +3728,25 @@ this.$.contentOff.setContent(this.offContent || ""), this.$.contentOff.addRemove
 disabledChanged: function() {
 this.addRemoveClass("disabled", this.disabled);
 },
-updateValue: function(a) {
-this.disabled || (this.setValue(a), this.doChange({
+updateValue: function(e) {
+this.disabled || (this.setValue(e), this.doChange({
 value: this.value
 }));
 },
 tap: function() {
 this.updateValue(!this.value);
 },
-dragstart: function(a, b) {
-if (b.horizontal) return b.preventDefault(), this.dragging = !0, this.dragged = !1, !0;
+dragstart: function(e, t) {
+if (t.horizontal) return t.preventDefault(), this.dragging = !0, this.dragged = !1, !0;
 },
-drag: function(a, b) {
+drag: function(e, t) {
 if (this.dragging) {
-var c = b.dx;
-return Math.abs(c) > 10 && (this.updateValue(c > 0), this.dragged = !0), !0;
+var n = t.dx;
+return Math.abs(n) > 10 && (this.updateValue(n > 0), this.dragged = !0), !0;
 }
 },
-dragfinish: function(a, b) {
-this.dragging = !1, this.dragged && b.preventTap();
+dragfinish: function(e, t) {
+this.dragging = !1, this.dragged && t.preventTap();
 }
 });
 
@@ -5198,16 +3785,16 @@ return this.cancelShow(), this.inherited(arguments);
 showingChanged: function() {
 this.cancelShow(), this.adjustPosition(!0), this.inherited(arguments);
 },
-applyPosition: function(a) {
-var b = "";
-for (n in a) b += n + ":" + a[n] + (isNaN(a[n]) ? "; " : "px; ");
-this.addStyles(b);
+applyPosition: function(e) {
+var t = "";
+for (n in e) t += n + ":" + e[n] + (isNaN(e[n]) ? "; " : "px; ");
+this.addStyles(t);
 },
-adjustPosition: function(a) {
+adjustPosition: function(e) {
 if (this.showing && this.hasNode()) {
-var b = this.node.getBoundingClientRect();
-b.top + b.height > window.innerHeight ? (this.addRemoveClass("below", !1), this.addRemoveClass("above", !0)) : (this.addRemoveClass("above", !1), this.addRemoveClass("below", !0)), b.left + b.width > window.innerWidth && (this.applyPosition({
-"margin-left": -b.width,
+var t = this.node.getBoundingClientRect();
+t.top + t.height > window.innerHeight ? (this.addRemoveClass("below", !1), this.addRemoveClass("above", !0)) : (this.addRemoveClass("above", !1), this.addRemoveClass("below", !0)), t.left + t.width > window.innerWidth && (this.applyPosition({
+"margin-left": -t.width,
 bottom: "auto"
 }), this.addRemoveClass("left-arrow", !1), this.addRemoveClass("right-arrow", !0));
 }
@@ -5275,8 +3862,8 @@ classes: "onyx-progress-bar-bar"
 create: function() {
 this.inherited(arguments), this.progressChanged(), this.barClassesChanged(), this.showStripesChanged(), this.animateStripesChanged();
 },
-barClassesChanged: function(a) {
-this.$.bar.removeClass(a), this.$.bar.addClass(this.barClasses);
+barClassesChanged: function(e) {
+this.$.bar.removeClass(e), this.$.bar.addClass(this.barClasses);
 },
 showStripesChanged: function() {
 this.$.bar.addRemoveClass("striped", this.showStripes);
@@ -5286,33 +3873,33 @@ this.$.bar.addRemoveClass("animated", this.animateStripes);
 },
 progressChanged: function() {
 this.progress = this.clampValue(this.min, this.max, this.progress);
-var a = this.calcPercent(this.progress);
-this.updateBarPosition(a);
+var e = this.calcPercent(this.progress);
+this.updateBarPosition(e);
 },
-clampValue: function(a, b, c) {
-return Math.max(a, Math.min(c, b));
+clampValue: function(e, t, n) {
+return Math.max(e, Math.min(n, t));
 },
-calcRatio: function(a) {
-return (a - this.min) / (this.max - this.min);
+calcRatio: function(e) {
+return (e - this.min) / (this.max - this.min);
 },
-calcPercent: function(a) {
-return this.calcRatio(a) * 100;
+calcPercent: function(e) {
+return this.calcRatio(e) * 100;
 },
-updateBarPosition: function(a) {
-this.$.bar.applyStyle("width", a + "%");
+updateBarPosition: function(e) {
+this.$.bar.applyStyle("width", e + "%");
 },
-animateProgressTo: function(a) {
+animateProgressTo: function(e) {
 this.$.progressAnimator.play({
 startValue: this.progress,
-endValue: a,
+endValue: e,
 node: this.hasNode()
 });
 },
-progressAnimatorStep: function(a) {
-return this.setProgress(a.value), !0;
+progressAnimatorStep: function(e) {
+return this.setProgress(e.value), !0;
 },
-progressAnimatorComplete: function(a) {
-return this.doAnimateProgressFinish(a), !0;
+progressAnimatorComplete: function(e) {
+return this.doAnimateProgressFinish(e), !0;
 }
 });
 
@@ -5360,24 +3947,24 @@ this.inherited(arguments), this.zStack = [], this.floating && this.setParent(eny
 showingChanged: function() {
 this.floating && this.showing && !this.hasNode() && this.render(), this.inherited(arguments);
 },
-addZIndex: function(a) {
-enyo.indexOf(a, this.zStack) < 0 && this.zStack.push(a);
+addZIndex: function(e) {
+enyo.indexOf(e, this.zStack) < 0 && this.zStack.push(e);
 },
-removeZIndex: function(a) {
-enyo.remove(a, this.zStack);
+removeZIndex: function(e) {
+enyo.remove(e, this.zStack);
 },
-showAtZIndex: function(a) {
-this.addZIndex(a), a !== undefined && this.setZIndex(a), this.show();
+showAtZIndex: function(e) {
+this.addZIndex(e), e !== undefined && this.setZIndex(e), this.show();
 },
-hideAtZIndex: function(a) {
-this.removeZIndex(a);
+hideAtZIndex: function(e) {
+this.removeZIndex(e);
 if (!this.zStack.length) this.hide(); else {
-var b = this.zStack[this.zStack.length - 1];
-this.setZIndex(b);
+var t = this.zStack[this.zStack.length - 1];
+this.setZIndex(t);
 }
 },
-setZIndex: function(a) {
-this.zIndex = a, this.applyStyle("z-index", a);
+setZIndex: function(e) {
+this.zIndex = e, this.applyStyle("z-index", e);
 },
 make: function() {
 return this;
@@ -5385,21 +3972,21 @@ return this;
 }), enyo.kind({
 name: "onyx.scrimSingleton",
 kind: null,
-constructor: function(a, b) {
-this.instanceName = a, enyo.setObject(this.instanceName, this), this.props = b || {};
+constructor: function(e, t) {
+this.instanceName = e, enyo.setObject(this.instanceName, this), this.props = t || {};
 },
 make: function() {
-var a = new onyx.Scrim(this.props);
-return enyo.setObject(this.instanceName, a), a;
+var e = new onyx.Scrim(this.props);
+return enyo.setObject(this.instanceName, e), e;
 },
-showAtZIndex: function(a) {
-var b = this.make();
-b.showAtZIndex(a);
+showAtZIndex: function(e) {
+var t = this.make();
+t.showAtZIndex(e);
 },
 hideAtZIndex: enyo.nop,
 show: function() {
-var a = this.make();
-a.show();
+var e = this.make();
+e.show();
 }
 }), new onyx.scrimSingleton("onyx.scrim", {
 floating: !0,
@@ -5446,52 +4033,52 @@ this.inherited(arguments), this.createComponents(this.moreComponents), this.valu
 },
 valueChanged: function() {
 this.value = this.clampValue(this.min, this.max, this.value);
-var a = this.calcPercent(this.value);
-this.updateKnobPosition(a), this.lockBar && this.setProgress(this.value);
+var e = this.calcPercent(this.value);
+this.updateKnobPosition(e), this.lockBar && this.setProgress(this.value);
 },
-updateKnobPosition: function(a) {
-this.$.knob.applyStyle("left", a + "%");
+updateKnobPosition: function(e) {
+this.$.knob.applyStyle("left", e + "%");
 },
-calcKnobPosition: function(a) {
-var b = a.clientX - this.hasNode().getBoundingClientRect().left;
-return b / this.getBounds().width * (this.max - this.min) + this.min;
+calcKnobPosition: function(e) {
+var t = e.clientX - this.hasNode().getBoundingClientRect().left;
+return t / this.getBounds().width * (this.max - this.min) + this.min;
 },
-dragstart: function(a, b) {
-if (b.horizontal) return b.preventDefault(), this.dragging = !0, !0;
+dragstart: function(e, t) {
+if (t.horizontal) return t.preventDefault(), this.dragging = !0, !0;
 },
-drag: function(a, b) {
+drag: function(e, t) {
 if (this.dragging) {
-var c = this.calcKnobPosition(b);
-return this.setValue(c), this.doChanging({
+var n = this.calcKnobPosition(t);
+return this.setValue(n), this.doChanging({
 value: this.value
 }), !0;
 }
 },
-dragfinish: function(a, b) {
-return this.dragging = !1, b.preventTap(), this.doChange({
+dragfinish: function(e, t) {
+return this.dragging = !1, t.preventTap(), this.doChange({
 value: this.value
 }), !0;
 },
-tap: function(a, b) {
+tap: function(e, t) {
 if (this.tappable) {
-var c = this.calcKnobPosition(b);
-return this.tapped = !0, this.animateTo(c), !0;
+var n = this.calcKnobPosition(t);
+return this.tapped = !0, this.animateTo(n), !0;
 }
 },
-animateTo: function(a) {
+animateTo: function(e) {
 this.$.animator.play({
 startValue: this.value,
-endValue: a,
+endValue: e,
 node: this.hasNode()
 });
 },
-animatorStep: function(a) {
-return this.setValue(a.value), !0;
+animatorStep: function(e) {
+return this.setValue(e.value), !0;
 },
-animatorComplete: function(a) {
+animatorComplete: function(e) {
 return this.tapped && (this.tapped = !1, this.doChange({
 value: this.value
-})), this.doAnimateFinish(a), !0;
+})), this.doAnimateFinish(e), !0;
 }
 });
 
@@ -5505,28 +4092,28 @@ handlers: {
 onhold: "hold",
 onrelease: "release"
 },
-hold: function(a, b) {
-this.tapHighlight && onyx.Item.addFlyweightClass(this.controlParent || this, "onyx-highlight", b);
+hold: function(e, t) {
+this.tapHighlight && onyx.Item.addFlyweightClass(this.controlParent || this, "onyx-highlight", t);
 },
-release: function(a, b) {
-this.tapHighlight && onyx.Item.removeFlyweightClass(this.controlParent || this, "onyx-highlight", b);
+release: function(e, t) {
+this.tapHighlight && onyx.Item.removeFlyweightClass(this.controlParent || this, "onyx-highlight", t);
 },
 statics: {
-addFlyweightClass: function(a, b, c, d) {
-var e = c.flyweight;
-if (e) {
-var f = d != undefined ? d : c.index;
-e.performOnRow(f, function() {
-a.hasClass(b) ? a.setClassAttribute(a.getClassAttribute()) : a.addClass(b);
-}), a.removeClass(b);
+addFlyweightClass: function(e, t, n, r) {
+var i = n.flyweight;
+if (i) {
+var s = r != undefined ? r : n.index;
+i.performOnRow(s, function() {
+e.hasClass(t) ? e.setClassAttribute(e.getClassAttribute()) : e.addClass(t);
+}), e.removeClass(t);
 }
 },
-removeFlyweightClass: function(a, b, c, d) {
-var e = c.flyweight;
-if (e) {
-var f = d != undefined ? d : c.index;
-e.performOnRow(f, function() {
-a.hasClass(b) ? a.removeClass(b) : a.setClassAttribute(a.getClassAttribute());
+removeFlyweightClass: function(e, t, n, r) {
+var i = n.flyweight;
+if (i) {
+var s = r != undefined ? r : n.index;
+i.performOnRow(s, function() {
+e.hasClass(t) ? e.removeClass(t) : e.setClassAttribute(e.getClassAttribute());
 });
 }
 }
@@ -5586,36 +4173,36 @@ this.menuClass && this.menuClass.length > 0 && !this.$.menu.hasClass(this.menuCl
 reflow: function() {
 this.inherited(arguments), this.isContentOverflowing() ? (this.$.nard.show(), this.popItem() && this.reflow()) : this.tryPushItem() ? this.reflow() : this.$.menu.children.length || (this.$.nard.hide(), this.$.menu.hide());
 },
-activated: function(a, b) {
-this.addRemoveClass("active", b.originator.active);
+activated: function(e, t) {
+this.addRemoveClass("active", t.originator.active);
 },
 popItem: function() {
-var a = this.findCollapsibleItem();
-if (a) {
-this.movedClass && this.movedClass.length > 0 && !a.hasClass(this.movedClass) && a.addClass(this.movedClass), this.$.menu.addChild(a);
-var b = this.$.menu.hasNode();
-return b && a.hasNode() && a.insertNodeInParent(b), !0;
+var e = this.findCollapsibleItem();
+if (e) {
+this.movedClass && this.movedClass.length > 0 && !e.hasClass(this.movedClass) && e.addClass(this.movedClass), this.$.menu.addChild(e);
+var t = this.$.menu.hasNode();
+return t && e.hasNode() && e.insertNodeInParent(t), !0;
 }
 },
 pushItem: function() {
-var a = this.$.menu.children, b = a[0];
-if (b) {
-this.movedClass && this.movedClass.length > 0 && b.hasClass(this.movedClass) && b.removeClass(this.movedClass), this.$.client.addChild(b);
-var c = this.$.client.hasNode();
-if (c && b.hasNode()) {
-var d = undefined, e;
-for (var f = 0; f < this.$.client.children.length; f++) {
-var g = this.$.client.children[f];
-if (g.toolbarIndex != undefined && g.toolbarIndex != f) {
-d = g, e = f;
+var e = this.$.menu.children, t = e[0];
+if (t) {
+this.movedClass && this.movedClass.length > 0 && t.hasClass(this.movedClass) && t.removeClass(this.movedClass), this.$.client.addChild(t);
+var n = this.$.client.hasNode();
+if (n && t.hasNode()) {
+var r = undefined, i;
+for (var s = 0; s < this.$.client.children.length; s++) {
+var o = this.$.client.children[s];
+if (o.toolbarIndex != undefined && o.toolbarIndex != s) {
+r = o, i = s;
 break;
 }
 }
-if (d && d.hasNode()) {
-b.insertNodeInParent(c, d.node);
-var h = this.$.client.children.pop();
-this.$.client.children.splice(e, 0, h);
-} else b.appendNodeToParent(c);
+if (r && r.hasNode()) {
+t.insertNodeInParent(n, r.node);
+var u = this.$.client.children.pop();
+this.$.client.children.splice(i, 0, u);
+} else t.appendNodeToParent(n);
 }
 return !0;
 }
@@ -5628,31 +4215,31 @@ this.popItem();
 },
 isContentOverflowing: function() {
 if (this.$.client.hasNode()) {
-var a = this.$.client.children, b = a[a.length - 1].hasNode();
-if (b) return b.offsetLeft + b.offsetWidth > this.$.client.node.clientWidth;
+var e = this.$.client.children, t = e[e.length - 1].hasNode();
+if (t) return t.offsetLeft + t.offsetWidth > this.$.client.node.clientWidth;
 }
 },
 findCollapsibleItem: function() {
-var a = this.$.client.children;
-for (var b = a.length - 1; c = a[b]; b--) {
+var e = this.$.client.children;
+for (var t = e.length - 1; c = e[t]; t--) {
 if (!c.unmoveable) return c;
-c.toolbarIndex == undefined && (c.toolbarIndex = b);
+c.toolbarIndex == undefined && (c.toolbarIndex = t);
 }
 }
 });
 
 // lib/globalize.js
 
-(function(a, b) {
-var c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z;
-c = function(a) {
-return new c.prototype.init(a);
-}, typeof require != "undefined" && typeof exports != "undefined" && typeof module != "undefined" ? module.exports = c : a.Globalize = c, c.cultures = {}, c.prototype = {
-constructor: c,
-init: function(a) {
-return this.cultures = c.cultures, this.cultureSelector = a, this;
+(function(e, t) {
+var n, r, i, s, o, u, a, f, l, c, h, p, d, v, m, g, y, b, w, E, S, x, T, N;
+n = function(e) {
+return new n.prototype.init(e);
+}, typeof require != "undefined" && typeof exports != "undefined" && typeof module != "undefined" ? module.exports = n : e.Globalize = n, n.cultures = {}, n.prototype = {
+constructor: n,
+init: function(e) {
+return this.cultures = n.cultures, this.cultureSelector = e, this;
 }
-}, c.prototype.init.prototype = c.prototype, c.cultures["default"] = {
+}, n.prototype.init.prototype = n.prototype, n.cultures["default"] = {
 name: "en",
 englishName: "English",
 nativeName: "English",
@@ -5723,291 +4310,291 @@ S: "yyyy'-'MM'-'dd'T'HH':'mm':'ss"
 }
 },
 messages: {}
-}, c.cultures["default"].calendar = c.cultures["default"].calendars.standard, c.cultures.en = c.cultures["default"], c.cultureSelector = "en", d = /^0x[a-f0-9]+$/i, e = /^[+\-]?infinity$/i, f = /^[+\-]?\d*\.?\d*(e[+\-]?\d+)?$/, g = /^\s+|\s+$/g, h = function(a, b) {
-if (a.indexOf) return a.indexOf(b);
-for (var c = 0, d = a.length; c < d; c++) if (a[c] === b) return c;
+}, n.cultures["default"].calendar = n.cultures["default"].calendars.standard, n.cultures.en = n.cultures["default"], n.cultureSelector = "en", r = /^0x[a-f0-9]+$/i, i = /^[+\-]?infinity$/i, s = /^[+\-]?\d*\.?\d*(e[+\-]?\d+)?$/, o = /^\s+|\s+$/g, u = function(e, t) {
+if (e.indexOf) return e.indexOf(t);
+for (var n = 0, r = e.length; n < r; n++) if (e[n] === t) return n;
 return -1;
-}, i = function(a, b) {
-return a.substr(a.length - b.length) === b;
-}, j = function() {
-var a, c, d, e, f, g, h = arguments[0] || {}, i = 1, n = arguments.length, o = !1;
-typeof h == "boolean" && (o = h, h = arguments[1] || {}, i = 2), typeof h != "object" && !l(h) && (h = {});
-for (; i < n; i++) if ((a = arguments[i]) != null) for (c in a) {
-d = h[c], e = a[c];
-if (h === e) continue;
-o && e && (m(e) || (f = k(e))) ? (f ? (f = !1, g = d && k(d) ? d : []) : g = d && m(d) ? d : {}, h[c] = j(o, g, e)) : e !== b && (h[c] = e);
+}, a = function(e, t) {
+return e.substr(e.length - t.length) === t;
+}, f = function() {
+var e, n, r, i, s, o, u = arguments[0] || {}, a = 1, p = arguments.length, d = !1;
+typeof u == "boolean" && (d = u, u = arguments[1] || {}, a = 2), typeof u != "object" && !c(u) && (u = {});
+for (; a < p; a++) if ((e = arguments[a]) != null) for (n in e) {
+r = u[n], i = e[n];
+if (u === i) continue;
+d && i && (h(i) || (s = l(i))) ? (s ? (s = !1, o = r && l(r) ? r : []) : o = r && h(r) ? r : {}, u[n] = f(d, o, i)) : i !== t && (u[n] = i);
 }
-return h;
-}, k = Array.isArray || function(a) {
-return Object.prototype.toString.call(a) === "[object Array]";
-}, l = function(a) {
-return Object.prototype.toString.call(a) === "[object Function]";
-}, m = function(a) {
-return Object.prototype.toString.call(a) === "[object Object]";
-}, n = function(a, b) {
-return a.indexOf(b) === 0;
-}, o = function(a) {
-return (a + "").replace(g, "");
-}, p = function(a) {
-return isNaN(a) ? NaN : Math[a < 0 ? "ceil" : "floor"](a);
-}, q = function(a, b, c) {
-var d;
-for (d = a.length; d < b; d += 1) a = c ? "0" + a : a + "0";
-return a;
-}, r = function(a, b) {
-var c = 0, d = !1;
-for (var e = 0, f = a.length; e < f; e++) {
-var g = a.charAt(e);
-switch (g) {
+return u;
+}, l = Array.isArray || function(e) {
+return Object.prototype.toString.call(e) === "[object Array]";
+}, c = function(e) {
+return Object.prototype.toString.call(e) === "[object Function]";
+}, h = function(e) {
+return Object.prototype.toString.call(e) === "[object Object]";
+}, p = function(e, t) {
+return e.indexOf(t) === 0;
+}, d = function(e) {
+return (e + "").replace(o, "");
+}, v = function(e) {
+return isNaN(e) ? NaN : Math[e < 0 ? "ceil" : "floor"](e);
+}, m = function(e, t, n) {
+var r;
+for (r = e.length; r < t; r += 1) e = n ? "0" + e : e + "0";
+return e;
+}, g = function(e, t) {
+var n = 0, r = !1;
+for (var i = 0, s = e.length; i < s; i++) {
+var o = e.charAt(i);
+switch (o) {
 case "'":
-d ? b.push("'") : c++, d = !1;
+r ? t.push("'") : n++, r = !1;
 break;
 case "\\":
-d && b.push("\\"), d = !d;
+r && t.push("\\"), r = !r;
 break;
 default:
-b.push(g), d = !1;
+t.push(o), r = !1;
+}
+}
+return n;
+}, y = function(e, t) {
+t = t || "F";
+var n, r = e.patterns, i = t.length;
+if (i === 1) {
+n = r[t];
+if (!n) throw "Invalid date format string '" + t + "'.";
+t = n;
+} else i === 2 && t.charAt(0) === "%" && (t = t.charAt(1));
+return t;
+}, b = function(e, t, n) {
+function T(e, t) {
+var n, r = e + "";
+return t > 1 && r.length < t ? (n = c[t - 2] + r, n.substr(n.length - t, t)) : (n = r, n);
+}
+function N() {
+return h || p ? h : (h = d.test(t), p = !0, h);
+}
+function C(e, t) {
+if (w) return w[t];
+switch (t) {
+case 0:
+return e.getFullYear();
+case 1:
+return e.getMonth();
+case 2:
+return e.getDate();
+default:
+throw "Invalid part value " + t;
+}
+}
+var r = n.calendar, i = r.convert, s;
+if (!t || !t.length || t === "i") {
+if (n && n.name.length) if (i) s = b(e, r.patterns.F, n); else {
+var o = new Date(e.getTime()), u = S(e, r.eras);
+o.setFullYear(x(e, r, u)), s = o.toLocaleString();
+} else s = e.toString();
+return s;
+}
+var a = r.eras, f = t === "s";
+t = y(r, t), s = [];
+var l, c = [ "0", "00", "000" ], h, p, d = /([^d]|^)(d|dd)([^d]|$)/g, v = 0, m = E(), w;
+!f && i && (w = i.fromGregorian(e));
+for (;;) {
+var k = m.lastIndex, L = m.exec(t), A = t.slice(k, L ? L.index : t.length);
+v += g(A, s);
+if (!L) break;
+if (v % 2) {
+s.push(L[0]);
+continue;
+}
+var O = L[0], M = O.length;
+switch (O) {
+case "ddd":
+case "dddd":
+var _ = M === 3 ? r.days.namesAbbr : r.days.names;
+s.push(_[e.getDay()]);
+break;
+case "d":
+case "dd":
+h = !0, s.push(T(C(e, 2), M));
+break;
+case "MMM":
+case "MMMM":
+var D = C(e, 1);
+s.push(r.monthsGenitive && N() ? r.monthsGenitive[M === 3 ? "namesAbbr" : "names"][D] : r.months[M === 3 ? "namesAbbr" : "names"][D]);
+break;
+case "M":
+case "MM":
+s.push(T(C(e, 1) + 1, M));
+break;
+case "y":
+case "yy":
+case "yyyy":
+D = w ? w[0] : x(e, r, S(e, a), f), M < 4 && (D %= 100), s.push(T(D, M));
+break;
+case "h":
+case "hh":
+l = e.getHours() % 12, l === 0 && (l = 12), s.push(T(l, M));
+break;
+case "H":
+case "HH":
+s.push(T(e.getHours(), M));
+break;
+case "m":
+case "mm":
+s.push(T(e.getMinutes(), M));
+break;
+case "s":
+case "ss":
+s.push(T(e.getSeconds(), M));
+break;
+case "t":
+case "tt":
+D = e.getHours() < 12 ? r.AM ? r.AM[0] : " " : r.PM ? r.PM[0] : " ", s.push(M === 1 ? D.charAt(0) : D);
+break;
+case "f":
+case "ff":
+case "fff":
+s.push(T(e.getMilliseconds(), 3).substr(0, M));
+break;
+case "z":
+case "zz":
+l = e.getTimezoneOffset() / 60, s.push((l <= 0 ? "+" : "-") + T(Math.floor(Math.abs(l)), M));
+break;
+case "zzz":
+l = e.getTimezoneOffset() / 60, s.push((l <= 0 ? "+" : "-") + T(Math.floor(Math.abs(l)), 2) + ":" + T(Math.abs(e.getTimezoneOffset() % 60), 2));
+break;
+case "g":
+case "gg":
+r.eras && s.push(r.eras[S(e, a)].name);
+break;
+case "/":
+s.push(r["/"]);
+break;
+default:
+throw "Invalid date format pattern '" + O + "'.";
+}
+}
+return s.join("");
+}, function() {
+var e;
+e = function(e, t, n) {
+var r = n.groupSizes, i = r[0], s = 1, o = Math.pow(10, t), u = Math.round(e * o) / o;
+isFinite(u) || (u = e), e = u;
+var a = e + "", f = "", l = a.split(/e/i), c = l.length > 1 ? parseInt(l[1], 10) : 0;
+a = l[0], l = a.split("."), a = l[0], f = l.length > 1 ? l[1] : "";
+var h;
+c > 0 ? (f = m(f, c, !1), a += f.slice(0, c), f = f.substr(c)) : c < 0 && (c = -c, a = m(a, c + 1, !0), f = a.slice(-c, a.length) + f, a = a.slice(0, -c)), t > 0 ? f = n["."] + (f.length > t ? f.slice(0, t) : m(f, t)) : f = "";
+var p = a.length - 1, d = n[","], v = "";
+while (p >= 0) {
+if (i === 0 || i > p) return a.slice(0, p + 1) + (v.length ? d + v + f : f);
+v = a.slice(p - i + 1, p + 1) + (v.length ? d + v : ""), p -= i, s < r.length && (i = r[s], s++);
+}
+return a.slice(0, p + 1) + d + v + f;
+}, w = function(t, n, r) {
+if (!isFinite(t)) return t === Infinity ? r.numberFormat.positiveInfinity : t === -Infinity ? r.numberFormat.negativeInfinity : r.numberFormat.NaN;
+if (!n || n === "i") return r.name.length ? t.toLocaleString() : t.toString();
+n = n || "D";
+var i = r.numberFormat, s = Math.abs(t), o = -1, u;
+n.length > 1 && (o = parseInt(n.slice(1), 10));
+var a = n.charAt(0).toUpperCase(), f;
+switch (a) {
+case "D":
+u = "n", s = v(s), o !== -1 && (s = m("" + s, o, !0)), t < 0 && (s = "-" + s);
+break;
+case "N":
+f = i;
+case "C":
+f = f || i.currency;
+case "P":
+f = f || i.percent, u = t < 0 ? f.pattern[0] : f.pattern[1] || "n", o === -1 && (o = f.decimals), s = e(s * (a === "P" ? 100 : 1), o, f);
+break;
+default:
+throw "Bad number format specifier: " + a;
+}
+var l = /n|\$|-|%/g, c = "";
+for (;;) {
+var h = l.lastIndex, p = l.exec(u);
+c += u.slice(h, p ? p.index : u.length);
+if (!p) break;
+switch (p[0]) {
+case "n":
+c += s;
+break;
+case "$":
+c += i.currency.symbol;
+break;
+case "-":
+/[1-9]/.test(s) && (c += i["-"]);
+break;
+case "%":
+c += i.percent.symbol;
 }
 }
 return c;
-}, s = function(a, b) {
-b = b || "F";
-var c, d = a.patterns, e = b.length;
-if (e === 1) {
-c = d[b];
-if (!c) throw "Invalid date format string '" + b + "'.";
-b = c;
-} else e === 2 && b.charAt(0) === "%" && (b = b.charAt(1));
-return b;
-}, t = function(a, b, c) {
-function y(a, b) {
-var c, d = a + "";
-return b > 1 && d.length < b ? (c = l[b - 2] + d, c.substr(c.length - b, b)) : (c = d, c);
-}
-function z() {
-return m || n ? m : (m = o.test(b), n = !0, m);
-}
-function A(a, b) {
-if (u) return u[b];
-switch (b) {
-case 0:
-return a.getFullYear();
-case 1:
-return a.getMonth();
-case 2:
-return a.getDate();
-default:
-throw "Invalid part value " + b;
-}
-}
-var d = c.calendar, e = d.convert, f;
-if (!b || !b.length || b === "i") {
-if (c && c.name.length) if (e) f = t(a, d.patterns.F, c); else {
-var g = new Date(a.getTime()), h = w(a, d.eras);
-g.setFullYear(x(a, d, h)), f = g.toLocaleString();
-} else f = a.toString();
-return f;
-}
-var i = d.eras, j = b === "s";
-b = s(d, b), f = [];
-var k, l = [ "0", "00", "000" ], m, n, o = /([^d]|^)(d|dd)([^d]|$)/g, p = 0, q = v(), u;
-!j && e && (u = e.fromGregorian(a));
-for (;;) {
-var B = q.lastIndex, C = q.exec(b), D = b.slice(B, C ? C.index : b.length);
-p += r(D, f);
-if (!C) break;
-if (p % 2) {
-f.push(C[0]);
-continue;
-}
-var E = C[0], F = E.length;
-switch (E) {
-case "ddd":
-case "dddd":
-var G = F === 3 ? d.days.namesAbbr : d.days.names;
-f.push(G[a.getDay()]);
-break;
-case "d":
-case "dd":
-m = !0, f.push(y(A(a, 2), F));
-break;
-case "MMM":
-case "MMMM":
-var H = A(a, 1);
-f.push(d.monthsGenitive && z() ? d.monthsGenitive[F === 3 ? "namesAbbr" : "names"][H] : d.months[F === 3 ? "namesAbbr" : "names"][H]);
-break;
-case "M":
-case "MM":
-f.push(y(A(a, 1) + 1, F));
-break;
-case "y":
-case "yy":
-case "yyyy":
-H = u ? u[0] : x(a, d, w(a, i), j), F < 4 && (H %= 100), f.push(y(H, F));
-break;
-case "h":
-case "hh":
-k = a.getHours() % 12, k === 0 && (k = 12), f.push(y(k, F));
-break;
-case "H":
-case "HH":
-f.push(y(a.getHours(), F));
-break;
-case "m":
-case "mm":
-f.push(y(a.getMinutes(), F));
-break;
-case "s":
-case "ss":
-f.push(y(a.getSeconds(), F));
-break;
-case "t":
-case "tt":
-H = a.getHours() < 12 ? d.AM ? d.AM[0] : " " : d.PM ? d.PM[0] : " ", f.push(F === 1 ? H.charAt(0) : H);
-break;
-case "f":
-case "ff":
-case "fff":
-f.push(y(a.getMilliseconds(), 3).substr(0, F));
-break;
-case "z":
-case "zz":
-k = a.getTimezoneOffset() / 60, f.push((k <= 0 ? "+" : "-") + y(Math.floor(Math.abs(k)), F));
-break;
-case "zzz":
-k = a.getTimezoneOffset() / 60, f.push((k <= 0 ? "+" : "-") + y(Math.floor(Math.abs(k)), 2) + ":" + y(Math.abs(a.getTimezoneOffset() % 60), 2));
-break;
-case "g":
-case "gg":
-d.eras && f.push(d.eras[w(a, i)].name);
-break;
-case "/":
-f.push(d["/"]);
-break;
-default:
-throw "Invalid date format pattern '" + E + "'.";
-}
-}
-return f.join("");
-}, function() {
-var a;
-a = function(a, b, c) {
-var d = c.groupSizes, e = d[0], f = 1, g = Math.pow(10, b), h = Math.round(a * g) / g;
-isFinite(h) || (h = a), a = h;
-var i = a + "", j = "", k = i.split(/e/i), l = k.length > 1 ? parseInt(k[1], 10) : 0;
-i = k[0], k = i.split("."), i = k[0], j = k.length > 1 ? k[1] : "";
-var m;
-l > 0 ? (j = q(j, l, !1), i += j.slice(0, l), j = j.substr(l)) : l < 0 && (l = -l, i = q(i, l + 1, !0), j = i.slice(-l, i.length) + j, i = i.slice(0, -l)), b > 0 ? j = c["."] + (j.length > b ? j.slice(0, b) : q(j, b)) : j = "";
-var n = i.length - 1, o = c[","], p = "";
-while (n >= 0) {
-if (e === 0 || e > n) return i.slice(0, n + 1) + (p.length ? o + p + j : j);
-p = i.slice(n - e + 1, n + 1) + (p.length ? o + p : ""), n -= e, f < d.length && (e = d[f], f++);
-}
-return i.slice(0, n + 1) + o + p + j;
-}, u = function(b, c, d) {
-if (!isFinite(b)) return b === Infinity ? d.numberFormat.positiveInfinity : b === -Infinity ? d.numberFormat.negativeInfinity : d.numberFormat.NaN;
-if (!c || c === "i") return d.name.length ? b.toLocaleString() : b.toString();
-c = c || "D";
-var e = d.numberFormat, f = Math.abs(b), g = -1, h;
-c.length > 1 && (g = parseInt(c.slice(1), 10));
-var i = c.charAt(0).toUpperCase(), j;
-switch (i) {
-case "D":
-h = "n", f = p(f), g !== -1 && (f = q("" + f, g, !0)), b < 0 && (f = "-" + f);
-break;
-case "N":
-j = e;
-case "C":
-j = j || e.currency;
-case "P":
-j = j || e.percent, h = b < 0 ? j.pattern[0] : j.pattern[1] || "n", g === -1 && (g = j.decimals), f = a(f * (i === "P" ? 100 : 1), g, j);
-break;
-default:
-throw "Bad number format specifier: " + i;
-}
-var k = /n|\$|-|%/g, l = "";
-for (;;) {
-var m = k.lastIndex, n = k.exec(h);
-l += h.slice(m, n ? n.index : h.length);
-if (!n) break;
-switch (n[0]) {
-case "n":
-l += f;
-break;
-case "$":
-l += e.currency.symbol;
-break;
-case "-":
-/[1-9]/.test(f) && (l += e["-"]);
-break;
-case "%":
-l += e.percent.symbol;
-}
-}
-return l;
 };
-}(), v = function() {
+}(), E = function() {
 return /\/|dddd|ddd|dd|d|MMMM|MMM|MM|M|yyyy|yy|y|hh|h|HH|H|mm|m|ss|s|tt|t|fff|ff|f|zzz|zz|z|gg|g/g;
-}, w = function(a, b) {
-if (!b) return 0;
-var c, d = a.getTime();
-for (var e = 0, f = b.length; e < f; e++) {
-c = b[e].start;
-if (c === null || d >= c) return e;
+}, S = function(e, t) {
+if (!t) return 0;
+var n, r = e.getTime();
+for (var i = 0, s = t.length; i < s; i++) {
+n = t[i].start;
+if (n === null || r >= n) return i;
 }
 return 0;
-}, x = function(a, b, c, d) {
-var e = a.getFullYear();
-return !d && b.eras && (e -= b.eras[c].offset), e;
+}, x = function(e, t, n, r) {
+var i = e.getFullYear();
+return !r && t.eras && (i -= t.eras[n].offset), i;
 }, function() {
-var a, b, c, d, e, f, g;
-a = function(a, b) {
-if (b < 100) {
-var c = new Date, d = w(c), e = x(c, a, d), f = a.twoDigitYearMax;
-f = typeof f == "string" ? (new Date).getFullYear() % 100 + parseInt(f, 10) : f, b += e - e % 100, b > f && (b -= 100);
+var e, t, n, r, i, s, o;
+e = function(e, t) {
+if (t < 100) {
+var n = new Date, r = S(n), i = x(n, e, r), s = e.twoDigitYearMax;
+s = typeof s == "string" ? (new Date).getFullYear() % 100 + parseInt(s, 10) : s, t += i - i % 100, t > s && (t -= 100);
 }
-return b;
-}, b = function(a, b, c) {
-var d, e = a.days, i = a._upperDays;
-return i || (a._upperDays = i = [ g(e.names), g(e.namesAbbr), g(e.namesShort) ]), b = f(b), c ? (d = h(i[1], b), d === -1 && (d = h(i[2], b))) : d = h(i[0], b), d;
-}, c = function(a, b, c) {
-var d = a.months, e = a.monthsGenitive || a.months, i = a._upperMonths, j = a._upperMonthsGen;
-i || (a._upperMonths = i = [ g(d.names), g(d.namesAbbr) ], a._upperMonthsGen = j = [ g(e.names), g(e.namesAbbr) ]), b = f(b);
-var k = h(c ? i[1] : i[0], b);
-return k < 0 && (k = h(c ? j[1] : j[0], b)), k;
-}, d = function(a, b) {
-var c = a._parseRegExp;
-if (!c) a._parseRegExp = c = {}; else {
-var d = c[b];
-if (d) return d;
+return t;
+}, t = function(e, t, n) {
+var r, i = e.days, a = e._upperDays;
+return a || (e._upperDays = a = [ o(i.names), o(i.namesAbbr), o(i.namesShort) ]), t = s(t), n ? (r = u(a[1], t), r === -1 && (r = u(a[2], t))) : r = u(a[0], t), r;
+}, n = function(e, t, n) {
+var r = e.months, i = e.monthsGenitive || e.months, a = e._upperMonths, f = e._upperMonthsGen;
+a || (e._upperMonths = a = [ o(r.names), o(r.namesAbbr) ], e._upperMonthsGen = f = [ o(i.names), o(i.namesAbbr) ]), t = s(t);
+var l = u(n ? a[1] : a[0], t);
+return l < 0 && (l = u(n ? f[1] : f[0], t)), l;
+}, r = function(e, t) {
+var n = e._parseRegExp;
+if (!n) e._parseRegExp = n = {}; else {
+var r = n[t];
+if (r) return r;
 }
-var e = s(a, b).replace(/([\^\$\.\*\+\?\|\[\]\(\)\{\}])/g, "\\\\$1"), f = [ "^" ], g = [], h = 0, i = 0, j = v(), k;
-while ((k = j.exec(e)) !== null) {
-var l = e.slice(h, k.index);
-h = j.lastIndex, i += r(l, f);
-if (i % 2) {
-f.push(k[0]);
+var i = y(e, t).replace(/([\^\$\.\*\+\?\|\[\]\(\)\{\}])/g, "\\\\$1"), s = [ "^" ], o = [], u = 0, a = 0, f = E(), l;
+while ((l = f.exec(i)) !== null) {
+var c = i.slice(u, l.index);
+u = f.lastIndex, a += g(c, s);
+if (a % 2) {
+s.push(l[0]);
 continue;
 }
-var m = k[0], n = m.length, o;
-switch (m) {
+var h = l[0], p = h.length, d;
+switch (h) {
 case "dddd":
 case "ddd":
 case "MMMM":
 case "MMM":
 case "gg":
 case "g":
-o = "(\\D+)";
+d = "(\\D+)";
 break;
 case "tt":
 case "t":
-o = "(\\D*)";
+d = "(\\D*)";
 break;
 case "yyyy":
 case "fff":
 case "ff":
 case "f":
-o = "(\\d{" + n + "})";
+d = "(\\d{" + p + "})";
 break;
 case "dd":
 case "d":
@@ -6023,273 +4610,273 @@ case "mm":
 case "m":
 case "ss":
 case "s":
-o = "(\\d\\d?)";
+d = "(\\d\\d?)";
 break;
 case "zzz":
-o = "([+-]?\\d\\d?:\\d{2})";
+d = "([+-]?\\d\\d?:\\d{2})";
 break;
 case "zz":
 case "z":
-o = "([+-]?\\d\\d?)";
+d = "([+-]?\\d\\d?)";
 break;
 case "/":
-o = "(\\/)";
+d = "(\\/)";
 break;
 default:
-throw "Invalid date format pattern '" + m + "'.";
+throw "Invalid date format pattern '" + h + "'.";
 }
-o && f.push(o), g.push(k[0]);
+d && s.push(d), o.push(l[0]);
 }
-r(e.slice(h), f), f.push("$");
-var p = f.join("").replace(/\s+/g, "\\s+"), q = {
-regExp: p,
-groups: g
+g(i.slice(u), s), s.push("$");
+var v = s.join("").replace(/\s+/g, "\\s+"), m = {
+regExp: v,
+groups: o
 };
-return c[b] = q;
-}, e = function(a, b, c) {
-return a < b || a > c;
-}, f = function(a) {
-return a.split("\u00a0").join(" ").toUpperCase();
-}, g = function(a) {
-var b = [];
-for (var c = 0, d = a.length; c < d; c++) b[c] = f(a[c]);
-return b;
-}, y = function(f, g, h) {
-f = o(f);
-var i = h.calendar, j = d(i, g), k = (new RegExp(j.regExp)).exec(f);
-if (k === null) return null;
-var l = j.groups, m = null, p = null, q = null, r = null, s = null, t = 0, u, v = 0, w = 0, x = 0, y = null, z = !1;
-for (var A = 0, B = l.length; A < B; A++) {
-var C = k[A + 1];
-if (C) {
-var D = l[A], E = D.length, F = parseInt(C, 10);
-switch (D) {
+return n[t] = m;
+}, i = function(e, t, n) {
+return e < t || e > n;
+}, s = function(e) {
+return e.split("\u00a0").join(" ").toUpperCase();
+}, o = function(e) {
+var t = [];
+for (var n = 0, r = e.length; n < r; n++) t[n] = s(e[n]);
+return t;
+}, T = function(s, o, u) {
+s = d(s);
+var a = u.calendar, f = r(a, o), l = (new RegExp(f.regExp)).exec(s);
+if (l === null) return null;
+var c = f.groups, h = null, v = null, m = null, g = null, y = null, b = 0, w, E = 0, S = 0, x = 0, T = null, N = !1;
+for (var C = 0, k = c.length; C < k; C++) {
+var L = l[C + 1];
+if (L) {
+var A = c[C], O = A.length, M = parseInt(L, 10);
+switch (A) {
 case "dd":
 case "d":
-r = F;
-if (e(r, 1, 31)) return null;
+g = M;
+if (i(g, 1, 31)) return null;
 break;
 case "MMM":
 case "MMMM":
-q = c(i, C, E === 3);
-if (e(q, 0, 11)) return null;
+m = n(a, L, O === 3);
+if (i(m, 0, 11)) return null;
 break;
 case "M":
 case "MM":
-q = F - 1;
-if (e(q, 0, 11)) return null;
+m = M - 1;
+if (i(m, 0, 11)) return null;
 break;
 case "y":
 case "yy":
 case "yyyy":
-p = E < 4 ? a(i, F) : F;
-if (e(p, 0, 9999)) return null;
+v = O < 4 ? e(a, M) : M;
+if (i(v, 0, 9999)) return null;
 break;
 case "h":
 case "hh":
-t = F, t === 12 && (t = 0);
-if (e(t, 0, 11)) return null;
+b = M, b === 12 && (b = 0);
+if (i(b, 0, 11)) return null;
 break;
 case "H":
 case "HH":
-t = F;
-if (e(t, 0, 23)) return null;
+b = M;
+if (i(b, 0, 23)) return null;
 break;
 case "m":
 case "mm":
-v = F;
-if (e(v, 0, 59)) return null;
+E = M;
+if (i(E, 0, 59)) return null;
 break;
 case "s":
 case "ss":
-w = F;
-if (e(w, 0, 59)) return null;
+S = M;
+if (i(S, 0, 59)) return null;
 break;
 case "tt":
 case "t":
-z = i.PM && (C === i.PM[0] || C === i.PM[1] || C === i.PM[2]);
-if (!z && (!i.AM || C !== i.AM[0] && C !== i.AM[1] && C !== i.AM[2])) return null;
+N = a.PM && (L === a.PM[0] || L === a.PM[1] || L === a.PM[2]);
+if (!N && (!a.AM || L !== a.AM[0] && L !== a.AM[1] && L !== a.AM[2])) return null;
 break;
 case "f":
 case "ff":
 case "fff":
-x = F * Math.pow(10, 3 - E);
-if (e(x, 0, 999)) return null;
+x = M * Math.pow(10, 3 - O);
+if (i(x, 0, 999)) return null;
 break;
 case "ddd":
 case "dddd":
-s = b(i, C, E === 3);
-if (e(s, 0, 6)) return null;
+y = t(a, L, O === 3);
+if (i(y, 0, 6)) return null;
 break;
 case "zzz":
-var G = C.split(/:/);
-if (G.length !== 2) return null;
-u = parseInt(G[0], 10);
-if (e(u, -12, 13)) return null;
-var H = parseInt(G[1], 10);
-if (e(H, 0, 59)) return null;
-y = u * 60 + (n(C, "-") ? -H : H);
+var _ = L.split(/:/);
+if (_.length !== 2) return null;
+w = parseInt(_[0], 10);
+if (i(w, -12, 13)) return null;
+var D = parseInt(_[1], 10);
+if (i(D, 0, 59)) return null;
+T = w * 60 + (p(L, "-") ? -D : D);
 break;
 case "z":
 case "zz":
-u = F;
-if (e(u, -12, 13)) return null;
-y = u * 60;
+w = M;
+if (i(w, -12, 13)) return null;
+T = w * 60;
 break;
 case "g":
 case "gg":
-var I = C;
-if (!I || !i.eras) return null;
-I = o(I.toLowerCase());
-for (var J = 0, K = i.eras.length; J < K; J++) if (I === i.eras[J].name.toLowerCase()) {
-m = J;
+var P = L;
+if (!P || !a.eras) return null;
+P = d(P.toLowerCase());
+for (var H = 0, B = a.eras.length; H < B; H++) if (P === a.eras[H].name.toLowerCase()) {
+h = H;
 break;
 }
-if (m === null) return null;
+if (h === null) return null;
 }
 }
 }
-var L = new Date, M, N = i.convert;
-M = N ? N.fromGregorian(L)[0] : L.getFullYear(), p === null ? p = M : i.eras && (p += i.eras[m || 0].offset), q === null && (q = 0), r === null && (r = 1);
-if (N) {
-L = N.toGregorian(p, q, r);
-if (L === null) return null;
+var j = new Date, F, I = a.convert;
+F = I ? I.fromGregorian(j)[0] : j.getFullYear(), v === null ? v = F : a.eras && (v += a.eras[h || 0].offset), m === null && (m = 0), g === null && (g = 1);
+if (I) {
+j = I.toGregorian(v, m, g);
+if (j === null) return null;
 } else {
-L.setFullYear(p, q, r);
-if (L.getDate() !== r) return null;
-if (s !== null && L.getDay() !== s) return null;
+j.setFullYear(v, m, g);
+if (j.getDate() !== g) return null;
+if (y !== null && j.getDay() !== y) return null;
 }
-z && t < 12 && (t += 12), L.setHours(t, v, w, x);
-if (y !== null) {
-var O = L.getMinutes() - (y + L.getTimezoneOffset());
-L.setHours(L.getHours() + parseInt(O / 60, 10), O % 60);
+N && b < 12 && (b += 12), j.setHours(b, E, S, x);
+if (T !== null) {
+var q = j.getMinutes() - (T + j.getTimezoneOffset());
+j.setHours(j.getHours() + parseInt(q / 60, 10), q % 60);
 }
-return L;
+return j;
 };
-}(), z = function(a, b, c) {
-var d = b["-"], e = b["+"], f;
-switch (c) {
+}(), N = function(e, t, n) {
+var r = t["-"], i = t["+"], s;
+switch (n) {
 case "n -":
-d = " " + d, e = " " + e;
+r = " " + r, i = " " + i;
 case "n-":
-i(a, d) ? f = [ "-", a.substr(0, a.length - d.length) ] : i(a, e) && (f = [ "+", a.substr(0, a.length - e.length) ]);
+a(e, r) ? s = [ "-", e.substr(0, e.length - r.length) ] : a(e, i) && (s = [ "+", e.substr(0, e.length - i.length) ]);
 break;
 case "- n":
-d += " ", e += " ";
+r += " ", i += " ";
 case "-n":
-n(a, d) ? f = [ "-", a.substr(d.length) ] : n(a, e) && (f = [ "+", a.substr(e.length) ]);
+p(e, r) ? s = [ "-", e.substr(r.length) ] : p(e, i) && (s = [ "+", e.substr(i.length) ]);
 break;
 case "(n)":
-n(a, "(") && i(a, ")") && (f = [ "-", a.substr(1, a.length - 2) ]);
+p(e, "(") && a(e, ")") && (s = [ "-", e.substr(1, e.length - 2) ]);
 }
-return f || [ "", a ];
-}, c.prototype.findClosestCulture = function(a) {
-return c.findClosestCulture.call(this, a);
-}, c.prototype.format = function(a, b, d) {
-return c.format.call(this, a, b, d);
-}, c.prototype.localize = function(a, b) {
-return c.localize.call(this, a, b);
-}, c.prototype.parseInt = function(a, b, d) {
-return c.parseInt.call(this, a, b, d);
-}, c.prototype.parseFloat = function(a, b, d) {
-return c.parseFloat.call(this, a, b, d);
-}, c.prototype.culture = function(a) {
-return c.culture.call(this, a);
-}, c.addCultureInfo = function(a, b, c) {
-var d = {}, e = !1;
-typeof a != "string" ? (c = a, a = this.culture().name, d = this.cultures[a]) : typeof b != "string" ? (c = b, e = this.cultures[a] == null, d = this.cultures[a] || this.cultures["default"]) : (e = !0, d = this.cultures[b]), this.cultures[a] = j(!0, {}, d, c), e && (this.cultures[a].calendar = this.cultures[a].calendars.standard);
-}, c.findClosestCulture = function(a) {
-var b;
-if (!a) return this.findClosestCulture(this.cultureSelector) || this.cultures["default"];
-typeof a == "string" && (a = a.split(","));
-if (k(a)) {
-var c, d = this.cultures, e = a, f, g = e.length, h = [];
-for (f = 0; f < g; f++) {
-a = o(e[f]);
-var i, j = a.split(";");
-c = o(j[0]), j.length === 1 ? i = 1 : (a = o(j[1]), a.indexOf("q=") === 0 ? (a = a.substr(2), i = parseFloat(a), i = isNaN(i) ? 0 : i) : i = 1), h.push({
-lang: c,
-pri: i
+return s || [ "", e ];
+}, n.prototype.findClosestCulture = function(e) {
+return n.findClosestCulture.call(this, e);
+}, n.prototype.format = function(e, t, r) {
+return n.format.call(this, e, t, r);
+}, n.prototype.localize = function(e, t) {
+return n.localize.call(this, e, t);
+}, n.prototype.parseInt = function(e, t, r) {
+return n.parseInt.call(this, e, t, r);
+}, n.prototype.parseFloat = function(e, t, r) {
+return n.parseFloat.call(this, e, t, r);
+}, n.prototype.culture = function(e) {
+return n.culture.call(this, e);
+}, n.addCultureInfo = function(e, t, n) {
+var r = {}, i = !1;
+typeof e != "string" ? (n = e, e = this.culture().name, r = this.cultures[e]) : typeof t != "string" ? (n = t, i = this.cultures[e] == null, r = this.cultures[e] || this.cultures["default"]) : (i = !0, r = this.cultures[t]), this.cultures[e] = f(!0, {}, r, n), i && (this.cultures[e].calendar = this.cultures[e].calendars.standard);
+}, n.findClosestCulture = function(e) {
+var t;
+if (!e) return this.findClosestCulture(this.cultureSelector) || this.cultures["default"];
+typeof e == "string" && (e = e.split(","));
+if (l(e)) {
+var n, r = this.cultures, i = e, s, o = i.length, u = [];
+for (s = 0; s < o; s++) {
+e = d(i[s]);
+var a, f = e.split(";");
+n = d(f[0]), f.length === 1 ? a = 1 : (e = d(f[1]), e.indexOf("q=") === 0 ? (e = e.substr(2), a = parseFloat(e), a = isNaN(a) ? 0 : a) : a = 1), u.push({
+lang: n,
+pri: a
 });
 }
-h.sort(function(a, b) {
-return a.pri < b.pri ? 1 : a.pri > b.pri ? -1 : 0;
+u.sort(function(e, t) {
+return e.pri < t.pri ? 1 : e.pri > t.pri ? -1 : 0;
 });
-for (f = 0; f < g; f++) {
-c = h[f].lang, b = d[c];
-if (b) return b;
+for (s = 0; s < o; s++) {
+n = u[s].lang, t = r[n];
+if (t) return t;
 }
-for (f = 0; f < g; f++) {
-c = h[f].lang;
+for (s = 0; s < o; s++) {
+n = u[s].lang;
 do {
-var l = c.lastIndexOf("-");
-if (l === -1) break;
-c = c.substr(0, l), b = d[c];
-if (b) return b;
+var c = n.lastIndexOf("-");
+if (c === -1) break;
+n = n.substr(0, c), t = r[n];
+if (t) return t;
 } while (1);
 }
-for (f = 0; f < g; f++) {
-c = h[f].lang;
-for (var m in d) {
-var n = d[m];
-if (n.language == c) return n;
+for (s = 0; s < o; s++) {
+n = u[s].lang;
+for (var h in r) {
+var p = r[h];
+if (p.language == n) return p;
 }
 }
-} else if (typeof a == "object") return a;
-return b || null;
-}, c.format = function(a, b, c) {
-var d = this.findClosestCulture(c);
-return a instanceof Date ? a = t(a, b, d) : typeof a == "number" && (a = u(a, b, d)), a;
-}, c.localize = function(a, b) {
-return this.findClosestCulture(b).messages[a] || this.cultures["default"].messages[a];
-}, c.parseDate = function(a, b, c) {
-c = this.findClosestCulture(c);
-var d, e, f;
-if (b) {
-typeof b == "string" && (b = [ b ]);
-if (b.length) for (var g = 0, h = b.length; g < h; g++) {
-var i = b[g];
-if (i) {
-d = y(a, i, c);
-if (d) break;
+} else if (typeof e == "object") return e;
+return t || null;
+}, n.format = function(e, t, n) {
+var r = this.findClosestCulture(n);
+return e instanceof Date ? e = b(e, t, r) : typeof e == "number" && (e = w(e, t, r)), e;
+}, n.localize = function(e, t) {
+return this.findClosestCulture(t).messages[e] || this.cultures["default"].messages[e];
+}, n.parseDate = function(e, t, n) {
+n = this.findClosestCulture(n);
+var r, i, s;
+if (t) {
+typeof t == "string" && (t = [ t ]);
+if (t.length) for (var o = 0, u = t.length; o < u; o++) {
+var a = t[o];
+if (a) {
+r = T(e, a, n);
+if (r) break;
 }
 }
 } else {
-f = c.calendar.patterns;
-for (e in f) {
-d = y(a, f[e], c);
-if (d) break;
+s = n.calendar.patterns;
+for (i in s) {
+r = T(e, s[i], n);
+if (r) break;
 }
 }
-return d || null;
-}, c.parseInt = function(a, b, d) {
-return p(c.parseFloat(a, b, d));
-}, c.parseFloat = function(a, b, c) {
-typeof b != "number" && (c = b, b = 10);
-var g = this.findClosestCulture(c), h = NaN, i = g.numberFormat;
-a.indexOf(g.numberFormat.currency.symbol) > -1 && (a = a.replace(g.numberFormat.currency.symbol, ""), a = a.replace(g.numberFormat.currency["."], g.numberFormat["."])), a = o(a);
-if (e.test(a)) h = parseFloat(a); else if (!b && d.test(a)) h = parseInt(a, 16); else {
-var j = z(a, i, i.pattern[0]), k = j[0], l = j[1];
-k === "" && i.pattern[0] !== "(n)" && (j = z(a, i, "(n)"), k = j[0], l = j[1]), k === "" && i.pattern[0] !== "-n" && (j = z(a, i, "-n"), k = j[0], l = j[1]), k = k || "+";
-var m, n, p = l.indexOf("e");
-p < 0 && (p = l.indexOf("E")), p < 0 ? (n = l, m = null) : (n = l.substr(0, p), m = l.substr(p + 1));
-var q, r, s = i["."], t = n.indexOf(s);
-t < 0 ? (q = n, r = null) : (q = n.substr(0, t), r = n.substr(t + s.length));
-var u = i[","];
-q = q.split(u).join("");
-var v = u.replace(/\u00A0/g, " ");
-u !== v && (q = q.split(v).join(""));
-var w = k + q;
-r !== null && (w += "." + r);
-if (m !== null) {
-var x = z(m, i, "-n");
-w += "e" + (x[0] || "+") + x[1];
+return r || null;
+}, n.parseInt = function(e, t, r) {
+return v(n.parseFloat(e, t, r));
+}, n.parseFloat = function(e, t, n) {
+typeof t != "number" && (n = t, t = 10);
+var o = this.findClosestCulture(n), u = NaN, a = o.numberFormat;
+e.indexOf(o.numberFormat.currency.symbol) > -1 && (e = e.replace(o.numberFormat.currency.symbol, ""), e = e.replace(o.numberFormat.currency["."], o.numberFormat["."])), e = d(e);
+if (i.test(e)) u = parseFloat(e); else if (!t && r.test(e)) u = parseInt(e, 16); else {
+var f = N(e, a, a.pattern[0]), l = f[0], c = f[1];
+l === "" && a.pattern[0] !== "(n)" && (f = N(e, a, "(n)"), l = f[0], c = f[1]), l === "" && a.pattern[0] !== "-n" && (f = N(e, a, "-n"), l = f[0], c = f[1]), l = l || "+";
+var h, p, v = c.indexOf("e");
+v < 0 && (v = c.indexOf("E")), v < 0 ? (p = c, h = null) : (p = c.substr(0, v), h = c.substr(v + 1));
+var m, g, y = a["."], b = p.indexOf(y);
+b < 0 ? (m = p, g = null) : (m = p.substr(0, b), g = p.substr(b + y.length));
+var w = a[","];
+m = m.split(w).join("");
+var E = w.replace(/\u00A0/g, " ");
+w !== E && (m = m.split(E).join(""));
+var S = l + m;
+g !== null && (S += "." + g);
+if (h !== null) {
+var x = N(h, a, "-n");
+S += "e" + (x[0] || "+") + x[1];
 }
-f.test(w) && (h = parseFloat(w));
+s.test(S) && (u = parseFloat(S));
 }
-return h;
-}, c.culture = function(a) {
-return typeof a != "undefined" && (this.cultureSelector = a), this.findClosestCulture(a) || this.cultures["default"];
+return u;
+}, n.culture = function(e) {
+return typeof e != "undefined" && (this.cultureSelector = e), this.findClosestCulture(e) || this.cultures["default"];
 };
 })(this);
 
@@ -6559,11 +5146,11 @@ this.inherited(arguments), this.viewDate = this.viewDate || new Date, this.value
 rendered: function() {
 this.inherited(arguments);
 if (dateFormat) {
-var a = new Date(2011, 4, 1);
-this.$.sunday.setContent(dateFormat(a, this.dowFormat)), a.setDate(a.getDate() + 1), this.$.monday.setContent(dateFormat(a, this.dowFormat)), a.setDate(a.getDate() + 1), this.$.tuesday.setContent(dateFormat(a, this.dowFormat)), a.setDate(a.getDate() + 1), this.$.wednesday.setContent(dateFormat(a, this.dowFormat)), a.setDate(a.getDate() + 1), this.$.thursday.setContent(dateFormat(a, this.dowFormat)), a.setDate(a.getDate() + 1), this.$.friday.setContent(dateFormat(a, this.dowFormat)), a.setDate(a.getDate() + 1), this.$.saturday.setContent(dateFormat(a, this.dowFormat));
+var e = new Date(2011, 4, 1);
+this.$.sunday.setContent(dateFormat(e, this.dowFormat)), e.setDate(e.getDate() + 1), this.$.monday.setContent(dateFormat(e, this.dowFormat)), e.setDate(e.getDate() + 1), this.$.tuesday.setContent(dateFormat(e, this.dowFormat)), e.setDate(e.getDate() + 1), this.$.wednesday.setContent(dateFormat(e, this.dowFormat)), e.setDate(e.getDate() + 1), this.$.thursday.setContent(dateFormat(e, this.dowFormat)), e.setDate(e.getDate() + 1), this.$.friday.setContent(dateFormat(e, this.dowFormat)), e.setDate(e.getDate() + 1), this.$.saturday.setContent(dateFormat(e, this.dowFormat));
 }
-var b = Math.round(10 * this.getBounds().width / 7) / 10;
-this.$.sunday.applyStyle("width", b + "px"), this.$.monday.applyStyle("width", b + "px"), this.$.tuesday.applyStyle("width", b + "px"), this.$.wednesday.applyStyle("width", b + "px"), this.$.thursday.applyStyle("width", b + "px"), this.$.friday.applyStyle("width", b + "px"), this.$.saturday.applyStyle("width", b + "px"), this.valueChanged();
+var t = Math.round(10 * this.getBounds().width / 7) / 10;
+this.$.sunday.applyStyle("width", t + "px"), this.$.monday.applyStyle("width", t + "px"), this.$.tuesday.applyStyle("width", t + "px"), this.$.wednesday.applyStyle("width", t + "px"), this.$.thursday.applyStyle("width", t + "px"), this.$.friday.applyStyle("width", t + "px"), this.$.saturday.applyStyle("width", t + "px"), this.valueChanged();
 },
 valueChanged: function() {
 if (Object.prototype.toString.call(this.value) !== "[object Date]" || isNaN(this.value.getTime())) this.value = new Date;
@@ -6573,13 +5160,13 @@ viewDateChanged: function() {
 this.renderCalendar();
 },
 renderCalendar: function() {
-var a = Math.round(10 * this.getBounds().width / 7) / 10, b = new Date;
+var e = Math.round(10 * this.getBounds().width / 7) / 10, t = new Date;
 this.viewDate = new Date(this.viewDate.getFullYear(), this.viewDate.getMonth(), 1);
-var c = new Date(this.viewDate.getFullYear(), this.viewDate.getMonth(), 0), d = new Date(this.viewDate.getFullYear(), this.viewDate.getMonth(), 1);
-c.setDate(c.getDate() - d.getDay() + 1), c.getTime() === d.getTime() && c.setDate(c.getDate() - 7);
-var e = 0, f;
-while (e < 6) c.getDate() === this.value.getDate() && c.getMonth() === this.value.getMonth() && c.getFullYear() === this.value.getFullYear() ? f = "onyx-blue" : c.getDate() === b.getDate() && c.getMonth() === b.getMonth() && c.getFullYear() === b.getFullYear() ? f = "onyx-affirmative" : c.getMonth() !== d.getMonth() ? f = "onyx-dark" : f = "", this.$["row" + e + "col" + c.getDay()].applyStyle("width", a + "px"), this.$["row" + e + "col" + c.getDay()].removeClass("onyx-affirmative"), this.$["row" + e + "col" + c.getDay()].removeClass("onyx-blue"), this.$["row" + e + "col" + c.getDay()].removeClass("onyx-dark"), this.$["row" + e + "col" + c.getDay()].addClass(f), this.$["row" + e + "col" + c.getDay()].setContent(c.getDate()), this.$["row" + e + "col" + c.getDay()].ts = c.getTime(), c.setDate(c.getDate() + 1), c.getDay() === 0 && e < 6 && e++;
-dateFormat ? this.$.monthLabel.setContent(dateFormat(d, this.monthFormat)) : this.$.monthLabel.setContent(this.getMonthString(d.getMonth()));
+var n = new Date(this.viewDate.getFullYear(), this.viewDate.getMonth(), 0), r = new Date(this.viewDate.getFullYear(), this.viewDate.getMonth(), 1);
+n.setDate(n.getDate() - r.getDay() + 1), n.getTime() === r.getTime() && n.setDate(n.getDate() - 7);
+var i = 0, s;
+while (i < 6) n.getDate() === this.value.getDate() && n.getMonth() === this.value.getMonth() && n.getFullYear() === this.value.getFullYear() ? s = "onyx-blue" : n.getDate() === t.getDate() && n.getMonth() === t.getMonth() && n.getFullYear() === t.getFullYear() ? s = "onyx-affirmative" : n.getMonth() !== r.getMonth() ? s = "onyx-dark" : s = "", this.$["row" + i + "col" + n.getDay()].applyStyle("width", e + "px"), this.$["row" + i + "col" + n.getDay()].removeClass("onyx-affirmative"), this.$["row" + i + "col" + n.getDay()].removeClass("onyx-blue"), this.$["row" + i + "col" + n.getDay()].removeClass("onyx-dark"), this.$["row" + i + "col" + n.getDay()].addClass(s), this.$["row" + i + "col" + n.getDay()].setContent(n.getDate()), this.$["row" + i + "col" + n.getDay()].ts = n.getTime(), n.setDate(n.getDate() + 1), n.getDay() === 0 && i < 6 && i++;
+dateFormat ? this.$.monthLabel.setContent(dateFormat(r, this.monthFormat)) : this.$.monthLabel.setContent(this.getMonthString(r.getMonth()));
 },
 monthBack: function() {
 this.viewDate.setMonth(this.viewDate.getMonth() - 1), this.renderCalendar();
@@ -6590,62 +5177,62 @@ this.viewDate.setMonth(this.viewDate.getMonth() + 1), this.renderCalendar();
 resetDate: function() {
 this.viewDate = new Date, this.value = new Date, this.renderCalendar(), this.doChange(this.value);
 },
-dateHandler: function(a, b) {
-var c = new Date;
-c.setTime(a.ts), this.value.setDate(c.getDate()), this.value.setMonth(c.getMonth()), this.value.setFullYear(c.getFullYear()), this.value.getMonth() != this.viewDate.getMonth() && (this.viewDate = new Date(this.value.getFullYear(), this.value.getMonth(), 1)), this.doChange(this.value), this.renderCalendar();
+dateHandler: function(e, t) {
+var n = new Date;
+n.setTime(e.ts), this.value.setDate(n.getDate()), this.value.setMonth(n.getMonth()), this.value.setFullYear(n.getFullYear()), this.value.getMonth() != this.viewDate.getMonth() && (this.viewDate = new Date(this.value.getFullYear(), this.value.getMonth(), 1)), this.doChange(this.value), this.renderCalendar();
 },
-getMonthString: function(a) {
-return [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ][a];
+getMonthString: function(e) {
+return [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ][e];
 },
-getDayString: function(a) {
-return [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ][a];
+getDayString: function(e) {
+return [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ][e];
 }
 });
 
-// date.format.js
+// date_format.js
 
 var dateFormat = function() {
-var a = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|"[^"]*"|'[^']*'/g, b = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g, c = /[^-+\dA-Z]/g, d = function(a, b) {
-a = String(a), b = b || 2;
-while (a.length < b) a = "0" + a;
-return a;
+var e = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|"[^"]*"|'[^']*'/g, t = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g, n = /[^-+\dA-Z]/g, r = function(e, t) {
+e = String(e), t = t || 2;
+while (e.length < t) e = "0" + e;
+return e;
 };
-return function(e, f, g) {
-var h = dateFormat;
-arguments.length == 1 && Object.prototype.toString.call(e) == "[object String]" && !/\d/.test(e) && (f = e, e = undefined), e = e ? new Date(e) : new Date;
-if (isNaN(e)) throw SyntaxError("invalid date");
-f = String(h.masks[f] || f || h.masks["default"]), f.slice(0, 4) == "UTC:" && (f = f.slice(4), g = !0);
-var i = g ? "getUTC" : "get", j = e[i + "Date"](), k = e[i + "Day"](), l = e[i + "Month"](), m = e[i + "FullYear"](), n = e[i + "Hours"](), o = e[i + "Minutes"](), p = e[i + "Seconds"](), q = e[i + "Milliseconds"](), r = g ? 0 : e.getTimezoneOffset(), s = {
-d: j,
-dd: d(j),
-ddd: h.i18n.dayNames[k],
-dddd: h.i18n.dayNames[k + 7],
-m: l + 1,
-mm: d(l + 1),
-mmm: h.i18n.monthNames[l],
-mmmm: h.i18n.monthNames[l + 12],
-yy: String(m).slice(2),
-yyyy: m,
-h: n % 12 || 12,
-hh: d(n % 12 || 12),
-H: n,
-HH: d(n),
-M: o,
-MM: d(o),
-s: p,
-ss: d(p),
-l: d(q, 3),
-L: d(q > 99 ? Math.round(q / 10) : q),
-t: n < 12 ? "a" : "p",
-tt: n < 12 ? "am" : "pm",
-T: n < 12 ? "A" : "P",
-TT: n < 12 ? "AM" : "PM",
-Z: g ? "UTC" : (String(e).match(b) || [ "" ]).pop().replace(c, ""),
-o: (r > 0 ? "-" : "+") + d(Math.floor(Math.abs(r) / 60) * 100 + Math.abs(r) % 60, 4),
-S: [ "th", "st", "nd", "rd" ][j % 10 > 3 ? 0 : (j % 100 - j % 10 != 10) * j % 10]
+return function(i, s, o) {
+var u = dateFormat;
+arguments.length == 1 && Object.prototype.toString.call(i) == "[object String]" && !/\d/.test(i) && (s = i, i = undefined), i = i ? new Date(i) : new Date;
+if (isNaN(i)) throw SyntaxError("invalid date");
+s = String(u.masks[s] || s || u.masks["default"]), s.slice(0, 4) == "UTC:" && (s = s.slice(4), o = !0);
+var a = o ? "getUTC" : "get", f = i[a + "Date"](), l = i[a + "Day"](), c = i[a + "Month"](), h = i[a + "FullYear"](), p = i[a + "Hours"](), d = i[a + "Minutes"](), v = i[a + "Seconds"](), m = i[a + "Milliseconds"](), g = o ? 0 : i.getTimezoneOffset(), y = {
+d: f,
+dd: r(f),
+ddd: u.i18n.dayNames[l],
+dddd: u.i18n.dayNames[l + 7],
+m: c + 1,
+mm: r(c + 1),
+mmm: u.i18n.monthNames[c],
+mmmm: u.i18n.monthNames[c + 12],
+yy: String(h).slice(2),
+yyyy: h,
+h: p % 12 || 12,
+hh: r(p % 12 || 12),
+H: p,
+HH: r(p),
+M: d,
+MM: r(d),
+s: v,
+ss: r(v),
+l: r(m, 3),
+L: r(m > 99 ? Math.round(m / 10) : m),
+t: p < 12 ? "a" : "p",
+tt: p < 12 ? "am" : "pm",
+T: p < 12 ? "A" : "P",
+TT: p < 12 ? "AM" : "PM",
+Z: o ? "UTC" : (String(i).match(t) || [ "" ]).pop().replace(n, ""),
+o: (g > 0 ? "-" : "+") + r(Math.floor(Math.abs(g) / 60) * 100 + Math.abs(g) % 60, 4),
+S: [ "th", "st", "nd", "rd" ][f % 10 > 3 ? 0 : (f % 100 - f % 10 != 10) * f % 10]
 };
-return f.replace(a, function(a) {
-return a in s ? s[a] : a.slice(1, a.length - 1);
+return s.replace(e, function(e) {
+return e in y ? y[e] : e.slice(1, e.length - 1);
 });
 };
 }();
@@ -6666,173 +5253,173 @@ isoUtcDateTime: "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'"
 }, dateFormat.i18n = {
 dayNames: [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ],
 monthNames: [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]
-}, Date.prototype.format = function(a, b) {
-return dateFormat(this, a, b);
+}, Date.prototype.format = function(e, t) {
+return dateFormat(this, e, t);
 };
 
 // socket.io.min.js
 
-(function(a, b) {
-var c = a;
-c.version = "0.9.6", c.protocol = 1, c.transports = [], c.j = [], c.sockets = {}, c.connect = function(a, d) {
-var e = c.util.parseUri(a), f, g;
-b && b.location && (e.protocol = e.protocol || b.location.protocol.slice(0, -1), e.host = e.host || (b.document ? b.document.domain : b.location.hostname), e.port = e.port || b.location.port), f = c.util.uniqueUri(e);
-var h = {
-host: e.host,
-secure: "https" == e.protocol,
-port: e.port || ("https" == e.protocol ? 443 : 80),
-query: e.query || ""
+(function(e, t) {
+var n = e;
+n.version = "0.9.6", n.protocol = 1, n.transports = [], n.j = [], n.sockets = {}, n.connect = function(e, r) {
+var i = n.util.parseUri(e), s, o;
+t && t.location && (i.protocol = i.protocol || t.location.protocol.slice(0, -1), i.host = i.host || (t.document ? t.document.domain : t.location.hostname), i.port = i.port || t.location.port), s = n.util.uniqueUri(i);
+var u = {
+host: i.host,
+secure: "https" == i.protocol,
+port: i.port || ("https" == i.protocol ? 443 : 80),
+query: i.query || ""
 };
-c.util.merge(h, d);
-if (h["force new connection"] || !c.sockets[f]) g = new c.Socket(h);
-return !h["force new connection"] && g && (c.sockets[f] = g), g = g || c.sockets[f], g.of(e.path.length > 1 ? e.path : "");
+n.util.merge(u, r);
+if (u["force new connection"] || !n.sockets[s]) o = new n.Socket(u);
+return !u["force new connection"] && o && (n.sockets[s] = o), o = o || n.sockets[s], o.of(i.path.length > 1 ? i.path : "");
 };
-})("object" == typeof module ? module.exports : this.io = {}, this), function(a, b) {
-var c = a.util = {}, d = /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/, e = [ "source", "protocol", "authority", "userInfo", "user", "password", "host", "port", "relative", "path", "directory", "file", "query", "anchor" ];
-c.parseUri = function(a) {
-var b = d.exec(a || ""), c = {}, f = 14;
-while (f--) c[e[f]] = b[f] || "";
-return c;
-}, c.uniqueUri = function(a) {
-var c = a.protocol, d = a.host, e = a.port;
-return "document" in b ? (d = d || document.domain, e = e || (c == "https" && document.location.protocol !== "https:" ? 443 : document.location.port)) : (d = d || "localhost", !e && c == "https" && (e = 443)), (c || "http") + "://" + d + ":" + (e || 80);
-}, c.query = function(a, b) {
-var d = c.chunkQuery(a || ""), e = [];
-c.merge(d, c.chunkQuery(b || ""));
-for (var f in d) d.hasOwnProperty(f) && e.push(f + "=" + d[f]);
-return e.length ? "?" + e.join("&") : "";
-}, c.chunkQuery = function(a) {
-var b = {}, c = a.split("&"), d = 0, e = c.length, f;
-for (; d < e; ++d) f = c[d].split("="), f[0] && (b[f[0]] = f[1]);
-return b;
+})("object" == typeof module ? module.exports : this.io = {}, this), function(e, t) {
+var n = e.util = {}, r = /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/, i = [ "source", "protocol", "authority", "userInfo", "user", "password", "host", "port", "relative", "path", "directory", "file", "query", "anchor" ];
+n.parseUri = function(e) {
+var t = r.exec(e || ""), n = {}, s = 14;
+while (s--) n[i[s]] = t[s] || "";
+return n;
+}, n.uniqueUri = function(e) {
+var n = e.protocol, r = e.host, i = e.port;
+return "document" in t ? (r = r || document.domain, i = i || (n == "https" && document.location.protocol !== "https:" ? 443 : document.location.port)) : (r = r || "localhost", !i && n == "https" && (i = 443)), (n || "http") + "://" + r + ":" + (i || 80);
+}, n.query = function(e, t) {
+var r = n.chunkQuery(e || ""), i = [];
+n.merge(r, n.chunkQuery(t || ""));
+for (var s in r) r.hasOwnProperty(s) && i.push(s + "=" + r[s]);
+return i.length ? "?" + i.join("&") : "";
+}, n.chunkQuery = function(e) {
+var t = {}, n = e.split("&"), r = 0, i = n.length, s;
+for (; r < i; ++r) s = n[r].split("="), s[0] && (t[s[0]] = s[1]);
+return t;
 };
-var f = !1;
-c.load = function(a) {
-if ("document" in b && document.readyState === "complete" || f) return a();
-c.on(b, "load", a, !1);
-}, c.on = function(a, b, c, d) {
-a.attachEvent ? a.attachEvent("on" + b, c) : a.addEventListener && a.addEventListener(b, c, d);
-}, c.request = function(a) {
-if (a && "undefined" != typeof XDomainRequest) return new XDomainRequest;
-if ("undefined" != typeof XMLHttpRequest && (!a || c.ua.hasCORS)) return new XMLHttpRequest;
-if (!a) try {
+var s = !1;
+n.load = function(e) {
+if ("document" in t && document.readyState === "complete" || s) return e();
+n.on(t, "load", e, !1);
+}, n.on = function(e, t, n, r) {
+e.attachEvent ? e.attachEvent("on" + t, n) : e.addEventListener && e.addEventListener(t, n, r);
+}, n.request = function(e) {
+if (e && "undefined" != typeof XDomainRequest) return new XDomainRequest;
+if ("undefined" != typeof XMLHttpRequest && (!e || n.ua.hasCORS)) return new XMLHttpRequest;
+if (!e) try {
 return new (window[[ "Active" ].concat("Object").join("X")])("Microsoft.XMLHTTP");
-} catch (b) {}
+} catch (t) {}
 return null;
-}, "undefined" != typeof window && c.load(function() {
-f = !0;
-}), c.defer = function(a) {
-if (!c.ua.webkit || "undefined" != typeof importScripts) return a();
-c.load(function() {
-setTimeout(a, 100);
+}, "undefined" != typeof window && n.load(function() {
+s = !0;
+}), n.defer = function(e) {
+if (!n.ua.webkit || "undefined" != typeof importScripts) return e();
+n.load(function() {
+setTimeout(e, 100);
 });
-}, c.merge = function(a, b, d, e) {
-var f = e || [], g = typeof d == "undefined" ? 2 : d, h;
-for (h in b) b.hasOwnProperty(h) && c.indexOf(f, h) < 0 && (typeof a[h] != "object" || !g ? (a[h] = b[h], f.push(b[h])) : c.merge(a[h], b[h], g - 1, f));
-return a;
-}, c.mixin = function(a, b) {
-c.merge(a.prototype, b.prototype);
-}, c.inherit = function(a, b) {
-function c() {}
-c.prototype = b.prototype, a.prototype = new c;
-}, c.isArray = Array.isArray || function(a) {
-return Object.prototype.toString.call(a) === "[object Array]";
-}, c.intersect = function(a, b) {
-var d = [], e = a.length > b.length ? a : b, f = a.length > b.length ? b : a;
-for (var g = 0, h = f.length; g < h; g++) ~c.indexOf(e, f[g]) && d.push(f[g]);
-return d;
-}, c.indexOf = function(a, b, c) {
-for (var d = a.length, c = c < 0 ? c + d < 0 ? 0 : c + d : c || 0; c < d && a[c] !== b; c++) ;
-return d <= c ? -1 : c;
-}, c.toArray = function(a) {
-var b = [];
-for (var c = 0, d = a.length; c < d; c++) b.push(a[c]);
-return b;
-}, c.ua = {}, c.ua.hasCORS = "undefined" != typeof XMLHttpRequest && function() {
+}, n.merge = function(e, t, r, i) {
+var s = i || [], o = typeof r == "undefined" ? 2 : r, u;
+for (u in t) t.hasOwnProperty(u) && n.indexOf(s, u) < 0 && (typeof e[u] != "object" || !o ? (e[u] = t[u], s.push(t[u])) : n.merge(e[u], t[u], o - 1, s));
+return e;
+}, n.mixin = function(e, t) {
+n.merge(e.prototype, t.prototype);
+}, n.inherit = function(e, t) {
+function n() {}
+n.prototype = t.prototype, e.prototype = new n;
+}, n.isArray = Array.isArray || function(e) {
+return Object.prototype.toString.call(e) === "[object Array]";
+}, n.intersect = function(e, t) {
+var r = [], i = e.length > t.length ? e : t, s = e.length > t.length ? t : e;
+for (var o = 0, u = s.length; o < u; o++) ~n.indexOf(i, s[o]) && r.push(s[o]);
+return r;
+}, n.indexOf = function(e, t, n) {
+for (var r = e.length, n = n < 0 ? n + r < 0 ? 0 : n + r : n || 0; n < r && e[n] !== t; n++) ;
+return r <= n ? -1 : n;
+}, n.toArray = function(e) {
+var t = [];
+for (var n = 0, r = e.length; n < r; n++) t.push(e[n]);
+return t;
+}, n.ua = {}, n.ua.hasCORS = "undefined" != typeof XMLHttpRequest && function() {
 try {
-var a = new XMLHttpRequest;
-} catch (b) {
+var e = new XMLHttpRequest;
+} catch (t) {
 return !1;
 }
-return a.withCredentials != undefined;
-}(), c.ua.webkit = "undefined" != typeof navigator && /webkit/i.test(navigator.userAgent);
-}("undefined" != typeof io ? io : module.exports, this), function(a, b) {
-function c() {}
-a.EventEmitter = c, c.prototype.on = function(a, c) {
-return this.$events || (this.$events = {}), this.$events[a] ? b.util.isArray(this.$events[a]) ? this.$events[a].push(c) : this.$events[a] = [ this.$events[a], c ] : this.$events[a] = c, this;
-}, c.prototype.addListener = c.prototype.on, c.prototype.once = function(a, b) {
-function c() {
-d.removeListener(a, c), b.apply(this, arguments);
+return e.withCredentials != undefined;
+}(), n.ua.webkit = "undefined" != typeof navigator && /webkit/i.test(navigator.userAgent);
+}("undefined" != typeof io ? io : module.exports, this), function(e, t) {
+function n() {}
+e.EventEmitter = n, n.prototype.on = function(e, n) {
+return this.$events || (this.$events = {}), this.$events[e] ? t.util.isArray(this.$events[e]) ? this.$events[e].push(n) : this.$events[e] = [ this.$events[e], n ] : this.$events[e] = n, this;
+}, n.prototype.addListener = n.prototype.on, n.prototype.once = function(e, t) {
+function n() {
+r.removeListener(e, n), t.apply(this, arguments);
 }
-var d = this;
-return c.listener = b, this.on(a, c), this;
-}, c.prototype.removeListener = function(a, c) {
-if (this.$events && this.$events[a]) {
-var d = this.$events[a];
-if (b.util.isArray(d)) {
-var e = -1;
-for (var f = 0, g = d.length; f < g; f++) if (d[f] === c || d[f].listener && d[f].listener === c) {
-e = f;
+var r = this;
+return n.listener = t, this.on(e, n), this;
+}, n.prototype.removeListener = function(e, n) {
+if (this.$events && this.$events[e]) {
+var r = this.$events[e];
+if (t.util.isArray(r)) {
+var i = -1;
+for (var s = 0, o = r.length; s < o; s++) if (r[s] === n || r[s].listener && r[s].listener === n) {
+i = s;
 break;
 }
-if (e < 0) return this;
-d.splice(e, 1), d.length || delete this.$events[a];
-} else (d === c || d.listener && d.listener === c) && delete this.$events[a];
+if (i < 0) return this;
+r.splice(i, 1), r.length || delete this.$events[e];
+} else (r === n || r.listener && r.listener === n) && delete this.$events[e];
 }
 return this;
-}, c.prototype.removeAllListeners = function(a) {
-return this.$events && this.$events[a] && (this.$events[a] = null), this;
-}, c.prototype.listeners = function(a) {
-return this.$events || (this.$events = {}), this.$events[a] || (this.$events[a] = []), b.util.isArray(this.$events[a]) || (this.$events[a] = [ this.$events[a] ]), this.$events[a];
-}, c.prototype.emit = function(a) {
+}, n.prototype.removeAllListeners = function(e) {
+return this.$events && this.$events[e] && (this.$events[e] = null), this;
+}, n.prototype.listeners = function(e) {
+return this.$events || (this.$events = {}), this.$events[e] || (this.$events[e] = []), t.util.isArray(this.$events[e]) || (this.$events[e] = [ this.$events[e] ]), this.$events[e];
+}, n.prototype.emit = function(e) {
 if (!this.$events) return !1;
-var c = this.$events[a];
-if (!c) return !1;
-var d = Array.prototype.slice.call(arguments, 1);
-if ("function" == typeof c) c.apply(this, d); else {
-if (!b.util.isArray(c)) return !1;
-var e = c.slice();
-for (var f = 0, g = e.length; f < g; f++) e[f].apply(this, d);
+var n = this.$events[e];
+if (!n) return !1;
+var r = Array.prototype.slice.call(arguments, 1);
+if ("function" == typeof n) n.apply(this, r); else {
+if (!t.util.isArray(n)) return !1;
+var i = n.slice();
+for (var s = 0, o = i.length; s < o; s++) i[s].apply(this, r);
 }
 return !0;
 };
 }("undefined" != typeof io ? io : module.exports, "undefined" != typeof io ? io : module.parent.exports), function(exports, nativeJSON) {
-function f(a) {
-return a < 10 ? "0" + a : a;
+function f(e) {
+return e < 10 ? "0" + e : e;
 }
-function date(a, b) {
-return isFinite(a.valueOf()) ? a.getUTCFullYear() + "-" + f(a.getUTCMonth() + 1) + "-" + f(a.getUTCDate()) + "T" + f(a.getUTCHours()) + ":" + f(a.getUTCMinutes()) + ":" + f(a.getUTCSeconds()) + "Z" : null;
+function date(e, t) {
+return isFinite(e.valueOf()) ? e.getUTCFullYear() + "-" + f(e.getUTCMonth() + 1) + "-" + f(e.getUTCDate()) + "T" + f(e.getUTCHours()) + ":" + f(e.getUTCMinutes()) + ":" + f(e.getUTCSeconds()) + "Z" : null;
 }
-function quote(a) {
-return escapable.lastIndex = 0, escapable.test(a) ? '"' + a.replace(escapable, function(a) {
-var b = meta[a];
-return typeof b == "string" ? b : "\\u" + ("0000" + a.charCodeAt(0).toString(16)).slice(-4);
-}) + '"' : '"' + a + '"';
+function quote(e) {
+return escapable.lastIndex = 0, escapable.test(e) ? '"' + e.replace(escapable, function(e) {
+var t = meta[e];
+return typeof t == "string" ? t : "\\u" + ("0000" + e.charCodeAt(0).toString(16)).slice(-4);
+}) + '"' : '"' + e + '"';
 }
-function str(a, b) {
-var c, d, e, f, g = gap, h, i = b[a];
-i instanceof Date && (i = date(a)), typeof rep == "function" && (i = rep.call(b, a, i));
-switch (typeof i) {
+function str(e, t) {
+var n, r, i, s, o = gap, u, a = t[e];
+a instanceof Date && (a = date(e)), typeof rep == "function" && (a = rep.call(t, e, a));
+switch (typeof a) {
 case "string":
-return quote(i);
+return quote(a);
 case "number":
-return isFinite(i) ? String(i) : "null";
+return isFinite(a) ? String(a) : "null";
 case "boolean":
 case "null":
-return String(i);
+return String(a);
 case "object":
-if (!i) return "null";
-gap += indent, h = [];
-if (Object.prototype.toString.apply(i) === "[object Array]") {
-f = i.length;
-for (c = 0; c < f; c += 1) h[c] = str(c, i) || "null";
-return e = h.length === 0 ? "[]" : gap ? "[\n" + gap + h.join(",\n" + gap) + "\n" + g + "]" : "[" + h.join(",") + "]", gap = g, e;
+if (!a) return "null";
+gap += indent, u = [];
+if (Object.prototype.toString.apply(a) === "[object Array]") {
+s = a.length;
+for (n = 0; n < s; n += 1) u[n] = str(n, a) || "null";
+return i = u.length === 0 ? "[]" : gap ? "[\n" + gap + u.join(",\n" + gap) + "\n" + o + "]" : "[" + u.join(",") + "]", gap = o, i;
 }
 if (rep && typeof rep == "object") {
-f = rep.length;
-for (c = 0; c < f; c += 1) typeof rep[c] == "string" && (d = rep[c], e = str(d, i), e && h.push(quote(d) + (gap ? ": " : ":") + e));
-} else for (d in i) Object.prototype.hasOwnProperty.call(i, d) && (e = str(d, i), e && h.push(quote(d) + (gap ? ": " : ":") + e));
-return e = h.length === 0 ? "{}" : gap ? "{\n" + gap + h.join(",\n" + gap) + "\n" + g + "}" : "{" + h.join(",") + "}", gap = g, e;
+s = rep.length;
+for (n = 0; n < s; n += 1) typeof rep[n] == "string" && (r = rep[n], i = str(r, a), i && u.push(quote(r) + (gap ? ": " : ":") + i));
+} else for (r in a) Object.prototype.hasOwnProperty.call(a, r) && (i = str(r, a), i && u.push(quote(r) + (gap ? ": " : ":") + i));
+return i = u.length === 0 ? "{}" : gap ? "{\n" + gap + u.join(",\n" + gap) + "\n" + o + "}" : "{" + u.join(",") + "}", gap = o, i;
 }
 }
 "use strict";
@@ -6849,174 +5436,174 @@ var JSON = exports.JSON = {}, cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5
 '"': '\\"',
 "\\": "\\\\"
 }, rep;
-JSON.stringify = function(a, b, c) {
-var d;
+JSON.stringify = function(e, t, n) {
+var r;
 gap = "", indent = "";
-if (typeof c == "number") for (d = 0; d < c; d += 1) indent += " "; else typeof c == "string" && (indent = c);
-rep = b;
-if (!b || typeof b == "function" || typeof b == "object" && typeof b.length == "number") return str("", {
-"": a
+if (typeof n == "number") for (r = 0; r < n; r += 1) indent += " "; else typeof n == "string" && (indent = n);
+rep = t;
+if (!t || typeof t == "function" || typeof t == "object" && typeof t.length == "number") return str("", {
+"": e
 });
 throw new Error("JSON.stringify");
 }, JSON.parse = function(text, reviver) {
-function walk(a, b) {
-var c, d, e = a[b];
-if (e && typeof e == "object") for (c in e) Object.prototype.hasOwnProperty.call(e, c) && (d = walk(e, c), d !== undefined ? e[c] = d : delete e[c]);
-return reviver.call(a, b, e);
+function walk(e, t) {
+var n, r, i = e[t];
+if (i && typeof i == "object") for (n in i) Object.prototype.hasOwnProperty.call(i, n) && (r = walk(i, n), r !== undefined ? i[n] = r : delete i[n]);
+return reviver.call(e, t, i);
 }
 var j;
-text = String(text), cx.lastIndex = 0, cx.test(text) && (text = text.replace(cx, function(a) {
-return "\\u" + ("0000" + a.charCodeAt(0).toString(16)).slice(-4);
+text = String(text), cx.lastIndex = 0, cx.test(text) && (text = text.replace(cx, function(e) {
+return "\\u" + ("0000" + e.charCodeAt(0).toString(16)).slice(-4);
 }));
 if (/^[\],:{}\s]*$/.test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, "@").replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, "]").replace(/(?:^|:|,)(?:\s*\[)+/g, ""))) return j = eval("(" + text + ")"), typeof reviver == "function" ? walk({
 "": j
 }, "") : j;
 throw new SyntaxError("JSON.parse");
 };
-}("undefined" != typeof io ? io : module.exports, typeof JSON != "undefined" ? JSON : undefined), function(a, b) {
-var c = a.parser = {}, d = c.packets = [ "disconnect", "connect", "heartbeat", "message", "json", "event", "ack", "error", "noop" ], e = c.reasons = [ "transport not supported", "client not handshaken", "unauthorized" ], f = c.advice = [ "reconnect" ], g = b.JSON, h = b.util.indexOf;
-c.encodePacket = function(a) {
-var b = h(d, a.type), c = a.id || "", i = a.endpoint || "", j = a.ack, k = null;
-switch (a.type) {
+}("undefined" != typeof io ? io : module.exports, typeof JSON != "undefined" ? JSON : undefined), function(e, t) {
+var n = e.parser = {}, r = n.packets = [ "disconnect", "connect", "heartbeat", "message", "json", "event", "ack", "error", "noop" ], i = n.reasons = [ "transport not supported", "client not handshaken", "unauthorized" ], s = n.advice = [ "reconnect" ], o = t.JSON, u = t.util.indexOf;
+n.encodePacket = function(e) {
+var t = u(r, e.type), n = e.id || "", a = e.endpoint || "", l = e.ack, c = null;
+switch (e.type) {
 case "error":
-var l = a.reason ? h(e, a.reason) : "", m = a.advice ? h(f, a.advice) : "";
-if (l !== "" || m !== "") k = l + (m !== "" ? "+" + m : "");
+var p = e.reason ? u(i, e.reason) : "", v = e.advice ? u(s, e.advice) : "";
+if (p !== "" || v !== "") c = p + (v !== "" ? "+" + v : "");
 break;
 case "message":
-a.data !== "" && (k = a.data);
+e.data !== "" && (c = e.data);
 break;
 case "event":
-var n = {
-name: a.name
+var m = {
+name: e.name
 };
-a.args && a.args.length && (n.args = a.args), k = g.stringify(n);
+e.args && e.args.length && (m.args = e.args), c = o.stringify(m);
 break;
 case "json":
-k = g.stringify(a.data);
+c = o.stringify(e.data);
 break;
 case "connect":
-a.qs && (k = a.qs);
+e.qs && (c = e.qs);
 break;
 case "ack":
-k = a.ackId + (a.args && a.args.length ? "+" + g.stringify(a.args) : "");
+c = e.ackId + (e.args && e.args.length ? "+" + o.stringify(e.args) : "");
 }
-var o = [ b, c + (j == "data" ? "+" : ""), i ];
-return k !== null && k !== undefined && o.push(k), o.join(":");
-}, c.encodePayload = function(a) {
-var b = "";
-if (a.length == 1) return a[0];
-for (var c = 0, d = a.length; c < d; c++) {
-var e = a[c];
-b += "\ufffd" + e.length + "\ufffd" + a[c];
+var y = [ t, n + (l == "data" ? "+" : ""), a ];
+return c !== null && c !== undefined && y.push(c), y.join(":");
+}, n.encodePayload = function(e) {
+var t = "";
+if (e.length == 1) return e[0];
+for (var n = 0, r = e.length; n < r; n++) {
+var i = e[n];
+t += "\ufffd" + i.length + "\ufffd" + e[n];
 }
-return b;
+return t;
 };
-var i = /([^:]+):([0-9]+)?(\+)?:([^:]+)?:?([\s\S]*)?/;
-c.decodePacket = function(a) {
-var b = a.match(i);
-if (!b) return {};
-var c = b[2] || "", a = b[5] || "", h = {
-type: d[b[1]],
-endpoint: b[4] || ""
+var a = /([^:]+):([0-9]+)?(\+)?:([^:]+)?:?([\s\S]*)?/;
+n.decodePacket = function(e) {
+var t = e.match(a);
+if (!t) return {};
+var n = t[2] || "", e = t[5] || "", u = {
+type: r[t[1]],
+endpoint: t[4] || ""
 };
-c && (h.id = c, b[3] ? h.ack = "data" : h.ack = !0);
-switch (h.type) {
+n && (u.id = n, t[3] ? u.ack = "data" : u.ack = !0);
+switch (u.type) {
 case "error":
-var b = a.split("+");
-h.reason = e[b[0]] || "", h.advice = f[b[1]] || "";
+var t = e.split("+");
+u.reason = i[t[0]] || "", u.advice = s[t[1]] || "";
 break;
 case "message":
-h.data = a || "";
+u.data = e || "";
 break;
 case "event":
 try {
-var j = g.parse(a);
-h.name = j.name, h.args = j.args;
-} catch (k) {}
-h.args = h.args || [];
+var l = o.parse(e);
+u.name = l.name, u.args = l.args;
+} catch (c) {}
+u.args = u.args || [];
 break;
 case "json":
 try {
-h.data = g.parse(a);
-} catch (k) {}
+u.data = o.parse(e);
+} catch (c) {}
 break;
 case "connect":
-h.qs = a || "";
+u.qs = e || "";
 break;
 case "ack":
-var b = a.match(/^([0-9]+)(\+)?(.*)/);
-if (b) {
-h.ackId = b[1], h.args = [];
-if (b[3]) try {
-h.args = b[3] ? g.parse(b[3]) : [];
-} catch (k) {}
+var t = e.match(/^([0-9]+)(\+)?(.*)/);
+if (t) {
+u.ackId = t[1], u.args = [];
+if (t[3]) try {
+u.args = t[3] ? o.parse(t[3]) : [];
+} catch (c) {}
 }
 break;
 case "disconnect":
 case "heartbeat":
 }
-return h;
-}, c.decodePayload = function(a) {
-if (a.charAt(0) == "\ufffd") {
-var b = [];
-for (var d = 1, e = ""; d < a.length; d++) a.charAt(d) == "\ufffd" ? (b.push(c.decodePacket(a.substr(d + 1).substr(0, e))), d += Number(e) + 1, e = "") : e += a.charAt(d);
-return b;
+return u;
+}, n.decodePayload = function(e) {
+if (e.charAt(0) == "\ufffd") {
+var t = [];
+for (var r = 1, i = ""; r < e.length; r++) e.charAt(r) == "\ufffd" ? (t.push(n.decodePacket(e.substr(r + 1).substr(0, i))), r += Number(i) + 1, i = "") : i += e.charAt(r);
+return t;
 }
-return [ c.decodePacket(a) ];
+return [ n.decodePacket(e) ];
 };
-}("undefined" != typeof io ? io : module.exports, "undefined" != typeof io ? io : module.parent.exports), function(a, b) {
-function c(a, b) {
-this.socket = a, this.sessid = b;
+}("undefined" != typeof io ? io : module.exports, "undefined" != typeof io ? io : module.parent.exports), function(e, t) {
+function n(e, t) {
+this.socket = e, this.sessid = t;
 }
-a.Transport = c, b.util.mixin(c, b.EventEmitter), c.prototype.onData = function(a) {
+e.Transport = n, t.util.mixin(n, t.EventEmitter), n.prototype.onData = function(e) {
 this.clearCloseTimeout(), (this.socket.connected || this.socket.connecting || this.socket.reconnecting) && this.setCloseTimeout();
-if (a !== "") {
-var c = b.parser.decodePayload(a);
-if (c && c.length) for (var d = 0, e = c.length; d < e; d++) this.onPacket(c[d]);
+if (e !== "") {
+var n = t.parser.decodePayload(e);
+if (n && n.length) for (var r = 0, i = n.length; r < i; r++) this.onPacket(n[r]);
 }
 return this;
-}, c.prototype.onPacket = function(a) {
-return this.socket.setHeartbeatTimeout(), a.type == "heartbeat" ? this.onHeartbeat() : (a.type == "connect" && a.endpoint == "" && this.onConnect(), a.type == "error" && a.advice == "reconnect" && (this.open = !1), this.socket.onPacket(a), this);
-}, c.prototype.setCloseTimeout = function() {
+}, n.prototype.onPacket = function(e) {
+return this.socket.setHeartbeatTimeout(), e.type == "heartbeat" ? this.onHeartbeat() : (e.type == "connect" && e.endpoint == "" && this.onConnect(), e.type == "error" && e.advice == "reconnect" && (this.open = !1), this.socket.onPacket(e), this);
+}, n.prototype.setCloseTimeout = function() {
 if (!this.closeTimeout) {
-var a = this;
+var e = this;
 this.closeTimeout = setTimeout(function() {
-a.onDisconnect();
+e.onDisconnect();
 }, this.socket.closeTimeout);
 }
-}, c.prototype.onDisconnect = function() {
+}, n.prototype.onDisconnect = function() {
 return this.close && this.open && this.close(), this.clearTimeouts(), this.socket.onDisconnect(), this;
-}, c.prototype.onConnect = function() {
+}, n.prototype.onConnect = function() {
 return this.socket.onConnect(), this;
-}, c.prototype.clearCloseTimeout = function() {
+}, n.prototype.clearCloseTimeout = function() {
 this.closeTimeout && (clearTimeout(this.closeTimeout), this.closeTimeout = null);
-}, c.prototype.clearTimeouts = function() {
+}, n.prototype.clearTimeouts = function() {
 this.clearCloseTimeout(), this.reopenTimeout && clearTimeout(this.reopenTimeout);
-}, c.prototype.packet = function(a) {
-this.send(b.parser.encodePacket(a));
-}, c.prototype.onHeartbeat = function(a) {
+}, n.prototype.packet = function(e) {
+this.send(t.parser.encodePacket(e));
+}, n.prototype.onHeartbeat = function(e) {
 this.packet({
 type: "heartbeat"
 });
-}, c.prototype.onOpen = function() {
+}, n.prototype.onOpen = function() {
 this.open = !0, this.clearCloseTimeout(), this.socket.onOpen();
-}, c.prototype.onClose = function() {
-var a = this;
+}, n.prototype.onClose = function() {
+var e = this;
 this.open = !1, this.socket.onClose(), this.onDisconnect();
-}, c.prototype.prepareUrl = function() {
-var a = this.socket.options;
-return this.scheme() + "://" + a.host + ":" + a.port + "/" + a.resource + "/" + b.protocol + "/" + this.name + "/" + this.sessid;
-}, c.prototype.ready = function(a, b) {
-b.call(this);
+}, n.prototype.prepareUrl = function() {
+var e = this.socket.options;
+return this.scheme() + "://" + e.host + ":" + e.port + "/" + e.resource + "/" + t.protocol + "/" + this.name + "/" + this.sessid;
+}, n.prototype.ready = function(e, t) {
+t.call(this);
 };
-}("undefined" != typeof io ? io : module.exports, "undefined" != typeof io ? io : module.parent.exports), function(a, b, c) {
-function d(a) {
+}("undefined" != typeof io ? io : module.exports, "undefined" != typeof io ? io : module.parent.exports), function(e, t, n) {
+function r(e) {
 this.options = {
 port: 80,
 secure: !1,
-document: "document" in c ? document : !1,
+document: "document" in n ? document : !1,
 resource: "socket.io",
-transports: b.transports,
+transports: t.transports,
 "connect timeout": 1e4,
 "try multiple transports": !0,
 reconnect: !0,
@@ -7027,579 +5614,579 @@ reconnect: !0,
 "sync disconnect on unload": !0,
 "auto connect": !0,
 "flash policy port": 10843
-}, b.util.merge(this.options, a), this.connected = !1, this.open = !1, this.connecting = !1, this.reconnecting = !1, this.namespaces = {}, this.buffer = [], this.doBuffer = !1;
-if (this.options["sync disconnect on unload"] && (!this.isXDomain() || b.util.ua.hasCORS)) {
-var d = this;
-b.util.on(c, "unload", function() {
-d.disconnectSync();
+}, t.util.merge(this.options, e), this.connected = !1, this.open = !1, this.connecting = !1, this.reconnecting = !1, this.namespaces = {}, this.buffer = [], this.doBuffer = !1;
+if (this.options["sync disconnect on unload"] && (!this.isXDomain() || t.util.ua.hasCORS)) {
+var r = this;
+t.util.on(n, "unload", function() {
+r.disconnectSync();
 }, !1);
 }
 this.options["auto connect"] && this.connect();
 }
-function e() {}
-a.Socket = d, b.util.mixin(d, b.EventEmitter), d.prototype.of = function(a) {
-return this.namespaces[a] || (this.namespaces[a] = new b.SocketNamespace(this, a), a !== "" && this.namespaces[a].packet({
+function i() {}
+e.Socket = r, t.util.mixin(r, t.EventEmitter), r.prototype.of = function(e) {
+return this.namespaces[e] || (this.namespaces[e] = new t.SocketNamespace(this, e), e !== "" && this.namespaces[e].packet({
 type: "connect"
-})), this.namespaces[a];
-}, d.prototype.publish = function() {
+})), this.namespaces[e];
+}, r.prototype.publish = function() {
 this.emit.apply(this, arguments);
-var a;
-for (var b in this.namespaces) this.namespaces.hasOwnProperty(b) && (a = this.of(b), a.$emit.apply(a, arguments));
-}, d.prototype.handshake = function(a) {
-function c(b) {
-b instanceof Error ? d.onError(b.message) : a.apply(null, b.split(":"));
+var e;
+for (var t in this.namespaces) this.namespaces.hasOwnProperty(t) && (e = this.of(t), e.$emit.apply(e, arguments));
+}, r.prototype.handshake = function(e) {
+function n(t) {
+t instanceof Error ? r.onError(t.message) : e.apply(null, t.split(":"));
 }
-var d = this, f = this.options, g = [ "http" + (f.secure ? "s" : "") + ":/", f.host + ":" + f.port, f.resource, b.protocol, b.util.query(this.options.query, "t=" + +(new Date)) ].join("/");
-if (this.isXDomain() && !b.util.ua.hasCORS) {
-var h = document.getElementsByTagName("script")[0], i = document.createElement("script");
-i.src = g + "&jsonp=" + b.j.length, h.parentNode.insertBefore(i, h), b.j.push(function(a) {
-c(a), i.parentNode.removeChild(i);
+var r = this, s = this.options, o = [ "http" + (s.secure ? "s" : "") + ":/", s.host + ":" + s.port, s.resource, t.protocol, t.util.query(this.options.query, "t=" + +(new Date)) ].join("/");
+if (this.isXDomain() && !t.util.ua.hasCORS) {
+var u = document.getElementsByTagName("script")[0], a = document.createElement("script");
+a.src = o + "&jsonp=" + t.j.length, u.parentNode.insertBefore(a, u), t.j.push(function(e) {
+n(e), a.parentNode.removeChild(a);
 });
 } else {
-var j = b.util.request();
-j.open("GET", g, !0), j.withCredentials = !0, j.onreadystatechange = function() {
-j.readyState == 4 && (j.onreadystatechange = e, j.status == 200 ? c(j.responseText) : !d.reconnecting && d.onError(j.responseText));
-}, j.send(null);
+var f = t.util.request();
+f.open("GET", o, !0), f.withCredentials = !0, f.onreadystatechange = function() {
+f.readyState == 4 && (f.onreadystatechange = i, f.status == 200 ? n(f.responseText) : !r.reconnecting && r.onError(f.responseText));
+}, f.send(null);
 }
-}, d.prototype.getTransport = function(a) {
-var c = a || this.transports, d;
-for (var e = 0, f; f = c[e]; e++) if (b.Transport[f] && b.Transport[f].check(this) && (!this.isXDomain() || b.Transport[f].xdomainCheck())) return new b.Transport[f](this, this.sessionid);
+}, r.prototype.getTransport = function(e) {
+var n = e || this.transports, r;
+for (var i = 0, s; s = n[i]; i++) if (t.Transport[s] && t.Transport[s].check(this) && (!this.isXDomain() || t.Transport[s].xdomainCheck())) return new t.Transport[s](this, this.sessionid);
 return null;
-}, d.prototype.connect = function(a) {
+}, r.prototype.connect = function(e) {
 if (this.connecting) return this;
-var c = this;
-return this.handshake(function(d, e, f, g) {
-function h(a) {
-c.transport && c.transport.clearTimeouts(), c.transport = c.getTransport(a);
-if (!c.transport) return c.publish("connect_failed");
-c.transport.ready(c, function() {
-c.connecting = !0, c.publish("connecting", c.transport.name), c.transport.open(), c.options["connect timeout"] && (c.connectTimeoutTimer = setTimeout(function() {
-if (!c.connected) {
-c.connecting = !1;
-if (c.options["try multiple transports"]) {
-c.remainingTransports || (c.remainingTransports = c.transports.slice(0));
-var a = c.remainingTransports;
-while (a.length > 0 && a.splice(0, 1)[0] != c.transport.name) ;
-a.length ? h(a) : c.publish("connect_failed");
+var n = this;
+return this.handshake(function(r, i, s, o) {
+function u(e) {
+n.transport && n.transport.clearTimeouts(), n.transport = n.getTransport(e);
+if (!n.transport) return n.publish("connect_failed");
+n.transport.ready(n, function() {
+n.connecting = !0, n.publish("connecting", n.transport.name), n.transport.open(), n.options["connect timeout"] && (n.connectTimeoutTimer = setTimeout(function() {
+if (!n.connected) {
+n.connecting = !1;
+if (n.options["try multiple transports"]) {
+n.remainingTransports || (n.remainingTransports = n.transports.slice(0));
+var e = n.remainingTransports;
+while (e.length > 0 && e.splice(0, 1)[0] != n.transport.name) ;
+e.length ? u(e) : n.publish("connect_failed");
 }
 }
-}, c.options["connect timeout"]));
+}, n.options["connect timeout"]));
 });
 }
-c.sessionid = d, c.closeTimeout = f * 1e3, c.heartbeatTimeout = e * 1e3, c.transports = g ? b.util.intersect(g.split(","), c.options.transports) : c.options.transports, c.setHeartbeatTimeout(), h(c.transports), c.once("connect", function() {
-clearTimeout(c.connectTimeoutTimer), a && typeof a == "function" && a();
+n.sessionid = r, n.closeTimeout = s * 1e3, n.heartbeatTimeout = i * 1e3, n.transports = o ? t.util.intersect(o.split(","), n.options.transports) : n.options.transports, n.setHeartbeatTimeout(), u(n.transports), n.once("connect", function() {
+clearTimeout(n.connectTimeoutTimer), e && typeof e == "function" && e();
 });
 }), this;
-}, d.prototype.setHeartbeatTimeout = function() {
+}, r.prototype.setHeartbeatTimeout = function() {
 clearTimeout(this.heartbeatTimeoutTimer);
-var a = this;
+var e = this;
 this.heartbeatTimeoutTimer = setTimeout(function() {
-a.transport.onClose();
+e.transport.onClose();
 }, this.heartbeatTimeout);
-}, d.prototype.packet = function(a) {
-return this.connected && !this.doBuffer ? this.transport.packet(a) : this.buffer.push(a), this;
-}, d.prototype.setBuffer = function(a) {
-this.doBuffer = a, !a && this.connected && this.buffer.length && (this.transport.payload(this.buffer), this.buffer = []);
-}, d.prototype.disconnect = function() {
+}, r.prototype.packet = function(e) {
+return this.connected && !this.doBuffer ? this.transport.packet(e) : this.buffer.push(e), this;
+}, r.prototype.setBuffer = function(e) {
+this.doBuffer = e, !e && this.connected && this.buffer.length && (this.transport.payload(this.buffer), this.buffer = []);
+}, r.prototype.disconnect = function() {
 if (this.connected || this.connecting) this.open && this.of("").packet({
 type: "disconnect"
 }), this.onDisconnect("booted");
 return this;
-}, d.prototype.disconnectSync = function() {
-var a = b.util.request(), c = this.resource + "/" + b.protocol + "/" + this.sessionid;
-a.open("GET", c, !0), this.onDisconnect("booted");
-}, d.prototype.isXDomain = function() {
-var a = c.location.port || ("https:" == c.location.protocol ? 443 : 80);
-return this.options.host !== c.location.hostname || this.options.port != a;
-}, d.prototype.onConnect = function() {
+}, r.prototype.disconnectSync = function() {
+var e = t.util.request(), n = this.resource + "/" + t.protocol + "/" + this.sessionid;
+e.open("GET", n, !0), this.onDisconnect("booted");
+}, r.prototype.isXDomain = function() {
+var e = n.location.port || ("https:" == n.location.protocol ? 443 : 80);
+return this.options.host !== n.location.hostname || this.options.port != e;
+}, r.prototype.onConnect = function() {
 this.connected || (this.connected = !0, this.connecting = !1, this.doBuffer || this.setBuffer(!1), this.emit("connect"));
-}, d.prototype.onOpen = function() {
+}, r.prototype.onOpen = function() {
 this.open = !0;
-}, d.prototype.onClose = function() {
+}, r.prototype.onClose = function() {
 this.open = !1, clearTimeout(this.heartbeatTimeoutTimer);
-}, d.prototype.onPacket = function(a) {
-this.of(a.endpoint).onPacket(a);
-}, d.prototype.onError = function(a) {
-a && a.advice && a.advice === "reconnect" && (this.connected || this.connecting) && (this.disconnect(), this.options.reconnect && this.reconnect()), this.publish("error", a && a.reason ? a.reason : a);
-}, d.prototype.onDisconnect = function(a) {
-var b = this.connected, c = this.connecting;
+}, r.prototype.onPacket = function(e) {
+this.of(e.endpoint).onPacket(e);
+}, r.prototype.onError = function(e) {
+e && e.advice && e.advice === "reconnect" && (this.connected || this.connecting) && (this.disconnect(), this.options.reconnect && this.reconnect()), this.publish("error", e && e.reason ? e.reason : e);
+}, r.prototype.onDisconnect = function(e) {
+var t = this.connected, n = this.connecting;
 this.connected = !1, this.connecting = !1, this.open = !1;
-if (b || c) this.transport.close(), this.transport.clearTimeouts(), b && (this.publish("disconnect", a), "booted" != a && this.options.reconnect && !this.reconnecting && this.reconnect());
-}, d.prototype.reconnect = function() {
-function a() {
-if (c.connected) {
-for (var a in c.namespaces) c.namespaces.hasOwnProperty(a) && "" !== a && c.namespaces[a].packet({
+if (t || n) this.transport.close(), this.transport.clearTimeouts(), t && (this.publish("disconnect", e), "booted" != e && this.options.reconnect && !this.reconnecting && this.reconnect());
+}, r.prototype.reconnect = function() {
+function e() {
+if (n.connected) {
+for (var e in n.namespaces) n.namespaces.hasOwnProperty(e) && "" !== e && n.namespaces[e].packet({
 type: "connect"
 });
-c.publish("reconnect", c.transport.name, c.reconnectionAttempts);
+n.publish("reconnect", n.transport.name, n.reconnectionAttempts);
 }
-clearTimeout(c.reconnectionTimer), c.removeListener("connect_failed", b), c.removeListener("connect", b), c.reconnecting = !1, delete c.reconnectionAttempts, delete c.reconnectionDelay, delete c.reconnectionTimer, delete c.redoTransports, c.options["try multiple transports"] = e;
+clearTimeout(n.reconnectionTimer), n.removeListener("connect_failed", t), n.removeListener("connect", t), n.reconnecting = !1, delete n.reconnectionAttempts, delete n.reconnectionDelay, delete n.reconnectionTimer, delete n.redoTransports, n.options["try multiple transports"] = i;
 }
-function b() {
-if (!c.reconnecting) return;
-if (c.connected) return a();
-if (c.connecting && c.reconnecting) return c.reconnectionTimer = setTimeout(b, 1e3);
-c.reconnectionAttempts++ >= d ? c.redoTransports ? (c.publish("reconnect_failed"), a()) : (c.on("connect_failed", b), c.options["try multiple transports"] = !0, c.transport = c.getTransport(), c.redoTransports = !0, c.connect()) : (c.reconnectionDelay < f && (c.reconnectionDelay *= 2), c.connect(), c.publish("reconnecting", c.reconnectionDelay, c.reconnectionAttempts), c.reconnectionTimer = setTimeout(b, c.reconnectionDelay));
+function t() {
+if (!n.reconnecting) return;
+if (n.connected) return e();
+if (n.connecting && n.reconnecting) return n.reconnectionTimer = setTimeout(t, 1e3);
+n.reconnectionAttempts++ >= r ? n.redoTransports ? (n.publish("reconnect_failed"), e()) : (n.on("connect_failed", t), n.options["try multiple transports"] = !0, n.transport = n.getTransport(), n.redoTransports = !0, n.connect()) : (n.reconnectionDelay < s && (n.reconnectionDelay *= 2), n.connect(), n.publish("reconnecting", n.reconnectionDelay, n.reconnectionAttempts), n.reconnectionTimer = setTimeout(t, n.reconnectionDelay));
 }
 this.reconnecting = !0, this.reconnectionAttempts = 0, this.reconnectionDelay = this.options["reconnection delay"];
-var c = this, d = this.options["max reconnection attempts"], e = this.options["try multiple transports"], f = this.options["reconnection limit"];
-this.options["try multiple transports"] = !1, this.reconnectionTimer = setTimeout(b, this.reconnectionDelay), this.on("connect", b);
+var n = this, r = this.options["max reconnection attempts"], i = this.options["try multiple transports"], s = this.options["reconnection limit"];
+this.options["try multiple transports"] = !1, this.reconnectionTimer = setTimeout(t, this.reconnectionDelay), this.on("connect", t);
 };
-}("undefined" != typeof io ? io : module.exports, "undefined" != typeof io ? io : module.parent.exports, this), function(a, b) {
-function c(a, b) {
-this.socket = a, this.name = b || "", this.flags = {}, this.json = new d(this, "json"), this.ackPackets = 0, this.acks = {};
+}("undefined" != typeof io ? io : module.exports, "undefined" != typeof io ? io : module.parent.exports, this), function(e, t) {
+function n(e, t) {
+this.socket = e, this.name = t || "", this.flags = {}, this.json = new r(this, "json"), this.ackPackets = 0, this.acks = {};
 }
-function d(a, b) {
-this.namespace = a, this.name = b;
+function r(e, t) {
+this.namespace = e, this.name = t;
 }
-a.SocketNamespace = c, b.util.mixin(c, b.EventEmitter), c.prototype.$emit = b.EventEmitter.prototype.emit, c.prototype.of = function() {
+e.SocketNamespace = n, t.util.mixin(n, t.EventEmitter), n.prototype.$emit = t.EventEmitter.prototype.emit, n.prototype.of = function() {
 return this.socket.of.apply(this.socket, arguments);
-}, c.prototype.packet = function(a) {
-return a.endpoint = this.name, this.socket.packet(a), this.flags = {}, this;
-}, c.prototype.send = function(a, b) {
-var c = {
+}, n.prototype.packet = function(e) {
+return e.endpoint = this.name, this.socket.packet(e), this.flags = {}, this;
+}, n.prototype.send = function(e, t) {
+var n = {
 type: this.flags.json ? "json" : "message",
-data: a
+data: e
 };
-return "function" == typeof b && (c.id = ++this.ackPackets, c.ack = !0, this.acks[c.id] = b), this.packet(c);
-}, c.prototype.emit = function(a) {
-var b = Array.prototype.slice.call(arguments, 1), c = b[b.length - 1], d = {
+return "function" == typeof t && (n.id = ++this.ackPackets, n.ack = !0, this.acks[n.id] = t), this.packet(n);
+}, n.prototype.emit = function(e) {
+var t = Array.prototype.slice.call(arguments, 1), n = t[t.length - 1], r = {
 type: "event",
-name: a
+name: e
 };
-return "function" == typeof c && (d.id = ++this.ackPackets, d.ack = "data", this.acks[d.id] = c, b = b.slice(0, b.length - 1)), d.args = b, this.packet(d);
-}, c.prototype.disconnect = function() {
+return "function" == typeof n && (r.id = ++this.ackPackets, r.ack = "data", this.acks[r.id] = n, t = t.slice(0, t.length - 1)), r.args = t, this.packet(r);
+}, n.prototype.disconnect = function() {
 return this.name === "" ? this.socket.disconnect() : (this.packet({
 type: "disconnect"
 }), this.$emit("disconnect")), this;
-}, c.prototype.onPacket = function(a) {
-function c() {
-d.packet({
+}, n.prototype.onPacket = function(e) {
+function n() {
+r.packet({
 type: "ack",
-args: b.util.toArray(arguments),
-ackId: a.id
+args: t.util.toArray(arguments),
+ackId: e.id
 });
 }
-var d = this;
-switch (a.type) {
+var r = this;
+switch (e.type) {
 case "connect":
 this.$emit("connect");
 break;
 case "disconnect":
-this.name === "" ? this.socket.onDisconnect(a.reason || "booted") : this.$emit("disconnect", a.reason);
+this.name === "" ? this.socket.onDisconnect(e.reason || "booted") : this.$emit("disconnect", e.reason);
 break;
 case "message":
 case "json":
-var e = [ "message", a.data ];
-a.ack == "data" ? e.push(c) : a.ack && this.packet({
+var i = [ "message", e.data ];
+e.ack == "data" ? i.push(n) : e.ack && this.packet({
 type: "ack",
-ackId: a.id
-}), this.$emit.apply(this, e);
+ackId: e.id
+}), this.$emit.apply(this, i);
 break;
 case "event":
-var e = [ a.name ].concat(a.args);
-a.ack == "data" && e.push(c), this.$emit.apply(this, e);
+var i = [ e.name ].concat(e.args);
+e.ack == "data" && i.push(n), this.$emit.apply(this, i);
 break;
 case "ack":
-this.acks[a.ackId] && (this.acks[a.ackId].apply(this, a.args), delete this.acks[a.ackId]);
+this.acks[e.ackId] && (this.acks[e.ackId].apply(this, e.args), delete this.acks[e.ackId]);
 break;
 case "error":
-a.advice ? this.socket.onError(a) : a.reason == "unauthorized" ? this.$emit("connect_failed", a.reason) : this.$emit("error", a.reason);
+e.advice ? this.socket.onError(e) : e.reason == "unauthorized" ? this.$emit("connect_failed", e.reason) : this.$emit("error", e.reason);
 }
-}, d.prototype.send = function() {
+}, r.prototype.send = function() {
 this.namespace.flags[this.name] = !0, this.namespace.send.apply(this.namespace, arguments);
-}, d.prototype.emit = function() {
+}, r.prototype.emit = function() {
 this.namespace.flags[this.name] = !0, this.namespace.emit.apply(this.namespace, arguments);
 };
-}("undefined" != typeof io ? io : module.exports, "undefined" != typeof io ? io : module.parent.exports), function(a, b, c) {
-function d(a) {
-b.Transport.apply(this, arguments);
+}("undefined" != typeof io ? io : module.exports, "undefined" != typeof io ? io : module.parent.exports), function(e, t, n) {
+function r(e) {
+t.Transport.apply(this, arguments);
 }
-a.websocket = d, b.util.inherit(d, b.Transport), d.prototype.name = "websocket", d.prototype.open = function() {
-var a = b.util.query(this.socket.options.query), d = this, e;
-return e || (e = c.MozWebSocket || c.WebSocket), this.websocket = new e(this.prepareUrl() + a), this.websocket.onopen = function() {
-d.onOpen(), d.socket.setBuffer(!1);
-}, this.websocket.onmessage = function(a) {
-d.onData(a.data);
+e.websocket = r, t.util.inherit(r, t.Transport), r.prototype.name = "websocket", r.prototype.open = function() {
+var e = t.util.query(this.socket.options.query), r = this, i;
+return i || (i = n.MozWebSocket || n.WebSocket), this.websocket = new i(this.prepareUrl() + e), this.websocket.onopen = function() {
+r.onOpen(), r.socket.setBuffer(!1);
+}, this.websocket.onmessage = function(e) {
+r.onData(e.data);
 }, this.websocket.onclose = function() {
-d.onClose(), d.socket.setBuffer(!0);
-}, this.websocket.onerror = function(a) {
-d.onError(a);
+r.onClose(), r.socket.setBuffer(!0);
+}, this.websocket.onerror = function(e) {
+r.onError(e);
 }, this;
-}, d.prototype.send = function(a) {
-return this.websocket.send(a), this;
-}, d.prototype.payload = function(a) {
-for (var b = 0, c = a.length; b < c; b++) this.packet(a[b]);
+}, r.prototype.send = function(e) {
+return this.websocket.send(e), this;
+}, r.prototype.payload = function(e) {
+for (var t = 0, n = e.length; t < n; t++) this.packet(e[t]);
 return this;
-}, d.prototype.close = function() {
+}, r.prototype.close = function() {
 return this.websocket.close(), this;
-}, d.prototype.onError = function(a) {
-this.socket.onError(a);
-}, d.prototype.scheme = function() {
+}, r.prototype.onError = function(e) {
+this.socket.onError(e);
+}, r.prototype.scheme = function() {
 return this.socket.options.secure ? "wss" : "ws";
-}, d.check = function() {
-return "WebSocket" in c && !("__addTask" in WebSocket) || "MozWebSocket" in c;
-}, d.xdomainCheck = function() {
+}, r.check = function() {
+return "WebSocket" in n && !("__addTask" in WebSocket) || "MozWebSocket" in n;
+}, r.xdomainCheck = function() {
 return !0;
-}, b.transports.push("websocket");
-}("undefined" != typeof io ? io.Transport : module.exports, "undefined" != typeof io ? io : module.parent.exports, this), function(a, b) {
-function c() {
-b.Transport.websocket.apply(this, arguments);
+}, t.transports.push("websocket");
+}("undefined" != typeof io ? io.Transport : module.exports, "undefined" != typeof io ? io : module.parent.exports, this), function(e, t) {
+function n() {
+t.Transport.websocket.apply(this, arguments);
 }
-a.flashsocket = c, b.util.inherit(c, b.Transport.websocket), c.prototype.name = "flashsocket", c.prototype.open = function() {
-var a = this, c = arguments;
+e.flashsocket = n, t.util.inherit(n, t.Transport.websocket), n.prototype.name = "flashsocket", n.prototype.open = function() {
+var e = this, n = arguments;
 return WebSocket.__addTask(function() {
-b.Transport.websocket.prototype.open.apply(a, c);
+t.Transport.websocket.prototype.open.apply(e, n);
 }), this;
-}, c.prototype.send = function() {
-var a = this, c = arguments;
+}, n.prototype.send = function() {
+var e = this, n = arguments;
 return WebSocket.__addTask(function() {
-b.Transport.websocket.prototype.send.apply(a, c);
+t.Transport.websocket.prototype.send.apply(e, n);
 }), this;
-}, c.prototype.close = function() {
-return WebSocket.__tasks.length = 0, b.Transport.websocket.prototype.close.call(this), this;
-}, c.prototype.ready = function(a, d) {
-function e() {
-var b = a.options, e = b["flash policy port"], g = [ "http" + (b.secure ? "s" : "") + ":/", b.host + ":" + b.port, b.resource, "static/flashsocket", "WebSocketMain" + (a.isXDomain() ? "Insecure" : "") + ".swf" ];
-c.loaded || (typeof WEB_SOCKET_SWF_LOCATION == "undefined" && (WEB_SOCKET_SWF_LOCATION = g.join("/")), e !== 843 && WebSocket.loadFlashPolicyFile("xmlsocket://" + b.host + ":" + e), WebSocket.__initialize(), c.loaded = !0), d.call(f);
+}, n.prototype.close = function() {
+return WebSocket.__tasks.length = 0, t.Transport.websocket.prototype.close.call(this), this;
+}, n.prototype.ready = function(e, r) {
+function i() {
+var t = e.options, i = t["flash policy port"], o = [ "http" + (t.secure ? "s" : "") + ":/", t.host + ":" + t.port, t.resource, "static/flashsocket", "WebSocketMain" + (e.isXDomain() ? "Insecure" : "") + ".swf" ];
+n.loaded || (typeof WEB_SOCKET_SWF_LOCATION == "undefined" && (WEB_SOCKET_SWF_LOCATION = o.join("/")), i !== 843 && WebSocket.loadFlashPolicyFile("xmlsocket://" + t.host + ":" + i), WebSocket.__initialize(), n.loaded = !0), r.call(s);
 }
-var f = this;
-if (document.body) return e();
-b.util.load(e);
-}, c.check = function() {
+var s = this;
+if (document.body) return i();
+t.util.load(i);
+}, n.check = function() {
 return typeof WebSocket != "undefined" && "__initialize" in WebSocket && !!swfobject ? swfobject.getFlashPlayerVersion().major >= 10 : !1;
-}, c.xdomainCheck = function() {
+}, n.xdomainCheck = function() {
 return !0;
-}, typeof window != "undefined" && (WEB_SOCKET_DISABLE_AUTO_INITIALIZATION = !0), b.transports.push("flashsocket");
+}, typeof window != "undefined" && (WEB_SOCKET_DISABLE_AUTO_INITIALIZATION = !0), t.transports.push("flashsocket");
 }("undefined" != typeof io ? io.Transport : module.exports, "undefined" != typeof io ? io : module.parent.exports);
 
 if ("undefined" != typeof window) var swfobject = function() {
-function a() {
-if (P) return;
-try {
-var a = E.getElementsByTagName("body")[0].appendChild(q("span"));
-a.parentNode.removeChild(a);
-} catch (b) {
-return;
-}
-P = !0;
-var c = H.length;
-for (var d = 0; d < c; d++) H[d]();
-}
-function b(a) {
-P ? a() : H[H.length] = a;
-}
-function c(a) {
-if (typeof D.addEventListener != w) D.addEventListener("load", a, !1); else if (typeof E.addEventListener != w) E.addEventListener("load", a, !1); else if (typeof D.attachEvent != w) r(D, "onload", a); else if (typeof D.onload == "function") {
-var b = D.onload;
-D.onload = function() {
-b(), a();
-};
-} else D.onload = a;
-}
-function d() {
-G ? e() : f();
-}
 function e() {
-var a = E.getElementsByTagName("body")[0], b = q(x);
-b.setAttribute("type", A);
-var c = a.appendChild(b);
-if (c) {
-var d = 0;
-(function() {
-if (typeof c.GetVariable != w) {
-var e = c.GetVariable("$version");
-e && (e = e.split(" ")[1].split(","), U.pv = [ parseInt(e[0], 10), parseInt(e[1], 10), parseInt(e[2], 10) ]);
-} else if (d < 10) {
-d++, setTimeout(arguments.callee, 10);
+if (R) return;
+try {
+var e = O.getElementsByTagName("body")[0].appendChild(m("span"));
+e.parentNode.removeChild(e);
+} catch (t) {
 return;
 }
-a.removeChild(b), c = null, f();
+R = !0;
+var n = D.length;
+for (var r = 0; r < n; r++) D[r]();
+}
+function t(e) {
+R ? e() : D[D.length] = e;
+}
+function n(e) {
+if (typeof A.addEventListener != S) A.addEventListener("load", e, !1); else if (typeof O.addEventListener != S) O.addEventListener("load", e, !1); else if (typeof A.attachEvent != S) g(A, "onload", e); else if (typeof A.onload == "function") {
+var t = A.onload;
+A.onload = function() {
+t(), e();
+};
+} else A.onload = e;
+}
+function r() {
+_ ? i() : s();
+}
+function i() {
+var e = O.getElementsByTagName("body")[0], t = m(x);
+t.setAttribute("type", C);
+var n = e.appendChild(t);
+if (n) {
+var r = 0;
+(function() {
+if (typeof n.GetVariable != S) {
+var i = n.GetVariable("$version");
+i && (i = i.split(" ")[1].split(","), V.pv = [ parseInt(i[0], 10), parseInt(i[1], 10), parseInt(i[2], 10) ]);
+} else if (r < 10) {
+r++, setTimeout(arguments.callee, 10);
+return;
+}
+e.removeChild(t), n = null, s();
 })();
-} else f();
+} else s();
 }
-function f() {
-var a = I.length;
-if (a > 0) for (var b = 0; b < a; b++) {
-var c = I[b].id, d = I[b].callbackFn, e = {
+function s() {
+var e = P.length;
+if (e > 0) for (var t = 0; t < e; t++) {
+var n = P[t].id, r = P[t].callbackFn, i = {
 success: !1,
-id: c
+id: n
 };
-if (U.pv[0] > 0) {
-var f = p(c);
-if (f) if (s(I[b].swfVersion) && !(U.wk && U.wk < 312)) u(c, !0), d && (e.success = !0, e.ref = g(c), d(e)); else if (I[b].expressInstall && h()) {
-var k = {};
-k.data = I[b].expressInstall, k.width = f.getAttribute("width") || "0", k.height = f.getAttribute("height") || "0", f.getAttribute("class") && (k.styleclass = f.getAttribute("class")), f.getAttribute("align") && (k.align = f.getAttribute("align"));
-var l = {}, m = f.getElementsByTagName("param"), n = m.length;
-for (var o = 0; o < n; o++) m[o].getAttribute("name").toLowerCase() != "movie" && (l[m[o].getAttribute("name")] = m[o].getAttribute("value"));
-i(k, l, c, d);
-} else j(f), d && d(e);
+if (V.pv[0] > 0) {
+var s = v(n);
+if (s) if (y(P[t].swfVersion) && !(V.wk && V.wk < 312)) w(n, !0), r && (i.success = !0, i.ref = o(n), r(i)); else if (P[t].expressInstall && u()) {
+var l = {};
+l.data = P[t].expressInstall, l.width = s.getAttribute("width") || "0", l.height = s.getAttribute("height") || "0", s.getAttribute("class") && (l.styleclass = s.getAttribute("class")), s.getAttribute("align") && (l.align = s.getAttribute("align"));
+var c = {}, h = s.getElementsByTagName("param"), p = h.length;
+for (var d = 0; d < p; d++) h[d].getAttribute("name").toLowerCase() != "movie" && (c[h[d].getAttribute("name")] = h[d].getAttribute("value"));
+a(l, c, n, r);
+} else f(s), r && r(i);
 } else {
-u(c, !0);
-if (d) {
-var q = g(c);
-q && typeof q.SetVariable != w && (e.success = !0, e.ref = q), d(e);
+w(n, !0);
+if (r) {
+var m = o(n);
+m && typeof m.SetVariable != S && (i.success = !0, i.ref = m), r(i);
 }
 }
 }
 }
-function g(a) {
-var b = null, c = p(a);
-if (c && c.nodeName == "OBJECT") if (typeof c.SetVariable != w) b = c; else {
-var d = c.getElementsByTagName(x)[0];
-d && (b = d);
+function o(e) {
+var t = null, n = v(e);
+if (n && n.nodeName == "OBJECT") if (typeof n.SetVariable != S) t = n; else {
+var r = n.getElementsByTagName(x)[0];
+r && (t = r);
 }
-return b;
+return t;
 }
-function h() {
-return !Q && s("6.0.65") && (U.win || U.mac) && !(U.wk && U.wk < 312);
+function u() {
+return !U && y("6.0.65") && (V.win || V.mac) && !(V.wk && V.wk < 312);
 }
-function i(a, b, c, d) {
-Q = !0, N = d || null, O = {
+function a(e, t, n, r) {
+U = !0, I = r || null, q = {
 success: !1,
-id: c
+id: n
 };
-var e = p(c);
-if (e) {
-e.nodeName == "OBJECT" ? (L = k(e), M = null) : (L = e, M = c), a.id = B;
-if (typeof a.width == w || !/%$/.test(a.width) && parseInt(a.width, 10) < 310) a.width = "310";
-if (typeof a.height == w || !/%$/.test(a.height) && parseInt(a.height, 10) < 137) a.height = "137";
-E.title = E.title.slice(0, 47) + " - Flash Player Installation";
-var f = U.ie && U.win ? [ "Active" ].concat("").join("X") : "PlugIn", g = "MMredirectURL=" + D.location.toString().replace(/&/g, "%26") + "&MMplayerType=" + f + "&MMdoctitle=" + E.title;
-typeof b.flashvars != w ? b.flashvars += "&" + g : b.flashvars = g;
-if (U.ie && U.win && e.readyState != 4) {
-var h = q("div");
-c += "SWFObjectNew", h.setAttribute("id", c), e.parentNode.insertBefore(h, e), e.style.display = "none", function() {
+var i = v(n);
+if (i) {
+i.nodeName == "OBJECT" ? (j = l(i), F = null) : (j = i, F = n), e.id = k;
+if (typeof e.width == S || !/%$/.test(e.width) && parseInt(e.width, 10) < 310) e.width = "310";
+if (typeof e.height == S || !/%$/.test(e.height) && parseInt(e.height, 10) < 137) e.height = "137";
+O.title = O.title.slice(0, 47) + " - Flash Player Installation";
+var s = V.ie && V.win ? [ "Active" ].concat("").join("X") : "PlugIn", o = "MMredirectURL=" + A.location.toString().replace(/&/g, "%26") + "&MMplayerType=" + s + "&MMdoctitle=" + O.title;
+typeof t.flashvars != S ? t.flashvars += "&" + o : t.flashvars = o;
+if (V.ie && V.win && i.readyState != 4) {
+var u = m("div");
+n += "SWFObjectNew", u.setAttribute("id", n), i.parentNode.insertBefore(u, i), i.style.display = "none", function() {
+i.readyState == 4 ? i.parentNode.removeChild(i) : setTimeout(arguments.callee, 10);
+}();
+}
+c(e, t, n);
+}
+}
+function f(e) {
+if (V.ie && V.win && e.readyState != 4) {
+var t = m("div");
+e.parentNode.insertBefore(t, e), t.parentNode.replaceChild(l(e), t), e.style.display = "none", function() {
 e.readyState == 4 ? e.parentNode.removeChild(e) : setTimeout(arguments.callee, 10);
 }();
+} else e.parentNode.replaceChild(l(e), e);
 }
-l(a, b, c);
-}
-}
-function j(a) {
-if (U.ie && U.win && a.readyState != 4) {
-var b = q("div");
-a.parentNode.insertBefore(b, a), b.parentNode.replaceChild(k(a), b), a.style.display = "none", function() {
-a.readyState == 4 ? a.parentNode.removeChild(a) : setTimeout(arguments.callee, 10);
-}();
-} else a.parentNode.replaceChild(k(a), a);
-}
-function k(a) {
-var b = q("div");
-if (U.win && U.ie) b.innerHTML = a.innerHTML; else {
-var c = a.getElementsByTagName(x)[0];
-if (c) {
-var d = c.childNodes;
-if (d) {
-var e = d.length;
-for (var f = 0; f < e; f++) (d[f].nodeType != 1 || d[f].nodeName != "PARAM") && d[f].nodeType != 8 && b.appendChild(d[f].cloneNode(!0));
+function l(e) {
+var t = m("div");
+if (V.win && V.ie) t.innerHTML = e.innerHTML; else {
+var n = e.getElementsByTagName(x)[0];
+if (n) {
+var r = n.childNodes;
+if (r) {
+var i = r.length;
+for (var s = 0; s < i; s++) (r[s].nodeType != 1 || r[s].nodeName != "PARAM") && r[s].nodeType != 8 && t.appendChild(r[s].cloneNode(!0));
 }
 }
 }
-return b;
+return t;
 }
-function l(a, b, c) {
-var d, e = p(c);
-if (U.wk && U.wk < 312) return d;
-if (e) {
-typeof a.id == w && (a.id = c);
-if (U.ie && U.win) {
-var f = "";
-for (var g in a) a[g] != Object.prototype[g] && (g.toLowerCase() == "data" ? b.movie = a[g] : g.toLowerCase() == "styleclass" ? f += ' class="' + a[g] + '"' : g.toLowerCase() != "classid" && (f += " " + g + '="' + a[g] + '"'));
-var h = "";
-for (var i in b) b[i] != Object.prototype[i] && (h += '<param name="' + i + '" value="' + b[i] + '" />');
-e.outerHTML = '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"' + f + ">" + h + "</object>", J[J.length] = a.id, d = p(a.id);
+function c(e, t, n) {
+var r, i = v(n);
+if (V.wk && V.wk < 312) return r;
+if (i) {
+typeof e.id == S && (e.id = n);
+if (V.ie && V.win) {
+var s = "";
+for (var o in e) e[o] != Object.prototype[o] && (o.toLowerCase() == "data" ? t.movie = e[o] : o.toLowerCase() == "styleclass" ? s += ' class="' + e[o] + '"' : o.toLowerCase() != "classid" && (s += " " + o + '="' + e[o] + '"'));
+var u = "";
+for (var a in t) t[a] != Object.prototype[a] && (u += '<param name="' + a + '" value="' + t[a] + '" />');
+i.outerHTML = '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"' + s + ">" + u + "</object>", H[H.length] = e.id, r = v(e.id);
 } else {
-var j = q(x);
-j.setAttribute("type", A);
-for (var k in a) a[k] != Object.prototype[k] && (k.toLowerCase() == "styleclass" ? j.setAttribute("class", a[k]) : k.toLowerCase() != "classid" && j.setAttribute(k, a[k]));
-for (var l in b) b[l] != Object.prototype[l] && l.toLowerCase() != "movie" && m(j, l, b[l]);
-e.parentNode.replaceChild(j, e), d = j;
+var f = m(x);
+f.setAttribute("type", C);
+for (var l in e) e[l] != Object.prototype[l] && (l.toLowerCase() == "styleclass" ? f.setAttribute("class", e[l]) : l.toLowerCase() != "classid" && f.setAttribute(l, e[l]));
+for (var c in t) t[c] != Object.prototype[c] && c.toLowerCase() != "movie" && h(f, c, t[c]);
+i.parentNode.replaceChild(f, i), r = f;
 }
 }
-return d;
+return r;
 }
-function m(a, b, c) {
-var d = q("param");
-d.setAttribute("name", b), d.setAttribute("value", c), a.appendChild(d);
+function h(e, t, n) {
+var r = m("param");
+r.setAttribute("name", t), r.setAttribute("value", n), e.appendChild(r);
 }
-function n(a) {
-var b = p(a);
-b && b.nodeName == "OBJECT" && (U.ie && U.win ? (b.style.display = "none", function() {
-b.readyState == 4 ? o(a) : setTimeout(arguments.callee, 10);
-}()) : b.parentNode.removeChild(b));
+function p(e) {
+var t = v(e);
+t && t.nodeName == "OBJECT" && (V.ie && V.win ? (t.style.display = "none", function() {
+t.readyState == 4 ? d(e) : setTimeout(arguments.callee, 10);
+}()) : t.parentNode.removeChild(t));
 }
-function o(a) {
-var b = p(a);
-if (b) {
-for (var c in b) typeof b[c] == "function" && (b[c] = null);
-b.parentNode.removeChild(b);
+function d(e) {
+var t = v(e);
+if (t) {
+for (var n in t) typeof t[n] == "function" && (t[n] = null);
+t.parentNode.removeChild(t);
 }
 }
-function p(a) {
-var b = null;
+function v(e) {
+var t = null;
 try {
-b = E.getElementById(a);
-} catch (c) {}
-return b;
+t = O.getElementById(e);
+} catch (n) {}
+return t;
 }
-function q(a) {
-return E.createElement(a);
+function m(e) {
+return O.createElement(e);
 }
-function r(a, b, c) {
-a.attachEvent(b, c), K[K.length] = [ a, b, c ];
+function g(e, t, n) {
+e.attachEvent(t, n), B[B.length] = [ e, t, n ];
 }
-function s(a) {
-var b = U.pv, c = a.split(".");
-return c[0] = parseInt(c[0], 10), c[1] = parseInt(c[1], 10) || 0, c[2] = parseInt(c[2], 10) || 0, b[0] > c[0] || b[0] == c[0] && b[1] > c[1] || b[0] == c[0] && b[1] == c[1] && b[2] >= c[2] ? !0 : !1;
+function y(e) {
+var t = V.pv, n = e.split(".");
+return n[0] = parseInt(n[0], 10), n[1] = parseInt(n[1], 10) || 0, n[2] = parseInt(n[2], 10) || 0, t[0] > n[0] || t[0] == n[0] && t[1] > n[1] || t[0] == n[0] && t[1] == n[1] && t[2] >= n[2] ? !0 : !1;
 }
-function t(a, b, c, d) {
-if (U.ie && U.mac) return;
-var e = E.getElementsByTagName("head")[0];
-if (!e) return;
-var f = c && typeof c == "string" ? c : "screen";
-d && (R = null, S = null);
-if (!R || S != f) {
-var g = q("style");
-g.setAttribute("type", "text/css"), g.setAttribute("media", f), R = e.appendChild(g), U.ie && U.win && typeof E.styleSheets != w && E.styleSheets.length > 0 && (R = E.styleSheets[E.styleSheets.length - 1]), S = f;
+function b(e, t, n, r) {
+if (V.ie && V.mac) return;
+var i = O.getElementsByTagName("head")[0];
+if (!i) return;
+var s = n && typeof n == "string" ? n : "screen";
+r && (z = null, W = null);
+if (!z || W != s) {
+var o = m("style");
+o.setAttribute("type", "text/css"), o.setAttribute("media", s), z = i.appendChild(o), V.ie && V.win && typeof O.styleSheets != S && O.styleSheets.length > 0 && (z = O.styleSheets[O.styleSheets.length - 1]), W = s;
 }
-U.ie && U.win ? R && typeof R.addRule == x && R.addRule(a, b) : R && typeof E.createTextNode != w && R.appendChild(E.createTextNode(a + " {" + b + "}"));
+V.ie && V.win ? z && typeof z.addRule == x && z.addRule(e, t) : z && typeof O.createTextNode != S && z.appendChild(O.createTextNode(e + " {" + t + "}"));
 }
-function u(a, b) {
-if (!T) return;
-var c = b ? "visible" : "hidden";
-P && p(a) ? p(a).style.visibility = c : t("#" + a, "visibility:" + c);
+function w(e, t) {
+if (!X) return;
+var n = t ? "visible" : "hidden";
+R && v(e) ? v(e).style.visibility = n : b("#" + e, "visibility:" + n);
 }
-function v(a) {
-var b = /[\\\"<>\.;]/, c = b.exec(a) != null;
-return c && typeof encodeURIComponent != w ? encodeURIComponent(a) : a;
+function E(e) {
+var t = /[\\\"<>\.;]/, n = t.exec(e) != null;
+return n && typeof encodeURIComponent != S ? encodeURIComponent(e) : e;
 }
-var w = "undefined", x = "object", y = "Shockwave Flash", z = "ShockwaveFlash.ShockwaveFlash", A = "application/x-shockwave-flash", B = "SWFObjectExprInst", C = "onreadystatechange", D = window, E = document, F = navigator, G = !1, H = [ d ], I = [], J = [], K = [], L, M, N, O, P = !1, Q = !1, R, S, T = !0, U = function() {
-var a = typeof E.getElementById != w && typeof E.getElementsByTagName != w && typeof E.createElement != w, b = F.userAgent.toLowerCase(), c = F.platform.toLowerCase(), d = c ? /win/.test(c) : /win/.test(b), e = c ? /mac/.test(c) : /mac/.test(b), f = /webkit/.test(b) ? parseFloat(b.replace(/^.*webkit\/(\d+(\.\d+)?).*$/, "$1")) : !1, g = !1, h = [ 0, 0, 0 ], i = null;
-if (typeof F.plugins != w && typeof F.plugins[y] == x) i = F.plugins[y].description, i && (typeof F.mimeTypes == w || !F.mimeTypes[A] || !!F.mimeTypes[A].enabledPlugin) && (G = !0, g = !1, i = i.replace(/^.*\s+(\S+\s+\S+$)/, "$1"), h[0] = parseInt(i.replace(/^(.*)\..*$/, "$1"), 10), h[1] = parseInt(i.replace(/^.*\.(.*)\s.*$/, "$1"), 10), h[2] = /[a-zA-Z]/.test(i) ? parseInt(i.replace(/^.*[a-zA-Z]+(.*)$/, "$1"), 10) : 0); else if (typeof D[[ "Active" ].concat("Object").join("X")] != w) try {
-var j = new (window[[ "Active" ].concat("Object").join("X")])(z);
-j && (i = j.GetVariable("$version"), i && (g = !0, i = i.split(" ")[1].split(","), h = [ parseInt(i[0], 10), parseInt(i[1], 10), parseInt(i[2], 10) ]));
-} catch (k) {}
+var S = "undefined", x = "object", T = "Shockwave Flash", N = "ShockwaveFlash.ShockwaveFlash", C = "application/x-shockwave-flash", k = "SWFObjectExprInst", L = "onreadystatechange", A = window, O = document, M = navigator, _ = !1, D = [ r ], P = [], H = [], B = [], j, F, I, q, R = !1, U = !1, z, W, X = !0, V = function() {
+var e = typeof O.getElementById != S && typeof O.getElementsByTagName != S && typeof O.createElement != S, t = M.userAgent.toLowerCase(), n = M.platform.toLowerCase(), r = n ? /win/.test(n) : /win/.test(t), i = n ? /mac/.test(n) : /mac/.test(t), s = /webkit/.test(t) ? parseFloat(t.replace(/^.*webkit\/(\d+(\.\d+)?).*$/, "$1")) : !1, o = !1, u = [ 0, 0, 0 ], a = null;
+if (typeof M.plugins != S && typeof M.plugins[T] == x) a = M.plugins[T].description, a && (typeof M.mimeTypes == S || !M.mimeTypes[C] || !!M.mimeTypes[C].enabledPlugin) && (_ = !0, o = !1, a = a.replace(/^.*\s+(\S+\s+\S+$)/, "$1"), u[0] = parseInt(a.replace(/^(.*)\..*$/, "$1"), 10), u[1] = parseInt(a.replace(/^.*\.(.*)\s.*$/, "$1"), 10), u[2] = /[a-zA-Z]/.test(a) ? parseInt(a.replace(/^.*[a-zA-Z]+(.*)$/, "$1"), 10) : 0); else if (typeof A[[ "Active" ].concat("Object").join("X")] != S) try {
+var f = new (window[[ "Active" ].concat("Object").join("X")])(N);
+f && (a = f.GetVariable("$version"), a && (o = !0, a = a.split(" ")[1].split(","), u = [ parseInt(a[0], 10), parseInt(a[1], 10), parseInt(a[2], 10) ]));
+} catch (l) {}
 return {
-w3: a,
-pv: h,
-wk: f,
-ie: g,
-win: d,
-mac: e
+w3: e,
+pv: u,
+wk: s,
+ie: o,
+win: r,
+mac: i
 };
-}(), V = function() {
-if (!U.w3) return;
-(typeof E.readyState != w && E.readyState == "complete" || typeof E.readyState == w && (E.getElementsByTagName("body")[0] || E.body)) && a(), P || (typeof E.addEventListener != w && E.addEventListener("DOMContentLoaded", a, !1), U.ie && U.win && (E.attachEvent(C, function() {
-E.readyState == "complete" && (E.detachEvent(C, arguments.callee), a());
-}), D == top && function() {
-if (P) return;
+}(), $ = function() {
+if (!V.w3) return;
+(typeof O.readyState != S && O.readyState == "complete" || typeof O.readyState == S && (O.getElementsByTagName("body")[0] || O.body)) && e(), R || (typeof O.addEventListener != S && O.addEventListener("DOMContentLoaded", e, !1), V.ie && V.win && (O.attachEvent(L, function() {
+O.readyState == "complete" && (O.detachEvent(L, arguments.callee), e());
+}), A == top && function() {
+if (R) return;
 try {
-E.documentElement.doScroll("left");
-} catch (b) {
+O.documentElement.doScroll("left");
+} catch (t) {
 setTimeout(arguments.callee, 0);
 return;
 }
-a();
-}()), U.wk && function() {
-if (P) return;
-if (!/loaded|complete/.test(E.readyState)) {
+e();
+}()), V.wk && function() {
+if (R) return;
+if (!/loaded|complete/.test(O.readyState)) {
 setTimeout(arguments.callee, 0);
 return;
 }
-a();
-}(), c(a));
-}(), W = function() {
-U.ie && U.win && window.attachEvent("onunload", function() {
-var a = K.length;
-for (var b = 0; b < a; b++) K[b][0].detachEvent(K[b][1], K[b][2]);
-var c = J.length;
-for (var d = 0; d < c; d++) n(J[d]);
-for (var e in U) U[e] = null;
-U = null;
-for (var f in swfobject) swfobject[f] = null;
+e();
+}(), n(e));
+}(), J = function() {
+V.ie && V.win && window.attachEvent("onunload", function() {
+var e = B.length;
+for (var t = 0; t < e; t++) B[t][0].detachEvent(B[t][1], B[t][2]);
+var n = H.length;
+for (var r = 0; r < n; r++) p(H[r]);
+for (var i in V) V[i] = null;
+V = null;
+for (var s in swfobject) swfobject[s] = null;
 swfobject = null;
 });
 }();
 return {
-registerObject: function(a, b, c, d) {
-if (U.w3 && a && b) {
-var e = {};
-e.id = a, e.swfVersion = b, e.expressInstall = c, e.callbackFn = d, I[I.length] = e, u(a, !1);
-} else d && d({
+registerObject: function(e, t, n, r) {
+if (V.w3 && e && t) {
+var i = {};
+i.id = e, i.swfVersion = t, i.expressInstall = n, i.callbackFn = r, P[P.length] = i, w(e, !1);
+} else r && r({
 success: !1,
-id: a
+id: e
 });
 },
-getObjectById: function(a) {
-if (U.w3) return g(a);
+getObjectById: function(e) {
+if (V.w3) return o(e);
 },
-embedSWF: function(a, c, d, e, f, g, j, k, m, n) {
-var o = {
+embedSWF: function(e, n, r, i, s, o, f, l, h, p) {
+var d = {
 success: !1,
-id: c
+id: n
 };
-U.w3 && !(U.wk && U.wk < 312) && a && c && d && e && f ? (u(c, !1), b(function() {
-d += "", e += "";
-var b = {};
-if (m && typeof m === x) for (var p in m) b[p] = m[p];
-b.data = a, b.width = d, b.height = e;
-var q = {};
-if (k && typeof k === x) for (var r in k) q[r] = k[r];
-if (j && typeof j === x) for (var t in j) typeof q.flashvars != w ? q.flashvars += "&" + t + "=" + j[t] : q.flashvars = t + "=" + j[t];
-if (s(f)) {
-var v = l(b, q, c);
-b.id == c && u(c, !0), o.success = !0, o.ref = v;
+V.w3 && !(V.wk && V.wk < 312) && e && n && r && i && s ? (w(n, !1), t(function() {
+r += "", i += "";
+var t = {};
+if (h && typeof h === x) for (var v in h) t[v] = h[v];
+t.data = e, t.width = r, t.height = i;
+var m = {};
+if (l && typeof l === x) for (var g in l) m[g] = l[g];
+if (f && typeof f === x) for (var b in f) typeof m.flashvars != S ? m.flashvars += "&" + b + "=" + f[b] : m.flashvars = b + "=" + f[b];
+if (y(s)) {
+var E = c(t, m, n);
+t.id == n && w(n, !0), d.success = !0, d.ref = E;
 } else {
-if (g && h()) {
-b.data = g, i(b, q, c, n);
+if (o && u()) {
+t.data = o, a(t, m, n, p);
 return;
 }
-u(c, !0);
+w(n, !0);
 }
-n && n(o);
-})) : n && n(o);
+p && p(d);
+})) : p && p(d);
 },
 switchOffAutoHideShow: function() {
-T = !1;
+X = !1;
 },
-ua: U,
+ua: V,
 getFlashPlayerVersion: function() {
 return {
-major: U.pv[0],
-minor: U.pv[1],
-release: U.pv[2]
+major: V.pv[0],
+minor: V.pv[1],
+release: V.pv[2]
 };
 },
-hasFlashPlayerVersion: s,
-createSWF: function(a, b, c) {
-return U.w3 ? l(a, b, c) : undefined;
+hasFlashPlayerVersion: y,
+createSWF: function(e, t, n) {
+return V.w3 ? c(e, t, n) : undefined;
 },
-showExpressInstall: function(a, b, c, d) {
-U.w3 && h() && i(a, b, c, d);
+showExpressInstall: function(e, t, n, r) {
+V.w3 && u() && a(e, t, n, r);
 },
-removeSWF: function(a) {
-U.w3 && n(a);
+removeSWF: function(e) {
+V.w3 && p(e);
 },
-createCSS: function(a, b, c, d) {
-U.w3 && t(a, b, c, d);
+createCSS: function(e, t, n, r) {
+V.w3 && b(e, t, n, r);
 },
-addDomLoadEvent: b,
-addLoadEvent: c,
-getQueryParamValue: function(a) {
-var b = E.location.search || E.location.hash;
-if (b) {
-/\?/.test(b) && (b = b.split("?")[1]);
-if (a == null) return v(b);
-var c = b.split("&");
-for (var d = 0; d < c.length; d++) if (c[d].substring(0, c[d].indexOf("=")) == a) return v(c[d].substring(c[d].indexOf("=") + 1));
+addDomLoadEvent: t,
+addLoadEvent: n,
+getQueryParamValue: function(e) {
+var t = O.location.search || O.location.hash;
+if (t) {
+/\?/.test(t) && (t = t.split("?")[1]);
+if (e == null) return E(t);
+var n = t.split("&");
+for (var r = 0; r < n.length; r++) if (n[r].substring(0, n[r].indexOf("=")) == e) return E(n[r].substring(n[r].indexOf("=") + 1));
 }
 return "";
 },
 expressInstallCallback: function() {
-if (Q) {
-var a = p(B);
-a && L && (a.parentNode.replaceChild(L, a), M && (u(M, !0), U.ie && U.win && (L.style.display = "block")), N && N(O)), Q = !1;
+if (U) {
+var e = v(k);
+e && j && (e.parentNode.replaceChild(j, e), F && (w(F, !0), V.ie && V.win && (j.style.display = "block")), I && I(q)), U = !1;
 }
 }
 };
@@ -7607,297 +6194,306 @@ a && L && (a.parentNode.replaceChild(L, a), M && (u(M, !0), U.ie && U.win && (L.
 
 (function() {
 if ("undefined" == typeof window || window.WebSocket) return;
-var a = window.console;
-if (!a || !a.log || !a.error) a = {
+var e = window.console;
+if (!e || !e.log || !e.error) e = {
 log: function() {},
 error: function() {}
 };
 if (!swfobject.hasFlashPlayerVersion("10.0.0")) {
-a.error("Flash Player >= 10.0.0 is required.");
+e.error("Flash Player >= 10.0.0 is required.");
 return;
 }
-location.protocol == "file:" && a.error("WARNING: web-socket-js doesn't work in file:///... URL unless you set Flash Security Settings properly. Open the page via Web server i.e. http://..."), WebSocket = function(a, b, c, d, e) {
-var f = this;
-f.__id = WebSocket.__nextId++, WebSocket.__instances[f.__id] = f, f.readyState = WebSocket.CONNECTING, f.bufferedAmount = 0, f.__events = {}, b ? typeof b == "string" && (b = [ b ]) : b = [], setTimeout(function() {
+location.protocol == "file:" && e.error("WARNING: web-socket-js doesn't work in file:///... URL unless you set Flash Security Settings properly. Open the page via Web server i.e. http://..."), WebSocket = function(e, t, n, r, i) {
+var s = this;
+s.__id = WebSocket.__nextId++, WebSocket.__instances[s.__id] = s, s.readyState = WebSocket.CONNECTING, s.bufferedAmount = 0, s.__events = {}, t ? typeof t == "string" && (t = [ t ]) : t = [], setTimeout(function() {
 WebSocket.__addTask(function() {
-WebSocket.__flash.create(f.__id, a, b, c || null, d || 0, e || null);
+WebSocket.__flash.create(s.__id, e, t, n || null, r || 0, i || null);
 });
 }, 0);
-}, WebSocket.prototype.send = function(a) {
+}, WebSocket.prototype.send = function(e) {
 if (this.readyState == WebSocket.CONNECTING) throw "INVALID_STATE_ERR: Web Socket connection has not been established";
-var b = WebSocket.__flash.send(this.__id, encodeURIComponent(a));
-return b < 0 ? !0 : (this.bufferedAmount += b, !1);
+var t = WebSocket.__flash.send(this.__id, encodeURIComponent(e));
+return t < 0 ? !0 : (this.bufferedAmount += t, !1);
 }, WebSocket.prototype.close = function() {
 if (this.readyState == WebSocket.CLOSED || this.readyState == WebSocket.CLOSING) return;
 this.readyState = WebSocket.CLOSING, WebSocket.__flash.close(this.__id);
-}, WebSocket.prototype.addEventListener = function(a, b, c) {
-a in this.__events || (this.__events[a] = []), this.__events[a].push(b);
-}, WebSocket.prototype.removeEventListener = function(a, b, c) {
-if (!(a in this.__events)) return;
-var d = this.__events[a];
-for (var e = d.length - 1; e >= 0; --e) if (d[e] === b) {
-d.splice(e, 1);
+}, WebSocket.prototype.addEventListener = function(e, t, n) {
+e in this.__events || (this.__events[e] = []), this.__events[e].push(t);
+}, WebSocket.prototype.removeEventListener = function(e, t, n) {
+if (!(e in this.__events)) return;
+var r = this.__events[e];
+for (var i = r.length - 1; i >= 0; --i) if (r[i] === t) {
+r.splice(i, 1);
 break;
 }
-}, WebSocket.prototype.dispatchEvent = function(a) {
-var b = this.__events[a.type] || [];
-for (var c = 0; c < b.length; ++c) b[c](a);
-var d = this["on" + a.type];
-d && d(a);
-}, WebSocket.prototype.__handleEvent = function(a) {
-"readyState" in a && (this.readyState = a.readyState), "protocol" in a && (this.protocol = a.protocol);
-var b;
-if (a.type == "open" || a.type == "error") b = this.__createSimpleEvent(a.type); else if (a.type == "close") b = this.__createSimpleEvent("close"); else {
-if (a.type != "message") throw "unknown event type: " + a.type;
-var c = decodeURIComponent(a.message);
-b = this.__createMessageEvent("message", c);
+}, WebSocket.prototype.dispatchEvent = function(e) {
+var t = this.__events[e.type] || [];
+for (var n = 0; n < t.length; ++n) t[n](e);
+var r = this["on" + e.type];
+r && r(e);
+}, WebSocket.prototype.__handleEvent = function(e) {
+"readyState" in e && (this.readyState = e.readyState), "protocol" in e && (this.protocol = e.protocol);
+var t;
+if (e.type == "open" || e.type == "error") t = this.__createSimpleEvent(e.type); else if (e.type == "close") t = this.__createSimpleEvent("close"); else {
+if (e.type != "message") throw "unknown event type: " + e.type;
+var n = decodeURIComponent(e.message);
+t = this.__createMessageEvent("message", n);
 }
-this.dispatchEvent(b);
-}, WebSocket.prototype.__createSimpleEvent = function(a) {
+this.dispatchEvent(t);
+}, WebSocket.prototype.__createSimpleEvent = function(e) {
 if (document.createEvent && window.Event) {
-var b = document.createEvent("Event");
-return b.initEvent(a, !1, !1), b;
+var t = document.createEvent("Event");
+return t.initEvent(e, !1, !1), t;
 }
 return {
-type: a,
+type: e,
 bubbles: !1,
 cancelable: !1
 };
-}, WebSocket.prototype.__createMessageEvent = function(a, b) {
+}, WebSocket.prototype.__createMessageEvent = function(e, t) {
 if (document.createEvent && window.MessageEvent && !window.opera) {
-var c = document.createEvent("MessageEvent");
-return c.initMessageEvent("message", !1, !1, b, null, null, window, null), c;
+var n = document.createEvent("MessageEvent");
+return n.initMessageEvent("message", !1, !1, t, null, null, window, null), n;
 }
 return {
-type: a,
-data: b,
+type: e,
+data: t,
 bubbles: !1,
 cancelable: !1
 };
-}, WebSocket.CONNECTING = 0, WebSocket.OPEN = 1, WebSocket.CLOSING = 2, WebSocket.CLOSED = 3, WebSocket.__flash = null, WebSocket.__instances = {}, WebSocket.__tasks = [], WebSocket.__nextId = 0, WebSocket.loadFlashPolicyFile = function(a) {
+}, WebSocket.CONNECTING = 0, WebSocket.OPEN = 1, WebSocket.CLOSING = 2, WebSocket.CLOSED = 3, WebSocket.__flash = null, WebSocket.__instances = {}, WebSocket.__tasks = [], WebSocket.__nextId = 0, WebSocket.loadFlashPolicyFile = function(e) {
 WebSocket.__addTask(function() {
-WebSocket.__flash.loadManualPolicyFile(a);
+WebSocket.__flash.loadManualPolicyFile(e);
 });
 }, WebSocket.__initialize = function() {
 if (WebSocket.__flash) return;
 WebSocket.__swfLocation && (window.WEB_SOCKET_SWF_LOCATION = WebSocket.__swfLocation);
 if (!window.WEB_SOCKET_SWF_LOCATION) {
-a.error("[WebSocket] set WEB_SOCKET_SWF_LOCATION to location of WebSocketMain.swf");
+e.error("[WebSocket] set WEB_SOCKET_SWF_LOCATION to location of WebSocketMain.swf");
 return;
 }
-var b = document.createElement("div");
-b.id = "webSocketContainer", b.style.position = "absolute", WebSocket.__isFlashLite() ? (b.style.left = "0px", b.style.top = "0px") : (b.style.left = "-100px", b.style.top = "-100px");
-var c = document.createElement("div");
-c.id = "webSocketFlash", b.appendChild(c), document.body.appendChild(b), swfobject.embedSWF(WEB_SOCKET_SWF_LOCATION, "webSocketFlash", "1", "1", "10.0.0", null, null, {
+var t = document.createElement("div");
+t.id = "webSocketContainer", t.style.position = "absolute", WebSocket.__isFlashLite() ? (t.style.left = "0px", t.style.top = "0px") : (t.style.left = "-100px", t.style.top = "-100px");
+var n = document.createElement("div");
+n.id = "webSocketFlash", t.appendChild(n), document.body.appendChild(t), swfobject.embedSWF(WEB_SOCKET_SWF_LOCATION, "webSocketFlash", "1", "1", "10.0.0", null, null, {
 hasPriority: !0,
 swliveconnect: !0,
 allowScriptAccess: "always"
-}, null, function(b) {
-b.success || a.error("[WebSocket] swfobject.embedSWF failed");
+}, null, function(t) {
+t.success || e.error("[WebSocket] swfobject.embedSWF failed");
 });
 }, WebSocket.__onFlashInitialized = function() {
 setTimeout(function() {
 WebSocket.__flash = document.getElementById("webSocketFlash"), WebSocket.__flash.setCallerUrl(location.href), WebSocket.__flash.setDebug(!!window.WEB_SOCKET_DEBUG);
-for (var a = 0; a < WebSocket.__tasks.length; ++a) WebSocket.__tasks[a]();
+for (var e = 0; e < WebSocket.__tasks.length; ++e) WebSocket.__tasks[e]();
 WebSocket.__tasks = [];
 }, 0);
 }, WebSocket.__onFlashEvent = function() {
 return setTimeout(function() {
 try {
-var b = WebSocket.__flash.receiveEvents();
-for (var c = 0; c < b.length; ++c) WebSocket.__instances[b[c].webSocketId].__handleEvent(b[c]);
-} catch (d) {
-a.error(d);
+var t = WebSocket.__flash.receiveEvents();
+for (var n = 0; n < t.length; ++n) WebSocket.__instances[t[n].webSocketId].__handleEvent(t[n]);
+} catch (r) {
+e.error(r);
 }
 }, 0), !0;
-}, WebSocket.__log = function(b) {
-a.log(decodeURIComponent(b));
-}, WebSocket.__error = function(b) {
-a.error(decodeURIComponent(b));
-}, WebSocket.__addTask = function(a) {
-WebSocket.__flash ? a() : WebSocket.__tasks.push(a);
+}, WebSocket.__log = function(t) {
+e.log(decodeURIComponent(t));
+}, WebSocket.__error = function(t) {
+e.error(decodeURIComponent(t));
+}, WebSocket.__addTask = function(e) {
+WebSocket.__flash ? e() : WebSocket.__tasks.push(e);
 }, WebSocket.__isFlashLite = function() {
 if (!window.navigator || !window.navigator.mimeTypes) return !1;
-var a = window.navigator.mimeTypes["application/x-shockwave-flash"];
-return !a || !a.enabledPlugin || !a.enabledPlugin.filename ? !1 : a.enabledPlugin.filename.match(/flashlite/i) ? !0 : !1;
+var e = window.navigator.mimeTypes["application/x-shockwave-flash"];
+return !e || !e.enabledPlugin || !e.enabledPlugin.filename ? !1 : e.enabledPlugin.filename.match(/flashlite/i) ? !0 : !1;
 }, window.WEB_SOCKET_DISABLE_AUTO_INITIALIZATION || (window.addEventListener ? window.addEventListener("load", function() {
 WebSocket.__initialize();
 }, !1) : window.attachEvent("onload", function() {
 WebSocket.__initialize();
 }));
-})(), function(a, b, c) {
-function d(a) {
-if (!a) return;
-b.Transport.apply(this, arguments), this.sendBuffer = [];
+})(), function(e, t, n) {
+function r(e) {
+if (!e) return;
+t.Transport.apply(this, arguments), this.sendBuffer = [];
 }
-function e() {}
-a.XHR = d, b.util.inherit(d, b.Transport), d.prototype.open = function() {
+function i() {}
+e.XHR = r, t.util.inherit(r, t.Transport), r.prototype.open = function() {
 return this.socket.setBuffer(!1), this.onOpen(), this.get(), this.setCloseTimeout(), this;
-}, d.prototype.payload = function(a) {
-var c = [];
-for (var d = 0, e = a.length; d < e; d++) c.push(b.parser.encodePacket(a[d]));
-this.send(b.parser.encodePayload(c));
-}, d.prototype.send = function(a) {
-return this.post(a), this;
-}, d.prototype.post = function(a) {
-function b() {
-this.readyState == 4 && (this.onreadystatechange = e, f.posting = !1, this.status == 200 ? f.socket.setBuffer(!1) : f.onClose());
+}, r.prototype.payload = function(e) {
+var n = [];
+for (var r = 0, i = e.length; r < i; r++) n.push(t.parser.encodePacket(e[r]));
+this.send(t.parser.encodePayload(n));
+}, r.prototype.send = function(e) {
+return this.post(e), this;
+}, r.prototype.post = function(e) {
+function t() {
+this.readyState == 4 && (this.onreadystatechange = i, s.posting = !1, this.status == 200 ? s.socket.setBuffer(!1) : s.onClose());
 }
-function d() {
-this.onload = e, f.socket.setBuffer(!1);
+function r() {
+this.onload = i, s.socket.setBuffer(!1);
 }
-var f = this;
-this.socket.setBuffer(!0), this.sendXHR = this.request("POST"), c.XDomainRequest && this.sendXHR instanceof XDomainRequest ? this.sendXHR.onload = this.sendXHR.onerror = d : this.sendXHR.onreadystatechange = b, this.sendXHR.send(a);
-}, d.prototype.close = function() {
+var s = this;
+this.socket.setBuffer(!0), this.sendXHR = this.request("POST"), n.XDomainRequest && this.sendXHR instanceof XDomainRequest ? this.sendXHR.onload = this.sendXHR.onerror = r : this.sendXHR.onreadystatechange = t, this.sendXHR.send(e);
+}, r.prototype.close = function() {
 return this.onClose(), this;
-}, d.prototype.request = function(a) {
-var c = b.util.request(this.socket.isXDomain()), d = b.util.query(this.socket.options.query, "t=" + +(new Date));
-c.open(a || "GET", this.prepareUrl() + d, !0);
-if (a == "POST") try {
-c.setRequestHeader ? c.setRequestHeader("Content-type", "text/plain;charset=UTF-8") : c.contentType = "text/plain";
-} catch (e) {}
-return c;
-}, d.prototype.scheme = function() {
-return this.socket.options.secure ? "https" : "http";
-}, d.check = function(a, d) {
-try {
-var e = b.util.request(d), f = c.XDomainRequest && e instanceof XDomainRequest, g = a && a.options && a.options.secure ? "https:" : "http:", h = g != c.location.protocol;
-if (e && (!f || !h)) return !0;
+}, r.prototype.request = function(e) {
+var n = t.util.request(this.socket.isXDomain()), r = t.util.query(this.socket.options.query, "t=" + +(new Date));
+n.open(e || "GET", this.prepareUrl() + r, !0);
+if (e == "POST") try {
+n.setRequestHeader ? n.setRequestHeader("Content-type", "text/plain;charset=UTF-8") : n.contentType = "text/plain";
 } catch (i) {}
-return !1;
-}, d.xdomainCheck = function() {
-return d.check(null, !0);
-};
-}("undefined" != typeof io ? io.Transport : module.exports, "undefined" != typeof io ? io : module.parent.exports, this), function(a, b) {
-function c(a) {
-b.Transport.XHR.apply(this, arguments);
-}
-a.htmlfile = c, b.util.inherit(c, b.Transport.XHR), c.prototype.name = "htmlfile", c.prototype.get = function() {
-this.doc = new (window[[ "Active" ].concat("Object").join("X")])("htmlfile"), this.doc.open(), this.doc.write("<html></html>"), this.doc.close(), this.doc.parentWindow.s = this;
-var a = this.doc.createElement("div");
-a.className = "socketio", this.doc.body.appendChild(a), this.iframe = this.doc.createElement("iframe"), a.appendChild(this.iframe);
-var c = this, d = b.util.query(this.socket.options.query, "t=" + +(new Date));
-this.iframe.src = this.prepareUrl() + d, b.util.on(window, "unload", function() {
-c.destroy();
-});
-}, c.prototype._ = function(a, b) {
-this.onData(a);
+return n;
+}, r.prototype.scheme = function() {
+return this.socket.options.secure ? "https" : "http";
+}, r.check = function(e, r) {
 try {
-var c = b.getElementsByTagName("script")[0];
-c.parentNode.removeChild(c);
-} catch (d) {}
-}, c.prototype.destroy = function() {
+var i = t.util.request(r), s = n.XDomainRequest && i instanceof XDomainRequest, o = e && e.options && e.options.secure ? "https:" : "http:", u = o != n.location.protocol;
+if (i && (!s || !u)) return !0;
+} catch (a) {}
+return !1;
+}, r.xdomainCheck = function() {
+return r.check(null, !0);
+};
+}("undefined" != typeof io ? io.Transport : module.exports, "undefined" != typeof io ? io : module.parent.exports, this), function(e, t) {
+function n(e) {
+t.Transport.XHR.apply(this, arguments);
+}
+e.htmlfile = n, t.util.inherit(n, t.Transport.XHR), n.prototype.name = "htmlfile", n.prototype.get = function() {
+this.doc = new (window[[ "Active" ].concat("Object").join("X")])("htmlfile"), this.doc.open(), this.doc.write("<html></html>"), this.doc.close(), this.doc.parentWindow.s = this;
+var e = this.doc.createElement("div");
+e.className = "socketio", this.doc.body.appendChild(e), this.iframe = this.doc.createElement("iframe"), e.appendChild(this.iframe);
+var n = this, r = t.util.query(this.socket.options.query, "t=" + +(new Date));
+this.iframe.src = this.prepareUrl() + r, t.util.on(window, "unload", function() {
+n.destroy();
+});
+}, n.prototype._ = function(e, t) {
+this.onData(e);
+try {
+var n = t.getElementsByTagName("script")[0];
+n.parentNode.removeChild(n);
+} catch (r) {}
+}, n.prototype.destroy = function() {
 if (this.iframe) {
 try {
 this.iframe.src = "about:blank";
-} catch (a) {}
+} catch (e) {}
 this.doc = null, this.iframe.parentNode.removeChild(this.iframe), this.iframe = null, CollectGarbage();
 }
-}, c.prototype.close = function() {
-return this.destroy(), b.Transport.XHR.prototype.close.call(this);
-}, c.check = function() {
+}, n.prototype.close = function() {
+return this.destroy(), t.Transport.XHR.prototype.close.call(this);
+}, n.check = function() {
 if (typeof window != "undefined" && [ "Active" ].concat("Object").join("X") in window) try {
-var a = new (window[[ "Active" ].concat("Object").join("X")])("htmlfile");
-return a && b.Transport.XHR.check();
-} catch (c) {}
+var e = new (window[[ "Active" ].concat("Object").join("X")])("htmlfile");
+return e && t.Transport.XHR.check();
+} catch (n) {}
 return !1;
-}, c.xdomainCheck = function() {
+}, n.xdomainCheck = function() {
 return !1;
-}, b.transports.push("htmlfile");
-}("undefined" != typeof io ? io.Transport : module.exports, "undefined" != typeof io ? io : module.parent.exports), function(a, b, c) {
-function d() {
-b.Transport.XHR.apply(this, arguments);
+}, t.transports.push("htmlfile");
+}("undefined" != typeof io ? io.Transport : module.exports, "undefined" != typeof io ? io : module.parent.exports), function(e, t, n) {
+function r() {
+t.Transport.XHR.apply(this, arguments);
 }
-function e() {}
-a["xhr-polling"] = d, b.util.inherit(d, b.Transport.XHR), b.util.merge(d, b.Transport.XHR), d.prototype.name = "xhr-polling", d.prototype.open = function() {
-var a = this;
-return b.Transport.XHR.prototype.open.call(a), !1;
-}, d.prototype.get = function() {
-function a() {
-this.readyState == 4 && (this.onreadystatechange = e, this.status == 200 ? (f.onData(this.responseText), f.get()) : f.onClose());
+function i() {}
+e["xhr-polling"] = r, t.util.inherit(r, t.Transport.XHR), t.util.merge(r, t.Transport.XHR), r.prototype.name = "xhr-polling", r.prototype.open = function() {
+var e = this;
+return t.Transport.XHR.prototype.open.call(e), !1;
+}, r.prototype.get = function() {
+function e() {
+this.readyState == 4 && (this.onreadystatechange = i, this.status == 200 ? (s.onData(this.responseText), s.get()) : s.onClose());
 }
-function b() {
-this.onload = e, this.onerror = e, f.onData(this.responseText), f.get();
+function t() {
+this.onload = i, this.onerror = i, s.onData(this.responseText), s.get();
 }
-function d() {
-f.onClose();
+function r() {
+s.onClose();
 }
 if (!this.open) return;
-var f = this;
-this.xhr = this.request(), c.XDomainRequest && this.xhr instanceof XDomainRequest ? (this.xhr.onload = b, this.xhr.onerror = d) : this.xhr.onreadystatechange = a, this.xhr.send(null);
-}, d.prototype.onClose = function() {
-b.Transport.XHR.prototype.onClose.call(this);
+var s = this;
+this.xhr = this.request(), n.XDomainRequest && this.xhr instanceof XDomainRequest ? (this.xhr.onload = t, this.xhr.onerror = r) : this.xhr.onreadystatechange = e, this.xhr.send(null);
+}, r.prototype.onClose = function() {
+t.Transport.XHR.prototype.onClose.call(this);
 if (this.xhr) {
-this.xhr.onreadystatechange = this.xhr.onload = this.xhr.onerror = e;
+this.xhr.onreadystatechange = this.xhr.onload = this.xhr.onerror = i;
 try {
 this.xhr.abort();
-} catch (a) {}
+} catch (e) {}
 this.xhr = null;
 }
-}, d.prototype.ready = function(a, c) {
-var d = this;
-b.util.defer(function() {
-c.call(d);
+}, r.prototype.ready = function(e, n) {
+var r = this;
+t.util.defer(function() {
+n.call(r);
 });
-}, b.transports.push("xhr-polling");
-}("undefined" != typeof io ? io.Transport : module.exports, "undefined" != typeof io ? io : module.parent.exports, this), function(a, b, c) {
-function d(a) {
-b.Transport["xhr-polling"].apply(this, arguments), this.index = b.j.length;
-var c = this;
-b.j.push(function(a) {
-c._(a);
+}, t.transports.push("xhr-polling");
+}("undefined" != typeof io ? io.Transport : module.exports, "undefined" != typeof io ? io : module.parent.exports, this), function(e, t, n) {
+function r(e) {
+t.Transport["xhr-polling"].apply(this, arguments), this.index = t.j.length;
+var n = this;
+t.j.push(function(e) {
+n._(e);
 });
 }
-var e = c.document && "MozAppearance" in c.document.documentElement.style;
-a["jsonp-polling"] = d, b.util.inherit(d, b.Transport["xhr-polling"]), d.prototype.name = "jsonp-polling", d.prototype.post = function(a) {
-function c() {
-d(), e.socket.setBuffer(!1);
+var i = n.document && "MozAppearance" in n.document.documentElement.style;
+e["jsonp-polling"] = r, t.util.inherit(r, t.Transport["xhr-polling"]), r.prototype.name = "jsonp-polling", r.prototype.post = function(e) {
+function n() {
+r(), i.socket.setBuffer(!1);
 }
-function d() {
-e.iframe && e.form.removeChild(e.iframe);
+function r() {
+i.iframe && i.form.removeChild(i.iframe);
 try {
-j = document.createElement('<iframe name="' + e.iframeId + '">');
-} catch (a) {
-j = document.createElement("iframe"), j.name = e.iframeId;
+f = document.createElement('<iframe name="' + i.iframeId + '">');
+} catch (e) {
+f = document.createElement("iframe"), f.name = i.iframeId;
 }
-j.id = e.iframeId, e.form.appendChild(j), e.iframe = j;
+f.id = i.iframeId, i.form.appendChild(f), i.iframe = f;
 }
-var e = this, f = b.util.query(this.socket.options.query, "t=" + +(new Date) + "&i=" + this.index);
+var i = this, s = t.util.query(this.socket.options.query, "t=" + +(new Date) + "&i=" + this.index);
 if (!this.form) {
-var g = document.createElement("form"), h = document.createElement("textarea"), i = this.iframeId = "socketio_iframe_" + this.index, j;
-g.className = "socketio", g.style.position = "absolute", g.style.top = "0px", g.style.left = "0px", g.style.display = "none", g.target = i, g.method = "POST", g.setAttribute("accept-charset", "utf-8"), h.name = "d", g.appendChild(h), document.body.appendChild(g), this.form = g, this.area = h;
+var o = document.createElement("form"), u = document.createElement("textarea"), a = this.iframeId = "socketio_iframe_" + this.index, f;
+o.className = "socketio", o.style.position = "absolute", o.style.top = "0px", o.style.left = "0px", o.style.display = "none", o.target = a, o.method = "POST", o.setAttribute("accept-charset", "utf-8"), u.name = "d", o.appendChild(u), document.body.appendChild(o), this.form = o, this.area = u;
 }
-this.form.action = this.prepareUrl() + f, d(), this.area.value = b.JSON.stringify(a);
+this.form.action = this.prepareUrl() + s, r(), this.area.value = t.JSON.stringify(e);
 try {
 this.form.submit();
-} catch (k) {}
-this.iframe.attachEvent ? j.onreadystatechange = function() {
-e.iframe.readyState == "complete" && c();
-} : this.iframe.onload = c, this.socket.setBuffer(!0);
-}, d.prototype.get = function() {
-var a = this, c = document.createElement("script"), d = b.util.query(this.socket.options.query, "t=" + +(new Date) + "&i=" + this.index);
-this.script && (this.script.parentNode.removeChild(this.script), this.script = null), c.async = !0, c.src = this.prepareUrl() + d, c.onerror = function() {
-a.onClose();
+} catch (l) {}
+this.iframe.attachEvent ? f.onreadystatechange = function() {
+i.iframe.readyState == "complete" && n();
+} : this.iframe.onload = n, this.socket.setBuffer(!0);
+}, r.prototype.get = function() {
+var e = this, n = document.createElement("script"), r = t.util.query(this.socket.options.query, "t=" + +(new Date) + "&i=" + this.index);
+this.script && (this.script.parentNode.removeChild(this.script), this.script = null), n.async = !0, n.src = this.prepareUrl() + r, n.onerror = function() {
+e.onClose();
 };
-var f = document.getElementsByTagName("script")[0];
-f.parentNode.insertBefore(c, f), this.script = c, e && setTimeout(function() {
-var a = document.createElement("iframe");
-document.body.appendChild(a), document.body.removeChild(a);
+var s = document.getElementsByTagName("script")[0];
+s.parentNode.insertBefore(n, s), this.script = n, i && setTimeout(function() {
+var e = document.createElement("iframe");
+document.body.appendChild(e), document.body.removeChild(e);
 }, 100);
-}, d.prototype._ = function(a) {
-return this.onData(a), this.open && this.get(), this;
-}, d.prototype.ready = function(a, c) {
-var d = this;
-if (!e) return c.call(this);
-b.util.load(function() {
-c.call(d);
+}, r.prototype._ = function(e) {
+return this.onData(e), this.open && this.get(), this;
+}, r.prototype.ready = function(e, n) {
+var r = this;
+if (!i) return n.call(this);
+t.util.load(function() {
+n.call(r);
 });
-}, d.check = function() {
-return "document" in c;
-}, d.xdomainCheck = function() {
+}, r.check = function() {
+return "document" in n;
+}, r.xdomainCheck = function() {
 return !0;
-}, b.transports.push("jsonp-polling");
+}, t.transports.push("jsonp-polling");
 }("undefined" != typeof io ? io.Transport : module.exports, "undefined" != typeof io ? io : module.parent.exports, this);
+
+// core.js
+
+(function() {
+var e = window.DOCUMENT_HOSTNAME = document.location.hostname;
+window.relocate = function() {
+document.location = "https://%@/login".f(e);
+};
+})();
 
 // foundation.js
 
@@ -7915,39 +6511,39 @@ WEIGHT_SCALE: 2
 }, XM = {}, _.extend(XT, {
 K: function() {},
 _date: new Date,
-toReadableTimestamp: function(a) {
-var b = XT._date || (XT._date = new Date);
-return b.setTime(a), b.toLocaleTimeString();
+toReadableTimestamp: function(e) {
+var t = XT._date || (XT._date = new Date);
+return t.setTime(e), t.toLocaleTimeString();
 },
-getObjectByName: function(a) {
-if (!a.split) return null;
-var b = a.split("."), c, d, e = 0;
-for (; e < b.length; ++e) {
-d = b[e], c = c ? c[d] : window[d];
-if (c === null || c === undefined) return null;
+getObjectByName: function(e) {
+if (!e.split) return null;
+var t = e.split("."), n, r, i = 0;
+for (; i < t.length; ++i) {
+r = t[i], n = n ? n[r] : window[r];
+if (n === null || n === undefined) return null;
 }
-return c;
+return n;
 },
-A: function(a) {
-if (a === null || a === undefined) return [];
-if (a.slice instanceof Function) return typeof a == "string" ? [ a ] : a.slice();
-var b = [];
-if (a.length) {
-var c = a.length;
-while (--c >= 0) b[c] = a[c];
-return b;
+A: function(e) {
+if (e === null || e === undefined) return [];
+if (e.slice instanceof Function) return typeof e == "string" ? [ e ] : e.slice();
+var t = [];
+if (e.length) {
+var n = e.length;
+while (--n >= 0) t[n] = e[n];
+return t;
 }
-return _.values(a);
+return _.values(e);
 }
 }), XT.$A = XT.A, _.extend(XT, {
 history: [],
-addToHistory: function(a, b) {
-for (var c = 0; c < this.history.length; c++) this.history[c].modelType === b.recordType && this.history[c].modelId === b.get("id") && (this.history.splice(c, 1), c--);
+addToHistory: function(e, t) {
+for (var n = 0; n < this.history.length; n++) this.history[n].modelType === t.recordType && this.history[n].modelId === t.get("id") && (this.history.splice(n, 1), n--);
 this.history.unshift({
-modelType: b.recordType,
-modelId: b.get("id"),
-modelName: b.getValue(b.nameAttribute),
-module: a
+modelType: t.recordType,
+modelId: t.get("id"),
+modelName: t.getValue(t.nameAttribute),
+workspaceType: e
 });
 },
 getHistory: function() {
@@ -7958,33 +6554,34 @@ return this.history;
 // error.js
 
 (function() {
-"use strict", XT.Error = function() {}, XT.Error.prototype = {
+"use strict";
+XT.Error = function() {}, XT.Error.prototype = {
 code: null,
 messageKey: null,
 params: {},
 message: function() {
-var a = (this.messageKey || "").loc(), b, c;
-for (b in this.params) this.params.hasOwnProperty(b) && (c = (this.params[b] || "_unknown").loc(), a = a.replace("{" + b + "}", c));
-return a;
+var e = (this.messageKey || "").loc(), t, n;
+for (t in this.params) this.params.hasOwnProperty(t) && (n = (this.params[t] || "_unknown").loc(), e = e.replace("{" + t + "}", n));
+return e;
 }
 }, _.extend(XT.Error, {
-clone: function(a, b) {
-var c;
-b = b || {};
-if (a) {
-c = _.find(XT.errors, function(b) {
-return b.code === a;
+clone: function(e, t) {
+var n;
+t = t || {};
+if (e) {
+n = _.find(XT.errors, function(t) {
+return t.code === e;
 });
-if (!c) return !1;
+if (!n) return !1;
 }
-return c = _.clone(c), c.params && (c.params = _.clone(c.params)), _.extend(c, b), XT.Error.create(c);
+return n = _.clone(n), n.params && (n.params = _.clone(n.params)), _.extend(n, t), XT.Error.create(n);
 },
-create: function(a) {
-var b;
-return a = a || {}, b = new XT.Error, _.extend(b, a), b;
+create: function(e) {
+var t;
+return e = e || {}, t = new XT.Error, _.extend(t, e), t;
 }
 });
-var a = [ {
+var e = [ {
 code: "xt1001",
 params: {
 error: null
@@ -8056,124 +6653,128 @@ messageKey: "_productCategoryRequiredOnSold"
 }, {
 code: "xt2006",
 messageKey: "_recursiveParentDisallowed"
+}, {
+code: "xt2007",
+messageKey: "_addressShared"
 } ];
-XT.errors = [], _.each(a, function(a) {
-var b = XT.Error.create(a);
-XT.errors.push(b);
+XT.errors = [], _.each(e, function(e) {
+var t = XT.Error.create(e);
+XT.errors.push(t);
 });
 })();
 
 // log.js
 
 XT.log = function() {
-var a = XT.$A(arguments);
-console.log.apply ? console.log.apply(console, a) : console.log(a.join(" "));
+var e = XT.$A(arguments);
+console.log.apply ? console.log.apply(console, e) : console.log(e.join(" "));
 };
 
 // datasource.js
 
 (function() {
-"use strict", XT.dataSource = {
-datasourceUrl: document.location.hostname,
+"use strict";
+XT.dataSource = {
+datasourceUrl: DOCUMENT_HOSTNAME,
 datasourcePort: 443,
 isConnected: !1,
-fetch: function(a) {
-a = a ? _.clone(a) : {};
-var b = this, c = {}, d = a.query.parameters, e, f = function(c) {
-var d, e = {}, f;
-if (c.isError) {
-a && a.error && (e.error = c.reason.data.code, f = XT.Error.clone("xt1001", {
-params: e
-}), a.error.call(b, f));
+fetch: function(e) {
+e = e ? _.clone(e) : {};
+var t = this, n = {}, r = e.query.parameters, i, s = function(n) {
+var r, i = {}, s;
+if (n.isError) {
+e && e.error && (i.error = n.reason.data.code, s = XT.Error.clone("xt1001", {
+params: i
+}), e.error.call(t, s));
 return;
 }
-d = JSON.parse(c.data.rows[0].fetch), a && a.success && a.success.call(b, d);
-}, g = function(b) {
-var c = a.query.recordType, d = c ? XT.getObjectByName(c) : null, e = d ? d.prototype.relations : [], f = _.find(e, function(a) {
-return a.key === b.attribute;
-}), g;
-b.value instanceof Date ? b.value = b.value.toJSON() : b.value instanceof XM.Model && (b.value = b.value.id), f && f.type === Backbone.HasOne && f.includeInJSON === !0 && (d = XT.getObjectByName(f.relatedModel), g = d.prototype.idAttribute, b.attribute = b.attribute + "." + g);
+r = JSON.parse(n.data.rows[0].fetch), e && e.success && e.success.call(t, r);
+}, o = function(t) {
+var n = e.query.recordType, r = n ? XT.getObjectByName(n) : null, i = r ? r.prototype.relations : [], s = _.find(i, function(e) {
+return e.key === t.attribute;
+}), o;
+t.value instanceof Date ? t.value = t.value.toJSON() : t.value instanceof XM.Model && (t.value = t.value.id), s && s.type === Backbone.HasOne && s.includeInJSON === !0 && (r = XT.getObjectByName(s.relatedModel), o = r.prototype.idAttribute, t.attribute = t.attribute + "." + o);
 };
-for (e in d) g(d[e]);
-return c.requestType = "fetch", c.query = a.query, XT.Request.handle("function/fetch").notify(f).send(c);
+for (i in r) o(r[i]);
+return n.requestType = "fetch", n.query = e.query, XT.Request.handle("function/fetch").notify(s).send(n);
 },
-retrieveRecord: function(a, b, c) {
-var d = this, e = {}, f = function(a) {
-var b, e = {}, f;
-if (a.isError) {
-c && c.error && (e.error = a.reason.data.code, f = XT.Error.clone("xt1001", {
-params: e
-}), c.error.call(d, f));
+retrieveRecord: function(e, t, n) {
+var r = this, i = {}, s = function(e) {
+var t, i = {}, s;
+if (e.isError) {
+n && n.error && (i.error = e.reason.data.code, s = XT.Error.clone("xt1001", {
+params: i
+}), n.error.call(r, s));
 return;
 }
-b = JSON.parse(a.data.rows[0].retrieve_record);
-if (_.isEmpty(b)) {
-c && c.error && (f = XT.Error.clone("xt1007"), c.error.call(d, f));
+t = JSON.parse(e.data.rows[0].retrieve_record);
+if (_.isEmpty(t)) {
+n && n.error && (s = XT.Error.clone("xt1007"), n.error.call(r, s));
 return;
 }
-c && c.success && c.success.call(d, b);
+n && n.success && n.success.call(r, t);
 };
-return e.requestType = "retrieveRecord", e.recordType = a, e.id = b, XT.Request.handle("function/retrieveRecord").notify(f).send(e);
+return i.requestType = "retrieveRecord", i.recordType = e, i.id = t, XT.Request.handle("function/retrieveRecord").notify(s).send(i);
 },
-commitRecord: function(a, b) {
-var c = this, d = {}, e = function(a) {
-var d, e = {}, f;
-if (a.isError) {
-b && b.error && (e.error = a.reason.data.code, f = XT.Error.clone("xt1001", {
-params: e
-}), b.error.call(c, f));
+commitRecord: function(e, t) {
+var n = this, r = {}, i = function(e) {
+var r, i = {}, s;
+if (e.isError) {
+t && t.error && (i.error = e.reason.data.code, s = XT.Error.clone("xt1001", {
+params: i
+}), t.error.call(n, s));
 return;
 }
-d = JSON.parse(a.data.rows[0].commit_record), b && b.success && b.success.call(c, d);
+r = JSON.parse(e.data.rows[0].commit_record), t && t.success && t.success.call(n, r);
 };
-return d.requestType = "commitRecord", d.recordType = a.recordType, d.requery = b.requery, d.dataHash = a.changeSet(), XT.Request.handle("function/commitRecord").notify(e).send(d);
+return r.requestType = "commitRecord", r.recordType = e.recordType, r.requery = t.requery, r.dataHash = e.changeSet(), XT.Request.handle("function/commitRecord").notify(i).send(r);
 },
-dispatch: function(a, b, c, d) {
-var e = this, f = {
+dispatch: function(e, t, n, r) {
+var i = this, s = {
 requestType: "dispatch",
-className: a,
-functionName: b,
-parameters: c
-}, g = function(a) {
-var b, c = {}, f;
-if (a.isError) {
-d && d.error && (c.error = a.reason.data.code, f = XT.Error.clone("xt1001", {
-params: c
-}), d.error.call(e, f));
+className: e,
+functionName: t,
+parameters: n
+}, o = function(e) {
+var t, n = {}, s;
+if (e.isError) {
+r && r.error && (n.error = e.reason.data.code, s = XT.Error.clone("xt1001", {
+params: n
+}), r.error.call(i, s));
 return;
 }
-b = JSON.parse(a.data.rows[0].dispatch), d && d.success && d.success.call(e, b);
+t = JSON.parse(e.data.rows[0].dispatch), r && r.success && r.success.call(i, t);
 };
-return XT.Request.handle("function/dispatch").notify(g).send(f);
+return XT.Request.handle("function/dispatch").notify(o).send(s);
 },
-connect: function(a) {
+connect: function(e) {
 if (this.isConnected) {
-a && a instanceof Function && a();
+e && e instanceof Function && e();
 return;
 }
 XT.log("Attempting to connect to the datasource");
-var b = this.datasourceUrl, c = this.datasourcePort, d = "https://%@/clientsock".f(b), e = this, f = this.sockDidConnect, g = this.sockDidError;
-this._sock = io.connect(d, {
-port: c,
+var t = this.datasourceUrl, n = this.datasourcePort, r = "https://%@/clientsock".f(t), i = this, s = this.sockDidConnect, o = this.sockDidError;
+this._sock = io.connect(r, {
+port: n,
 secure: !0
 }), this._sock.on("connect", function() {}), this._sock.on("ok", function() {
-f.call(e, a);
-}), this._sock.on("error", function(b) {
-g.call(e, b, a);
-}), this._sock.on("debug", function(a) {
-XT.log("SERVER DEBUG => ", a);
+s.call(i, e);
+}), this._sock.on("error", function(t) {
+o.call(i, t, e);
+}), this._sock.on("debug", function(e) {
+XT.log("SERVER DEBUG => ", e);
 });
 },
-sockDidError: function(a, b) {
-console.warn(a), b && b instanceof Function && b(a);
+sockDidError: function(e, t) {
+console.warn(e), t && t instanceof Function && t(e);
 },
-sockDidConnect: function(a) {
-XT.log("Successfully connected to the datasource"), this.isConnected = !0, XT.session || (XT.session = Object.create(XT.Session), setTimeout(_.bind(XT.session.start, XT.session), 0)), a && a instanceof Function && a();
+sockDidConnect: function(e) {
+XT.log("Successfully connected to the datasource"), this.isConnected = !0, XT.session || (XT.session = Object.create(XT.Session), setTimeout(_.bind(XT.session.start, XT.session), 0)), e && e instanceof Function && e();
 },
 reset: function() {
 if (!this.isConnected) return;
-var a = this._sock;
-a && (a.disconnect(), this.isConnected = !1), this.connect();
+var e = this._sock;
+e && (e.disconnect(), this.isConnected = !1), this.connect();
 }
 };
 })();
@@ -8181,20 +6782,21 @@ a && (a.disconnect(), this.isConnected = !1), this.connect();
 // date.js
 
 (function() {
-"use strict", XT.date = {
-convert: function(a) {
-return a.constructor === Date ? a : a.constructor === Array ? new Date(a[0], a[1], a[2]) : a.constructor === Number ? new Date(a) : a.constructor === String ? new Date(a) : typeof a == "object" ? new Date(a.year, a.month, a.date) : NaN;
+"use strict";
+XT.date = {
+convert: function(e) {
+return e.constructor === Date ? e : e.constructor === Array ? new Date(e[0], e[1], e[2]) : e.constructor === Number ? new Date(e) : e.constructor === String ? new Date(e) : typeof e == "object" ? new Date(e.year, e.month, e.date) : NaN;
 },
-compare: function(a, b) {
-return isFinite(a = this.convert(a).valueOf()) && isFinite(b = this.convert(b).valueOf()) ? (a > b) - (a < b) : NaN;
+compare: function(e, t) {
+return isFinite(e = this.convert(e).valueOf()) && isFinite(t = this.convert(t).valueOf()) ? (e > t) - (e < t) : NaN;
 },
-compareDate: function(a, b) {
-if (!a || !b) return NaN;
-var c = new Date(a.valueOf()), d = new Date(b.valueOf());
-return c.setHours(0, 0, 0, 0), d.setHours(0, 0, 0, 0), this.compare(c, d);
+compareDate: function(e, t) {
+if (!e || !t) return NaN;
+var n = new Date(e.valueOf()), r = new Date(t.valueOf());
+return n.setHours(0, 0, 0, 0), r.setHours(0, 0, 0, 0), this.compare(n, r);
 },
-inRange: function(a, b, c) {
-return isFinite(a = this.convert(a).valueOf()) && isFinite(b = this.convert(b).valueOf()) && isFinite(c = this.convert(c).valueOf()) ? b <= a && a <= c : NaN;
+inRange: function(e, t, n) {
+return isFinite(e = this.convert(e).valueOf()) && isFinite(t = this.convert(t).valueOf()) && isFinite(n = this.convert(n).valueOf()) ? t <= e && e <= n : NaN;
 }
 };
 })();
@@ -8202,21 +6804,22 @@ return isFinite(a = this.convert(a).valueOf()) && isFinite(b = this.convert(b).v
 // math.js
 
 (function() {
-"use strict", XT.math = {
-add: function(a, b, c) {
-c = c || 0;
-var d = Math.pow(10, c);
-return Math.round(a * d + b * d) / d;
+"use strict";
+XT.math = {
+add: function(e, t, n) {
+n = n || 0;
+var r = Math.pow(10, n);
+return Math.round(e * r + t * r) / r;
 },
-round: function(a, b) {
-b = b || 0;
-var c = Math.pow(10, b);
-return Math.round(a * c) / c;
+round: function(e, t) {
+t = t || 0;
+var n = Math.pow(10, t);
+return Math.round(e * n) / n;
 },
-subtract: function(a, b, c) {
-c = c || 0;
-var d = Math.pow(10, c);
-return Math.round(a * d - b * d) / d;
+subtract: function(e, t, n) {
+n = n || 0;
+var r = Math.pow(10, n);
+return Math.round(e * r - t * r) / r;
 }
 };
 })();
@@ -8224,22 +6827,23 @@ return Math.round(a * d - b * d) / d;
 // request.js
 
 (function() {
-"use strict", XT.Request = {
-send: function(a) {
-var b = XT.session.details, c = XT.dataSource._sock, d = this._notify, e = this._handle, f = {
-payload: a
-}, g;
-return !!d && d instanceof Function ? g = function(a) {
-d(_.extend(Object.create(XT.Response), a));
-} : g = XT.K, f = _.extend(f, b), XT.log("Socket sending: %@".replace("%@", e), f), c.json.emit(e, f, g), this;
+"use strict";
+XT.Request = {
+send: function(e) {
+var t = XT.session.details, n = XT.dataSource._sock, r = this._notify, i = this._handle, s = {
+payload: e
+}, o;
+return !!r && r instanceof Function ? o = function(e) {
+r(_.extend(Object.create(XT.Response), e));
+} : o = XT.K, s = _.extend(s, t), XT.log("Socket sending: %@".replace("%@", i), s), n.json.emit(i, s, o), this;
 },
-handle: function(a) {
-return this._handle = a, this;
+handle: function(e) {
+return this._handle = e, this;
 },
-notify: function(a) {
-var b = Array.prototype.slice.call(arguments).slice(1);
-return this._notify = function(c) {
-b.unshift(c), a.apply(null, b);
+notify: function(e) {
+var t = Array.prototype.slice.call(arguments).slice(1);
+return this._notify = function(n) {
+t.unshift(n), e.apply(null, t);
 }, this;
 }
 };
@@ -8248,13 +6852,15 @@ b.unshift(c), a.apply(null, b);
 // response.js
 
 (function() {
-"use strict", XT.Response = {};
+"use strict";
+XT.Response = {};
 })();
 
 // session.js
 
 (function() {
-"use strict", XT.Session = {
+"use strict";
+XT.Session = {
 details: {},
 availableSessions: [],
 privileges: {},
@@ -8265,45 +6871,40 @@ PRIVILEGES: 2,
 SCHEMA: 4,
 LOCALE: 8,
 ALL: 15,
-loadSessionObjects: function(a, b) {
-var c = this, d, e, f, g, h, i;
-return b && b.success && b.success instanceof Function ? i = b.success : i = XT.K, a === undefined && (a = this.ALL), a & this.PRIVILEGES && (d = b ? _.clone(b) : {}, d.success = function(a) {
-e = new Backbone.Model, e.get = function(a) {
-return _.isBoolean(a) ? a : Backbone.Model.prototype.get.call(this, a);
-}, a.forEach(function(a) {
-e.set(a.privilege, a.isGranted);
-}), c.setPrivileges(e), i();
-}, XT.dataSource.dispatch("XT.Session", "privileges", null, d)), a & this.SETTINGS && (f = b ? _.clone(b) : {}, f.success = function(a) {
-g = new Backbone.Model, a.forEach(function(a) {
-g.set(a.setting, a.value);
-}), c.setSettings(g), i();
-}, XT.dataSource.dispatch("XT.Session", "settings", null, f)), a & this.SCHEMA && (h = b ? _.clone(b) : {}, h.success = function(a) {
-var b = new Backbone.Model(a), d, e, f, g;
-c.setSchema(b);
-for (d in b.attributes) if (b.attributes.hasOwnProperty(d)) {
-f = b.attributes[d].relations || [];
-if (f.length) {
-e = XM.Model.getObjectByName("XM." + d);
-if (e) {
-e.prototype.relations = [];
-for (g = 0; g < f.length; g++) {
-if (f[g].type === "Backbone.HasOne") f[g].type = Backbone.HasOne; else {
-if (f[g].type !== "Backbone.HasMany") continue;
-f[g].type = Backbone.HasMany;
+loadSessionObjects: function(e, t) {
+var n = this, r, i, s, o, u, a;
+return t && t.success && t.success instanceof Function ? a = t.success : a = XT.K, e === undefined && (e = this.ALL), e & this.PRIVILEGES && (r = t ? _.clone(t) : {}, r.success = function(e) {
+i = new Backbone.Model, i.get = function(e) {
+return _.isBoolean(e) ? e : Backbone.Model.prototype.get.call(this, e);
+}, e.forEach(function(e) {
+i.set(e.privilege, e.isGranted);
+}), n.setPrivileges(i), a();
+}, XT.dataSource.dispatch("XT.Session", "privileges", null, r)), e & this.SETTINGS && (s = t ? _.clone(t) : {}, s.success = function(e) {
+o = new Backbone.Model, e.forEach(function(e) {
+o.set(e.setting, e.value);
+}), n.setSettings(o), a();
+}, XT.dataSource.dispatch("XT.Session", "settings", null, s)), e & this.SCHEMA && (u = t ? _.clone(t) : {}, u.success = function(e) {
+var t = new Backbone.Model(e), r, s, o, u;
+n.setSchema(t);
+for (r in t.attributes) if (t.attributes.hasOwnProperty(r)) {
+s = XM.Model.getObjectByName("XM." + r);
+if (s) {
+o = t.attributes[r].relations || [];
+if (o.length) {
+s.prototype.relations = [];
+for (u = 0; u < o.length; u++) {
+if (o[u].type === "Backbone.HasOne") o[u].type = Backbone.HasOne; else {
+if (o[u].type !== "Backbone.HasMany") continue;
+o[u].type = Backbone.HasMany;
 }
-e.prototype.relations.push(f[g]);
-}
-}
+s.prototype.relations.push(o[u]);
 }
 }
-i();
-}, XT.dataSource.dispatch("XT.Session", "schema", "xm", h)), a & this.LOCALE && (XT.lang ? XT.locale.setLanguage(XT.lang) : XT.log("XT.session.loadSessionObjects(): could not find a valid language to load"), i && i instanceof Function && setTimeout(i, 1)), !0;
-},
-selectSession: function(a, b) {
-var c = this, d = function(a) {
-c._didAcquireSession.call(c, a, b);
-};
-XT.Request.handle("session/select").notify(d).send(a);
+i = t.attributes[r].privileges, i && (s.prototype.privileges = i);
+}
+}
+a();
+}, XT.dataSource.dispatch("XT.Session", "schema", "xm", u)), e & this.LOCALE && (XT.lang ? XT.locale.setLanguage(XT.lang) : XT.log("XT.session.loadSessionObjects(): could not find a valid language to load"), a && a instanceof Function && setTimeout(a, 1)), !0;
 },
 getAvailableSessions: function() {
 return this.availableSessions;
@@ -8320,46 +6921,44 @@ return this.settings;
 getPrivileges: function() {
 return this.privileges;
 },
-setAvailableSessions: function(a) {
-return this.availableSessions = a, this;
+setAvailableSessions: function(e) {
+return this.availableSessions = e, this;
 },
-setDetails: function(a) {
-return this.details = a, this;
+setDetails: function(e) {
+return this.details = e, this;
 },
-setSchema: function(a) {
-return this.schema = a, this;
+setSchema: function(e) {
+return this.schema = e, this;
 },
-setSettings: function(a) {
-return this.settings = a, this;
+setSettings: function(e) {
+return this.settings = e, this;
 },
-setPrivileges: function(a) {
-return this.privileges = a, this;
+setPrivileges: function(e) {
+return this.privileges = e, this;
 },
-validateSession: function(a, b) {
-var c = this, d = function(a) {
-c._didValidateSession.call(c, a, b);
+validateSession: function(e, t) {
+var n = this, r = function(e) {
+n._didValidateSession.call(n, e, t);
 };
-this.details = a, XT.Request.handle("session").notify(d).send(a);
+this.details = e, XT.Request.handle("session").notify(r).send(e);
 },
-_didValidateSession: function(a, b) {
-var c = document.location.hostname;
-if (a.code !== 1) return document.location = "https://%@/login".f(c);
-this.setDetails(a.data), XT.getStartupManager().start(), b && b instanceof Function && b(a);
+_didValidateSession: function(e, t) {
+if (e.code !== 1) return relocate();
+this.setDetails(e.data), XT.getStartupManager().start(), t && t instanceof Function && t(e);
 },
 start: function() {
-var a = enyo.getCookie("xtsessioncookie");
+var e = enyo.getCookie("xtsessioncookie");
 try {
-a = JSON.parse(a), this.validateSession(a, function() {
+e = JSON.parse(e), this.validateSession(e, function() {
 XT.app.show();
 });
-} catch (b) {
+} catch (t) {
 XT.Session.logout();
 }
 },
 logout: function() {
-var a = document.location.hostname;
 XT.Request.handle("function/logout").notify(function() {
-document.location = "https://%@/login".f(a);
+relocate();
 }).send();
 },
 DB_BOOLEAN: "B",
@@ -8376,7 +6975,8 @@ DB_UNKNOWN: "X"
 // locale.js
 
 (function() {
-"use strict", XT.locale = {
+"use strict";
+XT.locale = {
 hasStrings: !1,
 strings: {},
 lang: "",
@@ -8389,31 +6989,31 @@ return this.lang;
 getStrings: function() {
 return this.strings;
 },
-setHasStrings: function(a) {
-return this.hasStrings = a, this;
+setHasStrings: function(e) {
+return this.hasStrings = e, this;
 },
-setLang: function(a) {
-return this.lang = a, this;
+setLang: function(e) {
+return this.lang = e, this;
 },
-setStrings: function(a) {
-return this.strings = a, this;
+setStrings: function(e) {
+return this.strings = e, this;
 },
-setLanguage: function(a) {
+setLanguage: function(e) {
 if (this.getHasStrings()) return console.log("attempt to set a new language");
-this.setLang(a.lang || "en"), this.setStrings(a.strings || {});
+this.setLang(e.lang || "en"), this.setStrings(e.strings || {});
 },
 stringsChanged: function() {
-var a = this.getStrings();
-a && a instanceof Object && Object.keys(a).length > 0 ? this.setHasStrings(!0) : this.error("something is amiss");
+var e = this.getStrings();
+e && e instanceof Object && Object.keys(e).length > 0 ? this.setHasStrings(!0) : this.error("something is amiss");
 },
-loc: function(a) {
-var b = this.getStrings();
-return b[a] || a.toString();
+loc: function(e) {
+var t = this.getStrings();
+return t[e] || e.toString();
 }
-}, XT.stringsFor = function(a, b) {
+}, XT.stringsFor = function(e, t) {
 XT.lang ? console.log("XT.stringsFor(): request to write over current language") : XT.lang = {
-lang: a,
-strings: b
+lang: e,
+strings: t
 };
 };
 })();
@@ -8442,17 +7042,17 @@ _address1: "Address1",
 _address2: "Address2",
 _addressCharacteristic: "Address Characteristic",
 _addressComment: "Address Comment",
+_advancedSearch: "Advanced Search",
 _alarms: "Alarms",
 _altEmphasisColor: "Alt Emphasis Color",
 _alternate: "Alternate",
 _alternateAddresses: "Alternate Addresses",
 _amount: "Amount",
+_apply: "Apply",
 _array: "Array",
 _assignDate: "Assign Date",
 _assigned: "Assigned",
 _assignedTo: "Assigned To",
-_assignedEndDate: "Assigned End Date",
-_assignedStartDate: "Assigned Start Date",
 _automatic: "Automatic",
 _automaticAllowOverride: "Automatic Allow Override",
 _back: "Back",
@@ -8460,6 +7060,7 @@ _balance: "Balance",
 _balanceExpensesTotal: "Balance Expenses Total",
 _balanceHoursTotal: "Balance Hours Total",
 _boolean: "Boolean",
+_budgeted: "Budgeted",
 _budgetedExpenses: "Budgeted Expenses",
 _budgetedExpensesTotal: "Total Expenses Budgeted",
 _budgetedHours: "Budgeted Hours",
@@ -8480,8 +7081,6 @@ _code: "Code",
 _commentType: "Comment Type",
 _comments: "Comments",
 _completed: "Completed",
-_completedEndDate: "Completed End Date",
-_completedStartDate: "Completed Start Date",
 _commentsEditable: "Comments Editable",
 _company: "Company",
 _completeDate: "Complete Date",
@@ -8490,6 +7089,7 @@ _confirmed: "Confirmed",
 _contact: "Contact",
 _contactRelations: "Contacts",
 _contacts: "Contacts",
+_countries: "Countries",
 _country: "Country",
 _created: "Created",
 _createdBy: "Created By",
@@ -8505,10 +7105,12 @@ _data: "Data",
 _dataState: "Data State",
 _date: "Date",
 _deactivate: "Deactivate",
+_deferred: "Deferred",
 _delete: "Delete",
 _description: "Description",
 _description1: "Description1",
 _description2: "Description2",
+_discard: "Discard",
 _disableExport: "Disable Export",
 _document: "Document",
 _documentDate: "Document Date",
@@ -8516,8 +7118,6 @@ _documentNumber: "Document #",
 _documentType: "Document Type",
 _dueDate: "Due Date",
 _dueDays: "Due Days",
-_dueEndDate: "Due End Date",
-_dueStartDate: "Due Start Date",
 _duplicate: "Duplicate",
 _effective: "Effective",
 _email: "Email",
@@ -8528,6 +7128,7 @@ _endBalance: "End Balance",
 _endDate: "End Date",
 _ending: "Ending",
 _endingLabel: "Ending Label",
+_error: "Error",
 _errorColor: "Error Color",
 _eventRecipient: "Event Recipient",
 _expiredColor: "Expired Color",
@@ -8553,6 +7154,7 @@ _groups: "Groups",
 _history: "History",
 _home: "Home",
 _honorific: "Honorific",
+_honorifics: "Honorifics",
 _hours: "Hours",
 _hrs: "hrs.",
 _image: "Image",
@@ -8560,11 +7162,18 @@ _images: "Images",
 _incident: "Incident",
 _incidentRelations: "Incidents",
 _incidents: "Incidents",
+_incidentCategories: "Incident Categories",
+_incidentCategory: "Incident Category",
+_incidentResolution: "Incident Resolution",
+_incidentResolutions: "Incident Resolutions",
+_incidentSeverities: "Incident Severities",
+_incidentSeverity: "Incident Severity",
 _incidentStatus: "Status",
 _incidentNumberGeneration: "Incident Number Generation",
 _incidentsPublicByDefault: "Incidents public by default",
 _incidentsShowPublicCheckbox: "Incidents show public checkbox",
 _individual: "Individual",
+_information: "Information",
 _initials: "Initials",
 _inProcess: "In Process",
 _inventoryUnit: "Inventory Unit",
@@ -8607,6 +7216,7 @@ _mainAddress: "Main Address",
 _manual: "Manual",
 _mask: "Mask",
 _maximum: "Maximum",
+_menu: "Menu",
 _messageRecipient: "Message Recipient",
 _middleName: "Middle Name",
 _module: "Module",
@@ -8617,6 +7227,7 @@ _neither: "Neither",
 _new: "New",
 _nextNumber: "Next #",
 _nextCheckNumber: "Next Check Number",
+_none: "None",
 _notes: "Notes",
 _number: "Number",
 _object: "Object",
@@ -8629,15 +7240,19 @@ _opportunities: "Opportunities",
 _opportunity: "Opportunity",
 _opportunityChangeLog: "Post Opportunity changes to Change Log",
 _opportunityRelations: "Opportunities",
-_opportunitySource: "Source",
-_opportunityStage: "Stage",
-_opportunityType: "Type",
+_opportunitySource: "Opportunity Source",
+_opportunitySources: "Opportunity Sources",
+_opportunityStage: "Opportunity Stage",
+_opportunityStages: "Opportunity Stages",
+_opportunityType: "Opportunity Type",
+_opportunityTypes: "Opportunity Types",
 _open: "Open",
 _options: "Options",
 _order: "Order",
 _orderDate: "Order Date",
 _orderNumber: "Order Number",
 _ordered: "Ordered",
+_organization: "Organization",
 _owner: "Owner",
 _overview: "Overview",
 _paid: "Paid",
@@ -8656,6 +7271,7 @@ _primaryContact: "Primary Contact",
 _primaryEmail: "Primary Email",
 _printed: "Printed",
 _priority: "Priority",
+_priorities: "Priorities",
 _privilege: "Privilege",
 _privileges: "Privileges",
 _probability: "Probability",
@@ -8673,15 +7289,19 @@ _properName: "Proper Name",
 _propername: "Propername",
 _purchaseOrderNumber: "Purchase Order",
 _purpose: "Purpose",
+_required: "Required",
 _resolved: "Resolved",
 _qualifier: "Qualifier",
 _quantity: "Quantity",
 _recurrences: "Recurrences",
 _recurring: "Recurring",
 _reference: "Reference",
+_refresh: "Refresh",
 _relatedTo: "Related To",
+_relationships: "Relationships",
 _resolution: "Resolution",
 _save: "Save",
+_saveAndNew: "Save and New",
 _schedule: "Schedule",
 _search: "Search",
 _secondaryContact: "Secondary Contact",
@@ -8689,15 +7309,14 @@ _sense: "Sense",
 _series: "Series",
 _setup: "Setup",
 _severity: "Severity",
-_showCompleted: "Show Completed",
-_showCompletedOnly: "Show Completed Only",
+_showCompleted: "Show Complete",
+_showCompletedOnly: "Show Complete Only",
 _showInactive: "Show Inactive",
 _source: "Source",
 _sourceType: "Source Type",
+_stage: "Stage",
 _start: "Start",
 _startDate: "Start Date",
-_startEndDate: "Start End Date",
-_startStartDate: "Start Start Date",
 _state: "State",
 _states: "States",
 _status: "Status",
@@ -8739,19 +7358,25 @@ _validator: "Validator",
 _value: "Value",
 _warningColor: "Warning Color",
 _webAddress: "Web Address",
+_welcome: "Welcome",
 _xtuplePostbooks: "PostBooks",
+_addressShared: "There are multiple records sharing this Address.",
 _assignedToRequiredAssigned: "Assigned to is required when status is 'Assigned'",
-_attributeIsRequired: "'{attr}' is required.",
+_attributeIsRequired: "{attr} is required.",
 _attributeTypeMismatch: "The value of '{attr}' must be type: {type}.",
 _attributeNotInSchema: "'{attr}' does not exist in the schema.",
 _attributeReadOnly: "Can not edit read only attribute(s).",
 _canNotUpdate: "Insufficient privileges to edit the record.",
+_changeAll: "Change All",
+_changeOne: "Change only this one",
 _characteristicContextRequired: "You must set at least one characteristic context to true.",
 _datasourceError: "Data source error: {error}",
 _duplicateValues: "Duplicate values are not allowed.",
 _lengthInvalid: "Length of {attr} must be {length}.",
+_logoutConfirmation: "Are you sure you want to log out?",
 _nameRequired: "A name is required.",
 _noAccountName: "No Account Name",
+_noAddress: "No Address",
 _noCategory: "No Category",
 _noCloseTarget: "No Close Target",
 _noContact: "No Contact",
@@ -8771,77 +7396,151 @@ _productCategoryRequiredOnSold: "A Product Category is required for sold items."
 _recordNotFound: "Record not found.",
 _recordStatusNotEditable: "Record with status of `{status}` is not editable.",
 _recursiveParentDisallowed: "Record is not allowed to reference itself as the parent.",
-_valueExists: "Record with {attr} of '{value}' already exists."
+_unsavedChanges: "You have unsaved changes. Do you want to save your work?",
+_valueExists: "Record with {attr} of '{value}' already exists.",
+_whatToDo: "What would you like to do?"
 }), XT.locale.setLanguage(XT.lang);
 
 // string.js
 
 _.extend(String.prototype, {
 camelize: function() {
-var a = XT.$A(arguments);
-return XT.String.camelize(this, a);
+var e = XT.$A(arguments);
+return XT.String.camelize(this, e);
 },
 format: function() {
-var a = XT.$A(arguments);
-return XT.String.format(this, a);
+var e = XT.$A(arguments);
+return XT.String.format(this, e);
 },
 f: function() {
-var a = XT.$A(arguments);
-return XT.String.format(this, a);
+var e = XT.$A(arguments);
+return XT.String.format(this, e);
 },
 loc: function() {
-var a = XT.$A(arguments);
-return a.unshift(this), XT.String.loc.apply(XT.String, a);
+var e = XT.$A(arguments);
+return e.unshift(this), XT.String.loc.apply(XT.String, e);
 },
 trim: function() {
 return XT.String.trim(this);
+},
+pluralize: function() {
+return owl.pluralize(this);
 }
 });
+
+// pluralize.js
+
+typeof owl == "undefined" && (owl = {}), owl.pluralize = function() {
+function t(e, t) {
+return t.match(/^[A-Z]/) ? e.charAt(0).toUpperCase() + e.slice(1) : e;
+}
+function n(e) {
+e = e.split(",");
+var t = e.length, n = {};
+for (var r = 0; r < t; r++) n[e[r]] = 1;
+return n;
+}
+function o(n, o, u) {
+if (n === "") return "";
+if (o === 1) return n;
+if (typeof u == "string") return u;
+var a = n.toLowerCase();
+if (a in e) return t(e[a], n);
+if (n.match(/^[A-Z]$/)) return n + "'s";
+if (n.match(/fish$|ois$|sheep$|deer$|pox$|itis$/i)) return n;
+if (n.match(/^[A-Z][a-z]*ese$/)) return n;
+if (a in r) return n;
+if (a in i) return t(i[a], n);
+var f = s.length;
+for (var l = 0; l < f; l++) {
+var c = s[l];
+if (n.match(c[0])) return n.replace(c[0], c[1]);
+}
+return n + "s";
+}
+var e = {}, r = n("aircraft,advice,blues,corn,molasses,equipment,gold,information,cotton,jewelry,kin,legislation,luck,luggage,moose,music,offspring,rice,silver,trousers,wheat,bison,bream,breeches,britches,carp,chassis,clippers,cod,contretemps,corps,debris,diabetes,djinn,eland,elk,flounder,gallows,graffiti,headquarters,herpes,high,homework,innings,jackanapes,mackerel,measles,mews,mumps,news,pincers,pliers,proceedings,rabies,salmon,scissors,sea,series,shears,species,swine,trout,tuna,whiting,wildebeest,pike,oats,tongs,dregs,snuffers,victuals,tweezers,vespers,pinchers,bellows,cattle"), i = {
+I: "we",
+he: "they",
+it: "they",
+me: "us",
+you: "you",
+him: "them",
+them: "them",
+myself: "ourselves",
+yourself: "yourselves",
+himself: "themselves",
+herself: "themselves",
+itself: "themselves",
+themself: "themselves",
+oneself: "oneselves",
+child: "children",
+dwarf: "dwarfs",
+mongoose: "mongooses",
+mythos: "mythoi",
+ox: "oxen",
+soliloquy: "soliloquies",
+trilby: "trilbys",
+person: "people",
+forum: "forums",
+syllabus: "syllabi",
+alumnus: "alumni",
+genus: "genera",
+viscus: "viscera",
+stigma: "stigmata"
+}, s = [ [ /man$/i, "men" ], [ /([lm])ouse$/i, "$1ice" ], [ /tooth$/i, "teeth" ], [ /goose$/i, "geese" ], [ /foot$/i, "feet" ], [ /zoon$/i, "zoa" ], [ /([tcsx])is$/i, "$1es" ], [ /ix$/i, "ices" ], [ /^(cod|mur|sil|vert)ex$/i, "$1ices" ], [ /^(agend|addend|memorand|millenni|dat|extrem|bacteri|desiderat|strat|candelabr|errat|ov|symposi)um$/i, "$1a" ], [ /^(apheli|hyperbat|periheli|asyndet|noumen|phenomen|criteri|organ|prolegomen|\w+hedr)on$/i, "$1a" ], [ /^(alumn|alg|vertebr)a$/i, "$1ae" ], [ /([cs]h|ss|x)$/i, "$1es" ], [ /([aeo]l|[^d]ea|ar)f$/i, "$1ves" ], [ /([nlw]i)fe$/i, "$1ves" ], [ /([aeiou])y$/i, "$1ys" ], [ /(^[A-Z][a-z]*)y$/, "$1ys" ], [ /y$/i, "ies" ], [ /([aeiou])o$/i, "$1os" ], [ /^(pian|portic|albin|generalissim|manifest|archipelag|ghett|medic|armadill|guan|octav|command|infern|phot|ditt|jumb|pr|dynam|ling|quart|embry|lumbag|rhin|fiasc|magnet|styl|alt|contralt|sopran|bass|crescend|temp|cant|sol|kimon)o$/i, "$1os" ], [ /o$/i, "oes" ], [ /s$/i, "ses" ] ];
+return o.define = function(t, n) {
+e[t.toLowerCase()] = n;
+}, o;
+}();
 
 // string.js
 
 XT.String = {
-camelize: function(a) {
-var b = a.replace(/([\s|\-|\_|\n])([^\s|\-|\_|\n]?)/g, function(a, b, c) {
-return c ? c.toUpperCase() : "";
-}), c = b.charAt(0), d = c.toLowerCase();
-return c !== d ? d + b.slice(1) : b;
+camelize: function(e) {
+var t = e.replace(/([\s|\-|\_|\n])([^\s|\-|\_|\n]?)/g, function(e, t, n) {
+return n ? n.toUpperCase() : "";
+}), n = t.charAt(0), r = n.toLowerCase();
+return n !== r ? r + t.slice(1) : t;
 },
-loc: function(a) {
-if (!XT.locale) return XT.warn("XT.String.loc(): attempt to localize string but no locale set"), a;
-var b = XT.$A(arguments), c = XT.locale.loc(a);
-b.shift();
-if (!(b.length > 0)) return c;
+loc: function(e) {
+if (!XT.locale) return XT.warn("XT.String.loc(): attempt to localize string but no locale set"), e;
+var t = XT.$A(arguments), n = XT.locale.loc(e);
+t.shift();
+if (!(t.length > 0)) return n;
 try {
-return XT.String.format(c, b);
-} catch (d) {
-XT.error("could not localize string, %@".f(a), d);
+return XT.String.format(n, t);
+} catch (r) {
+XT.error("could not localize string, %@".f(e), r);
 }
 },
-format: function(a, b) {
+format: function(e, t) {
 if (arguments.length === 0) return "";
-if (arguments.length === 1) return a;
-var c = 0, d, e;
-for (; c < b.length; ++c) {
-e = b[c];
-if (!e) continue;
-d = typeof e;
-if (d === "object") a = XT.String.replaceKeys(a, e); else {
-if (d !== "string" && d !== "number") continue;
-a = a.replace(/\%@/, e);
+if (arguments.length === 1) return e;
+var n = 0, r, i;
+for (; n < t.length; ++n) {
+i = t[n];
+if (!i) continue;
+r = typeof i;
+if (r === "object") e = XT.String.replaceKeys(e, i); else {
+if (r !== "string" && r !== "number") continue;
+e = e.replace(/\%@/, i);
 }
 }
-return a;
+return e;
 },
-replaceKeys: function(a, b) {
-if (typeof a != "string") return "";
-if (typeof b != "object") return a;
-var c, d, e, f;
-for (d in b) b.hasOwnProperty(d) && (e = "{" + d + "}", c = new RegExp(e, "g"), f = b[d], a = a.replace(c, f));
-return a;
+replaceKeys: function(e, t) {
+if (typeof e != "string") return "";
+if (typeof t != "object") return e;
+var n, r, i, s;
+for (r in t) t.hasOwnProperty(r) && (i = "{" + r + "}", n = new RegExp(i, "g"), s = t[r], e = e.replace(n, s));
+return e;
 },
-trim: function(b) {
-return !!b && b instanceof String ? b.replace(/^\s\s*/, "").replace(/\s\s*$/, "") : "";
+trim: function(t) {
+return !!t && t instanceof String ? t.replace(/^\s\s*/, "").replace(/\s\s*$/, "") : "";
+},
+suffix: function(e) {
+while (e.indexOf(".") > 0) e = e.substring(e.indexOf(".") + 1);
+return e;
 }
 };
 
@@ -8849,42 +7548,42 @@ return !!b && b instanceof String ? b.replace(/^\s\s*/, "").replace(/\s\s*$/, ""
 
 (function() {
 "use strict";
-var a = XT.StartupTask = function(a) {
-var b;
+var e = XT.StartupTask = function(e) {
+var t;
 this._properties = {
 taskName: "",
 waitingList: [],
 isComplete: !1,
 task: null
 };
-for (b in a) a.hasOwnProperty(b) && (this._properties[b] = a[b]);
+for (t in e) e.hasOwnProperty(t) && (this._properties[t] = e[t]);
 (!this.get("taskName") || this.get("taskName") === "") && this.set("taskName", _.uniqueId("xt_task_")), XT.getStartupManager().registerTask(this);
 };
-a.prototype.get = function(a) {
-var b = this._properties, c = b[a];
-return c;
-}, a.prototype.set = function(a, b) {
-var c = this._properties, d;
-if (typeof a == "string" && b) c[a] = b; else if (a && !b) {
-b = a;
-for (d in b) b.hasOwnProperty(d) && this.set(d, b[d]);
+e.prototype.get = function(e) {
+var t = this._properties, n = t[e];
+return n;
+}, e.prototype.set = function(e, t) {
+var n = this._properties, r;
+if (typeof e == "string" && t) n[e] = t; else if (e && !t) {
+t = e;
+for (r in t) t.hasOwnProperty(r) && this.set(r, t[r]);
 }
 return this;
-}, a.prototype.checkWaitingList = function(a) {
-var b = this.get("waitingList");
-b && b.length > 0 && b.indexOf(a) > -1 && this.set("waitingList", b = _.without(b, a));
-}, a.prototype.exec = function() {
+}, e.prototype.checkWaitingList = function(e) {
+var t = this.get("waitingList");
+t && t.length > 0 && t.indexOf(e) > -1 && this.set("waitingList", t = _.without(t, e));
+}, e.prototype.exec = function() {
 if (this.get("isComplete")) return !0;
-var a = this.get("task");
-return !!a && a instanceof Function ? this.get("waitingList").length > 0 ? !1 : (a.call(this), !0) : (this.error("Could not execute without an actual task"), !1);
-}, a.prototype.didComplete = function() {
+var e = this.get("task");
+return !!e && e instanceof Function ? this.get("waitingList").length > 0 ? !1 : (e.call(this), !0) : (this.error("Could not execute without an actual task"), !1);
+}, e.prototype.didComplete = function() {
 this.set("isComplete", !0), XT.getStartupManager().taskDidComplete(this);
-}, a.create = function(a) {
-return new XT.StartupTask(a);
+}, e.create = function(e) {
+return new XT.StartupTask(e);
 };
 })(), function() {
 "use strict";
-var a = XT.StartupTaskManager = function() {
+var e = XT.StartupTaskManager = function() {
 XT.getStartupManager = _.bind(function() {
 return this;
 }, this), this._properties = {
@@ -8892,51 +7591,54 @@ queue: [],
 tasks: {},
 completed: [],
 isStarted: !1,
-callbacks: []
+callbacks: [],
+eachCallbacks: []
 };
-}, b;
-a.prototype.get = function(a) {
-var b = this._properties, c = b[a];
-return c;
-}, a.prototype.set = function(a, b) {
-var c = this._properties, d;
-if (typeof a == "string" && b) c[a] = b; else if (a && !b) {
-b = a;
-for (d in b) b.hasOwnProperty(d) && this.set(d, b[d]);
+}, t;
+e.prototype.get = function(e) {
+var t = this._properties, n = t[e];
+return n;
+}, e.prototype.set = function(e, t) {
+var n = this._properties, r;
+if (typeof e == "string" && t) n[e] = t; else if (e && !t) {
+t = e;
+for (r in t) t.hasOwnProperty(r) && this.set(r, t[r]);
 }
 return this;
-}, a.prototype.registerTask = function(a) {
-var b = a.get("taskName"), c = this.get("tasks"), d = this.get("queue");
-c[b] || (c[b] = {
-task: a
-}), this.get("isStarted") ? a.exec() : d.push(a);
-}, a.prototype.taskDidComplete = function(a) {
-var b = a.get("taskName"), c = this.get("completed"), d = this.get("tasks"), e, f, g = Object.keys(d).length;
-c.push(b);
-for (e in d) d.hasOwnProperty(e) && (f = d[e], e = f.task, e.get("isComplete") || e.checkWaitingList(b));
-g > c.length ? this.start() : this.allDone();
-}, a.prototype.start = function() {
+}, e.prototype.registerTask = function(e) {
+var t = e.get("taskName"), n = this.get("tasks"), r = this.get("queue");
+n[t] || (n[t] = {
+task: e
+}), this.get("isStarted") ? e.exec() : r.push(e);
+}, e.prototype.taskDidComplete = function(e) {
+var t = e.get("taskName"), n = this.get("completed"), r = this.get("eachCallbacks") || [], i, s, o = this.get("tasks"), u, a, f = Object.keys(o).length;
+n.push(t);
+for (i = 0; i < r.length; i++) s = r[i], s && s instanceof Function && s();
+for (u in o) o.hasOwnProperty(u) && (a = o[u], u = a.task, u.get("isComplete") || u.checkWaitingList(t));
+f > n.length ? this.start() : this.allDone();
+}, e.prototype.start = function() {
 if (this.get("isStarted")) return !1;
-var a = this.get("queue"), b = [], c, d, e = a.length;
-if (!a || a.length <= 0) {
+var e = this.get("queue"), t = [], n, r, i = e.length;
+if (!e || e.length <= 0) {
 this.set("isStarted", !0);
 return;
 }
-for (c = 0; c < e; c += 1) d = a.shift(), d.exec() || b.push(d);
-b.length > 0 ? this.set("queue", b) : this.start();
-}, a.prototype.registerCallback = function(a) {
-var b = this.get("callbacks") || [];
-b.push(a);
-}, a.prototype.allDone = function() {
-var a = this.get("callbacks") || [], b;
-while (a.length > 0) b = a.shift(), b && b instanceof Function && b();
-}, b = new XT.StartupTaskManager;
+for (n = 0; n < i; n += 1) r = e.shift(), r.exec() || t.push(r);
+t.length > 0 ? this.set("queue", t) : this.start();
+}, e.prototype.registerCallback = function(e, t) {
+var n = t ? this.get("eachCallbacks") : this.get("callbacks");
+n.push(e);
+}, e.prototype.allDone = function() {
+var e = this.get("callbacks") || [], t;
+while (e.length > 0) t = e.shift(), t && t instanceof Function && t();
+}, t = new XT.StartupTaskManager;
 }();
 
 // model.js
 
 (function() {
-"use strict", XM.Model = Backbone.RelationalModel.extend({
+"use strict";
+XM.Model = Backbone.RelationalModel.extend({
 autoFetchId: !0,
 lastError: null,
 prime: null,
@@ -8954,86 +7656,92 @@ canDelete: function() {
 return this.getClass().canDelete(this);
 },
 changeSet: function() {
-var a = this.toJSON(), b = function(a) {
-var c = null, d, e, f;
-if (a && a.dataState !== "read") {
-c = {};
-for (e in a) if (a[e] instanceof Array) {
-c[e] = [];
-for (d = 0; d < a[e].length; d++) f = b(a[e][d]), f && c[e].push(f);
-} else c[e] = a[e];
+var e = this.toJSON(), t = function(e) {
+var n = null, r, i, s;
+if (e && e.dataState !== "read") {
+n = {};
+for (i in e) if (e[i] instanceof Array) {
+n[i] = [];
+for (r = 0; r < e[i].length; r++) s = t(e[i][r]), s && n[i].push(s);
+} else n[i] = e[i];
 }
-return c;
+return n;
 };
-return b(a);
+return t(e);
 },
-didChange: function(a, b) {
-a = a || {}, b = b || {};
-var c = XM.Model, d = this.getStatus(), e;
-if (b.force) return;
-d === c.READY_CLEAN && this.setStatus(c.READY_DIRTY);
-if (d & c.READY) for (e in this.changed) this.changed.hasOwnProperty(e) && this.prime[e] === undefined && (this.prime[e] = this.previous(e));
+didChange: function(e, t) {
+e = e || {}, t = t || {};
+var n = XM.Model, r = this.getStatus(), i;
+if (t.force) return;
+if (r & n.READY) for (i in this.changed) this.changed.hasOwnProperty(i) && this.prime[i] === undefined && (this.prime[i] = this.previous(i));
+r === n.READY_CLEAN && this.setStatus(n.READY_DIRTY);
 },
 didDestroy: function() {
-var a = XM.Model;
-this.setStatus(a.DESTROYED_CLEAN), this.clear({
+var e = XM.Model;
+this.setStatus(e.DESTROYED_CLEAN), this.clear({
 silent: !0
 });
 },
-didError: function(a, b) {
-a = a || {}, this.lastError = b, XT.log(b);
+didError: function(e, t) {
+e = e || {}, this.lastError = t, XT.log(t);
 },
-original: function(a) {
-return this.prime[a] || this.get(a);
+isValid: function() {
+var e = {
+validateSave: !0
+};
+return !this.validate || !this.validate(this.attributes, e);
+},
+original: function(e) {
+return this.prime[e] || this.get(e);
 },
 originalAttributes: function() {
 return _.defaults(_.clone(this.prime), _.clone(this.attributes));
 },
-destroy: function(a) {
-a = a ? _.clone(a) : {};
-var b = this.getClass(), c = a.success, d = this, e, f = XM.Model, g = this.getParent(!0), h = [], i = function(a) {
-_.each(a.relations, function(b) {
-var c, d = a.attributes[b.key];
-if (d && d.models && b.type === Backbone.HasMany) {
-for (c = 0; c < d.models.length; c += 1) i(d.models[c]);
-h = _.union(h, d.models);
+destroy: function(e) {
+e = e ? _.clone(e) : {};
+var t = this.getClass(), n = t.canDelete(this), r = e.success, i = this, s, o = XM.Model, u = this.getParent(!0), a = [], f = function(e) {
+_.each(e.relations, function(t) {
+var n, r = e.attributes[t.key];
+if (r && r.models && t.type === Backbone.HasMany) {
+for (n = 0; n < r.models.length; n += 1) f(r.models[n]);
+a = _.union(a, r.models);
 }
 });
 };
-return g && g.canUpdate(this) || !g && b.canDelete(this) ? (this.setStatus(f.DESTROYED_DIRTY, {
+return u && u.canUpdate(this) || !u && n ? (this.setStatus(o.DESTROYED_DIRTY, {
 cascade: !0
-}), this._wasNew = this.isNew(), !g && b.canDelete(this) ? (i(this), this.setStatus(f.BUSY_DESTROYING, {
+}), this._wasNew = this.isNew(), !u && n ? (f(this), this.setStatus(o.BUSY_DESTROYING, {
 cascade: !0
-}), a.wait = !0, a.success = function(b) {
-var e;
-for (e = 0; e < h.length; e += 1) h[e].didDestroy();
-XT.log("Destroy successful"), c && c(d, b, a);
-}, e = Backbone.Model.prototype.destroy.call(this, a), delete this._wasNew, e) : !0) : (XT.log("Insufficient privileges to destroy"), !1);
+}), e.wait = !0, e.success = function(t) {
+var n;
+for (n = 0; n < a.length; n += 1) a[n].didDestroy();
+XT.log("Destroy successful"), r && r(i, t, e);
+}, s = Backbone.Model.prototype.destroy.call(this, e), delete this._wasNew, s) : !0) : (XT.log("Insufficient privileges to destroy"), !1);
 },
-fetch: function(a) {
-a = a ? _.clone(a) : {};
-var b = this, c = XM.Model, d = a.success, e = this.getClass();
-return e.canRead() ? (this.setStatus(c.BUSY_FETCHING, {
+fetch: function(e) {
+e = e ? _.clone(e) : {};
+var t = this, n = XM.Model, r = e.success, i = this.getClass();
+return i.canRead() ? (this.setStatus(n.BUSY_FETCHING, {
 cascade: !0
-}), a.cascade = !0, a.success = function(e) {
-b.setStatus(c.READY_CLEAN, a), XT.log("Fetch successful"), d && d(b, e, a);
-}, Backbone.Model.prototype.fetch.call(this, a)) : (XT.log("Insufficient privileges to fetch"), !1);
+}), e.cascade = !0, e.success = function(i) {
+t.setStatus(n.READY_CLEAN, e), XT.log("Fetch successful"), r && r(t, i, e);
+}, Backbone.Model.prototype.fetch.call(this, e)) : (XT.log("Insufficient privileges to fetch"), !1);
 },
-fetchId: function(a) {
-a = _.defaults(a ? _.clone(a) : {}, {
+fetchId: function(e) {
+e = _.defaults(e ? _.clone(e) : {}, {
 force: !0
 });
-var b = this, c;
-this.id || (a.success = function(c) {
-b.set(b.idAttribute, c, a);
-}, XT.dataSource.dispatch("XM.Model", "fetchId", this.recordType, a)), a && a.cascade && _.each(this.relations, function(d) {
-c = b.attributes[d.key], c && d.type === Backbone.HasMany && c.models && _.each(c.models, function(b) {
-b.fetchId && b.fetchId(a);
+var t = this, n;
+this.id || (e.success = function(n) {
+e.force = !0, t.set(t.idAttribute, n, e);
+}, XT.dataSource.dispatch("XM.Model", "fetchId", this.recordType, e)), e && e.cascade && _.each(this.relations, function(r) {
+n = t.attributes[r.key], n && r.type === Backbone.HasMany && n.models && _.each(n.models, function(t) {
+t.fetchId && t.fetchId(e);
 });
 });
 },
-findExisting: function(a, b, c) {
-return this.getClass().findExisting.call(this, a, b, c);
+findExisting: function(e, t, n) {
+return this.getClass().findExisting.call(this, e, t, n);
 },
 getAttributeNames: function() {
 return this.getClass().getAttributeNames.call(this);
@@ -9041,244 +7749,251 @@ return this.getClass().getAttributeNames.call(this);
 getClass: function() {
 return Backbone.Relational.store.getObjectByName(this.recordType);
 },
-getParent: function(a) {
-var b, c, d = _.find(this.relations, function(a) {
-if (a.reverseRelation && a.isAutoRelation) return !0;
+getParent: function(e) {
+var t, n, r = _.find(this.relations, function(e) {
+if (e.reverseRelation && e.isAutoRelation) return !0;
 });
-return b = d && d.key ? this.get(d.key) : !1, b && a && (c = b.getParent(a)), c || b;
+return t = r && r.key ? this.get(r.key) : !1, t && e && (n = t.getParent(e)), n || t;
 },
 getStatus: function() {
 return this.status;
 },
 getStatusString: function() {
-var a = [], b = this.getStatus(), c;
-for (c in XM.Model) XM.Model.hasOwnProperty(c) && c.match(/[A-Z_]$/) && XM.Model[c] === b && a.push(c);
-return a.join(" ");
+var e = [], t = this.getStatus(), n;
+for (n in XM.Model) XM.Model.hasOwnProperty(n) && n.match(/[A-Z_]$/) && XM.Model[n] === t && e.push(n);
+return e.join(" ");
 },
-getValue: function(a) {
-return _.has(this.attributes, a) ? this.attributes[a] : _.isFunction(this[a]) ? this[a]() : this[a];
+getValue: function(e) {
+var t, n, r;
+if (e.indexOf(".") !== -1) {
+t = e.split("."), n = this;
+for (r = 0; r < t.length; r++) {
+n = n.getValue(t[r]);
+if (n && n instanceof Date) break;
+if (n && typeof n == "object") continue;
+if (typeof n == "string") break;
+n = "";
+break;
+}
+return n;
+}
+return _.has(this.attributes, e) ? this.attributes[e] : _.isFunction(this[e]) ? this[e]() : this[e];
 },
-initialize: function(a, b) {
-a = a || {}, b = b || {};
-var c, d = XM.Model;
+initialize: function(e, t) {
+e = e || {}, t = t || {};
+var n, r = XM.Model, i = this.getStatus();
 if (_.isEmpty(this.recordType)) throw "No record type defined";
-this.prime = {}, this.privileges = this.privileges || {}, this.readOnlyAttributes = this.readOnlyAttributes || [], this.requiredAttributes = this.requiredAttributes || [];
-if (b.isNew) {
-c = this.getClass();
-if (!c.canCreate()) throw "Insufficent privileges to create a record.";
-this.setStatus(d.READY_NEW, {
+if (i !== r.EMPTY) throw "Model may only be intialized from a status of EMPTY.";
+this.prime = {}, this.privileges = this.privileges || {}, this.readOnlyAttributes = this.readOnlyAttributes ? this.readOnlyAttributes.slice(0) : [], this.requiredAttributes = this.requiredAttributes ? this.requiredAttributes.slice(0) : [];
+if (t.isNew) {
+n = this.getClass();
+if (!n.canCreate()) throw "Insufficent privileges to create a record.";
+this.setStatus(r.READY_NEW, {
 cascade: !0
 }), this.autoFetchId && this.fetchId({
 cascade: !0
 });
-} else b.force && this.setStatus(d.READY_CLEAN);
+} else t.force && this.setStatus(r.READY_CLEAN);
 this.idAttribute && this.setReadOnly(this.idAttribute), this.idAttribute && !_.contains(this.requiredAttributes, this.idAttribute) && this.requiredAttributes.push(this.idAttribute), this.setReadOnly("type"), this.on("change", this.didChange), this.on("error", this.didError), this.on("destroy", this.didDestroy);
 },
 isNew: function() {
-var a = XM.Model;
-return this.getStatus() === a.READY_NEW || this._wasNew;
+var e = XM.Model;
+return this.getStatus() === e.READY_NEW || this._wasNew || !1;
 },
 isDirty: function() {
-var a = this.getStatus(), b = XM.Model;
-return a === b.READY_NEW || a === b.READY_DIRTY;
+var e = this.getStatus(), t = XM.Model;
+return e === t.READY_NEW || e === t.READY_DIRTY;
 },
-isReadOnly: function(a) {
-var b, c;
-if (!_.isString(a) && !_.isObject(a) || this.readOnly) c = this.readOnly; else if (_.isObject(a)) {
-for (b in a) a.hasOwnProperty(b) && _.contains(this.readOnlyAttributes, b) && (c = !0);
-c = !1;
-} else c = _.contains(this.readOnlyAttributes, a);
-return c;
+isReadOnly: function(e) {
+var t, n;
+if (!_.isString(e) && !_.isObject(e) || this.readOnly) n = this.readOnly; else if (_.isObject(e)) {
+for (t in e) e.hasOwnProperty(t) && _.contains(this.readOnlyAttributes, t) && (n = !0);
+n = !1;
+} else n = _.contains(this.readOnlyAttributes, e);
+return n;
 },
-parse: function(a) {
-var b = XT.Session, c, d, e = function(a) {
-a = d(a);
-}, f = function(a, b) {
-var c = XT.session.getSchema().get(a).columns;
-return _.find(c, function(a) {
-return a.name === b;
+isRequired: function(e) {
+return _.contains(this.requiredAttributes, e);
+},
+parse: function(e) {
+var t = XT.Session, n, r, i = function(e) {
+e = r(e);
+}, s = function(e, t) {
+var n = XT.session.getSchema().get(e).columns;
+return _.find(n, function(e) {
+return e.name === t;
 });
 };
-return d = function(a) {
-var g;
-for (g in a) a.hasOwnProperty(g) && (_.isArray(a[g]) ? _.each(a[g], e) : _.isObject(a[g]) ? a[g] = d(a[g]) : (c = f(a.type, g), c && c.category && c.category === b.DB_DATE && a[g] !== null && (a[g] = new Date(a[g]))));
-return a;
-}, d(a);
+return r = function(e) {
+var o;
+for (o in e) e.hasOwnProperty(o) && (_.isArray(e[o]) ? _.each(e[o], i) : _.isObject(e[o]) ? e[o] = r(e[o]) : (n = s(e.type, o), n && n.category && n.category === t.DB_DATE && e[o] !== null && (e[o] = new Date(e[o]))));
+return e;
+}, r(e);
 },
-save: function(a, b, c) {
-c = c ? _.clone(c) : {};
-var d = {}, e = this, f = XM.Model, g = c.success, h, i = this.getStatus();
+save: function(e, t, n) {
+n = n ? _.clone(n) : {};
+var r = {}, i = this, s = XM.Model, o, u, a = this.getStatus();
 if (this.getParent()) return XT.log("You must save on the root level model of this relation"), !1;
-_.isObject(a) || _.isEmpty(a) ? (d = a, c = b ? _.clone(b) : {}) : _.isString(a) && (d[a] = b);
-if (this.isDirty() || d) {
-c.wait = !0, c.cascade = !0, c.success = function(a) {
-e.setStatus(f.READY_CLEAN, c), XT.log("Save successful"), g && g(e, a, c);
+_.isObject(e) || _.isEmpty(e) ? (r = e, n = t ? _.clone(t) : {}) : _.isString(e) && (r[e] = t);
+if (this.isDirty() || r) {
+o = n.success, n.wait = !0, n.cascade = !0, n.validateSave = !0, n.success = function(e) {
+i.setStatus(s.READY_CLEAN, n), XT.log("Save successful"), o && o(i, e, n);
 };
-if (_.isObject(a) || _.isEmpty(a)) b = c;
-return this.setStatus(f.BUSY_COMMITTING, {
+if (_.isObject(e) || _.isEmpty(e)) t = n;
+return this.setStatus(s.BUSY_COMMITTING, {
 cascade: !0
-}), h = Backbone.Model.prototype.save.call(this, a, b, c), h || this.setStatus(i, {
+}), u = Backbone.Model.prototype.save.call(this, e, t, n), u || this.setStatus(a, {
 cascade: !0
-}), h;
+}), u;
 }
 return XT.log("No changes to save"), !1;
 },
-setReadOnly: function(a, b) {
-return _.isString(a) ? (b = _.isBoolean(b) ? b : !0, b && !_.contains(this.readOnlyAttributes, a) ? this.readOnlyAttributes.push(a) : !b && _.contains(this.readOnlyAttributes, a) && (this.readOnlyAttributes = _.without(this.readOnlyAttributes, a))) : (a = _.isBoolean(a) ? a : !0, this.readOnly = a), this;
+setReadOnly: function(e, t) {
+return _.isString(e) ? (t = _.isBoolean(t) ? t : !0, t && !_.contains(this.readOnlyAttributes, e) ? this.readOnlyAttributes.push(e) : !t && _.contains(this.readOnlyAttributes, e) && (this.readOnlyAttributes = _.without(this.readOnlyAttributes, e))) : (e = _.isBoolean(e) ? e : !0, this.readOnly = e), this;
 },
-setStatus: function(a, b) {
-var c = XM.Model, d, e = this, f, g = {
+setStatus: function(e, t) {
+var n = XM.Model, r, i = this, s, o = {
 force: !0
 };
-if (this.isLocked() || this.status === a) return;
-this.acquire(), this.status = a, f = this.getParent();
-if (a === c.READY_NEW || a === c.READY_CLEAN) this.prime = {};
-return b && b.cascade && _.each(this.relations, function(c) {
-d = e.attributes[c.key], d && d.models && c.type === Backbone.HasMany && _.each(d.models, function(c) {
-c.setStatus && c.setStatus(a, b);
+if (this.isLocked() || this.status === e) return;
+this.acquire(), this.status = e, s = this.getParent();
+if (e === n.READY_NEW || e === n.READY_CLEAN) this.prime = {};
+return t && t.cascade && _.each(this.relations, function(n) {
+r = i.attributes[n.key], r && r.models && n.type === Backbone.HasMany && _.each(r.models, function(n) {
+n.setStatus && n.setStatus(e, t);
 });
-}), a === c.READY_NEW ? this.set("dataState", "create", g) : a === c.READY_CLEAN ? this.set("dataState", "read", g) : a === c.READY_DIRTY ? this.set("dataState", "update", g) : a === c.DESTROYED_DIRTY && this.set("dataState", "delete", g), f && f.trigger("change", this, a, b), this.release(), this.trigger("statusChange", this, a, b), this;
+}), e === n.READY_NEW ? this.set("dataState", "create", o) : e === n.READY_CLEAN ? this.set("dataState", "read", o) : e === n.READY_DIRTY ? this.set("dataState", "update", o) : e === n.DESTROYED_DIRTY && this.set("dataState", "delete", o), s && s.trigger("change", this, e, t), this.release(), this.trigger("statusChange", this, e, t), this;
 },
-sync: function(a, b, c) {
-c = c ? _.clone(c) : {};
-var d = this, e = c.id || b.id, f = this.recordType, g, h = c.error;
-c.error = function(a) {
-var e = XM.Model;
-d.setStatus(e.ERROR), h && h(b, a, c);
+sync: function(e, t, n) {
+n = n ? _.clone(n) : {};
+var r = this, i = n.id || t.id, s = this.recordType, o, u = n.error;
+n.error = function(e) {
+var i = XM.Model;
+r.setStatus(i.ERROR), u && u(t, e, n);
 };
-if (a === "read" && f && e && c.success) g = XT.dataSource.retrieveRecord(f, e, c); else if (a === "create" || a === "update" || a === "delete") g = XT.dataSource.commitRecord(b, c);
-return g || !1;
+if (e === "read" && s && i && n.success) o = XT.dataSource.retrieveRecord(s, i, n); else if (e === "create" || e === "update" || e === "delete") o = XT.dataSource.commitRecord(t, n);
+return o || !1;
 },
-validate: function(a, b) {
-a = a || {}, b = b || {};
-if (b.force) return;
-var c = this, d, e, f = XM.Model, g = XT.Session, h = _.keys(a), i = _.pick(this.originalAttributes(), h), j = this.getStatus(), k, l, m, n, o = {}, p = this.recordType.replace(/\w+\./i, ""), q = XT.session.getSchema().get(p).columns, r = function(a, b, d) {
-var e;
-return e = _.find(c.relations, function(b) {
-return b.key === a && b.type === d;
-}), e ? _.isObject(b) : !1;
-}, s = function(a) {
-return _.find(q, function(b) {
-return b.name === a;
+validate: function(e, t) {
+e = e || {}, t = t || {};
+if (t.force) return;
+var n = this, r, i, s = XM.Model, o = XT.Session, u = _.keys(e), a = _.pick(this.originalAttributes(), u), f = this.getStatus(), l, c, h, p, d = {}, v = this.recordType.replace(/\w+\./i, ""), m = XT.session.getSchema().get(v).columns, g = function(e, t, r) {
+var i;
+return i = _.find(n.relations, function(t) {
+return t.key === e && t.type === r;
+}), i ? _.isObject(t) : !1;
+}, y = function(e) {
+return _.find(m, function(t) {
+return t.name === e;
 });
 };
-if (j === f.ERROR || j === f.EMPTY || j & f.DESTROYED) return XT.Error.clone("xt1009", {
+if (f === s.ERROR || f === s.EMPTY || f & s.DESTROYED) return XT.Error.clone("xt1009", {
 params: {
 status: this.getStatusString()
 }
 });
-for (k in a) if (a.hasOwnProperty(k) && !_.isNull(a[k]) && !_.isUndefined(a[k])) {
-o.attr = ("_" + k).loc(), l = a[k], n = s(k), m = n ? n.category : !1;
-switch (m) {
-case g.DB_BYTEA:
-case g.DB_UNKNOWN:
-case g.DB_STRING:
-if (!_.isString(l)) return o.type = "_string".loc(), XT.Error.clone("xt1003", {
-params: o
+for (l in e) if (e.hasOwnProperty(l) && !_.isNull(e[l]) && !_.isUndefined(e[l])) {
+d.attr = ("_" + l).loc(), c = e[l], p = y(l), h = p ? p.category : !1;
+switch (h) {
+case o.DB_BYTEA:
+case o.DB_UNKNOWN:
+case o.DB_STRING:
+if (!_.isString(c)) return d.type = "_string".loc(), XT.Error.clone("xt1003", {
+params: d
 });
 break;
-case g.DB_NUMBER:
-if (!_.isNumber(l) && !r(k, l, Backbone.HasOne)) return o.type = "_number".loc(), XT.Error.clone("xt1003", {
-params: o
+case o.DB_NUMBER:
+if (!_.isNumber(c) && !g(l, c, Backbone.HasOne)) return d.type = "_number".loc(), XT.Error.clone("xt1003", {
+params: d
 });
 break;
-case g.DB_DATE:
-if (!_.isDate(l)) return o.type = "_date".loc(), XT.Error.clone("xt1003", {
-params: o
+case o.DB_DATE:
+if (!_.isDate(c)) return d.type = "_date".loc(), XT.Error.clone("xt1003", {
+params: d
 });
 break;
-case g.DB_BOOLEAN:
-if (!_.isBoolean(l)) return o.type = "_boolean".loc(), XT.Error.clone("xt1003", {
-params: o
+case o.DB_BOOLEAN:
+if (!_.isBoolean(c)) return d.type = "_boolean".loc(), XT.Error.clone("xt1003", {
+params: d
 });
 break;
-case g.DB_ARRAY:
-if (!_.isArray(l) && !r(k, l, Backbone.HasMany)) return o.type = "_array".loc(), XT.Error.clone("xt1003", {
-params: o
+case o.DB_ARRAY:
+if (!_.isArray(c) && !g(l, c, Backbone.HasMany)) return d.type = "_array".loc(), XT.Error.clone("xt1003", {
+params: d
 });
 break;
-case g.DB_COMPOUND:
-if (!_.isObject(l)) return o.type = "_object".loc(), XT.Error.clone("xt1003", {
-params: o
+case o.DB_COMPOUND:
+if (!_.isObject(c)) return d.type = "_object".loc(), XT.Error.clone("xt1003", {
+params: d
 });
 break;
 default:
 return XT.Error.clone("xt1002", {
-params: o
+params: d
 });
 }
 }
-if (j === f.BUSY_COMMITTING) {
-for (d = 0; d < this.requiredAttributes.length; d += 1) {
-l = a[this.requiredAttributes[d]];
-if (l === undefined || l === null) return o.attr = ("_" + this.requiredAttributes[d]).loc(), XT.Error.clone("xt1004", {
-params: o
+if (t.validateSave) {
+for (r = 0; r < this.requiredAttributes.length; r += 1) {
+c = e[this.requiredAttributes[r]];
+if (c === undefined || c === null) return d.attr = ("_" + this.requiredAttributes[r]).loc(), XT.Error.clone("xt1004", {
+params: d
 });
 }
-e = this.validateSave(a, b);
-if (e) return e;
+i = this.validateSave(e, t);
+if (i) return i;
 }
-if (j & f.READY && !_.isEqual(a, i)) {
-for (k in a) if (a[k] !== this.original(k) && this.isReadOnly(k)) return XT.Error.clone("xt1005");
+if (f & s.READY && !_.isEqual(e, a)) {
+for (l in e) if (e[l] !== this.original(l) && this.isReadOnly(l)) return XT.Error.clone("xt1005");
 if (!this.canUpdate()) return XT.Error.clone("xt1010");
 }
-return this.validateEdit(a, b);
+return this.validateEdit(e, t);
 },
-validateEdit: function(a, b) {},
-validateSave: function(a, b) {}
+validateEdit: function(e, t) {},
+validateSave: function(e, t) {}
 }), _.extend(XM.Model, {
 canCreate: function() {
 return XM.Model.canDo.call(this, "create");
 },
 canRead: function() {
-var a = this.prototype.privileges, b = XT.session.privileges, c = !1;
-return _.isEmpty(a) ? !0 : (b && b.get && (c = a.all && a.all.read ? b.get(a.all.read) : !1, c || (c = a.all && a.all.update ? b.get(a.all.update) : !1), c || (c = a.personal && a.personal.read ? b.get(a.personal.read) : !1), c || (c = a.personal && a.personal.update ? b.get(a.personal.update) : !1)), c);
+var e = this.prototype.privileges, t = XT.session.privileges, n = !1;
+return _.isEmpty(e) ? !0 : (t && t.get && (n = e.all && e.all.read ? t.get(e.all.read) : !1, n || (n = e.all && e.all.update ? t.get(e.all.update) : !1), n || (n = e.personal && e.personal.read ? t.get(e.personal.read) : !1), n || (n = e.personal && e.personal.update ? t.get(e.personal.update) : !1)), n);
 },
-canUpdate: function(a) {
-return XM.Model.canDo.call(this, "update", a);
+canUpdate: function(e) {
+return XM.Model.canDo.call(this, "update", e);
 },
-canDelete: function(a) {
-return XM.Model.canDo.call(this, "delete", a);
+canDelete: function(e) {
+return XM.Model.canDo.call(this, "delete", e);
 },
-canDo: function(a, b) {
-var c = this.prototype.privileges, d = XT.session.privileges, e = !1, f = !1, g = XT.session.details.username, h, i, j;
-if (_.isEmpty(c)) return !0;
-d && d.get && (c.all && c.all[a] && (e = d.get(c.all[a])), !e && c.personal && c.personal[a] && (f = d.get(c.personal[a])));
-if (!e && f && b) {
-i = 0, j = c.personal && c.personal.properties ? c.personal.properties : [], f = !1;
-while (!f && i < j.length) h = b.original(j[i]), h = typeof h == "object" ? h.get("username") : h, f = h === g, i += 1;
+canDo: function(e, t) {
+var n = this.prototype.privileges, r = XT.session.privileges, i = !1, s = !1, o = XT.session.details.username, u, a, f, l = XM.Model, c = t && t.getStatus ? t.getStatus() : l.READY;
+if (!(c & l.READY)) return !1;
+if (_.isEmpty(n)) return !0;
+r && r.get && (n.all && n.all[e] && (i = r.get(n.all[e])), !i && n.personal && n.personal[e] && (s = r.get(n.personal[e])));
+if (!i && s && t) {
+a = 0, f = n.personal && n.personal.properties ? n.personal.properties : [], s = !1;
+while (!s && a < f.length) u = t.original(f[a]), u = typeof u == "object" ? u.get("username") : u, s = u === o, a += 1;
 }
-return e || f;
+return i || s;
 },
 getAttributeNames: function() {
-var a = this.recordType || this.prototype.recordType, b = a.replace(/\w+\./i, "");
-return _.pluck(XT.session.getSchema().get(b).columns, "name");
+var e = this.recordType || this.prototype.recordType, t = e.replace(/\w+\./i, "");
+return _.pluck(XT.session.getSchema().get(t).columns, "name");
 },
-getObjectByName: function(a) {
-return Backbone.Relational.store.getObjectByName(a);
+getObjectByName: function(e) {
+return Backbone.Relational.store.getObjectByName(e);
 },
 getSearchableAttributes: function() {
-var a = this, b = this.prototype.recordType, c = b.split(".")[1], d = XT.session.getSchema().get(c), e = [], f, g, h, i, j, k = function(b) {
-var c = a.prototype.relations, d = _.find(c, function(a) {
-return a.key === b;
-}).relatedModel;
-return typeof d == "string" ? a.getObjectByName(d) : d;
-};
-for (h = 0; h < d.columns.length; h++) {
-f = d.columns[h].name;
-if (d.columns[h].category === "S") e.push(f); else if (d.columns[h].category === "C") {
-j = k(f), g = j.getSearchableAttributes();
-for (i = 0; i < g.length; i++) e.push(f + "." + g[i]);
-}
-}
-return e;
+var e = this.prototype.recordType, t = e.split(".")[1], n = XT.session.getSchema().get(t), r = [], i, s;
+for (s = 0; s < n.columns.length; s++) i = n.columns[s].name, n.columns[s].category === "S" && r.push(i);
+return r;
 },
-findExisting: function(a, b, c) {
-var d = this.recordType || this.prototype.recordType, e = [ d, a, b, this.id || -1 ];
-return XT.dataSource.dispatch("XM.Model", "findExisting", e, c), XT.log("XM.Model.findExisting for: " + d), this;
+findExisting: function(e, t, n) {
+var r = this.recordType || this.prototype.recordType, i = [ r, e, t, this.id || -1 ];
+return XT.dataSource.dispatch("XM.Model", "findExisting", i, n), XT.log("XM.Model.findExisting for: " + r), this;
 },
-findOrCreate: function(a, b) {
-return b = b ? _.clone(b) : {}, b.force = !0, Backbone.RelationalModel.findOrCreate.call(this, a, b);
+findOrCreate: function(e, t) {
+return t = t ? _.clone(t) : {}, t.force = !0, Backbone.RelationalModel.findOrCreate.call(this, e, t);
 },
 CLEAN: 1,
 DIRTY: 2,
@@ -9298,17 +8013,17 @@ BUSY_DESTROYING: 2112
 }), XM.Model = XM.Model.extend({
 status: XM.Model.EMPTY
 });
-var a = Backbone.Relation.prototype.setRelated;
-Backbone.Relation.prototype.setRelated = function(b, c) {
-c = c ? _.clone(c) : {}, c.force = !0, c.silent = !1, a.call(this, b, c);
-}, Backbone.HasMany.prototype.handleAddition = function(a, b, c) {
-b = b || {};
-if (!(a instanceof Backbone.Model)) return;
-var d = this;
-c = this.sanitizeOptions(c), _.each(this.getReverseRelations(a), function(a) {
-a.addRelated(this.instance, c);
+var e = Backbone.Relation.prototype.setRelated;
+Backbone.Relation.prototype.setRelated = function(t, n) {
+n = n ? _.clone(n) : {}, n.force = !0, n.silent = !1, e.call(this, t, n);
+}, Backbone.HasMany.prototype.handleAddition = function(e, t, n) {
+t = t || {};
+if (!(e instanceof Backbone.Model)) return;
+var r = this;
+n = this.sanitizeOptions(n), _.each(this.getReverseRelations(e), function(e) {
+e.addRelated(this.instance, n);
 }, this), Backbone.Relational.eventQueue.add(function() {
-c.silentChange || (d.instance.trigger("add:" + d.key, a, d.related, c), d.instance.trigger("change", a, d.related, c));
+n.silentChange || (r.instance.trigger("add:" + r.key, e, r.related, n), r.instance.trigger("change", e, r.related, n));
 });
 };
 })();
@@ -9316,80 +8031,85 @@ c.silentChange || (d.instance.trigger("add:" + d.key, a, d.related, c), d.instan
 // collection.js
 
 (function() {
-"use strict", XM.Collection = Backbone.Collection.extend({
-add: function(a, b) {
-var c = Backbone.Collection.prototype.add.call(this, a, b), d, e = XM.Model;
-for (d = 0; d < c.models.length; d += 1) c.models[d].setStatus(e.READY_CLEAN);
-return c;
+"use strict";
+XM.Collection = Backbone.Collection.extend({
+add: function(e, t) {
+var n = Backbone.Collection.prototype.add.call(this, e, t), r, i = XM.Model;
+for (r = 0; r < n.models.length; r += 1) n.models[r].setStatus(i.READY_CLEAN);
+return n;
 },
-getObjectByName: function(a) {
-return Backbone.Relational.store.getObjectByName(a);
+getObjectByName: function(e) {
+return Backbone.Relational.store.getObjectByName(e);
 },
-fetch: function(a) {
-return a = a ? _.clone(a) : {}, a.force = !0, Backbone.Collection.prototype.fetch.call(this, a);
+fetch: function(e) {
+return e = e ? _.clone(e) : this.orderAttribute ? {
+query: this.orderAttribute
+} : {}, e.force = !0, Backbone.Collection.prototype.fetch.call(this, e);
 },
-sync: function(a, b, c) {
-return c = c ? _.clone(c) : {}, c.query = c.query || {}, c.query.recordType = b.model.prototype.recordType, a === "read" && c.query.recordType && c.success ? XT.dataSource.fetch(c) : !1;
-}
+sync: function(e, t, n) {
+return n = n ? _.clone(n) : {}, n.query = n.query || {}, n.query.recordType = t.model.prototype.recordType, e === "read" && n.query.recordType && n.success ? XT.dataSource.fetch(n) : !1;
+},
+orderAttribute: null
 });
 })();
 
 // document.js
 
 (function() {
-"use strict", XM.Document = XM.Model.extend({
+"use strict";
+XM.Document = XM.Model.extend({
 documentKey: "number",
 enforceUpperKey: !0,
 keyIsString: !0,
 numberPolicy: null,
 numberPolicySetting: null,
 destroy: function() {
-var a = XM.Model, b = this.getStatus();
-b === a.READY_NEW && this._number && this.releaseNumber(), XM.Model.prototype.destroy.apply(this, arguments);
+var e = XM.Model, t = this.getStatus();
+t === e.READY_NEW && this._number && this.releaseNumber(), XM.Model.prototype.destroy.apply(this, arguments);
 },
-documentKeyDidChange: function(a, b, c) {
-var d = XM.Model, e = this, f = this.getStatus(), g = b;
-c = c || {}, this.keyIsString && b && b.toUpperCase && (g = g.toUpperCase());
-if (c.force || !(f & d.READY)) return;
-if (this.enforceUpperKey && b !== g) {
-this.set(this.documentKey, g);
+documentKeyDidChange: function(e, t, n) {
+var r = XM.Model, i = this, s = this.getStatus(), o = t;
+n = n || {}, this.keyIsString && t && t.toUpperCase && (o = o.toUpperCase());
+if (n.force || !(s & r.READY)) return;
+if (this.enforceUpperKey && t !== o) {
+this.set(this.documentKey, o);
 return;
 }
-f === d.READY_NEW && this._number && this._number !== b && this.releaseNumber(), b && this.isDirty() && !this._number && (c.success = function(a) {
-var d, f = {};
-a && (f.attr = ("_" + e.documentKey).loc(), f.value = b, d = XT.Error.clone("xt1008", {
-params: f
-}), e.trigger("error", e, d, c));
-}, this.findExisting(this.documentKey, b, c));
+s === r.READY_NEW && this._number && this._number !== t && this.releaseNumber(), t && this.isDirty() && !this._number && (n.success = function(e) {
+var r, s = {};
+e && (s.attr = ("_" + i.documentKey).loc(), s.value = t, r = XT.Error.clone("xt1008", {
+params: s
+}), i.trigger("error", i, r, n));
+}, this.findExisting(this.documentKey, t, n));
 },
-initialize: function(a, b) {
-XM.Model.prototype.initialize.call(this, a, b);
-var c = XM.Document, d;
-a = a || {}, this.numberPolicy || (this.numberPolicySetting && (d = XT.session.getSettings().get(this.numberPolicySetting)), this.numberPolicy = d || c.MANUAL_NUMBER), b && b.isNew && (this.numberPolicy === c.AUTO_NUMBER || this.numberPolicy === c.AUTO_OVERRIDE_NUMBER) && this.fetchNumber(), _.contains(this.requiredAttributes, this.documentKey) || this.requiredAttributes.push(this.documentKey), this.on("change:" + this.documentKey, this.documentKeyDidChange), this.on("statusChange", this.statusDidChange);
+initialize: function(e, t) {
+XM.Model.prototype.initialize.call(this, e, t);
+var n = XM.Document, r;
+e = e || {}, this.numberPolicy || (this.numberPolicySetting && (r = XT.session.getSettings().get(this.numberPolicySetting)), this.numberPolicy = r || n.MANUAL_NUMBER), t && t.isNew && (this.numberPolicy === n.AUTO_NUMBER || this.numberPolicy === n.AUTO_OVERRIDE_NUMBER) && this.fetchNumber(), _.contains(this.requiredAttributes, this.documentKey) || this.requiredAttributes.push(this.documentKey), this.on("change:" + this.documentKey, this.documentKeyDidChange), this.on("statusChange", this.statusDidChange);
 },
 fetchNumber: function() {
-var a = this, b = {};
-return b.success = function(b) {
-a._number = a.keyIsString && b.toString() ? b.toString() : b, a.set(a.documentKey, a._number, {
+var e = this, t = {};
+return t.success = function(t) {
+e._number = e.keyIsString && t.toString() ? t.toString() : t, e.set(e.documentKey, e._number, {
 force: !0
 });
-}, XT.dataSource.dispatch("XM.Model", "fetchNumber", this.recordType, b), console.log("XM.Model.fetchNumber for: " + this.recordType), this;
+}, XT.dataSource.dispatch("XM.Model", "fetchNumber", this.recordType, t), console.log("XM.Model.fetchNumber for: " + this.recordType), this;
 },
 releaseNumber: function() {
 return XT.dataSource.dispatch("XM.Model", "releaseNumber", [ this.recordType, this._number ]), this._number = null, console.log("XM.Model.releaseNumber for: " + this.recordType), this;
 },
-save: function(a, b, c) {
-var d = this, e = XM.Model, f = this.get(this.documentKey), g = this.original(this.documentKey), h = this.getStatus(), i = {};
-h === e.READY_NEW && f && !this._number || h === e.READY_DIRTY && f !== g ? (i.success = function(e) {
-var g, h = {};
-e === 0 ? XM.Model.prototype.save.call(d, a, b, c) : (h.attr = ("_" + d.documentKey).loc(), h.value = f, g = XT.Error.clone("xt1008", {
-params: h
-}), d.trigger("error", d, g, c));
-}, i.error = Backbone.wrapError(null, d, c), this.findExisting(this.documentKey, f, i)) : XM.Model.prototype.save.call(d, a, b, c);
+save: function(e, t, n) {
+var r = this, i = XM.Model, s = this.get(this.documentKey), o = this.original(this.documentKey), u = this.getStatus(), a = {};
+u === i.READY_NEW && s && !this._number || u === i.READY_DIRTY && s !== o ? (a.success = function(i) {
+var o, u = {};
+i === 0 ? XM.Model.prototype.save.call(r, e, t, n) : (u.attr = ("_" + r.documentKey).loc(), u.value = s, o = XT.Error.clone("xt1008", {
+params: u
+}), r.trigger("error", r, o, n));
+}, a.error = Backbone.wrapError(null, r, n), this.findExisting(this.documentKey, s, a)) : XM.Model.prototype.save.call(r, e, t, n);
 },
 statusDidChange: function() {
-var a = XM.Model, b = XM.Document;
-this.numberPolicy === b.AUTO_NUMBER && this.getStatus() === a.READY_CLEAN && this.setReadOnly(this.documentKey);
+var e = XM.Model, t = XM.Document;
+this.numberPolicy === t.AUTO_NUMBER && this.getStatus() === e.READY_CLEAN && this.setReadOnly(this.documentKey);
 }
 }), _.extend(XM.Document, {
 MANUAL_NUMBER: "M",
@@ -9401,41 +8121,30 @@ AUTO_OVERRIDE_NUMBER: "O"
 // comment.js
 
 (function() {
-"use strict", XM.CommentType = XM.Model.extend({
+"use strict";
+XM.CommentType = XM.Model.extend({
 recordType: "XM.CommentType",
-privileges: {
-all: {
-create: "MaintainCommentTypes",
-read: !0,
-update: "MaintainCommentTypes",
-"delete": "MaintainCommentTypes"
-}
-},
 defaults: {
 commentsEditable: !1,
 order: 0
 },
 requiredAttributes: [ "name", "commentType", "commentsEditable", "order" ]
 }), XM.Comment = XM.Model.extend({
-privileges: {
-all: {
-create: !0,
-read: !0,
-update: "EditOthersComments",
-"delete": !1
-},
-personal: {
-update: "EditOwnComments",
-properties: [ "createdBy" ]
-}
-},
+readOnlyAttributes: [ "created", "createdBy" ],
 defaults: function() {
-var a = {}, b = XT.session.getSettings().get("CommentPublicDefault");
-return a.created = new Date, a.createdBy = XM.currentUser.get("username"), a.isPublic = b || !1, a;
+var e = {}, t = XT.session.getSettings().get("CommentPublicDefault");
+return e.created = new Date, e.createdBy = XM.currentUser.get("username"), e.isPublic = t || !1, e;
+},
+initialize: function(e, t) {
+XM.Model.prototype.initialize.apply(this, arguments), this.on("statusChange", this.statusChanged), this.statusChanged();
 },
 isReadOnly: function() {
-var a = this.get("commentType"), b = this.getStatus() === XM.Model.READY_NEW, c = b || a && a.get("commentsEditable");
-return !c || XM.Model.prototype.isReadOnly.apply(this, arguments);
+var e = this.get("commentType"), t = this.getStatus() === XM.Model.READY_NEW, n = t || e && e.get("commentsEditable");
+return !n || XM.Model.prototype.isReadOnly.apply(this, arguments);
+},
+statusChanged: function() {
+var e = this.getStatus(), t = XM.Model;
+e === t.READY_CLEAN && this.setReadOnly("commentType");
 }
 }), XM.CommentTypeCollection = XM.Collection.extend({
 model: XM.CommentType
@@ -9445,17 +8154,10 @@ model: XM.CommentType
 // characteristic.js
 
 (function() {
-"use strict", XM.Characteristic = XM.Document.extend({
+"use strict";
+XM.Characteristic = XM.Document.extend({
 recordType: "XM.Characteristic",
 documentKey: "name",
-privileges: {
-all: {
-create: "MaintainCharacteristics",
-read: !0,
-update: "MaintainCharacteristics",
-"delete": "MaintainCharacteristics"
-}
-},
 defaults: {
 characteristicType: 0,
 isAddresses: !1,
@@ -9468,8 +8170,8 @@ initialize: function() {
 XM.Document.prototype.initialize.apply(this, arguments), this.on("change:characteristicType", this.characteristicTypeDidChange), this.characteristicTypeDidChange();
 },
 characteristicTypeDidChange: function() {
-var a = this.get("characteristicType");
-switch (a) {
+var e = this.get("characteristicType");
+switch (e) {
 case XM.Characteristic.TEXT:
 this.setReadOnly("options", !0), this.setReadOnly("mask", !1), this.setReadOnly("validator", !1);
 break;
@@ -9481,14 +8183,14 @@ this.setReadOnly("options", !0), this.setReadOnly("mask", !0), this.setReadOnly(
 }
 },
 statusDidChange: function() {
-var a = this.getStatus(), b = XM.Model;
-a !== b.READY_NEW && this.setReadOnly("characteristicType", !0), XM.Document.prototype.statusDidChange.apply(this, arguments);
+var e = this.getStatus(), t = XM.Model;
+e !== t.READY_NEW && this.setReadOnly("characteristicType", !0), XM.Document.prototype.statusDidChange.apply(this, arguments);
 },
 validateSave: function() {
-var a = this.get("options").models, b = [], c;
+var e = this.get("options").models, t = [], n;
 if (!(this.get("isItems") || this.get("isContacts") || this.get("isAddresses") || this.get("isAccounts"))) return XT.Error.clone("xt2002");
-for (c = 0; c < a.length; c += 1) b.push(a[c].get("value"));
-if (!_.isEqual(b, _.unique(b))) return XT.Error.clone("xt2003");
+for (n = 0; n < e.length; n += 1) t.push(e[n].get("value"));
+if (!_.isEqual(t, _.unique(t))) return XT.Error.clone("xt2003");
 }
 }), _.extend(XM.Characteristic, {
 TEXT: 0,
@@ -9496,14 +8198,6 @@ LIST: 1,
 DATE: 2
 }), XM.CharacteristicOption = XM.Model.extend({
 recordType: "XM.CharacteristicOption",
-privileges: {
-all: {
-create: !0,
-read: !0,
-update: !1,
-"delete": !0
-}
-},
 defaults: {
 order: 0
 },
@@ -9512,9 +8206,9 @@ requiredAttributes: [ "order" ]
 initialize: function() {
 XM.Model.prototype.initialize.apply(this, arguments), this.on("change:characteristic", this.characteristicDidChange);
 },
-characteristicDidChange: function(a, b, c) {
-var d = this.getStatus(), e = XM.Model;
-if (c && c.force || !(d & e.READY)) return;
+characteristicDidChange: function(e, t, n) {
+var r = this.getStatus(), i = XM.Model;
+if (n && n.force || !(r & i.READY)) return;
 this.set("value", "");
 }
 }), XM.CharacteristicCollection = XM.Collection.extend({
@@ -9525,27 +8219,28 @@ model: XM.Characteristic
 // alarm.js
 
 (function() {
-"use strict", XM.Alarm = XM.Document.extend({
+"use strict";
+XM.Alarm = XM.Document.extend({
 numberPolicy: XM.Document.AUTO_NUMBER,
 initialize: function() {
 XM.Document.prototype.initialize.apply(this, arguments), this.on("change:offset change:qualifier change:time", this.alarmDidChange);
 },
-alarmDidChange: function(a, b, c) {
-var d = this.getStatus(), e = XM.Model, f, g, h, i;
-if (c && c.force || !(d & e.READY)) return;
-f = this.get("offset"), g = this.get("qualifier"), h = this.get("time"), i = this.get("trigger");
-if (f) switch (g) {
+alarmDidChange: function(e, t, n) {
+var r = this.getStatus(), i = XM.Model, s, o, u, a;
+if (n && n.force || !(r & i.READY)) return;
+s = this.get("offset"), o = this.get("qualifier"), u = this.get("time"), a = this.get("trigger");
+if (s) switch (o) {
 case "MB":
 case "MA":
-g.indexOf("B") !== -1 ? i.setMinutes(h.getMinutes() - f) : i.setMinutes(h.getMinutes() + f);
+o.indexOf("B") !== -1 ? a.setMinutes(u.getMinutes() - s) : a.setMinutes(u.getMinutes() + s);
 break;
 case "HB":
 case "HA":
-g.indexOf("B") !== -1 ? i.setHours(h.getHours() - f) : i.setHours(h.getHours() + f);
+o.indexOf("B") !== -1 ? a.setHours(u.getHours() - s) : a.setHours(u.getHours() + s);
 break;
 default:
-g.indexOf("B") !== -1 ? i.setDate(h.getDate() - f) : i.setDate(h.getDate() + f);
-} else i.setMinutes(h.getMinutes());
+o.indexOf("B") !== -1 ? a.setDate(u.getDate() - s) : a.setDate(u.getDate() + s);
+} else a.setMinutes(u.getMinutes());
 }
 });
 })();
@@ -9553,38 +8248,24 @@ g.indexOf("B") !== -1 ? i.setDate(h.getDate() - f) : i.setDate(h.getDate() + f);
 // account.js
 
 (function() {
-"use strict", XM.AccountDocument = XM.Document.extend({
+"use strict";
+XM.AccountDocument = XM.Document.extend({
 numberPolicySetting: "CRMAccountNumberGeneration",
 requiredAttributes: [ "number" ],
 documentKeyDidChange: function() {
-var a = this.recordType;
-this.recordType = "XM.Account", XM.Document.prototype.documentKeyDidChange.apply(this, arguments), this.recordType = a;
+var e = this.recordType;
+this.recordType = "XM.Account", XM.Document.prototype.documentKeyDidChange.apply(this, arguments), this.recordType = e;
 }
 }), XM.Account = XM.AccountDocument.extend({
 recordType: "XM.Account",
-privileges: {
-all: {
-create: "MaintainAllCRMAccounts",
-read: "ViewAllCRMAccounts",
-update: "MaintainAllCRMAccounts",
-"delete": "MaintainAllCRMAccounts"
-},
-personal: {
-create: "MaintainPersonalCRMAccounts",
-read: "ViewPersonalCRMAccounts",
-update: "MaintainPersonalCRMAccounts",
-"delete": "MaintainPersonalCRMAccounts",
-properties: [ "owner" ]
-}
-},
 defaults: {
 owner: XM.currentUser,
 isActive: !0,
 accountType: "O"
 },
 requiredAttributes: [ "accountType", "isActive", "number", "name" ],
-validateEdit: function(a) {
-if (a.parent && a.parent.id === this.id) return XT.Error.clone("xt2006");
+validateEdit: function(e) {
+if (e.parent && e.parent.id === this.id) return XT.Error.clone("xt2006");
 }
 }), XM.AccountComment = XM.Comment.extend({
 recordType: "XM.AccountComment"
@@ -9615,22 +8296,7 @@ isDocumentAssignment: !0
 recordType: "XM.AccountContactInfo"
 }), XM.AccountInfo = XM.Model.extend({
 recordType: "XM.AccountInfo",
-readOnly: !0,
-privileges: {
-all: {
-create: !1,
-read: "ViewAllCRMAccounts",
-update: !1,
-"delete": !1
-},
-personal: {
-create: !1,
-read: !0,
-update: !1,
-"delete": !0,
-properties: [ "owner" ]
-}
-}
+readOnly: !0
 }), XM.AccountInfoCollection = XM.Collection.extend({
 model: XM.AccountInfo
 });
@@ -9639,107 +8305,153 @@ model: XM.AccountInfo
 // address.js
 
 (function() {
-"use strict", XM.Country = XM.Model.extend({
+"use strict";
+XM.Country = XM.Model.extend({
 recordType: "XM.Country",
-privileges: {
-all: {
-create: "MaintainCountries",
-read: !0,
-update: "MaintainCountries",
-"delete": "MaintainCountries"
-}
-},
 requiredAttributes: [ "abbreviation", "currencyAbbreviation", "name" ],
-validateEdit: function(a) {
-var b = {};
-if (a.abbreviation && a.abbreviation.length !== 2) return b.attr = "_abbreviation".loc(), b.length = "2", XT.Error.clone("xt1006", {
-params: b
+validateEdit: function(e) {
+var t = {};
+if (e.abbreviation && e.abbreviation.length !== 2) return t.attr = "_abbreviation".loc(), t.length = "2", XT.Error.clone("xt1006", {
+params: t
 });
-if (a.currencyAbbreviation && a.currencyAbbreviation.length !== 3) return b.attr = "_currencyAbbreviation".loc(), b.length = "3", XT.Error.clone("xt1006", {
-params: b
+if (e.currencyAbbreviation && e.currencyAbbreviation.length !== 3) return t.attr = "_currencyAbbreviation".loc(), t.length = "3", XT.Error.clone("xt1006", {
+params: t
 });
 }
 }), XM.State = XM.Model.extend({
 recordType: "XM.State",
-privileges: {
-all: {
-create: "MaintainStates",
-read: !0,
-update: "MaintainStates",
-"delete": "MaintainStates"
-}
-},
 requiredAttributes: [ "abbreviation", "country", "name" ]
 }), XM.Address = XM.Document.extend({
 recordType: "XM.Address",
 numberPolicy: XM.Document.AUTO_NUMBER,
-privileges: {
-all: {
-create: "MaintainAddresses",
-read: "ViewAddresses",
-update: "MaintainAddresses",
-"delete": "MaintainAddresses"
-}
-},
-format: function(a) {
-return XM.Address.format(this, a);
+format: function(e) {
+return XM.Address.format(this, e);
 },
 formatShort: function() {
 return XM.Address.formatShort(this);
 },
-useCount: function(a) {
-return console.log("XM.Address.useCount for: " + this.id), XT.dataSource.dispatch("XM.Address", "useCount", this.id, a), this;
+useCount: function(e) {
+return console.log("XM.Address.useCount for: " + this.id), XT.dataSource.dispatch("XM.Address", "useCount", this.id, e), this;
 }
 }), _.extend(XM.Address, {
-findExisting: function(a, b, c, d, e, f, g, h) {
-var i = {
+findExisting: function(e, t, n, r, i, s, o, u) {
+var a = {
 type: "Address",
-line1: a,
-line2: b,
-line3: c,
-city: d,
-state: e,
-postalcode: f,
-country: g
+line1: e,
+line2: t,
+line3: n,
+city: r,
+state: i,
+postalcode: s,
+country: o
 };
-return XT.dataSource.dispatch("XM.Address", "findExisting", i, h), console.log("XM.Address.findExisting"), this;
+return XT.dataSource.dispatch("XM.Address", "findExisting", a, u), console.log("XM.Address.findExisting"), this;
 },
 format: function() {
-var a = [], b, c, d, e, f, g, h, i, j, k = "", l;
-if (typeof arguments[0] == "object") b = "", c = arguments[0].get("line1"), d = arguments[0].get("line2"), e = arguments[0].get("line3"), f = arguments[0].get("city"), g = arguments[0].get("state"), h = arguments[0].get("postalcode"), i = arguments[0].get("country"), j = (arguments[1] === undefined ? !1 : arguments[1]) ? "<br />" : "\n"; else {
+var e = [], t, n, r, i, s, o, u, a, f, l = "", c;
+if (typeof arguments[0] == "object") t = "", n = arguments[0].get("line1"), r = arguments[0].get("line2"), i = arguments[0].get("line3"), s = arguments[0].get("city"), o = arguments[0].get("state"), u = arguments[0].get("postalCode"), a = arguments[0].get("country"), f = (arguments[1] === undefined ? !1 : arguments[1]) ? "<br />" : "\n"; else {
 if (typeof arguments[0] != "string") return !1;
-b = arguments[0], c = arguments[1], d = arguments[2], e = arguments[3], f = arguments[4], g = arguments[5], h = arguments[6], i = arguments[7], j = (arguments[8] === undefined ? !1 : arguments[8]) ? "<br />" : "\n";
+t = arguments[0], n = arguments[1], r = arguments[2], i = arguments[3], s = arguments[4], o = arguments[5], u = arguments[6], a = arguments[7], f = (arguments[8] === undefined ? !1 : arguments[8]) ? "<br />" : "\n";
 }
-b && a.push(b), c && a.push(c), d && a.push(d), e && a.push(e);
-if (f || g || h) l = (f || "") + (f && (g || h) ? ", " : "") + (g || "") + (g && h ? " " : "") + (h || ""), a.push(l);
-return i && a.push(i), a.length && (k = a.join(j)), k;
+t && e.push(t), n && e.push(n), r && e.push(r), i && e.push(i);
+if (s || o || u) c = (s || "") + (s && (o || u) ? ", " : "") + (o || "") + (o && u ? " " : "") + (u || ""), e.push(c);
+return a && e.push(a), e.length && (l = e.join(f)), l;
 },
-formatShort: function(a) {
-var b, c = a.get("city") || "", d = a.get("state") || "", e = a.get("country") || "";
-return b = c + (c && d ? ", " : "") + d, b += (b ? " " : "") + e, b;
-}
+formatShort: function(e) {
+var t, n, r, i;
+return typeof e == "object" ? (n = e.get("city") || "", r = e.get("state") || "", i = e.get("country") || "") : (n = arguments[0] || "", r = arguments[1] || "", i = arguments[2] || ""), t = n + (n && r ? ", " : "") + r, t += (t ? " " : "") + i, t;
+},
+CHANGE_ONE: 0,
+CHANGE_ALL: 1
 }), XM.AddressComment = XM.Model.extend({
 recordType: "XM.AddressComment"
 }), XM.AddressCharacteristic = XM.Model.extend({
 recordType: "XM.AddressCharacteristic"
-}), XM.AddressInfo = XM.Model.extend({
+}), XM.AddressInfo = XM.Document.extend({
 recordType: "XM.AddressInfo",
-readOnly: !0,
-privileges: {
-all: {
-create: !1,
-read: !0,
-update: !1,
-"delete": !1
-}
+numberPolicy: XM.Document.AUTO_NUMBER,
+copy: function() {
+var e = _.clone(this.attributes);
+return delete e.id, delete e.dataState, delete e.number, delete e.type, delete e.isActive, new XM.AddressInfo(e, {
+isNew: !0
+});
 },
-format: function(a) {
-return XM.Address.format(this, a);
+format: function(e) {
+return XM.Address.format(this, e);
 },
 formatShort: function() {
 return XM.Address.formatShort(this);
+},
+isEmpty: function() {
+return _.isEmpty(this.get("line1")) && _.isEmpty(this.get("line2")) && _.isEmpty(this.get("line3")) && _.isEmpty(this.get("city")) && _.isEmpty(this.get("state")) && _.isEmpty(this.get("postalCode")) && _.isEmpty(this.get("country"));
+},
+useCount: function(e) {
+return console.log("XM.Address.useCount for: " + this.id), XT.dataSource.dispatch("XM.Address", "useCount", this.id, e), this;
 }
-}), XM.AddressInfoCollection = XM.Collection.extend({
+}), XM.AddressCheckMixin = {
+addressChanged: function() {
+var e = this.get("address"), t = e ? e.getStatus() : !1, n = this.getStatus(), r = XM.Model;
+t === r.READY_DIRTY && n === r.READY_CLEAN && this.setStatus(r.READY_DIRTY);
+},
+didChange: function() {
+var e, t = this;
+XM.Document.prototype.didChange.apply(this, arguments), this.changed.address && (e = this.previous("address"), e && e.off("change", this.addressChanged, t), e = this.get("address"), e && e.on("change", this.addressChanged, t));
+},
+destroy: function() {
+var e = this.get("address");
+e.isNew() && e.releaseNumber(), XM.Document.prototype.destroy.apply(this, arguments);
+},
+initialize: function(e, t) {
+XM.Document.prototype.initialize.apply(this, arguments), t && t.isNew && this.get("address") === null && this.set("address", new XM.AddressInfo(null, {
+isNew: !0
+}));
+},
+save: function(e, t, n) {
+var r = this, i = this.get("address"), s = i ? i.getStatus() : !1, o = this.isNew() ? 0 : 1, u = {}, a = {}, f = {}, l = this.isValid(), c = XM.Model;
+if (l && i && s !== c.READY_CLEAN) {
+_.isObject(e) || _.isEmpty(e) ? n = t ? _.clone(t) : {} : n = n ? _.clone(n) : {}, u.success = function(i) {
+XM.Document.prototype.save.call(r, e, t, n);
+};
+if (i.isEmpty()) i.isNew() && i.releaseNumber(), this.set("address", null); else {
+if (i.isDirty() && !n.existingChecked) {
+a.success = function(s) {
+s && (i.set("id", s, {
+force: !0
+}), i.status = c.READY_CLEAN), n.existingChecked = !0;
+if (_.isObject(e) || _.isEmpty(e)) t = n;
+r.save(e, t, n);
+}, XM.Address.findExisting(i.get("line1"), i.get("line2"), i.get("line3"), i.get("city"), i.get("state"), i.get("postalCode"), i.get("country"), a);
+return;
+}
+if (i.isNew()) {
+i.save(null, u);
+return;
+}
+if (i.isDirty()) {
+f.success = function(e) {
+var t, s = XM.Address, a, f;
+if (e > o) {
+if (!_.isNumber(n.address)) {
+t = XT.Error.clone("xt2007"), r.trigger("error", r, t, n);
+return;
+}
+if (n.address !== s.CHANGE_ALL) {
+a = function() {
+var e = f.id, t = f.get("number");
+e && t && (f.off("change:id change:number", a), r.set("address", f), f.save(null, u));
+}, f = i.copy(), f.on("change:id change:number", a), a();
+return;
+}
+}
+i.save(null, u);
+}, i.useCount(f);
+return;
+}
+}
+}
+XM.Document.prototype.save.call(r, e, t, n);
+}
+}, XM.AddressInfoCollection = XM.Collection.extend({
 model: XM.AddressInfo
 }), XM.CountryCollection = XM.Collection.extend({
 model: XM.Country
@@ -9751,18 +8463,11 @@ model: XM.State
 // contact.js
 
 (function() {
-"use strict", XM.Honorific = XM.Document.extend({
+"use strict";
+XM.Honorific = XM.Document.extend({
 recordType: "XM.Honorific",
 documentKey: "code",
-enforceUpperKey: !1,
-privileges: {
-all: {
-create: "MaintainTitles",
-read: !0,
-update: "MaintainTitles",
-"delete": "MaintainTitles"
-}
-}
+enforceUpperKey: !1
 }), XM.Contact = XM.Document.extend({
 recordType: "XM.Contact",
 nameAttribute: "getName",
@@ -9771,29 +8476,14 @@ defaults: {
 owner: XM.currentUser,
 isActive: !0
 },
-privileges: {
-all: {
-create: "MaintainAllContacts",
-read: "ViewAllContacts",
-update: "MaintainAllContacts",
-"delete": "MaintainAllContacts"
-},
-personal: {
-create: "MaintainPersonalContacts",
-read: "ViewPersonalContacts",
-update: "MaintainPersonalContacts",
-"delete": "MaintainPersonalContacts",
-properties: [ "owner" ]
-}
-},
 getName: function() {
-var a = [], b = this.get("firstName"), c = this.get("middleName"), d = this.get("lastName"), e = this.get("suffix");
-return b && a.push(b), c && a.push(c), d && a.push(d), e && a.push(e), a.join(" ");
+var e = [], t = this.get("firstName"), n = this.get("middleName"), r = this.get("lastName"), i = this.get("suffix");
+return t && e.push(t), n && e.push(n), r && e.push(r), i && e.push(i), e.join(" ");
 },
-validateSave: function(a, b) {
-if (!a.firstName && !a.lastName) return XT.Error.clone("xt2004");
+validateSave: function(e, t) {
+if (!e.firstName && !e.lastName) return XT.Error.clone("xt2004");
 }
-}), XM.Contact = XM.Contact.extend(XM.ContactMixin), XM.ContactEmail = XM.Model.extend({
+}), XM.Contact = XM.Contact.extend(XM.AddressCheckMixin), XM.ContactEmail = XM.Model.extend({
 recordType: "XM.ContactEmail",
 requiredAttributes: [ "email" ]
 }), XM.ContactComment = XM.Comment.extend({
@@ -9831,51 +8521,44 @@ model: XM.ContactInfo
 // currency.js
 
 (function() {
-"use strict", XM.Currency = XM.Document.extend({
+"use strict";
+XM.Currency = XM.Document.extend({
 recordType: "XM.Currency",
-privileges: {
-all: {
-create: "CreateNewCurrency",
-read: !0,
-update: "MaintainCurrencies",
-"delete": "MaintainCurrencies"
-}
-},
 documentKey: "name",
 enforceUpperKey: !1,
 defaults: {
 isBase: !1
 },
 requiredAttributes: [ "abbreviation", "isBase", "name", "symbol" ],
-abbreviationDidChange: function(a, b, c) {
-var d = XM.Model, e = this, f = this.getStatus(), g = {};
-if (c && c.force || !(f & d.READY)) return;
-g.success = function(a) {
-var d, f = {};
-a && (f.attr = "_abbreviation".loc(), f.value = b, d = XT.Error.clone("xt1008", {
-params: f
-}), e.trigger("error", e, d, c));
-}, this.findExisting("abbreviation", b, g);
+abbreviationDidChange: function(e, t, n) {
+var r = XM.Model, i = this, s = this.getStatus(), o = {};
+if (n && n.force || !(s & r.READY)) return;
+o.success = function(e) {
+var r, s = {};
+e && (s.attr = "_abbreviation".loc(), s.value = t, r = XT.Error.clone("xt1008", {
+params: s
+}), i.trigger("error", i, r, n));
+}, this.findExisting("abbreviation", t, o);
 },
 initialize: function() {
 XM.Document.prototype.initialize.apply(this, arguments), this.on("change:abbreviation", this.abbreviationDidChange);
 },
-save: function(a, b, c) {
-var d = this, e = XM.Model, f = this.get("abbreviation"), g = this.original("abbreviation"), h = this.getStatus(), i = {};
-h === e.READY_NEW || h === e.READY_DIRTY && f !== g ? (i.success = function(e) {
-var g, h = {};
-e === 0 ? XM.Document.prototype.save.call(d, a, b, c) : (h.attr = "_abbreviation".loc(), h.value = f, g = XT.Error.clone("xt1008", {
-params: h
-}), d.trigger("error", d, g, c));
-}, i.error = Backbone.wrapError(null, d, c), this.findExisting("abbreviation", f, i)) : XM.Document.prototype.save.call(d, a, b, c);
+save: function(e, t, n) {
+var r = this, i = XM.Model, s = this.get("abbreviation"), o = this.original("abbreviation"), u = this.getStatus(), a = {};
+u === i.READY_NEW || u === i.READY_DIRTY && s !== o ? (a.success = function(i) {
+var o, u = {};
+i === 0 ? XM.Document.prototype.save.call(r, e, t, n) : (u.attr = "_abbreviation".loc(), u.value = s, o = XT.Error.clone("xt1008", {
+params: u
+}), r.trigger("error", r, o, n));
+}, a.error = Backbone.wrapError(null, r, n), this.findExisting("abbreviation", s, a)) : XM.Document.prototype.save.call(r, e, t, n);
 },
 toString: function() {
 return this.get("abbreviation") + " - " + this.get("symbol");
 },
-validateEdit: function(a) {
-var b = {};
-if (a.abbreviation && a.abbreviation.length !== 3) return b.attr = "_abbreviation".loc(), b.length = "3", XT.Error.clone("xt1006", {
-params: b
+validateEdit: function(e) {
+var t = {};
+if (e.abbreviation && e.abbreviation.length !== 3) return t.attr = "_abbreviation".loc(), t.length = "3", XT.Error.clone("xt1006", {
+params: t
 });
 }
 }), XM.CurrencyCollection = XM.Collection.extend({
@@ -9886,7 +8569,8 @@ model: XM.Currency
 // file.js
 
 (function() {
-"use strict", XM.FileInfo = XM.Model.extend({
+"use strict";
+XM.FileInfo = XM.Model.extend({
 recordType: "XM.FileInfo"
 });
 })();
@@ -9894,7 +8578,8 @@ recordType: "XM.FileInfo"
 // image.js
 
 (function() {
-"use strict", XM.ImageInfo = XM.Model.extend({
+"use strict";
+XM.ImageInfo = XM.Model.extend({
 recordType: "XM.ImageInfo"
 });
 })();
@@ -9902,84 +8587,61 @@ recordType: "XM.ImageInfo"
 // incident.js
 
 (function() {
-"use strict", XM.IncidentCategory = XM.Document.extend({
+"use strict";
+XM.IncidentCategory = XM.Document.extend({
 recordType: "XM.IncidentCategory",
 documentKey: "name",
 enforceUpperKey: !1,
-privileges: {
-all: {
-create: "MaintainIncidentCategories",
-read: !0,
-update: "MaintainIncidentCategories",
-"delete": "MaintainIncidentCategories"
-}
-},
 defaults: {
 order: 0
 },
-requiredAttributes: [ "order" ]
+requiredAttributes: [ "order" ],
+orderAttribute: {
+orderBy: [ {
+attribute: "order"
+} ]
+}
 }), XM.IncidentSeverity = XM.Document.extend({
 recordType: "XM.IncidentSeverity",
 documentKey: "name",
 enforceUpperKey: !1,
-privileges: {
-all: {
-create: "MaintainIncidentSeverities",
-read: !0,
-update: "MaintainIncidentSeverities",
-"delete": "MaintainIncidentSeverities"
-}
-},
 defaults: {
 order: 0
 },
-requiredAttributes: [ "order" ]
+requiredAttributes: [ "order" ],
+orderAttribute: {
+orderBy: [ {
+attribute: "order"
+} ]
+}
 }), XM.IncidentResolution = XM.Model.extend({
 recordType: "XM.IncidentResolution",
 documentKey: "name",
 enforceUpperKey: !1,
-privileges: {
-all: {
-create: "MaintainIncidentResolutions",
-read: !0,
-update: "MaintainIncidentResolutions",
-"delete": "MaintainIncidentResolutions"
-}
-},
 defaults: {
 order: 0
 },
-requiredAttributes: [ "order" ]
+requiredAttributes: [ "order" ],
+orderAttribute: {
+orderBy: [ {
+attribute: "order"
+} ]
+}
 }), XM.IncidentStatus = {
 getIncidentStatusString: function() {
-var a = XM.Incident, b = this.get("status");
-if (b === a.NEW) return "_new".loc();
-if (b === a.FEEDBACK) return "_feedback".loc();
-if (b === a.CONFIRMED) return "_confirmed".loc();
-if (b === a.ASSIGNED) return "_assigned".loc();
-if (b === a.RESOLVED) return "_resolved".loc();
-if (b === a.CLOSED) return "_closed".loc();
+var e = XM.Incident, t = this.get("status");
+if (t === e.NEW) return "_new".loc();
+if (t === e.FEEDBACK) return "_feedback".loc();
+if (t === e.CONFIRMED) return "_confirmed".loc();
+if (t === e.ASSIGNED) return "_assigned".loc();
+if (t === e.RESOLVED) return "_resolved".loc();
+if (t === e.CLOSED) return "_closed".loc();
 }
 }, XM.Incident = XM.Document.extend({
 recordType: "XM.Incident",
 nameAttribute: "number",
 numberPolicy: XM.Document.AUTO_NUMBER,
 keyIsString: !1,
-privileges: {
-all: {
-create: "MaintainAllIncidents",
-read: "ViewAllIncidents",
-update: "MaintainAllIncidents",
-"delete": "MaintainAllIncidents"
-},
-personal: {
-create: "MaintainPersonalIncidents",
-read: "ViewPersonalIncidents",
-update: "MaintainPersonalIncidents",
-"delete": "MaintainPersonalIncidents",
-properties: [ "owner", "assignedTo" ]
-}
-},
 defaults: function() {
 return {
 owner: XM.currentUser,
@@ -9990,14 +8652,14 @@ requiredAttributes: [ "account", "category", "contact", "description" ],
 initialize: function() {
 XM.Document.prototype.initialize.apply(this, arguments), this.on("change:assignedTo", this.assignedToDidChange);
 },
-assignedToDidChange: function(a, b, c) {
-var d = this.getStatus(), e = XM.Incident, f = XM.Model;
-if (c && c.force || !(d & f.READY)) return;
-b && this.set("incidentStatus", e.ASSIGNED);
+assignedToDidChange: function(e, t, n) {
+var r = this.getStatus(), i = XM.Incident, s = XM.Model;
+if (n && n.force || !(r & s.READY)) return;
+t && this.set("incidentStatus", i.ASSIGNED);
 },
 validateSave: function() {
-var a = XM.Incident;
-if (this.get("status") === a.ASSIGNED && !this.get("assignedTo")) return XT.Error.clone("xt2001");
+var e = XM.Incident;
+if (this.get("status") === e.ASSIGNED && !this.get("assignedTo")) return XT.Error.clone("xt2001");
 }
 }), _.extend(XM.Incident, {
 NEW: "N",
@@ -10054,29 +8716,14 @@ model: XM.IncidentInfo
 // item.js
 
 (function() {
-"use strict", XM.ClassCode = XM.Document.extend({
+"use strict";
+XM.ClassCode = XM.Document.extend({
 recordType: "XM.ClassCode",
 documentKey: "code",
-enforceUpperKey: !1,
-privileges: {
-all: {
-create: "MaintainClassCodes",
-read: !0,
-update: "MaintainClassCodes",
-"delete": "MaintainClassCodes"
-}
-}
+enforceUpperKey: !1
 }), XM.ProductCategory = XM.Document.extend({
 recordType: "XM.ProductCategory",
-documentKey: "code",
-privileges: {
-all: {
-create: "MaintainProductCategories",
-read: !0,
-update: "MaintainProductCategories",
-"delete": "MaintainProductCategories"
-}
-}
+documentKey: "code"
 }), XM.emptyProductCategory = new XM.ProductCategory({
 id: -1,
 code: "EMPTY",
@@ -10084,28 +8731,12 @@ description: "Use for indicating no product category"
 }), XM.Unit = XM.Document.extend({
 recordType: "XM.Unit",
 documentKey: "name",
-privileges: {
-all: {
-create: "MaintainUOMs",
-read: !0,
-update: "MaintainUOMs",
-"delete": "MaintainUOMs"
-}
-},
 defaults: {
 isWeight: !1
 },
 requiredAttributes: [ "isWeight" ]
 }), XM.Item = XM.Document.extend({
 recordType: "XM.Item",
-privileges: {
-all: {
-create: "MaintainItemMasters",
-read: "ViewItemMasters",
-update: "MaintainItemMasters",
-"delete": "MaintainItemMasters"
-}
-},
 defaults: function() {
 return {
 description1: "",
@@ -10121,22 +8752,22 @@ requiredAttributes: [ "classCode", "description1", "description2", "inventoryUni
 initialize: function() {
 XM.Document.prototype.initialize.apply(this, arguments), this.on("change:inventoryUnit", this.inventoryUnitDidChange), this.on("change:isSold", this.isSoldDidChange), this.on("statusChange", this.isSoldDidChange);
 },
-inventoryUnitDidChange: function(a, b, c) {
-var d = this.getStatus(), e = XM.Model;
-if (c && c.force || !(d & e.READY)) return;
-b && this.set("priceUnit", b);
+inventoryUnitDidChange: function(e, t, n) {
+var r = this.getStatus(), i = XM.Model;
+if (n && n.force || !(r & i.READY)) return;
+t && this.set("priceUnit", t);
 },
 isSoldDidChange: function() {
-var a = XM.Model, b = !this.get("isSold") && !0;
-this.getStatus() & a.READY && (this.setReadOnly("productCategory", b), this.setReadOnly("priceUnit", b), this.setReadOnly("listPrice", b));
+var e = XM.Model, t = !this.get("isSold") && !0;
+this.getStatus() & e.READY && (this.setReadOnly("productCategory", t), this.setReadOnly("priceUnit", t), this.setReadOnly("listPrice", t));
 },
 statusDidChange: function() {
-var a = XM.Model;
-this.getStatus() === a.READY_CLEAN && (this.setReadOnly("number"), this.setReadOnly("inventoryUnit"));
+var e = XM.Model;
+this.getStatus() === e.READY_CLEAN && (this.setReadOnly("number"), this.setReadOnly("inventoryUnit"));
 },
 validateSave: function() {
-var a = this.get("isSold"), b = this.get("productCategory");
-if (a && (b.id || -1) === -1) return XT.Error.clone("xt2005");
+var e = this.get("isSold"), t = this.get("productCategory");
+if (e && (t.id || -1) === -1) return XT.Error.clone("xt2005");
 }
 }), XM.ItemComment = XM.Comment.extend({
 recordType: "XM.ItemComment"
@@ -10177,57 +8808,35 @@ model: XM.ItemInfo
 // opportunity.js
 
 (function() {
-"use strict", XM.OpportunityType = XM.Document.extend({
+"use strict";
+XM.OpportunityType = XM.Document.extend({
 recordType: "XM.OpportunityType",
-documentKey: "name",
-privileges: {
-all: {
-create: "MaintainOpportunityTypes",
-read: !0,
-update: "MaintainOpportunityTypes",
-"delete": "MaintainOpportunityTypes"
-}
-}
+documentKey: "name"
 }), XM.OpportunityStage = XM.Document.extend({
 recordType: "XM.OpportunityStage",
 documentKey: "name",
-privileges: {
-all: {
-create: "MaintainOpportunityStages",
-read: !0,
-update: "MaintainOpportunityStages",
-"delete": "MaintainOpportunityStages"
-}
-},
 defaults: {
 deactivate: !1
 },
 requiredAttributes: [ "deactivate" ]
 }), XM.OpportunitySource = XM.Document.extend({
 recordType: "XM.OpportunitySource",
-documentKey: "name",
-privileges: {
-all: {
-create: "MaintainOpportunitySources",
-read: !0,
-update: "MaintainOpportunitySources",
-"delete": "MaintainOpportunitySources"
-}
-}
+documentKey: "name"
 }), XM.Opportunity = XM.Document.extend({
 recordType: "XM.Opportunity",
 numberPolicy: XM.Document.AUTO_NUMBER,
 defaults: {
+owner: XM.currentUser,
 isActive: !0
 },
 requiredAttributes: [ "account", "name", "isActive", "opportunityStage", "opportunitySource", "opportunityType" ],
 initialize: function() {
 XM.Document.prototype.initialize.apply(this, arguments), this.on("change:assignedTo", this.assignedToDidChange);
 },
-assignedToDidChange: function(a, b, c) {
-var d = this.getStatus(), e = XM.Model, f, g;
-if (c && c.force || !(d & e.READY)) return;
-f = this.get("assignedTo"), g = this.get("assignDate"), f && !g && this.set("assignDate", new Date);
+assignedToDidChange: function(e, t, n) {
+var r = this.getStatus(), i = XM.Model, s, o;
+if (n && n.force || !(r & i.READY)) return;
+s = this.get("assignedTo"), o = this.get("assignDate"), s && !o && this.set("assignDate", new Date);
 }
 }), XM.OpportunityComment = XM.Comment.extend({
 recordType: "XM.OpportunityComment"
@@ -10271,74 +8880,58 @@ model: XM.OpportunityInfo
 // priority.js
 
 (function() {
-"use strict", XM.Priority = XM.Model.extend({
+"use strict";
+XM.Priority = XM.Model.extend({
 recordType: "XM.Priority",
-privileges: {
-all: {
-create: "MaintainIncidentPriorities",
-read: !0,
-update: "MaintainIncidentPriorities",
-"delete": "MaintainIncidentPriorities"
-}
-},
 defaults: {
 order: 0
 },
 requiredAttributes: [ "name" ]
 }), XM.PriorityCollection = XM.Collection.extend({
-model: XM.Priority
+model: XM.Priority,
+orderAttribute: {
+orderBy: [ {
+attribute: "order"
+} ]
+}
 });
 })();
 
 // project.js
 
 (function() {
-"use strict", XM.ProjectStatus = {
+"use strict";
+XM.ProjectStatus = {
 getProjectStatusString: function() {
-var a = XM.Project, b = this.get("status");
-if (b === a.CONCEPT) return "_concept".loc();
-if (b === a.IN_PROCESS) return "_inProcess".loc();
-if (b === a.COMPLETED) return "_completed".loc();
+var e = XM.Project, t = this.get("status");
+if (t === e.CONCEPT) return "_concept".loc();
+if (t === e.IN_PROCESS) return "_inProcess".loc();
+if (t === e.COMPLETED) return "_completed".loc();
 }
 }, XM.ProjectBase = XM.Document.extend({
 defaults: function() {
-var a = XM.Project, b = {
-status: a.CONCEPT
+var e = XM.Project, t = {
+status: e.CONCEPT
 };
-return b;
-},
-privileges: {
-all: {
-create: "MaintainAllProjects",
-read: "ViewAllProjects",
-update: "MaintainAllProjects",
-"delete": "MaintainAllProjects"
-},
-personal: {
-create: "MaintainPersonalProjects",
-read: "ViewPersonalProjects",
-update: "MaintainPersonalProjects",
-"delete": "MaintainPersonalProjects",
-properties: [ "owner", "assignedTo" ]
-}
+return t;
 },
 requiredAttributes: [ "number", "status", "name", "dueDate" ],
 initialize: function() {
 XM.Document.prototype.initialize.apply(this, arguments), this.on("change:status", this.projectStatusDidChange);
 },
 statusDidChange: function() {
-var a = XM.Model;
-this.getStatus() === a.READY_CLEAN && this.setReadOnly("number");
+var e = XM.Model;
+this.getStatus() === e.READY_CLEAN && this.setReadOnly("number");
 },
 projectStatusDidChange: function() {
-var a = this.get("status"), b, c = XM.Project;
-this.isDirty() && (b = (new Date).toISOString(), a === c.IN_PROCESS && !this.get("assignDate") ? this.set("assignDate", b) : a === c.COMPLETED && !this.get("completeDate") && this.set("completeDate", b));
+var e = this.get("status"), t, n = XM.Project;
+this.isDirty() && (t = (new Date).toISOString(), e === n.IN_PROCESS && !this.get("assignDate") ? this.set("assignDate", t) : e === n.COMPLETED && !this.get("completeDate") && this.set("completeDate", t));
 }
 }), XM.ProjectBase = XM.ProjectBase.extend(XM.ProjectStatus), XM.Project = XM.ProjectBase.extend({
 recordType: "XM.Project",
 defaults: function() {
-var a = XM.ProjectBase.prototype.defaults.call(this);
-return a.owner = a.assignedTo = XM.currentUser, a;
+var e = XM.ProjectBase.prototype.defaults.call(this);
+return e.owner = e.assignedTo = XM.currentUser, e;
 },
 budgetedHoursTotal: 0,
 actualHoursTotal: 0,
@@ -10346,43 +8939,44 @@ balanceHoursTotal: 0,
 budgetedExpensesTotal: 0,
 actualExpensesTotal: 0,
 balanceExpensesTotal: 0,
-copy: function(a, b) {
-return XM.Project.copy(this, a, b);
+copy: function(e) {
+return XM.Project.copy(this, e);
 },
 initialize: function() {
 XM.ProjectBase.prototype.initialize.apply(this, arguments), this.on("add:tasks remove:tasks", this.tasksDidChange);
 },
 tasksDidChange: function() {
-var a = this, b;
-this.budgetedHoursTotal = 0, this.actualHoursTotal = 0, this.budgetedExpensesTotal = 0, this.actualExpensesTotal = 0, _.each(this.get("tasks").models, function(b) {
-a.budgetedHoursTotal = XT.math.add(a.budgetedHoursTotal, b.get("budgetedHours"), XT.QTY_SCALE), a.actualHoursTotal = XT.math.add(a.actualHoursTotal, b.get("actualHours"), XT.QTY_SCALE), a.budgetedExpensesTotal = XT.math.add(a.budgetedExpensesTotal, b.get("budgetedExpenses"), XT.MONEY_SCALE), a.actualExpensesTotal = XT.math.add(a.actualExpensesTotal, b.get("actualExpenses"), XT.MONEY_SCALE);
-}), this.balanceHoursTotal = XT.math.subtract(this.budgetedHoursTotal, this.actualHoursTotal, XT.QTY_SCALE), this.balanceExpensesTotal = XT.math.subtract(this.budgetedExpensesTotal, this.actualExpensesTotal, XT.QTY_SCALE), b = {
+var e = this, t;
+this.budgetedHoursTotal = 0, this.actualHoursTotal = 0, this.budgetedExpensesTotal = 0, this.actualExpensesTotal = 0, _.each(this.get("tasks").models, function(t) {
+e.budgetedHoursTotal = XT.math.add(e.budgetedHoursTotal, t.get("budgetedHours"), XT.QTY_SCALE), e.actualHoursTotal = XT.math.add(e.actualHoursTotal, t.get("actualHours"), XT.QTY_SCALE), e.budgetedExpensesTotal = XT.math.add(e.budgetedExpensesTotal, t.get("budgetedExpenses"), XT.MONEY_SCALE), e.actualExpensesTotal = XT.math.add(e.actualExpensesTotal, t.get("actualExpenses"), XT.MONEY_SCALE);
+}), this.balanceHoursTotal = XT.math.subtract(this.budgetedHoursTotal, this.actualHoursTotal, XT.QTY_SCALE), this.balanceExpensesTotal = XT.math.subtract(this.budgetedExpensesTotal, this.actualExpensesTotal, XT.QTY_SCALE), t = {
 budgetedHoursTotal: this.budgetedHoursTotal,
 actualHoursTotal: this.actualHoursTotal,
 budgetedExpensesTotal: this.budgetedExpensesTotal,
 actualExpensesTotal: this.actualExpensesTotal,
 balanceHoursTotal: this.balanceHoursTotal,
 balanceExpensesTotal: this.balanceExpensesTotal
-}, this.trigger("change", this, b);
+}, this.trigger("change", this, t);
 }
 }), _.extend(XM.Project, {
-copy: function(a, b, c) {
-if (a instanceof XM.Project == 0) return console.log("Passed object must be an instance of 'XM.Project'"), !1;
-if (b === undefined) return console.log("Number is required"), !1;
-var d, e, f, g = new Date(a.get("dueDate").valueOf()), h = XM.Project.prototype.idAttribute, i;
-c = c || 0, g.setDate(g.getDate() + c), d = a.parse(JSON.parse(JSON.stringify(a.toJSON()))), _.extend(d, {
-number: b,
-dueDate: g
-}), delete d[h], delete d.status, delete d.comments, delete d.recurrences, h = XM.ProjectTask.prototype.idAttribute, d.tasks && _.each(d.tasks, function(a) {
-delete a[h], delete a.status, delete a.comments, delete a.alarms, g = new Date(a.dueDate.valueOf()), g.setDate(g.getDate() + c);
+copy: function(e, t) {
+var n = t.number, r = t.offset;
+if (e instanceof XM.Project == 0) return console.log("Passed object must be an instance of 'XM.Project'"), !1;
+if (n === undefined) return console.log("Number is required"), !1;
+var i, s, o, u = new Date(e.get("dueDate").valueOf()), a = XM.Project.prototype.idAttribute, f;
+r = r || 0, u.setDate(u.getDate() + r), i = e.parse(JSON.parse(JSON.stringify(e.toJSON()))), _.extend(i, {
+number: n,
+dueDate: u
+}), delete i[a], delete i.status, delete i.comments, delete i.recurrences, a = XM.ProjectTask.prototype.idAttribute, i.tasks && _.each(i.tasks, function(e) {
+delete e[a], delete e.status, delete e.comments, delete e.alarms, u = new Date(e.dueDate.valueOf()), u.setDate(u.getDate() + r);
 });
-for (e in d) if (d.hasOwnProperty(e) && e !== "tasks" && _.isArray(d[e])) {
-h = a.get(e).model.prototype.idAttribute;
-for (f = 0; f < d[e].length; f += 1) delete d[e][f][h];
+for (s in i) if (i.hasOwnProperty(s) && s !== "tasks" && _.isArray(i[s])) {
+a = e.get(s).model.prototype.idAttribute;
+for (o = 0; o < i[s].length; o += 1) delete i[s][o][a];
 }
-return i = new XM.Project(d, {
+return f = new XM.Project(i, {
 isNew: !0
-}), i.documentKeyDidChange(), i;
+}), f.documentKeyDidChange(), f;
 },
 CONCEPT: "P",
 IN_PROCESS: "O",
@@ -10390,26 +8984,26 @@ COMPLETED: "C"
 }), XM.ProjectTask = XM.ProjectBase.extend({
 recordType: "XM.ProjectTask",
 defaults: function() {
-var a = XM.ProjectBase.prototype.defaults.call(this);
-return _.extend(a, {
+var e = XM.ProjectBase.prototype.defaults.call(this);
+return _.extend(e, {
 actualExpenses: 0,
 actualHours: 0,
 budgetedExpenses: 0,
 budgetedHours: 0
-}), a;
+}), e;
 },
 initialize: function() {
 XM.ProjectBase.prototype.initialize.apply(this, arguments);
-var a = "change:budgetedHours change:actualHours change:budgetedExpenses change:actualExpenses";
-this.on(a, this.valuesDidChange), this.on("change:project", this.projectDidChange);
+var e = "change:budgetedHours change:actualHours change:budgetedExpenses change:actualExpenses";
+this.on(e, this.valuesDidChange), this.on("change:project", this.projectDidChange);
 },
 projectDidChange: function() {
-var a = this.get("project"), b = XM.Model, c = this.getStatus();
-a && c === b.READY_NEW && (this.set("owner", this.get("owner") || a.get("owner")), this.set("assignedTo", this.get("owner") || a.get("assignedTo")), this.set("startDate", this.get("startDate") || a.get("startDate")), this.set("assignDate", this.get("assignDate") || a.get("assignDate")), this.set("dueDate", this.get("dueDate") || a.get("dueDate")), this.set("completeDate", this.get("completeDate") || a.get("completeDate")));
+var e = this.get("project"), t = XM.Model, n = this.getStatus();
+e && n === t.READY_NEW && (this.set("owner", this.get("owner") || e.get("owner")), this.set("assignedTo", this.get("owner") || e.get("assignedTo")), this.set("startDate", this.get("startDate") || e.get("startDate")), this.set("assignDate", this.get("assignDate") || e.get("assignDate")), this.set("dueDate", this.get("dueDate") || e.get("dueDate")), this.set("completeDate", this.get("completeDate") || e.get("completeDate")));
 },
 valuesDidChange: function() {
-var a = this.get("project");
-a && a.tasksDidChange();
+var e = this.get("project");
+e && e.tasksDidChange();
 }
 }), XM.ProjectComment = XM.Comment.extend({
 recordType: "XM.ProjectComment"
@@ -10450,16 +9044,9 @@ model: XM.ProjectInfo
 // sales_rep.js
 
 (function() {
-"use strict", XM.SalesRep = XM.AccountDocument.extend({
+"use strict";
+XM.SalesRep = XM.AccountDocument.extend({
 recordType: "XM.SalesRep",
-privileges: {
-all: {
-create: "MaintainSalesReps",
-read: !0,
-update: "MaintainSalesReps",
-"delete": "MaintainSalesReps"
-}
-},
 defaults: {
 isActive: !0,
 commission: 0
@@ -10470,48 +9057,27 @@ commission: 0
 // tax_authority.js
 
 (function() {
-"use strict", XM.TaxAuthority = XM.AccountDocument.extend({
-recordType: "XM.TaxAuthority",
-privileges: {
-all: {
-create: "MaintainTaxAuthorities",
-read: "ViewTaxAuthorities",
-update: "MaintainTaxAuthorities",
-"delete": "MaintainTaxAuthorities"
-}
-}
+"use strict";
+XM.TaxAuthority = XM.AccountDocument.extend({
+recordType: "XM.TaxAuthority"
 });
 })();
 
 // to_do.js
 
 (function() {
-"use strict", XM.ToDoStatus = {
+"use strict";
+XM.ToDoStatus = {
 getToDoStatusString: function() {
-var a = XM.ToDo, b = this.get("status");
-if (b === a.PENDING) return "_pending".loc();
-if (b === a.DEFERRED) return "_deferred".loc();
-if (b === a.NEITHER) return "_neither".loc();
-if (b === a.IN_PROCESS) return "_inProcess".loc();
-if (b === a.COMPLETED) return "_completed".loc();
+var e = XM.ToDo, t = this.get("status");
+if (t === e.PENDING) return "_pending".loc();
+if (t === e.DEFERRED) return "_deferred".loc();
+if (t === e.NEITHER) return "_neither".loc();
+if (t === e.IN_PROCESS) return "_inProcess".loc();
+if (t === e.COMPLETED) return "_completed".loc();
 }
 }, XM.ToDo = XM.Model.extend({
 recordType: "XM.ToDo",
-privileges: {
-all: {
-create: "MaintainAllToDoItems",
-read: "ViewAllToDoItems",
-update: "MaintainAllToDoItems",
-"delete": "MaintainAllToDoItems"
-},
-personal: {
-create: "MaintainPersonalToDoItems",
-read: "ViewPersonalToDoItems",
-update: "MaintainPersonalToDoItems",
-"delete": "MaintainPersonalToDoItems",
-properties: [ "owner", "assignedTo" ]
-}
-},
 defaults: function() {
 return {
 isActive: !0,
@@ -10522,8 +9088,8 @@ status: XM.ToDo.NEITHER
 },
 requiredAttributes: [ "dueDate", "name" ],
 getToDoStatusProxy: function() {
-var a = XM.ToDo;
-return this._status || a.NEITHER;
+var e = XM.ToDo;
+return this._status || e.NEITHER;
 },
 initialize: function() {
 XM.Model.prototype.initialize.apply(this, arguments), this.on("change:startDate change:completeDate", this.toDoStatusDidChange), this.on("change:status", this.toDoDidChange), this.on("changeStatus", this.toDoDidChange);
@@ -10531,17 +9097,17 @@ XM.Model.prototype.initialize.apply(this, arguments), this.on("change:startDate 
 toDoDidChange: function() {
 this.setToDoStatusProxy(this.get("status"));
 },
-toDoStatusDidChange: function(a, b, c) {
-var d = this.getStatus(), e = this.getToDoStatusProxy(), f = this.get("startDate"), g = this.get("completeDate"), h = XM.ToDo, i = h.NEITHER;
-if (c && c.force || !(d & XM.Model.READY)) return;
-g ? (i = h.COMPLETED, this.setToDoStatusProxy(h.NEITHER)) : e === h.DEFERRED ? i = h.DEFERRED : e === h.PENDING ? i = h.PENDING : f && (i = h.IN_PROCESS), this.set("status", i);
+toDoStatusDidChange: function(e, t, n) {
+var r = this.getStatus(), i = this.getToDoStatusProxy(), s = this.get("startDate"), o = this.get("completeDate"), u = XM.ToDo, a = u.NEITHER;
+if (n && n.force || !(r & XM.Model.READY)) return;
+o ? (a = u.COMPLETED, this.setToDoStatusProxy(u.NEITHER)) : i === u.DEFERRED ? a = u.DEFERRED : i === u.PENDING ? a = u.PENDING : s && (a = u.IN_PROCESS), this.set("status", a);
 },
-setToDoStatusProxy: function(a) {
-var b = XM.ToDo;
-if (a === this._status) return this;
-if (a === b.PENDING || a === b.DEFERRED) this._status = a; else {
-if (this._status === b.NEITHER) return this;
-this._status = b.NEITHER;
+setToDoStatusProxy: function(e) {
+var t = XM.ToDo;
+if (e === this._status) return this;
+if (e === t.PENDING || e === t.DEFERRED) this._status = e; else {
+if (this._status === t.NEITHER) return this;
+this._status = t.NEITHER;
 }
 return this.toDoStatusDidChange(), this;
 }
@@ -10586,7 +9152,8 @@ model: XM.ToDoInfo
 // url.js
 
 (function() {
-"use strict", XM.Url = XM.Model.extend({
+"use strict";
+XM.Url = XM.Model.extend({
 recordType: "XM.Url"
 });
 })();
@@ -10594,7 +9161,8 @@ recordType: "XM.Url"
 // user_account.js
 
 (function() {
-"use strict", XM.Language = XM.Document.extend({
+"use strict";
+XM.Language = XM.Document.extend({
 recordType: "XM.Language",
 documentKey: "name",
 enforceUpperKey: !1,
@@ -10603,14 +9171,6 @@ readOnly: !0
 recordType: "XM.Locale",
 documentKey: "code",
 enforceUpperKey: !1,
-privileges: {
-all: {
-create: "MaintainLocales",
-read: !0,
-update: "MaintainLocales",
-"delete": "MaintainLocales"
-}
-},
 defaults: {
 altEmphasisColor: "",
 costScale: 2,
@@ -10636,52 +9196,27 @@ recordType: "XM.Privilege",
 readOnly: !0
 }), XM.UserAccountRole = XM.Document.extend({
 recordType: "XM.UserAccountRole",
-documentKey: "name",
-privileges: {
-all: {
-create: "MaintainGroups",
-read: "MaintainGroups",
-update: "MaintainGroups",
-"delete": "MaintainGroups"
-}
-}
+documentKey: "name"
 }), XM.UserAccountRoleInfo = XM.Model.extend({
-recordType: "UserAccountRole",
+recordType: "XM.UserAccountRoleInfo",
 readOnly: !0
 }), XM.UserAccountRolePrivilegeAssignment = XM.Document.extend({
-recordType: "UserAccountRolePrivilegeAssignment"
+recordType: "XM.UserAccountRolePrivilegeAssignment"
 }), XM.UserAccount = XM.AccountDocument.extend({
 idAttribute: "username",
 recordType: "XM.UserAccount",
 documentKey: "username",
 enforceUpperKey: !1,
-privileges: {
-all: {
-create: "MaintainUsers",
-read: "MaintainUsers",
-update: "MaintainUsers",
-"delete": !1
-}
-},
 defaults: {
-canCreateUsers: !1,
 disableExport: !1,
 isDatabaseUser: !1
 },
-requiredAttributes: [ "canCreateUsers", "disableExport", "isDatabaseUser" ]
+requiredAttributes: [ "disableExport", "isDatabaseUser" ]
 }), XM.UserAccountPrivilegeAssignment = XM.Model.extend({
 recordType: "XM.UserAccountPrivilegeAssignment",
-privileges: {
-all: {
-create: !0,
-read: !0,
-update: !1,
-"delete": !0
-}
-},
 requiredAttributes: [ "userAccount", "privilege" ]
 }), XM.UserAccountUserAccountRoleAssignment = XM.Document.extend({
-recordType: "UserAccountUserAccountRoleAssignment"
+recordType: "XM.UserAccountUserAccountRoleAssignment"
 }), XM.UserAccountInfo = XM.Model.extend({
 idAttribute: "username",
 recordType: "XM.UserAccountInfo",
@@ -10692,6 +9227,10 @@ model: XM.Language
 model: XM.Locale
 }), XM.PrivilegeCollection = XM.Collection.extend({
 model: XM.Privilege
+}), XM.UserAccountRoleCollection = XM.Collection.extend({
+model: XM.UserAccountRole
+}), XM.UserAccountRoleInfoCollection = XM.Collection.extend({
+model: XM.UserAccountRoleInfo
 }), XM.UserAccountInfoCollection = XM.Collection.extend({
 model: XM.UserAccountInfo
 });
@@ -10700,7 +9239,8 @@ model: XM.UserAccountInfo
 // crm.js
 
 (function() {
-"use strict", XM.AccountToDo = XM.Model.extend({
+"use strict";
+XM.AccountToDo = XM.Model.extend({
 recordType: "XM.AccountToDo",
 isDocumentAssignment: !0
 }), XM.AccountIncident = XM.Model.extend({
@@ -10766,225 +9306,249 @@ isDocumentAssignment: !0
 // startup.js
 
 (function() {
-"use strict", XT.StartupTask.create({
+"use strict";
+XT.StartupTask.create({
 taskName: "loadSessionSettings",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XT.session.loadSessionObjects(XT.session.SETTINGS, a);
+XT.session.loadSessionObjects(XT.session.SETTINGS, e);
 }
 }), XT.StartupTask.create({
 taskName: "loadSessionPrivileges",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XT.session.loadSessionObjects(XT.session.PRIVILEGES, a);
+XT.session.loadSessionObjects(XT.session.PRIVILEGES, e);
 }
 }), XT.StartupTask.create({
 taskName: "loadSessionSchema",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XT.session.loadSessionObjects(XT.session.SCHEMA, a);
+XT.session.loadSessionObjects(XT.session.SCHEMA, e);
 }
 }), XT.StartupTask.create({
 taskName: "loadSessionLocale",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XT.session.loadSessionObjects(XT.session.LOCALE, a);
+XT.session.loadSessionObjects(XT.session.LOCALE, e);
 }
 }), XT.StartupTask.create({
 taskName: "loadCurrentUser",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this),
 id: XT.session.details.username
 };
-XM.currentUser = new XM.UserAccountInfo, XM.currentUser.fetch(a);
+XM.currentUser = new XM.UserAccountInfo, XM.currentUser.fetch(e);
 },
 waitingList: [ "loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges" ]
 }), XT.StartupTask.create({
 taskName: "loadHonorifics",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XM.honorifics = new XM.HonorificCollection, XM.honorifics.fetch(a);
+XM.honorifics = new XM.HonorificCollection, XM.honorifics.fetch(e);
 },
 waitingList: [ "loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges" ]
 }), XT.StartupTask.create({
 taskName: "loadCommentTypes",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XM.commentTypes = new XM.CommentTypeCollection, XM.commentTypes.fetch(a);
+XM.commentTypes = new XM.CommentTypeCollection, XM.commentTypes.fetch(e);
 },
 waitingList: [ "loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges" ]
 }), XT.StartupTask.create({
 taskName: "loadCharacteristics",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XM.characteristics = new XM.CharacteristicCollection, XM.characteristics.fetch(a);
+XM.characteristics = new XM.CharacteristicCollection, XM.characteristics.fetch(e);
 },
 waitingList: [ "loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges" ]
 }), XT.StartupTask.create({
 taskName: "loadLanguages",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XM.languages = new XM.LanguageCollection, XM.languages.fetch(a);
+XM.languages = new XM.LanguageCollection, XM.languages.fetch(e);
 },
 waitingList: [ "loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges" ]
 }), XT.StartupTask.create({
 taskName: "loadLocales",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XM.locales = new XM.LocaleCollection, XM.locales.fetch(a);
+XM.locales = new XM.LocaleCollection, XM.locales.fetch(e);
 },
 waitingList: [ "loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges" ]
 }), XT.StartupTask.create({
 taskName: "loadPrivileges",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XM.privileges = new XM.PrivilegeCollection, XM.privileges.fetch(a);
+XM.privileges = new XM.PrivilegeCollection, XM.privileges.fetch(e);
 },
 waitingList: [ "loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges" ]
 }), XT.StartupTask.create({
 taskName: "loadCurrencies",
 task: function() {
-var a = {
+var e = {
 success: _.bind(function() {
-XM.baseCurrency = _.find(XM.currencies.models, function(a) {
-return a.get("isBase");
+XM.baseCurrency = _.find(XM.currencies.models, function(e) {
+return e.get("isBase");
 }), this.didComplete();
 }, this)
 };
-XM.currencies = new XM.CurrencyCollection, XM.currencies.fetch(a);
+XM.currencies = new XM.CurrencyCollection, XM.currencies.fetch(e);
 },
 waitingList: [ "loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges" ]
 }), XT.StartupTask.create({
 taskName: "loadCountries",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XM.countries = new XM.CountryCollection, XM.countries.fetch(a);
+XM.countries = new XM.CountryCollection, XM.countries.fetch(e);
 },
 waitingList: [ "loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges" ]
 }), XT.StartupTask.create({
 taskName: "loadStates",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XM.states = new XM.StateCollection, XM.states.fetch(a);
+XM.states = new XM.StateCollection, XM.states.fetch(e);
 },
 waitingList: [ "loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges" ]
 }), XT.StartupTask.create({
 taskName: "loadUnits",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XM.units = new XM.UnitCollection, XM.units.fetch(a);
+XM.units = new XM.UnitCollection, XM.units.fetch(e);
 },
 waitingList: [ "loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges" ]
 }), XT.StartupTask.create({
 taskName: "loadClassCodes",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XM.classCodes = new XM.ClassCodeCollection, XM.classCodes.fetch(a);
+XM.classCodes = new XM.ClassCodeCollection, XM.classCodes.fetch(e);
 },
 waitingList: [ "loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges" ]
 }), XT.StartupTask.create({
 taskName: "loadProductCategories",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XM.productCategories = new XM.ProductCategoryCollection, XM.productCategories.fetch(a);
+XM.productCategories = new XM.ProductCategoryCollection, XM.productCategories.fetch(e);
 },
 waitingList: [ "loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges" ]
 }), XT.StartupTask.create({
 taskName: "loadPriorities",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XM.priorities = new XM.PriorityCollection, XM.priorities.fetch(a);
+XM.priorities = new XM.PriorityCollection, XM.priorities.fetch(e);
 },
 waitingList: [ "loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges" ]
 }), XT.StartupTask.create({
 taskName: "loadIncidentCategories",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XM.incidentCategories = new XM.IncidentCategoryCollection, XM.incidentCategories.fetch(a);
+XM.incidentCategories = new XM.IncidentCategoryCollection, XM.incidentCategories.fetch(e);
 },
 waitingList: [ "loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges" ]
 }), XT.StartupTask.create({
 taskName: "loadIncidentResolutions",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XM.incidentResolutions = new XM.IncidentResolutionCollection, XM.incidentResolutions.fetch(a);
+XM.incidentResolutions = new XM.IncidentResolutionCollection, XM.incidentResolutions.fetch(e);
 },
 waitingList: [ "loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges" ]
 }), XT.StartupTask.create({
 taskName: "loadIncidentSeverities",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XM.incidentSeverities = new XM.IncidentSeverityCollection, XM.incidentSeverities.fetch(a);
+XM.incidentSeverities = new XM.IncidentSeverityCollection, XM.incidentSeverities.fetch(e);
 },
 waitingList: [ "loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges" ]
 }), XT.StartupTask.create({
 taskName: "loadOpportunityStages",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XM.opportunityStages = new XM.OpportunityStageCollection, XM.opportunityStages.fetch(a);
+XM.opportunityStages = new XM.OpportunityStageCollection, XM.opportunityStages.fetch(e);
 },
 waitingList: [ "loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges" ]
 }), XT.StartupTask.create({
 taskName: "loadOpportunityTypes",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XM.opportunityTypes = new XM.OpportunityTypeCollection, XM.opportunityTypes.fetch(a);
+XM.opportunityTypes = new XM.OpportunityTypeCollection, XM.opportunityTypes.fetch(e);
 },
 waitingList: [ "loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges" ]
 }), XT.StartupTask.create({
 taskName: "loadOpportunitySources",
 task: function() {
-var a = {
+var e = {
 success: _.bind(this.didComplete, this)
 };
-XM.opportunitySources = new XM.OpportunitySourceCollection, XM.opportunitySources.fetch(a);
+XM.opportunitySources = new XM.OpportunitySourceCollection, XM.opportunitySources.fetch(e);
 },
 waitingList: [ "loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges" ]
 });
-var a, b = [ {
+var e, t = [ {
+id: "N",
+name: "_new".loc()
+}, {
+id: "F",
+name: "_feedback".loc()
+}, {
+id: "C",
+name: "_confirmed".loc()
+}, {
+id: "R",
+name: "_resolved".loc()
+}, {
+id: "L",
+name: "_closed".loc()
+} ];
+XM.IncidentStatusModel = Backbone.Model.extend(), XM.IncidentStatusCollection = Backbone.Collection.extend({
+model: XM.IncidentStatusModel
+}), XM.incidentStatuses = new XM.IncidentStatusCollection;
+for (e = 0; e < t.length; e++) {
+var n = new XM.IncidentStatusModel(t[e]);
+XM.incidentStatuses.add(n);
+}
+var r = [ {
 id: "P",
 name: "_concept".loc()
 }, {
@@ -10997,11 +9561,11 @@ name: "_completed".loc()
 XM.ProjectStatusModel = Backbone.Model.extend({}), XM.ProjectStatusCollection = Backbone.Collection.extend({
 model: XM.ProjectStatusModel
 }), XM.projectStatuses = new XM.ProjectStatusCollection;
-for (a = 0; a < b.length; a++) {
-var c = new XM.ProjectStatusModel(b[a]);
-XM.projectStatuses.add(c);
+for (e = 0; e < r.length; e++) {
+var i = new XM.ProjectStatusModel(r[e]);
+XM.projectStatuses.add(i);
 }
-var d = [ {
+var s = [ {
 id: "O",
 name: "_organization".loc()
 }, {
@@ -11011,9 +9575,9 @@ name: "_individual".loc()
 XM.AccountTypeModel = Backbone.Model.extend({}), XM.AccountTypeCollection = Backbone.Collection.extend({
 model: XM.AccountTypeModel
 }), XM.accountTypes = new XM.AccountTypeCollection;
-for (a = 0; a < d.length; a++) {
-var e = new XM.AccountTypeModel(d[a]);
-XM.accountTypes.add(e);
+for (e = 0; e < s.length; e++) {
+var o = new XM.AccountTypeModel(s[e]);
+XM.accountTypes.add(o);
 }
 })();
 
@@ -11541,32 +10105,52 @@ fieldName: "description"
 } ]
 });
 },
-removeAllChildren: function(a) {
-var b = a.children.length;
-for (var c = 0; c < b; c++) a.removeChild(a.children[0]);
+removeAllChildren: function(e) {
+var t = e.children.length;
+for (var n = 0; n < t; n++) e.removeChild(e.children[0]);
 },
-removeAll: function(a) {
-var b = a.controls.length, c;
-for (c = 0; c < b; c++) a.removeControl(a.controls[0]);
-var d = a.children.length;
-for (c = 0; c < d; c++) a.removeChild(a.children[0]);
+removeAll: function(e) {
+var t = e.controls.length, n;
+for (n = 0; n < t; n++) e.removeControl(e.controls[0]);
+var r = e.children.length;
+for (n = 0; n < r; n++) e.removeChild(e.children[0]);
 },
-formatModelName: function(a) {
-return this.infoToMasterModelName(this.stripModelNamePrefix(a));
+formatModelName: function(e) {
+return this.infoToMasterModelName(this.stripModelNamePrefix(e));
 },
-infoToMasterModelName: function(a) {
-return a && a.indexOf("Info") >= 0 && (a = a.substring(0, a.length - 4)), a;
+infoToMasterModelName: function(e) {
+return e && e.indexOf("Info") >= 0 && (e = e.substring(0, e.length - 4)), e;
 },
-stripModelNamePrefix: function(a) {
-return a && a.indexOf("XM") >= 0 && (a = a.substring(3)), a;
+stripModelNamePrefix: function(e) {
+return e && e.indexOf("XM") >= 0 && (e = e.substring(3)), e;
 }
 }), XV.util = new XV.Util;
+})();
+
+// menu.js
+
+(function() {
+enyo.kind({
+name: "XV.MenuItem",
+kind: "onyx.MenuItem",
+classes: "xv-menuitem",
+published: {
+disabled: !1
+},
+disabledChanged: function() {
+this.addRemoveClass("disabled", this.disabled);
+},
+tap: function(e) {
+if (!this.disabled) return this.inherited(arguments);
+}
+});
 })();
 
 // label.js
 
 (function() {
-"use strict", enyo.kind({
+"use strict";
+enyo.kind({
 name: "XV.Label",
 kind: "enyo.Control",
 style: "border: 0px;",
@@ -11575,8 +10159,8 @@ tag: "span",
 name: "field",
 style: "border: 0px; "
 } ],
-setValue: function(a) {
-this.$.field.setContent(a);
+setValue: function(e) {
+this.$.field.setContent(e);
 }
 });
 })();
@@ -11586,8 +10170,11 @@ this.$.field.setContent(a);
 (function() {
 enyo.kind({
 name: "XV.Input",
+classes: "xv-input",
 published: {
-value: null
+attr: null,
+value: null,
+disabled: !1
 },
 events: {
 onValueChange: ""
@@ -11595,40 +10182,79 @@ onValueChange: ""
 components: [ {
 name: "input",
 kind: "onyx.Input",
+classes: "xv-subinput",
 onchange: "inputChanged"
 } ],
-inputChanged: function(a, b) {
-var c = this.$.input.getValue(), d = this.validate(c);
-d !== !1 ? this.setValue(d) : (this.setValue(null), this.valueChanged(""));
+clear: function(e) {
+this.setValue("", e);
 },
-setDisabled: function(a) {
-this.$.input.setDisabled(a);
+create: function() {
+this.inherited(arguments), this.disabledChanged();
 },
-setValue: function(a, b) {
-b = b || {};
-var c = this.getValue(), d;
-c !== a && (this.value = a, this.valueChanged(a), d = {
-value: a,
+disabledChanged: function() {
+this.$.input.setDisabled(this.getDisabled());
+},
+inputChanged: function(e, t) {
+var n = this.$.input.getValue(), r = this.validate(n);
+r !== !1 ? this.setValue(r) : (this.setValue(null), this.valueChanged(""));
+},
+setValue: function(e, t) {
+t = t || {};
+var n = this.getValue(), r;
+n !== e && (this.value = e, this.valueChanged(e), r = {
+value: e,
 originator: this
-}, b.silent || this.doValueChange(d));
+}, t.silent || this.doValueChange(r));
 },
-validate: function(a) {
-return a;
+validate: function(e) {
+return e;
 },
-valueChanged: function(a) {
-return this.$.input.setValue(a), a;
+valueChanged: function(e) {
+return this.$.input.setValue(e || ""), e;
+},
+setInputStyle: function(e) {
+this.$.input.setStyle(e);
+},
+setDisabled: function(e) {
+this.$.input.setDisabled(e);
 }
 }), enyo.kind({
 name: "XV.InputWidget",
 kind: "XV.Input",
+classes: "xv-inputwidget",
+published: {
+label: "",
+placeholder: ""
+},
 components: [ {
+kind: "FittableColumns",
+components: [ {
+name: "label",
+content: "",
+classes: "xv-label"
+}, {
 kind: "onyx.InputDecorator",
+fit: !0,
+classes: "xv-input-decorator",
 components: [ {
 name: "input",
 kind: "onyx.Input",
+classes: "xv-subinput",
 onchange: "inputChanged"
 } ]
 } ]
+} ],
+create: function() {
+this.inherited(arguments), this.labelChanged(), this.placeholderChanged();
+},
+labelChanged: function() {
+var e = this.getLabel() || ("_" + this.attr || "").loc();
+this.$.label.setContent(e + ":");
+},
+placeholderChanged: function() {
+var e = this.getPlaceholder();
+this.$.input.setPlaceholder(e);
+}
 });
 })();
 
@@ -11657,17 +10283,63 @@ this.doButtonTapped();
 enyo.kind({
 name: "XV.Checkbox",
 kind: "onyx.Checkbox",
+published: {
+attr: null
+},
 events: {
 onValueChange: ""
 },
 handlers: {
 onchange: "changed"
 },
-setValue: function(a, b) {
-b = b || {}, this._silent = b.silent, this.inherited(arguments), this._silent = !1;
+clear: function(e) {
+this.setValue(!1, e);
 },
-changed: function(a, b) {
-this._silent || (b.value = this.getValue(), this.doValueChange(b));
+setValue: function(e, t) {
+t = t || {}, this._silent = t.silent, this.inherited(arguments), this._silent = !1;
+},
+changed: function(e, t) {
+this._silent || (t.value = this.getValue(), this.doValueChange(t));
+}
+}), enyo.kind({
+name: "XV.CheckboxWidget",
+kind: "XV.Input",
+classes: "xv-inputwidget xv-checkboxwidget",
+published: {
+label: ""
+},
+components: [ {
+kind: "FittableColumns",
+components: [ {
+name: "label",
+content: "",
+classes: "xv-decorated-label"
+}, {
+kind: "onyx.InputDecorator",
+classes: "xv-input-decorator",
+components: [ {
+name: "input",
+kind: "onyx.Checkbox",
+onchange: "inputChanged"
+} ]
+} ]
+} ],
+clear: function(e) {
+this.setValue(!1, e);
+},
+create: function() {
+this.inherited(arguments), this.labelChanged();
+},
+inputChanged: function(e, t) {
+var n = this.$.input.getValue();
+this.setValue(n);
+},
+labelChanged: function() {
+var e = (this.getLabel() || ("_" + this.attr || "").loc()) + ":";
+this.$.label.setContent(e);
+},
+valueChanged: function(e) {
+return this.$.input.setValue(e), e;
 }
 });
 })();
@@ -11681,27 +10353,2079 @@ kind: "XV.Input",
 published: {
 scale: 0
 },
-setValue: function(a, b) {
-a = _.isNumber(a) ? XT.math.round(a, this.getScale()) : null, XV.Input.prototype.setValue.call(this, a, b);
+setValue: function(e, t) {
+e = _.isNumber(e) ? XT.math.round(e, this.getScale()) : null, XV.Input.prototype.setValue.call(this, e, t);
 },
-validate: function(a) {
-return a = Number(a), isNaN(a) ? !1 : a;
+validate: function(e) {
+return e = Number(e), isNaN(e) ? !1 : e;
 },
-valueChanged: function(a) {
-return a = a ? Globalize.format(a, "n" + this.getScale()) : "", XV.Input.prototype.valueChanged.call(this, a);
+valueChanged: function(e) {
+return e = e || e === 0 ? Globalize.format(e, "n" + this.getScale()) : "", XV.Input.prototype.valueChanged.call(this, e);
 }
 }), enyo.kind({
 name: "XV.NumberWidget",
 kind: "XV.Number",
+classes: "xv-inputwidget xv-numberwidget",
+published: {
+label: "",
+placeholder: ""
+},
 components: [ {
 kind: "onyx.InputDecorator",
+classes: "xv-input-decorator",
 components: [ {
+name: "label",
+content: "",
+classes: "xv-label"
+}, {
 name: "input",
 kind: "onyx.Input",
 onchange: "inputChanged"
 } ]
+} ],
+create: function() {
+this.inherited(arguments), this.labelChanged();
+},
+labelChanged: function() {
+var e = (this.getLabel() || ("_" + this.attr + "").loc()) + ":";
+this.$.label.setContent(e);
+},
+placeholderChanged: function() {
+var e = this.getPlaceholder();
+this.$.input.setPlaceholder(e);
+}
+});
+})();
+
+// text_area.js
+
+(function() {
+enyo.kind({
+name: "XV.TextArea",
+kind: "XV.Input",
+classes: "xv-inputwidget xv-textarea",
+published: {
+attr: null,
+placeholder: ""
+},
+components: [ {
+name: "input",
+kind: "onyx.TextArea",
+classes: "xv-textarea-input",
+onchange: "inputChanged"
+} ],
+placeholderChanged: function() {
+var e = this.getPlaceholder();
+this.$.input.setPlaceholder(e);
+}
+});
+})();
+
+// dropdown.js
+
+(function() {
+enyo.kind({
+name: "XV.DropdownWidget",
+kind: "enyo.Control",
+classes: "xv-dropdownwidget",
+events: {
+onValueChange: ""
+},
+published: {
+attr: null,
+label: "",
+value: null,
+collection: null,
+disabled: !1,
+idAttribute: "id",
+nameAttribute: "name",
+valueAttribute: null
+},
+handlers: {
+onSelect: "itemSelected"
+},
+components: [ {
+kind: "FittableColumns",
+components: [ {
+name: "label",
+content: "",
+classes: "xv-dropdown-label"
+}, {
+kind: "onyx.InputDecorator",
+classes: "xv-input-decorator",
+components: [ {
+kind: "onyx.PickerDecorator",
+components: [ {
+content: "_none".loc(),
+classes: "xv-picker"
+}, {
+name: "picker",
+kind: "onyx.Picker"
 } ]
+} ]
+} ]
+} ],
+clear: function(e) {
+this.setValue(null, e);
+},
+collectionChanged: function() {
+var e = this.getNameAttribute(), t = XT.getObjectByName(this.getCollection()), n, r, i, s = !1, o = this, u;
+if (!t) {
+if (s) {
+XT.log("Could not find collection " + this.getCollection());
+return;
+}
+i = function() {
+s = !0, o.collectionChanged();
+}, XT.getStartupManager().registerCallback(i);
+return;
+}
+this.$.picker.createComponent({
+value: null,
+content: "_none".loc()
+});
+for (n = 0; n < t.models.length; n++) u = t.models[n], r = u.get(e), this.$.picker.createComponent({
+value: u,
+content: r
+});
+this.render();
+},
+create: function() {
+this.inherited(arguments), this.getCollection() && this.collectionChanged(), this.labelChanged();
+},
+disabledChanged: function(e, t) {
+this.$.pickerButton.setDisabled(this.getDisabled());
+},
+itemSelected: function(e, t) {
+var n = this.$.picker.getSelected().value, r = this.getValueAttribute();
+this.setValue(r ? n[r] : n);
+},
+labelChanged: function() {
+var e = this.getLabel() || (this.attr ? ("_" + this.attr).loc() + ":" : "");
+this.$.label.setShowing(e), this.$.label.setContent(e);
+},
+setValue: function(e, t) {
+t = t || {};
+var n, r = this.getValue();
+e !== r && (this._selectValue(e) || (e = null), e !== r && (this.value = e, t.silent || (n = {
+originator: this,
+value: e
+}, this.doValueChange(n))));
+},
+_selectValue: function(e) {
+e = !e || this.getValueAttribute() ? e : e.id;
+var t = _.find(this.$.picker.getComponents(), function(t) {
+if (t.kind === "onyx.MenuItem") return (t.value ? t.value.id : null) === e;
+});
+return t || (e = null), this.$.picker.setSelected(t), e;
+}
+});
+})();
+
+// address.js
+
+(function() {
+enyo.kind({
+name: "XV.AddressWidget",
+kind: "FittableRows",
+classes: "xv-addresswidget",
+published: {
+attr: null,
+value: null
+},
+events: {
+onModelUpdate: ""
+},
+handlers: {
+onfocus: "receiveFocus"
+},
+components: [ {
+kind: "enyo.TextArea",
+name: "viewer",
+showing: !0,
+fit: !0,
+classes: "xv-addresswidget-viewer",
+placeholder: "_none".loc()
+}, {
+kind: "onyx.InputDecorator",
+name: "editor",
+showing: !1,
+fit: !0,
+classes: "xv-addresswidget-editor",
+components: [ {
+kind: "onyx.Input",
+name: "line1",
+showing: !1,
+placeholder: "_street".loc(),
+style: "display: block;"
+}, {
+kind: "onyx.Input",
+name: "line2",
+showing: !1,
+style: "display: block;"
+}, {
+kind: "onyx.Input",
+name: "line3",
+showing: !1,
+style: "display: block;"
+}, {
+kind: "onyx.Input",
+name: "city",
+placeholder: "_city".loc(),
+showing: !1,
+style: "width: 126px;"
+}, {
+kind: "onyx.Input",
+name: "state",
+placeholder: "_state".loc(),
+showing: !1,
+style: "width: 76px;"
+}, {
+kind: "onyx.Input",
+name: "postalCode",
+showing: !1,
+placeholder: "_postalCode".loc(),
+style: "width: 126px;"
+}, {
+kind: "onyx.Input",
+name: "country",
+showing: !1,
+placeholder: "_country".loc(),
+style: "display: block;"
+} ]
+} ],
+receiveBlur: function(e, t) {
+this._wasIn && (this.$.viewer.show(), this.$.editor.hide(), this.$.line1.hide(), this.$.line2.hide(), this.$.line3.hide(), this.$.city.hide(), this.$.state.hide(), this.$.postalCode.hide(), this.$.country.hide(), this._wasIn = !1);
+switch (t.originator) {
+case this.$.line1:
+case this.$.line2:
+case this.$.line3:
+case this.$.city:
+case this.$.state:
+case this.$.postalCode:
+case this.$.country:
+this._wasIn = !0;
+}
+},
+receiveFocus: function(e, t) {
+this._alert || (alert("Editing of addresses is not supported yet."), this._alert = !0);
+},
+valueChanged: function() {
+var e = this.getValue(), t = e.get("line1") || "", n = e.get("line2") || "", r = e.get("line3") || "", i = e.get("city") || "", s = e.get("state") || "", o = e.get("postalCode") || "", u = e.get("country") || "", a = XM.Address.format(e);
+this.$.line1.setValue(t), this.$.line2.setValue(n), this.$.line3.setValue(r), this.$.city.setValue(i), this.$.state.setValue(s), this.$.postalCode.setValue(o), this.$.country.setValue(u), this.$.viewer.setValue(a);
+}
+});
+})();
+
+// comments.js
+
+(function() {
+"use strict";
+enyo.kind({
+name: "XV.CommentsWidget",
+kind: enyo.Control,
+published: {
+collection: null,
+descriptor: null,
+fields: [ {
+fieldName: "createdBy",
+label: "creator",
+type: "text"
+}, {
+fieldName: "created",
+label: "date",
+type: "date"
+}, {
+fieldName: "text",
+label: "text",
+type: "text"
+} ]
+},
+events: {
+onModelUpdate: ""
+},
+classes: "xv-widgets-comments",
+style: "height: 200px; width: 700px; margin-right: 5px; font-size: 12px;",
+components: [ {
+kind: "onyx.GroupboxHeader",
+name: "title",
+classes: "xv-widgets-comments-title"
+}, {
+kind: "Repeater",
+name: "commentsRepeater",
+count: 1,
+onSetupItem: "setupRow",
+components: [ {
+kind: "onyx.Groupbox",
+classes: "onyx-toolbar-inline",
+style: "background-color: white;",
+name: "commentRow"
+} ]
+} ],
+setupRow: function(e, t) {
+var n = t.item.$.commentRow;
+for (var r = 0; r < this.getFields().length; r++) {
+var i = this.getFields()[r], s = ("_" + i.label).loc();
+if (t.index === 0) this.createComponent({
+container: n,
+content: s,
+style: "text-weight: bold; border-width: 0px;"
+}); else {
+var o = this.getCollection().at(t.index - 1), u = this.createComponent({
+container: n,
+placeholder: s,
+style: "border: 0px;",
+onchange: "doFieldChanged"
+});
+u.setContent(this.formatContent(o.get(i.fieldName), i.type));
+}
+}
+},
+formatContent: function(e, t) {
+return t === "date" ? Globalize.format(e, "d") : e;
+},
+descriptorChanged: function() {
+this.$.title.setContent(this.getDescriptor().title);
+},
+setValue: function(e) {
+this.setCollection(e);
+},
+getValue: function() {
+return this.getCollection();
+},
+collectionChanged: function() {
+this.$.commentsRepeater.setCount(this.getCollection().length + 1), this.render();
+},
+doFieldChanged: function(e, t) {}
+});
+})();
+
+// date.js
+
+(function() {
+enyo.kind({
+name: "XV.Date",
+kind: "XV.Input",
+setValue: function(e, t) {
+e = _.isDate(e) ? new Date(e.valueOf()) : null, XV.Input.prototype.setValue.call(this, e, t);
+},
+textToDate: function(e) {
+var t = null, n = 864e5;
+return e === "0" || e.indexOf("+") === 0 || e.indexOf("-") === 0 ? t = new Date((new Date).getTime() + e * n) : e.indexOf("#") === 0 ? (t = new Date, t.setMonth(0), t.setDate(e.substring(1))) : e.length && !isNaN(e) ? (t = new Date, t.setDate(e)) : e && (t = new Date(e)), t && (isNaN(t.getTime()) ? t = !1 : t.setHours(0, 0, 0, 0)), t;
+},
+validate: function(e) {
+return e = this.textToDate(e), _.isDate(e) || _.isEmpty(e) ? e : !1;
+},
+valueChanged: function(e) {
+return e ? (e = new Date(e.valueOf()), e.setMinutes(e.getTimezoneOffset()), e = Globalize.format(e, "d")) : e = "", XV.Input.prototype.valueChanged.call(this, e);
+}
 }), enyo.kind({
+name: "XV.DateWidget",
+kind: "XV.Date",
+classes: "xv-inputwidget xv-datewidget",
+published: {
+label: "",
+placeholder: ""
+},
+components: [ {
+kind: "FittableColumns",
+components: [ {
+name: "label",
+content: "",
+classes: "xv-decorated-label"
+}, {
+kind: "onyx.InputDecorator",
+name: "decorator",
+classes: "xv-input-decorator",
+components: [ {
+name: "input",
+kind: "onyx.Input",
+onchange: "inputChanged",
+classes: "xv-subinput"
+}, {
+name: "icon",
+kind: "onyx.IconButton",
+ontap: "iconTapped",
+src: "assets/date-icon.png"
+}, {
+name: "datePickPopup",
+kind: "onyx.Popup",
+modal: !0,
+components: [ {
+kind: "GTS.DatePicker",
+name: "datePick",
+style: "",
+onChange: "datePicked"
+} ]
+} ]
+} ]
+} ],
+create: function() {
+this.inherited(arguments), this.labelChanged();
+},
+datePicked: function(e, t) {
+this.setValue(t), this.$.datePickPopup.hide();
+},
+iconTapped: function() {
+this.$.datePickPopup.show();
+},
+labelChanged: function() {
+var e = (this.getLabel() || ("_" + this.attr || "").loc()) + ":";
+this.$.label.setContent(e);
+},
+placeholderChanged: function() {
+var e = this.getPlaceholder();
+this.$.input.setPlaceholder(e);
+},
+valueChanged: function(e) {
+var t = e;
+e = XV.Date.prototype.valueChanged.call(this, e), this.$.datePick.setValue(e ? t : new Date), this.$.datePick.render();
+}
+});
+})();
+
+// relation.js
+
+(function() {
+enyo.kind({
+name: "XV.RelationWidget",
+kind: enyo.Control,
+classes: "xv-inputwidget xv-relationwidget",
+published: {
+attr: null,
+label: "",
+placeholder: "",
+value: null,
+list: "",
+disabled: !1,
+keyAttribute: "number",
+nameAttribute: "name",
+descripAttribute: ""
+},
+events: {
+onSearch: "",
+onValueChange: "",
+onWorkspace: ""
+},
+handlers: {
+onModelChange: "modelChanged"
+},
+components: [ {
+kind: "FittableColumns",
+components: [ {
+name: "label",
+content: "",
+classes: "xv-decorated-label"
+}, {
+kind: "onyx.InputDecorator",
+classes: "xv-input-decorator",
+components: [ {
+name: "input",
+kind: "onyx.Input",
+classes: "xv-subinput",
+onkeyup: "keyUp",
+onkeydown: "keyDown",
+onblur: "receiveBlur"
+}, {
+kind: "onyx.MenuDecorator",
+onSelect: "itemSelected",
+components: [ {
+kind: "onyx.IconButton",
+src: "assets/relation-icon-search.png"
+}, {
+name: "popupMenu",
+floating: !0,
+kind: "onyx.Menu",
+components: [ {
+kind: "XV.MenuItem",
+name: "searchItem",
+content: "_search".loc()
+}, {
+kind: "XV.MenuItem",
+name: "openItem",
+content: "_open".loc(),
+disabled: !0
+}, {
+kind: "XV.MenuItem",
+name: "newItem",
+content: "_new".loc(),
+disabled: !0
+} ]
+} ]
+}, {
+kind: "onyx.MenuDecorator",
+classes: "xv-relationwidget-completer",
+onSelect: "relationSelected",
+components: [ {
+kind: "onyx.Menu",
+name: "autocompleteMenu",
+modal: !1
+} ]
+} ]
+} ]
+}, {
+name: "name",
+classes: "xv-relationwidget-description"
+}, {
+name: "description",
+classes: "xv-relationwidget-description"
+} ],
+autocomplete: function() {
+var e = this.getKeyAttribute(), t = this.getValue() ? this.getValue().get(e) : "", n = this.$.input.getValue(), r;
+n && n !== t ? (r = {
+parameters: [ {
+attribute: e,
+operator: "BEGINS_WITH",
+value: n
+} ],
+rowLimit: 1,
+orderBy: [ {
+attribute: e
+} ]
+}, this._collection.fetch({
+success: enyo.bind(this, "_fetchSuccess"),
+query: r
+})) : n || this.setValue(null);
+},
+clear: function(e) {
+this.setValue(null, e);
+},
+create: function() {
+this.inherited(arguments), this.listChanged(), this.labelChanged(), this.disabledChanged();
+},
+disabledChanged: function() {
+var e = this.getDisabled();
+this.$.input.setDisabled(e), this.$.name.addRemoveClass("disabled", e), this.$.description.addRemoveClass("disabled", e);
+},
+itemSelected: function(e, t) {
+var n = this, r = t.originator, i = this.getList(), s = this.getValue(), o = s ? s.id : null, u = this._List ? this._List.prototype.workspace : null, a;
+switch (r.name) {
+case "searchItem":
+a = function(e) {
+n.setValue(e);
+}, this.doSearch({
+list: i,
+searchText: this.$.input.getValue(),
+callback: a
+});
+break;
+case "openItem":
+this.doWorkspace({
+workspace: u,
+id: o
+});
+break;
+case "newItem":
+a = function(e) {
+var t = n._collection.model, r = new t({
+id: e.id
+}), i = {};
+i.success = function() {
+n.setValue(r);
+}, r.fetch(i);
+}, this.doWorkspace({
+workspace: u,
+callback: a
+});
+}
+},
+keyDown: function(e, t) {
+t.keyCode === 9 && (this.$.autocompleteMenu.hide(), this.autocomplete());
+},
+keyUp: function(e, t) {
+var n, r = this.getKeyAttribute(), i = this.getValue() ? this.getValue().get(r) : "", s = this.$.input.getValue(), o = this.$.autocompleteMenu;
+s && s !== i && t.keyCode !== 9 ? (n = {
+parameters: [ {
+attribute: r,
+operator: "BEGINS_WITH",
+value: s
+} ],
+rowLimit: 10,
+orderBy: [ {
+attribute: r
+} ]
+}, this._collection.fetch({
+success: enyo.bind(this, "_collectionFetchSuccess"),
+query: n
+})) : o.hide();
+},
+labelChanged: function() {
+var e = this.getLabel() || ("_" + this.attr || "").loc();
+this.$.label.setContent(e + ":");
+},
+listChanged: function() {
+var e = this.getList(), t;
+delete this._List, delete this._Workspace;
+if (!e) return;
+this._List = XT.getObjectByName(e), this._Workspace = this._List.prototype.workspace ? XT.getObjectByName(this._List.prototype.workspace) : null, t = this._List.prototype.collection ? XT.getObjectByName(this._List.prototype.collection) : null;
+if (!t) return;
+this._collection = new t;
+},
+modelChanged: function(e, t) {
+var n = this, r = this._List, i = r && r.prototype.workspace ? XT.getObjectByName(r.prototype.workspace) : null, s = {}, o = this.getValue();
+if (!r || !i || !o) return;
+i.prototype.model === t.model && o.id === t.id && (s.success = function() {
+n.setValue(o);
+}, o.fetch(s));
+},
+placeholderChanged: function() {
+var e = this.getPlaceholder();
+this.$.input.setPlaceholder(e);
+},
+receiveBlur: function(e, t) {
+this.autocomplete();
+},
+relationSelected: function(e, t) {
+return this.setValue(t.originator.model), this.$.autocompleteMenu.hide(), !0;
+},
+setValue: function(e, t) {
+t = t || {};
+var n = this, r = e ? e.id : null, i = this.value ? this.value.id : null, s = this.getKeyAttribute(), o = this.getNameAttribute(), u = this.getDescripAttribute(), a = {
+value: e,
+originator: this
+}, f = "", l = "", c = "", h = this._Workspace, p = h && h.prototype.model ? XT.getObjectByName(h.prototype.model) : null, d = p ? p.prototype.recordType : null, v = function() {
+var e = {}, t = {};
+r && (e.success = function(e) {
+n.destroyed || n.$.openItem.setDisabled(!e);
+}, t.recordType = d, t.id = r, XT.dataSource.dispatch("XM.Model", "canRead", t, e), n.$.newItem.setDisabled(!p.canCreate()));
+};
+this.value = e, e && e.get && (f = e.get(s) || "", l = e.get(o) || "", c = e.get(u) || ""), this.$.input.setValue(f), this.$.name.setShowing(l), this.$.name.setContent(l), this.$.description.setShowing(c), this.$.description.setContent(c), r !== i && !t.silent && this.doValueChange(a), n.$.openItem.setShowing(h), n.$.newItem.setShowing(h), n.$.openItem.setDisabled(!0), n.$.newItem.setDisabled(!0), p && h && (XT.session ? v() : XT.getStartupManager().registerCallback(v));
+},
+_collectionFetchSuccess: function() {
+var e = this.getKeyAttribute(), t = this.$.autocompleteMenu, n, r;
+t.destroyComponents(), t.controls = [], t.children = [];
+if (this._collection.length) {
+for (r = 0; r < this._collection.length; r++) n = this._collection.models[r], t.createComponent({
+content: n.get(e),
+model: n
+});
+t.reflow(), t.render(), t.show();
+} else t.hide();
+},
+_fetchSuccess: function() {
+var e = this._collection.length ? this._collection.models[0] : null;
+this.setValue(e);
+}
+});
+})();
+
+// grid.js
+
+(function() {
+"use strict";
+enyo.kind({
+name: "XV.GridWidget",
+kind: enyo.Control,
+published: {
+collection: null,
+descriptor: null,
+customization: {}
+},
+events: {
+onSubmodelUpdate: ""
+},
+style: "height: 200px; width: 900px; margin-right: 5px; font-size: 12px;",
+components: [ {
+kind: "onyx.GroupboxHeader",
+name: "title"
+}, {
+kind: "Repeater",
+name: "gridRepeater",
+count: 0,
+onSetupItem: "setupRow",
+components: [ {
+kind: "onyx.Groupbox",
+classes: "onyx-toolbar-inline",
+style: "background-color: white;",
+name: "gridRow"
+} ]
+} ],
+setupRow: function(e, t) {
+var n = t.item.$.gridRow;
+for (var r = 0; r < this.getDescriptor().fields.length; r++) {
+var i = this.getDescriptor().fields[r], s = i.label ? i.label : i.fieldName, o = ("_" + s).loc();
+if (t.index === 0) this.createComponent({
+container: n,
+content: o,
+style: "text-weight: bold; border-width: 0px; width: " + i.width + "px;"
+}); else {
+var u = this.createComponent({
+kind: i.fieldType || "XV.Input",
+container: n,
+name: i.fieldName + (t.index - 1),
+placeholder: o,
+style: "border: 0px; width: " + i.width + "px;",
+onchange: "doFieldChanged"
+});
+i.collection && u.setCollection(i.collection);
+if (this.getCollection().size() + 1 > t.index) {
+var a = this.getCollection().at(t.index - 1);
+u.setValue(a.get(i.fieldName), {
+silent: !0
+}), this.getCustomization().disallowEdit && u.setDisabled(!0);
+} else this.getCustomization().stampUser && i.fieldName === "createdBy" && (u.setValue("<YOU>", {
+silent: !0
+}), u.setDisabled(!0)), this.getCustomization().stampDate && i.fieldName === "created" && (u.setValue("<NOW>", {
+silent: !0
+}), u.setDisabled(!0));
+}
+}
+!this.getCustomization().disallowEdit && t.index !== 0 && t.index !== this.getCollection().size() + 1 && this.createComponent({
+kind: "onyx.Button",
+container: n,
+name: "delete" + (t.index - 1),
+content: "Delete",
+onclick: "deleteRow"
+}), this.getCollection() && t.index === this.getCollection().size() + 1 && n.applyStyle("border", "1px solid orange");
+},
+deleteRow: function(e, t) {
+this.$.gridRepeater.removeChild(e.parent.parent), this.$.gridRepeater.render();
+var n = e.getName(), r = n.match(/(\D+)(\d+)/), i = Number(r[2]);
+this.getCollection().at(i).destroy(), this.doSubmodelUpdate();
+},
+descriptorChanged: function() {
+var e = this.getDescriptor();
+this.$.title.setContent(e.title), this.$.gridRepeater.setCount(1);
+},
+setValue: function(e) {
+this.setCollection(e);
+},
+getValue: function() {
+return this.getCollection();
+},
+collectionChanged: function() {
+this.$.gridRepeater.setCount(this.getCollection().size() + 2);
+},
+doFieldChanged: function(e, t) {
+var n = e.getName(), r = e.getValue(), i = n.match(/(\D+)(\d+)/), s = Number(i[2]), o = i[1], u = {};
+u[o] = r;
+if (s >= this.getCollection().size()) {
+var a = XV.util.stripModelNamePrefix(this.getDescriptor().modelType), f = new XM[a](u, {
+isNew: !0
+});
+for (var l = 0; l < f.requiredAttributes.length; l++) {
+var c = f.requiredAttributes[l];
+if (!f.get(c)) {
+if (c === "dueDate") continue;
+if (c === "id") continue;
+var h = {};
+h[c] = "", f.set(h);
+}
+}
+this.getCollection().add(f);
+} else this.getCollection().at(s).set(u);
+this.doSubmodelUpdate();
+}
+});
+})();
+
+// parameter.js
+
+(function() {
+enyo.kind({
+name: "XV.ParameterItem",
+classes: "xv-parameter-item",
+published: {
+value: "",
+label: "",
+attr: "",
+operator: ""
+},
+events: {
+onParameterChange: ""
+},
+handlers: {
+onValueChange: "parameterChanged"
+},
+components: [ {
+name: "input",
+classes: "xv-parameter-item-input"
+} ],
+defaultKind: "XV.InputWidget",
+create: function() {
+this.inherited(arguments), this.valueChanged(), this.labelChanged(), !this.getOperator() && this.defaultKind === "XV.InputWidget" && this.setOperator("MATCHES");
+},
+labelChanged: function() {
+this.$.input.setLabel(this.label);
+},
+getParameter: function() {
+var e;
+return this.getValue() && (e = {
+attribute: this.getAttr(),
+operator: this.getOperator(),
+value: this.getValue()
+}), e;
+},
+getValue: function() {
+return this.$.input.getValue();
+},
+parameterChanged: function() {
+var e = {
+value: this.getValue,
+originator: this
+};
+return this.doParameterChange(e), !0;
+},
+valueChanged: function() {
+this.$.input.setValue(this.value);
+}
+}), enyo.kind({
+name: "XV.ParameterWidget",
+kind: "FittableRows",
+classes: "xv-groupbox",
+defaultKind: "XV.ParameterItem",
+getParameters: function() {
+var e, t, n = [], r;
+for (e = 0; e < this.children.length; e++) r = this.children[e], t = r && r.getParameter ? r.getParameter() : null, t && n.push(t);
+return n;
+}
+});
+})();
+
+// list.js
+
+(function() {
+var e = 50, t = 100;
+enyo.kind({
+name: "XV.ListItem",
+classes: "xv-list-item",
+ontap: "itemTap"
+}), enyo.kind({
+name: "XV.ListColumn",
+classes: "xv-list-column"
+}), enyo.kind({
+name: "XV.ListAttr",
+classes: "xv-list-attr",
+published: {
+attr: ""
+}
+}), enyo.kind({
+name: "XV.List",
+kind: "List",
+classes: "xv-list",
+published: {
+label: "",
+collection: null,
+query: null,
+isFetching: !1,
+isMore: !0,
+parameterWidget: null,
+workspace: null
+},
+events: {
+onItemTap: "",
+onWorkspace: ""
+},
+fixedHeight: !0,
+handlers: {
+onModelChange: "modelChanged",
+onSetupItem: "setupItem"
+},
+collectionChanged: function() {
+var e = this.getCollection(), t = e ? XT.getObjectByName(e) : !1;
+delete this._collection;
+if (!t) return;
+t && (this._collection = new t);
+},
+create: function() {
+this.inherited(arguments), this.collectionChanged();
+},
+getModel: function(e) {
+return this._collection.models[e];
+},
+getSearchableAttributes: function() {
+return this._collection.model.getSearchableAttributes();
+},
+fetch: function(t) {
+var n = this, r = this.getQuery() || {}, i;
+t = t ? _.clone(t) : {}, t.showMore = _.isBoolean(t.showMore) ? t.showMore : !1, i = t.success, t.showMore ? (r.rowOffset += e, t.add = !0) : (r.rowOffset = 0, r.rowLimit = e), _.extend(t, {
+success: function(e, t, r) {
+n.fetched(), i && i(e, t, r);
+},
+query: r
+}), this._collection.fetch(t);
+},
+fetched: function() {
+var e = this.getQuery() || {}, t = e.rowOffset || 0, n = e.rowLimit || 0, r = this._collection.length, i = n ? t + n <= r && this.getCount() !== r : !1, s = 50 > r ? r : 50;
+this.setIsMore(i), this.setIsFetching(!1), this.setCount(r), s !== this.rowsPerPage && this.setRowsPerPage(s), t ? this.refresh() : this.reset();
+},
+itemTap: function(e, t) {
+t.list = this, this.doItemTap(t);
+},
+modelChanged: function(e, t) {
+var n = this, r = this.getWorkspace(), i = {}, s;
+r = r ? XT.getObjectByName(r) : null, r && r.prototype.model === t.model && this._collection && (s = this._collection.get(t.id), s && (i.success = function() {
+n.refresh();
+}, s.fetch(i)));
+},
+queryChanged: function() {
+var e = this.getQuery();
+this._collection && e.orderBy && (this._collection.comparator = function(t, n) {
+var r, i, s, o;
+for (o = 0; o < e.orderBy.length; o++) {
+s = e.orderBy[o].attribute, r = t.get(s), i = n.get(s);
+if (r !== i) return r > i ? 1 : -1;
+}
+return 0;
+});
+},
+scroll: function(e, n) {
+var r = this.inherited(arguments), i = this.getScrollBounds().maxTop - this.rowHeight * t, s = {};
+return this.getIsMore() && this.getScrollPosition() > i && !this.fetching && (this.setIsFetching(!0), s.showMore = !0, this.fetch(s)), r;
+},
+setupItem: function(e, t) {
+var n = this._collection.models[t.index], r, i, s, o, u;
+for (r in this.$) this.$.hasOwnProperty(r) && this.$[r].getAttr && (s = this.$[r], i = !1, n.getValue ? o = n.getValue(this.$[r].getAttr()) : o = n.get(this.$[r].getAttr()), u = s.formatter, !o && s.placeholder && (o = s.placeholder, i = !0), u && (o = this[u](o, s, n)), o && o instanceof Date && (o = Globalize.format(o, "d")), s.setContent(o), s.addRemoveClass("placeholder", i));
+},
+setQuery: function() {
+var e = _.clone(this.query);
+this.inherited(arguments), _.isEqual(e, this.query) && this.queryChanged();
+}
+});
+})();
+
+// navigator.js
+
+(function() {
+var e = 0, t = 1;
+enyo.kind({
+name: "XV.Navigator",
+kind: "Panels",
+classes: "app enyo-unselectable",
+published: {
+modules: []
+},
+events: {
+onListAdded: "",
+onTogglePullout: "",
+onWorkspace: ""
+},
+handlers: {
+onParameterChange: "requery",
+onItemTap: "itemTap"
+},
+showPullout: !0,
+arrangerKind: "CollapsingArranger",
+components: [ {
+kind: "FittableRows",
+classes: "left",
+components: [ {
+kind: "onyx.Toolbar",
+classes: "onyx-menu-toolbar",
+components: [ {
+kind: "onyx.Button",
+name: "backButton",
+content: "_logout".loc(),
+ontap: "backTapped"
+}, {
+kind: "Group",
+name: "iconButtonGroup",
+defaultKind: "onyx.IconButton",
+tag: null,
+components: [ {
+name: "historyIconButton",
+src: "assets/menu-icon-bookmark.png",
+ontap: "showHistory"
+}, {
+name: "searchIconButton",
+src: "assets/menu-icon-search.png",
+ontap: "showParameters",
+showing: !1
+} ]
+}, {
+kind: "onyx.Popup",
+name: "logoutPopup",
+centered: !0,
+modal: !0,
+floating: !0,
+components: [ {
+content: "_logoutConfirmation".loc()
+}, {
+tag: "br"
+}, {
+kind: "onyx.Button",
+content: "_ok".loc(),
+ontap: "logout"
+}, {
+kind: "onyx.Button",
+content: "_cancel".loc(),
+ontap: "closeLogoutPopup",
+classes: "onyx-blue"
+} ]
+} ]
+}, {
+name: "menuPanels",
+kind: "Panels",
+draggable: !1,
+fit: !0,
+margin: 0,
+components: [ {
+name: "moduleMenu",
+kind: "List",
+touch: !0,
+onSetupItem: "setupModuleMenuItem",
+components: [ {
+name: "moduleItem",
+classes: "item enyo-border-box"
+} ]
+}, {
+name: "panelMenu",
+kind: "List",
+touch: !0,
+onSetupItem: "setupPanelMenuItem",
+components: [ {
+name: "listItem",
+classes: "item enyo-border-box"
+} ]
+}, {} ]
+} ]
+}, {
+kind: "FittableRows",
+components: [ {
+kind: "onyx.MoreToolbar",
+name: "contentToolbar",
+components: [ {
+kind: "onyx.Grabber"
+}, {
+name: "rightLabel",
+style: "text-align: center"
+}, {
+name: "search",
+kind: "onyx.InputDecorator",
+style: "float: right;",
+showing: !1,
+components: [ {
+name: "searchInput",
+kind: "onyx.Input",
+style: "width: 200px;",
+placeholder: "Search",
+onchange: "inputChanged"
+}, {
+kind: "Image",
+src: "assets/search-input-search.png"
+} ]
+}, {
+name: "newButton",
+kind: "onyx.Button",
+content: "_new".loc(),
+ontap: "newRecord",
+style: "float: right;",
+showing: !1
+} ]
+}, {
+name: "contentPanels",
+kind: "Panels",
+margin: 0,
+fit: !0,
+draggable: !1,
+panelCount: 0
+} ]
+} ],
+fetched: {},
+activate: function() {
+this.setMenuPanel(e);
+},
+backTapped: function() {
+var t = this.$.menuPanels.getIndex();
+t === e ? this.warnLogout() : this.setMenuPanel(e);
+},
+create: function() {
+this.inherited(arguments);
+var e = this.getModules() || [], t, n, r, i;
+for (r = 0; r < e.length; r++) {
+t = e[r].panels || [];
+for (i = 0; i < t.length; i++) t[i].index = this.$.contentPanels.panelCount++, n = this.$.contentPanels.createComponent(t[i]), n instanceof XV.List && this.doListAdded(n);
+}
+this.$.moduleMenu.setCount(e.length);
+},
+getSelectedModule: function(e) {
+return this._selectedModule;
+},
+fetch: function(e) {
+e = e ? _.clone(e) : {};
+var t = e.index || this.$.contentPanels.getIndex(), n = this.$.contentPanels.getPanels()[t], r = n ? n.name : "", i, s, o, u;
+if (!n instanceof XV.List) return;
+this.fetched[t] = !0, i = n.getQuery() || {}, s = this.$.searchInput.getValue(), o = XT.app ? XT.app.getPullout().getItem(r) : null, u = o ? o.getParameters() : [], e.showMore = _.isBoolean(e.showMore) ? e.showMore : !1, s || u.length ? (i.parameters = [], s && (i.parameters = [ {
+attribute: n.getSearchableAttributes(),
+operator: "MATCHES",
+value: this.$.searchInput.getValue()
+} ]), u && (i.parameters = i.parameters.concat(u))) : delete i.parameters, n.setQuery(i), n.fetch(e);
+},
+inputChanged: function(e, t) {
+this.fetched = {}, this.fetch();
+},
+itemTap: function(e, t) {
+var n = t.list, r = n ? n.getWorkspace() : null, i = n ? n.getModel(t.index).id : null;
+r && this.doWorkspace({
+workspace: r,
+id: i
+});
+},
+newRecord: function(e, t) {
+var n = this.$.contentPanels.getActive(), r = n instanceof XV.List ? n.getWorkspace() : null, i;
+if (!n instanceof XV.List) return;
+return i = function(e) {
+var t = n._collection.model, r = new t({
+id: e.id
+}), i = {};
+i.success = function() {
+n._collection.add(r), n.setCount(n._collection.length), n.refresh();
+}, r.fetch(i);
+}, r && this.doWorkspace({
+workspace: r,
+callback: i
+}), !0;
+},
+requery: function(e, t) {
+this.fetch();
+},
+setContentPanel: function(e) {
+var t = this.getSelectedModule(), n = t && t.panels ? t.panels[e].index : -1, r = n > -1 ? this.$.contentPanels.getPanels()[n] : null, i = r && r.label ? r.label : "";
+if (!r) return;
+this.$.panelMenu.isSelected(e) || this.$.panelMenu.select(e), this.$.contentPanels.getIndex() !== n && this.$.contentPanels.setIndex(n), this.$.rightLabel.setContent(i), r.fetch && !this.fetched[n] && this.fetch();
+},
+setMenuPanel: function(e) {
+var t = e ? "_back".loc() : "_logout".loc();
+this.$.menuPanels.setIndex(e), this.$.menuPanels.getActive().select(0), this.setContentPanel(0), this.$.backButton.setContent(t), this.$.newButton.setShowing(e), this.$.search.setShowing(e), this.$.searchIconButton.setShowing(e);
+},
+setModule: function(e) {
+var n = this.getModules()[e], r = n.panels || [], i = n.hasSubmenu !== !1 && r.length;
+n !== this._selectedModule && (this._selectedModule = n, i && (this.$.panelMenu.setCount(r.length), this.$.panelMenu.render(), this.setMenuPanel(t)));
+},
+setupModuleMenuItem: function(e, t) {
+var n = t.index, r = this.modules[n].label, i = e.isSelected(n);
+this.$.moduleItem.setContent(r), this.$.moduleItem.addRemoveClass("onyx-selected", i), i && this.setModule(n);
+},
+setupPanelMenuItem: function(e, t) {
+var n = this.getSelectedModule(), r = t.index, i = e.isSelected(r), s, o, u;
+s = n.panels[r], o = s && s.name ? n.panels[r].name : "", s = this.$.contentPanels.$[o], u = s && s.getLabel ? s.getLabel() : "", this.$.listItem.setContent(u), this.$.listItem.addRemoveClass("onyx-selected", i), i && this.setContentPanel(r);
+},
+showHistory: function(e, t) {
+var n = {
+name: "history"
+};
+this.doTogglePullout(n);
+},
+showParameters: function(e, t) {
+var n = this.$.contentPanels.getActive();
+this.doTogglePullout(n);
+},
+warnLogout: function() {
+this.$.logoutPopup.show();
+},
+closeLogoutPopup: function() {
+this.$.logoutPopup.hide();
+},
+logout: function() {
+this.$.logoutPopup.hide(), XT.session.logout();
+},
+setActiveIconButton: function(e) {
+var t = null;
+e === "search" ? t = this.$.searchIconButton : e === "history" && (t = this.$.historyIconButton), this.$.iconButtonGroup.setActive(t);
+}
+});
+})();
+
+// pullout.js
+
+(function() {
+enyo.kind({
+name: "XV.Pullout",
+kind: "enyo.Slideable",
+classes: "pullout",
+value: -100,
+min: -100,
+unit: "%",
+events: {
+onHistoryItemSelected: ""
+},
+published: {
+selectedPanel: ""
+},
+components: [ {
+name: "shadow",
+classes: "pullout-shadow"
+}, {
+name: "grabber",
+kind: "onyx.Grabber",
+classes: "pullout-grabbutton",
+ondragfinish: "grabberDragFinish"
+}, {
+kind: "FittableRows",
+classes: "enyo-fit",
+components: [ {
+name: "client",
+classes: "pullout-toolbar"
+}, {
+classes: "xv-pullout-header",
+name: "pulloutHeader",
+content: ""
+}, {
+name: "pulloutItems",
+fit: !0,
+kind: "Scroller",
+style: "position: relative;",
+components: [ {
+fit: !0,
+name: "history",
+kind: "Scroller",
+components: [ {
+kind: "Repeater",
+name: "historyList",
+onSetupItem: "setupHistoryItem",
+count: 0,
+components: [ {
+name: "historyItem"
+} ]
+} ]
+} ]
+} ]
+} ],
+grabberDragFinish: function() {
+this.getSelectedPanel() || this.togglePullout("history");
+},
+refreshHistoryList: function() {
+this.$.historyList.setCount(XT.getHistory().length);
+},
+setupHistoryItem: function(e, t) {
+var n = t.item.$.historyItem, r = XT.getHistory()[t.index], i = ("_" + XV.util.stripModelNamePrefix(r.modelType).camelize()).loc();
+this.createComponent({
+container: n,
+classes: "item enyo-border-box",
+style: "color:white",
+ontap: "doHistoryItemSelected",
+content: i + ": " + r.modelName,
+modelType: r.modelType,
+id: r.modelId,
+workspace: r.workspaceType
+});
+},
+getItem: function(e) {
+return this.$.pulloutItems.$[e] || this.$[e];
+},
+togglePullout: function(e) {
+var t = this.getItem(e), n = this.$.pulloutItems.children[0].children, r;
+e === "history" ? this.$.pulloutHeader.setContent("_history".loc()) : this.$.pulloutHeader.setContent("_advancedSearch".loc()), this.setSelectedPanel(e);
+if (t && t.showing && this.isAtMax()) this.animateToMin(); else {
+for (r = 0; r < n.length; r++) n[r].hide();
+t.show(), t.resized(), this.isAtMax() || (this.render(), this.animateToMax());
+}
+}
+});
+})();
+
+// workspace.js
+
+(function() {
+enyo.kind({
+name: "XV.Workspace",
+kind: "FittableRows",
+published: {
+title: "_none".loc(),
+model: "",
+callback: null
+},
+events: {
+onError: "",
+onModelChange: "",
+onStatusChange: "",
+onTitleChange: "",
+onHistoryChange: ""
+},
+handlers: {
+onValueChange: "valueChanged"
+},
+components: [ {
+kind: "Panels",
+name: "topPanel",
+arrangerKind: "CarouselArranger",
+fit: !0,
+components: [ {
+kind: "XV.Groupbox",
+components: [ {
+kind: "onyx.GroupboxHeader",
+content: "_overview".loc()
+}, {
+kind: "XV.InputWidget",
+name: "name"
+}, {
+kind: "XV.InputWidget",
+name: "description"
+} ]
+} ]
+} ],
+attributesChanged: function(e, t) {
+t = t || {};
+var n = this, r, i, s = XM.Model, o = e.getStatus(), u = t.changes, a = !e.canUpdate() || !(o & s.READY), f, l, c, h = function(e) {
+return _.find(n.$, function(t) {
+return t.attr === e;
+});
+};
+for (r in u) u.hasOwnProperty(r) && (i = e.get(r), l = e.isReadOnly(r), c = e.isRequired(r), f = h(r), f && (f.setPlaceholder && c && !f.getPlaceholder() && f.setPlaceholder("_required".loc()), f.setValue && !(o & s.BUSY) && f.setValue(i, {
+silent: !0
+}), f.setDisabled && f.setDisabled(a || l)));
+},
+clear: function() {
+var e = this._model ? this._model.getAttributeNames() : [], t, n;
+for (n = 0; n < e.length; n++) t = e[n], this.$[t] && this.$[t].clear && this.$[t].clear({
+silent: !0
+});
+},
+create: function() {
+this.inherited(arguments), this.titleChanged(), this.modelChanged();
+},
+destroy: function() {
+this.setModel(null), this.inherited(arguments);
+},
+error: function(e, t) {
+var n = {
+originator: this,
+model: e,
+error: t
+};
+this.doError(n);
+},
+fetch: function(e) {
+if (!this._model) return;
+this._model.fetch({
+id: e
+});
+},
+isDirty: function() {
+return this._model ? this._model.isDirty() : !1;
+},
+modelChanged: function() {
+var e = this.getModel(), t = e ? XT.getObjectByName(e) : null, n, r = this;
+this._model && (this._model.off(), this._model.isNew() && this._model.destroy(), delete this._model);
+if (!t) return;
+if (!XT.session) {
+n = function() {
+r.modelChanged();
+}, XT.getStartupManager().registerCallback(n);
+return;
+}
+this._model = new t, this._model.on("change", this.attributesChanged, this), this._model.on("statusChange", this.statusChanged, this), this._model.on("error", this.error, this);
+},
+newRecord: function() {
+this.modelChanged(), this._model.initialize(null, {
+isNew: !0
+}), this.clear();
+},
+requery: function() {
+this.fetch(this._model.id);
+},
+save: function(e) {
+e = e || {};
+var t = this, n = e.success, r = {
+originator: this,
+model: this.getModel(),
+id: this._model.id
+};
+e.success = function(e, i, s) {
+t.doModelChange(r), t.callback && t.callback(e), n && n(e, i, s);
+}, this._model.save(null, e);
+},
+statusChanged: function(e, t, n) {
+n = n || {};
+var r = {
+model: e
+}, i = e.getAttributeNames(), s = {}, o;
+e.id && (XT.addToHistory(this.kind, e), this.doHistoryChange(this));
+for (o = 0; o < i.length; o++) s[i[o]] = !0;
+n.changes = s, this.attributesChanged(e, n), this.doStatusChange(r);
+},
+titleChanged: function() {
+var e = {
+title: this.getTitle(),
+originator: this
+};
+this.doTitleChange(e);
+},
+valueChanged: function(e, t) {
+var n = {};
+n[t.originator.attr] = t.value, this._model.set(n);
+}
+}), enyo.kind({
+name: "XV.WorkspaceContainer",
+kind: "Panels",
+arrangerKind: "CollapsingArranger",
+classes: "app enyo-unselectable",
+published: {
+menuItems: []
+},
+events: {
+onPrevious: ""
+},
+handlers: {
+onError: "errorNotify",
+onStatusChange: "statusChanged",
+onTitleChange: "titleChanged"
+},
+components: [ {
+kind: "FittableRows",
+name: "navigationPanel",
+classes: "left",
+components: [ {
+kind: "onyx.Toolbar",
+name: "menuToolbar",
+components: [ {
+kind: "onyx.Button",
+name: "backButton",
+content: "_back".loc(),
+onclick: "close"
+} ]
+}, {
+name: "menu",
+kind: "List",
+fit: !0,
+touch: !0,
+onSetupItem: "setupItem",
+components: [ {
+name: "item",
+classes: "item enyo-border-box",
+ontap: "itemTap"
+} ]
+} ]
+}, {
+kind: "FittableRows",
+name: "contentPanel",
+components: [ {
+kind: "onyx.MoreToolbar",
+name: "contentToolbar",
+components: [ {
+kind: "onyx.Grabber"
+}, {
+name: "title",
+style: "text-align: center;"
+}, {
+kind: "onyx.Button",
+name: "saveButton",
+disabled: !0,
+style: "float: right; background-color: #35A8EE;",
+content: "_save".loc(),
+onclick: "saveAndClose"
+}, {
+kind: "onyx.Button",
+name: "saveAndNewButton",
+disabled: !0,
+style: "float: right;",
+content: "_saveAndNew".loc(),
+onclick: "saveAndNew"
+}, {
+kind: "onyx.Button",
+name: "applyButton",
+disabled: !0,
+style: "float: right;",
+content: "_apply".loc(),
+onclick: "save"
+}, {
+kind: "onyx.Button",
+name: "refreshButton",
+disabled: !0,
+content: "_refresh".loc(),
+onclick: "requery",
+style: "float: right;"
+} ]
+}, {
+kind: "onyx.Popup",
+name: "unsavedPopup",
+centered: !0,
+modal: !0,
+floating: !0,
+onShow: "popupShown",
+onHide: "popupHidden",
+components: [ {
+content: "_unsavedChanges".loc()
+}, {
+tag: "br"
+}, {
+kind: "onyx.Button",
+content: "_discard".loc(),
+ontap: "unsavedDiscard"
+}, {
+kind: "onyx.Button",
+content: "_cancel".loc(),
+ontap: "unsavedCancel"
+}, {
+kind: "onyx.Button",
+content: "_save".loc(),
+ontap: "unsavedSave",
+classes: "onyx-blue"
+} ]
+}, {
+kind: "onyx.Popup",
+name: "errorPopup",
+centered: !0,
+modal: !0,
+floating: !0,
+onShow: "popupShown",
+onHide: "popupHidden",
+components: [ {
+name: "errorMessage",
+content: "_error".loc()
+}, {
+tag: "br"
+}, {
+kind: "onyx.Button",
+content: "_ok".loc(),
+ontap: "errorOk",
+classes: "onyx-blue"
+} ]
+} ]
+} ],
+close: function(e) {
+e = e || {};
+if (!e.force && this.$.workspace.isDirty()) {
+this.$.unsavedPopup.close = !0, this.$.unsavedPopup.show();
+return;
+}
+this.doPrevious();
+},
+destroyWorkspace: function() {
+var e = this.$.workspace;
+e && (this.removeComponent(e), e.destroy());
+},
+errorNotify: function(e, t) {
+var n = t.error.message();
+this.$.errorMessage.setContent(n), this.$.errorPopup.render(), this.$.errorPopup.show();
+},
+errorOk: function() {
+this.$.errorPopup.hide();
+},
+itemTap: function(e, t) {
+var n = this.$.workspace, r = this.getMenuItems()[t.index], i, s, o;
+for (i in n.$) if (n.$.hasOwnProperty(i) && n.$[i] instanceof enyo.Panels) {
+o = n.$[i].getPanels();
+for (s = 0; s < o.length; s++) if (o[s] === r) {
+n.$[i].setIndex(s);
+break;
+}
+}
+},
+newRecord: function() {
+this.$.workspace.newRecord();
+},
+requery: function(e) {
+e = e || {};
+if (!e.force && this.$.workspace.isDirty()) {
+this.$.unsavedPopup.close = !1, this.$.unsavedPopup.show();
+return;
+}
+this.$.workspace.requery();
+},
+save: function(e) {
+this.$.workspace.save(e);
+},
+saveAndNew: function() {
+var e = this, t = {}, n = function() {
+e.newRecord();
+};
+t.success = n, this.save(t);
+},
+saveAndClose: function() {
+var e = this, t = {}, n = function() {
+e.close();
+};
+t.success = n, this.save(t);
+},
+setupItem: function(e, t) {
+var n = this.getMenuItems()[t.index], r = "_menu".loc() + t.index, i = n.getTitle ? n.getTitle() || r : n.title ? n.title || r : r;
+this.$.item.setContent(i), this.$.item.box = n, this.$.item.addRemoveClass("onyx-selected", e.isSelected(t.index));
+},
+setWorkspace: function(e, t, n) {
+var r = [], i;
+e && (this.destroyWorkspace(), e = {
+name: "workspace",
+container: this.$.contentPanel,
+kind: e,
+fit: !0,
+callback: n
+}, e = this.createComponent(e), t ? e.fetch(t) : e.newRecord(), this.render()), this.$.menu.setCount(0);
+for (i in e.$) e.$.hasOwnProperty(i) && e.$[i] instanceof enyo.Panels && (r = r.concat(e.$[i].getPanels()));
+this.setMenuItems(r), this.$.menu.setCount(r.length), this.$.menu.render();
+},
+statusChanged: function(e, t) {
+var n = t.model, r = XM.Model, i = n.getStatus(), s = i !== r.READY_CLEAN && i !== r.READY_DIRTY, o = n.canUpdate() && !n.isReadOnly(), u = !n.isDirty() || !o;
+this.$.refreshButton.setDisabled(s), this.$.applyButton.setDisabled(u), this.$.saveAndNewButton.setDisabled(u), this.$.saveButton.setDisabled(u);
+},
+titleChanged: function(e, t) {
+var n = t.title || "";
+return this.$.title.setContent(n), !0;
+},
+unsavedCancel: function() {
+this.$.unsavedPopup.hide();
+},
+unsavedDiscard: function() {
+var e = {
+force: !0
+};
+this.$.unsavedPopup.hide(), this.close(e);
+},
+unsavedSave: function() {
+this.$.unsavedPopup.hide(), this.$.unsavedPopup.close ? this.saveAndClose() : this.save();
+}
+});
+})();
+
+// groupbox.js
+
+(function() {
+enyo.kind({
+name: "XV.Groupbox",
+kind: "Scroller",
+horizontal: "hidden",
+classes: "xv-groupbox",
+published: {
+title: "_overview".loc()
+}
+});
+})();
+
+// repeater_box.js
+
+(function() {
+enyo.kind({
+name: "XV.RepeaterBox",
+kind: "XV.Groupbox",
+published: {
+attr: null,
+columns: [],
+collection: null,
+recordType: null
+},
+handlers: {
+onDeleteRow: "deleteRow"
+},
+classes: "xv-repeater-box xv-groupbox",
+components: [ {
+kind: "onyx.GroupboxHeader",
+classes: "xv-repeater-box-title",
+name: "title",
+content: "Title"
+}, {
+kind: "onyx.Groupbox",
+classes: "onyx-toolbar-inline xv-repeater-box-header",
+name: "headerRow"
+}, {
+kind: "Repeater",
+name: "repeater",
+count: 0,
+onSetupItem: "setupRow",
+components: [ {
+kind: "XV.RepeaterBoxRow",
+name: "repeaterRow"
+} ]
+}, {
+kind: "onyx.Button",
+name: "newRowButton",
+onclick: "newRow",
+content: "Add New"
+} ],
+create: function() {
+this.inherited(arguments), this.$.title.setContent(("_" + this.attr || "").loc()), this.getColumns() && this.showLabels();
+},
+columnsChanged: function() {
+this.showLabels();
+},
+showLabels: function() {
+for (var e = 0; e < this.getColumns().length; e++) {
+var t = this.getColumns()[e], n = ("_" + XT.String.suffix(t.name)).loc();
+this.createComponent({
+container: this.$.headerRow,
+content: n,
+classes: t.classes ? t.classes + " xv-label" : "xv-label"
+});
+}
+},
+newRow: function() {
+var e = XT.String.suffix(this.getRecordType()), t = new XM[e](null, {
+isNew: !0
+});
+this.getCollection().add(t), this.$.repeater.setCount(this.getCollection().size());
+},
+setupRow: function(e, t) {
+var n = t.item.$.repeaterRow;
+n.setColumns(this.getColumns());
+var r = this.getCollection().at(t.index);
+n.setModel(r), r.getStatus() & XM.Model.DESTROYED && n.setDeleted(!0);
+},
+setValue: function(e, t) {
+this.setCollection(e), this.$.repeater.setCount(this.getCollection().size());
+},
+collectionChanged: function() {
+this.getCollection().model.canCreate() || this.$.newRowButton.setDisabled(!0);
+},
+deleteRow: function(e, t) {
+t.originator.parent.getModel().destroy(), this.$.repeater.setCount(this.getCollection().size());
+}
+});
+})();
+
+// repeater_box_row.js
+
+(function() {
+enyo.kind({
+name: "XV.RepeaterBoxRow",
+kind: "onyx.Groupbox",
+classes: "onyx-toolbar-inline xv-repeater-box-row",
+published: {
+columns: [],
+model: null
+},
+events: {
+onDeleteRow: ""
+},
+handlers: {
+onValueChange: "fieldChanged"
+},
+modelChanged: function(e, t) {
+for (var n = 0; n < this.getColumns().length; n++) {
+var r = this.getColumns()[n], i = ("_" + XT.String.suffix(r.name)).loc(), s = this.createComponent({
+kind: r.kind,
+name: XT.String.suffix(r.name),
+placeholder: i,
+classes: r.classes
+});
+r.collection && s.setCollection(r.collection), s.setValue(this.getModel().get(XT.String.suffix(r.name)), {
+silent: !0
+}), (this.getModel().isReadOnly() || !this.getModel().canUpdate()) && this.setDisabled(!0);
+}
+!this.getModel().isReadOnly() && this.getModel().canDelete() && this.createComponent({
+kind: "onyx.Button",
+name: "deleteButton",
+classes: "xv-delete-button",
+content: "x",
+ontap: "deleteRow"
+});
+},
+setValue: function(e, t) {
+this.setModel(e);
+},
+fieldChanged: function(e, t) {
+var n = e.getName(), r = e.getValue(), i = {};
+return i[n] = r, this.getModel().set(i), !0;
+},
+deleteRow: function(e, t) {
+this.setStyle("background-color:purple"), this.doDeleteRow(t);
+},
+setDeleted: function(e) {
+var t, n = e ? "text-decoration: line-through" : "text-decoration: none";
+for (i = 0; i < this.getComponents().length; i++) t = this.getComponents()[i], t.setInputStyle ? t.setInputStyle(n) : XT.log("setInputStyle not supported on widget");
+this.setDisabled(e);
+},
+setDisabled: function(e) {
+var t, n;
+for (t = 0; t < this.getComponents().length; t++) n = this.getComponents()[t], n.setDisabled ? n.setDisabled(e) : XT.log("setDisabled not supported on widget");
+}
+});
+})();
+
+// comment_box.js
+
+(function() {
+enyo.kind({
+name: "XV.CommentBox",
+kind: "XV.RepeaterBox",
+classes: "xv-comment-box",
+published: {
+title: "_comments".loc(),
+columns: [ {
+kind: "XV.TextArea",
+name: "comments.text",
+classes: "xv-comment-box-text"
+}, {
+kind: "XV.Input",
+name: "comments.createdBy",
+classes: "xv-comment-box-createdBy"
+}, {
+kind: "XV.Date",
+name: "comments.created",
+classes: "xv-comment-box-created"
+}, {
+kind: "XV.CommentTypeDropdown",
+name: "comments.commentType",
+classes: "xv-comment-box-comment-type"
+} ]
+}
+});
+})();
+
+// assignment_box.js
+
+(function() {
+enyo.kind({
+name: "XV.AssignmentBox",
+kind: "XV.Groupbox",
+classes: "xv-assignment-box",
+handlers: {
+onValueChange: "checkboxChange"
+},
+published: {
+title: "",
+type: "",
+cacheName: "",
+assignedCollection: null,
+assignedIds: null,
+totalCollection: null,
+totalCollectionName: "",
+segments: null,
+segmentedCollections: null,
+translateLabels: !0
+},
+components: [ {
+kind: "Repeater",
+name: "segmentRepeater",
+fit: !0,
+onSetupItem: "setupSegment",
+segmentIndex: 0,
+components: [ {
+kind: "onyx.GroupboxHeader",
+name: "segmentHeader",
+content: ""
+}, {
+kind: "Repeater",
+name: "checkboxRepeater",
+fit: !0,
+onSetupItem: "setupCheckbox",
+components: [ {
+kind: "XV.CheckboxWidget",
+name: "checkbox"
+} ]
+} ]
+} ],
+assignedCollectionChanged: function() {
+this.mapIds();
+},
+checkboxChange: function(e, t) {
+var n = this, r = t.originator.name, i = t.value, s, o;
+try {
+var u = t.originator.$.input.checked, a = t.originator.parent.parent.parent.indexInContainer(), f = t.originator.parent.indexInContainer();
+} catch (l) {
+XT.log("Crazy hack failed. Not bothering with it.");
+}
+if (i) {
+var s = _.filter(this.getTotalCollection().models, function(e) {
+return e.get("name") === r;
+})[0];
+XT.log("WTF1?: " + this.$.segmentRepeater.children[a].children[1].children[f].$.checkbox.$.input.checked), o = this.getAssignmentModel(s), XT.log("WTF2?: " + this.$.segmentRepeater.children[a].children[1].children[f].$.checkbox.$.input.checked), this.getAssignedCollection().add(o);
+} else s = _.filter(this.getAssignedCollection().models, function(e) {
+return !(e.getStatus() & XM.Model.DESTROYED) && e.get(n.getType()) && e.get(n.getType()).get("name") === r;
+})[0], s || XT.log("No model to destroy. This is probably a bug."), s.destroy();
+try {
+u != this.$.segmentRepeater.children[a].children[1].children[f].$.checkbox.$.input.checked && (XT.log("applying hack: setting checkbox to " + u), this.$.segmentRepeater.children[a].children[1].children[f].$.checkbox.$.input.checked = u, this.render());
+} catch (l) {
+XT.log("Crazy hack failed. Not bothering with it.");
+}
+return !0;
+},
+create: function() {
+this.inherited(arguments);
+var e, t = this;
+this.setSegmentedCollections([]);
+for (e = 0; e < this.getSegments().length; e++) this.getSegmentedCollections()[e] = new (XM[this.getTotalCollectionName()]), this.getSegmentedCollections()[e].comparator = function(e) {
+return e.get("name");
+};
+if (XM[this.getCacheName()]) this.setTotalCollection(XM[this.getCacheName()]), this.segmentizeTotalCollection(); else {
+this.setTotalCollection(new (XM[this.getTotalCollectionName()]));
+var n = {
+success: function() {
+t.segmentizeTotalCollection();
+}
+};
+this.getTotalCollection().fetch(n);
+}
+},
+getAssignmentModel: function() {
+return null;
+},
+mapIds: function() {
+var e = this;
+this.setAssignedIds(this.getAssignedCollection().map(function(t) {
+return t.get(e.getType()) ? t.get(e.getType()).get("id") : null;
+}));
+},
+setupSegment: function(e, t) {
+var n = t.index, r = t.item, i = r.$.segmentHeader;
+if (t.originator.name !== "segmentRepeater") return;
+return e.segmentIndex = n, i.setContent(this.getSegments()[n]), r.$.checkboxRepeater.setCount(this.getSegmentedCollections()[n].length), !0;
+},
+setupCheckbox: function(e, t) {
+var n = t.item.indexInContainer(), r = e.parent.parent, i = r.segmentIndex, s = this.getSegmentedCollections()[i].at(n), o = t.item.$.checkbox, u = this.getTranslateLabels() ? ("_" + s.get("name")).loc() : s.get("name");
+return o.setLabel(u), o.setName(s.get("name")), _.indexOf(this.getAssignedIds(), s.get("id")) >= 0 && o.setValue(!0, {
+silent: !0
+}), !0;
+},
+setValue: function(e) {
+this.setAssignedCollection(e), this.tryToRender();
+},
+segmentizeTotalCollection: function() {
+var e, t, n, r;
+for (e = 0; e < this.getTotalCollection().length; e++) {
+n = this.getTotalCollection().models[e], r = n.get("module");
+for (t = 0; t < this.getSegments().length; t++) (this.getSegments().length === 1 || r === this.getSegments()[t]) && this.getSegmentedCollections()[t].add(n);
+}
+this.tryToRender();
+},
+tryToRender: function() {
+this.getAssignedCollection() && this.getSegmentedCollections()[0] && this.$.segmentRepeater.setCount(this.getSegments().length);
+}
+});
+})();
+
+// search.js
+
+(function() {
+enyo.kind({
+name: "XV.SearchContainer",
+kind: "Panels",
+classes: "app enyo-unselectable",
+published: {
+callback: null
+},
+events: {
+onPrevious: ""
+},
+handlers: {
+onItemTap: "itemTap",
+onParameterChange: "requery"
+},
+arrangerKind: "CollapsingArranger",
+components: [ {
+name: "parameterPanel",
+kind: "FittableRows",
+classes: "left",
+components: [ {
+kind: "onyx.Toolbar",
+classes: "onyx-menu-toolbar",
+components: [ {
+kind: "onyx.Button",
+name: "backButton",
+content: "_back".loc(),
+ontap: "close"
+} ]
+}, {
+name: "leftTitle",
+content: "_advancedSearch".loc(),
+classes: "xv-parameter-title"
+} ]
+}, {
+name: "listPanel",
+kind: "FittableRows",
+components: [ {
+kind: "onyx.Toolbar",
+name: "contentToolbar",
+components: [ {
+kind: "onyx.Grabber"
+}, {
+name: "rightLabel",
+content: "_search".loc(),
+style: "text-align: center"
+}, {
+name: "search",
+kind: "onyx.InputDecorator",
+style: "float: right;",
+components: [ {
+name: "searchInput",
+kind: "onyx.Input",
+style: "width: 200px;",
+placeholder: "Search",
+onchange: "requery"
+}, {
+kind: "Image",
+src: "assets/search-input-search.png"
+} ]
+} ]
+} ]
+} ],
+init: !1,
+close: function(e) {
+this.doPrevious();
+},
+itemTap: function(e, t) {
+var n = t.list, r = n ? n.getModel(t.index) : null;
+r && (this.callback && this.callback(r), this.close());
+},
+fetch: function(e) {
+if (!this.init) return;
+e = e ? _.clone(e) : {};
+var t = this.$.list, n, r, i, s;
+if (!t) return;
+n = t.getQuery() || {}, r = this.$.searchInput.getValue(), i = this.$.parameterWidget, s = i ? i.getParameters() : [], e.showMore = _.isBoolean(e.showMore) ? e.showMore : !1, r || s.length ? (n.parameters = [], r && (n.parameters = [ {
+attribute: t.getSearchableAttributes(),
+operator: "MATCHES",
+value: this.$.searchInput.getValue()
+} ]), s && (n.parameters = n.parameters.concat(s))) : delete n.parameters, t.setQuery(n), t.fetch(e);
+},
+requery: function(e, t) {
+return this.fetch(), !0;
+},
+setList: function(e, t) {
+var n;
+n = this.createComponent({
+name: "list",
+container: this.$.listPanel,
+kind: e,
+fit: !0
+}), this.$.rightLabel.setContent(n.label), this.setCallback(t), n && this.createComponent({
+name: "parameterWidget",
+container: this.$.parameterPanel,
+kind: n.getParameterWidget(),
+fit: !0
+}), this.init = !0, this.render();
+},
+setSearchText: function(e) {
+this.$.searchInput.setValue(e);
+}
+});
+})();
+
+// screen_carousel.js
+
+(function() {
+enyo.kind({
+name: "XV.ScreenCarousel",
+kind: "Panels",
+classes: "xt-screen-carousel enyo-unselectable",
+draggable: !1,
+published: {
+currentView: "",
+carouselEvents: null
+},
+handlers: {
+onTransitionStart: "start"
+},
+previousView: "",
+currentViewChanged: function() {
+var e = this.children, t = this.getCurrentView(), n = this.$[t], r = e.indexOf(n), i = this.previousView;
+if (r === -1) this.log(this.name, "Could not find requested view %@".f(t), this.children, n, this.$), i || i === null ? this.currentView = i : this.currentView = null; else {
+if (r === this.getIndex()) return;
+this.previousView = t, this.setIndex(r);
+}
+},
+create: function() {
+var e = this.getCarouselEvents(), t = this.handlers, n;
+if (e) for (n in e) e.hasOwnProperty(n) && (t[n] = "handleCarouselEvent");
+this.inherited(arguments);
+},
+handleCarouselEvent: function(e, t) {
+var n = this.getCarouselEvents(), r = t.eventName, i = n[r], s = this.getActive().name;
+return i && (this.setCurrentView(i), t.previous = s, this.$[i].waterfall("onPanelChange", t)), !0;
+},
+completed: function() {
+var e;
+this.inherited(arguments), e = this.getActive(), e && e.activated && e.activated();
+},
+start: function() {
+var e;
+this.inherited(arguments), e = this.getActive(), e && e.willActivate && e.willActivate();
+}
+});
+})();
+
+// number.js
+
+(function() {
+enyo.kind({
 name: "XV.Cost",
 kind: "XV.Number",
 published: {
@@ -11828,88 +12552,23 @@ scale: XT.WEIGHT_SCALE
 
 (function() {
 enyo.kind({
-name: "XV.DropdownWidget",
-kind: "enyo.Control",
-events: {
-onValueChange: ""
-},
-published: {
-value: null,
-collection: null,
-disabled: !1,
-idAttribute: "id",
-nameAttribute: "name",
-valueAttribute: null
-},
-handlers: {
-onSelect: "itemSelected"
-},
-components: [ {
-kind: "onyx.PickerDecorator",
-components: [ {}, {
-name: "picker",
-kind: "onyx.Picker"
-} ]
-} ],
-collectionChanged: function() {
-var a = this.getNameAttribute(), b = XT.getObjectByName(this.getCollection()), c, d, e, f = !1, g = this, h;
-if (!b) {
-if (f) {
-XT.log("Could not find collection " + this.getCollection());
-return;
-}
-e = function() {
-f = !0, g.collectionChanged();
-}, XT.getStartupManager().registerCallback(e);
-return;
-}
-this.$.picker.createComponent({
-idValue: "",
-content: ""
-});
-for (c = 0; c < b.models.length; c++) h = b.models[c], d = h.get(a), this.$.picker.createComponent({
-value: h,
-content: d
-});
-this.render();
-},
-create: function() {
-this.inherited(arguments), this.getCollection() && this.collectionChanged();
-},
-disabledChange: function(a, b) {
-this.addRemoveClass("onyx-disabled", b.originator.disabled);
-},
-itemSelected: function(a, b) {
-var c = this.$.picker.getSelected().value, d = this.getValueAttribute();
-this.setValue(d ? c[d] : c);
-},
-setValue: function(a, b) {
-b = b || {};
-var c, d = this.getValue();
-a !== d && (this._selectValue(a) || (a = null), a !== d && (this.value = a, b.silent || (c = {
-originator: this,
-value: a
-}, this.doValueChange(c))));
-},
-_selectValue: function(a) {
-if (!a) return;
-a = this.getValueAttribute() ? a : a.id;
-var b = _.find(this.$.picker.getComponents(), function(b) {
-return (b.value ? b.value.id : null) === a;
-});
-return b ? (this.$.picker.setSelected(b), !0) : !1;
-}
-}), enyo.kind({
 name: "XV.AccountTypeDropdown",
 kind: "XV.DropdownWidget",
 published: {
-collection: "XM.accountTypes"
+collection: "XM.accountTypes",
+valueAttribute: "id"
 }
 }), enyo.kind({
 name: "XV.CommentTypeDropdown",
 kind: "XV.DropdownWidget",
 published: {
 collection: "XM.commentTypes"
+}
+}), enyo.kind({
+name: "XV.CountryDropdown",
+kind: "XV.DropdownWidget",
+published: {
+collection: "XM.countries"
 }
 }), enyo.kind({
 name: "XV.IncidentCategoryDropdown",
@@ -11928,6 +12587,13 @@ name: "XV.IncidentSeverityDropdown",
 kind: "XV.DropdownWidget",
 published: {
 collection: "XM.incidentSeverities"
+}
+}), enyo.kind({
+name: "XV.IncidentStatusDropdown",
+kind: "XV.DropdownWidget",
+published: {
+collection: "XM.incidentStatuses",
+valueAttribute: "id"
 }
 }), enyo.kind({
 name: "XV.OpportunitySourceDropdown",
@@ -11963,239 +12629,34 @@ valueAttribute: "id"
 });
 })();
 
-// address.js
-
-(function() {
-enyo.kind({
-name: "XV.AddressWidget",
-kind: enyo.Control,
-published: {
-model: null
-},
-events: {
-onModelUpdate: ""
-},
-components: [ {
-kind: "onyx.Input",
-name: "line1Field",
-disabled: !0
-}, {
-kind: "onyx.Input",
-name: "line2Field",
-disabled: !0
-}, {
-kind: "onyx.Input",
-name: "line3Field",
-disabled: !0
-}, {
-kind: "onyx.Input",
-name: "cityField",
-disabled: !0
-} ],
-setValue: function(a) {
-this.setModel(a);
-},
-getValue: function() {
-return this.getModel();
-},
-formatCity: function(a, b, c) {
-return a + ", " + b + " " + c;
-},
-parseAddress: function(a) {
-if (typeof a != "string") throw "Address is not a string.";
-a = a.trim();
-var b = {}, c = a.indexOf(",");
-b.city = a.slice(0, c);
-var d = a.substring(c + 2), e = d.lastIndexOf(" ");
-return b.state = d.slice(0, e), b.zip = d.substring(e + 1), b;
-},
-modelChanged: function() {
-this.$.line1Field.setValue(this.getModel() ? this.getModel().get("line1") : ""), this.$.line2Field.setValue(this.getModel() ? this.getModel().get("line2") : ""), this.$.line3Field.setValue(this.getModel() ? this.getModel().get("line3") : ""), this.$.cityField.setValue(this.getModel() ? this.formatCity(this.getModel().get("city"), this.getModel().get("state"), this.getModel().get("postalCode")) : "");
-},
-doAddressChanged: function(a, b) {
-this.getModel().set({
-line1: a.getValue()
-});
-},
-doCityChanged: function(a, b) {
-var c = this.parseAddress(a.getValue());
-this.getModel().set({
-city: c.city,
-state: c.state,
-postalCode: c.zip
-}), this.doModelUpdate();
-}
-});
-})();
-
-// comments.js
-
-(function() {
-"use strict", enyo.kind({
-name: "XV.CommentsWidget",
-kind: enyo.Control,
-published: {
-collection: null,
-descriptor: null,
-fields: [ {
-fieldName: "createdBy",
-label: "creator",
-type: "text"
-}, {
-fieldName: "created",
-label: "date",
-type: "date"
-}, {
-fieldName: "text",
-label: "text",
-type: "text"
-} ]
-},
-events: {
-onModelUpdate: ""
-},
-classes: "xv-widgets-comments",
-style: "height: 200px; width: 700px; margin-right: 5px; font-size: 12px;",
-components: [ {
-kind: "onyx.GroupboxHeader",
-name: "title",
-classes: "xv-widgets-comments-title"
-}, {
-kind: "Repeater",
-name: "commentsRepeater",
-count: 1,
-onSetupItem: "setupRow",
-components: [ {
-kind: "onyx.Groupbox",
-classes: "onyx-toolbar-inline",
-style: "background-color: white;",
-name: "commentRow"
-} ]
-} ],
-setupRow: function(a, b) {
-var c = b.item.$.commentRow;
-for (var d = 0; d < this.getFields().length; d++) {
-var e = this.getFields()[d], f = ("_" + e.label).loc();
-if (b.index === 0) this.createComponent({
-container: c,
-content: f,
-style: "text-weight: bold; border-width: 0px;"
-}); else {
-var g = this.getCollection().at(b.index - 1), h = this.createComponent({
-container: c,
-placeholder: f,
-style: "border: 0px;",
-onchange: "doFieldChanged"
-});
-h.setContent(this.formatContent(g.get(e.fieldName), e.type));
-}
-}
-},
-formatContent: function(a, b) {
-return b === "date" ? Globalize.format(a, "d") : a;
-},
-descriptorChanged: function() {
-this.$.title.setContent(this.getDescriptor().title);
-},
-setValue: function(a) {
-this.setCollection(a);
-},
-getValue: function() {
-return this.getCollection();
-},
-collectionChanged: function() {
-this.$.commentsRepeater.setCount(this.getCollection().length + 1), this.render();
-},
-doFieldChanged: function(a, b) {}
-});
-})();
-
-// date.js
-
-(function() {
-enyo.kind({
-name: "XV.Date",
-kind: "XV.Input",
-components: [ {
-name: "input",
-kind: "onyx.Input",
-onchange: "inputChanged"
-} ],
-setValue: function(a, b) {
-a = _.isDate(a) ? new Date(a.valueOf()) : null, XV.Input.prototype.setValue.call(this, a, b);
-},
-textToDate: function(a) {
-var b = null, c = 864e5;
-return a === "0" || a.indexOf("+") === 0 || a.indexOf("-") === 0 ? b = new Date((new Date).getTime() + a * c) : a.indexOf("#") === 0 ? (b = new Date, b.setMonth(0), b.setDate(a.substring(1))) : a.length && !isNaN(a) ? (b = new Date, b.setDate(a)) : a && (b = new Date(a)), b && (isNaN(b.getTime()) ? b = !1 : b.setHours(0, 0, 0, 0)), b;
-},
-validate: function(a) {
-return a = this.textToDate(a), _.isDate(a) || _.isEmpty(a) ? a : !1;
-},
-valueChanged: function(a) {
-return a ? (a = new Date(a.valueOf()), a.setMinutes(a.getTimezoneOffset()), a = Globalize.format(a, "d")) : a = "", XV.Input.prototype.valueChanged.call(this, a);
-}
-}), enyo.kind({
-name: "XV.DateWidget",
-kind: "XV.Date",
-components: [ {
-kind: "onyx.InputDecorator",
-name: "decorator",
-components: [ {
-name: "input",
-kind: "onyx.Input",
-onchange: "inputChanged"
-}, {
-name: "icon",
-kind: "Image",
-src: "images/date-icon.jpg",
-ontap: "iconTapped"
-}, {
-name: "datePickPopup",
-kind: "onyx.Popup",
-modal: !0,
-components: [ {
-kind: "GTS.DatePicker",
-name: "datePick",
-style: "",
-onChange: "datePicked"
-} ]
-} ]
-} ],
-datePicked: function(a, b) {
-this.setValue(b), this.$.datePickPopup.hide();
-},
-iconTapped: function() {
-this.$.datePickPopup.show();
-},
-valueChanged: function(a) {
-var b = a;
-a = XV.Date.prototype.valueChanged.call(this, a), this.$.datePick.setValue(a ? b : new Date), this.$.datePick.render();
-}
-});
-})();
-
 // relation.js
 
 (function() {
 enyo.kind({
-name: "XV.RelationWidget",
-kind: enyo.Control,
-published: {
-value: null,
-collection: null,
-keyAttribute: "number",
-nameAttribute: "name",
-descripAttribute: ""
-},
-events: {
-onValueChange: ""
-},
+name: "XV.AccountWidget",
+kind: "XV.RelationWidget",
+list: "XV.AccountList"
+}), enyo.kind({
+name: "XV.ContactWidget",
+kind: "XV.RelationWidget",
+label: "_name".loc(),
+list: "XV.ContactList",
+keyAttribute: "name",
+nameAttribute: "jobTitle",
+descripAttribute: "phone",
 components: [ {
+kind: "FittableColumns",
+components: [ {
+name: "label",
+content: "",
+classes: "xv-decorated-label"
+}, {
 kind: "onyx.InputDecorator",
-style: "height: 27px",
+classes: "xv-input-decorator",
 components: [ {
 name: "input",
 kind: "onyx.Input",
+classes: "xv-subinput",
 onkeyup: "keyUp",
 onkeydown: "keyDown",
 onblur: "receiveBlur"
@@ -12204,24 +12665,30 @@ kind: "onyx.MenuDecorator",
 onSelect: "itemSelected",
 components: [ {
 kind: "onyx.IconButton",
-src: "images/menu-icon-search.png"
+src: "assets/relation-icon-search.png"
 }, {
 name: "popupMenu",
+floating: !0,
 kind: "onyx.Menu",
 components: [ {
-content: "_search".loc(),
-value: "search"
+kind: "XV.MenuItem",
+name: "searchItem",
+content: "_search".loc()
 }, {
+kind: "XV.MenuItem",
+name: "openItem",
 content: "_open".loc(),
-value: "open"
+disabled: !0
 }, {
+kind: "XV.MenuItem",
+name: "newItem",
 content: "_new".loc(),
-value: "new"
+disabled: !0
 } ]
 } ]
 }, {
 kind: "onyx.MenuDecorator",
-style: "left: -200px; top: 25px;",
+classes: "xv-relationwidget-completer",
 onSelect: "relationSelected",
 components: [ {
 kind: "onyx.Menu",
@@ -12229,534 +12696,114 @@ name: "autocompleteMenu",
 modal: !1
 } ]
 } ]
+} ]
 }, {
+kind: "FittableColumns",
+components: [ {
+name: "labels",
+classes: "xv-relationwidget-column left",
+components: [ {
+name: "jobTitleLabel",
+content: "_jobTitle".loc() + ":",
+classes: "xv-relationwidget-description label",
+showing: !1
+}, {
+name: "phoneLabel",
+content: "_phone".loc() + ":",
+classes: "xv-relationwidget-description label",
+showing: !1
+}, {
+name: "alternateLabel",
+content: "_alternate".loc() + ":",
+classes: "xv-relationwidget-description label",
+showing: !1
+}, {
+name: "faxLabel",
+content: "_fax".loc() + ":",
+classes: "xv-relationwidget-description label",
+showing: !1
+}, {
+name: "primaryEmailLabel",
+content: "_email".loc() + ":",
+classes: "xv-relationwidget-description label",
+showing: !1
+}, {
+name: "webAddressLabel",
+content: "_phone".loc() + ":",
+classes: "xv-relationwidget-description label",
+showing: !1
+} ]
+}, {
+name: "data",
+fit: !0,
+components: [ {
 name: "name",
-content: ""
+classes: "xv-relationwidget-description hasLabel"
 }, {
 name: "description",
-content: ""
-} ],
-autocomplete: function() {
-var a = this.getKeyAttribute(), b = this.getValue() ? this.getValue().get(a) : "", c = this.$.input.getValue(), d;
-c && c !== b ? (d = {
-parameters: [ {
-attribute: a,
-operator: "BEGINS_WITH",
-value: c,
-rowLimit: 1
-} ],
-orderBy: [ {
-attribute: a
+classes: "xv-relationwidget-description hasLabel"
+}, {
+name: "alternate",
+classes: "xv-relationwidget-description hasLabel"
+}, {
+name: "fax",
+classes: "xv-relationwidget-description hasLabel"
+}, {
+name: "primaryEmail",
+ontap: "sendMail",
+classes: "xv-relationwidget-description hasLabel hyperlink"
+}, {
+name: "webAddress",
+ontap: "openWindow",
+classes: "xv-relationwidget-description hasLabel hyperlink"
 } ]
-}, this._collection.fetch({
-success: enyo.bind(this, "_fetchSuccess"),
-query: d
-})) : c || this.setValue(null);
-},
-create: function() {
-this.inherited(arguments), this.getCollection() && this.collectionChanged();
-},
-collectionChanged: function() {
-var a = this.getCollection(), b = XM.Model.getObjectByName(a);
-this._collection = new b;
-},
-itemSelected: function(a, b) {
-var c = b.originator.value, d;
-switch (c) {
-case "search":
-break;
-case "open":
-d = this.getValue(), this.bubble("workspace", {
-eventName: "workspace",
-options: d
-});
-break;
-case "new":
-d = new this._collection.model, this.bubble("workspace", {
-eventName: "workspace",
-options: d
-});
-}
-},
-keyDown: function(a, b) {
-b.keyCode === 9 && (this.$.autocompleteMenu.hide(), this.autocomplete());
-},
-keyUp: function(a, b) {
-var c, d = this.getKeyAttribute(), e = this.getValue() ? this.getValue().get(d) : "", f = this.$.input.getValue(), g = this.$.autocompleteMenu;
-f && f !== e && b.keyCode !== 9 ? (c = {
-parameters: [ {
-attribute: d,
-operator: "BEGINS_WITH",
-value: f,
-rowLimit: 10
-} ],
-orderBy: [ {
-attribute: d
 } ]
-}, this._collection.fetch({
-success: enyo.bind(this, "_collectionFetchSuccess"),
-query: c
-})) : g.hide();
+} ],
+disabledChanged: function() {
+this.inherited(arguments);
+var e = this.getDisabled();
+this.$.phone && (this.$.jobTitle.addRemoveClass("disabled", e), this.$.phone.addRemoveClass("disabled", e), this.$.alternate.addRemoveClass("disabled", e), this.$.fax.addRemoveClass("disabled", e), this.$.primaryEmail.addRemoveClass("disabled", e), this.$.webAddress.addRemoveClass("disabled", e));
 },
-receiveBlur: function(a, b) {
-this.autocomplete();
+setValue: function(e, t) {
+this.inherited(arguments);
+if (!e) return;
+var n = e.get("jobTitle"), r = e.get("phone"), i = e.get("alternate"), s = e.get("fax"), o = e.get("primaryEmail"), u = e.get("webAddress");
+e && e.get && (this.$.jobTitleLabel.setShowing(n), this.$.phoneLabel.setShowing(r), this.$.alternate.setShowing(i), this.$.alternate.setContent(i), this.$.alternateLabel.setShowing(i), this.$.fax.setShowing(s), this.$.fax.setContent(s), this.$.faxLabel.setShowing(s), this.$.primaryEmail.setShowing(o), this.$.primaryEmail.setContent(o), this.$.primaryEmailLabel.setShowing(o), this.$.webAddress.setShowing(u), this.$.webAddress.setContent(u), this.$.webAddressLabel.setShowing(u));
 },
-relationSelected: function(a, b) {
-return this.setValue(b.originator.model), this.$.autocompleteMenu.hide(), !0;
+openWindow: function() {
+var e = this.value ? this.value.get("webAddress") : null;
+return e && window.open("http://" + e), !0;
 },
-setValue: function(a, b) {
-b = b || {};
-var c = a ? a.id : null, d = this.value ? this.value.id : null, e = this.getKeyAttribute(), f = this.getNameAttribute(), g = this.getDescripAttribute(), h = "", i = "", j = "", k = {
-value: a,
-originator: this
-};
-this.value = a, a && a.get && (h = a.get(e) || "", i = a.get(f) || "", j = a.get(g) || ""), this.$.input.setValue(h), this.$.name.setContent(i), this.$.description.setContent(j), c !== d && !b.silent && this.doValueChange(k);
-},
-_collectionFetchSuccess: function() {
-var a = this.getKeyAttribute(), b = this.$.autocompleteMenu, c, d;
-b.destroyComponents(), b.controls = [], b.children = [];
-if (this._collection.length) {
-for (d = 0; d < this._collection.length; d++) c = this._collection.models[d], b.createComponent({
-content: c.get(a),
-model: c
-});
-b.reflow(), b.render(), b.show();
-} else b.hide();
-},
-_fetchSuccess: function() {
-var a = this._collection.length ? this._collection.models[0] : null;
-this.setValue(a);
+sendMail: function() {
+var e = this.value ? this.value.get("primaryEmail") : null, t;
+return e && (t = window.open("mailto:" + e), t.close()), !0;
 }
 }), enyo.kind({
-name: "XV.AccountRelationWidget",
+name: "XV.IncidentWidget",
 kind: "XV.RelationWidget",
-published: {
-collection: "XM.AccountInfoCollection"
-}
-}), enyo.kind({
-name: "XV.IncidentRelationWidget",
-kind: "XV.RelationWidget",
-published: {
-collection: "XM.IncidentInfoCollection",
+list: "XV.IncidentList",
 nameAttribute: "description"
-}
 }), enyo.kind({
-name: "XV.ItemRelationWidget",
+name: "XV.ItemWidget",
 kind: "XV.RelationWidget",
-published: {
-collection: "XM.ItemInfoCollection",
+list: "XV.ItemList",
 nameAttribute: "description1",
 descripAttribute: "description2"
-}
 }), enyo.kind({
-name: "XV.UserAccountRelationWidget",
+name: "XV.UserAccountWidget",
 kind: "XV.RelationWidget",
-published: {
-collection: "XM.UserAccountInfoCollection",
+list: "XV.UserAccountList",
 keyAttribute: "username",
 nameAttribute: "properName"
-}
 });
 })();
 
-// grid.js
-
-(function() {
-"use strict", enyo.kind({
-name: "XV.GridWidget",
-kind: enyo.Control,
-published: {
-collection: null,
-descriptor: null,
-customization: {}
-},
-events: {
-onSubmodelUpdate: ""
-},
-style: "height: 200px; width: 900px; margin-right: 5px; font-size: 12px;",
-components: [ {
-kind: "onyx.GroupboxHeader",
-name: "title"
-}, {
-kind: "Repeater",
-name: "gridRepeater",
-count: 0,
-onSetupItem: "setupRow",
-components: [ {
-kind: "onyx.Groupbox",
-classes: "onyx-toolbar-inline",
-style: "background-color: white;",
-name: "gridRow"
-} ]
-} ],
-setupRow: function(a, b) {
-var c = b.item.$.gridRow;
-for (var d = 0; d < this.getDescriptor().fields.length; d++) {
-var e = this.getDescriptor().fields[d], f = e.label ? e.label : e.fieldName, g = ("_" + f).loc();
-if (b.index === 0) this.createComponent({
-container: c,
-content: g,
-style: "text-weight: bold; border-width: 0px; width: " + e.width + "px;"
-}); else {
-var h = this.createComponent({
-kind: e.fieldType || "XV.Input",
-container: c,
-name: e.fieldName + (b.index - 1),
-placeholder: g,
-style: "border: 0px; width: " + e.width + "px;",
-onchange: "doFieldChanged"
-});
-e.collection && h.setCollection(e.collection);
-if (this.getCollection().size() + 1 > b.index) {
-var i = this.getCollection().at(b.index - 1);
-h.setValue(i.get(e.fieldName), {
-silent: !0
-}), this.getCustomization().disallowEdit && h.setDisabled(!0);
-} else this.getCustomization().stampUser && e.fieldName === "createdBy" && (h.setValue("<YOU>", {
-silent: !0
-}), h.setDisabled(!0)), this.getCustomization().stampDate && e.fieldName === "created" && (h.setValue("<NOW>", {
-silent: !0
-}), h.setDisabled(!0));
-}
-}
-!this.getCustomization().disallowEdit && b.index !== 0 && b.index !== this.getCollection().size() + 1 && this.createComponent({
-kind: "onyx.Button",
-container: c,
-name: "delete" + (b.index - 1),
-content: "Delete",
-onclick: "deleteRow"
-}), this.getCollection() && b.index === this.getCollection().size() + 1 && c.applyStyle("border", "1px solid orange");
-},
-deleteRow: function(a, b) {
-this.$.gridRepeater.removeChild(a.parent.parent), this.$.gridRepeater.render();
-var c = a.getName(), d = c.match(/(\D+)(\d+)/), e = Number(d[2]);
-this.getCollection().at(e).destroy(), this.doSubmodelUpdate();
-},
-descriptorChanged: function() {
-var a = this.getDescriptor();
-this.$.title.setContent(a.title), this.$.gridRepeater.setCount(1);
-},
-setValue: function(a) {
-this.setCollection(a);
-},
-getValue: function() {
-return this.getCollection();
-},
-collectionChanged: function() {
-this.$.gridRepeater.setCount(this.getCollection().size() + 2);
-},
-doFieldChanged: function(a, b) {
-var c = a.getName(), d = a.getValue(), e = c.match(/(\D+)(\d+)/), f = Number(e[2]), g = e[1], h = {};
-h[g] = d;
-if (f >= this.getCollection().size()) {
-var i = XV.util.stripModelNamePrefix(this.getDescriptor().modelType), j = new XM[i](h, {
-isNew: !0
-});
-for (var k = 0; k < j.requiredAttributes.length; k++) {
-var l = j.requiredAttributes[k];
-if (!j.get(l)) {
-if (l === "dueDate") continue;
-if (l === "id") continue;
-var m = {};
-m[l] = "", j.set(m);
-}
-}
-this.getCollection().add(j);
-} else this.getCollection().at(f).set(h);
-this.doSubmodelUpdate();
-}
-});
-})();
-
-// parameter.js
+// list.js
 
 (function() {
 enyo.kind({
-name: "XV.ParameterItem",
-classes: "parameter-item",
-published: {
-value: "",
-label: "",
-attr: "",
-operator: ""
-},
-events: {
-onParameterChange: ""
-},
-handlers: {
-onValueChange: "parameterChanged"
-},
-components: [ {
-name: "label",
-kind: "Control",
-classes: "parameter-label"
-}, {
-name: "input",
-classes: "parameter-item-input"
-} ],
-defaultKind: "XV.InputWidget",
-create: function() {
-this.inherited(arguments), this.valueChanged(), this.labelChanged(), !this.getOperator() && this.defaultKind === "XV.InputWidget" && this.setOperator("MATCHES");
-},
-labelChanged: function() {
-this.$.label.setContent(this.label);
-},
-getParameter: function() {
-var a;
-return this.getValue() && (a = {
-attribute: this.getAttr(),
-operator: this.getOperator(),
-value: this.getValue()
-}), a;
-},
-getValue: function() {
-return this.$.input.getValue();
-},
-parameterChanged: function() {
-var a = {
-value: this.getValue,
-originator: this
-};
-return this.doParameterChange(a), !0;
-},
-valueChanged: function() {
-this.$.input.setValue(this.value);
-}
-}), enyo.kind({
-name: "XV.ParameterWidget",
-kind: "FittableRows",
-defaultKind: "XV.ParameterItem",
-getParameters: function() {
-var a, b, c = [];
-for (a = 0; a < this.children.length; a++) b = this.children[a].getParameter(), b && c.push(b);
-return c;
-}
-});
-})();
-
-// info_list.js
-
-(function() {
-enyo.kind({
-name: "XV.InfoList",
-kind: "Panels",
-classes: "xt-info-list",
-draggable: !1,
-components: [ {
-name: "loader",
-classes: "xt-info-list-loader",
-content: "Loading content..."
-}, {
-name: "error",
-classes: "xt-info-list-error",
-content: "There was an error"
-}, {
-name: "list",
-kind: "XV.InfoListPrivate"
-} ],
-published: {
-collection: null,
-rowClass: "",
-query: null,
-parameterWidget: null
-},
-collectionChanged: function() {
-var a = this.getCollection(), b;
-typeof a == "string" && (b = XT.getObjectByName(a), a = this.collection = new b);
-if (!a) {
-this.setIndex(1);
-return;
-}
-a.bind("change", enyo.bind(this, "_collectionChanged", a));
-},
-_collectionChanged: function(a) {
-this.log();
-},
-_collectionFetchSuccess: function() {
-this.log(), this.waterfall("onCollectionUpdated");
-},
-_collectionFetchError: function() {
-this.log();
-},
-create: function() {
-this.inherited(arguments), this.rowClassChanged(), this.collectionChanged();
-},
-rowClassChanged: function() {
-this.$.list.setRowClass(this.getRowClass());
-},
-showingChanged: function() {
-this.inherited(arguments), this.log(this.name, this.showing, this);
-},
-fetch: function(a) {
-var b = this, c = this.getCollection(), d = this.getQuery(), e;
-a = a ? _.clone(a) : {}, e = a.success, _.extend(a, {
-success: function(a, c, d) {
-b._collectionFetchSuccess(a, c, d), e && e(a, c, d);
-},
-error: enyo.bind(this, "_collectionFetchError"),
-query: d
-}), c.fetch(a);
-}
-}), enyo.kind({
-name: "XV.InfoListPrivate",
-kind: "List",
-classes: "xt-info-list-private",
-published: {
-rowClass: "",
-isFetching: !1,
-isMore: !0
-},
-handlers: {
-onSetupItem: "setupRow",
-onCollectionUpdated: "collectionUpdated"
-},
-collectionUpdated: function() {
-var a = this.parent.getCollection(), b = this.parent.getQuery(), c = b.rowOffset || 0, d = b.rowLimit || 0, e = a.length, f = d ? c + d <= e && this.getCount() !== a.length : !1;
-this.setIsMore(f), this.setIsFetching(!1), this.setCount(a.length), c ? this.refresh() : this.reset(), this.parent.setIndex(2);
-},
-rowClassChanged: function() {
-var a = this.getRowClass(), b, c;
-a && XT.getObjectByName(a) && (b = {
-name: "item",
-kind: a
-}, c = this.$.item, c && (this.removeComponent(c), c.destroy()), this.createComponent(b));
-},
-setupRow: function(a, b) {
-var c = this.parent.getCollection(), d = this.$.item, e = b.index, f = c.models[e];
-d && d.renderModel && d.renderModel(f);
-}
-}), enyo.kind({
-name: "XV.InfoListRow",
-classes: "xt-info-list-row",
-published: {
-leftColumn: [],
-rightColumn: []
-},
-events: {
-onInfoListRowTapped: ""
-},
-create: function() {
-this.inherited(arguments);
-var a = this.getLeftColumn(), b = this.getRightColumn(), c, d;
-c = this.createComponent({
-name: "leftColumn",
-kind: "XV.InfoListRowColumn",
-structure: a
-}), d = this.createComponent({
-name: "rightColumn",
-kind: "XV.InfoListRowColumn",
-structure: b
-});
-},
-renderModel: function(a) {
-var b = this.$, c, d, e, f, g, h;
-for (c in b) if (b.hasOwnProperty(c)) {
-e = b[c];
-if (e.isLabel) continue;
-if (c.indexOf(".") > -1) {
-f = c.split("."), d = 0, g = a;
-for (; d < f.length; ++d) {
-g = g.getValue(f[d]);
-if (g && g instanceof Date) break;
-if (!g || typeof g != "object") {
-if (typeof g == "string") break;
-g = "";
-break;
-}
-}
-e.setContent(g);
-} else g = a.getValue(c);
-e.formatter && (h = this[e.formatter], h && h instanceof Function && (g = h(g, a, e))), g && g instanceof Date && (g = Globalize.format(g, "d")), e.setContent(g || e.placeholder || ""), g ? e.removeClass("empty") : e.addClass("empty");
-}
-},
-tap: function(a, b) {
-this.doInfoListRowTapped(b);
-}
-}), enyo.kind({
-name: "XV.InfoListRowColumn",
-classes: "xt-info-list-row-column",
-published: {
-structure: null
-},
-create: function() {
-this.inherited(arguments);
-var a = this.getStructure(), b = 0, c, d = this, e = enyo.bind(this, "createComponentFromArray", this.owner), f = enyo.bind(this, "createComponentFromObject", this.owner);
-for (; b < a.length; ++b) c = a[b], c instanceof Array ? d = e(d, c) : typeof c == "object" && f(d, c);
-},
-createComponentFromArray: function(a, b, c) {
-var d = b, e = c, f = e.slice(0).shift().width, g = 0, h, i;
-d.kind !== "InfoListBasicColumn" && (i = d, d = d.createComponent({
-kind: "XV.InfoListBasicColumn",
-style: "width:" + f + "px;"
-}));
-for (; g < e.length; ++g) h = e[g], h instanceof Array ? d = this.createComponentFromArray(a, d, h, e.length) : typeof h == "object" && this.createComponentFromObject(a, d, h);
-return i;
-},
-createComponentFromObject: function(a, b, c) {
-var d = b, e = c;
-d = d.createComponent({
-kind: "XV.InfoListBasicCell"
-}, e), a.$[e.name] || (a.$[e.name] = d);
-}
-}), enyo.kind({
-name: "XV.InfoListBasicRow",
-classes: "xt-info-list-basic-row"
-}), enyo.kind({
-name: "XV.InfoListBasicColumn",
-classes: "xt-info-list-basic-column"
-}), enyo.kind({
-name: "XV.InfoListBasicCell",
-classes: "xt-info-list-basic-cell"
-}), enyo.kind({
-name: "XV.AccountInfoParameters",
-kind: "XV.ParameterWidget",
-components: [ {
-attr: "isActive",
-label: "_showInactive".loc(),
-defaultKind: "XV.Checkbox",
-getParameter: function() {
-var a;
-return this.getValue() || (a = {
-attribute: this.getAttr(),
-operator: "=",
-value: !0
-}), a;
-}
-}, {
-label: "_number".loc(),
-attr: "number"
-}, {
-label: "_name".loc(),
-attr: "name"
-}, {
-label: "_primaryContact".loc(),
-attr: "primaryContact.name"
-}, {
-label: "_primaryEmail".loc(),
-attr: "primaryContact.primaryEmail"
-}, {
-label: "_phone".loc(),
-attr: [ "primaryContact.phone", "primaryContact.alternate", "primaryContact.fax" ]
-}, {
-label: "_street".loc(),
-attr: [ "primaryContact.address.line1", "primaryContact.address.line2", "primaryContact.address.line3" ]
-}, {
-label: "_city".loc(),
-attr: "primaryContact.address.city"
-}, {
-label: "_postalCode".loc(),
-attr: "primaryContact.address.postalCode"
-}, {
-label: "_state".loc(),
-attr: "primaryContact.address.state"
-}, {
-label: "_country".loc(),
-attr: "primaryContact.address.country"
-} ]
-}), enyo.kind({
-name: "XV.AccountInfoList",
-kind: "XV.InfoList",
-published: {
+name: "XV.AccountList",
+kind: "XV.List",
 label: "_accounts".loc(),
 collection: "XM.AccountInfoCollection",
 query: {
@@ -12764,84 +12811,62 @@ orderBy: [ {
 attribute: "number"
 } ]
 },
-rowClass: "XV.AccountInfoCollectionRow",
-parameterWidget: "XV.AccountInfoParameters"
-}
-}), enyo.kind({
-name: "XV.AccountInfoCollectionRow",
-kind: "XV.InfoListRow",
-leftColumn: [ [ {
-width: 160
-}, {
-name: "number",
-classes: "cell-key account-number"
-}, {
-name: "name",
-classes: "account-name",
-placeholder: "_noJobTitle".loc()
-} ], [ {
-width: 160
-}, {
-name: "primaryContact.phone",
-classes: "cell-align-right account-primaryContact-phone"
-}, {
-name: "primaryContact.primaryEmail",
-classes: "cell-align-right account-primaryContact-primaryEmail"
-} ] ],
-rightColumn: [ [ {
-width: 320
-}, {
-name: "primaryContact.name",
-classes: "cell-italic account-primaryContact-name",
-placeholder: "_noContact".loc()
-}, {
-name: "primaryContact.address.formatShort",
-classes: "account-primaryContact-address"
-} ] ]
-}), enyo.kind({
-name: "XV.ContactInfoParameters",
-kind: "XV.ParameterWidget",
+parameterWidget: "XV.AccountInfoParameters",
+workspace: "XV.AccountWorkspace",
 components: [ {
-attr: "isActive",
-label: "_showInactive".loc(),
-defaultKind: "XV.Checkbox",
-getParameter: function() {
-var a;
-return this.getValue() || (a = {
-attribute: this.getAttr(),
-operator: "=",
-value: !0
-}), a;
-}
+kind: "XV.ListItem",
+components: [ {
+kind: "FittableColumns",
+components: [ {
+kind: "XV.ListColumn",
+classes: "first",
+components: [ {
+kind: "FittableColumns",
+components: [ {
+kind: "XV.ListAttr",
+attr: "number",
+classes: "bold"
 }, {
-label: "_name".loc(),
+kind: "XV.ListAttr",
+attr: "primaryContact.phone",
+fit: !0,
+classes: "right"
+} ]
+}, {
+kind: "FittableColumns",
+components: [ {
+kind: "XV.ListAttr",
 attr: "name"
 }, {
-label: "_primaryEmail".loc(),
-attr: "primaryEmail"
-}, {
-label: "_phone".loc(),
-attr: [ "phone", "alternate", "fax" ]
-}, {
-label: "_street".loc(),
-attr: [ "address.line1", "address.line2", "address.line3" ]
-}, {
-label: "_city".loc(),
-attr: "address.city"
-}, {
-label: "_state".loc(),
-attr: "address.state"
-}, {
-label: "_postalCode".loc(),
-attr: "address.postalCode"
-}, {
-label: "_country".loc(),
-attr: "address.country"
+kind: "XV.ListAttr",
+attr: "primaryContact.primaryEmail",
+ontap: "sendMail",
+classes: "right hyperlink"
 } ]
+} ]
+}, {
+kind: "XV.ListColumn",
+classes: "last",
+fit: !0,
+components: [ {
+kind: "XV.ListAttr",
+attr: "primaryContact.name",
+classes: "italic",
+placeholder: "_noContact".loc()
+}, {
+kind: "XV.ListAttr",
+attr: "primaryContact.address.formatShort"
+} ]
+} ]
+} ]
+} ],
+sendMail: function(e, t) {
+var n = this.getModel(t.index), r = n ? n.getValue("primaryContact.primaryEmail") : null, i;
+return r && (i = window.open("mailto:" + r), i.close()), !0;
+}
 }), enyo.kind({
-name: "XV.ContactInfoList",
-kind: "XV.InfoList",
-published: {
+name: "XV.ContactList",
+kind: "XV.List",
 label: "_contacts".loc(),
 collection: "XM.ContactInfoCollection",
 query: {
@@ -12849,306 +12874,280 @@ orderBy: [ {
 attribute: "lastName"
 }, {
 attribute: "firstName"
+}, {
+attribute: "primaryEmail"
+}, {
+attribute: "id"
 } ]
 },
-rowClass: "XV.ContactInfoCollectionRow",
-parameterWidget: "XV.ContactInfoParameters"
-}
-}), enyo.kind({
-name: "XV.ContactInfoCollectionRow",
-kind: "XV.InfoListRow",
-leftColumn: [ [ {
-width: 160
+parameterWidget: "XV.ContactInfoParameters",
+workspace: "XV.ContactWorkspace",
+components: [ {
+kind: "XV.ListItem",
+components: [ {
+kind: "FittableColumns",
+components: [ {
+kind: "XV.ListColumn",
+classes: "first",
+components: [ {
+kind: "FittableColumns",
+components: [ {
+kind: "FittableColumns",
+components: [ {
+kind: "XV.ListAttr",
+attr: "firstName",
+formatter: "formatFirstName"
 }, {
-name: "name",
-classes: "cell-key contact-name"
+kind: "XV.ListAttr",
+attr: "lastName",
+fit: !0,
+classes: "bold",
+style: "padding-left: 0px;"
+} ]
 }, {
-name: "jobTitle",
-classes: "contact-job-title",
+kind: "XV.ListAttr",
+attr: "phone",
+fit: !0,
+classes: "right"
+} ]
+}, {
+kind: "FittableColumns",
+components: [ {
+kind: "XV.ListAttr",
+attr: "jobTitle",
 placeholder: "_noJobTitle".loc()
-} ], [ {
-width: 160
 }, {
-name: "phone",
-classes: "cell-align-right contact-phone"
+kind: "XV.ListAttr",
+attr: "primaryEmail",
+ontap: "sendMail",
+classes: "right hyperlink",
+fit: !0
+} ]
+} ]
 }, {
-name: "primaryEmail",
-classes: "cell-align-right contact-email"
-} ] ],
-rightColumn: [ [ {
-width: 320
-}, {
-name: "account.name",
-classes: "cell-italic contact-account-name",
+kind: "XV.ListColumn",
+classes: "last",
+fit: !0,
+components: [ {
+kind: "XV.ListAttr",
+attr: "account.name",
+classes: "italic",
 placeholder: "_noAccountName".loc()
 }, {
-name: "address.formatShort",
-classes: "contact-account-name"
-} ] ]
-}), enyo.kind({
-name: "XV.IncidentInfoParameters",
-kind: "XV.ParameterWidget",
-components: [ {
-label: "_number".loc(),
-attr: "number",
-getParameter: function() {
-var a, b = this.getValue() - 0;
-return b && _.isNumber(b) && (a = {
-attribute: this.getAttr(),
-operator: "=",
-value: b
-}), a;
-}
-}, {
-label: "_account".loc(),
-attr: "account",
-defaultKind: "XV.AccountRelationWidget"
-}, {
-label: "_description".loc(),
-attr: "description"
-}, {
-label: "_category".loc(),
-attr: "category",
-defaultKind: "XV.IncidentCategoryDropdown"
-}, {
-label: "_priority".loc(),
-attr: "priority",
-defaultKind: "XV.PriorityDropdown"
-}, {
-label: "_severity".loc(),
-attr: "severity",
-defaultKind: "XV.IncidentSeverityDropdown"
-}, {
-label: "_resolution".loc(),
-attr: "resolution",
-defaultKind: "XV.IncidentResolutionDropdown"
-}, {
-label: "_startDate".loc(),
-attr: "created",
-operator: ">=",
-defaultKind: "XV.DateWidget"
-}, {
-label: "_endDate".loc(),
-attr: "created",
-operator: "<=",
-defaultKind: "XV.DateWidget"
+kind: "XV.ListAttr",
+attr: "address.formatShort"
 } ]
+} ]
+} ]
+} ],
+formatFirstName: function(e, t, n) {
+return t.addRemoveClass("bold", _.isEmpty(n.get("lastName").trim())), e;
+},
+sendMail: function(e, t) {
+var n = this.getModel(t.index), r = n ? n.getValue("primaryEmail") : null, i;
+return r && (i = window.open("mailto:" + r), i.close()), !0;
+}
 }), enyo.kind({
-name: "XV.IncidentInfoList",
-kind: "XV.InfoList",
-published: {
+name: "XV.IncidentList",
+kind: "XV.List",
 label: "_incidents".loc(),
 collection: "XM.IncidentInfoCollection",
-rowClass: "XV.IncidentInfoCollectionRow",
-parameterWidget: "XV.IncidentInfoParameters"
-}
-}), enyo.kind({
-name: "XV.IncidentInfoCollectionRow",
-kind: "XV.InfoListRow",
-leftColumn: [ [ {
-width: 245
+query: {
+orderBy: [ {
+attribute: "created"
+} ]
+},
+parameterWidget: "XV.IncidentInfoParameters",
+workspace: "XV.IncidentWorkspace",
+components: [ {
+kind: "XV.ListItem",
+components: [ {
+kind: "FittableColumns",
+components: [ {
+kind: "XV.ListColumn",
+classes: "first",
+components: [ {
+kind: "FittableColumns",
+components: [ {
+kind: "XV.ListAttr",
+attr: "number",
+classes: "bold"
 }, {
-name: "number",
-classes: "cell-key incident-number"
+kind: "XV.ListAttr",
+attr: "updated",
+fit: !0,
+formatter: "formatDate",
+classes: "right"
+} ]
 }, {
-name: "description",
-classes: "cell incident-description"
-} ], [ {
-width: 75
+kind: "XV.ListAttr",
+attr: "description"
+} ]
 }, {
-name: "updated",
-classes: "cell-align-right incident-updated",
-formatter: "formatDate"
-} ] ],
-rightColumn: [ [ {
-width: 165
+kind: "XV.ListColumn",
+classes: "second",
+components: [ {
+kind: "XV.ListAttr",
+attr: "account.name",
+classes: "italic"
 }, {
-name: "account.name",
-classes: "cell-italic incident-account-name"
+kind: "XV.ListAttr",
+attr: "contact.name"
+} ]
 }, {
-name: "contact.getName",
-classes: "incident-contact-name"
-} ], [ {
-width: 75
+kind: "XV.ListColumn",
+classes: "third",
+components: [ {
+kind: "XV.ListAttr",
+attr: "getIncidentStatusString"
 }, {
-name: "getIncidentStatusString",
-classes: "incident-status"
+kind: "XV.ListAttr",
+attr: "owner.username"
+} ]
 }, {
-name: "owner.username",
-classes: "incident-owner-username"
-} ], [ {
-width: 75
-}, {
-name: "priority.name",
-classes: "incident-priority",
+kind: "XV.ListColumn",
+classes: "last",
+fit: !0,
+components: [ {
+kind: "XV.ListAttr",
+attr: "priority.name",
 placeholder: "_noPriority".loc()
 }, {
-name: "category.name",
-classes: "incident-category",
+kind: "XV.ListAttr",
+attr: "category.name",
 placeholder: "_noCategory".loc()
-} ] ],
-formatDate: function(a, b, c) {
-var d = new Date;
-return XT.date.compareDate(a, d) ? c.removeClass("bold") : c.addClass("bold"), a;
+} ]
+} ]
+} ]
+} ],
+formatDate: function(e, t, n) {
+var r = !XT.date.compareDate(e, new Date);
+return t.addRemoveClass("bold", r), e;
 }
 }), enyo.kind({
-name: "XV.OpportunityInfoParameters",
-kind: "XV.ParameterWidget",
+name: "XV.ItemList",
+kind: "XV.List",
+label: "_items".loc(),
+collection: "XM.ItemInfoCollection",
+query: {
+orderBy: [ {
+attribute: "number"
+} ]
+},
+parameterWidget: "XV.ItemInfoParameters",
 components: [ {
-label: "_showInactive".loc(),
-attr: "isActive",
-defaultKind: "XV.Checkbox",
-getParameter: function() {
-var a;
-return this.getValue() || (a = {
-attribute: this.getAttr(),
-operator: "=",
-value: !0
-}), a;
-}
+kind: "XV.ListItem",
+components: [ {
+kind: "FittableColumns",
+components: [ {
+kind: "XV.ListColumn",
+classes: "first",
+components: [ {
+kind: "FittableColumns",
+components: [ {
+kind: "XV.ListAttr",
+attr: "number",
+classes: "bold"
 }, {
-label: "_name".loc(),
-attr: "name"
+kind: "XV.ListAttr",
+attr: "inventoryUnit.name",
+fit: !0,
+classes: "right"
+} ]
 }, {
-label: "_opportunityStage".loc(),
-attr: "opportunityStage",
-defaultKind: "XV.OpportunityStageDropdown"
-}, {
-label: "_opportunityType".loc(),
-attr: "opportunityType",
-defaultKind: "XV.OpportunityTypeDropdown"
-}, {
-label: "_opportunitySource".loc(),
-attr: "opportunitySource",
-defaultKind: "XV.OpportunitySourceDropdown"
+kind: "XV.ListAttr",
+attr: "description1"
+} ]
+} ]
+} ]
 } ]
 }), enyo.kind({
-name: "XV.OpportunityInfoList",
-kind: "XV.InfoList",
-published: {
+name: "XV.OpportunityList",
+kind: "XV.List",
 collection: "XM.OpportunityInfoCollection",
+query: {
+orderBy: [ {
+attribute: "targetClose"
+}, {
+attribute: "name"
+}, {
+attribute: "id"
+} ]
+},
 label: "_opportunities".loc(),
-rowClass: "XV.OpportunityInfoCollectionRow",
-parameterWidget: "XV.OpportunityInfoParameters"
-}
-}), enyo.kind({
-name: "XV.OpportunityInfoCollectionRow",
-kind: "XV.InfoListRow",
-leftColumn: [ [ {
-width: 200
+parameterWidget: "XV.OpportunityInfoParameters",
+workspace: "XV.OpportunityWorkspace",
+components: [ {
+kind: "XV.ListItem",
+components: [ {
+kind: "FittableColumns",
+components: [ {
+kind: "XV.ListColumn",
+classes: "first",
+components: [ {
+kind: "FittableColumns",
+components: [ {
+kind: "XV.ListAttr",
+attr: "number",
+classes: "bold"
 }, {
-name: "number",
-classes: "cell-key opportunity-number"
-}, {
-name: "name",
-classes: "opportunity-description"
-} ], [ {
-width: 120
-}, {
-name: "targetClose",
-classes: "cell-align-right",
+kind: "XV.ListAttr",
+attr: "targetClose",
+fit: !0,
 formatter: "formatTargetClose",
-placeholder: "_noCloseTarget".loc()
-} ] ],
-rightColumn: [ [ {
-width: 165
+placeholder: "_noCloseTarget".loc(),
+classes: "right"
+} ]
 }, {
-name: "account.name",
-classes: "cell-italic opportunity-account-name"
+kind: "XV.ListAttr",
+attr: "name"
+} ]
 }, {
-name: "contact.getName",
-classes: "opportunity-contact-name",
-placeholder: "_noContact".loc()
-} ], [ {
-width: 75
+kind: "XV.ListColumn",
+classes: "second",
+components: [ {
+kind: "XV.ListAttr",
+attr: "account.name",
+classes: "italic",
+placeholder: "_noAccountName".loc()
 }, {
-name: "opportunityStage.name",
-classes: "opportunity-opportunityStage-name",
+kind: "XV.ListAttr",
+attr: "contact.name"
+} ]
+}, {
+kind: "XV.ListColumn",
+classes: "third",
+components: [ {
+kind: "XV.ListAttr",
+attr: "opportunityStage.name",
 placeholder: "_noStage".loc()
 }, {
-name: "owner.username",
-classes: "opportunity-owner-username"
-} ], [ {
-width: 75
+kind: "XV.ListAttr",
+attr: "owner.username"
+} ]
 }, {
-name: "priority.name",
-classes: "opportunity-priority-name",
+kind: "XV.ListColumn",
+classes: "last",
+fit: !0,
+components: [ {
+kind: "XV.ListAttr",
+attr: "priority.name",
 placeholder: "_noPriority".loc()
 }, {
-name: "opportunityType.name",
-classes: "opportunity-opportunityType-name",
+kind: "XV.ListAttr",
+attr: "opportunityType.name",
 placeholder: "_noType".loc()
-} ] ],
-formatTargetClose: function(a, b, c) {
-var d = new Date;
-return b.get("isActive") && a && XT.date.compareDate(a, d) < 1 ? c.addClass("error") : c.removeClass("error"), a;
-}
-}), enyo.kind({
-name: "XV.ProjectInfoParameters",
-kind: "XV.ParameterWidget",
-components: [ {
-label: "_showCompleted".loc(),
-attr: "status",
-defaultKind: "XV.Checkbox",
-getParameter: function() {
-var a;
-return this.getValue() || (a = {
-attribute: this.getAttr(),
-operator: "!=",
-value: "C"
-}), a;
-}
-}, {
-label: "_number".loc(),
-attr: "number"
-}, {
-label: "_name".loc(),
-attr: "name"
-}, {
-label: "_startStartDate".loc(),
-attr: "startDate",
-operator: ">=",
-defaultKind: "XV.DateWidget"
-}, {
-label: "_startEndDate".loc(),
-attr: "startDate",
-operator: "<=",
-defaultKind: "XV.DateWidget"
-}, {
-label: "_assignedStartDate".loc(),
-attr: "assignDate",
-operator: ">=",
-defaultKind: "XV.DateWidget"
-}, {
-label: "_assignedEndDate".loc(),
-attr: "assignDate",
-operator: "<=",
-defaultKind: "XV.DateWidget"
-}, {
-label: "_dueStartDate".loc(),
-attr: "dueDate",
-operator: ">=",
-defaultKind: "XV.DateWidget"
-}, {
-label: "_dueEndDate".loc(),
-attr: "dueDate",
-operator: "<=",
-defaultKind: "XV.DateWidget"
-}, {
-label: "_completedStartDate".loc(),
-attr: "completeDate",
-operator: ">=",
-defaultKind: "XV.DateWidget"
-}, {
-label: "_completedEndDate".loc(),
-attr: "completeDate",
-operator: "<=",
-defaultKind: "XV.DateWidget"
 } ]
+} ]
+} ]
+} ],
+formatTargetClose: function(e, t, n) {
+var r = n && n.get("isActive") && XT.date.compareDate(e, new Date) < 1;
+return t.addRemoveClass("error", r), e;
+}
 }), enyo.kind({
-name: "XV.ProjectInfoList",
-kind: "XV.InfoList",
-published: {
+name: "XV.ProjectList",
+kind: "XV.List",
 label: "_projects".loc(),
 collection: "XM.ProjectInfoCollection",
 query: {
@@ -13156,189 +13155,196 @@ orderBy: [ {
 attribute: "number"
 } ]
 },
-rowClass: "XV.ProjectInfoCollectionRow",
-parameterWidget: "XV.ProjectInfoParameters"
-}
-}), enyo.kind({
-name: "XV.ProjectInfoCollectionRow",
-kind: "XV.InfoListRow",
-leftColumn: [ [ {
-width: 200
-}, {
-name: "number",
-classes: "cell-key project-number"
-}, {
-name: "name",
-classes: "project-name"
-}, {
-name: "account.name",
-classes: "project-account-name"
-} ], [ {
-width: 120
-}, {
-name: "dueDate",
-classes: "cell-align-right project-due-date",
-formatter: "formatDueDate"
-} ] ],
-rightColumn: [ [ {
-width: 70
-}, {
-name: "getProjectStatusString",
-classes: "project-status"
-}, {
-name: "owner.username",
-classes: "project-owner-username"
-} ], [ {
-width: 70
-}, {
-content: "budgeted:",
-style: "text-align: right;",
-isLabel: !0
-}, {
-content: "actual:",
-style: "text-align: right;",
-isLabel: !0
-}, {
-content: "balance:",
-style: "text-align: right;",
-isLabel: !0
-} ], [ {
-width: 80
-}, {
-name: "budgetedExpenses",
-classes: "cell-align-right project-budgeted-expenses",
-formatter: "formatExpenses"
-}, {
-name: "actualExpenses",
-classes: "cell-align-right project-actual-expenses",
-formatter: "formatExpenses"
-}, {
-name: "balanceExpenses",
-classes: "cell-align-right project-balance-expenses",
-formatter: "formatExpenses"
-} ], [ {
-width: 80
-}, {
-name: "budgetedHours",
-classes: "cell-align-right project-budgeted-hours",
-formatter: "formatHours"
-}, {
-name: "actualHours",
-classes: "cell-align-right project-actual-hours",
-formatter: "formatHours"
-}, {
-name: "balanceHours",
-classes: "cell-align-right project-balance-hours",
-formatter: "formatHours"
-} ] ],
-formatDueDate: function(a, b, c) {
-var d = new Date, e = XM.Project;
-return b.get("status") !== e.COMPLETED && XT.date.compareDate(a, d) < 1 ? c.addClass("error") : c.removeClass("error"), a;
-},
-formatHours: function(a, b, c) {
-return Globalize.format(a, "n2") + " " + "_hrs".loc();
-},
-formatExpenses: function(a, b, c) {
-return Globalize.format(a, "c" + XT.MONEY_SCALE);
-}
-}), enyo.kind({
-name: "XV.ToDoInfoParameters",
-kind: "XV.ParameterWidget",
+parameterWidget: "XV.ProjectInfoParameters",
+workspace: "XV.ProjectWorkspace",
 components: [ {
-label: "_showCompleted".loc(),
-attr: "status",
-defaultKind: "XV.Checkbox",
-getParameter: function() {
-var a;
-return this.getValue() || (a = {
-attribute: this.getAttr(),
-operator: "!=",
-value: "C"
-}), a;
-}
+kind: "XV.ListItem",
+components: [ {
+kind: "FittableColumns",
+components: [ {
+kind: "XV.ListColumn",
+classes: "first",
+components: [ {
+kind: "FittableColumns",
+components: [ {
+kind: "XV.ListAttr",
+attr: "number",
+classes: "bold"
 }, {
-label: "_name".loc(),
+kind: "XV.ListAttr",
+attr: "dueDate",
+fit: !0,
+formatter: "formatDueDate",
+placeholder: "_noCloseTarget".loc(),
+classes: "right"
+} ]
+}, {
+kind: "XV.ListAttr",
 attr: "name"
 }, {
-label: "_startStartDate".loc(),
-attr: "startDate",
-operator: ">=",
-defaultKind: "XV.DateWidget"
-}, {
-label: "_startEndDate".loc(),
-attr: "startDate",
-operator: "<=",
-defaultKind: "XV.DateWidget"
-}, {
-label: "_dueStartDate".loc(),
-attr: "dueDate",
-operator: ">=",
-defaultKind: "XV.DateWidget"
-}, {
-label: "_dueEndDate".loc(),
-attr: "dueDate",
-operator: "<=",
-defaultKind: "XV.DateWidget"
+kind: "XV.ListAttr",
+attr: "account.name"
 } ]
-}), enyo.kind({
-name: "XV.ToDoInfoList",
-kind: "XV.InfoList",
-published: {
-label: "_toDos".loc(),
-collection: "XM.ToDoInfoCollection",
-rowClass: "XV.ToDoInfoCollectionRow",
-parameterWidget: "XV.ToDoInfoParameters"
-}
-}), enyo.kind({
-name: "XV.ToDoInfoCollectionRow",
-kind: "XV.InfoListRow",
-leftColumn: [ [ {
-width: 245
 }, {
-name: "name",
-classes: "cell-key toDo-name"
-}, {
-name: "description",
-classes: "cell toDo-description"
-} ], [ {
-width: 75
-}, {
-name: "dueDate",
-classes: "cell-align-right toDo-dueDate",
-formatter: "formatDueDate"
-} ] ],
-rightColumn: [ [ {
-width: 165
-}, {
-name: "account.name",
-classes: "cell-italic toDo-account-name",
+kind: "XV.ListColumn",
+classes: "third",
+components: [ {
+kind: "XV.ListAttr",
+attr: "getProjectStatusString",
 placeholder: "_noAccountName".loc()
 }, {
-name: "contact.getName",
-classes: "toDo-contact-name"
-} ], [ {
-width: 75
+kind: "XV.ListAttr",
+attr: "owner.username"
+} ]
 }, {
-name: "getToDoStatusString",
-classes: "toDo-status"
+kind: "XV.ListColumn",
+style: "width: 80;",
+components: [ {
+content: "_budgeted".loc() + ":",
+classes: "xv-list-attr",
+style: "text-align: right;"
 }, {
-name: "assignedTo.username",
-classes: "toDo-assignedTo-username"
-} ], [ {
-width: 75
+content: "_actual".loc() + ":",
+classes: "xv-list-attr",
+style: "text-align: right;"
 }, {
-name: "priority.name",
-classes: "toDo-priority",
-placeholder: "_noPriority".loc()
-} ] ],
-formatDueDate: function(a, b, c) {
-var d = new Date, e = XM.ToDo;
-return b.get("status") !== e.COMPLETED && XT.date.compareDate(a, d) < 1 ? c.addClass("error") : c.removeClass("error"), a;
+content: "_balance".loc() + ":",
+classes: "xv-list-attr",
+style: "text-align: right;"
+} ]
+}, {
+kind: "XV.ListColumn",
+classes: "money",
+components: [ {
+kind: "XV.ListAttr",
+attr: "budgetedExpenses",
+classes: "text-align-right",
+formatter: "formatExpenses"
+}, {
+kind: "XV.ListAttr",
+attr: "actualExpenses",
+classes: "text-align-right",
+formatter: "formatExpenses"
+}, {
+kind: "XV.ListAttr",
+attr: "balanceExpenses",
+classes: "text-align-right",
+formatter: "formatExpenses"
+} ]
+}, {
+kind: "XV.ListColumn",
+classes: "money",
+fit: !0,
+components: [ {
+kind: "XV.ListAttr",
+attr: "budgetedHours",
+classes: "text-align-right",
+formatter: "formatHours"
+}, {
+kind: "XV.ListAttr",
+attr: "actualHours",
+classes: "text-align-right",
+formatter: "formatHours"
+}, {
+kind: "XV.ListAttr",
+attr: "balanceHours",
+classes: "text-align-right",
+formatter: "formatHours"
+} ]
+} ]
+} ]
+} ],
+formatDueDate: function(e, t, n) {
+var r = new Date, i = XM.Project, s = n.get("status") !== i.COMPLETED && XT.date.compareDate(e, r) < 1;
+return t.addRemoveClass("error", s), e;
+},
+formatHours: function(e, t, n) {
+return t.addRemoveClass("error", e < 0), Globalize.format(e, "n2") + " " + "_hrs".loc();
+},
+formatExpenses: function(e, t, n) {
+return t.addRemoveClass("error", e < 0), Globalize.format(e, "c" + XT.MONEY_SCALE);
 }
 }), enyo.kind({
-name: "XV.UserAccountInfoList",
-kind: "XV.InfoList",
-published: {
+name: "XV.ToDoList",
+kind: "XV.List",
+label: "_toDos".loc(),
+collection: "XM.ToDoInfoCollection",
+parameterWidget: "XV.ToDoInfoParameters",
+query: {
+orderBy: [ {
+attribute: "dueDate"
+}, {
+attribute: "name"
+} ]
+},
+workspace: "XV.ToDoWorkspace",
+components: [ {
+kind: "XV.ListItem",
+components: [ {
+kind: "FittableColumns",
+components: [ {
+kind: "XV.ListColumn",
+classes: "first",
+components: [ {
+kind: "FittableColumns",
+components: [ {
+kind: "XV.ListAttr",
+attr: "name",
+classes: "bold"
+}, {
+kind: "XV.ListAttr",
+attr: "dueDate",
+fit: !0,
+formatter: "formatDueDate",
+placeholder: "_noDueDate".loc(),
+classes: "right"
+} ]
+}, {
+kind: "XV.ListAttr",
+attr: "description",
+placeholder: "_noDescription".loc()
+} ]
+}, {
+kind: "XV.ListColumn",
+classes: "second",
+components: [ {
+kind: "XV.ListAttr",
+attr: "account.name",
+classes: "italic",
+placeholder: "_noAccountName".loc()
+}, {
+kind: "XV.ListAttr",
+attr: "contact.name"
+} ]
+}, {
+kind: "XV.ListColumn",
+classes: "third",
+components: [ {
+kind: "XV.ListAttr",
+attr: "getToDoStatusString"
+}, {
+kind: "XV.ListAttr",
+attr: "owner.username"
+} ]
+}, {
+kind: "XV.ListColumn",
+classes: "last",
+fit: !0,
+components: [ {
+kind: "XV.ListAttr",
+attr: "priority.name",
+placeholder: "_noPriority".loc()
+} ]
+} ]
+} ]
+} ],
+formatDueDate: function(e, t, n) {
+var r = new Date, i = XM.ToDo, s = n.get("status") !== i.COMPLETED && XT.date.compareDate(e, r) < 1;
+return t.addRemoveClass("error", s), e;
+}
+}), enyo.kind({
+name: "XV.UserAccountList",
+kind: "XV.List",
 label: "_userAccounts".loc(),
 collection: "XM.UserAccountInfoCollection",
 query: {
@@ -13346,111 +13352,151 @@ orderBy: [ {
 attribute: "username"
 } ]
 },
-rowClass: "XV.UserAccountInfoCollectionRow"
-}
-}), enyo.kind({
-name: "XV.UserAccountInfoCollectionRow",
-kind: "XV.InfoListRow",
-leftColumn: [ [ {
-width: 160
+workspace: "XV.UserAccountWorkspace",
+components: [ {
+kind: "XV.ListItem",
+components: [ {
+kind: "FittableColumns",
+components: [ {
+kind: "XV.ListColumn",
+classes: "short",
+components: [ {
+kind: "XV.ListAttr",
+attr: "username",
+classes: "bold"
+} ]
 }, {
-name: "username",
-classes: "cell-key user-account-username"
-} ], [ {
-width: 160
+kind: "XV.ListColumn",
+classes: "short",
+components: [ {
+kind: "XV.ListAttr",
+attr: "propername"
+} ]
 }, {
-name: "propername",
-classes: "user-account-proper-name"
-} ] ],
-rightColumn: [ [ {
-width: 320
-}, {
-name: "isActive",
-classes: "cell-align-right user-account-active",
+kind: "XV.ListColumn",
+classes: "last",
+fit: !0,
+components: [ {
+kind: "XV.ListAttr",
+attr: "isActive",
 formatter: "formatActive"
-} ] ],
-formatActive: function(a) {
-return a ? "_active".loc() : "";
+} ]
+} ]
+} ]
+} ],
+formatActive: function(e, t, n) {
+return e ? "_active".loc() : "";
 }
 }), enyo.kind({
 name: "XV.HonorificList",
-kind: "XV.InfoList",
-published: {
-label: "_honorific".loc(),
+kind: "XV.List",
+label: "_honorifics".loc(),
 collection: "XM.HonorificCollection",
 query: {
 orderBy: [ {
 attribute: "code"
 } ]
 },
-rowClass: "XV.HonorificCollectionRow"
-}
+workspace: "XV.HonorificWorkspace",
+components: [ {
+kind: "XV.ListItem",
+components: [ {
+kind: "XV.ListColumn",
+classes: "last",
+components: [ {
+kind: "XV.ListAttr",
+attr: "code",
+classes: "bold"
+} ]
+} ]
+} ]
 }), enyo.kind({
-name: "XV.HonorificCollectionRow",
-kind: "XV.InfoListRow",
-leftColumn: [ [ {
-width: 160
+name: "XV.AbbreviationList",
+kind: "XV.List",
+components: [ {
+kind: "XV.ListItem",
+components: [ {
+kind: "FittableColumns",
+components: [ {
+kind: "XV.ListColumn",
+classes: "short",
+components: [ {
+kind: "XV.ListAttr",
+attr: "abbreviation",
+classes: "bold"
+} ]
 }, {
-name: "code",
-classes: ""
-} ] ]
+kind: "XV.ListColumn",
+classes: "last",
+fit: !0,
+components: [ {
+kind: "XV.ListAttr",
+attr: "name"
+} ]
+} ]
+} ]
+} ]
 }), enyo.kind({
 name: "XV.StateList",
-kind: "XV.InfoList",
-published: {
-label: "_state".loc(),
+kind: "XV.AbbreviationList",
+label: "_states".loc(),
 collection: "XM.StateCollection",
 query: {
 orderBy: [ {
 attribute: "abbreviation"
 } ]
 },
-rowClass: "XV.AbbreviationNameRow"
-}
+workspace: "XV.StateWorkspace"
 }), enyo.kind({
 name: "XV.CountryList",
-kind: "XV.InfoList",
-published: {
-label: "_country".loc(),
+kind: "XV.AbbreviationList",
+label: "_countries".loc(),
 collection: "XM.CountryCollection",
+query: {
+orderBy: [ {
+attribute: "abbreviation"
+} ]
+},
+workspace: "XV.CountryWorkspace"
+}), enyo.kind({
+name: "XV.NameDescriptionList",
+kind: "XV.List",
 query: {
 orderBy: [ {
 attribute: "name"
 } ]
 },
-rowClass: "XV.AbbreviationNameRow"
-}
-}), enyo.kind({
-name: "XV.AbbreviationNameRow",
-kind: "XV.InfoListRow",
-leftColumn: [ [ {
-width: 160
-}, {
-name: "abbreviation",
-classes: ""
-} ], [ {
-width: 160
-}, {
-name: "name",
-classes: ""
-} ] ]
-}), enyo.kind({
-name: "XV.NameDescriptionList",
-kind: "XV.InfoList",
-published: {
-label: "",
-collection: null,
-query: {
-orderBy: [ {
-attribute: "order"
+components: [ {
+kind: "XV.ListItem",
+components: [ {
+kind: "FittableColumns",
+components: [ {
+kind: "XV.ListColumn",
+classes: "short",
+components: [ {
+kind: "XV.ListAttr",
+attr: "name",
+classes: "bold"
 } ]
-},
-rowClass: "XV.NameDescriptionRow"
-},
+}, {
+kind: "XV.ListColumn",
+classes: "last",
+fit: !0,
+components: [ {
+kind: "XV.ListAttr",
+attr: "description"
+} ]
+} ]
+} ]
+} ],
 create: function() {
 this.inherited(arguments);
-var a = this.kind.substring(0, this.kind.length - 4).substring(3);
-this.getLabel() || this.setLabel(("_" + a.camelize()).loc()), this.getCollection() || this.setCollection("XM." + a + "Collection");
+var e = this.kind.substring(0, this.kind.length - 4).substring(3);
+if (!this.getLabel()) {
+var t = "_" + e.camelize().pluralize();
+this.setLabel(t.loc());
+}
+this.getCollection() || this.setCollection("XM." + e + "Collection"), this.getWorkspace() || this.setWorkspace("XV." + e + "Workspace");
 }
 }), enyo.kind({
 name: "XV.IncidentCategoryList",
@@ -13470,7 +13516,7 @@ kind: "XV.NameDescriptionList",
 published: {
 query: {
 orderBy: [ {
-attribute: "id"
+attribute: "name"
 } ]
 }
 }
@@ -13480,7 +13526,7 @@ kind: "XV.NameDescriptionList",
 published: {
 query: {
 orderBy: [ {
-attribute: "id"
+attribute: "name"
 } ]
 }
 }
@@ -13490,395 +13536,418 @@ kind: "XV.NameDescriptionList",
 published: {
 query: {
 orderBy: [ {
-attribute: "id"
+attribute: "name"
 } ]
 }
 }
 }), enyo.kind({
-name: "XV.NameDescriptionRow",
-kind: "XV.InfoListRow",
-leftColumn: [ [ {
-width: 160
-}, {
-name: "name",
-classes: ""
-} ], [ {
-width: 160
-}, {
-name: "description",
-classes: ""
-} ] ]
+name: "XV.UserAccountRoleList",
+kind: "XV.NameDescriptionList",
+collection: "XM.UserAccountRoleInfoCollection"
 });
 })();
 
-// module.js
-
-(function() {
-var a = 50, b = 100;
-enyo.kind({
-name: "XV.Module",
-kind: "Panels",
-label: "",
-classes: "app enyo-unselectable",
-events: {
-onInfoListAdded: "",
-onTogglePullout: ""
-},
-handlers: {
-onParameterChange: "requery",
-onScroll: "didScroll",
-onInfoListRowTapped: "doInfoListRowTapped"
-},
-showPullout: !0,
-realtimeFit: !0,
-arrangerKind: "CollapsingArranger",
-selectedList: 0,
-components: [ {
-kind: "FittableRows",
-classes: "left",
-components: [ {
-kind: "onyx.Toolbar",
-classes: "onyx-menu-toolbar",
-components: [ {
-kind: "onyx.Button",
-content: "_back".loc(),
-ontap: "showDashboard"
-}, {
-kind: "Group",
-defaultKind: "onyx.IconButton",
-tag: null,
-components: [ {
-src: "images/menu-icon-search.png",
-ontap: "showParameters"
-}, {
-src: "images/menu-icon-bookmark.png",
-ontap: "showHistory"
-} ]
-}, {
-name: "leftLabel"
-} ]
-}, {
-name: "menu",
-kind: "List",
-fit: !0,
-touch: !0,
-onSetupItem: "setupItem",
-components: [ {
-name: "item",
-classes: "item enyo-border-box",
-ontap: "itemTap"
-} ]
-} ]
-}, {
-kind: "FittableRows",
-components: [ {
-kind: "FittableColumns",
-noStretch: !0,
-classes: "onyx-toolbar onyx-toolbar-inline",
-components: [ {
-kind: "onyx.Grabber"
-}, {
-kind: "Scroller",
-thumb: !1,
-fit: !0,
-touch: !0,
-vertical: "hidden",
-style: "margin: 0;",
-components: [ {
-classes: "onyx-toolbar-inline",
-style: "white-space: nowrap;"
-}, {
-name: "rightLabel",
-style: "text-align: center"
-} ]
-}, {
-kind: "onyx.Button",
-content: "_new".loc(),
-ontap: "newWorkspace"
-}, {
-kind: "onyx.InputDecorator",
-components: [ {
-name: "searchInput",
-kind: "onyx.Input",
-style: "width: 200px;",
-placeholder: "Search",
-onchange: "inputChanged"
-}, {
-kind: "Image",
-src: "images/search-input-search.png"
-} ]
-}, {
-kind: "onyx.Button",
-content: "_logout".loc(),
-ontap: "warnLogout"
-}, {
-name: "logoutWarningPopup",
-classes: "onyx-sample-popup",
-kind: "onyx.Popup",
-centered: !0,
-modal: !0,
-floating: !0,
-components: [ {
-content: "Are you sure you want to log out?"
-}, {
-tag: "br"
-}, {
-kind: "onyx.Button",
-content: "Yes, logout",
-ontap: "logout"
-}, {
-kind: "onyx.Button",
-content: "No, don't logout.",
-ontap: "closeLogoutWarningPopup"
-} ]
-} ]
-}, {
-name: "lists",
-kind: "Panels",
-arrangerKind: "LeftRightArranger",
-margin: 0,
-fit: !0,
-onTransitionFinish: "didFinishTransition"
-} ]
-}, {
-kind: "Signals",
-onModelSave: "doRefreshInfoObject"
-} ],
-firstTime: !0,
-fetched: {},
-setupItem: function(a, b) {
-var c = this.lists[b.index].name;
-this.$.item.setContent(this.$.lists.$[c].getLabel()), this.$.item.addRemoveClass("onyx-selected", a.isSelected(b.index));
-},
-didBecomeActive: function() {
-this.firstTime && (this.firstTime = !1, this.setList(0));
-},
-didFinishTransition: function(a, b) {
-this.setList(a.index);
-},
-didScroll: function(a, c) {
-if (c.originator.kindName !== "XV.InfoListPrivate") return;
-var d = c.originator, e = d.getScrollBounds().maxTop - d.rowHeight * b, f = {};
-d.getIsMore() && d.getScrollPosition() > e && !d.getIsFetching() && (d.setIsFetching(!0), f.showMore = !0, this.fetch(d.owner.name, f));
-},
-create: function() {
-var a, b;
-this.inherited(arguments), this.$.leftLabel.setContent(this.label);
-for (a = 0; a < this.lists.length; a++) b = this.$.lists.createComponent(this.lists[a]), this.doInfoListAdded(b);
-this.$.menu.setCount(this.lists.length);
-},
-inputChanged: function(a, b) {
-var c = this.$.lists.getIndex(), d = this.lists[c].name;
-this.fetched = {}, this.fetch(d);
-},
-itemTap: function(a, b) {
-this.setList(b.index);
-},
-setList: function(a) {
-if (this.firstTime) return;
-var b = this.lists[a].name;
-this.$.menu.isSelected(a) || this.$.menu.select(a), this.selectedList = a, this.$.lists.getIndex() !== a && this.$.lists.setIndex(a), this.$.rightLabel.setContent(this.$.lists.$[b].getLabel()), this.fetched[b] || this.fetch(b);
-},
-fetch: function(b, c) {
-b = b || this.$.lists.getActive().name;
-var d = this.$.lists.$[b], e = d.getQuery() || {}, f = this.$.searchInput.getValue(), g = XT.app.$.pullout.getItem(b), h = g ? g.getParameters() : [];
-c = c ? _.clone(c) : {}, c.showMore = _.isBoolean(c.showMore) ? c.showMore : !1, f || h.length ? (e.parameters = [], f && (e.parameters = [ {
-attribute: d.getCollection().model.getSearchableAttributes(),
-operator: "MATCHES",
-value: this.$.searchInput.getValue()
-} ]), h && (e.parameters = e.parameters.concat(h))) : delete e.parameters, c.showMore ? (e.rowOffset += a, c.add = !0) : (e.rowOffset = 0, e.rowLimit = a), d.setQuery(e), d.fetch(c), this.fetched[b] = !0;
-},
-requery: function(a, b) {
-this.fetch();
-},
-showDashboard: function() {
-this.bubble("dashboard", {
-eventName: "dashboard"
-});
-},
-showHistory: function(a, b) {
-var c = {
-name: "history"
-};
-this.doTogglePullout(c);
-},
-showParameters: function(a, b) {
-var c = this.$.lists.getActive();
-this.doTogglePullout(c);
-},
-doInfoListRowTapped: function(a, b) {
-var c = this.$.lists.index, d = this.$.lists.children[c], e = b.index, f = d.collection.models[e];
-return this.bubble("workspace", {
-eventName: "workspace",
-options: f
-}), !0;
-},
-newWorkspace: function(a, b) {
-var c = this.$.lists.controls[this.selectedList].query.recordType, d = new (XM[XV.util.formatModelName(c)]);
-d.initialize(null, {
-isNew: !0
-}), this.bubble("workspace", {
-eventName: "workspace",
-options: d
-});
-},
-doRefreshInfoObject: function(a, b) {
-var c = XV.util.stripModelNamePrefix(b.recordType).camelize(), d = this.name === "setup" ? c + "List" : c + "InfoList", e = this.$.lists.$[d];
-if (!e) return;
-var f = _.find(e.collection.models, function(a) {
-return a.id === b.id;
-});
-if (!f) return;
-f.fetch();
-},
-warnLogout: function() {
-this.$.logoutWarningPopup.show();
-},
-closeLogoutWarningPopup: function() {
-this.$.logoutWarningPopup.hide();
-},
-logout: function() {
-this.$.logoutWarningPopup.hide(), XT.session.logout();
-}
-});
-})();
-
-// pullout.js
+// parameter.js
 
 (function() {
 enyo.kind({
-name: "XV.Pullout",
-kind: "enyo.Slideable",
-classes: "pullout",
-value: -100,
-min: -100,
-unit: "%",
-events: {
-onHistoryItemSelected: ""
-},
-published: {
-selectedPanel: ""
-},
+name: "XV.AccountInfoParameters",
+kind: "XV.ParameterWidget",
 components: [ {
-name: "shadow",
-classes: "pullout-shadow"
+kind: "onyx.GroupboxHeader",
+content: "_account".loc()
 }, {
-name: "grabber",
-kind: "onyx.Grabber",
-classes: "pullout-grabbutton",
-ondragfinish: "grabberDragFinish"
+attr: "isActive",
+label: "_showInactive".loc(),
+defaultKind: "XV.CheckboxWidget",
+getParameter: function() {
+var e;
+return this.getValue() || (e = {
+attribute: this.getAttr(),
+operator: "=",
+value: !0
+}), e;
+}
 }, {
-kind: "FittableRows",
-classes: "enyo-fit",
-components: [ {
-name: "client",
-classes: "pullout-toolbar"
+label: "_number".loc(),
+attr: "number"
 }, {
-name: "pulloutItems",
-fit: !0,
-style: "position: relative;",
-components: [ {
-name: "history",
-kind: "FittableRows",
-showing: !1,
-classes: "enyo-fit",
-components: [ {
-kind: "onyx.RadioGroup",
-classes: "history-header",
-components: [ {
-content: "History",
-active: !0
-} ]
+label: "_name".loc(),
+attr: "name"
 }, {
-fit: !0,
-name: "historyPanel",
-kind: "Scroller",
-classes: "history-scroller",
+kind: "onyx.GroupboxHeader",
+content: "_contact".loc()
+}, {
+label: "_primaryContact".loc(),
+attr: "primaryContact.name"
+}, {
+label: "_primaryEmail".loc(),
+attr: "primaryContact.primaryEmail"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_address".loc()
+}, {
+label: "_phone".loc(),
+attr: [ "primaryContact.phone", "primaryContact.alternate", "primaryContact.fax" ]
+}, {
+label: "_street".loc(),
+attr: [ "primaryContact.address.line1", "primaryContact.address.line2", "primaryContact.address.line3" ]
+}, {
+label: "_city".loc(),
+attr: "primaryContact.address.city"
+}, {
+label: "_postalCode".loc(),
+attr: "primaryContact.address.postalCode"
+}, {
+label: "_state".loc(),
+attr: "primaryContact.address.state"
+}, {
+label: "_country".loc(),
+attr: "primaryContact.address.country"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_userAccount".loc()
+}, {
+label: "_owner".loc(),
+attr: "owner",
+defaultKind: "XV.UserAccountWidget"
+} ]
+}), enyo.kind({
+name: "XV.ContactInfoParameters",
+kind: "XV.ParameterWidget",
 components: [ {
-kind: "Repeater",
-name: "historyList",
-onSetupItem: "setupHistoryItem",
-count: 0,
+kind: "onyx.GroupboxHeader",
+content: "_contact".loc()
+}, {
+attr: "isActive",
+label: "_showInactive".loc(),
+defaultKind: "XV.CheckboxWidget",
+getParameter: function() {
+var e;
+return this.getValue() || (e = {
+attribute: this.getAttr(),
+operator: "=",
+value: !0
+}), e;
+}
+}, {
+label: "_name".loc(),
+attr: "name"
+}, {
+label: "_primaryEmail".loc(),
+attr: "primaryEmail"
+}, {
+label: "_phone".loc(),
+attr: [ "phone", "alternate", "fax" ]
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_address".loc()
+}, {
+label: "_street".loc(),
+attr: [ "address.line1", "address.line2", "address.line3" ]
+}, {
+label: "_city".loc(),
+attr: "address.city"
+}, {
+label: "_state".loc(),
+attr: "address.state"
+}, {
+label: "_postalCode".loc(),
+attr: "address.postalCode"
+}, {
+label: "_country".loc(),
+attr: "address.country"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_userAccount".loc()
+}, {
+label: "_owner".loc(),
+attr: "owner",
+defaultKind: "XV.UserAccountWidget"
+} ]
+}), enyo.kind({
+name: "XV.IncidentInfoParameters",
+kind: "XV.ParameterWidget",
 components: [ {
-name: "historyItem"
-} ]
-} ]
-} ]
-} ]
-} ]
-} ],
-grabberDragFinish: function() {
-this.getSelectedPanel() || this.togglePullout("history");
-},
-refreshHistoryList: function() {
-this.$.historyList.setCount(XT.getHistory().length);
-},
-setupHistoryItem: function(a, b) {
-var c = b.item.$.historyItem, d = XT.getHistory()[b.index], e = ("_" + XV.util.stripModelNamePrefix(d.modelType).camelize()).loc();
-this.createComponent({
-container: c,
-classes: "item enyo-border-box",
-style: "color:white",
-ontap: "doHistoryItemSelected",
-content: e + ": " + d.modelName,
-modelType: d.modelType,
-modelId: d.modelId,
-module: d.module
-});
-},
-getItem: function(a) {
-return this.$.pulloutItems.$[a] || this.$[a];
-},
-togglePullout: function(a) {
-this.setSelectedPanel(a);
-var b = this.getItem(a), c = this.$.pulloutItems.children, d;
-if (b.showing && this.isAtMax()) this.animateToMin(); else {
-this.animateToMax();
-for (d = 0; d < c.length; d++) c[d].hide();
-b.show(), b.resized();
+kind: "onyx.GroupboxHeader",
+content: "_incident".loc()
+}, {
+label: "_number".loc(),
+attr: "number",
+getParameter: function() {
+var e, t = this.getValue() - 0;
+return t && _.isNumber(t) && (e = {
+attribute: this.getAttr(),
+operator: "=",
+value: t
+}), e;
 }
+}, {
+label: "_description".loc(),
+attr: "description"
+}, {
+label: "_category".loc(),
+attr: "category",
+defaultKind: "XV.IncidentCategoryDropdown"
+}, {
+label: "_account".loc(),
+attr: "account",
+defaultKind: "XV.AccountWidget"
+}, {
+label: "_contact".loc(),
+attr: "contact",
+defaultKind: "XV.ContactWidget"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_status".loc()
+}, {
+label: "_priority".loc(),
+attr: "priority",
+defaultKind: "XV.PriorityDropdown"
+}, {
+label: "_severity".loc(),
+attr: "severity",
+defaultKind: "XV.IncidentSeverityDropdown"
+}, {
+label: "_resolution".loc(),
+attr: "resolution",
+defaultKind: "XV.IncidentResolutionDropdown"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_userAccounts".loc()
+}, {
+label: "_owner".loc(),
+attr: "owner",
+defaultKind: "XV.UserAccountWidget"
+}, {
+label: "_assignedTo".loc(),
+attr: "assignedTo",
+defaultKind: "XV.UserAccountWidget"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_created".loc()
+}, {
+label: "_startDate".loc(),
+attr: "created",
+operator: ">=",
+defaultKind: "XV.DateWidget"
+}, {
+label: "_endDate".loc(),
+attr: "created",
+operator: "<=",
+defaultKind: "XV.DateWidget"
+} ]
+}), enyo.kind({
+name: "XV.ItemInfoParameters",
+kind: "XV.ParameterWidget",
+components: [ {
+kind: "onyx.GroupboxHeader",
+content: "_item".loc()
+}, {
+attr: "isActive",
+label: "_showInactive".loc(),
+defaultKind: "XV.CheckboxWidget",
+getParameter: function() {
+var e;
+return this.getValue() || (e = {
+attribute: this.getAttr(),
+operator: "=",
+value: !0
+}), e;
 }
-});
-})();
-
-// screen_carousel.js
-
-(function() {
-enyo.kind({
-name: "XV.ScreenCarousel",
-kind: "Panels",
-classes: "xt-screen-carousel enyo-unselectable",
-draggable: !1,
-published: {
-currentView: "",
-carouselEvents: null
-},
-previousView: "",
-currentViewChanged: function() {
-var a = this.children, b = this.getCurrentView(), c = this.$[b], d = a.indexOf(c), e = this.previousView;
-if (d === -1) this.log(this.name, "Could not find requested view %@".f(b), this.children, c, this.$), e || e === null ? this.currentView = e : this.currentView = null; else {
-if (d === this.getIndex()) return;
-this.previousView = b, this.setIndex(d);
+}, {
+label: "_number".loc(),
+attr: "number"
+}, {
+label: "_description".loc(),
+attr: [ "description1", "description2" ]
+} ]
+}), enyo.kind({
+name: "XV.OpportunityInfoParameters",
+kind: "XV.ParameterWidget",
+components: [ {
+kind: "onyx.GroupboxHeader",
+content: "_opportunity".loc()
+}, {
+label: "_showInactive".loc(),
+attr: "isActive",
+defaultKind: "XV.CheckboxWidget",
+getParameter: function() {
+var e;
+return this.getValue() || (e = {
+attribute: this.getAttr(),
+operator: "=",
+value: !0
+}), e;
 }
-},
-create: function() {
-var a = this.getCarouselEvents(), b = this.handlers, c;
-if (a) for (c in a) a.hasOwnProperty(c) && (b[c] = "handleCarouselEvent");
-this.inherited(arguments);
-},
-handleCarouselEvent: function(a, b) {
-var c = this.getCarouselEvents(), d = b.eventName, e = c[d];
-if (e) {
-this.setCurrentView(e);
-var f = this.$[e];
-b.options && f && f.setOptions && f.setOptions(b.options);
+}, {
+label: "_name".loc(),
+attr: "name"
+}, {
+label: "_account".loc(),
+attr: "account",
+defaultKind: "XV.AccountWidget"
+}, {
+label: "_contact".loc(),
+attr: "contact",
+defaultKind: "XV.ContactWidget"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_status".loc()
+}, {
+label: "_stage".loc(),
+attr: "opportunityStage",
+defaultKind: "XV.OpportunityStageDropdown"
+}, {
+label: "_priority".loc(),
+attr: "priority",
+defaultKind: "XV.PriorityDropdown"
+}, {
+label: "_type".loc(),
+attr: "opportunityType",
+defaultKind: "XV.OpportunityTypeDropdown"
+}, {
+label: "_source".loc(),
+attr: "opportunitySource",
+defaultKind: "XV.OpportunitySourceDropdown"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_userAccounts".loc()
+}, {
+label: "_owner".loc(),
+attr: "owner",
+defaultKind: "XV.UserAccountWidget"
+}, {
+label: "_assignedTo".loc(),
+attr: "assignedTo",
+defaultKind: "XV.UserAccountWidget"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_targetClose".loc()
+}, {
+label: "_startDate".loc(),
+attr: "targetClose",
+operator: ">=",
+defaultKind: "XV.DateWidget"
+}, {
+label: "_endDate".loc(),
+attr: "targetClose",
+operator: "<=",
+defaultKind: "XV.DateWidget"
+} ]
+}), enyo.kind({
+name: "XV.ProjectInfoParameters",
+kind: "XV.ParameterWidget",
+components: [ {
+kind: "onyx.GroupboxHeader",
+content: "_project".loc()
+}, {
+label: "_showCompleted".loc(),
+attr: "status",
+defaultKind: "XV.CheckboxWidget",
+getParameter: function() {
+var e;
+return this.getValue() || (e = {
+attribute: this.getAttr(),
+operator: "!=",
+value: "C"
+}), e;
 }
-return !0;
-},
-completed: function() {
-var a;
-this.inherited(arguments), a = this.getActive(), a && a.didBecomeActive && a.didBecomeActive();
+}, {
+label: "_number".loc(),
+attr: "number"
+}, {
+label: "_name".loc(),
+attr: "name"
+}, {
+label: "_account".loc(),
+attr: "account",
+defaultKind: "XV.AccountWidget"
+}, {
+label: "_contact".loc(),
+attr: "contact",
+defaultKind: "XV.ContactWidget"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_status".loc()
+}, {
+label: "_status".loc(),
+attr: "status",
+defaultKind: "XV.ProjectStatusDropdown"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_userAccounts".loc()
+}, {
+label: "_owner".loc(),
+attr: "owner",
+defaultKind: "XV.UserAccountWidget"
+}, {
+label: "_assignedTo".loc(),
+attr: "assignedTo",
+defaultKind: "XV.UserAccountWidget"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_dueDate".loc()
+}, {
+label: "_startDate".loc(),
+attr: "dueDate",
+operator: ">=",
+defaultKind: "XV.DateWidget"
+}, {
+label: "_endDate".loc(),
+attr: "dueDate",
+operator: "<=",
+defaultKind: "XV.DateWidget"
+} ]
+}), enyo.kind({
+name: "XV.ToDoInfoParameters",
+kind: "XV.ParameterWidget",
+components: [ {
+kind: "onyx.GroupboxHeader",
+content: "_toDo".loc()
+}, {
+label: "_showCompleted".loc(),
+attr: "status",
+defaultKind: "XV.CheckboxWidget",
+getParameter: function() {
+var e;
+return this.getValue() || (e = {
+attribute: this.getAttr(),
+operator: "!=",
+value: "C"
+}), e;
 }
+}, {
+label: "_name".loc(),
+attr: "name"
+}, {
+label: "_description".loc(),
+attr: "description"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_userAccounts".loc()
+}, {
+label: "_owner".loc(),
+attr: "owner",
+defaultKind: "XV.UserAccountWidget"
+}, {
+label: "_assignedTo".loc(),
+attr: "assignedTo",
+defaultKind: "XV.UserAccountWidget"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_dueDate".loc()
+}, {
+label: "_startDate".loc(),
+attr: "dueDate",
+operator: ">=",
+defaultKind: "XV.DateWidget"
+}, {
+label: "_endDate".loc(),
+attr: "dueDate",
+operator: "<=",
+defaultKind: "XV.DateWidget"
+} ]
 });
 })();
 
@@ -13886,265 +13955,867 @@ this.inherited(arguments), a = this.getActive(), a && a.didBecomeActive && a.did
 
 (function() {
 enyo.kind({
-name: "XV.WorkspacePanels",
-kind: "FittableRows",
-realtimeFit: !0,
-wrap: !1,
-classes: "panels enyo-border-box",
-published: {
-modelType: ""
-},
-events: {
-onValueChanged: ""
+name: "XV.OrderedReferenceWorkspace",
+kind: "XV.Workspace",
+components: [ {
+kind: "Panels",
+name: "topPanel",
+arrangerKind: "CarouselArranger",
+fit: !0,
+components: [ {
+kind: "XV.Groupbox",
+components: [ {
+kind: "onyx.GroupboxHeader",
+content: "_overview".loc()
+}, {
+kind: "XV.InputWidget",
+attr: "name"
+}, {
+kind: "XV.InputWidget",
+attr: "description"
+}, {
+kind: "XV.NumberWidget",
+attr: "order"
+} ]
+} ]
+} ]
+}), enyo.kind({
+name: "XV.AccountWorkspace",
+kind: "XV.Workspace",
+title: "_account".loc(),
+model: "XM.Account",
+components: [ {
+kind: "Panels",
+name: "topPanel",
+arrangerKind: "CarouselArranger",
+fit: !0,
+components: [ {
+kind: "XV.Groupbox",
+components: [ {
+kind: "onyx.GroupboxHeader",
+content: "_overview".loc()
+}, {
+kind: "XV.InputWidget",
+attr: "number"
+}, {
+kind: "XV.CheckboxWidget",
+attr: "isActive"
+}, {
+kind: "XV.InputWidget",
+attr: "name"
+}, {
+kind: "XV.AccountTypeDropdown",
+attr: "accountType"
+}, {
+kind: "XV.UserAccountWidget",
+attr: "owner"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_primaryContact".loc()
+}, {
+kind: "XV.ContactWidget",
+attr: "primaryContact"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_secondaryContact".loc()
+}, {
+kind: "XV.ContactWidget",
+attr: "secondaryContact"
+} ]
+}, {
+kind: "XV.Groupbox",
+title: "_notes".loc(),
+components: [ {
+kind: "onyx.GroupboxHeader",
+content: "_notes".loc()
+}, {
+kind: "XV.TextArea",
+attr: "notes"
+} ]
+}, {
+kind: "Scroller",
+horizontal: "hidden",
+title: "_comments".loc(),
+components: [ {
+kind: "XV.AccountCommentBox",
+attr: "comments"
+} ]
+} ]
+} ]
+}), enyo.kind({
+name: "XV.ContactWorkspace",
+kind: "XV.Workspace",
+title: "_contact".loc(),
+model: "XM.Contact",
+components: [ {
+kind: "Panels",
+name: "topPanel",
+arrangerKind: "CarouselArranger",
+fit: !0,
+components: [ {
+kind: "XV.Groupbox",
+components: [ {
+kind: "onyx.GroupboxHeader",
+content: "_overview".loc()
+}, {
+kind: "XV.InputWidget",
+attr: "number"
+}, {
+kind: "XV.CheckboxWidget",
+attr: "isActive"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_name".loc()
+}, {
+kind: "XV.InputWidget",
+attr: "firstName"
+}, {
+kind: "XV.InputWidget",
+attr: "middleName"
+}, {
+kind: "XV.InputWidget",
+attr: "lastName"
+}, {
+kind: "XV.InputWidget",
+attr: "suffix"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_address".loc()
+}, {
+kind: "XV.AddressWidget",
+attr: "address"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_information".loc()
+}, {
+kind: "XV.InputWidget",
+attr: "jobTitle"
+}, {
+kind: "XV.InputWidget",
+attr: "primaryEmail"
+}, {
+kind: "XV.InputWidget",
+attr: "phone"
+}, {
+kind: "XV.InputWidget",
+attr: "alternate"
+}, {
+kind: "XV.InputWidget",
+attr: "fax"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_relationships".loc()
+}, {
+kind: "XV.AccountWidget",
+attr: "account"
+}, {
+kind: "XV.UserAccountWidget",
+attr: "owner"
+} ]
+}, {
+kind: "XV.Groupbox",
+title: "_notes".loc(),
+components: [ {
+kind: "onyx.GroupboxHeader",
+content: "_notes".loc()
+}, {
+kind: "XV.TextArea",
+attr: "notes"
+} ]
+}, {
+kind: "Scroller",
+horizontal: "hidden",
+title: "_comments".loc(),
+components: [ {
+kind: "XV.ContactCommentBox",
+attr: "comments"
+} ]
+} ]
+} ]
+}), enyo.kind({
+name: "XV.CountryWorkspace",
+kind: "XV.Workspace",
+title: "_country".loc(),
+model: "XM.Country",
+components: [ {
+kind: "Panels",
+name: "topPanel",
+arrangerKind: "CarouselArranger",
+fit: !0,
+components: [ {
+kind: "XV.Groupbox",
+components: [ {
+kind: "onyx.GroupboxHeader",
+content: "_overview".loc()
+}, {
+kind: "XV.InputWidget",
+attr: "abbreviation"
+}, {
+kind: "XV.InputWidget",
+attr: "name"
+}, {
+kind: "XV.InputWidget",
+attr: "currencyName"
+}, {
+kind: "XV.InputWidget",
+attr: "currencySymbol"
+}, {
+kind: "XV.InputWidget",
+attr: "currencyAbbreviation"
+}, {
+kind: "XV.InputWidget",
+attr: "currencyNumber"
+} ]
+} ]
+} ]
+}), enyo.kind({
+name: "XV.HonorificWorkspace",
+kind: "XV.Workspace",
+title: "_honorific".loc(),
+model: "XM.Honorific",
+components: [ {
+kind: "Panels",
+name: "topPanel",
+arrangerKind: "CarouselArranger",
+fit: !0,
+components: [ {
+kind: "XV.Groupbox",
+components: [ {
+kind: "onyx.GroupboxHeader",
+content: "_overview".loc()
+}, {
+kind: "XV.InputWidget",
+attr: "code"
+} ]
+} ]
+} ]
+}), enyo.kind({
+name: "XV.IncidentWorkspace",
+kind: "XV.Workspace",
+title: "_incident".loc(),
+model: "XM.Incident",
+components: [ {
+kind: "Panels",
+name: "topPanel",
+arrangerKind: "CarouselArranger",
+fit: !0,
+components: [ {
+kind: "XV.Groupbox",
+components: [ {
+kind: "onyx.GroupboxHeader",
+content: "_overview".loc()
+}, {
+kind: "XV.InputWidget",
+attr: "number"
+}, {
+kind: "XV.InputWidget",
+attr: "description"
+}, {
+kind: "XV.AccountWidget",
+attr: "account"
+}, {
+kind: "XV.ContactWidget",
+attr: "contact"
+}, {
+kind: "XV.IncidentCategoryDropdown",
+attr: "category"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_status".loc()
+}, {
+kind: "XV.IncidentStatusDropdown",
+attr: "status"
+}, {
+kind: "XV.PriorityDropdown",
+attr: "priority"
+}, {
+kind: "XV.IncidentSeverityDropdown",
+attr: "severity"
+}, {
+kind: "XV.IncidentResolutionDropdown",
+attr: "resolution"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_userAccounts".loc()
+}, {
+kind: "XV.UserAccountWidget",
+attr: "owner"
+}, {
+kind: "XV.UserAccountWidget",
+attr: "assignedTo"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_relationships".loc()
+}, {
+kind: "XV.ItemWidget",
+attr: "item"
+} ]
+}, {
+kind: "XV.Groupbox",
+title: "_notes".loc(),
+components: [ {
+kind: "onyx.GroupboxHeader",
+content: "_notes".loc()
+}, {
+kind: "XV.TextArea",
+attr: "notes"
+} ]
+}, {
+kind: "Scroller",
+horizontal: "hidden",
+title: "_comments".loc(),
+components: [ {
+kind: "XV.IncidentCommentBox",
+attr: "comments"
+} ]
+} ]
+} ]
+}), enyo.kind({
+name: "XV.IncidentCategoryWorkspace",
+kind: "XV.OrderedReferenceWorkspace",
+title: "_incidentCategory".loc(),
+model: "XM.IncidentCategory"
+}), enyo.kind({
+name: "XV.IncidentResolutionWorkspace",
+kind: "XV.OrderedReferenceWorkspace",
+title: "_incidentResolution".loc(),
+model: "XM.IncidentResolution"
+}), enyo.kind({
+name: "XV.IncidentSeverityWorkspace",
+kind: "XV.OrderedReferenceWorkspace",
+title: "_incidentSeverity".loc(),
+model: "XM.IncidentSeverity"
+}), enyo.kind({
+name: "XV.OpportunityWorkspace",
+kind: "XV.Workspace",
+title: "_opportunity".loc(),
+model: "XM.Opportunity",
+components: [ {
+kind: "Panels",
+name: "topPanel",
+arrangerKind: "CarouselArranger",
+fit: !0,
+components: [ {
+kind: "XV.Groupbox",
+components: [ {
+kind: "onyx.GroupboxHeader",
+content: "_overview".loc()
+}, {
+kind: "XV.InputWidget",
+attr: "number"
+}, {
+kind: "XV.CheckboxWidget",
+attr: "isActive"
+}, {
+kind: "XV.InputWidget",
+attr: "name"
+}, {
+kind: "XV.AccountWidget",
+attr: "account"
+}, {
+kind: "XV.ContactWidget",
+attr: "contact"
+}, {
+kind: "XV.MoneyWidget",
+attr: "amount"
+}, {
+kind: "XV.PercentWidget",
+attr: "probability"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_status".loc()
+}, {
+kind: "XV.OpportunityStageDropdown",
+attr: "opportunityStage",
+label: "_stage".loc()
+}, {
+kind: "XV.PriorityDropdown",
+attr: "priority"
+}, {
+kind: "XV.OpportunityTypeDropdown",
+attr: "opportunityType",
+label: "_type".loc()
+}, {
+kind: "XV.OpportunitySourceDropdown",
+attr: "opportunitySource",
+label: "_source".loc()
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_schedule".loc()
+}, {
+kind: "XV.DateWidget",
+attr: "targetClose"
+}, {
+kind: "XV.DateWidget",
+attr: "startDate"
+}, {
+kind: "XV.DateWidget",
+attr: "assignDate"
+}, {
+kind: "XV.DateWidget",
+attr: "actualClose"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_userAccounts".loc()
+}, {
+kind: "XV.UserAccountWidget",
+attr: "owner"
+}, {
+kind: "XV.UserAccountWidget",
+attr: "assignedTo"
+} ]
+}, {
+kind: "XV.Groupbox",
+title: "_notes".loc(),
+components: [ {
+kind: "onyx.GroupboxHeader",
+content: "_notes".loc()
+}, {
+kind: "XV.TextArea",
+attr: "notes"
+} ]
+}, {
+kind: "Scroller",
+horizontal: "hidden",
+title: "_comments".loc(),
+components: [ {
+kind: "XV.OpportunityCommentBox",
+attr: "comments"
+} ]
+} ]
+} ]
+}), enyo.kind({
+name: "XV.OpportunitySourceWorkspace",
+kind: "XV.Workspace",
+title: "_opportunitySource".loc(),
+model: "XM.OpportunitySource"
+}), enyo.kind({
+name: "XV.OpportunityStageWorkspace",
+kind: "XV.Workspace",
+title: "_opportunityStage".loc(),
+model: "XM.OpportunityStage"
+}), enyo.kind({
+name: "XV.OpportunityTypeWorkspace",
+kind: "XV.Workspace",
+title: "_opportunityType".loc(),
+model: "XM.OpportunityType"
+}), enyo.kind({
+name: "XV.PriorityWorkspace",
+kind: "XV.OrderedReferenceWorkspace",
+title: "_priority".loc(),
+model: "XM.Priority"
+}), enyo.kind({
+name: "XV.ProjectWorkspace",
+kind: "XV.Workspace",
+title: "_project".loc(),
+model: "XM.Project",
+components: [ {
+kind: "Panels",
+name: "topPanel",
+arrangerKind: "CarouselArranger",
+classes: "xv-top-panel",
+fit: !0,
+components: [ {
+kind: "XV.Groupbox",
+components: [ {
+kind: "onyx.GroupboxHeader",
+content: "_overview".loc()
+}, {
+kind: "XV.InputWidget",
+attr: "number"
+}, {
+kind: "XV.InputWidget",
+attr: "name"
+}, {
+kind: "XV.ProjectStatusDropdown",
+attr: "status"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_schedule".loc()
+}, {
+kind: "XV.DateWidget",
+attr: "dueDate"
+}, {
+kind: "XV.DateWidget",
+attr: "startDate"
+}, {
+kind: "XV.DateWidget",
+attr: "assignDate"
+}, {
+kind: "XV.DateWidget",
+attr: "completeDate"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_userAccounts".loc()
+}, {
+kind: "XV.UserAccountWidget",
+attr: "owner"
+}, {
+kind: "XV.UserAccountWidget",
+attr: "assignedTo"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_relationships".loc()
+}, {
+kind: "XV.AccountWidget",
+attr: "account"
+}, {
+kind: "XV.ContactWidget",
+attr: "contact"
+} ]
+}, {
+kind: "XV.Groupbox",
+title: "_notes".loc(),
+components: [ {
+kind: "onyx.GroupboxHeader",
+content: "_notes".loc()
+}, {
+kind: "XV.TextArea",
+attr: "notes"
+} ]
+}, {
+kind: "Scroller",
+horizontal: "hidden",
+title: "_comments".loc(),
+components: [ {
+kind: "XV.ProjectCommentBox",
+attr: "comments"
+} ]
+}, {
+kind: "Scroller",
+horizontal: "hidden",
+title: "_tasks".loc(),
+components: [ {
+kind: "XV.ProjectTaskRepeaterBox",
+attr: "tasks"
+} ]
+} ]
+} ]
+}), enyo.kind({
+name: "XV.StateWorkspace",
+kind: "XV.Workspace",
+title: "_state".loc(),
+model: "XM.State",
+components: [ {
+kind: "Panels",
+name: "topPanel",
+arrangerKind: "CarouselArranger",
+fit: !0,
+components: [ {
+kind: "XV.Groupbox",
+components: [ {
+kind: "onyx.GroupboxHeader",
+content: "_overview".loc()
+}, {
+kind: "XV.InputWidget",
+attr: "abbreviation"
+}, {
+kind: "XV.InputWidget",
+attr: "name"
+}, {
+kind: "XV.CountryDropdown",
+attr: "country"
+} ]
+} ]
+} ]
+}), enyo.kind({
+name: "XV.ToDoWorkspace",
+kind: "XV.Workspace",
+title: "_toDo".loc(),
+model: "XM.ToDo",
+components: [ {
+kind: "Panels",
+name: "topPanel",
+arrangerKind: "CarouselArranger",
+fit: !0,
+components: [ {
+kind: "XV.Groupbox",
+components: [ {
+kind: "onyx.GroupboxHeader",
+content: "_overview".loc()
+}, {
+kind: "XV.InputWidget",
+attr: "name"
+}, {
+kind: "XV.InputWidget",
+attr: "description"
+}, {
+kind: "XV.PriorityDropdown",
+attr: "priority"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_schedule".loc()
+}, {
+kind: "XV.DateWidget",
+attr: "dueDate"
+}, {
+kind: "XV.DateWidget",
+attr: "startDate"
+}, {
+kind: "XV.DateWidget",
+attr: "assignDate"
+}, {
+kind: "XV.DateWidget",
+attr: "completeDate"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_userAccounts".loc()
+}, {
+kind: "XV.UserAccountWidget",
+attr: "owner"
+}, {
+kind: "XV.UserAccountWidget",
+attr: "assignedTo"
+}, {
+kind: "onyx.GroupboxHeader",
+content: "_relationships".loc()
+}, {
+kind: "XV.AccountWidget",
+attr: "account"
+}, {
+kind: "XV.ContactWidget",
+attr: "contact"
+} ]
+}, {
+kind: "XV.Groupbox",
+title: "_notes".loc(),
+components: [ {
+kind: "onyx.GroupboxHeader",
+content: "_notes".loc()
+}, {
+kind: "XV.TextArea",
+attr: "notes"
+} ]
+}, {
+kind: "Scroller",
+horizontal: "hidden",
+title: "_comments".loc(),
+components: [ {
+kind: "XV.ToDoCommentBox",
+attr: "comments"
+} ]
+} ]
+} ]
+}), enyo.kind({
+name: "XV.UserAccountWorkspace",
+kind: "XV.Workspace",
+title: "_userAccount".loc(),
+model: "XM.UserAccount",
+handlers: {
+onRefreshPrivileges: "refreshPrivileges"
 },
 components: [ {
 kind: "Panels",
 name: "topPanel",
-style: "height: 300px;",
-arrangerKind: "CarouselArranger"
-}, {
-kind: "Panels",
+arrangerKind: "CarouselArranger",
 fit: !0,
-name: "bottomPanel",
-arrangerKind: "CarouselArranger"
-} ],
-updateLayout: function() {
-var a, b, c, d, e;
-for (var f = 0; f < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; f++) {
-var g = XV.util.getWorkspacePanelDescriptor()[this.modelType][f];
-if (g.kind) a = this.createComponent({
-kind: g.kind || "XV.InputWidget",
-container: g.location === "bottom" ? this.$.bottomPanel : this.$.topPanel,
-name: g.title
-}), g.customization && a.setCustomization(g.customization), a.setDescriptor(g); else {
-a = this.createComponent({
-kind: "onyx.Groupbox",
-container: g.location === "bottom" ? this.$.bottomPanel : this.$.topPanel,
-style: "min-height: 250px; width: 400px; background-color: white; margin-right: 5px;",
+classes: "xv-top-panel",
+components: [ {
+kind: "XV.UserAccountRoleGroupbox",
+name: "grantedUserAccountRoles"
+}, {
+kind: "XV.UserAccountPrivilegeGroupbox",
+name: "grantedPrivileges"
+}, {
+kind: "XV.Groupbox",
 components: [ {
 kind: "onyx.GroupboxHeader",
-content: g.title
+content: "_overview".loc()
+}, {
+kind: "XV.CheckboxWidget",
+attr: "isActive"
+}, {
+kind: "XV.InputWidget",
+attr: "properName"
+}, {
+kind: "XV.InputWidget",
+attr: "initials"
+}, {
+kind: "XV.InputWidget",
+attr: "email"
 } ]
-});
-for (b = 0; b < g.fields.length; b++) {
-c = g.fields[b], e = c.label ? "_" + c.label : "_" + c.fieldName, d = this.createComponent({
-kind: "onyx.InputDecorator",
-style: "font-size: 12px",
-container: a,
-components: [ {
-tag: "span",
-content: e.loc() + ": ",
-style: "padding-right: 10px;"
 } ]
-});
-var h = this.createComponent({
-kind: c.kind || "XV.InputWidget",
-style: "border: 0px; ",
-name: c.fieldName,
-container: d
-});
-c.collection && h.setCollection(c.collection);
-}
-}
-}
-this.render();
-},
-gotoBox: function(a) {
-var b = 0, c = 0, d;
-for (d = 0; d < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; d++) {
-var e = XV.util.getWorkspacePanelDescriptor()[this.modelType][d];
-if (e.title === a && e.location === "bottom") {
-this.$.bottomPanel.setIndex(c);
-return;
-}
-if (e.title === a) {
-this.$.topPanel.setIndex(b);
-return;
-}
-e.location === "bottom" ? c++ : b++;
-}
-},
-updateFields: function(a) {
-var b, c, d, e, f;
-XT.log("update with model: " + a.get("type"));
-for (b = 0; b < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; b++) {
-var g = XV.util.getWorkspacePanelDescriptor()[this.modelType][b];
-if (g.kind) this.$[g.title].setValue(a.getValue(g.objectName)); else for (c = 0; c < g.fields.length; c++) d = g.fields[c], e = g.fields[c].fieldName, f = a.getValue(e) || a.getValue(e) === 0 ? a.getValue(e) : "", e && this.$[e].setValue(f, {
-silent: !0
-});
-}
+} ],
+refreshPrivileges: function(e, t) {
+this.$.grantedPrivileges.mapIds(), this.$.grantedPrivileges.tryToRender();
 }
 }), enyo.kind({
-name: "XV.Workspace",
+name: "XV.UserAccountRoleWorkspace",
+kind: "XV.Workspace",
+title: "_userAccountRole".loc(),
+model: "XM.UserAccountRole",
+components: [ {
 kind: "Panels",
-classes: "app enyo-unselectable",
-realtimeFit: !0,
-arrangerKind: "CollapsingArranger",
-published: {
-modelType: "",
-model: null
-},
-events: {
-onHistoryChanged: "",
-onModelSave: ""
-},
-handlers: {
-onValueChange: "valueChanged",
-onSubmodelUpdate: "enableSaveButton"
-},
-components: [ {
-kind: "FittableRows",
-classes: "left",
-components: [ {
-kind: "onyx.Toolbar",
-classes: "onyx-menu-toolbar",
-components: [ {
-name: "workspaceHeader"
-}, {
-kind: "onyx.MenuDecorator",
-components: [ {
-content: "_navigation".loc()
-}, {
-kind: "onyx.Tooltip",
-content: "Tap to open..."
-}, {
-kind: "onyx.Menu",
-name: "navigationMenu",
-components: [ {
-content: "Dashboard"
-}, {
-content: "CRM"
-}, {
-content: "Setup"
-} ],
-ontap: "navigationSelected"
-} ]
-} ]
-}, {
-kind: "Repeater",
+name: "topPanel",
+arrangerKind: "CarouselArranger",
 fit: !0,
-touch: !0,
-onSetupItem: "setupItem",
-name: "menuItems",
+classes: "xv-top-panel",
 components: [ {
-name: "item",
-classes: "item enyo-border-box",
-ontap: "itemTap"
-} ]
-} ]
-}, {
-kind: "FittableRows",
+kind: "XV.Groupbox",
 components: [ {
-kind: "onyx.Toolbar",
-components: [ {
-content: ""
+kind: "onyx.GroupboxHeader",
+content: "_overview".loc()
 }, {
-kind: "onyx.Button",
-name: "saveButton",
-disabled: !0,
-content: "_save".loc(),
-classes: "onyx-affirmative",
-onclick: "save"
+kind: "XV.InputWidget",
+attr: "name"
+}, {
+kind: "XV.InputWidget",
+attr: "description"
 } ]
 }, {
-kind: "XV.WorkspacePanels",
-name: "workspacePanels",
-fit: !0
-}, {
-name: "exitWarningPopup",
-classes: "onyx-sample-popup",
-kind: "onyx.Popup",
-centered: !0,
-modal: !0,
-floating: !0,
-onShow: "popupShown",
-onHide: "popupHidden",
-components: [ {
-content: "You have unsaved changes. Are you sure you want to leave?"
-}, {
-tag: "br"
-}, {
-kind: "onyx.Button",
-content: "Leave without saving",
-ontap: "forceExit"
-}, {
-kind: "onyx.Button",
-content: "Save and leave",
-ontap: "saveAndLeave"
-}, {
-kind: "onyx.Button",
-content: "Don't leave",
-ontap: "closeExitWarningPopup"
+kind: "XV.UserAccountRolePrivilegeGroupbox",
+attr: "grantedPrivileges"
 } ]
 } ]
-} ],
-_exitDestination: null,
-bubbleExit: function(a) {
-this.bubble(a, {
-eventName: a
 });
-},
-closeExitWarningPopup: function() {
-this.$.exitWarningPopup.hide();
-},
-enableSaveButton: function() {
-this.$.saveButton.setDisabled(!1);
-},
-forceExit: function() {
-this.closeExitWarningPopup(), this.bubbleExit(this._exitDestination);
-},
-itemTap: function(a, b) {
-var c = XV.util.getWorkspacePanelDescriptor()[this.getModelType()][b.index];
-this.$.workspacePanels.gotoBox(c.title);
-},
-modelDidChange: function(a, b, c) {
-var d = a.getStatus(), e = a.getClass();
-if (!(d & e.READY)) return;
-XT.log("Loading model into workspace: " + JSON.stringify(a.toJSON())), XT.addToHistory("crm", a), this.doHistoryChanged(), this.$.workspacePanels.updateFields(a);
-},
-navigationSelected: function(a, b) {
-var c = b.originator.content.toLowerCase(), d = this.getModel(), e = d.getStatus(), f = d.getClass();
-if (e & f.DIRTY) {
-this.$.exitWarningPopup.show(), this._exitDestination = c;
-return;
+})();
+
+// repeater_box.js
+
+(function() {
+enyo.kind({
+name: "XV.ProjectTaskRepeaterBox",
+kind: "XV.RepeaterBox",
+published: {
+recordType: "XM.ProjectTask",
+columns: [ {
+kind: "XV.Input",
+name: "tasks.number"
+}, {
+kind: "XV.Input",
+name: "tasks.name"
+}, {
+kind: "XV.Input",
+name: "tasks.notes",
+classes: "xv-wide-entry"
+}, {
+kind: "XV.DateWidget",
+name: "tasks.dueDate"
+}, {
+kind: "XV.Number",
+name: "tasks.actualHours"
+}, {
+kind: "XV.Number",
+name: "tasks.actualExpenses"
+} ]
 }
-this.bubbleExit(c);
+}), enyo.kind({
+name: "XV.AccountCommentBox",
+kind: "XV.CommentBox",
+published: {
+recordType: "XM.AccountComment"
+}
+}), enyo.kind({
+name: "XV.ContactCommentBox",
+kind: "XV.CommentBox",
+published: {
+recordType: "XM.ContactComment"
+}
+}), enyo.kind({
+name: "XV.IncidentCommentBox",
+kind: "XV.CommentBox",
+published: {
+recordType: "XM.OpportunityComment"
+}
+}), enyo.kind({
+name: "XV.OpportunityCommentBox",
+kind: "XV.CommentBox",
+published: {
+recordType: "XM.OpportunityComment"
+}
+}), enyo.kind({
+name: "XV.ProjectCommentBox",
+kind: "XV.CommentBox",
+published: {
+recordType: "XM.ProjectComment"
+}
+}), enyo.kind({
+name: "XV.ToDoCommentBox",
+kind: "XV.CommentBox",
+published: {
+recordType: "XM.ToDoComment"
+}
+});
+})();
+
+// assignment_box.js
+
+(function() {
+enyo.kind({
+name: "XV.UserAccountRoleGroupbox",
+kind: "XV.AssignmentBox",
+events: {
+onRefreshPrivileges: ""
 },
-save: function() {
-this.getModel().save(), this.$.saveButton.setDisabled(!0);
-var a = this.getModel().id, b = this.getModel().recordType;
-enyo.Signals.send("onModelSave", {
-id: a,
-recordType: b
+segments: [ "Roles" ],
+title: "_roles".loc(),
+translateLabels: !1,
+totalCollectionName: "UserAccountRoleCollection",
+type: "userAccountRole",
+checkboxChange: function(e, t) {
+return this.inherited(arguments), this.doRefreshPrivileges(), !0;
+},
+getAssignmentModel: function(e) {
+return new XM.UserAccountUserAccountRoleAssignment({
+userAccountRole: e,
+type: "UserAccountUserAccountRoleAssignment",
+userAccount: this.getAssignedCollection().userAccount
+}, {
+isNew: !0
+});
+}
+}), enyo.kind({
+name: "XV.UserAccountPrivilegeGroupbox",
+kind: "XV.AssignmentBox",
+published: {
+idsFromRoles: null
+},
+cacheName: "privileges",
+segments: [ "System", "CRM" ],
+title: "_privileges".loc(),
+totalCollectionName: "PrivilegeCollection",
+type: "privilege",
+getAssignmentModel: function(e) {
+return new XM.UserAccountPrivilegeAssignment({
+privilege: e,
+type: "UserAccountPrivilegeAssignment",
+userAccount: this.getAssignedCollection().userAccount
+}, {
+isNew: !0
 });
 },
-saveAndLeave: function() {
-this.closeExitWarningPopup(), this.save(), this.bubbleExit(this._exitDestination);
+mapIds: function() {
+this.inherited(arguments);
+var e = this.getAssignedCollection().userAccount.get("grantedUserAccountRoles"), t = e.map(function(e) {
+return e.getStatus() & XM.Model.DESTROYED ? [] : e.get("userAccountRole").get("grantedPrivileges");
+}), n = _.map(t, function(e) {
+return e.map(function(e) {
+var t = e.get("privilege");
+return t ? t.get("id") : null;
+});
+}), r = _.uniq(_.flatten(n));
+this.setIdsFromRoles(r);
 },
-setupItem: function(a, b) {
-var c = XV.util.getWorkspacePanelDescriptor()[this.getModelType()][b.index].title;
-return b.item.children[0].setContent(c), !0;
+setupCheckbox: function(e, t) {
+this.inherited(arguments);
+var n = t.item.indexInContainer(), r = e.parent.parent, i = r.segmentIndex, s = this.getSegmentedCollections()[i].at(n), o = t.item.$.checkbox;
+this.disableCheckbox(o, _.indexOf(this.getIdsFromRoles(), s.get("id")) >= 0);
 },
-setOptions: function(a) {
-var b, c, d, e;
-this.wipe(), b = XV.util.infoToMasterModelName(a.recordType), this.setModelType(b);
-var f = XV.util.stripModelNamePrefix(b).camelize();
-this.$.workspaceHeader.setContent(("_" + f).loc()), this.setWorkspaceList(), this.$.menuItems.render(), this.$.workspacePanels.setModelType(b), this.$.workspacePanels.updateLayout(), c = Backbone.Relational.store.getObjectByName(b), d = a.id, e = new c, this.setModel(e), e.on("statusChange", enyo.bind(this, "modelDidChange")), d ? (e.fetch({
-id: d
-}), XT.log("Workspace is fetching " + b + " " + d)) : (e.initialize(null, {
+disableCheckbox: function(e, t) {
+t && !e.$.input.checked ? e.$.input.addClass("xv-half-check") : e.$.input.removeClass("xv-half-check");
+}
+}), enyo.kind({
+name: "XV.UserAccountRolePrivilegeGroupbox",
+kind: "XV.UserAccountPrivilegeGroupbox",
+getAssignmentModel: function(e) {
+return new XM.UserAccountRolePrivilegeAssignment({
+privilege: e,
+type: "UserAccountRolePrivilegeAssignment",
+userAccountRole: this.getAssignedCollection().user_account_role,
+user_account_role: this.getAssignedCollection().user_account_role
+}, {
 isNew: !0
-}), XT.log("Workspace is fetching new " + b));
-},
-setWorkspaceList: function() {
-var a = XV.util.getWorkspacePanelDescriptor()[this.getModelType()];
-this.$.menuItems.setCount(a.length);
-},
-valueChanged: function(a, b) {
-var c = b.value, d = {}, e = this.getModel();
-e && (d[b.originator.name] = c, e.set(d), this.enableSaveButton());
-},
-wipe: function() {
-XV.util.removeAll(this.$.workspacePanels.$.topPanel), this.$.workspacePanels.$.topPanel.refresh(), XV.util.removeAll(this.$.workspacePanels.$.bottomPanel), this.$.workspacePanels.$.bottomPanel.refresh();
+});
 }
 });
 })();
@@ -14152,12 +14823,12 @@ XV.util.removeAll(this.$.workspacePanels.$.topPanel), this.$.workspacePanels.$.t
 // login.js
 
 (function() {
-var a = enyo.getCookie("xtsessioncookie"), b = document.location.hostname, c = document.location.pathname;
-if (c.match(/login/g)) return;
+var e = enyo.getCookie("xtsessioncookie"), t = document.location.hostname, n = document.location.pathname;
+if (n.match(/login/g)) return;
 try {
-a = JSON.parse(a);
-} catch (d) {
-document.location = "https://%@/login".f(b);
+e = JSON.parse(e);
+} catch (r) {
+document.location = "https://%@/login".f(t);
 }
 })();
 
@@ -14165,158 +14836,71 @@ document.location = "https://%@/login".f(b);
 
 enyo.kind({
 name: "XV.Postbooks",
-kind: "Control",
+kind: "Panels",
+arrangerKind: "CardArranger",
+draggable: !1,
 classes: "xt-postbooks enyo-unselectable",
-components: [ {
-name: "container",
-kind: "XV.PostbooksContainer"
-} ],
-getContainer: function() {
-return this.$.container;
+handlers: {
+onPrevious: "previous",
+onSearch: "addSearch",
+onWorkspace: "addWorkspacePanel"
 },
-getActiveModule: function() {
-return this.getContainer().getActive();
-}
-}), enyo.kind({
-name: "XV.PostbooksContainer",
-kind: "XV.ScreenCarousel",
-classes: "xt-postbooks-container enyo-unselectable",
 components: [ {
-name: "dashboard",
-kind: "XV.Dashboard"
+name: "startup",
+classes: "xv-startup-panel",
+style: "background: #333;",
+components: [ {
+classes: "xv-startup-divider",
+content: "Loading application data..."
+}, {
+name: "startupProgressBar",
+kind: "onyx.ProgressBar",
+classes: "xv-startup-progress",
+progress: 0
+} ]
+}, {
+name: "navigator",
+kind: "XV.Navigator",
+modules: [ {
+name: "welcome",
+label: "_welcome".loc(),
+hasSubmenu: !1,
+panels: [ {
+name: "welcomePage",
+content: "Welcome"
+} ]
 }, {
 name: "crm",
-kind: "XV.Crm"
-}, {
-name: "billing",
-kind: "XV.Billing"
-}, {
-name: "setup",
-kind: "XV.Setup"
-}, {
-name: "workspace",
-kind: "XV.Workspace"
-} ],
-carouselEvents: {
-crm: "crm",
-billing: "billing",
-setup: "setup",
-workspace: "workspace",
-dashboard: "dashboard"
-},
-getModuleByName: function(a) {
-return this.$[a];
-},
-applyWorkspace: function(a) {
-this.setCurrentView("workspace"), this.$.workspace.setOptions(a);
-}
-});
-
-// dashboard.js
-
-(function() {
-enyo.kind({
-name: "XV.Dashboard",
-kind: "Control",
-classes: "xt-dashboard",
-components: [ {
-name: "container",
-classes: "xt-dashboard-container",
-components: [ {
-name: "icons",
-kind: "XV.DashboardIcons"
-} ]
-} ]
-}), enyo.kind({
-name: "XV.DashboardIcons",
-classes: "xt-dashboard-icons",
-create: function() {
-this.inherited(arguments);
-var a = this.children.length;
-this.applyStyle("width", 134 * a + "px");
-},
-components: [ {
-name: "crm",
-kind: "XV.DashboardIcon"
-}, {
-name: "setup",
-kind: "XV.DashboardIcon"
-} ]
-}), enyo.kind({
-name: "XV.DashboardIcon",
-kind: "Control",
-classes: "xt-dashboard-icon",
-tap: function() {
-var a = this.name;
-this.bubble(a, {
-eventName: a
-});
-},
-create: function() {
-this.inherited(arguments);
-var a = this.name, b = "%@Icon".f(a);
-this.createComponent({
-name: b,
-kind: "Image",
-classes: "xt-dashboard-icon-image",
-src: "images/" + a + "-icon.png"
-}), this.createComponent({
-name: "%@Label".f(b),
-content: a,
-classes: "xt-dashboard-icon-label"
-});
-}
-});
-})();
-
-// crm.js
-
-(function() {
-enyo.kind({
-name: "XV.Crm",
-kind: "XV.Module",
 label: "_crm".loc(),
-lists: [ {
-name: "accountInfoList",
-kind: "XV.AccountInfoList"
+panels: [ {
+name: "accountList",
+kind: "XV.AccountList"
 }, {
-name: "contactInfoList",
-kind: "XV.ContactInfoList"
+name: "contactList",
+kind: "XV.ContactList"
 }, {
-name: "toDoInfoList",
-kind: "XV.ToDoInfoList"
+name: "toDoList",
+kind: "XV.ToDoList"
 }, {
-name: "opportunityInfoList",
-kind: "XV.OpportunityInfoList"
+name: "opportunityList",
+kind: "XV.OpportunityList"
 }, {
-name: "incidentInfoList",
-kind: "XV.IncidentInfoList"
+name: "incidentList",
+kind: "XV.IncidentList"
 }, {
-name: "projectInfoList",
-kind: "XV.ProjectInfoList"
+name: "projectList",
+kind: "XV.ProjectList"
 } ]
-});
-})();
-
-// billing.js
-
-(function() {
-enyo.kind({
-name: "XV.Billing",
-kind: "XV.Module",
-label: "_billing".loc(),
-lists: []
-});
-})();
-
-// setup.js
-
-(function() {
-enyo.kind({
-name: "XV.Setup",
-kind: "XV.Module",
+}, {
+name: "setup",
 label: "_setup".loc(),
-lists: [ {
+panels: [ {
+name: "userAccountList",
+kind: "XV.UserAccountList"
+}, {
+name: "userAccountRoleList",
+kind: "XV.UserAccountRoleList"
+}, {
 name: "stateList",
 kind: "XV.StateList"
 }, {
@@ -14347,8 +14931,39 @@ kind: "XV.OpportunityStageList"
 name: "opportunityTypeList",
 kind: "XV.OpportunityTypeList"
 } ]
+} ]
+} ],
+addSearch: function(e, t) {
+var n;
+t.list && (n = this.createComponent({
+kind: "XV.SearchContainer"
+}), n.render(), this.reflow(), n.setList(t.list), n.setSearchText(t.searchText), n.setCallback(t.callback), n.fetch(), this.next());
+},
+addWorkspacePanel: function(e, t) {
+var n;
+t.workspace && (n = this.createComponent({
+kind: "XV.WorkspaceContainer"
+}), n.render(), this.reflow(), n.setWorkspace(t.workspace, t.id, t.callback), this.next());
+},
+getNavigator: function() {
+return this.$.navigator;
+},
+getStartupProgressBar: function() {
+return this.$.startupProgressBar;
+},
+previous: function() {
+var e = this.getActive(), t = this.getPanels().length - 1;
+this.setIndex(t), e.destroy();
+}
 });
-})();
+
+// crm.js
+
+(function() {})();
+
+// setup.js
+
+(function() {})();
 
 // app.js
 
@@ -14361,11 +14976,13 @@ published: {
 isStarted: !1
 },
 handlers: {
-onInfoListAdded: "addPulloutItem",
+onListAdded: "addPulloutItem",
+onModelChange: "modelChanged",
 onParameterChange: "parameterDidChange",
 onTogglePullout: "togglePullout",
-onHistoryChanged: "refreshHistoryPanel",
-onHistoryItemSelected: "selectHistoryItem"
+onHistoryChange: "refreshHistoryPanel",
+onHistoryItemSelected: "selectHistoryItem",
+onAnimateProgressFinish: "dataLoaded"
 },
 components: [ {
 name: "postbooks",
@@ -14373,46 +14990,62 @@ kind: "XV.Postbooks",
 onTransitionStart: "handlePullout"
 }, {
 name: "pullout",
-kind: "XV.Pullout"
+kind: "XV.Pullout",
+onAnimateFinish: "pulloutAnimateFinish"
 } ],
-addPulloutItem: function(a, b) {
-var c = {
-name: b.name,
+addPulloutItem: function(e, t) {
+var n = {
+name: t.name,
 showing: !1
 };
-b.getParameterWidget && (c.kind = b.getParameterWidget()), c.kind && (this._pulloutItems === undefined && (this._pulloutItems = []), this._pulloutItems.push(c));
+t.getParameterWidget && (n.kind = t.getParameterWidget()), n.kind && (this._pulloutItems === undefined && (this._pulloutItems = []), this._pulloutItems.push(n));
 },
 create: function() {
 this.inherited(arguments);
-var a = this._pulloutItems || [], b;
-for (b = 0; b < a.length; b++) this.$.pullout.$.pulloutItems.createComponent(a[b]);
+var e = this._pulloutItems || [], t, n;
+for (n = 0; n < e.length; n++) t = e[n], t.container = this.$.pullout.$.pulloutItems, this.$.pullout.createComponent(t);
+XT.app = this;
 },
-handlePullout: function(a, b) {
-var c = a.$.container.getActive().showPullout || !1;
-this.$.pullout.setShowing(c);
+getPullout: function() {
+return this.$.pullout;
 },
-parameterDidChange: function(a, b) {
-this.$.postbooks.getActiveModule().waterfall("onParameterChange", b);
+handlePullout: function(e, t) {
+var n = e.getActive().showPullout || !1;
+this.$.pullout.setShowing(n);
 },
-togglePullout: function(a, b) {
-this.$.pullout.togglePullout(b.name);
+modelChanged: function(e, t) {
+this.$.postbooks.waterfall("onModelChange", t);
 },
-refreshHistoryPanel: function(a, b) {
+parameterDidChange: function(e, t) {
+this.getIsStarted() && this.$.postbooks.getNavigator().waterfall("onParameterChange", t);
+},
+pulloutAnimateFinish: function(e, t) {
+var n;
+e.value === e.max ? this.$.pullout.getSelectedPanel() === "history" ? n = "history" : n = "search" : e.value === e.min && (n = null), this.$.postbooks.getNavigator().setActiveIconButton(n);
+},
+refreshHistoryPanel: function(e, t) {
 this.$.pullout.refreshHistoryList();
 },
-selectHistoryItem: function(a, b) {
-var c = b.module, d = b.modelId, e = b.modelType, f = {
-recordType: e,
-id: d
-};
-XT.log("Load from history: " + e + " " + d), this.$.postbooks.getContainer().applyWorkspace(f);
+selectHistoryItem: function(e, t) {
+XT.log("Load from history: " + t.workspace + " " + t.id), t.eventName = "onWorkspace", this.waterfall("onWorkspace", t);
+},
+dataLoaded: function() {
+XT.app.$.postbooks.next(), XT.app.$.postbooks.getNavigator().activate();
 },
 start: function() {
 if (this.getIsStarted()) return;
-XT.dataSource.connect(), XT.app = this, this.setIsStarted(!0);
+XT.app = this;
+var e = XT.getStartupManager(), t = XT.app.$.postbooks.getStartupProgressBar(), n = function() {
+var n = e.get("completed").length;
+t.animateProgressTo(n);
+};
+e.registerCallback(n, !0), XT.dataSource.connect(), t.setMax(e.get("queue").length + e.get("completed").length), this.setIsStarted(!0);
 },
 show: function() {
 this.getShowing() && this.getIsStarted() ? this.renderInto(document.body) : this.inherited(arguments);
+},
+togglePullout: function(e, t) {
+this.$.pullout.togglePullout(t.name);
 }
 });
 })();
