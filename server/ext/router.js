@@ -14,7 +14,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     init: function () {
       var routes = this.routes, map, mapr;
       map = this.routes = {}, mapr = this.regexRoutes = [];
-      
+      //X.debug("X.Router.init(): ", routes);
       // this is ok because it is a one-time nested loop
       // during initialization of router(s) at datasource
       // startup
@@ -24,6 +24,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           else mapr.push({expr: handle, route: route});
         });
       });
+      
+      //X.debug(mapr);
+      //X.debug("X.Router.init(): ", routes);
     },
     
     route: function (xtr) {

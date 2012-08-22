@@ -9,6 +9,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   
   X.Route = X.Object.extend({
     init: function () {
+      //X.debug("X.Route.init(%@)".f(this.get("className")));
       var handles = this.handles, regex, tmp = [];
       regex = /(:[a-z0-9]*)/g;
       _.each(handles, function (handle, idx) {

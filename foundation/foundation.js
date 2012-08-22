@@ -170,6 +170,7 @@ X = {};
         }
       }
       if (this.init) this.init.call(this);
+      if (this.postInit) this.postInit.call(this);
     },
     
     set: function () {

@@ -18,7 +18,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
     
     extend: function () {
-      var ret = function () { return X.init.apply(this, arguments[0]); },
+      var ret = function () { X.init.apply(this, arguments[0]); },
           args = X.$A(arguments), len = args.length, i = 0, proto;
       ret = X.mixin(ret, this);
       proto = (ret.prototype = X.sire(this.prototype));
