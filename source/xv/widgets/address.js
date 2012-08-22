@@ -16,8 +16,8 @@ regexp:true, undef:true, trailing:true, white:true */
       onModelUpdate: ""
     },
     handlers: {
-      "onfocus": "receiveFocus",
-      "onblur": "receiveBlur"
+      "onfocus": "receiveFocus"
+    //  "onblur": "receiveBlur"
     },
     components: [
       {kind: "enyo.TextArea", name: "viewer", showing: true, fit: true,
@@ -39,27 +39,52 @@ regexp:true, undef:true, trailing:true, white:true */
           placeholder: "_country".loc(), style: "display: block;"}
       ]}
     ],
-    receiveBlur: function () {
-      this.$.viewer.show();
-      this.$.editor.hide();
-      this.$.line1.hide();
-      this.$.line2.hide();
-      this.$.line3.hide();
-      this.$.city.hide();
-      this.$.state.hide();
-      this.$.postalCode.hide();
-      this.$.country.hide();
+    receiveBlur: function (inSender, inEvent) {
+      if (this._wasIn) {
+        this.$.viewer.show();
+        this.$.editor.hide();
+        this.$.line1.hide();
+        this.$.line2.hide();
+        this.$.line3.hide();
+        this.$.city.hide();
+        this.$.state.hide();
+        this.$.postalCode.hide();
+        this.$.country.hide();
+        this._wasIn = false;
+      }
+      switch (inEvent.originator) {
+      case this.$.line1:
+      case this.$.line2:
+      case this.$.line3:
+      case this.$.city:
+      case this.$.state:
+      case this.$.postalCode:
+      case this.$.country:
+        this._wasIn = true;
+      }
     },
-    receiveFocus: function () {
-      this.$.viewer.hide();
-      this.$.editor.show();
-      this.$.line1.show();
-      this.$.line2.show();
-      this.$.line3.show();
-      this.$.city.show();
-      this.$.state.show();
-      this.$.postalCode.show();
-      this.$.country.show();
+    receiveFocus: function (inSender, inEvent) {
+      if (!this._alert) {
+        alert("Editing of addresses is not supported yet.");
+        this._alert = true;
+      }
+      /*
+      if (!this._wasIn) {
+        this.$.viewer.hide();
+        this.$.editor.show();
+        this.$.line1.show();
+        this.$.line2.show();
+        this.$.line3.show();
+        this.$.city.show();
+        this.$.state.show();
+        this.$.postalCode.show();
+        this.$.country.show();
+        if (inEvent.originator === this.$.viewer) {
+          this.$.line1.focus();
+        }
+      }
+      this._wasIn = false;
+      */
     },
     valueChanged: function () {
       var value = this.getValue(),

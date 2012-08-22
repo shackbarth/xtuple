@@ -578,15 +578,14 @@ body {
 
 .xv-addresswidget {
   background-color: white;
+  min-height: 104px;
   .xv-addresswidget-viewer {
     padding: 8px;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    min-height: 70px;
-    .xv-placeholder {
-      font-style: italic;    
-      opacity: 0.4;
-    }
+    border: 0px;
+    font-size: medium;
+  }
+  .xv-addresswidget-input {
+    display: black;
   }
 }
 
