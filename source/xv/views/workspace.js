@@ -4,7 +4,10 @@ trailing:true white:true*/
 /*global XV:true, XM:true, _:true, onyx:true, enyo:true, XT:true */
 
 (function () {
-
+  var SAVE_APPLY = 1;
+  var SAVE_CLOSE = 2;
+  var SAVE_NEW = 3;
+  
   enyo.kind({
     name: "XV.Workspace",
     kind: "FittableRows",
@@ -250,6 +253,7 @@ trailing:true white:true*/
     handlers: {
       onError: "errorNotify",
       onHeaderChange: "headerChanged",
+      onModelChange: "modelChanged",
       onStatusChange: "statusChanged",
       onTitleChange: "titleChanged"
     },
@@ -354,6 +358,13 @@ trailing:true white:true*/
         }
       }
     },
+    modelChanged: function () {
+      if (this._saveState === SAVE_CLOSE) {
+        this.close();
+      } else if (this._saveState === SAVE_NEW) {
+        this.newRecord();
+      }
+    },
     newRecord: function () {
       this.$.workspace.newRecord();
     },
@@ -369,25 +380,16 @@ trailing:true white:true*/
       this.$.workspace.requery();
     },
     save: function (options) {
+      if (!this._saveState) { this._saveState = SAVE_APPLY; }
       this.$.workspace.save(options);
     },
-    saveAndNew: function () {
-      var that = this,
-        options = {},
-        success = function () {
-          that.newRecord();
-        };
-      options.success = success;
-      this.save(options);
-    },
     saveAndClose: function () {
-      var that = this,
-        options = {},
-        success = function () {
-          that.close();
-        };
-      options.success = success;
-      this.save(options);
+      this._saveState = SAVE_CLOSE;
+      this.save();
+    },
+    saveAndNew: function () {
+      this._saveState = SAVE_NEW;
+      this.save();
     },
     // menu
     setupItem: function (inSender, inEvent) {
