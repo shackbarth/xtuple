@@ -64,8 +64,6 @@ trailing:true white:true*/
     label: "_contacts".loc(),
     collection: "XM.ContactInfoCollection",
     query: {orderBy: [
-      {attribute: 'lastName', isEmpty: true},
-      {attribute: 'firstName', isEmpty: true},
       {attribute: 'lastName'},
       {attribute: 'firstName'},
       {attribute: 'primaryEmail'},
@@ -127,7 +125,7 @@ trailing:true white:true*/
     label: "_incidents".loc(),
     collection: "XM.IncidentInfoCollection",
     query: {orderBy: [
-      {attribute: 'number'}
+      {attribute: 'created'}
     ]},
     parameterWidget: "XV.IncidentInfoParameters",
     workspace: "XV.IncidentWorkspace",
@@ -164,6 +162,35 @@ trailing:true white:true*/
       view.addRemoveClass("bold", isToday);
       return value;
     }
+  });
+
+  // ..........................................................
+  // ITEM
+  //
+
+  enyo.kind({
+    name: "XV.ItemList",
+    kind: "XV.List",
+    label: "_items".loc(),
+    collection: "XM.ItemInfoCollection",
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    parameterWidget: "XV.ItemInfoParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "inventoryUnit.name", fit: true,
+                classes: "right"}
+            ]},
+            {kind: "XV.ListAttr", attr: "description1"}
+          ]}
+        ]}
+      ]}
+    ]
   });
 
   // ..........................................................

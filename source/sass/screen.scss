@@ -267,22 +267,6 @@ body {
   }
 }
 
-.xv-parameter-item {
-    border-bottom: 1px solid lightgrey;
-    .xv-subinput {
-      width: 100px;
-    }
-    .xv-label {
-      width: 140px;
-    }
-    .xv-datewidget {
-      @include slim-datewidget(visible);
-    }
-    .xv-picker {
-      width:140px;
-    }
-}
-
 .xv-pullout-header {
 	text-align: center;
 	padding: 10px 0;
@@ -330,6 +314,31 @@ body {
 .pullout-toolbar {
 	padding-top: 4px;
 	text-align: center;
+}
+
+/* Parameter.scss */
+.xv-parameter-item {
+  background-color: white;
+  .xv-label {
+    color: black;
+  }
+  .xv-decorated-label {
+    color: black;
+  }
+  .xv-picker {
+    width: 150px;
+  }
+  /* this ain't right */
+  .xv-relationwidget {
+    .xv-subinput {
+     width: 127px;
+    }
+  }
+  .xv-datewidget {
+    .xv-subinput {
+      width: 127px;
+    }
+  }
 }
 
 /* List.scss */
@@ -386,7 +395,6 @@ body {
         }
         &.hyperlink {
           color: blue;
-          text-decoration:underline;
         }
       }
     }
@@ -398,8 +406,6 @@ body {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 8px;
-  min-height: 300px; 
-  width: 350px; 
   margin-right: 5px;
 }
 
@@ -562,14 +568,33 @@ body {
   }
 }
 
+.xv-parameter-title {
+  padding-top: 8px;
+  font-size: large;
+  text-align: center;
+}
+
 /*********XV WIDGETS***********/
+
+.xv-addresswidget {
+  background-color: white;
+  min-height: 104px;
+  .xv-addresswidget-viewer {
+    padding: 8px;
+    border: 0px;
+    font-size: medium;
+  }
+  .xv-addresswidget-input {
+    display: black;
+  }
+}
 
 .xv-dropdownwidget {
   background-color: white;
 }
 
 .xv-picker {
-  width: 190px;
+  width: 180px;
 }
 
 .xv-label {
@@ -599,10 +624,6 @@ body {
   text-align: right;
 }
 
-.xv-subinput {
-  width: 200px;
-}
-
 .xv-textarea-input {
   border: 0px;
   width: 324px; 
@@ -629,6 +650,7 @@ body {
   text-indent: 140px;
   font-size: small;
   padding-bottom: 4px;
+  max-width: 325px;
   &.disabled {
     opacity: 0.4;
   }
@@ -642,13 +664,6 @@ body {
   }
   &.hyperlink {
     color: blue;
-    text-decoration:underline;
-  }
-}
-
-.xv-relationwidget {
-  .xv-subinput {
-    width: 150px;
   }
 }
 

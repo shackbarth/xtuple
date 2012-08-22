@@ -77,8 +77,10 @@ regexp:true, undef:true, trailing:true, white:true */
         {name: "label", content: "", classes: "xv-decorated-label"},
         {kind: "onyx.InputDecorator", name: "decorator",
           classes: "xv-input-decorator", components: [
-          {name: "input", kind: "onyx.Input", onchange: "inputChanged"},
-          {name: "icon", kind: "onyx.IconButton", ontap: "iconTapped", src: "assets/date-icon.png"},
+          {name: "input", kind: "onyx.Input", onchange: "inputChanged",
+            classes: "xv-subinput"},
+          {name: "icon", kind: "onyx.IconButton", ontap: "iconTapped",
+            src: "assets/date-icon.png"},
           {name: "datePickPopup", kind: "onyx.Popup", modal: true, components: [
             {kind: "GTS.DatePicker", name: "datePick", style: "", onChange: "datePicked"}
           ]}

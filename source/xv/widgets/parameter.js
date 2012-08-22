@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true
 white:true*/
-/*global enyo:true, XM:true, XT:true, _:true, console:true */
+/*global enyo:true, XM:true, XT:true, XV:true, _:true, console:true */
 
 (function () {
 
@@ -62,28 +62,16 @@ white:true*/
   enyo.kind({
     name: "XV.ParameterWidget",
     kind: "FittableRows",
+    classes: "xv-groupbox",
     defaultKind: "XV.ParameterItem",
-    /*
-    components: [
-      {name: "client", classes: "pullout-toolbar"},
-      {fit: true, style: "position: relative;", components: [
-        {kind: "Scroller", classes: "enyo-fit"}
-      ]}
-    ],
-    create: function () {
-      this.inherited(arguments);
-      var i;
-      for (i = 0; i < this.items.length; i++) {
-        this.$.scroller.createComponent(this.items[i]);
-      }
-    },
-    */
     getParameters: function () {
       var i,
         param,
-        params = [];
+        params = [],
+        child;
       for (i = 0; i < this.children.length; i++) {
-        param = this.children[i].getParameter();
+        child = this.children[i];
+        param = child && child.getParameter ? child.getParameter() : null;
         if (param) { params.push(param); }
       }
       return params;

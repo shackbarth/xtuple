@@ -10,7 +10,8 @@ trailing:true white:true*/
     kind: "FittableRows",
     published: {
       title: "_none".loc(),
-      model: ""
+      model: "",
+      callback: null
     },
     events: {
       onError: "",
@@ -120,8 +121,8 @@ trailing:true white:true*/
 
       // Clean up
       if (this._model) {
-        if (this._model.isNew()) { model.destroy(); }
         this._model.off();
+        if (this._model.isNew()) { this._model.destroy(); }
         delete this._model;
       }
       if (!Klass) { return; }
@@ -161,6 +162,7 @@ trailing:true white:true*/
         };
       options.success = function (model, resp, options) {
         that.doModelChange(inEvent);
+        if (that.callback) { that.callback(model); }
         if (success) { success(model, resp, options); }
       };
       this._model.save(null, options);
@@ -354,7 +356,7 @@ trailing:true white:true*/
       this.$.item.box = box;
       this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
     },
-    setWorkspace: function (workspace, id) {
+    setWorkspace: function (workspace, id, callback) {
       var menuItems = [],
         prop;
       if (workspace) {
@@ -363,7 +365,8 @@ trailing:true white:true*/
           name: "workspace",
           container: this.$.contentPanel,
           kind: workspace,
-          fit: true
+          fit: true,
+          callback: callback
         };
         workspace = this.createComponent(workspace);
         if (id) {
