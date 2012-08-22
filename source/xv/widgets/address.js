@@ -13,7 +13,7 @@ regexp:true, undef:true, trailing:true, white:true */
       value: null
     },
     events: {
-      onModelUpdate: ""
+      onValueChange: ""
     },
     handlers: {
       onblur: "receiveBlur",
@@ -27,28 +27,38 @@ regexp:true, undef:true, trailing:true, white:true */
         components: [
         {kind: "onyx.Input", name: "line1", showing: false,
           placeholder: "_street".loc(), style: "display: block; width: 100%;",
-          classes: "xv-addresswidget-input"},
+          classes: "xv-addresswidget-input", onchange: "inputChanged"},
         {kind: "onyx.Input", name: "line2", showing: false,
           style: "display: block; width: 100%;",
-          classes: "xv-addresswidget-input"},
+          classes: "xv-addresswidget-input", onchange: "inputChanged"},
         {kind: "onyx.Input", name: "line3", showing: false,
           style: "display: block; width: 100%;",
-          classes: "xv-addresswidget-input"},
+          classes: "xv-addresswidget-input", onchange: "inputChanged"},
         {kind: "onyx.Input", name: "city", placeholder: "_city".loc(),
           showing: false, style: "width: 120px;",
-          classes: "xv-addresswidget-input"},
+          classes: "xv-addresswidget-input", onchange: "inputChanged"},
         {kind: "onyx.Input", name: "state", placeholder: "_state".loc(),
           showing: false, style: "width: 70px; margin-left: 4px;",
-          classes: "xv-addresswidget-input"},
+          classes: "xv-addresswidget-input", onchange: "inputChanged"},
         {kind: "onyx.Input", name: "postalCode",  showing: false,
           placeholder: "_postalCode".loc(), style: "width: 120px; margin-left: 4px;",
-          classes: "xv-addresswidget-input"},
+          classes: "xv-addresswidget-input", onchange: "inputChanged"},
         {kind: "onyx.Input", name: "country", showing: false,
           placeholder: "_country".loc(),
           style: "display: block; width: 100%;",
+          onchange: "inputChanged",
           classes: "xv-addresswidget-input"}
       ]}
     ],
+    inputChanged: function (inSender, inEvent) {
+      var value = this.getValue(),
+        attr = inEvent.originator.name;
+      if (!value) {
+        value = new XM.Address(null, {isNew: true});
+      }
+      value.set(attr, this.$[attr].getValue());
+      this.setValue(value);
+    },
     receiveBlur: function (inSender, inEvent) {
       this.$.viewer.show();
       this.$.editor.hide();
@@ -70,6 +80,22 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.state.show();
       this.$.postalCode.show();
       this.$.country.show();
+    },
+    setValue: function (value, options) {
+      var inEvent,
+        oldAttrs = this.value ? this.value.toJSON() : null,
+        newAttrs = value ? value.toJSON() : null;
+      options = options || {};
+      if (oldAttrs === newAttrs) { return; }
+      this.value = value;
+      this.valueChanged();
+      if (!options.silent) {
+        inEvent = {
+          originator: this,
+          value: value
+        };
+        this.doValueChange(inEvent);
+      }
     },
     valueChanged: function () {
       var value = this.getValue(),
