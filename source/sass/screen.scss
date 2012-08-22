@@ -579,13 +579,16 @@ body {
 .xv-addresswidget {
   background-color: white;
   min-height: 104px;
+  padding: 8px;
   .xv-addresswidget-viewer {
-    padding: 8px;
     border: 0px;
     font-size: medium;
   }
   .xv-addresswidget-input {
+    border: 1px solid lightgrey;
+    border-radius: 4px;
     display: black;
+    font-size: medium;
   }
 }
 

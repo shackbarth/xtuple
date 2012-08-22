@@ -16,75 +16,60 @@ regexp:true, undef:true, trailing:true, white:true */
       onModelUpdate: ""
     },
     handlers: {
-      "onfocus": "receiveFocus"
-    //  "onblur": "receiveBlur"
+      onblur: "receiveBlur",
+      onfocus: "receiveFocus"
     },
     components: [
       {kind: "enyo.TextArea", name: "viewer", showing: true, fit: true,
         classes: "xv-addresswidget-viewer", placeholder: "_none".loc()},
-      {kind: "onyx.InputDecorator", name: "editor", showing: false, fit: true,
+      {name: "editor", showing: false, fit: true,
         classes: "xv-addresswidget-editor",
         components: [
         {kind: "onyx.Input", name: "line1", showing: false,
-          placeholder: "_street".loc(), style: "display: block;"},
-        {kind: "onyx.Input", name: "line2", showing: false, style: "display: block;"},
-        {kind: "onyx.Input", name: "line3", showing: false, style: "display: block;"},
+          placeholder: "_street".loc(), style: "display: block; width: 100%;",
+          classes: "xv-addresswidget-input"},
+        {kind: "onyx.Input", name: "line2", showing: false,
+          style: "display: block; width: 100%;",
+          classes: "xv-addresswidget-input"},
+        {kind: "onyx.Input", name: "line3", showing: false,
+          style: "display: block; width: 100%;",
+          classes: "xv-addresswidget-input"},
         {kind: "onyx.Input", name: "city", placeholder: "_city".loc(),
-          showing: false, style: "width: 126px;"},
+          showing: false, style: "width: 120px;",
+          classes: "xv-addresswidget-input"},
         {kind: "onyx.Input", name: "state", placeholder: "_state".loc(),
-          showing: false, style: "width: 76px;"},
+          showing: false, style: "width: 70px; margin-left: 4px;",
+          classes: "xv-addresswidget-input"},
         {kind: "onyx.Input", name: "postalCode",  showing: false,
-          placeholder: "_postalCode".loc(), style: "width: 126px;"},
+          placeholder: "_postalCode".loc(), style: "width: 120px; margin-left: 4px;",
+          classes: "xv-addresswidget-input"},
         {kind: "onyx.Input", name: "country", showing: false,
-          placeholder: "_country".loc(), style: "display: block;"}
+          placeholder: "_country".loc(),
+          style: "display: block; width: 100%;",
+          classes: "xv-addresswidget-input"}
       ]}
     ],
     receiveBlur: function (inSender, inEvent) {
-      if (this._wasIn) {
-        this.$.viewer.show();
-        this.$.editor.hide();
-        this.$.line1.hide();
-        this.$.line2.hide();
-        this.$.line3.hide();
-        this.$.city.hide();
-        this.$.state.hide();
-        this.$.postalCode.hide();
-        this.$.country.hide();
-        this._wasIn = false;
-      }
-      switch (inEvent.originator) {
-      case this.$.line1:
-      case this.$.line2:
-      case this.$.line3:
-      case this.$.city:
-      case this.$.state:
-      case this.$.postalCode:
-      case this.$.country:
-        this._wasIn = true;
-      }
+      this.$.viewer.show();
+      this.$.editor.hide();
+      this.$.line1.hide();
+      this.$.line2.hide();
+      this.$.line3.hide();
+      this.$.city.hide();
+      this.$.state.hide();
+      this.$.postalCode.hide();
+      this.$.country.hide();
     },
     receiveFocus: function (inSender, inEvent) {
-      if (!this._alert) {
-        alert("Editing of addresses is not supported yet.");
-        this._alert = true;
-      }
-      /*
-      if (!this._wasIn) {
-        this.$.viewer.hide();
-        this.$.editor.show();
-        this.$.line1.show();
-        this.$.line2.show();
-        this.$.line3.show();
-        this.$.city.show();
-        this.$.state.show();
-        this.$.postalCode.show();
-        this.$.country.show();
-        if (inEvent.originator === this.$.viewer) {
-          this.$.line1.focus();
-        }
-      }
-      this._wasIn = false;
-      */
+      this.$.viewer.hide();
+      this.$.editor.show();
+      this.$.line1.show();
+      this.$.line2.show();
+      this.$.line3.show();
+      this.$.city.show();
+      this.$.state.show();
+      this.$.postalCode.show();
+      this.$.country.show();
     },
     valueChanged: function () {
       var value = this.getValue(),
