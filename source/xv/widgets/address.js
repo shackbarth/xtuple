@@ -16,8 +16,8 @@ regexp:true, undef:true, trailing:true, white:true */
       onValueChange: ""
     },
     handlers: {
-      onblur: "receiveBlur",
-      onfocus: "receiveFocus"
+   //   onblur: "receiveBlur",
+  //    onfocus: "receiveFocus"
     },
     components: [
       {kind: "enyo.TextArea", name: "viewer", showing: true, fit: true,
@@ -43,13 +43,18 @@ regexp:true, undef:true, trailing:true, white:true */
         {kind: "onyx.Input", name: "postalCode",  showing: false,
           placeholder: "_postalCode".loc(), style: "width: 120px; margin-left: 4px;",
           classes: "xv-addresswidget-input", onchange: "inputChanged"},
-        {kind: "onyx.Input", name: "country", showing: false,
+        {kind: "XV.Combobox", name: "country", showing: false,
+          onValueChange: "inputChanged",
           placeholder: "_country".loc(),
           style: "display: block; width: 100%;",
           onchange: "inputChanged",
           classes: "xv-addresswidget-input"}
       ]}
     ],
+    create: function () {
+      this.inherited(arguments);
+      this.receiveFocus();
+    },
     inputChanged: function (inSender, inEvent) {
       var value = this.getValue(),
         attr = inEvent.originator.name;
@@ -58,6 +63,7 @@ regexp:true, undef:true, trailing:true, white:true */
       }
       value.set(attr, this.$[attr].getValue());
       this.setValue(value);
+      return true;
     },
     receiveBlur: function (inSender, inEvent) {
       this.$.viewer.show();
@@ -86,7 +92,7 @@ regexp:true, undef:true, trailing:true, white:true */
         oldAttrs = this.value ? this.value.toJSON() : null,
         newAttrs = value ? value.toJSON() : null;
       options = options || {};
-      if (oldAttrs === newAttrs) { return; }
+      if (_.isEqual(oldAttrs, newAttrs)) { return; }
       this.value = value;
       this.valueChanged();
       if (!options.silent) {

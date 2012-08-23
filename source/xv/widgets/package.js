@@ -10,6 +10,7 @@ enyo.depends(
   "address.js",
   "comments.js",
   "date.js",
+  "combobox.js",
   "relation.js",
   "grid.js",
   "parameter.js"
