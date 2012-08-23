@@ -7,8 +7,13 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
   enyo.kind({
     name: "XV.CompleterPicker",
     kind: "onyx.Picker",
+    /**
+      Unfortunately this is a copy of code from menu. It makes adjustments to account for the
+      height of the completer widget so the menu doesn't cover over typing area.
+    */
     adjustPosition: function (belowActivator) {
-      var r;
+      var r,
+        rHeight;
       if (this.showing && this.hasNode()) {
         this.removeClass("onyx-menu-up");
 
@@ -27,14 +32,15 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
         //if floating, adjust the vertical positioning
         if (this.floating) {
           r = this.activatorOffset;
+          rHeight = (r.height === undefined) ? (r.bottom - r.top) : r.height;
           //if the menu doesn't fit below the activator, move it up
           if (this.menuUp) {
-            this.applyPosition({top: (r.top - bHeight + (this.showOnTop ? r.height : 0)), bottom: "auto"});
+            this.applyPosition({top: (r.top - rHeight - bHeight + (this.showOnTop ? r.height : 0)), bottom: "auto"});
           } else {
             //if the top of the menu is above the top of the activator and there's room to move it down, do so
             if ((b.top < r.top) && (r.top + (belowActivator ? r.height : 0) + bHeight < innerHeight))
             {
-              this.applyPosition({top: r.top + (this.showOnTop ? 0 : r.height), bottom: "auto"});
+              this.applyPosition({top: r.top + rHeight + (this.showOnTop ? 0 : r.height), bottom: "auto"});
             }
           }
         }
@@ -71,7 +77,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     classes: "xv-combobox",
     published: {
       keyAttribute: "name",
-      collection: "XM.countries"
+      collection: ""
     },
     events: {
       onSearch: ""
@@ -83,8 +89,8 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
           onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur"},
         {kind: "onyx.IconButton", src: "assets/relation-icon-search.png",
           ontap: "togglePicker"},
-        {name: "autocompleteMenu", kind: "XV.CompleterPicker", style: "width: 100px;",
-          classes: "xv-combobox-picker"
+        {name: "picker", kind: "XV.CompleterPicker", style: "width: 100px;",
+          classes: "xv-combobox-picker", modal: false
         }
       ]}
     ],
@@ -107,15 +113,12 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
      // return;
       var key = this.getKeyAttribute(),
         regexp = new RegExp("^" + this.$.input.getValue(), "i"),
-        menu = this.$.autocompleteMenu,
+        picker = this.$.picker,
         models = this._collection ? this._collection.models : null,
         model,
         list,
         i;
-    //  menu.destroyComponents();
-   //   menu.controls = [];
-     // menu.children = [];
-      // filter here...
+      picker.destroyClientControls();
       if (models && models.length) {
         list = _.filter(models, function (model) {
           var value = model.get(key) || "";
@@ -124,15 +127,12 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
 
         for (i = 0; i < list.length; i++) {
           model = list[i];
-          menu.createComponent({
+          picker.createComponent({
             content: model.get(key)
           });
         }
-        menu.reflow();
-        menu.render();
-   //     menu.show();
-      } else {
-   //     menu.hide();
+        picker.reflow();
+        picker.render();
       }
     },
     create: function () {
@@ -143,12 +143,19 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     keyDown: function (inSender, inEvent) {
       // If tabbed out...
       if (inEvent.keyCode === 9) {
-        this.$.autocompleteMenu.hide();
+        this.$.picker.hide();
         this.autocomplete();
       }
     },
     keyUp: function (inSender, inEvent) {
-     // this.buildList();
+      inEvent.activator = this;
+      if (this.$.picker.controls.length) {
+        this.$.picker.waterfall("onRequestHideMenu", inEvent);
+      }
+      this.buildList();
+      if (this.$.picker.controls.length) {
+        this.$.picker.waterfall("onRequestShowMenu", inEvent);
+      }
     },
     collectionChanged: function () {
       var that = this,
@@ -165,7 +172,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     },
     itemSelected: function (inSender, inEvent) {
       this.setValue(inEvent.originator.content);
-      this.$.autocompleteMenu.hide();
+      this.$.picker.hide();
       return true;
     },
     receiveBlur: function (inSender, inEvent) {
@@ -173,7 +180,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     },
     togglePicker: function (inSender, inEvent) {
       inEvent.activator = this;
-      var picker = this.$.autocompleteMenu;
+      var picker = this.$.picker;
       if (picker.showing) {
         picker.waterfall("onRequestHideMenu", inEvent);
       } else {
@@ -181,6 +188,27 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
       }
     }
 
+  });
+  
+  
+  // ..........................................................
+  // COUNTRY
+  //
+
+  enyo.kind({
+    name: "XV.CountryCombobox",
+    kind: "XV.Combobox",
+    collection: "XM.countries"
+  });
+  
+  // ..........................................................
+  // COUNTRY
+  //
+
+  enyo.kind({
+    name: "XV.StateCombobox",
+    kind: "XV.Combobox",
+    collection: "XM.states"
   });
 
 }());
