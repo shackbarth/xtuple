@@ -67,7 +67,7 @@ trailing:true white:true*/
           {name: "search", kind: "onyx.InputDecorator", style: "float: right;",
             showing: false, components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
-              placeholder: "Search", onchange: "inputChanged"},
+              placeholder: "_search".loc(), onchange: "inputChanged"},
             {kind: "Image", src: "assets/search-input-search.png"}
           ]},
           {name: "newButton", kind: "onyx.Button", content: "_new".loc(),
