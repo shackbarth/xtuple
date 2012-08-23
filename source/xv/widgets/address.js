@@ -47,7 +47,6 @@ regexp:true, undef:true, trailing:true, white:true */
           onValueChange: "inputChanged",
           placeholder: "_country".loc(),
           style: "display: block; width: 100%;",
-          onValueChange: "inputChanged",
           classes: "xv-addresswidget-input"}
       ]}
     ],
@@ -59,6 +58,12 @@ regexp:true, undef:true, trailing:true, white:true */
       }
       value.set(attr, this.$[attr].getValue());
       this.setValue(value);
+      this.valueChanged();
+      inEvent = {
+        originator: this,
+        value: value
+      };
+      this.doValueChange(inEvent);
       return true;
     },
     receiveBlur: function (inSender, inEvent) {
@@ -85,10 +90,10 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     setValue: function (value, options) {
       var inEvent,
-        oldAttrs = this.value ? this.value.toJSON() : null,
-        newAttrs = value ? value.toJSON() : null;
+        oldId = this.value ? this.value.id : null,
+        newId = value ? value.id : null;
       options = options || {};
-      if (_.isEqual(oldAttrs, newAttrs)) { return; }
+      if (newId === oldId) { return; }
       this.value = value;
       this.valueChanged();
       if (!options.silent) {
