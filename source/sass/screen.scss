@@ -539,13 +539,26 @@ body {
   .xv-addresswidget-input {
     border: 1px solid lightgrey;
     border-radius: 4px;
-    display: black;
     font-size: medium;
   }
 }
 
-.xv-combobox-picker {
-  
+.xv-combobox {
+  height: 24px;
+  width: 205px;
+}
+
+.xv-combobox-input {
+  font-size: medium;
+  border: 0px;
+  top: -2px;
+  position: relative;
+}
+
+.xv-combobox-icon {
+  top: 8px;
+  left: 8px;
+  position: relative;
 }
 
 .xv-dropdownwidget {

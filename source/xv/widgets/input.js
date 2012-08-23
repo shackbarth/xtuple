@@ -25,6 +25,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     create: function () {
       this.inherited(arguments);
+      this.placeholderChanged();
       this.disabledChanged();
     },
     disabledChanged: function () {

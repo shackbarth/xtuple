@@ -663,21 +663,41 @@ body {
 .xv-addresswidget .xv-addresswidget-input {
   border: 1px solid lightgrey;
   border-radius: 4px;
-  display: black;
   font-size: medium;
 }
 
+/* line 546, ../sass/screen.scss */
+.xv-combobox {
+  height: 24px;
+  width: 205px;
+}
+
 /* line 551, ../sass/screen.scss */
+.xv-combobox-input {
+  font-size: medium;
+  border: 0px;
+  top: -2px;
+  position: relative;
+}
+
+/* line 558, ../sass/screen.scss */
+.xv-combobox-icon {
+  top: 8px;
+  left: 8px;
+  position: relative;
+}
+
+/* line 564, ../sass/screen.scss */
 .xv-dropdownwidget {
   background-color: white;
 }
 
-/* line 555, ../sass/screen.scss */
+/* line 568, ../sass/screen.scss */
 .xv-picker {
   width: 180px;
 }
 
-/* line 559, ../sass/screen.scss */
+/* line 572, ../sass/screen.scss */
 .xv-label {
   width: 130px;
   padding-bottom: 8px;
@@ -687,7 +707,7 @@ body {
   text-align: right;
 }
 
-/* line 568, ../sass/screen.scss */
+/* line 581, ../sass/screen.scss */
 .xv-decorated-label {
   width: 130px;
   padding-bottom: 8px;
@@ -697,7 +717,7 @@ body {
   text-align: right;
 }
 
-/* line 577, ../sass/screen.scss */
+/* line 590, ../sass/screen.scss */
 .xv-dropdown-label {
   width: 130px;
   padding-bottom: 8px;
@@ -707,7 +727,7 @@ body {
   text-align: right;
 }
 
-/* line 586, ../sass/screen.scss */
+/* line 599, ../sass/screen.scss */
 .xv-textarea-input {
   border: 0px;
   width: 324px;
@@ -715,20 +735,20 @@ body {
   margin: 6px;
 }
 
-/* line 593, ../sass/screen.scss */
+/* line 606, ../sass/screen.scss */
 .xv-relationwidget-completer {
   left: -200px;
   top: 15px;
 }
 
-/* line 599, ../sass/screen.scss */
+/* line 612, ../sass/screen.scss */
 .xv-relationwidget-column.left {
   padding-right: 18px;
   color: black;
   width: 140px;
 }
 
-/* line 605, ../sass/screen.scss */
+/* line 618, ../sass/screen.scss */
 .xv-relationwidget-description {
   white-space: nowrap;
   overflow: hidden;
@@ -738,38 +758,38 @@ body {
   padding-bottom: 4px;
   max-width: 325px;
 }
-/* line 613, ../sass/screen.scss */
+/* line 626, ../sass/screen.scss */
 .xv-relationwidget-description.disabled {
   opacity: 0.4;
 }
-/* line 616, ../sass/screen.scss */
+/* line 629, ../sass/screen.scss */
 .xv-relationwidget-description.label {
   text-indent: 0px;
   text-align: right;
 }
-/* line 621, ../sass/screen.scss */
+/* line 634, ../sass/screen.scss */
 .xv-relationwidget-description.hasLabel {
   text-indent: 0px;
 }
-/* line 624, ../sass/screen.scss */
+/* line 637, ../sass/screen.scss */
 .xv-relationwidget-description.hyperlink {
   color: blue;
 }
 
-/* line 629, ../sass/screen.scss */
+/* line 642, ../sass/screen.scss */
 .xv-half-check {
   border: 5px solid green;
   background: url("../../images/not_a_checkbox.png") no-repeat scroll 0 0 transparent;
   background-color: darkgrey;
 }
 
-/* line 636, ../sass/screen.scss */
+/* line 649, ../sass/screen.scss */
 .xv-menuitem.disabled {
   color: Dimgray;
 }
 
 /********END XV WIDGETS******/
-/* line 644, ../sass/screen.scss */
+/* line 657, ../sass/screen.scss */
 .xv-login .xv-login-form {
   position: absolute;
   height: 250px;
@@ -779,17 +799,17 @@ body {
   margin-top: -125px;
   margin-left: -150px;
 }
-/* line 652, ../sass/screen.scss */
+/* line 665, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box {
   font-size: 12px;
   text-align: center;
   padding: 10px;
 }
-/* line 654, ../sass/screen.scss */
+/* line 667, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box.error {
   color: #ff0000;
 }
-/* line 661, ../sass/screen.scss */
+/* line 674, ../sass/screen.scss */
 .xv-login .xv-organizations-selection {
   position: absolute;
   height: 300px;
@@ -799,17 +819,17 @@ body {
   margin-top: -150px;
   margin-left: -200px;
 }
-/* line 669, ../sass/screen.scss */
+/* line 682, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row {
   padding: 5px;
   cursor: pointer;
 }
-/* line 672, ../sass/screen.scss */
+/* line 685, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row:hover {
   background-color: #ddd;
 }
 
-/* line 680, ../sass/screen.scss */
+/* line 693, ../sass/screen.scss */
 .xv-startup-panel .xv-startup-divider {
   width: 70%;
   margin-left: auto;
@@ -823,7 +843,7 @@ body {
   font-weight: bold;
   margin-bottom: 8px;
 }
-/* line 693, ../sass/screen.scss */
+/* line 706, ../sass/screen.scss */
 .xv-startup-panel .xv-startup-progress {
   width: 70%;
   margin-left: auto;

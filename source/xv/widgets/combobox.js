@@ -83,16 +83,14 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
       onSearch: ""
     },
     components: [
-      {name: "decorator", kind: "onyx.InputDecorator",
-        classes: "xv-input-decorator", components: [
-        {name: "input", kind: "onyx.Input", classes: "xv-subinput",
-          onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur"},
-        {kind: "onyx.IconButton", src: "assets/relation-icon-search.png",
-          ontap: "togglePicker"},
-        {name: "picker", kind: "XV.CompleterPicker", style: "width: 100px;",
-          classes: "xv-combobox-picker", modal: false
-        }
-      ]}
+      {name: "input", kind: "onyx.Input", classes: "xv-combobox-input",
+        onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur"},
+      {kind: "onyx.IconButton", src: "assets/triangle-down-large.png",
+        ontap: "togglePicker", classes: "xv-combobox-icon"},
+      {name: "picker", kind: "XV.CompleterPicker", style: "width: 100px;",
+        classes: "xv-combobox-picker", onSelect: "itemSelected",
+        modal: false
+      }
     ],
     autocomplete: function () {
       var key = this.getKeyAttribute(),
@@ -148,6 +146,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
       }
     },
     keyUp: function (inSender, inEvent) {
+      if (inEvent.keyCode === 9) { return; }
       inEvent.activator = this;
       if (this.$.picker.controls.length) {
         this.$.picker.waterfall("onRequestHideMenu", inEvent);

@@ -16,8 +16,8 @@ regexp:true, undef:true, trailing:true, white:true */
       onValueChange: ""
     },
     handlers: {
-      onblur: "receiveBlur",
-      onfocus: "receiveFocus"
+//onblur: "receiveBlur",
+  //    onfocus: "receiveFocus"
     },
     components: [
       {kind: "enyo.TextArea", name: "viewer", showing: true, fit: true,
@@ -35,21 +35,29 @@ regexp:true, undef:true, trailing:true, white:true */
           style: "display: block; width: 100%;",
           classes: "xv-addresswidget-input", onchange: "inputChanged"},
         {kind: "onyx.Input", name: "city", placeholder: "_city".loc(),
-          showing: false, style: "width: 120px;",
+          showing: false,
+          style: "display: block; width: 100%;",
           classes: "xv-addresswidget-input", onchange: "inputChanged"},
-        {kind: "onyx.Input", name: "state", placeholder: "_state".loc(),
-          showing: false, style: "width: 70px; margin-left: 4px;",
-          classes: "xv-addresswidget-input", onchange: "inputChanged"},
+        {kind: "XV.StateCombobox", name: "state", placeholder: "_state".loc(),
+          showing: false,
+          style: "display: block;",
+          classes: "xv-addresswidget-input xv-state-input",
+          onValueChange: "inputChanged"},
         {kind: "onyx.Input", name: "postalCode",  showing: false,
-          placeholder: "_postalCode".loc(), style: "width: 120px; margin-left: 4px;",
+          placeholder: "_postalCode".loc(),
+          style: "display: block; width: 100%;",
           classes: "xv-addresswidget-input", onchange: "inputChanged"},
         {kind: "XV.CountryCombobox", name: "country", showing: false,
           onValueChange: "inputChanged",
           placeholder: "_country".loc(),
-          style: "display: block; width: 100%;",
-          classes: "xv-addresswidget-input"}
+          style: "display: block;",
+          classes: "xv-addresswidget-input country"}
       ]}
     ],
+    create: function () {
+      this.inherited(arguments);
+      this.receiveFocus();
+    },
     inputChanged: function (inSender, inEvent) {
       var value = this.getValue(),
         attr = inEvent.originator.name;
