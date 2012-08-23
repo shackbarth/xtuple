@@ -1,8 +1,69 @@
 /*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, trailing:true, white:true */
+regexp:true, undef:true, trailing:true, white:true, browser:true */
 /*global XT:true, XV:true, XM:true, Backbone:true, enyo:true, _:true */
 
 (function () {
+
+  enyo.kind({
+    name: "XV.CompleterPicker",
+    kind: "onyx.Picker",
+    adjustPosition: function (belowActivator) {
+      var r;
+      if (this.showing && this.hasNode()) {
+        this.removeClass("onyx-menu-up");
+
+        //reset the left position before we get the bounding rect for proper horizontal calculation
+        if (!this.floating) { this.applyPosition({left: "auto"}); }
+
+        var b = this.node.getBoundingClientRect();
+        var bHeight = (b.height === undefined) ? (b.bottom - b.top) : b.height;
+        var innerHeight = (window.innerHeight === undefined) ? document.documentElement.clientHeight : window.innerHeight;
+        var innerWidth = (window.innerWidth === undefined) ? document.documentElement.clientWidth : window.innerWidth;
+
+        //position the menu above the activator if it's getting cut off, but only if there's more room above than below
+        this.menuUp = (b.top + bHeight > innerHeight) && ((innerHeight - b.bottom) < (b.top - bHeight));
+        this.addRemoveClass("onyx-menu-up", this.menuUp);
+
+        //if floating, adjust the vertical positioning
+        if (this.floating) {
+          r = this.activatorOffset;
+          //if the menu doesn't fit below the activator, move it up
+          if (this.menuUp) {
+            this.applyPosition({top: (r.top - bHeight + (this.showOnTop ? r.height : 0)), bottom: "auto"});
+          } else {
+            //if the top of the menu is above the top of the activator and there's room to move it down, do so
+            if ((b.top < r.top) && (r.top + (belowActivator ? r.height : 0) + bHeight < innerHeight))
+            {
+              this.applyPosition({top: r.top + (this.showOnTop ? 0 : r.height), bottom: "auto"});
+            }
+          }
+        }
+
+        //adjust the horizontal positioning to keep the menu from being cut off on the right
+        if ((b.right) > innerWidth) {
+          if (this.floating) {
+            this.applyPosition({left: r.left - (b.left + b.width - innerWidth)});
+          } else {
+            this.applyPosition({left: - (b.right - innerWidth)});
+          }
+        }
+
+        //finally prevent the menu from being cut off on the left
+        if (b.left < 0) {
+          if (this.floating) {
+            this.applyPosition({left: 0, right: "auto"});
+          } else {
+            //handle the situation where a non-floating menu is right or left aligned
+            if (this.getComputedStyleValue("right") === "auto") {
+              this.applyPosition({left: -b.left});
+            } else {
+              this.applyPosition({right: b.left});
+            }
+          }
+        }
+      }
+    }
+  });
 
   enyo.kind({
     name: "XV.Combobox",
@@ -16,17 +77,15 @@ regexp:true, undef:true, trailing:true, white:true */
       onSearch: ""
     },
     components: [
-      {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
-        components: [
-        {name: 'input', kind: "onyx.Input", classes: "xv-subinput",
-          onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur"
-        },
+      {name: "decorator", kind: "onyx.InputDecorator",
+        classes: "xv-input-decorator", components: [
+        {name: "input", kind: "onyx.Input", classes: "xv-subinput",
+          onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur"},
         {kind: "onyx.IconButton", src: "assets/relation-icon-search.png",
-          ontap: "showList"},
-        {kind: "onyx.MenuDecorator", classes: "xv-relationwidget-completer",
-          onSelect: "itemSelected", components: [
-          {kind: "onyx.Menu", name: "autocompleteMenu", modal: false}
-        ]}
+          ontap: "togglePicker"},
+        {name: "autocompleteMenu", kind: "XV.CompleterPicker", style: "width: 100px;",
+          classes: "xv-combobox-picker"
+        }
       ]}
     ],
     autocomplete: function () {
@@ -45,6 +104,7 @@ regexp:true, undef:true, trailing:true, white:true */
       if (res) { this.setValue(res.get(key)); }
     },
     buildList: function () {
+     // return;
       var key = this.getKeyAttribute(),
         regexp = new RegExp("^" + this.$.input.getValue(), "i"),
         menu = this.$.autocompleteMenu,
@@ -52,16 +112,16 @@ regexp:true, undef:true, trailing:true, white:true */
         model,
         list,
         i;
-      menu.destroyComponents();
-      menu.controls = [];
-      menu.children = [];
+    //  menu.destroyComponents();
+   //   menu.controls = [];
+     // menu.children = [];
       // filter here...
       if (models && models.length) {
         list = _.filter(models, function (model) {
           var value = model.get(key) || "";
           return value.match(regexp);
         });
-        
+
         for (i = 0; i < list.length; i++) {
           model = list[i];
           menu.createComponent({
@@ -70,14 +130,15 @@ regexp:true, undef:true, trailing:true, white:true */
         }
         menu.reflow();
         menu.render();
-        menu.show();
+   //     menu.show();
       } else {
-        menu.hide();
+   //     menu.hide();
       }
     },
     create: function () {
       this.inherited(arguments);
       this.collectionChanged();
+      this.buildList();
     },
     keyDown: function (inSender, inEvent) {
       // If tabbed out...
@@ -87,7 +148,7 @@ regexp:true, undef:true, trailing:true, white:true */
       }
     },
     keyUp: function (inSender, inEvent) {
-      this.buildList();
+     // this.buildList();
     },
     collectionChanged: function () {
       var that = this,
@@ -110,15 +171,16 @@ regexp:true, undef:true, trailing:true, white:true */
     receiveBlur: function (inSender, inEvent) {
       this.autocomplete();
     },
-    showList: function (inSender, inEvent) {
-      if (this.$.autocompleteMenu.showing) {
-        this.$.autocompleteMenu.hide();
+    togglePicker: function (inSender, inEvent) {
+      inEvent.activator = this;
+      var picker = this.$.autocompleteMenu;
+      if (picker.showing) {
+        picker.waterfall("onRequestHideMenu", inEvent);
       } else {
-        this.buildList();
-        this.$.autocompleteMenu.show();
+        picker.waterfall("onRequestShowMenu", inEvent);
       }
     }
-    
+
   });
-  
+
 }());
