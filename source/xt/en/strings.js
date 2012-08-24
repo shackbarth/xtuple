@@ -116,6 +116,7 @@ XT.stringsFor("en_US", {
   "_dueDate": "Due Date",
   "_dueDays": "Due Days",
   "_duplicate": "Duplicate",
+  "_edit": "Edit",
   "_editAddress": "Edit Address",
   "_effective": "Effective",
   "_email": "Email",

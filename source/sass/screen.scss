@@ -530,11 +530,12 @@ body {
 
 .xv-addresswidget {
   background-color: white;
-  min-height: 104px;
-  padding: 8px;
+  min-height: 110px;
+  padding: 4px;
   .xv-addresswidget-viewer {
     border: 0px;
     font-size: medium;
+    readonly: readonly;
   }
 }
 

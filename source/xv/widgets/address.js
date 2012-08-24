@@ -16,12 +16,14 @@ regexp:true, undef:true, trailing:true, white:true */
       onValueChange: ""
     },
     handlers: {
-      onfocus: "receiveFocus"
+      onkeyup: "keyUp"
     },
     components: [
       {kind: "enyo.TextArea", name: "viewer", showing: true, fit: true,
+        tag: "textarea readonly=readonly",
         classes: "xv-addresswidget-viewer", placeholder: "_none".loc()},
-      {kind: "onyx.Popup", name: "editor", showing: false, fit: true,
+      {kind: "onyx.Button", content: "_edit".loc(), ontap: "edit", onkeyup: "buttonKeyUp"},
+      {kind: "onyx.Popup", name: "editor",
         classes: "xv-addresswidget-editor", modal: true, floating: true,
         centered: true, scrim: true, components: [
         {content: "_editAddress".loc(),
@@ -75,15 +77,21 @@ regexp:true, undef:true, trailing:true, white:true */
           classes: "onyx-blue"}
       ]}
     ],
+    buttonKeyUp: function (inSender, inEvent) {
+      // Return or last tab out
+      if (inEvent.keyCode === 13 ||
+         (inEvent.keyCode === 32)) {
+        this.edit();
+      }
+      return true;
+    },
     done: function () {
       this.$.editor.hide();
+      this.$.viewer.focus();
     },
     inputChanged: function (inSender, inEvent) {
       var value = this.getValue(),
         attr = inEvent.originator.name;
-      if (!value) {
-        value = new XM.Address(null, {isNew: true});
-      }
       value.set(attr, this.$[attr].getValue());
       this.setValue(value);
       this.valueChanged();
@@ -94,9 +102,23 @@ regexp:true, undef:true, trailing:true, white:true */
       this.doValueChange(inEvent);
       return true;
     },
-    receiveFocus: function (inSender, inEvent) {
-      this.$.editor.show();
-      //this.$.line1.focus();
+    keyUp: function (inSender, inEvent) {
+      // Return or last tab out
+      if (inEvent.keyCode === 13 ||
+         (inEvent.originator.parent.name === "country" &&
+           inEvent.keyCode === 9)) {
+        this.done();
+      }
+    },
+    edit: function (inSender, inEvent) {
+      var value = this.getValue();
+      if (!value) {
+        value = new XM.Address(null, {isNew: true});
+      }
+      if (!this.$.editor.showing) {
+        this.$.editor.show();
+        this.$.line1.focus();
+      }
     },
     setValue: function (value, options) {
       var inEvent,
