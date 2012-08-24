@@ -107,7 +107,7 @@ trailing:true white:true*/
         ]}
       ]},
       {kind: "onyx.Popup", name: "multipleAddressPopup", centered: true,
-        modal: true, floating: true, onShow: "popupShown",
+        modal: true, floating: true, scrim: true, onShow: "popupShown",
         onHide: "popupHidden", components: [
         {content: "_addressShared".loc() + " " + "_whatToDo".loc()},
         {tag: "br"},

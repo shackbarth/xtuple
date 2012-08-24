@@ -288,8 +288,7 @@ trailing:true white:true*/
         ]},
         {name: "header", classes: "xv-workspace-header"},
         {kind: "onyx.Popup", name: "unsavedPopup", centered: true,
-          modal: true, floating: true, onShow: "popupShown",
-          onHide: "popupHidden", components: [
+          modal: true, floating: true, scrim: true, components: [
           {content: "_unsavedChanges".loc() },
           {tag: "br"},
           {kind: "onyx.Button", content: "_discard".loc(), ontap: "unsavedDiscard" },
@@ -298,8 +297,7 @@ trailing:true white:true*/
             classes: "onyx-blue"}
         ]},
         {kind: "onyx.Popup", name: "errorPopup", centered: true,
-          modal: true, floating: true, onShow: "popupShown",
-          onHide: "popupHidden", components: [
+          modal: true, floating: true, scrim: true, components: [
           {name: "errorMessage", content: "_error".loc()},
           {tag: "br"},
           {kind: "onyx.Button", content: "_ok".loc(), ontap: "errorOk",
