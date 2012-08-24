@@ -16,47 +16,67 @@ regexp:true, undef:true, trailing:true, white:true */
       onValueChange: ""
     },
     handlers: {
-//onblur: "receiveBlur",
-  //    onfocus: "receiveFocus"
+      onfocus: "receiveFocus"
     },
     components: [
       {kind: "enyo.TextArea", name: "viewer", showing: true, fit: true,
         classes: "xv-addresswidget-viewer", placeholder: "_none".loc()},
-      {name: "editor", showing: false, fit: true,
-        classes: "xv-addresswidget-editor",
-        components: [
-        {kind: "onyx.Input", name: "line1", showing: false,
-          placeholder: "_street".loc(), style: "display: block; width: 100%;",
-          classes: "xv-addresswidget-input", onchange: "inputChanged"},
-        {kind: "onyx.Input", name: "line2", showing: false,
-          style: "display: block; width: 100%;",
-          classes: "xv-addresswidget-input", onchange: "inputChanged"},
-        {kind: "onyx.Input", name: "line3", showing: false,
-          style: "display: block; width: 100%;",
-          classes: "xv-addresswidget-input", onchange: "inputChanged"},
-        {kind: "onyx.Input", name: "city", placeholder: "_city".loc(),
-          showing: false,
-          style: "display: block; width: 100%;",
-          classes: "xv-addresswidget-input", onchange: "inputChanged"},
-        {kind: "XV.StateCombobox", name: "state", placeholder: "_state".loc(),
-          showing: false,
-          style: "display: block;",
-          classes: "xv-addresswidget-input xv-state-input",
-          onValueChange: "inputChanged"},
-        {kind: "onyx.Input", name: "postalCode",  showing: false,
-          placeholder: "_postalCode".loc(),
-          style: "display: block; width: 100%;",
-          classes: "xv-addresswidget-input", onchange: "inputChanged"},
-        {kind: "XV.CountryCombobox", name: "country", showing: false,
-          onValueChange: "inputChanged",
-          placeholder: "_country".loc(),
-          style: "display: block;",
-          classes: "xv-addresswidget-input country"}
+      {kind: "onyx.Popup", name: "editor", showing: false, fit: true,
+        classes: "xv-addresswidget-editor", modal: true, floating: true,
+        centered: true, scrim: true, components: [
+        {content: "_editAddress".loc(),
+          classes: "xv-addresswidget-editor-header"},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-input-decorator",
+          components: [
+          {kind: "onyx.Input", name: "line1",
+            placeholder: "_street".loc(), classes: "xv-addresswidget-input",
+            onchange: "inputChanged"}
+        ]},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-input-decorator",
+          components: [
+          {kind: "onyx.Input", name: "line2",
+            classes: "xv-addresswidget-input", onchange: "inputChanged"}
+        ]},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-input-decorator",
+          components: [
+          {kind: "onyx.Input", name: "line3",
+            classes: "xv-addresswidget-input", onchange: "inputChanged"}
+        ]},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-input-decorator",
+          components: [
+          {kind: "onyx.Input", name: "city", placeholder: "_city".loc(),
+            classes: "xv-addresswidget-input", onchange: "inputChanged"}
+        ]},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-combobox-decorator",
+          components: [
+          {kind: "XV.StateCombobox", name: "state", placeholder: "_state".loc(),
+            onValueChange: "inputChanged"}
+        ]},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-input-decorator",
+          components: [
+          {kind: "onyx.Input", name: "postalCode",
+            classes: "xv-addresswidget-input", placeholder: "_postalCode".loc(), onchange: "inputChanged"}
+        ]},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-combobox-decorator",
+          components: [
+          {kind: "XV.CountryCombobox", name: "country",
+            onValueChange: "inputChanged",
+            placeholder: "_country".loc()}
+        ]},
+        {tag: "br"},
+        {kind: "onyx.Button", content: "_done".loc(), ontap: "done",
+          classes: "onyx-blue"}
       ]}
     ],
-    create: function () {
-      this.inherited(arguments);
-      this.receiveFocus();
+    done: function () {
+      this.$.editor.hide();
     },
     inputChanged: function (inSender, inEvent) {
       var value = this.getValue(),
@@ -74,27 +94,9 @@ regexp:true, undef:true, trailing:true, white:true */
       this.doValueChange(inEvent);
       return true;
     },
-    receiveBlur: function (inSender, inEvent) {
-      this.$.viewer.show();
-      this.$.editor.hide();
-      this.$.line1.hide();
-      this.$.line2.hide();
-      this.$.line3.hide();
-      this.$.city.hide();
-      this.$.state.hide();
-      this.$.postalCode.hide();
-      this.$.country.hide();
-    },
     receiveFocus: function (inSender, inEvent) {
-      this.$.viewer.hide();
       this.$.editor.show();
-      this.$.line1.show();
-      this.$.line2.show();
-      this.$.line3.show();
-      this.$.city.show();
-      this.$.state.show();
-      this.$.postalCode.show();
-      this.$.country.show();
+      //this.$.line1.focus();
     },
     setValue: function (value, options) {
       var inEvent,
@@ -110,6 +112,11 @@ regexp:true, undef:true, trailing:true, white:true */
           value: value
         };
         this.doValueChange(inEvent);
+      }
+    },
+    pickerTapped: function (inSender, inEvent) {
+      if (inEvent.originator.name === "iconButton") {
+        this.receiveFocus();
       }
     },
     valueChanged: function () {

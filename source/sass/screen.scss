@@ -536,11 +536,33 @@ body {
     border: 0px;
     font-size: medium;
   }
-  .xv-addresswidget-input {
-    border: 1px solid lightgrey;
-    border-radius: 4px;
-    font-size: medium;
-  }
+}
+
+.xv-addresswidget-input-decorator {
+  background: white;
+  display: block;
+  margin: 4px;
+}
+
+.xv-addresswidget-combobox-decorator {
+  background: white;
+  display: block;
+  margin: 4px;
+  width: 205px;
+}
+
+.xv-addresswidget-input {
+  width: 100%;
+}
+
+.xv-addresswidget-editor-header {
+  padding: 4px;
+}
+
+.xv-addresswidget-editor {
+  width: 320px;
+  padding: 8px;
+  padding-right: 16px;
 }
 
 .xv-combobox {

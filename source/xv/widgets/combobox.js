@@ -79,9 +79,6 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
       keyAttribute: "name",
       collection: ""
     },
-    events: {
-      onSearch: ""
-    },
     components: [
       {name: "input", kind: "onyx.Input", classes: "xv-combobox-input",
         onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur"},
@@ -207,7 +204,8 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
   enyo.kind({
     name: "XV.StateCombobox",
     kind: "XV.Combobox",
-    collection: "XM.states"
+    collection: "XM.states",
+    keyAttribute: "abbreviation"
   });
 
 }());
