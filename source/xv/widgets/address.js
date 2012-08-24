@@ -20,7 +20,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     components: [
       {kind: "enyo.TextArea", name: "viewer", showing: true, fit: true,
-        tag: "textarea readonly=readonly",
+        tag: 'textarea rows="5" readonly=readonly',
         classes: "xv-addresswidget-viewer", placeholder: "_none".loc()},
       {kind: "onyx.Button", content: "_edit".loc(), ontap: "edit", onkeyup: "buttonKeyUp"},
       {kind: "onyx.Popup", name: "editor",
@@ -78,7 +78,7 @@ regexp:true, undef:true, trailing:true, white:true */
       ]}
     ],
     buttonKeyUp: function (inSender, inEvent) {
-      // Return or last tab out
+      // Return or space bar activates button
       if (inEvent.keyCode === 13 ||
          (inEvent.keyCode === 32)) {
         this.edit();
