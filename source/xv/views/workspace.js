@@ -288,7 +288,8 @@ trailing:true white:true*/
         ]},
         {name: "header", classes: "xv-workspace-header"},
         {kind: "onyx.Popup", name: "unsavedPopup", centered: true,
-          modal: true, floating: true, scrim: true, components: [
+          modal: true, floating: true, scrim: true,
+          onHide: "popupHidden", components: [
           {content: "_unsavedChanges".loc() },
           {tag: "br"},
           {kind: "onyx.Button", content: "_discard".loc(), ontap: "unsavedDiscard" },
@@ -297,7 +298,8 @@ trailing:true white:true*/
             classes: "onyx-blue"}
         ]},
         {kind: "onyx.Popup", name: "errorPopup", centered: true,
-          modal: true, floating: true, scrim: true, components: [
+          modal: true, floating: true, scrim: true,
+          onHide: "popupHidden", components: [
           {name: "errorMessage", content: "_error".loc()},
           {tag: "br"},
           {kind: "onyx.Button", content: "_ok".loc(), ontap: "errorOk",
@@ -310,6 +312,7 @@ trailing:true white:true*/
       if (!options.force) {
         if (this.$.workspace.isDirty()) {
           this.$.unsavedPopup.close = true;
+          this._popupDone = false;
           this.$.unsavedPopup.show();
           return;
         }
@@ -365,6 +368,11 @@ trailing:true white:true*/
     },
     newRecord: function () {
       this.$.workspace.newRecord();
+    },
+    popupHidden: function (inSender, inEvent) {
+      if (!this._popupDone) {
+        inEvent.originator.show();
+      }
     },
     requery: function (options) {
       options = options || {};
@@ -459,14 +467,17 @@ trailing:true white:true*/
       return true;
     },
     unsavedCancel: function () {
+      this._popupDone = true;
       this.$.unsavedPopup.hide();
     },
     unsavedDiscard: function () {
+      this._popupDone = true;
       var options = {force: true};
       this.$.unsavedPopup.hide();
       this.close(options);
     },
     unsavedSave: function () {
+      this._popupDone = true;
       this.$.unsavedPopup.hide();
       if (this.$.unsavedPopup.close) {
         this.saveAndClose();

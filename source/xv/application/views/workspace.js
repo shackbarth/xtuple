@@ -118,22 +118,31 @@ trailing:true white:true*/
     ],
     addressChangeAll: function () {
       var options = {address: XM.Address.CHANGE_ALL};
+      this._popupDone = true;
       this.$.multipleAddressPopup.hide();
       this.save(options);
     },
     addressChangeOne: function () {
       var options = {address: XM.Address.CHANGE_ONE};
+      this._popupDone = true;
       this.$.multipleAddressPopup.hide();
       this.save(options);
     },
     addressCancel: function () {
+      this._popupDone = true;
       this.$.multipleAddressPopup.hide();
     },
     errorNotify: function (inSender, inEvent) {
       // Handle address questions
       if (inEvent.error.code === 'xt2007') {
+        this._popupDone = false;
         this.$.multipleAddressPopup.show();
         return true;
+      }
+    },
+    popupHidden: function () {
+      if (!this._popupDone) {
+        this.$.multipleAddressPopup.show();
       }
     }
   });
