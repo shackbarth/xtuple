@@ -374,6 +374,7 @@ XT.stringsFor("en_US", {
   "_changeAll": "Change All",
   "_changeOne": "Change only this one",
   "_characteristicContextRequired": "You must set at least one characteristic context to true.",
+  "_countryInvalid": "Country is invalid.",
   "_datasourceError": "Data source error: {error}",
   "_duplicateValues": "Duplicate values are not allowed.",
   "_lengthInvalid": "Length of {attr} must be {length}.",

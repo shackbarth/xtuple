@@ -23,7 +23,7 @@ regexp:true, undef:true, trailing:true, white:true */
         tag: 'textarea rows="5" readonly=readonly',
         classes: "xv-addresswidget-viewer", placeholder: "_none".loc()},
       {kind: "onyx.Button", content: "_edit".loc(), ontap: "edit", onkeyup: "buttonKeyUp"},
-      {kind: "onyx.Popup", name: "editor",
+      {kind: "onyx.Popup", name: "editor", onHide: "editorHidden",
         classes: "xv-addresswidget-editor", modal: true, floating: true,
         centered: true, scrim: true, components: [
         {content: "_editAddress".loc(),
@@ -86,8 +86,11 @@ regexp:true, undef:true, trailing:true, white:true */
       return true;
     },
     done: function () {
-      this.$.editor.hide();
-      this.$.viewer.focus();
+      if (this.getValue().isValid()) {
+        this._popupDone = true;
+        this.$.editor.hide();
+        this.$.viewer.focus();
+      }
     },
     inputChanged: function (inSender, inEvent) {
       var value = this.getValue(),
@@ -113,11 +116,18 @@ regexp:true, undef:true, trailing:true, white:true */
     edit: function (inSender, inEvent) {
       var value = this.getValue();
       if (!value) {
-        value = new XM.Address(null, {isNew: true});
+        value = new XM.AddressInfo(null, {isNew: true});
+        this.setValue(value);
       }
       if (!this.$.editor.showing) {
         this.$.editor.show();
         this.$.line1.focus();
+        this._popupDone = false;
+      }
+    },
+    editorHidden: function () {
+      if (!this._popupDone) {
+        this.edit();
       }
     },
     setValue: function (value, options) {

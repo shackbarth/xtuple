@@ -197,6 +197,9 @@
     }, {
       code: "xt2007",
       messageKey: "_addressShared"
+    }, {
+      code: "xt2008",
+      messageKey: "_countryInvalid"
     }
   ];
 
