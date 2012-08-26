@@ -530,7 +530,6 @@ body {
 
 .xv-addresswidget {
   background-color: white;
-  //min-height: 110px;
   padding: 4px;
   .xv-addresswidget-viewer {
     border: 0px;
@@ -576,6 +575,7 @@ body {
   border: 0px;
   top: -2px;
   position: relative;
+  outline: none;
 }
 
 .xv-combobox-icon {

@@ -653,21 +653,21 @@ body {
   background-color: white;
   padding: 4px;
 }
-/* line 535, ../sass/screen.scss */
+/* line 534, ../sass/screen.scss */
 .xv-addresswidget .xv-addresswidget-viewer {
   border: 0px;
   font-size: medium;
   readonly: readonly;
 }
 
-/* line 542, ../sass/screen.scss */
+/* line 541, ../sass/screen.scss */
 .xv-addresswidget-input-decorator {
   background: white;
   display: block;
   margin: 4px;
 }
 
-/* line 548, ../sass/screen.scss */
+/* line 547, ../sass/screen.scss */
 .xv-addresswidget-combobox-decorator {
   background: white;
   display: block;
@@ -675,35 +675,36 @@ body {
   width: 205px;
 }
 
-/* line 555, ../sass/screen.scss */
+/* line 554, ../sass/screen.scss */
 .xv-addresswidget-input {
   width: 100%;
 }
 
-/* line 559, ../sass/screen.scss */
+/* line 558, ../sass/screen.scss */
 .xv-addresswidget-editor-header {
   padding: 4px;
 }
 
-/* line 563, ../sass/screen.scss */
+/* line 562, ../sass/screen.scss */
 .xv-addresswidget-editor {
   width: 320px;
   padding: 8px;
   padding-right: 16px;
 }
 
-/* line 569, ../sass/screen.scss */
+/* line 568, ../sass/screen.scss */
 .xv-combobox {
   height: 24px;
   width: 205px;
 }
 
-/* line 574, ../sass/screen.scss */
+/* line 573, ../sass/screen.scss */
 .xv-combobox-input {
   font-size: medium;
   border: 0px;
   top: -2px;
   position: relative;
+  outline: none;
 }
 
 /* line 581, ../sass/screen.scss */
