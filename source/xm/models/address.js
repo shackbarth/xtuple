@@ -68,7 +68,7 @@ white:true*/
     validateEdit: function (attributes, options) {
       var settings = XT.session.getSettings(),
         strict = settings.get('StrictAddressCountry'),
-        country = this.get('country'),
+        country = attributes.country,
         found;
         
       // Validate country if setting says to do so

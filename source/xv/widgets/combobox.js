@@ -81,7 +81,8 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     },
     components: [
       {name: "input", kind: "onyx.Input", classes: "xv-combobox-input",
-        onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur"},
+        onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur",
+        onchange: "inputChanged"},
       {kind: "onyx.IconButton", src: "assets/triangle-down-large.png",
         ontap: "togglePicker", classes: "xv-combobox-icon"},
       {name: "picker", kind: "XV.CompleterPicker", style: "width: 100px;",

@@ -86,11 +86,9 @@ regexp:true, undef:true, trailing:true, white:true */
       return true;
     },
     done: function () {
-      if (this.getValue().isValid()) {
-        this._popupDone = true;
-        this.$.editor.hide();
-        this.$.viewer.focus();
-      }
+      this._popupDone = true;
+      this.$.editor.hide();
+      this.$.viewer.focus();
     },
     inputChanged: function (inSender, inEvent) {
       var value = this.getValue(),
@@ -106,10 +104,8 @@ regexp:true, undef:true, trailing:true, white:true */
       return true;
     },
     keyUp: function (inSender, inEvent) {
-      // Return or last tab out
-      if (inEvent.keyCode === 13 ||
-         (inEvent.originator.parent.name === "country" &&
-           inEvent.keyCode === 9)) {
+      // Return
+      if (inEvent.keyCode === 13) {
         this.done();
       }
     },
