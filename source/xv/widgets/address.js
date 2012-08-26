@@ -69,7 +69,7 @@ regexp:true, undef:true, trailing:true, white:true */
           classes: "xv-addresswidget-combobox-decorator",
           components: [
           {kind: "XV.CountryCombobox", name: "country",
-            onValueChange: "inputChanged",
+            onValueChange: "countryChanged",
             placeholder: "_country".loc()}
         ]},
         {tag: "br"},
@@ -83,6 +83,12 @@ regexp:true, undef:true, trailing:true, white:true */
          (inEvent.keyCode === 32)) {
         this.edit();
       }
+      return true;
+    },
+    countryChanged: function (inSender, inEvent) {
+      var country = this.$.country.getValue();
+      this.inputChanged(inSender, inEvent);
+      this.$.state.setCountry(country);
       return true;
     },
     done: function () {

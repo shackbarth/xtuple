@@ -77,7 +77,8 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     classes: "xv-combobox",
     published: {
       keyAttribute: "name",
-      collection: ""
+      collection: "",
+      filter: null
     },
     components: [
       {name: "input", kind: "onyx.Input", classes: "xv-combobox-input",
@@ -110,7 +111,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
       var key = this.getKeyAttribute(),
         regexp = new RegExp("^" + this.$.input.getValue(), "i"),
         picker = this.$.picker,
-        models = this._collection ? this._collection.models : null,
+        models = this.filteredList(),
         model,
         list,
         value,
@@ -138,7 +139,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     create: function () {
       this.inherited(arguments);
       this.collectionChanged();
-      this.buildList();
+      this.filterChanged();
     },
     keyDown: function (inSender, inEvent) {
       // If tabbed out...
@@ -176,6 +177,17 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
       this.$.picker.hide();
       return true;
     },
+    filterChanged: function () {
+      this.buildList();
+    },
+    filteredList: function (inSender, inEvent) {
+      var models = this._collection ? this._collection.models : null,
+        filter = this.getFilter();
+      if (filter) {
+        models = filter(models);
+      }
+      return models;
+    },
     receiveBlur: function (inSender, inEvent) {
       this.autocomplete();
     },
@@ -203,14 +215,45 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
   });
   
   // ..........................................................
-  // COUNTRY
+  // STATE
   //
 
   enyo.kind({
     name: "XV.StateCombobox",
     kind: "XV.Combobox",
     collection: "XM.states",
-    keyAttribute: "abbreviation"
+    keyAttribute: "abbreviation",
+    published: {
+      country: null
+    },
+    create: function () {
+      this.inherited(arguments);
+      var that = this,
+        filter = function (models) {
+          return _.filter(models, function (model) {
+            var country = model.get('country') || {};
+            return country.id === that._countryId;
+          });
+        };
+      this.setFilter(filter);
+    },
+    countryChanged: function () {
+      var country = this.getCountry();
+      if (typeof country === 'string') {
+        country = _.find(XM.countries.models, function (model) {
+          return model.get('name') === country;
+        });
+        this._countryId = country ? country.id : undefined;
+      } else if (typeof country === 'object') {
+        this._countryId = country.id;
+      } else if (typeof country === 'number') {
+        this._countryId = country;
+      } else {
+        this._countryId = undefined;
+      }
+      this.buildList();
+    }
+    
   });
 
 }());
