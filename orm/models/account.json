@@ -280,6 +280,102 @@
     "isSystem": true
     },
     {
+      "context": "xtuple",
+      "nameSpace": "XM",
+      "type": "AccountAddressInfo",
+      "table": "xt.crmacctaddr",
+      "comment": "Account Address Info Map",
+      "privileges": {
+        "all": {
+          "create": false,
+          "read": true,
+          "update": false,
+          "delete": false
+        }
+      },
+      "properties": [
+        {
+          "name": "id",
+          "attr": {
+            "type": "Number",
+            "column": "addr_id",
+            "isPrimaryKey": true
+          }
+        },
+        {
+          "name": "number",
+          "attr": {
+            "type": "String",
+            "column": "addr_number"
+          }
+        },
+        {
+          "name": "isActive",
+          "attr": {
+            "type": "Boolean",
+            "column": "addr_active"
+          }
+        },
+        {
+          "name": "line1",
+          "attr": {
+            "type": "String",
+            "column": "addr_line1"
+          }
+        },
+        {
+          "name": "line2",
+          "attr": {
+            "type": "String",
+            "column": "addr_line2"
+          }
+        },
+        {
+          "name": "line3",
+          "attr": {
+            "type": "String",
+            "column": "addr_line3"
+          }
+        },
+        {
+          "name": "city",
+          "attr": {
+            "type": "String",
+            "column": "addr_city"
+          }
+        },
+        {
+          "name": "state",
+          "attr": {
+            "type": "String",
+            "column": "addr_state"
+          }
+        },
+        {
+          "name": "postalCode",
+          "attr": {
+            "type": "String",
+            "column": "addr_postalcode"
+          }
+        },
+        {
+          "name": "country",
+          "attr": {
+            "type": "String",
+            "column": "addr_country"
+          }
+        },
+        {
+          "name": "account",
+          "attr": {
+            "type": "Number",
+            "column": "crmacct_id"
+          }
+        }
+      ],
+      "isSystem": true
+    },
+    {
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "AccountCharacteristic",
