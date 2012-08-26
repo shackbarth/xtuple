@@ -113,6 +113,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
         models = this._collection ? this._collection.models : null,
         model,
         list,
+        value,
         i;
       picker.destroyClientControls();
       if (models && models.length) {
@@ -123,9 +124,12 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
 
         for (i = 0; i < list.length; i++) {
           model = list[i];
-          picker.createComponent({
-            content: model.get(key)
-          });
+          value = model.get(key);
+          if (value) {
+            picker.createComponent({
+              content: model.get(key)
+            });
+          }
         }
         picker.reflow();
         picker.render();
