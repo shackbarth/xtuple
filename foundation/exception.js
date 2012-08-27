@@ -14,9 +14,24 @@ issue = function () {
 (function () {
   "use strict";
 
-  X.exception = X.Object.create({
+  /**
+    The exception object.
 
-    handle: function (err) {      
+   @class
+   */
+  X.exception = X.Object.create(/** @lends X.exception */{
+
+    /**
+      Handles exception.
+
+      @param {Object} err The exception to be handled. Exceptions with unknown
+         type are treated as fatal exceptions.
+      @param {String} err.type
+      @param {String} err.message
+      @param {Object} err.stack
+
+     */
+    handle: function (err) {
       var type = err.type, message = err.message, stack = err.stack;
       switch (type) {
         case X.exception.T_WARNING:
@@ -33,25 +48,48 @@ issue = function () {
           break;
       }
     },
-      
+
+    /**
+      Fatal exception type. This kind of exception when handled will stop the process
+
+      @type {String}
+     */
     T_FATAL:    'fatal',
+
+    /**
+      Warning exception type.
+
+      @type {String}
+     */
     T_WARNING:  'warning',
+
+    /**
+      Report exception type. Is currently handled in the same way as a warning.
+
+      @type {String}
+     */
     T_REPORT:   'report',
 
+    /**
+      @return {Object} Fatal exception
+     */
     fatal: function () {
       return { type: 'fatal', message: arguments[0] };
     },
-    
+
+    /**
+      @return (Object} Warning exception
+     */
     warning: function () {
       return { type: 'warning', message: arguments[0] };
     },
-    
+
     className: "X.exception"
   });
-  
+
   X.fatal    = X.exception.fatal;
   X.warning  = X.exception.warning;
   X.close    = X.exception.close;
-  
+
   process.on('uncaughtException', X.exception.handle);
 }());

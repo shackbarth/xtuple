@@ -4,21 +4,45 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 (function () {
   "use strict";
-  
+
   var _ = X._;
-  
-  X.Database = X.Object.extend({
+
+ /**
+  Functionality for dealing with postgres
+
+  @class
+ */
+  X.Database = X.Object.extend(/** @lends X.Database */{
     poolSize: 12,
     className: "X.Database",
     cleanupCompletedEvent: "cleanupCompleted",
+
+    /**
+      Returns postgres connection string
+
+      @param {Object} options optional parameters
+      @param {String} options.password postgres password
+    */
     conString: function (options) {
       options.password = options.password? options.password.pre(":"): "";
       return "tcp://{user}{password}@{hostname}:{port}/{database}".f(options);
     },
+
+    /**
+      Perform query
+
+      @param {String} query
+      @param {Object} options
+      @param {Function} callback
+     */
     query: function (query, options, callback) {
       var str = this.conString(_.clone(options));
       X.pg.connect(str, _.bind(this.connected, this, query, options, callback));
     },
+
+    /**
+      Connected.
+    */
     connected: function (query, options, callback, err, client, ranInit) {
       if (err) {
         issue(X.warning("Failed to connect to database: " +
@@ -31,10 +55,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           this.connected, this, query, options, callback, err, client, true));
       } else client.query(query, callback);
     },
+
+    /**
+      Initializes database by setting the default pool size
+     */
     init: function () {
       X.addCleanupTask(_.bind(this.cleanup, this), this);
       X.pg.defaults.poolSize = this.poolSize;
     },
+
+    /**
+      Waits for database pool to drain and finishes cleanup
+
+     */
     cleanup: function () {
       X.log("Waiting for database pool to drain");
       if (X.pg) X.pg.end();

@@ -5,14 +5,34 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
+  /**
+  The X.Function object
+
+  @class
+  */
   X.Function = {};
-  
+
   X.mixin(X.Function, {
+    /**
+      Sets the isProperty value of the function in the parameters to true.
+
+      @method X.Function.property
+      @param {Function} func The function
+      @returns {Function} func The function from the parameters
+    */
     property: function (func) {
       func.isProperty = true;
       return func;
     },
 
+    /**
+      Attaches an observer for an event onto a function.
+
+      @method X.Function.observes
+      @param {Function} func The function
+      @param {Object} event The event
+      @returns {Function} func The function from the parameters
+    */
     observes: function (func, event) {
       if (!func.events) func.events = [];
       func.events.push(event);

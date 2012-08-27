@@ -4,9 +4,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 (function () {
   "use strict";
-  
+
   var _fs = X.fs, _path = X.path;
-  
+
   X.mixin({
 
     basePath: process.cwd(),
@@ -21,7 +21,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       } else if (X.none(options)) options = {};
 
       path = _path.normalize(path);
-      
+
       try {
         if (X.typeOf(callback) !== X.T_FUNCTION) {
           files = _fs.readdirSync(path);
@@ -52,22 +52,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     shorten: function (path, max) {
       if (X.none(max)) max = 3;
       if (X.none(path) || X.typeOf(path) !== X.T_STRING) return path;
-  
+
       var count = path.match(/\//g).length;
-  
+
       if (!count || count <= max) return path;
-      
+
       var found = 0;
       var total = count - max;
       var idx = 0;
       var copy = path;
-  
+
       while (found < total && !!~idx) {
         idx = copy.indexOf('/');
         copy = copy.slice(idx === 0 ? 1 : idx);
         if (idx !== 0) found += 1;
       }
-  
+
       return '...%@'.f(copy);
     },
 
