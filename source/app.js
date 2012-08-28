@@ -23,10 +23,7 @@ white:true*/
     },
     components: [
       { name: "postbooks", kind: "XV.Postbooks",  onTransitionStart: "handlePullout" },
-      // XXX get this to work
-      //{ kind: "Scroller", horizontal: "hidden", components: [
       { name: "pullout", kind: "XV.Pullout", onAnimateFinish: "pulloutAnimateFinish" }
-      //]}
     ],
     addPulloutItem: function (inSender, inEvent) {
       var item = {
