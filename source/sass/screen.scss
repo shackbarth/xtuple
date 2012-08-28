@@ -536,6 +536,10 @@ body {
     border: 0px;
     font-size: medium;
     display: inline;
+    &.placeholder {
+      font-style: italic;
+      color: #93a1a1;
+    }
   }
 }
 

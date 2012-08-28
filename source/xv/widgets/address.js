@@ -196,7 +196,8 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.state.setValue(state);
       this.$.postalCode.setValue(postalCode);
       this.$.country.setValue(country);
-      this.$.viewer.setContent(fmt);
+      this.$.viewer.addRemoveClass("placeholder", !fmt);
+      this.$.viewer.setContent(fmt || '_none'.loc());
     }
 
   });
