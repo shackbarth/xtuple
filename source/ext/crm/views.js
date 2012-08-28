@@ -5,6 +5,14 @@ trailing:true white:true*/
 
 (function () {
 
+  var extension = {
+    container: "mainGroup",
+    kind: "XV.IncidentWidget",
+    attr: "incident"
+  };
+  
+  XV.appendExtension("XV.ToDoWorkspace", extension);
+
   var panels = [
     {name: "stateList", kind: "XV.StateList"},
     {name: "countryList", kind: "XV.CountryList"},

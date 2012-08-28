@@ -7,7 +7,7 @@ trailing:true white:true*/
   var SAVE_APPLY = 1;
   var SAVE_CLOSE = 2;
   var SAVE_NEW = 3;
-  
+
   enyo.kind({
     name: "XV.Workspace",
     kind: "FittableRows",
@@ -17,6 +17,7 @@ trailing:true white:true*/
       model: "",
       callback: null
     },
+    extensions: null,
     events: {
       onError: "",
       onHeaderChange: "",
@@ -31,7 +32,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.Groupbox", components: [
+        {kind: "XV.Groupbox", name: "mainGroup", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", name: "name"},
           {kind: "XV.InputWidget", name: "description"}
@@ -96,6 +97,17 @@ trailing:true white:true*/
     },
     create: function () {
       this.inherited(arguments);
+      var extensions = this.extensions || [],
+        ext,
+        i;
+      for (i = 0; i < extensions.length; i++) {
+        ext = this.extensions[i];
+        // Resolve name of container to the instance
+        if (ext.container && typeof ext.container === 'string') {
+          ext.container = this.$[ext.container];
+        }
+        this.createComponent(ext);
+      }
       this.titleChanged();
       this.modelChanged();
     },
