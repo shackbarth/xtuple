@@ -25,10 +25,12 @@ regexp:true, undef:true, trailing:true, white:true */
         classes: "xv-addresswidget-viewer", placeholder: "_none".loc()},
       {kind: "FittableColumns", classes: "xv-addresswidget-buttons",
         components: [
-        {kind: "onyx.Button", content: "_edit".loc(), ontap: "edit",
-          onkeyup: "editButtonKeyUp", classes: "xv-addresswidget-button"},
-        {kind: "onyx.Button", content: "_search".loc(), ontap: "search",
-          onkeyup: "searchButtonKeyUp", classes: "xv-addresswidget-button"}
+        {kind: "onyx.Button", name: "editButton", content: "_edit".loc(),
+          ontap: "edit", onkeyup: "editButtonKeyUp",
+          classes: "xv-addresswidget-button"},
+        {kind: "onyx.Button", name: "searchButton", content: "_search".loc(),
+          ontap: "search", onkeyup: "searchButtonKeyUp",
+          classes: "xv-addresswidget-button"}
       ]},
       {kind: "onyx.Popup", name: "editor", onHide: "editorHidden",
         classes: "xv-addresswidget-editor", modal: true, floating: true,
@@ -91,9 +93,25 @@ regexp:true, undef:true, trailing:true, white:true */
       return true;
     },
     done: function () {
+      var siblings,
+        i,
+        next = false;
+      if (!this._nextWidget) {
+        // Find next widget to shift focus to
+        siblings = this.parent.children;
+        for (i = 0; i < siblings.length; i++) {
+          if (next) {
+            if (siblings[i].focus) {
+              this._nextWidget = siblings[i];
+              break;
+            }
+          }
+          if (siblings[i] === this) { next = true; }
+        }
+      }
       this._popupDone = true;
       this.$.editor.hide();
-      this.$.viewer.focus();
+      if (this._nextWidget) { this._nextWidget.focus(); }
     },
     editButtonKeyUp: function (inSender, inEvent) {
       // Return or space bar activates button
