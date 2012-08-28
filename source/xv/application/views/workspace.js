@@ -33,6 +33,7 @@ trailing:true white:true*/
     name: "XV.AccountWorkspace",
     kind: "XV.Workspace",
     title: "_account".loc(),
+    headerAttrs: ["number", "-", "name"],
     model: "XM.Account",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
@@ -69,6 +70,10 @@ trailing:true white:true*/
     kind: "XV.Workspace",
     title: "_contact".loc(),
     model: "XM.Contact",
+    headerAttrs: ["firstName", "lastName"],
+    handlers: {
+      onError: "errorNotify"
+    },
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -100,8 +105,46 @@ trailing:true white:true*/
         {kind: "Scroller", horizontal: "hidden", title: "_comments".loc(), components: [
           {kind: "XV.ContactCommentBox", attr: "comments"}
         ]}
+      ]},
+      {kind: "onyx.Popup", name: "multipleAddressPopup", centered: true,
+        modal: true, floating: true, scrim: true, onShow: "popupShown",
+        onHide: "popupHidden", components: [
+        {content: "_addressShared".loc() + " " + "_whatToDo".loc()},
+        {tag: "br"},
+        {kind: "onyx.Button", content: "_changeOne".loc(), ontap: "addressChangeOne", classes: "onyx-blue"},
+        {kind: "onyx.Button", content: "_changeAll".loc(), ontap: "addressChangeAll" },
+        {kind: "onyx.Button", content: "_cancel".loc(), ontap: "addressCancel"}
       ]}
-    ]
+    ],
+    addressChangeAll: function () {
+      var options = {address: XM.Address.CHANGE_ALL};
+      this._popupDone = true;
+      this.$.multipleAddressPopup.hide();
+      this.save(options);
+    },
+    addressChangeOne: function () {
+      var options = {address: XM.Address.CHANGE_ONE};
+      this._popupDone = true;
+      this.$.multipleAddressPopup.hide();
+      this.save(options);
+    },
+    addressCancel: function () {
+      this._popupDone = true;
+      this.$.multipleAddressPopup.hide();
+    },
+    errorNotify: function (inSender, inEvent) {
+      // Handle address questions
+      if (inEvent.error.code === 'xt2007') {
+        this._popupDone = false;
+        this.$.multipleAddressPopup.show();
+        return true;
+      }
+    },
+    popupHidden: function () {
+      if (!this._popupDone) {
+        this.$.multipleAddressPopup.show();
+      }
+    }
   });
 
   // ..........................................................
@@ -157,6 +200,7 @@ trailing:true white:true*/
     name: "XV.IncidentWorkspace",
     kind: "XV.Workspace",
     title: "_incident".loc(),
+    headerAttrs: ["number", "-", "description"],
     model: "XM.Incident",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
@@ -231,6 +275,7 @@ trailing:true white:true*/
     name: "XV.OpportunityWorkspace",
     kind: "XV.Workspace",
     title: "_opportunity".loc(),
+    headerAttrs: ["number", "-", "name"],
     model: "XM.Opportunity",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
@@ -324,6 +369,7 @@ trailing:true white:true*/
     name: "XV.ProjectWorkspace",
     kind: "XV.Workspace",
     title: "_project".loc(),
+    headerAttrs: ["number", "-", "name"],
     model: "XM.Project",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
@@ -390,6 +436,7 @@ trailing:true white:true*/
     name: "XV.ToDoWorkspace",
     kind: "XV.Workspace",
     title: "_toDo".loc(),
+    headerAttrs: ["name"],
     model: "XM.ToDo",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",

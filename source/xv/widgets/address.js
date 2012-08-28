@@ -13,78 +13,145 @@ regexp:true, undef:true, trailing:true, white:true */
       value: null
     },
     events: {
-      onModelUpdate: ""
+      onValueChange: ""
     },
     handlers: {
-      "onfocus": "receiveFocus"
-    //  "onblur": "receiveBlur"
+      onkeyup: "keyUp"
     },
     components: [
       {kind: "enyo.TextArea", name: "viewer", showing: true, fit: true,
+        tag: 'textarea rows="5" readonly=readonly',
         classes: "xv-addresswidget-viewer", placeholder: "_none".loc()},
-      {kind: "onyx.InputDecorator", name: "editor", showing: false, fit: true,
-        classes: "xv-addresswidget-editor",
-        components: [
-        {kind: "onyx.Input", name: "line1", showing: false,
-          placeholder: "_street".loc(), style: "display: block;"},
-        {kind: "onyx.Input", name: "line2", showing: false, style: "display: block;"},
-        {kind: "onyx.Input", name: "line3", showing: false, style: "display: block;"},
-        {kind: "onyx.Input", name: "city", placeholder: "_city".loc(),
-          showing: false, style: "width: 126px;"},
-        {kind: "onyx.Input", name: "state", placeholder: "_state".loc(),
-          showing: false, style: "width: 76px;"},
-        {kind: "onyx.Input", name: "postalCode",  showing: false,
-          placeholder: "_postalCode".loc(), style: "width: 126px;"},
-        {kind: "onyx.Input", name: "country", showing: false,
-          placeholder: "_country".loc(), style: "display: block;"}
+      {kind: "onyx.Button", content: "_edit".loc(), ontap: "edit", onkeyup: "buttonKeyUp"},
+      {kind: "onyx.Popup", name: "editor", onHide: "editorHidden",
+        classes: "xv-addresswidget-editor", modal: true, floating: true,
+        centered: true, scrim: true, components: [
+        {content: "_editAddress".loc(),
+          classes: "xv-addresswidget-editor-header"},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-input-decorator",
+          components: [
+          {kind: "onyx.Input", name: "line1",
+            placeholder: "_street".loc(), classes: "xv-addresswidget-input",
+            onchange: "inputChanged"}
+        ]},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-input-decorator",
+          components: [
+          {kind: "onyx.Input", name: "line2",
+            classes: "xv-addresswidget-input", onchange: "inputChanged"}
+        ]},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-input-decorator",
+          components: [
+          {kind: "onyx.Input", name: "line3",
+            classes: "xv-addresswidget-input", onchange: "inputChanged"}
+        ]},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-input-decorator",
+          components: [
+          {kind: "onyx.Input", name: "city", placeholder: "_city".loc(),
+            classes: "xv-addresswidget-input", onchange: "inputChanged"}
+        ]},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-combobox-decorator",
+          components: [
+          {kind: "XV.StateCombobox", name: "state", placeholder: "_state".loc(),
+            onValueChange: "inputChanged"}
+        ]},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-input-decorator",
+          components: [
+          {kind: "onyx.Input", name: "postalCode",
+            classes: "xv-addresswidget-input", placeholder: "_postalCode".loc(), onchange: "inputChanged"}
+        ]},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-combobox-decorator",
+          components: [
+          {kind: "XV.CountryCombobox", name: "country",
+            onValueChange: "countryChanged",
+            placeholder: "_country".loc()}
+        ]},
+        {tag: "br"},
+        {kind: "onyx.Button", content: "_done".loc(), ontap: "done",
+          classes: "onyx-blue"}
       ]}
     ],
-    receiveBlur: function (inSender, inEvent) {
-      if (this._wasIn) {
-        this.$.viewer.show();
-        this.$.editor.hide();
-        this.$.line1.hide();
-        this.$.line2.hide();
-        this.$.line3.hide();
-        this.$.city.hide();
-        this.$.state.hide();
-        this.$.postalCode.hide();
-        this.$.country.hide();
-        this._wasIn = false;
+    buttonKeyUp: function (inSender, inEvent) {
+      // Return or space bar activates button
+      if (inEvent.keyCode === 13 ||
+         (inEvent.keyCode === 32)) {
+        this.edit();
       }
-      switch (inEvent.originator) {
-      case this.$.line1:
-      case this.$.line2:
-      case this.$.line3:
-      case this.$.city:
-      case this.$.state:
-      case this.$.postalCode:
-      case this.$.country:
-        this._wasIn = true;
+      return true;
+    },
+    countryChanged: function (inSender, inEvent) {
+      var country = this.$.country.getValue();
+      this.inputChanged(inSender, inEvent);
+      this.$.state.setCountry(country);
+      return true;
+    },
+    done: function () {
+      this._popupDone = true;
+      this.$.editor.hide();
+      this.$.viewer.focus();
+    },
+    inputChanged: function (inSender, inEvent) {
+      var value = this.getValue(),
+        attr = inEvent.originator.name;
+      value.set(attr, this.$[attr].getValue());
+      this.setValue(value);
+      this.valueChanged();
+      inEvent = {
+        originator: this,
+        value: value
+      };
+      this.doValueChange(inEvent);
+      return true;
+    },
+    keyUp: function (inSender, inEvent) {
+      // Return
+      if (inEvent.keyCode === 13) {
+        this.done();
       }
     },
-    receiveFocus: function (inSender, inEvent) {
-      if (!this._alert) {
-        alert("Editing of addresses is not supported yet.");
-        this._alert = true;
+    edit: function (inSender, inEvent) {
+      var value = this.getValue();
+      if (!value) {
+        value = new XM.AddressInfo(null, {isNew: true});
+        this.setValue(value);
       }
-      /*
-      if (!this._wasIn) {
-        this.$.viewer.hide();
+      if (!this.$.editor.showing) {
         this.$.editor.show();
-        this.$.line1.show();
-        this.$.line2.show();
-        this.$.line3.show();
-        this.$.city.show();
-        this.$.state.show();
-        this.$.postalCode.show();
-        this.$.country.show();
-        if (inEvent.originator === this.$.viewer) {
-          this.$.line1.focus();
-        }
+        this.$.line1.focus();
+        this._popupDone = false;
       }
-      this._wasIn = false;
-      */
+    },
+    editorHidden: function () {
+      if (!this._popupDone) {
+        this.edit();
+      }
+    },
+    setValue: function (value, options) {
+      var inEvent,
+        oldId = this.value ? this.value.id : null,
+        newId = value ? value.id : null;
+      options = options || {};
+      if (newId === oldId) { return; }
+      this.value = value;
+      this.valueChanged();
+      if (!options.silent) {
+        inEvent = {
+          originator: this,
+          value: value
+        };
+        this.doValueChange(inEvent);
+      }
+    },
+    pickerTapped: function (inSender, inEvent) {
+      if (inEvent.originator.name === "iconButton") {
+        this.receiveFocus();
+      }
     },
     valueChanged: function () {
       var value = this.getValue(),

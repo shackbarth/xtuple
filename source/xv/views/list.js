@@ -101,8 +101,8 @@ trailing:true white:true*/
         isMore = limit ?
           (offset + limit <= count) && (this.getCount() !== count) : false,
         rowsPerPage = 50 > count ? count : 50;
-      this.setIsMore(isMore);
-      this.setIsFetching(false);
+      this.isMore = isMore;
+      this.fetching = false;
 
       // Reset the size of the list
       this.setCount(count);
@@ -152,8 +152,8 @@ trailing:true white:true*/
             i;
           for (i = 0; i < query.orderBy.length; i++) {
             attr = query.orderBy[i].attribute;
-            aval = a.get(attr);
-            bval = b.get(attr);
+            aval = query.orderBy[i].descending ? b.get(attr) : a.get(attr);
+            bval = query.orderBy[i].descending ? a.get(attr) : b.get(attr);
             if (aval !== bval) {
               return aval > bval ? 1 : -1;
             }
@@ -167,8 +167,8 @@ trailing:true white:true*/
       // Manage lazy loading
       var max = this.getScrollBounds().maxTop - this.rowHeight * FETCH_TRIGGER,
         options = {};
-      if (this.getIsMore() && this.getScrollPosition() > max && !this.fetching) {
-        this.setIsFetching(true);
+      if (this.isMore && this.getScrollPosition() > max && !this.fetching) {
+        this.fetching = true;
         options.showMore = true;
         this.fetch(options);
       }
