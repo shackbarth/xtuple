@@ -101,8 +101,8 @@ trailing:true white:true*/
         isMore = limit ?
           (offset + limit <= count) && (this.getCount() !== count) : false,
         rowsPerPage = 50 > count ? count : 50;
-      this.setIsMore(isMore);
-      this.setIsFetching(false);
+      this.isMore = isMore;
+      this.fetching = false;
 
       // Reset the size of the list
       this.setCount(count);
@@ -167,8 +167,8 @@ trailing:true white:true*/
       // Manage lazy loading
       var max = this.getScrollBounds().maxTop - this.rowHeight * FETCH_TRIGGER,
         options = {};
-      if (this.getIsMore() && this.getScrollPosition() > max && !this.fetching) {
-        this.setIsFetching(true);
+      if (this.isMore && this.getScrollPosition() > max && !this.fetching) {
+        this.fetching = true;
         options.showMore = true;
         this.fetch(options);
       }
