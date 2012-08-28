@@ -55,6 +55,33 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // ADDRESS
+  //
+
+  enyo.kind({
+    name: "XV.AddressList",
+    kind: "XV.List",
+    label: "_addresses".loc(),
+    collection: "XM.AddressInfoCollection",
+    query: {orderBy: [
+      {attribute: 'country'},
+      {attribute: 'state'},
+      {attribute: 'city'},
+      {attribute: 'line1'}
+    ]},
+    parameterWidget: "XV.AddressInfoParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "XV.ListAttr", attr: "id", formatter: "formatAddress",
+          classes: "xv-addresslist-attr", allowHtml: true}
+      ]}
+    ],
+    formatAddress: function (value, view, model) {
+      return XM.Address.format(model, true);
+    }
+  });
+
+  // ..........................................................
   // CONTACT
   //
 

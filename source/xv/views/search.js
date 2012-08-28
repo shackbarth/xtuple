@@ -120,7 +120,7 @@ trailing:true white:true*/
       this.render();
     },
     setSearchText: function (searchText) {
-      this.$.searchInput.setValue(searchText);
+      this.$.searchInput.setValue(searchText || "");
     }
   });
 
