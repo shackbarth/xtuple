@@ -67,7 +67,9 @@
 \i xt/views/crmacctaddr.sql;
 \i xt/views/incdtinfo.sql;
 \i xt/views/nodeusr.sql;
+\i xt/views/opheadinfo.sql;
 \i xt/views/prjinfo.sql;
+\i xt/views/todoiteminfo.sql;
 
 -- delete system orms
 \i delete_system_orms.sql;

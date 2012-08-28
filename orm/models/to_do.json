@@ -674,7 +674,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ToDoInfo",
-    "table": "todoitem",
+    "table": "xt.todoiteminfo",
     "comment": "Todo Info Map",
     "privileges": {
       "all": {
@@ -765,6 +765,13 @@
           "isNested": true,
           "type": "AccountInfo",
           "column": "todoitem_crmacct_id"
+        }
+      },
+      {
+        "name": "priorityOrder",
+        "attr": {
+          "type": "Number",
+          "column": "priority_order"
         }
       }
     ],
