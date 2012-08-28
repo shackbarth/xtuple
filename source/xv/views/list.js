@@ -152,8 +152,8 @@ trailing:true white:true*/
             i;
           for (i = 0; i < query.orderBy.length; i++) {
             attr = query.orderBy[i].attribute;
-            aval = a.get(attr);
-            bval = b.get(attr);
+            aval = query.orderBy[i].descending ? b.get(attr) : a.get(attr);
+            bval = query.orderBy[i].descending ? a.get(attr) : b.get(attr);
             if (aval !== bval) {
               return aval > bval ? 1 : -1;
             }
