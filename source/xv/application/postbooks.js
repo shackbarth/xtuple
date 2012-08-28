@@ -26,17 +26,7 @@ trailing:true white:true*/
         ]},
         {name: "setup", label: "_setup".loc(), panels: [
           {name: "userAccountList", kind: "XV.UserAccountList"},
-          {name: "userAccountRoleList", kind: "XV.UserAccountRoleList"},
-          {name: "stateList", kind: "XV.StateList"},
-          {name: "countryList", kind: "XV.CountryList"},
-          {name: "priorityList", kind: "XV.PriorityList"},
-          {name: "honorificList", kind: "XV.HonorificList"},
-          {name: "incidentCategoryList", kind: "XV.IncidentCategoryList"},
-          {name: "incidentResoulutionList", kind: "XV.IncidentResolutionList"},
-          {name: "incidentSeverityList", kind: "XV.IncidentSeverityList"},
-          {name: "opportunitySourceList", kind: "XV.OpportunitySourceList"},
-          {name: "opportunityStageList", kind: "XV.OpportunityStageList"},
-          {name: "opportunityTypeList", kind: "XV.OpportunityTypeList"}
+          {name: "userAccountRoleList", kind: "XV.UserAccountRoleList"}
         ]}
       ]
     },
@@ -95,7 +85,36 @@ trailing:true white:true*/
 
   // Class methods
   enyo.mixin(XV.Postbooks, {
-    addModule: function (module, index) {
+    /**
+      Add panels to a module. If any are found to already
+      exist by the same name they will be ignored.
+      
+      @param {String} Module name
+      @param {Array} Panels
+    */
+    appendPanels: function (moduleName, panels) {
+      var modules = this.prototype.published.modules,
+        module = _.find(modules, function (mod) {
+          return mod.name === moduleName;
+        }),
+        existing = _.pluck(module, "name"),
+        i;
+      for (i = 0; i < panels.length; i++) {
+        if (!_.contains(existing, panels[i].name)) {
+          module.panels.push(panels[i]);
+        }
+      }
+    },
+    
+    /**
+      Insert a new `module` at `index`. If index is
+      not defined the module will be appended to the
+      end of the menu.
+      
+      @param {Object} Module
+      @param {Number} Index
+    */
+    insertModule: function (module, index) {
       var modules = this.prototype.published.modules,
         count = modules.length;
       index = index || count;
