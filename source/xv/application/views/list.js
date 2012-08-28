@@ -67,7 +67,8 @@ trailing:true white:true*/
       {attribute: 'country'},
       {attribute: 'state'},
       {attribute: 'city'},
-      {attribute: 'line1'}
+      {attribute: 'line1'},
+      {attribute: 'id'}
     ]},
     parameterWidget: "XV.AddressInfoParameters",
     components: [
