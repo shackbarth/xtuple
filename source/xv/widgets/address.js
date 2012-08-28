@@ -10,19 +10,28 @@ regexp:true, undef:true, trailing:true, white:true */
     classes: "xv-addresswidget",
     published: {
       attr: null,
-      value: null
+      value: null,
+      list: "XV.AddressList"
     },
     events: {
+      onSearch: "",
       onValueChange: ""
     },
     handlers: {
       onkeyup: "keyUp"
     },
     components: [
-      {kind: "enyo.TextArea", name: "viewer", showing: true, fit: true,
-        tag: 'textarea rows="5" readonly=readonly',
+      {name: "viewer", showing: true, fit: true, allowHtml: true,
         classes: "xv-addresswidget-viewer", placeholder: "_none".loc()},
-      {kind: "onyx.Button", content: "_edit".loc(), ontap: "edit", onkeyup: "buttonKeyUp"},
+      {kind: "FittableColumns", classes: "xv-addresswidget-buttons",
+        components: [
+        {kind: "onyx.Button", name: "editButton", content: "_edit".loc(),
+          ontap: "edit", onkeyup: "editButtonKeyUp",
+          classes: "xv-addresswidget-button"},
+        {kind: "onyx.Button", name: "searchButton", content: "_search".loc(),
+          ontap: "search", onkeyup: "searchButtonKeyUp",
+          classes: "xv-addresswidget-button"}
+      ]},
       {kind: "onyx.Popup", name: "editor", onHide: "editorHidden",
         classes: "xv-addresswidget-editor", modal: true, floating: true,
         centered: true, scrim: true, components: [
@@ -77,14 +86,6 @@ regexp:true, undef:true, trailing:true, white:true */
           classes: "onyx-blue"}
       ]}
     ],
-    buttonKeyUp: function (inSender, inEvent) {
-      // Return or space bar activates button
-      if (inEvent.keyCode === 13 ||
-         (inEvent.keyCode === 32)) {
-        this.edit();
-      }
-      return true;
-    },
     countryChanged: function (inSender, inEvent) {
       var country = this.$.country.getValue();
       this.inputChanged(inSender, inEvent);
@@ -92,9 +93,33 @@ regexp:true, undef:true, trailing:true, white:true */
       return true;
     },
     done: function () {
+      var siblings,
+        i,
+        next = false;
+      if (!this._nextWidget) {
+        // Find next widget to shift focus to
+        siblings = this.parent.children;
+        for (i = 0; i < siblings.length; i++) {
+          if (next) {
+            if (siblings[i].focus) {
+              this._nextWidget = siblings[i];
+              break;
+            }
+          }
+          if (siblings[i] === this) { next = true; }
+        }
+      }
       this._popupDone = true;
       this.$.editor.hide();
-      this.$.viewer.focus();
+      if (this._nextWidget) { this._nextWidget.focus(); }
+    },
+    editButtonKeyUp: function (inSender, inEvent) {
+      // Return or space bar activates button
+      if (inEvent.keyCode === 13 ||
+         (inEvent.keyCode === 32)) {
+        this.edit();
+      }
+      return true;
     },
     inputChanged: function (inSender, inEvent) {
       var value = this.getValue(),
@@ -132,6 +157,25 @@ regexp:true, undef:true, trailing:true, white:true */
         this.edit();
       }
     },
+    search: function () {
+      var that = this,
+        list = this.getList(),
+        callback = function (value) {
+          that.setValue(value);
+        };
+      this.doSearch({
+        list: list,
+        callback: callback
+      });
+    },
+    searchButtonKeyUp: function (inSender, inEvent) {
+      // Return or space bar activates button
+      if (inEvent.keyCode === 13 ||
+         (inEvent.keyCode === 32)) {
+        this.search();
+      }
+      return true;
+    },
     setValue: function (value, options) {
       var inEvent,
         oldId = this.value ? this.value.id : null,
@@ -162,7 +206,7 @@ regexp:true, undef:true, trailing:true, white:true */
         state = value.get('state') || "",
         postalCode = value.get('postalCode') || "",
         country = value.get('country') || "",
-        fmt = XM.Address.format(value);
+        fmt = XM.Address.format(value, true);
       this.$.line1.setValue(line1);
       this.$.line2.setValue(line2);
       this.$.line3.setValue(line3);
@@ -170,7 +214,8 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.state.setValue(state);
       this.$.postalCode.setValue(postalCode);
       this.$.country.setValue(country);
-      this.$.viewer.setValue(fmt);
+      this.$.viewer.addRemoveClass("placeholder", !fmt);
+      this.$.viewer.setContent(fmt || '_none'.loc());
     }
 
   });

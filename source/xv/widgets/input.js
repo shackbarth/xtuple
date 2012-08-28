@@ -31,6 +31,9 @@ regexp:true, undef:true, trailing:true, white:true */
     disabledChanged: function () {
       this.$.input.setDisabled(this.getDisabled());
     },
+    focus: function () {
+      this.$.input.focus();
+    },
     inputChanged: function (inSender, inEvent) {
       var input = this.$.input.getValue(),
         value = this.validate(input);

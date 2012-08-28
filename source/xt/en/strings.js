@@ -38,6 +38,7 @@ XT.stringsFor("en_US", {
   "_address2": "Address2",
   "_addressCharacteristic": "Address Characteristic",
   "_addressComment": "Address Comment",
+  "_addresses": "Addresses",
   "_advancedSearch": "Advanced Search",
   "_alarms": "Alarms",
   "_altEmphasisColor": "Alt Emphasis Color",

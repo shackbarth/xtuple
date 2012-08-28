@@ -43,6 +43,36 @@ trailing:true white:true*/
       {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
     ]
   });
+  
+  // ..........................................................
+  // ADDRESS
+  //
+
+  enyo.kind({
+    name: "XV.AddressInfoParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_address".loc()},
+      {attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {label: "_street".loc(), attr: ["line1", "line2", "line3"]},
+      {label: "_city".loc(), attr: "city"},
+      {label: "_postalCode".loc(), attr: "postalCode"},
+      {label: "_state".loc(), attr: "state"},
+      {label: "_country".loc(), attr: "country"}
+    ]
+  });
 
   // ..........................................................
   // CONTACT

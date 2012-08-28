@@ -528,13 +528,18 @@ body {
 
 /*********XV WIDGETS***********/
 
+/* AddressWidget.scss */
 .xv-addresswidget {
   background-color: white;
   padding: 4px;
   .xv-addresswidget-viewer {
     border: 0px;
     font-size: medium;
-    readonly: readonly;
+    display: inline;
+    &.placeholder {
+      font-style: italic;
+      color: #93a1a1;
+    }
   }
 }
 
@@ -555,6 +560,14 @@ body {
   width: 100%;
 }
 
+.xv-addresswidget-button {
+  margin-right: 4px;
+}
+
+.xv-addresswidget-buttons {
+  margin-top: 4px;
+}
+
 .xv-addresswidget-editor-header {
   padding: 4px;
 }
@@ -565,6 +578,16 @@ body {
   padding-right: 16px;
 }
 
+.xv-addresslist-attr {
+  padding: 5px;
+  font-size: 13px;
+  white-space: normal;
+  overflow: auto;
+  color: black;
+  background-color: white;
+}
+
+/* Combobox.scss */
 .xv-combobox {
   height: 24px;
   width: 205px;
@@ -584,6 +607,7 @@ body {
   position: relative;
 }
 
+/* Dropdown.scss */
 .xv-dropdownwidget {
   background-color: white;
 }
