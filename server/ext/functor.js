@@ -4,11 +4,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 (function () {
   "use strict";
-  
-  var _ = X._, _path = X.path;
-  
-  X.Functor = X.Object.extend({
 
+  var _ = X._, _path = X.path;
+
+  /**
+    Functor
+
+    @class
+  */
+  X.Functor = X.Object.extend(/** @lends X.Functor */{
+
+    /**
+      Initializes functor from handles
+    */
     init: function () {
       var handles = this.get("handles");
       if (X.typeOf(handles) !== X.T_ARRAY) handles = [handles];
@@ -17,27 +25,27 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         X.functorMap[handle] = this;
       }, this);
     },
-  
+
     handle: function (payload, session) {},
-  
+
     handles: null,
 
     className: "X.Functor"
   });
-  
+
   X.run(function () {
     var path, files;
-    
+
     if (!X.functorsDirectory) return;
-    
+
     path = _path.join(X.basePath, X.functorsDirectory);
-    
+
     X.functors = [];
     X.functorMap = {};
-    
+
     X.log("Loading available functors from %@".f(
       X.shorten(path, 5)));
-    
+
     files = X.directoryFiles(path, {extension: ".js", fullPath: true});
     _.each(files, function (file) {
       require(file);

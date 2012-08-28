@@ -4,10 +4,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 (function () {
   "use strict";
-  
+
   var _ = X._, _path = X.path;
-  
-  X.Route = X.Object.extend({
+
+  /**
+    A route is a request handler, or maybe the mapping of a path to a handler
+
+    @class
+   */
+  X.Route = X.Object.extend(/** @lends X.Route */{
+    /**
+      Init.
+
+     */
     init: function () {
       //X.debug("X.Route.init(%@)".f(this.get("className")));
       var handles = this.handles, regex, tmp = [];
@@ -23,24 +32,36 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       if (tmp.length > 0) handles = handles.concat(tmp);
       this.handles = handles;
     },
+
+    /**
+      Handle.
+
+      @type {Function}
+     */
     handle: function (xtr) {},
+
+    /**
+      Array of paths that this handler can deal with.
+
+      @type {Array}
+     */
     handles: []
   });
-  
+
   X.run(function () {
     var path, files;
 
     if (!X.routesDirectory) return;
-    
+
     path = _path.join(X.basePath, X.routesDirectory);
 
     X.log("Loading available routes from %@".f(
       X.shorten(path, 5)));
-    
+
     files = X.directoryFiles(path, {extension: ".js", fullPath: true});
     _.each(files, function (file) {
       require(file);
     });
   });
-  
+
 }());

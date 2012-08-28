@@ -12,11 +12,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   */
   X.Function = {};
 
-  X.mixin(X.Function, {
+  X.mixin(X.Function, /** @lends X.Function */{
     /**
       Sets the isProperty value of the function in the parameters to true.
 
-      @method X.Function.property
       @param {Function} func The function
       @returns {Function} func The function from the parameters
     */
@@ -28,7 +27,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     /**
       Attaches an observer for an event onto a function.
 
-      @method X.Function.observes
       @param {Function} func The function
       @param {Object} event The event
       @returns {Function} func The function from the parameters

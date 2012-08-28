@@ -74,6 +74,7 @@ X = {};
   /**
     Adds a function to X. Used internally.
 
+   @private
    @param {Boolean} override Dictates whether to override pre-existing function
       if it already exists.
    @param [base] Defaults to this if not specified.

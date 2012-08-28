@@ -7,10 +7,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   var _fs = X.fs, _path = X.path;
 
-  X.mixin({
+  X.mixin(/** @lends X */ {
 
+    /**
+      Base path.
+
+      @type {String}
+     */
     basePath: process.cwd(),
 
+    /**
+      Directory Files.
+
+      @param {String} path
+      @param {Object} options
+      @param {Function} callback
+     */
     directoryFiles: function (path, options, callback) {
       var files;
       if (options) {
@@ -49,6 +61,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     },
 
+    /**
+      Shortens path.
+
+      @param {String} path
+      @param {Number} max
+     */
     shorten: function (path, max) {
       if (X.none(max)) max = 3;
       if (X.none(path) || X.typeOf(path) !== X.T_STRING) return path;
