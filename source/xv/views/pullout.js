@@ -57,7 +57,7 @@ white:true*/
     setupHistoryItem: function (inSender, inEvent) {
       var historyItem = inEvent.item.$.historyItem;
       var historyData = XT.getHistory()[inEvent.index];
-      var modelTypeShow = ("_" + XV.util.stripModelNamePrefix(historyData.modelType).camelize()).loc();
+      var modelTypeShow = ("_" + historyData.modelType.afterDot().camelize()).loc();
       this.createComponent({
         container: historyItem,
         classes: "item enyo-border-box",

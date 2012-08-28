@@ -3,6 +3,16 @@
 */
 XT.String = {
 
+  /** 
+    Return the text after the first dot.
+    
+    @param {String}
+    @returns {String}
+  */
+  afterDot: function (str) {
+    return str.replace(/\w+\./i, '');
+  },
+
   /**
      Change sting with underscores '_' to camel case.
 
