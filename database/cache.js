@@ -11,6 +11,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
    Functionality for dealing with Mongo
 
    @class
+   @extends X.Object
   */
   X.Cache = X.Object.extend(/** @lends X.Cache */{
 

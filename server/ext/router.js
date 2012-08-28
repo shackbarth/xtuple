@@ -11,6 +11,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Sends a request to the appropriate request handler.
 
     @class
+    @extends X.Object
    */
   X.Router = X.Object.extend(/** @lends X.Router */{
     /**

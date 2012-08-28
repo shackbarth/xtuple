@@ -11,6 +11,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Functor
 
     @class
+    @extends X.Object
   */
   X.Functor = X.Object.extend(/** @lends X.Functor */{
 

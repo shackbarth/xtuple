@@ -11,6 +11,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     A route is a request handler, or maybe the mapping of a path to a handler
 
     @class
+    @extends X.Object
    */
   X.Route = X.Object.extend(/** @lends X.Route */{
     /**

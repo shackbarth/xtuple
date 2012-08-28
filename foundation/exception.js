@@ -18,6 +18,7 @@ issue = function () {
     The exception object.
 
    @class
+   @type X.Object
    */
   X.exception = X.Object.create(/** @lends X.exception */{
 

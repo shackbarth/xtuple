@@ -6,6 +6,7 @@ var _fs     = require('fs');
  Deals with logging.
 
  @class
+ @extends X.Object
 */
 X.Logger = X.Object.extend(/** @lends X.Logger */ {
 

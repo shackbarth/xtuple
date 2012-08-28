@@ -12,6 +12,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     and abstracts the details.
 
     @class
+    @extends X.Object
    */
   X.Response = X.Object.extend({
     init: function () {

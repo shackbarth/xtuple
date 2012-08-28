@@ -15,6 +15,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     The node server.
 
     @class
+    @extends X.Object
    */
   X.Server = X.Object.extend(/** @lends X.Server */{
     autoStart: false,

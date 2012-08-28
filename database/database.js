@@ -11,6 +11,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   Functionality for dealing with postgres
 
   @class
+  @extends X.Object
  */
   X.Database = X.Object.extend(/** @lends X.Database */{
     poolSize: 12,
