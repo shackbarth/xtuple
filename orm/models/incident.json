@@ -1065,6 +1065,13 @@
           "type": "Date",
           "column": "incdt_updated"
         }
+      },
+      {
+        "name": "priorityOrder",
+        "attr": {
+          "type": "Number",
+          "column": "incdtpriority_order"
+        }
       }
     ],
     "isSystem": true

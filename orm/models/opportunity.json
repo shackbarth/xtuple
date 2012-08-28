@@ -664,7 +664,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "OpportunityInfo",
-    "table": "ophead",
+    "table": "xt.opheadinfo",
     "comment": "Opporunity Info Map",
     "privileges": {
       "all": {
@@ -771,6 +771,13 @@
           "type": "UserAccountInfo",
           "column": "ophead_username",
           "inverse": "username"
+        }
+      },
+      {
+        "name": "priorityOrder",
+        "attr": {
+          "type": "Number",
+          "column": "priority_order"
         }
       }
     ],

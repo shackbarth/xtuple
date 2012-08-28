@@ -715,6 +715,7 @@ select xt.install_js('XT','Data','xtuple', $$
         type = recordType.afterDot(),
         table = (nameSpace + '.' + type).decamelize(),
         orm = XT.Orm.fetch(nameSpace, type),
+        key = XT.Orm.primaryKey(orm),
         limit = rowLimit ? 'limit ' + rowLimit : '',
         offset = rowOffset ? 'offset ' + rowOffset : '',
         recs = null,
@@ -725,7 +726,8 @@ select xt.install_js('XT','Data','xtuple', $$
         parts,
         list = [],
         clause = this.buildClause(nameSpace, type, parameters),
-        sql = "select * from {table} where {conditions} {orderBy} {limit} {offset}";
+        sql = "select * from {table} where {key} in " +
+              "(select {key} from {table} where {conditions} {orderBy} {limit} {offset})";
 
       /* Massage ordeBy with quoted identifiers */
       if (orderBy) {
@@ -768,7 +770,8 @@ select xt.install_js('XT','Data','xtuple', $$
       if(!this.checkPrivileges(nameSpace, type)) throw new Error("Access Denied.");
 
       /* query the model */
-      sql = sql.replace('{table}', table)
+      sql = sql.replace(/{table}/g, table)
+               .replace(/{key}/g, key)
                .replace('{conditions}', clause.conditions)
                .replace('{orderBy}', orderBy)
                .replace('{limit}', limit)
