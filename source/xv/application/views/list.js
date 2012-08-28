@@ -15,7 +15,7 @@ trailing:true white:true*/
     label: "_accounts".loc(),
     collection: "XM.AccountInfoCollection",
     query: {orderBy: [
-      {attribute: 'number' }
+      {attribute: 'number'}
     ]},
     parameterWidget: "XV.AccountInfoParameters",
     workspace: "XV.AccountWorkspace",
@@ -204,6 +204,7 @@ trailing:true white:true*/
     kind: "XV.List",
     collection: "XM.OpportunityInfoCollection",
     query: {orderBy: [
+      {attribute: 'priorityOrder'},
       {attribute: 'targetClose'},
       {attribute: 'name'},
       {attribute: 'id'}
@@ -344,6 +345,7 @@ trailing:true white:true*/
     collection: "XM.ToDoInfoCollection",
     parameterWidget: "XV.ToDoInfoParameters",
     query: {orderBy: [
+      {attribute: 'priorityOrder'},
       {attribute: 'dueDate'},
       {attribute: 'name'}
     ]},
