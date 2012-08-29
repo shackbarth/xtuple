@@ -221,7 +221,7 @@ trailing:true white:true*/
     },
     statusChanged: function (model, status, options) {
       options = options || {};
-      var inEvent = {model: model},
+      var inEvent = {model: model, status: status},
         attrs = model.getAttributeNames(),
         changes = {},
         i;
@@ -299,6 +299,12 @@ trailing:true white:true*/
             style: "float: right;"}
         ]},
         {name: "header", classes: "xv-workspace-header"},
+        {kind: "onyx.Popup", name: "spinnerPopup", centered: true,
+          modal: true, floating: true, scrim: true,
+          onHide: "popupHidden", components: [
+          {kind: "onyx.Spinner"},
+          {content: "_loading".loc() + "..."}
+        ]},
         {kind: "onyx.Popup", name: "unsavedPopup", centered: true,
           modal: true, floating: true, scrim: true,
           onHide: "popupHidden", components: [
@@ -444,7 +450,6 @@ trailing:true white:true*/
         } else {
           this.$.header.hide();
         }
-        this.render();
       }
 
       // Build menu by finding all panels
@@ -462,7 +467,7 @@ trailing:true white:true*/
     statusChanged: function (inSender, inEvent) {
       var model = inEvent.model,
         K = XM.Model,
-        status = model.getStatus(),
+        status = inEvent.status,
         isNotReady = (status !== K.READY_CLEAN && status !== K.READY_DIRTY),
         isEditable = (model.canUpdate() && !model.isReadOnly()),
         canNotSave = (!model.isDirty() || !isEditable);
@@ -472,6 +477,16 @@ trailing:true white:true*/
       this.$.applyButton.setDisabled(canNotSave);
       this.$.saveAndNewButton.setDisabled(canNotSave);
       this.$.saveButton.setDisabled(canNotSave);
+
+      // Toggle spinner popup
+      if (status & K.BUSY) {
+        this._popupDone = false;
+        this.render();
+        this.$.spinnerPopup.show();
+      } else if (status & K.READY) {
+        this._popupDone = true;
+        this.$.spinnerPopup.hide();
+      }
     },
     titleChanged: function (inSender, inEvent) {
       var title = inEvent.title || "";

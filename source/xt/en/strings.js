@@ -210,6 +210,7 @@ XT.stringsFor("en_US", {
   "_lineNumber": "Line Number",
   "_lines": "Lines",
   "_listPrice": "List Price",
+  "_loading": "Loading",
   "_locale": "Locale",
   "_logout": "Logout",
   "_mainAddress": "Main Address",
