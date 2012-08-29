@@ -505,7 +505,9 @@ white:true*/
       options = options || {};
       var klass,
         K = XM.Model,
-        status = this.getStatus();
+        status = this.getStatus(),
+        relations = this.relations || [],
+        i;
 
       // Validate
       if (_.isEmpty(this.recordType)) { throw 'No record type defined'; }
@@ -545,6 +547,12 @@ white:true*/
       this.on('change', this.didChange);
       this.on('error', this.didError);
       this.on('destroy', this.didDestroy);
+      for (i = 0; i < relations.length; i++) {
+        if (relations[i].type === Backbone.HasMany &&
+            relations[i].includeInJSON === true) {
+          this.on('add:' + relations[i].key, this.didChange);
+        }
+      }
     },
 
     /**
