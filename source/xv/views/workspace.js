@@ -101,7 +101,7 @@ trailing:true white:true*/
         ext,
         i;
       for (i = 0; i < extensions.length; i++) {
-        ext = this.extensions[i];
+        ext = _.clone(this.extensions[i]);
         // Resolve name of container to the instance
         if (ext.container && typeof ext.container === 'string') {
           ext.container = this.$[ext.container];
