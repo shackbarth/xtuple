@@ -787,8 +787,8 @@ white:true*/
       }
 
       // Percolate changes up to parent when applicable
-      if (parent) {
-        parent.trigger('change', this, status, options);
+      if (parent && this.isDirty()) {
+        parent.trigger('change', this, options);
       }
       this.release();
       this.trigger('statusChange', this, status, options);
@@ -1393,25 +1393,6 @@ white:true*/
     options.silent = false;
 
     func.call(this, related, options);
-  };
-
-  // Reimplement with generic `change` trigger to parent relations
-  Backbone.HasMany.prototype.handleAddition = function (model, coll, options) {
-    coll = coll || {};
-    if (!(model instanceof Backbone.Model)) { return; }
-    var that = this;
-    options = this.sanitizeOptions(options);
-    _.each(this.getReverseRelations(model), function (relation) {
-      relation.addRelated(this.instance, options);
-    }, this);
-
-    // Only trigger 'add' once the newly added model is initialized (so, has it's relations set up)
-    Backbone.Relational.eventQueue.add(function () {
-      if (!options.silentChange) {
-        that.instance.trigger('add:' + that.key, model, that.related, options);
-        that.instance.trigger('change', model, that.related, options);
-      }
-    });
   };
 
 }());
