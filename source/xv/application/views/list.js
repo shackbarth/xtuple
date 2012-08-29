@@ -128,7 +128,8 @@ trailing:true white:true*/
       ]}
     ],
     formatFirstName: function (value, view, model) {
-      view.addRemoveClass("bold", _.isEmpty(model.get('lastName').trim()));
+      var lastName = (model.get('lastName') || "").trim();
+      view.addRemoveClass("bold", _.isEmpty(lastName));
       return value;
     },
     sendMail: function (inSender, inEvent) {
