@@ -2,10 +2,6 @@
 /**
 */
 _.extend(String.prototype, {
-  afterDot: function() {
-    var args = XT.$A(arguments);
-    return XT.String.afterDot(this, args);
-  },
   camelize: function() {
     var args = XT.$A(arguments);
     return XT.String.camelize(this, args);
@@ -28,5 +24,9 @@ _.extend(String.prototype, {
   },
   pluralize: function() {
     return owl.pluralize(this);
+  },
+  suffix: function() {
+    var args = XT.$A(arguments);
+    return XT.String.suffix(this, args);
   }
 });
