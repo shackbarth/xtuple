@@ -234,6 +234,9 @@ trailing:true white:true*/
     handlers: {
       onSetupItem: "setupItem"
     },
+    getModel: function (index) {
+      return this._collection.models[index];
+    },
     lengthChanged: function () {
       var count = this.readyModels().length,
         rowsPerPage = 50 > count ? count : 50;
