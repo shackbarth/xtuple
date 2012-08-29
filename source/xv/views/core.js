@@ -8,16 +8,18 @@ trailing:true white:true*/
   // Class methods
   enyo.mixin(XV, {
     /**
-      Add component view(s) to a workspace class.
+      Add component or array of component view(s) to a workspace class.
 
       @param {String} Workspace name
-      @param {Object} Component(s)
+      @param {Object|Array} Component(s)
     */
-    appendExtension: function (workspace, component) {
+    appendExtension: function (workspace, extension) {
       var Workspace = XT.getObjectByName(workspace),
         extensions = Workspace.prototype.extensions || [];
-      extensions.push(component);
-      Workspace.prototype.extensions = extensions;
+      if (!_.isArray(extension)) {
+        extension = [extension];
+      }
+      Workspace.prototype.extensions = extensions.concat(extension);
     }
 
   });

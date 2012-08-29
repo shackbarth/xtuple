@@ -454,9 +454,10 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
           {kind: "XV.UserAccountWidget", attr: "owner"},
           {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+          {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
+          {kind: "XV.ContactWidget", attr: "contact"},
           {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-          {kind: "XV.AccountWidget", attr: "account"},
-          {kind: "XV.ContactWidget", attr: "contact"}
+          {kind: "XV.AccountWidget", attr: "account"}
         ]},
         {kind: "XV.Groupbox", title: "_notes".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},

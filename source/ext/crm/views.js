@@ -5,13 +5,20 @@ trailing:true white:true*/
 
 (function () {
 
-  var extension = {
-    container: "mainGroup",
-    kind: "XV.IncidentWidget",
-    attr: "incident"
-  };
+  // ..........................................................
+  // TO DO
+  //
+
+  var extensions = [
+    {kind: "XV.IncidentWidget", container: "mainGroup", attr: "incident"},
+    {kind: "XV.OpportunityWidget", container: "mainGroup", attr: "opportunity"}
+  ];
   
-  XV.appendExtension("XV.ToDoWorkspace", extension);
+  XV.appendExtension("XV.ToDoWorkspace", extensions);
+
+  // ..........................................................
+  // APPLICATION
+  //
 
   var panels = [
     {name: "stateList", kind: "XV.StateList"},

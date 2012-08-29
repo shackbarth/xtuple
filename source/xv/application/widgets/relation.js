@@ -161,6 +161,16 @@ regexp:true, undef:true, trailing:true, white:true */
     nameAttribute: "description1",
     descripAttribute: "description2"
   });
+  
+  // ..........................................................
+  // OPPORTUNITY
+  //
+
+  enyo.kind({
+    name: "XV.OpportunityWidget",
+    kind: "XV.RelationWidget",
+    list: "XV.OpportunityList"
+  });
 
   // ..........................................................
   // USER ACCOUNT
