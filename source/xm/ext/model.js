@@ -306,8 +306,11 @@ white:true*/
     },
 
     /*
-      Reimplemented to handle state change.
-
+      Reimplemented to handle status changes. Will also automatically
+      fetch related models where they are not already loaded unless
+      the`fetchRelated: false` option is passed
+      
+      @param {Object} Options
       @returns {XT.Request} Request
     */
     fetch: function (options) {
@@ -321,6 +324,11 @@ white:true*/
         options.cascade = true; // Update status of children
         options.success = function (resp) {
           model.setStatus(K.READY_CLEAN, options);
+          if (options.fetchRelated !== false) {
+            _.each(model.relations, function (relation) {
+              model.fetchRelated(relation.key);
+            });
+          }
           XT.log('Fetch successful');
           if (success) { success(model, resp, options); }
         };
