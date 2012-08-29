@@ -5,22 +5,15 @@ trailing:true white:true*/
 
 (function () {
 
-  // ..........................................................
-  // TO DO
-  //
-
-  var extensions = [
-    {kind: "XV.IncidentWidget", container: "mainGroup", attr: "incident"},
-    {kind: "XV.OpportunityWidget", container: "mainGroup", attr: "opportunity"}
-  ];
-  
-  XV.appendExtension("XV.ToDoWorkspace", extensions);
+  var extensions,
+    panels,
+    module;
 
   // ..........................................................
   // APPLICATION
   //
 
-  var panels = [
+  panels = [
     {name: "stateList", kind: "XV.StateList"},
     {name: "countryList", kind: "XV.CountryList"},
     {name: "priorityList", kind: "XV.PriorityList"},
@@ -32,10 +25,10 @@ trailing:true white:true*/
     {name: "opportunityStageList", kind: "XV.OpportunityStageList"},
     {name: "opportunityTypeList", kind: "XV.OpportunityTypeList"}
   ];
-  
+
   XV.Postbooks.appendPanels("setup", panels);
 
-  var module = {
+  module = {
     name: "crm",
     label: "_crm".loc(),
     panels: [
@@ -49,5 +42,26 @@ trailing:true white:true*/
   };
 
   XV.Postbooks.insertModule(module, 1);
+
+  // ..........................................................
+  // INCIDENT
+  //
+
+  extensions = [
+    {kind: "XV.ProjectWidget", container: "mainGroup", attr: "project"}
+  ];
+
+  XV.appendExtension("XV.IncidentWorkspace", extensions);
+
+  // ..........................................................
+  // TO DO
+  //
+
+  extensions = [
+    {kind: "XV.IncidentWidget", container: "mainGroup", attr: "incident"},
+    {kind: "XV.OpportunityWidget", container: "mainGroup", attr: "opportunity"}
+  ];
+
+  XV.appendExtension("XV.ToDoWorkspace", extensions);
 
 }());

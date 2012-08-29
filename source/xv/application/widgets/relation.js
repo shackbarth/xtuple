@@ -171,6 +171,16 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.RelationWidget",
     list: "XV.OpportunityList"
   });
+  
+  // ..........................................................
+  // PROJECT
+  //
+
+  enyo.kind({
+    name: "XV.ProjectWidget",
+    kind: "XV.RelationWidget",
+    list: "XV.ProjectList"
+  });
 
   // ..........................................................
   // USER ACCOUNT
