@@ -22,6 +22,8 @@
 \i xt/functions/any_text.sql;
 \i xt/functions/begins_with.sql;
 \i xt/functions/commit_record.sql;
+\i xt/functions/cntctmerge.sql;
+\i xt/functions/cntctrestore.sql;
 \i xt/functions/create_table.sql;
 \i xt/functions/createuser.sql;
 \i xt/functions/dispatch.sql;
