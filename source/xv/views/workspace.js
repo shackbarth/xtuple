@@ -439,11 +439,6 @@ trailing:true white:true*/
           callback: callback
         };
         workspace = this.createComponent(workspace);
-        if (id) {
-          workspace.fetch(id);
-        } else {
-          workspace.newRecord();
-        }
         headerAttrs = workspace.getHeaderAttrs() || [];
         if (headerAttrs.length) {
           this.$.header.show();
@@ -451,9 +446,11 @@ trailing:true white:true*/
           this.$.header.hide();
         }
         this.render();
-        // Render must be complete before showing spinner
-        this._init = true;
-        if (this._spinnerShow) { this.spinnerShow(); }
+        if (id) {
+          workspace.fetch(id);
+        } else {
+          workspace.newRecord();
+        }
       }
 
       // Build menu by finding all panels
@@ -473,11 +470,6 @@ trailing:true white:true*/
       this.$.spinnerPopup.hide();
     },
     spinnerShow: function () {
-      // First render must be complete before showing spinner
-      if (!this._init) {
-        this._spinnerShow = true;
-        return;
-      }
       this._popupDone = false;
       this.$.spinnerPopup.show();
     },
