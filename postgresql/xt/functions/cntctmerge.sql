@@ -4,9 +4,10 @@ create or replace function xt.cntctmerge(source_id integer, target_id integer, p
 declare
   result boolean;
 begin
-  alter table comment disable trigger comment_did_change;
+
+  perform setUserPreference(getEffectiveXtUser(),'editCommentsException', 't');
   result = public.cntctmerge(source_id, target_id, purge);
-  alter table comment enable trigger comment_did_change;
+  perform setUserPreference(getEffectiveXtUser(),'editCommentsException', 'f');
   return result;
 end;
 $$ language 'plpgsql';
