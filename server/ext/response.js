@@ -13,6 +13,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     @class
     @extends X.Object
+    @see X.HTTPResponse
+    @see X.SocketResponse
    */
   X.Response = X.Object.extend({
     init: function () {
@@ -25,6 +27,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
   });
 
+  /**
+    Implementation of X.Reponse for HTTP requests
+
+    @class
+    @see X.Response
+   */
   X.HTTPResponse = {
 
     isReady: false,
@@ -128,6 +136,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   };
 
+  /**
+    Implementation of X.Reponse for socket requests
+
+    @class
+    @see X.Response
+   */
   X.SocketResponse = {
 
     useSocket: true,
