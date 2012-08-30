@@ -66,6 +66,10 @@ white:true*/
         success: _.bind(this.didComplete, this)
       };
       XM.honorifics = new XM.HonorificCollection();
+      options.query = {};
+      options.query.orderBy = [
+        {attribute: 'code'}
+      ];
       XM.honorifics.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
@@ -154,6 +158,10 @@ white:true*/
       var options = {
         success: _.bind(this.didComplete, this)
       };
+      options.query = {};
+      options.query.orderBy = [
+        {attribute: 'name'}
+      ];
       XM.countries = new XM.CountryCollection();
       XM.countries.fetch(options);
     },
@@ -166,6 +174,10 @@ white:true*/
       var options = {
         success: _.bind(this.didComplete, this)
       };
+      options.query = {};
+      options.query.orderBy = [
+        {attribute: 'abbreviation'}
+      ];
       XM.states = new XM.StateCollection();
       XM.states.fetch(options);
     },

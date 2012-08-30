@@ -47,7 +47,7 @@ trailing:true white:true*/
           ]}
         ]},
         {name: "menuPanels", kind: "Panels", draggable: false, fit: true,
-          arrangerKind: "LeftRightArranger", margin: 0, components: [
+          margin: 0, components: [
           {name: "moduleMenu", kind: "List", touch: true,
               onSetupItem: "setupModuleMenuItem",
               components: [
@@ -67,7 +67,7 @@ trailing:true white:true*/
           {name: "search", kind: "onyx.InputDecorator", style: "float: right;",
             showing: false, components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
-              placeholder: "Search", onchange: "inputChanged"},
+              placeholder: "_search".loc(), onchange: "inputChanged"},
             {kind: "Image", src: "assets/search-input-search.png"}
           ]},
           {name: "newButton", kind: "onyx.Button", content: "_new".loc(),
@@ -88,31 +88,6 @@ trailing:true white:true*/
       } else {
         this.setMenuPanel(MODULE_MENU);
       }
-    },
-    create: function () {
-      this.inherited(arguments);
-      var modules = this.getModules() || [],
-        panels,
-        panel,
-        i,
-        n;
-
-      // Build panels
-      for (i = 0; i < modules.length; i++) {
-        panels = modules[i].panels || [];
-        for (n = 0; n < panels.length; n++) {
-
-          // Keep track of where this panel is being placed for later reference
-          panels[n].index = this.$.contentPanels.panelCount++;
-          panel = this.$.contentPanels.createComponent(panels[n]);
-          if (panel instanceof XV.List) {
-
-            // Bubble parameter widget up to pullout
-            this.doListAdded(panel);
-          }
-        }
-      }
-      this.$.moduleMenu.setCount(modules.length);
     },
     getSelectedModule: function (index) {
       return this._selectedModule;
@@ -170,6 +145,30 @@ trailing:true white:true*/
 
       // Bubble requset for workspace view, including the model id payload
       if (workspace) { this.doWorkspace({workspace: workspace, id: id}); }
+    },
+    modulesChanged: function () {
+      var modules = this.getModules() || [],
+        panels,
+        panel,
+        i,
+        n;
+
+      // Build panels
+      for (i = 0; i < modules.length; i++) {
+        panels = modules[i].panels || [];
+        for (n = 0; n < panels.length; n++) {
+
+          // Keep track of where this panel is being placed for later reference
+          panels[n].index = this.$.contentPanels.panelCount++;
+          panel = this.$.contentPanels.createComponent(panels[n]);
+          if (panel instanceof XV.List) {
+
+            // Bubble parameter widget up to pullout
+            this.doListAdded(panel);
+          }
+        }
+      }
+      this.$.moduleMenu.setCount(modules.length);
     },
     newRecord: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),

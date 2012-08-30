@@ -1,4 +1,5 @@
 enyo.depends(
+  "core.js",
   "list.js",
   "navigator.js",
   "pullout.js",

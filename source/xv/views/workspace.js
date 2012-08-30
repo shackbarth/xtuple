@@ -4,17 +4,23 @@ trailing:true white:true*/
 /*global XV:true, XM:true, _:true, onyx:true, enyo:true, XT:true */
 
 (function () {
+  var SAVE_APPLY = 1;
+  var SAVE_CLOSE = 2;
+  var SAVE_NEW = 3;
 
   enyo.kind({
     name: "XV.Workspace",
     kind: "FittableRows",
     published: {
       title: "_none".loc(),
+      headerAttrs: null,
       model: "",
       callback: null
     },
+    extensions: null,
     events: {
       onError: "",
+      onHeaderChange: "",
       onModelChange: "",
       onStatusChange: "",
       onTitleChange: "",
@@ -26,7 +32,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.Groupbox", components: [
+        {kind: "XV.Groupbox", name: "mainGroup", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", name: "name"},
           {kind: "XV.InputWidget", name: "description"}
@@ -91,6 +97,17 @@ trailing:true white:true*/
     },
     create: function () {
       this.inherited(arguments);
+      var extensions = this.extensions || [],
+        ext,
+        i;
+      for (i = 0; i < extensions.length; i++) {
+        ext = _.clone(this.extensions[i]);
+        // Resolve name of container to the instance
+        if (ext.container && typeof ext.container === 'string') {
+          ext.container = this.$[ext.container];
+        }
+        this.createComponent(ext);
+      }
       this.titleChanged();
       this.modelChanged();
     },
@@ -107,8 +124,30 @@ trailing:true white:true*/
       this.doError(inEvent);
     },
     fetch: function (id) {
+      var options = {};
+      options.id = id;
       if (!this._model) { return; }
-      this._model.fetch({id: id});
+      this._model.fetch(options);
+    },
+    headerValuesChanged: function () {
+      var headerAttrs = this.getHeaderAttrs() || [],
+        model = this._model,
+        header = "",
+        value,
+        attr,
+        i;
+      if (headerAttrs.length && model) {
+        for (i = 0; i < headerAttrs.length; i++) {
+          attr = headerAttrs[i];
+          if (_.contains(model.getAttributeNames(), attr)) {
+            value = model.get(headerAttrs[i]) || "";
+            header = header ? header + " " + value : value;
+          } else {
+            header = header ? header + " " + attr : attr;
+          }
+        }
+      }
+      this.doHeaderChange({originator: this, header: header });
     },
     isDirty: function () {
       return this._model ? this._model.isDirty() : false;
@@ -117,12 +156,16 @@ trailing:true white:true*/
       var model = this.getModel(),
         Klass = model ? XT.getObjectByName(model) : null,
         callback,
-        that = this;
+        that = this,
+        headerAttrs = this.getHeaderAttrs() || [],
+        i,
+        attr,
+        observers = "";
 
       // Clean up
       if (this._model) {
-        if (this._model.isNew()) { model.destroy(); }
         this._model.off();
+        if (this._model.isNew()) { this._model.destroy(); }
         delete this._model;
       }
       if (!Klass) { return; }
@@ -142,6 +185,15 @@ trailing:true white:true*/
       this._model.on("change", this.attributesChanged, this);
       this._model.on("statusChange", this.statusChanged, this);
       this._model.on("error", this.error, this);
+      if (headerAttrs.length) {
+        for (i = 0; i < headerAttrs.length; i++) {
+          attr = headerAttrs[i];
+          if (_.contains(this._model.getAttributeNames(), attr)) {
+            observers = observers ? observers + " change:" + attr : "change:" + attr;
+          }
+        }
+        this._model.on(observers, this.headerValuesChanged, this);
+      }
     },
     newRecord: function () {
       this.modelChanged();
@@ -169,7 +221,7 @@ trailing:true white:true*/
     },
     statusChanged: function (model, status, options) {
       options = options || {};
-      var inEvent = {model: model},
+      var inEvent = {model: model, status: status},
         attrs = model.getAttributeNames(),
         changes = {},
         i;
@@ -179,7 +231,7 @@ trailing:true white:true*/
         XT.addToHistory(this.kind, model);
         this.doHistoryChange(this);
       }
-      
+
       // Update attributes
       for (i = 0; i < attrs.length; i++) {
         changes[attrs[i]] = true;
@@ -212,6 +264,8 @@ trailing:true white:true*/
     },
     handlers: {
       onError: "errorNotify",
+      onHeaderChange: "headerChanged",
+      onModelChange: "modelChanged",
       onStatusChange: "statusChanged",
       onTitleChange: "titleChanged"
     },
@@ -244,8 +298,15 @@ trailing:true white:true*/
             content: "_refresh".loc(), onclick: "requery",
             style: "float: right;"}
         ]},
+        {name: "header", classes: "xv-workspace-header"},
+        {kind: "onyx.Popup", name: "spinnerPopup", centered: true,
+          modal: true, floating: true, scrim: true,
+          onHide: "popupHidden", components: [
+          {kind: "onyx.Spinner"},
+          {content: "_loading".loc() + "..."}
+        ]},
         {kind: "onyx.Popup", name: "unsavedPopup", centered: true,
-          modal: true, floating: true, onShow: "popupShown",
+          modal: true, floating: true, scrim: true,
           onHide: "popupHidden", components: [
           {content: "_unsavedChanges".loc() },
           {tag: "br"},
@@ -255,7 +316,7 @@ trailing:true white:true*/
             classes: "onyx-blue"}
         ]},
         {kind: "onyx.Popup", name: "errorPopup", centered: true,
-          modal: true, floating: true, onShow: "popupShown",
+          modal: true, floating: true, scrim: true,
           onHide: "popupHidden", components: [
           {name: "errorMessage", content: "_error".loc()},
           {tag: "br"},
@@ -269,6 +330,7 @@ trailing:true white:true*/
       if (!options.force) {
         if (this.$.workspace.isDirty()) {
           this.$.unsavedPopup.close = true;
+          this._popupDone = false;
           this.$.unsavedPopup.show();
           return;
         }
@@ -291,6 +353,10 @@ trailing:true white:true*/
     errorOk: function () {
       this.$.errorPopup.hide();
     },
+    headerChanged: function (inSender, inEvent) {
+      this.$.header.setContent(inEvent.header);
+      return true;
+    },
     itemTap: function (inSender, inEvent) {
       var workspace = this.$.workspace,
         panel = this.getMenuItems()[inEvent.index],
@@ -311,8 +377,20 @@ trailing:true white:true*/
         }
       }
     },
+    modelChanged: function () {
+      if (this._saveState === SAVE_CLOSE) {
+        this.close();
+      } else if (this._saveState === SAVE_NEW) {
+        this.newRecord();
+      }
+    },
     newRecord: function () {
       this.$.workspace.newRecord();
+    },
+    popupHidden: function (inSender, inEvent) {
+      if (!this._popupDone) {
+        inEvent.originator.show();
+      }
     },
     requery: function (options) {
       options = options || {};
@@ -326,25 +404,16 @@ trailing:true white:true*/
       this.$.workspace.requery();
     },
     save: function (options) {
+      if (!this._saveState) { this._saveState = SAVE_APPLY; }
       this.$.workspace.save(options);
     },
-    saveAndNew: function () {
-      var that = this,
-        options = {},
-        success = function () {
-          that.newRecord();
-        };
-      options.success = success;
-      this.save(options);
-    },
     saveAndClose: function () {
-      var that = this,
-        options = {},
-        success = function () {
-          that.close();
-        };
-      options.success = success;
-      this.save(options);
+      this._saveState = SAVE_CLOSE;
+      this.save();
+    },
+    saveAndNew: function () {
+      this._saveState = SAVE_NEW;
+      this.save();
     },
     // menu
     setupItem: function (inSender, inEvent) {
@@ -358,7 +427,8 @@ trailing:true white:true*/
     },
     setWorkspace: function (workspace, id, callback) {
       var menuItems = [],
-        prop;
+        prop,
+        headerAttrs;
       if (workspace) {
         this.destroyWorkspace();
         workspace = {
@@ -374,7 +444,16 @@ trailing:true white:true*/
         } else {
           workspace.newRecord();
         }
+        headerAttrs = workspace.getHeaderAttrs() || [];
+        if (headerAttrs.length) {
+          this.$.header.show();
+        } else {
+          this.$.header.hide();
+        }
         this.render();
+        // Render must be complete before showing spinner
+        this._init = true;
+        if (this._spinnerShow) { this.spinnerShow(); }
       }
 
       // Build menu by finding all panels
@@ -389,10 +468,23 @@ trailing:true white:true*/
       this.$.menu.setCount(menuItems.length);
       this.$.menu.render();
     },
+    spinnerHide: function () {
+      this._popupDone = true;
+      this.$.spinnerPopup.hide();
+    },
+    spinnerShow: function () {
+      // First render must be complete before showing spinner
+      if (!this._init) {
+        this._spinnerShow = true;
+        return;
+      }
+      this._popupDone = false;
+      this.$.spinnerPopup.show();
+    },
     statusChanged: function (inSender, inEvent) {
       var model = inEvent.model,
         K = XM.Model,
-        status = model.getStatus(),
+        status = inEvent.status,
         isNotReady = (status !== K.READY_CLEAN && status !== K.READY_DIRTY),
         isEditable = (model.canUpdate() && !model.isReadOnly()),
         canNotSave = (!model.isDirty() || !isEditable);
@@ -402,6 +494,13 @@ trailing:true white:true*/
       this.$.applyButton.setDisabled(canNotSave);
       this.$.saveAndNewButton.setDisabled(canNotSave);
       this.$.saveButton.setDisabled(canNotSave);
+
+      // Toggle spinner popup
+      if (status & K.BUSY) {
+        this.spinnerShow();
+      } else if (status & K.READY) {
+        this.spinnerHide();
+      }
     },
     titleChanged: function (inSender, inEvent) {
       var title = inEvent.title || "";
@@ -409,14 +508,17 @@ trailing:true white:true*/
       return true;
     },
     unsavedCancel: function () {
+      this._popupDone = true;
       this.$.unsavedPopup.hide();
     },
     unsavedDiscard: function () {
+      this._popupDone = true;
       var options = {force: true};
       this.$.unsavedPopup.hide();
       this.close(options);
     },
     unsavedSave: function () {
+      this._popupDone = true;
       this.$.unsavedPopup.hide();
       if (this.$.unsavedPopup.close) {
         this.saveAndClose();

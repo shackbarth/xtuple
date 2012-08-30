@@ -1,78 +1,228 @@
 /*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, strict:true, trailing:true, white:true */
+regexp:true, undef:true, trailing:true, white:true */
 /*global XT:true, XV:true, XM:true, Backbone:true, enyo:true, _:true */
+
 (function () {
-  //"use strict";
 
   enyo.kind({
-    name: "XV.Address",
-    kind: enyo.Control,
+    name: "XV.AddressWidget",
+    kind: "FittableRows",
+    classes: "xv-addresswidget",
     published: {
-      model: null
+      attr: null,
+      value: null,
+      list: "XV.AddressList"
     },
     events: {
-      onModelUpdate: ""
+      onSearch: "",
+      onValueChange: ""
+    },
+    handlers: {
+      onkeyup: "keyUp"
     },
     components: [
-      // XXX fields are disabled until we get this whole thing to work
-      { kind: "onyx.Input", name: "line1Field", onchange: "doAddress1Changed" },
-      { kind: "onyx.Input", name: "line2Field", onchange: "doAddress2Changed" },
-      { kind: "onyx.Input", name: "line3Field", onchange: "doAddress3Changed" },
-      { kind: "onyx.Input", name: "cityField", onchange: "doCityChanged" }
+      {name: "viewer", showing: true, fit: true, allowHtml: true,
+        classes: "xv-addresswidget-viewer", placeholder: "_none".loc()},
+      {kind: "FittableColumns", classes: "xv-addresswidget-buttons",
+        components: [
+        {kind: "onyx.Button", name: "editButton", content: "_edit".loc(),
+          ontap: "edit", onkeyup: "editButtonKeyUp",
+          classes: "xv-addresswidget-button"},
+        {kind: "onyx.Button", name: "searchButton", content: "_search".loc(),
+          ontap: "search", onkeyup: "searchButtonKeyUp",
+          classes: "xv-addresswidget-button"}
+      ]},
+      {kind: "onyx.Popup", name: "editor", onHide: "editorHidden",
+        classes: "xv-addresswidget-editor", modal: true, floating: true,
+        centered: true, scrim: true, components: [
+        {content: "_editAddress".loc(),
+          classes: "xv-addresswidget-editor-header"},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-input-decorator",
+          components: [
+          {kind: "onyx.Input", name: "line1",
+            placeholder: "_street".loc(), classes: "xv-addresswidget-input",
+            onchange: "inputChanged"}
+        ]},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-input-decorator",
+          components: [
+          {kind: "onyx.Input", name: "line2",
+            classes: "xv-addresswidget-input", onchange: "inputChanged"}
+        ]},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-input-decorator",
+          components: [
+          {kind: "onyx.Input", name: "line3",
+            classes: "xv-addresswidget-input", onchange: "inputChanged"}
+        ]},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-input-decorator",
+          components: [
+          {kind: "onyx.Input", name: "city", placeholder: "_city".loc(),
+            classes: "xv-addresswidget-input", onchange: "inputChanged"}
+        ]},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-combobox-decorator",
+          components: [
+          {kind: "XV.StateCombobox", name: "state", placeholder: "_state".loc(),
+            onValueChange: "inputChanged"}
+        ]},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-input-decorator",
+          components: [
+          {kind: "onyx.Input", name: "postalCode",
+            classes: "xv-addresswidget-input", placeholder: "_postalCode".loc(), onchange: "inputChanged"}
+        ]},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-combobox-decorator",
+          components: [
+          {kind: "XV.CountryCombobox", name: "country",
+            onValueChange: "countryChanged",
+            placeholder: "_country".loc()}
+        ]},
+        {tag: "br"},
+        {kind: "onyx.Button", content: "_done".loc(), ontap: "done",
+          classes: "onyx-blue"}
+      ]}
     ],
-    /**
-     * A convenience function so that this object can be treated generally like an input
-     */
-    setValue: function (object) {
-      this.setModel(object);
+    countryChanged: function (inSender, inEvent) {
+      var country = this.$.country.getValue();
+      this.inputChanged(inSender, inEvent);
+      this.$.state.setCountry(country);
+      return true;
     },
     /**
      * A convenience function so that this object can be treated generally like an input
      */
-    getValue: function () {
-      return this.getModel();
+    //getValue: function () {
+    //  return this.getModel();
+    //},
+    done: function () {
+      var siblings,
+        i,
+        next = false;
+      if (!this._nextWidget) {
+        // Find next widget to shift focus to
+        siblings = this.parent.children;
+        for (i = 0; i < siblings.length; i++) {
+          if (next) {
+            if (siblings[i].focus) {
+              this._nextWidget = siblings[i];
+              break;
+            }
+          }
+          if (siblings[i] === this) { next = true; }
+        }
+      }
+      this._popupDone = true;
+      this.$.editor.hide();
+      if (this._nextWidget) { this._nextWidget.focus(); }
     },
-    formatCity: function (city, state, zip) {
-      return city + ", " + state + " " + zip;
+    editButtonKeyUp: function (inSender, inEvent) {
+      // Return or space bar activates button
+      if (inEvent.keyCode === 13 ||
+         (inEvent.keyCode === 32)) {
+        this.edit();
+      }
+      return true;
     },
-    // XXX if we want to keep this sort of implementation we should move this function to a static area
-    // http://stackoverflow.com/questions/5097875/help-parsing-string-city-state-zip-with-javascript
-    parseAddress: function (a) {
-      if (typeof a!=="string") throw "Address is not a string.";a=a.trim();var r={},c=a.indexOf(',');r.city=a.slice(0,c);var f=a.substring(c+2),s=f.lastIndexOf(' ');r.state=f.slice(0,s);r.zip=f.substring(s+1);return r;
+    inputChanged: function (inSender, inEvent) {
+      var value = this.getValue(),
+        attr = inEvent.originator.name;
+      value.set(attr, this.$[attr].getValue());
+      this.setValue(value);
+      this.valueChanged();
+      inEvent = {
+        originator: this,
+        value: value
+      };
+      this.doValueChange(inEvent);
+      return true;
     },
+    keyUp: function (inSender, inEvent) {
+      // Return
+      if (inEvent.keyCode === 13) {
+        this.done();
+      }
+    },
+    edit: function (inSender, inEvent) {
+      var value = this.getValue();
+      if (!value) {
+        value = new XM.AddressInfo(null, {isNew: true});
+        this.setValue(value);
+      }
+      if (!this.$.editor.showing) {
+        this.$.editor.show();
+        this.$.line1.focus();
+        this._popupDone = false;
+      }
+    },
+    editorHidden: function () {
+      if (!this._popupDone) {
+        this.edit();
+      }
+    },
+    search: function () {
+      var that = this,
+        list = this.getList(),
+        callback = function (value) {
+          that.setValue(value);
+        };
+      this.doSearch({
+        list: list,
+        callback: callback
+      });
+    },
+    searchButtonKeyUp: function (inSender, inEvent) {
+      // Return or space bar activates button
+      if (inEvent.keyCode === 13 ||
+         (inEvent.keyCode === 32)) {
+        this.search();
+      }
+      return true;
+    },
+    setValue: function (value, options) {
+      var inEvent,
+        oldId = this.value ? this.value.id : null,
+        newId = value ? value.id : null;
+      options = options || {};
+      if (newId === oldId) { return; }
+      this.value = value;
+      this.valueChanged();
+      if (!options.silent) {
+        inEvent = {
+          originator: this,
+          value: value
+        };
+        this.doValueChange(inEvent);
+      }
+    },
+    pickerTapped: function (inSender, inEvent) {
+      if (inEvent.originator.name === "iconButton") {
+        this.receiveFocus();
+      }
+    },
+    valueChanged: function () {
+      var value = this.getValue(),
+        line1 = value.get('line1') || "",
+        line2 = value.get('line2') || "",
+        line3 = value.get('line3') || "",
+        city = value.get('city') || "",
+        state = value.get('state') || "",
+        postalCode = value.get('postalCode') || "",
+        country = value.get('country') || "",
+        fmt = XM.Address.format(value);
+      this.$.line1.setValue(line1);
+      this.$.line2.setValue(line2);
+      this.$.line3.setValue(line3);
+      this.$.city.setValue(city);
+      this.$.state.setValue(state);
+      this.$.postalCode.setValue(postalCode);
+      this.$.country.setValue(country);
+      this.$.viewer.addRemoveClass("placeholder", !fmt);
+      this.$.viewer.setContent(fmt || '_none'.loc());
+    }
 
-    /**
-     * render this object onto the name field
-     * XXX the problem is we're receiving an AddressInfo object and we probably want an Address object
-     */
-    modelChanged: function () {
-      /**
-       * Populate the input with the applicable field. If there's no model chosen
-       * just leave the field blank.
-       */
-      this.$.line1Field.setValue(this.getModel() ? this.getModel().get("line1") : "");
-      this.$.line2Field.setValue(this.getModel() ? this.getModel().get("line2") : "");
-      this.$.line3Field.setValue(this.getModel() ? this.getModel().get("line3") : "");
-      this.$.cityField.setValue(this.getModel() ? this.formatCity(
-        this.getModel().get("city"),
-        this.getModel().get("state"),
-        this.getModel().get("postalCode")
-      ) : "");
-    },
-    doAddress1Changed: function (inSender, inEvent) {
-      this.getModel().set({ line1: inSender.getValue() });
-    },
-    doAddress2Changed: function (inSender, inEvent) {
-      this.getModel().set({ line2: inSender.getValue() });
-    },
-    doAddress3Changed: function (inSender, inEvent) {
-      this.getModel().set({ line3: inSender.getValue() });
-    },
-    // TODO use fuzzy logic match
-    doCityChanged: function (inSender, inEvent) {
-      var parsed = this.parseAddress(inSender.getValue());
-      this.getModel().set({ city: parsed.city, state: parsed.state, postalCode: parsed.zip });
-      this.doModelUpdate();
-    },
   });
 }());

@@ -10,7 +10,8 @@ regexp:true, undef:true, trailing:true, white:true */
     published: {
       attr: null,
       value: null,
-      disabled: false
+      disabled: false,
+      placeholder: null
     },
     events: {
       "onValueChange": ""
@@ -24,10 +25,14 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     create: function () {
       this.inherited(arguments);
+      this.placeholderChanged();
       this.disabledChanged();
     },
     disabledChanged: function () {
       this.$.input.setDisabled(this.getDisabled());
+    },
+    focus: function () {
+      this.$.input.focus();
     },
     inputChanged: function (inSender, inEvent) {
       var input = this.$.input.getValue(),
@@ -38,6 +43,10 @@ regexp:true, undef:true, trailing:true, white:true */
         this.setValue(null);
         this.valueChanged("");
       }
+    },
+    placeholderChanged: function () {
+      var placeholder = this.getPlaceholder();
+      this.$.input.setPlaceholder(placeholder);
     },
     setValue: function (value, options) {
       options = options || {};
@@ -70,8 +79,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.Input",
     classes: "xv-inputwidget",
     published: {
-      label: "",
-      placeholder: ""
+      label: ""
     },
     components: [
       {kind: "FittableColumns", components: [
@@ -90,10 +98,6 @@ regexp:true, undef:true, trailing:true, white:true */
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.attr || "").loc());
       this.$.label.setContent(label + ":");
-    },
-    placeholderChanged: function () {
-      var placeholder = this.getPlaceholder();
-      this.$.input.setPlaceholder(placeholder);
     }
   });
 

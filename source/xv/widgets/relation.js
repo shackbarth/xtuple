@@ -96,6 +96,9 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.name.addRemoveClass("disabled", disabled);
       this.$.description.addRemoveClass("disabled", disabled);
     },
+    focus: function () {
+      this.$.input.focus();
+    },
     itemSelected: function (inSender, inEvent) {
       var that = this,
         menuItem = inEvent.originator,

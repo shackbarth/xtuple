@@ -305,8 +305,11 @@ white:true*/
     },
 
     /*
-      Reimplemented to handle state change.
-
+      Reimplemented to handle status changes. Will also automatically
+      fetch related models where they are not already loaded unless
+      the`fetchRelated: false` option is passed
+      
+      @param {Object} Options
       @returns {XT.Request} Request
     */
     fetch: function (options) {
@@ -320,6 +323,11 @@ white:true*/
         options.cascade = true; // Update status of children
         options.success = function (resp) {
           model.setStatus(K.READY_CLEAN, options);
+          if (options.fetchRelated !== false) {
+            _.each(model.relations, function (relation) {
+              model.fetchRelated(relation.key);
+            });
+          }
           XT.log('Fetch successful');
           if (success) { success(model, resp, options); }
         };
@@ -496,7 +504,9 @@ white:true*/
       options = options || {};
       var klass,
         K = XM.Model,
-        status = this.getStatus();
+        status = this.getStatus(),
+        relations = this.relations || [],
+        i;
 
       // Validate
       if (_.isEmpty(this.recordType)) { throw 'No record type defined'; }
@@ -536,6 +546,12 @@ white:true*/
       this.on('change', this.didChange);
       this.on('error', this.didError);
       this.on('destroy', this.didDestroy);
+      for (i = 0; i < relations.length; i++) {
+        if (relations[i].type === Backbone.HasMany &&
+            relations[i].includeInJSON === true) {
+          this.on('add:' + relations[i].key, this.didChange);
+        }
+      }
     },
 
     /**
@@ -778,8 +794,8 @@ white:true*/
       }
 
       // Percolate changes up to parent when applicable
-      if (parent) {
-        parent.trigger('change', this, status, options);
+      if (parent && this.isDirty()) {
+        parent.trigger('change', this, options);
       }
       this.release();
       this.trigger('statusChange', this, status, options);
@@ -1384,25 +1400,6 @@ white:true*/
     options.silent = false;
 
     func.call(this, related, options);
-  };
-
-  // Reimplement with generic `change` trigger to parent relations
-  Backbone.HasMany.prototype.handleAddition = function (model, coll, options) {
-    coll = coll || {};
-    if (!(model instanceof Backbone.Model)) { return; }
-    var that = this;
-    options = this.sanitizeOptions(options);
-    _.each(this.getReverseRelations(model), function (relation) {
-      relation.addRelated(this.instance, options);
-    }, this);
-
-    // Only trigger 'add' once the newly added model is initialized (so, has it's relations set up)
-    Backbone.Relational.eventQueue.add(function () {
-      if (!options.silentChange) {
-        that.instance.trigger('add:' + that.key, model, that.related, options);
-        that.instance.trigger('change', model, that.related, options);
-      }
-    });
   };
 
 }());

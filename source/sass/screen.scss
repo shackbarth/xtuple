@@ -50,47 +50,6 @@ body {}
 	min-width: 50%;
 }
 
-/** DASHBOARD */
-
-.xt-app {
-  .xt-dashboard {
-    @include background-image(radial-gradient(#666, #333 70%));
-    background-color: #999;
-    color: #fff;
-    font-weight: bold;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    .xt-dashboard-container {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      right: 0;
-      margin-top: -65px;
-      height: 131px;
-      .xt-dashboard-icons {
-        margin: auto auto;
-        .xt-dashboard-icon {
-          @include box-sizing(border-box);
-          display: inline-block;
-          margin: 0 10px;
-          &:hover {
-            cursor: pointer;
-          }
-          .xt-dashboard-icon-label {
-            width: 100%;
-            text-align: center;
-          }
-        }
-      }
-    }
-  }
-}
-
-/** END DASHBOARD */
-
 
 .developer-ui-container {
   @include box-shadow(#333 4px 4px 10px -4px);
@@ -119,20 +78,6 @@ body {}
       height: 54px;
       width: 50px;
     }
-  }
-}
-
-.crm-menu-item {
-  padding: 10px;
-  margin: 10px 0;
-  text-align: center;
-  background-color: #fff;
-  color: #000;
-  &.selected {
-    background-color: #eee;
-  }
-  &:hover {
-    background-color: #eee;
   }
 }
 
@@ -316,6 +261,13 @@ body {
 	text-align: center;
 }
 
+/* Workspace.scss */
+.xv-workspace-header {
+  color: white;
+  padding-top: 8px;
+  padding-left: 8px;
+}
+
 /* Parameter.scss */
 .xv-parameter-item {
   background-color: white;
@@ -407,6 +359,7 @@ body {
   padding-bottom: 8px;
   padding-left: 8px;
   margin-right: 5px;
+  min-width: 330px;
 }
 
 .xv-groupbox > * {
@@ -579,6 +532,86 @@ body {
 
 /*********XV WIDGETS***********/
 
+/* AddressWidget.scss */
+.xv-addresswidget {
+  background-color: white;
+  padding: 4px;
+  .xv-addresswidget-viewer {
+    border: 0px;
+    font-size: medium;
+    display: inline;
+    &.placeholder {
+      font-style: italic;
+      color: #93a1a1;
+    }
+  }
+}
+
+.xv-addresswidget-input-decorator {
+  background: white;
+  display: block;
+  margin: 4px;
+}
+
+.xv-addresswidget-combobox-decorator {
+  background: white;
+  display: block;
+  margin: 4px;
+  width: 205px;
+}
+
+.xv-addresswidget-input {
+  width: 100%;
+}
+
+.xv-addresswidget-button {
+  margin-right: 4px;
+}
+
+.xv-addresswidget-buttons {
+  margin-top: 4px;
+}
+
+.xv-addresswidget-editor-header {
+  padding: 4px;
+}
+
+.xv-addresswidget-editor {
+  width: 320px;
+  padding: 8px;
+  padding-right: 16px;
+}
+
+.xv-addresslist-attr {
+  padding: 5px;
+  font-size: 13px;
+  white-space: normal;
+  overflow: auto;
+  color: black;
+  background-color: white;
+}
+
+/* Combobox.scss */
+.xv-combobox {
+  height: 24px;
+  width: 205px;
+}
+
+.xv-combobox-input {
+  font-size: medium;
+  border: 0px;
+  top: -2px;
+  position: relative;
+  outline: none;
+}
+
+.xv-combobox-icon {
+  top: 8px;
+  left: 8px;
+  position: relative;
+}
+
+/* Dropdown.scss */
 .xv-dropdownwidget {
   background-color: white;
 }

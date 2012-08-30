@@ -46,10 +46,6 @@ regexp:true, undef:true, trailing:true, white:true */
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.attr + "").loc()) + ":";
       this.$.label.setContent(label);
-    },
-    placeholderChanged: function () {
-      var placeholder = this.getPlaceholder();
-      this.$.input.setPlaceholder(placeholder);
     }
 
   });
