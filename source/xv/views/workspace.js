@@ -450,6 +450,10 @@ trailing:true white:true*/
         } else {
           this.$.header.hide();
         }
+        this.render();
+        // Render must be complete before showing spinner
+        this._init = true;
+        if (this._spinnerShow) { this.spinnerShow(); }
       }
 
       // Build menu by finding all panels
@@ -463,6 +467,19 @@ trailing:true white:true*/
       this.setMenuItems(menuItems);
       this.$.menu.setCount(menuItems.length);
       this.$.menu.render();
+    },
+    spinnerHide: function () {
+      this._popupDone = true;
+      this.$.spinnerPopup.hide();
+    },
+    spinnerShow: function () {
+      // First render must be complete before showing spinner
+      if (!this._init) {
+        this._spinnerShow = true;
+        return;
+      }
+      this._popupDone = false;
+      this.$.spinnerPopup.show();
     },
     statusChanged: function (inSender, inEvent) {
       var model = inEvent.model,
@@ -480,12 +497,9 @@ trailing:true white:true*/
 
       // Toggle spinner popup
       if (status & K.BUSY) {
-        this._popupDone = false;
-        this.render();
-        this.$.spinnerPopup.show();
+        this.spinnerShow();
       } else if (status & K.READY) {
-        this._popupDone = true;
-        this.$.spinnerPopup.hide();
+        this.spinnerHide();
       }
     },
     titleChanged: function (inSender, inEvent) {
