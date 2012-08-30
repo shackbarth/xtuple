@@ -100,12 +100,16 @@ trailing:true white:true*/
         count = this._collection.length,
         isMore = limit ?
           (offset + limit <= count) && (this.getCount() !== count) : false,
-        rowsPerPage = 50 > count ? count : 50;
+        rowsPerPage;
       this.isMore = isMore;
       this.fetching = false;
 
       // Reset the size of the list
       this.setCount(count);
+      
+      // Hack: Solves scroll problem for small number of rows
+      // but doesn't seem quite right
+      rowsPerPage = count && 50 > count ? count : 50;
       if (rowsPerPage !== this.rowsPerPage) {
         this.setRowsPerPage(rowsPerPage);
       }
@@ -239,12 +243,20 @@ trailing:true white:true*/
     },
     lengthChanged: function () {
       var count = this.readyModels().length,
-        rowsPerPage = 50 > count ? count : 50;
+        rowsPerPage;
+        
+      // Hack: Solves scroll problem for small number of rows
+      // but doesn't seem quite right
+      rowsPerPage = count && 50 > count ? count : 50;
       if (rowsPerPage !== this.rowsPerPage) {
         this.setRowsPerPage(rowsPerPage);
       }
       this.setCount(count);
-      this.refresh();
+      if (count) {
+        this.refresh();
+      } else {
+        this.reset();
+      }
     },
     modelAdded: function (model) {
       if (model.getStatus() === XM.Model.READY_CLEAN) {
