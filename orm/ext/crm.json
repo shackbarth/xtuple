@@ -1413,14 +1413,6 @@
     ],
     "properties": [
       {
-        "name": "account",
-        "toOne": {
-          "isNested": true,
-          "type": "AccountInfo",
-          "column": "todoitem_crmacct_id"
-        }
-      },
-      {
         "name": "incident",
         "toOne": {
           "isNested": true,

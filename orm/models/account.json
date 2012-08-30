@@ -606,87 +606,101 @@
      }
     },
     "properties": [
-     {
-       "name": "id",
-       "attr": {
-         "type": "Number",
-         "column": "cntct_id",
-         "isPrimaryKey": true
-       }
-     },
-     {
-       "name": "name",
-       "attr": {
-         "type": "String",
-         "column": "cntct_name"
-       }
-     },
-     {
-       "name": "isActive",
-       "attr": {
-         "type": "Boolean",
-         "column": "cntct_active"
-       }
-     },
-     {
-       "name": "jobTitle",
-       "attr": {
-         "type": "String",
-         "column": "cntct_title"
-       }
-     },
-     {
-       "name": "phone",
-       "attr": {
-         "type": "String",
-         "column": "cntct_phone"
-       }
-     },
-     {
-       "name": "alternate",
-       "attr": {
-         "type": "String",
-         "column": "cntct_phone2"
-       }
-     },
-     {
-       "name": "fax",
-       "attr": {
-         "type": "String",
-         "column": "cntct_fax"
-       }
-     },
-     {
-       "name": "primaryEmail",
-       "attr": {
-         "type": "String",
-         "column": "cntct_email"
-       }
-     },
-     {
-       "name": "webAddress",
-       "attr": {
-         "type": "String",
-         "column": "cntct_webaddr"
-       }
-     },
-     {
-       "name": "address",
-       "toOne": {
-         "isNested": true,
-         "type": "AddressInfo",
-         "column": "cntct_addr_id"
-       }
-     },
-     {
-       "name": "owner",
-       "toOne": {
-         "isNested": true,
-         "type": "UserAccountInfo",
-         "column": "cntct_owner_username",
-         "inverse": "username"
-       }
-     },
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cntct_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "cntct_active"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "cntct_name"
+        }
+      },
+      {
+        "name": "firstName",
+        "attr": {
+          "type": "String",
+          "column": "cntct_first_name"
+        }
+      },
+      {
+        "name": "lastName",
+        "attr": {
+          "type": "String",
+          "column": "cntct_last_name"
+        }
+      },
+      {
+        "name": "jobTitle",
+        "attr": {
+          "type": "String",
+          "column": "cntct_title"
+        }
+      },
+      {
+        "name": "phone",
+        "attr": {
+          "type": "String",
+          "column": "cntct_phone"
+        }
+      },
+      {
+        "name": "alternate",
+        "attr": {
+          "type": "String",
+          "column": "cntct_phone2"
+        }
+      },
+      {
+        "name": "fax",
+        "attr": {
+          "type": "String",
+          "column": "cntct_fax"
+        }
+      },
+      {
+        "name": "primaryEmail",
+        "attr": {
+          "type": "String",
+          "column": "cntct_email"
+        }
+      },
+      {
+        "name": "webAddress",
+        "attr": {
+          "type": "String",
+          "column": "cntct_webaddr"
+        }
+      },
+      {
+        "name": "address",
+        "toOne": {
+          "isNested": true,
+          "type": "AddressInfo",
+          "column": "cntct_addr_id"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountInfo",
+          "column": "cntct_owner_username",
+          "inverse": "username"
+        }
+      },
      {
        "name": "account",
        "attr": {

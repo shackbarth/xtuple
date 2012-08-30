@@ -1,4 +1,4 @@
-﻿select xt.install_js('XT','Session','xtuple', $$
+select xt.install_js('XT','Session','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -128,6 +128,8 @@
       },
       addToMany = function (value) {
         var relations = result[type]['relations'], 
+          child = XT.Orm.fetch(schema.toUpperCase(), value.toMany.type),
+          pkey = XT.Orm.primaryKey(child),
           rel = {
             type: "Backbone.HasMany",
             key: value.name,
@@ -136,6 +138,9 @@
               key: value.toMany.inverse
             }
           };
+        if (!value.toMany.isNested) {
+          rel.includeInJSON = pkey;
+        }
         relations.push(rel);
       },
       processProperties = function (orm) {
