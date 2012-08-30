@@ -298,7 +298,7 @@ trailing:true white:true*/
             content: "_refresh".loc(), onclick: "requery",
             style: "float: right;"}
         ]},
-        {name: "header", classes: "xv-workspace-header"},
+        {name: "header", content: "_loading".loc(), classes: "xv-workspace-header"},
         {kind: "onyx.Popup", name: "spinnerPopup", centered: true,
           modal: true, floating: true, scrim: true,
           onHide: "popupHidden", components: [
