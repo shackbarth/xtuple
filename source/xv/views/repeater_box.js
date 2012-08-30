@@ -23,7 +23,7 @@ white:true*/
       { kind: "Repeater", name: "repeater", count: 0, onSetupItem: "setupRow", components: [
         { kind: "XV.RepeaterBoxRow", name: "repeaterRow" }
       ]},
-      { kind: "onyx.Button", name: "newRowButton", onclick: "newRow", content: "Add New" }
+      { kind: "onyx.Button", name: "newRowButton", onclick: "newRow", content: "_new".loc() }
     ],
     create: function () {
       this.inherited(arguments);

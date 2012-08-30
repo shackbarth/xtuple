@@ -544,16 +544,33 @@ body {
 }
 
 /* line 452, ../sass/screen.scss */
+.xv-groupbox-buttons {
+  border: none;
+}
+/* line 454, ../sass/screen.scss */
+.xv-groupbox-buttons .xv-groupbox-button-center {
+  border-radius: 0 0 0 0;
+}
+/* line 457, ../sass/screen.scss */
+.xv-groupbox-buttons .xv-groupbox-button-left {
+  border-radius: 0 0 0 4px;
+}
+/* line 460, ../sass/screen.scss */
+.xv-groupbox-buttons .xv-groupbox-button-right {
+  border-radius: 0 0 4px 0;
+}
+
+/* line 465, ../sass/screen.scss */
 .xv-error {
   color: #ff0000;
 }
 
 /* RepeaterBox.scss */
-/* line 457, ../sass/screen.scss */
+/* line 470, ../sass/screen.scss */
 .xv-repeater-box {
   width: 880px;
 }
-/* line 459, ../sass/screen.scss */
+/* line 472, ../sass/screen.scss */
 .xv-repeater-box .xv-label {
   width: 90px;
   font-weight: bold;
@@ -561,16 +578,16 @@ body {
   font-size: 12px;
   text-align: center;
 }
-/* line 466, ../sass/screen.scss */
+/* line 479, ../sass/screen.scss */
 .xv-repeater-box .xv-wide-entry {
   width: 200px;
 }
-/* line 469, ../sass/screen.scss */
+/* line 482, ../sass/screen.scss */
 .xv-repeater-box .xv-input {
   width: 100px;
   border-width: 0px;
 }
-/* line 472, ../sass/screen.scss */
+/* line 485, ../sass/screen.scss */
 .xv-repeater-box .xv-input .xv-subinput {
   width: 90px;
   border-width: 0px;
@@ -595,24 +612,24 @@ body {
   vertical-align: top;
 }
 
-/* line 483, ../sass/screen.scss */
+/* line 496, ../sass/screen.scss */
 .xv-repeater-box-header {
   background-color: lightgrey;
 }
 
-/* line 487, ../sass/screen.scss */
+/* line 500, ../sass/screen.scss */
 .xv-repeater-box-row {
   background-color: white;
 }
-/* line 489, ../sass/screen.scss */
+/* line 502, ../sass/screen.scss */
 .xv-repeater-box-row .xv-wide-entry {
   width: 200px;
 }
-/* line 491, ../sass/screen.scss */
+/* line 504, ../sass/screen.scss */
 .xv-repeater-box-row .xv-wide-entry .xv-subinput {
   width: 200px;
 }
-/* line 495, ../sass/screen.scss */
+/* line 508, ../sass/screen.scss */
 .xv-repeater-box-row .xv-delete-button {
   width: 14px;
   height: 21px;
@@ -620,19 +637,19 @@ body {
 }
 
 /* CommentBox.scss */
-/* line 503, ../sass/screen.scss */
+/* line 516, ../sass/screen.scss */
 .xv-comment-box {
   width: 700px;
 }
-/* line 505, ../sass/screen.scss */
+/* line 518, ../sass/screen.scss */
 .xv-comment-box .xv-repeater-box-row {
   height: 140px;
 }
-/* line 508, ../sass/screen.scss */
+/* line 521, ../sass/screen.scss */
 .xv-comment-box .xv-comment-box-createdBy {
   font-weight: bold;
 }
-/* line 512, ../sass/screen.scss */
+/* line 525, ../sass/screen.scss */
 .xv-comment-box .xv-comment-box-text {
   position: absolute;
   margin-top: 40px;
@@ -641,33 +658,33 @@ body {
   border: 1px solid grey;
   border-radius: 4px 4px 4px 4px;
 }
-/* line 520, ../sass/screen.scss */
+/* line 533, ../sass/screen.scss */
 .xv-comment-box .xv-textarea-input {
   height: 65px;
   min-height: 65px;
   width: 480px;
 }
-/* line 525, ../sass/screen.scss */
+/* line 538, ../sass/screen.scss */
 .xv-comment-box .xv-repeater-box-header {
   visibility: hidden;
   height: 0px;
 }
-/* line 529, ../sass/screen.scss */
+/* line 542, ../sass/screen.scss */
 .xv-comment-box .xv-comment-box-comment-type {
   border-width: 0px;
 }
-/* line 531, ../sass/screen.scss */
+/* line 544, ../sass/screen.scss */
 .xv-comment-box .xv-comment-box-comment-type .xv-picker {
   height: 25px;
   padding: 2px;
 }
 
-/* line 539, ../sass/screen.scss */
+/* line 552, ../sass/screen.scss */
 .xv-assignment-box .xv-label {
   width: 250px;
 }
 
-/* line 544, ../sass/screen.scss */
+/* line 557, ../sass/screen.scss */
 .xv-parameter-title {
   padding-top: 8px;
   font-size: large;
@@ -676,31 +693,31 @@ body {
 
 /*********XV WIDGETS***********/
 /* AddressWidget.scss */
-/* line 553, ../sass/screen.scss */
+/* line 566, ../sass/screen.scss */
 .xv-addresswidget {
   background-color: white;
   padding: 4px;
 }
-/* line 556, ../sass/screen.scss */
+/* line 569, ../sass/screen.scss */
 .xv-addresswidget .xv-addresswidget-viewer {
   border: 0px;
   font-size: medium;
   display: inline;
 }
-/* line 560, ../sass/screen.scss */
+/* line 573, ../sass/screen.scss */
 .xv-addresswidget .xv-addresswidget-viewer.placeholder {
   font-style: italic;
   color: #93a1a1;
 }
 
-/* line 567, ../sass/screen.scss */
+/* line 580, ../sass/screen.scss */
 .xv-addresswidget-input-decorator {
   background: white;
   display: block;
   margin: 4px;
 }
 
-/* line 573, ../sass/screen.scss */
+/* line 586, ../sass/screen.scss */
 .xv-addresswidget-combobox-decorator {
   background: white;
   display: block;
@@ -708,34 +725,34 @@ body {
   width: 205px;
 }
 
-/* line 580, ../sass/screen.scss */
+/* line 593, ../sass/screen.scss */
 .xv-addresswidget-input {
   width: 100%;
 }
 
-/* line 584, ../sass/screen.scss */
+/* line 597, ../sass/screen.scss */
 .xv-addresswidget-button {
   margin-right: 4px;
 }
 
-/* line 588, ../sass/screen.scss */
+/* line 601, ../sass/screen.scss */
 .xv-addresswidget-buttons {
   margin-top: 4px;
 }
 
-/* line 592, ../sass/screen.scss */
+/* line 605, ../sass/screen.scss */
 .xv-addresswidget-editor-header {
   padding: 4px;
 }
 
-/* line 596, ../sass/screen.scss */
+/* line 609, ../sass/screen.scss */
 .xv-addresswidget-editor {
   width: 320px;
   padding: 8px;
   padding-right: 16px;
 }
 
-/* line 602, ../sass/screen.scss */
+/* line 615, ../sass/screen.scss */
 .xv-addresslist-attr {
   padding: 5px;
   font-size: 13px;
@@ -746,13 +763,13 @@ body {
 }
 
 /* Combobox.scss */
-/* line 612, ../sass/screen.scss */
+/* line 625, ../sass/screen.scss */
 .xv-combobox {
   height: 24px;
   width: 205px;
 }
 
-/* line 617, ../sass/screen.scss */
+/* line 630, ../sass/screen.scss */
 .xv-combobox-input {
   font-size: medium;
   border: 0px;
@@ -761,7 +778,7 @@ body {
   outline: none;
 }
 
-/* line 625, ../sass/screen.scss */
+/* line 638, ../sass/screen.scss */
 .xv-combobox-icon {
   top: 8px;
   left: 8px;
@@ -769,17 +786,17 @@ body {
 }
 
 /* Dropdown.scss */
-/* line 632, ../sass/screen.scss */
+/* line 645, ../sass/screen.scss */
 .xv-dropdownwidget {
   background-color: white;
 }
 
-/* line 636, ../sass/screen.scss */
+/* line 649, ../sass/screen.scss */
 .xv-picker {
   width: 180px;
 }
 
-/* line 640, ../sass/screen.scss */
+/* line 653, ../sass/screen.scss */
 .xv-label {
   width: 130px;
   padding-bottom: 8px;
@@ -789,7 +806,7 @@ body {
   text-align: right;
 }
 
-/* line 649, ../sass/screen.scss */
+/* line 662, ../sass/screen.scss */
 .xv-decorated-label {
   width: 130px;
   padding-bottom: 8px;
@@ -799,7 +816,7 @@ body {
   text-align: right;
 }
 
-/* line 658, ../sass/screen.scss */
+/* line 671, ../sass/screen.scss */
 .xv-dropdown-label {
   width: 130px;
   padding-bottom: 8px;
@@ -809,7 +826,7 @@ body {
   text-align: right;
 }
 
-/* line 667, ../sass/screen.scss */
+/* line 680, ../sass/screen.scss */
 .xv-textarea-input {
   border: 0px;
   width: 95%;
@@ -817,20 +834,20 @@ body {
   margin: 6px;
 }
 
-/* line 674, ../sass/screen.scss */
+/* line 687, ../sass/screen.scss */
 .xv-relationwidget-completer {
   left: -200px;
   top: 15px;
 }
 
-/* line 680, ../sass/screen.scss */
+/* line 693, ../sass/screen.scss */
 .xv-relationwidget-column.left {
   padding-right: 18px;
   color: black;
   width: 140px;
 }
 
-/* line 686, ../sass/screen.scss */
+/* line 699, ../sass/screen.scss */
 .xv-relationwidget-description {
   white-space: nowrap;
   overflow: hidden;
@@ -840,38 +857,38 @@ body {
   padding-bottom: 4px;
   max-width: 325px;
 }
-/* line 694, ../sass/screen.scss */
+/* line 707, ../sass/screen.scss */
 .xv-relationwidget-description.disabled {
   opacity: 0.4;
 }
-/* line 697, ../sass/screen.scss */
+/* line 710, ../sass/screen.scss */
 .xv-relationwidget-description.label {
   text-indent: 0px;
   text-align: right;
 }
-/* line 702, ../sass/screen.scss */
+/* line 715, ../sass/screen.scss */
 .xv-relationwidget-description.hasLabel {
   text-indent: 0px;
 }
-/* line 705, ../sass/screen.scss */
+/* line 718, ../sass/screen.scss */
 .xv-relationwidget-description.hyperlink {
   color: blue;
 }
 
-/* line 710, ../sass/screen.scss */
+/* line 723, ../sass/screen.scss */
 .xv-half-check {
   border: 5px solid green;
   background: url("../../images/not_a_checkbox.png") no-repeat scroll 0 0 transparent;
   background-color: darkgrey;
 }
 
-/* line 717, ../sass/screen.scss */
+/* line 730, ../sass/screen.scss */
 .xv-menuitem.disabled {
   color: Dimgray;
 }
 
 /********END XV WIDGETS******/
-/* line 725, ../sass/screen.scss */
+/* line 738, ../sass/screen.scss */
 .xv-login .xv-login-form {
   position: absolute;
   height: 250px;
@@ -881,17 +898,17 @@ body {
   margin-top: -125px;
   margin-left: -150px;
 }
-/* line 733, ../sass/screen.scss */
+/* line 746, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box {
   font-size: 12px;
   text-align: center;
   padding: 10px;
 }
-/* line 735, ../sass/screen.scss */
+/* line 748, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box.error {
   color: #ff0000;
 }
-/* line 742, ../sass/screen.scss */
+/* line 755, ../sass/screen.scss */
 .xv-login .xv-organizations-selection {
   position: absolute;
   height: 300px;
@@ -901,17 +918,17 @@ body {
   margin-top: -150px;
   margin-left: -200px;
 }
-/* line 750, ../sass/screen.scss */
+/* line 763, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row {
   padding: 5px;
   cursor: pointer;
 }
-/* line 753, ../sass/screen.scss */
+/* line 766, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row:hover {
   background-color: #ddd;
 }
 
-/* line 761, ../sass/screen.scss */
+/* line 774, ../sass/screen.scss */
 .xv-startup-panel .xv-startup-divider {
   width: 70%;
   margin-left: auto;
@@ -925,7 +942,7 @@ body {
   font-weight: bold;
   margin-bottom: 8px;
 }
-/* line 774, ../sass/screen.scss */
+/* line 787, ../sass/screen.scss */
 .xv-startup-panel .xv-startup-progress {
   width: 70%;
   margin-left: auto;

@@ -449,6 +449,19 @@ body {
 	border-radius: 4px;
 }
 
+.xv-groupbox-buttons {
+	border: none;
+	.xv-groupbox-button-center {
+	  border-radius: 0 0 0 0;
+	}
+	.xv-groupbox-button-left {
+  	border-radius: 0 0 0 4px;
+	}
+	.xv-groupbox-button-right {
+		border-radius: 0 0 4px 0;
+	}
+}
+
 .xv-error {
   color: #ff0000;
 }

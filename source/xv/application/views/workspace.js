@@ -40,7 +40,15 @@ trailing:true white:true*/
     components: [
       {kind: "onyx.GroupboxHeader", content: "_contacts".loc()},
       {kind: "XV.AccountContactList", name: "list", attr: "contactRelations",
-        fit: true}
+        fit: true},
+      {kind: 'FittableColumns', classes: "xv-groupbox-buttons", components: [
+        {kind: "onyx.Button", name: "newButton", onclick: "newContact",
+          content: "_new".loc(), classes: "xv-groupbox-button-left"},
+        {kind: "onyx.Button", name: "attachButton", onclick: "attachContact",
+          content: "_attach".loc(), classes: "xv-groupbox-button-center"},
+        {kind: "onyx.Button", name: "detachButton", onclick: "detachContact",
+          content: "_detach".loc(), classes: "xv-groupbox-button-right", disabled: true}
+      ]}
     ],
     attrChanged: function () {
       this.$.list.setAttr(this.attr);
