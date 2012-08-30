@@ -303,6 +303,7 @@ XT.stringsFor("en_US", {
   "_resolution": "Resolution",
   "_save": "Save",
   "_saveAndNew": "Save and New",
+  "_saving": "Saving",
   "_schedule": "Schedule",
   "_search": "Search",
   "_secondaryContact": "Secondary Contact",

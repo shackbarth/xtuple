@@ -303,7 +303,7 @@ trailing:true white:true*/
           modal: true, floating: true, scrim: true,
           onHide: "popupHidden", components: [
           {kind: "onyx.Spinner"},
-          {content: "_loading".loc() + "..."}
+          {name: "spinnerMessage", content: "_loading".loc() + "..."}
         ]},
         {kind: "onyx.Popup", name: "unsavedPopup", centered: true,
           modal: true, floating: true, scrim: true,
@@ -469,8 +469,10 @@ trailing:true white:true*/
       this._popupDone = true;
       this.$.spinnerPopup.hide();
     },
-    spinnerShow: function () {
+    spinnerShow: function (message) {
+      message = message || "_loading".loc() + '...';
       this._popupDone = false;
+      this.$.spinnerMessage.setContent(message);
       this.$.spinnerPopup.show();
     },
     statusChanged: function (inSender, inEvent) {
@@ -479,7 +481,8 @@ trailing:true white:true*/
         status = inEvent.status,
         isNotReady = (status !== K.READY_CLEAN && status !== K.READY_DIRTY),
         isEditable = (model.canUpdate() && !model.isReadOnly()),
-        canNotSave = (!model.isDirty() || !isEditable);
+        canNotSave = (!model.isDirty() || !isEditable),
+        message;
 
       // Status dictates whether buttons are actionable
       this.$.refreshButton.setDisabled(isNotReady);
@@ -489,7 +492,10 @@ trailing:true white:true*/
 
       // Toggle spinner popup
       if (status & K.BUSY) {
-        this.spinnerShow();
+        if (status === K.BUSY_COMMITTING) {
+          message = "_saving".loc() + "...";
+        }
+        this.spinnerShow(message);
       } else if (status & K.READY) {
         this.spinnerHide();
       }
