@@ -92,6 +92,12 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.state.setCountry(country);
       return true;
     },
+    /**
+     * A convenience function so that this object can be treated generally like an input
+     */
+    //getValue: function () {
+    //  return this.getModel();
+    //},
     done: function () {
       var siblings,
         i,

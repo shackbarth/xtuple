@@ -68,7 +68,7 @@ trailing:true white:true*/
     },
     fetch: function (options) {
       var that = this,
-        query = this.getQuery(),
+        query = this.getQuery() || {},
         success;
       options = options ? _.clone(options) : {};
       options.showMore = _.isBoolean(options.showMore) ?
@@ -94,7 +94,7 @@ trailing:true white:true*/
       this._collection.fetch(options);
     },
     fetched: function () {
-      var query = this.getQuery(),
+      var query = this.getQuery() || {},
         offset = query.rowOffset || 0,
         limit = query.rowLimit || 0,
         count = this._collection.length,
@@ -191,7 +191,8 @@ trailing:true white:true*/
         if (this.$.hasOwnProperty(prop) && this.$[prop].getAttr) {
           view = this.$[prop];
           isPlaceholder = false;
-          value = model.getValue(this.$[prop].getAttr());
+          if (model.getValue) value = model.getValue(this.$[prop].getAttr());
+          else value = model.get(this.$[prop].getAttr());
           formatter = view.formatter;
           if (!value && view.placeholder) {
             value = view.placeholder;

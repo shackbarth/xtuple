@@ -14,6 +14,9 @@ trailing:true white:true*/
       currentView: "",
       carouselEvents: null
     },
+    handlers: {
+      onTransitionStart: "start"
+    },
     previousView: "",
     currentViewChanged: function () {
       var children = this.children;
@@ -89,6 +92,14 @@ trailing:true white:true*/
       active = this.getActive();
       if (active && active.activated) {
         active.activated();
+      }
+    },
+    start: function () {
+      var active;
+      this.inherited(arguments);
+      active = this.getActive();
+      if (active && active.willActivate) {
+        active.willActivate();
       }
     }
   });
