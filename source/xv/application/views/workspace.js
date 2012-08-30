@@ -30,6 +30,27 @@ trailing:true white:true*/
   //
 
   enyo.kind({
+    name: "XV.AccountContactsPanel",
+    kind: "XV.Panel",
+    title: "_contacts".loc(),
+    published: {
+      attr: null,
+      value: null
+    },
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_contacts".loc()},
+      {kind: "XV.AccountContactList", name: "list", attr: "contactRelations",
+        fit: true}
+    ],
+    attrChanged: function () {
+      this.$.list.setAttr(this.attr);
+    },
+    valueChanged: function () {
+      this.$.list.setValue(this.value);
+    }
+  });
+  
+  enyo.kind({
     name: "XV.AccountWorkspace",
     kind: "XV.Workspace",
     title: "_account".loc(),
@@ -53,10 +74,7 @@ trailing:true white:true*/
             {kind: "XV.ContactWidget", attr: "secondaryContact", showAddress: true}
           ]}
         ]},
-        {kind: "XV.Panel", title: "_contacts".loc(), components: [
-          {kind: "onyx.GroupboxHeader", content: "_contacts".loc()},
-          {kind: "XV.AccountContactList", attr: "contactRelations", fit: true}
-        ]},
+        {kind: "XV.AccountContactsPanel", attr: "contactRelations"},
         {kind: "XV.Panel", title: "_notes".loc(),
           components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
