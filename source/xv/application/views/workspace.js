@@ -46,9 +46,9 @@ trailing:true white:true*/
           {kind: "XV.AccountTypeDropdown", attr: "accountType"},
           {kind: "XV.UserAccountWidget", attr: "owner"},
           {kind: "onyx.GroupboxHeader", content: "_primaryContact".loc()},
-          {kind: "XV.ContactWidget", attr: "primaryContact"},
+          {kind: "XV.ContactWidget", attr: "primaryContact", showAddress: true},
           {kind: "onyx.GroupboxHeader", content: "_secondaryContact".loc()},
-          {kind: "XV.ContactWidget", attr: "secondaryContact"}
+          {kind: "XV.ContactWidget", attr: "secondaryContact", showAddress: true}
         ]},
         {kind: "XV.Groupbox", title: "_contacts".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_contacts".loc()},

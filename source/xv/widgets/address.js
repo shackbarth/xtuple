@@ -206,7 +206,7 @@ regexp:true, undef:true, trailing:true, white:true */
         state = value.get('state') || "",
         postalCode = value.get('postalCode') || "",
         country = value.get('country') || "",
-        fmt = XM.Address.format(value, true);
+        fmt = XM.Address.format(value);
       this.$.line1.setValue(line1);
       this.$.line2.setValue(line2);
       this.$.line3.setValue(line3);
