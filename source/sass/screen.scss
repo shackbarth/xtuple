@@ -295,6 +295,7 @@ body {
 
 /* List.scss */
 .xv-list {
+  background-color: white;
   .xv-list-item {
     @include box-sizing(border-box);
     background-color: #fff;
@@ -360,6 +361,22 @@ body {
   padding-left: 8px;
   margin-right: 5px;
   min-width: 330px;
+  &.in-panel {
+		padding: 0 0 0 0;
+		margin: 0 0 0 0;
+	}
+}
+
+.xv-groupbox.in-panel > *:first-child {
+	border-top-color: #aaaaaa;
+	border-top: none;
+	border-width: 1px;
+	border-radius: 0 0 0 0;
+}
+
+.xv-groupbox.in-panel > *:last-child {
+	border-radius: 0 0 0 0;
+	border-bottom: none;
 }
 
 .xv-groupbox > * {

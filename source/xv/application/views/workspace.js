@@ -38,21 +38,24 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainGroup", components: [
+        {kind: "XV.Panel", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.InputWidget", attr: "number"},
-          {kind: "XV.CheckboxWidget", attr: "isActive"},
-          {kind: "XV.InputWidget", attr: "name"},
-          {kind: "XV.AccountTypeDropdown", attr: "accountType"},
-          {kind: "XV.UserAccountWidget", attr: "owner"},
-          {kind: "onyx.GroupboxHeader", content: "_primaryContact".loc()},
-          {kind: "XV.ContactWidget", attr: "primaryContact", showAddress: true},
-          {kind: "onyx.GroupboxHeader", content: "_secondaryContact".loc()},
-          {kind: "XV.ContactWidget", attr: "secondaryContact", showAddress: true}
+          {kind: "XV.Groupbox", name: "mainGroup", fit: true, classes: "in-panel",
+            components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.AccountTypeDropdown", attr: "accountType"},
+            {kind: "XV.UserAccountWidget", attr: "owner"},
+            {kind: "onyx.GroupboxHeader", content: "_primaryContact".loc()},
+            {kind: "XV.ContactWidget", attr: "primaryContact", showAddress: true},
+            {kind: "onyx.GroupboxHeader", content: "_secondaryContact".loc()},
+            {kind: "XV.ContactWidget", attr: "secondaryContact", showAddress: true}
+          ]}
         ]},
-        {kind: "XV.Groupbox", title: "_contacts".loc(), components: [
+        {kind: "XV.Panel", title: "_contacts".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_contacts".loc()},
-          {kind: "XV.AccountContactList", attr: "contactRelations"}
+          {kind: "XV.AccountContactList", attr: "contactRelations", fit: true}
         ]},
         {kind: "XV.Groupbox", title: "_notes".loc(),
           components: [
