@@ -4,9 +4,9 @@ create or replace function xt.cntctrestore(contact_id integer) RETURNS boolean A
 declare
   result boolean;
 begin
-  alter table comment disable trigger comment_did_change;
+  perform setUserPreference(getEffectiveXtUser(),'editCommentsException', 't');
   result = public.cntctrestore(contact_id);
-  alter table comment enable trigger comment_did_change;
+  perform setUserPreference(getEffectiveXtUser(),'editCommentsException', 'f');
   return result;
 end;
 $$ language 'plpgsql';
