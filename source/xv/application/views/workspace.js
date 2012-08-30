@@ -40,8 +40,8 @@ trailing:true white:true*/
         fit: true, components: [
         {kind: "XV.Panel", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.Groupbox", name: "mainGroup", fit: true, classes: "in-panel",
-            components: [
+          {kind: "XV.Groupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "number"},
             {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.InputWidget", attr: "name"},
@@ -85,26 +85,30 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainGroup", components: [
+        {kind: "XV.Panel", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.InputWidget", attr: "number"},
-          {kind: "XV.CheckboxWidget", attr: "isActive"},
-          {kind: "onyx.GroupboxHeader", content: "_name".loc()},
-          {kind: "XV.InputWidget", attr: "firstName"},
-          {kind: "XV.InputWidget", attr: "middleName"},
-          {kind: "XV.InputWidget", attr: "lastName"},
-          {kind: "XV.InputWidget", attr: "suffix"},
-          {kind: "onyx.GroupboxHeader", content: "_address".loc()},
-          {kind: "XV.AddressWidget", attr: "address"},
-          {kind: "onyx.GroupboxHeader", content: "_information".loc()},
-          {kind: "XV.InputWidget", attr: "jobTitle"},
-          {kind: "XV.InputWidget", attr: "primaryEmail"},
-          {kind: "XV.InputWidget", attr: "phone"},
-          {kind: "XV.InputWidget", attr: "alternate"},
-          {kind: "XV.InputWidget", attr: "fax"},
-          {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-          {kind: "XV.AccountWidget", attr: "account"},
-          {kind: "XV.UserAccountWidget", attr: "owner"}
+          {kind: "XV.Groupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
+            {kind: "onyx.GroupboxHeader", content: "_name".loc()},
+            {kind: "XV.InputWidget", attr: "honorific"},
+            {kind: "XV.InputWidget", attr: "firstName"},
+            {kind: "XV.InputWidget", attr: "middleName"},
+            {kind: "XV.InputWidget", attr: "lastName"},
+            {kind: "XV.InputWidget", attr: "suffix"},
+            {kind: "onyx.GroupboxHeader", content: "_address".loc()},
+            {kind: "XV.AddressWidget", attr: "address"},
+            {kind: "onyx.GroupboxHeader", content: "_information".loc()},
+            {kind: "XV.InputWidget", attr: "jobTitle"},
+            {kind: "XV.InputWidget", attr: "primaryEmail"},
+            {kind: "XV.InputWidget", attr: "phone"},
+            {kind: "XV.InputWidget", attr: "alternate"},
+            {kind: "XV.InputWidget", attr: "fax"},
+            {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
+            {kind: "XV.AccountWidget", attr: "account"},
+            {kind: "XV.UserAccountWidget", attr: "owner"}
+          ]}
         ]},
         {kind: "XV.Panel", title: "_notes".loc(),
           components: [
@@ -214,23 +218,26 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainGroup", components: [
+        {kind: "XV.Panel", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.InputWidget", attr: "number"},
-          {kind: "XV.InputWidget", attr: "description"},
-          {kind: "XV.AccountWidget", attr: "account"},
-          {kind: "XV.ContactWidget", attr: "contact"},
-          {kind: "XV.IncidentCategoryDropdown", attr: "category"},
-          {kind: "onyx.GroupboxHeader", content: "_status".loc()},
-          {kind: "XV.IncidentStatusDropdown", attr: "status"},
-          {kind: "XV.PriorityDropdown", attr: "priority"},
-          {kind: "XV.IncidentSeverityDropdown", attr: "severity"},
-          {kind: "XV.IncidentResolutionDropdown", attr: "resolution"},
-          {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
-          {kind: "XV.UserAccountWidget", attr: "owner"},
-          {kind: "XV.UserAccountWidget", attr: "assignedTo"},
-          {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-          {kind: "XV.ItemWidget", attr: "item"}
+          {kind: "XV.Groupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.AccountWidget", attr: "account"},
+            {kind: "XV.ContactWidget", attr: "contact"},
+            {kind: "XV.IncidentCategoryDropdown", attr: "category"},
+            {kind: "onyx.GroupboxHeader", content: "_status".loc()},
+            {kind: "XV.IncidentStatusDropdown", attr: "status"},
+            {kind: "XV.PriorityDropdown", attr: "priority"},
+            {kind: "XV.IncidentSeverityDropdown", attr: "severity"},
+            {kind: "XV.IncidentResolutionDropdown", attr: "resolution"},
+            {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
+            {kind: "XV.UserAccountWidget", attr: "owner"},
+            {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+            {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
+            {kind: "XV.ItemWidget", attr: "item"}
+          ]}
         ]},
         {kind: "XV.Panel", title: "_notes".loc(),
           components: [
@@ -290,31 +297,34 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainGroup", components: [
+        {kind: "XV.Panel", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.InputWidget", attr: "number"},
-          {kind: "XV.CheckboxWidget", attr: "isActive"},
-          {kind: "XV.InputWidget", attr: "name"},
-          {kind: "XV.AccountWidget", attr: "account"},
-          {kind: "XV.ContactWidget", attr: "contact"},
-          {kind: "XV.MoneyWidget", attr: "amount"},
-          {kind: "XV.PercentWidget", attr: "probability"},
-          {kind: "onyx.GroupboxHeader", content: "_status".loc()},
-          {kind: "XV.OpportunityStageDropdown", attr: "opportunityStage",
-            label: "_stage".loc()},
-          {kind: "XV.PriorityDropdown", attr: "priority"},
-          {kind: "XV.OpportunityTypeDropdown", attr: "opportunityType",
-            label: "_type".loc()},
-          {kind: "XV.OpportunitySourceDropdown", attr: "opportunitySource",
-            label: "_source".loc()},
-          {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
-          {kind: "XV.DateWidget", attr: "targetClose"},
-          {kind: "XV.DateWidget", attr: "startDate"},
-          {kind: "XV.DateWidget", attr: "assignDate"},
-          {kind: "XV.DateWidget", attr: "actualClose"},
-          {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
-          {kind: "XV.UserAccountWidget", attr: "owner"},
-          {kind: "XV.UserAccountWidget", attr: "assignedTo"}
+          {kind: "XV.Groupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.AccountWidget", attr: "account"},
+            {kind: "XV.ContactWidget", attr: "contact"},
+            {kind: "XV.MoneyWidget", attr: "amount"},
+            {kind: "XV.PercentWidget", attr: "probability"},
+            {kind: "onyx.GroupboxHeader", content: "_status".loc()},
+            {kind: "XV.OpportunityStageDropdown", attr: "opportunityStage",
+              label: "_stage".loc()},
+            {kind: "XV.PriorityDropdown", attr: "priority"},
+            {kind: "XV.OpportunityTypeDropdown", attr: "opportunityType",
+              label: "_type".loc()},
+            {kind: "XV.OpportunitySourceDropdown", attr: "opportunitySource",
+              label: "_source".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
+            {kind: "XV.DateWidget", attr: "targetClose"},
+            {kind: "XV.DateWidget", attr: "startDate"},
+            {kind: "XV.DateWidget", attr: "assignDate"},
+            {kind: "XV.DateWidget", attr: "actualClose"},
+            {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
+            {kind: "XV.UserAccountWidget", attr: "owner"},
+            {kind: "XV.UserAccountWidget", attr: "assignedTo"}
+          ]}
         ]},
         {kind: "XV.Panel", title: "_notes".loc(),
           components: [
@@ -385,22 +395,25 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         classes: "xv-top-panel", fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainGroup", components: [
+        {kind: "XV.Panel", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.InputWidget", attr: "number"},
-          {kind: "XV.InputWidget", attr: "name"},
-          {kind: "XV.ProjectStatusDropdown", attr: "status"},
-          {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
-          {kind: "XV.DateWidget", attr: "dueDate"},
-          {kind: "XV.DateWidget", attr: "startDate"},
-          {kind: "XV.DateWidget", attr: "assignDate"},
-          {kind: "XV.DateWidget", attr: "completeDate"},
-          {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
-          {kind: "XV.UserAccountWidget", attr: "owner"},
-          {kind: "XV.UserAccountWidget", attr: "assignedTo"},
-          {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-          {kind: "XV.AccountWidget", attr: "account"},
-          {kind: "XV.ContactWidget", attr: "contact"}
+          {kind: "XV.Groupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.ProjectStatusDropdown", attr: "status"},
+            {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
+            {kind: "XV.DateWidget", attr: "dueDate"},
+            {kind: "XV.DateWidget", attr: "startDate"},
+            {kind: "XV.DateWidget", attr: "assignDate"},
+            {kind: "XV.DateWidget", attr: "completeDate"},
+            {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
+            {kind: "XV.UserAccountWidget", attr: "owner"},
+            {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+            {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
+            {kind: "XV.AccountWidget", attr: "account"},
+            {kind: "XV.ContactWidget", attr: "contact"}
+          ]}
         ]},
         {kind: "XV.Panel", title: "_notes".loc(),
           components: [
@@ -452,23 +465,26 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainGroup", components: [
+        {kind: "XV.Panel", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.InputWidget", attr: "name"},
-          {kind: "XV.InputWidget", attr: "description"},
-          {kind: "XV.PriorityDropdown", attr: "priority"},
-          {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
-          {kind: "XV.DateWidget", attr: "dueDate"},
-          {kind: "XV.DateWidget", attr: "startDate"},
-          {kind: "XV.DateWidget", attr: "assignDate"},
-          {kind: "XV.DateWidget", attr: "completeDate"},
-          {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
-          {kind: "XV.UserAccountWidget", attr: "owner"},
-          {kind: "XV.UserAccountWidget", attr: "assignedTo"},
-          {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
-          {kind: "XV.ContactWidget", attr: "contact"},
-          {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-          {kind: "XV.AccountWidget", attr: "account"}
+          {kind: "XV.Groupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.PriorityDropdown", attr: "priority"},
+            {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
+            {kind: "XV.DateWidget", attr: "dueDate"},
+            {kind: "XV.DateWidget", attr: "startDate"},
+            {kind: "XV.DateWidget", attr: "assignDate"},
+            {kind: "XV.DateWidget", attr: "completeDate"},
+            {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
+            {kind: "XV.UserAccountWidget", attr: "owner"},
+            {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+            {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
+            {kind: "XV.ContactWidget", attr: "contact"},
+            {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
+            {kind: "XV.AccountWidget", attr: "account"}
+          ]}
         ]},
         {kind: "XV.Panel", title: "_notes".loc(),
           components: [
