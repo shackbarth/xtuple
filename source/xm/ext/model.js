@@ -29,7 +29,7 @@ white:true*/
     @param {Object} Attributes
     @param {Object} Options
   */
-  XM.Model = Backbone.RelationalModel.extend({
+  XM.Model = Backbone.RelationalModel.extend(/** @lends XM.Model */{
   /** @scope XM.Model.prototype */
 
     /**
@@ -134,7 +134,6 @@ white:true*/
     /**
       Returns only attribute records that have changed.
 
-      @property
       @type Hash
     */
     changeSet: function () {

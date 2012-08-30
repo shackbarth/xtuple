@@ -648,6 +648,6 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.UserAccountRoleList",
     kind: "XV.NameDescriptionList",
-    collection: "XM.UserAccountRoleInfoCollection"
+    collection: "XM.UserAccountRoleCollection"
   });
 }());

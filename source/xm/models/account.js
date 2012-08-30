@@ -31,9 +31,15 @@ white:true*/
     */
     documentKeyDidChange: function () {
       var oldType = this.recordType;
+      var oldKey = this.documentKey;
+      var oldId = this.id;
       this.recordType = 'XM.Account';
+      this.documentKey = 'number';
+      this.id = -1;
       XM.Document.prototype.documentKeyDidChange.apply(this, arguments);
       this.recordType = oldType;
+      this.documentKey = oldKey;
+      this.id = oldId;
     }
 
   });

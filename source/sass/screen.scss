@@ -432,7 +432,7 @@ body {
 	border-radius: 0;
 }
 
-.xv-groupbox > .xv-inputwidget {
+.xv-groupbox .xv-inputwidget {
   background-color: white;
 }
 
@@ -536,6 +536,9 @@ body {
 }
 
 .xv-assignment-box {
+  .xv-decorated-label {
+    width: 250px;  
+  }
   .xv-label {
     width: 250px;  
   }
@@ -708,9 +711,11 @@ body {
 }
 
 .xv-half-check {
-  border: 5px solid green;
-  background: url("../../images/not_a_checkbox.png") no-repeat scroll 0 0 transparent;;
-  background-color: darkgrey;
+  background-image: url("../../assets/checkbox.png");
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: 0 -96px;
+  background-color: transparent;
 }
 
 .xv-menuitem {
