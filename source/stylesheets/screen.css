@@ -809,8 +809,8 @@ body {
 /* line 664, ../sass/screen.scss */
 .xv-textarea-input {
   border: 0px;
-  width: 324px;
-  min-height: 255px;
+  width: 95%;
+  height: 97%;
   margin: 6px;
 }
 
