@@ -238,6 +238,18 @@ trailing:true white:true*/
     handlers: {
       onSetupItem: "setupItem"
     },
+    destroy: function () {
+      // Clear all bindings
+      var models = this._collection ? this._collection.models : null;
+      if (models) {
+        _.each(models, function (model) {
+          model.off('statusChange', this.statusChanged, this);
+        });
+      }
+      this._collection.off("add", this.modelAdded, this);
+      this._collection.off("remove", this.lengthChanged, this);
+      this.inherited(arguments);
+    },
     getModel: function (index) {
       return this._collection.models[index];
     },
@@ -252,11 +264,7 @@ trailing:true white:true*/
         this.setRowsPerPage(rowsPerPage);
       }
       this.setCount(count);
-      if (count) {
-        this.refresh();
-      } else {
-        this.reset();
-      }
+      this.refresh();
     },
     modelAdded: function (model) {
       if (model.getStatus() === XM.Model.READY_CLEAN) {
