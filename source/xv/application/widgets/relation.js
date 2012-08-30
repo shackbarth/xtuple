@@ -26,6 +26,9 @@ regexp:true, undef:true, trailing:true, white:true */
     keyAttribute: "name",
     nameAttribute: "jobTitle",
     descripAttribute: "phone",
+    published: {
+      showAddress: false
+    },
     components: [
       {kind: "FittableColumns", components: [
         {name: "label", content: "", classes: "xv-decorated-label"},
@@ -69,7 +72,10 @@ regexp:true, undef:true, trailing:true, white:true */
           {name: "primaryEmailLabel", content: "_email".loc() + ":",
             classes: "xv-relationwidget-description label",
             showing: false},
-          {name: "webAddressLabel", content: "_phone".loc() + ":",
+          {name: "webAddressLabel", content: "_web".loc() + ":",
+            classes: "xv-relationwidget-description label",
+            showing: false},
+          {name: "addressLabel", content: "_address".loc() + ":",
             classes: "xv-relationwidget-description label",
             showing: false}
         ]},
@@ -81,7 +87,9 @@ regexp:true, undef:true, trailing:true, white:true */
           {name: "primaryEmail", ontap: "sendMail",
             classes: "xv-relationwidget-description hasLabel hyperlink"},
           {name: "webAddress", ontap: "openWindow",
-            classes: "xv-relationwidget-description hasLabel hyperlink"}
+            classes: "xv-relationwidget-description hasLabel hyperlink"},
+          {name: "address", classes: "xv-relationwidget-description hasLabel",
+            allowHtml: true}
         ]}
       ]}
     ],
@@ -105,7 +113,9 @@ regexp:true, undef:true, trailing:true, white:true */
         alternate = value.get('alternate'),
         fax = value.get('fax'),
         primaryEmail = value.get('primaryEmail'),
-        webAddress = value.get('webAddress');
+        webAddress = value.get('webAddress'),
+        address = XM.Address.format(value.get('address')),
+        showAddress = this.getShowAddress();
       if (value && value.get) {
         this.$.jobTitleLabel.setShowing(jobTitle);
         this.$.phoneLabel.setShowing(phone);
@@ -121,6 +131,9 @@ regexp:true, undef:true, trailing:true, white:true */
         this.$.webAddress.setShowing(webAddress);
         this.$.webAddress.setContent(webAddress);
         this.$.webAddressLabel.setShowing(webAddress);
+        this.$.address.setShowing(address && showAddress);
+        this.$.addressLabel.setShowing(address && showAddress);
+        if (showAddress) { this.$.address.setContent(address); }
       }
     },
     openWindow: function () {

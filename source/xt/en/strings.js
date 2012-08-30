@@ -358,6 +358,7 @@ XT.stringsFor("en_US", {
   "_validator": "Validator",
   "_value": "Value",
   "_warningColor": "Warning Color",
+  "_web": "Web",
   "_webAddress": "Web Address",
   "_welcome": "Welcome",
   "_xtuplePostbooks": "PostBooks",

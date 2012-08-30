@@ -36,7 +36,7 @@ white:true*/
       Formats the multiple lines of an address into a
       text block separating the elements of the address by line breaks.
 
-      @params {Boolean} Is HTML
+      @params {Boolean} Is HTML - default true
       @return {String}
     */
     format: function (isHtml) {
@@ -385,7 +385,7 @@ white:true*/
 
       Where address is an XM.Address and isHtml determines whether to
       use HTML line breaks instead of ASCII new line characters. The
-      default for isHtml is false. The longer signatures accept string
+      default for isHtml is true. The longer signatures accept string
       components of an address.
 
       @return {String}
@@ -405,7 +405,7 @@ white:true*/
         state = arguments[0].get('state');
         postalcode = arguments[0].get('postalCode');
         country = arguments[0].get('country');
-        breaks = (arguments[1] === undefined ? false : arguments[1]) ? '<br />' : '\n';
+        breaks = (arguments[1] === undefined ? true : arguments[1]) ? '<br />' : '\n';
       } else if (typeof arguments[0] === 'string')  {
         name = arguments[0];
         line1 = arguments[1];
@@ -415,7 +415,7 @@ white:true*/
         state = arguments[5];
         postalcode = arguments[6];
         country = arguments[7];
-        breaks = (arguments[8] === undefined ? false : arguments[8]) ? '<br />' : '\n';
+        breaks = (arguments[8] === undefined ? true : arguments[8]) ? '<br />' : '\n';
       } else { return false; }
 
       if (name) { fmtlines.push(name); }
