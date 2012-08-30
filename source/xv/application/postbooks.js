@@ -58,7 +58,7 @@ trailing:true white:true*/
         panel = this.createComponent({kind: "XV.WorkspaceContainer"});
         panel.render();
         this.reflow();
-        panel.setWorkspace(inEvent.workspace, inEvent.id, inEvent.callback);
+        panel.setWorkspace(inEvent);
         this.next();
       }
     },

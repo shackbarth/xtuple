@@ -184,15 +184,16 @@ trailing:true white:true*/
         isPlaceholder,
         view,
         value,
-        formatter;
+        formatter,
+        attr;
 
       // Loop through all attribute container children and set content
       for (prop in this.$) {
         if (this.$.hasOwnProperty(prop) && this.$[prop].getAttr) {
           view = this.$[prop];
           isPlaceholder = false;
-          if (model.getValue) value = model.getValue(this.$[prop].getAttr());
-          else value = model.get(this.$[prop].getAttr());
+          attr = this.$[prop].getAttr();
+          value = model.getValue ? model.getValue(attr) : model.get(attr);
           formatter = view.formatter;
           if (!value && view.placeholder) {
             value = view.placeholder;
@@ -234,7 +235,8 @@ trailing:true white:true*/
     fixedHeight: true,
     published: {
       attr: null,
-      value: null
+      value: null,
+      parentKey: ""
     },
     handlers: {
       onSetupItem: "setupItem"
@@ -253,6 +255,10 @@ trailing:true white:true*/
     },
     getModel: function (index) {
       return this._collection.models[index];
+    },
+    getParent: function () {
+      var key = this.getParentKey();
+      return key && this._collection ? this._collection[key] : null;
     },
     lengthChanged: function () {
       var count = this.readyModels().length,

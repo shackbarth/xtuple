@@ -37,6 +37,9 @@ trailing:true white:true*/
       attr: null,
       value: null
     },
+    events: {
+      onWorkspace: ""
+    },
     components: [
       {kind: "onyx.GroupboxHeader", content: "_contacts".loc()},
       {kind: "XV.AccountContactList", name: "list", attr: "contactRelations",
@@ -52,6 +55,16 @@ trailing:true white:true*/
     ],
     attrChanged: function () {
       this.$.list.setAttr(this.attr);
+    },
+    newContact: function () {
+      var account = this.$.list.getParent(),
+        attributes = {account: account},
+        inEvent = {
+          originator: this,
+          workspace: "XV.ContactWorkspace",
+          attributes: attributes
+        };
+      this.doWorkspace(inEvent);
     },
     valueChanged: function () {
       this.$.list.setValue(this.value);

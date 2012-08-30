@@ -183,6 +183,7 @@ trailing:true white:true*/
       // Create new instance and bindings
       this._model = new Klass();
       this._model.on("change", this.attributesChanged, this);
+      this._model.on("readOnlyChange", this.attributesChanged, this);
       this._model.on("statusChange", this.statusChanged, this);
       this._model.on("error", this.error, this);
       if (headerAttrs.length) {
@@ -195,9 +196,16 @@ trailing:true white:true*/
         this._model.on(observers, this.headerValuesChanged, this);
       }
     },
-    newRecord: function () {
+    newRecord: function (attributes) {
+      var attr;
       this.modelChanged();
       this._model.initialize(null, {isNew: true});
+      this._model.set(attributes);
+      for (attr in attributes) {
+        if (attributes.hasOwnProperty(attr)) {
+          this._model.setReadOnly(attr);
+        }
+      }
       this.clear();
     },
     requery: function () {
@@ -425,10 +433,23 @@ trailing:true white:true*/
       this.$.item.box = box;
       this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
     },
-    setWorkspace: function (workspace, id, callback) {
+    /**
+      Loads a workspace into the workspace container.
+      Accepts the following options:
+        * workspace: class name (required)
+        * id: record id to load. If none, a new record will be created.
+        * attributes: default attribute values for a new record.
+        * callback: function to call on a successful save. Passes the
+          new or updated model as an argument.
+    */
+    setWorkspace: function (options) {
       var menuItems = [],
         prop,
-        headerAttrs;
+        headerAttrs,
+        workspace = options.workspace,
+        id = options.id,
+        callback = options.callback,
+        attributes = options.attributes;
       if (workspace) {
         this.destroyWorkspace();
         workspace = {
@@ -449,7 +470,7 @@ trailing:true white:true*/
         if (id) {
           workspace.fetch(id);
         } else {
-          workspace.newRecord();
+          workspace.newRecord(attributes);
         }
       }
 

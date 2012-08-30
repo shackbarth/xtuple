@@ -152,7 +152,7 @@ trailing:true white:true*/
   var AccountContactList = {
     name: "XV.AccountContactList",
     kind: "XV.ListRelations",
-    fixedHeight: true,
+    parentKey: "account",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [

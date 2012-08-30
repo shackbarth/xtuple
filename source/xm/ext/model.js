@@ -725,21 +725,33 @@ white:true*/
       @param {Boolean} Boolean - default = true.
     */
     setReadOnly: function (key, value) {
+      var changes = {},
+        delta;
       // handle attribute
       if (_.isString(key)) {
         value = _.isBoolean(value) ? value : true;
         if (value && !_.contains(this.readOnlyAttributes, key)) {
           this.readOnlyAttributes.push(key);
+          changes[key] = true;
         } else if (!value && _.contains(this.readOnlyAttributes, key)) {
           this.readOnlyAttributes = _.without(this.readOnlyAttributes, key);
+          changes[key] = true;
         }
-
       // handle model
       } else {
         key = _.isBoolean(key) ? key : true;
         this.readOnly = key;
+        // Attributes that were already read-only will stay that way
+        // so only count the attributes that were not affected
+        delta = _.difference(this.getAttributeNames(), this.readOnlyAttributes);
+        _.each(delta, function (attr) {
+          changes[attr] = true;
+        });
       }
-
+      // Notify changes
+      if (!_.isEmpty(changes)) {
+        this.trigger('readOnlyChange', this, {changes: changes, isReadOnly: value});
+      }
       return this;
     },
 
