@@ -320,6 +320,7 @@ trailing:true white:true*/
       this._collection = this.value;
       this._collection.on("add", this.modelAdded, this);
       this._collection.on("remove", this.lengthChanged, this);
+      this.lengthChanged();
     }
 
   });
