@@ -83,14 +83,19 @@ white:true*/
 
     },
     setDeleted: function (isDeleted) {
-        var comp,
-          style = isDeleted ? "text-decoration: line-through" : "text-decoration: none";
+      var comp,
+        style = isDeleted ? "text-decoration: line-through" : "text-decoration: none",
+        i;
 
-        for (i = 0; i < this.getComponents().length; i++) {
-          comp = this.getComponents()[i];
-          comp.setInputStyle ? comp.setInputStyle(style) : XT.log("setInputStyle not supported on widget");
+      for (i = 0; i < this.getComponents().length; i++) {
+        comp = this.getComponents()[i];
+        if (comp.setInputStyle) {
+          comp.setInputStyle(style);
+        } else {
+          XT.log("setInputStyle not supported on widget");
         }
-        this.setDisabled(isDeleted);
+      }
+      this.setDisabled(isDeleted);
     },
     setDisabled: function (isDisabled) {
       var i,
@@ -98,7 +103,11 @@ white:true*/
 
       for (i = 0; i < this.getComponents().length; i++) {
         comp = this.getComponents()[i];
-        comp.setDisabled ? comp.setDisabled(isDisabled) : XT.log("setDisabled not supported on widget");
+        if (comp.setDisabled) {
+          comp.setDisabled(isDisabled);
+        } else {
+          XT.log("setDisabled not supported on widget");
+        }
       }
     }
   });

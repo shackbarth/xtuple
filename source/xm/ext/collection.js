@@ -54,7 +54,7 @@ white:true*/
           }]
         }
       };
-      call.fetch(options);
+      coll.fetch(options);
 
     The `query` object supports the following:
       * parameters - Attributes on which to filter by

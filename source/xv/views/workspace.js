@@ -7,7 +7,7 @@ trailing:true white:true*/
   var SAVE_APPLY = 1;
   var SAVE_CLOSE = 2;
   var SAVE_NEW = 3;
-  
+
   enyo.kind({
     name: "XV.Workspace",
     kind: "FittableRows",
@@ -17,6 +17,7 @@ trailing:true white:true*/
       model: "",
       callback: null
     },
+    extensions: null,
     events: {
       onError: "",
       onHeaderChange: "",
@@ -31,7 +32,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.Groupbox", components: [
+        {kind: "XV.Groupbox", name: "mainGroup", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", name: "name"},
           {kind: "XV.InputWidget", name: "description"}
@@ -96,6 +97,17 @@ trailing:true white:true*/
     },
     create: function () {
       this.inherited(arguments);
+      var extensions = this.extensions || [],
+        ext,
+        i;
+      for (i = 0; i < extensions.length; i++) {
+        ext = _.clone(this.extensions[i]);
+        // Resolve name of container to the instance
+        if (ext.container && typeof ext.container === 'string') {
+          ext.container = this.$[ext.container];
+        }
+        this.createComponent(ext);
+      }
       this.titleChanged();
       this.modelChanged();
     },
@@ -209,7 +221,7 @@ trailing:true white:true*/
     },
     statusChanged: function (model, status, options) {
       options = options || {};
-      var inEvent = {model: model},
+      var inEvent = {model: model, status: status},
         attrs = model.getAttributeNames(),
         changes = {},
         i;
@@ -287,6 +299,12 @@ trailing:true white:true*/
             style: "float: right;"}
         ]},
         {name: "header", classes: "xv-workspace-header"},
+        {kind: "onyx.Popup", name: "spinnerPopup", centered: true,
+          modal: true, floating: true, scrim: true,
+          onHide: "popupHidden", components: [
+          {kind: "onyx.Spinner"},
+          {content: "_loading".loc() + "..."}
+        ]},
         {kind: "onyx.Popup", name: "unsavedPopup", centered: true,
           modal: true, floating: true, scrim: true,
           onHide: "popupHidden", components: [
@@ -433,6 +451,9 @@ trailing:true white:true*/
           this.$.header.hide();
         }
         this.render();
+        // Render must be complete before showing spinner
+        this._init = true;
+        if (this._spinnerShow) { this.spinnerShow(); }
       }
 
       // Build menu by finding all panels
@@ -447,10 +468,23 @@ trailing:true white:true*/
       this.$.menu.setCount(menuItems.length);
       this.$.menu.render();
     },
+    spinnerHide: function () {
+      this._popupDone = true;
+      this.$.spinnerPopup.hide();
+    },
+    spinnerShow: function () {
+      // First render must be complete before showing spinner
+      if (!this._init) {
+        this._spinnerShow = true;
+        return;
+      }
+      this._popupDone = false;
+      this.$.spinnerPopup.show();
+    },
     statusChanged: function (inSender, inEvent) {
       var model = inEvent.model,
         K = XM.Model,
-        status = model.getStatus(),
+        status = inEvent.status,
         isNotReady = (status !== K.READY_CLEAN && status !== K.READY_DIRTY),
         isEditable = (model.canUpdate() && !model.isReadOnly()),
         canNotSave = (!model.isDirty() || !isEditable);
@@ -460,6 +494,13 @@ trailing:true white:true*/
       this.$.applyButton.setDisabled(canNotSave);
       this.$.saveAndNewButton.setDisabled(canNotSave);
       this.$.saveButton.setDisabled(canNotSave);
+
+      // Toggle spinner popup
+      if (status & K.BUSY) {
+        this.spinnerShow();
+      } else if (status & K.READY) {
+        this.spinnerHide();
+      }
     },
     titleChanged: function (inSender, inEvent) {
       var title = inEvent.title || "";

@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XT:true, XM:true, _:true, window: true, enyo:true, Globalize:true*/
+/*global XT:true, XM:true, XV:true, _:true, window: true, enyo:true, Globalize:true*/
 
 (function () {
 
@@ -86,7 +86,25 @@ trailing:true white:true*/
   // CONTACT
   //
 
-  enyo.kind({
+  var ContactListMixin = {
+    formatFirstName: function (value, view, model) {
+      var lastName = (model.get('lastName') || "").trim();
+      view.addRemoveClass("bold", _.isEmpty(lastName));
+      return value;
+    },
+    sendMail: function (inSender, inEvent) {
+      var model = this.getModel(inEvent.index),
+        email = model ? model.getValue('primaryEmail') : null,
+        win;
+      if (email) {
+        win = window.open('mailto:' + email);
+        win.close();
+      }
+      return true;
+    }
+  };
+
+  var ContactList = {
     name: "XV.ContactList",
     kind: "XV.List",
     label: "_contacts".loc(),
@@ -126,22 +144,41 @@ trailing:true white:true*/
           ]}
         ]}
       ]}
-    ],
-    formatFirstName: function (value, view, model) {
-      view.addRemoveClass("bold", _.isEmpty(model.get('lastName').trim()));
-      return value;
-    },
-    sendMail: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        email = model ? model.getValue('primaryEmail') : null,
-        win;
-      if (email) {
-        win = window.open('mailto:' + email);
-        win.close();
-      }
-      return true;
-    }
-  });
+    ]
+  };
+  ContactList = enyo.mixin(ContactList, ContactListMixin);
+  enyo.kind(ContactList);
+
+  var AccountContactList = {
+    name: "XV.AccountContactList",
+    kind: "XV.ListRelations",
+    fixedHeight: true,
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "firstName",
+                  formatter: "formatFirstName"},
+                {kind: "XV.ListAttr", attr: "lastName", fit: true, classes: "bold",
+                  style: "padding-left: 0px;"}
+              ]},
+              {kind: "XV.ListAttr", attr: "phone", fit: true, classes: "right"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "jobTitle",
+                placeholder: "_noJobTitle".loc()},
+              {kind: "XV.ListAttr", attr: "primaryEmail", ontap: "sendMail",
+                classes: "right hyperlink", fit: true}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  };
+  AccountContactList = enyo.mixin(AccountContactList, ContactListMixin);
+  enyo.kind(AccountContactList);
 
   // ..........................................................
   // INCIDENT

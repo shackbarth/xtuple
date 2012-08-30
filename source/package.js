@@ -13,5 +13,6 @@ enyo.depends(
   "xm",
   "xv",
   "stylesheets/screen.css",
-  "app.js"
+  "app.js",
+  "ext"
 );
