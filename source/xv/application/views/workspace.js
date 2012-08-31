@@ -48,13 +48,21 @@ trailing:true white:true*/
         fit: true},
       {kind: 'FittableColumns', classes: "xv-groupbox-buttons", components: [
         {kind: "onyx.Button", name: "newButton", onclick: "newContact",
-          content: "_new".loc(), classes: "xv-groupbox-button-left"},
+          content: "_new".loc(), classes: "xv-groupbox-button-left",
+          disabled: true},
         {kind: "onyx.Button", name: "attachButton", onclick: "attachContact",
-          content: "_attach".loc(), classes: "xv-groupbox-button-center"},
+          content: "_attach".loc(), classes: "xv-groupbox-button-center",
+          disabled: true},
         {kind: "onyx.Button", name: "detachButton", onclick: "detachContact",
-          content: "_detach".loc(), classes: "xv-groupbox-button-right", disabled: true}
+          content: "_detach".loc(), classes: "xv-groupbox-button-right",
+          disabled: true}
       ]}
     ],
+    create: function () {
+      this.inherited(arguments);
+      this.$.newButton.setDisabled(!XM.Contact.canCreate());
+      this.$.attachButton.setDisabled(!XM.Contact.canUpdate());
+    },
     attachContact: function () {
       var list = this.$.list,
         accountId = list.getParent().id,
@@ -62,11 +70,9 @@ trailing:true white:true*/
         // Callback to handle selection...
         callback = function (contactInfo) {
 
-          // Instantiate the the models involved
+          // Instantiate the models involved
           var contact = new XM.Contact({id: contactInfo.id}),
             contactAccountInfo = new XM.ContactAccountInfo({id: accountId}),
-
-            // Callback to load the account when contact fetched
             setAndSave = function () {
               var K = XM.Model,
                 options = {};

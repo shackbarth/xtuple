@@ -328,7 +328,6 @@ body {
         overflow: hidden;
         text-overflow: ellipsis;
         color: black;
-        background-color: white;
         &.right {
           position: absolute;
           right: 0px;
@@ -351,6 +350,21 @@ body {
         }
         &.hyperlink {
           color: blue;
+        }
+      }
+    }
+    &.item-selected {
+			background: #226B9A url(../../assets/item-hilite.png) repeat-x bottom;
+			.xv-list-column {
+			  .xv-list-attr {
+          color: white;
+          &.placeholder {
+            font-style: italic;
+            color: SkyBlue;
+          }
+          &.hyperlink {
+            color: #F49200;
+          }
         }
       }
     }

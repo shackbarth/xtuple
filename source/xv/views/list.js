@@ -11,7 +11,10 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ListItem",
     classes: "xv-list-item",
-    ontap: "itemTap"
+    ontap: "itemTap",
+    setSelected: function (inSelected) {
+      this.addRemoveClass("item-selected", inSelected);
+    }
   });
 
   enyo.kind({
@@ -309,7 +312,9 @@ trailing:true white:true*/
       });
     },
     setupItem: function (inSender, inEvent) {
-      var model = this.readyModels()[inEvent.index],
+      var index = inEvent.index,
+        isSelected = inEvent.originator.isSelected(index),
+        model = this.readyModels()[index],
         prop,
         isPlaceholder,
         view,
@@ -339,6 +344,9 @@ trailing:true white:true*/
           view.addRemoveClass("placeholder", isPlaceholder);
         }
       }
+      
+      // Selection
+      this.$.listItem.addRemoveClass("item-selected", isSelected);
     },
     statusChanged: function (model) {
       if (model.getStatus() === XM.Model.READY_CLEAN) {
