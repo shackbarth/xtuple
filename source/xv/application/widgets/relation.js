@@ -107,34 +107,31 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     setValue: function (value, options) {
       this.inherited(arguments);
-      if (!value) { return; }
-      var jobTitle = value.get('jobTitle'),
-        phone = value.get('phone'),
-        alternate = value.get('alternate'),
-        fax = value.get('fax'),
-        primaryEmail = value.get('primaryEmail'),
-        webAddress = value.get('webAddress'),
-        address = XM.Address.format(value.get('address')),
+      var jobTitle = value ? value.get('jobTitle') : "",
+        phone = value ? value.get('phone') : "",
+        alternate = value ? value.get('alternate') : "",
+        fax = value ? value.get('fax') : "",
+        primaryEmail = value ? value.get('primaryEmail') : "",
+        webAddress = value ? value.get('webAddress') : "",
+        address = value ? XM.Address.format(value.get('address')) : "",
         showAddress = this.getShowAddress();
-      if (value && value.get) {
-        this.$.jobTitleLabel.setShowing(jobTitle);
-        this.$.phoneLabel.setShowing(phone);
-        this.$.alternate.setShowing(alternate);
-        this.$.alternate.setContent(alternate);
-        this.$.alternateLabel.setShowing(alternate);
-        this.$.fax.setShowing(fax);
-        this.$.fax.setContent(fax);
-        this.$.faxLabel.setShowing(fax);
-        this.$.primaryEmail.setShowing(primaryEmail);
-        this.$.primaryEmail.setContent(primaryEmail);
-        this.$.primaryEmailLabel.setShowing(primaryEmail);
-        this.$.webAddress.setShowing(webAddress);
-        this.$.webAddress.setContent(webAddress);
-        this.$.webAddressLabel.setShowing(webAddress);
-        this.$.address.setShowing(address && showAddress);
-        this.$.addressLabel.setShowing(address && showAddress);
-        if (showAddress) { this.$.address.setContent(address); }
-      }
+      this.$.jobTitleLabel.setShowing(jobTitle);
+      this.$.phoneLabel.setShowing(phone);
+      this.$.alternate.setShowing(alternate);
+      this.$.alternate.setContent(alternate);
+      this.$.alternateLabel.setShowing(alternate);
+      this.$.fax.setShowing(fax);
+      this.$.fax.setContent(fax);
+      this.$.faxLabel.setShowing(fax);
+      this.$.primaryEmail.setShowing(primaryEmail);
+      this.$.primaryEmail.setContent(primaryEmail);
+      this.$.primaryEmailLabel.setShowing(primaryEmail);
+      this.$.webAddress.setShowing(webAddress);
+      this.$.webAddress.setContent(webAddress);
+      this.$.webAddressLabel.setShowing(webAddress);
+      this.$.address.setShowing(address && showAddress);
+      this.$.addressLabel.setShowing(address && showAddress);
+      if (showAddress) { this.$.address.setContent(address); }
     },
     openWindow: function () {
       var address = this.value ? this.value.get('webAddress') : null;
