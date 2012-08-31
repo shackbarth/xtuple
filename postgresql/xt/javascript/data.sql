@@ -53,7 +53,8 @@ select xt.install_js('XT','Data','xtuple', $$
        ret = {},
        conds = [],
        pcond = "",
-       prop;
+       prop,
+       col;
 
       ret.conditions = "";
       ret.parameters = [];
@@ -144,15 +145,16 @@ select xt.install_js('XT','Data','xtuple', $$
            privileges.personal &&
           (this.checkPrivilege(privileges.personal.read) || 
            this.checkPrivilege(privileges.personal.update)))) {
-        properties = privileges.personal.properties, conds = [], col;
-        for(i = 0; i < properties.length; i++) {
-          col = map.properties.findProperty('name', properties[i]).toOne ? "(" + properties[i] + ").username" : properties[i];
+        properties = privileges.personal.properties;
+        conds = [];
+        for (i = 0; i < properties.length; i++) {
+          col = orm.properties.findProperty('name', properties[i]).toOne ? "(" + properties[i] + ").username" : properties[i];
           conds.push(col);
         }
         pcond = "'" + this.currentUser() + "' in (" + conds.join(",") + ")";
       }
       ret.conditions = clauses.length ? '(' + clauses.join(' and ') + ')' : ret.conditions;
-      ret.conditions = pcond.length ? (clauses.length ? ret.concat(' and ', pcond) : pcond) : ret.conditions;
+      ret.conditions = pcond.length ? (clauses.length ? ret.conditions.concat(' and ', pcond) : pcond) : ret.conditions;
       ret.conditions = ret.conditions || true;
       return ret;
     },
