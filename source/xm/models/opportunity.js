@@ -240,7 +240,7 @@ white:true*/
 
     recordType: 'XM.OpportunityInfo',
 
-    editableModel: 'XM.Opporunity'
+    editableModel: 'XM.Opportunity'
 
   });
 

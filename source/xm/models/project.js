@@ -515,7 +515,7 @@ white:true*/
 
     recordType: 'XM.ProjectInfo',
 
-    editableRecord: 'XM.Project'
+    editableModel: 'XM.Project'
 
   });
 
