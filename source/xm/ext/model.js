@@ -1147,7 +1147,8 @@ white:true*/
         isGrantedPersonal = false;
         while (!isGrantedPersonal && i < props.length) {
           value = model.original(props[i]);
-          value = typeof value === 'object' ? value.get('username') : value;
+          value = value && typeof value === 'object' ?
+            value.get('username') : value;
           isGrantedPersonal = value === username;
           i += 1;
         }
