@@ -33,12 +33,14 @@ trailing:true white:true*/
     name: "XV.AccountContactsPanel",
     kind: "XV.Groupbox",
     title: "_contacts".loc(),
+    classes: "panel",
     published: {
       attr: null,
       value: null
     },
     events: {
-      onWorkspace: ""
+      onWorkspace: "",
+      onSearch: ""
     },
     components: [
       {kind: "onyx.GroupboxHeader", content: "_contacts".loc()},
@@ -53,6 +55,12 @@ trailing:true white:true*/
           content: "_detach".loc(), classes: "xv-groupbox-button-right", disabled: true}
       ]}
     ],
+    attachContact: function () {
+      var callback = function () {
+        alert('do something');
+      };
+      this.doSearch({list: "XV.ContactList", callback: callback});
+    },
     attrChanged: function () {
       this.$.list.setAttr(this.attr);
     },
@@ -110,7 +118,7 @@ trailing:true white:true*/
           ]}
         ]},
         {kind: "XV.AccountContactsPanel", attr: "contactRelations"},
-        {kind: "XV.Groupbox", title: "_notes".loc(),
+        {kind: "XV.Groupbox", title: "_notes".loc(), classes: "panel",
           components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
@@ -163,7 +171,7 @@ trailing:true white:true*/
             {kind: "XV.UserAccountWidget", attr: "owner"}
           ]}
         ]},
-        {kind: "XV.Groupbox", title: "_notes".loc(),
+        {kind: "XV.Groupbox", title: "_notes".loc(), classes: "panel",
           components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
@@ -292,7 +300,7 @@ trailing:true white:true*/
             {kind: "XV.ItemWidget", attr: "item"}
           ]}
         ]},
-        {kind: "XV.Groupbox", title: "_notes".loc(),
+        {kind: "XV.Groupbox", title: "_notes".loc(), classes: "panel",
           components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
@@ -379,7 +387,7 @@ trailing:true white:true*/
             {kind: "XV.UserAccountWidget", attr: "assignedTo"}
           ]}
         ]},
-        {kind: "XV.Groupbox", title: "_notes".loc(),
+        {kind: "XV.Groupbox", title: "_notes".loc(), classes: "panel",
           components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
@@ -468,7 +476,7 @@ trailing:true white:true*/
             {kind: "XV.ContactWidget", attr: "contact"}
           ]}
         ]},
-        {kind: "XV.Groupbox", title: "_notes".loc(),
+        {kind: "XV.Groupbox", title: "_notes".loc(), classes: "panel",
           components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
@@ -539,7 +547,7 @@ trailing:true white:true*/
             {kind: "XV.AccountWidget", attr: "account"}
           ]}
         ]},
-        {kind: "XV.Groupbox", title: "_notes".loc(),
+        {kind: "XV.Groupbox", title: "_notes".loc(), classes: "panel",
           components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
