@@ -36,7 +36,7 @@ white:true*/
 
         /**
          * If the descriptor mentions a model type we want to send that
-         * down to the widget, e.g. for DropdownWidgets
+         * down to the widget, e.g. for PickerWidgets
          */
         if (columnDesc.collection) {
           field.setCollection(columnDesc.collection);

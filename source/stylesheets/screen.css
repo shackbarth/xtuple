@@ -789,9 +789,9 @@ body {
   position: relative;
 }
 
-/* Dropdown.scss */
+/* picker.scss */
 /* line 648, ../sass/screen.scss */
-.xv-dropdownwidget {
+.xv-pickerwidget {
   background-color: white;
 }
 
@@ -821,7 +821,7 @@ body {
 }
 
 /* line 674, ../sass/screen.scss */
-.xv-dropdown-label {
+.xv-picker-label {
   width: 130px;
   padding-bottom: 8px;
   padding-left: 8px;

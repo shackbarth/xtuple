@@ -5,9 +5,9 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   enyo.kind({
-    name: "XV.DropdownWidget",
+    name: "XV.PickerWidget",
     kind: "enyo.Control",
-    classes: "xv-dropdownwidget",
+    classes: "xv-pickerwidget",
     events: {
       onValueChange: ""
     },
@@ -26,7 +26,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     components: [
       {kind: "FittableColumns", components: [
-        {name: "label", content: "", classes: "xv-dropdown-label"},
+        {name: "label", content: "", classes: "xv-picker-label"},
         {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
           components: [
           {kind: "onyx.PickerDecorator",
