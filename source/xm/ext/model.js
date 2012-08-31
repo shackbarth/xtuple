@@ -1042,39 +1042,8 @@ white:true*/
 
       @returns {Boolean}
     */
-    canRead: function () {
-      var privs = this.prototype.privileges,
-        sessionPrivs = XT.session.privileges,
-        isGranted = false;
-
-      // If no privileges, nothing to check.
-      if (_.isEmpty(privs)) { return true; }
-
-      if (sessionPrivs && sessionPrivs.get) {
-        // Check global read privilege.
-        isGranted = privs.all && privs.all.read ?
-                    sessionPrivs.get(privs.all.read) : false;
-
-        // Check global update privilege.
-        if (!isGranted) {
-          isGranted = privs.all && privs.all.update ?
-                      sessionPrivs.get(privs.all.update) : false;
-        }
-
-        // Check personal view privilege.
-        if (!isGranted) {
-          isGranted = privs.personal && privs.personal.read ?
-                      sessionPrivs.get(privs.personal.read) : false;
-        }
-
-        // Check personal update privilege.
-        if (!isGranted) {
-          isGranted = privs.personal && privs.personal.update ?
-                      sessionPrivs.get(privs.personal.update) : false;
-        }
-      }
-
-      return isGranted;
+    canRead: function (model) {
+      return XM.Model.canDo.call(this, 'read', model);
     },
 
     /**
