@@ -71,7 +71,7 @@ white:true*/
     }
 
   });
-  
+
   // Add mixin
   XM.Contact = XM.Contact.extend(XM.AddressCheckMixin);
 
@@ -126,6 +126,20 @@ white:true*/
     recordType: 'XM.ContactAccount',
 
     isDocumentAssignment: true
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.ContactAccountInfo = XM.Info.extend({
+    /** @scope XM.ContactAccountInfo.prototype */
+
+    recordType: 'XM.ContactAccountInfo',
+    
+    editableModel: 'XM.Account'
 
   });
 
@@ -202,14 +216,14 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Info
   */
-  XM.ContactInfo = XM.Model.extend({
+  XM.ContactInfo = XM.Info.extend({
     /** @scope XM.ContactInfo.prototype */
 
     recordType: 'XM.ContactInfo',
-
-    readOnly: true
+    
+    editableModel: 'XM.Contact'
 
   });
 

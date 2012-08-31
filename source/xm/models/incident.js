@@ -419,14 +419,14 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Info
   */
-  XM.IncidentInfo = XM.Model.extend({
+  XM.IncidentInfo = XM.Info.extend({
     /** @scope XM.IncidentInfo.prototype */
 
     recordType: 'XM.IncidentInfo',
 
-    readOnly: true
+    editableModel: 'XM.Incident'
 
   });
 

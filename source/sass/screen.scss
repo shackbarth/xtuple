@@ -328,7 +328,6 @@ body {
         overflow: hidden;
         text-overflow: ellipsis;
         color: black;
-        background-color: white;
         &.right {
           position: absolute;
           right: 0px;
@@ -354,6 +353,21 @@ body {
         }
       }
     }
+    &.item-selected {
+			background: #226B9A url(../../assets/item-hilite.png) repeat-x bottom;
+			.xv-list-column {
+			  .xv-list-attr {
+          color: white;
+          &.placeholder {
+            font-style: italic;
+            color: SkyBlue;
+          }
+          &.hyperlink {
+            color: #F49200;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -363,10 +377,12 @@ body {
   padding-bottom: 8px;
   padding-left: 8px;
   margin-right: 5px;
-  min-width: 330px;
   &.in-panel {
 		padding: 0 0 0 0;
 		margin: 0 0 0 0;
+	}
+	&.panel {
+		min-width: 330px;
 	}
 }
 
@@ -447,6 +463,19 @@ body {
 
 .xv-groupbox > .onyx-input-decorator:first-child:last-child {
 	border-radius: 4px;
+}
+
+.xv-groupbox-buttons {
+	border: none;
+	.xv-groupbox-button-center {
+	  border-radius: 0 0 0 0;
+	}
+	.xv-groupbox-button-left {
+  	border-radius: 0 0 0 4px;
+	}
+	.xv-groupbox-button-right {
+		border-radius: 0 0 4px 0;
+	}
 }
 
 .xv-error {
@@ -631,8 +660,8 @@ body {
   position: relative;
 }
 
-/* Dropdown.scss */
-.xv-dropdownwidget {
+/* picker.scss */
+.xv-pickerwidget {
   background-color: white;
 }
 
@@ -658,7 +687,7 @@ body {
   text-align: right;
 }
 
-.xv-dropdown-label {
+.xv-picker-label {
   width: 130px;
   padding-bottom: 8px;
   padding-left: 8px;

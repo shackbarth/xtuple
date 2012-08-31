@@ -320,12 +320,14 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Info
   */
-  XM.ToDoInfo = XM.Model.extend({
+  XM.ToDoInfo = XM.Info.extend({
     /** @scope XM.ToDoInfo.prototype */
 
-    recordType: 'XM.ToDoInfo'
+    recordType: 'XM.ToDoInfo',
+    
+    editableModel: 'XM.ToDo'
 
   });
 

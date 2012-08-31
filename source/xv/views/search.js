@@ -98,8 +98,18 @@ trailing:true white:true*/
       this.fetch();
       return true;
     },
-    setList: function (list, callback) {
-      var component;
+    /**
+      Set the search list. Options are
+        * list: class name
+        * searchText: initial text to search on
+        * callback: function to call when selection is made
+          that passes back the selected model.
+    */
+    setList: function (options) {
+      var component,
+        list = options.list,
+        callback = options.callback,
+        searchText = options.searchText;
       component = this.createComponent({
         name: "list",
         container: this.$.listPanel,
@@ -118,8 +128,6 @@ trailing:true white:true*/
       }
       this.init = true;
       this.render();
-    },
-    setSearchText: function (searchText) {
       this.$.searchInput.setValue(searchText || "");
     }
   });

@@ -159,11 +159,15 @@ white:true*/
     */
     fetchNumber: function () {
       var that = this,
-        options = {};
+        options = {},
+        D = XM.Document;
       options.success = function (resp) {
         that._number = that.keyIsString && resp.toString() ?
             resp.toString() : resp;
         that.set(that.documentKey, that._number, {force: true});
+        if (that.numberPolicy === D.AUTO_NUMBER) {
+          that.setReadOnly(that.documentKey);
+        }
       };
       XT.dataSource.dispatch('XM.Model', 'fetchNumber',
                              this.recordType, options);

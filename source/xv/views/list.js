@@ -11,7 +11,10 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ListItem",
     classes: "xv-list-item",
-    ontap: "itemTap"
+    ontap: "itemTap",
+    setSelected: function (inSelected) {
+      this.addRemoveClass("item-selected", inSelected);
+    }
   });
 
   enyo.kind({
@@ -184,15 +187,16 @@ trailing:true white:true*/
         isPlaceholder,
         view,
         value,
-        formatter;
+        formatter,
+        attr;
 
       // Loop through all attribute container children and set content
       for (prop in this.$) {
         if (this.$.hasOwnProperty(prop) && this.$[prop].getAttr) {
           view = this.$[prop];
           isPlaceholder = false;
-          if (model.getValue) value = model.getValue(this.$[prop].getAttr());
-          else value = model.get(this.$[prop].getAttr());
+          attr = this.$[prop].getAttr();
+          value = model.getValue ? model.getValue(attr) : model.get(attr);
           formatter = view.formatter;
           if (!value && view.placeholder) {
             value = view.placeholder;
@@ -232,9 +236,12 @@ trailing:true white:true*/
     kind: "List",
     classes: "xv-list",
     fixedHeight: true,
+    toggleSelected: true,
     published: {
       attr: null,
-      value: null
+      value: null,
+      parentKey: "",
+      orderBy: null
     },
     handlers: {
       onSetupItem: "setupItem"
@@ -251,12 +258,26 @@ trailing:true white:true*/
       this._collection.off("remove", this.lengthChanged, this);
       this.inherited(arguments);
     },
+    getFirstSelected: function () {
+      var selected = this.getSelection().selected,
+        prop;
+      for (prop in selected) {
+        if (selected.hasOwnProperty(prop)) {
+          return prop;
+        }
+      }
+    },
     getModel: function (index) {
-      return this._collection.models[index];
+      return this.readyModels()[index];
+    },
+    getParent: function () {
+      var key = this.getParentKey();
+      return key && this._collection ? this._collection[key] : null;
     },
     lengthChanged: function () {
       var count = this.readyModels().length,
         rowsPerPage;
+      if (count === this.count) { return; }
         
       // Hack: Solves scroll problem for small number of rows
       // but doesn't seem quite right
@@ -264,6 +285,7 @@ trailing:true white:true*/
       if (rowsPerPage !== this.rowsPerPage) {
         this.setRowsPerPage(rowsPerPage);
       }
+      this._collection.sort();
       this.setCount(count);
       this.refresh();
     },
@@ -274,13 +296,35 @@ trailing:true white:true*/
         model.on('statusChange', this.statusChanged, this);
       }
     },
+    orderByChanged: function () {
+      var orderBy = this.getOrderBy() || [];
+      if (this._collection && orderBy.length) {
+        this._collection.comparator = function (a, b) {
+          var aval,
+            bval,
+            attr,
+            i;
+          for (i = 0; i < orderBy.length; i++) {
+            attr = orderBy[i].attribute;
+            aval = orderBy[i].descending ? b.get(attr) : a.get(attr);
+            bval = orderBy[i].descending ? a.get(attr) : b.get(attr);
+            if (aval !== bval) {
+              return aval > bval ? 1 : -1;
+            }
+          }
+          return 0;
+        };
+      }
+    },
     readyModels: function () {
       return _.filter(this._collection.models, function (model) {
         return model.getStatus() === XM.Model.READY_CLEAN;
       });
     },
     setupItem: function (inSender, inEvent) {
-      var model = this.readyModels()[inEvent.index],
+      var index = inEvent.index,
+        isSelected = inEvent.originator.isSelected(index),
+        model = this.readyModels()[index],
         prop,
         isPlaceholder,
         view,
@@ -310,6 +354,9 @@ trailing:true white:true*/
           view.addRemoveClass("placeholder", isPlaceholder);
         }
       }
+      
+      // Selection
+      this.$.listItem.addRemoveClass("item-selected", isSelected);
     },
     statusChanged: function (model) {
       if (model.getStatus() === XM.Model.READY_CLEAN) {
@@ -321,6 +368,7 @@ trailing:true white:true*/
       this._collection = this.value;
       this._collection.on("add", this.modelAdded, this);
       this._collection.on("remove", this.lengthChanged, this);
+      this.orderByChanged();
       this.lengthChanged();
     }
 

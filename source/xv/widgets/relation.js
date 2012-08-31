@@ -243,21 +243,10 @@ regexp:true, undef:true, trailing:true, white:true */
         Workspace = this._Workspace,
         Model = Workspace && Workspace.prototype.model ?
           XT.getObjectByName(Workspace.prototype.model)  : null,
-        recordType = Model ? Model.prototype.recordType : null,
         setPrivileges = function () {
-          var options = {},
-            params = {};
-          // Need to request read priv. from the server
-          if (newId) {
-            options.success = function (resp) {
-              if (!that.destroyed) {
-                that.$.openItem.setDisabled(!resp);
-              }
-            };
-            params.recordType = recordType;
-            params.id = newId;
-            XT.dataSource.dispatch('XM.Model', 'canRead', params, options);
-            that.$.newItem.setDisabled(!Model.canCreate());
+          if (value && newId) {
+            that.$.newItem.setDisabled(!value.couldCreate());
+            that.$.openItem.setDisabled(!value.couldRead());
           }
         };
       this.value = value;

@@ -1,5 +1,6 @@
 enyo.depends(
   // Base classes
+  "info.js",
   "document.js",
   "comment.js",
   "characteristic.js",

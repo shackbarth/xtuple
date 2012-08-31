@@ -5,7 +5,6 @@ enyo.depends(
   "pullout.js",
   "workspace.js",
   "groupbox.js",
-  "panel.js",
   "repeater_box.js",
   "repeater_box_row.js",
   "comment_box.js",

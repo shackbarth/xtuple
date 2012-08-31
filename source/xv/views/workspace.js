@@ -32,7 +32,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainGroup", components: [
+        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", name: "name"},
           {kind: "XV.InputWidget", name: "description"}
@@ -183,6 +183,7 @@ trailing:true white:true*/
       // Create new instance and bindings
       this._model = new Klass();
       this._model.on("change", this.attributesChanged, this);
+      this._model.on("readOnlyChange", this.attributesChanged, this);
       this._model.on("statusChange", this.statusChanged, this);
       this._model.on("error", this.error, this);
       if (headerAttrs.length) {
@@ -195,9 +196,33 @@ trailing:true white:true*/
         this._model.on(observers, this.headerValuesChanged, this);
       }
     },
-    newRecord: function () {
+    newRecord: function (attributes) {
+      var that = this,
+        attr,
+        // Fetch related data, and notify when done
+        fetchIfRelated = function (attr) {
+          _.each(that._model.relations, function (relation) {
+            if (relation.key === attr) {
+              var options = {
+                success: function () {
+                  var changes = {};
+                  changes[attr] = true;
+                  that.attributesChanged(that._model, {changes: changes});
+                }
+              };
+              that._model.fetchRelated(attr, options);
+            }
+          });
+        };
       this.modelChanged();
       this._model.initialize(null, {isNew: true});
+      this._model.set(attributes, {force: true});
+      for (attr in attributes) {
+        if (attributes.hasOwnProperty(attr)) {
+          this._model.setReadOnly(attr);
+          fetchIfRelated(attr);
+        }
+      }
       this.clear();
     },
     requery: function () {
@@ -303,7 +328,7 @@ trailing:true white:true*/
           modal: true, floating: true, scrim: true,
           onHide: "popupHidden", components: [
           {kind: "onyx.Spinner"},
-          {content: "_loading".loc() + "..."}
+          {name: "spinnerMessage", content: "_loading".loc() + "..."}
         ]},
         {kind: "onyx.Popup", name: "unsavedPopup", centered: true,
           modal: true, floating: true, scrim: true,
@@ -425,10 +450,23 @@ trailing:true white:true*/
       this.$.item.box = box;
       this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
     },
-    setWorkspace: function (workspace, id, callback) {
+    /**
+      Loads a workspace into the workspace container.
+      Accepts the following options:
+        * workspace: class name (required)
+        * id: record id to load. If none, a new record will be created.
+        * attributes: default attribute values for a new record.
+        * callback: function to call on a successful save. Passes the
+          new or updated model as an argument.
+    */
+    setWorkspace: function (options) {
       var menuItems = [],
         prop,
-        headerAttrs;
+        headerAttrs,
+        workspace = options.workspace,
+        id = options.id,
+        callback = options.callback,
+        attributes = options.attributes;
       if (workspace) {
         this.destroyWorkspace();
         workspace = {
@@ -449,7 +487,7 @@ trailing:true white:true*/
         if (id) {
           workspace.fetch(id);
         } else {
-          workspace.newRecord();
+          workspace.newRecord(attributes);
         }
       }
 
@@ -469,8 +507,10 @@ trailing:true white:true*/
       this._popupDone = true;
       this.$.spinnerPopup.hide();
     },
-    spinnerShow: function () {
+    spinnerShow: function (message) {
+      message = message || "_loading".loc() + '...';
       this._popupDone = false;
+      this.$.spinnerMessage.setContent(message);
       this.$.spinnerPopup.show();
     },
     statusChanged: function (inSender, inEvent) {
@@ -479,7 +519,8 @@ trailing:true white:true*/
         status = inEvent.status,
         isNotReady = (status !== K.READY_CLEAN && status !== K.READY_DIRTY),
         isEditable = (model.canUpdate() && !model.isReadOnly()),
-        canNotSave = (!model.isDirty() || !isEditable);
+        canNotSave = (!model.isDirty() || !isEditable),
+        message;
 
       // Status dictates whether buttons are actionable
       this.$.refreshButton.setDisabled(isNotReady);
@@ -489,8 +530,11 @@ trailing:true white:true*/
 
       // Toggle spinner popup
       if (status & K.BUSY) {
-        this.spinnerShow();
-      } else if (status & K.READY) {
+        if (status === K.BUSY_COMMITTING) {
+          message = "_saving".loc() + "...";
+        }
+        this.spinnerShow(message);
+      } else {
         this.spinnerHide();
       }
     },

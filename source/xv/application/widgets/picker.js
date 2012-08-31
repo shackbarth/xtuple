@@ -9,8 +9,8 @@ regexp:true, undef:true, trailing:true, white:true */
   //
   
   enyo.kind({
-    name: "XV.AccountTypeDropdown",
-    kind: "XV.DropdownWidget",
+    name: "XV.AccountTypePicker",
+    kind: "XV.PickerWidget",
     published: {
       collection: "XM.accountTypes",
       valueAttribute: "id"
@@ -22,8 +22,8 @@ regexp:true, undef:true, trailing:true, white:true */
   //
   
   enyo.kind({
-    name: "XV.CommentTypeDropdown",
-    kind: "XV.DropdownWidget",
+    name: "XV.CommentTypePicker",
+    kind: "XV.PickerWidget",
     published: {
       collection: "XM.commentTypes"
     }
@@ -34,8 +34,8 @@ regexp:true, undef:true, trailing:true, white:true */
   //
   
   enyo.kind({
-    name: "XV.CountryDropdown",
-    kind: "XV.DropdownWidget",
+    name: "XV.CountryPicker",
+    kind: "XV.PickerWidget",
     published: {
       collection: "XM.countries"
     }
@@ -46,8 +46,8 @@ regexp:true, undef:true, trailing:true, white:true */
   //
   
   enyo.kind({
-    name: "XV.IncidentCategoryDropdown",
-    kind: "XV.DropdownWidget",
+    name: "XV.IncidentCategoryPicker",
+    kind: "XV.PickerWidget",
     published: {
       collection: "XM.incidentCategories"
     }
@@ -58,8 +58,8 @@ regexp:true, undef:true, trailing:true, white:true */
   //
   
   enyo.kind({
-    name: "XV.IncidentResolutionDropdown",
-    kind: "XV.DropdownWidget",
+    name: "XV.IncidentResolutionPicker",
+    kind: "XV.PickerWidget",
     published: {
       collection: "XM.incidentResolutions"
     }
@@ -70,8 +70,8 @@ regexp:true, undef:true, trailing:true, white:true */
   //
   
   enyo.kind({
-    name: "XV.IncidentSeverityDropdown",
-    kind: "XV.DropdownWidget",
+    name: "XV.IncidentSeverityPicker",
+    kind: "XV.PickerWidget",
     published: {
       collection: "XM.incidentSeverities"
     }
@@ -82,8 +82,8 @@ regexp:true, undef:true, trailing:true, white:true */
   //
   
   enyo.kind({
-    name: "XV.IncidentStatusDropdown",
-    kind: "XV.DropdownWidget",
+    name: "XV.IncidentStatusPicker",
+    kind: "XV.PickerWidget",
     published: {
       collection: "XM.incidentStatuses",
       valueAttribute: "id"
@@ -95,8 +95,8 @@ regexp:true, undef:true, trailing:true, white:true */
   //
   
   enyo.kind({
-    name: "XV.OpportunitySourceDropdown",
-    kind: "XV.DropdownWidget",
+    name: "XV.OpportunitySourcePicker",
+    kind: "XV.PickerWidget",
     published: {
       collection: "XM.opportunitySources"
     }
@@ -107,8 +107,8 @@ regexp:true, undef:true, trailing:true, white:true */
   //
   
   enyo.kind({
-    name: "XV.OpportunityStageDropdown",
-    kind: "XV.DropdownWidget",
+    name: "XV.OpportunityStagePicker",
+    kind: "XV.PickerWidget",
     published: {
       collection: "XM.opportunityStages"
     }
@@ -119,8 +119,8 @@ regexp:true, undef:true, trailing:true, white:true */
   //
   
   enyo.kind({
-    name: "XV.OpportunityTypeDropdown",
-    kind: "XV.DropdownWidget",
+    name: "XV.OpportunityTypePicker",
+    kind: "XV.PickerWidget",
     published: {
       collection: "XM.opportunityTypes"
     }
@@ -131,8 +131,8 @@ regexp:true, undef:true, trailing:true, white:true */
   //
   
   enyo.kind({
-    name: "XV.PriorityDropdown",
-    kind: "XV.DropdownWidget",
+    name: "XV.PriorityPicker",
+    kind: "XV.PickerWidget",
     published: {
       collection: "XM.priorities"
     }
@@ -143,8 +143,8 @@ regexp:true, undef:true, trailing:true, white:true */
   //
   
   enyo.kind({
-    name: "XV.ProjectStatusDropdown",
-    kind: "XV.DropdownWidget",
+    name: "XV.ProjectStatusPicker",
+    kind: "XV.PickerWidget",
     published: {
       collection: "XM.projectStatuses",
       valueAttribute: "id"
