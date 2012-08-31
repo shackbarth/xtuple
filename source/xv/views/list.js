@@ -236,6 +236,7 @@ trailing:true white:true*/
     kind: "List",
     classes: "xv-list",
     fixedHeight: true,
+    toggleSelected: true,
     published: {
       attr: null,
       value: null,
@@ -257,8 +258,17 @@ trailing:true white:true*/
       this._collection.off("remove", this.lengthChanged, this);
       this.inherited(arguments);
     },
+    getFirstSelected: function () {
+      var selected = this.getSelection().selected,
+        prop;
+      for (prop in selected) {
+        if (selected.hasOwnProperty(prop)) {
+          return prop;
+        }
+      }
+    },
     getModel: function (index) {
-      return this._collection.models[index];
+      return this.readyModels()[index];
     },
     getParent: function () {
       var key = this.getParentKey();

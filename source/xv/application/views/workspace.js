@@ -1,7 +1,7 @@
 /*jshint bitwise:false, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XV:true, XM:true, Backbone:true, enyo:true, XT:true */
+/*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true */
 
 (function () {
 
@@ -41,6 +41,10 @@ trailing:true white:true*/
     events: {
       onWorkspace: "",
       onSearch: ""
+    },
+    handlers: {
+      onSelect: "selectionChanged",
+      onDeselect: "selectionChanged"
     },
     components: [
       {kind: "onyx.GroupboxHeader", content: "_contacts".loc()},
@@ -108,6 +112,36 @@ trailing:true white:true*/
     attrChanged: function () {
       this.$.list.setAttr(this.attr);
     },
+    detachContact: function () {
+      var list = this.$.list,
+        index = list.getFirstSelected(),
+        contactInfo = list.getModel(index),
+        contact = new XM.Contact({id: contactInfo.id}),
+        setAndSave = function () {
+          var K = XM.Model,
+            options = {};
+          if (contact.getStatus() === K.READY_CLEAN) {
+            contact.off('statusChange', setAndSave);
+
+            // Callback to update our list with changes when save complete
+            options.success = function () {
+              list._collection.remove(contactInfo);
+              list.setCount(list._collection.length);
+              list.refresh();
+            };
+
+            // Set and save our contact without account relation
+            contact.set('account', null);
+            contact.save(null, options);
+          }
+        };
+
+      // When fetch complete, trigger set and save
+      contact.on('statusChange', setAndSave);
+
+      // Go get the data
+      contact.fetch();
+    },
     newContact: function () {
       var list = this.$.list,
         account = this.$.list.getParent(),
@@ -131,6 +165,27 @@ trailing:true white:true*/
           callback: callback
         };
       this.doWorkspace(inEvent);
+    },
+    selectionChanged: function (inSender, inEvent) {
+      // Enables/disables the Detach button
+      var that = this,
+        index = this.$.list.getFirstSelected(),
+        contact,
+        options = {},
+        id;
+      if (!_.isEmpty(index) && XM.Contact.canUpdate()) {
+        
+        // Because of personal privileges need to actually
+        // fetch the model to find out if we can really update
+        id = this.$.list.getModel(index).id;
+        contact = new XM.Contact({id: id});
+        options.success = function () {
+          that.$.detachButton.setDisabled(!contact.canUpdate());
+        };
+        contact.fetch(options);
+      } else {
+        this.$.detachButton.setDisabled(true);
+      }
     },
     valueChanged: function () {
       this.$.list.setValue(this.value);
