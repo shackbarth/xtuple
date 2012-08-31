@@ -6,7 +6,7 @@ white:true*/
 (function () {
   enyo.kind({
     name: "XV.RepeaterBox",
-    kind: "XV.Groupbox",
+    kind: "XV.ScrollableGroupbox",
     published: {
       attr: null,
       columns: [],
