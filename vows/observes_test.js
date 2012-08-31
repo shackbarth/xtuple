@@ -10,7 +10,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   require('../xt');
 
-  vows.describe('X.Object').addBatch({
+  vows.describe('the X.Object observes function').addBatch({
 
     "when an observed function's event is not fired": {
       topic: function () {
@@ -130,6 +130,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         classInstance.emit('something');
       },
       "The overiding function shouldn't also need to also observe": function (error, result) {
+        // XXX this fails. Should it fail?
+
         // the following assertions are consistent with the effect
         // of the callback being fired
         assert.isNull(error);
