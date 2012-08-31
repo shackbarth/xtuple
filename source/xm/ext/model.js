@@ -946,7 +946,7 @@ white:true*/
             }
             break;
           case S.DB_COMPOUND:
-            if (!_.isObject(value)) {
+            if (!_.isObject(value) && !_.isNumber(value)) {
               params.type = "_object".loc();
               return XT.Error.clone('xt1003', { params: params });
             }

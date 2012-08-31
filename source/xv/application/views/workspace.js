@@ -56,9 +56,47 @@ trailing:true white:true*/
       ]}
     ],
     attachContact: function () {
-      var callback = function () {
-        alert('do something');
-      };
+      var list = this.$.list,
+        accountId = list.getParent().id,
+
+        // Callback to handle selection...
+        callback = function (contactInfo) {
+
+          // Instantiate the the models involved
+          var contact = new XM.Contact({id: contactInfo.id}),
+            contactAccountInfo = new XM.ContactAccountInfo({id: accountId}),
+
+            // Callback to load the account when contact fetched
+            setAndSave = function () {
+              var K = XM.Model,
+                options = {};
+              if (contact.getStatus() === K.READY_CLEAN &&
+                  contactAccountInfo.getStatus() === K.READY_CLEAN) {
+                contact.off('statusChange', setAndSave);
+                contactAccountInfo.off('statusChange', setAndSave);
+
+                // Callback to update our list with changes when save complete
+                options.success = function () {
+                  list._collection.add(contactInfo);
+                  list.setCount(list._collection.length);
+                  list.refresh();
+                };
+
+                // Set and save our contact with the new account relation
+                contact.set('account', contactAccountInfo);
+                contact.save(null, options);
+              }
+            };
+
+          // When fetch complete, trigger set and save
+          contact.on('statusChange', setAndSave);
+          contactAccountInfo.on('statusChange', setAndSave);
+
+          // Go get the data
+          contact.fetch();
+          contactAccountInfo.fetch();
+        };
+
       this.doSearch({list: "XV.ContactList", callback: callback});
     },
     attrChanged: function () {
@@ -92,7 +130,7 @@ trailing:true white:true*/
       this.$.list.setValue(this.value);
     }
   });
-  
+
   enyo.kind({
     name: "XV.AccountWorkspace",
     kind: "XV.Workspace",
