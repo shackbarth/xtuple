@@ -48,8 +48,8 @@ trailing:true white:true*/
     },
     components: [
       {kind: "onyx.GroupboxHeader", content: "_contacts".loc()},
-      {kind: "XV.AccountContactList", name: "list", attr: "contactRelations",
-        fit: true},
+      {kind: "XV.AccountContactListRelations", name: "list",
+        attr: "contactRelations", fit: true},
       {kind: 'FittableColumns', classes: "xv-groupbox-buttons", components: [
         {kind: "onyx.Button", name: "newButton", onclick: "newContact",
           content: "_new".loc(), classes: "xv-groupbox-button-left",
@@ -201,9 +201,11 @@ trailing:true white:true*/
             {kind: "XV.AccountTypePicker", attr: "accountType"},
             {kind: "XV.UserAccountWidget", attr: "owner"},
             {kind: "onyx.GroupboxHeader", content: "_primaryContact".loc()},
-            {kind: "XV.ContactWidget", attr: "primaryContact", showAddress: true},
+            {kind: "XV.ContactWidget", attr: "primaryContact",
+              list: "XV.AccountContactList", showAddress: true},
             {kind: "onyx.GroupboxHeader", content: "_secondaryContact".loc()},
-            {kind: "XV.ContactWidget", attr: "secondaryContact", showAddress: true}
+            {kind: "XV.ContactWidget", attr: "secondaryContact",
+              list: "XV.AccountContactList", showAddress: true}
           ]}
         ]},
         {kind: "XV.AccountContactsPanel", attr: "contactRelations"},

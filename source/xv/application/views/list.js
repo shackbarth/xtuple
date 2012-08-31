@@ -148,9 +148,18 @@ trailing:true white:true*/
   };
   ContactList = enyo.mixin(ContactList, ContactListMixin);
   enyo.kind(ContactList);
-
-  var AccountContactList = {
+  
+  /**
+    Specifically for search on contacts in account workspace.
+  */
+  enyo.kind({
     name: "XV.AccountContactList",
+    kind: "XV.ContactList",
+    collection: "XM.AccountContactInfoCollection"
+  });
+
+  var AccountContactListRelations = {
+    name: "XV.AccountContactListRelations",
     kind: "XV.ListRelations",
     orderBy: [
       {attribute: "lastName"},
@@ -181,8 +190,8 @@ trailing:true white:true*/
       ]}
     ]
   };
-  AccountContactList = enyo.mixin(AccountContactList, ContactListMixin);
-  enyo.kind(AccountContactList);
+  AccountContactListRelations = enyo.mixin(AccountContactListRelations, ContactListMixin);
+  enyo.kind(AccountContactListRelations);
 
   // ..........................................................
   // INCIDENT

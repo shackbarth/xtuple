@@ -238,6 +238,18 @@ white:true*/
 
     @extends XM.Collection
   */
+  XM.AccountContactInfoCollection = XM.Collection.extend({
+    /** @scope XM.AccountContactInfoCollection.prototype */
+
+    model: XM.AccountContactInfo
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
   XM.AccountInfoCollection = XM.Collection.extend({
     /** @scope XM.AccountInfoCollection.prototype */
 
