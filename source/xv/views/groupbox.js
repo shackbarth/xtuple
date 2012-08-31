@@ -6,7 +6,7 @@ white:true*/
 (function () {
   
   enyo.kind({
-    name: "XV.Panel",
+    name: "XV.Groupbox",
     kind: "FittableRows",
     classes: "xv-groupbox",
     published: {

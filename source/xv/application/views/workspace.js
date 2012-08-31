@@ -31,7 +31,7 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.AccountContactsPanel",
-    kind: "XV.Panel",
+    kind: "XV.Groupbox",
     title: "_contacts".loc(),
     published: {
       attr: null,
@@ -94,7 +94,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.Panel", name: "mainPanel", components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
@@ -110,7 +110,7 @@ trailing:true white:true*/
           ]}
         ]},
         {kind: "XV.AccountContactsPanel", attr: "contactRelations"},
-        {kind: "XV.Panel", title: "_notes".loc(),
+        {kind: "XV.Groupbox", title: "_notes".loc(),
           components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
@@ -138,7 +138,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.Panel", name: "mainPanel", components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
@@ -163,7 +163,7 @@ trailing:true white:true*/
             {kind: "XV.UserAccountWidget", attr: "owner"}
           ]}
         ]},
-        {kind: "XV.Panel", title: "_notes".loc(),
+        {kind: "XV.Groupbox", title: "_notes".loc(),
           components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
@@ -271,7 +271,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.Panel", name: "mainPanel", components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
@@ -292,7 +292,7 @@ trailing:true white:true*/
             {kind: "XV.ItemWidget", attr: "item"}
           ]}
         ]},
-        {kind: "XV.Panel", title: "_notes".loc(),
+        {kind: "XV.Groupbox", title: "_notes".loc(),
           components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
@@ -350,7 +350,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.Panel", name: "mainPanel", components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
@@ -379,7 +379,7 @@ trailing:true white:true*/
             {kind: "XV.UserAccountWidget", attr: "assignedTo"}
           ]}
         ]},
-        {kind: "XV.Panel", title: "_notes".loc(),
+        {kind: "XV.Groupbox", title: "_notes".loc(),
           components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
@@ -448,7 +448,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         classes: "xv-top-panel", fit: true, components: [
-        {kind: "XV.Panel", name: "mainPanel", components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
@@ -468,7 +468,7 @@ trailing:true white:true*/
             {kind: "XV.ContactWidget", attr: "contact"}
           ]}
         ]},
-        {kind: "XV.Panel", title: "_notes".loc(),
+        {kind: "XV.Groupbox", title: "_notes".loc(),
           components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
@@ -518,7 +518,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.Panel", name: "mainPanel", components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
@@ -539,7 +539,7 @@ trailing:true white:true*/
             {kind: "XV.AccountWidget", attr: "account"}
           ]}
         ]},
-        {kind: "XV.Panel", title: "_notes".loc(),
+        {kind: "XV.Groupbox", title: "_notes".loc(),
           components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
