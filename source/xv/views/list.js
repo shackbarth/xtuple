@@ -236,7 +236,8 @@ trailing:true white:true*/
     published: {
       attr: null,
       value: null,
-      parentKey: ""
+      parentKey: "",
+      orderBy: null
     },
     handlers: {
       onSetupItem: "setupItem"
@@ -263,6 +264,7 @@ trailing:true white:true*/
     lengthChanged: function () {
       var count = this.readyModels().length,
         rowsPerPage;
+      if (count === this.count) { return; }
         
       // Hack: Solves scroll problem for small number of rows
       // but doesn't seem quite right
@@ -270,6 +272,7 @@ trailing:true white:true*/
       if (rowsPerPage !== this.rowsPerPage) {
         this.setRowsPerPage(rowsPerPage);
       }
+      this._collection.sort();
       this.setCount(count);
       this.refresh();
     },
@@ -278,6 +281,26 @@ trailing:true white:true*/
         this.lengthChanged();
       } else {
         model.on('statusChange', this.statusChanged, this);
+      }
+    },
+    orderByChanged: function () {
+      var orderBy = this.getOrderBy() || [];
+      if (this._collection && orderBy.length) {
+        this._collection.comparator = function (a, b) {
+          var aval,
+            bval,
+            attr,
+            i;
+          for (i = 0; i < orderBy.length; i++) {
+            attr = orderBy[i].attribute;
+            aval = orderBy[i].descending ? b.get(attr) : a.get(attr);
+            bval = orderBy[i].descending ? a.get(attr) : b.get(attr);
+            if (aval !== bval) {
+              return aval > bval ? 1 : -1;
+            }
+          }
+          return 0;
+        };
       }
     },
     readyModels: function () {
@@ -327,6 +350,7 @@ trailing:true white:true*/
       this._collection = this.value;
       this._collection.on("add", this.modelAdded, this);
       this._collection.on("remove", this.lengthChanged, this);
+      this.orderByChanged();
       this.lengthChanged();
     }
 

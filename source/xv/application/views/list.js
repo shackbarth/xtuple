@@ -152,6 +152,10 @@ trailing:true white:true*/
   var AccountContactList = {
     name: "XV.AccountContactList",
     kind: "XV.ListRelations",
+    orderBy: [
+      {attribute: "lastName"},
+      {attribute: "firstName"}
+    ],
     parentKey: "account",
     components: [
       {kind: "XV.ListItem", components: [
