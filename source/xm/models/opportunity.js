@@ -62,7 +62,7 @@ white:true*/
     @extends XM.Document
   */
   XM.Opportunity = XM.Document.extend({
-    /** @scope XM.OpportunityInfo.prototype */
+    /** @scope XM.Opportunity.prototype */
 
     recordType: 'XM.Opportunity',
 
@@ -233,14 +233,14 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Info
   */
-  XM.OpportunityInfo = XM.Model.extend({
+  XM.OpportunityInfo = XM.Info.extend({
     /** @scope XM.OpportunityInfo.prototype */
 
     recordType: 'XM.OpportunityInfo',
 
-    readOnly: true
+    editableModel: 'XM.Opporunity'
 
   });
 

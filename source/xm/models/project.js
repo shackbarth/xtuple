@@ -129,7 +129,7 @@ white:true*/
 
     /**
     Return a copy of this project with a given number and date offset.
-    Accepted options are: 
+    Accepted options are:
       number: Project number
       offset: Due date offset
 
@@ -195,7 +195,7 @@ white:true*/
 
     /**
     Return a copy of this project with a given number and date offset.
-    Accepted options are: 
+    Accepted options are:
       number: Project number
       offset: Due date offset
 
@@ -507,15 +507,15 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Info
     @extends XM.ProjectStatus
   */
-  XM.ProjectInfo = XM.Model.extend({
+  XM.ProjectInfo = XM.Info.extend({
     /** @scope XM.ProjectInfo.prototype */
 
     recordType: 'XM.ProjectInfo',
 
-    readOnly: true
+    editableRecord: 'XM.Project'
 
   });
 

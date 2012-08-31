@@ -204,26 +204,28 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Info
   */
-  XM.AccountContactInfo = XM.Model.extend({
+  XM.AccountContactInfo = XM.Info.extend({
     /** @scope XM.AccountContactInfo.prototype */
 
-    recordType: 'XM.AccountContactInfo'
+    recordType: 'XM.AccountContactInfo',
+    
+    editableModel: 'XM.Contact'
 
   });
 
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Info
   */
-  XM.AccountInfo = XM.Model.extend({
+  XM.AccountInfo = XM.Info.extend({
     /** @scope XM.AccountInfo.prototype */
 
     recordType: 'XM.AccountInfo',
 
-    readOnly: true,
+    editableModel: 'XM.Account'
 
   });
 

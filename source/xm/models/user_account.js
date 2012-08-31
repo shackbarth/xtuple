@@ -111,14 +111,14 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Info
   */
-  XM.UserAccountRoleInfo = XM.Model.extend({
+  XM.UserAccountRoleInfo = XM.Info.extend({
     /** @scope XM.UserAccountRoleInfo.prototype */
 
     recordType: 'XM.UserAccountRoleInfo',
 
-    readOnly: true
+    editableModel: 'XM.UserAccountRole'
 
   });
 
@@ -212,16 +212,16 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Info
   */
-  XM.UserAccountInfo = XM.Model.extend({
+  XM.UserAccountInfo = XM.Info.extend({
     /** @scope XM.UserAccountInfo.prototype */
 
     idAttribute: 'username',
 
     recordType: 'XM.UserAccountInfo',
 
-    readOnly: true
+    editableModel: 'XM.UserAccount'
 
   });
 

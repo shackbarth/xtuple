@@ -58,8 +58,11 @@ trailing:true white:true*/
           content: "_attach".loc(), classes: "xv-groupbox-button-center",
           disabled: true},
         {kind: "onyx.Button", name: "detachButton", onclick: "detachContact",
-          content: "_detach".loc(), classes: "xv-groupbox-button-right",
-          disabled: true}
+          content: "_detach".loc(), classes: "xv-groupbox-button-center",
+          disabled: true},
+        {kind: "onyx.Button", name: "openButton", onclick: "openContact",
+          content: "_open".loc(), classes: "xv-groupbox-button-right",
+          disabled: true, fit: true}
       ]}
     ],
     create: function () {
@@ -167,25 +170,12 @@ trailing:true white:true*/
       this.doWorkspace(inEvent);
     },
     selectionChanged: function (inSender, inEvent) {
-      // Enables/disables the Detach button
-      var that = this,
-        index = this.$.list.getFirstSelected(),
-        contact,
-        options = {},
-        id;
-      if (!_.isEmpty(index) && XM.Contact.canUpdate()) {
-        
-        // Because of personal privileges need to actually
-        // fetch the model to find out if we can really update
-        id = this.$.list.getModel(index).id;
-        contact = new XM.Contact({id: id});
-        options.success = function () {
-          that.$.detachButton.setDisabled(!contact.canUpdate());
-        };
-        contact.fetch(options);
-      } else {
-        this.$.detachButton.setDisabled(true);
-      }
+      var index = this.$.list.getFirstSelected(),
+        model = index ? this.$.list.getModel(index) : null,
+        couldNotRead = model ? !model.couldRead() : true,
+        couldNotUpdate = model ? !model.couldUpdate() : true;
+      this.$.detachButton.setDisabled(couldNotUpdate);
+      this.$.openButton.setDisabled(couldNotRead);
     },
     valueChanged: function () {
       this.$.list.setValue(this.value);
