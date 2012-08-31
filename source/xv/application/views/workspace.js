@@ -57,12 +57,26 @@ trailing:true white:true*/
       this.$.list.setAttr(this.attr);
     },
     newContact: function () {
-      var account = this.$.list.getParent(),
-        attributes = {account: account},
+      var list = this.$.list,
+        account = this.$.list.getParent(),
+        id = account ? account.id : null,
+        attributes = {account: id},
+        callback = function (model) {
+          var Model = list._collection.model,
+            value = new Model({id: model.id}),
+            options = {};
+          options.success = function () {
+            list._collection.add(value);
+            list.setCount(list._collection.length);
+            list.refresh();
+          };
+          value.fetch(options);
+        },
         inEvent = {
           originator: this,
           workspace: "XV.ContactWorkspace",
-          attributes: attributes
+          attributes: attributes,
+          callback: callback
         };
       this.doWorkspace(inEvent);
     },

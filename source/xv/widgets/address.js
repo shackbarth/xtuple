@@ -72,7 +72,8 @@ regexp:true, undef:true, trailing:true, white:true */
           classes: "xv-addresswidget-input-decorator",
           components: [
           {kind: "onyx.Input", name: "postalCode",
-            classes: "xv-addresswidget-input", placeholder: "_postalCode".loc(), onchange: "inputChanged"}
+            classes: "xv-addresswidget-input",
+            placeholder: "_postalCode".loc(), onchange: "inputChanged"}
         ]},
         {kind: "onyx.InputDecorator", fit: true,
           classes: "xv-addresswidget-combobox-decorator",
@@ -92,12 +93,6 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.state.setCountry(country);
       return true;
     },
-    /**
-     * A convenience function so that this object can be treated generally like an input
-     */
-    //getValue: function () {
-    //  return this.getModel();
-    //},
     done: function () {
       var siblings,
         i,
@@ -205,14 +200,24 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     valueChanged: function () {
       var value = this.getValue(),
-        line1 = value.get('line1') || "",
-        line2 = value.get('line2') || "",
-        line3 = value.get('line3') || "",
-        city = value.get('city') || "",
-        state = value.get('state') || "",
-        postalCode = value.get('postalCode') || "",
-        country = value.get('country') || "",
+        line1 = "",
+        line2 = "",
+        line3 = "",
+        city = "",
+        state = "",
+        postalCode = "",
+        country = "",
+        fmt = "";
+      if (value) {
+        line1 = value.get('line1') || "";
+        line2 = value.get('line2') || "";
+        line3 = value.get('line3') || "";
+        city = value.get('city') || "";
+        state = value.get('state') || "";
+        postalCode = value.get('postalCode') || "";
+        country = value.get('country') || "";
         fmt = XM.Address.format(value);
+      }
       this.$.line1.setValue(line1);
       this.$.line2.setValue(line2);
       this.$.line3.setValue(line3);

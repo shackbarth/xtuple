@@ -128,6 +128,20 @@ white:true*/
     isDocumentAssignment: true
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.ContactAccountInfo = XM.Model.extend({
+    /** @scope XM.ContactAccountInfo.prototype */
+
+    recordType: 'XM.ContactAccountInfo',
+
+    readOnly: true,
+
+  });
 
   /**
     @class

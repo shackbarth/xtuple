@@ -197,13 +197,30 @@ trailing:true white:true*/
       }
     },
     newRecord: function (attributes) {
-      var attr;
+      var that = this,
+        attr,
+        // Fetch related data, and notify when done
+        fetchIfRelated = function (attr) {
+          _.each(that._model.relations, function (relation) {
+            if (relation.key === attr) {
+              var options = {
+                success: function () {
+                  var changes = {};
+                  changes[attr] = true;
+                  that.attributesChanged(that._model, {changes: changes});
+                }
+              };
+              that._model.fetchRelated(attr, options);
+            }
+          });
+        };
       this.modelChanged();
       this._model.initialize(null, {isNew: true});
-      this._model.set(attributes);
+      this._model.set(attributes, {force: true});
       for (attr in attributes) {
         if (attributes.hasOwnProperty(attr)) {
           this._model.setReadOnly(attr);
+          fetchIfRelated(attr);
         }
       }
       this.clear();
@@ -517,7 +534,7 @@ trailing:true white:true*/
           message = "_saving".loc() + "...";
         }
         this.spinnerShow(message);
-      } else if (status & K.READY) {
+      } else {
         this.spinnerHide();
       }
     },
