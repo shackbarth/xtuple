@@ -39,8 +39,8 @@ trailing:true white:true*/
       value: null
     },
     events: {
-      onWorkspace: "",
-      onSearch: ""
+      onSearch: "",
+      onWorkspace: ""
     },
     handlers: {
       onSelect: "selectionChanged",
@@ -167,6 +167,27 @@ trailing:true white:true*/
           attributes: attributes,
           callback: callback
         };
+      this.doWorkspace(inEvent);
+    },
+    openContact: function () {
+      var list = this.$.list,
+        index = list.getFirstSelected(),
+        model = list.getModel(index),
+        id = model.id,
+        callback = function () {
+          var options = {};
+          options.success = function () {
+            list.refresh();
+          };
+          // Refresh
+          model.fetch(options);
+        },
+        inEvent = {
+          workspace: "XV.ContactWorkspace",
+          id: id,
+          callback: callback
+        };
+
       this.doWorkspace(inEvent);
     },
     selectionChanged: function (inSender, inEvent) {
