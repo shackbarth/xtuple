@@ -13,7 +13,7 @@ trailing:true white:true*/
     name: "XV.OrderedReferenceWorkspace",
     kind: "XV.Workspace",
     components: [
-      {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
+      {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
@@ -30,7 +30,7 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.AccountContactsPanel",
+    name: "XV.AccountContactsBox",
     kind: "XV.Groupbox",
     title: "_contacts".loc(),
     classes: "panel",
@@ -210,7 +210,7 @@ trailing:true white:true*/
     headerAttrs: ["number", "-", "name"],
     model: "XM.Account",
     components: [
-      {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
+      {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
@@ -229,7 +229,7 @@ trailing:true white:true*/
               list: "XV.AccountContactList", showAddress: true}
           ]}
         ]},
-        {kind: "XV.AccountContactsPanel", attr: "contactRelations"},
+        {kind: "XV.AccountContactsBox", attr: "contactRelations"},
         {kind: "XV.Groupbox", title: "_notes".loc(), classes: "panel",
           components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
@@ -256,7 +256,7 @@ trailing:true white:true*/
       onError: "errorNotify"
     },
     components: [
-      {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
+      {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
@@ -343,7 +343,7 @@ trailing:true white:true*/
     title: "_country".loc(),
     model: "XM.Country",
     components: [
-      {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
+      {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
@@ -368,7 +368,7 @@ trailing:true white:true*/
     title: "_honorific".loc(),
     model: "XM.Honorific",
     components: [
-      {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
+      {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
@@ -389,7 +389,7 @@ trailing:true white:true*/
     headerAttrs: ["number", "-", "description"],
     model: "XM.Incident",
     components: [
-      {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
+      {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
@@ -468,7 +468,7 @@ trailing:true white:true*/
     headerAttrs: ["number", "-", "name"],
     model: "XM.Opportunity",
     components: [
-      {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
+      {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
@@ -566,7 +566,7 @@ trailing:true white:true*/
     headerAttrs: ["number", "-", "name"],
     model: "XM.Project",
     components: [
-      {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
+      {kind: "Panels", arrangerKind: "CarouselArranger",
         classes: "xv-top-panel", fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
@@ -613,7 +613,7 @@ trailing:true white:true*/
     title: "_state".loc(),
     model: "XM.State",
     components: [
-      {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
+      {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
@@ -636,7 +636,7 @@ trailing:true white:true*/
     headerAttrs: ["name"],
     model: "XM.ToDo",
     components: [
-      {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
+      {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
@@ -684,7 +684,7 @@ trailing:true white:true*/
       onRefreshPrivileges: "refreshPrivileges"
     },
     components: [
-      {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
+      {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, classes: "xv-top-panel", components: [
         {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles"},
         {kind: "XV.UserAccountPrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges" },
@@ -714,7 +714,7 @@ trailing:true white:true*/
     title: "_userAccountRole".loc(),
     model: "XM.UserAccountRole",
     components: [
-      {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
+      {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, classes: "xv-top-panel", components: [
         {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},

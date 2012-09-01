@@ -166,6 +166,7 @@ trailing:true white:true*/
       {attribute: "firstName"}
     ],
     parentKey: "account",
+    workspace: "XV.ContactWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [

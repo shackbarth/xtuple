@@ -8,17 +8,24 @@ trailing:true white:true*/
   var extensions;
  
   // ..........................................................
-  // INCIDENT
+  // ACCOUNT
   //
   
+  /**
+    Must include a component called `list`.
+    List must be of sub-kind `XV.ListRelations`.
+    The `value` must be set to a collection of `XM.Info` models.
+  */
   enyo.kind({
-    name: "XV.AccountIncidentsPanel",
+    name: "XV.AccountOpportunitiesBox",
     kind: "XV.Groupbox",
-    title: "_incidents".loc(),
+    title: "_opportunities".loc(),
     classes: "panel",
     published: {
       attr: null,
-      value: null
+      value: null,
+      parentKey: 'account',
+      searchList: "XV.OpportunityList"
     },
     events: {
       onSearch: "",
@@ -29,109 +36,109 @@ trailing:true white:true*/
       onDeselect: "selectionChanged"
     },
     components: [
-      {kind: "onyx.GroupboxHeader", content: "_contacts".loc()},
-      {kind: "XV.AccountContactListRelations", name: "list",
-        attr: "contactRelations", fit: true},
+      {kind: "onyx.GroupboxHeader", content: "_opportunities".loc()},
+      {kind: "XV.AccountOpportunityListRelations", name: "list",
+        attr: "opportunityRelations", fit: true},
       {kind: 'FittableColumns', classes: "xv-groupbox-buttons", components: [
-        {kind: "onyx.Button", name: "newButton", onclick: "newContact",
+        {kind: "onyx.Button", name: "newButton", onclick: "newRecord",
           content: "_new".loc(), classes: "xv-groupbox-button-left",
           disabled: true},
-        {kind: "onyx.Button", name: "attachButton", onclick: "attachContact",
+        {kind: "onyx.Button", name: "attachButton", onclick: "attachRecord",
           content: "_attach".loc(), classes: "xv-groupbox-button-center",
           disabled: true},
-        {kind: "onyx.Button", name: "detachButton", onclick: "detachContact",
+        {kind: "onyx.Button", name: "detachButton", onclick: "detachRecord",
           content: "_detach".loc(), classes: "xv-groupbox-button-center",
           disabled: true},
-        {kind: "onyx.Button", name: "openButton", onclick: "openContact",
+        {kind: "onyx.Button", name: "openButton", onclick: "openRecord",
           content: "_open".loc(), classes: "xv-groupbox-button-right",
           disabled: true, fit: true}
       ]}
     ],
-    create: function () {
-      this.inherited(arguments);
-      this.$.newButton.setDisabled(!XM.Contact.canCreate());
-      this.$.attachButton.setDisabled(!XM.Contact.canUpdate());
-    },
-    attachContact: function () {
+    attachRecord: function () {
       var list = this.$.list,
-        accountId = list.getParent().id,
+        key = this.parentKey,
+        parentId = list.getParent().id,
 
         // Callback to handle selection...
-        callback = function (contactInfo) {
+        callback = function (selectedModel) {
 
           // Instantiate the models involved
-          var contact = new XM.Contact({id: contactInfo.id}),
-            contactAccountInfo = new XM.ContactAccountInfo({id: accountId}),
+          var Klass = XT.getObjectByName(selectedModel.editableModel),
+            model = new Klass({id: selectedModel.id}),
+            infoModel = new list.model({id: parentId}),
             setAndSave = function () {
               var K = XM.Model,
                 options = {};
-              if (contact.getStatus() === K.READY_CLEAN &&
-                  contactAccountInfo.getStatus() === K.READY_CLEAN) {
-                contact.off('statusChange', setAndSave);
-                contactAccountInfo.off('statusChange', setAndSave);
+              if (model.getStatus() === K.READY_CLEAN &&
+                  infoModel.getStatus() === K.READY_CLEAN) {
+                model.off('statusChange', setAndSave);
+                infoModel.off('statusChange', setAndSave);
 
                 // Callback to update our list with changes when save complete
                 options.success = function () {
-                  list._collection.add(contactInfo);
+                  list._collection.add(selectedModel);
                   list.setCount(list._collection.length);
                   list.refresh();
                 };
 
                 // Set and save our contact with the new account relation
-                contact.set('account', contactAccountInfo);
-                contact.save(null, options);
+                model.set(key, infoModel);
+                model.save(null, options);
               }
             };
 
           // When fetch complete, trigger set and save
-          contact.on('statusChange', setAndSave);
-          contactAccountInfo.on('statusChange', setAndSave);
+          model.on('statusChange', setAndSave);
+          infoModel.on('statusChange', setAndSave);
 
           // Go get the data
-          contact.fetch();
-          contactAccountInfo.fetch();
+          model.fetch();
+          infoModel.fetch();
         };
 
-      this.doSearch({list: "XV.ContactList", callback: callback});
+      this.doSearch({list: this.searchList, callback: callback});
     },
     attrChanged: function () {
       this.$.list.setAttr(this.attr);
     },
-    detachContact: function () {
+    detachRecord: function () {
       var list = this.$.list,
+        key = this.parentKey,
         index = list.getFirstSelected(),
-        contactInfo = list.getModel(index),
-        contact = new XM.Contact({id: contactInfo.id}),
+        infoModel = list.getModel(index),
+        Klass = XT.getObjectByName(infoModel.editableModel),
+        model = new Klass({id: infoModel.id}),
         setAndSave = function () {
           var K = XM.Model,
             options = {};
-          if (contact.getStatus() === K.READY_CLEAN) {
-            contact.off('statusChange', setAndSave);
+          if (model.getStatus() === K.READY_CLEAN) {
+            model.off('statusChange', setAndSave);
 
             // Callback to update our list with changes when save complete
             options.success = function () {
-              list._collection.remove(contactInfo);
+              list._collection.remove(infoModel);
               list.setCount(list._collection.length);
               list.refresh();
             };
 
             // Set and save our contact without account relation
-            contact.set('account', null);
-            contact.save(null, options);
+            model.set(key, null);
+            model.save(null, options);
           }
         };
 
       // When fetch complete, trigger set and save
-      contact.on('statusChange', setAndSave);
+      model.on('statusChange', setAndSave);
 
       // Go get the data
-      contact.fetch();
+      model.fetch();
     },
-    newContact: function () {
+    newRecord: function () {
       var list = this.$.list,
-        account = this.$.list.getParent(),
-        id = account ? account.id : null,
-        attributes = {account: id},
+        parent = this.$.list.getParent(),
+        id = parent ? parent.id : null,
+        key = this.parentKey,
+        attributes = {},
         callback = function (model) {
           var Model = list._collection.model,
             value = new Model({id: model.id}),
@@ -143,15 +150,17 @@ trailing:true white:true*/
           };
           value.fetch(options);
         },
-        inEvent = {
-          originator: this,
-          workspace: "XV.ContactWorkspace",
-          attributes: attributes,
-          callback: callback
-        };
+        inEvent;
+      attributes[key] = id;
+      inEvent = {
+        originator: this,
+        workspace: list.workspace,
+        attributes: attributes,
+        callback: callback
+      };
       this.doWorkspace(inEvent);
     },
-    openContact: function () {
+    openRecord: function () {
       var list = this.$.list,
         index = list.getFirstSelected(),
         model = list.getModel(index),
@@ -165,7 +174,7 @@ trailing:true white:true*/
           model.fetch(options);
         },
         inEvent = {
-          workspace: "XV.ContactWorkspace",
+          workspace: list.workspace,
           id: id,
           callback: callback
         };
@@ -181,9 +190,23 @@ trailing:true white:true*/
       this.$.openButton.setDisabled(couldNotRead);
     },
     valueChanged: function () {
-      this.$.list.setValue(this.value);
+      var value = this.getValue(), // Must be a collection of Info models
+        Klass = value ?
+          XT.getObjectByName(value.model.prototype.editableModel) : null,
+        canNotCreate = Klass ? !Klass.canCreate() : true,
+        canNotUpdate = Klass ? !Klass.canUpdate() : true;
+      this.$.list.setValue(value);
+      this.$.newButton.setDisabled(canNotCreate);
+      this.$.attachButton.setDisabled(canNotUpdate);
     }
   });
+  
+  extensions = [
+    {kind: "XV.AccountOpportunitiesBox", container: "panels",
+      attr: "opportunityRelations"}
+  ];
+
+  XV.appendExtension("XV.AccountWorkspace", extensions);
 
   // ..........................................................
   // INCIDENT

@@ -30,7 +30,7 @@ trailing:true white:true*/
       onValueChange: "valueChanged"
     },
     components: [
-      {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
+      {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},

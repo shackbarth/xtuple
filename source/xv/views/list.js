@@ -241,7 +241,8 @@ trailing:true white:true*/
       attr: null,
       value: null,
       parentKey: "",
-      orderBy: null
+      orderBy: null,
+      workspace: ""
     },
     handlers: {
       onSetupItem: "setupItem"

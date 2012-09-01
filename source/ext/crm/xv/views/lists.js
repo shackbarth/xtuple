@@ -19,6 +19,7 @@ trailing:true white:true*/
       {attribute: 'id'}
     ],
     parentKey: "account",
+    workspace: "XV.OpportunityWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -34,7 +35,8 @@ trailing:true white:true*/
           ]}
         ]}
       ]}
-    ]
+    ],
+    formatTargetClose: XV.OpportunityList.prototype.formatTargetClose
   });
 
 }());
