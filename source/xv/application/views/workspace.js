@@ -33,27 +33,9 @@ trailing:true white:true*/
     name: "XV.AccountContactsBox",
     kind: "XV.ListRelationsBox",
     title: "_contacts".loc(),
-    parentKey: 'account',
-    searchList: "XV.ContactList",
-    components: [
-      {kind: "onyx.GroupboxHeader", content: "_contacts".loc()},
-      {kind: "XV.AccountContactListRelations", name: "list",
-        attr: "contactRelations", fit: true},
-      {kind: 'FittableColumns', classes: "xv-groupbox-buttons", components: [
-        {kind: "onyx.Button", name: "newButton", onclick: "newRecord",
-          content: "_new".loc(), classes: "xv-groupbox-button-left",
-          disabled: true},
-        {kind: "onyx.Button", name: "attachButton", onclick: "attachRecord",
-          content: "_attach".loc(), classes: "xv-groupbox-button-center",
-          disabled: true},
-        {kind: "onyx.Button", name: "detachButton", onclick: "detachRecord",
-          content: "_detach".loc(), classes: "xv-groupbox-button-center",
-          disabled: true},
-        {kind: "onyx.Button", name: "openButton", onclick: "openRecord",
-          content: "_open".loc(), classes: "xv-groupbox-button-right",
-          disabled: true, fit: true}
-      ]}
-    ]
+    parentKey: "account",
+    listRelations: "XV.AccountContactListRelations",
+    searchList: "XV.ContactList"
   });
 
   enyo.kind({

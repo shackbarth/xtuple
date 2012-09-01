@@ -20,27 +20,9 @@ trailing:true white:true*/
     name: "XV.AccountOpportunitiesBox",
     kind: "XV.ListRelationsBox",
     title: "_opportunities".loc(),
-    parentKey: 'account',
-    searchList: "XV.OpportunityList",
-    components: [
-      {kind: "onyx.GroupboxHeader", content: "_opportunities".loc()},
-      {kind: "XV.AccountOpportunityListRelations", name: "list",
-        attr: "opportunityRelations", fit: true},
-      {kind: 'FittableColumns', classes: "xv-groupbox-buttons", components: [
-        {kind: "onyx.Button", name: "newButton", onclick: "newRecord",
-          content: "_new".loc(), classes: "xv-groupbox-button-left",
-          disabled: true},
-        {kind: "onyx.Button", name: "attachButton", onclick: "attachRecord",
-          content: "_attach".loc(), classes: "xv-groupbox-button-center",
-          disabled: true},
-        {kind: "onyx.Button", name: "detachButton", onclick: "detachRecord",
-          content: "_detach".loc(), classes: "xv-groupbox-button-center",
-          disabled: true},
-        {kind: "onyx.Button", name: "openButton", onclick: "openRecord",
-          content: "_open".loc(), classes: "xv-groupbox-button-right",
-          disabled: true, fit: true}
-      ]}
-    ]
+    parentKey: "account",
+    listRelations: "XV.AccountOpportunityListRelations",
+    searchList: "XV.OpportunityList"
   });
   
   extensions = [

@@ -13,11 +13,12 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ListRelationsBox",
     kind: "XV.Groupbox",
-    title: "",
     published: {
       attr: null,
       value: null,
+      title: "",
       parentKey: "",
+      listRelations: "",
       searchList: ""
     },
     events: {
@@ -28,25 +29,40 @@ trailing:true white:true*/
       onSelect: "selectionChanged",
       onDeselect: "selectionChanged"
     },
-    components: [
-      {kind: "onyx.GroupboxHeader", content: "_opportunities".loc()},
-      {kind: "XV.AccountOpportunityListRelations", name: "list",
-        attr: "opportunityRelations", fit: true},
-      {kind: 'FittableColumns', classes: "xv-groupbox-buttons", components: [
-        {kind: "onyx.Button", name: "newButton", onclick: "newRecord",
-          content: "_new".loc(), classes: "xv-groupbox-button-left",
-          disabled: true},
-        {kind: "onyx.Button", name: "attachButton", onclick: "attachRecord",
-          content: "_attach".loc(), classes: "xv-groupbox-button-center",
-          disabled: true},
-        {kind: "onyx.Button", name: "detachButton", onclick: "detachRecord",
-          content: "_detach".loc(), classes: "xv-groupbox-button-center",
-          disabled: true},
-        {kind: "onyx.Button", name: "openButton", onclick: "openRecord",
-          content: "_open".loc(), classes: "xv-groupbox-button-right",
-          disabled: true, fit: true}
-      ]}
-    ],
+    create: function () {
+      this.inherited(arguments);
+      // Header
+      this.createComponent({
+        kind: "onyx.GroupboxHeader",
+        content: this.getTitle()
+      });
+      
+      // List
+      this.createComponent({
+        kind: this.getListRelations(),
+        name: "list",
+        attr: this.getAttr(),
+        fit: true
+      });
+      
+      // Buttons
+      this.createComponent(
+        {kind: 'FittableColumns', classes: "xv-groupbox-buttons", components: [
+          {kind: "onyx.Button", name: "newButton", onclick: "newRecord",
+            content: "_new".loc(), classes: "xv-groupbox-button-left",
+            disabled: true},
+          {kind: "onyx.Button", name: "attachButton", onclick: "attachRecord",
+            content: "_attach".loc(), classes: "xv-groupbox-button-center",
+            disabled: true},
+          {kind: "onyx.Button", name: "detachButton", onclick: "detachRecord",
+            content: "_detach".loc(), classes: "xv-groupbox-button-center",
+            disabled: true},
+          {kind: "onyx.Button", name: "openButton", onclick: "openRecord",
+            content: "_open".loc(), classes: "xv-groupbox-button-right",
+            disabled: true, fit: true}
+        ]}
+      );
+    },
     attachRecord: function () {
       var list = this.$.list,
         collection = this.value,
