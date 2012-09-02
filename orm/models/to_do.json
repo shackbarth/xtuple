@@ -51,7 +51,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountInfo",
+          "type": "AccountBasicInfo",
           "column": "todoitem_crmacct_id"
         }
       },
@@ -274,7 +274,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountInfo",
+          "type": "AccountBasicInfo",
           "column": "target_id"
         }
       },

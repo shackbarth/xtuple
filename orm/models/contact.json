@@ -135,7 +135,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "ContactAccountInfo",
+          "type": "AccountBasicInfo",
           "column": "cntct_crmacct_id"
         }
       },
@@ -313,71 +313,6 @@
     ],
     "isNestedOnly": true,
     "isSystem": true
-  },
-  {
-  "context": "xtuple",
-  "nameSpace": "XM",
-  "type": "ContactAccountInfo",
-  "table": "crmacct",
-  "comment": "Contact Account Info Map (prevent recursion problems)",
-  "privileges": {
-   "all": {
-     "create": false,
-     "read": "ViewAllCRMAccounts",
-     "update": false,
-     "delete": false
-   },
-   "personal": {
-     "create": false,
-     "read": true,
-     "update": false,
-     "delete": true,
-     "properties": [
-       "owner"
-     ]
-   }
-  },
-  "properties": [
-   {
-     "name": "id",
-     "attr": {
-       "type": "Number",
-       "column": "crmacct_id",
-       "isPrimaryKey": true
-     }
-   },
-   {
-     "name": "number",
-     "attr": {
-       "type": "String",
-       "column": "crmacct_number"
-     }
-   },
-   {
-     "name": "name",
-     "attr": {
-       "type": "String",
-       "column": "crmacct_name"
-     }
-   },
-   {
-     "name": "isActive",
-     "attr": {
-       "type": "Boolean",
-       "column": "crmacct_active"
-     }
-   },
-   {
-     "name": "owner",
-     "toOne": {
-       "isNested": true,
-       "type": "UserAccountInfo",
-       "column": "crmacct_owner_username",
-       "inverse": "username"
-     }
-   }
-  ],
-  "isSystem": true
   },
   {
     "context": "xtuple",
