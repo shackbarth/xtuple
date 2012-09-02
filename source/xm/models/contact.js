@@ -132,20 +132,6 @@ white:true*/
   /**
     @class
 
-    @extends XM.Info
-  */
-  XM.ContactAccountInfo = XM.Info.extend({
-    /** @scope XM.ContactAccountInfo.prototype */
-
-    recordType: 'XM.ContactAccountInfo',
-    
-    editableModel: 'XM.Account'
-
-  });
-
-  /**
-    @class
-
     @extends XM.Model
   */
   XM.ContactContact = XM.Model.extend({

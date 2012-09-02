@@ -214,6 +214,23 @@ white:true*/
     editableModel: 'XM.Contact'
 
   });
+  
+  /**
+    @class
+    
+    Like `XM.AccountInfo`, but without contact which otherwise
+    runs into recursion problems.
+
+    @extends XM.Info
+  */
+  XM.AccountBasicInfo = XM.Info.extend({
+    /** @scope XM.ContactAccountInfo.prototype */
+
+    recordType: 'XM.AccountBasicInfo',
+    
+    editableModel: 'XM.Account'
+
+  });
 
   /**
     @class
