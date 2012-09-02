@@ -10,6 +10,33 @@ trailing:true white:true*/
   //
   
   enyo.kind({
+    name: "XV.AccountIncidentListRelations",
+    kind: "XV.ListRelations",
+    orderBy: [
+      {attribute: 'priorityOrder'},
+      {attribute: 'updated', descending: true},
+      {attribute: 'id', descending: true}
+    ],
+    parentKey: "account",
+    workspace: "XV.IncidentWorkspace",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "updated", fit: true, formatter: "formatDate",
+                classes: "right"}
+            ]},
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ],
+    formatDate: XV.IncidentList.prototype.formatDate
+  });
+
+  enyo.kind({
     name: "XV.AccountOpportunityListRelations",
     kind: "XV.ListRelations",
     orderBy: [
@@ -40,30 +67,32 @@ trailing:true white:true*/
   });
   
   enyo.kind({
-    name: "XV.AccountIncidentListRelations",
+    name: "XV.AccountToDoListRelations",
     kind: "XV.ListRelations",
     orderBy: [
       {attribute: 'priorityOrder'},
-      {attribute: 'updated', descending: true},
-      {attribute: 'id', descending: true}
+      {attribute: 'dueDate'},
+      {attribute: 'name'}
     ],
     parentKey: "account",
-    workspace: "XV.IncidentWorkspace",
+    workspace: "XV.ToDoWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
-              {kind: "XV.ListAttr", attr: "updated", fit: true, formatter: "formatDate",
+              {kind: "XV.ListAttr", attr: "name", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "dueDate", fit: true,
+                formatter: "formatDueDate", placeholder: "_noDueDate".loc(),
                 classes: "right"}
             ]},
-            {kind: "XV.ListAttr", attr: "description"}
+            {kind: "XV.ListAttr", attr: "description",
+              placeholder: "_noDescription".loc()}
           ]}
         ]}
       ]}
     ],
-    formatDate: XV.IncidentList.prototype.formatDate
+    formatDueDate: XV.ToDoList.prototype.formatDueDate
   });
 
 }());

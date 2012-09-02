@@ -74,7 +74,6 @@ trailing:true white:true*/
     },
     attachRecord: function () {
       var list = this.$.list,
-        collection = this.value,
         key = this.getParentKey(),
         parent = list.getParent(),
         searchList = this.getSearchList(),
@@ -86,7 +85,8 @@ trailing:true white:true*/
           // Instantiate the models involved
           var Klass = XT.getObjectByName(selectedModel.editableModel),
             model = new Klass({id: selectedModel.id}),
-            infoModel = new collection.model({id: parent.id}),
+            InfoKlass = model.getRelation('account').relatedModel,
+            infoModel = new InfoKlass({id: parent.id}),
             setAndSave = function () {
               var K = XM.Model,
                 options = {};
