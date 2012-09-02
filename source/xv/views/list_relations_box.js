@@ -75,8 +75,10 @@ trailing:true white:true*/
     attachRecord: function () {
       var list = this.$.list,
         collection = this.value,
-        key = this.parentKey,
-        parentId = list.getParent().id,
+        key = this.getParentKey(),
+        parent = list.getParent(),
+        searchList = this.getSearchList(),
+        inEvent,
 
         // Callback to handle selection...
         callback = function (selectedModel) {
@@ -84,7 +86,7 @@ trailing:true white:true*/
           // Instantiate the models involved
           var Klass = XT.getObjectByName(selectedModel.editableModel),
             model = new Klass({id: selectedModel.id}),
-            infoModel = new collection.model({id: parentId}),
+            infoModel = new collection.model({id: parent.id}),
             setAndSave = function () {
               var K = XM.Model,
                 options = {};
@@ -96,8 +98,6 @@ trailing:true white:true*/
                 // Callback to update our list with changes when save complete
                 options.success = function () {
                   list._collection.add(selectedModel);
-                  list.setCount(list._collection.length);
-                  list.refresh();
                 };
 
                 // Set and save our contact with the new account relation
@@ -114,8 +114,18 @@ trailing:true white:true*/
           model.fetch();
           infoModel.fetch();
         };
-
-      this.doSearch({list: this.searchList, callback: callback});
+      
+      // Open a search screen that excludes already attached records
+      inEvent = {
+        list: searchList,
+        callback: callback,
+        conditions: [{
+          attribute: key,
+          operator: "!=",
+          value: parent
+        }]
+      };
+      this.doSearch(inEvent);
     },
     attrChanged: function () {
       this.$.list.setAttr(this.attr);
@@ -164,8 +174,6 @@ trailing:true white:true*/
             options = {};
           options.success = function () {
             list._collection.add(value);
-            list.setCount(list._collection.length);
-            list.refresh();
           };
           value.fetch(options);
         },
