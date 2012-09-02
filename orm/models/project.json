@@ -51,7 +51,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountInfo",
+          "type": "AccountRelation",
           "column": "prj_crmacct_id"
         }
       },
@@ -59,7 +59,7 @@
         "name": "contact",
         "toOne": {
           "isNested": true,
-          "type": "ContactInfo",
+          "type": "ContactRelation",
           "column": "prj_cntct_id"
         }
       },
@@ -102,7 +102,7 @@
         "name": "assignedTo",
         "toOne": {
           "isNested": true,
-          "type": "UserAccountInfo",
+          "type": "UserAccountRelation",
           "column": "prj_username",
           "inverse": "username"
         }
@@ -118,7 +118,7 @@
         "name": "owner",
         "toOne": {
           "isNested": true,
-          "type": "UserAccountInfo",
+          "type": "UserAccountRelation",
           "column": "prj_owner_username",
           "inverse": "username"
         }
@@ -269,7 +269,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountInfo",
+          "type": "AccountRelation",
           "column": "target_id"
         }
       },
@@ -419,7 +419,7 @@
         "name": "contact",
         "toOne": {
           "isNested": true,
-          "type": "ContactInfo",
+          "type": "ContactRelation",
           "column": "target_id"
         }
       },
@@ -485,7 +485,7 @@
         "name": "file",
         "toOne": {
           "isNested": true,
-          "type": "FileInfo",
+          "type": "FileRelation",
           "column": "target_id"
         }
       },
@@ -551,7 +551,7 @@
         "name": "image",
         "toOne": {
           "isNested": true,
-          "type": "ImageInfo",
+          "type": "ImageRelation",
           "column": "target_id"
         }
       },
@@ -569,9 +569,98 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "ProjectInfo",
+    "type": "ProjectRelation",
+    "table": "prj",
+    "comment": "Project Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewAllProjects",
+        "update": false,
+        "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false,
+        "properties": [
+          "owner",
+          "assignedTo"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "prj_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "prj_number"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "prj_name"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "prj_status"
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "prj_due_date"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "prj_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "prj_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "account",
+        "attr": {
+          "type": "Number",
+          "column": "prj_crmacct_id"
+        }
+      } 
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ProjectListItem",
     "table": "xt.prjinfo",
-    "comment": "Project Info Map",
+    "comment": "Project List Item Map",
     "privileges": {
       "all": {
         "create": false,
@@ -652,7 +741,7 @@
         "name": "assignedTo",
         "toOne": {
           "isNested": true,
-          "type": "UserAccountInfo",
+          "type": "UserAccountRelation",
           "column": "prj_username",
           "inverse": "username"
         }
@@ -661,7 +750,7 @@
         "name": "owner",
         "toOne": {
           "isNested": true,
-          "type": "UserAccountInfo",
+          "type": "UserAccountRelation",
           "column": "prj_owner_username",
           "inverse": "username"
         }
@@ -670,7 +759,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountInfo",
+          "type": "AccountRelation",
           "column": "prj_crmacct_id"
         }
       },
@@ -770,7 +859,7 @@
         "name": "item",
         "toOne": {
           "isNested": true,
-          "type": "ItemInfo",
+          "type": "ItemRelation",
           "column": "target_id"
         }
       },
@@ -836,7 +925,7 @@
         "name": "project",
         "toOne": {
           "isNested": true,
-          "type": "ProjectInfo",
+          "type": "ProjectRelation",
           "column": "target_id"
         }
       },
@@ -1060,7 +1149,7 @@
         "name": "assignedTo",
         "toOne": {
           "isNested": true,
-          "type": "UserAccountInfo",
+          "type": "UserAccountRelation",
           "column": "prjtask_username",
           "inverse": "username"
         }
@@ -1069,7 +1158,7 @@
         "name": "owner",
         "toOne": {
           "isNested": true,
-          "type": "UserAccountInfo",
+          "type": "UserAccountRelation",
           "column": "prjtask_owner_username",
           "inverse": "username"
         }
@@ -1108,7 +1197,7 @@
             "name": "projectAssignedTo",
             "toOne": {
               "isNested": true,
-              "type": "UserAccountInfo",
+              "type": "UserAccountRelation",
               "column": "prj_username",
               "inverse": "username"
             }
@@ -1117,7 +1206,7 @@
             "name": "projectOwner",
             "toOne": {
               "isNested": true,
-              "type": "UserAccountInfo",
+              "type": "UserAccountRelation",
               "column": "prj_owner_username",
               "inverse": "username"
             }

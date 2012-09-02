@@ -66,7 +66,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountInfo",
+          "type": "AccountRelation",
           "column": "incdt_crmacct_id"
         }
       },
@@ -74,7 +74,7 @@
         "name": "contact",
         "toOne": {
           "isNested": true,
-          "type": "ContactInfo",
+          "type": "ContactRelation",
           "column": "incdt_cntct_id"
         }
       },
@@ -110,7 +110,7 @@
         "name": "owner",
         "toOne": {
           "isNested": true,
-          "type": "UserAccountInfo",
+          "type": "UserAccountRelation",
           "column": "incdt_owner_username",
           "inverse": "username"
         }
@@ -119,7 +119,7 @@
         "name": "assignedTo",
         "toOne": {
           "isNested": true,
-          "type": "UserAccountInfo",
+          "type": "UserAccountRelation",
           "column": "incdt_assigned_username",
           "inverse": "username"
         }
@@ -135,7 +135,7 @@
         "name": "item",
         "toOne": {
           "isNested": true,
-          "type": "ItemInfo",
+          "type": "ItemRelation",
           "column": "incdt_item_id"
         }
       },
@@ -310,7 +310,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountInfo",
+          "type": "AccountRelation",
           "column": "target_id"
         }
       },
@@ -672,7 +672,7 @@
         "name": "contact",
         "toOne": {
           "isNested": true,
-          "type": "ContactInfo",
+          "type": "ContactRelation",
           "column": "target_id"
         }
       },
@@ -738,7 +738,7 @@
         "name": "file",
         "toOne": {
           "isNested": true,
-          "type": "FileInfo",
+          "type": "FileRelation",
           "column": "target_id"
         }
       },
@@ -855,7 +855,7 @@
         "name": "image",
         "toOne": {
           "isNested": true,
-          "type": "ImageInfo",
+          "type": "ImageRelation",
           "column": "target_id"
         }
       },
@@ -921,7 +921,7 @@
         "name": "incident",
         "toOne": {
           "isNested": true,
-          "type": "IncidentInfo",
+          "type": "IncidentRelation",
           "column": "target_id"
         }
       },
@@ -939,9 +939,98 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "IncidentInfo",
+    "type": "IncidentRelation",
     "table": "xt.incdtinfo",
-    "comment": "Incident Info Map",
+    "comment": "Incident Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewAllIncidents",
+        "update": false,
+        "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false,
+        "properties": [
+          "owner",
+          "assignedTo"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "incdt_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "incdt_number"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "incdt_summary"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "incdt_status"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "incdt_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "incdt_assigned_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "updated",
+        "attr": {
+          "type": "Date",
+          "column": "incdt_updated"
+        }
+      },
+      {
+        "name": "account",
+        "attr": {
+          "type": "Number",
+          "column": "incdt_crmacct_id"
+        }
+      }      
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentListItem",
+    "table": "xt.incdtinfo",
+    "comment": "Incident List Item Map",
     "privileges": {
       "all": {
         "create": false,
@@ -1001,7 +1090,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountInfo",
+          "type": "AccountRelation",
           "column": "incdt_crmacct_id"
         }
       },
@@ -1009,7 +1098,7 @@
         "name": "contact",
         "toOne": {
           "isNested": true,
-          "type": "ContactInfo",
+          "type": "ContactRelation",
           "column": "incdt_cntct_id"
         }
       },
@@ -1038,7 +1127,7 @@
         "name": "owner",
         "toOne": {
           "isNested": true,
-          "type": "UserAccountInfo",
+          "type": "UserAccountRelation",
           "column": "incdt_owner_username",
           "inverse": "username"
         }
@@ -1047,7 +1136,7 @@
         "name": "assignedTo",
         "toOne": {
           "isNested": true,
-          "type": "UserAccountInfo",
+          "type": "UserAccountRelation",
           "column": "incdt_assigned_username",
           "inverse": "username"
         }
@@ -1127,7 +1216,7 @@
         "name": "item",
         "toOne": {
           "isNested": true,
-          "type": "ItemInfo",
+          "type": "ItemRelation",
           "column": "target_id"
         }
       },

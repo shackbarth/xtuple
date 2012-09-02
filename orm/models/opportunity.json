@@ -58,7 +58,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountInfo",
+          "type": "AccountRelation",
           "column": "ophead_crmacct_id"
         }
       },
@@ -66,7 +66,7 @@
         "name": "contact",
         "toOne": {
           "isNested": true,
-          "type": "ContactInfo",
+          "type": "ContactRelation",
           "column": "ophead_cntct_id"
         }
       },
@@ -158,7 +158,7 @@
         "name": "owner",
         "toOne": {
           "isNested": true,
-          "type": "UserAccountInfo",
+          "type": "UserAccountRelation",
           "column": "ophead_owner_username",
           "inverse": "username"
         }
@@ -167,7 +167,7 @@
         "name": "assignedTo",
         "toOne": {
           "isNested": true,
-          "type": "UserAccountInfo",
+          "type": "UserAccountRelation",
           "column": "ophead_username",
           "inverse": "username"
         }
@@ -307,7 +307,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountInfo",
+          "type": "AccountRelation",
           "column": "target_id"
         }
       },
@@ -513,7 +513,7 @@
         "name": "contact",
         "toOne": {
           "isNested": true,
-          "type": "ContactInfo",
+          "type": "ContactRelation",
           "column": "target_id"
         }
       },
@@ -579,7 +579,7 @@
         "name": "file",
         "toOne": {
           "isNested": true,
-          "type": "FileInfo",
+          "type": "FileRelation",
           "column": "target_id"
         }
       },
@@ -645,7 +645,7 @@
         "name": "image",
         "toOne": {
           "isNested": true,
-          "type": "ImageInfo",
+          "type": "ImageRelation",
           "column": "target_id"
         }
       },
@@ -663,9 +663,88 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "OpportunityInfo",
+    "type": "OpportunityRelation",
     "table": "xt.opheadinfo",
-    "comment": "Opporunity Info Map",
+    "comment": "Opporunity Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewAllOpportunities",
+        "update": false,
+        "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false,
+        "properties": [
+          "owner"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "ophead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "ophead_number"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "ophead_name"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "ophead_active"
+        }
+      },
+      {
+        "name": "targetClose",
+        "attr": {
+          "type": "Date",
+          "column": "ophead_target_date"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "ophead_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "account",
+        "attr": {
+          "type": "Number",
+          "column": "ophead_crmacct_id"
+        }
+      } 
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "OpportunityListItem",
+    "table": "xt.opheadinfo",
+    "comment": "Opporunity List Item Map",
     "privileges": {
       "all": {
         "create": false,
@@ -717,7 +796,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountInfo",
+          "type": "AccountRelation",
           "column": "ophead_crmacct_id"
         }
       },
@@ -725,7 +804,7 @@
         "name": "contact",
         "toOne": {
           "isNested": true,
-          "type": "ContactInfo",
+          "type": "ContactRelation",
           "column": "ophead_cntct_id"
         }
       },
@@ -768,7 +847,7 @@
         "name": "assignedTo",
         "toOne": {
           "isNested": true,
-          "type": "UserAccountInfo",
+          "type": "UserAccountRelation",
           "column": "ophead_username",
           "inverse": "username"
         }
@@ -834,7 +913,7 @@
         "name": "item",
         "toOne": {
           "isNested": true,
-          "type": "ItemInfo",
+          "type": "ItemRelation",
           "column": "target_id"
         }
       },
@@ -900,7 +979,7 @@
         "name": "opportunity",
         "toOne": {
           "isNested": true,
-          "type": "OpportunityInfo",
+          "type": "OpportunityRelation",
           "column": "target_id"
         }
       },

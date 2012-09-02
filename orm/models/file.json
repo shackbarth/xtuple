@@ -44,9 +44,9 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "FileInfo",
+    "type": "FileRelation",
     "table": "file",
-    "comment": "File Info Map",
+    "comment": "File Relation Map",
     "privileges": {
       "all": {
         "create": false,
