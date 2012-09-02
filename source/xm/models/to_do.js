@@ -322,17 +322,31 @@ white:true*/
 
     @extends XM.Info
   */
-  XM.ToDoInfo = XM.Info.extend({
-    /** @scope XM.ToDoInfo.prototype */
+  XM.ToDoRelation = XM.Info.extend({
+    /** @scope XM.ToDoRelation.prototype */
 
-    recordType: 'XM.ToDoInfo',
+    recordType: 'XM.ToDoRelation',
+    
+    editableModel: 'XM.ToDo'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.ToDoListItem = XM.Info.extend({
+    /** @scope XM.ToDoListItem.prototype */
+
+    recordType: 'XM.ToDoListItem',
     
     editableModel: 'XM.ToDo'
 
   });
 
   // To-Do status mixin
-  XM.ToDoInfo = XM.ToDoInfo.extend(XM.ToDoStatus);
+  XM.ToDoListItem = XM.ToDoListItem.extend(XM.ToDoStatus);
 
   // ..........................................................
   // COLLECTIONS
@@ -343,10 +357,10 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.ToDoInfoCollection = XM.Collection.extend({
-    /** @scope XM.ToDoInfoCollection.prototype */
+  XM.ToDoListItemCollection = XM.Collection.extend({
+    /** @scope XM.ToDoListItemCollection.prototype */
 
-    model: XM.ToDoInfo
+    model: XM.ToDoListItem
 
   });
 

@@ -30,7 +30,7 @@ trailing:true white:true*/
       onValueChange: "valueChanged"
     },
     components: [
-      {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
+      {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
@@ -318,7 +318,7 @@ trailing:true white:true*/
             content: "_saveAndNew".loc(), onclick: "saveAndNew"},
           {kind: "onyx.Button", name: "applyButton", disabled: true,
             style: "float: right;",
-            content: "_apply".loc(), onclick: "save"},
+            content: "_apply".loc(), onclick: "apply"},
           {kind: "onyx.Button", name: "refreshButton", disabled: true,
             content: "_refresh".loc(), onclick: "requery",
             style: "float: right;"}
@@ -341,8 +341,7 @@ trailing:true white:true*/
             classes: "onyx-blue"}
         ]},
         {kind: "onyx.Popup", name: "errorPopup", centered: true,
-          modal: true, floating: true, scrim: true,
-          onHide: "popupHidden", components: [
+          modal: true, floating: true, scrim: true, components: [
           {name: "errorMessage", content: "_error".loc()},
           {tag: "br"},
           {kind: "onyx.Button", content: "_ok".loc(), ontap: "errorOk",
@@ -350,6 +349,9 @@ trailing:true white:true*/
         ]}
       ]}
     ],
+    apply: function () {
+      this.save();
+    },
     close: function (options) {
       options = options || {};
       if (!options.force) {
@@ -371,6 +373,7 @@ trailing:true white:true*/
     },
     errorNotify: function (inSender, inEvent) {
       var message = inEvent.error.message();
+      this.spinnerHide();
       this.$.errorMessage.setContent(message);
       this.$.errorPopup.render();
       this.$.errorPopup.show();

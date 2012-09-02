@@ -132,20 +132,6 @@ white:true*/
   /**
     @class
 
-    @extends XM.Info
-  */
-  XM.ContactAccountInfo = XM.Info.extend({
-    /** @scope XM.ContactAccountInfo.prototype */
-
-    recordType: 'XM.ContactAccountInfo',
-    
-    editableModel: 'XM.Account'
-
-  });
-
-  /**
-    @class
-
     @extends XM.Model
   */
   XM.ContactContact = XM.Model.extend({
@@ -218,10 +204,24 @@ white:true*/
 
     @extends XM.Info
   */
-  XM.ContactInfo = XM.Info.extend({
-    /** @scope XM.ContactInfo.prototype */
+  XM.ContactRelation = XM.Info.extend({
+    /** @scope XM.ContactRelation.prototype */
 
-    recordType: 'XM.ContactInfo',
+    recordType: 'XM.ContactRelation',
+    
+    editableModel: 'XM.Contact'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.ContactListItem = XM.Info.extend({
+    /** @scope XM.ContactListItem.prototype */
+
+    recordType: 'XM.ContactListItem',
     
     editableModel: 'XM.Contact'
 
@@ -248,10 +248,10 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.ContactInfoCollection = XM.Collection.extend({
-    /** @scope XM.ContactInfoCollection.prototype */
+  XM.ContactListItemCollection = XM.Collection.extend({
+    /** @scope XM.ContactListItemCollection.prototype */
 
-    model: XM.ContactInfo
+    model: XM.ContactListItem
 
   });
 

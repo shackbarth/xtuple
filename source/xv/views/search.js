@@ -10,7 +10,8 @@ trailing:true white:true*/
     kind: "Panels",
     classes: "app enyo-unselectable",
     published: {
-      callback: null
+      callback: null,
+      conditions: null
     },
     events: {
       onPrevious: ""
@@ -59,6 +60,7 @@ trailing:true white:true*/
       if (!this.init) { return; }
       options = options ? _.clone(options) : {};
       var list = this.$.list,
+        conditions = this.getConditions(),
         query,
         input,
         parameterWidget,
@@ -71,17 +73,19 @@ trailing:true white:true*/
       options.showMore = _.isBoolean(options.showMore) ?
         options.showMore : false;
 
-      // Build parameters
-      if (input || parameters.length) {
-        query.parameters = [];
+      // Build conditions
+      if (conditions || input || parameters.length) {
+
+        // Fixed conditions
+        query.parameters = conditions || [];
 
         // Input search parameters
         if (input) {
-          query.parameters = [{
+          query.parameters = query.parameters.concat([{
             attribute: list.getSearchableAttributes(),
             operator: 'MATCHES',
             value: this.$.searchInput.getValue()
-          }];
+          }]);
         }
 
         // Advanced parameters
@@ -109,7 +113,8 @@ trailing:true white:true*/
       var component,
         list = options.list,
         callback = options.callback,
-        searchText = options.searchText;
+        searchText = options.searchText,
+        conditions = options.conditions;
       component = this.createComponent({
         name: "list",
         container: this.$.listPanel,
@@ -118,6 +123,7 @@ trailing:true white:true*/
       });
       this.$.rightLabel.setContent(component.label);
       this.setCallback(callback);
+      this.setConditions(conditions);
       if (component) {
         this.createComponent({
           name: "parameterWidget",

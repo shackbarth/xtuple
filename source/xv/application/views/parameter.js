@@ -10,7 +10,7 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.AccountInfoParameters",
+    name: "XV.AccountListParameters",
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_account".loc()},
@@ -49,7 +49,7 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.AddressInfoParameters",
+    name: "XV.AddressListParameters",
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_address".loc()},
@@ -79,7 +79,7 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.ContactInfoParameters",
+    name: "XV.ContactListParameters",
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
@@ -115,7 +115,7 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.IncidentInfoParameters",
+    name: "XV.IncidentListParameters",
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_incident".loc()},
@@ -161,7 +161,7 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.ItemInfoParameters",
+    name: "XV.ItemListParameters",
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_item".loc()},
@@ -188,7 +188,7 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.OpportunityInfoParameters",
+    name: "XV.OpportunityListParameters",
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_opportunity".loc()},
@@ -234,7 +234,7 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.ProjectInfoParameters",
+    name: "XV.ProjectListParameters",
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_project".loc()},
@@ -274,7 +274,7 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.ToDoInfoParameters",
+    name: "XV.ToDoListParameters",
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_toDo".loc()},

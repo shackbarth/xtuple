@@ -503,6 +503,19 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.ProjectRelation = XM.Info.extend({
+    /** @scope XM.ProjectRelation.prototype */
+
+    recordType: 'XM.ProjectRelation',
+
+    editableModel: 'XM.Project'
+
+  });
 
   /**
     @class
@@ -510,16 +523,16 @@ white:true*/
     @extends XM.Info
     @extends XM.ProjectStatus
   */
-  XM.ProjectInfo = XM.Info.extend({
-    /** @scope XM.ProjectInfo.prototype */
+  XM.ProjectListItem = XM.Info.extend({
+    /** @scope XM.ProjectListItem.prototype */
 
-    recordType: 'XM.ProjectInfo',
+    recordType: 'XM.ProjectListItem',
 
-    editableRecord: 'XM.Project'
+    editableModel: 'XM.Project'
 
   });
 
-  XM.ProjectInfo = XM.ProjectInfo.extend(XM.ProjectStatus);
+  XM.ProjectListItem = XM.ProjectListItem.extend(XM.ProjectStatus);
 
   // ..........................................................
   // COLLECTIONS
@@ -530,10 +543,10 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.ProjectInfoCollection = XM.Collection.extend({
-    /** @scope XM.ProjectInfoCollection.prototype */
+  XM.ProjectListItemCollection = XM.Collection.extend({
+    /** @scope XM.ProjectListItemCollection.prototype */
 
-    model: XM.ProjectInfo
+    model: XM.ProjectListItem
 
   });
 
