@@ -13,13 +13,15 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ListRelationsBox",
     kind: "XV.Groupbox",
+    classes: "panel",
     published: {
       attr: null,
       value: null,
       title: "",
       parentKey: "",
       listRelations: "",
-      searchList: ""
+      searchList: "",
+      canAttach: false
     },
     events: {
       onSearch: "",
@@ -31,6 +33,9 @@ trailing:true white:true*/
     },
     create: function () {
       this.inherited(arguments);
+      var canAttach = this.getCanAttach(),
+        buttons;
+      
       // Header
       this.createComponent({
         kind: "onyx.GroupboxHeader",
@@ -46,22 +51,26 @@ trailing:true white:true*/
       });
       
       // Buttons
-      this.createComponent(
-        {kind: 'FittableColumns', classes: "xv-groupbox-buttons", components: [
-          {kind: "onyx.Button", name: "newButton", onclick: "newRecord",
-            content: "_new".loc(), classes: "xv-groupbox-button-left",
-            disabled: true},
-          {kind: "onyx.Button", name: "attachButton", onclick: "attachRecord",
-            content: "_attach".loc(), classes: "xv-groupbox-button-center",
-            disabled: true},
-          {kind: "onyx.Button", name: "detachButton", onclick: "detachRecord",
-            content: "_detach".loc(), classes: "xv-groupbox-button-center",
-            disabled: true},
-          {kind: "onyx.Button", name: "openButton", onclick: "openRecord",
-            content: "_open".loc(), classes: "xv-groupbox-button-right",
-            disabled: true, fit: true}
-        ]}
-      );
+      buttons = {kind: 'FittableColumns', classes: "xv-groupbox-buttons",
+        components: [
+        {kind: "onyx.Button", name: "newButton", onclick: "newRecord",
+          content: "_new".loc(), classes: "xv-groupbox-button-left",
+          disabled: true}
+      ]};
+      if (canAttach) {
+        buttons.components.push(
+        {kind: "onyx.Button", name: "attachButton", onclick: "attachRecord",
+          content: "_attach".loc(), classes: "xv-groupbox-button-center",
+          disabled: true},
+        {kind: "onyx.Button", name: "detachButton", onclick: "detachRecord",
+          content: "_detach".loc(), classes: "xv-groupbox-button-center",
+          disabled: true});
+      }
+      buttons.components.push(
+        {kind: "onyx.Button", name: "openButton", onclick: "openRecord",
+          content: "_open".loc(), classes: "xv-groupbox-button-right",
+          disabled: true, fit: canAttach});
+      this.createComponent(buttons);
     },
     attachRecord: function () {
       var list = this.$.list,
@@ -194,20 +203,22 @@ trailing:true white:true*/
     selectionChanged: function (inSender, inEvent) {
       var index = this.$.list.getFirstSelected(),
         model = index ? this.$.list.getModel(index) : null,
+        canAttach = this.getCanAttach(),
         couldNotRead = model ? !model.couldRead() : true,
         couldNotUpdate = model ? !model.couldUpdate() : true;
-      this.$.detachButton.setDisabled(couldNotUpdate);
+      if (canAttach) { this.$.detachButton.setDisabled(couldNotUpdate); }
       this.$.openButton.setDisabled(couldNotRead);
     },
     valueChanged: function () {
       var value = this.getValue(), // Must be a collection of Info models
+        canAttach = this.getCanAttach(),
         Klass = value ?
           XT.getObjectByName(value.model.prototype.editableModel) : null,
         canNotCreate = Klass ? !Klass.canCreate() : true,
         canNotUpdate = Klass ? !Klass.canUpdate() : true;
       this.$.list.setValue(value);
       this.$.newButton.setDisabled(canNotCreate);
-      this.$.attachButton.setDisabled(canNotUpdate);
+      if (canAttach) { this.$.attachButton.setDisabled(canNotUpdate); }
     }
   });
 

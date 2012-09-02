@@ -35,7 +35,8 @@ trailing:true white:true*/
     title: "_contacts".loc(),
     parentKey: "account",
     listRelations: "XV.AccountContactListRelations",
-    searchList: "XV.ContactList"
+    searchList: "XV.ContactList",
+    canAttach: true
   });
 
   enyo.kind({

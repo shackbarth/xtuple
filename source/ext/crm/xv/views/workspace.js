@@ -11,11 +11,6 @@ trailing:true white:true*/
   // ACCOUNT
   //
   
-  /**
-    Must include a component called `list`.
-    List must be of sub-kind `XV.ListRelations`.
-    The `value` must be set to a collection of `XM.Info` models.
-  */
   enyo.kind({
     name: "XV.AccountOpportunitiesBox",
     kind: "XV.ListRelationsBox",
