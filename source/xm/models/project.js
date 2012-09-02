@@ -506,21 +506,16 @@ white:true*/
   /**
     @class
 
-   Same as `XM.ProjectInfo` except without account and balances.
-
     @extends XM.Info
-    @extends XM.ProjectStatus
   */
-  XM.ProjectBasicInfo = XM.Info.extend({
-    /** @scope XM.ProjectBasicInfo.prototype */
+  XM.ProjectRelation = XM.Info.extend({
+    /** @scope XM.ProjectRelation.prototype */
 
-    recordType: 'XM.ProjectBasicInfo',
+    recordType: 'XM.ProjectRelation',
 
     editableModel: 'XM.Project'
 
   });
-
-  XM.ProjectBasicInfo = XM.ProjectBasicInfo.extend(XM.ProjectStatus);
 
   /**
     @class
@@ -528,16 +523,16 @@ white:true*/
     @extends XM.Info
     @extends XM.ProjectStatus
   */
-  XM.ProjectInfo = XM.Info.extend({
-    /** @scope XM.ProjectInfo.prototype */
+  XM.ProjectListItem = XM.Info.extend({
+    /** @scope XM.ProjectListItem.prototype */
 
-    recordType: 'XM.ProjectInfo',
+    recordType: 'XM.ProjectListItem',
 
     editableModel: 'XM.Project'
 
   });
 
-  XM.ProjectInfo = XM.ProjectInfo.extend(XM.ProjectStatus);
+  XM.ProjectListItem = XM.ProjectListItem.extend(XM.ProjectStatus);
 
   // ..........................................................
   // COLLECTIONS
@@ -548,10 +543,10 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.ProjectInfoCollection = XM.Collection.extend({
-    /** @scope XM.ProjectInfoCollection.prototype */
+  XM.ProjectListItemCollection = XM.Collection.extend({
+    /** @scope XM.ProjectListItemCollection.prototype */
 
-    model: XM.ProjectInfo
+    model: XM.ProjectListItem
 
   });
 

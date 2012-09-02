@@ -418,15 +418,13 @@ white:true*/
   
   /**
     @class
-    
-    Same as 'XM.Info' but without account or contact.
 
     @extends XM.Info
   */
-  XM.IncidentBasicInfo = XM.Info.extend({
-    /** @scope XM.IncidentBasicInfo.prototype */
+  XM.IncidentRelation = XM.Info.extend({
+    /** @scope XM.IncidentRelation.prototype */
     
-    recordType: 'XM.IncidentBasicInfo',
+    recordType: 'XM.IncidentRelation',
 
     editableModel: 'XM.Incident'
 
@@ -437,17 +435,17 @@ white:true*/
 
     @extends XM.Info
   */
-  XM.IncidentInfo = XM.Info.extend({
-    /** @scope XM.IncidentInfo.prototype */
+  XM.IncidentListItem = XM.Info.extend({
+    /** @scope XM.IncidentListItem.prototype */
     
-    recordType: 'XM.IncidentInfo',
+    recordType: 'XM.IncidentListItem',
 
     editableModel: 'XM.Incident'
 
   });
 
   // Incident status mixin
-  XM.IncidentInfo = XM.IncidentInfo.extend(XM.IncidentStatus);
+  XM.IncidentListItem = XM.IncidentListItem.extend(XM.IncidentStatus);
 
   // ..........................................................
   // COLLECTIONS
@@ -494,10 +492,10 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.IncidentInfoCollection = XM.Collection.extend({
-    /** @scope XM.IncidentInfoCollection.prototype */
+  XM.IncidentListItemCollection = XM.Collection.extend({
+    /** @scope XM.IncidentListItemCollection.prototype */
 
-    model: XM.IncidentInfo
+    model: XM.IncidentListItem
 
   });
 

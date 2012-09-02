@@ -34,7 +34,7 @@ trailing:true white:true*/
     kind: "XV.ListRelationsBox",
     title: "_contacts".loc(),
     parentKey: "account",
-    listRelations: "XV.AccountContactListRelations",
+    listRelations: "XV.ContactListRelations",
     searchList: "XV.ContactList",
     canAttach: true
   });
@@ -59,10 +59,10 @@ trailing:true white:true*/
             {kind: "XV.UserAccountWidget", attr: "owner"},
             {kind: "onyx.GroupboxHeader", content: "_primaryContact".loc()},
             {kind: "XV.ContactWidget", attr: "primaryContact",
-              list: "XV.AccountContactList", showAddress: true},
+              showAddress: true},
             {kind: "onyx.GroupboxHeader", content: "_secondaryContact".loc()},
             {kind: "XV.ContactWidget", attr: "secondaryContact",
-              list: "XV.AccountContactList", showAddress: true}
+              showAddress: true}
           ]}
         ]},
         {kind: "XV.AccountContactsBox", attr: "contactRelations"},

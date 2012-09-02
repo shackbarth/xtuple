@@ -206,27 +206,10 @@ white:true*/
 
     @extends XM.Info
   */
-  XM.AccountContactInfo = XM.Info.extend({
-    /** @scope XM.AccountContactInfo.prototype */
+  XM.AccountRelation = XM.Info.extend({
+    /** @scope XM.ContactRelation.prototype */
 
-    recordType: 'XM.AccountContactInfo',
-    
-    editableModel: 'XM.Contact'
-
-  });
-  
-  /**
-    @class
-    
-    Like `XM.AccountInfo`, but without contact which otherwise
-    runs into recursion problems.
-
-    @extends XM.Info
-  */
-  XM.AccountBasicInfo = XM.Info.extend({
-    /** @scope XM.ContactAccountInfo.prototype */
-
-    recordType: 'XM.AccountBasicInfo',
+    recordType: 'XM.AccountRelation',
     
     editableModel: 'XM.Account'
 
@@ -237,10 +220,10 @@ white:true*/
 
     @extends XM.Info
   */
-  XM.AccountInfo = XM.Info.extend({
-    /** @scope XM.AccountInfo.prototype */
+  XM.AccountListItem = XM.Info.extend({
+    /** @scope XM.AccountListItem.prototype */
 
-    recordType: 'XM.AccountInfo',
+    recordType: 'XM.AccountListItem',
 
     editableModel: 'XM.Account'
 
@@ -267,10 +250,10 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.AccountInfoCollection = XM.Collection.extend({
-    /** @scope XM.AccountInfoCollection.prototype */
+  XM.AccountListItemCollection = XM.Collection.extend({
+    /** @scope XM.AccountListItemCollection.prototype */
 
-    model: XM.AccountInfo
+    model: XM.AccountListItem
 
   });
 
