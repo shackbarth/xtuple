@@ -771,7 +771,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountInfo",
+          "type": "AccountBasicInfo",
           "column": "todoitem_crmacct_id"
         }
       },

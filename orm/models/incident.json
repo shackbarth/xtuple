@@ -66,7 +66,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountInfo",
+          "type": "AccountBasicInfo",
           "column": "incdt_crmacct_id"
         }
       },
@@ -310,7 +310,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountInfo",
+          "type": "AccountBasicInfo",
           "column": "target_id"
         }
       },
@@ -921,7 +921,7 @@
         "name": "incident",
         "toOne": {
           "isNested": true,
-          "type": "IncidentInfo",
+          "type": "IncidentBasicInfo",
           "column": "target_id"
         }
       },
@@ -934,6 +934,88 @@
       }
     ],
     "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentBasicInfo",
+    "table": "xt.incdtinfo",
+    "comment": "Incident Basic Info Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewAllIncidents",
+        "update": false,
+        "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false,
+        "properties": [
+          "owner",
+          "assignedTo"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "incdt_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "incdt_number"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "incdt_summary"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "incdt_status"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountInfo",
+          "column": "incdt_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountInfo",
+          "column": "incdt_assigned_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "updated",
+        "attr": {
+          "type": "Date",
+          "column": "incdt_updated"
+        }
+      }
+    ],
     "isSystem": true
   },
   {
@@ -1001,7 +1083,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountInfo",
+          "type": "AccountBasicInfo",
           "column": "incdt_crmacct_id"
         }
       },

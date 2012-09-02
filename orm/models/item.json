@@ -282,7 +282,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountInfo",
+          "type": "AccountBasicInfo",
           "column": "target_id"
         }
       },

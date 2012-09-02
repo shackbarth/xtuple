@@ -65,7 +65,7 @@
        "name": "parent",
        "toOne": {
          "isNested": true,
-         "type": "AccountInfo",
+         "type": "AccountBasicInfo",
          "column": "crmacct_parent_id",
          "inverse": "id"
        }
@@ -264,7 +264,7 @@
        "name": "account",
        "toOne": {
          "isNested": true,
-         "type": "AccountInfo",
+         "type": "AccountBasicInfo",
          "column": "target_id"
        }
      },

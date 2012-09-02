@@ -136,7 +136,7 @@
         "name": "incident",
         "toOne": {
           "isNested": true,
-          "type": "IncidentInfo",
+          "type": "IncidentBasicInfo",
           "column": "target_id"
         }
       },
@@ -202,7 +202,7 @@
         "name": "opportunity",
         "toOne": {
           "isNested": true,
-          "type": "OpportunityInfo",
+          "type": "OpportunityBasicInfo",
           "column": "target_id"
         }
       },
@@ -268,7 +268,7 @@
         "name": "project",
         "toOne": {
           "isNested": true,
-          "type": "ProjectInfo",
+          "type": "ProjectBasicInfo",
           "column": "target_id"
         }
       },
@@ -400,7 +400,7 @@
         "name": "incident",
         "toOne": {
           "isNested": true,
-          "type": "IncidentInfo",
+          "type": "IncidentBasicInfo",
           "column": "target_id"
         }
       },
@@ -466,7 +466,7 @@
         "name": "opportunity",
         "toOne": {
           "isNested": true,
-          "type": "OpportunityInfo",
+          "type": "OpportunityBasicInfo",
           "column": "target_id"
         }
       },
@@ -532,7 +532,7 @@
         "name": "project",
         "toOne": {
           "isNested": true,
-          "type": "ProjectInfo",
+          "type": "ProjectBasicInfo",
           "column": "target_id"
         }
       },
@@ -631,7 +631,7 @@
         "name": "project",
         "toOne": {
           "isNested": true,
-          "type": "ProjectInfo",
+          "type": "ProjectBasicInfo",
           "column": "incdt_prj_id"
         }
       },
@@ -757,7 +757,7 @@
         "name": "opportunity",
         "toOne": {
           "isNested": true,
-          "type": "OpportunityInfo",
+          "type": "OpportunityBasicInfo",
           "column": "target_id"
         }
       },
@@ -823,7 +823,7 @@
         "name": "project",
         "toOne": {
           "isNested": true,
-          "type": "ProjectInfo",
+          "type": "ProjectBasicInfo",
           "column": "target_id"
         }
       },
@@ -1008,7 +1008,7 @@
         "name": "incident",
         "toOne": {
           "isNested": true,
-          "type": "IncidentInfo",
+          "type": "IncidentBasicInfo",
           "column": "target_id"
         }
       },
@@ -1074,7 +1074,7 @@
         "name": "project",
         "toOne": {
           "isNested": true,
-          "type": "ProjectInfo",
+          "type": "ProjectBasicInfo",
           "column": "target_id"
         }
       },
@@ -1251,7 +1251,7 @@
         "name": "incident",
         "toOne": {
           "isNested": true,
-          "type": "IncidentInfo",
+          "type": "IncidentBasicInfo",
           "column": "target_id"
         }
       },
@@ -1317,7 +1317,7 @@
         "name": "opportunity",
         "toOne": {
           "isNested": true,
-          "type": "OpportunityInfo",
+          "type": "OpportunityBasicInfo",
           "column": "target_id"
         }
       },
@@ -1416,7 +1416,7 @@
         "name": "incident",
         "toOne": {
           "isNested": true,
-          "type": "IncidentInfo",
+          "type": "IncidentBasicInfo",
           "column": "todoitem_incdt_id"
         }
       },
@@ -1424,7 +1424,7 @@
         "name": "opportunity",
         "toOne": {
           "isNested": true,
-          "type": "OpportunityInfo",
+          "type": "OpportunityBasicInfo",
           "column": "todoitem_ophead_id"
         }
       },
@@ -1542,7 +1542,7 @@
         "name": "incident",
         "toOne": {
           "isNested": true,
-          "type": "IncidentInfo",
+          "type": "IncidentBasicInfo",
           "column": "target_id"
         }
       },
@@ -1608,7 +1608,7 @@
         "name": "opportunity",
         "toOne": {
           "isNested": true,
-          "type": "OpportunityInfo",
+          "type": "OpportunityBasicInfo",
           "column": "target_id"
         }
       },
@@ -1674,7 +1674,7 @@
         "name": "project",
         "toOne": {
           "isNested": true,
-          "type": "ProjectInfo",
+          "type": "ProjectBasicInfo",
           "column": "target_id"
         }
       },

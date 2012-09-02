@@ -58,7 +58,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountInfo",
+          "type": "AccountBasicInfo",
           "column": "ophead_crmacct_id"
         }
       },
@@ -307,7 +307,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountInfo",
+          "type": "AccountBasicInfo",
           "column": "target_id"
         }
       },
@@ -663,6 +663,78 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "OpportunityBasicInfo",
+    "table": "xt.opheadinfo",
+    "comment": "Opporunity Info Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewAllOpportunities",
+        "update": false,
+        "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false,
+        "properties": [
+          "owner"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "ophead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "ophead_number"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "ophead_name"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "ophead_active"
+        }
+      },
+      {
+        "name": "targetClose",
+        "attr": {
+          "type": "Date",
+          "column": "ophead_target_date"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountInfo",
+          "column": "ophead_username",
+          "inverse": "username"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "OpportunityInfo",
     "table": "xt.opheadinfo",
     "comment": "Opporunity Info Map",
@@ -717,7 +789,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountInfo",
+          "type": "AccountBasicInfo",
           "column": "ophead_crmacct_id"
         }
       },
@@ -900,7 +972,7 @@
         "name": "opportunity",
         "toOne": {
           "isNested": true,
-          "type": "OpportunityInfo",
+          "type": "OpportunityBasicInfo",
           "column": "target_id"
         }
       },
