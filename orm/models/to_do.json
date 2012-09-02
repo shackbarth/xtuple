@@ -716,6 +716,13 @@
         }
       },
       {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "todoitem_due_date"
+        }
+      },
+      {
         "name": "contact",
         "attr": {
           "type": "Number",
