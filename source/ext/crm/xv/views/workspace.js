@@ -30,7 +30,17 @@ trailing:true white:true*/
   });
   
   enyo.kind({
-    name: "XV.AccountToDoBox",
+    name: "XV.AccountProjectsBox",
+    kind: "XV.ListRelationsBox",
+    title: "_projects".loc(),
+    parentKey: "account",
+    listRelations: "XV.AccountProjectListRelations",
+    searchList: "XV.ProjectList",
+    canAttach: true
+  });
+  
+  enyo.kind({
+    name: "XV.AccountToDosBox",
     kind: "XV.ListRelationsBox",
     title: "_toDos".loc(),
     parentKey: "account",
@@ -40,12 +50,14 @@ trailing:true white:true*/
   });
   
   extensions = [
-    {kind: "XV.AccountToDoBox", container: "panels",
+    {kind: "XV.AccountToDosBox", container: "panels",
       attr: "toDoRelations"},
     {kind: "XV.AccountOpportunitiesBox", container: "panels",
       attr: "opportunityRelations"},
     {kind: "XV.AccountIncidentsBox", container: "panels",
-      attr: "incidentRelations"}
+      attr: "incidentRelations"},
+    {kind: "XV.AccountProjectsBox", container: "panels",
+      attr: "projectRelations"}
   ];
 
   XV.appendExtension("XV.AccountWorkspace", extensions);

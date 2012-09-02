@@ -67,6 +67,33 @@ trailing:true white:true*/
   });
   
   enyo.kind({
+    name: "XV.AccountProjectListRelations",
+    kind: "XV.ListRelations",
+    orderBy: [
+      {attribute: 'number' }
+    ],
+    parentKey: "account",
+    workspace: "XV.ProjectWorkspace",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "dueDate", fit: true,
+                formatter: "formatDueDate",
+                placeholder: "_noCloseTarget".loc(),
+                classes: "right"}
+            ]},
+            {kind: "XV.ListAttr", attr: "name"}
+          ]}
+        ]}
+      ]}
+    ],
+    formatDueDate: XV.ProjectList.prototype.formatDueDate
+  });
+  
+  enyo.kind({
     name: "XV.AccountToDoListRelations",
     kind: "XV.ListRelations",
     orderBy: [
