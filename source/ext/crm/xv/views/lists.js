@@ -38,5 +38,32 @@ trailing:true white:true*/
     ],
     formatTargetClose: XV.OpportunityList.prototype.formatTargetClose
   });
+  
+  enyo.kind({
+    name: "XV.AccountIncidentListRelations",
+    kind: "XV.ListRelations",
+    orderBy: [
+      {attribute: 'priorityOrder'},
+      {attribute: 'updated', descending: true},
+      {attribute: 'id', descending: true}
+    ],
+    parentKey: "account",
+    workspace: "XV.IncidentWorkspace",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "updated", fit: true, formatter: "formatDate",
+                classes: "right"}
+            ]},
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ],
+    formatDate: XV.IncidentList.prototype.formatDate
+  });
 
 }());

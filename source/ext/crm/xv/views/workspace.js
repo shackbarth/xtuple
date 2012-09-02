@@ -20,9 +20,20 @@ trailing:true white:true*/
     searchList: "XV.OpportunityList"
   });
   
+  enyo.kind({
+    name: "XV.AccountIncidentsBox",
+    kind: "XV.ListRelationsBox",
+    title: "_incidents".loc(),
+    parentKey: "account",
+    listRelations: "XV.AccountIncidentListRelations",
+    searchList: "XV.IncidentList"
+  });
+  
   extensions = [
     {kind: "XV.AccountOpportunitiesBox", container: "panels",
-      attr: "opportunityRelations"}
+      attr: "opportunityRelations"},
+    {kind: "XV.AccountIncidentsBox", container: "panels",
+      attr: "incidentRelations"}
   ];
 
   XV.appendExtension("XV.AccountWorkspace", extensions);
