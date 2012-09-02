@@ -50,9 +50,9 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "ImageInfo",
+    "type": "ImageRelation",
     "table": "image",
-    "comment": "Image Info Map",
+    "comment": "Image Relation Map",
     "privileges": {
       "all": {
         "create": false,

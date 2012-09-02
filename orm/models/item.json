@@ -282,7 +282,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountBasicInfo",
+          "type": "AccountRelation",
           "column": "target_id"
         }
       },
@@ -559,7 +559,7 @@
         "name": "contact",
         "toOne": {
           "isNested": true,
-          "type": "ContactInfo",
+          "type": "ContactRelation",
           "column": "target_id"
         }
       },
@@ -625,7 +625,7 @@
         "name": "file",
         "toOne": {
           "isNested": true,
-          "type": "FileInfo",
+          "type": "FileRelation",
           "column": "target_id"
         }
       },
@@ -691,7 +691,7 @@
         "name": "image",
         "toOne": {
           "isNested": true,
-          "type": "ImageInfo",
+          "type": "ImageRelation",
           "column": "target_id"
         }
       },
@@ -709,9 +709,9 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "ItemInfo",
+    "type": "ItemRelation",
     "table": "item",
-    "comment": "Item Info Map",
+    "comment": "Item Relation Map",
     "privileges": {
       "all": {
         "create": false,
@@ -846,7 +846,7 @@
         "name": "item",
         "toOne": {
           "isNested": true,
-          "type": "ItemInfo",
+          "type": "ItemRelation",
           "column": "target_id"
         }
       },

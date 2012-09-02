@@ -65,7 +65,7 @@
        "name": "parent",
        "toOne": {
          "isNested": true,
-         "type": "AccountBasicInfo",
+         "type": "AccountRelation",
          "column": "crmacct_parent_id",
          "inverse": "id"
        }
@@ -81,7 +81,7 @@
        "name": "primaryContact",
        "toOne": {
          "isNested": true,
-         "type": "AccountContactInfo",
+         "type": "ContactRelation",
          "column": "crmacct_cntct_id_1",
          "inverse": "id"
        }
@@ -90,7 +90,7 @@
        "name": "secondaryContact",
        "toOne": {
          "isNested": true,
-         "type": "AccountContactInfo",
+         "type": "ContactRelation",
          "column": "crmacct_cntct_id_2",
          "inverse": "id"
        }
@@ -98,7 +98,7 @@
      {
        "name": "contactRelations",
        "toMany": {
-         "type": "AccountContactInfo",
+         "type": "ContactRelation",
          "column": "crmacct_id",
          "inverse": "account"
        }
@@ -107,7 +107,7 @@
        "name": "owner",
        "toOne": {
          "isNested": true,
-         "type": "UserAccountInfo",
+         "type": "UserAccountRelation",
          "column": "crmacct_owner_username",
          "inverse": "username"
        }
@@ -115,7 +115,7 @@
      {
        "name": "userAccount",
        "toOne": {
-         "type": "UserAccountInfo",
+         "type": "UserAccountRelation",
          "column": "crmacct_usr_username",
          "inverse": "username"
        }
@@ -264,7 +264,7 @@
        "name": "account",
        "toOne": {
          "isNested": true,
-         "type": "AccountBasicInfo",
+         "type": "AccountRelation",
          "column": "target_id"
        }
      },
@@ -282,9 +282,9 @@
     {
       "context": "xtuple",
       "nameSpace": "XM",
-      "type": "AccountAddressInfo",
+      "type": "AccountAddressListItem",
       "table": "xt.crmacctaddr",
-      "comment": "Account Address Info Map",
+      "comment": "Account Address List Item Map",
       "privileges": {
         "all": {
           "create": false,
@@ -567,7 +567,7 @@
        "name": "contact",
        "toOne": {
          "isNested": true,
-         "type": "ContactInfo",
+         "type": "ContactRelation",
          "column": "target_id"
        }
      },
@@ -580,135 +580,6 @@
      }
     ],
     "isNestedOnly": true,
-    "isSystem": true
-    },
-    {
-    "context": "xtuple",
-    "nameSpace": "XM",
-    "type": "AccountContactInfo",
-    "table": "cntct",
-    "comment": "Account Contact Info Map (necessary to avoid circular dependencies)",
-    "privileges": {
-     "all": {
-       "create": false,
-       "read": "ViewAllContacts",
-       "update": false,
-       "delete": false
-     },
-     "personal": {
-       "create": false,
-       "read": true,
-       "update": false,
-       "delete": false,
-       "properties": [
-         "owner"
-       ]
-     }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "cntct_id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "isActive",
-        "attr": {
-          "type": "Boolean",
-          "column": "cntct_active"
-        }
-      },
-      {
-        "name": "name",
-        "attr": {
-          "type": "String",
-          "column": "cntct_name"
-        }
-      },
-      {
-        "name": "firstName",
-        "attr": {
-          "type": "String",
-          "column": "cntct_first_name"
-        }
-      },
-      {
-        "name": "lastName",
-        "attr": {
-          "type": "String",
-          "column": "cntct_last_name"
-        }
-      },
-      {
-        "name": "jobTitle",
-        "attr": {
-          "type": "String",
-          "column": "cntct_title"
-        }
-      },
-      {
-        "name": "phone",
-        "attr": {
-          "type": "String",
-          "column": "cntct_phone"
-        }
-      },
-      {
-        "name": "alternate",
-        "attr": {
-          "type": "String",
-          "column": "cntct_phone2"
-        }
-      },
-      {
-        "name": "fax",
-        "attr": {
-          "type": "String",
-          "column": "cntct_fax"
-        }
-      },
-      {
-        "name": "primaryEmail",
-        "attr": {
-          "type": "String",
-          "column": "cntct_email"
-        }
-      },
-      {
-        "name": "webAddress",
-        "attr": {
-          "type": "String",
-          "column": "cntct_webaddr"
-        }
-      },
-      {
-        "name": "address",
-        "toOne": {
-          "isNested": true,
-          "type": "AddressInfo",
-          "column": "cntct_addr_id"
-        }
-      },
-      {
-        "name": "owner",
-        "toOne": {
-          "isNested": true,
-          "type": "UserAccountInfo",
-          "column": "cntct_owner_username",
-          "inverse": "username"
-        }
-      },
-      {
-       "name": "account",
-       "attr": {
-         "type": "Number",
-         "column": "cntct_crmacct_id"
-       }
-     }
-    ],
     "isSystem": true
     },
     {
@@ -762,7 +633,7 @@
        "name": "file",
        "toOne": {
          "isNested": true,
-         "type": "FileInfo",
+         "type": "FileRelation",
          "column": "target_id"
        }
      },
@@ -828,7 +699,7 @@
        "name": "image",
        "toOne": {
          "isNested": true,
-         "type": "ImageInfo",
+         "type": "ImageRelation",
          "column": "target_id"
        }
      },
@@ -846,9 +717,9 @@
     {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "AccountBasicInfo",
+    "type": "AccountRelation",
     "table": "crmacct",
-    "comment": "Account Basic Info Map (prevent contact recursion problems)",
+    "comment": "Account Relation Map",
     "privileges": {
      "all": {
        "create": false,
@@ -900,7 +771,7 @@
        "name": "owner",
        "toOne": {
          "isNested": true,
-         "type": "UserAccountInfo",
+         "type": "UserAccountRelation",
          "column": "crmacct_owner_username",
          "inverse": "username"
        }
@@ -911,9 +782,9 @@
     {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "AccountInfo",
+    "type": "AccountListItem",
     "table": "crmacct",
-    "comment": "Account Info Map",
+    "comment": "Account List Item Map",
     "privileges": {
      "all": {
        "create": false,
@@ -965,7 +836,7 @@
        "name": "primaryContact",
        "toOne": {
          "isNested": true,
-         "type": "AccountContactInfo",
+         "type": "ContactRelation",
          "column": "crmacct_cntct_id_1",
          "inverse": "id"
        }
@@ -974,7 +845,7 @@
        "name": "owner",
        "toOne": {
          "isNested": true,
-         "type": "UserAccountInfo",
+         "type": "UserAccountRelation",
          "column": "crmacct_owner_username",
          "inverse": "username"
        }
@@ -1033,7 +904,7 @@
        "name": "item",
        "toOne": {
          "isNested": true,
-         "type": "ItemInfo",
+         "type": "ItemRelation",
          "column": "target_id"
        }
      },

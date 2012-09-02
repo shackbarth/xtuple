@@ -365,9 +365,9 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "UserAccountInfo",
+    "type": "UserAccountRelation",
     "table": "xt.nodeusr",
-    "comment": "User Account Info Map",
+    "comment": "User Account Relation Map",
     "privileges": {
       "all": {
         "create": false,
@@ -504,9 +504,9 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "UserAccountRoleInfo",
+    "type": "UserAccountRoleRelation",
     "table": "grp",
-    "comment": "User Account Role Info Map",
+    "comment": "User Account Role Relation Map",
     "privileges": {
       "all": {
         "create": false,

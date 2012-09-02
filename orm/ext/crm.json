@@ -52,7 +52,7 @@
       {
         "name": "incidentRelations",
         "toMany": {
-          "type": "IncidentInfo",
+          "type": "IncidentRelation",
           "column": "crmacct_id",
           "inverse": "account"
         }
@@ -60,7 +60,7 @@
       {
         "name": "opportunityRelations",
         "toMany": {
-          "type": "OpportunityInfo",
+          "type": "OpportunityRelation",
           "column": "crmacct_id",
           "inverse": "account"
         }
@@ -68,7 +68,7 @@
       {
         "name": "toDoRelations",
         "toMany": {
-          "type": "ToDoInfo",
+          "type": "ToDoRelation",
           "column": "crmacct_id",
           "inverse": "account"
         }
@@ -76,7 +76,7 @@
       {
         "name": "projectRelations",
         "toMany": {
-          "type": "ProjectInfo",
+          "type": "ProjectRelation",
           "column": "crmacct_id",
           "inverse": "account"
         }
@@ -136,7 +136,7 @@
         "name": "incident",
         "toOne": {
           "isNested": true,
-          "type": "IncidentBasicInfo",
+          "type": "IncidentRelation",
           "column": "target_id"
         }
       },
@@ -202,7 +202,7 @@
         "name": "opportunity",
         "toOne": {
           "isNested": true,
-          "type": "OpportunityBasicInfo",
+          "type": "OpportunityRelation",
           "column": "target_id"
         }
       },
@@ -268,7 +268,7 @@
         "name": "project",
         "toOne": {
           "isNested": true,
-          "type": "ProjectBasicInfo",
+          "type": "ProjectRelation",
           "column": "target_id"
         }
       },
@@ -334,7 +334,7 @@
         "name": "toDo",
         "toOne": {
           "isNested": true,
-          "type": "ToDoInfo",
+          "type": "ToDoRelation",
           "column": "target_id"
         }
       },
@@ -400,7 +400,7 @@
         "name": "incident",
         "toOne": {
           "isNested": true,
-          "type": "IncidentBasicInfo",
+          "type": "IncidentRelation",
           "column": "target_id"
         }
       },
@@ -466,7 +466,7 @@
         "name": "opportunity",
         "toOne": {
           "isNested": true,
-          "type": "OpportunityBasicInfo",
+          "type": "OpportunityRelation",
           "column": "target_id"
         }
       },
@@ -532,7 +532,7 @@
         "name": "project",
         "toOne": {
           "isNested": true,
-          "type": "ProjectBasicInfo",
+          "type": "ProjectRelation",
           "column": "target_id"
         }
       },
@@ -598,7 +598,7 @@
         "name": "toDo",
         "toOne": {
           "isNested": true,
-          "type": "ToDoInfo",
+          "type": "ToDoRelation",
           "column": "target_id"
         }
       },
@@ -631,7 +631,7 @@
         "name": "project",
         "toOne": {
           "isNested": true,
-          "type": "ProjectBasicInfo",
+          "type": "ProjectRelation",
           "column": "incdt_prj_id"
         }
       },
@@ -665,7 +665,7 @@
       {
         "name": "toDoRelations",
         "toMany": {
-          "type": "ToDoInfo",
+          "type": "ToDoRelation",
           "column": "incdt_id",
           "inverse": "incident"
         }
@@ -757,7 +757,7 @@
         "name": "opportunity",
         "toOne": {
           "isNested": true,
-          "type": "OpportunityBasicInfo",
+          "type": "OpportunityRelation",
           "column": "target_id"
         }
       },
@@ -823,7 +823,7 @@
         "name": "project",
         "toOne": {
           "isNested": true,
-          "type": "ProjectBasicInfo",
+          "type": "ProjectRelation",
           "column": "target_id"
         }
       },
@@ -889,7 +889,7 @@
         "name": "toDo",
         "toOne": {
           "isNested": true,
-          "type": "ToDoInfo",
+          "type": "ToDoRelation",
           "column": "target_id"
         }
       },
@@ -948,7 +948,7 @@
       {
         "name": "toDoRelations",
         "toMany": {
-          "type": "ToDoInfo",
+          "type": "ToDoRelation",
           "column": "ophead_id",
           "inverse": "opportunity"
         }
@@ -1008,7 +1008,7 @@
         "name": "incident",
         "toOne": {
           "isNested": true,
-          "type": "IncidentBasicInfo",
+          "type": "IncidentRelation",
           "column": "target_id"
         }
       },
@@ -1074,7 +1074,7 @@
         "name": "project",
         "toOne": {
           "isNested": true,
-          "type": "ProjectBasicInfo",
+          "type": "ProjectRelation",
           "column": "target_id"
         }
       },
@@ -1140,7 +1140,7 @@
         "name": "toDo",
         "toOne": {
           "isNested": true,
-          "type": "ToDoInfo",
+          "type": "ToDoRelation",
           "column": "target_id"
         }
       },
@@ -1251,7 +1251,7 @@
         "name": "incident",
         "toOne": {
           "isNested": true,
-          "type": "IncidentBasicInfo",
+          "type": "IncidentRelation",
           "column": "target_id"
         }
       },
@@ -1317,7 +1317,7 @@
         "name": "opportunity",
         "toOne": {
           "isNested": true,
-          "type": "OpportunityBasicInfo",
+          "type": "OpportunityRelation",
           "column": "target_id"
         }
       },
@@ -1383,7 +1383,7 @@
         "name": "toDo",
         "toOne": {
           "isNested": true,
-          "type": "ToDoInfo",
+          "type": "ToDoRelation",
           "column": "target_id"
         }
       },
@@ -1416,7 +1416,7 @@
         "name": "incident",
         "toOne": {
           "isNested": true,
-          "type": "IncidentBasicInfo",
+          "type": "IncidentRelation",
           "column": "todoitem_incdt_id"
         }
       },
@@ -1424,7 +1424,7 @@
         "name": "opportunity",
         "toOne": {
           "isNested": true,
-          "type": "OpportunityBasicInfo",
+          "type": "OpportunityRelation",
           "column": "todoitem_ophead_id"
         }
       },
@@ -1462,7 +1462,7 @@
   {
     "context": "crm",
     "nameSpace": "XM",
-    "type": "ToDoInfo",
+    "type": "ToDoRelation",
     "table": "todoitem",
     "isExtension": true,
     "comment": "Extended by Crm",
@@ -1542,7 +1542,7 @@
         "name": "incident",
         "toOne": {
           "isNested": true,
-          "type": "IncidentBasicInfo",
+          "type": "IncidentRelation",
           "column": "target_id"
         }
       },
@@ -1608,7 +1608,7 @@
         "name": "opportunity",
         "toOne": {
           "isNested": true,
-          "type": "OpportunityBasicInfo",
+          "type": "OpportunityRelation",
           "column": "target_id"
         }
       },
@@ -1674,7 +1674,7 @@
         "name": "project",
         "toOne": {
           "isNested": true,
-          "type": "ProjectBasicInfo",
+          "type": "ProjectRelation",
           "column": "target_id"
         }
       },

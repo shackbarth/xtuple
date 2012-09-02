@@ -135,7 +135,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountBasicInfo",
+          "type": "AccountRelation",
           "column": "cntct_crmacct_id"
         }
       },
@@ -143,7 +143,7 @@
         "name": "owner",
         "toOne": {
           "isNested": true,
-          "type": "UserAccountInfo",
+          "type": "UserAccountRelation",
           "column": "cntct_owner_username",
           "inverse": "username"
         }
@@ -299,7 +299,7 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountBasicInfo",
+          "type": "AccountRelation",
           "column": "target_id"
         }
       },
@@ -507,7 +507,7 @@
         "name": "contact",
         "toOne": {
           "isNested": true,
-          "type": "ContactInfo",
+          "type": "ContactRelation",
           "column": "target_id"
         }
       },
@@ -615,7 +615,7 @@
         "name": "file",
         "toOne": {
           "isNested": true,
-          "type": "FileInfo",
+          "type": "FileRelation",
           "column": "target_id"
         }
       },
@@ -681,7 +681,7 @@
         "name": "image",
         "toOne": {
           "isNested": true,
-          "type": "ImageInfo",
+          "type": "ImageRelation",
           "column": "target_id"
         }
       },
@@ -699,9 +699,9 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "ContactInfo",
+    "type": "ContactListItem",
     "table": "cntct",
-    "comment": "Contact Info Map",
+    "comment": "Contact List Item Map",
     "privileges": {
       "all": {
         "create": false,
@@ -810,7 +810,7 @@
         "name": "owner",
         "toOne": {
           "isNested": true,
-          "type": "UserAccountInfo",
+          "type": "UserAccountRelation",
           "column": "cntct_owner_username",
           "inverse": "username"
         }
@@ -819,7 +819,136 @@
         "name": "account",
         "toOne": {
           "isNested": true,
-          "type": "AccountBasicInfo",
+          "type": "AccountRelation",
+          "column": "cntct_crmacct_id"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ContactRelation",
+    "table": "cntct",
+    "comment": "Contact Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewAllContacts",
+        "update": false,
+        "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false,
+        "properties": [
+          "owner"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cntct_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "cntct_active"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "cntct_name"
+        }
+      },
+      {
+        "name": "firstName",
+        "attr": {
+          "type": "String",
+          "column": "cntct_first_name"
+        }
+      },
+      {
+        "name": "lastName",
+        "attr": {
+          "type": "String",
+          "column": "cntct_last_name"
+        }
+      },
+      {
+        "name": "jobTitle",
+        "attr": {
+          "type": "String",
+          "column": "cntct_title"
+        }
+      },
+      {
+        "name": "phone",
+        "attr": {
+          "type": "String",
+          "column": "cntct_phone"
+        }
+      },
+      {
+        "name": "alternate",
+        "attr": {
+          "type": "String",
+          "column": "cntct_phone2"
+        }
+      },
+      {
+        "name": "fax",
+        "attr": {
+          "type": "String",
+          "column": "cntct_fax"
+        }
+      },
+      {
+        "name": "primaryEmail",
+        "attr": {
+          "type": "String",
+          "column": "cntct_email"
+        }
+      },
+      {
+        "name": "webAddress",
+        "attr": {
+          "type": "String",
+          "column": "cntct_webaddr"
+        }
+      },
+      {
+        "name": "address",
+        "toOne": {
+          "isNested": true,
+          "type": "AddressInfo",
+          "column": "cntct_addr_id"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "cntct_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "account",
+        "attr": {
+          "type": "Number",
           "column": "cntct_crmacct_id"
         }
       }
@@ -877,7 +1006,7 @@
         "name": "item",
         "toOne": {
           "isNested": true,
-          "type": "ItemInfo",
+          "type": "ItemRelation",
           "column": "target_id"
         }
       },
