@@ -341,8 +341,7 @@ trailing:true white:true*/
             classes: "onyx-blue"}
         ]},
         {kind: "onyx.Popup", name: "errorPopup", centered: true,
-          modal: true, floating: true, scrim: true,
-          onHide: "popupHidden", components: [
+          modal: true, floating: true, scrim: true, components: [
           {name: "errorMessage", content: "_error".loc()},
           {tag: "br"},
           {kind: "onyx.Button", content: "_ok".loc(), ontap: "errorOk",
@@ -374,6 +373,7 @@ trailing:true white:true*/
     },
     errorNotify: function (inSender, inEvent) {
       var message = inEvent.error.message();
+      this.spinnerHide();
       this.$.errorMessage.setContent(message);
       this.$.errorPopup.render();
       this.$.errorPopup.show();
