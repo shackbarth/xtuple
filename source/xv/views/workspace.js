@@ -318,7 +318,7 @@ trailing:true white:true*/
             content: "_saveAndNew".loc(), onclick: "saveAndNew"},
           {kind: "onyx.Button", name: "applyButton", disabled: true,
             style: "float: right;",
-            content: "_apply".loc(), onclick: "save"},
+            content: "_apply".loc(), onclick: "apply"},
           {kind: "onyx.Button", name: "refreshButton", disabled: true,
             content: "_refresh".loc(), onclick: "requery",
             style: "float: right;"}
@@ -350,6 +350,9 @@ trailing:true white:true*/
         ]}
       ]}
     ],
+    apply: function () {
+      this.save();
+    },
     close: function (options) {
       options = options || {};
       if (!options.force) {
