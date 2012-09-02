@@ -415,6 +415,22 @@ white:true*/
     recordType: 'XM.IncidentRecurrence'
 
   });
+  
+  /**
+    @class
+    
+    Same as 'XM.Info' but without account or contact.
+
+    @extends XM.Info
+  */
+  XM.IncidentBasicInfo = XM.Info.extend({
+    /** @scope XM.IncidentBasicInfo.prototype */
+    
+    recordType: 'XM.IncidentBasicInfo',
+
+    editableModel: 'XM.Incident'
+
+  });
 
   /**
     @class
@@ -423,7 +439,7 @@ white:true*/
   */
   XM.IncidentInfo = XM.Info.extend({
     /** @scope XM.IncidentInfo.prototype */
-
+    
     recordType: 'XM.IncidentInfo',
 
     editableModel: 'XM.Incident'

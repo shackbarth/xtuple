@@ -503,6 +503,24 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+   Same as `XM.ProjectInfo` except without account and balances.
+
+    @extends XM.Info
+    @extends XM.ProjectStatus
+  */
+  XM.ProjectBasicInfo = XM.Info.extend({
+    /** @scope XM.ProjectBasicInfo.prototype */
+
+    recordType: 'XM.ProjectBasicInfo',
+
+    editableModel: 'XM.Project'
+
+  });
+
+  XM.ProjectBasicInfo = XM.ProjectBasicInfo.extend(XM.ProjectStatus);
 
   /**
     @class

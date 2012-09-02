@@ -233,6 +233,22 @@ white:true*/
   /**
     @class
 
+    Same as `XM.OpportunityInfo` but less data.
+
+    @extends XM.Info
+  */
+  XM.OpportunityBasicInfo = XM.Info.extend({
+    /** @scope XM.OpportunityBasicInfo.prototype */
+
+    recordType: 'XM.OpportunityBasicInfo',
+
+    editableModel: 'XM.Opportunity'
+
+  });
+
+  /**
+    @class
+
     @extends XM.Info
   */
   XM.OpportunityInfo = XM.Info.extend({
