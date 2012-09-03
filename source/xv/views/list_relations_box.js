@@ -121,7 +121,8 @@ trailing:true white:true*/
         conditions: [{
           attribute: key,
           operator: "!=",
-          value: parent
+          value: parent,
+          includeNull: true
         }]
       };
       this.doSearch(inEvent);
