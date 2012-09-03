@@ -758,7 +758,25 @@
           "type": "Number",
           "column": "todoitem_crmacct_id"
         }
+      },
+      {
+        "name": "priority",
+        "toOne": {
+          "type": "Priority",
+          "column": "todoitem_priority_id"
+        }
+      },
+      {
+        "name": "priorityOrder",
+        "attr": {
+          "type": "Number",
+          "column": "priority_order"
+        }
       }
+    ],
+    "order": [
+      "todoitem_due_date desc",
+      "todoitem_name"
     ],
     "isSystem": true,
     "extensions": []

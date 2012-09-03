@@ -414,7 +414,11 @@ select xt.install_js('XT','Orm','xtuple', $$
       if (DEBUG) plv8.elog(NOTICE, 'process base order array');
       if (orm.order) {
         for (i = 0; i < orm.order.length; i++) {
-          orm.order[i] = orm.order[i].replace(RegExp(table + ".", "g"), tblAlias + ".");
+          if (orm.order[i].indexOf('.') === -1) {
+            orm.order[i] = tblAlias + "." + orm.order[i];
+          } else {
+            orm.order[i] = orm.order[i].replace(RegExp(orm.table + "."), tblAlias + ".");
+          }
           orderBy.push(orm.order[i]);
         }
       }

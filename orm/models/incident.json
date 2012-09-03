@@ -940,7 +940,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "IncidentRelation",
-    "table": "xt.incdtinfo",
+    "table": "incdt",
     "comment": "Incident Relation Map",
     "privileges": {
       "all": {
@@ -972,7 +972,7 @@
       {
         "name": "number",
         "attr": {
-          "type": "String",
+          "type": "Number",
           "column": "incdt_number"
         }
       },
@@ -1024,10 +1024,7 @@
       }      
     ],
     "order": [
-      "incdt_status != 'C'",
-      "incdtpriority_order",
-      "updated desc",
-      "id desc"
+      "incdt_number desc"
     ],
     "isSystem": true
   },

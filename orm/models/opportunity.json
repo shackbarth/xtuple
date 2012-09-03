@@ -735,7 +735,24 @@
           "type": "Number",
           "column": "ophead_crmacct_id"
         }
-      } 
+      },
+      {
+        "name": "priority",
+        "toOne": {
+          "type": "Priority",
+          "column": "ophead_priority_id"
+        }
+      },
+      {
+        "name": "priorityOrder",
+        "attr": {
+          "type": "Number",
+          "column": "priority_order"
+        }
+      }
+    ],
+    "order": [
+      "ophead_number::integer desc"
     ],
     "isSystem": true
   },
