@@ -109,6 +109,8 @@ trailing:true white:true*/
             attr = orderBy[i].attribute;
             aval = orderBy[i].descending ? b.getValue(attr) : a.getValue(attr);
             bval = orderBy[i].descending ? a.getValue(attr) : b.getValue(attr);
+            aval = !isNaN(aval) ? aval - 0 : aval;
+            bval = !isNaN(aval) ? bval - 0 : bval;
             if (aval !== bval) {
               return aval > bval ? 1 : -1;
             }

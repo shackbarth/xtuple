@@ -159,8 +159,10 @@ trailing:true white:true*/
             i;
           for (i = 0; i < query.orderBy.length; i++) {
             attr = query.orderBy[i].attribute;
-            aval = query.orderBy[i].descending ? b.get(attr) : a.get(attr);
-            bval = query.orderBy[i].descending ? a.get(attr) : b.get(attr);
+            aval = query.orderBy[i].descending ? b.getValue(attr) : a.getValue(attr);
+            bval = query.orderBy[i].descending ? a.getValue(attr) : b.getValue(attr);
+            aval = !isNaN(aval) ? aval - 0 : aval;
+            bval = !isNaN(aval) ? bval - 0 : bval;
             if (aval !== bval) {
               return aval > bval ? 1 : -1;
             }

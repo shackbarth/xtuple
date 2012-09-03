@@ -32,6 +32,12 @@ white:true*/
       if (status === K.COMPLETED) {
         return '_completed'.loc();
       }
+    },
+    
+    isActive: function () {
+      var K = XM.Project,
+        status = this.get('status');
+      return (status !== K.COMPLETED);
     }
 
   };

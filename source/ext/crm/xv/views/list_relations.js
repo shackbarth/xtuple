@@ -13,10 +13,7 @@ trailing:true white:true*/
     name: "XV.AccountIncidentListRelations",
     kind: "XV.ListRelations",
     orderBy: [
-      {attribute: 'isActive', descending: true},
-      {attribute: 'priorityOrder'},
-      {attribute: 'updated', descending: true},
-      {attribute: 'id', descending: true}
+      {attribute: 'number', descending: true}
     ],
     parentKey: "account",
     workspace: "XV.IncidentWorkspace",
@@ -42,10 +39,7 @@ trailing:true white:true*/
     name: "XV.AccountOpportunityListRelations",
     kind: "XV.ListRelations",
     orderBy: [
-      {attribute: 'priorityOrder'},
-      {attribute: 'targetClose'},
-      {attribute: 'name'},
-      {attribute: 'id'}
+      {attribute: 'number', descending: true}
     ],
     parentKey: "account",
     workspace: "XV.OpportunityWorkspace",
@@ -72,6 +66,7 @@ trailing:true white:true*/
     name: "XV.AccountProjectListRelations",
     kind: "XV.ListRelations",
     orderBy: [
+      {attribute: 'dueDate', descending: true},
       {attribute: 'number' }
     ],
     parentKey: "account",
@@ -99,8 +94,7 @@ trailing:true white:true*/
     name: "XV.AccountToDoListRelations",
     kind: "XV.ListRelations",
     orderBy: [
-      {attribute: 'priorityOrder'},
-      {attribute: 'dueDate'},
+      {attribute: 'dueDate', descending: true},
       {attribute: 'name'}
     ],
     parentKey: "account",
