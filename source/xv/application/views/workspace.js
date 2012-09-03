@@ -30,16 +30,6 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.AccountContactsBox",
-    kind: "XV.ListRelationsBox",
-    title: "_contacts".loc(),
-    parentKey: "account",
-    listRelations: "XV.ContactListRelations",
-    searchList: "XV.ContactList",
-    canAttach: true
-  });
-
-  enyo.kind({
     name: "XV.AccountWorkspace",
     kind: "XV.Workspace",
     title: "_account".loc(),

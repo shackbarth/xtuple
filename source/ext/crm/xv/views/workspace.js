@@ -10,44 +10,6 @@ trailing:true white:true*/
   // ..........................................................
   // ACCOUNT
   //
-
-  enyo.kind({
-    name: "XV.AccountIncidentsBox",
-    kind: "XV.ListRelationsBox",
-    title: "_incidents".loc(),
-    parentKey: "account",
-    listRelations: "XV.AccountIncidentListRelations",
-    searchList: "XV.IncidentList"
-  });
-  
-  enyo.kind({
-    name: "XV.AccountOpportunitiesBox",
-    kind: "XV.ListRelationsBox",
-    title: "_opportunities".loc(),
-    parentKey: "account",
-    listRelations: "XV.AccountOpportunityListRelations",
-    searchList: "XV.OpportunityList"
-  });
-  
-  enyo.kind({
-    name: "XV.AccountProjectsBox",
-    kind: "XV.ListRelationsBox",
-    title: "_projects".loc(),
-    parentKey: "account",
-    listRelations: "XV.AccountProjectListRelations",
-    searchList: "XV.ProjectList",
-    canAttach: true
-  });
-  
-  enyo.kind({
-    name: "XV.AccountToDosBox",
-    kind: "XV.ListRelationsBox",
-    title: "_toDo".loc(),
-    parentKey: "account",
-    listRelations: "XV.AccountToDoListRelations",
-    searchList: "XV.ToDoList",
-    canAttach: true
-  });
   
   extensions = [
     {kind: "XV.AccountToDosBox", container: "panels",
@@ -66,13 +28,6 @@ trailing:true white:true*/
   // INCIDENT
   //
   
-  enyo.kind({
-    name: "XV.IncidentToDosBox",
-    kind: "XV.AccountToDosBox",
-    parentKey: "incident",
-    listRelations: "XV.IncidentToDoListRelations"
-  });
-
   extensions = [
     {kind: "XV.ProjectWidget", container: "mainGroup", attr: "project"},
     {kind: "XV.IncidentToDosBox", container: "panels", attr: "toDoRelations"}
@@ -83,13 +38,6 @@ trailing:true white:true*/
   // ..........................................................
   // OPPORTUNITY
   //
-  
-  enyo.kind({
-    name: "XV.OpportunityToDosBox",
-    kind: "XV.AccountToDosBox",
-    parentKey: "opportunity",
-    listRelations: "XV.OpportunityToDoListRelations"
-  });
 
   extensions = [
     {kind: "XV.OpportunityToDosBox", container: "panels", attr: "toDoRelations"}
@@ -101,14 +49,6 @@ trailing:true white:true*/
   // PROJECT
   //
   
-  enyo.kind({
-    name: "XV.ProjectIncidentsBox",
-    kind: "XV.AccountIncidentsBox",
-    parentKey: "project",
-    listRelations: "XV.ProjectIncidentListRelations",
-    canAttach: true
-  });
-
   extensions = [
     {kind: "XV.ProjectIncidentsBox", container: "panels", attr: "incidentRelations"}
   ];
