@@ -1023,6 +1023,12 @@
         }
       }      
     ],
+    "order": [
+      "incdt_status != 'C'",
+      "incdtpriority_order",
+      "updated desc",
+      "id desc"
+    ],
     "isSystem": true
   },
   {
