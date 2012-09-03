@@ -30,16 +30,6 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.AccountContactsBox",
-    kind: "XV.ListRelationsBox",
-    title: "_contacts".loc(),
-    parentKey: "account",
-    listRelations: "XV.ContactListRelations",
-    searchList: "XV.ContactList",
-    canAttach: true
-  });
-
-  enyo.kind({
     name: "XV.AccountWorkspace",
     kind: "XV.Workspace",
     title: "_account".loc(),
@@ -478,6 +468,7 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.PriorityPicker", attr: "priority"},

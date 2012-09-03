@@ -305,6 +305,17 @@ body {
     padding-top: 3px;
     padding-bottom: 3px;
     border-bottom: 1px solid #ddd;
+    &.inactive {
+      background-color: #8d8d8d;
+      color: black;
+      .xv-list-column {
+        .xv-list-attr {
+          &.placeholder {
+            color: #8d8d8d;
+          }
+        }
+      }
+    }
     .xv-list-column {
       &.short {
         width: 150px;

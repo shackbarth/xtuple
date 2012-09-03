@@ -5,6 +5,9 @@ trailing:true white:true*/
 
 (function () {
 
+  var FIRST_FETCH = 20;
+  var FETCH_TRIGGER = 5;
+  
   /**
     @class
 
@@ -56,6 +59,22 @@ trailing:true white:true*/
       var key = this.getParentKey();
       return key && this._collection ? this._collection[key] : null;
     },
+    fetchRelated: function (max) {
+      var parent = this.getParent(),
+        attr = this.getAttr(),
+        options = { max: max || FIRST_FETCH };
+      if (this.hasMore()) {
+        parent.fetchRelated(attr, options);
+      }
+    },
+    hasMore: function () {
+      var parent = this.getParent(),
+        count = this._collection ? this._collection.length : 0,
+        attr = this.getAttr(),
+        relation = parent && attr ? parent.getRelation(attr) : null,
+        keyContents = relation && relation.keyContents ? relation.keyContents : [];
+      return count < keyContents.length;
+    },
     lengthChanged: function () {
       var count = this.readyModels().length,
         rowsPerPage;
@@ -88,8 +107,10 @@ trailing:true white:true*/
             i;
           for (i = 0; i < orderBy.length; i++) {
             attr = orderBy[i].attribute;
-            aval = orderBy[i].descending ? b.get(attr) : a.get(attr);
-            bval = orderBy[i].descending ? a.get(attr) : b.get(attr);
+            aval = orderBy[i].descending ? b.getValue(attr) : a.getValue(attr);
+            bval = orderBy[i].descending ? a.getValue(attr) : b.getValue(attr);
+            aval = !isNaN(aval) ? aval - 0 : aval;
+            bval = !isNaN(aval) ? bval - 0 : bval;
             if (aval !== bval) {
               return aval > bval ? 1 : -1;
             }
@@ -103,10 +124,26 @@ trailing:true white:true*/
         return model.getStatus() === XM.Model.READY_CLEAN;
       });
     },
+    scroll: function (inSender, inEvent) {
+      var r = this.inherited(arguments),
+        bounds = this.getScrollBounds(),
+        lastShowing = this._lastShowing || 0,
+        totalRows = this._collection.length,
+        rowsPerPage = bounds.clientHeight / this.rowHeight,
+        showingRows = Math.floor(bounds.top / this.rowHeight + rowsPerPage),
+        fetch =  showingRows > lastShowing && totalRows - showingRows - FETCH_TRIGGER < 0 && this.hasMore();
+      // Manage lazy loading
+      if (fetch) {
+        this._lastShowing = showingRows;
+        this.fetchRelated(1);
+      }
+      return r;
+    },
     setupItem: function (inSender, inEvent) {
       var index = inEvent.index,
         isSelected = inEvent.originator.isSelected(index),
         model = this.readyModels()[index],
+        isNotActive = model ? !model.getValue('isActive') || false : false,
         prop,
         isPlaceholder,
         view,
@@ -137,6 +174,9 @@ trailing:true white:true*/
         }
       }
       
+      // Inactive
+      this.$.listItem.addRemoveClass("inactive", isNotActive);
+      
       // Selection
       this.$.listItem.addRemoveClass("item-selected", isSelected);
     },
@@ -152,6 +192,7 @@ trailing:true white:true*/
       this._collection.on("remove", this.lengthChanged, this);
       this.orderByChanged();
       this.lengthChanged();
+      this.fetchRelated();
     }
 
   });

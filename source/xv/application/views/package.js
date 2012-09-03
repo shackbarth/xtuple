@@ -1,6 +1,7 @@
 enyo.depends(
   "list.js",
   "list_relations.js",
+  "list_relations_box.js",
   "parameter.js",
   "workspace.js",
   "repeater_box.js",

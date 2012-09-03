@@ -20,8 +20,7 @@ trailing:true white:true*/
       title: "",
       parentKey: "",
       listRelations: "",
-      searchList: "",
-      canAttach: false
+      searchList: ""
     },
     events: {
       onSearch: "",
@@ -33,7 +32,7 @@ trailing:true white:true*/
     },
     create: function () {
       this.inherited(arguments);
-      var canAttach = this.getCanAttach(),
+      var canAttach = this.getSearchList().length > 0,
         buttons;
       
       // Header
@@ -122,7 +121,8 @@ trailing:true white:true*/
         conditions: [{
           attribute: key,
           operator: "!=",
-          value: parent
+          value: parent,
+          includeNull: true
         }]
       };
       this.doSearch(inEvent);
@@ -211,7 +211,7 @@ trailing:true white:true*/
     selectionChanged: function (inSender, inEvent) {
       var index = this.$.list.getFirstSelected(),
         model = index ? this.$.list.getModel(index) : null,
-        canAttach = this.getCanAttach(),
+        canAttach = this.getSearchList().length > 0,
         couldNotRead = model ? !model.couldRead() : true,
         couldNotUpdate = model ? !model.couldUpdate() : true;
       if (canAttach) { this.$.detachButton.setDisabled(couldNotUpdate); }
@@ -219,7 +219,7 @@ trailing:true white:true*/
     },
     valueChanged: function () {
       var value = this.getValue(), // Must be a collection of Info models
-        canAttach = this.getCanAttach(),
+        canAttach = this.getSearchList().length > 0,
         Klass = value ?
           XT.getObjectByName(value.model.prototype.editableModel) : null,
         canNotCreate = Klass ? !Klass.canCreate() : true,

@@ -13,9 +13,7 @@ trailing:true white:true*/
     name: "XV.AccountIncidentListRelations",
     kind: "XV.ListRelations",
     orderBy: [
-      {attribute: 'priorityOrder'},
-      {attribute: 'updated', descending: true},
-      {attribute: 'id', descending: true}
+      {attribute: 'number', descending: true}
     ],
     parentKey: "account",
     workspace: "XV.IncidentWorkspace",
@@ -25,7 +23,8 @@ trailing:true white:true*/
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", classes: "bold"},
-              {kind: "XV.ListAttr", attr: "updated", fit: true, formatter: "formatDate",
+              {kind: "XV.ListAttr", attr: "getIncidentStatusString", fit: true},
+              {kind: "XV.ListAttr", attr: "updated", formatter: "formatDate",
                 classes: "right"}
             ]},
             {kind: "XV.ListAttr", attr: "description"}
@@ -40,10 +39,7 @@ trailing:true white:true*/
     name: "XV.AccountOpportunityListRelations",
     kind: "XV.ListRelations",
     orderBy: [
-      {attribute: 'priorityOrder'},
-      {attribute: 'targetClose'},
-      {attribute: 'name'},
-      {attribute: 'id'}
+      {attribute: 'number', descending: true}
     ],
     parentKey: "account",
     workspace: "XV.OpportunityWorkspace",
@@ -70,6 +66,7 @@ trailing:true white:true*/
     name: "XV.AccountProjectListRelations",
     kind: "XV.ListRelations",
     orderBy: [
+      {attribute: 'dueDate', descending: true},
       {attribute: 'number' }
     ],
     parentKey: "account",
@@ -97,8 +94,7 @@ trailing:true white:true*/
     name: "XV.AccountToDoListRelations",
     kind: "XV.ListRelations",
     orderBy: [
-      {attribute: 'priorityOrder'},
-      {attribute: 'dueDate'},
+      {attribute: 'dueDate', descending: true},
       {attribute: 'name'}
     ],
     parentKey: "account",
@@ -120,6 +116,36 @@ trailing:true white:true*/
       ]}
     ],
     formatDueDate: XV.ToDoList.prototype.formatDueDate
+  });
+  
+  // ..........................................................
+  // INCIDENT
+  //
+  
+  enyo.kind({
+    name: "XV.IncidentToDoListRelations",
+    kind: "XV.AccountToDoListRelations",
+    parentKey: "incident"
+  });
+  
+  // ..........................................................
+  // OPPORTUNITY
+  //
+  
+  enyo.kind({
+    name: "XV.OpportunityToDoListRelations",
+    kind: "XV.AccountToDoListRelations",
+    parentKey: "opportunity"
+  });
+  
+  // ..........................................................
+  // PROJECT
+  //
+  
+  enyo.kind({
+    name: "XV.ProjectIncidentListRelations",
+    kind: "XV.AccountIncidentListRelations",
+    parentKey: "project"
   });
 
 }());

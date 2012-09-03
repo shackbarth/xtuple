@@ -370,7 +370,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ToDoList",
     kind: "XV.List",
-    label: "_toDos".loc(),
+    label: "_toDo".loc(),
     collection: "XM.ToDoListItemCollection",
     parameterWidget: "XV.ToDoListParameters",
     query: {orderBy: [
@@ -413,7 +413,7 @@ trailing:true white:true*/
     formatDueDate: function (value, view, model) {
       var today = new Date(),
         K = XM.ToDo,
-        isLate = (model.get('status') !== K.COMPLETED &&
+        isLate = (model.get('isActive') &&
           XT.date.compareDate(value, today) < 1);
       view.addRemoveClass("error", isLate);
       return value;

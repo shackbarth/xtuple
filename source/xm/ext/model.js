@@ -305,9 +305,7 @@ white:true*/
     },
 
     /*
-      Reimplemented to handle status changes. Will also automatically
-      fetch related models where they are not already loaded unless
-      the`fetchRelated: false` option is passed
+      Reimplemented to handle status changes.
       
       @param {Object} Options
       @returns {XT.Request} Request
@@ -323,11 +321,6 @@ white:true*/
         options.cascade = true; // Update status of children
         options.success = function (resp) {
           model.setStatus(K.READY_CLEAN, options);
-          if (options.fetchRelated !== false) {
-            _.each(model.relations, function (relation) {
-              model.fetchRelated(relation.key);
-            });
-          }
           XT.log('Fetch successful');
           if (success) { success(model, resp, options); }
         };
@@ -369,6 +362,61 @@ white:true*/
           }
         });
       }
+    },
+    
+    /**
+     * Retrieve related objects.
+     * @param key {string} The relation key to fetch models for.
+     * @param options {Object} Options for 'Backbone.Model.fetch' and 'Backbone.sync'.
+     * @param update {boolean} Whether to force a fetch from the server (updating existing models).
+     * @return {Array} An array of request objects
+     */
+    fetchRelated: function (key, options, update) {
+      options = options || {};
+      var requests = [],
+        rel = this.getRelation(key),
+        keyContents = rel && rel.keyContents,
+        toFetch = keyContents && _.filter(_.isArray(keyContents) ? keyContents : [keyContents], function (item) {
+          var id = Backbone.Relational.store.resolveIdForItem(rel.relatedModel, item);
+          return id && (update || !Backbone.Relational.store.find(rel.relatedModel, id));
+        }, this);
+			
+      if (toFetch && toFetch.length) {
+        if (options.max && toFetch.length > options.max) {
+          toFetch.length = options.max;
+        }
+        
+        // Create a model for each entry in 'keyContents' that is to be fetched
+        var models = _.map(toFetch, function (item) {
+          var model;
+
+          if (_.isObject(item)) {
+            model = rel.relatedModel.build(item);
+          }
+          else {
+            var attrs = {};
+            attrs[rel.relatedModel.prototype.idAttribute] = item;
+            model = rel.relatedModel.build(attrs);
+          }
+
+          return model;
+        }, this);
+
+        requests = _.map(models, function (model) {
+          var opts = _.defaults(
+            {
+              error: function () {
+                model.trigger('destroy', model, model.collection, options);
+                if (options.error) { options.error.apply(model, arguments); }
+              }
+            },
+            options
+          );
+          return model.fetch(opts);
+        }, this);
+      }
+		
+      return requests;
     },
 
     /**

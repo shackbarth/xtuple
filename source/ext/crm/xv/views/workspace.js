@@ -10,44 +10,6 @@ trailing:true white:true*/
   // ..........................................................
   // ACCOUNT
   //
-
-  enyo.kind({
-    name: "XV.AccountIncidentsBox",
-    kind: "XV.ListRelationsBox",
-    title: "_incidents".loc(),
-    parentKey: "account",
-    listRelations: "XV.AccountIncidentListRelations",
-    searchList: "XV.IncidentList"
-  });
-  
-  enyo.kind({
-    name: "XV.AccountOpportunitiesBox",
-    kind: "XV.ListRelationsBox",
-    title: "_opportunities".loc(),
-    parentKey: "account",
-    listRelations: "XV.AccountOpportunityListRelations",
-    searchList: "XV.OpportunityList"
-  });
-  
-  enyo.kind({
-    name: "XV.AccountProjectsBox",
-    kind: "XV.ListRelationsBox",
-    title: "_projects".loc(),
-    parentKey: "account",
-    listRelations: "XV.AccountProjectListRelations",
-    searchList: "XV.ProjectList",
-    canAttach: true
-  });
-  
-  enyo.kind({
-    name: "XV.AccountToDosBox",
-    kind: "XV.ListRelationsBox",
-    title: "_toDos".loc(),
-    parentKey: "account",
-    listRelations: "XV.AccountToDoListRelations",
-    searchList: "XV.ToDoList",
-    canAttach: true
-  });
   
   extensions = [
     {kind: "XV.AccountToDosBox", container: "panels",
@@ -60,17 +22,38 @@ trailing:true white:true*/
       attr: "projectRelations"}
   ];
 
-  XV.appendExtension("XV.AccountWorkspace", extensions);
+  XV.appendWorkspaceExtension("XV.AccountWorkspace", extensions);
 
   // ..........................................................
   // INCIDENT
   //
-
+  
   extensions = [
-    {kind: "XV.ProjectWidget", container: "mainGroup", attr: "project"}
+    {kind: "XV.ProjectWidget", container: "mainGroup", attr: "project"},
+    {kind: "XV.IncidentToDosBox", container: "panels", attr: "toDoRelations"}
   ];
 
-  XV.appendExtension("XV.IncidentWorkspace", extensions);
+  XV.appendWorkspaceExtension("XV.IncidentWorkspace", extensions);
+  
+  // ..........................................................
+  // OPPORTUNITY
+  //
+
+  extensions = [
+    {kind: "XV.OpportunityToDosBox", container: "panels", attr: "toDoRelations"}
+  ];
+
+  XV.appendWorkspaceExtension("XV.OpportunityWorkspace", extensions);
+  
+  // ..........................................................
+  // PROJECT
+  //
+  
+  extensions = [
+    {kind: "XV.ProjectIncidentsBox", container: "panels", attr: "incidentRelations"}
+  ];
+
+  XV.appendWorkspaceExtension("XV.ProjectWorkspace", extensions);
 
   // ..........................................................
   // TO DO
@@ -81,6 +64,6 @@ trailing:true white:true*/
     {kind: "XV.OpportunityWidget", container: "mainGroup", attr: "opportunity"}
   ];
 
-  XV.appendExtension("XV.ToDoWorkspace", extensions);
+  XV.appendWorkspaceExtension("XV.ToDoWorkspace", extensions);
 
 }());

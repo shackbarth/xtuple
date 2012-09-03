@@ -57,11 +57,15 @@ white:true*/
       coll.fetch(options);
 
     The `query` object supports the following:
-      * parameters - Attributes on which to filter by
+      * parameters - Array of objects describing what to filter on.
+        Supports the following properties:
         > attribute - The name of the attrbute to filter on
         > operator - The operator to perform comparison on.
         > value - The matching value.
-      * orderBy - Object designating sort order
+        > includeNull - "OR" include the row if the attribute is null irrespective
+          of whether the operator matches.
+      * orderBy - Array of objects designating sort order. Supports
+        the following properties:
         > attrbute - Attribute to sort by.
         > descending - `Boolean` value. If false or absent sort ascending.
       * rowLimit - Maximum rows to return
