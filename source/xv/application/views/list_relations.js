@@ -14,7 +14,8 @@ trailing:true white:true*/
     kind: "XV.ListRelations",
     orderBy: [
       {attribute: "lastName"},
-      {attribute: "firstName"}
+      {attribute: "firstName"},
+      {attribute: "primaryEmail"}
     ],
     parentKey: "account",
     workspace: "XV.ContactWorkspace",

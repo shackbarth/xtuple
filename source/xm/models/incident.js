@@ -130,6 +130,12 @@ white:true*/
       if (status === K.CLOSED) {
         return '_closed'.loc();
       }
+    },
+    
+    isActive: function () {
+      var K = XM.Incident,
+        status = this.get('status');
+      return (status !== K.CLOSED);
     }
 
   };
@@ -429,6 +435,9 @@ white:true*/
     editableModel: 'XM.Incident'
 
   });
+  
+  // Incident status mixin
+  XM.IncidentRelation = XM.IncidentRelation.extend(XM.IncidentStatus);
 
   /**
     @class
