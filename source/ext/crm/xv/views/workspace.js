@@ -22,7 +22,7 @@ trailing:true white:true*/
       attr: "projectRelations"}
   ];
 
-  XV.appendExtension("XV.AccountWorkspace", extensions);
+  XV.appendWorkspaceExtension("XV.AccountWorkspace", extensions);
 
   // ..........................................................
   // INCIDENT
@@ -33,7 +33,7 @@ trailing:true white:true*/
     {kind: "XV.IncidentToDosBox", container: "panels", attr: "toDoRelations"}
   ];
 
-  XV.appendExtension("XV.IncidentWorkspace", extensions);
+  XV.appendWorkspaceExtension("XV.IncidentWorkspace", extensions);
   
   // ..........................................................
   // OPPORTUNITY
@@ -43,7 +43,7 @@ trailing:true white:true*/
     {kind: "XV.OpportunityToDosBox", container: "panels", attr: "toDoRelations"}
   ];
 
-  XV.appendExtension("XV.OpportunityWorkspace", extensions);
+  XV.appendWorkspaceExtension("XV.OpportunityWorkspace", extensions);
   
   // ..........................................................
   // PROJECT
@@ -53,7 +53,7 @@ trailing:true white:true*/
     {kind: "XV.ProjectIncidentsBox", container: "panels", attr: "incidentRelations"}
   ];
 
-  XV.appendExtension("XV.ProjectWorkspace", extensions);
+  XV.appendWorkspaceExtension("XV.ProjectWorkspace", extensions);
 
   // ..........................................................
   // TO DO
@@ -64,6 +64,6 @@ trailing:true white:true*/
     {kind: "XV.OpportunityWidget", container: "mainGroup", attr: "opportunity"}
   ];
 
-  XV.appendExtension("XV.ToDoWorkspace", extensions);
+  XV.appendWorkspaceExtension("XV.ToDoWorkspace", extensions);
 
 }());

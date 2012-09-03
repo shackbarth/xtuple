@@ -13,7 +13,7 @@ trailing:true white:true*/
       @param {String} Workspace name
       @param {Object|Array} Component(s)
     */
-    appendExtension: function (workspace, extension) {
+    appendWorkspaceExtension: function (workspace, extension) {
       var Workspace = XT.getObjectByName(workspace),
         extensions = Workspace.prototype.extensions || [];
       if (!_.isArray(extension)) {
