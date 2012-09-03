@@ -56,6 +56,18 @@ trailing:true white:true*/
       var key = this.getParentKey();
       return key && this._collection ? this._collection[key] : null;
     },
+    fetchRelated: function () {
+      var parent = this.getParent(),
+        K = XM.Model,
+        status = parent ? parent.getStatus() : null,
+        count = this._collection ? this._collection.length : 0,
+        attr = this.getAttr(),
+        relation = parent && attr ? parent.getRelation(attr) : null,
+        keyContents = relation && relation.keyContents ? relation.keyContents : [];
+      if (status === K.READY_CLEAN && count < keyContents.length) {
+        parent.fetchRelated(attr);
+      }
+    },
     lengthChanged: function () {
       var count = this.readyModels().length,
         rowsPerPage;
@@ -147,11 +159,13 @@ trailing:true white:true*/
       }
     },
     valueChanged: function () {
+      var parent;
       this._collection = this.value;
       this._collection.on("add", this.modelAdded, this);
       this._collection.on("remove", this.lengthChanged, this);
       this.orderByChanged();
       this.lengthChanged();
+      this.fetchRelated();
     }
 
   });
