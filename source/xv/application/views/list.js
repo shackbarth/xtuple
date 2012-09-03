@@ -413,7 +413,7 @@ trailing:true white:true*/
     formatDueDate: function (value, view, model) {
       var today = new Date(),
         K = XM.ToDo,
-        isLate = (model.get('status') !== K.COMPLETED &&
+        isLate = (model.get('isActive') &&
           XT.date.compareDate(value, today) < 1);
       view.addRemoveClass("error", isLate);
       return value;

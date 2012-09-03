@@ -143,6 +143,7 @@ trailing:true white:true*/
       var index = inEvent.index,
         isSelected = inEvent.originator.isSelected(index),
         model = this.readyModels()[index],
+        isNotActive = model ? !model.getValue('isActive') || false : false,
         prop,
         isPlaceholder,
         view,
@@ -172,6 +173,9 @@ trailing:true white:true*/
           view.addRemoveClass("placeholder", isPlaceholder);
         }
       }
+      
+      // Inactive
+      this.$.listItem.addRemoveClass("inactive", isNotActive);
       
       // Selection
       this.$.listItem.addRemoveClass("item-selected", isSelected);
