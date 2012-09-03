@@ -121,9 +121,7 @@ select xt.install_js('XT','Session','xtuple', $$
             key: value.name,
             relatedModel: schema.toUpperCase() + '.' + value.toOne.type
           };
-        if (!value.toOne.isNested) {
-          rel.includeInJSON = pkey;
-        }
+        rel.includeInJSON = pkey;
         relations.push(rel);
       },
       addToMany = function (value) {

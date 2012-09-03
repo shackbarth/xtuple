@@ -953,6 +953,11 @@
         }
       }
     ],
+    "order": [
+      "cntct_last_name",
+      "cntct_first_name",
+      "cntct_email"
+    ],
     "isSystem": true
   },
   {

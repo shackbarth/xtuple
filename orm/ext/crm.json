@@ -677,6 +677,31 @@
   {
     "context": "crm",
     "nameSpace": "XM",
+    "type": "IncidentRelation",
+    "table": "xt.incdtinfo",
+    "isExtension": true,
+    "comment": "Extended by Crm",
+    "relations": [
+      {
+        "column": "incdt_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "project",
+        "attr": {
+          "type": "Number",
+          "column": "incdt_prj_id"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "crm",
+    "nameSpace": "XM",
     "type": "Characteristic",
     "table": "char",
     "isExtension": true,
@@ -1194,6 +1219,14 @@
           "type": "ProjectToDo",
           "column": "prj_id",
           "inverse": "source"
+        }
+      },
+      {
+        "name": "incidentRelations",
+        "toMany": {
+          "type": "IncidentRelation",
+          "column": "prj_id",
+          "inverse": "project"
         }
       }
     ],

@@ -653,6 +653,10 @@
         }
       } 
     ],
+    "order": [
+      "prj_due_date desc",
+      "prj_number"
+    ],
     "isSystem": true
   },
   {
