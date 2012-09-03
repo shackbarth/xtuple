@@ -5,6 +5,8 @@ trailing:true white:true*/
 
 (function () {
 
+  var ROWS_PER_FETCH = 15;
+  
   /**
     @class
 
@@ -58,14 +60,13 @@ trailing:true white:true*/
     },
     fetchRelated: function () {
       var parent = this.getParent(),
-        K = XM.Model,
-        status = parent ? parent.getStatus() : null,
         count = this._collection ? this._collection.length : 0,
         attr = this.getAttr(),
         relation = parent && attr ? parent.getRelation(attr) : null,
-        keyContents = relation && relation.keyContents ? relation.keyContents : [];
-      if (status === K.READY_CLEAN && count < keyContents.length) {
-        parent.fetchRelated(attr);
+        keyContents = relation && relation.keyContents ? relation.keyContents : [],
+        options = { max: ROWS_PER_FETCH };
+      if (count < keyContents.length) {
+        parent.fetchRelated(attr, options);
       }
     },
     lengthChanged: function () {
@@ -159,7 +160,6 @@ trailing:true white:true*/
       }
     },
     valueChanged: function () {
-      var parent;
       this._collection = this.value;
       this._collection.on("add", this.modelAdded, this);
       this._collection.on("remove", this.lengthChanged, this);

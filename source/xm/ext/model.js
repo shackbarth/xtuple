@@ -369,19 +369,23 @@ white:true*/
      * @param key {string} The relation key to fetch models for.
      * @param options {Object} Options for 'Backbone.Model.fetch' and 'Backbone.sync'.
      * @param update {boolean} Whether to force a fetch from the server (updating existing models).
-     * @return {jQuery.when[]} An array of request objects
+     * @return {Array} An array of request objects
      */
     fetchRelated: function (key, options, update) {
       options = options || {};
       var requests = [],
         rel = this.getRelation(key),
         keyContents = rel && rel.keyContents,
-        toFetch = keyContents && _.select(_.isArray(keyContents) ? keyContents : [keyContents], function (item) {
+        toFetch = keyContents && _.filter(_.isArray(keyContents) ? keyContents : [keyContents], function (item) {
           var id = Backbone.Relational.store.resolveIdForItem(rel.relatedModel, item);
           return id && (update || !Backbone.Relational.store.find(rel.relatedModel, id));
         }, this);
 			
       if (toFetch && toFetch.length) {
+        if (options.max && toFetch.length > options.max) {
+          toFetch.length = options.max;
+        }
+        
         // Create a model for each entry in 'keyContents' that is to be fetched
         var models = _.map(toFetch, function (item) {
           var model;
