@@ -49,7 +49,8 @@ trailing:true white:true*/
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", classes: "bold"},
-              {kind: "XV.ListAttr", attr: "targetClose", fit: true,
+              {kind: "XV.ListAttr", attr: "opportunityStage.name", fit: true},
+              {kind: "XV.ListAttr", attr: "targetClose",
                 formatter: "formatTargetClose",
                 placeholder: "_noCloseTarget".loc(),
                 classes: "right"}
