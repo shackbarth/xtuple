@@ -479,6 +479,9 @@ trailing:true white:true*/
           fit: true,
           callback: callback
         };
+        // Callback means something sent us here that must be
+        // finished. Can't go on and do other new things
+        if (callback) { this.$.saveAndNewButton.hide(); }
         workspace = this.createComponent(workspace);
         headerAttrs = workspace.getHeaderAttrs() || [];
         if (headerAttrs.length) {
