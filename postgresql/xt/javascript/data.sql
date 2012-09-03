@@ -129,6 +129,9 @@ select xt.install_js('XT','Data','xtuple', $$
             clause.push(attr);
             clause.push(op);
             clause.push(arg);
+            if (parameters[i].includeNull) {
+              clause.push(' or ' + attr + 'is null');
+            }
             orClause.push(clause.join(''));
           }
           clauses.push('(' + orClause.join(' or ') + ')');
