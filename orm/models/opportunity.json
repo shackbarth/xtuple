@@ -737,17 +737,10 @@
         }
       },
       {
-        "name": "priority",
+        "name": "opportunityStage",
         "toOne": {
-          "type": "Priority",
-          "column": "ophead_priority_id"
-        }
-      },
-      {
-        "name": "priorityOrder",
-        "attr": {
-          "type": "Number",
-          "column": "priority_order"
+          "type": "OpportunityStage",
+          "column": "ophead_opstage_id"
         }
       }
     ],
