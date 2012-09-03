@@ -78,8 +78,8 @@ trailing:true white:true*/
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", classes: "bold"},
-              {kind: "XV.ListAttr", attr: "dueDate", fit: true,
-                formatter: "formatDueDate",
+              {kind: "XV.ListAttr", attr: "getProjectStatusString", fit: true},
+              {kind: "XV.ListAttr", attr: "dueDate", formatter: "formatDueDate",
                 placeholder: "_noCloseTarget".loc(),
                 classes: "right"}
             ]},
