@@ -439,14 +439,10 @@ select xt.install_js('XT','Data','xtuple', $$
               throw new Error("No encryption key provided.");
             }
           } else if (record[prop] !== null) { 
-            if (ormp && ormp.toOne && ormp.toOne.isNested) { 
-              toOneOrm = XT.Orm.fetch(orm.nameSpace, ormp.toOne.type);
-              toOneKey = XT.Orm.primaryKey(toOneOrm);
-              toOneProp = XT.Orm.getProperty(toOneOrm, toOneKey);
-              toOneVal = toOneProp.attr.type === 'String' ?
-                "'" + record[prop][toOneKey] + "'" : record[prop][toOneKey];
-              params.expressions.push(toOneVal);
-            } else if (type === 'String' || type === 'Date') { 
+            if (ormp && ormp.toOne) {
+              type = isNaN(record[prop]) ? "String" : "Number";
+            }
+            if (type === 'String' || type === 'Date') { 
               params.expressions.push("'" + record[prop] + "'");
             } else {
               params.expressions.push(record[prop]);
@@ -577,14 +573,10 @@ select xt.install_js('XT','Data','xtuple', $$
             }
           } else if (ormp.name !== pkey) {
             if (record[prop] !== null) {
-              if (ormp.toOne && ormp.toOne.isNested) {
-                toOneOrm = XT.Orm.fetch(orm.nameSpace, ormp.toOne.type);
-                toOneKey = XT.Orm.primaryKey(toOneOrm);
-                toOneProp = XT.Orm.getProperty(toOneOrm, toOneKey);
-                toOneVal = toOneProp.attr.type === 'String' ?
-                  "'" + record[prop][toOneKey] + "'" : record[prop][toOneKey];
-                params.expressions.push(qprop.concat(" = ", toOneVal));
-              } else if (type === 'String' || type === 'Date') { 
+              if (ormp && ormp.toOne) {
+                type = isNaN(record[prop]) ? "String" : "Number";
+              }
+              if (type === 'String' || type === 'Date') { 
                 params.expressions.push(qprop.concat(" = '", record[prop], "'"));
               } else {
                 params.expressions.push(qprop.concat(" = ", record[prop]));
