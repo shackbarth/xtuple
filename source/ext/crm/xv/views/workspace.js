@@ -42,7 +42,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.AccountToDosBox",
     kind: "XV.ListRelationsBox",
-    title: "_toDos".loc(),
+    title: "_toDo".loc(),
     parentKey: "account",
     listRelations: "XV.AccountToDoListRelations",
     searchList: "XV.ToDoList",
@@ -65,12 +65,55 @@ trailing:true white:true*/
   // ..........................................................
   // INCIDENT
   //
+  
+  enyo.kind({
+    name: "XV.IncidentToDosBox",
+    kind: "XV.AccountToDosBox",
+    parentKey: "incident",
+    listRelations: "XV.IncidentToDoListRelations"
+  });
 
   extensions = [
-    {kind: "XV.ProjectWidget", container: "mainGroup", attr: "project"}
+    {kind: "XV.ProjectWidget", container: "mainGroup", attr: "project"},
+    {kind: "XV.IncidentToDosBox", container: "panels", attr: "toDoRelations"}
   ];
 
   XV.appendExtension("XV.IncidentWorkspace", extensions);
+  
+  // ..........................................................
+  // OPPORTUNITY
+  //
+  
+  enyo.kind({
+    name: "XV.OpportunityToDosBox",
+    kind: "XV.AccountToDosBox",
+    parentKey: "opportunity",
+    listRelations: "XV.OpportunityToDoListRelations"
+  });
+
+  extensions = [
+    {kind: "XV.OpportunityToDosBox", container: "panels", attr: "toDoRelations"}
+  ];
+
+  XV.appendExtension("XV.OpportunityWorkspace", extensions);
+  
+  // ..........................................................
+  // PROJECT
+  //
+  
+  enyo.kind({
+    name: "XV.ProjectIncidentsBox",
+    kind: "XV.AccountIncidentsBox",
+    parentKey: "project",
+    listRelations: "XV.ProjectIncidentListRelations",
+    canAttach: true
+  });
+
+  extensions = [
+    {kind: "XV.ProjectIncidentsBox", container: "panels", attr: "incidentRelations"}
+  ];
+
+  XV.appendExtension("XV.ProjectWorkspace", extensions);
 
   // ..........................................................
   // TO DO

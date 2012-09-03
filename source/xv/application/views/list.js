@@ -370,7 +370,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ToDoList",
     kind: "XV.List",
-    label: "_toDos".loc(),
+    label: "_toDo".loc(),
     collection: "XM.ToDoListItemCollection",
     parameterWidget: "XV.ToDoListParameters",
     query: {orderBy: [

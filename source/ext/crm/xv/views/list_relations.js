@@ -121,5 +121,35 @@ trailing:true white:true*/
     ],
     formatDueDate: XV.ToDoList.prototype.formatDueDate
   });
+  
+  // ..........................................................
+  // INCIDENT
+  //
+  
+  enyo.kind({
+    name: "XV.IncidentToDoListRelations",
+    kind: "XV.AccountToDoListRelations",
+    parentKey: "incident"
+  });
+  
+  // ..........................................................
+  // OPPORTUNITY
+  //
+  
+  enyo.kind({
+    name: "XV.OpportunityToDoListRelations",
+    kind: "XV.AccountToDoListRelations",
+    parentKey: "opportunity"
+  });
+  
+  // ..........................................................
+  // PROJECT
+  //
+  
+  enyo.kind({
+    name: "XV.ProjectIncidentListRelations",
+    kind: "XV.AccountIncidentListRelations",
+    parentKey: "project"
+  });
 
 }());
