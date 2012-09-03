@@ -6,6 +6,7 @@ trailing:true white:true*/
 (function () {
 
   var ROWS_PER_FETCH = 15;
+  var FETCH_TRIGGER = 30;
   
   /**
     @class
@@ -60,14 +61,19 @@ trailing:true white:true*/
     },
     fetchRelated: function () {
       var parent = this.getParent(),
+        attr = this.getAttr(),
+        options = { max: ROWS_PER_FETCH };
+      if (this.hasMore()) {
+        parent.fetchRelated(attr, options);
+      }
+    },
+    hasMore: function () {
+      var parent = this.getParent(),
         count = this._collection ? this._collection.length : 0,
         attr = this.getAttr(),
         relation = parent && attr ? parent.getRelation(attr) : null,
-        keyContents = relation && relation.keyContents ? relation.keyContents : [],
-        options = { max: ROWS_PER_FETCH };
-      if (count < keyContents.length) {
-        parent.fetchRelated(attr, options);
-      }
+        keyContents = relation && relation.keyContents ? relation.keyContents : [];
+      return count < keyContents.length;
     },
     lengthChanged: function () {
       var count = this.readyModels().length,
@@ -115,6 +121,16 @@ trailing:true white:true*/
       return _.filter(this._collection.models, function (model) {
         return model.getStatus() === XM.Model.READY_CLEAN;
       });
+    },
+    scroll: function (inSender, inEvent) {
+      var r = this.inherited(arguments);
+      // Manage lazy loading
+      var max = this.getScrollBounds().maxTop - this.rowHeight * FETCH_TRIGGER;
+      if (this.hasMore && this.getScrollPosition() > max && !this.fetching) {
+        this.fetching = true;
+        this.fetchRelated();
+      }
+      return r;
     },
     setupItem: function (inSender, inEvent) {
       var index = inEvent.index,
