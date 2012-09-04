@@ -1,5 +1,12 @@
 enyo.depends(
-  "address_widget_test.js",
-  "dropdown_widget_test.js",
   "number_widget_test.js"
+    //"langTest.js",
+	//"KindTest.js",
+	//"JsonTest.js",
+	//"AsyncTest.js",
+	//"AjaxTest.js",
+	//"ComponentDispatchTest.js",
+	//"ComponentHandlersTest.js",
+	//"ControlPropsTest.js",
+	//"DecodePackagePathTest.js"
 );
