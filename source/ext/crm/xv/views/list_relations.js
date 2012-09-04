@@ -120,6 +120,34 @@ trailing:true white:true*/
   });
   
   // ..........................................................
+  // CONTACT
+  //
+ 
+  enyo.kind({
+    name: "XV.ContactIncidentListRelations",
+    kind: "XV.AccountIncidentListRelations",
+    parentKey: "contact"
+  });
+  
+  enyo.kind({
+    name: "XV.ContactOpportunityListRelations",
+    kind: "XV.AccountOpportunityListRelations",
+    parentKey: "contact"
+  });
+  
+  enyo.kind({
+    name: "XV.ContactProjectListRelations",
+    kind: "XV.AccountProjectListRelations",
+    parentKey: "contact"
+  });
+  
+  enyo.kind({
+    name: "XV.ContactToDoListRelations",
+    kind: "XV.AccountToDoListRelations",
+    parentKey: "contact"
+  });
+  
+  // ..........................................................
   // INCIDENT
   //
   
