@@ -523,6 +523,8 @@ white:true*/
 
   });
 
+  XM.ProjectRelation = XM.ProjectRelation.extend(XM.ProjectStatus);
+
   /**
     @class
 
