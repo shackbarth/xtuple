@@ -214,8 +214,8 @@ trailing:true white:true*/
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", classes: "bold"},
-              {kind: "XV.ListAttr", attr: "inventoryUnit.name", fit: true,
-                classes: "right"}
+              //{kind: "XV.ListAttr", attr: "inventoryUnit.name", fit: true,
+              //  classes: "right"}
             ]},
             {kind: "XV.ListAttr", attr: "description1"}
           ]}
@@ -451,6 +451,71 @@ trailing:true white:true*/
     formatActive: function (value, view, model) {
       return value ? "_active".loc() : "";
     }
+  });
+
+  // ..........................................................
+  // ITEM
+  //
+
+  enyo.kind({
+    name: "XV.ItemList",
+    kind: "XV.List",
+    label: "_items".loc(),
+    collection: "XM.ItemListItemCollection",
+    query: {},
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    workspace: "XV.ItemWorkspace",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "XV.ListColumn", classes: "last", components: [
+          {kind: "XV.ListAttr", attr: "number", classes: "bold"}
+        ]}
+      ]}
+    ]
+  });
+
+  enyo.kind({
+    name: "XV.ClassCodeList",
+    kind: "XV.List",
+    label: "_classCodes".loc(),
+    collection: "XM.ClassCodeCollection",
+    query: {},
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    workspace: "XV.ItemWorkspace",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "XV.ListColumn", classes: "last", components: [
+          {kind: "XV.ListAttr", attr: "code", classes: "bold"}
+        ]}
+      ]}
+    ]
+  });
+
+
+  // ..........................................................
+  // CURRENCY
+  //
+
+  enyo.kind({
+    name: "XV.CurrencyList",
+    kind: "XV.List",
+    label: "_currencies".loc(),
+    collection: "XM.CurrencyCollection",
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    workspace: "XV.CurrencyWorkspace",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "XV.ListColumn", classes: "last", components: [
+          {kind: "XV.ListAttr", attr: "name", classes: "bold"}
+        ]}
+      ]}
+    ]
   });
 
   // ..........................................................

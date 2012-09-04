@@ -185,6 +185,28 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // CURRENCY
+  //
+
+  enyo.kind({
+    name: "XV.CurrencyWorkspace",
+    kind: "XV.Workspace",
+    title: "_currency".loc(),
+    model: "XM.Currency",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.InputWidget", attr: "abbreviation"},
+          {kind: "XV.InputWidget", attr: "name"},
+          {kind: "XV.InputWidget", attr: "symbol"}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
   // HONORIFIC
   //
 
@@ -283,6 +305,48 @@ trailing:true white:true*/
     model: "XM.IncidentSeverity"
   });
 
+
+  // ..........................................................
+  // ITEM
+  //
+
+  enyo.kind({
+    name: "XV.ItemWorkspace",
+    kind: "XV.Workspace",
+    title: "_item".loc(),
+    model: "XM.Item",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ClassCodeWidget", attr: "classCode"},
+          {kind: "XV.InputWidget", attr: "description1"},
+          {kind: "XV.InputWidget", attr: "description2"},
+          {kind: "XV.InputWidget", attr: "inventoryUnit"},
+          {kind: "XV.InputWidget", attr: "isActive"},
+          {kind: "XV.InputWidget", attr: "isFractional"},
+          {kind: "XV.InputWidget", attr: "isSold"},
+          {kind: "XV.InputWidget", attr: "listPrice"},
+          {kind: "XV.InputWidget", attr: "priceUnit"},
+          {kind: "XV.InputWidget", attr: "productCategory"}
+        ]}
+      ]}
+    ]
+    /*
+
+      "classCode",
+      "description1",
+      "description2",
+      "inventoryUnit",
+      "isActive",
+      "isFractional",
+      "isSold",
+      "listPrice",
+      "priceUnit",
+      "productCategory"
+    */
+  });
   // ..........................................................
   // OPPORTUNITY
   //

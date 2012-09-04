@@ -154,6 +154,20 @@ white:true*/
   /**
     @class
 
+    @extends XM.Info
+  */
+  XM.ItemListItem = XM.Info.extend({
+    /** @scope XM.ItemListItem.prototype */
+
+    recordType: 'XM.ItemListItem',
+
+    editableModel: 'XM.Item'
+
+  });
+
+  /**
+    @class
+
     @extends XM.Comment
   */
   XM.ItemComment = XM.Comment.extend({
