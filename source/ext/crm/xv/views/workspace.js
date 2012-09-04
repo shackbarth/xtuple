@@ -23,6 +23,23 @@ trailing:true white:true*/
   ];
 
   XV.appendWorkspaceExtension("XV.AccountWorkspace", extensions);
+  
+  // ..........................................................
+  // ACCOUNT
+  //
+  
+  extensions = [
+    {kind: "XV.ContactToDosBox", container: "panels",
+      attr: "toDoRelations"},
+    {kind: "XV.ContactOpportunitiesBox", container: "panels",
+      attr: "opportunityRelations"},
+    {kind: "XV.ContactIncidentsBox", container: "panels",
+      attr: "incidentRelations"},
+    {kind: "XV.ContactProjectsBox", container: "panels",
+      attr: "projectRelations"}
+  ];
+
+  XV.appendWorkspaceExtension("XV.ContactWorkspace", extensions);
 
   // ..........................................................
   // INCIDENT

@@ -42,6 +42,44 @@ trailing:true white:true*/
     listRelations: "XV.AccountToDoListRelations",
     searchList: "XV.ToDoList"
   });
+  
+  // ..........................................................
+  // CONTACT
+  //
+
+  enyo.kind({
+    name: "XV.ContactIncidentsBox",
+    kind: "XV.ListRelationsBox",
+    title: "_incidents".loc(),
+    parentKey: "contact",
+    listRelations: "XV.ContactIncidentListRelations"
+  });
+  
+  enyo.kind({
+    name: "XV.ContactOpportunitiesBox",
+    kind: "XV.ListRelationsBox",
+    title: "_opportunities".loc(),
+    parentKey: "contact",
+    listRelations: "XV.ContactOpportunityListRelations"
+  });
+  
+  enyo.kind({
+    name: "XV.ContactProjectsBox",
+    kind: "XV.ListRelationsBox",
+    title: "_projects".loc(),
+    parentKey: "contact",
+    listRelations: "XV.ContactProjectListRelations",
+    searchList: "XV.ProjectList"
+  });
+  
+  enyo.kind({
+    name: "XV.ContactToDosBox",
+    kind: "XV.ListRelationsBox",
+    title: "_toDo".loc(),
+    parentKey: "contact",
+    listRelations: "XV.ContactToDoListRelations",
+    searchList: "XV.ToDoList"
+  });
 
   // ..........................................................
   // INCIDENT

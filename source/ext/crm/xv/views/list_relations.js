@@ -49,7 +49,8 @@ trailing:true white:true*/
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", classes: "bold"},
-              {kind: "XV.ListAttr", attr: "targetClose", fit: true,
+              {kind: "XV.ListAttr", attr: "opportunityStage.name", fit: true},
+              {kind: "XV.ListAttr", attr: "targetClose",
                 formatter: "formatTargetClose",
                 placeholder: "_noCloseTarget".loc(),
                 classes: "right"}
@@ -77,8 +78,8 @@ trailing:true white:true*/
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", classes: "bold"},
-              {kind: "XV.ListAttr", attr: "dueDate", fit: true,
-                formatter: "formatDueDate",
+              {kind: "XV.ListAttr", attr: "getProjectStatusString", fit: true},
+              {kind: "XV.ListAttr", attr: "dueDate", formatter: "formatDueDate",
                 placeholder: "_noCloseTarget".loc(),
                 classes: "right"}
             ]},
@@ -116,6 +117,34 @@ trailing:true white:true*/
       ]}
     ],
     formatDueDate: XV.ToDoList.prototype.formatDueDate
+  });
+  
+  // ..........................................................
+  // CONTACT
+  //
+ 
+  enyo.kind({
+    name: "XV.ContactIncidentListRelations",
+    kind: "XV.AccountIncidentListRelations",
+    parentKey: "contact"
+  });
+  
+  enyo.kind({
+    name: "XV.ContactOpportunityListRelations",
+    kind: "XV.AccountOpportunityListRelations",
+    parentKey: "contact"
+  });
+  
+  enyo.kind({
+    name: "XV.ContactProjectListRelations",
+    kind: "XV.AccountProjectListRelations",
+    parentKey: "contact"
+  });
+  
+  enyo.kind({
+    name: "XV.ContactToDoListRelations",
+    kind: "XV.AccountToDoListRelations",
+    parentKey: "contact"
   });
   
   // ..........................................................
