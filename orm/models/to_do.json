@@ -760,6 +760,13 @@
         }
       },
       {
+        "name": "conntact",
+        "attr": {
+          "type": "Number",
+          "column": "todoitem_cntct_id"
+        }
+      },
+      {
         "name": "priority",
         "toOne": {
           "type": "Priority",

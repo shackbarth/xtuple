@@ -1021,7 +1021,14 @@
           "type": "Number",
           "column": "incdt_crmacct_id"
         }
-      }      
+      },
+      {
+        "name": "contact",
+        "attr": {
+          "type": "Number",
+          "column": "incdt_cntct_id"
+        }
+      }
     ],
     "order": [
       "incdt_number desc"

@@ -651,7 +651,14 @@
           "type": "Number",
           "column": "prj_crmacct_id"
         }
-      } 
+      },
+      {
+        "name": "contact",
+        "attr": {
+          "type": "Number",
+          "column": "prj_cntct_id"
+        }
+      }
     ],
     "order": [
       "prj_due_date desc",

@@ -714,6 +714,13 @@
         }
       },
       {
+        "name": "opportunityStage",
+        "toOne": {
+          "type": "OpportunityStage",
+          "column": "ophead_opstage_id"
+        }
+      },
+      {
         "name": "targetClose",
         "attr": {
           "type": "Date",
@@ -737,10 +744,10 @@
         }
       },
       {
-        "name": "opportunityStage",
-        "toOne": {
-          "type": "OpportunityStage",
-          "column": "ophead_opstage_id"
+        "name": "contact",
+        "attr": {
+          "type": "Number",
+          "column": "ophead_cntct_id"
         }
       }
     ],
