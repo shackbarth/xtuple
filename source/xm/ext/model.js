@@ -305,9 +305,7 @@ white:true*/
     },
 
     /*
-      Reimplemented to handle status changes. Will also automatically
-      fetch related models where they are not already loaded unless
-      the`fetchRelated: false` option is passed
+      Reimplemented to handle status changes.
       
       @param {Object} Options
       @returns {XT.Request} Request
@@ -323,11 +321,6 @@ white:true*/
         options.cascade = true; // Update status of children
         options.success = function (resp) {
           model.setStatus(K.READY_CLEAN, options);
-          if (options.fetchRelated !== false) {
-            _.each(model.relations, function (relation) {
-              model.fetchRelated(relation.key);
-            });
-          }
           XT.log('Fetch successful');
           if (success) { success(model, resp, options); }
         };
@@ -369,6 +362,61 @@ white:true*/
           }
         });
       }
+    },
+    
+    /**
+     * Retrieve related objects.
+     * @param key {string} The relation key to fetch models for.
+     * @param options {Object} Options for 'Backbone.Model.fetch' and 'Backbone.sync'.
+     * @param update {boolean} Whether to force a fetch from the server (updating existing models).
+     * @return {Array} An array of request objects
+     */
+    fetchRelated: function (key, options, update) {
+      options = options || {};
+      var requests = [],
+        rel = this.getRelation(key),
+        keyContents = rel && rel.keyContents,
+        toFetch = keyContents && _.filter(_.isArray(keyContents) ? keyContents : [keyContents], function (item) {
+          var id = Backbone.Relational.store.resolveIdForItem(rel.relatedModel, item);
+          return id && (update || !Backbone.Relational.store.find(rel.relatedModel, id));
+        }, this);
+			
+      if (toFetch && toFetch.length) {
+        if (options.max && toFetch.length > options.max) {
+          toFetch.length = options.max;
+        }
+        
+        // Create a model for each entry in 'keyContents' that is to be fetched
+        var models = _.map(toFetch, function (item) {
+          var model;
+
+          if (_.isObject(item)) {
+            model = rel.relatedModel.build(item);
+          }
+          else {
+            var attrs = {};
+            attrs[rel.relatedModel.prototype.idAttribute] = item;
+            model = rel.relatedModel.build(attrs);
+          }
+
+          return model;
+        }, this);
+
+        requests = _.map(models, function (model) {
+          var opts = _.defaults(
+            {
+              error: function () {
+                model.trigger('destroy', model, model.collection, options);
+                if (options.error) { options.error.apply(model, arguments); }
+              }
+            },
+            options
+          );
+          return model.fetch(opts);
+        }, this);
+      }
+		
+      return requests;
     },
 
     /**
@@ -725,21 +773,33 @@ white:true*/
       @param {Boolean} Boolean - default = true.
     */
     setReadOnly: function (key, value) {
+      var changes = {},
+        delta;
       // handle attribute
       if (_.isString(key)) {
         value = _.isBoolean(value) ? value : true;
         if (value && !_.contains(this.readOnlyAttributes, key)) {
           this.readOnlyAttributes.push(key);
+          changes[key] = true;
         } else if (!value && _.contains(this.readOnlyAttributes, key)) {
           this.readOnlyAttributes = _.without(this.readOnlyAttributes, key);
+          changes[key] = true;
         }
-
       // handle model
       } else {
         key = _.isBoolean(key) ? key : true;
         this.readOnly = key;
+        // Attributes that were already read-only will stay that way
+        // so only count the attributes that were not affected
+        delta = _.difference(this.getAttributeNames(), this.readOnlyAttributes);
+        _.each(delta, function (attr) {
+          changes[attr] = true;
+        });
       }
-
+      // Notify changes
+      if (!_.isEmpty(changes)) {
+        this.trigger('readOnlyChange', this, {changes: changes, isReadOnly: value});
+      }
       return this;
     },
 
@@ -934,7 +994,7 @@ white:true*/
             }
             break;
           case S.DB_COMPOUND:
-            if (!_.isObject(value)) {
+            if (!_.isObject(value) && !_.isNumber(value)) {
               params.type = "_object".loc();
               return XT.Error.clone('xt1003', { params: params });
             }
@@ -1030,39 +1090,8 @@ white:true*/
 
       @returns {Boolean}
     */
-    canRead: function () {
-      var privs = this.prototype.privileges,
-        sessionPrivs = XT.session.privileges,
-        isGranted = false;
-
-      // If no privileges, nothing to check.
-      if (_.isEmpty(privs)) { return true; }
-
-      if (sessionPrivs && sessionPrivs.get) {
-        // Check global read privilege.
-        isGranted = privs.all && privs.all.read ?
-                    sessionPrivs.get(privs.all.read) : false;
-
-        // Check global update privilege.
-        if (!isGranted) {
-          isGranted = privs.all && privs.all.update ?
-                      sessionPrivs.get(privs.all.update) : false;
-        }
-
-        // Check personal view privilege.
-        if (!isGranted) {
-          isGranted = privs.personal && privs.personal.read ?
-                      sessionPrivs.get(privs.personal.read) : false;
-        }
-
-        // Check personal update privilege.
-        if (!isGranted) {
-          isGranted = privs.personal && privs.personal.update ?
-                      sessionPrivs.get(privs.personal.update) : false;
-        }
-      }
-
-      return isGranted;
+    canRead: function (model) {
+      return XM.Model.canDo.call(this, 'read', model);
     },
 
     /**
@@ -1135,7 +1164,8 @@ white:true*/
         isGrantedPersonal = false;
         while (!isGrantedPersonal && i < props.length) {
           value = model.original(props[i]);
-          value = typeof value === 'object' ? value.get('username') : value;
+          value = value && typeof value === 'object' ?
+            value.get('username') : value;
           isGrantedPersonal = value === username;
           i += 1;
         }

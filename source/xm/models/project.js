@@ -32,6 +32,12 @@ white:true*/
       if (status === K.COMPLETED) {
         return '_completed'.loc();
       }
+    },
+    
+    isActive: function () {
+      var K = XM.Project,
+        status = this.get('status');
+      return (status !== K.COMPLETED);
     }
 
   };
@@ -129,7 +135,7 @@ white:true*/
 
     /**
     Return a copy of this project with a given number and date offset.
-    Accepted options are: 
+    Accepted options are:
       number: Project number
       offset: Due date offset
 
@@ -195,7 +201,7 @@ white:true*/
 
     /**
     Return a copy of this project with a given number and date offset.
-    Accepted options are: 
+    Accepted options are:
       number: Project number
       offset: Due date offset
 
@@ -503,23 +509,36 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.ProjectRelation = XM.Info.extend({
+    /** @scope XM.ProjectRelation.prototype */
+
+    recordType: 'XM.ProjectRelation',
+
+    editableModel: 'XM.Project'
+
+  });
 
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Info
     @extends XM.ProjectStatus
   */
-  XM.ProjectInfo = XM.Model.extend({
-    /** @scope XM.ProjectInfo.prototype */
+  XM.ProjectListItem = XM.Info.extend({
+    /** @scope XM.ProjectListItem.prototype */
 
-    recordType: 'XM.ProjectInfo',
+    recordType: 'XM.ProjectListItem',
 
-    readOnly: true
+    editableModel: 'XM.Project'
 
   });
 
-  XM.ProjectInfo = XM.ProjectInfo.extend(XM.ProjectStatus);
+  XM.ProjectListItem = XM.ProjectListItem.extend(XM.ProjectStatus);
 
   // ..........................................................
   // COLLECTIONS
@@ -530,10 +549,10 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.ProjectInfoCollection = XM.Collection.extend({
-    /** @scope XM.ProjectInfoCollection.prototype */
+  XM.ProjectListItemCollection = XM.Collection.extend({
+    /** @scope XM.ProjectListItemCollection.prototype */
 
-    model: XM.ProjectInfo
+    model: XM.ProjectListItem
 
   });
 

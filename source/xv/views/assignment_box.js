@@ -14,11 +14,11 @@ white:true*/
    *
    * @class
    * @alias XV.AssignmentBox
-   * @extends XV.Groupbox
+   * @extends XV.ScrollableGroupbox
    */
   var enyoObj = {
     name: "XV.AssignmentBox",
-    kind: "XV.Groupbox",
+    kind: "XV.ScrollableGroupbox",
     classes: "xv-assignment-box",
     handlers: {
       onValueChange: "checkboxChange"

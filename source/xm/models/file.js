@@ -11,10 +11,10 @@ white:true*/
   
     @extends XM.Model
   */
-  XM.FileInfo = XM.Model.extend({
-    /** @scope XM.FileInfo.prototype */
+  XM.FileRelation = XM.Model.extend({
+    /** @scope XM.FileRelation.prototype */
 
-    recordType: 'XM.FileInfo'
+    recordType: 'XM.FileRelation'
 
   });
 

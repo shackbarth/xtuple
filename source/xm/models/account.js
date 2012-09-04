@@ -204,26 +204,28 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Info
   */
-  XM.AccountContactInfo = XM.Model.extend({
-    /** @scope XM.AccountContactInfo.prototype */
+  XM.AccountRelation = XM.Info.extend({
+    /** @scope XM.ContactRelation.prototype */
 
-    recordType: 'XM.AccountContactInfo'
+    recordType: 'XM.AccountRelation',
+    
+    editableModel: 'XM.Account'
 
   });
 
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Info
   */
-  XM.AccountInfo = XM.Model.extend({
-    /** @scope XM.AccountInfo.prototype */
+  XM.AccountListItem = XM.Info.extend({
+    /** @scope XM.AccountListItem.prototype */
 
-    recordType: 'XM.AccountInfo',
+    recordType: 'XM.AccountListItem',
 
-    readOnly: true,
+    editableModel: 'XM.Account'
 
   });
 
@@ -236,10 +238,22 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.AccountInfoCollection = XM.Collection.extend({
-    /** @scope XM.AccountInfoCollection.prototype */
+  XM.AccountContactInfoCollection = XM.Collection.extend({
+    /** @scope XM.AccountContactInfoCollection.prototype */
 
-    model: XM.AccountInfo
+    model: XM.AccountContactInfo
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.AccountListItemCollection = XM.Collection.extend({
+    /** @scope XM.AccountListItemCollection.prototype */
+
+    model: XM.AccountListItem
 
   });
 

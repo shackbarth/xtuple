@@ -11,7 +11,10 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ListItem",
     classes: "xv-list-item",
-    ontap: "itemTap"
+    ontap: "itemTap",
+    setSelected: function (inSelected) {
+      this.addRemoveClass("item-selected", inSelected);
+    }
   });
 
   enyo.kind({
@@ -156,8 +159,10 @@ trailing:true white:true*/
             i;
           for (i = 0; i < query.orderBy.length; i++) {
             attr = query.orderBy[i].attribute;
-            aval = query.orderBy[i].descending ? b.get(attr) : a.get(attr);
-            bval = query.orderBy[i].descending ? a.get(attr) : b.get(attr);
+            aval = query.orderBy[i].descending ? b.getValue(attr) : a.getValue(attr);
+            bval = query.orderBy[i].descending ? a.getValue(attr) : b.getValue(attr);
+            aval = !isNaN(aval) ? aval - 0 : aval;
+            bval = !isNaN(aval) ? bval - 0 : bval;
             if (aval !== bval) {
               return aval > bval ? 1 : -1;
             }
@@ -184,15 +189,16 @@ trailing:true white:true*/
         isPlaceholder,
         view,
         value,
-        formatter;
+        formatter,
+        attr;
 
       // Loop through all attribute container children and set content
       for (prop in this.$) {
         if (this.$.hasOwnProperty(prop) && this.$[prop].getAttr) {
           view = this.$[prop];
           isPlaceholder = false;
-          if (model.getValue) value = model.getValue(this.$[prop].getAttr());
-          else value = model.get(this.$[prop].getAttr());
+          attr = this.$[prop].getAttr();
+          value = model.getValue ? model.getValue(attr) : model.get(attr);
           formatter = view.formatter;
           if (!value && view.placeholder) {
             value = view.placeholder;
@@ -216,103 +222,6 @@ trailing:true white:true*/
       if (_.isEqual(old, this.query)) {
         this.queryChanged();
       }
-    }
-
-  });
-
-  /**
-    @class
-
-    List to attach to workspaces to present related data.
-
-    @extends
-  */
-  enyo.kind({
-    name: "XV.ListRelations",
-    kind: "List",
-    classes: "xv-list",
-    fixedHeight: true,
-    published: {
-      attr: null,
-      value: null
-    },
-    handlers: {
-      onSetupItem: "setupItem"
-    },
-    getModel: function (index) {
-      return this._collection.models[index];
-    },
-    lengthChanged: function () {
-      var count = this.readyModels().length,
-        rowsPerPage;
-        
-      // Hack: Solves scroll problem for small number of rows
-      // but doesn't seem quite right
-      rowsPerPage = count && 50 > count ? count : 50;
-      if (rowsPerPage !== this.rowsPerPage) {
-        this.setRowsPerPage(rowsPerPage);
-      }
-      this.setCount(count);
-      if (count) {
-        this.refresh();
-      } else {
-        this.reset();
-      }
-    },
-    modelAdded: function (model) {
-      if (model.getStatus() === XM.Model.READY_CLEAN) {
-        this.lengthChanged();
-      } else {
-        model.on('statusChange', this.statusChanged, this);
-      }
-    },
-    readyModels: function () {
-      return _.filter(this._collection.models, function (model) {
-        return model.getStatus() === XM.Model.READY_CLEAN;
-      });
-    },
-    setupItem: function (inSender, inEvent) {
-      var model = this.readyModels()[inEvent.index],
-        prop,
-        isPlaceholder,
-        view,
-        attr,
-        value,
-        formatter;
-
-      // Loop through all attribute container children and set content
-      for (prop in this.$) {
-        if (this.$.hasOwnProperty(prop) && this.$[prop].getAttr) {
-          view = this.$[prop];
-          isPlaceholder = false;
-          attr = this.$[prop].getAttr();
-          value = model.getValue(attr);
-          formatter = view.formatter;
-          if (!value && view.placeholder) {
-            value = view.placeholder;
-            isPlaceholder = true;
-          }
-          if (formatter) {
-            value = this[formatter](value, view, model);
-          }
-          if (value && value instanceof Date) {
-            value = Globalize.format(value, 'd');
-          }
-          view.setContent(value);
-          view.addRemoveClass("placeholder", isPlaceholder);
-        }
-      }
-    },
-    statusChanged: function (model) {
-      if (model.getStatus() === XM.Model.READY_CLEAN) {
-        model.off('statusChange', this.statusChanged, this);
-        this.lengthChanged();
-      }
-    },
-    valueChanged: function () {
-      this._collection = this.value;
-      this._collection.on("add", this.modelAdded, this);
-      this._collection.on("remove", this.lengthChanged, this);
     }
 
   });

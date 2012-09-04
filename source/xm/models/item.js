@@ -32,7 +32,7 @@ white:true*/
 
     recordType: 'XM.ProductCategory',
 
-    documentKey: 'code',
+    documentKey: 'code'
 
   });
 
@@ -264,12 +264,12 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.ItemInfo = XM.Model.extend({
-    /** @scope XM.ItemInfo.prototype */
+  XM.ItemRelation = XM.Info.extend({
+    /** @scope XM.ItemRelatino.prototype */
 
     recordType: 'XM.ItemInfo',
 
-    readOnly: true
+    editableModel: 'Item'
 
   });
 
@@ -318,10 +318,10 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.ItemInfoCollection = XM.Collection.extend({
-    /** @scope XM.ItemInfoCollection.prototype */
+  XM.ItemListItemCollection = XM.Collection.extend({
+    /** @scope XM.ItemListItemCollection.prototype */
 
-    model: XM.ItemInfo
+    model: XM.ItemListItem
 
   });
 

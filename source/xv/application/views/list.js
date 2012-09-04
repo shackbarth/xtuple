@@ -13,11 +13,11 @@ trailing:true white:true*/
     name: "XV.AccountList",
     kind: "XV.List",
     label: "_accounts".loc(),
-    collection: "XM.AccountInfoCollection",
+    collection: "XM.AccountListItemCollection",
     query: {orderBy: [
       {attribute: 'number'}
     ]},
-    parameterWidget: "XV.AccountInfoParameters",
+    parameterWidget: "XV.AccountListParameters",
     workspace: "XV.AccountWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
@@ -70,7 +70,7 @@ trailing:true white:true*/
       {attribute: 'line1'},
       {attribute: 'id'}
     ]},
-    parameterWidget: "XV.AddressInfoParameters",
+    parameterWidget: "XV.AddressListParameters",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "XV.ListAttr", attr: "id", formatter: "formatAddress",
@@ -86,36 +86,18 @@ trailing:true white:true*/
   // CONTACT
   //
 
-  var ContactListMixin = {
-    formatFirstName: function (value, view, model) {
-      var lastName = (model.get('lastName') || "").trim();
-      view.addRemoveClass("bold", _.isEmpty(lastName));
-      return value;
-    },
-    sendMail: function (inSender, inEvent) {
-      var model = this.getModel(inEvent.index),
-        email = model ? model.getValue('primaryEmail') : null,
-        win;
-      if (email) {
-        win = window.open('mailto:' + email);
-        win.close();
-      }
-      return true;
-    }
-  };
-
-  var ContactList = {
+  enyo.kind({
     name: "XV.ContactList",
     kind: "XV.List",
     label: "_contacts".loc(),
-    collection: "XM.ContactInfoCollection",
+    collection: "XM.ContactListItemCollection",
     query: {orderBy: [
       {attribute: 'lastName'},
       {attribute: 'firstName'},
       {attribute: 'primaryEmail'},
       {attribute: 'id'}
     ]},
-    parameterWidget: "XV.ContactInfoParameters",
+    parameterWidget: "XV.ContactListParameters",
     workspace: "XV.ContactWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
@@ -144,41 +126,23 @@ trailing:true white:true*/
           ]}
         ]}
       ]}
-    ]
-  };
-  ContactList = enyo.mixin(ContactList, ContactListMixin);
-  enyo.kind(ContactList);
-
-  var AccountContactList = {
-    name: "XV.AccountContactList",
-    kind: "XV.ListRelations",
-    fixedHeight: true,
-    components: [
-      {kind: "XV.ListItem", components: [
-        {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "firstName",
-                  formatter: "formatFirstName"},
-                {kind: "XV.ListAttr", attr: "lastName", fit: true, classes: "bold",
-                  style: "padding-left: 0px;"}
-              ]},
-              {kind: "XV.ListAttr", attr: "phone", fit: true, classes: "right"}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "jobTitle",
-                placeholder: "_noJobTitle".loc()},
-              {kind: "XV.ListAttr", attr: "primaryEmail", ontap: "sendMail",
-                classes: "right hyperlink", fit: true}
-            ]}
-          ]}
-        ]}
-      ]}
-    ]
-  };
-  AccountContactList = enyo.mixin(AccountContactList, ContactListMixin);
-  enyo.kind(AccountContactList);
+    ],
+    formatFirstName: function (value, view, model) {
+      var lastName = (model.get('lastName') || "").trim();
+      view.addRemoveClass("bold", _.isEmpty(lastName));
+      return value;
+    },
+    sendMail: function (inSender, inEvent) {
+      var model = this.getModel(inEvent.index),
+        email = model ? model.getValue('primaryEmail') : null,
+        win;
+      if (email) {
+        win = window.open('mailto:' + email);
+        win.close();
+      }
+      return true;
+    }
+  });
 
   // ..........................................................
   // INCIDENT
@@ -188,13 +152,13 @@ trailing:true white:true*/
     name: "XV.IncidentList",
     kind: "XV.List",
     label: "_incidents".loc(),
-    collection: "XM.IncidentInfoCollection",
+    collection: "XM.IncidentListItemCollection",
     query: {orderBy: [
       {attribute: 'priorityOrder'},
       {attribute: 'updated', descending: true},
       {attribute: 'id', descending: true}
     ]},
-    parameterWidget: "XV.IncidentInfoParameters",
+    parameterWidget: "XV.IncidentListParameters",
     workspace: "XV.IncidentWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
@@ -239,11 +203,11 @@ trailing:true white:true*/
     name: "XV.ItemList",
     kind: "XV.List",
     label: "_items".loc(),
-    collection: "XM.ItemInfoCollection",
+    collection: "XM.ItemListItemCollection",
     query: {orderBy: [
       {attribute: 'number'}
     ]},
-    parameterWidget: "XV.ItemInfoParameters",
+    parameterWidget: "XV.ItemListParameters",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -267,7 +231,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.OpportunityList",
     kind: "XV.List",
-    collection: "XM.OpportunityInfoCollection",
+    collection: "XM.OpportunityListItemCollection",
     query: {orderBy: [
       {attribute: 'priorityOrder'},
       {attribute: 'targetClose'},
@@ -275,7 +239,7 @@ trailing:true white:true*/
       {attribute: 'id'}
     ]},
     label: "_opportunities".loc(),
-    parameterWidget: "XV.OpportunityInfoParameters",
+    parameterWidget: "XV.OpportunityListParameters",
     workspace: "XV.OpportunityWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
@@ -327,11 +291,11 @@ trailing:true white:true*/
     name: "XV.ProjectList",
     kind: "XV.List",
     label: "_projects".loc(),
-    collection: "XM.ProjectInfoCollection",
+    collection: "XM.ProjectListItemCollection",
     query: {orderBy: [
       {attribute: 'number' }
     ]},
-    parameterWidget: "XV.ProjectInfoParameters",
+    parameterWidget: "XV.ProjectListParameters",
     workspace: "XV.ProjectWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
@@ -406,9 +370,9 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ToDoList",
     kind: "XV.List",
-    label: "_toDos".loc(),
-    collection: "XM.ToDoInfoCollection",
-    parameterWidget: "XV.ToDoInfoParameters",
+    label: "_toDo".loc(),
+    collection: "XM.ToDoListItemCollection",
+    parameterWidget: "XV.ToDoListParameters",
     query: {orderBy: [
       {attribute: 'priorityOrder'},
       {attribute: 'dueDate'},
@@ -449,7 +413,7 @@ trailing:true white:true*/
     formatDueDate: function (value, view, model) {
       var today = new Date(),
         K = XM.ToDo,
-        isLate = (model.get('status') !== K.COMPLETED &&
+        isLate = (model.get('isActive') &&
           XT.date.compareDate(value, today) < 1);
       view.addRemoveClass("error", isLate);
       return value;
@@ -464,7 +428,7 @@ trailing:true white:true*/
     name: "XV.UserAccountList",
     kind: "XV.List",
     label: "_userAccounts".loc(),
-    collection: "XM.UserAccountInfoCollection",
+    collection: "XM.UserAccountRelationCollection",
     query: {orderBy: [
       {attribute: 'username'}
     ]},

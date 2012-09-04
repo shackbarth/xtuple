@@ -4,9 +4,18 @@ white:true*/
 /*global enyo:true, XT:true, XV:true */
 
 (function () {
-
+  
   enyo.kind({
     name: "XV.Groupbox",
+    kind: "FittableRows",
+    classes: "xv-groupbox",
+    published: {
+      title: "_overview".loc()
+    }
+  });
+
+  enyo.kind({
+    name: "XV.ScrollableGroupbox",
     kind: "Scroller",
     horizontal: "hidden",
     classes: "xv-groupbox",

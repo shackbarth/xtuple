@@ -11,10 +11,10 @@ white:true*/
   
     @extends XM.Model
   */
-  XM.ImageInfo = XM.Model.extend({
-    /** @scope XM.ImageInfo.prototype */
+  XM.ImageRelation = XM.Model.extend({
+    /** @scope XM.ImageRelation.prototype */
 
-    recordType: 'XM.ImageInfo'
+    recordType: 'XM.ImageRelation'
 
   });
 

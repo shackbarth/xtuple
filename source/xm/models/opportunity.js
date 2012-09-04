@@ -62,7 +62,7 @@ white:true*/
     @extends XM.Document
   */
   XM.Opportunity = XM.Document.extend({
-    /** @scope XM.OpportunityInfo.prototype */
+    /** @scope XM.Opportunity.prototype */
 
     recordType: 'XM.Opportunity',
 
@@ -233,14 +233,30 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    Same as `XM.OpportunityInfo` but less data.
+
+    @extends XM.Info
   */
-  XM.OpportunityInfo = XM.Model.extend({
-    /** @scope XM.OpportunityInfo.prototype */
+  XM.OpportunityRelation = XM.Info.extend({
+    /** @scope XM.OpportunityRelation.prototype */
 
-    recordType: 'XM.OpportunityInfo',
+    recordType: 'XM.OpportunityRelation',
 
-    readOnly: true
+    editableModel: 'XM.Opportunity'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.OpportunityListItem = XM.Info.extend({
+    /** @scope XM.OpportunityListItem.prototype */
+
+    recordType: 'XM.OpportunityListItem',
+
+    editableModel: 'XM.Opportunity'
 
   });
 
@@ -289,10 +305,10 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.OpportunityInfoCollection = XM.Collection.extend({
-    /** @scope XM.OpportunityInfoCollection.prototype */
+  XM.OpportunityListItemCollection = XM.Collection.extend({
+    /** @scope XM.OpportunityListItemCollection.prototype */
 
-    model: XM.OpportunityInfo
+    model: XM.OpportunityListItem
 
   });
 

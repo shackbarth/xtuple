@@ -111,14 +111,14 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Info
   */
-  XM.UserAccountRoleInfo = XM.Model.extend({
-    /** @scope XM.UserAccountRoleInfo.prototype */
+  XM.UserAccountRoleRelation = XM.Info.extend({
+    /** @scope XM.UserAccountRoleRelation.prototype */
 
-    recordType: 'XM.UserAccountRoleInfo',
+    recordType: 'XM.UserAccountRoleRelation',
 
-    readOnly: true
+    editableModel: 'XM.UserAccountRole'
 
   });
 
@@ -212,16 +212,16 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Info
   */
-  XM.UserAccountInfo = XM.Model.extend({
-    /** @scope XM.UserAccountInfo.prototype */
+  XM.UserAccountRelation = XM.Info.extend({
+    /** @scope XM.UserAccountRelation.prototype */
 
     idAttribute: 'username',
 
-    recordType: 'XM.UserAccountInfo',
+    recordType: 'XM.UserAccountRelation',
 
-    readOnly: true
+    editableModel: 'XM.UserAccount'
 
   });
 
@@ -282,10 +282,10 @@ white:true*/
 
    @extends XM.Collection
   */
-  XM.UserAccountRoleInfoCollection = XM.Collection.extend({
-   /** @scope XM.UserAccountRoleInfoCollection.prototype */
+  XM.UserAccountRoleRelationCollection = XM.Collection.extend({
+   /** @scope XM.UserAccountRoleRelationCollection.prototype */
 
-    model: XM.UserAccountRoleInfo
+    model: XM.UserAccountRoleRelation
 
   });
 
@@ -294,10 +294,10 @@ white:true*/
 
    @extends XM.Collection
   */
-  XM.UserAccountInfoCollection = XM.Collection.extend({
-   /** @scope XM.UserAccountInfoCollection.prototype */
+  XM.UserAccountRelationCollection = XM.Collection.extend({
+   /** @scope XM.UserAccountRelationCollection.prototype */
 
-    model: XM.UserAccountInfo
+    model: XM.UserAccountRelation
 
   });
 

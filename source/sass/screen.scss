@@ -264,6 +264,9 @@ body {
 /* Workspace.scss */
 .xv-workspace-header {
   color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   padding-top: 8px;
   padding-left: 8px;
 }
@@ -295,12 +298,24 @@ body {
 
 /* List.scss */
 .xv-list {
+  background-color: white;
   .xv-list-item {
     @include box-sizing(border-box);
     background-color: #fff;
     padding-top: 3px;
     padding-bottom: 3px;
     border-bottom: 1px solid #ddd;
+    &.inactive {
+      background-color: #8d8d8d;
+      color: black;
+      .xv-list-column {
+        .xv-list-attr {
+          &.placeholder {
+            color: #8d8d8d;
+          }
+        }
+      }
+    }
     .xv-list-column {
       &.short {
         width: 150px;
@@ -324,7 +339,6 @@ body {
         overflow: hidden;
         text-overflow: ellipsis;
         color: black;
-        background-color: white;
         &.right {
           position: absolute;
           right: 0px;
@@ -350,6 +364,21 @@ body {
         }
       }
     }
+    &.item-selected {
+			background: #226B9A url(../../assets/item-hilite.png) repeat-x bottom;
+			.xv-list-column {
+			  .xv-list-attr {
+          color: white;
+          &.placeholder {
+            font-style: italic;
+            color: SkyBlue;
+          }
+          &.hyperlink {
+            color: #F49200;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -359,7 +388,25 @@ body {
   padding-bottom: 8px;
   padding-left: 8px;
   margin-right: 5px;
-  min-width: 330px;
+  &.in-panel {
+		padding: 0 0 0 0;
+		margin: 0 0 0 0;
+	}
+	&.panel {
+		min-width: 330px;
+	}
+}
+
+.xv-groupbox.in-panel > *:first-child {
+	border-top-color: #aaaaaa;
+	border-top: none;
+	border-width: 1px;
+	border-radius: 0 0 0 0;
+}
+
+.xv-groupbox.in-panel > *:last-child {
+	border-radius: 0 0 0 0;
+	border-bottom: none;
 }
 
 .xv-groupbox > * {
@@ -427,6 +474,19 @@ body {
 
 .xv-groupbox > .onyx-input-decorator:first-child:last-child {
 	border-radius: 4px;
+}
+
+.xv-groupbox-buttons {
+	border: none;
+	.xv-groupbox-button-center {
+	  border-radius: 0 0 0 0;
+	}
+	.xv-groupbox-button-left {
+  	border-radius: 0 0 0 4px;
+	}
+	.xv-groupbox-button-right {
+		border-radius: 0 0 4px 0;
+	}
 }
 
 .xv-error {
@@ -611,8 +671,8 @@ body {
   position: relative;
 }
 
-/* Dropdown.scss */
-.xv-dropdownwidget {
+/* picker.scss */
+.xv-pickerwidget {
   background-color: white;
 }
 
@@ -638,7 +698,7 @@ body {
   text-align: right;
 }
 
-.xv-dropdown-label {
+.xv-picker-label {
   width: 130px;
   padding-bottom: 8px;
   padding-left: 8px;
@@ -649,8 +709,8 @@ body {
 
 .xv-textarea-input {
   border: 0px;
-  width: 324px; 
-  min-height: 255px;
+  width: 95%; 
+  height: 97%;
   margin: 6px 
 }
 

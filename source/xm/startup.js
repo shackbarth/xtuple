@@ -53,7 +53,7 @@ white:true*/
         success: _.bind(this.didComplete, this),
         id: XT.session.details.username
       };
-      XM.currentUser = new XM.UserAccountInfo();
+      XM.currentUser = new XM.UserAccountRelation();
       XM.currentUser.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]

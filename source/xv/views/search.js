@@ -10,7 +10,8 @@ trailing:true white:true*/
     kind: "Panels",
     classes: "app enyo-unselectable",
     published: {
-      callback: null
+      callback: null,
+      conditions: null
     },
     events: {
       onPrevious: ""
@@ -59,6 +60,7 @@ trailing:true white:true*/
       if (!this.init) { return; }
       options = options ? _.clone(options) : {};
       var list = this.$.list,
+        conditions = this.getConditions(),
         query,
         input,
         parameterWidget,
@@ -71,17 +73,19 @@ trailing:true white:true*/
       options.showMore = _.isBoolean(options.showMore) ?
         options.showMore : false;
 
-      // Build parameters
-      if (input || parameters.length) {
-        query.parameters = [];
+      // Build conditions
+      if (conditions || input || parameters.length) {
+
+        // Fixed conditions
+        query.parameters = conditions || [];
 
         // Input search parameters
         if (input) {
-          query.parameters = [{
+          query.parameters = query.parameters.concat([{
             attribute: list.getSearchableAttributes(),
             operator: 'MATCHES',
             value: this.$.searchInput.getValue()
-          }];
+          }]);
         }
 
         // Advanced parameters
@@ -98,8 +102,19 @@ trailing:true white:true*/
       this.fetch();
       return true;
     },
-    setList: function (list, callback) {
-      var component;
+    /**
+      Set the search list. Options are
+        * list: class name
+        * searchText: initial text to search on
+        * callback: function to call when selection is made
+          that passes back the selected model.
+    */
+    setList: function (options) {
+      var component,
+        list = options.list,
+        callback = options.callback,
+        searchText = options.searchText,
+        conditions = options.conditions;
       component = this.createComponent({
         name: "list",
         container: this.$.listPanel,
@@ -108,6 +123,7 @@ trailing:true white:true*/
       });
       this.$.rightLabel.setContent(component.label);
       this.setCallback(callback);
+      this.setConditions(conditions);
       if (component) {
         this.createComponent({
           name: "parameterWidget",
@@ -118,8 +134,6 @@ trailing:true white:true*/
       }
       this.init = true;
       this.render();
-    },
-    setSearchText: function (searchText) {
       this.$.searchInput.setValue(searchText || "");
     }
   });

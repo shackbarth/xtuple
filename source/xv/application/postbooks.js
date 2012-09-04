@@ -45,9 +45,7 @@ trailing:true white:true*/
         panel = this.createComponent({kind: "XV.SearchContainer"});
         panel.render();
         this.reflow();
-        panel.setList(inEvent.list);
-        panel.setSearchText(inEvent.searchText);
-        panel.setCallback(inEvent.callback);
+        panel.setList(inEvent);
         panel.fetch();
         this.next();
       }
@@ -58,7 +56,7 @@ trailing:true white:true*/
         panel = this.createComponent({kind: "XV.WorkspaceContainer"});
         panel.render();
         this.reflow();
-        panel.setWorkspace(inEvent.workspace, inEvent.id, inEvent.callback);
+        panel.setWorkspace(inEvent);
         this.next();
       }
     },

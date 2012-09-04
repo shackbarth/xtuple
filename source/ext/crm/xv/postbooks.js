@@ -42,26 +42,5 @@ trailing:true white:true*/
   };
 
   XV.Postbooks.insertModule(module, 1);
-
-  // ..........................................................
-  // INCIDENT
-  //
-
-  extensions = [
-    {kind: "XV.ProjectWidget", container: "mainGroup", attr: "project"}
-  ];
-
-  XV.appendExtension("XV.IncidentWorkspace", extensions);
-
-  // ..........................................................
-  // TO DO
-  //
-
-  extensions = [
-    {kind: "XV.IncidentWidget", container: "mainGroup", attr: "incident"},
-    {kind: "XV.OpportunityWidget", container: "mainGroup", attr: "opportunity"}
-  ];
-
-  XV.appendExtension("XV.ToDoWorkspace", extensions);
-
+ 
 }());
