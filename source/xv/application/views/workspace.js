@@ -69,6 +69,27 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // CLASS CODE
+  //
+
+  enyo.kind({
+    name: "XV.ClassCodeWorkspace",
+    kind: "XV.Workspace",
+    title: "_classCode".loc(),
+    model: "XM.ClassCode",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.InputWidget", attr: "code"},
+          {kind: "XV.InputWidget", attr: "description"}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
   // CONTACT
   //
 
@@ -323,30 +344,18 @@ trailing:true white:true*/
           {kind: "XV.ClassCodeWidget", attr: "classCode"},
           {kind: "XV.InputWidget", attr: "description1"},
           {kind: "XV.InputWidget", attr: "description2"},
-          {kind: "XV.InputWidget", attr: "inventoryUnit"},
-          {kind: "XV.InputWidget", attr: "isActive"},
-          {kind: "XV.InputWidget", attr: "isFractional"},
-          {kind: "XV.InputWidget", attr: "isSold"},
+          {kind: "XV.UnitWidget", attr: "inventoryUnit"},
+          {kind: "XV.CheckboxWidget", attr: "isActive"},
+          {kind: "XV.CheckboxWidget", attr: "isFractional"},
+          {kind: "XV.CheckboxWidget", attr: "isSold"},
           {kind: "XV.InputWidget", attr: "listPrice"},
-          {kind: "XV.InputWidget", attr: "priceUnit"},
-          {kind: "XV.InputWidget", attr: "productCategory"}
+          {kind: "XV.UnitWidget", attr: "priceUnit"},
+          {kind: "XV.ProductCategoryWidget", attr: "productCategory"}
         ]}
       ]}
     ]
-    /*
-
-      "classCode",
-      "description1",
-      "description2",
-      "inventoryUnit",
-      "isActive",
-      "isFractional",
-      "isSold",
-      "listPrice",
-      "priceUnit",
-      "productCategory"
-    */
   });
+
   // ..........................................................
   // OPPORTUNITY
   //
@@ -443,6 +452,27 @@ trailing:true white:true*/
     kind: "XV.OrderedReferenceWorkspace",
     title: "_priority".loc(),
     model: "XM.Priority"
+  });
+
+  // ..........................................................
+  // PRODUCT CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.ProductCategoryWorkspace",
+    kind: "XV.Workspace",
+    title: "_productCategory".loc(),
+    model: "XM.ProductCategory",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.InputWidget", attr: "code"},
+          {kind: "XV.InputWidget", attr: "description"}
+        ]}
+      ]}
+    ]
   });
 
   // ..........................................................
@@ -557,6 +587,28 @@ trailing:true white:true*/
         ]},
         {kind: "Scroller", horizontal: "hidden", title: "_comments".loc(), components: [
           {kind: "XV.ToDoCommentBox", attr: "comments"}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
+  // UNIT
+  //
+
+  enyo.kind({
+    name: "XV.UnitWorkspace",
+    kind: "XV.Workspace",
+    title: "_unit".loc(),
+    model: "XM.Unit",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.InputWidget", attr: "name"},
+          {kind: "XV.InputWidget", attr: "description"},
+          {kind: "XV.CheckboxWidget", attr: "isItemWeight"}
         ]}
       ]}
     ]

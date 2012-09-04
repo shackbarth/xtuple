@@ -61,11 +61,11 @@ white:true*/
     documentKey: 'name',
 
     defaults: {
-      isWeight: false
+      isItemWeight: false
     },
 
     requiredAttributes: [
-      "isWeight"
+      "isItemWeight"
     ]
 
   });

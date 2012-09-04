@@ -151,17 +151,6 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // CLASS CODE
-  //
-
-  enyo.kind({
-    name: "XV.ClassCodeWidget",
-    kind: "XV.RelationWidget",
-    list: "XV.ClassCodeList",
-    nameAttribute: "code"
-  });
-
-  // ..........................................................
   // INCIDENT
   //
 
@@ -203,6 +192,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.RelationWidget",
     list: "XV.ProjectList"
   });
+
 
   // ..........................................................
   // USER ACCOUNT

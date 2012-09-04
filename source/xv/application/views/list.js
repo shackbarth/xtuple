@@ -485,7 +485,7 @@ trailing:true white:true*/
     query: {orderBy: [
       {attribute: 'code'}
     ]},
-    workspace: "XV.ItemWorkspace",
+    workspace: "XV.ClassCodeWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "XV.ListColumn", classes: "last", components: [
@@ -535,6 +535,34 @@ trailing:true white:true*/
       {kind: "XV.ListItem", components: [
         {kind: "XV.ListColumn", classes: "last", components: [
           {kind: "XV.ListAttr", attr: "code", classes: "bold"}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
+  // PRODUCT CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.ProductCategoryList",
+    kind: "XV.List",
+    label: "_productCategories".loc(),
+    collection: "XM.ProductCategoryCollection",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    workspace: "XV.ProductCategoryWorkspace",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "code", classes: "bold"}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
         ]}
       ]}
     ]
@@ -647,6 +675,11 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.PriorityList",
+    kind: "XV.NameDescriptionList"
+  });
+
+  enyo.kind({
+    name: "XV.UnitList",
     kind: "XV.NameDescriptionList"
   });
 
