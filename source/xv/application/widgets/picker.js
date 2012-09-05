@@ -7,148 +7,156 @@ regexp:true, undef:true, trailing:true, white:true */
   // ..........................................................
   // ACCOUNT TYPE
   //
-  
+
   enyo.kind({
     name: "XV.AccountTypePicker",
     kind: "XV.PickerWidget",
-    published: {
-      collection: "XM.accountTypes",
-      valueAttribute: "id"
-    }
+    collection: "XM.accountTypes",
+    valueAttribute: "id"
+  });
+
+  // ..........................................................
+  // CLASS CODE
+  //
+
+  enyo.kind({
+    name: "XV.ClassCodeWidget",
+    kind: "XV.PickerWidget",
+    collection: "XM.classCodes",
+    nameAttribute: "code"
   });
 
   // ..........................................................
   // COMMENT TYPE
   //
-  
+
   enyo.kind({
     name: "XV.CommentTypePicker",
     kind: "XV.PickerWidget",
-    published: {
-      collection: "XM.commentTypes"
-    }
+    collection: "XM.commentTypes"
   });
-  
+
   // ..........................................................
   // COUNTRY
   //
-  
+
   enyo.kind({
     name: "XV.CountryPicker",
     kind: "XV.PickerWidget",
-    published: {
-      collection: "XM.countries"
-    }
+    collection: "XM.countries"
   });
-  
+
   // ..........................................................
   // INCIDENT CATEGORY
   //
-  
+
   enyo.kind({
     name: "XV.IncidentCategoryPicker",
     kind: "XV.PickerWidget",
-    published: {
-      collection: "XM.incidentCategories"
-    }
+    collection: "XM.incidentCategories"
   });
-  
+
   // ..........................................................
   // INCIDENT RESOLUTION
   //
-  
+
   enyo.kind({
     name: "XV.IncidentResolutionPicker",
     kind: "XV.PickerWidget",
-    published: {
-      collection: "XM.incidentResolutions"
-    }
+    collection: "XM.incidentResolutions"
   });
-  
+
   // ..........................................................
   // INCIDENT SEVERITY
   //
-  
+
   enyo.kind({
     name: "XV.IncidentSeverityPicker",
     kind: "XV.PickerWidget",
-    published: {
-      collection: "XM.incidentSeverities"
-    }
+    collection: "XM.incidentSeverities"
   });
-  
+
   // ..........................................................
   // INCIDENT STATUS
   //
-  
+
   enyo.kind({
     name: "XV.IncidentStatusPicker",
     kind: "XV.PickerWidget",
-    published: {
-      collection: "XM.incidentStatuses",
-      valueAttribute: "id"
-    }
+    collection: "XM.incidentStatuses",
+    valueAttribute: "id"
   });
 
   // ..........................................................
   // OPPORTUNITY SOURCE
   //
-  
+
   enyo.kind({
     name: "XV.OpportunitySourcePicker",
     kind: "XV.PickerWidget",
-    published: {
-      collection: "XM.opportunitySources"
-    }
+    collection: "XM.opportunitySources"
   });
-  
+
   // ..........................................................
   // OPPORTUNITY STAGE
   //
-  
+
   enyo.kind({
     name: "XV.OpportunityStagePicker",
     kind: "XV.PickerWidget",
-    published: {
-      collection: "XM.opportunityStages"
-    }
+    collection: "XM.opportunityStages"
   });
-  
+
   // ..........................................................
   // OPPORTUNITY TYPE
   //
-  
+
   enyo.kind({
     name: "XV.OpportunityTypePicker",
     kind: "XV.PickerWidget",
-    published: {
-      collection: "XM.opportunityTypes"
-    }
+    collection: "XM.opportunityTypes"
   });
-  
+
   // ..........................................................
   // PRIORITY
   //
-  
+
   enyo.kind({
     name: "XV.PriorityPicker",
     kind: "XV.PickerWidget",
-    published: {
-      collection: "XM.priorities"
-    }
+    collection: "XM.priorities"
   });
-  
+
+  // ..........................................................
+  // PRODUCT CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.ProductCategoryWidget",
+    kind: "XV.PickerWidget",
+    collection: "XM.productCategories",
+    nameAttribute: "code"
+  });
+
   // ..........................................................
   // PROJECT STATUS
   //
-  
+
   enyo.kind({
     name: "XV.ProjectStatusPicker",
     kind: "XV.PickerWidget",
-    published: {
-      collection: "XM.projectStatuses",
-      valueAttribute: "id"
-    }
+    collection: "XM.projectStatuses",
+    valueAttribute: "id"
   });
-  
+
+  // ..........................................................
+  // UNIT
+  //
+
+  enyo.kind({
+    name: "XV.UnitWidget",
+    kind: "XV.PickerWidget",
+    collection: "XM.units",
+    nameAttribute: "description" // XXX this could be the default, "name"
+  });
 }());

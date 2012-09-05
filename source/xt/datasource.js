@@ -131,6 +131,7 @@ white:true*/
       payload.requestType = 'retrieveRecord';
       payload.recordType = recordType;
       payload.id = id;
+      payload.options = { context: options.context };
 
       return XT.Request
                .handle("function/retrieveRecord")

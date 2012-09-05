@@ -412,6 +412,14 @@ white:true*/
             },
             options
           );
+          // Context option means server will check privilege access of the parent
+          // and the existence of relation on the parent to determine whether user
+          // can see this record instead of usual privilege check on the model.
+          opts.context = {
+            recordType: this.recordType,
+            value: this.id,
+            relation: key
+          };
           return model.fetch(opts);
         }, this);
       }

@@ -84,7 +84,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
       {name: "input", kind: "onyx.Input", classes: "xv-combobox-input",
         onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur",
         onchange: "inputChanged"},
-      {kind: "onyx.IconButton", src: "assets/triangle-down-large.png",
+      {kind: "onyx.IconButton", src: "assets/combobox-icon.png",
         ontap: "togglePicker", classes: "xv-combobox-icon"},
       {name: "picker", kind: "XV.CompleterPicker",
         // Hack: make sure picker is always on top ('floating' doesn't work)

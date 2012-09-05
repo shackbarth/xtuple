@@ -14,6 +14,8 @@ trailing:true white:true*/
   //
 
   panels = [
+    {name: "itemList", kind: "XV.ItemList"},
+    {name: "currencyList", kind: "XV.CurrencyList"},
     {name: "stateList", kind: "XV.StateList"},
     {name: "countryList", kind: "XV.CountryList"},
     {name: "priorityList", kind: "XV.PriorityList"},
@@ -23,7 +25,10 @@ trailing:true white:true*/
     {name: "incidentSeverityList", kind: "XV.IncidentSeverityList"},
     {name: "opportunitySourceList", kind: "XV.OpportunitySourceList"},
     {name: "opportunityStageList", kind: "XV.OpportunityStageList"},
-    {name: "opportunityTypeList", kind: "XV.OpportunityTypeList"}
+    {name: "opportunityTypeList", kind: "XV.OpportunityTypeList"},
+    {name: "classCodeList", kind: "XV.ClassCodeList"},
+    {name: "unitList", kind: "XV.UnitList"},
+    {name: "productCategoryList", kind: "XV.ProductCategoryList"}
   ];
 
   XV.Postbooks.appendPanels("setup", panels);
@@ -42,5 +47,5 @@ trailing:true white:true*/
   };
 
   XV.Postbooks.insertModule(module, 1);
- 
+
 }());
