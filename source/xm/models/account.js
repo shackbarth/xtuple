@@ -54,10 +54,12 @@ white:true*/
 
     recordType: 'XM.Account',
 
-    defaults: {
-      owner: XM.currentUser,
-      isActive: true,
-      accountType: 'O'
+    defaults: function () {
+      return {
+        owner: XM.currentUser,
+        isActive: true,
+        accountType: 'O'
+      };
     },
 
     requiredAttributes: [
