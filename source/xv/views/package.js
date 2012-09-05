@@ -8,7 +8,6 @@ enyo.depends(
   "groupbox.js",
   "list_relations_box.js",
   "repeater_box.js",
-  "repeater_box_row.js",
   "comment_box.js",
   "assignment_box.js",
   "search.js",
