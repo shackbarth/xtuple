@@ -63,7 +63,15 @@ white:true*/
     name: "XV.ParameterWidget",
     kind: "FittableRows",
     classes: "xv-groupbox",
+    handlers: {
+      onParameterChange: "memoize"
+    },
     defaultKind: "XV.ParameterItem",
+    isAllSetUp: false,
+    create: function () {
+      this.inherited(arguments);
+      this.isAllSetUp = true;
+    },
     getParameters: function () {
       var i,
         param,
@@ -75,6 +83,52 @@ white:true*/
         if (param) { params.push(param); }
       }
       return params;
+    },
+    /**
+      Remember the state of this parameter widget
+     */
+    memoize: function (inSender, inEvent) {
+      var values = {},
+        component,
+        componentName,
+        components = this.$;
+
+      if (!this.isAllSetUp) {
+        // no need to set any cookies during the create method
+        return;
+      }
+      for (componentName in components) {
+        if (componentName.indexOf("parameterItem") === 0 && components.hasOwnProperty(componentName)) {
+          component = components[componentName];
+          if (component.getValue()) {
+            values[component.getLabel()] = component.getValue();
+          }
+        }
+      }
+      enyo.setCookie(this.name, JSON.stringify(values));
+    },
+    populateFromCookie: function () {
+      var cookieValue = enyo.getCookie(this.name),
+        name,
+        cookieObject,
+        item,
+        savedValue;
+      if (!cookieValue) {
+        // there's no cookie yet for this parameter list
+        return;
+      }
+      cookieObject = JSON.parse(cookieValue);
+      for (name in cookieObject) {
+        if (cookieObject.hasOwnProperty(name)) {
+          savedValue = cookieObject[name];
+          item = _.find(this.$, function (component) {
+            return component.kind === 'XV.ParameterItem' && component.getLabel() === name;
+          });
+          if (item) {
+            item.setValue(savedValue);
+          }
+        }
+      }
     }
   });
 

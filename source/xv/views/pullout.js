@@ -47,9 +47,9 @@ white:true*/
       no panel is yet selected, we default to the history panel.
     */
     grabberDragFinish: function () {
-      if (!this.getSelectedPanel()) {
-        this.togglePullout("history");
-      }
+      var name = this.getSelectedPanel() ? this.getSelectedPanel() : "history";
+
+      this.togglePullout(this, {name: name, show: true});
     },
     refreshHistoryList: function () {
       this.$.historyList.setCount(XT.getHistory().length);
@@ -73,10 +73,38 @@ white:true*/
     getItem: function (name) {
       return this.$.pulloutItems.$[name] || this.$[name];
     },
-    togglePullout: function (name) {
-      var item = this.getItem(name),
+    /**
+
+      Sets the pullout to be the appropriate panel (either history or
+      the apppropriate advanced search). May or may not show the panel,
+      depending on inEvent.show.
+
+      @param {Object} inSender
+      @param {Object} inEvent
+      @param {String} inEvent.name The name of the panel, or the word "history"
+      @param {Boolean} inEvent.show Whether or not we want to show the panel
+
+     */
+    togglePullout: function (inSender, inEvent) {
+      // note that if you show history, then move to a list with a panel, then pull the
+      // pullout, it will show the advanced search and not history. This is a consequence
+      // of the stream of notifications from the navigator even when the pullout isn't activated
+      // letting the pullout know where the navigator is at. It gets saved in this.selectedPanel,
+      // which has the effect of wiping out the "memory" that history was the last pullout panel
+      // in use.
+      var name = inEvent.name,
+        item = this.getItem(name),
         children = this.$.pulloutItems.children[0].children,
         i;
+
+      if (!item) {
+        // if we've moved to a list with no advanced search and pull the pullout
+        // again, there will be no item to find by that name. The best we can do
+        // is to have the pullout show history instead.
+        name = "history";
+        item = this.getItem(name);
+      }
+
       if (name === 'history') {
         this.$.pulloutHeader.setContent("_history".loc());
       } else {
@@ -85,9 +113,13 @@ white:true*/
       this.setSelectedPanel(name);
       if (item && item.showing && this.isAtMax()) {
         this.animateToMin();
-      } else {
+      } else if (inEvent.show) {
         for (i = 0; i < children.length; i++) {
           children[i].hide();
+        }
+        if (item.populateFromCookie) {
+          // i.e. don't try to do this for history
+          item.populateFromCookie();
         }
         item.show();
         item.resized();
