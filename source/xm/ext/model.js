@@ -904,7 +904,7 @@ white:true*/
       Default validation checks `attributes` for:
 
         * Data type integrity.
-        * Required fields (when committing).
+        * Required fields when `validateSave=true` option is passed.
         * Read Only and Privileges (when editing).
 
       Returns `undefined` if the validation succeeded, or some value, usually
@@ -936,6 +936,8 @@ white:true*/
         attr, value, category, column, params = {},
         type = this.recordType.replace(/\w+\./i, ''),
         columns = XT.session.getSchema().get(type).columns,
+        isRel,
+        model,
 
         // Helper functions
         isRelation = function (attr, value, type) {
@@ -995,10 +997,18 @@ white:true*/
             }
             break;
           case S.DB_ARRAY:
-            if (!_.isArray(value) &&
-                !isRelation(attr, value, Backbone.HasMany)) {
+            isRel = isRelation(attr, value, Backbone.HasMany);
+            if (!_.isArray(value) && !isRel) {
               params.type = "_array".loc();
               return XT.Error.clone('xt1003', { params: params });
+            }
+            // Validate children
+            if (isRel && value.models) {
+              for (i = 0; i < value.models.length; i++) {
+                model = value.models[i];
+                result = model.validate(model.attributes, options);
+                if (result) { return result; }
+              }
             }
             break;
           case S.DB_COMPOUND:
@@ -1058,9 +1068,8 @@ white:true*/
     },
 
     /**
-      Called by the `validate` function if the status is `BUSY_COMMITTING`
-      (saving) after checking required fields and the function has not
-      returned a result for any other reason. Implement custom validation
+      Called by the `validate` function after checking required fields
+      if the `validateSave=true` option was passed. Implement custom validation
       before committing to the server here. The default implementation
       returns `undefined`.
 
