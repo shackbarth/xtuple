@@ -23,7 +23,6 @@ white:true*/
 
     requiredAttributes: [
       "name",
-      "commentType",
       "commentsEditable",
       "order"
     ]
@@ -43,6 +42,10 @@ white:true*/
     readOnlyAttributes: [
       "created",
       "createdBy"
+    ],
+    
+    requiredAttributes: [
+      "commentType"
     ],
 
     // ..........................................................
