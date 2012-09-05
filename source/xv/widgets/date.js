@@ -7,8 +7,23 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.Date",
     kind: "XV.Input",
+
+    /**
+      Sets the value programatically.
+
+      @param value Can be Date or String, but if it's a string that doesn't
+        look like a date then it will be set to null.
+      @param {Object} options
+     */
     setValue: function (value, options) {
-      value = _.isDate(value) ? new Date(value.valueOf()) : null;
+      if (value) {
+        value = new Date(value.valueOf()); // clone. Also converts string to date.
+        if (isNaN(value.getTime())) {
+          value = null;
+        }
+      } else {
+        value = null;
+      }
       XV.Input.prototype.setValue.call(this, value, options);
     },
     textToDate: function (value) {
