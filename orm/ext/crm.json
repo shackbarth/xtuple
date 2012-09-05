@@ -32,15 +32,6 @@
         }
       },
       {
-        "name": "projects",
-        "toMany": {
-          "isNested": true,
-          "type": "AccountProject",
-          "column": "crmacct_id",
-          "inverse": "source"
-        }
-      },
-      {
         "name": "toDos",
         "toMany": {
           "isNested": true,
@@ -69,14 +60,6 @@
         "name": "toDoRelations",
         "toMany": {
           "type": "ToDoRelation",
-          "column": "crmacct_id",
-          "inverse": "account"
-        }
-      },
-      {
-        "name": "projectRelations",
-        "toMany": {
-          "type": "ProjectRelation",
           "column": "crmacct_id",
           "inverse": "account"
         }
@@ -220,72 +203,6 @@
   {
     "context": "crm",
     "nameSpace": "XM",
-    "type": "AccountProject",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "Account Project Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
-          "value": "CRMA"
-        }
-      },
-      {
-        "name": "source",
-        "attr": {
-          "type": "Number",
-          "column": "source_id"
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "target_type",
-          "value": "J"
-        }
-      },
-      {
-        "name": "project",
-        "toOne": {
-          "isNested": true,
-          "type": "ProjectRelation",
-          "column": "target_id"
-        }
-      },
-      {
-        "name": "purpose",
-        "attr": {
-          "type": "String",
-          "column": "purpose"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
     "type": "AccountToDo",
     "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
@@ -382,15 +299,6 @@
         }
       },
       {
-        "name": "projects",
-        "toMany": {
-          "isNested": true,
-          "type": "ContactProject",
-          "column": "cntct_id",
-          "inverse": "source"
-        }
-      },
-      {
         "name": "toDos",
         "toMany": {
           "isNested": true,
@@ -419,14 +327,6 @@
         "name": "toDoRelations",
         "toMany": {
           "type": "ToDoRelation",
-          "column": "cntct_id",
-          "inverse": "contact"
-        }
-      },
-      {
-        "name": "projectRelations",
-        "toMany": {
-          "type": "ProjectRelation",
           "column": "cntct_id",
           "inverse": "contact"
         }
@@ -570,72 +470,6 @@
   {
     "context": "crm",
     "nameSpace": "XM",
-    "type": "ContactProject",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "Contact Project Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
-          "value": "T"
-        }
-      },
-      {
-        "name": "source",
-        "attr": {
-          "type": "Number",
-          "column": "source_id"
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "target_type",
-          "value": "J"
-        }
-      },
-      {
-        "name": "project",
-        "toOne": {
-          "isNested": true,
-          "type": "ProjectRelation",
-          "column": "target_id"
-        }
-      },
-      {
-        "name": "purpose",
-        "attr": {
-          "type": "String",
-          "column": "purpose"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
     "type": "ContactToDo",
     "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
@@ -714,27 +548,10 @@
     ],
     "properties": [
       {
-        "name": "project",
-        "toOne": {
-          "isNested": true,
-          "type": "ProjectRelation",
-          "column": "incdt_prj_id"
-        }
-      },
-      {
         "name": "opportunities",
         "toMany": {
           "isNested": true,
           "type": "IncidentOpportunity",
-          "column": "incdt_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "projects",
-        "toMany": {
-          "isNested": true,
-          "type": "IncidentProject",
           "column": "incdt_id",
           "inverse": "source"
         }
@@ -754,31 +571,6 @@
           "type": "ToDoRelation",
           "column": "incdt_id",
           "inverse": "incident"
-        }
-      }
-    ],
-    "sequence": 0,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
-    "type": "IncidentRelation",
-    "table": "xt.incdtinfo",
-    "isExtension": true,
-    "comment": "Extended by Crm",
-    "relations": [
-      {
-        "column": "incdt_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
-      {
-        "name": "project",
-        "attr": {
-          "type": "Number",
-          "column": "incdt_prj_id"
         }
       }
     ],
@@ -886,72 +678,6 @@
   {
     "context": "crm",
     "nameSpace": "XM",
-    "type": "IncidentProject",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "Incident Project Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
-          "value": "INCDT"
-        }
-      },
-      {
-        "name": "source",
-        "attr": {
-          "type": "Number",
-          "column": "source_id"
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "target_type",
-          "value": "J"
-        }
-      },
-      {
-        "name": "project",
-        "toOne": {
-          "isNested": true,
-          "type": "ProjectRelation",
-          "column": "target_id"
-        }
-      },
-      {
-        "name": "purpose",
-        "attr": {
-          "type": "String",
-          "column": "purpose"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
     "type": "IncidentToDo",
     "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
@@ -1034,15 +760,6 @@
         "toMany": {
           "isNested": true,
           "type": "OpportunityIncident",
-          "column": "ophead_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "projects",
-        "toMany": {
-          "isNested": true,
-          "type": "OpportunityProject",
           "column": "ophead_id",
           "inverse": "source"
         }
@@ -1137,72 +854,6 @@
   {
     "context": "crm",
     "nameSpace": "XM",
-    "type": "OpportunityProject",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "Opportunity Project Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
-          "value": "OPP"
-        }
-      },
-      {
-        "name": "source",
-        "attr": {
-          "type": "Number",
-          "column": "source_id"
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "target_type",
-          "value": "J"
-        }
-      },
-      {
-        "name": "project",
-        "toOne": {
-          "isNested": true,
-          "type": "ProjectRelation",
-          "column": "target_id"
-        }
-      },
-      {
-        "name": "purpose",
-        "attr": {
-          "type": "String",
-          "column": "purpose"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
     "type": "OpportunityToDo",
     "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
@@ -1230,257 +881,6 @@
           "type": "String",
           "column": "source_type",
           "value": "OPP"
-        }
-      },
-      {
-        "name": "source",
-        "attr": {
-          "type": "Number",
-          "column": "source_id"
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "target_type",
-          "value": "TODO"
-        }
-      },
-      {
-        "name": "toDo",
-        "toOne": {
-          "isNested": true,
-          "type": "ToDoRelation",
-          "column": "target_id"
-        }
-      },
-      {
-        "name": "purpose",
-        "attr": {
-          "type": "String",
-          "column": "purpose"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
-    "type": "Project",
-    "table": "prj",
-    "isExtension": true,
-    "comment": "Extended by Crm",
-    "relations": [
-      {
-        "column": "prj_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
-      {
-        "name": "opportunities",
-        "toMany": {
-          "isNested": true,
-          "type": "ProjectOpportunity",
-          "column": "prj_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "incidents",
-        "toMany": {
-          "isNested": true,
-          "type": "ProjectIncident",
-          "column": "prj_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "toDos",
-        "toMany": {
-          "isNested": true,
-          "type": "ProjectToDo",
-          "column": "prj_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "incidentRelations",
-        "toMany": {
-          "type": "IncidentRelation",
-          "column": "prj_id",
-          "inverse": "project"
-        }
-      }
-    ],
-    "sequence": 0,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
-    "type": "ProjectIncident",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "Project Incident Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
-          "value": "J"
-        }
-      },
-      {
-        "name": "source",
-        "attr": {
-          "type": "Number",
-          "column": "source_id"
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "target_type",
-          "value": "INCDT"
-        }
-      },
-      {
-        "name": "incident",
-        "toOne": {
-          "isNested": true,
-          "type": "IncidentRelation",
-          "column": "target_id"
-        }
-      },
-      {
-        "name": "purpose",
-        "attr": {
-          "type": "String",
-          "column": "purpose"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
-    "type": "ProjectOpportunity",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "Project Opportunity Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
-          "value": "J"
-        }
-      },
-      {
-        "name": "source",
-        "attr": {
-          "type": "Number",
-          "column": "source_id"
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "target_type",
-          "value": "OPP"
-        }
-      },
-      {
-        "name": "opportunity",
-        "toOne": {
-          "isNested": true,
-          "type": "OpportunityRelation",
-          "column": "target_id"
-        }
-      },
-      {
-        "name": "purpose",
-        "attr": {
-          "type": "String",
-          "column": "purpose"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
-    "type": "ProjectToDo",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "Project To Do Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
-          "value": "J"
         }
       },
       {
@@ -1552,15 +952,6 @@
         "toMany": {
           "isNested": true,
           "type": "ToDoIncident",
-          "column": "todoitem_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "projects",
-        "toMany": {
-          "isNested": true,
-          "type": "ToDoProject",
           "column": "todoitem_id",
           "inverse": "source"
         }
@@ -1728,72 +1119,6 @@
         "toOne": {
           "isNested": true,
           "type": "OpportunityRelation",
-          "column": "target_id"
-        }
-      },
-      {
-        "name": "purpose",
-        "attr": {
-          "type": "String",
-          "column": "purpose"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
-    "type": "ToDoProject",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "ToDo Project Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
-          "value": "TODO"
-        }
-      },
-      {
-        "name": "source",
-        "attr": {
-          "type": "Number",
-          "column": "source_id"
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "target_type",
-          "value": "J"
-        }
-      },
-      {
-        "name": "project",
-        "toOne": {
-          "isNested": true,
-          "type": "ProjectRelation",
           "column": "target_id"
         }
       },
