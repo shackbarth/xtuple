@@ -26,15 +26,6 @@ trailing:true white:true*/
   });
   
   enyo.kind({
-    name: "XV.AccountProjectsBox",
-    kind: "XV.ListRelationsBox",
-    title: "_projects".loc(),
-    parentKey: "account",
-    listRelations: "XV.AccountProjectListRelations",
-    searchList: "XV.ProjectList"
-  });
-  
-  enyo.kind({
     name: "XV.AccountToDosBox",
     kind: "XV.ListRelationsBox",
     title: "_toDo".loc(),
@@ -61,15 +52,6 @@ trailing:true white:true*/
     title: "_opportunities".loc(),
     parentKey: "contact",
     listRelations: "XV.ContactOpportunityListRelations"
-  });
-  
-  enyo.kind({
-    name: "XV.ContactProjectsBox",
-    kind: "XV.ListRelationsBox",
-    title: "_projects".loc(),
-    parentKey: "contact",
-    listRelations: "XV.ContactProjectListRelations",
-    searchList: "XV.ProjectList"
   });
   
   enyo.kind({
@@ -101,17 +83,6 @@ trailing:true white:true*/
     kind: "XV.AccountToDosBox",
     parentKey: "opportunity",
     listRelations: "XV.OpportunityToDoListRelations"
-  });
-  
-  // ..........................................................
-  // PROJECT
-  //
-  
-  enyo.kind({
-    name: "XV.ProjectIncidentsBox",
-    kind: "XV.AccountIncidentsBox",
-    parentKey: "project",
-    listRelations: "XV.ProjectIncidentListRelations"
   });
 
 }());

@@ -17,9 +17,7 @@ trailing:true white:true*/
     {kind: "XV.AccountOpportunitiesBox", container: "panels",
       attr: "opportunityRelations"},
     {kind: "XV.AccountIncidentsBox", container: "panels",
-      attr: "incidentRelations"},
-    {kind: "XV.AccountProjectsBox", container: "panels",
-      attr: "projectRelations"}
+      attr: "incidentRelations"}
   ];
 
   XV.appendWorkspaceExtension("XV.AccountWorkspace", extensions);
@@ -34,9 +32,7 @@ trailing:true white:true*/
     {kind: "XV.ContactOpportunitiesBox", container: "panels",
       attr: "opportunityRelations"},
     {kind: "XV.ContactIncidentsBox", container: "panels",
-      attr: "incidentRelations"},
-    {kind: "XV.ContactProjectsBox", container: "panels",
-      attr: "projectRelations"}
+      attr: "incidentRelations"}
   ];
 
   XV.appendWorkspaceExtension("XV.ContactWorkspace", extensions);
@@ -46,7 +42,6 @@ trailing:true white:true*/
   //
   
   extensions = [
-    {kind: "XV.ProjectWidget", container: "mainGroup", attr: "project"},
     {kind: "XV.IncidentToDosBox", container: "panels", attr: "toDoRelations"}
   ];
 
@@ -61,16 +56,6 @@ trailing:true white:true*/
   ];
 
   XV.appendWorkspaceExtension("XV.OpportunityWorkspace", extensions);
-  
-  // ..........................................................
-  // PROJECT
-  //
-  
-  extensions = [
-    {kind: "XV.ProjectIncidentsBox", container: "panels", attr: "incidentRelations"}
-  ];
-
-  XV.appendWorkspaceExtension("XV.ProjectWorkspace", extensions);
 
   // ..........................................................
   // TO DO
