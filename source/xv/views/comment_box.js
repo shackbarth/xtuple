@@ -12,10 +12,10 @@ white:true*/
     published: {
       title: "_comments".loc(),
       columns: [
-        {kind: "XV.TextArea", name: "comments.text", classes: "xv-comment-box-text"},
-        {kind: "XV.Input", name: "comments.createdBy", classes: "xv-comment-box-createdBy"},
-        {kind: "XV.Date", name: "comments.created", classes: "xv-comment-box-created"},
-        {kind: "XV.CommentTypePicker", name: "comments.commentType",
+        {kind: "XV.TextArea", attr: "text", classes: "xv-comment-box-text"},
+        {kind: "XV.Input", attr: "createdBy", classes: "xv-comment-box-createdBy"},
+        {kind: "XV.Date", attr: "created", classes: "xv-comment-box-created"},
+        {kind: "XV.CommentTypePicker", attr: "commentType",
           classes: "xv-comment-box-comment-type"}
       ]
     }

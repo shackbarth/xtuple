@@ -11,88 +11,78 @@ white:true*/
     published: {
       attr: null,
       columns: [],
-      collection: null,
-      recordType: null
+      model: null
     },
     handlers: {
       onDeleteRow: "deleteRow"
     },
     classes: "xv-repeater-box xv-groupbox",
     components: [
-      { kind: "onyx.GroupboxHeader", classes: "xv-repeater-box-title", name: "title", content: "Title" },
-      { kind: "onyx.Groupbox", classes: "onyx-toolbar-inline xv-repeater-box-header", name: "headerRow" },
-      { kind: "Repeater", name: "repeater", count: 0, onSetupItem: "setupRow", components: [
-        { kind: "XV.RepeaterBoxRow", name: "repeaterRow" }
+      {kind: "onyx.GroupboxHeader", classes: "xv-repeater-box-title",
+        name: "title", content: "_title".loc()},
+      {kind: "onyx.Groupbox",
+        classes: "onyx-toolbar-inline xv-repeater-box-header",
+        name: "headerRow" },
+      {kind: "Repeater", name: "repeater", count: 0, onSetupItem: "setupRow",
+        components: [
+        {kind: "XV.RepeaterBoxRow", name: "repeaterRow" }
       ]},
-      { kind: "onyx.Button", name: "newRowButton", onclick: "newRow", content: "_new".loc() }
+      {kind: "onyx.Button", name: "newRowButton", onclick: "newRow",
+        content: "_new".loc()}
     ],
     create: function () {
       this.inherited(arguments);
       this.$.title.setContent(("_" + this.attr || "").loc());
-
-      /**
-       * If the columns are defined from the outset of the creation of this class
-       * then we should render the labels now because columnsChanged will never be
-       * called.
-       */
-      if (this.getColumns()) {
-        this.showLabels();
-      }
+      this.columnsChanged();
     },
     columnsChanged: function () {
       this.showLabels();
     },
-    showLabels: function () {
-      // XXX probably should clear all existing so as not to ever double up
-      for (var iColumn = 0; iColumn < this.getColumns().length; iColumn++) {
-        var columnDesc = this.getColumns()[iColumn];
-        var label = ("_" + XT.String.suffix(columnDesc.name)).loc();
-
-        this.createComponent({
-          container: this.$.headerRow,
-          content: label,
-          classes: columnDesc.classes ? columnDesc.classes + " xv-label" : "xv-label"
-        });
-      }
+    deleteRow: function (inSender, inEvent) {
+      inEvent.originator.parent.getModel().destroy();
+      this.$.repeater.setCount(this._collection.length);
     },
     newRow: function () {
-      var modelType = XT.String.suffix(this.getRecordType());
-      var newModel = new XM[modelType](null, { isNew: true });
-      this.getCollection().add(newModel);
-      this.$.repeater.setCount(this.getCollection().size());
+      var Klass = XT.getObjectByName(this.getModel()),
+        model = new Klass(null, { isNew: true });
+      this._collection.add(model);
+      this.$.repeater.setCount(this._collection.length);
     },
     setupRow: function (inSender, inEvent) {
-      var row = inEvent.item.$.repeaterRow;
-      row.setColumns(this.getColumns());
-      var model = this.getCollection().at(inEvent.index);
-      row.setModel(model);
-      if (model.getStatus() & XM.Model.DESTROYED) {
+      var row = inEvent.item.$.repeaterRow,
+        columns = this.getColumns(),
+        model = this._collection.at(inEvent.index),
+        status = model.getStatus(),
+        K = XM.Model;
+      row.setColumns(columns);
+      row.setValue(model);
+      if (status & K.DESTROYED) {
         row.setDeleted(true);
       }
     },
     setValue: function (value, options) {
-      this.setCollection(value);
-
-      // XXX: This should get called in collectionChanged, but it doesn't work there
-      this.$.repeater.setCount(this.getCollection().size());
-    },
-    /**
-     * Display the collection in the grid when it's passed in.
-     */
-    collectionChanged: function () {
-      /**
-       * Disable the "create new" button if the user doesn't have permission
-       * to add a model to this collection
-       */
-      if (!this.getCollection().model.canCreate()) {
+      this._collection = value;
+      this.$.repeater.setCount(this._collection.length);
+      if (!this._collection.model.canCreate()) {
         this.$.newRowButton.setDisabled(true);
       }
-      // XXX this should get called here but some bug is keeping setupRow from being called
-      //this.$.repeater.setCount(this.getCollection().size());
     },
-    deleteRow: function (inSender, inEvent) {
-      inEvent.originator.parent.getModel().destroy();
-      this.$.repeater.setCount(this.getCollection().size());
+    showLabels: function () {
+      var columns = this.getColumns(),
+        column,
+        label,
+        i;
+      // XXX probably should clear all existing so as not to ever double up
+      for (i = 0; i < columns.length; i++) {
+        column = this.columns[i];
+        label = ("_" + column.attr).loc();
+
+        this.createComponent({
+          container: this.$.headerRow,
+          content: label,
+          classes: column.classes ? column.classes + " xv-label" : "xv-label"
+        });
+      }
     }
   });
   
@@ -102,7 +92,7 @@ white:true*/
     classes: "onyx-toolbar-inline xv-repeater-box-row",
     published: {
       columns: [],
-      model: null
+      value: null
     },
     events: {
       onDeleteRow: ""
@@ -110,38 +100,40 @@ white:true*/
     handlers: {
       onValueChange: "fieldChanged"
     },
-    modelChanged: function (inSender, inEvent) {
-      for (var iColumn = 0; iColumn < this.getColumns().length; iColumn++) {
-        var columnDesc = this.getColumns()[iColumn];
-        var label = ("_" + XT.String.suffix(columnDesc.name)).loc();
+    valueChanged: function (inSender, inEvent) {
+      var i,
+        model = this.getValue(),
+        columns = this.getColumns(),
+        column,
+        label,
+        component,
+        attr;
+      for (i = 0; i < columns.length; i++) {
+        column = columns[i];
+        attr = column.attr;
+        label = ("_" + attr).loc();
 
-        /**
-         * These are the fields with the data
-         */
-        var field = this.createComponent({
-          kind: columnDesc.kind,
-          name: XT.String.suffix(columnDesc.name),
+        // These are the fields with the data
+        component = this.createComponent({
+          kind: column.kind,
+          name: attr,
           placeholder: label, // XXX doesn't work. probably have to fix XV.Input
-          classes: columnDesc.classes // this is clever
-
+          classes: column.classes // this is clever
         });
 
-        /**
-         * If the descriptor mentions a model type we want to send that
-         * down to the widget, e.g. for PickerWidgets
-         */
-        if (columnDesc.collection) {
-          field.setCollection(columnDesc.collection);
+        // If the descriptor mentions a model type we want to send that
+        // down to the widget, e.g. for PickerWidgets
+        if (column.collection) {
+          component.setCollection(column.collection);
         }
-        field.setValue(this.getModel().get(XT.String.suffix(columnDesc.name)), {silent: true});
-        if (this.getModel().isReadOnly() || !this.getModel().canUpdate()) {
+        component.setValue(model.get(attr), {silent: true});
+        if (model.isReadOnly() || !model.canUpdate()) {
           this.setDisabled(true);
         }
       }
-      /**
-       * Add delete buttons for each row
-       */
-      if (!this.getModel().isReadOnly() && this.getModel().canDelete()) {
+      
+      // Add delete buttons for each row
+      if (!model.isReadOnly() && model.canDelete()) {
         this.createComponent({
           kind: "onyx.Button",
           name: "deleteButton",
@@ -151,36 +143,32 @@ white:true*/
         });
       }
     },
-    setValue: function (value, options) {
-      this.setModel(value);
-    },
     /**
-     * Catch events from constituent widgets and update the model
-     */
+      Catch events from constituent widgets and update the model
+    */
     fieldChanged: function (inSender, inEvent) {
-      var fieldName = inSender.getName();
-      var newValue = inSender.getValue();
-      var updateObject = {};
+      var fieldName = inSender.getName(),
+        newValue = inSender.getValue(),
+        updateObject = {},
+        model = this.getValue();
       updateObject[fieldName] = newValue;
 
-      /**
-       * Update the model.
-       */
-      this.getModel().set(updateObject);
+      // Update the model.
+      model.set(updateObject);
       return true;
     },
     deleteRow: function (inSender, inEvent) {
       this.setStyle("background-color:purple");
       this.doDeleteRow(inEvent);
-
     },
     setDeleted: function (isDeleted) {
-      var comp,
+      var components = this.getComponents(),
+        comp,
         style = isDeleted ? "text-decoration: line-through" : "text-decoration: none",
         i;
 
-      for (i = 0; i < this.getComponents().length; i++) {
-        comp = this.getComponents()[i];
+      for (i = 0; i < components.length; i++) {
+        comp = components[i];
         if (comp.setInputStyle) {
           comp.setInputStyle(style);
         } else {
@@ -191,10 +179,11 @@ white:true*/
     },
     setDisabled: function (isDisabled) {
       var i,
+        components = this.getComponents(),
         comp;
 
-      for (i = 0; i < this.getComponents().length; i++) {
-        comp = this.getComponents()[i];
+      for (i = 0; i < components.length; i++) {
+        comp = components[i];
         if (comp.setDisabled) {
           comp.setDisabled(isDisabled);
         } else {
