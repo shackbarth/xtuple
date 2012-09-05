@@ -33,19 +33,5 @@ white:true*/
     isDocumentAssignment: true
 
   });
-  
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.OpportunityProject = XM.Model.extend(
-    /** @scope XM.OpportunityProject.prototype */ {
-
-    recordType: 'XM.OpportunityProject',
-
-    isDocumentAssignment: true
-
-  });
 
 }());

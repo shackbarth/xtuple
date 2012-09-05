@@ -34,19 +34,5 @@ white:true*/
 
   });
   
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.ToDoProject = XM.Model.extend(
-    /** @scope XM.ToDoProject.prototype */ {
-
-    recordType: 'XM.ToDoProject',
-
-    isDocumentAssignment: true
-
-  });
-  
 
 }());
