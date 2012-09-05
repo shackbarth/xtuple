@@ -151,7 +151,7 @@ select xt.install_js('XT','Data','xtuple', $$
         properties = privileges.personal.properties;
         conds = [];
         for (i = 0; i < properties.length; i++) {
-          col = orm.properties.findProperty('name', properties[i]).toOne ? "(" + properties[i] + ").username" : properties[i];
+          col = orm.properties.findProperty('name', properties[i]).toOne ? '(' + type.decamelize() + '."' + properties[i] + '").username' : properties[i];
           conds.push(col);
         }
         pcond = "'" + this.currentUser() + "' in (" + conds.join(",") + ")";
@@ -782,47 +782,61 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-      Retreives a single record from the database. If the user does not have appropriate privileges an
-      error will be thrown.
+      Retreives a record from the database. If the user does not have appropriate privileges an
+      error will be thrown unless the `silentError` option is passed.
+
+      If `context` is passed as an option then a record will only be returned if it exists in the context record,
+      which itself must be accessible by the effective user. Context is an object that requires the following
+      properties.
+
+      recordType: The namespace qualifed object name the record exists in. 
+      value: The value of the primary key.
+      relation: The name of the attribute on the recordType to which this record is related.
       
       @param {String} namespace qualified record type
       @param {Number} record id
       @param {String} encryption key
+      @param {Object} options - support options are context and silentError
       @returns Object
     */
     retrieveRecord: function(recordType, id, encryptionKey, options) {
-      return this.retrieveRecords(recordType, [id], encryptionKey, options)[0] || {}; 
-    },
-
-    /**
-      Retreives an array of records from the database. If the user does not have appropriate privileges an
-      error will be thrown.
-      
-      @param {String} namespace qualified record type
-      @param {Number} record ids
-      @param {String} encryption key
-      @returns Object
-    */
-    retrieveRecords: function(recordType, ids, encryptionKey, options) {
       options = options || {};
       var nameSpace = recordType.beforeDot(), 
-          type = recordType.afterDot(),
-          map = XT.Orm.fetch(nameSpace, type),
-          ret, sql, pkey = XT.Orm.primaryKey(map);
+        type = recordType.afterDot(),
+        map = XT.Orm.fetch(nameSpace, type),
+        ret, sql, pkey = XT.Orm.primaryKey(map),
+        context = options.context,
+        join = "",
+        conditions = "",
+        params = {},
+        clause;
       if(!pkey) throw new Error('No primary key found for {recordType}'.replace(/{recordType}/, recordType));
-      for (var i = 0; i < ids.length; i++) {
-        if (XT.typeOf(ids[i]) === 'string') {
-          ids.splice(i,1,"'"+ids[i]+"'");
-        }
+      if (XT.typeOf(id) === 'string') {
+        id = "'" + id + "'";
       }
-      sql = "select * from {schema}.{table} where {primaryKey} in ({ids});"
-            .replace(/{schema}/, nameSpace.decamelize())
-            .replace(/{table}/, type.decamelize())
-            .replace(/{primaryKey}/, pkey)
-            .replace(/{ids}/, ids.join(','));
+
+      /* Context means search for this record inside another */
+      if (context) {
+        context.nameSpace = context.recordType.beforeDot();
+        context.type = context.recordType.afterDot()
+        context.map = XT.Orm.fetch(context.nameSpace, context.type);
+        context.prop = XT.Orm.getProperty(context.map, context.relation);
+        context.fkey = context.prop.toMany.inverse;
+        context.pkey = XT.Orm.primaryKey(context.map);
+        params.attribute = context.pkey;
+        params.value = context.value;
+        clause = this.buildClause(context.nameSpace, context.type, params);
+        join = 'join {recordType} on ({table1}."{pkey}"={table2}."{fkey}")';
+        join = join.replace(/{recordType}/, context.recordType.decamelize())
+                   .replace(/{table1}/, context.type.decamelize())
+                   .replace(/{pkey}/, context.pkey)
+                   .replace(/{table2}/, type.decamelize())
+                   .replace(/{fkey}/, context.fkey);
+        conditions = "and (" + clause.conditions + ")";    
+      }
 
       /* validate - don't bother running the query if the user has no privileges */
-      if(!this.checkPrivileges(nameSpace, type)) {
+      if(!context && !this.checkPrivileges(nameSpace, type)) {
         if (options.silentError) {
           return false;
         } else {
@@ -830,13 +844,21 @@ select xt.install_js('XT','Data','xtuple', $$
         }
       }
 
+      sql = 'select {table}.* from {schema}.{table} {join} where {table}."{primaryKey}" = {id} {conditions};'
+            .replace(/{schema}/, nameSpace.decamelize())
+            .replace(/{table}/g, type.decamelize())
+            .replace(/{join}/, join)
+            .replace(/{primaryKey}/, pkey)
+            .replace(/{id}/, id)
+            .replace(/{conditions}/, conditions);
+
       /* query the map */
       if(DEBUG) plv8.elog(NOTICE, 'sql = ', sql);
-      ret = plv8.execute(sql);
+      ret = plv8.execute(sql)[0];
 
-      for (var i = 0; i < ret.length; i++) {
+      if (!context) {
         /* check privileges again, this time against record specific criteria where applicable */
-        if(!this.checkPrivileges(nameSpace, type, ret[i])) {
+        if(!this.checkPrivileges(nameSpace, type, ret)) {
           if (options.silentError) {
             return false;
           } else {
@@ -845,11 +867,11 @@ select xt.install_js('XT','Data','xtuple', $$
         }
         
         /* decrypt result where applicable */
-        ret[i] = this.decrypt(nameSpace, type, ret[i], encryptionKey);
+        ret = this.decrypt(nameSpace, type, ret, encryptionKey);
       }
 
       /* return the results */
-      return ret;
+      return ret || {};
     },
 
     /**
