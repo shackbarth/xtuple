@@ -61,11 +61,11 @@ white:true*/
     documentKey: 'name',
 
     defaults: {
-      isWeight: false
+      isItemWeight: false
     },
 
     requiredAttributes: [
-      "isWeight"
+      "isItemWeight"
     ]
 
   });
@@ -148,6 +148,20 @@ white:true*/
         return XT.Error.clone('xt2005');
       }
     }
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.ItemListItem = XM.Info.extend({
+    /** @scope XM.ItemListItem.prototype */
+
+    recordType: 'XM.ItemListItem',
+
+    editableModel: 'XM.Item'
 
   });
 

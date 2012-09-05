@@ -34,8 +34,8 @@ trailing:true white:true*/
         fit: true, components: [
         {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.InputWidget", name: "name"},
-          {kind: "XV.InputWidget", name: "description"}
+          {kind: "XV.InputWidget", attr: "name"},
+          {kind: "XV.InputWidget", attr: "description"}
         ]}
       ]}
     ],

@@ -69,6 +69,27 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // CLASS CODE
+  //
+
+  enyo.kind({
+    name: "XV.ClassCodeWorkspace",
+    kind: "XV.Workspace",
+    title: "_classCode".loc(),
+    model: "XM.ClassCode",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.InputWidget", attr: "code"},
+          {kind: "XV.InputWidget", attr: "description"}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
   // CONTACT
   //
 
@@ -185,6 +206,28 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // CURRENCY
+  //
+
+  enyo.kind({
+    name: "XV.CurrencyWorkspace",
+    kind: "XV.Workspace",
+    title: "_currency".loc(),
+    model: "XM.Currency",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.InputWidget", attr: "abbreviation"},
+          {kind: "XV.InputWidget", attr: "name"},
+          {kind: "XV.InputWidget", attr: "symbol"}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
   // HONORIFIC
   //
 
@@ -283,6 +326,36 @@ trailing:true white:true*/
     model: "XM.IncidentSeverity"
   });
 
+
+  // ..........................................................
+  // ITEM
+  //
+
+  enyo.kind({
+    name: "XV.ItemWorkspace",
+    kind: "XV.Workspace",
+    title: "_item".loc(),
+    model: "XM.Item",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ClassCodeWidget", attr: "classCode"},
+          {kind: "XV.InputWidget", attr: "description1"},
+          {kind: "XV.InputWidget", attr: "description2"},
+          {kind: "XV.UnitWidget", attr: "inventoryUnit"},
+          {kind: "XV.CheckboxWidget", attr: "isActive"},
+          {kind: "XV.CheckboxWidget", attr: "isFractional"},
+          {kind: "XV.CheckboxWidget", attr: "isSold"},
+          {kind: "XV.InputWidget", attr: "listPrice"},
+          {kind: "XV.UnitWidget", attr: "priceUnit"},
+          {kind: "XV.ProductCategoryWidget", attr: "productCategory"}
+        ]}
+      ]}
+    ]
+  });
+
   // ..........................................................
   // OPPORTUNITY
   //
@@ -379,6 +452,27 @@ trailing:true white:true*/
     kind: "XV.OrderedReferenceWorkspace",
     title: "_priority".loc(),
     model: "XM.Priority"
+  });
+
+  // ..........................................................
+  // PRODUCT CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.ProductCategoryWorkspace",
+    kind: "XV.Workspace",
+    title: "_productCategory".loc(),
+    model: "XM.ProductCategory",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.InputWidget", attr: "code"},
+          {kind: "XV.InputWidget", attr: "description"}
+        ]}
+      ]}
+    ]
   });
 
   // ..........................................................
@@ -493,6 +587,28 @@ trailing:true white:true*/
         ]},
         {kind: "Scroller", horizontal: "hidden", title: "_comments".loc(), components: [
           {kind: "XV.ToDoCommentBox", attr: "comments"}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
+  // UNIT
+  //
+
+  enyo.kind({
+    name: "XV.UnitWorkspace",
+    kind: "XV.Workspace",
+    title: "_unit".loc(),
+    model: "XM.Unit",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.InputWidget", attr: "name"},
+          {kind: "XV.InputWidget", attr: "description"},
+          {kind: "XV.CheckboxWidget", attr: "isItemWeight"}
         ]}
       ]}
     ]

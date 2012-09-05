@@ -172,7 +172,7 @@ regexp:true, undef:true, trailing:true, white:true */
     nameAttribute: "description1",
     descripAttribute: "description2"
   });
-  
+
   // ..........................................................
   // OPPORTUNITY
   //
@@ -182,7 +182,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.RelationWidget",
     list: "XV.OpportunityList"
   });
-  
+
   // ..........................................................
   // PROJECT
   //
@@ -192,6 +192,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.RelationWidget",
     list: "XV.ProjectList"
   });
+
 
   // ..........................................................
   // USER ACCOUNT
