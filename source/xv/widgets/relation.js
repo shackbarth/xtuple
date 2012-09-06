@@ -259,6 +259,8 @@ regexp:true, undef:true, trailing:true, white:true */
           }
         };
 
+      // here is where we find the model and re-call this method if we're given
+      // an id instead of a whole model.
       if (value && typeof value !== 'object') {
         this._collection.fetch({success: function (collection, response) {
           var model = collection.get(value);
