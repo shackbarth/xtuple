@@ -229,6 +229,14 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.autocompleteMenu.hide();
       return true;
     },
+    /**
+      Programatically sets the value of this widget.
+
+      @param value Can be a model or the id of a model (String or Number).
+        If it is an ID, then the correct model will be fetched and this
+        function will be called again recursively with the model.
+      @param options {Object}
+     */
     setValue: function (value, options) {
       options = options || {};
       var that = this,
@@ -250,6 +258,16 @@ regexp:true, undef:true, trailing:true, white:true */
             that.$.openItem.setDisabled(!value.couldRead());
           }
         };
+
+      if (value && typeof value !== 'object') {
+        this._collection.fetch({success: function (collection, response) {
+          var model = collection.get(value);
+          that.setValue(model, options);
+        }});
+        return;
+      }
+
+
       this.value = value;
       if (value && value.get) {
         keyValue = value.get(key) || "";

@@ -91,29 +91,41 @@ white:true*/
       var values = {},
         component,
         componentName,
-        components = this.$;
+        dbName,
+        cookieName;
 
       if (!this.isAllSetUp) {
         // no need to set any cookies during the create method
         return;
       }
-      for (componentName in components) {
-        if (componentName.indexOf("parameterItem") === 0 && components.hasOwnProperty(componentName)) {
-          component = components[componentName];
-          if (component.getValue()) {
+      for (componentName in this.$) {
+        if (componentName.indexOf("parameterItem") === 0 && this.$.hasOwnProperty(componentName)) {
+          component = this.$[componentName];
+          if (!component.getValue()) {
+            // don't bother saving empties
+          } else if (component.getValue().id) {
+            // relation widgets need to be treated specially
+            values[component.getLabel()] = component.getValue().id;
+          } else {
+            // default case: save the value in the cookie
             values[component.getLabel()] = component.getValue();
           }
         }
       }
-      enyo.setCookie(this.name, JSON.stringify(values));
+
+      dbName = XT.session.details.organization;
+      cookieName = 'advancedSearchCache_' + dbName + '_' + this.name;
+      enyo.setCookie(cookieName, JSON.stringify(values));
     },
     populateFromCookie: function () {
-      var cookieValue = enyo.getCookie(this.name),
+      var dbName = XT.session.details.organization,
+        cookieName = 'advancedSearchCache_' + dbName + '_' + this.name,
+        cookieValue = enyo.getCookie(cookieName),
         name,
         cookieObject,
         item,
         savedValue;
-      if (!cookieValue) {
+      if (!cookieValue || cookieValue === 'undefined') {
         // there's no cookie yet for this parameter list
         return;
       }

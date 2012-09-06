@@ -629,8 +629,6 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, classes: "xv-top-panel", components: [
-        {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles"},
-        {kind: "XV.UserAccountPrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges" },
         {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "username"},
@@ -638,7 +636,9 @@ trailing:true white:true*/
           {kind: "XV.InputWidget", attr: "initials"},
           {kind: "XV.InputWidget", attr: "email"},
           {kind: "XV.CheckboxWidget", attr: "isActive"}
-        ]}
+        ]},
+        {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles"},
+        {kind: "XV.UserAccountPrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges" }
       ]}
     ],
     refreshPrivileges: function (inSender, inEvent) {
