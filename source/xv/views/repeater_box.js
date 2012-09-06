@@ -8,6 +8,7 @@ white:true*/
   enyo.kind({
     name: "XV.RepeaterBox",
     kind: "XV.Groupbox",
+    classes: "panel",
     published: {
       attr: null,
       columns: [],
@@ -17,14 +18,14 @@ white:true*/
     handlers: {
       onDeleteRow: "deleteRow"
     },
-    classes: "panel",
-    //classes: "xv-repeater-box xv-groupbox",
     components: [
       {kind: "onyx.GroupboxHeader", name: "title", content: "_title".loc()},
       {kind: "XV.Groupbox", name: "header", classes: "in-panel" },
-      {kind: "Repeater", name: "repeater", count: 0, onSetupItem: "setupRow",
-        fit: true, components: [
-        {kind: "XV.CommentBoxItem", name: "repeaterRow" }
+      {kind: "XV.Scroller", fit: true, components: [
+        {kind: "Repeater", name: "repeater", count: 0, onSetupItem: "setupRow",
+          classes: "xv-comment-box-repeater", components: [
+          {kind: "XV.CommentBoxItem", name: "repeaterRow" }
+        ]}
       ]},
       {kind: "onyx.Button", name: "newRowButton", onclick: "newRow",
         content: "_new".loc()}
@@ -96,7 +97,6 @@ white:true*/
   
   enyo.kind({
     name: "XV.RepeaterBoxRow",
-    kind: "onyx.Groupbox",
     published: {
       columns: [],
       value: null

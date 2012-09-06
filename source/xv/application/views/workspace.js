@@ -133,9 +133,7 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
         ]},
-        {kind: "Scroller", horizontal: "hidden", title: "_comments".loc(), components: [
-          {kind: "XV.ContactCommentBox", attr: "comments"}
-        ]}
+        {kind: "XV.ContactCommentBox", attr: "comments"}
       ]},
       {kind: "onyx.Popup", name: "multipleAddressPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",
@@ -284,9 +282,7 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
         ]},
-        {kind: "Scroller", horizontal: "hidden", title: "_comments".loc(), components: [
-          {kind: "XV.IncidentCommentBox", attr: "comments"}
-        ]}
+        {kind: "XV.IncidentCommentBox", attr: "comments"}
       ]}
     ]
   });
@@ -401,9 +397,7 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
         ]},
-        {kind: "Scroller", horizontal: "hidden", title: "_comments".loc(), components: [
-          {kind: "XV.OpportunityCommentBox", attr: "comments"}
-        ]}
+        {kind: "XV.OpportunityCommentBox", attr: "comments"}
       ]}
     ]
   });
@@ -511,12 +505,8 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
         ]},
-        {kind: "Scroller", horizontal: "hidden", title: "_comments".loc(), components: [
-          {kind: "XV.ProjectCommentBox", attr: "comments"}
-        ]},
-        {kind: "Scroller", horizontal: "hidden", title: "_tasks".loc(), components: [
-          {kind: "XV.ProjectTaskRepeaterBox", attr: "tasks"}
-        ]}
+        {kind: "XV.ProjectCommentBox", attr: "comments"},
+        {kind: "XV.ProjectTaskRepeaterBox", attr: "tasks"}
       ]}
     ]
   });
@@ -583,9 +573,7 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
         ]},
-        {kind: "Scroller", horizontal: "hidden", title: "_comments".loc(), components: [
-          {kind: "XV.ToDoCommentBox", attr: "comments"}
-        ]}
+        {kind: "XV.ToDoCommentBox", attr: "comments"}
       ]}
     ]
   });

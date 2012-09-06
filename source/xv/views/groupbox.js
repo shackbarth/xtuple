@@ -18,7 +18,7 @@ white:true*/
     name: "XV.ScrollableGroupbox",
     kind: "Scroller",
     horizontal: "hidden",
-    classes: "xv-groupbox",
+    classes: "xv-groupbox xv-scroller",
     published: {
       title: "_overview".loc()
     }

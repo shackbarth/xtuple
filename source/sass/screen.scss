@@ -493,6 +493,10 @@ body {
 	}
 }
 
+.xv-scroller {
+  background: white;
+}
+
 .xv-error {
   color: #ff0000;
 }
@@ -544,38 +548,24 @@ body {
 }
 */
 /* CommentBox.scss */
-/*
 .xv-comment-box {
-  max-width: 330;
-  .xv-repeater-box-row {
-    height: 140px;
-  }
-  
-  .xv-comment-box-text {
-    position:absolute;
-    margin-top: 40px;
-    border-width: 0px;
-    width: 500px;
-    border: 1px solid grey;
-    border-radius: 4px 4px 4px 4px;
-  }
-  .xv-textarea-input {
-    height: 65px;
-    min-height: 65px;
-    width: 480px;
+  .xv-comment-box-repeater {
+    background: white;
+    max-width: 330px;
   }
 
-  .xv-repeater-box-header {
-    visibility: hidden;
-    height: 0px;
-  }
-
-  .xv-comment-box-comment-type {
-    border-width: 0px;
+  .xv-comment-box-label {
+    padding: 4px;
+    font-size: small;
+    font-weight: bold;
   }
   
+  .xv-comment-box-textblock {
+    padding: 4px;
+    font-size: small;
+  }
 }
-*/
+
 .xv-assignment-box {
   .xv-decorated-label {
     width: 250px;  
