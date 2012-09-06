@@ -465,7 +465,6 @@ body {
 
 .xv-groupbox .xv-inputwidget {
   background-color: white;
-  width: 430px;
 }
 
 .xv-groupbox > .onyx-input-decorator:first-child {
@@ -499,8 +498,8 @@ body {
 }
 
 /* RepeaterBox.scss */
+/*
 .xv-repeater-box {
-  width: 880px;
   .xv-label {
     width: 90px;
     font-weight: bold;
@@ -543,15 +542,13 @@ body {
     padding-top: 0px;
   }
 }
-
+*/
 /* CommentBox.scss */
+/*
 .xv-comment-box {
-  width: 700px;
+  max-width: 330;
   .xv-repeater-box-row {
     height: 140px;
-  }
-  .xv-comment-box-createdBy {
-    font-weight: bold;
   }
   
   .xv-comment-box-text {
@@ -567,19 +564,18 @@ body {
     min-height: 65px;
     width: 480px;
   }
+
   .xv-repeater-box-header {
     visibility: hidden;
     height: 0px;
   }
+
   .xv-comment-box-comment-type {
     border-width: 0px;
-    .xv-picker {
-      height: 25px;
-      padding: 2px;
-    }
   }
+  
 }
-
+*/
 .xv-assignment-box {
   .xv-decorated-label {
     width: 250px;  
@@ -759,6 +755,10 @@ body {
   &.hyperlink {
     color: blue;
   }
+}
+
+.xv-textarea {
+  background-color: white;
 }
 
 .xv-half-check {

@@ -7,24 +7,23 @@ white:true*/
   
   enyo.kind({
     name: "XV.RepeaterBox",
-    kind: "XV.ScrollableGroupbox",
+    kind: "XV.Groupbox",
     published: {
       attr: null,
       columns: [],
-      model: null
+      model: null,
+      showHeader: true
     },
     handlers: {
       onDeleteRow: "deleteRow"
     },
-    classes: "xv-repeater-box xv-groupbox",
+    classes: "panel",
+    //classes: "xv-repeater-box xv-groupbox",
     components: [
-      {kind: "onyx.GroupboxHeader", classes: "xv-repeater-box-title",
-        name: "title", content: "_title".loc()},
-      {kind: "onyx.Groupbox",
-        classes: "onyx-toolbar-inline xv-repeater-box-header",
-        name: "headerRow" },
+      {kind: "onyx.GroupboxHeader", name: "title", content: "_title".loc()},
+      {kind: "XV.Groupbox", name: "header", classes: "in-panel" },
       {kind: "Repeater", name: "repeater", count: 0, onSetupItem: "setupRow",
-        components: [
+        fit: true, components: [
         {kind: "XV.RepeaterBoxRow", name: "repeaterRow" }
       ]},
       {kind: "onyx.Button", name: "newRowButton", onclick: "newRow",
@@ -34,6 +33,7 @@ white:true*/
       this.inherited(arguments);
       this.$.title.setContent(("_" + this.attr || "").loc());
       this.columnsChanged();
+      this.showHeaderChanged();
     },
     columnsChanged: function () {
       this.showLabels();
@@ -67,6 +67,14 @@ white:true*/
         this.$.newRowButton.setDisabled(true);
       }
     },
+    showHeaderChanged: function () {
+      var showHeader = this.getShowHeader();
+      if (showHeader) {
+        this.$.header.show();
+      } else {
+        this.$.header.hide();
+      }
+    },
     showLabels: function () {
       var columns = this.getColumns(),
         column,
@@ -78,7 +86,7 @@ white:true*/
         label = ("_" + column.attr).loc();
 
         this.createComponent({
-          container: this.$.headerRow,
+          container: this.$.header,
           content: label,
           classes: column.classes ? column.classes + " xv-label" : "xv-label"
         });
@@ -89,7 +97,6 @@ white:true*/
   enyo.kind({
     name: "XV.RepeaterBoxRow",
     kind: "onyx.Groupbox",
-    classes: "onyx-toolbar-inline xv-repeater-box-row",
     published: {
       columns: [],
       value: null
@@ -104,10 +111,12 @@ white:true*/
       var i,
         model = this.getValue(),
         columns = this.getColumns(),
+        parent = this.parent.parent.parent,
         column,
         label,
         component,
-        attr;
+        attr,
+        value;
       for (i = 0; i < columns.length; i++) {
         column = columns[i];
         attr = column.attr;
@@ -126,7 +135,13 @@ white:true*/
         if (column.collection) {
           component.setCollection(column.collection);
         }
-        component.setValue(model.get(attr), {silent: true});
+        value = model.getValue(attr);
+        value = column.formatter ? parent[column.formatter](value, component, model) : value;
+        if (component.setValue) {
+          component.setValue(value, {silent: true});
+        } else {
+          component.setContent(value);
+        }
         if (model.isReadOnly() || !model.canUpdate()) {
           this.setDisabled(true);
         }

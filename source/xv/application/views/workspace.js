@@ -61,9 +61,7 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
         ]},
-        {kind: "Scroller", horizontal: "hidden", title: "_comments".loc(), components: [
-          {kind: "XV.AccountCommentBox", attr: "comments"}
-        ]}
+        {kind: "XV.AccountCommentBox", attr: "comments"}
       ]}
     ]
   });
