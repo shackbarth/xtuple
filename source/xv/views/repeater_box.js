@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true
 white:true*/
-/*global enyo:true, XT:true, XM:true, XV:true */
+/*global enyo:true, XT:true, XM:true, XV:true, _:true */
 
 (function () {
   
@@ -24,7 +24,7 @@ white:true*/
       {kind: "XV.Groupbox", name: "header", classes: "in-panel" },
       {kind: "Repeater", name: "repeater", count: 0, onSetupItem: "setupRow",
         fit: true, components: [
-        {kind: "XV.RepeaterBoxRow", name: "repeaterRow" }
+        {kind: "XV.CommentBoxItem", name: "repeaterRow" }
       ]},
       {kind: "onyx.Button", name: "newRowButton", onclick: "newRow",
         content: "_new".loc()}
@@ -36,7 +36,7 @@ white:true*/
       this.showHeaderChanged();
     },
     columnsChanged: function () {
-      this.showLabels();
+      //this.showLabels();
     },
     deleteRow: function (inSender, inEvent) {
       inEvent.originator.parent.getModel().destroy();
@@ -50,11 +50,11 @@ white:true*/
     },
     setupRow: function (inSender, inEvent) {
       var row = inEvent.item.$.repeaterRow,
-        columns = this.getColumns(),
+        //columns = this.getColumns(),
         model = this._collection.at(inEvent.index),
         status = model.getStatus(),
         K = XM.Model;
-      row.setColumns(columns);
+      //row.setColumns(columns);
       row.setValue(model);
       if (status & K.DESTROYED) {
         row.setDeleted(true);
@@ -110,37 +110,40 @@ white:true*/
     valueChanged: function (inSender, inEvent) {
       var i,
         model = this.getValue(),
-        columns = this.getColumns(),
-        parent = this.parent.parent.parent,
-        column,
+        controls = _.filter(this.$, function (obj) {
+          return obj.attr;
+        }),
+        control,
         label,
         component,
         attr,
         value;
-      for (i = 0; i < columns.length; i++) {
-        column = columns[i];
-        attr = column.attr;
+      for (i = 0; i < controls.length; i++) {
+        control = controls[i];
+        attr = control.attr;
         label = ("_" + attr).loc();
 
         // These are the fields with the data
+        /*
         component = this.createComponent({
           kind: column.kind,
           name: attr,
           placeholder: label, // XXX doesn't work. probably have to fix XV.Input
           classes: column.classes // this is clever
         });
-
+        */
+        
         // If the descriptor mentions a model type we want to send that
         // down to the widget, e.g. for PickerWidgets
-        if (column.collection) {
-          component.setCollection(column.collection);
-        }
+        //if (control.collection) {
+        //  component.setCollection(column.collection);
+        //}
         value = model.getValue(attr);
-        value = column.formatter ? parent[column.formatter](value, component, model) : value;
-        if (component.setValue) {
-          component.setValue(value, {silent: true});
+        value = control.formatter ? this[control.formatter](value, component, model) : value;
+        if (control.setValue) {
+          control.setValue(value, {silent: true});
         } else {
-          component.setContent(value);
+          control.setContent(value);
         }
         if (model.isReadOnly() || !model.canUpdate()) {
           this.setDisabled(true);
