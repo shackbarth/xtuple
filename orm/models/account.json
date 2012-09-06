@@ -480,7 +480,7 @@
      {
        "name": "commentType",
        "toOne": {
-         "type": "Account",
+         "type": "CommentType",
          "column": "comment_cmnttype_id"
        }
      },
