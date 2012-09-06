@@ -130,6 +130,12 @@ white:true*/
       if (status === K.CLOSED) {
         return '_closed'.loc();
       }
+    },
+    
+    isActive: function () {
+      var K = XM.Incident,
+        status = this.get('status');
+      return (status !== K.CLOSED);
     }
 
   };
@@ -415,23 +421,40 @@ white:true*/
     recordType: 'XM.IncidentRecurrence'
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.IncidentRelation = XM.Info.extend({
+    /** @scope XM.IncidentRelation.prototype */
+    
+    recordType: 'XM.IncidentRelation',
+
+    editableModel: 'XM.Incident'
+
+  });
+  
+  // Incident status mixin
+  XM.IncidentRelation = XM.IncidentRelation.extend(XM.IncidentStatus);
 
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Info
   */
-  XM.IncidentInfo = XM.Model.extend({
-    /** @scope XM.IncidentInfo.prototype */
+  XM.IncidentListItem = XM.Info.extend({
+    /** @scope XM.IncidentListItem.prototype */
+    
+    recordType: 'XM.IncidentListItem',
 
-    recordType: 'XM.IncidentInfo',
-
-    readOnly: true
+    editableModel: 'XM.Incident'
 
   });
 
   // Incident status mixin
-  XM.IncidentInfo = XM.IncidentInfo.extend(XM.IncidentStatus);
+  XM.IncidentListItem = XM.IncidentListItem.extend(XM.IncidentStatus);
 
   // ..........................................................
   // COLLECTIONS
@@ -478,10 +501,10 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.IncidentInfoCollection = XM.Collection.extend({
-    /** @scope XM.IncidentInfoCollection.prototype */
+  XM.IncidentListItemCollection = XM.Collection.extend({
+    /** @scope XM.IncidentListItemCollection.prototype */
 
-    model: XM.IncidentInfo
+    model: XM.IncidentListItem
 
   });
 

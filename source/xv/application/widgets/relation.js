@@ -26,6 +26,9 @@ regexp:true, undef:true, trailing:true, white:true */
     keyAttribute: "name",
     nameAttribute: "jobTitle",
     descripAttribute: "phone",
+    published: {
+      showAddress: false
+    },
     components: [
       {kind: "FittableColumns", components: [
         {name: "label", content: "", classes: "xv-decorated-label"},
@@ -35,7 +38,8 @@ regexp:true, undef:true, trailing:true, white:true */
             onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur"
           },
           {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
-            {kind: "onyx.IconButton", src: "assets/relation-icon-search.png"},
+            {kind: "onyx.IconButton", src: "assets/triangle-down-large.png",
+              classes: "xv-relationwidget-icon"},
             {name: 'popupMenu', floating: true, kind: "onyx.Menu",
               components: [
               {kind: "XV.MenuItem", name: 'searchItem', content: "_search".loc()},
@@ -69,7 +73,10 @@ regexp:true, undef:true, trailing:true, white:true */
           {name: "primaryEmailLabel", content: "_email".loc() + ":",
             classes: "xv-relationwidget-description label",
             showing: false},
-          {name: "webAddressLabel", content: "_phone".loc() + ":",
+          {name: "webAddressLabel", content: "_web".loc() + ":",
+            classes: "xv-relationwidget-description label",
+            showing: false},
+          {name: "addressLabel", content: "_address".loc() + ":",
             classes: "xv-relationwidget-description label",
             showing: false}
         ]},
@@ -81,7 +88,9 @@ regexp:true, undef:true, trailing:true, white:true */
           {name: "primaryEmail", ontap: "sendMail",
             classes: "xv-relationwidget-description hasLabel hyperlink"},
           {name: "webAddress", ontap: "openWindow",
-            classes: "xv-relationwidget-description hasLabel hyperlink"}
+            classes: "xv-relationwidget-description hasLabel hyperlink"},
+          {name: "address", classes: "xv-relationwidget-description hasLabel",
+            allowHtml: true}
         ]}
       ]}
     ],
@@ -99,29 +108,31 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     setValue: function (value, options) {
       this.inherited(arguments);
-      if (!value) { return; }
-      var jobTitle = value.get('jobTitle'),
-        phone = value.get('phone'),
-        alternate = value.get('alternate'),
-        fax = value.get('fax'),
-        primaryEmail = value.get('primaryEmail'),
-        webAddress = value.get('webAddress');
-      if (value && value.get) {
-        this.$.jobTitleLabel.setShowing(jobTitle);
-        this.$.phoneLabel.setShowing(phone);
-        this.$.alternate.setShowing(alternate);
-        this.$.alternate.setContent(alternate);
-        this.$.alternateLabel.setShowing(alternate);
-        this.$.fax.setShowing(fax);
-        this.$.fax.setContent(fax);
-        this.$.faxLabel.setShowing(fax);
-        this.$.primaryEmail.setShowing(primaryEmail);
-        this.$.primaryEmail.setContent(primaryEmail);
-        this.$.primaryEmailLabel.setShowing(primaryEmail);
-        this.$.webAddress.setShowing(webAddress);
-        this.$.webAddress.setContent(webAddress);
-        this.$.webAddressLabel.setShowing(webAddress);
-      }
+      var jobTitle = value ? value.get('jobTitle') : "",
+        phone = value ? value.get('phone') : "",
+        alternate = value ? value.get('alternate') : "",
+        fax = value ? value.get('fax') : "",
+        primaryEmail = value ? value.get('primaryEmail') : "",
+        webAddress = value ? value.get('webAddress') : "",
+        address = value ? XM.Address.format(value.get('address')) : "",
+        showAddress = this.getShowAddress();
+      this.$.jobTitleLabel.setShowing(jobTitle);
+      this.$.phoneLabel.setShowing(phone);
+      this.$.alternate.setShowing(alternate);
+      this.$.alternate.setContent(alternate);
+      this.$.alternateLabel.setShowing(alternate);
+      this.$.fax.setShowing(fax);
+      this.$.fax.setContent(fax);
+      this.$.faxLabel.setShowing(fax);
+      this.$.primaryEmail.setShowing(primaryEmail);
+      this.$.primaryEmail.setContent(primaryEmail);
+      this.$.primaryEmailLabel.setShowing(primaryEmail);
+      this.$.webAddress.setShowing(webAddress);
+      this.$.webAddress.setContent(webAddress);
+      this.$.webAddressLabel.setShowing(webAddress);
+      this.$.address.setShowing(address && showAddress);
+      this.$.addressLabel.setShowing(address && showAddress);
+      if (showAddress) { this.$.address.setContent(address); }
     },
     openWindow: function () {
       var address = this.value ? this.value.get('webAddress') : null;
@@ -161,6 +172,27 @@ regexp:true, undef:true, trailing:true, white:true */
     nameAttribute: "description1",
     descripAttribute: "description2"
   });
+
+  // ..........................................................
+  // OPPORTUNITY
+  //
+
+  enyo.kind({
+    name: "XV.OpportunityWidget",
+    kind: "XV.RelationWidget",
+    list: "XV.OpportunityList"
+  });
+
+  // ..........................................................
+  // PROJECT
+  //
+
+  enyo.kind({
+    name: "XV.ProjectWidget",
+    kind: "XV.RelationWidget",
+    list: "XV.ProjectList"
+  });
+
 
   // ..........................................................
   // USER ACCOUNT

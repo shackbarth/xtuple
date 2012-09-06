@@ -11,7 +11,10 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ListItem",
     classes: "xv-list-item",
-    ontap: "itemTap"
+    ontap: "itemTap",
+    setSelected: function (inSelected) {
+      this.addRemoveClass("item-selected", inSelected);
+    }
   });
 
   enyo.kind({
@@ -100,12 +103,16 @@ trailing:true white:true*/
         count = this._collection.length,
         isMore = limit ?
           (offset + limit <= count) && (this.getCount() !== count) : false,
-        rowsPerPage = 50 > count ? count : 50;
-      this.setIsMore(isMore);
-      this.setIsFetching(false);
+        rowsPerPage;
+      this.isMore = isMore;
+      this.fetching = false;
 
       // Reset the size of the list
       this.setCount(count);
+      
+      // Hack: Solves scroll problem for small number of rows
+      // but doesn't seem quite right
+      rowsPerPage = count && 50 > count ? count : 50;
       if (rowsPerPage !== this.rowsPerPage) {
         this.setRowsPerPage(rowsPerPage);
       }
@@ -152,8 +159,10 @@ trailing:true white:true*/
             i;
           for (i = 0; i < query.orderBy.length; i++) {
             attr = query.orderBy[i].attribute;
-            aval = a.get(attr);
-            bval = b.get(attr);
+            aval = query.orderBy[i].descending ? b.getValue(attr) : a.getValue(attr);
+            bval = query.orderBy[i].descending ? a.getValue(attr) : b.getValue(attr);
+            aval = !isNaN(aval) ? aval - 0 : aval;
+            bval = !isNaN(aval) ? bval - 0 : bval;
             if (aval !== bval) {
               return aval > bval ? 1 : -1;
             }
@@ -167,8 +176,8 @@ trailing:true white:true*/
       // Manage lazy loading
       var max = this.getScrollBounds().maxTop - this.rowHeight * FETCH_TRIGGER,
         options = {};
-      if (this.getIsMore() && this.getScrollPosition() > max && !this.fetching) {
-        this.setIsFetching(true);
+      if (this.isMore && this.getScrollPosition() > max && !this.fetching) {
+        this.fetching = true;
         options.showMore = true;
         this.fetch(options);
       }
@@ -180,15 +189,16 @@ trailing:true white:true*/
         isPlaceholder,
         view,
         value,
-        formatter;
+        formatter,
+        attr;
 
       // Loop through all attribute container children and set content
       for (prop in this.$) {
         if (this.$.hasOwnProperty(prop) && this.$[prop].getAttr) {
           view = this.$[prop];
           isPlaceholder = false;
-          if (model.getValue) value = model.getValue(this.$[prop].getAttr());
-          else value = model.get(this.$[prop].getAttr());
+          attr = this.$[prop].getAttr();
+          value = model.getValue ? model.getValue(attr) : model.get(attr);
           formatter = view.formatter;
           if (!value && view.placeholder) {
             value = view.placeholder;

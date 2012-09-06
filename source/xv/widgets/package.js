@@ -6,10 +6,11 @@ enyo.depends(
   "checkbox.js",
   "number.js",
   "text_area.js",
-  "dropdown.js",
+  "picker.js",
   "address.js",
   "comments.js",
   "date.js",
+  "combobox.js",
   "relation.js",
   "grid.js",
   "parameter.js"

@@ -71,7 +71,7 @@ white:true*/
     }
 
   });
-  
+
   // Add mixin
   XM.Contact = XM.Contact.extend(XM.AddressCheckMixin);
 
@@ -202,14 +202,28 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Info
   */
-  XM.ContactInfo = XM.Model.extend({
-    /** @scope XM.ContactInfo.prototype */
+  XM.ContactRelation = XM.Info.extend({
+    /** @scope XM.ContactRelation.prototype */
 
-    recordType: 'XM.ContactInfo',
+    recordType: 'XM.ContactRelation',
+    
+    editableModel: 'XM.Contact'
 
-    readOnly: true
+  });
+
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.ContactListItem = XM.Info.extend({
+    /** @scope XM.ContactListItem.prototype */
+
+    recordType: 'XM.ContactListItem',
+    
+    editableModel: 'XM.Contact'
 
   });
 
@@ -234,10 +248,10 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.ContactInfoCollection = XM.Collection.extend({
-    /** @scope XM.ContactInfoCollection.prototype */
+  XM.ContactListItemCollection = XM.Collection.extend({
+    /** @scope XM.ContactListItemCollection.prototype */
 
-    model: XM.ContactInfo
+    model: XM.ContactListItem
 
   });
 

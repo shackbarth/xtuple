@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XT:true, XM:true, _:true, window: true, enyo:true, Globalize:true*/
+/*global XT:true, XM:true, XV:true, _:true, window: true, enyo:true, Globalize:true*/
 
 (function () {
 
@@ -13,11 +13,11 @@ trailing:true white:true*/
     name: "XV.AccountList",
     kind: "XV.List",
     label: "_accounts".loc(),
-    collection: "XM.AccountInfoCollection",
+    collection: "XM.AccountListItemCollection",
     query: {orderBy: [
-      {attribute: 'number' }
+      {attribute: 'number'}
     ]},
-    parameterWidget: "XV.AccountInfoParameters",
+    parameterWidget: "XV.AccountListParameters",
     workspace: "XV.AccountWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
@@ -55,6 +55,34 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // ADDRESS
+  //
+
+  enyo.kind({
+    name: "XV.AddressList",
+    kind: "XV.List",
+    label: "_addresses".loc(),
+    collection: "XM.AddressInfoCollection",
+    query: {orderBy: [
+      {attribute: 'country'},
+      {attribute: 'state'},
+      {attribute: 'city'},
+      {attribute: 'line1'},
+      {attribute: 'id'}
+    ]},
+    parameterWidget: "XV.AddressListParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "XV.ListAttr", attr: "id", formatter: "formatAddress",
+          classes: "xv-addresslist-attr", allowHtml: true}
+      ]}
+    ],
+    formatAddress: function (value, view, model) {
+      return XM.Address.format(model, true);
+    }
+  });
+
+  // ..........................................................
   // CONTACT
   //
 
@@ -62,14 +90,14 @@ trailing:true white:true*/
     name: "XV.ContactList",
     kind: "XV.List",
     label: "_contacts".loc(),
-    collection: "XM.ContactInfoCollection",
+    collection: "XM.ContactListItemCollection",
     query: {orderBy: [
       {attribute: 'lastName'},
       {attribute: 'firstName'},
       {attribute: 'primaryEmail'},
       {attribute: 'id'}
     ]},
-    parameterWidget: "XV.ContactInfoParameters",
+    parameterWidget: "XV.ContactListParameters",
     workspace: "XV.ContactWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
@@ -100,7 +128,8 @@ trailing:true white:true*/
       ]}
     ],
     formatFirstName: function (value, view, model) {
-      view.addRemoveClass("bold", _.isEmpty(model.get('lastName').trim()));
+      var lastName = (model.get('lastName') || "").trim();
+      view.addRemoveClass("bold", _.isEmpty(lastName));
       return value;
     },
     sendMail: function (inSender, inEvent) {
@@ -123,11 +152,13 @@ trailing:true white:true*/
     name: "XV.IncidentList",
     kind: "XV.List",
     label: "_incidents".loc(),
-    collection: "XM.IncidentInfoCollection",
+    collection: "XM.IncidentListItemCollection",
     query: {orderBy: [
-      {attribute: 'created'}
+      {attribute: 'priorityOrder'},
+      {attribute: 'updated', descending: true},
+      {attribute: 'id', descending: true}
     ]},
-    parameterWidget: "XV.IncidentInfoParameters",
+    parameterWidget: "XV.IncidentListParameters",
     workspace: "XV.IncidentWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
@@ -172,19 +203,19 @@ trailing:true white:true*/
     name: "XV.ItemList",
     kind: "XV.List",
     label: "_items".loc(),
-    collection: "XM.ItemInfoCollection",
+    collection: "XM.ItemListItemCollection",
     query: {orderBy: [
       {attribute: 'number'}
     ]},
-    parameterWidget: "XV.ItemInfoParameters",
+    parameterWidget: "XV.ItemListParameters",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", classes: "bold"},
-              {kind: "XV.ListAttr", attr: "inventoryUnit.name", fit: true,
-                classes: "right"}
+              //{kind: "XV.ListAttr", attr: "inventoryUnit.name", fit: true,
+              //  classes: "right"}
             ]},
             {kind: "XV.ListAttr", attr: "description1"}
           ]}
@@ -200,14 +231,15 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.OpportunityList",
     kind: "XV.List",
-    collection: "XM.OpportunityInfoCollection",
+    collection: "XM.OpportunityListItemCollection",
     query: {orderBy: [
+      {attribute: 'priorityOrder'},
       {attribute: 'targetClose'},
       {attribute: 'name'},
       {attribute: 'id'}
     ]},
     label: "_opportunities".loc(),
-    parameterWidget: "XV.OpportunityInfoParameters",
+    parameterWidget: "XV.OpportunityListParameters",
     workspace: "XV.OpportunityWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
@@ -259,11 +291,11 @@ trailing:true white:true*/
     name: "XV.ProjectList",
     kind: "XV.List",
     label: "_projects".loc(),
-    collection: "XM.ProjectInfoCollection",
+    collection: "XM.ProjectListItemCollection",
     query: {orderBy: [
       {attribute: 'number' }
     ]},
-    parameterWidget: "XV.ProjectInfoParameters",
+    parameterWidget: "XV.ProjectListParameters",
     workspace: "XV.ProjectWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
@@ -338,10 +370,11 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ToDoList",
     kind: "XV.List",
-    label: "_toDos".loc(),
-    collection: "XM.ToDoInfoCollection",
-    parameterWidget: "XV.ToDoInfoParameters",
+    label: "_toDo".loc(),
+    collection: "XM.ToDoListItemCollection",
+    parameterWidget: "XV.ToDoListParameters",
     query: {orderBy: [
+      {attribute: 'priorityOrder'},
       {attribute: 'dueDate'},
       {attribute: 'name'}
     ]},
@@ -380,7 +413,7 @@ trailing:true white:true*/
     formatDueDate: function (value, view, model) {
       var today = new Date(),
         K = XM.ToDo,
-        isLate = (model.get('status') !== K.COMPLETED &&
+        isLate = (model.get('isActive') &&
           XT.date.compareDate(value, today) < 1);
       view.addRemoveClass("error", isLate);
       return value;
@@ -395,7 +428,7 @@ trailing:true white:true*/
     name: "XV.UserAccountList",
     kind: "XV.List",
     label: "_userAccounts".loc(),
-    collection: "XM.UserAccountInfoCollection",
+    collection: "XM.UserAccountRelationCollection",
     query: {orderBy: [
       {attribute: 'username'}
     ]},
@@ -421,6 +454,71 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // ITEM
+  //
+
+  enyo.kind({
+    name: "XV.ItemList",
+    kind: "XV.List",
+    label: "_items".loc(),
+    collection: "XM.ItemListItemCollection",
+    query: {},
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    workspace: "XV.ItemWorkspace",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "XV.ListColumn", classes: "last", components: [
+          {kind: "XV.ListAttr", attr: "number", classes: "bold"}
+        ]}
+      ]}
+    ]
+  });
+
+  enyo.kind({
+    name: "XV.ClassCodeList",
+    kind: "XV.List",
+    label: "_classCodes".loc(),
+    collection: "XM.ClassCodeCollection",
+    query: {},
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    workspace: "XV.ClassCodeWorkspace",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "XV.ListColumn", classes: "last", components: [
+          {kind: "XV.ListAttr", attr: "code", classes: "bold"}
+        ]}
+      ]}
+    ]
+  });
+
+
+  // ..........................................................
+  // CURRENCY
+  //
+
+  enyo.kind({
+    name: "XV.CurrencyList",
+    kind: "XV.List",
+    label: "_currencies".loc(),
+    collection: "XM.CurrencyCollection",
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    workspace: "XV.CurrencyWorkspace",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "XV.ListColumn", classes: "last", components: [
+          {kind: "XV.ListAttr", attr: "name", classes: "bold"}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
   // HONORIFIC
   //
 
@@ -437,6 +535,34 @@ trailing:true white:true*/
       {kind: "XV.ListItem", components: [
         {kind: "XV.ListColumn", classes: "last", components: [
           {kind: "XV.ListAttr", attr: "code", classes: "bold"}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
+  // PRODUCT CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.ProductCategoryList",
+    kind: "XV.List",
+    label: "_productCategories".loc(),
+    collection: "XM.ProductCategoryCollection",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    workspace: "XV.ProductCategoryWorkspace",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "code", classes: "bold"}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
         ]}
       ]}
     ]
@@ -553,6 +679,11 @@ trailing:true white:true*/
   });
 
   enyo.kind({
+    name: "XV.UnitList",
+    kind: "XV.NameDescriptionList"
+  });
+
+  enyo.kind({
     name: "XV.OpportunitySourceList",
     kind: "XV.NameDescriptionList",
     published: {
@@ -579,6 +710,6 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.UserAccountRoleList",
     kind: "XV.NameDescriptionList",
-    collection: "XM.UserAccountRoleInfoCollection"
+    collection: "XM.UserAccountRoleCollection"
   });
 }());

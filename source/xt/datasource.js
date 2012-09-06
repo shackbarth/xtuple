@@ -67,7 +67,8 @@ white:true*/
 
         // Format attribute if it's `HasOne` relation
         if (relation && relation.type === Backbone.HasOne &&
-            relation.includeInJSON === true) {
+           (relation.includeInJSON === true ||
+            relation.includeInJSON === undefined)) {
           klass = XT.getObjectByName(relation.relatedModel);
           idAttribute = klass.prototype.idAttribute;
           param.attribute = param.attribute + '.' + idAttribute;
@@ -130,6 +131,7 @@ white:true*/
       payload.requestType = 'retrieveRecord';
       payload.recordType = recordType;
       payload.id = id;
+      payload.options = { context: options.context };
 
       return XT.Request
                .handle("function/retrieveRecord")

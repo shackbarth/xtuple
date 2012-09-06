@@ -1,5 +1,5 @@
 enyo.depends(
   "number.js",
-  "dropdown.js",
+  "picker.js",
   "relation.js"
 );

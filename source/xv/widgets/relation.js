@@ -36,7 +36,8 @@ regexp:true, undef:true, trailing:true, white:true */
             onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur"
           },
           {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
-            {kind: "onyx.IconButton", src: "assets/relation-icon-search.png"},
+            {kind: "onyx.IconButton", src: "assets/triangle-down-large.png",
+              classes: "xv-relationwidget-icon"},
             {name: 'popupMenu', floating: true, kind: "onyx.Menu",
               components: [
               {kind: "XV.MenuItem", name: 'searchItem', content: "_search".loc()},
@@ -95,6 +96,9 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.input.setDisabled(disabled);
       this.$.name.addRemoveClass("disabled", disabled);
       this.$.description.addRemoveClass("disabled", disabled);
+    },
+    focus: function () {
+      this.$.input.focus();
     },
     itemSelected: function (inSender, inEvent) {
       var that = this,
@@ -240,21 +244,10 @@ regexp:true, undef:true, trailing:true, white:true */
         Workspace = this._Workspace,
         Model = Workspace && Workspace.prototype.model ?
           XT.getObjectByName(Workspace.prototype.model)  : null,
-        recordType = Model ? Model.prototype.recordType : null,
         setPrivileges = function () {
-          var options = {},
-            params = {};
-          // Need to request read priv. from the server
-          if (newId) {
-            options.success = function (resp) {
-              if (!that.destroyed) {
-                that.$.openItem.setDisabled(!resp);
-              }
-            };
-            params.recordType = recordType;
-            params.id = newId;
-            XT.dataSource.dispatch('XM.Model', 'canRead', params, options);
-            that.$.newItem.setDisabled(!Model.canCreate());
+          if (value && newId) {
+            that.$.newItem.setDisabled(!value.couldCreate());
+            that.$.openItem.setDisabled(!value.couldRead());
           }
         };
       this.value = value;
