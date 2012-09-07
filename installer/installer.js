@@ -12,4 +12,7 @@
   X.setup(options);
   
   require("./lib/orm");
+  
+  // support for command line is a hack for now...
+  require("./lib/cli");
 }());
