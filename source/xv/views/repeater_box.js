@@ -122,24 +122,9 @@ white:true*/
         control = controls[i];
         attr = control.attr;
         label = ("_" + attr).loc();
-
-        // These are the fields with the data
-        /*
-        component = this.createComponent({
-          kind: column.kind,
-          name: attr,
-          placeholder: label, // XXX doesn't work. probably have to fix XV.Input
-          classes: column.classes // this is clever
-        });
-        */
-        
-        // If the descriptor mentions a model type we want to send that
-        // down to the widget, e.g. for PickerWidgets
-        //if (control.collection) {
-        //  component.setCollection(column.collection);
-        //}
         value = model.getValue(attr);
-        value = control.formatter ? this[control.formatter](value, component, model) : value;
+        value = control.formatter ?
+          this[control.formatter](value, component, model) : value;
         if (control.setValue) {
           control.setValue(value, {silent: true});
         } else {
