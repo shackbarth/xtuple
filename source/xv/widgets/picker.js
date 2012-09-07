@@ -49,7 +49,7 @@ regexp:true, undef:true, trailing:true, white:true */
         didStartup = false,
         that = this,
         model;
-        
+
       // If we don't have data yet, try again after start up tasks complete
       if (!collection) {
         if (didStartup) {
@@ -63,7 +63,7 @@ regexp:true, undef:true, trailing:true, white:true */
         XT.getStartupManager().registerCallback(callback);
         return;
       }
-      
+
       // Get set up
       this.$.picker.createComponent({
         value: null,
@@ -94,10 +94,30 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.label.setShowing(label);
       this.$.label.setContent(label);
     },
+    /**
+      Programatically sets the value of this widget.
+
+      @param value Can be a model or the id of a model (String or Number).
+        If it is an ID, then the correct model will be fetched and this
+        function will be called again recursively with the model.
+      @param options {Object}
+     */
     setValue: function (value, options) {
       options = options || {};
       var inEvent,
-        oldValue = this.getValue();
+        oldValue = this.getValue(),
+        actualModel;
+
+      // here is where we find the model and re-call this method if we're given
+      // an id instead of a whole model.
+      if (value && typeof value !== 'object') {
+        actualModel = _.find(this.$.picker.controls, function (menuItem) {
+          return menuItem.value && menuItem.value.id === value;
+        }).value;
+        this.setValue(actualModel);
+        return;
+      }
+
       if (value !== oldValue) {
         if (!this._selectValue(value)) { value = null; }
         if (value !== oldValue) {
@@ -122,5 +142,5 @@ regexp:true, undef:true, trailing:true, white:true */
       return value;
     }
   });
-  
+
 }());
