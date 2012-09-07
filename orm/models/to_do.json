@@ -869,6 +869,15 @@
         }
       },
       {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "todoitem_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
         "name": "assignedTo",
         "toOne": {
           "isNested": true,

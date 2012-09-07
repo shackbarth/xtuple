@@ -122,6 +122,9 @@ select xt.install_js('XT','Session','xtuple', $$
             relatedModel: schema.toUpperCase() + '.' + value.toOne.type
           };
         rel.includeInJSON = pkey;
+        if(value.toOne.isNested) {
+          rel.isNested = true;
+        }
         relations.push(rel);
       },
       addToMany = function (value) {
@@ -138,6 +141,8 @@ select xt.install_js('XT','Session','xtuple', $$
           };
         if (!value.toMany.isNested) {
           rel.includeInJSON = pkey;
+        } else {
+          rel.isNested = true;
         }
         relations.push(rel);
       },
@@ -179,10 +184,9 @@ select xt.install_js('XT','Session','xtuple', $$
         
         /* Add relations and privileges from the orm*/
         orm = XT.Orm.fetch(schema.toUpperCase(), type);
-        
-	result[type]['relations'] = [];
+       
+        result[type]['relations'] = [];
         processProperties(orm);
-        
         processPrivileges(orm);
       }
       column = { 
