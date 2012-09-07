@@ -334,18 +334,21 @@ trailing:true white:true*/
           modal: true, floating: true, scrim: true,
           onHide: "popupHidden", components: [
           {content: "_unsavedChanges".loc() },
+          {content: "_saveYourWork?".loc() },
           {tag: "br"},
-          {kind: "onyx.Button", content: "_discard".loc(), ontap: "unsavedDiscard" },
-          {kind: "onyx.Button", content: "_cancel".loc(), ontap: "unsavedCancel" },
+          {kind: "onyx.Button", content: "_discard".loc(), ontap: "unsavedDiscard",
+            classes: "xv-popup-button"},
+          {kind: "onyx.Button", content: "_cancel".loc(), ontap: "unsavedCancel",
+            classes: "xv-popup-button"},
           {kind: "onyx.Button", content: "_save".loc(), ontap: "unsavedSave",
-            classes: "onyx-blue"}
+            classes: "onyx-blue xv-popup-button"}
         ]},
         {kind: "onyx.Popup", name: "errorPopup", centered: true,
           modal: true, floating: true, scrim: true, components: [
           {name: "errorMessage", content: "_error".loc()},
           {tag: "br"},
           {kind: "onyx.Button", content: "_ok".loc(), ontap: "errorOk",
-            classes: "onyx-blue"}
+            classes: "onyx-blue xv-popup-button"}
         ]}
       ]}
     ],

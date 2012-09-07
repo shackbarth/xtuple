@@ -411,8 +411,9 @@ XT.stringsFor("en_US", {
   "_recordNotFound": "Record not found.",
   "_recordStatusNotEditable": "Record with status of `{status}` is not editable.",
   "_recursiveParentDisallowed": "Record is not allowed to reference itself as the parent.",
-  "_unsavedChanges": "You have unsaved changes. Do you want to save your work?",
+  "_unsavedChanges": "You have unsaved changes.",
   "_valueExists": "Record with {attr} of '{value}' already exists.",
+  "_saveYourWork?": "Do you want to save your work?",
   "_whatToDo": "What would you like to do?"
 
 });
