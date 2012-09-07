@@ -87,7 +87,7 @@ white:true*/
       var i,
         model = this.getValue(),
         controls = _.filter(this.$, function (obj) {
-          return obj.attr;
+          return obj.attr || obj.formatter;
         }),
         control,
         label,
@@ -97,7 +97,7 @@ white:true*/
         control = controls[i];
         attr = control.attr;
         label = ("_" + attr).loc();
-        value = model.getValue(attr);
+        value = attr ? model.getValue(attr) : null;
         value = control.formatter ?
           this[control.formatter](value, control, model) : value;
         if (control.setValue) {

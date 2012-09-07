@@ -14,12 +14,8 @@ white:true*/
       ontap: "edit"
     },
     components: [
-      {kind: "FittableColumns", classes: "xv-comment-box-header", components: [
-        {attr: "created", formatter: 'formatDate',
-          classes: "xv-comment-box-label"},
-        {attr: "createdBy", classes: "xv-comment-box-label"},
-        {attr: "commentType.name", name: "commentTypeName", classes: "xv-comment-box-label"}
-      ]},
+      {name: "header", formatter: "formatHeader",
+        classes: "xv-comment-box-label"},
       {attr: "text", name: "textBlock", formatter: "formatText", allowHtml: true,
         classes: "xv-comment-box-textblock"},
       // Editing widgets
@@ -30,32 +26,37 @@ white:true*/
     ],
     edit: function () {
       var that = this,
-        value = this.getValue(),
+        model = this.getValue(),
         commentType = this.$.commentType,
-        commentTypeName = this.$.commentTypeName,
-        textBlock = this.$.textBlock,
+        header = this.$.header,
         textInput = this.$.textArea.$.input,
         typeChanged = function () {
-          var name = value.getValue('commentType.name');
+          var headerText = that.formatHeader(null, that, model);
           textInput.setDisabled(false);
           textInput.focus();
-          commentTypeName.setContent(name);
+          header.setContent(headerText);
           commentType.hide();
-          value.off('change:commentType', typeChanged);
+          model.off('change:commentType', typeChanged);
         };
-      if (value.isReadOnly()) { return; }
+      if (model.isReadOnly()) { return; }
       this.$.textBlock.hide();
       this.$.textArea.show();
-      if (value.get('commentType')) {
+      if (model.get('commentType')) {
         textInput.focus();
       } else {
         commentType.show();
         textInput.setDisabled(true);
-        value.on('change:commentType', typeChanged);
+        model.on('change:commentType', typeChanged);
       }
     },
-    formatDate: function (value) {
-      return Globalize.format(value, 'd') + ' ' + Globalize.format(value, 't');
+    formatHeader: function (value, view, model) {
+      var values = [
+        Globalize.format(model.get('created'), 'd'),
+        Globalize.format(model.get('created'), 't'),
+        model.get('createdBy'),
+        model.getValue('commentType.name')
+      ];
+      return values.join(' ');
     },
     formatText: function (value, view, model) {
       var regExp = new RegExp("\r?\n"),

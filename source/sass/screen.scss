@@ -562,6 +562,9 @@ body {
     padding: 4px;
     font-size: small;
     font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   .xv-comment-box-textblock {
