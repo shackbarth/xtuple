@@ -7,7 +7,7 @@ white:true*/
 
   enyo.kind({
     name: "XV.CommentBoxItem",
-    kind: "XV.RepeaterBoxRow",
+    kind: "XV.RepeaterBoxItem",
     classes: "xv-comment-box",
     title: "_comments".loc(),
     components: [
@@ -29,7 +29,7 @@ white:true*/
     },
     textBlock: function (value, view, model) {
       var regExp = new RegExp("\r?\n"),
-        text = value.replace("<", "&lt;").replace(regExp, "<br>\n");
+        text = value ? value.replace("<", "&lt;").replace(regExp, "<br>\n") : value;
       view.addRemoveClass("disabled", model.isReadOnly());
       return "<p>\n<blockquote>" + text + "</pre></blockquote><br><hr>";
     }

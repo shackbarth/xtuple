@@ -16,18 +16,18 @@ white:true*/
       showHeader: true
     },
     handlers: {
-      onDeleteRow: "deleteRow"
+      onDeleteItem: "deleteItem"
     },
     components: [
       {kind: "onyx.GroupboxHeader", name: "title", content: "_title".loc()},
       {kind: "XV.Groupbox", name: "header", classes: "in-panel" },
       {kind: "XV.Scroller", fit: true, components: [
-        {kind: "Repeater", name: "repeater", count: 0, onSetupItem: "setupRow",
+        {kind: "Repeater", name: "repeater", count: 0, onSetupItem: "setupItem",
           classes: "xv-comment-box-repeater", components: [
-          {kind: "XV.CommentBoxItem", name: "repeaterRow" }
+          {kind: "XV.CommentBoxItem", name: "repeaterItem" }
         ]}
       ]},
-      {kind: "onyx.Button", name: "newRowButton", onclick: "newRow",
+      {kind: "onyx.Button", name: "newItemButton", onclick: "newItem",
         content: "_new".loc()}
     ],
     create: function () {
@@ -39,18 +39,18 @@ white:true*/
     columnsChanged: function () {
       //this.showLabels();
     },
-    deleteRow: function (inSender, inEvent) {
+    deleteItem: function (inSender, inEvent) {
       inEvent.originator.parent.getModel().destroy();
       this.$.repeater.setCount(this._collection.length);
     },
-    newRow: function () {
+    newItem: function () {
       var Klass = XT.getObjectByName(this.getModel()),
         model = new Klass(null, { isNew: true });
       this._collection.add(model);
       this.$.repeater.setCount(this._collection.length);
     },
-    setupRow: function (inSender, inEvent) {
-      var row = inEvent.item.$.repeaterRow,
+    setupItem: function (inSender, inEvent) {
+      var row = inEvent.item.$.repeaterItem,
         //columns = this.getColumns(),
         model = this._collection.at(inEvent.index),
         status = model.getStatus(),
@@ -65,7 +65,7 @@ white:true*/
       this._collection = value;
       this.$.repeater.setCount(this._collection.length);
       if (!this._collection.model.canCreate()) {
-        this.$.newRowButton.setDisabled(true);
+        this.$.newItemButton.setDisabled(true);
       }
     },
     showHeaderChanged: function () {
@@ -96,13 +96,13 @@ white:true*/
   });
   
   enyo.kind({
-    name: "XV.RepeaterBoxRow",
+    name: "XV.RepeaterBoxItem",
     published: {
       columns: [],
       value: null
     },
     events: {
-      onDeleteRow: ""
+      onDeleteItem: ""
     },
     handlers: {
       onValueChange: "fieldChanged"
@@ -141,7 +141,7 @@ white:true*/
           name: "deleteButton",
           classes: "xv-delete-button",
           content: "x",
-          ontap: "deleteRow"
+          ontap: "deleteItem"
         });
       }
     },
@@ -159,9 +159,9 @@ white:true*/
       model.set(updateObject);
       return true;
     },
-    deleteRow: function (inSender, inEvent) {
+    deleteItem: function (inSender, inEvent) {
       this.setStyle("background-color:purple");
-      this.doDeleteRow(inEvent);
+      this.doDeleteItem(inEvent);
     },
     setDeleted: function (isDeleted) {
       var components = this.getComponents(),
