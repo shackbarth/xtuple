@@ -58,6 +58,7 @@ white:true*/
       result.created = new Date();
       result.createdBy = XM.currentUser.get('username');
       result.isPublic = publicDefault || false;
+      result.text = "";
       return result;
     },
     

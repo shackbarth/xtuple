@@ -18,9 +18,9 @@ white:true*/
         {attr: "created", formatter: 'formatDate',
           classes: "xv-comment-box-label"},
         {attr: "createdBy", classes: "xv-comment-box-label"},
-        {attr: "commentType.name", classes: "xv-comment-box-label"}
+        {attr: "commentType.name", name: "commentTypeName", classes: "xv-comment-box-label"}
       ]},
-      {attr: "text", name: "textBlock", formatter: "formatTextBlock", allowHtml: true,
+      {attr: "text", name: "textBlock", formatter: "formatText", allowHtml: true,
         classes: "xv-comment-box-textblock"},
       // Editing widgets
       {kind: "XV.CommentTypePicker", name: "commentType", attr: "commentType",
@@ -29,16 +29,17 @@ white:true*/
         showBorder: true, onblur: 'textAreaBlur'}
     ],
     edit: function () {
-      var value = this.getValue(),
+      var that = this,
+        value = this.getValue(),
         commentType = this.$.commentType,
+        commentTypeName = this.$.commentTypeName,
         textBlock = this.$.textBlock,
         textInput = this.$.textArea.$.input,
         typeChanged = function () {
           var name = value.getValue('commentType.name');
           textInput.setDisabled(false);
           textInput.focus();
-          textBlock.setContent(name);
-          textBlock.render();
+          commentTypeName.setContent(name);
           commentType.hide();
           value.off('change:commentType', typeChanged);
         };
@@ -56,7 +57,7 @@ white:true*/
     formatDate: function (value) {
       return Globalize.format(value, 'd') + ' ' + Globalize.format(value, 't');
     },
-    formatTextBlock: function (value, view, model) {
+    formatText: function (value, view, model) {
       var regExp = new RegExp("\r?\n"),
         text = value ? value.replace("<", "&lt;").replace(regExp, "<br>\n") : value;
       view.addRemoveClass("disabled", model.isReadOnly());
@@ -64,7 +65,7 @@ white:true*/
     },
     textAreaBlur: function () {
       var value = this.getValue(),
-        text = this.formatTextBlock(value.get('text'), this, value);
+        text = this.formatText(value.get('text'), this, value);
       this.$.textBlock.setContent(text);
       this.$.textBlock.show();
       this.$.textArea.hide();
