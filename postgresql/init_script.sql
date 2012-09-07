@@ -67,6 +67,7 @@
 
 \i xt/views/doc.sql;
 \i xt/views/crmacctaddr.sql;
+\i xt/views/crmacctcomment.sql;
 \i xt/views/incdtinfo.sql;
 \i xt/views/nodeusr.sql;
 \i xt/views/opheadinfo.sql;
