@@ -178,11 +178,16 @@ _.extend(XT, {
   history: [],
 
   /**
-   * Save this in the history array. It's necessary to wait until
-   * we actually have the model returned so that we can give
-   * a nice title to the history item.
+    Save this in the history array. It's necessary to wait until
+    we actually have the model returned so that we can give
+    a nice title to the history item.
+
+    @param {String} workspaceType
+    @param {Object} model
+    @param {Function} callback
+
    */
-  addToHistory: function (workspaceType, model) {
+  addToHistory: function (workspaceType, model, callback) {
    /**
     * We don't want to have duplicate entries in the history stack,
     * so delete any entry that's identical. We do this instead of
@@ -206,6 +211,10 @@ _.extend(XT, {
       modelName: model.getValue(model.nameAttribute),
       workspaceType: workspaceType
     });
+
+    if (callback) {
+      callback(this.history);
+    }
   },
 
 

@@ -253,7 +253,9 @@ trailing:true white:true*/
 
       // Add to history if appropriate.
       if (model.id) {
-        XT.addToHistory(this.kind, model);
+        XT.addToHistory(this.kind, model, function (historyArray) {
+          enyo.setCookie("history", JSON.stringify(historyArray));
+        });
         this.doHistoryChange(this);
       }
 

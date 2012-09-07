@@ -43,6 +43,43 @@ white:true*/
       ]}
     ],
     /**
+      Tries to pre-populate the history list from a cookie if present
+     */
+    create: function () {
+      this.inherited(arguments);
+
+      var cookieValue = enyo.getCookie("history"),
+        historyArray,
+        i,
+        historyItem,
+        mockModel = {};
+
+      if (!cookieValue || cookieValue === 'undefined') {
+        // there's no cookie yet for this parameter list
+        return;
+      }
+
+      historyArray = JSON.parse(cookieValue);
+
+      // running through the array backwards allows us to preserve the
+      // reverse chronology of the history list.
+      for (i = historyArray.length - 1; i >= 0; i--) {
+        historyItem = historyArray[i];
+        // the mock model we create here is built to fool XT.addToHistory
+        // into thinking it's a real model. This code is fragile to any
+        // change in that function.
+        mockModel.recordType = historyItem.modelType;
+        mockModel.getValue = function () {
+          return historyItem.modelName;
+        };
+        mockModel.get = function () {
+          return historyItem.modelId;
+        };
+        XT.addToHistory(historyItem.workspaceType, mockModel);
+      }
+      this.refreshHistoryList();
+    },
+    /**
       Called whenever the pullout is pulled via the dragger. We ensure that if
       no panel is yet selected, we default to the history panel.
     */
@@ -51,6 +88,9 @@ white:true*/
 
       this.togglePullout(this, {name: name, show: true});
     },
+    /**
+      Refreshes the history list.
+     */
     refreshHistoryList: function () {
       this.$.historyList.setCount(XT.getHistory().length);
     },
