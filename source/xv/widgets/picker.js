@@ -110,6 +110,8 @@ regexp:true, undef:true, trailing:true, white:true */
 
       // here is where we find the model and re-call this method if we're given
       // an id instead of a whole model.
+      // note that we assume that all of the possible models are already
+      // populated in the menu items of the picker
       if (value && typeof value !== 'object') {
         actualModel = _.find(this.$.picker.controls, function (menuItem) {
           return menuItem.value && menuItem.value.id === value;
