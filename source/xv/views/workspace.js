@@ -557,7 +557,11 @@ trailing:true white:true*/
       this._popupDone = true;
       var options = {force: true};
       this.$.unsavedPopup.hide();
-      this.close(options);
+      if (this.$.unsavedPopup.close) {
+        this.close(options);
+      } else {
+        this.$.workspace.requery();
+      }
     },
     unsavedSave: function () {
       this._popupDone = true;
