@@ -4,14 +4,13 @@ white:true*/
 /*global enyo:true, XT:true, XM:true, XV:true, _:true */
 
 (function () {
-  
+
   enyo.kind({
     name: "XV.RepeaterBox",
     kind: "XV.Groupbox",
     classes: "panel",
     published: {
       attr: null,
-      columns: [],
       model: null,
       showHeader: true
     },
@@ -21,7 +20,7 @@ white:true*/
     components: [
       {kind: "onyx.GroupboxHeader", name: "title", content: "_title".loc()},
       {kind: "XV.Groupbox", name: "header", classes: "in-panel" },
-      {kind: "XV.Scroller", fit: true, components: [
+      {kind: "XV.Scroller", horizontal: 'hidden', fit: true, components: [
         {kind: "Repeater", name: "repeater", count: 0, onSetupItem: "setupItem",
           classes: "xv-comment-box-repeater", components: [
           {kind: "XV.CommentBoxItem", name: "repeaterItem" }
@@ -33,11 +32,7 @@ white:true*/
     create: function () {
       this.inherited(arguments);
       this.$.title.setContent(("_" + this.attr || "").loc());
-      this.columnsChanged();
       this.showHeaderChanged();
-    },
-    columnsChanged: function () {
-      //this.showLabels();
     },
     deleteItem: function (inSender, inEvent) {
       inEvent.originator.parent.getModel().destroy();
@@ -51,11 +46,9 @@ white:true*/
     },
     setupItem: function (inSender, inEvent) {
       var row = inEvent.item.$.repeaterItem,
-        //columns = this.getColumns(),
         model = this._collection.at(inEvent.index),
         status = model.getStatus(),
         K = XM.Model;
-      //row.setColumns(columns);
       row.setValue(model);
       if (status & K.DESTROYED) {
         row.setDeleted(true);
@@ -75,26 +68,9 @@ white:true*/
       } else {
         this.$.header.hide();
       }
-    },
-    showLabels: function () {
-      var columns = this.getColumns(),
-        column,
-        label,
-        i;
-      // XXX probably should clear all existing so as not to ever double up
-      for (i = 0; i < columns.length; i++) {
-        column = this.columns[i];
-        label = ("_" + column.attr).loc();
-
-        this.createComponent({
-          container: this.$.header,
-          content: label,
-          classes: column.classes ? column.classes + " xv-label" : "xv-label"
-        });
-      }
     }
   });
-  
+
   enyo.kind({
     name: "XV.RepeaterBoxItem",
     published: {
@@ -105,7 +81,7 @@ white:true*/
       onDeleteItem: ""
     },
     handlers: {
-      onValueChange: "fieldChanged"
+      onValueChange: "controlValueChanged"
     },
     valueChanged: function (inSender, inEvent) {
       var i,
@@ -133,30 +109,17 @@ white:true*/
           this.setDisabled(true);
         }
       }
-      
-      // Add delete buttons for each row
-      if (!model.isReadOnly() && model.canDelete()) {
-        this.createComponent({
-          kind: "onyx.Button",
-          name: "deleteButton",
-          classes: "xv-delete-button",
-          content: "x",
-          ontap: "deleteItem"
-        });
-      }
     },
     /**
       Catch events from constituent widgets and update the model
     */
-    fieldChanged: function (inSender, inEvent) {
-      var fieldName = inSender.getName(),
-        newValue = inSender.getValue(),
-        updateObject = {},
+    controlValueChanged: function (inSender, inEvent) {
+      var attr = inSender.getAttr(),
+        value = inSender.getValue(),
+        attributes = {},
         model = this.getValue();
-      updateObject[fieldName] = newValue;
-
-      // Update the model.
-      model.set(updateObject);
+      attributes[attr] = value;
+      model.set(attributes);
       return true;
     },
     deleteItem: function (inSender, inEvent) {
@@ -189,11 +152,9 @@ white:true*/
         comp = components[i];
         if (comp.setDisabled) {
           comp.setDisabled(isDisabled);
-        } else {
-          XT.log("setDisabled not supported on widget");
         }
       }
     }
   });
-  
+
 }());

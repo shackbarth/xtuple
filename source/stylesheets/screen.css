@@ -825,33 +825,34 @@ body {
 
 /* line 703, ../sass/screen.scss */
 .xv-textarea-input {
-  border: 0px;
   width: 95%;
-  height: 97%;
+  min-height: 100px;
   margin: 6px;
+  border-radius: 4px;
+  border-color: #ddd;
 }
 
-/* line 710, ../sass/screen.scss */
+/* line 711, ../sass/screen.scss */
 .xv-relationwidget-completer {
   left: -200px;
   top: 15px;
 }
 
-/* line 716, ../sass/screen.scss */
+/* line 717, ../sass/screen.scss */
 .xv-relationwidget-column.left {
   padding-right: 18px;
   color: black;
   width: 140px;
 }
 
-/* line 723, ../sass/screen.scss */
+/* line 724, ../sass/screen.scss */
 .xv-relationwidget-icon {
   top: 2px;
   left: 8px;
   position: relative;
 }
 
-/* line 729, ../sass/screen.scss */
+/* line 730, ../sass/screen.scss */
 .xv-relationwidget-description {
   white-space: nowrap;
   overflow: hidden;
@@ -861,30 +862,30 @@ body {
   padding-bottom: 4px;
   max-width: 325px;
 }
-/* line 737, ../sass/screen.scss */
+/* line 738, ../sass/screen.scss */
 .xv-relationwidget-description.disabled {
   opacity: 0.4;
 }
-/* line 740, ../sass/screen.scss */
+/* line 741, ../sass/screen.scss */
 .xv-relationwidget-description.label {
   text-indent: 0px;
   text-align: right;
 }
-/* line 745, ../sass/screen.scss */
+/* line 746, ../sass/screen.scss */
 .xv-relationwidget-description.hasLabel {
   text-indent: 0px;
 }
-/* line 748, ../sass/screen.scss */
+/* line 749, ../sass/screen.scss */
 .xv-relationwidget-description.hyperlink {
   color: blue;
 }
 
-/* line 753, ../sass/screen.scss */
+/* line 754, ../sass/screen.scss */
 .xv-textarea {
   background-color: white;
 }
 
-/* line 757, ../sass/screen.scss */
+/* line 758, ../sass/screen.scss */
 .xv-half-check {
   background-image: url("../../assets/checkbox.png");
   background-repeat: no-repeat;
@@ -893,13 +894,13 @@ body {
   background-color: transparent;
 }
 
-/* line 766, ../sass/screen.scss */
+/* line 767, ../sass/screen.scss */
 .xv-menuitem.disabled {
   color: Dimgray;
 }
 
 /********END XV WIDGETS******/
-/* line 774, ../sass/screen.scss */
+/* line 775, ../sass/screen.scss */
 .xv-login .xv-login-form {
   position: absolute;
   height: 250px;
@@ -909,17 +910,17 @@ body {
   margin-top: -125px;
   margin-left: -150px;
 }
-/* line 782, ../sass/screen.scss */
+/* line 783, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box {
   font-size: 12px;
   text-align: center;
   padding: 10px;
 }
-/* line 784, ../sass/screen.scss */
+/* line 785, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box.error {
   color: #ff0000;
 }
-/* line 791, ../sass/screen.scss */
+/* line 792, ../sass/screen.scss */
 .xv-login .xv-organizations-selection {
   position: absolute;
   height: 300px;
@@ -929,17 +930,17 @@ body {
   margin-top: -150px;
   margin-left: -200px;
 }
-/* line 799, ../sass/screen.scss */
+/* line 800, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row {
   padding: 5px;
   cursor: pointer;
 }
-/* line 802, ../sass/screen.scss */
+/* line 803, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row:hover {
   background-color: #ddd;
 }
 
-/* line 810, ../sass/screen.scss */
+/* line 811, ../sass/screen.scss */
 .xv-startup-panel .xv-startup-divider {
   width: 70%;
   margin-left: auto;
@@ -953,7 +954,7 @@ body {
   font-weight: bold;
   margin-bottom: 8px;
 }
-/* line 823, ../sass/screen.scss */
+/* line 824, ../sass/screen.scss */
 .xv-startup-panel .xv-startup-progress {
   width: 70%;
   margin-left: auto;

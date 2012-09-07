@@ -701,10 +701,11 @@ body {
 }
 
 .xv-textarea-input {
-  border: 0px;
-  width: 95%; 
-  height: 97%;
-  margin: 6px 
+  width: 95%;
+  min-height: 100px;
+  margin: 6px;
+  border-radius: 4px;
+  border-color: #ddd;
 }
 
 .xv-relationwidget-completer {
