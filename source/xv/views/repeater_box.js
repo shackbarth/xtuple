@@ -115,7 +115,6 @@ white:true*/
         }),
         control,
         label,
-        component,
         attr,
         value;
       for (i = 0; i < controls.length; i++) {
@@ -124,7 +123,7 @@ white:true*/
         label = ("_" + attr).loc();
         value = model.getValue(attr);
         value = control.formatter ?
-          this[control.formatter](value, component, model) : value;
+          this[control.formatter](value, control, model) : value;
         if (control.setValue) {
           control.setValue(value, {silent: true});
         } else {
@@ -167,7 +166,8 @@ white:true*/
     setDeleted: function (isDeleted) {
       var components = this.getComponents(),
         comp,
-        style = isDeleted ? "text-decoration: line-through" : "text-decoration: none",
+        style = isDeleted ?
+          "text-decoration: line-through" : "text-decoration: none",
         i;
 
       for (i = 0; i < components.length; i++) {

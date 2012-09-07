@@ -561,8 +561,11 @@ body {
   }
   
   .xv-comment-box-textblock {
-    padding: 4px;
+    padding: 12px;
     font-size: small;
+    &.disabled {
+      opacity: 0.6;
+    }
   }
 }
 

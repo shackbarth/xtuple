@@ -30,6 +30,7 @@ white:true*/
     textBlock: function (value, view, model) {
       var regExp = new RegExp("\r?\n"),
         text = value.replace("<", "&lt;").replace(regExp, "<br>\n");
+      view.addRemoveClass("disabled", model.isReadOnly());
       return "<p>\n<blockquote>" + text + "</pre></blockquote><br><hr>";
     }
   });
