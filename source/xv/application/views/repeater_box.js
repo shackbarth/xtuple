@@ -4,61 +4,54 @@ white:true*/
 /*global enyo:true, XT:true, XV:true */
 
 (function () {
+  
   enyo.kind({
     name: "XV.ProjectTaskRepeaterBox",
     kind: "XV.RepeaterBox",
-    published: {
-      recordType: "XM.ProjectTask",
-      columns: [
-        {kind: "XV.Input", name: "tasks.number" },
-        {kind: "XV.Input", name: "tasks.name" },
-        {kind: "XV.Input", name: "tasks.notes", classes: "xv-wide-entry" },
-        {kind: "XV.DateWidget", name: "tasks.dueDate" },
-        {kind: "XV.Number", name: "tasks.actualHours" },
-        {kind: "XV.Number", name: "tasks.actualExpenses" }
-      ]
-    }
+    model: "XM.ProjectTask",
+    columns: [
+      {kind: "XV.Input", attr: "number" },
+      {kind: "XV.Input", attr: "name" },
+      {kind: "XV.Input", attr: "notes", classes: "xv-wide-entry" },
+      {kind: "XV.DateWidget", attr: "dueDate" },
+      {kind: "XV.Number", attr: "actualHours" },
+      {kind: "XV.Number", attr: "actualExpenses" }
+    ]
   });
+  
   enyo.kind({
     name: "XV.AccountCommentBox",
     kind: "XV.CommentBox",
-    published: {
-      recordType: "XM.AccountComment",
-    }
+    model: "XM.AccountComment"
   });
+  
   enyo.kind({
     name: "XV.ContactCommentBox",
     kind: "XV.CommentBox",
-    published: {
-      recordType: "XM.ContactComment",
-    }
+    model: "XM.ContactComment"
   });
+  
   enyo.kind({
     name: "XV.IncidentCommentBox",
     kind: "XV.CommentBox",
-    published: {
-      recordType: "XM.OpportunityComment",
-    }
+    model: "XM.OpportunityComment"
   });
+  
   enyo.kind({
     name: "XV.OpportunityCommentBox",
     kind: "XV.CommentBox",
-    published: {
-      recordType: "XM.OpportunityComment",
-    }
+    model: "XM.OpportunityComment"
   });
+  
   enyo.kind({
     name: "XV.ProjectCommentBox",
     kind: "XV.CommentBox",
-    published: {
-      recordType: "XM.ProjectComment",
-    }
+    model: "XM.ProjectComment"
   });
+  
   enyo.kind({
     name: "XV.ToDoCommentBox",
     kind: "XV.CommentBox",
-    published: {
-      recordType: "XM.ToDoComment",
-    }
+    model: "XM.ToDoComment"
   });
 }());

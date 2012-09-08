@@ -465,7 +465,6 @@ body {
 
 .xv-groupbox .xv-inputwidget {
   background-color: white;
-  width: 430px;
 }
 
 .xv-groupbox > .onyx-input-decorator:first-child {
@@ -494,13 +493,21 @@ body {
 	}
 }
 
+.xv-popup-button {
+  margin: 4px;
+}
+
+.xv-scroller {
+  background: white;
+}
+
 .xv-error {
   color: #ff0000;
 }
 
 /* RepeaterBox.scss */
+/*
 .xv-repeater-box {
-  width: 880px;
   .xv-label {
     width: 90px;
     font-weight: bold;
@@ -543,39 +550,29 @@ body {
     padding-top: 0px;
   }
 }
-
+*/
 /* CommentBox.scss */
 .xv-comment-box {
-  width: 700px;
-  .xv-repeater-box-row {
-    height: 140px;
+  .xv-comment-box-repeater {
+    background: white;
+    max-width: 320px;
   }
-  .xv-comment-box-createdBy {
+
+  .xv-comment-box-label {
+    padding: 4px;
+    font-size: small;
     font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
-  .xv-comment-box-text {
-    position:absolute;
-    margin-top: 40px;
-    border-width: 0px;
-    width: 500px;
-    border: 1px solid grey;
-    border-radius: 4px 4px 4px 4px;
-  }
-  .xv-textarea-input {
-    height: 65px;
-    min-height: 65px;
-    width: 480px;
-  }
-  .xv-repeater-box-header {
-    visibility: hidden;
-    height: 0px;
-  }
-  .xv-comment-box-comment-type {
-    border-width: 0px;
-    .xv-picker {
-      height: 25px;
-      padding: 2px;
+  .xv-comment-box-textblock {
+    padding: 12px;
+    font-size: small;
+    overflow: hidden;
+    &.disabled {
+      opacity: 0.6;
     }
   }
 }
@@ -712,10 +709,11 @@ body {
 }
 
 .xv-textarea-input {
-  border: 0px;
-  width: 95%; 
-  height: 97%;
-  margin: 6px 
+  width: 95%;
+  min-height: 100px;
+  margin: 6px;
+  border-radius: 4px;
+  border-color: #ddd;
 }
 
 .xv-relationwidget-completer {
@@ -759,6 +757,10 @@ body {
   &.hyperlink {
     color: blue;
   }
+}
+
+.xv-textarea {
+  background-color: white;
 }
 
 .xv-half-check {

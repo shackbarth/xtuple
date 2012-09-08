@@ -17,7 +17,6 @@ regexp:true, undef:true, trailing:true, white:true */
       "onValueChange": ""
     },
     components: [
-      // XXX subinput?! really we just make sure this subinput reflects css such as width in its container
       {name: "input", kind: "onyx.Input", classes: "xv-subinput", onchange: "inputChanged"}
     ],
     clear: function (options) {

@@ -7,7 +7,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.TextArea",
     kind: "XV.Input",
-    classes: "xv-inputwidget xv-textarea",
+    classes: "xv-textarea",
     published: {
       attr: null,
       placeholder: ""

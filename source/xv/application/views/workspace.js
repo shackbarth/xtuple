@@ -52,18 +52,13 @@ trailing:true white:true*/
               showAddress: true},
             {kind: "onyx.GroupboxHeader", content: "_secondaryContact".loc()},
             {kind: "XV.ContactWidget", attr: "secondaryContact",
-              showAddress: true}
+              showAddress: true},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
         ]},
         {kind: "XV.AccountContactsBox", attr: "contactRelations"},
-        {kind: "XV.Groupbox", title: "_notes".loc(), classes: "panel",
-          components: [
-          {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-          {kind: "XV.TextArea", attr: "notes", fit: true}
-        ]},
-        {kind: "Scroller", horizontal: "hidden", title: "_comments".loc(), components: [
-          {kind: "XV.AccountCommentBox", attr: "comments"}
-        ]}
+        {kind: "XV.AccountCommentBox", attr: "comments"}
       ]}
     ]
   });
@@ -125,28 +120,27 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "phone"},
             {kind: "XV.InputWidget", attr: "alternate"},
             {kind: "XV.InputWidget", attr: "fax"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true},
             {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
             {kind: "XV.AccountWidget", attr: "account"},
             {kind: "XV.UserAccountWidget", attr: "owner"}
           ]}
         ]},
-        {kind: "XV.Groupbox", title: "_notes".loc(), classes: "panel",
-          components: [
-          {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-          {kind: "XV.TextArea", attr: "notes", fit: true}
-        ]},
-        {kind: "Scroller", horizontal: "hidden", title: "_comments".loc(), components: [
-          {kind: "XV.ContactCommentBox", attr: "comments"}
-        ]}
+        {kind: "XV.ContactCommentBox", attr: "comments"}
       ]},
       {kind: "onyx.Popup", name: "multipleAddressPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",
         onHide: "popupHidden", components: [
-        {content: "_addressShared".loc() + " " + "_whatToDo".loc()},
+        {content: "_addressShared".loc()},
+        {content: "_whatToDo".loc()},
         {tag: "br"},
-        {kind: "onyx.Button", content: "_changeOne".loc(), ontap: "addressChangeOne", classes: "onyx-blue"},
-        {kind: "onyx.Button", content: "_changeAll".loc(), ontap: "addressChangeAll" },
-        {kind: "onyx.Button", content: "_cancel".loc(), ontap: "addressCancel"}
+        {kind: "onyx.Button", content: "_changeOne".loc(), ontap: "addressChangeOne",
+          classes: "onyx-blue xv-popup-button"},
+        {kind: "onyx.Button", content: "_changeAll".loc(), ontap: "addressChangeAll",
+          classes: "xv-popup-button"},
+        {kind: "onyx.Button", content: "_cancel".loc(), ontap: "addressCancel",
+          classes: "xv-popup-button"}
       ]}
     ],
     addressChangeAll: function () {
@@ -277,18 +271,13 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
             {kind: "XV.UserAccountWidget", attr: "owner"},
             {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true},
             {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
             {kind: "XV.ItemWidget", attr: "item"}
           ]}
         ]},
-        {kind: "XV.Groupbox", title: "_notes".loc(), classes: "panel",
-          components: [
-          {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-          {kind: "XV.TextArea", attr: "notes", fit: true}
-        ]},
-        {kind: "Scroller", horizontal: "hidden", title: "_comments".loc(), components: [
-          {kind: "XV.IncidentCommentBox", attr: "comments"}
-        ]}
+        {kind: "XV.IncidentCommentBox", attr: "comments"}
       ]}
     ]
   });
@@ -395,17 +384,12 @@ trailing:true white:true*/
             {kind: "XV.DateWidget", attr: "actualClose"},
             {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
             {kind: "XV.UserAccountWidget", attr: "owner"},
-            {kind: "XV.UserAccountWidget", attr: "assignedTo"}
+            {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
         ]},
-        {kind: "XV.Groupbox", title: "_notes".loc(), classes: "panel",
-          components: [
-          {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-          {kind: "XV.TextArea", attr: "notes", fit: true}
-        ]},
-        {kind: "Scroller", horizontal: "hidden", title: "_comments".loc(), components: [
-          {kind: "XV.OpportunityCommentBox", attr: "comments"}
-        ]}
+        {kind: "XV.OpportunityCommentBox", attr: "comments"}
       ]}
     ]
   });
@@ -503,22 +487,15 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
             {kind: "XV.UserAccountWidget", attr: "owner"},
             {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true},
             {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
             {kind: "XV.AccountWidget", attr: "account"},
             {kind: "XV.ContactWidget", attr: "contact"}
           ]}
         ]},
-        {kind: "XV.Groupbox", title: "_notes".loc(), classes: "panel",
-          components: [
-          {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-          {kind: "XV.TextArea", attr: "notes", fit: true}
-        ]},
-        {kind: "Scroller", horizontal: "hidden", title: "_comments".loc(), components: [
-          {kind: "XV.ProjectCommentBox", attr: "comments"}
-        ]},
-        {kind: "Scroller", horizontal: "hidden", title: "_tasks".loc(), components: [
-          {kind: "XV.ProjectTaskRepeaterBox", attr: "tasks"}
-        ]}
+        {kind: "XV.ProjectCommentBox", attr: "comments"},
+        {kind: "XV.ProjectTaskRepeaterBox", attr: "tasks"}
       ]}
     ]
   });
@@ -576,18 +553,13 @@ trailing:true white:true*/
             {kind: "XV.UserAccountWidget", attr: "assignedTo"},
             {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
             {kind: "XV.ContactWidget", attr: "contact"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true},
             {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
             {kind: "XV.AccountWidget", attr: "account"}
           ]}
         ]},
-        {kind: "XV.Groupbox", title: "_notes".loc(), classes: "panel",
-          components: [
-          {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-          {kind: "XV.TextArea", attr: "notes", fit: true}
-        ]},
-        {kind: "Scroller", horizontal: "hidden", title: "_comments".loc(), components: [
-          {kind: "XV.ToDoCommentBox", attr: "comments"}
-        ]}
+        {kind: "XV.ToDoCommentBox", attr: "comments"}
       ]}
     ]
   });

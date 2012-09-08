@@ -20,18 +20,4 @@ white:true*/
 
   });
 
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.IncidentProject = XM.Model.extend(
-    /** @scope XM.IncidentProject.prototype */ {
-
-    recordType: 'XM.IncidentProject',
-
-    isDocumentAssignment: true
-
-  });
-
 }());

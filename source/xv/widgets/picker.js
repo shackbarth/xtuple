@@ -37,18 +37,32 @@ regexp:true, undef:true, trailing:true, white:true */
         ]}
       ]}
     ],
+    buildList: function () {
+      var nameAttribute = this.getNameAttribute(),
+        models = this.filteredList(),
+        name,
+        model,
+        i;
+      this.$.picker.destroyClientControls();
+      this.$.picker.createComponent({
+        value: null,
+        content: "_none".loc()
+      });
+      for (i = 0; i < models.length; i++) {
+        model = models[i];
+        name = model.get(nameAttribute);
+        this.$.picker.createComponent({ value: model, content: name });
+      }
+      this.render();
+    },
     clear: function (options) {
       this.setValue(null, options);
     },
     collectionChanged: function () {
-      var nameAttribute = this.getNameAttribute(),
-        collection = XT.getObjectByName(this.getCollection()),
-        i,
-        name,
+      var collection = XT.getObjectByName(this.collection),
         callback,
         didStartup = false,
-        that = this,
-        model;
+        that = this;
         
       // If we don't have data yet, try again after start up tasks complete
       if (!collection) {
@@ -63,18 +77,8 @@ regexp:true, undef:true, trailing:true, white:true */
         XT.getStartupManager().registerCallback(callback);
         return;
       }
-      
-      // Get set up
-      this.$.picker.createComponent({
-        value: null,
-        content: "_none".loc()
-      });
-      for (i = 0; i < collection.models.length; i++) {
-        model = collection.models[i];
-        name = model.get(nameAttribute);
-        this.$.picker.createComponent({ value: model, content: name });
-      }
-      this.render();
+      this._collection = collection;
+      this.buildList();
     },
     create: function () {
       this.inherited(arguments);
@@ -89,8 +93,26 @@ regexp:true, undef:true, trailing:true, white:true */
         attribute = this.getValueAttribute();
       this.setValue(attribute ? value[attribute] : value);
     },
+    /**
+      Implement your own filter function here. By default
+      simply returns the array of models passed.
+      
+      @param {Array}
+      returns {Array}
+    */
+    filter: function (models) {
+      return models || [];
+    },
+    /**
+      Returns array of models for current collection instance with `filter`
+      applied.
+    */
+    filteredList: function () {
+      return this._collection ? this.filter(this._collection.models) : [];
+    },
     labelChanged: function () {
-      var label = this.getLabel() || (this.attr ? ("_" + this.attr).loc() + ":" : "");
+      var label = this.getLabel() ||
+        (this.attr ? ("_" + this.attr).loc() + ":" : "");
       this.$.label.setShowing(label);
       this.$.label.setContent(label);
     },

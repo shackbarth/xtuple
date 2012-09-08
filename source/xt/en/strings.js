@@ -73,6 +73,7 @@ XT.stringsFor("en_US", {
   "_child": "Child",
   "_city": "City",
   "_classCode": "Class Code",
+  "_classCodes": "Class Codes",
   "_closeDate": "Close Date",
   "_closed": "Closed",
   "_code": "Code",
@@ -93,6 +94,7 @@ XT.stringsFor("en_US", {
   "_createdBy": "Created By",
   "_crm": "CRM",
   "_crmSetup": "CRM Setup",
+  "_currencies": "Currencies",
   "_currency": "Currency",
   "_currencyAbbreviation": "Currency Abbreviation",
   "_currencyName": "Currency Name",
@@ -278,6 +280,7 @@ XT.stringsFor("en_US", {
   "_privilege": "Privilege",
   "_privileges": "Privileges",
   "_probability": "Probability",
+  "_productCategories": "Product Categories",
   "_productCategory": "Product Category",
   "_profitCenter": "Profit Center",
   "_project": "Project",
@@ -346,6 +349,7 @@ XT.stringsFor("en_US", {
   "_trigger": "Trigger",
   "_type": "Type",
   "_unit": "Unit",
+  "_units": "Units",
   "_unitType": "Unit Type",
   "_unknown": "(unknown)",
   "_updated": "Updated",
@@ -407,8 +411,9 @@ XT.stringsFor("en_US", {
   "_recordNotFound": "Record not found.",
   "_recordStatusNotEditable": "Record with status of `{status}` is not editable.",
   "_recursiveParentDisallowed": "Record is not allowed to reference itself as the parent.",
-  "_unsavedChanges": "You have unsaved changes. Do you want to save your work?",
+  "_unsavedChanges": "You have unsaved changes.",
   "_valueExists": "Record with {attr} of '{value}' already exists.",
+  "_saveYourWork?": "Do you want to save your work?",
   "_whatToDo": "What would you like to do?"
 
 });

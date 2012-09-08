@@ -64,34 +64,6 @@ trailing:true white:true*/
   });
   
   enyo.kind({
-    name: "XV.AccountProjectListRelations",
-    kind: "XV.ListRelations",
-    orderBy: [
-      {attribute: 'dueDate', descending: true},
-      {attribute: 'number' }
-    ],
-    parentKey: "account",
-    workspace: "XV.ProjectWorkspace",
-    components: [
-      {kind: "XV.ListItem", components: [
-        {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
-              {kind: "XV.ListAttr", attr: "getProjectStatusString", fit: true},
-              {kind: "XV.ListAttr", attr: "dueDate", formatter: "formatDueDate",
-                placeholder: "_noCloseTarget".loc(),
-                classes: "right"}
-            ]},
-            {kind: "XV.ListAttr", attr: "name"}
-          ]}
-        ]}
-      ]}
-    ],
-    formatDueDate: XV.ProjectList.prototype.formatDueDate
-  });
-  
-  enyo.kind({
     name: "XV.AccountToDoListRelations",
     kind: "XV.ListRelations",
     orderBy: [
@@ -136,12 +108,6 @@ trailing:true white:true*/
   });
   
   enyo.kind({
-    name: "XV.ContactProjectListRelations",
-    kind: "XV.AccountProjectListRelations",
-    parentKey: "contact"
-  });
-  
-  enyo.kind({
     name: "XV.ContactToDoListRelations",
     kind: "XV.AccountToDoListRelations",
     parentKey: "contact"
@@ -165,16 +131,6 @@ trailing:true white:true*/
     name: "XV.OpportunityToDoListRelations",
     kind: "XV.AccountToDoListRelations",
     parentKey: "opportunity"
-  });
-  
-  // ..........................................................
-  // PROJECT
-  //
-  
-  enyo.kind({
-    name: "XV.ProjectIncidentListRelations",
-    kind: "XV.AccountIncidentListRelations",
-    parentKey: "project"
   });
 
 }());

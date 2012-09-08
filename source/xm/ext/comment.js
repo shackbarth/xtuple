@@ -12,7 +12,7 @@ white:true*/
     @extends XM.Model
   */
   XM.CommentType = XM.Model.extend({
-    /** @scope XM.Comment.prototype */
+    /** @scope XM.CommentType.prototype */
 
     recordType: 'XM.CommentType',
 
@@ -23,10 +23,33 @@ white:true*/
 
     requiredAttributes: [
       "name",
-      "commentType",
       "commentsEditable",
       "order"
     ]
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.CommentTypeSource = XM.Model.extend({
+    /** @scope XM.CommentTypeSource.prototype */
+
+    recordType: 'XM.CommentTypeSource'
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.Source = XM.Model.extend({
+    /** @scope XM.Source.prototype */
+
+    recordType: 'XM.Source'
 
   });
 
@@ -39,10 +62,20 @@ white:true*/
   */
   XM.Comment = XM.Model.extend({
     /** @scope XM.Comment.prototype */
+    
+    /**
+      The name of the source used in conjunction with `CommentTypeSource`
+      to determine which comment types are available in a given comment sub class.
+    */
+    sourceName: "",
 
     readOnlyAttributes: [
       "created",
       "createdBy"
+    ],
+    
+    requiredAttributes: [
+      "commentType"
     ],
 
     // ..........................................................
@@ -55,6 +88,7 @@ white:true*/
       result.created = new Date();
       result.createdBy = XM.currentUser.get('username');
       result.isPublic = publicDefault || false;
+      result.text = "";
       return result;
     },
     
@@ -96,6 +130,18 @@ white:true*/
     /** @scope XM.CommentTypeCollection.prototype */
 
     model: XM.CommentType
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.SourceCollection = XM.Collection.extend({
+    /** @scope XM.SourceCollection.prototype */
+
+    model: XM.Source
 
   });
 

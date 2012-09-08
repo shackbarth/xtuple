@@ -54,10 +54,12 @@ white:true*/
 
     recordType: 'XM.Account',
 
-    defaults: {
-      owner: XM.currentUser,
-      isActive: true,
-      accountType: 'O'
+    defaults: function () {
+      return {
+        owner: XM.currentUser,
+        isActive: true,
+        accountType: 'O'
+      };
     },
 
     requiredAttributes: [
@@ -87,7 +89,9 @@ white:true*/
   XM.AccountComment = XM.Comment.extend({
     /** @scope XM.AccountComment.prototype */
 
-    recordType: 'XM.AccountComment'
+    recordType: 'XM.AccountComment',
+    
+    sourceName: 'CRMA'
 
   });
 

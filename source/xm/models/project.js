@@ -373,7 +373,9 @@ white:true*/
   XM.ProjectComment = XM.Comment.extend({
     /** @scope XM.ProjectComment.prototype */
 
-    recordType: 'XM.ProjectComment'
+    recordType: 'XM.ProjectComment',
+    
+    sourceName: 'J'
 
   });
 
@@ -493,7 +495,9 @@ white:true*/
   XM.ProjectTaskComment = XM.Comment.extend({
     /** @scope XM.ProjectTaskComment.prototype */
 
-    recordType: 'XM.ProjectTaskComment'
+    recordType: 'XM.ProjectTaskComment',
+    
+    sourceName: 'TA'
 
   });
 
