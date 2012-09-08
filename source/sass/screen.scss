@@ -570,6 +570,7 @@ body {
   .xv-comment-box-textblock {
     padding: 12px;
     font-size: small;
+    overflow: hidden;
     &.disabled {
       opacity: 0.6;
     }
