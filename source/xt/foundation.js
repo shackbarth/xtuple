@@ -102,7 +102,17 @@ XT = {
     @type Number
     @default 2
   */
-  WEIGHT_SCALE: 2
+  WEIGHT_SCALE: 2,
+
+  /**
+    Maximum length of the history array
+
+    @static
+    @constant
+    @type Number
+    @default 20
+   */
+  HISTORY_MAX_LENGTH: 20
 
 };
 
@@ -178,17 +188,22 @@ _.extend(XT, {
   history: [],
 
   /**
-   * Save this in the history array. It's necessary to wait until
-   * we actually have the model returned so that we can give
-   * a nice title to the history item.
+    Save this in the history array. It's necessary to wait until
+    we actually have the model returned so that we can give
+    a nice title to the history item.
+
+    @param {String} workspaceType
+    @param {Object} model
+    @param {Function} callback
+
    */
-  addToHistory: function (workspaceType, model) {
-   /**
-    * We don't want to have duplicate entries in the history stack,
-    * so delete any entry that's identical. We do this instead of
-    * just not adding the new one, because we want the new one
-    * to be at the top of the stack.
-    */
+  addToHistory: function (workspaceType, model, callback) {
+    //
+    // We don't want to have duplicate entries in the history stack,
+    // so delete any entry that's identical. We do this instead of
+    // just not adding the new one, because we want the new one
+    // to be at the top of the stack.
+    //
     for (var i = 0; i < this.history.length; i++) {
       if (this.history[i].modelType === model.recordType &&
           this.history[i].modelId === model.get("id")) {
@@ -197,15 +212,30 @@ _.extend(XT, {
       }
     }
 
-    /**
-     * Unshift instead of push because we want the newest entries at the top
-     */
+    //
+    // Unshift instead of push because we want the newest entries at the top
+    //
     this.history.unshift({
       modelType: model.recordType,
       modelId: model.get("id"),
       modelName: model.getValue(model.nameAttribute),
       workspaceType: workspaceType
     });
+
+    //
+    // Preserve a maximum length of the history array based on a global constant
+    // in XT
+    //
+    if (this.history.length > XT.HISTORY_MAX_LENGTH) {
+      this.history = this.history.slice(0, XT.HISTORY_MAX_LENGTH);
+    }
+
+
+
+
+    if (callback) {
+      callback(this.history);
+    }
   },
 
 

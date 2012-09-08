@@ -16,7 +16,7 @@ white:true*/
       onListAdded: "addPulloutItem",
       onModelChange: "modelChanged",
       onParameterChange: "parameterDidChange",
-      onTogglePullout: "togglePullout",
+      onNavigatorEvent: "togglePullout",
       onHistoryChange: "refreshHistoryPanel",
       onHistoryItemSelected: "selectHistoryItem",
       onAnimateProgressFinish: "dataLoaded"
@@ -134,7 +134,7 @@ white:true*/
       }
     },
     togglePullout: function (inSender, inEvent) {
-      this.$.pullout.togglePullout(inEvent.name);
+      this.$.pullout.togglePullout(inSender, inEvent);
     }
   });
 }());

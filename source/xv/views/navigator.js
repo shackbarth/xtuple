@@ -16,7 +16,7 @@ trailing:true white:true*/
     },
     events: {
       onListAdded: "",
-      onTogglePullout: "",
+      onNavigatorEvent: "",
       onWorkspace: ""
     },
     handlers: {
@@ -41,9 +41,11 @@ trailing:true white:true*/
             modal: true, floating: true, components: [
             {content: "_logoutConfirmation".loc() },
             {tag: "br"},
-            {kind: "onyx.Button", content: "_ok".loc(), ontap: "logout"},
+            {kind: "onyx.Button", content: "_ok".loc(), ontap: "logout",
+              classes: "xv-popup-button"},
             {kind: "onyx.Button", content: "_cancel".loc(),
-              ontap: "closeLogoutPopup", classes: "onyx-blue"}
+              ontap: "closeLogoutPopup",
+              classes: "onyx-blue xv-popup-button"}
           ]}
         ]},
         {name: "menuPanels", kind: "Panels", draggable: false, fit: true,
@@ -206,6 +208,15 @@ trailing:true white:true*/
         label = panel && panel.label ? panel.label : "";
       if (!panel) { return; }
 
+      // Make sure the advanced search icon is visible iff there is an advanced
+      // search for this list
+      if (panel.parameterWidget) {
+        this.$.searchIconButton.setStyle("visibility: visible;");
+      } else {
+        this.$.searchIconButton.setStyle("visibility: hidden;");
+      }
+      this.doNavigatorEvent({name: panel.name, show: false});
+
       // Select panelMenu
       if (!this.$.panelMenu.isSelected(index)) {
         this.$.panelMenu.select(index);
@@ -267,12 +278,12 @@ trailing:true white:true*/
       if (isSelected) { this.setContentPanel(index); }
     },
     showHistory: function (inSender, inEvent) {
-      var panel = {name: 'history'};
-      this.doTogglePullout(panel);
+      var panel = {name: 'history', show: true};
+      this.doNavigatorEvent(panel);
     },
     showParameters: function (inSender, inEvent) {
       var panel = this.$.contentPanels.getActive();
-      this.doTogglePullout(panel);
+      this.doNavigatorEvent({name: panel.name, show: true});
     },
     warnLogout: function () {
       this.$.logoutPopup.show();
