@@ -43,6 +43,7 @@ regexp:true, undef:true, trailing:true, white:true */
         name,
         model,
         i;
+      this.$.picker.destroyClientControls();
       this.$.picker.createComponent({
         value: null,
         content: "_none".loc()

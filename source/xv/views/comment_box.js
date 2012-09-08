@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true
 white:true*/
-/*global enyo:true, XT:true, XV:true, XM:true, Globalize:true */
+/*global enyo:true, XT:true, XV:true, XM:true, _: true, Globalize:true */
 
 (function () {
 
@@ -63,6 +63,30 @@ white:true*/
       view.addRemoveClass("disabled", model.isReadOnly());
       return "<p>\n<blockquote>" + text + "</pre></blockquote><br><hr>";
     },
+    setCommentTypeFilter: function () {
+      var model = this.parent.parent.parent.parent.parent.getModel(),
+        Klass = XT.getObjectByName(model),
+        sourceName = Klass.prototype.sourceName,
+        commentType = this.$.commentType;
+      commentType.filter = function (models) {
+        return _.filter(models, function (model) {
+          var sourcesModels,
+            sourcesAttrs,
+            sources,
+            attrs,
+            sourceNames;
+          sourcesModels = model.get('sources').models;
+          sourcesAttrs = _.pluck(sourcesModels, 'attributes');
+          sources = _.pluck(sourcesAttrs, 'source');
+          attrs = _.pluck(sources, 'attributes');
+          sourceNames = _.pluck(attrs, 'name');
+          return _.find(sourceNames, function (name) {
+            return name === sourceName;
+          });
+        });
+      };
+      commentType.buildList();
+    },
     textAreaBlur: function () {
       var value = this.getValue(),
         text = this.formatText(value.get('text'), this, value);
@@ -77,6 +101,7 @@ white:true*/
         status = value ? value.getStatus() : null,
         K = XM.Model;
       if (status === K.READY_NEW) {
+        this.setCommentTypeFilter();
         this.edit();
       }
     }
