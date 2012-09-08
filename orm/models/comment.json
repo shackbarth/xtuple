@@ -63,7 +63,7 @@
         "toMany": {
           "type": "CommentTypeSource",
           "column": "cmnttype_id",
-          "inverse": "id",
+          "inverse": "comment_type",
           "isNested": true
         }
       }
