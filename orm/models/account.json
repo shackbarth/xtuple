@@ -436,7 +436,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "AccountComment",
-    "table": "comment",
+    "table": "xt.crmacctcomment",
     "idSequenceName": "comment_comment_id_seq",
     "comment": "Account Comment Map",
     "privileges": {
@@ -463,14 +463,6 @@
        }
      },
      {
-       "name": "sourceType",
-       "attr": {
-         "type": "String",
-         "column": "comment_source",
-         "value": "CRMA"
-       }
-     },
-     {
        "name": "account",
        "attr": {
          "type": "Number",
@@ -480,7 +472,7 @@
      {
        "name": "commentType",
        "toOne": {
-         "type": "Account",
+         "type": "CommentType",
          "column": "comment_cmnttype_id"
        }
      },
