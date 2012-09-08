@@ -41,9 +41,11 @@ trailing:true white:true*/
             modal: true, floating: true, components: [
             {content: "_logoutConfirmation".loc() },
             {tag: "br"},
-            {kind: "onyx.Button", content: "_ok".loc(), ontap: "logout"},
+            {kind: "onyx.Button", content: "_ok".loc(), ontap: "logout",
+              classes: "xv-popup-button"},
             {kind: "onyx.Button", content: "_cancel".loc(),
-              ontap: "closeLogoutPopup", classes: "onyx-blue"}
+              ontap: "closeLogoutPopup",
+              classes: "onyx-blue xv-popup-button"}
           ]}
         ]},
         {name: "menuPanels", kind: "Panels", draggable: false, fit: true,

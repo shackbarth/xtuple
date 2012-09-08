@@ -57,8 +57,8 @@ trailing:true white:true*/
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
         ]},
-        {kind: "XV.AccountContactsBox", attr: "contactRelations"},
-        {kind: "XV.AccountCommentBox", attr: "comments"}
+        {kind: "XV.AccountCommentBox", attr: "comments"},
+        {kind: "XV.AccountContactsBox", attr: "contactRelations"}
       ]}
     ]
   });
