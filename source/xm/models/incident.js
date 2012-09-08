@@ -272,7 +272,9 @@ white:true*/
   XM.IncidentComment = XM.Comment.extend({
     /** @scope XM.IncidentComment.prototype */
 
-    recordType: 'XM.IncidentComment'
+    recordType: 'XM.IncidentComment',
+    
+    sourceName: 'INCDT'
 
   });
 

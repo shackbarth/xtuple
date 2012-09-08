@@ -229,7 +229,9 @@ white:true*/
   XM.ToDoComment = XM.Comment.extend({
     /** @scope XM.ToDoComment.prototype */
 
-    recordType: 'XM.ToDoComment'
+    recordType: 'XM.ToDoComment',
+    
+    sourceName: 'TD'
 
   });
 

@@ -89,7 +89,9 @@ white:true*/
   XM.AccountComment = XM.Comment.extend({
     /** @scope XM.AccountComment.prototype */
 
-    recordType: 'XM.AccountComment'
+    recordType: 'XM.AccountComment',
+    
+    sourceName: 'CRMA'
 
   });
 

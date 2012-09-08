@@ -101,7 +101,9 @@ white:true*/
   XM.ContactComment = XM.Comment.extend({
     /** @scope XM.ContactComment.prototype */
 
-    recordType: 'XM.ContactComment'
+    recordType: 'XM.ContactComment',
+    
+    sourceName: 'T'
 
   });
 
