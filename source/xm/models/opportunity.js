@@ -68,9 +68,11 @@ white:true*/
 
     numberPolicy: XM.Document.AUTO_NUMBER,
 
-    defaults: {
-      owner: XM.currentUser,
-      isActive: true
+    defaults: function () {
+      return {
+        owner: XM.currentUser,
+        isActive: true
+      };
     },
 
     requiredAttributes: [
@@ -116,7 +118,9 @@ white:true*/
   XM.OpportunityComment = XM.Comment.extend({
     /** @scope XM.OpportunityComment.prototype */
 
-    recordType: 'XM.OpportunityComment'
+    recordType: 'XM.OpportunityComment',
+    
+    sourceName: 'OPP'
 
   });
 

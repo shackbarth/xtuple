@@ -47,20 +47,5 @@ white:true*/
     isDocumentAssignment: true
 
   });
-  
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.AccountProject = XM.Model.extend(
-    /** @scope XM.AccountProject.prototype */ {
-
-    recordType: 'XM.AccountProject',
-
-    isDocumentAssignment: true
-
-  });
-  
 
 }());

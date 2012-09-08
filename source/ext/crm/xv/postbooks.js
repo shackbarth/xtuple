@@ -41,8 +41,7 @@ trailing:true white:true*/
       {name: "contactList", kind: "XV.ContactList"},
       {name: "toDoList", kind: "XV.ToDoList"},
       {name: "opportunityList", kind: "XV.OpportunityList"},
-      {name: "incidentList", kind: "XV.IncidentList"},
-      {name: "projectList", kind: "XV.ProjectList"}
+      {name: "incidentList", kind: "XV.IncidentList"}
     ]
   };
 

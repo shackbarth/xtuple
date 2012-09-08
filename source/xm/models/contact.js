@@ -37,9 +37,11 @@ white:true*/
 
     numberPolicy: XM.Document.AUTO_NUMBER,
 
-    defaults: {
-      owner: XM.currentUser,
-      isActive: true
+    defaults: function () {
+      return {
+        owner: XM.currentUser,
+        isActive: true
+      };
     },
 
     // ..........................................................
@@ -99,7 +101,9 @@ white:true*/
   XM.ContactComment = XM.Comment.extend({
     /** @scope XM.ContactComment.prototype */
 
-    recordType: 'XM.ContactComment'
+    recordType: 'XM.ContactComment',
+    
+    sourceName: 'T'
 
   });
 

@@ -1,23 +1,129 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true
 white:true*/
-/*global enyo:true, XT:true, XV:true */
+/*global enyo:true, XT:true, XV:true, XM:true, _: true, Globalize:true */
 
 (function () {
+
+  enyo.kind({
+    name: "XV.CommentBoxItem",
+    kind: "XV.RepeaterBoxItem",
+    classes: "xv-comment-box",
+    title: "_comments".loc(),
+    handlers: {
+      ontap: "edit"
+    },
+    components: [
+      {name: "header", formatter: "formatHeader",
+        classes: "xv-comment-box-label"},
+      {attr: "text", name: "textBlock", formatter: "formatText", allowHtml: true,
+        classes: "xv-comment-box-textblock"},
+      // Editing widgets
+      {kind: "XV.CommentTypePicker", name: "commentType", attr: "commentType",
+        showing: false},
+      {kind: "XV.TextArea", name: 'textArea', attr: "text", showing: false,
+        showBorder: true, onblur: 'textAreaBlur'}
+    ],
+    edit: function () {
+      var that = this,
+        model = this.getValue(),
+        commentType = this.$.commentType,
+        header = this.$.header,
+        textInput = this.$.textArea.$.input,
+        typeChanged = function () {
+          var headerText = that.formatHeader(null, that, model);
+          textInput.setDisabled(false);
+          textInput.focus();
+          header.setContent(headerText);
+          commentType.hide();
+          model.off('change:commentType', typeChanged);
+        };
+      if (model.isReadOnly()) { return; }
+      this.$.textBlock.hide();
+      this.$.textArea.show();
+      if (model.get('commentType')) {
+        textInput.focus();
+      } else {
+        commentType.show();
+        textInput.setDisabled(true);
+        model.on('change:commentType', typeChanged);
+      }
+    },
+    formatHeader: function (value, view, model) {
+      var values = [
+        Globalize.format(model.get('created'), 'd'),
+        Globalize.format(model.get('created'), 't'),
+        model.get('createdBy'),
+        model.getValue('commentType.name')
+      ];
+      return values.join(' ');
+    },
+    formatText: function (value, view, model) {
+      var text = value ? value.replace(/</g, "&lt;").replace(/\r?\n/g, "<br>\n") : value;
+      view.addRemoveClass("disabled", model.isReadOnly());
+      return "<p>\n<blockquote>" + text + "</pre></blockquote><br><hr>";
+    },
+    setCommentTypeFilter: function () {
+      var model = this.parent.parent.parent.parent.parent.getModel(),
+        Klass = XT.getObjectByName(model),
+        sourceName = Klass.prototype.sourceName,
+        commentType = this.$.commentType;
+      commentType.filter = function (models) {
+        return _.filter(models, function (model) {
+          var sourcesModels,
+            sourcesAttrs,
+            sources,
+            attrs,
+            sourceNames;
+          sourcesModels = model.get('sources').models;
+          sourcesAttrs = _.pluck(sourcesModels, 'attributes');
+          sources = _.pluck(sourcesAttrs, 'source');
+          attrs = _.pluck(sources, 'attributes');
+          sourceNames = _.pluck(attrs, 'name');
+          return _.find(sourceNames, function (name) {
+            return name === sourceName;
+          });
+        });
+      };
+      commentType.buildList();
+    },
+    textAreaBlur: function () {
+      var value = this.getValue(),
+        text = this.formatText(value.get('text'), this, value);
+      this.$.textBlock.setContent(text);
+      this.$.textBlock.show();
+      this.$.textArea.hide();
+      this.$.commentType.hide();
+    },
+    valueChanged: function () {
+      this.inherited(arguments);
+      var value = this.getValue(),
+        status = value ? value.getStatus() : null,
+        K = XM.Model;
+      if (status === K.READY_NEW) {
+        this.setCommentTypeFilter();
+        this.edit();
+      }
+    }
+  });
 
   enyo.kind({
     name: "XV.CommentBox",
     kind: "XV.RepeaterBox",
     classes: "xv-comment-box",
-    published: {
-      title: "_comments".loc(),
-      columns: [
-        {kind: "XV.TextArea", name: "comments.text", classes: "xv-comment-box-text"},
-        {kind: "XV.Input", name: "comments.createdBy", classes: "xv-comment-box-createdBy"},
-        {kind: "XV.Date", name: "comments.created", classes: "xv-comment-box-created"},
-        {kind: "XV.CommentTypePicker", name: "comments.commentType",
-          classes: "xv-comment-box-comment-type"}
-      ]
+    title: "_comments".loc(),
+    showHeader: false,
+    setValue: function (value, options) {
+      if (value) {
+        value.comparator = this.sort;
+        value.sort();
+      }
+      this.inherited(arguments);
+    },
+    sort: function (a, b) {
+      var aval = a.get('created'),
+        bval = b.get('created');
+      return XT.date.compare(bval, aval);
     }
   });
 
