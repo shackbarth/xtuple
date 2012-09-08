@@ -12,7 +12,7 @@ white:true*/
     @extends XM.Model
   */
   XM.CommentType = XM.Model.extend({
-    /** @scope XM.Comment.prototype */
+    /** @scope XM.CommentType.prototype */
 
     recordType: 'XM.CommentType',
 
@@ -26,6 +26,30 @@ white:true*/
       "commentsEditable",
       "order"
     ]
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.CommentTypeSource = XM.Model.extend({
+    /** @scope XM.CommentTypeSource.prototype */
+
+    recordType: 'XM.CommentTypeSource'
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.Source = XM.Model.extend({
+    /** @scope XM.Source.prototype */
+
+    recordType: 'XM.Source'
 
   });
 
@@ -100,6 +124,18 @@ white:true*/
     /** @scope XM.CommentTypeCollection.prototype */
 
     model: XM.CommentType
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.SourceCollection = XM.Collection.extend({
+    /** @scope XM.SourceCollection.prototype */
+
+    model: XM.Source
 
   });
 

@@ -76,6 +76,18 @@ white:true*/
   });
 
   XT.StartupTask.create({
+    taskName: "loadSources",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      XM.sources = new XM.SourceCollection();
+      XM.sources.fetch(options);
+    },
+    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+  });
+
+  XT.StartupTask.create({
     taskName: "loadCommentTypes",
     task: function () {
       var options = {
