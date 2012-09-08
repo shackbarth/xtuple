@@ -62,6 +62,12 @@ white:true*/
   */
   XM.Comment = XM.Model.extend({
     /** @scope XM.Comment.prototype */
+    
+    /**
+      The name of the source used in conjunction with `CommentTypeSource`
+      to determine which comment types are available in a given comment sub class.
+    */
+    sourceName: "",
 
     readOnlyAttributes: [
       "created",
