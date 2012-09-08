@@ -59,8 +59,7 @@ white:true*/
       return values.join(' ');
     },
     formatText: function (value, view, model) {
-      var regExp = new RegExp("\r?\n"),
-        text = value ? value.replace("<", "&lt;").replace(regExp, "<br>\n") : value;
+      var text = value ? value.replace(/</g, "&lt;").replace(/\r?\n/g, "<br>\n") : value;
       view.addRemoveClass("disabled", model.isReadOnly());
       return "<p>\n<blockquote>" + text + "</pre></blockquote><br><hr>";
     },
