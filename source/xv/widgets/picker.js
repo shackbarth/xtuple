@@ -116,10 +116,32 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.label.setShowing(label);
       this.$.label.setContent(label);
     },
+    /**
+      Programatically sets the value of this widget.
+
+      @param value Can be a model or the id of a model (String or Number).
+        If it is an ID, then the correct model will be fetched and this
+        function will be called again recursively with the model.
+      @param options {Object}
+     */
     setValue: function (value, options) {
       options = options || {};
       var inEvent,
-        oldValue = this.getValue();
+        oldValue = this.getValue(),
+        actualModel;
+
+      // here is where we find the model and re-call this method if we're given
+      // an id instead of a whole model.
+      // note that we assume that all of the possible models are already
+      // populated in the menu items of the picker
+      if (value && typeof value !== 'object') {
+        actualModel = _.find(this.$.picker.controls, function (menuItem) {
+          return menuItem.value && menuItem.value.id === value;
+        }).value;
+        this.setValue(actualModel);
+        return;
+      }
+
       if (value !== oldValue) {
         if (!this._selectValue(value)) { value = null; }
         if (value !== oldValue) {

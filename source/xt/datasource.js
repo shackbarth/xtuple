@@ -66,9 +66,7 @@ white:true*/
         }
 
         // Format attribute if it's `HasOne` relation
-        if (relation && relation.type === Backbone.HasOne &&
-           (relation.includeInJSON === true ||
-            relation.includeInJSON === undefined)) {
+        if (relation && relation.type === Backbone.HasOne && relation.isNested) {
           klass = XT.getObjectByName(relation.relatedModel);
           idAttribute = klass.prototype.idAttribute;
           param.attribute = param.attribute + '.' + idAttribute;
