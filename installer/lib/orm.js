@@ -50,25 +50,27 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         try {
           ext = context[namespace][type];
         } catch (err) {}
-        if (ext) extensionList.push(ext);
-        if (orm.extensions && (_.find(orm.extensions, function (sub, i) {
-          if (sub.nameSpace && sub.type) {
-            if (sub.nameSpace === ext.nameSpace && sub.type === ext.type) {
-              idx = i;
-              return true;
+        if (ext) { 
+          extensionList.push(ext);
+          if (orm.extensions && (_.find(orm.extensions, function (sub, i) {
+            if (sub.nameSpace && sub.type) {
+              if (sub.nameSpace === ext.nameSpace && sub.type === ext.type) {
+                idx = i;
+                return true;
+              }
             }
-          }
-          return false;
-        }))) {
-          if (idx > -1) {
-            orm.extensions.splice(idx, 1);
-            idx = -1;
+            return false;
+          }))) {
+            if (idx > -1) {
+              orm.extensions.splice(idx, 1);
+              idx = -1;
+            }
           }
         }
       });
     }
 
-    socket.emit("message", "installing %@%@.%@".f(isExtension? "(extension %@) ".f(context): "", orm.nameSpace, orm.type));
+    socket.emit("message", "installing %@%@.%@".f(isExtension ? "(extension %@) ".f(context): "", orm.nameSpace, orm.type));
 
     query = "select xt.install_orm('%@')".f(X.json(cleanse(orm)));
 
@@ -76,7 +78,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     X.db.query(query, socket.databaseOptions, _.bind(function (err, res) {
       var c = extensionList.length;
       if (err) {
-        socket.emit("message", err.message);        
+        socket.emit("message", err.message);
         if (isExtension) socket.emit("message", "skipping ahead");
         else {
           socket.emit("message", "unable to continue");
@@ -87,13 +89,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       if (!isExtension) socket.installed.push(orm);
       if (c > 0) {
         this.on(socket.id, _.bind(function (c) {
-          --c; if (c === 0) {
+          --c;
+          if (!extensionList.length) {
             this.removeAllListeners(socket.id);
             installQueue.call(this, socket, ack, queue);
           } else {
             submit.call(this, socket, extensionList.shift(), queue, ack, true);
           }
-        }, this, c));
+        }, this, c)); 
         submit.call(this, socket, extensionList.shift(), queue, ack, true);
       } else if (isExtension) {
         return this.emit(socket.id);
@@ -125,7 +128,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return installQueue.call(this, socket, ack, dependencies);
       }
     }
-    
+
     submit.call(this, socket, orm, queue, ack);
   };
   
@@ -143,10 +146,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   
   dive = function (path, root) {
     var files = X.directoryFiles(path, {fullPath: true}), stat, isTop, ret, content, errors = [];
-    isTop = root? false: true;
+    isTop = root ? false: true;
     _.each(files, function (file) {
       stat = _fs.statSync(file);
-      if (stat.isDirectory()) dive(file, root? root: (root = {}));
+      if (stat.isDirectory()) dive(file, root ? root: (root = {}));
       else if (X.ext(file) === "json") root[file] = "";
     });
     if (isTop) {
@@ -167,7 +170,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   
   dependenciesFor = function (socket, orm, dependencies) {
     var properties, extensions, ignore = "PUBLIC XT".w(), namespace, table, orms, dep;
-    dependencies = dependencies? dependencies: orm.dependencies? orm.dependencies: (orm.dependencies = []);
+    dependencies = dependencies ? dependencies: orm.dependencies ? orm.dependencies: (orm.dependencies = []);
     properties = orm.properties || [];
     extensions = orm.extensions || [];
     orms = socket.orms;
@@ -176,7 +179,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       var which, type, ns;
       if (property.toOne || property.toMany) {
         if (property.toOne && !property.toOne.isNested) return;
-        which = property.toOne? property.toOne: property.toMany;
+        which = property.toOne ? property.toOne: property.toMany;
         type = which.type;
         ns = orm.nameSpace;
         dep = {nameSpace: ns, type: type};
