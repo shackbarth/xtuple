@@ -5,8 +5,7 @@ trailing:true white:true*/
 
 (function () {
 
-  var extensions,
-    module;
+  var module;
 
   // ..........................................................
   // APPLICATION
@@ -16,7 +15,8 @@ trailing:true white:true*/
     name: "project",
     label: "_project".loc(),
     panels: [
-      {name: "projectList", kind: "XV.ProjectList"}
+      {name: "projectList", kind: "XV.ProjectList"},
+      {name: "projectTaskList", kind: "XV.ProjectTaskList"}
     ]
   };
 

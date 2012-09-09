@@ -213,7 +213,7 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "number", classes: "bold"}
               //{kind: "XV.ListAttr", attr: "inventoryUnit.name", fit: true,
               //  classes: "right"}
             ]},
@@ -305,7 +305,6 @@ trailing:true white:true*/
               {kind: "XV.ListAttr", attr: "number", classes: "bold"},
               {kind: "XV.ListAttr", attr: "dueDate", fit: true,
                 formatter: "formatDueDate",
-                placeholder: "_noCloseTarget".loc(),
                 classes: "right"}
             ]},
             {kind: "XV.ListAttr", attr: "name"},
@@ -362,6 +361,69 @@ trailing:true white:true*/
       return Globalize.format(value, "c" + XT.MONEY_SCALE);
     }
   });
+  
+  enyo.kind({
+    name: "XV.ProjectTaskList",
+    kind: "XV.List",
+    label: "_projectTasks".loc(),
+    collection: "XM.ProjectTaskListItemCollection",
+    query: {orderBy: [
+      {attribute: 'dueDate'},
+      {attribute: 'number'}
+    ]},
+    parameterWidget: "XV.ProjectTaskListParameters",
+    workspace: "XV.ProjectTaskWorkspace",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "dueDate", fit: true,
+                formatter: "formatDueDate",
+                classes: "right"}
+            ]},
+            {kind: "XV.ListAttr", attr: "name"},
+            {kind: "XV.ListAttr", attr: "project.name"}
+          ]},
+          {kind: "XV.ListColumn", classes: "third",
+            components: [
+            {kind: "XV.ListAttr", attr: "getProjectStatusString",
+              placeholder: "_noAccountName".loc()},
+            {kind: "XV.ListAttr", attr: "owner.username"}
+          ]},
+          {kind: "XV.ListColumn", style: "width: 80;",
+            components: [
+            {content: "_budgeted".loc() + ":", classes: "xv-list-attr",
+              style: "text-align: right;"},
+            {content: "_actual".loc() + ":", classes: "xv-list-attr",
+              style: "text-align: right;"},
+            {content: "_balance".loc() + ":", classes: "xv-list-attr",
+              style: "text-align: right;"}
+          ]},
+          {kind: "XV.ListColumn", classes: "money", components: [
+            {kind: "XV.ListAttr", attr: "budgetedExpenses",
+              classes: "text-align-right", formatter: "formatExpenses"},
+            {kind: "XV.ListAttr", attr: "actualExpenses",
+              classes: "text-align-right", formatter: "formatExpenses"},
+            {kind: "XV.ListAttr", attr: "balanceExpenses",
+              classes: "text-align-right", formatter: "formatExpenses"}
+          ]},
+          {kind: "XV.ListColumn", classes: "money", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "budgetedHours",
+              classes: "text-align-right", formatter: "formatHours"},
+            {kind: "XV.ListAttr", attr: "actualHours",
+              classes: "text-align-right", formatter: "formatHours"},
+            {kind: "XV.ListAttr", attr: "balanceHours",
+              classes: "text-align-right", formatter: "formatHours"}
+          ]}
+        ]}
+      ]}
+    ],
+    formatDueDate: XV.ProjectList.prototype.formatDueDate,
+    formatHours: XV.ProjectList.prototype.formatHours,
+    formatExpenses: XV.ProjectList.prototype.formatExpenses
+  });
 
   // ..........................................................
   // TO DO
@@ -412,7 +474,6 @@ trailing:true white:true*/
     ],
     formatDueDate: function (value, view, model) {
       var today = new Date(),
-        K = XM.ToDo,
         isLate = (model.get('isActive') &&
           XT.date.compareDate(value, today) < 1);
       view.addRemoveClass("error", isLate);
@@ -462,7 +523,6 @@ trailing:true white:true*/
     kind: "XV.List",
     label: "_items".loc(),
     collection: "XM.ItemListItemCollection",
-    query: {},
     query: {orderBy: [
       {attribute: 'number'}
     ]},
@@ -481,7 +541,6 @@ trailing:true white:true*/
     kind: "XV.List",
     label: "_classCodes".loc(),
     collection: "XM.ClassCodeCollection",
-    query: {},
     query: {orderBy: [
       {attribute: 'code'}
     ]},

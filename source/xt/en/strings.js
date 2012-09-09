@@ -289,6 +289,7 @@ XT.stringsFor("en_US", {
   "_projectRelations": "Projects",
   "_projectStatus": "Project Status",
   "_projectTask": "Project Task",
+  "_projectTasks": "Project Tasks",
   "_projectTaskStatus": "Project Task Status",
   "_projects": "Projects",
   "_properName": "Proper Name",
