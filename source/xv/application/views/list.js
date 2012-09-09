@@ -373,6 +373,7 @@ trailing:true white:true*/
     ]},
     parameterWidget: "XV.ProjectTaskListParameters",
     workspace: "XV.ProjectTaskWorkspace",
+    canAddNew: false,
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
