@@ -34,7 +34,7 @@ white:true*/
   enyo.kind({
     name: "XV.IncidentCommentBox",
     kind: "XV.CommentBox",
-    model: "XM.OpportunityComment"
+    model: "XM.IncidentComment"
   });
   
   enyo.kind({
