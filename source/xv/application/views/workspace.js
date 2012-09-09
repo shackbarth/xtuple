@@ -494,8 +494,8 @@ trailing:true white:true*/
             {kind: "XV.ContactWidget", attr: "contact"}
           ]}
         ]},
-        {kind: "XV.ProjectCommentBox", attr: "comments"},
-        {kind: "XV.ProjectTaskRepeaterBox", attr: "tasks"}
+        {kind: "XV.ProjectTaskRepeaterBox", attr: "tasks"},
+        {kind: "XV.ProjectCommentBox", attr: "comments"}
       ]}
     ]
   });
