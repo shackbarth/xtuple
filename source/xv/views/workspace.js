@@ -474,6 +474,7 @@ trailing:true white:true*/
         workspace = options.workspace,
         id = options.id,
         callback = options.callback,
+        allowNew = options.allowNew,
         attributes = options.attributes;
       if (workspace) {
         this.destroyWorkspace();
@@ -486,7 +487,7 @@ trailing:true white:true*/
         };
         // Callback means something sent us here that must be
         // finished. Can't go on and do other new things
-        if (callback) { this.$.saveAndNewButton.hide(); }
+        if (allowNew === false) { this.$.saveAndNewButton.hide(); }
         workspace = this.createComponent(workspace);
         headerAttrs = workspace.getHeaderAttrs() || [];
         if (headerAttrs.length) {

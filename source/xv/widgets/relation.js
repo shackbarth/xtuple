@@ -121,7 +121,11 @@ regexp:true, undef:true, trailing:true, white:true */
         });
         break;
       case 'openItem':
-        this.doWorkspace({workspace: workspace, id: id});
+        this.doWorkspace({
+          workspace: workspace,
+          id: id,
+          allowNew: false
+        });
         break;
       case 'newItem':
         // Callback options on commit of the workspace
@@ -135,7 +139,11 @@ regexp:true, undef:true, trailing:true, white:true */
           };
           value.fetch(options);
         };
-        this.doWorkspace({workspace: workspace, callback: callback});
+        this.doWorkspace({
+          workspace: workspace,
+          callback: callback,
+          allowNew: false
+        });
         break;
       }
     },
