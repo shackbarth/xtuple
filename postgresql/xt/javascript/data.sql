@@ -352,14 +352,14 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       /* commit the base record */
-      plv8.execute(sql.statement); 
+      plv8.execute(sql.statement, sql.values); 
 
       /* handle extensions on other tables */
       for (i = 0; i < orm.extensions.length; i++) {
         if (orm.extensions[i].table !== orm.table && 
            !orm.extensions[i].isChild) {
           sql = this.prepareInsert(orm.extensions[i], value);
-          plv8.execute(sql.statement); 
+          plv8.execute(sql.statement, sql.values); 
         }
       }
 
@@ -381,7 +381,8 @@ select xt.install_js('XT','Data','xtuple', $$
      @returns {Object}
    */
     prepareInsert: function (orm, record, params) {
-      var column,
+      var count,
+        column,
         columns,
         expressions,
         ormp,
@@ -397,9 +398,11 @@ select xt.install_js('XT','Data','xtuple', $$
       params = params || { 
         table: "", 
         columns: [], 
-        expressions: []
+        expressions: [],
+        values: []
       }
       params.table = orm.table;
+      count = params.values.length + 1;
 
       /* if extension handle key */
       if (orm.relations) {
@@ -421,12 +424,13 @@ select xt.install_js('XT','Data','xtuple', $$
 
         /* handle fixed values */
         if (attr.value) {
-          value = typeof attr.value === 'string' ? "'" + attr.value + "'" : attr.value;
           params.columns.push('"' + attr.column + '"');
-          params.expressions.push(value);
+          params.expressions.push('$' +count);
+          params.values.push(attr.value);
+          count++
 
         /* handle passed values */
-        } else if (record[prop] !== undefined && !ormp.toMany) {
+        } else if (record[prop] !== undefined && record[prop] !== null && !ormp.toMany) {
           params.columns.push('"' + attr.column + '"');
 
           if (attr.isEncrypted) {
@@ -434,21 +438,19 @@ select xt.install_js('XT','Data','xtuple', $$
               record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
                              .replace(/{value}/, record[prop])
                              .replace(/{encryptionKey}/, encryptionKey);
-              params.expressions.push(record[prop]);
+              params.values.push(record[prop]);
+              params.expressions.push('$' + count);
+              count++;
             } else { 
               throw new Error("No encryption key provided.");
             }
-          } else if (record[prop] !== null) { 
-            if (ormp && ormp.toOne) {
-              type = isNaN(record[prop]) ? "String" : "Number";
-            }
-            if (type === 'String' || type === 'Date') { 
-              params.expressions.push("'" + record[prop] + "'");
-            } else {
-              params.expressions.push(record[prop]);
-            }
-          } else {
-            params.expressions.push('null');
+          /* Unfortuantely dates aren't handled correctly by parameters */
+          } else if (attr.type === 'Date') {
+            params.expressions.push("'" + record[prop] + "'");
+          } else { 
+            params.expressions.push('$' + count);
+            count++;
+            params.values.push(record[prop]);
           }
         }
       }
@@ -483,7 +485,7 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       /* commit the base record */
-      plv8.execute(sql.statement); 
+      plv8.execute(sql.statement, sql.values); 
 
       /* handle extensions on other tables */
       for (i = 0; i < orm.extensions.length; i++) {
@@ -501,7 +503,7 @@ select xt.install_js('XT','Data','xtuple', $$
           } else {
             sql = this.prepareInsert(ext, value);
           }
-          plv8.execute(sql.statement); 
+          plv8.execute(sql.statement, sql.values); 
         }
       }
 
@@ -523,7 +525,8 @@ select xt.install_js('XT','Data','xtuple', $$
      @returns {Object}
    */
     prepareUpdate: function (orm, record, params) {
-      var pkey,
+      var count, 
+        pkey,
         columnKey,
         expressions, 
         prop,
@@ -538,9 +541,11 @@ select xt.install_js('XT','Data','xtuple', $$
         keyValue;
       params = params || { 
         table: "", 
-        expressions: []
+        expressions: [],
+        values: []
       }
       params.table = orm.table;
+      count = params.values.length + 1;
 
       if (orm.relations) {
         /* extension */
@@ -567,22 +572,22 @@ select xt.install_js('XT','Data','xtuple', $$
               record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
                              .replace(/{value}/, record[prop])
                              .replace(/{encryptionKey}/, encryptionKey);
-              params.expressions.push(qprop.concat(" = ", record[prop]));
+              params.values.push(record[prop]);
+              params.expressions.push(qprop.concat(" = ", "$", count));
+              count++;
             } else {
               throw new Error("No encryption key provided.");
             }
           } else if (ormp.name !== pkey) {
-            if (record[prop] !== null) {
-              if (ormp && ormp.toOne) {
-                type = isNaN(record[prop]) ? "String" : "Number";
-              }
-              if (type === 'String' || type === 'Date') { 
-                params.expressions.push(qprop.concat(" = '", record[prop], "'"));
-              } else {
-                params.expressions.push(qprop.concat(" = ", record[prop]));
-              }
-            } else {
+            /* Unfortuantely dates and nulls aren't handled correctly by parameters */
+            if (record[prop] === null) {
               params.expressions.push(qprop.concat(' = null'));
+            } else if (attr.type === 'Date') {
+              params.expressions.push(qprop.concat(" = '" + record[prop] + "'"));
+            } else {
+              params.values.push(record[prop]);
+              params.expressions.push(qprop.concat(" = ", "$", count));
+              count++;
             }
           }
         }
@@ -591,6 +596,7 @@ select xt.install_js('XT','Data','xtuple', $$
       expressions = params.expressions.join(', ');
       params.statement = 'update ' + params.table + ' set ' + expressions + ' where ' + columnKey + ' = ' + keyValue + ';';
       if (DEBUG) { plv8.elog(NOTICE, 'sql =', params.statement); }
+      if (DEBUG) { plv8.elog(NOTICE, 'values =', params.values); }
       return params;
     },
 
