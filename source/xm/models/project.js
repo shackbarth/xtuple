@@ -360,7 +360,9 @@ white:true*/
     */
     valuesDidChange: function () {
       var project = this.get('project');
-      if (project) { project.tasksDidChange(); }
+      if (project && project.tasksDidChange) { 
+        project.tasksDidChange(); 
+      }
     }
 
   });

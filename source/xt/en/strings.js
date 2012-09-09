@@ -135,6 +135,7 @@ XT.stringsFor("en_US", {
   "_error": "Error",
   "_errorColor": "Error Color",
   "_eventRecipient": "Event Recipient",
+  "_expenses": "Expenses",
   "_expiredColor": "Expired Color",
   "_expires": "Expires",
   "_extended": "Extended",

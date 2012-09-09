@@ -521,12 +521,21 @@ trailing:true white:true*/
             {kind: "XV.DateWidget", attr: "startDate"},
             {kind: "XV.DateWidget", attr: "assignDate"},
             {kind: "XV.DateWidget", attr: "completeDate"},
+            {kind: "onyx.GroupboxHeader", content: "_hours".loc()},
+            {kind: "XV.QuantityWidget", attr: "budgetedHours",
+              label: "_budgeted".loc()},
+            {kind: "XV.QuantityWidget", attr: "actualHours",
+              label: "_actual".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_expenses".loc()},
+            {kind: "XV.MoneyWidget", attr: "budgetedExpenses",
+              label: "_budgeted".loc()},
+            {kind: "XV.MoneyWidget", attr: "actualExpenses",
+              label: "_actual".loc()},
             {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
             {kind: "XV.UserAccountWidget", attr: "owner"},
             {kind: "XV.UserAccountWidget", attr: "assignedTo"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes", fit: true},
-            {kind: "onyx.GroupboxHeader", content: "_budget".loc()}
+            {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
         ]},
         {kind: "XV.ProjectTaskCommentBox", attr: "comments"}
