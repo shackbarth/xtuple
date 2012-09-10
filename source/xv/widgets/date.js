@@ -84,7 +84,8 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.Date",
     classes: "xv-inputwidget xv-datewidget",
     published: {
-      label: ""
+      label: "",
+      showLabel: true
     },
     components: [
       {kind: "FittableColumns", components: [
@@ -104,6 +105,7 @@ regexp:true, undef:true, trailing:true, white:true */
     create: function () {
       this.inherited(arguments);
       this.labelChanged();
+      this.showLabelChanged();
     },
     datePicked: function (inSender, inEvent) {
       this.setValue(inEvent);
@@ -115,6 +117,13 @@ regexp:true, undef:true, trailing:true, white:true */
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.attr || "").loc()) + ":";
       this.$.label.setContent(label);
+    },
+    showLabelChanged: function () {
+      if (this.getShowLabel()) {
+        this.$.label.show();
+      } else {
+        this.$.label.hide();
+      }
     },
     valueChanged: function (value) {
       var dateValue = value;

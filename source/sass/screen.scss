@@ -508,52 +508,18 @@ body {
   color: #ff0000;
 }
 
-/* RepeaterBox.scss */
-/*
-.xv-repeater-box {
-  .xv-label {
-    width: 90px;
-    font-weight: bold;
-    border-width: 0px;
-    font-size: 12px;
-    text-align:center;
-  }
-  .xv-wide-entry {
-    width: 200px;
-  }
-  .xv-input {
-    width: 100px;
-    border-width: 0px;
-    .xv-subinput {
-      width: 90px;
-      border-width: 0px;
-    }
-  }
+/* ProjectTaskRepeaterBox.scss */
+.xv-project-task-repeater-box {
+  width: 480px;
+  border-bottom: 1px solid #ddd;
+}
 
-  .xv-datewidget {
-    @include slim-datewidget(hidden, hidden);
+.xv-project-task-repeater-box {
+  .onyx-input-decorator {
+    border: 1px solid #ddd;
   }
 }
 
-.xv-repeater-box-header {
-  background-color: lightgrey;
-}
-
-.xv-repeater-box-row {
-  background-color: white;
-  .xv-wide-entry {
-    width: 200px;
-    .xv-subinput {
-      width: 200px;
-    }
-  }
-  .xv-delete-button {
-    width: 14px;
-    height: 21px;
-    padding-top: 0px;
-  }
-}
-*/
 /* CommentBox.scss */
 .xv-comment-box {
   .xv-comment-box-repeater {

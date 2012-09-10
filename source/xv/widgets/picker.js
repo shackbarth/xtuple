@@ -14,6 +14,7 @@ regexp:true, undef:true, trailing:true, white:true */
     published: {
       attr: null,
       label: "",
+      showLabel: true,
       value: null,
       collection: null,
       disabled: false,
@@ -87,6 +88,7 @@ regexp:true, undef:true, trailing:true, white:true */
       this.inherited(arguments);
       if (this.getCollection()) { this.collectionChanged(); }
       this.labelChanged();
+      this.showLabelChanged();
     },
     disabledChanged: function (inSender, inEvent) {
       this.$.pickerButton.setDisabled(this.getDisabled());
@@ -176,6 +178,13 @@ regexp:true, undef:true, trailing:true, white:true */
             this.doValueChange(inEvent);
           }
         }
+      }
+    },
+    showLabelChanged: function () {
+      if (this.getShowLabel()) {
+        this.$.label.show();
+      } else {
+        this.$.label.hide();
       }
     },
     /** @private */

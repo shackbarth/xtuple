@@ -30,6 +30,7 @@ regexp:true, undef:true, trailing:true, white:true */
     classes: "xv-inputwidget xv-numberwidget",
     published: {
       label: "",
+      showLabel: true,
       placeholder: ""
     },
     components: [
@@ -44,10 +45,18 @@ regexp:true, undef:true, trailing:true, white:true */
     create: function () {
       this.inherited(arguments);
       this.labelChanged();
+      this.showLabelChanged();
     },
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.attr + "").loc()) + ":";
       this.$.label.setContent(label);
+    },
+    showLabelChanged: function () {
+      if (this.getShowLabel()) {
+        this.$.label.show();
+      } else {
+        this.$.label.hide();
+      }
     }
 
   });

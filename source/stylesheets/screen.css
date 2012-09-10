@@ -614,59 +614,25 @@ body {
   color: #ff0000;
 }
 
-/* RepeaterBox.scss */
-/*
-.xv-repeater-box {
-  .xv-label {
-    width: 90px;
-    font-weight: bold;
-    border-width: 0px;
-    font-size: 12px;
-    text-align:center;
-  }
-  .xv-wide-entry {
-    width: 200px;
-  }
-  .xv-input {
-    width: 100px;
-    border-width: 0px;
-    .xv-subinput {
-      width: 90px;
-      border-width: 0px;
-    }
-  }
-
-  .xv-datewidget {
-    @include slim-datewidget(hidden, hidden);
-  }
+/* ProjectTaskRepeaterBox.scss */
+/* line 512, ../sass/screen.scss */
+.xv-project-task-repeater-box {
+  width: 480px;
+  border-bottom: 1px solid #ddd;
 }
 
-.xv-repeater-box-header {
-  background-color: lightgrey;
+/* line 518, ../sass/screen.scss */
+.xv-project-task-repeater-box .onyx-input-decorator {
+  border: 1px solid #ddd;
 }
 
-.xv-repeater-box-row {
-  background-color: white;
-  .xv-wide-entry {
-    width: 200px;
-    .xv-subinput {
-      width: 200px;
-    }
-  }
-  .xv-delete-button {
-    width: 14px;
-    height: 21px;
-    padding-top: 0px;
-  }
-}
-*/
 /* CommentBox.scss */
-/* line 559, ../sass/screen.scss */
+/* line 525, ../sass/screen.scss */
 .xv-comment-box .xv-comment-box-repeater {
   background: white;
   max-width: 320px;
 }
-/* line 564, ../sass/screen.scss */
+/* line 530, ../sass/screen.scss */
 .xv-comment-box .xv-comment-box-label {
   padding: 4px;
   font-size: small;
@@ -675,27 +641,27 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* line 573, ../sass/screen.scss */
+/* line 539, ../sass/screen.scss */
 .xv-comment-box .xv-comment-box-textblock {
   padding: 12px;
   font-size: small;
   overflow: hidden;
 }
-/* line 577, ../sass/screen.scss */
+/* line 543, ../sass/screen.scss */
 .xv-comment-box .xv-comment-box-textblock.disabled {
   opacity: 0.6;
 }
 
-/* line 584, ../sass/screen.scss */
+/* line 550, ../sass/screen.scss */
 .xv-assignment-box .xv-decorated-label {
   width: 250px;
 }
-/* line 587, ../sass/screen.scss */
+/* line 553, ../sass/screen.scss */
 .xv-assignment-box .xv-label {
   width: 250px;
 }
 
-/* line 592, ../sass/screen.scss */
+/* line 558, ../sass/screen.scss */
 .xv-parameter-title {
   padding-top: 8px;
   font-size: large;
@@ -704,31 +670,31 @@ body {
 
 /*********XV WIDGETS***********/
 /* AddressWidget.scss */
-/* line 601, ../sass/screen.scss */
+/* line 567, ../sass/screen.scss */
 .xv-addresswidget {
   background-color: white;
   padding: 4px;
 }
-/* line 604, ../sass/screen.scss */
+/* line 570, ../sass/screen.scss */
 .xv-addresswidget .xv-addresswidget-viewer {
   border: 0px;
   font-size: medium;
   display: inline;
 }
-/* line 608, ../sass/screen.scss */
+/* line 574, ../sass/screen.scss */
 .xv-addresswidget .xv-addresswidget-viewer.placeholder {
   font-style: italic;
   color: #93a1a1;
 }
 
-/* line 615, ../sass/screen.scss */
+/* line 581, ../sass/screen.scss */
 .xv-addresswidget-input-decorator {
   background: white;
   display: block;
   margin: 4px;
 }
 
-/* line 621, ../sass/screen.scss */
+/* line 587, ../sass/screen.scss */
 .xv-addresswidget-combobox-decorator {
   background: white;
   display: block;
@@ -736,34 +702,34 @@ body {
   width: 205px;
 }
 
-/* line 628, ../sass/screen.scss */
+/* line 594, ../sass/screen.scss */
 .xv-addresswidget-input {
   width: 100%;
 }
 
-/* line 632, ../sass/screen.scss */
+/* line 598, ../sass/screen.scss */
 .xv-addresswidget-button {
   margin-right: 4px;
 }
 
-/* line 636, ../sass/screen.scss */
+/* line 602, ../sass/screen.scss */
 .xv-addresswidget-buttons {
   margin-top: 4px;
 }
 
-/* line 640, ../sass/screen.scss */
+/* line 606, ../sass/screen.scss */
 .xv-addresswidget-editor-header {
   padding: 4px;
 }
 
-/* line 644, ../sass/screen.scss */
+/* line 610, ../sass/screen.scss */
 .xv-addresswidget-editor {
   width: 320px;
   padding: 8px;
   padding-right: 16px;
 }
 
-/* line 650, ../sass/screen.scss */
+/* line 616, ../sass/screen.scss */
 .xv-addresslist-attr {
   padding: 5px;
   font-size: 13px;
@@ -774,13 +740,13 @@ body {
 }
 
 /* Combobox.scss */
-/* line 660, ../sass/screen.scss */
+/* line 626, ../sass/screen.scss */
 .xv-combobox {
   height: 24px;
   width: 205px;
 }
 
-/* line 665, ../sass/screen.scss */
+/* line 631, ../sass/screen.scss */
 .xv-combobox-input {
   font-size: medium;
   border: 0px;
@@ -789,24 +755,24 @@ body {
   outline: none;
 }
 
-/* line 673, ../sass/screen.scss */
+/* line 639, ../sass/screen.scss */
 .xv-combobox-icon {
   left: 8px;
   position: relative;
 }
 
 /* picker.scss */
-/* line 679, ../sass/screen.scss */
+/* line 645, ../sass/screen.scss */
 .xv-pickerwidget {
   background-color: white;
 }
 
-/* line 683, ../sass/screen.scss */
+/* line 649, ../sass/screen.scss */
 .xv-picker {
   width: 180px;
 }
 
-/* line 687, ../sass/screen.scss */
+/* line 653, ../sass/screen.scss */
 .xv-label {
   width: 130px;
   padding-bottom: 8px;
@@ -816,7 +782,7 @@ body {
   text-align: right;
 }
 
-/* line 696, ../sass/screen.scss */
+/* line 662, ../sass/screen.scss */
 .xv-decorated-label {
   width: 130px;
   padding-bottom: 8px;
@@ -826,7 +792,7 @@ body {
   text-align: right;
 }
 
-/* line 705, ../sass/screen.scss */
+/* line 671, ../sass/screen.scss */
 .xv-picker-label {
   width: 130px;
   padding-bottom: 8px;
@@ -836,7 +802,7 @@ body {
   text-align: right;
 }
 
-/* line 714, ../sass/screen.scss */
+/* line 680, ../sass/screen.scss */
 .xv-textarea-input {
   width: 95%;
   min-height: 100px;
@@ -845,27 +811,27 @@ body {
   border-color: #ddd;
 }
 
-/* line 722, ../sass/screen.scss */
+/* line 688, ../sass/screen.scss */
 .xv-relationwidget-completer {
   left: -200px;
   top: 15px;
 }
 
-/* line 728, ../sass/screen.scss */
+/* line 694, ../sass/screen.scss */
 .xv-relationwidget-column.left {
   padding-right: 18px;
   color: black;
   width: 140px;
 }
 
-/* line 735, ../sass/screen.scss */
+/* line 701, ../sass/screen.scss */
 .xv-relationwidget-icon {
   top: 2px;
   left: 8px;
   position: relative;
 }
 
-/* line 741, ../sass/screen.scss */
+/* line 707, ../sass/screen.scss */
 .xv-relationwidget-description {
   white-space: nowrap;
   overflow: hidden;
@@ -875,30 +841,30 @@ body {
   padding-bottom: 4px;
   max-width: 325px;
 }
-/* line 749, ../sass/screen.scss */
+/* line 715, ../sass/screen.scss */
 .xv-relationwidget-description.disabled {
   opacity: 0.4;
 }
-/* line 752, ../sass/screen.scss */
+/* line 718, ../sass/screen.scss */
 .xv-relationwidget-description.label {
   text-indent: 0px;
   text-align: right;
 }
-/* line 757, ../sass/screen.scss */
+/* line 723, ../sass/screen.scss */
 .xv-relationwidget-description.hasLabel {
   text-indent: 0px;
 }
-/* line 760, ../sass/screen.scss */
+/* line 726, ../sass/screen.scss */
 .xv-relationwidget-description.hyperlink {
   color: blue;
 }
 
-/* line 765, ../sass/screen.scss */
+/* line 731, ../sass/screen.scss */
 .xv-textarea {
   background-color: white;
 }
 
-/* line 769, ../sass/screen.scss */
+/* line 735, ../sass/screen.scss */
 .xv-half-check {
   background-image: url("../../assets/checkbox.png");
   background-repeat: no-repeat;
@@ -907,13 +873,13 @@ body {
   background-color: transparent;
 }
 
-/* line 778, ../sass/screen.scss */
+/* line 744, ../sass/screen.scss */
 .xv-menuitem.disabled {
   color: Dimgray;
 }
 
 /********END XV WIDGETS******/
-/* line 786, ../sass/screen.scss */
+/* line 752, ../sass/screen.scss */
 .xv-login .xv-login-form {
   position: absolute;
   height: 250px;
@@ -923,17 +889,17 @@ body {
   margin-top: -125px;
   margin-left: -150px;
 }
-/* line 794, ../sass/screen.scss */
+/* line 760, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box {
   font-size: 12px;
   text-align: center;
   padding: 10px;
 }
-/* line 796, ../sass/screen.scss */
+/* line 762, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box.error {
   color: #ff0000;
 }
-/* line 803, ../sass/screen.scss */
+/* line 769, ../sass/screen.scss */
 .xv-login .xv-organizations-selection {
   position: absolute;
   height: 300px;
@@ -943,17 +909,17 @@ body {
   margin-top: -150px;
   margin-left: -200px;
 }
-/* line 811, ../sass/screen.scss */
+/* line 777, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row {
   padding: 5px;
   cursor: pointer;
 }
-/* line 814, ../sass/screen.scss */
+/* line 780, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row:hover {
   background-color: #ddd;
 }
 
-/* line 822, ../sass/screen.scss */
+/* line 788, ../sass/screen.scss */
 .xv-startup-panel .xv-startup-divider {
   width: 70%;
   margin-left: auto;
@@ -967,7 +933,7 @@ body {
   font-weight: bold;
   margin-bottom: 8px;
 }
-/* line 835, ../sass/screen.scss */
+/* line 801, ../sass/screen.scss */
 .xv-startup-panel .xv-startup-progress {
   width: 70%;
   margin-left: auto;

@@ -14,7 +14,8 @@ white:true*/
       model: null,
       title: "",
       repeaterBoxItem: "",
-      canOpen: false
+      canOpen: false,
+      canDelete: false
     },
     handlers: {
       onDeleteItem: "deleteItem"
@@ -52,7 +53,17 @@ white:true*/
         buttons.components[0].classes = "xv-groupbox-button-left";
         buttons.components.push(
           {kind: "onyx.Button", name: "openButton", onclick: "openRecord",
-            content: "_open".loc(), classes: "xv-groupbox-button-right"}
+            content: "_more".loc(), classes: "xv-groupbox-button-right"}
+        );
+      }
+      if (this.getCanDelete()) {
+        buttons.components[0].classes = "xv-groupbox-button-left";
+        if (this.getCanOpen()) {
+          buttons.components[0].classes = "xv-groupbox-button-center";
+        }
+        buttons.components.push(
+          {kind: "onyx.Button", name: "deleteButton", onclick: "deleteItem",
+            content: "_delete".loc(), classes: "xv-groupbox-button-right"}
         );
       }
       this.createComponent(buttons);
