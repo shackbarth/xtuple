@@ -312,8 +312,7 @@ trailing:true white:true*/
           ]},
           {kind: "XV.ListColumn", classes: "third",
             components: [
-            {kind: "XV.ListAttr", attr: "getProjectStatusString",
-              placeholder: "_noAccountName".loc()},
+            {kind: "XV.ListAttr", attr: "getProjectStatusString"},
             {kind: "XV.ListAttr", attr: "owner.username"}
           ]},
           {kind: "XV.ListColumn", style: "width: 80;",
@@ -389,8 +388,7 @@ trailing:true white:true*/
           ]},
           {kind: "XV.ListColumn", classes: "third",
             components: [
-            {kind: "XV.ListAttr", attr: "getProjectStatusString",
-              placeholder: "_noAccountName".loc()},
+            {kind: "XV.ListAttr", attr: "getProjectStatusString"},
             {kind: "XV.ListAttr", attr: "owner.username"}
           ]},
           {kind: "XV.ListColumn", style: "width: 80;",

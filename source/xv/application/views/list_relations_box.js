@@ -17,5 +17,18 @@ trailing:true white:true*/
     listRelations: "XV.ContactListRelations",
     searchList: "XV.ContactList"
   });
+  
+  // ..........................................................
+  // PROJECT
+  //
+
+  enyo.kind({
+    name: "XV.ProjectTasksBox",
+    kind: "XV.ListRelationsBox",
+    classes: "xv-project-tasks-box",
+    title: "_projectTasks".loc(),
+    parentKey: "project",
+    listRelations: "XV.ProjectTaskListRelations"
+  });
 
 }());

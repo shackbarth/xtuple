@@ -331,7 +331,7 @@ body {
         width: 75px;
       }
       &.money {
-        width: 100px;
+        width: 85px;
       }
       .xv-list-attr {
         padding: 5px;
@@ -508,15 +508,10 @@ body {
   color: #ff0000;
 }
 
-/* ProjectTaskRepeaterBox.scss */
-.xv-project-task-repeater-box {
-  width: 480px;
-  border-bottom: 1px solid #ddd;
-}
-
-.xv-project-task-repeater-box {
-  .onyx-input-decorator {
-    border: 1px solid #ddd;
+/* ProjectTaskListRelationsBox.scss */
+.xv-project-tasks-box {
+  &.panel {
+    width: 640px;
   }
 }
 
