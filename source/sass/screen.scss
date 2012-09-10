@@ -482,6 +482,9 @@ body {
 
 .xv-groupbox-buttons {
 	border: none;
+	.xv-groupbox-button-single {
+	  border-radius: 0 0 4px 4px;
+	}
 	.xv-groupbox-button-center {
 	  border-radius: 0 0 0 0;
 	}
