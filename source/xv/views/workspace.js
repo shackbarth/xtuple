@@ -249,12 +249,14 @@ trailing:true white:true*/
       var inEvent = {model: model, status: status},
         attrs = model.getAttributeNames(),
         changes = {},
-        i;
+        i,
+        dbName;
 
       // Add to history if appropriate.
       if (model.id) {
         XT.addToHistory(this.kind, model, function (historyArray) {
-          enyo.setCookie("history", JSON.stringify(historyArray));
+          dbName = XT.session.details.organization;
+          enyo.setCookie("history_" + dbName, JSON.stringify(historyArray));
         });
         this.doHistoryChange(this);
       }
