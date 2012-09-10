@@ -33,7 +33,11 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.CommentTypePicker",
     kind: "XV.PickerWidget",
-    collection: "XM.commentTypes"
+    collection: "XM.commentTypes",
+    orderBy: [
+      {attribute: 'order'},
+      {attribute: 'name'}
+    ]
   });
 
   // ..........................................................

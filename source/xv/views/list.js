@@ -41,7 +41,8 @@ trailing:true white:true*/
       isFetching: false,
       isMore: true,
       parameterWidget: null,
-      workspace: null
+      workspace: null,
+      canAddNew: true
     },
     events: {
       onItemTap: "",

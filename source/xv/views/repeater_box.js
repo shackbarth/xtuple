@@ -12,27 +12,61 @@ white:true*/
     published: {
       attr: null,
       model: null,
-      showHeader: true
+      title: "",
+      repeaterBoxItem: "",
+      canOpen: false,
+      canDelete: false
     },
     handlers: {
       onDeleteItem: "deleteItem"
     },
-    components: [
-      {kind: "onyx.GroupboxHeader", name: "title", content: "_title".loc()},
-      {kind: "XV.Groupbox", name: "header", classes: "in-panel" },
-      {kind: "XV.Scroller", horizontal: 'hidden', fit: true, components: [
-        {kind: "Repeater", name: "repeater", count: 0, onSetupItem: "setupItem",
-          classes: "xv-comment-box-repeater", components: [
-          {kind: "XV.CommentBoxItem", name: "repeaterItem" }
-        ]}
-      ]},
-      {kind: "onyx.Button", name: "newItemButton", onclick: "newItem",
-        content: "_new".loc()}
-    ],
     create: function () {
+      var buttons;
       this.inherited(arguments);
-      this.$.title.setContent(("_" + this.attr || "").loc());
-      this.showHeaderChanged();
+
+      // Header
+      this.createComponent({
+        kind: "onyx.GroupboxHeader",
+        content: this.getTitle()
+      });
+      
+      // Repeater
+      this.createComponent({
+        kind: "XV.Scroller",
+        horizontal: 'hidden',
+        fit: true,
+        components: [
+          {kind: "Repeater", name: "repeater", count: 0, onSetupItem: "setupItem",
+            classes: "xv-comment-box-repeater", components: [
+            {kind: this.getRepeaterBoxItem(), name: "repeaterItem" }
+          ]}
+        ]
+      });
+      
+      // Buttons
+      buttons = {kind: 'FittableColumns', classes: "xv-groupbox-buttons",
+        components: [
+        {kind: "onyx.Button", name: "newButton", onclick: "newItem",
+          content: "_new".loc(), classes: "xv-groupbox-button-single"}
+      ]};
+      if (this.getCanOpen()) {
+        buttons.components[0].classes = "xv-groupbox-button-left";
+        buttons.components.push(
+          {kind: "onyx.Button", name: "openButton", onclick: "openRecord",
+            content: "_more".loc(), classes: "xv-groupbox-button-right"}
+        );
+      }
+      if (this.getCanDelete()) {
+        buttons.components[0].classes = "xv-groupbox-button-left";
+        if (this.getCanOpen()) {
+          buttons.components[0].classes = "xv-groupbox-button-center";
+        }
+        buttons.components.push(
+          {kind: "onyx.Button", name: "deleteButton", onclick: "deleteItem",
+            content: "_delete".loc(), classes: "xv-groupbox-button-right"}
+        );
+      }
+      this.createComponent(buttons);
     },
     deleteItem: function (inSender, inEvent) {
       inEvent.originator.parent.getModel().destroy();
@@ -59,14 +93,6 @@ white:true*/
       this.$.repeater.setCount(this._collection.length);
       if (!this._collection.model.canCreate()) {
         this.$.newItemButton.setDisabled(true);
-      }
-    },
-    showHeaderChanged: function () {
-      var showHeader = this.getShowHeader();
-      if (showHeader) {
-        this.$.header.show();
-      } else {
-        this.$.header.hide();
       }
     }
   });

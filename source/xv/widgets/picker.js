@@ -14,12 +14,14 @@ regexp:true, undef:true, trailing:true, white:true */
     published: {
       attr: null,
       label: "",
+      showLabel: true,
       value: null,
       collection: null,
       disabled: false,
       idAttribute: "id",
       nameAttribute: "name",
-      valueAttribute: null
+      valueAttribute: null,
+      orderBy: null
     },
     handlers: {
       onSelect: "itemSelected"
@@ -78,12 +80,15 @@ regexp:true, undef:true, trailing:true, white:true */
         return;
       }
       this._collection = collection;
+      this.orderByChanged();
+      if (this._collection.comparator) { this._collection.sort(); }
       this.buildList();
     },
     create: function () {
       this.inherited(arguments);
       if (this.getCollection()) { this.collectionChanged(); }
       this.labelChanged();
+      this.showLabelChanged();
     },
     disabledChanged: function (inSender, inEvent) {
       this.$.pickerButton.setDisabled(this.getDisabled());
@@ -115,6 +120,28 @@ regexp:true, undef:true, trailing:true, white:true */
         (this.attr ? ("_" + this.attr).loc() + ":" : "");
       this.$.label.setShowing(label);
       this.$.label.setContent(label);
+    },
+    orderByChanged: function () {
+      var orderBy = this.getOrderBy();
+      if (this._collection && orderBy) {
+        this._collection.comparator = function (a, b) {
+          var aval,
+            bval,
+            attr,
+            i;
+          for (i = 0; i < orderBy.length; i++) {
+            attr = orderBy[i].attribute;
+            aval = orderBy[i].descending ? b.getValue(attr) : a.getValue(attr);
+            bval = orderBy[i].descending ? a.getValue(attr) : b.getValue(attr);
+            aval = !isNaN(aval) ? aval - 0 : aval;
+            bval = !isNaN(aval) ? bval - 0 : bval;
+            if (aval !== bval) {
+              return aval > bval ? 1 : -1;
+            }
+          }
+          return 0;
+        };
+      }
     },
     /**
       Programatically sets the value of this widget.
@@ -151,6 +178,13 @@ regexp:true, undef:true, trailing:true, white:true */
             this.doValueChange(inEvent);
           }
         }
+      }
+    },
+    showLabelChanged: function () {
+      if (this.getShowLabel()) {
+        this.$.label.show();
+      } else {
+        this.$.label.hide();
       }
     },
     /** @private */

@@ -494,8 +494,51 @@ trailing:true white:true*/
             {kind: "XV.ContactWidget", attr: "contact"}
           ]}
         ]},
-        {kind: "XV.ProjectCommentBox", attr: "comments"},
-        {kind: "XV.ProjectTaskRepeaterBox", attr: "tasks"}
+        {kind: "XV.ProjectTasksBox", attr: "tasks"},
+        {kind: "XV.ProjectCommentBox", attr: "comments"}
+      ]}
+    ]
+  });
+  
+  enyo.kind({
+    name: "XV.ProjectTaskWorkspace",
+    kind: "XV.Workspace",
+    title: "_projectTask".loc(),
+    headerAttrs: ["number", "-", "name"],
+    model: "XM.ProjectTask",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        classes: "xv-top-panel", fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.ProjectStatusPicker", attr: "status"},
+            {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
+            {kind: "XV.DateWidget", attr: "dueDate"},
+            {kind: "XV.DateWidget", attr: "startDate"},
+            {kind: "XV.DateWidget", attr: "assignDate"},
+            {kind: "XV.DateWidget", attr: "completeDate"},
+            {kind: "onyx.GroupboxHeader", content: "_hours".loc()},
+            {kind: "XV.QuantityWidget", attr: "budgetedHours",
+              label: "_budgeted".loc()},
+            {kind: "XV.QuantityWidget", attr: "actualHours",
+              label: "_actual".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_expenses".loc()},
+            {kind: "XV.MoneyWidget", attr: "budgetedExpenses",
+              label: "_budgeted".loc()},
+            {kind: "XV.MoneyWidget", attr: "actualExpenses",
+              label: "_actual".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
+            {kind: "XV.UserAccountWidget", attr: "owner"},
+            {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true}
+          ]}
+        ]},
+        {kind: "XV.ProjectTaskCommentBox", attr: "comments"}
       ]}
     ]
   });
