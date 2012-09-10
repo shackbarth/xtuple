@@ -9,6 +9,12 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "enyo.Control",
     classes: "xv-pickerwidget",
     events: {
+      /**
+
+        @param {Object} inEvent The payload that's attached to bubbled-up events
+        @param {XV.PickerWidget} inEvent.originator This
+        @param inEvent.value The value passed up is the key of the object and not the object itself
+       */
       onValueChange: ""
     },
     published: {
@@ -20,7 +26,6 @@ regexp:true, undef:true, trailing:true, white:true */
       disabled: false,
       idAttribute: "id",
       nameAttribute: "name",
-      valueAttribute: null,
       orderBy: null
     },
     handlers: {
@@ -65,7 +70,7 @@ regexp:true, undef:true, trailing:true, white:true */
         callback,
         didStartup = false,
         that = this;
-        
+
       // If we don't have data yet, try again after start up tasks complete
       if (!collection) {
         if (didStartup) {
@@ -94,14 +99,13 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.pickerButton.setDisabled(this.getDisabled());
     },
     itemSelected: function (inSender, inEvent) {
-      var value = this.$.picker.getSelected().value,
-        attribute = this.getValueAttribute();
-      this.setValue(attribute ? value[attribute] : value);
+      var value = this.$.picker.getSelected().value;
+      this.setValue(value);
     },
     /**
       Implement your own filter function here. By default
       simply returns the array of models passed.
-      
+
       @param {Array}
       returns {Array}
     */
@@ -174,7 +178,7 @@ regexp:true, undef:true, trailing:true, white:true */
         if (value !== oldValue) {
           this.value = value;
           if (!options.silent) {
-            inEvent = { originator: this, value: value };
+            inEvent = { originator: this, value: value.id ? value.id : value };
             this.doValueChange(inEvent);
           }
         }
@@ -189,7 +193,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     /** @private */
     _selectValue: function (value) {
-      value = (!value || this.getValueAttribute()) ? value : value.id;
+      value = value ? value.id : value;
       var component = _.find(this.$.picker.getComponents(), function (c) {
         if (c.kind === "onyx.MenuItem") {
           return (c.value ? c.value.id : null) === value;
@@ -200,5 +204,5 @@ regexp:true, undef:true, trailing:true, white:true */
       return value;
     }
   });
-  
+
 }());

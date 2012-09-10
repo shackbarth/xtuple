@@ -80,6 +80,8 @@ white:true*/
 
     recordType: 'XM.Item',
 
+    nameAttribute: 'number',
+
     defaults: function () {
       return {
         description1: '',
