@@ -93,9 +93,9 @@ regexp:true, undef:true, trailing:true, white:true */
           classes: "xv-input-decorator", components: [
           {name: "input", kind: "onyx.Input", onchange: "inputChanged",
             classes: "xv-subinput"},
-          {name: "icon", kind: "onyx.IconButton", ontap: "iconTapped",
+          {name: "icon", kind: "onyx.IconButton", ontap: "iconTapped", name: "iconButton",
             src: "assets/date-icon.png"},
-          {name: "datePickPopup", kind: "onyx.Popup", modal: true, components: [
+          {name: "datePickPopup", kind: "onyx.Popup", modal: true, floating: true, components: [
             {kind: "GTS.DatePicker", name: "datePick", style: "", onChange: "datePicked"}
           ]}
         ]}
@@ -109,8 +109,17 @@ regexp:true, undef:true, trailing:true, white:true */
       this.setValue(inEvent);
       this.$.datePickPopup.hide();
     },
-    iconTapped: function () {
+    iconTapped: function (inSender, inEvent) {
+      var element = inSender,
+        coord = {left: 0, top: 0, width: element.getBounds().width, height: element.getBounds().height};
+
       this.$.datePickPopup.show();
+      do {
+        coord.left += element.getBounds && element.getBounds().left ? element.getBounds().left : 0;
+        coord.top  += element.getBounds && element.getBounds().top ? element.getBounds().top : 0;
+      } while ((element = element.parent) && element !== this);
+
+      this.$.datePickPopup.setBounds({ top: coord.top, left: (coord.left + coord.width) });
     },
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.attr || "").loc()) + ":";
