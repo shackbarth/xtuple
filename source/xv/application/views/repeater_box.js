@@ -19,45 +19,4 @@ white:true*/
     ]
   });
   
-  enyo.kind({
-    name: "XV.AccountCommentBox",
-    kind: "XV.CommentBox",
-    model: "XM.AccountComment"
-  });
-  
-  enyo.kind({
-    name: "XV.ContactCommentBox",
-    kind: "XV.CommentBox",
-    model: "XM.ContactComment"
-  });
-  
-  enyo.kind({
-    name: "XV.IncidentCommentBox",
-    kind: "XV.CommentBox",
-    model: "XM.IncidentComment"
-  });
-  
-  enyo.kind({
-    name: "XV.OpportunityCommentBox",
-    kind: "XV.CommentBox",
-    model: "XM.OpportunityComment"
-  });
-  
-  enyo.kind({
-    name: "XV.ProjectCommentBox",
-    kind: "XV.CommentBox",
-    model: "XM.ProjectComment"
-  });
-  
-  enyo.kind({
-    name: "XV.ProjectTaskCommentBox",
-    kind: "XV.CommentBox",
-    model: "XM.ProjectTaskComment"
-  });
-  
-  enyo.kind({
-    name: "XV.ToDoCommentBox",
-    kind: "XV.CommentBox",
-    model: "XM.ToDoComment"
-  });
 }());
