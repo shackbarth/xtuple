@@ -313,14 +313,14 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_toDo".loc()},
-      {label: "_showCompleted".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
+      {label: "_showInactive".loc(), attr: "isActive", defaultKind: "XV.CheckboxWidget",
         getParameter: function () {
           var param;
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
               operator: '!=',
-              value: 'C'
+              value: true
             };
           }
           return param;
