@@ -3,7 +3,6 @@ enyo.depends(
   "list.js",
   "list_relations.js",
   "navigator.js",
-  "pullout.js",
   "workspace.js",
   "scroller.js",
   "groupbox.js",
