@@ -64,7 +64,8 @@ trailing:true white:true*/
       ]},
       {kind: "FittableRows", components: [
         {kind: "onyx.MoreToolbar", name: "contentToolbar", components: [
-          {kind: "onyx.Grabber"},
+                                 // AWFUL UGLY HEINOUS HACK SHOULD NOT BE NECESSARY
+          {kind: "onyx.Grabber", style: "height: 27px !important;"},
           {name: "rightLabel", style: "text-align: center"},
           {name: "search", kind: "onyx.InputDecorator", style: "float: right;",
             showing: false, components: [
