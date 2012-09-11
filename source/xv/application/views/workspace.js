@@ -15,11 +15,13 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.InputWidget", attr: "name"},
-          {kind: "XV.InputWidget", attr: "description"},
-          {kind: "XV.NumberWidget", attr: "order"}
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.NumberWidget", attr: "order"}
+          ]}
         ]}
       ]}
     ]
@@ -75,10 +77,12 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.InputWidget", attr: "code"},
-          {kind: "XV.InputWidget", attr: "description"}
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
         ]}
       ]}
     ]
@@ -186,14 +190,16 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.InputWidget", attr: "abbreviation"},
-          {kind: "XV.InputWidget", attr: "name"},
-          {kind: "XV.InputWidget", attr: "currencyName"},
-          {kind: "XV.InputWidget", attr: "currencySymbol"},
-          {kind: "XV.InputWidget", attr: "currencyAbbreviation"},
-          {kind: "XV.InputWidget", attr: "currencyNumber"}
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+            {kind: "XV.InputWidget", attr: "abbreviation"},
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "currencyName"},
+            {kind: "XV.InputWidget", attr: "currencySymbol"},
+            {kind: "XV.InputWidget", attr: "currencyAbbreviation"},
+            {kind: "XV.InputWidget", attr: "currencyNumber"}
+          ]}
         ]}
       ]}
     ]
@@ -211,11 +217,13 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.InputWidget", attr: "abbreviation"},
-          {kind: "XV.InputWidget", attr: "name"},
-          {kind: "XV.InputWidget", attr: "symbol"}
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+            {kind: "XV.InputWidget", attr: "abbreviation"},
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "symbol"}
+          ]}
         ]}
       ]}
     ]
@@ -233,9 +241,11 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.InputWidget", attr: "code"}
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+            {kind: "XV.InputWidget", attr: "code"}
+          ]}
         ]}
       ]}
     ]
@@ -328,20 +338,25 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ClassCodeWidget", attr: "classCode"},
-          {kind: "XV.InputWidget", attr: "description1"},
-          {kind: "XV.InputWidget", attr: "description2"},
-          {kind: "XV.UnitWidget", attr: "inventoryUnit"},
-          {kind: "XV.CheckboxWidget", attr: "isActive"},
-          {kind: "XV.CheckboxWidget", attr: "isFractional"},
-          {kind: "XV.CheckboxWidget", attr: "isSold"},
-          {kind: "XV.InputWidget", attr: "listPrice"},
-          {kind: "XV.UnitWidget", attr: "priceUnit"},
-          {kind: "XV.ProductCategoryWidget", attr: "productCategory"}
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+            {kind: "XV.ClassCodeWidget", attr: "classCode"},
+            {kind: "XV.InputWidget", attr: "description1"},
+            {kind: "XV.InputWidget", attr: "description2"},
+            {kind: "XV.UnitWidget", attr: "inventoryUnit"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
+            {kind: "XV.CheckboxWidget", attr: "isFractional"},
+            {kind: "XV.CheckboxWidget", attr: "isSold"},
+            {kind: "XV.InputWidget", attr: "listPrice"},
+            {kind: "XV.UnitWidget", attr: "priceUnit"},
+            {kind: "XV.ProductCategoryWidget", attr: "productCategory"}
+          ]}
         ]}
-      ]}
+      ]},
+      {},
+      {}
+
     ]
   });
 
@@ -450,10 +465,12 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.InputWidget", attr: "code"},
-          {kind: "XV.InputWidget", attr: "description"}
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
         ]}
       ]}
     ]
@@ -499,7 +516,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   enyo.kind({
     name: "XV.ProjectTaskWorkspace",
     kind: "XV.Workspace",
@@ -555,11 +572,13 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.InputWidget", attr: "abbreviation"},
-          {kind: "XV.InputWidget", attr: "name"},
-          {kind: "XV.CountryPicker", attr: "country"}
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+            {kind: "XV.InputWidget", attr: "abbreviation"},
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.CountryPicker", attr: "country"}
+          ]}
         ]}
       ]}
     ]
@@ -619,11 +638,13 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.InputWidget", attr: "name"},
-          {kind: "XV.InputWidget", attr: "description"},
-          {kind: "XV.CheckboxWidget", attr: "isItemWeight"}
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.CheckboxWidget", attr: "isItemWeight"}
+          ]}
         ]}
       ]}
     ]
@@ -644,16 +665,26 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, classes: "xv-top-panel", components: [
-        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.InputWidget", attr: "username"},
-          {kind: "XV.InputWidget", attr: "properName"},
-          {kind: "XV.InputWidget", attr: "initials"},
-          {kind: "XV.InputWidget", attr: "email"},
-          {kind: "XV.CheckboxWidget", attr: "isActive"}
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+            {kind: "XV.InputWidget", attr: "username"},
+            {kind: "XV.InputWidget", attr: "properName"},
+            {kind: "XV.InputWidget", attr: "initials"},
+            {kind: "XV.InputWidget", attr: "email"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"}
+          ]}
         ]},
-        {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles"},
-        {kind: "XV.UserAccountPrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges" }
+
+        {kind: "XV.Groupbox", name: "rolePanel", title: "_roles".loc(), components: [
+          {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
+          {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles"}
+        ]},
+
+        {kind: "XV.Groupbox", name: "privilegePanel", title: "_privileges".loc(), components: [
+          {kind: "onyx.GroupboxHeader", content: "privileges".loc()},
+          {kind: "XV.UserAccountPrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges" }
+        ]}
       ]}
     ],
     refreshPrivileges: function (inSender, inEvent) {
@@ -674,12 +705,17 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, classes: "xv-top-panel", components: [
-        {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.InputWidget", attr: "name"},
-          {kind: "XV.InputWidget", attr: "description"}
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
         ]},
-        {kind: "XV.UserAccountRolePrivilegeAssignmentBox", attr: "grantedPrivileges"}
+        {kind: "XV.Groupbox", name: "privilegePanel", title: "_privileges".loc(), components: [
+          {kind: "onyx.GroupboxHeader", content: "_privileges".loc()},
+          {kind: "XV.UserAccountRolePrivilegeAssignmentBox", attr: "grantedPrivileges"}
+        ]}
       ]}
     ]
   });

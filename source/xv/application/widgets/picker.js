@@ -11,8 +11,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.AccountTypePicker",
     kind: "XV.PickerWidget",
-    collection: "XM.accountTypes",
-    valueAttribute: "id"
+    collection: "XM.accountTypes"
   });
 
   // ..........................................................
@@ -149,8 +148,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.ProjectStatusPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.projectStatuses",
-    valueAttribute: "id"
+    collection: "XM.projectStatuses"
   });
 
   // ..........................................................

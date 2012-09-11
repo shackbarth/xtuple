@@ -75,6 +75,7 @@ trailing:true white:true*/
           {name: "newButton", kind: "onyx.Button", content: "_new".loc(),
             ontap: "newRecord", style: "float: right;", showing: false}
         ]},
+        {name: "header", content: "", classes: "xv-navigator-header"},
         {name: "contentPanels", kind: "Panels", margin: 0, fit: true,
           draggable: false, panelCount: 0}
       ]}
@@ -112,6 +113,9 @@ trailing:true white:true*/
       options.showMore = _.isBoolean(options.showMore) ?
         options.showMore : false;
 
+
+      this.setHeaderContent(this.formatQuery(parameterWidget ? parameterWidget.getSelectedValues() : null, input));
+
       // Build parameters
       if (input || parameters.length) {
         query.parameters = [];
@@ -135,6 +139,24 @@ trailing:true white:true*/
 
       list.setQuery(query);
       list.fetch(options);
+    },
+    formatQuery: function (advancedSearch, simpleSearch) {
+      var keys,
+        formattedQuery = "";
+
+      for (key in advancedSearch) {
+        formattedQuery += (key + ": " + advancedSearch[key] + ", ");
+      }
+
+      if (simpleSearch) {
+        formattedQuery += "Matches: " + simpleSearch;
+      }
+
+      if (formattedQuery) {
+        formattedQuery = "Filter by: " + formattedQuery;
+      }
+
+      return formattedQuery;
     },
     inputChanged: function (inSender, inEvent) {
       this.fetched = {};
@@ -220,7 +242,7 @@ trailing:true white:true*/
         this.$.searchIconButton.setStyle("visibility: hidden;");
       }
       this.doNavigatorEvent({name: panel.name, show: false});
-      
+
       // Handel new button
       this.$.newButton.setShowing(panel.canAddNew);
       if (collection) {
@@ -243,6 +265,9 @@ trailing:true white:true*/
       if (panel.fetch && !this.fetched[panelIndex]) {
         this.fetch();
       }
+    },
+    setHeaderContent: function (content) {
+      this.$.header.setContent(content);
     },
     setMenuPanel: function (index) {
       var label = index ? "_back".loc() : "_logout".loc();

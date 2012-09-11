@@ -94,9 +94,9 @@ regexp:true, undef:true, trailing:true, white:true */
           classes: "xv-input-decorator", components: [
           {name: "input", kind: "onyx.Input", onchange: "inputChanged",
             classes: "xv-subinput"},
-          {name: "icon", kind: "onyx.IconButton", ontap: "iconTapped",
+          {name: "icon", kind: "onyx.IconButton", ontap: "iconTapped", name: "iconButton",
             src: "assets/date-icon.png"},
-          {name: "datePickPopup", kind: "onyx.Popup", modal: true, components: [
+          {name: "datePickPopup", kind: "onyx.Popup", modal: true, floating: true, components: [
             {kind: "GTS.DatePicker", name: "datePick", style: "", onChange: "datePicked"}
           ]}
         ]}
@@ -111,8 +111,30 @@ regexp:true, undef:true, trailing:true, white:true */
       this.setValue(inEvent);
       this.$.datePickPopup.hide();
     },
-    iconTapped: function () {
+    getAbsoluteBounds: function (control) {
+        var element = control.hasNode();
+        var coord = {left: 0, top: 0, width: element.offsetWidth, height: element.offsetHeight};
+        do {
+                coord.left += element.offsetLeft;
+                coord.top  += element.offsetTop;
+        } while ( element = element.offsetParent );
+        return coord;
+    },
+    iconTapped: function (inSender, inEvent) {
+      var element = inSender,
+        coord = {left: 0, top: 0, width: element.getBounds().width, height: element.getBounds().height};
+
       this.$.datePickPopup.show();
+      /*
+      do {
+        console.log(element.name + " bounds are " + element.getBounds().top + ", " + element.getBounds().left);
+        coord.left += element.getBounds && element.getBounds().left ? element.getBounds().left : 0;
+        coord.top  += element.getBounds && element.getBounds().top ? element.getBounds().top : 0;
+        this.$.datePickPopup.setBounds({ top: coord.top, left: (coord.left + coord.width) });
+      } while ((element = element.parent));
+      */
+      var bounds = this.getAbsoluteBounds(inSender);
+      this.$.datePickPopup.setBounds({ top: bounds.top, left: bounds.left + bounds.width});
     },
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.attr || "").loc()) + ":";
