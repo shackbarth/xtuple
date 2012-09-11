@@ -235,8 +235,11 @@ body {
 // Navigator
 //
 .xv-navigator-header {
+  font-size: small;
+  font-weight: bold;
+  text-transform: uppercase;
   color: $orange;
-  padding-left: 10px;
+  padding-left: 20px;
 }
 
 

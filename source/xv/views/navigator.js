@@ -151,12 +151,19 @@ trailing:true white:true*/
         formattedQuery += (key + ": " + advancedSearch[key] + ", ");
       }
 
-      if (simpleSearch) {
-        formattedQuery += "Matches: " + simpleSearch;
+      if (simpleSearch && formattedQuery) {
+        formattedQuery += "Match: " + simpleSearch;
+      } else if (simpleSearch) {
+        formattedQuery += simpleSearch;
       }
 
       if (formattedQuery) {
         formattedQuery = "Filter by: " + formattedQuery;
+      }
+
+      if (formattedQuery.lastIndexOf(", ") + 2 === formattedQuery.length) {
+        // chop off trailing comma
+        formattedQuery = formattedQuery.substring(0, formattedQuery.length - 2);
       }
 
       return formattedQuery;
