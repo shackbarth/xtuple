@@ -27,6 +27,10 @@ trailing:true white:true*/
     kind: "XV.ListRelationsBox",
     classes: "xv-project-tasks-box",
     title: "_projectTasks".loc(),
+    editors: [
+      {content: "Stuff", style: "background-color: #ddd; min-width: 310px"},
+      {content: "More Stuff", style: "background-color: #fff; min-width: 310px"}
+    ],
     parentKey: "project",
     listRelations: "XV.ProjectTaskListRelations"
   });

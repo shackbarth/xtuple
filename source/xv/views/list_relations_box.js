@@ -1,14 +1,14 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XT:true, XM:true, XV:true, enyo:true*/
+/*global XT:true, XM:true, XV:true, _:true, enyo:true*/
 
 (function () {
   
   /**
     Must include a component called `list`.
     List must be of sub-kind `XV.ListRelations`.
-    The `value` must be set to a collection of `XM.Info` models.
+    The `value` must be set to a collection of `XM.Model`.
   */
   enyo.kind({
     name: "XV.ListRelationsBox",
@@ -20,7 +20,8 @@ trailing:true white:true*/
       title: "",
       parentKey: "",
       listRelations: "",
-      searchList: ""
+      searchList: "",
+      editors: null
     },
     events: {
       onSearch: "",
@@ -33,7 +34,10 @@ trailing:true white:true*/
     create: function () {
       this.inherited(arguments);
       var canAttach = this.getSearchList().length > 0,
-        buttons;
+        editors = this.getEditors() || [],
+        buttons,
+        panels,
+        control;
       
       // Header
       this.createComponent({
@@ -42,12 +46,25 @@ trailing:true white:true*/
       });
       
       // List
-      this.createComponent({
+      var list = {
         kind: this.getListRelations(),
         name: "list",
         attr: this.getAttr(),
         fit: true
-      });
+      };
+      if (editors.length) {
+        panels = {
+          kind: "Panels",
+          fit: true,
+          arrangerKind: "CollapsingArranger",
+          components: _.clone(editors)
+        };
+        panels.components.push(list);
+        control = this.createComponent(panels);
+        control.setIndex(editors.length);
+      } else {
+        this.createComponent(list);
+      }
       
       // Buttons
       buttons = {kind: 'FittableColumns', classes: "xv-groupbox-buttons",
@@ -212,10 +229,25 @@ trailing:true white:true*/
       var index = this.$.list.getFirstSelected(),
         model = index ? this.$.list.getModel(index) : null,
         canAttach = this.getSearchList().length > 0,
-        couldNotRead = model ? !model.couldRead() : true,
-        couldNotUpdate = model ? !model.couldUpdate() : true;
+        couldNotRead = true,
+        couldNotUpdate = true,
+        editors = this.getEditors() || [];
+      if (model instanceof XM.Info) {
+        couldNotRead = !model.couldRead();
+        couldNotUpdate = !model.couldUpdate();
+      } else if (model instanceof XM.Model) {
+        couldNotRead = !model.getClass().canRead();
+        couldNotUpdate = !model.canUpdate();
+      }
       if (canAttach) { this.$.detachButton.setDisabled(couldNotUpdate); }
       this.$.openButton.setDisabled(couldNotRead);
+      if (editors.length) {
+        if (index) {
+          this.$.panels.previous();
+        } else {
+          this.$.panels.setIndex(editors.length);
+        }
+      }
     },
     valueChanged: function () {
       var value = this.getValue(), // Must be a collection of Info models
