@@ -20,9 +20,8 @@ trailing:true white:true*/
       modules: [
         {name: "welcome", label: "_welcome".loc(), hasSubmenu: false,
           panels: [
-          {name: "welcomePage", content: "Welcome"
-            //tag: '<iframe src="http://www.xtuple.com/beta"></iframe>'
-            }
+          {name: "welcomePage",
+            tag: '<iframe src="http://mobile.xtuple.com"></iframe>'}
         ]},
         {name: "setup", label: "_setup".loc(), panels: [
           {name: "userAccountList", kind: "XV.UserAccountList"},
