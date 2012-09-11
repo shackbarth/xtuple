@@ -112,7 +112,7 @@ white:true*/
     kind: "XV.RepeaterBox",
     classes: "xv-comment-box",
     title: "_comments".loc(),
-    showHeader: false,
+    repeaterBoxItem: "XV.CommentBoxItem",
     setValue: function (value, options) {
       if (value) {
         value.comparator = this.sort;

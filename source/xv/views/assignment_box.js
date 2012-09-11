@@ -203,6 +203,9 @@ white:true*/
         }};
         this.getTotalCollection().fetch(options);
       }
+
+
+
     },
     /**
      * Creates a new assignment model to add to the assignedCollection.
@@ -248,6 +251,16 @@ white:true*/
       inSender.segmentIndex = index;
       header.setContent(this.getSegments()[index]);
       row.$.checkboxRepeater.setCount(this.getSegmentedCollections()[index].length);
+
+      //
+      // Suppress the header if there's just one segment
+      //
+      if (this.getSegments().length < 2) {
+        header.setStyle("visibility: hidden;");
+      }
+
+
+
       return true;
     },
     /**

@@ -84,20 +84,11 @@ white:true*/
       }
       return params;
     },
-    /**
-      Remember the state of this parameter widget
-     */
-    memoize: function (inSender, inEvent) {
+    getSelectedValues: function () {
       var values = {},
-        component,
         componentName,
-        dbName,
-        cookieName;
+        component;
 
-      if (!this.isAllSetUp) {
-        // no need to set any cookies during the create method
-        return;
-      }
       for (componentName in this.$) {
         if (componentName.indexOf("parameterItem") === 0 && this.$.hasOwnProperty(componentName)) {
           component = this.$[componentName];
@@ -112,7 +103,22 @@ white:true*/
           }
         }
       }
+      return values;
+    },
+    /**
+      Remember the state of this parameter widget
+     */
+    memoize: function (inSender, inEvent) {
+      var values,
+        dbName,
+        cookieName;
 
+      if (!this.isAllSetUp) {
+        // no need to set any cookies during the create method
+        return;
+      }
+
+      values = this.getSelectedValues();
       dbName = XT.session.details.organization;
       cookieName = 'advancedSearchCache_' + dbName + '_' + this.name;
       enyo.setCookie(cookieName, JSON.stringify(values));

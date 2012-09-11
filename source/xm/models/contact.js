@@ -18,6 +18,8 @@ white:true*/
 
     documentKey: 'code',
 
+    nameAttribute: 'code',
+
     enforceUpperKey: false
 
   });
@@ -102,7 +104,7 @@ white:true*/
     /** @scope XM.ContactComment.prototype */
 
     recordType: 'XM.ContactComment',
-    
+
     sourceName: 'T'
 
   });
@@ -212,7 +214,7 @@ white:true*/
     /** @scope XM.ContactRelation.prototype */
 
     recordType: 'XM.ContactRelation',
-    
+
     editableModel: 'XM.Contact'
 
   });
@@ -226,7 +228,7 @@ white:true*/
     /** @scope XM.ContactListItem.prototype */
 
     recordType: 'XM.ContactListItem',
-    
+
     editableModel: 'XM.Contact'
 
   });

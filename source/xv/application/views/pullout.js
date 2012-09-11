@@ -48,7 +48,16 @@ white:true*/
     create: function () {
       this.inherited(arguments);
 
-      var cookieValue = enyo.getCookie("history"),
+      var that = this,
+        callback = function () {
+          that.preLoadHistory();
+        };
+
+      XT.getStartupManager().registerCallback(callback, true);
+    },
+    preLoadHistory: function () {
+      var dbName = XT.session.details.organization,
+        cookieValue = enyo.getCookie("history_" + dbName),
         historyArray,
         i,
         historyItem,

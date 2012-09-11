@@ -268,6 +268,41 @@ trailing:true white:true*/
         defaultKind: "XV.DateWidget"}
     ]
   });
+  
+  enyo.kind({
+    name: "XV.ProjectTaskListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_project".loc()},
+      {label: "_showCompleted".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '!=',
+              value: 'C'
+            };
+          }
+          return param;
+        }
+      },
+      {label: "_project".loc(), attr: "project", defaultKind: "XV.ProjectWidget"},
+      {label: "_number".loc(), attr: "number"},
+      {label: "_name".loc(), attr: "name"},
+      {kind: "onyx.GroupboxHeader", content: "_status".loc()},
+      {label: "_status".loc(), attr: "status",
+        defaultKind: "XV.ProjectStatusPicker"},
+      {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
+      {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
+      {label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
+      {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
+      {label: "_startDate".loc(), attr: "dueDate", operator: ">=",
+        defaultKind: "XV.DateWidget"},
+      {label: "_endDate".loc(), attr: "dueDate", operator: "<=",
+        defaultKind: "XV.DateWidget"}
+    ]
+  });
 
   // ..........................................................
   // TO DO
@@ -278,14 +313,14 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_toDo".loc()},
-      {label: "_showCompleted".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
+      {label: "_showInactive".loc(), attr: "isActive", defaultKind: "XV.CheckboxWidget",
         getParameter: function () {
           var param;
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
               operator: '!=',
-              value: 'C'
+              value: true
             };
           }
           return param;
