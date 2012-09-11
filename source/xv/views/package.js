@@ -7,6 +7,7 @@ enyo.depends(
   "scroller.js",
   "groupbox.js",
   "list_relations_box.js",
+  "list_relations_editor_box.js",
   "repeater_box.js",
   "comment_box.js",
   "assignment_box.js",

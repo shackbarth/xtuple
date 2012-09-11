@@ -1,14 +1,14 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XT:true, XM:true, XV:true, _:true, enyo:true*/
+/*global XT:true, XM:true, XV:true, enyo:true*/
 
 (function () {
   
   /**
     Must include a component called `list`.
     List must be of sub-kind `XV.ListRelations`.
-    The `value` must be set to a collection of `XM.Model`.
+    The `value` must be set to a collection of `XM.Info` models.
   */
   enyo.kind({
     name: "XV.ListRelationsBox",
@@ -20,8 +20,7 @@ trailing:true white:true*/
       title: "",
       parentKey: "",
       listRelations: "",
-      searchList: "",
-      editors: null
+      searchList: ""
     },
     events: {
       onSearch: "",
@@ -34,10 +33,7 @@ trailing:true white:true*/
     create: function () {
       this.inherited(arguments);
       var canAttach = this.getSearchList().length > 0,
-        editors = this.getEditors() || [],
-        buttons,
-        panels,
-        control;
+        buttons;
       
       // Header
       this.createComponent({
@@ -46,49 +42,36 @@ trailing:true white:true*/
       });
       
       // List
-      var list = {
+      this.createComponent({
         kind: this.getListRelations(),
         name: "list",
         attr: this.getAttr(),
         fit: true
-      };
-      if (editors.length) {
-        panels = {
-          kind: "Panels",
-          fit: true,
-          arrangerKind: "CollapsingArranger",
-          components: _.clone(editors)
-        };
-        panels.components.push(list);
-        control = this.createComponent(panels);
-        control.setIndex(editors.length);
-      } else {
-        this.createComponent(list);
-      }
+      });
       
       // Buttons
       buttons = {kind: 'FittableColumns', classes: "xv-groupbox-buttons",
         components: [
-        {kind: "onyx.Button", name: "newButton", onclick: "newItem",
+        {kind: "onyx.Button", name: "newButton", onclick: "newRecord",
           content: "_new".loc(), classes: "xv-groupbox-button-left",
           disabled: true}
       ]};
       if (canAttach) {
         buttons.components.push(
-        {kind: "onyx.Button", name: "attachButton", onclick: "attachItem",
+        {kind: "onyx.Button", name: "attachButton", onclick: "attachRecord",
           content: "_attach".loc(), classes: "xv-groupbox-button-center",
           disabled: true},
-        {kind: "onyx.Button", name: "detachButton", onclick: "detachItem",
+        {kind: "onyx.Button", name: "detachButton", onclick: "detachRecord",
           content: "_detach".loc(), classes: "xv-groupbox-button-center",
           disabled: true});
       }
       buttons.components.push(
-        {kind: "onyx.Button", name: "openButton", onclick: "openItem",
+        {kind: "onyx.Button", name: "openButton", onclick: "openRecord",
           content: "_open".loc(), classes: "xv-groupbox-button-right",
           disabled: true, fit: canAttach});
       this.createComponent(buttons);
     },
-    attachItem: function () {
+    attachRecord: function () {
       var list = this.$.list,
         key = this.getParentKey(),
         parent = list.getParent(),
@@ -131,7 +114,7 @@ trailing:true white:true*/
           infoModel.fetch();
         };
       
-      // Open a search screen that excludes already attached items
+      // Open a search screen that excludes already attached records
       inEvent = {
         list: searchList,
         callback: callback,
@@ -147,7 +130,7 @@ trailing:true white:true*/
     attrChanged: function () {
       this.$.list.setAttr(this.attr);
     },
-    detachItem: function () {
+    detachRecord: function () {
       var list = this.$.list,
         key = this.parentKey,
         index = list.getFirstSelected(),
@@ -179,7 +162,7 @@ trailing:true white:true*/
       // Go get the data
       model.fetch();
     },
-    newItem: function () {
+    newRecord: function () {
       var list = this.$.list,
         parent = this.$.list.getParent(),
         id = parent ? parent.id : null,
@@ -204,7 +187,7 @@ trailing:true white:true*/
       };
       this.doWorkspace(inEvent);
     },
-    openItem: function () {
+    openRecord: function () {
       var list = this.$.list,
         index = list.getFirstSelected(),
         model = list.getModel(index),
@@ -229,32 +212,16 @@ trailing:true white:true*/
       var index = this.$.list.getFirstSelected(),
         model = index ? this.$.list.getModel(index) : null,
         canAttach = this.getSearchList().length > 0,
-        couldNotRead = true,
-        couldNotUpdate = true,
-        editors = this.getEditors() || [];
-      if (model instanceof XM.Info) {
-        couldNotRead = !model.couldRead();
-        couldNotUpdate = !model.couldUpdate();
-      } else if (model instanceof XM.Model) {
-        couldNotRead = !model.getClass().canRead();
-        couldNotUpdate = !model.canUpdate();
-      }
+        couldNotRead = model ? !model.couldRead() : true,
+        couldNotUpdate = model ? !model.couldUpdate() : true;
       if (canAttach) { this.$.detachButton.setDisabled(couldNotUpdate); }
       this.$.openButton.setDisabled(couldNotRead);
-      if (editors.length) {
-        if (index) {
-          this.$.panels.previous();
-        } else {
-          this.$.panels.setIndex(editors.length);
-        }
-      }
     },
     valueChanged: function () {
       var value = this.getValue(), // Must be a collection of Info models
         canAttach = this.getSearchList().length > 0,
-        editableModel = value && value.model ? value.model.prototype.editableModel : null,
-        Klass = editableModel ?
-          XT.getObjectByName(editableModel) : null,
+        Klass = value ?
+          XT.getObjectByName(value.model.prototype.editableModel) : null,
         canNotCreate = Klass ? !Klass.canCreate() : true,
         canNotUpdate = Klass ? !Klass.canUpdate() : true;
       this.$.list.setValue(value);
