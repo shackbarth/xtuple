@@ -30,22 +30,33 @@ regexp:true, undef:true, trailing:true, white:true */
     classes: "xv-inputwidget xv-numberwidget",
     published: {
       label: "",
+      showLabel: true,
       placeholder: ""
     },
     components: [
-      {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
-        components: [
+      {kind: "FittableColumns", components: [
         {name: "label", content: "", classes: "xv-label"},
-        {name: "input", kind: "onyx.Input", onchange: "inputChanged"}
+        {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
+          components: [
+          {name: "input", kind: "onyx.Input", onchange: "inputChanged"}
+        ]}
       ]}
     ],
     create: function () {
       this.inherited(arguments);
       this.labelChanged();
+      this.showLabelChanged();
     },
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.attr + "").loc()) + ":";
       this.$.label.setContent(label);
+    },
+    showLabelChanged: function () {
+      if (this.getShowLabel()) {
+        this.$.label.show();
+      } else {
+        this.$.label.hide();
+      }
     }
 
   });

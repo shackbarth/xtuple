@@ -75,6 +75,7 @@ trailing:true white:true*/
           {name: "newButton", kind: "onyx.Button", content: "_new".loc(),
             ontap: "newRecord", style: "float: right;", showing: false}
         ]},
+        {name: "header", content: "", classes: "xv-navigator-header"},
         {name: "contentPanels", kind: "Panels", margin: 0, fit: true,
           draggable: false, panelCount: 0}
       ]}
@@ -112,6 +113,9 @@ trailing:true white:true*/
       options.showMore = _.isBoolean(options.showMore) ?
         options.showMore : false;
 
+
+      this.setHeaderContent(this.formatQuery(parameterWidget ? parameterWidget.getSelectedValues() : null, input));
+
       // Build parameters
       if (input || parameters.length) {
         query.parameters = [];
@@ -135,6 +139,24 @@ trailing:true white:true*/
 
       list.setQuery(query);
       list.fetch(options);
+    },
+    formatQuery: function (advancedSearch, simpleSearch) {
+      var keys,
+        formattedQuery = "";
+
+      for (key in advancedSearch) {
+        formattedQuery += (key + ": " + advancedSearch[key] + ", ");
+      }
+
+      if (simpleSearch) {
+        formattedQuery += "Matches: " + simpleSearch;
+      }
+
+      if (formattedQuery) {
+        formattedQuery = "Filter by: " + formattedQuery;
+      }
+
+      return formattedQuery;
     },
     inputChanged: function (inSender, inEvent) {
       this.fetched = {};
@@ -205,7 +227,11 @@ trailing:true white:true*/
       var module = this.getSelectedModule(),
         panelIndex = module && module.panels ? module.panels[index].index : -1,
         panel = panelIndex > -1 ? this.$.contentPanels.getPanels()[panelIndex] : null,
-        label = panel && panel.label ? panel.label : "";
+        label = panel && panel.label ? panel.label : "",
+        collection = panel.getCollection ?
+          XT.getObjectByName(panel.getCollection()) : false,
+        model,
+        canNotCreate = true;
       if (!panel) { return; }
 
       // Make sure the advanced search icon is visible iff there is an advanced
@@ -216,6 +242,15 @@ trailing:true white:true*/
         this.$.searchIconButton.setStyle("visibility: hidden;");
       }
       this.doNavigatorEvent({name: panel.name, show: false});
+
+      // Handel new button
+      this.$.newButton.setShowing(panel.canAddNew);
+      if (collection) {
+        // Check 'couldCreate' first in case it's an info model.
+        model = collection.prototype.model;
+        canNotCreate = model.prototype.couldCreate ? !model.prototype.couldCreate() : !model.canCreate();
+      }
+      this.$.newButton.setDisabled(canNotCreate);
 
       // Select panelMenu
       if (!this.$.panelMenu.isSelected(index)) {
@@ -231,13 +266,15 @@ trailing:true white:true*/
         this.fetch();
       }
     },
+    setHeaderContent: function (content) {
+      this.$.header.setContent(content);
+    },
     setMenuPanel: function (index) {
       var label = index ? "_back".loc() : "_logout".loc();
       this.$.menuPanels.setIndex(index);
       this.$.menuPanels.getActive().select(0);
       this.setContentPanel(0);
       this.$.backButton.setContent(label);
-      this.$.newButton.setShowing(index);
       this.$.search.setShowing(index);
       this.$.searchIconButton.setShowing(index);
     },

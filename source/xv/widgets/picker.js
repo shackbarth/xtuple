@@ -9,17 +9,24 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "enyo.Control",
     classes: "xv-pickerwidget",
     events: {
+      /**
+
+        @param {Object} inEvent The payload that's attached to bubbled-up events
+        @param {XV.PickerWidget} inEvent.originator This
+        @param inEvent.value The value passed up is the key of the object and not the object itself
+       */
       onValueChange: ""
     },
     published: {
       attr: null,
       label: "",
+      showLabel: true,
       value: null,
       collection: null,
       disabled: false,
       idAttribute: "id",
       nameAttribute: "name",
-      valueAttribute: null
+      orderBy: null
     },
     handlers: {
       onSelect: "itemSelected"
@@ -63,7 +70,7 @@ regexp:true, undef:true, trailing:true, white:true */
         callback,
         didStartup = false,
         that = this;
-        
+
       // If we don't have data yet, try again after start up tasks complete
       if (!collection) {
         if (didStartup) {
@@ -78,25 +85,27 @@ regexp:true, undef:true, trailing:true, white:true */
         return;
       }
       this._collection = collection;
+      this.orderByChanged();
+      if (this._collection.comparator) { this._collection.sort(); }
       this.buildList();
     },
     create: function () {
       this.inherited(arguments);
       if (this.getCollection()) { this.collectionChanged(); }
       this.labelChanged();
+      this.showLabelChanged();
     },
     disabledChanged: function (inSender, inEvent) {
       this.$.pickerButton.setDisabled(this.getDisabled());
     },
     itemSelected: function (inSender, inEvent) {
-      var value = this.$.picker.getSelected().value,
-        attribute = this.getValueAttribute();
-      this.setValue(attribute ? value[attribute] : value);
+      var value = this.$.picker.getSelected().value;
+      this.setValue(value);
     },
     /**
       Implement your own filter function here. By default
       simply returns the array of models passed.
-      
+
       @param {Array}
       returns {Array}
     */
@@ -115,6 +124,28 @@ regexp:true, undef:true, trailing:true, white:true */
         (this.attr ? ("_" + this.attr).loc() + ":" : "");
       this.$.label.setShowing(label);
       this.$.label.setContent(label);
+    },
+    orderByChanged: function () {
+      var orderBy = this.getOrderBy();
+      if (this._collection && orderBy) {
+        this._collection.comparator = function (a, b) {
+          var aval,
+            bval,
+            attr,
+            i;
+          for (i = 0; i < orderBy.length; i++) {
+            attr = orderBy[i].attribute;
+            aval = orderBy[i].descending ? b.getValue(attr) : a.getValue(attr);
+            bval = orderBy[i].descending ? a.getValue(attr) : b.getValue(attr);
+            aval = !isNaN(aval) ? aval - 0 : aval;
+            bval = !isNaN(aval) ? bval - 0 : bval;
+            if (aval !== bval) {
+              return aval > bval ? 1 : -1;
+            }
+          }
+          return 0;
+        };
+      }
     },
     /**
       Programatically sets the value of this widget.
@@ -138,7 +169,7 @@ regexp:true, undef:true, trailing:true, white:true */
         actualModel = _.find(this.$.picker.controls, function (menuItem) {
           return menuItem.value && menuItem.value.id === value;
         }).value;
-        this.setValue(actualModel);
+        this.setValue(actualModel, options);
         return;
       }
 
@@ -147,15 +178,22 @@ regexp:true, undef:true, trailing:true, white:true */
         if (value !== oldValue) {
           this.value = value;
           if (!options.silent) {
-            inEvent = { originator: this, value: value };
+            inEvent = { originator: this, value: value.id ? value.id : value };
             this.doValueChange(inEvent);
           }
         }
       }
     },
+    showLabelChanged: function () {
+      if (this.getShowLabel()) {
+        this.$.label.show();
+      } else {
+        this.$.label.hide();
+      }
+    },
     /** @private */
     _selectValue: function (value) {
-      value = (!value || this.getValueAttribute()) ? value : value.id;
+      value = value ? value.id : value;
       var component = _.find(this.$.picker.getComponents(), function (c) {
         if (c.kind === "onyx.MenuItem") {
           return (c.value ? c.value.id : null) === value;
@@ -166,5 +204,5 @@ regexp:true, undef:true, trailing:true, white:true */
       return value;
     }
   });
-  
+
 }());

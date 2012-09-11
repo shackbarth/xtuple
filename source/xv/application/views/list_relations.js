@@ -45,5 +45,68 @@ trailing:true white:true*/
     formatFirstName: XV.ContactList.prototype.formatFirstName,
     sendMail: XV.ContactList.prototype.sendMail
   });
+  
+  // ..........................................................
+  // PROJECT
+  //
+
+  enyo.kind({
+    name: "XV.ProjectTaskListRelations",
+    kind: "XV.ListRelations",
+    orderBy: [
+      {attribute: "number"}
+    ],
+    parentKey: "project",
+    workspace: "XV.ProjecTaskWorkspace",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "dueDate", fit: true,
+                formatter: "formatDueDate",
+                classes: "right"}
+            ]},
+            {kind: "XV.ListAttr", attr: "name"},
+            {kind: "XV.ListAttr", attr: "project.name"}
+          ]},
+          {kind: "XV.ListColumn", classes: "third",
+            components: [
+            {kind: "XV.ListAttr", attr: "getProjectStatusString"},
+            {kind: "XV.ListAttr", attr: "owner.username"}
+          ]},
+          {kind: "XV.ListColumn", style: "width: 80;",
+            components: [
+            {content: "_budgeted".loc() + ":", classes: "xv-list-attr",
+              style: "text-align: right;"},
+            {content: "_actual".loc() + ":", classes: "xv-list-attr",
+              style: "text-align: right;"},
+            {content: "_balance".loc() + ":", classes: "xv-list-attr",
+              style: "text-align: right;"}
+          ]},
+          {kind: "XV.ListColumn", classes: "money", components: [
+            {kind: "XV.ListAttr", attr: "budgetedExpenses",
+              classes: "text-align-right", formatter: "formatExpenses"},
+            {kind: "XV.ListAttr", attr: "actualExpenses",
+              classes: "text-align-right", formatter: "formatExpenses"},
+            {kind: "XV.ListAttr", attr: "balanceExpenses",
+              classes: "text-align-right", formatter: "formatExpenses"}
+          ]},
+          {kind: "XV.ListColumn", classes: "money", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "budgetedHours",
+              classes: "text-align-right", formatter: "formatHours"},
+            {kind: "XV.ListAttr", attr: "actualHours",
+              classes: "text-align-right", formatter: "formatHours"},
+            {kind: "XV.ListAttr", attr: "balanceHours",
+              classes: "text-align-right", formatter: "formatHours"}
+          ]}
+        ]}
+      ]}
+    ],
+    formatDueDate: XV.ProjectList.prototype.formatDueDate,
+    formatHours: XV.ProjectList.prototype.formatHours,
+    formatExpenses: XV.ProjectList.prototype.formatExpenses
+  });
 
 }());

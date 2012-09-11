@@ -78,7 +78,8 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.Input",
     classes: "xv-inputwidget",
     published: {
-      label: ""
+      label: "",
+      showLabel: true
     },
     components: [
       {kind: "FittableColumns", components: [
@@ -93,10 +94,18 @@ regexp:true, undef:true, trailing:true, white:true */
       this.inherited(arguments);
       this.labelChanged();
       this.placeholderChanged();
+      this.showLabelChanged();
     },
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.attr || "").loc());
       this.$.label.setContent(label + ":");
+    },
+    showLabelChanged: function () {
+      if (this.getShowLabel()) {
+        this.$.label.show();
+      } else {
+        this.$.label.hide();
+      }
     }
   });
 

@@ -10,7 +10,7 @@ trailing:true white:true*/
     kind: "Panels",
     arrangerKind: "CardArranger",
     draggable: false,
-    classes: "xt-postbooks enyo-unselectable",
+    classes: "xv-postbooks enyo-unselectable",
     handlers: {
       onPrevious: "previous",
       onSearch: "addSearch",
