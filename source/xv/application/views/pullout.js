@@ -166,10 +166,6 @@ white:true*/
         for (i = 0; i < children.length; i++) {
           children[i].hide();
         }
-        if (item.populateFromCookie) {
-          // i.e. don't try to do this for history
-          item.populateFromCookie();
-        }
         item.show();
         item.resized();
         if (!this.isAtMax()) {

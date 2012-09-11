@@ -70,6 +70,14 @@ white:true*/
     isAllSetUp: false,
     create: function () {
       this.inherited(arguments);
+
+      var that = this,
+        callback = function () {
+          that.populateFromCookie();
+        };
+
+      XT.getStartupManager().registerCallback(callback, true);
+
       this.isAllSetUp = true;
     },
     getParameters: function () {
