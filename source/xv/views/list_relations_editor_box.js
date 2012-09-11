@@ -36,44 +36,7 @@ trailing:true white:true*/
       @param {XM.Model} model
       @param {Object} options
     */
-    attributesChanged: function (model, options) {
-      options = options || {};
-      var that = this,
-        attr,
-        value,
-        K = XM.Model,
-        status = model.getStatus(),
-        changes = options.changes,
-        canNotUpdate = !model.canUpdate() || !(status & K.READY),
-        control,
-        isReadOnly,
-        isRequired,
-        findControl = function (attr) {
-          return _.find(that.$, function (ctl) {
-            return ctl.attr === attr;
-          });
-        };
-      for (attr in changes) {
-        if (changes.hasOwnProperty(attr)) {
-          value = model.get(attr);
-          isReadOnly = model.isReadOnly(attr);
-          isRequired = model.isRequired(attr);
-          control = findControl(attr);
-          if (control) {
-            if (control.setPlaceholder && isRequired &&
-                !control.getPlaceholder()) {
-              control.setPlaceholder("_required".loc());
-            }
-            if (control.setValue && !(status & K.BUSY)) {
-              control.setValue(value, {silent: true});
-            }
-            if (control.setDisabled) {
-              control.setDisabled(canNotUpdate || isReadOnly);
-            }
-          }
-        }
-      }
-    },
+    attributesChanged: XV.Workspace.prototype.attributesChanged,
     create: function () {
       this.inherited(arguments);
       var editors = this.getEditors() || [],
