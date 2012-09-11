@@ -1,4 +1,4 @@
-/*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
+/*jshint bitwise:false, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
 /*global XT:true, XM:true, XV:true, _:true, enyo:true*/
@@ -25,6 +25,54 @@ trailing:true white:true*/
     handlers: {
       onSelect: "selectionChanged",
       onDeselect: "selectionChanged"
+    },
+    attrChanged: function () {
+      this.$.list.setAttr(this.attr);
+    },
+    /**
+      Updates all child controls on the workspace where the name of
+      the control matches the name of an attribute on the model.
+
+      @param {XM.Model} model
+      @param {Object} options
+    */
+    attributesChanged: function (model, options) {
+      options = options || {};
+      var that = this,
+        attr,
+        value,
+        K = XM.Model,
+        status = model.getStatus(),
+        changes = options.changes,
+        canNotUpdate = !model.canUpdate() || !(status & K.READY),
+        control,
+        isReadOnly,
+        isRequired,
+        findControl = function (attr) {
+          return _.find(that.$, function (ctl) {
+            return ctl.attr === attr;
+          });
+        };
+      for (attr in changes) {
+        if (changes.hasOwnProperty(attr)) {
+          value = model.get(attr);
+          isReadOnly = model.isReadOnly(attr);
+          isRequired = model.isRequired(attr);
+          control = findControl(attr);
+          if (control) {
+            if (control.setPlaceholder && isRequired &&
+                !control.getPlaceholder()) {
+              control.setPlaceholder("_required".loc());
+            }
+            if (control.setValue && !(status & K.BUSY)) {
+              control.setValue(value, {silent: true});
+            }
+            if (control.setDisabled) {
+              control.setDisabled(canNotUpdate || isReadOnly);
+            }
+          }
+        }
+      }
     },
     create: function () {
       this.inherited(arguments);
@@ -63,9 +111,6 @@ trailing:true white:true*/
         classes: "xv-groupbox-button-single"
       });
     },
-    attrChanged: function () {
-      this.$.list.setAttr(this.attr);
-    },
     newItem: function () {
       var list = this.$.list,
         parent = this.$.list.getParent(),
@@ -93,8 +138,20 @@ trailing:true white:true*/
     },
     selectionChanged: function (inSender, inEvent) {
       var index = this.$.list.getFirstSelected(),
-        editors = this.getEditors() || [];
+        model = index ? this.$.list.getModel(index) : null,
+        editors = this.getEditors() || [],
+        changes = {},
+        options = {},
+        attrs,
+        i;
       if (index) {
+        // Update editor panel(s) completely
+        attrs = model.getAttributeNames();
+        for (i = 0; i < attrs.length; i++) {
+          changes[attrs[i]] = true;
+        }
+        options.changes = changes;
+        this.attributesChanged(model, options);
         this.$.panels.previous();
       } else {
         this.$.panels.setIndex(editors.length);

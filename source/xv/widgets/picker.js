@@ -169,7 +169,7 @@ regexp:true, undef:true, trailing:true, white:true */
         actualModel = _.find(this.$.picker.controls, function (menuItem) {
           return menuItem.value && menuItem.value.id === value;
         }).value;
-        this.setValue(actualModel);
+        this.setValue(actualModel, options);
         return;
       }
 
