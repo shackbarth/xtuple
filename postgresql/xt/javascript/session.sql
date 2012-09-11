@@ -131,12 +131,13 @@ select xt.install_js('XT','Session','xtuple', $$
         var relations = result[type]['relations'], 
           child = XT.Orm.fetch(schema.toUpperCase(), value.toMany.type),
           pkey = XT.Orm.primaryKey(child),
+          inverse = value.toMany.inverse ? value.toMany.inverse.camelize() : undefined;
           rel = {
             type: "Backbone.HasMany",
             key: value.name,
             relatedModel: schema.toUpperCase() + '.' + value.toMany.type,
             reverseRelation: {
-              key: value.toMany.inverse
+              key: inverse
             }
           };
         if (!value.toMany.isNested) {
