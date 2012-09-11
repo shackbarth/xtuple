@@ -587,7 +587,7 @@ body {
 /* ProjectTaskListRelationsBox.scss */
 /* line 482, ../sass/screen.scss */
 .xv-project-tasks-box.panel {
-  width: 640px;
+  width: 675px;
 }
 /* line 485, ../sass/screen.scss */
 .xv-project-tasks-box .xv-groupbox {
@@ -597,14 +597,18 @@ body {
   margin-right: 0px;
   border: none;
 }
+/* line 491, ../sass/screen.scss */
+.xv-project-tasks-box .xv-groupbox.panel {
+  min-width: 0px;
+}
 
 /* CommentBox.scss */
-/* line 496, ../sass/screen.scss */
+/* line 499, ../sass/screen.scss */
 .xv-comment-box .xv-comment-box-repeater {
   background: white;
   max-width: 320px;
 }
-/* line 501, ../sass/screen.scss */
+/* line 504, ../sass/screen.scss */
 .xv-comment-box .xv-comment-box-label {
   padding: 4px;
   font-size: small;
@@ -613,27 +617,27 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* line 510, ../sass/screen.scss */
+/* line 513, ../sass/screen.scss */
 .xv-comment-box .xv-comment-box-textblock {
   padding: 12px;
   font-size: small;
   overflow: hidden;
 }
-/* line 514, ../sass/screen.scss */
+/* line 517, ../sass/screen.scss */
 .xv-comment-box .xv-comment-box-textblock.disabled {
   opacity: 0.6;
 }
 
-/* line 521, ../sass/screen.scss */
+/* line 524, ../sass/screen.scss */
 .xv-assignment-box .xv-decorated-label {
   width: 250px;
 }
-/* line 524, ../sass/screen.scss */
+/* line 527, ../sass/screen.scss */
 .xv-assignment-box .xv-label {
   width: 250px;
 }
 
-/* line 529, ../sass/screen.scss */
+/* line 532, ../sass/screen.scss */
 .xv-parameter-title {
   padding-top: 8px;
   font-size: large;
@@ -642,31 +646,31 @@ body {
 
 /*********XV WIDGETS***********/
 /* AddressWidget.scss */
-/* line 538, ../sass/screen.scss */
+/* line 541, ../sass/screen.scss */
 .xv-addresswidget {
   background-color: white;
   padding: 4px;
 }
-/* line 541, ../sass/screen.scss */
+/* line 544, ../sass/screen.scss */
 .xv-addresswidget .xv-addresswidget-viewer {
   border: 0px;
   font-size: medium;
   display: inline;
 }
-/* line 545, ../sass/screen.scss */
+/* line 548, ../sass/screen.scss */
 .xv-addresswidget .xv-addresswidget-viewer.placeholder {
   font-style: italic;
   color: #93a1a1;
 }
 
-/* line 552, ../sass/screen.scss */
+/* line 555, ../sass/screen.scss */
 .xv-addresswidget-input-decorator {
   background: white;
   display: block;
   margin: 4px;
 }
 
-/* line 558, ../sass/screen.scss */
+/* line 561, ../sass/screen.scss */
 .xv-addresswidget-combobox-decorator {
   background: white;
   display: block;
@@ -674,34 +678,34 @@ body {
   width: 205px;
 }
 
-/* line 565, ../sass/screen.scss */
+/* line 568, ../sass/screen.scss */
 .xv-addresswidget-input {
   width: 100%;
 }
 
-/* line 569, ../sass/screen.scss */
+/* line 572, ../sass/screen.scss */
 .xv-addresswidget-button {
   margin-right: 4px;
 }
 
-/* line 573, ../sass/screen.scss */
+/* line 576, ../sass/screen.scss */
 .xv-addresswidget-buttons {
   margin-top: 4px;
 }
 
-/* line 577, ../sass/screen.scss */
+/* line 580, ../sass/screen.scss */
 .xv-addresswidget-editor-header {
   padding: 4px;
 }
 
-/* line 581, ../sass/screen.scss */
+/* line 584, ../sass/screen.scss */
 .xv-addresswidget-editor {
   width: 320px;
   padding: 8px;
   padding-right: 16px;
 }
 
-/* line 587, ../sass/screen.scss */
+/* line 590, ../sass/screen.scss */
 .xv-addresslist-attr {
   padding: 5px;
   font-size: 13px;
@@ -712,13 +716,13 @@ body {
 }
 
 /* Combobox.scss */
-/* line 597, ../sass/screen.scss */
+/* line 600, ../sass/screen.scss */
 .xv-combobox {
   height: 24px;
   width: 205px;
 }
 
-/* line 602, ../sass/screen.scss */
+/* line 605, ../sass/screen.scss */
 .xv-combobox-input {
   font-size: medium;
   border: 0px;
@@ -727,24 +731,24 @@ body {
   outline: none;
 }
 
-/* line 610, ../sass/screen.scss */
+/* line 613, ../sass/screen.scss */
 .xv-combobox-icon {
   left: 8px;
   position: relative;
 }
 
 /* picker.scss */
-/* line 616, ../sass/screen.scss */
+/* line 619, ../sass/screen.scss */
 .xv-pickerwidget {
   background-color: white;
 }
 
-/* line 620, ../sass/screen.scss */
+/* line 623, ../sass/screen.scss */
 .xv-picker {
   width: 180px;
 }
 
-/* line 624, ../sass/screen.scss */
+/* line 627, ../sass/screen.scss */
 .xv-label {
   width: 130px;
   padding-bottom: 8px;
@@ -754,7 +758,7 @@ body {
   text-align: right;
 }
 
-/* line 633, ../sass/screen.scss */
+/* line 636, ../sass/screen.scss */
 .xv-decorated-label {
   width: 130px;
   padding-bottom: 8px;
@@ -764,7 +768,7 @@ body {
   text-align: right;
 }
 
-/* line 642, ../sass/screen.scss */
+/* line 645, ../sass/screen.scss */
 .xv-picker-label {
   width: 130px;
   padding-bottom: 8px;
@@ -774,7 +778,7 @@ body {
   text-align: right;
 }
 
-/* line 651, ../sass/screen.scss */
+/* line 654, ../sass/screen.scss */
 .xv-textarea-input {
   width: 95%;
   min-height: 100px;
@@ -783,27 +787,27 @@ body {
   border-color: #ddd;
 }
 
-/* line 659, ../sass/screen.scss */
+/* line 662, ../sass/screen.scss */
 .xv-relationwidget-completer {
   left: -200px;
   top: 15px;
 }
 
-/* line 665, ../sass/screen.scss */
+/* line 668, ../sass/screen.scss */
 .xv-relationwidget-column.left {
   padding-right: 18px;
   color: black;
   width: 140px;
 }
 
-/* line 672, ../sass/screen.scss */
+/* line 675, ../sass/screen.scss */
 .xv-relationwidget-icon {
   top: 2px;
   left: 8px;
   position: relative;
 }
 
-/* line 678, ../sass/screen.scss */
+/* line 681, ../sass/screen.scss */
 .xv-relationwidget-description {
   white-space: nowrap;
   overflow: hidden;
@@ -813,30 +817,30 @@ body {
   padding-bottom: 4px;
   max-width: 325px;
 }
-/* line 686, ../sass/screen.scss */
+/* line 689, ../sass/screen.scss */
 .xv-relationwidget-description.disabled {
   opacity: 0.4;
 }
-/* line 689, ../sass/screen.scss */
+/* line 692, ../sass/screen.scss */
 .xv-relationwidget-description.label {
   text-indent: 0px;
   text-align: right;
 }
-/* line 694, ../sass/screen.scss */
+/* line 697, ../sass/screen.scss */
 .xv-relationwidget-description.hasLabel {
   text-indent: 0px;
 }
-/* line 697, ../sass/screen.scss */
+/* line 700, ../sass/screen.scss */
 .xv-relationwidget-description.hyperlink {
   color: blue;
 }
 
-/* line 702, ../sass/screen.scss */
+/* line 705, ../sass/screen.scss */
 .xv-textarea {
   background-color: white;
 }
 
-/* line 706, ../sass/screen.scss */
+/* line 709, ../sass/screen.scss */
 .xv-half-check {
   background-image: url("../../assets/checkbox.png");
   background-repeat: no-repeat;
@@ -845,7 +849,7 @@ body {
   background-color: transparent;
 }
 
-/* line 715, ../sass/screen.scss */
+/* line 718, ../sass/screen.scss */
 .xv-menuitem.disabled {
   color: Dimgray;
 }

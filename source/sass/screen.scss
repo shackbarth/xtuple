@@ -480,7 +480,7 @@ body {
 /* ProjectTaskListRelationsBox.scss */
 .xv-project-tasks-box {
   &.panel {
-    width: 640px;
+    width: 675px;
   }
   .xv-groupbox {
     padding-top: 0px;
@@ -488,6 +488,9 @@ body {
     padding-left: 0px;
     margin-right: 0px;
     border: none;
+    &.panel {
+  		min-width: 0px;
+  	}
   }
 }
 
