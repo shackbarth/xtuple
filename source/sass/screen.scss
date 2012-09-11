@@ -81,32 +81,6 @@ body {}
   }
 }
 
-.xt-sub-module-content {
-  @include box-shadow(#000 -4px 0 10px -4px);
-}
-
-.xt-module-screen {
-  .xt-module-menu {
-    width: 320px !important;
-    background-color: #fff;
-    .xt-module-menu-item {
-      padding: 15px;
-      vertical-align: middle;
-      border-bottom: 1px solid #ddd;
-      &:hover {
-        background-color: $highlight;
-        cursor: pointer;
-      }
-      &:active {
-        background-color: #fff;
-      }
-      &.selected {
-        background-color: $highlight;
-      }
-    }
-  }
-}
-
 /******** ********/
 $blue1      : #99ccff;
 
@@ -120,76 +94,71 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  .xt-postbooks {
+  .xv-postbooks {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    .xt-postbooks-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      .xt-login {
-        .xt-login-screen {
-          .xt-user-login-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #fff;
-            .xt-user-login-block {
-              background: url("../assets/login-blue-scr.png") 0 0 no-repeat;
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              margin-top: -125px;
-              margin-left: -300px;
-              height: 250px;
-              width: 300px;
-              .xt-user-login-sub-block {
-                position: absolute;
-                top: 30px;
-                left: 20px;
-                right: 0;
-                bottom: 30px;
-                /*background-color: $blue1;*/
-                overflow: hidden;
-                .xt-user-login-form {
-                  .xt-input {
-                    &.xt-login-input {
-                      display: block;
-                      margin: 10px;
-                      margin-left: 35px;
-                    }
-                  }
-                  .xt-button {
-                    &.xt-login-button {
-                      display: block;
-                      margin-left: 152px;
-                      width: 80px;
-                    }
-                  }
-                }
-              }
-            }
-            .xt-login-logo-block {
-              /*@include box-shadow(#000 -9px 0 20px -14px);*/
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              margin-top: -125px;
-              height: 250px;
-              width: 300px;
-              background: url("../assets/login-logo.png") 0 0 no-repeat;
-            }
-          }
-        }
+  }
+}
+
+.xv-login {
+  .xv-login-form {
+    position: absolute;
+    height: 250px;
+    width: 300px;
+    top: 50%;
+    left: 50%;
+    margin-top: -125px;
+    margin-left: -150px;
+    .xv-message-box {
+      font-size: 12px;
+      &.error {
+        color: #ff0000;
+      }
+      text-align: center;
+      padding: 10px;
+    }
+  }
+  .xv-organizations-selection {
+    position: absolute;
+    height: 300px;
+    width: 400px;
+    top: 50%;
+    left: 50%;
+    margin-top: -150px;
+    margin-left: -200px;
+    .xv-organization-row {
+      padding: 5px;
+      cursor: pointer;
+      &:hover {
+        background-color: #ddd;
       }
     }
+  }
+}
+
+.xv-startup-panel {
+  .xv-startup-divider {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    top: 200px;
+    position: relative;
+  	color: #F49200;
+  	text-transform: uppercase;
+  	font-family: Segoe UI, Prelude Medium, Helvetica, Verdana, sans-serif;
+  	font-size: 14px;
+  	font-weight: bold;
+  	margin-bottom: 8px;
+  }
+  .xv-startup-progress {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    top: 200px;
+    position: relative;
   }
 }
 
@@ -513,6 +482,13 @@ body {
   &.panel {
     width: 640px;
   }
+  .xv-groupbox {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    margin-right: 0px;
+    border: none;
+  }
 }
 
 /* CommentBox.scss */
@@ -743,63 +719,5 @@ body {
 
 /********END XV WIDGETS******/
 
-.xv-login {
-  .xv-login-form {
-    position: absolute;
-    height: 250px;
-    width: 300px;
-    top: 50%;
-    left: 50%;
-    margin-top: -125px;
-    margin-left: -150px;
-    .xv-message-box {
-      font-size: 12px;
-      &.error {
-        color: #ff0000;
-      }
-      text-align: center;
-      padding: 10px;
-    }
-  }
-  .xv-organizations-selection {
-    position: absolute;
-    height: 300px;
-    width: 400px;
-    top: 50%;
-    left: 50%;
-    margin-top: -150px;
-    margin-left: -200px;
-    .xv-organization-row {
-      padding: 5px;
-      cursor: pointer;
-      &:hover {
-        background-color: #ddd;
-      }
-    }
-  }
-}
-
-.xv-startup-panel {
-  .xv-startup-divider {
-    width: 70%;
-    margin-left: auto;
-    margin-right: auto;
-    top: 200px;
-    position: relative;
-  	color: #F49200;
-  	text-transform: uppercase;
-  	font-family: Segoe UI, Prelude Medium, Helvetica, Verdana, sans-serif;
-  	font-size: 14px;
-  	font-weight: bold;
-  	margin-bottom: 8px;
-  }
-  .xv-startup-progress {
-    width: 70%;
-    margin-left: auto;
-    margin-right: auto;
-    top: 200px;
-    position: relative;
-  }
-}
 
 
