@@ -159,6 +159,7 @@ regexp:true, undef:true, trailing:true, white:true */
       options = options || {};
       var inEvent,
         oldValue = this.getValue(),
+        actualMenuItem,
         actualModel;
 
       // here is where we find the model and re-call this method if we're given
@@ -166,10 +167,15 @@ regexp:true, undef:true, trailing:true, white:true */
       // note that we assume that all of the possible models are already
       // populated in the menu items of the picker
       if (value && typeof value !== 'object') {
-        actualModel = _.find(this.$.picker.controls, function (menuItem) {
+        actualMenuItem = _.find(this.$.picker.controls, function (menuItem) {
           return menuItem.value && menuItem.value.id === value;
-        }).value;
-        this.setValue(actualModel, options);
+        });
+        if (actualMenuItem) {
+          // a menu item matches the selection. Use the model back backs the menu item
+          actualModel = actualMenuItem.value;
+          this.setValue(actualModel, options);
+        }
+        // (else "none" is selected and there's no need to do anything)
         return;
       }
 
