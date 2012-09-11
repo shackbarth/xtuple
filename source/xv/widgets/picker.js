@@ -178,7 +178,7 @@ regexp:true, undef:true, trailing:true, white:true */
         if (value !== oldValue) {
           this.value = value;
           if (!options.silent) {
-            inEvent = { originator: this, value: value.id ? value.id : value };
+            inEvent = { originator: this, value: value && value.id ? value.id : value };
             this.doValueChange(inEvent);
           }
         }
