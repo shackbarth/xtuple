@@ -509,6 +509,18 @@ white:true*/
     model: XM.IncidentListItem
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.IncidentRelationCollection = XM.Collection.extend({
+    /** @scope XM.IncidentRelationCollection.prototype */
+
+    model: XM.IncidentRelation
+
+  });
 
 }());
 

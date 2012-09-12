@@ -315,5 +315,17 @@ white:true*/
     model: XM.OpportunityListItem
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.OpportunityRelationCollection = XM.Collection.extend({
+    /** @scope XM.OpportunityRelationCollection.prototype */
+
+    model: XM.OpportunityRelation
+
+  });
 
 }());

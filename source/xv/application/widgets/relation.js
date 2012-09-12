@@ -11,6 +11,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.AccountWidget",
     kind: "XV.RelationWidget",
+    collection: "XM.AccountRelationCollection",
     list: "XV.AccountList"
   });
 
@@ -22,6 +23,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.ContactWidget",
     kind: "XV.RelationWidget",
     label: "_name".loc(),
+    collection: "XM.ContactRelationCollection",
     list: "XV.ContactList",
     keyAttribute: "name",
     nameAttribute: "jobTitle",
@@ -32,10 +34,11 @@ regexp:true, undef:true, trailing:true, white:true */
     components: [
       {kind: "FittableColumns", components: [
         {name: "label", content: "", classes: "xv-decorated-label"},
-        {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
-          components: [
+        {kind: "onyx.InputDecorator", name: "decorator",
+          classes: "xv-input-decorator", components: [
           {name: 'input', kind: "onyx.Input", classes: "xv-subinput",
-            onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur"
+            onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur",
+            onfocus: "receiveFocus"
           },
           {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
             {kind: "onyx.IconButton", src: "assets/triangle-down-large.png",
@@ -49,10 +52,7 @@ regexp:true, undef:true, trailing:true, white:true */
                 disabled: true}
             ]}
           ]},
-          {kind: "onyx.MenuDecorator", classes: "xv-relationwidget-completer",
-            onSelect: "relationSelected", components: [
-            {kind: "onyx.Menu", name: "autocompleteMenu", modal: false}
-          ]}
+          {name: "completer", kind: "XV.Completer", onSelect: "itemSelected"}
         ]}
       ]},
       {kind: "FittableColumns", components: [
@@ -157,6 +157,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.IncidentWidget",
     kind: "XV.RelationWidget",
+    collection: "XM.IncidentRelationCollection",
     list: "XV.IncidentList",
     nameAttribute: "description"
   });
@@ -168,6 +169,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.ItemWidget",
     kind: "XV.RelationWidget",
+    collection: "XM.ItemRelationCollection",
     list: "XV.ItemList",
     nameAttribute: "description1",
     descripAttribute: "description2"
@@ -180,6 +182,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.OpportunityWidget",
     kind: "XV.RelationWidget",
+    collection: "XM.OpportunityRelationCollection",
     list: "XV.OpportunityList"
   });
 
@@ -190,6 +193,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.ProjectWidget",
     kind: "XV.RelationWidget",
+    collection: "XM.ProjectRelationCollection",
     list: "XV.ProjectList"
   });
 
@@ -201,6 +205,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.UserAccountWidget",
     kind: "XV.RelationWidget",
+    collection: "XM.UserAccountRelationCollection",
     list: "XV.UserAccountList",
     keyAttribute: "username",
     nameAttribute: "properName"

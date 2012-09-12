@@ -340,5 +340,17 @@ white:true*/
     model: XM.ItemListItem
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.ItemRelationCollection = XM.Collection.extend({
+    /** @scope XM.ItemRelationCollection.prototype */
+
+    model: XM.ItemRelation
+
+  });
 
 }());

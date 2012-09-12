@@ -10,6 +10,7 @@
 @import "compass/css3/box-sizing";
 
 $highlight  : #d6f1ff;
+$orange     : #ff6600;
 
 body {}
  
@@ -234,8 +235,11 @@ body {
 // Navigator
 //
 .xv-navigator-header {
-  color: yellow;
-  padding-left: 10px;
+  font-size: small;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: $orange;
+  padding-left: 20px;
 }
 
 
