@@ -1030,9 +1030,6 @@
         }
       }
     ],
-    "order": [
-      "incdt_number desc"
-    ],
     "isSystem": true
   },
   {
