@@ -7,6 +7,7 @@ enyo.depends(
   "picker.js",
   "address.js",
   "date.js",
+  "completer.js",
   "combobox.js",
   "relation.js",
   "parameter.js"
