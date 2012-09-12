@@ -33,7 +33,7 @@ white:true*/
         return '_completed'.loc();
       }
     },
-    
+
     isActive: function () {
       var K = XM.Project,
         status = this.get('status');
@@ -360,8 +360,8 @@ white:true*/
     */
     valuesDidChange: function () {
       var project = this.get('project');
-      if (project && project.tasksDidChange) { 
-        project.tasksDidChange(); 
+      if (project && project.tasksDidChange) {
+        project.tasksDidChange();
       }
     }
 
@@ -376,7 +376,7 @@ white:true*/
     /** @scope XM.ProjectComment.prototype */
 
     recordType: 'XM.ProjectComment',
-    
+
     sourceName: 'J'
 
   });
@@ -498,7 +498,7 @@ white:true*/
     /** @scope XM.ProjectTaskComment.prototype */
 
     recordType: 'XM.ProjectTaskComment',
-    
+
     sourceName: 'TA'
 
   });
@@ -547,7 +547,7 @@ white:true*/
   });
 
   XM.ProjectListItem = XM.ProjectListItem.extend(XM.ProjectStatus);
-  
+
   /**
     @class
 
@@ -581,7 +581,19 @@ white:true*/
     model: XM.ProjectListItem
 
   });
-  
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.ProjectRelationCollection = XM.Collection.extend({
+    /** @scope XM.ProjectRelationCollection.prototype */
+
+    model: XM.ProjectRelation
+
+  });
+
   /**
     @class
 

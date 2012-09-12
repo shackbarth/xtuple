@@ -95,7 +95,6 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
             });
           }
         }
-        this.reflow();
         this.render();
       }
     }

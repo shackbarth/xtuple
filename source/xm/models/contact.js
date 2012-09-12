@@ -260,5 +260,17 @@ white:true*/
     model: XM.ContactListItem
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.ContactRelationCollection = XM.Collection.extend({
+    /** @scope XM.ContactRelationCollection.prototype */
+
+    model: XM.ContactRelation
+
+  });
 
 }());

@@ -14,6 +14,7 @@ regexp:true, undef:true, trailing:true, white:true */
       placeholder: "",
       value: null,
       list: "",
+      collection: "",
       disabled: false,
       keyAttribute: "number",
       nameAttribute: "name",
@@ -201,8 +202,8 @@ regexp:true, undef:true, trailing:true, white:true */
         XT.getObjectByName(this._List.prototype.workspace) : null;
 
       // Setup collection instance
-      Collection = this._List.prototype.collection ?
-        XT.getObjectByName(this._List.prototype.collection) : null;
+      Collection = this.getCollection() ?
+        XT.getObjectByName(this.getCollection()) : null;
       if (!Collection) { return; }
       this._collection = new Collection();
     },
@@ -314,7 +315,9 @@ regexp:true, undef:true, trailing:true, white:true */
         inEvent = { activator: this.$.decorator };
       if (models.length) {
         this.$.completer.buildList(key, value, models);
-        this.$.completer.waterfall("onRequestShowMenu", inEvent);
+        if (!this.$.completer.showing) {
+          this.$.completer.waterfall("onRequestShowMenu", inEvent);
+        }
       } else {
         this.$.completer.waterfall("onRequestHideMenu", inEvent);
       }
