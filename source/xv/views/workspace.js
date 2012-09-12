@@ -15,7 +15,8 @@ trailing:true white:true*/
       title: "_none".loc(),
       headerAttrs: null,
       model: "",
-      callback: null
+      callback: null,
+      value: null
     },
     extensions: null,
     events: {
@@ -27,7 +28,7 @@ trailing:true white:true*/
       onHistoryChange: ""
     },
     handlers: {
-      onValueChange: "valueChanged"
+      onValueChange: "controlValueChanged"
     },
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
@@ -87,7 +88,8 @@ trailing:true white:true*/
       }
     },
     clear: function () {
-      var attrs = this._model ? this._model.getAttributeNames() : [],
+      var value = this.getValue(),
+        attrs = value ? value.getAttributeNames() : [],
         attr,
         i;
       for (i = 0; i < attrs.length; i++) {
@@ -96,6 +98,12 @@ trailing:true white:true*/
           this.$[attr].clear({silent: true});
         }
       }
+    },
+    controlValueChanged: function (inSender, inEvent) {
+      var value = this.getValue(),
+        attrs = {};
+      attrs[inEvent.originator.attr] = inEvent.value;
+      value.set(attrs);
     },
     create: function () {
       this.inherited(arguments);
@@ -126,14 +134,15 @@ trailing:true white:true*/
       this.doError(inEvent);
     },
     fetch: function (id) {
-      var options = {};
+      var value = this.getValue(),
+        options = {};
       options.id = id;
-      if (!this._model) { return; }
-      this._model.fetch(options);
+      if (!value) { return; }
+      value.fetch(options);
     },
     headerValuesChanged: function () {
       var headerAttrs = this.getHeaderAttrs() || [],
-        model = this._model,
+        model = this.getValue(),
         header = "",
         value,
         attr,
@@ -152,23 +161,25 @@ trailing:true white:true*/
       this.doHeaderChange({originator: this, header: header });
     },
     isDirty: function () {
-      return this._model ? this._model.isDirty() : false;
+      var value = this.getValue();
+      return value ? value.isDirty() : false;
     },
     modelChanged: function () {
       var model = this.getModel(),
         Klass = model ? XT.getObjectByName(model) : null,
         callback,
         that = this,
+        value = this.getValue(),
         headerAttrs = this.getHeaderAttrs() || [],
         i,
         attr,
         observers = "";
 
       // Clean up
-      if (this._model) {
-        this._model.off();
-        if (this._model.isNew()) { this._model.destroy(); }
-        delete this._model;
+      if (value) {
+        value.off();
+        if (value.isNew()) { value.destroy(); }
+        this.value = null;
       }
       if (!Klass) { return; }
 
@@ -183,68 +194,71 @@ trailing:true white:true*/
       }
 
       // Create new instance and bindings
-      this._model = new Klass();
-      this._model.on("change", this.attributesChanged, this);
-      this._model.on("readOnlyChange", this.attributesChanged, this);
-      this._model.on("statusChange", this.statusChanged, this);
-      this._model.on("error", this.error, this);
+      value = new Klass();
+      value.on("change", this.attributesChanged, this);
+      value.on("readOnlyChange", this.attributesChanged, this);
+      value.on("statusChange", this.statusChanged, this);
+      value.on("error", this.error, this);
       if (headerAttrs.length) {
         for (i = 0; i < headerAttrs.length; i++) {
           attr = headerAttrs[i];
-          if (_.contains(this._model.getAttributeNames(), attr)) {
+          if (_.contains(value.getAttributeNames(), attr)) {
             observers = observers ? observers + " change:" + attr : "change:" + attr;
           }
         }
-        this._model.on(observers, this.headerValuesChanged, this);
+        value.on(observers, this.headerValuesChanged, this);
       }
+      this.value = value;
     },
     newRecord: function (attributes) {
       var that = this,
+        value = this.getValue(),
         attr,
         // Fetch related data, and notify when done
         fetchIfRelated = function (attr) {
-          _.each(that._model.relations, function (relation) {
+          _.each(value.relations, function (relation) {
             if (relation.key === attr) {
               var options = {
                 success: function () {
                   var changes = {};
                   changes[attr] = true;
-                  that.attributesChanged(that._model, {changes: changes});
+                  that.attributesChanged(value, {changes: changes});
                 }
               };
-              that._model.fetchRelated(attr, options);
+              value.fetchRelated(attr, options);
             }
           });
         };
       this.modelChanged();
-      this._model.initialize(null, {isNew: true});
-      this._model.set(attributes, {force: true});
+      value.initialize(null, {isNew: true});
+      value.set(attributes, {force: true});
       for (attr in attributes) {
         if (attributes.hasOwnProperty(attr)) {
-          this._model.setReadOnly(attr);
+          value.setReadOnly(attr);
           fetchIfRelated(attr);
         }
       }
       this.clear();
     },
     requery: function () {
-      this.fetch(this._model.id);
+      this.fetch(this.value.id);
     },
     save: function (options) {
       options = options || {};
       var that = this,
+        value = this.getValue(),
         success = options.success,
         inEvent = {
           originator: this,
           model: this.getModel(),
-          id: this._model.id
+          id: value.id
         };
       options.success = function (model, resp, options) {
         that.doModelChange(inEvent);
         if (that.callback) { that.callback(model); }
         if (success) { success(model, resp, options); }
       };
-      this._model.save(null, options);
+      value.save(null, options);
     },
     statusChanged: function (model, status, options) {
       options = options || {};
@@ -274,11 +288,6 @@ trailing:true white:true*/
     titleChanged: function () {
       var inEvent = { title: this.getTitle(), originator: this };
       this.doTitleChange(inEvent);
-    },
-    valueChanged: function (inSender, inEvent) {
-      var attrs = {};
-      attrs[inEvent.originator.attr] = inEvent.value;
-      this._model.set(attrs);
     }
   });
 
