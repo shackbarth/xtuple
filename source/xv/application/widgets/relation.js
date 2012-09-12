@@ -34,10 +34,11 @@ regexp:true, undef:true, trailing:true, white:true */
     components: [
       {kind: "FittableColumns", components: [
         {name: "label", content: "", classes: "xv-decorated-label"},
-        {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
-          components: [
+        {kind: "onyx.InputDecorator", name: "decorator",
+          classes: "xv-input-decorator", components: [
           {name: 'input', kind: "onyx.Input", classes: "xv-subinput",
-            onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur"
+            onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur",
+            onfocus: "receiveFocus"
           },
           {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
             {kind: "onyx.IconButton", src: "assets/triangle-down-large.png",
