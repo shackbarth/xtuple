@@ -34,7 +34,8 @@ regexp:true, undef:true, trailing:true, white:true */
         {kind: "onyx.InputDecorator", name: "decorator",
           classes: "xv-input-decorator", components: [
           {name: 'input', kind: "onyx.Input", classes: "xv-subinput",
-            onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur"
+            onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur",
+            onfocus: "receiveFocus"
           },
           {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
             {kind: "onyx.IconButton", src: "assets/triangle-down-large.png",
@@ -231,6 +232,10 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     receiveBlur: function (inSender, inEvent) {
       this.autocomplete();
+      this._hasFocus = false;
+    },
+    receiveFocus: function (inSender, inEvent) {
+      this._hasFocus = true;
     },
     relationSelected: function (inSender, inEvent) {
       inEvent.activator = this.$.decorator;
@@ -309,6 +314,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     /** @private */
     _collectionFetchSuccess: function () {
+      if (!this._hasFocus) { return; }
       var key = this.getKeyAttribute(),
         value = this.$.input.getValue(),
         models = this._collection.models,
