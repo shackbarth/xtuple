@@ -30,8 +30,8 @@ regexp:true, undef:true, trailing:true, white:true */
     components: [
       {kind: "FittableColumns", components: [
         {name: "label", content: "", classes: "xv-decorated-label"},
-        {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
-          components: [
+        {kind: "onyx.InputDecorator", name: "decorator",
+          classes: "xv-input-decorator", components: [
           {name: 'input', kind: "onyx.Input", classes: "xv-subinput",
             onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur"
           },
@@ -47,10 +47,7 @@ regexp:true, undef:true, trailing:true, white:true */
                 disabled: true}
             ]}
           ]},
-          {kind: "onyx.MenuDecorator", classes: "xv-relationwidget-completer",
-            onSelect: "relationSelected", components: [
-            {kind: "onyx.Menu", name: "autocompleteMenu", modal: false}
-          ]}
+          {name: "completer", kind: "XV.Completer", onSelect: "itemSelected"}
         ]}
       ]},
       {name: "name", classes: "xv-relationwidget-description"},
@@ -149,8 +146,9 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     keyDown: function (inSender, inEvent) {
       // If tabbed out...
+      inEvent.activator = this.$.decorator;
       if (inEvent.keyCode === 9) {
-        this.$.autocompleteMenu.hide();
+        this.$.completer.waterfall("onRequestHideMenu", inEvent);
         this.autocomplete();
       }
     },
@@ -159,7 +157,8 @@ regexp:true, undef:true, trailing:true, white:true */
         key = this.getKeyAttribute(),
         attr = this.getValue() ? this.getValue().get(key) : "",
         value = this.$.input.getValue(),
-        menu = this.$.autocompleteMenu;
+        completer = this.$.completer;
+      inEvent.activator = this.$.decorator;
 
       // Look up if value changed
       if (value && value !== attr &&
@@ -180,7 +179,7 @@ regexp:true, undef:true, trailing:true, white:true */
           query: query
         });
       } else {
-        menu.hide();
+        completer.waterfall("onRequestHideMenu", inEvent);
       }
     },
     labelChanged: function () {
@@ -233,8 +232,9 @@ regexp:true, undef:true, trailing:true, white:true */
       this.autocomplete();
     },
     relationSelected: function (inSender, inEvent) {
+      inEvent.activator = this.$.decorator;
       this.setValue(inEvent.originator.model);
-      this.$.autocompleteMenu.hide();
+      this.$.completer.waterfall("onRequestHideMenu", inEvent);
       return true;
     },
     /**
@@ -309,25 +309,14 @@ regexp:true, undef:true, trailing:true, white:true */
     /** @private */
     _collectionFetchSuccess: function () {
       var key = this.getKeyAttribute(),
-        menu = this.$.autocompleteMenu,
-        model,
-        i;
-      menu.destroyComponents();
-      menu.controls = [];
-      menu.children = [];
-      if (this._collection.length) {
-        for (i = 0; i < this._collection.length; i++) {
-          model = this._collection.models[i];
-          menu.createComponent({
-            content: model.get(key),
-            model: model // for selection reference
-          });
-        }
-        menu.reflow();
-        menu.render();
-        menu.show();
+        value = this.$.input.getValue(),
+        models = this._collection.models,
+        inEvent = { activator: this.$.decorator };
+      if (models.length) {
+        this.$.completer.buildList(key, value, models);
+        this.$.completer.waterfall("onRequestShowMenu", inEvent);
       } else {
-        menu.hide();
+        this.$.completer.waterfall("onRequestHideMenu", inEvent);
       }
     },
     /** @private */
