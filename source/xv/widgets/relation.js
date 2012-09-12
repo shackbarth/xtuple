@@ -324,6 +324,7 @@ regexp:true, undef:true, trailing:true, white:true */
         if (!this.$.completer.showing) {
           this.$.completer.waterfall("onRequestShowMenu", inEvent);
         }
+        this.$.completer.adjustPosition();
       } else {
         this.$.completer.waterfall("onRequestHideMenu", inEvent);
       }
