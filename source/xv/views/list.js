@@ -37,6 +37,7 @@ trailing:true white:true*/
     published: {
       label: "",
       collection: null,
+      filterDescription: "",
       query: null,
       isFetching: false,
       isMore: true,
@@ -110,7 +111,7 @@ trailing:true white:true*/
 
       // Reset the size of the list
       this.setCount(count);
-      
+
       // Hack: Solves scroll problem for small number of rows
       // but doesn't seem quite right
       rowsPerPage = count && 50 > count ? count : 50;

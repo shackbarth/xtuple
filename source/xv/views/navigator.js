@@ -90,6 +90,7 @@ trailing:true white:true*/
       if (index === MODULE_MENU) {
         this.warnLogout();
       } else {
+        this.setHeaderContent("");
         this.setMenuPanel(MODULE_MENU);
       }
     },
@@ -104,7 +105,8 @@ trailing:true white:true*/
         query,
         input,
         parameterWidget,
-        parameters;
+        parameters,
+        filterDescription;
       if (!list instanceof XV.List) { return; }
       this.fetched[index] = true;
       query = list.getQuery() || {};
@@ -114,8 +116,9 @@ trailing:true white:true*/
       options.showMore = _.isBoolean(options.showMore) ?
         options.showMore : false;
 
-
-      this.setHeaderContent(this.formatQuery(parameterWidget ? parameterWidget.getSelectedValues() : null, input));
+      filterDescription = this.formatQuery(parameterWidget ? parameterWidget.getSelectedValues() : null, input);
+      list.setFilterDescription(filterDescription);
+      this.setHeaderContent(filterDescription);
 
       // Build parameters
       if (input || parameters.length) {
@@ -149,12 +152,19 @@ trailing:true white:true*/
         formattedQuery += (key + ": " + advancedSearch[key] + ", ");
       }
 
-      if (simpleSearch) {
-        formattedQuery += "Matches: " + simpleSearch;
+      if (simpleSearch && formattedQuery) {
+        formattedQuery += "Match: " + simpleSearch;
+      } else if (simpleSearch) {
+        formattedQuery += simpleSearch;
       }
 
       if (formattedQuery) {
         formattedQuery = "Filter by: " + formattedQuery;
+      }
+
+      if (formattedQuery.lastIndexOf(", ") + 2 === formattedQuery.length) {
+        // chop off trailing comma
+        formattedQuery = formattedQuery.substring(0, formattedQuery.length - 2);
       }
 
       return formattedQuery;
@@ -263,6 +273,9 @@ trailing:true white:true*/
         this.$.contentPanels.setIndex(panelIndex);
       }
       this.$.rightLabel.setContent(label);
+      if (panel.getFilterDescription) {
+        this.setHeaderContent(panel.getFilterDescription());
+      }
       if (panel.fetch && !this.fetched[panelIndex]) {
         this.fetch();
       }
