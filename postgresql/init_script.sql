@@ -31,12 +31,14 @@
 \i xt/functions/execute_query.sql;
 \i xt/functions/fetch.sql;
 \i xt/functions/get_id.sql;
+\i xt/functions/geteffectivextuser.sql;
 \i xt/functions/js_init.sql;
 \i xt/functions/install_js.sql;
 \i xt/functions/install_orm.sql;
 \i xt/functions/is_date.sql;
 \i xt/functions/raise_exception.sql;
 \i xt/functions/retrieve_record.sql;
+\i xt/functions/seteffectivextuser.sql;
 \i xt/functions/text_gt_date.sql;
 \i xt/functions/text_lt_date.sql;
 
