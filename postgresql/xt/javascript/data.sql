@@ -730,7 +730,8 @@ select xt.install_js('XT','Data','xtuple', $$
         list = [],
         clause = this.buildClause(nameSpace, type, parameters),
         sql = "select * from {table} where {key} in " +
-              "(select {key} from {table} where {conditions} {orderBy} {limit} {offset})";
+              "(select {key} from {table} where {conditions} {orderBy} {limit} {offset}) " +
+              "{orderBy}";
 
       /* Massage ordeBy with quoted identifiers */
       if (orderBy) {
@@ -776,7 +777,7 @@ select xt.install_js('XT','Data','xtuple', $$
       sql = sql.replace(/{table}/g, table)
                .replace(/{key}/g, key)
                .replace('{conditions}', clause.conditions)
-               .replace('{orderBy}', orderBy)
+               .replace(/{orderBy}/g, orderBy)
                .replace('{limit}', limit)
                .replace('{offset}', offset);
       if(DEBUG) { plv8.elog(NOTICE, 'sql = ', sql); }
