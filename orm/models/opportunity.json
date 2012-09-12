@@ -254,11 +254,6 @@
         }
       }
     ],
-    "order": [
-      "ophead_target_date",
-      "ophead_number",
-      "ophead_name"
-    ],
     "isSystem": true,
     "sourceCode": "OPP",
     "extensions": []
@@ -750,9 +745,6 @@
           "column": "ophead_cntct_id"
         }
       }
-    ],
-    "order": [
-      "ophead_number::integer desc"
     ],
     "isSystem": true
   },

@@ -781,10 +781,6 @@
         }
       }
     ],
-    "order": [
-      "todoitem_due_date desc",
-      "todoitem_name"
-    ],
     "isSystem": true,
     "extensions": []
   },
