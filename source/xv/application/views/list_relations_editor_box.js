@@ -14,8 +14,10 @@ trailing:true white:true*/
     kind: "XV.ListRelationsEditorBox",
     classes: "xv-project-tasks-box",
     title: "_projectTasks".loc(),
-    editors: [
-      {kind: "XV.Groupbox", name: "mainPanel", components: [
+    editor: {
+      kind: "XV.Groupbox",
+      name: "mainPanel",
+      components: [
         {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
           classes: "in-panel", components: [
           {kind: "XV.InputWidget", attr: "number"},
@@ -42,8 +44,8 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes", fit: true}
         ]}
-      ]}
-    ],
+      ]
+    },
     parentKey: "project",
     listRelations: "XV.ProjectTaskListRelations"
   });

@@ -20,7 +20,7 @@ trailing:true white:true*/
       title: "",
       parentKey: "",
       listRelations: "",
-      editors: null
+      editor: null
     },
     handlers: {
       onSelect: "selectionChanged",
@@ -39,7 +39,7 @@ trailing:true white:true*/
     attributesChanged: XV.Workspace.prototype.attributesChanged,
     create: function () {
       this.inherited(arguments);
-      var editors = this.getEditors() || [],
+      var editor = this.getEditor() || [],
         panels,
         control;
       
@@ -54,7 +54,7 @@ trailing:true white:true*/
         kind: "Panels",
         fit: true,
         arrangerKind: "CollapsingArranger",
-        components: _.clone(editors)
+        components: [_.clone(editor)]
       };
       panels.components.push({
         kind: this.getListRelations(),
@@ -63,7 +63,7 @@ trailing:true white:true*/
         fit: true
       });
       control = this.createComponent(panels);
-      control.setIndex(editors.length);
+      control.setIndex(1);
       
       // Button
       this.createComponent({
@@ -102,7 +102,6 @@ trailing:true white:true*/
     selectionChanged: function (inSender, inEvent) {
       var index = this.$.list.getFirstSelected(),
         model = index ? this.$.list.getModel(index) : null,
-        editors = this.getEditors() || [],
         changes = {},
         options = {},
         attrs,
@@ -117,7 +116,7 @@ trailing:true white:true*/
         this.attributesChanged(model, options);
         this.$.panels.previous();
       } else {
-        this.$.panels.setIndex(editors.length);
+        this.$.panels.setIndex(1);
       }
     },
     valueChanged: function () {
