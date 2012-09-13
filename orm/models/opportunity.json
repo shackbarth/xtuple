@@ -674,7 +674,8 @@
         "update": false,
         "delete": false,
         "properties": [
-          "owner"
+          "owner",
+          "assignedTo"
         ]
       }
     },
@@ -723,6 +724,15 @@
         }
       },
       {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "ophead_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
         "name": "assignedTo",
         "toOne": {
           "isNested": true,
@@ -767,7 +777,8 @@
         "update": false,
         "delete": false,
         "properties": [
-          "owner"
+          "owner",
+          "assignedTo"
         ]
       }
     },
@@ -850,6 +861,15 @@
         "toOne": {
           "type": "Priority",
           "column": "ophead_priority_id"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "ophead_owner_username",
+          "inverse": "username"
         }
       },
       {
