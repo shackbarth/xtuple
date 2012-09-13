@@ -7,40 +7,14 @@ trailing:true white:true*/
   var SAVE_APPLY = 1;
   var SAVE_CLOSE = 2;
   var SAVE_NEW = 3;
-
-  enyo.kind({
-    name: "XV.Workspace",
-    kind: "FittableRows",
-    published: {
-      title: "_none".loc(),
-      headerAttrs: null,
-      model: "",
-      callback: null
+  
+  
+  XV.EditorMixin = {
+    controlValueChanged: function (inSender, inEvent) {
+      var attrs = {};
+      attrs[inEvent.originator.attr] = inEvent.value;
+      this.value.set(attrs);
     },
-    extensions: null,
-    events: {
-      onError: "",
-      onHeaderChange: "",
-      onModelChange: "",
-      onStatusChange: "",
-      onTitleChange: "",
-      onHistoryChange: ""
-    },
-    handlers: {
-      onValueChange: "valueChanged"
-    },
-    components: [
-      {kind: "Panels", arrangerKind: "CarouselArranger",
-        fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainPanel", components: [
-          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
-            {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.InputWidget", attr: "description"}
-          ]}
-        ]}
-      ]}
-    ],
     /**
       Updates all child controls on the workspace where the name of
       the control matches the name of an attribute on the model.
@@ -85,9 +59,45 @@ trailing:true white:true*/
           }
         }
       }
+    }
+  };
+
+  var workspaceHash = enyo.mixin(XV.EditorMixin, {
+    name: "XV.Workspace",
+    kind: "FittableRows",
+    published: {
+      title: "_none".loc(),
+      headerAttrs: null,
+      model: "",
+      callback: null,
+      value: null
     },
+    extensions: null,
+    events: {
+      onError: "",
+      onHeaderChange: "",
+      onModelChange: "",
+      onStatusChange: "",
+      onTitleChange: "",
+      onHistoryChange: ""
+    },
+    handlers: {
+      onValueChange: "controlValueChanged"
+    },
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ],
     clear: function () {
-      var attrs = this._model ? this._model.getAttributeNames() : [],
+      var attrs = this.value ? this.value.getAttributeNames() : [],
         attr,
         i;
       for (i = 0; i < attrs.length; i++) {
@@ -128,12 +138,12 @@ trailing:true white:true*/
     fetch: function (id) {
       var options = {};
       options.id = id;
-      if (!this._model) { return; }
-      this._model.fetch(options);
+      if (!this.value) { return; }
+      this.value.fetch(options);
     },
     headerValuesChanged: function () {
       var headerAttrs = this.getHeaderAttrs() || [],
-        model = this._model,
+        model = this.value,
         header = "",
         value,
         attr,
@@ -152,7 +162,7 @@ trailing:true white:true*/
       this.doHeaderChange({originator: this, header: header });
     },
     isDirty: function () {
-      return this._model ? this._model.isDirty() : false;
+      return this.value ? this.value.isDirty() : false;
     },
     modelChanged: function () {
       var model = this.getModel(),
@@ -165,10 +175,10 @@ trailing:true white:true*/
         observers = "";
 
       // Clean up
-      if (this._model) {
-        this._model.off();
-        if (this._model.isNew()) { this._model.destroy(); }
-        delete this._model;
+      if (this.value) {
+        this.value.off();
+        if (this.value.isNew()) { this.value.destroy(); }
+        this.value = null;
       }
       if (!Klass) { return; }
 
@@ -183,19 +193,19 @@ trailing:true white:true*/
       }
 
       // Create new instance and bindings
-      this._model = new Klass();
-      this._model.on("change", this.attributesChanged, this);
-      this._model.on("readOnlyChange", this.attributesChanged, this);
-      this._model.on("statusChange", this.statusChanged, this);
-      this._model.on("error", this.error, this);
+      this.value = new Klass();
+      this.value.on("change", this.attributesChanged, this);
+      this.value.on("readOnlyChange", this.attributesChanged, this);
+      this.value.on("statusChange", this.statusChanged, this);
+      this.value.on("error", this.error, this);
       if (headerAttrs.length) {
         for (i = 0; i < headerAttrs.length; i++) {
           attr = headerAttrs[i];
-          if (_.contains(this._model.getAttributeNames(), attr)) {
+          if (_.contains(this.value.getAttributeNames(), attr)) {
             observers = observers ? observers + " change:" + attr : "change:" + attr;
           }
         }
-        this._model.on(observers, this.headerValuesChanged, this);
+        this.value.on(observers, this.headerValuesChanged, this);
       }
     },
     newRecord: function (attributes) {
@@ -203,32 +213,32 @@ trailing:true white:true*/
         attr,
         // Fetch related data, and notify when done
         fetchIfRelated = function (attr) {
-          _.each(that._model.relations, function (relation) {
+          _.each(this.value.relations, function (relation) {
             if (relation.key === attr) {
               var options = {
                 success: function () {
                   var changes = {};
                   changes[attr] = true;
-                  that.attributesChanged(that._model, {changes: changes});
+                  that.attributesChanged(that.value, {changes: changes});
                 }
               };
-              that._model.fetchRelated(attr, options);
+              that.value.fetchRelated(attr, options);
             }
           });
         };
       this.modelChanged();
-      this._model.initialize(null, {isNew: true});
-      this._model.set(attributes, {force: true});
+      this.value.initialize(null, {isNew: true});
+      this.value.set(attributes, {force: true});
       for (attr in attributes) {
         if (attributes.hasOwnProperty(attr)) {
-          this._model.setReadOnly(attr);
+          this.value.setReadOnly(attr);
           fetchIfRelated(attr);
         }
       }
       this.clear();
     },
     requery: function () {
-      this.fetch(this._model.id);
+      this.fetch(this.value.id);
     },
     save: function (options) {
       options = options || {};
@@ -237,14 +247,14 @@ trailing:true white:true*/
         inEvent = {
           originator: this,
           model: this.getModel(),
-          id: this._model.id
+          id: this.value.id
         };
       options.success = function (model, resp, options) {
         that.doModelChange(inEvent);
         if (that.callback) { that.callback(model); }
         if (success) { success(model, resp, options); }
       };
-      this._model.save(null, options);
+      this.value.save(null, options);
     },
     statusChanged: function (model, status, options) {
       options = options || {};
@@ -274,11 +284,6 @@ trailing:true white:true*/
     titleChanged: function () {
       var inEvent = { title: this.getTitle(), originator: this };
       this.doTitleChange(inEvent);
-    },
-    valueChanged: function (inSender, inEvent) {
-      var attrs = {};
-      attrs[inEvent.originator.attr] = inEvent.value;
-      this._model.set(attrs);
     }
   });
 
@@ -583,5 +588,7 @@ trailing:true white:true*/
       }
     }
   });
+  
+  enyo.kind(workspaceHash);
 
 }());

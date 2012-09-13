@@ -67,6 +67,10 @@ white:true*/
       if (suffix) { name.push(suffix); }
       return name.join(' ');
     },
+    
+    used: function (options) {
+      return XT.dataSource.dispatch('XM.Contact', 'used', this.id, options);
+    },
 
     validateSave: function (attributes, options) {
       if (!attributes.firstName && !attributes.lastName) {
@@ -114,7 +118,7 @@ white:true*/
 
     @extends XM.Characteristic
   */
-  XM.ContactCharacteristic = XM.Characteristic.extend({
+  XM.ContactCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.ContactCharacteristic.prototype */
 
     recordType: 'XM.ContactCharacteristic'

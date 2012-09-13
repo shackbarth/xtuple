@@ -38,7 +38,7 @@ trailing:true white:true*/
               ontap: "showParameters", showing: false}
           ]},
           {kind: "onyx.Popup", name: "logoutPopup", centered: true,
-            modal: true, floating: true, components: [
+            modal: true, floating: true, scrim: true, components: [
             {content: "_logoutConfirmation".loc() },
             {tag: "br"},
             {kind: "onyx.Button", content: "_ok".loc(), ontap: "logout",
