@@ -11,10 +11,9 @@ trailing:true white:true*/
   
   XV.EditorMixin = {
     controlValueChanged: function (inSender, inEvent) {
-      var value = this.getValue(),
-        attrs = {};
+      var attrs = {};
       attrs[inEvent.originator.attr] = inEvent.value;
-      value.set(attrs);
+      this.value.set(attrs);
     },
     /**
       Updates all child controls on the workspace where the name of
@@ -98,8 +97,7 @@ trailing:true white:true*/
       ]}
     ],
     clear: function () {
-      var value = this.getValue(),
-        attrs = value ? value.getAttributeNames() : [],
+      var attrs = this.value ? this.value.getAttributeNames() : [],
         attr,
         i;
       for (i = 0; i < attrs.length; i++) {
@@ -138,15 +136,14 @@ trailing:true white:true*/
       this.doError(inEvent);
     },
     fetch: function (id) {
-      var value = this.getValue(),
-        options = {};
+      var options = {};
       options.id = id;
-      if (!value) { return; }
-      value.fetch(options);
+      if (!this.value) { return; }
+      this.value.fetch(options);
     },
     headerValuesChanged: function () {
       var headerAttrs = this.getHeaderAttrs() || [],
-        model = this.getValue(),
+        model = this.value,
         header = "",
         value,
         attr,
@@ -165,24 +162,22 @@ trailing:true white:true*/
       this.doHeaderChange({originator: this, header: header });
     },
     isDirty: function () {
-      var value = this.getValue();
-      return value ? value.isDirty() : false;
+      return this.value ? this.value.isDirty() : false;
     },
     modelChanged: function () {
       var model = this.getModel(),
         Klass = model ? XT.getObjectByName(model) : null,
         callback,
         that = this,
-        value = this.getValue(),
         headerAttrs = this.getHeaderAttrs() || [],
         i,
         attr,
         observers = "";
 
       // Clean up
-      if (value) {
-        value.off();
-        if (value.isNew()) { value.destroy(); }
+      if (this.value) {
+        this.value.off();
+        if (this.value.isNew()) { this.value.destroy(); }
         this.value = null;
       }
       if (!Klass) { return; }
@@ -198,47 +193,45 @@ trailing:true white:true*/
       }
 
       // Create new instance and bindings
-      value = new Klass();
-      value.on("change", this.attributesChanged, this);
-      value.on("readOnlyChange", this.attributesChanged, this);
-      value.on("statusChange", this.statusChanged, this);
-      value.on("error", this.error, this);
+      this.value = new Klass();
+      this.value.on("change", this.attributesChanged, this);
+      this.value.on("readOnlyChange", this.attributesChanged, this);
+      this.value.on("statusChange", this.statusChanged, this);
+      this.value.on("error", this.error, this);
       if (headerAttrs.length) {
         for (i = 0; i < headerAttrs.length; i++) {
           attr = headerAttrs[i];
-          if (_.contains(value.getAttributeNames(), attr)) {
+          if (_.contains(this.value.getAttributeNames(), attr)) {
             observers = observers ? observers + " change:" + attr : "change:" + attr;
           }
         }
-        value.on(observers, this.headerValuesChanged, this);
+        this.value.on(observers, this.headerValuesChanged, this);
       }
-      this.value = value;
     },
     newRecord: function (attributes) {
       var that = this,
-        value = this.getValue(),
         attr,
         // Fetch related data, and notify when done
         fetchIfRelated = function (attr) {
-          _.each(value.relations, function (relation) {
+          _.each(this.value.relations, function (relation) {
             if (relation.key === attr) {
               var options = {
                 success: function () {
                   var changes = {};
                   changes[attr] = true;
-                  that.attributesChanged(value, {changes: changes});
+                  that.attributesChanged(that.value, {changes: changes});
                 }
               };
-              value.fetchRelated(attr, options);
+              that.value.fetchRelated(attr, options);
             }
           });
         };
       this.modelChanged();
-      value.initialize(null, {isNew: true});
-      value.set(attributes, {force: true});
+      this.value.initialize(null, {isNew: true});
+      this.value.set(attributes, {force: true});
       for (attr in attributes) {
         if (attributes.hasOwnProperty(attr)) {
-          value.setReadOnly(attr);
+          this.value.setReadOnly(attr);
           fetchIfRelated(attr);
         }
       }
@@ -250,19 +243,18 @@ trailing:true white:true*/
     save: function (options) {
       options = options || {};
       var that = this,
-        value = this.getValue(),
         success = options.success,
         inEvent = {
           originator: this,
           model: this.getModel(),
-          id: value.id
+          id: this.value.id
         };
       options.success = function (model, resp, options) {
         that.doModelChange(inEvent);
         if (that.callback) { that.callback(model); }
         if (success) { success(model, resp, options); }
       };
-      value.save(null, options);
+      this.value.save(null, options);
     },
     statusChanged: function (model, status, options) {
       options = options || {};
