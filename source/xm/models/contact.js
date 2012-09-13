@@ -114,7 +114,7 @@ white:true*/
 
     @extends XM.Characteristic
   */
-  XM.ContactCharacteristic = XM.Characteristic.extend({
+  XM.ContactCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.ContactCharacteristic.prototype */
 
     recordType: 'XM.ContactCharacteristic'
