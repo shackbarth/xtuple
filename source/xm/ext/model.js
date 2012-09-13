@@ -376,10 +376,11 @@ white:true*/
       var requests = [],
         rel = this.getRelation(key),
         keyContents = rel && rel.keyContents,
-        toFetch = keyContents && _.filter(_.isArray(keyContents) ? keyContents : [keyContents], function (item) {
-          var id = Backbone.Relational.store.resolveIdForItem(rel.relatedModel, item);
-          return id && (update || !Backbone.Relational.store.find(rel.relatedModel, id));
-        }, this);
+        toFetch = keyContents && _.filter(_.isArray(keyContents) ?
+          keyContents : [keyContents], function (item) {
+            var id = Backbone.Relational.store.resolveIdForItem(rel.relatedModel, item);
+            return id && (update || !Backbone.Relational.store.find(rel.relatedModel, id));
+          }, this);
 			
       if (toFetch && toFetch.length) {
         if (options.max && toFetch.length > options.max) {
@@ -898,6 +899,19 @@ white:true*/
         result = XT.dataSource.commitRecord(model, options);
       }
       return result || false;
+    },
+    
+    /**
+      Determine whether this record has been referenced by another. By default
+      this function inspects foreign key relationships on the database, and is
+      therefore dependent on foreign key relationships existing where appropriate
+      to work correctly.
+
+      @param {Object} Options
+      @returns {XT.Request} Request
+    */
+    used: function (options) {
+      return XT.dataSource.dispatch('XM.Model', 'used', [this.recordType, this.id], options);
     },
 
     /**

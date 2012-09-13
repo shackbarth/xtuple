@@ -67,6 +67,10 @@ white:true*/
       if (suffix) { name.push(suffix); }
       return name.join(' ');
     },
+    
+    used: function (options) {
+      return XT.dataSource.dispatch('XM.Contact', 'used', this.id, options);
+    },
 
     validateSave: function (attributes, options) {
       if (!attributes.firstName && !attributes.lastName) {
