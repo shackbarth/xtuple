@@ -40,8 +40,10 @@ trailing:true white:true*/
           model.off('statusChange', this.statusChanged, this);
         });
       }
-      value.off("add", this.modelAdded, this);
-      value.off("remove", this.lengthChanged, this);
+      if (value) {
+        value.off("add", this.modelAdded, this);
+        value.off("remove", this.lengthChanged, this);
+      }
       this.inherited(arguments);
     },
     getFirstSelected: function () {
@@ -144,7 +146,10 @@ trailing:true white:true*/
         totalRows = this.value.length,
         rowsPerPage = bounds.clientHeight / this.rowHeight,
         showingRows = Math.floor(bounds.top / this.rowHeight + rowsPerPage),
-        fetch =  showingRows > lastShowing && totalRows - showingRows - FETCH_TRIGGER < 0 && this.hasMore();
+        fetch =  showingRows > lastShowing &&
+          totalRows - showingRows - FETCH_TRIGGER < 0 &&
+          this.hasMore();
+          
       // Manage lazy loading
       if (fetch) {
         this._lastShowing = showingRows;

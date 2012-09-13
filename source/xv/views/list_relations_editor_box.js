@@ -29,7 +29,7 @@ trailing:true white:true*/
     }
   });
   enyo.kind(editor);
-  
+
   /**
     Must include a component called `list`.
     List must be of sub-kind `XV.ListRelations`.
@@ -64,13 +64,13 @@ trailing:true white:true*/
       var editor = this.getEditor(),
         panels,
         control;
-      
+
       // Header
       this.createComponent({
         kind: "onyx.GroupboxHeader",
         content: this.getTitle()
       });
-      
+
       // List
       panels = {
         kind: "Panels",
@@ -84,29 +84,47 @@ trailing:true white:true*/
       };
       control = this.createComponent(panels);
       control.setIndex(1);
-      
-      // Button
+
+      // Buttons
       this.createComponent({
-        kind: "onyx.Button",
-        name: "newButton",
-        onclick: "newItem",
-        content: "_new".loc(),
-        classes: "xv-groupbox-button-single"
+        kind: "FittableColumns",
+        classes: "xv-groupbox-buttons",
+        components: [
+          {kind: "onyx.Button", name: "newButton", onclick: "newItem",
+            content: "_new".loc(), classes: "xv-groupbox-button-left"},
+          {kind: "onyx.Button", name: "deleteButton", onclick: "deleteItem",
+            content: "_delete".loc(), classes: "xv-groupbox-button-right",
+            disabled: true}
+        ]
       });
+
+    },
+    deleteItem: function () {
+      var index = this.$.list.getFirstSelected(),
+        model = index ? this.$.list.getModel(index) : null;
+      this.$.list.getSelection().deselect(index, false);
+      model.destroy();
+      this.$.list.lengthChanged();
     },
     newItem: function () {
       var collection = this.$.list.getValue(),
         Klass = collection.model,
         model = new Klass(null, {isNew: true});
       collection.add(model);
-      this.$.list.refresh();
       this.$.list.select(collection.length - 1);
     },
     selectionChanged: function (inSender, inEvent) {
       var index = this.$.list.getFirstSelected(),
-        model = index ? this.$.list.getModel(index) : null;
+        model = index ? this.$.list.getModel(index) : null,
+        that = this;
+      this.$.deleteButton.setDisabled(true);
       if (index) {
         this.$.editor.setValue(model);
+        model.used({
+          success: function (resp) {
+            that.$.deleteButton.setDisabled(resp);
+          }
+        });
         this.$.panels.previous();
       } else {
         this.$.panels.setIndex(1);
