@@ -68,8 +68,7 @@ trailing:true white:true*/
                 formatter: "formatDueDate",
                 classes: "right"}
             ]},
-            {kind: "XV.ListAttr", attr: "name"},
-            {kind: "XV.ListAttr", attr: "project.name"}
+            {kind: "XV.ListAttr", attr: "name"}
           ]},
           {kind: "XV.ListColumn", classes: "third",
             components: [

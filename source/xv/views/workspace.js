@@ -15,7 +15,6 @@ trailing:true white:true*/
         attrs = {};
       attrs[inEvent.originator.attr] = inEvent.value;
       value.set(attrs);
-      return true;
     },
     /**
       Updates all child controls on the workspace where the name of

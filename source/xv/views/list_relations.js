@@ -91,7 +91,10 @@ trailing:true white:true*/
       this.refresh();
     },
     modelAdded: function (model) {
-      if (model.getStatus() === XM.Model.READY_CLEAN) {
+      var status = model.getStatus(),
+        K = XM.Model;
+      if (status === K.READY_CLEAN ||
+          status === K.READY_NEW) {
         this.lengthChanged();
       } else {
         model.on('statusChange', this.statusChanged, this);
@@ -121,7 +124,12 @@ trailing:true white:true*/
     },
     readyModels: function () {
       return _.filter(this._collection.models, function (model) {
-        return model.getStatus() === XM.Model.READY_CLEAN;
+        var status = model.getStatus(),
+          K = XM.Model;
+        // Avoiding bitwise because performance matters here
+        return (status === K.READY_CLEAN ||
+                status === K.READY_DIRTY ||
+                status === K.READY_NEW);
       });
     },
     scroll: function (inSender, inEvent) {

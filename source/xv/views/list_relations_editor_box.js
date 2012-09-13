@@ -11,6 +11,9 @@ trailing:true white:true*/
   var editor = enyo.mixin(XV.EditorMixin, {
     name: "XV.RelationsEditor",
     kind: "XV.Groupbox",
+    handlers: {
+      onValueChange: "controlValueChanged"
+    },
     setValue: function (value) {
       var changes = {},
         options = {},
@@ -51,6 +54,10 @@ trailing:true white:true*/
     },
     attrChanged: function () {
       this.$.list.setAttr(this.attr);
+    },
+    controlValueChanged: function () {
+      this.$.list.refresh();
+      return true;
     },
     create: function () {
       this.inherited(arguments);
