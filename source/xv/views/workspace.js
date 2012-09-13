@@ -7,41 +7,16 @@ trailing:true white:true*/
   var SAVE_APPLY = 1;
   var SAVE_CLOSE = 2;
   var SAVE_NEW = 3;
-
-  enyo.kind({
-    name: "XV.Workspace",
-    kind: "FittableRows",
-    published: {
-      title: "_none".loc(),
-      headerAttrs: null,
-      model: "",
-      callback: null,
-      value: null
+  
+  
+  XV.EditorMixin = {
+    controlValueChanged: function (inSender, inEvent) {
+      var value = this.getValue(),
+        attrs = {};
+      attrs[inEvent.originator.attr] = inEvent.value;
+      value.set(attrs);
+      return true;
     },
-    extensions: null,
-    events: {
-      onError: "",
-      onHeaderChange: "",
-      onModelChange: "",
-      onStatusChange: "",
-      onTitleChange: "",
-      onHistoryChange: ""
-    },
-    handlers: {
-      onValueChange: "controlValueChanged"
-    },
-    components: [
-      {kind: "Panels", arrangerKind: "CarouselArranger",
-        fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainPanel", components: [
-          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
-            {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.InputWidget", attr: "description"}
-          ]}
-        ]}
-      ]}
-    ],
     /**
       Updates all child controls on the workspace where the name of
       the control matches the name of an attribute on the model.
@@ -86,7 +61,43 @@ trailing:true white:true*/
           }
         }
       }
+    }
+  };
+
+  var workspaceHash = enyo.mixin(XV.EditorMixin, {
+    name: "XV.Workspace",
+    kind: "FittableRows",
+    published: {
+      title: "_none".loc(),
+      headerAttrs: null,
+      model: "",
+      callback: null,
+      value: null
     },
+    extensions: null,
+    events: {
+      onError: "",
+      onHeaderChange: "",
+      onModelChange: "",
+      onStatusChange: "",
+      onTitleChange: "",
+      onHistoryChange: ""
+    },
+    handlers: {
+      onValueChange: "controlValueChanged"
+    },
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ],
     clear: function () {
       var value = this.getValue(),
         attrs = value ? value.getAttributeNames() : [],
@@ -98,12 +109,6 @@ trailing:true white:true*/
           this.$[attr].clear({silent: true});
         }
       }
-    },
-    controlValueChanged: function (inSender, inEvent) {
-      var value = this.getValue(),
-        attrs = {};
-      attrs[inEvent.originator.attr] = inEvent.value;
-      value.set(attrs);
     },
     create: function () {
       this.inherited(arguments);
@@ -592,5 +597,7 @@ trailing:true white:true*/
       }
     }
   });
+  
+  enyo.kind(workspaceHash);
 
 }());

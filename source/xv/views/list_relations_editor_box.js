@@ -4,6 +4,28 @@ trailing:true white:true*/
 /*global XT:true, XM:true, XV:true, _:true, enyo:true*/
 
 (function () {
+
+  /**
+    Use this class to define the editor for `XV.ListRelationsEditorBox`.
+  */
+  var editor = enyo.mixin(XV.EditorMixin, {
+    name: "XV.RelationsEditor",
+    kind: "XV.Groupbox",
+    setValue: function (value) {
+      var changes = {},
+        options = {},
+        attrs,
+        i;
+      this.value = value;
+      attrs = value.getAttributeNames();
+      for (i = 0; i < attrs.length; i++) {
+        changes[attrs[i]] = true;
+      }
+      options.changes = changes;
+      this.attributesChanged(value, options);
+    }
+  });
+  enyo.kind(editor);
   
   /**
     Must include a component called `list`.
@@ -24,22 +46,15 @@ trailing:true white:true*/
     },
     handlers: {
       onSelect: "selectionChanged",
-      onDeselect: "selectionChanged"
+      onDeselect: "selectionChanged",
+      onValueChange: "controlValueChanged"
     },
     attrChanged: function () {
       this.$.list.setAttr(this.attr);
     },
-    /**
-      Updates all child controls on the workspace where the name of
-      the control matches the name of an attribute on the model.
-
-      @param {XM.Model} model
-      @param {Object} options
-    */
-    attributesChanged: XV.Workspace.prototype.attributesChanged,
     create: function () {
       this.inherited(arguments);
-      var editor = this.getEditor() || [],
+      var editor = this.getEditor(),
         panels,
         control;
       
@@ -54,14 +69,12 @@ trailing:true white:true*/
         kind: "Panels",
         fit: true,
         arrangerKind: "CollapsingArranger",
-        components: [_.clone(editor)]
+        components: [
+          {kind: editor, name: "editor"},
+          {kind: this.getListRelations(), name: "list",
+            attr: this.getAttr(), fit: true}
+        ]
       };
-      panels.components.push({
-        kind: this.getListRelations(),
-        name: "list",
-        attr: this.getAttr(),
-        fit: true
-      });
       control = this.createComponent(panels);
       control.setIndex(1);
       
@@ -101,19 +114,9 @@ trailing:true white:true*/
     },
     selectionChanged: function (inSender, inEvent) {
       var index = this.$.list.getFirstSelected(),
-        model = index ? this.$.list.getModel(index) : null,
-        changes = {},
-        options = {},
-        attrs,
-        i;
+        model = index ? this.$.list.getModel(index) : null;
       if (index) {
-        // Update editor panel(s) completely
-        attrs = model.getAttributeNames();
-        for (i = 0; i < attrs.length; i++) {
-          changes[attrs[i]] = true;
-        }
-        options.changes = changes;
-        this.attributesChanged(model, options);
+        this.$.editor.setValue(model);
         this.$.panels.previous();
       } else {
         this.$.panels.setIndex(1);
