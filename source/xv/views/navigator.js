@@ -35,7 +35,10 @@ trailing:true white:true*/
             {name: "historyIconButton", src: "assets/menu-icon-bookmark.png",
               ontap: "showHistory"},
             {name: "searchIconButton", src: "assets/menu-icon-search.png",
-              ontap: "showParameters", showing: false}
+              ontap: "showParameters", showing: false},
+            {name: "myAccountButton", src: "assets/menu-icon-gear.png",
+              ontap: "showMyAccount"},
+            {name: "myAccountPopup", kind: "XV.MyAccountPopup"}
           ]},
           {kind: "onyx.Popup", name: "logoutPopup", centered: true,
             modal: true, floating: true, components: [
@@ -144,7 +147,7 @@ trailing:true white:true*/
       list.fetch(options);
     },
     formatQuery: function (advancedSearch, simpleSearch) {
-      var keys,
+      var key,
         formattedQuery = "";
 
       for (key in advancedSearch) {
@@ -334,6 +337,9 @@ trailing:true white:true*/
     showParameters: function (inSender, inEvent) {
       var panel = this.$.contentPanels.getActive();
       this.doNavigatorEvent({name: panel.name, show: true});
+    },
+    showMyAccount: function (inSender, inEvent) {
+      this.$.myAccountPopup.show();
     },
     warnLogout: function () {
       this.$.logoutPopup.show();
