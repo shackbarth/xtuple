@@ -35,8 +35,9 @@ trailing:true white:true*/
     submitPassword: function (inSender, inEvent) {
       var oldPassword = this.$.oldPassword.getValue(),
         newPassword = this.$.newPassword.getValue(),
-        newPasswordCheck = this.$.newPasswordCheck.getValue();
-
+        newPasswordCheck = this.$.newPasswordCheck.getValue(),
+        params = {oldPassword: oldPassword, newPassword: newPassword},
+        options = {};
 
       if (!oldPassword) {
         alert("Please enter your old password");
@@ -51,7 +52,19 @@ trailing:true white:true*/
         return;
       }
 
-      this.getModel().save({oldPassword: oldPassword, newPassword: newPassword});
+      options.success = function (result) {
+        alert("Success!");
+        alert(JSON.stringify(result));
+      }
+
+      options.error = function (result) {
+        alert("Error!");
+        alert(JSON.stringify(result));
+      }
+
+      result = XT.dataSource.configure("updatePassword", params, options);
+
+      //this.getModel().save({oldPassword: oldPassword, newPassword: newPassword});
       //this.getModel().save();
 
       this.hide();
