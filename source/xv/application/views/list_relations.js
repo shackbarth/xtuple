@@ -90,7 +90,7 @@ trailing:true white:true*/
             {kind: "XV.ListAttr", attr: "actualExpenses",
               classes: "text-align-right", formatter: "formatExpenses"},
             {kind: "XV.ListAttr", attr: "balanceExpenses",
-              classes: "text-align-right", formatter: "formatExpenses"}
+              classes: "text-align-right", formatter: "formatBalanceExpenses"}
           ]},
           {kind: "XV.ListColumn", classes: "money", fit: true, components: [
             {kind: "XV.ListAttr", attr: "budgetedHours",
@@ -98,11 +98,21 @@ trailing:true white:true*/
             {kind: "XV.ListAttr", attr: "actualHours",
               classes: "text-align-right", formatter: "formatHours"},
             {kind: "XV.ListAttr", attr: "balanceHours",
-              classes: "text-align-right", formatter: "formatHours"}
+              classes: "text-align-right", formatter: "formatBalanceHours"}
           ]}
         ]}
       ]}
     ],
+    formatBalanceExpenses: function (value, view, model) {
+      var actual = model.get('actualExpenses'),
+        budget = model.get('budgetedExpenses');
+      return this.formatExpenses(budget - actual, view);
+    },
+    formatBalanceHours: function (value, view, model) {
+      var actual = model.get('actualHours'),
+        budget = model.get('budgetedHours');
+      return this.formatHours(budget - actual, view);
+    },
     formatDueDate: XV.ProjectList.prototype.formatDueDate,
     formatHours: XV.ProjectList.prototype.formatHours,
     formatExpenses: XV.ProjectList.prototype.formatExpenses
