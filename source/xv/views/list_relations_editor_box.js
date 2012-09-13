@@ -95,29 +95,12 @@ trailing:true white:true*/
       });
     },
     newItem: function () {
-      var list = this.$.list,
-        parent = this.$.list.getParent(),
-        id = parent ? parent.id : null,
-        key = this.parentKey,
-        attributes = {},
-        callback = function (model) {
-          var Model = list._collection.model,
-            value = new Model({id: model.id}),
-            options = {};
-          options.success = function () {
-            list._collection.add(value);
-          };
-          value.fetch(options);
-        },
-        inEvent;
-      attributes[key] = id;
-      inEvent = {
-        originator: this,
-        workspace: list.workspace,
-        attributes: attributes,
-        callback: callback
-      };
-      this.doWorkspace(inEvent);
+      var collection = this.$.list.getValue(),
+        Klass = collection.model,
+        model = new Klass(null, {isNew: true});
+      collection.add(model);
+      this.$.list.refresh();
+      this.$.list.select(collection.length - 1);
     },
     selectionChanged: function (inSender, inEvent) {
       var index = this.$.list.getFirstSelected(),
