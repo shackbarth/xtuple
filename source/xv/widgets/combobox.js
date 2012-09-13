@@ -5,73 +5,6 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
 (function () {
 
   enyo.kind({
-    name: "XV.CompleterPicker",
-    kind: "onyx.Picker",
-    /**
-      Unfortunately this is a copy of code from menu. It makes adjustments to account for the
-      height of the completer widget so the menu doesn't cover over typing area.
-    */
-    adjustPosition: function (belowActivator) {
-      var r,
-        rHeight;
-      if (this.showing && this.hasNode()) {
-        this.removeClass("onyx-menu-up");
-
-        //reset the left position before we get the bounding rect for proper horizontal calculation
-        if (!this.floating) { this.applyPosition({left: "auto"}); }
-
-        var b = this.node.getBoundingClientRect();
-        var bHeight = (b.height === undefined) ? (b.bottom - b.top) : b.height;
-        var innerHeight = (window.innerHeight === undefined) ? document.documentElement.clientHeight : window.innerHeight;
-        var innerWidth = (window.innerWidth === undefined) ? document.documentElement.clientWidth : window.innerWidth;
-
-        //position the menu above the activator if it's getting cut off, but only if there's more room above than below
-        this.menuUp = (b.top + bHeight > innerHeight) && ((innerHeight - b.bottom) < (b.top - bHeight));
-        this.addRemoveClass("onyx-menu-up", this.menuUp);
-
-        //if floating, adjust the vertical positioning
-        if (this.floating) {
-          r = this.activatorOffset;
-          rHeight = (r.height === undefined) ? (r.bottom - r.top) : r.height;
-          //if the menu doesn't fit below the activator, move it up
-          if (this.menuUp) {
-            this.applyPosition({top: (r.top - rHeight - bHeight + (this.showOnTop ? r.height : 0)), bottom: "auto"});
-          } else {
-            //if the top of the menu is above the top of the activator and there's room to move it down, do so
-            if ((b.top < r.top) && (r.top + (belowActivator ? r.height : 0) + bHeight < innerHeight))
-            {
-              this.applyPosition({top: r.top + rHeight + (this.showOnTop ? 0 : r.height), bottom: "auto"});
-            }
-          }
-        }
-
-        //adjust the horizontal positioning to keep the menu from being cut off on the right
-        if ((b.right) > innerWidth) {
-          if (this.floating) {
-            this.applyPosition({left: r.left - (b.left + b.width - innerWidth)});
-          } else {
-            this.applyPosition({left: - (b.right - innerWidth)});
-          }
-        }
-
-        //finally prevent the menu from being cut off on the left
-        if (b.left < 0) {
-          if (this.floating) {
-            this.applyPosition({left: 0, right: "auto"});
-          } else {
-            //handle the situation where a non-floating menu is right or left aligned
-            if (this.getComputedStyleValue("right") === "auto") {
-              this.applyPosition({left: -b.left});
-            } else {
-              this.applyPosition({right: b.left});
-            }
-          }
-        }
-      }
-    }
-  });
-
-  enyo.kind({
     name: "XV.Combobox",
     kind: "XV.Input",
     classes: "xv-combobox",
@@ -85,13 +18,8 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
         onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur",
         onchange: "inputChanged"},
       {kind: "onyx.IconButton", src: "assets/combobox-icon.png",
-        ontap: "togglePicker", classes: "xv-combobox-icon"},
-      {name: "picker", kind: "XV.CompleterPicker",
-        // Hack: make sure picker is always on top ('floating' doesn't work)
-        style: "width: 100px; z-index: 999;",
-        classes: "xv-combobox-picker", onSelect: "itemSelected",
-        modal: false
-      }
+        ontap: "toggleCompleter", classes: "xv-combobox-icon"},
+      {name: "completer", kind: "XV.Completer", onSelect: "itemSelected"}
     ],
     autocomplete: function () {
       var key = this.getKeyAttribute(),
@@ -109,34 +37,10 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
       if (res) { this.setValue(res.get(key)); }
     },
     buildList: function () {
-     // return;
       var key = this.getKeyAttribute(),
-        regexp = new RegExp("^" + this.$.input.getValue(), "i"),
-        picker = this.$.picker,
-        models = this.filteredList(),
-        model,
-        list,
-        value,
-        i;
-      picker.destroyClientControls();
-      if (models && models.length) {
-        list = _.filter(models, function (model) {
-          var value = model.get(key) || "";
-          return value.match(regexp);
-        });
-
-        for (i = 0; i < list.length; i++) {
-          model = list[i];
-          value = model.get(key);
-          if (value) {
-            picker.createComponent({
-              content: model.get(key)
-            });
-          }
-        }
-        picker.reflow();
-        picker.render();
-      }
+        value = this.$.input.getValue(),
+        models = this.filteredList();
+      this.$.completer.buildList(key, value, models);
     },
     create: function () {
       this.inherited(arguments);
@@ -146,19 +50,19 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     keyDown: function (inSender, inEvent) {
       // If tabbed out...
       if (inEvent.keyCode === 9) {
-        this.$.picker.hide();
+        this.$.completer.hide();
         this.autocomplete();
       }
     },
     keyUp: function (inSender, inEvent) {
       if (inEvent.keyCode === 9) { return; }
       inEvent.activator = this;
-      if (this.$.picker.controls.length) {
-        this.$.picker.waterfall("onRequestHideMenu", inEvent);
+      if (this.$.completer.controls.length) {
+        this.$.completer.waterfall("onRequestHideMenu", inEvent);
       }
       this.buildList();
-      if (this.$.picker.controls.length) {
-        this.$.picker.waterfall("onRequestShowMenu", inEvent);
+      if (this.$.completer.controls.length) {
+        this.$.completer.waterfall("onRequestShowMenu", inEvent);
       }
     },
     collectionChanged: function () {
@@ -176,7 +80,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     },
     itemSelected: function (inSender, inEvent) {
       this.setValue(inEvent.originator.content);
-      this.$.picker.hide();
+      this.$.completer.hide();
       return true;
     },
     filterChanged: function () {
@@ -193,13 +97,13 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     receiveBlur: function (inSender, inEvent) {
       this.autocomplete();
     },
-    togglePicker: function (inSender, inEvent) {
+    toggleCompleter: function (inSender, inEvent) {
       inEvent.activator = this;
-      var picker = this.$.picker;
-      if (picker.showing) {
-        picker.waterfall("onRequestHideMenu", inEvent);
+      var completer = this.$.completer;
+      if (completer.showing) {
+        completer.waterfall("onRequestHideMenu", inEvent);
       } else {
-        picker.waterfall("onRequestShowMenu", inEvent);
+        completer.waterfall("onRequestShowMenu", inEvent);
       }
     }
 

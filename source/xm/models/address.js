@@ -391,6 +391,7 @@ white:true*/
       @return {String}
     */
     format: function () {
+      if (!arguments[0]) { return; }
       var fmtlines   = [],
         name, line1, line2, line3,
         city, state, postalcode, country,

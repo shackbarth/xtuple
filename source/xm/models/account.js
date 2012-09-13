@@ -260,5 +260,17 @@ white:true*/
     model: XM.AccountListItem
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.AccountRelationCollection = XM.Collection.extend({
+    /** @scope XM.AccountRelationCollection.prototype */
+
+    model: XM.AccountRelation
+
+  });
 
 }());
