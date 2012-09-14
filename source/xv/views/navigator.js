@@ -67,9 +67,6 @@ trailing:true white:true*/
       ]},
       {kind: "FittableRows", components: [
         {kind: "onyx.MoreToolbar", name: "contentToolbar", components: [
-                                 // AWFUL UGLY HEINOUS HACK SHOULD NOT BE NECESSARY
-          {kind: "onyx.Grabber", style: "height: 27px !important;"},
-          {name: "rightLabel", style: "text-align: center"},
           {name: "search", kind: "onyx.InputDecorator", style: "float: right;",
             showing: false, components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
@@ -77,7 +74,12 @@ trailing:true white:true*/
             {kind: "Image", src: "assets/search-input-search.png"}
           ]},
           {name: "newButton", kind: "onyx.Button", content: "_new".loc(),
-            ontap: "newRecord", style: "float: right;", showing: false}
+            ontap: "newRecord", style: "float: right;", showing: false},
+          {name: "exportButton", kind: "onyx.Button", content: "_export".loc(),
+            ontap: "exportList", style: "float: right;"},
+                                 // AWFUL UGLY HEINOUS HACK SHOULD NOT BE NECESSARY
+          {kind: "onyx.Grabber", style: "height: 27px !important;"},
+          {name: "rightLabel", style: "text-align: center"}
         ]},
         {name: "header", content: "", classes: "xv-navigator-header"},
         {name: "contentPanels", kind: "Panels", margin: 0, fit: true,
@@ -208,6 +210,10 @@ trailing:true white:true*/
       }
       this.$.moduleMenu.setCount(modules.length);
     },
+    exportList: function (inSender, inEvent) {
+      alert("Export list");
+    },
+
     newRecord: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),
         workspace = list instanceof XV.List ? list.getWorkspace() : null,

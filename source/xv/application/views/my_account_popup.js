@@ -20,17 +20,14 @@ trailing:true white:true*/
           {content: "Old Password: "},
           {kind: "onyx.Input", type:"password", name: "oldPassword", placeholder: "Enter old password"}
         ]},
-        {tag: "br"},
         {kind: "onyx.InputDecorator", components: [
           {content: "New Password: "},
           {kind: "onyx.Input", type:"password", name: "newPassword", placeholder: "Enter new password"}
         ]},
-        {tag: "br"},
         {kind: "onyx.InputDecorator", components: [
           {content: "New Password: "},
           {kind: "onyx.Input", type:"password", name: "newPasswordCheck", placeholder: "Re-enter new password"}
         ]},
-        {tag: "br"},
         {kind: "onyx.Button", name: "submitButton", ontap: "submitPassword", content: "Submit"}
       ]}
     ],
