@@ -12,7 +12,43 @@ white:true*/
   enyo.kind({
     name: "XV.CharacteristicPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.characteristics"
+    collection: "XM.characteristics",
+    orderBy: [
+      {attribute: 'order'},
+      {attribute: 'name'}
+    ]
+  });
+  
+  enyo.kind({
+    name: "XV.CharacteristicItem",
+    kind: "FittableColumns",
+    published: {
+      value: null
+    },
+    handlers: {
+      onValueChange: "controlValueChanged"
+    },
+    components: [
+      {kind: "XV.CharacteristicPicker", attr: "chararteristic",
+        showLabel: false},
+      {kind: "XV.InputWidget", attr: "value", showLabel: false}
+    ],
+    controlValueChanged: function (inSender, inEvent) {
+      var attr = inSender.getAttr(),
+        value = inSender.getValue(),
+        attributes = {},
+        model = this.getValue();
+      attributes[attr] = value;
+      model.set(attributes);
+      return true;
+    },
+    valueChanged: function () {
+      var model = this.getValue(),
+        characteristic = model.get('characteristic'),
+        value = model.get('value');
+      this.$.characteristicPicker.setValue(characteristic, {silent: true});
+      this.$.inputWidget.setValue(value, {silent: true});
+    }
   });
 
   enyo.kind({
@@ -24,8 +60,7 @@ white:true*/
     },
     components: [
       {kind: "Repeater", count: 0, onSetupItem: "setupItem", components: [
-        {kind: "XV.CharacteristicPicker"},
-        {kind: "XV.InputWidget"}
+        {kind: "XV.CharacteristicItem"}
       ]},
       {kind: "FittableColumns", components: [
         {kind: "onyx.Button", name: "newButton", onclick: "newItem",
@@ -56,15 +91,27 @@ white:true*/
                 status === K.READY_NEW);
       });
     },
-    setImageSource: function (inSender, inEvent) {
-      var item = inEvent.item.$.repeaterItem,
-        model = this.readyModels()[inEvent.index],
-        characteristic = model.get('characteristic'),
-        value = model.get('value');
-      item.$.characteristicPicker.setValue(characteristic);
-      item.$.inputWidget.setValue(value);
+    setupItem: function (inSender, inEvent) {
+      var item = inEvent.item.$.characteristicItem,
+        model = this.readyModels()[inEvent.index];
+      item.setValue(model);
+    },
+    sort: function (a, b) {
+      var aord = a.getValue('characeristic.order'),
+        bord = b.getValue('characeristic.order'),
+        aname,
+        bname;
+      if (aord === bord) {
+        aname = a.getValue('characeristic.name');
+        bname = b.getValue('characeristic.name');
+        return aname < bname ? 1 : -1;
+      }
+      return aord < bord ? 1 : -1;
     },
     valueChanged: function () {
+      // Set sort by order then name
+      this.value.comparator = this.sort;
+      this.value.sort();
       this.$.repeater.setCount(this.readyModels().length);
     }
 
