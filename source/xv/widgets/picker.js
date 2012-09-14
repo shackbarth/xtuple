@@ -101,6 +101,7 @@ regexp:true, undef:true, trailing:true, white:true */
     itemSelected: function (inSender, inEvent) {
       var value = this.$.picker.getSelected().value;
       this.setValue(value);
+      return true;
     },
     /**
       Implement your own filter function here. By default

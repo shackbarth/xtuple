@@ -618,8 +618,16 @@ body {
     width: 130px;
   }
 }
+
 .xv-characteristic-item {
   border-bottom: 1px solid #aaaaaa;
+  .onyx-input-decorator > input {
+    width: 150px;
+  }
+}
+
+.xv-characteristic-widget {
+
 }
 
 .xv-characteristic-button {

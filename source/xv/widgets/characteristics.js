@@ -27,8 +27,15 @@ white:true*/
   enyo.kind({
     name: "XV.OptionsPicker",
     published: {
+      attr: null,
       collection: null,
       value: null
+    },
+    events: {
+      onValueChange: ""
+    },
+    handlers: {
+      onSelect: "itemSelected"
     },
     components: [
       {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
@@ -40,6 +47,11 @@ white:true*/
         ]}
       ]}
     ],
+    itemSelected: function (inSender, inEvent) {
+      var value = this.$.picker.getSelected().value;
+      this.setValue(value);
+      return true;
+    },
     setCollection: function (collection) {
       var model,
         value,
@@ -56,14 +68,25 @@ white:true*/
       this.render();
     },
     setValue: function (value, options) {
-      var components = this.$.picker.getComponents(),
+      options = options || {};
+      var oldValue = this.getValue(),
+        inEvent,
+        components = this.$.picker.getComponents(),
         component = _.find(components, function (c) {
-        if (c.kind === "onyx.MenuItem") {
-          return c.content === value;
-        }
-      });
+          if (c.kind === "onyx.MenuItem") {
+            return c.content === value;
+          }
+        });
       if (!component) { value = null; }
       this.$.picker.setSelected(component);
+
+      if (value !== oldValue) {
+        this.value = value;
+        if (!options.silent) {
+          inEvent = { originator: this, value: value };
+          this.doValueChange(inEvent);
+        }
+      }
       return value;
     },
     sort: function (a, b) {
@@ -104,7 +127,7 @@ white:true*/
         value = inSender.getValue(),
         attributes = {},
         model = this.getValue();
-      attributes[attr] = value;
+      attributes[attr] = _.isDate(value) ? value.toJSON() : value;
       model.set(attributes);
       return true;
     },
