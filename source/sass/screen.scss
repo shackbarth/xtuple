@@ -613,15 +613,21 @@ body {
 }
 
 /* Characteristics.scss */
-.xv-options-picker {
+.xv-characteristic-picker {
   .onyx-picker-decorator .onyx-button {
     width: 130px;
   }
 }
-.xv-characteristics-widget {
-  .onyx-input-decorator > input {
-    width: 100px;
-  }
+.xv-characteristic-item {
+  border-bottom: 1px solid #aaaaaa;
+}
+
+.xv-characteristic-button {
+  margin-right: 4px;
+}
+
+.xv-characteristic-buttons {
+  margin: 8px;
 }
 
 /* Combobox.scss */

@@ -8,7 +8,7 @@ white:true*/
   // ..........................................................
   // ACCOUNT TYPE
   //
-  
+
   var TEXT = 0;
   var LIST = 1;
   var DATE = 2;
@@ -23,13 +23,63 @@ white:true*/
       {attribute: 'name'}
     ]
   });
-  
+
   enyo.kind({
     name: "XV.OptionsPicker",
-    classes: "xv-options-picker",
-    kind: "XV.PickerWidget"
+    published: {
+      collection: null,
+      value: null
+    },
+    components: [
+      {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
+        components: [
+        {kind: "onyx.PickerDecorator",
+          components: [
+          {classes: "xv-picker"},
+          {name: "picker", kind: "onyx.Picker"}
+        ]}
+      ]}
+    ],
+    setCollection: function (collection) {
+      var model,
+        value,
+        i;
+      this.collection = collection;
+      collection.comparator = this.sort;
+      collection.sort();
+      this.$.picker.destroyClientControls();
+      for (i = 0; i < collection.length; i++) {
+        model = collection.at(i);
+        value = model.get('value');
+        this.$.picker.createComponent({ content: value });
+      }
+      this.render();
+    },
+    setValue: function (value, options) {
+      var components = this.$.picker.getComponents(),
+        component = _.find(components, function (c) {
+        if (c.kind === "onyx.MenuItem") {
+          return c.content === value;
+        }
+      });
+      if (!component) { value = null; }
+      this.$.picker.setSelected(component);
+      return value;
+    },
+    sort: function (a, b) {
+      var aord = a.get('order'),
+        bord = b.get('order'),
+        aname,
+        bname;
+      if (aord === bord) {
+        aname = a.get('value');
+        bname = b.get('value');
+        return aname < bname ? 1 : -1;
+      }
+      return aord < bord ? 1 : -1;
+    }
   });
-  
+
   enyo.kind({
     name: "XV.CharacteristicItem",
     kind: "FittableColumns",
@@ -63,7 +113,8 @@ white:true*/
         characteristic = model.get('characteristic'),
         type = characteristic.get('characteristicType'),
         value = model.get('value'),
-        valueWidget;
+        valueWidget,
+        options;
       switch (type)
       {
       case TEXT:
@@ -83,6 +134,8 @@ white:true*/
         this.$.inputWidget.hide();
         this.$.optionsPicker.show();
         valueWidget = this.$.optionsPicker;
+        options = characteristic.get('options');
+        this.$.optionsPicker.setCollection(options);
       }
       this.$.characteristicPicker.setValue(characteristic, {silent: true});
       valueWidget.setValue(value, {silent: true});
@@ -100,8 +153,10 @@ white:true*/
       {kind: "Repeater", count: 0, onSetupItem: "setupItem", components: [
         {kind: "XV.CharacteristicItem"}
       ]},
-      {kind: "FittableColumns", components: [
-        {kind: "onyx.Button", name: "newButton", onclick: "newItem",
+      {kind: "FittableColumns", classes: "xv-characteristic-buttons",
+        components: [
+        {kind: "onyx.Button", name: "newButton",
+          classes: "xv-characteristic-button", onclick: "newItem",
           content: "_new".loc()},
         {kind: "onyx.Button", name: "deleteButton", onclick: "deleteItem",
           content: "_delete".loc(), disabled: true}
