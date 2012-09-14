@@ -612,6 +612,18 @@ body {
   background-color: white;
 }
 
+/* Characteristics.scss */
+.xv-options-picker {
+  .onyx-picker-decorator .onyx-button {
+    width: 130px;
+  }
+}
+.xv-characteristics-widget {
+  .onyx-input-decorator > input {
+    width: 100px;
+  }
+}
+
 /* Combobox.scss */
 .xv-combobox {
   height: 24px;

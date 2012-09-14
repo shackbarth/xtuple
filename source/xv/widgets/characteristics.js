@@ -8,10 +8,15 @@ white:true*/
   // ..........................................................
   // ACCOUNT TYPE
   //
+  
+  var TEXT = 0;
+  var LIST = 1;
+  var DATE = 2;
 
   enyo.kind({
     name: "XV.CharacteristicPicker",
     kind: "XV.PickerWidget",
+    classes: "xv-characteristic-picker",
     collection: "XM.characteristics",
     orderBy: [
       {attribute: 'order'},
@@ -20,8 +25,15 @@ white:true*/
   });
   
   enyo.kind({
+    name: "XV.OptionsPicker",
+    classes: "xv-options-picker",
+    kind: "XV.PickerWidget"
+  });
+  
+  enyo.kind({
     name: "XV.CharacteristicItem",
     kind: "FittableColumns",
+    classes: "xv-characteristic-item",
     published: {
       value: null
     },
@@ -31,7 +43,11 @@ white:true*/
     components: [
       {kind: "XV.CharacteristicPicker", attr: "chararteristic",
         showLabel: false},
-      {kind: "XV.InputWidget", attr: "value", showLabel: false}
+      {kind: "XV.InputWidget", attr: "value", showLabel: false},
+      {kind: "XV.DateWidget", attr: "value", showLabel: false,
+        showing: false},
+      {kind: "XV.OptionsPicker", attr: "value", showLabel: false,
+        showing: false}
     ],
     controlValueChanged: function (inSender, inEvent) {
       var attr = inSender.getAttr(),
@@ -45,15 +61,37 @@ white:true*/
     valueChanged: function () {
       var model = this.getValue(),
         characteristic = model.get('characteristic'),
-        value = model.get('value');
+        type = characteristic.get('characteristicType'),
+        value = model.get('value'),
+        valueWidget;
+      switch (type)
+      {
+      case TEXT:
+        this.$.dateWidget.hide();
+        this.$.optionsPicker.hide();
+        this.$.inputWidget.show();
+        valueWidget = this.$.inputWidget;
+        break;
+      case DATE:
+        this.$.optionsPicker.hide();
+        this.$.inputWidget.hide();
+        this.$.dateWidget.show();
+        valueWidget = this.$.dateWidget;
+        break;
+      case LIST:
+        this.$.dateWidget.hide();
+        this.$.inputWidget.hide();
+        this.$.optionsPicker.show();
+        valueWidget = this.$.optionsPicker;
+      }
       this.$.characteristicPicker.setValue(characteristic, {silent: true});
-      this.$.inputWidget.setValue(value, {silent: true});
+      valueWidget.setValue(value, {silent: true});
     }
   });
 
   enyo.kind({
     name: "XV.CharacteristicsWidget",
-    //kind: "XV.Groupbox",
+    classes: "xv-characteristics-widget",
     published: {
       attr: null,
       value: null
@@ -95,6 +133,7 @@ white:true*/
       var item = inEvent.item.$.characteristicItem,
         model = this.readyModels()[inEvent.index];
       item.setValue(model);
+      return true;
     },
     sort: function (a, b) {
       var aord = a.getValue('characeristic.order'),
