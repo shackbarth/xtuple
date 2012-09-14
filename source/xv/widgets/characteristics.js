@@ -21,7 +21,7 @@ white:true*/
     orderBy: [
       {attribute: 'order'},
       {attribute: 'name'}
-    ]
+    ],
   });
 
   enyo.kind({
@@ -135,7 +135,7 @@ white:true*/
       model.set(attributes);
       if (attr === 'characteristic') {
         if (value) {
-          empty = model.getValue('characteristic').get('characteristicType') === DATE ?
+          empty = model.get('characteristic').get('characteristicType') === DATE ?
             null : "";
           model.set('value', empty);
           this.valueChanged();
@@ -207,22 +207,15 @@ white:true*/
           content: "_new".loc()}
       ]}
     ],
-/*
-    deleteItem: function (inSender, inEvent) {
-      //inEvent.originator.parent.getModel().destroy();
-      //this.$.repeater.setCount(this._collection.length);
-    },
-*/
     itemDestroyed: function () {
       var len = this.readyModels().length;
       this.$.repeater.setCount(len);
     },
     newItem: function () {
       var Klass = XT.getObjectByName(this.getModel()),
-        model = new Klass(null, { isNew: true }),
-        len = this.readyModels().length;
+        model = new Klass(null, { isNew: true });
       this.value.add(model);
-      this.$.repeater.setCount(len);
+      this.$.repeater.setCount(this.readyModels().length);
     },
     readyModels: function () {
       return _.filter(this.value.models, function (model) {
