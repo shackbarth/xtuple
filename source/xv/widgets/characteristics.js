@@ -141,7 +141,6 @@ white:true*/
           this.valueChanged();
         } else {
           model.destroy();
-          this.doItemDestroyed();
         }
       }
       return true;
@@ -193,9 +192,6 @@ white:true*/
       value: null,
       which: null
     },
-    handlers: {
-      onItemDestroyed: "itemDestroyed"
-    },
     components: [
       {kind: "Repeater", count: 0, onSetupItem: "setupItem", components: [
         {kind: "XV.CharacteristicItem"}
@@ -207,15 +203,13 @@ white:true*/
           content: "_new".loc()}
       ]}
     ],
-    itemDestroyed: function () {
-      var len = this.readyModels().length;
-      this.$.repeater.setCount(len);
+    lengthChanged: function () {
+      this.$.repeater.setCount(this.readyModels().length);
     },
     newItem: function () {
       var Klass = XT.getObjectByName(this.getModel()),
         model = new Klass(null, { isNew: true });
       this.value.add(model);
-      this.$.repeater.setCount(this.readyModels().length);
     },
     readyModels: function () {
       return _.filter(this.value.models, function (model) {
@@ -254,11 +248,17 @@ white:true*/
       }
       return aord < bord ? 1 : -1;
     },
-    valueChanged: function () {
-      // Set sort by order then name
+    setValue: function (value) {
+      if (this.value) {
+        this.value.off('add', this.lengthChanged, this);
+        this.value.off('statusChange', this.lengthChanged, this);
+      }
+      this.value = value;
+      this.value.on('add', this.lengthChanged, this);
+      this.value.on('statusChange', this.lengthChanged, this);
       this.value.comparator = this.sort;
       this.value.sort();
-      this.$.repeater.setCount(this.readyModels().length);
+      this.lengthChanged();
     }
 
   });
