@@ -75,8 +75,8 @@ trailing:true white:true*/
           ]},
           {name: "newButton", kind: "onyx.Button", content: "_new".loc(),
             ontap: "newRecord", style: "float: right;", showing: false},
-          {name: "exportButton", kind: "onyx.Button", content: "_export".loc(),
-            ontap: "exportList", style: "float: right;"},
+          //{name: "exportButton", kind: "onyx.Button", content: "_export".loc(),
+          //  ontap: "exportList", style: "float: right;"},
                                  // AWFUL UGLY HEINOUS HACK SHOULD NOT BE NECESSARY
           {kind: "onyx.Grabber", style: "height: 27px !important;"},
           {name: "rightLabel", style: "text-align: center"}
@@ -211,6 +211,9 @@ trailing:true white:true*/
       this.$.moduleMenu.setCount(modules.length);
     },
     exportList: function (inSender, inEvent) {
+      var list = this.$.contentPanels.getActive(),
+        Model = list.getValue().model;
+
       alert("Not yet implemented");
     },
 
@@ -222,12 +225,12 @@ trailing:true white:true*/
       // Callback options on commit of the workspace
       // Fetch the corresponding list model and add
       callback = function (model) {
-        var Model = list._collection.model,
+        var Model = list.getValue().model,
           value = new Model({id: model.id}),
           options = {};
         options.success = function () {
-          list._collection.add(value);
-          list.setCount(list._collection.length);
+          list.getValue().add(value);
+          list.setCount(list.getValue().length);
           list.refresh();
         };
         value.fetch(options);

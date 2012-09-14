@@ -43,7 +43,8 @@ trailing:true white:true*/
       isMore: true,
       parameterWidget: null,
       workspace: null,
-      canAddNew: true
+      canAddNew: true,
+      value: null
     },
     events: {
       onItemTap: "",
@@ -57,19 +58,22 @@ trailing:true white:true*/
     collectionChanged: function () {
       var collection = this.getCollection(),
         Klass = collection ? XT.getObjectByName(collection) : false;
-      delete this._collection;
-      if (!Klass) { return; }
-      if (Klass) { this._collection = new Klass(); }
+
+      if (Klass) {
+        this.setValue(new Klass());
+      } else {
+        this.setValue(null);
+      }
     },
     create: function () {
       this.inherited(arguments);
       this.collectionChanged();
     },
     getModel: function (index) {
-      return this._collection.models[index];
+      return this.getValue().models[index];
     },
     getSearchableAttributes: function () {
-      return this._collection.model.getSearchableAttributes();
+      return this.getValue().model.getSearchableAttributes();
     },
     fetch: function (options) {
       var that = this,
@@ -96,13 +100,13 @@ trailing:true white:true*/
         },
         query: query
       });
-      this._collection.fetch(options);
+      this.getValue().fetch(options);
     },
     fetched: function () {
       var query = this.getQuery() || {},
         offset = query.rowOffset || 0,
         limit = query.rowLimit || 0,
-        count = this._collection.length,
+        count = this.getValue().length,
         isMore = limit ?
           (offset + limit <= count) && (this.getCount() !== count) : false,
         rowsPerPage;
@@ -137,8 +141,8 @@ trailing:true white:true*/
       // refresh the item.
       workspace = workspace ? XT.getObjectByName(workspace) : null;
       if (workspace && workspace.prototype.model === inEvent.model &&
-          this._collection) {
-        model = this._collection.get(inEvent.id);
+          this.getValue()) {
+        model = this.getValue().get(inEvent.id);
         if (model) {
           options.success = function () {
             that.refresh();
@@ -153,8 +157,8 @@ trailing:true white:true*/
     */
     queryChanged: function () {
       var query = this.getQuery();
-      if (this._collection && query.orderBy) {
-        this._collection.comparator = function (a, b) {
+      if (this.getValue() && query.orderBy) {
+        this.getValue().comparator = function (a, b) {
           var aval,
             bval,
             attr,
@@ -186,7 +190,7 @@ trailing:true white:true*/
       return r;
     },
     setupItem: function (inSender, inEvent) {
-      var model = this._collection.models[inEvent.index],
+      var model = this.getValue().models[inEvent.index],
         prop,
         isPlaceholder,
         view,
