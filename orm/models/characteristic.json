@@ -108,60 +108,6 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "CharacteristicAssignment",
-    "table": "charass",
-    "idSequenceName": "charass_charass_id_seq",
-    "comment": "Characteristic Assignment Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": false
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "charass_id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "charass_target_type"
-        }
-      },
-      {
-        "name": "target",
-        "toOne": {
-          "type": "Characteristic",
-          "column": "charass_target_id"
-        }
-      },
-      {
-        "name": "characteristic",
-        "attr": {
-          "type": "Number",
-          "column": "charass_char_id"
-        }
-      },
-      {
-        "name": "value",
-        "attr": {
-          "type": "String",
-          "column": "charass_value"
-        }
-      }
-    ]
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
     "type": "CharacteristicOption",
     "table": "charopt",
     "idSequenceName": "charopt_charopt_id_seq",

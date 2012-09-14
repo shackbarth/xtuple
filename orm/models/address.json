@@ -120,7 +120,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "AddressCharacteristic",
-    "table": "xm.characteristic_assignment",
+    "table": "charass",
     "comment": "Address Characteristic Map",
     "privileges": {
       "all": {
@@ -135,7 +135,7 @@
         "name": "id",
         "attr": {
           "type": "Number",
-          "column": "id",
+          "column": "charass_id",
           "isPrimaryKey": true
         }
       },
@@ -143,7 +143,7 @@
         "name": "targetType",
         "attr": {
           "type": "String",
-          "column": "targetType",
+          "column": "charass_target_type",
           "value": "ADDR"
         }
       },
@@ -151,21 +151,21 @@
         "name": "address",
         "attr": {
           "type": "Number",
-          "column": "target"
+          "column": "charass_target_id"
         }
       },
       {
         "name": "characteristic",
         "toOne": {
           "type": "Characteristic",
-          "column": "characteristic"
+          "column": "charass_char_id"
         }
       },
       {
         "name": "value",
         "attr": {
           "type": "String",
-          "column": "value"
+          "column": "charass_value"
         }
       }
     ],
