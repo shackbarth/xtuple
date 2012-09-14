@@ -216,6 +216,7 @@ trailing:true white:true*/
           view.addRemoveClass("placeholder", isPlaceholder);
         }
       }
+      return true;
     },
     setQuery: function () {
       var old = _.clone(this.query);

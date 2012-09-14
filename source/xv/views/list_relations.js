@@ -197,6 +197,7 @@ trailing:true white:true*/
       
       // Selection
       this.$.listItem.addRemoveClass("item-selected", isSelected);
+      return true;
     },
     statusChanged: function (model) {
       if (model.getStatus() === XM.Model.READY_CLEAN) {

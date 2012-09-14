@@ -87,6 +87,7 @@ white:true*/
       if (status & K.DESTROYED) {
         row.setDeleted(true);
       }
+      return true;
     },
     setValue: function (value, options) {
       this._collection = value;
