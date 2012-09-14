@@ -4,7 +4,7 @@ trailing:true white:true*/
 /*global XT:true, XM:true, XV:true, enyo:true*/
 
 (function () {
-  
+
   /**
     Must include a component called `list`.
     List must be of sub-kind `XV.ListRelations`.
@@ -34,13 +34,13 @@ trailing:true white:true*/
       this.inherited(arguments);
       var canAttach = this.getSearchList().length > 0,
         buttons;
-      
+
       // Header
       this.createComponent({
         kind: "onyx.GroupboxHeader",
         content: this.getTitle()
       });
-      
+
       // List
       this.createComponent({
         kind: this.getListRelations(),
@@ -48,7 +48,7 @@ trailing:true white:true*/
         attr: this.getAttr(),
         fit: true
       });
-      
+
       // Buttons
       buttons = {kind: 'FittableColumns', classes: "xv-groupbox-buttons",
         components: [
@@ -96,7 +96,7 @@ trailing:true white:true*/
 
                 // Callback to update our list with changes when save complete
                 options.success = function () {
-                  list._collection.add(selectedModel);
+                  list.getValue().add(selectedModel);
                 };
 
                 // Set and save our contact with the new account relation
@@ -113,7 +113,7 @@ trailing:true white:true*/
           model.fetch();
           infoModel.fetch();
         };
-      
+
       // Open a search screen that excludes already attached records
       inEvent = {
         list: searchList,
@@ -145,8 +145,8 @@ trailing:true white:true*/
 
             // Callback to update our list with changes when save complete
             options.success = function () {
-              list._collection.remove(infoModel);
-              list.setCount(list._collection.length);
+              list.getValue().remove(infoModel);
+              list.setCount(list.getValue().length);
               list.refresh();
             };
 
@@ -169,11 +169,11 @@ trailing:true white:true*/
         key = this.parentKey,
         attributes = {},
         callback = function (model) {
-          var Model = list._collection.model,
+          var Model = list.getValue().model,
             value = new Model({id: model.id}),
             options = {};
           options.success = function () {
-            list._collection.add(value);
+            list.getValue().add(value);
           };
           value.fetch(options);
         },

@@ -230,6 +230,27 @@ body {
 	text-align: center;
 }
 
+.xv-my-account-popup {
+  background-color: white;
+  color: black;
+  .xv-message {
+    color:red;
+    padding: 5px;
+  }
+  .onyx-button {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .onyx-input {
+    padding-left: 10px;
+    float: right;
+  }
+}
+
+
+//
+// XV-VIEWS
+//
 
 //
 // Navigator
