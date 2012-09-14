@@ -33,14 +33,17 @@ trailing:true white:true*/
     },
     destroy: function () {
       // Clear all bindings
-      var models = this._collection ? this._collection.models : null;
+      var value = this.getValue(),
+        models = value ? value.models : null;
       if (models) {
         _.each(models, function (model) {
           model.off('statusChange', this.statusChanged, this);
         });
       }
-      this._collection.off("add", this.modelAdded, this);
-      this._collection.off("remove", this.lengthChanged, this);
+      if (value) {
+        value.off("add", this.modelAdded, this);
+        value.off("remove", this.lengthChanged, this);
+      }
       this.inherited(arguments);
     },
     getFirstSelected: function () {
@@ -56,8 +59,9 @@ trailing:true white:true*/
       return this.readyModels()[index];
     },
     getParent: function () {
-      var key = this.getParentKey();
-      return key && this._collection ? this._collection[key] : null;
+      var key = this.getParentKey(),
+        value = this.getValue();
+      return key && value ? value[key] : null;
     },
     fetchRelated: function (max) {
       var parent = this.getParent(),
@@ -69,7 +73,8 @@ trailing:true white:true*/
     },
     hasMore: function () {
       var parent = this.getParent(),
-        count = this._collection ? this._collection.length : 0,
+        value = this.getValue(),
+        count = value ? value.length : 0,
         attr = this.getAttr(),
         relation = parent && attr ? parent.getRelation(attr) : null,
         keyContents = relation && relation.keyContents ? relation.keyContents : [];
@@ -77,6 +82,7 @@ trailing:true white:true*/
     },
     lengthChanged: function () {
       var count = this.readyModels().length,
+        value = this.getValue(),
         rowsPerPage;
       if (count === this.count) { return; }
         
@@ -86,21 +92,25 @@ trailing:true white:true*/
       if (rowsPerPage !== this.rowsPerPage) {
         this.setRowsPerPage(rowsPerPage);
       }
-      this._collection.sort();
+      value.sort();
       this.setCount(count);
       this.refresh();
     },
     modelAdded: function (model) {
-      if (model.getStatus() === XM.Model.READY_CLEAN) {
+      var status = model.getStatus(),
+        K = XM.Model;
+      if (status === K.READY_CLEAN ||
+          status === K.READY_NEW) {
         this.lengthChanged();
       } else {
         model.on('statusChange', this.statusChanged, this);
       }
     },
     orderByChanged: function () {
-      var orderBy = this.getOrderBy() || [];
-      if (this._collection && orderBy.length) {
-        this._collection.comparator = function (a, b) {
+      var orderBy = this.getOrderBy() || [],
+        value = this.getValue();
+      if (value && orderBy.length) {
+        value.comparator = function (a, b) {
           var aval,
             bval,
             attr,
@@ -120,18 +130,26 @@ trailing:true white:true*/
       }
     },
     readyModels: function () {
-      return _.filter(this._collection.models, function (model) {
-        return model.getStatus() === XM.Model.READY_CLEAN;
+      return _.filter(this.value.models, function (model) {
+        var status = model.getStatus(),
+          K = XM.Model;
+        // Avoiding bitwise because performance matters here
+        return (status === K.READY_CLEAN ||
+                status === K.READY_DIRTY ||
+                status === K.READY_NEW);
       });
     },
     scroll: function (inSender, inEvent) {
       var r = this.inherited(arguments),
         bounds = this.getScrollBounds(),
         lastShowing = this._lastShowing || 0,
-        totalRows = this._collection.length,
+        totalRows = this.value.length,
         rowsPerPage = bounds.clientHeight / this.rowHeight,
         showingRows = Math.floor(bounds.top / this.rowHeight + rowsPerPage),
-        fetch =  showingRows > lastShowing && totalRows - showingRows - FETCH_TRIGGER < 0 && this.hasMore();
+        fetch =  showingRows > lastShowing &&
+          totalRows - showingRows - FETCH_TRIGGER < 0 &&
+          this.hasMore();
+          
       // Manage lazy loading
       if (fetch) {
         this._lastShowing = showingRows;
@@ -187,9 +205,9 @@ trailing:true white:true*/
       }
     },
     valueChanged: function () {
-      this._collection = this.value;
-      this._collection.on("add", this.modelAdded, this);
-      this._collection.on("remove", this.lengthChanged, this);
+      var value = this.getValue();
+      value.on("add", this.modelAdded, this);
+      value.on("remove", this.lengthChanged, this);
       this.orderByChanged();
       this.lengthChanged();
       this.fetchRelated();

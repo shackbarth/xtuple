@@ -4,7 +4,32 @@ trailing:true white:true*/
 /*global XT:true, XM:true, XV:true, _:true, enyo:true*/
 
 (function () {
-  
+
+  /**
+    Use this class to define the editor for `XV.ListRelationsEditorBox`.
+  */
+  var editor = enyo.mixin(XV.EditorMixin, {
+    name: "XV.RelationsEditor",
+    kind: "XV.Groupbox",
+    handlers: {
+      onValueChange: "controlValueChanged"
+    },
+    setValue: function (value) {
+      var changes = {},
+        options = {},
+        attrs,
+        i;
+      this.value = value;
+      attrs = value.getAttributeNames();
+      for (i = 0; i < attrs.length; i++) {
+        changes[attrs[i]] = true;
+      }
+      options.changes = changes;
+      this.attributesChanged(value, options);
+    }
+  });
+  enyo.kind(editor);
+
   /**
     Must include a component called `list`.
     List must be of sub-kind `XV.ListRelations`.
@@ -20,104 +45,89 @@ trailing:true white:true*/
       title: "",
       parentKey: "",
       listRelations: "",
-      editors: null
+      editor: null
     },
     handlers: {
       onSelect: "selectionChanged",
-      onDeselect: "selectionChanged"
+      onDeselect: "selectionChanged",
+      onValueChange: "controlValueChanged"
     },
     attrChanged: function () {
       this.$.list.setAttr(this.attr);
     },
-    /**
-      Updates all child controls on the workspace where the name of
-      the control matches the name of an attribute on the model.
-
-      @param {XM.Model} model
-      @param {Object} options
-    */
-    attributesChanged: XV.Workspace.prototype.attributesChanged,
+    controlValueChanged: function () {
+      this.$.list.refresh();
+      return true;
+    },
     create: function () {
       this.inherited(arguments);
-      var editors = this.getEditors() || [],
+      var editor = this.getEditor(),
         panels,
         control;
-      
+
       // Header
       this.createComponent({
         kind: "onyx.GroupboxHeader",
         content: this.getTitle()
       });
-      
+
       // List
       panels = {
         kind: "Panels",
         fit: true,
         arrangerKind: "CollapsingArranger",
-        components: _.clone(editors)
+        components: [
+          {kind: editor, name: "editor"},
+          {kind: this.getListRelations(), name: "list",
+            attr: this.getAttr(), fit: true}
+        ]
       };
-      panels.components.push({
-        kind: this.getListRelations(),
-        name: "list",
-        attr: this.getAttr(),
-        fit: true
-      });
       control = this.createComponent(panels);
-      control.setIndex(editors.length);
-      
-      // Button
+      control.setIndex(1);
+
+      // Buttons
       this.createComponent({
-        kind: "onyx.Button",
-        name: "newButton",
-        onclick: "newItem",
-        content: "_new".loc(),
-        classes: "xv-groupbox-button-single"
+        kind: "FittableColumns",
+        classes: "xv-groupbox-buttons",
+        components: [
+          {kind: "onyx.Button", name: "newButton", onclick: "newItem",
+            content: "_new".loc(), classes: "xv-groupbox-button-left"},
+          {kind: "onyx.Button", name: "deleteButton", onclick: "deleteItem",
+            content: "_delete".loc(), classes: "xv-groupbox-button-right",
+            disabled: true}
+        ]
       });
+
+    },
+    deleteItem: function () {
+      var index = this.$.list.getFirstSelected(),
+        model = index ? this.$.list.getModel(index) : null;
+      this.$.list.getSelection().deselect(index, false);
+      model.destroy();
+      this.$.list.lengthChanged();
     },
     newItem: function () {
-      var list = this.$.list,
-        parent = this.$.list.getParent(),
-        id = parent ? parent.id : null,
-        key = this.parentKey,
-        attributes = {},
-        callback = function (model) {
-          var Model = list._collection.model,
-            value = new Model({id: model.id}),
-            options = {};
-          options.success = function () {
-            list._collection.add(value);
-          };
-          value.fetch(options);
-        },
-        inEvent;
-      attributes[key] = id;
-      inEvent = {
-        originator: this,
-        workspace: list.workspace,
-        attributes: attributes,
-        callback: callback
-      };
-      this.doWorkspace(inEvent);
+      var collection = this.$.list.getValue(),
+        Klass = collection.model,
+        model = new Klass(null, {isNew: true});
+      collection.add(model);
+      this.$.list.select(collection.length - 1);
     },
     selectionChanged: function (inSender, inEvent) {
       var index = this.$.list.getFirstSelected(),
         model = index ? this.$.list.getModel(index) : null,
-        editors = this.getEditors() || [],
-        changes = {},
-        options = {},
-        attrs,
-        i;
+        that = this;
+      this.$.deleteButton.setDisabled(true);
       if (index) {
-        // Update editor panel(s) completely
-        attrs = model.getAttributeNames();
-        for (i = 0; i < attrs.length; i++) {
-          changes[attrs[i]] = true;
-        }
-        options.changes = changes;
-        this.attributesChanged(model, options);
+        this.$.editor.setValue(model);
+        model.used({
+          success: function (resp) {
+            that.$.deleteButton.setDisabled(resp);
+          }
+        });
         this.$.panels.previous();
       } else {
-        this.$.panels.setIndex(editors.length);
+        this.$.panels.setIndex(1);
       }
     },
     valueChanged: function () {
