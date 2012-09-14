@@ -113,6 +113,9 @@ white:true*/
     handlers: {
       onValueChange: "controlValueChanged"
     },
+    events: {
+      onItemDestroyed: ""
+    },
     components: [
       {kind: "XV.CharacteristicPicker", attr: "characteristic",
         showLabel: false},
@@ -131,10 +134,15 @@ white:true*/
       attributes[attr] = _.isDate(value) ? value.toJSON() : value;
       model.set(attributes);
       if (attr === 'characteristic') {
-        empty = model.getValue('characteristic').get('characteristicType') === DATE ?
-          null : "";
-        model.set('value', empty);
-        this.valueChanged();
+        if (value) {
+          empty = model.getValue('characteristic').get('characteristicType') === DATE ?
+            null : "";
+          model.set('value', empty);
+          this.valueChanged();
+        } else {
+          model.destroy();
+          this.doItemDestroyed();
+        }
       }
       return true;
     },
@@ -185,6 +193,9 @@ white:true*/
       value: null,
       which: null
     },
+    handlers: {
+      onItemDestroyed: "itemDestroyed"
+    },
     components: [
       {kind: "Repeater", count: 0, onSetupItem: "setupItem", components: [
         {kind: "XV.CharacteristicItem"}
@@ -193,9 +204,7 @@ white:true*/
         components: [
         {kind: "onyx.Button", name: "newButton",
           classes: "xv-characteristic-button", onclick: "newItem",
-          content: "_new".loc()},
-        {kind: "onyx.Button", name: "deleteButton", onclick: "deleteItem",
-          content: "_delete".loc(), disabled: true}
+          content: "_new".loc()}
       ]}
     ],
 /*
@@ -204,11 +213,16 @@ white:true*/
       //this.$.repeater.setCount(this._collection.length);
     },
 */
+    itemDestroyed: function () {
+      var len = this.readyModels().length;
+      this.$.repeater.setCount(len);
+    },
     newItem: function () {
       var Klass = XT.getObjectByName(this.getModel()),
-        model = new Klass(null, { isNew: true });
+        model = new Klass(null, { isNew: true }),
+        len = this.readyModels().length;
       this.value.add(model);
-      this.$.repeater.setCount(this.value.length);
+      this.$.repeater.setCount(len);
     },
     readyModels: function () {
       return _.filter(this.value.models, function (model) {
