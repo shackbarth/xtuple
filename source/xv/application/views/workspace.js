@@ -56,7 +56,8 @@ trailing:true white:true*/
             {kind: "XV.ContactWidget", attr: "secondaryContact",
               showAddress: true},
             {kind: "onyx.GroupboxHeader", content: "_characteristics".loc()},
-            {kind: "XV.CharacteristicsWidget", attr: "characteristics"},
+            {kind: "XV.CharacteristicsWidget", attr: "characteristics",
+              which: "isAccounts"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}

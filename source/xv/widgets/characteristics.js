@@ -48,7 +48,7 @@ white:true*/
       ]}
     ],
     itemSelected: function (inSender, inEvent) {
-      var value = this.$.picker.getSelected().value;
+      var value = this.$.picker.getSelected().content;
       this.setValue(value);
       return true;
     },
@@ -131,6 +131,9 @@ white:true*/
       model.set(attributes);
       return true;
     },
+    getCharacteristicPicker: function () {
+      return this.$.characteristicPicker;
+    },
     valueChanged: function () {
       var model = this.getValue(),
         characteristic = model.get('characteristic'),
@@ -170,7 +173,8 @@ white:true*/
     classes: "xv-characteristics-widget",
     published: {
       attr: null,
-      value: null
+      value: null,
+      which: null
     },
     components: [
       {kind: "Repeater", count: 0, onSetupItem: "setupItem", components: [
@@ -209,8 +213,17 @@ white:true*/
     },
     setupItem: function (inSender, inEvent) {
       var item = inEvent.item.$.characteristicItem,
-        model = this.readyModels()[inEvent.index];
+        model = this.readyModels()[inEvent.index],
+        which = this.getWhich(),
+        picker = item.getCharacteristicPicker(),
+        filter = function (models) {
+          return _.filter(models, function (m) {
+            return m.get(which);
+          });
+        };
       item.setValue(model);
+      picker.filter = filter;
+      picker.buildList();
       return true;
     },
     sort: function (a, b) {
