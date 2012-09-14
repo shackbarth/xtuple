@@ -5,3 +5,9 @@ config_local*
 datasource.log
 datasource-err.log
 www/client
+lib/private
+test/steves_add_user.js
+test/admin.txt
+test/salt.txt
+*.swp
+
