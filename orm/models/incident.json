@@ -798,9 +798,6 @@
         }
       }
     ],
-    "order": [
-      "incdthist_timestamp"
-    ],
     "isNestedOnly": true,
     "isSystem": true
   },

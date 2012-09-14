@@ -157,26 +157,7 @@
           "column": "charass_value"
         }
       }
-    ],
-    "extensions": [
-      {
-        "table": "char",
-        "isChild": true,
-        "relations": [
-          {
-            "column": "char_id",
-            "inverse": "characteristic"
-          }
-        ],
-        "order": [
-          "char_order",
-          "char_name"
-        ],
-        "nameSpace": "XM"
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
+    ]
   },
   {
     "context": "xtuple",
