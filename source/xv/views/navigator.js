@@ -211,7 +211,7 @@ trailing:true white:true*/
       this.$.moduleMenu.setCount(modules.length);
     },
     exportList: function (inSender, inEvent) {
-      alert("Export list");
+      alert("Not yet implemented");
     },
 
     newRecord: function (inSender, inEvent) {
