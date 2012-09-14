@@ -158,6 +158,10 @@ white:true*/
   */
   XM.CharacteristicAssignment = XM.Model.extend({
     /** @scope XM.CharacteristicAssignment.prototype */
+    
+    requiredAttributes: [
+      "characteristic"
+    ],
 
     //..................................................
     // METHODS
