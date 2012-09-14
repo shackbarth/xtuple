@@ -5,6 +5,7 @@ enyo.depends(
   "number.js",
   "text_area.js",
   "picker.js",
+  "characteristics.js",
   "address.js",
   "date.js",
   "completer.js",
