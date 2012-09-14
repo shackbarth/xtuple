@@ -114,7 +114,7 @@ white:true*/
       onValueChange: "controlValueChanged"
     },
     components: [
-      {kind: "XV.CharacteristicPicker", attr: "chararteristic",
+      {kind: "XV.CharacteristicPicker", attr: "characteristic",
         showLabel: false},
       {kind: "XV.InputWidget", attr: "value", showLabel: false},
       {kind: "XV.DateWidget", attr: "value", showLabel: false,
@@ -126,9 +126,16 @@ white:true*/
       var attr = inSender.getAttr(),
         value = inSender.getValue(),
         attributes = {},
-        model = this.getValue();
+        model = this.getValue(),
+        empty;
       attributes[attr] = _.isDate(value) ? value.toJSON() : value;
       model.set(attributes);
+      if (attr === 'characteristic') {
+        empty = model.getValue('characteristic').get('characteristicType') === DATE ?
+          null : "";
+        model.set('value', empty);
+        this.valueChanged();
+      }
       return true;
     },
     getCharacteristicPicker: function () {
@@ -137,7 +144,8 @@ white:true*/
     valueChanged: function () {
       var model = this.getValue(),
         characteristic = model.get('characteristic'),
-        type = characteristic.get('characteristicType'),
+        type = characteristic ?
+          characteristic.get('characteristicType') : TEXT,
         value = model.get('value'),
         valueWidget,
         options;
@@ -173,6 +181,7 @@ white:true*/
     classes: "xv-characteristics-widget",
     published: {
       attr: null,
+      model: null,
       value: null,
       which: null
     },
@@ -194,13 +203,13 @@ white:true*/
       //inEvent.originator.parent.getModel().destroy();
       //this.$.repeater.setCount(this._collection.length);
     },
+*/
     newItem: function () {
       var Klass = XT.getObjectByName(this.getModel()),
         model = new Klass(null, { isNew: true });
-      this._collection.add(model);
-      this.$.repeater.setCount(this._collection.length);
+      this.value.add(model);
+      this.$.repeater.setCount(this.value.length);
     },
-*/
     readyModels: function () {
       return _.filter(this.value.models, function (model) {
         var status = model.getStatus(),
