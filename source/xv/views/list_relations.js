@@ -92,7 +92,7 @@ trailing:true white:true*/
       if (rowsPerPage !== this.rowsPerPage) {
         this.setRowsPerPage(rowsPerPage);
       }
-      value.sort();
+      if (value.comparator) { value.sort(); }
       this.setCount(count);
       this.refresh();
     },

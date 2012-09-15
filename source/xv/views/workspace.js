@@ -16,7 +16,7 @@ trailing:true white:true*/
       this.value.set(attrs);
     },
     /**
-      Updates all child controls on the workspace where the name of
+      Updates all child controls on the editor where the name of
       the control matches the name of an attribute on the model.
 
       @param {XM.Model} model
@@ -24,8 +24,7 @@ trailing:true white:true*/
     */
     attributesChanged: function (model, options) {
       options = options || {};
-      var that = this,
-        attr,
+      var attr,
         value,
         K = XM.Model,
         status = model.getStatus(),
@@ -34,17 +33,15 @@ trailing:true white:true*/
         control,
         isReadOnly,
         isRequired,
-        findControl = function (attr) {
-          return _.find(that.$, function (ctl) {
-            return ctl.attr === attr;
-          });
-        };
+        prop;
       for (attr in changes) {
         if (changes.hasOwnProperty(attr)) {
-          value = model.get(attr);
-          isReadOnly = model.isReadOnly(attr);
-          isRequired = model.isRequired(attr);
-          control = findControl(attr);
+          prop = model.attributeDelegates && model.attributeDelegates[attr]
+            ? model.attributeDelegates[attr] : attr;
+          value = model.getValue(prop);
+          isReadOnly = model.isReadOnly(prop);
+          isRequired = model.isRequired(prop);
+          control = this.findControl(prop, model);
           if (control) {
             if (control.setPlaceholder && isRequired &&
                 !control.getPlaceholder()) {
@@ -59,6 +56,11 @@ trailing:true white:true*/
           }
         }
       }
+    },
+    findControl: function (attr, model) {
+      return _.find(this.$, function (ctl) {
+        return ctl.attr === attr;
+      });
     }
   };
 

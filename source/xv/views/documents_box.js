@@ -45,8 +45,7 @@ trailing:true white:true*/
       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
         classes: "in-panel", components: [
         {kind: "XV.PickerWidget", attr: "number"},
-        {kind: "XV.PickerWidget", attr: "name"},
-        {kind: "XV.RelationWdiget", attr: "status"}
+        {kind: "XV.PickerWidget", attr: "name"}
       ]}
     ]
   });

@@ -16,6 +16,11 @@ white:true*/
     /** @scope XM.Document */
 
     /**
+      A mapping of attributes whose values have been mapped to another property.
+    */
+    attributeDelegates: null,
+    
+    /**
       The unique property for the document, typically a number, code or name.
       This property will be checked when a user edits it to ensure it has not already
       been used by another record of the same type.
@@ -165,9 +170,11 @@ white:true*/
       this.on('statusChange', this.statusDidChange);
       
       // Bind document assignments
+      this.attributeDelegates = this.attributeDelegates || {};
       this.documents = new Backbone.Collection();
       _.each(relations, function (relation) {
         if (relation.relatedModel.prototype.isDocumentAssignment) {
+          that.attributeDelegates[relation.key] = 'documents';
           collection = that.get(relation.key);
           collection.on('add', that.documentAdded, that);
           collection.on('remove', that.documentRemoved, that);
