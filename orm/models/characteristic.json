@@ -70,7 +70,8 @@
         "toMany": {
           "type": "CharacteristicOption",
           "column": "char_id",
-          "inverse": "characteristic"
+          "inverse": "characteristic",
+          "isNested": true
         }
       },
       {
