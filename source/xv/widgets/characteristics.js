@@ -57,7 +57,8 @@ white:true*/
     setCollection: function (collection) {
       var model,
         value,
-        i;
+        i,
+        c;
       this.collection = collection;
       collection.comparator = this.sort;
       collection.sort();
@@ -65,7 +66,9 @@ white:true*/
       for (i = 0; i < collection.length; i++) {
         model = collection.at(i);
         value = model.get('value');
-        this.$.picker.createComponent({ content: value });
+        c = this.$.picker.createComponent({ content: value });
+        // Autormatically select first
+        if (i === 0) { this.$.picker.setSelected(c); }
       }
       this.render();
     },
@@ -99,9 +102,9 @@ white:true*/
       if (aord === bord) {
         aname = a.get('value');
         bname = b.get('value');
-        return aname < bname ? 1 : -1;
+        return aname < bname ? -1 : 1;
       }
-      return aord < bord ? 1 : -1;
+      return aord < bord ? -1 : 1;
     }
   });
 
@@ -239,16 +242,18 @@ white:true*/
       return true;
     },
     sort: function (a, b) {
-      var aord = a.getValue('characeristic.order'),
-        bord = b.getValue('characeristic.order'),
+      var achar = a.get('characteristic'),
+        bchar = b.get('characteristic'),
+        aord = achar ? achar.get('order') : null,
+        bord = bchar ? bchar.get('order') : null,
         aname,
         bname;
       if (aord === bord) {
-        aname = a.getValue('characeristic.name');
-        bname = b.getValue('characeristic.name');
-        return aname < bname ? 1 : -1;
+        aname = achar ? achar.get('name') : null;
+        bname = bchar ? bchar.get('name') : null;
+        return aname < bname ? -1 : 1;
       }
-      return aord < bord ? 1 : -1;
+      return aord < bord ? -1 : 1;
     },
     setValue: function (value) {
       if (this.value) {
