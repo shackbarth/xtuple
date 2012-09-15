@@ -20,10 +20,17 @@ white:true*/
   });
   
   enyo.kind({
-    name: "XV.IncidentCharacteristicsBox",
+    name: "XV.IncidentCharacteristicsWidget",
     kind: "XV.CharacteristicsWidget",
     model: "XM.IncidentCharacteristic",
     which: "isIncidents"
+  });
+  
+  enyo.kind({
+    name: "XV.ItemCharacteristicsWidget",
+    kind: "XV.CharacteristicsWidget",
+    model: "XM.ItemCharacteristic",
+    which: "isItems"
   });
   
   enyo.kind({

@@ -126,6 +126,8 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "phone"},
             {kind: "XV.InputWidget", attr: "alternate"},
             {kind: "XV.InputWidget", attr: "fax"},
+            {kind: "onyx.GroupboxHeader", content: "_characteristics".loc()},
+            {kind: "XV.ContactCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true},
             {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
@@ -283,6 +285,8 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
             {kind: "XV.UserAccountWidget", attr: "owner"},
             {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+            {kind: "onyx.GroupboxHeader", content: "_characteristics".loc()},
+            {kind: "XV.IncidentCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true},
             {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
@@ -352,7 +356,9 @@ trailing:true white:true*/
             {kind: "XV.CheckboxWidget", attr: "isSold"},
             {kind: "XV.InputWidget", attr: "listPrice"},
             {kind: "XV.UnitWidget", attr: "priceUnit"},
-            {kind: "XV.ProductCategoryWidget", attr: "productCategory"}
+            {kind: "XV.ProductCategoryWidget", attr: "productCategory"},
+            {kind: "onyx.GroupboxHeader", content: "_characteristics".loc()},
+            {kind: "XV.ItemCharacteristicsWidget", attr: "characteristics"}
           ]}
         ]}
       ]},
@@ -402,6 +408,8 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
             {kind: "XV.UserAccountWidget", attr: "owner"},
             {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+            {kind: "onyx.GroupboxHeader", content: "_characteristics".loc()},
+            {kind: "XV.OpportunityCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
