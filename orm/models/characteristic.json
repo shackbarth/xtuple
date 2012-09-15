@@ -70,7 +70,8 @@
         "toMany": {
           "type": "CharacteristicOption",
           "column": "char_id",
-          "inverse": "characteristic"
+          "inverse": "characteristic",
+          "isNested": true
         }
       },
       {
@@ -104,79 +105,6 @@
     ],
     "isSystem": true,
     "extensions": []
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
-    "type": "CharacteristicAssignment",
-    "table": "charass",
-    "idSequenceName": "charass_charass_id_seq",
-    "comment": "Characteristic Assignment Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": false
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "charass_id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "charass_target_type"
-        }
-      },
-      {
-        "name": "target",
-        "toOne": {
-          "type": "Characteristic",
-          "column": "charass_target_id"
-        }
-      },
-      {
-        "name": "characteristic",
-        "attr": {
-          "type": "Number",
-          "column": "charass_char_id"
-        }
-      },
-      {
-        "name": "value",
-        "attr": {
-          "type": "String",
-          "column": "charass_value"
-        }
-      }
-    ],
-    "extensions": [
-      {
-        "table": "char",
-        "isChild": true,
-        "relations": [
-          {
-            "column": "char_id",
-            "inverse": "characteristic"
-          }
-        ],
-        "order": [
-          "char_order",
-          "char_name"
-        ],
-        "nameSpace": "XM"
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
   },
   {
     "context": "xtuple",

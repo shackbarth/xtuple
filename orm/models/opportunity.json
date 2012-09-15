@@ -321,7 +321,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "OpportunityCharacteristic",
-    "table": "xm.characteristic_assignment",
+    "table": "charass",
     "idSequenceName": "charass_charass_id_seq",
     "comment": "Opportunity Characteristic Map",
     "privileges": {
@@ -337,7 +337,7 @@
         "name": "id",
         "attr": {
           "type": "Number",
-          "column": "id",
+          "column": "charass_id",
           "isPrimaryKey": true
         }
       },
@@ -345,7 +345,7 @@
         "name": "targetType",
         "attr": {
           "type": "String",
-          "column": "targetType",
+          "column": "charass_target_type",
           "value": "OPP"
         }
       },
@@ -353,21 +353,21 @@
         "name": "opportunity",
         "attr": {
           "type": "Number",
-          "column": "target"
+          "column": "charass_target_id"
         }
       },
       {
         "name": "characteristic",
         "toOne": {
           "type": "Characteristic",
-          "column": "characteristic"
+          "column": "charass_char_id"
         }
       },
       {
         "name": "value",
         "attr": {
           "type": "String",
-          "column": "value"
+          "column": "charass_value"
         }
       }
     ],

@@ -533,13 +533,6 @@
     }
   ],
   
-  /*
-  A array of columns indicating the order queries on the views should be returned in.
-  */
-  "order": [
-    "prjtask_number"
-  ],
-   
   /** 
   The extensions array allows you to define addtional tables on which to join to the table
   of this ORM. The following keys apply to extensions in the exact same manner as the root
