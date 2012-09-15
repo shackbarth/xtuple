@@ -743,26 +743,28 @@ body {
 /* line 628, ../sass/screen.scss */
 .xv-characteristic-item .onyx-input-decorator > input {
   width: 150px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
-/* line 633, ../sass/screen.scss */
+/* line 635, ../sass/screen.scss */
 .xv-characteristic-button {
   margin-right: 4px;
 }
 
-/* line 637, ../sass/screen.scss */
+/* line 639, ../sass/screen.scss */
 .xv-characteristic-buttons {
   margin: 8px;
 }
 
 /* Combobox.scss */
-/* line 642, ../sass/screen.scss */
+/* line 644, ../sass/screen.scss */
 .xv-combobox {
   height: 24px;
   width: 205px;
 }
 
-/* line 647, ../sass/screen.scss */
+/* line 649, ../sass/screen.scss */
 .xv-combobox-input {
   font-size: medium;
   border: 0px;
@@ -771,24 +773,24 @@ body {
   outline: none;
 }
 
-/* line 655, ../sass/screen.scss */
+/* line 657, ../sass/screen.scss */
 .xv-combobox-icon {
   left: 8px;
   position: relative;
 }
 
 /* picker.scss */
-/* line 661, ../sass/screen.scss */
+/* line 663, ../sass/screen.scss */
 .xv-pickerwidget {
   background-color: white;
 }
 
-/* line 665, ../sass/screen.scss */
+/* line 667, ../sass/screen.scss */
 .xv-picker {
   width: 180px;
 }
 
-/* line 669, ../sass/screen.scss */
+/* line 671, ../sass/screen.scss */
 .xv-label {
   width: 130px;
   padding-bottom: 8px;
@@ -798,7 +800,7 @@ body {
   text-align: right;
 }
 
-/* line 678, ../sass/screen.scss */
+/* line 680, ../sass/screen.scss */
 .xv-decorated-label {
   width: 130px;
   padding-bottom: 8px;
@@ -808,7 +810,7 @@ body {
   text-align: right;
 }
 
-/* line 687, ../sass/screen.scss */
+/* line 689, ../sass/screen.scss */
 .xv-picker-label {
   width: 130px;
   padding-bottom: 8px;
@@ -818,7 +820,7 @@ body {
   text-align: right;
 }
 
-/* line 696, ../sass/screen.scss */
+/* line 698, ../sass/screen.scss */
 .xv-textarea-input {
   width: 95%;
   min-height: 100px;
@@ -827,27 +829,27 @@ body {
   border-color: #ddd;
 }
 
-/* line 704, ../sass/screen.scss */
+/* line 706, ../sass/screen.scss */
 .xv-relationwidget-completer {
   left: -200px;
   top: 15px;
 }
 
-/* line 710, ../sass/screen.scss */
+/* line 712, ../sass/screen.scss */
 .xv-relationwidget-column.left {
   padding-right: 18px;
   color: black;
   width: 140px;
 }
 
-/* line 717, ../sass/screen.scss */
+/* line 719, ../sass/screen.scss */
 .xv-relationwidget-icon {
   top: 2px;
   left: 8px;
   position: relative;
 }
 
-/* line 723, ../sass/screen.scss */
+/* line 725, ../sass/screen.scss */
 .xv-relationwidget-description {
   white-space: nowrap;
   overflow: hidden;
@@ -857,30 +859,30 @@ body {
   padding-bottom: 4px;
   max-width: 325px;
 }
-/* line 731, ../sass/screen.scss */
+/* line 733, ../sass/screen.scss */
 .xv-relationwidget-description.disabled {
   opacity: 0.4;
 }
-/* line 734, ../sass/screen.scss */
+/* line 736, ../sass/screen.scss */
 .xv-relationwidget-description.label {
   text-indent: 0px;
   text-align: right;
 }
-/* line 739, ../sass/screen.scss */
+/* line 741, ../sass/screen.scss */
 .xv-relationwidget-description.hasLabel {
   text-indent: 0px;
 }
-/* line 742, ../sass/screen.scss */
+/* line 744, ../sass/screen.scss */
 .xv-relationwidget-description.hyperlink {
   color: blue;
 }
 
-/* line 747, ../sass/screen.scss */
+/* line 749, ../sass/screen.scss */
 .xv-textarea {
   background-color: white;
 }
 
-/* line 751, ../sass/screen.scss */
+/* line 753, ../sass/screen.scss */
 .xv-half-check {
   background-image: url("../../assets/checkbox.png");
   background-repeat: no-repeat;
@@ -889,7 +891,7 @@ body {
   background-color: transparent;
 }
 
-/* line 760, ../sass/screen.scss */
+/* line 762, ../sass/screen.scss */
 .xv-menuitem.disabled {
   color: Dimgray;
 }
