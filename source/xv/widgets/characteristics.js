@@ -18,10 +18,12 @@ white:true*/
     kind: "XV.PickerWidget",
     classes: "xv-characteristic-picker",
     collection: "XM.characteristics",
+    noneText: "_delete".loc(),
+    noneClasses: "xv-negative",
     orderBy: [
       {attribute: 'order'},
       {attribute: 'name'}
-    ],
+    ]
   });
 
   enyo.kind({

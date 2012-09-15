@@ -26,7 +26,9 @@ regexp:true, undef:true, trailing:true, white:true */
       disabled: false,
       idAttribute: "id",
       nameAttribute: "name",
-      orderBy: null
+      orderBy: null,
+      noneText: "_none".loc(),
+      noneClasses: ""
     },
     handlers: {
       onSelect: "itemSelected"
@@ -38,7 +40,7 @@ regexp:true, undef:true, trailing:true, white:true */
           components: [
           {kind: "onyx.PickerDecorator",
             components: [
-            {content: "_none".loc(), classes: "xv-picker"},
+            {classes: "xv-picker"},
             {name: "picker", kind: "onyx.Picker"}
           ]}
         ]}
@@ -47,13 +49,16 @@ regexp:true, undef:true, trailing:true, white:true */
     buildList: function () {
       var nameAttribute = this.getNameAttribute(),
         models = this.filteredList(),
+        none = this.getNoneText(),
+        classes = this.getNoneClasses(),
         name,
         model,
         i;
       this.$.picker.destroyClientControls();
       this.$.picker.createComponent({
         value: null,
-        content: "_none".loc()
+        content: none,
+        classes: classes
       });
       for (i = 0; i < models.length; i++) {
         model = models[i];
@@ -125,6 +130,12 @@ regexp:true, undef:true, trailing:true, white:true */
         (this.attr ? ("_" + this.attr).loc() + ":" : "");
       this.$.label.setShowing(label);
       this.$.label.setContent(label);
+    },
+    noneTextChanged: function () {
+      this.buildList();
+    },
+    noneClassesChanged: function () {
+      this.buildList();
     },
     orderByChanged: function () {
       var orderBy = this.getOrderBy();

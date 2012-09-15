@@ -612,6 +612,10 @@ body {
   background-color: white;
 }
 
+.xv-negative {
+	color: #C51616;
+}
+
 /* Characteristics.scss */
 .xv-characteristic-picker {
   .onyx-picker-decorator .onyx-button {
@@ -624,10 +628,6 @@ body {
   .onyx-input-decorator > input {
     width: 150px;
   }
-}
-
-.xv-characteristic-widget {
-
 }
 
 .xv-characteristic-button {
