@@ -117,6 +117,7 @@ XT.stringsFor("en_US", {
   "_documentDate": "Document Date",
   "_documentNumber": "Document #",
   "_documentType": "Document Type",
+  "_documents": "Documents",
   "_done": "Done",
   "_dueDate": "Due Date",
   "_dueDays": "Due Days",
