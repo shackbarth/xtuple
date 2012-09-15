@@ -75,8 +75,8 @@ trailing:true white:true*/
           ]},
           {name: "newButton", kind: "onyx.Button", content: "_new".loc(),
             ontap: "newRecord", style: "float: right;", showing: false},
-          //{name: "exportButton", kind: "onyx.Button", content: "_export".loc(),
-          //  ontap: "exportList", style: "float: right;"},
+          {name: "exportButton", kind: "onyx.Button", content: "_export".loc(),
+            ontap: "exportList", style: "float: right;", showing: false},
                                  // AWFUL UGLY HEINOUS HACK SHOULD NOT BE NECESSARY
           {kind: "onyx.Grabber", style: "height: 27px !important;"},
           {name: "rightLabel", style: "text-align: center"}
@@ -101,6 +101,25 @@ trailing:true white:true*/
     },
     getSelectedModule: function (index) {
       return this._selectedModule;
+    },
+    exportList: function (inSender, inEvent) {
+      var list = this.$.contentPanels.getActive(),
+        coll = list.getValue(),
+        success = function (collection, models) {
+          XT.log("success");
+          XT.log(collection);
+          XT.log(models);
+        },
+        error = function (collection, result) {
+          XT.log("error");
+          XT.log(collection);
+          XT.log(result);
+        },
+        options = {responseType: "csv", success: success, error: error};
+
+      //coll.fetch(options);
+
+      window.location = "http://localhost:8888/debug"; // XXX craft the appropriate URL here
     },
     fetch: function (options) {
       options = options ? _.clone(options) : {};
@@ -210,13 +229,6 @@ trailing:true white:true*/
       }
       this.$.moduleMenu.setCount(modules.length);
     },
-    exportList: function (inSender, inEvent) {
-      var list = this.$.contentPanels.getActive(),
-        Model = list.getValue().model;
-
-      alert("Not yet implemented");
-    },
-
     newRecord: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),
         workspace = list instanceof XV.List ? list.getWorkspace() : null,
@@ -265,6 +277,9 @@ trailing:true white:true*/
         this.$.searchIconButton.setStyle("visibility: hidden;");
       }
       this.doNavigatorEvent({name: panel.name, show: false});
+
+      var isAllowedToExport = (XT.session.details.organization === 'dev'); // XXX temp
+      this.$.exportButton.setShowing(isAllowedToExport && collection);
 
       // Handel new button
       this.$.newButton.setShowing(panel.canAddNew);
