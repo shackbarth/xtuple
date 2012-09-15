@@ -24,6 +24,12 @@ white:true*/
       @type {String}
     */
     documentKey: 'number',
+    
+    /**
+      An array of mixed document assignment models that converges all model relations
+      where the related model prototype `isDocumentAssignment` property is true.
+    */
+    documents: null,
 
     /**
       Forces the document key to always be upper case.
@@ -79,6 +85,10 @@ white:true*/
       }
       XM.Model.prototype.destroy.apply(this, arguments);
     },
+    
+    documentAdded: function (model) {
+      this.documents.add(model);
+    },
 
     documentKeyDidChange: function (model, value, options) {
       var K = XM.Model,
@@ -116,11 +126,18 @@ white:true*/
         this.findExisting(this.documentKey, value, options);
       }
     },
+    
+    documentRemoved: function (model) {
+      this.documents.remove(model);
+    },
 
     initialize: function (attributes, options) {
       XM.Model.prototype.initialize.call(this, attributes, options);
-      var K = XM.Document,
-        policy;
+      var that = this,
+        K = XM.Document,
+        policy,
+        relations = this.getRelations(),
+        collection;
       attributes = attributes || {};
 
       // Set number policy if not already set
@@ -146,6 +163,16 @@ white:true*/
       // Bind events
       this.on('change:' + this.documentKey, this.documentKeyDidChange);
       this.on('statusChange', this.statusDidChange);
+      
+      // Bind document assignments
+      this.documents = new Backbone.Collection();
+      _.each(relations, function (relation) {
+        if (relation.relatedModel.prototype.isDocumentAssignment) {
+          collection = that.get(relation.key);
+          collection.on('add', that.documentAdded, that);
+          collection.on('remove', that.documentRemoved, that);
+        }
+      });
     },
 
     /**
