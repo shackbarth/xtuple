@@ -115,9 +115,6 @@ white:true*/
     handlers: {
       onValueChange: "controlValueChanged"
     },
-    events: {
-      onItemDestroyed: ""
-    },
     components: [
       {kind: "XV.CharacteristicPicker", attr: "characteristic",
         showLabel: false},
@@ -236,6 +233,9 @@ white:true*/
       item.setValue(model);
       picker.filter = filter;
       picker.buildList();
+      if (!model.get('characteristic')) {
+        picker.select(1);
+      }
       return true;
     },
     sort: function (a, b) {

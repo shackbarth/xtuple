@@ -159,6 +159,16 @@ regexp:true, undef:true, trailing:true, white:true */
         };
       }
     },
+    select: function (index) {
+      var i = 0,
+        component = _.find(this.$.picker.getComponents(), function (c) {
+          if (c.kind === "onyx.MenuItem") { i++; }
+          return i > index;
+        });
+      if (component) {
+        this.setValue(component.value);
+      }
+    },
     /**
       Programatically sets the value of this widget.
 
