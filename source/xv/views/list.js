@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XT:true, XM:true, _:true, enyo:true, Globalize:true*/
+/*global XT:true, XM:true, XV:true, _:true, enyo:true, Globalize:true*/
 
 (function () {
 
@@ -42,7 +42,6 @@ trailing:true white:true*/
       isFetching: false,
       isMore: true,
       parameterWidget: null,
-      workspace: null,
       canAddNew: true
     },
     events: {
@@ -70,6 +69,12 @@ trailing:true white:true*/
     },
     getSearchableAttributes: function () {
       return this._collection.model.getSearchableAttributes();
+    },
+    getWorkspace: function () {
+      var collection = this.getCollection(),
+        Klass = collection ? XT.getObjectByName(collection) : null,
+        recordType = Klass ? Klass.prototype.model.prototype.recordType : null;
+      return XV.getWorkspace(recordType);
     },
     fetch: function (options) {
       var that = this,

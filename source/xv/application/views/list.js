@@ -18,7 +18,6 @@ trailing:true white:true*/
       {attribute: 'number'}
     ]},
     parameterWidget: "XV.AccountListParameters",
-    workspace: "XV.AccountWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -98,7 +97,6 @@ trailing:true white:true*/
       {attribute: 'id'}
     ]},
     parameterWidget: "XV.ContactListParameters",
-    workspace: "XV.ContactWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -159,7 +157,6 @@ trailing:true white:true*/
       {attribute: 'id', descending: true}
     ]},
     parameterWidget: "XV.IncidentListParameters",
-    workspace: "XV.IncidentWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -240,7 +237,6 @@ trailing:true white:true*/
     ]},
     label: "_opportunities".loc(),
     parameterWidget: "XV.OpportunityListParameters",
-    workspace: "XV.OpportunityWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -296,7 +292,6 @@ trailing:true white:true*/
       {attribute: 'number' }
     ]},
     parameterWidget: "XV.ProjectListParameters",
-    workspace: "XV.ProjectWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -371,7 +366,6 @@ trailing:true white:true*/
       {attribute: 'number'}
     ]},
     parameterWidget: "XV.ProjectTaskListParameters",
-    workspace: "XV.ProjectTaskWorkspace",
     canAddNew: false,
     components: [
       {kind: "XV.ListItem", components: [
@@ -439,7 +433,6 @@ trailing:true white:true*/
       {attribute: 'dueDate'},
       {attribute: 'name'}
     ]},
-    workspace: "XV.ToDoWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -492,7 +485,6 @@ trailing:true white:true*/
     query: {orderBy: [
       {attribute: 'username'}
     ]},
-    workspace: "XV.UserAccountWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -525,7 +517,6 @@ trailing:true white:true*/
     query: {orderBy: [
       {attribute: 'number'}
     ]},
-    workspace: "XV.ItemWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "XV.ListColumn", classes: "last", components: [
@@ -566,7 +557,6 @@ trailing:true white:true*/
     query: {orderBy: [
       {attribute: 'name'}
     ]},
-    workspace: "XV.CurrencyWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "XV.ListColumn", classes: "last", components: [
@@ -588,7 +578,6 @@ trailing:true white:true*/
     query: {orderBy: [
       {attribute: 'code'}
     ]},
-    workspace: "XV.HonorificWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "XV.ListColumn", classes: "last", components: [
@@ -610,7 +599,6 @@ trailing:true white:true*/
     query: {orderBy: [
       {attribute: 'code'}
     ]},
-    workspace: "XV.ProductCategoryWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -653,8 +641,7 @@ trailing:true white:true*/
     kind: "XV.AbbreviationList",
     label: "_states".loc(),
     collection: "XM.StateCollection",
-    query: {orderBy: [{ attribute: 'abbreviation' }] },
-    workspace: "XV.StateWorkspace"
+    query: {orderBy: [{ attribute: 'abbreviation' }] }
   });
 
   enyo.kind({
@@ -664,8 +651,7 @@ trailing:true white:true*/
     collection: "XM.CountryCollection",
     query: {orderBy: [
       {attribute: 'abbreviation'}
-    ]},
-    workspace: "XV.CountryWorkspace"
+    ]}
   });
 
   // ..........................................................
@@ -709,9 +695,6 @@ trailing:true white:true*/
       }
       if (!this.getCollection()) {
         this.setCollection("XM." + kindName + "Collection");
-      }
-      if (!this.getWorkspace()) {
-        this.setWorkspace("XV." + kindName + "Workspace");
       }
     }
   });

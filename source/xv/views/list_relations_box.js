@@ -166,6 +166,7 @@ trailing:true white:true*/
       var list = this.$.list,
         parent = this.$.list.getParent(),
         id = parent ? parent.id : null,
+        workspace = list.getWorkspace(),
         key = this.parentKey,
         attributes = {},
         callback = function (model) {
@@ -181,7 +182,7 @@ trailing:true white:true*/
       attributes[key] = id;
       inEvent = {
         originator: this,
-        workspace: list.workspace,
+        workspace: workspace,
         attributes: attributes,
         callback: callback
       };
@@ -191,6 +192,7 @@ trailing:true white:true*/
       var list = this.$.list,
         index = list.getFirstSelected(),
         model = list.getModel(index),
+        workspace = list.getWorkspace(),
         id = model.id,
         callback = function () {
           var options = {};
@@ -201,7 +203,7 @@ trailing:true white:true*/
           model.fetch(options);
         },
         inEvent = {
-          workspace: list.workspace,
+          workspace: workspace,
           id: id,
           callback: callback
         };
