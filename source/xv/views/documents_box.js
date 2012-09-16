@@ -13,7 +13,8 @@ trailing:true white:true*/
       {kind: "XV.ListItem", classes: "header", components: [
         {kind: "XV.ListAttr", formatter: "formatType", classes: "header"},
         {kind: "XV.ListAttr", formatter: "formatNumber", classes: "bold"},
-        {kind: "XV.ListAttr", formatter: "formatDescription"}
+        {kind: "XV.ListAttr", formatter: "formatDescription",
+          placeholder: "_noDescription".loc()}
       ]}
     ],
     orderBy: [
@@ -58,7 +59,14 @@ trailing:true white:true*/
     title: "_documents".loc(),
     parentKey: "account",
     listRelations: "XV.DocumentListRelations",
-    searchList: "XV.AccountList"
+    searchList: "XV.AccountList",
+    detachRecord: function () {
+      var list = this.$.list,
+        index = list.getFirstSelected(),
+        model = list.getModel(index, false);
+      model.destroy();
+      list.lengthChanged();
+    }
   });
 
 }());

@@ -178,15 +178,15 @@ trailing:true white:true*/
           attr = this.$[prop].getAttr();
           value = model.getValue(attr);
           formatter = view.formatter;
-          if (!value && view.placeholder) {
-            value = view.placeholder;
-            isPlaceholder = true;
-          }
           if (formatter) {
             value = this[formatter](value, view, model);
           }
           if (value && value instanceof Date) {
             value = Globalize.format(value, 'd');
+          }
+          if (!value && view.placeholder) {
+            value = view.placeholder;
+            isPlaceholder = true;
           }
           view.setContent(value);
           view.addRemoveClass("placeholder", isPlaceholder);
