@@ -31,6 +31,13 @@
         }
       },
       {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "file_descrip"
+        }
+      },
+      {
         "name": "data",
         "attr": {
           "type": "String",
@@ -69,6 +76,13 @@
         "attr": {
           "type": "String",
           "column": "file_title"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "file_descrip"
         }
       }
     ],
