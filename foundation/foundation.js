@@ -86,7 +86,7 @@ X = {};
     K.prototype = base;
     ret = new K();
     K.prototype = null;
-    ret._super = base;
+    //ret._super = base;
     return ret;
   };
   
