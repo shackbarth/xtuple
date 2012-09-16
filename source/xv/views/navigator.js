@@ -107,7 +107,7 @@ trailing:true white:true*/
         parameterWidget,
         parameters,
         filterDescription;
-      if (!list instanceof XV.List) { return; }
+      if (list instanceof XV.List === false) { return; }
       this.fetched[index] = true;
       query = list.getQuery() || {};
       input = this.$.searchInput.getValue();
@@ -145,7 +145,7 @@ trailing:true white:true*/
       list.fetch(options);
     },
     formatQuery: function (advancedSearch, simpleSearch) {
-      var keys,
+      var key,
         formattedQuery = "";
 
       for (key in advancedSearch) {
