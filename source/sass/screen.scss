@@ -618,6 +618,12 @@ body {
 }
 
 /* DocumentList.scss */
+.xv-document {
+  .xv-list-item {
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+}
 .xv-document-list-number {
   padding: 4px;
 }
@@ -629,7 +635,11 @@ body {
 }
 .xv-document-list-type {
   padding: 4px;
-  background: #aaaaaa;
+  background: #8d8d8d;
+  font-size: 11px;
+	font-weight: bold;
+	text-transform: uppercase;
+	color: white;
 }
 
 

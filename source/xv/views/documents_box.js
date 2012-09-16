@@ -15,7 +15,7 @@ trailing:true white:true*/
         {kind: "XV.ListAttr", formatter: "formatType",
           classes: "xv-document-list-type"},
         {kind: "XV.ListAttr", formatter: "formatNumber",
-          classes: "xv-document-list-number"},
+          classes: "xv-document-list-number bold"},
         {kind: "XV.ListAttr", formatter: "formatDescription",
           classes: "xv-document-list-description"}
       ]}
