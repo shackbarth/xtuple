@@ -4,7 +4,31 @@ trailing:true white:true*/
 /*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true */
 
 (function () {
+
+  enyo.kind({
+    name: "XV.DocumentPurposePicker",
+    kind: "onyx.PickerDecorator",
+    components: [
+      {},
+      {kind: "onyx.Picker", components: [
+        {content: "_relatedTo".loc(), value: "S", active: true},
+        {content: "_parentOf".loc(), value: "C" },
+        {content: "_childOf".loc(), value: "A" },
+        {content: "_duplicateOf".loc(), value: "D" }
+      ]}
+    ]
+  });
   
+  enyo.kind({
+    name: "XV.DocumentTypePicker",
+    kind: "onyx.PickerDecorator",
+    components: [
+      {},
+      {kind: "onyx.Picker", components: [
+      ]}
+    ]
+  });
+
   enyo.kind({
     name: "XV.DocumentListRelations",
     kind: "XV.ListRelations",
@@ -57,15 +81,63 @@ trailing:true white:true*/
     kind: "XV.ListRelationsBox",
     classes: "xv-documents-box",
     title: "_documents".loc(),
-    parentKey: "account",
     listRelations: "XV.DocumentListRelations",
-    searchList: "XV.AccountList",
+    searchList: "dummy",
+    handlers: {
+      onValueChange: "popupValueChanged"
+    },
+    create: function () {
+      this.inherited(arguments);
+      var popup = {
+        kind: "onyx.Popup",
+        name: "attachPopup",
+        centered: true,
+        modal: true,
+        floating: true,
+        scrim: true,
+        onHide: "popupHidden",
+        components: [
+          {kind: "FittableColumns", components: [
+            {content: "_purpose".loc() + ":"},
+            {kind: "XV.DocumentPurposePicker"}
+          ]},
+          {tag: "br"},
+          {kind: "onyx.Button", content: "_ok".loc(), ontap: "attachOk",
+            classes: "onyx-blue xv-popup-button"}
+        ]
+      };
+      this.createComponent(popup);
+    },
+    attachItem: function () {
+      this._popupDone = false;
+      this.$.attachPopup.show();
+    },
+    attachOk: function () {
+      this._popupDone = true;
+      this.$.attachPopup.hide();
+    },
     detachRecord: function () {
       var list = this.$.list,
         index = list.getFirstSelected(),
         model = list.getModel(index, false);
       model.destroy();
       list.lengthChanged();
+    },
+    popupHidden: function (inSender, inEvent) {
+      if (inEvent.originator.name !== "attachPopup") {
+        return;
+      }
+      if (!this._popupDone) {
+        inEvent.originator.show();
+      }
+    },
+    popupValueChanged: function () {
+      return true;
+    },
+    valueChanged: function () {
+      this.inherited(arguments);
+      this.$.newButton.setDisabled(false);
+      this.$.attachButton.setDisabled(false);
     }
   });
 
