@@ -62,7 +62,7 @@ trailing:true white:true*/
           ]}
         ]},
         {kind: "XV.AccountCommentBox", attr: "comments"},
-        {kind: "XV.DocumentsBox", attr: "documents"},
+        {kind: "XV.AccountDocumentsBox", attr: "documents"},
         {kind: "XV.AccountContactsBox", attr: "contactRelations"}
       ]}
     ]

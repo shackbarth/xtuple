@@ -6,5 +6,6 @@ enyo.depends(
   "workspace.js",
   "comment_box.js",
   "assignment_box.js",
+  "documents_box.js",
   "pullout.js"
 );
