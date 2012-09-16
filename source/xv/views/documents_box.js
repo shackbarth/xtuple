@@ -24,6 +24,17 @@ trailing:true white:true*/
           return (attribute instanceof XM.Info);
         });
     },
+    /**
+      @param {Integer} Index
+      @param {Boolean} Return InfoModel (default = true)
+    */
+    getModel: function (index, infoModel) {
+      var model = this.inherited(arguments);
+      if (infoModel !== false) {
+        return this.getInfoModel(model);
+      }
+      return model;
+    },
     formatNumber: function (value, view, model) {
       var infoModel = this.getInfoModel(model),
         attr = infoModel.numberKey;
