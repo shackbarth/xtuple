@@ -317,38 +317,6 @@ body {
       &.money {
         width: 85px;
       }
-      .xv-list-attr {
-        padding: 5px;
-        font-size: 13px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        color: black;
-        background-color: white;
-        &.right {
-          position: absolute;
-          right: 0px;
-        }
-        &.text-align-right {
-          text-align: right;
-        }
-        &.bold {
-          font-weight: bold;
-        }
-        &.error {
-          color: #ff0000;
-        }
-        &.italic {
-          font-style: italic;
-        }
-        &.placeholder {
-          font-style: italic;
-          color: #93a1a1;
-        }
-        &.hyperlink {
-          color: blue;
-        }
-      }
     }
     &.item-selected {
 			background: #226B9A url(../../assets/item-hilite.png) repeat-x bottom;
@@ -367,6 +335,39 @@ body {
         }
       }
     }
+  }
+}
+
+.xv-list-attr {
+  padding: 5px;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: black;
+  background-color: white;
+  &.right {
+    position: absolute;
+    right: 0px;
+  }
+  &.text-align-right {
+    text-align: right;
+  }
+  &.bold {
+    font-weight: bold;
+  }
+  &.error {
+    color: #ff0000;
+  }
+  &.italic {
+    font-style: italic;
+  }
+  &.placeholder {
+    font-style: italic;
+    color: #93a1a1;
+  }
+  &.hyperlink {
+    color: blue;
   }
 }
 
@@ -615,6 +616,22 @@ body {
 .xv-negative {
 	color: #C51616;
 }
+
+/* DocumentList.scss */
+.xv-document-list-number {
+  padding: 4px;
+}
+.xv-document-list-description {
+  padding: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.xv-document-list-type {
+  padding: 4px;
+  background: #aaaaaa;
+}
+
 
 /* Characteristics.scss */
 .xv-characteristic-picker {

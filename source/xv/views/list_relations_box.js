@@ -96,7 +96,7 @@ trailing:true white:true*/
 
                 // Callback to update our list with changes when save complete
                 options.success = function () {
-                  list._collection.add(selectedModel);
+                  list.value.add(selectedModel);
                 };
 
                 // Set and save our contact with the new account relation

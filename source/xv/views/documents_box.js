@@ -9,32 +9,35 @@ trailing:true white:true*/
     name: "XV.DocumentListRelations",
     kind: "XV.ListRelations",
     parentKey: "account",
+    classes: "xv-document",
     components: [
       {kind: "XV.ListItem", components: [
-        {formatter: "formatType"},
-        {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", formatter: "formatNumber"},
-              {kind: "XV.ListAttr", formatter: "formatDate", fit: true,
-                classes: "right"}
-            ]},
-            {kind: "XV.ListAttr", formatter: "formatDescription"}
-          ]}
-        ]}
+        {kind: "XV.ListAttr", formatter: "formatType",
+          classes: "xv-document-list-type"},
+        {kind: "XV.ListAttr", formatter: "formatNumber",
+          classes: "xv-document-list-number"},
+        {kind: "XV.ListAttr", formatter: "formatDescription",
+          classes: "xv-document-list-description"}
       ]}
     ],
-    formatNumber: function () {
-      return "number";
+    getInfoModel: function (model) {
+      return _.find(model.attributes, function (attribute) {
+          return (attribute instanceof XM.Info);
+        });
     },
-    formatDate: function () {
-      return "date";
+    formatNumber: function (value, view, model) {
+      var infoModel = this.getInfoModel(model),
+        attr = infoModel.numberKey;
+      return infoModel.get(attr);
     },
-    formatDescription: function () {
-      return "description";
+    formatDescription: function (value, view, model) {
+      var infoModel = this.getInfoModel(model),
+        attr = infoModel.descriptionKey;
+      return infoModel.get(attr);
     },
-    formatType: function () {
-      return "type";
+    formatType: function (value, view, model) {
+      var infoModel = this.getInfoModel(model);
+      return ("_" + infoModel.get('type').replace("Relation", "").camelize()).loc();
     }
   });
   

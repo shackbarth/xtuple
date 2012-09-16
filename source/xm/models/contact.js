@@ -219,7 +219,11 @@ white:true*/
 
     recordType: 'XM.ContactRelation',
 
-    editableModel: 'XM.Contact'
+    editableModel: 'XM.Contact',
+    
+    descriptionKey: "jobTitle",
+    
+    numberKey: "name"
 
   });
 
