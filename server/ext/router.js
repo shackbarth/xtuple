@@ -4,13 +4,28 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 (function () {
   "use strict";
-  
+
   var _ = X._, _path = X.path;
-  
-  X.Router = X.Object.extend({
-    
+
+  /**
+    Sends a request to the appropriate request handler.
+
+    @class
+    @extends X.Object
+   */
+  X.Router = X.Object.extend(/** @lends X.Router */{
+    /**
+      Determines behavior for requests whose routing cannot be determined.
+
+      @type {Boolean}
+     */
     dropOnNotFound: true,
-    
+
+    /**
+      Init.
+
+
+     */
     init: function () {
       var routes = this.routes, map, mapr;
       map = this.routes = {}, mapr = this.regexRoutes = [];
@@ -24,17 +39,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           else mapr.push({expr: handle, route: route});
         });
       });
-      
+
       //X.debug(mapr);
       //X.debug("X.Router.init(): ", routes);
     },
-    
+
+    /**
+      Routes a request to the appropriate request handler
+
+      @param {X.Response} xtr The response object.
+     */
     route: function (xtr) {
       var path = xtr.get("path"), regexRoutes = this.regexRoutes || [], match, handler, filter;
-      
+
       //console.log("route(): ", path, Object.keys(this.routes), this.routes[path]);
       //X.debug("X.Router.route(): ", path);
-      
+
       // arbitrary check since some browsers automatically
       // request a favicon.ico
       if (path.match(/\.ico/g)) {
@@ -67,7 +87,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       //X.debug("returning false");
       return false;
     },
-    
+
+    /**
+      Creates a response and dispatches it ass soon as the request handler
+      is ready.
+     */
     handle: function (req, res) {
       var xtr;
       (xtr = X.Response.create({
@@ -75,34 +99,49 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         response: res
       })).once("isReady", _.bind(this.route, this, xtr));
     },
-    
+
+    /**
+      Drops request
+
+      @param {X.Response} xtr
+     */
     drop: function (xtr) {
       if (this.get("dropOnNotFound")) xtr.error("You just have no clue do you?");
     },
-    
+
+    /**
+      Known routes.
+
+      @type {Array}
+     */
     routes: [],
-    
+
+    /**
+      Known regex routes.
+
+      @type {Array}
+     */
     regexRoutes: [],
-    
+
     className: "X.Router"
   });
-  
+
   X.run(function () {
     var path, files;
-    
+
     if (!X.routersDirectory) return;
-    
+
     path = _path.join(X.basePath, X.routersDirectory);
-    
+
     X.log("Loading available routers from %@".f(
       X.shorten(path, 5)));
-    
+
     files = X.directoryFiles(path, {extension: ".js", fullPath: true});
     _.each(files, function (file) {
       require(file);
     });
   });
-  
+
 }());
 
 

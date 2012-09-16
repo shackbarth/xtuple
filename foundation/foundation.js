@@ -5,13 +5,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 //........................................
 // DEFINE GLOBAL NAMESPACE
 //
+
+/**
+  X is the single global variable across all node layers that defines
+  our namespace.
+
+  @class
+  @namespace
+  @global
+ */
 X = {};
 
 (function () {
   "use strict";
 
   var _fs, _path, _;
-  
+
   _path = X.path = require("path");
   _fs   = X.fs   = require("fs");
   _     = X._    = require("underscore");
@@ -21,13 +30,30 @@ X = {};
   X.https        = require("https");
   X.url          = require("url");
   X.crypto       = require("crypto");
-  
+
   X.connect      = require("connect");
   X.pg           = require("pg").native;
   X.mongoose     = require("mongoose");
-  
+
+  /**
+   Returns the global X
+
+   @returns {Object} X
+  */
   X.$P = function () { return this; };
+
+  /**
+   Returns an empty object
+   @returns {Object} An empty object
+   */
   X.$K = function () {};
+
+  /**
+    Returns the input as an array
+
+    @param obj Any object or array
+    @returns {Array} An array version of the input
+  */
   X.$A = function (obj) {
     var ret, len;
     if (obj === null || obj === undefined) return [];
@@ -45,7 +71,15 @@ X = {};
 
     return _.values(obj);
   };
-  
+  /**
+    Adds a function to X. Used internally.
+
+   @private
+   @param {Boolean} override Dictates whether to override pre-existing function
+      if it already exists.
+   @param [base] Defaults to this if not specified.
+   @return {Object} base The base object being extended.
+   */
   X.extend = function (override) {
     var args = X.$A(arguments).slice(1),
         len = args.length, i = 0,
@@ -75,21 +109,38 @@ X = {};
     }
     return base;
   };
-  
+
+  /**
+   Extend with an explicit base and extention. This function will automatically override
+   any preexisting properties on the base
+
+   @param {Object} base The object to extend.
+   @param {Object} ext Object or function extension.
+   @returns base
+   */
   X.protoExtend = function (base, ext) {
     base = X.extend(true, base, ext);
     return base;
   };
-  
+
+  /**
+    Sires.
+  */
   X.sire = function (base) {
     var K = X.$P, ret;
     K.prototype = base;
     ret = new K();
     K.prototype = null;
-    ret._super = base;
+    //ret._super = base;
     return ret;
   };
-  
+
+  /**
+   Determines whether the parameter is an object
+
+   @param obj The Object under test.
+   @return {Boolean}
+  */
   X.isObject = function (obj) {
     if (X.none(obj)) return false;
     if (
@@ -97,31 +148,46 @@ X = {};
     ) return true;
     return false;
   };
-  
+
+  /**
+    Adds properties of the parameter into the X object.
+    Pre-existing properties of X will be overridden
+
+    @param {Object}
+  */
   X.mixin = function () {
     var args = X.$A(arguments);
     args.unshift(true);
     return X.extend.apply(this, args);
   };
 
+  /**
+    Adds properties of the parameter into the X object.
+    Pre-existing properties of X will not be overridden
+
+    @param {Object}
+  */
   X.complete = function () {
     var args = X.$A(arguments);
     args.unshift(false);
     return X.extend.apply(this, args);
   };
-  
+
+  /**
+    Adds Events
+  */
   X.addEvents = function (func, events) {
     //console.log("X.addEvents(): ", func, events);
     var i = 0, len = events.length;
     for (; i < len; ++i) this.addEvent(events[i], func);
   };
-  
+
   X.mixin({
 
     none: function (obj) {
       return !! (_.isNull(obj) || typeof obj === X.T_UNDEFINED);
     },
-  
+
     T_STRING:     'string',
     T_OBJECT:     'object',
     T_NULL:       'null',
@@ -134,7 +200,7 @@ X = {};
     T_ARRAY:      'array',
     T_REGEX:      'regex',
     T_ERROR:      'error',
-    
+
     typeOf: function (obj) {
       if (X.none(obj)) {
         if (typeof obj === X.T_UNDEFINED) return X.T_UNDEFINED;
@@ -151,12 +217,12 @@ X = {};
         else return X.T_HASH;
       }
     },
-    
+
     kindOf: function (obj, ctor) {
       if (X.none(obj) || !obj.constructor) return false;
       return !! (obj.constructor === ctor);
     },
-    
+
     init: function () {
       var args = X.$A(arguments),
           len = args.length, i = 0, key;
@@ -172,7 +238,7 @@ X = {};
       if (this.init) this.init.call(this);
       if (this.postInit) this.postInit.call(this);
     },
-    
+
     set: function () {
       var args, path, value, cur, i, parts, tmp;
       if (arguments.length < 2) return this;
@@ -200,19 +266,19 @@ X = {};
       if (this.emit) process.nextTick(_.bind(this.emit, this, path, path, value));
       return this;
     },
-  
+
     run: function (func) {
       var queue = X.runQueue || (X.runQueue = []);
       if (!X.isReady) queue.push(func);
       else func();
     },
-    
+
     isReady: false,
-  
+
     runQueue: [],
-  
+
     hasBecomeReady: false,
-  
+
     didBecomeReady: function () {
       var wasReady = X.hasBecomeReady,
           queue = X.runQueue;
@@ -221,7 +287,7 @@ X = {};
       X.runQueue = null;
       X.hasBecomeReady = true;
     },
-    
+
     get: function () {
       var args, path, cur, i, value, part, type;
       if (arguments.length === 0) return undefined;
@@ -247,7 +313,7 @@ X = {};
       }
       return value;
     },
-    
+
     json: function (json, emitExceptions) {
       var type = X.typeOf(json);
       try {
@@ -256,7 +322,7 @@ X = {};
       } catch (err) { if (emitExceptions) throw err; }
       return json ? json : undefined;
     },
-    
+
     cleanup: function () {
       var queue = this.cleanupQueue || [], task;
       if (queue.length <= 0) {
@@ -272,13 +338,13 @@ X = {};
         task.exec();
       }
     },
-    
+
     addCleanupTask: function (task, context) {
       var queue = this.cleanupQueue || (this.cleanupQueue = []);
       task = X.CleanupTask.create({ task: task, context: context });
       queue.unshift(task);
     },
-  
+
     addProperties: function (base) {
       var args, value, part, i = 0;
       args = X.$A(arguments).slice(1);
@@ -292,7 +358,7 @@ X = {};
       }
       return base;
     },
-    
+
     setup: function (options) {
       var name, option, prop, unused;
       if (X.isSetup) return;
@@ -322,7 +388,7 @@ X = {};
       if (X.autoStart) X.didBecomeReady();
     }
   });
-    
+
   require("./proto");
   require("./object");
   require("./io");
