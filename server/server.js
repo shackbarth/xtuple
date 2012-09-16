@@ -11,8 +11,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   require('./ext/functor');
 
   var _ = X._, _fs = X.fs, _path = X.path;
+  /**
+    The node server.
 
-  X.Server = X.Object.extend({
+    @class
+    @extends X.Object
+   */
+  X.Server = X.Object.extend(/** @lends X.Server */{
     autoStart: false,
     port: null,
     name: null,
@@ -24,13 +29,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     certFile: null,
     bindAddress: null,
     parseCookies: false,
+    /**
+      Initializes server
+    */
     init: function () {
       var auto = this.get("autoStart"),
           port = this.get("port"),
           name = this.get("name"),
           router = this.get("router"),
           sockets = this.get("useWebSocket");
-          
+
       if (!name) name = this.name = "NONAME%@".f(_.uniqueId("_server"));
       if (!port) {
         issue(X.fatal("cannot create a server with no port %@".f(name)));
@@ -38,35 +46,53 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       //if (!router && !sockets) issue(X.fatal("cannot create a non-websocket server with no router"));
 
       if (auto) this.start();
-  
+
       X.Server.registerServer(this);
     },
+
+    /**
+      Returns sockets if they exist
+
+      @method X.Server.sockets
+     */
     sockets: function () {
       return this._io && this._io.sockets ? this._io.sockets : null;
     }.property(),
+
+    /**
+     Routes a request.
+     */
     route: function (req, res) {
       var router = this.get("router");
       if (router) router.handle.call(router, req, res);
     },
+
+    /**
+      Synchronously returns the cert file
+
+      @method X.Server.cert
+     */
     cert: function () {
       var file = this.get("certFile");
       return _fs.readFileSync(_path.join(X.basePath, file), "utf8");
     }.property(),
+
     key: function () {
       var file = this.get("keyFile");
       return _fs.readFileSync(_path.join(X.basePath, file), "utf8");
     }.property(),
+
     start: function () {
-      var port = this.get("port"), useSockets = this.get("useWebSocket"), 
+      var port = this.get("port"), useSockets = this.get("useWebSocket"),
           generator = this.get("generator"), server, app = this.server, options = {},
           secure = this.get("secure"), bindAddress = this.get("bindAddress"),
           cookies = this.get("parseCookies");
-          
+
       if (secure) {
         options.key = this.get("key");
         options.cert = this.get("cert");
       }
-          
+
       // TODO: remove this from a try/catch but test for consequences in fail case...
       // right now it wraps unintended sub-calls
       try {
@@ -75,14 +101,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           //else app = X.connect().use(_.bind(this.route, this));
           if (secure) app = X.connect(options);
           else app = X.connect();
-          
+
           if (cookies) app.use(X.connect.cookieParser());
           app.use(_.bind(this.route, this));
         }
-        
+
         if (bindAddress) server = this.server = app.listen(port, bindAddress);
         else server = this.server = app.listen(port);
-        
+
         if (useSockets) {
           this._io = require("socket.io").listen(server, X.mixin({
             "log level": 0,
@@ -96,9 +122,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           }, options));
         }
       } catch (err) { issue(X.fatal(err)); }
-  
+
       X.log("Started %@server, %@, listening on port %@".f(secure? "secure ": "", this.get("name"), port));
-  
+
       return this;
     },
     setSocketHandler: function (namespace, event, callback, context) {
@@ -122,8 +148,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
     className: "X.Server"
   });
-  
-  
+
+
   X.mixin(X.Server, {
 
     activeServers: {},
@@ -151,6 +177,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     }
   });
-  
+
   X.addCleanupTask(_.bind(X.Server.closeAll, X.Server));
 }());

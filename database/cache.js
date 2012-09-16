@@ -7,9 +7,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   var _path = X.path, _ = X._, mongoose = X.mongoose;
 
-  X.Cache = X.Object.extend({
-    /** @lends X.cache */
+  /**
+   Functionality for dealing with Mongo
 
+   @class
+   @extends X.Object
+  */
+  X.Cache = X.Object.extend(/** @lends X.Cache */{
+
+    /**
+      Initializes schemas based on files in the schema directory.
+    */
     init: function () {
       var schemaFiles, i, prefix = this.get("prefix"), target;
 
@@ -33,18 +41,33 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       X.addCleanupTask(_.bind(this.cleanup, this));
     },
 
+    /**
+      Creates the mongo connection string.
+
+      @method X.Cache.conString
+      @return {String} The connection string.
+    */
     conString: function () {
       return "mongodb://%@:%@/%@".f(this.get("hostname"), this.get("port"), this.get("database"));
     }.property(),
 
+    /**
+      Closes any open connections and theoretically does any other necessary cleanup.
+    */
     cleanup: function () {
       if (this.connection) {
         this.connection.close();
       }
     },
-    
+
     connection: null,
-    
+
+    /**
+      Get a model by name.
+
+      @param {String} name The name of the model
+      @return {Object} The mongoose schema.
+    */
     model: function (name) {
       var schemas = this.get("schemas"), schema = "%@Schema".f(name),
           models = this.get("models"), con = this.get("connection"), K;
@@ -54,10 +77,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return K;
     },
 
+    /**
+      Returns mongo models.
+
+      @method X.Cache.models
+    */
     models: function () {
       return X.models || (X.models = {});
     }.property(),
 
+    /**
+     Returns mongo schemas
+
+     @method X.Cache.schemas
+     */
     schemas: function () {
       return X.schemas || (X.schemas = {});
     }.property(),
@@ -72,5 +105,5 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return schemaFiles;
     }.property()
   });
-  
+
 }());
