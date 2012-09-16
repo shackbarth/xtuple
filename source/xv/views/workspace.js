@@ -36,8 +36,8 @@ trailing:true white:true*/
         prop;
       for (attr in changes) {
         if (changes.hasOwnProperty(attr)) {
-          prop = model.attributeDelegates && model.attributeDelegates[attr]
-            ? model.attributeDelegates[attr] : attr;
+          prop = model.attributeDelegates && model.attributeDelegates[attr] ?
+            model.attributeDelegates[attr] : attr;
           value = model.getValue(prop);
           isReadOnly = model.isReadOnly(prop);
           isRequired = model.isRequired(prop);
@@ -211,33 +211,19 @@ trailing:true white:true*/
       }
     },
     newRecord: function (attributes) {
-      var that = this,
-        attr,
-        // Fetch related data, and notify when done
-        fetchIfRelated = function (attr) {
-          _.each(this.value.relations, function (relation) {
-            if (relation.key === attr) {
-              var options = {
-                success: function () {
-                  var changes = {};
-                  changes[attr] = true;
-                  that.attributesChanged(that.value, {changes: changes});
-                }
-              };
-              that.value.fetchRelated(attr, options);
-            }
-          });
-        };
+      var attr,
+        changes = {};
       this.modelChanged();
+      this.clear();
       this.value.initialize(null, {isNew: true});
       this.value.set(attributes, {force: true});
       for (attr in attributes) {
         if (attributes.hasOwnProperty(attr)) {
           this.value.setReadOnly(attr);
-          fetchIfRelated(attr);
+          changes[attr] = true;
+          this.attributesChanged(this.value, {changes: changes});
         }
       }
-      this.clear();
     },
     requery: function () {
       this.fetch(this.value.id);

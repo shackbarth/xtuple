@@ -165,8 +165,7 @@ trailing:true white:true*/
     newItem: function () {
       var list = this.$.list,
         parent = this.$.list.getParent(),
-        id = parent ? parent.id : null,
-        workspace = list.getWorkspace(),
+        workspace = XV.getWorkspace(list.value.model.prototype.recordType),
         key = this.parentKey,
         attributes = {},
         callback = function (model) {
@@ -179,7 +178,7 @@ trailing:true white:true*/
           value.fetch(options);
         },
         inEvent;
-      attributes[key] = id;
+      attributes[key] = parent;
       inEvent = {
         originator: this,
         workspace: workspace,
