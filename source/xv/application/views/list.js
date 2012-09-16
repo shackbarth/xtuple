@@ -682,10 +682,10 @@ trailing:true white:true*/
       ]}
     ],
     /**
-     * All of these lists follow a very similar naming convention.
-     * Apply that convention unless the list overrides the label
-     * or collection attribute.
-     */
+      All of these lists follow a very similar naming convention.
+      Apply that convention unless the list overrides the label
+      or collection attribute.
+    */
     create: function () {
       this.inherited(arguments);
       var kindName = this.kind.substring(0, this.kind.length - 4).substring(3);

@@ -192,7 +192,7 @@ trailing:true white:true*/
       var list = this.$.list,
         index = list.getFirstSelected(),
         model = list.getModel(index),
-        workspace = list.getWorkspace(),
+        workspace = XV.getWorkspace(model.recordType),
         id = model.id,
         callback = function () {
           var options = {};
