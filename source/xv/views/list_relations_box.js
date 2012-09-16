@@ -52,26 +52,26 @@ trailing:true white:true*/
       // Buttons
       buttons = {kind: 'FittableColumns', classes: "xv-groupbox-buttons",
         components: [
-        {kind: "onyx.Button", name: "newButton", onclick: "newRecord",
+        {kind: "onyx.Button", name: "newButton", onclick: "newItem",
           content: "_new".loc(), classes: "xv-groupbox-button-left",
           disabled: true}
       ]};
       if (canAttach) {
         buttons.components.push(
-        {kind: "onyx.Button", name: "attachButton", onclick: "attachRecord",
+        {kind: "onyx.Button", name: "attachButton", onclick: "attachItem",
           content: "_attach".loc(), classes: "xv-groupbox-button-center",
           disabled: true},
-        {kind: "onyx.Button", name: "detachButton", onclick: "detachRecord",
+        {kind: "onyx.Button", name: "detachButton", onclick: "detachItem",
           content: "_detach".loc(), classes: "xv-groupbox-button-center",
           disabled: true});
       }
       buttons.components.push(
-        {kind: "onyx.Button", name: "openButton", onclick: "openRecord",
+        {kind: "onyx.Button", name: "openButton", onclick: "openItem",
           content: "_open".loc(), classes: "xv-groupbox-button-right",
           disabled: true, fit: canAttach});
       this.createComponent(buttons);
     },
-    attachRecord: function () {
+    attachItem: function () {
       var list = this.$.list,
         key = this.getParentKey(),
         parent = list.getParent(),
@@ -130,7 +130,7 @@ trailing:true white:true*/
     attrChanged: function () {
       this.$.list.setAttr(this.attr);
     },
-    detachRecord: function () {
+    detachItem: function () {
       var list = this.$.list,
         key = this.parentKey,
         index = list.getFirstSelected(),
@@ -145,8 +145,8 @@ trailing:true white:true*/
 
             // Callback to update our list with changes when save complete
             options.success = function () {
-              list._collection.remove(infoModel);
-              list.setCount(list._collection.length);
+              list.value.remove(infoModel);
+              list.setCount(list.value.length);
               list.refresh();
             };
 
@@ -162,7 +162,7 @@ trailing:true white:true*/
       // Go get the data
       model.fetch();
     },
-    newRecord: function () {
+    newItem: function () {
       var list = this.$.list,
         parent = this.$.list.getParent(),
         id = parent ? parent.id : null,
@@ -170,11 +170,11 @@ trailing:true white:true*/
         key = this.parentKey,
         attributes = {},
         callback = function (model) {
-          var Model = list._collection.model,
+          var Model = list.getValue().model,
             value = new Model({id: model.id}),
             options = {};
           options.success = function () {
-            list._collection.add(value);
+            list.value.add(value);
           };
           value.fetch(options);
         },
@@ -188,7 +188,7 @@ trailing:true white:true*/
       };
       this.doWorkspace(inEvent);
     },
-    openRecord: function () {
+    openItem: function () {
       var list = this.$.list,
         index = list.getFirstSelected(),
         model = list.getModel(index),
