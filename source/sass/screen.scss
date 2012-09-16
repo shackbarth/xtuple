@@ -289,6 +289,9 @@ body {
     padding-top: 3px;
     padding-bottom: 3px;
     border-bottom: 1px solid #ddd;
+    &.header {
+      padding-top: 0px;    
+    }
     &.inactive {
       background-color: #8d8d8d;
       color: black;
@@ -320,6 +323,23 @@ body {
     }
     &.item-selected {
 			background: #226B9A url(../../assets/item-hilite.png) repeat-x bottom;
+			.xv-list-attr {
+        color: white;
+        background: none;
+        &.placeholder {
+          font-style: italic;
+          color: SkyBlue;
+        }
+        &.hyperlink {
+          color: #F49200;
+          background: #226B9A url(../../assets/item-hilite.png) repeat-x bottom;
+        }
+      }
+      .xv-list-attr {
+        &.header {
+          background: SkyBlue;
+        }
+      }
 			.xv-list-column {
 			  .xv-list-attr {
           color: white;
@@ -346,6 +366,14 @@ body {
   text-overflow: ellipsis;
   color: black;
   background-color: white;
+  &.header {
+    padding: 4px;
+    background: #8d8d8d;
+    font-size: 11px;
+  	font-weight: bold;
+  	text-transform: uppercase;
+  	color: white;
+  }
   &.right {
     position: absolute;
     right: 0px;
@@ -616,32 +644,6 @@ body {
 .xv-negative {
 	color: #C51616;
 }
-
-/* DocumentList.scss */
-.xv-document {
-  .xv-list-item {
-    padding-top: 0px;
-    padding-bottom: 0px;
-  }
-}
-.xv-document-list-number {
-  padding: 4px;
-}
-.xv-document-list-description {
-  padding: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.xv-document-list-type {
-  padding: 4px;
-  background: #8d8d8d;
-  font-size: 11px;
-	font-weight: bold;
-	text-transform: uppercase;
-	color: white;
-}
-
 
 /* Characteristics.scss */
 .xv-characteristic-picker {

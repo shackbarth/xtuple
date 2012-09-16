@@ -9,16 +9,15 @@ trailing:true white:true*/
     name: "XV.DocumentListRelations",
     kind: "XV.ListRelations",
     parentKey: "account",
-    classes: "xv-document",
     components: [
-      {kind: "XV.ListItem", components: [
-        {kind: "XV.ListAttr", formatter: "formatType",
-          classes: "xv-document-list-type"},
-        {kind: "XV.ListAttr", formatter: "formatNumber",
-          classes: "xv-document-list-number bold"},
-        {kind: "XV.ListAttr", formatter: "formatDescription",
-          classes: "xv-document-list-description"}
+      {kind: "XV.ListItem", classes: "header", components: [
+        {kind: "XV.ListAttr", formatter: "formatType", classes: "header"},
+        {kind: "XV.ListAttr", formatter: "formatNumber", classes: "bold"},
+        {kind: "XV.ListAttr", formatter: "formatDescription"}
       ]}
+    ],
+    orderBy: [
+      {attribute: "id"}
     ],
     getInfoModel: function (model) {
       return _.find(model.attributes, function (attribute) {
