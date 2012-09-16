@@ -220,8 +220,10 @@ trailing:true white:true*/
     valueChanged: function () {
       var value = this.getValue(), // Must be a collection of Info models
         canAttach = this.getSearchList().length > 0,
-        Klass = value ?
-          XT.getObjectByName(value.model.prototype.editableModel) : null,
+        editableModel = value && value.model.prototype.editableModel ?
+          value.model.prototype.editableModel : null,
+        Klass = editableModel ?
+          XT.getObjectByName(editableModel) : null,
         canNotCreate = Klass ? !Klass.canCreate() : true,
         canNotUpdate = Klass ? !Klass.canUpdate() : true;
       this.$.list.setValue(value);

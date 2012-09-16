@@ -40,27 +40,15 @@ trailing:true white:true*/
       return ("_" + infoModel.get('type').replace("Relation", "").camelize()).loc();
     }
   });
-  
-  enyo.kind({
-    name: "XV.DocumentsEditor",
-    kind: "XV.RelationsEditor",
-    components: [
-      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
-        classes: "in-panel", components: [
-        {kind: "XV.PickerWidget", attr: "number"},
-        {kind: "XV.PickerWidget", attr: "name"}
-      ]}
-    ]
-  });
 
   enyo.kind({
     name: "XV.DocumentsBox",
-    kind: "XV.ListRelationsEditorBox",
+    kind: "XV.ListRelationsBox",
     classes: "xv-documents-box",
     title: "_documents".loc(),
-    editor: "XV.DocumentsEditor",
     parentKey: "account",
-    listRelations: "XV.DocumentListRelations"
+    listRelations: "XV.DocumentListRelations",
+    searchList: "XV.AccountList"
   });
 
 }());
