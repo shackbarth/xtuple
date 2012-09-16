@@ -16,5 +16,7 @@ trailing:true white:true*/
     kind: "XV.DocumentsBox",
     parentKey: "contact"
   });
+  
+  //XV.registerModelSearch('')
 
 }());

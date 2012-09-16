@@ -6,30 +6,6 @@ trailing:true white:true*/
 (function () {
 
   enyo.kind({
-    name: "XV.DocumentPurposePicker",
-    kind: "onyx.PickerDecorator",
-    components: [
-      {},
-      {kind: "onyx.Picker", components: [
-        {content: "_relatedTo".loc(), value: "S", active: true},
-        {content: "_parentOf".loc(), value: "C" },
-        {content: "_childOf".loc(), value: "A" },
-        {content: "_duplicateOf".loc(), value: "D" }
-      ]}
-    ]
-  });
-  
-  enyo.kind({
-    name: "XV.DocumentTypePicker",
-    kind: "onyx.PickerDecorator",
-    components: [
-      {},
-      {kind: "onyx.Picker", components: [
-      ]}
-    ]
-  });
-
-  enyo.kind({
     name: "XV.DocumentListRelations",
     kind: "XV.ListRelations",
     parentKey: "account",
@@ -84,13 +60,13 @@ trailing:true white:true*/
     listRelations: "XV.DocumentListRelations",
     searchList: "dummy",
     handlers: {
-      onValueChange: "popupValueChanged"
+      onSelect: "itemSelected"
     },
     create: function () {
       this.inherited(arguments);
       var popup = {
         kind: "onyx.Popup",
-        name: "attachPopup",
+        name: "selectionPopup",
         centered: true,
         modal: true,
         floating: true,
@@ -99,22 +75,38 @@ trailing:true white:true*/
         components: [
           {kind: "FittableColumns", components: [
             {content: "_purpose".loc() + ":"},
-            {kind: "XV.DocumentPurposePicker"}
+            {kind: "onyx.PickerDecorator", components: [
+              {},
+              {kind: "onyx.Picker", name: "purposePicker", components: [
+                {content: "_relatedTo".loc(), value: "S", active: true},
+                {content: "_parentOf".loc(), value: "C" },
+                {content: "_childOf".loc(), value: "A" },
+                {content: "_duplicateOf".loc(), value: "D" }
+              ]}
+            ]}
+          ]},
+          {kind: "FittableColumns", components: [
+            {content: "_type".loc() + ":"},
+            {kind: "onyx.PickerDecorator", components: [
+              {style: "width: 100px;"},
+              {kind: "onyx.Picker", name: "typePicker"}
+            ]}
           ]},
           {tag: "br"},
-          {kind: "onyx.Button", content: "_ok".loc(), ontap: "attachOk",
+          {kind: "onyx.Button", content: "_ok".loc(), ontap: "popupOk",
             classes: "onyx-blue xv-popup-button"}
         ]
       };
       this.createComponent(popup);
     },
-    attachItem: function () {
-      this._popupDone = false;
-      this.$.attachPopup.show();
+    attachDocument: function () {
+      
     },
-    attachOk: function () {
-      this._popupDone = true;
-      this.$.attachPopup.hide();
+    attachItem: function () {
+      if (!this._initPicker) { this._pickerInit(); }
+      this._popupDone = false;
+      this._mode = "attach";
+      this.$.selectionPopup.show();
     },
     detachRecord: function () {
       var list = this.$.list,
@@ -123,21 +115,86 @@ trailing:true white:true*/
       model.destroy();
       list.lengthChanged();
     },
-    popupHidden: function (inSender, inEvent) {
-      if (inEvent.originator.name !== "attachPopup") {
-        return;
+    itemSelected: function (inSender, inEvent) {
+      if (inEvent.originator.name === "purposePicker") {
+        this._purpose = inEvent.selected.value;
+      } else if (inEvent.originator.name === "typePicker") {
+        this._type = inEvent.selected.value;
       }
-      if (!this._popupDone) {
+      return true;
+    },
+    popupHidden: function (inSender, inEvent) {
+      if (!this._popupDone &&
+          inEvent.originator.name === "selectionPopup") {
         inEvent.originator.show();
       }
     },
-    popupValueChanged: function () {
-      return true;
+    popupOk: function () {
+      this._popupDone = true;
+      this.$.selectionPopup.hide();
+      if (this._mode === "attach") {
+        this.attachDocument();
+      }
     },
     valueChanged: function () {
       this.inherited(arguments);
       this.$.newButton.setDisabled(false);
       this.$.attachButton.setDisabled(false);
+    },
+    /** private */
+    _pickerInit: function () {
+      var that = this,
+        parent = this.parent.parent.getValue(),
+        delegates = [],
+        relation,
+        relations,
+        prop,
+        content,
+        infoModel,
+        hashes = [];
+        
+      // Make sure we only have 'documents' delegates
+      for (prop in parent.attributeDelegates) {
+        if (parent.attributeDelegates.hasOwnProperty(prop) &&
+            parent.attributeDelegates[prop] === 'documents') {
+          delegates.push(prop);
+        }
+      }
+      
+      // Magic! Determine selections from the parent and delegate map
+      _.each(delegates, function (del) {
+        relation = parent.getRelation(del);
+        relations = relation.relatedModel.prototype.relations;
+        relation = _.find(relations, function (rel) {
+          // There should only be one of these and it's the info model
+          return rel.isNested;
+        });
+        infoModel = relation.relatedModel;
+        content = ("_" + infoModel.suffix()
+                                 .camelize()
+                                 .replace("Relation", "")
+                                 .camelize()).loc();
+        hashes.push({
+          content: content,
+          value: infoModel
+        });
+      });
+      
+      // Sort by the content
+      hashes = _.sortBy(hashes, function (hash) {
+        return hash.content;
+      });
+      
+      // Default first one
+      hashes[0].active = true;
+      
+      // Create the components
+      _.each(hashes, function (hash) {
+        that.$.typePicker.createComponent(hash);
+      });
+      
+      // Don't come back here
+      this._initPicker = true;
     }
   });
 
