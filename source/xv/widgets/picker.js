@@ -40,7 +40,7 @@ regexp:true, undef:true, trailing:true, white:true */
           components: [
           {kind: "onyx.PickerDecorator",
             components: [
-            {classes: "xv-picker"},
+            {content: "_none".loc(), classes: "xv-picker"},
             {name: "picker", kind: "onyx.Picker"}
           ]}
         ]}
