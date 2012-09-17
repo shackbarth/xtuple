@@ -16,5 +16,29 @@ trailing:true white:true*/
     kind: "XV.DocumentsBox",
     parentKey: "contact"
   });
+  
+  enyo.kind({
+    name: "XV.IncidentDocumentsBox",
+    kind: "XV.DocumentsBox",
+    parentKey: "incident"
+  });
+  
+  enyo.kind({
+    name: "XV.OpportunityDocumentsBox",
+    kind: "XV.DocumentsBox",
+    parentKey: "opportunity"
+  });
+  
+  enyo.kind({
+    name: "XV.ProjectDocumentsBox",
+    kind: "XV.DocumentsBox",
+    parentKey: "project"
+  });
+  
+  enyo.kind({
+    name: "XV.ToDoDocumentsBox",
+    kind: "XV.DocumentsBox",
+    parentKey: "toDo"
+  });
 
 }());

@@ -141,7 +141,8 @@ trailing:true white:true*/
             {kind: "XV.UserAccountWidget", attr: "owner"}
           ]}
         ]},
-        {kind: "XV.ContactCommentBox", attr: "comments"}
+        {kind: "XV.ContactCommentBox", attr: "comments"},
+        {kind: "XV.ContactDocumentsBox", attr: "documents"}
       ]},
       {kind: "onyx.Popup", name: "multipleAddressPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",
@@ -308,7 +309,8 @@ trailing:true white:true*/
             {kind: "XV.ItemWidget", attr: "item"}
           ]}
         ]},
-        {kind: "XV.IncidentCommentBox", attr: "comments"}
+        {kind: "XV.IncidentCommentBox", attr: "comments"},
+        {kind: "XV.IncidentDocumentsBox", attr: "documents"}
       ]}
     ]
   });
@@ -441,7 +443,8 @@ trailing:true white:true*/
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
         ]},
-        {kind: "XV.OpportunityCommentBox", attr: "comments"}
+        {kind: "XV.OpportunityCommentBox", attr: "comments"},
+        {kind: "XV.OpportunityDocumentsBox", attr: "documents"}
       ]}
     ]
   });
@@ -562,7 +565,8 @@ trailing:true white:true*/
           ]}
         ]},
         {kind: "XV.ProjectTasksBox", attr: "tasks"},
-        {kind: "XV.ProjectCommentBox", attr: "comments"}
+        {kind: "XV.ProjectCommentBox", attr: "comments"},
+        {kind: "XV.ContactDocumentsBox", attr: "documents"}
       ]}
     ]
   });
@@ -679,7 +683,8 @@ trailing:true white:true*/
             {kind: "XV.AccountWidget", attr: "account"}
           ]}
         ]},
-        {kind: "XV.ToDoCommentBox", attr: "comments"}
+        {kind: "XV.ToDoCommentBox", attr: "comments"},
+        {kind: "XV.ToDoDocumentsBox", attr: "documents"}
       ]}
     ]
   });

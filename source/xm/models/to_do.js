@@ -329,7 +329,9 @@ white:true*/
 
     recordType: 'XM.ToDoRelation',
     
-    editableModel: 'XM.ToDo'
+    editableModel: 'XM.ToDo',
+    
+    numberKey: 'name'
 
   });
 
