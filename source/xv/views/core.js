@@ -5,7 +5,7 @@ trailing:true white:true*/
 
 (function () {
   
-  XV._modelSearches = {};
+  XV._modelLists = {};
   XV._modelWorkspaces = {};
   
   // Class methods
@@ -25,16 +25,16 @@ trailing:true white:true*/
       Workspace.prototype.extensions = extensions.concat(extension);
     },
 
-    getSearch: function (recordType) {
-      return XV._modelSearches[recordType];
+    getList: function (recordType) {
+      return XV._modelLists[recordType];
     },
     
     getWorkspace: function (recordType) {
       return XV._modelWorkspaces[recordType];
     },
 
-    registerModelSearch: function (recordType, search) {
-      XV._modelSearch[recordType] = search;
+    registerModelList: function (recordType, list) {
+      XV._modelLists[recordType] = list;
     },
 
     registerModelWorkspace: function (recordType, workspace) {

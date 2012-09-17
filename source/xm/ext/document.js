@@ -172,6 +172,7 @@ white:true*/
       // Bind document assignments
       this.attributeDelegates = this.attributeDelegates || {};
       this.documents = new Backbone.Collection();
+      this.documents.parent = this;
       _.each(relations, function (relation) {
         if (relation.relatedModel.prototype.isDocumentAssignment) {
           that.attributeDelegates[relation.key] = 'documents';

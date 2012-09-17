@@ -48,7 +48,10 @@ trailing:true white:true*/
     },
     formatType: function (value, view, model) {
       var infoModel = this.getInfoModel(model);
-      return ("_" + infoModel.get('type').replace("Relation", "").camelize()).loc();
+      return ("_" + infoModel.get('type')
+                             .replace("Relation", "")
+                             .replace("ListItem", "")
+                             .camelize()).loc();
     }
   });
 
@@ -59,9 +62,6 @@ trailing:true white:true*/
     title: "_documents".loc(),
     listRelations: "XV.DocumentListRelations",
     searchList: "dummy",
-    handlers: {
-      onSelect: "itemSelected"
-    },
     create: function () {
       this.inherited(arguments);
       var popup = {
@@ -77,7 +77,8 @@ trailing:true white:true*/
             {content: "_purpose".loc() + ":"},
             {kind: "onyx.PickerDecorator", components: [
               {},
-              {kind: "onyx.Picker", name: "purposePicker", components: [
+              {kind: "onyx.Picker", name: "purposePicker",
+                onChange: "purposeSelected", components: [
                 {content: "_relatedTo".loc(), value: "S", active: true},
                 {content: "_parentOf".loc(), value: "C" },
                 {content: "_childOf".loc(), value: "A" },
@@ -89,7 +90,8 @@ trailing:true white:true*/
             {content: "_type".loc() + ":"},
             {kind: "onyx.PickerDecorator", components: [
               {style: "width: 100px;"},
-              {kind: "onyx.Picker", name: "typePicker"}
+              {kind: "onyx.Picker", name: "typePicker",
+                onChange: "typeSelected"}
             ]}
           ]},
           {tag: "br"},
@@ -100,10 +102,43 @@ trailing:true white:true*/
       this.createComponent(popup);
     },
     attachDocument: function () {
-      
+      var parent = this.$.list.getValue().parent,
+        searchList = XV.getList(this._type.infoModel),
+        purpose = this._purpose,
+        docsModel = this._type.docsModel,
+        docsAttr = this._type.docsAttr,
+        infoAttr = this._type.infoAttr,
+        collection = parent.get(docsAttr),
+        inEvent,
+
+        // Callback to handle selection...
+        callback = function (selectedModel) {
+
+          // Create a new document assignment record
+          var Klass = XT.getObjectByName(docsModel),
+            model = new Klass(),
+
+            // When id has been fetched, set attributes and
+            // add document assignment to parent
+            idFetched = function () {
+              model.off('change:id', idFetched);
+              model.set('purpose', purpose, {silent: true});
+              model.set(infoAttr, selectedModel, {silent: true});
+              collection.add(model);
+            };
+          model.on('change:id', idFetched);
+          model.initialize(null, { isNew: true });
+        };
+
+      // Open a search screen
+      inEvent = {
+        list: searchList,
+        callback: callback
+      };
+      this.doSearch(inEvent);
     },
     attachItem: function () {
-      if (!this._initPicker) { this._pickerInit(); }
+      if (!this._initPicker) { this._buildList(); }
       this._popupDone = false;
       this._mode = "attach";
       this.$.selectionPopup.show();
@@ -114,14 +149,6 @@ trailing:true white:true*/
         model = list.getModel(index, false);
       model.destroy();
       list.lengthChanged();
-    },
-    itemSelected: function (inSender, inEvent) {
-      if (inEvent.originator.name === "purposePicker") {
-        this._purpose = inEvent.selected.value;
-      } else if (inEvent.originator.name === "typePicker") {
-        this._type = inEvent.selected.value;
-      }
-      return true;
     },
     popupHidden: function (inSender, inEvent) {
       if (!this._popupDone &&
@@ -136,13 +163,19 @@ trailing:true white:true*/
         this.attachDocument();
       }
     },
+    purposeSelected: function (inSender, inEvent) {
+      this._purpose = inEvent.selected.value;
+    },
+    typeSelected: function (inSender, inEvent) {
+      this._type = inEvent.selected.value;
+    },
     valueChanged: function () {
       this.inherited(arguments);
       this.$.newButton.setDisabled(false);
       this.$.attachButton.setDisabled(false);
     },
     /** private */
-    _pickerInit: function () {
+    _buildList: function () {
       var that = this,
         parent = this.parent.parent.getValue(),
         delegates = [],
@@ -150,9 +183,12 @@ trailing:true white:true*/
         relations,
         prop,
         content,
+        docsAttr,
+        docsModel,
+        infoAttr,
         infoModel,
         hashes = [];
-        
+
       // Make sure we only have 'documents' delegates
       for (prop in parent.attributeDelegates) {
         if (parent.attributeDelegates.hasOwnProperty(prop) &&
@@ -160,15 +196,18 @@ trailing:true white:true*/
           delegates.push(prop);
         }
       }
-      
+
       // Magic! Determine selections from the parent and delegate map
       _.each(delegates, function (del) {
         relation = parent.getRelation(del);
+        docsAttr = relation.key;
+        docsModel = relation.relatedModel.prototype.recordType;
         relations = relation.relatedModel.prototype.relations;
         relation = _.find(relations, function (rel) {
           // There should only be one of these and it's the info model
           return rel.isNested;
         });
+        infoAttr = relation.key;
         infoModel = relation.relatedModel;
         content = ("_" + infoModel.suffix()
                                  .camelize()
@@ -176,23 +215,28 @@ trailing:true white:true*/
                                  .camelize()).loc();
         hashes.push({
           content: content,
-          value: infoModel
+          value: {
+            docsAttr: docsAttr,
+            docsModel: docsModel,
+            infoAttr: infoAttr,
+            infoModel: infoModel
+          }
         });
       });
-      
+
       // Sort by the content
       hashes = _.sortBy(hashes, function (hash) {
         return hash.content;
       });
-      
+
       // Default first one
       hashes[0].active = true;
-      
+
       // Create the components
       _.each(hashes, function (hash) {
         that.$.typePicker.createComponent(hash);
       });
-      
+
       // Don't come back here
       this._initPicker = true;
     }
