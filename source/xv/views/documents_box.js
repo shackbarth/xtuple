@@ -143,12 +143,65 @@ trailing:true white:true*/
       this._mode = "attach";
       this.$.selectionPopup.show();
     },
-    detachRecord: function () {
+    detachItem: function () {
       var list = this.$.list,
         index = list.getFirstSelected(),
         model = list.getModel(index, false);
       model.destroy();
       list.lengthChanged();
+    },
+    newDocument: function () {
+      var parent = this.$.list.getValue().parent,
+        purpose = this._purpose,
+        docsModel = this._type.docsModel,
+        docsAttr = this._type.docsAttr,
+        infoAttr = this._type.infoAttr,
+        infoModel = this._type.infoModel,
+        workspace = XV.getWorkspace(infoModel),
+        collection = parent.get(docsAttr),
+        inEvent,
+        
+        // Callback when new model is successfully committed
+        callback = function (model) {
+          
+          // First load up the info model version
+          // of the model just created
+          var Klass = XT.getObjectByName(infoModel),
+            info = new Klass({id: model.id}),
+            options = {};
+          options.success = function () {
+            
+            // Now create a document assignment model
+            var Klass = XT.getObjectByName(docsModel),
+              model = new Klass(),
+              
+              // When id has been fetched, set attributes and
+              // add document assignment to parent
+              idFetched = function () {
+                model.off('change:id', idFetched);
+                model.set('purpose', purpose, {silent: true});
+                model.set(infoAttr, info, {silent: true});
+                collection.add(model);
+              };
+            model.on('change:id', idFetched);
+            model.initialize(null, { isNew: true });
+          };
+          
+          // Fetch the info model
+          info.fetch(options);
+        };
+      inEvent = {
+        originator: this,
+        workspace: workspace,
+        callback: callback
+      };
+      this.doWorkspace(inEvent);
+    },
+    newItem: function () {
+      if (!this._initPicker) { this._buildList(); }
+      this._popupDone = false;
+      this._mode = "new";
+      this.$.selectionPopup.show();
     },
     popupHidden: function (inSender, inEvent) {
       if (!this._popupDone &&
@@ -161,6 +214,8 @@ trailing:true white:true*/
       this.$.selectionPopup.hide();
       if (this._mode === "attach") {
         this.attachDocument();
+      } else if (this._mode === "new") {
+        this.newDocument();
       }
     },
     purposeSelected: function (inSender, inEvent) {
