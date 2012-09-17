@@ -227,7 +227,7 @@ trailing:true white:true*/
     ]
   });
   
-  XV.registerModelList("XM.IncidentRelation", "XV.IncidentList");
+  XV.registerModelList("XM.ItemRelation", "XV.ItemList");
 
   // ..........................................................
   // OPPORTUNITY
