@@ -309,6 +309,7 @@ XT.stringsFor("en_US", {
   "_recurring": "Recurring",
   "_reference": "Reference",
   "_refresh": "Refresh",
+  "_related": "Related",
   "_relatedTo": "Related to",
   "_relationships": "Relationships",
   "_resolution": "Resolution",

@@ -12,7 +12,11 @@ trailing:true white:true*/
     components: [
       {kind: "XV.ListItem", classes: "header", components: [
         {kind: "XV.ListAttr", formatter: "formatType", classes: "header"},
-        {kind: "XV.ListAttr", formatter: "formatNumber", classes: "bold"},
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListAttr", formatter: "formatNumber", classes: "bold"},
+          {kind: "XV.ListAttr", attr: "purpose", fit: true, formatter: "formatPurpose",
+            classes: "right"}
+        ]},
         {kind: "XV.ListAttr", formatter: "formatDescription",
           placeholder: "_noDescription".loc()}
       ]}
@@ -45,6 +49,33 @@ trailing:true white:true*/
       var infoModel = this.getInfoModel(model),
         attr = infoModel.descriptionKey;
       return infoModel.get(attr);
+    },
+    formatPurpose: function (value) {
+      var purpose;
+      switch (value)
+      {
+      case 'S':
+        purpose = "_related".loc();
+        break;
+      case 'A':
+        purpose = "_child".loc();
+        break;
+      case 'C':
+        purpose = "_parent".loc();
+        break;
+      case 'D':
+        purpose = "_duplicate".loc();
+        break;
+      case 'P':
+        purpose = "_product".loc();
+        break;
+      case 'E':
+        purpose = "_engineering".loc();
+        break;
+      default:
+        purpose = "_miscellaneous".loc();
+      }
+      return purpose;
     },
     formatType: function (value, view, model) {
       var infoModel = this.getInfoModel(model);
@@ -80,8 +111,8 @@ trailing:true white:true*/
               {kind: "onyx.Picker", name: "purposePicker", style: "z-index: 999;",
                 onChange: "purposeSelected", components: [
                 {content: "_relatedTo".loc(), value: "S", active: true},
-                {content: "_parentOf".loc(), value: "C" },
-                {content: "_childOf".loc(), value: "A" },
+                {content: "_parentOf".loc(), value: "A" },
+                {content: "_childOf".loc(), value: "C" },
                 {content: "_duplicateOf".loc(), value: "D" }
               ]}
             ]}
