@@ -352,6 +352,7 @@ trailing:true white:true*/
       ]}
     ],
     apply: function () {
+      this._saveState = SAVE_APPLY;
       this.save();
     },
     close: function (options) {
