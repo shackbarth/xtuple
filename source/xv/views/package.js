@@ -11,6 +11,7 @@ enyo.depends(
   "repeater_box.js",
   "comment_box.js",
   "assignment_box.js",
+  "documents_box.js",
   "search.js",
   "screen_carousel.js"
 );

@@ -55,15 +55,21 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_secondaryContact".loc()},
             {kind: "XV.ContactWidget", attr: "secondaryContact",
               showAddress: true},
+            {kind: "onyx.GroupboxHeader", content: "_characteristics".loc()},
+            {kind: "XV.AccountCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
         ]},
         {kind: "XV.AccountCommentBox", attr: "comments"},
+        {kind: "XV.AccountDocumentsBox", attr: "documents"},
         {kind: "XV.AccountContactsBox", attr: "contactRelations"}
       ]}
     ]
   });
+  
+  XV.registerModelWorkspace("XM.AccountRelation", "XV.AccountWorkspace");
+  XV.registerModelWorkspace("XM.AccountListItem", "XV.AccountWorkspace");
 
   // ..........................................................
   // CLASS CODE
@@ -87,6 +93,8 @@ trailing:true white:true*/
       ]}
     ]
   });
+  
+  XV.registerModelWorkspace("XM.ClassCode", "XV.ClassCodeWorkspace");
 
   // ..........................................................
   // CONTACT
@@ -124,6 +132,8 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "phone"},
             {kind: "XV.InputWidget", attr: "alternate"},
             {kind: "XV.InputWidget", attr: "fax"},
+            {kind: "onyx.GroupboxHeader", content: "_characteristics".loc()},
+            {kind: "XV.ContactCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true},
             {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
@@ -131,7 +141,8 @@ trailing:true white:true*/
             {kind: "XV.UserAccountWidget", attr: "owner"}
           ]}
         ]},
-        {kind: "XV.ContactCommentBox", attr: "comments"}
+        {kind: "XV.ContactCommentBox", attr: "comments"},
+        {kind: "XV.ContactDocumentsBox", attr: "documents"}
       ]},
       {kind: "onyx.Popup", name: "multipleAddressPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",
@@ -177,6 +188,9 @@ trailing:true white:true*/
       }
     }
   });
+  
+  XV.registerModelWorkspace("XM.ContactRelation", "XV.ContactWorkspace");
+  XV.registerModelWorkspace("XM.ContactListItem", "XV.ContactWorkspace");
 
   // ..........................................................
   // COUNTRY
@@ -204,6 +218,8 @@ trailing:true white:true*/
       ]}
     ]
   });
+  
+  XV.registerModelWorkspace("XM.Country", "XV.CountryWorkspace");
 
   // ..........................................................
   // CURRENCY
@@ -228,6 +244,8 @@ trailing:true white:true*/
       ]}
     ]
   });
+  
+  XV.registerModelWorkspace("XM.Currency", "XV.CurrencyWorkspace");
 
   // ..........................................................
   // HONORIFIC
@@ -250,6 +268,8 @@ trailing:true white:true*/
       ]}
     ]
   });
+  
+  XV.registerModelWorkspace("XM.Honorific", "XV.HonorificWorkspace");
 
   // ..........................................................
   // INCIDENT
@@ -281,16 +301,22 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
             {kind: "XV.UserAccountWidget", attr: "owner"},
             {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+            {kind: "onyx.GroupboxHeader", content: "_characteristics".loc()},
+            {kind: "XV.IncidentCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true},
             {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
             {kind: "XV.ItemWidget", attr: "item"}
           ]}
         ]},
-        {kind: "XV.IncidentCommentBox", attr: "comments"}
+        {kind: "XV.IncidentCommentBox", attr: "comments"},
+        {kind: "XV.IncidentDocumentsBox", attr: "documents"}
       ]}
     ]
   });
+  
+  XV.registerModelWorkspace("XM.IncidentRelation", "XV.IncidentWorkspace");
+  XV.registerModelWorkspace("XM.IncidentListItem", "XV.IncidentWorkspace");
 
   // ..........................................................
   // INCIDENT CATEGORY
@@ -302,6 +328,8 @@ trailing:true white:true*/
     title: "_incidentCategory".loc(),
     model: "XM.IncidentCategory"
   });
+  
+  XV.registerModelWorkspace("XM.IncidentCategory", "XV.IncidentCategoryWorkspace");
 
   // ..........................................................
   // INCIDENT RESOLUTION
@@ -313,9 +341,11 @@ trailing:true white:true*/
     title: "_incidentResolution".loc(),
     model: "XM.IncidentResolution"
   });
+  
+  XV.registerModelWorkspace("XM.IncidentResolution", "XV.IncidentResolutionWorkspace");
 
   // ..........................................................
-  // INCIDENT RESOLUTION
+  // INCIDENT SEVERITY
   //
 
   enyo.kind({
@@ -324,6 +354,8 @@ trailing:true white:true*/
     title: "_incidentSeverity".loc(),
     model: "XM.IncidentSeverity"
   });
+  
+  XV.registerModelWorkspace("XM.IncidentSeverity", "XV.IncidentSeverityWorkspace");
 
 
   // ..........................................................
@@ -350,15 +382,22 @@ trailing:true white:true*/
             {kind: "XV.CheckboxWidget", attr: "isSold"},
             {kind: "XV.InputWidget", attr: "listPrice"},
             {kind: "XV.UnitWidget", attr: "priceUnit"},
-            {kind: "XV.ProductCategoryWidget", attr: "productCategory"}
+            {kind: "XV.ProductCategoryWidget", attr: "productCategory"},
+            {kind: "onyx.GroupboxHeader", content: "_characteristics".loc()},
+            {kind: "XV.ItemCharacteristicsWidget", attr: "characteristics"}
           ]}
-        ]}
+        ]},
+        {kind: "XV.ItemCommentBox", attr: "comments"},
+        {kind: "XV.ItemDocumentsBox", attr: "documents"}
       ]},
       {},
       {}
 
     ]
   });
+  
+  XV.registerModelWorkspace("XM.ItemRelation", "XV.ItemWorkspace");
+  XV.registerModelWorkspace("XM.ItemListItem", "XV.ItemWorkspace");
 
   // ..........................................................
   // OPPORTUNITY
@@ -400,14 +439,20 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
             {kind: "XV.UserAccountWidget", attr: "owner"},
             {kind: "XV.UserAccountWidget", attr: "assignedTo"},
+            {kind: "onyx.GroupboxHeader", content: "_characteristics".loc()},
+            {kind: "XV.OpportunityCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
         ]},
-        {kind: "XV.OpportunityCommentBox", attr: "comments"}
+        {kind: "XV.OpportunityCommentBox", attr: "comments"},
+        {kind: "XV.OpportunityDocumentsBox", attr: "documents"}
       ]}
     ]
   });
+  
+  XV.registerModelWorkspace("XM.OpportunityRelation", "XV.OpportunityWorkspace");
+  XV.registerModelWorkspace("XM.OpportunityListItem", "XV.OpportunityWorkspace");
 
   // ..........................................................
   // OPPORTUNITY SOURCE
@@ -419,6 +464,8 @@ trailing:true white:true*/
     title: "_opportunitySource".loc(),
     model: "XM.OpportunitySource"
   });
+  
+  XV.registerModelWorkspace("XM.OpportunitySource", "XV.OpportunitySourceWorkspace");
 
   // ..........................................................
   // OPPORTUNITY STAGE
@@ -430,6 +477,8 @@ trailing:true white:true*/
     title: "_opportunityStage".loc(),
     model: "XM.OpportunityStage"
   });
+  
+  XV.registerModelWorkspace("XM.OpportunityStage", "XV.OpportunityStageWorkspace");
 
   // ..........................................................
   // OPPORTUNITY TYPE
@@ -441,6 +490,8 @@ trailing:true white:true*/
     title: "_opportunityType".loc(),
     model: "XM.OpportunityType"
   });
+  
+  XV.registerModelWorkspace("XM.OpportunityType", "XV.OpportunityTypeWorkspace");
 
   // ..........................................................
   // PRIORITY
@@ -452,6 +503,8 @@ trailing:true white:true*/
     title: "_priority".loc(),
     model: "XM.Priority"
   });
+
+  XV.registerModelWorkspace("XM.Priority", "XV.PriorityWorkspace");
 
   // ..........................................................
   // PRODUCT CATEGORY
@@ -475,6 +528,8 @@ trailing:true white:true*/
       ]}
     ]
   });
+  
+  XV.registerModelWorkspace("XM.ProductCategory", "XV.ProductCategoryWorkspace");
 
   // ..........................................................
   // PROJECT
@@ -512,10 +567,14 @@ trailing:true white:true*/
           ]}
         ]},
         {kind: "XV.ProjectTasksBox", attr: "tasks"},
-        {kind: "XV.ProjectCommentBox", attr: "comments"}
+        {kind: "XV.ProjectCommentBox", attr: "comments"},
+        {kind: "XV.ContactDocumentsBox", attr: "documents"}
       ]}
     ]
   });
+  
+  XV.registerModelWorkspace("XM.ProjectRelation", "XV.ProjectWorkspace");
+  XV.registerModelWorkspace("XM.ProjectListItem", "XV.ProjectWorkspace");
 
   enyo.kind({
     name: "XV.ProjectTaskWorkspace",
@@ -559,6 +618,9 @@ trailing:true white:true*/
       ]}
     ]
   });
+  
+  XV.registerModelWorkspace("XM.ProjectTask", "XV.ProjectTaskWorkspace");
+  XV.registerModelWorkspace("XM.ProjectTaskListItem", "XV.ProjectTaskWorkspace");
 
   // ..........................................................
   // STATE
@@ -583,6 +645,8 @@ trailing:true white:true*/
       ]}
     ]
   });
+  
+  XV.registerModelWorkspace("XM.State", "XV.StateWorkspace");
 
   // ..........................................................
   // TO DO
@@ -621,10 +685,14 @@ trailing:true white:true*/
             {kind: "XV.AccountWidget", attr: "account"}
           ]}
         ]},
-        {kind: "XV.ToDoCommentBox", attr: "comments"}
+        {kind: "XV.ToDoCommentBox", attr: "comments"},
+        {kind: "XV.ToDoDocumentsBox", attr: "documents"}
       ]}
     ]
   });
+  
+  XV.registerModelWorkspace("XM.ToDoRelation", "XV.ToDoWorkspace");
+  XV.registerModelWorkspace("XM.ToDoListItem", "XV.ToDoWorkspace");
 
   // ..........................................................
   // UNIT
@@ -649,6 +717,8 @@ trailing:true white:true*/
       ]}
     ]
   });
+  
+  XV.registerModelWorkspace("XM.Unit", "XV.UnitWorkspace");
 
   // ..........................................................
   // USER ACCOUNT
@@ -692,6 +762,9 @@ trailing:true white:true*/
       this.$.grantedPrivileges.tryToRender();
     }
   });
+  
+  XV.registerModelWorkspace("XM.UserAccountRelation", "XV.UserAccountWorkspace");
+  XV.registerModelWorkspace("XM.UserAccountListItem", "XV.UserAccountWorkspace");
 
   // ..........................................................
   // USER ACCOUNT ROLE
@@ -719,5 +792,8 @@ trailing:true white:true*/
       ]}
     ]
   });
+  
+  XV.registerModelWorkspace("XM.UserAccountRoleRelation", "XV.UserAccountRoleWorkspace");
+  XV.registerModelWorkspace("XM.UserAccountRoleListItem", "XV.UserAccountRoleWorkspace");
 
 }());

@@ -5,6 +5,9 @@ trailing:true white:true*/
 
 (function () {
   
+  XV._modelLists = {};
+  XV._modelWorkspaces = {};
+  
   // Class methods
   enyo.mixin(XV, {
     /**
@@ -20,6 +23,22 @@ trailing:true white:true*/
         extension = [extension];
       }
       Workspace.prototype.extensions = extensions.concat(extension);
+    },
+
+    getList: function (recordType) {
+      return XV._modelLists[recordType];
+    },
+    
+    getWorkspace: function (recordType) {
+      return XV._modelWorkspaces[recordType];
+    },
+
+    registerModelList: function (recordType, list) {
+      XV._modelLists[recordType] = list;
+    },
+
+    registerModelWorkspace: function (recordType, workspace) {
+      XV._modelWorkspaces[recordType] = workspace;
     }
 
   });

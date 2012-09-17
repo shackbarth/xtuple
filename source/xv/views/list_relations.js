@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XT:true, XM:true, _:true, enyo:true, Globalize:true*/
+/*global XT:true, XM:true, XV:true, _:true, enyo:true, Globalize:true*/
 
 (function () {
 
@@ -25,8 +25,7 @@ trailing:true white:true*/
       attr: null,
       value: null,
       parentKey: "",
-      orderBy: null,
-      workspace: ""
+      orderBy: null
     },
     handlers: {
       onSetupItem: "setupItem"
@@ -92,7 +91,7 @@ trailing:true white:true*/
       if (rowsPerPage !== this.rowsPerPage) {
         this.setRowsPerPage(rowsPerPage);
       }
-      value.sort();
+      if (value.comparator) { value.sort(); }
       this.setCount(count);
       this.refresh();
     },
@@ -161,7 +160,8 @@ trailing:true white:true*/
       var index = inEvent.index,
         isSelected = inEvent.originator.isSelected(index),
         model = this.readyModels()[index],
-        isNotActive = model ? !model.getValue('isActive') || false : false,
+        isActive = model.getValue('isActive'),
+        isNotActive = _.isBoolean(isActive) ? !isActive : false,
         prop,
         isPlaceholder,
         view,
@@ -177,15 +177,15 @@ trailing:true white:true*/
           attr = this.$[prop].getAttr();
           value = model.getValue(attr);
           formatter = view.formatter;
-          if (!value && view.placeholder) {
-            value = view.placeholder;
-            isPlaceholder = true;
-          }
           if (formatter) {
             value = this[formatter](value, view, model);
           }
           if (value && value instanceof Date) {
             value = Globalize.format(value, 'd');
+          }
+          if (!value && view.placeholder) {
+            value = view.placeholder;
+            isPlaceholder = true;
           }
           view.setContent(value);
           view.addRemoveClass("placeholder", isPlaceholder);
@@ -197,6 +197,7 @@ trailing:true white:true*/
       
       // Selection
       this.$.listItem.addRemoveClass("item-selected", isSelected);
+      return true;
     },
     statusChanged: function (model) {
       if (model.getStatus() === XM.Model.READY_CLEAN) {

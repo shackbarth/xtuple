@@ -18,7 +18,6 @@ trailing:true white:true*/
       {attribute: "primaryEmail"}
     ],
     parentKey: "account",
-    workspace: "XV.ContactWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -57,7 +56,6 @@ trailing:true white:true*/
       {attribute: "number"}
     ],
     parentKey: "project",
-    workspace: "XV.ProjecTaskWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [

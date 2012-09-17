@@ -31,6 +31,10 @@ white:true*/
     */
     editableModel: null,
     
+    descriptionKey: "description",
+    
+    numberKey: "number",
+    
     readOnly: true,
 
     // ..........................................................

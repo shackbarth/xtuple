@@ -11,10 +11,16 @@ white:true*/
   
     @extends XM.Model
   */
-  XM.Url = XM.Model.extend({
+  XM.Url = XM.Info.extend({
     /** @scope XM.Url.prototype */
 
-    recordType: 'XM.Url'
+    recordType: 'XM.Url',
+    
+    editableModel: 'XM.Url',
+    
+    numberKey: 'name',
+    
+    descriptionKey: 'path'
 
   });
 
