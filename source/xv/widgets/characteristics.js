@@ -195,6 +195,7 @@ white:true*/
       which: null
     },
     components: [
+      {kind: "onyx.GroupboxHeader", content: "_characteristics".loc()},
       {kind: "Repeater", count: 0, onSetupItem: "setupItem", components: [
         {kind: "XV.CharacteristicItem"}
       ]},
