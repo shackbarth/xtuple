@@ -303,7 +303,8 @@ X = {};
       else {
         part = path.substring(0, i);
         path = path.slice(i);
-        type = X.typeOf(cur[path]);
+        //type = X.typeOf(cur[path]);
+        type = X.typeOf(cur[part]);
         if (type === X.T_OBJECT) value = cur[part].get(path);
         else if (type === X.T_HASH) value = X.get.call(cur[part], path, true);
         else return undefined;
