@@ -74,10 +74,10 @@ trailing:true white:true*/
         onHide: "popupHidden",
         components: [
           {kind: "FittableColumns", components: [
-            {content: "_purpose".loc() + ":"},
+            {content: "_purpose".loc() + ":", classes: "xv-documents-picker-label"},
             {kind: "onyx.PickerDecorator", components: [
-              {},
-              {kind: "onyx.Picker", name: "purposePicker",
+              {classes: "xv-documents-picker"},
+              {kind: "onyx.Picker", name: "purposePicker", style: "z-index: 999;",
                 onChange: "purposeSelected", components: [
                 {content: "_relatedTo".loc(), value: "S", active: true},
                 {content: "_parentOf".loc(), value: "C" },
@@ -87,11 +87,11 @@ trailing:true white:true*/
             ]}
           ]},
           {kind: "FittableColumns", components: [
-            {content: "_type".loc() + ":"},
+            {content: "_type".loc() + ":", classes: "xv-documents-picker-label"},
             {kind: "onyx.PickerDecorator", components: [
-              {style: "width: 100px;"},
+              {classes: "xv-documents-picker"},
               {kind: "onyx.Picker", name: "typePicker",
-                onChange: "typeSelected"}
+                onChange: "typeSelected", style: "z-index: 999;"}
             ]}
           ]},
           {tag: "br"},
