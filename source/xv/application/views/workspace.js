@@ -376,7 +376,7 @@ trailing:true white:true*/
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "number"},
             {kind: "XV.CheckboxWidget", attr: "isActive"},
@@ -392,7 +392,12 @@ trailing:true white:true*/
             {kind: "XV.SalesPriceWidget", attr: "listPrice"},
             {kind: "XV.UnitWidget", attr: "priceUnit"},
             {kind: "onyx.GroupboxHeader", content: "_characteristics".loc()},
-            {kind: "XV.ItemCharacteristicsWidget", attr: "characteristics"}
+            {kind: "XV.ItemCharacteristicsWidget", attr: "characteristics"},
+            {kind: "onyx.GroupboxHeader",
+              content: "_extendedDescription".loc()},
+            {kind: "XV.TextArea", attr: "extendedDescription"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
         ]},
         {kind: "XV.ItemCommentBox", attr: "comments"},
