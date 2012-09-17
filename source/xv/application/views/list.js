@@ -128,8 +128,14 @@ trailing:true white:true*/
       ]}
     ],
     formatFirstName: function (value, view, model) {
-      var lastName = (model.get('lastName') || "").trim();
-      view.addRemoveClass("bold", _.isEmpty(lastName));
+      var lastName = (model.get('lastName') || "").trim(),
+        firstName = (model.get('firstName') || "").trim();
+      if (_.isEmpty(firstName) && _.isEmpty(lastName)) {
+        view.addRemoveClass("placeholder", true);
+        value = "_noName".loc();
+      } else {
+        view.addRemoveClass("bold", _.isEmpty(lastName));
+      }
       return value;
     },
     sendMail: function (inSender, inEvent) {
@@ -201,6 +207,24 @@ trailing:true white:true*/
   // ..........................................................
   // ITEM
   //
+  
+  enyo.kind({
+    name: "XV.ClassCodeList",
+    kind: "XV.List",
+    label: "_classCodes".loc(),
+    collection: "XM.ClassCodeCollection",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    workspace: "XV.ClassCodeWorkspace",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "XV.ListColumn", classes: "last", components: [
+          {kind: "XV.ListAttr", attr: "code", classes: "bold"}
+        ]}
+      ]}
+    ]
+  });
 
   enyo.kind({
     name: "XV.ItemList",
@@ -216,15 +240,30 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", classes: "bold"}
-              //{kind: "XV.ListAttr", attr: "inventoryUnit.name", fit: true,
-              //  classes: "right"}
+              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "unit.name", fit: true,
+                classes: "right"}
             ]},
             {kind: "XV.ListAttr", attr: "description1"}
+          ]},
+          {kind: "XV.ListColumn", classes: "second",
+            components: [
+            {kind: "XV.ListAttr", attr: "classCode.code", classes: "italic"},
+            {kind: "XV.ListAttr", attr: "productCategory.code"}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "isActive", formatter: "formatActive"},
+            {kind: "XV.ListAttr", attr: "isSold", formatter: "formatSold"}
           ]}
         ]}
       ]}
-    ]
+    ],
+    formatActive: function (value, view, model) {
+      return value ? "_active".loc() : "";
+    },
+    formatSold: function (value, view, model) {
+      return value ? "_sold".loc() : "";
+    }
   });
   
   XV.registerModelList("XM.ItemRelation", "XV.ItemList");
@@ -518,46 +557,6 @@ trailing:true white:true*/
       return value ? "_active".loc() : "";
     }
   });
-
-  // ..........................................................
-  // ITEM
-  //
-
-  enyo.kind({
-    name: "XV.ItemList",
-    kind: "XV.List",
-    label: "_items".loc(),
-    collection: "XM.ItemListItemCollection",
-    query: {orderBy: [
-      {attribute: 'number'}
-    ]},
-    components: [
-      {kind: "XV.ListItem", components: [
-        {kind: "XV.ListColumn", classes: "last", components: [
-          {kind: "XV.ListAttr", attr: "number", classes: "bold"}
-        ]}
-      ]}
-    ]
-  });
-
-  enyo.kind({
-    name: "XV.ClassCodeList",
-    kind: "XV.List",
-    label: "_classCodes".loc(),
-    collection: "XM.ClassCodeCollection",
-    query: {orderBy: [
-      {attribute: 'code'}
-    ]},
-    workspace: "XV.ClassCodeWorkspace",
-    components: [
-      {kind: "XV.ListItem", components: [
-        {kind: "XV.ListColumn", classes: "last", components: [
-          {kind: "XV.ListAttr", attr: "code", classes: "bold"}
-        ]}
-      ]}
-    ]
-  });
-
 
   // ..........................................................
   // CURRENCY

@@ -96,8 +96,6 @@ white:true*/
 
     requiredAttributes: [
       "classCode",
-      "description1",
-      "description2",
       "inventoryUnit",
       "isActive",
       "isFractional",

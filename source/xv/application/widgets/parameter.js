@@ -179,7 +179,11 @@ trailing:true white:true*/
         }
       },
       {label: "_number".loc(), attr: "number"},
-      {label: "_description".loc(), attr: ["description1", "description2"]}
+      {label: "_description".loc(), attr: ["description1", "description2"]},
+      {label: "_classCode".loc(), attr: "classCode",
+        defaultKind: "XV.ClassCodePicker"},
+      {label: "_category".loc(), attr: "productCategory",
+        defaultKind: "XV.ProductCategoryPicker"}
     ]
   });
 
