@@ -86,6 +86,9 @@ white:true*/
       this.on('change:startDate change:completeDate', this.toDoStatusDidChange);
       this.on('change:status', this.toDoDidChange);
       this.on('changeStatus', this.toDoDidChange);
+      
+      // Bind document assignments
+      this.bindDocuments();
     },
 
     toDoDidChange: function () {
@@ -139,6 +142,8 @@ white:true*/
     }
 
   });
+  
+  XM.ToDo = XM.ToDo.extend(XM.DocumentAssignmentsMixin);
 
   // To-Do status mixin
   XM.ToDo = XM.ToDo.extend(XM.ToDoStatus);
