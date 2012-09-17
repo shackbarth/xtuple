@@ -221,6 +221,48 @@ white:true*/
                .send(payload);
     },
 
+
+    /*
+    Send a configuration call to the datasource.
+
+    @param {String} function name
+    @param {Object} parameters
+    @param {Function} success callback
+    @param {Function} error callback
+    */
+    /** @private */
+    configure: function (func, params, options) {
+      var that = this,
+        payload = {
+          requestType: 'configure',
+          functionName: func,
+          parameters: params
+        },
+        complete = function (response) {
+          var dataHash, params = {}, error;
+
+          // handle error
+          if (response.isError) {
+            if (options && options.error) {
+              params.error = response.reason;
+              error = XT.Error.clone('xt1001', { params: params });
+              options.error.call(that, error);
+            }
+            return;
+          }
+
+          // handle success
+          if (options && options.success) {
+            options.success.call(that, response.data);
+          }
+        };
+
+      return XT.Request
+               .handle('function/configure')
+               .notify(complete)
+               .send(payload);
+    },
+
     /* @private */
     connect: function (callback) {
       if (this.isConnected) {

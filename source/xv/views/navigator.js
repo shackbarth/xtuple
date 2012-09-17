@@ -35,7 +35,10 @@ trailing:true white:true*/
             {name: "historyIconButton", src: "assets/menu-icon-bookmark.png",
               ontap: "showHistory"},
             {name: "searchIconButton", src: "assets/menu-icon-search.png",
-              ontap: "showParameters", showing: false}
+              ontap: "showParameters", showing: false},
+            {name: "myAccountButton", src: "assets/menu-icon-gear.png",
+              ontap: "showMyAccount"},
+            {name: "myAccountPopup", kind: "XV.MyAccountPopup"}
           ]},
           {kind: "onyx.Popup", name: "logoutPopup", centered: true,
             modal: true, floating: true, scrim: true, components: [
@@ -64,9 +67,6 @@ trailing:true white:true*/
       ]},
       {kind: "FittableRows", components: [
         {kind: "onyx.MoreToolbar", name: "contentToolbar", components: [
-                                 // AWFUL UGLY HEINOUS HACK SHOULD NOT BE NECESSARY
-          {kind: "onyx.Grabber", style: "height: 27px !important;"},
-          {name: "rightLabel", style: "text-align: center"},
           {name: "search", kind: "onyx.InputDecorator", style: "float: right;",
             showing: false, components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
@@ -74,7 +74,12 @@ trailing:true white:true*/
             {kind: "Image", src: "assets/search-input-search.png"}
           ]},
           {name: "newButton", kind: "onyx.Button", content: "_new".loc(),
-            ontap: "newRecord", style: "float: right;", showing: false}
+            ontap: "newRecord", style: "float: right;", showing: false},
+          //{name: "exportButton", kind: "onyx.Button", content: "_export".loc(),
+          //  ontap: "exportList", style: "float: right;"},
+                                 // AWFUL UGLY HEINOUS HACK SHOULD NOT BE NECESSARY
+          {kind: "onyx.Grabber", style: "height: 27px !important;"},
+          {name: "rightLabel", style: "text-align: center"}
         ]},
         {name: "header", content: "", classes: "xv-navigator-header"},
         {name: "contentPanels", kind: "Panels", margin: 0, fit: true,
@@ -205,6 +210,13 @@ trailing:true white:true*/
       }
       this.$.moduleMenu.setCount(modules.length);
     },
+    exportList: function (inSender, inEvent) {
+      var list = this.$.contentPanels.getActive(),
+        Model = list.getValue().model;
+
+      alert("Not yet implemented");
+    },
+
     newRecord: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),
         workspace = list instanceof XV.List ? list.getWorkspace() : null,
@@ -213,12 +225,12 @@ trailing:true white:true*/
       // Callback options on commit of the workspace
       // Fetch the corresponding list model and add
       callback = function (model) {
-        var Model = list._collection.model,
+        var Model = list.getValue().model,
           value = new Model({id: model.id}),
           options = {};
         options.success = function () {
-          list._collection.add(value);
-          list.setCount(list._collection.length);
+          list.getValue().add(value);
+          list.setCount(list.getValue().length);
           list.refresh();
         };
         value.fetch(options);
@@ -335,6 +347,9 @@ trailing:true white:true*/
     showParameters: function (inSender, inEvent) {
       var panel = this.$.contentPanels.getActive();
       this.doNavigatorEvent({name: panel.name, show: true});
+    },
+    showMyAccount: function (inSender, inEvent) {
+      this.$.myAccountPopup.show();
     },
     warnLogout: function () {
       this.$.logoutPopup.show();

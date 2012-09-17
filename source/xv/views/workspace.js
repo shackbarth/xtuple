@@ -7,8 +7,8 @@ trailing:true white:true*/
   var SAVE_APPLY = 1;
   var SAVE_CLOSE = 2;
   var SAVE_NEW = 3;
-  
-  
+
+
   XV.EditorMixin = {
     controlValueChanged: function (inSender, inEvent) {
       var attrs = {};
@@ -306,8 +306,6 @@ trailing:true white:true*/
       ]},
       {kind: "FittableRows", name: "contentPanel", components: [
         {kind: "onyx.MoreToolbar", name: "contentToolbar", components: [
-          {kind: "onyx.Grabber"},
-          {name: "title", style: "text-align: center;"},
           {kind: "onyx.Button", name: "saveButton",
             disabled: true, // TO DO: Get the affirmative style back into CSS
             style: "float: right; background-color: #35A8EE;",
@@ -320,7 +318,10 @@ trailing:true white:true*/
             content: "_apply".loc(), onclick: "apply"},
           {kind: "onyx.Button", name: "refreshButton", disabled: true,
             content: "_refresh".loc(), onclick: "requery",
-            style: "float: right;"}
+            style: "float: right;"},
+                                 // AWFUL UGLY HEINOUS HACK SHOULD NOT BE NECESSARY
+          {kind: "onyx.Grabber", style: "height: 27px !important;"},
+          {name: "title", style: "text-align: center;"}
         ]},
         {name: "header", content: "_loading".loc(), classes: "xv-workspace-header"},
         {kind: "onyx.Popup", name: "spinnerPopup", centered: true,
@@ -577,7 +578,7 @@ trailing:true white:true*/
       }
     }
   });
-  
+
   enyo.kind(workspaceHash);
 
 }());
