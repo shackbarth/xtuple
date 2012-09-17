@@ -46,6 +46,7 @@ white:true*/
     @class
 
     @extends XM.Model
+    @extends XM.DocumentAssignmentsMixin
   */
   XM.ToDo = XM.Model.extend({
     /** @scope XM.ToDo.prototype */

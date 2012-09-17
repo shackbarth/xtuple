@@ -386,7 +386,9 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_characteristics".loc()},
             {kind: "XV.ItemCharacteristicsWidget", attr: "characteristics"}
           ]}
-        ]}
+        ]},
+        {kind: "XV.ItemCommentBox", attr: "comments"},
+        {kind: "XV.ItemDocumentsBox", attr: "documents"}
       ]},
       {},
       {}

@@ -24,6 +24,12 @@ white:true*/
   });
   
   enyo.kind({
+    name: "XV.ItemCommentBox",
+    kind: "XV.CommentBox",
+    model: "XM.ItemComment"
+  });
+  
+  enyo.kind({
     name: "XV.OpportunityCommentBox",
     kind: "XV.CommentBox",
     model: "XM.OpportunityComment"
