@@ -105,21 +105,19 @@ trailing:true white:true*/
     exportList: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),
         coll = list.getValue(),
-        success = function (collection, models) {
-          XT.log("success");
-          XT.log(collection);
-          XT.log(models);
+        recordType = coll.models[0].recordType, // XXX can do better than this
+        success = function (result) {
+          var cacheId = result.cacheId;
+          window.location = "https://localtest.com/export?cacheId=" + cacheId;
         },
-        error = function (collection, result) {
+        error = function (result) {
           XT.log("error");
-          XT.log(collection);
           XT.log(result);
         },
         options = {responseType: "csv", success: success, error: error};
 
-      //coll.fetch(options);
-
-      window.location = "http://localhost:8888/debug"; // XXX craft the appropriate URL here
+      // XXX I should be using some new datasource function here, not configure
+      XT.dataSource.configure("createCSV", {"recordType": recordType}, options);
     },
     fetch: function (options) {
       options = options ? _.clone(options) : {};
