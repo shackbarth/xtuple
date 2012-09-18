@@ -514,8 +514,8 @@
       },
       {
         "name": "incident",
-        "toOne": {
-          "type": "Incident",
+        "attr": {
+          "type": "Number",
           "column": "charass_target_id"
         }
       },
