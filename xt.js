@@ -34,6 +34,10 @@ require('./foundation');
   var _ = X._, sighandler;
   
   sighandler = function (signal) {
+    
+    // mostly for logging, make sure anything that wants to know can
+    // easily find why we're shutting down
+    X.SHUTDOWN_SIGNAL = signal;
     X.io.console(X.StringBuffer.create({color: "blue", prefix: null}),
       "\n================================================" +
       "\n%@ CAUGHT - cleaning up before shutting down".f(signal.toUpperCase()) +
