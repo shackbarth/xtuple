@@ -10,8 +10,8 @@
       "all": {
         "create": true,
         "read": true,
-        "update": false,
-        "delete": true
+        "update": true,
+        "delete": false
       }
     },
     "properties": [
@@ -38,7 +38,6 @@
         }
       }
     ],
-    "isNestedOnly": true,
     "isSystem": true
   }
 ]
