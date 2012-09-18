@@ -1,7 +1,7 @@
 /*jshint bitwise:false, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true */
+/*global XV:true, XM:true, _:true, window: true, Backbone:true, enyo:true, XT:true */
 
 (function () {
 
@@ -9,6 +9,9 @@ trailing:true white:true*/
     name: "XV.DocumentListRelations",
     kind: "XV.ListRelations",
     parentKey: "account",
+    events: {
+      onError: ""
+    },
     components: [
       {kind: "XV.ListItem", classes: "header", components: [
         {kind: "XV.ListAttr", formatter: "formatType", classes: "header"},
@@ -18,7 +21,7 @@ trailing:true white:true*/
             classes: "right"}
         ]},
         {kind: "XV.ListAttr", formatter: "formatDescription",
-          placeholder: "_noDescription".loc()}
+          ontap: "openWindow", placeholder: "_noDescription".loc()}
       ]}
     ],
     orderBy: [
@@ -47,7 +50,9 @@ trailing:true white:true*/
     },
     formatDescription: function (value, view, model) {
       var infoModel = this.getInfoModel(model),
-        attr = infoModel.descriptionKey;
+        attr = infoModel.descriptionKey,
+        isUrl = infoModel.recordType === 'XM.Url';
+      view.addRemoveClass("hyperlink", isUrl);
       return infoModel.get(attr);
     },
     formatPurpose: function (value) {
@@ -83,6 +88,22 @@ trailing:true white:true*/
                              .replace("Relation", "")
                              .replace("ListItem", "")
                              .camelize()).loc();
+    },
+    openWindow: function (inSender, inEvent) {
+      var model = this.getModel(inEvent.index),
+        recordType = model.recordType,
+        path,
+        error;
+      path = recordType === "XM.Url" ? model.getValue('path') : null;
+      if (path) {
+        if (path.search(/^file/i) > -1) {
+          error = XT.Error.clone('xt1011');
+          this.doError({error: error});
+          return true;
+        }
+        window.open(path);
+        return true;
+      }
     }
   });
 

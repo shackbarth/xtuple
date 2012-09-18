@@ -398,6 +398,7 @@ XT.stringsFor("en_US", {
   "_datasourceError": "Data source error: {error}",
   "_duplicateValues": "Duplicate values are not allowed.",
   "_lengthInvalid": "Length of {attr} must be {length}.",
+  "_localResourceNotAllowed": "Not allowed to load local resource",
   "_logoutConfirmation": "Are you sure you want to log out?",
   "_nameRequired": "A name is required.",
   "_noAccountName": "No Account Name",

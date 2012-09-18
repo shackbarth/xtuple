@@ -174,6 +174,10 @@
       code: "xt1010",
       messageKey: "_canNotUpdate"
     },
+    {
+      code: "xt1011",
+      messageKey: "_localResourceNotAllowed"
+    },
 
     // Application errors
     {
