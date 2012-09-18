@@ -19,5 +19,19 @@ white:true*/
     isDocumentAssignment: true
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.IncidentToDo = XM.Model.extend(
+    /** @scope XM.IncidentToDoprototype */ {
+
+    recordType: 'XM.IncidentToDo',
+
+    isDocumentAssignment: true
+
+  });
 
 }());

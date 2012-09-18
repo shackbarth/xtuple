@@ -215,6 +215,7 @@ trailing:true white:true*/
             value = view.placeholder;
             isPlaceholder = true;
           }
+          view.addRemoveClass("placeholder", isPlaceholder);
           if (formatter) {
             value = this[formatter](value, view, model);
           }
@@ -222,7 +223,6 @@ trailing:true white:true*/
             value = Globalize.format(value, 'd');
           }
           view.setContent(value);
-          view.addRemoveClass("placeholder", isPlaceholder);
         }
       }
       return true;

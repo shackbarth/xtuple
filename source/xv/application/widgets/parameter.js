@@ -179,7 +179,11 @@ trailing:true white:true*/
         }
       },
       {label: "_number".loc(), attr: "number"},
-      {label: "_description".loc(), attr: ["description1", "description2"]}
+      {label: "_description".loc(), attr: ["description1", "description2"]},
+      {label: "_classCode".loc(), attr: "classCode",
+        defaultKind: "XV.ClassCodePicker"},
+      {label: "_category".loc(), attr: "productCategory",
+        defaultKind: "XV.ProductCategoryPicker"}
     ]
   });
 
@@ -334,6 +338,20 @@ trailing:true white:true*/
       {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
       {label: "_startDate".loc(), attr: "dueDate", operator: ">=", defaultKind: "XV.DateWidget"},
       {label: "_endDate".loc(), attr: "dueDate", operator: "<=", defaultKind: "XV.DateWidget"}
+    ]
+  });
+  
+  // ..........................................................
+  // URL
+  //
+
+  enyo.kind({
+    name: "XV.UrlParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_url".loc()},
+      {label: "_name".loc(), attr: "name"},
+      {label: "_path".loc(), attr: "path"}
     ]
   });
 

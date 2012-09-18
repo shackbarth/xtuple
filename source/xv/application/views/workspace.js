@@ -17,7 +17,8 @@ trailing:true white:true*/
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.NumberWidget", attr: "order"}
@@ -55,7 +56,6 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_secondaryContact".loc()},
             {kind: "XV.ContactWidget", attr: "secondaryContact",
               showAddress: true},
-            {kind: "onyx.GroupboxHeader", content: "_characteristics".loc()},
             {kind: "XV.AccountCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
@@ -85,7 +85,8 @@ trailing:true white:true*/
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "code"},
             {kind: "XV.InputWidget", attr: "description"}
           ]}
@@ -132,7 +133,6 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "phone"},
             {kind: "XV.InputWidget", attr: "alternate"},
             {kind: "XV.InputWidget", attr: "fax"},
-            {kind: "onyx.GroupboxHeader", content: "_characteristics".loc()},
             {kind: "XV.ContactCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true},
@@ -206,7 +206,8 @@ trailing:true white:true*/
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "abbreviation"},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "currencyName"},
@@ -235,7 +236,8 @@ trailing:true white:true*/
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "abbreviation"},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "symbol"}
@@ -261,7 +263,8 @@ trailing:true white:true*/
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "code"}
           ]}
         ]}
@@ -301,7 +304,6 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
             {kind: "XV.UserAccountWidget", attr: "owner"},
             {kind: "XV.UserAccountWidget", attr: "assignedTo"},
-            {kind: "onyx.GroupboxHeader", content: "_characteristics".loc()},
             {kind: "XV.IncidentCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true},
@@ -357,7 +359,6 @@ trailing:true white:true*/
   
   XV.registerModelWorkspace("XM.IncidentSeverity", "XV.IncidentSeverityWorkspace");
 
-
   // ..........................................................
   // ITEM
   //
@@ -372,27 +373,32 @@ trailing:true white:true*/
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
-            {kind: "XV.ClassCodeWidget", attr: "classCode"},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.InputWidget", attr: "description1"},
             {kind: "XV.InputWidget", attr: "description2"},
             {kind: "XV.UnitWidget", attr: "inventoryUnit"},
-            {kind: "XV.CheckboxWidget", attr: "isActive"},
+            {kind: "XV.ClassCodePicker", attr: "classCode"},
             {kind: "XV.CheckboxWidget", attr: "isFractional"},
+            {kind: "onyx.GroupboxHeader", content: "_product".loc()},
             {kind: "XV.CheckboxWidget", attr: "isSold"},
-            {kind: "XV.InputWidget", attr: "listPrice"},
+            {kind: "XV.ProductCategoryPicker", attr: "productCategory",
+              label: "_category".loc()},
+            {kind: "XV.SalesPriceWidget", attr: "listPrice"},
             {kind: "XV.UnitWidget", attr: "priceUnit"},
-            {kind: "XV.ProductCategoryWidget", attr: "productCategory"},
-            {kind: "onyx.GroupboxHeader", content: "_characteristics".loc()},
-            {kind: "XV.ItemCharacteristicsWidget", attr: "characteristics"}
+            {kind: "XV.ItemCharacteristicsWidget", attr: "characteristics"},
+            {kind: "onyx.GroupboxHeader",
+              content: "_extendedDescription".loc()},
+            {kind: "XV.TextArea", attr: "extendedDescription"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
         ]},
         {kind: "XV.ItemCommentBox", attr: "comments"},
         {kind: "XV.ItemDocumentsBox", attr: "documents"}
-      ]},
-      {},
-      {}
-
+      ]}
     ]
   });
   
@@ -439,7 +445,6 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
             {kind: "XV.UserAccountWidget", attr: "owner"},
             {kind: "XV.UserAccountWidget", attr: "assignedTo"},
-            {kind: "onyx.GroupboxHeader", content: "_characteristics".loc()},
             {kind: "XV.OpportunityCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
@@ -520,7 +525,8 @@ trailing:true white:true*/
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "code"},
             {kind: "XV.InputWidget", attr: "description"}
           ]}
@@ -636,7 +642,8 @@ trailing:true white:true*/
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "abbreviation"},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.CountryPicker", attr: "country"}
@@ -693,6 +700,32 @@ trailing:true white:true*/
   
   XV.registerModelWorkspace("XM.ToDoRelation", "XV.ToDoWorkspace");
   XV.registerModelWorkspace("XM.ToDoListItem", "XV.ToDoWorkspace");
+  
+  // ..........................................................
+  // URL
+  //
+
+  enyo.kind({
+    name: "XV.UrlWorkspace",
+    kind: "XV.Workspace",
+    title: "_url".loc(),
+    model: "XM.Url",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "path"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+  
+  XV.registerModelWorkspace("XM.Url", "XV.UrlWorkspace");
 
   // ..........................................................
   // UNIT
@@ -708,7 +741,8 @@ trailing:true white:true*/
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.CheckboxWidget", attr: "isItemWeight"}
@@ -737,7 +771,8 @@ trailing:true white:true*/
         fit: true, classes: "xv-top-panel", components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "username"},
             {kind: "XV.InputWidget", attr: "properName"},
             {kind: "XV.InputWidget", attr: "initials"},
@@ -780,7 +815,8 @@ trailing:true white:true*/
         fit: true, classes: "xv-top-panel", components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", components: [
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"}
           ]}
