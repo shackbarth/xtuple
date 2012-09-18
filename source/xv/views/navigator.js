@@ -105,7 +105,7 @@ trailing:true white:true*/
     exportList: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),
         coll = list.getValue(),
-        recordType = coll.models[0].recordType, // XXX can do better than this
+        recordType = coll.model.prototype.recordType,
         success = function (result) {
           var cacheId = result.cacheId;
           window.location = "https://localtest.com/export?cacheId=" + cacheId;
@@ -276,7 +276,7 @@ trailing:true white:true*/
       }
       this.doNavigatorEvent({name: panel.name, show: false});
 
-      var isAllowedToExport = (XT.session.details.organization === 'dev'); // XXX temp
+      var isAllowedToExport = !XM.currentUser.get("disableExport");
       this.$.exportButton.setShowing(isAllowedToExport && collection);
 
       // Handel new button
