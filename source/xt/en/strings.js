@@ -397,6 +397,7 @@ XT.stringsFor("en_US", {
   "_countryInvalid": "Country is invalid.",
   "_datasourceError": "Data source error: {error}",
   "_duplicateValues": "Duplicate values are not allowed.",
+  "_invalidAddress": "Invalid Address",
   "_lengthInvalid": "Length of {attr} must be {length}.",
   "_localResourceNotAllowed": "Not allowed to load local resource",
   "_logoutConfirmation": "Are you sure you want to log out?",

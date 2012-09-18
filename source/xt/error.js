@@ -204,6 +204,9 @@
     }, {
       code: "xt2008",
       messageKey: "_countryInvalid"
+    }, {
+      code: "xt2009",
+      messageKey: "_invalidAddress"
     }
   ];
 
