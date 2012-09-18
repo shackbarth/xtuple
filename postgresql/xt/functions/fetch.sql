@@ -48,7 +48,7 @@ select xt.fetch($${ "query":{
                        }$$);
 
 select xt.fetch($${ "query":{
-                         "recordType":"XM.AccountInfo",
+                         "recordType":"XM.AccountListItem",
                          "parameters":[{
                            "attribute":"primaryContact.address.state",
                            "value": "VA"
@@ -62,7 +62,7 @@ select xt.fetch($${ "query":{
                        }$$);
 
 select xt.fetch($${ "query":{
-                         "recordType":"XM.ItemInfo",
+                         "recordType":"XM.ItemListItem",
                          "parameters":[{
                            "attribute": "number",
                            "operator": "BEGINS_WITH",
@@ -73,7 +73,7 @@ select xt.fetch($${ "query":{
                        }$$);
 
 select xt.fetch($${ "query":{
-                         "recordType":"XM.ToDoInfo",
+                         "recordType":"XM.ToDoListItem",
                          "parameters":[{
                            "attribute":"dueDate",
                            "operator": ">=",
@@ -84,7 +84,7 @@ select xt.fetch($${ "query":{
                        }$$);
 
 select xt.fetch($${ "query":{
-                         "recordType":"XM.ContactInfo",
+                         "recordType":"XM.ContactListItem",
                          "parameters":[{
                            "attribute": ["account.number", "account.name", "name", "phone", "address.city"],
                            "operator": "MATCHES",
