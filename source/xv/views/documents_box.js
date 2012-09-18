@@ -273,6 +273,13 @@ trailing:true white:true*/
     purposeSelected: function (inSender, inEvent) {
       this._purpose = inEvent.selected.value;
     },
+    selectionChanged: function (inSender, inEvent) {
+      var index = this.$.list.getFirstSelected(),
+        model = index ? this.$.list.getModel(index) : null,
+        couldNotRead = model ? !model.couldRead() : true;
+      this.$.detachButton.setDisabled(index === undefined);
+      this.$.openButton.setDisabled(couldNotRead);
+    },
     typeSelected: function (inSender, inEvent) {
       this._type = inEvent.selected.value;
     },

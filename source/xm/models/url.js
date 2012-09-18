@@ -20,7 +20,25 @@ white:true*/
     
     numberKey: 'name',
     
-    descriptionKey: 'path'
+    descriptionKey: 'path',
+    
+    readOnly: false
+
+  });
+  
+  // ..........................................................
+  // COLLECTIONS
+  //
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.UrlCollection = XM.Collection.extend({
+    /** @scope XM.UrlCollection.prototype */
+
+    model: XM.Url
 
   });
 

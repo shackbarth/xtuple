@@ -340,5 +340,19 @@ trailing:true white:true*/
       {label: "_endDate".loc(), attr: "dueDate", operator: "<=", defaultKind: "XV.DateWidget"}
     ]
   });
+  
+  // ..........................................................
+  // URL
+  //
+
+  enyo.kind({
+    name: "XV.UrlParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_url".loc()},
+      {label: "_name".loc(), attr: "name"},
+      {label: "_path".loc(), attr: "path"}
+    ]
+  });
 
 }());

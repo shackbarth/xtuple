@@ -700,6 +700,32 @@ trailing:true white:true*/
   
   XV.registerModelWorkspace("XM.ToDoRelation", "XV.ToDoWorkspace");
   XV.registerModelWorkspace("XM.ToDoListItem", "XV.ToDoWorkspace");
+  
+  // ..........................................................
+  // URL
+  //
+
+  enyo.kind({
+    name: "XV.UrlWorkspace",
+    kind: "XV.Workspace",
+    title: "_url".loc(),
+    model: "XM.Url",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "path"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+  
+  XV.registerModelWorkspace("XM.Url", "XV.UrlWorkspace");
 
   // ..........................................................
   // UNIT
