@@ -8,13 +8,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var token   = /\{[a-zA-Z1-9]*\}/g,
       camel   = /([\s|\-|\_|\n])([^\s|\-|\_|\n]?)/g,
       decamel = /([a-z])([A-Z])/g;
-  
+
   var camelizeChar = function () {
     return arguments[2] ? arguments[2].toUpperCase() : "";
   };
-  
+
   X.String = {};
-  
+
   X.mixin(X.String, {
 
     format: function () {
@@ -25,7 +25,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         type = X.typeOf(args[i]);
         if (type === X.T_HASH) str = X.String.replaceKeys(str, args[i]);
         else if (type === X.T_STRING) str = str.replace(/\%@/, args[i]);
-        else if (type === X.T_NUMBER) str = str.replace(/\%@/, String(args[i]));
+        else if (type === X.T_NUMBER || type === X.T_BOOLEAN) str = str.replace(/\%@/, String(args[i]));
         else continue;
       }
       return str;
@@ -70,11 +70,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     decamelize: function () {
       return this.toString().replace(decamel, "$1_$2").toLowerCase();
     },
-    
+
     w: function () {
       return this.toString().split(" ");
     },
-    
+
     escape: function () {
       return this.toString().replace(/\//g, "\\/");
     }
