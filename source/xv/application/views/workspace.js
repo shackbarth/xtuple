@@ -385,7 +385,7 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_product".loc()},
             {kind: "XV.CheckboxWidget", attr: "isSold"},
             {kind: "XV.ProductCategoryPicker", attr: "productCategory",
-              label: "_category".loc() + ":"},
+              label: "_category".loc()},
             {kind: "XV.SalesPriceWidget", attr: "listPrice"},
             {kind: "XV.UnitWidget", attr: "priceUnit"},
             {kind: "XV.ItemCharacteristicsWidget", attr: "characteristics"},
