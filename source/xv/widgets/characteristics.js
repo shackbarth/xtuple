@@ -206,6 +206,15 @@ white:true*/
           content: "_new".loc()}
       ]}
     ],
+    create: function () {
+      this.inherited(arguments);
+      // Hide this if there aren't any characteristics set up
+      var attr = this.getWhich(),
+        models = _.filter(XM.characteristics.models, function (char) {
+          return char.get(attr);
+        });
+      if (!models.length) { this.hide(); }
+    },
     lengthChanged: function () {
       this.$.repeater.setCount(this.readyModels().length);
     },
