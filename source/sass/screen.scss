@@ -757,6 +757,15 @@ body {
   }
 }
 
+.xv-button-bar {
+  .onyx-button {
+    // TODO: really we want to center the (potentially multiple) buttons
+    // and have some padding between them.
+    margin-left: 40px;
+    margin-right: 40px;
+  }
+}
+
 /********END XV WIDGETS******/
 
 
