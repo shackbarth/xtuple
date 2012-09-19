@@ -4,9 +4,9 @@ enyo.depends(
   "list_relations_box.js",
   "list_relations_editor_box.js",
   "workspace.js",
-  "repeater_box.js",
   "comment_box.js",
   "assignment_box.js",
+  "documents_box.js",
   "pullout.js",
   "my_account_popup.js"
 );

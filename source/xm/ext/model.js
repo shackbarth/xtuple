@@ -1021,8 +1021,10 @@ white:true*/
             if (isRel && value.models) {
               for (i = 0; i < value.models.length; i++) {
                 model = value.models[i];
-                result = model.validate(model.attributes, options);
-                if (result) { return result; }
+                if (model.get('dataState') !== 'delete') {
+                  result = model.validate(model.attributes, options);
+                  if (result) { return result; }
+                }
               }
             }
             break;

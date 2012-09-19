@@ -26,7 +26,9 @@ regexp:true, undef:true, trailing:true, white:true */
       disabled: false,
       idAttribute: "id",
       nameAttribute: "name",
-      orderBy: null
+      orderBy: null,
+      noneText: "_none".loc(),
+      noneClasses: ""
     },
     handlers: {
       onSelect: "itemSelected"
@@ -47,13 +49,16 @@ regexp:true, undef:true, trailing:true, white:true */
     buildList: function () {
       var nameAttribute = this.getNameAttribute(),
         models = this.filteredList(),
+        none = this.getNoneText(),
+        classes = this.getNoneClasses(),
         name,
         model,
         i;
       this.$.picker.destroyClientControls();
       this.$.picker.createComponent({
         value: null,
-        content: "_none".loc()
+        content: none,
+        classes: classes
       });
       for (i = 0; i < models.length; i++) {
         model = models[i];
@@ -101,6 +106,7 @@ regexp:true, undef:true, trailing:true, white:true */
     itemSelected: function (inSender, inEvent) {
       var value = this.$.picker.getSelected().value;
       this.setValue(value);
+      return true;
     },
     /**
       Implement your own filter function here. By default
@@ -121,9 +127,15 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     labelChanged: function () {
       var label = this.getLabel() ||
-        (this.attr ? ("_" + this.attr).loc() + ":" : "");
+        (this.attr ? ("_" + this.attr).loc() : "");
       this.$.label.setShowing(label);
-      this.$.label.setContent(label);
+      this.$.label.setContent(label + ":");
+    },
+    noneTextChanged: function () {
+      this.buildList();
+    },
+    noneClassesChanged: function () {
+      this.buildList();
     },
     orderByChanged: function () {
       var orderBy = this.getOrderBy();
@@ -145,6 +157,16 @@ regexp:true, undef:true, trailing:true, white:true */
           }
           return 0;
         };
+      }
+    },
+    select: function (index) {
+      var i = 0,
+        component = _.find(this.$.picker.getComponents(), function (c) {
+          if (c.kind === "onyx.MenuItem") { i++; }
+          return i > index;
+        });
+      if (component) {
+        this.setValue(component.value);
       }
     },
     /**

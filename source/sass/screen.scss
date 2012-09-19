@@ -310,6 +310,9 @@ body {
     padding-top: 3px;
     padding-bottom: 3px;
     border-bottom: 1px solid #ddd;
+    &.header {
+      padding-top: 0px;    
+    }
     &.inactive {
       background-color: #8d8d8d;
       color: black;
@@ -338,41 +341,26 @@ body {
       &.money {
         width: 85px;
       }
-      .xv-list-attr {
-        padding: 5px;
-        font-size: 13px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        color: black;
-        background-color: white;
-        &.right {
-          position: absolute;
-          right: 0px;
-        }
-        &.text-align-right {
-          text-align: right;
-        }
-        &.bold {
-          font-weight: bold;
-        }
-        &.error {
-          color: #ff0000;
-        }
-        &.italic {
-          font-style: italic;
-        }
-        &.placeholder {
-          font-style: italic;
-          color: #93a1a1;
-        }
-        &.hyperlink {
-          color: blue;
-        }
-      }
     }
     &.item-selected {
 			background: #226B9A url(../../assets/item-hilite.png) repeat-x bottom;
+			.xv-list-attr {
+        color: white;
+        background: none;
+        &.placeholder {
+          font-style: italic;
+          color: SkyBlue;
+        }
+        &.hyperlink {
+          color: #F49200;
+          background: #226B9A url(../../assets/item-hilite.png) repeat-x bottom;
+        }
+      }
+      .xv-list-attr {
+        &.header {
+          background: SkyBlue;
+        }
+      }
 			.xv-list-column {
 			  .xv-list-attr {
           color: white;
@@ -388,6 +376,47 @@ body {
         }
       }
     }
+  }
+}
+
+.xv-list-attr {
+  padding: 5px;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: black;
+  background-color: white;
+  &.header {
+    padding: 4px;
+    background: #8d8d8d;
+    font-size: 11px;
+  	font-weight: bold;
+  	text-transform: uppercase;
+  	color: white;
+  }
+  &.right {
+    position: absolute;
+    right: 0px;
+  }
+  &.text-align-right {
+    text-align: right;
+  }
+  &.bold {
+    font-weight: bold;
+  }
+  &.error {
+    color: #ff0000;
+  }
+  &.italic {
+    font-style: italic;
+  }
+  &.placeholder {
+    font-style: italic;
+    color: #93a1a1;
+  }
+  &.hyperlink {
+    color: blue;
   }
 }
 
@@ -633,6 +662,34 @@ body {
   background-color: white;
 }
 
+.xv-negative {
+	color: #C51616;
+}
+
+/* Characteristics.scss */
+.xv-characteristic-picker {
+  .onyx-picker-decorator .onyx-button {
+    width: 130px;
+  }
+}
+
+.xv-characteristic-item {
+  border-bottom: 1px solid #aaaaaa;
+  .onyx-input-decorator > input {
+    width: 150px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+}
+
+.xv-characteristic-button {
+  margin-right: 4px;
+}
+
+.xv-characteristic-buttons {
+  margin: 8px;
+}
+
 /* Combobox.scss */
 .xv-combobox {
   height: 24px;
@@ -694,6 +751,20 @@ body {
   margin: 6px;
   border-radius: 4px;
   border-color: #ddd;
+}
+
+.xv-documents-picker-label {
+  width: 85px;
+  padding-bottom: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 16px;
+  text-align: right;
+}
+
+.xv-documents-picker {
+  width: 120px;
+  margin: 6px;
 }
 
 .xv-relationwidget-completer {

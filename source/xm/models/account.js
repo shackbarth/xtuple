@@ -215,7 +215,9 @@ white:true*/
 
     recordType: 'XM.AccountRelation',
     
-    editableModel: 'XM.Account'
+    editableModel: 'XM.Account',
+    
+    descriptionKey: "name"
 
   });
 

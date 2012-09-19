@@ -69,7 +69,8 @@ trailing:true white:true*/
       query = list.getQuery() || {};
       input = this.$.searchInput.getValue();
       parameterWidget = this.$.parameterWidget;
-      parameters = parameterWidget ? parameterWidget.getParameters() : [];
+      parameters = parameterWidget && parameterWidget.getParameters ?
+        parameterWidget.getParameters() : [];
       options.showMore = _.isBoolean(options.showMore) ?
         options.showMore : false;
 

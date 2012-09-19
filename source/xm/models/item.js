@@ -96,8 +96,6 @@ white:true*/
 
     requiredAttributes: [
       "classCode",
-      "description1",
-      "description2",
       "inventoryUnit",
       "isActive",
       "isFractional",
@@ -285,7 +283,9 @@ white:true*/
 
     recordType: 'XM.ItemInfo',
 
-    editableModel: 'Item'
+    editableModel: 'Item',
+    
+    descriptionKey: 'description1'
 
   });
 

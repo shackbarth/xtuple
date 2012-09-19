@@ -105,7 +105,7 @@ regexp:true, undef:true, trailing:true, white:true */
         list = this.getList(),
         model = this.getValue(),
         id = model ? model.id : null,
-        workspace = this._List ? this._List.prototype.workspace : null,
+        workspace = this._List ? this._List.prototype.getWorkspace() : null,
         callback;
       switch (menuItem.name)
       {
@@ -190,7 +190,8 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     listChanged: function () {
       var list = this.getList(),
-        Collection;
+        Collection,
+        workspace;
       delete this._List;
       delete this._Workspace;
 
@@ -199,8 +200,8 @@ regexp:true, undef:true, trailing:true, white:true */
       this._List = XT.getObjectByName(list);
 
       // Get Workspace class
-      this._Workspace = this._List.prototype.workspace ?
-        XT.getObjectByName(this._List.prototype.workspace) : null;
+      workspace = this._List.prototype.getWorkspace();
+      this._Workspace = workspace ? XT.getObjectByName(workspace) : null;
 
       // Setup collection instance
       Collection = this.getCollection() ?
@@ -211,8 +212,8 @@ regexp:true, undef:true, trailing:true, white:true */
     modelChanged: function (inSender, inEvent) {
       var that = this,
         List = this._List,
-        Workspace = List && List.prototype.workspace ?
-          XT.getObjectByName(List.prototype.workspace) : null,
+        workspace = List.prototype.getWorkspace(),
+        Workspace = workspace ? XT.getObjectByName(workspace) : null,
         options = {},
         model = this.getValue();
       // If the model that changed was related to and exists on this widget

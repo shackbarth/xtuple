@@ -129,7 +129,7 @@ trailing:true white:true*/
         parameterWidget,
         parameters,
         filterDescription;
-      if (!list instanceof XV.List) { return; }
+      if (list instanceof XV.List === false) { return; }
       this.fetched[index] = true;
       query = list.getQuery() || {};
       input = this.$.searchInput.getValue();
