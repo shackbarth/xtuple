@@ -109,6 +109,20 @@ trailing:true white:true*/
       {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
     ]
   });
+  
+  // ..........................................................
+  // FILE
+  //
+
+  enyo.kind({
+    name: "XV.FileParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_file".loc()},
+      {label: "_name".loc(), attr: "name"},
+      {label: "_description".loc(), attr: "description"}
+    ]
+  });
 
   // ..........................................................
   // INCIDENT
