@@ -17,6 +17,7 @@ XT.stringsFor("en_US", {
   // Labels
   // ********
 
+  "_above": "Above",
   "_abbreviation": "Abbreviation",
   "_abbreviationLong": "Abbreviation Long",
   "_abbreviationShort": "Abbreviation Short",
@@ -135,6 +136,7 @@ XT.stringsFor("en_US", {
   "_endDate": "End Date",
   "_ending": "Ending",
   "_endingLabel": "Ending Label",
+  "_equals": "Equals",
   "_error": "Error",
   "_errorColor": "Error Color",
   "_eventRecipient": "Event Recipient",
