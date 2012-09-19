@@ -105,6 +105,8 @@ trailing:true white:true*/
       {label: "_state".loc(), attr: "address.state"},
       {label: "_postalCode".loc(), attr: "address.postalCode"},
       {label: "_country".loc(), attr: "address.country"},
+      {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
+      {label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_userAccount".loc()},
       {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
     ]
@@ -197,8 +199,6 @@ trailing:true white:true*/
       {label: "_description".loc(), attr: "description"},
       {label: "_category".loc(), attr: "category",
         defaultKind: "XV.IncidentCategoryPicker"},
-      {label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
-      {label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
       {label: "_priority".loc(), attr: "priority",
         defaultKind: "XV.PriorityPicker"},
       {label: "_severity".loc(), attr: "severity",
@@ -256,6 +256,9 @@ trailing:true white:true*/
           }
           return param;
         }},
+      {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
+      {label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
+      {label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
       {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
@@ -333,6 +336,9 @@ trailing:true white:true*/
         defaultKind: "XV.OpportunityTypePicker"},
       {label: "_source".loc(), attr: "opportunitySource",
         defaultKind: "XV.OpportunitySourcePicker"},
+      {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
+      {label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
+      {label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
       {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
@@ -443,6 +449,9 @@ trailing:true white:true*/
       },
       {label: "_name".loc(), attr: "name"},
       {label: "_description".loc(), attr: "description"},
+      {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
+      {label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
+      {label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
       {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},

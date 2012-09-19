@@ -37,7 +37,7 @@ white:true*/
     },
     getParameter: function () {
       var param,
-        value = this.getValue(); 
+        value = this.getValue();
       if (value) {
         param = {
           attribute: this.getAttr(),
@@ -100,19 +100,28 @@ white:true*/
     getSelectedValues: function () {
       var values = {},
         componentName,
-        component;
+        component,
+        value,
+        label,
+        control;
 
       for (componentName in this.$) {
         if (componentName.indexOf("parameterItem") === 0 && this.$.hasOwnProperty(componentName)) {
           component = this.$[componentName];
-          if (!component.getValue()) {
-            // don't bother saving empties
-          } else if (component.getValue().id) {
-            // relation widgets need to be treated specially
-            values[component.getLabel()] = component.getValue().id;
-          } else {
-            // default case: save the value in the cookie
-            values[component.getLabel()] = component.getValue();
+          value = component.getValue();
+          label = component.getLabel();
+          control = component.$.input;
+          if (value) {
+            if (control instanceof XV.RelationWidget) {
+              values[label] = value.get(control.getKeyAttribute());
+            } else if (control instanceof XV.PickerWidget) {
+              values[label] = value.get(control.getNameAttribute());
+            } else if (control instanceof XV.DateWidget) {
+              values[label] = control.toString();
+            } else {
+              // default case: save the value in the cookie
+              values[label] = value;
+            }
           }
         }
       }

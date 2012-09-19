@@ -63,6 +63,9 @@ regexp:true, undef:true, trailing:true, white:true */
       }
       return date;
     },
+    toString: function (value) {
+      return this.$.input.value;
+    },
     validate: function (value) {
       value = this.textToDate(value);
       return (_.isDate(value) || _.isEmpty(value)) ? value : false;
