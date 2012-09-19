@@ -514,8 +514,8 @@
       },
       {
         "name": "incident",
-        "toOne": {
-          "type": "Incident",
+        "attr": {
+          "type": "Number",
           "column": "charass_target_id"
         }
       },
@@ -1164,6 +1164,13 @@
         "attr": {
           "type": "Number",
           "column": "incdtpriority_order"
+        }
+      },
+      {
+        "name": "statusOrder",
+        "attr": {
+          "type": "Number",
+          "column": "status_seq"
         }
       }
     ],
