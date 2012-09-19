@@ -405,6 +405,13 @@
           "type": "String",
           "column": "nodeusr_email"
         }
+      },
+      {
+        "name": "disableExport",
+        "attr": {
+          "type": "Boolean",
+          "column": "nodeusr_disable_export"
+        }
       }
     ],
     "isSystem": true
