@@ -279,7 +279,7 @@ trailing:true white:true*/
       var isAllowedToExport = !XM.currentUser.get("disableExport");
       this.$.exportButton.setShowing(isAllowedToExport && collection);
 
-      // Handel new button
+      // Handle new button
       this.$.newButton.setShowing(panel.canAddNew);
       if (collection) {
         // Check 'couldCreate' first in case it's an info model.

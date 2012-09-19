@@ -128,7 +128,13 @@ white:true*/
     },
     show: function () {
       if (this.getShowing() && this.getIsStarted()) {
-        this.renderInto(document.body);
+        if (document.getElementById("subdiv")) {
+          console.log("rendering to subdiv");
+          alert("click me");
+          this.renderInto(document.getElementById("subdiv"));
+        } else {
+          this.renderInto(document.body);
+        }
       } else {
         this.inherited(arguments);
       }
