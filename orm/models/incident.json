@@ -1165,6 +1165,13 @@
           "type": "Number",
           "column": "incdtpriority_order"
         }
+      },
+      {
+        "name": "statusOrder",
+        "attr": {
+          "type": "Number",
+          "column": "status_seq"
+        }
       }
     ],
     "isSystem": true
