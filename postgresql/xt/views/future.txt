@@ -1,0 +1,439 @@
+-- drop view xt.apapply cascade
+create or replace view xt.apapply as
+  select 
+    apapply_id, 
+    apapply_vend_id,
+    apapply_target_apopen_id as apopen_id,
+    case when (apapply_source_doctype='C') THEN '_creditMemo'
+         when (apapply_source_doctype='K') THEN '_check'
+         else '_other'
+    end as doctype,
+    apapply_source_docnumber, 
+    apapply_postdate, 
+    apapply_amount,
+    apapply_curr_id,
+    apapply_target_paid,
+    apapply_username,
+    true as source
+  from apapply 
+    join apopen on apopen_id=apapply_target_apopen_id
+  where apopen_doctype in ('V','D')
+  union
+  select 
+    apapply_id, 
+    apapply_vend_id,
+    apapply_source_apopen_id as apopen_id,
+    case when (apapply_target_doctype='V') THEN '_voucher'
+         when (apapply_target_doctype='D') THEN '_debitMemo'
+         else '_other'
+    end as doctype,
+    apapply_target_docnumber as docnumber,
+    apapply_postdate, 
+    apapply_amount,
+    apapply_curr_id,
+    apapply_target_paid,
+    apapply_username,
+    false as source
+  from apapply 
+    join apopen on apopen_id=apapply_source_apopen_id
+  where apopen_doctype = 'C'
+  order by apapply_postdate;
+
+grant all on table xt.apapply to xtrole;
+comment on view xt.apapply is 'receivable applications';
+
+create or replace rule "_INSERT" as on insert to xt.apapply do instead nothing;
+
+create or replace rule "_UPDATE" as on update to xt.apapply do instead nothing;
+
+create or replace rule "_DELETE" as on delete to xt.apapply do instead nothing;
+
+
+********************************
+
+-- drop view xt.arapply cascade
+create or replace view xt.arapply as
+  select 
+    arapply_id, 
+    arapply_cust_id,
+    arapply_target_aropen_id as aropen_id,
+    case when (arapply_source_doctype = 'C') THEN '_creditMemo'
+         when (arapply_source_doctype = 'R') THEN '_cashdeposit'
+         when (arapply_fundstype='C') THEN '_check'
+         when (arapply_fundstype='T') THEN '_certifiedCheck'
+         when (arapply_fundstype='M') THEN '_masterCard'
+         when (arapply_fundstype='V') THEN '_visa'
+         when (arapply_fundstype='A') THEN '_americanExpress'
+         when (arapply_fundstype='D') THEN '_discoverCard'
+         when (arapply_fundstype='R') THEN '_otherCreditCard'
+         when (arapply_fundstype='K') THEN '_cash'
+         when (arapply_fundstype='W') THEN '_wireTransfer'
+         when (arapply_fundstype='O') THEN '_other'
+    end AS doctype,
+    case when (arapply_source_doctype in ('C','R')) then arapply_source_docnumber
+         when (arapply_source_doctype = 'K') then arapply_refnumber
+         else '_other' 
+    end as docnumber, 
+    arapply_postdate, 
+    arapply_distdate,
+    arapply_applied,
+    arapply_curr_id,
+    arapply_target_paid,
+    arapply_username,
+    true as source
+  from arapply 
+    join aropen on aropen_id=arapply_target_aropen_id
+  where aropen_doctype in ('I','D')
+  union
+  select 
+    arapply_id, 
+    arapply_cust_id,
+    arapply_source_aropen_id as aropen_id,
+    case when (arapply_target_doctype = 'I') THEN '_invoice'
+         when (arapply_target_doctype = 'D') THEN '_debitMemo'
+         when (arapply_target_doctype = 'K') THEN '_check'
+         when (arapply_target_doctype = 'R') THEN '_cashreceipt'
+         else '_other'
+    end AS doctype,
+    arapply_target_docnumber as docnumber,
+    arapply_postdate, 
+    arapply_distdate,
+    arapply_applied,
+    arapply_curr_id,
+    arapply_target_paid,
+    arapply_username,
+    false as source
+  from arapply 
+    join aropen on aropen_id=arapply_source_aropen_id
+  where aropen_doctype in ('C','R')
+  order by arapply_postdate;
+
+grant all on table xt.arapply to xtrole;
+comment on view xt.arapply is 'receivable applications';
+
+create or replace rule "_INSERT" as on insert to xt.arapply do instead nothing;
+
+create or replace rule "_UPDATE" as on update to xt.arapply do instead nothing;
+
+create or replace rule "_DELETE" as on delete to xt.arapply do instead nothing;
+
+*************************************
+
+-- drop view xt.aropencr cascade
+create or replace view xt.aropencr as
+select
+  aropen_id,
+  aropen_cust_id,
+  aropen_docdate,
+  aropen_doctype,
+  aropen_docnumber,
+  aropen_amount,
+  aropen_curr_id,
+  aropen_curr_rate
+from aropen
+where aropen_open
+  and aropen_doctype in ('C','R');
+
+grant all on table xt.aropencr to xtrole;
+comment on view xt.aropencr is 'open receivable credits';
+
+create or replace rule "_INSERT" as on insert to xt.aropencr do instead nothing;
+
+create or replace rule "_UPDATE" as on update to xt.aropencr do instead nothing;
+
+create or replace rule "_DELETE" as on delete to xt.aropencr do instead nothing;
+
+*************************************
+
+-- drop view xt.aropenid cascade
+create or replace view xt.aropenid as
+select
+  aropen_id,
+  aropen_cust_id,
+  aropen_docdate,
+  aropen_duedate,
+  aropen_doctype,
+  aropen_docnumber,
+  aropen_amount,
+  aropen_curr_id,
+  aropen_curr_rate
+from aropen
+where aropen_open
+  and aropen_doctype in ('I','D');
+
+grant all on table xt.aropenid to xtrole;
+comment on view xt.aropenid is 'open receivable debits';
+
+create or replace rule "_INSERT" as on insert to xt.aropenid do instead nothing;
+
+create or replace rule "_UPDATE" as on update to xt.aropenid do instead nothing;
+
+create or replace rule "_DELETE" as on delete to xt.aropenid do instead nothing;
+
+****************************************
+
+-- drop view xt.arpending cascade
+create or replace view xt.arpending as
+  -- pending cash receipts
+  select 
+    cashrcptitem_id as arpending_id,
+    'R'::text as arpending_type,
+    cashrcptitem_aropen_id as arpending_aropen_id,
+    round(currtocurr(cashrcpt_curr_id,aropen_curr_id,(cashrcptitem_amount + cashrcptitem_discount),cashrcpt_applydate) * case when aropen_doctype in ('I','D') then 1 else -1 end,2) as arpending_amount
+  from cashrcptitem 
+    join cashrcpt on cashrcpt_id=cashrcptitem_cashrcpt_id
+    join aropen on aropen_id=cashrcptitem_aropen_id
+  where not cashrcpt_posted
+    and not cashrcpt_void
+  union
+  -- pending credit memo applications
+  select
+    arcreditapply_id as arpending_id,
+    'C'::text as arpending_type,
+    arcreditapply_target_aropen_id as arpending_aropen_id,
+    round(currToCurr(arcreditapply_curr_id, aropen_curr_id, arcreditapply_amount, current_date),2) as arpending_amount
+  from arcreditapply
+    join aropen on aropen_id=arcreditapply_target_aropen_id;
+
+grant all on table xt.arpending to xtrole;
+comment on view xt.arpending is 'receivable pending applications';
+
+create or replace rule "_INSERT" as on insert to xt.arpending do instead nothing;
+
+create or replace rule "_UPDATE" as on update to xt.arpending do instead nothing;
+
+create or replace rule "_DELETE" as on delete to xt.arpending do instead nothing;
+
+*******************************************
+
+drop view if exists xt.gl cascade;
+
+create or replace view xt.gl as
+
+select
+  gltrans_id as gl_id,
+  gltrans_date as gl_date,
+  gltrans_notes as gl_notes,
+  gltrans_accnt_id as gl_accnt_id,
+  case when gltrans_amount < 0 then 'D' else 'C' end as gl_sense,
+  abs(gltrans_amount) as gl_amount,
+  gltrans_journalnumber as gl_journalnumber,
+  gltrans_created as gl_created,
+  gltrans_username as gl_username,
+  gltrans_deleted as gl_deleted
+from gltrans
+order by gl_accnt_id, gl_date, gl_sense, gl_journalnumber;
+
+grant all on table xt.gl to xtrole;
+
+create or replace rule "_INSERT" as on insert to xt.gl do instead nothing;
+
+create or replace rule "_UPDATE" as on update to xt.gl do instead nothing;
+
+create or replace rule "_DELETE" as on delete to xt.gl do instead nothing;
+
+********************************************
+
+create or replace view xt.invcheadtaxadj as
+  select 
+    taxhist_id, 
+    taxhist_parent_id, 
+    taxhist_tax_id, 
+    taxhist_docdate, 
+    taxhist_tax,
+    taxhist_sequence
+  from invcheadtax
+  where taxhist_taxtype_id=getadjustmenttaxtypeid();
+
+grant all on table xt.invcheadtaxadj to xtrole;
+comment on view xt.invcheadtaxadj is 'invoice header tax adjustments';
+
+-- rules
+
+create or replace rule "_INSERT" as
+  on insert to xt.invcheadtaxadj do instead
+
+insert into invcheadtax (
+  taxhist_id,
+  taxhist_basis,
+  taxhist_percent,
+  taxhist_amount,
+  taxhist_docdate, 
+  taxhist_tax_id, 
+  taxhist_sequence,
+  taxhist_tax, 
+  taxhist_taxtype_id, 
+  taxhist_parent_id
+) values (
+  new.taxhist_id,
+  0, 
+  0, 
+  0, 
+  new.taxhist_docdate,
+  new.taxhist_tax_id, 
+  0, 
+  new.taxhist_tax, 
+  getadjustmenttaxtypeid(), 
+  new.taxhist_parent_id
+);
+
+create or replace rule "_UPDATE" as
+  on update to xt.invcheadtaxadj do instead
+
+  update taxhist set
+    taxhist_tax=new.taxhist_tax,
+    taxhist_docdate=new.taxhist_docdate
+  where taxhist_id=old.taxhist_id;
+
+create or replace rule "_DELETE" as
+  on delete to xt.invcheadtaxadj do instead
+
+  delete from taxhist
+  where taxhist_id=old.taxhist_id;
+
+************************************************
+
+drop view if exists xt.jrnl cascade;
+
+create or replace view xt.jrnl as
+
+select
+  sltrans_id as jrnl_id,
+  case 
+    when sltrans_source = 'G/L' then 'G'
+    when sltrans_doctype = 'CR' then 'CR'
+    when sltrans_doctype = 'CK' then 'CD'
+    when sltrans_source = 'A/P' then 'P'
+    when sltrans_source = 'A/R' then 'S'
+    when sltrans_source in ('I/M','S/R','P/D', 'W/O') then 'I'
+    else 'ERR'
+  end as jrnl_type,
+  sltrans_date as jrnl_date,
+  sltrans_sequence as jrnl_sequence,
+  sltrans_accnt_id as jrnl_accnt_id,
+  sltrans_source as jrnl_source,
+  sltrans_doctype as jrnl_doctype,
+  sltrans_docnumber as jrnl_docnumber,
+  sltrans_misc_id as jrnl_misc_id,
+  case when sltrans_amount < 0 then 'D' else 'C' end as jrnl_sense,
+  abs(sltrans_amount) as jrnl_amount,
+  sltrans_notes as jrnl_notes,
+  sltrans_gltrans_journalnumber as jrnl_number,
+  sltrans_created as jrnl_created,
+  sltrans_username as jrnl_username,
+  sltrans_rec as jrnl_rec
+from sltrans
+where sltrans_source in ('G/L','A/R','A/P','W/O','P/D','I/M','S/R')
+union all
+select
+  gltrans_id as jrnl_id,
+  case 
+    when gltrans_source = 'G/L' then 'G'
+    when gltrans_doctype = 'CR' then 'CR'
+    when gltrans_doctype = 'CK' then 'CD'
+    when gltrans_source = 'A/P' then 'P'
+    when gltrans_source = 'A/R' then 'S'
+    when gltrans_source in ('I/M','S/R','P/D') then 'I'
+    when gltrans_source = 'W/O' then 'M'
+    else 'ERR'
+  end as jrnl_type,
+  gltrans_date as jrnl_date,
+  gltrans_sequence as jrnl_sequence,
+  gltrans_accnt_id as jrnl_accnt_id,
+  gltrans_source as jrnl_source,
+  gltrans_doctype as jrnl_doctype,
+  gltrans_docnumber as jrnl_docnumber,
+  gltrans_misc_id as jrnl_misc_id,
+  case when gltrans_amount < 0 then 'D' else 'C' end as jrnl_sense,
+  abs(gltrans_amount) as jrnl_amount,
+  gltrans_notes as jrnl_notes,
+  gltrans_journalnumber as jrnl_number,
+  gltrans_created as jrnl_created,
+  gltrans_username as jrnl_username,
+  gltrans_rec as jrnl_rec
+from gltrans
+where gltrans_source in ('G/L','A/R','A/P','W/O','P/D','I/M','S/R')
+ and gltrans_doctype != 'JP'
+order by jrnl_date, jrnl_sequence, jrnl_sense desc;
+
+grant all on table xt.jrnl to xtrole;
+
+create or replace rule "_INSERT" as on insert to xt.jrnl do instead nothing;
+
+create or replace rule "_UPDATE" as on update to xt.jrnl do instead nothing;
+
+create or replace rule "_DELETE" as on delete to xt.jrnl do instead nothing;
+
+
+**********************************************
+
+drop view if exists xt.unrec cascade;
+
+-- Unreconciled on posted reconciliations
+create or replace view xt.unrec as
+select 
+  jrnl_id, 
+  this.bankrec_id,
+  jrnl_date,
+  jrnl_docnumber,
+  jrnl_doctype,
+  jrnl_notes,
+  jrnl_amount
+from xt.jrnl
+  join bankaccnt on bankaccnt_accnt_id=jrnl_accnt_id
+  join bankrec this on this.bankrec_bankaccnt_id=bankaccnt_id
+  left outer join bankrecitem on bankrecitem_source_id=jrnl_id
+  left outer join bankrec actual on actual.bankrec_id=bankrecitem_bankrec_id
+  left outer join checkhead on jrnl_doctype='CK' 
+              and jrnl_misc_id=checkhead_id
+where this.bankrec_postdate < coalesce(actual.bankrec_postdate,endOfTime())
+  and this.bankrec_postdate > jrnl_created
+  and not coalesce(checkhead_void, false)
+  and this.bankrec_posted
+union all
+-- Unreconciled on unposted reconcilation
+select 
+  jrnl_id, 
+  this.bankrec_id,
+  jrnl_date,
+  jrnl_docnumber,
+  jrnl_doctype,
+  jrnl_notes,
+  jrnl_amount
+from xt.jrnl
+  join bankaccnt on bankaccnt_accnt_id=jrnl_accnt_id
+  join bankrec this on this.bankrec_bankaccnt_id=bankaccnt_id
+  left outer join checkhead on jrnl_doctype='CK' 
+              and jrnl_misc_id=checkhead_id
+where not jrnl_rec
+  and not this.bankrec_posted
+  and not coalesce(checkhead_void, false)
+except
+-- Exclude cleared items
+select 
+  jrnl_id, 
+  this.bankrec_id,
+  jrnl_date,
+  jrnl_docnumber,
+  jrnl_doctype,
+  jrnl_notes,
+  jrnl_amount
+from xt.jrnl
+  join bankaccnt on bankaccnt_accnt_id=jrnl_accnt_id
+  join bankrec this on this.bankrec_bankaccnt_id=bankaccnt_id
+  join bankrecitem on bankrecitem_source_id=jrnl_id
+  left outer join checkhead on jrnl_doctype='CK' 
+              and jrnl_misc_id=checkhead_id
+where not jrnl_rec
+  and bankrecitem_cleared
+  and not this.bankrec_posted
+  and not coalesce(checkhead_void, false);
+
+grant all on table xt.unrec to xtrole;
+
+create or replace rule "_INSERT" as on insert to xt.unrec do instead nothing;
+
+create or replace rule "_UPDATE" as on update to xt.unrec do instead nothing;
+
+create or replace rule "_DELETE" as on delete to xt.unrec do instead nothing;
+
