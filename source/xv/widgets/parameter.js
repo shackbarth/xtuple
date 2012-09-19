@@ -36,18 +36,23 @@ white:true*/
       this.$.input.setLabel(this.label);
     },
     getParameter: function () {
-      var param;
-      if (this.getValue()) {
+      var param,
+        value = this.getValue(); 
+      if (value) {
         param = {
           attribute: this.getAttr(),
           operator: this.getOperator(),
-          value: this.getValue()
+          value: value
         };
       }
       return param;
     },
     getValue: function () {
-      return this.$.input.getValue();
+      var value = this.$.input.getValue();
+      if (value && this.$.input.valueAttribute) {
+        value = value.get(this.$.input.valueAttribute);
+      }
+      return value;
     },
     parameterChanged: function () {
       var inEvent = { value: this.getValue, originator: this };

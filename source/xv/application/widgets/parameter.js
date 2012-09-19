@@ -153,6 +153,8 @@ trailing:true white:true*/
       {label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
       {label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
       {kind: "onyx.GroupboxHeader", content: "_status".loc()},
+      {label: "_status".loc(), attr: "status",
+        defaultKind: "XV.IncidentStatusPicker"},
       {label: "_priority".loc(), attr: "priority",
         defaultKind: "XV.PriorityPicker"},
       {label: "_severity".loc(), attr: "severity",
