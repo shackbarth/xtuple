@@ -276,8 +276,10 @@ trailing:true white:true*/
       }
       this.doNavigatorEvent({name: panel.name, show: false});
 
-      var isAllowedToExport = !XM.currentUser.get("disableExport");
-      this.$.exportButton.setShowing(isAllowedToExport && collection);
+      // I'm skirting around the loading time for XM.currentUser. If this data
+      // hasn't been loaded yet then the navigator simply won't allow export
+      var isAllowedToExport = XM.currentUser && !XM.currentUser.get("disableExport");
+      this.$.exportButton.setShowing(collection && isAllowedToExport);
 
       // Handle new button
       this.$.newButton.setShowing(panel.canAddNew);

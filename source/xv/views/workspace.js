@@ -29,7 +29,9 @@ trailing:true white:true*/
         K = XM.Model,
         status = model.getStatus(),
         changes = options.changes,
-        canNotUpdate = !model.canUpdate() || !(status & K.READY),
+        canUpdate = (status === K.READY_NEW /* && model.canCreate() */) ||
+          (status === K.READY_CLEAN && model.canUpdate()),
+        //canNotUpdate = !model.canUpdate() || !(status & K.READY),
         control,
         isReadOnly,
         isRequired,
@@ -51,7 +53,7 @@ trailing:true white:true*/
               control.setValue(value, {silent: true});
             }
             if (control.setDisabled) {
-              control.setDisabled(canNotUpdate || isReadOnly);
+              control.setDisabled(!canUpdate || isReadOnly);
             }
           }
         }
