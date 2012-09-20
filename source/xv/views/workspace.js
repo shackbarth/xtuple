@@ -31,7 +31,6 @@ trailing:true white:true*/
         changes = options.changes,
         canUpdate = (status === K.READY_NEW /* && model.canCreate() */) ||
           ((status & K.READY) && model.canUpdate()),
-        //canNotUpdate = !model.canUpdate() || !(status & K.READY),
         control,
         isReadOnly,
         isRequired,
@@ -532,7 +531,7 @@ trailing:true white:true*/
         K = XM.Model,
         status = inEvent.status,
         isNotReady = status !== K.READY_CLEAN && status !== K.READY_DIRTY,
-        canUpdate = model.canUpdate() || status === K.READY_CLEAN,
+        canUpdate = model.canUpdate() || status === K.READY_NEW,
         isEditable = canUpdate && !model.isReadOnly(),
         canNotSave = !model.isDirty() || !isEditable,
         message;
