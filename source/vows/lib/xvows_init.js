@@ -482,7 +482,6 @@
       // GRAB THE STARTUP TASKS
       require(_path.join(X.basePath, "../xm", "startup.js"));
 
-
       // PROCESS ANY INCOMING ARGS REAL QUICK
       (function () {
         "use strict";
