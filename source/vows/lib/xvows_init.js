@@ -30,7 +30,7 @@
       .option("-p, --port [port]", "Datasource port", 20100, parseInt)
       .option("-o, --organization [organization]", "Organization to run against", "production")
       .parse(process.argv);
-    if (!program.args.length) {
+    if (process.argv.length <= 2) {
       program.parse([process.argv[0], process.argv[1], '--help']);
       process.exit(0);
     }
