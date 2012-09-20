@@ -94,8 +94,7 @@ white:true*/
     recordType: 'XM.ContactEmail',
 
     requiredAttributes: [
-      "name",
-      "description"
+      "email"
     ]
 
   });
