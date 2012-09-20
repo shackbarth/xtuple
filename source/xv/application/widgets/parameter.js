@@ -129,53 +129,6 @@ trailing:true white:true*/
   // ..........................................................
   // INCIDENT
   //
-  
-  enyo.kind({
-    "name": "XV.StatusOptionsRadiogroup",
-    "kind": "XV.Input",
-    handlers: {
-      onActivate: "radioActivated"
-    },
-    components: [
-      {kind: "onyx.RadioGroup", name: "input",
-        classes: "xv-radiogroup",
-        components: [
-        {name: "equals", content: "_equals".loc(), active: true},
-        {name: "above", content: "_above".loc()}
-      ],
-      getValue: function () {
-        return this.value || 0;
-      },
-      setValue: function (value) {
-        this.value = value;
-        if (value) {
-          this.parent.$.above.setActive(true);
-        } else {
-          this.parent.$.equals.setActive(true);
-        }
-      },
-      setDisabled: function () {
-        // get. out.
-      },
-      setPlaceholder: function () {
-        // get. out.
-      }}
-    ],
-    radioActivated: function (inSender, inEvent) {
-      if (!inEvent.originator.active) { return; }
-      var value = inEvent.originator.name === "equals" ? 0 : 1;
-      this.setValue(value);
-      return true;
-    },
-    valueChanged: function (value) {
-      if (this.value === value) { return; }
-      this.$.input.setValue(value);
-      return value;
-    },
-    setLabel: function () {
-      // get. out.
-    }
-  });
 
   enyo.kind({
     name: "XV.IncidentListParameters",
@@ -206,53 +159,40 @@ trailing:true white:true*/
       {label: "_resolution".loc(), attr: "resolution",
           defaultKind: "XV.IncidentResolutionPicker"},
       {kind: "onyx.GroupboxHeader", content: "_status".loc()},
-      {name: "statusOptionsRadiogroup",
-        value: 0,
-        defaultKind: "XV.StatusOptionsRadiogroup",
-        getParameter: function () {
-          // get. out.
-      }},
-      {label: "_status".loc(), attr: "status",
+      {label: "_equals".loc(), attr: "status",
+        defaultKind: "XV.IncidentStatusPicker"},
+      {label: "_above".loc(), attr: "status",
         defaultKind: "XV.IncidentStatusPicker",
         getParameter: function () {
-          var isAbove = this.parent.$.statusOptionsRadiogroup.getValue(),
-            value = this.getValue(),
+          var value = this.getValue(),
             param;
+          switch (value)
+          {
+          case 'N':
+            value = 0;
+            break;
+          case 'F':
+            value = 1;
+            break;
+          case 'C':
+            value = 2;
+            break;
+          case 'A':
+            value = 3;
+            break;
+          case 'R':
+            value = 4;
+            break;
+          case 'L':
+            value = 5;
+            break;
+          }
           if (value) {
-            if (isAbove) {
-              switch (value)
-              {
-              case 'N':
-                value = 0;
-                break;
-              case 'F':
-                value = 1;
-                break;
-              case 'C':
-                value = 2;
-                break;
-              case 'A':
-                value = 3;
-                break;
-              case 'R':
-                value = 4;
-                break;
-              case 'L':
-                value = 5;
-                break;
-              }
-              param = {
-                attribute: "statusOrder",
-                operator: '<',
-                value: value
-              };
-            } else {
-              param = {
-                attribute: "status",
-                operator: '=',
-                value: value
-              };
-            }
+            param = {
+              attribute: "statusOrder",
+              operator: '<',
+              value: value
+            };
           }
           return param;
         }},
