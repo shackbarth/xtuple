@@ -1,5 +1,4 @@
 enyo.depends(
-  "core.js",
   "list.js",
   "list_relations.js",
   "navigator.js",

@@ -65,7 +65,13 @@ white:true*/
     }
   });
 
-  enyo.kind({
+  /**
+    @class
+    
+    @extends enyo.FittableRows
+    @extends XV.ExtensionsMixin
+  */
+  var parameterWidgetHash = {
     name: "XV.ParameterWidget",
     kind: "FittableRows",
     classes: "xv-groupbox",
@@ -76,6 +82,7 @@ white:true*/
     isAllSetUp: false,
     create: function () {
       this.inherited(arguments);
+      this.processExtensions();
 
       var that = this,
         callback = function () {
@@ -163,6 +170,9 @@ white:true*/
         }
       }
     }
-  });
+  };
+  
+  parameterWidgetHash = enyo.mixin(parameterWidgetHash, XV.ExtensionsMixin);
+  enyo.kind(parameterWidgetHash);
 
 }());
