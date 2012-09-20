@@ -105,6 +105,8 @@ trailing:true white:true*/
       {label: "_state".loc(), attr: "address.state"},
       {label: "_postalCode".loc(), attr: "address.postalCode"},
       {label: "_country".loc(), attr: "address.country"},
+      {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
+      {label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_userAccount".loc()},
       {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
     ]
@@ -150,22 +152,62 @@ trailing:true white:true*/
       {label: "_description".loc(), attr: "description"},
       {label: "_category".loc(), attr: "category",
         defaultKind: "XV.IncidentCategoryPicker"},
-      {label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
-      {label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
-      {kind: "onyx.GroupboxHeader", content: "_status".loc()},
       {label: "_priority".loc(), attr: "priority",
         defaultKind: "XV.PriorityPicker"},
       {label: "_severity".loc(), attr: "severity",
         defaultKind: "XV.IncidentSeverityPicker"},
       {label: "_resolution".loc(), attr: "resolution",
           defaultKind: "XV.IncidentResolutionPicker"},
+      {kind: "onyx.GroupboxHeader", content: "_status".loc()},
+      {label: "_equals".loc(), attr: "status",
+        filterLabel: "_status" + " " + "_equals".loc(),
+        defaultKind: "XV.IncidentStatusPicker"},
+      {label: "_above".loc(), attr: "status",
+        filterLabel: "_status" + " " + "_above".loc(),
+        defaultKind: "XV.IncidentStatusPicker",
+        getParameter: function () {
+          var value = this.getValue(),
+            param;
+          switch (value)
+          {
+          case 'N':
+            value = 0;
+            break;
+          case 'F':
+            value = 1;
+            break;
+          case 'C':
+            value = 2;
+            break;
+          case 'A':
+            value = 3;
+            break;
+          case 'R':
+            value = 4;
+            break;
+          case 'L':
+            value = 5;
+            break;
+          }
+          if (value) {
+            param = {
+              attribute: "statusOrder",
+              operator: '<',
+              value: value
+            };
+          }
+          return param;
+        }},
+      {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
+      {label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
+      {label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
       {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_created".loc()},
-      {label: "_startDate".loc(), attr: "created", operator: ">=",
+      {label: "_fromDate".loc(), attr: "created", operator: ">=",
         defaultKind: "XV.DateWidget"},
-      {label: "_endDate".loc(), attr: "created", operator: "<=",
+      {label: "_toDate".loc(), attr: "created", operator: "<=",
         defaultKind: "XV.DateWidget"}
     ]
   });
@@ -236,13 +278,18 @@ trailing:true white:true*/
         defaultKind: "XV.OpportunityTypePicker"},
       {label: "_source".loc(), attr: "opportunitySource",
         defaultKind: "XV.OpportunitySourcePicker"},
+      {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
+      {label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
+      {label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
       {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_targetClose".loc()},
-      {label: "_startDate".loc(), attr: "targetClose", operator: ">=",
+      {label: "_fromDate".loc(), attr: "targetClose", operator: ">=",
+        filterLabel: "_from".loc() + " " + "_targetClose".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"},
-      {label: "_endDate".loc(), attr: "targetClose", operator: "<=",
+      {label: "_toDate".loc(), attr: "targetClose", operator: "<=",
+        filterLabel: "_to".loc() + " " + "_targetClose".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"}
     ]
   });
@@ -280,9 +327,11 @@ trailing:true white:true*/
       {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
-      {label: "_startDate".loc(), attr: "dueDate", operator: ">=",
+      {label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
+        filterLabel: "_from".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"},
-      {label: "_endDate".loc(), attr: "dueDate", operator: "<=",
+      {label: "_toDate".loc(), attr: "dueDate", operator: "<=",
+        filterLabel: "_to".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"}
     ]
   });
@@ -315,9 +364,11 @@ trailing:true white:true*/
       {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
-      {label: "_startDate".loc(), attr: "dueDate", operator: ">=",
+      {label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
+        filterLabel: "_from".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"},
-      {label: "_endDate".loc(), attr: "dueDate", operator: "<=",
+      {label: "_toDate".loc(), attr: "dueDate", operator: "<=",
+        filterLabel: "_to".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"}
     ]
   });
@@ -346,12 +397,19 @@ trailing:true white:true*/
       },
       {label: "_name".loc(), attr: "name"},
       {label: "_description".loc(), attr: "description"},
+      {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
+      {label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
+      {label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
       {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
-      {label: "_startDate".loc(), attr: "dueDate", operator: ">=", defaultKind: "XV.DateWidget"},
-      {label: "_endDate".loc(), attr: "dueDate", operator: "<=", defaultKind: "XV.DateWidget"}
+      {label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
+        filterLabel: "_from".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
+        defaultKind: "XV.DateWidget"},
+      {label: "_toDate".loc(), attr: "dueDate", operator: "<=",
+        filterLabel: "_to".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
+        defaultKind: "XV.DateWidget"}
     ]
   });
   

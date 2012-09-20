@@ -175,13 +175,13 @@ trailing:true white:true*/
       }
 
       if (simpleSearch && formattedQuery) {
-        formattedQuery += "Match: " + simpleSearch;
+        formattedQuery += "_match".loc() + ": " + simpleSearch;
       } else if (simpleSearch) {
         formattedQuery += simpleSearch;
       }
 
       if (formattedQuery) {
-        formattedQuery = "Filter by: " + formattedQuery;
+        formattedQuery = "_filterBy".loc() + ": " + formattedQuery;
       }
 
       if (formattedQuery.lastIndexOf(", ") + 2 === formattedQuery.length) {

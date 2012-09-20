@@ -103,6 +103,9 @@ regexp:true, undef:true, trailing:true, white:true */
     disabledChanged: function (inSender, inEvent) {
       this.$.pickerButton.setDisabled(this.getDisabled());
     },
+    getValueToString: function () {
+      return this.$.pickerButton.getContent();
+    },
     itemSelected: function (inSender, inEvent) {
       var value = this.$.picker.getSelected().value;
       this.setValue(value);
