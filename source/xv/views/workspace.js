@@ -64,6 +64,13 @@ trailing:true white:true*/
     }
   };
 
+  /**
+    @class
+    
+    @extends enyo.FittableRows
+    @extends XV.EditorMixin
+    @extends XV.ExtensionsMixin
+  */
   var workspaceHash = enyo.mixin(XV.EditorMixin, {
     name: "XV.Workspace",
     kind: "FittableRows",
@@ -112,17 +119,7 @@ trailing:true white:true*/
     },
     create: function () {
       this.inherited(arguments);
-      var extensions = this.extensions || [],
-        ext,
-        i;
-      for (i = 0; i < extensions.length; i++) {
-        ext = _.clone(this.extensions[i]);
-        // Resolve name of container to the instance
-        if (ext.container && typeof ext.container === 'string') {
-          ext.container = this.$[ext.container];
-        }
-        this.createComponent(ext);
-      }
+      this.processExtensions();
       this.titleChanged();
       this.modelChanged();
     },
@@ -275,6 +272,9 @@ trailing:true white:true*/
       this.doTitleChange(inEvent);
     }
   });
+  
+  workspaceHash = enyo.mixin(workspaceHash, XV.ExtensionsMixin);
+  enyo.kind(workspaceHash);
 
   enyo.kind({
     name: "XV.WorkspaceContainer",
@@ -579,7 +579,5 @@ trailing:true white:true*/
       }
     }
   });
-
-  enyo.kind(workspaceHash);
 
 }());

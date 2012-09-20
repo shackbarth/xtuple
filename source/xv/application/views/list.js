@@ -200,6 +200,37 @@ trailing:true white:true*/
       ]}
     ]
   });
+  
+  // ..........................................................
+  // FILE
+  //
+  
+  enyo.kind({
+    name: "XV.FileList",
+    kind: "XV.List",
+    label: "_files".loc(),
+    collection: "XM.FileRelationCollection",
+    parameterWidget: "XV.FileParameters",
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    workspace: "XV.FileWorkspace",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "name", classes: "bold"}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+  
+  XV.registerModelList("XM.FileRelation", "XV.FileList");
 
   // ..........................................................
   // HONORIFIC

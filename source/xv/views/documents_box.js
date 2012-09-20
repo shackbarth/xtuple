@@ -301,7 +301,9 @@ trailing:true white:true*/
         docsModel,
         infoAttr,
         infoModel,
-        hashes = [];
+        hashes = [],
+        InfoModel,
+        EditableModel;
 
       // Make sure we only have 'documents' delegates
       for (prop in parent.attributeDelegates) {
@@ -323,19 +325,23 @@ trailing:true white:true*/
         });
         infoAttr = relation.key;
         infoModel = relation.relatedModel;
+        InfoModel = XT.getObjectByName(infoModel);
+        EditableModel = XT.getObjectByName(InfoModel.prototype.editableModel);
         content = ("_" + infoModel.suffix()
                                  .camelize()
                                  .replace("Relation", "")
                                  .camelize()).loc();
-        hashes.push({
-          content: content,
-          value: {
-            docsAttr: docsAttr,
-            docsModel: docsModel,
-            infoAttr: infoAttr,
-            infoModel: infoModel
-          }
-        });
+        if (EditableModel.canCreate()) {
+          hashes.push({
+            content: content,
+            value: {
+              docsAttr: docsAttr,
+              docsModel: docsModel,
+              infoAttr: infoAttr,
+              infoModel: infoModel
+            }
+          });
+        }
       });
 
       // Sort by the content

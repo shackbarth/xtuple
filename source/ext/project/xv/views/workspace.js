@@ -16,7 +16,7 @@ trailing:true white:true*/
       attr: "projectRelations"}
   ];
 
-  XV.appendWorkspaceExtension("XV.AccountWorkspace", extensions);
+  XV.appendExtension("XV.AccountWorkspace", extensions);
   
   // ..........................................................
   // ACCOUNT
@@ -27,7 +27,7 @@ trailing:true white:true*/
       attr: "projectRelations"}
   ];
 
-  XV.appendWorkspaceExtension("XV.ContactWorkspace", extensions);
+  XV.appendExtension("XV.ContactWorkspace", extensions);
 
   // ..........................................................
   // INCIDENT
@@ -37,7 +37,7 @@ trailing:true white:true*/
     {kind: "XV.ProjectWidget", container: "mainGroup", attr: "project"}
   ];
 
-  XV.appendWorkspaceExtension("XV.IncidentWorkspace", extensions);
+  XV.appendExtension("XV.IncidentWorkspace", extensions);
   
   // ..........................................................
   // PROJECT
@@ -47,6 +47,6 @@ trailing:true white:true*/
     {kind: "XV.ProjectIncidentsBox", container: "panels", attr: "incidentRelations"}
   ];
 
-  XV.appendWorkspaceExtension("XV.ProjectWorkspace", extensions);
+  XV.appendExtension("XV.ProjectWorkspace", extensions);
 
 }());

@@ -99,6 +99,9 @@ regexp:true, undef:true, trailing:true, white:true */
     focus: function () {
       this.$.input.focus();
     },
+    getValueToString: function () {
+      return this.value.get(this.getKeyAttribute());
+    },
     itemSelected: function (inSender, inEvent) {
       var that = this,
         menuItem = inEvent.originator,
@@ -274,13 +277,19 @@ regexp:true, undef:true, trailing:true, white:true */
           }
         };
 
-      // here is where we find the model and re-call this method if we're given
+      // Here is where we find the model and re-call this method if we're given
       // an id instead of a whole model.
-      if (value && typeof value !== 'object') {
-        this._collection.fetch({success: function (collection, response) {
-          var model = collection.get(value);
-          that.setValue(model, options);
-        }});
+      if (_.isNumber(value)) {
+        if (this.value === value || oldId === value) { return; }
+        Model = XT.getObjectByName(this._collection.model.prototype.recordType);
+        value = new Model({id: value});
+        options = {
+          success: function () {
+            that.setValue(value);
+          }
+        };
+        this.value = value;
+        value.fetch();
         return;
       }
 

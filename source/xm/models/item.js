@@ -283,7 +283,7 @@ white:true*/
 
     recordType: 'XM.ItemInfo',
 
-    editableModel: 'Item',
+    editableModel: 'XM.Item',
     
     descriptionKey: 'description1'
 

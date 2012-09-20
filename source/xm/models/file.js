@@ -14,7 +14,7 @@ white:true*/
   XM.File = XM.Model.extend({
     /** @scope XM.File.prototype */
 
-    recordType: 'XM.File',
+    recordType: 'XM.File'
 
   });
 
@@ -31,6 +31,22 @@ white:true*/
     editableModel: 'XM.File',
     
     numberKey: 'name'
+
+  });
+  
+  // ..........................................................
+  // COLLECTIONS
+  //
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.FileRelationCollection = XM.Collection.extend({
+    /** @scope XM.FileCollection.prototype */
+
+    model: XM.FileRelation
 
   });
 

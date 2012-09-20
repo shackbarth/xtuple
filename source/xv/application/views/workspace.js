@@ -248,6 +248,33 @@ trailing:true white:true*/
   });
   
   XV.registerModelWorkspace("XM.Currency", "XV.CurrencyWorkspace");
+  
+  // ..........................................................
+  // FILE
+  //
+
+  enyo.kind({
+    name: "XV.FileWorkspace",
+    kind: "XV.Workspace",
+    title: "_file".loc(),
+    model: "XM.File",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {tag: "input type=file", name: "fileInput"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+  
+  XV.registerModelWorkspace("XM.FileRelation", "XV.FileWorkspace");
 
   // ..........................................................
   // HONORIFIC
@@ -718,7 +745,7 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.InputWidget", attr: "path"}
+            {kind: "XV.InputWidget", attr: "path", label: "_address".loc()}
           ]}
         ]}
       ]}
