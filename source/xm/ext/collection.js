@@ -221,12 +221,14 @@ white:true*/
       options = options ? _.clone(options) :
         this.orderAttribute ? { query: this.orderAttribute } : {};
       options.force = true;
+      /*
       var that = this,
         success = options.success;
       options.success = function (resp) {
-        XT.log("Successfully fetched:" + that.model.prototype.recordType, _.clone(resp));
+        XT.log("Successfully fetched:" + that.model.prototype.recordType, resp);
         if (success) { success(resp); }
       };
+      */
       return Backbone.Collection.prototype.fetch.call(this, options);
     },
 
