@@ -30,7 +30,7 @@ trailing:true white:true*/
         status = model.getStatus(),
         changes = options.changes,
         canUpdate = (status === K.READY_NEW /* && model.canCreate() */) ||
-          (status === K.READY_CLEAN && model.canUpdate()),
+          ((status & K.READY) && model.canUpdate()),
         //canNotUpdate = !model.canUpdate() || !(status & K.READY),
         control,
         isReadOnly,
@@ -531,9 +531,10 @@ trailing:true white:true*/
       var model = inEvent.model,
         K = XM.Model,
         status = inEvent.status,
-        isNotReady = (status !== K.READY_CLEAN && status !== K.READY_DIRTY),
-        isEditable = (model.canUpdate() && !model.isReadOnly()),
-        canNotSave = (!model.isDirty() || !isEditable),
+        isNotReady = status !== K.READY_CLEAN && status !== K.READY_DIRTY,
+        canUpdate = model.canUpdate() || status === K.READY_CLEAN,
+        isEditable = canUpdate && !model.isReadOnly(),
+        canNotSave = !model.isDirty() || !isEditable,
         message;
 
       // Status dictates whether buttons are actionable
