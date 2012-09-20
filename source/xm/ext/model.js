@@ -985,6 +985,11 @@ white:true*/
           category = column ? column.category : false;
           switch (category) {
           case S.DB_BYTEA:
+            if (!_.isObject(value) && !_.isString(value)) { // XXX unscientific
+              params.type = "_binary".loc();
+              return XT.Error.clone('xt1003', { params: params });
+            }
+            break;
           case S.DB_UNKNOWN:
           case S.DB_STRING:
             if (!_.isString(value)) {

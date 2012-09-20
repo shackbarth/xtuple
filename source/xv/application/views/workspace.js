@@ -267,7 +267,7 @@ trailing:true white:true*/
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
-            {tag: "input type=file", name: "fileInput"}
+            {kind: "XV.FileInputWidget", attr: "data"}
           ]}
         ]}
       ]}

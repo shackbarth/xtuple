@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
@@ -8,32 +8,36 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.File = XM.Model.extend({
     /** @scope XM.File.prototype */
 
-    recordType: 'XM.File'
+    recordType: 'XM.File',
 
+    requiredAttributes: [
+      "name",
+      "description"
+    ]
   });
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.FileRelation = XM.Info.extend({
     /** @scope XM.FileRelation.prototype */
 
     recordType: 'XM.FileRelation',
-    
+
     editableModel: 'XM.File',
-    
+
     numberKey: 'name'
 
   });
-  
+
   // ..........................................................
   // COLLECTIONS
   //
