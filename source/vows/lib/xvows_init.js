@@ -478,7 +478,7 @@
       enyo.relativePath = _path.join(X.basePath, "../xm/models");
       require(_path.join(X.basePath, "../xm/models", "package.js"));
       // GRAB THE CRM MODULE
-      require(_path.join(X.basePath, "../ext/crm", "models.js"));
+      require(_path.join(X.basePath, "../ext/crm/xm/models", "package.js"));
       // GRAB THE STARTUP TASKS
       require(_path.join(X.basePath, "../xm", "startup.js"));
 
