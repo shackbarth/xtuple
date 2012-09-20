@@ -26,7 +26,7 @@
       .option("--spec", "Use the spec reporter")
       .option("-t, --tests [tests]", "Specify space-separated string of test names", tests, ["*"])
       .option("-u, --user [user]", "Global user ID (must be active global user)", "admin@xtuple.com")
-      .option("-h, --host [host]", "Datasource hostname/ip", "localhost")
+      .option("-H, --host [host]", "Datasource hostname/ip", "localhost")
       .option("-p, --port [port]", "Datasource port", 20100, parseInt)
       .option("-o, --organization [organization]", "Organization to run against", "production")
       .parse(process.argv);
