@@ -283,7 +283,7 @@ white:true*/
 
     @extends XM.Characteristic
   */
-  XM.IncidentCharacteristic = XM.Characteristic.extend({
+  XM.IncidentCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.IncidentCharacteristic.prototype */
 
     recordType: 'XM.IncidentCharacteristic'

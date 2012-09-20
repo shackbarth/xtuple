@@ -132,12 +132,14 @@ white:true*/
         value = inSender.getValue(),
         attributes = {},
         model = this.getValue(),
+        characteristic,
         empty;
       attributes[attr] = _.isDate(value) ? value.toJSON() : value;
       model.set(attributes);
       if (attr === 'characteristic') {
         if (value) {
-          empty = model.get('characteristic').get('characteristicType') === DATE ?
+          characteristic = model.get('characteristic');
+          empty = characteristic && characteristic.get('characteristicType') === DATE ?
             null : "";
           model.set('value', empty);
           this.valueChanged();
