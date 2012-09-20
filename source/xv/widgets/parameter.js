@@ -11,6 +11,7 @@ white:true*/
     published: {
       value: "",
       label: "",
+      filterLabel: "",
       attr: "",
       operator: ""
     },
@@ -110,7 +111,7 @@ white:true*/
             this.$.hasOwnProperty(componentName)) {
           component = this.$[componentName];
           value = component.getValue();
-          label = component.getLabel();
+          label = component.getFilterLabel() || component.getLabel();
           control = component.$.input;
           if (value) {
             values[label] = control.getValueToString ? control.getValueToString() : value;

@@ -160,8 +160,10 @@ trailing:true white:true*/
           defaultKind: "XV.IncidentResolutionPicker"},
       {kind: "onyx.GroupboxHeader", content: "_status".loc()},
       {label: "_equals".loc(), attr: "status",
+        filterLabel: "_status" + " " + "_equals".loc(),
         defaultKind: "XV.IncidentStatusPicker"},
       {label: "_above".loc(), attr: "status",
+        filterLabel: "_status" + " " + "_above".loc(),
         defaultKind: "XV.IncidentStatusPicker",
         getParameter: function () {
           var value = this.getValue(),
@@ -203,9 +205,9 @@ trailing:true white:true*/
       {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_created".loc()},
-      {label: "_startDate".loc(), attr: "created", operator: ">=",
+      {label: "_fromDate".loc(), attr: "created", operator: ">=",
         defaultKind: "XV.DateWidget"},
-      {label: "_endDate".loc(), attr: "created", operator: "<=",
+      {label: "_toDate".loc(), attr: "created", operator: "<=",
         defaultKind: "XV.DateWidget"}
     ]
   });
@@ -283,9 +285,11 @@ trailing:true white:true*/
       {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_targetClose".loc()},
-      {label: "_startDate".loc(), attr: "targetClose", operator: ">=",
+      {label: "_fromDate".loc(), attr: "targetClose", operator: ">=",
+        filterLabel: "_from".loc() + " " + "_targetClose".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"},
-      {label: "_endDate".loc(), attr: "targetClose", operator: "<=",
+      {label: "_toDate".loc(), attr: "targetClose", operator: "<=",
+        filterLabel: "_to".loc() + " " + "_targetClose".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"}
     ]
   });
@@ -323,9 +327,11 @@ trailing:true white:true*/
       {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
-      {label: "_startDate".loc(), attr: "dueDate", operator: ">=",
+      {label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
+        filterLabel: "_from".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"},
-      {label: "_endDate".loc(), attr: "dueDate", operator: "<=",
+      {label: "_toDate".loc(), attr: "dueDate", operator: "<=",
+        filterLabel: "_to".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"}
     ]
   });
@@ -358,9 +364,11 @@ trailing:true white:true*/
       {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
-      {label: "_startDate".loc(), attr: "dueDate", operator: ">=",
+      {label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
+        filterLabel: "_from".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"},
-      {label: "_endDate".loc(), attr: "dueDate", operator: "<=",
+      {label: "_toDate".loc(), attr: "dueDate", operator: "<=",
+        filterLabel: "_to".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"}
     ]
   });
@@ -396,8 +404,12 @@ trailing:true white:true*/
       {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
-      {label: "_startDate".loc(), attr: "dueDate", operator: ">=", defaultKind: "XV.DateWidget"},
-      {label: "_endDate".loc(), attr: "dueDate", operator: "<=", defaultKind: "XV.DateWidget"}
+      {label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
+        filterLabel: "_from".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
+        defaultKind: "XV.DateWidget"},
+      {label: "_toDate".loc(), attr: "dueDate", operator: "<=",
+        filterLabel: "_to".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
+        defaultKind: "XV.DateWidget"}
     ]
   });
   
