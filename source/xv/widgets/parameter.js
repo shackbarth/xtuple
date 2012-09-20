@@ -9,7 +9,7 @@ white:true*/
     name: "XV.ParameterItem",
     classes: "xv-parameter-item",
     published: {
-      value: "",
+      value: null,
       label: "",
       filterLabel: "",
       attr: "",
@@ -105,7 +105,10 @@ white:true*/
       }
       return params;
     },
-    getSelectedValues: function () {
+    /**
+      @param {Boolean} Return raw value instead of text - default false
+    */
+    getSelectedValues: function (returnValue) {
       var values = {},
         componentName,
         component,
@@ -121,7 +124,11 @@ white:true*/
           label = component.getFilterLabel() || component.getLabel();
           control = component.$.input;
           if (value) {
-            values[label] = control.getValueToString ? control.getValueToString() : value;
+            if (returnValue) {
+              values[label] = value instanceof XM.Model ? value.id : value;
+            } else {
+              values[label] = control.getValueToString ? control.getValueToString() : value;
+            }
           }
         }
       }
@@ -140,7 +147,7 @@ white:true*/
         return;
       }
 
-      values = this.getSelectedValues();
+      values = this.getSelectedValues(true);
       dbName = XT.session.details.organization;
       cookieName = 'advancedSearchCache_' + dbName + '_' + this.name;
       enyo.setCookie(cookieName, JSON.stringify(values));
