@@ -106,22 +106,14 @@ white:true*/
         control;
 
       for (componentName in this.$) {
-        if (componentName.indexOf("parameterItem") === 0 && this.$.hasOwnProperty(componentName)) {
+        if (this.$[componentName] instanceof XV.ParameterItem &&
+            this.$.hasOwnProperty(componentName)) {
           component = this.$[componentName];
           value = component.getValue();
           label = component.getLabel();
           control = component.$.input;
           if (value) {
-            if (control instanceof XV.RelationWidget) {
-              values[label] = value.get(control.getKeyAttribute());
-            } else if (control instanceof XV.PickerWidget) {
-              values[label] = value.get(control.getNameAttribute());
-            } else if (control instanceof XV.DateWidget) {
-              values[label] = control.toString();
-            } else {
-              // default case: save the value in the cookie
-              values[label] = value;
-            }
+            values[label] = control.getValueToString ? control.getValueToString() : value;
           }
         }
       }

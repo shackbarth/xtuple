@@ -99,6 +99,9 @@ regexp:true, undef:true, trailing:true, white:true */
     focus: function () {
       this.$.input.focus();
     },
+    getValueToString: function () {
+      return this.value.get(this.getKeyAttribute());
+    },
     itemSelected: function (inSender, inEvent) {
       var that = this,
         menuItem = inEvent.originator,
