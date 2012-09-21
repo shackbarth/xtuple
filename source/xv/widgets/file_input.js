@@ -13,6 +13,10 @@ regexp:true, undef:true, trailing:true, white:true */
     components: [
       {name: "input", tag: "input type=file", kind: "onyx.Input",  classes: "xv-subinput", onchange: "inputChanged"}
     ],
+    setValue: function (value, options) {
+      this.value = value;
+      // don't try to update widget. Just throws a security exception if you do.
+    },
     /**
       Turn the payload into the file instead of the filename
      */
@@ -35,7 +39,6 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.FileInputWidget",
     kind: "XV.FileInput"
-
   });
 
 }());
