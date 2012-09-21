@@ -171,12 +171,12 @@ select xt.install_js('XT','Data','xtuple', $$
     checkPrivilege: function (privilege) {
       var ret = privilege;
       if (typeof privilege === 'string') {
-        if(!this._grantedPrivs) this._grantedPrivs = [];
-        if(this._grantedPrivs.contains(privilege)) return true;  
+        if (!this._grantedPrivs) { this._grantedPrivs = []; }
+        if (this._grantedPrivs.contains(privilege)) { return true; }
         var res = plv8.execute("select checkPrivilege($1) as is_granted", [ privilege ]),
           ret = res[0].is_granted;
         /* cache the result locally so we don't requery needlessly */
-        if(ret) this._grantedPrivs.push(privilege);
+        if (ret) { this._grantedPrivs.push(privilege); }
       }
       return ret;
     },
@@ -771,7 +771,7 @@ select xt.install_js('XT','Data','xtuple', $$
       orderBy = list.length ? 'order by ' + list.join(',') : '';
 
       /* validate - don't bother running the query if the user has no privileges */
-      if(!this.checkPrivileges(nameSpace, type)) throw new Error("Access Denied.");
+      if(!this.checkPrivileges(nameSpace, type)) { return []; };
 
       /* query the model */
       sql = sql.replace(/{table}/g, table)
