@@ -19,7 +19,7 @@ regexp:true, undef:true, trailing:true, white:true */
   //
 
   enyo.kind({
-    name: "XV.ClassCodeWidget",
+    name: "XV.ClassCodePicker",
     kind: "XV.PickerWidget",
     collection: "XM.classCodes",
     nameAttribute: "code"
@@ -135,7 +135,7 @@ regexp:true, undef:true, trailing:true, white:true */
   //
 
   enyo.kind({
-    name: "XV.ProductCategoryWidget",
+    name: "XV.ProductCategoryPicker",
     kind: "XV.PickerWidget",
     collection: "XM.productCategories",
     nameAttribute: "code"

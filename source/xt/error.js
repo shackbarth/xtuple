@@ -174,6 +174,10 @@
       code: "xt1010",
       messageKey: "_canNotUpdate"
     },
+    {
+      code: "xt1011",
+      messageKey: "_localResourceNotAllowed"
+    },
 
     // Application errors
     {
@@ -200,6 +204,9 @@
     }, {
       code: "xt2008",
       messageKey: "_countryInvalid"
+    }, {
+      code: "xt2009",
+      messageKey: "_invalidAddress"
     }
   ];
 

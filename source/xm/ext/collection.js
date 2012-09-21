@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
-/*global XT:true, Backbone:true, _:true */
+/*global XT:true, XM:true, Backbone:true, _:true */
 
 (function () {
   "use strict";
@@ -42,7 +42,7 @@ white:true*/
     Use a query object to limit the result set. This query will return results
     with the first name 'Frank' and last name 'Farley':
 
-      var coll = new XM.ContactInfoCollection();
+      var coll = new XM.ContactListItemCollection();
       var options = {
         query: {
           parameters":[{
@@ -89,7 +89,7 @@ white:true*/
 
     Fetch the first 10 Contacts ordered by last name, then first name.
 
-      var coll = new XM.ContactInfoCollection();
+      var coll = new XM.ContactListItemCollection();
       var options = {
         query: {
           rowLimit: 10,
@@ -104,7 +104,7 @@ white:true*/
 
     Fetch Contacts with 'Frank' in the name:
 
-      var coll = new XM.ContactInfoCollection();
+      var coll = new XM.ContactListItemCollection();
       var options = {
         query: {
           parameters:[{
@@ -119,7 +119,7 @@ white:true*/
     Fetch Accounts in Virginia ordering by Contact name descending. Note
     support for querying object hierchary paths.
 
-      var coll = new XM.AccountInfoCollection();
+      var coll = new XM.AccountListItemCollection();
       var options = {
         query: {
           parameters:[{
@@ -136,7 +136,7 @@ white:true*/
 
     Fetch Items with numbers starting with 'B'.
 
-      var coll = new XM.ItemInfoCollection();
+      var coll = new XM.ItemListItemCollection();
       var options = {
         query: {
           parameters:[{
@@ -150,7 +150,7 @@ white:true*/
 
     Fetch active To Do items due on or after July 17, 2009.
 
-      var coll = new XM.ToDoInfoCollection();
+      var coll = new XM.ToDoListItemCollection();
       var dt = new Date();
       dt.setMonth(7);
       dt.setDate(17);
@@ -174,7 +174,7 @@ white:true*/
     an attribute array uses `OR` logic for comparison against all listed
     attributes.
 
-      var coll = new XM.ContactInfoCollection();
+      var coll = new XM.ContactListItemCollection();
       var options = {
         query: {
           parameters:[{
@@ -221,6 +221,14 @@ white:true*/
       options = options ? _.clone(options) :
         this.orderAttribute ? { query: this.orderAttribute } : {};
       options.force = true;
+      /*
+      var that = this,
+        success = options.success;
+      options.success = function (resp) {
+        XT.log("Successfully fetched:" + that.model.prototype.recordType, resp);
+        if (success) { success(resp); }
+      };
+      */
       return Backbone.Collection.prototype.fetch.call(this, options);
     },
 

@@ -103,6 +103,9 @@ regexp:true, undef:true, trailing:true, white:true */
     disabledChanged: function (inSender, inEvent) {
       this.$.pickerButton.setDisabled(this.getDisabled());
     },
+    getValueToString: function () {
+      return this.$.pickerButton.getContent();
+    },
     itemSelected: function (inSender, inEvent) {
       var value = this.$.picker.getSelected().value;
       this.setValue(value);
@@ -127,9 +130,9 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     labelChanged: function () {
       var label = this.getLabel() ||
-        (this.attr ? ("_" + this.attr).loc() + ":" : "");
+        (this.attr ? ("_" + this.attr).loc() : "");
       this.$.label.setShowing(label);
-      this.$.label.setContent(label);
+      this.$.label.setContent(label + ":");
     },
     noneTextChanged: function () {
       this.buildList();

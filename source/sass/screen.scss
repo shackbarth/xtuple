@@ -288,6 +288,10 @@ body {
   .xv-picker {
     width: 150px;
   }
+  .xv-radiogroup {
+    padding: 6px;
+    margin-left: 130px; /* hack */
+  }
   /* this ain't right */
   .xv-relationwidget {
     .xv-subinput {

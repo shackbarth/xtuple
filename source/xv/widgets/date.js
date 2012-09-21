@@ -7,7 +7,9 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.Date",
     kind: "XV.Input",
-
+    getValueToString: function (value) {
+      return this.$.input.value;
+    },
     /**
       Sets the value programatically.
 

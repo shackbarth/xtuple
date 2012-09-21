@@ -9,8 +9,9 @@ white:true*/
     name: "XV.ParameterItem",
     classes: "xv-parameter-item",
     published: {
-      value: "",
+      value: null,
       label: "",
+      filterLabel: "",
       attr: "",
       operator: ""
     },
@@ -36,18 +37,23 @@ white:true*/
       this.$.input.setLabel(this.label);
     },
     getParameter: function () {
-      var param;
-      if (this.getValue()) {
+      var param,
+        value = this.getValue();
+      if (value) {
         param = {
           attribute: this.getAttr(),
           operator: this.getOperator(),
-          value: this.getValue()
+          value: value
         };
       }
       return param;
     },
     getValue: function () {
-      return this.$.input.getValue();
+      var value = this.$.input.getValue();
+      if (value && this.$.input.valueAttribute) {
+        value = value.get(this.$.input.valueAttribute);
+      }
+      return value;
     },
     parameterChanged: function () {
       var inEvent = { value: this.getValue, originator: this };
@@ -59,7 +65,13 @@ white:true*/
     }
   });
 
-  enyo.kind({
+  /**
+    @class
+    
+    @extends enyo.FittableRows
+    @extends XV.ExtensionsMixin
+  */
+  var parameterWidgetHash = {
     name: "XV.ParameterWidget",
     kind: "FittableRows",
     classes: "xv-groupbox",
@@ -70,6 +82,7 @@ white:true*/
     isAllSetUp: false,
     create: function () {
       this.inherited(arguments);
+      this.processExtensions();
 
       var that = this,
         callback = function () {
@@ -92,22 +105,30 @@ white:true*/
       }
       return params;
     },
-    getSelectedValues: function () {
+    /**
+      @param {Boolean} Return raw value instead of text - default false
+    */
+    getSelectedValues: function (returnValue) {
       var values = {},
         componentName,
-        component;
+        component,
+        value,
+        label,
+        control;
 
       for (componentName in this.$) {
-        if (componentName.indexOf("parameterItem") === 0 && this.$.hasOwnProperty(componentName)) {
+        if (this.$[componentName] instanceof XV.ParameterItem &&
+            this.$.hasOwnProperty(componentName)) {
           component = this.$[componentName];
-          if (!component.getValue()) {
-            // don't bother saving empties
-          } else if (component.getValue().id) {
-            // relation widgets need to be treated specially
-            values[component.getLabel()] = component.getValue().id;
-          } else {
-            // default case: save the value in the cookie
-            values[component.getLabel()] = component.getValue();
+          value = component.getValue();
+          label = component.getFilterLabel() || component.getLabel();
+          control = component.$.input;
+          if (value) {
+            if (returnValue) {
+              values[label] = value instanceof XM.Model ? value.id : value;
+            } else {
+              values[label] = control.getValueToString ? control.getValueToString() : value;
+            }
           }
         }
       }
@@ -126,7 +147,7 @@ white:true*/
         return;
       }
 
-      values = this.getSelectedValues();
+      values = this.getSelectedValues(true);
       dbName = XT.session.details.organization;
       cookieName = 'advancedSearchCache_' + dbName + '_' + this.name;
       enyo.setCookie(cookieName, JSON.stringify(values));
@@ -156,6 +177,9 @@ white:true*/
         }
       }
     }
-  });
+  };
+  
+  parameterWidgetHash = enyo.mixin(parameterWidgetHash, XV.ExtensionsMixin);
+  enyo.kind(parameterWidgetHash);
 
 }());
