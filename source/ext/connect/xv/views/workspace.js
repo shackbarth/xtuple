@@ -46,7 +46,7 @@ trailing:true white:true*/
   
     var extensions = [
       {kind: "XV.IncidentEmailProfilePicker", container: "mainGroup",
-        attr: "incidentEmailProfile"}
+        attr: "emailProfile"}
     ];
 
     XV.appendExtension("XV.IncidentCategoryWorkspace", extensions);

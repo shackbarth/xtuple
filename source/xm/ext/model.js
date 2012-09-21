@@ -13,17 +13,21 @@ white:true*/
     @class
 
     `XM.Model` is an abstract class designed to operate with `XT.DataSource`.
-    It should be subclassed for any specific implentation. Subtypes should
+    It should be subclassed for any specific implentation. Subclasses should
     include a `recordType` the data source will use to retreive the record.
 
     To create a new model include `isNew` in the options like so:
-      XM.Contact = XM.Model.extend({recordType: 'XM.Contact'});
-      m = new XM.Contact({firstName: 'Randy'}, {isNew: true});
+      // Create a new class
+      XM.MyModel = XM.Model.extend({
+        recordType: 'XM.MyModel'
+      });
+      
+      // Instantiate a new model object
+      m = new XM.MyModel(null, {isNew: true});
 
-    To load an existing record include a id in the options like so:
-      XM.Contact = XM.Model.extend({recordType: 'XM.Contact'});
-      m = new XM.Contact;
-      m.fetch({id: 1});
+    To load an existing record include an id in the attributes like so:
+      m = new XM.MyModel({id: 1});
+      m.fetch();
 
     @extends Backbone.RelationalModel
     @param {Object} Attributes

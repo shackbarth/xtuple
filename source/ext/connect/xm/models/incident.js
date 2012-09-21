@@ -7,6 +7,34 @@ white:true*/
   "use strict";
 
   XT.extensions.connect.initIncidentModels = function () {
+    
+    // Get original save function
+    var save = XM.Incident.prototype.save;
+    
+    // Define email processing
+    var sendEmail = function () {
+      XT.log('sending email');
+    };
+    
+    // Extend save function to generate email
+    XM.Incident.prototype.save = function (key, value, options) {
+      options = options ? _.clone(options) : {};
+      var that = this,
+        success = options.success;
+      options.success = function (model, resp, options) {
+        sendEmail.call(that);
+        if (success) { success(model, resp, options); }
+      };
+      
+      // Handle both `"key", value` and `{key: value}` -style arguments.
+      if (_.isObject(key) || _.isEmpty(key)) {
+        value = options;
+      }
+      
+      // Now call the original
+      save.call(this, key, value, options);
+    };
+    
     /**
       @class
 
