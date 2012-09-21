@@ -338,6 +338,7 @@ XT.stringsFor("en_US", {
   "_sourceType": "Source Type",
   "_stage": "Stage",
   "_start": "Start",
+  "_startDate": "Start Date",
   "_state": "State",
   "_states": "States",
   "_status": "Status",
