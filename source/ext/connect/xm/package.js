@@ -1,3 +1,4 @@
 enyo.depends(
-  "models"
+  "models",
+  "startup.js"
 );

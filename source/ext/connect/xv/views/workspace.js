@@ -5,6 +5,10 @@ trailing:true white:true*/
 
 (function () {
 
+  // ..........................................................
+  // INCIDENT EMAIL PROFILE
+  //
+
   enyo.kind({
     name: "XV.IncidentEmailProfileWorkspace",
     kind: "XV.Workspace",
@@ -34,5 +38,17 @@ trailing:true white:true*/
   });
   
   XV.registerModelWorkspace("XM.IncidentEmailProfile", "XV.IncidentEmailProfileWorkspace");
+  
+  // ..........................................................
+  // INCIDENT CATEGORY
+  //
+  
+  var extensions = [
+    {kind: "XV.IncidentEmailProfilePicker", container: "mainGroup",
+      attr: "incidentEmailProfile"}
+  ];
+
+  XV.appendExtension("XV.IncidentCategoryWorkspace", extensions);
+  
 
 }());

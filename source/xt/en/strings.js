@@ -436,18 +436,17 @@ XT.stringsFor("en_US", {
   "_whatToDo": "What would you like to do?",
   
   // ********
-  // Connect
+  // Connect - TODO: Separate this into its extension folder
   // ********
   
   "_bcc": "Bcc",
   "_body": "Body",
   "_cc": "Cc",
-  "_from": "From",
+  "_emailProfile": "Email Profile",
   "_header": "Header",
   "_incidentEmailProfile": "Incident Email Profiles",
   "_incidentEmailProfiles": "Incident Email Profiles",
-  "_subject": "Subject",
-  "_to": "To"
+  "_subject": "Subject"
   
 });
 
