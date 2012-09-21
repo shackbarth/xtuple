@@ -1,9 +1,15 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true
 white:true*/
-/*global enyo:true, XT:true, document:true */
+/*global enyo:true, XT:true, _:true, document:true */
 
 (function () {
+
+  var UNINITIALIZED = 0;
+  var LOADING_SESSION = 1;
+  var LOADING_EXTENSIONS = 2;
+  var LOADING_APP_DATA = 3;
+  var RUNNING = 4;
 
   enyo.kind({
     name: "App",
@@ -19,12 +25,13 @@ white:true*/
       onNavigatorEvent: "togglePullout",
       onHistoryChange: "refreshHistoryPanel",
       onHistoryItemSelected: "selectHistoryItem",
-      onAnimateProgressFinish: "dataLoaded"
+      onAnimateProgressFinish: "startupProcess"
     },
     components: [
       { name: "postbooks", kind: "XV.Postbooks",  onTransitionStart: "handlePullout" },
       { name: "pullout", kind: "XV.Pullout", onAnimateFinish: "pulloutAnimateFinish" }
     ],
+    state: UNINITIALIZED,
     addPulloutItem: function (inSender, inEvent) {
       var item = {
         name: inEvent.name,
@@ -103,45 +110,79 @@ white:true*/
       inEvent.eventName = "onWorkspace";
       this.waterfall("onWorkspace", inEvent);
     },
-    dataLoaded: function () {
-      // Initialize extensions
-      if (this._dataLoaded) { return; }
-      this._dataLoaded = true;
-      var prop,
+    startupProcess: function () {
+      var startupManager = XT.getStartupManager(),
+        progressBar = XT.app.$.postbooks.getStartupProgressBar(),
+        prop,
         ext,
-        extprop;
-      for (prop in XT.extensions) {
-        if (XT.extensions.hasOwnProperty(prop)) {
-          ext = XT.extensions[prop];
-          for (extprop in ext) {
-            if (ext.hasOwnProperty(extprop) &&
-                typeof ext[extprop] === "function") {
-              //XT.log('Installing ' + prop + ' ' + extprop);
-              ext[extprop]();
+        extprop,
+        i = 0,
+        task,
+        len,
+        text,
+        eachCallback = function () {
+          var completed = startupManager.get('completed').length;
+          progressBar.animateProgressTo(completed);
+        };
+
+      // 1: Load session data
+      if (this.state === UNINITIALIZED) {
+        this.state = LOADING_SESSION;
+        startupManager.registerCallback(eachCallback, true);
+        XT.dataSource.connect();
+        len = startupManager.get('queue').length +
+          startupManager.get('completed').length;
+        progressBar.setMax(len);
+        
+      // 2: Initialize extensions
+      } else if (this.state === LOADING_SESSION) {
+        // Treating this like other progressive actions because we assume
+        // in the future extensions will be loaded from the server
+        this.state = LOADING_EXTENSIONS;
+        text = "_loadingExtensions".loc() + "...";
+        XT.app.$.postbooks.getStartupText().setContent(text);
+        for (prop in XT.extensions) {
+          if (XT.extensions.hasOwnProperty(prop)) {
+            ext = XT.extensions[prop];
+            for (extprop in ext) {
+              if (ext.hasOwnProperty(extprop) &&
+                  typeof ext[extprop] === "function") {
+                //XT.log('Installing ' + prop + ' ' + extprop);
+                ext[extprop]();
+              }
             }
           }
+          i++;
         }
-      }
+        this.startupProcess();
       
-      // Go to the navigator
-      XT.app.$.postbooks.next();
-      XT.app.$.postbooks.getNavigator().activate();
+      // 3. Load Application Data
+      } else if (this.state === LOADING_EXTENSIONS) {
+        // Run startup tasks
+        this.state = LOADING_APP_DATA;
+        text = "_loadingApplicationData".loc() + "...";
+        XT.app.$.postbooks.getStartupText().setContent(text);
+        progressBar.setMax(XT.StartupTasks.length);
+        progressBar.setProgress(0);
+        for (i = 0; i < XT.StartupTasks.length; i++) {
+          task = XT.StartupTasks[i];
+          XT.StartupTask.create(task);
+        }
+        
+      // 4. Go to Navigator
+      } else if (this.state === LOADING_APP_DATA) {
+        // Go to the navigator
+        this.state = RUNNING;
+        XT.app.$.postbooks.next();
+        XT.app.$.postbooks.getNavigator().activate();
+      }
     },
     start: function () {
       if (this.getIsStarted()) { return; }
       XT.app = this;
 
-      // on application start, connect the datasource
-      var startupManager = XT.getStartupManager(),
-        progressBar = XT.app.$.postbooks.getStartupProgressBar(),
-        eachCallback = function () {
-          var completed = startupManager.get('completed').length;
-          progressBar.animateProgressTo(completed);
-        };
-      startupManager.registerCallback(eachCallback, true);
-      XT.dataSource.connect();
-      progressBar.setMax(startupManager.get('queue').length +
-        startupManager.get('completed').length);
+      // Run through the multi-step start process
+      this.startupProcess();
 
       // lets not allow this to happen again
       this.setIsStarted(true);

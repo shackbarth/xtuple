@@ -32,7 +32,8 @@ trailing:true white:true*/
     components: [
       {name: "startup", classes: "xv-startup-panel", style: "background: #333;",
         components: [
-        {classes: "xv-startup-divider", content: "Loading application data..."},
+        {name: "startupText", classes: "xv-startup-divider",
+          content: "_loadingSessionData".loc() + ".."},
         {name: "startupProgressBar", kind: "onyx.ProgressBar",
           classes: "xv-startup-progress", progress: 0}
       ]},
@@ -89,6 +90,9 @@ trailing:true white:true*/
     },
     getStartupProgressBar: function () {
       return this.$.startupProgressBar;
+    },
+    getStartupText: function () {
+      return this.$.startupText;
     },
     /**
       Insert a new `module` at `index`. If index is

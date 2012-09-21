@@ -7,7 +7,7 @@ white:true*/
   "use strict";
 
   XT.extensions.connect.initStartup = function () {
-    XT.StartupTask.create({
+    XT.StartupTasks.push({
       taskName: "loadIncidentEmailProfiles",
       task: function () {
         var options = {
