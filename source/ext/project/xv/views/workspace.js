@@ -19,7 +19,7 @@ trailing:true white:true*/
   XV.appendExtension("XV.AccountWorkspace", extensions);
   
   // ..........................................................
-  // ACCOUNT
+  // CONTACT
   //
   
   extensions = [

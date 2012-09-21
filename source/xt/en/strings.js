@@ -433,8 +433,22 @@ XT.stringsFor("en_US", {
   "_unsavedChanges": "You have unsaved changes.",
   "_valueExists": "Record with {attr} of '{value}' already exists.",
   "_saveYourWork?": "Do you want to save your work?",
-  "_whatToDo": "What would you like to do?"
-
+  "_whatToDo": "What would you like to do?",
+  
+  // ********
+  // Connect
+  // ********
+  
+  "_bcc": "Bcc",
+  "_body": "Body",
+  "_cc": "Cc",
+  "_from": "From",
+  "_header": "Header",
+  "_incidentEmailProfile": "Incident Email Profiles",
+  "_incidentEmailProfiles": "Incident Email Profiles",
+  "_subject": "Subject",
+  "_to": "To"
+  
 });
 
 XT.locale.setLanguage(XT.lang);
