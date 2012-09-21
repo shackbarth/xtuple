@@ -116,7 +116,7 @@ white:true*/
           for (extprop in ext) {
             if (ext.hasOwnProperty(extprop) &&
                 typeof ext[extprop] === "function") {
-              XT.log('Installing ' + prop + ' ' + extprop);
+              //XT.log('Installing ' + prop + ' ' + extprop);
               ext[extprop]();
             }
           }
