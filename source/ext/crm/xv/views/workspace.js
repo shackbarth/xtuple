@@ -5,67 +5,69 @@ trailing:true white:true*/
 
 (function () {
 
-  var extensions;
+  XT.extensions.crm.initWorkspaces = function () {
+    var extensions;
  
-  // ..........................................................
-  // ACCOUNT
-  //
+    // ..........................................................
+    // ACCOUNT
+    //
   
-  extensions = [
-    {kind: "XV.AccountToDosBox", container: "panels",
-      attr: "toDoRelations"},
-    {kind: "XV.AccountOpportunitiesBox", container: "panels",
-      attr: "opportunityRelations"},
-    {kind: "XV.AccountIncidentsBox", container: "panels",
-      attr: "incidentRelations"}
-  ];
+    extensions = [
+      {kind: "XV.AccountToDosBox", container: "panels",
+        attr: "toDoRelations"},
+      {kind: "XV.AccountOpportunitiesBox", container: "panels",
+        attr: "opportunityRelations"},
+      {kind: "XV.AccountIncidentsBox", container: "panels",
+        attr: "incidentRelations"}
+    ];
 
-  XV.appendExtension("XV.AccountWorkspace", extensions);
+    XV.appendExtension("XV.AccountWorkspace", extensions);
   
-  // ..........................................................
-  // ACCOUNT
-  //
+    // ..........................................................
+    // ACCOUNT
+    //
   
-  extensions = [
-    {kind: "XV.ContactToDosBox", container: "panels",
-      attr: "toDoRelations"},
-    {kind: "XV.ContactOpportunitiesBox", container: "panels",
-      attr: "opportunityRelations"},
-    {kind: "XV.ContactIncidentsBox", container: "panels",
-      attr: "incidentRelations"}
-  ];
+    extensions = [
+      {kind: "XV.ContactToDosBox", container: "panels",
+        attr: "toDoRelations"},
+      {kind: "XV.ContactOpportunitiesBox", container: "panels",
+        attr: "opportunityRelations"},
+      {kind: "XV.ContactIncidentsBox", container: "panels",
+        attr: "incidentRelations"}
+    ];
 
-  XV.appendExtension("XV.ContactWorkspace", extensions);
+    XV.appendExtension("XV.ContactWorkspace", extensions);
 
-  // ..........................................................
-  // INCIDENT
-  //
+    // ..........................................................
+    // INCIDENT
+    //
   
-  extensions = [
-    {kind: "XV.IncidentToDosBox", container: "panels", attr: "toDoRelations"}
-  ];
+    extensions = [
+      {kind: "XV.IncidentToDosBox", container: "panels", attr: "toDoRelations"}
+    ];
 
-  XV.appendExtension("XV.IncidentWorkspace", extensions);
+    XV.appendExtension("XV.IncidentWorkspace", extensions);
   
-  // ..........................................................
-  // OPPORTUNITY
-  //
+    // ..........................................................
+    // OPPORTUNITY
+    //
 
-  extensions = [
-    {kind: "XV.OpportunityToDosBox", container: "panels", attr: "toDoRelations"}
-  ];
+    extensions = [
+      {kind: "XV.OpportunityToDosBox", container: "panels", attr: "toDoRelations"}
+    ];
 
-  XV.appendExtension("XV.OpportunityWorkspace", extensions);
+    XV.appendExtension("XV.OpportunityWorkspace", extensions);
 
-  // ..........................................................
-  // TO DO
-  //
+    // ..........................................................
+    // TO DO
+    //
 
-  extensions = [
-    {kind: "XV.IncidentWidget", container: "mainGroup", attr: "incident"},
-    {kind: "XV.OpportunityWidget", container: "mainGroup", attr: "opportunity"}
-  ];
+    extensions = [
+      {kind: "XV.IncidentWidget", container: "mainGroup", attr: "incident"},
+      {kind: "XV.OpportunityWidget", container: "mainGroup", attr: "opportunity"}
+    ];
 
-  XV.appendExtension("XV.ToDoWorkspace", extensions);
+    XV.appendExtension("XV.ToDoWorkspace", extensions);
+  };
 
 }());

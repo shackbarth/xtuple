@@ -6,6 +6,8 @@ white:true*/
 (function () {
   "use strict";
 
+XT.extensions.project.initIncidentModels = function () {
+  
   /**
     @class
 
@@ -19,5 +21,6 @@ white:true*/
     isDocumentAssignment: true
 
   });
+};
 
 }());

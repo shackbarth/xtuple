@@ -2,13 +2,19 @@
 regexp:true, undef:true, trailing:true, white:true */
 /*global XT:true, XM:true, enyo:true, _:true */
 
-(function () {
 
-  enyo.kind({
-    name: "XV.IncidentEmailProfilePicker",
-    kind: "XV.PickerWidget",
-    label: "_emailProfile".loc(),
-    collection: "XM.incidentEmailProfiles"
-  });
+(function () {
+  "use strict";
+
+  XT.extensions.connect.initPickers = function () {
+
+    enyo.kind({
+      name: "XV.IncidentEmailProfilePicker",
+      kind: "XV.PickerWidget",
+      label: "_emailProfile".loc(),
+      collection: "XM.incidentEmailProfiles"
+    });
+
+  };
 
 }());

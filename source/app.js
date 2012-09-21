@@ -104,6 +104,26 @@ white:true*/
       this.waterfall("onWorkspace", inEvent);
     },
     dataLoaded: function () {
+      // Initialize extensions
+      if (this._dataLoaded) { return; }
+      this._dataLoaded = true;
+      var prop,
+        ext,
+        extprop;
+      for (prop in XT.extensions) {
+        if (XT.extensions.hasOwnProperty(prop)) {
+          ext = XT.extensions[prop];
+          for (extprop in ext) {
+            if (ext.hasOwnProperty(extprop) &&
+                typeof ext[extprop] === "function") {
+              XT.log('Installing ' + prop + ' ' + extprop);
+              ext[extprop]();
+            }
+          }
+        }
+      }
+      
+      // Go to the navigator
       XT.app.$.postbooks.next();
       XT.app.$.postbooks.getNavigator().activate();
     },

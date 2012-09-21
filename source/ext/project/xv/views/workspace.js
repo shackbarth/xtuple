@@ -5,48 +5,50 @@ trailing:true white:true*/
 
 (function () {
 
-  var extensions;
+  XT.extensions.project.initWorkspaces = function () {
+    var extensions;
  
-  // ..........................................................
-  // ACCOUNT
-  //
+    // ..........................................................
+    // ACCOUNT
+    //
   
-  extensions = [
-    {kind: "XV.AccountProjectsBox", container: "panels",
-      attr: "projectRelations"}
-  ];
+    extensions = [
+      {kind: "XV.AccountProjectsBox", container: "panels",
+        attr: "projectRelations"}
+    ];
 
-  XV.appendExtension("XV.AccountWorkspace", extensions);
+    XV.appendExtension("XV.AccountWorkspace", extensions);
   
-  // ..........................................................
-  // CONTACT
-  //
+    // ..........................................................
+    // CONTACT
+    //
   
-  extensions = [
-    {kind: "XV.ContactProjectsBox", container: "panels",
-      attr: "projectRelations"}
-  ];
+    extensions = [
+      {kind: "XV.ContactProjectsBox", container: "panels",
+        attr: "projectRelations"}
+    ];
 
-  XV.appendExtension("XV.ContactWorkspace", extensions);
+    XV.appendExtension("XV.ContactWorkspace", extensions);
 
-  // ..........................................................
-  // INCIDENT
-  //
+    // ..........................................................
+    // INCIDENT
+    //
   
-  extensions = [
-    {kind: "XV.ProjectWidget", container: "mainGroup", attr: "project"}
-  ];
+    extensions = [
+      {kind: "XV.ProjectWidget", container: "mainGroup", attr: "project"}
+    ];
 
-  XV.appendExtension("XV.IncidentWorkspace", extensions);
+    XV.appendExtension("XV.IncidentWorkspace", extensions);
   
-  // ..........................................................
-  // PROJECT
-  //
+    // ..........................................................
+    // PROJECT
+    //
   
-  extensions = [
-    {kind: "XV.ProjectIncidentsBox", container: "panels", attr: "incidentRelations"}
-  ];
+    extensions = [
+      {kind: "XV.ProjectIncidentsBox", container: "panels", attr: "incidentRelations"}
+    ];
 
-  XV.appendExtension("XV.ProjectWorkspace", extensions);
+    XV.appendExtension("XV.ProjectWorkspace", extensions);
+  };
 
 }());

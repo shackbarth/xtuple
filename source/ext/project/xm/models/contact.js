@@ -5,20 +5,21 @@ white:true*/
 
 (function () {
   "use strict";
-  
-  /**
-    @class
 
-    @extends XM.Model
-  */
-  XM.ContactProject = XM.Model.extend(
-    /** @scope XM.ContactProject.prototype */ {
+  XT.extensions.project.initContactModels = function () {
+    /**
+      @class
 
-    recordType: 'XM.ContactProject',
+      @extends XM.Model
+    */
+    XM.ContactProject = XM.Model.extend(
+      /** @scope XM.ContactProject.prototype */ {
 
-    isDocumentAssignment: true
+      recordType: 'XM.ContactProject',
 
-  });
-  
+      isDocumentAssignment: true
+
+    });
+  }; 
 
 }());

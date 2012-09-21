@@ -5,22 +5,24 @@ trailing:true white:true*/
 
 (function () {
 
-  var module;
+  XT.extensions.project.initPostbooks = function () {
+    var module;
 
-  // ..........................................................
-  // APPLICATION
-  //
+    // ..........................................................
+    // APPLICATION
+    //
 
-  module = {
-    name: "project",
-    label: "_project".loc(),
-    panels: [
-      {name: "projectList", kind: "XV.ProjectList"},
-      {name: "projectTaskList", kind: "XV.ProjectTaskList"}
-    ]
+    module = {
+      name: "project",
+      label: "_project".loc(),
+      panels: [
+        {name: "projectList", kind: "XV.ProjectList"},
+        {name: "projectTaskList", kind: "XV.ProjectTaskList"}
+      ]
+    };
+
+    // TODO: the index should be the one above setup.
+    XT.app.$.postbooks.insertModule(module, 2);
   };
-
-  // TODO: the index should be the one above setup.
-  XV.Postbooks.insertModule(module, 2);
 
 }());

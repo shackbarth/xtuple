@@ -5,18 +5,20 @@ trailing:true white:true*/
 
 (function () {
 
-  var extensions,
-    panels,
-    module;
+  XT.extensions.connect.initPostbooks = function () {
+    var extensions,
+      panels,
+      module;
 
-  // ..........................................................
-  // APPLICATION
-  //
+    // ..........................................................
+    // APPLICATION
+    //
 
-  panels = [
-    {name: "incidentEmailProfile", kind: "XV.IncidentEmailProfileList"}
-  ];
+    panels = [
+      {name: "incidentEmailProfile", kind: "XV.IncidentEmailProfileList"}
+    ];
 
-  XV.Postbooks.appendPanels("setup", panels);
+    XT.app.$.postbooks.appendPanels("setup", panels);
+  };
 
 }());

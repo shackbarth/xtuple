@@ -6,16 +6,17 @@ white:true*/
 (function () {
   "use strict";
 
-  XT.StartupTask.create({
-    taskName: "loadIncidentEmailProfiles",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.incidentEmailProfiles = new XM.IncidentEmailProfileCollection();
-      XM.incidentEmailProfiles.fetch(options);
-      waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
-    }
-  });
+  XT.extensions.connect.initStartup = function () {
+    XT.StartupTask.create({
+      taskName: "loadIncidentEmailProfiles",
+      task: function () {
+        var options = {
+          success: _.bind(this.didComplete, this)
+        };
+        XM.incidentEmailProfiles = new XM.IncidentEmailProfileCollection();
+        XM.incidentEmailProfiles.fetch(options);
+      }
+    });
+  };
 
 }());

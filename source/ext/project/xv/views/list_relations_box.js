@@ -5,41 +5,43 @@ trailing:true white:true*/
 
 (function () {
  
-  // ..........................................................
-  // ACCOUNT
-  //
+  XT.extensions.project.initListRelationsBox = function () {
+    // ..........................................................
+    // ACCOUNT
+    //
   
-  enyo.kind({
-    name: "XV.AccountProjectsBox",
-    kind: "XV.ListRelationsBox",
-    title: "_projects".loc(),
-    parentKey: "account",
-    listRelations: "XV.AccountProjectListRelations",
-    searchList: "XV.ProjectList"
-  });
+    enyo.kind({
+      name: "XV.AccountProjectsBox",
+      kind: "XV.ListRelationsBox",
+      title: "_projects".loc(),
+      parentKey: "account",
+      listRelations: "XV.AccountProjectListRelations",
+      searchList: "XV.ProjectList"
+    });
   
-  // ..........................................................
-  // CONTACT
-  //
+    // ..........................................................
+    // CONTACT
+    //
 
-  enyo.kind({
-    name: "XV.ContactProjectsBox",
-    kind: "XV.ListRelationsBox",
-    title: "_projects".loc(),
-    parentKey: "contact",
-    listRelations: "XV.ContactProjectListRelations",
-    searchList: "XV.ProjectList"
-  });
+    enyo.kind({
+      name: "XV.ContactProjectsBox",
+      kind: "XV.ListRelationsBox",
+      title: "_projects".loc(),
+      parentKey: "contact",
+      listRelations: "XV.ContactProjectListRelations",
+      searchList: "XV.ProjectList"
+    });
 
-  // ..........................................................
-  // PROJECT
-  //
+    // ..........................................................
+    // PROJECT
+    //
   
-  enyo.kind({
-    name: "XV.ProjectIncidentsBox",
-    kind: "XV.AccountIncidentsBox",
-    parentKey: "project",
-    listRelations: "XV.ProjectIncidentListRelations"
-  });
+    enyo.kind({
+      name: "XV.ProjectIncidentsBox",
+      kind: "XV.AccountIncidentsBox",
+      parentKey: "project",
+      listRelations: "XV.ProjectIncidentListRelations"
+    });
+  };
 
 }());
