@@ -19,7 +19,8 @@ trailing:true white:true*/
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           fit: true, components: [
-          {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "XV.Groupbox", name: "mainPanel",
+            style: "width: 480px;", components: [
             {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
             {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
               classes: "in-panel", components: [
@@ -31,7 +32,7 @@ trailing:true white:true*/
               {kind: "XV.InputWidget", attr: "bcc"},
               {kind: "XV.InputWidget", attr: "subject"},
               {kind: "onyx.GroupboxHeader", content: "_body".loc()},
-              {kind: "XV.TextArea", attr: "body", fit: true}
+              {kind: "XV.TextArea", attr: "body", classes: "max-height"}
             ]}
           ]}
         ]}
