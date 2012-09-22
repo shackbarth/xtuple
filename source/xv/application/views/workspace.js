@@ -265,8 +265,8 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.InputWidget", attr: "name", name: "name"},
+            {kind: "XV.InputWidget", attr: "description", name: "description"},
             {kind: "XV.FileInputWidget", attr: "data"}
           ]}
         ]}
