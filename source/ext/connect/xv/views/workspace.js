@@ -27,6 +27,7 @@ trailing:true white:true*/
               {kind: "XV.InputWidget", attr: "name"},
               {kind: "XV.InputWidget", attr: "description"},
               {kind: "onyx.GroupboxHeader", content: "_header".loc()},
+              {kind: "XV.InputWidget", attr: "from"},
               {kind: "XV.InputWidget", attr: "to"},
               {kind: "XV.InputWidget", attr: "cc"},
               {kind: "XV.InputWidget", attr: "bcc"},

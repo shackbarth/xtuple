@@ -8,15 +8,40 @@ white:true*/
 
   XT.extensions.connect.initIncidentModels = function () {
     
-    // Get original save function
-    var save = XM.Incident.prototype.save;
-    
     // Define email processing
     var sendEmail = function () {
-      XT.log('sending email');
+      var that = this,
+        profile = this.getValue('category.emailProfile'),
+        from,
+        to,
+        cc,
+        bcc,
+        subject,
+        body,
+        format = function (str) {
+          var parser = /\{([^}]+)\}/g, // Finds curly braces
+            tokens,
+            attr;
+          tokens = str.match(parser);
+          _.each(tokens, function (token) {
+            attr = token.slice(1, token.indexOf('}'));
+            body = body.replace(token, that.getValue(attr));
+          });
+        };
+      if (profile) {
+        from = format(profile.get('from') || "");
+        to = format(profile.get('to') || "");
+        cc = format(profile.get('cc') || "");
+        bcc = format(profile.get('bcc') || "");
+        subject = format(profile.get('subject') || "");
+        body = format(profile.get('body') || "");
+      }
     };
     
-    // Extend save function to generate email
+    // Enhance `save` function to generate email after successful commit
+    // We don't use `extend` to avoid risk of over-writing something else
+    // Instead inject `options` into existing save function
+    var save = XM.Incident.prototype.save;
     XM.Incident.prototype.save = function (key, value, options) {
       options = options ? _.clone(options) : {};
       var that = this,
