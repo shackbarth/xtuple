@@ -271,7 +271,23 @@ trailing:true white:true*/
           ]}
         ]}
       ]}
-    ]
+    ],
+
+    /**
+      When a file is uploaded we want the filename to overwrite
+      the name and description fields.
+     */
+      // TODO: description should not be user-editable
+      // TODO: this isn't getting fired for the fileinputwidget
+    controlValueChanged: function (inSender, inEvent) {
+      var filename = inEvent.filename;
+      if (filename) {
+        this.$.name.setValue(filename);
+        this.$.description.setValue(filename);
+      }
+
+      this.inherited(arguments);
+    }
   });
 
   XV.registerModelWorkspace("XM.FileRelation", "XV.FileWorkspace");

@@ -27,12 +27,22 @@ regexp:true, undef:true, trailing:true, white:true */
       var file = inEvent.originator.$.input.hasNode().files[0],
         // XXX unsure about browser support for this HTML5 construct
         // XXX unsure about the overhead of this constructor. maybe save it globally?
-        reader = new FileReader();
+        filename = inEvent.value,
+        reader;
 
+      if (FileReader) {
+        reader = new FileReader();
+      } else {
+        alert("Sorry! File upload is only supported on modern browsers.");
+        inEvent.value = null;
+        return;
+      }
       // XXX binary string is only one of several options here
+      // and I don't think it's working for true binary files
       // http://www.html5rocks.com/en/tutorials/file/dndfiles/
-      reader.readAsBinaryString(file)
+      reader.readAsBinaryString(file);
       inEvent.value = reader.result;
+      inEvent.filename = filename;
     }
   });
 
