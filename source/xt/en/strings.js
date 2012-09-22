@@ -404,6 +404,7 @@ XT.stringsFor("en_US", {
   "_countryInvalid": "Country is invalid.",
   "_datasourceError": "Data source error: {error}",
   "_duplicateValues": "Duplicate values are not allowed.",
+  "_insufficientViewPrivileges": "You do not have sufficient privileges to view this record.",
   "_invalidAddress": "Invalid Address",
   "_lengthInvalid": "Length of {attr} must be {length}.",
   "_loadingApplicationData": "Loading Application Data",

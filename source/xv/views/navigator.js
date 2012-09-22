@@ -83,7 +83,14 @@ trailing:true white:true*/
         ]},
         {name: "header", content: "", classes: "xv-navigator-header"},
         {name: "contentPanels", kind: "Panels", margin: 0, fit: true,
-          draggable: false, panelCount: 0}
+          draggable: false, panelCount: 0},
+        {kind: "onyx.Popup", name: "errorPopup", centered: true,
+          modal: true, floating: true, scrim: true, components: [
+          {name: "errorMessage", content: "_error".loc()},
+          {tag: "br"},
+          {kind: "onyx.Button", content: "_ok".loc(), ontap: "errorOk",
+            classes: "onyx-blue xv-popup-button"}
+        ]}
       ]}
     ],
     fetched: {},
@@ -101,6 +108,9 @@ trailing:true white:true*/
     },
     getSelectedModule: function (index) {
       return this._selectedModule;
+    },
+    errorOk: function () {
+      this.$.errorPopup.hide();
     },
     fetch: function (options) {
       options = options ? _.clone(options) : {};
@@ -181,10 +191,22 @@ trailing:true white:true*/
     itemTap: function (inSender, inEvent) {
       var list = inEvent.list,
         workspace = list ? list.getWorkspace() : null,
-        id = list ? list.getModel(inEvent.index).id : null;
+        model = list.getModel(inEvent.index),
+        id = model ? model.id : null,
+        message;
+        
+      // Check privileges first
+      if (!model.couldRead()) {
+        message = "_insufficientViewPrivileges".loc();
+        this.$.errorMessage.setContent(message);
+        this.$.errorPopup.render();
+        this.$.errorPopup.show();
+        return true;
+      }
 
       // Bubble requset for workspace view, including the model id payload
       if (workspace) { this.doWorkspace({workspace: workspace, id: id}); }
+      return true;
     },
     setModules: function (modules) {
       this.modules = modules;
