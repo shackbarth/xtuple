@@ -192,11 +192,12 @@ trailing:true white:true*/
       var list = inEvent.list,
         workspace = list ? list.getWorkspace() : null,
         model = list.getModel(inEvent.index),
+        canNotRead = model.couldRead ? !model.couldRead() : !model.getClass().canRead(),
         id = model ? model.id : null,
         message;
         
       // Check privileges first
-      if (!model.couldRead()) {
+      if (canNotRead) {
         message = "_insufficientViewPrivileges".loc();
         this.$.errorMessage.setContent(message);
         this.$.errorPopup.render();
