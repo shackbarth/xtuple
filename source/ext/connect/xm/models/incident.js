@@ -13,11 +13,13 @@ white:true*/
       var that = this,
         profile = this.getValue('category.emailProfile'),
         from,
+        replyTo,
         to,
         cc,
         bcc,
         subject,
         body,
+        batch,
         format = function (str) {
           var parser = /\{([^}]+)\}/g, // Finds curly braces
             tokens,
@@ -30,11 +32,29 @@ white:true*/
         };
       if (profile) {
         from = format(profile.get('from') || "");
+        replyTo = format(profile.get('replyTo') || "");
         to = format(profile.get('to') || "");
         cc = format(profile.get('cc') || "");
         bcc = format(profile.get('bcc') || "");
         subject = format(profile.get('subject') || "");
         body = format(profile.get('body') || "");
+        
+        // Create and submit the email batch record
+        batch = new XM.Batch(null, {isNew: true});
+        batch.set({
+          action: "Email",
+          createdBy: XM.currentUser.id,
+          created: new Date(),
+          scheduled: new Date(),
+          from: from,
+          replyTo: replyTo,
+          to: to,
+          cc: cc,
+          bcc: bcc,
+          subject: subject,
+          body: body
+        });
+        batch.save();
       }
     };
     
@@ -59,6 +79,44 @@ white:true*/
       // Now call the original
       save.call(this, key, value, options);
     };
+    
+    // Supporting functions for email processing
+    XM.Incident = XM.Incident.extend(
+      /** @scope XM.Incident.prototype */ {
+
+      change: function () {
+        return "?Change?";
+      },
+      
+      emailBcc: function () {
+        return "john@xtuple.com";
+      },
+      
+      lastComment: function () {
+        var comments = this.get('comments'),
+          comment,
+          ret = "";
+        if (comments.length) {
+          comments.comparator = function (a, b) {
+            var aval = a.get('created'),
+              bval = b.get('created');
+            return XT.date.compare(bval, aval);
+          };
+          comments.sort();
+          comment = comments.models[0];
+          ret = "_latestComment" +
+                comment.get('createdBy') +
+                "/n/n" +
+                comment.get('text');
+        }
+        return ret;
+      },
+      
+      lastHistory: function () {
+        
+      }
+      
+    });
     
     /**
       @class

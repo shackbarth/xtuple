@@ -318,6 +318,7 @@ XT.stringsFor("en_US", {
   "_related": "Related",
   "_relatedTo": "Related to",
   "_relationships": "Relationships",
+  "_replyTo": "Reply To",
   "_resolution": "Resolution",
   "_roles": "Roles",
   "_save": "Save",
