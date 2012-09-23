@@ -41,22 +41,12 @@ white:true*/
         item.kind = inEvent.getParameterWidget();
       }
       if (item.kind) {
-        if (this._pulloutItems === undefined) {
-          this._pulloutItems = [];
-        }
-        this._pulloutItems.push(item);
+        item.container = this.$.pullout.$.pulloutItems;
+        this.$.pullout.createComponent(item);
       }
     },
     create: function () {
       this.inherited(arguments);
-      var pulloutItems = this._pulloutItems || [],
-        item,
-        i;
-      for (i = 0; i < pulloutItems.length; i++) {
-        item = pulloutItems[i];
-        item.container = this.$.pullout.$.pulloutItems;
-        this.$.pullout.createComponent(item);
-      }
       XT.app = this;
     },
     getPullout: function () {
