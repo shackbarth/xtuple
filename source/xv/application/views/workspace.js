@@ -278,7 +278,6 @@ trailing:true white:true*/
       the name and description fields.
      */
       // TODO: description should not be user-editable
-      // TODO: this isn't getting fired for the fileinputwidget
     controlValueChanged: function (inSender, inEvent) {
       var filename = inEvent.filename;
       if (filename) {
