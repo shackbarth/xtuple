@@ -184,7 +184,7 @@ white:true*/
         I = XM.Incident,
         K = XM.Model;
       if ((options && options.force) || !(status & K.READY)) { return; }
-      if (value) { this.set('incidentStatus', I.ASSIGNED); }
+      if (value) { this.set('status', I.ASSIGNED); }
     },
 
     validateSave: function () {

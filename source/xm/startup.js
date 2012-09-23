@@ -307,6 +307,7 @@ white:true*/
     { id: "N", name: "_new".loc() },
     { id: "F", name: "_feedback".loc() },
     { id: "C", name: "_confirmed".loc() },
+    { id: "A", name: "_assigned".loc() },
     { id: "R", name: "_resolved".loc() },
     { id: "L", name: "_closed".loc() }
   ];

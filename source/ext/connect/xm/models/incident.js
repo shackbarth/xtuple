@@ -73,11 +73,32 @@ white:true*/
     XM.Incident.prototype.save = function (key, value, options) {
       options = options ? _.clone(options) : {};
       var that = this,
-        success = options.success;
+        K = XM.Model,
+        success = options.success,
+        status = this.getStatus(),
+        statusString = this.getIncidentStatusString().toUpperCase(),
+        isNotUpdated = _.size(this.prime) === 0,
+        newComment = _.find(this.get('comments').models, function (comment) {
+          return comment.getStatus() === K.READY_NEW;
+        });
       options.success = function (model, resp, options) {
         sendEmail.call(that);
         if (success) { success(model, resp, options); }
       };
+      
+      // Set change text
+      if (status === K.READY_NEW && this.get('status') !== 'N') {
+        this._lastChange = "The following incident has been created with status " + statusString + ".";
+      } else if (status === K.READY_NEW) {
+        this._lastChange = "The following incident has been CREATED.";
+      } else if (this.original('status') !== this.get('status')) {
+        this._lastChange = "The status of the following incident has been changed to " +
+          statusString + ".";
+      } else if (newComment && isNotUpdated) {
+        this._lastChange = "A new COMMENT has been added to the following incident.";
+      } else {
+        this._lastChange = "The following incident has been UPDATED.";
+      }
       
       // Handle both `"key", value` and `{key: value}` -style arguments.
       if (_.isObject(key) || _.isEmpty(key)) {
@@ -92,8 +113,8 @@ white:true*/
     XM.Incident = XM.Incident.extend(
       /** @scope XM.Incident.prototype */ {
 
-      changeText: function () {
-        return "?Change?";
+      getChangeString: function () {
+        return this._lastChange;
       },
       
       emailBcc: function () {

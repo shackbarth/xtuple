@@ -28,12 +28,20 @@ trailing:true white:true*/
         value,
         K = XM.Model,
         status = model.getStatus(),
-        changes = options.changes,
+        changes = {}, // = options.changes
         canNotUpdate = !model.canUpdate() || !(status & K.READY),
         control,
         isReadOnly,
         isRequired,
         prop;
+      // This wasn't original intent. Changes was ONLY supposed to process changes,
+      // but it turns out attributes changed inside triggers don't themselves don't
+      // get included in a generic change event. So for now process all every time.
+      for (prop in model.attributes) {
+        if (model.attributes.hasOwnProperty(prop)) {
+          changes[prop] = true;
+        }
+      }
       for (attr in changes) {
         if (changes.hasOwnProperty(attr)) {
           prop = model.attributeDelegates && model.attributeDelegates[attr] ?
