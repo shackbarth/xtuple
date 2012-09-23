@@ -134,7 +134,8 @@ white:true*/
           };
           history.sort();
           _.each(history.models, function (model) {
-            var created = model.get('created'),
+            var offset = (new Date()).getTimezoneOffset(), // hack: the data should include timezone
+              created = new Date(model.get('created').getTime() + offset * 60 * 1000),
               fdate = Globalize.format(created, "d"),
               ftime = Globalize.format(created, "t");
             if (!isFirst) { ret += "\n"; }
