@@ -6,18 +6,20 @@ white:true*/
 (function () {
   "use strict";
   
-  /**
-    @class
+  XT.extensions.project.initOpportunityModels = function () {
+    /**
+      @class
 
-    @extends XM.Model
-  */
-  XM.OpportunityProject = XM.Model.extend(
-    /** @scope XM.OpportunityProject.prototype */ {
+      @extends XM.Model
+    */
+    XM.OpportunityProject = XM.Model.extend(
+      /** @scope XM.OpportunityProject.prototype */ {
 
-    recordType: 'XM.OpportunityProject',
+      recordType: 'XM.OpportunityProject',
 
-    isDocumentAssignment: true
+      isDocumentAssignment: true
 
-  });
+    });
+  };
 
 }());

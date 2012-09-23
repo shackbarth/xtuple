@@ -5,20 +5,22 @@ white:true*/
 
 (function () {
   "use strict";
+
+  XT.extensions.project.initListAccountModels = function () {
   
-  /**
-    @class
+    /**
+      @class
 
-    @extends XM.Model
-  */
-  XM.AccountProject = XM.Model.extend(
-    /** @scope XM.AccountProject.prototype */ {
+      @extends XM.Model
+    */
+    XM.AccountProject = XM.Model.extend(
+      /** @scope XM.AccountProject.prototype */ {
 
-    recordType: 'XM.AccountProject',
+      recordType: 'XM.AccountProject',
 
-    isDocumentAssignment: true
+      isDocumentAssignment: true
 
-  });
-  
+    });
+  };
 
 }());

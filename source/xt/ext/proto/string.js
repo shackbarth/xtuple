@@ -28,5 +28,13 @@ _.extend(String.prototype, {
   suffix: function() {
     var args = XT.$A(arguments);
     return XT.String.suffix(this, args);
+  },
+  leftPad: function() {
+    var args = XT.$A(arguments);
+    return XT.String.leftPad(this.toString(), args[0], args[1]);
+  },
+  rightPad: function() {
+    var args = XT.$A(arguments);
+    return XT.String.rightPad(this.toString(), args[0], args[1]);
   }
 });

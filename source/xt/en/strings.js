@@ -318,6 +318,7 @@ XT.stringsFor("en_US", {
   "_related": "Related",
   "_relatedTo": "Related to",
   "_relationships": "Relationships",
+  "_replyTo": "Reply To",
   "_resolution": "Resolution",
   "_roles": "Roles",
   "_save": "Save",
@@ -338,6 +339,7 @@ XT.stringsFor("en_US", {
   "_sourceType": "Source Type",
   "_stage": "Stage",
   "_start": "Start",
+  "_startDate": "Start Date",
   "_state": "State",
   "_states": "States",
   "_status": "Status",
@@ -403,8 +405,12 @@ XT.stringsFor("en_US", {
   "_countryInvalid": "Country is invalid.",
   "_datasourceError": "Data source error: {error}",
   "_duplicateValues": "Duplicate values are not allowed.",
+  "_insufficientViewPrivileges": "You do not have sufficient privileges to view this record.",
   "_invalidAddress": "Invalid Address",
   "_lengthInvalid": "Length of {attr} must be {length}.",
+  "_loadingApplicationData": "Loading Application Data",
+  "_loadingExtensions": "Loading Extensions",
+  "_loadingSessionData": "Loading Session Data",
   "_localResourceNotAllowed": "Not allowed to load local resource",
   "_logoutConfirmation": "Are you sure you want to log out?",
   "_nameRequired": "A name is required.",
@@ -432,8 +438,27 @@ XT.stringsFor("en_US", {
   "_unsavedChanges": "You have unsaved changes.",
   "_valueExists": "Record with {attr} of '{value}' already exists.",
   "_saveYourWork?": "Do you want to save your work?",
-  "_whatToDo": "What would you like to do?"
-
+  "_whatToDo": "What would you like to do?",
+  
+  // ********
+  // Connect - TODO: Separate this into its extension folder
+  // ********
+  
+  "_bcc": "Bcc",
+  "_body": "Body",
+  "_cc": "Cc",
+  "_emailProfile": "Email Profile",
+  "_header": "Header",
+  "_incidentChangedStatus": "The status of the following incident has been changed to {status}",
+  "_incidentCreatedStatus": "The following incident has been created with status {status}",
+  "_incidentCreated": "The following incident has been CREATED",
+  "_incidentNewComment": "A new COMMENT has been added to the following incident",
+  "_incidentUpdated": "The following incident has been UPDATED",
+  "_incidentEmailProfile": "Incident Email Profiles",
+  "_incidentEmailProfiles": "Incident Email Profiles",
+  "_latestComment": "Latest Comment",
+  "_subject": "Subject"
+  
 });
 
 XT.locale.setLanguage(XT.lang);

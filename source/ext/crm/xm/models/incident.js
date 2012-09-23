@@ -6,32 +6,34 @@ white:true*/
 (function () {
   "use strict";
 
-  /**
-    @class
+  XT.extensions.crm.incidentModels = function () {
+    /**
+      @class
 
-    @extends XM.Model
-  */
-  XM.IncidentOpportunity = XM.Model.extend(
-    /** @scope XM.IncidentOpportunity.prototype */ {
+      @extends XM.Model
+    */
+    XM.IncidentOpportunity = XM.Model.extend(
+      /** @scope XM.IncidentOpportunity.prototype */ {
 
-    recordType: 'XM.IncidentOpportunity',
+      recordType: 'XM.IncidentOpportunity',
 
-    isDocumentAssignment: true
+      isDocumentAssignment: true
 
-  });
+    });
   
-  /**
-    @class
+    /**
+      @class
 
-    @extends XM.Model
-  */
-  XM.IncidentToDo = XM.Model.extend(
-    /** @scope XM.IncidentToDoprototype */ {
+      @extends XM.Model
+    */
+    XM.IncidentToDo = XM.Model.extend(
+      /** @scope XM.IncidentToDoprototype */ {
 
-    recordType: 'XM.IncidentToDo',
+      recordType: 'XM.IncidentToDo',
 
-    isDocumentAssignment: true
+      isDocumentAssignment: true
 
-  });
+    });
+  };
 
 }());

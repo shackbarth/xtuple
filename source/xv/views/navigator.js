@@ -83,7 +83,14 @@ trailing:true white:true*/
         ]},
         {name: "header", content: "", classes: "xv-navigator-header"},
         {name: "contentPanels", kind: "Panels", margin: 0, fit: true,
-          draggable: false, panelCount: 0}
+          draggable: false, panelCount: 0},
+        {kind: "onyx.Popup", name: "errorPopup", centered: true,
+          modal: true, floating: true, scrim: true, components: [
+          {name: "errorMessage", content: "_error".loc()},
+          {tag: "br"},
+          {kind: "onyx.Button", content: "_ok".loc(), ontap: "errorOk",
+            classes: "onyx-blue xv-popup-button"}
+        ]}
       ]}
     ],
     fetched: {},
@@ -101,6 +108,9 @@ trailing:true white:true*/
     },
     getSelectedModule: function (index) {
       return this._selectedModule;
+    },
+    errorOk: function () {
+      this.$.errorPopup.hide();
     },
     fetch: function (options) {
       options = options ? _.clone(options) : {};
@@ -181,23 +191,63 @@ trailing:true white:true*/
     itemTap: function (inSender, inEvent) {
       var list = inEvent.list,
         workspace = list ? list.getWorkspace() : null,
-        id = list ? list.getModel(inEvent.index).id : null;
+        model = list.getModel(inEvent.index),
+        canNotRead = model.couldRead ? !model.couldRead() : !model.getClass().canRead(),
+        id = model ? model.id : null,
+        message;
+        
+      // Check privileges first
+      if (canNotRead) {
+        message = "_insufficientViewPrivileges".loc();
+        this.$.errorMessage.setContent(message);
+        this.$.errorPopup.render();
+        this.$.errorPopup.show();
+        return true;
+      }
 
       // Bubble requset for workspace view, including the model id payload
       if (workspace) { this.doWorkspace({workspace: workspace, id: id}); }
+      return true;
     },
+    setModules: function (modules) {
+      this.modules = modules;
+      this.modulesChanged();
+    },
+    /**
+      Handles additive changes only
+    */
     modulesChanged: function () {
       var modules = this.getModules() || [],
+        existingModules = this._modules || [],
+        existingModule,
+        existingPanel,
         panels,
         panel,
         i,
-        n;
-
+        n,
+        findExistingModule = function (name) {
+          return _.find(existingModules, function (module) {
+            return module.name === name;
+          });
+        },
+        findExistingPanel = function (panels, name) {
+          return _.find(panels, function (panel) {
+            return panel.name === name;
+          });
+        };
+      
       // Build panels
       for (i = 0; i < modules.length; i++) {
         panels = modules[i].panels || [];
+        existingModule = findExistingModule(modules[i].name);
         for (n = 0; n < panels.length; n++) {
-
+          
+          // If the panel already exists, move on
+          if (existingModule) {
+            existingPanel = findExistingPanel(existingModule.panels, panels[n].name);
+            if (existingPanel) { continue; }
+          }
+          
           // Keep track of where this panel is being placed for later reference
           panels[n].index = this.$.contentPanels.panelCount++;
           panel = this.$.contentPanels.createComponent(panels[n]);
@@ -209,6 +259,9 @@ trailing:true white:true*/
         }
       }
       this.$.moduleMenu.setCount(modules.length);
+      // Cache a deep copy
+      this._modules = JSON.parse(JSON.stringify(modules));
+      this.render();
     },
     exportList: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),

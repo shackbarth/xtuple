@@ -129,7 +129,7 @@ white:true*/
 
     @extends XM.Characteristic
   */
-  XM.OpportunityCharacteristic = XM.Characteristic.extend({
+  XM.OpportunityCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.OpportunityCharacteristic.prototype */
 
     recordType: 'XM.OpportunityCharacteristic'

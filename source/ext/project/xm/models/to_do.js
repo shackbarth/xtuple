@@ -6,19 +6,20 @@ white:true*/
 (function () {
   "use strict";
 
-  /**
-    @class
+  XT.extensions.project.toDoModels = function () {
+    /**
+      @class
 
-    @extends XM.Model
-  */
-  XM.ToDoProject = XM.Model.extend(
-    /** @scope XM.ToDoProject.prototype */ {
+      @extends XM.Model
+    */
+    XM.ToDoProject = XM.Model.extend(
+      /** @scope XM.ToDoProject.prototype */ {
 
-    recordType: 'XM.ToDoProject',
+      recordType: 'XM.ToDoProject',
 
-    isDocumentAssignment: true
+      isDocumentAssignment: true
 
-  });
-  
+    });
+  };
 
 }());

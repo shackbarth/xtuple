@@ -6,21 +6,21 @@ white:true*/
 (function () {
   "use strict";
 
-XT.extensions.project.initIncidentModels = function () {
-  
   /**
     @class
 
     @extends XM.Model
   */
-  XM.IncidentProject = XM.Model.extend(
-    /** @scope XM.IncidentProject.prototype */ {
+  XM.Batch = XM.Model.extend(
+    /** @scope XM.Batch.prototype */ {
 
-    recordType: 'XM.IncidentProject',
-
-    isDocumentAssignment: true
+    recordType: 'XM.Batch',
+  
+    defaults: {
+      rescheduleInterval: 'N',
+      isEmailHtml: false
+    }
 
   });
-};
 
 }());

@@ -751,6 +751,7 @@ body {
 
 .xv-textarea-input {
   width: 95%;
+  height: 100%;
   min-height: 100px;
   margin: 6px;
   border-radius: 4px;
@@ -816,6 +817,9 @@ body {
 
 .xv-textarea {
   background-color: white;
+  &.max-height {
+    height: 100%;
+  }
 }
 
 .xv-half-check {
