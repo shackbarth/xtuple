@@ -88,16 +88,16 @@ white:true*/
       
       // Set change text
       if (status === K.READY_NEW && this.get('status') !== 'N') {
-        this._lastChange = "The following incident has been created with status " + statusString + ".";
+        this._lastChange = "_incidentCreatedStatus".loc() + statusString + ".";
       } else if (status === K.READY_NEW) {
-        this._lastChange = "The following incident has been CREATED.";
+        this._lastChange = "_incidentCreated".loc();
       } else if (this.original('status') !== this.get('status')) {
-        this._lastChange = "The status of the following incident has been changed to " +
+        this._lastChange = "_incidentChangedStatus".loc() +
           statusString + ".";
       } else if (newComment && isNotUpdated) {
-        this._lastChange = "A new COMMENT has been added to the following incident.";
+        this._lastChange = "_incidentNewComment".loc();
       } else {
-        this._lastChange = "The following incident has been UPDATED.";
+        this._lastChange = "_incidentUpdated".loc();
       }
       
       // Handle both `"key", value` and `{key: value}` -style arguments.
