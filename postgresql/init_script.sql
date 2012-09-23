@@ -56,6 +56,9 @@
 
 -- xt tables
 \i xt/tables/comment.sql
+\i xt/tables/emlprofile.sql
+\i xt/tables/incdtemlprofile.sql
+\i xt/tables/incdtcatemlprofile.sql
 \i xt/tables/js.sql
 \i xt/tables/orm.sql
 \i xt/tables/useracct.sql
