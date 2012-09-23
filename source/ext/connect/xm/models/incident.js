@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
-/*global XT:true, XM:true, Backbone:true, _:true, console:true */
+/*global XT:true, XM:true, Backbone:true, Globalize: true, _:true, console:true */
 
 (function () {
   "use strict";
@@ -21,40 +21,48 @@ white:true*/
         body,
         batch,
         format = function (str) {
+          str = str || "";
           var parser = /\{([^}]+)\}/g, // Finds curly braces
             tokens,
             attr;
           tokens = str.match(parser);
           _.each(tokens, function (token) {
             attr = token.slice(1, token.indexOf('}'));
-            body = body.replace(token, that.getValue(attr));
+            str = str.replace(token, that.getValue(attr));
           });
+          return str;
+        },
+        // Finish handling batch when we get an id.
+        callback = function () {
+          batch.off('change:id', callback);
+          batch.set({
+            action: "Email",
+            createdBy: XM.currentUser.id,
+            created: new Date(),
+            scheduled: new Date(),
+            from: from,
+            replyTo: replyTo,
+            to: to,
+            cc: cc,
+            bcc: bcc,
+            subject: subject,
+            body: body
+          });
+          batch.save();
         };
       if (profile) {
-        from = format(profile.get('from') || "");
-        replyTo = format(profile.get('replyTo') || "");
-        to = format(profile.get('to') || "");
-        cc = format(profile.get('cc') || "");
-        bcc = format(profile.get('bcc') || "");
-        subject = format(profile.get('subject') || "");
-        body = format(profile.get('body') || "");
+        from = format(profile.get('from'));
+        replyTo = format(profile.get('replyTo'));
+        to = format(profile.get('to'));
+        cc = format(profile.get('cc'));
+        bcc = format(profile.get('bcc'));
+        subject = format(profile.get('subject'));
+        body = format(profile.get('body'));
         
         // Create and submit the email batch record
-        batch = new XM.Batch(null, {isNew: true});
-        batch.set({
-          action: "Email",
-          createdBy: XM.currentUser.id,
-          created: new Date(),
-          scheduled: new Date(),
-          from: from,
-          replyTo: replyTo,
-          to: to,
-          cc: cc,
-          bcc: bcc,
-          subject: subject,
-          body: body
-        });
-        batch.save();
+        batch = new XM.Batch();
+        batch.on('change:id', callback);
+        batch.initialize(null, {isNew: true});
       }
     };
     
@@ -84,7 +92,7 @@ white:true*/
     XM.Incident = XM.Incident.extend(
       /** @scope XM.Incident.prototype */ {
 
-      change: function () {
+      changeText: function () {
         return "?Change?";
       },
       
@@ -92,11 +100,12 @@ white:true*/
         return "john@xtuple.com";
       },
       
-      lastComment: function () {
+      getLastCommentString: function () {
         var comments = this.get('comments'),
           comment,
           ret = "";
         if (comments.length) {
+          // Sort by date descending and take first
           comments.comparator = function (a, b) {
             var aval = a.get('created'),
               bval = b.get('created');
@@ -104,16 +113,38 @@ white:true*/
           };
           comments.sort();
           comment = comments.models[0];
-          ret = "_latestComment" +
-                comment.get('createdBy') +
-                "/n/n" +
+          ret = "_latestComment".loc() +
+                " (" + comment.get('createdBy') + ")" +
+                "\n\n" +
                 comment.get('text');
         }
         return ret;
       },
       
-      lastHistory: function () {
-        
+      getHistoryString: function () {
+        var history = this.get('history'),
+          ret = "",
+          isFirst = true;
+        if (history.length) {
+          // Sort by date ascending
+          history.comparator = function (a, b) {
+            var aval = a.get('created'),
+              bval = b.get('created');
+            return XT.date.compare(aval, bval);
+          };
+          history.sort();
+          _.each(history.models, function (model) {
+            var created = model.get('created'),
+              fdate = Globalize.format(created, "d"),
+              ftime = Globalize.format(created, "t");
+            if (!isFirst) { ret += "\n"; }
+            isFirst = false;
+            ret += (fdate + ' ' + ftime).rightPad(' ', 24);
+            ret += model.get('createdBy').slice(0, 17).rightPad(' ', 18);
+            ret += model.get('description');
+          });
+        }
+        return ret;
       }
       
     });

@@ -451,6 +451,7 @@ XT.stringsFor("en_US", {
   "_header": "Header",
   "_incidentEmailProfile": "Incident Email Profiles",
   "_incidentEmailProfiles": "Incident Email Profiles",
+  "_latestComment": "Latest Comment",
   "_subject": "Subject"
   
 });
