@@ -245,6 +245,7 @@ trailing:true white:true*/
         };
       options.success = function (model, resp, options) {
         that.doModelChange(inEvent);
+        that.parent.parent.modelSaved();
         if (that.callback) { that.callback(model); }
         if (success) { success(model, resp, options); }
       };
@@ -298,7 +299,6 @@ trailing:true white:true*/
     handlers: {
       onError: "errorNotify",
       onHeaderChange: "headerChanged",
-      onModelChange: "modelChanged",
       onStatusChange: "statusChanged",
       onTitleChange: "titleChanged"
     },
@@ -418,7 +418,7 @@ trailing:true white:true*/
         }
       }
     },
-    modelChanged: function () {
+    modelSaved: function () {
       if (this._saveState === SAVE_CLOSE) {
         this.close();
       } else if (this._saveState === SAVE_NEW) {
