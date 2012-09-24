@@ -71,6 +71,11 @@ white:true*/
     // Instead inject `options` into existing save function
     var save = XM.Incident.prototype.save;
     XM.Incident.prototype.save = function (key, value, options) {
+      // Handle both `"key", value` and `{key: value}` -style arguments.
+      if (_.isObject(key) || _.isEmpty(key)) {
+        options = value;
+      }
+      
       options = options ? _.clone(options) : {};
       var that = this,
         K = XM.Model,
@@ -81,6 +86,7 @@ white:true*/
         newComment = _.find(this.get('comments').models, function (comment) {
           return comment.getStatus() === K.READY_NEW;
         });
+        
       options.success = function (model, resp, options) {
         sendEmail.call(that);
         if (success) { success(model, resp, options); }
@@ -101,11 +107,6 @@ white:true*/
         this._lastChange = "_incidentUpdated".loc();
       }
       this._lastChange += ":";
-      
-      // Handle both `"key", value` and `{key: value}` -style arguments.
-      if (_.isObject(key) || _.isEmpty(key)) {
-        value = options;
-      }
       
       // Now call the original
       save.call(this, key, value, options);
