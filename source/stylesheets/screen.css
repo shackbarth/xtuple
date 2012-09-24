@@ -883,13 +883,14 @@ body {
 /* line 752, ../sass/screen.scss */
 .xv-textarea-input {
   width: 95%;
+  height: 100%;
   min-height: 100px;
   margin: 6px;
   border-radius: 4px;
   border-color: #ddd;
 }
 
-/* line 760, ../sass/screen.scss */
+/* line 761, ../sass/screen.scss */
 .xv-documents-picker-label {
   width: 85px;
   padding-bottom: 8px;
@@ -899,33 +900,33 @@ body {
   text-align: right;
 }
 
-/* line 769, ../sass/screen.scss */
+/* line 770, ../sass/screen.scss */
 .xv-documents-picker {
   width: 120px;
   margin: 6px;
 }
 
-/* line 774, ../sass/screen.scss */
+/* line 775, ../sass/screen.scss */
 .xv-relationwidget-completer {
   left: -200px;
   top: 15px;
 }
 
-/* line 780, ../sass/screen.scss */
+/* line 781, ../sass/screen.scss */
 .xv-relationwidget-column.left {
   padding-right: 18px;
   color: black;
   width: 140px;
 }
 
-/* line 787, ../sass/screen.scss */
+/* line 788, ../sass/screen.scss */
 .xv-relationwidget-icon {
   top: 2px;
   left: 8px;
   position: relative;
 }
 
-/* line 793, ../sass/screen.scss */
+/* line 794, ../sass/screen.scss */
 .xv-relationwidget-description {
   white-space: nowrap;
   overflow: hidden;
@@ -935,30 +936,34 @@ body {
   padding-bottom: 4px;
   max-width: 325px;
 }
-/* line 801, ../sass/screen.scss */
+/* line 802, ../sass/screen.scss */
 .xv-relationwidget-description.disabled {
   opacity: 0.4;
 }
-/* line 804, ../sass/screen.scss */
+/* line 805, ../sass/screen.scss */
 .xv-relationwidget-description.label {
   text-indent: 0px;
   text-align: right;
 }
-/* line 809, ../sass/screen.scss */
+/* line 810, ../sass/screen.scss */
 .xv-relationwidget-description.hasLabel {
   text-indent: 0px;
 }
-/* line 812, ../sass/screen.scss */
+/* line 813, ../sass/screen.scss */
 .xv-relationwidget-description.hyperlink {
   color: blue;
 }
 
-/* line 817, ../sass/screen.scss */
+/* line 818, ../sass/screen.scss */
 .xv-textarea {
   background-color: white;
 }
+/* line 820, ../sass/screen.scss */
+.xv-textarea.max-height {
+  height: 100%;
+}
 
-/* line 821, ../sass/screen.scss */
+/* line 825, ../sass/screen.scss */
 .xv-half-check {
   background-image: url("../../assets/checkbox.png");
   background-repeat: no-repeat;
@@ -967,7 +972,7 @@ body {
   background-color: transparent;
 }
 
-/* line 830, ../sass/screen.scss */
+/* line 834, ../sass/screen.scss */
 .xv-menuitem.disabled {
   color: Dimgray;
 }

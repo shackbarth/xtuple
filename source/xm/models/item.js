@@ -182,7 +182,7 @@ white:true*/
 
     @extends XM.Characteristic
   */
-  XM.ItemCharacteristic = XM.Characteristic.extend({
+  XM.ItemCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.ItemCharacteristic.prototype */
 
     recordType: 'XM.ItemCharacteristic'

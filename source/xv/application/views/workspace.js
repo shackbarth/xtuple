@@ -135,7 +135,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "fax"},
             {kind: "XV.ContactCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes", fit: true},
+            {kind: "XV.TextArea", attr: "notes"},
             {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
             {kind: "XV.AccountWidget", attr: "account"},
             {kind: "XV.UserAccountWidget", attr: "owner"}

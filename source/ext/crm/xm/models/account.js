@@ -6,46 +6,62 @@ white:true*/
 (function () {
   "use strict";
 
-  /**
-    @class
+  XT.extensions.crm.initAccountModels = function () {
+    /**
+      @class
 
-    @extends XM.Model
-  */
-  XM.AccountToDo = XM.Model.extend(
-    /** @scope XM.AccountToDo.prototype */ {
+      @extends XM.Model
+    */
+    XM.AccountToDo = XM.Model.extend(
+      /** @scope XM.AccountToDo.prototype */ {
 
-    recordType: 'XM.AccountToDo',
+      recordType: 'XM.AccountToDo',
 
-    isDocumentAssignment: true
+      isDocumentAssignment: true
 
-  });
+    });
 
-  /**
-    @class
+    /**
+      @class
 
-    @extends XM.Model
-  */
-  XM.AccountIncident = XM.Model.extend(
-    /** @scope XM.AccountIncident.prototype */ {
+      @extends XM.Model
+    */
+    XM.AccountIncident = XM.Model.extend(
+      /** @scope XM.AccountIncident.prototype */ {
 
-    recordType: 'XM.AccountIncident',
+      recordType: 'XM.AccountIncident',
 
-    isDocumentAssignment: true
+      isDocumentAssignment: true
 
-  });
+    });
 
-  /**
-    @class
+    /**
+      @class
 
-    @extends XM.Model
-  */
-  XM.AccountOpportunity = XM.Model.extend(
-    /** @scope XM.AccountOpportunity.prototype */ {
+      @extends XM.Model
+    */
+    XM.AccountIncident = XM.Model.extend(
+      /** @scope XM.AccountIncident.prototype */ {
 
-    recordType: 'XM.AccountOpportunity',
+      recordType: 'XM.AccountIncident',
 
-    isDocumentAssignment: true
+      isDocumentAssignment: true
 
-  });
+    });
+
+    /**
+      @class
+
+      @extends XM.Model
+    */
+    XM.AccountOpportunity = XM.Model.extend(
+      /** @scope XM.AccountOpportunity.prototype */ {
+
+      recordType: 'XM.AccountOpportunity',
+
+      isDocumentAssignment: true
+
+    });
+  }
 
 }());

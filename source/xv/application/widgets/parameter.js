@@ -152,12 +152,28 @@ trailing:true white:true*/
       {label: "_description".loc(), attr: "description"},
       {label: "_category".loc(), attr: "category",
         defaultKind: "XV.IncidentCategoryPicker"},
-      {label: "_priority".loc(), attr: "priority",
-        defaultKind: "XV.PriorityPicker"},
       {label: "_severity".loc(), attr: "severity",
         defaultKind: "XV.IncidentSeverityPicker"},
       {label: "_resolution".loc(), attr: "resolution",
           defaultKind: "XV.IncidentResolutionPicker"},
+      {kind: "onyx.GroupboxHeader", content: "_priority".loc()},
+      {label: "_equals".loc(), attr: "priority",
+        defaultKind: "XV.PriorityPicker"},
+      {label: "_above".loc(), attr: "priority",
+          filterLabel: "_priority" + " " + "_above".loc(),
+          defaultKind: "XV.PriorityPicker",
+          getParameter: function () {
+            var value = this.getValue(),
+              param;
+            if (value) {
+              param = {
+                attribute: "priorityOrder",
+                operator: '<',
+                value: value.get('order')
+              };
+            }
+            return param;
+          }},
       {kind: "onyx.GroupboxHeader", content: "_status".loc()},
       {label: "_equals".loc(), attr: "status",
         filterLabel: "_status" + " " + "_equals".loc(),

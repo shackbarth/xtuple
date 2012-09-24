@@ -158,7 +158,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.UnitWidget",
     kind: "XV.PickerWidget",
-    collection: "XM.units",
-    nameAttribute: "description" // XXX this could be the default, "name"
+    collection: "XM.units"
   });
+  
 }());
