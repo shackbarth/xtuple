@@ -300,6 +300,55 @@ trailing:true white:true*/
       var isToday = !XT.date.compareDate(value, new Date());
       view.addRemoveClass("bold", isToday);
       return value;
+    },
+    getStyle: function (model) {
+      var settings = XT.session.getSettings(),
+        K = XM.Incident,
+        status = model ? model.get('status') : null,
+        background,
+        style;
+      switch (status)
+      {
+      case K.NEW:
+        background = settings.get('IncidentNewColor');
+        break;
+      case K.FEEDBACK:
+        background = settings.get('IncidentFeedbackColor');
+        break;
+      case K.CONFIRMED:
+        background = settings.get('IncidentConfirmedColor');
+        break;
+      case K.ASSIGNED:
+        background = settings.get('IncidentAssignedColor');
+        break;
+      case K.RESOLVED:
+        background = settings.get('IncidentResolvedColor');
+        break;
+      case K.CLOSED:
+        background = settings.get('IncidentClosedColor');
+        break;
+      }
+      if (background) {
+        style = "background: " + background + ";";
+      }
+      return style;
+    },
+    setupItem: function (inSender, inEvent) {
+      this.inherited(arguments);
+      var model = this.getValue().models[inEvent.index],
+        style = this.getStyle(model),
+        prop,
+        view;
+        
+      // Apply background color to all views.
+      this.$.listItem.setStyle(style);
+      for (prop in this.$) {
+        if (this.$.hasOwnProperty(prop) && this.$[prop].getAttr) {
+          view = this.$[prop];
+          view.setStyle(style);
+        }
+      }
+      return true;
     }
   });
   

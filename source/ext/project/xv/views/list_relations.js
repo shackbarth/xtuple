@@ -5,56 +5,59 @@ trailing:true white:true*/
 
 (function () {
   
-  // ..........................................................
-  // ACCOUNT
-  //
+  XT.extensions.project.initListRelations = function () {
+    
+    // ..........................................................
+    // ACCOUNT
+    //
 
-  enyo.kind({
-    name: "XV.AccountProjectListRelations",
-    kind: "XV.ListRelations",
-    orderBy: [
-      {attribute: 'dueDate', descending: true},
-      {attribute: 'number' }
-    ],
-    parentKey: "account",
-    workspace: "XV.ProjectWorkspace",
-    components: [
-      {kind: "XV.ListItem", components: [
-        {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
-              {kind: "XV.ListAttr", attr: "getProjectStatusString", fit: true},
-              {kind: "XV.ListAttr", attr: "dueDate", formatter: "formatDueDate",
-                placeholder: "_noCloseTarget".loc(),
-                classes: "right"}
-            ]},
-            {kind: "XV.ListAttr", attr: "name"}
+    enyo.kind({
+      name: "XV.AccountProjectListRelations",
+      kind: "XV.ListRelations",
+      orderBy: [
+        {attribute: 'dueDate', descending: true},
+        {attribute: 'number' }
+      ],
+      parentKey: "account",
+      workspace: "XV.ProjectWorkspace",
+      components: [
+        {kind: "XV.ListItem", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListColumn", classes: "first", components: [
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+                {kind: "XV.ListAttr", attr: "getProjectStatusString", fit: true},
+                {kind: "XV.ListAttr", attr: "dueDate", formatter: "formatDueDate",
+                  placeholder: "_noCloseTarget".loc(),
+                  classes: "right"}
+              ]},
+              {kind: "XV.ListAttr", attr: "name"}
+            ]}
           ]}
         ]}
-      ]}
-    ],
-    formatDueDate: XV.ProjectList.prototype.formatDueDate
-  });
+      ],
+      formatDueDate: XV.ProjectList.prototype.formatDueDate
+    });
   
-  // ..........................................................
-  // CONTACT
-  //
+    // ..........................................................
+    // CONTACT
+    //
   
-  enyo.kind({
-    name: "XV.ContactProjectListRelations",
-    kind: "XV.AccountProjectListRelations",
-    parentKey: "contact"
-  });
+    enyo.kind({
+      name: "XV.ContactProjectListRelations",
+      kind: "XV.AccountProjectListRelations",
+      parentKey: "contact"
+    });
   
-  // ..........................................................
-  // PROJECT
-  //
+    // ..........................................................
+    // PROJECT
+    //
   
-  enyo.kind({
-    name: "XV.ProjectIncidentListRelations",
-    kind: "XV.AccountIncidentListRelations",
-    parentKey: "project"
-  });
+    enyo.kind({
+      name: "XV.ProjectIncidentListRelations",
+      kind: "XV.AccountIncidentListRelations",
+      parentKey: "project"
+    });
+  };
 
 }());

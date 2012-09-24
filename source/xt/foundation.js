@@ -185,6 +185,9 @@ _.extend(XT,
 XT.$A = XT.A;
 
 _.extend(XT, {
+  
+  extensions: {},
+  
   history: [],
 
   /**
@@ -247,4 +250,4 @@ _.extend(XT, {
   }
 });
 
-XV = {}
+XV = {};

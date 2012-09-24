@@ -184,7 +184,7 @@ white:true*/
         I = XM.Incident,
         K = XM.Model;
       if ((options && options.force) || !(status & K.READY)) { return; }
-      if (value) { this.set('incidentStatus', I.ASSIGNED); }
+      if (value) { this.set('status', I.ASSIGNED); }
     },
 
     validateSave: function () {
@@ -283,7 +283,7 @@ white:true*/
 
     @extends XM.Characteristic
   */
-  XM.IncidentCharacteristic = XM.Characteristic.extend({
+  XM.IncidentCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.IncidentCharacteristic.prototype */
 
     recordType: 'XM.IncidentCharacteristic'

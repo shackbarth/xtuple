@@ -5,7 +5,7 @@ white:true*/
 
 (function () {
   "use strict";
-
+  
   XT.StartupTask.create({
     taskName: "loadSessionSettings",
     task: function () {
@@ -45,8 +45,11 @@ white:true*/
       XT.session.loadSessionObjects(XT.session.LOCALE, options);
     }
   });
+  
+  // These will be looaded after all extensions are loaded
+  if (!XT.StartupTasks) { XT.StartupTasks = []; }
 
-  XT.StartupTask.create({
+  XT.StartupTasks.push({
     taskName: "loadCurrentUser",
     task: function () {
       var options = {
@@ -55,11 +58,10 @@ white:true*/
       };
       XM.currentUser = new XM.UserAccountRelation();
       XM.currentUser.fetch(options);
-    },
-    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+    }
   });
 
-  XT.StartupTask.create({
+  XT.StartupTasks.push({
     taskName: "loadHonorifics",
     task: function () {
       var options = {
@@ -71,11 +73,10 @@ white:true*/
         {attribute: 'code'}
       ];
       XM.honorifics.fetch(options);
-    },
-    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+    }
   });
 
-  XT.StartupTask.create({
+  XT.StartupTasks.push({
     taskName: "loadSources",
     task: function () {
       var options = {
@@ -83,11 +84,10 @@ white:true*/
       };
       XM.sources = new XM.SourceCollection();
       XM.sources.fetch(options);
-    },
-    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+    }
   });
 
-  XT.StartupTask.create({
+  XT.StartupTasks.push({
     taskName: "loadCommentTypes",
     task: function () {
       var options = {
@@ -95,11 +95,10 @@ white:true*/
       };
       XM.commentTypes = new XM.CommentTypeCollection();
       XM.commentTypes.fetch(options);
-    },
-    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+    }
   });
 
-  XT.StartupTask.create({
+  XT.StartupTasks.push({
     taskName: "loadCharacteristics",
     task: function () {
       var options = {
@@ -107,11 +106,10 @@ white:true*/
       };
       XM.characteristics = new XM.CharacteristicCollection();
       XM.characteristics.fetch(options);
-    },
-    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+    }
   });
 
-  XT.StartupTask.create({
+  XT.StartupTasks.push({
     taskName: "loadLanguages",
     task: function () {
       var options = {
@@ -119,11 +117,10 @@ white:true*/
       };
       XM.languages = new XM.LanguageCollection();
       XM.languages.fetch(options);
-    },
-    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+    }
   });
 
-  XT.StartupTask.create({
+  XT.StartupTasks.push({
     taskName: "loadLocales",
     task: function () {
       var options = {
@@ -131,11 +128,10 @@ white:true*/
       };
       XM.locales = new XM.LocaleCollection();
       XM.locales.fetch(options);
-    },
-    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+    }
   });
 
-  XT.StartupTask.create({
+  XT.StartupTasks.push({
     taskName: "loadPrivileges",
     task: function () {
       var options = {
@@ -143,11 +139,10 @@ white:true*/
       };
       XM.privileges = new XM.PrivilegeCollection();
       XM.privileges.fetch(options);
-    },
-    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+    }
   });
 
-  XT.StartupTask.create({
+  XT.StartupTasks.push({
     taskName: "loadCurrencies",
     task: function () {
       var options = {
@@ -160,11 +155,10 @@ white:true*/
       };
       XM.currencies = new XM.CurrencyCollection();
       XM.currencies.fetch(options);
-    },
-    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+    }
   });
 
-  XT.StartupTask.create({
+  XT.StartupTasks.push({
     taskName: "loadCountries",
     task: function () {
       var options = {
@@ -176,11 +170,10 @@ white:true*/
       ];
       XM.countries = new XM.CountryCollection();
       XM.countries.fetch(options);
-    },
-    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+    }
   });
 
-  XT.StartupTask.create({
+  XT.StartupTasks.push({
     taskName: "loadStates",
     task: function () {
       var options = {
@@ -192,11 +185,10 @@ white:true*/
       ];
       XM.states = new XM.StateCollection();
       XM.states.fetch(options);
-    },
-    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+    }
   });
 
-  XT.StartupTask.create({
+  XT.StartupTasks.push({
     taskName: "loadUnits",
     task: function () {
       var options = {
@@ -204,11 +196,10 @@ white:true*/
       };
       XM.units = new XM.UnitCollection();
       XM.units.fetch(options);
-    },
-    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+    }
   });
 
-  XT.StartupTask.create({
+  XT.StartupTasks.push({
     taskName: "loadClassCodes",
     task: function () {
       var options = {
@@ -216,11 +207,10 @@ white:true*/
       };
       XM.classCodes = new XM.ClassCodeCollection();
       XM.classCodes.fetch(options);
-    },
-    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+    }
   });
 
-  XT.StartupTask.create({
+  XT.StartupTasks.push({
     taskName: "loadProductCategories",
     task: function () {
       var options = {
@@ -228,11 +218,10 @@ white:true*/
       };
       XM.productCategories = new XM.ProductCategoryCollection();
       XM.productCategories.fetch(options);
-    },
-    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+    }
   });
 
-  XT.StartupTask.create({
+  XT.StartupTasks.push({
     taskName: "loadPriorities",
     task: function () {
       var options = {
@@ -240,11 +229,10 @@ white:true*/
       };
       XM.priorities = new XM.PriorityCollection();
       XM.priorities.fetch(options);
-    },
-    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+    }
   });
 
-  XT.StartupTask.create({
+  XT.StartupTasks.push({
     taskName: "loadIncidentCategories",
     task: function () {
       var options = {
@@ -252,11 +240,10 @@ white:true*/
       };
       XM.incidentCategories = new XM.IncidentCategoryCollection();
       XM.incidentCategories.fetch(options);
-    },
-    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+    }
   });
 
-  XT.StartupTask.create({
+  XT.StartupTasks.push({
     taskName: "loadIncidentResolutions",
     task: function () {
       var options = {
@@ -264,11 +251,10 @@ white:true*/
       };
       XM.incidentResolutions = new XM.IncidentResolutionCollection();
       XM.incidentResolutions.fetch(options);
-    },
-    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+    }
   });
 
-  XT.StartupTask.create({
+  XT.StartupTasks.push({
     taskName: "loadIncidentSeverities",
     task: function () {
       var options = {
@@ -276,11 +262,10 @@ white:true*/
       };
       XM.incidentSeverities = new XM.IncidentSeverityCollection();
       XM.incidentSeverities.fetch(options);
-    },
-    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+    }
   });
 
-  XT.StartupTask.create({
+  XT.StartupTasks.push({
     taskName: "loadOpportunityStages",
     task: function () {
       var options = {
@@ -288,11 +273,10 @@ white:true*/
       };
       XM.opportunityStages = new XM.OpportunityStageCollection();
       XM.opportunityStages.fetch(options);
-    },
-    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+    }
   });
 
-  XT.StartupTask.create({
+  XT.StartupTasks.push({
     taskName: "loadOpportunityTypes",
     task: function () {
       var options = {
@@ -300,11 +284,10 @@ white:true*/
       };
       XM.opportunityTypes = new XM.OpportunityTypeCollection();
       XM.opportunityTypes.fetch(options);
-    },
-    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+    }
   });
 
-  XT.StartupTask.create({
+  XT.StartupTasks.push({
     taskName: "loadOpportunitySources",
     task: function () {
       var options = {
@@ -312,18 +295,19 @@ white:true*/
       };
       XM.opportunitySources = new XM.OpportunitySourceCollection();
       XM.opportunitySources.fetch(options);
-    },
-    waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
+    }
   });
 
 
+  // These are hard coded collections that may be turned into tables at a later date
   var i;
 
-  // Incident Status
+  // Incident Status (TODO: There actually already is a table for this one...)
   var incidentStatusJson = [
     { id: "N", name: "_new".loc() },
     { id: "F", name: "_feedback".loc() },
     { id: "C", name: "_confirmed".loc() },
+    { id: "A", name: "_assigned".loc() },
     { id: "R", name: "_resolved".loc() },
     { id: "L", name: "_closed".loc() }
   ];

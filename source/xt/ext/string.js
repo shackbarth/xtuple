@@ -97,14 +97,32 @@ XT.String = {
 
 
   /**
-   * Returns everything after the last dot.
-   */
+    Returns everything after the last dot.
+  */
   suffix: function (value) {
     while (value.indexOf(".") > 0) {
       // strip off the prefix (everything before the dot) if there is one
       value = value.substring(value.indexOf(".") + 1);
     }
     return value;
+  },
+  
+  /**
+    Pads left
+  */
+  leftPad: function(str, padString, length) {
+    while (str.length < length)
+        str = padString + str;
+    return str;
+  },
+
+  /**
+    Pads right
+  */
+  rightPad: function(str, padString, length) {
+    while (str.length < length)
+        str = str + padString;
+    return str;
   }
 
 };

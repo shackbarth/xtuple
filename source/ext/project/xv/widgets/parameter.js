@@ -5,17 +5,19 @@ trailing:true white:true*/
 
 (function () {
 
-  var extensions;
+  XT.extensions.project.initParameters = function () {
+    var extensions;
  
-  // ..........................................................
-  // INCIDENT
-  //
+    // ..........................................................
+    // INCIDENT
+    //
   
-  extensions = [
-    {kind: "onyx.GroupboxHeader", content: "_project".loc()},
-    {label: "_project".loc(), attr: "project", defaultKind: "XV.ProjectWidget"}
-  ];
+    extensions = [
+      {kind: "onyx.GroupboxHeader", content: "_project".loc()},
+      {label: "_project".loc(), attr: "project", defaultKind: "XV.ProjectWidget"}
+    ];
 
-  XV.appendExtension("XV.IncidentListParameters", extensions);
+    XV.appendExtension("XV.IncidentListParameters", extensions);
+  };
 
 }());

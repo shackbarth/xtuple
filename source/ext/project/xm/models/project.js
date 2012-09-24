@@ -6,46 +6,49 @@ white:true*/
 (function () {
   "use strict";
 
-  /**
-    @class
+  XT.extensions.project.initProjectModels = function () {
+  
+    /**
+      @class
 
-    @extends XM.Model
-  */
-  XM.ProjectIncident = XM.Model.extend(
-    /** @scope XM.ProjectIncident.prototype */ {
+      @extends XM.Model
+    */
+    XM.ProjectIncident = XM.Model.extend(
+      /** @scope XM.ProjectIncident.prototype */ {
 
-    recordType: 'XM.ProjectIncident',
+      recordType: 'XM.ProjectIncident',
 
-    isDocumentAssignment: true
+      isDocumentAssignment: true
 
-  });
+    });
 
-  /**
-    @class
+    /**
+      @class
 
-    @extends XM.Model
-  */
-  XM.ProjectOpportunity = XM.Model.extend(
-    /** @scope XM.ProjectOpportunity.prototype */ {
+      @extends XM.Model
+    */
+    XM.ProjectOpportunity = XM.Model.extend(
+      /** @scope XM.ProjectOpportunity.prototype */ {
 
-    recordType: 'XM.ProjectOpportunity',
+      recordType: 'XM.ProjectOpportunity',
 
-    isDocumentAssignment: true
+      isDocumentAssignment: true
 
-  });
+    });
 
-  /**
-    @class
+    /**
+      @class
 
-    @extends XM.Model
-  */
-  XM.ProjectToDo = XM.Model.extend(
-    /** @scope XM.ProjectToDo.prototype */ {
+      @extends XM.Model
+    */
+    XM.ProjectToDo = XM.Model.extend(
+      /** @scope XM.ProjectToDo.prototype */ {
 
-    recordType: 'XM.ProjectToDo',
+      recordType: 'XM.ProjectToDo',
 
-    isDocumentAssignment: true
+      isDocumentAssignment: true
 
-  });
+    });
+  };
 
 }());

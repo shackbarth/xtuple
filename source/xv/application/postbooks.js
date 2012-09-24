@@ -32,7 +32,8 @@ trailing:true white:true*/
     components: [
       {name: "startup", classes: "xv-startup-panel", style: "background: #333;",
         components: [
-        {classes: "xv-startup-divider", content: "Loading application data..."},
+        {name: "startupText", classes: "xv-startup-divider",
+          content: "_loadingSessionData".loc() + ".."},
         {name: "startupProgressBar", kind: "onyx.ProgressBar",
           classes: "xv-startup-progress", progress: 0}
       ]},
@@ -59,29 +60,6 @@ trailing:true white:true*/
         this.next();
       }
     },
-    create: function () {
-      this.inherited(arguments);
-      var modules = this.getModules();
-      this.$.navigator.setModules(modules);
-    },
-    getNavigator: function () {
-      return this.$.navigator;
-    },
-    getStartupProgressBar: function () {
-      return this.$.startupProgressBar;
-    },
-    previous: function () {
-      // Stock implementation is screwy, do our own
-      var last = this.getActive(),
-        previous = this.getPanels().length - 1;
-      this.setIndex(previous);
-      last.destroy();
-    }
-
-  });
-
-  // Class methods
-  enyo.mixin(XV.Postbooks, {
     /**
       Add panels to a module. If any are found to already
       exist by the same name they will be ignored.
@@ -90,7 +68,7 @@ trailing:true white:true*/
       @param {Array} Panels
     */
     appendPanels: function (moduleName, panels) {
-      var modules = this.prototype.published.modules,
+      var modules = this.published.modules,
         module = _.find(modules, function (mod) {
           return mod.name === moduleName;
         }),
@@ -101,8 +79,21 @@ trailing:true white:true*/
           module.panels.push(panels[i]);
         }
       }
+      this._setModules();
     },
-    
+    create: function () {
+      this.inherited(arguments);
+      this._setModules();
+    },
+    getNavigator: function () {
+      return this.$.navigator;
+    },
+    getStartupProgressBar: function () {
+      return this.$.startupProgressBar;
+    },
+    getStartupText: function () {
+      return this.$.startupText;
+    },
     /**
       Insert a new `module` at `index`. If index is
       not defined the module will be appended to the
@@ -112,11 +103,24 @@ trailing:true white:true*/
       @param {Number} Index
     */
     insertModule: function (module, index) {
-      var modules = this.prototype.published.modules,
+      var modules = this.published.modules,
         count = modules.length;
       index = index || count;
       modules.splice(index, 0, module);
+      this._setModules();
+    },
+    previous: function () {
+      // Stock implementation is screwy, do our own
+      var last = this.getActive(),
+        previous = this.getPanels().length - 1;
+      this.setIndex(previous);
+      last.destroy();
+    },
+    _setModules: function () {
+      var modules = this.getModules();
+      this.$.navigator.setModules(modules);
     }
+
   });
 
 }());

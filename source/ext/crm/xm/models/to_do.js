@@ -6,33 +6,34 @@ white:true*/
 (function () {
   "use strict";
 
-  /**
-    @class
+  XT.extensions.crm.toDoModels = function () {
+    /**
+      @class
 
-    @extends XM.Model
-  */
-  XM.ToDoIncident = XM.Model.extend(
-    /** @scope XM.ToDoIncident.prototype */ {
+      @extends XM.Model
+    */
+    XM.ToDoIncident = XM.Model.extend(
+      /** @scope XM.ToDoIncident.prototype */ {
 
-    recordType: 'XM.ToDoIncident',
+      recordType: 'XM.ToDoIncident',
 
-    isDocumentAssignment: true
+      isDocumentAssignment: true
 
-  });
+    });
   
-  /**
-    @class
+    /**
+      @class
 
-    @extends XM.Model
-  */
-  XM.ToDoOpportunity = XM.Model.extend(
-    /** @scope XM.ToDoOpportunity.prototype */ {
+      @extends XM.Model
+    */
+    XM.ToDoOpportunity = XM.Model.extend(
+      /** @scope XM.ToDoOpportunity.prototype */ {
 
-    recordType: 'XM.ToDoOpportunity',
+      recordType: 'XM.ToDoOpportunity',
 
-    isDocumentAssignment: true
+      isDocumentAssignment: true
 
-  });
-  
+    });
+  };
 
 }());

@@ -5,47 +5,49 @@ white:true*/
 
 (function () {
   "use strict";
+  
+  XT.extensions.crm.contactModels = function () {
+    /**
+      @class
 
-  /**
-    @class
+      @extends XM.Model
+    */
+    XM.ContactToDo = XM.Model.extend(
+      /** @scope XM.ContactToDo.prototype */ {
 
-    @extends XM.Model
-  */
-  XM.ContactToDo = XM.Model.extend(
-    /** @scope XM.ContactToDo.prototype */ {
+      recordType: 'XM.ContactToDo',
 
-    recordType: 'XM.ContactToDo',
+      isDocumentAssignment: true
 
-    isDocumentAssignment: true
+    });
 
-  });
+    /**
+      @class
 
-  /**
-    @class
+      @extends XM.Model
+    */
+    XM.ContactIncident = XM.Model.extend(
+      /** @scope XM.ContactIncident.prototype */ {
 
-    @extends XM.Model
-  */
-  XM.ContactIncident = XM.Model.extend(
-    /** @scope XM.ContactIncident.prototype */ {
+      recordType: 'XM.ContactIncident',
 
-    recordType: 'XM.ContactIncident',
+      isDocumentAssignment: true
 
-    isDocumentAssignment: true
+    });
 
-  });
+    /**
+      @class
 
-  /**
-    @class
+      @extends XM.Model
+    */
+    XM.ContactOpportunity = XM.Model.extend(
+      /** @scope XM.ContactOpportunity.prototype */ {
 
-    @extends XM.Model
-  */
-  XM.ContactOpportunity = XM.Model.extend(
-    /** @scope XM.ContactOpportunity.prototype */ {
+      recordType: 'XM.ContactOpportunity',
 
-    recordType: 'XM.ContactOpportunity',
+      isDocumentAssignment: true
 
-    isDocumentAssignment: true
-
-  });
+    });
+  };
 
 }());

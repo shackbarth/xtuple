@@ -4,85 +4,88 @@ trailing:true white:true*/
 /*global XT:true, XM:true, XV:true, enyo:true*/
 
 (function () {
- 
-  // ..........................................................
-  // ACCOUNT
-  //
 
-  enyo.kind({
-    name: "XV.AccountIncidentsBox",
-    kind: "XV.ListRelationsBox",
-    title: "_incidents".loc(),
-    parentKey: "account",
-    listRelations: "XV.AccountIncidentListRelations"
-  });
+  XT.extensions.crm.initListRelationsBox = function () {
   
-  enyo.kind({
-    name: "XV.AccountOpportunitiesBox",
-    kind: "XV.ListRelationsBox",
-    title: "_opportunities".loc(),
-    parentKey: "account",
-    listRelations: "XV.AccountOpportunityListRelations"
-  });
-  
-  enyo.kind({
-    name: "XV.AccountToDosBox",
-    kind: "XV.ListRelationsBox",
-    title: "_toDo".loc(),
-    parentKey: "account",
-    listRelations: "XV.AccountToDoListRelations",
-    searchList: "XV.ToDoList"
-  });
-  
-  // ..........................................................
-  // CONTACT
-  //
+    // ..........................................................
+    // ACCOUNT
+    //
 
-  enyo.kind({
-    name: "XV.ContactIncidentsBox",
-    kind: "XV.ListRelationsBox",
-    title: "_incidents".loc(),
-    parentKey: "contact",
-    listRelations: "XV.ContactIncidentListRelations"
-  });
+    enyo.kind({
+      name: "XV.AccountIncidentsBox",
+      kind: "XV.ListRelationsBox",
+      title: "_incidents".loc(),
+      parentKey: "account",
+      listRelations: "XV.AccountIncidentListRelations"
+    });
   
-  enyo.kind({
-    name: "XV.ContactOpportunitiesBox",
-    kind: "XV.ListRelationsBox",
-    title: "_opportunities".loc(),
-    parentKey: "contact",
-    listRelations: "XV.ContactOpportunityListRelations"
-  });
+    enyo.kind({
+      name: "XV.AccountOpportunitiesBox",
+      kind: "XV.ListRelationsBox",
+      title: "_opportunities".loc(),
+      parentKey: "account",
+      listRelations: "XV.AccountOpportunityListRelations"
+    });
   
-  enyo.kind({
-    name: "XV.ContactToDosBox",
-    kind: "XV.ListRelationsBox",
-    title: "_toDo".loc(),
-    parentKey: "contact",
-    listRelations: "XV.ContactToDoListRelations",
-    searchList: "XV.ToDoList"
-  });
+    enyo.kind({
+      name: "XV.AccountToDosBox",
+      kind: "XV.ListRelationsBox",
+      title: "_toDo".loc(),
+      parentKey: "account",
+      listRelations: "XV.AccountToDoListRelations",
+      searchList: "XV.ToDoList"
+    });
+  
+    // ..........................................................
+    // CONTACT
+    //
 
-  // ..........................................................
-  // INCIDENT
-  //
+    enyo.kind({
+      name: "XV.ContactIncidentsBox",
+      kind: "XV.ListRelationsBox",
+      title: "_incidents".loc(),
+      parentKey: "contact",
+      listRelations: "XV.ContactIncidentListRelations"
+    });
   
-  enyo.kind({
-    name: "XV.IncidentToDosBox",
-    kind: "XV.AccountToDosBox",
-    parentKey: "incident",
-    listRelations: "XV.IncidentToDoListRelations"
-  });
+    enyo.kind({
+      name: "XV.ContactOpportunitiesBox",
+      kind: "XV.ListRelationsBox",
+      title: "_opportunities".loc(),
+      parentKey: "contact",
+      listRelations: "XV.ContactOpportunityListRelations"
+    });
   
-  // ..........................................................
-  // OPPORTUNITY
-  //
+    enyo.kind({
+      name: "XV.ContactToDosBox",
+      kind: "XV.ListRelationsBox",
+      title: "_toDo".loc(),
+      parentKey: "contact",
+      listRelations: "XV.ContactToDoListRelations",
+      searchList: "XV.ToDoList"
+    });
+
+    // ..........................................................
+    // INCIDENT
+    //
   
-  enyo.kind({
-    name: "XV.OpportunityToDosBox",
-    kind: "XV.AccountToDosBox",
-    parentKey: "opportunity",
-    listRelations: "XV.OpportunityToDoListRelations"
-  });
+    enyo.kind({
+      name: "XV.IncidentToDosBox",
+      kind: "XV.AccountToDosBox",
+      parentKey: "incident",
+      listRelations: "XV.IncidentToDoListRelations"
+    });
+  
+    // ..........................................................
+    // OPPORTUNITY
+    //
+  
+    enyo.kind({
+      name: "XV.OpportunityToDosBox",
+      kind: "XV.AccountToDosBox",
+      parentKey: "opportunity",
+      listRelations: "XV.OpportunityToDoListRelations"
+    });
+  };
 
 }());

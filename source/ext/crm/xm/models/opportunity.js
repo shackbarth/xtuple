@@ -5,33 +5,35 @@ white:true*/
 
 (function () {
   "use strict";
-  
-  /**
-    @class
 
-    @extends XM.Model
-  */
-  XM.OpportunityIncident = XM.Model.extend(
-    /** @scope XM.OpportunityIncident.prototype */ {
+  XT.extensions.crm.opportunityModels = function () {
+    /**
+      @class
 
-    recordType: 'XM.OpportunityIncident',
+      @extends XM.Model
+    */
+    XM.OpportunityIncident = XM.Model.extend(
+      /** @scope XM.OpportunityIncident.prototype */ {
 
-    isDocumentAssignment: true
+      recordType: 'XM.OpportunityIncident',
 
-  });
+      isDocumentAssignment: true
 
-  /**
-    @class
+    });
 
-    @extends XM.Model
-  */
-  XM.OpportunityToDo = XM.Model.extend(
-    /** @scope XM.OpportunityToDo.prototype */ {
+    /**
+      @class
 
-    recordType: 'XM.OpportunityToDo',
+      @extends XM.Model
+    */
+    XM.OpportunityToDo = XM.Model.extend(
+      /** @scope XM.OpportunityToDo.prototype */ {
 
-    isDocumentAssignment: true
+      recordType: 'XM.OpportunityToDo',
 
-  });
+      isDocumentAssignment: true
+
+    });
+  };
 
 }());

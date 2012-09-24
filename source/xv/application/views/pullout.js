@@ -166,6 +166,7 @@ white:true*/
         for (i = 0; i < children.length; i++) {
           children[i].hide();
         }
+        if (item.processExtensions) { item.processExtensions(); }
         item.show();
         item.resized();
         if (!this.isAtMax()) {

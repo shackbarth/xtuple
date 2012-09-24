@@ -65,6 +65,7 @@ trailing:true white:true*/
       var extensions = this.extensions || [],
         ext,
         i;
+      if (this._extLength === extensions.length) { return; }
       for (i = 0; i < extensions.length; i++) {
         ext = _.clone(this.extensions[i]);
         // Resolve name of container to the instance
@@ -73,6 +74,7 @@ trailing:true white:true*/
         }
         this.createComponent(ext);
       }
+      this._extLength = extensions.length;
     }
   };
 
