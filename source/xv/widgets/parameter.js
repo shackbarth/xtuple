@@ -27,7 +27,6 @@ white:true*/
     defaultKind: "XV.InputWidget",
     create: function () {
       this.inherited(arguments);
-      this.valueChanged();
       this.labelChanged();
       if (!this.getOperator() && this.defaultKind === "XV.InputWidget") {
         this.setOperator("MATCHES");
@@ -60,9 +59,10 @@ white:true*/
       this.doParameterChange(inEvent);
       return true; // stop right here
     },
-    valueChanged: function () {
-      this.$.input.setValue(this.value);
+    setValue: function (value, options) {
+      this.$.input.setValue(value, options);
     }
+    
   });
 
   /**
@@ -82,10 +82,10 @@ white:true*/
     isAllSetUp: false,
     create: function () {
       this.inherited(arguments);
-      this.processExtensions();
 
       var that = this,
         callback = function () {
+          that.processExtensions();
           that.populateFromCookie();
         };
 
@@ -106,9 +106,10 @@ white:true*/
       return params;
     },
     /**
-      @param {Boolean} Return raw value instead of text - default false
+      @param {Object} options
     */
-    getSelectedValues: function (returnValue) {
+    getSelectedValues: function (options) {
+      options = options || {};
       var values = {},
         componentName,
         component,
@@ -121,10 +122,10 @@ white:true*/
             this.$.hasOwnProperty(componentName)) {
           component = this.$[componentName];
           value = component.getValue();
-          label = component.getFilterLabel() || component.getLabel();
+          label = options.name ? component.getName() : component.getFilterLabel() || component.getLabel();
           control = component.$.input;
           if (value) {
-            if (returnValue) {
+            if (options.value) {
               values[label] = value instanceof XM.Model ? value.id : value;
             } else {
               values[label] = control.getValueToString ? control.getValueToString() : value;
@@ -147,7 +148,7 @@ white:true*/
         return;
       }
 
-      values = this.getSelectedValues(true);
+      values = this.getSelectedValues({name: true, value: true});
       dbName = XT.session.details.organization;
       cookieName = 'advancedSearchCache_' + dbName + '_' + this.name;
       enyo.setCookie(cookieName, JSON.stringify(values));
@@ -168,11 +169,9 @@ white:true*/
       for (name in cookieObject) {
         if (cookieObject.hasOwnProperty(name)) {
           savedValue = cookieObject[name];
-          item = _.find(this.$, function (component) {
-            return component.kind === 'XV.ParameterItem' && component.getLabel() === name;
-          });
+          item = this.$[name];
           if (item) {
-            item.setValue(savedValue);
+            item.setValue(savedValue, {silent: true});
           }
         }
       }

@@ -20,6 +20,8 @@ white:true*/
         subject,
         body,
         batch,
+        offset = (new Date()).getTimezoneOffset(),
+        now = new Date(new Date() - offset * 60 * 1000),
         format = function (str) {
           str = str || "";
           var parser = /\{([^}]+)\}/g, // Finds curly braces
@@ -38,15 +40,16 @@ white:true*/
           batch.set({
             action: "Email",
             createdBy: XM.currentUser.id,
-            created: new Date(),
-            scheduled: new Date(),
+            created: now,
+            scheduled: now,
             from: from,
             replyTo: replyTo,
             to: to,
             cc: cc,
             bcc: bcc,
             subject: subject,
-            body: body
+            body: body,
+            fileName: 'incident'
           });
           batch.save();
         };
@@ -107,6 +110,11 @@ white:true*/
         this._lastChange = "_incidentUpdated".loc();
       }
       this._lastChange += ":";
+      
+      // Handle both `"key", value` and `{key: value}` -style arguments.
+      if (_.isObject(key) || _.isEmpty(key)) {
+        value = options;
+      }
       
       // Now call the original
       save.call(this, key, value, options);
