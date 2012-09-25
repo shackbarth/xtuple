@@ -179,7 +179,7 @@ trailing:true white:true*/
         filterLabel: "_status" + " " + "_equals".loc(),
         defaultKind: "XV.IncidentStatusPicker"},
       {label: "_above".loc(), attr: "status",
-        filterLabel: "_status" + " " + "_above".loc(),
+        filterLabel: "_status".loc() + " " + "_above".loc(),
         defaultKind: "XV.IncidentStatusPicker",
         getParameter: function () {
           var value = this.getValue(),
