@@ -21,7 +21,7 @@ white:true*/
       XM.MyModel = XM.Model.extend({
         recordType: 'XM.MyModel'
       });
-      
+
       // Instantiate a new model object
       m = new XM.MyModel(null, {isNew: true});
 

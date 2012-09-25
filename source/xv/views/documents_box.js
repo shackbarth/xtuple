@@ -51,7 +51,7 @@ trailing:true white:true*/
     formatDescription: function (value, view, model) {
       var infoModel = this.getInfoModel(model),
         attr = infoModel.descriptionKey,
-        recordType = infoModel.recordType
+        recordType = infoModel.recordType,
         isUrl = recordType === 'XM.Url' || recordType === 'XM.FileRelation';
 
       view.addRemoveClass("hyperlink", isUrl);
@@ -100,7 +100,7 @@ trailing:true white:true*/
       if (recordType === "XM.Url") {
         path = model.getValue('path');
       } else if (recordType === 'XM.FileRelation') {
-        path = '/export?recordType=XM.File&id=' + model.id;
+        path = '/file?recordType=XM.File&id=' + model.id;
       }
       if (path) {
         if (path.search(/^file/i) > -1) {
