@@ -97,3 +97,7 @@
 \i xm/javascript/project.sql;
 \i xm/javascript/to_do.sql;
 -- [ END ] xm
+
+-- xtbatch (TODO: This should be moved elsewhere)
+\i create_xtbatch_schema.sql;
+\i xtbatch/tables/batch.sql
