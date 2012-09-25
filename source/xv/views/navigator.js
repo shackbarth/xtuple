@@ -112,7 +112,12 @@ trailing:true white:true*/
     exportList: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),
         coll = list.getValue(),
-        recordType = coll.model.prototype.recordType,
+        recordType = coll.model.prototype.recordType;
+
+      window.location = "/export?details={\"requestType\":\"fetch\",\"query\":{\"recordType\":\"" + recordType + "\"}}";
+
+
+        /*
         success = function (result) {
           var cacheId = result.cacheId;
           window.location = "https://localtest.com/export?cacheId=" + cacheId;
@@ -125,6 +130,7 @@ trailing:true white:true*/
 
       // XXX I should be using some new datasource function here, not configure
       XT.dataSource.configure("createCSV", {"recordType": recordType}, options);
+    */
     },
     errorOk: function () {
       this.$.errorPopup.hide();
