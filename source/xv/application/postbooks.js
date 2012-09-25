@@ -21,7 +21,7 @@ trailing:true white:true*/
         {name: "welcome", label: "_welcome".loc(), hasSubmenu: false,
           panels: [
           {name: "welcomePage",
-            tag: '<iframe src="http://mobile.xtuple.com"></iframe>'}
+            tag: '<iframe src="http://msplash.xtuple.com"></iframe>'}
         ]},
         {name: "setup", label: "_setup".loc(), panels: [
           {name: "userAccountList", kind: "XV.UserAccountList"},
