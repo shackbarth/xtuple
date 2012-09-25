@@ -14,7 +14,7 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_account".loc()},
-      {attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
         getParameter: function () {
           var param;
           if (!this.getValue()) {
@@ -27,20 +27,20 @@ trailing:true white:true*/
           return param;
         }
       },
-      {label: "_number".loc(), attr: "number"},
-      {label: "_name".loc(), attr: "name"},
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "name", label: "_name".loc(), attr: "name"},
       {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
-      {label: "_primaryContact".loc(), attr: "primaryContact.name"},
-      {label: "_primaryEmail".loc(), attr: "primaryContact.primaryEmail"},
+      {name: "primaryContact", label: "_primaryContact".loc(), attr: "primaryContact.name"},
+      {name: "primaryEmail", label: "_primaryEmail".loc(), attr: "primaryContact.primaryEmail"},
       {kind: "onyx.GroupboxHeader", content: "_address".loc()},
-      {label: "_phone".loc(), attr: ["primaryContact.phone", "primaryContact.alternate", "primaryContact.fax"]},
-      {label: "_street".loc(), attr: ["primaryContact.address.line1", "primaryContact.address.line2", "primaryContact.address.line3"]},
-      {label: "_city".loc(), attr: "primaryContact.address.city"},
-      {label: "_postalCode".loc(), attr: "primaryContact.address.postalCode"},
-      {label: "_state".loc(), attr: "primaryContact.address.state"},
-      {label: "_country".loc(), attr: "primaryContact.address.country"},
+      {name: "phone", label: "_phone".loc(), attr: ["primaryContact.phone", "primaryContact.alternate", "primaryContact.fax"]},
+      {name: "street", label: "_street".loc(), attr: ["primaryContact.address.line1", "primaryContact.address.line2", "primaryContact.address.line3"]},
+      {name: "city", label: "_city".loc(), attr: "primaryContact.address.city"},
+      {name: "postalCode", label: "_postalCode".loc(), attr: "primaryContact.address.postalCode"},
+      {name: "state", label: "_state".loc(), attr: "primaryContact.address.state"},
+      {name: "country", label: "_country".loc(), attr: "primaryContact.address.country"},
       {kind: "onyx.GroupboxHeader", content: "_userAccount".loc()},
-      {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
+      {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
     ]
   });
   
@@ -53,7 +53,7 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_address".loc()},
-      {attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
         getParameter: function () {
           var param;
           if (!this.getValue()) {
@@ -66,11 +66,11 @@ trailing:true white:true*/
           return param;
         }
       },
-      {label: "_street".loc(), attr: ["line1", "line2", "line3"]},
-      {label: "_city".loc(), attr: "city"},
-      {label: "_postalCode".loc(), attr: "postalCode"},
-      {label: "_state".loc(), attr: "state"},
-      {label: "_country".loc(), attr: "country"}
+      {name: "street", label: "_street".loc(), attr: ["line1", "line2", "line3"]},
+      {name: "city", label: "_city".loc(), attr: "city"},
+      {name: "postalCode", label: "_postalCode".loc(), attr: "postalCode"},
+      {name: "state", label: "_state".loc(), attr: "state"},
+      {name: "country", label: "_country".loc(), attr: "country"}
     ]
   });
 
@@ -83,7 +83,7 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
-      {attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
         getParameter: function () {
           var param;
           if (!this.getValue()) {
@@ -96,19 +96,19 @@ trailing:true white:true*/
           return param;
         }
       },
-      {label: "_name".loc(), attr: "name"},
-      {label: "_primaryEmail".loc(), attr: "primaryEmail"},
-      {label: "_phone".loc(), attr: ["phone", "alternate", "fax"]},
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "primaryEmail", label: "_primaryEmail".loc(), attr: "primaryEmail"},
+      {name: "phone", label: "_phone".loc(), attr: ["phone", "alternate", "fax"]},
       {kind: "onyx.GroupboxHeader", content: "_address".loc()},
-      {label: "_street".loc(), attr: ["address.line1", "address.line2", "address.line3"]},
-      {label: "_city".loc(), attr: "address.city"},
-      {label: "_state".loc(), attr: "address.state"},
-      {label: "_postalCode".loc(), attr: "address.postalCode"},
-      {label: "_country".loc(), attr: "address.country"},
+      {name: "street", label: "_street".loc(), attr: ["address.line1", "address.line2", "address.line3"]},
+      {name: "city", label: "_city".loc(), attr: "address.city"},
+      {name: "state", label: "_state".loc(), attr: "address.state"},
+      {name: "postalCode", label: "_postalCode".loc(), attr: "address.postalCode"},
+      {name: "country", label: "_country".loc(), attr: "address.country"},
       {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-      {label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
+      {name: "account", label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_userAccount".loc()},
-      {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
+      {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
     ]
   });
   
@@ -121,8 +121,8 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_file".loc()},
-      {label: "_name".loc(), attr: "name"},
-      {label: "_description".loc(), attr: "description"}
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "description", label: "_description".loc(), attr: "description"}
     ]
   });
 
@@ -135,7 +135,7 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_incident".loc()},
-      {label: "_number".loc(), attr: "number",
+      {name: "number", label: "_number".loc(), attr: "number",
         getParameter: function () {
           var param,
             value = this.getValue() - 0;
@@ -149,17 +149,17 @@ trailing:true white:true*/
           return param;
         }
       },
-      {label: "_description".loc(), attr: "description"},
-      {label: "_category".loc(), attr: "category",
+      {name: "description", label: "_description".loc(), attr: "description"},
+      {name: "category", label: "_category".loc(), attr: "category",
         defaultKind: "XV.IncidentCategoryPicker"},
-      {label: "_severity".loc(), attr: "severity",
+      {name: "severity", label: "_severity".loc(), attr: "severity",
         defaultKind: "XV.IncidentSeverityPicker"},
-      {label: "_resolution".loc(), attr: "resolution",
+      {name: "resolution", label: "_resolution".loc(), attr: "resolution",
           defaultKind: "XV.IncidentResolutionPicker"},
       {kind: "onyx.GroupboxHeader", content: "_priority".loc()},
-      {label: "_equals".loc(), attr: "priority",
+      {name: "priorityEquals", label: "_equals".loc(), attr: "priority",
         defaultKind: "XV.PriorityPicker"},
-      {label: "_above".loc(), attr: "priority",
+      {name: "priorityAbove", label: "_above".loc(), attr: "priority",
           filterLabel: "_priority" + " " + "_above".loc(),
           defaultKind: "XV.PriorityPicker",
           getParameter: function () {
@@ -175,10 +175,10 @@ trailing:true white:true*/
             return param;
           }},
       {kind: "onyx.GroupboxHeader", content: "_status".loc()},
-      {label: "_equals".loc(), attr: "status",
+      {name: "statusEquals", label: "_equals".loc(), attr: "status",
         filterLabel: "_status" + " " + "_equals".loc(),
         defaultKind: "XV.IncidentStatusPicker"},
-      {label: "_above".loc(), attr: "status",
+      {name: "statusAbove", label: "_above".loc(), attr: "status",
         filterLabel: "_status".loc() + " " + "_above".loc(),
         defaultKind: "XV.IncidentStatusPicker",
         getParameter: function () {
@@ -215,15 +215,15 @@ trailing:true white:true*/
           return param;
         }},
       {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-      {label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
-      {label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
+      {name: "account", label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
+      {name: "contact", label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
-      {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
-      {label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
+      {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
+      {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_created".loc()},
-      {label: "_fromDate".loc(), attr: "created", operator: ">=",
+      {name: "fromDate", label: "_fromDate".loc(), attr: "created", operator: ">=",
         defaultKind: "XV.DateWidget"},
-      {label: "_toDate".loc(), attr: "created", operator: "<=",
+      {name: "toDate", label: "_toDate".loc(), attr: "created", operator: "<=",
         defaultKind: "XV.DateWidget"}
     ]
   });
@@ -237,7 +237,7 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_item".loc()},
-      {attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
         getParameter: function () {
           var param;
           if (!this.getValue()) {
@@ -250,11 +250,11 @@ trailing:true white:true*/
           return param;
         }
       },
-      {label: "_number".loc(), attr: "number"},
-      {label: "_description".loc(), attr: ["description1", "description2"]},
-      {label: "_classCode".loc(), attr: "classCode",
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "description", label: "_description".loc(), attr: ["description1", "description2"]},
+      {name: "classCode", label: "_classCode".loc(), attr: "classCode",
         defaultKind: "XV.ClassCodePicker"},
-      {label: "_category".loc(), attr: "productCategory",
+      {name: "category", label: "_category".loc(), attr: "productCategory",
         defaultKind: "XV.ProductCategoryPicker"}
     ]
   });
@@ -268,7 +268,7 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_opportunity".loc()},
-      {label: "_showInactive".loc(), attr: "isActive",
+      {name: "showInactive", label: "_showInactive".loc(), attr: "isActive",
         defaultKind: "XV.CheckboxWidget",
         getParameter: function () {
           var param;
@@ -282,29 +282,29 @@ trailing:true white:true*/
           return param;
         }
       },
-      {label: "_name".loc(), attr: "name"},
-      {label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
-      {label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "account", label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
+      {name: "contact", label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
       {kind: "onyx.GroupboxHeader", content: "_status".loc()},
-      {label: "_stage".loc(), attr: "opportunityStage",
+      {name: "stage", label: "_stage".loc(), attr: "opportunityStage",
         defaultKind: "XV.OpportunityStagePicker"},
-      {label: "_priority".loc(), attr: "priority",
+      {name: "priority", label: "_priority".loc(), attr: "priority",
         defaultKind: "XV.PriorityPicker"},
-      {label: "_type".loc(), attr: "opportunityType",
+      {name: "type", label: "_type".loc(), attr: "opportunityType",
         defaultKind: "XV.OpportunityTypePicker"},
-      {label: "_source".loc(), attr: "opportunitySource",
+      {name: "source", label: "_source".loc(), attr: "opportunitySource",
         defaultKind: "XV.OpportunitySourcePicker"},
       {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-      {label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
-      {label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
+      {name: "account", label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
+      {name: "contact", label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
-      {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
-      {label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
+      {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
+      {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_targetClose".loc()},
-      {label: "_fromDate".loc(), attr: "targetClose", operator: ">=",
+      {name: "fromTargetDate", label: "_fromDate".loc(), attr: "targetClose", operator: ">=",
         filterLabel: "_from".loc() + " " + "_targetClose".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"},
-      {label: "_toDate".loc(), attr: "targetClose", operator: "<=",
+      {name: "toTargetDate", label: "_toDate".loc(), attr: "targetClose", operator: "<=",
         filterLabel: "_to".loc() + " " + "_targetClose".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"}
     ]
@@ -319,7 +319,7 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_project".loc()},
-      {label: "_showCompleted".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
+      {name: "showCompleted", label: "_showCompleted".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
         getParameter: function () {
           var param;
           if (!this.getValue()) {
@@ -332,21 +332,21 @@ trailing:true white:true*/
           return param;
         }
       },
-      {label: "_number".loc(), attr: "number"},
-      {label: "_name".loc(), attr: "name"},
-      {label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
-      {label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "account", label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
+      {name: "contact", label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
       {kind: "onyx.GroupboxHeader", content: "_status".loc()},
-      {label: "_status".loc(), attr: "status",
+      {name: "status", label: "_status".loc(), attr: "status",
         defaultKind: "XV.ProjectStatusPicker"},
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
-      {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
-      {label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
+      {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
+      {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
-      {label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
+      {name: "fromDueDate", label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
         filterLabel: "_from".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"},
-      {label: "_toDate".loc(), attr: "dueDate", operator: "<=",
+      {name: "toDueDate", label: "_toDate".loc(), attr: "dueDate", operator: "<=",
         filterLabel: "_to".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"}
     ]
@@ -357,7 +357,7 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_project".loc()},
-      {label: "_showCompleted".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
+      {name: "showCompleted", label: "_showCompleted".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
         getParameter: function () {
           var param;
           if (!this.getValue()) {
@@ -370,20 +370,20 @@ trailing:true white:true*/
           return param;
         }
       },
-      {label: "_project".loc(), attr: "project", defaultKind: "XV.ProjectWidget"},
-      {label: "_number".loc(), attr: "number"},
-      {label: "_name".loc(), attr: "name"},
+      {name: "project", label: "_project".loc(), attr: "project", defaultKind: "XV.ProjectWidget"},
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "name", label: "_name".loc(), attr: "name"},
       {kind: "onyx.GroupboxHeader", content: "_status".loc()},
-      {label: "_status".loc(), attr: "status",
+      {name: "status", label: "_status".loc(), attr: "status",
         defaultKind: "XV.ProjectStatusPicker"},
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
-      {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
-      {label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
+      {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
+      {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
-      {label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
+      {name: "fromDueDate", label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
         filterLabel: "_from".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"},
-      {label: "_toDate".loc(), attr: "dueDate", operator: "<=",
+      {name: "toDueDate", label: "_toDate".loc(), attr: "dueDate", operator: "<=",
         filterLabel: "_to".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"}
     ]
@@ -398,7 +398,7 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_toDo".loc()},
-      {label: "_showInactive".loc(), attr: "isActive", defaultKind: "XV.CheckboxWidget",
+      {name: "showInactive", label: "_showInactive".loc(), attr: "isActive", defaultKind: "XV.CheckboxWidget",
         getParameter: function () {
           var param;
           if (!this.getValue()) {
@@ -411,19 +411,19 @@ trailing:true white:true*/
           return param;
         }
       },
-      {label: "_name".loc(), attr: "name"},
-      {label: "_description".loc(), attr: "description"},
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "description", label: "_description".loc(), attr: "description"},
       {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-      {label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
-      {label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
+      {name: "account", label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
+      {name: "contact", label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
       {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
-      {label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
-      {label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
+      {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
+      {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
-      {label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
+      {name: "fromDate", label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
         filterLabel: "_from".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"},
-      {label: "_toDate".loc(), attr: "dueDate", operator: "<=",
+      {name: "toDate", label: "_toDate".loc(), attr: "dueDate", operator: "<=",
         filterLabel: "_to".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"}
     ]
@@ -438,8 +438,8 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_url".loc()},
-      {label: "_name".loc(), attr: "name"},
-      {label: "_path".loc(), attr: "path"}
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "address", label: "_address".loc(), attr: "path"}
     ]
   });
 

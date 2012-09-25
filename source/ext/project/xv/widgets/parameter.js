@@ -14,7 +14,7 @@ trailing:true white:true*/
   
     extensions = [
       {kind: "onyx.GroupboxHeader", content: "_project".loc()},
-      {label: "_project".loc(), attr: "project", defaultKind: "XV.ProjectWidget"}
+      {name: "project", label: "_project".loc(), attr: "project", defaultKind: "XV.ProjectWidget"}
     ];
 
     XV.appendExtension("XV.IncidentListParameters", extensions);
