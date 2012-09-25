@@ -169,7 +169,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
   
   dependenciesFor = function (socket, orm, dependencies) {
-    var properties, extensions, ignore = "PUBLIC XT".w(), namespace, table, orms, dep;
+    var properties, extensions, namespace, table, orms, dep;
     dependencies = dependencies ? dependencies: orm.dependencies ? orm.dependencies: (orm.dependencies = []);
     properties = orm.properties || [];
     extensions = orm.extensions || [];
@@ -191,12 +191,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       dependenciesFor(socket, extension, dependencies);
     });
     namespace = orm.table.match(/^(.*)\./);
-    if (!X.none(namespace) && !ignore.contains(namespace[1].toUpperCase())) {
-      namespace = namespace[1].toUpperCase();
-      table = orm.table.match(/\.(.*)$/)[1].h();
-      dep = {nameSpace: namespace, type: table};
-      if (!dependencies.contains(dep)) dependencies.push({nameSpace: namespace, type: table});
-    }
     _.each(dependencies, function (dependency) {
       var ns, type;
       ns = orms[dependency.nameSpace];
