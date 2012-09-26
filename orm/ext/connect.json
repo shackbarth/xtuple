@@ -119,7 +119,7 @@
     "nameSpace": "XM",
     "type": "Batch",
     "table": "xtbatch.batch",
-    "idSequenceName": "batch_batch_id_seq",
+    "idSequenceName": "xtbatch.batch_batch_id_seq",
     "comment": "Batch Map",
     "privileges": {
       "all": {
