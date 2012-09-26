@@ -22,7 +22,10 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.ClassCodePicker",
     kind: "XV.PickerWidget",
     collection: "XM.classCodes",
-    nameAttribute: "code"
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ]
   });
 
   // ..........................................................
@@ -46,7 +49,10 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.CountryPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.countries"
+    collection: "XM.countries",
+    orderBy: [
+      {attribute: 'name'}
+    ]
   });
 
   // ..........................................................
@@ -56,7 +62,11 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.IncidentCategoryPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.incidentCategories"
+    collection: "XM.incidentCategories",
+    orderBy: [
+      {attribute: 'order'},
+      {attribute: 'name'}
+    ]
   });
 
   // ..........................................................
@@ -66,7 +76,11 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.IncidentResolutionPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.incidentResolutions"
+    collection: "XM.incidentResolutions",
+    orderBy: [
+      {attribute: 'order'},
+      {attribute: 'name'}
+    ]
   });
 
   // ..........................................................
@@ -76,7 +90,11 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.IncidentSeverityPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.incidentSeverities"
+    collection: "XM.incidentSeverities",
+    orderBy: [
+      {attribute: 'order'},
+      {attribute: 'name'}
+    ]
   });
 
   // ..........................................................
@@ -97,7 +115,10 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.OpportunitySourcePicker",
     kind: "XV.PickerWidget",
-    collection: "XM.opportunitySources"
+    collection: "XM.opportunitySources",
+    orderBy: [
+      {attribute: 'name'}
+    ]
   });
 
   // ..........................................................
@@ -107,7 +128,10 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.OpportunityStagePicker",
     kind: "XV.PickerWidget",
-    collection: "XM.opportunityStages"
+    collection: "XM.opportunityStages",
+    orderBy: [
+      {attribute: 'name'}
+    ]
   });
 
   // ..........................................................
@@ -117,7 +141,10 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.OpportunityTypePicker",
     kind: "XV.PickerWidget",
-    collection: "XM.opportunityTypes"
+    collection: "XM.opportunityTypes",
+    orderBy: [
+      {attribute: 'name'}
+    ]
   });
 
   // ..........................................................
@@ -127,7 +154,11 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.PriorityPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.priorities"
+    collection: "XM.priorities",
+    orderBy: [
+      {attribute: 'order'},
+      {attribute: 'name'}
+    ]
   });
 
   // ..........................................................
@@ -138,7 +169,10 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.ProductCategoryPicker",
     kind: "XV.PickerWidget",
     collection: "XM.productCategories",
-    nameAttribute: "code"
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ]
   });
 
   // ..........................................................
@@ -158,7 +192,10 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.UnitWidget",
     kind: "XV.PickerWidget",
-    collection: "XM.units"
+    collection: "XM.units",
+    orderBy: [
+      {attribute: 'name'}
+    ]
   });
   
 }());

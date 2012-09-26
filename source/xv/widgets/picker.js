@@ -152,6 +152,9 @@ regexp:true, undef:true, trailing:true, white:true */
             attr = orderBy[i].attribute;
             aval = orderBy[i].descending ? b.getValue(attr) : a.getValue(attr);
             bval = orderBy[i].descending ? a.getValue(attr) : b.getValue(attr);
+            // Bad hack for null 'order' values
+            if (attr === "order" && !_.isNumber(aval)) { aval = 9999; }
+            if (attr === "order" && !_.isNumber(bval)) { bval = 9999; }
             aval = !isNaN(aval) ? aval - 0 : aval;
             bval = !isNaN(aval) ? bval - 0 : bval;
             if (aval !== bval) {
