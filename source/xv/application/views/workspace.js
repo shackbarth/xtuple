@@ -266,7 +266,8 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name", name: "name"},
-            {kind: "XV.InputWidget", attr: "description", name: "description"},
+            // XXX the disabled flag here doesn't seem to work
+            {kind: "XV.InputWidget", attr: "description", name: "description", disabled: true},
             {kind: "XV.FileInputWidget", attr: "data"}
           ]}
         ]}
