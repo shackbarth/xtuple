@@ -285,7 +285,7 @@ trailing:true white:true*/
           ]},
           {kind: "XV.ListColumn", classes: "third", components: [
             {kind: "XV.ListAttr", attr: "getIncidentStatusString"},
-            {kind: "XV.ListAttr", attr: "owner.username"}
+            {kind: "XV.ListAttr", attr: "assignedTo.username"}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "priority.name",
@@ -439,7 +439,7 @@ trailing:true white:true*/
             components: [
             {kind: "XV.ListAttr", attr: "opportunityStage.name",
               placeholder: "_noStage".loc()},
-            {kind: "XV.ListAttr", attr: "owner.username"}
+            {kind: "XV.ListAttr", attr: "assignedTo.username"}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "priority.name",
@@ -516,7 +516,7 @@ trailing:true white:true*/
           {kind: "XV.ListColumn", classes: "third",
             components: [
             {kind: "XV.ListAttr", attr: "getProjectStatusString"},
-            {kind: "XV.ListAttr", attr: "owner.username"}
+            {kind: "XV.ListAttr", attr: "assignedTo.username"}
           ]},
           {kind: "XV.ListColumn", style: "width: 80;",
             components: [

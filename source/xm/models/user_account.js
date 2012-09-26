@@ -127,7 +127,7 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.UserAccountRolePrivilegeAssignment = XM.Document.extend({
+  XM.UserAccountRolePrivilegeAssignment = XM.Model.extend({
     /** @scope XM.UserAccountRolePrivilegeAssignment.prototype */
 
     recordType: 'XM.UserAccountRolePrivilegeAssignment'
