@@ -114,7 +114,7 @@ trailing:true white:true*/
         coll = list.getValue(),
         recordType = coll.model.prototype.recordType;
 
-      window.location = "/export?details={\"requestType\":\"fetch\",\"query\":{\"recordType\":\"" + recordType + "\"}}";
+      window.open("/export?details={\"requestType\":\"fetch\",\"query\":{\"recordType\":\"" + recordType + "\"}}","_newtab");
 
 
         /*
