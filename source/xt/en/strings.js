@@ -410,6 +410,7 @@ XT.stringsFor("en_US", {
   "_lengthInvalid": "Length of {attr} must be {length}.",
   "_loadingApplicationData": "Loading Application Data",
   "_loadingExtensions": "Loading Extensions",
+  "_loadingSchema": "Loading Schema",
   "_loadingSessionData": "Loading Session Data",
   "_localResourceNotAllowed": "Not allowed to load local resource",
   "_logoutConfirmation": "Are you sure you want to log out?",

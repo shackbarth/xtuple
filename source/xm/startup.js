@@ -5,7 +5,7 @@ white:true*/
 
 (function () {
   "use strict";
-
+  
   XT.StartupTask.create({
     taskName: "loadSessionSettings",
     task: function () {
@@ -35,37 +35,9 @@ white:true*/
       XT.session.loadSessionObjects(XT.session.LOCALE, options);
     }
   });
-
-
-  // XXX add this one.
-  XT.StartupTask.create({
-    taskName: "loadSessionSchema",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XT.session.loadSessionObjects(XT.session.SCHEMA, options);
-    }
-  });
-
-
-  // These will be loaded after all extensions are loaded
+  
+  // These will be looaded after all extensions are loaded
   if (!XT.StartupTasks) { XT.StartupTasks = []; }
-
-
-  // XXX remove this one
- /*
-  XT.StartupTasks.push({
-    taskName: "loadSessionSchema",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XT.session.loadSessionObjects(XT.session.SCHEMA, options);
-    }
-  });
-  */
-  // XXX
 
   XT.StartupTasks.push({
     taskName: "loadCurrentUser",
