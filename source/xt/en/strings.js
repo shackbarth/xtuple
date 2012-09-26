@@ -142,6 +142,7 @@ XT.stringsFor("en_US", {
   "_expenses": "Expenses",
   "_expiredColor": "Expired Color",
   "_expires": "Expires",
+  "_export": "Export",
   "_extended": "Extended",
   "_extendedDescription": "Extended Description",
   "_extendedPriceScale": "Extended Price Scale",
