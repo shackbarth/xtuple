@@ -51,7 +51,9 @@ trailing:true white:true*/
     formatDescription: function (value, view, model) {
       var infoModel = this.getInfoModel(model),
         attr = infoModel.descriptionKey,
-        isUrl = infoModel.recordType === 'XM.Url';
+        recordType = infoModel.recordType,
+        isUrl = recordType === 'XM.Url' || recordType === 'XM.FileRelation';
+
       view.addRemoveClass("hyperlink", isUrl);
       return infoModel.get(attr);
     },
@@ -94,7 +96,12 @@ trailing:true white:true*/
         recordType = model.recordType,
         path,
         error;
-      path = recordType === "XM.Url" ? model.getValue('path') : null;
+
+      if (recordType === "XM.Url") {
+        path = model.getValue('path');
+      } else if (recordType === 'XM.FileRelation') {
+        path = '/file?recordType=XM.File&id=' + model.id;
+      }
       if (path) {
         if (path.search(/^file/i) > -1) {
           error = XT.Error.clone('xt1011');
@@ -212,21 +219,21 @@ trailing:true white:true*/
         workspace = XV.getWorkspace(infoModel),
         collection = parent.get(docsAttr),
         inEvent,
-        
+
         // Callback when new model is successfully committed
         callback = function (model) {
-          
+
           // First load up the info model version
           // of the model just created
           var Klass = XT.getObjectByName(infoModel),
             info = new Klass({id: model.id}),
             options = {};
           options.success = function () {
-            
+
             // Now create a document assignment model
             var Klass = XT.getObjectByName(docsModel),
               model = new Klass(),
-              
+
               // When id has been fetched, set attributes and
               // add document assignment to parent
               idFetched = function () {
@@ -238,7 +245,7 @@ trailing:true white:true*/
             model.on('change:id', idFetched);
             model.initialize(null, { isNew: true });
           };
-          
+
           // Fetch the info model
           info.fetch(options);
         };

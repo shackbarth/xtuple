@@ -90,7 +90,7 @@ white:true*/
     /** @scope XM.AccountComment.prototype */
 
     recordType: 'XM.AccountComment',
-    
+
     sourceName: 'CRMA'
 
   });
@@ -130,6 +130,20 @@ white:true*/
     /** @scope XM.AccountContact.prototype */
 
     recordType: 'XM.AccountContact',
+
+    isDocumentAssignment: true
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.AccountIncident = XM.Model.extend({
+    /** @scope XM.AccountIncident.prototype */
+
+    recordType: 'XM.AccountIncident',
 
     isDocumentAssignment: true
 
@@ -214,9 +228,9 @@ white:true*/
     /** @scope XM.ContactRelation.prototype */
 
     recordType: 'XM.AccountRelation',
-    
+
     editableModel: 'XM.Account',
-    
+
     descriptionKey: "name"
 
   });
@@ -262,7 +276,7 @@ white:true*/
     model: XM.AccountListItem
 
   });
-  
+
   /**
     @class
 

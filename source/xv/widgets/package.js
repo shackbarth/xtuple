@@ -11,5 +11,6 @@ enyo.depends(
   "completer.js",
   "combobox.js",
   "relation.js",
-  "parameter.js"
+  "parameter.js",
+  "file_input.js"
 );

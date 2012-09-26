@@ -40,6 +40,20 @@ white:true*/
 
       @extends XM.Model
     */
+    XM.AccountIncident = XM.Model.extend(
+      /** @scope XM.AccountIncident.prototype */ {
+
+      recordType: 'XM.AccountIncident',
+
+      isDocumentAssignment: true
+
+    });
+
+    /**
+      @class
+
+      @extends XM.Model
+    */
     XM.AccountOpportunity = XM.Model.extend(
       /** @scope XM.AccountOpportunity.prototype */ {
 

@@ -75,8 +75,8 @@ trailing:true white:true*/
           ]},
           {name: "newButton", kind: "onyx.Button", content: "_new".loc(),
             ontap: "newRecord", style: "float: right;", showing: false},
-          //{name: "exportButton", kind: "onyx.Button", content: "_export".loc(),
-          //  ontap: "exportList", style: "float: right;"},
+          {name: "exportButton", kind: "onyx.Button", content: "_export".loc(),
+            ontap: "exportList", style: "float: right;", showing: false},
                                  // AWFUL UGLY HEINOUS HACK SHOULD NOT BE NECESSARY
           {kind: "onyx.Grabber", style: "height: 27px !important;"},
           {name: "rightLabel", style: "text-align: center"}
@@ -108,6 +108,29 @@ trailing:true white:true*/
     },
     getSelectedModule: function (index) {
       return this._selectedModule;
+    },
+    exportList: function (inSender, inEvent) {
+      var list = this.$.contentPanels.getActive(),
+        coll = list.getValue(),
+        recordType = coll.model.prototype.recordType;
+
+      window.location = "/export?details={\"requestType\":\"fetch\",\"query\":{\"recordType\":\"" + recordType + "\"}}";
+
+
+        /*
+        success = function (result) {
+          var cacheId = result.cacheId;
+          window.location = "https://localtest.com/export?cacheId=" + cacheId;
+        },
+        error = function (result) {
+          XT.log("error");
+          XT.log(result);
+        },
+        options = {responseType: "csv", success: success, error: error};
+
+      // XXX I should be using some new datasource function here, not configure
+      XT.dataSource.configure("createCSV", {"recordType": recordType}, options);
+    */
     },
     errorOk: function () {
       this.$.errorPopup.hide();
@@ -195,7 +218,7 @@ trailing:true white:true*/
         canNotRead = model.couldRead ? !model.couldRead() : !model.getClass().canRead(),
         id = model ? model.id : null,
         message;
-        
+
       // Check privileges first
       if (canNotRead) {
         message = "_insufficientViewPrivileges".loc();
@@ -235,19 +258,19 @@ trailing:true white:true*/
             return panel.name === name;
           });
         };
-      
+
       // Build panels
       for (i = 0; i < modules.length; i++) {
         panels = modules[i].panels || [];
         existingModule = findExistingModule(modules[i].name);
         for (n = 0; n < panels.length; n++) {
-          
+
           // If the panel already exists, move on
           if (existingModule) {
             existingPanel = findExistingPanel(existingModule.panels, panels[n].name);
             if (existingPanel) { continue; }
           }
-          
+
           // Keep track of where this panel is being placed for later reference
           panels[n].index = this.$.contentPanels.panelCount++;
           panel = this.$.contentPanels.createComponent(panels[n]);
@@ -263,13 +286,6 @@ trailing:true white:true*/
       this._modules = JSON.parse(JSON.stringify(modules));
       this.render();
     },
-    exportList: function (inSender, inEvent) {
-      var list = this.$.contentPanels.getActive(),
-        Model = list.getValue().model;
-
-      alert("Not yet implemented");
-    },
-
     newRecord: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),
         workspace = list instanceof XV.List ? list.getWorkspace() : null,
@@ -319,7 +335,12 @@ trailing:true white:true*/
       }
       this.doNavigatorEvent({name: panel.name, show: false});
 
-      // Handel new button
+      // I'm skirting around the loading time for XM.currentUser. If this data
+      // hasn't been loaded yet then the navigator simply won't allow export
+      var isAllowedToExport = XM.currentUser && !XM.currentUser.get("disableExport");
+      this.$.exportButton.setShowing(collection && isAllowedToExport);
+
+      // Handle new button
       this.$.newButton.setShowing(panel.canAddNew);
       if (collection) {
         // Check 'couldCreate' first in case it's an info model.

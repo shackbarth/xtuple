@@ -67,7 +67,7 @@ white:true*/
       if (suffix) { name.push(suffix); }
       return name.join(' ');
     },
-    
+
     used: function (options) {
       return XT.dataSource.dispatch('XM.Contact', 'used', this.id, options);
     },
@@ -220,9 +220,9 @@ white:true*/
     recordType: 'XM.ContactRelation',
 
     editableModel: 'XM.Contact',
-    
+
     descriptionKey: "jobTitle",
-    
+
     numberKey: "name"
 
   });
@@ -268,7 +268,7 @@ white:true*/
     model: XM.ContactListItem
 
   });
-  
+
   /**
     @class
 

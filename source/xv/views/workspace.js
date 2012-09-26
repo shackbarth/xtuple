@@ -29,7 +29,8 @@ trailing:true white:true*/
         K = XM.Model,
         status = model.getStatus(),
         changes = {}, // = options.changes
-        canNotUpdate = !model.canUpdate() || !(status & K.READY),
+        canUpdate = (status === K.READY_NEW /* && model.canCreate() */) ||
+          ((status & K.READY) && model.canUpdate()),
         control,
         isReadOnly,
         isRequired,
@@ -59,7 +60,7 @@ trailing:true white:true*/
               control.setValue(value, {silent: true});
             }
             if (control.setDisabled) {
-              control.setDisabled(canNotUpdate || isReadOnly);
+              control.setDisabled(!canUpdate || isReadOnly);
             }
           }
         }
@@ -74,7 +75,7 @@ trailing:true white:true*/
 
   /**
     @class
-    
+
     @extends enyo.FittableRows
     @extends XV.EditorMixin
     @extends XV.ExtensionsMixin
@@ -281,7 +282,7 @@ trailing:true white:true*/
       this.doTitleChange(inEvent);
     }
   });
-  
+
   workspaceHash = enyo.mixin(workspaceHash, XV.ExtensionsMixin);
   enyo.kind(workspaceHash);
 
@@ -537,9 +538,10 @@ trailing:true white:true*/
       var model = inEvent.model,
         K = XM.Model,
         status = inEvent.status,
-        isNotReady = (status !== K.READY_CLEAN && status !== K.READY_DIRTY),
-        isEditable = (model.canUpdate() && !model.isReadOnly()),
-        canNotSave = (!model.isDirty() || !isEditable),
+        isNotReady = status !== K.READY_CLEAN && status !== K.READY_DIRTY,
+        canUpdate = model.canUpdate() || status === K.READY_NEW,
+        isEditable = canUpdate && !model.isReadOnly(),
+        canNotSave = !model.isDirty() || !isEditable,
         message;
 
       // Status dictates whether buttons are actionable
