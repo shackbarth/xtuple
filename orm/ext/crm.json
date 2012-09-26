@@ -14,15 +14,6 @@
     ],
     "properties": [
       {
-        "name": "incidents",
-        "toMany": {
-          "isNested": true,
-          "type": "AccountIncident",
-          "column": "crmacct_id",
-          "inverse": "source"
-        }
-      },
-      {
         "name": "opportunities",
         "toMany": {
           "isNested": true,
@@ -66,72 +57,6 @@
       }
     ],
     "sequence": 0,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
-    "type": "AccountIncident",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "Account Incident Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
-          "value": "CRMA"
-        }
-      },
-      {
-        "name": "source",
-        "attr": {
-          "type": "Number",
-          "column": "source_id"
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "target_type",
-          "value": "INCDT"
-        }
-      },
-      {
-        "name": "incident",
-        "toOne": {
-          "isNested": true,
-          "type": "IncidentRelation",
-          "column": "target_id"
-        }
-      },
-      {
-        "name": "purpose",
-        "attr": {
-          "type": "String",
-          "column": "purpose"
-        }
-      }
-    ],
-    "isNestedOnly": true,
     "isSystem": true
   },
   {
