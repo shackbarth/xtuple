@@ -42,8 +42,10 @@ white:true*/
         item.kind = inEvent.getParameterWidget();
       }
       if (item.kind) {
-        item.container = this.$.pullout.$.pulloutItems;
-        this.$.pullout.createComponent(item);
+        if (this._pulloutItems === undefined) {
+          this._pulloutItems = [];
+        }
+        this._pulloutItems.push(item);
       }
     },
     create: function () {
@@ -112,6 +114,8 @@ white:true*/
         task,
         len,
         text,
+        pulloutItems,
+        item,
         eachCallback = function () {
           var completed = startupManager.get('completed').length;
           progressBar.animateProgressTo(completed);
@@ -180,8 +184,16 @@ white:true*/
           XT.StartupTask.create(task);
         }
 
-      // 4. Go to Navigator
+      // 4. Finish up
       } else if (this.state === LOADING_APP_DATA) {
+        // Create pullout items
+        pulloutItems = this._pulloutItems || [];
+        for (i = 0; i < pulloutItems.length; i++) {
+          item = pulloutItems[i];
+          item.container = this.$.pullout.$.pulloutItems;
+          this.$.pullout.createComponent(item);
+        }
+         
         // Go to the navigator
         this.state = RUNNING;
         XT.app.$.postbooks.next();
