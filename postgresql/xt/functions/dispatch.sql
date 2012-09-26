@@ -1,6 +1,4 @@
 create or replace function xt.dispatch(data_hash text) returns text as $$
-  /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
-     See www.xm.ple.com/CPAL for the full text of the software license. */
 
   if (!Function.prototype.curry) {
     /* support methods */  

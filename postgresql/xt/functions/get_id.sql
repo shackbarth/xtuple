@@ -1,6 +1,4 @@
 create or replace function xt.get_id(table_name text, column_name text, value_text text, id_column_name text default null, schema_name text default 'xt') returns integer immutable as $$
--- Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
--- See www.xm.ple.com/CPAL for the full text of the software license.
 declare
   id_column text;
   query text;

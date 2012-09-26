@@ -1,6 +1,4 @@
 create or replace function xt.add_constraint(table_name text, constraint_name text, constraint_text text, schema_name text default 'xt') returns boolean volatile as $$
--- Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
--- See www.xm.ple.com/CPAL for the full text of the software license.
 declare
   count integer;
   query text;

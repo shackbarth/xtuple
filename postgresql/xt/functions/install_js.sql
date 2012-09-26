@@ -1,6 +1,4 @@
 create or replace function xt.install_js(name_space text, type_name text, context text, javascript text, is_extension boolean default false) returns void as $$                                
-/* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
-   See www.xm.ple.com/CPAL for the full text of the software license. */
 
   if(!name_space) throw new Error("A name space is required");
   if(!type_name) throw new Error("A type is required");
