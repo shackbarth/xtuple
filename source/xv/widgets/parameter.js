@@ -82,15 +82,8 @@ white:true*/
     isAllSetUp: false,
     create: function () {
       this.inherited(arguments);
-
-      var that = this,
-        callback = function () {
-          that.processExtensions();
-          that.populateFromCookie();
-        };
-
-      XT.getStartupManager().registerCallback(callback, true);
-
+      this.processExtensions();
+      this.populateFromCookie();
       this.isAllSetUp = true;
     },
     getParameters: function () {
