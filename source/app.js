@@ -8,8 +8,9 @@ white:true*/
   var UNINITIALIZED = 0;
   var LOADING_SESSION = 1;
   var LOADING_EXTENSIONS = 2;
-  var LOADING_APP_DATA = 3;
-  var RUNNING = 4;
+  var LOADING_SCHEMA = 3;
+  var LOADING_APP_DATA = 4;
+  var RUNNING = 5;
 
   enyo.kind({
     name: "App",
@@ -103,6 +104,7 @@ white:true*/
     startupProcess: function () {
       var startupManager = XT.getStartupManager(),
         progressBar = XT.app.$.postbooks.getStartupProgressBar(),
+        that = this,
         prop,
         ext,
         extprop,
@@ -123,7 +125,7 @@ white:true*/
         len = startupManager.get('queue').length +
           startupManager.get('completed').length;
         progressBar.setMax(len);
-        
+
       // 2: Initialize extensions
       } else if (this.state === LOADING_SESSION) {
         // Treating this like other progressive actions because we assume
@@ -145,9 +147,28 @@ white:true*/
           i++;
         }
         this.startupProcess();
-      
-      // 3. Load Application Data
+
+      // 3. Load Schema
       } else if (this.state === LOADING_EXTENSIONS) {
+        this.state = LOADING_SCHEMA;
+        text = "_loadingSchema".loc() + "...";
+        XT.app.$.postbooks.getStartupText().setContent(text);
+        startupManager.registerCallback(function () {
+          that.startupProcess();
+        });
+
+        XT.StartupTask.create({
+          taskName: "loadSessionSchema",
+          task: function () {
+            var options = {
+              success: _.bind(this.didComplete, this)
+            };
+            XT.session.loadSessionObjects(XT.session.SCHEMA, options);
+          }
+        });
+
+      // 4 Load Application Data
+      } else if (this.state === LOADING_SCHEMA) {
         // Run startup tasks
         this.state = LOADING_APP_DATA;
         text = "_loadingApplicationData".loc() + "...";
@@ -158,7 +179,7 @@ white:true*/
           task = XT.StartupTasks[i];
           XT.StartupTask.create(task);
         }
-        
+
       // 4. Go to Navigator
       } else if (this.state === LOADING_APP_DATA) {
         // Go to the navigator

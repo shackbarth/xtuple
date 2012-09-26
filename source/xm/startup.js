@@ -27,16 +27,6 @@ white:true*/
   });
 
   XT.StartupTask.create({
-    taskName: "loadSessionSchema",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XT.session.loadSessionObjects(XT.session.SCHEMA, options);
-    }
-  });
-
-  XT.StartupTask.create({
     taskName: "loadSessionLocale",
     task: function () {
       var options = {
