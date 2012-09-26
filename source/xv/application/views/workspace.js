@@ -67,7 +67,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   XV.registerModelWorkspace("XM.AccountRelation", "XV.AccountWorkspace");
   XV.registerModelWorkspace("XM.AccountListItem", "XV.AccountWorkspace");
 
@@ -94,7 +94,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   XV.registerModelWorkspace("XM.ClassCode", "XV.ClassCodeWorkspace");
 
   // ..........................................................
@@ -188,7 +188,7 @@ trailing:true white:true*/
       }
     }
   });
-  
+
   XV.registerModelWorkspace("XM.ContactRelation", "XV.ContactWorkspace");
   XV.registerModelWorkspace("XM.ContactListItem", "XV.ContactWorkspace");
 
@@ -219,7 +219,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   XV.registerModelWorkspace("XM.Country", "XV.CountryWorkspace");
 
   // ..........................................................
@@ -246,9 +246,9 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   XV.registerModelWorkspace("XM.Currency", "XV.CurrencyWorkspace");
-  
+
   // ..........................................................
   // FILE
   //
@@ -265,15 +265,30 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.InputWidget", attr: "description"},
-            {tag: "input type=file", name: "fileInput"}
+            {kind: "XV.InputWidget", attr: "name", name: "name"},
+            {kind: "XV.InputWidget", attr: "description", name: "description"},
+            {kind: "XV.FileInputWidget", attr: "data"}
           ]}
         ]}
       ]}
-    ]
+    ],
+
+    /**
+      When a file is uploaded we want the filename to overwrite
+      the name and description fields.
+     */
+      // TODO: description should not be user-editable
+    controlValueChanged: function (inSender, inEvent) {
+      var filename = inEvent.filename;
+      if (filename) {
+        this.$.name.setValue(filename);
+        this.$.description.setValue(filename);
+      }
+
+      this.inherited(arguments);
+    }
   });
-  
+
   XV.registerModelWorkspace("XM.FileRelation", "XV.FileWorkspace");
 
   // ..........................................................
@@ -298,7 +313,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   XV.registerModelWorkspace("XM.Honorific", "XV.HonorificWorkspace");
 
   // ..........................................................
@@ -343,7 +358,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   XV.registerModelWorkspace("XM.IncidentRelation", "XV.IncidentWorkspace");
   XV.registerModelWorkspace("XM.IncidentListItem", "XV.IncidentWorkspace");
 
@@ -357,7 +372,7 @@ trailing:true white:true*/
     title: "_incidentCategory".loc(),
     model: "XM.IncidentCategory"
   });
-  
+
   XV.registerModelWorkspace("XM.IncidentCategory", "XV.IncidentCategoryWorkspace");
 
   // ..........................................................
@@ -370,7 +385,7 @@ trailing:true white:true*/
     title: "_incidentResolution".loc(),
     model: "XM.IncidentResolution"
   });
-  
+
   XV.registerModelWorkspace("XM.IncidentResolution", "XV.IncidentResolutionWorkspace");
 
   // ..........................................................
@@ -383,7 +398,7 @@ trailing:true white:true*/
     title: "_incidentSeverity".loc(),
     model: "XM.IncidentSeverity"
   });
-  
+
   XV.registerModelWorkspace("XM.IncidentSeverity", "XV.IncidentSeverityWorkspace");
 
   // ..........................................................
@@ -428,7 +443,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   XV.registerModelWorkspace("XM.ItemRelation", "XV.ItemWorkspace");
   XV.registerModelWorkspace("XM.ItemListItem", "XV.ItemWorkspace");
 
@@ -482,7 +497,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   XV.registerModelWorkspace("XM.OpportunityRelation", "XV.OpportunityWorkspace");
   XV.registerModelWorkspace("XM.OpportunityListItem", "XV.OpportunityWorkspace");
 
@@ -496,7 +511,7 @@ trailing:true white:true*/
     title: "_opportunitySource".loc(),
     model: "XM.OpportunitySource"
   });
-  
+
   XV.registerModelWorkspace("XM.OpportunitySource", "XV.OpportunitySourceWorkspace");
 
   // ..........................................................
@@ -509,7 +524,7 @@ trailing:true white:true*/
     title: "_opportunityStage".loc(),
     model: "XM.OpportunityStage"
   });
-  
+
   XV.registerModelWorkspace("XM.OpportunityStage", "XV.OpportunityStageWorkspace");
 
   // ..........................................................
@@ -522,7 +537,7 @@ trailing:true white:true*/
     title: "_opportunityType".loc(),
     model: "XM.OpportunityType"
   });
-  
+
   XV.registerModelWorkspace("XM.OpportunityType", "XV.OpportunityTypeWorkspace");
 
   // ..........................................................
@@ -561,7 +576,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   XV.registerModelWorkspace("XM.ProductCategory", "XV.ProductCategoryWorkspace");
 
   // ..........................................................
@@ -605,7 +620,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   XV.registerModelWorkspace("XM.ProjectRelation", "XV.ProjectWorkspace");
   XV.registerModelWorkspace("XM.ProjectListItem", "XV.ProjectWorkspace");
 
@@ -651,7 +666,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   XV.registerModelWorkspace("XM.ProjectTask", "XV.ProjectTaskWorkspace");
   XV.registerModelWorkspace("XM.ProjectTaskListItem", "XV.ProjectTaskWorkspace");
 
@@ -679,7 +694,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   XV.registerModelWorkspace("XM.State", "XV.StateWorkspace");
 
   // ..........................................................
@@ -724,10 +739,10 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   XV.registerModelWorkspace("XM.ToDoRelation", "XV.ToDoWorkspace");
   XV.registerModelWorkspace("XM.ToDoListItem", "XV.ToDoWorkspace");
-  
+
   // ..........................................................
   // URL
   //
@@ -751,7 +766,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   XV.registerModelWorkspace("XM.Url", "XV.UrlWorkspace");
 
   // ..........................................................
@@ -778,7 +793,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   XV.registerModelWorkspace("XM.Unit", "XV.UnitWorkspace");
 
   // ..........................................................
@@ -824,7 +839,7 @@ trailing:true white:true*/
       this.$.grantedPrivileges.tryToRender();
     }
   });
-  
+
   XV.registerModelWorkspace("XM.UserAccountRelation", "XV.UserAccountWorkspace");
   XV.registerModelWorkspace("XM.UserAccountListItem", "XV.UserAccountWorkspace");
 
@@ -855,7 +870,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   XV.registerModelWorkspace("XM.UserAccountRoleRelation", "XV.UserAccountRoleWorkspace");
   XV.registerModelWorkspace("XM.UserAccountRoleListItem", "XV.UserAccountRoleWorkspace");
 

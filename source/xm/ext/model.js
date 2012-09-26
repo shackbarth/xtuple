@@ -21,7 +21,7 @@ white:true*/
       XM.MyModel = XM.Model.extend({
         recordType: 'XM.MyModel'
       });
-      
+
       // Instantiate a new model object
       m = new XM.MyModel(null, {isNew: true});
 
@@ -310,7 +310,7 @@ white:true*/
 
     /*
       Reimplemented to handle status changes.
-      
+
       @param {Object} Options
       @returns {XT.Request} Request
     */
@@ -367,7 +367,7 @@ white:true*/
         });
       }
     },
-    
+
     /**
      * Retrieve related objects.
      * @param key {string} The relation key to fetch models for.
@@ -385,12 +385,12 @@ white:true*/
             var id = Backbone.Relational.store.resolveIdForItem(rel.relatedModel, item);
             return id && (update || !Backbone.Relational.store.find(rel.relatedModel, id));
           }, this);
-			
+
       if (toFetch && toFetch.length) {
         if (options.max && toFetch.length > options.max) {
           toFetch.length = options.max;
         }
-        
+
         // Create a model for each entry in 'keyContents' that is to be fetched
         var models = _.map(toFetch, function (item) {
           var model;
@@ -428,7 +428,7 @@ white:true*/
           return model.fetch(opts);
         }, this);
       }
-		
+
       return requests;
     },
 
@@ -905,7 +905,7 @@ white:true*/
       }
       return result || false;
     },
-    
+
     /**
       Determine whether this record has been referenced by another. By default
       this function inspects foreign key relationships on the database, and is
@@ -989,6 +989,11 @@ white:true*/
           category = column ? column.category : false;
           switch (category) {
           case S.DB_BYTEA:
+            if (!_.isObject(value) && !_.isString(value)) { // XXX unscientific
+              params.type = "_binary".loc();
+              return XT.Error.clone('xt1003', { params: params });
+            }
+            break;
           case S.DB_UNKNOWN:
           case S.DB_STRING:
             if (!_.isString(value)) {
@@ -1066,7 +1071,7 @@ white:true*/
           }
         }
 
-        if (!this.canUpdate()) {
+        if (!this.canUpdate() && status !== K.READY_NEW) {
           return XT.Error.clone('xt1010');
         }
       }

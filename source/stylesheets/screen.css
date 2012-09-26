@@ -977,4 +977,10 @@ body {
   color: Dimgray;
 }
 
+/* line 761, ../sass/screen.scss */
+.xv-button-bar .onyx-button {
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
 /********END XV WIDGETS******/
