@@ -5,9 +5,7 @@
 
 -- create schemas
 \i create_xt_schema.sql;
-
--- drop xm views
-\i drop_xm_views.sql;
+\i create_xm_schema.sql;
 
 -- [ END ] initdb
 
@@ -27,14 +25,14 @@
 \i xt/functions/execute_query.sql;
 \i xt/functions/fetch.sql;
 \i xt/functions/get_id.sql;
-\i xt/functions/geteffectivextuser.sql;
+\i xt/functions/get_user.sql;
 \i xt/functions/js_init.sql;
 \i xt/functions/install_js.sql;
 \i xt/functions/install_orm.sql;
 \i xt/functions/is_date.sql;
 \i xt/functions/raise_exception.sql;
 \i xt/functions/retrieve_record.sql;
-\i xt/functions/seteffectivextuser.sql;
+\i xt/functions/set_user.sql;
 \i xt/functions/text_gt_date.sql;
 \i xt/functions/text_lt_date.sql;
 
@@ -57,9 +55,6 @@
 \i xt/javascript/data.sql;
 \i xt/javascript/orm.sql;
 \i xt/javascript/session.sql;
-
--- delete system orms
-\i delete_system_orms.sql;
 
 -- [ END ] xt
 
