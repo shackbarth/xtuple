@@ -270,9 +270,9 @@ regexp:true, undef:true, trailing:true, white:true */
         Workspace = this._Workspace,
         Model = Workspace && Workspace.prototype.model ?
           XT.getObjectByName(Workspace.prototype.model)  : null,
+        couldNotCreate = Model ? !Model.canCreate() : true,
         setPrivileges = function () {
           if (value && newId) {
-            that.$.newItem.setDisabled(!value.couldCreate());
             that.$.openItem.setDisabled(!value.couldRead());
           }
         };
@@ -293,7 +293,6 @@ regexp:true, undef:true, trailing:true, white:true */
         return;
       }
 
-
       this.value = value;
       if (value && value.get) {
         keyValue = value.get(key) || "";
@@ -313,7 +312,7 @@ regexp:true, undef:true, trailing:true, white:true */
       that.$.openItem.setShowing(Workspace);
       that.$.newItem.setShowing(Workspace);
       that.$.openItem.setDisabled(true);
-      that.$.newItem.setDisabled(true);
+      that.$.newItem.setDisabled(couldNotCreate);
       if (Model && Workspace) {
         if (XT.session) {
           setPrivileges();
