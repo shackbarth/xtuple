@@ -266,8 +266,9 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name", name: "name"},
-            {kind: "XV.InputWidget", attr: "description", name: "description"},
-            {kind: "XV.FileInputWidget", attr: "data"}
+            // XXX the disabled flag here doesn't seem to work
+            {kind: "XV.InputWidget", attr: "description", name: "description", disabled: true},
+            {kind: "XV.FileInputWidget", name: "file", attr: "data"}
           ]}
         ]}
       ]}
@@ -277,19 +278,70 @@ trailing:true white:true*/
       When a file is uploaded we want the filename to overwrite
       the name and description fields.
      */
-      // TODO: description should not be user-editable
     controlValueChanged: function (inSender, inEvent) {
       var filename = inEvent.filename;
       if (filename) {
         this.$.name.setValue(filename);
         this.$.description.setValue(filename);
       }
-
       this.inherited(arguments);
     }
   });
 
   XV.registerModelWorkspace("XM.FileRelation", "XV.FileWorkspace");
+
+  enyo.kind({
+    name: "XV.ImageWorkspace",
+    kind: "XV.FileWorkspace",
+    title: "_image".loc(),
+    model: "XM.Image",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name", name: "name"},
+            // XXX the disabled flag here doesn't seem to work
+            {kind: "XV.InputWidget", attr: "description", name: "description", disabled: true},
+            {kind: "XV.FileInputWidget", name: "file", attr: "data"}
+          ]}
+        ]},
+        {kind: "XV.Groupbox", name: "previewPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_preview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "previewGroup", classes: "in-panel", components: [
+            {tag: "img", name: "image"}
+          ]}
+        ]}
+      ]}
+    ],
+    attributesChanged: function (model, options) {
+      var id = this.getValue().get("id"),
+        K = XM.Model;
+
+      this.inherited(arguments);
+      if (id &&
+          !this.$.image.getAttribute("src") && this.isImageFile() &&
+          this.getValue().getStatus() !== K.READY_NEW) {
+        this.$.image.setAttribute("src", "/file?recordType=XM.Image&id=" + id);
+      }
+    },
+    isImageFile: function () {
+      var filename = this.$.description.getValue(),
+        extension;
+      if (!filename) {
+        return false;
+      }
+      extension = filename.substring(filename.lastIndexOf('.') + 1);
+      return (['png', 'gif', 'jpg'].indexOf(extension) >= 0);
+    }
+
+
+  });
+
+  XV.registerModelWorkspace("XM.ImageRelation", "XV.ImageWorkspace");
+
 
   // ..........................................................
   // HONORIFIC
@@ -823,19 +875,19 @@ trailing:true white:true*/
           ]}
         ]},
 
-        {kind: "XV.Groupbox", name: "rolePanel", title: "_roles".loc(), components: [
-          {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
-          {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles"}
-        ]},
+        //{kind: "XV.Groupbox", name: "rolePanel", title: "_roles".loc(), components: [
+        //  {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
+        {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles", name: "grantedRoles", title: "_roles".loc()},
+        //]},
 
-        {kind: "XV.Groupbox", name: "privilegePanel", title: "_privileges".loc(), components: [
-          {kind: "onyx.GroupboxHeader", content: "privileges".loc()},
-          {kind: "XV.UserAccountPrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges" }
-        ]}
+        //{kind: "XV.Groupbox", name: "privilegePanel", title: "_privileges".loc(), components: [
+        //  {kind: "onyx.GroupboxHeader", content: "privileges".loc()},
+        {kind: "XV.UserAccountPrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges", title: "_privileges".loc() }
+        //]},
       ]}
     ],
     refreshPrivileges: function (inSender, inEvent) {
-      this.$.grantedPrivileges.mapIds();
+      this.$.grantedPrivileges.mapIds(this.$.grantedRoles.getAssignedCollection().models);
       this.$.grantedPrivileges.tryToRender();
     }
   });
@@ -863,14 +915,15 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "description"}
           ]}
         ]},
-        {kind: "XV.Groupbox", name: "privilegePanel", title: "_privileges".loc(), components: [
-          {kind: "onyx.GroupboxHeader", content: "_privileges".loc()},
-          {kind: "XV.UserAccountRolePrivilegeAssignmentBox", attr: "grantedPrivileges"}
-        ]}
+        //{kind: "XV.Groupbox", name: "privilegePanel", title: "_privileges".loc(), components: [
+        //  {kind: "onyx.GroupboxHeader", content: "_privileges".loc()},
+        {kind: "XV.UserAccountRolePrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges", title: "_privileges".loc() }
+        //]}
       ]}
     ]
   });
 
+  XV.registerModelWorkspace("XM.UserAccountRole", "XV.UserAccountRoleWorkspace");
   XV.registerModelWorkspace("XM.UserAccountRoleRelation", "XV.UserAccountRoleWorkspace");
   XV.registerModelWorkspace("XM.UserAccountRoleListItem", "XV.UserAccountRoleWorkspace");
 

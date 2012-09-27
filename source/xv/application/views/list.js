@@ -52,7 +52,7 @@ trailing:true white:true*/
       return true;
     }
   });
-  
+
   XV.registerModelList("XM.AccountRelation", "XV.AccountList");
 
   // ..........................................................
@@ -82,11 +82,11 @@ trailing:true white:true*/
       return XM.Address.format(model, true);
     }
   });
-  
+
   // ..........................................................
   // CLASS CODE
   //
-  
+
   enyo.kind({
     name: "XV.ClassCodeList",
     kind: "XV.List",
@@ -177,9 +177,9 @@ trailing:true white:true*/
       return true;
     }
   });
-  
+
   XV.registerModelList("XM.ContactRelation", "XV.ContactList");
-  
+
   // ..........................................................
   // CURRENCY
   //
@@ -200,11 +200,11 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   // ..........................................................
   // FILE
   //
-  
+
   enyo.kind({
     name: "XV.FileList",
     kind: "XV.List",
@@ -229,7 +229,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   XV.registerModelList("XM.FileRelation", "XV.FileList");
 
   // ..........................................................
@@ -339,7 +339,7 @@ trailing:true white:true*/
         style = this.getStyle(model),
         prop,
         view;
-        
+
       // Apply background color to all views.
       this.$.listItem.setStyle(style);
       for (prop in this.$) {
@@ -351,7 +351,7 @@ trailing:true white:true*/
       return true;
     }
   });
-  
+
   XV.registerModelList("XM.IncidentRelation", "XV.IncidentList");
 
   // ..........................................................
@@ -397,7 +397,7 @@ trailing:true white:true*/
       return value ? "_sold".loc() : "";
     }
   });
-  
+
   XV.registerModelList("XM.ItemRelation", "XV.ItemList");
 
   // ..........................................................
@@ -457,9 +457,9 @@ trailing:true white:true*/
       return value;
     }
   });
-  
+
   XV.registerModelList("XM.OpportunityRelation", "XV.OpportunityList");
-  
+
   // ..........................................................
   // PRODUCT CATEGORY
   //
@@ -563,9 +563,9 @@ trailing:true white:true*/
       return Globalize.format(value, "c" + XT.MONEY_SCALE);
     }
   });
-  
+
   XV.registerModelList("XM.ProjectRelation", "XV.ProjectList");
-  
+
   enyo.kind({
     name: "XV.ProjectTaskList",
     kind: "XV.List",
@@ -682,13 +682,13 @@ trailing:true white:true*/
       return value;
     }
   });
-  
+
   XV.registerModelList("XM.ToDoRelation", "XV.ToDoList");
-  
+
   // ..........................................................
   // URL
   //
-  
+
   enyo.kind({
     name: "XV.UrlList",
     kind: "XV.List",
@@ -713,7 +713,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   XV.registerModelList("XM.Url", "XV.UrlList");
 
   // ..........................................................
@@ -886,5 +886,11 @@ trailing:true white:true*/
     name: "XV.UserAccountRoleList",
     kind: "XV.NameDescriptionList",
     collection: "XM.UserAccountRoleCollection"
+  });
+
+  enyo.kind({
+    name: "XV.ImageList",
+    kind: "XV.NameDescriptionList",
+    collection: "XM.ImageRelationCollection"
   });
 }());

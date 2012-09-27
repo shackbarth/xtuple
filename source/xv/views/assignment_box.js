@@ -18,7 +18,7 @@ white:true*/
    */
   var enyoObj = {
     name: "XV.AssignmentBox",
-    kind: "XV.ScrollableGroupbox",
+    kind: "XV.ScrollableGroupbox",//"XV.Groupbox",
     classes: "xv-assignment-box",
     handlers: {
       onValueChange: "checkboxChange"
@@ -77,13 +77,20 @@ white:true*/
       translateLabels: true,
       type: ""
     },
+
+    // TODO: you'll notice the CSS looks bad. You can fix it by uncommenting the three lines here
+    // in components, and swap in the commented kind, above. Problem is, the scroller disappears
+    // inexplicably if you do this.
     components: [
+      //{kind: "onyx.GroupboxHeader", content: "_roles".loc()},
+      //{kind: "XV.ScrollableGroupbox", components: [
       {kind: "Repeater", name: "segmentRepeater", fit: true, onSetupItem: "setupSegment", segmentIndex: 0, components: [
         {kind: "onyx.GroupboxHeader", name: "segmentHeader", content: ""},
         {kind: "Repeater", name: "checkboxRepeater", fit: true, onSetupItem: "setupCheckbox", components: [
           {kind: "XV.CheckboxWidget", name: "checkbox" }
         ]}
       ]}
+      //]}
     ],
     /**
      * Applies special formatting to a checkbox after it has been clicked, if applicable.
@@ -180,15 +187,16 @@ white:true*/
       this.inherited(arguments);
 
       var i,
-        that = this;
+        that = this,
+        comparator = function (model) {
+          return model.get("name");
+        };
 
       this.setSegmentedCollections([]);
 
       for (i = 0; i < this.getSegments().length; i++) {
         this.getSegmentedCollections()[i] = new XM[this.getTotalCollectionName()]();
-        this.getSegmentedCollections()[i].comparator = function (model) {
-          return model.get("name");
-        };
+        this.getSegmentedCollections()[i].comparator = comparator;
       }
       //
       // Get the collection from the cache if it exists

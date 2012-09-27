@@ -15,8 +15,12 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     components: [
       {name: "input", tag: "input type=file", kind: "onyx.Input",  classes: "xv-subinput", onchange: "inputChanged"},
+      {tag: "img", name: "image"},
       {name: "scrim", kind: "onyx.Scrim", showing: false, floating: true}
     ],
+    setImageSrc: function (url) {
+        this.$.image.setAttribute("src", url);
+    },
     setValue: function (value, options) {
       // this is a bit dicey. Generally we don't want to set the value of the widget, because
       // setting the value of a file input with the binary data will just throw a security
