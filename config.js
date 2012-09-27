@@ -20,10 +20,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
     datasource: {
       sessionTimeout: 15,
-      securePort: 443,
-      secureKeyFile: "./lib/private/key.pem",
-      secureCertFile: "./lib/private/cert.crt",
-      secureSaltFile: "./lib/private/salt.txt"
+      bindAddress: "",
+      port: 443,
+      keyFile: "",
+      certFile: "",
+      caFile: "",
+      saltFile: "",
+      
+      // make sure to supply the information necessary
+      // for this service to register itself with router
+      name: "[DATASOURCE INSTANCE NAME]",
+      description: "[DATASOURCE DESCRIPTION TEXT]",
+      hostname: "[DATASOURCE HOSTNAME/IP]",
+      location: "[DATASOURCE LOCATION TEXT SPECIFIER]"
     },
     cache: {
       session: {
