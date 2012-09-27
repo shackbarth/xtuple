@@ -66,7 +66,7 @@ trailing:true white:true*/
         }
       }
     },
-    findControl: function (attr, model) {
+    findControl: function (attr) {
       return _.find(this.$, function (ctl) {
         return ctl.attr === attr;
       });
@@ -118,11 +118,13 @@ trailing:true white:true*/
     clear: function () {
       var attrs = this.value ? this.value.getAttributeNames() : [],
         attr,
+        control,
         i;
       for (i = 0; i < attrs.length; i++) {
         attr = attrs[i];
-        if (this.$[attr] && this.$[attr].clear) {
-          this.$[attr].clear({silent: true});
+        control = this.findControl(attr);
+        if (control && control.clear) {
+          control.clear({silent: true}); 
         }
       }
     },
