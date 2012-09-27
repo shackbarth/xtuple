@@ -280,9 +280,13 @@ trailing:true white:true*/
       ]}
     ],
     attributesChanged: function (model, options) {
-      var id = this.value.get("id");
+      var id = this.getValue().get("id"),
+        K = XM.Model;
+
       this.inherited(arguments);
-      if (id && !this.$.image.getAttribute("src") && this.isImageFile()) {
+      if (id &&
+          !this.$.image.getAttribute("src") && this.isImageFile() &&
+          this.getValue().getStatus() !== K.READY_NEW) {
         this.$.image.setAttribute("src", "/file?recordType=XM.File&id=" + id);
       }
     },
@@ -317,6 +321,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ImageWorkspace",
     kind: "XV.FileWorkspace",
+    title: "_image".loc(),
+    model: "XM.Image"
   });
 
   XV.registerModelWorkspace("XM.ImageRelation", "XV.ImageWorkspace");
