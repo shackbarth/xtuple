@@ -1,7 +1,7 @@
 (function () {
-  
+
   var _path = X.path, _ = X._;
-  
+
   enyo = {
     relativePath: "",
     depends: function () {
