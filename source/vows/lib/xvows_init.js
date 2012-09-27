@@ -1,5 +1,5 @@
 (function () {
-  
+
   // native
   _fs             = X.fs;
   _path           = X.path;
@@ -26,10 +26,14 @@
       .option("--spec", "Use the spec reporter")
       .option("-t, --tests [tests]", "Specify space-separated string of test names", tests, ["*"])
       .option("-u, --user [user]", "Global user ID (must be active global user)", "admin@xtuple.com")
-      .option("-h, --host [host]", "Datasource hostname/ip", "localhost")
-      .option("-p, --port [port]", "Datasource port", 20100, parseInt)
+      .option("-H, --host [host]", "Datasource hostname/ip", "localhost")
+      .option("-p, --port [port]", "Datasource port", 443, parseInt)
       .option("-o, --organization [organization]", "Organization to run against", "production")
       .parse(process.argv);
+    if (process.argv.length <= 2) {
+      program.parse([process.argv[0], process.argv[1], '--help']);
+      process.exit(0);
+    }
     if (program.spec) {
       var spec = require(_path.join(X.basePath, "node_modules/vows/lib/vows/reporters/spec"));
       var suite = require(_path.join(X.basePath, "node_modules/vows/lib/vows/suite")).Suite.prototype;
@@ -37,31 +41,31 @@
       suite.run = function () {
         return suite.ext_run.call(this, {reporter: spec});
       };
-    }    
+    }
   }());
-  
+
   var sessionCache, userCache, K, sid, k, user, username, organization, details, tmp;
-  
+
   // namespace for the test suite
   XVOWS = X.Object.create({
     className: "XVOWS",
-    
+
     wait: 5000,
-    
+
     init: function () {
       this.nexted = _.bind(this.next, this, [true]);
     },
-    
+
     findAllTests: function () {
       "use strict";
-      
+
       var path = _path.join(X.basePath, "tests"), files, hash = {};
       _.each(X.directoryFiles(path, {fullPath: true, extension: ".js"}), function(file) {
         hash[_path.basename(file)] = file;
       });
       this.set("tests", hash);
     },
-  
+
     begin: function () {
       "use strict";
       this.console("all startup tasks completed");
@@ -86,7 +90,7 @@
       // start testing
       this.start();
     },
-  
+
     addTest: function (file) {
       "use strict";
       if (!this.toRun) {
@@ -128,8 +132,8 @@
 
       this.next();
     },
-  
-    
+
+
     finish: function () {
       "use strict";
       this.console("testing finished");
@@ -180,15 +184,15 @@
     },
 
     nexted: null,
-  
+
     /**
       Creates a working model and automatically checks state
       is `READY_NEW` and a valid `id` immediately afterward.
-    
+
       Note: This function assumes the `id` is fetched automatically.
       For models with manually created ids such as 'XM.UserAccount',
       create a topic manually.
-    
+
       @param {String|Object} Model
       @param {Object} Vows
     */
@@ -216,7 +220,7 @@
                 that.callback(null, model);
               }
             };
-    
+
           if (typeof model === 'string') {
             Klass = Backbone.Relational.store.getObjectByName(model);
             model = new Klass();
@@ -227,7 +231,7 @@
             model.on('change:' + model.documentKey, callback);
           }
           model.initialize(null, {isNew: true});
-    
+
           // If we don't hear back, keep going
           timeoutId = setTimeout(function () {
             that.callback(null, model);
@@ -240,7 +244,7 @@
           assert.isNumber(model.id);
         }
       };
-    
+
       // Add in any other passed vows
       _.extend(context, vows);
       return context;
@@ -249,7 +253,7 @@
     /**
       Saves the working model and automatically checks state
       is `READY_CLEAN` immediately afterward.
-    
+
       @param {String|Object} Model
       @param {Object} Vows
     */
@@ -271,7 +275,7 @@
             };
           model.on('statusChange', callback);
           model.save();
-    
+
           // If we don't hear back, keep going
           timeoutId = setTimeout(function () {
             that.callback(null, model);
@@ -281,7 +285,7 @@
           assert.equal(model.getStatusString(), 'READY_CLEAN');
         }
       };
-    
+
       // Add in any other passed vows
       _.extend(context, vows);
       return context;
@@ -289,7 +293,7 @@
 
     /**
       Check before updating the working model that the state is `READY_CLEAN`.
-    
+
       @param {String|Object} Model
       @param {Object} Vows
     */
@@ -304,7 +308,7 @@
           assert.equal(model.getStatusString(), 'READY_CLEAN');
         }
       };
-    
+
       // Add in any other passed vows
       _.extend(context, vows);
       return context;
@@ -313,7 +317,7 @@
     /**
       Destorys the working model and automatically checks state
       is `DESTROYED_CLEAN` immediately afterward.
-    
+
       @param {Object} Vows
     */
     destroy: function (model, vows, obj) {
@@ -334,7 +338,7 @@
             };
           model.on('statusChange', callback);
           model.destroy();
-    
+
           // If we don't hear back, keep going
           timeoutId = setTimeout(function () {
             that.callback(null, model);
@@ -349,14 +353,14 @@
       return context;
     }
   });
-  
+
   user = program.user;
   organization = program.organization;
-  
+
   // create the cache for session control
   sessionCache = X.Cache.create({prefix: "session"});
   userCache = X.Cache.create({prefix: "user"});
-  
+
   K = userCache.model("User");
   K.findOne({id: user}, ["organizations"], function (err, res) {
     var msg, organizations;
@@ -367,7 +371,7 @@
       msg = msg.suf("available organizations are '%@'".f(organizations.join(", ")));
       issue(X.fatal(msg));
     }
-    
+
     username = res.organizations[organizations.indexOf(organization)].username;
     sid = X.generateSID();
     K = sessionCache.model("Session");
@@ -394,7 +398,7 @@
           X.addCleanupTask(_.bind(this.cleanup, this), this);
         }
       });
-      
+
       //......................................
       // INCLUDE ALL THE NECESSARY XT FRAMEWORK
       // DEPENDENCIES
@@ -420,9 +424,9 @@
         "use strict";
         require(path);
       });
-      
+
       XT.app = {show: X.$P};
-      
+
       // CRUSH QUIET SMASH AND DESTROY ANY NORMAL OUTPUT FOR NOW
       // ...actually just...pipe it to some file...
       (function () {
@@ -452,7 +456,7 @@
           if (XVOWS.outfile) XVOWS.outfile.destroySoon();
         });
       }());
-      
+
       //......................................
       // INCLUDE ALL THE NECESSARY XM FRAMEWORK
       // DEPENDENCIES
@@ -473,12 +477,13 @@
       // FROM THE package.js FILE IN MODELS
       enyo.relativePath = _path.join(X.basePath, "../xm/models");
       require(_path.join(X.basePath, "../xm/models", "package.js"));
+      require(_path.join(X.basePath, "../ext/crm", "core.js"));
       // GRAB THE CRM MODULE
-      require(_path.join(X.basePath, "../ext/crm", "models.js"));
+      enyo.relativePath = _path.join(X.basePath, "../ext/crm/xm/models");
+      require(_path.join(X.basePath, "../ext/crm/xm/models", "package.js"));
       // GRAB THE STARTUP TASKS
       require(_path.join(X.basePath, "../xm", "startup.js"));
-      
-      
+
       // PROCESS ANY INCOMING ARGS REAL QUICK
       (function () {
         "use strict";
@@ -492,9 +497,9 @@
           }
         };
       }());
-      
+
       XVOWS.emit("ready");
-      
+
     });
-  });  
+  });
 }());
