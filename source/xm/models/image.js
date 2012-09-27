@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
@@ -8,29 +8,45 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.Image = XM.Model.extend({
     /** @scope XM.Image.prototype */
 
-    recordType: 'XM.ImageRelation'
+    recordType: 'XM.Image'
 
   });
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ImageRelation = XM.Info.extend({
     /** @scope XM.ImageRelation.prototype */
 
     recordType: 'XM.ImageRelation',
-    
+
     editableModel: 'XM.Image',
-    
+
     numberKey: 'name'
+
+  });
+
+  // ..........................................................
+  // COLLECTIONS
+  //
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.ImageRelationCollection = XM.Collection.extend({
+    /** @scope XM.ImageCollection.prototype */
+
+    model: XM.ImageRelation
 
   });
 
