@@ -577,7 +577,7 @@
       },
       {
         "name": "userAccountRole",
-        "toOne": {
+        "attr": {
           "type": "UserAccountRole",
           "column": "grppriv_grp_id"
         }
