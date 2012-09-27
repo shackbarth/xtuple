@@ -9,6 +9,8 @@ create or replace function xt.retrieve_record(data_hash text) returns text as $$
       options = dataHash.options,
       ret = data.retrieveRecord(dataHash.recordType, dataHash.id, encryptionKey, options);
 
+  if (dataHash.username) { XT.username = dataHash.username; }
+  
   /* return the results */
   return JSON.stringify(ret, null, prettyPrint);
 
