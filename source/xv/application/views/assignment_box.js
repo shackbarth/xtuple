@@ -98,16 +98,20 @@ white:true*/
      * privileges that were granted on behalf of a role. We generated that
      * (published) array here, and use it later.
      *
+     * @param {Array} roles If we can we get the roles from the workspace
+     * instead of having to look in our own models, which may be length 0
+     *
      * @override
      */
-    mapIds: function () {
+    mapIds: function (roles) {
       this.inherited(arguments);
 
-      if (this.getAssignedCollection().models.length === 0) {
+      if ((!roles || roles.length === 0) && this.getAssignedCollection().models.length === 0) {
         // if there are no models in this collection then there are no IDs to map
         return;
       }
-      var grantedRoles = this.getAssignedCollection().models[0].get("userAccount").get("grantedUserAccountRoles"),
+      var grantedRoles = roles && roles.length > 0 ? roles :
+          this.getAssignedCollection().models[0].get("userAccount").get("grantedUserAccountRoles"),
         privsFromRoles = grantedRoles.map(function (model) {
           return model.getStatus() & XM.Model.DESTROYED ? [] : model.get("userAccountRole").get("grantedPrivileges");
         }),

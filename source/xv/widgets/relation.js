@@ -279,17 +279,21 @@ regexp:true, undef:true, trailing:true, white:true */
 
       // Here is where we find the model and re-call this method if we're given
       // an id instead of a whole model.
-      if (_.isNumber(value)) {
+      if (_.isNumber(value) || _.isString(value)) {
         if (this.value === value || oldId === value) { return; }
         Model = XT.getObjectByName(this._collection.model.prototype.recordType);
         value = new Model({id: value});
         options = {
           success: function () {
             that.setValue(value);
-          }
+          },
+          //error: function () {
+          //  console.log("error fetching relation model");
+          //}
         };
         this.value = value;
-        value.fetch();
+        // XXX shouldn't we pass the options in here?
+        value.fetch(/*options*/);
         return;
       }
 
