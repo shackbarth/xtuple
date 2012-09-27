@@ -270,6 +270,43 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "description", name: "description", disabled: true},
             {kind: "XV.FileInputWidget", name: "file", attr: "data"}
           ]}
+        ]}
+      ]}
+    ],
+
+    /**
+      When a file is uploaded we want the filename to overwrite
+      the name and description fields.
+     */
+    controlValueChanged: function (inSender, inEvent) {
+      var filename = inEvent.filename;
+      if (filename) {
+        this.$.name.setValue(filename);
+        this.$.description.setValue(filename);
+      }
+      this.inherited(arguments);
+    }
+  });
+
+  XV.registerModelWorkspace("XM.FileRelation", "XV.FileWorkspace");
+
+  enyo.kind({
+    name: "XV.ImageWorkspace",
+    kind: "XV.FileWorkspace",
+    title: "_image".loc(),
+    model: "XM.Image",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name", name: "name"},
+            // XXX the disabled flag here doesn't seem to work
+            {kind: "XV.InputWidget", attr: "description", name: "description", disabled: true},
+            {kind: "XV.FileInputWidget", name: "file", attr: "data"}
+          ]}
         ]},
         {kind: "XV.Groupbox", name: "previewPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_preview".loc()},
@@ -287,24 +324,9 @@ trailing:true white:true*/
       if (id &&
           !this.$.image.getAttribute("src") && this.isImageFile() &&
           this.getValue().getStatus() !== K.READY_NEW) {
-        this.$.image.setAttribute("src", "/file?recordType=XM.File&id=" + id);
+        this.$.image.setAttribute("src", "/file?recordType=XM.Image&id=" + id);
       }
     },
-
-    /**
-      When a file is uploaded we want the filename to overwrite
-      the name and description fields.
-     */
-    controlValueChanged: function (inSender, inEvent) {
-      var filename = inEvent.filename;
-      if (filename) {
-        this.$.name.setValue(filename);
-        this.$.description.setValue(filename);
-      }
-
-      this.inherited(arguments);
-    },
-
     isImageFile: function () {
       var filename = this.$.description.getValue(),
         extension;
@@ -314,15 +336,8 @@ trailing:true white:true*/
       extension = filename.substring(filename.lastIndexOf('.') + 1);
       return (['png', 'gif', 'jpg'].indexOf(extension) >= 0);
     }
-  });
 
-  XV.registerModelWorkspace("XM.FileRelation", "XV.FileWorkspace");
 
-  enyo.kind({
-    name: "XV.ImageWorkspace",
-    kind: "XV.FileWorkspace",
-    title: "_image".loc(),
-    model: "XM.Image"
   });
 
   XV.registerModelWorkspace("XM.ImageRelation", "XV.ImageWorkspace");
