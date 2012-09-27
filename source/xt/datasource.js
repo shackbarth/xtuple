@@ -31,7 +31,7 @@ white:true*/
           // Handle error
           if (response.isError) {
             if (options && options.error) {
-              params.error = response.reason.data.code;
+              params.error = response.reason.data.detail;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }
@@ -103,7 +103,7 @@ white:true*/
           // Handle error
           if (response.isError) {
             if (options && options.error) {
-              params.error = response.reason.data.code;
+              params.error = response.reason.data.detail;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }
@@ -152,7 +152,7 @@ white:true*/
           // Handle error
           if (response.isError) {
             if (options && options.error) {
-              params.error = response.reason.data.code;
+              params.error = response.reason.data.detail;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }
@@ -201,7 +201,7 @@ white:true*/
           // handle error
           if (response.isError) {
             if (options && options.error) {
-              params.error = response.reason.data.code;
+              params.error = response.reason.data.detail;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }
@@ -244,7 +244,7 @@ white:true*/
           // handle error
           if (response.isError) {
             if (options && options.error) {
-              params.error = response.reason;
+              params.error = response.reason.data.detail;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }
