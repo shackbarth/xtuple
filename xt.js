@@ -31,7 +31,20 @@ require('./foundation');
 (function () {
   "use strict";
   
-  var _ = X._;
+  var _ = X._, sighandler;
+  
+  sighandler = function (signal) {
+    
+    // mostly for logging, make sure anything that wants to know can
+    // easily find why we're shutting down
+    X.SHUTDOWN_SIGNAL = signal;
+    X.io.console(X.StringBuffer.create({color: "blue", prefix: null}),
+      "\n================================================" +
+      "\n%@ CAUGHT - cleaning up before shutting down".f(signal.toUpperCase()) +
+      "\n================================================"
+    );
+    X.cleanup();
+  };
   
   // the first method to run once the framework has been told it is
   // ready
@@ -58,13 +71,8 @@ require('./foundation');
     // or log as gracefully as possible
     //process.once('exit', _.bind(X.cleanup, X));
     
-    process.once('SIGINT', function () {
-      X.io.console(X.StringBuffer.create({ color: 'blue', prefix: null }),
-        "\n================================================" +
-        "\nSIGINT CAUGHT - cleaning up before shutting down" +
-        "\n================================================"
-      );
-      X.cleanup();
+    _.forEach(["SIGINT", "SIGHUP", "SIGQUIT", "SIGKILL", "SIGSEGV", "SIGILL"], function (sig) {
+      process.once(sig, _.bind(sighandler, X, sig));
     });
   });
 }());

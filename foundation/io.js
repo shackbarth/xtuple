@@ -21,10 +21,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return X.StringBuffer.create();
     },
     
+    timestamp: function () {
+      return (new Date()).toISOString();
+    },
+    
     log: function () {
       var args = X.$A(arguments), buff = this.buff(), flushed;
       buff.set("color", "grey");
-      buff.set("prefix", "<<LOG>>");
+      buff.set("prefix", "<<LOG %@>>".f(this.timestamp()));
       args.unshift(buff);
       flushed = this.console.apply(this, args);
       this.hook("log", flushed);
@@ -33,7 +37,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     warn: function () {
       var args = X.$A(arguments), buff = this.buff(), flushed;
       buff.set("color", "yellow");
-      buff.set("prefix", "<<WARN>>");
+      buff.set("prefix", "<<WARN %@>>".f(this.timestamp()));
       args.unshift(buff);
       flushed = this.console.apply(this, args);
       this.hook("warn", flushed);
@@ -42,7 +46,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     err: function () {
       var args = X.$A(arguments), buff = this.buff(), flushed;
       buff.set("color", "red");
-      buff.set("prefix", "<<ERROR>>");
+      buff.set("prefix", "<<ERROR %@>>".f(this.timestamp()));
       args.unshift(buff);
       flushed = this.console.apply(this, args);
       this.hook("err", flushed);
@@ -54,7 +58,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       args = X.$A(arguments);
       buff = this.buff();
       buff.set("color", "blue");
-      buff.set("prefix", "<<DEBUG>>");
+      buff.set("prefix", "<<DEBUG %@>>".f(this.timestamp()));
       args.unshift(buff);
       flushed = this.console.apply(this, args);
       this.hook("debug", flushed);
