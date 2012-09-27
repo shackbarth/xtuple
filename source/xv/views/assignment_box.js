@@ -77,6 +77,10 @@ white:true*/
       translateLabels: true,
       type: ""
     },
+
+    // TODO: you'll notice the CSS looks bad. You can fix it by uncommenting the three lines here
+    // in components, and swap in the commented kind, above. Problem is, the scroller disappears
+    // inexplicably if you do this.
     components: [
       //{kind: "onyx.GroupboxHeader", content: "_roles".loc()},
       //{kind: "XV.ScrollableGroupbox", components: [
