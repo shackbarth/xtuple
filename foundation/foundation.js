@@ -282,10 +282,14 @@ X = {};
     didBecomeReady: function () {
       var wasReady = X.hasBecomeReady,
           queue = X.runQueue;
+      
+      // its an unfortunate oversight that these two variables
+      // exist simultaneously...
+      X.hasBecomeReady = true;
+      X.isReady = true;
       if (wasReady) return;
       while (queue.length > 0) (queue.shift())();
       X.runQueue = null;
-      X.hasBecomeReady = true;
     },
 
     get: function () {
