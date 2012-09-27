@@ -21,7 +21,7 @@ trailing:true white:true*/
         {name: "welcome", label: "_welcome".loc(), hasSubmenu: false,
           panels: [
           {name: "welcomePage",
-            tag: '<iframe src="http://msplash.xtuple.com"></iframe>'}
+            tag: '<iframe src="assets/splash/index.html"></iframe>'}
         ]},
         {name: "setup", label: "_setup".loc(), panels: [
           {name: "userAccountList", kind: "XV.UserAccountList"},
@@ -63,7 +63,7 @@ trailing:true white:true*/
     /**
       Add panels to a module. If any are found to already
       exist by the same name they will be ignored.
-      
+
       @param {String} Module name
       @param {Array} Panels
     */
@@ -98,7 +98,7 @@ trailing:true white:true*/
       Insert a new `module` at `index`. If index is
       not defined the module will be appended to the
       end of the menu.
-      
+
       @param {Object} Module
       @param {Number} Index
     */
