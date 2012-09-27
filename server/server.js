@@ -10,7 +10,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   require("./ext/router");
   require('./ext/functor');
 
-  var _ = X._, _fs = X.fs, _path = X.path;
+  var _ = X._, _fs = X.fs, _path = X.path, _https = X.https;
   /**
     The node server.
 
@@ -27,6 +27,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     secure: false,
     keyFile: null,
     certFile: null,
+    passPhrase: null,
+    caFile: null,
     bindAddress: null,
     parseCookies: false,
     /**
@@ -74,12 +76,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      */
     cert: function () {
       var file = this.get("certFile");
-      return _fs.readFileSync(_path.join(X.basePath, file), "utf8");
+      return _fs.readFileSync(_path.join(X.basePath, file));
     }.property(),
 
     key: function () {
       var file = this.get("keyFile");
-      return _fs.readFileSync(_path.join(X.basePath, file), "utf8");
+      return _fs.readFileSync(_path.join(X.basePath, file));
+    }.property(),
+    
+    ca: function () {
+      var file = this.get("caFile");
+      if (!file) return null;
+      if (X.typeOf(file) !== X.T_ARRAY) file = [file];
+      return file.map(function (caFile){return _fs.readFileSync(_path.join(X.basePath, caFile))});
     }.property(),
 
     start: function () {
@@ -91,6 +100,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       if (secure) {
         options.key = this.get("key");
         options.cert = this.get("cert");
+        if (this.get("passPhrase")) options.passPhrase = this.get("passPhrase");
+        options.ca = this.get("ca");
+        
+        //X.debugging = true;
+        //X.debug(options);
       }
 
       // TODO: remove this from a try/catch but test for consequences in fail case...
@@ -99,11 +113,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         if (X.none(app)) {
           //if (secure) app = X.connect(options).use(_.bind(this.route, this));
           //else app = X.connect().use(_.bind(this.route, this));
-          if (secure) app = X.connect(options);
-          else app = X.connect();
+          //if (secure) app = X.connect(X.https.createServer(options));
+          //else app = X.connect();
+          app = X.connect();
 
           if (cookies) app.use(X.connect.cookieParser());
           app.use(_.bind(this.route, this));
+          
+          if (secure) app = _https.createServer(options, app);
         }
 
         if (bindAddress) server = this.server = app.listen(port, bindAddress);
