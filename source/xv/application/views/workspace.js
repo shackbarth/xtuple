@@ -860,19 +860,19 @@ trailing:true white:true*/
           ]}
         ]},
 
-        {kind: "XV.Groupbox", name: "rolePanel", title: "_roles".loc(), components: [
-          {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
-          {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles"}
-        ]},
+        //{kind: "XV.Groupbox", name: "rolePanel", title: "_roles".loc(), components: [
+        //  {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
+        {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles", name: "grantedRoles", title: "_roles".loc()},
+        //]},
 
-        {kind: "XV.Groupbox", name: "privilegePanel", title: "_privileges".loc(), components: [
-          {kind: "onyx.GroupboxHeader", content: "privileges".loc()},
-          {kind: "XV.UserAccountPrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges" }
-        ]}
+        //{kind: "XV.Groupbox", name: "privilegePanel", title: "_privileges".loc(), components: [
+        //  {kind: "onyx.GroupboxHeader", content: "privileges".loc()},
+        {kind: "XV.UserAccountPrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges", title: "_privileges".loc() }
+        //]},
       ]}
     ],
     refreshPrivileges: function (inSender, inEvent) {
-      this.$.grantedPrivileges.mapIds();
+      this.$.grantedPrivileges.mapIds(this.$.grantedRoles.getAssignedCollection().models);
       this.$.grantedPrivileges.tryToRender();
     }
   });
@@ -900,10 +900,10 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "description"}
           ]}
         ]},
-        {kind: "XV.Groupbox", name: "privilegePanel", title: "_privileges".loc(), components: [
-          {kind: "onyx.GroupboxHeader", content: "_privileges".loc()},
-          {kind: "XV.UserAccountRolePrivilegeAssignmentBox", attr: "grantedPrivileges"}
-        ]}
+        //{kind: "XV.Groupbox", name: "privilegePanel", title: "_privileges".loc(), components: [
+        //  {kind: "onyx.GroupboxHeader", content: "_privileges".loc()},
+        {kind: "XV.UserAccountRolePrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges", title: "_privileges".loc() }
+        //]}
       ]}
     ]
   });
