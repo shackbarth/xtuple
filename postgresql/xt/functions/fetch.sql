@@ -2,7 +2,8 @@ create or replace function xt.fetch(data_hash text) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
-  var query = JSON.parse(data_hash).query,
+  var dataHash = JSON.parse(data_hash),
+    query = dataHash.query,
     recordType = query.recordType,
     orderBy = query.orderBy,
     parameters = query.parameters,
@@ -11,6 +12,8 @@ create or replace function xt.fetch(data_hash text) returns text as $$
     data = Object.create(XT.Data), recs = null, 
     prettyPrint = query.prettyPrint ? 2 : null;
   recs = data.fetch(recordType, parameters, orderBy, rowLimit, rowOffset);
+
+  if (dataHash.username) { XT.username = dataHash.username; }
  
   /* return the results */
   return JSON.stringify(recs, null, prettyPrint);
@@ -19,7 +22,7 @@ $$ language plv8;
 /*
 select xt.js_init();
 select xt.fetch($${ "query":{
-                         "recordType":"XM.ContactInfo",
+                         "recordType":"XM.ContactRelation",
                          "parameters":[{
                            "attribute":"firstName",
                            "value": "Mike"
@@ -32,7 +35,7 @@ select xt.fetch($${ "query":{
                        }$$);
 
 select xt.fetch($${ "query":{
-                         "recordType":"XM.ContactInfo",
+                         "recordType":"XM.ContactRelation",
                          "parameters":[{
                            "attribute": "name",
                            "operator": "MATCHES",

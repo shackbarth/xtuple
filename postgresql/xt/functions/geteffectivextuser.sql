@@ -6,7 +6,7 @@ create or replace function xt.getEffectiveXtUser() returns text as $$
     plv8.execute('select xt.js_init();');
     XT.user = plv8.execute('select public.getEffectiveXtUser() as username')[0].username;
   }
-  return XT.user;
+  return XT.username;
   
 $$ language 'plv8' stable;
 

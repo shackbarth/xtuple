@@ -154,7 +154,7 @@ select xt.install_js('XT','Data','xtuple', $$
           col = orm.properties.findProperty('name', properties[i]).toOne ? '(' + type.decamelize() + '."' + properties[i] + '").username' : properties[i];
           conds.push(col);
         }
-        pcond = "'" + this.currentUser() + "' in (" + conds.join(",") + ")";
+        pcond = "'" + XT.username + "' in (" + conds.join(",") + ")";
       }
       ret.conditions = clauses.length ? '(' + clauses.join(' and ') + ')' : ret.conditions;
       ret.conditions = pcond.length ? (clauses.length ? ret.conditions.concat(' and ', pcond) : pcond) : ret.conditions;
@@ -247,7 +247,7 @@ select xt.install_js('XT','Data','xtuple', $$
               props = privileges.personal.properties;
           while(!isGranted && i < props.length) {
             var prop = props[i];
-            isGranted = record[prop] && record[prop].username === that.currentUser();
+            isGranted = record[prop] && record[prop].username === XT.username;
             i++;
           }
           return isGranted;
@@ -653,22 +653,6 @@ select xt.install_js('XT','Data','xtuple', $$
       
       /* commit the record */
       plv8.execute(sql, [record[nameKey]]); 
-    },
-
-    /** 
-      Returns the currently logged in user's username.
-      
-      @returns {String} 
-    */
-    currentUser: function () {
-      var res;
-      if(!this._currentUser) {
-        res = plv8.execute("select getEffectiveXtUser() as curr_user");
-
-        /* cache the result locally so we don't requery needlessly */
-        this._currentUser = res[0].curr_user;
-      }
-      return this._currentUser;
     },
 
     /** 
