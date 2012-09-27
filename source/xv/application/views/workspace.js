@@ -268,17 +268,29 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name", name: "name"},
             // XXX the disabled flag here doesn't seem to work
             {kind: "XV.InputWidget", attr: "description", name: "description", disabled: true},
-            {kind: "XV.FileInputWidget", attr: "data"}
+            {kind: "XV.FileInputWidget", name: "file", attr: "data"}
+          ]}
+        ]},
+        {kind: "XV.Groupbox", name: "previewPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_preview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "previewGroup", classes: "in-panel", components: [
+            {tag: "img", name: "image"}
           ]}
         ]}
       ]}
     ],
+    attributesChanged: function (model, options) {
+      var id = this.value.get("id");
+      this.inherited(arguments);
+      if (id && !this.$.image.getAttribute("src") && this.isImageFile()) {
+        this.$.image.setAttribute("src", "/file?recordType=XM.File&id=" + id);
+      }
+    },
 
     /**
       When a file is uploaded we want the filename to overwrite
       the name and description fields.
      */
-      // TODO: description should not be user-editable
     controlValueChanged: function (inSender, inEvent) {
       var filename = inEvent.filename;
       if (filename) {
@@ -287,10 +299,28 @@ trailing:true white:true*/
       }
 
       this.inherited(arguments);
+    },
+
+    isImageFile: function () {
+      var filename = this.$.description.getValue(),
+        extension;
+      if (!filename) {
+        return false;
+      }
+      extension = filename.substring(filename.lastIndexOf('.') + 1);
+      return (['png', 'gif', 'jpg'].indexOf(extension) >= 0);
     }
   });
 
   XV.registerModelWorkspace("XM.FileRelation", "XV.FileWorkspace");
+
+  enyo.kind({
+    name: "XV.ImageWorkspace",
+    kind: "XV.FileWorkspace",
+  });
+
+  XV.registerModelWorkspace("XM.ImageRelation", "XV.ImageWorkspace");
+
 
   // ..........................................................
   // HONORIFIC
