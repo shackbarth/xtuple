@@ -160,7 +160,7 @@ trailing:true white:true*/
       {name: "priorityEquals", label: "_equals".loc(), attr: "priority",
         defaultKind: "XV.PriorityPicker"},
       {name: "priorityAbove", label: "_above".loc(), attr: "priority",
-          filterLabel: "_priority" + " " + "_above".loc(),
+          filterLabel: "_priority".loc() + " " + "_above".loc(),
           defaultKind: "XV.PriorityPicker",
           getParameter: function () {
             var value = this.getValue(),
