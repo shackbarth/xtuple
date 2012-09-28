@@ -202,7 +202,7 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.UserAccountUserAccountRoleAssignment = XM.Document.extend({
+  XM.UserAccountUserAccountRoleAssignment = XM.Model.extend({
     /** @scope XM.UserAccountUserAccountRoleAssignment.prototype */
 
     recordType: 'XM.UserAccountUserAccountRoleAssignment'
