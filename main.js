@@ -25,7 +25,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   // load up the dataserver
   require("./lib/dataserver");
   
-  // load up the redirector
+  // register this service
+  require("./lib/register_service");
   
   X.userCache = X.Cache.create({prefix: "users"});
   X.sessionCache = X.Cache.create({
