@@ -722,21 +722,12 @@
     "table": "crmacct",
     "comment": "Account Relation Map",
     "privileges": {
-     "all": {
-       "create": false,
-       "read": "ViewAllCRMAccounts",
-       "update": false,
-       "delete": false
-     },
-     "personal": {
-       "create": false,
-       "read": true,
-       "update": false,
-       "delete": true,
-       "properties": [
-         "owner"
-       ]
-     }
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
     },
     "properties": [
      {
@@ -778,6 +769,7 @@
        }
      }
     ],
+    "isNestedOnly": true,
     "isSystem": true
     },
     {

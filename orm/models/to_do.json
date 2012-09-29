@@ -781,6 +781,7 @@
         }
       }
     ],
+    "isNestedOnly": true,
     "isSystem": true,
     "extensions": []
   },
@@ -793,9 +794,19 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": true,
+        "read": "ViewAllToDoItems",
         "update": false,
         "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false,
+        "properties": [
+          "owner",
+          "assignedTo"
+        ]
       }
     },
     "properties": [
