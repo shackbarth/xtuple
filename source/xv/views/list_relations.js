@@ -142,7 +142,7 @@ trailing:true white:true*/
       var r = this.inherited(arguments),
         bounds = this.getScrollBounds(),
         lastShowing = this._lastShowing || 0,
-        totalRows = this.value.length,
+        totalRows = this.value ? this.value.length : 0,
         rowsPerPage = bounds.clientHeight / this.rowHeight,
         showingRows = Math.floor(bounds.top / this.rowHeight + rowsPerPage),
         fetch =  showingRows > lastShowing &&
