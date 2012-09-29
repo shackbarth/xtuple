@@ -20,24 +20,18 @@ white:true*/
     },
     components: [
       {name: "shadow", classes: "pullout-shadow"},
-      {name: "grabber", kind: "onyx.Grabber", classes: "pullout-grabbutton", ondragfinish: "grabberDragFinish"},
+      {name: "grabber", kind: "onyx.Grabber", classes: "pullout-grabbutton",
+        ondragfinish: "grabberDragFinish"},
       {kind: "FittableRows", classes: "enyo-fit", components: [
         {name: "client", classes: "pullout-toolbar"},
-        {classes: "xv-pullout-header", name: "pulloutHeader", content: "" },
-        { name: "pulloutItems", fit: true,
-          kind: "Scroller",
-          style: "position: relative;",
+        {classes: "xv-pullout-header", name: "pulloutHeader", content: ""},
+        {kind: "Scroller", name: "pulloutItems", fit: true, style: "position: relative;",
           components: [
           {fit: true, name: "history", kind: "Scroller", components: [
-            {
-              kind: "Repeater",
-              name: "historyList",
-              onSetupItem: "setupHistoryItem",
-              count: 0,
-              components: [
-                { name: "historyItem" }
-              ]
-            }
+            {kind: "Repeater", name: "historyList",
+              onSetupItem: "setupHistoryItem", count: 0, components: [
+              {name: "historyItem"}
+            ]}
           ]}
         ]}
       ]}
@@ -64,17 +58,17 @@ white:true*/
         mockModel = {};
 
       if (!cookieValue || cookieValue === 'undefined') {
-        // there's no cookie yet for this parameter list
+        // There's no cookie yet for this parameter list
         return;
       }
 
       historyArray = JSON.parse(cookieValue);
 
-      // running through the array backwards allows us to preserve the
+      // Running through the array backwards allows us to preserve the
       // reverse chronology of the history list.
       for (i = historyArray.length - 1; i >= 0; i--) {
         historyItem = historyArray[i];
-        // the mock model we create here is built to fool XT.addToHistory
+        // The mock model we create here is built to fool XT.addToHistory
         // into thinking it's a real model. This code is fragile to any
         // change in that function.
         mockModel.recordType = historyItem.modelType;
@@ -111,7 +105,6 @@ white:true*/
         container: historyItem,
         classes: "item enyo-border-box",
         style: "color:white",
-        // XXX color/look TBD
         ontap: "doHistoryItemSelected",
         content: modelTypeShow + ": " + historyData.modelName,
         modelType: historyData.modelType,
@@ -132,15 +125,10 @@ white:true*/
       @param {Object} inEvent
       @param {String} inEvent.name The name of the panel, or the word "history"
       @param {Boolean} inEvent.show Whether or not we want to show the panel
-
-     */
+    */
     togglePullout: function (inSender, inEvent) {
-      // note that if you show history, then move to a list with a panel, then pull the
-      // pullout, it will show the advanced search and not history. This is a consequence
-      // of the stream of notifications from the navigator even when the pullout isn't activated
-      // letting the pullout know where the navigator is at. It gets saved in this.selectedPanel,
-      // which has the effect of wiping out the "memory" that history was the last pullout panel
-      // in use.
+      // Note that if you show history, then move to a list with a panel, then pull the
+      // pullout, it will show the advanced search and not history.
       var name = inEvent.name,
         item = this.getItem(name),
         children = this.$.pulloutItems.children[0].children,
@@ -148,8 +136,7 @@ white:true*/
 
       if (!item) {
         // if we've moved to a list with no advanced search and pull the pullout
-        // again, there will be no item to find by that name. The best we can do
-        // is to have the pullout show history instead.
+        // again show history instead.
         name = "history";
         item = this.getItem(name);
       }

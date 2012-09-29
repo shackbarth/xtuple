@@ -184,7 +184,7 @@ white:true*/
           XT.StartupTask.create(task);
         }
 
-      // 4. Finish up
+      // 5. Finish up
       } else if (this.state === LOADING_APP_DATA) {
         // Create pullout items
         pulloutItems = this._pulloutItems || [];
