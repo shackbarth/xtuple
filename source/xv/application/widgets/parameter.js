@@ -404,7 +404,7 @@ trailing:true white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '!=',
+              operator: '=',
               value: true
             };
           }
