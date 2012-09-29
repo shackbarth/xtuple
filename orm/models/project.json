@@ -575,19 +575,9 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": "ViewAllProjects",
-        "update": false,
-        "delete": false
-      },
-      "personal": {
-        "create": false,
         "read": true,
         "update": false,
-        "delete": false,
-        "properties": [
-          "owner",
-          "assignedTo"
-        ]
+        "delete": false
       }
     },
     "properties": [
@@ -660,6 +650,7 @@
         }
       }
     ],
+    "isNestedOnly": true,
     "isSystem": true
   },
   {
