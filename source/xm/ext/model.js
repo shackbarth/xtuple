@@ -1196,6 +1196,10 @@ white:true*/
         if (!isGrantedAll && privs.personal && privs.personal[action]) {
           isGrantedPersonal = sessionPrivs.get(privs.personal[action]);
         }
+        if (!isGrantedPersonal && privs.personal && action === 'read'  &&
+            privs.personal['update']) {
+          isGrantedPersonal = sessionPrivs.get(privs.personal['update']);
+        }
       }
 
       // If only personal privileges, check the personal attribute list to
