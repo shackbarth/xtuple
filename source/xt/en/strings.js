@@ -329,6 +329,7 @@ XT.stringsFor("en_US", {
   "_schedule": "Schedule",
   "_search": "Search",
   "_secondaryContact": "Secondary Contact",
+  "_selectOrganization": "Select Organization",
   "_sense": "Sense",
   "_series": "Series",
   "_sessionTimedOut": "Your session has timed out",
