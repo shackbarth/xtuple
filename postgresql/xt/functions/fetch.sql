@@ -1,6 +1,7 @@
 create or replace function xt.fetch(data_hash text) returns text as $$
 
-  var query = JSON.parse(data_hash).query,
+  var dataHash = JSON.parse(data_hash),
+    query = dataHash.query,
     recordType = query.recordType,
     orderBy = query.orderBy,
     parameters = query.parameters,
@@ -8,6 +9,8 @@ create or replace function xt.fetch(data_hash text) returns text as $$
     rowOffset = query.rowOffset,
     data = Object.create(XT.Data), recs = null, 
     prettyPrint = query.prettyPrint ? 2 : null;
+    
+  if (dataHash.username) { XT.username = dataHash.username; }
   recs = data.fetch(recordType, parameters, orderBy, rowLimit, rowOffset);
  
   /* return the results */
@@ -17,7 +20,7 @@ $$ language plv8;
 /*
 select xt.js_init();
 select xt.fetch($${ "query":{
-                         "recordType":"XM.ContactInfo",
+                         "recordType":"XM.ContactRelation",
                          "parameters":[{
                            "attribute":"firstName",
                            "value": "Mike"
@@ -30,7 +33,7 @@ select xt.fetch($${ "query":{
                        }$$);
 
 select xt.fetch($${ "query":{
-                         "recordType":"XM.ContactInfo",
+                         "recordType":"XM.ContactRelation",
                          "parameters":[{
                            "attribute": "name",
                            "operator": "MATCHES",

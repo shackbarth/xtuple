@@ -152,7 +152,7 @@ select xt.install_js('XT','Data','xtuple', $$
           col = orm.properties.findProperty('name', properties[i]).toOne ? '(' + type.decamelize() + '."' + properties[i] + '").username' : properties[i];
           conds.push(col);
         }
-        pcond = "'" + this.currentUser() + "' in (" + conds.join(",") + ")";
+        pcond = "'" + XT.username + "' in (" + conds.join(",") + ")";
       }
       ret.conditions = clauses.length ? '(' + clauses.join(' and ') + ')' : ret.conditions;
       ret.conditions = pcond.length ? (clauses.length ? ret.conditions.concat(' and ', pcond) : pcond) : ret.conditions;
@@ -167,15 +167,25 @@ select xt.install_js('XT','Data','xtuple', $$
       @returns {Boolean}
     */
     checkPrivilege: function (privilege) {
-      var ret = privilege;
+      var ret = privilege,
+       sql = 'select coalesce(usrpriv_priv_id, grppriv_priv_id, -1) > 0 as granted ' +
+             'from priv ' +
+             'left outer join usrpriv on (priv_id=usrpriv_priv_id) and (usrpriv_username=$1) ' +
+             'left outer join ( ' +
+             '  select distinct grppriv_priv_id ' +
+             '  from grppriv ' +
+             '    join usrgrp on (grppriv_grp_id=usrgrp_grp_id) and (usrgrp_username=$1) ' +
+             '  ) grppriv on (grppriv_priv_id=priv_id) ' +
+             'where priv_name = $2;';
       if (typeof privilege === 'string') {
-        if (!this._grantedPrivs) { this._grantedPrivs = []; }
-        if (this._grantedPrivs.contains(privilege)) { return true; }
-        var res = plv8.execute("select checkPrivilege($1) as is_granted", [ privilege ]),
-          ret = res[0].is_granted;
-        /* cache the result locally so we don't requery needlessly */
-        if (ret) { this._grantedPrivs.push(privilege); }
+        if (!this._granted) { this._granted = {}; }
+        if (this._granted[privilege] !== undefined) { return this._granted[privilege]; }
+        var res = plv8.execute(sql, [ XT.username, privilege ]),
+          ret = res[0].granted;
+        /* memoize */
+        this._granted[privilege] = ret;
       }
+      if (DEBUG) { plv8.elog(NOTICE, 'Privilege check for "' + XT.username + '" on "' + privilege + '" returns ' + ret); }
       return ret;
     },
   
@@ -245,7 +255,7 @@ select xt.install_js('XT','Data','xtuple', $$
               props = privileges.personal.properties;
           while(!isGranted && i < props.length) {
             var prop = props[i];
-            isGranted = record[prop] && record[prop].username === that.currentUser();
+            isGranted = record[prop] && record[prop].username === XT.username;
             i++;
           }
           return isGranted;
@@ -651,22 +661,6 @@ select xt.install_js('XT','Data','xtuple', $$
       
       /* commit the record */
       plv8.execute(sql, [record[nameKey]]); 
-    },
-
-    /** 
-      Returns the currently logged in user's username.
-      
-      @returns {String} 
-    */
-    currentUser: function () {
-      var res;
-      if(!this._currentUser) {
-        res = plv8.execute("select getEffectiveXtUser() as curr_user");
-
-        /* cache the result locally so we don't requery needlessly */
-        this._currentUser = res[0].curr_user;
-      }
-      return this._currentUser;
     },
 
     /** 
