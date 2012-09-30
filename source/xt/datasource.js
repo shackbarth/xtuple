@@ -31,7 +31,7 @@ white:true*/
           // Handle error
           if (response.isError) {
             if (options && options.error) {
-              params.error = response.reason.data.detail;
+              params.error = response.message;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }
@@ -103,7 +103,7 @@ white:true*/
           // Handle error
           if (response.isError) {
             if (options && options.error) {
-              params.error = response.reason.data.detail;
+              params.error = response.message;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }
@@ -152,7 +152,7 @@ white:true*/
           // Handle error
           if (response.isError) {
             if (options && options.error) {
-              params.error = response.reason.data.detail;
+              params.error = response.message;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }
@@ -201,7 +201,7 @@ white:true*/
           // handle error
           if (response.isError) {
             if (options && options.error) {
-              params.error = response.reason.data.detail;
+              params.error = response.message;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }
@@ -244,7 +244,7 @@ white:true*/
           // handle error
           if (response.isError) {
             if (options && options.error) {
-              params.error = response.reason.data.detail;
+              params.error = response.message;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }
@@ -295,6 +295,29 @@ white:true*/
       });
       this._sock.on("debug", function (msg) {
         XT.log("SERVER DEBUG => ", msg);
+      });
+      
+      this._sock.on("timeout", function (msg) {
+        XT.log("SERVER SAID YOU TIMED OUT");
+        
+        var p = XT.app.createComponent({
+          kind: "onyx.Popup",
+          centered: true,
+          modal: true,
+          floating: true,
+          scrim: true,
+          autoDismiss: false,
+          components: [
+            {content: "_sessionTimedOut".loc()},
+            {kind: "onyx.Button", content: "_ok".loc(), style: "width: 50px; margin: 0 auto;",
+              tap: function () { relocate(); }}
+          ]
+        });
+        p.show();
+      });
+      
+      this._sock.on("disconnect", function () {
+        XT.log("DISCONNECTED FROM SERVER");
       });
     },
 
