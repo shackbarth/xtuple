@@ -279,6 +279,7 @@ XT.stringsFor("en_US", {
   "_percent": "Percent",
   "_period": "Period",
   "_phone": "Phone",
+  "_pleaseLogin": "Please Login",
   "_postalCode": "Postal Code",
   "_price": "Price",
   "_priceUnit": "Price Unit",
