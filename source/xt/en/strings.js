@@ -225,6 +225,7 @@ XT.stringsFor("en_US", {
   "_listPrice": "List Price",
   "_loading": "Loading",
   "_locale": "Locale",
+  "_login": "Login",
   "_logout": "Logout",
   "_mainAddress": "Main Address",
   "_manual": "Manual",
