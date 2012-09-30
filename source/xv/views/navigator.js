@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XT:true, XV:true, XM:true, _:true, enyo:true*/
+/*global XT:true, XV:true, XM:true, _:true, enyo:true, window:true */
 
 (function () {
   var MODULE_MENU = 0;
@@ -114,23 +114,7 @@ trailing:true white:true*/
         coll = list.getValue(),
         recordType = coll.model.prototype.recordType;
 
-      window.open("/export?details={\"requestType\":\"fetch\",\"query\":{\"recordType\":\"" + recordType + "\"}}","_newtab");
-
-
-        /*
-        success = function (result) {
-          var cacheId = result.cacheId;
-          window.location = "https://localtest.com/export?cacheId=" + cacheId;
-        },
-        error = function (result) {
-          XT.log("error");
-          XT.log(result);
-        },
-        options = {responseType: "csv", success: success, error: error};
-
-      // XXX I should be using some new datasource function here, not configure
-      XT.dataSource.configure("createCSV", {"recordType": recordType}, options);
-    */
+      window.open("/export?details={\"requestType\":\"fetch\",\"query\":{\"recordType\":\"" + recordType + "\"}}", "_newtab");
     },
     errorOk: function () {
       this.$.errorPopup.hide();
@@ -273,11 +257,18 @@ trailing:true white:true*/
 
           // Keep track of where this panel is being placed for later reference
           panels[n].index = this.$.contentPanels.panelCount++;
-          panel = this.$.contentPanels.createComponent(panels[n]);
-          if (panel instanceof XV.List) {
 
-            // Bubble parameter widget up to pullout
-            this.doListAdded(panel);
+          // XXX try this: only create the first three
+          if (panels[n].index < 3) {
+            panel = this.$.contentPanels.createComponent(panels[n]);
+            panels[n].status = "active";
+            if (panel instanceof XV.List) {
+
+              // Bubble parameter widget up to pullout
+              this.doListAdded(panel);
+            }
+          } else {
+            panels[n].status = "unborn";
           }
         }
       }
@@ -318,12 +309,39 @@ trailing:true white:true*/
     setContentPanel: function (index) {
       var module = this.getSelectedModule(),
         panelIndex = module && module.panels ? module.panels[index].index : -1,
-        panel = panelIndex > -1 ? this.$.contentPanels.getPanels()[panelIndex] : null,
-        label = panel && panel.label ? panel.label : "",
-        collection = panel.getCollection ?
-          XT.getObjectByName(panel.getCollection()) : false,
+        panelStatus = module && module.panels ? module.panels[index].status : 'unknown',
+        panel,// = panelIndex > -1 ? this.$.contentPanels.getPanels()[panelIndex] : null,
+        label,
+        collection,
         model,
         canNotCreate = true;
+
+      if (panelStatus === 'active') {
+        panel = _.find(this.$.contentPanels.children, function (child) {
+          return child.index === panelIndex;
+        });
+
+      } else if (panelStatus === 'unborn') {
+        // panel exists but has not been rendered. Render it.
+        panel = this.$.contentPanels.createComponent(module.panels[index]);
+        module.panels[index].status = 'active';
+        if (panel instanceof XV.List) {
+
+          // Bubble parameter widget up to pullout
+          this.doListAdded(panel);
+        }
+
+      } else if (panelStatus === 'cached') {
+        // TODO
+
+      } else {
+        XT.error("Don't know what to do with this panel status");
+      }
+
+
+      label = panel && panel.label ? panel.label : "";
+      collection = panel && panel.getCollection ? XT.getObjectByName(panel.getCollection()) : false;
+
       if (!panel) { return; }
 
       // Make sure the advanced search icon is visible iff there is an advanced
@@ -353,11 +371,9 @@ trailing:true white:true*/
       if (!this.$.panelMenu.isSelected(index)) {
         this.$.panelMenu.select(index);
       }
-
       // Select list
-      if (this.$.contentPanels.getIndex() !== panelIndex) {
-        this.$.contentPanels.setIndex(panelIndex);
-      }
+      this.$.contentPanels.setIndex(this.$.contentPanels.indexOfChild(panel));
+
       this.$.rightLabel.setContent(label);
       if (panel.getFilterDescription) {
         this.setHeaderContent(panel.getFilterDescription());
