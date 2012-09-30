@@ -11,9 +11,9 @@ create or replace function xt.fetch(data_hash text) returns text as $$
     rowOffset = query.rowOffset,
     data = Object.create(XT.Data), recs = null, 
     prettyPrint = query.prettyPrint ? 2 : null;
-  recs = data.fetch(recordType, parameters, orderBy, rowLimit, rowOffset);
-
+    
   if (dataHash.username) { XT.username = dataHash.username; }
+  recs = data.fetch(recordType, parameters, orderBy, rowLimit, rowOffset);
  
   /* return the results */
   return JSON.stringify(recs, null, prettyPrint);

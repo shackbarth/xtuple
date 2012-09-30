@@ -834,18 +834,9 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": "ViewAllContacts",
-        "update": false,
-        "delete": false
-      },
-      "personal": {
-        "create": false,
         "read": true,
         "update": false,
-        "delete": false,
-        "properties": [
-          "owner"
-        ]
+        "delete": false
       }
     },
     "properties": [

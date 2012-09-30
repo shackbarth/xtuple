@@ -74,9 +74,19 @@ select xt.install_js('XT','Session','xtuple', $$
     @returns {Hash}
   */ 
   XT.Session.privileges = function() {
-    var rec = plv8.execute( 'select privilege, granted as "isGranted" from privgranted' );
+    var sql = 'select priv_name as "privilege", ' +
+              'coalesce(usrpriv_priv_id, grppriv_priv_id, -1) > 0 as "isGranted", ' +
+              'priv_seq as sequence ' +
+              'from priv ' +
+              'left outer join usrpriv on (priv_id=usrpriv_priv_id) and (usrpriv_username=$1) ' +
+              'left outer join ( ' +
+              '  select distinct grppriv_priv_id ' +
+              'from grppriv ' +
+              'join usrgrp on (grppriv_grp_id=usrgrp_grp_id) and (usrgrp_username=$1) ' +
+              ') grppriv on (grppriv_priv_id=priv_id); '
+      rec = plv8.execute(sql, [ XT.username ] );
 
-    return rec.length ? JSON.stringify (rec) : '{}';
+    return rec.length ? JSON.stringify(rec) : '{}';
   }
 
   /**

@@ -20,7 +20,8 @@
         "update": "MaintainPersonalOpportunities",
         "delete": "MaintainPersonalOpportunities",
         "properties": [
-          "owner"
+          "owner",
+          "assignedTo"
         ]
       }
     },
@@ -664,19 +665,9 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": "ViewAllOpportunities",
-        "update": false,
-        "delete": false
-      },
-      "personal": {
-        "create": false,
         "read": true,
         "update": false,
-        "delete": false,
-        "properties": [
-          "owner",
-          "assignedTo"
-        ]
+        "delete": false
       }
     },
     "properties": [
