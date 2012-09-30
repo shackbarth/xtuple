@@ -330,6 +330,7 @@ XT.stringsFor("en_US", {
   "_secondaryContact": "Secondary Contact",
   "_sense": "Sense",
   "_series": "Series",
+  "_sessionTimedOut": "Your session has timed out",
   "_setup": "Setup",
   "_severity": "Severity",
   "_showCompleted": "Show Complete",
