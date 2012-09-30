@@ -5,6 +5,8 @@ create or replace function xt.commit_record(data_hash text) returns text as $$
       data = Object.create(XT.Data),
       key, orm;
 
+  if (dataHash.username) { XT.username = dataHash.username; }
+ 
   delete dataHash.recordType;
   data.commitRecord(recordType, dataHash.dataHash, encryptionKey);
   orm = XT.Orm.fetch(recordType.beforeDot(), recordType.afterDot());

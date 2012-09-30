@@ -24,6 +24,8 @@ create or replace function xt.dispatch(data_hash text) returns text as $$
       args = params instanceof Array ? params : [params], 
       method, ret;
 
+  if (dataHash.username) { XT.username = dataHash.username; }
+
   if(obj[f]) method = obj[f].curry(args);
   else throw new Error('Function ' + dataHash.className + '.' + f + ' not found.');
 

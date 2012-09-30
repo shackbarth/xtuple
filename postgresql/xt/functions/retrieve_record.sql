@@ -5,8 +5,11 @@ create or replace function xt.retrieve_record(data_hash text) returns text as $$
       encryptionKey = dataHash.encryptionKey,
       prettyPrint = dataHash.prettyPrint ? 2 : null,
       options = dataHash.options,
-      ret = data.retrieveRecord(dataHash.recordType, dataHash.id, encryptionKey, options);
+      ret;
 
+  if (dataHash.username) { XT.username = dataHash.username; }
+  ret = data.retrieveRecord(dataHash.recordType, dataHash.id, encryptionKey, options);
+  
   /* return the results */
   return JSON.stringify(ret, null, prettyPrint);
 
