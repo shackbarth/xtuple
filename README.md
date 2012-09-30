@@ -1,6 +1,6 @@
-#XTUPLE DATABASE
+#Postgres Object Relational Map System
 
-This repository contains the database object definitions that enable a standard xTuple database to run in conjunction with the xTuple NodeJS Datasource (https://github.com/xtuple/datasource).
+This repository contains the database object definitions for an embedded ORM system running through the PLV8 javascript engine.
 
 ##Prerequisites
 
@@ -11,7 +11,7 @@ This repository contains the database object definitions that enable a standard 
 
 ##Instructions
 
-Build and install PostgreSQL from source. In the `contrib/crypto` directory `sudo make install`.   
+Build and install PostgreSQL from source.   
 
 Build the v8 library then copy the `libv8*` shared libraries to `/usr/local/lib`.  
 
