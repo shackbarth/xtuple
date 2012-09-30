@@ -307,10 +307,10 @@ white:true*/
           floating: true,
           scrim: true,
           autoDismiss: false,
+          style: "text-align: center;",
           components: [
             {content: "_sessionTimedOut".loc()},
-            {kind: "onyx.Button", content: "_ok".loc(), style: "width: 50px; margin: 0 auto;",
-              tap: function () { relocate(); }}
+            {kind: "onyx.Button", content: "_ok".loc(), tap: function () { relocate(); }}
           ]
         });
         p.show();
