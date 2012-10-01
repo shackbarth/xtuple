@@ -25,7 +25,8 @@ white:true*/
         callback = XT.K;
       } else {
         callback = function (response) {
-          notify(_.extend(Object.create(XT.Response), response));
+          //notify(_.extend(Object.create(XT.Response), response));
+          notify(new XT.Response(response));
         };
       }
 
