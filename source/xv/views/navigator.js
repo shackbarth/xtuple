@@ -260,8 +260,8 @@ trailing:true white:true*/
 
           // XXX try this: only create the first three
           if (panels[n].index < 3) {
-            panel = this.$.contentPanels.createComponent(panels[n]);
             panels[n].status = "active";
+            panel = this.$.contentPanels.createComponent(panels[n]);
             if (panel instanceof XV.List) {
 
               // Bubble parameter widget up to pullout
@@ -323,8 +323,8 @@ trailing:true white:true*/
 
       } else if (panelStatus === 'unborn') {
         // panel exists but has not been rendered. Render it.
-        panel = this.$.contentPanels.createComponent(module.panels[index]);
         module.panels[index].status = 'active';
+        panel = this.$.contentPanels.createComponent(module.panels[index]);
         if (panel instanceof XV.List) {
 
           // Bubble parameter widget up to pullout
@@ -424,8 +424,11 @@ trailing:true white:true*/
         label;
       panel =  module.panels[index];
       name = panel && panel.name ? module.panels[index].name : "";
-      panel = this.$.contentPanels.$[name];
-      label = panel && panel.getLabel ? panel.getLabel() : "";
+      //panel = this.$.contentPanels.$[name];
+      label = name;//panel && panel.getLabel ? panel.getLabel() : "";
+      // TODO: label was better than name
+      // I'll have to come up with a new way of getting the correctly
+      // formatted label without looking at the XV.List subkind.
       this.$.listItem.setContent(label);
       this.$.listItem.addRemoveClass("onyx-selected", isSelected);
       if (isSelected) { this.setContentPanel(index); }
