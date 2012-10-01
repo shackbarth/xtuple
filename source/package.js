@@ -1,4 +1,5 @@
 enyo.depends(
+  "core.js",
   "model.js",
   "collection.js",
   "document.js",
