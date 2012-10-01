@@ -1,4 +1,4 @@
-backbone
+backbone-x
 ========
 
 Model abstraction based on Backbone.js
