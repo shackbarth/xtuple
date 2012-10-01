@@ -5,6 +5,7 @@ trailing:true white:true*/
 
 (function () {
 
+  XV = {};
   XV._modelLists = {};
   XV._modelWorkspaces = {};
 
