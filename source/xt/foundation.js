@@ -249,5 +249,3 @@ _.extend(XT, {
     return this.history;
   }
 });
-
-XV = {};

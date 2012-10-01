@@ -11,7 +11,8 @@ enyo.depends(
   "core.js",
   "xt",
   "xm",
-  "xv",
+  "$lib/enyo-x",
+  "application",
   "stylesheets/screen.css",
   "app.js",
   "ext"
