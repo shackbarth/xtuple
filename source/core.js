@@ -4,7 +4,6 @@ white:true*/
 /*global XM:true */
 
 (function () {
-  "use strict";
 
   XM = {};
 
