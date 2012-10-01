@@ -282,7 +282,7 @@ XT.stringsFor("en_US", {
   "_phone": "Phone",
   "_pleaseLogin": "Please Login",
   "_postalCode": "Postal Code",
-  "_postbooks": "Postbooks",
+  "_postbooks": "PostBooks",
   "_price": "Price",
   "_priceUnit": "Price Unit",
   "_priceUnitRatio": "Price Unit Ratio",
