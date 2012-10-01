@@ -460,16 +460,24 @@ trailing:true white:true*/
       var module = this.getSelectedModule(),
         index = inEvent.index,
         isSelected = inSender.isSelected(index),
-        panel,
-        name,
-        label;
-      panel =  module.panels[index];
-      name = panel && panel.name ? module.panels[index].name : "";
-      //panel = this.$.contentPanels.$[name];
-      label = name;//panel && panel.getLabel ? panel.getLabel() : "";
-      // TODO: label was better than name
-      // I'll have to come up with a new way of getting the correctly
-      // formatted label without looking at the XV.List subkind.
+        panel = module.panels[index],
+        name = panel && panel.name ? module.panels[index].name : "",
+        // peek inside the kind to see what the label should be
+        kind = XT.getObjectByName(panel.kind),
+        label = kind && kind.prototype.label ? kind.prototype.label : "",
+        shortKindName;
+
+      if (!label && kind && kind.prototype.determineLabel) {
+        // some of these lists have labels that are dynamically computed,
+        // so we can't rely on their being statically defined. We have to
+        // compute them in the same way that their create() method would.
+        shortKindName = panel.kind.substring(0, panel.kind.length - 4).substring(3);
+        label = kind.prototype.determineLabel(shortKindName);
+
+      } else if (!label) {
+        label = name;
+      }
+
       this.$.listItem.setContent(label);
       this.$.listItem.addRemoveClass("onyx-selected", isSelected);
       if (isSelected) { this.setContentPanel(index); }

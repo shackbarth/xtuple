@@ -824,12 +824,15 @@ trailing:true white:true*/
       this.inherited(arguments);
       var kindName = this.kind.substring(0, this.kind.length - 4).substring(3);
       if (!this.getLabel()) {
-        var label = "_" + kindName.camelize().pluralize();
-        this.setLabel(label.loc());
+        this.setLabel(this.determineLabel(kindName));
       }
       if (!this.getCollection()) {
         this.setCollection("XM." + kindName + "Collection");
       }
+    },
+
+    determineLabel: function (kindName) {
+      return ("_" + kindName.camelize().pluralize()).loc();
     }
   });
 
