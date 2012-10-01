@@ -242,22 +242,32 @@ X = {};
     set: function () {
       var args, path, value, cur, i, parts, tmp;
       if (arguments.length < 2) return this;
-      args = arguments;
-      path = args[0];
-      value = args[1];
+      args = X.$A(arguments);
+      //path = args[0];
+      path = args.shift();
+      //value = args[1];
+      value = args.shift();
       cur = this;
       i = path.indexOf(".");
       while (i === 0) {
         path = path.slice(1);
         i = path.indexOf(".");
       }
-      if (i === -1) this[path] = value;
-      else {
+      if (i === -1) {
+        if (this[path] && this[path] instanceof Function && this[path].isProperty) {
+          args.unshift(value);
+          this[path].apply(this, args);
+        } else this[path] = value;
+      } else {
         parts = path.split(".");
         while (parts.length > 0) {
           tmp = parts.shift();
-          if (parts.length === 0) cur[tmp] = value;
-          else {
+          if (parts.length === 0) {
+            if (cur[tmp] && cur[tmp] instanceof Function && cur[tmp].isProperty) {
+              args.unshift(value);
+              cur[tmp].apply(this, args);
+            } else cur[tmp] = value;
+          } else {
             if (X.none(cur[tmp])) cur[tmp] = {};
             cur = cur[tmp];
           }

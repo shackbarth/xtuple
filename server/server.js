@@ -182,6 +182,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
       this.activeServers[name] = server;
     },
+    
+    getServer: function (name) {
+      return this.activeServers[name];
+    },
 
     closeAll: function () {
       X.log("Shutting down all active servers.");

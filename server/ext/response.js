@@ -180,9 +180,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return this;
     },
 
-    error: function (message) {
-      //X.warn("X.Response.error(): ", message);
-      this.write({reason: message, isError: true}).close();
+    error: function (err) {
+      //X.warn("X.Response.error(): ", err);
+      this.write(X.mixin(err, {isError: true})).close();
       this.destroy();
     },
 
