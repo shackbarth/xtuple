@@ -1,0 +1,18 @@
+enyo.depends(
+  "$lib/underscore",
+  "$lib/backbone",
+  "$lib/backbone_relational",
+  "$lib/layout",
+  "$lib/onyx",
+  "$lib/globalize",
+  "$lib/gts-plugins",
+  "$lib/date_format",
+  "$lib/socket_io",
+  "core.js",
+  "xt",
+  "xm",
+  "xv",
+  "stylesheets/screen.css",
+  "app.js",
+  "ext"
+);
