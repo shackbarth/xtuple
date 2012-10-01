@@ -12,7 +12,8 @@ trailing:true white:true*/
     kind: "Panels",
     classes: "app enyo-unselectable",
     published: {
-      modules: []
+      modules: [],
+      panelCache: {}
     },
     events: {
       onListAdded: "",
@@ -104,6 +105,37 @@ trailing:true white:true*/
       } else {
         this.setHeaderContent("");
         this.setMenuPanel(MODULE_MENU);
+      }
+    },
+    cachePanels: function () {
+      var contentPanels = this.$.contentPanels,
+        panelToCache,
+        globalIndex,
+        pertinentModule,
+        panelReference,
+        findPanel = function (panel) {
+          return panel.index === globalIndex;
+        },
+        findModule = function (module) {
+          var panel = _.find(module.panels, findPanel);
+          return panel !== undefined;
+        };
+
+      while (contentPanels.children.length > 3) {
+        panelToCache = contentPanels.children[0];
+        globalIndex = panelToCache.index;
+
+        // Panels are abstractly referenced in this.getModules().
+        // Find the abstract panel of the panelToCache
+        // XXX this would be cleaner if we kept a backwards reference
+        // from the panel to its containing module (and index therein)
+        pertinentModule = _.find(this.getModules(), findModule);
+        panelReference = _.find(pertinentModule.panels, findPanel);
+
+        contentPanels.removeChild(panelToCache);
+        contentPanels.render();
+        panelReference.status = "cached";
+        this.getPanelCache()[globalIndex] = panelToCache;
       }
     },
     getSelectedModule: function (index) {
@@ -307,7 +339,8 @@ trailing:true white:true*/
       this.fetch();
     },
     setContentPanel: function (index) {
-      var module = this.getSelectedModule(),
+      var contentPanels = this.$.contentPanels,
+        module = this.getSelectedModule(),
         panelIndex = module && module.panels ? module.panels[index].index : -1,
         panelStatus = module && module.panels ? module.panels[index].status : 'unknown',
         panel,// = panelIndex > -1 ? this.$.contentPanels.getPanels()[panelIndex] : null,
@@ -317,14 +350,15 @@ trailing:true white:true*/
         canNotCreate = true;
 
       if (panelStatus === 'active') {
-        panel = _.find(this.$.contentPanels.children, function (child) {
+        panel = _.find(contentPanels.children, function (child) {
           return child.index === panelIndex;
         });
 
       } else if (panelStatus === 'unborn') {
         // panel exists but has not been rendered. Render it.
         module.panels[index].status = 'active';
-        panel = this.$.contentPanels.createComponent(module.panels[index]);
+        panel = contentPanels.createComponent(module.panels[index]);
+        panel.render();
         if (panel instanceof XV.List) {
 
           // Bubble parameter widget up to pullout
@@ -332,12 +366,17 @@ trailing:true white:true*/
         }
 
       } else if (panelStatus === 'cached') {
-        // TODO
+        module.panels[index].status = 'active';
+        panel = this.panelCache[panelIndex];
+        contentPanels.addChild(panel);
+        panel.render();
 
       } else {
         XT.error("Don't know what to do with this panel status");
       }
 
+      // cache any extraneous content panels
+      this.cachePanels();
 
       label = panel && panel.label ? panel.label : "";
       collection = panel && panel.getCollection ? XT.getObjectByName(panel.getCollection()) : false;
@@ -371,8 +410,9 @@ trailing:true white:true*/
       if (!this.$.panelMenu.isSelected(index)) {
         this.$.panelMenu.select(index);
       }
+
       // Select list
-      this.$.contentPanels.setIndex(this.$.contentPanels.indexOfChild(panel));
+      contentPanels.setIndex(this.$.contentPanels.indexOfChild(panel));
 
       this.$.rightLabel.setContent(label);
       if (panel.getFilterDescription) {
@@ -381,6 +421,7 @@ trailing:true white:true*/
       if (panel.fetch && !this.fetched[panelIndex]) {
         this.fetch();
       }
+
     },
     setHeaderContent: function (content) {
       this.$.header.setContent(content);
