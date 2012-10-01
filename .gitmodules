@@ -10,3 +10,6 @@
 [submodule "lib/enyo-x"]
 	path = lib/enyo-x
 	url = git@github.com:xtuple/enyo-x.git
+[submodule "lib/backbone-x"]
+	path = lib/backbone-x
+	url = git@github.com:xtuple/backbone-x.git
