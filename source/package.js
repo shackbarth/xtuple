@@ -11,7 +11,7 @@ enyo.depends(
   "$lib/socket_io",
   "core.js",
   "$lib/tools",
-  "xm",
+  "$lib/models",
   "$lib/enyo-x",
   "application",
   "stylesheets/screen.css",

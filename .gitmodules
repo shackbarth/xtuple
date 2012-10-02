@@ -16,3 +16,6 @@
 [submodule "lib/tools"]
 	path = lib/tools
 	url = git@github.com:xtuple/tools.git
+[submodule "lib/models"]
+	path = lib/models
+	url = git@github.com:xtuple/models.git
