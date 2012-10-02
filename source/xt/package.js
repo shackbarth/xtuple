@@ -1,5 +1,5 @@
 enyo.depends(
-  "foundation.js",
+  "core.js",
   "error.js",
   "log.js",
   "datasource.js",
