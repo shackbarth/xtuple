@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XT:true, XV:true, XM:true, _:true, enyo:true*/
+/*global XT:true, XV:true, XM:true, _:true, enyo:true, window:true */
 
 (function () {
   var MODULE_MENU = 0;
@@ -12,7 +12,8 @@ trailing:true white:true*/
     kind: "Panels",
     classes: "app enyo-unselectable",
     published: {
-      modules: []
+      modules: [],
+      panelCache: {}
     },
     events: {
       onListAdded: "",
@@ -106,6 +107,37 @@ trailing:true white:true*/
         this.setMenuPanel(MODULE_MENU);
       }
     },
+    cachePanels: function () {
+      var contentPanels = this.$.contentPanels,
+        panelToCache,
+        globalIndex,
+        pertinentModule,
+        panelReference,
+        findPanel = function (panel) {
+          return panel.index === globalIndex;
+        },
+        findModule = function (module) {
+          var panel = _.find(module.panels, findPanel);
+          return panel !== undefined;
+        };
+
+      while (contentPanels.children.length > 3) {
+        panelToCache = contentPanels.children[0];
+        globalIndex = panelToCache.index;
+
+        // Panels are abstractly referenced in this.getModules().
+        // Find the abstract panel of the panelToCache
+        // XXX this would be cleaner if we kept a backwards reference
+        // from the panel to its containing module (and index therein)
+        pertinentModule = _.find(this.getModules(), findModule);
+        panelReference = _.find(pertinentModule.panels, findPanel);
+
+        contentPanels.removeChild(panelToCache);
+        contentPanels.render();
+        panelReference.status = "cached";
+        this.getPanelCache()[globalIndex] = panelToCache;
+      }
+    },
     getSelectedModule: function (index) {
       return this._selectedModule;
     },
@@ -114,23 +146,7 @@ trailing:true white:true*/
         coll = list.getValue(),
         recordType = coll.model.prototype.recordType;
 
-      window.open("/export?details={\"requestType\":\"fetch\",\"query\":{\"recordType\":\"" + recordType + "\"}}","_newtab");
-
-
-        /*
-        success = function (result) {
-          var cacheId = result.cacheId;
-          window.location = "https://localtest.com/export?cacheId=" + cacheId;
-        },
-        error = function (result) {
-          XT.log("error");
-          XT.log(result);
-        },
-        options = {responseType: "csv", success: success, error: error};
-
-      // XXX I should be using some new datasource function here, not configure
-      XT.dataSource.configure("createCSV", {"recordType": recordType}, options);
-    */
+      window.open("/export?details={\"requestType\":\"fetch\",\"query\":{\"recordType\":\"" + recordType + "\"}}", "_newtab");
     },
     errorOk: function () {
       this.$.errorPopup.hide();
@@ -273,11 +289,18 @@ trailing:true white:true*/
 
           // Keep track of where this panel is being placed for later reference
           panels[n].index = this.$.contentPanels.panelCount++;
-          panel = this.$.contentPanels.createComponent(panels[n]);
-          if (panel instanceof XV.List) {
 
-            // Bubble parameter widget up to pullout
-            this.doListAdded(panel);
+          // XXX try this: only create the first three
+          if (panels[n].index < 3) {
+            panels[n].status = "active";
+            panel = this.$.contentPanels.createComponent(panels[n]);
+            if (panel instanceof XV.List) {
+
+              // Bubble parameter widget up to pullout
+              this.doListAdded(panel);
+            }
+          } else {
+            panels[n].status = "unborn";
           }
         }
       }
@@ -316,14 +339,48 @@ trailing:true white:true*/
       this.fetch();
     },
     setContentPanel: function (index) {
-      var module = this.getSelectedModule(),
+      var contentPanels = this.$.contentPanels,
+        module = this.getSelectedModule(),
         panelIndex = module && module.panels ? module.panels[index].index : -1,
-        panel = panelIndex > -1 ? this.$.contentPanels.getPanels()[panelIndex] : null,
-        label = panel && panel.label ? panel.label : "",
-        collection = panel.getCollection ?
-          XT.getObjectByName(panel.getCollection()) : false,
+        panelStatus = module && module.panels ? module.panels[index].status : 'unknown',
+        panel,// = panelIndex > -1 ? this.$.contentPanels.getPanels()[panelIndex] : null,
+        label,
+        collection,
         model,
         canNotCreate = true;
+
+      if (panelStatus === 'active') {
+        panel = _.find(contentPanels.children, function (child) {
+          return child.index === panelIndex;
+        });
+
+      } else if (panelStatus === 'unborn') {
+        // panel exists but has not been rendered. Render it.
+        module.panels[index].status = 'active';
+        panel = contentPanels.createComponent(module.panels[index]);
+        panel.render();
+        if (panel instanceof XV.List) {
+
+          // Bubble parameter widget up to pullout
+          this.doListAdded(panel);
+        }
+
+      } else if (panelStatus === 'cached') {
+        module.panels[index].status = 'active';
+        panel = this.panelCache[panelIndex];
+        contentPanels.addChild(panel);
+        panel.render();
+
+      } else {
+        XT.error("Don't know what to do with this panel status");
+      }
+
+      // cache any extraneous content panels
+      this.cachePanels();
+
+      label = panel && panel.label ? panel.label : "";
+      collection = panel && panel.getCollection ? XT.getObjectByName(panel.getCollection()) : false;
+
       if (!panel) { return; }
 
       // Make sure the advanced search icon is visible iff there is an advanced
@@ -355,9 +412,8 @@ trailing:true white:true*/
       }
 
       // Select list
-      if (this.$.contentPanels.getIndex() !== panelIndex) {
-        this.$.contentPanels.setIndex(panelIndex);
-      }
+      contentPanels.setIndex(this.$.contentPanels.indexOfChild(panel));
+
       this.$.rightLabel.setContent(label);
       if (panel.getFilterDescription) {
         this.setHeaderContent(panel.getFilterDescription());
@@ -365,6 +421,7 @@ trailing:true white:true*/
       if (panel.fetch && !this.fetched[panelIndex]) {
         this.fetch();
       }
+
     },
     setHeaderContent: function (content) {
       this.$.header.setContent(content);
@@ -403,13 +460,24 @@ trailing:true white:true*/
       var module = this.getSelectedModule(),
         index = inEvent.index,
         isSelected = inSender.isSelected(index),
-        panel,
-        name,
-        label;
-      panel =  module.panels[index];
-      name = panel && panel.name ? module.panels[index].name : "";
-      panel = this.$.contentPanels.$[name];
-      label = panel && panel.getLabel ? panel.getLabel() : "";
+        panel = module.panels[index],
+        name = panel && panel.name ? module.panels[index].name : "",
+        // peek inside the kind to see what the label should be
+        kind = XT.getObjectByName(panel.kind),
+        label = kind && kind.prototype.label ? kind.prototype.label : "",
+        shortKindName;
+
+      if (!label && kind && kind.prototype.determineLabel) {
+        // some of these lists have labels that are dynamically computed,
+        // so we can't rely on their being statically defined. We have to
+        // compute them in the same way that their create() method would.
+        shortKindName = panel.kind.substring(0, panel.kind.length - 4).substring(3);
+        label = kind.prototype.determineLabel(shortKindName);
+
+      } else if (!label) {
+        label = name;
+      }
+
       this.$.listItem.setContent(label);
       this.$.listItem.addRemoveClass("onyx-selected", isSelected);
       if (isSelected) { this.setContentPanel(index); }
