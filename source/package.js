@@ -10,7 +10,7 @@ enyo.depends(
   "$lib/date_format",
   "$lib/socket_io",
   "core.js",
-  "xt",
+  "$lib/tools",
   "xm",
   "$lib/enyo-x",
   "application",
