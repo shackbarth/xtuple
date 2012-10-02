@@ -8,11 +8,9 @@ white:true*/
 
   /**
   */
-  XT.Session = {
+  _.extend(XT.Session, {
     /** @scope XT.Session */
 
-    details: {},
-    availableSessions: [],
     privileges: {},
     settings: {},
     schema: {},
@@ -159,14 +157,6 @@ white:true*/
       return true;
     },
 
-    getAvailableSessions: function () {
-      return this.availableSessions;
-    },
-
-    getDetails: function () {
-      return this.details;
-    },
-
     getSchema: function () {
       return this.schema;
     },
@@ -177,16 +167,6 @@ white:true*/
 
     getPrivileges: function () {
       return this.privileges;
-    },
-
-    setAvailableSessions: function (value) {
-      this.availableSessions = value;
-      return this;
-    },
-
-    setDetails: function (value) {
-      this.details = value;
-      return this;
     },
 
     setSchema: function (value) {
@@ -204,54 +184,6 @@ white:true*/
       return this;
     },
 
-    validateSession: function (credentials, callback) {
-      var self = this,
-        complete = function (payload) {
-          self._didValidateSession.call(self, payload, callback);
-        };
-
-      // we store these credentials until we have
-      // acquired a valid session
-      this.details = credentials;
-
-      XT.Request
-        .handle("session")
-        .notify(complete)
-        .send(credentials);
-    },
-
-    _didValidateSession: function (payload, callback) {
-      // if this is a valid session acquisition, go ahead
-      // and store the properties
-      if (payload.code === 1) {
-        this.setDetails(payload.data);
-        XT.getStartupManager().start();
-      } else {
-        return relocate();
-      }
-
-      if (callback && callback instanceof Function) {
-        callback(payload);
-      }
-    },
-
-    start: function () {
-      var c = enyo.getCookie("xtsessioncookie");
-      try {
-        c = JSON.parse(c);
-        this.validateSession(c, function () { XT.app.show(); });
-      } catch (e) { XT.Session.logout(); }
-    },
-
-    logout: function () {
-      XT.Request
-        .handle("function/logout")
-        .notify(function () {
-          relocate();
-        })
-        .send();
-    },
-
     // ..........................................................
     // CLASS CONSTANTS
     //
@@ -265,6 +197,6 @@ white:true*/
     DB_BYTEA: 'U',
     DB_UNKNOWN: 'X'
 
-  };
+  });
 
 }());
