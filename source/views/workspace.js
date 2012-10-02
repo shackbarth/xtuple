@@ -282,7 +282,7 @@ trailing:true white:true*/
     },
     /**
       When a text area is brought into focus we want to move the
-      panels to bring this it into prime position.
+      panels to bring this into prime position.
     */
     textAreaFocus: function (inSender, inEvent) {
       var originator = inEvent.originator,
