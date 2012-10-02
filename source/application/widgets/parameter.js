@@ -283,8 +283,6 @@ trailing:true white:true*/
         }
       },
       {name: "name", label: "_name".loc(), attr: "name"},
-      {name: "account", label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
-      {name: "contact", label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
       {kind: "onyx.GroupboxHeader", content: "_status".loc()},
       {name: "stage", label: "_stage".loc(), attr: "opportunityStage",
         defaultKind: "XV.OpportunityStagePicker"},

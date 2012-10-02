@@ -2,6 +2,7 @@ enyo.depends(
   "$lib/underscore",
   "$lib/backbone",
   "$lib/backbone_relational",
+  "$lib/backbone-x",
   "$lib/layout",
   "$lib/onyx",
   "$lib/globalize",
@@ -11,7 +12,8 @@ enyo.depends(
   "core.js",
   "xt",
   "xm",
-  "xv",
+  "$lib/enyo-x",
+  "application",
   "stylesheets/screen.css",
   "app.js",
   "ext"

@@ -118,10 +118,6 @@ XT = {
 
 /**
 */
-XM = {};
-
-/**
-*/
 _.extend(XT,
   /** */ {
 
@@ -249,5 +245,3 @@ _.extend(XT, {
     return this.history;
   }
 });
-
-XV = {};
