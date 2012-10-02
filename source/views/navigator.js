@@ -463,7 +463,7 @@ trailing:true white:true*/
         panel = module.panels[index],
         name = panel && panel.name ? module.panels[index].name : "",
         // peek inside the kind to see what the label should be
-        kind = XT.getObjectByName(panel.kind),
+        kind = panel && panel.kind ? XT.getObjectByName(panel.kind) : null,
         label = kind && kind.prototype.label ? kind.prototype.label : "",
         shortKindName;
 
