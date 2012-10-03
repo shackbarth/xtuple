@@ -9,7 +9,8 @@ trailing:true white:true*/
     Use this class to define the editor for `XV.ListRelationsEditorBox`.
 
     @class
-    @alias XV.RelationsEditor
+    @name XV.RelationsEditor
+    @extends XV.Groupbox
     @see XV.ListRelationsEditorBox
   */
   var editor = enyo.mixin(XV.EditorMixin, {
@@ -40,10 +41,11 @@ trailing:true white:true*/
     The `value` must be set to a collection of `XM.Model`.
 
     @class
-    @alias XV.ListRelationsEditorBox
+    @name XV.ListRelationsEditorBox
+    @extends XV.Groupbox
     @see XV.RelationsEditor
   */
-  var listRelationsEditorBox = {
+  enyo.kind(/** @lends XV.ListRelationsEditorBox */{
     name: "XV.ListRelationsEditorBox",
     kind: "XV.Groupbox",
     classes: "panel",
@@ -142,7 +144,6 @@ trailing:true white:true*/
       var value = this.getValue();
       this.$.list.setValue(value);
     }
-  };
-  enyo.kind(listRelationsEditorBox);
+  });
 
 }());

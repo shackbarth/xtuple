@@ -13,10 +13,10 @@ trailing:true white:true*/
     List to attach to workspaces to present related data.
 
     @class
-    @alias XV.ListRelations
+    @name XV.ListRelations
     @extends enyo.List
   */
-  var listRelations = {
+  enyo.kind(/** @lends XV.ListRelations */{
     name: "XV.ListRelations",
     kind: "List",
     classes: "xv-list",
@@ -214,7 +214,6 @@ trailing:true white:true*/
       this.lengthChanged();
       this.fetchRelated();
     }
-  };
-  enyo.kind(listRelations);
+  });
 
 }());

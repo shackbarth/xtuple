@@ -4,7 +4,14 @@ regexp:true, undef:true, trailing:true, white:true */
 
 (function () {
 
-  enyo.kind({
+  /**
+
+    @class
+    @name XV.Date
+    @extends XV.Input
+    @see XV.DateWidget
+   */
+  enyo.kind(/** @lends XV.Date */{
     name: "XV.Date",
     kind: "XV.Input",
     getValueToString: function (value) {
@@ -81,7 +88,13 @@ regexp:true, undef:true, trailing:true, white:true */
     }
   });
 
-  enyo.kind({
+  /**
+
+    @class
+    @name XV.DateWidget
+    @extends XV.Date
+   */
+  enyo.kind(/** @lends XV.DateWidget */{
     name: "XV.DateWidget",
     kind: "XV.Date",
     classes: "xv-inputwidget xv-datewidget",

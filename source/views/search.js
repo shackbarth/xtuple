@@ -11,9 +11,9 @@ trailing:true white:true*/
     relational widget values, etc.
 
     @class
-    @alias XV.SearchContainer
+    @name XV.SearchContainer
   */
-  var searchContainer = {
+  enyo.kind(/** @lends XV.SearchContainer */{
     name: "XV.SearchContainer",
     kind: "Panels",
     classes: "app enyo-unselectable",
@@ -145,7 +145,6 @@ trailing:true white:true*/
       this.render();
       this.$.searchInput.setValue(searchText || "");
     }
-  };
-  enyo.kind(searchContainer);
+  });
 
 }());

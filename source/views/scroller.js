@@ -9,13 +9,12 @@ white:true*/
     Just a scroller with our css.
 
     @class
-    @alias XV.Scroller
+    @name XV.Scroller
    */
-  var scroller = {
+  enyo.kind(/** @lends XV.Scroller */{
     name: "XV.Scroller",
     kind: "Scroller",
     classes: "xv-scroller"
-  };
-  enyo.kind(scroller);
+  });
 
 }());

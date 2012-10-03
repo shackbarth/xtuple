@@ -9,10 +9,10 @@ white:true*/
     Represents and individual comment within the comment box.
 
     @class
-    @alias XV.CommentBoxItem
+    @name XV.CommentBoxItem
     @see XV.CommentBox
    */
-  var commentBoxItem = {
+  enyo.kind(/** @lends XV.CommentBoxItem */{
     name: "XV.CommentBoxItem",
     classes: "xv-comment-box",
     published: {
@@ -161,17 +161,16 @@ white:true*/
         this.edit();
       }
     }
-  };
-  enyo.kind(commentBoxItem);
+  });
 
   /**
     The comment box contains and manages multiple comments, represented as CommentBoxItems
 
     @class
-    @alias XV.CommentBox
+    @name XV.CommentBox
     @see XV.CommentBoxItem
    */
-  var commentBox = {
+  enyo.kind(/** @lends XV.CommentBox */{
     name: "XV.CommentBox",
     kind: "XV.Groupbox",
     classes: "panel xv-comment-box",
@@ -244,6 +243,5 @@ white:true*/
         bval = b.get('created');
       return XT.date.compare(bval, aval);
     }
-  };
-  enyo.kind(commentBox);
+  });
 }());

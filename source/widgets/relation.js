@@ -4,7 +4,14 @@ regexp:true, undef:true, trailing:true, white:true */
 
 (function () {
 
-  enyo.kind({
+  /**
+    Relation widget.
+
+    @class
+    @name XV.RelationWidget
+    @see XV.Relation
+   */
+  enyo.kind(/** @lends XV.RelationWidget */{
     name: "XV.RelationWidget",
     kind: enyo.Control,
     classes: "xv-inputwidget xv-relationwidget",

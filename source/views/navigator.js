@@ -11,9 +11,9 @@ trailing:true white:true*/
     High-level container of all business object lists.
 
     @class
-    @alias XV.Navigator
+    @name XV.Navigator
    */
-  var navigator = {
+  enyo.kind(/** @lends XV.Navigator */{
     name: "XV.Navigator",
     kind: "Panels",
     classes: "app enyo-unselectable",
@@ -595,7 +595,6 @@ trailing:true white:true*/
       }
       this.$.iconButtonGroup.setActive(activeIconButton);
     }
-  };
-  enyo.kind(navigator);
+  });
 
 }());

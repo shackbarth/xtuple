@@ -11,55 +11,52 @@ trailing:true white:true*/
   /**
 
     @class
-    @alias XV.ListItem
+    @name XV.ListItem
     @see XV.List
    */
-  var listItem = {
+  enyo.kind(/** @lends XV.ListItem */{
     name: "XV.ListItem",
     classes: "xv-list-item",
     ontap: "itemTap",
     setSelected: function (inSelected) {
       this.addRemoveClass("item-selected", inSelected);
     }
-  };
-  enyo.kind(listItem);
+  });
 
   /**
 
     @class
-    @alias XV.ListColumn
+    @name XV.ListColumn
     @see XV.List
    */
-  var listColumn = {
+  enyo.kind(/** @lends XV.ListColumn */{
     name: "XV.ListColumn",
     classes: "xv-list-column"
-  };
-  enyo.kind(listColumn);
+  });
 
   /**
 
     @class
-    @alias XV.ListAttr
+    @name XV.ListAttr
     @see XV.List
    */
-  var listAttr = {
+  enyo.kind(/** @lends XV.ListAttr */{
     name: "XV.ListAttr",
     classes: "xv-list-attr",
     published: {
       attr: ""
     }
-  };
-  enyo.kind(listAttr);
+  });
 
   /**
 
     @class
-    @alias XV.List
+    @name XV.List
     @see XV.ListItem
     @see XV.ListColumn
     @see XV.ListAttr
    */
-  var list = {
+  enyo.kind(/** @lends XV.List */{
     name: "XV.List",
     kind: "List",
     classes: "xv-list",
@@ -264,7 +261,6 @@ trailing:true white:true*/
         this.queryChanged();
       }
     }
-  };
-  enyo.kind(list);
+  });
 
 }());

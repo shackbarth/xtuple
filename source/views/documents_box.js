@@ -9,9 +9,9 @@ trailing:true white:true*/
 
 
     @class
-    @alias XV.DocumentListRelations
+    @name XV.DocumentListRelations
    */
-  var documentListRelations = {
+  enyo.kind(/** @lends XV.DocumentListRelations */{
     name: "XV.DocumentListRelations",
     kind: "XV.ListRelations",
     parentKey: "account",
@@ -118,15 +118,14 @@ trailing:true white:true*/
         return true;
       }
     }
-  };
-  enyo.kind(documentListRelations);
+  });
 
   /**
 
     @class
-    @alias XV.DocumentsBox
+    @name XV.DocumentsBox
   */
-  var documentsBox = {
+  enyo.kind(/** @lends XV.DocumentsBox */{
     name: "XV.DocumentsBox",
     kind: "XV.ListRelationsBox",
     classes: "xv-documents-box",
@@ -379,7 +378,6 @@ trailing:true white:true*/
       // Don't come back here
       this._initPicker = true;
     }
-  };
-  enyo.kind(documentsBox);
+  });
 
 }());

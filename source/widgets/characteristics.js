@@ -13,7 +13,13 @@ white:true*/
   var LIST = 1;
   var DATE = 2;
 
-  enyo.kind({
+  /**
+
+    @class
+    @name XV.CharacteristicPicker
+    @extends XV.PickerWidget
+   */
+  enyo.kind(/** @lends XV.CharacteristicPicker */{
     name: "XV.CharacteristicPicker",
     kind: "XV.PickerWidget",
     classes: "xv-characteristic-picker",
@@ -26,7 +32,12 @@ white:true*/
     ]
   });
 
-  enyo.kind({
+  /**
+
+    @class
+    @name XV.OptionsPicker
+  */
+  enyo.kind(/** @lends XV.OptionsPicker */{
     name: "XV.OptionsPicker",
     published: {
       attr: null,
@@ -108,7 +119,13 @@ white:true*/
     }
   });
 
-  enyo.kind({
+  /**
+
+
+    @class
+    @name XV.CharacteristicItem
+   */
+  enyo.kind(/** @lends XV.CharacteristicItem */{
     name: "XV.CharacteristicItem",
     kind: "FittableColumns",
     classes: "xv-characteristic-item",
@@ -187,7 +204,13 @@ white:true*/
     }
   });
 
-  enyo.kind({
+  /**
+
+
+    @class
+    @name XV.CharacteristicsWidget
+   */
+  enyo.kind(/** @lends XV.CharacteristicsWidget */{
     name: "XV.CharacteristicsWidget",
     classes: "xv-characteristics-widget",
     published: {
@@ -279,7 +302,6 @@ white:true*/
       this.value.sort();
       this.lengthChanged();
     }
-
   });
 
 }());

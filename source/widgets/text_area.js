@@ -4,7 +4,14 @@ regexp:true, undef:true, trailing:true, white:true */
 
 (function () {
 
-  enyo.kind({
+  /**
+    Implements an onyx.TextArea with API support from XV.Input
+
+    @class
+    @name XV.TextArea
+    @extends XV.Input
+   */
+  enyo.kind(/** @lends XV.TextArea */{
     name: "XV.TextArea",
     kind: "XV.Input",
     classes: "xv-textarea",

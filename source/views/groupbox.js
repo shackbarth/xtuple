@@ -9,27 +9,26 @@ white:true*/
     The groupbox holds the widgets in each panel of the workspace.
 
     @class
-    @alias XV.Groupbox
+    @name XV.Groupbox
     @see XV.ScrollableGroupbox
    */
-  var groupBox = {
+  enyo.kind(/** @lends XV.Groupbox */{
     name: "XV.Groupbox",
     kind: "FittableRows",
     classes: "xv-groupbox",
     published: {
       title: "_overview".loc()
     }
-  };
-  enyo.kind(groupBox);
+  });
 
   /**
     A variant of the groupbox that automatically includes a scroller
 
     @class
-    @alias XV.ScrollableGroupbox
+    @name XV.ScrollableGroupbox
     @see XV.Groupbox
    */
-  var scrollableGroupbox = {
+  enyo.kind(/** @lends XV.ScrollableGroupbox */{
     name: "XV.ScrollableGroupbox",
     kind: "Scroller",
     horizontal: "hidden",
@@ -37,7 +36,6 @@ white:true*/
     published: {
       title: "_overview".loc()
     }
-  };
-  enyo.kind(scrollableGroupbox);
+  });
 
 }());

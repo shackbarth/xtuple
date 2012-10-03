@@ -12,10 +12,10 @@ white:true*/
    are associated with a role.
 
    @class
-   @alias XV.AssignmentBox
+   @name XV.AssignmentBox
    @extends XV.ScrollableGroupbox
    */
-  var assignmentBox = {
+  enyo.kind(/** @lends XV.AssignmentBox */{
     name: "XV.AssignmentBox",
     kind: "XV.ScrollableGroupbox",//"XV.Groupbox",
     classes: "xv-assignment-box",
@@ -325,6 +325,5 @@ white:true*/
         this.$.segmentRepeater.setCount(this.getSegments().length);
       }
     }
-  };
-  enyo.kind(assignmentBox);
+  });
 }());

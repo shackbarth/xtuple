@@ -11,9 +11,10 @@ trailing:true white:true*/
     The `value` must be set to a collection of `XM.Info` models.
 
     @class
-    @alias XV.ListRelationsBox
+    @name XV.ListRelationsBox
+    @extends XV.Groupbox
   */
-  var listRelationsBox = {
+  enyo.kind(/** @lends XV.ListRelationsBox */{
     name: "XV.ListRelationsBox",
     kind: "XV.Groupbox",
     classes: "panel",
@@ -234,7 +235,6 @@ trailing:true white:true*/
       this.$.newButton.setDisabled(canNotCreate);
       if (canAttach) { this.$.attachButton.setDisabled(canNotUpdate); }
     }
-  };
-  enyo.kind(listRelationsBox);
+  });
 
 }());
