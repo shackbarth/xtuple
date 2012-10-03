@@ -11,8 +11,8 @@ trailing:true white:true*/
   /**
 
     @class
-    @alias ListItem
-    @see List
+    @alias XV.ListItem
+    @see XV.List
    */
   var listItem = {
     name: "XV.ListItem",
@@ -27,8 +27,8 @@ trailing:true white:true*/
   /**
 
     @class
-    @alias ListColumn
-    @see List
+    @alias XV.ListColumn
+    @see XV.List
    */
   var listColumn = {
     name: "XV.ListColumn",
@@ -39,8 +39,8 @@ trailing:true white:true*/
   /**
 
     @class
-    @alias ListAttr
-    @see List
+    @alias XV.ListAttr
+    @see XV.List
    */
   var listAttr = {
     name: "XV.ListAttr",
@@ -54,10 +54,10 @@ trailing:true white:true*/
   /**
 
     @class
-    @alias List
-    @see ListItem
-    @see ListColumn
-    @see ListAttr
+    @alias XV.List
+    @see XV.ListItem
+    @see XV.ListColumn
+    @see XV.ListAttr
    */
   var list = {
     name: "XV.List",

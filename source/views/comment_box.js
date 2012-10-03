@@ -9,8 +9,8 @@ white:true*/
     Represents and individual comment within the comment box.
 
     @class
-    @alias CommentBoxItem
-    @see CommentBox
+    @alias XV.CommentBoxItem
+    @see XV.CommentBox
    */
   var commentBoxItem = {
     name: "XV.CommentBoxItem",
@@ -168,8 +168,8 @@ white:true*/
     The comment box contains and manages multiple comments, represented as CommentBoxItems
 
     @class
-    @alias CommentBox
-    @see CommentBoxItem
+    @alias XV.CommentBox
+    @see XV.CommentBoxItem
    */
   var commentBox = {
     name: "XV.CommentBox",

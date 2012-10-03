@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: XV</title>
+    <title>JSDoc: Class: EditorMixin</title>
     
     <script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
     <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: XV</h1>
+    <h1 class="page-title">Class: EditorMixin</h1>
     
     
 
@@ -27,7 +27,9 @@
     
 <header>
     <h2>
-    XV
+        <span class="ancestors"><a href="XV.html">XV</a>.</span>
+    
+    EditorMixin
     </h2>
     
 </header>  
@@ -39,7 +41,7 @@
     
         
 <dt>
-    <h4 class="name" id="XV"><span class="type-signature"></span>new XV</h4>
+    <h4 class="name" id="EditorMixin"><span class="type-signature"></span>new EditorMixin</h4>
     
     
 </dt>
@@ -47,8 +49,7 @@
     
     
     <div class="description">
-        XV is the global namespace for all the "xTuple Views" defined in
-    enyo-x and elsewhere
+        Common functionality to Workspace and ListRelationsEditorBox
     </div>
     
     
@@ -76,11 +77,20 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>core.js, line 14</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>workspace.js, line 19</li></ul></dd>
 	
     
     
 	
+	
+	<dt class="tag-see">See:</dt>
+	<dd class="tag-see">
+        <ul>
+            <li><a href="XV.Workspace.html">XV.Workspace</a></li>
+        
+            <li><a href="XV.ListRelationsEditorBox.html">XV.ListRelationsEditorBox</a></li>
+        </ul>
+	</dd>
 	
 	
 	
@@ -106,76 +116,6 @@
     
     
     
-        <h3 class="subsection-title">Classes</h3>
-        
-        <dl>
-            <dt><a href="XV.AssignmentBox.html">AssignmentBox</a></dt>
-            <dd></dd>
-        
-            <dt><a href="XV.CommentBox.html">CommentBox</a></dt>
-            <dd></dd>
-        
-            <dt><a href="XV.CommentBoxItem.html">CommentBoxItem</a></dt>
-            <dd></dd>
-        
-            <dt><a href="XV.DocumentListRelations.html">DocumentListRelations</a></dt>
-            <dd></dd>
-        
-            <dt><a href="XV.DocumentsBox.html">DocumentsBox</a></dt>
-            <dd></dd>
-        
-            <dt><a href="XV.EditorMixin.html">EditorMixin</a></dt>
-            <dd></dd>
-        
-            <dt><a href="XV.ExtensionsMixin.html">ExtensionsMixin</a></dt>
-            <dd></dd>
-        
-            <dt><a href="XV.Groupbox.html">Groupbox</a></dt>
-            <dd></dd>
-        
-            <dt><a href="XV.List.html">List</a></dt>
-            <dd></dd>
-        
-            <dt><a href="XV.ListAttr.html">ListAttr</a></dt>
-            <dd></dd>
-        
-            <dt><a href="XV.ListColumn.html">ListColumn</a></dt>
-            <dd></dd>
-        
-            <dt><a href="XV.ListItem.html">ListItem</a></dt>
-            <dd></dd>
-        
-            <dt><a href="XV.ListRelations.html">ListRelations</a></dt>
-            <dd></dd>
-        
-            <dt><a href="XV.ListRelationsBox.html">ListRelationsBox</a></dt>
-            <dd></dd>
-        
-            <dt><a href="XV.ListRelationsEditorBox.html">ListRelationsEditorBox</a></dt>
-            <dd></dd>
-        
-            <dt><a href="XV.Navigator.html">Navigator</a></dt>
-            <dd></dd>
-        
-            <dt><a href="XV.RelationsEditor.html">RelationsEditor</a></dt>
-            <dd></dd>
-        
-            <dt><a href="XV.ScrollableGroupbox.html">ScrollableGroupbox</a></dt>
-            <dd></dd>
-        
-            <dt><a href="XV.Scroller.html">Scroller</a></dt>
-            <dd></dd>
-        
-            <dt><a href="XV.SearchContainer.html">SearchContainer</a></dt>
-            <dd></dd>
-        
-            <dt><a href="XV.Workspace.html">Workspace</a></dt>
-            <dd></dd>
-        
-            <dt><a href="XV.WorkspaceContainer.html">WorkspaceContainer</a></dt>
-            <dd></dd>
-        </dl>
-    
     
     
     
@@ -187,7 +127,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="appendExtension"><span class="type-signature">&lt;static> </span>appendExtension</h4>
+    <h4 class="name" id="attributesChanged"><span class="type-signature">&lt;static> </span>attributesChanged</h4>
     
     
 </dt>
@@ -195,12 +135,8 @@
     
     
     <div class="description">
-        Add component or array of component view(s) to a view class that
-      has implemented the `extensionsMixin`.
-
-      Examples of classes that support extensions are:
-`Workspace`
-`ParameterWidget`
+        Updates all child controls on the editor where the name of
+      the control matches the name of an attribute on the model.
     </div>
     
     
@@ -232,12 +168,12 @@
 	
         <tr>
             
-                <td class="name"><code>Class</code></td>
+                <td class="name"><code>model</code></td>
             
             
             <td class="type">
             
-                        String
+                        XM.Model
                         
                     
             </td>
@@ -246,22 +182,19 @@
             
             
             
-            <td class="description last">name</td>
+            <td class="description last"></td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>Component(s)</code></td>
+                <td class="name"><code>options</code></td>
             
             
             <td class="type">
             
                         Object
-                         | 
-                    
-                        Array
                         
                     
             </td>
@@ -298,7 +231,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>core.js, line 32</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>workspace.js, line 32</li></ul></dd>
 	
     
     
@@ -340,7 +273,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Wed Oct 03 2012 14:06:00 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Wed Oct 03 2012 14:06:01 GMT-0400 (EDT)
 </footer>
 
 <script> sh_highlightDocument(); </script>

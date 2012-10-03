@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: ExtensionsMixin</title>
+    <title>JSDoc: Class: SearchContainer</title>
     
     <script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
     <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: ExtensionsMixin</h1>
+    <h1 class="page-title">Class: SearchContainer</h1>
     
     
 
@@ -29,10 +29,8 @@
     <h2>
         <span class="ancestors"><a href="XV.html">XV</a>.</span>
     
-    ExtensionsMixin
+    SearchContainer
     </h2>
-    
-        <div class="class-description">A mixin that allows the components of a class to be extended.</div>
     
 </header>  
 
@@ -43,12 +41,18 @@
     
         
 <dt>
-    <h4 class="name" id="ExtensionsMixin"><span class="type-signature"></span>new ExtensionsMixin</h4>
+    <h4 class="name" id="SearchContainer"><span class="type-signature"></span>new SearchContainer</h4>
     
     
 </dt>
 <dd>
     
+    
+    <div class="description">
+        High-level container showing a list of searchable items with the advanced
+    search widget available. Used for attaching documents, searching for
+    relational widget values, etc.
+    </div>
     
     
     
@@ -75,7 +79,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>core.js, line 64</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>search.js, line 16</li></ul></dd>
 	
     
     
@@ -116,7 +120,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="processExtensions"><span class="type-signature">&lt;static> </span>processExtensions</h4>
+    <h4 class="name" id="setList"><span class="type-signature">&lt;static> </span>setList</h4>
     
     
 </dt>
@@ -124,8 +128,11 @@
     
     
     <div class="description">
-        This function should be run in the create function of a class
-      using this mixin. It will add any extensions to the class at run time.
+        Set the search list. Options are
+list: class name
+searchText: initial text to search on
+callback: function to call when selection is made
+          that passes back the selected model.
     </div>
     
     
@@ -153,7 +160,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>core.js, line 71</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>search.js, line 121</li></ul></dd>
 	
     
     

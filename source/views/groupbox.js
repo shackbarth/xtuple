@@ -9,8 +9,8 @@ white:true*/
     The groupbox holds the widgets in each panel of the workspace.
 
     @class
-    @alias Groupbox
-    @see ScrollableGroupbox
+    @alias XV.Groupbox
+    @see XV.ScrollableGroupbox
    */
   var groupBox = {
     name: "XV.Groupbox",
@@ -26,8 +26,8 @@ white:true*/
     A variant of the groupbox that automatically includes a scroller
 
     @class
-    @alias ScrollableGroupbox
-    @see Groupbox
+    @alias XV.ScrollableGroupbox
+    @see XV.Groupbox
    */
   var scrollableGroupbox = {
     name: "XV.ScrollableGroupbox",

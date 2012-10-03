@@ -5,7 +5,15 @@ trailing:true white:true*/
 
 (function () {
 
-  enyo.kind({
+  /**
+    High-level container showing a list of searchable items with the advanced
+    search widget available. Used for attaching documents, searching for
+    relational widget values, etc.
+
+    @class
+    @alias XV.SearchContainer
+  */
+  var searchContainer = {
     name: "XV.SearchContainer",
     kind: "Panels",
     classes: "app enyo-unselectable",
@@ -50,7 +58,7 @@ trailing:true white:true*/
     itemTap: function (inSender, inEvent) {
       var list = inEvent.list,
         value = list ? list.getModel(inEvent.index) : null;
-        
+
       if (value) {
         if (this.callback) { this.callback(value); }
         this.close();
@@ -137,6 +145,7 @@ trailing:true white:true*/
       this.render();
       this.$.searchInput.setValue(searchText || "");
     }
-  });
+  };
+  enyo.kind(searchContainer);
 
 }());

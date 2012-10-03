@@ -13,7 +13,7 @@ trailing:true white:true*/
     List to attach to workspaces to present related data.
 
     @class
-    @alias ListRelations
+    @alias XV.ListRelations
     @extends enyo.List
   */
   var listRelations = {

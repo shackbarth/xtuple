@@ -9,8 +9,8 @@ trailing:true white:true*/
     Use this class to define the editor for `XV.ListRelationsEditorBox`.
 
     @class
-    @alias RelationsEditor
-    @see ListRelationsEditorBox
+    @alias XV.RelationsEditor
+    @see XV.ListRelationsEditorBox
   */
   var editor = enyo.mixin(XV.EditorMixin, {
     name: "XV.RelationsEditor",
@@ -40,8 +40,8 @@ trailing:true white:true*/
     The `value` must be set to a collection of `XM.Model`.
 
     @class
-    @alias ListRelationsEditorBox
-    @see RelationsEditor
+    @alias XV.ListRelationsEditorBox
+    @see XV.RelationsEditor
   */
   var listRelationsEditorBox = {
     name: "XV.ListRelationsEditorBox",

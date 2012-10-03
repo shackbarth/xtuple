@@ -11,7 +11,7 @@ trailing:true white:true*/
     The `value` must be set to a collection of `XM.Info` models.
 
     @class
-    @alias ListRelationsBox
+    @alias XV.ListRelationsBox
   */
   var listRelationsBox = {
     name: "XV.ListRelationsBox",

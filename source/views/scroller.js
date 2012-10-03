@@ -4,11 +4,18 @@ white:true*/
 /*global enyo:true, XT:true, XV:true */
 
 (function () {
-  
-  enyo.kind({
+
+  /**
+    Just a scroller with our css.
+
+    @class
+    @alias XV.Scroller
+   */
+  var scroller = {
     name: "XV.Scroller",
     kind: "Scroller",
     classes: "xv-scroller"
-  });
-  
+  };
+  enyo.kind(scroller);
+
 }());

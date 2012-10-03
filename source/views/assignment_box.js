@@ -12,8 +12,8 @@ white:true*/
    are associated with a role.
 
    @class
-   @alias AssignmentBox
-   @extends ScrollableGroupbox
+   @alias XV.AssignmentBox
+   @extends XV.ScrollableGroupbox
    */
   var assignmentBox = {
     name: "XV.AssignmentBox",

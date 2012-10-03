@@ -11,7 +11,7 @@ trailing:true white:true*/
     High-level container of all business object lists.
 
     @class
-    @alias Navigator
+    @alias XV.Navigator
    */
   var navigator = {
     name: "XV.Navigator",

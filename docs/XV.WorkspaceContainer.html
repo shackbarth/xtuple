@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: ExtensionsMixin</title>
+    <title>JSDoc: Class: WorkspaceContainer</title>
     
     <script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
     <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: ExtensionsMixin</h1>
+    <h1 class="page-title">Class: WorkspaceContainer</h1>
     
     
 
@@ -29,10 +29,8 @@
     <h2>
         <span class="ancestors"><a href="XV.html">XV</a>.</span>
     
-    ExtensionsMixin
+    WorkspaceContainer
     </h2>
-    
-        <div class="class-description">A mixin that allows the components of a class to be extended.</div>
     
 </header>  
 
@@ -43,7 +41,7 @@
     
         
 <dt>
-    <h4 class="name" id="ExtensionsMixin"><span class="type-signature"></span>new ExtensionsMixin</h4>
+    <h4 class="name" id="WorkspaceContainer"><span class="type-signature"></span>new WorkspaceContainer</h4>
     
     
 </dt>
@@ -75,11 +73,18 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>core.js, line 64</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>workspace.js, line 323</li></ul></dd>
 	
     
     
 	
+	
+	<dt class="tag-see">See:</dt>
+	<dd class="tag-see">
+        <ul>
+            <li><a href="XV.Workspace.html">XV.Workspace</a></li>
+        </ul>
+	</dd>
 	
 	
 	
@@ -116,7 +121,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="processExtensions"><span class="type-signature">&lt;static> </span>processExtensions</h4>
+    <h4 class="name" id="setWorkspace"><span class="type-signature">&lt;static> </span>setWorkspace</h4>
     
     
 </dt>
@@ -124,8 +129,13 @@
     
     
     <div class="description">
-        This function should be run in the create function of a class
-      using this mixin. It will add any extensions to the class at run time.
+        Loads a workspace into the workspace container.
+      Accepts the following options:
+workspace: class name (required)
+id: record id to load. If none, a new record will be created.
+attributes: default attribute values for a new record.
+callback: function to call on a successful save. Passes the
+          new or updated model as an argument.
     </div>
     
     
@@ -153,7 +163,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>core.js, line 71</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>workspace.js, line 513</li></ul></dd>
 	
     
     

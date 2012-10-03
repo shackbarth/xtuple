@@ -8,7 +8,14 @@ trailing:true white:true*/
   var SAVE_CLOSE = 2;
   var SAVE_NEW = 3;
 
+  /**
+    Common functionality to Workspace and ListRelationsEditorBox
 
+    @class
+    @alias XV.EditorMixin
+    @see XV.Workspace
+    @see XV.ListRelationsEditorBox
+   */
   XV.EditorMixin = {
     controlValueChanged: function (inSender, inEvent) {
       var attrs = {};
@@ -76,9 +83,11 @@ trailing:true white:true*/
   /**
     @class
 
+    @alias XV.Workspace
     @extends enyo.FittableRows
     @extends XV.EditorMixin
     @extends XV.ExtensionsMixin
+    @see XV.WorkspaceContainer
   */
   var workspaceHash = enyo.mixin(XV.EditorMixin, {
     name: "XV.Workspace",
@@ -305,7 +314,13 @@ trailing:true white:true*/
   workspaceHash = enyo.mixin(workspaceHash, XV.ExtensionsMixin);
   enyo.kind(workspaceHash);
 
-  enyo.kind({
+  /**
+
+    @class
+    @alias XV.WorkspaceContainer
+    @see XV.Workspace
+   */
+  var workspaceContainer = {
     name: "XV.WorkspaceContainer",
     kind: "Panels",
     arrangerKind: "CollapsingArranger",
@@ -607,6 +622,7 @@ trailing:true white:true*/
         this.save();
       }
     }
-  });
+  };
+  enyo.kind(workspaceContainer);
 
 }());

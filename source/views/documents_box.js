@@ -9,7 +9,7 @@ trailing:true white:true*/
 
 
     @class
-    @alias DocumentListRelations
+    @alias XV.DocumentListRelations
    */
   var documentListRelations = {
     name: "XV.DocumentListRelations",
@@ -124,7 +124,7 @@ trailing:true white:true*/
   /**
 
     @class
-    @alias DocumentsBox
+    @alias XV.DocumentsBox
   */
   var documentsBox = {
     name: "XV.DocumentsBox",

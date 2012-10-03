@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: ExtensionsMixin</title>
+    <title>JSDoc: Class: ListRelationsEditorBox</title>
     
     <script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
     <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: ExtensionsMixin</h1>
+    <h1 class="page-title">Class: ListRelationsEditorBox</h1>
     
     
 
@@ -29,10 +29,8 @@
     <h2>
         <span class="ancestors"><a href="XV.html">XV</a>.</span>
     
-    ExtensionsMixin
+    ListRelationsEditorBox
     </h2>
-    
-        <div class="class-description">A mixin that allows the components of a class to be extended.</div>
     
 </header>  
 
@@ -43,80 +41,7 @@
     
         
 <dt>
-    <h4 class="name" id="ExtensionsMixin"><span class="type-signature"></span>new ExtensionsMixin</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>core.js, line 64</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-    
-    </div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        <h3 class="subsection-title">Methods</h3>
-        
-        <dl>
-            
-<dt>
-    <h4 class="name" id="processExtensions"><span class="type-signature">&lt;static> </span>processExtensions</h4>
+    <h4 class="name" id="ListRelationsEditorBox"><span class="type-signature"></span>new ListRelationsEditorBox</h4>
     
     
 </dt>
@@ -124,8 +49,9 @@
     
     
     <div class="description">
-        This function should be run in the create function of a class
-      using this mixin. It will add any extensions to the class at run time.
+        Must include a component called `list`.
+    List must be of sub-kind `XV.ListRelations`.
+    The `value` must be set to a collection of `XM.Model`.
     </div>
     
     
@@ -153,11 +79,18 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>core.js, line 71</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>list_relations_editor_box.js, line 46</li></ul></dd>
 	
     
     
 	
+	
+	<dt class="tag-see">See:</dt>
+	<dd class="tag-see">
+        <ul>
+            <li><a href="XV.RelationsEditor.html">XV.RelationsEditor</a></li>
+        </ul>
+	</dd>
 	
 	
 	
@@ -173,7 +106,21 @@
     
 </dd>
 
-        </dl>
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
