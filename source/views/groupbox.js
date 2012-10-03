@@ -4,17 +4,32 @@ white:true*/
 /*global enyo:true, XT:true, XV:true */
 
 (function () {
-  
-  enyo.kind({
+
+  /**
+    The groupbox holds the widgets in each panel of the workspace.
+
+    @class
+    @alias Groupbox
+    @see ScrollableGroupbox
+   */
+  var groupBox = {
     name: "XV.Groupbox",
     kind: "FittableRows",
     classes: "xv-groupbox",
     published: {
       title: "_overview".loc()
     }
-  });
+  };
+  enyo.kind(groupBox);
 
-  enyo.kind({
+  /**
+    A variant of the groupbox that automatically includes a scroller
+
+    @class
+    @alias ScrollableGroupbox
+    @see Groupbox
+   */
+  var scrollableGroupbox = {
     name: "XV.ScrollableGroupbox",
     kind: "Scroller",
     horizontal: "hidden",
@@ -22,6 +37,7 @@ white:true*/
     published: {
       title: "_overview".loc()
     }
-  });
+  };
+  enyo.kind(scrollableGroupbox);
 
 }());

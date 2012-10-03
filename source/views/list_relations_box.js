@@ -9,8 +9,11 @@ trailing:true white:true*/
     Must include a component called `list`.
     List must be of sub-kind `XV.ListRelations`.
     The `value` must be set to a collection of `XM.Info` models.
+
+    @class
+    @alias ListRelationsBox
   */
-  enyo.kind({
+  var listRelationsBox = {
     name: "XV.ListRelationsBox",
     kind: "XV.Groupbox",
     classes: "panel",
@@ -231,6 +234,7 @@ trailing:true white:true*/
       this.$.newButton.setDisabled(canNotCreate);
       if (canAttach) { this.$.attachButton.setDisabled(canNotUpdate); }
     }
-  });
+  };
+  enyo.kind(listRelationsBox);
 
 }());

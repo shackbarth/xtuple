@@ -13,7 +13,7 @@ white:true*/
 
    @class
    @alias AssignmentBox
-   @extends XV.ScrollableGroupbox
+   @extends ScrollableGroupbox
    */
   var assignmentBox = {
     name: "XV.AssignmentBox",
@@ -43,8 +43,8 @@ white:true*/
      *
      * @property {Array} segments
      * We allow the assignable checkboxes to be grouped by segment, such as module.
-     * If this array is length one then there is no segmentation, and the one value
-     * of the array becomes the header of the box.
+     *    If this array is length one then there is no segmentation, and the one value
+     *    of the array becomes the header of the box.
      *
      * @property {String} title
      * Used by the workspace to title the menu item for the box.
@@ -58,7 +58,7 @@ white:true*/
      *
      * @property {Boolean} translateLabels
      * We want to translate the labels if they are hardcoded into our system (such as privileges)
-     * but not if they are user-defined.
+     *    but not if they are user-defined.
      *
      * @property {String} type
      * Camelized name of assignable model. Used for drilling down from the assignment

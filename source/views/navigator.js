@@ -7,10 +7,27 @@ trailing:true white:true*/
   var MODULE_MENU = 0;
   var PANEL_MENU = 1;
 
-  enyo.kind({
+  /**
+    High-level container of all business object lists.
+
+    @class
+    @alias Navigator
+   */
+  var navigator = {
     name: "XV.Navigator",
     kind: "Panels",
     classes: "app enyo-unselectable",
+    /**
+      Published fields
+      @type {Object}
+
+      @property {Array} modules A DOM-free representation of all of the modules
+         contained in the navigator. The details of these module objects will
+         inform the creation of the panel compontents.
+
+      @property {Object} panelCache A hashmap of cached panels where the key is
+         the global ID of the panel and the value is the enyo panel component.
+    */
     published: {
       modules: [],
       panelCache: {}
@@ -94,10 +111,18 @@ trailing:true white:true*/
         ]}
       ]}
     ],
+    /**
+      Keeps track of whether any list has already been fetched, to avoid unnecessary
+      refetching.
+     */
     fetched: {},
     activate: function () {
       this.setMenuPanel(MODULE_MENU);
     },
+    /**
+      The back button is a logout button if you're at the root menu. Otherwise it's a
+      back button that takes you to the root menu.
+     */
     backTapped: function () {
       var index = this.$.menuPanels.getIndex();
       if (index === MODULE_MENU) {
@@ -107,6 +132,10 @@ trailing:true white:true*/
         this.setMenuPanel(MODULE_MENU);
       }
     },
+    /**
+      The navigator only keeps three panels in the DOM at a time. Anything extra panels
+      will be periodically cached into the panelCache published field and removed from the DOM.
+     */
     cachePanels: function () {
       var contentPanels = this.$.contentPanels,
         panelToCache,
@@ -141,6 +170,14 @@ trailing:true white:true*/
     getSelectedModule: function (index) {
       return this._selectedModule;
     },
+    /**
+      Exports the contents of a list to CSV. Note that it will export the entire
+      list, not just the part that's been lazy-loaded. Goes to the server for this.
+      Avoids websockets or AJAX because the server will prompt the browser to download
+      the file by setting the Content-Type of the response, which is not possible with
+      those technologies.
+
+     */
     exportList: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),
         coll = list.getValue(),
@@ -151,6 +188,9 @@ trailing:true white:true*/
     errorOk: function () {
       this.$.errorPopup.hide();
     },
+    /**
+      Fetch a list.
+     */
     fetch: function (options) {
       options = options ? _.clone(options) : {};
       var index = options.index || this.$.contentPanels.getIndex(),
@@ -227,6 +267,9 @@ trailing:true white:true*/
       this.fetched = {};
       this.fetch();
     },
+    /**
+      Drills down into a workspace if a user clicks a list item.
+     */
     itemTap: function (inSender, inEvent) {
       var list = inEvent.list,
         workspace = list ? list.getWorkspace() : null,
@@ -309,6 +352,10 @@ trailing:true white:true*/
       this._modules = JSON.parse(JSON.stringify(modules));
       this.render();
     },
+    /**
+      Fired when the user clicks the "New" button. Takes the user to a workspace
+      backed by an empty object of the type displayed in the current list.
+     */
     newRecord: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),
         workspace = list instanceof XV.List ? list.getWorkspace() : null,
@@ -338,6 +385,10 @@ trailing:true white:true*/
     requery: function (inSender, inEvent) {
       this.fetch();
     },
+    /**
+      Renders a list and performs all the necessary auxilliary work such as hiding/showing
+      the advanced search icon if appropriate. Called when a user chooses a menu item.
+     */
     setContentPanel: function (index) {
       var contentPanels = this.$.contentPanels,
         module = this.getSelectedModule(),
@@ -421,8 +472,10 @@ trailing:true white:true*/
       if (panel.fetch && !this.fetched[panelIndex]) {
         this.fetch();
       }
-
     },
+    /**
+      The header content typically describes to the user the particular query filter in effect.
+     */
     setHeaderContent: function (content) {
       this.$.header.setContent(content);
     },
@@ -448,6 +501,9 @@ trailing:true white:true*/
         }
       }
     },
+    /**
+      Renders a list of modules from the root menu
+     */
     setupModuleMenuItem: function (inSender, inEvent) {
       var index = inEvent.index,
         label = this.modules[index].label,
@@ -456,6 +512,10 @@ trailing:true white:true*/
       this.$.moduleItem.addRemoveClass("onyx-selected", isSelected);
       if (isSelected) { this.setModule(index); }
     },
+    /**
+      Renders the leftbar list of objects within a given module. This function
+      is also called when a leftbar item is tapped, per enyo's List conventions.
+     */
     setupPanelMenuItem: function (inSender, inEvent) {
       var module = this.getSelectedModule(),
         index = inEvent.index,
@@ -482,27 +542,49 @@ trailing:true white:true*/
       this.$.listItem.addRemoveClass("onyx-selected", isSelected);
       if (isSelected) { this.setContentPanel(index); }
     },
+    /**
+      Display the history panel.
+     */
     showHistory: function (inSender, inEvent) {
       var panel = {name: 'history', show: true};
       this.doNavigatorEvent(panel);
     },
+    /**
+      Display the advanced search panel
+     */
     showParameters: function (inSender, inEvent) {
       var panel = this.$.contentPanels.getActive();
       this.doNavigatorEvent({name: panel.name, show: true});
     },
+    /**
+      Displays the My Account popup
+     */
     showMyAccount: function (inSender, inEvent) {
       this.$.myAccountPopup.show();
     },
+    /**
+      Pops up the logout popup to verify that a user really wants to exit
+     */
     warnLogout: function () {
       this.$.logoutPopup.show();
     },
+    /**
+      Called if the user does not really want to log out. Just closes the logout popup.
+     */
     closeLogoutPopup: function () {
       this.$.logoutPopup.hide();
     },
+    /**
+      Actually logs the user out if they confirm that's what they want to do.
+     */
     logout: function () {
       this.$.logoutPopup.hide();
       XT.session.logout();
     },
+    /**
+      Determines whether the advanced search or the history icon (or neither) is
+      lit.
+     */
     setActiveIconButton: function (buttonName) {
       var activeIconButton = null;
       // Null deactivates both
@@ -513,7 +595,7 @@ trailing:true white:true*/
       }
       this.$.iconButtonGroup.setActive(activeIconButton);
     }
-
-  });
+  };
+  enyo.kind(navigator);
 
 }());

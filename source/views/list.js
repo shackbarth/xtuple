@@ -8,29 +8,58 @@ trailing:true white:true*/
   var ROWS_PER_FETCH = 50;
   var FETCH_TRIGGER = 100;
 
-  enyo.kind({
+  /**
+
+    @class
+    @alias ListItem
+    @see List
+   */
+  var listItem = {
     name: "XV.ListItem",
     classes: "xv-list-item",
     ontap: "itemTap",
     setSelected: function (inSelected) {
       this.addRemoveClass("item-selected", inSelected);
     }
-  });
+  };
+  enyo.kind(listItem);
 
-  enyo.kind({
+  /**
+
+    @class
+    @alias ListColumn
+    @see List
+   */
+  var listColumn = {
     name: "XV.ListColumn",
     classes: "xv-list-column"
-  });
+  };
+  enyo.kind(listColumn);
 
-  enyo.kind({
+  /**
+
+    @class
+    @alias ListAttr
+    @see List
+   */
+  var listAttr = {
     name: "XV.ListAttr",
     classes: "xv-list-attr",
     published: {
       attr: ""
     }
-  });
+  };
+  enyo.kind(listAttr);
 
-  enyo.kind({
+  /**
+
+    @class
+    @alias List
+    @see ListItem
+    @see ListColumn
+    @see ListAttr
+   */
+  var list = {
     name: "XV.List",
     kind: "List",
     classes: "xv-list",
@@ -235,7 +264,7 @@ trailing:true white:true*/
         this.queryChanged();
       }
     }
-
-  });
+  };
+  enyo.kind(list);
 
 }());
