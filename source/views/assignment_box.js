@@ -3,20 +3,19 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true
 white:true*/
 /*global enyo:true, XM:true, XV:true, XT:true, _:true */
 
-/** @module XV */
 
 (function () {
 
   /**
-   * An assignment box is a groupbox that manages the assignment of a set of
-   * available options to an object. For example, setting up the privileges that
-   * are associated with a role.
-   *
-   * @class
-   * @alias XV.AssignmentBox
-   * @extends XV.ScrollableGroupbox
+   An assignment box is a groupbox that manages the assignment of a set of
+   available options to an object. For example, setting up the privileges that
+   are associated with a role.
+
+   @class
+   @alias AssignmentBox
+   @extends XV.ScrollableGroupbox
    */
-  var enyoObj = {
+  var assignmentBox = {
     name: "XV.AssignmentBox",
     kind: "XV.ScrollableGroupbox",//"XV.Groupbox",
     classes: "xv-assignment-box",
@@ -327,6 +326,5 @@ white:true*/
       }
     }
   };
-
-  enyo.kind(enyoObj);
+  enyo.kind(assignmentBox);
 }());
