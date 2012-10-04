@@ -91,7 +91,8 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
           item = model.get(key);
           if (item) {
             this.createComponent({
-              content: model.get(key)
+              content: model.get(key),
+              model: model
             });
           }
         }
