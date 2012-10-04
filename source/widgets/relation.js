@@ -33,7 +33,8 @@ regexp:true, undef:true, trailing:true, white:true */
       onWorkspace: ""
     },
     handlers: {
-      onModelChange: "modelChanged"
+      onModelChange: "modelChanged",
+      onSelect: "itemSelected"
     },
     components: [
       {kind: "FittableColumns", components: [
@@ -44,7 +45,7 @@ regexp:true, undef:true, trailing:true, white:true */
             onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur",
             onfocus: "receiveFocus"
           },
-          {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
+          {kind: "onyx.MenuDecorator", components: [
             {kind: "onyx.IconButton", src: "assets/triangle-down-large.png",
               classes: "xv-relationwidget-icon"},
             {name: 'popupMenu', floating: true, kind: "onyx.Menu",
@@ -56,7 +57,7 @@ regexp:true, undef:true, trailing:true, white:true */
                 disabled: true}
             ]}
           ]},
-          {name: "completer", kind: "XV.Completer", onSelect: "itemSelected"}
+          {name: "completer", kind: "XV.Completer"}
         ]}
       ]},
       {name: "name", classes: "xv-relationwidget-description"},
@@ -109,7 +110,78 @@ regexp:true, undef:true, trailing:true, white:true */
     getValueToString: function () {
       return this.value.get(this.getKeyAttribute());
     },
+    keyDown: function (inSender, inEvent) {
+      // If tabbed out...
+      inEvent.activator = this.$.decorator;
+      if (inEvent.keyCode === 9) {
+        this.$.completer.waterfall("onRequestHideMenu", inEvent);
+        this.autocomplete();
+      }
+    },
+    keyUp: function (inSender, inEvent) {
+      var query,
+        key = this.getKeyAttribute(),
+        attr = this.getValue() ? this.getValue().get(key) : "",
+        value = this.$.input.getValue(),
+        completer = this.$.completer;
+      inEvent.activator = this.$.decorator;
+
+      // Look up if value changed
+      if (value && value !== attr &&
+          inEvent.keyCode !== 9) {
+        query = {
+          parameters: [{
+            attribute: key,
+            operator: "BEGINS_WITH",
+            value: value
+          }],
+          rowLimit: 10,
+          orderBy: [{
+            attribute: key
+          }]
+        };
+        this._collection.fetch({
+          success: enyo.bind(this, "_collectionFetchSuccess"),
+          query: query
+        });
+      } else {
+        completer.waterfall("onRequestHideMenu", inEvent);
+      }
+    },
     itemSelected: function (inSender, inEvent) {
+      if (inSender.name === 'completer') {
+        this.relationSelected(inSender, inEvent);
+      } else {
+        this.menuItemSelected(inSender, inEvent);
+      }
+      return true;
+    },
+    labelChanged: function () {
+      var label = (this.getLabel() || ("_" + this.attr || "").loc());
+      this.$.label.setContent(label + ":");
+    },
+    listChanged: function () {
+      var list = this.getList(),
+        Collection,
+        workspace;
+      delete this._List;
+      delete this._Workspace;
+
+      // Get List class
+      if (!list) { return; }
+      this._List = XT.getObjectByName(list);
+
+      // Get Workspace class
+      workspace = this._List.prototype.getWorkspace();
+      this._Workspace = workspace ? XT.getObjectByName(workspace) : null;
+
+      // Setup collection instance
+      Collection = this.getCollection() ?
+        XT.getObjectByName(this.getCollection()) : null;
+      if (!Collection) { return; }
+      this._collection = new Collection();
+    },
+    menuItemSelected: function (inSender, inEvent) {
       var that = this,
         menuItem = inEvent.originator,
         list = this.getList(),
@@ -156,69 +228,6 @@ regexp:true, undef:true, trailing:true, white:true */
         break;
       }
     },
-    keyDown: function (inSender, inEvent) {
-      // If tabbed out...
-      inEvent.activator = this.$.decorator;
-      if (inEvent.keyCode === 9) {
-        this.$.completer.waterfall("onRequestHideMenu", inEvent);
-        this.autocomplete();
-      }
-    },
-    keyUp: function (inSender, inEvent) {
-      var query,
-        key = this.getKeyAttribute(),
-        attr = this.getValue() ? this.getValue().get(key) : "",
-        value = this.$.input.getValue(),
-        completer = this.$.completer;
-      inEvent.activator = this.$.decorator;
-
-      // Look up if value changed
-      if (value && value !== attr &&
-          inEvent.keyCode !== 9) {
-        query = {
-          parameters: [{
-            attribute: key,
-            operator: "BEGINS_WITH",
-            value: value
-          }],
-          rowLimit: 10,
-          orderBy: [{
-            attribute: key
-          }]
-        };
-        this._collection.fetch({
-          success: enyo.bind(this, "_collectionFetchSuccess"),
-          query: query
-        });
-      } else {
-        completer.waterfall("onRequestHideMenu", inEvent);
-      }
-    },
-    labelChanged: function () {
-      var label = (this.getLabel() || ("_" + this.attr || "").loc());
-      this.$.label.setContent(label + ":");
-    },
-    listChanged: function () {
-      var list = this.getList(),
-        Collection,
-        workspace;
-      delete this._List;
-      delete this._Workspace;
-
-      // Get List class
-      if (!list) { return; }
-      this._List = XT.getObjectByName(list);
-
-      // Get Workspace class
-      workspace = this._List.prototype.getWorkspace();
-      this._Workspace = workspace ? XT.getObjectByName(workspace) : null;
-
-      // Setup collection instance
-      Collection = this.getCollection() ?
-        XT.getObjectByName(this.getCollection()) : null;
-      if (!Collection) { return; }
-      this._collection = new Collection();
-    },
     modelChanged: function (inSender, inEvent) {
       var that = this,
         List = this._List,
@@ -247,8 +256,10 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     receiveFocus: function (inSender, inEvent) {
       this._hasFocus = true;
+      this._relationSelected = false;
     },
     relationSelected: function (inSender, inEvent) {
+      this._relationSelected = true;
       inEvent.activator = this.$.decorator;
       this.setValue(inEvent.originator.model);
       this.$.completer.waterfall("onRequestHideMenu", inEvent);
@@ -293,10 +304,7 @@ regexp:true, undef:true, trailing:true, white:true */
         options = {
           success: function () {
             that.setValue(value);
-          },
-          //error: function () {
-          //  console.log("error fetching relation model");
-          //}
+          }
         };
         this.value = value;
         // XXX shouldn't we pass the options in here?
@@ -351,8 +359,11 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     /** @private */
     _fetchSuccess: function () {
-      var value = this._collection.length ? this._collection.models[0] : null;
+      if (this._relationSelected) { return; }
+      var value = this._collection.length ? this._collection.models[0] : null,
+        target = enyo.dispatcher.captureTarget;
       this.setValue(value);
+      enyo.dispatcher.captureTarget = target;
     }
 
   });
