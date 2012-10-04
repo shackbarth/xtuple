@@ -15,7 +15,7 @@
 	url = git@github.com:xtuple/backbone-x.git
 [submodule "lib/tools"]
 	path = lib/tools
-	url = git@github.com:xtuple/tools.git
+	url = git://github.com/shackbarth/tools.git
 [submodule "lib/models"]
 	path = lib/models
 	url = git@github.com:xtuple/models.git
