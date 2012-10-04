@@ -37,6 +37,23 @@ white:true*/
       ]}
     ],
     /**
+      A parameter widget has been passed to us in an event. Make sure that the payload of the
+      event gets added to our pullout items.
+     */
+    addPulloutItem: function (inSender, inEvent) {
+      var item = {
+        name: inEvent.name,
+        showing: false
+      };
+      if (inEvent.getParameterWidget) {
+        item.kind = inEvent.getParameterWidget();
+        if (item.kind) {
+          item.container = this.$.pulloutItems;
+          this.createComponent(item);
+        } // else there's no parameter widget for this business object
+      }
+    },
+    /**
       Tries to pre-populate the history list from a cookie if present
      */
     create: function () {

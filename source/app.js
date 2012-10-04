@@ -33,20 +33,20 @@ white:true*/
       { name: "pullout", kind: "XV.Pullout", onAnimateFinish: "pulloutAnimateFinish" }
     ],
     state: UNINITIALIZED,
+    /**
+      Passes the pullout payload straight from the sender (presumably the list
+      containing the pullout parameter) to the pullout, who will deal with
+      adding it.
+     */
     addPulloutItem: function (inSender, inEvent) {
-      var item = {
-        name: inEvent.name,
-        showing: false
-      };
-      if (inEvent.getParameterWidget) {
-        item.kind = inEvent.getParameterWidget();
+      if (!this.$.pullout) {
+        // XXX: because postbooks is defined before pullout, the events thrown by the postbooks
+        // creation can't really be dealt with yet. Luckily none of the first 3 pre-loaded panels
+        // have an associated parameter widget. We'll have to tackle this if we want to put a
+        // parameter search on user accounts or user account roles.
+        return;
       }
-      if (item.kind) {
-        if (this._pulloutItems === undefined) {
-          this._pulloutItems = [];
-        }
-        this._pulloutItems.push(item);
-      }
+      this.$.pullout.addPulloutItem(inSender, inEvent);
     },
     create: function () {
       this.inherited(arguments);
@@ -186,14 +186,6 @@ white:true*/
 
       // 5. Finish up
       } else if (this.state === LOADING_APP_DATA) {
-        // Create pullout items
-        pulloutItems = this._pulloutItems || [];
-        for (i = 0; i < pulloutItems.length; i++) {
-          item = pulloutItems[i];
-          item.container = this.$.pullout.$.pulloutItems;
-          this.$.pullout.createComponent(item);
-        }
-         
         // Go to the navigator
         this.state = RUNNING;
         XT.app.$.postbooks.next();

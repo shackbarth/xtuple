@@ -268,7 +268,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name", name: "name"},
             // XXX the disabled flag here doesn't seem to work
             {kind: "XV.InputWidget", attr: "description", name: "description", disabled: true},
-            {kind: "XV.FileInputWidget", name: "file", attr: "data"}
+            {kind: "XV.FileInput", name: "file", attr: "data"}
           ]}
         ]}
       ]}
@@ -305,7 +305,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name", name: "name"},
             // XXX the disabled flag here doesn't seem to work
             {kind: "XV.InputWidget", attr: "description", name: "description", disabled: true},
-            {kind: "XV.FileInputWidget", name: "file", attr: "data"}
+            {kind: "XV.FileInput", name: "file", attr: "data"}
           ]}
         ]},
         {kind: "XV.Groupbox", name: "previewPanel", components: [
