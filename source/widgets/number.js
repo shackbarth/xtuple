@@ -4,7 +4,15 @@ regexp:true, undef:true, trailing:true, white:true */
 
 (function () {
 
-  enyo.kind({
+  /**
+    An input field built for dealing with numbers
+
+    @class
+    @name XV.Number
+    @extends XV.Input
+    @see XV.NumberWidget
+   */
+  enyo.kind(/** @lends XV.Number */{
     name: "XV.Number",
     kind: "XV.Input",
     published: {
@@ -24,7 +32,14 @@ regexp:true, undef:true, trailing:true, white:true */
     }
   });
 
-  enyo.kind({
+  /**
+    An input with styled label and decorator built for dealing with numbers
+
+    @class
+    @name XV.NumberWidget
+    @extends XV.Number
+   */
+  enyo.kind(/** @lends XV.NumberWidget */{
     name: "XV.NumberWidget",
     kind: "XV.Number",
     classes: "xv-inputwidget xv-numberwidget",

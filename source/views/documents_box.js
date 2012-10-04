@@ -5,7 +5,13 @@ trailing:true white:true*/
 
 (function () {
 
-  enyo.kind({
+  /**
+
+
+    @class
+    @name XV.DocumentListRelations
+   */
+  enyo.kind(/** @lends XV.DocumentListRelations */{
     name: "XV.DocumentListRelations",
     kind: "XV.ListRelations",
     parentKey: "account",
@@ -114,7 +120,12 @@ trailing:true white:true*/
     }
   });
 
-  enyo.kind({
+  /**
+
+    @class
+    @name XV.DocumentsBox
+  */
+  enyo.kind(/** @lends XV.DocumentsBox */{
     name: "XV.DocumentsBox",
     kind: "XV.ListRelationsBox",
     classes: "xv-documents-box",

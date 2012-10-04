@@ -4,7 +4,14 @@ regexp:true, undef:true, trailing:true, white:true */
 
 (function () {
 
-  enyo.kind({
+  /**
+    An input field that maintains a consistent API to be used by workspaces.
+
+    @class
+    @name XV.Input
+    @see XV.InputWidget
+   */
+  enyo.kind(/** @lends XV.Input */{
     name: "XV.Input",
     classes: "xv-input",
     published: {
@@ -73,7 +80,15 @@ regexp:true, undef:true, trailing:true, white:true */
     }
   });
 
-  enyo.kind({
+  /**
+    An input with styled label and decorator that maintains a consistent API
+    for use in a workspace.
+
+    @class
+    @name XV.InputWidget
+    @extends @XV.Input
+   */
+  enyo.kind(/** @lends XV.InputWidget */{
     name: "XV.InputWidget",
     kind: "XV.Input",
     classes: "xv-inputwidget",

@@ -5,12 +5,18 @@ trailing:true white:true*/
 
 (function () {
 
+  /**
+    XV is the global namespace for all the "xTuple Views" defined in
+    enyo-x and elsewhere
+
+    @class
+   */
   XV = {};
   XV._modelLists = {};
   XV._modelWorkspaces = {};
 
   // Class methods
-  enyo.mixin(XV, {
+  enyo.mixin(XV, /** @lends XV */{
 
     /**
       Add component or array of component view(s) to a view class that
@@ -49,15 +55,15 @@ trailing:true white:true*/
     }
 
   });
-  
+
   /**
     @class
-    
+
     A mixin that allows the components of a class to be extended.
   */
   XV.ExtensionsMixin = {
     extensions: null,
-    
+
     /**
       This function should be run in the create function of a class
       using this mixin. It will add any extensions to the class at run time.

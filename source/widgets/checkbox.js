@@ -4,7 +4,14 @@ regexp:true, undef:true, trailing:true, white:true */
 
 (function () {
 
-  enyo.kind({
+  /**
+    Checkbox
+
+    @class
+    @name XV.Checkbox
+    @see XV.CheckboxWidget
+   */
+  enyo.kind(/** @lends XV.Checkbox */{
     name: "XV.Checkbox",
     kind: "onyx.Checkbox",
     published: {
@@ -33,7 +40,14 @@ regexp:true, undef:true, trailing:true, white:true */
     }
   });
 
-  enyo.kind({
+  /**
+    Checkbox widget
+
+    @class
+    @name XV.CheckboxWidget
+    @see XV.Checkbox
+   */
+  enyo.kind(/** @lends XV.CheckboxWidget */{
     name: "XV.CheckboxWidget",
     kind: "XV.Input",
     classes: "xv-inputwidget xv-checkboxwidget",

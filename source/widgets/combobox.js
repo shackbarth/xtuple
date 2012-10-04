@@ -1,10 +1,18 @@
-/*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, trailing:true, white:true, browser:true */
 /*global XT:true, XV:true, XM:true, Backbone:true, enyo:true, _:true */
 
 (function () {
 
-  enyo.kind({
+  /**
+
+    @class
+    @name XV.Combobox
+    @extends XV.Input
+    @see XV.StateCombobox
+    @see XV.CountryCombobox
+   */
+  enyo.kind(/** @lends XV.Combobox */{
     name: "XV.Combobox",
     kind: "XV.Input",
     classes: "xv-combobox",
@@ -106,25 +114,38 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
         completer.waterfall("onRequestShowMenu", inEvent);
       }
     }
-
   });
-  
-  
+
+
   // ..........................................................
   // COUNTRY
   //
 
-  enyo.kind({
+  /**
+    A combobox backed by the XM.countries collection
+
+    @class
+    @name XV.CountryCombobox
+    @extends XV.Combobox
+   */
+  enyo.kind(/** @lends XV.CountryCombobox */{
     name: "XV.CountryCombobox",
     kind: "XV.Combobox",
     collection: "XM.countries"
   });
-  
+
   // ..........................................................
   // STATE
   //
 
-  enyo.kind({
+  /**
+    A combobox backed by the XM.states collection
+
+    @class
+    @name XV.StateCombobox
+    @extends XV.Combobox
+   */
+  enyo.kind(/** @lends XV.StateCombobox */{
     name: "XV.StateCombobox",
     kind: "XV.Combobox",
     collection: "XM.states",
@@ -159,7 +180,6 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
       }
       this.buildList();
     }
-    
   });
 
 }());

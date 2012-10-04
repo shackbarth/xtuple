@@ -4,7 +4,14 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
 
 (function () {
 
-  enyo.kind({
+  /**
+
+
+    @class
+    @name XV.Completer
+    @extends onyx.Picker
+   */
+  enyo.kind(/** @lends XV.Completer */{
     name: "XV.Completer",
     kind: "onyx.Picker",
     classes: "xv-combobox-picker",

@@ -1,19 +1,26 @@
-/*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, trailing:true, white:true */
 /*global XT:true, XM:true, enyo:true, _:true */
 
 (function () {
 
-  enyo.kind({
+  /**
+    Implements a dropdown. Unlike the {XV.RelationWidget}, the collection is stored local to the
+    widget.
+
+    @class
+    @name XV.PickerWidget
+    @see XV.Relation
+   */
+  enyo.kind(/** @lends XV.PickerWidget */{
     name: "XV.PickerWidget",
     kind: "enyo.Control",
     classes: "xv-pickerwidget",
-    events: {
+    events: /** @lends XV.PickerWidget */{
       /**
-
-        @param {Object} inEvent The payload that's attached to bubbled-up events
-        @param {XV.PickerWidget} inEvent.originator This
-        @param inEvent.value The value passed up is the key of the object and not the object itself
+        @property {Object} inEvent The payload that's attached to bubbled-up events
+        @property {XV.PickerWidget} inEvent.originator This
+        @property inEvent.value The value passed up is the key of the object and not the object itself
        */
       onValueChange: ""
     },

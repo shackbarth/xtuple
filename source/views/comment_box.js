@@ -5,7 +5,14 @@ white:true*/
 
 (function () {
 
-  enyo.kind({
+  /**
+    Represents and individual comment within the comment box.
+
+    @class
+    @name XV.CommentBoxItem
+    @see XV.CommentBox
+   */
+  enyo.kind(/** @lends XV.CommentBoxItem */{
     name: "XV.CommentBoxItem",
     classes: "xv-comment-box",
     published: {
@@ -156,7 +163,14 @@ white:true*/
     }
   });
 
-  enyo.kind({
+  /**
+    The comment box contains and manages multiple comments, represented as CommentBoxItems
+
+    @class
+    @name XV.CommentBox
+    @see XV.CommentBoxItem
+   */
+  enyo.kind(/** @lends XV.CommentBox */{
     name: "XV.CommentBox",
     kind: "XV.Groupbox",
     classes: "panel xv-comment-box",
@@ -174,7 +188,7 @@ white:true*/
         kind: "onyx.GroupboxHeader",
         content: this.getTitle()
       });
-      
+
       // Repeater
       this.createComponent({
         kind: "XV.Scroller",
@@ -187,7 +201,7 @@ white:true*/
           ]}
         ]
       });
-      
+
       // Buttons
       buttons = {kind: 'FittableColumns', classes: "xv-groupbox-buttons",
         components: [
@@ -230,5 +244,4 @@ white:true*/
       return XT.date.compare(bval, aval);
     }
   });
-
 }());

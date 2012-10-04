@@ -4,7 +4,14 @@ regexp:true, undef:true, trailing:true, white:true */
 
 (function () {
 
-  enyo.kind({
+  /**
+    Widget for managing the upload of files. Powered by an html <code>input type=file</code> tag,
+    with some HTML5 functionality.
+
+    @name XV.FileInput
+    @class
+   */
+  enyo.kind(/** @lends XV.FileInput */{
     name: "XV.FileInput",
     kind: "XV.Input",
     events: {
@@ -15,19 +22,18 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     components: [
       {name: "input", tag: "input type=file", kind: "onyx.Input",  classes: "xv-subinput", onchange: "inputChanged"},
-      {tag: "img", name: "image"},
       {name: "scrim", kind: "onyx.Scrim", showing: false, floating: true}
     ],
-    setImageSrc: function (url) {
-        this.$.image.setAttribute("src", url);
-    },
-    setValue: function (value, options) {
-      // this is a bit dicey. Generally we don't want to set the value of the widget, because
-      // setting the value of a file input with the binary data will just throw a security
-      // exception. But this function is also used as an essential part of selecting a file.
-      // In that circumstance the value is the filename and the options has no silent attribute.
-      // I use that to differentiate the appropriate times to suppress the setting of the value
 
+    /**
+      Generally we don't want to set the value of the widget, because
+      setting the value of a file input with the binary data will just throw a security
+      exception. But this function is also used as an essential part of selecting a file.
+      In that circumstance the value is the filename and the options has no silent attribute,
+      which is what's used to differentiate the appropriate times to suppress the setting of
+      the value.
+     */
+    setValue: function (value, options) {
       if (options && options.silent) {
         // don't try to update widget. Just throws a security exception if you do.
         this.value = value;
@@ -36,14 +42,14 @@ regexp:true, undef:true, trailing:true, white:true */
       }
     },
     /**
-      Turn the payload into the file instead of the filename
+      Turns the payload of the bubbled event into the file instead of the filename
+      using HTML5.
      */
     valueChange: function (inSender, inEvent) {
       if (inEvent.transformedByFileInput) {
         // we've already been here. We want to propagate up, but don't run this function again.
         return false;
       }
-
 
       // I feel bad going to the DOM like this but not that bad.
       // Some inspiration from https://github.com/JMTK/decorated-file-input
@@ -83,11 +89,6 @@ regexp:true, undef:true, trailing:true, white:true */
       // this event will be bubbled by the callback
       return true;
     }
-  });
-
-  enyo.kind({
-    name: "XV.FileInputWidget",
-    kind: "XV.FileInput"
   });
 
 }());

@@ -3,20 +3,19 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true
 white:true*/
 /*global enyo:true, XM:true, XV:true, XT:true, _:true */
 
-/** @module XV */
 
 (function () {
 
   /**
-   * An assignment box is a groupbox that manages the assignment of a set of
-   * available options to an object. For example, setting up the privileges that
-   * are associated with a role.
-   *
-   * @class
-   * @alias XV.AssignmentBox
-   * @extends XV.ScrollableGroupbox
+   An assignment box is a groupbox that manages the assignment of a set of
+   available options to an object. For example, setting up the privileges that
+   are associated with a role.
+
+   @class
+   @name XV.AssignmentBox
+   @extends XV.ScrollableGroupbox
    */
-  var enyoObj = {
+  enyo.kind(/** @lends XV.AssignmentBox */{
     name: "XV.AssignmentBox",
     kind: "XV.ScrollableGroupbox",//"XV.Groupbox",
     classes: "xv-assignment-box",
@@ -44,8 +43,8 @@ white:true*/
      *
      * @property {Array} segments
      * We allow the assignable checkboxes to be grouped by segment, such as module.
-     * If this array is length one then there is no segmentation, and the one value
-     * of the array becomes the header of the box.
+     *    If this array is length one then there is no segmentation, and the one value
+     *    of the array becomes the header of the box.
      *
      * @property {String} title
      * Used by the workspace to title the menu item for the box.
@@ -59,7 +58,7 @@ white:true*/
      *
      * @property {Boolean} translateLabels
      * We want to translate the labels if they are hardcoded into our system (such as privileges)
-     * but not if they are user-defined.
+     *    but not if they are user-defined.
      *
      * @property {String} type
      * Camelized name of assignable model. Used for drilling down from the assignment
@@ -326,7 +325,5 @@ white:true*/
         this.$.segmentRepeater.setCount(this.getSegments().length);
       }
     }
-  };
-
-  enyo.kind(enyoObj);
+  });
 }());

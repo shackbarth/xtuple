@@ -5,7 +5,14 @@ white:true*/
 
 (function () {
 
-  enyo.kind({
+  /**
+    A particular widget filter contained in a {@link XV.ParameterWidget}.
+
+    @class
+    @name XV.ParameterItem
+    @see XV.ParameterWidget
+   */
+  enyo.kind(/** @lends XV.ParameterItem */{
     name: "XV.ParameterItem",
     classes: "xv-parameter-item",
     published: {
@@ -62,14 +69,17 @@ white:true*/
     setValue: function (value, options) {
       this.$.input.setValue(value, options);
     }
-    
+
   });
 
   /**
+    The panel of the advanced search feature.
+
     @class
-    
+    @name XV.ParameterWidget
     @extends enyo.FittableRows
     @extends XV.ExtensionsMixin
+    @see XV.ParameterItem
   */
   var parameterWidgetHash = {
     name: "XV.ParameterWidget",
@@ -170,7 +180,7 @@ white:true*/
       }
     }
   };
-  
+
   parameterWidgetHash = enyo.mixin(parameterWidgetHash, XV.ExtensionsMixin);
   enyo.kind(parameterWidgetHash);
 

@@ -4,7 +4,13 @@ regexp:true, undef:true, trailing:true, white:true */
 
 (function () {
 
-  enyo.kind({
+  /**
+
+    @class
+    @name XV.MenuItem
+    @extends onyx.MenuItem
+   */
+  enyo.kind(/** @lends XV.MenuItem */{
     name: "XV.MenuItem",
     kind: "onyx.MenuItem",
     classes: "xv-menuitem",

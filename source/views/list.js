@@ -8,7 +8,13 @@ trailing:true white:true*/
   var ROWS_PER_FETCH = 50;
   var FETCH_TRIGGER = 100;
 
-  enyo.kind({
+  /**
+
+    @class
+    @name XV.ListItem
+    @see XV.List
+   */
+  enyo.kind(/** @lends XV.ListItem */{
     name: "XV.ListItem",
     classes: "xv-list-item",
     ontap: "itemTap",
@@ -17,12 +23,24 @@ trailing:true white:true*/
     }
   });
 
-  enyo.kind({
+  /**
+
+    @class
+    @name XV.ListColumn
+    @see XV.List
+   */
+  enyo.kind(/** @lends XV.ListColumn */{
     name: "XV.ListColumn",
     classes: "xv-list-column"
   });
 
-  enyo.kind({
+  /**
+
+    @class
+    @name XV.ListAttr
+    @see XV.List
+   */
+  enyo.kind(/** @lends XV.ListAttr */{
     name: "XV.ListAttr",
     classes: "xv-list-attr",
     published: {
@@ -30,7 +48,15 @@ trailing:true white:true*/
     }
   });
 
-  enyo.kind({
+  /**
+
+    @class
+    @name XV.List
+    @see XV.ListItem
+    @see XV.ListColumn
+    @see XV.ListAttr
+   */
+  enyo.kind(/** @lends XV.List */{
     name: "XV.List",
     kind: "List",
     classes: "xv-list",
@@ -235,7 +261,6 @@ trailing:true white:true*/
         this.queryChanged();
       }
     }
-
   });
 
 }());

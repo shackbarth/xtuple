@@ -4,17 +4,31 @@ regexp:true, undef:true, trailing:true, white:true */
 
 (function () {
 
-  enyo.kind({
+  /**
+    Implements an onyx.TextArea with API support from XV.Input
+
+    @class
+    @name XV.TextArea
+    @extends XV.Input
+   */
+  enyo.kind(/** @lends XV.TextArea */{
     name: "XV.TextArea",
     kind: "XV.Input",
     classes: "xv-textarea",
+    events: {
+      onTextAreaFocus: ""
+    },
     published: {
       attr: null,
       placeholder: ""
     },
     components: [
-      {name: "input", kind: "onyx.TextArea", classes: "xv-textarea-input", onchange: "inputChanged"}
+      {name: "input", kind: "onyx.TextArea", classes: "xv-textarea-input",
+        onchange: "inputChanged", onfocus: "focused"}
     ],
+    focused: function (inSender, inEvent) {
+      this.doTextAreaFocus(inEvent);
+    },
     placeholderChanged: function () {
       var placeholder = this.getPlaceholder();
       this.$.input.setPlaceholder(placeholder);

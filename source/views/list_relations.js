@@ -7,15 +7,16 @@ trailing:true white:true*/
 
   var FIRST_FETCH = 20;
   var FETCH_TRIGGER = 5;
-  
+
   /**
-    @class
 
     List to attach to workspaces to present related data.
 
+    @class
+    @name XV.ListRelations
     @extends enyo.List
   */
-  enyo.kind({
+  enyo.kind(/** @lends XV.ListRelations */{
     name: "XV.ListRelations",
     kind: "List",
     classes: "xv-list",
@@ -84,7 +85,7 @@ trailing:true white:true*/
         value = this.getValue(),
         rowsPerPage;
       if (count === this.count) { return; }
-        
+
       // Hack: Solves scroll problem for small number of rows
       // but doesn't seem quite right
       rowsPerPage = count && 50 > count ? count : 50;
@@ -148,7 +149,7 @@ trailing:true white:true*/
         fetch =  showingRows > lastShowing &&
           totalRows - showingRows - FETCH_TRIGGER < 0 &&
           this.hasMore();
-          
+
       // Manage lazy loading
       if (fetch) {
         this._lastShowing = showingRows;
@@ -191,10 +192,10 @@ trailing:true white:true*/
           view.addRemoveClass("placeholder", isPlaceholder);
         }
       }
-      
+
       // Inactive
       this.$.listItem.addRemoveClass("inactive", isNotActive);
-      
+
       // Selection
       this.$.listItem.addRemoveClass("item-selected", isSelected);
       return true;
@@ -213,7 +214,6 @@ trailing:true white:true*/
       this.lengthChanged();
       this.fetchRelated();
     }
-
   });
 
 }());

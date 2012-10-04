@@ -8,7 +8,14 @@ trailing:true white:true*/
   var SAVE_CLOSE = 2;
   var SAVE_NEW = 3;
 
+  /**
+    Common functionality to Workspace and ListRelationsEditorBox
 
+    @class
+    @name XV.EditorMixin
+    @see XV.Workspace
+    @see XV.ListRelationsEditorBox
+   */
   XV.EditorMixin = {
     controlValueChanged: function (inSender, inEvent) {
       var attrs = {};
@@ -76,11 +83,13 @@ trailing:true white:true*/
   /**
     @class
 
+    @name XV.Workspace
     @extends enyo.FittableRows
     @extends XV.EditorMixin
     @extends XV.ExtensionsMixin
+    @see XV.WorkspaceContainer
   */
-  var workspaceHash = enyo.mixin(XV.EditorMixin, {
+  var workspaceHash = enyo.mixin(XV.EditorMixin, /** @lends XV.Workspace */{
     name: "XV.Workspace",
     kind: "FittableRows",
     published: {
@@ -100,7 +109,8 @@ trailing:true white:true*/
       onHistoryChange: ""
     },
     handlers: {
-      onValueChange: "controlValueChanged"
+      onValueChange: "controlValueChanged",
+      onTextAreaFocus: "textAreaFocus"
     },
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
@@ -124,7 +134,7 @@ trailing:true white:true*/
         attr = attrs[i];
         control = this.findControl(attr);
         if (control && control.clear) {
-          control.clear({silent: true}); 
+          control.clear({silent: true});
         }
       }
     },
@@ -279,6 +289,22 @@ trailing:true white:true*/
       this.attributesChanged(model, options);
       this.doStatusChange(inEvent);
     },
+    /**
+      When a text area is brought into focus we want to move the
+      panels to bring this into prime position.
+    */
+    textAreaFocus: function (inSender, inEvent) {
+      var originator = inEvent.originator,
+        component = originator;
+
+      while (component.parent && component.parent.name !== 'panels') {
+        component = component.parent;
+      }
+
+      if (component.indexInContainer && component.indexInContainer !== this.$.panels.getIndex()) {
+        this.$.panels.setIndex(component.indexInContainer());
+      }
+    },
     titleChanged: function () {
       var inEvent = { title: this.getTitle(), originator: this };
       this.doTitleChange(inEvent);
@@ -288,7 +314,13 @@ trailing:true white:true*/
   workspaceHash = enyo.mixin(workspaceHash, XV.ExtensionsMixin);
   enyo.kind(workspaceHash);
 
-  enyo.kind({
+  /**
+
+    @class
+    @name XV.WorkspaceContainer
+    @see XV.Workspace
+   */
+  enyo.kind(/** @lends XV.WorkspaceContainer */{
     name: "XV.WorkspaceContainer",
     kind: "Panels",
     arrangerKind: "CollapsingArranger",

@@ -1,10 +1,17 @@
-/*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, trailing:true, white:true */
 /*global XT:true, XV:true, XM:true, Backbone:true, enyo:true, _:true */
 
 (function () {
 
-  enyo.kind({
+  /**
+
+
+    @class
+    @name XV.AddressWidget
+    @extends FittableRows
+   */
+  enyo.kind(/** @lends XV.AddressWidget */{
     name: "XV.AddressWidget",
     kind: "FittableRows",
     classes: "xv-addresswidget",
@@ -228,6 +235,5 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.viewer.addRemoveClass("placeholder", !fmt);
       this.$.viewer.setContent(fmt || '_none'.loc());
     }
-
   });
 }());
