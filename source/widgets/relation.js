@@ -1,40 +1,35 @@
 /*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, trailing:true, white:true */
-/*global XT:true, XV:true, XM:true, Backbone:true, enyo:true, _:true */
+/*global XT:true, XV:true, XM:true, Backbone:true, window:true, enyo:true, _:true */
 
 (function () {
 
-  /**
-    Relation widget.
+  // ..........................................................
+  // ACCOUNT
+  //
 
-    @class
-    @name XV.RelationWidget
-    @see XV.Relation
-   */
-  enyo.kind(/** @lends XV.RelationWidget */{
-    name: "XV.RelationWidget",
-    kind: enyo.Control,
-    classes: "xv-inputwidget xv-relationwidget",
+  enyo.kind({
+    name: "XV.AccountWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.AccountRelationCollection",
+    list: "XV.AccountList"
+  });
+
+  // ..........................................................
+  // CONTACT
+  //
+
+  enyo.kind({
+    name: "XV.ContactWidget",
+    kind: "XV.RelationWidget",
+    label: "_name".loc(),
+    collection: "XM.ContactRelationCollection",
+    list: "XV.ContactList",
+    keyAttribute: "name",
+    nameAttribute: "jobTitle",
+    descripAttribute: "phone",
     published: {
-      attr: null,
-      label: "",
-      placeholder: "",
-      value: null,
-      list: "",
-      collection: "",
-      disabled: false,
-      keyAttribute: "number",
-      nameAttribute: "name",
-      descripAttribute: ""
-    },
-    events: {
-      onSearch: "",
-      onValueChange: "",
-      onWorkspace: ""
-    },
-    handlers: {
-      onModelChange: "modelChanged",
-      onSelect: "itemSelected"
+      showAddress: false
     },
     components: [
       {kind: "FittableColumns", components: [
@@ -45,7 +40,7 @@ regexp:true, undef:true, trailing:true, white:true */
             onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur",
             onfocus: "receiveFocus"
           },
-          {kind: "onyx.MenuDecorator", components: [
+          {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
             {kind: "onyx.IconButton", src: "assets/triangle-down-large.png",
               classes: "xv-relationwidget-icon"},
             {name: 'popupMenu', floating: true, kind: "onyx.Menu",
@@ -57,314 +52,163 @@ regexp:true, undef:true, trailing:true, white:true */
                 disabled: true}
             ]}
           ]},
-          {name: "completer", kind: "XV.Completer"}
+          {name: "completer", kind: "XV.Completer", onSelect: "itemSelected"}
         ]}
       ]},
-      {name: "name", classes: "xv-relationwidget-description"},
-      {name: "description", classes: "xv-relationwidget-description"}
+      {kind: "FittableColumns", components: [
+        {name: "labels", classes: "xv-relationwidget-column left",
+          components: [
+          {name: "jobTitleLabel", content: "_jobTitle".loc() + ":",
+            classes: "xv-relationwidget-description label",
+            showing: false},
+          {name: "phoneLabel", content: "_phone".loc() + ":",
+            classes: "xv-relationwidget-description label",
+            showing: false},
+          {name: "alternateLabel", content: "_alternate".loc() + ":",
+            classes: "xv-relationwidget-description label",
+            showing: false},
+          {name: "faxLabel", content: "_fax".loc() + ":",
+            classes: "xv-relationwidget-description label",
+            showing: false},
+          {name: "primaryEmailLabel", content: "_email".loc() + ":",
+            classes: "xv-relationwidget-description label",
+            showing: false},
+          {name: "webAddressLabel", content: "_web".loc() + ":",
+            classes: "xv-relationwidget-description label",
+            showing: false},
+          {name: "addressLabel", content: "_address".loc() + ":",
+            classes: "xv-relationwidget-description label",
+            showing: false}
+        ]},
+        {name: "data", fit: true, components: [
+          {name: "name", classes: "xv-relationwidget-description hasLabel"},
+          {name: "description", classes: "xv-relationwidget-description hasLabel"},
+          {name: "alternate", classes: "xv-relationwidget-description hasLabel"},
+          {name: "fax", classes: "xv-relationwidget-description hasLabel"},
+          {name: "primaryEmail", ontap: "sendMail",
+            classes: "xv-relationwidget-description hasLabel hyperlink"},
+          {name: "webAddress", ontap: "openWindow",
+            classes: "xv-relationwidget-description hasLabel hyperlink"},
+          {name: "address", classes: "xv-relationwidget-description hasLabel",
+            allowHtml: true}
+        ]}
+      ]}
     ],
-    autocomplete: function () {
-      var key = this.getKeyAttribute(),
-        attr = this.getValue() ? this.getValue().get(key) : "",
-        value = this.$.input.getValue(),
-        query;
-
-      if (value && value !== attr) {
-        query = {
-          parameters: [{
-            attribute: key,
-            operator: "BEGINS_WITH",
-            value: value
-          }],
-          rowLimit: 1,
-          orderBy: [{
-            attribute: key
-          }]
-        };
-        this._collection.fetch({
-          success: enyo.bind(this, "_fetchSuccess"),
-          query: query
-        });
-      } else if (!value) {
-        this.setValue(null);
-      }
-    },
-    clear: function (options) {
-      this.setValue(null, options);
-    },
-    create: function () {
-      this.inherited(arguments);
-      this.listChanged();
-      this.labelChanged();
-      this.disabledChanged();
-    },
     disabledChanged: function () {
+      this.inherited(arguments);
       var disabled = this.getDisabled();
-      this.$.input.setDisabled(disabled);
-      this.$.name.addRemoveClass("disabled", disabled);
-      this.$.description.addRemoveClass("disabled", disabled);
-    },
-    focus: function () {
-      this.$.input.focus();
-    },
-    getValueToString: function () {
-      return this.value.get(this.getKeyAttribute());
-    },
-    keyDown: function (inSender, inEvent) {
-      // If tabbed out...
-      inEvent.activator = this.$.decorator;
-      if (inEvent.keyCode === 9) {
-        this.$.completer.waterfall("onRequestHideMenu", inEvent);
-        this.autocomplete();
+      if (this.$.phone) {
+        this.$.jobTitle.addRemoveClass("disabled", disabled);
+        this.$.phone.addRemoveClass("disabled", disabled);
+        this.$.alternate.addRemoveClass("disabled", disabled);
+        this.$.fax.addRemoveClass("disabled", disabled);
+        this.$.primaryEmail.addRemoveClass("disabled", disabled);
+        this.$.webAddress.addRemoveClass("disabled", disabled);
       }
     },
-    keyUp: function (inSender, inEvent) {
-      var query,
-        key = this.getKeyAttribute(),
-        attr = this.getValue() ? this.getValue().get(key) : "",
-        value = this.$.input.getValue(),
-        completer = this.$.completer;
-      inEvent.activator = this.$.decorator;
-
-      // Look up if value changed
-      if (value && value !== attr &&
-          inEvent.keyCode !== 9) {
-        query = {
-          parameters: [{
-            attribute: key,
-            operator: "BEGINS_WITH",
-            value: value
-          }],
-          rowLimit: 10,
-          orderBy: [{
-            attribute: key
-          }]
-        };
-        this._collection.fetch({
-          success: enyo.bind(this, "_collectionFetchSuccess"),
-          query: query
-        });
-      } else {
-        completer.waterfall("onRequestHideMenu", inEvent);
-      }
-    },
-    itemSelected: function (inSender, inEvent) {
-      if (inSender.name === 'completer') {
-        this.relationSelected(inSender, inEvent);
-      } else {
-        this.menuItemSelected(inSender, inEvent);
-      }
-      return true;
-    },
-    labelChanged: function () {
-      var label = (this.getLabel() || ("_" + this.attr || "").loc());
-      this.$.label.setContent(label + ":");
-    },
-    listChanged: function () {
-      var list = this.getList(),
-        Collection,
-        workspace;
-      delete this._List;
-      delete this._Workspace;
-
-      // Get List class
-      if (!list) { return; }
-      this._List = XT.getObjectByName(list);
-
-      // Get Workspace class
-      workspace = this._List.prototype.getWorkspace();
-      this._Workspace = workspace ? XT.getObjectByName(workspace) : null;
-
-      // Setup collection instance
-      Collection = this.getCollection() ?
-        XT.getObjectByName(this.getCollection()) : null;
-      if (!Collection) { return; }
-      this._collection = new Collection();
-    },
-    menuItemSelected: function (inSender, inEvent) {
-      var that = this,
-        menuItem = inEvent.originator,
-        list = this.getList(),
-        model = this.getValue(),
-        id = model ? model.id : null,
-        workspace = this._List ? this._List.prototype.getWorkspace() : null,
-        callback;
-      switch (menuItem.name)
-      {
-      case 'searchItem':
-        callback = function (value) {
-          that.setValue(value);
-        };
-        this.doSearch({
-          list: list,
-          searchText: this.$.input.getValue(),
-          callback: callback
-        });
-        break;
-      case 'openItem':
-        this.doWorkspace({
-          workspace: workspace,
-          id: id,
-          allowNew: false
-        });
-        break;
-      case 'newItem':
-        // Callback options on commit of the workspace
-        // Find the model with matching id, fetch and set it.
-        callback = function (model) {
-          var Model = that._collection.model,
-            value = new Model({id: model.id}),
-            options = {};
-          options.success = function () {
-            that.setValue(value);
-          };
-          value.fetch(options);
-        };
-        this.doWorkspace({
-          workspace: workspace,
-          callback: callback,
-          allowNew: false
-        });
-        break;
-      }
-    },
-    modelChanged: function (inSender, inEvent) {
-      var that = this,
-        List = this._List,
-        workspace = List.prototype.getWorkspace(),
-        Workspace = workspace ? XT.getObjectByName(workspace) : null,
-        options = {},
-        model = this.getValue();
-      // If the model that changed was related to and exists on this widget
-      // refresh the local model.
-      if (!List || !Workspace || !model) { return; }
-      if (Workspace.prototype.model === inEvent.model &&
-        model.id === inEvent.id) {
-        options.success = function () {
-          that.setValue(model);
-        };
-        model.fetch(options);
-      }
-    },
-    placeholderChanged: function () {
-      var placeholder = this.getPlaceholder();
-      this.$.input.setPlaceholder(placeholder);
-    },
-    receiveBlur: function (inSender, inEvent) {
-      this.autocomplete();
-      this._hasFocus = false;
-    },
-    receiveFocus: function (inSender, inEvent) {
-      this._hasFocus = true;
-      this._relationSelected = false;
-    },
-    relationSelected: function (inSender, inEvent) {
-      this._relationSelected = true;
-      inEvent.activator = this.$.decorator;
-      this.setValue(inEvent.originator.model);
-      this.$.completer.waterfall("onRequestHideMenu", inEvent);
-      return true;
-    },
-    /**
-      Programatically sets the value of this widget.
-
-      @param value Can be a model or the id of a model (String or Number).
-        If it is an ID, then the correct model will be fetched and this
-        function will be called again recursively with the model.
-      @param options {Object}
-     */
     setValue: function (value, options) {
-      options = options || {};
-      var that = this,
-        newId = value ? value.id : null,
-        oldId = this.value ? this.value.id : null,
-        key = this.getKeyAttribute(),
-        name = this.getNameAttribute(),
-        descrip = this.getDescripAttribute(),
-        inEvent = { value: value, originator: this },
-        keyValue = "",
-        nameValue = "",
-        descripValue = "",
-        Workspace = this._Workspace,
-        Model = Workspace && Workspace.prototype.model ?
-          XT.getObjectByName(Workspace.prototype.model)  : null,
-        couldNotCreate = Model ? !Model.canCreate() : true,
-        setPrivileges = function () {
-          if (value && newId) {
-            that.$.openItem.setDisabled(!value.couldRead());
-          }
-        };
-
-      // Here is where we find the model and re-call this method if we're given
-      // an id instead of a whole model.
-      if (_.isNumber(value) || _.isString(value)) {
-        if (this.value === value || oldId === value) { return; }
-        Model = XT.getObjectByName(this._collection.model.prototype.recordType);
-        value = new Model({id: value});
-        options = {
-          success: function () {
-            that.setValue(value);
-          }
-        };
-        this.value = value;
-        // XXX shouldn't we pass the options in here?
-        value.fetch(/*options*/);
-        return;
-      }
-
-      this.value = value;
-      if (value && value.get) {
-        keyValue = value.get(key) || "";
-        nameValue = value.get(name) || "";
-        descripValue = value.get(descrip) || "";
-      }
-      this.$.input.setValue(keyValue);
-      this.$.name.setShowing(nameValue);
-      this.$.name.setContent(nameValue);
-      this.$.description.setShowing(descripValue);
-      this.$.description.setContent(descripValue);
-
-      // Only notify if selection actually changed
-      if (newId !== oldId && !options.silent) { this.doValueChange(inEvent); }
-
-      // Handle menu actions
-      that.$.openItem.setShowing(Workspace);
-      that.$.newItem.setShowing(Workspace);
-      that.$.openItem.setDisabled(true);
-      that.$.newItem.setDisabled(couldNotCreate);
-      if (Model && Workspace) {
-        if (XT.session) {
-          setPrivileges();
-        } else {
-          XT.getStartupManager().registerCallback(setPrivileges);
-        }
-      }
+      this.inherited(arguments);
+      var jobTitle = value ? value.get('jobTitle') : "",
+        phone = value ? value.get('phone') : "",
+        alternate = value ? value.get('alternate') : "",
+        fax = value ? value.get('fax') : "",
+        primaryEmail = value ? value.get('primaryEmail') : "",
+        webAddress = value ? value.get('webAddress') : "",
+        address = value ? XM.Address.format(value.get('address')) : "",
+        showAddress = this.getShowAddress();
+      this.$.jobTitleLabel.setShowing(jobTitle);
+      this.$.phoneLabel.setShowing(phone);
+      this.$.alternate.setShowing(alternate);
+      this.$.alternate.setContent(alternate);
+      this.$.alternateLabel.setShowing(alternate);
+      this.$.fax.setShowing(fax);
+      this.$.fax.setContent(fax);
+      this.$.faxLabel.setShowing(fax);
+      this.$.primaryEmail.setShowing(primaryEmail);
+      this.$.primaryEmail.setContent(primaryEmail);
+      this.$.primaryEmailLabel.setShowing(primaryEmail);
+      this.$.webAddress.setShowing(webAddress);
+      this.$.webAddress.setContent(webAddress);
+      this.$.webAddressLabel.setShowing(webAddress);
+      this.$.address.setShowing(address && showAddress);
+      this.$.addressLabel.setShowing(address && showAddress);
+      if (showAddress) { this.$.address.setContent(address); }
     },
-    /** @private */
-    _collectionFetchSuccess: function () {
-      if (!this._hasFocus) { return; }
-      var key = this.getKeyAttribute(),
-        value = this.$.input.getValue(),
-        models = this._collection.models,
-        inEvent = { activator: this.$.decorator };
-      if (models.length) {
-        this.$.completer.buildList(key, value, models);
-        if (!this.$.completer.showing) {
-          this.$.completer.waterfall("onRequestShowMenu", inEvent);
-        }
-        this.$.completer.adjustPosition();
-      } else {
-        this.$.completer.waterfall("onRequestHideMenu", inEvent);
-      }
+    openWindow: function () {
+      var address = this.value ? this.value.get('webAddress') : null;
+      if (address) { window.open('http://' + address); }
+      return true;
     },
-    /** @private */
-    _fetchSuccess: function () {
-      if (this._relationSelected) { return; }
-      var value = this._collection.length ? this._collection.models[0] : null,
-        target = enyo.dispatcher.captureTarget;
-      this.setValue(value);
-      enyo.dispatcher.captureTarget = target;
+    sendMail: function () {
+      var email = this.value ? this.value.get('primaryEmail') : null,
+        win;
+      if (email) {
+        win = window.open('mailto:' + email);
+        win.close();
+      }
+      return true;
     }
-
   });
+
+  // ..........................................................
+  // INCIDENT
+  //
+
+  enyo.kind({
+    name: "XV.IncidentWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.IncidentRelationCollection",
+    list: "XV.IncidentList",
+    nameAttribute: "description"
+  });
+
+  // ..........................................................
+  // ITEM
+  //
+
+  enyo.kind({
+    name: "XV.ItemWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.ItemRelationCollection",
+    list: "XV.ItemList",
+    nameAttribute: "description1",
+    descripAttribute: "description2"
+  });
+
+  // ..........................................................
+  // OPPORTUNITY
+  //
+
+  enyo.kind({
+    name: "XV.OpportunityWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.OpportunityRelationCollection",
+    list: "XV.OpportunityList"
+  });
+
+  // ..........................................................
+  // PROJECT
+  //
+
+  enyo.kind({
+    name: "XV.ProjectWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.ProjectRelationCollection",
+    list: "XV.ProjectList"
+  });
+
+
+  // ..........................................................
+  // USER ACCOUNT
+  //
+
+  enyo.kind({
+    name: "XV.UserAccountWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.UserAccountRelationCollection",
+    list: "XV.UserAccountList",
+    keyAttribute: "username",
+    nameAttribute: "properName"
+  });
+
 }());
