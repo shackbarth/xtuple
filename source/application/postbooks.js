@@ -21,7 +21,8 @@ trailing:true white:true*/
         {name: "welcome", label: "_welcome".loc(), hasSubmenu: false,
           panels: [
           {name: "welcomePage",
-            tag: '<iframe src="assets/splash/index.html"></iframe>'}
+            tag: "iframe",
+            attributes: {src: "assets/splash/index.html"}}
         ]},
         {name: "setup", label: "_setup".loc(), panels: [
           {name: "userAccountList", kind: "XV.UserAccountList"},
