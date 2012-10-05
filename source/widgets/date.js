@@ -127,7 +127,10 @@ regexp:true, undef:true, trailing:true, white:true */
       this.showLabelChanged();
     },
     datePicked: function (inSender, inEvent) {
-      this.setValue(inEvent);
+      var date = inEvent;
+      // mimic the human-typed behavior of setting the hours to 0.
+      date.setHours(0);
+      this.setValue(date);
       this.$.datePickPopup.hide();
     },
     iconTapped: function (inSender, inEvent) {
