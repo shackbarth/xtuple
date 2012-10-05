@@ -50,7 +50,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         try {
           ext = context[namespace][type];
         } catch (err) {}
-        if (ext) { 
+        if (ext) {
           extensionList.push(ext);
           if (orm.extensions && (_.find(orm.extensions, function (sub, i) {
             if (sub.nameSpace && sub.type) {
@@ -96,7 +96,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           } else {
             submit.call(this, socket, extensionList.shift(), queue, ack, true);
           }
-        }, this, c)); 
+        }, this, c));
         submit.call(this, socket, extensionList.shift(), queue, ack, true);
       } else if (isExtension) {
         return this.emit(socket.id);
@@ -169,7 +169,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
   
   dependenciesFor = function (socket, orm, dependencies) {
-    var properties, extensions, namespace, table, orms, dep;
+    var properties, extensions, namespace, orms, dep;
     dependencies = dependencies ? dependencies: orm.dependencies ? orm.dependencies: (orm.dependencies = []);
     properties = orm.properties || [];
     extensions = orm.extensions || [];
@@ -278,8 +278,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       socket.installed = [];
       installer(valid);
     },
-    refresh: function (socket, ack) {
-      var path = _path.join(X.basePath, "../orm"), files, orms, extensions, errors;
+    refresh: function (socket, options, ack) {
+      options = options || {};
+      if (typeof options === 'function') { ack = options; }
+      var path = _path.join(X.basePath, options.path || X.options.orm.defaultPath),
+        files, orms, extensions, errors;
       orms = {};
       extensions = {};
       files = dive(path);

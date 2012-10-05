@@ -6,11 +6,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
   
   module.exports = {
-    version: "beta1",
+    version: "1.0",
     requireDatabase: true,
     requireServer: true,
     orm: {
-      port: 9080
-    }
+      port: 9080,
+      defaultPath: "../../client/orm"
+    },
   };
 }());
