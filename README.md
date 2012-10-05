@@ -11,7 +11,9 @@ This repository contains the database object definitions for an embedded ORM sys
 
 ##Instructions
 
-Build and install PostgreSQL from source.   
+Build and install PostgreSQL from source.
+
+Optional: If you want to use data encryption, in the `contrib/crypto` directory `sudo make install`. 
 
 Build the v8 library then copy the `libv8*` shared libraries to `/usr/local/lib`.  
 
