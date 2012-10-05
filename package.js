@@ -1,3 +1,4 @@
 enyo.depends(
+  "lib",
   "source"
 );
