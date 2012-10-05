@@ -4,14 +4,7 @@ regexp:true, undef:true, trailing:true, white:true */
 
 (function () {
 
-  /**
-    Relation widget.
-
-    @class
-    @name XV.RelationWidget
-    @see XV.Relation
-   */
-  enyo.kind(/** @lends XV.RelationWidget */{
+  enyo.kind({
     name: "XV.RelationWidget",
     kind: enyo.Control,
     classes: "xv-inputwidget xv-relationwidget",
@@ -149,7 +142,7 @@ regexp:true, undef:true, trailing:true, white:true */
       }
     },
     itemSelected: function (inSender, inEvent) {
-      if (inSender.name === 'completer') {
+      if (inEvent.originator.kind === 'onyx.MenuItem') {
         this.relationSelected(inSender, inEvent);
       } else {
         this.menuItemSelected(inSender, inEvent);
