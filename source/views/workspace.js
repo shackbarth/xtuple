@@ -420,7 +420,7 @@ trailing:true white:true*/
       }
     },
     errorNotify: function (inSender, inEvent) {
-      var message = inEvent.error.message();
+      var message = inEvent.error.message ? inEvent.error.message() : "Messageless error";
       this.spinnerHide();
       this.$.errorMessage.setContent(message);
       this.$.errorPopup.render();

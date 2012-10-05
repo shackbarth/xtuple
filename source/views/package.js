@@ -10,5 +10,6 @@ enyo.depends(
   "comment_box.js",
   "assignment_box.js",
   "documents_box.js",
+  "screen_carousel.js",
   "search.js"
 );
