@@ -6,6 +6,8 @@ white:true*/
 (function () {
   "use strict";
 
+  var _isDatabaseError, _message;
+
   /**
   */
   XT.Response = function () {
@@ -37,18 +39,46 @@ white:true*/
     }
   };
   
-  // TODO: find out if there is a way to determine support for ES5 getters as
-  // opposed to the fallback ES4 that are deprecated moving forward...
-  XT.Response.prototype.__defineGetter__("message", function () {
-    if (this.data && this.data.detail) return this.data.detail;
-    else if (this.reason) return this.reason;
-    return this;
-  });
   
-  XT.Response.prototype.__defineGetter__("isDatabaseError", function () {
+  _isDatabaseError = function () {
     if (!this.isError) return false;
     if (this.data && this.data.detail) return true;
     return false;
-  });
+  };
+  
+  _message = function () {
+    if (this.data && this.data.detail) return this.data.detail;
+    else if (this.reason) return this.reason;
+    return this;
+  }
+  
+  // TODO: this is an ugly hack to say the least but there's no guarantee that
+  // the various versions of the browsers can handle either of these methods...
+  if (Object.__defineGetter__) {
+    
+    // TODO: find out if there is a way to determine support for ES5 getters as
+    // opposed to the fallback ES4 that are deprecated moving forward...
+    XT.Response.prototype.__defineGetter__("message", function () {
+      return _message.call(this);
+    });
+    
+    XT.Response.prototype.__defineGetter__("isDatabaseError", function () {
+      return _isDatabaseError.call(this);
+    });
+  } else {
+    
+    // will work with IE 9...
+    Object.defineProperty(XT.Response.prototype, "isDatabaseError", {
+      get: function () {
+        return _isDatabaseError.call(this);
+      }
+    });
+    
+    Object.defineProperty(XT.Response.prototype, "message", {
+      get: function () {
+        return _message.call(this);
+      }
+    })
+  }
 
 }());
