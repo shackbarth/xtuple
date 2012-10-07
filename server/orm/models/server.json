@@ -135,5 +135,184 @@
      }
     ],
     "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Organization",
+    "table": "xt.org",
+    "idSequenceName": "org_org_id_seq",
+    "comment": "Organization Map",
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "org_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "name",
+       "attr": {
+         "type": "String",
+         "column": "org_name"
+       }
+     },
+     {
+       "name": "databaseServer",
+       "toOne": {
+         "isNested": true,
+         "type": "DatabaseServer",
+         "column": "org_dbserver_id"
+       }
+     },
+     {
+       "name": "description",
+       "attr": {
+         "type": "String",
+         "column": "org_descrip"
+       }
+     }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "User",
+    "table": "xt.usr",
+    "idSequenceName": "usr_usr_id_seq",
+    "comment": "User Map",
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "usr_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "username",
+       "attr": {
+         "type": "String",
+         "column": "usr_username"
+       }
+     },
+     {
+       "name": "password",
+       "attr": {
+         "isEncrypted": true,
+         "type": "String",
+         "column": "usr_password"
+       }
+     },
+     {
+       "name": "organizations",
+       "toMany": {
+         "isNested": true,
+         "type": "UserOrganization",
+         "column": "usr_id",
+         "inverse": "user"
+       }
+     }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "UserOrganization",
+    "table": "xt.usrorg",
+    "idSequenceName": "usrorg_usrorg_id_seq",
+    "comment": "User Organization Map",
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "usrorg_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "user",
+       "attr": {
+         "type": "Number",
+         "column": "usrorg_usr_id"
+       }
+     },
+     {
+       "name": "organization",
+       "toOne": {
+         "type": "User",
+         "column": "usrorg_usr_id"
+       }
+     }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Session",
+    "table": "xt.session",
+    "idSequenceName": "session_session_id_seq",
+    "comment": "Session Map",
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "session_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "sid",
+       "attr": {
+         "type": "String",
+         "column": "session_sid"
+       }
+     },
+     {
+       "name": "created",
+       "attr": {
+         "type": "Date",
+         "column": "session_created"
+       }
+     },
+     {
+       "name": "updated",
+       "attr": {
+         "type": "Date",
+         "column": "session_updated"
+       }
+     },
+     {
+       "name": "checksum",
+       "attr": {
+         "type": "String",
+         "column": "session_checksum"
+       }
+     },
+     {
+       "name": "organization",
+       "toOne": {
+         "isNested": true,
+         "type": "Organization",
+         "column": "session_org_id"
+       }
+     },
+     {
+       "name": "socket",
+       "attr": {
+         "type": "String",
+         "column": "session_socket"
+       }
+     }
+    ],
+    "isSystem": true
   }
 ]
