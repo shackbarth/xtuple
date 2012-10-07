@@ -65,3 +65,4 @@
 
 -- public
 \i public/functions/geteffectivextuser.sql;
+\i public/tables/schemaord.sql;
