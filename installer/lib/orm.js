@@ -347,7 +347,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       
       callback = _.bind(testConnection, this, socket, ack, creds);
       
-      X.db.query("select * from usr limit 1", creds, callback);
+      X.db.query("select * from pg_class limit 1", creds, callback);
       
       // test our connection credentials
       //X.db.user = options.username;

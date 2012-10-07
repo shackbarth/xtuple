@@ -17,7 +17,7 @@ create or replace function xt.orm_did_change() returns trigger as $$
   while (n--) {
     nsp = views[n].beforeDot();
     rel = views[n].afterDot();
-    plv8.execute("select dropIfExists('VIEW', $1, $2)", [rel, nsp]);
+    plv8.execute("drop view if exists " + nsp + "." + rel);
   }
 
   /* Determine whether to rebuild */ 
