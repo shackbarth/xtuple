@@ -7,3 +7,5 @@ tmp
 *.DS_Store
 output.txt
 /*.backup
+
+*.log
