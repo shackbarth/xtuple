@@ -1,0 +1,139 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Datasource",
+    "table": "xt.datasource",
+    "idSequenceName": "datasource_datasource_id_seq",
+    "comment": "Datasource Map",
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "datasource_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "name",
+       "attr": {
+         "type": "String",
+         "column": "datasource_name"
+       }
+     },
+     {
+       "name": "hostname",
+       "attr": {
+         "type": "String",
+         "column": "datasource_hostname"
+       }
+     },
+     {
+       "name": "port",
+       "attr": {
+         "type": "String",
+         "column": "datasource_port"
+       }
+     },
+     {
+       "name": "description",
+       "attr": {
+         "type": "String",
+         "column": "datasource_descrip"
+       }
+     },
+     {
+       "name": "location",
+       "attr": {
+         "type": "String",
+         "column": "datasource_loc"
+       }
+     },
+     {
+       "name": "created",
+       "attr": {
+         "type": "Date",
+         "column": "datasource_created"
+       }
+     }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "DatabaseServer",
+    "table": "xt.dbserver",
+    "idSequenceName": "dbserver_dbserver_id_seq",
+    "comment": "Database Server Map",
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "dbserver_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "name",
+       "attr": {
+         "type": "String",
+         "column": "dbserver_name"
+       }
+     },
+     {
+       "name": "hostname",
+       "attr": {
+         "type": "String",
+         "column": "dbserver_hostname"
+       }
+     },
+     {
+       "name": "port",
+       "attr": {
+         "type": "String",
+         "column": "dbserver_port"
+       }
+     },
+     {
+       "name": "description",
+       "attr": {
+         "type": "String",
+         "column": "dbserver_descrip"
+       }
+     },
+     {
+       "name": "location",
+       "attr": {
+         "type": "String",
+         "column": "dbserver_loc"
+       }
+     },
+     {
+       "name": "created",
+       "attr": {
+         "type": "Date",
+         "column": "dbserver_created"
+       }
+     },
+     {
+       "name": "username",
+       "attr": {
+         "type": "String",
+         "column": "dbserver_username"
+       }
+     },
+     {
+       "name": "password",
+       "attr": {
+         "isEncrypted": true,
+         "type": "String",
+         "column": "dbserver_password"
+       }
+     }
+    ],
+    "isSystem": true
+  }
+]
