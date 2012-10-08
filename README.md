@@ -8,7 +8,6 @@ This repository contains the database object definitions for an embedded ORM sys
  * [plV8js] (http://www.pgxn.org/dist/plv8/) -- `1.2`
    - [v8] (http://github.com/v8/v8) -- `v3.6.2`
  * [NodeJS] (http://nodejs.org/) -- `v.0.6.18`
- * [Postbooks] (http://sourceforge.net/projects/postbooks) -- `v4.0.0`
 
 ##Instructions
 
