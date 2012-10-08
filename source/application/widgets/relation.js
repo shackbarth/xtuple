@@ -108,12 +108,6 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     setValue: function (value, options) {
       this.inherited(arguments);
-      if (value && !value.get) {
-        // the value of the widget is still being fetched asyncronously.
-        // when the value is fetched, this function will be run again,
-        // so for now we can just stop here.
-        return;
-      }
       var jobTitle = value ? value.get('jobTitle') : "",
         phone = value ? value.get('phone') : "",
         alternate = value ? value.get('alternate') : "",
