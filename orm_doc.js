@@ -261,21 +261,11 @@
       */
       "attr": {
         /** 
-        The expected type of the property. Can be any of the following: 
+        The expected type of the property. Should be any of the following: 
           * String
           * Date
           * Boolean
           * Number
-          * Money
-          * Quantity
-          * QuantityPer
-          * Cost
-          * SalesPrice
-          * PurchasePrice
-          * ExtendedPrice
-          * UnitRatio
-          * Percent
-          * Weight
            
         @type {String}
         */
@@ -338,32 +328,6 @@
         @default {true}
         */
         "isEncrypted": false,
-        
-        /**
-        Default value specifies initial value you want populated in the property. Can be a 
-        string, number or boolean. 
-        
-        There is also support for special keywords: 
-          * "currentDate", 
-          * "currentUser"
-          * "baseCurrency" 
-          
-        Each of these will generate correct default value functions
-        on client side generated code using the xTuple datasource model generator.
-        */
-        "defaultValue": "O"        
-        
-        /**
-        SC.RecordAttribute property. Indicates whether a "Date" type will use the ISO8601
-        format.
-
-        Even though it defaults to true in the Client, the xTuple datasource model generator
-        will override this condition if not explicitly expressed.
-           
-        @type {Boolean}
-        @default {false}
-        */
-        "useIsoDate": true,
         
       },
       
@@ -468,67 +432,7 @@
         @type {Boolean}
         @default false
         */
-        "isNested": true,
-        
-        /** 
-        Delete delegates are useful when you want nested records deleted when the parent is deleted, 
-        but rules on the type conflict with this behavior. For example you may have nested records
-        where the delete privilege on the toMany type's ORM is set to false because normally users 
-        should not be able delete these records, however you do want the records to delete if the parent 
-        is deleted. Normally if you attempt to delete these records, the underlying delete rule 
-        for the type will 'do nothing.'
-           
-        The deleteDelegate allows you to redirect the delete rule to another table at a lower level that
-        can over-ride such restrictions.
-    
-        @type {Hash}
-        */
-        "deleteDelegate": {
-          /** 
-          The table or view you want to actually perform the delete against.
-             
-          Required.
-
-          @type {String}
-          */
-          "table": "comment",
-          
-          /** 
-          Relation mappings between the object and the delete delegate table. These mappings are an array 
-          that supports compound keys. Each relation should have either an inverse field mapping, or a
-          fixed value, but never both.
-             
-          Required.
-
-          @type {Array}
-          */
-          "relations": [
-            {
-              /** 
-              The column to map to.
-              
-              Required.
-                 
-              @type {String}
-              */
-              "column": "comment_source_id",
-              
-              /** 
-              A foreign key relation on the delegate table.
-              
-              @type {String}
-              */
-              "inverse": "guid",
-              
-              /** 
-              A fixed value for the foreign key relation on the delegate table.
-              
-              @type {Any}
-              */
-              "value": "TA"
-            }
-          ]
-        }
+        "isNested": true
       }
     }
   ],
