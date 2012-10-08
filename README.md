@@ -26,4 +26,5 @@ To install orms on an existing xTuple 4.x database:
     cd client/source
     psql -U {user} -d {database} -p {port} -h {hostname} -f "init_script.sql"
     cd ../../orm/installer
+    npm install
     ./installer.js -cli -h {hostname} -d {database} -u {username} -p {port} -P {password} --path "../../client/orm"
