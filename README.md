@@ -7,7 +7,8 @@ This repository contains the database object definitions for an embedded ORM sys
  * [PostgreSQL] (http://www.postgresql.org/) -- `v9.1.0`
  * [plV8js] (https://code.google.com/p/plv8js) -- `git clone` clone source, do *not* use tar downloads!
    - [v8] (http://github.com/v8/v8) -- `v3.6.2`
- * [Postbooks] (http://sourceforge.net/projects/postbooks) -- `v4.0.0Beta`
+ * [NodeJS] (http://nodejs.org/) -- 'v.0.6.18'
+ * [Postbooks] (http://sourceforge.net/projects/postbooks) -- `v4.0.0`
 
 ##Instructions
 
