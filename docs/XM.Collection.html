@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: Collection</title>
+    
+    <script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
+    <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/node-dark.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Class: Collection</h1>
+    
+    
+
+
+
+<section>
+    
+<header>
+    <h2>
+    Collection
+    </h2>
+    
+        <div class="class-description">`XM.Collection` is a standard class for querying the xTuple data source.
+    It should be sub classed for use with sub classes of `XM.Model` (which
+    themselves typically exist in the `XM` name space). To create a new class,
+    simply extened `XM.Collection` and indicate the model to reference:
+
+      XM.MyCollection = XM.Collection.extend({
+        model: XM.MyModel
+      })
+
+    Once your class is created you can intantiate one and call `fetch` to
+    retreive all records of that type.
+
+      var coll = new XM.MyCollection();
+      coll.fetch();
+
+    You can access the results on the `models` array.
+
+      coll.models;
+
+    You can specify options in fetch including `success` and `query` options.
+    The `success` option is the callback executed when `fetch` sucessfully
+    completes.
+
+      var options = {
+        success: function () {
+          console.log('Fetch completed!')
+        }
+      };
+      coll.fetch(options);
+
+    Use a query object to limit the result set. This query will return results
+    with the first name 'Frank' and last name 'Farley':
+
+      var coll = new XM.ContactListItemCollection();
+      var options = {
+        query: {
+          parameters":[{
+           attribute:"firstName",
+           value: "Mike"
+          }, {
+           attribute: "lastName",
+           value: "Farley"
+          }]
+        }
+      };
+      coll.fetch(options);
+
+    The `query` object supports the following:
+parameters - Array of objects describing what to filter on.
+        Supports the following properties:
+        > attribute - The name of the attrbute to filter on
+        > operator - The operator to perform comparison on.
+        > value - The matching value.
+        > includeNull - "OR" include the row if the attribute is null irrespective
+          of whether the operator matches.
+orderBy - Array of objects designating sort order. Supports
+        the following properties:
+        > attrbute - Attribute to sort by.
+        > descending - `Boolean` value. If false or absent sort ascending.
+rowLimit - Maximum rows to return
+rowOffset - Result offset. Always use together with `orderBy`.
+
+    If no operator is provided in a parameter object, the default will be `=`.
+    Supported operators include:
+      - `=`
+      - `!=`
+      - `<`
+      - `<=`
+      - `>`
+      - `>=`
+      - `BEGINS_WITH` -- (checks if a string starts with another one)
+      - `ENDS_WITH` --   (checks if a string ends with another one)
+      - `MATCHES` --     (checks if a string is matched by a case insensitive regexp)
+      - `ANY` --         (checks if the thing on its left is contained in the array
+                         on its right)
+
+    Examples:
+
+    Fetch the first 10 Contacts ordered by last name, then first name.
+
+      var coll = new XM.ContactListItemCollection();
+      var options = {
+        query: {
+          rowLimit: 10,
+          orderBy: [{
+            attribute: "lastName"
+          }, {
+            attribute: "firstName"
+          }]
+        }
+      };
+      coll.fetch(options);
+
+    Fetch Contacts with 'Frank' in the name:
+
+      var coll = new XM.ContactListItemCollection();
+      var options = {
+        query: {
+          parameters:[{
+            attribute: "name",
+            operator: "MATCHES",
+            value: "Frank"
+          }],
+        }
+      };
+      coll.fetch(options);
+
+    Fetch Accounts in Virginia ordering by Contact name descending. Note
+    support for querying object hierchary paths.
+
+      var coll = new XM.AccountListItemCollection();
+      var options = {
+        query: {
+          parameters:[{
+            attribute: "primaryContact.address.state",
+            value: "VA"
+          }],
+          orderBy: [{
+            attribute: "primaryContact.name",
+            descending: true
+          }]
+        }
+      };
+      coll.fetch(options);
+
+    Fetch Items with numbers starting with 'B'.
+
+      var coll = new XM.ItemListItemCollection();
+      var options = {
+        query: {
+          parameters:[{
+            attribute: "number",
+            operator: "BEGINS_WITH",
+            value: "B"
+          }]
+        }
+      };
+      coll.fetch(options);
+
+    Fetch active To Do items due on or after July 17, 2009.
+
+      var coll = new XM.ToDoListItemCollection();
+      var dt = new Date();
+      dt.setMonth(7);
+      dt.setDate(17);
+      dt.setYear(2009);
+      var options = {
+        query: {
+          parameters:[{
+            attribute:"dueDate",
+            operator: ">=",
+            value: dt
+          }, {
+            attribute: "isActive",
+            value: true
+          }]
+        }
+      };
+      coll.fetch(options);
+
+    Fetch contact(s) with an account number, account name, (contact) name,
+    phone, or city matching 'ttoys' and a first name beginning with 'M'. Note
+    an attribute array uses `OR` logic for comparison against all listed
+    attributes.
+
+      var coll = new XM.ContactListItemCollection();
+      var options = {
+        query: {
+          parameters:[{
+            attribute: ["account.number", "account.name", "name", "phone", "address.city"],
+            operator: "MATCHES",
+            value: "ttoys"
+          }, {
+            attribute: "firstName",
+            operator: "BEGINS_WITH",
+            value: "M"
+          }]
+        }
+      };
+      coll.fetch(options);</div>
+    
+</header>  
+
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+<dt>
+    <h4 class="name" id="Collection"><span class="type-signature"></span>new Collection</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>collection.js, line 195</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+    
+    </div>
+    
+    
+        <h3 class="subsection-title">Extends</h3>
+        
+        <ul>
+            <li>Backbone.Collection</li>
+        </ul>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="add"><span class="type-signature"></span>add</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Handle status change.
+    </div>
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>collection.js, line 200</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="sync"><span class="type-signature"></span>sync</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Sync to xTuple datasource.
+    </div>
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>collection.js, line 237</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+</article>
+
+</section>  
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="XM.Alarm.html">Alarm</a></li><li><a href="XM.Characteristic.html">Characteristic</a></li><li><a href="XM.CharacteristicAssignment.html">CharacteristicAssignment</a></li><li><a href="XM.CharacteristicCollection.html">CharacteristicCollection</a></li><li><a href="XM.CharacteristicOption.html">CharacteristicOption</a></li><li><a href="XM.Collection.html">Collection</a></li><li><a href="XM.Comment.html">Comment</a></li><li><a href="XM.CommentType.html">CommentType</a></li><li><a href="XM.CommentTypeCollection.html">CommentTypeCollection</a></li><li><a href="XM.CommentTypeSource.html">CommentTypeSource</a></li><li><a href="XM.Document.html">Document</a></li><li><a href="XM.DocumentAssignmentsMixin.html">DocumentAssignmentsMixin</a></li><li><a href="XM.Info.html">Info</a></li><li><a href="XM.Model.html">Model</a></li><li><a href="XM.Source.html">Source</a></li><li><a href="XM.SourceCollection.html">SourceCollection</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Sun Oct 07 2012 21:36:10 GMT-0400 (EDT)
+</footer>
+
+<script> sh_highlightDocument(); </script>
+</body>
+</html>
