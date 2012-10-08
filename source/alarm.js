@@ -11,8 +11,7 @@ white:true*/
 
     @extends XM.Document
   */
-  XM.Alarm = XM.Document.extend({
-  /** @scope XM.Alarm.prototype */
+  XM.Alarm = XM.Document.extend(/** @lends XM.Alarm.prototype */{
 
     numberPolicy: XM.Document.AUTO_NUMBER,
 

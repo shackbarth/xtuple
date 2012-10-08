@@ -13,15 +13,14 @@ white:true*/
     `info` models are suitable for displaying information on lists and widgets.
     Usually they are not themselves editable, but special functions are included that
     allow the `info` model to determine whether its "full" counterpart is editable.
-    
+
     The special `could` privileges are designed to take personal privilege settings
     into account, so it is important that info models have the necessary attributes
     such as `owner` and/or `assignedTo` to check for access.
 
     @extends XM.Model
   */
-  XM.Info = XM.Model.extend({
-    /** @scope XM.Info */
+  XM.Info = XM.Model.extend(/** @lends XM.Info */{
 
     /**
       The "full" editable counter part for this model. This is model whose privileges
@@ -30,11 +29,11 @@ white:true*/
       @type {String}
     */
     editableModel: null,
-    
+
     descriptionKey: "description",
-    
+
     numberKey: "number",
-    
+
     readOnly: true,
 
     // ..........................................................

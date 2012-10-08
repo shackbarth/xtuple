@@ -192,8 +192,7 @@ white:true*/
 
     @extends Backbone.Collection
   */
-  XM.Collection = Backbone.Collection.extend({
-    /** @scope XM.Collection.prototype */
+  XM.Collection = Backbone.Collection.extend(/** @lends XM.Collection.prototype */{
 
     /**
       Handle status change.
@@ -213,11 +212,11 @@ white:true*/
     },
 
     fetch: function (options) {
-      /**
-       * Use default order attribute if it's specified and if no options are specified
-       * TODO: we should apply the default ordering even in the presence of options
-       * so long as the options don't have an orderBy command
-       */
+      //
+      // Use default order attribute if it's specified and if no options are specified
+      // TODO: we should apply the default ordering even in the presence of options
+      // so long as the options don't have an orderBy command
+      //
       options = options ? _.clone(options) :
         this.orderAttribute ? { query: this.orderAttribute } : {};
       options.force = true;

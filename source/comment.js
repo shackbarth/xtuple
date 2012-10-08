@@ -11,8 +11,7 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.CommentType = XM.Model.extend({
-    /** @scope XM.CommentType.prototype */
+  XM.CommentType = XM.Model.extend(/** @lends XM.CommentType.prototype */{
 
     recordType: 'XM.CommentType',
 
@@ -28,26 +27,24 @@ white:true*/
     ]
 
   });
-  
+
   /**
     @class
 
     @extends XM.Model
   */
-  XM.CommentTypeSource = XM.Model.extend({
-    /** @scope XM.CommentTypeSource.prototype */
+  XM.CommentTypeSource = XM.Model.extend(/** @lends XM.CommentTypeSource.prototype */{
 
     recordType: 'XM.CommentTypeSource'
 
   });
-  
+
   /**
     @class
 
     @extends XM.Model
   */
-  XM.Source = XM.Model.extend({
-    /** @scope XM.Source.prototype */
+  XM.Source = XM.Model.extend(/** @lends XM.Source.prototype */{
 
     recordType: 'XM.Source'
 
@@ -60,9 +57,8 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.Comment = XM.Model.extend({
-    /** @scope XM.Comment.prototype */
-    
+  XM.Comment = XM.Model.extend(/** @lends XM.Comment.prototype */{
+
     /**
       The name of the source used in conjunction with `CommentTypeSource`
       to determine which comment types are available in a given comment sub class.
@@ -73,7 +69,7 @@ white:true*/
       "created",
       "createdBy"
     ],
-    
+
     requiredAttributes: [
       "commentType"
     ],
@@ -91,7 +87,7 @@ white:true*/
       result.text = "";
       return result;
     },
-    
+
     initialize: function (attributes, options) {
       XM.Model.prototype.initialize.apply(this, arguments);
       this.on('statusChange', this.statusChanged);
@@ -106,7 +102,7 @@ white:true*/
 
       return !editable || XM.Model.prototype.isReadOnly.apply(this, arguments);
     },
-    
+
     statusChanged: function () {
       var status = this.getStatus(),
         K = XM.Model;
@@ -126,20 +122,18 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.CommentTypeCollection = XM.Collection.extend({
-    /** @scope XM.CommentTypeCollection.prototype */
+  XM.CommentTypeCollection = XM.Collection.extend(/** @lends XM.CommentTypeCollection.prototype */{
 
     model: XM.CommentType
 
   });
-  
+
   /**
     @class
 
     @extends XM.Collection
   */
-  XM.SourceCollection = XM.Collection.extend({
-    /** @scope XM.SourceCollection.prototype */
+  XM.SourceCollection = XM.Collection.extend(/** @lends XM.SourceCollection.prototype */{
 
     model: XM.Source
 

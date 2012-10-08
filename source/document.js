@@ -12,12 +12,12 @@ white:true*/
     Use this mixin for setting up document associations.
   */
   XM.DocumentAssignmentsMixin = {
-    
+
     /**
       A mapping of attributes whose values have been mapped to another property.
     */
     attributeDelegates: null,
-    
+
     /**
       A collection of mixed document assignment models that converges all model relations
       where the related model prototype `isDocumentAssignment` property is true.
@@ -66,12 +66,11 @@ white:true*/
 
     Includes functionality common to xTuple documents uniquely identified by
     a user accessible `documentKey'.
-    
+
     @extends XM.Model
     @extends XM.DocumentAssignmentsMixin
   */
-  XM.Document = XM.Model.extend({
-    /** @scope XM.Document */
+  XM.Document = XM.Model.extend(/** @lends XM.Document */{
 
     /**
       The unique property for the document, typically a number, code or name.
@@ -299,11 +298,10 @@ white:true*/
     }
 
   });
-  
+
   XM.Document = XM.Document.extend(XM.DocumentAssignmentsMixin);
 
-  _.extend(XM.Document, {
-      /** @scope XM.Document */
+  _.extend(XM.Document, /** @lends XM.Document */{
 
     /**
       Numbers are manually generated.
