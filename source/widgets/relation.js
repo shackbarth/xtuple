@@ -281,6 +281,7 @@ regexp:true, undef:true, trailing:true, white:true */
         Workspace = this._Workspace,
         Model = Workspace && Workspace.prototype.model ?
           XT.getObjectByName(Workspace.prototype.model)  : null,
+        originalValue,
         couldNotCreate = Model ? !Model.canCreate() : true,
         setPrivileges = function () {
           if (value && newId) {
@@ -292,16 +293,19 @@ regexp:true, undef:true, trailing:true, white:true */
       // an id instead of a whole model.
       if (_.isNumber(value) || _.isString(value)) {
         if (this.value === value || oldId === value) { return; }
+        originalValue = value;
         Model = XT.getObjectByName(this._collection.model.prototype.recordType);
-        value = new Model({id: value});
+        value = new Model();
         options = {
+          id: originalValue,
           success: function () {
             that.setValue(value);
+          },
+          error: function () {
+            X.log("Error setting relational widget value");
           }
         };
-        this.value = value;
-        // XXX shouldn't we pass the options in here?
-        value.fetch(/*options*/);
+        value.fetch(options);
         return;
       }
 
