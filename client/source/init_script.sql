@@ -1,0 +1,68 @@
+-- [ START ] initdb
+
+-- run core orm scripts
+\cd ../../orm/source;
+\i init_script.sql;
+\cd ../../client/source;
+
+-- drop xm views
+\i ../../orm/source/drop_xm_views.sql;
+
+-- [ END ] initdb
+
+-- [ START ] xt
+
+-- xt functions
+\i xt/functions/cntctmerge.sql;
+\i xt/functions/cntctrestore.sql;
+\i xt/functions/createuser.sql;
+
+-- xt trigger functions
+\i xt/trigger_functions/comment_did_change.sql
+
+-- xt tables
+\i xt/tables/comment.sql
+\i xt/tables/emlprofile.sql
+\i xt/tables/incdtemlprofile.sql
+\i xt/tables/incdtcatemlprofile.sql
+\i xt/tables/useracct.sql
+
+-- xt javascript
+\i xt/javascript/session.sql;
+
+-- xt views
+
+\i xt/views/doc.sql;
+\i xt/views/crmacctaddr.sql;
+\i xt/views/crmacctcomment.sql;
+\i xt/views/incdtinfo.sql;
+\i xt/views/nodeusr.sql;
+\i xt/views/opheadinfo.sql;
+\i xt/views/prjinfo.sql;
+\i xt/views/todoiteminfo.sql;
+
+-- delete system orms
+\i ../../orm/source/delete_system_orms.sql;
+
+-- [ END ] xt
+
+-- [ START ] xm
+
+-- xm/javascript
+\i xm/javascript/address.sql;
+\i xm/javascript/contact.sql;
+\i xm/javascript/crm.sql;
+\i xm/javascript/database_information.sql;
+\i xm/javascript/incident.sql;
+\i xm/javascript/model.sql;
+\i xm/javascript/project.sql;
+\i xm/javascript/to_do.sql;
+-- [ END ] xm
+
+-- xtbatch (TODO: This should be moved elsewhere)
+\i create_xtbatch_schema.sql;
+\i xtbatch/tables/batch.sql
+
+-- public
+\i public/functions/geteffectivextuser.sql;
+\i public/tables/schemaord.sql;
