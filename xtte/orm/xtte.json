@@ -54,4 +54,37 @@
     ],
     "isSystem": true
   },
+  {
+    "context": "xtte",
+    "nameSpace": "XM",
+    "type": "Item",
+    "table": "te.teexp",
+    "isExtension": true,
+    "comment": "Extended by Time and Expense",
+    "relations": [
+      {
+        "column": "teexp_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+     {
+       "name": "expenseCategory",
+       "toOne": {
+         "isNested": true,
+         "type": "Number",
+         "column": "teexp_expcat_id"
+       }
+     },
+     {
+       "name": "ledgerAccount",
+       "attr": {
+         "isNested": true,
+         "type": "Number",
+         "column": "teexp_accnt_id"
+       }
+     }
+    ],
+    "isSystem": true
+  }
 ]
