@@ -251,6 +251,167 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "ContactInfo",
+    "table": "cntct",
+    "idSequenceName": "cntct_cntct_id_seq",
+    "orderSequence": "ContactNumber",
+    "comment": "Contact Info Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainAllContacts",
+        "read": "ViewAllContacts",
+        "update": "MaintainAllContacts",
+        "delete": "MaintainAllContacts"
+      },
+      "personal": {
+        "create": "MaintainPersonalContacts",
+        "read": "ViewPersonalContacts",
+        "update": "MaintainPersonalContacts",
+        "delete": "MaintainPersonalContacts",
+        "properties": [
+          "owner"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cntct_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "cntct_number"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "cntct_active"
+        }
+      },
+      {
+        "name": "honorific",
+        "attr": {
+          "type": "String",
+          "column": "cntct_honorific"
+        }
+      },
+      {
+        "name": "firstName",
+        "attr": {
+          "type": "String",
+          "column": "cntct_first_name"
+        }
+      },
+      {
+        "name": "middleName",
+        "attr": {
+          "type": "String",
+          "column": "cntct_middle"
+        }
+      },
+      {
+        "name": "lastName",
+        "attr": {
+          "type": "String",
+          "column": "cntct_last_name"
+        }
+      },
+      {
+        "name": "suffix",
+        "attr": {
+          "type": "String",
+          "column": "cntct_suffix"
+        }
+      },
+      {
+        "name": "jobTitle",
+        "attr": {
+          "type": "String",
+          "column": "cntct_title"
+        }
+      },
+      {
+        "name": "initials",
+        "attr": {
+          "type": "String",
+          "column": "cntct_initials"
+        }
+      },
+      {
+        "name": "phone",
+        "attr": {
+          "type": "String",
+          "column": "cntct_phone"
+        }
+      },
+      {
+        "name": "alternate",
+        "attr": {
+          "type": "String",
+          "column": "cntct_phone2"
+        }
+      },
+      {
+        "name": "fax",
+        "attr": {
+          "type": "String",
+          "column": "cntct_fax"
+        }
+      },
+      {
+        "name": "primaryEmail",
+        "attr": {
+          "type": "String",
+          "column": "cntct_email"
+        }
+      },
+      {
+        "name": "webAddress",
+        "attr": {
+          "type": "String",
+          "column": "cntct_webaddr"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "cntct_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "address",
+        "toOne": {
+          "isNested": true,
+          "type": "AddressInfo",
+          "column": "cntct_addr_id"
+        }
+      },
+      {
+        "name": "email",
+        "toMany": {
+          "type": "ContactEmail",
+          "column": "cntct_id",
+          "inverse": "contact",
+          "isNested": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "ContactAccount",
     "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",

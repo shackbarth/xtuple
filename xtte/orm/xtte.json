@@ -1,0 +1,57 @@
+[
+  {
+    "context": "xtte",
+    "nameSpace": "XM",
+    "type": "Customer",
+    "table": "te.tecustrate",
+    "isExtension": true,
+    "comment": "Extended by Time and Expense",
+    "relations": [
+      {
+        "column": "tecustrate_cust_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+     {
+       "name": "rate",
+       "attr": {
+         "type": "Number",
+         "column": "tecustrate_rate"
+       }
+     },
+     {
+       "name": "currency",
+       "toOne": {
+         "type": "Currency",
+         "column": "tecustrate_currency_id"
+       }
+     }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtte",
+    "nameSpace": "XM",
+    "type": "Employee",
+    "table": "te.teemp",
+    "isExtension": true,
+    "comment": "Extended by Time and Expense",
+    "relations": [
+      {
+        "column": "teemp_emp_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+     {
+       "name": "contractor",
+       "attr": {
+         "type": "Number",
+         "column": "teemp_contractor"
+       }
+     }
+    ],
+    "isSystem": true
+  },
+]
