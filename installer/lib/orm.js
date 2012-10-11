@@ -14,6 +14,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     parseFile,
     calculateDependencies,
     dependenciesFor,
+    findExisting,
     checkDependencies,
     cleanse,
     installQueue,
@@ -188,18 +189,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return ret;
     }
   };
+  
+  findExisting = function (nameSpace, type) {
+    return _.find(existing, function (orm) {
+      return orm.namespace === nameSpace && orm.type === type;
+    });
+  };
 
   dependenciesFor = function (socket, orm, dependencies) {
     var properties,
       extensions,
       namespace,
       orms,
-      dep,
-      findExisting = function (dep) {
-        return _.find(existing, function (orm) {
-          return orm.namespace === dep.nameSpace && orm.type === dep.type;
-        });
-      };
+      dep;
     dependencies = dependencies || orm.dependencies || [];
     properties = orm.properties || [];
     extensions = orm.extensions || [];
@@ -214,7 +216,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         type = which.type;
         ns = orm.nameSpace;
         dep = {nameSpace: ns, type: type};
-        if (!dependencies.contains(dep) && !findExisting(dep)) {
+        if (!dependencies.contains(dep) && !findExisting(ns, type)) {
           dependencies.push({nameSpace: ns, type: type});
         }
       }
@@ -346,26 +348,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         });
       });
 
-      // organize and associate the extensions
-      _.each(extensions, function (context) {
-        _.each(context, function (namespace) {
-          _.each(_.keys(namespace), function (name) {
-            var ext, ns, type, orm;
-            ext = namespace[name];
-            ns = ext.nameSpace;
-            type = ext.type;
-            try {
-              orm = orms[ns][type];
-            } catch (err) { return; }
-            if (!orm.extensions) { orm.extensions = []; }
-            orm.extensions.push(ext);
-          });
-        });
-      });
-
-      socket.orms = orms;
-      socket.extensions = extensions;
-
       // Get a list of existing orms
       sql = "select orm_namespace as namespace, " +
             " orm_type as type " +
@@ -373,6 +355,33 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             "where not orm_ext;";
       callback = function (err, resp) {
         existing = resp.rows;
+        
+        // organize and associate the extensions
+        _.each(extensions, function (context) {
+          _.each(context, function (namespace) {
+            _.each(_.keys(namespace), function (name) {
+              var ext, ns, type, orm;
+              ext = namespace[name];
+              ns = ext.nameSpace;
+              type = ext.type;
+              try {
+                orm = orms[ns][type];
+              } catch (err) { return; }
+              if (orm) {
+                if (!orm.extensions) { orm.extensions = []; }
+                orm.extensions.push(ext);
+              } else if (findExisting(ns, type)) {
+                orms = X.addProperties(orms, ns, type, ext);
+              } else {
+                socket.emit("message", "no base orm for extension %@.%@".f(ns, type));
+              }
+            });
+          });
+        });
+
+        socket.orms = orms;
+        socket.extensions = extensions;
+        
         calculateDependencies.call(this, socket);
         ack(orms);
       };
