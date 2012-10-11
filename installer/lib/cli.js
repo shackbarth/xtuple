@@ -32,10 +32,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
     con.on("connect", function () {
       var options = { path: path };
-      con.emit("refresh", options, function () {
+      con.emit("select", credentials, function (ok) {
+        if (!ok) issue(X.fatal("Could not connect to database"));
         // when the refresh comes back we know its done calculating dependencies
-        con.emit("select", credentials, function (ok) {
-          if (!ok) issue(X.fatal("Could not connect to database"));
+        con.emit("refresh", options, function () {
           con.emit("install", function () {
             // all done
             X.log("completed install");
