@@ -13,9 +13,18 @@
 
 XT.stringsFor("en_US", {
 
+  "_apply": "Apply",
   "_back": "Back",
+  "_comments": "Comments",
+  "_characteristics": "Characteristics",
+  "_documents": "Documents",
   "_export": "Export",
   "_new": "New",
+  "_none": "None",
+  "_overview": "Overview",
+  "_refresh": "Refresh",
+  "_save": "Save",
+  "_saveAndNew": "Save and New"
   "_search": "Search"
   
 });
