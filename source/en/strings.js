@@ -21,10 +21,11 @@ XT.stringsFor("en_US", {
   "_export": "Export",
   "_new": "New",
   "_none": "None",
+  "_ok": "Ok",
   "_overview": "Overview",
   "_refresh": "Refresh",
   "_save": "Save",
-  "_saveAndNew": "Save and New"
+  "_saveAndNew": "Save and New",
   "_search": "Search"
   
 });
