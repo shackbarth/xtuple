@@ -467,5 +467,3 @@ var lang = XT.stringsFor("en_US", {
   "_subject": "Subject"
   
 });
-
-XT.locale.setLanguage("en_US");
