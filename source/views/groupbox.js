@@ -12,7 +12,7 @@ white:true*/
     @name XV.Groupbox
     @see XV.ScrollableGroupbox
    */
-  enyo.kind(/** @lends XV.Groupbox */{
+  enyo.kind(/** @lends XV.Groupbox# */{
     name: "XV.Groupbox",
     kind: "FittableRows",
     classes: "xv-groupbox",
@@ -28,7 +28,7 @@ white:true*/
     @name XV.ScrollableGroupbox
     @see XV.Groupbox
    */
-  enyo.kind(/** @lends XV.ScrollableGroupbox */{
+  enyo.kind(/** @lends XV.ScrollableGroupbox# */{
     name: "XV.ScrollableGroupbox",
     kind: "Scroller",
     horizontal: "hidden",

@@ -11,7 +11,7 @@ regexp:true, undef:true, trailing:true, white:true */
     @name XV.Input
     @see XV.InputWidget
    */
-  enyo.kind(/** @lends XV.Input */{
+  enyo.kind(/** @lends XV.Input# */{
     name: "XV.Input",
     classes: "xv-input",
     published: {
@@ -88,7 +88,7 @@ regexp:true, undef:true, trailing:true, white:true */
     @name XV.InputWidget
     @extends @XV.Input
    */
-  enyo.kind(/** @lends XV.InputWidget */{
+  enyo.kind(/** @lends XV.InputWidget# */{
     name: "XV.InputWidget",
     kind: "XV.Input",
     classes: "xv-inputwidget",

@@ -14,7 +14,7 @@ trailing:true white:true*/
     @name XV.ListRelationsBox
     @extends XV.Groupbox
   */
-  enyo.kind(/** @lends XV.ListRelationsBox */{
+  enyo.kind(/** @lends XV.ListRelationsBox# */{
     name: "XV.ListRelationsBox",
     kind: "XV.Groupbox",
     classes: "panel",

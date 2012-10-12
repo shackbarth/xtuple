@@ -11,7 +11,7 @@ white:true*/
     @class
     @name XV.Scroller
    */
-  enyo.kind(/** @lends XV.Scroller */{
+  enyo.kind(/** @lends XV.Scroller# */{
     name: "XV.Scroller",
     kind: "Scroller",
     classes: "xv-scroller"

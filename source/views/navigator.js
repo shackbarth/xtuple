@@ -13,7 +13,7 @@ trailing:true white:true*/
     @class
     @name XV.Navigator
    */
-  enyo.kind(/** @lends XV.Navigator */{
+  enyo.kind(/** @lends XV.Navigator# */{
     name: "XV.Navigator",
     kind: "Panels",
     classes: "app enyo-unselectable",

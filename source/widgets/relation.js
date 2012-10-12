@@ -4,7 +4,14 @@ regexp:true, undef:true, trailing:true, white:true */
 
 (function () {
 
-  enyo.kind({
+  /**
+    Implements a dropdown. Unlike the {XV.RelationWidget}, the collection is stored local to the
+    widget.
+
+    @class
+    @name XV.Relation
+   */
+  enyo.kind(/** @lends XV.Relation# */{
     name: "XV.RelationWidget",
     kind: enyo.Control,
     classes: "xv-inputwidget xv-relationwidget",

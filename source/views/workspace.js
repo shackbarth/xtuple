@@ -89,7 +89,7 @@ trailing:true white:true*/
     @extends XV.ExtensionsMixin
     @see XV.WorkspaceContainer
   */
-  var workspaceHash = enyo.mixin(XV.EditorMixin, /** @lends XV.Workspace */{
+  var workspaceHash = enyo.mixin(XV.EditorMixin, /** @lends XV.Workspace# */{
     name: "XV.Workspace",
     kind: "FittableRows",
     published: {
@@ -320,7 +320,7 @@ trailing:true white:true*/
     @name XV.WorkspaceContainer
     @see XV.Workspace
    */
-  enyo.kind(/** @lends XV.WorkspaceContainer */{
+  enyo.kind(/** @lends XV.WorkspaceContainer# */{
     name: "XV.WorkspaceContainer",
     kind: "Panels",
     arrangerKind: "CollapsingArranger",

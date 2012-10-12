@@ -11,7 +11,7 @@ regexp:true, undef:true, trailing:true, white:true */
     @name XV.FileInput
     @class
    */
-  enyo.kind(/** @lends XV.FileInput */{
+  enyo.kind(/** @lends XV.FileInput# */{
     name: "XV.FileInput",
     kind: "XV.Input",
     events: {

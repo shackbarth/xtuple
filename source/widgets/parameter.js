@@ -12,7 +12,7 @@ white:true*/
     @name XV.ParameterItem
     @see XV.ParameterWidget
    */
-  enyo.kind(/** @lends XV.ParameterItem */{
+  enyo.kind(/** @lends XV.ParameterItem# */{
     name: "XV.ParameterItem",
     classes: "xv-parameter-item",
     published: {

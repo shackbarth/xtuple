@@ -11,7 +11,7 @@ regexp:true, undef:true, trailing:true, white:true */
     @name XV.TextArea
     @extends XV.Input
    */
-  enyo.kind(/** @lends XV.TextArea */{
+  enyo.kind(/** @lends XV.TextArea# */{
     name: "XV.TextArea",
     kind: "XV.Input",
     classes: "xv-textarea",
