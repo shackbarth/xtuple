@@ -42,8 +42,8 @@ white:true*/
     },
 
     setLanguage: function (language) {
-      if (this.getHasStrings()) {
-        return console.log("attempt to set a new language");
+      if (typeof language === 'string') {
+        language = XT.getLanguage(language) || {};
       }
       this.setLang(language.lang || "en");
       this.setStrings(language.strings || {});
@@ -62,16 +62,27 @@ white:true*/
     }
 
   };
+  
+  XT.getLanguage = function (lang) {
+    return _.find(XT.languages, function (obj) {
+      return obj.lang === lang;
+    });
+  };
 
   XT.stringsFor = function (lang, stringsHash) {
-    if (!XT.lang) {
-      XT.lang = {
+    var language;
+    if (!XT.languages) { XT.languages = []; }
+    language = XT.getLanguage(lang);
+    if (language) {
+      language.strings = _.extend(language.strings, stringsHash);
+    } else {
+      language = {
         lang: lang,
         strings: stringsHash
       };
-    } else {
-      console.log("XT.stringsFor(): request to write over current language");
+      XT.languages.push(language);
     }
+    return language;
   };
 
 }());
