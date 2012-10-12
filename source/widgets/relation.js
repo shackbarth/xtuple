@@ -9,9 +9,9 @@ regexp:true, undef:true, trailing:true, white:true */
     widget.
 
     @class
-    @name XV.Relation
+    @name XV.RelationWidget
    */
-  enyo.kind(/** @lends XV.Relation# */{
+  enyo.kind(/** @lends XV.RelationWidget# */{
     name: "XV.RelationWidget",
     kind: enyo.Control,
     classes: "xv-inputwidget xv-relationwidget",
