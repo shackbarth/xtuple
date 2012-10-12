@@ -20,7 +20,7 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.Info = XM.Model.extend(/** @lends XM.Info */{
+  XM.Info = XM.Model.extend(/** @lends XM.Info# */{
 
     /**
       The "full" editable counter part for this model. This is model whose privileges

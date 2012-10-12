@@ -11,7 +11,7 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.CommentType = XM.Model.extend(/** @lends XM.CommentType.prototype */{
+  XM.CommentType = XM.Model.extend(/** @lends XM.CommentType# */{
 
     recordType: 'XM.CommentType',
 
@@ -33,7 +33,7 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.CommentTypeSource = XM.Model.extend(/** @lends XM.CommentTypeSource.prototype */{
+  XM.CommentTypeSource = XM.Model.extend(/** @lends XM.CommentTypeSource# */{
 
     recordType: 'XM.CommentTypeSource'
 
@@ -44,7 +44,7 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.Source = XM.Model.extend(/** @lends XM.Source.prototype */{
+  XM.Source = XM.Model.extend(/** @lends XM.Source# */{
 
     recordType: 'XM.Source'
 
@@ -57,7 +57,7 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.Comment = XM.Model.extend(/** @lends XM.Comment.prototype */{
+  XM.Comment = XM.Model.extend(/** @lends XM.Comment# */{
 
     /**
       The name of the source used in conjunction with `CommentTypeSource`
@@ -122,7 +122,7 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.CommentTypeCollection = XM.Collection.extend(/** @lends XM.CommentTypeCollection.prototype */{
+  XM.CommentTypeCollection = XM.Collection.extend(/** @lends XM.CommentTypeCollection# */{
 
     model: XM.CommentType
 
@@ -133,7 +133,7 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.SourceCollection = XM.Collection.extend(/** @lends XM.SourceCollection.prototype */{
+  XM.SourceCollection = XM.Collection.extend(/** @lends XM.SourceCollection# */{
 
     model: XM.Source
 

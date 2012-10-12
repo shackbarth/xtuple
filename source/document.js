@@ -70,7 +70,7 @@ white:true*/
     @extends XM.Model
     @extends XM.DocumentAssignmentsMixin
   */
-  XM.Document = XM.Model.extend(/** @lends XM.Document */{
+  XM.Document = XM.Model.extend(/** @lends XM.Document# */{
 
     /**
       The unique property for the document, typically a number, code or name.
@@ -301,7 +301,7 @@ white:true*/
 
   XM.Document = XM.Document.extend(XM.DocumentAssignmentsMixin);
 
-  _.extend(XM.Document, /** @lends XM.Document */{
+  _.extend(XM.Document, /** @lends XM.Document# */{
 
     /**
       Numbers are manually generated.

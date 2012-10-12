@@ -192,7 +192,7 @@ white:true*/
 
     @extends Backbone.Collection
   */
-  XM.Collection = Backbone.Collection.extend(/** @lends XM.Collection.prototype */{
+  XM.Collection = Backbone.Collection.extend(/** @lends XM.Collection# */{
 
     /**
       Handle status change.

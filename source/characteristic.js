@@ -11,7 +11,7 @@ white:true*/
 
     @extends XM.Document
   */
-  XM.Characteristic = XM.Document.extend(/** @lends XM.Characteristic.prototype */{
+  XM.Characteristic = XM.Document.extend(/** @lends XM.Characteristic# */{
 
     recordType: 'XM.Characteristic',
 
@@ -99,7 +99,7 @@ white:true*/
 
   });
 
-  _.extend(XM.Characteristic, /** @lends XM.Characteristic */{
+  _.extend(XM.Characteristic, /** @lends XM.Characteristic# */{
 
     /**
       @static
@@ -132,7 +132,7 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.CharacteristicOption = XM.Model.extend(/** @lends XM.CharacteristicOption.prototype */{
+  XM.CharacteristicOption = XM.Model.extend(/** @lends XM.CharacteristicOption# */{
 
     recordType: 'XM.CharacteristicOption',
 
@@ -153,7 +153,7 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.CharacteristicAssignment = XM.Model.extend(/** @lends XM.CharacteristicAssignment.prototype */{
+  XM.CharacteristicAssignment = XM.Model.extend(/** @lends XM.CharacteristicAssignment# */{
 
     requiredAttributes: [
       "characteristic"
@@ -186,7 +186,7 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.CharacteristicCollection = XM.Collection.extend(/** @lends XM.CharacteristicCollection.prototype */{
+  XM.CharacteristicCollection = XM.Collection.extend(/** @lends XM.CharacteristicCollection# */{
 
     model: XM.Characteristic
 

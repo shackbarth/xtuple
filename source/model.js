@@ -33,7 +33,7 @@ white:true*/
     @param {Object} Attributes
     @param {Object} Options
   */
-  XM.Model = Backbone.RelationalModel.extend(/** @lends XM.Model */{
+  XM.Model = Backbone.RelationalModel.extend(/** @lends XM.Model# */{
 
     /**
       Set to true if you want an id fetched from the server when the `isNew` option
@@ -1114,7 +1114,7 @@ white:true*/
   // CLASS METHODS
   //
 
-  _.extend(XM.Model, /** @lends XM.Model */{
+  _.extend(XM.Model, /** @lends XM.Model# */{
 
     /**
       Use this function to find out whether a user can create records before
