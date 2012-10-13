@@ -13,10 +13,13 @@
 
 XT.stringsFor("en_US", {
 
+  "_advancedSearch": "Advanced Search",
   "_apply": "Apply",
   "_back": "Back",
+  "_cancel": "Cancel",
   "_comments": "Comments",
   "_characteristics": "Characteristics",
+  "_discard": "Discard",
   "_documents": "Documents",
   "_export": "Export",
   "_new": "New",
@@ -26,7 +29,23 @@ XT.stringsFor("en_US", {
   "_refresh": "Refresh",
   "_save": "Save",
   "_saveAndNew": "Save and New",
-  "_search": "Search"
+  "_search": "Search",
+  
+  // ********
+  // Messages
+  // ********
+  
+  "_addressShared": "There are multiple records sharing this Address.",
+  "_canNotUpdate": "Insufficient privileges to edit the record.",
+  "_changeAll": "Change All",
+  "_changeOne": "Change only this one",
+  "_countryInvalid": "Country is invalid.",
+  "_invalidAddress": "Invalid Address",
+  "_insufficientViewPrivileges": "You do not have sufficient privileges to view this record.",
+  "_localResourceNotAllowed": "Not allowed to load local resource",
+  "_logoutConfirmation": "Are you sure you want to log out?",
+  "_unsavedChanges": "You have unsaved changes.",
+  "_saveYourWork?": "Do you want to save your work?"
   
 });
 
