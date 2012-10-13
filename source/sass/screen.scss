@@ -547,20 +547,24 @@ body {
   color: #ff0000;
 }
 
-/* ProjectTaskListRelationsBox.scss */
-.xv-project-tasks-box {
-  &.panel {
-    width: 675px;
-  }
+/* RelationsEditorBox.scss */
+.xv-relations-editor-box {
   .xv-groupbox {
     padding-top: 0px;
     padding-bottom: 0px;
     padding-left: 0px;
     margin-right: 0px;
     border: none;
-    &.panel {
-  		min-width: 0px;
-  	}
+  }
+  &.panel {
+    width: 350px;
+  }
+}
+
+/* ProjectTaskListRelationsBox.scss */
+.xv-project-tasks-box {
+  &.panel {
+    width: 675px;
   }
 }
 

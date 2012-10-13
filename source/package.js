@@ -4,6 +4,7 @@ enyo.depends(
   "../lib/backbone-x",
   "../lib/models",
   "../lib/enyo-x",
+  "en",
   "application",
   "stylesheets/screen.css",
   "app.js",
