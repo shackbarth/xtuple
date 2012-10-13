@@ -555,9 +555,9 @@ body {
     padding-left: 0px;
     margin-right: 0px;
     border: none;
-    &.panel {
-  		min-width: 0px;
-  	}
+  }
+  &.panel {
+    width: 350px;
   }
 }
 
