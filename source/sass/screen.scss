@@ -547,11 +547,8 @@ body {
   color: #ff0000;
 }
 
-/* ProjectTaskListRelationsBox.scss */
-.xv-project-tasks-box {
-  &.panel {
-    width: 675px;
-  }
+/* RelationsEditorBox.scss */
+.xv-relations-editor-box {
   .xv-groupbox {
     padding-top: 0px;
     padding-bottom: 0px;
@@ -561,6 +558,13 @@ body {
     &.panel {
   		min-width: 0px;
   	}
+  }
+}
+
+/* ProjectTaskListRelationsBox.scss */
+.xv-project-tasks-box {
+  &.panel {
+    width: 675px;
   }
 }
 
