@@ -191,7 +191,6 @@ var lang = XT.stringsFor("en_US", {
   "_isItemWeight": "Item Weight",
   "_isItems": "Items",
   "_isMessage": "Message",
-  "_isOpen": "Open",
   "_isOpportunities": "Opportunities",
   "_isPosted": "Posted",
   "_isPrinted": "Printed",
@@ -397,25 +396,6 @@ var lang = XT.stringsFor("en_US", {
   "_noSeverity": "No Severity",
   "_noStage": "No Stage",
   "_noTerms": "No Terms",
-  "_noType": "No Type",
-  
-  // ********
-  // Connect - TODO: Separate this into its extension folder
-  // ********
-  
-  "_bcc": "Bcc",
-  "_body": "Body",
-  "_cc": "Cc",
-  "_emailProfile": "Email Profile",
-  "_header": "Header",
-  "_incidentChangedStatus": "The status of the following incident has been changed to {status}",
-  "_incidentCreatedStatus": "The following incident has been created with status {status}",
-  "_incidentCreated": "The following incident has been CREATED",
-  "_incidentNewComment": "A new COMMENT has been added to the following incident",
-  "_incidentUpdated": "The following incident has been UPDATED",
-  "_incidentEmailProfile": "Incident Email Profiles",
-  "_incidentEmailProfiles": "Incident Email Profiles",
-  "_latestComment": "Latest Comment",
-  "_subject": "Subject"
+  "_noType": "No Type"
   
 });
