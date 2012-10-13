@@ -48,7 +48,7 @@ trailing:true white:true*/
   enyo.kind(/** @lends XV.ListRelationsEditorBox */{
     name: "XV.ListRelationsEditorBox",
     kind: "XV.Groupbox",
-    classes: "panel",
+    classes: "panel xv-relations-editor-box",
     published: {
       attr: null,
       value: null,
