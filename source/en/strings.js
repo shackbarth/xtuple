@@ -25,6 +25,7 @@ XT.stringsFor("en_US", {
   "_new": "New",
   "_none": "None",
   "_ok": "Ok",
+  "_open": "Open",
   "_overview": "Overview",
   "_refresh": "Refresh",
   "_save": "Save",
