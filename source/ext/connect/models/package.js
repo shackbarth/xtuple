@@ -1,4 +1,5 @@
 enyo.depends(
-  "models",
+  "batch.js",
+  "incident.js",
   "startup.js"
 );

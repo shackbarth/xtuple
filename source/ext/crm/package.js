@@ -1,5 +1,6 @@
 enyo.depends(
   "core.js",
-  "xm",
-  "xv"
+  "models",
+  "views",
+  "postbooks.js"
 );
