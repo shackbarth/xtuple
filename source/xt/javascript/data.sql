@@ -87,54 +87,67 @@ select xt.install_js('XT','Data','xtuple', $$
             plv8.elog(ERROR, 'Invalid operator: ' + op);
           };
 
-          if (XT.typeOf(param.attribute) !== 'array') {
-            param.attribute = [param.attribute];
-          }
+          /* array comparisons handle one way */
+          if (op === '<@') {
+            for (c = 0; c < param.value.length; c++) {
+              ret.parameters.push(param.value[c]);
+              param.value[c] = '$' + cnt;
+              cnt++;
+            }
+            clause = param.attribute + ' ' + op + ' ARRAY[' + param.value.join(',') + ']';
+            clauses.push(clause);
 
-          for (c = 0; c < param.attribute.length; c++) {       
-            /* handle paths if applicable */
-            if (param.attribute[c].indexOf('.') > -1) {
-              parts = param.attribute[c].split('.');
-              childOrm = orm;
-              attr = "";
-              for (n = 0; n < parts.length; n++) {
+          /* everything else handle another */
+          } else {
+            if (XT.typeOf(param.attribute) !== 'array') {
+              param.attribute = [param.attribute];
+            }
+
+            for (c = 0; c < param.attribute.length; c++) {       
+              /* handle paths if applicable */
+              if (param.attribute[c].indexOf('.') > -1) {
+                parts = param.attribute[c].split('.');
+                childOrm = orm;
+                attr = "";
+                for (n = 0; n < parts.length; n++) {
+                  /* validate attribute */
+                  prop = XT.Orm.getProperty(childOrm, parts[n])
+                  if (!prop) {
+                    plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[n]);
+                  }
+
+                  /* build path */
+                  attr += '"' + parts[n] + '"';
+                  if (n < parts.length - 1) {
+                    attr = "(" + attr + ").";
+                    childOrm = XT.Orm.fetch(nameSpace, prop.toOne.type);
+                  }
+                }
+              } else {
                 /* validate attribute */
-                prop = XT.Orm.getProperty(childOrm, parts[n])
+                prop = XT.Orm.getProperty(orm, param.attribute[c]);
                 if (!prop) {
-                  plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[n]);
+                  plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
                 }
-
-                /* build path */
-                attr += '"' + parts[n] + '"';
-                if (n < parts.length - 1) {
-                  attr = "(" + attr + ").";
-                  childOrm = XT.Orm.fetch(nameSpace, prop.toOne.type);
-                }
+                attr = '"' + param.attribute[c] + '"';
               }
-            } else {
-              /* validate attribute */
-              prop = XT.Orm.getProperty(orm, param.attribute[c]);
-              if (!prop) {
-                plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
+
+              arg = '$' + cnt;
+              if (prop.attr && prop.attr.type === 'Date') { arg += '::date'; }
+
+              clause = [];
+              clause.push(attr);
+              clause.push(op);
+              clause.push(arg);
+              if (parameters[i].includeNull) {
+                clause.push(' or ' + attr + 'is null');
               }
-              attr = '"' + param.attribute[c] + '"';
+              orClause.push(clause.join(''));
             }
-
-            arg = '$' + cnt;
-            if (prop.attr && prop.attr.type === 'Date') { arg += '::date'; }
-
-            clause = [];
-            clause.push(attr);
-            clause.push(op);
-            clause.push(arg);
-            if (parameters[i].includeNull) {
-              clause.push(' or ' + attr + 'is null');
-            }
-            orClause.push(clause.join(''));
+            clauses.push('(' + orClause.join(' or ') + ')');
+            cnt++;
+            ret.parameters.push(param.value);
           }
-          clauses.push('(' + orClause.join(' or ') + ')');
-          cnt++;
-          ret.parameters.push(param.value);
         }
       }
 
