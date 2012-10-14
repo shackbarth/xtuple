@@ -402,6 +402,7 @@ body {
   &.right {
     position: absolute;
     right: 0px;
+    height: 20px;
   }
   &.text-align-right {
     text-align: right;
@@ -718,12 +719,20 @@ body {
 }
 
 /* picker.scss */
+.onyx-picker .onyx-menu-item {
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .xv-pickerwidget {
   background-color: white;
 }
 
 .xv-picker {
   width: 180px;
+  text-align: left;
 }
 
 .xv-label {
