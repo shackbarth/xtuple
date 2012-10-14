@@ -844,16 +844,25 @@ body {
 
 /* picker.scss */
 /* line 722, ../sass/screen.scss */
+.onyx-picker .onyx-menu-item {
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* line 729, ../sass/screen.scss */
 .xv-pickerwidget {
   background-color: white;
 }
 
-/* line 726, ../sass/screen.scss */
+/* line 733, ../sass/screen.scss */
 .xv-picker {
   width: 180px;
+  text-align: left;
 }
 
-/* line 730, ../sass/screen.scss */
+/* line 738, ../sass/screen.scss */
 .xv-label {
   width: 130px;
   padding-bottom: 8px;
@@ -863,7 +872,7 @@ body {
   text-align: right;
 }
 
-/* line 739, ../sass/screen.scss */
+/* line 747, ../sass/screen.scss */
 .xv-decorated-label {
   width: 130px;
   padding-bottom: 8px;
@@ -873,7 +882,7 @@ body {
   text-align: right;
 }
 
-/* line 748, ../sass/screen.scss */
+/* line 756, ../sass/screen.scss */
 .xv-picker-label {
   width: 130px;
   padding-bottom: 8px;
@@ -883,7 +892,7 @@ body {
   text-align: right;
 }
 
-/* line 757, ../sass/screen.scss */
+/* line 765, ../sass/screen.scss */
 .xv-textarea-input {
   width: 95%;
   height: 100%;
@@ -893,7 +902,7 @@ body {
   border-color: #ddd;
 }
 
-/* line 766, ../sass/screen.scss */
+/* line 774, ../sass/screen.scss */
 .xv-documents-picker-label {
   width: 85px;
   padding-bottom: 8px;
@@ -903,33 +912,33 @@ body {
   text-align: right;
 }
 
-/* line 775, ../sass/screen.scss */
+/* line 783, ../sass/screen.scss */
 .xv-documents-picker {
   width: 120px;
   margin: 6px;
 }
 
-/* line 780, ../sass/screen.scss */
+/* line 788, ../sass/screen.scss */
 .xv-relationwidget-completer {
   left: -200px;
   top: 15px;
 }
 
-/* line 786, ../sass/screen.scss */
+/* line 794, ../sass/screen.scss */
 .xv-relationwidget-column.left {
   padding-right: 18px;
   color: black;
   width: 140px;
 }
 
-/* line 793, ../sass/screen.scss */
+/* line 801, ../sass/screen.scss */
 .xv-relationwidget-icon {
   top: 2px;
   left: 8px;
   position: relative;
 }
 
-/* line 799, ../sass/screen.scss */
+/* line 807, ../sass/screen.scss */
 .xv-relationwidget-description {
   white-space: nowrap;
   overflow: hidden;
@@ -939,34 +948,34 @@ body {
   padding-bottom: 4px;
   max-width: 325px;
 }
-/* line 807, ../sass/screen.scss */
+/* line 815, ../sass/screen.scss */
 .xv-relationwidget-description.disabled {
   opacity: 0.4;
 }
-/* line 810, ../sass/screen.scss */
+/* line 818, ../sass/screen.scss */
 .xv-relationwidget-description.label {
   text-indent: 0px;
   text-align: right;
 }
-/* line 815, ../sass/screen.scss */
+/* line 823, ../sass/screen.scss */
 .xv-relationwidget-description.hasLabel {
   text-indent: 0px;
 }
-/* line 818, ../sass/screen.scss */
+/* line 826, ../sass/screen.scss */
 .xv-relationwidget-description.hyperlink {
   color: blue;
 }
 
-/* line 823, ../sass/screen.scss */
+/* line 831, ../sass/screen.scss */
 .xv-textarea {
   background-color: white;
 }
-/* line 825, ../sass/screen.scss */
+/* line 833, ../sass/screen.scss */
 .xv-textarea.max-height {
   height: 100%;
 }
 
-/* line 830, ../sass/screen.scss */
+/* line 838, ../sass/screen.scss */
 .xv-half-check {
   background-image: url("../../assets/checkbox.png");
   background-repeat: no-repeat;
@@ -975,12 +984,12 @@ body {
   background-color: transparent;
 }
 
-/* line 839, ../sass/screen.scss */
+/* line 847, ../sass/screen.scss */
 .xv-menuitem.disabled {
   color: Dimgray;
 }
 
-/* line 845, ../sass/screen.scss */
+/* line 853, ../sass/screen.scss */
 .xv-button-bar .onyx-button {
   margin-left: 40px;
   margin-right: 40px;
