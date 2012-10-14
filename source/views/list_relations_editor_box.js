@@ -120,6 +120,7 @@ trailing:true white:true*/
       var collection = this.$.list.getValue(),
         Klass = collection.model,
         model = new Klass(null, {isNew: true});
+      this.$.editor.clear();
       collection.add(model);
       this.$.list.select(collection.length - 1);
     },

@@ -73,6 +73,19 @@ trailing:true white:true*/
         }
       }
     },
+    clear: function () {
+      var attrs = this.value ? this.value.getAttributeNames() : [],
+        attr,
+        control,
+        i;
+      for (i = 0; i < attrs.length; i++) {
+        attr = attrs[i];
+        control = this.findControl(attr);
+        if (control && control.clear) {
+          control.clear({silent: true});
+        }
+      }
+    },
     findControl: function (attr) {
       return _.find(this.$, function (ctl) {
         return ctl.attr === attr;
@@ -125,19 +138,6 @@ trailing:true white:true*/
         ]}
       ]}
     ],
-    clear: function () {
-      var attrs = this.value ? this.value.getAttributeNames() : [],
-        attr,
-        control,
-        i;
-      for (i = 0; i < attrs.length; i++) {
-        attr = attrs[i];
-        control = this.findControl(attr);
-        if (control && control.clear) {
-          control.clear({silent: true});
-        }
-      }
-    },
     create: function () {
       this.inherited(arguments);
       this.processExtensions();
