@@ -157,6 +157,28 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // CUSTOMER
+  //
+
+  enyo.kind({
+    name: "XV.CustomerWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.CustomerRelationCollection",
+    list: "XV.CustomerList"
+  });
+  
+  // ..........................................................
+  // EMPLOYEE
+  //
+
+  enyo.kind({
+    name: "XV.EmployeeWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.EmployeeRelationCollection",
+    list: "XV.EmployeeList"
+  });
+
+  // ..........................................................
   // INCIDENT
   //
 

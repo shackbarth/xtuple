@@ -5,12 +5,20 @@ white:true*/
 
 (function () {
   
+  // ..........................................................
+  // ACCOUNT
+  //
+  
   enyo.kind({
     name: "XV.AccountCharacteristicsWidget",
     kind: "XV.CharacteristicsWidget",
     model: "XM.AccountCharacteristic",
     which: "isAccounts"
   });
+  
+  // ..........................................................
+  // CONTACT
+  //
   
   enyo.kind({
     name: "XV.ContactCharacteristicsWidget",
@@ -19,6 +27,32 @@ white:true*/
     which: "isContacts"
   });
   
+  // ..........................................................
+  // CUSTOMER
+  //
+  
+  enyo.kind({
+    name: "XV.CustomerCharacteristicsWidget",
+    kind: "XV.CharacteristicsWidget",
+    model: "XM.CustomerCharacteristic",
+    which: "isCustomers"
+  });
+  
+  // ..........................................................
+  // EMPLOYEE
+  //
+  
+  enyo.kind({
+    name: "XV.EmployeeCharacteristicsWidget",
+    kind: "XV.CharacteristicsWidget",
+    model: "XM.EmployeeCharacteristic",
+    which: "isEmployees"
+  });
+  
+  // ..........................................................
+  // INCIDENT
+  //
+  
   enyo.kind({
     name: "XV.IncidentCharacteristicsWidget",
     kind: "XV.CharacteristicsWidget",
@@ -26,12 +60,20 @@ white:true*/
     which: "isIncidents"
   });
   
+  // ..........................................................
+  // ITEM
+  //
+  
   enyo.kind({
     name: "XV.ItemCharacteristicsWidget",
     kind: "XV.CharacteristicsWidget",
     model: "XM.ItemCharacteristic",
     which: "isItems"
   });
+  
+  // ..........................................................
+  // OPPORTUNITY
+  //
   
   enyo.kind({
     name: "XV.OpportunityCharacteristicsWidget",
