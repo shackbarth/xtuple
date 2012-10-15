@@ -37,36 +37,42 @@ $$ LANGUAGE plv8;
 
 /*
 select xt.js_init();
-select xt.dispatch($${"requestType":"dispatch",
+select xt.dispatch($${"username": "admin",
+                      "requestType":"dispatch",
                            "className": "XM.Address",
                            "functionName":"findExisting",
                            "parameters": {"type": "Address", "line1":"Tremendous Toys Inc.","line2":"101 Toys Place","line3":"","city":"Walnut Hills","state":"VA","postalcode":"22209","country":"United States"}
                           }$$);
 
-select xt.dispatch($${"requestType":"dispatch",
+select xt.dispatch($${"username": "admin",
+                      "requestType":"dispatch",
                           "className":"XM.Address",
                           "functionName":"useCount",
                           "parameters": 41
                           }$$);
 
-select xt.dispatch($${"requestType":"dispatch",
+select xt.dispatch($${"username": "admin",
+                      "requestType":"dispatch",
                            "className":"XM.Model",
                            "functionName":"fetchId",
                            "parameters":"XM.Address"
                            }$$);
 
-select xt.dispatch($${"requestType":"dispatch",
+select xt.dispatch($${"username": "admin",
+                      "requestType":"dispatch",
                           "className":"XM.Model",
                           "functionName":"fetchNumber",
                           "parameters":"XM.Incident"
                           }$$);
 
-select xt.dispatch($${"requestType":"dispatch",
+select xt.dispatch($${"username": "admin",
+                      "requestType":"dispatch",
                           "className":"XT.Session",
                           "functionName":"locale"
                           }$$);
 
-select xt.dispatch($${"requestType":"dispatch",
+select xt.dispatch($${"username": "admin",
+                      "requestType":"dispatch",
                           "className":"XT.Session",
                           "functionName":"settings"
                           }$$);
@@ -74,51 +80,10 @@ select xt.dispatch($${"requestType":"dispatch",
 select xt.dispatch($${"requestType":"dispatch",
                           "className":"XT.Session",
                           "functionName":"privileges"
-                          }$$);    
-                          
-select xt.dispatch($${"requestType":"dispatch",
-                          "className":"XM.Invoice",
-                          "functionName":"post",
-                          "parameters":[137]
-                          }$$);  
-                            
-select xt.dispatch($${"requestType":"dispatch",
-                          "className":"XM.Invoice",
-                          "functionName":"postALl",
-                          "parameters":[false]
-                          }$$); 
-                          
-select xt.dispatch($${"requestType":"dispatch",
-                          "className":"XM.InvoiceLine",
-                          "functionName":"taxDetail",
-                          "parameters":154
-                          }$$);
-                          
-select xt.dispatch($${"requestType":"dispatch",
-                          "className":"XM.Invoice",
-                          "functionName":"freightTax",
-                          "parameters":79
-                          }$$);
+                          }$$);     
 
-select xt.dispatch($${"requestType":"dispatch",
-                          "className":"XM.Invoice",
-                          "functionName":"freightTax",
-                          "parameters":[1,"01-01-2011", 1, 125]
-                          }$$);
-                              
-select xt.dispatch($${"requestType":"dispatch",
-                          "className":"XM.Invoice",
-                          "functionName":"void",
-                          "parameters":{"id":129}
-                          }$$);    
-
-select xt.dispatch($${"requestType":"dispatch",
-                          "className":"XM.Payable",
-                          "functionName":"approve",
-                          "parameters":[264,13]
-                          }$$);  
-
-select xt.dispatch($${"requestType":"dispatch",
+select xt.dispatch($${"username": "admin",
+                      "requestType":"dispatch",
                           "className":"XM.Crm",
                           "functionName":"commitSettings",
                           "parameters":{ 
@@ -140,70 +105,5 @@ select xt.dispatch($${"requestType":"dispatch",
                             "IncidentClosedColor": "grey"
                            }
                           }$$);    
-                          
-select xt.dispatch($${"requestType":"dispatch",
-                          "className":"XM.Receivables",
-                          "functionName":"commitSettings",
-                          "parameters":{ 
-                            "NextARMemoNumber": 100,
-                            "NextCashRcptNumber": 2000,
-                            "HideApplyToBalance": true,
-                            "EnableCustomerDeposits": false,
-                            "CreditTaxDiscount": false,
-                            "remitto_name": "Wacky Widgets, Inc.",
-                            "remitto_address1": "123 Azalea Court",
-                            "remitto_address2": "Unit 201",
-                            "remitto_address3": "",
-                            "remitto_city": "Murfreesboro",
-                            "remitto_state": "TN",
-                            "remitto_zipcode": "76811",
-                            "remitto_country": "United States",
-                            "remitto_phone": "478-112-8989",
-                            "DefaultAutoCreditWarnGraceDays": 20,
-                            "DefaultARIncidentStatus": 1,
-                            "AutoCloseARIncident": true,
-                            "RecurringInvoiceBuffer": 10
-                           }
-                          }$$);  
-
-select xt.dispatch($${"requestType":"dispatch",
-                          "className":"XM.Payables",
-                          "functionName":"commitSettings",
-                          "parameters":{ 
-                            "NextAPMemoNumber": 100,
-                            "ACHEnabled": false,
-                            "ACHCompanyId": "",
-                            "ACHCompanyIdType": "D",
-                            "ACHCompanyName": "Wacky Widgets, Inc.",
-                            "ACHDefaultSuffix": ".txt",
-                            "EFTRoutingRegex": "",
-                            "EFTAccountRegex": "",
-                            "EFTFunction": "",
-                            "NextACHBatchNumber": 200,
-                            "ReqInvRegVoucher": true,
-                            "ReqInvMiscVoucher": true,
-                            "RecurringVoucherBuffer": 10
-                           }
-                          }$$);  
-
-select xt.dispatch($${"requestType":"dispatch",
-                          "className":"XM.GeneralLedger",
-                          "functionName":"updateSettings",
-                          "parameters":{ 
-                            "GLMainSize": 5,
-                            "GLCompanySize": 3,
-                            "YearEndEquityAccount": 83,
-                            "CurrencyGainLossAccount": 83,
-                            "GLSeriesDiscrepancyAccount": 83,
-                            "GLProfitSize": 3,
-                            "GLFFProfitCenters": true,
-                            "GLSubaccountSize": 3,
-                            "GLFFSubaccounts": true,
-                            "UseJournals": false,
-                            "CurrencyExchangeSense": 0,
-                            "MandatoryGLEntryNotes": false,
-                            "ManualForwardUpdate": false,
-                            "InterfaceToGL": false
-                           }
-                          }$$);         
+ 
 */

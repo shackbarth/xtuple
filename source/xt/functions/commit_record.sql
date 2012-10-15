@@ -17,7 +17,8 @@ $$ language plv8;
 /*
 select xt.js_init();
 select xt.commit_record(
- E'{"recordType":"XM.Contact",
+ $${"username": "admin",
+    "recordType":"XM.Contact",
     "dataHash":{
       "id":12171,
       "number":"14832",
@@ -34,13 +35,7 @@ select xt.commit_record(
       "fax":"555-333-3333",
       "webAddress":"www.xtuple.com",
       "notes":"A famous person",
-      "owner":{
-        "username":"admin",
-        "isActive":true,
-        "propername":"administrator",
-        "type": "UserAccount",
-        "dataState":"create"
-      },
+      "owner":"admin",
       "primaryEmail":"jdr@gmail.com",
       "address": null,
       "comments":[{
@@ -48,7 +43,7 @@ select xt.commit_record(
         "contact":12171,
         "created":"2011-12-21 12:47:12.756437-05",
         "createdBy":"admin", 
-        "commentType":"3",
+        "commentType": 3,
         "text":"booya!",
         "isPublic":false,
         "type": "ContactComment",
@@ -58,7 +53,7 @@ select xt.commit_record(
         "contact":12171,
         "created":"2011-12-21 12:47:12.756437-05",
         "createdBy":"admin", 
-        "commentType":"3",
+        "commentType": 3,
         "text":"Now is the time for all good men...",
         "isPublic":false,
         "type": "ContactComment",
@@ -70,11 +65,12 @@ select xt.commit_record(
       "type": "Contact",
       "dataState":"create"
     }
-  }'
+  }$$
 );
 
 select xt.commit_record(
- E'{"recordType":"XM.Contact",
+ $${"username": "admin",
+    "recordType":"XM.Contact",
     "dataHash":{
       "id":12171,
       "number":"14832",
@@ -92,34 +88,15 @@ select xt.commit_record(
       "webAddress":
       "www.xtuple.com",
       "notes":"A distinguished person",
-      "owner":{
-        "username":"postgres",
-        "isActive":true,
-        "propername":"",
-        "type": "UserAccountInfo",
-        "dataState":"read"
-      },
+      "owner":"admin",
       "primaryEmail":"jane@gmail.com",
-      "address":{
-        "id":1,
-        "number": "1",
-        "isActive": true,
-        "line1":"Tremendous Toys Inc.",
-        "line2":"101 Toys Place",
-        "line3":"",
-        "city":"Walnut Hills",
-        "state":"VA",
-        "postalcode":"22209",
-        "country":"United States",
-        "type": "AddressInfo",
-        "dataState":"read"
-      },
+      "address": 1,
       "comments":[{
         "id":739893,
         "contact":12171,
         "created":"2011-12-21 12:47:12.756437-05",
         "createdBy":"admin", 
-        "commentType":"3",
+        "commentType": 3,
         "text":"booya!",
         "isPublic":false,
         "dataState":"update"
@@ -128,7 +105,7 @@ select xt.commit_record(
         "contact":12171,
         "created":"2011-12-21 12:47:12.756437-05",
         "createdBy":"admin", 
-        "commentType":"3",
+        "commentType": 3,
         "text":"Now is NOT the time for all good men...",
         "isPublic":false,
         "type": "ContactComment",
@@ -139,11 +116,12 @@ select xt.commit_record(
       "type": "Contact",
       "dataState":"update"
     }
-  }'
+  }$$
 );
 
 select xt.commit_record(
- E'{"recordType":"XM.Contact",
+ $${"username": "admin",
+    "recordType":"XM.Contact",
     "dataHash":{
       "id":12171,
       "number":"14832",
@@ -161,35 +139,16 @@ select xt.commit_record(
       "webAddress":
       "www.xtuple.com",
       "notes":"A distinguished person",
-      "owner":{
-        "username":"postgres",
-        "isActive":true,
-        "propername":"",
-        "type": "UserAccountInfo",
-        "dataState":"read"
-      },
+      "owner":"admin",
       "primaryEmail":"jane@gmail.com",
-      "address":{
-        "id":1,
-        "number": "1",
-        "isActive": true,
-        "line1":"Tremendous Toys Inc.",
-        "line2":"101 Toys Place",
-        "line3":"",
-        "city":"Walnut Hills",
-        "state":"VA",
-        "postalcode":"22209",
-        "country":"United States",
-        "type": "AddressInfo",
-        "dataState":"read"
-      },
+      "address": 1,
       "comments":[{
         "dataState":"delete",
         "id":739893,
         "contact":12171,
         "created":"2011-12-21 12:47:12.756437-05",
         "createdBy":"admin", 
-        "commentType":"3",
+        "commentType": 3,
         "text":"booya!",
         "isPublic":false,
         "type": "ContactComment",
@@ -200,7 +159,7 @@ select xt.commit_record(
         "contact":12171,
         "date":"2011-12-21 12:47:12.756437-05",
         "username":"admin", 
-        "comment_type":"3",
+        "comment_type": 3,
         "text":"Now is the time for all good men...",
         "isPublic":false,
         "type": "ContactComment",
@@ -211,6 +170,5 @@ select xt.commit_record(
       "type": "Contact",
       "dataState":"delete"
     }
-  }'
-);
+  }$$);
 */

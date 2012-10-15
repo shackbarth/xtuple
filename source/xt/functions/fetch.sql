@@ -19,7 +19,8 @@ create or replace function xt.fetch(data_hash text) returns text as $$
 $$ language plv8;
 /*
 select xt.js_init();
-select xt.fetch($${ "query":{
+select xt.fetch($${ "username": "admin",
+                    "query":{
                          "recordType":"XM.ContactRelation",
                          "parameters":[{
                            "attribute":"firstName",
@@ -32,7 +33,8 @@ select xt.fetch($${ "query":{
                          }
                        }$$);
 
-select xt.fetch($${ "query":{
+select xt.fetch($${ "username": "admin",
+                    "query":{
                          "recordType":"XM.ContactRelation",
                          "parameters":[{
                            "attribute": "name",
@@ -48,7 +50,8 @@ select xt.fetch($${ "query":{
                          }
                        }$$);
 
-select xt.fetch($${ "query":{
+select xt.fetch($${ "username": "admin",
+                    "query":{
                          "recordType":"XM.AccountListItem",
                          "parameters":[{
                            "attribute":"primaryContact.address.state",
@@ -62,7 +65,8 @@ select xt.fetch($${ "query":{
                          }
                        }$$);
 
-select xt.fetch($${ "query":{
+select xt.fetch($${ "username": "admin",
+                    "query":{
                          "recordType":"XM.ItemListItem",
                          "parameters":[{
                            "attribute": "number",
@@ -73,7 +77,8 @@ select xt.fetch($${ "query":{
                          }
                        }$$);
 
-select xt.fetch($${ "query":{
+select xt.fetch($${ "username": "admin",
+                    "query":{
                          "recordType":"XM.ToDoListItem",
                          "parameters":[{
                            "attribute":"dueDate",
@@ -84,7 +89,8 @@ select xt.fetch($${ "query":{
                          }
                        }$$);
 
-select xt.fetch($${ "query":{
+select xt.fetch($${ "username": "admin",
+                    "query":{
                          "recordType":"XM.ContactListItem",
                          "parameters":[{
                            "attribute": ["account.number", "account.name", "name", "phone", "address.city"],
@@ -99,7 +105,8 @@ select xt.fetch($${ "query":{
                          }
                        }$$);
 
-select xt.fetch($${ "query":{
+select xt.fetch($${ "username": "admin",
+                    "query":{
                          "recordType":"XM.Contact",
                          "rowLimit": 10,
                          "prettyPrint": true

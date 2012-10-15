@@ -16,6 +16,7 @@ create or replace function xt.retrieve_record(data_hash text) returns text as $$
 $$ language plv8;
 /*
 select xt.retrieve_record('{
+  "username": "admin",
   "recordType":"XM.Contact", 
   "id": 1,
   "prettyPrint": true
