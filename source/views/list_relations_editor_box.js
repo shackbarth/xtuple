@@ -48,7 +48,7 @@ trailing:true white:true*/
   enyo.kind(/** @lends XV.ListRelationsEditorBox# */{
     name: "XV.ListRelationsEditorBox",
     kind: "XV.Groupbox",
-    classes: "panel",
+    classes: "panel xv-relations-editor-box",
     published: {
       attr: null,
       value: null,
@@ -120,6 +120,7 @@ trailing:true white:true*/
       var collection = this.$.list.getValue(),
         Klass = collection.model,
         model = new Klass(null, {isNew: true});
+      this.$.editor.clear();
       collection.add(model);
       this.$.list.select(collection.length - 1);
     },

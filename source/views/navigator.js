@@ -84,7 +84,8 @@ trailing:true white:true*/
         ]}
       ]},
       {kind: "FittableRows", components: [
-        {kind: "onyx.MoreToolbar", name: "contentToolbar", components: [
+        {kind: "onyx.Toolbar", name: "contentToolbar", components: [
+          {kind: "onyx.Grabber"},
           {name: "search", kind: "onyx.InputDecorator", style: "float: right;",
             showing: false, components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
@@ -95,8 +96,6 @@ trailing:true white:true*/
             ontap: "newRecord", style: "float: right;", showing: false},
           {name: "exportButton", kind: "onyx.Button", content: "_export".loc(),
             ontap: "exportList", style: "float: right;", showing: false},
-                                 // AWFUL UGLY HEINOUS HACK SHOULD NOT BE NECESSARY
-          {kind: "onyx.Grabber", style: "height: 27px !important;"},
           {name: "rightLabel", style: "text-align: center"}
         ]},
         {name: "header", content: "", classes: "xv-navigator-header"},

@@ -44,10 +44,11 @@ white:true*/
     },
     getParameter: function () {
       var param,
+        attr = this.getAttr(),
         value = this.getValue();
-      if (value) {
+      if (attr && value) {
         param = {
-          attribute: this.getAttr(),
+          attribute: attr,
           operator: this.getOperator(),
           value: value
         };
