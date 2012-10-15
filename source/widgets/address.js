@@ -6,7 +6,7 @@ regexp:true, undef:true, trailing:true, white:true */
 
   /**
 
-last time for this text!!!
+
     @class
     @name XV.AddressWidget
     @extends FittableRows
