@@ -55,11 +55,13 @@ trailing:true white:true*/
       title: "",
       parentKey: "",
       listRelations: "",
-      editor: null
+      editor: null,
+      fitButtons: true
     },
     handlers: {
       onSelect: "selectionChanged",
       onDeselect: "selectionChanged",
+      onTransitionFinish: "transitionFinished",
       onValueChange: "controlValueChanged"
     },
     attrChanged: function () {
@@ -103,8 +105,17 @@ trailing:true white:true*/
           {kind: "onyx.Button", name: "newButton", onclick: "newItem",
             content: "_new".loc(), classes: "xv-groupbox-button-left"},
           {kind: "onyx.Button", name: "deleteButton", onclick: "deleteItem",
-            content: "_delete".loc(), classes: "xv-groupbox-button-right",
-            disabled: true}
+            content: "_delete".loc(), classes: "xv-groupbox-button-center",
+            disabled: true},
+          {kind: "onyx.Button", name: "prevButton", onclick: "prevItem",
+            content: "<", classes: "xv-groupbox-button-center",
+            disabled: true},
+          {kind: "onyx.Button", name: "nextButton", onclick: "nextItem",
+            content: ">", classes: "xv-groupbox-button-center",
+            disabled: true},
+          {kind: "onyx.Button", name: "doneButton", onclick: "doneItem",
+            content: "_done".loc(), classes: "xv-groupbox-button-right",
+            disabled: true, fit: this.getFitButtons()}
         ]
       });
 
@@ -115,6 +126,11 @@ trailing:true white:true*/
       this.$.list.getSelection().deselect(index, false);
       model.destroy();
       this.$.list.lengthChanged();
+    },
+    doneItem: function () {
+      var index = this.$.list.getFirstSelected(),
+        selection = this.$.list.getSelection();
+      selection.deselect(index);
     },
     newItem: function () {
       var collection = this.$.list.getValue(),
@@ -129,6 +145,7 @@ trailing:true white:true*/
         model = index ? this.$.list.getModel(index) : null,
         that = this;
       this.$.deleteButton.setDisabled(true);
+      this.$.doneButton.setDisabled(!index);
       if (index) {
         this.$.editor.setValue(model);
         model.used({
@@ -136,9 +153,21 @@ trailing:true white:true*/
             that.$.deleteButton.setDisabled(resp);
           }
         });
-        this.$.panels.previous();
+        if (this.$.panels.getIndex()) { this.$.panels.setIndex(0); }
+        this.$.prevButton.setDisabled(index === 0);
+        this.$.nextButton.setDisabled(index === this.$.list.value.length - 1);
       } else {
-        this.$.panels.setIndex(1);
+        if (!this.$.panels.getIndex()) { this.$.panels.setIndex(1); }
+        this.$.prevButton.setDisabled(true);
+        this.$.nextButton.setDisabled(true);
+      }
+    },
+    transitionFinished: function (inSender, inEvent) {
+      if (inEvent.originator.name === 'panels') {
+        if (this.$.panels.getIndex() === 1) {
+          this.doneItem();
+        }
+        return true;
       }
     },
     valueChanged: function () {
