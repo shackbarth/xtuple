@@ -140,6 +140,14 @@ trailing:true white:true*/
       collection.add(model);
       this.$.list.select(collection.length - 1);
     },
+    nextItem: function () {
+      var index = this.$.list.getFirstSelected() - 0;
+      this.$.list.select(index + 1);
+    },
+    prevItem: function () {
+      var index = this.$.list.getFirstSelected() - 0;
+      this.$.list.select(index - 1);
+    },
     selectionChanged: function (inSender, inEvent) {
       var index = this.$.list.getFirstSelected(),
         model = index ? this.$.list.getModel(index) : null,
@@ -154,8 +162,8 @@ trailing:true white:true*/
           }
         });
         if (this.$.panels.getIndex()) { this.$.panels.setIndex(0); }
-        this.$.prevButton.setDisabled(index === 0);
-        this.$.nextButton.setDisabled(index === this.$.list.value.length - 1);
+        this.$.prevButton.setDisabled(index - 0 === 0);
+        this.$.nextButton.setDisabled(index - 0 === this.$.list.value.length - 1);
       } else {
         if (!this.$.panels.getIndex()) { this.$.panels.setIndex(1); }
         this.$.prevButton.setDisabled(true);
