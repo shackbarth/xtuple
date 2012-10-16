@@ -48,7 +48,8 @@ trailing:true white:true*/
     title: "_projectTasks".loc(),
     editor: "XV.ProjectTaskEditor",
     parentKey: "project",
-    listRelations: "XV.ProjectTaskListRelations"
+    listRelations: "XV.ProjectTaskListRelations",
+    fitButtons: false
   });
 
 }());
