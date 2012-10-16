@@ -402,6 +402,7 @@ body {
   &.right {
     position: absolute;
     right: 0px;
+    height: 20px;
   }
   &.text-align-right {
     text-align: right;
@@ -547,20 +548,24 @@ body {
   color: #ff0000;
 }
 
-/* ProjectTaskListRelationsBox.scss */
-.xv-project-tasks-box {
-  &.panel {
-    width: 675px;
-  }
+/* RelationsEditorBox.scss */
+.xv-relations-editor-box {
   .xv-groupbox {
     padding-top: 0px;
     padding-bottom: 0px;
     padding-left: 0px;
     margin-right: 0px;
     border: none;
-    &.panel {
-  		min-width: 0px;
-  	}
+  }
+  &.panel {
+    width: 350px;
+  }
+}
+
+/* ProjectTaskListRelationsBox.scss */
+.xv-project-tasks-box {
+  &.panel {
+    width: 675px;
   }
 }
 
@@ -714,12 +719,20 @@ body {
 }
 
 /* picker.scss */
+.onyx-picker .onyx-menu-item {
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .xv-pickerwidget {
   background-color: white;
 }
 
 .xv-picker {
   width: 180px;
+  text-align: left;
 }
 
 .xv-label {
