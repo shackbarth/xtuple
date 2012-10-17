@@ -340,8 +340,11 @@ X = {};
 
     cleanup: function () {
       var queue = this.cleanupQueue || [], task;
+      X.cleaningUp = true;
+      if (X.cleanedUp) return false;
       if (queue.length <= 0) {
         X.log("All done. See ya.");
+        X.cleanedUp = true;
         process.exit(0);
       }
       task = queue.shift();
@@ -372,6 +375,18 @@ X = {};
         } else { part = part[args[i]]; }
       }
       return base;
+    },
+    
+    writePidFile: function () {
+      X.log("Writing pid file '%@'".f(X.pidFileName));
+      X.writeFile(X.pidFile, X.pid);
+      X.addCleanupTask(X.cleanupPidFile);
+    },
+    
+    cleanupPidFile: function () {
+      if (!X.pidFile) return;
+      X.log("Removing pid file.");
+      X.removeFile(X.pidFile);
     },
 
     setup: function (options) {
