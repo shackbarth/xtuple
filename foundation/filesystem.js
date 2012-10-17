@@ -141,6 +141,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         _fs.writeFileSync(path, content, 'utf8');
       }
     },
+    
+    removeFile: function (path) {
+      _fs.unlinkSync(path);
+    },
 
     reduce: function (files, extension) {
       if (!files || files.length < 1) return files || [];
