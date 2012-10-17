@@ -133,7 +133,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         stats = _fs.statSync(path);
         return stats.isDirectory() || stats.isFile() ? true : false;
       } catch (err) {
-        issue(X.warning(err));
+        //issue(X.warning(err));
         return false;
       }
     },
