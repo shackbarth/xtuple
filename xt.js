@@ -52,19 +52,19 @@ require('./foundation');
     
     var i, sub;
     
-    if (X.requireDatabase) require("./database");
-    if (X.requireServer) require("./server");
-    if (X.requireCache) {
-      require('./database/cache');
-      require("./database/ext/mongoose_schema");
-    }
-    
     // special case where the desired output requires calling console directly
     X.io.console(X.StringBuffer.create({ color: 'blue', prefix: null }),
       "\n================================================" +
       "\nXUPLE NODE.JS FRAMEWORK ({version})".f({ version: X.version || "N/A" }) +
       "\n================================================\n"
     );
+    
+    if (X.requireDatabase) require("./database");
+    if (X.requireServer) require("./server");
+    if (X.requireCache) {
+      require('./database/cache');
+      require("./database/ext/mongoose_schema");
+    }
     
     X.pid = process.pid;
     
