@@ -31,6 +31,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     caFile: null,
     bindAddress: null,
     parseCookies: false,
+    isRunning: false,
     /**
       Initializes server
     */
@@ -123,6 +124,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           if (secure) app = _https.createServer(options, app);
         }
 
+        app.on("listening", _.bind(function () {this.set("isRunning", true)}, this));
+
         if (bindAddress) server = this.server = app.listen(port, bindAddress);
         else server = this.server = app.listen(port);
 
@@ -159,7 +162,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     close: function () {
       if (this.server) {
         X.log("Server: '%@' shutting down.".f(this.get('name')));
-        this.server.close();
+        if (this.get("isRunning")) this.server.close();
       }
       return this;
     },
