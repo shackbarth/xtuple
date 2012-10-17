@@ -1,7 +1,7 @@
 .DS_Store
 node_modules
 npm-debug.log
-config_local*
+config*
 datasource.log
 datasource-err.log
 www/client
