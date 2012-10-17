@@ -50,6 +50,8 @@ require('./foundation');
   // ready
   X.run(function () {
     
+    var i, sub;
+    
     if (X.requireDatabase) require("./database");
     if (X.requireServer) require("./server");
     if (X.requireCache) {
@@ -78,6 +80,14 @@ require('./foundation');
         X.pidFileName = "%@.pid".f(X.processName? X.processName: "node_xt_process");
       } else if (X.pidFileName.indexOf(".pid") === -1) {
         X.pidFileName = X.pidFileName.suf(".pid");
+      }
+    
+      // if we're allowed to have multiples of this resource executing
+      // simultaneously we need to make the name unique
+      if (X.allowMultipleInstances === true) {
+        i = X.pidFileName.indexOf(".pid");
+        sub = X.pidFileName.substring(0, i);
+        X.pidFileName = "%@_%@.pid".f(sub, X.pid);
       }
     
       // keep track of the actual pidfile full path

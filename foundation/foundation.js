@@ -378,6 +378,7 @@ X = {};
     },
     
     writePidFile: function () {
+      X.log("Writing pid file '%@'".f(X.pidFileName));
       X.writeFile(X.pidFile, X.pid);
     },
     
