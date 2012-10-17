@@ -130,9 +130,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         else server = this.server = app.listen(port);
 
         if (useSockets) {
+          //this._io = require("socket.io").listen(server);
           this._io = require("socket.io").listen(server, X.mixin({
             "log level": 0,
-            "browser client": false,
+            //"browser client": true,
             "origins": "*:*",
             "transports": [
               "websocket",

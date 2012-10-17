@@ -90,6 +90,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
 
     readFile: function (path, filename, callback) {
+      var args = X.$A(arguments);
+      if (args.length === 1)
+      
+        // TODO: will throw error?
+        return _fs.readFileSync(path, "utf8").trim();
+      
       if (X.typeOf(filename) === X.T_FUNCTION) {
         callback = filename;
         filename = '';

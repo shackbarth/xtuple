@@ -425,4 +425,9 @@ X = {};
   require("./exception");
   require("./filesystem");
   require("./ext/cleanup_task");
+  
+  (function () {
+    // read in the version file
+    X.version = X.readFile(_path.join(X.basePath, "version.txt"));
+  }())
 }());
