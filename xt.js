@@ -93,13 +93,18 @@ require('./foundation');
       // keep track of the actual pidfile full path
       X.pidFile = _path.join(X.pidFilePath, X.pidFileName);
       
-      // write our pidfile...
-      X.exists(_path.join(X.pidFilePath), function (exists) {
-        if (!exists) X.createDir(X.pidFilePath, X.writePidFile);
-        else X.writePidFile();
+      X.exists(X.pidFile, function (exists) {
+        if (exists && !X.allowMultupleInstances) {
+          issue(X.fatal("Multiple instances are not allowed"));
+        } else {
+        
+          // write our pidfile...
+          X.exists(_path.join(X.pidFilePath), function (exists) {
+            if (!exists) X.createDir(X.pidFilePath, X.writePidFile);
+            else X.writePidFile();
+          }); 
+        }
       });
-      
-      X.addCleanupTask(X.cleanupPidFile);
     }
     
     // give any running process the opportunity to save state
