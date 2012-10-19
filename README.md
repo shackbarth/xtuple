@@ -28,7 +28,7 @@ In order to use any of the functionality provided by this project you must run t
 
 The main purpose of this project is to provide an Object Relational Map (ORM) structure and APIs to retreive and manipulate records as json objects, and to make function calls on the database. Some examples are provided below. More may be found in the source files.
 
-##Retreive a Record
+##Retrieve a Record
 
     select xt.retrieve_record('{
       "recordType":"XM.Contact", 
