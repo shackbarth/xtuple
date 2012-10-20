@@ -2,7 +2,7 @@
 
 -- remove old trigger if any
 
-select dropIfExists('TRIGGER', 'orm_did_change', 'xt');
+drop trigger if exists orm_did_change on xt.orm;
 
 select xt.create_table('orm');
 select xt.add_column('orm','orm_id', 'serial', 'primary key');
