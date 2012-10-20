@@ -1,10 +1,10 @@
 -- table definition
 
--- remove old trigger if any
+select xt.create_table('orm');
 
+-- remove old trigger if any
 drop trigger if exists orm_did_change on xt.orm;
 
-select xt.create_table('orm');
 select xt.add_column('orm','orm_id', 'serial', 'primary key');
 select xt.add_column('orm','orm_json', 'text', 'not null');
 select xt.add_column('orm','orm_namespace', 'text', E'not null');
