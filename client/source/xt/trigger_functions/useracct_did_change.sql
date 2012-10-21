@@ -6,7 +6,8 @@ create or replace function xt.useracct_did_change() returns trigger as $$
  var sql = "select nextval('xt.useracct_useracct_id_seq') as sequence;",
    sql2 = "select useracct_id from xt.useracct where useracct_id = $1;",
    sql3 = "update xt.useracct set useracct_id = $1 where useracct_username = $2;",
-   id,
+   sql4 = "update xt.useracct set useracct_username = $1 where useracct_username = $2;",
+   id = NEW.useracct_id,
    res;
  while (!id) {
    id = plv8.execute(sql)[0].sequence;
@@ -16,6 +17,10 @@ create or replace function xt.useracct_did_change() returns trigger as $$
    } else {
      plv8.execute(sql3, [ id, NEW.useracct_username ]);
    }
+ }
+ 
+ if (NEW.useracct_username !== NEW.useracct_username.toLowerCase()) {
+   plv8.execute(sql4, [ NEW.useracct_username.toLowerCase(), NEW.useracct_username ]);
  }
   
  return NEW;
