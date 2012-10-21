@@ -3,7 +3,7 @@ create or replace function xt.createuser(username text, can_create_users boolean
 -- See www.xtuple.com/CPAL for the full text of the software license.
 begin
 
-  insert into xt.useracct values (username);
+  insert into xt.useracct (useracct_username) values (username);
   
   return public.createuser(username, can_create_users);
   
