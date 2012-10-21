@@ -32,9 +32,9 @@ select xt.install_js('XT','Data','xtuple', $$
       @returns {Object}
     */
     buildClause: function (nameSpace, type, parameters) {
+     parameters = parameters || [];
      var orm = XT.Orm.fetch(nameSpace, type),
        privileges = orm.privileges,
-       properties,
        param,
        childOrm,
        clause,
@@ -50,15 +50,30 @@ select xt.install_js('XT','Data','xtuple', $$
        cnt = 1,
        ret = {},
        conds = [],
-       pcond = "",
        prop,
        col;
 
       ret.conditions = "";
       ret.parameters = [];
 
+      /* handle privileges */
+      if (orm.isNestedOnly) { plv8.elog(ERROR, 'Access Denied'); }
+      if ((privileges &&
+         (!privileges.all || (privileges.all &&
+         (!this.checkPrivilege(privileges.all.read) && 
+          !this.checkPrivilege(privileges.all.update)))) &&
+           privileges.personal &&
+          (this.checkPrivilege(privileges.personal.read) || 
+           this.checkPrivilege(privileges.personal.update)))) {
+        parameters.push({
+          attribute: privileges.personal.properties,
+          isLower: true,
+          value: XT.username
+        });
+      }
+
       /* handle parameters */
-      if (parameters) {
+      if (parameters.length) {
         for (i = 0; i < parameters.length; i++) {
           orClause = [];
           param = parameters[i];
@@ -121,6 +136,8 @@ select xt.install_js('XT','Data','xtuple', $$
                   if (n < parts.length - 1) {
                     attr = "(" + attr + ").";
                     childOrm = XT.Orm.fetch(nameSpace, prop.toOne.type);
+                  } else if (param.isLower) {
+                    attr = "lower(" + attr + ")";
                   }
                 }
               } else {
@@ -151,25 +168,7 @@ select xt.install_js('XT','Data','xtuple', $$
         }
       }
 
-      /* handle privileges */
-      if ((privileges &&
-         (!privileges.all || (privileges.all &&
-         (!this.checkPrivilege(privileges.all.read) && 
-          !this.checkPrivilege(privileges.all.update)))) &&
-           privileges.personal &&
-          (this.checkPrivilege(privileges.personal.read) || 
-           this.checkPrivilege(privileges.personal.update)))) {
-        properties = privileges.personal.properties;
-        conds = [];
-        for (i = 0; i < properties.length; i++) {
-          col = orm.properties.findProperty('name', properties[i]).toOne ? '(' + type.decamelize() + '."' + properties[i] + '").username' : properties[i];
-          conds.push(col);
-        }
-        pcond = "'" + XT.username + "' in (" + conds.join(",") + ")";
-      }
-      ret.conditions = clauses.length ? '(' + clauses.join(' and ') + ')' : ret.conditions;
-      ret.conditions = pcond.length ? (clauses.length ? ret.conditions.concat(' and ', pcond) : pcond) : ret.conditions;
-      ret.conditions = ret.conditions || true;
+      ret.conditions = (clauses.length ? '(' + clauses.join(' and ') + ')' : ret.conditions) || true;
       return ret;
     },
 
@@ -264,11 +263,26 @@ select xt.install_js('XT','Data','xtuple', $$
 
         /* shared checker function that checks 'personal' properties for access rights */
         checkPersonal = function(record) {
-          var i = 0, isGranted = false,
-              props = privileges.personal.properties;
+          var i = 0,
+            isGranted = false,
+            props = privileges.personal.properties,
+            get = function (obj, target) {
+              var parts = target.split("."),
+                ret,
+                part,
+                idx;
+              for (idx = 0; idx < parts.length; idx++) {
+                part = parts[idx];
+                ret = ret ? ret[part] : obj[part];
+                if (ret === null || ret === undefined) {
+                  return null;
+                }
+              }
+              return ret.toLowerCase();
+            };
           while(!isGranted && i < props.length) {
             var prop = props[i];
-            isGranted = record[prop] && record[prop].username === XT.username;
+            isGranted = get(record, prop) === XT.username;
             i++;
           }
           return isGranted;
