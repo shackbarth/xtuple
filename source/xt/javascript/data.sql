@@ -278,11 +278,11 @@ select xt.install_js('XT','Data','xtuple', $$
                   return null;
                 }
               }
-              return ret;
+              return ret.toLowerCase();
             };
           while(!isGranted && i < props.length) {
             var prop = props[i];
-            isGranted = get(record, prop).toLowerCase() === XT.username;
+            isGranted = get(record, prop) === XT.username;
             i++;
           }
           return isGranted;
