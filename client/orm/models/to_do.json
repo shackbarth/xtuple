@@ -19,8 +19,8 @@
         "update": "MaintainPersonalToDoItems",
         "delete": "MaintainPersonalToDoItems",
         "properties": [
-          "owner",
-          "assignedTo"
+          "owner.username",
+          "assignedTo.username"
         ]
       }
     },
@@ -687,9 +687,19 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": true,
+        "read": "ViewAllToDoItems",
         "update": false,
         "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false,
+        "properties": [
+          "owner.username",
+          "assignedTo.username"
+        ]
       }
     },
     "properties": [
@@ -744,6 +754,15 @@
         }
       },
       {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "todoitem_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
         "name": "assignedTo",
         "toOne": {
           "isNested": true,
@@ -757,13 +776,6 @@
         "attr": {
           "type": "Number",
           "column": "todoitem_crmacct_id"
-        }
-      },
-      {
-        "name": "conntact",
-        "attr": {
-          "type": "Number",
-          "column": "todoitem_cntct_id"
         }
       },
       {
@@ -803,8 +815,8 @@
         "update": false,
         "delete": false,
         "properties": [
-          "owner",
-          "assignedTo"
+          "owner.username",
+          "assignedTo.username"
         ]
       }
     },

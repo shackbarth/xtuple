@@ -718,15 +718,6 @@
         "read": "ViewItemMasters",
         "update": false,
         "delete": false
-      },
-      "personal": {
-        "create": false,
-        "read": true,
-        "update": false,
-        "delete": false,
-        "properties": [
-          "owner"
-        ]
       }
     },
     "properties": [
