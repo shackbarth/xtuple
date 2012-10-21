@@ -234,6 +234,28 @@ white:true*/
       @returns {Object}
     */
     original: function (attr) {
+      var parts,
+        value,
+        i;
+      // Search path
+      if (attr.indexOf('.') !== -1) {
+        parts = attr.split('.');
+        value = this;
+        for (i = 0; i < parts.length; i++) {
+          value = value.original(parts[i]);
+          if (value && value instanceof Date) {
+            break;
+          } else if (value && typeof value === "object") {
+            continue;
+          } else if (typeof value === "string") {
+            break;
+          } else {
+            value = "";
+            break;
+          }
+        }
+        return value;
+      }
       return this.prime[attr] || this.get(attr);
     },
 
@@ -1197,8 +1219,8 @@ white:true*/
           isGrantedPersonal = sessionPrivs.get(privs.personal[action]);
         }
         if (!isGrantedPersonal && privs.personal && action === 'read'  &&
-            privs.personal['update']) {
-          isGrantedPersonal = sessionPrivs.get(privs.personal['update']);
+            privs.personal.update) {
+          isGrantedPersonal = sessionPrivs.get(privs.personal.update);
         }
       }
 
@@ -1212,8 +1234,6 @@ white:true*/
         isGrantedPersonal = false;
         while (!isGrantedPersonal && i < props.length) {
           value = model.original(props[i]);
-          value = value && typeof value === 'object' ?
-            value.get('username') : value;
           isGrantedPersonal = value === username;
           i += 1;
         }
