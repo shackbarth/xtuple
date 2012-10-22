@@ -771,6 +771,14 @@
         }
       },
       {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "prj_cntct_id"
+        }
+      },
+      {
         "name": "budgetedHours",
         "attr": {
           "type": "Number",
