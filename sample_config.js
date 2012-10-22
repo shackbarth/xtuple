@@ -6,8 +6,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   module.exports = {
+    processName: "node-datasource",
     debugging: true,
-    version: "beta1",
+    allowMultipleVersions: true,
     requireDatabase: true,
     requireServer: true,
     requireCache: true,
