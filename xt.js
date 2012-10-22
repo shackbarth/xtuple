@@ -31,7 +31,7 @@ require('./foundation');
 (function () {
   "use strict";
   
-  var _ = X._, sighandler;
+  var _ = X._, _path = X.path, sighandler;
   
   sighandler = function (signal) {
     
@@ -50,6 +50,15 @@ require('./foundation');
   // ready
   X.run(function () {
     
+    var i, sub;
+    
+    // special case where the desired output requires calling console directly
+    X.io.console(X.StringBuffer.create({ color: 'blue', prefix: null }),
+      "\n================================================" +
+      "\nXUPLE NODE.JS FRAMEWORK ({version})".f({ version: X.version || "N/A" }) +
+      "\n================================================\n"
+    );
+    
     if (X.requireDatabase) require("./database");
     if (X.requireServer) require("./server");
     if (X.requireCache) {
@@ -57,19 +66,50 @@ require('./foundation');
       require("./database/ext/mongoose_schema");
     }
     
-    // special case where the desired output requires calling console directly
-    X.io.console(X.StringBuffer.create({ color: 'blue', prefix: null }),
-      "\n================================================" +
-      "\nXUPLE NODE.JS FRAMEWORK ({version})".f({ version: X.version }) +
-      "\n================================================" +
-      "\nThis framework is highly experimental." +
-      "\n\nPlease report bugs to the project git issue tracker and for blocking" +
-      "\nissues please also report those via email to Cole Davis (cole@xtuple.com)\n"
-    );
+    X.pid = process.pid;
+    
+    // must explicitly be set to false for it to know you do not want
+    // a pidfile!
+    if (X.pidFile !== false) {
+      if (!X.pidFilePath) {
+        X.pidFilePath = "%@/pid".f(X.basePath);
+      } else if (X.pidFilePath.indexOf(X.basePath) === -1) {
+        X.pidFilePath = _path.join(X.basePath, X.pidFilePath);
+      }
+      if (!X.pidFileName) {
+        X.pidFileName = "%@.pid".f(X.processName? X.processName: "node_xt_process");
+      } else if (X.pidFileName.indexOf(".pid") === -1) {
+        X.pidFileName = X.pidFileName.suf(".pid");
+      }
+    
+      // if we're allowed to have multiples of this resource executing
+      // simultaneously we need to make the name unique
+      if (X.allowMultipleInstances === true) {
+        i = X.pidFileName.indexOf(".pid");
+        sub = X.pidFileName.substring(0, i);
+        X.pidFileName = "%@_%@.pid".f(sub, X.pid);
+      }
+    
+      // keep track of the actual pidfile full path
+      X.pidFile = _path.join(X.pidFilePath, X.pidFileName);
+      
+      X.exists(X.pidFile, function (exists) {
+        if (exists && !X.allowMultupleInstances) {
+          issue(X.fatal("Multiple instances are not allowed"));
+        } else {
+        
+          // write our pidfile...
+          X.exists(_path.join(X.pidFilePath), function (exists) {
+            if (!exists) X.createDir(X.pidFilePath, X.writePidFile);
+            else X.writePidFile();
+          }); 
+        }
+      });
+    }
     
     // give any running process the opportunity to save state
     // or log as gracefully as possible
-    //process.once('exit', _.bind(X.cleanup, X));
+    process.once('exit', _.bind(X.cleanup, X));
     
     _.forEach(["SIGINT", "SIGHUP", "SIGQUIT", "SIGKILL", "SIGSEGV", "SIGILL"], function (sig) {
       process.once(sig, _.bind(sighandler, X, sig));

@@ -90,6 +90,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
 
     readFile: function (path, filename, callback) {
+      var args = X.$A(arguments);
+      if (args.length === 1)
+      
+        // TODO: will throw error?
+        return _fs.readFileSync(path, "utf8").trim();
+      
       if (X.typeOf(filename) === X.T_FUNCTION) {
         callback = filename;
         filename = '';
@@ -127,7 +133,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         stats = _fs.statSync(path);
         return stats.isDirectory() || stats.isFile() ? true : false;
       } catch (err) {
-        issue(X.warning(err));
+        //issue(X.warning(err));
         return false;
       }
     },
@@ -140,6 +146,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       if (X.none(callback) || X.typeOf(callback) !== X.T_FUNCTION) {
         _fs.writeFileSync(path, content, 'utf8');
       }
+    },
+    
+    removeFile: function (path) {
+      _fs.unlinkSync(path);
     },
 
     reduce: function (files, extension) {
