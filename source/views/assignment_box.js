@@ -17,7 +17,7 @@ white:true*/
    */
   enyo.kind(/** @lends XV.AssignmentBox# */{
     name: "XV.AssignmentBox",
-    kind: "XV.ScrollableGroupbox",//"XV.Groupbox",
+    kind: "XV.Groupbox",
     classes: "xv-assignment-box",
     handlers: {
       onValueChange: "checkboxChange"
@@ -77,19 +77,16 @@ white:true*/
       type: ""
     },
 
-    // TODO: you'll notice the CSS looks bad. You can fix it by uncommenting the three lines here
-    // in components, and swap in the commented kind, above. Problem is, the scroller disappears
-    // inexplicably if you do this.
     components: [
-      //{kind: "onyx.GroupboxHeader", content: "_roles".loc()},
-      //{kind: "XV.ScrollableGroupbox", components: [
-      {kind: "Repeater", name: "segmentRepeater", fit: true, onSetupItem: "setupSegment", segmentIndex: 0, components: [
-        {kind: "onyx.GroupboxHeader", name: "segmentHeader", content: ""},
-        {kind: "Repeater", name: "checkboxRepeater", fit: true, onSetupItem: "setupCheckbox", components: [
-          {kind: "XV.CheckboxWidget", name: "checkbox" }
+      {kind: "onyx.GroupboxHeader", name: "masterHeader"},
+      {kind: "Scroller", fit: true, components: [
+        {kind: "Repeater", name: "segmentRepeater", fit: true, onSetupItem: "setupSegment", segmentIndex: 0, components: [
+          {kind: "onyx.GroupboxHeader", name: "segmentHeader", content: ""},
+          {kind: "Repeater", name: "checkboxRepeater", fit: true, onSetupItem: "setupCheckbox", components: [
+            {kind: "XV.CheckboxWidget", name: "checkbox" }
+          ]}
         ]}
       ]}
-      //]}
     ],
     /**
      * Applies special formatting to a checkbox after it has been clicked, if applicable.
@@ -183,14 +180,15 @@ white:true*/
      * and calls for the totalCollection to be segmentized.
      */
     create: function () {
-      this.inherited(arguments);
-
       var i,
         that = this,
         comparator = function (model) {
           return model.get("name");
         };
 
+      this.inherited(arguments);
+
+      this.$.masterHeader.setContent(this.getTitle());
       this.setSegmentedCollections([]);
 
       for (i = 0; i < this.getSegments().length; i++) {
