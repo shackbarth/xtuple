@@ -102,7 +102,6 @@ white:true*/
     },
     /**
      * Handles bubbled checkbox event changes and prevents them from bubbling further.
-     * Note that this method is afflicted with an insane bug.
      */
     checkboxChange: function (inSender, inEvent) {
       var that = this,
@@ -112,40 +111,20 @@ white:true*/
         checkedModel,
         newModel;
 
-      // BEGIN HACK
-      /*
-      var tempChecked, segmentNum, checkboxNum;
-      try {
-        tempChecked = checkbox.$.input.checked;
-        segmentNum = checkbox.parent.parent.parent.indexInContainer();
-        checkboxNum = checkbox.parent.indexInContainer();
-      } catch (error) {
-        XT.log("Crazy hack failed. Not bothering with it.");
-      }
-      */
-      //END HACK
-
-        //
-        // The record type in totalCollection is XM.Privilege and the
-        // record type in assignedCollection is XM.UserAccountPrivilegeAssignment,
-        // so we have to navigate this.
-        //
+      //
+      // The record type in totalCollection is XM.Privilege and the
+      // record type in assignedCollection is XM.UserAccountPrivilegeAssignment,
+      // so we have to navigate this.
+      //
       if (value) {
         // filter returns an array and we want a model: that's why I [0]
         // assumption: no duplicate originator names
         checkedModel = _.filter(this.getTotalCollection().models, function (model) {
           return model.get("name") === originatorName;
         })[0];
-        // XXX I would love to revisit this when I have another two hours to burn on crazy bugs
-        // the issue is that by creating the model we uncheck somehow the checkbox. Or maybe we're replacing
-        // the checkbox with a different checkbox that itself is unchecked. Adding to the craziness is
-        // that inEvent disappears at the same time. In WTF1land everything is normal. In WTF2land everything
-        // is zany. And the problem disappears entirely when I set a breakpoint! The hack above and below
-        // cannot possibly stand the test of time. But after 2 hours I'm ready to move on for now.
-         //XT.log("WTF1?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
         newModel = this.getAssignmentModel(checkedModel);
-         //XT.log("WTF2?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
         this.getAssignedCollection().add(newModel);
+        // force a refresh of the mapIds cache
         this.assignedCollectionChanged();
         this.tryToRender();
       } else {
@@ -159,24 +138,8 @@ white:true*/
         if (!checkedModel) {
           XT.log("No model to destroy. This is probably a bug."); // XXX
         }
-         //XT.log("WTF3?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
         checkedModel.destroy();
-         //XT.log("WTF4?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
       }
-      // BEGIN HACK
-      /*
-      try {
-        if (tempChecked !== this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked) {
-          XT.log("applying hack: setting checkbox to " + tempChecked);
-          checkbox = this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox;
-          checkbox.$.input.checked = tempChecked;
-          this.render();
-        }
-      } catch (error) {
-        XT.log("Crazy hack failed. Not bothering with it.");
-      }
-      */
-      // END HACK
 
       this.applyPostCheckFormatting(checkbox, checkedModel);
       return true;
