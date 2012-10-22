@@ -8,32 +8,40 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   module.exports = {
     processName: "node-datasource",
     debugging: true,
-    allowMultipleVersions: true,
+    allowMultipleInstances: true,
     requireDatabase: true,
     requireServer: true,
     requireCache: true,
     functorsDirectory: "./lib/functors",
     routesDirectory: "./lib/routes",
     routersDirectory: "./lib/routers",
-    proxy: {
-      hostname: "localhost",
-      port: 9000
-    },
     datasource: {
       sessionTimeout: 15,
       bindAddress: "",
-      port: 443,
+      port: 20100,
       keyFile: "",
       certFile: "",
-      caFile: "",
+      caFile: null,
       saltFile: "",
       
-      // make sure to supply the information necessary
-      // for this service to register itself with router
-      name: "[DATASOURCE INSTANCE NAME]",
-      description: "[DATASOURCE DESCRIPTION TEXT]",
-      hostname: "[DATASOURCE HOSTNAME/IP]",
-      location: "[DATASOURCE LOCATION TEXT SPECIFIER]"
+      // these properties are dynamically registered with the
+      // node discovery service
+      
+      // the unique identifer registered for this service/instance
+      name: "",
+      
+      // human-friendly description of this service
+      description: "",
+      
+      // REQUIRED - the ip address or hostname for this instance
+      hostname: "",
+      
+      // human-friendly location identifier for various cloud, physical
+      // servers, etc. 
+      location: ""
+    },
+    administratorInterface: {
+      port: 9090
     },
     cache: {
       session: {
@@ -48,6 +56,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         schemaDirectory: "./mongo_schemas/users",
         database: "xtusers"
       }
-    }
+    },
+    required: [
+      "lib/ext/session",
+      "lib/ext/database",
+      "lib/servers",
+      "lib/ext/caches"
+    ]
   };
 }());

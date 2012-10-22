@@ -19,23 +19,4 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   // set the options
   X.setup(options);
-
-  require("./lib/ext/session");
-  require("./lib/ext/proxy");
-  require("./lib/ext/database");
-
-  // load up the dataserver
-  require("./lib/dataserver");
-  
-  // register this service
-  require("./lib/register_service");
-  
-  X.userCache = X.Cache.create({prefix: "users"});
-  X.sessionCache = X.Cache.create({
-    prefix: "session",
-    init: function () {
-      this._super.init.call(this);
-      X.Session.cache = this;
-    }
-  });
 }());
