@@ -79,7 +79,7 @@ white:true*/
 
     components: [
       {kind: "onyx.GroupboxHeader", name: "masterHeader"},
-      {kind: "Scroller", fit: true, components: [
+      {kind: "Scroller", fit: true, horizontal: "hidden", components: [
         {kind: "Repeater", name: "segmentRepeater", fit: true, onSetupItem: "setupSegment", segmentIndex: 0, components: [
           {kind: "onyx.GroupboxHeader", name: "segmentHeader", content: ""},
           {kind: "Repeater", name: "checkboxRepeater", fit: true, onSetupItem: "setupCheckbox", components: [
