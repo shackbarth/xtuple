@@ -45,8 +45,7 @@ white:true*/
      */
     getAssignmentModel: function (roleModel) {
       return new XM.UserAccountUserAccountRoleAssignment({
-        userAccountRole: roleModel,
-        userAccount: this.getAssignedCollection().userAccount
+        userAccountRole: roleModel
       }, {isNew: true});
     }
   };
