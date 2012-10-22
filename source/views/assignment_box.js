@@ -259,7 +259,9 @@ white:true*/
 
       //
       // Suppress the header if there's just one segment
-      //
+      // TODO: we also want to collapse the header, or just delete it.
+      // it'll look something like header.parent.removeChild(header)
+      // but we need to deal with the fragility of the "crazy bug" fix first
       if (this.getSegments().length < 2) {
         header.setStyle("visibility: hidden;");
       }
