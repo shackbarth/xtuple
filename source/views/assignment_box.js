@@ -124,9 +124,7 @@ white:true*/
         })[0];
         newModel = this.getAssignmentModel(checkedModel);
         this.getAssignedCollection().add(newModel);
-        // force a refresh of the mapIds cache
-        this.assignedCollectionChanged();
-        this.tryToRender();
+
       } else {
         checkedModel = _.filter(this.getAssignedCollection().models, function (model) {
           // we don't want to redestroy a destroyed model, because there's probably a living one
@@ -141,9 +139,13 @@ white:true*/
         checkedModel.destroy();
       }
 
+      // force a refresh of the mapIds cache
+      this.assignedCollectionChanged();
+      this.tryToRender();
       this.applyPostCheckFormatting(checkbox, checkedModel);
       return true;
     },
+
     /**
      * Populates totalCollection field (either from the cache or through a fetch)
      * and calls for the totalCollection to be segmentized.
@@ -177,9 +179,6 @@ white:true*/
         }};
         this.getTotalCollection().fetch(options);
       }
-
-
-
     },
     /**
      * Creates a new assignment model to add to the assignedCollection.
@@ -204,6 +203,10 @@ white:true*/
           return null;
         }
 
+        if (model.getStatus() & XM.Model.DESTROYED) {
+          // don't add destroyed models to cache
+          return null;
+        }
         return model.get(that.getType()).get("id");
       }));
     },
@@ -234,8 +237,6 @@ white:true*/
       if (this.getSegments().length < 2) {
         header.setStyle("visibility: hidden;");
       }
-
-
 
       return true;
     },
