@@ -19,6 +19,7 @@
 
 -- xt trigger functions
 \i xt/trigger_functions/comment_did_change.sql
+\i xt/trigger_functions/useracct_did_change.sql
 
 -- xt tables
 \i xt/tables/comment.sql
@@ -28,6 +29,7 @@
 \i xt/tables/useracct.sql
 
 -- xt javascript
+\i xt/javascript/init.sql;
 \i xt/javascript/session.sql;
 
 -- xt views
@@ -40,6 +42,7 @@
 \i xt/views/opheadinfo.sql;
 \i xt/views/prjinfo.sql;
 \i xt/views/todoiteminfo.sql;
+\i xt/views/usr.sql;
 
 -- delete system orms
 \i ../../orm/source/delete_system_orms.sql;

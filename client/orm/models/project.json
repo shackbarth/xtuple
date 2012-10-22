@@ -19,8 +19,8 @@
         "update": "MaintainPersonalProjects",
         "delete": "MaintainPersonalProjects",
         "properties": [
-          "owner",
-          "assignedTo"
+          "owner.username",
+          "assignedTo.username"
         ]
       }
     },
@@ -575,9 +575,19 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": true,
+        "read": "ViewAllProjects",
         "update": false,
         "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false,
+        "properties": [
+          "owner.username",
+          "assignedTo.username"
+        ]
       }
     },
     "properties": [
@@ -671,8 +681,8 @@
         "update": false,
         "delete": false,
         "properties": [
-          "owner",
-          "assignedTo"
+          "owner.username",
+          "assignedTo.username"
         ]
       }
     },
@@ -1043,10 +1053,10 @@
         "update": "MaintainPersonalProjects",
         "delete": "MaintainPersonalProjects",
         "properties": [
-          "owner",
-          "assignedTo",
-          "projectOwner",
-          "projectAssignedTo"
+          "owner.username",
+          "assignedTo.username",
+          "projectOwner.username",
+          "projectAssignedTo.username"
         ]
       }
     },
@@ -1241,10 +1251,10 @@
         "update": false,
         "delete": false,
         "properties": [
-          "owner",
-          "assignedTo",
-          "projectOwner",
-          "projectAssignedTo"
+          "owner.username",
+          "assignedTo.username",
+          "projectOwner.username",
+          "projectAssignedTo.username"
         ]
       }
     },

@@ -2,14 +2,15 @@ drop view if exists xt.nodeusr cascade;
 
 create or replace view xt.nodeusr as
 
-  select 
+  select
+    useracct_id as nodeusr_id,
     useracct_username as nodeusr_username,
     (select 
        case when usrpref_value='t' then true 
          else false 
        end 
        from usrpref 
-       where usrpref_username=usename 
+       where usrpref_username=useracct_username
          and usrpref_name='active') as nodeusr_active,
     coalesce((select usrpref_value 
               from usrpref 
@@ -55,15 +56,12 @@ values (
   new.nodeusr_username
 );
 
-select xt.execute_query('alter table usrpref disable trigger usrprefaftertrigger');
 select setUserPreference(new.nodeusr_username, 'DisableExportContents', case when new.nodeusr_disable_export then 't' else 'f' end );
 select setUserPreference(new.nodeusr_username, 'propername', new.nodeusr_propername);
 select setUserPreference(new.nodeusr_username, 'email', new.nodeusr_email);
 select setUserPreference(new.nodeusr_username, 'initials', new.nodeusr_initials);
 select setUserPreference(new.nodeusr_username, 'locale_id', new.nodeusr_locale_id::text);
 select setUserPreference(new.nodeusr_username, 'active', case when new.nodeusr_active then 't' else 'f' end );
-select xt.execute_query('alter table usrpref enable trigger usrprefaftertrigger');
-
 );
 
 -- update rules
