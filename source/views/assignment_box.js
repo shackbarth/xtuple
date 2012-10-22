@@ -113,6 +113,7 @@ white:true*/
         newModel;
 
       // BEGIN HACK
+      /*
       var tempChecked, segmentNum, checkboxNum;
       try {
         tempChecked = checkbox.$.input.checked;
@@ -121,6 +122,7 @@ white:true*/
       } catch (error) {
         XT.log("Crazy hack failed. Not bothering with it.");
       }
+      */
       //END HACK
 
         //
@@ -140,10 +142,12 @@ white:true*/
         // that inEvent disappears at the same time. In WTF1land everything is normal. In WTF2land everything
         // is zany. And the problem disappears entirely when I set a breakpoint! The hack above and below
         // cannot possibly stand the test of time. But after 2 hours I'm ready to move on for now.
-        // XT.log("WTF1?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
+         //XT.log("WTF1?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
         newModel = this.getAssignmentModel(checkedModel);
-        // XT.log("WTF2?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
+         //XT.log("WTF2?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
         this.getAssignedCollection().add(newModel);
+        this.assignedCollectionChanged();
+        this.tryToRender();
       } else {
         checkedModel = _.filter(this.getAssignedCollection().models, function (model) {
           // we don't want to redestroy a destroyed model, because there's probably a living one
@@ -155,11 +159,12 @@ white:true*/
         if (!checkedModel) {
           XT.log("No model to destroy. This is probably a bug."); // XXX
         }
-        // XT.log("WTF1?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
+         //XT.log("WTF3?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
         checkedModel.destroy();
-        // XT.log("WTF2?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
+         //XT.log("WTF4?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
       }
       // BEGIN HACK
+      /*
       try {
         if (tempChecked !== this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked) {
           XT.log("applying hack: setting checkbox to " + tempChecked);
@@ -170,6 +175,7 @@ white:true*/
       } catch (error) {
         XT.log("Crazy hack failed. Not bothering with it.");
       }
+      */
       // END HACK
 
       this.applyPostCheckFormatting(checkbox, checkedModel);
