@@ -291,7 +291,7 @@ X = {};
 
     didBecomeReady: function () {
       var wasReady = X.hasBecomeReady,
-          queue = X.runQueue;
+          queue = X.runQueue, required;
       
       // its an unfortunate oversight that these two variables
       // exist simultaneously...
@@ -300,6 +300,12 @@ X = {};
       if (wasReady) return;
       while (queue.length > 0) (queue.shift())();
       X.runQueue = null;
+      
+      // now run any of the require statements...
+      required = X.required || [];
+      while (required.length) {
+        require(_path.join(X.basePath, required.shift()));
+      }
     },
 
     get: function () {
