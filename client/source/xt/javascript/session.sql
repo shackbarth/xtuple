@@ -177,13 +177,10 @@ select xt.install_js('XT','Session','xtuple', $$
         }
       },
       processPrivileges = function (orm) {
-	    if(orm.privileges) {
-	      result[type]['privileges'] = orm.privileges;
-	    }
+        if (orm.privileges) {
+	   result[type]['privileges'] = orm.privileges;
+	}
       };
-
-    
-
 
     /* Loop through each field and add to the object */
     for (i = 0; i < recs.length; i++) {
@@ -194,6 +191,9 @@ select xt.install_js('XT','Session','xtuple', $$
         result[type].columns = [];
         
         /* Add relations and privileges from the orm*/
+        if (DEBUG) { 
+          plv8.elog(NOTICE, 'Fetching schema ' + schema.toUpperCase() + '.' + type);
+        }
         orm = XT.Orm.fetch(schema.toUpperCase(), type);
        
         result[type]['relations'] = [];

@@ -19,7 +19,7 @@
 
 -- xt trigger functions
 \i xt/trigger_functions/comment_did_change.sql
-\i xt/trigger_functions/usracct_did_change.sql
+\i xt/trigger_functions/useracct_did_change.sql
 
 -- xt tables
 \i xt/tables/comment.sql
