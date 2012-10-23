@@ -871,24 +871,31 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "properName"},
             {kind: "XV.InputWidget", attr: "initials"},
             {kind: "XV.InputWidget", attr: "email"},
+            {kind: "XV.CheckboxWidget", attr: "disableExport"},
             {kind: "XV.CheckboxWidget", attr: "isActive"}
           ]}
         ]},
-
-        //{kind: "XV.Groupbox", name: "rolePanel", title: "_roles".loc(), components: [
-        //  {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
         {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles", name: "grantedRoles", title: "_roles".loc()},
-        //]},
-
-        //{kind: "XV.Groupbox", name: "privilegePanel", title: "_privileges".loc(), components: [
-        //  {kind: "onyx.GroupboxHeader", content: "privileges".loc()},
         {kind: "XV.UserAccountPrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges", title: "_privileges".loc() }
-        //]},
       ]}
     ],
+    /**
+      Inject awareness of privileges earned by role into the privilege box when prompted
+     */
     refreshPrivileges: function (inSender, inEvent) {
       this.$.grantedPrivileges.mapIds(this.$.grantedRoles.getAssignedCollection().models);
       this.$.grantedPrivileges.tryToRender();
+    },
+
+    /**
+      Inject awareness of privileges earned by role into the privilege box at the start of the model loading
+     */
+    statusChanged: function (model, status, options) {
+      this.inherited(arguments);
+      if (model.getStatus() & XM.Model.READY) {
+        this.$.grantedPrivileges.mapIds(this.getValue().get("grantedUserAccountRoles").models);
+        this.$.grantedPrivileges.tryToRender();
+      }
     }
   });
 
