@@ -252,6 +252,8 @@ white:true*/
         title = data.get("name").camelize(),
         label = this.getTranslateLabels() ? ("_" + title).loc() : data.get("name");
 
+      // XXX useful for translating:
+      //console.log('"_' + title + '": "' + data.get("name") + '",');
       row.setLabel(label);
       row.setName(data.get("name"));
       if (_.indexOf(this.getAssignedIds(), data.get("id")) >= 0) {
