@@ -11,7 +11,7 @@ regexp:true, undef:true, trailing:true, white:true */
     @name XV.AddressWidget
     @extends FittableRows
    */
-  enyo.kind(/** @lends XV.AddressWidget */{
+  enyo.kind(/** @lends XV.AddressWidget# */{
     name: "XV.AddressWidget",
     kind: "FittableRows",
     classes: "xv-addresswidget",

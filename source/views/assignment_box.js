@@ -15,7 +15,7 @@ white:true*/
    @name XV.AssignmentBox
    @extends XV.ScrollableGroupbox
    */
-  enyo.kind(/** @lends XV.AssignmentBox */{
+  enyo.kind(/** @lends XV.AssignmentBox# */{
     name: "XV.AssignmentBox",
     kind: "XV.ScrollableGroupbox",//"XV.Groupbox",
     classes: "xv-assignment-box",

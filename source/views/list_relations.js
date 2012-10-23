@@ -16,7 +16,7 @@ trailing:true white:true*/
     @name XV.ListRelations
     @extends enyo.List
   */
-  enyo.kind(/** @lends XV.ListRelations */{
+  enyo.kind(/** @lends XV.ListRelations# */{
     name: "XV.ListRelations",
     kind: "List",
     classes: "xv-list",

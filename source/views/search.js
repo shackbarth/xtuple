@@ -13,7 +13,7 @@ trailing:true white:true*/
     @class
     @name XV.SearchContainer
   */
-  enyo.kind(/** @lends XV.SearchContainer */{
+  enyo.kind(/** @lends XV.SearchContainer# */{
     name: "XV.SearchContainer",
     kind: "Panels",
     classes: "app enyo-unselectable",

@@ -12,7 +12,7 @@ white:true*/
     @name XV.CommentBoxItem
     @see XV.CommentBox
    */
-  enyo.kind(/** @lends XV.CommentBoxItem */{
+  enyo.kind(/** @lends XV.CommentBoxItem# */{
     name: "XV.CommentBoxItem",
     classes: "xv-comment-box",
     published: {
@@ -170,7 +170,7 @@ white:true*/
     @name XV.CommentBox
     @see XV.CommentBoxItem
    */
-  enyo.kind(/** @lends XV.CommentBox */{
+  enyo.kind(/** @lends XV.CommentBox# */{
     name: "XV.CommentBox",
     kind: "XV.Groupbox",
     classes: "panel xv-comment-box",

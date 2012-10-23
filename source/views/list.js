@@ -14,7 +14,7 @@ trailing:true white:true*/
     @name XV.ListItem
     @see XV.List
    */
-  enyo.kind(/** @lends XV.ListItem */{
+  enyo.kind(/** @lends XV.ListItem# */{
     name: "XV.ListItem",
     classes: "xv-list-item",
     ontap: "itemTap",
@@ -29,7 +29,7 @@ trailing:true white:true*/
     @name XV.ListColumn
     @see XV.List
    */
-  enyo.kind(/** @lends XV.ListColumn */{
+  enyo.kind(/** @lends XV.ListColumn# */{
     name: "XV.ListColumn",
     classes: "xv-list-column"
   });
@@ -40,7 +40,7 @@ trailing:true white:true*/
     @name XV.ListAttr
     @see XV.List
    */
-  enyo.kind(/** @lends XV.ListAttr */{
+  enyo.kind(/** @lends XV.ListAttr# */{
     name: "XV.ListAttr",
     classes: "xv-list-attr",
     published: {
@@ -56,7 +56,7 @@ trailing:true white:true*/
     @see XV.ListColumn
     @see XV.ListAttr
    */
-  enyo.kind(/** @lends XV.List */{
+  enyo.kind(/** @lends XV.List# */{
     name: "XV.List",
     kind: "List",
     classes: "xv-list",

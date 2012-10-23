@@ -10,7 +10,7 @@ regexp:true, undef:true, trailing:true, white:true */
     @name XV.MenuItem
     @extends onyx.MenuItem
    */
-  enyo.kind(/** @lends XV.MenuItem */{
+  enyo.kind(/** @lends XV.MenuItem# */{
     name: "XV.MenuItem",
     kind: "onyx.MenuItem",
     classes: "xv-menuitem",
