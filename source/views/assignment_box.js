@@ -249,7 +249,8 @@ white:true*/
         segmentIndex = parentSegmentRepeater.segmentIndex,
         data = this.getSegmentedCollections()[segmentIndex].at(index),
         row = inEvent.item.$.checkbox,
-        label = this.getTranslateLabels() ? ("_" + data.get("name")).loc() : data.get("name");
+        title = data.get("name").camelize(),
+        label = this.getTranslateLabels() ? ("_" + title).loc() : data.get("name");
 
       row.setLabel(label);
       row.setName(data.get("name"));
