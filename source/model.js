@@ -1076,7 +1076,7 @@ white:true*/
       if (options.validateSave) {
         for (i = 0; i < this.requiredAttributes.length; i += 1) {
           value = attributes[this.requiredAttributes[i]];
-          if (value === undefined || value === null) {
+          if (value === undefined || value === null || value === "") {
             params.attr = ("_" + this.requiredAttributes[i]).loc();
             return XT.Error.clone('xt1004', { params: params });
           }
