@@ -52,6 +52,9 @@ white:true*/
     create: function () {
       this.inherited(arguments);
       XT.app = this;
+      window.onbeforeunload = function () {
+        return "_exitPageWarning".loc();
+      }
     },
     getPullout: function () {
       return this.$.pullout;
