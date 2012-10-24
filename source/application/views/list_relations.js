@@ -117,3 +117,33 @@ trailing:true white:true*/
   });
 
 }());
+
+// ..........................................................
+// INCIDENT HISTORY
+//
+
+enyo.kind({
+  name: "XV.IncidentHistoryListRelations",
+  kind: "XV.ListRelations",
+  orderBy: [
+    {attribute: "lastName"},
+    {attribute: "firstName"},
+    {attribute: "primaryEmail"}
+  ],
+  parentKey: "history",
+  components: [
+    {kind: "XV.ListItem", components: [
+      {kind: "FittableRows", components: [
+        {kind: "XV.ListColumn", classes: "first", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListAttr", attr: "createdBy"},
+            {kind: "XV.ListAttr", attr: "created", fit: true, classes: "right"}
+          ]},
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]}
+  ]
+});

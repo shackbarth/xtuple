@@ -168,6 +168,7 @@ var lang = XT.stringsFor("en_US", {
   "_incidents": "Incidents",
   "_incidentCategories": "Incident Categories",
   "_incidentCategory": "Incident Category",
+  "_incidentHistory": "Incident History",
   "_incidentResolution": "Incident Resolution",
   "_incidentResolutions": "Incident Resolutions",
   "_incidentSeverities": "Incident Severities",
