@@ -364,6 +364,7 @@ var lang = XT.stringsFor("en_US", {
   // Messages
   // ********
 
+  "_exitPageWarning": "You are about to leave the xTuple application.",
   "_loadingApplicationData": "Loading Application Data",
   "_loadingExtensions": "Loading Extensions",
   "_loadingSchema": "Loading Schema",
