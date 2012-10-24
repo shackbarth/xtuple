@@ -23,6 +23,9 @@ regexp:true, undef:true, trailing:true, white:true */
     events: {
       "onValueChange": ""
     },
+    handlers: {
+      onblur: "receiveBlur"
+    },
     components: [
       {name: "input", kind: "onyx.Input", classes: "xv-subinput", onchange: "inputChanged"}
     ],
@@ -53,6 +56,12 @@ regexp:true, undef:true, trailing:true, white:true */
     placeholderChanged: function () {
       var placeholder = this.getPlaceholder();
       this.$.input.setPlaceholder(placeholder);
+    },
+    receiveBlur: function () {
+      // Because webkit browsers don't always emit a change event
+      if (this.$.input.getValue() !== this.getValue()) {
+        this.inputChanged();
+      }
     },
     setValue: function (value, options) {
       options = options || {};
