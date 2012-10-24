@@ -1,0 +1,55 @@
+/* LESS version of screen.scss file previously in client 
+
+To compile to .css: lessc screen.less > ../stylesheets/screen.css -compress
+
+*/
+
+/*
+	These variables will show in css as their hex values
+*/
+@highlight  : #d6f1ff;
+@orange     : #f60;
+@bright-orange	:	#f49200;
+@slate-blue : #226b9a;
+@light-blue : #9cf;
+@light-gray : #d8d8d8;
+@med-gray 	: #8d8d8d;
+@blue-gray	: #93a1a1;
+@light-gray	:	#aaa;
+@white      : #fff;
+@dark-gray	:	#333;
+@near-black	: #0e0e0e;
+
+body {
+  font-family: "arial", "arial black";
+}
+
+.item {
+	background-color: @dark-gray;
+	border-bottom: 1px solid @near-black;
+	position: relative;
+	padding: 16px 12px;
+}
+
+.item.onyx-selected {
+	background-color: @slate-blue;
+}
+
+.left {
+	color: @white;
+}
+
+.xt-app {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  .xv-postbooks {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}

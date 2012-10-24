@@ -1,0 +1,5 @@
+body{font-family:"arial","arial black";}
+.item{background-color:#333333;border-bottom:1px solid #0e0e0e;position:relative;padding:16px 12px;}
+.item.onyx-selected{background-color:#226b9a;}
+.left{color:#ffffff;}
+.xt-app{position:absolute;top:0;left:0;right:0;bottom:0;}.xt-app .xv-postbooks{position:absolute;top:0;left:0;right:0;bottom:0;}
