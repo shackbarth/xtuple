@@ -168,6 +168,7 @@ white:true*/
 
       payload.requestType = 'commitRecord';
       payload.recordType = model.recordType;
+      payload.binaryField = model.binaryField; // see issue 18661
       payload.requery = options.requery;
       payload.dataHash = model.changeSet();
 
@@ -296,10 +297,10 @@ white:true*/
       this._sock.on("debug", function (msg) {
         XT.log("SERVER DEBUG => ", msg);
       });
-      
+
       this._sock.on("timeout", function (msg) {
         XT.log("SERVER SAID YOU TIMED OUT");
-        
+
         var p = XT.app.createComponent({
           kind: "onyx.Popup",
           centered: true,
@@ -315,7 +316,7 @@ white:true*/
         });
         p.show();
       });
-      
+
       this._sock.on("disconnect", function () {
         XT.log("DISCONNECTED FROM SERVER");
       });
