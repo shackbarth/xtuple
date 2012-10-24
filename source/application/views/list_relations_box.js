@@ -18,4 +18,17 @@ trailing:true white:true*/
     searchList: "XV.ContactList"
   });
 
+  // ..........................................................
+  // INCIDENT HISTORY
+  //
+
+  enyo.kind({
+    name: "XV.IncidentHistoryRelationsBox",
+    kind: "XV.ListRelationsBox",
+    title: "_history".loc(),
+    parentKey: "history",
+    listRelations: "XV.IncidentHistoryListRelations",
+    canOpen: false
+  });
+
 }());
