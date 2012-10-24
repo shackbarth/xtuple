@@ -18,13 +18,17 @@ white:true*/
       },
       
       projectDidChange: function () {
-        var project = this.get('project');
-        this.setReadOnly('foundIn', project);
-        this.setReadOnly('fixedIn', project);
-        if (!project && this.isDirty()) {
-          this.set('foundIn', null, {force: true});
-          this.set('fixedIn', null, {force: true});
+        var project = this.get('project'),
+          status = this.getStatus(),
+          K = XM.Model;
+        this.setReadOnly('foundIn', false);
+        this.setReadOnly('fixedIn', false);
+        if (status & K.READY) {
+          this.set('foundIn', null);
+          this.set('fixedIn', null);
         }
+        this.setReadOnly('foundIn', !project);
+        this.setReadOnly('fixedIn', !project);
       }
 
     });
