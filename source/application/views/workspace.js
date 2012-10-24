@@ -406,7 +406,8 @@ trailing:true white:true*/
           ]}
         ]},
         {kind: "XV.IncidentCommentBox", attr: "comments"},
-        {kind: "XV.IncidentDocumentsBox", attr: "documents"}
+        {kind: "XV.IncidentDocumentsBox", attr: "documents"},
+		{kind: "XV.IncidentHistoryRelationsBox", attr: "history"}
       ]}
     ]
   });
