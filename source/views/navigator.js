@@ -92,6 +92,8 @@ trailing:true white:true*/
               placeholder: "_search".loc(), onchange: "inputChanged"},
             {kind: "Image", src: "assets/search-input-search.png"}
           ]},
+          {name: "refreshButton", kind: "onyx.Button", content: "_refresh".loc(),
+              ontap: "requery", style: "float: right;", showing: false},
           {name: "newButton", kind: "onyx.Button", content: "_new".loc(),
             ontap: "newRecord", style: "float: right;", showing: false},
           {name: "exportButton", kind: "onyx.Button", content: "_export".loc(),
@@ -484,6 +486,7 @@ trailing:true white:true*/
       this.$.menuPanels.getActive().select(0);
       this.setContentPanel(0);
       this.$.backButton.setContent(label);
+      this.$.refreshButton.setShowing(index);
       this.$.search.setShowing(index);
       this.$.searchIconButton.setShowing(index);
     },
