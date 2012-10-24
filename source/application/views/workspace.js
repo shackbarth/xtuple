@@ -266,8 +266,7 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name", name: "name"},
-            // XXX the disabled flag here doesn't seem to work
-            {kind: "XV.InputWidget", attr: "description", name: "description", disabled: true},
+            {kind: "XV.InputWidget", attr: "description", name: "description" },
             {kind: "XV.FileInput", name: "file", attr: "data"}
           ]}
         ]}
@@ -280,11 +279,21 @@ trailing:true white:true*/
      */
     controlValueChanged: function (inSender, inEvent) {
       var filename = inEvent.filename;
+      this.inherited(arguments);
+
       if (filename) {
         this.$.name.setValue(filename);
         this.$.description.setValue(filename);
       }
+    },
+    /**
+      We want the description to be always disabled, which means we have
+      to go in after the attributesChanged method, which, as it's defined
+      in the superkind, will reset the disabled status based on permissions etc.
+     */
+    attributesChanged: function (model, options) {
       this.inherited(arguments);
+      this.$.description.setDisabled(true);
     }
   });
 
