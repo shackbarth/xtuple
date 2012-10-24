@@ -24,7 +24,8 @@ trailing:true white:true*/
       title: "",
       parentKey: "",
       listRelations: "",
-      searchList: ""
+      searchList: "",
+      canOpen: true
     },
     events: {
       onSearch: "",
@@ -56,10 +57,18 @@ trailing:true white:true*/
       // Buttons
       buttons = {kind: 'FittableColumns', classes: "xv-groupbox-buttons",
         components: [
+      ]};
+      var canOpen = this.getCanOpen();
+      if (canOpen) {
+        buttons.components.push(
+        {kind: "onyx.Button", name: "openButton", onclick: "openItem",
+          content: "_open".loc(), classes: "xv-groupbox-button-right",
+          disabled: true, fit: canAttach});
+        buttons.components.push(
         {kind: "onyx.Button", name: "newButton", onclick: "newItem",
           content: "_new".loc(), classes: "xv-groupbox-button-left",
-          disabled: true}
-      ]};
+          disabled: true});
+      }
       if (canAttach) {
         buttons.components.push(
         {kind: "onyx.Button", name: "attachButton", onclick: "attachItem",
@@ -69,10 +78,6 @@ trailing:true white:true*/
           content: "_detach".loc(), classes: "xv-groupbox-button-center",
           disabled: true});
       }
-      buttons.components.push(
-        {kind: "onyx.Button", name: "openButton", onclick: "openItem",
-          content: "_open".loc(), classes: "xv-groupbox-button-right",
-          disabled: true, fit: canAttach});
       this.createComponent(buttons);
     },
     attachItem: function () {
@@ -232,7 +237,7 @@ trailing:true white:true*/
         canNotCreate = Klass ? !Klass.canCreate() : true,
         canNotUpdate = Klass ? !Klass.canUpdate() : true;
       this.$.list.setValue(value);
-      this.$.newButton.setDisabled(canNotCreate);
+      if (this.getCanOpen()) {this.$.newButton.setDisabled(canNotCreate); }
       if (canAttach) { this.$.attachButton.setDisabled(canNotUpdate); }
     }
   });
