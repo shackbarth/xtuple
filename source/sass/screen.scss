@@ -15,7 +15,7 @@ $orange     : #ff6600;
 body {}
  
 .bggrad {
-  @include background-image(radial-gradient(#666, #333 70%));
+ @include background-image(radial-gradient(#666, #333 70%));
   background-color: #999;
 }
 
@@ -25,25 +25,9 @@ body {}
 	background: #555;
 }
 
-.left {
-	color: white;
-}
-
-.item {
-	position: relative;
-	border-bottom: 1px solid #0E0E0E;
-	padding: 16px 12px;
-	background-color: #333333;
-}
-
-.item.onyx-selected {
-	background-color: #226B9A;
-}
-
 .panels > * {
 	border: 2px solid #333;
 	font-size: 5em;
-	//text-align: center;
 }
 
 .wide > * {
@@ -86,21 +70,6 @@ $blue1      : #99ccff;
 
 body {
   font-family: "arial", "arial black";
-}
-
-.xt-app {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  .xv-postbooks {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
 }
 
 .xv-login {
