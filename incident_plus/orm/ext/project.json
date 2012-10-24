@@ -16,6 +16,7 @@
      {
        "name": "versions",
        "toMany": {
+         "isNested": true,
          "type": "ProjectVersion",
          "column": "prj_id",
          "inverse": "project"

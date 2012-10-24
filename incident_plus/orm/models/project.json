@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "ProjectVersion",
     "table": "xtincdtpls.prjver",
+    "idSequenceName": "xtincdtpls.prjver_prjver_id_seq",
     "comment": "Project Version Map",
     "properties": [
       {
