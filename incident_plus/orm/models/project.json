@@ -10,7 +10,7 @@
         "name": "id",
         "attr": {
           "type": "Number",
-          "column": "cntct_id",
+          "column": "prjver_id",
           "isPrimaryKey": true
         }
       },

@@ -6,7 +6,7 @@
 \cd ../../client/source;
 
 -- drop xm views
---\i ../../orm/source/drop_xm_views.sql;
+\i ../../orm/source/drop_xm_views.sql;
 
 -- [ END ] initdb
 
@@ -45,7 +45,7 @@
 \i xt/views/usr.sql;
 
 -- delete system orms
---\i ../../orm/source/delete_system_orms.sql;
+\i ../../orm/source/delete_system_orms.sql;
 
 -- [ END ] xt
 
