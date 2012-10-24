@@ -1,0 +1,26 @@
+[
+  {
+    "context": "incident_plus",
+    "nameSpace": "XM",
+    "type": "Incident",
+    "table": "xtincdtpls.incdtver",
+    "isExtension": true,
+    "comment": "Extended by Incident Plus",
+    "relations": [
+      {
+        "column": "incdtver_incdt_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+     {
+       "name": "foundIn",
+       "toOne": {
+         "type": "P",
+         "column": "prjver_version"
+       }
+     }
+    ],
+    "isSystem": true
+  }
+]

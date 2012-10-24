@@ -1,0 +1,34 @@
+[
+  {
+    "context": "incident_plus",
+    "nameSpace": "XM",
+    "type": "ProjectVersion",
+    "table": "xtincdtpls.prjver",
+    "comment": "Project Version Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cntct_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+       "name": "project",
+       "attr": {
+         "type": "Number",
+         "column": "prjver_prj_id"
+       }
+      },
+      {
+        "name": "version",
+        "attr": {
+          "type": "String",
+          "column": "prjver_version"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

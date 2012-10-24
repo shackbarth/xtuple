@@ -1,0 +1,27 @@
+[
+  {
+    "context": "incident_plus",
+    "nameSpace": "XM",
+    "type": "Project",
+    "table": "prj",
+    "isExtension": true,
+    "comment": "Extended by Incident Plus",
+    "relations": [
+      {
+        "column": "prj_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+     {
+       "name": "versions",
+       "toMany": {
+         "type": "ProjectVersion",
+         "column": "prj_id",
+         "inverse": "project"
+       }
+     }
+    ],
+    "isSystem": true
+  }
+]
