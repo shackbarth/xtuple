@@ -59,6 +59,12 @@ regexp:true, undef:true, trailing:true, white:true */
         filename = inEvent.value,
         reader;
 
+      if (filename.indexOf("C:\\fakepath\\") === 0) {
+        // some browsers obnoxiously give you a fake path, but the only thing
+        // we want is the filename really.
+        filename = filename.replace("C:\\fakepath\\", "");
+      }
+
       // XXX Browser support for this HTML5 construct is not universal
       if (FileReader) {
         // XXX unsure about the overhead of this constructor. maybe save it globally?

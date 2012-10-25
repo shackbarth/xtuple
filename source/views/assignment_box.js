@@ -226,17 +226,18 @@ white:true*/
       }
 
       inSender.segmentIndex = index;
-      header.setContent(this.getSegments()[index]);
-      row.$.checkboxRepeater.setCount(this.getSegmentedCollections()[index].length);
 
-      //
-      // Suppress the header if there's just one segment
-      // TODO: we also want to collapse the header, or just delete it.
-      // it'll look something like header.parent.removeChild(header)
-      // but we need to deal with the fragility of the "crazy bug" fix first
-      if (this.getSegments().length < 2) {
-        header.setStyle("visibility: hidden;");
+      if (header && this.getSegments().length < 2) {
+        //
+        // Suppress the header if there's just one segment
+        //
+        header.parent.removeChild(header);
+
+      } else if (header) {
+        header.setContent(this.getSegments()[index]);
       }
+
+      row.$.checkboxRepeater.setCount(this.getSegmentedCollections()[index].length);
 
       return true;
     },

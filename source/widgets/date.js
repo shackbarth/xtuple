@@ -55,16 +55,18 @@ regexp:true, undef:true, trailing:true, white:true */
       } else if (value.length && !isNaN(value)) {
         // A positive integer by itself means that day of this month
 
-        // XXX if we want to cap this date to the current month (so that
-        // a user can type in 99 to get the last day of the month) then
-        // the code will look something like:
-        //var lastDayOfMonth = new Date();
-        //lastDayOfMonth.setMonth(lastDayOfMonth.getMonth() + 1);
-        //lastDayOfMonth.setDate(0);
-        //if (lastDayOfMonth.getTime() < date.getTime()) {
-
         date = new Date();
         date.setDate(value);
+
+        // we want to cap this date to the current month (so that
+        // a user can type in 99 to get the last day of the month)
+        var lastDayOfMonth = new Date();
+        lastDayOfMonth.setMonth(lastDayOfMonth.getMonth() + 1);
+        lastDayOfMonth.setDate(0);
+        if (lastDayOfMonth.getTime() < date.getTime()) {
+          date = lastDayOfMonth;
+        }
+
       } else if (value) {
         // Dates in the format of dates as we're used to them.
         // we're counting on JS to parse the date correctly
