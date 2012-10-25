@@ -36,7 +36,8 @@ trailing:true white:true*/
           {kind: "onyx.Button", name: "backButton", content: "_back".loc(),
             ontap: "close"}
         ]},
-        {name: "leftTitle", content: "_advancedSearch".loc(), classes: "xv-parameter-title"}
+        {name: "leftTitle", content: "_advancedSearch".loc(), classes: "xv-parameter-title"},
+        {kind: "Scroller", name: "parameterScroller", fit: true}
       ]},
       {name: "listPanel", kind: "FittableRows", components: [
         {kind: "onyx.Toolbar", name: "contentToolbar", components: [
@@ -136,7 +137,7 @@ trailing:true white:true*/
       if (component) {
         this.createComponent({
           name: "parameterWidget",
-          container: this.$.parameterPanel,
+          container: this.$.parameterScroller,
           kind: component.getParameterWidget(),
           fit: true
         });
