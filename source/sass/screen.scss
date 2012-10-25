@@ -47,9 +47,6 @@ $orange     : #ff6600;
   }
 }
 
-/******** ********/
-$blue1      : #99ccff;
-
 body {
   font-family: "arial", "arial black";
 }
@@ -73,11 +70,6 @@ body {
   }
 }
 
-.xv-pullout-header {
-	text-align: center;
-	padding: 10px 0;
-}
-
 /* adapt to smaller displays */
 @media (max-width: 480px) {
 	.pullout-menu {
@@ -86,92 +78,9 @@ body {
 	}
 }
 
-.pullout {
-	position: absolute;
-	top: 57px;
-	left: 0;
-	bottom: 0;
-	width: 320px;
-	background: #D8D8D8;
-}
-
-.pullout-shadow {
-	position: absolute;
-	height: 100%;
-	width: 20px;
-	right: -20px;
-	/** this is weird and indicates the REAL need to change the
-	    whatever the css system is...this relative path is different... **/
-	background: url("../../assets/sliding-shadow.png") repeat-y;
-	background-size: 20px 2px;
-}
-
-.pullout-grabbutton {
-	position: absolute;
-	height: 54px;
-	width: 50px;
-	bottom: 20px;
-	right: -46px;
-	border-radius: 0px 10px 10px 0px;
-	background-color: #D8D8D8;
-	box-shadow: 4px 4px 4px rgba(0,0,0,0.3);
-}
-
-.pullout-toolbar {
-	padding-top: 4px;
-	text-align: center;
-}
-
-.xv-my-account-popup {
-  background-color: white;
-  color: black;
-  .xv-message {
-    color:red;
-    padding: 5px;
-  }
-  .onyx-button {
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .onyx-input {
-    padding-left: 10px;
-    float: right;
-  }
-}
-
-
 //
 // XV-VIEWS
 //
-
-/* Parameter.scss */
-.xv-parameter-item {
-  background-color: white;
-  .xv-label {
-    color: black;
-  }
-  .xv-decorated-label {
-    color: black;
-  }
-  .xv-picker {
-    width: 150px;
-  }
-  .xv-radiogroup {
-    padding: 6px;
-    margin-left: 130px; /* hack */
-  }
-  /* this ain't right */
-  .xv-relationwidget {
-    .xv-subinput {
-     width: 127px;
-    }
-  }
-  .xv-datewidget {
-    .xv-subinput {
-      width: 127px;
-    }
-  }
-}
 
 /* List.scss */
 .xv-list {
@@ -404,80 +313,6 @@ body {
 	}
 }
 
-.xv-popup-button {
-  margin: 4px;
-}
-
-.xv-scroller {
-  background: white;
-}
-
-.xv-error {
-  color: #ff0000;
-}
-
-/* RelationsEditorBox.scss */
-.xv-relations-editor-box {
-  .xv-groupbox {
-    padding-top: 0px;
-    padding-bottom: 0px;
-    padding-left: 0px;
-    margin-right: 0px;
-    border: none;
-  }
-  &.panel {
-    width: 350px;
-  }
-}
-
-/* ProjectTaskListRelationsBox.scss */
-.xv-project-tasks-box {
-  &.panel {
-    width: 675px;
-  }
-}
-
-/* CommentBox.scss */
-.xv-comment-box {
-  .xv-comment-box-repeater {
-    background: white;
-    max-width: 320px;
-  }
-
-  .xv-comment-box-label {
-    padding: 4px;
-    font-size: small;
-    font-weight: bold;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .xv-comment-box-textblock {
-    padding: 12px;
-    font-size: small;
-    overflow: hidden;
-    &.disabled {
-      opacity: 0.6;
-    }
-  }
-}
-
-.xv-assignment-box {
-  .xv-decorated-label {
-    width: 250px;  
-  }
-  .xv-label {
-    width: 250px;  
-  }
-}
-
-.xv-parameter-title {
-  padding-top: 8px;
-  font-size: large;
-  text-align: center;
-}
-
 /*********XV WIDGETS***********/
 
 /* AddressWidget.scss */
@@ -579,19 +414,6 @@ body {
   }
   &.hyperlink {
     color: blue;
-  }
-}
-
-.xv-textarea {
-  background-color: white;
-  &.max-height {
-    height: 100%;
-  }
-}
-
-.xv-menuitem {
-  &.disabled {
-    color: Dimgray;
   }
 }
 
