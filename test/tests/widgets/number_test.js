@@ -7,7 +7,7 @@ trailing:true white:true*/
   "use strict";
 
   enyo.kind({
-    name: "XT.NumberWidgetTest",
+    name: "XV.NumberTest",
     kind: "enyo.TestSuite",
     components: [
       { kind: "XV.NumberWidget", name: "numberWidget" }
@@ -17,12 +17,19 @@ trailing:true white:true*/
     },
     testGetValueIsNumberFromString: function () {
       this.getObj().setValue("10");
-      var err = (typeof this.getObj().getValue() === 'number') ? "" : "getValue() not a number";
+      var err = (typeof this.getObj().getValue() === 'number') ? "" : "Number widget should accept strings that look like numbers";
       this.finish(err);
     },
     testAcceptDecimal: function () {
-      this.getObj().setValue(4.5);
-      var err = this.getObj().getValue() === 4.5 ? "" : "widget not dealing with decimals";
+      var numberWidget = this.getObj();
+      numberWidget.setScale(1);
+      numberWidget.setValue(4.6);
+      var err = this.getObj().getValue() === 4.6 ? "" : "Widget not dealing with decimals";
+      this.finish(err);
+    },
+    testRoundToScale: function () {
+      this.getObj().setValue(4.6);
+      var err = this.getObj().getValue() === 5 ? "" : "Widget not rounding decimals beyond scale";
       this.finish(err);
     },
     testEmptyStringAsNull: function () {

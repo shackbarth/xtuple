@@ -60,9 +60,18 @@ trailing:true white:true*/
     name: "XV.List",
     kind: "List",
     classes: "xv-list",
+    /**
+     * Published fields
+     * @type {Object}
+     *
+     * @property {Number} fetchCount
+     * Represents the number of times this list has been fetched on. Useful for
+     *   correctly ordering asynchronous responses.
+     */
     published: {
       label: "",
       collection: null,
+      fetchCount: 0,
       filterDescription: "",
       query: null,
       isFetching: false,
@@ -109,7 +118,11 @@ trailing:true white:true*/
     fetch: function (options) {
       var that = this,
         query = this.getQuery() || {},
-        success;
+        success,
+        fetchIndex = this.getFetchCount() + 1;
+
+      this.setFetchCount(fetchIndex);
+
       options = options ? _.clone(options) : {};
       options.showMore = _.isBoolean(options.showMore) ?
         options.showMore : false;
@@ -126,6 +139,12 @@ trailing:true white:true*/
 
       _.extend(options, {
         success: function (resp, status, xhr) {
+          if (fetchIndex < that.getFetchCount()) {
+            // this is an earlier query that's been running so long
+            // that a more recent query has already been called. Do not
+            // process or render.
+            return;
+          }
           that.fetched();
           if (success) { success(resp, status, xhr); }
         },

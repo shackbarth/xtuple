@@ -1,0 +1,4 @@
+enyo.depends(
+  "views",
+  "widgets"
+);

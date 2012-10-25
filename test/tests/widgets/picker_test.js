@@ -7,32 +7,32 @@ trailing:true white:true*/
   "use strict";
 
   enyo.kind({
-    name: "XT.DropdownWidgetTest",
+    name: "XV.DropdownTest",
     kind: "enyo.TestSuite",
     components: [
-      { kind: "XV.DropdownWidget", name: "dropdownWidget" }
+      { kind: "XV.PickerWidget", name: "pickerWidget" }
     ],
     getObj: function () {
-      return this.$.dropdownWidget;
+      return this.$.pickerWidget;
     },
     beforeEach: function () {
-      this.getObj().setCollection("XM.projectStatuses");
+      this.getObj().$.picker.createComponent({kind: "onyx.MenuItem", value: {id: "O"}});
     },
-    testJunkAsUndefined: function () {
+    testRejectJunk: function () {
       this.getObj().setValue("XYZ");
-      var err = this.getObj().getValue() === undefined ? "" : "Widget not rendering junk as undefined";
+      var err = this.getObj().getValue() === null ? "" : "Widget not rendering junk as null";
       this.finish(err);
     },
     testAcceptValid: function () {
       this.getObj().setValue("O");
-      var err = this.getObj().getValue() === "O" ? "" : "Widget not accepting valid input";
+      var err = this.getObj().getValue().id === "O" ? "" : "Widget not accepting valid input";
       this.finish(err);
     },
     testKeepOldValue: function () {
       this.getObj().setValue("O");
       this.getObj().setValue("XYZ");
-      var err = this.getObj().getValue() === "O" ? "" : "Widget not keeping valid input after junk input";
+      var err = this.getObj().getValue().id === "O" ? "" : "Widget not keeping valid input after junk input";
       this.finish(err);
-    },
+    }
   });
 }());

@@ -16,9 +16,10 @@
     </script>
 
     <script src="../enyo/enyo.js" type="text/javascript"></script>
-    <script src="../package.js" type="text/javascript"></script>
     <script src="../enyo/tools/test/core/test.js" type="text/javascript"></script>
     <link href="../enyo/tools/test/core/test.css" rel="stylesheet" type="text/css" />
+    <script src="../lib/tools/package.js" type="text/javascript"></script>
+    <script src="../package.js" type="text/javascript"></script>
     <!--
       This test runner will run all of the test suites mentioned in the tests/package.js depends file
     -->
@@ -26,38 +27,8 @@
   </head>
 
   <body>
-  <script type="text/javascript">
-
-    var needDB = false;
-
-    if(needDB) {
-       XT.dataSource.connect(function () {
-         XT.session.acquireSession({
-           username: "admin",
-           password: "admin",
-           organization: "production"
-         }, function (result) {
-           if (result.code === 1) {
-             // force new session, always
-             XT.session.selectSession("FORCE_NEW_SESSION", function () {
-               var app = new enyo.TestRunner();
-               app.renderInto(document.body);
-
-             });
-           } else if (result.code === 4) {
-             // we're ok? not sure how but, whatever...
-             var app = new enyo.TestRunner();
-             app.renderInto(document.body);
-           } else {
-             throw new Error("could not acquire valid session");
-           }
-         });
-       });
-
-    } else {
-      // don't need a DB.
-      new enyo.TestRunner().write();
-    }
-  </script>
+      <script type="text/javascript">
+          new enyo.TestRunner().write();
+      </script>
   </body>
 </html>
