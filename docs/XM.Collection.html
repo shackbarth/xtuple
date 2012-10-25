@@ -1,15 +1,36 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
-white:true*/
-/*global XT:true, XM:true, Backbone:true, _:true */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: Collection</title>
+    
+    <script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
+    <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/node-dark.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
 
-(function () {
-  "use strict";
+<body>
 
-  /**
-    @class
+<div id="main">
+    
+    <h1 class="page-title">Class: Collection</h1>
+    
+    
 
-    `XM.Collection` is a standard class for querying the xTuple data source.
+
+
+<section>
+    
+<header>
+    <h2>
+    Collection
+    </h2>
+    
+        <div class="class-description">`XM.Collection` is a standard class for querying the xTuple data source.
     It should be sub classed for use with sub classes of `XM.Model` (which
     themselves typically exist in the `XM` name space). To create a new class,
     simply extened `XM.Collection` and indicate the model to reference:
@@ -57,19 +78,19 @@ white:true*/
       coll.fetch(options);
 
     The `query` object supports the following:
-      * parameters - Array of objects describing what to filter on.
+parameters - Array of objects describing what to filter on.
         Supports the following properties:
         > attribute - The name of the attrbute to filter on
         > operator - The operator to perform comparison on.
         > value - The matching value.
         > includeNull - "OR" include the row if the attribute is null irrespective
           of whether the operator matches.
-      * orderBy - Array of objects designating sort order. Supports
+orderBy - Array of objects designating sort order. Supports
         the following properties:
         > attrbute - Attribute to sort by.
         > descending - `Boolean` value. If false or absent sort ascending.
-      * rowLimit - Maximum rows to return
-      * rowOffset - Result offset. Always use together with `orderBy`.
+rowLimit - Maximum rows to return
+rowOffset - Result offset. Always use together with `orderBy`.
 
     If no operator is provided in a parameter object, the default will be `=`.
     Supported operators include:
@@ -188,66 +209,236 @@ white:true*/
           }]
         }
       };
-      coll.fetch(options);
+      coll.fetch(options);</div>
+    
+</header>  
 
-    @extends Backbone.Collection
-  */
-  XM.Collection = Backbone.Collection.extend(/** @lends XM.Collection# */{
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+<dt>
+    <h4 class="name" id="Collection"><span class="type-signature"></span>new Collection</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>collection.js, line 195</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
 
-    /**
-      Handle status change.
-    */
-    add: function (models, options) {
-      var result = Backbone.Collection.prototype.add.call(this, models, options),
-        i,
-        K = XM.Model;
-      for (i = 0; i < result.models.length; i += 1) {
-        result.models[i].setStatus(K.READY_CLEAN);
-      }
-      return result;
-    },
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
 
-    getObjectByName: function (name) {
-      return Backbone.Relational.store.getObjectByName(name);
-    },
+    
+    </div>
+    
+    
+        <h3 class="subsection-title">Extends</h3>
+        
+        <ul>
+            <li>Backbone.Collection</li>
+        </ul>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="add"><span class="type-signature"></span>add</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Handle status change.
+    </div>
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>collection.js, line 200</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
 
-    fetch: function (options) {
-      //
-      // Use default order attribute if it's specified and if no options are specified
-      // TODO: we should apply the default ordering even in the presence of options
-      // so long as the options don't have an orderBy command
-      //
-      options = options ? _.clone(options) :
-        this.orderAttribute ? { query: this.orderAttribute } : {};
-      options.force = true;
-      /*
-      var that = this,
-        success = options.success;
-      options.success = function (resp) {
-        XT.log("Successfully fetched:" + that.model.prototype.recordType, resp);
-        if (success) { success(resp); }
-      };
-      */
-      return Backbone.Collection.prototype.fetch.call(this, options);
-    },
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
 
-    /**
-      Sync to xTuple datasource.
-    */
-    sync: function (method, model, options) {
-      options = options ? _.clone(options) : {};
-      options.query = options.query || {};
-      options.query.recordType = model.model.prototype.recordType;
+        
+            
+<dt>
+    <h4 class="name" id="sync"><span class="type-signature"></span>sync</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Sync to xTuple datasource.
+    </div>
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>collection.js, line 237</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
 
-      if (method === 'read' && options.query.recordType && options.success) {
-        return XT.dataSource.fetch(options);
-      }
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
 
-      return false;
-    },
+        </dl>
+    
+    
+    
+    
+    
+</article>
 
-    orderAttribute: null
+</section>  
 
-  });
 
-}());
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="XM.Alarm.html">Alarm</a></li><li><a href="XM.Characteristic.html">Characteristic</a></li><li><a href="XM.CharacteristicAssignment.html">CharacteristicAssignment</a></li><li><a href="XM.CharacteristicCollection.html">CharacteristicCollection</a></li><li><a href="XM.CharacteristicOption.html">CharacteristicOption</a></li><li><a href="XM.Collection.html">Collection</a></li><li><a href="XM.Comment.html">Comment</a></li><li><a href="XM.CommentType.html">CommentType</a></li><li><a href="XM.CommentTypeCollection.html">CommentTypeCollection</a></li><li><a href="XM.CommentTypeSource.html">CommentTypeSource</a></li><li><a href="XM.Document.html">Document</a></li><li><a href="XM.DocumentAssignmentsMixin.html">DocumentAssignmentsMixin</a></li><li><a href="XM.Info.html">Info</a></li><li><a href="XM.Model.html">Model</a></li><li><a href="XM.Source.html">Source</a></li><li><a href="XM.SourceCollection.html">SourceCollection</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Fri Oct 12 2012 15:06:15 GMT-0400 (EDT)
+</footer>
+
+<script> sh_highlightDocument(); </script>
+</body>
+</html>
