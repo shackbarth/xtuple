@@ -1,6 +1,7 @@
 /* LESS version of screen.scss file previously in client 
 
-To compile to .css: lessc screen.less > ../stylesheets/screen.css -compress
+	To compile to .css: lessc screen.less > ../stylesheets/screen.css
+	Use -compress for a compressed .css with no comments
 
 */
 
@@ -12,10 +13,11 @@ To compile to .css: lessc screen.less > ../stylesheets/screen.css -compress
 @bright-orange	:	#f49200;
 @light-blue : #9cf;
 @slate-blue : #226b9a;
-@silver	:	#aaa;
-@smoke : #ddd;
-@gray 	: #8d8d8d;
-@med-gray	:	#999;
+@silver			:	#aaa;
+@smoke 			: #ddd;
+@gray 			: #8d8d8d;
+@med-gray		:	#999;
+@charcoal		: #4c4c4c;
 @dim-gray		: #696969;
 @dark-gray	:	#333;
 @blue-gray	: #93a1a1;
@@ -23,6 +25,8 @@ To compile to .css: lessc screen.less > ../stylesheets/screen.css -compress
 @white      : #fff;
 @red				:	#c51616;
 @bright-red	:	#ff0000;
+@sky-blue 	: #87ceeb;
+@blue				:	#0000ff;
 
 /* Helper classes for css3 */
 @import "elements";
@@ -150,6 +154,36 @@ body {
   }
 }
 
+/* Pullout */
+.slim-datewidget($labelVisibility, $pickerVisibility: visible) {
+  .xv-input-decorator {
+    padding: 0;
+    height: 32px;
+  }
+  .xv-label {
+    visibility: $labelVisibility;
+  }
+  .onyx-icon {
+    visibility: $pickerVisibility;
+    vertical-align: top;
+  }
+  .onyx-input {
+    width: 90px;
+    vertical-align: top;
+  }
+}
+
+/* 
+	Media query for responsive design. This adapts to smaller
+	displays.
+*/
+@media (max-width: 480px) {
+	.pullout-menu {
+		display: block;
+		margin: 0;
+	}
+}
+
 .xv-pullout-header {
 	text-align: center;
 	padding: 10px 0;
@@ -181,7 +215,7 @@ body {
 	width: 50px;
 	bottom: 20px;
 	right: -46px;
-	border-radius: 0px 10px 10px 0px;
+	border-radius: 0 10px 10px 0;
 	background-color: @smoke;
 	box-shadow: 4px 4px 4px rgba(0,0,0,0.3);
 }
@@ -194,6 +228,126 @@ body {
 /*
 	XV Views
 */
+
+/* List */
+.xv-list {
+  background-color: @white;
+  .xv-list-item {
+    @include box-sizing(border-box);
+    background-color: @white;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid @smoke;
+    &.header {
+      padding-top: 0;    
+    }
+    &.inactive {
+      background-color: @gray;
+      color: black;
+      .xv-list-column {
+        .xv-list-attr {
+          background-color: @gray;
+          &.placeholder {
+            color: @gray;
+          }
+        }
+      }
+    }
+    .xv-list-column {
+      &.short {
+        width: 150px;
+      }
+      &.first {
+        width: 320px;
+      }
+      &.second {
+        width: 165px;
+      }
+      &.third {
+        width: 75px;
+      }
+      &.money {
+        width: 85px;
+      }
+    }
+    &.item-selected {
+			background: @slate-blue url(../../assets/item-hilite.png) repeat-x bottom;
+			.xv-list-attr {
+        color: @white;
+        background: none;
+        &.placeholder {
+          font-style: italic;
+          color: @sky-blue;
+        }
+        &.hyperlink {
+          color: @bright-orange;
+          background: #226B9A url(../../assets/item-hilite.png) repeat-x bottom;
+        }
+      }
+      .xv-list-attr {
+        &.header {
+          background: @sky-blue;
+        }
+      }
+			.xv-list-column {
+			  .xv-list-attr {
+          color: @white;
+          background: none;
+          &.placeholder {
+            font-style: italic;
+            color: SkyBlue;
+          }
+          &.hyperlink {
+            color: @bright-orange;
+            background: @slate-blue url(../../assets/item-hilite.png) repeat-x bottom;
+          }
+        }
+      }
+    }
+  }
+}
+
+.xv-list-attr {
+  padding: 5px;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: black;
+  background-color: @white;
+  &.header {
+    padding: 4px;
+    background: @gray;
+    font-size: 11px;
+  	font-weight: bold;
+  	text-transform: uppercase;
+  	color: @white;
+  }
+  &.right {
+    position: absolute;
+    right: 0;
+    height: 20px;
+  }
+  &.text-align-right {
+    text-align: right;
+  }
+  &.bold {
+    font-weight: bold;
+  }
+  &.error {
+    color: @bright-red;
+  }
+  &.italic {
+    font-style: italic;
+  }
+  &.placeholder {
+    font-style: italic;
+    color: @blue-gray;
+  }
+  &.hyperlink {
+    color: blue;
+  }
+}
 
 /* Parameter */
 .xv-parameter-item {
@@ -322,14 +476,224 @@ body {
   }
 }
 
+/* Groupbox.css */
+.xv-groupbox {
+  min-width: 300px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 8px;
+  margin-right: 5px;
+  &.in-panel {
+		padding: 0 0 0 0;
+		margin: 0 0 0 0;
+	}
+  &.panel {
+      min-width: 330px;
+  }
+}
+
+.xv-groupbox.in-panel > *:first-child {
+	border-top-color: @silver;
+	border-top: none;
+	border-width: 1px;
+	border-radius: 0 0 0 0;
+}
+
+.xv-groupbox.in-panel > *:last-child {
+	border-radius: 0 0 0 0;
+	border-bottom: none;
+}
+
+.xv-groupbox > * {
+	display: block;
+	border-color: @silver;
+	border-style: solid;
+	border-width: 0 1px 1px 1px;
+	/* reset styles that make 'item' look bad if they happen to be there */
+	border-radius: 0;
+	margin: 0;
+}
+
+.xv-groupbox > *:first-child {
+	border-top-color: @silver;
+	border-width: 1px;
+	border-radius: 4px 4px 0 0;
+}
+
+.xv-groupbox > *:last-child {
+	border-radius: 0 0 4px 4px;
+}
+
+.xv-groupbox > *:first-child:last-child {
+	border-radius: 4px;
+}
+
+.xv-groupbox-header {
+	padding: 2px 10px;
+	color: @white;
+	font-family: Segoe UI, Neue Helvetica, Helvectica, Arial, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	text-transform: uppercase;
+	background-color: @dark-gray;
+	border: none;
+	background: @charcoal url(../../images/gradient.png) repeat-x 0 10px;
+}
+
+.xv-groupbox .onyx-input-decorator {
+	border: 0;
+}
+
+.xv-groupbox > .onyx-input-decorator {
+	border-color: @silver;
+	border-width: 0 1px 1px 1px;
+	border-radius: 0;
+}
+
+.xv-groupbox .xv-inputwidget {
+  background-color: @white;
+}
+
+.xv-groupbox > .onyx-input-decorator:first-child {
+	border-width: 1px;
+	border-radius: 4px 4px 0 0;
+}
+
+.xv-groupbox > .onyx-input-decorator:last-child {
+	border-radius: 0 0 4px 4px;
+}
+
+.xv-groupbox > .onyx-input-decorator:first-child:last-child {
+	border-radius: 4px;
+}
+
+.xv-groupbox-buttons {
+	border: none;
+	.xv-groupbox-button-single {
+	  border-radius: 0 0 4px 4px;
+	}
+	.xv-groupbox-button-center {
+	  border-radius: 0 0 0 0;
+	}
+	.xv-groupbox-button-left {
+      border-radius: 0 0 0 4px;
+	}
+	.xv-groupbox-button-right {
+      border-radius: 0 0 4px 0;
+	}
+}
+
 /*
 	XV Widgets
 */
 
+/* AddressWidget.scss */
+.xv-addresswidget {
+  background-color: @white;
+  padding: 4px;
+  .xv-addresswidget-viewer {
+    border: 0;
+    font-size: medium;
+    display: inline;
+    &.placeholder {
+      font-style: italic;
+      color: @blue-gray;
+    }
+  }
+}
+
+.xv-addresswidget-input-decorator {
+  background: @white;
+  display: block;
+  margin: 4px;
+}
+
+.xv-addresswidget-combobox-decorator {
+  background: @white;
+  display: block;
+  margin: 4px;
+  width: 205px;
+}
+
+.xv-addresswidget-input {
+  width: 100%;
+}
+
+.xv-addresswidget-button {
+  margin-right: 4px;
+}
+
+.xv-addresswidget-buttons {
+  margin-top: 4px;
+}
+
+.xv-addresswidget-editor-header {
+  padding: 4px;
+}
+
+.xv-addresswidget-editor {
+  width: 320px;
+  padding: 8px;
+  padding-right: 16px;
+}
+
+.xv-addresslist-attr {
+  padding: 5px;
+  font-size: 13px;
+  white-space: normal;
+  overflow: auto;
+  color: #000;
+  background-color: @white;
+}
+
+/* RelationWidget */
+.xv-relationwidget-completer {
+  left: -200px; 
+  top: 15px;
+}
+
+.xv-relationwidget-column {
+  &.left {
+    padding-right: 18px;
+    color: #000;
+    width: 140px;
+  }
+}
+
+.xv-relationwidget-icon {
+  top: 2px;
+  left: 8px;
+  position: relative;
+}
+
+.xv-relationwidget-description {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-indent: 140px;
+  font-size: small;
+  padding-bottom: 4px;
+  max-width: 325px;
+  &.disabled {
+    opacity: 0.4;
+  }
+  &.label {
+    text-indent: 0; 
+    text-align: right;
+    
+  }
+  &.hasLabel {
+    text-indent: 0;
+  }
+  &.hyperlink {
+    color: blue;
+  }
+}
+
 /* RelationsEditorBox */
 .xv-relations-editor-box {
   .xv-groupbox {
-    margin-right: 0px;
+    margin-right: 0;
 		padding: 0;
     border: none;
   }
@@ -353,7 +717,7 @@ body {
 
 .xv-combobox-input {
   font-size: medium;
-  border: 0px;
+  border: 0;
   top: -2px;
   position: relative;
   outline: none;
