@@ -12,15 +12,20 @@ To compile to .css: lessc screen.less > ../stylesheets/screen.css -compress
 @bright-orange	:	#f49200;
 @light-blue : #9cf;
 @slate-blue : #226b9a;
-@lightest-gray : #ddd;
-@light-gray	:	#aaa;
-@med-gray 	: #8d8d8d;
-@blue-gray	: #93a1a1;
+@silver	:	#aaa;
+@smoke : #ddd;
+@gray 	: #8d8d8d;
+@med-gray	:	#999;
+@dim-gray		: #696969;
 @dark-gray	:	#333;
+@blue-gray	: #93a1a1;
 @near-black	: #0e0e0e;
 @white      : #fff;
 @red				:	#c51616;
 @bright-red	:	#ff0000;
+
+/* Helper classes for css3 */
+@import "elements";
 
 body {
   font-family: "arial", "arial black";
@@ -101,7 +106,7 @@ body {
       padding: 5px;
       cursor: pointer;
       &:hover {
-        background-color: @lightest-gray;
+        background-color: @smoke;
       }
     }
   }
@@ -129,9 +134,95 @@ body {
   }
 }
 
+.xv-my-account-popup {
+  background-color: @white;
+  color: #000;
+  .xv-message {
+    color:red;
+    padding: 5px;
+  }
+  .onyx-button {
+		margin: 0 auto 0 auto;
+  }
+  .onyx-input {
+    padding-left: 10px;
+    float: right;
+  }
+}
+
+.xv-pullout-header {
+	text-align: center;
+	padding: 10px 0;
+}
+
+.pullout {
+	position: absolute;
+	top: 57px;
+	left: 0;
+	bottom: 0;
+	width: 320px;
+	background: @smoke;
+}
+
+.pullout-shadow {
+	position: absolute;
+	height: 100%;
+	width: 20px;
+	right: -20px;
+	/** this is weird and indicates the REAL need to change the
+	    whatever the css system is...this relative path is different... **/
+	background: url("../../assets/sliding-shadow.png") repeat-y;
+	background-size: 20px 2px;
+}
+
+.pullout-grabbutton {
+	position: absolute;
+	height: 54px;
+	width: 50px;
+	bottom: 20px;
+	right: -46px;
+	border-radius: 0px 10px 10px 0px;
+	background-color: @smoke;
+	box-shadow: 4px 4px 4px rgba(0,0,0,0.3);
+}
+
+.pullout-toolbar {
+	padding-top: 4px;
+	text-align: center;
+}
+
 /*
 	XV Views
 */
+
+/* Parameter */
+.xv-parameter-item {
+  background-color: @white;
+  .xv-label {
+    color: #000;
+  }
+  .xv-decorated-label {
+    color: #000;
+  }
+  .xv-picker {
+    width: 150px;
+  }
+  .xv-radiogroup {
+    padding: 6px;
+    margin-left: 130px; /* hack */
+  }
+  /* this ain't right */
+  .xv-relationwidget {
+    .xv-subinput {
+     width: 127px;
+    }
+  }
+  .xv-datewidget {
+    .xv-subinput {
+      width: 127px;
+    }
+  }
+}
 
 /* Navigator */
 .xv-navigator-header {
@@ -158,7 +249,7 @@ body {
 }
 
 .xv-characteristic-item {
-  border-bottom: 1px solid @light-gray;
+  border-bottom: 1px solid @silver;
   .onyx-input-decorator > input {
     width: 150px;
     margin-top: 10px;
@@ -174,12 +265,84 @@ body {
   margin: 8px;
 }
 
+.xv-popup-button {
+  margin: 4px;
+}
+
+.xv-scroller {
+  background: @white;
+}
+
+.xv-error {
+  color: @bright-red;
+}
+
+.xv-negative {
+	color: @red;
+}
+
+.xv-assignment-box {
+  .xv-decorated-label {
+    width: 250px;  
+  }
+  .xv-label {
+    width: 250px;  
+  }
+}
+
+.xv-parameter-title {
+  padding-top: 8px;
+  font-size: large;
+  text-align: center;
+}
+
+/* CommentBox */
+.xv-comment-box {
+  .xv-comment-box-repeater {
+    background: @white;
+    max-width: 320px;
+  }
+
+  .xv-comment-box-label {
+    padding: 4px;
+    font-size: small;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .xv-comment-box-textblock {
+    padding: 12px;
+    font-size: small;
+    overflow: hidden;
+    &.disabled {
+      opacity: 0.6;
+    }
+  }
+}
+
 /*
 	XV Widgets
 */
 
-.xv-negative {
-	color: @red;
+/* RelationsEditorBox */
+.xv-relations-editor-box {
+  .xv-groupbox {
+    margin-right: 0px;
+		padding: 0;
+    border: none;
+  }
+  &.panel {
+    width: 350px;
+  }
+}
+
+/* ProjectTaskListRelationsBox */
+.xv-project-tasks-box {
+  &.panel {
+    width: 675px;
+  }
 }
 
 /* Combo Box */
@@ -262,6 +425,19 @@ body {
 		no-repeat
 		0 -96px
 		scroll;
+}
+
+.xv-textarea {
+  background-color: @white;
+  &.max-height {
+    height: 100%;
+  }
+}
+
+.xv-menuitem {
+  &.disabled {
+    color: @dim-gray;
+  }
 }
 
 /* This class isn't being used */
