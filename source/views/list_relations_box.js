@@ -61,10 +61,6 @@ trailing:true white:true*/
       var canOpen = this.getCanOpen();
       if (canOpen) {
         buttons.components.push(
-        {kind: "onyx.Button", name: "openButton", onclick: "openItem",
-          content: "_open".loc(), classes: "xv-groupbox-button-right",
-          disabled: true, fit: canAttach});
-        buttons.components.push(
         {kind: "onyx.Button", name: "newButton", onclick: "newItem",
           content: "_new".loc(), classes: "xv-groupbox-button-left",
           disabled: true});
@@ -77,6 +73,12 @@ trailing:true white:true*/
         {kind: "onyx.Button", name: "detachButton", onclick: "detachItem",
           content: "_detach".loc(), classes: "xv-groupbox-button-center",
           disabled: true});
+      }
+      if (canOpen) {
+        buttons.components.push(
+        {kind: "onyx.Button", name: "openButton", onclick: "openItem",
+          content: "_open".loc(), classes: "xv-groupbox-button-right",
+          disabled: true, fit: canAttach});
       }
       this.createComponent(buttons);
     },
