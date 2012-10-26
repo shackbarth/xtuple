@@ -89,6 +89,9 @@ white:true*/
     handlers: {
       onParameterChange: "memoize"
     },
+    published: {
+      memoizeEnabled: true
+    },
     defaultKind: "XV.ParameterItem",
     isAllSetUp: false,
     create: function () {
@@ -143,6 +146,7 @@ white:true*/
       Remember the state of this parameter widget
      */
     memoize: function (inSender, inEvent) {
+      if (!this.getMemoizeEnabled()) { return; }
       var values,
         dbName,
         cookieName;
@@ -158,6 +162,7 @@ white:true*/
       enyo.setCookie(cookieName, JSON.stringify(values));
     },
     populateFromCookie: function () {
+      if (!this.getMemoizeEnabled()) { return; }
       var dbName = XT.session.details.organization,
         cookieName = 'advancedSearchCache_' + dbName + '_' + this.name,
         cookieValue = enyo.getCookie(cookieName),
@@ -183,9 +188,8 @@ white:true*/
     setParameterItemValues: function (items) {
       var that = this;
       _.each(items, function (item) {
-        var prop;
-        if (item.$[item.name]) {
-          that.$[prop].setValue(item.value, {silent: true});
+        if (that.$[item.name]) {
+          that.$[item.name].setValue(item.value, {silent: true});
         }
       });
     }

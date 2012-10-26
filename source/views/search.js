@@ -117,8 +117,10 @@ trailing:true white:true*/
     },
     defaultParameterItemValuesChanged: function () {
       var parameterWidget = this.$.parameterWidget,
-        items = this.getDefaultParameterItemValues();
-      parameterWidget.setParameterItemValues(items);
+        items = this.getDefaultParameterItemValues() || [];
+      if (parameterWidget && items.length) {
+        parameterWidget.setParameterItemValues(items);
+      }
     },
     requery: function (inSender, inEvent) {
       this.fetch();
@@ -147,15 +149,16 @@ trailing:true white:true*/
       this.$.rightLabel.setContent(component.label);
       this.setCallback(callback);
       this.setConditions(conditions);
-      this.setDefaultParameterItemValues(params);
       if (component) {
         this.createComponent({
           name: "parameterWidget",
           container: this.$.parameterScroller,
           kind: component.getParameterWidget(),
+          memoizeEnabled: false,
           fit: true
         });
       }
+      this.setDefaultParameterItemValues(params);
       this.init = true;
       this.render();
       this.$.searchInput.setValue(searchText || "");
