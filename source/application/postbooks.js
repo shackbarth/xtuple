@@ -22,6 +22,7 @@ trailing:true white:true*/
           panels: [
           {name: "welcomePage",
             tag: "iframe",
+						style: "border: none;",
             attributes: {src: "assets/splash/index.html"}}
         ]},
         {name: "setup", label: "_setup".loc(), panels: [

@@ -6,7 +6,6 @@ enyo.depends(
   "../lib/enyo-x",
   "en",
   "application",
-  "stylesheets/screen.css",
   "app.js",
   "ext"
 );
