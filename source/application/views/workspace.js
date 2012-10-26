@@ -4,6 +4,27 @@ trailing:true white:true*/
 /*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true */
 
 (function () {
+  
+  /**
+    Used to notify change of account to contact widget if both exist on
+    the same workspace.
+  */
+  XV.accountNotifyContactMixin = {
+    attributesChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      this.accountChanged();
+    },
+    controlValueChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      if (inEvent.originator.name === 'accountWidget') {
+        this.accountChanged();
+      }
+    },
+    accountChanged: function () {
+      var account = this.$.accountWidget.getValue();
+      this.$.contactWidget.setAccount(account);
+    }
+  };
 
   // ..........................................................
   // BASE CLASS
@@ -381,7 +402,7 @@ trailing:true white:true*/
   // INCIDENT
   //
 
-  enyo.kind({
+  var incidentHash = {
     name: "XV.IncidentWorkspace",
     kind: "XV.Workspace",
     title: "_incident".loc(),
@@ -416,10 +437,13 @@ trailing:true white:true*/
         ]},
         {kind: "XV.IncidentCommentBox", attr: "comments"},
         {kind: "XV.IncidentDocumentsBox", attr: "documents"},
-		{kind: "XV.IncidentHistoryRelationsBox", attr: "history"}
+        {kind: "XV.IncidentHistoryRelationsBox", attr: "history"}
       ]}
     ]
-  });
+  };
+  
+  incidentHash = enyo.mixin(incidentHash, XV.accountNotifyContactMixin);
+  enyo.kind(incidentHash);
 
   XV.registerModelWorkspace("XM.IncidentRelation", "XV.IncidentWorkspace");
   XV.registerModelWorkspace("XM.IncidentListItem", "XV.IncidentWorkspace");
@@ -513,7 +537,7 @@ trailing:true white:true*/
   // OPPORTUNITY
   //
 
-  enyo.kind({
+  var opportunityHash = {
     name: "XV.OpportunityWorkspace",
     kind: "XV.Workspace",
     title: "_opportunity".loc(),
@@ -557,8 +581,19 @@ trailing:true white:true*/
         {kind: "XV.OpportunityCommentBox", attr: "comments"},
         {kind: "XV.OpportunityDocumentsBox", attr: "documents"}
       ]}
-    ]
-  });
+    ],
+    controlValueChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      var account;
+      if (inEvent.originator.name === 'accountWidget') {
+        account = this.$.accountWidget.getValue();
+        this.$.contactWidget.setAccount(account);
+      }
+    }
+  };
+  
+  opportunityHash = enyo.mixin(opportunityHash, XV.accountNotifyContactMixin);
+  enyo.kind(opportunityHash);
 
   XV.registerModelWorkspace("XM.OpportunityRelation", "XV.OpportunityWorkspace");
   XV.registerModelWorkspace("XM.OpportunityListItem", "XV.OpportunityWorkspace");
@@ -645,7 +680,7 @@ trailing:true white:true*/
   // PROJECT
   //
 
-  enyo.kind({
+  var projectHash = {
     name: "XV.ProjectWorkspace",
     kind: "XV.Workspace",
     title: "_project".loc(),
@@ -680,8 +715,19 @@ trailing:true white:true*/
         {kind: "XV.ProjectCommentBox", attr: "comments"},
         {kind: "XV.ContactDocumentsBox", attr: "documents"}
       ]}
-    ]
-  });
+    ],
+    controlValueChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      var account;
+      if (inEvent.originator.name === 'accountWidget') {
+        account = this.$.accountWidget.getValue();
+        this.$.contactWidget.setAccount(account);
+      }
+    }
+  };
+  
+  projectHash = enyo.mixin(projectHash, XV.accountNotifyContactMixin);
+  enyo.kind(projectHash);
 
   XV.registerModelWorkspace("XM.ProjectRelation", "XV.ProjectWorkspace");
   XV.registerModelWorkspace("XM.ProjectListItem", "XV.ProjectWorkspace");
@@ -763,7 +809,7 @@ trailing:true white:true*/
   // TO DO
   //
 
-  enyo.kind({
+  var toDoHash = {
     name: "XV.ToDoWorkspace",
     kind: "XV.Workspace",
     title: "_toDo".loc(),
@@ -799,8 +845,19 @@ trailing:true white:true*/
         {kind: "XV.ToDoCommentBox", attr: "comments"},
         {kind: "XV.ToDoDocumentsBox", attr: "documents"}
       ]}
-    ]
-  });
+    ],
+    controlValueChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      var account;
+      if (inEvent.originator.name === 'accountWidget') {
+        account = this.$.accountWidget.getValue();
+        this.$.contactWidget.setAccount(account);
+      }
+    }
+  };
+  
+  toDoHash = enyo.mixin(toDoHash, XV.accountNotifyContactMixin);
+  enyo.kind(toDoHash);
 
   XV.registerModelWorkspace("XM.ToDoRelation", "XV.ToDoWorkspace");
   XV.registerModelWorkspace("XM.ToDoListItem", "XV.ToDoWorkspace");
