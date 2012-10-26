@@ -122,8 +122,7 @@ trailing:true white:true*/
       onHistoryChange: ""
     },
     handlers: {
-      onValueChange: "controlValueChanged",
-      onTextAreaFocus: "textAreaFocus"
+      onValueChange: "controlValueChanged"
     },
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
@@ -288,22 +287,6 @@ trailing:true white:true*/
       options.changes = changes;
       this.attributesChanged(model, options);
       this.doStatusChange(inEvent);
-    },
-    /**
-      When a text area is brought into focus we want to move the
-      panels to bring this into prime position.
-    */
-    textAreaFocus: function (inSender, inEvent) {
-      var originator = inEvent.originator,
-        component = originator;
-
-      while (component.parent && component.parent.name !== 'panels') {
-        component = component.parent;
-      }
-
-      if (component.indexInContainer && component.indexInContainer !== this.$.panels.getIndex()) {
-        this.$.panels.setIndex(component.indexInContainer());
-      }
     },
     titleChanged: function () {
       var inEvent = { title: this.getTitle(), originator: this };
