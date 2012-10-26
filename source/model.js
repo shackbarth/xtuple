@@ -44,6 +44,12 @@ white:true*/
     autoFetchId: true,
 
     /**
+      Are there any binary fields that we might need to worry about transforming?
+      see issue 18661
+    */
+    binaryField: null,
+
+    /**
       The last error message reported.
     */
     lastError: null,
