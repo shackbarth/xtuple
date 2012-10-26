@@ -106,7 +106,7 @@ trailing:true white:true*/
       {name: "postalCode", label: "_postalCode".loc(), attr: "address.postalCode"},
       {name: "country", label: "_country".loc(), attr: "address.country"},
       {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-      {name: "account", label: "_account".loc(), attr: ["account", "accountParent"], defaultKind: "XV.AccountWidget"},
+      {name: "account", label: "_account".loc(), attr: ["account.id", "accountParent"], defaultKind: "XV.AccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_userAccount".loc()},
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
     ]
