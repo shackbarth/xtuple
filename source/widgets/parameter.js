@@ -179,6 +179,15 @@ white:true*/
           }
         }
       }
+    },
+    setParameterItemValues: function (items) {
+      var that = this;
+      _.each(items, function (item) {
+        var prop;
+        if (item.$[item.name]) {
+          that.$[prop].setValue(item.value, {silent: true});
+        }
+      });
     }
   };
 
