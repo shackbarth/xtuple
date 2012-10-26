@@ -8,25 +8,53 @@
 	These variables will show in css as their hex values
 */
 /* Helper classes for css3 */
-/*---------------------------------------------------
-    LESS Elements 0.6
-  ---------------------------------------------------
-    A set of useful LESS mixins by Dmitry Fadeyev
-    Special thanks for mixin suggestions to:
-      Kris Van Herzeele,
-      Benoit Adam,
-      Portenart Emile-Victor,
-      Ryan Faerman
-
-    More info at: http://lesselements.com
------------------------------------------------------*/
+.clearfix {
+  *zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.clearfix:after {
+  clear: both;
+}
+.hide-text {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+.input-block-level {
+  display: block;
+  width: 100%;
+  min-height: 30px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
 body {
   font-family: "arial", "arial black";
 }
+.bggrad {
+  /* Radial Gradient */
+
+  background-color: #333333;
+  background-image: -webkit-gradient(radial, center center, 0, center center, 460, from(#696969), to(#333333));
+  background-image: -webkit-radial-gradient(circle, #696969, #333333);
+  background-image: -moz-radial-gradient(circle, #696969, #333333);
+  background-image: -o-radial-gradient(circle, #696969, #333333);
+  background-repeat: no-repeat;
+  background-color: #999999;
+}
 .app > * {
   width: 320px;
+  -webkit-box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
   box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
-  background: #555;
+  background: #555555;
 }
 .panels > * {
   border: 2px solid #333333;
@@ -34,6 +62,40 @@ body {
 }
 .wide > * {
   min-width: 50%;
+}
+.developer-ui-container {
+  -webkit-box-shadow: #333333 4px 4px 10px -4px;
+  -moz-box-shadow: #333333 4px 4px 10px -4px;
+  box-shadow: #333333 4px 4px 10px -4px;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-right-radius: 10px;
+  top: 100px;
+  left: 0;
+  position: absolute;
+  background-color: #dddddd;
+  z-index: 10;
+}
+.developer-ui-container .developer-rows .row {
+  display: block;
+  margin: 10px;
+}
+.developer-ui-container .onyx-grabber.developer-grabber {
+  -webkit-box-shadow: #333333 4px 4px 10px -4px;
+  -moz-box-shadow: #333333 4px 4px 10px -4px;
+  box-shadow: #333333 4px 4px 10px -4px;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-right-radius: 10px;
+  -webkit-border-bottom-right-radius: 10px;
+  -moz-border-radius-bottomright: 10px;
+  border-bottom-right-radius: 10px;
+  background-color: #dddddd;
+  position: absolute;
+  right: -47px;
+  top: 0;
+  height: 54px;
+  width: 50px;
 }
 .item {
   background-color: #333333;
@@ -96,8 +158,7 @@ body {
 }
 .xv-startup-panel .xv-startup-divider {
   width: 70%;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto 8px auto;
   top: 200px;
   position: relative;
   color: #f49200;
@@ -105,7 +166,7 @@ body {
   font-family: Segoe UI, Prelude Medium, Helvetica, Verdana, sans-serif;
   font-size: 14px;
   font-weight: bold;
-  margin-bottom: 8px;
+  border: none;
 }
 .xv-startup-panel .xv-startup-progress {
   width: 70%;
@@ -183,7 +244,18 @@ body {
   width: 50px;
   bottom: 20px;
   right: -46px;
-  border-radius: 0 10px 10px 0;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-right-radius: 10px;
+  -webkit-border-bottom-right-radius: 10px;
+  -moz-border-radius-bottomright: 10px;
+  border-bottom-right-radius: 10px;
   background-color: #dddddd;
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
 }
@@ -369,7 +441,6 @@ body {
 }
 .xv-scroller {
   background: #ffffff;
-  overflow: auto;
 }
 .xv-error {
   color: #ff0000;
@@ -412,14 +483,12 @@ body {
 /* Groupbox.css */
 .xv-groupbox {
   min-width: 300px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 8px;
+  padding: 8px 0 8px 8px;
   margin-right: 5px;
 }
 .xv-groupbox.in-panel {
-  padding: 0 0 0 0;
-  margin: 0 0 0 0;
+  padding: 0;
+  margin: 0;
 }
 .xv-groupbox.panel {
   min-width: 330px;
@@ -428,35 +497,112 @@ body {
   border-top-color: #aaaaaa;
   border-top: none;
   border-width: 1px;
-  border-radius: 0 0 0 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
 }
 .xv-groupbox.in-panel > *:last-child {
-  border-radius: 0 0 0 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
   border-bottom: none;
 }
 .xv-groupbox > * {
   display: block;
-  border-color: #aaaaaa;
-  border-style: solid;
-  border-width: 0 1px 1px 1px;
+  border: 1px #aaaaaa solid;
+  border-top-width: 0;
   /* reset styles that make 'item' look bad if they happen to be there */
 
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
   border-radius: 0;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
   margin: 0;
 }
 .xv-groupbox > *:first-child {
   border-top-color: #aaaaaa;
   border-width: 1px;
-  border-radius: 4px 4px 0 0;
+  -webkit-border-top-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 4px;
+  -moz-border-radius-topright: 4px;
+  border-top-right-radius: 4px;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
 }
 .xv-groupbox > *:last-child {
-  border-radius: 0 0 4px 4px;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
 }
 .xv-groupbox > *:first-child:last-child {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
   border-radius: 4px;
+  -webkit-border-top-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
 }
 .xv-groupbox-header {
-  padding: 2px 10px;
+  padding: 5px 10px;
   color: #ffffff;
   font-family: Segoe UI, Neue Helvetica, Helvectica, Arial, sans-serif;
   font-size: 14px;
@@ -464,43 +610,144 @@ body {
   text-transform: uppercase;
   background-color: #333333;
   border: none;
-  background: #4c4c4c url(../../images/gradient.png) repeat-x 0 10px;
+  /* This image doesn't exist */
+
+  background: #555555 url(../../images/gradient.png) repeat-x 0 10px;
 }
 .xv-groupbox .onyx-input-decorator {
+  /* This resets the border for this element */
+
   border: 0;
 }
 .xv-groupbox > .onyx-input-decorator {
   border-color: #aaaaaa;
   border-width: 0 1px 1px 1px;
-  border-radius: 0;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-border-top-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
 }
 .xv-groupbox .xv-inputwidget {
   background-color: #ffffff;
 }
 .xv-groupbox > .onyx-input-decorator:first-child {
   border-width: 1px;
-  border-radius: 4px 4px 0 0;
+  -webkit-border-top-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 4px;
+  -moz-border-radius-topright: 4px;
+  border-top-right-radius: 4px;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
 }
 .xv-groupbox > .onyx-input-decorator:last-child {
-  border-radius: 0 0 4px 4px;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
 }
 .xv-groupbox > .onyx-input-decorator:first-child:last-child {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
   border-radius: 4px;
+  -webkit-border-top-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
 }
 .xv-groupbox-buttons {
   border: none;
 }
 .xv-groupbox-buttons .xv-groupbox-button-single {
-  border-radius: 0 0 4px 4px;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
 }
 .xv-groupbox-buttons .xv-groupbox-button-center {
-  border-radius: 0 0 0 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
 }
 .xv-groupbox-buttons .xv-groupbox-button-left {
-  border-radius: 0 0 0 4px;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
 }
 .xv-groupbox-buttons .xv-groupbox-button-right {
-  border-radius: 0 0 4px 0;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
 }
 /*
 	XV Widgets
