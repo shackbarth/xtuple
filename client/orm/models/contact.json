@@ -984,6 +984,27 @@
         }
       }
     ],
+    "extensions": [
+      {
+        "table": "crmacct",
+        "nameSpace": "XM",
+        "relations": [
+          {
+            "column": "crmacct_id",
+            "inverse": "account"
+          }
+        ],
+        "properties": [
+          {
+            "name": "accountParent",
+            "toOne": {
+              "type": "AccountRelation",
+              "column": "crmacct_parent_id"
+            }
+          }
+        ]
+      }
+    ],
     "isSystem": true
   },
   {
@@ -1111,6 +1132,27 @@
           "type": "Number",
           "column": "cntct_crmacct_id"
         }
+      }
+    ],
+    "extensions": [
+      {
+        "table": "crmacct",
+        "nameSpace": "XM",
+        "relations": [
+          {
+            "column": "crmacct_id",
+            "inverse": "account"
+          }
+        ],
+        "properties": [
+          {
+            "name": "accountParent",
+            "toOne": {
+              "type": "AccountRelation",
+              "column": "crmacct_parent_id"
+            }
+          }
+        ]
       }
     ],
     "isSystem": true
