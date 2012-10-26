@@ -416,9 +416,17 @@ trailing:true white:true*/
         ]},
         {kind: "XV.IncidentCommentBox", attr: "comments"},
         {kind: "XV.IncidentDocumentsBox", attr: "documents"},
-		{kind: "XV.IncidentHistoryRelationsBox", attr: "history"}
+        {kind: "XV.IncidentHistoryRelationsBox", attr: "history"}
       ]}
-    ]
+    ],
+    controlValueChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      var account;
+      if (inEvent.originator.name === 'accountWidget') {
+        account = this.$.accountWidget.getValue();
+        this.$.contactWidget.setAccount(account);
+      }
+    }
   });
 
   XV.registerModelWorkspace("XM.IncidentRelation", "XV.IncidentWorkspace");

@@ -95,6 +95,40 @@ regexp:true, undef:true, trailing:true, white:true */
         ]}
       ]}
     ],
+    autocomplete: function () {
+      var key = this.getKeyAttribute(),
+        attr = this.getValue() ? this.getValue().get(key) : "",
+        value = this.$.input.getValue(),
+        account = this.getAccount(),
+        query,
+        parameters = [{
+          attribute: key,
+          operator: "BEGINS_WITH",
+          value: value
+        }];
+
+      if (value && value !== attr) {
+        if (account) {
+          parameters.push({
+            attribute: ['account', 'accountParent'],
+            value: account
+          });
+        }
+        query = {
+          parameters: parameters,
+          rowLimit: 1,
+          orderBy: [{
+            attribute: key
+          }]
+        };
+        this._collection.fetch({
+          success: enyo.bind(this, "_fetchSuccess"),
+          query: query
+        });
+      } else if (!value) {
+        this.setValue(null);
+      }
+    },
     disabledChanged: function () {
       this.inherited(arguments);
       var disabled = this.getDisabled();
