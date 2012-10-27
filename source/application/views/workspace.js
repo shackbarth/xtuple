@@ -10,6 +10,10 @@ trailing:true white:true*/
     the same workspace.
   */
   XV.accountNotifyContactMixin = {
+    accountChanged: function () {
+      var account = this.$.accountWidget.getValue();
+      this.$.contactWidget.setAccount(account);
+    },
     attributesChanged: function (inSender, inEvent) {
       this.inherited(arguments);
       this.accountChanged();
@@ -19,10 +23,6 @@ trailing:true white:true*/
       if (inEvent.originator.name === 'accountWidget') {
         this.accountChanged();
       }
-    },
-    accountChanged: function () {
-      var account = this.$.accountWidget.getValue();
-      this.$.contactWidget.setAccount(account);
     }
   };
 
@@ -146,6 +146,9 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "middleName"},
             {kind: "XV.InputWidget", attr: "lastName"},
             {kind: "XV.InputWidget", attr: "suffix"},
+            {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
+            {kind: "XV.UserAccountWidget", attr: "owner"},
+            {kind: "XV.AccountWidget", attr: "account"},
             {kind: "onyx.GroupboxHeader", content: "_address".loc()},
             {kind: "XV.AddressWidget", attr: "address"},
             {kind: "onyx.GroupboxHeader", content: "_information".loc()},
@@ -156,10 +159,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "fax"},
             {kind: "XV.ContactCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes"},
-            {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-            {kind: "XV.AccountWidget", attr: "account"},
-            {kind: "XV.UserAccountWidget", attr: "owner"}
+            {kind: "XV.TextArea", attr: "notes"}
           ]}
         ]},
         {kind: "XV.ContactCommentBox", attr: "comments"},
@@ -179,6 +179,10 @@ trailing:true white:true*/
           classes: "xv-popup-button"}
       ]}
     ],
+    accountChanged: function () {
+      var account = this.$.accountWidget.getValue();
+      this.$.addressWidget.setAccount(account);
+    },
     addressChangeAll: function () {
       var options = {address: XM.Address.CHANGE_ALL};
       this._popupDone = true;
@@ -194,6 +198,16 @@ trailing:true white:true*/
     addressCancel: function () {
       this._popupDone = true;
       this.$.multipleAddressPopup.hide();
+    },
+    attributesChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      this.accountChanged();
+    },
+    controlValueChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      if (inEvent.originator.name === 'accountWidget') {
+        this.accountChanged();
+      }
     },
     errorNotify: function (inSender, inEvent) {
       // Handle address questions

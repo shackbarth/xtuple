@@ -70,7 +70,8 @@ trailing:true white:true*/
       {name: "city", label: "_city".loc(), attr: "city"},
       {name: "postalCode", label: "_postalCode".loc(), attr: "postalCode"},
       {name: "state", label: "_state".loc(), attr: "state"},
-      {name: "country", label: "_country".loc(), attr: "country"}
+      {name: "country", label: "_country".loc(), attr: "country"},
+      {name: "account", label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"}
     ]
   });
 
