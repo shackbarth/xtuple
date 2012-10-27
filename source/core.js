@@ -5,6 +5,36 @@ trailing:true white:true*/
 
 (function () {
 
+
+  // monkeypatch for issue 18395
+  // we can delete this when enyo 2.1 comes out
+
+
+  enyo.Panels.prototype.domScroll = function (inSender, inEvent) {
+    if (this.hasNode()) {
+      if (this.node.scrollLeft > 0) {
+        // Reset scrollLeft position
+        this.node.scrollLeft = 0;
+      }
+    }
+  };
+
+  enyo.Panels.prototype.create = function () {
+	this.transitionPoints = [];
+    enyo.Control.prototype.create.apply(this, arguments);
+	this.arrangerKindChanged();
+	this.narrowFitChanged();
+	this.indexChanged();
+	this.setAttribute("onscroll", enyo.bubbler);
+  };
+
+  enyo.Panels.prototype.handlers = enyo.Panels.prototype.handlers || {};
+  enyo.Panels.prototype.handlers.onscroll = "domScroll";
+
+
+  // end monkeypatch
+
+
   /**
     XV is the global namespace for all the "xTuple Views" defined in
     enyo-x and elsewhere
