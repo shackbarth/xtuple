@@ -25,12 +25,14 @@ white:true*/
       {kind: "FittableRows", classes: "enyo-fit", components: [
         {name: "client", classes: "pullout-toolbar"},
         {classes: "xv-pullout-header", name: "pulloutHeader", content: ""},
-        {name: "pulloutItems", fit: true, style: "position: relative;",
+        {kind: "Scroller", name: "pulloutItems", fit: true, style: "position: relative;",
           components: [
-          {name: "history", kind: "Scroller", fit: true, components: [
-            {kind: "Repeater", name: "historyList",
-              onSetupItem: "setupHistoryItem", count: 0, components: [
-              {name: "historyItem"}
+          {name: "container", components: [
+            {name: "history", fit: true, components: [
+              {kind: "Repeater", name: "historyList",
+                onSetupItem: "setupHistoryItem", count: 0, components: [
+                {name: "historyItem"}
+              ]}
             ]}
           ]}
         ]}
@@ -45,17 +47,14 @@ white:true*/
         widget = inEvent.getParameterWidget(),
         item = {
           name: inEvent.name,
-          kind: 'Scroller',
           fit: true
         };
       if (widget) {
-        item.components = [{
-          kind: widget
-        }];
-        item.container = this.$.pulloutItems;
+        item.kind = widget;
+        item.container = this.$.container;
         // Remove the previous item and create the new one
-        child = this.$.pulloutItems.children[0];
-        this.$.pulloutItems.removeChild(child);
+        child = this.$.container.children[0];
+        this.$.container.removeChild(child);
         this._pulloutItems[inEvent.name] = this.createComponent(item);
         this._parameterWidgets[inEvent.name] = this.$[widget.suffix().camelize()];
       }
@@ -67,7 +66,7 @@ white:true*/
       this.inherited(arguments);
       this._parameterWidgets = {};
       this._pulloutItems = {};
-      this._pulloutItems.history = this.$.pulloutItems.children[0];
+      this._pulloutItems.history = this.$.container.children[0];
       var that = this,
         callback = function () {
           that.preLoadHistory();
@@ -177,13 +176,13 @@ white:true*/
         this.$.pulloutHeader.setContent("_advancedSearch".loc());
       }
       this.setSelectedPanel(name);
-      child = this.$.pulloutItems.children[0];
+      child = this.$.container.children[0];
       if (item && this.isAtMax() &&
           child.name === item.name) {
         this.animateToMin();
       } else if (inEvent.show) {
-        this.$.pulloutItems.removeChild(child);
-        this.$.pulloutItems.addChild(item);
+        this.$.container.removeChild(child);
+        this.$.container.addChild(item);
         this.$.fittableRows.render();
         if (!this.isAtMax()) {
           this.animateToMax();
