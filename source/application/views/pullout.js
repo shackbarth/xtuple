@@ -45,7 +45,8 @@ white:true*/
         widget = inEvent.getParameterWidget(),
         item = {
           name: inEvent.name,
-          kind: 'Scroller'
+          kind: 'Scroller',
+          fit: true
         };
       if (widget) {
         item.components = [{
@@ -66,7 +67,7 @@ white:true*/
       this.inherited(arguments);
       this._parameterWidgets = {};
       this._pulloutItems = {};
-      this._pulloutItems.historyList = this.$.pulloutItems.children[0];
+      this._pulloutItems.history = this.$.pulloutItems.children[0];
       var that = this,
         callback = function () {
           that.preLoadHistory();
@@ -177,13 +178,14 @@ white:true*/
       }
       this.setSelectedPanel(name);
       child = this.$.pulloutItems.children[0];
-      if (item && item.showing && this.isAtMax()) {
+      if (item && this.isAtMax() &&
+          child.name === item.name) {
         this.animateToMin();
       } else if (inEvent.show) {
         this.$.pulloutItems.removeChild(child);
         this.$.pulloutItems.addChild(item);
+        this.$.fittableRows.render();
         if (!this.isAtMax()) {
-          this.render();
           this.animateToMax();
         }
       }
