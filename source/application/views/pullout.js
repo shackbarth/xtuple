@@ -56,7 +56,6 @@ white:true*/
         child = this.$.container.children[0];
         this.$.container.removeChild(child);
         this._pulloutItems[inEvent.name] = this.createComponent(item);
-        this._parameterWidgets[inEvent.name] = this.$[widget.suffix().camelize()];
       }
     },
     /**
@@ -141,9 +140,6 @@ white:true*/
     },
     getItem: function (name) {
       return this._pulloutItems[name];
-    },
-    getParameterWidget: function (name) {
-      return this._parameterWidgets[name];
     },
     /**
 
