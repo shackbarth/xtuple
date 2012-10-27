@@ -288,6 +288,7 @@ trailing:true white:true*/
       options.changes = changes;
       this.attributesChanged(model, options);
       this.doStatusChange(inEvent);
+      this.waterfallDown("onWorkspaceModelStatusChange", inEvent);
     },
     /**
       When a text area is brought into focus we want to move the

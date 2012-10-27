@@ -33,7 +33,8 @@ trailing:true white:true*/
     },
     handlers: {
       onSelect: "selectionChanged",
-      onDeselect: "selectionChanged"
+      onDeselect: "selectionChanged",
+      onWorkspaceModelStatusChange: "workspaceModelStatusChanged"
     },
     create: function () {
       this.inherited(arguments);
@@ -229,18 +230,45 @@ trailing:true white:true*/
       if (canAttach) { this.$.detachButton.setDisabled(couldNotUpdate); }
       this.$.openButton.setDisabled(couldNotRead);
     },
-    valueChanged: function () {
+    /**
+      Whether or not the new and attach buttons are enabled is based on
+      complex criteria based on the status of the workspace model, the
+      permissions of the user, and attributes of the list model. Therefore
+      this code can be executed based on changes coming from multiple
+      possible areas, and this function consolidates this functionality.
+     */
+    updateButtons: function () {
       var value = this.getValue(), // Must be a collection of Info models
         canAttach = this.getSearchList().length > 0,
         editableModel = value && value.model.prototype.editableModel ?
           value.model.prototype.editableModel : null,
         Klass = editableModel ?
           XT.getObjectByName(editableModel) : null,
-        canNotCreate = Klass ? !Klass.canCreate() : true,
-        canNotUpdate = Klass ? !Klass.canUpdate() : true;
-      this.$.list.setValue(value);
+        K = XM.Model,
+        hostModel = this.parent.parent.getValue(), // XXX this is brittle but I don't know where
+        // else to find the model that is backing the workspace that contains this l_r_box.
+        hostModelStatus = hostModel.getStatus(),
+        canNotCreate = Klass ? !Klass.canCreate() || hostModelStatus === K.READY_NEW : true,
+        canNotUpdate = Klass ? !Klass.canUpdate() || hostModelStatus === K.READY_NEW : true;
+
       if (this.getCanOpen()) {this.$.newButton.setDisabled(canNotCreate); }
       if (canAttach) { this.$.attachButton.setDisabled(canNotUpdate); }
+    },
+    valueChanged: function () {
+      var value = this.getValue(); // Must be a collection of Info models
+
+      this.$.list.setValue(value);
+      this.updateButtons();
+    },
+    /**
+      When the workspace containing this box has a change to the status of the model, it waterfalls
+      down an event to be handled here. We will want to enable the new- and attach- buttons if
+      the model is no longer in READY_NEW state
+     */
+    workspaceModelStatusChanged: function (inSender, inEvent) {
+      if (inEvent.status & XM.Model.READY) {
+        this.updateButtons();
+      }
     }
   });
 
