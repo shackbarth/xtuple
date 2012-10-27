@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true
 white:true*/
-/*global enyo:true, XT:true, XV:true */
+/*global enyo:true, XT:true, XV:true, _:true */
 
 (function () {
 
@@ -25,9 +25,9 @@ white:true*/
       {kind: "FittableRows", classes: "enyo-fit", components: [
         {name: "client", classes: "pullout-toolbar"},
         {classes: "xv-pullout-header", name: "pulloutHeader", content: ""},
-        {kind: "Scroller", name: "pulloutItems", fit: true, style: "position: relative;",
+        {name: "pulloutItems", fit: true, style: "position: relative;",
           components: [
-          {fit: true, name: "history", kind: "Scroller", components: [
+          {name: "history", kind: "Scroller", fit: true, components: [
             {kind: "Repeater", name: "historyList",
               onSetupItem: "setupHistoryItem", count: 0, components: [
               {name: "historyItem"}
@@ -41,16 +41,22 @@ white:true*/
       event gets added to our pullout items.
      */
     addPulloutItem: function (inSender, inEvent) {
-      var item = {
-        name: inEvent.name,
-        showing: false
-      };
-      if (inEvent.getParameterWidget) {
-        item.kind = inEvent.getParameterWidget();
-        if (item.kind) {
-          item.container = this.$.pulloutItems;
-          this.createComponent(item);
-        } // else there's no parameter widget for this business object
+      var child,
+        widget = inEvent.getParameterWidget(),
+        item = {
+          name: inEvent.name,
+          kind: 'Scroller'
+        };
+      if (widget) {
+        item.components = [{
+          kind: widget
+        }];
+        item.container = this.$.pulloutItems;
+        // Remove the previous item and create the new one
+        child = this.$.pulloutItems.children[0];
+        this.$.pulloutItems.removeChild(child);
+        this._pulloutItems[inEvent.name] = this.createComponent(item);
+        this._parameterWidgets[inEvent.name] = this.$[widget.suffix().camelize()];
       }
     },
     /**
@@ -58,7 +64,9 @@ white:true*/
      */
     create: function () {
       this.inherited(arguments);
-
+      this._parameterWidgets = {};
+      this._pulloutItems = {};
+      this._pulloutItems.historyList = this.$.pulloutItems.children[0];
       var that = this,
         callback = function () {
           that.preLoadHistory();
@@ -72,7 +80,13 @@ white:true*/
         historyArray,
         i,
         historyItem,
-        mockModel = {};
+        mockModel = {},
+        getValue = function () {
+          return historyItem.modelName;
+        },
+        get = function () {
+          return historyItem.modelId;
+        };
 
       if (!cookieValue || cookieValue === 'undefined') {
         // There's no cookie yet for this parameter list
@@ -89,12 +103,8 @@ white:true*/
         // into thinking it's a real model. This code is fragile to any
         // change in that function.
         mockModel.recordType = historyItem.modelType;
-        mockModel.getValue = function () {
-          return historyItem.modelName;
-        };
-        mockModel.get = function () {
-          return historyItem.modelId;
-        };
+        mockModel.getValue = getValue;
+        mockModel.get = get;
         XT.addToHistory(historyItem.workspaceType, mockModel);
       }
       this.refreshHistoryList();
@@ -130,7 +140,10 @@ white:true*/
       });
     },
     getItem: function (name) {
-      return this.$.pulloutItems.$[name] || this.$[name];
+      return this._pulloutItems[name];
+    },
+    getParameterWidget: function (name) {
+      return this._parameterWidgets[name];
     },
     /**
 
@@ -148,8 +161,7 @@ white:true*/
       // pullout, it will show the advanced search and not history.
       var name = inEvent.name,
         item = this.getItem(name),
-        children = this.$.pulloutItems.children[0].children,
-        i;
+        child;
 
       if (!item) {
         // if we've moved to a list with no advanced search and pull the pullout
@@ -164,14 +176,12 @@ white:true*/
         this.$.pulloutHeader.setContent("_advancedSearch".loc());
       }
       this.setSelectedPanel(name);
+      child = this.$.pulloutItems.children[0];
       if (item && item.showing && this.isAtMax()) {
         this.animateToMin();
       } else if (inEvent.show) {
-        for (i = 0; i < children.length; i++) {
-          children[i].hide();
-        }
-        item.show();
-        item.resized();
+        this.$.pulloutItems.removeChild(child);
+        this.$.pulloutItems.addChild(item);
         if (!this.isAtMax()) {
           this.render();
           this.animateToMax();
