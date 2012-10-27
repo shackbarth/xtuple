@@ -16,6 +16,8 @@
 \i xt/functions/cntctmerge.sql;
 \i xt/functions/cntctrestore.sql;
 \i xt/functions/createuser.sql;
+\i xt/functions/mergecrmaccts.sql;
+\i xt/functions/undomerge.sql;
 
 -- xt trigger functions
 \i xt/trigger_functions/comment_did_change.sql
