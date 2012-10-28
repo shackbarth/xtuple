@@ -4,6 +4,23 @@ white:true*/
 /*global enyo:true, XT:true, XV:true, XM:true, _: true, Globalize:true */
 
 (function () {
+  
+  /**
+    Comment type picker.
+
+    @class
+    @name XV.CommentTypePicker
+    @see XV.CommentBox
+   */
+  enyo.kind(/** @lends XV.CommentTypePicker# */{
+    name: "XV.CommentTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.commentTypes",
+    orderBy: [
+      {attribute: 'order'},
+      {attribute: 'name'}
+    ]
+  });
 
   /**
     Represents and individual comment within the comment box.
@@ -85,9 +102,7 @@ white:true*/
       return "<p>\n<blockquote>" + text + "</pre></blockquote><br><hr>";
     },
     setCommentTypeFilter: function () {
-      var model = this.parent.parent.parent.parent.parent.getModel(),
-        Klass = XT.getObjectByName(model),
-        sourceName = Klass.prototype.sourceName,
+      var value = this.getValue(),
         commentType = this.$.commentType;
       commentType.filter = function (models) {
         return _.filter(models, function (model) {
@@ -102,7 +117,7 @@ white:true*/
           attrs = _.pluck(sources, 'attributes');
           sourceNames = _.pluck(attrs, 'name');
           return _.find(sourceNames, function (name) {
-            return name === sourceName;
+            return name === value.sourceName;
           });
         });
       };
