@@ -51,6 +51,7 @@ trailing:true white:true*/
         panel.fetch();
         this.next();
       }
+      return true;
     },
     addWorkspacePanel: function (inSender, inEvent) {
       var panel;

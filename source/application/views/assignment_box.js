@@ -45,8 +45,7 @@ white:true*/
      */
     getAssignmentModel: function (roleModel) {
       return new XM.UserAccountUserAccountRoleAssignment({
-        userAccountRole: roleModel,
-        userAccount: this.getAssignedCollection().userAccount
+        userAccountRole: roleModel
       }, {isNew: true});
     }
   };
@@ -166,7 +165,10 @@ white:true*/
      * denote that a privilege is grated via a role but not directly to a user.
      */
     undercheckCheckbox: function (checkbox, isUnderchecked) {
-      if (isUnderchecked && !checkbox.$.input.checked) {
+      if (!checkbox.$.input) {
+        // harmless bug: do nothing
+        // TODO: check this out
+      } else if (isUnderchecked && !checkbox.$.input.checked) {
         checkbox.$.input.addClass("xv-half-check");
       } else {
         checkbox.$.input.removeClass("xv-half-check");

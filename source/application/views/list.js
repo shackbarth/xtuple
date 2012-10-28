@@ -80,6 +80,18 @@ trailing:true white:true*/
     ],
     formatAddress: function (value, view, model) {
       return XM.Address.format(model, true);
+    },
+    setQuery: function (query) {
+      // If account is in filter, need to switch to a model including account.
+      var account,
+        collection;
+      account = _.find(query.parameters, function (param) {
+        return param.attribute === 'account';
+      });
+      collection = account ?
+        'XM.AccountAddressListItemCollection' : 'XM.AddressInfoCollection';
+      this.setCollection(collection);
+      this.inherited(arguments);
     }
   });
 
