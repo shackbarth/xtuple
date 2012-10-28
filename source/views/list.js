@@ -177,6 +177,7 @@ trailing:true white:true*/
       } else {
         this.reset();
       }
+      this._maxTop = this.getScrollBounds().maxTop;
     },
     itemTap: function (inSender, inEvent) {
       inEvent.list = this;
@@ -232,15 +233,19 @@ trailing:true white:true*/
       }
     },
     scroll: function (inSender, inEvent) {
-      var r = this.inherited(arguments);
+      var r = this.inherited(arguments),
+        options = {},
+        max;
+      if (!this._maxTop) { return r; }
+
       // Manage lazy loading
-      var max = this.getScrollBounds().maxTop - this.rowHeight * FETCH_TRIGGER,
-        options = {};
-      if (this.isMore && this.getScrollPosition() > max && !this.fetching) {
+      max = this._maxTop - this.rowHeight * FETCH_TRIGGER;
+      if (this.isMore && !this.fetching && this.getScrollPosition() > max) {
         this.fetching = true;
         options.showMore = true;
         this.fetch(options);
       }
+
       return r;
     },
     setupItem: function (inSender, inEvent) {
