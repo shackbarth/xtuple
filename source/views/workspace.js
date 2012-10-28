@@ -42,8 +42,8 @@ trailing:true white:true*/
         isReadOnly,
         isRequired,
         prop;
-      // This wasn't original intent. Changes was ONLY supposed to process changes,
-      // but it turns out attributes changed inside triggers don't themselves don't
+      // This wasn't the original intent. Changes was ONLY supposed to process changes,
+      // but it turns out attributes changed inside triggers themselves don't
       // get included in a generic change event. So for now process all every time.
       for (prop in model.attributes) {
         if (model.attributes.hasOwnProperty(prop)) {
