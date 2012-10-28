@@ -69,7 +69,7 @@ trailing:true white:true*/
       {attribute: 'state'},
       {attribute: 'city'},
       {attribute: 'line1'},
-      {attribute: 'id'}
+      {attribute: 'id', numeric: true}
     ]},
     parameterWidget: "XV.AddressListParameters",
     components: [
@@ -136,7 +136,7 @@ trailing:true white:true*/
       {attribute: 'lastName'},
       {attribute: 'firstName'},
       {attribute: 'primaryEmail'},
-      {attribute: 'id'}
+      {attribute: 'id', numeric: true}
     ]},
     parameterWidget: "XV.ContactListParameters",
     components: [
@@ -377,7 +377,7 @@ trailing:true white:true*/
     query: {orderBy: [
       {attribute: 'priorityOrder'},
       {attribute: 'updated', descending: true},
-      {attribute: 'id', descending: true}
+      {attribute: 'number', descending: true, numeric: true}
     ]},
     parameterWidget: "XV.IncidentListParameters",
     components: [
@@ -524,7 +524,7 @@ trailing:true white:true*/
       {attribute: 'priorityOrder'},
       {attribute: 'targetClose'},
       {attribute: 'name'},
-      {attribute: 'id'}
+      {attribute: 'number', numeric: true}
     ]},
     label: "_opportunities".loc(),
     parameterWidget: "XV.OpportunityListParameters",
@@ -753,7 +753,8 @@ trailing:true white:true*/
     query: {orderBy: [
       {attribute: 'priorityOrder'},
       {attribute: 'dueDate'},
-      {attribute: 'name'}
+      {attribute: 'name'},
+      {attribute: 'id', numeric: true}
     ]},
     components: [
       {kind: "XV.ListItem", components: [
