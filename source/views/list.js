@@ -209,7 +209,7 @@ trailing:true white:true*/
         checkStatusQuery = this.getQuery();
         checkStatusQuery.parameters.push({attribute: "id", operator: "=", value: inEvent.id});
 
-        checkStatusCollection = new XM[this.getCollection().substring(3)];
+        checkStatusCollection = new XM[this.getCollection().suffix()];
         checkStatusCollection.fetch({
           query: checkStatusQuery,
           success: function (collection, response) {
@@ -222,8 +222,11 @@ trailing:true white:true*/
               // this model should still be in the collection. Refresh it.
 
               that.getValue().add(response[0]);
-              that.refresh();
             }
+            if (that.getCount() !== that.getValue().length) {
+              that.setCount(that.getValue().length);
+            }
+            that.refresh();
           },
           error: function (collection, error) {
             XT.log("Error checking model status in list");
