@@ -26,6 +26,7 @@
 \i xt/functions/fetch.sql;
 \i xt/functions/get_id.sql;
 \i xt/functions/js_init.sql;
+\i xt/functions/json_schema_type_format.sql;
 \i xt/functions/install_js.sql;
 \i xt/functions/install_orm.sql;
 \i xt/functions/is_date.sql;
