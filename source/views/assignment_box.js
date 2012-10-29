@@ -227,14 +227,14 @@ white:true*/
 
       inSender.segmentIndex = index;
 
-      if (header && this.getSegments().length < 2) {
+      if (header && (this.getSegments().length < 2 || this.getSegmentedCollections()[index].length === 0)) {
         //
-        // Suppress the header if there's just one segment
+        // Suppress the header if there's just one segment, or if the segment is empty of boxes to assign
         //
         header.parent.removeChild(header);
 
       } else if (header) {
-        header.setContent(this.getSegments()[index]);
+        header.setContent(("_" + this.getSegments()[index]).loc());
       }
 
       row.$.checkboxRepeater.setCount(this.getSegmentedCollections()[index].length);
@@ -280,7 +280,7 @@ white:true*/
 
         module = model.get("module");
         for (j = 0; j < this.getSegments().length; j++) {
-          if (this.getSegments().length === 1 || module === this.getSegments()[j]) {
+          if (this.getSegments().length === 1 || module.toLowerCase() === this.getSegments()[j].toLowerCase()) {
             // if there's only one segment then no need to segmentize at all
             this.getSegmentedCollections()[j].add(model);
           }
