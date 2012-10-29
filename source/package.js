@@ -2,5 +2,6 @@ enyo.depends(
   "core.js",
   "en",
   "widgets",
-  "views"
+  "views",
+	"stylesheets/screen.css"
 );

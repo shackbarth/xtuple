@@ -19,18 +19,13 @@ trailing:true white:true*/
     handlers: {
       onValueChange: "controlValueChanged"
     },
+    destroy: function () {
+      this.value = null;
+      this.inherited(arguments);
+    },
     setValue: function (value) {
-      var changes = {},
-        options = {},
-        attrs,
-        i;
       this.value = value;
-      attrs = value.getAttributeNames();
-      for (i = 0; i < attrs.length; i++) {
-        changes[attrs[i]] = true;
-      }
-      options.changes = changes;
-      this.attributesChanged(value, options);
+      this.attributesChanged(value);
     }
   });
   enyo.kind(editor);

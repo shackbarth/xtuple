@@ -19,7 +19,14 @@ trailing:true white:true*/
     classes: "app enyo-unselectable",
     published: {
       callback: null,
-      conditions: null
+      /**
+        Filter parameters not editable by the user
+      */
+      conditions: null,
+      /**
+        Filter parameters applied to parameter widget and editable by the user.
+      */
+      defaultParameterItemValues: null
     },
     events: {
       onPrevious: ""
@@ -108,6 +115,13 @@ trailing:true white:true*/
       list.setQuery(query);
       list.fetch(options);
     },
+    defaultParameterItemValuesChanged: function () {
+      var parameterWidget = this.$.parameterWidget,
+        items = this.getDefaultParameterItemValues() || [];
+      if (parameterWidget && items.length) {
+        parameterWidget.setParameterItemValues(items);
+      }
+    },
     requery: function (inSender, inEvent) {
       this.fetch();
       return true;
@@ -124,7 +138,8 @@ trailing:true white:true*/
         list = options.list,
         callback = options.callback,
         searchText = options.searchText,
-        conditions = options.conditions;
+        conditions = options.conditions,
+        params = options.parameterItemValues;
       component = this.createComponent({
         name: "list",
         container: this.$.listPanel,
@@ -139,9 +154,11 @@ trailing:true white:true*/
           name: "parameterWidget",
           container: this.$.parameterScroller,
           kind: component.getParameterWidget(),
+          memoizeEnabled: false,
           fit: true
         });
       }
+      this.setDefaultParameterItemValues(params);
       this.init = true;
       this.render();
       this.$.searchInput.setValue(searchText || "");

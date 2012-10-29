@@ -29,6 +29,7 @@ XT.stringsFor("en_US", {
   "_edit": "Edit",
   "_editAddress": "Edit Address",
   "_export": "Export",
+  "_loading": "Loading",
   "_new": "New",
   "_none": "None",
   "_ok": "Ok",
