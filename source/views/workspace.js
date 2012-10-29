@@ -287,7 +287,6 @@ trailing:true white:true*/
       options.changes = changes;
       this.attributesChanged(model, options);
       this.doStatusChange(inEvent);
-      this.waterfallDown("onWorkspaceModelStatusChange", inEvent);
     },
     titleChanged: function () {
       var inEvent = { title: this.getTitle(), originator: this };

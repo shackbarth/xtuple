@@ -34,7 +34,7 @@ trailing:true white:true*/
     handlers: {
       onSelect: "selectionChanged",
       onDeselect: "selectionChanged",
-      onWorkspaceModelStatusChange: "workspaceModelStatusChanged"
+      onParentStatusChange: "workspaceModelStatusChanged"
     },
     create: function () {
       this.inherited(arguments);
@@ -245,11 +245,13 @@ trailing:true white:true*/
         Klass = editableModel ?
           XT.getObjectByName(editableModel) : null,
         K = XM.Model,
-        hostModel = this.parent.parent.getValue(), // XXX this is brittle but I don't know where
-        // else to find the model that is backing the workspace that contains this l_r_box.
-        hostModelStatus = hostModel.getStatus(),
-        canNotCreate = Klass ? !Klass.canCreate() || hostModelStatus === K.READY_NEW : true,
-        canNotUpdate = Klass ? !Klass.canUpdate() || hostModelStatus === K.READY_NEW : true;
+        parentModel = this.$.list.getParent(),
+        // if the list is a DocumentsListRelations then there will be no getParent() model, but
+        // in this case we do not want to disable the buttons, so we can set the status to be
+        // anything except READY_NEW
+        parentModelStatus = parentModel ? parentModel.getStatus() : null,
+        canNotCreate = Klass ? !Klass.canCreate() || parentModelStatus === K.READY_NEW : true,
+        canNotUpdate = Klass ? !Klass.canUpdate() || parentModelStatus === K.READY_NEW : true;
 
       if (this.getCanOpen()) {this.$.newButton.setDisabled(canNotCreate); }
       if (canAttach) { this.$.attachButton.setDisabled(canNotUpdate); }
