@@ -183,23 +183,55 @@ trailing:true white:true*/
       inEvent.list = this;
       this.doItemTap(inEvent);
     },
+    /**
+      When a model changes, we are notified. We check the list to see if the
+      model is of the same recordType. If so, we check to see if the newly
+      changed model should still be on the list, and refresh appropriately.
+     */
     modelChanged: function (inSender, inEvent) {
       var that = this,
         workspace = this.getWorkspace(),
         options = {},
-        model;
+        model,
+        checkStatusCollection,
+        checkStatusQuery;
+
       // If the model that changed was related to and exists on this list
-      // refresh the item.
+      // refresh the item. Remove the item if appropriate
       workspace = workspace ? XT.getObjectByName(workspace) : null;
-      if (workspace && workspace.prototype.model === inEvent.model &&
-          this.getValue()) {
+      if (workspace && workspace.prototype.model === inEvent.model && this.getValue()) {
         model = this.getValue().get(inEvent.id);
-        if (model) {
-          options.success = function () {
+
+        // cleverness: we're going to see if the model still belongs in the collection by
+        // creating a new query that's the same as the current filter but with the addition
+        // of filtering on the id. Any result means it still belongs. An empty result
+        // means it doesn't.
+        checkStatusQuery = this.getQuery();
+        checkStatusQuery.parameters.push({attribute: "id", operator: "=", value: inEvent.id});
+
+        checkStatusCollection = new XM[this.getCollection().suffix()];
+        checkStatusCollection.fetch({
+          query: checkStatusQuery,
+          success: function (collection, response) {
+            // remove the old model no matter the query result
+            if (model) {
+              that.getValue().remove(model);
+            }
+
+            if (response.length > 0) {
+              // this model should still be in the collection. Refresh it.
+
+              that.getValue().add(response[0]);
+            }
+            if (that.getCount() !== that.getValue().length) {
+              that.setCount(that.getValue().length);
+            }
             that.refresh();
-          };
-          model.fetch(options);
-        }
+          },
+          error: function (collection, error) {
+            XT.log("Error checking model status in list");
+          }
+        });
       }
     },
     /**
