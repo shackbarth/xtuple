@@ -320,6 +320,7 @@ var lang = XT.stringsFor("en_US", {
   "_suffix": "Suffix",
   "_summary": "Summary",
   "_symbol": "Symbol",
+  "_system": "System",
   "_target": "Target",
   "_targetClose": "Target Close",
   "_targetType": "Target Type",

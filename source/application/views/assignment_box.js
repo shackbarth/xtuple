@@ -76,10 +76,31 @@ white:true*/
       idsFromRoles: null
     },
     cacheName: "privileges",
-    segments: ["System", "CRM"],
+    segments: [], // now generated dynamically
     title: "_privileges".loc(),
     totalCollectionName: "PrivilegeCollection",
     type: "privilege",
+    /**
+      The available privileges will be dynamically populated based on the modules
+      that are loaded.
+     */
+    create: function () {
+      var activeModules = _.map(XT.app.$.postbooks.getModules(), function (module) {
+        // once the rest of issue 18650 is written this transformation will be done on
+        // the DB level and we can just skip to return module.name. This hack is performed
+        // twice in this file.
+
+        if (module.name === 'setup') {
+          return 'system';
+        }
+
+
+        return module.name;
+      });
+
+      this.setSegments(activeModules);
+      this.inherited(arguments);
+    },
     /**
      * Returns a model specific to this AssignmentBox.
      *
@@ -187,11 +208,32 @@ white:true*/
   var userAccountRolePrivilegeAssignmentBox = {
     name: "XV.UserAccountRolePrivilegeAssignmentBox",
     kind: "XV.AssignmentBox",
-    segments: ["System", "CRM"],
+    segments: [], // now generated dynamically
     title: "_privileges".loc(),
     translateLabels: false,
     totalCollectionName: "PrivilegeCollection",
     type: "privilege",
+    /**
+      The available privileges will be dynamically populated based on the modules
+      that are loaded.
+     */
+    create: function () {
+      var activeModules = _.map(XT.app.$.postbooks.getModules(), function (module) {
+        // once the rest of issue 18650 is written this transformation will be done on
+        // the DB level and we can just skip to return module.name. This hack is performed
+        // twice in this file.
+
+        if (module.name === 'setup') {
+          return 'system';
+        }
+
+
+        return module.name;
+      });
+
+      this.setSegments(activeModules);
+      this.inherited(arguments);
+    },
     /**
      * Returns a model specific to this AssignmentBox.
      *
