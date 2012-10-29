@@ -42,8 +42,8 @@ trailing:true white:true*/
         isReadOnly,
         isRequired,
         prop;
-      // This wasn't original intent. Changes was ONLY supposed to process changes,
-      // but it turns out attributes changed inside triggers don't themselves don't
+      // This wasn't the original intent. Changes was ONLY supposed to process changes,
+      // but it turns out attributes changed inside triggers themselves don't
       // get included in a generic change event. So for now process all every time.
       for (prop in model.attributes) {
         if (model.attributes.hasOwnProperty(prop)) {
@@ -122,8 +122,7 @@ trailing:true white:true*/
       onHistoryChange: ""
     },
     handlers: {
-      onValueChange: "controlValueChanged",
-      onTextAreaFocus: "textAreaFocus"
+      onValueChange: "controlValueChanged"
     },
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
@@ -289,22 +288,6 @@ trailing:true white:true*/
       this.attributesChanged(model, options);
       this.doStatusChange(inEvent);
       this.waterfallDown("onWorkspaceModelStatusChange", inEvent);
-    },
-    /**
-      When a text area is brought into focus we want to move the
-      panels to bring this into prime position.
-    */
-    textAreaFocus: function (inSender, inEvent) {
-      var originator = inEvent.originator,
-        component = originator;
-
-      while (component.parent && component.parent.name !== 'panels') {
-        component = component.parent;
-      }
-
-      if (component.indexInContainer && component.indexInContainer !== this.$.panels.getIndex()) {
-        this.$.panels.setIndex(component.indexInContainer());
-      }
     },
     titleChanged: function () {
       var inEvent = { title: this.getTitle(), originator: this };

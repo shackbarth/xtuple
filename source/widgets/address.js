@@ -18,7 +18,8 @@ regexp:true, undef:true, trailing:true, white:true */
     published: {
       attr: null,
       value: null,
-      list: "XV.AddressList"
+      list: "XV.AddressList",
+      account: null
     },
     events: {
       onSearch: "",
@@ -168,12 +169,21 @@ regexp:true, undef:true, trailing:true, white:true */
     search: function () {
       var that = this,
         list = this.getList(),
+        account = this.getAccount(),
+        parameterItemValues = [],
         callback = function (value) {
           that.setValue(value);
         };
+      if (account) {
+        parameterItemValues.push({
+          name: 'account',
+          value: account
+        });
+      }
       this.doSearch({
         list: list,
-        callback: callback
+        callback: callback,
+        parameterItemValues: parameterItemValues
       });
     },
     searchButtonKeyUp: function (inSender, inEvent) {

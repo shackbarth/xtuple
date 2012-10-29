@@ -405,6 +405,10 @@ trailing:true white:true*/
         panel = _.find(contentPanels.children, function (child) {
           return child.index === panelIndex;
         });
+        // If we're already here, bail
+        if (contentPanels.index === this.$.contentPanels.indexOfChild(panel)) {
+          return;
+        }
 
       } else if (panelStatus === 'unborn') {
         // panel exists but has not been rendered. Render it.

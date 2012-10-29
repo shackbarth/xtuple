@@ -177,6 +177,7 @@ trailing:true white:true*/
       } else {
         this.reset();
       }
+      this._maxTop = this.getScrollBounds().maxTop;
     },
     itemTap: function (inSender, inEvent) {
       inEvent.list = this;
@@ -212,13 +213,17 @@ trailing:true white:true*/
           var aval,
             bval,
             attr,
+            numeric,
+            descending,
             i;
           for (i = 0; i < query.orderBy.length; i++) {
             attr = query.orderBy[i].attribute;
+            numeric = query.orderBy[i].numeric;
+            descending = query.orderBy[i].descending;
             aval = query.orderBy[i].descending ? b.getValue(attr) : a.getValue(attr);
             bval = query.orderBy[i].descending ? a.getValue(attr) : b.getValue(attr);
-            aval = !isNaN(aval) ? aval - 0 : aval;
-            bval = !isNaN(aval) ? bval - 0 : bval;
+            aval = numeric ? aval - 0 : aval;
+            bval = numeric ? bval - 0 : bval;
             if (aval !== bval) {
               return aval > bval ? 1 : -1;
             }
@@ -228,15 +233,19 @@ trailing:true white:true*/
       }
     },
     scroll: function (inSender, inEvent) {
-      var r = this.inherited(arguments);
+      var r = this.inherited(arguments),
+        options = {},
+        max;
+      if (!this._maxTop) { return r; }
+
       // Manage lazy loading
-      var max = this.getScrollBounds().maxTop - this.rowHeight * FETCH_TRIGGER,
-        options = {};
-      if (this.isMore && this.getScrollPosition() > max && !this.fetching) {
+      max = this._maxTop - this.rowHeight * FETCH_TRIGGER;
+      if (this.isMore && !this.fetching && this.getScrollPosition() > max) {
         this.fetching = true;
         options.showMore = true;
         this.fetch(options);
       }
+
       return r;
     },
     setupItem: function (inSender, inEvent) {
