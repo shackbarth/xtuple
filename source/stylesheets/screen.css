@@ -465,7 +465,7 @@ body {
   max-width: 320px;
 }
 .xv-comment-box .xv-comment-box-label {
-  padding: 4px;
+  padding: 5px;
   font-size: small;
   font-weight: bold;
   white-space: nowrap;
@@ -473,7 +473,7 @@ body {
   text-overflow: ellipsis;
 }
 .xv-comment-box .xv-comment-box-textblock {
-  padding: 12px;
+  padding: 5px;
   font-size: small;
   overflow: hidden;
 }
@@ -898,11 +898,11 @@ body {
   text-align: right;
 }
 .xv-textarea-input {
-  width: 95%;
+  width: 90%;
   height: 100%;
   min-height: 100px;
   margin: 6px;
-  border: #ddd 4px solid;
+  border: #ddd 2px solid;
 }
 .xv-documents-picker-label {
   width: 85px;
