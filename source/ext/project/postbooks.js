@@ -6,11 +6,25 @@ trailing:true white:true*/
 (function () {
 
   XT.extensions.project.initPostbooks = function () {
-    var module;
+    var module, panels;
 
     // ..........................................................
     // APPLICATION
     //
+    panels = [
+      {name: "honorificList", kind: "XV.HonorificList"},
+      {name: "accountList", kind: "XV.AccountList"},
+      {name: "contactList", kind: "XV.ContactList"},
+      {name: "incidentList", kind: "XV.IncidentList"},
+      {name: "itemList", kind: "XV.ItemList"},
+      {name: "classCodeList", kind: "XV.ClassCodeList"},
+      {name: "unitList", kind: "XV.UnitList"},
+      {name: "stateList", kind: "XV.StateList"},
+      {name: "countryList", kind: "XV.CountryList"},
+      {name: "imageList", kind: "XV.ImageList"}
+    ];
+
+    XT.app.$.postbooks.appendPanels("setup", panels);
 
     module = {
       name: "project",
@@ -20,8 +34,42 @@ trailing:true white:true*/
         {name: "projectTaskList", kind: "XV.ProjectTaskList"}
       ],
       privileges: [
-        "ProjectPriv1",
-        "ProjectPriv2"
+        "MaintainAddresses",
+        "MaintainAllContacts",
+        "MaintainAllCRMAccounts",
+        "MaintainAllIncidents",
+        "MaintainAllProjects",
+        "MaintainPersonalContacts",
+        "MaintainPersonalCRMAccounts",
+        "MaintainPersonalIncidents",
+        "MaintainPersonalProjects",
+        "MaintainPersonalToDoItems",
+        "MaintainTitles",
+        "ViewAllContacts",
+        "ViewAllCRMAccounts",
+        "ViewAllIncidentHistory",
+        "ViewAllIncidents",
+        "ViewAllProjects",
+        "ViewPersonalContacts",
+        "ViewPersonalCRMAccounts",
+        "ViewPersonalIncidents",
+        "ViewPersonalProjects",
+        "ViewTitles",
+        "DeleteItemMasters",
+        "MaintainItemMasters",
+        "MaintainUOMs",
+        "ViewClassCodes",
+        "ViewCosts",
+        "ViewItemMasters",
+        "ViewUOMs",
+        "ConfigurePM",
+        "EditOthersComments",
+        "EditOwnComments",
+        "MaintainCommentTypes",
+        "MaintainCountries",
+        "MaintainImages",
+        "MaintainStates",
+        "MaintainUsers"
       ]
     };
 
