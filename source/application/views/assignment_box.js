@@ -76,7 +76,7 @@ white:true*/
       idsFromRoles: null
     },
     cacheName: "privileges",
-    segments: [], // now generated dynamically
+    segments: ["Privileges"],
     title: "_privileges".loc(),
     totalCollectionName: "PrivilegeCollection",
     type: "privilege",
@@ -85,20 +85,11 @@ white:true*/
       that are loaded.
      */
     create: function () {
-      var activeModules = _.map(XT.app.$.postbooks.getModules(), function (module) {
-        // once the rest of issue 18650 is written this transformation will be done on
-        // the DB level and we can just skip to return module.name. This hack is performed
-        // twice in this file.
-
-        if (module.name === 'setup') {
-          return 'system';
-        }
-
-
-        return module.name;
+      var privilegeArrays = _.map(XT.app.$.postbooks.getModules(), function (module) {
+        return module.privileges ? module.privileges : [];
       });
+      this.setRestrictedValues(_.uniq(_.flatten(privilegeArrays)));
 
-      this.setSegments(activeModules);
       this.inherited(arguments);
     },
     /**
@@ -208,7 +199,7 @@ white:true*/
   var userAccountRolePrivilegeAssignmentBox = {
     name: "XV.UserAccountRolePrivilegeAssignmentBox",
     kind: "XV.AssignmentBox",
-    segments: [], // now generated dynamically
+    segments: ["Privileges"],
     title: "_privileges".loc(),
     translateLabels: false,
     totalCollectionName: "PrivilegeCollection",
@@ -218,20 +209,11 @@ white:true*/
       that are loaded.
      */
     create: function () {
-      var activeModules = _.map(XT.app.$.postbooks.getModules(), function (module) {
-        // once the rest of issue 18650 is written this transformation will be done on
-        // the DB level and we can just skip to return module.name. This hack is performed
-        // twice in this file.
-
-        if (module.name === 'setup') {
-          return 'system';
-        }
-
-
-        return module.name;
+      var privilegeArrays = _.map(XT.app.$.postbooks.getModules(), function (module) {
+        return module.privileges ? module.privileges : [];
       });
+      this.setRestrictedValues(_.uniq(_.flatten(privilegeArrays)));
 
-      this.setSegments(activeModules);
       this.inherited(arguments);
     },
     /**

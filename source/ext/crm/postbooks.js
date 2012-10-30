@@ -43,6 +43,10 @@ trailing:true white:true*/
         {name: "toDoList", kind: "XV.ToDoList"},
         {name: "opportunityList", kind: "XV.OpportunityList"},
         {name: "incidentList", kind: "XV.IncidentList"}
+      ],
+      privileges: [
+        "MergeContacts",
+        "MaintainPartners"
       ]
     };
 

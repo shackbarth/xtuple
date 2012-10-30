@@ -18,6 +18,10 @@ trailing:true white:true*/
       panels: [
         {name: "projectList", kind: "XV.ProjectList"},
         {name: "projectTaskList", kind: "XV.ProjectTaskList"}
+      ],
+      privileges: [
+        "ProjectPriv1",
+        "ProjectPriv2"
       ]
     };
 
