@@ -194,6 +194,7 @@ trailing:true white:true*/
         options = {},
         model,
         checkStatusCollection,
+        checkStatusParameter,
         checkStatusQuery;
 
       // If the model that changed was related to and exists on this list
@@ -207,7 +208,12 @@ trailing:true white:true*/
         // of filtering on the id. Any result means it still belongs. An empty result
         // means it doesn't.
         checkStatusQuery = this.getQuery();
-        checkStatusQuery.parameters.push({attribute: "id", operator: "=", value: inEvent.id});
+        checkStatusParameter = {attribute: "id", operator: "=", value: inEvent.id};
+        if (checkStatusQuery.parameters) {
+          checkStatusQuery.parameters.push(checkStatusParameter);
+        } else {
+          checkStatusQuery.parameters = [checkStatusParameter];
+        }
 
         checkStatusCollection = new XM[this.getCollection().suffix()];
         checkStatusCollection.fetch({
