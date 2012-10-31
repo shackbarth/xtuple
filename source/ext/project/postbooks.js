@@ -59,7 +59,6 @@ trailing:true white:true*/
         "MaintainItemMasters",
         "MaintainUOMs",
         "ViewClassCodes",
-        "ViewCosts",
         "ViewItemMasters",
         "ViewUOMs",
         "ConfigurePM",
