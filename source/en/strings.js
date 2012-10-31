@@ -19,8 +19,10 @@ XT.stringsFor("en_US", {
   "_cancel": "Cancel",
   "_child": "Child",
   "_childOf": "Child of",
+  "_city": "City",
   "_comments": "Comments",
   "_characteristics": "Characteristics",
+  "_country": "Country",
   "_discard": "Discard",
   "_documents": "Documents",
   "_done": "Done",
@@ -37,6 +39,7 @@ XT.stringsFor("en_US", {
   "_overview": "Overview",
   "_parent": "Parent",
   "_parentOf": "Parent of",
+  "_postalCode": "Postal Code",
   "_purpose": "Purpose",
   "_refresh": "Refresh",
   "_related": "Related",
@@ -44,6 +47,8 @@ XT.stringsFor("en_US", {
   "_save": "Save",
   "_saveAndNew": "Save and New",
   "_search": "Search",
+  "_street": "Street",
+  "_state": "State",
   
   // ********
   // Messages
