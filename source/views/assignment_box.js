@@ -38,6 +38,11 @@ white:true*/
      * @property {String} cacheName
      * The name of the cached collection if the collection is stored in the XM cache.
      *
+     * @property {Array} restrictedValues
+     * An array of the values that we want to see in this assignment box. Values not in
+     *    this array will be suppressed. If this is null (as by default) then no suppression
+     *    will occur.
+     *
      * @property {Array} segmentedCollections
      * An array of collections, each of whom are a subset of totalCollection.
      *
@@ -68,6 +73,7 @@ white:true*/
       assignedCollection: null,
       assignedIds: null,
       cacheName: "",
+      restrictedValues: null,
       segmentedCollections: null,
       segments: null,
       title: "",
@@ -227,14 +233,14 @@ white:true*/
 
       inSender.segmentIndex = index;
 
-      if (header && this.getSegments().length < 2) {
+      if (header && (this.getSegments().length < 2 || this.getSegmentedCollections()[index].length === 0)) {
         //
-        // Suppress the header if there's just one segment
+        // Suppress the header if there's just one segment, or if the segment is empty of boxes to assign
         //
         header.parent.removeChild(header);
 
       } else if (header) {
-        header.setContent(this.getSegments()[index]);
+        header.setContent(("_" + this.getSegments()[index]).loc());
       }
 
       row.$.checkboxRepeater.setCount(this.getSegmentedCollections()[index].length);
@@ -273,21 +279,38 @@ white:true*/
        */
       this.tryToRender();
     },
+
     segmentizeTotalCollection: function () {
-      var i, j, model, module;
+      var i, model, name;
       for (i = 0; i < this.getTotalCollection().length; i++) {
         model = this.getTotalCollection().models[i];
-
-        module = model.get("module");
-        for (j = 0; j < this.getSegments().length; j++) {
-          if (this.getSegments().length === 1 || module === this.getSegments()[j]) {
-            // if there's only one segment then no need to segmentize at all
-            this.getSegmentedCollections()[j].add(model);
-          }
+        name = model.get("name")
+        if (!this.getRestrictedValues() || this.getRestrictedValues().indexOf(name) >= 0) {
+          // note: multiple segment support is effectively disabled by the hardcoded 0, below.
+          // if we want to re-incorporate it, look at the commented implementation below
+          // for a flavor of how this might work.
+          this.getSegmentedCollections()[0].add(model);
         }
       }
       this.tryToRender();
     },
+
+    // old implementation:
+    //segmentizeTotalCollection: function () {
+    //  var i, j, model, module;
+    //  for (i = 0; i < this.getTotalCollection().length; i++) {
+    //    model = this.getTotalCollection().models[i];
+    //    module = model.get("module");
+    //    for (j = 0; j < this.getSegments().length; j++) {
+    //      if (this.getSegments().length === 1 || module.toLowerCase() === this.getSegments()[j].toLowerCase()) {
+    //        // if there's only one segment then no need to segmentize at all
+    //        this.getSegmentedCollections()[j].add(model);
+    //      }
+    //    }
+    //  }
+    //  this.tryToRender();
+    //},
+
     /**
      * Render this AssignmentBox by firing off the segment repeater.
      * We can only render if we know *both* what the options and and also
