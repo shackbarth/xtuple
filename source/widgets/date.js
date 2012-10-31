@@ -119,7 +119,7 @@ regexp:true, undef:true, trailing:true, white:true */
         {kind: "onyx.InputDecorator", name: "decorator",
           classes: "xv-input-decorator", components: [
           {name: "input", kind: "onyx.Input", onchange: "inputChanged",
-            classes: "xv-subinput"},
+            classes: "xv-subinput", onkeydown: "keyDown"},
           {kind: "onyx.MenuDecorator", components: [
             {name: "icon", kind: "onyx.IconButton", ontap: "iconTapped",
               src: "assets/date-icon.png"},
@@ -146,6 +146,14 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     iconTapped: function (inSender, inEvent) {
       this.$.datePick.render();
+    },
+    keyDown: function (inSender, inEvent) {
+      // XXX hack here (and in other places that reference issue 18397)
+      // can be removed once enyo fixes ENYO-1104
+      var shadowNone = inEvent.originator.hasClass("text-shadow-none");
+      inEvent.originator.addRemoveClass("text-shadow-none", !shadowNone);
+      inEvent.originator.addRemoveClass("text-shadow-0", shadowNone);
+      // end hack
     },
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.attr || "").loc()) + ":";
