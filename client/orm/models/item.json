@@ -52,7 +52,7 @@
         "create": "MaintainItemMasters",
         "read": "ViewItemMasters",
         "update": "MaintainItemMasters",
-        "delete": "MaintainItemMasters"
+        "delete": "DeleteItemMasters"
       }
     },
     "properties": [
