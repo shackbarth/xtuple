@@ -48,6 +48,7 @@ create or replace function xt.json_schema_properties(data_hash text) returns tex
     else if (dataHash.properties[i].toOne) {
       // TODO Handle toOne properties.
       ret.properties[dataHash.properties[i].name].type = "object";
+      ret.properties[dataHash.properties[i].name]["$ref"] = dataHash.properties[i].toOne.type;
     }
     /* toMany property */
     else if (dataHash.properties[i].toMany) {
@@ -56,7 +57,7 @@ create or replace function xt.json_schema_properties(data_hash text) returns tex
 
       if (dataHash.properties[i].toMany.isNested) {
         // TODO Handle toMany properties isNested === true.
-        ret.properties[dataHash.properties[i].name].items = {"TODO": "TODO"};
+        ret.properties[dataHash.properties[i].name].items = {"$ref": dataHash.properties[i].toMany.type};
       }
     }
     /* Error */
