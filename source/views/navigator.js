@@ -50,11 +50,11 @@ trailing:true white:true*/
             ontap: "backTapped"},
           {kind: "Group", name: "iconButtonGroup",
             defaultKind: "onyx.IconButton", tag: null, components: [
-            {name: "historyIconButton", src: "assets/menu-icon-bookmark.png",
+            {name: "historyIconButton", src: "lib/enyo-x/assets/menu-icon-bookmark.png",
               ontap: "showHistory"},
-            {name: "searchIconButton", src: "assets/menu-icon-search.png",
+            {name: "searchIconButton", src: "lib/enyo-x/assets/menu-icon-search.png",
               ontap: "showParameters", showing: false},
-            {name: "myAccountButton", src: "assets/menu-icon-gear.png",
+            {name: "myAccountButton", src: "lib/enyo-x/assets/menu-icon-gear.png",
               ontap: "showMyAccount"},
             {name: "myAccountPopup", kind: "XV.MyAccountPopup"}
           ]},
@@ -90,7 +90,7 @@ trailing:true white:true*/
             showing: false, components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
               placeholder: "_search".loc(), onchange: "inputChanged"},
-            {kind: "Image", src: "assets/search-input-search.png"}
+            {kind: "Image", src: "lib/enyo-x/assets/search-input-search.png"}
           ]},
           {name: "refreshButton", kind: "onyx.Button", content: "_refresh".loc(),
               ontap: "requery", style: "float: right;", showing: false},

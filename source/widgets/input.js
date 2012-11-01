@@ -27,7 +27,7 @@ regexp:true, undef:true, trailing:true, white:true */
       onblur: "receiveBlur"
     },
     components: [
-      {name: "input", kind: "onyx.Input", classes: "xv-subinput", onchange: "inputChanged"}
+      {name: "input", kind: "onyx.Input", classes: "xv-subinput", onchange: "inputChanged", onkeydown: "keyDown"}
     ],
     clear: function (options) {
       this.setValue("", options);
@@ -52,6 +52,14 @@ regexp:true, undef:true, trailing:true, white:true */
         this.setValue(null);
         this.valueChanged("");
       }
+    },
+    keyDown: function (inSender, inEvent) {
+      // XXX hack here (and in other places that reference issue 18397)
+      // can be removed once enyo fixes ENYO-1104
+      var shadowNone = inEvent.originator.hasClass("text-shadow-none");
+      inEvent.originator.addRemoveClass("text-shadow-none", !shadowNone);
+      inEvent.originator.addRemoveClass("text-shadow-0", shadowNone);
+      // end hack
     },
     placeholderChanged: function () {
       var placeholder = this.getPlaceholder();
@@ -110,7 +118,7 @@ regexp:true, undef:true, trailing:true, white:true */
         {name: "label", content: "", classes: "xv-label"},
         {kind: "onyx.InputDecorator", fit: true, classes: "xv-input-decorator",
           components: [
-          {name: "input", kind: "onyx.Input", classes: "xv-subinput", onchange: "inputChanged"}
+          {name: "input", kind: "onyx.Input", classes: "xv-subinput", onchange: "inputChanged", onkeydown: "keyDown"}
         ]}
       ]}
     ],
@@ -123,6 +131,14 @@ regexp:true, undef:true, trailing:true, white:true */
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.attr || "").loc());
       this.$.label.setContent(label + ":");
+    },
+    keyDown: function (inSender, inEvent) {
+      // XXX hack here (and in other places that reference issue 18397)
+      // can be removed once enyo fixes ENYO-1104
+      var shadowNone = inEvent.originator.hasClass("text-shadow-none");
+      inEvent.originator.addRemoveClass("text-shadow-none", !shadowNone);
+      inEvent.originator.addRemoveClass("text-shadow-0", shadowNone);
+      // end hack
     },
     showLabelChanged: function () {
       if (this.getShowLabel()) {

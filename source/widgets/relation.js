@@ -111,6 +111,13 @@ regexp:true, undef:true, trailing:true, white:true */
       return this.value.get(this.getKeyAttribute());
     },
     keyDown: function (inSender, inEvent) {
+      // XXX hack here (and in other places that reference issue 18397)
+      // can be removed once enyo fixes ENYO-1104
+      var shadowNone = inEvent.originator.hasClass("text-shadow-none");
+      inEvent.originator.addRemoveClass("text-shadow-none", !shadowNone);
+      inEvent.originator.addRemoveClass("text-shadow-0", shadowNone);
+      // end hack
+
       // If tabbed out...
       inEvent.activator = this.$.decorator;
       if (inEvent.keyCode === 9) {

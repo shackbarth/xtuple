@@ -100,6 +100,16 @@ body {
 	color: @white;
 }
 
+// XXX hack here (and in other places that reference issue 18397)
+// can be removed once enyo fixes ENYO-1104
+.text-shadow-none {
+   text-shadow: none;
+}
+.text-shadow-0 {
+  text-shadow: 0px 0px black;
+}
+// end hack
+
 .xt-app {
   position: absolute;
   top: 0;
@@ -490,24 +500,27 @@ body {
     background: @white;
     max-width: 320px;
   }
-
   .xv-comment-box-label {
-    padding: 4px;
+    padding: 5px;
     font-size: small;
     font-weight: bold;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  
   .xv-comment-box-textblock {
-    padding: 12px;
+    padding: 5px;
     font-size: small;
     overflow: hidden;
     &.disabled {
       opacity: 0.6;
     }
   }
+	/* Resets the margin/padding value for blockquote tag in comments */
+	blockquote {
+		margin: 0 15px 10px 15px;
+		padding: 0;
+	}
 }
 
 /* Groupbox.css */
@@ -797,11 +810,11 @@ body {
 }
 
 .xv-textarea-input {
-  width: 95%;
+  width: 90%;
   height: 100%;
   min-height: 100px;
   margin: 6px;
-	border: #ddd 4px solid;
+	border: #ddd 2px solid;
 }
 
 .xv-documents-picker-label {
