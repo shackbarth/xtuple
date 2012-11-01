@@ -33,7 +33,8 @@ trailing:true white:true*/
     },
     handlers: {
       onSelect: "selectionChanged",
-      onDeselect: "selectionChanged"
+      onDeselect: "selectionChanged",
+      onParentStatusChange: "workspaceModelStatusChanged"
     },
     create: function () {
       this.inherited(arguments);
@@ -189,7 +190,7 @@ trailing:true white:true*/
           value.fetch(options);
         },
         inEvent;
-      attributes[key] = parent;
+      attributes[key] = parent.id;
       inEvent = {
         originator: this,
         workspace: workspace,
@@ -229,18 +230,47 @@ trailing:true white:true*/
       if (canAttach) { this.$.detachButton.setDisabled(couldNotUpdate); }
       this.$.openButton.setDisabled(couldNotRead);
     },
-    valueChanged: function () {
+    /**
+      Whether or not the new and attach buttons are enabled is based on
+      complex criteria based on the status of the workspace model, the
+      permissions of the user, and attributes of the list model. Therefore
+      this code can be executed based on changes coming from multiple
+      possible areas, and this function consolidates this functionality.
+     */
+    updateButtons: function () {
       var value = this.getValue(), // Must be a collection of Info models
         canAttach = this.getSearchList().length > 0,
         editableModel = value && value.model.prototype.editableModel ?
           value.model.prototype.editableModel : null,
         Klass = editableModel ?
           XT.getObjectByName(editableModel) : null,
-        canNotCreate = Klass ? !Klass.canCreate() : true,
-        canNotUpdate = Klass ? !Klass.canUpdate() : true;
-      this.$.list.setValue(value);
+        K = XM.Model,
+        parentModel = this.$.list.getParent(),
+        // if the list is a DocumentsListRelations then there will be no getParent() model, but
+        // in this case we do not want to disable the buttons, so we can set the status to be
+        // anything except READY_NEW
+        parentModelStatus = parentModel ? parentModel.getStatus() : null,
+        canNotCreate = Klass ? !Klass.canCreate() || parentModelStatus === K.READY_NEW : true,
+        canNotUpdate = Klass ? !Klass.canUpdate() || parentModelStatus === K.READY_NEW : true;
+
       if (this.getCanOpen()) {this.$.newButton.setDisabled(canNotCreate); }
       if (canAttach) { this.$.attachButton.setDisabled(canNotUpdate); }
+    },
+    valueChanged: function () {
+      var value = this.getValue(); // Must be a collection of Info models
+
+      this.$.list.setValue(value);
+      this.updateButtons();
+    },
+    /**
+      When the workspace containing this box has a change to the status of the model, it waterfalls
+      down an event to be handled here. We will want to enable the new- and attach- buttons if
+      the model is no longer in READY_NEW state
+     */
+    workspaceModelStatusChanged: function (inSender, inEvent) {
+      if (inEvent.status & XM.Model.READY) {
+        this.updateButtons();
+      }
     }
   });
 

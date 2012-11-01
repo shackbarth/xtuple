@@ -191,7 +191,6 @@ trailing:true white:true*/
     modelChanged: function (inSender, inEvent) {
       var that = this,
         workspace = this.getWorkspace(),
-        options = {},
         model,
         checkStatusCollection,
         checkStatusParameter,
@@ -215,7 +214,7 @@ trailing:true white:true*/
           checkStatusQuery.parameters = [checkStatusParameter];
         }
 
-        checkStatusCollection = new XM[this.getCollection().suffix()];
+        checkStatusCollection = new XM[this.getCollection().suffix()]();
         checkStatusCollection.fetch({
           query: checkStatusQuery,
           success: function (collection, response) {
@@ -227,7 +226,7 @@ trailing:true white:true*/
             if (response.length > 0) {
               // this model should still be in the collection. Refresh it.
 
-              that.getValue().add(response[0]);
+              that.getValue().add(response[0], {silent: true});
             }
             if (that.getCount() !== that.getValue().length) {
               that.setCount(that.getValue().length);

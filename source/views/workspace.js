@@ -230,7 +230,13 @@ trailing:true white:true*/
     },
     newRecord: function (attributes) {
       var attr,
-        changes = {};
+        changes = {},
+        that = this,
+        options = {
+          success: function () {
+            that.attributesChanged(that.value);
+          }
+        };
       this.modelChanged();
       this.clear();
       this.value.initialize(null, {isNew: true});
@@ -238,8 +244,12 @@ trailing:true white:true*/
       for (attr in attributes) {
         if (attributes.hasOwnProperty(attr)) {
           this.value.setReadOnly(attr);
-          changes[attr] = true;
-          this.attributesChanged(this.value, {changes: changes});
+          if (this.value.getRelation(attr)) {
+            this.value.fetchRelated(attr, options);
+          } else {
+            changes[attr] = true;
+            this.attributesChanged(this.value, {changes: changes});
+          }
         }
       }
     },
