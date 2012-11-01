@@ -26,7 +26,6 @@
 \i xt/functions/fetch.sql;
 \i xt/functions/get_id.sql;
 \i xt/functions/js_init.sql;
-\i xt/functions/json_schema_type_format.sql;
 \i xt/functions/json_schema_properties.sql;
 \i xt/functions/install_js.sql;
 \i xt/functions/install_orm.sql;
@@ -54,6 +53,7 @@
 -- xt javascript
 \i xt/javascript/data.sql;
 \i xt/javascript/orm.sql;
+\i xt/javascript/schema.sql;
 
 -- [ END ] xt
 
