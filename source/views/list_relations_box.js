@@ -190,7 +190,7 @@ trailing:true white:true*/
           value.fetch(options);
         },
         inEvent;
-      attributes[key] = parent;
+      attributes[key] = parent.id;
       inEvent = {
         originator: this,
         workspace: workspace,

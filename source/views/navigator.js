@@ -367,7 +367,7 @@ trailing:true white:true*/
       callback = function (model) {
         var Model = list.getValue().model,
           value = new Model({id: model.id}),
-          options = {};
+          options = {silent: true};
         options.success = function () {
           list.getValue().add(value);
           list.setCount(list.getValue().length);
