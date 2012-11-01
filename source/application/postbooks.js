@@ -23,7 +23,7 @@ trailing:true white:true*/
           {name: "welcomePage",
             tag: "iframe",
 						style: "border: none;",
-            attributes: {src: "assets/splash/index.html"}}
+            attributes: {src: "lib/enyo-x/assets/splash/index.html"}}
         ]},
         {name: "setup", label: "_setup".loc(), panels: [
           {name: "userAccountList", kind: "XV.UserAccountList"},
