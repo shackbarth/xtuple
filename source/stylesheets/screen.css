@@ -466,12 +466,16 @@ body {
   text-align: center;
 }
 /* CommentBox */
+.xv-comment-box {
+  /* Resets the margin/padding value for blockquote tag in comments */
+
+}
 .xv-comment-box .xv-comment-box-repeater {
   background: #ffffff;
   max-width: 320px;
 }
 .xv-comment-box .xv-comment-box-label {
-  padding: 4px;
+  padding: 5px;
   font-size: small;
   font-weight: bold;
   white-space: nowrap;
@@ -479,12 +483,16 @@ body {
   text-overflow: ellipsis;
 }
 .xv-comment-box .xv-comment-box-textblock {
-  padding: 12px;
+  padding: 5px;
   font-size: small;
   overflow: hidden;
 }
 .xv-comment-box .xv-comment-box-textblock.disabled {
   opacity: 0.6;
+}
+.xv-comment-box blockquote {
+  margin: 0 15px 10px 15px;
+  padding: 0;
 }
 /* Groupbox.css */
 .xv-groupbox {
@@ -904,11 +912,11 @@ body {
   text-align: right;
 }
 .xv-textarea-input {
-  width: 95%;
+  width: 90%;
   height: 100%;
   min-height: 100px;
   margin: 6px;
-  border: #ddd 4px solid;
+  border: #ddd 2px solid;
 }
 .xv-documents-picker-label {
   width: 85px;

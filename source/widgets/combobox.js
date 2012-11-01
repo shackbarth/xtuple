@@ -25,7 +25,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
       {name: "input", kind: "onyx.Input", classes: "xv-combobox-input",
         onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur",
         onchange: "inputChanged"},
-      {kind: "onyx.IconButton", src: "assets/combobox-icon.png",
+      {kind: "onyx.IconButton", src: "lib/enyo-x/assets/combobox-icon.png",
         ontap: "toggleCompleter", classes: "xv-combobox-icon"},
       {name: "completer", kind: "XV.Completer", onSelect: "itemSelected"}
     ],
