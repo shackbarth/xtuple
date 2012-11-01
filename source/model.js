@@ -405,6 +405,8 @@ white:true*/
     fetchRelated: function (key, options, update) {
       options = options || {};
       var requests = [],
+        status = this.getStatus(),
+        K = XM.Model,
         rel = this.getRelation(key),
         keyContents = rel && rel.keyContents,
         toFetch = keyContents && _.filter(_.isArray(keyContents) ?
@@ -447,11 +449,13 @@ white:true*/
           // Context option means server will check privilege access of the parent
           // and the existence of relation on the parent to determine whether user
           // can see this record instead of usual privilege check on the model.
-          opts.context = {
-            recordType: this.recordType,
-            value: this.id,
-            relation: key
-          };
+          if (status === K.READY_CLEAN || status === K.READY_DIRTY) {
+            opts.context = {
+              recordType: this.recordType,
+              value: this.id,
+              relation: key
+            };
+          }
           return model.fetch(opts);
         }, this);
       }
