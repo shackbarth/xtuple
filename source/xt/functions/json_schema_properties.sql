@@ -5,7 +5,7 @@ create or replace function xt.json_schema_properties(data_hash text) returns tex
       dataHash = dataLoad.properties ? dataLoad : XT.Orm.fetch(dataLoad.nameSpace, dataLoad.type),
       schemaTable = dataHash.table,
       column,
-      prettyPrint = dataHash.prettyPrint ? 2 : null,
+      prettyPrint = dataLoad.prettyPrint ? 2 : null,
       schemaColumnInfo = {},
       ret = {};
 
@@ -17,18 +17,14 @@ create or replace function xt.json_schema_properties(data_hash text) returns tex
     }
 
     /* Add title and description properties. */
-    /* For readability only, these should be first, therefore a redundant if. */
+    /* For readability only, title should be first, therefore a redundant if. */
     if ((dataHash.properties[i].attr && dataHash.properties[i].attr.column)
       || (dataHash.properties[i].toOne)
       || (dataHash.properties[i].toMany)) {
 
       /* Initialize named properties. */
       ret.properties[dataHash.properties[i].name] = {};
-
-// TODO convert camelcase to human readable label.
-      ret.properties[dataHash.properties[i].name].title = dataHash.properties[i].name;
-
-// TODO add description.
+      ret.properties[dataHash.properties[i].name].title = dataHash.properties[i].name.humanize();
     }
 
     /* Basic property */
@@ -46,17 +42,14 @@ create or replace function xt.json_schema_properties(data_hash text) returns tex
     }
     /* toOne property */
     else if (dataHash.properties[i].toOne) {
-      // TODO Handle toOne properties.
       ret.properties[dataHash.properties[i].name].type = "object";
       ret.properties[dataHash.properties[i].name]["$ref"] = dataHash.properties[i].toOne.type;
     }
     /* toMany property */
     else if (dataHash.properties[i].toMany) {
-      // TODO Handle toMany properties.
       ret.properties[dataHash.properties[i].name].type = "array";
 
       if (dataHash.properties[i].toMany.isNested) {
-        // TODO Handle toMany properties isNested === true.
         ret.properties[dataHash.properties[i].name].items = {"$ref": dataHash.properties[i].toMany.type};
       }
     }
@@ -65,6 +58,9 @@ create or replace function xt.json_schema_properties(data_hash text) returns tex
       // We should not get here.
       // TODO error?
     }
+
+    // TODO We have required from database column NOT NULL.  Now we need an override added to
+    // the ORMs based on the models "requiredAttribute".
   }
 
   /* If this ORM has no column properties, we have an empty object, return false. */
