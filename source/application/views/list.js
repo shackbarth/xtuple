@@ -322,7 +322,7 @@ trailing:true white:true*/
     kind: "XV.List",
     label: "_files".loc(),
     collection: "XM.FileRelationCollection",
-    parameterWidget: "XV.FileParameters",
+    parameterWidget: "XV.FileListParameters",
     query: {orderBy: [
       {attribute: 'name'}
     ]},
@@ -807,7 +807,7 @@ trailing:true white:true*/
     kind: "XV.List",
     label: "_urls".loc(),
     collection: "XM.UrlCollection",
-    parameterWidget: "XV.UrlParameters",
+    parameterWidget: "XV.UrlListParameters",
     query: {orderBy: [
       {attribute: 'name'}
     ]},
@@ -1007,7 +1007,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ImageList",
     kind: "XV.NameDescriptionList",
-    parameterWidget: "XV.ImageParameters",
+    parameterWidget: "XV.ImageListParameters",
     collection: "XM.ImageRelationCollection"
   });
   XV.registerModelList("XM.ImageRelation", "XV.ImageList");
