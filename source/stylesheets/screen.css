@@ -38,10 +38,6 @@
 body {
   font-family: "arial", "arial black";
 }
-blockquote {
-  margin: 0;
-  padding: 0;
-}
 .bggrad {
   /* Radial Gradient */
 
@@ -464,6 +460,10 @@ blockquote {
   text-align: center;
 }
 /* CommentBox */
+.xv-comment-box {
+  /* Resets the margin/padding value for blockquote tag in comments */
+
+}
 .xv-comment-box .xv-comment-box-repeater {
   background: #ffffff;
   max-width: 320px;
@@ -483,6 +483,10 @@ blockquote {
 }
 .xv-comment-box .xv-comment-box-textblock.disabled {
   opacity: 0.6;
+}
+.xv-comment-box blockquote {
+  margin: 0 15px 10px 15px;
+  padding: 0;
 }
 /* Groupbox.css */
 .xv-groupbox {

@@ -35,12 +35,6 @@ body {
   font-family: "arial", "arial black";
 }
 
-/* Resets the margin/padding value for blockquotes */
-blockquote {
-	margin: 0;
-	padding: 0;
-}
-
 .bggrad {
 	/* Radial Gradient */
 	#gradient > .radial(@dim-gray, @dark-gray);
@@ -512,6 +506,11 @@ blockquote {
       opacity: 0.6;
     }
   }
+	/* Resets the margin/padding value for blockquote tag in comments */
+	blockquote {
+		margin: 0 15px 10px 15px;
+		padding: 0;
+	}
 }
 
 /* Groupbox.css */
