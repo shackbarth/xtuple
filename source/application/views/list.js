@@ -212,7 +212,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   // ..........................................................
   // CUSTOMER
   //
@@ -262,7 +262,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.CustomerRelation", "XV.CustomerList");
-  
+
   // ..........................................................
   // EMPLOYEE
   //
@@ -838,6 +838,7 @@ trailing:true white:true*/
     kind: "XV.List",
     label: "_userAccounts".loc(),
     collection: "XM.UserAccountRelationCollection",
+    parameterWidget: "XV.UserAccountListParameters",
     query: {orderBy: [
       {attribute: 'username'}
     ]},
