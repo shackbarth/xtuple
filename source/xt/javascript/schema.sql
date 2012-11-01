@@ -40,7 +40,18 @@ select xt.install_js('XT','Schema','xtuple', $$
     sql = 'select ' +
             'data_type, ' +
             'character_maximum_length, ' +
-            'is_nullable ' +
+            'is_nullable, ' + /* Pull in required from NOT NULL in database. */
+            'col_description( ' + /* Pull in column comments from db. */
+                '( ' +
+                'select ' +
+                        'oid ' +
+                'from pg_class ' +
+                'where 1=1 ' +
+                        'and relname = information_schema.columns.table_name ' +
+                        'and relnamespace = (select oid from pg_namespace where nspname = information_schema.columns.table_schema) ' +
+                ')::oid, ' +
+                'ordinal_position ' +
+            ') AS comment ' +
           'from information_schema.columns ' +
           'where 1=1 ' +
             'and table_schema = $1 ' +
@@ -49,6 +60,12 @@ select xt.install_js('XT','Schema','xtuple', $$
 
     res = plv8.execute(sql, [schema, table, ormColumn]);
     if (!res.length) return false;
+
+
+    /* Set "description" if column "comment" is not null. */
+    if (res[0].comment) {
+      ret.description = res[0].comment;
+    }
 
     /* Set "required" if column is not "is_nullable". */
     if (res[0].is_nullable === "NO") {
