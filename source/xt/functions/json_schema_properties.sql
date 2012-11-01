@@ -1,6 +1,8 @@
 create or replace function xt.json_schema_properties(data_hash text) returns text as $$
 
-  var dataHash = JSON.parse(data_hash),
+  var dataLoad = JSON.parse(data_hash),
+      /* Load ORM if this function was called with a basic hash. */
+      dataHash = dataLoad.properties ? dataLoad : XT.Orm.fetch(dataLoad.nameSpace, dataLoad.type),
       schemaTable = dataHash.table,
       column,
       prettyPrint = dataHash.prettyPrint ? 2 : null,
@@ -34,7 +36,7 @@ create or replace function xt.json_schema_properties(data_hash text) returns tex
       column = dataHash.properties[i].attr.column;
 
       /* Get column's PostgreSQL datatype info. */
-      schemaColumnInfo = JSON.parse(XT.Schema.columnInfo(schemaTable, column));
+      schemaColumnInfo = XT.Schema.columnInfo(schemaTable, column);
       if (!schemaColumnInfo) return false;
 
       /* Loop through the returned schemaColumnInfo properties and add them. */
