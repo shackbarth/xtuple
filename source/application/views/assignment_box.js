@@ -45,8 +45,7 @@ white:true*/
      */
     getAssignmentModel: function (roleModel) {
       return new XM.UserAccountUserAccountRoleAssignment({
-        userAccountRole: roleModel,
-        userAccount: this.getAssignedCollection().userAccount
+        userAccountRole: roleModel
       }, {isNew: true});
     }
   };
@@ -77,10 +76,22 @@ white:true*/
       idsFromRoles: null
     },
     cacheName: "privileges",
-    segments: ["System", "CRM"],
+    segments: ["Privileges"],
     title: "_privileges".loc(),
     totalCollectionName: "PrivilegeCollection",
     type: "privilege",
+    /**
+      The available privileges will be dynamically populated based on the modules
+      that are loaded.
+     */
+    create: function () {
+      var privilegeArrays = _.map(XT.app.$.postbooks.getModules(), function (module) {
+        return module.privileges ? module.privileges : [];
+      });
+      this.setRestrictedValues(_.uniq(_.flatten(privilegeArrays)));
+
+      this.inherited(arguments);
+    },
     /**
      * Returns a model specific to this AssignmentBox.
      *
@@ -166,7 +177,10 @@ white:true*/
      * denote that a privilege is grated via a role but not directly to a user.
      */
     undercheckCheckbox: function (checkbox, isUnderchecked) {
-      if (isUnderchecked && !checkbox.$.input.checked) {
+      if (!checkbox.$.input) {
+        // harmless bug: do nothing
+        // TODO: check this out
+      } else if (isUnderchecked && !checkbox.$.input.checked) {
         checkbox.$.input.addClass("xv-half-check");
       } else {
         checkbox.$.input.removeClass("xv-half-check");
@@ -185,11 +199,23 @@ white:true*/
   var userAccountRolePrivilegeAssignmentBox = {
     name: "XV.UserAccountRolePrivilegeAssignmentBox",
     kind: "XV.AssignmentBox",
-    segments: ["System", "CRM"],
+    segments: ["Privileges"],
     title: "_privileges".loc(),
     translateLabels: false,
     totalCollectionName: "PrivilegeCollection",
     type: "privilege",
+    /**
+      The available privileges will be dynamically populated based on the modules
+      that are loaded.
+     */
+    create: function () {
+      var privilegeArrays = _.map(XT.app.$.postbooks.getModules(), function (module) {
+        return module.privileges ? module.privileges : [];
+      });
+      this.setRestrictedValues(_.uniq(_.flatten(privilegeArrays)));
+
+      this.inherited(arguments);
+    },
     /**
      * Returns a model specific to this AssignmentBox.
      *

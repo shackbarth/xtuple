@@ -26,7 +26,8 @@ white:true*/
       onNavigatorEvent: "togglePullout",
       onHistoryChange: "refreshHistoryPanel",
       onHistoryItemSelected: "selectHistoryItem",
-      onAnimateProgressFinish: "startupProcess"
+      onAnimateProgressFinish: "startupProcess",
+      onSearch: "waterfallSearch"
     },
     components: [
       { name: "postbooks", kind: "XV.Postbooks",  onTransitionStart: "handlePullout" },
@@ -51,6 +52,9 @@ white:true*/
     create: function () {
       this.inherited(arguments);
       XT.app = this;
+      window.onbeforeunload = function () {
+        return "_exitPageWarning".loc();
+      }
     },
     getPullout: function () {
       return this.$.pullout;
@@ -114,8 +118,6 @@ white:true*/
         task,
         len,
         text,
-        pulloutItems,
-        item,
         eachCallback = function () {
           var completed = startupManager.get('completed').length;
           progressBar.animateProgressTo(completed);
@@ -204,19 +206,16 @@ white:true*/
     },
     show: function () {
       if (this.getShowing() && this.getIsStarted()) {
-        if (document.getElementById("subdiv")) {
-          console.log("rendering to subdiv");
-          alert("click me");
-          this.renderInto(document.getElementById("subdiv"));
-        } else {
-          this.renderInto(document.body);
-        }
+        this.renderInto(document.body);
       } else {
         this.inherited(arguments);
       }
     },
     togglePullout: function (inSender, inEvent) {
       this.$.pullout.togglePullout(inSender, inEvent);
+    },
+    waterfallSearch: function (inSender, inEvent) {
+      this.$.postbooks.waterfall("onSearch", inEvent);
     }
   });
 }());

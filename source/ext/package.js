@@ -1,5 +1,6 @@
 enyo.depends(
   "crm",
   "project",
-  "connect"
+  "connect",
+  "incident_plus"
 );

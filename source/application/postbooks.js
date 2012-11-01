@@ -51,6 +51,7 @@ trailing:true white:true*/
         panel.fetch();
         this.next();
       }
+      return true;
     },
     addWorkspacePanel: function (inSender, inEvent) {
       var panel;
@@ -74,7 +75,7 @@ trailing:true white:true*/
         module = _.find(modules, function (mod) {
           return mod.name === moduleName;
         }),
-        existing = _.pluck(module, "name"),
+        existing = _.pluck(module.panels, "name"),
         i;
       for (i = 0; i < panels.length; i++) {
         if (!_.contains(existing, panels[i].name)) {
