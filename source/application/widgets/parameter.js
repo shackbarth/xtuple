@@ -43,7 +43,7 @@ trailing:true white:true*/
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
     ]
   });
-  
+
   // ..........................................................
   // ADDRESS
   //
@@ -112,7 +112,7 @@ trailing:true white:true*/
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
     ]
   });
-  
+
   // ..........................................................
   // FILE
   //
@@ -122,6 +122,20 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_file".loc()},
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "description", label: "_description".loc(), attr: "description"}
+    ]
+  });
+
+  // ..........................................................
+  // IMAGE
+  //
+
+  enyo.kind({
+    name: "XV.ImageParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_image".loc()},
       {name: "name", label: "_name".loc(), attr: "name"},
       {name: "description", label: "_description".loc(), attr: "description"}
     ]
@@ -228,7 +242,7 @@ trailing:true white:true*/
         defaultKind: "XV.DateWidget"}
     ]
   });
-  
+
   // ..........................................................
   // CONTACT
   //
@@ -350,7 +364,7 @@ trailing:true white:true*/
         defaultKind: "XV.DateWidget"}
     ]
   });
-  
+
   enyo.kind({
     name: "XV.ProjectTaskListParameters",
     kind: "XV.ParameterWidget",
@@ -427,7 +441,7 @@ trailing:true white:true*/
         defaultKind: "XV.DateWidget"}
     ]
   });
-  
+
   // ..........................................................
   // URL
   //

@@ -212,7 +212,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   // ..........................................................
   // CUSTOMER
   //
@@ -262,7 +262,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.CustomerRelation", "XV.CustomerList");
-  
+
   // ..........................................................
   // EMPLOYEE
   //
@@ -1007,6 +1007,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ImageList",
     kind: "XV.NameDescriptionList",
+    parameterWidget: "XV.ImageParameters",
     collection: "XM.ImageRelationCollection"
   });
+  XV.registerModelList("XM.ImageRelation", "XV.ImageList");
 }());

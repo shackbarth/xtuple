@@ -50,6 +50,8 @@ trailing:true white:true*/
         panel.setList(inEvent);
         panel.fetch();
         this.next();
+      } else {
+        XT.log("No list associated with this model for searching. Are you sure you've registered it?");
       }
       return true;
     },
