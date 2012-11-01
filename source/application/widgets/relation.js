@@ -41,7 +41,7 @@ regexp:true, undef:true, trailing:true, white:true */
             onfocus: "receiveFocus"
           },
           {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
-            {kind: "onyx.IconButton", src: "assets/triangle-down-large.png",
+            {kind: "onyx.IconButton", src: "lib/enyo-x/assets/triangle-down-large.png",
               classes: "xv-relationwidget-icon"},
             {name: 'popupMenu', floating: true, kind: "onyx.Menu",
               components: [
