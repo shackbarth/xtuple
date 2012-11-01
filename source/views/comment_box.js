@@ -82,7 +82,7 @@ white:true*/
     formatText: function (value, view, model) {
       var text = value ? value.replace(/</g, "&lt;").replace(/\r?\n/g, "<br>\n") : value;
       view.addRemoveClass("disabled", model.isReadOnly());
-      return "<p>\n<blockquote>" + text + "</pre></blockquote><br><hr>";
+      return "\n<blockquote>" + text + "</pre></blockquote><hr>";
     },
     setCommentTypeFilter: function () {
       var model = this.parent.parent.parent.parent.parent.getModel(),

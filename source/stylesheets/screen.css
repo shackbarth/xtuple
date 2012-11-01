@@ -38,6 +38,10 @@
 body {
   font-family: "arial", "arial black";
 }
+blockquote {
+  margin: 0;
+  padding: 0;
+}
 .bggrad {
   /* Radial Gradient */
 

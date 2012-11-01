@@ -111,7 +111,7 @@ regexp:true, undef:true, trailing:true, white:true */
             classes: "xv-subinput"},
           {kind: "onyx.MenuDecorator", components: [
             {name: "icon", kind: "onyx.IconButton", ontap: "iconTapped",
-              src: "assets/date-icon.png"},
+              src: "lib/enyo-x/assets/date-icon.png"},
             {name: "datePickPopup", kind: "onyx.Menu", maxHeight: 400, modal: true, floating: true,
                 style: "min-width:400px;",
                 components: [

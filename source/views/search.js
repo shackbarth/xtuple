@@ -46,7 +46,7 @@ trailing:true white:true*/
             components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
               placeholder: "_search".loc(), onchange: "requery"},
-            {kind: "Image", src: "assets/search-input-search.png"}
+            {kind: "Image", src: "lib/enyo-x/assets/search-input-search.png"}
           ]}
         ]}
       ]}
