@@ -43,7 +43,31 @@ trailing:true white:true*/
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
     ]
   });
-  
+
+  enyo.kind({
+    name: "XV.UserAccountListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_userAccount".loc()},
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {name: "username", label: "_username".loc(), attr: "username"},
+      {name: "propername", label: "_propername".loc(), attr: "propername"},
+      {name: "email", label: "_email".loc(), attr: "email"}
+    ]
+  });
+
   // ..........................................................
   // ADDRESS
   //
@@ -112,7 +136,7 @@ trailing:true white:true*/
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
     ]
   });
-  
+
   // ..........................................................
   // FILE
   //
@@ -228,7 +252,7 @@ trailing:true white:true*/
         defaultKind: "XV.DateWidget"}
     ]
   });
-  
+
   // ..........................................................
   // CONTACT
   //
@@ -350,7 +374,7 @@ trailing:true white:true*/
         defaultKind: "XV.DateWidget"}
     ]
   });
-  
+
   enyo.kind({
     name: "XV.ProjectTaskListParameters",
     kind: "XV.ParameterWidget",
@@ -427,7 +451,7 @@ trailing:true white:true*/
         defaultKind: "XV.DateWidget"}
     ]
   });
-  
+
   // ..........................................................
   // URL
   //
