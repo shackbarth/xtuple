@@ -11,6 +11,8 @@ select xt.add_column('useracct', 'useracct_username', 'text', 'primary key');
 insert into xt.useracct (useracct_username)
 select usename::text
 from pg_user
+  join usrpref on (usrpref_username = usename)
+    and (usrpref_name='active')
 where not exists (
   select useracct_username
   from xt.useracct
