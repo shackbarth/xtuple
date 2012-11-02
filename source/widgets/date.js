@@ -79,6 +79,7 @@ regexp:true, undef:true, trailing:true, white:true */
           date = false;
         } else {
           date.setHours(0, 0, 0, 0);
+          date = XT.date.applyTimezoneOffset(date, false);
         }
       }
       return date;
@@ -89,8 +90,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     valueChanged: function (value) {
       if (value) {
-        value = new Date(value.valueOf());
-        value.setMinutes(value.getTimezoneOffset());
+        value = XT.date.applyTimezoneOffset(value, true);
         value = Globalize.format(value, "d");
       } else {
         value = "";
@@ -139,8 +139,10 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     datePicked: function (inSender, inEvent) {
       var date = inEvent;
-      // mimic the human-typed behavior of setting the hours to 0.
-      date.setHours(0);
+      // mimic the human-typed behavior
+      date.setHours(0, 0, 0, 0);
+      date = XT.date.applyTimezoneOffset(date, false);
+
       this.setValue(date);
       this.$.datePickPopup.hide();
     },
