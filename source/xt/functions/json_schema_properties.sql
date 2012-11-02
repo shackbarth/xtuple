@@ -9,6 +9,8 @@ create or replace function xt.json_schema_properties(data_hash text) returns tex
       schemaColumnInfo = {},
       ret = {};
 
+  if (!dataHash.properties) return false;
+
   /* Loop through the ORM properties and get the columns. */
   for (var i = 0; i < dataHash.properties.length; i++) {
     if (!ret.properties) {
