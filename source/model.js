@@ -900,7 +900,7 @@ white:true*/
       // Percolate changes up to parent when applicable
       if (parent && (this.isDirty() ||
           status === K.DESTROYED_DIRTY)) {
-        parent.trigger('change', this, options);
+        parent.trigger('change', parent, options);
       }
       this.release();
       this.trigger('statusChange', this, status, options);
