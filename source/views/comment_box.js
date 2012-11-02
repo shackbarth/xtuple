@@ -233,13 +233,8 @@ white:true*/
     },
     setupItem: function (inSender, inEvent) {
       var row = inEvent.item.$.repeaterItem,
-        model = this._collection.at(inEvent.index),
-        status = model.getStatus(),
-        K = XM.Model;
+        model = this._collection.at(inEvent.index);
       row.setValue(model);
-      if (status & K.DESTROYED) {
-        row.setDeleted(true);
-      }
       return true;
     },
     setValue: function (value, options) {
