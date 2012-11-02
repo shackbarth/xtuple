@@ -219,14 +219,16 @@ trailing:true white:true*/
     },
     valueChanged: function () {
       var value = this.getValue();
-      value.on("add", this.modelAdded, this);
-      value.on("remove", this.lengthChanged, this);
-      if (value[this.getParentKey()]) {
-        value[this.getParentKey()].on("statusChange", this.parentStatusChanged, this);
+      if (value) {
+        value.on("add", this.modelAdded, this);
+        value.on("remove", this.lengthChanged, this);
+        if (value[this.getParentKey()]) {
+          value[this.getParentKey()].on("statusChange", this.parentStatusChanged, this);
+        }
+        this.orderByChanged();
+        this.lengthChanged();
+        this.fetchRelated();
       }
-      this.orderByChanged();
-      this.lengthChanged();
-      this.fetchRelated();
     }
   });
 

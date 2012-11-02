@@ -41,15 +41,14 @@ trailing:true white:true*/
         control,
         isReadOnly,
         isRequired,
-        prop;
+        prop,
+        attrs = this.value ? this.value.getAttributeNames() : [];
       // This wasn't the original intent. Changes was ONLY supposed to process changes,
       // but it turns out attributes changed inside triggers themselves don't
       // get included in a generic change event. So for now process all every time.
-      for (prop in model.attributes) {
-        if (model.attributes.hasOwnProperty(prop)) {
-          changes[prop] = true;
-        }
-      }
+      _.each(attrs, function (a) {
+        changes[a] = true;
+      });
       for (attr in changes) {
         if (changes.hasOwnProperty(attr)) {
           prop = model.attributeDelegates && model.attributeDelegates[attr] ?
