@@ -122,7 +122,8 @@
         "name": "description",
         "attr": {
           "type": "String",
-          "column": "locale_descrip"
+          "column": "locale_descrip",
+          "required": true
         }
       },
       {
@@ -150,112 +151,128 @@
         "name": "errorColor",
         "attr": {
           "type": "String",
-          "column": "locale_error_color"
+          "column": "locale_error_color",
+          "required": true
         }
       },
       {
         "name": "warningColor",
         "attr": {
           "type": "String",
-          "column": "locale_warning_color"
+          "column": "locale_warning_color",
+          "required": true
         }
       },
       {
         "name": "emphasisColor",
         "attr": {
           "type": "String",
-          "column": "locale_emphasis_color"
+          "column": "locale_emphasis_color",
+          "required": true
         }
       },
       {
         "name": "altEmphasisColor",
         "attr": {
           "type": "String",
-          "column": "locale_altemphasis_color"
+          "column": "locale_altemphasis_color",
+          "required": true
         }
       },
       {
         "name": "expiredColor",
         "attr": {
           "type": "String",
-          "column": "locale_expired_color"
+          "column": "locale_expired_color",
+          "required": true
         }
       },
       {
         "name": "futureColor",
         "attr": {
           "type": "String",
-          "column": "locale_future_color"
+          "column": "locale_future_color",
+          "required": true
         }
       },
       {
         "name": "currencyScale",
         "attr": {
           "type": "Number",
-          "column": "locale_curr_scale"
+          "column": "locale_curr_scale",
+          "required": true
         }
       },
       {
         "name": "salesPriceScale",
         "attr": {
           "type": "Number",
-          "column": "locale_salesprice_scale"
+          "column": "locale_salesprice_scale",
+          "required": true
         }
       },
       {
         "name": "purchasePriceScale",
         "attr": {
           "type": "Number",
-          "column": "locale_purchprice_scale"
+          "column": "locale_purchprice_scale",
+          "required": true
         }
       },
       {
         "name": "extendedPriceScale",
         "attr": {
           "type": "Number",
-          "column": "locale_extprice_scale"
+          "column": "locale_extprice_scale",
+          "required": true
         }
       },
       {
         "name": "costScale",
         "attr": {
           "type": "Number",
-          "column": "locale_cost_scale"
+          "column": "locale_cost_scale",
+          "required": true
         }
       },
       {
         "name": "quantityScale",
         "attr": {
           "type": "Number",
-          "column": "locale_qty_scale"
+          "column": "locale_qty_scale",
+          "required": true
         }
       },
       {
         "name": "quantityPerScale",
         "attr": {
           "type": "Number",
-          "column": "locale_qtyper_scale"
+          "column": "locale_qtyper_scale",
+          "required": true
         }
       },
       {
         "name": "unitRatioScale",
         "attr": {
           "type": "Number",
-          "column": "locale_uomratio_scale"
+          "column": "locale_uomratio_scale",
+          "required": true
         }
       },
       {
         "name": "percentScale",
         "attr": {
           "type": "Number",
-          "column": "locale_percent_scale"
+          "column": "locale_percent_scale",
+          "required": true
         }
       },
       {
         "name": "weightScale",
         "attr": {
           "type": "Number",
-          "column": "locale_weight_scale"
+          "column": "locale_weight_scale",
+          "required": true
         }
       }
     ],
@@ -323,14 +340,16 @@
         "name": "disableExport",
         "attr": {
           "type": "Boolean",
-          "column": "nodeusr_disable_export"
+          "column": "nodeusr_disable_export",
+          "required": true
         }
       },
       {
         "name": "isDatabaseUser",
         "attr": {
           "type": "Boolean",
-          "column": "nodeusr_db_user"
+          "column": "nodeusr_db_user",
+          "required": true
         }
       },
       {
@@ -444,14 +463,16 @@
         "name": "userAccount",
         "attr": {
           "type": "String",
-          "column": "usrpriv_username"
+          "column": "usrpriv_username",
+          "required": true
         }
       },
       {
         "name": "privilege",
         "toOne": {
           "type": "Privilege",
-          "column": "usrpriv_priv_id"
+          "column": "usrpriv_priv_id",
+          "required": true
         }
       }
     ],

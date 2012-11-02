@@ -96,14 +96,16 @@
         "name": "classCode",
         "toOne": {
           "type": "ClassCode",
-          "column": "item_classcode_id"
+          "column": "item_classcode_id",
+          "required": true
         }
       },
       {
         "name": "inventoryUnit",
         "toOne": {
           "type": "Unit",
-          "column": "item_inv_uom_id"
+          "column": "item_inv_uom_id",
+          "required": true
         }
       },
       {
@@ -131,7 +133,8 @@
         "name": "productCategory",
         "toOne": {
           "type": "ProductCategory",
-          "column": "item_prodcat_id"
+          "column": "item_prodcat_id",
+          "required": true
         }
       },
       {
@@ -145,7 +148,8 @@
         "name": "priceUnit",
         "toOne": {
           "type": "Unit",
-          "column": "item_price_uom_id"
+          "column": "item_price_uom_id",
+          "required": true
         }
       },
       {
@@ -410,7 +414,8 @@
         "name": "characteristic",
         "toOne": {
           "type": "Characteristic",
-          "column": "charass_char_id"
+          "column": "charass_char_id",
+          "required": true
         }
       },
       {
@@ -473,7 +478,8 @@
         "name": "commentType",
         "toOne": {
           "type": "CommentType",
-          "column": "comment_cmnttype_id"
+          "column": "comment_cmnttype_id",
+          "required": true
         }
       },
       {

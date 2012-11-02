@@ -55,7 +55,8 @@
         "name": "order",
         "attr": {
           "type": "Number",
-          "column": "cmnttype_order"
+          "column": "cmnttype_order",
+          "required": true
         }
       },
       {

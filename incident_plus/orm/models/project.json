@@ -26,7 +26,8 @@
         "name": "version",
         "attr": {
           "type": "String",
-          "column": "prjver_version"
+          "column": "prjver_version",
+          "required": true
         }
       }
     ],
