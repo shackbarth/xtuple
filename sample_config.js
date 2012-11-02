@@ -17,28 +17,28 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     routersDirectory: "./lib/routers",
     datasource: {
       sessionTimeout: 15,
-      bindAddress: "",
-      port: 20100,
-      keyFile: "",
-      certFile: "",
+      bindAddress: "localhost",
+      port: 443,
+      keyFile: "./lib/private/key.pem",
+      certFile: "./lib/private/server.crt",
       caFile: null,
-      saltFile: "",
+      saltFile: "./lib/private/salt.txt",
       
       // these properties are dynamically registered with the
       // node discovery service
       
       // the unique identifer registered for this service/instance
-      name: "",
+      name: "dev-datasource",
       
       // human-friendly description of this service
-      description: "",
+      description: "NA",
       
       // REQUIRED - the ip address or hostname for this instance
-      hostname: "",
+      hostname: "localhost",
       
       // human-friendly location identifier for various cloud, physical
       // servers, etc. 
-      location: ""
+      location: "NA"
     },
     administratorInterface: {
       port: 9090
@@ -55,11 +55,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         port: 27017,
         schemaDirectory: "./mongo_schemas/users",
         database: "xtusers"
+      },
+      proxy: {
+        hostname: "localhost",
+        port: 27017,
+        schemaDirectory: "./mongo_schemas/proxy",
+        database: "xtproxy"
       }
     },
     required: [
       "lib/ext/session",
       "lib/ext/database",
+      "lib/ext/router",
       "lib/servers",
       "lib/ext/caches"
     ]
