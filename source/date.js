@@ -10,6 +10,19 @@ white:true*/
     An object for performing operations on dates.
   */
   XT.date = {
+
+    /**
+
+    @param {Date} date
+    @param {Boolean} isForward
+    returns {Date} The new date
+    */
+    applyTimezoneOffset: function (date, isForward) {
+      var direction = isForward ? 1 : -1;
+
+      return new Date(date.valueOf() + direction * 60000 * date.getTimezoneOffset());
+    },
+
     /**
       Converts the date in d to a date-object. The input can be:
         a date object: returned without modification
