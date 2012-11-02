@@ -239,6 +239,7 @@ trailing:true white:true*/
         };
       this.modelChanged();
       this.clear();
+      this.headerValuesChanged();
       this.value.initialize(null, {isNew: true});
       this.value.set(attributes, {force: true});
       for (attr in attributes) {
