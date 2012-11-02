@@ -41,15 +41,30 @@ create or replace function xt.json_schema_properties(data_hash text) returns tex
       for (var attrname in schemaColumnInfo) {
         ret.properties[dataHash.properties[i].name][attrname] = schemaColumnInfo[attrname];
       }
+
+      /* Add required override based off of ORM's property. */
+      if (dataHash.properties[i].attr.required) {
+        ret.properties[dataHash.properties[i].name].required = true;
+      }
     }
     /* toOne property */
     else if (dataHash.properties[i].toOne) {
       ret.properties[dataHash.properties[i].name].type = "object";
       ret.properties[dataHash.properties[i].name]["$ref"] = dataHash.properties[i].toOne.type;
+
+      /* Add required override based off of ORM's property. */
+      if (dataHash.properties[i].toOne.required) {
+        ret.properties[dataHash.properties[i].name].required = true;
+      }
     }
     /* toMany property */
     else if (dataHash.properties[i].toMany) {
       ret.properties[dataHash.properties[i].name].type = "array";
+
+      /* Add required override based off of ORM's property. */
+      if (dataHash.properties[i].toMany.required) {
+        ret.properties[dataHash.properties[i].name].required = true;
+      }
 
       if (dataHash.properties[i].toMany.isNested) {
         ret.properties[dataHash.properties[i].name].items = {"$ref": dataHash.properties[i].toMany.type};
@@ -57,12 +72,9 @@ create or replace function xt.json_schema_properties(data_hash text) returns tex
     }
     /* Error */
     else {
-      // We should not get here.
-      // TODO error?
+      /* You broke it. We should not be here. */
+      throw new Error("Invalid ORM property. Unable to generate JSON-Schema from this ORM.");
     }
-
-    // TODO We have required from database column NOT NULL.  Now we need an override added to
-    // the ORMs based on the models "requiredAttribute".
   }
 
   /* If this ORM has no column properties, we have an empty object, return false. */
