@@ -78,7 +78,13 @@ regexp:true, undef:true, trailing:true, white:true */
         if (isNaN(date.getTime())) {
           date = false;
         } else {
+          // these dates are represented without the time, so
+          // strip that off here
           date.setHours(0, 0, 0, 0);
+          // see the comment in valueChanged, below. For human-
+          // entered dates we have to mock the model-driven
+          // offset so that the transformation in valueChanged
+          // leaves us where we want to be
           date = XT.date.applyTimezoneOffset(date, false);
         }
       }
@@ -90,6 +96,10 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     valueChanged: function (value) {
       if (value) {
+        // the model offsets this date by the timezone by the time
+        // it arrives here, so we need to undo that action here, or
+        // else 11/5 will be rendered as 11/4 to user in GMT-minus
+        // timezones (e.g. Korea)
         value = XT.date.applyTimezoneOffset(value, true);
         value = Globalize.format(value, "d");
       } else {
