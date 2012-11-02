@@ -151,11 +151,15 @@ trailing:true white:true*/
       this.$.doneButton.setDisabled(!index);
       if (index) {
         this.$.editor.setValue(model);
-        model.used({
-          success: function (resp) {
-            that.$.deleteButton.setDisabled(resp);
-          }
-        });
+        if (model.isNew()) {
+          this.$.deleteButton.setDisabled(false);
+        } else {
+          model.used({
+            success: function (resp) {
+              that.$.deleteButton.setDisabled(resp);
+            }
+          });
+        }
         if (this.$.panels.getIndex()) { this.$.panels.setIndex(0); }
         this.$.prevButton.setDisabled(index - 0 === 0);
         this.$.nextButton.setDisabled(index - 0 === this.$.list.value.length - 1);
