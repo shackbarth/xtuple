@@ -55,14 +55,15 @@ select xt.install_js('XT','Session','xtuple', $$
     @returns {hash}
   */ 
   XT.Session.settings = function() {
-    var settings = [], regs = XT.settingsRegistrations();
+    var settings = {},
+      type;
 
-    for(var i = 0; i < regs.length; i++) {
-      var nameSpace = regs[i].nameSpace,
-          type = regs[i].type,
-          action = regs[i].action;
-  
-      settings = settings.concat(this[nameSpace][type][action]()); 
+    for (type in XM) {
+      if (XM.hasOwnProperty(type) &&
+          XM[type].settings &&
+          typeof XM[type].settings === 'function') {
+        settings = XT.extend(settings, JSON.parse(XM[type].settings()));
+      }
     }
 
     return JSON.stringify(settings);

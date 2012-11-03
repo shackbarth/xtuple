@@ -44,15 +44,12 @@ select xt.install_js('XM','crm','crm', $$
         sql = "select orderseq_number as value "
             + "from orderseq"
             + " where (orderseq_name=$1)",
-        cnum = {}, inum = {}, ret = [], qry;
+        inum = {},
+        ret = {},
+        qry;
 
-    cnum.setting = 'NextCRMAccountNumber';
-    cnum.value = plv8.execute(sql, ['CRMAccountNumber'])[0].value;
-    ret.push(cnum);
-
-    inum.setting = 'NextIncidentNumber';
-    inum.value = plv8.execute(sql, ['IncidentNumber'])[0].value;
-    ret.push(inum);
+    ret.NextCRMAccountNumber = plv8.execute(sql, ['CRMAccountNumber'])[0].value;
+    ret.NextIncidentNumber = plv8.execute(sql, ['IncidentNumber'])[0].value;
 
     sql = "select status_color as color "
         + "from status "
@@ -61,15 +58,12 @@ select xt.install_js('XM','crm','crm', $$
     qry = plv8.execute(sql);
 
     while(colors.length) {
-      var col = {};
-      col.setting = colors.pop(),
-      col.value = qry.pop().color;        
-      ret.push(col);
+      ret[colors.pop()] = qry.pop().color;        
     }
 
-    ret = ret.concat(data.retrieveMetrics(keys));
+    ret = XT.extend(ret, data.retrieveMetrics(keys));
     
-    return ret;
+    return JSON.stringify(ret);
   }
 
   /* 
@@ -141,8 +135,6 @@ select xt.install_js('XM','crm','crm', $$
  
     return data.commitMetrics(metrics);
   }
-
-  XT.registerSettings('XM','Crm','settings');
 
 $$ );
 
