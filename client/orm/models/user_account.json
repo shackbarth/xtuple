@@ -265,7 +265,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "UserAccount",
-    "table": "xt.nodeusr",
+    "table": "xt.useracct",
     "comment": "User Account Map",
     "privileges": {
       "all": {
@@ -280,7 +280,7 @@
         "name": "username",
         "attr": {
           "type": "String",
-          "column": "nodeusr_username",
+          "column": "useracct_username",
           "isPrimaryKey": true
         }
       },
@@ -288,55 +288,48 @@
         "name": "isActive",
         "attr": {
           "type": "Boolean",
-          "column": "nodeusr_active"
+          "column": "useracct_active"
         }
       },
       {
         "name": "properName",
         "attr": {
           "type": "String",
-          "column": "nodeusr_propername"
+          "column": "useracct_propername"
         }
       },
       {
         "name": "initials",
         "attr": {
           "type": "String",
-          "column": "nodeusr_initials"
+          "column": "useracct_initials"
         }
       },
       {
         "name": "email",
         "attr": {
           "type": "String",
-          "column": "nodeusr_email"
+          "column": "useracct_email"
         }
       },
       {
         "name": "locale",
         "toOne": {
           "type": "Locale",
-          "column": "nodeusr_locale_id"
+          "column": "useracct_locale_id"
         }
       },
       {
         "name": "disableExport",
         "attr": {
           "type": "Boolean",
-          "column": "nodeusr_disable_export"
-        }
-      },
-      {
-        "name": "isDatabaseUser",
-        "attr": {
-          "type": "Boolean",
-          "column": "nodeusr_db_user"
+          "column": "useracct_disable_export"
         }
       },
       {
         "name": "grantedPrivileges",
         "toMany": {
-          "column": "nodeusr_username",
+          "column": "useracct_username",
           "type": "UserAccountPrivilegeAssignment",
           "inverse": "userAccount",
           "isNested": true
@@ -352,7 +345,7 @@
       {
         "name": "grantedUserAccountRoles",
         "toMany": {
-          "column": "nodeusr_username",
+          "column": "useracct_username",
           "type": "UserAccountUserAccountRoleAssignment",
           "inverse": "userAccount",
           "isNested": true
@@ -366,7 +359,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "UserAccountRelation",
-    "table": "xt.nodeusr",
+    "table": "xt.useracct",
     "comment": "User Account Relation Map",
     "privileges": {
       "all": {
@@ -381,7 +374,7 @@
         "name": "username",
         "attr": {
           "type": "String",
-          "column": "nodeusr_username",
+          "column": "useracct_username",
           "isPrimaryKey": true
         }
       },
@@ -389,28 +382,28 @@
         "name": "isActive",
         "attr": {
           "type": "Boolean",
-          "column": "nodeusr_active"
+          "column": "useracct_active"
         }
       },
       {
         "name": "propername",
         "attr": {
           "type": "String",
-          "column": "nodeusr_propername"
+          "column": "useracct_propername"
         }
       },
       {
         "name": "email",
         "attr": {
           "type": "String",
-          "column": "nodeusr_email"
+          "column": "useracct_email"
         }
       },
       {
         "name": "disableExport",
         "attr": {
           "type": "Boolean",
-          "column": "nodeusr_disable_export"
+          "column": "useracct_disable_export"
         }
       }
     ],
