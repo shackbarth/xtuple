@@ -22,6 +22,7 @@
 -- xt trigger functions
 \i xt/trigger_functions/comment_did_change.sql
 \i xt/trigger_functions/useracct_did_change.sql
+\i xt/trigger_functions/usrpref_did_change.sql
 
 -- xt tables
 \i xt/tables/comment.sql
@@ -40,7 +41,6 @@
 \i xt/views/crmacctaddr.sql;
 \i xt/views/crmacctcomment.sql;
 \i xt/views/incdtinfo.sql;
-\i xt/views/nodeusr.sql;
 \i xt/views/opheadinfo.sql;
 \i xt/views/prjinfo.sql;
 \i xt/views/todoiteminfo.sql;
@@ -71,3 +71,4 @@
 -- public
 \i public/functions/geteffectivextuser.sql;
 \i public/tables/schemaord.sql;
+\i public/tables/usrpref.sql;
