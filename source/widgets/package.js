@@ -12,5 +12,6 @@ enyo.depends(
   "combobox.js",
   "relation.js",
   "parameter.js",
-  "file_input.js"
+  "file_input.js",
+  "toggle_button.js"
 );
