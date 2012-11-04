@@ -153,6 +153,7 @@ trailing:true white:true*/
         error: error
       };
       this.doError(inEvent);
+      this.attributesChanged(this.getValue());
     },
     fetch: function (id) {
       var options = {};
