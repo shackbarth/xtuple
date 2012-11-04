@@ -6,5 +6,6 @@ enyo.depends(
   "info.js",
   "comment.js",
   "characteristic.js",
-  "alarm.js"
+  "alarm.js",
+  "settings.js"
 );
