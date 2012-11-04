@@ -193,7 +193,7 @@ select xt.install_js('XT','Data','xtuple', $$
         if (!this._granted) { this._granted = {}; }
         if (this._granted[privilege] !== undefined) { return this._granted[privilege]; }
         var res = plv8.execute(sql, [ XT.username, privilege ]),
-          ret = res[0].granted;
+          ret = res.length ? res[0].granted : false;
         /* memoize */
         this._granted[privilege] = ret;
       }
@@ -909,16 +909,21 @@ select xt.install_js('XT','Data','xtuple', $$
     retrieveMetrics: function (keys) {
       var sql = 'select metric_name as setting, metric_value as value '
               + 'from metric '
-              + 'where metric_name in ({keys})', ret; 
+              + 'where metric_name in ({keys})',
+        qry,
+        ret = {},
+        prop; 
       for (var i = 0; i < keys.length; i++) keys[i] = "'" + keys[i] + "'";
       sql = sql.replace(/{keys}/, keys.join(','));
-      ret =  plv8.execute(sql);
+      qry =  plv8.execute(sql);
 
       /* recast where applicable */
-      for (var i = 0; i < ret.length; i++) {
-        if(ret[i].value === 't') ret[i].value = true;
-        else if(ret[i].value === 'f') ret[i].value = false
-        else if(!isNaN(ret[i].value)) ret[i].value = ret[i].value - 0;
+      for (var i = 0; i < qry.length; i++) {
+        prop = qry[i].setting;
+        if(qry[i].value === 't') { ret[prop] = true; }
+        else if(qry[i].value === 'f') { ret[prop] = false }
+        else if(!isNaN(qry[i].value)) { ret[prop] = qry[i].value - 0; }
+        else { ret[prop] = qry[i].value; }
       }
       return ret;
     }
