@@ -122,6 +122,43 @@ trailing:true white:true*/
       ]}
     ]
   });
+  
+  // ..........................................................
+  // CONFIGURE
+  //
+
+  enyo.kind({
+    name: "XV.ConfigurationsList",
+    kind: "XV.List",
+    label: "_configure".loc(),
+    collection: "XM.configurations",
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    canAddNew: false,
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "name", classes: "bold"}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ],
+    collectionChanged: function () {
+      var collection = this.getCollection(),
+        obj = XT.getObjectByName(collection);
+      this.setValue(obj);
+    },
+    fetch: function () {
+      this.fetched();
+    }
+    
+  });
 
   // ..........................................................
   // CONTACT

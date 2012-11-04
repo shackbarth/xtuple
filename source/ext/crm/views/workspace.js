@@ -7,6 +7,7 @@ trailing:true white:true*/
 
   XT.extensions.crm.initWorkspaces = function () {
     var extensions;
+    
  
     // ..........................................................
     // ACCOUNT
@@ -22,9 +23,47 @@ trailing:true white:true*/
     ];
 
     XV.appendExtension("XV.AccountWorkspace", extensions);
+   
+    // ..........................................................
+    // CONFIGURE
+    //
+     
+    enyo.kind({
+      name: "XV.ConfigureCrmWorkspace",
+      kind: "XV.Workspace",
+      title: "_configureCrm".loc(),
+      headerAttrs: ["number", "-", "name"],
+      model: "XM.Account",
+      components: [
+        {kind: "Panels", arrangerKind: "CarouselArranger",
+          fit: true, components: [
+          {kind: "XV.Groupbox", name: "mainPanel", components: [
+            {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+            {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+              classes: "in-panel", components: [
+              {kind: "XV.InputWidget", attr: "number"},
+              {kind: "XV.CheckboxWidget", attr: "isActive"},
+              {kind: "XV.InputWidget", attr: "name"},
+              {kind: "XV.AccountTypePicker", attr: "accountType"},
+              {kind: "XV.AccountWidget", attr: "parent", label: "_parent".loc()},
+              {kind: "XV.UserAccountWidget", attr: "owner"},
+              {kind: "onyx.GroupboxHeader", content: "_primaryContact".loc()},
+              {kind: "XV.ContactWidget", attr: "primaryContact",
+                showAddress: true},
+              {kind: "onyx.GroupboxHeader", content: "_secondaryContact".loc()},
+              {kind: "XV.ContactWidget", attr: "secondaryContact",
+                showAddress: true},
+              {kind: "XV.AccountCharacteristicsWidget", attr: "characteristics"},
+              {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+              {kind: "XV.TextArea", attr: "notes", fit: true}
+            ]}
+          ]}
+        ]}
+      ]
+    });
   
     // ..........................................................
-    // ACCOUNT
+    // CONTACT
     //
   
     extensions = [

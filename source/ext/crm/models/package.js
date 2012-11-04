@@ -1,4 +1,5 @@
 enyo.depends(
+  "configure.js",
   "account.js",
   "contact.js",
   "incident.js",
