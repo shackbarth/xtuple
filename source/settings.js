@@ -22,12 +22,15 @@ white:true*/
     save: function (key, value, options) {
       options = options ? _.clone(options) : {};
       var that = this,
-        success = options.success;
+        success;
         
       // Handle both `"key", value` and `{key: value}` -style arguments.
       if (_.isObject(key) || _.isEmpty(key)) {
         options = value ? _.clone(value) : {};
+      } else {
+        options = options ? _.clone(options) : {};
       }
+      success = options.success;
         
       options.success = function (resp) {
         XT.session.settings.set(that.attributes);
