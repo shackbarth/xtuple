@@ -1,17 +1,28 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XT:true, XV:true, enyo:true*/
+/*global XT:true, XV:true, XM:true, enyo:true*/
 
 (function () {
 
   XT.extensions.crm.initPostbooks = function () {
     var panels,
-      module;
+      module,
+      configurationJson,
+      configuration;
 
     // ..........................................................
     // APPLICATION
     //
+    
+    configurationJson = {
+      model: "XM.crm",
+      name: "_crm".loc(),
+      description: "_crmDescription".loc(),
+      workspace: "XV.CrmWorkspace"
+    };
+    configuration = new XM.ConfigurationModel(configurationJson);
+    XM.configurations.add(configuration);
 
     panels = [
       {name: "itemList", kind: "XV.ItemList"},

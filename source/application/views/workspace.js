@@ -118,6 +118,34 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.ClassCode", "XV.ClassCodeWorkspace");
+  
+  // ..........................................................
+  // CONFIGURE
+  //
+   
+  enyo.kind({
+    name: "XV.DatabaseInformationWorkspace",
+    kind: "XV.Workspace",
+    title: "_database".loc() + " " + "_information".loc(),
+    model: "XM.DatabaseInformation",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "DatabaseName",
+              label: "_name".loc()},
+            {kind: "XV.InputWidget", attr: "ServerVersion",
+                label: "_version".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "DatabaseComments"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
 
   // ..........................................................
   // CONTACT
