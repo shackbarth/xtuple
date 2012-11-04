@@ -16,7 +16,7 @@ trailing:true white:true*/
     //
     
     configurationJson = {
-      id: "XM.Crm",
+      model: "XM.crm",
       name: "_crm".loc(),
       description: "_crmDescription".loc(),
       workspace: "XV.CrmWorkspace"

@@ -20,6 +20,8 @@ white:true*/
       privileges: 'ConfigureCRM'
 
     });
+    
+    XM.crm = new XM.Crm();
 
   };
 

@@ -93,6 +93,16 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.incidentStatuses",
     valueAttribute: "id"
   });
+  
+  // ..........................................................
+  // NUMBER POLICY
+  //
+
+  enyo.kind({
+    name: "XV.NumberPolicyPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.numberPolicies"
+  });
 
   // ..........................................................
   // OPPORTUNITY SOURCE

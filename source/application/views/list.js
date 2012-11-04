@@ -107,7 +107,6 @@ trailing:true white:true*/
     query: {orderBy: [
       {attribute: 'code'}
     ]},
-    workspace: "XV.ClassCodeWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -153,6 +152,18 @@ trailing:true white:true*/
       var collection = this.getCollection(),
         obj = XT.getObjectByName(collection);
       this.setValue(obj);
+    },
+    getModel: function (index) {
+      var model = this.getValue().at(index);
+      return XT.getObjectByName(model.get('model'));
+    },
+    getWorkspace: function () {
+      return this._workspace;
+    },
+    itemTap: function (inSender, inEvent) {
+      var model = this.getValue().at(inEvent.index);
+      this._workspace = model.get('workspace');
+      return this.inherited(arguments);
     },
     fetch: function () {
       this.fetched();
@@ -363,7 +374,6 @@ trailing:true white:true*/
     query: {orderBy: [
       {attribute: 'name'}
     ]},
-    workspace: "XV.FileWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -848,7 +858,6 @@ trailing:true white:true*/
     query: {orderBy: [
       {attribute: 'name'}
     ]},
-    workspace: "XV.UrlWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [

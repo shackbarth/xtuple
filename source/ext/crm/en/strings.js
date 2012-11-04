@@ -18,6 +18,7 @@ var lang = XT.stringsFor("en_US", {
   // ********
   
   "_crm": "CRM",
-  "_crmDescription": "Corporate Relationship Management"
+  "_crmDescription": "Corporate Relationship Management",
+  "_incidentStatusColors": "Incident Status Colors"
   
 });
