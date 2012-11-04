@@ -7,15 +7,9 @@ select xt.install_js('XM','DatabaseInformation','xtuple', $$
   XM.DatabaseInformation.isDispatchable = true,
 
   XM.DatabaseInformation.options = [
-    "Application",
-    "RegistrationKey",
     "DatabaseName",
     "DatabaseComments",
-    "ServerVersion",
-    "ServerPatchVersion",
-    "DisallowMismatchClientVersion",
-    "ForceLicenseLimit",
-    "AllowedUserLogins"
+    "ServerVersion"
   ]
 
   /* 
@@ -25,9 +19,9 @@ select xt.install_js('XM','DatabaseInformation','xtuple', $$
   */
   XM.DatabaseInformation.settings = function() {
     var keys = XM.DatabaseInformation.options.slice(0),
-        data = Object.create(XT.Data);
+      data = Object.create(XT.Data);
     
-    return data.retrieveMetrics(keys);
+    return JSON.stringify(data.retrieveMetrics(keys));
   }
 
   /* 
@@ -58,8 +52,6 @@ select xt.install_js('XM','DatabaseInformation','xtuple', $$
  
     return data.commitMetrics(metrics);
   }
-
-  XT.registerSettings('XM','DatabaseInformation','settings');
-
+  
 $$ );
 
