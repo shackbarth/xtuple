@@ -455,7 +455,7 @@ trailing:true white:true*/
 
       // Handle new button
       this.$.newButton.setShowing(panel.canAddNew);
-      if (collection) {
+      if (panel.canAddNew && collection) {
         // Check 'couldCreate' first in case it's an info model.
         model = collection.prototype.model;
         canNotCreate = model.prototype.couldCreate ? !model.prototype.couldCreate() : !model.canCreate();
