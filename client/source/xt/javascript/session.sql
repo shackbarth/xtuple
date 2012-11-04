@@ -117,6 +117,7 @@ select xt.install_js('XT','Session','xtuple', $$
       i,
       orm,
       props,
+      options,
       filterToOne = function (value) {
         return value.toOne;
       },
@@ -207,6 +208,24 @@ select xt.install_js('XT','Session','xtuple', $$
       }
       result[type]['columns'].push(column);
       prev = type;
+    }
+
+    /* Handle configuration settings */
+    for (type in XM) {
+      if (XM.hasOwnProperty(type) &&
+          XM[type].options &&
+          XT.typeOf(XM[type].options) === 'array') {
+        options = XM[type].options;
+        result[type] = {};
+        result[type].columns = [];
+        for (i = 0; i < options.length; i++) {
+          column = { 
+            name: options[i],
+            category: 'X'
+          }
+          result[type].columns.push(column);
+        }
+      }
     }
 
     this._schema = JSON.stringify(result);

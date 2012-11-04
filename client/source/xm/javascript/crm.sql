@@ -10,8 +10,6 @@ select xt.install_js('XM','crm','crm', $$
     "NextCRMAccountNumber",
     "NextIncidentNumber",
     "CRMAccountNumberGeneration",
-    "UseProjects",
-    "AutoCreateProjectsForOrders",
     "OpportunityChangeLog",
     "DefaultAddressCountry",
     "StrictAddressCountry",
