@@ -7,15 +7,9 @@ select xt.install_js('XM','DatabaseInformation','xtuple', $$
   XM.DatabaseInformation.isDispatchable = true,
 
   XM.DatabaseInformation.options = [
-    "Application",
-    "RegistrationKey",
     "DatabaseName",
     "DatabaseComments",
-    "ServerVersion",
-    "ServerPatchVersion",
-    "DisallowMismatchClientVersion",
-    "ForceLicenseLimit",
-    "AllowedUserLogins"
+    "ServerVersion"
   ]
 
   /* 
