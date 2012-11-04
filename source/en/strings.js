@@ -345,6 +345,7 @@ var lang = XT.stringsFor("en_US", {
   "_username": "Username",
   "_validator": "Validator",
   "_value": "Value",
+  "_version": "Version",
   "_warningColor": "Warning Color",
   "_web": "Web",
   "_webAddress": "Web Address",
