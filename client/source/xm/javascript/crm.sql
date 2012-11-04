@@ -80,12 +80,12 @@ select xt.install_js('XM','crm','crm', $$
 
     /* update numbers */
     if(settings['NextCRMAccountNumber']) {
-      plv8.execute('select setNextCRMAccountNumber($1)', [settings['NextCRMAccountNumber']]);
+      plv8.execute('select setNextCRMAccountNumber($1)', [settings['NextCRMAccountNumber'] - 0]);
     }
     options.remove('NextCRMAccountNumber');
 
     if(settings['NextIncidentNumber']) {
-      plv8.execute('select setNextIncidentNumber($1)', [settings['NextIncidentNumber']]);
+      plv8.execute('select setNextIncidentNumber($1)', [settings['NextIncidentNumber'] - 0]);
     }
     options.remove('NextIncidentNumber');
 
