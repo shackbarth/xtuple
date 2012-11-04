@@ -17,7 +17,18 @@ white:true*/
 
       recordType: 'XM.Crm',
       
-      privileges: 'ConfigureCRM'
+      privileges: 'ConfigureCRM',
+      
+      validate: function (attributes, options) {
+        var params = { type: "_number".loc() };
+        if (isNaN(attributes.NextCRMAccountNumber)) {
+          params.attr = "_account".loc() + " " + "_number".loc();
+          return XT.Error.clone('xt1003', { params: params });
+        } else if (isNaN(attributes.NextIncidentNumber)) {
+          params.attr = "_incident".loc() + " " + "_number".loc();
+          return XT.Error.clone('xt1003', { params: params });
+        }
+      }
 
     });
     
