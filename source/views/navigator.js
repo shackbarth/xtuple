@@ -276,7 +276,7 @@ trailing:true white:true*/
         workspace = list ? list.getWorkspace() : null,
         model = list.getModel(inEvent.index),
         canNotRead = model.couldRead ? !model.couldRead() : !model.getClass().canRead(),
-        id = model ? model.id : null,
+        id = model && model.id ? model.id : false,
         message;
 
       // Check privileges first
