@@ -206,7 +206,9 @@ trailing:true white:true*/
         // creating a new query that's the same as the current filter but with the addition
         // of filtering on the id. Any result means it still belongs. An empty result
         // means it doesn't.
-        checkStatusQuery = this.getQuery();
+
+        // clone the query so as not to change the real thing with this check.
+        checkStatusQuery = JSON.parse(JSON.stringify(this.getQuery()));
         checkStatusParameter = {attribute: "id", operator: "=", value: inEvent.id};
         if (checkStatusQuery.parameters) {
           checkStatusQuery.parameters.push(checkStatusParameter);
