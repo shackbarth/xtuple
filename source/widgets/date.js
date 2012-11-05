@@ -70,6 +70,12 @@ regexp:true, undef:true, trailing:true, white:true */
       } else if (value) {
         // Dates in the format of dates as we're used to them.
         // we're counting on JS to parse the date correctly
+
+        // assume two-digit dates are in the 2000's. Firefox does not do
+        // this automatically
+
+
+
         date = new Date(value);
       }
 
