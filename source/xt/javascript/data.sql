@@ -833,9 +833,7 @@ select xt.install_js('XT','Data','xtuple', $$
         ret, sql, pkey = XT.Orm.primaryKey(map),
         context = options.context,
         join = "",
-        conditions = "",
-        params = {},
-        clause;
+        params = {};
       if(!pkey) throw new Error('No primary key found for {recordType}'.replace(/{recordType}/, recordType));
       if (XT.typeOf(id) === 'string') {
         id = "'" + id + "'";
@@ -851,14 +849,12 @@ select xt.install_js('XT','Data','xtuple', $$
         context.pkey = XT.Orm.primaryKey(context.map);
         params.attribute = context.pkey;
         params.value = context.value;
-        clause = this.buildClause(context.nameSpace, context.type, params);
         join = 'join {recordType} on ({table1}."{pkey}"={table2}."{fkey}")';
         join = join.replace(/{recordType}/, context.recordType.decamelize())
                    .replace(/{table1}/, context.type.decamelize())
                    .replace(/{pkey}/, context.pkey)
                    .replace(/{table2}/, type.decamelize())
-                   .replace(/{fkey}/, context.fkey);
-        conditions = "and (" + clause.conditions + ")";    
+                   .replace(/{fkey}/, context.fkey);   
       }
 
       /* validate - don't bother running the query if the user has no privileges */
@@ -870,13 +866,12 @@ select xt.install_js('XT','Data','xtuple', $$
         }
       }
 
-      sql = 'select {table}.* from {schema}.{table} {join} where {table}."{primaryKey}" = {id} {conditions};'
+      sql = 'select {table}.* from {schema}.{table} {join} where {table}."{primaryKey}" = {id};'
             .replace(/{schema}/, nameSpace.decamelize())
             .replace(/{table}/g, type.decamelize())
             .replace(/{join}/, join)
             .replace(/{primaryKey}/, pkey)
-            .replace(/{id}/, id)
-            .replace(/{conditions}/, conditions);
+            .replace(/{id}/, id);
 
       /* query the map */
       if(DEBUG) plv8.elog(NOTICE, 'sql = ', sql);
