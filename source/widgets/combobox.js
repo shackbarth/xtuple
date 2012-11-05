@@ -12,7 +12,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     @see XV.StateCombobox
     @see XV.CountryCombobox
    */
-  enyo.kind(/** @lends XV.Combobox */{
+  enyo.kind(/** @lends XV.Combobox# */{
     name: "XV.Combobox",
     kind: "XV.Input",
     classes: "xv-combobox",
@@ -128,7 +128,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     @name XV.CountryCombobox
     @extends XV.Combobox
    */
-  enyo.kind(/** @lends XV.CountryCombobox */{
+  enyo.kind(/** @lends XV.CountryCombobox# */{
     name: "XV.CountryCombobox",
     kind: "XV.Combobox",
     collection: "XM.countries"
@@ -145,7 +145,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     @name XV.StateCombobox
     @extends XV.Combobox
    */
-  enyo.kind(/** @lends XV.StateCombobox */{
+  enyo.kind(/** @lends XV.StateCombobox# */{
     name: "XV.StateCombobox",
     kind: "XV.Combobox",
     collection: "XM.states",

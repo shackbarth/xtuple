@@ -11,7 +11,7 @@ regexp:true, undef:true, trailing:true, white:true */
     @name XV.Input
     @see XV.InputWidget
    */
-  enyo.kind(/** @lends XV.Input */{
+  enyo.kind(/** @lends XV.Input# */{
     name: "XV.Input",
     classes: "xv-input",
     published: {
@@ -23,8 +23,11 @@ regexp:true, undef:true, trailing:true, white:true */
     events: {
       "onValueChange": ""
     },
+    handlers: {
+      onblur: "receiveBlur"
+    },
     components: [
-      {name: "input", kind: "onyx.Input", classes: "xv-subinput", onchange: "inputChanged"}
+      {name: "input", kind: "onyx.Input", classes: "xv-subinput", onchange: "inputChanged", onkeydown: "keyDown"}
     ],
     clear: function (options) {
       this.setValue("", options);
@@ -50,9 +53,23 @@ regexp:true, undef:true, trailing:true, white:true */
         this.valueChanged("");
       }
     },
+    keyDown: function (inSender, inEvent) {
+      // XXX hack here (and in other places that reference issue 18397)
+      // can be removed once enyo fixes ENYO-1104
+      var shadowNone = inEvent.originator.hasClass("text-shadow-none");
+      inEvent.originator.addRemoveClass("text-shadow-none", !shadowNone);
+      inEvent.originator.addRemoveClass("text-shadow-0", shadowNone);
+      // end hack
+    },
     placeholderChanged: function () {
       var placeholder = this.getPlaceholder();
       this.$.input.setPlaceholder(placeholder);
+    },
+    receiveBlur: function () {
+      // Because webkit browsers don't always emit a change event
+      if (this.$.input.getValue() !== this.getValue()) {
+        this.inputChanged();
+      }
     },
     setValue: function (value, options) {
       options = options || {};
@@ -88,7 +105,7 @@ regexp:true, undef:true, trailing:true, white:true */
     @name XV.InputWidget
     @extends @XV.Input
    */
-  enyo.kind(/** @lends XV.InputWidget */{
+  enyo.kind(/** @lends XV.InputWidget# */{
     name: "XV.InputWidget",
     kind: "XV.Input",
     classes: "xv-inputwidget",
@@ -101,7 +118,7 @@ regexp:true, undef:true, trailing:true, white:true */
         {name: "label", content: "", classes: "xv-label"},
         {kind: "onyx.InputDecorator", fit: true, classes: "xv-input-decorator",
           components: [
-          {name: "input", kind: "onyx.Input", classes: "xv-subinput", onchange: "inputChanged"}
+          {name: "input", kind: "onyx.Input", classes: "xv-subinput", onchange: "inputChanged", onkeydown: "keyDown"}
         ]}
       ]}
     ],
@@ -114,6 +131,14 @@ regexp:true, undef:true, trailing:true, white:true */
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.attr || "").loc());
       this.$.label.setContent(label + ":");
+    },
+    keyDown: function (inSender, inEvent) {
+      // XXX hack here (and in other places that reference issue 18397)
+      // can be removed once enyo fixes ENYO-1104
+      var shadowNone = inEvent.originator.hasClass("text-shadow-none");
+      inEvent.originator.addRemoveClass("text-shadow-none", !shadowNone);
+      inEvent.originator.addRemoveClass("text-shadow-0", shadowNone);
+      // end hack
     },
     showLabelChanged: function () {
       if (this.getShowLabel()) {

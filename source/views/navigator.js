@@ -13,7 +13,7 @@ trailing:true white:true*/
     @class
     @name XV.Navigator
    */
-  enyo.kind(/** @lends XV.Navigator */{
+  enyo.kind(/** @lends XV.Navigator# */{
     name: "XV.Navigator",
     kind: "Panels",
     classes: "app enyo-unselectable",
@@ -92,6 +92,8 @@ trailing:true white:true*/
               placeholder: "_search".loc(), onchange: "inputChanged"},
             {kind: "Image", src: "lib/enyo-x/assets/search-input-search.png"}
           ]},
+          {name: "refreshButton", kind: "onyx.Button", content: "_refresh".loc(),
+              ontap: "requery", style: "float: right;", showing: false},
           {name: "newButton", kind: "onyx.Button", content: "_new".loc(),
             ontap: "newRecord", style: "float: right;", showing: false},
           {name: "exportButton", kind: "onyx.Button", content: "_export".loc(),
@@ -274,7 +276,7 @@ trailing:true white:true*/
         workspace = list ? list.getWorkspace() : null,
         model = list.getModel(inEvent.index),
         canNotRead = model.couldRead ? !model.couldRead() : !model.getClass().canRead(),
-        id = model ? model.id : null,
+        id = model && model.id ? model.id : false,
         message;
 
       // Check privileges first
@@ -365,7 +367,7 @@ trailing:true white:true*/
       callback = function (model) {
         var Model = list.getValue().model,
           value = new Model({id: model.id}),
-          options = {};
+          options = {silent: true};
         options.success = function () {
           list.getValue().add(value);
           list.setCount(list.getValue().length);
@@ -403,6 +405,10 @@ trailing:true white:true*/
         panel = _.find(contentPanels.children, function (child) {
           return child.index === panelIndex;
         });
+        // If we're already here, bail
+        if (contentPanels.index === this.$.contentPanels.indexOfChild(panel)) {
+          return;
+        }
 
       } else if (panelStatus === 'unborn') {
         // panel exists but has not been rendered. Render it.
@@ -449,7 +455,7 @@ trailing:true white:true*/
 
       // Handle new button
       this.$.newButton.setShowing(panel.canAddNew);
-      if (collection) {
+      if (panel.canAddNew && collection) {
         // Check 'couldCreate' first in case it's an info model.
         model = collection.prototype.model;
         canNotCreate = model.prototype.couldCreate ? !model.prototype.couldCreate() : !model.canCreate();
@@ -484,6 +490,7 @@ trailing:true white:true*/
       this.$.menuPanels.getActive().select(0);
       this.setContentPanel(0);
       this.$.backButton.setContent(label);
+      this.$.refreshButton.setShowing(index);
       this.$.search.setShowing(index);
       this.$.searchIconButton.setShowing(index);
     },

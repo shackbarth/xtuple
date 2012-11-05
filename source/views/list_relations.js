@@ -16,7 +16,7 @@ trailing:true white:true*/
     @name XV.ListRelations
     @extends enyo.List
   */
-  enyo.kind(/** @lends XV.ListRelations */{
+  enyo.kind(/** @lends XV.ListRelations# */{
     name: "XV.ListRelations",
     kind: "List",
     classes: "xv-list",
@@ -28,11 +28,16 @@ trailing:true white:true*/
       parentKey: "",
       orderBy: null
     },
+    events: {
+      onParentStatusChange: ""
+    },
     handlers: {
       onSetupItem: "setupItem"
     },
+    /**
+      Clear all bindings
+     */
     destroy: function () {
-      // Clear all bindings
       var value = this.getValue(),
         models = value ? value.models : null;
       if (models) {
@@ -43,6 +48,9 @@ trailing:true white:true*/
       if (value) {
         value.off("add", this.modelAdded, this);
         value.off("remove", this.lengthChanged, this);
+        if (value[this.getParentKey()]) {
+          value[this.getParentKey()].off("statusChange", this.parentStatusChanged, this);
+        }
       }
       this.inherited(arguments);
     },
@@ -129,6 +137,9 @@ trailing:true white:true*/
         };
       }
     },
+    parentStatusChanged: function (model) {
+      this.doParentStatusChange(model);
+    },
     readyModels: function () {
       return _.filter(this.value.models, function (model) {
         var status = model.getStatus(),
@@ -208,11 +219,16 @@ trailing:true white:true*/
     },
     valueChanged: function () {
       var value = this.getValue();
-      value.on("add", this.modelAdded, this);
-      value.on("remove", this.lengthChanged, this);
-      this.orderByChanged();
-      this.lengthChanged();
-      this.fetchRelated();
+      if (value) {
+        value.on("add", this.modelAdded, this);
+        value.on("remove", this.lengthChanged, this);
+        if (value[this.getParentKey()]) {
+          value[this.getParentKey()].on("statusChange", this.parentStatusChanged, this);
+        }
+        this.orderByChanged();
+        this.lengthChanged();
+        this.fetchRelated();
+      }
     }
   });
 

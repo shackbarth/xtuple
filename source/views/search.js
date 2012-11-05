@@ -13,13 +13,20 @@ trailing:true white:true*/
     @class
     @name XV.SearchContainer
   */
-  enyo.kind(/** @lends XV.SearchContainer */{
+  enyo.kind(/** @lends XV.SearchContainer# */{
     name: "XV.SearchContainer",
     kind: "Panels",
     classes: "app enyo-unselectable",
     published: {
       callback: null,
-      conditions: null
+      /**
+        Filter parameters not editable by the user
+      */
+      conditions: null,
+      /**
+        Filter parameters applied to parameter widget and editable by the user.
+      */
+      defaultParameterItemValues: null
     },
     events: {
       onPrevious: ""
@@ -36,7 +43,8 @@ trailing:true white:true*/
           {kind: "onyx.Button", name: "backButton", content: "_back".loc(),
             ontap: "close"}
         ]},
-        {name: "leftTitle", content: "_advancedSearch".loc(), classes: "xv-parameter-title"}
+        {name: "leftTitle", content: "_advancedSearch".loc(), classes: "xv-parameter-title"},
+        {kind: "Scroller", name: "parameterScroller", fit: true}
       ]},
       {name: "listPanel", kind: "FittableRows", components: [
         {kind: "onyx.Toolbar", name: "contentToolbar", components: [
@@ -107,6 +115,13 @@ trailing:true white:true*/
       list.setQuery(query);
       list.fetch(options);
     },
+    defaultParameterItemValuesChanged: function () {
+      var parameterWidget = this.$.parameterWidget,
+        items = this.getDefaultParameterItemValues() || [];
+      if (parameterWidget && items.length) {
+        parameterWidget.setParameterItemValues(items);
+      }
+    },
     requery: function (inSender, inEvent) {
       this.fetch();
       return true;
@@ -123,7 +138,8 @@ trailing:true white:true*/
         list = options.list,
         callback = options.callback,
         searchText = options.searchText,
-        conditions = options.conditions;
+        conditions = options.conditions,
+        params = options.parameterItemValues;
       component = this.createComponent({
         name: "list",
         container: this.$.listPanel,
@@ -136,11 +152,13 @@ trailing:true white:true*/
       if (component) {
         this.createComponent({
           name: "parameterWidget",
-          container: this.$.parameterPanel,
+          container: this.$.parameterScroller,
           kind: component.getParameterWidget(),
+          memoizeEnabled: false,
           fit: true
         });
       }
+      this.setDefaultParameterItemValues(params);
       this.init = true;
       this.render();
       this.$.searchInput.setValue(searchText || "");

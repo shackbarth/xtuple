@@ -19,18 +19,13 @@ trailing:true white:true*/
     handlers: {
       onValueChange: "controlValueChanged"
     },
+    destroy: function () {
+      this.value = null;
+      this.inherited(arguments);
+    },
     setValue: function (value) {
-      var changes = {},
-        options = {},
-        attrs,
-        i;
       this.value = value;
-      attrs = value.getAttributeNames();
-      for (i = 0; i < attrs.length; i++) {
-        changes[attrs[i]] = true;
-      }
-      options.changes = changes;
-      this.attributesChanged(value, options);
+      this.attributesChanged(value);
     }
   });
   enyo.kind(editor);
@@ -45,7 +40,7 @@ trailing:true white:true*/
     @extends XV.Groupbox
     @see XV.RelationsEditor
   */
-  enyo.kind(/** @lends XV.ListRelationsEditorBox */{
+  enyo.kind(/** @lends XV.ListRelationsEditorBox# */{
     name: "XV.ListRelationsEditorBox",
     kind: "XV.Groupbox",
     classes: "panel xv-relations-editor-box",
@@ -156,11 +151,15 @@ trailing:true white:true*/
       this.$.doneButton.setDisabled(!index);
       if (index) {
         this.$.editor.setValue(model);
-        model.used({
-          success: function (resp) {
-            that.$.deleteButton.setDisabled(resp);
-          }
-        });
+        if (model.isNew()) {
+          this.$.deleteButton.setDisabled(false);
+        } else {
+          model.used({
+            success: function (resp) {
+              that.$.deleteButton.setDisabled(resp);
+            }
+          });
+        }
         if (this.$.panels.getIndex()) { this.$.panels.setIndex(0); }
         this.$.prevButton.setDisabled(index - 0 === 0);
         this.$.nextButton.setDisabled(index - 0 === this.$.list.value.length - 1);

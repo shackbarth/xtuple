@@ -11,23 +11,25 @@ regexp:true, undef:true, trailing:true, white:true */
     @name XV.TextArea
     @extends XV.Input
    */
-  enyo.kind(/** @lends XV.TextArea */{
+  enyo.kind(/** @lends XV.TextArea# */{
     name: "XV.TextArea",
     kind: "XV.Input",
     classes: "xv-textarea",
-    events: {
-      onTextAreaFocus: ""
-    },
     published: {
       attr: null,
       placeholder: ""
     },
     components: [
       {name: "input", kind: "onyx.TextArea", classes: "xv-textarea-input",
-        onchange: "inputChanged", onfocus: "focused"}
+        onchange: "inputChanged", onkeydown: "keyDown"}
     ],
-    focused: function (inSender, inEvent) {
-      this.doTextAreaFocus(inEvent);
+    keyDown: function (inSender, inEvent) {
+      // XXX hack here (and in other places that reference issue 18397)
+      // can be removed once enyo fixes ENYO-1104
+      var shadowNone = inEvent.originator.hasClass("text-shadow-none");
+      inEvent.originator.addRemoveClass("text-shadow-none", !shadowNone);
+      inEvent.originator.addRemoveClass("text-shadow-0", shadowNone);
+      // end hack
     },
     placeholderChanged: function () {
       var placeholder = this.getPlaceholder();

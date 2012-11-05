@@ -8,12 +8,12 @@ regexp:true, undef:true, trailing:true, white:true */
     Checkbox
 
     @class
-    @name XV.Checkbox
-    @see XV.CheckboxWidget
+    @name XV.ToggleButton
+    @see XV.ToggleButtonWidget
    */
-  enyo.kind(/** @lends XV.Checkbox# */{
-    name: "XV.Checkbox",
-    kind: "onyx.Checkbox",
+  enyo.kind(/** @lends XV.ToggleButton# */{
+    name: "XV.ToggleButton",
+    kind: "onyx.ToggleButton",
     published: {
       attr: null
     },
@@ -21,7 +21,7 @@ regexp:true, undef:true, trailing:true, white:true */
       onValueChange: ""
     },
     handlers: {
-      onchange: "changed"
+      onChange: "changed"
     },
     clear: function (options) {
       this.setValue(false, options);
@@ -41,14 +41,14 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   /**
-    Checkbox widget
+    Toggle Button widget
 
     @class
-    @name XV.CheckboxWidget
-    @see XV.Checkbox
+    @name XV.ToggleButtonWidget
+    @see XV.ToggleButton
    */
-  enyo.kind(/** @lends XV.CheckboxWidget# */{
-    name: "XV.CheckboxWidget",
+  enyo.kind(/** @lends XV.ToggleButtonWidget# */{
+    name: "XV.ToggleButtonWidget",
     kind: "XV.Input",
     classes: "xv-inputwidget xv-checkboxwidget",
     published: {
@@ -59,7 +59,7 @@ regexp:true, undef:true, trailing:true, white:true */
         {name: "label", content: "", classes: "xv-decorated-label"},
         {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
           components: [
-          {name: "input", kind: "onyx.Checkbox", onchange: "inputChanged"}
+          {name: "input", kind: "onyx.ToggleButton", onChange: "inputChanged"}
         ]}
       ]}
     ],
@@ -77,6 +77,9 @@ regexp:true, undef:true, trailing:true, white:true */
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.attr || "").loc()) + ":";
       this.$.label.setContent(label);
+    },
+    placeholderChanged: function () {
+      // Not applicable
     },
     valueChanged: function (value) {
       this.$.input.setValue(value);

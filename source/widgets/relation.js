@@ -4,7 +4,14 @@ regexp:true, undef:true, trailing:true, white:true */
 
 (function () {
 
-  enyo.kind({
+  /**
+    Implements a dropdown. Unlike the {XV.RelationWidget}, the collection is stored local to the
+    widget.
+
+    @class
+    @name XV.RelationWidget
+   */
+  enyo.kind(/** @lends XV.RelationWidget# */{
     name: "XV.RelationWidget",
     kind: enyo.Control,
     classes: "xv-inputwidget xv-relationwidget",
@@ -104,6 +111,13 @@ regexp:true, undef:true, trailing:true, white:true */
       return this.value.get(this.getKeyAttribute());
     },
     keyDown: function (inSender, inEvent) {
+      // XXX hack here (and in other places that reference issue 18397)
+      // can be removed once enyo fixes ENYO-1104
+      var shadowNone = inEvent.originator.hasClass("text-shadow-none");
+      inEvent.originator.addRemoveClass("text-shadow-none", !shadowNone);
+      inEvent.originator.addRemoveClass("text-shadow-0", shadowNone);
+      // end hack
+
       // If tabbed out...
       inEvent.activator = this.$.decorator;
       if (inEvent.keyCode === 9) {
@@ -281,6 +295,7 @@ regexp:true, undef:true, trailing:true, white:true */
         Workspace = this._Workspace,
         Model = Workspace && Workspace.prototype.model ?
           XT.getObjectByName(Workspace.prototype.model)  : null,
+        originalValue,
         couldNotCreate = Model ? !Model.canCreate() : true,
         setPrivileges = function () {
           if (value && newId) {
@@ -292,16 +307,19 @@ regexp:true, undef:true, trailing:true, white:true */
       // an id instead of a whole model.
       if (_.isNumber(value) || _.isString(value)) {
         if (this.value === value || oldId === value) { return; }
+        originalValue = value;
         Model = XT.getObjectByName(this._collection.model.prototype.recordType);
-        value = new Model({id: value});
+        value = new Model();
         options = {
+          id: originalValue,
           success: function () {
             that.setValue(value);
+          },
+          error: function () {
+            X.log("Error setting relational widget value");
           }
         };
-        this.value = value;
-        // XXX shouldn't we pass the options in here?
-        value.fetch(/*options*/);
+        value.fetch(options);
         return;
       }
 

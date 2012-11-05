@@ -11,7 +11,7 @@ regexp:true, undef:true, trailing:true, white:true */
     @extends XV.Input
     @see XV.DateWidget
    */
-  enyo.kind(/** @lends XV.Date */{
+  enyo.kind(/** @lends XV.Date# */{
     name: "XV.Date",
     kind: "XV.Input",
     getValueToString: function (value) {
@@ -54,8 +54,19 @@ regexp:true, undef:true, trailing:true, white:true */
         date.setDate(value.substring(1));
       } else if (value.length && !isNaN(value)) {
         // A positive integer by itself means that day of this month
+
         date = new Date();
         date.setDate(value);
+
+        // we want to cap this date to the current month (so that
+        // a user can type in 99 to get the last day of the month)
+        var lastDayOfMonth = new Date();
+        lastDayOfMonth.setMonth(lastDayOfMonth.getMonth() + 1);
+        lastDayOfMonth.setDate(0);
+        if (lastDayOfMonth.getTime() < date.getTime()) {
+          date = lastDayOfMonth;
+        }
+
       } else if (value) {
         // Dates in the format of dates as we're used to them.
         // we're counting on JS to parse the date correctly
@@ -94,7 +105,7 @@ regexp:true, undef:true, trailing:true, white:true */
     @name XV.DateWidget
     @extends XV.Date
    */
-  enyo.kind(/** @lends XV.DateWidget */{
+  enyo.kind(/** @lends XV.DateWidget# */{
     name: "XV.DateWidget",
     kind: "XV.Date",
     classes: "xv-inputwidget xv-datewidget",
@@ -108,7 +119,7 @@ regexp:true, undef:true, trailing:true, white:true */
         {kind: "onyx.InputDecorator", name: "decorator",
           classes: "xv-input-decorator", components: [
           {name: "input", kind: "onyx.Input", onchange: "inputChanged",
-            classes: "xv-subinput"},
+            classes: "xv-subinput", onkeydown: "keyDown"},
           {kind: "onyx.MenuDecorator", components: [
             {name: "icon", kind: "onyx.IconButton", ontap: "iconTapped",
               src: "lib/enyo-x/assets/date-icon.png"},
@@ -135,6 +146,14 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     iconTapped: function (inSender, inEvent) {
       this.$.datePick.render();
+    },
+    keyDown: function (inSender, inEvent) {
+      // XXX hack here (and in other places that reference issue 18397)
+      // can be removed once enyo fixes ENYO-1104
+      var shadowNone = inEvent.originator.hasClass("text-shadow-none");
+      inEvent.originator.addRemoveClass("text-shadow-none", !shadowNone);
+      inEvent.originator.addRemoveClass("text-shadow-0", shadowNone);
+      // end hack
     },
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.attr || "").loc()) + ":";

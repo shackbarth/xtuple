@@ -5,7 +5,14 @@ trailing:true white:true*/
 
 (function () {
 
-  enyo.kind({
+  /**
+    We used to use this a lot.
+
+    @class
+    @deprecated
+    @name XV.ScreenCarousel
+   */
+  enyo.kind(/** @lends XV.ScreenCarousel# */{
     name: "XV.ScreenCarousel",
     kind: "Panels",
     classes: "xt-screen-carousel enyo-unselectable",

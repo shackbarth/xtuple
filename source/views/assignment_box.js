@@ -15,9 +15,9 @@ white:true*/
    @name XV.AssignmentBox
    @extends XV.ScrollableGroupbox
    */
-  enyo.kind(/** @lends XV.AssignmentBox */{
+  enyo.kind(/** @lends XV.AssignmentBox# */{
     name: "XV.AssignmentBox",
-    kind: "XV.ScrollableGroupbox",//"XV.Groupbox",
+    kind: "XV.Groupbox",
     classes: "xv-assignment-box",
     handlers: {
       onValueChange: "checkboxChange"
@@ -37,6 +37,11 @@ white:true*/
      *
      * @property {String} cacheName
      * The name of the cached collection if the collection is stored in the XM cache.
+     *
+     * @property {Array} restrictedValues
+     * An array of the values that we want to see in this assignment box. Values not in
+     *    this array will be suppressed. If this is null (as by default) then no suppression
+     *    will occur.
      *
      * @property {Array} segmentedCollections
      * An array of collections, each of whom are a subset of totalCollection.
@@ -68,6 +73,7 @@ white:true*/
       assignedCollection: null,
       assignedIds: null,
       cacheName: "",
+      restrictedValues: null,
       segmentedCollections: null,
       segments: null,
       title: "",
@@ -77,19 +83,16 @@ white:true*/
       type: ""
     },
 
-    // TODO: you'll notice the CSS looks bad. You can fix it by uncommenting the three lines here
-    // in components, and swap in the commented kind, above. Problem is, the scroller disappears
-    // inexplicably if you do this.
     components: [
-      //{kind: "onyx.GroupboxHeader", content: "_roles".loc()},
-      //{kind: "XV.ScrollableGroupbox", components: [
-      {kind: "Repeater", name: "segmentRepeater", fit: true, onSetupItem: "setupSegment", segmentIndex: 0, components: [
-        {kind: "onyx.GroupboxHeader", name: "segmentHeader", content: ""},
-        {kind: "Repeater", name: "checkboxRepeater", fit: true, onSetupItem: "setupCheckbox", components: [
-          {kind: "XV.CheckboxWidget", name: "checkbox" }
+      {kind: "onyx.GroupboxHeader", name: "masterHeader"},
+      {kind: "Scroller", fit: true, horizontal: "hidden", components: [
+        {kind: "Repeater", name: "segmentRepeater", fit: true, onSetupItem: "setupSegment", segmentIndex: 0, components: [
+          {kind: "onyx.GroupboxHeader", name: "segmentHeader", content: ""},
+          {kind: "Repeater", name: "checkboxRepeater", fit: true, onSetupItem: "setupCheckbox", components: [
+            {kind: "XV.CheckboxWidget", name: "checkbox" }
+          ]}
         ]}
       ]}
-      //]}
     ],
     /**
      * Applies special formatting to a checkbox after it has been clicked, if applicable.
@@ -105,7 +108,6 @@ white:true*/
     },
     /**
      * Handles bubbled checkbox event changes and prevents them from bubbling further.
-     * Note that this method is afflicted with an insane bug.
      */
     checkboxChange: function (inSender, inEvent) {
       var that = this,
@@ -115,38 +117,20 @@ white:true*/
         checkedModel,
         newModel;
 
-      // BEGIN HACK
-      var tempChecked, segmentNum, checkboxNum;
-      try {
-        tempChecked = checkbox.$.input.checked;
-        segmentNum = checkbox.parent.parent.parent.indexInContainer();
-        checkboxNum = checkbox.parent.indexInContainer();
-      } catch (error) {
-        XT.log("Crazy hack failed. Not bothering with it.");
-      }
-      //END HACK
-
-        //
-        // The record type in totalCollection is XM.Privilege and the
-        // record type in assignedCollection is XM.UserAccountPrivilegeAssignment,
-        // so we have to navigate this.
-        //
+      //
+      // The record type in totalCollection is XM.Privilege and the
+      // record type in assignedCollection is XM.UserAccountPrivilegeAssignment,
+      // so we have to navigate this.
+      //
       if (value) {
         // filter returns an array and we want a model: that's why I [0]
         // assumption: no duplicate originator names
         checkedModel = _.filter(this.getTotalCollection().models, function (model) {
           return model.get("name") === originatorName;
         })[0];
-        // XXX I would love to revisit this when I have another two hours to burn on crazy bugs
-        // the issue is that by creating the model we uncheck somehow the checkbox. Or maybe we're replacing
-        // the checkbox with a different checkbox that itself is unchecked. Adding to the craziness is
-        // that inEvent disappears at the same time. In WTF1land everything is normal. In WTF2land everything
-        // is zany. And the problem disappears entirely when I set a breakpoint! The hack above and below
-        // cannot possibly stand the test of time. But after 2 hours I'm ready to move on for now.
-        // XT.log("WTF1?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
         newModel = this.getAssignmentModel(checkedModel);
-        // XT.log("WTF2?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
         this.getAssignedCollection().add(newModel);
+
       } else {
         checkedModel = _.filter(this.getAssignedCollection().models, function (model) {
           // we don't want to redestroy a destroyed model, because there's probably a living one
@@ -158,39 +142,30 @@ white:true*/
         if (!checkedModel) {
           XT.log("No model to destroy. This is probably a bug."); // XXX
         }
-        // XT.log("WTF1?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
         checkedModel.destroy();
-        // XT.log("WTF2?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
       }
-      // BEGIN HACK
-      try {
-        if (tempChecked !== this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked) {
-          XT.log("applying hack: setting checkbox to " + tempChecked);
-          checkbox = this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox;
-          checkbox.$.input.checked = tempChecked;
-          this.render();
-        }
-      } catch (error) {
-        XT.log("Crazy hack failed. Not bothering with it.");
-      }
-      // END HACK
 
+      // force a refresh of the mapIds cache
+      this.assignedCollectionChanged();
+      this.tryToRender();
       this.applyPostCheckFormatting(checkbox, checkedModel);
       return true;
     },
+
     /**
      * Populates totalCollection field (either from the cache or through a fetch)
      * and calls for the totalCollection to be segmentized.
      */
     create: function () {
-      this.inherited(arguments);
-
       var i,
         that = this,
         comparator = function (model) {
           return model.get("name");
         };
 
+      this.inherited(arguments);
+
+      this.$.masterHeader.setContent(this.getTitle());
       this.setSegmentedCollections([]);
 
       for (i = 0; i < this.getSegments().length; i++) {
@@ -210,9 +185,6 @@ white:true*/
         }};
         this.getTotalCollection().fetch(options);
       }
-
-
-
     },
     /**
      * Creates a new assignment model to add to the assignedCollection.
@@ -237,6 +209,10 @@ white:true*/
           return null;
         }
 
+        if (model.getStatus() & XM.Model.DESTROYED) {
+          // don't add destroyed models to cache
+          return null;
+        }
         return model.get(that.getType()).get("id");
       }));
     },
@@ -256,17 +232,18 @@ white:true*/
       }
 
       inSender.segmentIndex = index;
-      header.setContent(this.getSegments()[index]);
-      row.$.checkboxRepeater.setCount(this.getSegmentedCollections()[index].length);
 
-      //
-      // Suppress the header if there's just one segment
-      //
-      if (this.getSegments().length < 2) {
-        header.setStyle("visibility: hidden;");
+      if (header && (this.getSegments().length < 2 || this.getSegmentedCollections()[index].length === 0)) {
+        //
+        // Suppress the header if there's just one segment, or if the segment is empty of boxes to assign
+        //
+        header.parent.removeChild(header);
+
+      } else if (header) {
+        header.setContent(("_" + this.getSegments()[index]).loc());
       }
 
-
+      row.$.checkboxRepeater.setCount(this.getSegmentedCollections()[index].length);
 
       return true;
     },
@@ -279,8 +256,11 @@ white:true*/
         segmentIndex = parentSegmentRepeater.segmentIndex,
         data = this.getSegmentedCollections()[segmentIndex].at(index),
         row = inEvent.item.$.checkbox,
-        label = this.getTranslateLabels() ? ("_" + data.get("name")).loc() : data.get("name");
+        title = data.get("name").camelize(),
+        label = this.getTranslateLabels() ? ("_" + title).loc() : data.get("name");
 
+      // XXX useful for translating:
+      //console.log('"_' + title + '": "' + data.get("name") + '",');
       row.setLabel(label);
       row.setName(data.get("name"));
       if (_.indexOf(this.getAssignedIds(), data.get("id")) >= 0) {
@@ -299,21 +279,38 @@ white:true*/
        */
       this.tryToRender();
     },
+
     segmentizeTotalCollection: function () {
-      var i, j, model, module;
+      var i, model, name;
       for (i = 0; i < this.getTotalCollection().length; i++) {
         model = this.getTotalCollection().models[i];
-
-        module = model.get("module");
-        for (j = 0; j < this.getSegments().length; j++) {
-          if (this.getSegments().length === 1 || module === this.getSegments()[j]) {
-            // if there's only one segment then no need to segmentize at all
-            this.getSegmentedCollections()[j].add(model);
-          }
+        name = model.get("name")
+        if (!this.getRestrictedValues() || this.getRestrictedValues().indexOf(name) >= 0) {
+          // note: multiple segment support is effectively disabled by the hardcoded 0, below.
+          // if we want to re-incorporate it, look at the commented implementation below
+          // for a flavor of how this might work.
+          this.getSegmentedCollections()[0].add(model);
         }
       }
       this.tryToRender();
     },
+
+    // old implementation:
+    //segmentizeTotalCollection: function () {
+    //  var i, j, model, module;
+    //  for (i = 0; i < this.getTotalCollection().length; i++) {
+    //    model = this.getTotalCollection().models[i];
+    //    module = model.get("module");
+    //    for (j = 0; j < this.getSegments().length; j++) {
+    //      if (this.getSegments().length === 1 || module.toLowerCase() === this.getSegments()[j].toLowerCase()) {
+    //        // if there's only one segment then no need to segmentize at all
+    //        this.getSegmentedCollections()[j].add(model);
+    //      }
+    //    }
+    //  }
+    //  this.tryToRender();
+    //},
+
     /**
      * Render this AssignmentBox by firing off the segment repeater.
      * We can only render if we know *both* what the options and and also

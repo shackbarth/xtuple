@@ -19,7 +19,7 @@ white:true*/
     @name XV.CharacteristicPicker
     @extends XV.PickerWidget
    */
-  enyo.kind(/** @lends XV.CharacteristicPicker */{
+  enyo.kind(/** @lends XV.CharacteristicPicker# */{
     name: "XV.CharacteristicPicker",
     kind: "XV.PickerWidget",
     classes: "xv-characteristic-picker",
@@ -37,7 +37,7 @@ white:true*/
     @class
     @name XV.OptionsPicker
   */
-  enyo.kind(/** @lends XV.OptionsPicker */{
+  enyo.kind(/** @lends XV.OptionsPicker# */{
     name: "XV.OptionsPicker",
     published: {
       attr: null,
@@ -125,7 +125,7 @@ white:true*/
     @class
     @name XV.CharacteristicItem
    */
-  enyo.kind(/** @lends XV.CharacteristicItem */{
+  enyo.kind(/** @lends XV.CharacteristicItem# */{
     name: "XV.CharacteristicItem",
     kind: "FittableColumns",
     classes: "xv-characteristic-item",
@@ -210,7 +210,7 @@ white:true*/
     @class
     @name XV.CharacteristicsWidget
    */
-  enyo.kind(/** @lends XV.CharacteristicsWidget */{
+  enyo.kind(/** @lends XV.CharacteristicsWidget# */{
     name: "XV.CharacteristicsWidget",
     classes: "xv-characteristics-widget",
     published: {

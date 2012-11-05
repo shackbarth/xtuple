@@ -11,7 +11,7 @@ regexp:true, undef:true, trailing:true, white:true */
     @name XV.FileInput
     @class
    */
-  enyo.kind(/** @lends XV.FileInput */{
+  enyo.kind(/** @lends XV.FileInput# */{
     name: "XV.FileInput",
     kind: "XV.Input",
     events: {
@@ -58,6 +58,12 @@ regexp:true, undef:true, trailing:true, white:true */
         file = inEvent.originator.$.input.hasNode().files[0],
         filename = inEvent.value,
         reader;
+
+      if (filename.indexOf("C:\\fakepath\\") === 0) {
+        // some browsers obnoxiously give you a fake path, but the only thing
+        // we want is the filename really.
+        filename = filename.replace("C:\\fakepath\\", "");
+      }
 
       // XXX Browser support for this HTML5 construct is not universal
       if (FileReader) {

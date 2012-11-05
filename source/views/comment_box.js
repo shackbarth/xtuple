@@ -4,6 +4,23 @@ white:true*/
 /*global enyo:true, XT:true, XV:true, XM:true, _: true, Globalize:true */
 
 (function () {
+  
+  /**
+    Comment type picker.
+
+    @class
+    @name XV.CommentTypePicker
+    @see XV.CommentBox
+   */
+  enyo.kind(/** @lends XV.CommentTypePicker# */{
+    name: "XV.CommentTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.commentTypes",
+    orderBy: [
+      {attribute: 'order'},
+      {attribute: 'name'}
+    ]
+  });
 
   /**
     Represents and individual comment within the comment box.
@@ -12,7 +29,7 @@ white:true*/
     @name XV.CommentBoxItem
     @see XV.CommentBox
    */
-  enyo.kind(/** @lends XV.CommentBoxItem */{
+  enyo.kind(/** @lends XV.CommentBoxItem# */{
     name: "XV.CommentBoxItem",
     classes: "xv-comment-box",
     published: {
@@ -85,9 +102,7 @@ white:true*/
       return "\n<blockquote>" + text + "</pre></blockquote><hr>";
     },
     setCommentTypeFilter: function () {
-      var model = this.parent.parent.parent.parent.parent.getModel(),
-        Klass = XT.getObjectByName(model),
-        sourceName = Klass.prototype.sourceName,
+      var value = this.getValue(),
         commentType = this.$.commentType;
       commentType.filter = function (models) {
         return _.filter(models, function (model) {
@@ -102,7 +117,7 @@ white:true*/
           attrs = _.pluck(sources, 'attributes');
           sourceNames = _.pluck(attrs, 'name');
           return _.find(sourceNames, function (name) {
-            return name === sourceName;
+            return name === value.sourceName;
           });
         });
       };
@@ -170,7 +185,7 @@ white:true*/
     @name XV.CommentBox
     @see XV.CommentBoxItem
    */
-  enyo.kind(/** @lends XV.CommentBox */{
+  enyo.kind(/** @lends XV.CommentBox# */{
     name: "XV.CommentBox",
     kind: "XV.Groupbox",
     classes: "panel xv-comment-box",
@@ -218,13 +233,8 @@ white:true*/
     },
     setupItem: function (inSender, inEvent) {
       var row = inEvent.item.$.repeaterItem,
-        model = this._collection.at(inEvent.index),
-        status = model.getStatus(),
-        K = XM.Model;
+        model = this._collection.at(inEvent.index);
       row.setValue(model);
-      if (status & K.DESTROYED) {
-        row.setDeleted(true);
-      }
       return true;
     },
     setValue: function (value, options) {

@@ -12,11 +12,11 @@ regexp:true, undef:true, trailing:true, white:true */
     @name XV.PickerWidget
     @see XV.Relation
    */
-  enyo.kind(/** @lends XV.PickerWidget */{
+  enyo.kind(/** @lends XV.PickerWidget# */{
     name: "XV.PickerWidget",
     kind: "enyo.Control",
     classes: "xv-pickerwidget",
-    events: /** @lends XV.PickerWidget */{
+    events: /** @lends XV.PickerWidget# */{
       /**
         @property {Object} inEvent The payload that's attached to bubbled-up events
         @property {XV.PickerWidget} inEvent.originator This

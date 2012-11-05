@@ -11,7 +11,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     @name XV.Completer
     @extends onyx.Picker
    */
-  enyo.kind(/** @lends XV.Completer */{
+  enyo.kind(/** @lends XV.Completer# */{
     name: "XV.Completer",
     kind: "onyx.Picker",
     classes: "xv-combobox-picker",

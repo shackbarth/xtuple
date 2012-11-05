@@ -41,15 +41,14 @@ trailing:true white:true*/
         control,
         isReadOnly,
         isRequired,
-        prop;
-      // This wasn't original intent. Changes was ONLY supposed to process changes,
-      // but it turns out attributes changed inside triggers don't themselves don't
+        prop,
+        attrs = this.value ? this.value.getAttributeNames() : [];
+      // This wasn't the original intent. Changes was ONLY supposed to process changes,
+      // but it turns out attributes changed inside triggers themselves don't
       // get included in a generic change event. So for now process all every time.
-      for (prop in model.attributes) {
-        if (model.attributes.hasOwnProperty(prop)) {
-          changes[prop] = true;
-        }
-      }
+      _.each(attrs, function (a) {
+        changes[a] = true;
+      });
       for (attr in changes) {
         if (changes.hasOwnProperty(attr)) {
           prop = model.attributeDelegates && model.attributeDelegates[attr] ?
@@ -102,7 +101,7 @@ trailing:true white:true*/
     @extends XV.ExtensionsMixin
     @see XV.WorkspaceContainer
   */
-  var workspaceHash = enyo.mixin(XV.EditorMixin, /** @lends XV.Workspace */{
+  var workspaceHash = enyo.mixin(XV.EditorMixin, /** @lends XV.Workspace# */{
     name: "XV.Workspace",
     kind: "FittableRows",
     published: {
@@ -122,8 +121,7 @@ trailing:true white:true*/
       onHistoryChange: ""
     },
     handlers: {
-      onValueChange: "controlValueChanged",
-      onTextAreaFocus: "textAreaFocus"
+      onValueChange: "controlValueChanged"
     },
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
@@ -155,6 +153,7 @@ trailing:true white:true*/
         error: error
       };
       this.doError(inEvent);
+      this.attributesChanged(this.getValue());
     },
     fetch: function (id) {
       var options = {};
@@ -231,16 +230,27 @@ trailing:true white:true*/
     },
     newRecord: function (attributes) {
       var attr,
-        changes = {};
+        changes = {},
+        that = this,
+        options = {
+          success: function () {
+            that.attributesChanged(that.value);
+          }
+        };
       this.modelChanged();
       this.clear();
+      this.headerValuesChanged();
       this.value.initialize(null, {isNew: true});
       this.value.set(attributes, {force: true});
       for (attr in attributes) {
         if (attributes.hasOwnProperty(attr)) {
           this.value.setReadOnly(attr);
-          changes[attr] = true;
-          this.attributesChanged(this.value, {changes: changes});
+          if (this.value.getRelation(attr)) {
+            this.value.fetchRelated(attr, options);
+          } else {
+            changes[attr] = true;
+            this.attributesChanged(this.value, {changes: changes});
+          }
         }
       }
     },
@@ -289,22 +299,6 @@ trailing:true white:true*/
       this.attributesChanged(model, options);
       this.doStatusChange(inEvent);
     },
-    /**
-      When a text area is brought into focus we want to move the
-      panels to bring this into prime position.
-    */
-    textAreaFocus: function (inSender, inEvent) {
-      var originator = inEvent.originator,
-        component = originator;
-
-      while (component.parent && component.parent.name !== 'panels') {
-        component = component.parent;
-      }
-
-      if (component.indexInContainer && component.indexInContainer !== this.$.panels.getIndex()) {
-        this.$.panels.setIndex(component.indexInContainer());
-      }
-    },
     titleChanged: function () {
       var inEvent = { title: this.getTitle(), originator: this };
       this.doTitleChange(inEvent);
@@ -320,7 +314,7 @@ trailing:true white:true*/
     @name XV.WorkspaceContainer
     @see XV.Workspace
    */
-  enyo.kind(/** @lends XV.WorkspaceContainer */{
+  enyo.kind(/** @lends XV.WorkspaceContainer# */{
     name: "XV.WorkspaceContainer",
     kind: "Panels",
     arrangerKind: "CollapsingArranger",
@@ -538,7 +532,7 @@ trailing:true white:true*/
           this.$.header.hide();
         }
         this.render();
-        if (id) {
+        if (id || id === false) {
           workspace.fetch(id);
         } else {
           workspace.newRecord(attributes);
@@ -572,12 +566,18 @@ trailing:true white:true*/
         K = XM.Model,
         status = inEvent.status,
         isNotReady = status !== K.READY_CLEAN && status !== K.READY_DIRTY,
+        canCreate = model.getClass().canCreate(),
         canUpdate = model.canUpdate() || status === K.READY_NEW,
         isEditable = canUpdate && !model.isReadOnly(),
         canNotSave = !model.isDirty() || !isEditable,
         message;
 
       // Status dictates whether buttons are actionable
+      if (canCreate) {
+        this.$.saveAndNewButton.show();
+      } else {
+        this.$.saveAndNewButton.hide();
+      }
       this.$.refreshButton.setDisabled(isNotReady);
       this.$.applyButton.setDisabled(canNotSave);
       this.$.saveAndNewButton.setDisabled(canNotSave);

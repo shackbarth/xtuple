@@ -109,6 +109,12 @@ body {
 .left {
   color: #ffffff;
 }
+.text-shadow-none {
+  text-shadow: none;
+}
+.text-shadow-0 {
+  text-shadow: 0px 0px black;
+}
 .xt-app {
   position: absolute;
   top: 0;

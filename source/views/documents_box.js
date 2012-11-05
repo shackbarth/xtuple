@@ -11,7 +11,7 @@ trailing:true white:true*/
     @class
     @name XV.DocumentListRelations
    */
-  enyo.kind(/** @lends XV.DocumentListRelations */{
+  enyo.kind(/** @lends XV.DocumentListRelations# */{
     name: "XV.DocumentListRelations",
     kind: "XV.ListRelations",
     parentKey: "account",
@@ -125,7 +125,7 @@ trailing:true white:true*/
     @class
     @name XV.DocumentsBox
   */
-  enyo.kind(/** @lends XV.DocumentsBox */{
+  enyo.kind(/** @lends XV.DocumentsBox# */{
     name: "XV.DocumentsBox",
     kind: "XV.ListRelationsBox",
     classes: "xv-documents-box",

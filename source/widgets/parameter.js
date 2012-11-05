@@ -12,7 +12,7 @@ white:true*/
     @name XV.ParameterItem
     @see XV.ParameterWidget
    */
-  enyo.kind(/** @lends XV.ParameterItem */{
+  enyo.kind(/** @lends XV.ParameterItem# */{
     name: "XV.ParameterItem",
     classes: "xv-parameter-item",
     published: {
@@ -89,6 +89,9 @@ white:true*/
     handlers: {
       onParameterChange: "memoize"
     },
+    published: {
+      memoizeEnabled: true
+    },
     defaultKind: "XV.ParameterItem",
     isAllSetUp: false,
     create: function () {
@@ -143,6 +146,7 @@ white:true*/
       Remember the state of this parameter widget
      */
     memoize: function (inSender, inEvent) {
+      if (!this.getMemoizeEnabled()) { return; }
       var values,
         dbName,
         cookieName;
@@ -158,6 +162,7 @@ white:true*/
       enyo.setCookie(cookieName, JSON.stringify(values));
     },
     populateFromCookie: function () {
+      if (!this.getMemoizeEnabled()) { return; }
       var dbName = XT.session.details.organization,
         cookieName = 'advancedSearchCache_' + dbName + '_' + this.name,
         cookieValue = enyo.getCookie(cookieName),
@@ -179,6 +184,14 @@ white:true*/
           }
         }
       }
+    },
+    setParameterItemValues: function (items) {
+      var that = this;
+      _.each(items, function (item) {
+        if (that.$[item.name]) {
+          that.$[item.name].setValue(item.value, {silent: true});
+        }
+      });
     }
   };
 
