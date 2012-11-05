@@ -153,6 +153,7 @@ trailing:true white:true*/
         error: error
       };
       this.doError(inEvent);
+      this.attributesChanged(this.getValue());
     },
     fetch: function (id) {
       var options = {};
@@ -531,7 +532,7 @@ trailing:true white:true*/
           this.$.header.hide();
         }
         this.render();
-        if (id) {
+        if (id || id === false) {
           workspace.fetch(id);
         } else {
           workspace.newRecord(attributes);
@@ -565,12 +566,18 @@ trailing:true white:true*/
         K = XM.Model,
         status = inEvent.status,
         isNotReady = status !== K.READY_CLEAN && status !== K.READY_DIRTY,
+        canCreate = model.getClass().canCreate(),
         canUpdate = model.canUpdate() || status === K.READY_NEW,
         isEditable = canUpdate && !model.isReadOnly(),
         canNotSave = !model.isDirty() || !isEditable,
         message;
 
       // Status dictates whether buttons are actionable
+      if (canCreate) {
+        this.$.saveAndNewButton.show();
+      } else {
+        this.$.saveAndNewButton.hide();
+      }
       this.$.refreshButton.setDisabled(isNotReady);
       this.$.applyButton.setDisabled(canNotSave);
       this.$.saveAndNewButton.setDisabled(canNotSave);

@@ -192,6 +192,7 @@ trailing:true white:true*/
       var that = this,
         workspace = this.getWorkspace(),
         model,
+        Klass = XT.getObjectByName(this.getCollection()),
         checkStatusCollection,
         checkStatusParameter,
         checkStatusQuery;
@@ -199,7 +200,8 @@ trailing:true white:true*/
       // If the model that changed was related to and exists on this list
       // refresh the item. Remove the item if appropriate
       workspace = workspace ? XT.getObjectByName(workspace) : null;
-      if (workspace && workspace.prototype.model === inEvent.model && this.getValue()) {
+      if (workspace && workspace.prototype.model === inEvent.model &&
+          this.getValue() && typeof Klass === 'function') {
         model = this.getValue().get(inEvent.id);
 
         // cleverness: we're going to see if the model still belongs in the collection by
@@ -214,7 +216,7 @@ trailing:true white:true*/
           checkStatusQuery.parameters = [checkStatusParameter];
         }
 
-        checkStatusCollection = new XM[this.getCollection().suffix()]();
+        checkStatusCollection = new Klass();
         checkStatusCollection.fetch({
           query: checkStatusQuery,
           success: function (collection, response) {

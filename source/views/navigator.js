@@ -276,7 +276,7 @@ trailing:true white:true*/
         workspace = list ? list.getWorkspace() : null,
         model = list.getModel(inEvent.index),
         canNotRead = model.couldRead ? !model.couldRead() : !model.getClass().canRead(),
-        id = model ? model.id : null,
+        id = model && model.id ? model.id : false,
         message;
 
       // Check privileges first
@@ -455,7 +455,7 @@ trailing:true white:true*/
 
       // Handle new button
       this.$.newButton.setShowing(panel.canAddNew);
-      if (collection) {
+      if (panel.canAddNew && collection) {
         // Check 'couldCreate' first in case it's an info model.
         model = collection.prototype.model;
         canNotCreate = model.prototype.couldCreate ? !model.prototype.couldCreate() : !model.canCreate();
