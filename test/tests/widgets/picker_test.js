@@ -20,19 +20,16 @@ trailing:true white:true*/
     },
     testRejectJunk: function () {
       this.getObj().setValue("XYZ");
-      var err = this.getObj().getValue() === null ? "" : "Widget not rendering junk as null";
-      this.finish(err);
+      this.finish(XV.applyTest(null, this.getObj().getValue(), "Widget not rendering junk as null"));
     },
     testAcceptValid: function () {
       this.getObj().setValue("O");
-      var err = this.getObj().getValue().id === "O" ? "" : "Widget not accepting valid input";
-      this.finish(err);
+      this.finish(XV.applyTest("O", this.getObj().getValue().id, "Widget not accepting valid input"));
     },
     testKeepOldValue: function () {
       this.getObj().setValue("O");
       this.getObj().setValue("XYZ");
-      var err = this.getObj().getValue().id === "O" ? "" : "Widget not keeping valid input after junk input";
-      this.finish(err);
+      this.finish(XV.applyTest("O", this.getObj().getValue().id, "Widget not keeping valid input after junk input"));
     }
   });
 }());

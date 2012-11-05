@@ -26,7 +26,12 @@ regexp:true, undef:true, trailing:true, white:true */
      */
     setValue: function (value, options) {
       if (value) {
-        value = new Date(value.valueOf()); // clone. Also converts string to date.
+        if (typeof value === 'string') {
+          value = this.validate(value);
+        } else {
+          value = new Date(value.valueOf()); // clone
+        }
+
         if (isNaN(value.getTime())) {
           value = null;
         }
@@ -70,13 +75,16 @@ regexp:true, undef:true, trailing:true, white:true */
       } else if (value) {
         // Dates in the format of dates as we're used to them.
         // we're counting on JS to parse the date correctly
+        date = new Date(value);
 
         // assume two-digit dates are in the 2000's. Firefox does not do
         // this automatically
-
-
-
-        date = new Date(value);
+        if (date.getFullYear() < 2000 && isNaN(value.substring(value.length - 4))) {
+          // this is not perfect code. We assume that if the last four digits are not
+          // numeric then they're something like "4/12", but maybe they're junky. Then again,
+          // I don't want to assume that the user will use a slash to separate month from year.
+          date.setYear("20" + value.substring(value.length - 2));
+        }
       }
 
       // Validate
@@ -87,10 +95,9 @@ regexp:true, undef:true, trailing:true, white:true */
           // these dates are represented without the time, so
           // strip that off here
           date.setHours(0, 0, 0, 0);
-          // see the comment in valueChanged, below. For human-
-          // entered dates we have to mock the model-driven
-          // offset so that the transformation in valueChanged
-          // leaves us where we want to be
+          // the model offsets this date by the timezone by the time
+          // it arrives here, so we need to mimic that action here
+          // for user input
           date = XT.date.applyTimezoneOffset(date, false);
         }
       }
@@ -102,10 +109,6 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     valueChanged: function (value) {
       if (value) {
-        // the model offsets this date by the timezone by the time
-        // it arrives here, so we need to undo that action here, or
-        // else 11/5 will be rendered as 11/4 to user in GMT-minus
-        // timezones (e.g. Korea)
         value = XT.date.applyTimezoneOffset(value, true);
         value = Globalize.format(value, "d");
       } else {
