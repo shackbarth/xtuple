@@ -133,8 +133,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     path = _path.join(X.basePath, X.routersDirectory);
 
-    X.log("Loading available routers from %@".f(
-      X.shorten(path, 5)));
+    X.log("Loading routers from %@".f(
+      X.shorten(path, 3)));
 
     files = X.directoryFiles(path, {extension: ".js", fullPath: true});
     _.each(files, function (file) {

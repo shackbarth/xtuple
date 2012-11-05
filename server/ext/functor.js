@@ -44,8 +44,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     X.functors = [];
     X.functorMap = {};
 
-    X.log("Loading available functors from %@".f(
-      X.shorten(path, 5)));
+    X.log("Loading functors from %@".f(
+      X.shorten(path, 3)));
 
     files = X.directoryFiles(path, {extension: ".js", fullPath: true});
     _.each(files, function (file) {
