@@ -142,10 +142,24 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.FileParameters",
+    name: "XV.FileListParameters",
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_file".loc()},
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "description", label: "_description".loc(), attr: "description"}
+    ]
+  });
+
+  // ..........................................................
+  // IMAGE
+  //
+
+  enyo.kind({
+    name: "XV.ImageListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_image".loc()},
       {name: "name", label: "_name".loc(), attr: "name"},
       {name: "description", label: "_description".loc(), attr: "description"}
     ]
@@ -457,7 +471,7 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.UrlParameters",
+    name: "XV.UrlListParameters",
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_url".loc()},
