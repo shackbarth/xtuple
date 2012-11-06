@@ -116,6 +116,7 @@ body {
 .left-float {
   float: left;
   display: block;
+  margin-right: 3px;
 }
 .text-shadow-none {
   text-shadow: none;
