@@ -38,6 +38,28 @@ trailing:true white:true*/
       Klass.prototype.extensions = extensions.concat(extension);
     },
 
+    /**
+      Helper function for enyo unit testing
+
+      @param expected
+      @param actual
+      @param {String} message
+         Only displayed in the case of a failed test
+      @return {String} Per enyo's conventions, the empty string means the test is passed.
+     */
+    applyTest: function (expected, actual, message) {
+      if (expected === actual) {
+        return "";
+      } else {
+        if (message) {
+          message = ". " + message;
+        } else {
+          message = ".";
+        }
+        return "Expected " + expected + ", saw " + actual + message;
+      }
+    },
+
     getList: function (recordType) {
       return XV._modelLists[recordType];
     },

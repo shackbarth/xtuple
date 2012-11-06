@@ -26,7 +26,12 @@ regexp:true, undef:true, trailing:true, white:true */
      */
     setValue: function (value, options) {
       if (value) {
-        value = new Date(value.valueOf()); // clone. Also converts string to date.
+        if (typeof value === 'string') {
+          value = this.validate(value);
+        } else {
+          value = new Date(value.valueOf()); // clone
+        }
+
         if (isNaN(value.getTime())) {
           value = null;
         }
@@ -71,6 +76,15 @@ regexp:true, undef:true, trailing:true, white:true */
         // Dates in the format of dates as we're used to them.
         // we're counting on JS to parse the date correctly
         date = new Date(value);
+
+        // assume two-digit dates are in the 2000's. Firefox does not do
+        // this automatically
+        if (date.getFullYear() < 2000 && isNaN(value.substring(value.length - 4))) {
+          // this is not perfect code. We assume that if the last four digits are not
+          // numeric then they're something like "4/12", but maybe they're junky. Then again,
+          // I don't want to assume that the user will use a slash to separate month from year.
+          date.setYear("20" + value.substring(value.length - 2));
+        }
       }
 
       // Validate
@@ -78,7 +92,13 @@ regexp:true, undef:true, trailing:true, white:true */
         if (isNaN(date.getTime())) {
           date = false;
         } else {
+          // these dates are represented without the time, so
+          // strip that off here
           date.setHours(0, 0, 0, 0);
+          // the model offsets this date by the timezone by the time
+          // it arrives here, so we need to mimic that action here
+          // for user input
+          date = XT.date.applyTimezoneOffset(date, false);
         }
       }
       return date;
@@ -89,8 +109,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     valueChanged: function (value) {
       if (value) {
-        value = new Date(value.valueOf());
-        value.setMinutes(value.getTimezoneOffset());
+        value = XT.date.applyTimezoneOffset(value, true);
         value = Globalize.format(value, "d");
       } else {
         value = "";
@@ -139,8 +158,10 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     datePicked: function (inSender, inEvent) {
       var date = inEvent;
-      // mimic the human-typed behavior of setting the hours to 0.
-      date.setHours(0);
+      // mimic the human-typed behavior
+      date.setHours(0, 0, 0, 0);
+      date = XT.date.applyTimezoneOffset(date, false);
+
       this.setValue(date);
       this.$.datePickPopup.hide();
     },
