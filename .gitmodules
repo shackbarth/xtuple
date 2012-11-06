@@ -1,0 +1,3 @@
+[submodule "mongo_schemas"]
+	path = mongo_schemas
+	url = git://github.com/xtuple/node-schemas.git
