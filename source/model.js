@@ -744,6 +744,36 @@ white:true*/
       };
       return parse(resp);
     },
+    
+    /**
+      Revert the model to the previous status. Useful for reseting status
+      after a failed validation.
+      
+      param {Boolean} - cascade
+    */
+    revertStatus: function (cascade) {
+      var K = XM.Model,
+        prev = this._prevStatus,
+        that = this,
+        attr;
+      this.setStatus(this._prevStatus || K.EMPTY);
+      this._prevStatus = prev;
+      
+      // Cascade changes through relations if specified
+      if (cascade) {
+        _.each(this.relations, function (relation) {
+          attr = that.attributes[relation.key];
+          if (attr && attr.models &&
+              relation.type === Backbone.HasMany) {
+            _.each(attr.models, function (model) {
+              if (model.revertStatus) {
+                model.revertStatus(cascade);
+              }
+            });
+          }
+        });
+      }
+    },
 
     /**
       Reimplemented.
@@ -756,8 +786,7 @@ white:true*/
         model = this,
         K = XM.Model,
         success,
-        result,
-        oldStatus = this.getStatus();
+        result;
 
       // Can't save unless root
       if (this.getParent()) {
@@ -791,7 +820,7 @@ white:true*/
         // Call the super version
         this.setStatus(K.BUSY_COMMITTING, {cascade: true});
         result = Backbone.Model.prototype.save.call(this, key, value, options);
-        if (!result) { this.setStatus(oldStatus, {cascade: true}); }
+        if (!result) { this.revertStatus(true); }
         return result;
       }
 
@@ -863,6 +892,7 @@ white:true*/
       // Prevent recursion
       if (this.isLocked() || this.status === status) { return; }
       this.acquire();
+      this._prevStatus = this.status;
       this.status = status;
       parent = this.getParent();
 
