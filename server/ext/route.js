@@ -56,8 +56,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     path = _path.join(X.basePath, X.routesDirectory);
 
-    X.log("Loading available routes from %@".f(
-      X.shorten(path, 5)));
+    X.log("Loading routes from %@".f(
+      X.shorten(path, 3)));
 
     files = X.directoryFiles(path, {extension: ".js", fullPath: true});
     _.each(files, function (file) {
