@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: TextArea</title>
+    <title>JSDoc: Global</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: TextArea</h1>
+    <h1 class="page-title">Global</h1>
     
     
 
@@ -27,9 +27,7 @@
     
 <header>
     <h2>
-        <span class="ancestors"><a href="XV.html">XV</a>.</span>
-    
-    TextArea
+    testQueryOrder
     </h2>
     
 </header>  
@@ -40,26 +38,14 @@
     
     
         
-<dt>
-    <h4 class="name" id="TextArea"><span class="type-signature"></span>new TextArea</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Implements an onyx.TextArea with API support from XV.Input
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
+            <div class="description">Test for incident #18662.
+      Makes two fetches to the model. The first call will take so long
+      that the second one will have already been made by the time
+      that it returns. This test is to make sure that the first
+      query is not processen when it returns.</div>
+        
+        
+        
 <dl class="details">
     
         
@@ -81,7 +67,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>text_area.js, line 7</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>list_test.js, line 22</li></ul></dd>
 	
     
     
@@ -91,25 +77,11 @@
 	
 </dl>
 
-    
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
+        
+        
     
     </div>
     
-    
-        <h3 class="subsection-title">Extends</h3>
-        
-        <ul>
-            <li><a href="XV.Input.html">XV.Input</a></li>
-        </ul>
     
     
     
