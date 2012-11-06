@@ -107,7 +107,7 @@ trailing:true white:true*/
       return this.getValue().models[index];
     },
     getSearchableAttributes: function () {
-      var model = this.getValue();
+      var model = this.getValue().model;
       return model.getSearchableAttributes ? model.getSearchableAttributes() : [];
     },
     getWorkspace: function () {
