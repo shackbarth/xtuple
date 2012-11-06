@@ -109,6 +109,14 @@ body {
 .left {
   color: #ffffff;
 }
+.right-float {
+  float: right;
+  display: block;
+}
+.left-float {
+  float: left;
+  display: block;
+}
 .text-shadow-none {
   text-shadow: none;
 }
