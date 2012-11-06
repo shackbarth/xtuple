@@ -15,7 +15,6 @@ trailing:true white:true*/
       {name: "honorificList", kind: "XV.HonorificList"},
       {name: "accountList", kind: "XV.AccountList"},
       {name: "contactList", kind: "XV.ContactList"},
-      {name: "incidentList", kind: "XV.IncidentList"},
       {name: "itemList", kind: "XV.ItemList"},
       {name: "classCodeList", kind: "XV.ClassCodeList"},
       {name: "unitList", kind: "XV.UnitList"},
