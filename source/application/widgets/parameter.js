@@ -260,9 +260,14 @@ trailing:true white:true*/
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_created".loc()},
-      {name: "fromDate", label: "_fromDate".loc(), attr: "created", operator: ">=",
+      {name: "createdFromDate", label: "_fromDate".loc(), attr: "created", operator: ">=",
         defaultKind: "XV.DateWidget"},
-      {name: "toDate", label: "_toDate".loc(), attr: "created", operator: "<=",
+      {name: "createdToDate", label: "_toDate".loc(), attr: "created", operator: "<=",
+        defaultKind: "XV.DateWidget"},
+      {kind: "onyx.GroupboxHeader", content: "_updated".loc()},
+      {name: "updatedFromDate", label: "_fromDate".loc(), attr: "updated", operator: ">=",
+        defaultKind: "XV.DateWidget"},
+      {name: "updatedToDate", label: "_toDate".loc(), attr: "updated", operator: "<=",
         defaultKind: "XV.DateWidget"}
     ]
   });
