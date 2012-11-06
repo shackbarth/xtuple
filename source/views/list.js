@@ -315,6 +315,7 @@ trailing:true white:true*/
             value = this[formatter](value, view, model);
           }
           if (value && value instanceof Date) {
+            value = XT.date.applyTimezoneOffset(value, true);
             value = Globalize.format(value, 'd');
           }
           view.setContent(value);
