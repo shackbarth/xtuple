@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <title>JSDoc: Class: Navigator</title>
     
-    <script src="http://shjs.sourceforge.net/sh_main.min.js"> </script>
-    <script src="http://shjs.sourceforge.net/lang/sh_javascript.min.js"> </script>
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/node-dark.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
     <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
 </head>
 
@@ -52,6 +52,8 @@
         High-level container of all business object lists.
     </div>
     
+
+    
     
     
     
@@ -63,6 +65,8 @@
         
 	
 	
+	
+
 	
 	
 	
@@ -135,6 +139,8 @@
 	
 	
 	
+
+	
 	
 	
 	
@@ -148,7 +154,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 118</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 119</li></ul></dd>
 	
     
     
@@ -211,9 +217,11 @@
             
             <td class="type">
             
-                        Array
-                        
-                    
+                
+<span class="param-type">Array</span>
+
+
+            
             </td>
             
             
@@ -234,9 +242,11 @@
             
             <td class="type">
             
-                        Object
-                        
-                    
+                
+<span class="param-type">Object</span>
+
+
+            
             </td>
             
             
@@ -255,6 +265,8 @@
         
 	
 	
+	
+
 	
 	
 	
@@ -304,6 +316,8 @@
       back button that takes you to the root menu.
     </div>
     
+
+    
     
     
     
@@ -315,6 +329,8 @@
         
 	
 	
+	
+
 	
 	
 	
@@ -329,7 +345,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 126</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 127</li></ul></dd>
 	
     
     
@@ -364,6 +380,8 @@
       will be periodically cached into the panelCache published field and removed from the DOM.
     </div>
     
+
+    
     
     
     
@@ -375,6 +393,8 @@
         
 	
 	
+	
+
 	
 	
 	
@@ -389,7 +409,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 139</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 140</li></ul></dd>
 	
     
     
@@ -423,68 +443,7 @@
         Called if the user does not really want to log out. Just closes the logout popup.
     </div>
     
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 574</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
 
-    
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="exportList"><span class="type-signature"></span>exportList</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Exports the contents of a list to CSV. Note that it will export the entire
-      list, not just the part that's been lazy-loaded. Goes to the server for this.
-      Avoids websockets or AJAX because the server will prompt the browser to download
-      the file by setting the Content-Type of the response, which is not possible with
-      those technologies.
-    </div>
     
     
     
@@ -498,182 +457,7 @@
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 181</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
 
-    
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="fetch"><span class="type-signature"></span>fetch</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Fetch a list.
-    </div>
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 194</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="itemTap"><span class="type-signature"></span>itemTap</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Drills down into a workspace if a user clicks a list item.
-    </div>
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 273</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="logout"><span class="type-signature"></span>logout</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Actually logs the user out if they confirm that's what they want to do.
-    </div>
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
 	
 	
 	
@@ -711,7 +495,7 @@
         
             
 <dt>
-    <h4 class="name" id="modulesChanged"><span class="type-signature"></span>modulesChanged</h4>
+    <h4 class="name" id="exportList"><span class="type-signature"></span>exportList</h4>
     
     
 </dt>
@@ -719,8 +503,14 @@
     
     
     <div class="description">
-        Handles additive changes only
+        Exports the contents of a list to CSV. Note that it will export the entire
+      list, not just the part that's been lazy-loaded. Goes to the server for this.
+      Avoids websockets or AJAX because the server will prompt the browser to download
+      the file by setting the Content-Type of the response, which is not possible with
+      those technologies.
     </div>
+    
+
     
     
     
@@ -733,6 +523,8 @@
         
 	
 	
+	
+
 	
 	
 	
@@ -747,7 +539,259 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 301</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 182</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="fetch"><span class="type-signature"></span>fetch</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Fetch a list.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 195</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="itemTap"><span class="type-signature"></span>itemTap</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Drills down into a workspace if a user clicks a list item.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 274</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="logout"><span class="type-signature"></span>logout</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Actually logs the user out if they confirm that's what they want to do.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 586</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="modulesChanged"><span class="type-signature"></span>modulesChanged</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Handles additive changes only
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 302</li></ul></dd>
 	
     
     
@@ -782,6 +826,8 @@
       backed by an empty object of the type displayed in the current list.
     </div>
     
+
+    
     
     
     
@@ -793,6 +839,8 @@
         
 	
 	
+	
+
 	
 	
 	
@@ -807,7 +855,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 359</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 360</li></ul></dd>
 	
     
     
@@ -842,6 +890,8 @@
       lit.
     </div>
     
+
+    
     
     
     
@@ -853,6 +903,8 @@
         
 	
 	
+	
+
 	
 	
 	
@@ -867,7 +919,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 588</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 594</li></ul></dd>
 	
     
     
@@ -902,6 +954,8 @@
       the advanced search icon if appropriate. Called when a user chooses a menu item.
     </div>
     
+
+    
     
     
     
@@ -913,6 +967,8 @@
         
 	
 	
+	
+
 	
 	
 	
@@ -927,7 +983,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 392</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 393</li></ul></dd>
 	
     
     
@@ -961,6 +1017,8 @@
         The header content typically describes to the user the particular query filter in effect.
     </div>
     
+
+    
     
     
     
@@ -972,6 +1030,8 @@
         
 	
 	
+	
+
 	
 	
 	
@@ -986,7 +1046,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 479</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 484</li></ul></dd>
 	
     
     
@@ -1020,6 +1080,8 @@
         Renders a list of modules from the root menu
     </div>
     
+
+    
     
     
     
@@ -1031,6 +1093,8 @@
         
 	
 	
+	
+
 	
 	
 	
@@ -1045,7 +1109,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 507</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 513</li></ul></dd>
 	
     
     
@@ -1080,6 +1144,8 @@
       is also called when a leftbar item is tapped, per enyo's List conventions.
     </div>
     
+
+    
     
     
     
@@ -1091,6 +1157,8 @@
         
 	
 	
+	
+
 	
 	
 	
@@ -1105,7 +1173,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 519</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 525</li></ul></dd>
 	
     
     
@@ -1139,6 +1207,8 @@
         Display the history panel.
     </div>
     
+
+    
     
     
     
@@ -1150,6 +1220,8 @@
         
 	
 	
+	
+
 	
 	
 	
@@ -1164,7 +1236,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 548</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 554</li></ul></dd>
 	
     
     
@@ -1198,6 +1270,8 @@
         Displays the My Account popup
     </div>
     
+
+    
     
     
     
@@ -1209,6 +1283,8 @@
         
 	
 	
+	
+
 	
 	
 	
@@ -1223,7 +1299,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 562</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 568</li></ul></dd>
 	
     
     
@@ -1257,6 +1333,8 @@
         Display the advanced search panel
     </div>
     
+
+    
     
     
     
@@ -1268,6 +1346,8 @@
         
 	
 	
+	
+
 	
 	
 	
@@ -1282,7 +1362,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 555</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 561</li></ul></dd>
 	
     
     
@@ -1316,6 +1396,8 @@
         Pops up the logout popup to verify that a user really wants to exit
     </div>
     
+
+    
     
     
     
@@ -1327,6 +1409,8 @@
         
 	
 	
+	
+
 	
 	
 	
@@ -1341,7 +1425,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 568</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 574</li></ul></dd>
 	
     
     
@@ -1377,15 +1461,15 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="XV.AddressWidget.html">AddressWidget</a></li><li><a href="XV.AssignmentBox.html">AssignmentBox</a></li><li><a href="XV.CharacteristicItem.html">CharacteristicItem</a></li><li><a href="XV.CharacteristicPicker.html">CharacteristicPicker</a></li><li><a href="XV.CharacteristicsWidget.html">CharacteristicsWidget</a></li><li><a href="XV.Checkbox.html">Checkbox</a></li><li><a href="XV.CheckboxWidget.html">CheckboxWidget</a></li><li><a href="XV.Combobox.html">Combobox</a></li><li><a href="XV.CommentBox.html">CommentBox</a></li><li><a href="XV.CommentBoxItem.html">CommentBoxItem</a></li><li><a href="XV.Completer.html">Completer</a></li><li><a href="XV.CountryCombobox.html">CountryCombobox</a></li><li><a href="XV.Date.html">Date</a></li><li><a href="XV.DateWidget.html">DateWidget</a></li><li><a href="XV.DocumentListRelations.html">DocumentListRelations</a></li><li><a href="XV.DocumentsBox.html">DocumentsBox</a></li><li><a href="XV.EditorMixin.html">EditorMixin</a></li><li><a href="XV.ExtensionsMixin.html">ExtensionsMixin</a></li><li><a href="XV.FileInput.html">FileInput</a></li><li><a href="XV.Groupbox.html">Groupbox</a></li><li><a href="XV.Input.html">Input</a></li><li><a href="XV.InputWidget.html">InputWidget</a></li><li><a href="XV.List.html">List</a></li><li><a href="XV.ListAttr.html">ListAttr</a></li><li><a href="XV.ListColumn.html">ListColumn</a></li><li><a href="XV.ListItem.html">ListItem</a></li><li><a href="XV.ListRelations.html">ListRelations</a></li><li><a href="XV.ListRelationsBox.html">ListRelationsBox</a></li><li><a href="XV.ListRelationsEditorBox.html">ListRelationsEditorBox</a></li><li><a href="XV.MenuItem.html">MenuItem</a></li><li><a href="XV.Navigator.html">Navigator</a></li><li><a href="XV.Number.html">Number</a></li><li><a href="XV.NumberWidget.html">NumberWidget</a></li><li><a href="XV.OptionsPicker.html">OptionsPicker</a></li><li><a href="XV.ParameterItem.html">ParameterItem</a></li><li><a href="XV.ParameterWidget.html">ParameterWidget</a></li><li><a href="XV.PickerWidget.html">PickerWidget</a></li><li><a href="XV.RelationWidget.html">RelationWidget</a></li><li><a href="XV.RelationsEditor.html">RelationsEditor</a></li><li><a href="XV.ScreenCarousel.html">ScreenCarousel</a></li><li><a href="XV.ScrollableGroupbox.html">ScrollableGroupbox</a></li><li><a href="XV.Scroller.html">Scroller</a></li><li><a href="XV.SearchContainer.html">SearchContainer</a></li><li><a href="XV.StateCombobox.html">StateCombobox</a></li><li><a href="XV.TextArea.html">TextArea</a></li><li><a href="XV.Workspace.html">Workspace</a></li><li><a href="XV.WorkspaceContainer.html">WorkspaceContainer</a></li><li><a href="XV.html">XV</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="XV.html">XV</a></li><li><a href="XV.AddressWidget.html">AddressWidget</a></li><li><a href="XV.AssignmentBox.html">AssignmentBox</a></li><li><a href="XV.CharacteristicItem.html">CharacteristicItem</a></li><li><a href="XV.CharacteristicPicker.html">CharacteristicPicker</a></li><li><a href="XV.CharacteristicsWidget.html">CharacteristicsWidget</a></li><li><a href="XV.Checkbox.html">Checkbox</a></li><li><a href="XV.CheckboxWidget.html">CheckboxWidget</a></li><li><a href="XV.Combobox.html">Combobox</a></li><li><a href="XV.CommentBox.html">CommentBox</a></li><li><a href="XV.CommentBoxItem.html">CommentBoxItem</a></li><li><a href="XV.CommentTypePicker.html">CommentTypePicker</a></li><li><a href="XV.Completer.html">Completer</a></li><li><a href="XV.CountryCombobox.html">CountryCombobox</a></li><li><a href="XV.Date.html">Date</a></li><li><a href="XV.DateWidget.html">DateWidget</a></li><li><a href="XV.DocumentListRelations.html">DocumentListRelations</a></li><li><a href="XV.DocumentsBox.html">DocumentsBox</a></li><li><a href="XV.EditorMixin.html">EditorMixin</a></li><li><a href="XV.ExtensionsMixin.html">ExtensionsMixin</a></li><li><a href="XV.FileInput.html">FileInput</a></li><li><a href="XV.Groupbox.html">Groupbox</a></li><li><a href="XV.Input.html">Input</a></li><li><a href="XV.InputWidget.html">InputWidget</a></li><li><a href="XV.List.html">List</a></li><li><a href="XV.ListAttr.html">ListAttr</a></li><li><a href="XV.ListColumn.html">ListColumn</a></li><li><a href="XV.ListItem.html">ListItem</a></li><li><a href="XV.ListRelations.html">ListRelations</a></li><li><a href="XV.ListRelationsBox.html">ListRelationsBox</a></li><li><a href="XV.ListRelationsEditorBox.html">ListRelationsEditorBox</a></li><li><a href="XV.MenuItem.html">MenuItem</a></li><li><a href="XV.Navigator.html">Navigator</a></li><li><a href="XV.Number.html">Number</a></li><li><a href="XV.NumberWidget.html">NumberWidget</a></li><li><a href="XV.OptionsPicker.html">OptionsPicker</a></li><li><a href="XV.ParameterItem.html">ParameterItem</a></li><li><a href="XV.ParameterWidget.html">ParameterWidget</a></li><li><a href="XV.PickerWidget.html">PickerWidget</a></li><li><a href="XV.RelationsEditor.html">RelationsEditor</a></li><li><a href="XV.RelationWidget.html">RelationWidget</a></li><li><a href="XV.ScreenCarousel.html">ScreenCarousel</a></li><li><a href="XV.ScrollableGroupbox.html">ScrollableGroupbox</a></li><li><a href="XV.Scroller.html">Scroller</a></li><li><a href="XV.SearchContainer.html">SearchContainer</a></li><li><a href="XV.StateCombobox.html">StateCombobox</a></li><li><a href="XV.TextArea.html">TextArea</a></li><li><a href="XV.ToggleButton.html">ToggleButton</a></li><li><a href="XV.ToggleButtonWidget.html">ToggleButtonWidget</a></li><li><a href="XV.Workspace.html">Workspace</a></li><li><a href="XV.WorkspaceContainer.html">WorkspaceContainer</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Fri Oct 12 2012 14:48:09 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Tue Nov 06 2012 17:01:20 GMT-0600 (CST)
 </footer>
 
-<script> sh_highlightDocument(); </script>
+<script> prettyPrint(); </script>
 </body>
 </html>
