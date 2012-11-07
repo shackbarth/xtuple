@@ -340,7 +340,7 @@
         "name": "disableExport",
         "attr": {
           "type": "Boolean",
-          "column": "useracct_disable_export"
+          "column": "useracct_disable_export",
           "required": true
         }
       },
