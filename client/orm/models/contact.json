@@ -518,7 +518,8 @@
         "name": "characteristic",
         "toOne": {
           "type": "Characteristic",
-          "column": "charass_char_id"
+          "column": "charass_char_id",
+          "required": true
         }
       },
       {
@@ -581,7 +582,8 @@
         "name": "commentType",
         "toOne": {
           "type": "CommentType",
-          "column": "comment_cmnttype_id"
+          "column": "comment_cmnttype_id",
+          "required": true
         }
       },
       {
