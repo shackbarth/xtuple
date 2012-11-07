@@ -106,6 +106,9 @@ body {
 .item.onyx-selected {
   background-color: #226b9a;
 }
+.onyx-button.save {
+  background-color: #35a8ee;
+}
 .left {
   color: #ffffff;
 }
@@ -329,14 +332,14 @@ body {
 }
 .xv-list .xv-list-item.item-selected .xv-list-attr.placeholder {
   font-style: italic;
-  color: #87ceeb;
+  color: #99ccff;
 }
 .xv-list .xv-list-item.item-selected .xv-list-attr.hyperlink {
   color: #f49200;
   background: #226b9a url(../../assets/item-hilite.png) repeat-x bottom;
 }
 .xv-list .xv-list-item.item-selected .xv-list-attr.header {
-  background: #87ceeb;
+  background: #99ccff;
 }
 .xv-list .xv-list-item.item-selected .xv-list-column .xv-list-attr {
   color: #ffffff;

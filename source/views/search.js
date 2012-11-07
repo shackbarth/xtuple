@@ -48,9 +48,9 @@ trailing:true white:true*/
       ]},
       {name: "listPanel", kind: "FittableRows", components: [
         {kind: "onyx.Toolbar", name: "contentToolbar", components: [
-          {kind: "onyx.Grabber"},
-          {name: "rightLabel", content: "_search".loc(), style: "text-align: center"},
-          {name: "search", kind: "onyx.InputDecorator", style: "float: right;",
+          {kind: "onyx.Grabber", classes: "left-float"},
+          {name: "rightLabel", content: "_search".loc(), classes: "left-float"},
+          {name: "search", kind: "onyx.InputDecorator", classes: "right-float",
             components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
               placeholder: "_search".loc(), onchange: "requery"},
