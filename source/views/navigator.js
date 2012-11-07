@@ -85,20 +85,20 @@ trailing:true white:true*/
       ]},
       {kind: "FittableRows", components: [
         {kind: "onyx.Toolbar", name: "contentToolbar", components: [
-          {kind: "onyx.Grabber"},
-          {name: "search", kind: "onyx.InputDecorator", style: "float: right;",
+          {kind: "onyx.Grabber", classes: "left-float"}, // left floats are to prevent overlap
+					{name: "rightLabel", classes: "left-float"},
+          {name: "search", kind: "onyx.InputDecorator", classes: "right-float", // right floats anchor buttons to right
             showing: false, components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
               placeholder: "_search".loc(), onchange: "inputChanged"},
             {kind: "Image", src: "lib/enyo-x/assets/search-input-search.png"}
           ]},
           {name: "refreshButton", kind: "onyx.Button", content: "_refresh".loc(),
-              ontap: "requery", style: "float: right;", showing: false},
+              ontap: "requery", classes: "right-float", showing: false},
           {name: "newButton", kind: "onyx.Button", content: "_new".loc(),
-            ontap: "newRecord", style: "float: right;", showing: false},
+            ontap: "newRecord", classes: "right-float", showing: false},
           {name: "exportButton", kind: "onyx.Button", content: "_export".loc(),
-            ontap: "exportList", style: "float: right;", showing: false},
-          {name: "rightLabel", style: "text-align: center"}
+            ontap: "exportList", classes: "right-float", showing: false}
         ]},
         {name: "header", content: "", classes: "xv-navigator-header"},
         {name: "contentPanels", kind: "Panels", margin: 0, fit: true,

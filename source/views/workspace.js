@@ -344,21 +344,21 @@ trailing:true white:true*/
       ]},
       {kind: "FittableRows", name: "contentPanel", components: [
         {kind: "onyx.Toolbar", name: "contentToolbar", components: [
-          {kind: "onyx.Grabber"},
-          {kind: "onyx.Button", name: "saveButton",
-            disabled: true, // TO DO: Get the affirmative style back into CSS
-            style: "float: right; background-color: #35A8EE;",
+					// these are floated left to prevent overlap of buttons and text
+          {kind: "onyx.Grabber", classes: "left-float"},
+          {name: "title", classes: "left-float"},
+					{kind: "onyx.Button", name: "saveButton",
+            disabled: true, classes: "right-float save",
             content: "_save".loc(), onclick: "saveAndClose"},
           {kind: "onyx.Button", name: "saveAndNewButton", disabled: true,
-            style: "float: right;",
+            classes: "right-float",
             content: "_saveAndNew".loc(), onclick: "saveAndNew"},
           {kind: "onyx.Button", name: "applyButton", disabled: true,
-            style: "float: right;",
+            classes: "right-float",
             content: "_apply".loc(), onclick: "apply"},
           {kind: "onyx.Button", name: "refreshButton", disabled: true,
             content: "_refresh".loc(), onclick: "requery",
-            style: "float: right;"},
-          {name: "title", style: "text-align: center;"}
+            classes: "right-float"}
         ]},
         {name: "header", content: "_loading".loc(), classes: "xv-workspace-header"},
         {kind: "onyx.Popup", name: "spinnerPopup", centered: true,
