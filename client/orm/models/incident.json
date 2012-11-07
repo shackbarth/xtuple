@@ -45,14 +45,16 @@
         "name": "description",
         "attr": {
           "type": "String",
-          "column": "incdt_summary"
+          "column": "incdt_summary",
+          "required": true
         }
       },
       {
         "name": "category",
         "toOne": {
           "type": "IncidentCategory",
-          "column": "incdt_incdtcat_id"
+          "column": "incdt_incdtcat_id",
+          "required": true
         }
       },
       {
@@ -67,7 +69,8 @@
         "toOne": {
           "isNested": true,
           "type": "AccountRelation",
-          "column": "incdt_crmacct_id"
+          "column": "incdt_crmacct_id",
+          "required": true
         }
       },
       {
@@ -75,7 +78,8 @@
         "toOne": {
           "isNested": true,
           "type": "ContactRelation",
-          "column": "incdt_cntct_id"
+          "column": "incdt_cntct_id",
+          "required": true
         }
       },
       {
@@ -474,7 +478,8 @@
         "name": "order",
         "attr": {
           "type": "Number",
-          "column": "incdtcat_order"
+          "column": "incdtcat_order",
+          "required": true
         }
       }
     ],
@@ -523,7 +528,8 @@
         "name": "characteristic",
         "toOne": {
           "type": "Characteristic",
-          "column": "charass_char_id"
+          "column": "charass_char_id",
+          "required": true
         }
       },
       {
@@ -586,7 +592,8 @@
         "name": "commentType",
         "toOne": {
           "type": "CommentType",
-          "column": "comment_cmnttype_id"
+          "column": "comment_cmnttype_id",
+          "required": true
         }
       },
       {
@@ -1355,7 +1362,8 @@
         "name": "order",
         "attr": {
           "type": "Number",
-          "column": "incdtresolution_order"
+          "column": "incdtresolution_order",
+          "required": true
         }
       },
       {
@@ -1403,7 +1411,8 @@
         "name": "order",
         "attr": {
           "type": "Number",
-          "column": "incdtseverity_order"
+          "column": "incdtseverity_order",
+          "required": true
         }
       },
       {

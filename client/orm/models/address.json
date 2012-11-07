@@ -375,14 +375,16 @@
         "name": "abbreviation",
         "attr": {
           "type": "String",
-          "column": "country_abbr"
+          "column": "country_abbr",
+          "required": true
         }
       },
       {
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "country_name"
+          "column": "country_name",
+          "required": true
         }
       },
       {
@@ -403,7 +405,8 @@
         "name": "currencyAbbreviation",
         "attr": {
           "type": "String",
-          "column": "country_curr_abbr"
+          "column": "country_curr_abbr",
+          "required": true
         }
       },
       {
@@ -451,14 +454,16 @@
         "name": "abbreviation",
         "attr": {
           "type": "String",
-          "column": "state_abbr"
+          "column": "state_abbr",
+          "required": true
         }
       },
       {
         "name": "country",
         "toOne": {
           "type": "Country",
-          "column": "state_country_id"
+          "column": "state_country_id",
+          "required": true
         }
       }
     ],

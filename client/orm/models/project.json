@@ -81,7 +81,8 @@
         "name": "dueDate",
         "attr": {
           "type": "Date",
-          "column": "prj_due_date"
+          "column": "prj_due_date",
+          "required": true
         }
       },
       {
@@ -333,7 +334,8 @@
         "name": "commentType",
         "toOne": {
           "type": "CommentType",
-          "column": "comment_cmnttype_id"
+          "column": "comment_cmnttype_id",
+          "required": true
         }
       },
       {
@@ -1143,7 +1145,8 @@
         "name": "dueDate",
         "attr": {
           "type": "Date",
-          "column": "prjtask_due_date"
+          "column": "prjtask_due_date",
+          "required": true
         }
       },
       {
@@ -1541,7 +1544,8 @@
         "name": "commentType",
         "toOne": {
           "type": "CommentType",
-          "column": "comment_cmnttype_id"
+          "column": "comment_cmnttype_id",
+          "required": true
         }
       },
       {

@@ -44,21 +44,24 @@
        "name": "name",
        "attr": {
          "type": "String",
-         "column": "crmacct_name"
+         "column": "crmacct_name",
+         "required": true
        }
      },
      {
        "name": "isActive",
        "attr": {
          "type": "Boolean",
-         "column": "crmacct_active"
+         "column": "crmacct_active",
+         "required": true
        }
      },
      {
        "name": "accountType",
        "attr": {
          "type": "String",
-         "column": "crmacct_type"
+         "column": "crmacct_type",
+         "required": true
        }
      },
      {
@@ -427,7 +430,8 @@
        "name": "characteristic",
        "toOne": {
          "type": "Characteristic",
-         "column": "charass_char_id"
+         "column": "charass_char_id",
+         "required": true
        }
      },
      {
@@ -482,7 +486,8 @@
        "name": "commentType",
        "toOne": {
          "type": "CommentType",
-         "column": "comment_cmnttype_id"
+         "column": "comment_cmnttype_id",
+         "required": true
        }
      },
      {
