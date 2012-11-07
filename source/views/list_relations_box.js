@@ -85,6 +85,7 @@ trailing:true white:true*/
     },
     attachItem: function () {
       var list = this.$.list,
+        ListModel = list.getValue().model,
         key = this.getParentKey(),
         parent = list.getParent(),
         searchList = this.getSearchList(),
@@ -93,22 +94,33 @@ trailing:true white:true*/
         // Callback to handle selection...
         callback = function (selectedModel) {
 
-          // Instantiate the models involved
+          // Instantiate the models involved.
+          // this looks a little backwards, because what's actually going
+          // on here is that we're taking a related model of the workspace
+          // that we're in and attaching it to an editable model of the
+          // item that we've just selected. This is on purpose!
+          // Meanwhile, we have to populate the list with a related model
+          // of the item that we've just selected, as selectedModel refers
+          // to an info model, which is not the type of model we want
+          // to use in the list
           var Klass = XT.getObjectByName(selectedModel.editableModel),
             model = new Klass({id: selectedModel.id}),
-            InfoKlass = model.getRelation('account').relatedModel,
+            InfoKlass = model.getRelation(key).relatedModel,
             infoModel = new InfoKlass({id: parent.id}),
+            listModel = new ListModel({id : selectedModel.id}),
             setAndSave = function () {
               var K = XM.Model,
                 options = {};
               if (model.getStatus() === K.READY_CLEAN &&
-                  infoModel.getStatus() === K.READY_CLEAN) {
+                  infoModel.getStatus() === K.READY_CLEAN &&
+                  listModel.getStatus() === K.READY_CLEAN) {
                 model.off('statusChange', setAndSave);
                 infoModel.off('statusChange', setAndSave);
+                listModel.off('statusChange', setAndSave);
 
                 // Callback to update our list with changes when save complete
                 options.success = function () {
-                  list.getValue().add(selectedModel);
+                  list.getValue().add(listModel);
                 };
 
                 // Set and save our contact with the new account relation
@@ -120,10 +132,12 @@ trailing:true white:true*/
           // When fetch complete, trigger set and save
           model.on('statusChange', setAndSave);
           infoModel.on('statusChange', setAndSave);
+          listModel.on('statusChange', setAndSave);
 
           // Go get the data
           model.fetch();
           infoModel.fetch();
+          listModel.fetch();
         };
 
       // Open a search screen that excludes already attached records

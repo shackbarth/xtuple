@@ -17,40 +17,33 @@ trailing:true white:true*/
     },
     testGetValueIsNumberFromString: function () {
       this.getObj().setValue("10");
-      var err = (typeof this.getObj().getValue() === 'number') ? "" : "Number widget should accept strings that look like numbers";
-      this.finish(err);
+      this.finish(XV.applyTest('number', typeof this.getObj().getValue(), "Number widget should accept strings that look like numbers"));
     },
     testAcceptDecimal: function () {
       var numberWidget = this.getObj();
       numberWidget.setScale(1);
       numberWidget.setValue(4.6);
-      var err = this.getObj().getValue() === 4.6 ? "" : "Widget not dealing with decimals";
-      this.finish(err);
+      this.finish(XV.applyTest(4.6, this.getObj().getValue(), "Widget not dealing with decimals"));
     },
     testRoundToScale: function () {
       this.getObj().setValue(4.6);
-      var err = this.getObj().getValue() === 5 ? "" : "Widget not rounding decimals beyond scale";
-      this.finish(err);
+      this.finish(XV.applyTest(5, this.getObj().getValue(), "Widget not rounding decimals beyond scale"));
     },
     testEmptyStringAsNull: function () {
       this.getObj().setValue('');
-      var err = this.getObj().getValue() === null ? "" : "Empty string input not being set to null";
-      this.finish(err);
+      this.finish(XV.applyTest(null, this.getObj().getValue(), "Empty string input not being set to null"));
     },
     testNullAsNull: function () {
       this.getObj().setValue(null);
-      var err = this.getObj().getValue() === null ? "" : "Null input not being set to null";
-      this.finish(err);
+      this.finish(XV.applyTest(null, this.getObj().getValue(), "Null input not being set to null"));
     },
     testJunkAsNull: function () {
       this.getObj().setValue("invalid_junk");
-      var err = this.getObj().getValue() === null ? "" : "Junk input not being set to null";
-      this.finish(err);
+      this.finish(XV.applyTest(null, this.getObj().getValue(), "Junk input not being set to null"));
     },
     testZero: function () {
       this.getObj().setValue(0);
-      var err = this.getObj().getValue() === 0 ? "" : "Widget not handling input of zero";
-      this.finish(err);
+      this.finish(XV.applyTest(0, this.getObj().getValue(), "Widget not handling input of zero"));
     }
   });
 }());

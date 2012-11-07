@@ -39,10 +39,11 @@ trailing:true white:true*/
      */
     destroy: function () {
       var value = this.getValue(),
-        models = value ? value.models : null;
+        models = value ? value.models : null,
+        that = this;
       if (models) {
         _.each(models, function (model) {
-          model.off('statusChange', this.statusChanged, this);
+          model.off('statusChange', that.statusChanged, that);
         });
       }
       if (value) {

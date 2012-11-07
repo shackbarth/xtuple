@@ -107,7 +107,8 @@ trailing:true white:true*/
       return this.getValue().models[index];
     },
     getSearchableAttributes: function () {
-      return this.getValue().model.getSearchableAttributes();
+      var model = this.getValue().model;
+      return model.getSearchableAttributes ? model.getSearchableAttributes() : [];
     },
     getWorkspace: function () {
       var collection = this.getCollection(),
@@ -208,7 +209,9 @@ trailing:true white:true*/
         // creating a new query that's the same as the current filter but with the addition
         // of filtering on the id. Any result means it still belongs. An empty result
         // means it doesn't.
-        checkStatusQuery = this.getQuery();
+
+        // clone the query so as not to change the real thing with this check.
+        checkStatusQuery = JSON.parse(JSON.stringify(this.getQuery()));
         checkStatusParameter = {attribute: "id", operator: "=", value: inEvent.id};
         if (checkStatusQuery.parameters) {
           checkStatusQuery.parameters.push(checkStatusParameter);
@@ -313,6 +316,7 @@ trailing:true white:true*/
             value = this[formatter](value, view, model);
           }
           if (value && value instanceof Date) {
+            value = XT.date.applyTimezoneOffset(value, true);
             value = Globalize.format(value, 'd');
           }
           view.setContent(value);

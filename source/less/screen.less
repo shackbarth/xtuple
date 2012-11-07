@@ -270,7 +270,7 @@ body {
 	width: 50px;
 	bottom: 20px;
 	right: -46px;
-	.border-radius(0, 10px, 10px, 0);
+	.border-radius-all(0, 10px, 10px, 0);
 	background-color: @smoke;
 	box-shadow: 4px 4px 4px rgba(0,0,0,0.3);
 }
@@ -572,11 +572,11 @@ body {
 .xv-groupbox > *:first-child {
 	border-top-color: @silver;
 	border-width: 1px;
-	.border-radius(4px, 4px, 0, 0);
+	.border-radius-all(4px, 4px, 0, 0);
 }
 
 .xv-groupbox > *:last-child {
-	.border-radius(0, 0, 4px, 4px);
+	.border-radius-all(0, 0, 4px, 4px);
 }
 
 .xv-groupbox > *:first-child:last-child {
@@ -613,11 +613,11 @@ body {
 
 .xv-groupbox > .onyx-input-decorator:first-child {
 	border-width: 1px;
-	.border-radius(4px, 4px, 0, 0);
+	.border-radius-all(4px, 4px, 0, 0);
 }
 
 .xv-groupbox > .onyx-input-decorator:last-child {
-	.border-radius(0, 0, 4px, 4px);
+	.border-radius-all(0, 0, 4px, 4px);
 }
 
 .xv-groupbox > .onyx-input-decorator:first-child:last-child {
@@ -627,16 +627,16 @@ body {
 .xv-groupbox-buttons {
 	border: none;
 	.xv-groupbox-button-single {
-		.border-radius(0, 0, 4px, 4px);
+		.border-radius-all(0, 0, 4px, 4px);
 	}
 	.xv-groupbox-button-center {
 		.border-radius(0);
 	}
 	.xv-groupbox-button-left {
-  	.border-radius(0, 0, 0, 4px);
+  	.border-radius-all(0, 0, 0, 4px);
 	}
 	.xv-groupbox-button-right {
-  	.border-radius(0, 0, 4px, 0);
+  	.border-radius-all(0, 0, 4px, 0);
 	}
 }
 
