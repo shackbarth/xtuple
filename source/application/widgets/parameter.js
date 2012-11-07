@@ -172,6 +172,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.IncidentListParameters",
     kind: "XV.ParameterWidget",
+    characteristicsRole: 'isIncidents',
     components: [
       {kind: "onyx.GroupboxHeader", content: "_incident".loc()},
       {name: "number", label: "_number".loc(), attr: "number",
