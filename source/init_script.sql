@@ -46,8 +46,13 @@
 \i xt/operators/text_lt_date.sql;
 
 -- xt tables
+\i xt/tables/grp.sql
+\i xt/tables/grppriv.sql
 \i xt/tables/js.sql
 \i xt/tables/orm.sql
+\i xt/tables/priv.sql
+\i xt/tables/useracct.sql
+\i xt/tables/usrpriv.sql
 
 -- xt javascript
 \i xt/javascript/data.sql;
