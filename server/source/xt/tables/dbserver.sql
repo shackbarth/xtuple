@@ -9,6 +9,6 @@ select xt.add_column('dbserver','dbserver_descrip', 'text');
 select xt.add_column('dbserver','dbserver_loc', 'text');
 select xt.add_column('dbserver','dbserver_created', 'timestamp with time zone');
 select xt.add_column('dbserver','dbserver_username', 'text');
-select xt.add_column('dbserver','dbserver_password', 'bytea');
+select xt.add_column('dbserver','dbserver_password', 'text');
 
 comment on table xt.dbserver is 'Database Servers';
