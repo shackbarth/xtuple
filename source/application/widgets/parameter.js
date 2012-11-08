@@ -12,6 +12,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.AccountListParameters",
     kind: "XV.ParameterWidget",
+    characteristicsRole: 'isAccounts',
     components: [
       {kind: "onyx.GroupboxHeader", content: "_account".loc()},
       {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
@@ -106,6 +107,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ContactListParameters",
     kind: "XV.ParameterWidget",
+    characteristicsRole: 'isContacts',
     components: [
       {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
       {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
@@ -269,12 +271,13 @@ trailing:true white:true*/
   });
 
   // ..........................................................
-  // CONTACT
+  // ITEM
   //
 
   enyo.kind({
     name: "XV.ItemListParameters",
     kind: "XV.ParameterWidget",
+    characteristicsRole: 'isItems',
     components: [
       {kind: "onyx.GroupboxHeader", content: "_item".loc()},
       {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
@@ -306,6 +309,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.OpportunityListParameters",
     kind: "XV.ParameterWidget",
+    characteristicsRole: 'isOpportunities',
     components: [
       {kind: "onyx.GroupboxHeader", content: "_opportunity".loc()},
       {name: "showInactive", label: "_showInactive".loc(), attr: "isActive",
