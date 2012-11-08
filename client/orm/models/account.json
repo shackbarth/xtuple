@@ -448,6 +448,64 @@
     {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "AccountListItemCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Account List Item Characteristic Map",
+    "privileges": {
+     "all": {
+       "create": true,
+       "read": true,
+       "update": true,
+       "delete": true
+     }
+    },
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "charass_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "targetType",
+       "attr": {
+         "type": "String",
+         "column": "charass_target_type",
+         "value": "CRMACCT"
+       }
+     },
+     {
+       "name": "account",
+       "attr": {
+         "type": "Number",
+         "column": "charass_target_id"
+       }
+     },
+     {
+       "name": "characteristic",
+       "toOne": {
+         "type": "Characteristic",
+         "column": "charass_char_id",
+         "required": true
+       }
+     },
+     {
+       "name": "value",
+       "attr": {
+         "type": "String",
+         "column": "charass_value"
+       }
+     }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+    },
+    {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "AccountComment",
     "table": "xt.crmacctcomment",
     "idSequenceName": "comment_comment_id_seq",
@@ -845,6 +903,15 @@
          "type": "UserAccountRelation",
          "column": "crmacct_owner_username",
          "inverse": "username"
+       }
+     },
+     {
+       "name": "characteristics",
+       "toMany": {
+         "isNested": true,
+         "type": "AccountListItemCharacteristic",
+         "column": "crmacct_id",
+         "inverse": "account"
        }
      }
     ],
