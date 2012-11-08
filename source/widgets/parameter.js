@@ -144,6 +144,9 @@ white:true*/
                 },
                 filteredList: function () {
                   return char.get('options').models;
+                },
+                getValue: function () {
+                  return this.value ? this.value.get('value') : null;
                 }
               });
               hash.defaultKind = kind;
