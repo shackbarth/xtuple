@@ -195,7 +195,8 @@ regexp:true, undef:true, trailing:true, white:true */
       var inEvent,
         oldValue = this.getValue(),
         actualMenuItem,
-        actualModel;
+        actualModel,
+        key = this.getIdAttribute();
 
       // here is where we find the model and re-call this method if we're given
       // an id instead of a whole model.
@@ -203,7 +204,13 @@ regexp:true, undef:true, trailing:true, white:true */
       // populated in the menu items of the picker
       if (value && typeof value !== 'object') {
         actualMenuItem = _.find(this.$.picker.controls, function (menuItem) {
-          return menuItem.value && menuItem.value.id === value;
+          var ret = false;
+          if (menuItem.value && menuItem.value.get) {
+            ret = menuItem.value.get(key) === value;
+          } else if (menuItem.value) {
+            ret = menuItem.value[key] === value;
+          }
+          return ret;
         });
         if (actualMenuItem) {
           // a menu item matches the selection. Use the model back backs the menu item
@@ -219,7 +226,7 @@ regexp:true, undef:true, trailing:true, white:true */
         if (value !== oldValue) {
           this.value = value;
           if (!options.silent) {
-            inEvent = { originator: this, value: value && value.id ? value.id : value };
+            inEvent = { originator: this, value: value && value.get ? value.get(key) : value };
             this.doValueChange(inEvent);
           }
         }
@@ -234,10 +241,12 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     /** @private */
     _selectValue: function (value) {
-      value = value ? value.id : value;
-      var component = _.find(this.$.picker.getComponents(), function (c) {
+      var key = this.getIdAttribute(),
+        component;
+      value = value ? value.get(key) : value;
+      component = _.find(this.$.picker.getComponents(), function (c) {
         if (c.kind === "onyx.MenuItem") {
-          return (c.value ? c.value.id : null) === value;
+          return (c.value ? c.value.get(key) : null) === value;
         }
       });
       if (!component) { value = null; }
