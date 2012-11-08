@@ -102,71 +102,85 @@ white:true*/
         K = XM.Characteristic,
         that = this,
         chars,
-        hash;
+        hash = {};
       this.inherited(arguments);
       this.processExtensions();
       this.populateFromCookie();
       this.isAllSetUp = true;
       
       if (role) {
-        // Header
-        this.createComponent({
-          kind: "onyx.GroupboxHeader",
-          content: "_characteristics".loc()
-        });
-        
-        // Process text and list
-        chars = XM.characteristics.filter(function (char) {
-          var type = char.get('characteristicType');
-          return char.get(role) &&
-            char.get('isSearchable') &&
-            (type === K.TEXT || type === K.LIST);
-        });
-        
-        _.each(chars, function (char) {
-          hash = {
-            name: char.get('name') + "Characteristic",
-            label: char.get('name'),
-            attr:  char.get('name')
-          };
-          if (char.get(role) === K.LIST) {
-            hash.defaultKind = '???';
-          }
-          that.createComponent(hash);
-        });
-          
-        // Process dates
-        chars = XM.characteristics.filter(function (char) {
-          var type = char.get('characteristicType');
-          return char.get(role) &&
-            char.get('isSearchable') &&
-            (type === K.DATE);
-        });
-        
-        _.each(chars, function (char) {
+        hash[role] = true;
+        if (XM.characteristics.where(hash).length) {
+          // Header
           this.createComponent({
             kind: "onyx.GroupboxHeader",
-            content: char.get('name').loc()
+            content: "_characteristics".loc()
+          });
+        
+          // Process text and list
+          chars = XM.characteristics.filter(function (char) {
+            var type = char.get('characteristicType');
+            return char.get(role) &&
+              char.get('isSearchable') &&
+              (type === K.TEXT || type === K.LIST);
+          });
+        
+          _.each(chars, function (char) {
+            var kind;
+            hash = {
+              name: char.get('name') + "Characteristic",
+              label: char.get('name'),
+              isCharacteristic: true,
+              attr:  char.get('name')
+            };
+            if (char.get('characteristicType') === K.LIST) {
+              kind = enyo.kind({
+                kind: "XV.PickerWidget",
+                nameAttribute: "value",
+                _collection: char.get('options')
+              });
+              hash.defaultKind = kind;
+            }
+            that.createComponent(hash);
           });
           
-          hash = {
-            name: char.get('name') + "FromCharacteristic",
-            label: "_from".loc(),
-            operator: "<=",
-            attr:  char.get('name'),
-            defaultKind: "XV.DateWidget"
-          };
-          this.createComponent(hash);
+          // Process dates
+          chars = XM.characteristics.filter(function (char) {
+            var type = char.get('characteristicType');
+            return char.get(role) &&
+              char.get('isSearchable') &&
+              (type === K.DATE);
+          });
+        
+          _.each(chars, function (char) {
+            that.createComponent({
+              kind: "onyx.GroupboxHeader",
+              content: char.get('name').loc()
+            });
           
-          hash = {
-            name: char.get('name') + "ToCharacteristic",
-            label: "_to".loc(),
-            operator: ">=",
-            attr:  char.get('name'),
-            defaultKind: "XV.DateWidget"
-          };
-          this.createComponent(hash);
-        });
+            hash = {
+              name: char.get('name') + "FromCharacteristic",
+              label: "_from".loc(),
+              filterLabel: char.get('name') + " " + "_from".loc(),
+              operator: "<=",
+              attr:  char.get('name'),
+              isCharacteristic: true,
+              defaultKind: "XV.DateWidget"
+            };
+            that.createComponent(hash);
+          
+            hash = {
+              name: char.get('name') + "ToCharacteristic",
+              label: "_to".loc(),
+              filterLabel: char.get('name') + " " + "_to".loc(),
+              operator: ">=",
+              attr:  char.get('name'),
+              isCharacteristic: true,
+              defaultKind: "XV.DateWidget"
+            };
+            that.createComponent(hash);
+          });
+        }
       }
     },
     getParameters: function () {
