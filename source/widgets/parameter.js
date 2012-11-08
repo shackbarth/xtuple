@@ -136,8 +136,15 @@ white:true*/
             if (char.get('characteristicType') === K.LIST) {
               kind = enyo.kind({
                 kind: "XV.PickerWidget",
+                idAttribute: "value",
                 nameAttribute: "value",
-                _collection: char.get('options')
+                create: function () {
+                  this.inherited(arguments);
+                  this.buildList();
+                },
+                filteredList: function () {
+                  return char.get('options').models;
+                }
               });
               hash.defaultKind = kind;
             }
