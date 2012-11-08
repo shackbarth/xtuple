@@ -1179,6 +1179,15 @@
           "type": "Number",
           "column": "status_seq"
         }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentCharacteristic",
+          "column": "incdt_id",
+          "inverse": "incident"
+        }
       }
     ],
     "isSystem": true
