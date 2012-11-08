@@ -150,15 +150,24 @@ white:true*/
         attributes = {},
         model = this.getValue(),
         characteristic,
-        empty;
+        defaultVal;
       attributes[attr] = _.isDate(value) ? value.toJSON() : value;
       model.set(attributes);
       if (attr === 'characteristic') {
         if (value) {
           characteristic = model.get('characteristic');
-          empty = characteristic && characteristic.get('characteristicType') === DATE ?
-            null : "";
-          model.set('value', empty);
+          switch (characteristic.get('characteristicType'))
+          {
+          case DATE:
+            defaultVal = null;
+            break;
+          case TEXT:
+            defaultVal = "";
+            break;
+          case LIST:
+            defaultVal = characteristic.get('options').models[0].get('value');
+          }
+          model.set('value', defaultVal);
           this.valueChanged();
         } else {
           model.destroy();
@@ -277,18 +286,23 @@ white:true*/
       return true;
     },
     sort: function (a, b) {
-      var achar = a.get('characteristic'),
+      var astatus = a.getStatus(),
+        bstatus = b.getStatus(),
+        achar = a.get('characteristic'),
         bchar = b.get('characteristic'),
         aord = achar ? achar.get('order') : null,
         bord = bchar ? bchar.get('order') : null,
         aname,
         bname;
-      if (aord === bord) {
-        aname = achar ? achar.get('name') : null;
-        bname = bchar ? bchar.get('name') : null;
-        return aname < bname ? -1 : 1;
+      if (astatus === bstatus) {
+        if (aord === bord) {
+          aname = achar ? achar.get('name') : null;
+          bname = bchar ? bchar.get('name') : null;
+          return aname < bname ? -1 : 1;
+        }
+        return aord < bord ? -1 : 1;
       }
-      return aord < bord ? -1 : 1;
+      return astatus < bstatus ? -1 : 1;
     },
     setValue: function (value) {
       if (this.value) {
