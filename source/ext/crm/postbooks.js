@@ -14,7 +14,7 @@ trailing:true white:true*/
     // ..........................................................
     // APPLICATION
     //
-    
+
     configurationJson = {
       model: "XM.crm",
       name: "_crm".loc(),
@@ -39,8 +39,7 @@ trailing:true white:true*/
       {name: "opportunityTypeList", kind: "XV.OpportunityTypeList"},
       {name: "classCodeList", kind: "XV.ClassCodeList"},
       {name: "unitList", kind: "XV.UnitList"},
-      {name: "productCategoryList", kind: "XV.ProductCategoryList"},
-      {name: "imageList", kind: "XV.ImageList"}
+      {name: "productCategoryList", kind: "XV.ProductCategoryList"}
     ];
 
     XT.app.$.postbooks.appendPanels("setup", panels);
@@ -109,7 +108,6 @@ trailing:true white:true*/
         "EditOwnComments",
         "MaintainCommentTypes",
         "MaintainCountries",
-        "MaintainImages",
         "MaintainStates",
         "MaintainUsers"
       ]
