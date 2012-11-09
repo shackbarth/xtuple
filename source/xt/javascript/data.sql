@@ -50,8 +50,7 @@ select xt.install_js('XT','Data','xtuple', $$
        cnt = 1,
        ret = {},
        conds = [],
-       prop,
-       col;
+       prop;
 
       ret.conditions = "";
       ret.parameters = [];
@@ -97,22 +96,57 @@ select xt.install_js('XT','Data','xtuple', $$
             break;
           case 'ANY':
             op = '<@';
-            break;
-          default:
-            plv8.elog(ERROR, 'Invalid operator: ' + op);
-          };
-
-          /* array comparisons handle one way */
-          if (op === '<@') {
             for (c = 0; c < param.value.length; c++) {
               ret.parameters.push(param.value[c]);
               param.value[c] = '$' + cnt;
               cnt++;
             }
+            break;
+          default:
+            plv8.elog(ERROR, 'Invalid operator: ' + op);
+          };
+
+          /* Handle characteristics. This is very specific to xTuple,
+             and highly dependant on certain table structures and naming conventions,
+             but otherwise way too much work to refactor in an abstract manner right now */
+          if (param.isCharacteristic) {
+            /* Handle array */
+            if (op === '<@') {
+              param.value = ' ARRAY[' + param.value.join(',') + ']';
+            }
+            
+            /* Booleans are stored as strings */
+            if (param.value === true) {
+              param.value = 't';
+            } else if (param.value === false) {
+              param.value = 'f';
+            }
+
+            /* Yeah, it depends on a property called 'charectristics'... */
+            prop = XT.Orm.getProperty(orm, 'characteristics');
+
+            /* Build the clause */
+            clause = '"id" in (' +
+                     '  select {column}' +
+                     '  from {table}' +
+                     '    join char on (char_id=characteristic)' +
+                     '  where' + 
+                     '    char_name = \'{name}\' and' +
+                     '    "value" {operator} \'{value}\'' +
+                     ')';
+            clause = clause.replace(/{column}/, prop.toMany.inverse)
+                     .replace(/{table}/, orm.nameSpace.toLowerCase() + "." + prop.toMany.type.decamelize())
+                     .replace(/{name}/, param.attribute)
+                     .replace(/{operator}/, op)
+                     .replace(/{value}/, param.value);
+            clauses.push(clause);
+ 
+          /* Array comparisons handle another way */
+          } else if (op === '<@') {
             clause = param.attribute + ' ' + op + ' ARRAY[' + param.value.join(',') + ']';
             clauses.push(clause);
 
-          /* everything else handle another */
+          /* Everything else handle another */
           } else {
             if (XT.typeOf(param.attribute) !== 'array') {
               param.attribute = [param.attribute];
@@ -193,7 +227,7 @@ select xt.install_js('XT','Data','xtuple', $$
         if (!this._granted) { this._granted = {}; }
         if (this._granted[privilege] !== undefined) { return this._granted[privilege]; }
         var res = plv8.execute(sql, [ XT.username, privilege ]),
-          ret = res[0].granted;
+          ret = res.length ? res[0].granted : false;
         /* memoize */
         this._granted[privilege] = ret;
       }
@@ -833,9 +867,7 @@ select xt.install_js('XT','Data','xtuple', $$
         ret, sql, pkey = XT.Orm.primaryKey(map),
         context = options.context,
         join = "",
-        conditions = "",
-        params = {},
-        clause;
+        params = {};
       if(!pkey) throw new Error('No primary key found for {recordType}'.replace(/{recordType}/, recordType));
       if (XT.typeOf(id) === 'string') {
         id = "'" + id + "'";
@@ -851,14 +883,12 @@ select xt.install_js('XT','Data','xtuple', $$
         context.pkey = XT.Orm.primaryKey(context.map);
         params.attribute = context.pkey;
         params.value = context.value;
-        clause = this.buildClause(context.nameSpace, context.type, params);
         join = 'join {recordType} on ({table1}."{pkey}"={table2}."{fkey}")';
         join = join.replace(/{recordType}/, context.recordType.decamelize())
                    .replace(/{table1}/, context.type.decamelize())
                    .replace(/{pkey}/, context.pkey)
                    .replace(/{table2}/, type.decamelize())
-                   .replace(/{fkey}/, context.fkey);
-        conditions = "and (" + clause.conditions + ")";    
+                   .replace(/{fkey}/, context.fkey);   
       }
 
       /* validate - don't bother running the query if the user has no privileges */
@@ -870,13 +900,12 @@ select xt.install_js('XT','Data','xtuple', $$
         }
       }
 
-      sql = 'select {table}.* from {schema}.{table} {join} where {table}."{primaryKey}" = {id} {conditions};'
+      sql = 'select {table}.* from {schema}.{table} {join} where {table}."{primaryKey}" = {id};'
             .replace(/{schema}/, nameSpace.decamelize())
             .replace(/{table}/g, type.decamelize())
             .replace(/{join}/, join)
             .replace(/{primaryKey}/, pkey)
-            .replace(/{id}/, id)
-            .replace(/{conditions}/, conditions);
+            .replace(/{id}/, id);
 
       /* query the map */
       if(DEBUG) plv8.elog(NOTICE, 'sql = ', sql);
@@ -909,16 +938,21 @@ select xt.install_js('XT','Data','xtuple', $$
     retrieveMetrics: function (keys) {
       var sql = 'select metric_name as setting, metric_value as value '
               + 'from metric '
-              + 'where metric_name in ({keys})', ret; 
+              + 'where metric_name in ({keys})',
+        qry,
+        ret = {},
+        prop; 
       for (var i = 0; i < keys.length; i++) keys[i] = "'" + keys[i] + "'";
       sql = sql.replace(/{keys}/, keys.join(','));
-      ret =  plv8.execute(sql);
+      qry =  plv8.execute(sql);
 
       /* recast where applicable */
-      for (var i = 0; i < ret.length; i++) {
-        if(ret[i].value === 't') ret[i].value = true;
-        else if(ret[i].value === 'f') ret[i].value = false
-        else if(!isNaN(ret[i].value)) ret[i].value = ret[i].value - 0;
+      for (var i = 0; i < qry.length; i++) {
+        prop = qry[i].setting;
+        if(qry[i].value === 't') { ret[prop] = true; }
+        else if(qry[i].value === 'f') { ret[prop] = false }
+        else if(!isNaN(qry[i].value)) { ret[prop] = qry[i].value - 0; }
+        else { ret[prop] = qry[i].value; }
       }
       return ret;
     }

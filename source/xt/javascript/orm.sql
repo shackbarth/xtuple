@@ -183,6 +183,7 @@ select xt.install_js('XT','Orm','xtuple', $$
       /* cache the result so we don't requery needlessly */
       this._maps.push({ "recordType": recordType, "map": ret});
     }
+    if (!ret) { plv8.elog(ERROR, "No orm found for " + nameSpace + "." + type) }
     return ret;
   };
 
