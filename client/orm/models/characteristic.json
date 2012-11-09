@@ -38,6 +38,14 @@
         }
       },
       {
+        "name": "isSearchable",
+        "attr": {
+          "type": "Boolean",
+          "column": "char_search",
+          "required": true
+        }
+      },
+      {
         "name": "order",
         "attr": {
           "type": "Number",
