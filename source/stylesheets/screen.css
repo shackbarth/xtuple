@@ -519,6 +519,9 @@ body {
 .xv-groupbox.panel {
   min-width: 330px;
 }
+.xv-groupbox .onyx-input-decorator > input {
+  width: 80%;
+}
 .xv-groupbox.in-panel > *:first-child {
   border-top-color: #aaaaaa;
   border-top: none;
