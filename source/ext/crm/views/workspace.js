@@ -49,7 +49,7 @@ trailing:true white:true*/
               {kind: "onyx.GroupboxHeader",
                 content: "_country".loc()},
               {kind: "XV.CountryPicker", attr: "DefaultAddressCountry",
-                label: "_default".loc()},
+                label: "_default".loc(), idAttribute: "name"},
               {kind: "XV.ToggleButtonWidget", attr: "StrictAddressCountry",
                 label: "_limitToList".loc()},
               {kind: "onyx.GroupboxHeader", content: "_incident".loc()},
