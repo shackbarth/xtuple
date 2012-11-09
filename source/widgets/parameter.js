@@ -222,13 +222,18 @@ white:true*/
             this.$.hasOwnProperty(componentName)) {
           component = this.$[componentName];
           value = component.getValue();
-          label = options.name ? component.getName() : component.getFilterLabel() || component.getLabel();
+          label = options.name ?
+            component.getName() :
+            component.getFilterLabel() || component.getLabel();
           control = component.$.input;
           if (value) {
             if (options.value) {
               values[label] = value instanceof XM.Model ? value.id : value;
+            } else if (typeof component === XV.DateWidget) {
+              values[label] = 
             } else {
-              values[label] = control.getValueToString ? control.getValueToString() : value;
+              values[label] = control.getValueToString ?
+                control.getValueToString() : value;
             }
           }
         }
