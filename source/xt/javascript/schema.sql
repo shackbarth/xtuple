@@ -182,4 +182,161 @@ select xt.install_js('XT','Schema','xtuple', $$
     return ret;
   }
 
+  /**
+    Return a JSON-Schema for an ORM to be used for an API Discovery Service
+    resource's "properties".
+
+    @param {Object} An ORM object or a basic one with just orm.nameSpace and orm.type.
+    @returns {Object}
+  */
+  XT.Schema.getProperties = function(orm) {
+    /* Load ORM if this function was called with just orm.nameSpace and orm.type. */
+    orm = orm.properties ? orm : XT.Orm.fetch(orm.nameSpace, orm.type);
+
+    var schemaTable = orm.table,
+        column,
+        schemaColumnInfo = {},
+        ret = {};
+
+    if (!orm.properties) return false;
+
+    /* Loop through the ORM properties and get the columns. */
+    for (var i = 0; i < orm.properties.length; i++) {
+      if (!ret.properties) {
+        /* Initialize properties. */
+        ret.properties = {};
+      }
+
+      /* Add title and description properties. */
+      /* For readability only, title should be first, therefore a redundant if. */
+      if ((orm.properties[i].attr && orm.properties[i].attr.column)
+        || (orm.properties[i].toOne)
+        || (orm.properties[i].toMany)) {
+
+        /* Initialize named properties. */
+        ret.properties[orm.properties[i].name] = {};
+        ret.properties[orm.properties[i].name].title = orm.properties[i].name.humanize();
+      }
+
+      /* Basic property */
+      if (orm.properties[i].attr && orm.properties[i].attr.column) {
+        column = orm.properties[i].attr.column;
+
+        /* Get column's PostgreSQL datatype info. */
+        schemaColumnInfo = XT.Schema.columnInfo(schemaTable, column);
+        if (!schemaColumnInfo) return false;
+
+        /* Loop through the returned schemaColumnInfo properties and add them. */
+        for (var attrname in schemaColumnInfo) {
+          ret.properties[orm.properties[i].name][attrname] = schemaColumnInfo[attrname];
+        }
+
+        /* Add required override based off of ORM's property. */
+        if (orm.properties[i].attr.required) {
+          ret.properties[orm.properties[i].name].required = true;
+        }
+      }
+      /* toOne property */
+      else if (orm.properties[i].toOne) {
+        ret.properties[orm.properties[i].name].type = "object";
+        ret.properties[orm.properties[i].name]["$ref"] = orm.properties[i].toOne.type;
+
+        /* Add required override based off of ORM's property. */
+        if (orm.properties[i].toOne.required) {
+          ret.properties[orm.properties[i].name].required = true;
+        }
+      }
+      /* toMany property */
+      else if (orm.properties[i].toMany) {
+        ret.properties[orm.properties[i].name].type = "array";
+
+        /* Add required override based off of ORM's property. */
+        if (orm.properties[i].toMany.required) {
+          ret.properties[orm.properties[i].name].required = true;
+        }
+
+        if (orm.properties[i].toMany.isNested) {
+          ret.properties[orm.properties[i].name].items = {"$ref": orm.properties[i].toMany.type};
+        }
+      }
+      /* Error */
+      else {
+        /* You broke it. We should not be here. */
+        throw new Error("Invalid ORM property. Unable to generate JSON-Schema from this ORM.");
+      }
+    }
+
+    /* If this ORM has no column properties, we have an empty object, return false. */
+    if (!ret.properties || !Object.keys(ret.properties).length > 0) return false;
+
+    /* return the results */
+    return ret;
+  }
+
+  /**
+    Return an array of requiredAttributes or columns that can not be NULL for an ORM.
+
+    @param {Object} An ORM object or a basic one with just orm.nameSpace and orm.type.
+    @returns {Array}
+  */
+  XT.Schema.getRequiredAttributes = function(orm) {
+    /* Load ORM if this function was called with just orm.nameSpace and orm.type. */
+    orm = orm.properties ? orm : XT.Orm.fetch(orm.nameSpace, orm.type);
+
+    var schemaTable = orm.table,
+      column,
+      schemaColumnInfo = {},
+      ret = [];
+
+    if (!orm.properties) return false;
+
+    /* Loop through the ORM properties and get the columns. */
+    for (var i = 0; i < orm.properties.length; i++) {
+
+      /* Basic property */
+      if (orm.properties[i].attr && orm.properties[i].attr.column) {
+        column = orm.properties[i].attr.column;
+
+        /* Get column's PostgreSQL datatype info. */
+        schemaColumnInfo = XT.Schema.columnInfo(schemaTable, column);
+        if (!schemaColumnInfo) return false;
+
+        /* Get required from the returned schemaColumnInfo properties. */
+        if (schemaColumnInfo.required) {
+          ret.push(orm.properties[i].name);
+        }
+
+        /* Add required override based off of ORM's property. */
+        if (orm.properties[i].attr.required) {
+          ret.push(orm.properties[i].name);
+        }
+      }
+      /* toOne property */
+      else if (orm.properties[i].toOne) {
+        /* Add required override based off of ORM's property. */
+        if (orm.properties[i].toOne.required) {
+          ret.push(orm.properties[i].name);
+        }
+      }
+      /* toMany property */
+      else if (orm.properties[i].toMany) {
+        /* Add required override based off of ORM's property. */
+        if (orm.properties[i].toMany.required) {
+          ret.push(orm.properties[i].name);
+        }
+      }
+      /* Error */
+      else {
+        /* You broke it. We should not be here. */
+        throw new Error("Invalid ORM property. Unable to generate requiredAttributes from this ORM.");
+      }
+    }
+
+    /* If this ORM has no column properties, we have an empty object, return false. */
+    if (!ret.length > 0) return false;
+
+    /* return the results */
+    return ret;
+  }
+
 $$ );
