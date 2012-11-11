@@ -1,7 +1,7 @@
 create or replace function xt.js_init() returns void as $$
 
   DEBUG = false;
-  
+
   // ..........................................................
   // METHODS
   //
@@ -23,7 +23,7 @@ create or replace function xt.js_init() returns void as $$
   }
 
   /**
-    Return the index of an item in an array 
+    Return the index of an item in an array
 
     @param {Any}
     @returns Any
@@ -39,7 +39,7 @@ create or replace function xt.js_init() returns void as $$
   }
 
   /**
-    Remove an item from an array and return it. 
+    Remove an item from an array and return it.
 
     @param {Any}
     @returns Any
@@ -49,7 +49,7 @@ create or replace function xt.js_init() returns void as $$
   }
 
   /**
-     Returns an the first item in an array with a property matching the passed value.  
+     Returns an the first item in an array with a property matching the passed value.
 
      @param {String} property name to search on
      @param {Any} value to search for
@@ -63,26 +63,26 @@ create or replace function xt.js_init() returns void as $$
              return this[i];
         }
       }
-    } 
+    }
     return false;
   }
 
-  /** 
+  /**
     Return the text after the first dot.
   */
   String.prototype.afterDot = function() {
     return this.replace(/\w+\./i, '');
   }
-  
-  /** 
+
+  /**
     Return the text before the first dot.
   */
   String.prototype.beforeDot = function() {
     return this.replace(/\.\w+/i, '');
   }
-  
+
   /**
-     Trim whitespace from a string. 
+     Trim whitespace from a string.
   */
   String.prototype.trim = function() {
     return this.replace(/^\s+|\s+$/g,"");
@@ -104,7 +104,7 @@ create or replace function xt.js_init() returns void as $$
   };
 
   /**
-     Converts the string into a class name. This method will camelize 
+     Converts the string into a class name. This method will camelize
      your string and then capitalize the first letter.
 
      @returns {String}
@@ -120,6 +120,17 @@ create or replace function xt.js_init() returns void as $$
   */
   String.prototype.decamelize = function() {
     return this.replace((/([a-z])([A-Z])/g), '$1_$2').toLowerCase();
+  }
+
+  /**
+     Change a camelCase or ClassName string to capitalize the first letter and
+     add space.
+
+     @returns {String} The argument modified
+  */
+  String.prototype.humanize = function() {
+    var spaced = this.replace((/([a-z])([A-Z])/g), '$1 $2');
+    return human = spaced.charAt(0).toUpperCase() + spaced.slice(1);
   }
 
   // ..........................................................
@@ -142,11 +153,11 @@ create or replace function xt.js_init() returns void as $$
         for(var prop in obj) ret[prop.camelize()] = obj[prop];
       }
     }
-    else if(typeof obj === "string") return obj.camelize(); 
+    else if(typeof obj === "string") return obj.camelize();
     return ret;
   }
 
-  /** 
+  /**
     Change camel case property names in an object to snake case.
      Only changes immediate properties, it is not recursive.
 
@@ -205,7 +216,7 @@ create or replace function xt.js_init() returns void as $$
         plv8[res[i].nameSpace] = eval([res[i].nameSpace] + " = {}");
       }
     }
-       
+
     /* load up all active javascript installed in the database */
     /* TODO: What about dependencies? */
     sql = 'select js_type, js_text as "javascript" '
@@ -216,7 +227,7 @@ create or replace function xt.js_init() returns void as $$
     if(res.length) {
       for(var i = 0; i < res.length; i++) {
         if(DEBUG) plv8.elog(NOTICE, 'loading javascript for type->', res[i].js_type);
-        
+
         eval(res[i].javascript);
       }
     }

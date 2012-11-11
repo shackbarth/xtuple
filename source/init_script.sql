@@ -52,6 +52,7 @@
 -- xt javascript
 \i xt/javascript/data.sql;
 \i xt/javascript/orm.sql;
+\i xt/javascript/schema.sql;
 
 -- [ END ] xt
 
