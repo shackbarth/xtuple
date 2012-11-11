@@ -173,7 +173,8 @@ trailing:true white:true*/
     },
     /**
       Exports the contents of a list to CSV. Note that it will export the entire
-      list, not just the part that's been lazy-loaded. Goes to the server for this.
+      list, not just the part that's been lazy-loaded. Of course, it will apply
+      the filter criteria as selected. Goes to the server for this.
       Avoids websockets or AJAX because the server will prompt the browser to download
       the file by setting the Content-Type of the response, which is not possible with
       those technologies.
@@ -181,10 +182,12 @@ trailing:true white:true*/
      */
     exportList: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),
-        coll = list.getValue(),
-        recordType = coll.model.prototype.recordType;
+        query = JSON.parse(JSON.stringify(list.getQuery())); // clone
 
-      window.open("/export?details={\"requestType\":\"fetch\",\"query\":{\"recordType\":\"" + recordType + "\"}}", "_newtab");
+      delete query.rowLimit;
+      delete query.rowOffset;
+
+      window.open('/export?details={"requestType":"fetch","query":' + JSON.stringify(query) + '}', '_newtab');
     },
     errorOk: function () {
       this.$.errorPopup.hide();
