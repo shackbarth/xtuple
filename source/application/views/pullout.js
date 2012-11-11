@@ -157,20 +157,23 @@ white:true*/
       // pullout, it will show the advanced search and not history.
       var name = inEvent.name,
         item = this.getItem(name),
-        child;
+        child,
+        forceMin = false;
 
-      if (!item && !inEvent.show) {
-        // nothing to see here.
-        // for example, the user has backed out into the main splash screen
-        // just pull back the pullout
-        this.animateToMin();
-        return;
-
-      } else if (!item) {
+      if (!item) {
         // if we've moved to a list with no advanced search and pull the pullout
         // again show history instead.
         name = "history";
         item = this.getItem(name);
+
+        if (!inEvent.show) {
+          // nothing to see here.
+          // for example, the user has backed out into the main splash screen
+          // just pull back the pullout
+          // but we do want the pullout to be set at "history" in case it gets
+          // drawn next for a list with no advanced search
+          forceMin = true;
+        }
       }
 
       if (name === 'history') {
@@ -180,8 +183,9 @@ white:true*/
       }
       this.setSelectedPanel(name);
       child = this.$.container.children[0];
-      if (item && this.isAtMax() && child.name === item.name) {
+      if (forceMin || (item && this.isAtMax() && child.name === item.name)) {
         this.animateToMin();
+
       } else if (inEvent.show) {
         this.$.container.removeChild(child);
         this.$.container.addChild(item);
