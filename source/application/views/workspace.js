@@ -4,7 +4,7 @@ trailing:true white:true*/
 /*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true */
 
 (function () {
-  
+
   /**
     Used to notify change of account to contact widget if both exist on
     the same workspace.
@@ -118,11 +118,11 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.ClassCode", "XV.ClassCodeWorkspace");
-  
+
   // ..........................................................
   // CONFIGURE
   //
-   
+
   enyo.kind({
     name: "XV.DatabaseInformationWorkspace",
     kind: "XV.Workspace",
@@ -363,58 +363,6 @@ trailing:true white:true*/
 
   XV.registerModelWorkspace("XM.FileRelation", "XV.FileWorkspace");
 
-  enyo.kind({
-    name: "XV.ImageWorkspace",
-    kind: "XV.FileWorkspace",
-    title: "_image".loc(),
-    model: "XM.Image",
-    components: [
-      {kind: "Panels", arrangerKind: "CarouselArranger",
-        fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainPanel", components: [
-          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
-            classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "name", name: "name"},
-            // XXX the disabled flag here doesn't seem to work
-            {kind: "XV.InputWidget", attr: "description", name: "description", disabled: true},
-            {kind: "XV.FileInput", name: "file", attr: "data"}
-          ]}
-        ]},
-        {kind: "XV.Groupbox", name: "previewPanel", components: [
-          {kind: "onyx.GroupboxHeader", content: "_preview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "previewGroup", classes: "in-panel", components: [
-            {tag: "img", name: "image"}
-          ]}
-        ]}
-      ]}
-    ],
-    attributesChanged: function (model, options) {
-      var id = this.getValue().get("id"),
-        K = XM.Model;
-
-      this.inherited(arguments);
-      if (id &&
-          !this.$.image.getAttribute("src") && this.isImageFile() &&
-          this.getValue().getStatus() !== K.READY_NEW) {
-        this.$.image.setAttribute("src", "/file?recordType=XM.Image&id=" + id);
-      }
-    },
-    isImageFile: function () {
-      var filename = this.$.description.getValue(),
-        extension;
-      if (!filename) {
-        return false;
-      }
-      extension = filename.substring(filename.lastIndexOf('.') + 1);
-      return (['png', 'gif', 'jpg'].indexOf(extension) >= 0);
-    }
-
-
-  });
-
-  XV.registerModelWorkspace("XM.ImageRelation", "XV.ImageWorkspace");
-
 
   // ..........................................................
   // HONORIFIC
@@ -484,7 +432,7 @@ trailing:true white:true*/
       ]}
     ]
   };
-  
+
   incidentHash = enyo.mixin(incidentHash, XV.accountNotifyContactMixin);
   enyo.kind(incidentHash);
 
@@ -634,7 +582,7 @@ trailing:true white:true*/
       }
     }
   };
-  
+
   opportunityHash = enyo.mixin(opportunityHash, XV.accountNotifyContactMixin);
   enyo.kind(opportunityHash);
 
@@ -768,7 +716,7 @@ trailing:true white:true*/
       }
     }
   };
-  
+
   projectHash = enyo.mixin(projectHash, XV.accountNotifyContactMixin);
   enyo.kind(projectHash);
 
@@ -898,7 +846,7 @@ trailing:true white:true*/
       }
     }
   };
-  
+
   toDoHash = enyo.mixin(toDoHash, XV.accountNotifyContactMixin);
   enyo.kind(toDoHash);
 

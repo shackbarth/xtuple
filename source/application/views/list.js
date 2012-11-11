@@ -121,7 +121,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   // ..........................................................
   // CONFIGURE
   //
@@ -168,7 +168,7 @@ trailing:true white:true*/
     fetch: function () {
       this.fetched();
     }
-    
+
   });
 
   // ..........................................................
@@ -1050,12 +1050,4 @@ trailing:true white:true*/
     kind: "XV.NameDescriptionList",
     collection: "XM.UserAccountRoleCollection"
   });
-
-  enyo.kind({
-    name: "XV.ImageList",
-    kind: "XV.NameDescriptionList",
-    parameterWidget: "XV.ImageListParameters",
-    collection: "XM.ImageRelationCollection"
-  });
-  XV.registerModelList("XM.ImageRelation", "XV.ImageList");
 }());
