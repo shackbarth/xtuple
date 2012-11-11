@@ -121,14 +121,6 @@
         }
       },
       {
-        "name": "image",
-        "toOne": {
-          "isNested": true,
-          "type": "Image",
-          "column": "emp_image_id"
-        }
-      },
-      {
         "name": "notes",
         "attr": {
           "type": "String",
