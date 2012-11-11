@@ -7,7 +7,7 @@ white:true*/
   "use strict";
 
   XT.extensions.connect.initIncidentModels = function () {
-    
+
     // Define email processing
     var sendEmail = function () {
       var that = this,
@@ -61,14 +61,14 @@ white:true*/
         bcc = format(profile.get('bcc'));
         subject = format(profile.get('subject'));
         body = format(profile.get('body'));
-        
+
         // Create and submit the email batch record
         batch = new XM.Batch();
         batch.on('change:id', callback);
         batch.initialize(null, {isNew: true});
       }
     };
-    
+
     // Enhance `save` function to generate email after successful commit
     // We don't use `extend` to avoid risk of over-writing something else
     // Instead inject `options` into existing save function
@@ -78,23 +78,23 @@ white:true*/
       if (_.isObject(key) || _.isEmpty(key)) {
         options = value;
       }
-      
+
       options = options ? _.clone(options) : {};
       var that = this,
         K = XM.Model,
         success = options.success,
         status = this.getStatus(),
-        statusString = this.getIncidentStatusString().toUpperCase(),
+        statusString = this.getIncidentStatusString() ? this.getIncidentStatusString().toUpperCase() : undefined,
         isNotUpdated = _.size(this.prime) === 0,
         newComment = _.find(this.get('comments').models, function (comment) {
           return comment.getStatus() === K.READY_NEW;
         });
-        
+
       options.success = function (model, resp, options) {
         sendEmail.call(that);
         if (success) { success(model, resp, options); }
       };
-      
+
       // Set change text
       if (status === K.READY_NEW && this.get('status') !== 'N') {
         this._lastChange = "_incidentCreatedStatus".loc()
@@ -110,16 +110,16 @@ white:true*/
         this._lastChange = "_incidentUpdated".loc();
       }
       this._lastChange += ":";
-      
+
       // Handle both `"key", value` and `{key: value}` -style arguments.
       if (_.isObject(key) || _.isEmpty(key)) {
         value = options;
       }
-      
+
       // Now call the original
       save.call(this, key, value, options);
     };
-    
+
     // Supporting functions for email processing
     XM.Incident = XM.Incident.extend(
       /** @scope XM.Incident.prototype */ {
@@ -127,11 +127,11 @@ white:true*/
       getChangeString: function () {
         return this._lastChange;
       },
-      
+
       emailBcc: function () {
         return "john@xtuple.com";
       },
-      
+
       getLastCommentString: function () {
         var comments = this.get('comments'),
           comment,
@@ -152,7 +152,7 @@ white:true*/
         }
         return ret;
       },
-      
+
       getHistoryString: function () {
         var history = this.get('history'),
           ret = "",
@@ -179,9 +179,9 @@ white:true*/
         }
         return ret;
       }
-      
+
     });
-    
+
     /**
       @class
 
@@ -191,11 +191,11 @@ white:true*/
       /** @scope XM.IncidentEmailProfile.prototype */ {
 
       recordType: 'XM.IncidentEmailProfile',
-    
+
       documentKey: 'name'
 
     });
-  
+
     // ..........................................................
     // COLLECTIONS
     //
