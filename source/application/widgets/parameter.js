@@ -154,20 +154,6 @@ trailing:true white:true*/
   });
 
   // ..........................................................
-  // IMAGE
-  //
-
-  enyo.kind({
-    name: "XV.ImageListParameters",
-    kind: "XV.ParameterWidget",
-    components: [
-      {kind: "onyx.GroupboxHeader", content: "_image".loc()},
-      {name: "name", label: "_name".loc(), attr: "name"},
-      {name: "description", label: "_description".loc(), attr: "description"}
-    ]
-  });
-
-  // ..........................................................
   // INCIDENT
   //
 
