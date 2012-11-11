@@ -159,7 +159,14 @@ white:true*/
         item = this.getItem(name),
         child;
 
-      if (!item) {
+      if (!item && !inEvent.show) {
+        // nothing to see here.
+        // for example, the user has backed out into the main splash screen
+        // just pull back the pullout
+        this.animateToMin();
+        return;
+
+      } else if (!item) {
         // if we've moved to a list with no advanced search and pull the pullout
         // again show history instead.
         name = "history";
@@ -173,8 +180,7 @@ white:true*/
       }
       this.setSelectedPanel(name);
       child = this.$.container.children[0];
-      if (item && this.isAtMax() &&
-          child.name === item.name) {
+      if (item && this.isAtMax() && child.name === item.name) {
         this.animateToMin();
       } else if (inEvent.show) {
         this.$.container.removeChild(child);
