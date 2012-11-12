@@ -206,6 +206,11 @@ white:true*/
       return params;
     },
     /**
+      Retrieves parameter values. By default returns values as human readable
+      strings. Boolean options are:
+        * name - If true returns the parameter item control name, otherwise returns the label.
+        * value - If true returns the control value, other wise returns a human readable string.
+        * deltaDate - If true returns as string for the date difference for date widgets. (i.e. "+5").
       @param {Object} options
     */
     getSelectedValues: function (options) {
@@ -215,20 +220,33 @@ white:true*/
         component,
         value,
         label,
-        control;
+        control,
+        date,
+        today,
+        days;
 
       for (componentName in this.$) {
         if (this.$[componentName] instanceof XV.ParameterItem &&
             this.$.hasOwnProperty(componentName)) {
           component = this.$[componentName];
           value = component.getValue();
-          label = options.name ? component.getName() : component.getFilterLabel() || component.getLabel();
+          label = options.name ?
+            component.getName() :
+            component.getFilterLabel() || component.getLabel();
           control = component.$.input;
           if (value) {
-            if (options.value) {
+            if (options.deltaDate &&
+                component.$.input.kind === 'XV.DateWidget') {
+              today = XT.date.today();
+              date = XT.date.applyTimezoneOffset(control.getValue(), true);
+              days = XT.date.daysBetween(date, today);
+              days = days < 0 ? "" + days : "+" + days;
+              values[label] = days;
+            } else if (options.value) {
               values[label] = value instanceof XM.Model ? value.id : value;
             } else {
-              values[label] = control.getValueToString ? control.getValueToString() : value;
+              values[label] = control.getValueToString ?
+                control.getValueToString() : value;
             }
           }
         }
@@ -249,7 +267,11 @@ white:true*/
         return;
       }
 
-      values = this.getSelectedValues({name: true, value: true});
+      values = this.getSelectedValues({
+        name: true,
+        value: true,
+        deltaDate: true
+      });
       dbName = XT.session.details.organization;
       cookieName = 'advancedSearchCache_' + dbName + '_' + this.name;
       enyo.setCookie(cookieName, JSON.stringify(values));
