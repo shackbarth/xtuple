@@ -720,7 +720,8 @@ body {
   background: #ffffff;
   display: block;
   margin: 4px;
-  width: 205px;
+  width: 70%;
+  padding-right: 0;
 }
 .xv-addresswidget-input {
   width: 100%;
@@ -800,18 +801,19 @@ body {
 /* Combo Box */
 .xv-combobox {
   height: 24px;
-  width: 205px;
+  width: 100%;
+  display: inline-block;
 }
 .xv-combobox-input {
   font-size: medium;
   border: 0;
-  top: -2px;
-  position: relative;
+  display: inline-block;
   outline: none;
+  width: 80%;
 }
 .xv-combobox-icon {
-  left: 8px;
-  position: relative;
+  margin-left: 8px;
+  display: inline-block;
 }
 /* Picker */
 .onyx-picker .onyx-menu-item {
