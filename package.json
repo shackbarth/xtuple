@@ -13,10 +13,11 @@
   "engines": {
     "node": "*"
   },
-  "main": "source/package.js",
+  "main": "source/node_init.js",
   "dependencies": {
     "backbone":"0.9.2",
-    "backbone-relational":"0.6.0"
+    "backbone-relational":"0.6.0",
+    "xt": "git://github.com/xtuple/node-xt.git#master"
   },
   "scripts": {}
 }
