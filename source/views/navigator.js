@@ -50,9 +50,11 @@ trailing:true white:true*/
             ontap: "backTapped"},
           {kind: "Group", name: "iconButtonGroup",
             defaultKind: "onyx.IconButton", tag: null, components: [
-            {name: "historyIconButton", src: "lib/enyo-x/assets/menu-icon-bookmark.png",
+            {name: "historyIconButton",
+              src: "lib/enyo-x/assets/menu-icon-bookmark.png",
               ontap: "showHistory"},
-            {name: "searchIconButton", src: "lib/enyo-x/assets/menu-icon-search.png",
+            {name: "searchIconButton",
+              src: "lib/enyo-x/assets/menu-icon-search.png",
               ontap: "showParameters", showing: false},
             {name: "myAccountButton", src: "lib/enyo-x/assets/menu-icon-gear.png",
               ontap: "showMyAccount"},
@@ -86,12 +88,13 @@ trailing:true white:true*/
       {kind: "FittableRows", components: [
         {kind: "onyx.Toolbar", name: "contentToolbar", components: [
           {kind: "onyx.Grabber", classes: "left-float"}, // left floats are to prevent overlap
-					{name: "rightLabel", classes: "left-float"},
+          {name: "rightLabel", classes: "left-float"},
           {name: "search", kind: "onyx.InputDecorator", classes: "right-float", // right floats anchor buttons to right
             showing: false, components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
               placeholder: "_search".loc(), onchange: "inputChanged"},
-            {kind: "Image", src: "lib/enyo-x/assets/search-input-search.png"}
+            {kind: "Image", src: "lib/enyo-x/assets/search-input-search.png",
+              name: "searchJump", ontap: "jump"}
           ]},
           {name: "refreshButton", kind: "onyx.Button", content: "_refresh".loc(),
               ontap: "requery", classes: "right-float", showing: false},
@@ -167,6 +170,12 @@ trailing:true white:true*/
         panelReference.status = "cached";
         this.getPanelCache()[globalIndex] = panelToCache;
       }
+    },
+    /**
+      Called if the user does not really want to log out. Just closes the logout popup.
+     */
+    closeLogoutPopup: function () {
+      this.$.logoutPopup.hide();
     },
     getSelectedModule: function (index) {
       return this._selectedModule;
@@ -276,15 +285,11 @@ trailing:true white:true*/
         workspace = list ? list.getWorkspace() : null,
         model = list.getModel(inEvent.index),
         canNotRead = model.couldRead ? !model.couldRead() : !model.getClass().canRead(),
-        id = model && model.id ? model.id : false,
-        message;
+        id = model && model.id ? model.id : false;
 
       // Check privileges first
       if (canNotRead) {
-        message = "_insufficientViewPrivileges".loc();
-        this.$.errorMessage.setContent(message);
-        this.$.errorPopup.render();
-        this.$.errorPopup.show();
+        this.showError("_insufficientViewPrivileges".loc());
         return true;
       }
 
@@ -292,9 +297,57 @@ trailing:true white:true*/
       if (workspace) { this.doWorkspace({workspace: workspace, id: id}); }
       return true;
     },
-    setModules: function (modules) {
-      this.modules = modules;
-      this.modulesChanged();
+    jump: function () {
+      var index = this.$.contentPanels.getIndex(),
+         list = this.$.contentPanels.getPanels()[index],
+         workspace = list ? list.getWorkspace() : null,
+         Klass = list.getValue().model,
+         upper = this._getModelProperty(Klass, 'enforceUpperKey'),
+         input = this.$.searchInput.getValue(),
+         that = this,
+         options = {},
+         key = this._getModelProperty(Klass, 'documentKey'),
+         model;
+      if (this._busy  || !input || !key) { return; }
+      this._busy = true;
+      
+      // First find a matching id
+      options.success = function (id) {
+        var options = {};
+        if (id) {
+
+          // Next fetch the model, see if we have privs
+          options.success = function () {
+            var canNotRead = model.couldRead ?
+              !model.couldRead() : !model.getClass().canRead();
+
+            // Check privileges first
+            if (canNotRead) {
+              this.showError("_insufficientViewPrivileges".loc());
+            } else {
+
+              // Bubble requset for workspace view, including the model id payload
+              if (workspace) { that.doWorkspace({workspace: workspace, id: id}); }
+            }
+            that._busy = false;
+          };
+          model = new Klass({id: id});
+          model.fetch(options);
+        } else {
+          that.showError("_noDocumentFound".loc());
+          that.$.searchInput.clear();
+          that._busy = false;
+        }
+      };
+      input = upper ? input.toUpperCase() : input;
+      Klass.findExisting(key, input, options);
+    },
+    /**
+      Actually logs the user out if they confirm that's what they want to do.
+     */
+    logout: function () {
+      this.$.logoutPopup.hide();
+      XT.session.logout();
     },
     /**
       Handles additive changes only
@@ -385,6 +438,20 @@ trailing:true white:true*/
     },
     requery: function (inSender, inEvent) {
       this.fetch();
+    },
+    /**
+      Determines whether the advanced search or the history icon (or neither) is
+      lit.
+     */
+    setActiveIconButton: function (buttonName) {
+      var activeIconButton = null;
+      // Null deactivates both
+      if (buttonName === 'search') {
+        activeIconButton = this.$.searchIconButton;
+      } else if (buttonName === 'history') {
+        activeIconButton = this.$.historyIconButton;
+      }
+      this.$.iconButtonGroup.setActive(activeIconButton);
     },
     /**
       Renders a list and performs all the necessary auxilliary work such as hiding/showing
@@ -507,6 +574,10 @@ trailing:true white:true*/
         }
       }
     },
+    setModules: function (modules) {
+      this.modules = modules;
+      this.modulesChanged();
+    },
     /**
       Renders a list of modules from the root menu
      */
@@ -548,6 +619,11 @@ trailing:true white:true*/
       this.$.listItem.addRemoveClass("onyx-selected", isSelected);
       if (isSelected) { this.setContentPanel(index); }
     },
+    showError: function (message) {
+      this.$.errorMessage.setContent(message);
+      this.$.errorPopup.render();
+      this.$.errorPopup.show();
+    },
     /**
       Display the history panel.
      */
@@ -574,32 +650,20 @@ trailing:true white:true*/
     warnLogout: function () {
       this.$.logoutPopup.show();
     },
-    /**
-      Called if the user does not really want to log out. Just closes the logout popup.
-     */
-    closeLogoutPopup: function () {
-      this.$.logoutPopup.hide();
-    },
-    /**
-      Actually logs the user out if they confirm that's what they want to do.
-     */
-    logout: function () {
-      this.$.logoutPopup.hide();
-      XT.session.logout();
-    },
-    /**
-      Determines whether the advanced search or the history icon (or neither) is
-      lit.
-     */
-    setActiveIconButton: function (buttonName) {
-      var activeIconButton = null;
-      // Null deactivates both
-      if (buttonName === 'search') {
-        activeIconButton = this.$.searchIconButton;
-      } else if (buttonName === 'history') {
-        activeIconButton = this.$.historyIconButton;
+    /** @private */
+    _getModelProperty: function (Klass, prop) {
+      var ret = false;
+      // Get the key if it's a document model
+      if (Klass.prototype[prop]) {
+        ret = Klass.prototype[prop];
+
+      // Hopefully it's an info model
+      } else if (Klass.prototype.editableModel) {
+        Klass = XT.getObjectByName(Klass.prototype.editableModel);
+        ret = Klass.prototype[prop];
       }
-      this.$.iconButtonGroup.setActive(activeIconButton);
+
+      return ret;
     }
   });
 
