@@ -93,6 +93,19 @@ white:true*/
       y.setHours(0, 0, 0, 0);
       return this.compare(x, y);
     },
+    
+    /**
+      Return the difference between two dates in days.
+      
+      @param {Date} Start date
+      @param {Date} End date
+      @returns {Number}
+    */
+    daysBetween: function (start, end) {
+      var day = 1000 * 60 * 60 * 24,
+        delta = start.getTime() - end.getTime();
+      return Math.round(delta / day);
+    },
 
     /**
     Checks if date in d is between dates in start and end.
@@ -114,6 +127,17 @@ white:true*/
         start <= d && d <= end :
         NaN
       );
+    },
+    /**
+      Returns today's date at midnight.
+      returns {Date}
+    */
+    today: function () {
+      var today = new Date();
+      today.setHours(0);
+      today.setMinutes(0);
+      today.setSeconds(0);
+      return today;
     }
 
   };
