@@ -172,7 +172,7 @@ white:true*/
               name: char.get('name') + "FromCharacteristic",
               label: "_from".loc(),
               filterLabel: char.get('name') + " " + "_from".loc(),
-              operator: "<=",
+              operator: ">=",
               attr:  char.get('name'),
               isCharacteristic: true,
               defaultKind: "XV.DateWidget"
@@ -183,7 +183,7 @@ white:true*/
               name: char.get('name') + "ToCharacteristic",
               label: "_to".loc(),
               filterLabel: char.get('name') + " " + "_to".loc(),
-              operator: ">=",
+              operator: "<=",
               attr:  char.get('name'),
               isCharacteristic: true,
               defaultKind: "XV.DateWidget"
