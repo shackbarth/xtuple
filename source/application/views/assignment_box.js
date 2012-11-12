@@ -76,7 +76,7 @@ white:true*/
       idsFromRoles: null
     },
     cacheName: "privileges",
-    segments: ["Privileges"],
+    segments: [],
     title: "_privileges".loc(),
     totalCollectionName: "PrivilegeCollection",
     type: "privilege",
@@ -199,7 +199,7 @@ white:true*/
   var userAccountRolePrivilegeAssignmentBox = {
     name: "XV.UserAccountRolePrivilegeAssignmentBox",
     kind: "XV.AssignmentBox",
-    segments: ["Privileges"],
+    segments: [],
     title: "_privileges".loc(),
     translateLabels: false,
     totalCollectionName: "PrivilegeCollection",
