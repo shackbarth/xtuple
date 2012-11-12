@@ -1,4 +1,4 @@
-enyo.depends(
+X.depends(
   "lib",
   "source"
 );

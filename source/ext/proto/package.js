@@ -1,3 +1,3 @@
-enyo.depends(
+X.depends(
   "string.js"
 );
