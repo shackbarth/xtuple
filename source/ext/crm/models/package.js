@@ -1,4 +1,4 @@
-enyo.depends(
+X.depends(
   "configure.js",
   "account.js",
   "contact.js",

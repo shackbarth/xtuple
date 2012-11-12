@@ -1,4 +1,4 @@
-enyo.depends(
+X.depends(
   "incident.js",
   "project.js",
   "startup.js"
