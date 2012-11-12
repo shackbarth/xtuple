@@ -79,14 +79,6 @@ trailing:true white:true*/
       case 'D':
         purpose = "_duplicate".loc();
         break;
-      case 'P':
-        purpose = "_product".loc();
-        break;
-      case 'E':
-        purpose = "_engineering".loc();
-        break;
-      default:
-        purpose = "_miscellaneous".loc();
       }
       return purpose;
     },

@@ -31,10 +31,8 @@ XT.stringsFor("en_US", {
   "_duplicateOf": "Duplicate of",
   "_edit": "Edit",
   "_editAddress": "Edit Address",
-  "_engineering": "Engineering",
   "_export": "Export",
   "_loading": "Loading",
-  "_miscellaneous": "Miscellaneous",
   "_new": "New",
   "_none": "None",
   "_ok": "Ok",
@@ -43,7 +41,6 @@ XT.stringsFor("en_US", {
   "_parent": "Parent",
   "_parentOf": "Parent of",
   "_postalCode": "Postal Code",
-  "_product": "Product",
   "_purpose": "Purpose",
   "_refresh": "Refresh",
   "_related": "Related",
@@ -69,6 +66,7 @@ XT.stringsFor("en_US", {
   "_localResourceNotAllowed": "Not allowed to load local resource",
   "_logoutConfirmation": "Are you sure you want to log out?",
   "_noDescription": "No Description",
+  "_noDocumentFound": "No Document Found.",
   "_unsavedChanges": "You have unsaved changes.",
   "_saveYourWork?": "Do you want to save your work?"
   
