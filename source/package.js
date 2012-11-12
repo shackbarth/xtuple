@@ -1,4 +1,4 @@
-enyo.depends(
+X.depends(
   "core.js",
   "model.js",
   "collection.js",
