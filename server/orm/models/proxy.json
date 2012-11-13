@@ -1,0 +1,162 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Datasource",
+    "table": "xt.datasource",
+    "comment": "Datasource Map",
+    "properties": [
+     {
+       "name": "name",
+       "attr": {
+         "type": "String",
+         "column": "datasource_name",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "hostname",
+       "attr": {
+         "type": "String",
+         "column": "datasource_hostname"
+       }
+     },
+     {
+       "name": "port",
+       "attr": {
+         "type": "String",
+         "column": "datasource_port"
+       }
+     },
+     {
+       "name": "description",
+       "attr": {
+         "type": "String",
+         "column": "datasource_descrip"
+       }
+     },
+     {
+       "name": "location",
+       "attr": {
+         "type": "String",
+         "column": "datasource_loc"
+       }
+     },
+     {
+       "name": "dateAdded",
+       "attr": {
+         "type": "Date",
+         "column": "datasource_created"
+       }
+     }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "DatabaseServer",
+    "table": "xt.dbserver",
+    "comment": "Database Server Map",
+    "properties": [
+     {
+       "name": "name",
+       "attr": {
+         "type": "String",
+         "column": "dbserver_name",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "hostname",
+       "attr": {
+         "type": "String",
+         "column": "dbserver_hostname"
+       }
+     },
+     {
+       "name": "port",
+       "attr": {
+         "type": "String",
+         "column": "dbserver_port"
+       }
+     },
+     {
+       "name": "description",
+       "attr": {
+         "type": "String",
+         "column": "dbserver_descrip"
+       }
+     },
+     {
+       "name": "location",
+       "attr": {
+         "type": "String",
+         "column": "dbserver_loc"
+       }
+     },
+     {
+       "name": "dateAdded",
+       "attr": {
+         "type": "Date",
+         "column": "dbserver_created"
+       }
+     },
+     {
+       "name": "password",
+       "attr": {
+         "isEncrypted": true,
+         "type": "String",
+         "column": "dbserver_password"
+       }
+     },
+     {
+       "name": "user",
+       "attr": {
+         "type": "String",
+         "column": "dbserver_username"
+       }
+     }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Organization",
+    "table": "xt.org",
+    "comment": "Organization Map",
+    "properties": [
+     {
+       "name": "name",
+       "attr": {
+         "type": "String",
+         "column": "org_name",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "databaseServer",
+       "attr": {
+         "type": "String",
+         "column": "org_dbserver_name"
+       }
+     },
+     {
+       "name": "description",
+       "attr": {
+         "type": "String",
+         "column": "org_descrip"
+       }
+     },
+     {
+       "name": "cloud",
+       "attr": {
+         "type": "String",
+         "column": "org_cloud"
+       }
+     }
+    ],
+    "isSystem": true
+  }
+]

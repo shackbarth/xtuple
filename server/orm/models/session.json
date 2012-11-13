@@ -1,0 +1,62 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Session",
+    "table": "xt.session",
+    "comment": "Session Map",
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "String",
+         "column": "session_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "sid",
+       "attr": {
+         "type": "String",
+         "column": "session_sid"
+       }
+     },
+     {
+       "name": "lastModified",
+       "attr": {
+         "type": "Date",
+         "column": "session_updated"
+       }
+     },
+     {
+       "name": "created",
+       "attr": {
+         "type": "Date",
+         "column": "session_created"
+       }
+     },
+     {
+       "name": "checksum",
+       "attr": {
+         "type": "String",
+         "column": "session_checksum"
+       }
+     },
+     {
+       "name": "organization",
+       "attr": {
+         "type": "String",
+         "column": "session_org_name"
+       }
+     },
+     {
+       "name": "socket",
+       "attr": {
+         "type": "String",
+         "column": "session_socket"
+       }
+     }
+    ],
+    "isSystem": true
+  }
+]
