@@ -22,8 +22,15 @@ regexp:true, undef:true, trailing:true, white:true */
       value = _.isNumber(value) ? XT.math.round(value, this.getScale()) : null;
       XV.Input.prototype.setValue.call(this, value, options);
     },
+    /**
+      Validates value, whether set programatically or via user input. Gracefully handles
+      commas, periods, etc per the set culture using Globalize.
+
+      @param {String} Number (string) to be validated.
+      @return The value if it is valid, otherwise false
+     */
     validate: function (value) {
-      value = Number(value);
+      value = Globalize.parseFloat(value);
       return isNaN(value) ? false : value;
     },
     valueChanged: function (value) {
