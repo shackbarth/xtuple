@@ -16,8 +16,7 @@
   "main": "source/package.js",
   "dependencies": {
     "backbone":"0.9.2",
-    "backbone-relational":"0.6.0",
-    "xt": "git://github.com/xtuple/node-xt.git#master"
+    "backbone-relational":"0.6.0"
   },
   "scripts": {}
 }
