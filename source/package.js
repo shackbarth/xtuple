@@ -1,5 +1,4 @@
 X.depends(
-  "core.js",
   "foundation.js",
   "error.js",
   "log.js",
