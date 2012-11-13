@@ -67,6 +67,7 @@ white:true*/
     },
 
     start: function () {
+      // TODO: this repo should really be enyo-independent
       var c = enyo.getCookie("xtsessioncookie");
       try {
         c = JSON.parse(c);

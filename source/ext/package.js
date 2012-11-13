@@ -1,4 +1,4 @@
-enyo.depends(
+X.depends(
   "proto",
   "pluralize.js",
   "string.js",
