@@ -17,8 +17,9 @@ white:true*/
    */
   enyo.kind(/** @lends XV.AssignmentBox# */{
     name: "XV.AssignmentBox",
-    kind: "XV.Groupbox",
-    classes: "xv-assignment-box",
+    kind: "Scroller",
+    fit: true,
+    horizontal: "hidden",
     handlers: {
       onValueChange: "checkboxChange"
     },
@@ -51,9 +52,6 @@ white:true*/
      *    If this array is length one then there is no segmentation, and the one value
      *    of the array becomes the header of the box.
      *
-     * @property {String} title
-     * Used by the workspace to title the menu item for the box.
-     *
      * @property {XM.Collection} totalCollection
      * The collection of all possible assignable models.
      *
@@ -76,7 +74,6 @@ white:true*/
       restrictedValues: null,
       segmentedCollections: null,
       segments: null,
-      title: "",
       totalCollection: null,
       totalCollectionName: "",
       translateLabels: true,
@@ -84,13 +81,10 @@ white:true*/
     },
 
     components: [
-      {kind: "onyx.GroupboxHeader", name: "masterHeader"},
-      {kind: "Scroller", fit: true, horizontal: "hidden", components: [
-        {kind: "Repeater", name: "segmentRepeater", fit: true, onSetupItem: "setupSegment", segmentIndex: 0, components: [
-          {kind: "onyx.GroupboxHeader", name: "segmentHeader", content: ""},
-          {kind: "Repeater", name: "checkboxRepeater", fit: true, onSetupItem: "setupCheckbox", components: [
-            {kind: "XV.CheckboxWidget", name: "checkbox" }
-          ]}
+      {kind: "Repeater", name: "segmentRepeater", fit: true, onSetupItem: "setupSegment", segmentIndex: 0, components: [
+        {kind: "onyx.GroupboxHeader", name: "segmentHeader", content: ""},
+        {kind: "Repeater", name: "checkboxRepeater", fit: true, onSetupItem: "setupCheckbox", components: [
+          {kind: "XV.CheckboxWidget", name: "checkbox" }
         ]}
       ]}
     ],
@@ -165,7 +159,6 @@ white:true*/
 
       this.inherited(arguments);
 
-      this.$.masterHeader.setContent(this.getTitle());
       this.setSegmentedCollections([]);
 
       for (i = 0; i < this.getSegments().length; i++) {
