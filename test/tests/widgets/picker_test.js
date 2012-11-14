@@ -16,7 +16,8 @@ trailing:true white:true*/
       return this.$.pickerWidget;
     },
     beforeEach: function () {
-      this.getObj().$.picker.createComponent({kind: "onyx.MenuItem", value: {id: "O"}});
+      var mockModel = { id: "O", get: function (key) { return "O"; }};
+      this.getObj().$.picker.createComponent({kind: "onyx.MenuItem", value: mockModel});
     },
     testRejectJunk: function () {
       this.getObj().setValue("XYZ");
