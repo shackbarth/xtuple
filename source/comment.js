@@ -8,7 +8,7 @@ white:true*/
 
   /**
     @class
-
+    @name XM.CommentType
     @extends XM.Model
   */
   XM.CommentType = XM.Model.extend(/** @lends XM.CommentType# */{
@@ -29,8 +29,9 @@ white:true*/
   });
 
   /**
-    @class
-
+    @class Used in conjunction with 'XM.Comment.sourceName" 
+    to determine which comment types are available in a given comment subclass.
+    @name XM.CommentTypeSource
     @extends XM.Model
   */
   XM.CommentTypeSource = XM.Model.extend(/** @lends XM.CommentTypeSource# */{
@@ -41,7 +42,7 @@ white:true*/
 
   /**
     @class
-
+    @name XM.Source
     @extends XM.Model
   */
   XM.Source = XM.Model.extend(/** @lends XM.Source# */{
@@ -51,17 +52,15 @@ white:true*/
   });
 
   /**
-    @class
-
-    Base class for use on comment sub classes.
-
+    @class Base class for use on comment subclasses.
+    @name XM.Comment
     @extends XM.Model
   */
   XM.Comment = XM.Model.extend(/** @lends XM.Comment# */{
 
     /**
       The name of the source used in conjunction with `CommentTypeSource`
-      to determine which comment types are available in a given comment sub class.
+      to determine which comment types are available in a given comment subclass.
     */
     sourceName: "",
 
@@ -119,7 +118,7 @@ white:true*/
 
   /**
     @class
-
+    @name XM.CommentTypeCollection
     @extends XM.Collection
   */
   XM.CommentTypeCollection = XM.Collection.extend(/** @lends XM.CommentTypeCollection# */{
@@ -130,7 +129,7 @@ white:true*/
 
   /**
     @class
-
+    @name XM.SourceCollection
     @extends XM.Collection
   */
   XM.SourceCollection = XM.Collection.extend(/** @lends XM.SourceCollection# */{

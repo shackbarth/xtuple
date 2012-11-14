@@ -8,7 +8,7 @@ white:true*/
 
   /**
     @class
-
+    @name XM.Settings
     @extends XM.Model
   */
   XM.Settings = XM.Model.extend(/** @lends XM.Settings# */{
@@ -53,7 +53,7 @@ white:true*/
     },
 
     /**
-      Reimplemented to invoke `settings` and `commitSettings` functions .
+      Reimplemented to invoke `settings` and `commitSettings` functions.
     */
     sync: function (method, model, options) {
       options = options ? _.clone(options) : {};
