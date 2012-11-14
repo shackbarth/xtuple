@@ -1,4 +1,4 @@
-var depends = enyo ? enyo.depends : X.depends;
+var depends = (typeof enyo !== 'undefined') ? enyo.depends : X.depends;
 depends(
   "batch.js",
   "incident.js",
