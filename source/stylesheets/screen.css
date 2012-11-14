@@ -232,6 +232,10 @@ body {
     display: block;
     margin: 0;
   }
+  .app-panels > * {
+    min-width: 100%;
+    max-width: 100%;
+  }
 }
 .xv-pullout-header {
   text-align: center;

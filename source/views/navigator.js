@@ -504,6 +504,11 @@ trailing:true white:true*/
       label = panel && panel.label ? panel.label : "";
       collection = panel && panel.getCollection ? XT.getObjectByName(panel.getCollection()) : false;
 
+			// Mobile device view
+			if (enyo.Panels.isScreenNarrow()){
+				this.next();
+			}
+
       if (!panel) { return; }
 
       // Make sure the advanced search icon is visible iff there is an advanced
