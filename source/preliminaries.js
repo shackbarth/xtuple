@@ -3,6 +3,9 @@ latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
 /*global X:true, enyo:true*/
 
+var X = X || {};
+X.getCookie = enyo.getCookie;
+
 (function () {
   var h = window.DOCUMENT_HOSTNAME = document.location.hostname, p = document.location.protocol;
   window.relocate = function () {
