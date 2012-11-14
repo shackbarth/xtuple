@@ -5,14 +5,14 @@ create or replace function xt.useracct_did_change() returns trigger as $$
  var sql = "select setUserPreference('" + NEW.useracct_username + "', '{name}', $1)";
  if (TG_OP === 'INSERT') {
    /* Set a unique id. Some ids come from pg_user oid, so there could be overlap */
-   var sql = "select nextval('xt.useracct_useracct_id_seq') as sequence;",
+   var sql1 = "select nextval('xt.useracct_useracct_id_seq') as sequence;",
      sql2 = "select useracct_id from xt.useracct where useracct_id = $1;",
      sql3 = "update xt.useracct set useracct_id = $1 where useracct_username = $2;",
      sql4 = "update xt.useracct set useracct_username = $1 where useracct_username = $2;",
      id = NEW.useracct_id,
      res;
    while (!id) {
-     id = plv8.execute(sql)[0].sequence;
+     id = plv8.execute(sql1)[0].sequence;
      res = plv8.execute(sql2, [ id ]);
      if (res.length) { 
        id = undefined;
