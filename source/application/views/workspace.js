@@ -930,11 +930,19 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "initials"},
             {kind: "XV.InputWidget", attr: "email"},
             {kind: "XV.CheckboxWidget", attr: "disableExport"},
-            {kind: "XV.CheckboxWidget", attr: "isActive"}
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
+            // normally I'd put classes: "xv-assignment-box" into the container of the assignmentbox,
+            // but there is no such container here. Maybe some CSS work to be done now that assignmentbox
+            // is the thing inside the thing instead of the thing and the container all together.
+            {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
+            {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles", name: "grantedRoles" }
           ]}
         ]},
-        {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles", name: "grantedRoles", title: "_roles".loc()},
-        {kind: "XV.UserAccountPrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges", title: "_privileges".loc() }
+        {kind: "XV.Groupbox", name: "privilegePanel", classes: "xv-assignment-box",
+            title: "_privileges".loc(), components: [
+          {kind: "onyx.GroupboxHeader", content: "_privileges".loc()},
+          {kind: "XV.UserAccountPrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges" }
+        ]}
       ]}
     ],
     /**
@@ -980,10 +988,11 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "description"}
           ]}
         ]},
-        //{kind: "XV.Groupbox", name: "privilegePanel", title: "_privileges".loc(), components: [
-        //  {kind: "onyx.GroupboxHeader", content: "_privileges".loc()},
-        {kind: "XV.UserAccountRolePrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges", title: "_privileges".loc() }
-        //]}
+        {kind: "XV.Groupbox", name: "privilegePanel", classes: "xv-assignment-box",
+            title: "_privileges".loc(), components: [
+          {kind: "onyx.GroupboxHeader", content: "_privileges".loc()},
+          {kind: "XV.UserAccountRolePrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges" }
+        ]}
       ]}
     ]
   });
