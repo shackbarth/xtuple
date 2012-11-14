@@ -50,8 +50,7 @@ select xt.install_js('XT','Data','xtuple', $$
        cnt = 1,
        ret = {},
        conds = [],
-       prop,
-       col;
+       prop;
 
       ret.conditions = "";
       ret.parameters = [];
@@ -97,22 +96,57 @@ select xt.install_js('XT','Data','xtuple', $$
             break;
           case 'ANY':
             op = '<@';
-            break;
-          default:
-            plv8.elog(ERROR, 'Invalid operator: ' + op);
-          };
-
-          /* array comparisons handle one way */
-          if (op === '<@') {
             for (c = 0; c < param.value.length; c++) {
               ret.parameters.push(param.value[c]);
               param.value[c] = '$' + cnt;
               cnt++;
             }
+            break;
+          default:
+            plv8.elog(ERROR, 'Invalid operator: ' + op);
+          };
+
+          /* Handle characteristics. This is very specific to xTuple,
+             and highly dependant on certain table structures and naming conventions,
+             but otherwise way too much work to refactor in an abstract manner right now */
+          if (param.isCharacteristic) {
+            /* Handle array */
+            if (op === '<@') {
+              param.value = ' ARRAY[' + param.value.join(',') + ']';
+            }
+            
+            /* Booleans are stored as strings */
+            if (param.value === true) {
+              param.value = 't';
+            } else if (param.value === false) {
+              param.value = 'f';
+            }
+
+            /* Yeah, it depends on a property called 'charectristics'... */
+            prop = XT.Orm.getProperty(orm, 'characteristics');
+
+            /* Build the clause */
+            clause = '"id" in (' +
+                     '  select {column}' +
+                     '  from {table}' +
+                     '    join char on (char_id=characteristic)' +
+                     '  where' + 
+                     '    char_name = \'{name}\' and' +
+                     '    "value" {operator} \'{value}\'' +
+                     ')';
+            clause = clause.replace(/{column}/, prop.toMany.inverse)
+                     .replace(/{table}/, orm.nameSpace.toLowerCase() + "." + prop.toMany.type.decamelize())
+                     .replace(/{name}/, param.attribute)
+                     .replace(/{operator}/, op)
+                     .replace(/{value}/, param.value);
+            clauses.push(clause);
+ 
+          /* Array comparisons handle another way */
+          } else if (op === '<@') {
             clause = param.attribute + ' ' + op + ' ARRAY[' + param.value.join(',') + ']';
             clauses.push(clause);
 
-          /* everything else handle another */
+          /* Everything else handle another */
           } else {
             if (XT.typeOf(param.attribute) !== 'array') {
               param.attribute = [param.attribute];
