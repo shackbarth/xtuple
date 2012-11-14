@@ -25,15 +25,14 @@
 \i xt/trigger_functions/usrpref_did_change.sql
 
 -- xt tables
-\i xt/tables/comment.sql
 \i xt/tables/emlprofile.sql
 \i xt/tables/incdtemlprofile.sql
 \i xt/tables/incdtcatemlprofile.sql
+\i xt/tables/priv.sql
 \i xt/tables/useracct.sql
 
 -- xt javascript
 \i xt/javascript/init.sql;
-\i xt/javascript/session.sql;
 
 -- xt views
 
@@ -70,5 +69,13 @@
 
 -- public
 \i public/functions/geteffectivextuser.sql;
+\i public/tables/comment.sql
 \i public/tables/schemaord.sql;
 \i public/tables/usrpref.sql;
+
+-- xc
+\i xc/schema/xc.sql;
+\i xc/views/userpriv.sql
+\i xc/views/userrole.sql;
+\i xc/views/userrolepriv.sql;
+\i xc/views/useruserrole.sql;
