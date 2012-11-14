@@ -4,7 +4,7 @@ trailing:true white:true*/
 /*global X:true, enyo:true*/
 
 var X = X || {};
-X.depends = enyo.depends;
+X.getCookie = enyo.getCookie;
 
 (function () {
   var h = window.DOCUMENT_HOSTNAME = document.location.hostname, p = document.location.protocol;
