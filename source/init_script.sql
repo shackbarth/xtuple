@@ -46,17 +46,18 @@
 \i xt/operators/text_lt_date.sql;
 
 -- xt tables
-\i xt/tables/grp.sql
-\i xt/tables/grppriv.sql
 \i xt/tables/js.sql
 \i xt/tables/orm.sql
 \i xt/tables/priv.sql
 \i xt/tables/useracct.sql
-\i xt/tables/usrpriv.sql
+\i xt/tables/userpriv.sql
+\i xt/tables/userrole.sql
+\i xt/tables/userrolepriv.sql
 
 -- xt javascript
 \i xt/javascript/data.sql;
 \i xt/javascript/orm.sql;
+\i xt/javascript/session.sql;
 
 -- [ END ] xt
 
