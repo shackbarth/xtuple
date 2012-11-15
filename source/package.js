@@ -1,4 +1,5 @@
 X.depends(
+  "ext",
   "core.js",
   "model.js",
   "collection.js",
