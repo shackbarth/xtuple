@@ -6,9 +6,7 @@ white:true*/
 (function () {
   
   /**
-    Comment type picker.
-
-    @class
+    @class Comment type picker.
     @name XV.CommentTypePicker
     @see XV.CommentBox
    */
@@ -23,9 +21,7 @@ white:true*/
   });
 
   /**
-    Represents and individual comment within the comment box.
-
-    @class
+    @class Represents an individual comment within the comment box.
     @name XV.CommentBoxItem
     @see XV.CommentBox
    */
@@ -179,9 +175,7 @@ white:true*/
   });
 
   /**
-    The comment box contains and manages multiple comments, represented as CommentBoxItems
-
-    @class
+    @class The comment box contains and manages multiple comments, represented as CommentBoxItems
     @name XV.CommentBox
     @see XV.CommentBoxItem
    */

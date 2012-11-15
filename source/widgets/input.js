@@ -5,9 +5,7 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   /**
-    An input field that maintains a consistent API to be used by workspaces.
-
-    @class
+    @class An input field that maintains a consistent API to be used by workspaces.
     @name XV.Input
     @see XV.InputWidget
    */
@@ -98,10 +96,8 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   /**
-    An input with styled label and decorator that maintains a consistent API
+    @class An input with styled label and decorator that maintains a consistent API
     for use in a workspace.
-
-    @class
     @name XV.InputWidget
     @extends @XV.Input
    */

@@ -7,11 +7,9 @@ white:true*/
 (function () {
 
   /**
-   An assignment box is a groupbox that manages the assignment of a set of
+   @class An assignment box is a groupbox that manages the assignment of a set of
    available options to an object. For example, setting up the privileges that
    are associated with a role.
-
-   @class
    @name XV.AssignmentBox
    @extends XV.ScrollableGroupbox
    */

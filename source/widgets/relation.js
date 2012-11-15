@@ -5,10 +5,7 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   /**
-    Implements a dropdown. Unlike the {XV.RelationWidget}, the collection is stored local to the
-    widget.
-
-    @class
+    @class Implements a dropdown.
     @name XV.RelationWidget
    */
   enyo.kind(/** @lends XV.RelationWidget# */{
@@ -278,7 +275,7 @@ regexp:true, undef:true, trailing:true, white:true */
       @param value Can be a model or the id of a model (String or Number).
         If it is an ID, then the correct model will be fetched and this
         function will be called again recursively with the model.
-      @param options {Object}
+      @param {Object} options
      */
     setValue: function (value, options) {
       options = options || {};

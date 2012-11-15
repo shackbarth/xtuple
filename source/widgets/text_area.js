@@ -5,9 +5,7 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   /**
-    Implements an onyx.TextArea with API support from XV.Input
-
-    @class
+    @class Implements an onyx.TextArea with API support from XV.Input
     @name XV.TextArea
     @extends XV.Input
    */

@@ -6,11 +6,9 @@ trailing:true white:true*/
 (function () {
 
   /**
-    Must include a component called `list`.
+    @class Must include a component called `list`.
     List must be of sub-kind `XV.ListRelations`.
     The `value` must be set to a collection of `XM.Info` models.
-
-    @class
     @name XV.ListRelationsBox
     @extends XV.Groupbox
   */

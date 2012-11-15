@@ -5,8 +5,6 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
 (function () {
 
   /**
-
-
     @class
     @name XV.Completer
     @extends onyx.Picker

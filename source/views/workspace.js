@@ -9,9 +9,7 @@ trailing:true white:true*/
   var SAVE_NEW = 3;
 
   /**
-    Common functionality to Workspace and ListRelationsEditorBox
-
-    @class
+    @class A mixin that contains functionality common to Workspace and ListRelationsEditorBox.
     @name XV.EditorMixin
     @see XV.Workspace
     @see XV.ListRelationsEditorBox
@@ -94,7 +92,6 @@ trailing:true white:true*/
 
   /**
     @class
-
     @name XV.Workspace
     @extends enyo.FittableRows
     @extends XV.EditorMixin
@@ -309,7 +306,6 @@ trailing:true white:true*/
   enyo.kind(workspaceHash);
 
   /**
-
     @class
     @name XV.WorkspaceContainer
     @see XV.Workspace

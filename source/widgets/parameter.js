@@ -6,9 +6,7 @@ white:true*/
 (function () {
 
   /**
-    A particular widget filter contained in a {@link XV.ParameterWidget}.
-
-    @class
+    @class A particular widget filter contained in a {@link XV.ParameterWidget}.
     @name XV.ParameterItem
     @see XV.ParameterWidget
    */
@@ -76,9 +74,7 @@ white:true*/
   });
 
   /**
-    The panel of the advanced search feature.
-
-    @class
+    @class The panel of the advanced search feature.
     @name XV.ParameterWidget
     @extends enyo.FittableRows
     @extends XV.ExtensionsMixin

@@ -5,9 +5,7 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   /**
-    Checkbox
-
-    @class
+    @class Use to build the toggle button that goes inside the toggle button widget.
     @name XV.ToggleButton
     @see XV.ToggleButtonWidget
    */
@@ -41,9 +39,7 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   /**
-    Toggle Button widget
-
-    @class
+    @class Use to build a toggle button widget which hold a toggle button and its label.
     @name XV.ToggleButtonWidget
     @see XV.ToggleButton
    */
