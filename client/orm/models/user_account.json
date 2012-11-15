@@ -71,10 +71,10 @@
         }
       },
       {
-        "name": "module",
+        "name": "group",
         "attr": {
           "type": "String",
-          "column": "priv_module"
+          "column": "priv_group"
         }
       },
       {
