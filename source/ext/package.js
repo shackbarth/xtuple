@@ -1,0 +1,3 @@
+X.depends(
+  "session.js"
+);
