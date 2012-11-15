@@ -14,13 +14,32 @@ _ = require("underscore");
 
   // include the X framework
   require("xt");
+
+  // This should be coming from node-xt...
+  X.relativeDependsPath = "";
+  X.depends = function () {
+    var dir = X.relativeDependsPath,
+      files = X.$A(arguments),
+      pathBeforeRecursion;
+
+    _.each(files, function (file) {
+      if (X.fs.statSync(X.path.join(dir, file)).isDirectory()) {
+        pathBeforeRecursion = X.relativeDependsPath;
+        X.relativeDependsPath = X.path.join(dir, file);
+        X.depends("package.js");
+        X.relativeDependsPath = pathBeforeRecursion;
+      } else {
+        require(X.path.join(dir, file));
+      }
+    });
+  };
   
   // Other xTuple libraries
   require("backbone-relational");
-  X.relativeDependsPath = X.path.join(X.basePath, "node_modules/backbone-x/source");
-  require("backbone-x");
   X.relativeDependsPath = X.path.join(X.basePath, "node_modules/tools/source");
   require("tools");
+  X.relativeDependsPath = X.path.join(X.basePath, "node_modules/backbone-x/source");
+  require("backbone-x");
   Backbone.XM = XM;
 
   // make absolutely sure we're going to start
