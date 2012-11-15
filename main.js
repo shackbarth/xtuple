@@ -42,6 +42,11 @@ _ = require("underscore");
   require("backbone-x");
   Backbone.XM = XM;
 
+  // Argh!!! Hack because XT has it's own string format that is incompatible....
+  String.prototype.f = function () {
+    return X.String.format.apply(this, arguments);
+  };
+
   // make absolutely sure we're going to start
   options.autoStart = true;
 
@@ -51,6 +56,8 @@ _ = require("underscore");
   X.setup(options);
   
   // TEST
+  XT.session = Object.create(XT.Session);
+  //XT.session.loadSessionObjects(XT.session.SCHEMA);
   /*
   var m = new XM.User({id: 'admin@xtuple.com'});
   var opts = {
