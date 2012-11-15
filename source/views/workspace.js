@@ -445,6 +445,12 @@ trailing:true white:true*/
           }
         }
       }
+
+			// Mobile device view
+			if (enyo.Panels.isScreenNarrow()){
+				this.next(); 
+			}
+
     },
     modelSaved: function () {
       if (this._saveState === SAVE_CLOSE) {

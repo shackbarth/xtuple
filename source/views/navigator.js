@@ -295,6 +295,12 @@ trailing:true white:true*/
 
       // Bubble requset for workspace view, including the model id payload
       if (workspace) { this.doWorkspace({workspace: workspace, id: id}); }
+
+			// Mobile device view
+			// if (enyo.Panels.isScreenNarrow()){
+			// 	this.next(); 
+			// }
+
       return true;
     },
     jump: function () {
@@ -506,7 +512,7 @@ trailing:true white:true*/
 
 			// Mobile device view
 			if (enyo.Panels.isScreenNarrow()){
-				this.next();
+				this.next(); 
 			}
 
       if (!panel) { return; }
