@@ -57,7 +57,7 @@ _ = require("underscore");
   
   // TEST
   XT.session = Object.create(XT.Session);
-  //XT.session.loadSessionObjects(XT.session.SCHEMA);
+  XT.session.loadSessionObjects(XT.session.SCHEMA);
   /*
   var m = new XM.User({id: 'admin@xtuple.com'});
   var opts = {
