@@ -2,7 +2,7 @@
 
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, Backbone:true, _:true, XM:true*/
+/*global X:true, Backbone:true, _:true, XM:true, XT:true*/
 
 Backbone = require("backbone");
 _ = require("underscore");
@@ -10,7 +10,9 @@ _ = require("underscore");
 (function () {
   "use strict";
 
-  var options = require("./lib/options");
+  var options = require("./lib/options"),
+    schemaOpts = {},
+    privOpts = {};
 
   // include the X framework
   require("xt");
@@ -42,7 +44,8 @@ _ = require("underscore");
   require("backbone-x");
   Backbone.XM = XM;
 
-  // Argh!!! Hack because XT has it's own string format that is incompatible....
+  // Argh!!! Hack because `XT` has it's own string format function that
+  // is incompatible with `X`....
   String.prototype.f = function () {
     return X.String.format.apply(this, arguments);
   };
@@ -55,20 +58,37 @@ _ = require("underscore");
   // set the options
   X.setup(options);
   
-  // TEST
-  XT.session = Object.create(XT.Session);
-  XT.session.loadSessionObjects(XT.session.SCHEMA);
-  /*
-  var m = new XM.User({id: 'admin@xtuple.com'});
-  var opts = {
-    success: function () {
-      X.log('found user');
-    },
-    error: function () {
-      X.log('something broke');
+  var schemaLoaded = false;
+  var privsLoaded = false;
+  var tryUser = function () {
+    if (schemaLoaded && privsLoaded) {
+      var m = new XM.User({id: 'admin@xtuple.com'});
+      var opts = {
+        success: function () {
+          X.log('found user');
+        },
+        error: function () {
+          X.log('something broke');
+        }
+      };
+      m.fetch(opts);
     }
   };
-  m.fetch(opts);
-  */
+  
+  // Set up internal session
+  schemaOpts.success = function () {
+    X.log('Schema Loaded');
+    schemaLoaded = true;
+    tryUser();
+  };
+  privOpts.success = function () {
+    X.log('Privileges Loaded');
+    privsLoaded = true;
+    tryUser();
+  };
+  XT.session = Object.create(XT.Session);
+  XT.session.loadSessionObjects(XT.session.SCHEMA, schemaOpts);
+  XT.session.loadSessionObjects(XT.session.PRIVILEGES, privOpts);
+
   
 }());
