@@ -54,6 +54,7 @@
 \i xt/tables/userpriv.sql
 \i xt/tables/userrole.sql
 \i xt/tables/userrolepriv.sql
+\i xt/tables/useruserrole.sql
 
 -- xt javascript
 \i xt/javascript/data.sql;
