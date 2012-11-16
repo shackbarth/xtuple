@@ -205,6 +205,11 @@ create or replace function xt.js_init() returns void as $$
 
   var res, sql, path;
 
+  /* put xt at the front of the search path */
+  path = plv8.execute('select show_search_path() as path');
+  path = path[0].path;
+  plv8.execute('set search_path to xt,' + path);
+
   /* create namespace objects for all registered javascript */
   sql = 'select distinct js_namespace as "nameSpace" '
         + 'from xt.js '

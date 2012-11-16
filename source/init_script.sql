@@ -31,6 +31,7 @@
 \i xt/functions/is_date.sql;
 \i xt/functions/raise_exception.sql;
 \i xt/functions/retrieve_record.sql;
+\i xt/functions/show_search_path.sql;
 \i xt/functions/text_gt_date.sql;
 \i xt/functions/text_lt_date.sql;
 
