@@ -56,6 +56,10 @@ _ = require("underscore");
   // set the options
   X.setup(options);
 
+  // initiate the internal session
+  XT.session = Object.create(XT.Session);
+  XT.session.loadSessionObjects(XT.session.SCHEMA);
+  XT.session.loadSessionObjects(XT.session.PRIVILEGES);
 
 
 }());
