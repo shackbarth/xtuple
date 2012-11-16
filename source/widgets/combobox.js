@@ -5,7 +5,6 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
 (function () {
 
   /**
-
     @class
     @name XV.Combobox
     @extends XV.Input
@@ -122,9 +121,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
   //
 
   /**
-    A combobox backed by the XM.countries collection
-
-    @class
+    @class A combobox backed by the XM.countries collection.
     @name XV.CountryCombobox
     @extends XV.Combobox
    */
@@ -139,9 +136,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
   //
 
   /**
-    A combobox backed by the XM.states collection
-
-    @class
+    @class A combobox backed by the XM.states collection.
     @name XV.StateCombobox
     @extends XV.Combobox
    */

@@ -9,10 +9,7 @@ trailing:true white:true*/
   var FETCH_TRIGGER = 5;
 
   /**
-
-    List to attach to workspaces to present related data.
-
-    @class
+    @class List to attach to workspaces to present related data.
     @name XV.ListRelations
     @extends enyo.List
   */

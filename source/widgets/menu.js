@@ -5,7 +5,6 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   /**
-
     @class
     @name XV.MenuItem
     @extends onyx.MenuItem

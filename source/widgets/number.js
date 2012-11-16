@@ -5,9 +5,7 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   /**
-    An input field built for dealing with numbers
-
-    @class
+    @class An input field built for dealing with numbers.
     @name XV.Number
     @extends XV.Input
     @see XV.NumberWidget
@@ -40,9 +38,7 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   /**
-    An input with styled label and decorator built for dealing with numbers
-
-    @class
+    @class An input with styled label and decorator built for dealing with numbers.
     @name XV.NumberWidget
     @extends XV.Number
    */

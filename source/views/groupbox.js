@@ -6,9 +6,7 @@ white:true*/
 (function () {
 
   /**
-    The groupbox holds the widgets in each panel of the workspace.
-
-    @class
+    @class The groupbox holds the widgets in each panel of the workspace.
     @name XV.Groupbox
     @see XV.ScrollableGroupbox
    */
@@ -22,9 +20,7 @@ white:true*/
   });
 
   /**
-    A variant of the groupbox that automatically includes a scroller
-
-    @class
+    @class A variant of the groupbox that automatically includes a scroller.
     @name XV.ScrollableGroupbox
     @see XV.Groupbox
    */

@@ -6,9 +6,7 @@ white:true*/
 (function () {
 
   /**
-    Just a scroller with our css.
-
-    @class
+    @class Just a scroller with our css.
     @name XV.Scroller
    */
   enyo.kind(/** @lends XV.Scroller# */{

@@ -14,7 +14,6 @@ white:true*/
   var DATE = 2;
 
   /**
-
     @class
     @name XV.CharacteristicPicker
     @extends XV.PickerWidget
@@ -33,7 +32,6 @@ white:true*/
   });
 
   /**
-
     @class
     @name XV.OptionsPicker
   */
@@ -120,8 +118,6 @@ white:true*/
   });
 
   /**
-
-
     @class
     @name XV.CharacteristicItem
    */
@@ -214,8 +210,6 @@ white:true*/
   });
 
   /**
-
-
     @class
     @name XV.CharacteristicsWidget
    */

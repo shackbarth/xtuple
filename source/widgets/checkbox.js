@@ -5,9 +5,7 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   /**
-    Checkbox
-
-    @class
+    @class Use to build the checkbox input field which goes inside a checkbox widget.
     @name XV.Checkbox
     @see XV.CheckboxWidget
    */
@@ -41,9 +39,7 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   /**
-    Checkbox widget
-
-    @class
+    @class Use to build a checkbox widget which holds a checkbox and its label.
     @name XV.CheckboxWidget
     @see XV.Checkbox
    */

@@ -6,11 +6,9 @@ trailing:true white:true*/
 (function () {
 
   /**
-    High-level container showing a list of searchable items with the advanced
+    @class High-level container showing a list of searchable items with the advanced
     search widget available. Used for attaching documents, searching for
     relational widget values, etc.
-
-    @class
     @name XV.SearchContainer
   */
   enyo.kind(/** @lends XV.SearchContainer# */{
