@@ -10,9 +10,7 @@ _ = require("underscore");
 (function () {
   "use strict";
 
-  var options = require("./lib/options"),
-    schemaOpts = {},
-    privOpts = {};
+  var options = require("./lib/options");
 
   // include the X framework
   require("xt");
@@ -35,7 +33,7 @@ _ = require("underscore");
       }
     });
   };
-  
+
   // Other xTuple libraries
   require("backbone-relational");
   X.relativeDependsPath = X.path.join(X.basePath, "node_modules/tools/source");
@@ -57,38 +55,7 @@ _ = require("underscore");
 
   // set the options
   X.setup(options);
-  
-  var schemaLoaded = false;
-  var privsLoaded = false;
-  var tryUser = function () {
-    if (schemaLoaded && privsLoaded) {
-      var m = new XM.User({id: 'admin@xtuple.com'});
-      var opts = {
-        success: function () {
-          X.log('found user');
-        },
-        error: function () {
-          X.log('something broke');
-        }
-      };
-      m.fetch(opts);
-    }
-  };
-  
-  // Set up internal session
-  schemaOpts.success = function () {
-    X.log('Schema Loaded');
-    schemaLoaded = true;
-    tryUser();
-  };
-  privOpts.success = function () {
-    X.log('Privileges Loaded');
-    privsLoaded = true;
-    tryUser();
-  };
-  XT.session = Object.create(XT.Session);
-  XT.session.loadSessionObjects(XT.session.SCHEMA, schemaOpts);
-  XT.session.loadSessionObjects(XT.session.PRIVILEGES, privOpts);
 
-  
+
+
 }());
