@@ -51,6 +51,7 @@ white:true*/
 
         // callback
         privilegesOptions.success = function (resp) {
+          var i;
           privileges = new Backbone.Model();
           privileges.get = function (attr) {
             // Sometimes the answer is already known...
@@ -59,9 +60,9 @@ white:true*/
           };
 
           // Loop through the response and set a privilege for each found.
-          resp.forEach(function (item) {
-            privileges.set(item.privilege, item.isGranted);
-          });
+          for (i = 0; i < resp.length; i++) {
+            privileges.set(resp[i].privilege, resp[i].isGranted);
+          }
 
           // Attach the privileges to the session object.
           that.setPrivileges(privileges);
