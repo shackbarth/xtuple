@@ -769,7 +769,7 @@ select xt.install_js('XT','Data','xtuple', $$
     fetch: function (recordType, parameters, orderBy, rowLimit, rowOffset) {
       var nameSpace = recordType.beforeDot(),
         type = recordType.afterDot(),
-        table = (nameSpace + '.' + type).decamelize(),
+        table = (nameSpace + '."' + type + '"').decamelize(),
         orm = XT.Orm.fetch(nameSpace, type),
         key = XT.Orm.primaryKey(orm),
         limit = rowLimit ? 'limit ' + rowLimit : '',
@@ -782,9 +782,9 @@ select xt.install_js('XT','Data','xtuple', $$
         parts,
         list = [],
         clause = this.buildClause(nameSpace, type, parameters),
-        sql = "select * from {table} where {key} in " +
-              "(select {key} from {table} where {conditions} {orderBy} {limit} {offset}) " +
-              "{orderBy}";
+        sql = 'select * from {table} where {key} in ' +
+              '(select {key} from {table} where {conditions} {orderBy} {limit} {offset}) ' +
+              '{orderBy}';
 
       /* Massage ordeBy with quoted identifiers */
       if (orderBy) {
@@ -900,7 +900,7 @@ select xt.install_js('XT','Data','xtuple', $$
         }
       }
 
-      sql = 'select {table}.* from {schema}.{table} {join} where {table}."{primaryKey}" = {id};'
+      sql = 'select "{table}".* from {schema}.{table} {join} where "{table}"."{primaryKey}" = {id};'
             .replace(/{schema}/, nameSpace.decamelize())
             .replace(/{table}/g, type.decamelize())
             .replace(/{join}/, join)
