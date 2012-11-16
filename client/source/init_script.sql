@@ -6,7 +6,7 @@
 \cd ../../client/source;
 
 -- drop xm views
-\i ../../orm/source/drop_xm_views.sql;
+\i drop_xm_views.sql;
 
 -- [ END ] initdb
 
@@ -46,7 +46,7 @@
 \i xt/views/usr.sql;
 
 -- delete system orms
-\i ../../orm/source/delete_system_orms.sql;
+\i delete_system_orms.sql;
 
 -- [ END ] xt
 
@@ -58,7 +58,6 @@
 \i xm/javascript/crm.sql;
 \i xm/javascript/database_information.sql;
 \i xm/javascript/incident.sql;
-\i xm/javascript/model.sql;
 \i xm/javascript/project.sql;
 \i xm/javascript/to_do.sql;
 -- [ END ] xm
