@@ -62,3 +62,9 @@
 
 -- [ END ] xt
 
+-- [ START ] xm
+
+-- xm javascript
+\i xm/javascript/model.sql;
+
+-- [ END ] xm
