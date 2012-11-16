@@ -9,7 +9,6 @@ trailing:true white:true*/
   var FETCH_TRIGGER = 100;
 
   /**
-
     @class
     @name XV.ListItem
     @see XV.List
@@ -24,7 +23,6 @@ trailing:true white:true*/
   });
 
   /**
-
     @class
     @name XV.ListColumn
     @see XV.List
@@ -35,7 +33,6 @@ trailing:true white:true*/
   });
 
   /**
-
     @class
     @name XV.ListAttr
     @see XV.List
@@ -49,7 +46,6 @@ trailing:true white:true*/
   });
 
   /**
-
     @class
     @name XV.List
     @see XV.ListItem

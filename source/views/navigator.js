@@ -8,9 +8,7 @@ trailing:true white:true*/
   var PANEL_MENU = 1;
 
   /**
-    High-level container of all business object lists.
-
-    @class
+    @class High-level container of all business object lists.
     @name XV.Navigator
    */
   enyo.kind(/** @lends XV.Navigator# */{
@@ -186,7 +184,6 @@ trailing:true white:true*/
       Avoids websockets or AJAX because the server will prompt the browser to download
       the file by setting the Content-Type of the response, which is not possible with
       those technologies.
-
      */
     exportList: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),
@@ -504,6 +501,11 @@ trailing:true white:true*/
       label = panel && panel.label ? panel.label : "";
       collection = panel && panel.getCollection ? XT.getObjectByName(panel.getCollection()) : false;
 
+			// Mobile device view
+			if (enyo.Panels.isScreenNarrow()){
+				this.next(); 
+			}
+
       if (!panel) { return; }
 
       // Make sure the advanced search icon is visible iff there is an advanced
@@ -579,7 +581,7 @@ trailing:true white:true*/
       this.modulesChanged();
     },
     /**
-      Renders a list of modules from the root menu
+      Renders a list of modules from the root menu.
      */
     setupModuleMenuItem: function (inSender, inEvent) {
       var index = inEvent.index,
@@ -625,27 +627,27 @@ trailing:true white:true*/
       this.$.errorPopup.show();
     },
     /**
-      Display the history panel.
+      Displays the history panel.
      */
     showHistory: function (inSender, inEvent) {
       var panel = {name: 'history', show: true};
       this.doNavigatorEvent(panel);
     },
     /**
-      Display the advanced search panel
+      Displays the advanced search panel.
      */
     showParameters: function (inSender, inEvent) {
       var panel = this.$.contentPanels.getActive();
       this.doNavigatorEvent({name: panel.name, show: true});
     },
     /**
-      Displays the My Account popup
+      Displays the My Account popup.
      */
     showMyAccount: function (inSender, inEvent) {
       this.$.myAccountPopup.show();
     },
     /**
-      Pops up the logout popup to verify that a user really wants to exit
+      Pops up the logout popup to verify that a user really wants to exit.
      */
     warnLogout: function () {
       this.$.logoutPopup.show();

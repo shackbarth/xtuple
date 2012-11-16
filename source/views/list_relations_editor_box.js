@@ -6,9 +6,7 @@ trailing:true white:true*/
 (function () {
 
   /**
-    Use this class to define the editor for `XV.ListRelationsEditorBox`.
-
-    @class
+    @class Use this class to define the editor for `XV.ListRelationsEditorBox`.
     @name XV.RelationsEditor
     @extends XV.Groupbox
     @see XV.ListRelationsEditorBox
@@ -31,11 +29,9 @@ trailing:true white:true*/
   enyo.kind(editor);
 
   /**
-    Must include a component called `list`.
+    @class Must include a component called `list`.
     List must be of sub-kind `XV.ListRelations`.
     The `value` must be set to a collection of `XM.Model`.
-
-    @class
     @name XV.ListRelationsEditorBox
     @extends XV.Groupbox
     @see XV.RelationsEditor

@@ -51,11 +51,11 @@ XT.stringsFor("en_US", {
   "_search": "Search",
   "_street": "Street",
   "_state": "State",
-  
+
   // ********
   // Messages
   // ********
-  
+
   "_addressShared": "There are multiple records sharing this Address.",
   "_canNotUpdate": "Insufficient privileges to edit the record.",
   "_changeAll": "Change All",
@@ -69,7 +69,7 @@ XT.stringsFor("en_US", {
   "_noDocumentFound": "No Document Found.",
   "_unsavedChanges": "You have unsaved changes.",
   "_saveYourWork?": "Do you want to save your work?"
-  
+
 });
 
 // TODO: Temporary until we get loaded from datasource

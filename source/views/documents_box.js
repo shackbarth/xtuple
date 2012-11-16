@@ -6,8 +6,6 @@ trailing:true white:true*/
 (function () {
 
   /**
-
-
     @class
     @name XV.DocumentListRelations
    */
@@ -113,7 +111,6 @@ trailing:true white:true*/
   });
 
   /**
-
     @class
     @name XV.DocumentsBox
   */
