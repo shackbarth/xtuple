@@ -10,15 +10,15 @@
        "name": "id",
        "attr": {
          "type": "String",
-         "column": "session_id",
-         "isPrimaryKey": true
+         "column": "session_id"
        }
      },
      {
        "name": "sid",
        "attr": {
          "type": "String",
-         "column": "session_sid"
+         "column": "session_sid",
+         "isPrimaryKey": true
        }
      },
      {
