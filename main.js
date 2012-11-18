@@ -10,7 +10,12 @@ _ = require("underscore");
 (function () {
   "use strict";
 
-  var options = require("./lib/options");
+  var options = require("./lib/options"),
+    schema = false,
+    privs = false,
+    sessionObjectLoaded,
+    schemaOptions = {},
+    privsOptions = {};
 
   // include the X framework
   require("xt");
@@ -56,10 +61,29 @@ _ = require("underscore");
   // set the options
   X.setup(options);
   
-  // initiate the internal session
-  XT.session = Object.create(XT.Session);
-  XT.session.loadSessionObjects(XT.session.SCHEMA);
-  XT.session.loadSessionObjects(XT.session.PRIVILEGES);
-
   
+  // initiate the internal session then start
+  sessionObjectLoaded = function () {
+    if (schema && privs) {
+      
+      // Start polling for expired user sessions
+      X.cachePollingInterval = setInterval(X.Session.pollCache, 10000);
+      X.addCleanupTask(function () {
+        clearInterval(X.cachePollingInterval);
+      });
+    }
+  };
+  schemaOptions.success = function () {
+    schema = true;
+    sessionObjectLoaded();
+  };
+  schemaOptions.success = function () {
+    privs = true;
+    sessionObjectLoaded();
+  };
+
+  XT.session = Object.create(XT.Session);
+  XT.session.loadSessionObjects(XT.session.SCHEMA, schemaOptions);
+  XT.session.loadSessionObjects(XT.session.PRIVILEGES, privsOptions);
+
 }());
