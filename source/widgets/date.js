@@ -13,14 +13,17 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind(/** @lends XV.Date# */{
     name: "XV.Date",
     kind: "XV.Input",
+    /**
+     @todo Document the getValueToString method.
+     */
     getValueToString: function (value) {
       return this.$.input.value;
     },
     /**
-      Sets the value programatically.
+      Sets the value of date programatically.
 
-      @param value Can be Date or String, but if it's a string that doesn't
-        look like a date then it will be set to null.
+      @param {Date | String} Can be Date or String. However, if it's a string that doesn't
+        look like a date, then it will be set to null.
       @param {Object} options
      */
     setValue: function (value, options) {
@@ -39,6 +42,9 @@ regexp:true, undef:true, trailing:true, white:true */
       }
       XV.Input.prototype.setValue.call(this, value, options);
     },
+    /**
+     @todo Document the textToDate method.
+     */
     textToDate: function (value) {
       var date = null,
         daysInMilliseconds = 1000 * 60 * 60 * 24;
@@ -102,10 +108,16 @@ regexp:true, undef:true, trailing:true, white:true */
       }
       return date;
     },
+    /**
+     @todo Document the validate method.
+     */
     validate: function (value) {
       value = this.textToDate(value);
       return (_.isDate(value) || _.isEmpty(value)) ? value : false;
     },
+    /**
+     @todo Document the valueChanged method.
+     */
     valueChanged: function (value) {
       if (value) {
         value = XT.date.applyTimezoneOffset(value, true);
@@ -149,11 +161,17 @@ regexp:true, undef:true, trailing:true, white:true */
         ]}
       ]}
     ],
+    /**
+     @todo Document create method.
+     */
     create: function () {
       this.inherited(arguments);
       this.labelChanged();
       this.showLabelChanged();
     },
+    /**
+     @todo Dcoument datePicked method.
+     */
     datePicked: function (inSender, inEvent) {
       var date = inEvent;
       // mimic the human-typed behavior
@@ -163,9 +181,15 @@ regexp:true, undef:true, trailing:true, white:true */
       this.setValue(date);
       this.$.datePickPopup.hide();
     },
+    /**
+    @todo Document iconTapped method.
+    */
     iconTapped: function (inSender, inEvent) {
       this.$.datePick.render();
     },
+    /**
+     @todo Document keyDown method.
+     */
     keyDown: function (inSender, inEvent) {
       // XXX hack here (and in other places that reference issue 18397)
       // can be removed once enyo fixes ENYO-1104
@@ -174,10 +198,16 @@ regexp:true, undef:true, trailing:true, white:true */
       inEvent.originator.addRemoveClass("text-shadow-0", shadowNone);
       // end hack
     },
+    /**
+     @todo Document labelChanged method.
+     */
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.attr || "").loc()) + ":";
       this.$.label.setContent(label);
     },
+    /**
+     @todo Document showLabelChanged method.
+     */
     showLabelChanged: function () {
       if (this.getShowLabel()) {
         this.$.label.show();
@@ -185,6 +215,9 @@ regexp:true, undef:true, trailing:true, white:true */
         this.$.label.hide();
       }
     },
+    /**
+     @todo Document valueChanged method.
+     */ 
     valueChanged: function (value) {
       var dateValue = value;
       value = XV.Date.prototype.valueChanged.call(this, value);

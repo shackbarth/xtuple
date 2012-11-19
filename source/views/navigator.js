@@ -21,7 +21,7 @@ trailing:true white:true*/
 
       @property {Array} modules A DOM-free representation of all of the modules
          contained in the navigator. The details of these module objects will
-         inform the creation of the panel compontents.
+         inform the creation of the panel components.
 
       @property {Object} panelCache A hashmap of cached panels where the key is
          the global ID of the panel and the value is the enyo panel component.

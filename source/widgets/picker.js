@@ -51,6 +51,9 @@ regexp:true, undef:true, trailing:true, white:true */
         ]}
       ]}
     ],
+    /**
+     @todo Document the buildList method.
+     */
     buildList: function () {
       var nameAttribute = this.getNameAttribute(),
         models = this.filteredList(),
@@ -72,9 +75,15 @@ regexp:true, undef:true, trailing:true, white:true */
       }
       this.render();
     },
+    /**
+     @todo Document the clear method.
+     */
     clear: function (options) {
       this.setValue(null, options);
     },
+    /**
+     @todo Document the collectionChanged method.
+     */
     collectionChanged: function () {
       var collection = XT.getObjectByName(this.collection),
         callback,
@@ -99,18 +108,30 @@ regexp:true, undef:true, trailing:true, white:true */
       if (this._collection.comparator) { this._collection.sort(); }
       this.buildList();
     },
+    /**
+     @todo Document the create method.
+     */
     create: function () {
       this.inherited(arguments);
       if (this.getCollection()) { this.collectionChanged(); }
       this.labelChanged();
       this.showLabelChanged();
     },
+    /**
+     @todo Document the disabledChanged method.
+     */
     disabledChanged: function (inSender, inEvent) {
       this.$.pickerButton.setDisabled(this.getDisabled());
     },
+    /**
+     @todo Document the getValueToString method.
+     */
     getValueToString: function () {
       return this.$.pickerButton.getContent();
     },
+    /**
+     @todo Document the itemSelected method.
+     */
     itemSelected: function (inSender, inEvent) {
       var value = this.$.picker.getSelected().value;
       this.setValue(value);
@@ -121,7 +142,7 @@ regexp:true, undef:true, trailing:true, white:true */
       simply returns the array of models passed.
 
       @param {Array}
-      returns {Array}
+      @returns {Array}
     */
     filter: function (models) {
       return models || [];
@@ -133,18 +154,30 @@ regexp:true, undef:true, trailing:true, white:true */
     filteredList: function () {
       return this._collection ? this.filter(this._collection.models) : [];
     },
+    /**
+     @todo Document the labelChanged method.
+     */
     labelChanged: function () {
       var label = this.getLabel() ||
         (this.attr ? ("_" + this.attr).loc() : "");
       this.$.label.setShowing(label);
       this.$.label.setContent(label + ":");
     },
+    /**
+     @todo Document the noneTextChanged method.
+     */
     noneTextChanged: function () {
       this.buildList();
     },
+    /**
+     @todo Document the noneClassesChanged method.
+     */
     noneClassesChanged: function () {
       this.buildList();
     },
+    /**
+     @todo Document the orderByChanged method.
+     */
     orderByChanged: function () {
       var orderBy = this.getOrderBy();
       if (this._collection && orderBy) {
@@ -170,6 +203,9 @@ regexp:true, undef:true, trailing:true, white:true */
         };
       }
     },
+    /**
+     @todo Document the select method.
+     */
     select: function (index) {
       var i = 0,
         component = _.find(this.$.picker.getComponents(), function (c) {
@@ -230,6 +266,9 @@ regexp:true, undef:true, trailing:true, white:true */
         }
       }
     },
+    /**
+     @todo Document the showLabelChanged method.
+     */
     showLabelChanged: function () {
       if (this.getShowLabel()) {
         this.$.label.show();
