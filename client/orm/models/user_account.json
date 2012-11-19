@@ -51,7 +51,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "Privilege",
-    "table": "priv",
+    "table": "xt.priv",
     "comment": "Privilege Map",
     "privileges": {
       "all": {
