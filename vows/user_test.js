@@ -17,70 +17,57 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           privsLoaded = false,
           username = "user" + Math.random(),
           fetchUsers = function () {
-            var userCollection = new XM.UserCollection(),
-              success = new function (coll, result) {
-                console.log("success", coll, result, userCollection);
-                that.callback(coll);
-              },
-              error = new function (coll, error) {
-                console.log("error", coll);
-              };
-            userCollection.fetch({success: success, error: error})
-          },
-          schemaOpts = {
-            success: function () {
-              X.log('Schema Loaded');
-              schemaLoaded = true;
-              tryUser();
-            }
-          },
-          privOpts = {
-            success: function () {
-              X.log('Privileges Loaded');
-              privsLoaded = true;
-              tryUser();
-            }
-          };
-
-        XT.session = Object.create(XT.Session);
-        XT.session.loadSessionObjects(XT.session.SCHEMA, schemaOpts);
-        XT.session.loadSessionObjects(XT.session.PRIVILEGES, privOpts);
-      },
-      'all is good': function (coll) {
-        console.log('bar', coll);
-      }
-    },
-
-
-
-    'when we create a user': {
-      topic: function () {
-        var that = this,
-          schemaLoaded = false,
-          privsLoaded = false,
-          username = "user" + Math.random(),
-          tryUser = function () {
             if (schemaLoaded && privsLoaded) {
-              var m = new XM.User({id: username, password: '123'}, {isNew: true}),
-                error = function (model, error) {
-                  console.log("error! ", error);
-                };
+              var userCollection = new XM.UserCollection(),
+                fetchSuccess = function (coll, result) {
+                  var i, model,
+                    createUser = function () {
+                      var m = new XM.User({id: username, password: '123'}, {isNew: true}),
+                        createError = function (model, error) {
+                          X.log("create error ", error);
+                        };
 
-              m.save(null, {force: true, success: that.callback, error: error});
+                      m.save(null, {force: true, success: that.callback, error: createError});
+                    },
+                    totalModels = coll.models.length,
+                    destroyedModels = 0,
+                    destroySuccess = function (model, result) {
+                      destroyedModels++;
+                      if (destroyedModels === totalModels) {
+                        createUser();
+                      }
+                    },
+                    destroyError = function () {
+                      X.log("destroy error");
+                    };
+
+                  if (totalModels === 0) {
+                    createUser();
+                    return;
+                  }
+                  for (i = 0; i < totalModels; i++) {
+                    model = coll.models[i];
+                    model.destroy({success: destroySuccess, error: destroyError});
+                  }
+                },
+                fetchError = function (coll, error) {
+                  X.log("error", coll);
+                };
+              userCollection.fetch({success: fetchSuccess, error: fetchError});
             }
           },
           schemaOpts = {
             success: function () {
               X.log('Schema Loaded');
               schemaLoaded = true;
-              tryUser();
+              fetchUsers();
             }
           },
           privOpts = {
             success: function () {
               X.log('Privileges Loaded');
               privsLoaded = true;
-              tryUser();
+              fetchUsers();
             }
           };
 
@@ -93,6 +80,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         assert.equal('123', result.get('password'));
       }
     }
+
+
   }).export(module);
 
 }());
