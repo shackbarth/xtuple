@@ -10,6 +10,26 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   require('../main.js');
 
   vows.describe('Check user').addBatch({
+    'when we clear out all the users': {
+      topic: function () {
+        var that = this,
+          userCollection = new XM.UserCollection(),
+          success = new function (coll, result) {
+            console.log("success", userCollection);
+            that.callback();
+          },
+          error = new function (coll, error) {
+            console.log("error", coll);
+          };
+        userCollection.fetch({success: success, error: error});
+      },
+      'all is good': function (coll) {
+        console.log('bar', coll);
+      }
+    },
+
+
+
     'when we create a user': {
       topic: function () {
         var that = this,
