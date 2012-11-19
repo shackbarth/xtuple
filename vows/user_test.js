@@ -13,15 +13,38 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     'when we clear out all the users': {
       topic: function () {
         var that = this,
-          userCollection = new XM.UserCollection(),
-          success = new function (coll, result) {
-            console.log("success", userCollection);
-            that.callback();
+          schemaLoaded = false,
+          privsLoaded = false,
+          username = "user" + Math.random(),
+          fetchUsers = function () {
+            var userCollection = new XM.UserCollection(),
+              success = new function (coll, result) {
+                console.log("success", coll, result, userCollection);
+                that.callback(coll);
+              },
+              error = new function (coll, error) {
+                console.log("error", coll);
+              };
+            userCollection.fetch({success: success, error: error})
           },
-          error = new function (coll, error) {
-            console.log("error", coll);
+          schemaOpts = {
+            success: function () {
+              X.log('Schema Loaded');
+              schemaLoaded = true;
+              tryUser();
+            }
+          },
+          privOpts = {
+            success: function () {
+              X.log('Privileges Loaded');
+              privsLoaded = true;
+              tryUser();
+            }
           };
-        userCollection.fetch({success: success, error: error});
+
+        XT.session = Object.create(XT.Session);
+        XT.session.loadSessionObjects(XT.session.SCHEMA, schemaOpts);
+        XT.session.loadSessionObjects(XT.session.PRIVILEGES, privOpts);
       },
       'all is good': function (coll) {
         console.log('bar', coll);
