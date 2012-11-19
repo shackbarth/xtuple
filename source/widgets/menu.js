@@ -16,9 +16,15 @@ regexp:true, undef:true, trailing:true, white:true */
     published: {
       disabled: false
     },
+    /**
+    @todo Document the disabledChanged method.
+    */
     disabledChanged: function () {
       this.addRemoveClass("disabled", this.disabled);
     },
+    /**
+    @todo Document the tap method.
+    */
     tap: function (inSender) {
       if (!this.disabled) { return this.inherited(arguments); }
     }

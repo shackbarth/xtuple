@@ -46,6 +46,9 @@ trailing:true white:true*/
   });
 
   /**
+    @class Displays a scrolling list of rows. 
+    Handles lazy loading. Passes in the first 50 items, and as one scrolls, passes more.
+    Note: enyo.list includes a scroller; therefore, XV.List should not be placed inside a scroller.
     @class
     @name XV.List
     @see XV.ListItem
@@ -60,9 +63,12 @@ trailing:true white:true*/
      * Published fields
      * @type {Object}
      *
+     * @property {Boolean} canAddNew
+     *
      * @property {Number} fetchCount
-     * Represents the number of times this list has been fetched on. Useful for
+     *   Represents the number of times this list has been fetched on. Useful for
      *   correctly ordering asynchronous responses.
+     * @property {String} label
      */
     published: {
       label: "",
@@ -85,6 +91,9 @@ trailing:true white:true*/
       onModelChange: "modelChanged",
       onSetupItem: "setupItem"
     },
+    /**
+     @todo Document the collectionChanged method.
+     */
     collectionChanged: function () {
       var collection = this.getCollection(),
         Klass = collection ? XT.getObjectByName(collection) : false;
@@ -95,23 +104,38 @@ trailing:true white:true*/
         this.setValue(null);
       }
     },
+    /**
+     @todo Document the create method.
+     */
     create: function () {
       this.inherited(arguments);
       this.collectionChanged();
     },
+    /**
+     @todo Document the getModel method.
+     */
     getModel: function (index) {
       return this.getValue().models[index];
     },
+    /**
+     @todo Document the getSearchableAttributes method.
+     */
     getSearchableAttributes: function () {
       var model = this.getValue().model;
       return model.getSearchableAttributes ? model.getSearchableAttributes() : [];
     },
+     /**
+      @todo Document the getWorkspace method.
+      */
     getWorkspace: function () {
       var collection = this.getCollection(),
         Klass = collection ? XT.getObjectByName(collection) : null,
         recordType = Klass ? Klass.prototype.model.prototype.recordType : null;
       return XV.getWorkspace(recordType);
     },
+    /**
+     @todo Document the fetch method.
+     */
     fetch: function (options) {
       var that = this,
         query = this.getQuery() || {},
@@ -149,6 +173,9 @@ trailing:true white:true*/
       });
       this.getValue().fetch(options);
     },
+    /**
+     @todo Document the fetched method.
+     */
     fetched: function () {
       var query = this.getQuery() || {},
         offset = query.rowOffset || 0,
@@ -176,6 +203,9 @@ trailing:true white:true*/
       }
       this._maxTop = this.getScrollBounds().maxTop;
     },
+    /**
+     @todo Document the itemTap method.
+     */    
     itemTap: function (inSender, inEvent) {
       inEvent.list = this;
       this.doItemTap(inEvent);
@@ -270,6 +300,9 @@ trailing:true white:true*/
         };
       }
     },
+     /**
+      Manages lazy loading of items in the list.
+      */
     scroll: function (inSender, inEvent) {
       var r = this.inherited(arguments),
         options = {},
@@ -286,6 +319,9 @@ trailing:true white:true*/
 
       return r;
     },
+     /**
+      @todo Document the setupItem method.
+      */
     setupItem: function (inSender, inEvent) {
       var model = this.getValue().models[inEvent.index],
         prop,
@@ -320,6 +356,9 @@ trailing:true white:true*/
       }
       return true;
     },
+     /**
+      @todo Document the setQuery method.
+      */
     setQuery: function () {
       var old = _.clone(this.query);
       this.inherited(arguments);
