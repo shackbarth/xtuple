@@ -10,15 +10,15 @@
        "name": "id",
        "attr": {
          "type": "String",
-         "column": "session_id",
-         "isPrimaryKey": true
+         "column": "session_id"
        }
      },
      {
        "name": "sid",
        "attr": {
          "type": "String",
-         "column": "session_sid"
+         "column": "session_sid",
+         "isPrimaryKey": true
        }
      },
      {
@@ -43,6 +43,21 @@
        }
      },
      {
+       "name": "username",
+       "attr": {
+         "type": "String",
+         "column": "session_username"
+       }
+     },
+     {
+       "name": "organizations",
+       "toMany": {
+         "type": "SessionOrganization",
+         "column": "session_sid",
+         "inverse": "session"
+       }
+     },
+     {
        "name": "organization",
        "attr": {
          "type": "String",
@@ -54,6 +69,46 @@
        "attr": {
          "type": "String",
          "column": "session_socket"
+       }
+     }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "SessionOrganization",
+    "table": "xt.sessionorg",
+    "idSequenceName": "sessionorg_sessionorg_id_seq",
+    "comment": "Session Organization Map",
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "sessionorg_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "session",
+       "attr": {
+         "type": "String",
+         "column": "sessionorg_session_sid"
+       }
+     },
+     {
+       "name": "username",
+       "attr": {
+         "type": "String",
+         "column": "sessionorg_usr_id"
+       }
+     },
+     {
+       "name": "name",
+       "attr": {
+         "type": "String",
+         "column": "sessionorg_org_name"
        }
      }
     ],

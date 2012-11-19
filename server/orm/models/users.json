@@ -27,7 +27,7 @@
          "isNested": true,
          "type": "UserOrganization",
          "column": "usr_id",
-         "inverse": "username"
+         "inverse": "user"
        }
      }
     ],
@@ -50,7 +50,7 @@
        }
      },
      {
-       "name": "username",
+       "name": "user",
        "attr": {
          "type": "String",
          "column": "usrorg_usr_id"
@@ -61,6 +61,13 @@
        "attr": {
          "type": "String",
          "column": "usrorg_org_name"
+       }
+     },
+     {
+       "name": "username",
+       "attr": {
+         "type": "String",
+         "column": "usrorg_username"
        }
      }
     ],
