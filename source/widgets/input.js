@@ -27,20 +27,35 @@ regexp:true, undef:true, trailing:true, white:true */
     components: [
       {name: "input", kind: "onyx.Input", classes: "xv-subinput", onchange: "inputChanged", onkeydown: "keyDown"}
     ],
+    /**
+    @todo Document the clear method.
+    */
     clear: function (options) {
       this.setValue("", options);
     },
+    /**
+    @todo Document the create method.
+    */
     create: function () {
       this.inherited(arguments);
       this.placeholderChanged();
       this.disabledChanged();
     },
+    /**
+    @todo Document the disabledChanged method.
+    */
     disabledChanged: function () {
       this.$.input.setDisabled(this.getDisabled());
     },
+    /**
+    @todo Document the focus method.
+    */
     focus: function () {
       this.$.input.focus();
     },
+    /**
+    @todo Document the inputChanged method.
+    */
     inputChanged: function (inSender, inEvent) {
       var input = this.$.input.getValue(),
         value = this.validate(input);
@@ -51,6 +66,9 @@ regexp:true, undef:true, trailing:true, white:true */
         this.valueChanged("");
       }
     },
+    /**
+    @todo Revisit/remove after fix to ENYO-1104. See also issue 18397.
+    */
     keyDown: function (inSender, inEvent) {
       // XXX hack here (and in other places that reference issue 18397)
       // can be removed once enyo fixes ENYO-1104
@@ -59,16 +77,25 @@ regexp:true, undef:true, trailing:true, white:true */
       inEvent.originator.addRemoveClass("text-shadow-0", shadowNone);
       // end hack
     },
+    /**
+    @todo Document the placeholderChanged method.
+    */
     placeholderChanged: function () {
       var placeholder = this.getPlaceholder();
       this.$.input.setPlaceholder(placeholder);
     },
+    /**
+    @todo Document the receiveBlur method.
+    */
     receiveBlur: function () {
       // Because webkit browsers don't always emit a change event
       if (this.$.input.getValue() !== this.getValue()) {
         this.inputChanged();
       }
     },
+    /**
+    @todo Document the setValue method.
+    */
     setValue: function (value, options) {
       options = options || {};
       var oldValue = this.getValue(),
@@ -80,16 +107,28 @@ regexp:true, undef:true, trailing:true, white:true */
         if (!options.silent) { this.doValueChange(inEvent); }
       }
     },
+    /**
+    @todo Document the validate method.
+    */
     validate: function (value) {
       return value;
     },
+    /**
+    @todo Document the valueChanged method.
+    */
     valueChanged: function (value) {
       this.$.input.setValue(value || "");
       return value;
     },
+    /**
+    @todo Document the setInputStyle method.
+    */
     setInputStyle: function (style) {
       this.$.input.setStyle(style);
     },
+    /**
+    @todo Document the setDisabled method.
+    */
     setDisabled: function (isDisabled) {
       this.$.input.setDisabled(isDisabled);
     }
@@ -118,16 +157,25 @@ regexp:true, undef:true, trailing:true, white:true */
         ]}
       ]}
     ],
+    /**
+    @todo Document the create method.
+    */
     create: function () {
       this.inherited(arguments);
       this.labelChanged();
       this.placeholderChanged();
       this.showLabelChanged();
     },
+    /**
+    @todo Document the labelChanged method.
+    */
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.attr || "").loc());
       this.$.label.setContent(label + ":");
     },
+    /**
+    @todo Document the keyDown method.
+    */
     keyDown: function (inSender, inEvent) {
       // XXX hack here (and in other places that reference issue 18397)
       // can be removed once enyo fixes ENYO-1104
@@ -136,6 +184,9 @@ regexp:true, undef:true, trailing:true, white:true */
       inEvent.originator.addRemoveClass("text-shadow-0", shadowNone);
       // end hack
     },
+    /**
+    @todo Document the showLabelChanged method.
+    */
     showLabelChanged: function () {
       if (this.getShowLabel()) {
         this.$.label.show();

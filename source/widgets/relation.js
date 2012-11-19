@@ -60,6 +60,9 @@ regexp:true, undef:true, trailing:true, white:true */
       {name: "name", classes: "xv-relationwidget-description"},
       {name: "description", classes: "xv-relationwidget-description"}
     ],
+    /**
+     @todo Document the autocomplete method.
+     */
     autocomplete: function () {
       var key = this.getKeyAttribute(),
         attr = this.getValue() ? this.getValue().get(key) : "",
@@ -86,27 +89,45 @@ regexp:true, undef:true, trailing:true, white:true */
         this.setValue(null);
       }
     },
+    /**
+     @todo Document the clear method.
+     */
     clear: function (options) {
       this.setValue(null, options);
     },
+    /**
+     @todo Document the create method.
+     */
     create: function () {
       this.inherited(arguments);
       this.listChanged();
       this.labelChanged();
       this.disabledChanged();
     },
+    /**
+     @todo Document the disabledChanged method.
+     */
     disabledChanged: function () {
       var disabled = this.getDisabled();
       this.$.input.setDisabled(disabled);
       this.$.name.addRemoveClass("disabled", disabled);
       this.$.description.addRemoveClass("disabled", disabled);
     },
+    /**
+     @todo Document the focus method.
+     */
     focus: function () {
       this.$.input.focus();
     },
+    /**
+     @todo Document the getValueToString method.
+     */
     getValueToString: function () {
       return this.value.get(this.getKeyAttribute());
     },
+    /**
+     @todo Revisit or remove after ENYO-1104 is resolved.
+     */
     keyDown: function (inSender, inEvent) {
       // XXX hack here (and in other places that reference issue 18397)
       // can be removed once enyo fixes ENYO-1104
@@ -122,6 +143,9 @@ regexp:true, undef:true, trailing:true, white:true */
         this.autocomplete();
       }
     },
+    /**
+     @todo Document the keyUp method.
+     */
     keyUp: function (inSender, inEvent) {
       var query,
         key = this.getKeyAttribute(),
@@ -152,6 +176,9 @@ regexp:true, undef:true, trailing:true, white:true */
         completer.waterfall("onRequestHideMenu", inEvent);
       }
     },
+    /**
+     @todo Document the itemSelected method.
+     */
     itemSelected: function (inSender, inEvent) {
       if (inEvent.originator.kind === 'onyx.MenuItem') {
         this.relationSelected(inSender, inEvent);
@@ -160,10 +187,16 @@ regexp:true, undef:true, trailing:true, white:true */
       }
       return true;
     },
+    /**
+     @todo Document the labelChanged method.
+     */
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.attr || "").loc());
       this.$.label.setContent(label + ":");
     },
+    /**
+     @todo Document the listChanged method.
+     */
     listChanged: function () {
       var list = this.getList(),
         Collection,
@@ -185,6 +218,9 @@ regexp:true, undef:true, trailing:true, white:true */
       if (!Collection) { return; }
       this._collection = new Collection();
     },
+    /**
+     @todo Document the menuItemSelected method.
+     */
     menuItemSelected: function (inSender, inEvent) {
       var that = this,
         menuItem = inEvent.originator,
@@ -232,6 +268,9 @@ regexp:true, undef:true, trailing:true, white:true */
         break;
       }
     },
+    /**
+     @todo Document the modelChanged method.
+     */
     modelChanged: function (inSender, inEvent) {
       var that = this,
         List = this._List,
@@ -250,18 +289,30 @@ regexp:true, undef:true, trailing:true, white:true */
         model.fetch(options);
       }
     },
+    /**
+     @todo Document the placeholderChanged method.
+     */
     placeholderChanged: function () {
       var placeholder = this.getPlaceholder();
       this.$.input.setPlaceholder(placeholder);
     },
+    /**
+     @todo Document the receiveBlur method.
+     */
     receiveBlur: function (inSender, inEvent) {
       this.autocomplete();
       this._hasFocus = false;
     },
+    /**
+     @todo Document the receiveFocus method.
+     */
     receiveFocus: function (inSender, inEvent) {
       this._hasFocus = true;
       this._relationSelected = false;
     },
+    /**
+     @todo Document the relationSelected method.
+     */
     relationSelected: function (inSender, inEvent) {
       this._relationSelected = true;
       inEvent.activator = this.$.decorator;

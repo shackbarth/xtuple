@@ -31,6 +31,9 @@ trailing:true white:true*/
     orderBy: [
       {attribute: "id"}
     ],
+    /**
+     @todo Document getInfoModel method.
+     */
     getInfoModel: function (model) {
       return _.find(model.attributes, function (attribute) {
           return (attribute instanceof XM.Info);
@@ -47,11 +50,17 @@ trailing:true white:true*/
       }
       return model;
     },
+    /**
+     @todo Document the formatNumber method.
+     */
     formatNumber: function (value, view, model) {
       var infoModel = this.getInfoModel(model),
         attr = infoModel.numberKey;
       return infoModel.get(attr);
     },
+    /**
+     @todo Document the formatDescription method.
+     */
     formatDescription: function (value, view, model) {
       var infoModel = this.getInfoModel(model),
         attr = infoModel.descriptionKey,
@@ -61,6 +70,9 @@ trailing:true white:true*/
       view.addRemoveClass("hyperlink", isUrl);
       return infoModel.get(attr);
     },
+    /**
+     @todo Document the formatPurpose method.
+     */
     formatPurpose: function (value) {
       var purpose;
       switch (value)
@@ -80,6 +92,9 @@ trailing:true white:true*/
       }
       return purpose;
     },
+    /**
+     @todo Document the formatType method.
+     */
     formatType: function (value, view, model) {
       var infoModel = this.getInfoModel(model);
       return ("_" + infoModel.get('type')
@@ -87,6 +102,9 @@ trailing:true white:true*/
                              .replace("ListItem", "")
                              .camelize()).loc();
     },
+    /**
+     @todo Document the openWindow method.
+     */
     openWindow: function (inSender, inEvent) {
       var model = this.getModel(inEvent.index),
         recordType = model.recordType,
@@ -113,7 +131,7 @@ trailing:true white:true*/
   /**
     @class
     @name XV.DocumentsBox
-  */
+   */
   enyo.kind(/** @lends XV.DocumentsBox# */{
     name: "XV.DocumentsBox",
     kind: "XV.ListRelationsBox",
@@ -121,6 +139,11 @@ trailing:true white:true*/
     title: "_documents".loc(),
     listRelations: "XV.DocumentListRelations",
     searchList: "dummy",
+    /**
+     Creates a pop-up window for user to define the document relationships.
+     For example, a file related to an account or a photograph related to an
+    inventory item.
+     */
     create: function () {
       this.inherited(arguments);
       var popup = {
@@ -160,6 +183,9 @@ trailing:true white:true*/
       };
       this.createComponent(popup);
     },
+    /**
+     @todo Document the attachDocument method.
+     */
     attachDocument: function () {
       var parent = this.$.list.getValue().parent,
         searchList = XV.getList(this._type.infoModel),
@@ -196,12 +222,18 @@ trailing:true white:true*/
       };
       this.doSearch(inEvent);
     },
+    /**
+     @todo Document the attachItem method.
+     */
     attachItem: function () {
       if (!this._initPicker) { this._buildList(); }
       this._popupDone = false;
       this._mode = "attach";
       this.$.selectionPopup.show();
     },
+    /**
+     @todo Document the detachItem method.
+     */
     detachItem: function () {
       var list = this.$.list,
         index = list.getFirstSelected(),
@@ -209,6 +241,9 @@ trailing:true white:true*/
       model.destroy();
       list.lengthChanged();
     },
+    /**
+     @todo Document the newDocument method.
+     */
     newDocument: function () {
       var parent = this.$.list.getValue().parent,
         purpose = this._purpose,
@@ -256,18 +291,27 @@ trailing:true white:true*/
       };
       this.doWorkspace(inEvent);
     },
+    /**
+     @todo Document the newItem method.
+     */
     newItem: function () {
       if (!this._initPicker) { this._buildList(); }
       this._popupDone = false;
       this._mode = "new";
       this.$.selectionPopup.show();
     },
+    /**
+     @todo Document the popupHidden method.
+     */
     popupHidden: function (inSender, inEvent) {
       if (!this._popupDone &&
           inEvent.originator.name === "selectionPopup") {
         inEvent.originator.show();
       }
     },
+    /**
+     @todo Document the popupOK method.
+     */
     popupOk: function () {
       this._popupDone = true;
       this.$.selectionPopup.hide();
@@ -277,9 +321,15 @@ trailing:true white:true*/
         this.newDocument();
       }
     },
+    /**
+     @todo Document the purposeSelected method.
+     */
     purposeSelected: function (inSender, inEvent) {
       this._purpose = inEvent.selected.value;
     },
+    /**
+     @todo Document the selectionChanged method.
+     */
     selectionChanged: function (inSender, inEvent) {
       var index = this.$.list.getFirstSelected(),
         model = index ? this.$.list.getModel(index) : null,
@@ -287,9 +337,15 @@ trailing:true white:true*/
       this.$.detachButton.setDisabled(index === undefined);
       this.$.openButton.setDisabled(couldNotRead);
     },
+    /**
+     @todo Document the typeSelected method.
+     */
     typeSelected: function (inSender, inEvent) {
       this._type = inEvent.selected.value;
     },
+    /**
+     @todo Document the valueChanged method.
+     */
     valueChanged: function () {
       this.inherited(arguments);
       this.$.newButton.setDisabled(false);

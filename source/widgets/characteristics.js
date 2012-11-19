@@ -58,11 +58,17 @@ white:true*/
         ]}
       ]}
     ],
+    /**
+     @todo Document the itemSelected method.
+     */
     itemSelected: function (inSender, inEvent) {
       var value = this.$.picker.getSelected().content;
       this.setValue(value);
       return true;
     },
+    /**
+     @todo Document the setCollection method.
+     */
     setCollection: function (collection) {
       var model,
         value,
@@ -81,6 +87,9 @@ white:true*/
       }
       this.render();
     },
+    /**
+     @todo Document the setValue method.
+     */
     setValue: function (value, options) {
       options = options || {};
       var oldValue = this.getValue(),
@@ -103,6 +112,9 @@ white:true*/
       }
       return value;
     },
+    /**
+     @todo Document the sort method.
+     */
     sort: function (a, b) {
       var aord = a.get('order'),
         bord = b.get('order'),
@@ -140,6 +152,9 @@ white:true*/
       {kind: "XV.OptionsPicker", attr: "value", showLabel: false,
         showing: false}
     ],
+    /**
+     @todo Document the controlValueChanged method.
+     */
     controlValueChanged: function (inSender, inEvent) {
       var attr = inSender.getAttr(),
         value = inSender.getValue(),
@@ -171,9 +186,15 @@ white:true*/
       }
       return true;
     },
+    /**
+     @todo Document the getCharacteristicPicker method.
+     */
     getCharacteristicPicker: function () {
       return this.$.characteristicPicker;
     },
+    /**
+     @todo Document the valueChanged method.
+     */
     valueChanged: function () {
       var model = this.getValue(),
         characteristic = model.get('characteristic'),
@@ -234,6 +255,9 @@ white:true*/
           content: "_new".loc()}
       ]}
     ],
+    /**
+     @todo Document the create method.
+     */
     create: function () {
       this.inherited(arguments);
       // Hide this if there aren't any characteristics set up
@@ -243,14 +267,23 @@ white:true*/
         });
       if (!models.length) { this.hide(); }
     },
+    /**
+     @todo Document the lengthChanged method.
+     */
     lengthChanged: function () {
       this.$.repeater.setCount(this.readyModels().length);
     },
+    /**
+     @todo Document the newItem method.
+     */
     newItem: function () {
       var Klass = XT.getObjectByName(this.getModel()),
         model = new Klass(null, { isNew: true });
       this.value.add(model);
     },
+    /**
+     @todo Document the readyModels method.
+     */
     readyModels: function () {
       return _.filter(this.value.models, function (model) {
         var status = model.getStatus(),
@@ -261,6 +294,9 @@ white:true*/
                 status === K.READY_NEW);
       });
     },
+    /**
+     @todo Document the setupItem method.
+     */
     setupItem: function (inSender, inEvent) {
       var item = inEvent.item.$.characteristicItem,
         model = this.readyModels()[inEvent.index],
@@ -279,6 +315,9 @@ white:true*/
       }
       return true;
     },
+    /**
+     @todo Document the sort method.
+     */
     sort: function (a, b) {
       var astatus = a.getStatus(),
         bstatus = b.getStatus(),
@@ -298,6 +337,9 @@ white:true*/
       }
       return astatus < bstatus ? -1 : 1;
     },
+    /**
+     @todo Document the setValue method.
+     */
     setValue: function (value) {
       if (this.value) {
         this.value.off('add', this.lengthChanged, this);
