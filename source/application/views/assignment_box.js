@@ -21,7 +21,6 @@ white:true*/
       onRefreshPrivileges: ""
     },
     segments: ["Roles"],
-    title: "_roles".loc(),
     translateLabels: false,
     totalCollectionName: "UserAccountRoleCollection",
     type: "userAccountRole",
@@ -77,7 +76,6 @@ white:true*/
     },
     cacheName: "privileges",
     segments: [],
-    title: "_privileges".loc(),
     totalCollectionName: "PrivilegeCollection",
     type: "privilege",
     /**
@@ -200,7 +198,6 @@ white:true*/
     name: "XV.UserAccountRolePrivilegeAssignmentBox",
     kind: "XV.AssignmentBox",
     segments: [],
-    title: "_privileges".loc(),
     translateLabels: false,
     totalCollectionName: "PrivilegeCollection",
     type: "privilege",
