@@ -10,14 +10,18 @@ trailing:true white:true*/
     // ..........................................................
     // APPLICATION
     //
-    var panels = [
-      {name: "userList", kind: "XV.UserList"},
-      {name: "databaseServerList", kind: "XV.DatabaseServerList"},
-      {name: "organizationList", kind: "XV.OrganizationList"}
-    ];
+    var module = {
+      name: "admin",
+      label: "_admin".loc(),
+      panels: [
+        {name: "userList", kind: "XV.UserList"},
+        {name: "databaseServerList", kind: "XV.DatabaseServerList"},
+        {name: "organizationList", kind: "XV.OrganizationList"}
+      ]
+    };
 
-    XT.app.$.postbooks.appendPanels("setup", panels);
-
+    // TODO: the index should be the one above setup.
+    XT.app.$.postbooks.insertModule(module, 2);
   };
 
 }());
