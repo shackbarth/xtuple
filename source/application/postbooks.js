@@ -23,9 +23,10 @@ trailing:true white:true*/
           {name: "welcomePage",
             tag: "iframe",
 						style: "border: none;",
-            attributes: {src: "assets/splash/index.html"}}
+            attributes: {src: "lib/enyo-x/assets/splash/index.html"}}
         ]},
         {name: "setup", label: "_setup".loc(), panels: [
+          {name: "configureList", kind: "XV.ConfigurationsList"},
           {name: "userAccountList", kind: "XV.UserAccountList"},
           {name: "userAccountRoleList", kind: "XV.UserAccountRoleList"}
         ]}
@@ -50,6 +51,8 @@ trailing:true white:true*/
         panel.setList(inEvent);
         panel.fetch();
         this.next();
+      } else {
+        XT.log("No list associated with this model for searching. Are you sure you've registered it?");
       }
       return true;
     },

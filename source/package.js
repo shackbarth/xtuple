@@ -1,5 +1,5 @@
 enyo.depends(
-  "core.js",
+  "preliminaries.js",
   "../lib/tools",
   "../lib/backbone-x",
   "../lib/models",

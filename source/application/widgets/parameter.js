@@ -12,6 +12,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.AccountListParameters",
     kind: "XV.ParameterWidget",
+    characteristicsRole: 'isAccounts',
     components: [
       {kind: "onyx.GroupboxHeader", content: "_account".loc()},
       {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
@@ -43,7 +44,31 @@ trailing:true white:true*/
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
     ]
   });
-  
+
+  enyo.kind({
+    name: "XV.UserAccountListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_userAccount".loc()},
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {name: "username", label: "_username".loc(), attr: "username"},
+      {name: "propername", label: "_propername".loc(), attr: "propername"},
+      {name: "email", label: "_email".loc(), attr: "email"}
+    ]
+  });
+
   // ..........................................................
   // ADDRESS
   //
@@ -82,6 +107,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ContactListParameters",
     kind: "XV.ParameterWidget",
+    characteristicsRole: 'isContacts',
     components: [
       {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
       {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
@@ -112,13 +138,13 @@ trailing:true white:true*/
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
     ]
   });
-  
+
   // ..........................................................
   // FILE
   //
 
   enyo.kind({
-    name: "XV.FileParameters",
+    name: "XV.FileListParameters",
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_file".loc()},
@@ -134,6 +160,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.IncidentListParameters",
     kind: "XV.ParameterWidget",
+    characteristicsRole: 'isIncidents',
     components: [
       {kind: "onyx.GroupboxHeader", content: "_incident".loc()},
       {name: "number", label: "_number".loc(), attr: "number",
@@ -222,20 +249,34 @@ trailing:true white:true*/
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
       {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_created".loc()},
-      {name: "fromDate", label: "_fromDate".loc(), attr: "created", operator: ">=",
+      {name: "createdFromDate", label: "_fromDate".loc(),
+        filterLabel: "_created".loc() + " " + "_fromDate".loc(),
+        attr: "created", operator: ">=",
         defaultKind: "XV.DateWidget"},
-      {name: "toDate", label: "_toDate".loc(), attr: "created", operator: "<=",
+      {name: "createdToDate", label: "_toDate".loc(),
+        filterLabel: "_created".loc() + " " + "_toDate".loc(),
+        attr: "created", operator: "<=",
+        defaultKind: "XV.DateWidget"},
+      {kind: "onyx.GroupboxHeader", content: "_updated".loc()},
+      {name: "updatedFromDate", label: "_fromDate".loc(),
+        filterLabel: "_updated".loc() + " " + "_fromDate".loc(),
+        attr: "updated", operator: ">=",
+        defaultKind: "XV.DateWidget"},
+      {name: "updatedToDate", label: "_toDate".loc(),
+        filterLabel: "_updated".loc() + " " + "_toDate".loc(),
+        attr: "updated", operator: "<=",
         defaultKind: "XV.DateWidget"}
     ]
   });
-  
+
   // ..........................................................
-  // CONTACT
+  // ITEM
   //
 
   enyo.kind({
     name: "XV.ItemListParameters",
     kind: "XV.ParameterWidget",
+    characteristicsRole: 'isItems',
     components: [
       {kind: "onyx.GroupboxHeader", content: "_item".loc()},
       {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
@@ -267,6 +308,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.OpportunityListParameters",
     kind: "XV.ParameterWidget",
+    characteristicsRole: 'isOpportunities',
     components: [
       {kind: "onyx.GroupboxHeader", content: "_opportunity".loc()},
       {name: "showInactive", label: "_showInactive".loc(), attr: "isActive",
@@ -350,7 +392,7 @@ trailing:true white:true*/
         defaultKind: "XV.DateWidget"}
     ]
   });
-  
+
   enyo.kind({
     name: "XV.ProjectTaskListParameters",
     kind: "XV.ParameterWidget",
@@ -427,13 +469,13 @@ trailing:true white:true*/
         defaultKind: "XV.DateWidget"}
     ]
   });
-  
+
   // ..........................................................
   // URL
   //
 
   enyo.kind({
-    name: "XV.UrlParameters",
+    name: "XV.UrlListParameters",
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_url".loc()},

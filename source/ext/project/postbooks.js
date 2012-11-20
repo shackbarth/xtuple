@@ -15,13 +15,11 @@ trailing:true white:true*/
       {name: "honorificList", kind: "XV.HonorificList"},
       {name: "accountList", kind: "XV.AccountList"},
       {name: "contactList", kind: "XV.ContactList"},
-      {name: "incidentList", kind: "XV.IncidentList"},
       {name: "itemList", kind: "XV.ItemList"},
       {name: "classCodeList", kind: "XV.ClassCodeList"},
       {name: "unitList", kind: "XV.UnitList"},
       {name: "stateList", kind: "XV.StateList"},
-      {name: "countryList", kind: "XV.CountryList"},
-      {name: "imageList", kind: "XV.ImageList"}
+      {name: "countryList", kind: "XV.CountryList"}
     ];
 
     XT.app.$.postbooks.appendPanels("setup", panels);
@@ -66,7 +64,6 @@ trailing:true white:true*/
         "EditOwnComments",
         "MaintainCommentTypes",
         "MaintainCountries",
-        "MaintainImages",
         "MaintainStates",
         "MaintainUsers"
       ]
