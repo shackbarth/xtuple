@@ -38,7 +38,9 @@ white:true*/
         settings,
         schemaOptions,
         localeOptions,
-        callback;
+        callback,
+        schemaCount = 0,
+        schemasReturned = 0;
 
       if (options && options.success && options.success instanceof Function) {
         callback = options.success;
@@ -138,16 +140,20 @@ white:true*/
               }
             }
           }
-
-          callback();
+          schemasReturned++;
+          if (schemasReturned === schemaCount) {
+            callback();
+          }
         };
 
         // get schema for instance DB models
         XT.dataSource.dispatch('XT.Session', 'schema', 'xm', schemaOptions);
+        schemaCount++;
 
         // get schema for global DB models
         schemaOptions.databaseType = 'global';
         XT.dataSource.dispatch('XT.Session', 'schema', 'xm', schemaOptions);
+        schemaCount++;
       }
 
       if (types & this.LOCALE) {
