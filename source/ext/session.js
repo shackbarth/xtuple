@@ -95,13 +95,22 @@ white:true*/
 
         // callback
         schemaOptions.success = function (resp) {
-          var schema = new Backbone.Model(resp),
+          var schema,
             prop,
             Klass,
             relations,
             i;
-          that.setSchema(schema);
 
+          if (that.getSchema().attributes) {
+            // add incoming data to already loaded schema attributes
+            schema = that.getSchema();
+            schema.set(resp);
+
+          } else {
+            // create schema as a new model
+            schema = new Backbone.Model(resp);
+            that.setSchema(schema);
+          }
           // Set relations
           for (prop in schema.attributes) {
             if (schema.attributes.hasOwnProperty(prop)) {
@@ -133,6 +142,11 @@ white:true*/
           callback();
         };
 
+        // get schema for instance DB models
+        XT.dataSource.dispatch('XT.Session', 'schema', 'xm', schemaOptions);
+
+        // get schema for global DB models
+        schemaOptions.databaseType = 'global';
         XT.dataSource.dispatch('XT.Session', 'schema', 'xm', schemaOptions);
       }
 
