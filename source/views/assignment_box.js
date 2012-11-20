@@ -151,8 +151,7 @@ white:true*/
      * and calls for the totalCollection to be segmentized.
      */
     create: function () {
-      var i,
-        that = this;
+      var that = this;
 
       this.inherited(arguments);
 
@@ -207,7 +206,17 @@ white:true*/
     setupSegment: function (inSender, inEvent) {
       var index = inEvent.index,
         row = inEvent.item,
-        header = row.$.segmentHeader;
+        header = row.$.segmentHeader,
+        segment,
+        camelize = function (str) {
+          var ret = str.replace((/([\s|\-|\_|\n])([^\s|\-|\_|\n]?)/g),
+            function (str, separater, character) {
+              return character ? character.toUpperCase() : '';
+            });
+          var first = ret.charAt(0),
+            lower = first.toLowerCase();
+          return first !== lower ? lower + ret.slice(1) : ret;
+        };
 
       if (inEvent.originator.name !== 'segmentRepeater') {
         // not sure why the checkbox repeater is bringing us here, but ignore
@@ -224,7 +233,8 @@ white:true*/
         header.parent.removeChild(header);
 
       } else if (header) {
-        header.setContent(("_" + this.getSegments()[index]).loc());
+        segment = this.getSegments()[index] || "setup";
+        header.setContent(("_" + camelize(segment)).loc());
       }
 
       row.$.checkboxRepeater.setCount(this.getSegmentedCollections()[index].length);
@@ -314,7 +324,9 @@ white:true*/
      * which is why we have to check and only execute when both are done.
      */
     tryToRender: function () {
-      if (this.getAssignedCollection() && this.getSegmentedCollections()[0]) {
+      if (this.getAssignedCollection() &&
+          this.getSegmentedCollections() !== null &&
+          this.getSegmentedCollections().length) {
         this.$.segmentRepeater.setCount(this.getSegments().length);
       }
     }
