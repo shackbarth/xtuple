@@ -43,6 +43,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     administratorInterface: {
       port: 9090
     },
+    globalDatabase: {
+      hostname: "localhost",
+      port: 5432,
+      database: "global",
+      user: "admin",
+      password: "admin"
+    },
     cache: {
       session: {
         hostname: "localhost",
@@ -68,7 +75,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       "lib/ext/database",
       "lib/ext/router",
       "lib/servers",
-      "lib/ext/caches"
+      "lib/ext/caches",
+      "lib/ext/datasource",
+      "lib/ext/models"
     ]
   };
 }());
