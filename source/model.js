@@ -50,6 +50,12 @@ white:true*/
     binaryField: null,
 
     /**
+      Differentiates models that belong to postbooks instances versus models
+      that belong to the global database
+    */
+    databaseType: 'instance',
+
+    /**
       The last error message reported.
     */
     lastError: null,
@@ -744,11 +750,11 @@ white:true*/
       };
       return parse(resp);
     },
-    
+
     /**
       Revert the model to the previous status. Useful for reseting status
       after a failed validation.
-      
+
       param {Boolean} - cascade
     */
     revertStatus: function (cascade) {
@@ -758,7 +764,7 @@ white:true*/
         attr;
       this.setStatus(this._prevStatus || K.EMPTY);
       this._prevStatus = prev;
-      
+
       // Cascade changes through relations if specified
       if (cascade) {
         _.each(this.relations, function (relation) {

@@ -238,6 +238,7 @@ white:true*/
       options = options ? _.clone(options) : {};
       options.query = options.query || {};
       options.query.recordType = model.model.prototype.recordType;
+      options.databaseType = model.model.prototype.databaseType;
 
       if (method === 'read' && options.query.recordType && options.success) {
         return XT.dataSource.fetch(options);
