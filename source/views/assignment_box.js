@@ -46,9 +46,11 @@ white:true*/
      * An array of collections, each of whom are a subset of totalCollection.
      *
      * @property {Array} segments
-     * We allow the assignable checkboxes to be grouped by segment, such as module.
+     * We allow the assignable checkboxes to be grouped by segment.
      *    If this array is length one then there is no segmentation, and the one value
-     *    of the array becomes the header of the box.
+     *    of the array becomes the header of the box. If the array is length zero then
+     *    we dynamically generate the segments based on the incoming data. It must be
+     *    overridden by the implementation to be something other than null, though.
      *
      * @property {XM.Collection} totalCollection
      * The collection of all possible assignable models.
@@ -150,19 +152,10 @@ white:true*/
      */
     create: function () {
       var i,
-        that = this,
-        comparator = function (model) {
-          return model.get("name");
-        };
+        that = this;
 
       this.inherited(arguments);
 
-      this.setSegmentedCollections([]);
-
-      for (i = 0; i < this.getSegments().length; i++) {
-        this.getSegmentedCollections()[i] = new XM[this.getTotalCollectionName()]();
-        this.getSegmentedCollections()[i].comparator = comparator;
-      }
       //
       // Get the collection from the cache if it exists
       //
@@ -272,35 +265,47 @@ white:true*/
     },
 
     segmentizeTotalCollection: function () {
-      var i, model, name;
+      var i, group, model, name, lowercaseSegments, pertinentSegment,
+        comparator = function (model) {
+          return model.get("name");
+        };
+      this.setSegmentedCollections([]);
+
+      if (this.getSegments().length === 0) {
+        // generate the segments dynamically based on the incoming models' modules
+        for (i = 0; i < this.getTotalCollection().length; i++) {
+          model = this.getTotalCollection().models[i];
+          group = model.get("group");
+          if (this.getSegments().indexOf(group) < 0) {
+            this.getSegments().push(group);
+          }
+          // alphebetize
+          this.getSegments().sort();
+        }
+      }
+      lowercaseSegments = _.map(this.getSegments(), function (segment) {
+        return segment.toLowerCase();
+      });
+
+
+      for (i = 0; i < this.getSegments().length; i++) {
+        this.getSegmentedCollections()[i] = new XM[this.getTotalCollectionName()]();
+        this.getSegmentedCollections()[i].comparator = comparator;
+      }
       for (i = 0; i < this.getTotalCollection().length; i++) {
         model = this.getTotalCollection().models[i];
-        name = model.get("name")
+        name = model.get("name");
+        group = model.get("group") || "";
         if (!this.getRestrictedValues() || this.getRestrictedValues().indexOf(name) >= 0) {
           // note: multiple segment support is effectively disabled by the hardcoded 0, below.
           // if we want to re-incorporate it, look at the commented implementation below
           // for a flavor of how this might work.
-          this.getSegmentedCollections()[0].add(model);
+          pertinentSegment = Math.max(0, lowercaseSegments.indexOf(group.toLowerCase()));
+          this.getSegmentedCollections()[pertinentSegment].add(model);
         }
       }
       this.tryToRender();
     },
-
-    // old implementation:
-    //segmentizeTotalCollection: function () {
-    //  var i, j, model, module;
-    //  for (i = 0; i < this.getTotalCollection().length; i++) {
-    //    model = this.getTotalCollection().models[i];
-    //    module = model.get("module");
-    //    for (j = 0; j < this.getSegments().length; j++) {
-    //      if (this.getSegments().length === 1 || module.toLowerCase() === this.getSegments()[j].toLowerCase()) {
-    //        // if there's only one segment then no need to segmentize at all
-    //        this.getSegmentedCollections()[j].add(model);
-    //      }
-    //    }
-    //  }
-    //  this.tryToRender();
-    //},
 
     /**
      * Render this AssignmentBox by firing off the segment repeater.
