@@ -11,4 +11,5 @@ test/steves_add_user.js
 test/admin.txt
 test/salt.txt
 *.swp
+pid/*
 
