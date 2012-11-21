@@ -55,7 +55,7 @@ trailing:true white:true*/
               src: "lib/enyo-x/assets/menu-icon-search.png",
               ontap: "showParameters", showing: false},
             {name: "myAccountButton", src: "lib/enyo-x/assets/menu-icon-gear.png",
-              ontap: "showMyAccount"},
+              ontap: "showMyAccount", style: "margin-top: 0px; max-height: 24px;"},
             {name: "myAccountPopup", kind: "XV.MyAccountPopup"}
           ]},
           {kind: "onyx.Popup", name: "logoutPopup", centered: true,
@@ -94,10 +94,14 @@ trailing:true white:true*/
             {kind: "Image", src: "lib/enyo-x/assets/search-input-search.png",
               name: "searchJump", ontap: "jump"}
           ]},
-          {name: "refreshButton", kind: "onyx.Button", content: "_refresh".loc(),
-              ontap: "requery", classes: "right-float", showing: false},
-          {name: "newButton", kind: "onyx.Button", content: "_new".loc(),
-            ontap: "newRecord", classes: "right-float", showing: false},
+          {name: "refreshButton", kind: "onyx.IconButton",
+            classes: "right-float",
+            src: "lib/enyo-x/assets/menu-icon-refresh.png",
+            ontap: "requery", showing: false},
+          {name: "newButton", kind: "onyx.IconButton",
+            classes: "right-float",
+            src: "lib/enyo-x/assets/menu-icon-new.png",
+            ontap: "newRecord", showing: false},
           {name: "exportButton", kind: "onyx.Button", content: "_export".loc(),
             ontap: "exportList", classes: "right-float", showing: false}
         ]},
@@ -505,9 +509,9 @@ trailing:true white:true*/
       collection = panel && panel.getCollection ? XT.getObjectByName(panel.getCollection()) : false;
 
 			// Mobile device view
-			if (enyo.Panels.isScreenNarrow()){
-				this.next(); 
-			}
+      if (enyo.Panels.isScreenNarrow()) {
+        this.next();
+      }
 
       if (!panel) { return; }
 
