@@ -46,7 +46,7 @@ trailing:true white:true*/
   });
 
   /**
-    @class Displays a scrolling list of rows. 
+    @class Displays a scrolling list of rows.
     Handles lazy loading. Passes in the first 50 items, and as one scrolls, passes more.
     Note: enyo.list includes a scroller; therefore, XV.List should not be placed inside a scroller.
     @class
@@ -205,7 +205,7 @@ trailing:true white:true*/
     },
     /**
      @todo Document the itemTap method.
-     */    
+     */
     itemTap: function (inSender, inEvent) {
       inEvent.list = this;
       this.doItemTap(inEvent);
@@ -238,7 +238,7 @@ trailing:true white:true*/
 
         // clone the query so as not to change the real thing with this check.
         checkStatusQuery = JSON.parse(JSON.stringify(this.getQuery()));
-        checkStatusParameter = {attribute: "id", operator: "=", value: inEvent.id};
+        checkStatusParameter = {attribute: model.idAttribute, operator: "=", value: inEvent.id};
         if (checkStatusQuery.parameters) {
           checkStatusQuery.parameters.push(checkStatusParameter);
         } else {
