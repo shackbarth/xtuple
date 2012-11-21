@@ -59,9 +59,9 @@ trailing:true white:true*/
             {kind: "onyx.IconButton", src: "lib/enyo-x/assets/menu-icon-gear.png",
              style: "margin-top: 0px; max-height: 24px;"},
             {kind: "onyx.Menu", components: [
-              {name: "exportItem", content: "_export".loc()},
+              {name: "exportItem", content: "_export".loc(), showing: false},
               {name: "myAccountItem", content: "_myAccount".loc()},
-              {name: "helpItem", content: "_help".loc()}
+              {name: "helpItem", content: "_help".loc(), showing: false}
             ]}
           ]},
           {kind: "onyx.Popup", name: "logoutPopup", centered: true,
