@@ -40,6 +40,26 @@ trailing:true white:true*/
     name: "XV.DatabaseServerWorkspace",
     kind: "XV.Workspace",
     title: "_databaseServer".loc(),
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.InputWidget", attr: "hostname"},
+            {kind: "XV.NumberWidget", attr: "port"},
+            {kind: "XV.InputWidget", attr: "location"},
+            {kind: "XV.DateWidget", attr: "dateAdded"},
+            {kind: "XV.InputWidget", attr: "user"},
+            {kind: "XV.InputWidget", attr: "password"},
+          ]}
+        ]}
+        // {kind: "XV.UserOrganizationSomethingorotherBox", attr: "organizations"} TODO
+      ]}
+    ],
     model: "XM.DatabaseServer"
   });
 
