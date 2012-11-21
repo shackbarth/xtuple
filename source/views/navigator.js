@@ -60,7 +60,8 @@ trailing:true white:true*/
              style: "margin-top: 0px; max-height: 24px;"},
             {kind: "onyx.Menu", components: [
               {name: "exportItem", content: "_export".loc()},
-              {name: "myAccountItem", content: "_myAccount".loc()}
+              {name: "myAccountItem", content: "_myAccount".loc()},
+              {name: "helpItem", content: "_help".loc()}
             ]}
           ]},
           {kind: "onyx.Popup", name: "logoutPopup", centered: true,
