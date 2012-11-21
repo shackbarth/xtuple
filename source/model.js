@@ -349,10 +349,12 @@ white:true*/
     */
     fetch: function (options) {
       options = options ? _.clone(options) : {};
+      options.databaseType = this.databaseType;
       var model = this,
         K = XM.Model,
         success = options.success,
         klass = this.getClass();
+
       if (klass.canRead()) {
         this.setStatus(K.BUSY_FETCHING, {cascade: true});
         options.cascade = true; // Update status of children
@@ -374,6 +376,7 @@ white:true*/
     */
     fetchId: function (options) {
       options = _.defaults(options ? _.clone(options) : {}, {force: true});
+      options.databaseType = this.databaseType;
       var that = this, attr;
       if (!this.id) {
         options.success = function (resp) {
