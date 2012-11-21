@@ -814,6 +814,7 @@ white:true*/
       if (this.isDirty() || attrs) {
         success = options.success;
         options.wait = true;
+        options.databaseType = this.databaseType;
         options.cascade = true; // Cascade status to children
         options.validateSave = true;
         options.success = function (resp) {
