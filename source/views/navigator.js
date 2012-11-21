@@ -53,10 +53,15 @@ trailing:true white:true*/
               ontap: "showHistory"},
             {name: "searchIconButton",
               src: "lib/enyo-x/assets/menu-icon-search.png",
-              ontap: "showParameters", showing: false},
-            {name: "myAccountButton", src: "lib/enyo-x/assets/menu-icon-gear.png",
-              ontap: "showMyAccount", style: "margin-top: 0px; max-height: 24px;"},
-            {name: "myAccountPopup", kind: "XV.MyAccountPopup"}
+              ontap: "showParameters", showing: false}
+          ]},
+          {kind: "onyx.MenuDecorator", onSelect: "actionSelected", components: [
+            {kind: "onyx.IconButton", src: "lib/enyo-x/assets/menu-icon-gear.png",
+             style: "margin-top: 0px; max-height: 24px;"},
+            {kind: "onyx.Menu", components: [
+              {name: "exportItem", content: "_export".loc()},
+              {name: "myAccountItem", content: "_myAccount".loc()}
+            ]}
           ]},
           {kind: "onyx.Popup", name: "logoutPopup", centered: true,
             modal: true, floating: true, scrim: true, components: [
@@ -101,9 +106,7 @@ trailing:true white:true*/
           {name: "newButton", kind: "onyx.IconButton",
             classes: "right-float",
             src: "lib/enyo-x/assets/menu-icon-new.png",
-            ontap: "newRecord", showing: false},
-          {name: "exportButton", kind: "onyx.Button", content: "_export".loc(),
-            ontap: "exportList", classes: "right-float", showing: false}
+            ontap: "newRecord", showing: false}
         ]},
         {name: "header", content: "", classes: "xv-navigator-header"},
         {name: "contentPanels", kind: "Panels", margin: 0, fit: true,
@@ -114,7 +117,8 @@ trailing:true white:true*/
           {tag: "br"},
           {kind: "onyx.Button", content: "_ok".loc(), ontap: "errorOk",
             classes: "onyx-blue xv-popup-button"}
-        ]}
+        ]},
+        {name: "myAccountPopup", kind: "XV.MyAccountPopup"}
       ]}
     ],
     /**
@@ -122,6 +126,17 @@ trailing:true white:true*/
       refetching.
      */
     fetched: {},
+    actionSelected: function (inSender, inEvent) {
+      switch (inEvent.originator.name)
+      {
+      case 'exportItem':
+        this.exportList();
+        break;
+      case 'myAccountItem':
+        this.showMyAccount();
+        break;
+      }
+    },
     activate: function () {
       this.setMenuPanel(MODULE_MENU);
     },
@@ -527,7 +542,7 @@ trailing:true white:true*/
       // I'm skirting around the loading time for XM.currentUser. If this data
       // hasn't been loaded yet then the navigator simply won't allow export
       var isAllowedToExport = XM.currentUser && !XM.currentUser.get("disableExport");
-      this.$.exportButton.setShowing(collection && isAllowedToExport);
+      this.$.exportItem.setShowing(collection && isAllowedToExport);
 
       // Handle new button
       this.$.newButton.setShowing(panel.canAddNew);
