@@ -21,7 +21,6 @@ white:true*/
       onRefreshPrivileges: ""
     },
     segments: ["Roles"],
-    title: "_roles".loc(),
     translateLabels: false,
     totalCollectionName: "UserAccountRoleCollection",
     type: "userAccountRole",
@@ -76,8 +75,7 @@ white:true*/
       idsFromRoles: null
     },
     cacheName: "privileges",
-    segments: ["Privileges"],
-    title: "_privileges".loc(),
+    segments: [],
     totalCollectionName: "PrivilegeCollection",
     type: "privilege",
     /**
@@ -199,8 +197,7 @@ white:true*/
   var userAccountRolePrivilegeAssignmentBox = {
     name: "XV.UserAccountRolePrivilegeAssignmentBox",
     kind: "XV.AssignmentBox",
-    segments: ["Privileges"],
-    title: "_privileges".loc(),
+    segments: [],
     translateLabels: false,
     totalCollectionName: "PrivilegeCollection",
     type: "privilege",
