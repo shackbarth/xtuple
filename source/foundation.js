@@ -144,8 +144,6 @@ _.extend(XT,
     var idx = 0;
     for (; idx < parts.length; ++idx) {
       part = parts[idx];
-      //console.log(part);
-      //console.log(global[part]);
       ret = ret ? ret[part] : typeof window !== 'undefined' ? window[part] : global[part];
       //ret = ret? ret[part] : window[part];
       if (ret === null || ret === undefined) {
