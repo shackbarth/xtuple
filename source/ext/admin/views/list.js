@@ -11,9 +11,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.UserList",
     kind: "XV.List",
-    label: "_globalUsers".loc(),
+    label: "_users".loc(),
     collection: "XM.UserCollection",
-    //parameterWidget: "XV.UserListParameters",
     query: {orderBy: [
       {attribute: 'id'}
     ]},
@@ -30,7 +29,7 @@ trailing:true white:true*/
 
   // ..........................................................
   // DATABASE SERVER
-  // TODO: move the superkind from client to enyo-x if admin is standalone
+  //
   enyo.kind({
     name: "XV.DatabaseServerList",
     kind: "XV.NameDescriptionList"

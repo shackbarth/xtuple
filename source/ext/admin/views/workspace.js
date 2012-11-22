@@ -21,7 +21,7 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "id"},
-            {kind: "XV.InputWidget", attr: "password"}
+            {kind: "XV.InputWidget", attr: "password"} // TODO: work out presentation and encrypt-transformation
           ]}
         ]}
         // {kind: "XV.UserOrganizationSomethingorotherBox", attr: "organizations"} TODO
@@ -50,14 +50,13 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.InputWidget", attr: "hostname"},
-            {kind: "XV.NumberWidget", attr: "port"},
+            {kind: "XV.NumberWidget", attr: "port"}, // TODO: number formatting with a comma looks funny here
             {kind: "XV.InputWidget", attr: "location"},
-            {kind: "XV.DateWidget", attr: "dateAdded"},
+            {kind: "XV.DateWidget", attr: "dateAdded"}, // TODO: should not be editable
             {kind: "XV.InputWidget", attr: "user"},
             {kind: "XV.InputWidget", attr: "password"},
           ]}
         ]}
-        // {kind: "XV.UserOrganizationSomethingorotherBox", attr: "organizations"} TODO
       ]}
     ],
     model: "XM.DatabaseServer"
@@ -73,6 +72,20 @@ trailing:true white:true*/
     name: "XV.OrganizationWorkspace",
     kind: "XV.Workspace",
     title: "_organization".loc(),
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.InputWidget", attr: "databaseServer"} // TODO use picker
+          ]}
+        ]}
+      ]}
+    ],
     model: "XM.Organization"
   });
 
