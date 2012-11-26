@@ -23,8 +23,8 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "id"},
             {kind: "XV.InputWidget", name: "password"} // TODO: work out presentation and encrypt-transformation
           ]}
-        ]}
-        // {kind: "XV.UserOrganizationSomethingorotherBox", attr: "organizations"} TODO
+        ]},
+        {kind: "XV.UserOrgBox", attr: "organizations"}
       ]}
     ],
     model: "XM.User",
