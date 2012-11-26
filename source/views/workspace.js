@@ -381,22 +381,21 @@ trailing:true white:true*/
         ]}
       ]},
       {kind: "FittableRows", name: "contentPanel", components: [
-        {kind: "onyx.MoreToolbar", name: "contentToolbar", components: [
-					// these are floated left to prevent overlap of buttons and text
-          {kind: "onyx.Grabber", classes: "left-float"},
-          {name: "title", classes: "left-float"},
-					{kind: "onyx.Button", name: "saveButton",
-            disabled: true, classes: "right-float save",
-            content: "_save".loc(), onclick: "saveAndClose"},
+        {kind: "onyx.MoreToolbar", name: "contentToolbar", layoutKind: "FittableColumnsLayout", 
+					components: [
+          {kind: "onyx.Grabber"},
+          {name: "title"},
+					// The MoreToolbar is a FittableColumnsLayout, so this spacer takes up all available space 
+					{name: "space", fit: true},
+					{kind: "onyx.Button", name: "refreshButton", disabled: true,
+            content: "_refresh".loc(), onclick: "requery"},
+					{kind: "onyx.Button", name: "applyButton", disabled: true,
+	            content: "_apply".loc(), onclick: "apply"},
           {kind: "onyx.Button", name: "saveAndNewButton", disabled: true,
-            classes: "right-float",
             content: "_saveAndNew".loc(), onclick: "saveAndNew"},
-          {kind: "onyx.Button", name: "applyButton", disabled: true,
-            classes: "right-float",
-            content: "_apply".loc(), onclick: "apply"},
-          {kind: "onyx.Button", name: "refreshButton", disabled: true,
-            content: "_refresh".loc(), onclick: "requery",
-            classes: "right-float"}
+          {kind: "onyx.Button", name: "saveButton",
+            disabled: true, classes: "save",
+            content: "_save".loc(), onclick: "saveAndClose"}
         ]},
         {name: "header", content: "_loading".loc(), classes: "xv-workspace-header"},
         {kind: "onyx.Popup", name: "spinnerPopup", centered: true,
