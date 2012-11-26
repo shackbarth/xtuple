@@ -54,7 +54,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "location"},
             {kind: "XV.DateWidget", attr: "dateAdded"}, // TODO: should not be editable
             {kind: "XV.InputWidget", attr: "user"},
-            {kind: "XV.InputWidget", attr: "password"},
+            {kind: "XV.InputWidget", attr: "password", type: "password"}
           ]}
         ]}
       ]}
