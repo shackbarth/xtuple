@@ -238,7 +238,7 @@ trailing:true white:true*/
 
         // clone the query so as not to change the real thing with this check.
         checkStatusQuery = JSON.parse(JSON.stringify(this.getQuery()));
-        checkStatusParameter = {attribute: model.idAttribute, operator: "=", value: inEvent.id};
+        checkStatusParameter = { attribute: this.getValue().model.prototype.idAttribute, operator: "=", value: inEvent.id};
         if (checkStatusQuery.parameters) {
           checkStatusQuery.parameters.push(checkStatusParameter);
         } else {
