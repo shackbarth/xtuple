@@ -78,6 +78,9 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
         }
       }
     },
+    /**
+    @todo Document the buildList method.
+    */
     buildList: function (key, value, models) {
       var regexp = new RegExp("^" + value, "i"),
         model,

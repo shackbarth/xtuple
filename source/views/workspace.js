@@ -70,6 +70,9 @@ trailing:true white:true*/
         }
       }
     },
+    /**
+     @todo Document the clear method.
+     */
     clear: function () {
       var attrs = this.value ? this.value.getAttributeNames() : [],
         attr,
@@ -83,6 +86,9 @@ trailing:true white:true*/
         }
       }
     },
+    /**
+     @todo Document the findControl method.
+     */
     findControl: function (attr) {
       return _.find(this.$, function (ctl) {
         return ctl.attr === attr;
@@ -133,16 +139,25 @@ trailing:true white:true*/
         ]}
       ]}
     ],
+    /**
+     @todo Document the create method.
+     */
     create: function () {
       this.inherited(arguments);
       this.processExtensions();
       this.titleChanged();
       this.modelChanged();
     },
+    /**
+     @todo Document the destroy method.
+     */
     destroy: function () {
       this.setModel(null);
       this.inherited(arguments);
     },
+    /**
+     @todo Document the error method.
+     */
     error: function (model, error) {
       var inEvent = {
         originator: this,
@@ -152,12 +167,18 @@ trailing:true white:true*/
       this.doError(inEvent);
       this.attributesChanged(this.getValue());
     },
+    /**
+     @todo Document the fetch method.
+     */
     fetch: function (id) {
       var options = {};
       options.id = id;
       if (!this.value) { return; }
       this.value.fetch(options);
     },
+    /**
+     @todo Document the headerValuesChanged method.
+     */
     headerValuesChanged: function () {
       var headerAttrs = this.getHeaderAttrs() || [],
         model = this.value,
@@ -178,9 +199,15 @@ trailing:true white:true*/
       }
       this.doHeaderChange({originator: this, header: header });
     },
+    /**
+     @todo Document the isDirty method.
+     */
     isDirty: function () {
       return this.value ? this.value.isDirty() : false;
     },
+    /**
+     @todo Document the modelChanged method.
+     */
     modelChanged: function () {
       var model = this.getModel(),
         Klass = model ? XT.getObjectByName(model) : null,
@@ -225,6 +252,9 @@ trailing:true white:true*/
         this.value.on(observers, this.headerValuesChanged, this);
       }
     },
+    /**
+     @todo Document the newRecord method.
+     */
     newRecord: function (attributes) {
       var attr,
         changes = {},
@@ -251,9 +281,15 @@ trailing:true white:true*/
         }
       }
     },
+    /**
+     @todo Document the requery method.
+     */
     requery: function () {
       this.fetch(this.value.id);
     },
+    /**
+     @todo Document the save method.
+     */
     save: function (options) {
       options = options || {};
       var that = this,
@@ -271,6 +307,9 @@ trailing:true white:true*/
       };
       this.value.save(null, options);
     },
+    /**
+     @todo Document the statusChanged method.
+     */
     statusChanged: function (model, status, options) {
       options = options || {};
       var inEvent = {model: model, status: status},
@@ -296,6 +335,9 @@ trailing:true white:true*/
       this.attributesChanged(model, options);
       this.doStatusChange(inEvent);
     },
+    /**
+     @todo Document the titleChanged method.
+     */
     titleChanged: function () {
       var inEvent = { title: this.getTitle(), originator: this };
       this.doTitleChange(inEvent);
@@ -385,10 +427,16 @@ trailing:true white:true*/
         ]}
       ]}
     ],
+    /**
+     @todo Document the apply method.
+     */
     apply: function () {
       this._saveState = SAVE_APPLY;
       this.save();
     },
+    /**
+     @todo Document the close method.
+     */
     close: function (options) {
       options = options || {};
       if (!options.force) {
@@ -401,6 +449,9 @@ trailing:true white:true*/
       }
       this.doPrevious();
     },
+    /**
+     @todo Document the destroyWorkspace method.
+     */
     destroyWorkspace: function () {
       var workspace = this.$.workspace;
       if (workspace) {
@@ -408,6 +459,9 @@ trailing:true white:true*/
         workspace.destroy();
       }
     },
+    /**
+     @todo Document the errorNotify method.
+     */
     errorNotify: function (inSender, inEvent) {
       var message = inEvent.error.message ? inEvent.error.message() : "Messageless error";
       this.spinnerHide();
@@ -415,13 +469,22 @@ trailing:true white:true*/
       this.$.errorPopup.render();
       this.$.errorPopup.show();
     },
+    /**
+     @todo Document the errorOK method.
+     */
     errorOk: function () {
       this.$.errorPopup.hide();
     },
+    /**
+     @todo Document the headerChanged method.
+     */
     headerChanged: function (inSender, inEvent) {
       this.$.header.setContent(inEvent.header);
       return true;
     },
+    /**
+     @todo Document the itemTap method.
+     */
     itemTap: function (inSender, inEvent) {
       var workspace = this.$.workspace,
         panel = this.getMenuItems()[inEvent.index],
@@ -448,6 +511,9 @@ trailing:true white:true*/
 			}
 
     },
+    /**
+     @todo Document the modelSaved method.
+     */
     modelSaved: function () {
       if (this._saveState === SAVE_CLOSE) {
         this.close();
@@ -455,14 +521,23 @@ trailing:true white:true*/
         this.newRecord();
       }
     },
+    /**
+     @todo Document the newRecord method.
+     */
     newRecord: function () {
       this.$.workspace.newRecord();
     },
+    /**
+     @todo Document the popupHidden method.
+     */
     popupHidden: function (inSender, inEvent) {
       if (!this._popupDone) {
         inEvent.originator.show();
       }
     },
+    /**
+     @todo Document the requery method.
+     */
     requery: function (options) {
       options = options || {};
       if (!options.force) {
@@ -474,10 +549,16 @@ trailing:true white:true*/
       }
       this.$.workspace.requery();
     },
+    /**
+     @todo Document the save method.
+     */
     save: function (options) {
       if (!this._saveState) { this._saveState = SAVE_APPLY; }
       this.$.workspace.save(options);
     },
+    /**
+     @todo Document the saveAndClose method.
+     */
     saveAndClose: function () {
       this._saveState = SAVE_CLOSE;
       this.save();
@@ -486,6 +567,9 @@ trailing:true white:true*/
       this._saveState = SAVE_NEW;
       this.save();
     },
+    /**
+     @todo Document the setupItem method.
+     */
     // menu
     setupItem: function (inSender, inEvent) {
       var box = this.getMenuItems()[inEvent.index],
@@ -553,16 +637,25 @@ trailing:true white:true*/
       this.$.menu.setCount(menuItems.length);
       this.$.menu.render();
     },
+    /**
+     @todo Document spinnerHide method.
+     */
     spinnerHide: function () {
       this._popupDone = true;
       this.$.spinnerPopup.hide();
     },
+    /**
+     @todo Document spinnerShow method.
+     */
     spinnerShow: function (message) {
       message = message || "_loading".loc() + '...';
       this._popupDone = false;
       this.$.spinnerMessage.setContent(message);
       this.$.spinnerPopup.show();
     },
+    /**
+     @todo Document statusChanged method.
+     */
     statusChanged: function (inSender, inEvent) {
       var model = inEvent.model,
         K = XM.Model,
@@ -595,15 +688,24 @@ trailing:true white:true*/
         this.spinnerHide();
       }
     },
+    /**
+     @todo Document titleChanged method.
+     */
     titleChanged: function (inSender, inEvent) {
       var title = inEvent.title || "";
       this.$.title.setContent(title);
       return true;
     },
+    /**
+     @todo Document unsavedCancel method.
+     */
     unsavedCancel: function () {
       this._popupDone = true;
       this.$.unsavedPopup.hide();
     },
+    /**
+     @todo Document unsavedDiscard method.
+     */
     unsavedDiscard: function () {
       this._popupDone = true;
       var options = {force: true};
@@ -614,6 +716,9 @@ trailing:true white:true*/
         this.$.workspace.requery();
       }
     },
+    /**
+     @todo Dcoument unsavedSave method.
+     */
     unsavedSave: function () {
       this._popupDone = true;
       this.$.unsavedPopup.hide();

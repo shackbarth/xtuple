@@ -21,7 +21,7 @@ trailing:true white:true*/
 
       @property {Array} modules A DOM-free representation of all of the modules
          contained in the navigator. The details of these module objects will
-         inform the creation of the panel compontents.
+         inform the creation of the panel components.
 
       @property {Object} panelCache A hashmap of cached panels where the key is
          the global ID of the panel and the value is the enyo panel component.
@@ -53,10 +53,16 @@ trailing:true white:true*/
               ontap: "showHistory"},
             {name: "searchIconButton",
               src: "lib/enyo-x/assets/menu-icon-search.png",
-              ontap: "showParameters", showing: false},
-            {name: "myAccountButton", src: "lib/enyo-x/assets/menu-icon-gear.png",
-              ontap: "showMyAccount"},
-            {name: "myAccountPopup", kind: "XV.MyAccountPopup"}
+              ontap: "showParameters", showing: false}
+          ]},
+          {kind: "onyx.MenuDecorator", onSelect: "actionSelected", components: [
+            {kind: "onyx.IconButton", src: "lib/enyo-x/assets/menu-icon-gear.png",
+             style: "margin-top: 0px; max-height: 24px;"},
+            {kind: "onyx.Menu", components: [
+              {name: "exportItem", content: "_export".loc(), showing: false},
+              {name: "myAccountItem", content: "_myAccount".loc()},
+              {name: "helpItem", content: "_help".loc(), showing: false}
+            ]}
           ]},
           {kind: "onyx.Popup", name: "logoutPopup", centered: true,
             modal: true, floating: true, scrim: true, components: [
@@ -94,12 +100,14 @@ trailing:true white:true*/
             {kind: "Image", src: "lib/enyo-x/assets/search-input-search.png",
               name: "searchJump", ontap: "jump"}
           ]},
-          {name: "refreshButton", kind: "onyx.Button", content: "_refresh".loc(),
-              ontap: "requery", classes: "right-float", showing: false},
-          {name: "newButton", kind: "onyx.Button", content: "_new".loc(),
-            ontap: "newRecord", classes: "right-float", showing: false},
-          {name: "exportButton", kind: "onyx.Button", content: "_export".loc(),
-            ontap: "exportList", classes: "right-float", showing: false}
+          {name: "refreshButton", kind: "onyx.IconButton",
+            classes: "right-float",
+            src: "lib/enyo-x/assets/menu-icon-refresh.png",
+            ontap: "requery", showing: false},
+          {name: "newButton", kind: "onyx.IconButton",
+            classes: "right-float",
+            src: "lib/enyo-x/assets/menu-icon-new.png",
+            ontap: "newRecord", showing: false}
         ]},
         {name: "header", content: "", classes: "xv-navigator-header"},
         {name: "contentPanels", kind: "Panels", margin: 0, fit: true,
@@ -110,7 +118,8 @@ trailing:true white:true*/
           {tag: "br"},
           {kind: "onyx.Button", content: "_ok".loc(), ontap: "errorOk",
             classes: "onyx-blue xv-popup-button"}
-        ]}
+        ]},
+        {name: "myAccountPopup", kind: "XV.MyAccountPopup"}
       ]}
     ],
     /**
@@ -118,6 +127,17 @@ trailing:true white:true*/
       refetching.
      */
     fetched: {},
+    actionSelected: function (inSender, inEvent) {
+      switch (inEvent.originator.name)
+      {
+      case 'exportItem':
+        this.exportList();
+        break;
+      case 'myAccountItem':
+        this.showMyAccount();
+        break;
+      }
+    },
     activate: function () {
       this.setMenuPanel(MODULE_MENU);
     },
@@ -180,17 +200,20 @@ trailing:true white:true*/
     },
     /**
       Exports the contents of a list to CSV. Note that it will export the entire
-      list, not just the part that's been lazy-loaded. Goes to the server for this.
+      list, not just the part that's been lazy-loaded. Of course, it will apply
+      the filter criteria as selected. Goes to the server for this.
       Avoids websockets or AJAX because the server will prompt the browser to download
       the file by setting the Content-Type of the response, which is not possible with
       those technologies.
      */
     exportList: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),
-        coll = list.getValue(),
-        recordType = coll.model.prototype.recordType;
+        query = JSON.parse(JSON.stringify(list.getQuery())); // clone
 
-      window.open("/export?details={\"requestType\":\"fetch\",\"query\":{\"recordType\":\"" + recordType + "\"}}", "_newtab");
+      delete query.rowLimit;
+      delete query.rowOffset;
+
+      window.open('/export?details={"requestType":"fetch","query":' + JSON.stringify(query) + '}', '_newtab');
     },
     errorOk: function () {
       this.$.errorPopup.hide();
@@ -502,9 +525,9 @@ trailing:true white:true*/
       collection = panel && panel.getCollection ? XT.getObjectByName(panel.getCollection()) : false;
 
 			// Mobile device view
-			if (enyo.Panels.isScreenNarrow()){
-				this.next(); 
-			}
+      if (enyo.Panels.isScreenNarrow()) {
+        this.next();
+      }
 
       if (!panel) { return; }
 
@@ -520,7 +543,7 @@ trailing:true white:true*/
       // I'm skirting around the loading time for XM.currentUser. If this data
       // hasn't been loaded yet then the navigator simply won't allow export
       var isAllowedToExport = XM.currentUser && !XM.currentUser.get("disableExport");
-      this.$.exportButton.setShowing(collection && isAllowedToExport);
+      this.$.exportItem.setShowing(collection && isAllowedToExport);
 
       // Handle new button
       this.$.newButton.setShowing(panel.canAddNew);

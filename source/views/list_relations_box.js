@@ -34,6 +34,10 @@ trailing:true white:true*/
       onDeselect: "selectionChanged",
       onParentStatusChange: "workspaceModelStatusChanged"
     },
+    /**
+     Builds the box that contains the list of relationships: a group box comprised of a header, a scrollable list, 
+    and navigation buttons.
+     */
     create: function () {
       this.inherited(arguments);
       var canAttach = this.getSearchList().length > 0,
@@ -81,6 +85,9 @@ trailing:true white:true*/
       }
       this.createComponent(buttons);
     },
+    /**
+     @todo Document the attachItem method.
+     */
     attachItem: function () {
       var list = this.$.list,
         ListModel = list.getValue().model,
@@ -151,9 +158,15 @@ trailing:true white:true*/
       };
       this.doSearch(inEvent);
     },
+    /**
+     @todo Document the attrChanged method.
+     */
     attrChanged: function () {
       this.$.list.setAttr(this.attr);
     },
+    /**
+     @todo Document the detachItem method.
+     */
     detachItem: function () {
       var list = this.$.list,
         key = this.parentKey,
@@ -186,6 +199,9 @@ trailing:true white:true*/
       // Go get the data
       model.fetch();
     },
+    /**
+     @todo Document the newItem method.
+     */
     newItem: function () {
       var list = this.$.list,
         parent = this.$.list.getParent(),
@@ -211,6 +227,9 @@ trailing:true white:true*/
       };
       this.doWorkspace(inEvent);
     },
+    /**
+     @todo Document the openItem method.
+     */
     openItem: function () {
       var list = this.$.list,
         index = list.getFirstSelected(),
@@ -233,6 +252,9 @@ trailing:true white:true*/
 
       this.doWorkspace(inEvent);
     },
+    /**
+     @todo Document the selectionChanged method.
+     */
     selectionChanged: function (inSender, inEvent) {
       var index = this.$.list.getFirstSelected(),
         model = index ? this.$.list.getModel(index) : null,
@@ -268,6 +290,9 @@ trailing:true white:true*/
       if (this.getCanOpen()) {this.$.newButton.setDisabled(canNotCreate); }
       if (canAttach) { this.$.attachButton.setDisabled(canNotUpdate); }
     },
+    /**
+     @todo Document the valueChanged method.
+     */
     valueChanged: function () {
       var value = this.getValue(); // Must be a collection of Info models
 
@@ -277,7 +302,7 @@ trailing:true white:true*/
     /**
       When the workspace containing this box has a change to the status of the model, it waterfalls
       down an event to be handled here. We will want to enable the new- and attach- buttons if
-      the model is no longer in READY_NEW state
+      the model is no longer in READY_NEW state.
      */
     workspaceModelStatusChanged: function (inSender, inEvent) {
       if (inEvent.status & XM.Model.READY) {

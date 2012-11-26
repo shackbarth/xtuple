@@ -58,6 +58,9 @@ white:true*/
       model.set(attributes);
       return true;
     },
+    /**
+    @todo Document the edit method.
+    */
     edit: function () {
       var that = this,
         model = this.getValue(),
@@ -83,6 +86,9 @@ white:true*/
         model.on('change:commentType', typeChanged);
       }
     },
+    /**
+    @todo Document the formatHeader method.
+    */
     formatHeader: function (value, view, model) {
       var values = [
         Globalize.format(model.get('created'), 'd'),
@@ -92,11 +98,17 @@ white:true*/
       ];
       return values.join(' ');
     },
+    /**
+    @todo Document the formatText method.
+    */
     formatText: function (value, view, model) {
       var text = value ? value.replace(/</g, "&lt;").replace(/\r?\n/g, "<br>\n") : value;
       view.addRemoveClass("disabled", model.isReadOnly());
       return "\n<blockquote>" + text + "</pre></blockquote><hr>";
     },
+    /**
+    @todo Document the setCommentTypeFilter method.
+    */
     setCommentTypeFilter: function () {
       var value = this.getValue(),
         commentType = this.$.commentType;
@@ -119,6 +131,9 @@ white:true*/
       };
       commentType.buildList();
     },
+    /**
+    @todo Document the setDisabled method.
+    */
     setDisabled: function (isDisabled) {
       var i,
         components = this.getComponents(),
@@ -131,6 +146,9 @@ white:true*/
         }
       }
     },
+    /**
+    @todo Document the textAreaBlur method.
+    */
     textAreaBlur: function () {
       var value = this.getValue(),
         text = this.formatText(value.get('text'), this, value);
@@ -139,6 +157,9 @@ white:true*/
       this.$.textArea.hide();
       this.$.commentType.hide();
     },
+    /**
+    @todo Document the valueChanged method.
+    */
     valueChanged: function () {
       var i,
         model = this.getValue(),
@@ -188,6 +209,9 @@ white:true*/
       model: null,
       title: "_comments".loc()
     },
+    /**
+     Builds the comment box comprised of a header, scroller to contain comment box items, and navigation buttons.
+     */
     create: function () {
       var buttons;
       this.inherited(arguments);
@@ -219,18 +243,27 @@ white:true*/
       ]};
       this.createComponent(buttons);
     },
+    /**
+     @todo Document the newItem method.
+     */
     newItem: function () {
       var Klass = XT.getObjectByName(this.getModel()),
         model = new Klass(null, { isNew: true });
       this._collection.add(model);
       this.$.repeater.setCount(this._collection.length);
     },
+    /**
+     @todo Document the setupItem method.
+     */
     setupItem: function (inSender, inEvent) {
       var row = inEvent.item.$.repeaterItem,
         model = this._collection.at(inEvent.index);
       row.setValue(model);
       return true;
     },
+    /**
+     @todo Document the setValue method.
+     */
     setValue: function (value, options) {
       if (value) {
         value.comparator = this.sort;
@@ -242,6 +275,9 @@ white:true*/
         this.$.newItemButton.setDisabled(true);
       }
     },
+    /**
+     @todo Document the sort method.
+     */
     sort: function (a, b) {
       var aval = a.get('created'),
         bval = b.get('created');

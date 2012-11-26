@@ -15,8 +15,9 @@ white:true*/
    */
   enyo.kind(/** @lends XV.AssignmentBox# */{
     name: "XV.AssignmentBox",
-    kind: "XV.Groupbox",
-    classes: "xv-assignment-box",
+    kind: "Scroller",
+    fit: true,
+    horizontal: "hidden",
     handlers: {
       onValueChange: "checkboxChange"
     },
@@ -45,12 +46,11 @@ white:true*/
      * An array of collections, each of whom are a subset of totalCollection.
      *
      * @property {Array} segments
-     * We allow the assignable checkboxes to be grouped by segment, such as module.
+     * We allow the assignable checkboxes to be grouped by segment.
      *    If this array is length one then there is no segmentation, and the one value
-     *    of the array becomes the header of the box.
-     *
-     * @property {String} title
-     * Used by the workspace to title the menu item for the box.
+     *    of the array becomes the header of the box. If the array is length zero then
+     *    we dynamically generate the segments based on the incoming data. It must be
+     *    overridden by the implementation to be something other than null, though.
      *
      * @property {XM.Collection} totalCollection
      * The collection of all possible assignable models.
@@ -74,7 +74,6 @@ white:true*/
       restrictedValues: null,
       segmentedCollections: null,
       segments: null,
-      title: "",
       totalCollection: null,
       totalCollectionName: "",
       translateLabels: true,
@@ -82,13 +81,10 @@ white:true*/
     },
 
     components: [
-      {kind: "onyx.GroupboxHeader", name: "masterHeader"},
-      {kind: "Scroller", fit: true, horizontal: "hidden", components: [
-        {kind: "Repeater", name: "segmentRepeater", fit: true, onSetupItem: "setupSegment", segmentIndex: 0, components: [
-          {kind: "onyx.GroupboxHeader", name: "segmentHeader", content: ""},
-          {kind: "Repeater", name: "checkboxRepeater", fit: true, onSetupItem: "setupCheckbox", components: [
-            {kind: "XV.CheckboxWidget", name: "checkbox" }
-          ]}
+      {kind: "Repeater", name: "segmentRepeater", fit: true, onSetupItem: "setupSegment", segmentIndex: 0, components: [
+        {kind: "onyx.GroupboxHeader", name: "segmentHeader", content: ""},
+        {kind: "Repeater", name: "checkboxRepeater", fit: true, onSetupItem: "setupCheckbox", components: [
+          {kind: "XV.CheckboxWidget", name: "checkbox" }
         ]}
       ]}
     ],
@@ -155,21 +151,10 @@ white:true*/
      * and calls for the totalCollection to be segmentized.
      */
     create: function () {
-      var i,
-        that = this,
-        comparator = function (model) {
-          return model.get("name");
-        };
+      var that = this;
 
       this.inherited(arguments);
 
-      this.$.masterHeader.setContent(this.getTitle());
-      this.setSegmentedCollections([]);
-
-      for (i = 0; i < this.getSegments().length; i++) {
-        this.getSegmentedCollections()[i] = new XM[this.getTotalCollectionName()]();
-        this.getSegmentedCollections()[i].comparator = comparator;
-      }
       //
       // Get the collection from the cache if it exists
       //
@@ -221,7 +206,17 @@ white:true*/
     setupSegment: function (inSender, inEvent) {
       var index = inEvent.index,
         row = inEvent.item,
-        header = row.$.segmentHeader;
+        header = row.$.segmentHeader,
+        segment,
+        camelize = function (str) {
+          var ret = str.replace((/([\s|\-|\_|\n])([^\s|\-|\_|\n]?)/g),
+            function (str, separater, character) {
+              return character ? character.toUpperCase() : '';
+            });
+          var first = ret.charAt(0),
+            lower = first.toLowerCase();
+          return first !== lower ? lower + ret.slice(1) : ret;
+        };
 
       if (inEvent.originator.name !== 'segmentRepeater') {
         // not sure why the checkbox repeater is bringing us here, but ignore
@@ -238,7 +233,8 @@ white:true*/
         header.parent.removeChild(header);
 
       } else if (header) {
-        header.setContent(("_" + this.getSegments()[index]).loc());
+        segment = this.getSegments()[index] || "setup";
+        header.setContent(("_" + camelize(segment)).loc());
       }
 
       row.$.checkboxRepeater.setCount(this.getSegmentedCollections()[index].length);
@@ -279,35 +275,47 @@ white:true*/
     },
 
     segmentizeTotalCollection: function () {
-      var i, model, name;
+      var i, group, model, name, lowercaseSegments, pertinentSegment,
+        comparator = function (model) {
+          return model.get("name");
+        };
+      this.setSegmentedCollections([]);
+
+      if (this.getSegments().length === 0) {
+        // generate the segments dynamically based on the incoming models' modules
+        for (i = 0; i < this.getTotalCollection().length; i++) {
+          model = this.getTotalCollection().models[i];
+          group = model.get("group");
+          if (this.getSegments().indexOf(group) < 0) {
+            this.getSegments().push(group);
+          }
+          // alphebetize
+          this.getSegments().sort();
+        }
+      }
+      lowercaseSegments = _.map(this.getSegments(), function (segment) {
+        return segment.toLowerCase();
+      });
+
+
+      for (i = 0; i < this.getSegments().length; i++) {
+        this.getSegmentedCollections()[i] = new XM[this.getTotalCollectionName()]();
+        this.getSegmentedCollections()[i].comparator = comparator;
+      }
       for (i = 0; i < this.getTotalCollection().length; i++) {
         model = this.getTotalCollection().models[i];
-        name = model.get("name")
+        name = model.get("name");
+        group = model.get("group") || "";
         if (!this.getRestrictedValues() || this.getRestrictedValues().indexOf(name) >= 0) {
           // note: multiple segment support is effectively disabled by the hardcoded 0, below.
           // if we want to re-incorporate it, look at the commented implementation below
           // for a flavor of how this might work.
-          this.getSegmentedCollections()[0].add(model);
+          pertinentSegment = Math.max(0, lowercaseSegments.indexOf(group.toLowerCase()));
+          this.getSegmentedCollections()[pertinentSegment].add(model);
         }
       }
       this.tryToRender();
     },
-
-    // old implementation:
-    //segmentizeTotalCollection: function () {
-    //  var i, j, model, module;
-    //  for (i = 0; i < this.getTotalCollection().length; i++) {
-    //    model = this.getTotalCollection().models[i];
-    //    module = model.get("module");
-    //    for (j = 0; j < this.getSegments().length; j++) {
-    //      if (this.getSegments().length === 1 || module.toLowerCase() === this.getSegments()[j].toLowerCase()) {
-    //        // if there's only one segment then no need to segmentize at all
-    //        this.getSegmentedCollections()[j].add(model);
-    //      }
-    //    }
-    //  }
-    //  this.tryToRender();
-    //},
 
     /**
      * Render this AssignmentBox by firing off the segment repeater.
@@ -316,7 +324,9 @@ white:true*/
      * which is why we have to check and only execute when both are done.
      */
     tryToRender: function () {
-      if (this.getAssignedCollection() && this.getSegmentedCollections()[0]) {
+      if (this.getAssignedCollection() &&
+          this.getSegmentedCollections() !== null &&
+          this.getSegmentedCollections().length) {
         this.$.segmentRepeater.setCount(this.getSegments().length);
       }
     }

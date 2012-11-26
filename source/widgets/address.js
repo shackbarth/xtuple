@@ -93,12 +93,18 @@ regexp:true, undef:true, trailing:true, white:true */
           classes: "onyx-blue"}
       ]}
     ],
+    /**
+    @todo Document the countryChanged method.
+    */
     countryChanged: function (inSender, inEvent) {
       var country = this.$.country.getValue();
       this.inputChanged(inSender, inEvent);
       this.$.state.setCountry(country);
       return true;
     },
+    /**
+    @todo Document the done method.
+    */
     done: function () {
       var siblings,
         i,
@@ -120,6 +126,9 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.editor.hide();
       if (this._nextWidget) { this._nextWidget.focus(); }
     },
+    /**
+    @todo Document the editButtonKeyUp method.
+    */
     editButtonKeyUp: function (inSender, inEvent) {
       // Return or space bar activates button
       if (inEvent.keyCode === 13 ||
@@ -128,6 +137,9 @@ regexp:true, undef:true, trailing:true, white:true */
       }
       return true;
     },
+    /**
+    @todo Document the inputChanged method.
+    */
     inputChanged: function (inSender, inEvent) {
       var value = this.getValue(),
         attr = inEvent.originator.name;
@@ -141,12 +153,18 @@ regexp:true, undef:true, trailing:true, white:true */
       this.doValueChange(inEvent);
       return true;
     },
+    /**
+    @todo Document the keyUp method.
+    */
     keyUp: function (inSender, inEvent) {
       // Return
       if (inEvent.keyCode === 13) {
         this.done();
       }
     },
+    /**
+    @todo Document the edit method.
+    */
     edit: function (inSender, inEvent) {
       var value = this.getValue();
       if (!value) {
@@ -159,11 +177,17 @@ regexp:true, undef:true, trailing:true, white:true */
         this._popupDone = false;
       }
     },
+    /**
+    @todo Document the editorHidden method.
+    */
     editorHidden: function () {
       if (!this._popupDone) {
         this.edit();
       }
     },
+    /**
+    @todo Document the search method.
+    */
     search: function () {
       var that = this,
         list = this.getList(),
@@ -184,6 +208,9 @@ regexp:true, undef:true, trailing:true, white:true */
         parameterItemValues: parameterItemValues
       });
     },
+    /**
+    @todo Document the searchButtonKeyUp method.
+    */
     searchButtonKeyUp: function (inSender, inEvent) {
       // Return or space bar activates button
       if (inEvent.keyCode === 13 ||
@@ -192,6 +219,9 @@ regexp:true, undef:true, trailing:true, white:true */
       }
       return true;
     },
+    /**
+    @todo Document the setValue method.
+    */
     setValue: function (value, options) {
       var inEvent,
         oldId = this.value ? this.value.id : null,
@@ -208,11 +238,17 @@ regexp:true, undef:true, trailing:true, white:true */
         this.doValueChange(inEvent);
       }
     },
+    /**
+    @todo Document the pickerTapped method.
+    */
     pickerTapped: function (inSender, inEvent) {
       if (inEvent.originator.name === "iconButton") {
         this.receiveFocus();
       }
     },
+    /**
+    @todo Document the valueChanged method.
+    */
     valueChanged: function () {
       var value = this.getValue(),
         line1 = "",
