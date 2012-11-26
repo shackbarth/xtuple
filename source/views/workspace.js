@@ -339,7 +339,7 @@ trailing:true white:true*/
         ]}
       ]},
       {kind: "FittableRows", name: "contentPanel", components: [
-        {kind: "onyx.Toolbar", name: "contentToolbar", components: [
+        {kind: "onyx.MoreToolbar", name: "contentToolbar", components: [
 					// these are floated left to prevent overlap of buttons and text
           {kind: "onyx.Grabber", classes: "left-float"},
           {name: "title", classes: "left-float"},
