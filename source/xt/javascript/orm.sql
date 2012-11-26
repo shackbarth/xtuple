@@ -153,7 +153,9 @@ select xt.install_js('XT','Orm','xtuple', $$
                 ' and not orm_ext ' +
                 ' and orm_active ';
       res = plv8.execute(sql, [ nameSpace, type ]);
-      if(!res.length) return false;
+      if(!res.length) {
+        plv8.elog(ERROR, "No orm found for " + nameSpace + "." + type);
+      }
       ret = JSON.parse(res[0].json);
 
       /* get extensions and merge them into the base */
@@ -183,7 +185,6 @@ select xt.install_js('XT','Orm','xtuple', $$
       /* cache the result so we don't requery needlessly */
       this._maps.push({ "recordType": recordType, "map": ret});
     }
-    if (!ret) { plv8.elog(ERROR, "No orm found for " + nameSpace + "." + type) }
     return ret;
   };
 
