@@ -1,7 +1,6 @@
 enyo.depends(
   "crm",
-  // uncomment to activate admin extension
-  //"admin",
+  "admin",
   "project",
   "connect",
   "incident_plus"
