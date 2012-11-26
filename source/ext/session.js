@@ -151,10 +151,9 @@ white:true*/
         schemaCount++;
 
         // get schema for global DB models
-        // uncomment to activate admin console
-        //schemaOptions.databaseType = 'global';
-        //XT.dataSource.dispatch('XT.Session', 'schema', 'xm', schemaOptions);
-        //schemaCount++;
+        schemaOptions.databaseType = 'global';
+        XT.dataSource.dispatch('XT.Session', 'schema', 'xm', schemaOptions);
+        schemaCount++;
       }
 
       if (types & this.LOCALE) {
