@@ -381,7 +381,7 @@ trailing:true white:true*/
         ]}
       ]},
       {kind: "FittableRows", name: "contentPanel", components: [
-        {kind: "onyx.MoreToolbar", name: "contentToolbar", layoutKind: "FittableColumnsLayout", 
+        {kind: "onyx.MoreToolbar", name: "contentToolbar", 
 					components: [
           {kind: "onyx.Grabber"},
           {name: "title"},
