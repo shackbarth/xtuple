@@ -19,16 +19,16 @@ trailing:true white:true*/
         {kind: "onyx.GroupboxHeader", content: "Change your password" },
         {name: "message", content: "", classes: "xv-message"},
         {kind: "onyx.InputDecorator", components: [
-          {content: "Old Password: "},
-          {kind: "onyx.Input", type:"password", name: "oldPassword", placeholder: "Enter old password"}
+          {content: "_oldPassword".loc() + ':'},
+          {kind: "onyx.Input", type: "password", name: "oldPassword"}
         ]},
         {kind: "onyx.InputDecorator", components: [
-          {content: "New Password: "},
-          {kind: "onyx.Input", type:"password", name: "newPassword", placeholder: "Enter new password"}
+          {content: "_newPassword".loc() + ':'},
+          {kind: "onyx.Input", type: "password", name: "newPassword"}
         ]},
         {kind: "onyx.InputDecorator", components: [
-          {content: "New Password: "},
-          {kind: "onyx.Input", type:"password", name: "newPasswordCheck", placeholder: "Re-enter new password"}
+          {content: "_newPassword".loc() + ":"},
+          {kind: "onyx.Input", type: "password", name: "newPasswordCheck"}
         ]},
         {classes: "xv-button-bar", components: [
           {kind: "onyx.Button", name: "submitButton", ontap: "submitPassword", content: "Submit"},
@@ -43,7 +43,7 @@ trailing:true white:true*/
       this.hide();
     },
     submitPassword: function (inSender, inEvent) {
-      var that= this,
+      var that = this,
         oldPassword = this.$.oldPassword.getValue(),
         newPassword = this.$.newPassword.getValue(),
         newPasswordCheck = this.$.newPasswordCheck.getValue(),
@@ -51,15 +51,15 @@ trailing:true white:true*/
         options = {};
 
       if (!oldPassword) {
-        this.$.message.setContent("Please enter your old password");
+        this.$.message.setContent("_noOldPassword".loc());
         return;
       }
       if (newPassword.length < 6) {
-        this.$.message.setContent("Passwords must be at least 6 digits");
+        this.$.message.setContent("_passwordNotSix".loc());
         return;
       }
       if (newPassword !== newPasswordCheck) {
-        this.$.message.setContent("Passwords don't match");
+        this.$.message.setContent("_passwordMismatch".loc());
         return;
       }
 
@@ -72,15 +72,15 @@ trailing:true white:true*/
         // TODO: it would be nice to show the user some message
         // (maybe in the navigator) that the command was successful
         that.hide();
-      }
+      };
 
       options.error = function (result) {
         if (result.params.error.reason === 'Invalid password') {
-          that.$.message.setContent("That's not your old password. Please re-enter.");
+          that.$.message.setContent("_invalidPassword".loc());
         }
-      }
+      };
 
-      result = XT.dataSource.configure("updatePassword", params, options);
+      XT.dataSource.configure("updatePassword", params, options);
 
       // for some reason this is necessary to "un-depress" the button
       this.$.submitButton.addRemoveClass("active");

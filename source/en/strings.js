@@ -357,10 +357,12 @@ var lang = XT.stringsFor("en_US", {
   // ********
 
   "_exitPageWarning": "You are about to leave the xTuple application.",
+  "_invalidPassword": "Entry does not match your old password. Please re-enter.",
   "_loadingApplicationData": "Loading Application Data",
   "_loadingExtensions": "Loading Extensions",
   "_loadingSchema": "Loading Schema",
   "_loadingSessionData": "Loading Session Data",
+  "_newPassword": "New Password",
   "_noAccountName": "No Account Name",
   "_noAddress": "No Address",
   "_noCategory": "No Category",
@@ -370,6 +372,7 @@ var lang = XT.stringsFor("en_US", {
   "_noJobTitle": "No Job Title",
   "_noName": "No Name",
   "_noNumber": "No Number",
+  "_noOldPassword": "Please enter your old password",
   "_noPhone": "No Phone",
   "_noPriority": "No Priority",
   "_noSalesRep": "No Sales Rep",
@@ -377,6 +380,9 @@ var lang = XT.stringsFor("en_US", {
   "_noStage": "No Stage",
   "_noTerms": "No Terms",
   "_noType": "No Type",
+  "_oldPassword": "Old Password",
+  "_passwordMismatch": "Passwords don't match",
+  "_passwordNotSix": "Passwords must be at least 6 digits",
 
   // ********
   // Permissions
