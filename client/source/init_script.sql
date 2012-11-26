@@ -74,6 +74,7 @@
 
 -- xc
 \i xc/schema/xc.sql;
+\i xc/views/priv.sql
 \i xc/views/userpriv.sql
 \i xc/views/userrole.sql;
 \i xc/views/userrolepriv.sql;
