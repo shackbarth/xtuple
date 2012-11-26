@@ -21,13 +21,25 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "id"},
-            {kind: "XV.InputWidget", attr: "password"} // TODO: work out presentation and encrypt-transformation
+            {kind: "XV.InputWidget", name: "password"} // TODO: work out presentation and encrypt-transformation
           ]}
         ]}
         // {kind: "XV.UserOrganizationSomethingorotherBox", attr: "organizations"} TODO
       ]}
     ],
-    model: "XM.User"
+    model: "XM.User",
+    /**
+      We do not handle the password via the model, so suppress the workspace's tendency to
+      notify it.
+     */
+    controlValueChanged: function (inSender, inEvent) {
+      if (inEvent.originator.name === 'password') {
+        // suppress this event from reaching the model
+        return true;
+      }
+
+      this.inherited(arguments);
+    }
   });
 
   XV.registerModelWorkspace("XM.User", "XV.UserWorkspace");

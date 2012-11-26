@@ -134,10 +134,18 @@ white:true*/
       this.on('statusChange', this.statusChanged);
       this.statusChanged();
     },
+
     statusChanged: function () {
       if (this.getStatus() === XM.Model.READY_NEW) {
         this.setReadOnly('id', false);
       }
+    },
+
+    save: function (key, value, options) {
+
+
+      XM.Model.prototype.save.call(this, key, value, options);
+
     }
   });
 
