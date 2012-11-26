@@ -67,12 +67,13 @@
 \i xtbatch/tables/batch.sql
 
 -- public
-\i public/functions/geteffectivextuser.sql;
 \i public/tables/comment.sql
 \i public/tables/schemaord.sql;
 \i public/tables/usrpref.sql;
 
 -- xc
+\i xc/functions/set_search_path.sql;
+\i xc/functions/geteffectivextuser.sql;
 \i xc/schema/xc.sql;
 \i xc/views/priv.sql
 \i xc/views/userpriv.sql
