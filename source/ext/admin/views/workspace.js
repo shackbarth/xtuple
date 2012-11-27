@@ -21,24 +21,15 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "id"},
-            {kind: "XV.InputWidget", name: "password"} // TODO: work out presentation and encrypt-transformation
+            {kind: "onyx.Button", name: "resetPasswordButton", content: "Reset Password", ontap: "resetPassword"}
           ]}
         ]},
         {kind: "XV.UserOrgBox", attr: "organizations"}
       ]}
     ],
     model: "XM.User",
-    /**
-      We do not handle the password via the model, so suppress the workspace's tendency to
-      notify it.
-     */
-    controlValueChanged: function (inSender, inEvent) {
-      if (inEvent.originator.name === 'password') {
-        // suppress this event from reaching the model
-        return true;
-      }
-
-      this.inherited(arguments);
+    resetPassword: function (inSender, inEvent) {
+      console.log("Todo: reset password");
     }
   });
 
