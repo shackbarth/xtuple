@@ -90,25 +90,33 @@ trailing:true white:true*/
         ]}
       ]},
       {kind: "FittableRows", components: [
-        {kind: "onyx.Toolbar", name: "contentToolbar", components: [
-          {kind: "onyx.Grabber", classes: "left-float"}, // left floats are to prevent overlap
-          {name: "rightLabel", classes: "left-float"},
-          {name: "search", kind: "onyx.InputDecorator", classes: "right-float", // right floats anchor buttons to right
-            showing: false, components: [
-            {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
-              placeholder: "_search".loc(), onchange: "inputChanged"},
-            {kind: "Image", src: "lib/enyo-x/assets/search-input-search.png",
-              name: "searchJump", ontap: "jump"}
-          ]},
-          {name: "refreshButton", kind: "onyx.IconButton",
-            classes: "right-float",
-            src: "lib/enyo-x/assets/menu-icon-refresh.png",
-            ontap: "requery", showing: false},
-          {name: "newButton", kind: "onyx.IconButton",
-            classes: "right-float",
-            src: "lib/enyo-x/assets/menu-icon-new.png",
-            ontap: "newRecord", showing: false}
-        ]},
+				// the onyx-menu-toolbar class keeps the popups from being hidden
+	      {kind: "onyx.MoreToolbar", name: "contentToolbar", classes: "onyx-menu-toolbar",
+				components: [
+	        {kind: "onyx.Grabber"}, 
+	        {name: "rightLabel", style: "width: 100px"},
+				// The MoreToolbar is a FittableColumnsLayout, so this spacer takes up all available space
+				{name: "spacer", content: "", fit: true},
+				{kind: "onyx.TooltipDecorator", style: "margin: 0;", components: [
+	        {name: "newButton", kind: "onyx.IconButton",
+		          src: "lib/enyo-x/assets/menu-icon-new.png",
+		          ontap: "newRecord", showing: false},
+	        {kind: "onyx.Tooltip", content: "New"},
+	      ]},
+				{kind: "onyx.TooltipDecorator", style: "margin: 0;", components: [
+	        {name: "refreshButton", kind: "onyx.IconButton",
+		          src: "lib/enyo-x/assets/menu-icon-refresh.png",
+		          ontap: "requery", showing: false},
+	        {kind: "onyx.Tooltip", content: "Refresh"},
+	      ]},
+        {name: "search", kind: "onyx.InputDecorator", 
+           showing: false, components: [
+           {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
+             placeholder: "_search".loc(), onchange: "inputChanged"},
+           {kind: "Image", src: "lib/enyo-x/assets/search-input-search.png",
+             name: "searchJump", ontap: "jump"}
+        		]}
+	      ]},
         {name: "header", content: "", classes: "xv-navigator-header"},
         {name: "contentPanels", kind: "Panels", margin: 0, fit: true,
           draggable: false, panelCount: 0},
@@ -547,6 +555,7 @@ trailing:true white:true*/
 
       // Handle new button
       this.$.newButton.setShowing(panel.canAddNew);
+			this.$.contentToolbar.resized();
       if (panel.canAddNew && collection) {
         // Check 'couldCreate' first in case it's an info model.
         model = collection.prototype.model;
@@ -585,6 +594,7 @@ trailing:true white:true*/
       this.$.refreshButton.setShowing(index);
       this.$.search.setShowing(index);
       this.$.searchIconButton.setShowing(index);
+			this.$.contentToolbar.resized();
     },
     setModule: function (index) {
       var module = this.getModules()[index],

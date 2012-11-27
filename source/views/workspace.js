@@ -384,7 +384,7 @@ trailing:true white:true*/
         {kind: "onyx.MoreToolbar", name: "contentToolbar", 
 					components: [
           {kind: "onyx.Grabber"},
-          {name: "title"},
+          {name: "title", style: "width: 100px"},
 					// The MoreToolbar is a FittableColumnsLayout, so this spacer takes up all available space 
 					{name: "space", fit: true},
 					{kind: "onyx.Button", name: "refreshButton", disabled: true,
