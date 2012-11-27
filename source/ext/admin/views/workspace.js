@@ -24,7 +24,7 @@ trailing:true white:true*/
             {kind: "onyx.Button", name: "resetPasswordButton", content: "_resetPassword".loc(), ontap: "resetPassword"}
           ]}
         ]},
-        {kind: "XV.UserOrgBox", attr: "organizations"}
+        {kind: "XV.UserOrganizationsBox", attr: "organizations"}
       ]}
     ],
     model: "XM.User",

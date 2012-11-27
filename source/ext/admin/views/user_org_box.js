@@ -12,8 +12,10 @@ white:true*/
   enyo.kind(/** @lends XV.UserOrgBox# */{
     name: "XV.UserOrgBoxItem",
     components: [
-      {kind: "XV.OrganizationWidget", name: "organizationPicker", label: "_organization".loc()},
-      {name: "applicationUsernameField"}
+      {kind: "onyx.Groupbox", style: "background-color: white;", components: [
+        {kind: "XV.OrganizationWidget", name: "organizationPicker", label: "_organization".loc()},
+        {kind: "XV.InputWidget", name: "applicationUsernameField", label: "_username".loc()}
+      ]}
     ]
   });
 
@@ -46,7 +48,7 @@ white:true*/
       var index = inEvent.index;
 
       inEvent.item.$.orgItem.$.organizationPicker.setValue(this.getValue()[index].name);
-      inEvent.item.$.orgItem.$.applicationUsernameField.setContent(this.getValue()[index].username);
+      inEvent.item.$.orgItem.$.applicationUsernameField.setValue(this.getValue()[index].username);
     },
     valueChanged: function () {
       console.log(JSON.stringify(this.getValue()));
