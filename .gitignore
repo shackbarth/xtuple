@@ -1,6 +1,7 @@
 .DS_Store
 node_modules
 npm-debug.log
+pid*
 config*
 datasource.log
 datasource-err.log
@@ -10,4 +11,5 @@ test/steves_add_user.js
 test/admin.txt
 test/salt.txt
 *.swp
+pid/*
 
