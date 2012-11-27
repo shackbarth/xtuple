@@ -21,7 +21,7 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "id"},
-            {kind: "onyx.Button", name: "resetPasswordButton", content: "_resetPassword".loc(), ontap: "resetPassword"}
+            {kind: "onyx.Button", name: "resetPasswordButton", content: "_resetPassword".loc(), ontap: "resetPassword", showing: false}
           ]}
         ]},
         {kind: "XV.UserOrganizationsBox", attr: "organizations"}
@@ -30,6 +30,15 @@ trailing:true white:true*/
     model: "XM.User",
     resetPassword: function (inSender, inEvent) {
       console.log("Todo: reset password");
+    },
+    /**
+      We only want the "reset password" button to appear on an edit, not an a "new"
+     */
+    statusChanged: function (model, status, options) {
+      this.inherited(arguments);
+      if (status === XM.Model.READY_CLEAN) {
+        this.$.resetPasswordButton.setShowing(true);
+      }
     }
   });
 
