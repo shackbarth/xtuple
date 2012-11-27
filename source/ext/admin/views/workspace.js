@@ -21,7 +21,7 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "id"},
-            {kind: "onyx.Button", name: "resetPasswordButton", content: "Reset Password", ontap: "resetPassword"}
+            {kind: "onyx.Button", name: "resetPasswordButton", content: "_resetPassword".loc(), ontap: "resetPassword"}
           ]}
         ]},
         {kind: "XV.UserOrgBox", attr: "organizations"}
@@ -84,7 +84,7 @@ trailing:true white:true*/
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
-            {kind: "XV.InputWidget", attr: "databaseServer"} // TODO use picker
+            {kind: "XV.DatabaseServerWidget", attr: "databaseServer"}
           ]}
         ]}
       ]}

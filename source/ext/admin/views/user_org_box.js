@@ -5,6 +5,17 @@ white:true*/
 
 (function () {
 
+  /**
+    @class Manages the organizations associated with a global user
+    @name XV.UserOrgBox
+   */
+  enyo.kind(/** @lends XV.UserOrgBox# */{
+    name: "XV.UserOrgBoxItem",
+    components: [
+      {kind: "XV.OrganizationWidget", name: "organizationPicker", label: "_organization".loc()},
+      {name: "applicationUsernameField"}
+    ]
+  });
 
   /**
     @class Manages the organizations associated with a global user
@@ -18,16 +29,24 @@ white:true*/
       value: null,
       title: "_organizations".loc()
     },
+    handlers: {
+      onValueChange: "controlValueChanged"
+    },
     components: [
       {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
       {kind: "Repeater", count: 0, onSetupItem: "setupItem", components: [
-        {name: "orgItem"}
+        {kind: "XV.UserOrgBoxItem", name: "orgItem"}
       ]}
     ],
+    controlValueChanged: function (inSender, inEvent) {
+      //for now, just catch and ignore these
+      return true;
+    },
     setupItem: function (inSender, inEvent) {
       var index = inEvent.index;
 
-      inEvent.item.$.orgItem.setContent(this.getValue()[index].name);
+      inEvent.item.$.orgItem.$.organizationPicker.setValue(this.getValue()[index].name);
+      inEvent.item.$.orgItem.$.applicationUsernameField.setContent(this.getValue()[index].username);
     },
     valueChanged: function () {
       console.log(JSON.stringify(this.getValue()));
