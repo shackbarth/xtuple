@@ -52,7 +52,8 @@
         "name": "isActive",
         "attr": {
           "type": "Boolean",
-          "column": "ophead_active"
+          "column": "ophead_active",
+          "required": true
         }
       },
       {
@@ -60,7 +61,8 @@
         "toOne": {
           "isNested": true,
           "type": "AccountRelation",
-          "column": "ophead_crmacct_id"
+          "column": "ophead_crmacct_id",
+          "required": true
         }
       },
       {
@@ -75,7 +77,8 @@
         "name": "opportunityStage",
         "toOne": {
           "type": "OpportunityStage",
-          "column": "ophead_opstage_id"
+          "column": "ophead_opstage_id",
+          "required": true
         }
       },
       {
@@ -89,14 +92,16 @@
         "name": "opportunitySource",
         "toOne": {
           "type": "OpportunitySource",
-          "column": "ophead_opsource_id"
+          "column": "ophead_opsource_id",
+          "required": true
         }
       },
       {
         "name": "opportunityType",
         "toOne": {
           "type": "OpportunityType",
-          "column": "ophead_optype_id"
+          "column": "ophead_optype_id",
+          "required": true
         }
       },
       {
@@ -214,15 +219,6 @@
         "toMany": {
           "isNested": true,
           "type": "OpportunityFile",
-          "column": "ophead_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "images",
-        "toMany": {
-          "isNested": true,
-          "type": "OpportunityImage",
           "column": "ophead_id",
           "inverse": "source"
         }
@@ -361,7 +357,66 @@
         "name": "characteristic",
         "toOne": {
           "type": "Characteristic",
-          "column": "charass_char_id"
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "OpportunityListItemCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Opportunity List Item Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "OPP"
+        }
+      },
+      {
+        "name": "opportunity",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
         }
       },
       {
@@ -424,7 +479,8 @@
         "name": "commentType",
         "toOne": {
           "type": "CommentType",
-          "column": "comment_cmnttype_id"
+          "column": "comment_cmnttype_id",
+          "required": true
         }
       },
       {
@@ -576,72 +632,6 @@
         "toOne": {
           "isNested": true,
           "type": "FileRelation",
-          "column": "target_id"
-        }
-      },
-      {
-        "name": "purpose",
-        "attr": {
-          "type": "String",
-          "column": "purpose"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
-    "type": "OpportunityImage",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "Opportunity Image Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
-          "value": "OPP"
-        }
-      },
-      {
-        "name": "source",
-        "attr": {
-          "type": "Number",
-          "column": "source_id"
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "target_type",
-          "value": "IMG"
-        }
-      },
-      {
-        "name": "image",
-        "toOne": {
-          "isNested": true,
-          "type": "ImageRelation",
           "column": "target_id"
         }
       },
@@ -888,6 +878,15 @@
           "type": "Number",
           "column": "priority_order"
         }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "OpportunityListItemCharacteristic",
+          "column": "ophead_id",
+          "inverse": "opportunity"
+        }
       }
     ],
     "isSystem": true
@@ -1002,7 +1001,7 @@
         "attr": {
           "type": "String",
           "column": "target_type",
-          "value": "I"
+          "value": "OPP"
         }
       },
       {
@@ -1107,7 +1106,8 @@
         "name": "deactivate",
         "attr": {
           "type": "Boolean",
-          "column": "opstage_opinactive"
+          "column": "opstage_opinactive",
+          "required": true
         }
       }
     ],

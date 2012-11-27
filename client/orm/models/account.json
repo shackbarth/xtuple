@@ -44,21 +44,24 @@
        "name": "name",
        "attr": {
          "type": "String",
-         "column": "crmacct_name"
+         "column": "crmacct_name",
+         "required": true
        }
      },
      {
        "name": "isActive",
        "attr": {
          "type": "Boolean",
-         "column": "crmacct_active"
+         "column": "crmacct_active",
+         "required": true
        }
      },
      {
        "name": "accountType",
        "attr": {
          "type": "String",
-         "column": "crmacct_type"
+         "column": "crmacct_type",
+         "required": true
        }
      },
      {
@@ -186,15 +189,6 @@
        "toMany": {
          "isNested": true,
          "type": "AccountFile",
-         "column": "crmacct_id",
-         "inverse": "source"
-       }
-     },
-     {
-       "name": "images",
-       "toMany": {
-         "isNested": true,
-         "type": "AccountImage",
          "column": "crmacct_id",
          "inverse": "source"
        }
@@ -427,7 +421,66 @@
        "name": "characteristic",
        "toOne": {
          "type": "Characteristic",
-         "column": "charass_char_id"
+         "column": "charass_char_id",
+         "required": true
+       }
+     },
+     {
+       "name": "value",
+       "attr": {
+         "type": "String",
+         "column": "charass_value"
+       }
+     }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+    },
+    {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "AccountListItemCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Account List Item Characteristic Map",
+    "privileges": {
+     "all": {
+       "create": true,
+       "read": true,
+       "update": true,
+       "delete": true
+     }
+    },
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "charass_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "targetType",
+       "attr": {
+         "type": "String",
+         "column": "charass_target_type",
+         "value": "CRMACCT"
+       }
+     },
+     {
+       "name": "account",
+       "attr": {
+         "type": "Number",
+         "column": "charass_target_id"
+       }
+     },
+     {
+       "name": "characteristic",
+       "toOne": {
+         "type": "Characteristic",
+         "column": "charass_char_id",
+         "required": true
        }
      },
      {
@@ -482,7 +535,8 @@
        "name": "commentType",
        "toOne": {
          "type": "CommentType",
-         "column": "comment_cmnttype_id"
+         "column": "comment_cmnttype_id",
+         "required": true
        }
      },
      {
@@ -652,72 +706,6 @@
     {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "AccountImage",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "Account Image Map",
-    "privileges": {
-     "all": {
-       "create": true,
-       "read": true,
-       "update": false,
-       "delete": true
-     }
-    },
-    "properties": [
-     {
-       "name": "id",
-       "attr": {
-         "type": "Number",
-         "column": "id",
-         "isPrimaryKey": true
-       }
-     },
-     {
-       "name": "sourceType",
-       "attr": {
-         "type": "String",
-         "column": "source_type",
-         "value": "CRMA"
-       }
-     },
-     {
-       "name": "source",
-       "attr": {
-         "type": "Number",
-         "column": "source_id"
-       }
-     },
-     {
-       "name": "targetType",
-       "attr": {
-         "type": "String",
-         "column": "target_type",
-         "value": "IMG"
-       }
-     },
-     {
-       "name": "image",
-       "toOne": {
-         "isNested": true,
-         "type": "ImageRelation",
-         "column": "target_id"
-       }
-     },
-     {
-       "name": "purpose",
-       "attr": {
-         "type": "String",
-         "column": "purpose"
-       }
-     }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-    },
-    {
-    "context": "xtuple",
-    "nameSpace": "XM",
     "type": "AccountRelation",
     "table": "crmacct",
     "comment": "Account Relation Map",
@@ -840,6 +828,15 @@
          "type": "UserAccountRelation",
          "column": "crmacct_owner_username",
          "inverse": "username"
+       }
+     },
+     {
+       "name": "characteristics",
+       "toMany": {
+         "isNested": true,
+         "type": "AccountListItemCharacteristic",
+         "column": "crmacct_id",
+         "inverse": "account"
        }
      }
     ],

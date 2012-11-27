@@ -121,14 +121,6 @@
         }
       },
       {
-        "name": "image",
-        "toOne": {
-          "isNested": true,
-          "type": "Image",
-          "column": "emp_image_id"
-        }
-      },
-      {
         "name": "notes",
         "attr": {
           "type": "String",
@@ -260,7 +252,8 @@
         "name": "commentType",
         "toOne": {
           "type": "CommentType",
-          "column": "comment_cmnttype_id"
+          "column": "comment_cmnttype_id",
+          "required": true
         }
       },
       {
@@ -338,7 +331,8 @@
         "name": "characteristic",
         "toOne": {
           "type": "Characteristic",
-          "column": "charass_char_id"
+          "column": "charass_char_id",
+          "required": true
         }
       },
       {

@@ -16,5 +16,6 @@
 \i xt/tables/session.sql
 \i xt/tables/usr.sql
 \i xt/tables/usrorg.sql
+\i xt/tables/sessionorg.sql
 
 -- [ END ] xt

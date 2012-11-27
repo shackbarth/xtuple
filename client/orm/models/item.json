@@ -52,7 +52,7 @@
         "create": "MaintainItemMasters",
         "read": "ViewItemMasters",
         "update": "MaintainItemMasters",
-        "delete": "MaintainItemMasters"
+        "delete": "DeleteItemMasters"
       }
     },
     "properties": [
@@ -96,14 +96,16 @@
         "name": "classCode",
         "toOne": {
           "type": "ClassCode",
-          "column": "item_classcode_id"
+          "column": "item_classcode_id",
+          "required": true
         }
       },
       {
         "name": "inventoryUnit",
         "toOne": {
           "type": "Unit",
-          "column": "item_inv_uom_id"
+          "column": "item_inv_uom_id",
+          "required": true
         }
       },
       {
@@ -131,7 +133,8 @@
         "name": "productCategory",
         "toOne": {
           "type": "ProductCategory",
-          "column": "item_prodcat_id"
+          "column": "item_prodcat_id",
+          "required": true
         }
       },
       {
@@ -145,7 +148,8 @@
         "name": "priceUnit",
         "toOne": {
           "type": "Unit",
-          "column": "item_price_uom_id"
+          "column": "item_price_uom_id",
+          "required": true
         }
       },
       {
@@ -204,15 +208,6 @@
         "name": "files",
         "toMany": {
           "type": "ItemFile",
-          "column": "item_id",
-          "inverse": "source",
-          "isNested": true
-        }
-      },
-      {
-        "name": "images",
-        "toMany": {
-          "type": "ItemImage",
           "column": "item_id",
           "inverse": "source",
           "isNested": true
@@ -410,7 +405,8 @@
         "name": "characteristic",
         "toOne": {
           "type": "Characteristic",
-          "column": "charass_char_id"
+          "column": "charass_char_id",
+          "required": true
         }
       },
       {
@@ -473,7 +469,8 @@
         "name": "commentType",
         "toOne": {
           "type": "CommentType",
-          "column": "comment_cmnttype_id"
+          "column": "comment_cmnttype_id",
+          "required": true
         }
       },
       {
@@ -626,72 +623,6 @@
         "toOne": {
           "isNested": true,
           "type": "FileRelation",
-          "column": "target_id"
-        }
-      },
-      {
-        "name": "purpose",
-        "attr": {
-          "type": "String",
-          "column": "purpose"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
-    "type": "ItemImage",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "Item Image Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
-          "value": "I"
-        }
-      },
-      {
-        "name": "source",
-        "attr": {
-          "type": "Number",
-          "column": "source_id"
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "target_type",
-          "value": "IMG"
-        }
-      },
-      {
-        "name": "image",
-        "toOne": {
-          "isNested": true,
-          "type": "ImageRelation",
           "column": "target_id"
         }
       },

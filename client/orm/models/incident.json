@@ -45,14 +45,16 @@
         "name": "description",
         "attr": {
           "type": "String",
-          "column": "incdt_summary"
+          "column": "incdt_summary",
+          "required": true
         }
       },
       {
         "name": "category",
         "toOne": {
           "type": "IncidentCategory",
-          "column": "incdt_incdtcat_id"
+          "column": "incdt_incdtcat_id",
+          "required": true
         }
       },
       {
@@ -67,7 +69,8 @@
         "toOne": {
           "isNested": true,
           "type": "AccountRelation",
-          "column": "incdt_crmacct_id"
+          "column": "incdt_crmacct_id",
+          "required": true
         }
       },
       {
@@ -75,7 +78,8 @@
         "toOne": {
           "isNested": true,
           "type": "ContactRelation",
-          "column": "incdt_cntct_id"
+          "column": "incdt_cntct_id",
+          "required": true
         }
       },
       {
@@ -221,15 +225,6 @@
         "toMany": {
           "isNested": true,
           "type": "IncidentFile",
-          "column": "incdt_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "images",
-        "toMany": {
-          "isNested": true,
-          "type": "IncidentImage",
           "column": "incdt_id",
           "inverse": "source"
         }
@@ -474,7 +469,8 @@
         "name": "order",
         "attr": {
           "type": "Number",
-          "column": "incdtcat_order"
+          "column": "incdtcat_order",
+          "required": true
         }
       }
     ],
@@ -523,7 +519,66 @@
         "name": "characteristic",
         "toOne": {
           "type": "Characteristic",
-          "column": "charass_char_id"
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentListItemCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Incident List Item Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "INCDT"
+        }
+      },
+      {
+        "name": "incident",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
         }
       },
       {
@@ -586,7 +641,8 @@
         "name": "commentType",
         "toOne": {
           "type": "CommentType",
-          "column": "comment_cmnttype_id"
+          "column": "comment_cmnttype_id",
+          "required": true
         }
       },
       {
@@ -795,72 +851,6 @@
         "attr": {
           "type": "String",
           "column": "incdthist_username"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
-    "type": "IncidentImage",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "Incident Image Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
-          "value": "INCDT"
-        }
-      },
-      {
-        "name": "source",
-        "attr": {
-          "type": "Number",
-          "column": "source_id"
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "target_type",
-          "value": "IMG"
-        }
-      },
-      {
-        "name": "image",
-        "toOne": {
-          "isNested": true,
-          "type": "ImageRelation",
-          "column": "target_id"
-        }
-      },
-      {
-        "name": "purpose",
-        "attr": {
-          "type": "String",
-          "column": "purpose"
         }
       }
     ],
@@ -1172,6 +1162,15 @@
           "type": "Number",
           "column": "status_seq"
         }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentListItemCharacteristic",
+          "column": "incdt_id",
+          "inverse": "incident"
+        }
       }
     ],
     "isSystem": true
@@ -1355,7 +1354,8 @@
         "name": "order",
         "attr": {
           "type": "Number",
-          "column": "incdtresolution_order"
+          "column": "incdtresolution_order",
+          "required": true
         }
       },
       {
@@ -1403,7 +1403,8 @@
         "name": "order",
         "attr": {
           "type": "Number",
-          "column": "incdtseverity_order"
+          "column": "incdtseverity_order",
+          "required": true
         }
       },
       {

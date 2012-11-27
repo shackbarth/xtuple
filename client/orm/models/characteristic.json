@@ -38,6 +38,14 @@
         }
       },
       {
+        "name": "isSearchable",
+        "attr": {
+          "type": "Boolean",
+          "column": "char_search",
+          "required": true
+        }
+      },
+      {
         "name": "order",
         "attr": {
           "type": "Number",
@@ -78,14 +86,16 @@
         "name": "isAddresses",
         "attr": {
           "type": "Boolean",
-          "column": "char_addresses"
+          "column": "char_addresses",
+          "required": true
         }
       },
       {
         "name": "isContacts",
         "attr": {
           "type": "Boolean",
-          "column": "char_contacts"
+          "column": "char_contacts",
+          "required": true
         }
       },
       {
@@ -99,7 +109,8 @@
         "name": "isItems",
         "attr": {
           "type": "Boolean",
-          "column": "char_items"
+          "column": "char_items",
+          "required": true
         }
       }
     ],

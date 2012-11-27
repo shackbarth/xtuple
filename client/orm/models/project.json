@@ -81,7 +81,8 @@
         "name": "dueDate",
         "attr": {
           "type": "Date",
-          "column": "prj_due_date"
+          "column": "prj_due_date",
+          "required": true
         }
       },
       {
@@ -182,15 +183,6 @@
         "toMany": {
           "isNested": true,
           "type": "ProjectFile",
-          "column": "prj_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "images",
-        "toMany": {
-          "isNested": true,
-          "type": "ProjectImage",
           "column": "prj_id",
           "inverse": "source"
         }
@@ -333,7 +325,8 @@
         "name": "commentType",
         "toOne": {
           "type": "CommentType",
-          "column": "comment_cmnttype_id"
+          "column": "comment_cmnttype_id",
+          "required": true
         }
       },
       {
@@ -486,72 +479,6 @@
         "toOne": {
           "isNested": true,
           "type": "FileRelation",
-          "column": "target_id"
-        }
-      },
-      {
-        "name": "purpose",
-        "attr": {
-          "type": "String",
-          "column": "purpose"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
-    "type": "ProjectImage",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "Project Image Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
-          "value": "J"
-        }
-      },
-      {
-        "name": "source",
-        "attr": {
-          "type": "Number",
-          "column": "source_id"
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "target_type",
-          "value": "IMG"
-        }
-      },
-      {
-        "name": "image",
-        "toOne": {
-          "isNested": true,
-          "type": "ImageRelation",
           "column": "target_id"
         }
       },
@@ -768,6 +695,14 @@
           "isNested": true,
           "type": "AccountRelation",
           "column": "prj_crmacct_id"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "prj_cntct_id"
         }
       },
       {
@@ -1135,7 +1070,8 @@
         "name": "dueDate",
         "attr": {
           "type": "Date",
-          "column": "prjtask_due_date"
+          "column": "prjtask_due_date",
+          "required": true
         }
       },
       {
@@ -1533,7 +1469,8 @@
         "name": "commentType",
         "toOne": {
           "type": "CommentType",
-          "column": "comment_cmnttype_id"
+          "column": "comment_cmnttype_id",
+          "required": true
         }
       },
       {

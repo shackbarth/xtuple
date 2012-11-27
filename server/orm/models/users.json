@@ -1,0 +1,76 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "User",
+    "table": "xt.usr",
+    "comment": "User Map",
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "String",
+         "column": "usr_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "password",
+       "attr": {
+         "type": "String",
+         "column": "usr_password"
+       }
+     },
+     {
+       "name": "organizations",
+       "toMany": {
+         "isNested": true,
+         "type": "UserOrganization",
+         "column": "usr_id",
+         "inverse": "user"
+       }
+     }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "UserOrganization",
+    "table": "xt.usrorg",
+    "idSequenceName": "usrorg_usrorg_id_seq",
+    "comment": "User Organization Map",
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "usrorg_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "user",
+       "attr": {
+         "type": "String",
+         "column": "usrorg_usr_id"
+       }
+     },
+     {
+       "name": "name",
+       "attr": {
+         "type": "String",
+         "column": "usrorg_org_name"
+       }
+     },
+     {
+       "name": "username",
+       "attr": {
+         "type": "String",
+         "column": "usrorg_username"
+       }
+     }
+    ],
+    "isSystem": true
+  }
+]

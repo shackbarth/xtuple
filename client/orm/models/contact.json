@@ -227,15 +227,6 @@
         }
       },
       {
-        "name": "images",
-        "toMany": {
-          "type": "ContactImage",
-          "column": "cntct_id",
-          "inverse": "source",
-          "isNested": true
-        }
-      },
-      {
         "name": "urls",
         "toMany": {
           "type": "ContactUrl",
@@ -518,7 +509,66 @@
         "name": "characteristic",
         "toOne": {
           "type": "Characteristic",
-          "column": "charass_char_id"
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ContactListItemCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Contact List Item Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "CNTCT"
+        }
+      },
+      {
+        "name": "contact",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
         }
       },
       {
@@ -581,7 +631,8 @@
         "name": "commentType",
         "toOne": {
           "type": "CommentType",
-          "column": "comment_cmnttype_id"
+          "column": "comment_cmnttype_id",
+          "required": true
         }
       },
       {
@@ -793,72 +844,6 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "ContactImage",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "Contact Image Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
-          "value": "T"
-        }
-      },
-      {
-        "name": "source",
-        "attr": {
-          "type": "Number",
-          "column": "source_id"
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "target_type",
-          "value": "IMG"
-        }
-      },
-      {
-        "name": "image",
-        "toOne": {
-          "isNested": true,
-          "type": "ImageRelation",
-          "column": "target_id"
-        }
-      },
-      {
-        "name": "purpose",
-        "attr": {
-          "type": "String",
-          "column": "purpose"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
     "type": "ContactListItem",
     "table": "cntct",
     "comment": "Contact List Item Map",
@@ -982,6 +967,36 @@
           "type": "AccountRelation",
           "column": "cntct_crmacct_id"
         }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "type": "ContactListItemCharacteristic",
+          "column": "cntct_id",
+          "inverse": "contact",
+          "isNested": true
+        }
+      }
+    ],
+    "extensions": [
+      {
+        "table": "crmacct",
+        "nameSpace": "XM",
+        "relations": [
+          {
+            "column": "crmacct_id",
+            "inverse": "account"
+          }
+        ],
+        "properties": [
+          {
+            "name": "accountParent",
+            "toOne": {
+              "type": "AccountRelation",
+              "column": "crmacct_parent_id"
+            }
+          }
+        ]
       }
     ],
     "isSystem": true
@@ -1111,6 +1126,27 @@
           "type": "Number",
           "column": "cntct_crmacct_id"
         }
+      }
+    ],
+    "extensions": [
+      {
+        "table": "crmacct",
+        "nameSpace": "XM",
+        "relations": [
+          {
+            "column": "crmacct_id",
+            "inverse": "account"
+          }
+        ],
+        "properties": [
+          {
+            "name": "accountParent",
+            "toOne": {
+              "type": "AccountRelation",
+              "column": "crmacct_parent_id"
+            }
+          }
+        ]
       }
     ],
     "isSystem": true
