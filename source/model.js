@@ -985,6 +985,7 @@ white:true*/
       @returns {XT.Request} Request
     */
     used: function (options) {
+      options.databaseType = this.databaseType;
       return XT.dataSource.dispatch('XM.Model', 'used', [this.recordType, this.id], options);
     },
 
