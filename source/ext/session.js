@@ -113,35 +113,38 @@ white:true*/
             schema = new Backbone.Model(resp);
             that.setSchema(schema);
           }
-          // Set relations
-          for (prop in schema.attributes) {
-            if (schema.attributes.hasOwnProperty(prop)) {
-              Klass = XM.Model.getObjectByName('XM' + '.' + prop);
-              if (Klass) {
-                relations = schema.attributes[prop].relations || [];
-                if (relations.length) {
-                  Klass.prototype.relations = [];
-                  for (i = 0; i < relations.length; i++) {
-                    if (relations[i].type === "Backbone.HasOne") {
-                      relations[i].type = Backbone.HasOne;
-                    } else if (relations[i].type === "Backbone.HasMany") {
-                      relations[i].type = Backbone.HasMany;
-                    } else {
-                      continue;
-                    }
-                    Klass.prototype.relations.push(relations[i]);
-                  }
-                }
+          schemasReturned++;
 
-                privileges = schema.attributes[prop].privileges;
-                if (privileges) {
-                  Klass.prototype.privileges = privileges;
+          if (schemasReturned === schemaCount) {
+            // Set relations
+            for (prop in schema.attributes) {
+              if (schema.attributes.hasOwnProperty(prop)) {
+                Klass = XM.Model.getObjectByName('XM' + '.' + prop);
+                if (Klass) {
+                  relations = schema.attributes[prop].relations || [];
+                  if (relations.length) {
+                    Klass.prototype.relations = [];
+                    for (i = 0; i < relations.length; i++) {
+                      if (relations[i].type === "Backbone.HasOne") {
+                        relations[i].type = Backbone.HasOne;
+                      } else if (relations[i].type === "Backbone.HasMany") {
+                        relations[i].type = Backbone.HasMany;
+                      } else {
+                        console.log(prop + " now has " + Klass.prototype.relations.length + " relations");
+                        continue;
+                      }
+                      Klass.prototype.relations.push(relations[i]);
+                      console.log(prop + " now has " + Klass.prototype.relations.length + " relations");
+                    }
+                  }
+
+                  privileges = schema.attributes[prop].privileges;
+                  if (privileges) {
+                    Klass.prototype.privileges = privileges;
+                  }
                 }
               }
             }
-          }
-          schemasReturned++;
-          if (schemasReturned === schemaCount) {
             callback();
           }
         };
