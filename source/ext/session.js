@@ -130,11 +130,9 @@ white:true*/
                       } else if (relations[i].type === "Backbone.HasMany") {
                         relations[i].type = Backbone.HasMany;
                       } else {
-                        console.log(prop + " now has " + Klass.prototype.relations.length + " relations");
                         continue;
                       }
                       Klass.prototype.relations.push(relations[i]);
-                      console.log(prop + " now has " + Klass.prototype.relations.length + " relations");
                     }
                   }
 
