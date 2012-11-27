@@ -21,10 +21,9 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "username", classes: "bold"},
-              {kind: "XV.ListAttr", attr: "name", fit: true, classes: "right"}
-            ]},
-            {kind: "XV.ListAttr", attr: "name"}
+              {kind: "XV.ListAttr", attr: "name", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "username", fit: true, classes: "right"}
+            ]}
           ]}
         ]}
       ]}

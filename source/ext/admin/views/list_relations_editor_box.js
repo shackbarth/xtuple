@@ -14,8 +14,8 @@ trailing:true white:true*/
     components: [
       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
         classes: "in-panel", components: [
-        {kind: "XV.InputWidget", attr: "username"},
-        {kind: "XV.InputWidget", attr: "name"}
+        {kind: "XV.OrganizationWidget", name: "organizationPicker", attr: "name", label: "_organization".loc()},
+        {kind: "XV.InputWidget", attr: "username"}
       ]}
     ]
   });
@@ -24,7 +24,7 @@ trailing:true white:true*/
     name: "XV.UserOrganizationsBox",
     kind: "XV.ListRelationsEditorBox",
     classes: "xv-user-organizations-box",
-    title: "_userOrganizations".loc(),
+    title: "_organizations".loc(),
     editor: "XV.UserOrganizationsEditor",
     parentKey: "user",
     listRelations: "XV.UserOrganizationListRelations",
