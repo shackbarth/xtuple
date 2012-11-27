@@ -15,6 +15,13 @@
        }
      },
      {
+       "name": "password",
+       "attr": {
+         "type": "String",
+         "column": "usr_password"
+       }
+     },
+     {
        "name": "organizations",
        "toMany": {
          "isNested": true,
