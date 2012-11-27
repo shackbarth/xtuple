@@ -29,7 +29,17 @@ trailing:true white:true*/
     ],
     model: "XM.User",
     resetPassword: function (inSender, inEvent) {
-      console.log("Todo: reset password");
+      var options = {
+        success: function (model, result) {
+          // TODO: application-wide messaging?!
+          alert("Password reset successful");
+        },
+        error: function (error) {
+          alert("Password reset fail");
+        },
+        databaseType: "global"
+      };
+      XT.dataSource.dispatch('XM.User', 'resetPassword', this.getValue().id, options);
     },
     /**
       We only want the "reset password" button to appear on an edit, not an a "new"
