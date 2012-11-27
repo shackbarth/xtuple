@@ -204,7 +204,7 @@ trailing:true white:true*/
           }},
       {kind: "onyx.GroupboxHeader", content: "_status".loc()},
       {name: "statusEquals", label: "_equals".loc(), attr: "status",
-        filterLabel: "_status" + " " + "_equals".loc(),
+        filterLabel: "_status".loc() + " " + "_equals".loc(),
         defaultKind: "XV.IncidentStatusPicker"},
       {name: "statusAbove", label: "_above".loc(), attr: "status",
         filterLabel: "_status".loc() + " " + "_above".loc(),
