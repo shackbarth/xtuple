@@ -62,8 +62,7 @@ trailing:true white:true*/
           ]},
           {kind: "onyx.MenuDecorator", onSelect: "actionSelected", components: [
 						{kind: "onyx.TooltipDecorator", style: "margin: 0;", components: [
-			        {kind: "onyx.IconButton", src: "lib/enyo-x/assets/menu-icon-gear.png",
-	             style: "margin-top: 0px; max-height: 24px;"},
+			        {kind: "onyx.IconButton", src: "lib/enyo-x/assets/menu-icon-gear.png"},
 			        {kind: "onyx.Tooltip", content: "Actions"},
 			      ]},
             {kind: "onyx.Menu", components: [
