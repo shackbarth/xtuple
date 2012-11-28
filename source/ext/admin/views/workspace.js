@@ -29,17 +29,42 @@ trailing:true white:true*/
     ],
     model: "XM.User",
     resetPassword: function (inSender, inEvent) {
-      var options = {
-        success: function (model, result) {
-          // TODO: application-wide messaging?!
-          alert("Password reset successful");
-        },
-        error: function (error) {
-          alert("Password reset fail");
-        },
-        databaseType: "global"
-      };
-      XT.dataSource.dispatch('XM.User', 'resetPassword', this.getValue().id, options);
+      var that = this,
+        options = {
+          success: function (model, result) {
+            // TODO: application-wide messaging?!
+            alert("An e-mail with the new password has been sent to " + that.getValue().id);
+          },
+          error: function (error) {
+            alert("Password reset fail");
+          },
+          databaseType: "global"
+        };
+      XT.dataSource.resetPassword(this.getValue().id, options);
+    },
+    /**
+      In the case of saving a new user we want to make a second call to reset
+      the password, which will be null after the first call. It's a bit awkward
+      that the two-stage process goes all the way up here to the presentation
+      layer.
+     */
+    save: function (options) {
+      var that = this,
+        isNewUser = this.getValue().getStatus() === XM.Model.READY_NEW,
+        success = options ? options.success : undefined;
+
+      if (isNewUser) {
+        options = options || {};
+        options.success = function (model, result, opts) {
+          if (success) {
+            success(model, result, opts);
+          }
+          that.setValue(model);
+          that.resetPassword();
+        };
+      }
+
+      this.inherited(arguments);
     },
     /**
       We only want the "reset password" button to appear on an edit, not an a "new"
