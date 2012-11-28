@@ -18,4 +18,8 @@
 \i xt/tables/usrorg.sql
 \i xt/tables/sessionorg.sql
 
+-- xt dispatch functions
+\i xt/javascript/user.sql
+
+
 -- [ END ] xt
