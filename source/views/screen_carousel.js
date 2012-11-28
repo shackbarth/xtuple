@@ -6,11 +6,10 @@ trailing:true white:true*/
 (function () {
 
   /**
-    We used to use this a lot.
-
+    @name XV.ScreenCarousel
     @class
     @deprecated
-    @name XV.ScreenCarousel
+	@extends enyo.Panels
    */
   enyo.kind(/** @lends XV.ScreenCarousel# */{
     name: "XV.ScreenCarousel",

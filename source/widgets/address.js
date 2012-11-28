@@ -5,9 +5,12 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   /**
-    @class
     @name XV.AddressWidget
-    @extends FittableRows
+    @class Contains a set of fittable rows made up of
+    controls for inputting and viewing addresses,
+    including the popup for adding or editing them.<br />
+    Derived from <a href="http://enyojs.com/api/#enyo.FittableRows">enyo.FittableRows</a>. 
+    @extends enyo.FittableRows
    */
   enyo.kind(/** @lends XV.AddressWidget# */{
     name: "XV.AddressWidget",

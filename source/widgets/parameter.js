@@ -6,9 +6,11 @@ white:true*/
 (function () {
 
   /**
-    @class A particular widget filter contained in a {@link XV.ParameterWidget}.
     @name XV.ParameterItem
-    @see XV.ParameterWidget
+    @class An input control for the Advanced Search feature 
+    in which the user specifies one or more search parameters.<br />
+    Represents one search parameter.
+    A component of {@link XV.ParameterWidget}.
    */
   enyo.kind(/** @lends XV.ParameterItem# */{
     name: "XV.ParameterItem",
@@ -92,11 +94,12 @@ white:true*/
   });
 
   /**
-    @class The panel of the advanced search feature.
     @name XV.ParameterWidget
+    @class Contains a set of fittable rows to implement the Advanced Search feature.<br />
+    Each row is a {@link XV.ParameterItem} and represents a parameter on which 
+    the user can narrow the search results.<br />
+    Derived from <a href="http://enyojs.com/api/#enyo.FittableRows">enyo.FittableRows</a>. 
     @extends enyo.FittableRows
-    @extends XV.ExtensionsMixin
-    @see XV.ParameterItem
   */
   var parameterWidgetHash = {
     name: "XV.ParameterWidget",
@@ -227,12 +230,12 @@ white:true*/
     },
     /**
       Retrieves parameter values. By default returns values as human readable
-      strings. Boolean options are:
-        * name - If true returns the parameter item control name, otherwise returns the label.
-        * value - If true returns the control value, other wise returns a human readable string.
-        * deltaDate - If true returns as string for the date difference for date widgets. (i.e. "+5").
+      strings. Boolean options are:<br />
+        &#42; name - If true returns the parameter item control name, otherwise returns the label.<br />
+        &#42; value - If true returns the control value, other wise returns a human readable string.<br />
+        &#42; deltaDate - If true returns as string for the date difference for date widgets. (i.e. "+5").
       @param {Object} options
-    */
+     */
     getSelectedValues: function (options) {
       options = options || {};
       var values = {},

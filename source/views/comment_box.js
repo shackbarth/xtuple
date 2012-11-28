@@ -6,9 +6,11 @@ white:true*/
 (function () {
   
   /**
-    @class Comment type picker.
     @name XV.CommentTypePicker
-    @see XV.CommentBox
+    @class A picker control used for selecting from the menu of comment types
+      in a comment box.<br />
+    A component of {@link XV.CommentBoxItem}.
+    @extends XV.PickerWidget
    */
   enyo.kind(/** @lends XV.CommentTypePicker# */{
     name: "XV.CommentTypePicker",
@@ -21,9 +23,8 @@ white:true*/
   });
 
   /**
-    @class Represents an individual comment within the comment box.
     @name XV.CommentBoxItem
-    @see XV.CommentBox
+    @class Represents an individual comment within an {@link XV.CommentBox}.
    */
   enyo.kind(/** @lends XV.CommentBoxItem# */{
     name: "XV.CommentBoxItem",
@@ -196,9 +197,15 @@ white:true*/
   });
 
   /**
-    @class The comment box contains and manages multiple comments, represented as CommentBoxItems
     @name XV.CommentBox
-    @see XV.CommentBoxItem
+    @class Provides a container in which its components are a vertically stacked group
+    of horizontal rows.<br />
+	Made up of a header (which contains the title), 
+	a scroller (a scrolling list of comment box items), 
+	and navigation buttons (such as New, Attach, Detach, Open).<br />
+	Use to implement a comment box that contains and manages multiple comments, 
+	represented as {@link XV.CommentBoxItem}s.
+	@extends XV.Groupbox
    */
   enyo.kind(/** @lends XV.CommentBox# */{
     name: "XV.CommentBox",

@@ -5,10 +5,12 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   /**
-    @class
     @name XV.Date
-    @extends XV.Input
-    @see XV.DateWidget
+	@class An input control used to specify a date.<br />
+	Reformats and sets a date entered either as a date type or a string.
+	If a string is not a recognizable date, sets the input to null.<br />
+	The superkind of {@link XV.DateWidget}.
+	@extends XV.Input
    */
   enyo.kind(/** @lends XV.Date# */{
     name: "XV.Date",
@@ -22,7 +24,7 @@ regexp:true, undef:true, trailing:true, white:true */
     /**
       Sets the value of date programatically.
 
-      @param {Date | String} Can be Date or String. However, if it's a string that doesn't
+      @param {Date|String} value Can be Date or String. However, if it's a string that doesn't
         look like a date, then it will be set to null.
       @param {Object} options
      */
@@ -130,8 +132,11 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   /**
-    @class
     @name XV.DateWidget
+    @class An input control consisting of fittable columns.<br />
+    Use to implement a styled input field for entering a date
+    including associated popup menu for selecting a date.<br />
+	Creates an HTML input element.
     @extends XV.Date
    */
   enyo.kind(/** @lends XV.DateWidget# */{
