@@ -46,18 +46,26 @@ trailing:true white:true*/
         {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
           {kind: "onyx.Button", name: "backButton", content: "_logout".loc(),
             ontap: "backTapped"},
-          {kind: "Group", name: "iconButtonGroup",
-            defaultKind: "onyx.IconButton", tag: null, components: [
-            {name: "historyIconButton",
-              src: "lib/enyo-x/assets/menu-icon-bookmark.png",
-              ontap: "showHistory"},
-            {name: "searchIconButton",
-              src: "lib/enyo-x/assets/menu-icon-search.png",
-              ontap: "showParameters", showing: false}
+          {kind: "Group", name: "iconButtonGroup", tag: null, components: [
+						{kind: "onyx.TooltipDecorator", style: "margin: 0;", components: [
+		        	{kind: "onyx.IconButton", name: "historyIconButton",
+	              src: "lib/enyo-x/assets/menu-icon-bookmark.png",
+	              ontap: "showHistory"},
+			        {kind: "onyx.Tooltip", content: "History"},
+		      	]},	
+						{kind: "onyx.TooltipDecorator", style: "margin: 0;", components: [
+		        	{kind: "onyx.IconButton", name: "searchIconButton",
+		             src: "lib/enyo-x/assets/menu-icon-search.png",
+		             ontap: "showParameters", showing: false},
+			        {kind: "onyx.Tooltip", content: "Search"},
+		      	]}
           ]},
           {kind: "onyx.MenuDecorator", onSelect: "actionSelected", components: [
-            {kind: "onyx.IconButton", src: "lib/enyo-x/assets/menu-icon-gear.png",
-             style: "margin-top: 0px; max-height: 24px;"},
+						{kind: "onyx.TooltipDecorator", style: "margin: 0;", components: [
+			        {kind: "onyx.IconButton", src: "lib/enyo-x/assets/menu-icon-gear.png",
+	             style: "margin-top: 0px; max-height: 24px;"},
+			        {kind: "onyx.Tooltip", content: "Actions"},
+			      ]},
             {kind: "onyx.Menu", components: [
               {name: "exportItem", content: "_export".loc(), showing: false},
               {name: "myAccountItem", content: "_myAccount".loc()},
