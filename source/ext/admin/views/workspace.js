@@ -21,12 +21,28 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "id"},
-            {kind: "onyx.Button", name: "resetPasswordButton", content: "_resetPassword".loc(), ontap: "resetPassword", showing: false}
+            {kind: "onyx.Popup", name: "resetPasswordPopup", centered: true,
+              modal: true, floating: true, scrim: true, components: [
+              {content: "_resetPasswordConfirmation".loc() },
+              {tag: "br"},
+              {kind: "onyx.Button", content: "_ok".loc(), ontap: "resetPassword",
+                classes: "xv-popup-button"},
+              {kind: "onyx.Button", content: "_cancel".loc(),
+                ontap: "closeResetPasswordPopup",
+                classes: "onyx-blue xv-popup-button"}
+            ]},
+            {kind: "onyx.Button", name: "resetPasswordButton", content: "_resetPassword".loc(), ontap: "warnResetPassword", showing: false}
           ]}
         ]},
         {kind: "XV.UserOrganizationsBox", attr: "organizations"}
       ]}
     ],
+    /**
+      Called if the user does not really want to reset the password. Just closes the popup.
+     */
+    closeResetPasswordPopup: function () {
+      this.$.resetPasswordPopup.hide();
+    },
     model: "XM.User",
     resetPassword: function (inSender, inEvent) {
       var that = this,
@@ -40,6 +56,8 @@ trailing:true white:true*/
           },
           databaseType: "global"
         };
+
+      this.$.resetPasswordPopup.hide();
       XT.dataSource.resetPassword(this.getValue().id, options);
     },
     /**
@@ -74,7 +92,13 @@ trailing:true white:true*/
       if (status === XM.Model.READY_CLEAN) {
         this.$.resetPasswordButton.setShowing(true);
       }
-    }
+    },
+    /**
+      Pops up the reset password popup to verify that we really want to reset a password.
+     */
+    warnResetPassword: function () {
+      this.$.resetPasswordPopup.show();
+    },
   });
 
   XV.registerModelWorkspace("XM.User", "XV.UserWorkspace");

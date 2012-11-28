@@ -28,6 +28,7 @@ var lang = XT.stringsFor("en_US", {
   "_user": "User",
   "_users": "Users",
   "_id": "ID",
-  "_resetPassword": "Reset Password"
+  "_resetPassword": "Reset Password",
+  "_resetPasswordConfirmation": "Are you sure you want to reset this password?"
 
 });
