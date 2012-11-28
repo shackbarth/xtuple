@@ -97,9 +97,9 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.InputWidget", attr: "hostname"},
-            {kind: "XV.NumberWidget", attr: "port"}, // TODO: number formatting with a comma looks funny here
+            {kind: "XV.NumberWidget", attr: "port"},
             {kind: "XV.InputWidget", attr: "location"},
-            {kind: "XV.DateWidget", attr: "dateAdded"}, // TODO: should not be editable
+            {kind: "XV.DateWidget", attr: "dateAdded"},
             {kind: "XV.InputWidget", attr: "user"},
             {kind: "XV.InputWidget", attr: "password", type: "password"}
           ]}
