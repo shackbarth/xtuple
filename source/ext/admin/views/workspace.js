@@ -47,9 +47,10 @@ trailing:true white:true*/
     resetPassword: function (inSender, inEvent) {
       var that = this,
         options = {
-          success: function (model, result) {
+          success: function (result) {
             // TODO: application-wide messaging?!
-            alert("An e-mail with the new password has been sent to " + that.getValue().id);
+            //alert("An e-mail with the new password has been sent to " + that.getValue().id);
+            alert("The password for " + that.getValue().id + " has been set to " + result.password);
           },
           error: function (error) {
             alert("Password reset fail");
@@ -57,7 +58,9 @@ trailing:true white:true*/
           databaseType: "global"
         };
 
-      this.$.resetPasswordPopup.hide();
+      if (this.$.resetPasswordPopup) {
+        this.$.resetPasswordPopup.hide();
+      }
       XT.dataSource.resetPassword(this.getValue().id, options);
     },
     /**
