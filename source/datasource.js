@@ -8,7 +8,7 @@ white:true*/
 
   /**
     @class
-    
+
     A place holder class that provides an API for models to attach to a datasource.
     The functions have no code and need to be developed for a real implementation.
   */
@@ -61,8 +61,19 @@ white:true*/
     /** @private */
     dispatch: function (name, func, params, options) {
       // Your code here
+    },
+
+    /*
+    Dispatch a server side function call to the datasource.
+
+    @param {String} id The global user ID whose password we want to reset
+    @param {Function} options.success callback
+    @param {Function} options.error callback
+    */
+    /** @private */
+    resetPassword: function (id, options) {
+      // Your code here
     }
-    
   };
 
 }());
