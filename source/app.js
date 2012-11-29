@@ -7,10 +7,11 @@ white:true*/
 
   var UNINITIALIZED = 0;
   var LOADING_SESSION = 1;
-  var LOADING_EXTENSIONS = 2;
-  var LOADING_SCHEMA = 3;
-  var LOADING_APP_DATA = 4;
-  var RUNNING = 5;
+  var DOWNLOADING_EXTENSIONS = 2;
+  var LOADING_EXTENSIONS = 3;
+  var LOADING_SCHEMA = 4;
+  var LOADING_APP_DATA = 5;
+  var RUNNING = 6;
 
   enyo.kind({
     name: "App",
@@ -107,6 +108,15 @@ white:true*/
       inEvent.eventName = "onWorkspace";
       this.waterfall("onWorkspace", inEvent);
     },
+    processExtensionResponse: function (inSender, inResponse) {
+        // do something with it
+        console.log(inResponse);
+        eval(inResponse); // MWA HA HA HA
+        this.startupProcess();
+    },
+    processExtensionError: function (inSender, inResponse) {
+        alert("Error!");
+    },
     startupProcess: function () {
       var startupManager = XT.getStartupManager(),
         progressBar = XT.app.$.postbooks.getStartupProgressBar(),
@@ -132,10 +142,23 @@ white:true*/
           startupManager.get('completed').length;
         progressBar.setMax(len);
 
-      // 2: Initialize extensions
+      // 2: Download extensions
       } else if (this.state === LOADING_SESSION) {
-        // Treating this like other progressive actions because we assume
-        // in the future extensions will be loaded from the server
+        this.state = DOWNLOADING_EXTENSIONS;
+
+        var ajax = new enyo.Ajax({
+            url: "/public-extensions/builds/project.js"
+        });
+        // send parameters the remote service using the 'go()' method
+        ajax.go();
+        // attach responders to the transaction object
+        ajax.response(this, "processExtensionResponse");
+        // handle error
+        ajax.error(this, "processExtensionError");
+
+      // 3: Initialize extensions
+      } else if (this.state === DOWNLOADING_EXTENSIONS) {
+
         this.state = LOADING_EXTENSIONS;
         text = "_loadingExtensions".loc() + "...";
         XT.app.$.postbooks.getStartupText().setContent(text);
@@ -154,7 +177,7 @@ white:true*/
         }
         this.startupProcess();
 
-      // 3. Load Schema
+      // 4. Load Schema
       } else if (this.state === LOADING_EXTENSIONS) {
         this.state = LOADING_SCHEMA;
         text = "_loadingSchema".loc() + "...";
@@ -173,7 +196,7 @@ white:true*/
           }
         });
 
-      // 4 Load Application Data
+      // 5 Load Application Data
       } else if (this.state === LOADING_SCHEMA) {
         // Run startup tasks
         this.state = LOADING_APP_DATA;
@@ -186,7 +209,7 @@ white:true*/
           XT.StartupTask.create(task);
         }
 
-      // 5. Finish up
+      // 6. Finish up
       } else if (this.state === LOADING_APP_DATA) {
         // Go to the navigator
         this.state = RUNNING;
