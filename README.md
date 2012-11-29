@@ -1,4 +1,4 @@
-public-extensions
+Public extensions
 =================
 
-Public Extensions for xTuple Postbooks
+To build all the public extensions for xTuple Postbooks, run the ./buildExtensions.sh script.
