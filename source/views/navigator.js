@@ -99,26 +99,26 @@ trailing:true white:true*/
       {kind: "FittableRows", components: [
 				// the onyx-menu-toolbar class keeps the popups from being hidden
 	      {kind: "onyx.MoreToolbar", name: "contentToolbar", 
-				classes: "onyx-menu-toolbar", movedClass: "xv-toolbar-moved",
-				components: [
-	        {kind: "onyx.Grabber"}, 
-	        {name: "rightLabel", style: "width: 100px"},
-				// The MoreToolbar is a FittableColumnsLayout, so this spacer takes up all available space
-				{name: "spacer", content: "", fit: true},
-        {name: "newButton", kind: "XV.IconButton",
-	      	src: "lib/enyo-x/assets/menu-icon-new.png", content: "New",
-	        ontap: "newRecord", showing: false},
-        {name: "refreshButton", kind: "XV.IconButton",
-	        src: "lib/enyo-x/assets/menu-icon-refresh.png", content: "Refresh",
-	        ontap: "requery", showing: false},
-        {name: "search", kind: "onyx.InputDecorator", 
-          showing: false, components: [
-        	{name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
-             placeholder: "_search".loc(), onchange: "inputChanged"},
-          {kind: "Image", src: "lib/enyo-x/assets/search-input-search.png",
-             name: "searchJump", ontap: "jump"}
-        	]}
-	      ]},
+					classes: "onyx-menu-toolbar", movedClass: "xv-toolbar-moved",
+					components: [
+		        {kind: "onyx.Grabber"}, 
+		        {name: "rightLabel", style: "width: 100px"},
+					// The MoreToolbar is a FittableColumnsLayout, so this spacer takes up all available space
+					{name: "spacer", content: "", fit: true},
+	        {name: "newButton", kind: "XV.IconButton",
+		      	src: "lib/enyo-x/assets/menu-icon-new.png", content: "New",
+		        ontap: "newRecord", showing: false},
+	        {name: "refreshButton", kind: "XV.IconButton",
+		        src: "lib/enyo-x/assets/menu-icon-refresh.png", content: "Refresh",
+		        ontap: "requery", showing: false},
+	        {name: "search", kind: "onyx.InputDecorator", 
+	          showing: false, components: [
+	        	{name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
+	             placeholder: "_search".loc(), onchange: "inputChanged"},
+	          {kind: "Image", src: "lib/enyo-x/assets/search-input-search.png",
+	             name: "searchJump", ontap: "jump"}
+	        	]}
+		      ]},
         {name: "header", content: "", classes: "xv-navigator-header"},
         {name: "contentPanels", kind: "Panels", margin: 0, fit: true,
           draggable: false, panelCount: 0},
