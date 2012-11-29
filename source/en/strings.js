@@ -22,6 +22,7 @@ var lang = XT.stringsFor("en_US", {
   "_abbreviationLong": "Abbreviation Long",
   "_abbreviationShort": "Abbreviation Short",
   "_account": "Account",
+  "_accounting": "Accounting",
   "_accountNumber": "Account Number",
   "_accountNumberGeneration": "Account Number Generation",
   "_accountType": "Account Type",
@@ -82,6 +83,7 @@ var lang = XT.stringsFor("en_US", {
   "_countries": "Countries",
   "_created": "Created",
   "_createdBy": "Created By",
+  "_crm": "CRM",
   "_currencies": "Currencies",
   "_currency": "Currency",
   "_currencyAbbreviation": "Currency Abbreviation",
@@ -264,6 +266,7 @@ var lang = XT.stringsFor("en_US", {
   "_probability": "Probability",
   "_productCategories": "Product Categories",
   "_productCategory": "Product Category",
+  "_products": "Products",
   "_project": "Project",
   "_projectAssignedTo": "Project Assigned To",
   "_projectOwner": "Project Owner",
@@ -357,10 +360,12 @@ var lang = XT.stringsFor("en_US", {
   // ********
 
   "_exitPageWarning": "You are about to leave the xTuple application.",
+  "_invalidPassword": "Entry does not match your old password. Please re-enter.",
   "_loadingApplicationData": "Loading Application Data",
   "_loadingExtensions": "Loading Extensions",
   "_loadingSchema": "Loading Schema",
   "_loadingSessionData": "Loading Session Data",
+  "_newPassword": "New Password",
   "_noAccountName": "No Account Name",
   "_noAddress": "No Address",
   "_noCategory": "No Category",
@@ -370,6 +375,7 @@ var lang = XT.stringsFor("en_US", {
   "_noJobTitle": "No Job Title",
   "_noName": "No Name",
   "_noNumber": "No Number",
+  "_noOldPassword": "Please enter your old password",
   "_noPhone": "No Phone",
   "_noPriority": "No Priority",
   "_noSalesRep": "No Sales Rep",
@@ -377,6 +383,9 @@ var lang = XT.stringsFor("en_US", {
   "_noStage": "No Stage",
   "_noTerms": "No Terms",
   "_noType": "No Type",
+  "_oldPassword": "Old Password",
+  "_passwordMismatch": "Passwords don't match",
+  "_passwordNotSix": "Passwords must be at least 6 digits",
 
   // ********
   // Permissions
