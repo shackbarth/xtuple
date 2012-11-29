@@ -75,6 +75,7 @@
 \i xtbatch/tables/batch.sql
 
 -- public
+\i public/functions/geteffectivextuser.sql
 \i public/tables/comment.sql
 \i public/tables/grp.sql;
 \i public/tables/grppriv.sql;
