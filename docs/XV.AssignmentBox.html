@@ -34,7 +34,8 @@
     
         <div class="class-description">An assignment box is a groupbox that manages the assignment of a set of
    available options to an object. For example, setting up the privileges that
-   are associated with a role.</div>
+   are associated with a role.<br />
+   Derived from <a href="http://enyojs.com/api/#enyo.Scroller">enyo.Scroller</a>.</div>
     
 </header>  
 
@@ -108,7 +109,7 @@
         <h3 class="subsection-title">Extends</h3>
         
         <ul>
-            <li><a href="XV.ScrollableGroupbox.html">XV.ScrollableGroupbox</a></li>
+            <li>enyo.Scroller</li>
         </ul>
     
     
@@ -302,32 +303,11 @@
             
             
             
-            <td class="description last">We allow the assignable checkboxes to be grouped by segment, such as module.
+            <td class="description last">We allow the assignable checkboxes to be grouped by segment.
    If this array is length one then there is no segmentation, and the one value
-   of the array becomes the header of the box.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>title</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Used by the workspace to title the menu item for the box.</td>
+   of the array becomes the header of the box. If the array is length zero then
+   we dynamically generate the segments based on the incoming data. It must be
+   overridden by the implementation to be something other than null, though.</td>
         </tr>
 	
 	
@@ -449,7 +429,7 @@ segmentedCollections.</td>
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 70</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 71</li></ul></dd>
 	
     
     
@@ -513,7 +493,7 @@ This method should be overriden by the subkind if applicable.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 99</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 96</li></ul></dd>
 	
     
     
@@ -576,7 +556,7 @@ This method should be overriden by the subkind if applicable.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 104</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 101</li></ul></dd>
 	
     
     
@@ -639,7 +619,7 @@ This method should be overriden by the subkind if applicable.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 110</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 107</li></ul></dd>
 	
     
     
@@ -703,7 +683,7 @@ and calls for the totalCollection to be segmentized.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 157</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 154</li></ul></dd>
 	
     
     
@@ -767,7 +747,7 @@ We rely on the subkinds to override this function, as implemetations are varied.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 191</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 177</li></ul></dd>
 	
     
     
@@ -830,7 +810,7 @@ We rely on the subkinds to override this function, as implemetations are varied.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 198</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 184</li></ul></dd>
 	
     
     
@@ -893,7 +873,7 @@ We rely on the subkinds to override this function, as implemetations are varied.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 251</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 248</li></ul></dd>
 	
     
     
@@ -957,7 +937,7 @@ the checkboxRepeater.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 221</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 207</li></ul></dd>
 	
     
     
@@ -1021,7 +1001,7 @@ create this box. All logic and rendering flows from here.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 273</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 270</li></ul></dd>
 	
     
     
@@ -1087,7 +1067,7 @@ which is why we have to check and only execute when both are done.
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 318</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>assignment_box.js, line 327</li></ul></dd>
 	
     
     
@@ -1123,13 +1103,13 @@ which is why we have to check and only execute when both are done.
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="XV.html">XV</a></li><li><a href="XV.AddressWidget.html">AddressWidget</a></li><li><a href="XV.AssignmentBox.html">AssignmentBox</a></li><li><a href="XV.CharacteristicItem.html">CharacteristicItem</a></li><li><a href="XV.CharacteristicPicker.html">CharacteristicPicker</a></li><li><a href="XV.CharacteristicsWidget.html">CharacteristicsWidget</a></li><li><a href="XV.Checkbox.html">Checkbox</a></li><li><a href="XV.CheckboxWidget.html">CheckboxWidget</a></li><li><a href="XV.Combobox.html">Combobox</a></li><li><a href="XV.CommentBox.html">CommentBox</a></li><li><a href="XV.CommentBoxItem.html">CommentBoxItem</a></li><li><a href="XV.CommentTypePicker.html">CommentTypePicker</a></li><li><a href="XV.Completer.html">Completer</a></li><li><a href="XV.CountryCombobox.html">CountryCombobox</a></li><li><a href="XV.Date.html">Date</a></li><li><a href="XV.DateWidget.html">DateWidget</a></li><li><a href="XV.DocumentListRelations.html">DocumentListRelations</a></li><li><a href="XV.DocumentsBox.html">DocumentsBox</a></li><li><a href="XV.EditorMixin.html">EditorMixin</a></li><li><a href="XV.ExtensionsMixin.html">ExtensionsMixin</a></li><li><a href="XV.FileInput.html">FileInput</a></li><li><a href="XV.Groupbox.html">Groupbox</a></li><li><a href="XV.Input.html">Input</a></li><li><a href="XV.InputWidget.html">InputWidget</a></li><li><a href="XV.List.html">List</a></li><li><a href="XV.ListAttr.html">ListAttr</a></li><li><a href="XV.ListColumn.html">ListColumn</a></li><li><a href="XV.ListItem.html">ListItem</a></li><li><a href="XV.ListRelations.html">ListRelations</a></li><li><a href="XV.ListRelationsBox.html">ListRelationsBox</a></li><li><a href="XV.ListRelationsEditorBox.html">ListRelationsEditorBox</a></li><li><a href="XV.MenuItem.html">MenuItem</a></li><li><a href="XV.Navigator.html">Navigator</a></li><li><a href="XV.Number.html">Number</a></li><li><a href="XV.NumberWidget.html">NumberWidget</a></li><li><a href="XV.OptionsPicker.html">OptionsPicker</a></li><li><a href="XV.ParameterItem.html">ParameterItem</a></li><li><a href="XV.ParameterWidget.html">ParameterWidget</a></li><li><a href="XV.PickerWidget.html">PickerWidget</a></li><li><a href="XV.RelationsEditor.html">RelationsEditor</a></li><li><a href="XV.RelationWidget.html">RelationWidget</a></li><li><a href="XV.ScreenCarousel.html">ScreenCarousel</a></li><li><a href="XV.ScrollableGroupbox.html">ScrollableGroupbox</a></li><li><a href="XV.Scroller.html">Scroller</a></li><li><a href="XV.SearchContainer.html">SearchContainer</a></li><li><a href="XV.StateCombobox.html">StateCombobox</a></li><li><a href="XV.TextArea.html">TextArea</a></li><li><a href="XV.ToggleButton.html">ToggleButton</a></li><li><a href="XV.ToggleButtonWidget.html">ToggleButtonWidget</a></li><li><a href="XV.Workspace.html">Workspace</a></li><li><a href="XV.WorkspaceContainer.html">WorkspaceContainer</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="XV.html">XV</a></li><li><a href="XV.AddressWidget.html">AddressWidget</a></li><li><a href="XV.AssignmentBox.html">AssignmentBox</a></li><li><a href="XV.CharacteristicItem.html">CharacteristicItem</a></li><li><a href="XV.CharacteristicPicker.html">CharacteristicPicker</a></li><li><a href="XV.CharacteristicsWidget.html">CharacteristicsWidget</a></li><li><a href="XV.Checkbox.html">Checkbox</a></li><li><a href="XV.CheckboxWidget.html">CheckboxWidget</a></li><li><a href="XV.Combobox.html">Combobox</a></li><li><a href="XV.CommentBox.html">CommentBox</a></li><li><a href="XV.CommentBoxItem.html">CommentBoxItem</a></li><li><a href="XV.CommentTypePicker.html">CommentTypePicker</a></li><li><a href="XV.Completer.html">Completer</a></li><li><a href="XV.CountryCombobox.html">CountryCombobox</a></li><li><a href="XV.Date.html">Date</a></li><li><a href="XV.DateWidget.html">DateWidget</a></li><li><a href="XV.DocumentListRelations.html">DocumentListRelations</a></li><li><a href="XV.DocumentsBox.html">DocumentsBox</a></li><li><a href="XV.EditorMixin.html">EditorMixin</a></li><li><a href="XV.ExtensionsMixin.html">ExtensionsMixin</a></li><li><a href="XV.FileInput.html">FileInput</a></li><li><a href="XV.Groupbox.html">Groupbox</a></li><li><a href="XV.Input.html">Input</a></li><li><a href="XV.InputWidget.html">InputWidget</a></li><li><a href="XV.List.html">List</a></li><li><a href="XV.ListAttr.html">ListAttr</a></li><li><a href="XV.ListColumn.html">ListColumn</a></li><li><a href="XV.ListItem.html">ListItem</a></li><li><a href="XV.ListRelations.html">ListRelations</a></li><li><a href="XV.ListRelationsBox.html">ListRelationsBox</a></li><li><a href="XV.ListRelationsEditorBox.html">ListRelationsEditorBox</a></li><li><a href="XV.MenuItem.html">MenuItem</a></li><li><a href="XV.Navigator.html">Navigator</a></li><li><a href="XV.Number.html">Number</a></li><li><a href="XV.NumberWidget.html">NumberWidget</a></li><li><a href="XV.OptionsPicker.html">OptionsPicker</a></li><li><a href="XV.ParameterItem.html">ParameterItem</a></li><li><a href="XV.ParameterWidget.html">ParameterWidget</a></li><li><a href="XV.PickerWidget.html">PickerWidget</a></li><li><a href="XV.RelationsEditor.html">RelationsEditor</a></li><li><a href="XV.RelationWidget.html">RelationWidget</a></li><li><a href="XV.ScreenCarousel.html">ScreenCarousel</a></li><li><a href="XV.ScrollableGroupbox.html">ScrollableGroupbox</a></li><li><a href="XV.Scroller.html">Scroller</a></li><li><a href="XV.SearchContainer.html">SearchContainer</a></li><li><a href="XV.StateCombobox.html">StateCombobox</a></li><li><a href="XV.TextArea.html">TextArea</a></li><li><a href="XV.ToggleButton.html">ToggleButton</a></li><li><a href="XV.ToggleButtonWidget.html">ToggleButtonWidget</a></li><li><a href="XV.Workspace.html">Workspace</a></li><li><a href="XV.WorkspaceContainer.html">WorkspaceContainer</a></li></ul><h3>Global</h3><ul><li><a href="global.html#destroy">destroy</a></li><li><a href="global.html#setValue">setValue</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Wed Nov 14 2012 20:55:29 GMT-0600 (CST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Tue Nov 27 2012 20:13:45 GMT-0600 (CST)
 </footer>
 
 <script> prettyPrint(); </script>

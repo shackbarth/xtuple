@@ -5,9 +5,11 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   /**
-    @class Widget for managing the upload of files. Powered by an html <code>input type=file</code> tag,
-    with some HTML5 functionality.
     @name XV.FileInput
+    @class An input control for managing the upload of files.<br />
+    Creates a file-type HTML input element,
+      with some HTML5 functionality.
+    @extends XV.Input
    */
   enyo.kind(/** @lends XV.FileInput# */{
     name: "XV.FileInput",

@@ -32,7 +32,14 @@
     Navigator
     </h2>
     
-        <div class="class-description">High-level container of all business object lists.</div>
+        <div class="class-description">Contains a set of panels for navigating the app and modules within the app.<br />
+    Navigation within the app is accomplished by elements within the menu tool bar, such as history, search, the back button or logout.<br />
+	Navigation within modules in the app is accomplished with a list within the panel menu which displays the menu items for each context.<br /> 
+	The root menu (module menu) contains the list of modules and the logout.<br />
+	Only three menus are cached at one time.<br />	
+	Layout: Collapsing Arranger.<br />
+    Use to implement the high-level container of all business object lists.<br />
+    Derived from <a href="http://enyojs.com/api/#enyo.Panels">enyo.Panels</a>.</div>
     
 </header>  
 
@@ -103,6 +110,12 @@
     </div>
     
     
+        <h3 class="subsection-title">Extends</h3>
+        
+        <ul>
+            <li>enyo.Panels</li>
+        </ul>
+    
     
     
     
@@ -152,7 +165,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 120</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 137</li></ul></dd>
 	
     
     
@@ -228,7 +241,7 @@
             
             <td class="description last">A DOM-free representation of all of the modules
          contained in the navigator. The details of these module objects will
-         inform the creation of the panel compontents.</td>
+         inform the creation of the panel components.</td>
         </tr>
 	
 	
@@ -279,7 +292,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 29</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 37</li></ul></dd>
 	
     
     
@@ -343,7 +356,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 128</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 156</li></ul></dd>
 	
     
     
@@ -407,7 +420,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 141</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 169</li></ul></dd>
 	
     
     
@@ -470,7 +483,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 175</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 203</li></ul></dd>
 	
     
     
@@ -502,7 +515,8 @@
     
     <div class="description">
         Exports the contents of a list to CSV. Note that it will export the entire
-      list, not just the part that's been lazy-loaded. Goes to the server for this.
+      list, not just the part that's been lazy-loaded. Of course, it will apply
+      the filter criteria as selected. Goes to the server for this.
       Avoids websockets or AJAX because the server will prompt the browser to download
       the file by setting the Content-Type of the response, which is not possible with
       those technologies.
@@ -537,7 +551,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 188</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 217</li></ul></dd>
 	
     
     
@@ -600,7 +614,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 201</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 232</li></ul></dd>
 	
     
     
@@ -663,7 +677,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 280</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 311</li></ul></dd>
 	
     
     
@@ -726,7 +740,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 345</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 376</li></ul></dd>
 	
     
     
@@ -789,7 +803,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 352</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 383</li></ul></dd>
 	
     
     
@@ -853,7 +867,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 410</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 441</li></ul></dd>
 	
     
     
@@ -917,7 +931,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 443</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 474</li></ul></dd>
 	
     
     
@@ -981,7 +995,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 457</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 488</li></ul></dd>
 	
     
     
@@ -1044,7 +1058,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 548</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 584</li></ul></dd>
 	
     
     
@@ -1107,7 +1121,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 581</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 617</li></ul></dd>
 	
     
     
@@ -1171,7 +1185,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 593</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 629</li></ul></dd>
 	
     
     
@@ -1234,7 +1248,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 627</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 663</li></ul></dd>
 	
     
     
@@ -1297,7 +1311,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 641</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 677</li></ul></dd>
 	
     
     
@@ -1360,7 +1374,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 634</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 670</li></ul></dd>
 	
     
     
@@ -1423,7 +1437,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 647</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>navigator.js, line 683</li></ul></dd>
 	
     
     
@@ -1459,13 +1473,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="XV.html">XV</a></li><li><a href="XV.AddressWidget.html">AddressWidget</a></li><li><a href="XV.AssignmentBox.html">AssignmentBox</a></li><li><a href="XV.CharacteristicItem.html">CharacteristicItem</a></li><li><a href="XV.CharacteristicPicker.html">CharacteristicPicker</a></li><li><a href="XV.CharacteristicsWidget.html">CharacteristicsWidget</a></li><li><a href="XV.Checkbox.html">Checkbox</a></li><li><a href="XV.CheckboxWidget.html">CheckboxWidget</a></li><li><a href="XV.Combobox.html">Combobox</a></li><li><a href="XV.CommentBox.html">CommentBox</a></li><li><a href="XV.CommentBoxItem.html">CommentBoxItem</a></li><li><a href="XV.CommentTypePicker.html">CommentTypePicker</a></li><li><a href="XV.Completer.html">Completer</a></li><li><a href="XV.CountryCombobox.html">CountryCombobox</a></li><li><a href="XV.Date.html">Date</a></li><li><a href="XV.DateWidget.html">DateWidget</a></li><li><a href="XV.DocumentListRelations.html">DocumentListRelations</a></li><li><a href="XV.DocumentsBox.html">DocumentsBox</a></li><li><a href="XV.EditorMixin.html">EditorMixin</a></li><li><a href="XV.ExtensionsMixin.html">ExtensionsMixin</a></li><li><a href="XV.FileInput.html">FileInput</a></li><li><a href="XV.Groupbox.html">Groupbox</a></li><li><a href="XV.Input.html">Input</a></li><li><a href="XV.InputWidget.html">InputWidget</a></li><li><a href="XV.List.html">List</a></li><li><a href="XV.ListAttr.html">ListAttr</a></li><li><a href="XV.ListColumn.html">ListColumn</a></li><li><a href="XV.ListItem.html">ListItem</a></li><li><a href="XV.ListRelations.html">ListRelations</a></li><li><a href="XV.ListRelationsBox.html">ListRelationsBox</a></li><li><a href="XV.ListRelationsEditorBox.html">ListRelationsEditorBox</a></li><li><a href="XV.MenuItem.html">MenuItem</a></li><li><a href="XV.Navigator.html">Navigator</a></li><li><a href="XV.Number.html">Number</a></li><li><a href="XV.NumberWidget.html">NumberWidget</a></li><li><a href="XV.OptionsPicker.html">OptionsPicker</a></li><li><a href="XV.ParameterItem.html">ParameterItem</a></li><li><a href="XV.ParameterWidget.html">ParameterWidget</a></li><li><a href="XV.PickerWidget.html">PickerWidget</a></li><li><a href="XV.RelationsEditor.html">RelationsEditor</a></li><li><a href="XV.RelationWidget.html">RelationWidget</a></li><li><a href="XV.ScreenCarousel.html">ScreenCarousel</a></li><li><a href="XV.ScrollableGroupbox.html">ScrollableGroupbox</a></li><li><a href="XV.Scroller.html">Scroller</a></li><li><a href="XV.SearchContainer.html">SearchContainer</a></li><li><a href="XV.StateCombobox.html">StateCombobox</a></li><li><a href="XV.TextArea.html">TextArea</a></li><li><a href="XV.ToggleButton.html">ToggleButton</a></li><li><a href="XV.ToggleButtonWidget.html">ToggleButtonWidget</a></li><li><a href="XV.Workspace.html">Workspace</a></li><li><a href="XV.WorkspaceContainer.html">WorkspaceContainer</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="XV.html">XV</a></li><li><a href="XV.AddressWidget.html">AddressWidget</a></li><li><a href="XV.AssignmentBox.html">AssignmentBox</a></li><li><a href="XV.CharacteristicItem.html">CharacteristicItem</a></li><li><a href="XV.CharacteristicPicker.html">CharacteristicPicker</a></li><li><a href="XV.CharacteristicsWidget.html">CharacteristicsWidget</a></li><li><a href="XV.Checkbox.html">Checkbox</a></li><li><a href="XV.CheckboxWidget.html">CheckboxWidget</a></li><li><a href="XV.Combobox.html">Combobox</a></li><li><a href="XV.CommentBox.html">CommentBox</a></li><li><a href="XV.CommentBoxItem.html">CommentBoxItem</a></li><li><a href="XV.CommentTypePicker.html">CommentTypePicker</a></li><li><a href="XV.Completer.html">Completer</a></li><li><a href="XV.CountryCombobox.html">CountryCombobox</a></li><li><a href="XV.Date.html">Date</a></li><li><a href="XV.DateWidget.html">DateWidget</a></li><li><a href="XV.DocumentListRelations.html">DocumentListRelations</a></li><li><a href="XV.DocumentsBox.html">DocumentsBox</a></li><li><a href="XV.EditorMixin.html">EditorMixin</a></li><li><a href="XV.ExtensionsMixin.html">ExtensionsMixin</a></li><li><a href="XV.FileInput.html">FileInput</a></li><li><a href="XV.Groupbox.html">Groupbox</a></li><li><a href="XV.Input.html">Input</a></li><li><a href="XV.InputWidget.html">InputWidget</a></li><li><a href="XV.List.html">List</a></li><li><a href="XV.ListAttr.html">ListAttr</a></li><li><a href="XV.ListColumn.html">ListColumn</a></li><li><a href="XV.ListItem.html">ListItem</a></li><li><a href="XV.ListRelations.html">ListRelations</a></li><li><a href="XV.ListRelationsBox.html">ListRelationsBox</a></li><li><a href="XV.ListRelationsEditorBox.html">ListRelationsEditorBox</a></li><li><a href="XV.MenuItem.html">MenuItem</a></li><li><a href="XV.Navigator.html">Navigator</a></li><li><a href="XV.Number.html">Number</a></li><li><a href="XV.NumberWidget.html">NumberWidget</a></li><li><a href="XV.OptionsPicker.html">OptionsPicker</a></li><li><a href="XV.ParameterItem.html">ParameterItem</a></li><li><a href="XV.ParameterWidget.html">ParameterWidget</a></li><li><a href="XV.PickerWidget.html">PickerWidget</a></li><li><a href="XV.RelationsEditor.html">RelationsEditor</a></li><li><a href="XV.RelationWidget.html">RelationWidget</a></li><li><a href="XV.ScreenCarousel.html">ScreenCarousel</a></li><li><a href="XV.ScrollableGroupbox.html">ScrollableGroupbox</a></li><li><a href="XV.Scroller.html">Scroller</a></li><li><a href="XV.SearchContainer.html">SearchContainer</a></li><li><a href="XV.StateCombobox.html">StateCombobox</a></li><li><a href="XV.TextArea.html">TextArea</a></li><li><a href="XV.ToggleButton.html">ToggleButton</a></li><li><a href="XV.ToggleButtonWidget.html">ToggleButtonWidget</a></li><li><a href="XV.Workspace.html">Workspace</a></li><li><a href="XV.WorkspaceContainer.html">WorkspaceContainer</a></li></ul><h3>Global</h3><ul><li><a href="global.html#destroy">destroy</a></li><li><a href="global.html#setValue">setValue</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Wed Nov 14 2012 20:55:30 GMT-0600 (CST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Tue Nov 27 2012 20:13:47 GMT-0600 (CST)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -9,10 +9,9 @@ trailing:true white:true*/
   var SAVE_NEW = 3;
 
   /**
-    @class A mixin that contains functionality common to Workspace and ListRelationsEditorBox.
     @name XV.EditorMixin
-    @see XV.Workspace
-    @see XV.ListRelationsEditorBox
+    @class A mixin that contains functionality common to {@link XV.Workspace}
+     and {@link XV.ListRelationsEditorBox}.
    */
   XV.EditorMixin = {
     controlValueChanged: function (inSender, inEvent) {
@@ -97,13 +96,16 @@ trailing:true white:true*/
   };
 
   /**
-    @class
     @name XV.Workspace
+    @class Contains a set of fittable rows which are laid out
+    using the carousel arranger and fitted to the size of the viewport.<br /> 
+    Its components can be extended via {@link XV.ExtensionsMixin}.<br />
+  	Derived from <a href="http://enyojs.com/api/#enyo.FittableRows">enyo.FittableRows</a>. 
     @extends enyo.FittableRows
     @extends XV.EditorMixin
     @extends XV.ExtensionsMixin
     @see XV.WorkspaceContainer
-  */
+   */
   var workspaceHash = enyo.mixin(XV.EditorMixin, /** @lends XV.Workspace# */{
     name: "XV.Workspace",
     kind: "FittableRows",
@@ -348,9 +350,11 @@ trailing:true white:true*/
   enyo.kind(workspaceHash);
 
   /**
-    @class
     @name XV.WorkspaceContainer
-    @see XV.Workspace
+    @class Contains the navigation and content panels which wrap around a workspace.<br />
+    See also {@link XV.Workspace}.<br />
+    Derived from <a href="http://enyojs.com/api/#enyo.Panels">enyo.Panels</a>. 
+    @extends enyo.Panels
    */
   enyo.kind(/** @lends XV.WorkspaceContainer# */{
     name: "XV.WorkspaceContainer",

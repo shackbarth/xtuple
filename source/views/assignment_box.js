@@ -7,11 +7,12 @@ white:true*/
 (function () {
 
   /**
+   @name XV.AssignmentBox
    @class An assignment box is a groupbox that manages the assignment of a set of
    available options to an object. For example, setting up the privileges that
-   are associated with a role.
-   @name XV.AssignmentBox
-   @extends XV.ScrollableGroupbox
+   are associated with a role.<br />
+   Derived from <a href="http://enyojs.com/api/#enyo.Scroller">enyo.Scroller</a>. 
+   @extends enyo.Scroller
    */
   enyo.kind(/** @lends XV.AssignmentBox# */{
     name: "XV.AssignmentBox",

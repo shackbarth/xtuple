@@ -14,8 +14,9 @@ white:true*/
   var DATE = 2;
 
   /**
-    @class
     @name XV.CharacteristicPicker
+    @class For the {@link XV.CharacteristicsWidget} displays the list of characteristics
+    that the user can select from to classify a {@link XV.CharacteristicItem}.
     @extends XV.PickerWidget
    */
   enyo.kind(/** @lends XV.CharacteristicPicker# */{
@@ -32,9 +33,9 @@ white:true*/
   });
 
   /**
-    @class
     @name XV.OptionsPicker
-  */
+    @class Displays a list of items that can be selected.
+   */
   enyo.kind(/** @lends XV.OptionsPicker# */{
     name: "XV.OptionsPicker",
     published: {
@@ -130,8 +131,13 @@ white:true*/
   });
 
   /**
-    @class
     @name XV.CharacteristicItem
+    @class Contains a set of fittable columns which make up a single row in a list of characteristics
+      for the {@link XV.CharacteristicsWidget}.<br />
+    Components: {@link XV.CharacteristicPicker}, {@link XV.InputWidget}, 
+      {@link XV.DateWidget}, {@link XV.OptionsPicker}.<br />
+    Derived from <a href="http://enyojs.com/api/#enyo.FittableColumns">enyo.FittableColumns</a>. 
+    @extends enyo.FittableColumns
    */
   enyo.kind(/** @lends XV.CharacteristicItem# */{
     name: "XV.CharacteristicItem",
@@ -231,8 +237,11 @@ white:true*/
   });
 
   /**
-    @class
     @name XV.CharacteristicsWidget
+    @class Use to implement a box for entering and viewing characteristics.
+    Made up of a header, a repeater (the control for making the list of characteristic items), 
+      and fittable columns for the navigation buttons.<br />
+    Components: {@link XV.CharacteristicItem}.
    */
   enyo.kind(/** @lends XV.CharacteristicsWidget# */{
     name: "XV.CharacteristicsWidget",

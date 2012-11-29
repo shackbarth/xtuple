@@ -5,10 +5,10 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   /**
-    @class An input field built for dealing with numbers.
     @name XV.Number
+    @class An input control for validating and formatting string input that represent a number.<br />
+    The superkind of {@link XV.NumberWidget}.
     @extends XV.Input
-    @see XV.NumberWidget
    */
   enyo.kind(/** @lends XV.Number# */{
     name: "XV.Number",
@@ -24,12 +24,12 @@ regexp:true, undef:true, trailing:true, white:true */
       XV.Input.prototype.setValue.call(this, value, options);
     },
     /**
-      @class Determines whether the user input is numeric.
+      Determines whether the user input is numeric.
       Validates value, whether set programatically or via user input. Gracefully handles
       commas, periods, etc per the set culture using Globalize.
 
       @param {String} Number (string) to be validated.
-      @return The value if it is valid, otherwise false
+      @return The value if it is valid, otherwise false.
      */
     validate: function (value) {
       value = Globalize.parseFloat(value);
@@ -45,8 +45,9 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   /**
-    @class An input with styled label and decorator built for dealing with numbers.
     @name XV.NumberWidget
+    @class An input control consisting of fittable columns: label, decorator, and input field.<br />
+    Use to implement an input field for strings that represents a number, such as prices.
     @extends XV.Number
    */
   enyo.kind(/** @lends XV.NumberWidget# */{

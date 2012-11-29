@@ -5,11 +5,10 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
 (function () {
 
   /**
-    @class
     @name XV.Combobox
+    @class Creates an HTML input element.<br />
+    The superkind of {@link XV.StateCombobox} and {@link XV.CountryCombobox}.
     @extends XV.Input
-    @see XV.StateCombobox
-    @see XV.CountryCombobox
    */
   enyo.kind(/** @lends XV.Combobox# */{
     name: "XV.Combobox",

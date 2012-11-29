@@ -8,8 +8,16 @@ trailing:true white:true*/
   var PANEL_MENU = 1;
 
   /**
-    @class High-level container of all business object lists.
     @name XV.Navigator
+    @class Contains a set of panels for navigating the app and modules within the app.<br />
+    Navigation within the app is accomplished by elements within the menu tool bar, such as history, search, the back button or logout.<br />
+	Navigation within modules in the app is accomplished with a list within the panel menu which displays the menu items for each context.<br /> 
+	The root menu (module menu) contains the list of modules and the logout.<br />
+	Only three menus are cached at one time.<br />	
+	Layout: Collapsing Arranger.<br />
+    Use to implement the high-level container of all business object lists.<br />
+    Derived from <a href="http://enyojs.com/api/#enyo.Panels">enyo.Panels</a>. 
+    @extends enyo.Panels
    */
   enyo.kind(/** @lends XV.Navigator# */{
     name: "XV.Navigator",

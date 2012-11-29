@@ -6,9 +6,13 @@ white:true*/
 (function () {
 
   /**
-    @class The groupbox holds the widgets in each panel of the workspace.
     @name XV.Groupbox
-    @see XV.ScrollableGroupbox
+    @class Provides a container in which its components are 
+    a vertically stacked column of horizontal rows.<br /> 
+    Includes a header.<br />
+    To implement a groupbox with a scroller, see {@link XV.ScrollableGroupbox}.<br />
+    Derived from <a href="http://enyojs.com/api/#enyo.FittableRows">enyo.FittableRows</a>. 
+    @extends enyo.FittableRows
    */
   enyo.kind(/** @lends XV.Groupbox# */{
     name: "XV.Groupbox",
@@ -20,9 +24,13 @@ white:true*/
   });
 
   /**
-    @class A variant of the groupbox that automatically includes a scroller.
     @name XV.ScrollableGroupbox
-    @see XV.Groupbox
+    @class Provides a container in which its components are 
+    a vertically stacked column of horizontal rows.<br /> 
+    Includes a header and a scroller.<br />
+    To implement a groupbox without a scroller, see {@link XV.Groupbox}.<br />
+    Derived from <a href="http://enyojs.com/api/#enyo.Scroller">enyo.Scroller</a>. 
+    @extends enyo.Scroller
    */
   enyo.kind(/** @lends XV.ScrollableGroupbox# */{
     name: "XV.ScrollableGroupbox",
