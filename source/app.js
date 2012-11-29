@@ -108,15 +108,6 @@ white:true*/
       inEvent.eventName = "onWorkspace";
       this.waterfall("onWorkspace", inEvent);
     },
-    processExtensionResponse: function (inSender, inResponse) {
-        // do something with it
-        console.log(inResponse);
-        eval(inResponse); // MWA HA HA HA
-        this.startupProcess();
-    },
-    processExtensionError: function (inSender, inResponse) {
-        alert("Error!");
-    },
     startupProcess: function () {
       var startupManager = XT.getStartupManager(),
         progressBar = XT.app.$.postbooks.getStartupProgressBar(),
@@ -128,6 +119,8 @@ white:true*/
         task,
         len,
         text,
+        ajax, extensionSuccess, extensionError, extensionPath,
+        extensionCount = 0, extensionsDownloaded = 0,
         eachCallback = function () {
           var completed = startupManager.get('completed').length;
           progressBar.animateProgressTo(completed);
@@ -146,15 +139,42 @@ white:true*/
       } else if (this.state === LOADING_SESSION) {
         this.state = DOWNLOADING_EXTENSIONS;
 
-        var ajax = new enyo.Ajax({
-            url: "/public-extensions/builds/project.js"
-        });
-        // send parameters the remote service using the 'go()' method
-        ajax.go();
-        // attach responders to the transaction object
-        ajax.response(this, "processExtensionResponse");
-        // handle error
-        ajax.error(this, "processExtensionError");
+        extensionSuccess = function (inSender, inResponse) {
+          eval(inResponse); // MWA HA HA HA
+
+          extensionsDownloaded++;
+          if (extensionsDownloaded === extensionCount) {
+            that.startupProcess();
+          }
+        };
+        extensionError = function (inSender, inResponse) {
+          XT.log("Error download extensions");
+        };
+
+        // download all public extensions
+        for (i = 0; i < XT.session.publicExtensions.length; i++) {
+          extensionPath = XT.session.publicExtensions[i];
+          extensionCount++;
+          ajax = new enyo.Ajax({url: extensionPath});
+          ajax.go();
+          ajax.response(extensionSuccess);
+          ajax.error(extensionError);
+        }
+
+        // download all private extensions
+        for (i = 0; i < XT.session.privateExtensions.length; i++) {
+          extensionPath = XT.session.privateExtensions[i];
+          extensionCount++;
+          ajax = new enyo.Ajax({url: extensionPath});
+          ajax.go();
+          ajax.response(extensionSuccess);
+          ajax.error(extensionError);
+        }
+
+        if (extensionCount === 0) {
+          // if no extensions are loaded we still need a way to move forward
+          this.startupProcess();
+        }
 
       // 3: Initialize extensions
       } else if (this.state === DOWNLOADING_EXTENSIONS) {
