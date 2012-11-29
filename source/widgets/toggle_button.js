@@ -5,9 +5,10 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   /**
-    @class Use to build the toggle button that goes inside the toggle button widget.
     @name XV.ToggleButton
-    @see XV.ToggleButtonWidget
+    @class A control that looks like a switch with labels for two states.<br />
+    Derived from <a href="http://enyojs.com/api/#onyx.ToggleButton">onyx.ToggleButton</a>. 
+    @extends onyx.ToggleButton
    */
   enyo.kind(/** @lends XV.ToggleButton# */{
     name: "XV.ToggleButton",
@@ -48,9 +49,12 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   /**
-    @class Use to build a toggle button widget which hold a toggle button and its label.
     @name XV.ToggleButtonWidget
-    @see XV.ToggleButton
+    @class An input control consisting of fittable columns:
+     label, decorator, and toggle button.<br />
+    Use to implement a toggle button, a switch with labels for two states.<br />
+    Creates an HTML input element.
+    @extends XV.Input
    */
   enyo.kind(/** @lends XV.ToggleButtonWidget# */{
     name: "XV.ToggleButtonWidget",

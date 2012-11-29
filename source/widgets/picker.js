@@ -5,10 +5,12 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   /**
-    @class Implements a dropdown. Unlike the {@link XV.RelationWidget},
-    the collection is stored local to the widget.
     @name XV.PickerWidget
-    @see XV.Relation
+    @class A picker control that implements a dropdown list of items which can be selected.<br />
+    Unlike the {@link XV.RelationWidget}, the collection is stored local to the widget.<br />
+    The superkind of {@link XV.CharacteristicPicker}.<br />
+    Derived from <a href="http://enyojs.com/api/#enyo.Control">enyo.Control</a>. 
+    @extends enyo.Control
    */
   enyo.kind(/** @lends XV.PickerWidget# */{
     name: "XV.PickerWidget",

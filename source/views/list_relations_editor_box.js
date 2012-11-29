@@ -6,10 +6,9 @@ trailing:true white:true*/
 (function () {
 
   /**
-    @class Use this class to define the editor for `XV.ListRelationsEditorBox`.
     @name XV.RelationsEditor
+    @class Use to define the editor for {@link XV.ListRelationsEditorBox}.
     @extends XV.Groupbox
-    @see XV.ListRelationsEditorBox
   */
   var editor = enyo.mixin(XV.EditorMixin, {
     name: "XV.RelationsEditor",
@@ -35,12 +34,14 @@ trailing:true white:true*/
   enyo.kind(editor);
 
   /**
-    @class Must include a component called `list`.
-    List must be of sub-kind `XV.ListRelations`.
-    The `value` must be set to a collection of `XM.Model`.
     @name XV.ListRelationsEditorBox
+    @class Provides a container in which its components 
+    are a vertically stacked group of horizontal rows.<br />
+    Made up of a header, panels, and a row of navigation buttons.<br />
+    Must include a component called `list`.
+    List must be of subkind {@link XV.ListRelations}.
+    The `value` must be set to a collection of `XM.Model`.
     @extends XV.Groupbox
-    @see XV.RelationsEditor
   */
   enyo.kind(/** @lends XV.ListRelationsEditorBox# */{
     name: "XV.ListRelationsEditorBox",

@@ -5,9 +5,11 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   /**
-    @class Use to build the checkbox input field which goes inside a checkbox widget.
     @name XV.Checkbox
-    @see XV.CheckboxWidget
+    @class An input control that shows or hides a checkmark when clicked.</br >
+    To implement a checkbox, see {@link XV.CheckboxWidget}.<br />
+    Derived from <a href="http://enyojs.com/api/#onyx.Checkbox">onyx.Checkbox</a>. 
+    @extends onyx.Checkbox
    */
   enyo.kind(/** @lends XV.Checkbox# */{
     name: "XV.Checkbox",
@@ -48,9 +50,12 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   /**
-    @class Use to build a checkbox widget which holds a checkbox and its label.
     @name XV.CheckboxWidget
-    @see XV.Checkbox
+    @class An input control consisting of fittable columns:
+      label, decorator, and checkbox.<br />
+    Use to implement a styled checkbox 
+      which is made up of a checkbox input control and its label. 
+    @extends XV.Input
    */
   enyo.kind(/** @lends XV.CheckboxWidget# */{
     name: "XV.CheckboxWidget",

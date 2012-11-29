@@ -6,10 +6,13 @@ trailing:true white:true*/
 (function () {
 
   /**
-    @class Must include a component called `list`.
-    List must be of sub-kind `XV.ListRelations`.
-    The `value` must be set to a collection of `XM.Info` models.
     @name XV.ListRelationsBox
+    @class Provides a container in which its components are a vertically stacked group
+    of horizontal rows.<br />
+    Made up of a header, scroller (with a list of related data), and a row of navigation buttons.<br />
+    Must include a component called "list" that must be of subkind {@link XV.ListRelations}.
+    The `value` must be set to a collection of `XM.Info` models.
+    The superkind of {@link XV.DocumentsBox}.
     @extends XV.Groupbox
   */
   enyo.kind(/** @lends XV.ListRelationsBox# */{

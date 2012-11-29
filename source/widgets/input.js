@@ -5,9 +5,16 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   /**
-    @class An input field that maintains a consistent API to be used by workspaces.
     @name XV.Input
-    @see XV.InputWidget
+    @class Maintains a consistent API to be used by workspaces.<br />
+    The superkind from which other xTuple input objects are derived.<br />
+    To create an input field for strings, see {@link XV.InputWidget}.<br />
+    To create an input field for dates, see {@link XV.DateWidget}.<br />
+    To create an input field for files, see {@link XV.FileInput}.<br />
+    To create an input field for numbers, see {@link XV.NumberWidget}.<br />
+    To create a multi-line textarea input box, see {@link XV.TextArea}.<br />
+    To create a checkbox, see {@link XV.CheckboxWidget}.<br />
+    To create a togglebutton, see {@link XV.TogglebuttonWidget}.<br />
    */
   enyo.kind(/** @lends XV.Input# */{
     name: "XV.Input",
@@ -135,10 +142,14 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   /**
-    @class An input with styled label and decorator that maintains a consistent API
-    for use in a workspace.
     @name XV.InputWidget
-    @extends @XV.Input
+    @class An input control consisting of fittable columns: 
+      a styled label and an onyx.Input placed inside an onyx.InputDecorator,
+      which provides styling.<br />
+    Any controls in the InputDecorator appear to be inside an area styled as an input.<br />
+    Use to implement a styled input field for strings.<br />
+    Creates an HTML input element.
+    @extends XV.Input
    */
   enyo.kind(/** @lends XV.InputWidget# */{
     name: "XV.InputWidget",
