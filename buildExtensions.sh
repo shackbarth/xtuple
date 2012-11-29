@@ -3,7 +3,8 @@
 
 # This could be more scalably done with node
 
-rm -rf builds/*
+rm -rf builds
+mkdir builds
 
 cp source/admin/root-package.js package.js
 tools/deploy.sh
