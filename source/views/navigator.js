@@ -44,27 +44,19 @@ trailing:true white:true*/
     components: [
       {kind: "FittableRows", classes: "left", components: [
         {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
-          {kind: "onyx.Button", name: "backButton", content: "_logout".loc(),
-            ontap: "backTapped"},
-          {kind: "Group", name: "iconButtonGroup", tag: null, components: [
-						{kind: "onyx.TooltipDecorator", style: "margin: 0;", components: [
-		        	{kind: "onyx.IconButton", name: "historyIconButton",
-	              src: "lib/enyo-x/assets/menu-icon-bookmark.png",
-	              ontap: "showHistory"},
-			        {kind: "onyx.Tooltip", content: "History"},
-		      	]},	
-						{kind: "onyx.TooltipDecorator", style: "margin: 0;", components: [
-		        	{kind: "onyx.IconButton", name: "searchIconButton",
-		             src: "lib/enyo-x/assets/menu-icon-search.png",
-		             ontap: "showParameters", showing: false},
-			        {kind: "onyx.Tooltip", content: "Search"},
-		      	]}
-          ]},
+	          {kind: "onyx.Button", name: "backButton", content: "_logout".loc(),
+	            ontap: "backTapped"},
+	          {kind: "Group", name: "iconButtonGroup", tag: null, components: [
+	        	{kind: "XV.IconButton", name: "historyIconButton",
+	             src: "lib/enyo-x/assets/menu-icon-bookmark.png",
+	             ontap: "showHistory", content: "History"},
+	        	{kind: "XV.IconButton", name: "searchIconButton",
+	             src: "lib/enyo-x/assets/menu-icon-search.png",
+	             ontap: "showParameters", content: "Advanced Search", showing: false}
+          	]},
           {kind: "onyx.MenuDecorator", onSelect: "actionSelected", components: [
-						{kind: "onyx.TooltipDecorator", style: "margin: 0;", components: [
-			        {kind: "onyx.IconButton", src: "lib/enyo-x/assets/menu-icon-gear.png"},
-			        {kind: "onyx.Tooltip", content: "Actions"},
-			      ]},
+			      {kind: "XV.IconButton", src: "lib/enyo-x/assets/menu-icon-gear.png", 
+							content: "Actions"},
             {kind: "onyx.Menu", components: [
               {name: "exportItem", content: "_export".loc(), showing: false},
               {name: "myAccountItem", content: "_myAccount".loc()},
@@ -104,25 +96,19 @@ trailing:true white:true*/
 	        {name: "rightLabel", style: "width: 100px"},
 				// The MoreToolbar is a FittableColumnsLayout, so this spacer takes up all available space
 				{name: "spacer", content: "", fit: true},
-				{kind: "onyx.TooltipDecorator", style: "margin: 0;", components: [
-	        {name: "newButton", kind: "onyx.IconButton",
-		          src: "lib/enyo-x/assets/menu-icon-new.png",
-		          ontap: "newRecord", showing: false},
-	        {kind: "onyx.Tooltip", content: "New"},
-	      ]},
-				{kind: "onyx.TooltipDecorator", style: "margin: 0;", components: [
-	        {name: "refreshButton", kind: "onyx.IconButton",
-		          src: "lib/enyo-x/assets/menu-icon-refresh.png",
-		          ontap: "requery", showing: false},
-	        {kind: "onyx.Tooltip", content: "Refresh"},
-	      ]},
+        {name: "newButton", kind: "XV.IconButton",
+	      	src: "lib/enyo-x/assets/menu-icon-new.png", content: "New",
+	        ontap: "newRecord", showing: false},
+        {name: "refreshButton", kind: "XV.IconButton",
+	        src: "lib/enyo-x/assets/menu-icon-refresh.png", content: "Refresh",
+	        ontap: "requery", showing: false},
         {name: "search", kind: "onyx.InputDecorator", 
-           showing: false, components: [
-           {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
+          showing: false, components: [
+        	{name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
              placeholder: "_search".loc(), onchange: "inputChanged"},
-           {kind: "Image", src: "lib/enyo-x/assets/search-input-search.png",
+          {kind: "Image", src: "lib/enyo-x/assets/search-input-search.png",
              name: "searchJump", ontap: "jump"}
-        		]}
+        	]}
 	      ]},
         {name: "header", content: "", classes: "xv-navigator-header"},
         {name: "contentPanels", kind: "Panels", margin: 0, fit: true,
