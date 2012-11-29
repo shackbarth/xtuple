@@ -90,7 +90,8 @@ trailing:true white:true*/
       ]},
       {kind: "FittableRows", components: [
 				// the onyx-menu-toolbar class keeps the popups from being hidden
-	      {kind: "onyx.MoreToolbar", name: "contentToolbar", classes: "onyx-menu-toolbar",
+	      {kind: "onyx.MoreToolbar", name: "contentToolbar", 
+				classes: "onyx-menu-toolbar", movedClass: "xv-toolbar-moved",
 				components: [
 	        {kind: "onyx.Grabber"}, 
 	        {name: "rightLabel", style: "width: 100px"},
