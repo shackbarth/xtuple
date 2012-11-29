@@ -75,12 +75,16 @@ trailing:true white:true*/
       }
 
       options.error = function (result) {
-        if (result.params.error.reason === 'Invalid password') {
-          that.$.message.setContent("That's not your old password. Please re-enter.");
+        var message;
+        if (result.params.error === 'Invalid password') {
+          message = "That's not your old password. Please re-enter.";
+        } else {
+          message = "There was an error changing your password.";
         }
+        that.$.message.setContent(message);
       }
 
-      result = XT.dataSource.configure("updatePassword", params, options);
+      result = XT.dataSource.changePassword(params, options);
 
       // for some reason this is necessary to "un-depress" the button
       this.$.submitButton.addRemoveClass("active");
