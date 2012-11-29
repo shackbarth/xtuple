@@ -16,6 +16,8 @@ white:true*/
     privileges: {},
     settings: {},
     schema: {},
+    publicExtensions: {},
+    privateExtensions: {},
 
     getAvailableSessions: function () {
       return this.availableSessions;
