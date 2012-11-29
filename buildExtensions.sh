@@ -1,6 +1,8 @@
 #!/bin/bash
 # Build extensions
 
+# This could be more scalably done with node
+
 rm -rf builds/*
 
 cp source/admin/root-package.js package.js
