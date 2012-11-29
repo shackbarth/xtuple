@@ -16,8 +16,7 @@ regexp:true, undef:true, trailing:true, white:true */
 		},
 		style: "margin: 0;",
 		components: [
-			{name: "iconButton", kind: "onyx.IconButton", 
-				showing: true},
+			{name: "iconButton", kind: "onyx.IconButton", showing: true},
 			{name: "toolTip", kind: "onyx.Tooltip"}
 		],
 

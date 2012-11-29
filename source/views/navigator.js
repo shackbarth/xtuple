@@ -62,7 +62,7 @@ trailing:true white:true*/
 	             src: "lib/enyo-x/assets/menu-icon-search.png",
 	             ontap: "showParameters", content: "Advanced Search", showing: false}
           	]},
-          {kind: "onyx.MenuDecorator", onSelect: "actionSelected", components: [
+          {kind: "onyx.MenuDecorator", style: "margin: 0;", onSelect: "actionSelected", components: [
 			      {kind: "XV.IconButton", src: "lib/enyo-x/assets/menu-icon-gear.png", 
 							content: "Actions"},
             {kind: "onyx.Menu", components: [
