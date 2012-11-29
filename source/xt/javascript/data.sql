@@ -215,12 +215,12 @@ select xt.install_js('XT','Data','xtuple', $$
     checkPrivilege: function (privilege) {
       var ret = privilege,
        sql = 'select coalesce(userpriv_priv_id, userrolepriv_priv_id, -1) > 0 as granted ' +
-             'from priv ' +
-             'left outer join userpriv on (priv_id=userpriv_priv_id) and (userpriv_username=$1) ' +
-             'left outer join ( ' +
+             'from xt.priv ' +
+             'left join xt.userpriv on (priv_id=userpriv_priv_id) and (userpriv_username=$1) ' +
+             'left join ( ' +
              '  select distinct userrolepriv_priv_id ' +
-             '  from userrolepriv ' +
-             '    join useruserrole on (userrolepriv_userrole_id=useruserrole_userrole_id) and (useruserrole_username=$1) ' +
+             '  from xt.userrolepriv ' +
+             '    join xt.useruserrole on (userrolepriv_userrole_id=useruserrole_userrole_id) and (useruserrole_username=$1) ' +
              '  ) userrolepriv on (userrolepriv_priv_id=priv_id) ' +
              'where priv_name = $2;';
       if (typeof privilege === 'string') {

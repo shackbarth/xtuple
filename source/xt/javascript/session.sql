@@ -16,23 +16,7 @@ select xt.install_js('XT','Session','xtuple', $$
             + 'locale_id as "id", '
             + 'locale_code as "code", '
             + 'lang_abbr2 AS "language", '
-            + 'country_abbr AS "country", '
-            + 'case when length(locale_error_color) = 0 then \'red\' else locale_error_color end as "errorColor", '
-            + 'case when length(locale_warning_color) = 0 then \'orange\' else locale_warning_color end as "warningColor", '
-            + 'case when length(locale_emphasis_color) = 0 then \'blue\' else locale_emphasis_color end as "emphasisColor", '
-            + 'case when length(locale_altemphasis_color) = 0 then \'green\' else locale_altemphasis_color end as "altEmphasisColor", '
-            + 'case when length(locale_expired_color) = 0 then \'red\' else locale_expired_color end as "expiredColor", '
-            + 'case when length(locale_future_color) = 0 then \'blue\' else locale_future_color end as "futureColor", '
-            + 'coalesce(locale_curr_scale,2) as "currencyScale", '
-            + 'coalesce(locale_salesprice_scale, 4) as "salesPriceScale", '
-            + 'coalesce(locale_purchprice_scale, 4) as "purchasePriceScale", '
-            + 'coalesce(locale_extprice_scale, 2) as "extPriceScale", '
-            + 'coalesce(locale_cost_scale, 4) as "costScale", '
-            + 'coalesce(locale_qty_scale, 2) as "qtyScale", '
-            + 'coalesce(locale_qtyper_scale, 6) as "qtyPerScale", '
-            + 'coalesce(locale_uomratio_scale, 6) as "uomRatioScale", '
-            + 'coalesce(locale_percent_scale, 2) as "percentScale", '
-            + 'coalesce(locale_weight_scale, 2) as "weightScale" '
+            + 'country_abbr AS "country" '
             + 'from locale '
             + 'join usr on usr_locale_id = locale_id '
             + 'left join lang on locale_lang_id = lang_id '
@@ -77,12 +61,12 @@ select xt.install_js('XT','Session','xtuple', $$
   XT.Session.privileges = function() {
     var sql = 'select priv_name as "privilege", ' +
               'coalesce(userpriv_priv_id, userrolepriv_priv_id, -1) > 0 as "isGranted" ' +
-              'from priv ' +
-              'left outer join userpriv on (priv_id=userpriv_priv_id) and (userpriv_username=$1) ' +
-              'left outer join ( ' +
+              'from xt.priv ' +
+              'left join xt.userpriv on (priv_id=userpriv_priv_id) and (userpriv_username=$1) ' +
+              'left join ( ' +
               '  select distinct userrolepriv_priv_id ' +
-              'from userrolepriv ' +
-              'join useruserrole on (userrolepriv_userrole_id=useruserrole_userrole_id) and (useruserrole_username=$1) ' +
+              'from xt.userrolepriv ' +
+              'join xt.useruserrole on (userrolepriv_userrole_id=useruserrole_userrole_id) and (useruserrole_username=$1) ' +
               ') userrolepriv on (userrolepriv_priv_id=priv_id); '
       rec = plv8.execute(sql, [ XT.username ] );
 
