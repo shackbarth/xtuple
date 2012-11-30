@@ -23,7 +23,8 @@ regexp:true, undef:true, trailing:true, white:true */
       attr: null,
       value: null,
       disabled: false,
-      placeholder: null
+      placeholder: null,
+      type: null
     },
     events: {
       "onValueChange": ""
@@ -47,9 +48,12 @@ regexp:true, undef:true, trailing:true, white:true */
       this.inherited(arguments);
       this.placeholderChanged();
       this.disabledChanged();
+      this.typeChanged();
     },
     /**
-    @todo Document the disabledChanged method.
+     The disabledChanged method, and many below it, are here to deal with the fact that XV.Input does
+     not inherit from onyx.input or enyo.input, and so insofar as it needs to support their APIs, we
+     have to redeclare the methods and pass through the data.
     */
     disabledChanged: function () {
       this.$.input.setDisabled(this.getDisabled());
@@ -128,16 +132,23 @@ regexp:true, undef:true, trailing:true, white:true */
       return value;
     },
     /**
-    @todo Document the setInputStyle method.
+      Pass through attributes intended for onyx input inside.
+      XXX is this necessary given disabledChanged function above?
+    */
+    setDisabled: function (isDisabled) {
+      this.$.input.setDisabled(isDisabled);
+    },
+    /**
+      Pass through attributes intended for onyx input inside.
     */
     setInputStyle: function (style) {
       this.$.input.setStyle(style);
     },
     /**
-    @todo Document the setDisabled method.
+      Pass through attributes intended for onyx input inside.
     */
-    setDisabled: function (isDisabled) {
-      this.$.input.setDisabled(isDisabled);
+    typeChanged: function () {
+      this.$.input.setType(this.getType());
     }
   });
 
