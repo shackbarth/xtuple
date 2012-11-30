@@ -360,6 +360,7 @@ white:true*/
         options.cascade = true; // Update status of children
         options.success = function (resp) {
           model.setStatus(K.READY_CLEAN, options);
+          XT.log('Fetch successful');
           if (success) { success(model, resp, options); }
         };
         return Backbone.Model.prototype.fetch.call(this, options);
@@ -819,6 +820,7 @@ white:true*/
         options.validateSave = true;
         options.success = function (resp) {
           model.setStatus(K.READY_CLEAN, options);
+          XT.log('Save successful');
           if (success) { success(model, resp, options); }
         };
 
