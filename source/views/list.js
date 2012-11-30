@@ -9,9 +9,9 @@ trailing:true white:true*/
   var FETCH_TRIGGER = 100;
 
   /**
-    @class
     @name XV.ListItem
-    @see XV.List
+    @class Represents a single row in a list of rows.<br />
+    Related: list, {@link XV.List}; row, XV.ListItem; cell, {@link XV.ListColumn}; data, {@link XV.ListAttr}
    */
   enyo.kind(/** @lends XV.ListItem# */{
     name: "XV.ListItem",
@@ -23,9 +23,9 @@ trailing:true white:true*/
   });
 
   /**
-    @class
     @name XV.ListColumn
-    @see XV.List
+    @class Represents a cell within a row of a list.<br />
+    Related: list, {@link XV.List}; row, {@link XV.ListItem}; cell, XV.ListColumn; data, {@link XV.ListAttr}
    */
   enyo.kind(/** @lends XV.ListColumn# */{
     name: "XV.ListColumn",
@@ -33,9 +33,9 @@ trailing:true white:true*/
   });
 
   /**
-    @class
     @name XV.ListAttr
-    @see XV.List
+    @class Holds the data within the cell of a row of a list.<br />
+    Related: list, {@link XV.List}; row, {@link XV.ListItem}; cell {@link XV.ListColumn}; data, XV.ListAttr
    */
   enyo.kind(/** @lends XV.ListAttr# */{
     name: "XV.ListAttr",
@@ -46,14 +46,16 @@ trailing:true white:true*/
   });
 
   /**
-    @class Displays a scrolling list of rows.
-    Handles lazy loading. Passes in the first 50 items, and as one scrolls, passes more.
-    Note: enyo.list includes a scroller; therefore, XV.List should not be placed inside a scroller.
-    @class
     @name XV.List
-    @see XV.ListItem
-    @see XV.ListColumn
-    @see XV.ListAttr
+    @class Displays a scrolling list of rows.</br >
+    Handles lazy loading. Passes in the first 50 items, and as one scrolls, passes more.<br />
+    Use to display large lists, typically a collection of records retrieved from the database, 
+    for example a list of accounts, addresses, contacts, incidents, projects, and so forth.
+	But can also be used to display lists stored elsewhere such as state or country abbreviations.<br />
+    Related: list, XV.List; row, {@link XV.ListItem}; cell, {@link XV.ListColumn}; data, {@link XV.ListAttr}<br />
+    Derived from <a href="http://enyojs.com/api/#enyo.List">enyo.List</a>.<br />
+    Note: enyo.List includes a scroller; therefore, XV.List should not be placed inside a scroller.
+    @extends enyo.List
    */
   enyo.kind(/** @lends XV.List# */{
     name: "XV.List",

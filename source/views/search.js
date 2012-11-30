@@ -6,11 +6,13 @@ trailing:true white:true*/
 (function () {
 
   /**
-    @class High-level container showing a list of searchable items with the advanced
-    search widget available. Used for attaching documents, searching for
-    relational widget values, etc.
     @name XV.SearchContainer
-  */
+    @class High-level container showing a list of searchable items available to the advanced
+    search widget.<br />
+    Used for attaching documents, searching for relational widget values, etc.<br />
+    Derived from <a href="http://enyojs.com/api/#enyo.Panels">enyo.Panels</a>. 
+    @extends enyo.Panels
+   */
   enyo.kind(/** @lends XV.SearchContainer# */{
     name: "XV.SearchContainer",
     kind: "Panels",

@@ -5,8 +5,11 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   /**
-    @class Implements an onyx.TextArea with API support from XV.Input
     @name XV.TextArea
+    @class Implements an onyx.TextArea with API support from XV.Input.
+    Use to implement a multi-line input box.<br />
+    Creates an HTML textarea element.<br />
+    For example, used as a component of {@link XV.CommentBoxItem}.
     @extends XV.Input
    */
   enyo.kind(/** @lends XV.TextArea# */{

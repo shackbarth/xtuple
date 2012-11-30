@@ -5,8 +5,12 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
 (function () {
 
   /**
-    @class
     @name XV.Completer
+    @class Renders a list of items that can be selected from a menu.<br />
+    Used to create the autocomplete list for {@link XV.Combobox}.<br />
+   	Derived from <a href="http://enyojs.com/api/#onyx.Picker">onyx.Picker</a>.<br /> 
+    Note: Each item in the list is an onyx.MenuItem, 
+    so an onSelect event with the item can be listened to by a client application to determine which picker item was selected.
     @extends onyx.Picker
    */
   enyo.kind(/** @lends XV.Completer# */{
@@ -26,7 +30,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
       if (this.showing && this.hasNode()) {
         this.removeClass("onyx-menu-up");
 
-        //reset the left position before we get the bounding rect for proper horizontal calculation
+        //Reset the left position before we get the bounding rect for proper horizontal calculation.
         if (!this.floating) { this.applyPosition({left: "auto"}); }
 
         var b = this.node.getBoundingClientRect();
@@ -34,11 +38,11 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
         var innerHeight = (window.innerHeight === undefined) ? document.documentElement.clientHeight : window.innerHeight;
         var innerWidth = (window.innerWidth === undefined) ? document.documentElement.clientWidth : window.innerWidth;
 
-        //position the menu above the activator if it's getting cut off, but only if there's more room above than below
+        //Position the menu above the activator if it's getting cut off, but only if there's more room above than below.
         this.menuUp = (b.top + bHeight > innerHeight) && ((innerHeight - b.bottom) < (b.top - bHeight));
         this.addRemoveClass("onyx-menu-up", this.menuUp);
 
-        //if floating, adjust the vertical positioning
+        //If floating, adjust the vertical positioning.
         if (this.floating) {
           r = this.activatorOffset;
           rHeight = (r.height === undefined) ? (r.bottom - r.top) : r.height;
@@ -54,7 +58,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
           }
         }
 
-        //adjust the horizontal positioning to keep the menu from being cut off on the right
+        //Adjust the horizontal positioning to keep the menu from being cut off on the right.
         if ((b.right) > innerWidth) {
           if (this.floating) {
             this.applyPosition({left: r.left - (b.left + b.width - innerWidth)});
@@ -63,7 +67,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
           }
         }
 
-        //finally prevent the menu from being cut off on the left
+        //Finally prevent the menu from being cut off on the left.
         if (b.left < 0) {
           if (this.floating) {
             this.applyPosition({left: 0, right: "auto"});

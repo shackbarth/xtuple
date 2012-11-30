@@ -9,10 +9,9 @@ trailing:true white:true*/
   var SAVE_NEW = 3;
 
   /**
-    @class A mixin that contains functionality common to Workspace and ListRelationsEditorBox.
     @name XV.EditorMixin
-    @see XV.Workspace
-    @see XV.ListRelationsEditorBox
+    @class A mixin that contains functionality common to {@link XV.Workspace}
+     and {@link XV.ListRelationsEditorBox}.
    */
   XV.EditorMixin = {
     controlValueChanged: function (inSender, inEvent) {
@@ -97,13 +96,16 @@ trailing:true white:true*/
   };
 
   /**
-    @class
     @name XV.Workspace
+    @class Contains a set of fittable rows which are laid out
+    using the carousel arranger and fitted to the size of the viewport.<br /> 
+    Its components can be extended via {@link XV.ExtensionsMixin}.<br />
+  	Derived from <a href="http://enyojs.com/api/#enyo.FittableRows">enyo.FittableRows</a>. 
     @extends enyo.FittableRows
     @extends XV.EditorMixin
     @extends XV.ExtensionsMixin
     @see XV.WorkspaceContainer
-  */
+   */
   var workspaceHash = enyo.mixin(XV.EditorMixin, /** @lends XV.Workspace# */{
     name: "XV.Workspace",
     kind: "FittableRows",
@@ -348,9 +350,11 @@ trailing:true white:true*/
   enyo.kind(workspaceHash);
 
   /**
-    @class
     @name XV.WorkspaceContainer
-    @see XV.Workspace
+    @class Contains the navigation and content panels which wrap around a workspace.<br />
+    See also {@link XV.Workspace}.<br />
+    Derived from <a href="http://enyojs.com/api/#enyo.Panels">enyo.Panels</a>. 
+    @extends enyo.Panels
    */
   enyo.kind(/** @lends XV.WorkspaceContainer# */{
     name: "XV.WorkspaceContainer",
@@ -381,22 +385,21 @@ trailing:true white:true*/
         ]}
       ]},
       {kind: "FittableRows", name: "contentPanel", components: [
-        {kind: "onyx.Toolbar", name: "contentToolbar", components: [
-					// these are floated left to prevent overlap of buttons and text
-          {kind: "onyx.Grabber", classes: "left-float"},
-          {name: "title", classes: "left-float"},
-					{kind: "onyx.Button", name: "saveButton",
-            disabled: true, classes: "right-float save",
-            content: "_save".loc(), onclick: "saveAndClose"},
+        {kind: "onyx.MoreToolbar", name: "contentToolbar", 
+					components: [
+          {kind: "onyx.Grabber"},
+          {name: "title"},
+					// The MoreToolbar is a FittableColumnsLayout, so this spacer takes up all available space 
+					{name: "space", fit: true},
+					{kind: "onyx.Button", name: "refreshButton", disabled: true,
+            content: "_refresh".loc(), onclick: "requery"},
+					{kind: "onyx.Button", name: "applyButton", disabled: true,
+	            content: "_apply".loc(), onclick: "apply"},
           {kind: "onyx.Button", name: "saveAndNewButton", disabled: true,
-            classes: "right-float",
             content: "_saveAndNew".loc(), onclick: "saveAndNew"},
-          {kind: "onyx.Button", name: "applyButton", disabled: true,
-            classes: "right-float",
-            content: "_apply".loc(), onclick: "apply"},
-          {kind: "onyx.Button", name: "refreshButton", disabled: true,
-            content: "_refresh".loc(), onclick: "requery",
-            classes: "right-float"}
+          {kind: "onyx.Button", name: "saveButton",
+            disabled: true, classes: "save",
+            content: "_save".loc(), onclick: "saveAndClose"}
         ]},
         {name: "header", content: "_loading".loc(), classes: "xv-workspace-header"},
         {kind: "onyx.Popup", name: "spinnerPopup", centered: true,

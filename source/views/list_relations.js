@@ -9,10 +9,13 @@ trailing:true white:true*/
   var FETCH_TRIGGER = 5;
 
   /**
-    @class List to attach to workspaces to present related data.
     @name XV.ListRelations
+    @class A control that displays a list of scrolling rows.<br /> 
+    Use to attach to a workspace to present related data.<br />
+    A superkind of {@link XV.DocumentListRelations}.<br />
+    Derived from <a href="http://enyojs.com/api/#enyo.List">enyo.List</a>. 
     @extends enyo.List
-  */
+  */ 
   enyo.kind(/** @lends XV.ListRelations# */{
     name: "XV.ListRelations",
     kind: "List",

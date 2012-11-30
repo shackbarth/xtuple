@@ -6,8 +6,10 @@ trailing:true white:true*/
 (function () {
 
   /**
-    @class
     @name XV.DocumentListRelations
+    @class A control that displays a list of scrolling rows.<br />
+    Use to provide the list of related data to the {@link XV.DocumentsBox}.<br /> 
+    @extends XV.ListRelations
    */
   enyo.kind(/** @lends XV.DocumentListRelations# */{
     name: "XV.DocumentListRelations",
@@ -129,8 +131,14 @@ trailing:true white:true*/
   });
 
   /**
-    @class
     @name XV.DocumentsBox
+	@class Provides a container in which its components are a vertically stacked group
+    of horizontal rows.<br />
+    Made up of a header, scroller, and a row of navigation buttons.<br />
+    Use to implement a popup window for the user to define document relationships,
+    for example: the purpose (related to, parent of, child of, duplicate of) and 
+    the type (account, contact, file, incident, item) of object to which the document is related.
+    @extends XV.ListRelationsBox
    */
   enyo.kind(/** @lends XV.DocumentsBox# */{
     name: "XV.DocumentsBox",
@@ -142,7 +150,7 @@ trailing:true white:true*/
     /**
      Creates a pop-up window for user to define the document relationships.
      For example, a file related to an account or a photograph related to an
-    inventory item.
+     inventory item.
      */
     create: function () {
       this.inherited(arguments);
