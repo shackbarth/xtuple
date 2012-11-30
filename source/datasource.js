@@ -8,7 +8,7 @@ white:true*/
 
   /**
     @class
-    
+
     A place holder class that provides an API for models to attach to a datasource.
     The functions have no code and need to be developed for a real implementation.
   */
@@ -62,7 +62,7 @@ white:true*/
     dispatch: function (name, func, params, options) {
       // Your code here
     }
-    
+
   };
 
 }());
