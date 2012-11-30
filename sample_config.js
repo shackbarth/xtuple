@@ -8,32 +8,47 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   module.exports = {
     processName: "node-datasource",
     debugging: true,
-    allowMultipleVersions: true,
+    allowMultipleInstances: true,
     requireDatabase: true,
     requireServer: true,
     requireCache: true,
     functorsDirectory: "./lib/functors",
     routesDirectory: "./lib/routes",
     routersDirectory: "./lib/routers",
-    proxy: {
-      hostname: "localhost",
-      port: 9000
-    },
     datasource: {
       sessionTimeout: 15,
-      bindAddress: "",
+      bindAddress: "localhost",
       port: 443,
-      keyFile: "",
-      certFile: "",
-      caFile: "",
-      saltFile: "",
+      keyFile: "./lib/private/key.pem",
+      certFile: "./lib/private/server.crt",
+      caFile: null,
+      saltFile: "./lib/private/salt.txt",
       
-      // make sure to supply the information necessary
-      // for this service to register itself with router
-      name: "[DATASOURCE INSTANCE NAME]",
-      description: "[DATASOURCE DESCRIPTION TEXT]",
-      hostname: "[DATASOURCE HOSTNAME/IP]",
-      location: "[DATASOURCE LOCATION TEXT SPECIFIER]"
+      // these properties are dynamically registered with the
+      // node discovery service
+      
+      // the unique identifer registered for this service/instance
+      name: "dev-datasource",
+      
+      // human-friendly description of this service
+      description: "NA",
+      
+      // REQUIRED - the ip address or hostname for this instance
+      hostname: "localhost",
+      
+      // human-friendly location identifier for various cloud, physical
+      // servers, etc. 
+      location: "NA"
+    },
+    administratorInterface: {
+      port: 9090
+    },
+    globalDatabase: {
+      hostname: "localhost",
+      port: 5432,
+      database: "global",
+      user: "admin",
+      password: "admin"
     },
     cache: {
       session: {
@@ -47,7 +62,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         port: 27017,
         schemaDirectory: "./mongo_schemas/users",
         database: "xtusers"
+      },
+      proxy: {
+        hostname: "localhost",
+        port: 27017,
+        schemaDirectory: "./mongo_schemas/proxy",
+        database: "xtproxy"
       }
-    }
+    },
+    required: [
+      "lib/ext/session",
+      "lib/ext/database",
+      "lib/ext/router",
+      "lib/servers",
+      "lib/ext/caches",
+      "lib/ext/datasource",
+      "lib/ext/models"
+    ]
   };
 }());
