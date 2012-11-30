@@ -84,6 +84,7 @@ var lang = XT.stringsFor("en_US", {
   "_created": "Created",
   "_createdBy": "Created By",
   "_crm": "CRM",
+  "_cRM": "CRM",
   "_currencies": "Currencies",
   "_currency": "Currency",
   "_currencyAbbreviation": "Currency Abbreviation",

@@ -95,6 +95,20 @@ regexp:true, undef:true, trailing:true, white:true */
   });
   
   // ..........................................................
+  // LOCALE
+  //
+
+  enyo.kind({
+    name: "XV.LocalePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.locales",
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ]
+  });
+  
+  // ..........................................................
   // NUMBER POLICY
   //
 
