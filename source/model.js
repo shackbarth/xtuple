@@ -53,6 +53,12 @@ white:true*/
     binaryField: null,
 
     /**
+      Differentiates models that belong to postbooks instances versus models
+      that belong to the global database
+    */
+    databaseType: 'instance',
+
+    /**
       The last error message reported.
     */
     lastError: null,
@@ -346,10 +352,12 @@ white:true*/
     */
     fetch: function (options) {
       options = options ? _.clone(options) : {};
+      options.databaseType = this.databaseType;
       var model = this,
         K = XM.Model,
         success = options.success,
         klass = this.getClass();
+
       if (klass.canRead()) {
         this.setStatus(K.BUSY_FETCHING, {cascade: true});
         options.cascade = true; // Update status of children
@@ -372,6 +380,7 @@ white:true*/
     */
     fetchId: function (options) {
       options = _.defaults(options ? _.clone(options) : {}, {force: true});
+      options.databaseType = this.databaseType;
       var that = this, attr;
       if (!this.id) {
         options.success = function (resp) {
@@ -745,11 +754,11 @@ white:true*/
       };
       return parse(resp);
     },
-    
+
     /**
       Revert the model to the previous status. Useful for reseting status
       after a failed validation.
-      
+
       param {Boolean} - cascade
     */
     revertStatus: function (cascade) {
@@ -759,7 +768,7 @@ white:true*/
         attr;
       this.setStatus(this._prevStatus || K.EMPTY);
       this._prevStatus = prev;
-      
+
       // Cascade changes through relations if specified
       if (cascade) {
         _.each(this.relations, function (relation) {
@@ -807,6 +816,7 @@ white:true*/
       if (this.isDirty() || attrs) {
         success = options.success;
         options.wait = true;
+        options.databaseType = this.databaseType;
         options.cascade = true; // Cascade status to children
         options.validateSave = true;
         options.success = function (resp) {
@@ -976,6 +986,7 @@ white:true*/
       @returns {XT.Request} Request
     */
     used: function (options) {
+      options.databaseType = this.databaseType;
       return XT.dataSource.dispatch('XM.Model', 'used', [this.recordType, this.id], options);
     },
 
