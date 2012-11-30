@@ -1,0 +1,84 @@
+[
+  {
+	"context": "xtuple",
+	"nameSpace": "XM",
+	"type": "CustomerGroup",
+	"table": "custgrp",
+	"idSequenceName": "custgrp_custgrp_id_seq",
+	"comment": "Customer Group Map",
+	"priveleges": {
+		"all": {
+			"create": "MaintainCustomerGroups",
+			"read": "ViewCustomerGroups",
+			"update": "MaintainCustomerGroups",
+			"delete": "MaintainCustomerGroups"
+			}
+	},
+	"properties": [
+	  {
+		"name": "id",
+		"attr":	{
+		  "type": "Number",
+		  "column": "custgrp_id",
+		  "isPrimaryKey": true
+		}
+	  },
+	  {
+		"name": "name",
+		"attr":	{
+		  "type": "String",
+		  "column": "custgrp_name"
+		}
+	  },
+	  {
+		"name": "description",
+		"attr":	{
+		  "type": "Number",
+		  "column": "custgrp_descrip"
+		}
+	  }
+	],
+	"isSystem": true
+  },
+  {
+	"context": "xtuple",
+	"nameSpace": "XM",
+	"type": "CustomerGroupCustomer",
+	"table": "custgrpitem",
+	"idSequenceName": "custgrpitem_custgrpitem_id_seq",
+	"comment": "Customer Group Customer Map",
+	"priveleges": {
+		"all": {
+			"create": "MaintainCustomerGroups",
+			"read": "ViewCustomerGroups",
+			"update": "MaintainCustomerGroups",
+			"delete": "MaintainCustomerGroups"
+			}
+	},
+	"properties": [
+	  {
+		"name": "id",
+		"attr":	{
+		  "type": "Number",
+		  "column": "custgrpitem_id",
+		  "isPrimaryKey": true
+		}
+	  },
+	  {
+		"name": "customerGroup",
+		"toOne": {
+		  "type": "CustomerGroup",
+		  "column": "custgrpitem_custgrp_id"
+		}
+	  },
+	  {
+		"name": "customer",
+		"toOne":	{
+		  "type": "Customer",
+		  "column": "custgrpitem_cust_id"
+		}
+	  }
+	],
+	"isSystem": true
+  }
+]

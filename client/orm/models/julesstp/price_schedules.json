@@ -1,0 +1,487 @@
+[ {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "FreightClass",
+    "table": "freightclass",
+    "idSequenceName": "freightclass_freightclass_id_seq",
+    "comment": "Freight Class Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainFreightClasses",
+        "read": "ViewFreightClasses",
+        "update": "MaintainFreightClasses",
+        "delete": "MaintainFreightClasses"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "freightclass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "freightclass_code"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "freightclass_descrip"
+        }
+      }
+    ],
+    "isSystem": true
+  }, 
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "PriceSchedule",
+    "table": "ipshead",
+    "idSequenceName": "ipshead_ipshead_id_seq",
+    "comment": "Price Schedule Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainPricingSchedules",
+        "read": "ViewPricingSchedules",
+        "update": "MaintainPricingSchedules",
+        "delete": "MaintainPricingSchedules"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "ipshead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "ipshead_name"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "ipshead_descrip"
+        }
+      },
+      {
+        "name": "effective",
+        "attr": {
+          "type": "Date",
+          "column": "ipshead_effective"
+        }
+      },
+      {
+        "name": "expires",
+        "attr": {
+          "type": "Date",
+          "column": "ipshead_expires"
+        }
+      },
+	  {
+        "name": "currency",
+        "attr": {
+          "type": "Number",
+          "column": "ipshead_curr_id"
+        }
+      },
+      {
+        "name": "lastUpdated",
+        "attr": {
+          "type": "Date",
+          "column": "ipshead_updated"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "PriceScheduleItem",
+    "table": "ipsiteminfo",
+    "idSequenceName": "ipsitem_ipsitem_id_seq",
+    "comment": "Price Schedule Item Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainPricingSchedules",
+        "read": "ViewPricingSchedules",
+        "update": "MaintainPricingSchedules",
+        "delete": "MaintainPricingSchedules"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "ipsitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "priceSchedule",
+        "toOne": {
+          "type": "PriceSchedule",
+          "column": "ipsitem_ipshead_id"
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "type": "Item",
+          "column": "ipsitem_item_id"
+        }
+      },
+      {
+        "name": "qtyBreak",
+        "attr": {
+          "type": "Number",
+          "column": "ipsitem_qtybreak"
+        }
+      },
+      {
+        "name": "price",
+        "attr": {
+          "type": "Number",
+          "column": "ipsitem_price"
+        }
+      },
+      {
+        "name": "qtyUom",
+        "toOne": {
+          "type": "Unit",
+          "column": "ipsitem_qty_uom_id"
+        }
+      },
+      {
+        "name": "priceUom",
+        "toOne": {
+          "type": "Unit",
+          "column": "ipsitem_price_uom_id"
+        }
+      },
+      {
+        "name": "discountPercent",
+        "attr": {
+          "type": "Number",
+          "column": "ipsitem_discntprcnt"
+        }
+      },
+      {
+        "name": "fixedAmountDiscount",
+        "attr": {
+          "type": "Number",
+          "column": "ipsitem_fixedamtdiscount"
+        }
+      },
+      {
+        "name": "productCategory",
+        "toOne": {
+          "type": "ProductCategory",
+          "column": "ipsitem_prodcat_id"
+        }
+      },
+	  {
+        "name": "priceType",
+        "attr": {
+          "type": "String",
+          "column": "ipsitem_type"
+        }
+      },
+	  {
+        "name": "warehouse",
+        "toOne": {
+          "type": "WarehouseInfo",
+          "column": "ipsitem_warehous_id"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "PriceScheduleAssignment",
+    "table": "ipsass",
+    "idSequenceName": "ipsass_ipsass_id_seq",
+    "comment": "Price Schedule Assignment Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainPricingSchedules",
+        "read": "ViewPricingSchedules",
+        "update": "MaintainPricingSchedules",
+        "delete": "MaintainPricingSchedules"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "ipsass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "priceSchedule",
+        "toOne": {
+          "type": "PriceSchedule",
+          "column": "ipsass_ipshead_id"
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "type": "Customer",
+          "column": "ipsass_cust_id"
+        }
+      },
+      {
+        "name": "customerType",
+        "toOne": {
+          "type": "CustomerType",
+          "column": "ipsass_custtype_id"
+        }
+      },
+      {
+        "name": "customerTypePattern",
+        "attr": {
+          "type": "String",
+          "column": "ipsass_custtype_pattern"
+        }
+      },
+      {
+        "name": "shipto",
+        "toOne": {
+          "type": "CustomerShipto",
+          "column": "ipsass_shipto_id"
+        }
+      },
+      {
+        "name": "shiptoPattern",
+        "attr": {
+          "type": "String",
+          "column": "ipsass_shipto_pattern"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "PriceScheduleFreight",
+    "table": "ipsfreight",
+    "idSequenceName": "ipsfreight_ipsfreight_id_seq",
+    "comment": "Price Schedule Freight Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainPriceSchedules",
+        "read": "ViewPriceSchedules",
+        "update": "MaintainPriceSchedules",
+        "delete": "MaintainPriceSchedules"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "ipsfreight_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "priceSchedule",
+        "toOne": {
+          "type": "PriceSchedule",
+          "column": "ipsfreight_ipshead_id"
+        }
+      },
+      {
+        "name": "qtyBreak",
+        "attr": {
+          "type": "Number",
+          "column": "ipsfreight_qtybreak"
+        }
+      },
+      {
+        "name": "price",
+        "toOne": {
+          "type": "Number",
+          "column": "ipsfreight_price"
+        }
+      },
+      {
+        "name": "freightType",
+        "attr": {
+          "type": "String",
+          "column": "ipsfreight_type"
+        }
+      },
+      { 
+        "name": "warehouse",
+        "toOne": {
+          "type": "WarehouseInfo",
+          "column": "ipsfreight_warehous_id"
+        }
+      },
+      {
+        "name": "shipZone",
+        "toOne": {
+          "type": "ShipZone",
+          "column": "ipsfreight_shipzone_id"
+        }
+      },
+	  {
+        "name": "freightClass",
+        "toOne": {
+          "type": "FreightClass",
+          "column": "ipsfreight_freightclass_id"
+        }
+      },
+      {
+        "name": "shipvia",
+        "attr": {
+          "type": "ShipVia",
+          "column": "ipsfreight_shipvia"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "PriceScheduleItemCharacteristics",
+    "table": "ipsitemchar",
+    "idSequenceName": "ipsitemchar_ipsitemchar_id_seq",
+    "comment": "Price Schedule Item Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainPriceSchedules",
+        "read": "ViewPriceSchedules",
+        "update": "MaintainPriceSchedules",
+        "delete": "MaintainPriceSchedules"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "ipsitemchar_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "priceScheduleItem",
+        "toOne": {
+          "type": "PriceScheduleItem",
+          "column": "ipsitemchar_ipsitem_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "ItemCharacteristic",
+          "column": "ipsitemchar_char_id"
+        }
+      },
+      {
+        "name": "value",
+        "toOne": {
+          "type": "String",
+          "column": "ipsitemchar_value"
+        }
+      },
+      {
+        "name": "price",
+        "attr": {
+          "type": "Number",
+          "column": "ipsitemchar_price"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "PriceScheduleItemProductCategory",
+    "table": "ipsprodcat_bak",
+    "idSequenceName": "ipsprodcat_ipsprodcat_id_seq",
+    "comment": "Price Schedule Item Product Category Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainPricingSchedules",
+        "read": "ViewPricingSchedules",
+        "update": "MaintainPricingSchedules",
+        "delete": "MaintainPricingSchedules"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "ipsprodcat_id",
+          "isPrimaryKey": true
+        }
+      },
+	  {
+        "name": "priceSchedule",
+        "toOne": {
+          "type": "PriceSchedule",
+          "column": "ipsprodcat_ipshead_id"
+        }
+      },
+      {
+        "name": "productCategory",
+        "toOne": {
+          "type": "ProductCategory",
+          "column": "ipsprodcat_prodcat_id"
+        }
+      },
+	  {
+        "name": "qtyBreak",
+        "attr": {
+          "type": "Number",
+          "column": "ipsprodcat_qtybreak"
+        }
+      },
+	  {
+        "name": "discountPercent",
+        "attr": {
+          "type": "Number",
+          "column": "ipsprodcat_discntprcnt"
+        }
+      },
+	  {
+        "name": "fixedAmountDiscount",
+        "attr": {
+          "type": "Number",
+          "column": "ipsprodcat_fixedamtdiscount"
+        }
+      }
+	],
+    "isSystem": true
+  }
+]
