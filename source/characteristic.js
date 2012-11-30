@@ -8,7 +8,7 @@ white:true*/
 
   /**
     @class
-
+	@name XM.Characteristic
     @extends XM.Document
   */
   XM.Characteristic = XM.Document.extend(/** @lends XM.Characteristic# */{
@@ -37,7 +37,7 @@ white:true*/
     //..................................................
     // METHODS
     //
-
+    
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
       this.on('change:characteristicType', this.characteristicTypeDidChange);
@@ -129,7 +129,7 @@ white:true*/
 
   /**
     @class
-
+    @name XM.CharacteristicOption
     @extends XM.Model
   */
   XM.CharacteristicOption = XM.Model.extend(/** @lends XM.CharacteristicOption# */{
@@ -147,10 +147,8 @@ white:true*/
   });
 
   /**
-    @class
-
-    Base class for use on characteristic assignment classes.
-
+    @class Base class for use on characteristic assignment classes.
+    @name XM.CharacteristicAssignment
     @extends XM.Model
   */
   XM.CharacteristicAssignment = XM.Model.extend(/** @lends XM.CharacteristicAssignment# */{
@@ -183,7 +181,7 @@ white:true*/
 
   /**
     @class
-
+    @name XM.CharacteristicCollection
     @extends XM.Collection
   */
   XM.CharacteristicCollection = XM.Collection.extend(/** @lends XM.CharacteristicCollection# */{

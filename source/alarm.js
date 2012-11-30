@@ -8,7 +8,7 @@ white:true*/
 
   /**
     @class
-
+    @name XM.Alarm
     @extends XM.Document
   */
   XM.Alarm = XM.Document.extend(/** @lends XM.Alarm# */{
