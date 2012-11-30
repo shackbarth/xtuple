@@ -13,6 +13,7 @@
 
 XT.stringsFor("en_US", {
 
+	"_actions": "Actions",
   "_advancedSearch": "Advanced Search",
   "_apply": "Apply",
   "_back": "Back",
@@ -33,6 +34,7 @@ XT.stringsFor("en_US", {
   "_editAddress": "Edit Address",
   "_export": "Export",
   "_help": "Help",
+  "_history" : "History",
   "_loading": "Loading",
   "_myAccount": "My Account",
   "_new": "New",
