@@ -14,6 +14,7 @@
 -- xt functions
 \i xt/functions/add_column.sql;
 \i xt/functions/add_constraint.sql;
+\i xt/functions/add_index.sql;
 \i xt/functions/add_primary_key.sql;
 \i xt/functions/any_numeric.sql;
 \i xt/functions/any_text.sql;
