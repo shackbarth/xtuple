@@ -96,6 +96,7 @@ select xt.install_js('XT','Orm','xtuple', $$
   XT.Orm.viewDependencies = function(view) {
     var rec, viewNames = [],
       nsp = view.beforeDot(),
+      quoted = view.replace(".", '."') + '"';
       sql = 'select distinct relname::text as "viewName" ' +
             'from pg_depend ' +
             'join pg_rewrite on (pg_rewrite.oid=objid) ' +
@@ -103,9 +104,9 @@ select xt.install_js('XT','Orm','xtuple', $$
             'join pg_namespace n on (c.relnamespace=n.oid) ' +
             "where (classid='pg_rewrite'::regclass) " +
             " and (refclassid='pg_class'::regclass) " +
-            ' and (refobjid::regclass::text = $1) ' +
-            " and (nspname || '.' || relname != $1) ";
-    rec = plv8.execute(sql, [view]);
+            ' and (refobjid::regclass::text in ($1,$2)) ' +
+            " and (nspname || '.' || relname not in ($1,$2)) ";
+    rec = plv8.execute(sql, [view, quoted]);
 
     /*  Loop through view dependencies */
     for(var i = 0; i < rec.length; i++) {
@@ -311,12 +312,12 @@ select xt.install_js('XT','Orm','xtuple', $$
           col = '({select}) as "{alias}"';
           if(!type) { throw new Error('No type was defined on property ' + props[i].name); }
           if(DEBUG) { plv8.elog(NOTICE, 'building toOne'); }
-          conditions = type + '."' + inverse + '" = ' + tblAlias + '.' + toOne.column;
+          conditions = '"' + type + '"."' + inverse + '" = ' + tblAlias + '.' + toOne.column;
 
           /* build select */
           col = col.replace('{select}',
-             SELECT.replace('{columns}', type)
-                   .replace('{table}', table)
+             SELECT.replace('{columns}', '"' + type + '"')
+                   .replace('{table}',  table)
                    .replace('{conditions}', conditions))
                    .replace('{alias}', alias);
           cols.push(col);
