@@ -155,6 +155,95 @@
          "type": "String",
          "column": "org_cloud"
        }
+     },
+     {
+       "name": "extensions",
+       "toMany": {
+         "isNested": true,
+         "type": "OrganizationExtension",
+         "column": "org_name",
+         "inverse": "organization"
+       }
+     }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Extension",
+    "table": "xt.ext",
+    "comment": "Extension Map",
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "ext_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "name",
+       "attr": {
+         "type": "String",
+         "column": "ext_name"
+       }
+     },
+     {
+       "name": "description",
+       "attr": {
+         "type": "String",
+         "column": "ext_descrip"
+       }
+     },
+     {
+       "name": "location",
+       "attr": {
+         "type": "String",
+         "column": "ext_location"
+       }
+     },
+     {
+       "name": "notes",
+       "attr": {
+         "type": "String",
+         "column": "ext_notes"
+       }
+     }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "OrganizationExtension",
+    "table": "xt.orgext",
+    "idSequenceName": "orgext_orgext_id_seq",
+    "comment": "Organization Extension Map",
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "orgext_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "organization",
+       "attr": {
+         "type": "String",
+         "column": "orgext_org_name"
+       }
+     },
+     {
+       "name": "extension",
+       "toOne": {
+         "isNested": true,
+         "type": "Extension",
+         "column": "orgext_ext_id"
+       }
      }
     ],
     "isSystem": true
