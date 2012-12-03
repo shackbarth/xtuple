@@ -159,8 +159,7 @@ white:true*/
           XT.log("Error loading extensions");
         }
         extensionOptions.success = function (resp) {
-          that.privateExtensions = resp.private;
-          that.publicExtensions = resp.public;
+          that.extensions = resp;
           callback();
         };
 
