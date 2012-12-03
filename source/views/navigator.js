@@ -544,9 +544,9 @@ trailing:true white:true*/
       // Make sure the advanced search icon is visible iff there is an advanced
       // search for this list
       if (panel.parameterWidget) {
-        this.$.searchIconButton.setStyle("visibility: visible;");
+        this.$.searchIconButton.setStyle("display: inline");
       } else {
-        this.$.searchIconButton.setStyle("visibility: hidden;");
+        this.$.searchIconButton.setStyle("display: none;");
       }
       this.doNavigatorEvent({name: panel.name, show: false});
 
