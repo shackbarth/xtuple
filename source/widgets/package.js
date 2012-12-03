@@ -13,5 +13,6 @@ enyo.depends(
   "relation.js",
   "parameter.js",
   "file_input.js",
-  "toggle_button.js"
+  "toggle_button.js",
+	"icon_button.js"
 );

@@ -876,7 +876,10 @@ body {
 .xv-menuitem.disabled {
   color: #696969;
 }
-/* This class isn't being used */
 .xv-button-bar .onyx-button {
   margin: 0 40px 0 40px;
+}
+/* This is for styling the moved items in the more toolbar*/
+.xv-toolbar-moved {
+  width: 220px;
 }

@@ -7,7 +7,7 @@ white:true*/
 
   /**
     @name XV.ParameterItem
-    @class An input control for the Advanced Search feature 
+    @class An input control for the Advanced Search feature
     in which the user specifies one or more search parameters.<br />
     Represents one search parameter.
     A component of {@link XV.ParameterWidget}.
@@ -96,12 +96,12 @@ white:true*/
   /**
     @name XV.ParameterWidget
     @class Contains a set of fittable rows to implement the Advanced Search feature.<br />
-    Each row is a {@link XV.ParameterItem} and represents a parameter on which 
+    Each row is a {@link XV.ParameterItem} and represents a parameter on which
     the user can narrow the search results.<br />
-    Derived from <a href="http://enyojs.com/api/#enyo.FittableRows">enyo.FittableRows</a>. 
+    Derived from <a href="http://enyojs.com/api/#enyo.FittableRows">enyo.FittableRows</a>.
     @extends enyo.FittableRows
   */
-  var parameterWidgetHash = {
+  enyo.kind(enyo.mixin(/** @lends XV.ParameterWidget# */{
     name: "XV.ParameterWidget",
     kind: "FittableRows",
     classes: "xv-groupbox",
@@ -127,7 +127,7 @@ white:true*/
       this.processExtensions();
       this.populateFromCookie();
       this.isAllSetUp = true;
-      
+
       if (role) {
         hash[role] = true;
         if (XM.characteristics.where(hash).length) {
@@ -136,7 +136,7 @@ white:true*/
             kind: "onyx.GroupboxHeader",
             content: "_characteristics".loc()
           });
-        
+
           // Process text and list
           chars = XM.characteristics.filter(function (char) {
             var type = char.get('characteristicType');
@@ -144,7 +144,7 @@ white:true*/
               char.get('isSearchable') &&
               (type === K.TEXT || type === K.LIST);
           });
-        
+
           _.each(chars, function (char) {
             var kind;
             hash = {
@@ -173,7 +173,7 @@ white:true*/
             }
             that.createComponent(hash);
           });
-          
+
           // Process dates
           chars = XM.characteristics.filter(function (char) {
             var type = char.get('characteristicType');
@@ -181,13 +181,13 @@ white:true*/
               char.get('isSearchable') &&
               (type === K.DATE);
           });
-        
+
           _.each(chars, function (char) {
             that.createComponent({
               kind: "onyx.GroupboxHeader",
               content: char.get('name').loc()
             });
-          
+
             hash = {
               name: char.get('name') + "FromCharacteristic",
               label: "_from".loc(),
@@ -198,7 +198,7 @@ white:true*/
               defaultKind: "XV.DateWidget"
             };
             that.createComponent(hash);
-          
+
             hash = {
               name: char.get('name') + "ToCharacteristic",
               label: "_to".loc(),
@@ -337,9 +337,6 @@ white:true*/
         }
       });
     }
-  };
-
-  parameterWidgetHash = enyo.mixin(parameterWidgetHash, XV.ExtensionsMixin);
-  enyo.kind(parameterWidgetHash);
+  }, XV.ExtensionsMixin));
 
 }());
