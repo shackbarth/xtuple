@@ -151,19 +151,9 @@ white:true*/
           XT.log("Error download extensions");
         };
 
-        // download all public extensions
-        for (i = 0; i < XT.session.publicExtensions.length; i++) {
-          extensionPath = XT.session.publicExtensions[i];
-          extensionCount++;
-          ajax = new enyo.Ajax({url: extensionPath});
-          ajax.go();
-          ajax.response(extensionSuccess);
-          ajax.error(extensionError);
-        }
-
-        // download all private extensions
-        for (i = 0; i < XT.session.privateExtensions.length; i++) {
-          extensionPath = XT.session.privateExtensions[i];
+        // download all extensions
+        for (i = 0; i < XT.session.extensions.length; i++) {
+          extensionPath = XT.session.extensions[i];
           extensionCount++;
           ajax = new enyo.Ajax({url: extensionPath});
           ajax.go();
