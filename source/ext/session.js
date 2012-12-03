@@ -163,7 +163,7 @@ white:true*/
           callback();
         };
 
-        XT.dataSource.dispatch('XT.Session', 'extensions', null, extensionOptions);
+        XT.dataSource.getExtensionList(extensionOptions);
       }
 
       return true;
