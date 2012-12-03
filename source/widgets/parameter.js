@@ -101,7 +101,7 @@ white:true*/
     Derived from <a href="http://enyojs.com/api/#enyo.FittableRows">enyo.FittableRows</a>.
     @extends enyo.FittableRows
   */
-  enyo.kind(enyo.mixin(XV.ExtensionsMixin, /** @lends XV.ParameterWidget# */{
+  enyo.kind(enyo.mixin(/** @lends XV.ParameterWidget# */{
     name: "XV.ParameterWidget",
     kind: "FittableRows",
     classes: "xv-groupbox",
@@ -337,6 +337,6 @@ white:true*/
         }
       });
     }
-  }));
+  }, XV.ExtensionsMixin));
 
 }());
