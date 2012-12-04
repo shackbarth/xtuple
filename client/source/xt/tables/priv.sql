@@ -1,4 +1,7 @@
--- table definition
+-- use PK sequence from public_priv
+alter table xt.priv alter column priv_id set default nextval('priv_priv_id_seq'::regclass);
+
+-- copy over data from public.priv
 
 insert into xt.priv
 select src.priv_id, src.priv_name, src.priv_descrip, '', src.priv_module, 'xtuple'
