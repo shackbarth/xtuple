@@ -210,6 +210,13 @@
          "type": "String",
          "column": "ext_notes"
        }
+     },
+     {
+       "name": "privilegeName",
+       "attr": {
+         "type": "String",
+         "column": "ext_priv_name"
+       }
      }
     ],
     "isSystem": true
