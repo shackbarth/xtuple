@@ -1,12 +1,12 @@
 -- table definition
 
-insert into xt.priv
-select src.priv_id, src.priv_name, src.priv_descrip, '', src.priv_module, 'xtuple'
+insert into xt.priv (priv_name, priv_descrip, priv_group, priv_context, priv_module)
+select src.priv_name, src.priv_descrip, '', src.priv_module, 'xtuple'
 from public.priv src
 where not exists (
-  select chk.priv_id
+  select chk.priv_name
   from xt.priv chk
-  where chk.priv_id=src.priv_id
+  where chk.priv_name=src.priv_name
 );
 
 do $$
