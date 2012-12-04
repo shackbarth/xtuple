@@ -431,7 +431,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "UserAccountPrivilegeAssignment",
-    "table": "usrpriv",
+    "table": "xt.userpriv",
     "idSequenceName": "usrpriv_usrpriv_id_seq",
     "comment": "User Account Privilege Assignment Map",
     "privileges": {
@@ -447,7 +447,7 @@
         "name": "id",
         "attr": {
           "type": "Number",
-          "column": "usrpriv_id",
+          "column": "userpriv_id",
           "isPrimaryKey": true
         }
       },
@@ -455,7 +455,7 @@
         "name": "userAccount",
         "attr": {
           "type": "String",
-          "column": "usrpriv_username",
+          "column": "userpriv_username",
           "required": true
         }
       },
@@ -463,7 +463,7 @@
         "name": "privilege",
         "toOne": {
           "type": "Privilege",
-          "column": "usrpriv_priv_id",
+          "column": "userpriv_priv_id",
           "required": true
         }
       }
