@@ -314,8 +314,8 @@ white:true*/
         };
       if ((parent && parent.canUpdate(this)) ||
           (!parent && canDelete)) {
-        this.setStatus(K.DESTROYED_DIRTY, {cascade: true});
         this._wasNew = this.isNew(); // Hack so prototype call will still work
+        this.setStatus(K.DESTROYED_DIRTY, {cascade: true});
 
         // If it's top level commit to the server now.
         if (!parent && canDelete) {
