@@ -7,41 +7,39 @@ white:true*/
   "use strict";
 
   /**
-    @class
-
-    `XM.Collection` is a standard class for querying the xTuple data source.
-    It should be sub classed for use with sub classes of `XM.Model` (which
-    themselves typically exist in the `XM` name space). To create a new class,
-    simply extened `XM.Collection` and indicate the model to reference:
-
+    @class `XM.Collection` is a standard class for querying the xTuple data source.
+    It should be subclassed for use with subclasses of `XM.Model` (which
+    themselves typically exist in the `XM` namespace). To create a new class,
+    simply extend `XM.Collection` and indicate the model to reference:
+    <pre><code>
       XM.MyCollection = XM.Collection.extend({
         model: XM.MyModel
       })
-
-    Once your class is created you can intantiate one and call `fetch` to
-    retreive all records of that type.
-
+    </code></pre>
+    After your class is created, you can instantiate one and call `fetch` to
+    retrieve all records of that type.
+    <pre><code>
       var coll = new XM.MyCollection();
       coll.fetch();
-
+    </code></pre>
     You can access the results on the `models` array.
-
+    <pre><code>
       coll.models;
-
+    </code></pre>
     You can specify options in fetch including `success` and `query` options.
     The `success` option is the callback executed when `fetch` sucessfully
     completes.
-
+    <pre><code>
       var options = {
         success: function () {
           console.log('Fetch completed!')
         }
       };
       coll.fetch(options);
-
-    Use a query object to limit the result set. This query will return results
+    </code></pre>
+    Use a query object to limit the result set. For example, this query will return results
     with the first name 'Frank' and last name 'Farley':
-
+    <pre><code>
       var coll = new XM.ContactListItemCollection();
       var options = {
         query: {
@@ -55,24 +53,24 @@ white:true*/
         }
       };
       coll.fetch(options);
-
-    The `query` object supports the following:
-      * parameters - Array of objects describing what to filter on.
+    </code></pre>
+    The `query` object supports the following:<pre>
+      &#42; parameters - Array of objects describing what to filter on.
         Supports the following properties:
-        > attribute - The name of the attrbute to filter on
+        > attribute - The name of the attribute to filter on.
         > operator - The operator to perform comparison on.
         > value - The matching value.
         > includeNull - "OR" include the row if the attribute is null irrespective
           of whether the operator matches.
-      * orderBy - Array of objects designating sort order. Supports
+      &#42; orderBy - Array of objects designating sort order. Supports
         the following properties:
-        > attrbute - Attribute to sort by.
+        > attribute - Attribute to sort by.
         > descending - `Boolean` value. If false or absent sort ascending.
-      * rowLimit - Maximum rows to return
-      * rowOffset - Result offset. Always use together with `orderBy`.
-
+      &#42; rowLimit - Maximum rows to return.
+      &#42; rowOffset - Result offset. Always use together with `orderBy`.
+    </pre>
     If no operator is provided in a parameter object, the default will be `=`.
-    Supported operators include:
+    Supported operators include:<pre>
       - `=`
       - `!=`
       - `<`
@@ -83,12 +81,10 @@ white:true*/
       - `ENDS_WITH` --   (checks if a string ends with another one)
       - `MATCHES` --     (checks if a string is matched by a case insensitive regexp)
       - `ANY` --         (checks if the thing on its left is contained in the array
-                         on its right)
-
-    Examples:
-
-    Fetch the first 10 Contacts ordered by last name, then first name.
-
+                         on its right)</pre>                   
+    <h5>Examples</h5>
+    Example: Fetch the first 10 Contacts ordered by last name, then first name.
+    <pre><code>
       var coll = new XM.ContactListItemCollection();
       var options = {
         query: {
@@ -101,9 +97,9 @@ white:true*/
         }
       };
       coll.fetch(options);
-
-    Fetch Contacts with 'Frank' in the name:
-
+    </code></pre>
+    Example: Fetch Contacts with 'Frank' in the name.
+    <pre><code>
       var coll = new XM.ContactListItemCollection();
       var options = {
         query: {
@@ -115,10 +111,10 @@ white:true*/
         }
       };
       coll.fetch(options);
-
-    Fetch Accounts in Virginia ordering by Contact name descending. Note
-    support for querying object hierchary paths.
-
+    </code></pre>
+    Example: Fetch Accounts in Virginia ordering by Contact name descending. Note
+    support for querying object hierarchy paths.
+    <pre><code>
       var coll = new XM.AccountListItemCollection();
       var options = {
         query: {
@@ -133,9 +129,9 @@ white:true*/
         }
       };
       coll.fetch(options);
-
-    Fetch Items with numbers starting with 'B'.
-
+    </code></pre>
+    Example: Fetch Items with numbers starting with 'B'.
+    <pre><code>
       var coll = new XM.ItemListItemCollection();
       var options = {
         query: {
@@ -147,9 +143,9 @@ white:true*/
         }
       };
       coll.fetch(options);
-
-    Fetch active To Do items due on or after July 17, 2009.
-
+    </code></pre>
+    Example: Fetch active To Do items due on or after July 17, 2009.
+    <pre><code>
       var coll = new XM.ToDoListItemCollection();
       var dt = new Date();
       dt.setMonth(7);
@@ -168,12 +164,12 @@ white:true*/
         }
       };
       coll.fetch(options);
-
-    Fetch contact(s) with an account number, account name, (contact) name,
+    </code></pre>
+    Example: Fetch contact(s) with an account number, account name, (contact) name,
     phone, or city matching 'ttoys' and a first name beginning with 'M'. Note
     an attribute array uses `OR` logic for comparison against all listed
     attributes.
-
+    <pre><code>
       var coll = new XM.ContactListItemCollection();
       var options = {
         query: {
@@ -189,9 +185,10 @@ white:true*/
         }
       };
       coll.fetch(options);
-
+    </code></pre>
+    @name XM.Collection
     @extends Backbone.Collection
-  */
+    */
   XM.Collection = Backbone.Collection.extend(/** @lends XM.Collection# */{
 
     /**
@@ -206,11 +203,18 @@ white:true*/
       }
       return result;
     },
-
+    
+    /**
+     * @todo Document the getObjectByName method.
+     */
     getObjectByName: function (name) {
       return Backbone.Relational.store.getObjectByName(name);
     },
-
+    
+    /**
+     * Retrieve records from the xTuple data source.
+     * Optionally retrieve a subset by passing query parameters.
+     */
     fetch: function (options) {
       //
       // Use default order attribute if it's specified and if no options are specified
@@ -232,12 +236,13 @@ white:true*/
     },
 
     /**
-      Sync to xTuple datasource.
+      Sync to xTuple data source.
     */
     sync: function (method, model, options) {
       options = options ? _.clone(options) : {};
       options.query = options.query || {};
       options.query.recordType = model.model.prototype.recordType;
+      options.databaseType = model.model.prototype.databaseType;
 
       if (method === 'read' && options.query.recordType && options.success) {
         return XT.dataSource.fetch(options);

@@ -8,7 +8,7 @@ white:true*/
 
   /**
     @class
-
+    @name XM.Settings
     @extends XM.Model
   */
   XM.Settings = XM.Model.extend(/** @lends XM.Settings# */{
@@ -53,7 +53,7 @@ white:true*/
     },
 
     /**
-      Reimplemented to invoke `settings` and `commitSettings` functions .
+      Reimplemented to invoke `settings` and `commitSettings` functions.
     */
     sync: function (method, model, options) {
       options = options ? _.clone(options) : {};
@@ -70,11 +70,11 @@ white:true*/
 
       // Read
       if (method === 'read' && recordType && options.success) {
-        result = XT.dataSource.dispatch(this.recordType, 'settings', this.recordType, options);
+        result = this.dispatch(this.recordType, 'settings', this.recordType, options);
 
       // Write
       } else if (method === 'update') {
-        result = XT.dataSource.dispatch(this.recordType, 'commitSettings', this.changeSet(), options);
+        result = this.dispatch(this.recordType, 'commitSettings', this.changeSet(), options);
       }
       return result || false;
     },

@@ -7,9 +7,7 @@ white:true*/
   "use strict";
 
   /**
-    @class
-
-    An abstract model whose sub classes are light weight versions of full models.
+    @class An abstract model whose subclasses are lightweight versions of full models.
     `info` models are suitable for displaying information on lists and widgets.
     Usually they are not themselves editable, but special functions are included that
     allow the `info` model to determine whether its "full" counterpart is editable.
@@ -17,13 +15,14 @@ white:true*/
     The special `could` privileges are designed to take personal privilege settings
     into account, so it is important that info models have the necessary attributes
     such as `owner` and/or `assignedTo` to check for access.
-
+    
+    @name XM.Info
     @extends XM.Model
   */
   XM.Info = XM.Model.extend(/** @lends XM.Info# */{
 
     /**
-      The "full" editable counter part for this model. This is model whose privileges
+      The "full" editable counterpart for this model. This is model whose privileges
       will be checked in `could` functions.
 
       @type {String}

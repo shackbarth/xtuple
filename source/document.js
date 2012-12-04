@@ -7,9 +7,8 @@ white:true*/
   "use strict";
 
   /**
-    @class
-
-    Use this mixin for setting up document associations.
+    @class Use this mixin for setting up document associations.
+    @name XM.DocumentAssignmentsMixin
   */
   XM.DocumentAssignmentsMixin = {
 
@@ -62,11 +61,9 @@ white:true*/
   };
 
   /**
-    @class
-
-    Includes functionality common to xTuple documents uniquely identified by
+    @class Includes functionality common to xTuple documents uniquely identified by
     a user accessible `documentKey'.
-
+    @name XM.Document 
     @extends XM.Model
     @extends XM.DocumentAssignmentsMixin
   */
@@ -83,7 +80,7 @@ white:true*/
     documentKey: 'number',
 
     /**
-      Forces the document key to always be upper case.
+      Forces the document key to always be uppercase.
 
       @type {Boolean}
       @default true
@@ -99,10 +96,10 @@ white:true*/
     keyIsString: true,
 
     /**
-      Number generation method for the document key that can be one of three constants:
-        XM.Document.MANUAL_NUMBER
-        XM.Document.AUTO_NUMBER
-        XM.Document.AUTO_OVERRIDE_NUMBER
+      Number generation method for the document key that can be one of three constants:<br />
+        XM.Document.MANUAL_NUMBER<br />
+        XM.Document.AUTO_NUMBER<br />
+        XM.Document.AUTO_OVERRIDE_NUMBER<br />
 
       Can be inferred from the setting that controls this for a given record type
       if it is set.
@@ -215,7 +212,7 @@ white:true*/
       which will cross reference the ORM 'orderSequnce' property for the class
       to determine which sequence to use.
 
-      @returns {Object} Receiever
+      @returns {Object} Receiver
     */
     fetchNumber: function () {
       var that = this,
@@ -229,7 +226,7 @@ white:true*/
           that.setReadOnly(that.documentKey);
         }
       };
-      XT.dataSource.dispatch('XM.Model', 'fetchNumber',
+      this.dispatch('XM.Model', 'fetchNumber',
                              this.recordType, options);
       console.log("XM.Model.fetchNumber for: " + this.recordType);
       return this;
@@ -240,13 +237,13 @@ white:true*/
       would happen when user cancels without saving a new record.
 
       The function will send the class name property of itself to the server
-      which will cross reference the ORM 'orderSequnce' property for the class
+      which will cross reference the ORM 'orderSequence' property for the class
       to determine which sequence to use.
 
-      @returns {Object} Receiever
+      @returns {Object} Receiver
     */
     releaseNumber: function () {
-      XT.dataSource.dispatch('XM.Model', 'releaseNumber',
+      this.dispatch('XM.Model', 'releaseNumber',
                              [this.recordType, this._number]);
       this._number = null;
       console.log("XM.Model.releaseNumber for: " + this.recordType);

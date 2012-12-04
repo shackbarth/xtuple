@@ -40,7 +40,9 @@ white:true*/
         schemaOptions,
         localeOptions,
         extensionOptions,
-        callback;
+        callback,
+        schemaCount = 0,
+        schemasReturned = 0;
 
       if (options && options.success && options.success instanceof Function) {
         callback = options.success;
@@ -97,45 +99,64 @@ white:true*/
 
         // callback
         schemaOptions.success = function (resp) {
-          var schema = new Backbone.Model(resp),
+          var schema,
             prop,
             Klass,
             relations,
             i;
-          that.setSchema(schema);
 
-          // Set relations
-          for (prop in schema.attributes) {
-            if (schema.attributes.hasOwnProperty(prop)) {
-              Klass = XM.Model.getObjectByName('XM' + '.' + prop);
-              if (Klass) {
-                relations = schema.attributes[prop].relations || [];
-                if (relations.length) {
-                  Klass.prototype.relations = [];
-                  for (i = 0; i < relations.length; i++) {
-                    if (relations[i].type === "Backbone.HasOne") {
-                      relations[i].type = Backbone.HasOne;
-                    } else if (relations[i].type === "Backbone.HasMany") {
-                      relations[i].type = Backbone.HasMany;
-                    } else {
-                      continue;
+          if (that.getSchema().attributes) {
+            // add incoming data to already loaded schema attributes
+            schema = that.getSchema();
+            schema.set(resp);
+
+          } else {
+            // create schema as a new model
+            schema = new Backbone.Model(resp);
+            that.setSchema(schema);
+          }
+          schemasReturned++;
+
+          if (schemasReturned === schemaCount) {
+            // Set relations
+            for (prop in schema.attributes) {
+              if (schema.attributes.hasOwnProperty(prop)) {
+                Klass = XM.Model.getObjectByName('XM' + '.' + prop);
+                if (Klass) {
+                  relations = schema.attributes[prop].relations || [];
+                  if (relations.length) {
+                    Klass.prototype.relations = [];
+                    for (i = 0; i < relations.length; i++) {
+                      if (relations[i].type === "Backbone.HasOne") {
+                        relations[i].type = Backbone.HasOne;
+                      } else if (relations[i].type === "Backbone.HasMany") {
+                        relations[i].type = Backbone.HasMany;
+                      } else {
+                        continue;
+                      }
+                      Klass.prototype.relations.push(relations[i]);
                     }
-                    Klass.prototype.relations.push(relations[i]);
                   }
-                }
 
-                privileges = schema.attributes[prop].privileges;
-                if (privileges) {
-                  Klass.prototype.privileges = privileges;
+                  privileges = schema.attributes[prop].privileges;
+                  if (privileges) {
+                    Klass.prototype.privileges = privileges;
+                  }
                 }
               }
             }
+            callback();
           }
-
-          callback();
         };
 
+        // get schema for instance DB models
         XT.dataSource.dispatch('XT.Session', 'schema', 'xm', schemaOptions);
+        schemaCount++;
+
+        // get schema for global DB models
+        schemaOptions.databaseType = 'global';
+        XT.dataSource.dispatch('XT.Session', 'schema', 'xm', schemaOptions);
+        schemaCount++;
       }
 
       if (types & this.LOCALE) {
