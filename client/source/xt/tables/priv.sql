@@ -12,6 +12,10 @@ where not exists (
   where chk.priv_id=src.priv_id
 );
 
+update xt.priv a set priv_module = b.priv_module
+from public.priv b
+where a.priv_id = b.priv_id;
+
 do $$
   
   var i, key, group,
