@@ -119,7 +119,7 @@ white:true*/
         task,
         len,
         text,
-        ajax, extensionSuccess, extensionError, extensionPath,
+        ajax, extensionSuccess, extensionError, extensionLocation, extensionPrivilegeName,
         extensionCount = 0, extensionsDownloaded = 0,
         eachCallback = function () {
           var completed = startupManager.get('completed').length;
@@ -153,9 +153,15 @@ white:true*/
 
         // download all extensions
         for (i = 0; i < XT.session.extensions.length; i++) {
-          extensionPath = XT.session.extensions[i];
+          extensionLocation = XT.session.extensions[i].location;
+          extensionPrivilegeName = XT.session.extensions[i].privilegeName;
+          if (!XT.session.privileges.get(extensionPrivilegeName)) {
+            // don't load the extension if the user doesn't have
+            // access rights
+            continue;
+          }
           extensionCount++;
-          ajax = new enyo.Ajax({url: extensionPath});
+          ajax = new enyo.Ajax({url: extensionLocation});
           ajax.go();
           ajax.response(extensionSuccess);
           ajax.error(extensionError);
