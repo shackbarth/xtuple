@@ -28,7 +28,7 @@ white:true*/
     <pre><code>
       m = new XM.MyModel({id: 1});
       m.fetch();
-    </code></pre>  
+    </code></pre>
     
     @name XM.Model
     @description To create a new model include `isNew` in the options:
@@ -343,6 +343,22 @@ white:true*/
       XT.log('Insufficient privileges to destroy');
       return false;
     },
+    
+    /*
+      Forward a dispatch request to the data source. Runs a "dispatchable" database function.
+      Include a `success` callback function in options to handle the result.
+      
+      @param {String} Name of the class
+      @param {String} Function name
+      @param {Object} Parameters
+      @param {Object} Options
+    */
+    dispatch: function (name, func, params, options) {
+      options = options ? _.clone(options) : {};
+      if (!options.databaseType) { options.databaseType = this.databaseType; }
+      var dataSource = options.dataSource || XT.dataSource;
+      return dataSource.dispatch(name, func, params, options);
+    },
 
     /*
       Reimplemented to handle status changes.
@@ -352,7 +368,6 @@ white:true*/
     */
     fetch: function (options) {
       options = options ? _.clone(options) : {};
-      options.databaseType = this.databaseType;
       var model = this,
         K = XM.Model,
         success = options.success,
@@ -380,14 +395,13 @@ white:true*/
     */
     fetchId: function (options) {
       options = _.defaults(options ? _.clone(options) : {}, {force: true});
-      options.databaseType = this.databaseType;
       var that = this, attr;
       if (!this.id) {
         options.success = function (resp) {
           options.force = true;
           that.set(that.idAttribute, resp, options);
         };
-        XT.dataSource.dispatch('XM.Model', 'fetchId', this.recordType, options);
+        this.dispatch('XM.Model', 'fetchId', this.recordType, options);
       }
 
       // Cascade through `HasMany` relations if specified.
@@ -816,7 +830,6 @@ white:true*/
       if (this.isDirty() || attrs) {
         success = options.success;
         options.wait = true;
-        options.databaseType = this.databaseType;
         options.cascade = true; // Cascade status to children
         options.validateSave = true;
         options.success = function (resp) {
@@ -953,7 +966,9 @@ white:true*/
     */
     sync: function (method, model, options) {
       options = options ? _.clone(options) : {};
+      if (!options.databaseType) { options.databaseType = this.databaseType; }
       var that = this,
+        dataSource = options.dataSource || XT.dataSource,
         id = options.id || model.id,
         recordType = this.recordType,
         result,
@@ -967,12 +982,13 @@ white:true*/
 
       // Read
       if (method === 'read' && recordType && id && options.success) {
-        result = XT.dataSource.retrieveRecord(recordType, id, options);
+        result = dataSource.retrieveRecord(recordType, id, options);
 
       // Write
       } else if (method === 'create' || method === 'update' || method === 'delete') {
-        result = XT.dataSource.commitRecord(model, options);
+        result = dataSource.commitRecord(model, options);
       }
+      
       return result || false;
     },
 
@@ -986,8 +1002,7 @@ white:true*/
       @returns {XT.Request} Request
     */
     used: function (options) {
-      options.databaseType = this.databaseType;
-      return XT.dataSource.dispatch('XM.Model', 'used', [this.recordType, this.id], options);
+      return this.dispatch('XM.Model', 'used', [this.recordType, this.id], options);
     },
 
     /**
@@ -1344,7 +1359,7 @@ white:true*/
     findExisting: function (key, value, options) {
       var recordType = this.recordType || this.prototype.recordType,
         params = [ recordType, key, value, this.id || -1 ];
-      XT.dataSource.dispatch('XM.Model', 'findExisting', params, options);
+      this.dispatch('XM.Model', 'findExisting', params, options);
       XT.log("XM.Model.findExisting for: " + recordType);
       return this;
     },

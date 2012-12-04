@@ -226,7 +226,7 @@ white:true*/
           that.setReadOnly(that.documentKey);
         }
       };
-      XT.dataSource.dispatch('XM.Model', 'fetchNumber',
+      this.dispatch('XM.Model', 'fetchNumber',
                              this.recordType, options);
       console.log("XM.Model.fetchNumber for: " + this.recordType);
       return this;
@@ -243,7 +243,7 @@ white:true*/
       @returns {Object} Receiver
     */
     releaseNumber: function () {
-      XT.dataSource.dispatch('XM.Model', 'releaseNumber',
+      this.dispatch('XM.Model', 'releaseNumber',
                              [this.recordType, this._number]);
       this._number = null;
       console.log("XM.Model.releaseNumber for: " + this.recordType);

@@ -70,11 +70,11 @@ white:true*/
 
       // Read
       if (method === 'read' && recordType && options.success) {
-        result = XT.dataSource.dispatch(this.recordType, 'settings', this.recordType, options);
+        result = this.dispatch(this.recordType, 'settings', this.recordType, options);
 
       // Write
       } else if (method === 'update') {
-        result = XT.dataSource.dispatch(this.recordType, 'commitSettings', this.changeSet(), options);
+        result = this.dispatch(this.recordType, 'commitSettings', this.changeSet(), options);
       }
       return result || false;
     },
