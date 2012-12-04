@@ -32,6 +32,7 @@ trailing:true white:true*/
         {name: "projectTaskList", kind: "XV.ProjectTaskList"}
       ],
       privileges: [
+        "AccessProjectExtension",
         "MaintainAddresses",
         "MaintainAllContacts",
         "MaintainAllCRMAccounts",
