@@ -21,11 +21,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     init: function () {
       //X.debug("X.Route.init(%@)".f(this.get("className")));
       var handles = this.handles, regex, tmp = [];
-      regex = /(:[a-z0-9]*)/g;
+      regex = /({[A-Za-z0-9]*})/g;
       _.each(handles, function (handle, idx) {
         var match = handle.match(regex), base, route;
         if (match) {
-          base = handle.replace(regex, "([a-z0-9]*)").suf("$");
+          base = handle.replace(regex, "([A-Za-z0-9]*)").suf("$");
           base = base.escape();
           tmp.push(new RegExp(base));
         }
