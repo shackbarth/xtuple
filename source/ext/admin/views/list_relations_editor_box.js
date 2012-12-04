@@ -6,8 +6,9 @@ trailing:true white:true*/
 (function () {
 
   // ..........................................................
-  // PROJECT
+  // USER ORGANIZATIONS
   //
+  
   enyo.kind({
     name: "XV.UserOrganizationsEditor",
     kind: "XV.RelationsEditor",
@@ -27,8 +28,7 @@ trailing:true white:true*/
     title: "_organizations".loc(),
     editor: "XV.UserOrganizationsEditor",
     parentKey: "user",
-    listRelations: "XV.UserOrganizationListRelations",
-    fitButtons: false
+    listRelations: "XV.UserOrganizationListRelations"
   });
 
 }());

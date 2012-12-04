@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XT:true, XM:true, XV:true, enyo:true*/
+/*global XT:true, XM:true, XV:true, enyo:true, alert:true*/
 
 (function () {
 
@@ -13,6 +13,7 @@ trailing:true white:true*/
     name: "XV.UserWorkspace",
     kind: "XV.Workspace",
     title: "_user".loc(),
+    headerAttrs: ["id"],
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -20,7 +21,7 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "id"},
+            {kind: "XV.InputWidget", attr: "id", label: "_userName".loc() },
             {kind: "onyx.Popup", name: "resetPasswordPopup", centered: true,
               modal: true, floating: true, scrim: true, components: [
               {content: "_resetPasswordConfirmation".loc() },
@@ -31,7 +32,11 @@ trailing:true white:true*/
                 ontap: "closeResetPasswordPopup",
                 classes: "onyx-blue xv-popup-button"}
             ]},
-            {kind: "onyx.Button", name: "resetPasswordButton", content: "_resetPassword".loc(), ontap: "warnResetPassword", showing: false}
+            {kind: "onyx.Button", name: "resetPasswordButton",
+              content: "_resetPassword".loc(),
+              ontap: "warnResetPassword",
+              style: "border-radius: 4px; margin: 8px;",
+              showing: false}
           ]}
         ]},
         {kind: "XV.UserOrganizationsBox", attr: "organizations"}
@@ -101,7 +106,7 @@ trailing:true white:true*/
      */
     warnResetPassword: function () {
       this.$.resetPasswordPopup.show();
-    },
+    }
   });
 
   XV.registerModelWorkspace("XM.User", "XV.UserWorkspace");

@@ -40,7 +40,8 @@ trailing:true white:true*/
   //
   enyo.kind({
     name: "XV.OrganizationList",
-    kind: "XV.NameDescriptionList"
+    kind: "XV.NameDescriptionList",
+    parameterWidget: "XV.OrganizationParameters"
   });
 
 }());

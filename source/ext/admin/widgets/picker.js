@@ -18,18 +18,4 @@ regexp:true, undef:true, trailing:true, white:true */
     ]
   });
 
-  // ..........................................................
-  // ORGANIZATION
-  //
-
-  enyo.kind({
-    name: "XV.OrganizationWidget",
-    kind: "XV.PickerWidget",
-    collection: "XM.organizations",
-    idAttribute: "name",
-    orderBy: [
-      {attribute: 'name'}
-    ]
-  });
-
 }());

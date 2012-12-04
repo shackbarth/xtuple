@@ -18,14 +18,15 @@ var lang = XT.stringsFor("en_US", {
   // ********
 
   "_admin": "Admin",
-  "_databaseServer": "Database Server",
-  "_databaseServers": "Database Servers",
+  "_databaseServer": "Server",
+  "_databaseServers": "Servers",
   "_organizations": "Organizations",
   "_port": "Port",
   "_hostname": "Hostname",
   "_dateAdded": "Date Added",
   "_location": "Location",
   "_user": "User",
+  "_userName": "User Name",
   "_users": "Users",
   "_id": "ID",
   "_resetPassword": "Reset Password",
