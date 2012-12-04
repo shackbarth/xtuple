@@ -69,12 +69,14 @@ select xt.install_js('XM','Model','xtuple', $$
         map = XT.Orm.fetch(nameSpace, type),
         table = recordType.decamelize(),
         pKey = XT.Orm.primaryKey(map),
-        sql = 'select {primaryKey} as id from {table} where {userKey}::text=$1::text and {primaryKey} != $2'
+        sql = 'select "{primaryKey}" as id from {table} where "{userKey}"::text=$1::text and "{primaryKey}" != $2'
               .replace(/{primaryKey}/g, pKey)
               .replace(/{table}/, table)
               .replace(/{userKey}/, key)
               .replace(/{value}/, value)
               .replace(/{id}/, id),
+        result;
+        if (DEBUG) { plv8.elog(NOTICE, sql); }
         result = plv8.execute(sql, [value, id])[0];
 
     return result ? result.id : 0;
