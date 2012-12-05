@@ -65,6 +65,20 @@ white:true*/
     autoFetchId: false
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.Extension = XM.Model.extend({
+    /** @scope XM.Extension.prototype */
+
+    recordType: 'XM.Extension',
+
+    databaseType: 'global'
+
+  });
 
   /**
     @class
@@ -99,7 +113,20 @@ white:true*/
       }
     }
   });
+  
+  /**
+    @class
 
+    @extends XM.Model
+  */
+  XM.OrganizationExtension = XM.Model.extend({
+    /** @scope XM.OrganizationExtension.prototype */
+
+    recordType: 'XM.OrganizationExtension',
+
+    databaseType: 'global'
+
+  });
 
   /**
     @class
