@@ -58,6 +58,14 @@
     "type": "DatabaseServer",
     "table": "xt.dbserver",
     "comment": "Database Server Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainDatabaseServers",
+        "read": "ViewDatabaseServers",
+        "update": "MaintainDatabaseServers",
+        "delete": "MaintainDatabaseServers"
+      }
+    },
     "properties": [
      {
        "name": "name",
