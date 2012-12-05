@@ -5,6 +5,14 @@
     "type": "User",
     "table": "xt.usr",
     "comment": "User Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainGlobalUsers",
+        "read": "ViewGlobalUsers",
+        "update": "MaintainGlobalUsers",
+        "delete": "MaintainGlobalUsers"
+      }
+    },
     "properties": [
      {
        "name": "id",
@@ -71,6 +79,90 @@
        }
      }
     ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "GlobalPrivilege",
+    "table": "xt.priv",
+    "comment": "Privilege Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "priv_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "group",
+        "attr": {
+          "type": "String",
+          "column": "priv_group"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "priv_name"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "UserGlobalPrivilegeAssignment",
+    "table": "xt.userpriv",
+    "idSequenceName": "xt.userpriv_userpriv_id_seq",
+    "comment": "User Global Privilege Assignment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "userpriv_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "user",
+        "attr": {
+          "type": "String",
+          "column": "userpriv_username",
+          "required": true
+        }
+      },
+      {
+        "name": "privilege",
+        "toOne": {
+          "type": "GlobalPrivilege",
+          "column": "userpriv_priv_id",
+          "required": true
+        }
+      }
+    ],
+    "isNestedOnly": true,
     "isSystem": true
   }
 ]

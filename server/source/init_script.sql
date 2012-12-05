@@ -26,7 +26,7 @@
 
 -- add necessary privs
 
-select xt.add_priv('MaintainUsers', 'Can Maintain Users', 'MaintainUsers', 'Admin', 'admin', 'Admin');
-select xt.add_priv('ViewUsers', 'Can View Users', 'ViewUsers', 'Admin', 'admin', 'Admin');
+select xt.add_priv('MaintainGlobalUsers', 'Can Maintain Users', 'MaintainGlobalUsers', 'Admin', 'admin', 'Admin');
+select xt.add_priv('ViewGlobalUsers', 'Can View Users', 'ViewGlobalUsers', 'Admin', 'admin', 'Admin');
 
 -- [ END ] xt
