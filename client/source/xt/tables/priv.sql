@@ -1,3 +1,5 @@
+-- copy over data from public.priv
+
 insert into xt.priv
 select src.priv_id, src.priv_name, src.priv_descrip, '', src.priv_module, 'xtuple'
 from public.priv src
