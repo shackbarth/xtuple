@@ -162,6 +162,11 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.DatabaseServerWidget", attr: "databaseServer"}
           ]}
+        ]},
+        {kind: "XV.Groupbox", name: "extensionPanel", classes: "xv-assignment-box",
+            title: "_extensions".loc(), components: [
+          {kind: "onyx.GroupboxHeader", content: "_extensions".loc()},
+          {kind: "XV.OrganizationExtensionAssignmentBox", attr: "extensions" }
         ]}
       ]}
     ],

@@ -205,9 +205,9 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.ExtensionOrganization = XM.Model.extend(/** @lends XM.ExtensionOrganization.prototype */{
+  XM.OrganizationExtension = XM.Model.extend(/** @lends XM.OrganizationExtension.prototype */{
 
-    recordType: 'XM.ExtensionOrganization',
+    recordType: 'XM.OrganizationExtension',
 
     databaseType: 'global'
 
