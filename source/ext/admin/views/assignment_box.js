@@ -3,8 +3,6 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true
 white:true*/
 /*global enyo:true, XM:true, XV:true, _:true */
 
-/** @module XV */
-
 (function () {
   /**
    * @class Manages the assignment of extensions to organizations.
@@ -19,18 +17,6 @@ white:true*/
     totalCollectionName: "ExtensionCollection",
     type: "extension",
     /**
-      The available privileges will be dynamically populated based on the modules
-      that are loaded.
-    create: function () {
-      var privilegeArrays = _.map(XT.app.$.postbooks.getModules(), function (module) {
-        return module.privileges ? module.privileges : [];
-      });
-      this.setRestrictedValues(_.uniq(_.flatten(privilegeArrays)));
-
-      this.inherited(arguments);
-    },
-     */
-    /**
      * Returns a model specific to this AssignmentBox.
      *
      * @override
@@ -38,14 +24,7 @@ white:true*/
      */
     getAssignmentModel: function (extensionModel) {
       return new XM.OrganizationExtension({
-        // TODO
         extension: extensionModel
-
-
-        //privilege: privilegeModel,
-        // XXX bad practice to use this field
-        // we could get it by having the workspace inject it into us
-        //userAccountRole: this.getAssignedCollection().user_account_role
       }, {isNew: true});
     }
   });
