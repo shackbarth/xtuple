@@ -544,9 +544,9 @@ trailing:true white:true*/
       // Make sure the advanced search icon is visible iff there is an advanced
       // search for this list
       if (panel.parameterWidget) {
-        this.$.searchIconButton.setStyle("visibility: visible;");
+        this.$.searchIconButton.setStyle("display: inline");
       } else {
-        this.$.searchIconButton.setStyle("visibility: hidden;");
+        this.$.searchIconButton.setStyle("display: none;");
       }
       this.doNavigatorEvent({name: panel.name, show: false});
 
@@ -590,9 +590,12 @@ trailing:true white:true*/
     setMenuPanel: function (index) {
       var label = index ? "_back".loc() : "_logout".loc();
       this.$.menuPanels.setIndex(index);
-      this.$.menuPanels.getActive().select(0);
-      this.setContentPanel(0);
-      this.$.backButton.setContent(label);
+			// on mobile, only automatically select the first screen if it's the module menu
+			if (!enyo.Panels.isScreenNarrow() || this.$.menuPanels.getIndex() == MODULE_MENU) {
+				this.$.menuPanels.getActive().select(0);
+				this.setContentPanel(0);
+      }
+			this.$.backButton.setContent(label);
       this.$.refreshButton.setShowing(index);
       this.$.search.setShowing(index);
       this.$.searchIconButton.setShowing(index);
