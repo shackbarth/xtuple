@@ -196,11 +196,7 @@ white:true*/
 
     recordType: 'XM.Extension',
 
-    idAttribute: 'name',
-
-    databaseType: 'global',
-
-    autoFetchId: false
+    databaseType: 'global'
 
   });
 

@@ -170,6 +170,35 @@ trailing:true white:true*/
 
   XV.registerModelWorkspace("XM.Organization", "XV.OrganizationWorkspace");
 
+  // ..........................................................
+  // EXTENSION
+  //
+
+  enyo.kind({
+    name: "XV.ExtensionWorkspace",
+    kind: "XV.Workspace",
+    title: "_extension".loc(),
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.InputWidget", attr: "location"},
+            {kind: "XV.InputWidget", attr: "privilegeName"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes"}
+          ]}
+        ]}
+      ]}
+    ],
+    model: "XM.Extension"
+  });
+
+  XV.registerModelWorkspace("XM.Extension", "XV.ExtensionWorkspace");
 
 
 }());
