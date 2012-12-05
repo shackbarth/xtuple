@@ -146,7 +146,7 @@ white:true*/
     autoFetchId: false,
 
     documentKey: 'id',
-    
+
     enforceUpperKey: false,
 
     databaseType: 'global',
@@ -158,14 +158,14 @@ white:true*/
       XM.Document.prototype.initialize.apply(this, arguments);
       this.setReadOnly('id', false);
     },
-    
+
     findExisting: function (key, value, options) {
       var recordType = this.recordType || this.prototype.recordType,
         params = [ recordType, key, value, value + "1" ];
       this.dispatch('XM.Model', 'findExisting', params, options);
       return this;
     }
-    
+
   });
 
   /**
@@ -179,11 +179,41 @@ white:true*/
     recordType: 'XM.UserOrganization',
 
     databaseType: 'global',
-    
+
     requiredAttributes: [
       "name",
       "username"
     ]
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.Extension = XM.Model.extend(/** @lends XM.Extension.prototype */{
+
+    recordType: 'XM.Extension',
+
+    idAttribute: 'name',
+
+    databaseType: 'global',
+
+    autoFetchId: false
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.ExtensionOrganization = XM.Model.extend(/** @lends XM.ExtensionOrganization.prototype */{
+
+    recordType: 'XM.ExtensionOrganization',
+
+    databaseType: 'global'
 
   });
 
@@ -259,6 +289,17 @@ white:true*/
     /** @scope XM.UserOrganizationCollection.prototype */
 
     model: XM.UserOrganization
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.ExtensionCollection = XM.Collection.extend(/** @lends XM.SessionCollection.prototype */{
+
+    model: XM.Extension
 
   });
 }());
