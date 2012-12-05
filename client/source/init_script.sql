@@ -13,6 +13,7 @@
 -- [ START ] xt
 
 -- xt functions
+\i xt/functions/add_priv.sql;
 \i xt/functions/cntctmerge.sql;
 \i xt/functions/cntctrestore.sql;
 \i xt/functions/createuser.sql;
