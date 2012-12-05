@@ -21,4 +21,12 @@
 \i xt/tables/sessionorg.sql
 
 
+-- xt functions
+\i xt/functions/add_priv.sql
+
+-- add necessary privs
+
+select xt.add_priv('MaintainUsers', 'Can Maintain Users', 'MaintainUsers', 'Admin', 'admin', 'Admin');
+select xt.add_priv('ViewUsers', 'Can View Users', 'ViewUsers', 'Admin', 'admin', 'Admin');
+
 -- [ END ] xt
