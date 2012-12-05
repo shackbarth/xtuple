@@ -61,7 +61,7 @@
     "privileges": {
       "all": {
         "create": "MaintainDatabaseServers",
-        "read": "ViewDatabaseServers",
+        "read": true,
         "update": "MaintainDatabaseServers",
         "delete": "MaintainDatabaseServers"
       }
