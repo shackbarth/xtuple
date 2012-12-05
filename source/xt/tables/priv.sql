@@ -11,7 +11,8 @@ select xt.add_column('priv','priv_module', 'text');
 select xt.add_constraint('priv','priv_name_idx', 'unique(priv_name)');
 
 do $$
-  var sql = "select * from pg_class c where c.relkind = 'S' and relname = 'priv_priv_id_seq' and relnamespace::regclass::text = 'xt';",
+  // OID woe: I really want to check the namespace 'xt'
+  var sql = "select * from pg_class c where c.relkind = 'S' and relname = 'priv_priv_id_seq' and relnamespace::regclass::text = '1032132';",
   qry = plv8.execute(sql);
 
   if (!qry.length) {
