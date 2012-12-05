@@ -19,7 +19,8 @@ white:true*/
     PRIVILEGES: 0x02,
     SCHEMA: 0x04,
     LOCALE: 0x08,
-    ALL: 0x01 | 0x02 | 0x04 | 0x08,
+    EXTENSIONS: 0x10,
+    ALL: 0x01 | 0x02 | 0x04 | 0x08 | 0x10,
 
     /**
       Loads session objects for settings, preferences and privileges into local
@@ -38,6 +39,7 @@ white:true*/
         settings,
         schemaOptions,
         localeOptions,
+        extensionOptions,
         callback,
         schemaCount = 0,
         schemasReturned = 0;
@@ -168,6 +170,21 @@ white:true*/
         };
 
         XT.dataSource.dispatch('XT.Session', 'locale', null, localeOptions);
+      }
+
+      if (types & this.EXTENSIONS) {
+        extensionOptions = options ? _.clone(options) : {};
+
+        // callback
+        extensionOptions.error = function (resp) {
+          XT.log("Error loading extensions");
+        }
+        extensionOptions.success = function (resp) {
+          that.extensions = resp;
+          callback();
+        };
+
+        XT.dataSource.getExtensionList(extensionOptions);
       }
 
       return true;
