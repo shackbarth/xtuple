@@ -172,6 +172,7 @@
     "nameSpace": "XM",
     "type": "Extension",
     "table": "xt.ext",
+    "idSequenceName": "xt.ext_ext_id_seq",
     "comment": "Extension Map",
     "properties": [
      {
