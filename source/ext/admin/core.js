@@ -6,6 +6,6 @@ white:true*/
 (function () {
   "use strict";
 
-  XT.extensions.project = {};
+  XT.extensions.admin = {};
 
 }());

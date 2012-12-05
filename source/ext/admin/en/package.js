@@ -1,3 +1,3 @@
 enyo.depends(
-  "parameter.js"
+  "strings.js"
 );
