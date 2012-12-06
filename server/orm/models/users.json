@@ -5,10 +5,11 @@
     "type": "User",
     "table": "xt.usr",
     "comment": "User Map",
+    "idSequenceName": "xt.useracct_useracct_id_seq",
     "privileges": {
       "all": {
         "create": "MaintainGlobalUsers",
-        "read": "ViewGlobalUsers",
+        "read": true,
         "update": "MaintainGlobalUsers",
         "delete": "MaintainGlobalUsers"
       }
@@ -39,6 +40,40 @@
        }
      }
     ],
+    "extensions": [
+     {
+       "table": "xt.useracct",
+       "relations": [
+         {
+           "column": "useracct_username",
+           "inverse": "id"
+         }
+       ],
+       "properties": [
+         {
+           "name": "isActive",
+           "attr": {
+             "type": "Boolean",
+             "column": "useracct_active"
+           }
+         },
+         {
+           "name": "properName",
+           "attr": {
+             "type": "String",
+             "column": "useracct_propername"
+           }
+         },
+         {
+           "name": "email",
+           "attr": {
+             "type": "String",
+             "column": "useracct_email"
+           }
+         }
+       ]
+     }
+   ],
     "isSystem": true
   },
   {
