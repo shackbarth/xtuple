@@ -9,7 +9,7 @@ select xt.install_js('XT','Schema','xtuple', $$
 
   XT.Schema = {};
 
-  XT.Session.isDispatchable = true;
+  XT.Schema.isDispatchable = true;
 
   /**
     Return a JSON-Schema property object that MAY include type, format, required
