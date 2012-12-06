@@ -32,5 +32,7 @@ select xt.add_priv('MaintainOrganizations', 'Can Maintain Organizations', 'Maint
 select xt.add_priv('ViewOrganizations', 'Can View Organizations', 'ViewOrganizations', 'Admin', 'admin', 'Admin');
 select xt.add_priv('MaintainGlobalUsers', 'Can Maintain Users', 'MaintainGlobalUsers', 'Admin', 'admin', 'Admin');
 select xt.add_priv('ViewGlobalUsers', 'Can View Users', 'ViewGlobalUsers', 'Admin', 'admin', 'Admin');
+select xt.add_priv('MaintainExtensions', 'Can Maintain Extensions', 'MaintainExtensions', 'Admin', 'admin', 'Admin');
+select xt.add_priv('ViewExtensions', 'Can View Extensions', 'ViewExtensions', 'Admin', 'admin', 'Admin');
 
 -- [ END ] xt

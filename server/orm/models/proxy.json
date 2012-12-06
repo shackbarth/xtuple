@@ -190,6 +190,14 @@
     "table": "xt.ext",
     "idSequenceName": "xt.ext_ext_id_seq",
     "comment": "Extension Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainExtensions",
+        "read": "ViewExtensions",
+        "update": "MaintainExtensions",
+        "delete": "MaintainExtensions"
+      }
+    },
     "properties": [
      {
        "name": "id",
