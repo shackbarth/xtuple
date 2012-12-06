@@ -23,4 +23,4 @@ do $$
   return false;
 $$ language plv8;
 
-alter table xt.priv alter column priv_id set default nextval('xt.useracct_useracct_id_seq'::regclass);
+alter table xt.useracct alter column useracct_id set default nextval('xt.useracct_useracct_id_seq'::regclass);
