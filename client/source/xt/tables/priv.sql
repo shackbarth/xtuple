@@ -1,4 +1,4 @@
--- table definition
+-- copy over data from public.priv
 
 insert into xt.priv
 select src.priv_id, src.priv_name, src.priv_descrip, '', src.priv_module, 'xtuple'
@@ -8,6 +8,10 @@ where not exists (
   from xt.priv chk
   where chk.priv_id=src.priv_id
 );
+
+update xt.priv a set priv_module = b.priv_module
+from public.priv b
+where a.priv_id = b.priv_id;
 
 do $$
   

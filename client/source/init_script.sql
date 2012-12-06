@@ -13,6 +13,7 @@
 -- [ START ] xt
 
 -- xt functions
+\i xt/functions/add_priv.sql;
 \i xt/functions/cntctmerge.sql;
 \i xt/functions/cntctrestore.sql;
 \i xt/functions/createuser.sql;
@@ -22,6 +23,10 @@
 -- xt trigger functions
 \i xt/trigger_functions/comment_did_change.sql
 \i xt/trigger_functions/useracct_did_change.sql
+\i xt/trigger_functions/grp_did_change.sql
+\i xt/trigger_functions/grppriv_did_change.sql
+\i xt/trigger_functions/usrgrp_did_change.sql
+\i xt/trigger_functions/usrpriv_did_change.sql
 \i xt/trigger_functions/usrpref_did_change.sql
 
 -- xt tables
@@ -30,6 +35,10 @@
 \i xt/tables/incdtcatemlprofile.sql
 \i xt/tables/priv.sql
 \i xt/tables/useracct.sql
+\i xt/tables/userpriv.sql
+\i xt/tables/userrole.sql
+\i xt/tables/userrolepriv.sql
+\i xt/tables/useruserrole.sql
 
 -- xt javascript
 \i xt/javascript/init.sql;
@@ -67,15 +76,11 @@
 \i xtbatch/tables/batch.sql
 
 -- public
-\i public/functions/geteffectivextuser.sql;
+\i public/functions/geteffectivextuser.sql
 \i public/tables/comment.sql
-\i public/tables/schemaord.sql;
+\i public/tables/grp.sql;
+\i public/tables/grppriv.sql;
+\i public/tables/usrgrp.sql;
 \i public/tables/usrpref.sql;
-
--- xc
-\i xc/schema/xc.sql;
-\i xc/views/priv.sql
-\i xc/views/userpriv.sql
-\i xc/views/userrole.sql;
-\i xc/views/userrolepriv.sql;
-\i xc/views/useruserrole.sql;
+\i public/tables/usrpriv.sql;
+\i public/tables/schemaord.sql;

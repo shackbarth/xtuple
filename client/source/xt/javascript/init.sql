@@ -5,4 +5,3 @@ select xt.install_js('XT','Init','xtuple', $$
    sql = 'set search_path to ' + searchPath;
  plv8.execute(sql);
 $$ );
-
