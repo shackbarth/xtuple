@@ -9,6 +9,8 @@ select xt.install_js('XT','Schema','xtuple', $$
 
   XT.Schema = {};
 
+  XT.Session.isDispatchable = true;
+
   /**
     Return a JSON-Schema property object that MAY include type, format, required
     minimum/maximum number, minLength/maxLength string based on a column's
@@ -41,16 +43,20 @@ select xt.install_js('XT','Schema','xtuple', $$
             'data_type, ' +
             'character_maximum_length, ' +
             'is_nullable, ' + /* Pull in required from NOT NULL in database. */
+            'CASE ' +
+              "WHEN column_default ILIKE 'nextval%' THEN 'AUTO_INCREMENT' " +
+              'ELSE NULL ' +
+            'END AS column_default, ' + /* Used to determine if integer is really an AUTO_INCREMENT serial. */
             'col_description( ' + /* Pull in column comments from db. */
-                '( ' +
+              '( ' +
                 'select ' +
                         'oid ' +
                 'from pg_class ' +
                 'where 1=1 ' +
                         'and relname = information_schema.columns.table_name ' +
                         'and relnamespace = (select oid from pg_namespace where nspname = information_schema.columns.table_schema) ' +
-                ')::oid, ' +
-                'ordinal_position ' +
+              ')::oid, ' +
+              'ordinal_position ' +
             ') AS comment ' +
           'from information_schema.columns ' +
           'where 1=1 ' +
@@ -84,10 +90,18 @@ select xt.install_js('XT','Schema','xtuple', $$
         ret.type = "array";
         break;
       case "bigint":
-        ret.type = "string";
-        ret.format = "int64";
-        ret.minimum = "-9223372036854775808";
-        ret.maximum = "9223372036854775807";
+        /* http://www.postgresql.org/docs/9.1/static/datatype-numeric.html#DATATYPE-SERIAL */
+        if (res[0].is_nullable === "NO" && res[0].column_default === "AUTO_INCREMENT") {
+          ret.type = "string";
+          ret.format = "uint64";
+          ret.minimum = "1";
+          ret.maximum = "9223372036854775807";
+        } else {
+          ret.type = "string";
+          ret.format = "int64";
+          ret.minimum = "-9223372036854775808";
+          ret.maximum = "9223372036854775807";
+        }
         break;
       case "bigserial":
         ret.type = "string";
@@ -127,10 +141,18 @@ select xt.install_js('XT','Schema','xtuple', $$
         ret.format = "double";
         break;
       case "integer":
-        ret.type = "integer";
-        ret.format = "int32";
-        ret.minimum = "-2147483648";
-        ret.maximum = "2147483647";
+        /* http://www.postgresql.org/docs/9.1/static/datatype-numeric.html#DATATYPE-SERIAL */
+        if (res[0].is_nullable === "NO" && res[0].column_default === "AUTO_INCREMENT") {
+          ret.type = "integer";
+          ret.format = "uint32";
+          ret.minimum = "1";
+          ret.maximum = "2147483647";
+        } else {
+          ret.type = "integer";
+          ret.format = "int32";
+          ret.minimum = "-2147483648";
+          ret.maximum = "2147483647";
+        }
         break;
       case "money":
         ret.type = "number";
@@ -234,6 +256,13 @@ select xt.install_js('XT','Schema','xtuple', $$
         /* Add required override based off of ORM's property. */
         if (orm.properties[i].attr.required) {
           ret.properties[orm.properties[i].name].required = true;
+        }
+
+        /* Add primary key flag. This isn't part of JSON-Schema, but very useful for URIs. */
+        /* example.com/resource/{primaryKey} */
+        /* JSON-Schema allows for additional custom properites like this. */
+        if (orm.properties[i].attr.isPrimaryKey) {
+          ret.properties[orm.properties[i].name].isPrimaryKey = true;
         }
       }
       /* toOne property */
