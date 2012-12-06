@@ -38,6 +38,15 @@
          "column": "usr_id",
          "inverse": "user"
        }
+     },
+     {
+       "name": "privileges",
+       "toMany": {
+         "isNested": true,
+         "type": "UserGlobalPrivilegeAssignment",
+         "column": "usr_id",
+         "inverse": "user"
+       }
      }
     ],
     "extensions": [
@@ -193,7 +202,8 @@
         "toOne": {
           "type": "GlobalPrivilege",
           "column": "userpriv_priv_id",
-          "required": true
+          "required": true,
+          "isNested": true
         }
       }
     ],
