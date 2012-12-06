@@ -16,7 +16,8 @@ trailing:true white:true*/
       panels: [
         {name: "userList", kind: "XV.UserList"},
         {name: "databaseServerList", kind: "XV.DatabaseServerList"},
-        {name: "organizationList", kind: "XV.OrganizationList"}
+        {name: "organizationList", kind: "XV.OrganizationList"},
+        {name: "extensionList", kind: "XV.ExtensionList"}
       ]
     };
 

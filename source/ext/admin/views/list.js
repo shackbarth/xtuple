@@ -44,4 +44,12 @@ trailing:true white:true*/
     parameterWidget: "XV.OrganizationParameters"
   });
 
+  // ..........................................................
+  // EXTENSION
+  //
+  enyo.kind({
+    name: "XV.ExtensionList",
+    kind: "XV.NameDescriptionList"
+  });
+
 }());

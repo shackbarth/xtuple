@@ -71,6 +71,20 @@ white:true*/
 
     @extends XM.Model
   */
+  XM.Extension = XM.Model.extend({
+    /** @scope XM.Extension.prototype */
+
+    recordType: 'XM.Extension',
+
+    databaseType: 'global'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
   XM.Organization = XM.Model.extend({
     /** @scope XM.Organization.prototype */
 
@@ -100,6 +114,19 @@ white:true*/
     }
   });
 
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.OrganizationExtension = XM.Model.extend({
+    /** @scope XM.OrganizationExtension.prototype */
+
+    recordType: 'XM.OrganizationExtension',
+
+    databaseType: 'global'
+
+  });
 
   /**
     @class
@@ -212,6 +239,23 @@ white:true*/
     databaseType: 'global'
 
   });
+
+  XM.Extension = XM.Model.extend(/** @lends XM.Extension.prototype */{
+
+    recordType: 'XM.Extension',
+
+    databaseType: 'global'
+
+  });
+
+  XM.OrganizationExtension = XM.Model.extend(/** @lends XM.OrganizationExtension.prototype */{
+
+    recordType: 'XM.OrganizationExtension',
+
+    databaseType: 'global'
+
+  });
+
   // ..........................................................
   // COLLECTIONS
   //
@@ -284,6 +328,17 @@ white:true*/
     /** @scope XM.UserOrganizationCollection.prototype */
 
     model: XM.UserOrganization
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.ExtensionCollection = XM.Collection.extend(/** @lends XM.SessionCollection.prototype */{
+
+    model: XM.Extension
 
   });
 }());

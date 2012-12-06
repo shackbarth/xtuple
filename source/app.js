@@ -7,10 +7,11 @@ white:true*/
 
   var UNINITIALIZED = 0;
   var LOADING_SESSION = 1;
-  var LOADING_EXTENSIONS = 2;
-  var LOADING_SCHEMA = 3;
-  var LOADING_APP_DATA = 4;
-  var RUNNING = 5;
+  var DOWNLOADING_EXTENSIONS = 2;
+  var LOADING_EXTENSIONS = 3;
+  var LOADING_SCHEMA = 4;
+  var LOADING_APP_DATA = 5;
+  var RUNNING = 6;
 
   enyo.kind({
     name: "App",
@@ -118,6 +119,8 @@ white:true*/
         task,
         len,
         text,
+        ajax, extensionSuccess, extensionError, extensionLocation, extensionPrivilegeName,
+        extensionCount = 0, extensionsDownloaded = 0,
         eachCallback = function () {
           var completed = startupManager.get('completed').length;
           progressBar.animateProgressTo(completed);
@@ -132,10 +135,46 @@ white:true*/
           startupManager.get('completed').length;
         progressBar.setMax(len);
 
-      // 2: Initialize extensions
+      // 2: Download extensions
       } else if (this.state === LOADING_SESSION) {
-        // Treating this like other progressive actions because we assume
-        // in the future extensions will be loaded from the server
+        this.state = DOWNLOADING_EXTENSIONS;
+
+        extensionSuccess = function (inSender, inResponse) {
+          eval(inResponse); // MWA HA HA HA
+
+          extensionsDownloaded++;
+          if (extensionsDownloaded === extensionCount) {
+            that.startupProcess();
+          }
+        };
+        extensionError = function (inSender, inResponse) {
+          XT.log("Error download extensions");
+        };
+
+        // download all extensions
+        for (i = 0; i < XT.session.extensions.length; i++) {
+          extensionLocation = XT.session.extensions[i].location;
+          extensionPrivilegeName = XT.session.extensions[i].privilegeName;
+          if (!XT.session.privileges.get(extensionPrivilegeName)) {
+            // don't load the extension if the user doesn't have
+            // access rights
+            continue;
+          }
+          extensionCount++;
+          ajax = new enyo.Ajax({url: extensionLocation});
+          ajax.go();
+          ajax.response(extensionSuccess);
+          ajax.error(extensionError);
+        }
+
+        if (extensionCount === 0) {
+          // if no extensions are loaded we still need a way to move forward
+          this.startupProcess();
+        }
+
+      // 3: Initialize extensions
+      } else if (this.state === DOWNLOADING_EXTENSIONS) {
+
         this.state = LOADING_EXTENSIONS;
         text = "_loadingExtensions".loc() + "...";
         XT.app.$.postbooks.getStartupText().setContent(text);
@@ -154,7 +193,7 @@ white:true*/
         }
         this.startupProcess();
 
-      // 3. Load Schema
+      // 4. Load Schema
       } else if (this.state === LOADING_EXTENSIONS) {
         this.state = LOADING_SCHEMA;
         text = "_loadingSchema".loc() + "...";
@@ -173,7 +212,7 @@ white:true*/
           }
         });
 
-      // 4 Load Application Data
+      // 5 Load Application Data
       } else if (this.state === LOADING_SCHEMA) {
         // Run startup tasks
         this.state = LOADING_APP_DATA;
@@ -186,7 +225,7 @@ white:true*/
           XT.StartupTask.create(task);
         }
 
-      // 5. Finish up
+      // 6. Finish up
       } else if (this.state === LOADING_APP_DATA) {
         // Go to the navigator
         this.state = RUNNING;
