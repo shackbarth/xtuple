@@ -146,7 +146,7 @@ white:true*/
     autoFetchId: false,
 
     documentKey: 'id',
-    
+
     enforceUpperKey: false,
 
     databaseType: 'global',
@@ -158,14 +158,14 @@ white:true*/
       XM.Document.prototype.initialize.apply(this, arguments);
       this.setReadOnly('id', false);
     },
-    
+
     findExisting: function (key, value, options) {
       var recordType = this.recordType || this.prototype.recordType,
         params = [ recordType, key, value, value + "1" ];
       this.dispatch('XM.Model', 'findExisting', params, options);
       return this;
     }
-    
+
   });
 
   /**
@@ -179,7 +179,7 @@ white:true*/
     recordType: 'XM.UserOrganization',
 
     databaseType: 'global',
-    
+
     requiredAttributes: [
       "name",
       "username"
@@ -187,6 +187,31 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.GlobalPrivilege = XM.Model.extend(/** @lends XM.GlobalPrivilege.prototype */{
+
+    recordType: 'XM.GlobalPrivilege',
+
+    databaseType: 'global'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.UserGlobalPrivilegeAssignment = XM.Model.extend(/** @lends XM.UserGlobalPrivilegeAssignment.prototype */{
+
+    recordType: 'XM.UserGlobalPrivilegeAssignment',
+
+    databaseType: 'global'
+
+  });
   // ..........................................................
   // COLLECTIONS
   //
