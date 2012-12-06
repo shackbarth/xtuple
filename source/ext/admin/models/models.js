@@ -341,4 +341,15 @@ white:true*/
     model: XM.Extension
 
   });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.GlobalPrivilegeCollection = XM.Collection.extend(/** @lends XM.GlobalPrivilegeCollection.prototype */{
+
+    model: XM.GlobalPrivilege
+
+  });
 }());

@@ -29,4 +29,28 @@ white:true*/
     }
   });
 
+  /**
+   * @class Manages the assignment of global privileges to global users.
+   *
+   * @extends XV.AssignmentBox
+   */
+  enyo.kind(/** @lends @OrganizationExtensionAssignmentBox# */{
+    name: "XV.UserGlobalPrivilegeAssignmentBox",
+    kind: "XV.AssignmentBox",
+    segments: ["Privileges"],
+    translateLabels: false,
+    totalCollectionName: "GlobalPrivilegeCollection",
+    type: "globalPrivilege",
+    /**
+     * Returns a model specific to this AssignmentBox.
+     *
+     * @override
+     * @return {XM.GlobalPrivilege}
+     */
+    getAssignmentModel: function (privilegeModel) {
+      return new XM.UserGlobalPrivilegeAssignment({
+        privilege: privilegeModel
+      }, {isNew: true});
+    }
+  });
 }());
