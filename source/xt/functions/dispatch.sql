@@ -1,13 +1,13 @@
 create or replace function xt.dispatch(data_hash text) returns text as $$
 
   if (!Function.prototype.curry) {
-    /* support methods */  
+    /* support methods */
     Function.prototype.curry = function() {
       if (arguments.length<1) {
           return this; //nothing to curry with - return function
       }
       var __method = this;
-      var args = arguments[0]; 
+      var args = arguments[0];
           return function() {
           return __method.apply(this, args.concat(Array.prototype.slice.call(arguments)));
       }
@@ -19,9 +19,9 @@ create or replace function xt.dispatch(data_hash text) returns text as $$
       nameSpace = dataHash.className.beforeDot(),
       type = dataHash.className.afterDot(),
       obj = plv8[nameSpace][type],
-      f = dataHash.functionName, 
+      f = dataHash.functionName,
       params = dataHash.parameters,
-      args = params instanceof Array ? params : [params], 
+      args = params instanceof Array ? params : [params],
       method, ret;
 
   if (dataHash.username) { XT.username = dataHash.username; }
@@ -30,7 +30,7 @@ create or replace function xt.dispatch(data_hash text) returns text as $$
   else throw new Error('Function ' + dataHash.className + '.' + f + ' not found.');
 
   ret = obj.isDispatchable ? method() : false;
-  
+
   return dataHash.isJSON ? JSON.stringify(ret) : ret;
 
 $$ LANGUAGE plv8;
@@ -80,13 +80,13 @@ select xt.dispatch($${"username": "admin",
 select xt.dispatch($${"requestType":"dispatch",
                           "className":"XT.Session",
                           "functionName":"privileges"
-                          }$$);     
+                          }$$);
 
 select xt.dispatch($${"username": "admin",
                       "requestType":"dispatch",
                           "className":"XM.Crm",
                           "functionName":"commitSettings",
-                          "parameters":{ 
+                          "parameters":{
                             "NextCRMAccountNumber": 1,
                             "NextIncidentNumber": 1600,
                             "CRMAccountNumberGeneration": "A",
@@ -104,6 +104,6 @@ select xt.dispatch($${"username": "admin",
                             "IncidentResolvedColor": "green",
                             "IncidentClosedColor": "grey"
                            }
-                          }$$);    
- 
+                          }$$);
+
 */
