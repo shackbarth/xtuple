@@ -52,6 +52,9 @@ _ = require("underscore");
   String.prototype.f = function () {
     return X.String.format.apply(this, arguments);
   };
+  
+  // Another hack: quiet the logs here
+  XT.log = function () {};
 
   // make absolutely sure we're going to start
   options.autoStart = true;
