@@ -9,7 +9,7 @@
     "privileges": {
       "all": {
         "create": "MaintainGlobalUsers",
-        "read": true,
+        "read": "ViewGlobalUsers",
         "update": "MaintainGlobalUsers",
         "delete": "MaintainGlobalUsers"
       }

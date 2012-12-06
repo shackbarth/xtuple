@@ -28,6 +28,8 @@
 
 select xt.add_priv('MaintainDatabaseServers', 'Can Maintain Database Servers', 'MaintainDatabaseServers', 'Admin', 'admin', 'Admin');
 select xt.add_priv('ViewDatabaseServers', 'Can View Database Servers', 'ViewDatabaseServers', 'Admin', 'admin', 'Admin');
+select xt.add_priv('MaintainOrganizations', 'Can Maintain Organizations', 'MaintainOrganizations', 'Admin', 'admin', 'Admin');
+select xt.add_priv('ViewOrganizations', 'Can View Organizations', 'ViewOrganizations', 'Admin', 'admin', 'Admin');
 select xt.add_priv('MaintainGlobalUsers', 'Can Maintain Users', 'MaintainGlobalUsers', 'Admin', 'admin', 'Admin');
 select xt.add_priv('ViewGlobalUsers', 'Can View Users', 'ViewGlobalUsers', 'Admin', 'admin', 'Admin');
 

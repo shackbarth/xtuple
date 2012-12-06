@@ -61,7 +61,7 @@
     "privileges": {
       "all": {
         "create": "MaintainDatabaseServers",
-        "read": true,
+        "read": "ViewDatabaseServers",
         "update": "MaintainDatabaseServers",
         "delete": "MaintainDatabaseServers"
       }
@@ -133,6 +133,14 @@
     "type": "Organization",
     "table": "xt.org",
     "comment": "Organization Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainOrganizations",
+        "read": "ViewOrganizations",
+        "update": "MaintainOrganizations",
+        "delete": "MaintainOrganizations"
+      }
+    },
     "properties": [
      {
        "name": "name",
