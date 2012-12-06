@@ -69,7 +69,7 @@ trailing:true white:true*/
       {attribute: 'state'},
       {attribute: 'city'},
       {attribute: 'line1'},
-      {attribute: 'id'}
+      {attribute: 'id', numeric: true}
     ]},
     parameterWidget: "XV.AddressListParameters",
     components: [
@@ -80,6 +80,18 @@ trailing:true white:true*/
     ],
     formatAddress: function (value, view, model) {
       return XM.Address.format(model, true);
+    },
+    setQuery: function (query) {
+      // If account is in filter, need to switch to a model including account.
+      var account,
+        collection;
+      account = _.find(query.parameters, function (param) {
+        return param.attribute === 'account';
+      });
+      collection = account ?
+        'XM.AccountAddressListItemCollection' : 'XM.AddressInfoCollection';
+      this.setCollection(collection);
+      this.inherited(arguments);
     }
   });
 
@@ -95,7 +107,6 @@ trailing:true white:true*/
     query: {orderBy: [
       {attribute: 'code'}
     ]},
-    workspace: "XV.ClassCodeWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -112,6 +123,55 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // CONFIGURE
+  //
+
+  enyo.kind({
+    name: "XV.ConfigurationsList",
+    kind: "XV.List",
+    label: "_configure".loc(),
+    collection: "XM.configurations",
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    canAddNew: false,
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "name", classes: "bold"}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ],
+    collectionChanged: function () {
+      var collection = this.getCollection(),
+        obj = XT.getObjectByName(collection);
+      this.setValue(obj);
+    },
+    getModel: function (index) {
+      var model = this.getValue().at(index);
+      return XT.getObjectByName(model.get('model'));
+    },
+    getWorkspace: function () {
+      return this._workspace;
+    },
+    itemTap: function (inSender, inEvent) {
+      var model = this.getValue().at(inEvent.index);
+      this._workspace = model.get('workspace');
+      return this.inherited(arguments);
+    },
+    fetch: function () {
+      this.fetched();
+    }
+
+  });
+
+  // ..........................................................
   // CONTACT
   //
 
@@ -124,7 +184,7 @@ trailing:true white:true*/
       {attribute: 'lastName'},
       {attribute: 'firstName'},
       {attribute: 'primaryEmail'},
-      {attribute: 'id'}
+      {attribute: 'id', numeric: true}
     ]},
     parameterWidget: "XV.ContactListParameters",
     components: [
@@ -200,7 +260,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   // ..........................................................
   // CUSTOMER
   //
@@ -250,7 +310,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.CustomerRelation", "XV.CustomerList");
-  
+
   // ..........................................................
   // EMPLOYEE
   //
@@ -310,11 +370,10 @@ trailing:true white:true*/
     kind: "XV.List",
     label: "_files".loc(),
     collection: "XM.FileRelationCollection",
-    parameterWidget: "XV.FileParameters",
+    parameterWidget: "XV.FileListParameters",
     query: {orderBy: [
       {attribute: 'name'}
     ]},
-    workspace: "XV.FileWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -365,7 +424,7 @@ trailing:true white:true*/
     query: {orderBy: [
       {attribute: 'priorityOrder'},
       {attribute: 'updated', descending: true},
-      {attribute: 'id', descending: true}
+      {attribute: 'number', descending: true, numeric: true}
     ]},
     parameterWidget: "XV.IncidentListParameters",
     components: [
@@ -512,7 +571,7 @@ trailing:true white:true*/
       {attribute: 'priorityOrder'},
       {attribute: 'targetClose'},
       {attribute: 'name'},
-      {attribute: 'id'}
+      {attribute: 'number', numeric: true}
     ]},
     label: "_opportunities".loc(),
     parameterWidget: "XV.OpportunityListParameters",
@@ -741,7 +800,8 @@ trailing:true white:true*/
     query: {orderBy: [
       {attribute: 'priorityOrder'},
       {attribute: 'dueDate'},
-      {attribute: 'name'}
+      {attribute: 'name'},
+      {attribute: 'id', numeric: true}
     ]},
     components: [
       {kind: "XV.ListItem", components: [
@@ -794,11 +854,10 @@ trailing:true white:true*/
     kind: "XV.List",
     label: "_urls".loc(),
     collection: "XM.UrlCollection",
-    parameterWidget: "XV.UrlParameters",
+    parameterWidget: "XV.UrlListParameters",
     query: {orderBy: [
       {attribute: 'name'}
     ]},
-    workspace: "XV.UrlWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -825,6 +884,7 @@ trailing:true white:true*/
     kind: "XV.List",
     label: "_userAccounts".loc(),
     collection: "XM.UserAccountRelationCollection",
+    parameterWidget: "XV.UserAccountListParameters",
     query: {orderBy: [
       {attribute: 'username'}
     ]},
@@ -989,11 +1049,5 @@ trailing:true white:true*/
     name: "XV.UserAccountRoleList",
     kind: "XV.NameDescriptionList",
     collection: "XM.UserAccountRoleCollection"
-  });
-
-  enyo.kind({
-    name: "XV.ImageList",
-    kind: "XV.NameDescriptionList",
-    collection: "XM.ImageRelationCollection"
   });
 }());

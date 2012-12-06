@@ -29,20 +29,6 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // COMMENT TYPE
-  //
-
-  enyo.kind({
-    name: "XV.CommentTypePicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.commentTypes",
-    orderBy: [
-      {attribute: 'order'},
-      {attribute: 'name'}
-    ]
-  });
-
-  // ..........................................................
   // COUNTRY
   //
 
@@ -106,6 +92,30 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.incidentStatuses",
     valueAttribute: "id"
+  });
+  
+  // ..........................................................
+  // LOCALE
+  //
+
+  enyo.kind({
+    name: "XV.LocalePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.locales",
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ]
+  });
+  
+  // ..........................................................
+  // NUMBER POLICY
+  //
+
+  enyo.kind({
+    name: "XV.NumberPolicyPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.numberPolicies"
   });
 
   // ..........................................................

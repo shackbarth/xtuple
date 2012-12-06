@@ -7,10 +7,11 @@ trailing:true white:true*/
   // first of 2 types of checks, this being the most obvious test
   var c = enyo.getCookie("xtsessioncookie"),
     h = document.location.hostname,
-    p = document.location.pathname,
-    noAuthRedirect = "https://%@/login".f(h);
+    p = document.location.protocol,
+    l = document.location.pathname,
+    noAuthRedirect = "%@//%@/login".f(p,h);
 
-  if (p.match(/login/g)) { return; }
+  if (l.match(/login/g)) { return; }
   try {
     c = JSON.parse(c);
     if (!c.organization) {

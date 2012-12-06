@@ -5,6 +5,27 @@ trailing:true white:true*/
 
 (function () {
 
+  /**
+    Used to notify change of account to contact widget if both exist on
+    the same workspace.
+  */
+  XV.accountNotifyContactMixin = {
+    accountChanged: function () {
+      var account = this.$.accountWidget.getValue();
+      this.$.contactWidget.setAccount(account);
+    },
+    attributesChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      this.accountChanged();
+    },
+    controlValueChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      if (inEvent.originator.name === 'accountWidget') {
+        this.accountChanged();
+      }
+    }
+  };
+
   // ..........................................................
   // BASE CLASS
   //
@@ -49,6 +70,7 @@ trailing:true white:true*/
             {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.AccountTypePicker", attr: "accountType"},
+            {kind: "XV.AccountWidget", attr: "parent", label: "_parent".loc()},
             {kind: "XV.UserAccountWidget", attr: "owner"},
             {kind: "onyx.GroupboxHeader", content: "_primaryContact".loc()},
             {kind: "XV.ContactWidget", attr: "primaryContact",
@@ -98,6 +120,34 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.ClassCode", "XV.ClassCodeWorkspace");
 
   // ..........................................................
+  // CONFIGURE
+  //
+
+  enyo.kind({
+    name: "XV.DatabaseInformationWorkspace",
+    kind: "XV.Workspace",
+    title: "_database".loc() + " " + "_information".loc(),
+    model: "XM.DatabaseInformation",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "DatabaseName",
+              label: "_name".loc()},
+            {kind: "XV.InputWidget", attr: "ServerVersion",
+                label: "_version".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "DatabaseComments"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
   // CONTACT
   //
 
@@ -125,6 +175,9 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "middleName"},
             {kind: "XV.InputWidget", attr: "lastName"},
             {kind: "XV.InputWidget", attr: "suffix"},
+            {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
+            {kind: "XV.UserAccountWidget", attr: "owner"},
+            {kind: "XV.AccountWidget", attr: "account"},
             {kind: "onyx.GroupboxHeader", content: "_address".loc()},
             {kind: "XV.AddressWidget", attr: "address"},
             {kind: "onyx.GroupboxHeader", content: "_information".loc()},
@@ -135,10 +188,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "fax"},
             {kind: "XV.ContactCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes"},
-            {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-            {kind: "XV.AccountWidget", attr: "account"},
-            {kind: "XV.UserAccountWidget", attr: "owner"}
+            {kind: "XV.TextArea", attr: "notes"}
           ]}
         ]},
         {kind: "XV.ContactCommentBox", attr: "comments"},
@@ -158,6 +208,10 @@ trailing:true white:true*/
           classes: "xv-popup-button"}
       ]}
     ],
+    accountChanged: function () {
+      var account = this.$.accountWidget.getValue();
+      this.$.addressWidget.setAccount(account);
+    },
     addressChangeAll: function () {
       var options = {address: XM.Address.CHANGE_ALL};
       this._popupDone = true;
@@ -173,6 +227,16 @@ trailing:true white:true*/
     addressCancel: function () {
       this._popupDone = true;
       this.$.multipleAddressPopup.hide();
+    },
+    attributesChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      this.accountChanged();
+    },
+    controlValueChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      if (inEvent.originator.name === 'accountWidget') {
+        this.accountChanged();
+      }
     },
     errorNotify: function (inSender, inEvent) {
       // Handle address questions
@@ -266,8 +330,7 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name", name: "name"},
-            // XXX the disabled flag here doesn't seem to work
-            {kind: "XV.InputWidget", attr: "description", name: "description", disabled: true},
+            {kind: "XV.InputWidget", attr: "description", name: "description" },
             {kind: "XV.FileInput", name: "file", attr: "data"}
           ]}
         ]}
@@ -280,67 +343,25 @@ trailing:true white:true*/
      */
     controlValueChanged: function (inSender, inEvent) {
       var filename = inEvent.filename;
+      this.inherited(arguments);
+
       if (filename) {
         this.$.name.setValue(filename);
         this.$.description.setValue(filename);
       }
+    },
+    /**
+      We want the description to be always disabled, which means we have
+      to go in after the attributesChanged method, which, as it's defined
+      in the superkind, will reset the disabled status based on permissions etc.
+     */
+    attributesChanged: function (model, options) {
       this.inherited(arguments);
+      this.$.description.setDisabled(true);
     }
   });
 
   XV.registerModelWorkspace("XM.FileRelation", "XV.FileWorkspace");
-
-  enyo.kind({
-    name: "XV.ImageWorkspace",
-    kind: "XV.FileWorkspace",
-    title: "_image".loc(),
-    model: "XM.Image",
-    components: [
-      {kind: "Panels", arrangerKind: "CarouselArranger",
-        fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainPanel", components: [
-          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
-            classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "name", name: "name"},
-            // XXX the disabled flag here doesn't seem to work
-            {kind: "XV.InputWidget", attr: "description", name: "description", disabled: true},
-            {kind: "XV.FileInput", name: "file", attr: "data"}
-          ]}
-        ]},
-        {kind: "XV.Groupbox", name: "previewPanel", components: [
-          {kind: "onyx.GroupboxHeader", content: "_preview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "previewGroup", classes: "in-panel", components: [
-            {tag: "img", name: "image"}
-          ]}
-        ]}
-      ]}
-    ],
-    attributesChanged: function (model, options) {
-      var id = this.getValue().get("id"),
-        K = XM.Model;
-
-      this.inherited(arguments);
-      if (id &&
-          !this.$.image.getAttribute("src") && this.isImageFile() &&
-          this.getValue().getStatus() !== K.READY_NEW) {
-        this.$.image.setAttribute("src", "/file?recordType=XM.Image&id=" + id);
-      }
-    },
-    isImageFile: function () {
-      var filename = this.$.description.getValue(),
-        extension;
-      if (!filename) {
-        return false;
-      }
-      extension = filename.substring(filename.lastIndexOf('.') + 1);
-      return (['png', 'gif', 'jpg'].indexOf(extension) >= 0);
-    }
-
-
-  });
-
-  XV.registerModelWorkspace("XM.ImageRelation", "XV.ImageWorkspace");
 
 
   // ..........................................................
@@ -372,7 +393,7 @@ trailing:true white:true*/
   // INCIDENT
   //
 
-  enyo.kind({
+  var incidentHash = {
     name: "XV.IncidentWorkspace",
     kind: "XV.Workspace",
     title: "_incident".loc(),
@@ -406,10 +427,14 @@ trailing:true white:true*/
           ]}
         ]},
         {kind: "XV.IncidentCommentBox", attr: "comments"},
-        {kind: "XV.IncidentDocumentsBox", attr: "documents"}
+        {kind: "XV.IncidentDocumentsBox", attr: "documents"},
+        {kind: "XV.IncidentHistoryRelationsBox", attr: "history"}
       ]}
     ]
-  });
+  };
+
+  incidentHash = enyo.mixin(incidentHash, XV.accountNotifyContactMixin);
+  enyo.kind(incidentHash);
 
   XV.registerModelWorkspace("XM.IncidentRelation", "XV.IncidentWorkspace");
   XV.registerModelWorkspace("XM.IncidentListItem", "XV.IncidentWorkspace");
@@ -503,7 +528,7 @@ trailing:true white:true*/
   // OPPORTUNITY
   //
 
-  enyo.kind({
+  var opportunityHash = {
     name: "XV.OpportunityWorkspace",
     kind: "XV.Workspace",
     title: "_opportunity".loc(),
@@ -547,8 +572,19 @@ trailing:true white:true*/
         {kind: "XV.OpportunityCommentBox", attr: "comments"},
         {kind: "XV.OpportunityDocumentsBox", attr: "documents"}
       ]}
-    ]
-  });
+    ],
+    controlValueChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      var account;
+      if (inEvent.originator.name === 'accountWidget') {
+        account = this.$.accountWidget.getValue();
+        this.$.contactWidget.setAccount(account);
+      }
+    }
+  };
+
+  opportunityHash = enyo.mixin(opportunityHash, XV.accountNotifyContactMixin);
+  enyo.kind(opportunityHash);
 
   XV.registerModelWorkspace("XM.OpportunityRelation", "XV.OpportunityWorkspace");
   XV.registerModelWorkspace("XM.OpportunityListItem", "XV.OpportunityWorkspace");
@@ -635,7 +671,7 @@ trailing:true white:true*/
   // PROJECT
   //
 
-  enyo.kind({
+  var projectHash = {
     name: "XV.ProjectWorkspace",
     kind: "XV.Workspace",
     title: "_project".loc(),
@@ -670,8 +706,19 @@ trailing:true white:true*/
         {kind: "XV.ProjectCommentBox", attr: "comments"},
         {kind: "XV.ContactDocumentsBox", attr: "documents"}
       ]}
-    ]
-  });
+    ],
+    controlValueChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      var account;
+      if (inEvent.originator.name === 'accountWidget') {
+        account = this.$.accountWidget.getValue();
+        this.$.contactWidget.setAccount(account);
+      }
+    }
+  };
+
+  projectHash = enyo.mixin(projectHash, XV.accountNotifyContactMixin);
+  enyo.kind(projectHash);
 
   XV.registerModelWorkspace("XM.ProjectRelation", "XV.ProjectWorkspace");
   XV.registerModelWorkspace("XM.ProjectListItem", "XV.ProjectWorkspace");
@@ -753,7 +800,7 @@ trailing:true white:true*/
   // TO DO
   //
 
-  enyo.kind({
+  var toDoHash = {
     name: "XV.ToDoWorkspace",
     kind: "XV.Workspace",
     title: "_toDo".loc(),
@@ -789,8 +836,19 @@ trailing:true white:true*/
         {kind: "XV.ToDoCommentBox", attr: "comments"},
         {kind: "XV.ToDoDocumentsBox", attr: "documents"}
       ]}
-    ]
-  });
+    ],
+    controlValueChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      var account;
+      if (inEvent.originator.name === 'accountWidget') {
+        account = this.$.accountWidget.getValue();
+        this.$.contactWidget.setAccount(account);
+      }
+    }
+  };
+
+  toDoHash = enyo.mixin(toDoHash, XV.accountNotifyContactMixin);
+  enyo.kind(toDoHash);
 
   XV.registerModelWorkspace("XM.ToDoRelation", "XV.ToDoWorkspace");
   XV.registerModelWorkspace("XM.ToDoListItem", "XV.ToDoWorkspace");
@@ -868,27 +926,43 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "username"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
+            {kind: "XV.LocalePicker", attr: "locale"},
             {kind: "XV.InputWidget", attr: "properName"},
             {kind: "XV.InputWidget", attr: "initials"},
             {kind: "XV.InputWidget", attr: "email"},
-            {kind: "XV.CheckboxWidget", attr: "isActive"}
+            {kind: "XV.CheckboxWidget", attr: "disableExport"},
+            // normally I'd put classes: "xv-assignment-box" into the container of the assignmentbox,
+            // but there is no such container here. Maybe some CSS work to be done now that assignmentbox
+            // is the thing inside the thing instead of the thing and the container all together.
+            {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
+            {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles", name: "grantedRoles" }
           ]}
         ]},
-
-        //{kind: "XV.Groupbox", name: "rolePanel", title: "_roles".loc(), components: [
-        //  {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
-        {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles", name: "grantedRoles", title: "_roles".loc()},
-        //]},
-
-        //{kind: "XV.Groupbox", name: "privilegePanel", title: "_privileges".loc(), components: [
-        //  {kind: "onyx.GroupboxHeader", content: "privileges".loc()},
-        {kind: "XV.UserAccountPrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges", title: "_privileges".loc() }
-        //]},
+        {kind: "XV.Groupbox", name: "privilegePanel", classes: "xv-assignment-box",
+            title: "_privileges".loc(), components: [
+          {kind: "onyx.GroupboxHeader", content: "_privileges".loc()},
+          {kind: "XV.UserAccountPrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges" }
+        ]}
       ]}
     ],
+    /**
+      Inject awareness of privileges earned by role into the privilege box when prompted
+     */
     refreshPrivileges: function (inSender, inEvent) {
       this.$.grantedPrivileges.mapIds(this.$.grantedRoles.getAssignedCollection().models);
       this.$.grantedPrivileges.tryToRender();
+    },
+
+    /**
+      Inject awareness of privileges earned by role into the privilege box at the start of the model loading
+     */
+    statusChanged: function (model, status, options) {
+      this.inherited(arguments);
+      if (model.getStatus() & XM.Model.READY) {
+        this.$.grantedPrivileges.mapIds(this.getValue().get("grantedUserAccountRoles").models);
+        this.$.grantedPrivileges.tryToRender();
+      }
     }
   });
 
@@ -915,10 +989,11 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "description"}
           ]}
         ]},
-        //{kind: "XV.Groupbox", name: "privilegePanel", title: "_privileges".loc(), components: [
-        //  {kind: "onyx.GroupboxHeader", content: "_privileges".loc()},
-        {kind: "XV.UserAccountRolePrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges", title: "_privileges".loc() }
-        //]}
+        {kind: "XV.Groupbox", name: "privilegePanel", classes: "xv-assignment-box",
+            title: "_privileges".loc(), components: [
+          {kind: "onyx.GroupboxHeader", content: "_privileges".loc()},
+          {kind: "XV.UserAccountRolePrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges" }
+        ]}
       ]}
     ]
   });

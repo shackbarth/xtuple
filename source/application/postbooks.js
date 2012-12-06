@@ -22,9 +22,11 @@ trailing:true white:true*/
           panels: [
           {name: "welcomePage",
             tag: "iframe",
-            attributes: {src: "assets/splash/index.html"}}
+						style: "border: none;",
+            attributes: {src: "lib/enyo-x/assets/splash/index.html"}}
         ]},
         {name: "setup", label: "_setup".loc(), panels: [
+          {name: "configureList", kind: "XV.ConfigurationsList"},
           {name: "userAccountList", kind: "XV.UserAccountList"},
           {name: "userAccountRoleList", kind: "XV.UserAccountRoleList"}
         ]}
@@ -49,7 +51,10 @@ trailing:true white:true*/
         panel.setList(inEvent);
         panel.fetch();
         this.next();
+      } else {
+        XT.log("No list associated with this model for searching. Are you sure you've registered it?");
       }
+      return true;
     },
     addWorkspacePanel: function (inSender, inEvent) {
       var panel;
@@ -73,7 +78,7 @@ trailing:true white:true*/
         module = _.find(modules, function (mod) {
           return mod.name === moduleName;
         }),
-        existing = _.pluck(module, "name"),
+        existing = _.pluck(module.panels, "name"),
         i;
       for (i = 0; i < panels.length; i++) {
         if (!_.contains(existing, panels[i].name)) {
