@@ -119,7 +119,7 @@ white:true*/
         task,
         len,
         text,
-        ajax, extensionSuccess, extensionError, extensionLocation, extensionPrivilegeName,
+        ajax, extensionSuccess, extensionError, extensionLocation, extensionName, extensionPrivilegeName,
         extensionCount = 0, extensionsDownloaded = 0,
         eachCallback = function () {
           var completed = startupManager.get('completed').length;
@@ -154,6 +154,7 @@ white:true*/
         // download all extensions
         for (i = 0; i < XT.session.extensions.length; i++) {
           extensionLocation = XT.session.extensions[i].location;
+          extensionName = XT.session.extensions[i].name;
           extensionPrivilegeName = XT.session.extensions[i].privilegeName;
           if (!XT.session.privileges.get(extensionPrivilegeName)) {
             // don't load the extension if the user doesn't have
@@ -161,7 +162,7 @@ white:true*/
             continue;
           }
           extensionCount++;
-          ajax = new enyo.Ajax({url: extensionLocation});
+          ajax = new enyo.Ajax({url: extensionLocation + "/builds/" + extensionName + "/" + extensionName + ".js"});
           ajax.go();
           ajax.response(extensionSuccess);
           ajax.error(extensionError);
