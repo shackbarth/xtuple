@@ -40,7 +40,7 @@ white:true*/
     segments: ["Privileges"],
     translateLabels: false,
     totalCollectionName: "GlobalPrivilegeCollection",
-    type: "globalPrivilege",
+    type: "privilege",
     /**
      * Returns a model specific to this AssignmentBox.
      *

@@ -183,7 +183,7 @@ white:true*/
      */
     initialize: function (attributes, options) {
       XM.Document.prototype.initialize.apply(this, arguments);
-      this.setReadOnly('id', false);
+      this.setReadOnly('id', this.getStatus() !== XM.Model.READY_NEW);
     },
 
     findExisting: function (key, value, options) {
