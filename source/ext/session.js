@@ -89,13 +89,28 @@ white:true*/
         };
 
         // dispatch
-        XT.dataSource.dispatch('XT.Session', 'privileges', null, privilegesOptions);
-        privilegeSetCount++;
+        // XXX need to operate differently if this is being done on the client
+        // or on the server
+        if (typeof X !== 'undefined' && X.options && X.options.globalDatabase) {
+          // from within node we only need to query once, but we need to
+          // ask about the privileges of the node user, which are hopefully
+          // all-encompassing.
+          privilegesOptions.username = X.options.globalDatabase.nodeUsername;
 
-        // get schema for global DB models
-        privilegesOptions.databaseType = 'global';
-        XT.dataSource.dispatch('XT.Session', 'privileges', null, privilegesOptions);
-        privilegeSetCount++;
+          XT.dataSource.dispatch('XT.Session', 'privileges', null, privilegesOptions);
+          privilegeSetCount++;
+
+        } else {
+
+          XT.dataSource.dispatch('XT.Session', 'privileges', null, privilegesOptions);
+          privilegeSetCount++;
+
+          // get schema for global DB models
+          privilegesOptions.databaseType = 'global';
+          XT.dataSource.dispatch('XT.Session', 'privileges', null, privilegesOptions);
+          privilegeSetCount++;
+        }
+
       }
 
       if (types & this.SETTINGS) {
