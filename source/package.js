@@ -2,10 +2,11 @@ enyo.depends(
   "preliminaries.js",
   "../lib/tools",
   "../lib/backbone-x",
-  "../lib/models",
   "../lib/enyo-x",
   "en",
+  "models",
   "application",
+  "startup.js",
   "app.js",
   "ext"
 );
