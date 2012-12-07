@@ -252,6 +252,14 @@
     "table": "xt.orgext",
     "idSequenceName": "orgext_orgext_id_seq",
     "comment": "Organization Extension Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
     "properties": [
      {
        "name": "id",
