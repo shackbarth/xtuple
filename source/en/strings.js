@@ -12,6 +12,27 @@
 //
 
 var lang = XT.stringsFor("en_US", {
+  
+  // ********
+  // Models
+  // ********
+  
+  "_assigned": "Assigned",
+  "_automatic": "Automatic",
+  "_automaticOverride": "Override Allowed",
+  "_closed": "Closed",
+  "_completed": "Completed",
+  "_concept": "Concept",
+  "_confirmed": "Confirmed",
+  "_database": "Database",
+  "_feedback": "Feedback",
+  "_individual": "Individual",
+  "_information": "Information",
+  "_inProcess": "In Process",
+  "_manual": "Manual",
+  "_new": "New",
+  "_organization": "Organization",
+  "_resolved": "Resolved",
 
   // ********
   // Labels
@@ -48,10 +69,8 @@ var lang = XT.stringsFor("en_US", {
   "_amount": "Amount",
   "_array": "Array",
   "_assignDate": "Assign Date",
-  "_assigned": "Assigned",
   "_assignedTo": "Assigned To",
   "_attach": "Attach",
-  "_automatic": "Automatic",
   "_balance": "Balance",
   "_balanceExpensesTotal": "Balance Expenses Total",
   "_balanceHoursTotal": "Balance Hours Total",
@@ -70,7 +89,6 @@ var lang = XT.stringsFor("en_US", {
   "_classCode": "Class Code",
   "_classCodes": "Class Codes",
   "_closeDate": "Close Date",
-  "_closed": "Closed",
   "_code": "Code",
   "_configure": "Configure",
   "_commentType": "Comment Type",
@@ -167,7 +185,6 @@ var lang = XT.stringsFor("en_US", {
   "_incidentSeverities": "Incident Severities",
   "_incidentSeverity": "Incident Severity",
   "_incidentStatus": "Status",
-  "_information": "Information",
   "_initials": "Initials",
   "_inventoryUnit": "Inventory Unit",
   "_isActive": "Active",
@@ -207,7 +224,6 @@ var lang = XT.stringsFor("en_US", {
   "_login": "Login",
   "_logout": "Logout",
   "_mainAddress": "Main Address",
-  "_manual": "Manual",
   "_mask": "Mask",
   "_match": "Match",
   "_maximum": "Maximum",
@@ -452,5 +468,26 @@ var lang = XT.stringsFor("en_US", {
   "_viewPersonalToDoItems": "View Personal To-Do Items",
   "_viewProductCategories": "View Product Categories",
   "_viewUOMs": "View Units of Measure",
-  "_viewTitles": "View Honorifics"
+  "_viewTitles": "View Honorifics",
+  
+  // ********
+  // Messages
+  // ********
+  
+  "_assignedToRequiredAssigned": "Assigned to is required when status is 'Assigned'",
+  "_attributeIsRequired": "{attr} is required.",
+  "_attributeTypeMismatch": "The value of '{attr}' must be type: {type}.",
+  "_attributeNotInSchema": "'{attr}' does not exist in the schema.",
+  "_attributeReadOnly": "Can not edit read only attribute(s).",
+  "_characteristicContextRequired": "You must set at least one characteristic context to true.",
+  "_datasourceError": "Data source error: {error}",
+  "_duplicateValues": "Duplicate values are not allowed.",
+  "_lengthInvalid": "Length of {attr} must be {length}.",
+  "_nameRequired": "A name is required.",
+  "_productCategoryRequiredOnSold": "A Product Category is required for sold items.",
+  "_recursiveParentDisallowed": "Record is not allowed to reference itself as the parent.",
+  "_recordNotFound": "Record not found.",
+  "_recordStatusNotEditable": "Record with status of `{status}` is not editable.",
+  "_valueExists": "Record with {attr} of '{value}' already exists.",
+  "_whatToDo": "What would you like to do?"
 });
