@@ -16,4 +16,9 @@ tools/deploy.sh
 mkdir builds/project
 mv build/app.js builds/project/project.js
 
+cp source/crm/client/root-package.js package.js
+tools/deploy.sh
+mkdir builds/crm
+mv build/app.js builds/crm/crm.js
+
 rm package.js
