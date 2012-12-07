@@ -1,4 +1,6 @@
 enyo.depends(
+  "core.js",
+  "datasource.js",
   "crm",
   "admin",
   "connect",
