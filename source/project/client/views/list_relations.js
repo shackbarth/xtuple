@@ -4,9 +4,9 @@ trailing:true white:true*/
 /*global XT:true, XV:true, enyo:true*/
 
 (function () {
-  
+
   XT.extensions.project.initListRelations = function () {
-    
+
     // ..........................................................
     // ACCOUNT
     //
@@ -38,24 +38,24 @@ trailing:true white:true*/
       ],
       formatDueDate: XV.ProjectList.prototype.formatDueDate
     });
-  
+
     // ..........................................................
     // CONTACT
     //
-  
+
     enyo.kind({
       name: "XV.ContactProjectListRelations",
       kind: "XV.AccountProjectListRelations",
       parentKey: "contact"
     });
-  
+
     // ..........................................................
     // PROJECT
     //
-  
+
     enyo.kind({
       name: "XV.ProjectIncidentListRelations",
-      kind: "XV.AccountIncidentListRelations",
+      kind: "XV.IncidentListRelations",
       parentKey: "project"
     });
   };

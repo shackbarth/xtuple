@@ -6,35 +6,15 @@ trailing:true white:true*/
 (function () {
 
   XT.extensions.crm.initListRelations = function () {
-  
+
     // ..........................................................
     // ACCOUNT
     //
-  
+
     enyo.kind({
       name: "XV.AccountIncidentListRelations",
-      kind: "XV.ListRelations",
-      orderBy: [
-        {attribute: 'number', descending: true}
-      ],
-      parentKey: "account",
-      workspace: "XV.IncidentWorkspace",
-      components: [
-        {kind: "XV.ListItem", components: [
-          {kind: "FittableColumns", components: [
-            {kind: "XV.ListColumn", classes: "first", components: [
-              {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "number", classes: "bold"},
-                {kind: "XV.ListAttr", attr: "getIncidentStatusString", fit: true},
-                {kind: "XV.ListAttr", attr: "updated", formatter: "formatDate",
-                  classes: "right"}
-              ]},
-              {kind: "XV.ListAttr", attr: "description"}
-            ]}
-          ]}
-        ]}
-      ],
-      formatDate: XV.IncidentList.prototype.formatDate
+      kind: "XV.IncidentListRelations",
+      parentKey: "account"
     });
 
     enyo.kind({
@@ -64,7 +44,7 @@ trailing:true white:true*/
       ],
       formatTargetClose: XV.OpportunityList.prototype.formatTargetClose
     });
-  
+
     enyo.kind({
       name: "XV.AccountToDoListRelations",
       kind: "XV.ListRelations",
@@ -92,43 +72,43 @@ trailing:true white:true*/
       ],
       formatDueDate: XV.ToDoList.prototype.formatDueDate
     });
-  
+
     // ..........................................................
     // CONTACT
     //
- 
+
     enyo.kind({
       name: "XV.ContactIncidentListRelations",
       kind: "XV.AccountIncidentListRelations",
       parentKey: "contact"
     });
-  
+
     enyo.kind({
       name: "XV.ContactOpportunityListRelations",
       kind: "XV.AccountOpportunityListRelations",
       parentKey: "contact"
     });
-  
+
     enyo.kind({
       name: "XV.ContactToDoListRelations",
       kind: "XV.AccountToDoListRelations",
       parentKey: "contact"
     });
-  
+
     // ..........................................................
     // INCIDENT
     //
-  
+
     enyo.kind({
       name: "XV.IncidentToDoListRelations",
       kind: "XV.AccountToDoListRelations",
       parentKey: "incident"
     });
-  
+
     // ..........................................................
     // OPPORTUNITY
     //
-  
+
     enyo.kind({
       name: "XV.OpportunityToDoListRelations",
       kind: "XV.AccountToDoListRelations",
