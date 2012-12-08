@@ -4,12 +4,12 @@ trailing:true white:true*/
 /*global XT:true, XM:true, XV:true, enyo:true*/
 
 (function () {
- 
+
   XT.extensions.project.initListRelationsBox = function () {
     // ..........................................................
     // ACCOUNT
     //
-  
+
     enyo.kind({
       name: "XV.AccountProjectsBox",
       kind: "XV.ListRelationsBox",
@@ -18,7 +18,7 @@ trailing:true white:true*/
       listRelations: "XV.AccountProjectListRelations",
       searchList: "XV.ProjectList"
     });
-  
+
     // ..........................................................
     // CONTACT
     //
@@ -35,13 +35,15 @@ trailing:true white:true*/
     // ..........................................................
     // PROJECT
     //
-  
+
     enyo.kind({
       name: "XV.ProjectIncidentsBox",
-      kind: "XV.AccountIncidentsBox",
+      kind: "XV.ListRelationsBox",
+      title: "_incidents".loc(),
       parentKey: "project",
       listRelations: "XV.ProjectIncidentListRelations"
     });
+
   };
 
 }());
