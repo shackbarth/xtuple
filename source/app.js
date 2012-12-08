@@ -140,6 +140,7 @@ white:true*/
         this.state = DOWNLOADING_EXTENSIONS;
 
         extensionSuccess = function (inSender, inResponse) {
+          XT.log("Installing extension " + inSender.url);
           eval(inResponse); // MWA HA HA HA
 
           extensionsDownloaded++;
@@ -162,7 +163,11 @@ white:true*/
             continue;
           }
           extensionCount++;
-          ajax = new enyo.Ajax({url: extensionLocation + "/builds/" + extensionName + "/" + extensionName + ".js"});
+          // the convention for where to find the built js file is something like
+          // /public-extensions/builds/crm/crm.js
+          ajax = new enyo.Ajax({
+            url: extensionLocation + "/builds/" + extensionName + "/" + extensionName + ".js",
+            handleAs: "text"});
           ajax.go();
           ajax.response(extensionSuccess);
           ajax.error(extensionError);
