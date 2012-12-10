@@ -1,5 +1,4 @@
 enyo.depends(
   "core.js",
-  "datasource.js",
-  "admin"
+  "datasource.js"
 );
