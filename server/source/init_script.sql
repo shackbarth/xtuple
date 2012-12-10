@@ -35,4 +35,7 @@ select xt.add_priv('ViewGlobalUsers', 'Can View Users', 'ViewGlobalUsers', 'Admi
 select xt.add_priv('MaintainExtensions', 'Can Maintain Extensions', 'MaintainExtensions', 'Admin', 'admin', 'Admin');
 select xt.add_priv('ViewExtensions', 'Can View Extensions', 'ViewExtensions', 'Admin', 'admin', 'Admin');
 
+\i xt/node_user.sql
+\i xt/admin_user.sql
+
 -- [ END ] xt
