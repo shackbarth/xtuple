@@ -39,7 +39,12 @@ trailing:true white:true*/
               showing: false}
           ]}
         ]},
-        {kind: "XV.UserOrganizationsBox", attr: "organizations"}
+        {kind: "XV.UserOrganizationsBox", attr: "organizations"},
+        {kind: "XV.Groupbox", name: "privilegePanel", classes: "xv-assignment-box",
+            title: "_privileges".loc(), components: [
+          {kind: "onyx.GroupboxHeader", content: "_privileges".loc()},
+          {kind: "XV.UserGlobalPrivilegeAssignmentBox", attr: "privileges" }
+        ]}
       ]}
     ],
     /**

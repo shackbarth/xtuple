@@ -183,7 +183,7 @@ white:true*/
      */
     initialize: function (attributes, options) {
       XM.Document.prototype.initialize.apply(this, arguments);
-      this.setReadOnly('id', false);
+      this.setReadOnly('id', this.getStatus() !== XM.Model.READY_NEW);
     },
 
     findExisting: function (key, value, options) {
@@ -339,6 +339,17 @@ white:true*/
   XM.ExtensionCollection = XM.Collection.extend(/** @lends XM.SessionCollection.prototype */{
 
     model: XM.Extension
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.GlobalPrivilegeCollection = XM.Collection.extend(/** @lends XM.GlobalPrivilegeCollection.prototype */{
+
+    model: XM.GlobalPrivilege
 
   });
 }());
