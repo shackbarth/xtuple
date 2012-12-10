@@ -7,7 +7,7 @@ regexp:true, undef:true, trailing:true, white:true */
   /**
     @name XV.ToggleButton
     @class A control that looks like a switch with labels for two states.<br />
-    Derived from <a href="http://enyojs.com/api/#onyx.ToggleButton">onyx.ToggleButton</a>. 
+    Derived from <a href="http://enyojs.com/api/#onyx.ToggleButton">onyx.ToggleButton</a>.
     @extends onyx.ToggleButton
    */
   enyo.kind(/** @lends XV.ToggleButton# */{
@@ -100,8 +100,8 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.label.setContent(label);
     },
     /**
-	 Not applicable in the context of a toggle button, 
-	 even though it is available to input widgets generally.
+   Not applicable in the context of a toggle button,
+   even though it is available to input widgets generally.
      */
     placeholderChanged: function () {
       // Not applicable
@@ -112,6 +112,9 @@ regexp:true, undef:true, trailing:true, white:true */
     valueChanged: function (value) {
       this.$.input.setValue(value);
       return value;
+    },
+    typeChanged: function () {
+      // Toggle button doesn't have this
     }
   });
 
