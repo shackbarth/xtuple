@@ -23,21 +23,21 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       certFile: "./lib/private/server.crt",
       caFile: null,
       saltFile: "./lib/private/salt.txt",
-      
+
       // these properties are dynamically registered with the
       // node discovery service
-      
+
       // the unique identifer registered for this service/instance
       name: "dev-datasource",
-      
+
       // human-friendly description of this service
       description: "NA",
-      
+
       // REQUIRED - the ip address or hostname for this instance
       hostname: "localhost",
-      
+
       // human-friendly location identifier for various cloud, physical
-      // servers, etc. 
+      // servers, etc.
       location: "NA"
     },
     administratorInterface: {
@@ -48,7 +48,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       port: 5432,
       database: "global",
       user: "admin",
-      password: "admin"
+      password: "admin",
+      nodeUsername: "node"
     },
     cache: {
       session: {
