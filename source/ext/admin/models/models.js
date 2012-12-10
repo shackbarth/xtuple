@@ -65,7 +65,7 @@ white:true*/
     autoFetchId: false
 
   });
-  
+
   /**
     @class
 
@@ -113,7 +113,7 @@ white:true*/
       }
     }
   });
-  
+
   /**
     @class
 
@@ -183,7 +183,7 @@ white:true*/
      */
     initialize: function (attributes, options) {
       XM.Document.prototype.initialize.apply(this, arguments);
-      this.setReadOnly('id', false);
+      this.setReadOnly('id', this.getStatus() !== XM.Model.READY_NEW);
     },
 
     findExisting: function (key, value, options) {
@@ -219,9 +219,9 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.Extension = XM.Model.extend(/** @lends XM.Extension.prototype */{
+  XM.GlobalPrivilege = XM.Model.extend(/** @lends XM.GlobalPrivilege.prototype */{
 
-    recordType: 'XM.Extension',
+    recordType: 'XM.GlobalPrivilege',
 
     databaseType: 'global'
 
@@ -232,6 +232,22 @@ white:true*/
 
     @extends XM.Model
   */
+  XM.UserGlobalPrivilegeAssignment = XM.Model.extend(/** @lends XM.UserGlobalPrivilegeAssignment.prototype */{
+
+    recordType: 'XM.UserGlobalPrivilegeAssignment',
+
+    databaseType: 'global'
+
+  });
+
+  XM.Extension = XM.Model.extend(/** @lends XM.Extension.prototype */{
+
+    recordType: 'XM.Extension',
+
+    databaseType: 'global'
+
+  });
+
   XM.OrganizationExtension = XM.Model.extend(/** @lends XM.OrganizationExtension.prototype */{
 
     recordType: 'XM.OrganizationExtension',
@@ -323,6 +339,17 @@ white:true*/
   XM.ExtensionCollection = XM.Collection.extend(/** @lends XM.SessionCollection.prototype */{
 
     model: XM.Extension
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.GlobalPrivilegeCollection = XM.Collection.extend(/** @lends XM.GlobalPrivilegeCollection.prototype */{
+
+    model: XM.GlobalPrivilege
 
   });
 }());

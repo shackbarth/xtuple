@@ -44,7 +44,7 @@ trailing:true white:true*/
     formatFirstName: XV.ContactList.prototype.formatFirstName,
     sendMail: XV.ContactList.prototype.sendMail
   });
-  
+
   // ..........................................................
   // PROJECT
   //
@@ -117,6 +117,38 @@ trailing:true white:true*/
   });
 
 }());
+
+
+// ..........................................................
+// INCIDENT
+//
+
+enyo.kind({
+  name: "XV.IncidentListRelations",
+  kind: "XV.ListRelations",
+  orderBy: [
+    {attribute: 'number', descending: true}
+  ],
+  //parentKey: "account", to be defined by subkind
+  workspace: "XV.IncidentWorkspace",
+  components: [
+    {kind: "XV.ListItem", components: [
+      {kind: "FittableColumns", components: [
+        {kind: "XV.ListColumn", classes: "first", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+            {kind: "XV.ListAttr", attr: "getIncidentStatusString", fit: true},
+            {kind: "XV.ListAttr", attr: "updated", formatter: "formatDate",
+              classes: "right"}
+          ]},
+          {kind: "XV.ListAttr", attr: "description"}
+        ]}
+      ]}
+    ]}
+  ],
+  formatDate: XV.IncidentList.prototype.formatDate
+});
+
 
 // ..........................................................
 // INCIDENT HISTORY
