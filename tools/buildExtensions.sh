@@ -6,14 +6,19 @@
 rm -rf builds
 mkdir builds
 
-cp source/admin/client/root-package.js package.js
+cp source/incident_plus/client/root-package.js package.js
 tools/deploy.sh
-mv build/app.js builds/admin.js
-#mv build/app.css builds/admin.css
+mkdir builds/incident_plus
+mv build/app.js builds/incident_plus/incident_plus.js
 
 cp source/project/client/root-package.js package.js
 tools/deploy.sh
-mv build/app.js builds/project.js
-#mv build/app.css builds/project.css
+mkdir builds/project
+mv build/app.js builds/project/project.js
+
+cp source/crm/client/root-package.js package.js
+tools/deploy.sh
+mkdir builds/crm
+mv build/app.js builds/crm/crm.js
 
 rm package.js
