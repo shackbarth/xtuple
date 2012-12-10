@@ -42,7 +42,9 @@ white:true*/
         extensionOptions,
         callback,
         schemaCount = 0,
-        schemasReturned = 0;
+        schemasReturned = 0,
+        privilegeSetCount = 0,
+        privilegeSetsReturned = 0;
 
       if (options && options.success && options.success instanceof Function) {
         callback = options.success;
@@ -55,13 +57,23 @@ white:true*/
 
         // callback
         privilegesOptions.success = function (resp) {
-          var i;
-          privileges = new Backbone.Model();
-          privileges.get = function (attr) {
-            // Sometimes the answer is already known...
-            if (_.isBoolean(attr)) { return attr; }
-            return Backbone.Model.prototype.get.call(this, attr);
-          };
+          var privileges, i;
+
+          if (that.getPrivileges().attributes) {
+            // add incoming data to already loaded privilege
+            privileges = that.getPrivileges();
+
+          } else {
+            // create privilege as a new model
+            privileges = new Backbone.Model();
+            privileges.get = function (attr) {
+              // Sometimes the answer is already known...
+              if (_.isBoolean(attr)) { return attr; }
+              return Backbone.Model.prototype.get.call(this, attr);
+            };
+          }
+
+          privilegeSetsReturned++;
 
           // Loop through the response and set a privilege for each found.
           for (i = 0; i < resp.length; i++) {
@@ -71,11 +83,34 @@ white:true*/
           // Attach the privileges to the session object.
           that.setPrivileges(privileges);
 
-          callback();
+          if (privilegeSetsReturned === privilegeSetCount) {
+            callback();
+          }
         };
 
         // dispatch
-        XT.dataSource.dispatch('XT.Session', 'privileges', null, privilegesOptions);
+        // XXX need to operate differently if this is being done on the client
+        // or on the server
+        if (typeof X !== 'undefined' && X.options && X.options.globalDatabase) {
+          // from within node we only need to query once, but we need to
+          // ask about the privileges of the node user, which are hopefully
+          // all-encompassing.
+          privilegesOptions.username = X.options.globalDatabase.nodeUsername;
+
+          XT.dataSource.dispatch('XT.Session', 'privileges', null, privilegesOptions);
+          privilegeSetCount++;
+
+        } else {
+
+          XT.dataSource.dispatch('XT.Session', 'privileges', null, privilegesOptions);
+          privilegeSetCount++;
+
+          // get schema for global DB models
+          privilegesOptions.databaseType = 'global';
+          XT.dataSource.dispatch('XT.Session', 'privileges', null, privilegesOptions);
+          privilegeSetCount++;
+        }
+
       }
 
       if (types & this.SETTINGS) {
