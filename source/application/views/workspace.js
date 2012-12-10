@@ -408,6 +408,7 @@ trailing:true white:true*/
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "number"},
             {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.CheckboxWidget", attr: "isPublic", name: "isPublic"},
             {kind: "XV.AccountWidget", attr: "account"},
             {kind: "XV.ContactWidget", attr: "contact"},
             {kind: "XV.IncidentCategoryPicker", attr: "category"},
@@ -430,7 +431,12 @@ trailing:true white:true*/
         {kind: "XV.IncidentDocumentsBox", attr: "documents"},
         {kind: "XV.IncidentHistoryRelationsBox", attr: "history"}
       ]}
-    ]
+    ],
+    create: function () {
+      this.inherited(arguments);
+      var settings = XT.session.getSettings();
+      this.$.isPublic.setShowing(settings.get('IncidentsPublicPrivate'));
+    }
   };
 
   incidentHash = enyo.mixin(incidentHash, XV.accountNotifyContactMixin);
