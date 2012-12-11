@@ -6,7 +6,7 @@ trailing:true white:true*/
 (function () {
 
   XT.extensions.project.initPostbooks = function () {
-    var module, panels;
+    var module, panels, relevantPrivileges;
 
     // ..........................................................
     // APPLICATION
@@ -30,48 +30,47 @@ trailing:true white:true*/
       panels: [
         {name: "projectList", kind: "XV.ProjectList"},
         {name: "projectTaskList", kind: "XV.ProjectTaskList"}
-      ],
-      privileges: [
-        "AccessProjectExtension",
-        "MaintainAddresses",
-        "MaintainAllContacts",
-        "MaintainAllCRMAccounts",
-        "MaintainAllIncidents",
-        "MaintainAllProjects",
-        "MaintainPersonalContacts",
-        "MaintainPersonalCRMAccounts",
-        "MaintainPersonalIncidents",
-        "MaintainPersonalProjects",
-        "MaintainPersonalToDoItems",
-        "MaintainTitles",
-        "ViewAllContacts",
-        "ViewAllCRMAccounts",
-        "ViewAllIncidentHistory",
-        "ViewAllIncidents",
-        "ViewAllProjects",
-        "ViewPersonalContacts",
-        "ViewPersonalCRMAccounts",
-        "ViewPersonalIncidents",
-        "ViewPersonalProjects",
-        "ViewTitles",
-        "DeleteItemMasters",
-        "MaintainItemMasters",
-        "MaintainUOMs",
-        "ViewClassCodes",
-        "ViewItemMasters",
-        "ViewUOMs",
-        "ConfigurePM",
-        "EditOthersComments",
-        "EditOwnComments",
-        "MaintainCommentTypes",
-        "MaintainCountries",
-        "MaintainStates",
-        "MaintainUsers"
       ]
     };
-
-    // TODO: the index should be the one above setup.
     XT.app.$.postbooks.insertModule(module, 2);
-  };
 
+    relevantPrivileges = [
+      "AccessProjectExtension",
+      "MaintainAddresses",
+      "MaintainAllContacts",
+      "MaintainAllCRMAccounts",
+      "MaintainAllIncidents",
+      "MaintainAllProjects",
+      "MaintainPersonalContacts",
+      "MaintainPersonalCRMAccounts",
+      "MaintainPersonalIncidents",
+      "MaintainPersonalProjects",
+      "MaintainPersonalToDoItems",
+      "MaintainTitles",
+      "ViewAllContacts",
+      "ViewAllCRMAccounts",
+      "ViewAllIncidentHistory",
+      "ViewAllIncidents",
+      "ViewAllProjects",
+      "ViewPersonalContacts",
+      "ViewPersonalCRMAccounts",
+      "ViewPersonalIncidents",
+      "ViewPersonalProjects",
+      "ViewTitles",
+      "DeleteItemMasters",
+      "MaintainItemMasters",
+      "MaintainUOMs",
+      "ViewClassCodes",
+      "ViewItemMasters",
+      "ViewUOMs",
+      "ConfigurePM",
+      "EditOthersComments",
+      "EditOwnComments",
+      "MaintainCommentTypes",
+      "MaintainCountries",
+      "MaintainStates",
+      "MaintainUsers"
+    ];
+    XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
+  };
 }());
