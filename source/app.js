@@ -48,8 +48,8 @@ white:true*/
       this.$.pullout.addPulloutItem(inSender, inEvent);
     },
     create: function () {
-      this.inherited(arguments);
       this._cachePullouts = [];
+      this.inherited(arguments);
       XT.app = this;
       window.onbeforeunload = function () {
         return "_exitPageWarning".loc();
