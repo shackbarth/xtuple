@@ -11,12 +11,12 @@ trailing:true white:true*/
     @name XV.Navigator
     @class Contains a set of panels for navigating the app and modules within the app.<br />
     Navigation within the app is accomplished by elements within the menu tool bar, such as history, search, the back button or logout.<br />
-	Navigation within modules in the app is accomplished with a list within the panel menu which displays the menu items for each context.<br /> 
+	Navigation within modules in the app is accomplished with a list within the panel menu which displays the menu items for each context.<br />
 	The root menu (module menu) contains the list of modules and the logout.<br />
-	Only three menus are cached at one time.<br />	
+	Only three menus are cached at one time.<br />
 	Layout: Collapsing Arranger.<br />
     Use to implement the high-level container of all business object lists.<br />
-    Derived from <a href="http://enyojs.com/api/#enyo.Panels">enyo.Panels</a>. 
+    Derived from <a href="http://enyojs.com/api/#enyo.Panels">enyo.Panels</a>.
     @extends enyo.Panels
    */
   enyo.kind(/** @lends XV.Navigator# */{
@@ -52,18 +52,18 @@ trailing:true white:true*/
     components: [
       {kind: "FittableRows", classes: "left", components: [
         {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
-	          {kind: "onyx.Button", name: "backButton", content: "_logout".loc(),
-	            ontap: "backTapped"},
-	          {kind: "Group", name: "iconButtonGroup", tag: null, components: [
-	        	{kind: "XV.IconButton", name: "historyIconButton",
-	             src: "lib/enyo-x/assets/menu-icon-bookmark.png",
-	             ontap: "showHistory", content: "_history".loc()},
-	        	{kind: "XV.IconButton", name: "searchIconButton",
-	             src: "lib/enyo-x/assets/menu-icon-search.png",
-	             ontap: "showParameters", content: "_advancedSearch".loc(), showing: false}
-          	]},
+          {kind: "onyx.Button", name: "backButton", content: "_logout".loc(),
+              ontap: "backTapped"},
+          {kind: "Group", name: "iconButtonGroup", tag: null, components: [
+            {kind: "XV.IconButton", name: "historyIconButton",
+               src: "lib/enyo-x/assets/menu-icon-bookmark.png",
+               ontap: "showHistory", content: "_history".loc()},
+            {kind: "XV.IconButton", name: "searchIconButton",
+               src: "lib/enyo-x/assets/menu-icon-search.png",
+               ontap: "showParameters", content: "_advancedSearch".loc(), showing: false}
+          ]},
           {kind: "onyx.MenuDecorator", style: "margin: 0;", onSelect: "actionSelected", components: [
-			      {kind: "XV.IconButton", src: "lib/enyo-x/assets/menu-icon-gear.png", 
+            {kind: "XV.IconButton", src: "lib/enyo-x/assets/menu-icon-gear.png",
 							content: "_actions".loc()},
             {kind: "onyx.Menu", components: [
               {name: "exportItem", content: "_export".loc(), showing: false},
@@ -98,27 +98,26 @@ trailing:true white:true*/
       ]},
       {kind: "FittableRows", components: [
 				// the onyx-menu-toolbar class keeps the popups from being hidden
-	      {kind: "onyx.MoreToolbar", name: "contentToolbar", 
-					classes: "onyx-menu-toolbar", movedClass: "xv-toolbar-moved",
-					components: [
-		        {kind: "onyx.Grabber"}, 
-		        {name: "rightLabel", style: "width: 100px"},
-					// The MoreToolbar is a FittableColumnsLayout, so this spacer takes up all available space
-					{name: "spacer", content: "", fit: true},
-	        {name: "newButton", kind: "XV.IconButton",
-		      	src: "lib/enyo-x/assets/menu-icon-new.png", content: "_new".loc(),
-		        ontap: "newRecord", showing: false},
-	        {name: "refreshButton", kind: "XV.IconButton",
-		        src: "lib/enyo-x/assets/menu-icon-refresh.png", content: "_refresh".loc(),
-		        ontap: "requery", showing: false},
-	        {name: "search", kind: "onyx.InputDecorator", 
-	          showing: false, components: [
-	        	{name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
-	             placeholder: "_search".loc(), onchange: "inputChanged"},
-	          {kind: "Image", src: "lib/enyo-x/assets/search-input-search.png",
-	             name: "searchJump", ontap: "jump"}
-	        	]}
-		      ]},
+        {kind: "onyx.MoreToolbar", name: "contentToolbar",
+          classes: "onyx-menu-toolbar", movedClass: "xv-toolbar-moved", components: [
+          {kind: "onyx.Grabber"},
+          {name: "rightLabel", style: "width: 100px"},
+          // The MoreToolbar is a FittableColumnsLayout, so this spacer takes up all available space
+          {name: "spacer", content: "", fit: true},
+          {name: "newButton", kind: "XV.IconButton",
+            src: "lib/enyo-x/assets/menu-icon-new.png", content: "_new".loc(),
+            ontap: "newRecord", showing: false},
+          {name: "refreshButton", kind: "XV.IconButton",
+            src: "lib/enyo-x/assets/menu-icon-refresh.png", content: "_refresh".loc(),
+            ontap: "requery", showing: false},
+          {name: "search", kind: "onyx.InputDecorator",
+            showing: false, components: [
+            {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
+              placeholder: "_search".loc(), onchange: "inputChanged"},
+            {kind: "Image", src: "lib/enyo-x/assets/search-input-search.png",
+              name: "searchJump", ontap: "jump"}
+          ]}
+        ]},
         {name: "header", content: "", classes: "xv-navigator-header"},
         {name: "contentPanels", kind: "Panels", margin: 0, fit: true,
           draggable: false, panelCount: 0},
@@ -245,7 +244,7 @@ trailing:true white:true*/
       this.fetched[index] = true;
       query = list.getQuery() || {};
       input = this.$.searchInput.getValue();
-      parameterWidget = XT.app ? XT.app.getPullout().getItem(name) : null;
+      parameterWidget = XT.app ? XT.app.$.pullout.getItem(name) : null;
       parameters = parameterWidget ? parameterWidget.getParameters() : [];
       options.showMore = _.isBoolean(options.showMore) ?
         options.showMore : false;
@@ -557,7 +556,7 @@ trailing:true white:true*/
 
       // Handle new button
       this.$.newButton.setShowing(panel.canAddNew);
-			this.$.contentToolbar.resized();
+      this.$.contentToolbar.resized();
       if (panel.canAddNew && collection) {
         // Check 'couldCreate' first in case it's an info model.
         model = collection.prototype.model;
@@ -591,15 +590,15 @@ trailing:true white:true*/
       var label = index ? "_back".loc() : "_logout".loc();
       this.$.menuPanels.setIndex(index);
 			// on mobile, only automatically select the first screen if it's the module menu
-			if (!enyo.Panels.isScreenNarrow() || this.$.menuPanels.getIndex() == MODULE_MENU) {
-				this.$.menuPanels.getActive().select(0);
-				this.setContentPanel(0);
+      if (!enyo.Panels.isScreenNarrow() || this.$.menuPanels.getIndex() === MODULE_MENU) {
+        this.$.menuPanels.getActive().select(0);
+        this.setContentPanel(0);
       }
-			this.$.backButton.setContent(label);
+      this.$.backButton.setContent(label);
       this.$.refreshButton.setShowing(index);
       this.$.search.setShowing(index);
       this.$.searchIconButton.setShowing(index);
-			this.$.contentToolbar.resized();
+      this.$.contentToolbar.resized();
     },
     setModule: function (index) {
       var module = this.getModules()[index],
