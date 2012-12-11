@@ -13,7 +13,7 @@ trailing:true white:true*/
     name: "XV.UserWorkspace",
     kind: "XV.Workspace",
     title: "_user".loc(),
-    headerAttrs: ["id"],
+    headerAttrs: ["id", "-", "properName"],
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -21,7 +21,10 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "id", label: "_userName".loc() },
+            {kind: "XV.InputWidget", attr: "id", label: "_userName".loc()},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
+            {kind: "XV.InputWidget", attr: "properName"},
+            {kind: "XV.InputWidget", attr: "email"},
             {kind: "onyx.Popup", name: "resetPasswordPopup", centered: true,
               modal: true, floating: true, scrim: true, components: [
               {content: "_resetPasswordConfirmation".loc() },
