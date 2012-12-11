@@ -44,7 +44,8 @@ white:true*/
         schemaCount = 0,
         schemasReturned = 0,
         privilegeSetCount = 0,
-        privilegeSetsReturned = 0;
+        privilegeSetsReturned = 0,
+        i;
 
       if (options && options.success && options.success instanceof Function) {
         callback = options.success;
@@ -88,25 +89,12 @@ white:true*/
           }
         };
 
-        // dispatch
-        // XXX need to operate differently if this is being done on the client
-        // or on the server
-        if (typeof X !== 'undefined' && X.options && X.options.globalDatabase) {
-          // from within node we only need to query once, but we need to
-          // ask about the privileges of the node user, which are hopefully
-          // all-encompassing.
-          privilegesOptions.username = X.options.globalDatabase.nodeUsername;
-
-          XT.dataSource.dispatch('XT.Session', 'privileges', null, privilegesOptions);
-          privilegeSetCount++;
-
-        } else {
-
-          XT.dataSource.dispatch('XT.Session', 'privileges', null, privilegesOptions);
-          privilegeSetCount++;
-
-          // get schema for global DB models
-          privilegesOptions.databaseType = 'global';
+        if (!privilegesOptions.databaseTypes) {
+          // by default we just run one query against the default database type
+          privilegesOptions.databaseTypes = [undefined];
+        }
+        for (i = 0; i < privilegesOptions.databaseTypes.length; i++) {
+          privilegesOptions.databaseType = privilegesOptions.databaseTypes[i];
           XT.dataSource.dispatch('XT.Session', 'privileges', null, privilegesOptions);
           privilegeSetCount++;
         }
@@ -213,7 +201,7 @@ white:true*/
         // callback
         extensionOptions.error = function (resp) {
           XT.log("Error loading extensions");
-        }
+        };
         extensionOptions.success = function (resp) {
           that.extensions = resp;
           callback();
