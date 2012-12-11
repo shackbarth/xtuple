@@ -302,13 +302,6 @@
         }
       },
       {
-        "name": "isActive",
-        "attr": {
-          "type": "Boolean",
-          "column": "useracct_active"
-        }
-      },
-      {
         "name": "properName",
         "attr": {
           "type": "String",
@@ -394,13 +387,6 @@
           "type": "String",
           "column": "useracct_username",
           "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "isActive",
-        "attr": {
-          "type": "Boolean",
-          "column": "useracct_active"
         }
       },
       {
