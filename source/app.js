@@ -31,7 +31,7 @@ white:true*/
       onSearch: "waterfallSearch"
     },
     components: [
-      { name: "postbooks", kind: "XV.Postbooks",  onTransitionStart: "handlePullout" },
+      { name: "postbooks", kind: "XV.ModuleContainer",  onTransitionStart: "handlePullout" },
       { name: "pullout", kind: "XV.Pullout", onAnimateFinish: "pulloutAnimateFinish" }
     ],
     state: UNINITIALIZED,
@@ -42,10 +42,8 @@ white:true*/
      */
     addPulloutItem: function (inSender, inEvent) {
       if (!this.$.pullout) {
-        // XXX: because postbooks is defined before pullout, the events thrown by the postbooks
-        // creation can't really be dealt with yet. Luckily none of the first 3 pre-loaded panels
-        // have an associated parameter widget. We'll have to tackle this if we want to put a
-        // parameter search on user accounts or user account roles.
+        if (!this._cachePullouts) { this._cachePullouts = []; }
+        this._cachePullouts.push(inEvent);
         return;
       }
       this.$.pullout.addPulloutItem(inSender, inEvent);
@@ -57,15 +55,12 @@ white:true*/
         return "_exitPageWarning".loc();
       };
     },
-    getPullout: function () {
-      return this.$.pullout;
-    },
     handlePullout: function (inSender, inEvent) {
       var showing = inSender.getActive().showPullout || false;
       this.$.pullout.setShowing(showing);
     },
     modelChanged: function (inSender, inEvent) {
-      this.$.postbooks.getNavigator().waterfall("onModelChange", inEvent);
+      this.$.container.getNavigator().waterfall("onModelChange", inEvent);
     },
     parameterDidChange: function (inSender, inEvent) {
       if (this.getIsStarted()) {
@@ -119,6 +114,7 @@ white:true*/
         task,
         len,
         text,
+        inEvent,
         ajax, extensionSuccess, extensionError, extensionLocation, extensionName, extensionPrivilegeName,
         extensionCount = 0, extensionsDownloaded = 0,
         eachCallback = function () {
@@ -235,6 +231,10 @@ white:true*/
       // 6. Finish up
       } else if (this.state === LOADING_APP_DATA) {
         // Go to the navigator
+        for (i = 0; i < this._cachePullouts.length; i++) {
+          inEvent = this._cachePullouts[i];
+          this.$.pullout.addPulloutItem(null, inEvent);
+        }
         this.state = RUNNING;
         XT.app.$.postbooks.next();
         XT.app.$.postbooks.getNavigator().activate();
