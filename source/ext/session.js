@@ -12,6 +12,7 @@ white:true*/
     /** @scope XT.Session */
 
     privileges: {},
+    relevantPrivileges: [], // those privileges that are needed for an active extension
     settings: {},
     schema: {},
 
@@ -248,6 +249,11 @@ white:true*/
       this.privileges = value;
       return this;
     },
+
+    addRelevantPrivileges: function (module, privArray) {
+      var privMap = _.map(privArray, function (priv) {return {module: module, privilege: priv};});
+      this.relevantPrivileges.add(privMap);
+    }
 
     // ..........................................................
     // CLASS CONSTANTS
