@@ -896,16 +896,10 @@ trailing:true white:true*/
           ]},
           {kind: "XV.ListColumn", classes: "short", components: [
             {kind: "XV.ListAttr", attr: "propername"}
-          ]},
-          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "isActive", formatter: "formatActive"}
           ]}
         ]}
       ]}
-    ],
-    formatActive: function (value, view, model) {
-      return value ? "_active".loc() : "";
-    }
+    ]
   });
 
   // ..........................................................
