@@ -250,9 +250,18 @@ white:true*/
       return this;
     },
 
+    /**
+      Each extension has a set of privileges that it cares about. The extension will load those
+      privileges here into the session object with then name of the module that the privilege
+      should be associated with. The module name will frequently be the extension name, but some
+      extensions do not have their own modules.
+
+      @param {String} module
+      @param {Array} privArray
+    */
     addRelevantPrivileges: function (module, privArray) {
       var privMap = _.map(privArray, function (priv) {return {module: module, privilege: priv}; });
-      this.relevantPrivileges.add(privMap);
+      this.relevantPrivileges = _.union(this.relevantPrivileges, privMap);
     },
 
     // ..........................................................
