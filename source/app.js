@@ -8,7 +8,10 @@ white:true*/
   enyo.kind({
     name: "App",
     kind: "XV.App",
-    moduleContainer: "XV.Postbooks"
+    components: [
+      { name: "postbooks", kind: "XV.Postbooks",  onTransitionStart: "handlePullout" },
+      { name: "pullout", kind: "XV.Pullout", onAnimateFinish: "pulloutAnimateFinish" }
+    ]
   });
   
 }());
