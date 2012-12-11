@@ -308,9 +308,6 @@ white:true*/
         name = model.get("name");
         group = model.get("group") || "";
         if (!this.getRestrictedValues() || this.getRestrictedValues().indexOf(name) >= 0) {
-          // note: multiple segment support is effectively disabled by the hardcoded 0, below.
-          // if we want to re-incorporate it, look at the commented implementation below
-          // for a flavor of how this might work.
           pertinentSegment = Math.max(0, lowercaseSegments.indexOf(group.toLowerCase()));
           this.getSegmentedCollections()[pertinentSegment].add(model);
         }
