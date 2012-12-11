@@ -83,10 +83,8 @@ white:true*/
       that are loaded.
      */
     create: function () {
-      var privilegeArrays = _.map(XT.app.$.postbooks.getModules(), function (module) {
-        return module.privileges ? module.privileges : [];
-      });
-      this.setRestrictedValues(_.uniq(_.flatten(privilegeArrays)));
+      var privileges = _.map(XT.session.relevantPrivileges, function (privObj) {return privObj.privilege; });
+      this.setRestrictedValues(privileges);
 
       this.inherited(arguments);
     },
@@ -206,10 +204,8 @@ white:true*/
       that are loaded.
      */
     create: function () {
-      var privilegeArrays = _.map(XT.app.$.postbooks.getModules(), function (module) {
-        return module.privileges ? module.privileges : [];
-      });
-      this.setRestrictedValues(_.uniq(_.flatten(privilegeArrays)));
+      var privileges = _.map(XT.session.relevantPrivileges, function (privObj) {return privObj.privilege; });
+      this.setRestrictedValues(privileges);
 
       this.inherited(arguments);
     },
