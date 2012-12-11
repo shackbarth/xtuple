@@ -7,6 +7,5 @@ enyo.depends(
   "comment_box.js",
   "assignment_box.js",
   "documents_box.js",
-  "pullout.js",
-  "my_account_popup.js"
+  "module_container.js"
 );
