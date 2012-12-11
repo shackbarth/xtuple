@@ -168,6 +168,8 @@ trailing:true white:true*/
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
+            {kind: "XV.NumberWidget", attr: "licenses"},
             {kind: "XV.DatabaseServerWidget", attr: "databaseServer"}
           ]}
         ]},

@@ -95,6 +95,15 @@ white:true*/
     databaseType: 'global',
 
     autoFetchId: false,
+    
+    defaults: {
+      isActive: true
+    },
+    
+    requiredAttributes: [
+      "isActive",
+      "licenses"
+    ],
 
     /**
      * The username attribute must be editable for a new entry. This overrides
@@ -177,7 +186,16 @@ white:true*/
     enforceUpperKey: false,
 
     databaseType: 'global',
-
+    
+    defaults: {
+      isActive: true
+    },
+    
+    requiredAttributes: [
+      "isActive",
+      "email"
+    ],
+    
     /**
      * The username attribute must be editable for a new entry.
      */
