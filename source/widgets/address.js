@@ -9,7 +9,7 @@ regexp:true, undef:true, trailing:true, white:true */
     @class Contains a set of fittable rows made up of
     controls for inputting and viewing addresses,
     including the popup for adding or editing them.<br />
-    Derived from <a href="http://enyojs.com/api/#enyo.FittableRows">enyo.FittableRows</a>. 
+    Derived from <a href="http://enyojs.com/api/#enyo.FittableRows">enyo.FittableRows</a>.
     @extends enyo.FittableRows
    */
   enyo.kind(/** @lends XV.AddressWidget# */{
@@ -146,14 +146,16 @@ regexp:true, undef:true, trailing:true, white:true */
     inputChanged: function (inSender, inEvent) {
       var value = this.getValue(),
         attr = inEvent.originator.name;
-      value.set(attr, this.$[attr].getValue());
-      this.setValue(value);
-      this.valueChanged();
-      inEvent = {
-        originator: this,
-        value: value
-      };
-      this.doValueChange(inEvent);
+      if (value) {
+        value.set(attr, this.$[attr].getValue());
+        this.setValue(value);
+        this.valueChanged();
+        inEvent = {
+          originator: this,
+          value: value
+        };
+        this.doValueChange(inEvent);
+      }
       return true;
     },
     /**
