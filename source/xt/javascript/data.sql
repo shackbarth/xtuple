@@ -479,7 +479,9 @@ select xt.install_js('XT','Data','xtuple', $$
           column = '"' + orm.relations[i].column + '"';
           if (!params.columns.contains(column)) {
             params.columns.push(column);
-            params.expressions.push(record[orm.relations[i].inverse]);
+            params.values.push(record[orm.relations[i].inverse]);
+            params.expressions.push('$' +count);
+            count++
           }
         }
       }
