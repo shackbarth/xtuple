@@ -12,6 +12,7 @@ white:true*/
     /** @scope XT.Session */
 
     privileges: {},
+    relevantPrivileges: [], // those privileges that are needed for an active extension
     settings: {},
     schema: {},
 
@@ -247,6 +248,20 @@ white:true*/
     setPrivileges: function (value) {
       this.privileges = value;
       return this;
+    },
+
+    /**
+      Each extension has a set of privileges that it cares about. The extension will load those
+      privileges here into the session object with then name of the module that the privilege
+      should be associated with. The module name will frequently be the extension name, but some
+      extensions do not have their own modules.
+
+      @param {String} module
+      @param {Array} privArray
+    */
+    addRelevantPrivileges: function (module, privArray) {
+      var privMap = _.map(privArray, function (priv) {return {module: module, privilege: priv}; });
+      this.relevantPrivileges = _.union(this.relevantPrivileges, privMap);
     },
 
     // ..........................................................
