@@ -251,9 +251,9 @@ white:true*/
     },
 
     addRelevantPrivileges: function (module, privArray) {
-      var privMap = _.map(privArray, function (priv) {return {module: module, privilege: priv};});
+      var privMap = _.map(privArray, function (priv) {return {module: module, privilege: priv}; });
       this.relevantPrivileges.add(privMap);
-    }
+    },
 
     // ..........................................................
     // CLASS CONSTANTS
