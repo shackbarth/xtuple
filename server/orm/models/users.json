@@ -123,6 +123,29 @@
        }
      }
     ],
+    "extensions": [
+      {
+        "table": "xt.org",
+        "isChild": true,
+        "relations": [
+          {
+            "column": "org_name",
+            "inverse": "name"
+          }
+        ],
+        "properties": [
+          {
+            "name": "isActive",
+            "attr": {
+              "type": "Boolean",
+              "column": "org_active",
+              "value": true
+            }
+          }
+        ],
+        "nameSpace": "XM"
+      }
+    ],
     "isSystem": true
   },
   {
