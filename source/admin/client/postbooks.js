@@ -18,6 +18,9 @@ trailing:true white:true*/
         {name: "databaseServerList", kind: "XV.DatabaseServerList"},
         {name: "organizationList", kind: "XV.OrganizationList"},
         {name: "extensionList", kind: "XV.ExtensionList"}
+      ],
+      privileges: [
+        "AccessAdminExtension",
       ]
     };
 
