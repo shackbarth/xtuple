@@ -60,7 +60,7 @@ white:true*/
       this.$.pullout.setShowing(showing);
     },
     modelChanged: function (inSender, inEvent) {
-      this.$.container.getNavigator().waterfall("onModelChange", inEvent);
+      this.$.postbooks.getNavigator().waterfall("onModelChange", inEvent);
     },
     parameterDidChange: function (inSender, inEvent) {
       if (this.getIsStarted()) {
