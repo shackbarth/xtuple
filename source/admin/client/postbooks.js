@@ -10,7 +10,7 @@ trailing:true white:true*/
     // ..........................................................
     // APPLICATION
     //
-    var module = {
+    var relevantPrivileges, module = {
       name: "admin",
       label: "_admin".loc(),
       panels: [
@@ -20,9 +20,12 @@ trailing:true white:true*/
         {name: "extensionList", kind: "XV.ExtensionList"}
       ]
     };
-
-    // TODO: the index should be the one above setup.
     XT.app.$.postbooks.insertModule(module, 2);
+
+    relevantPrivileges = [
+      "AccessAdminExtension",
+    ];
+    XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
   };
 
 }());

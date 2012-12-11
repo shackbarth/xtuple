@@ -16,10 +16,11 @@ var lang = XT.stringsFor("en_US", {
   // ********
   // Labels
   // ********
-  
+
   "_fixedIn": "Fixed In",
   "_foundIn": "Found In",
   "_version": "Version",
-  "_versions": "Versions"
-  
+  "_versions": "Versions",
+  "_accessIncidentPlusExtension": "Access Incident Plus Extension"
+
 });
