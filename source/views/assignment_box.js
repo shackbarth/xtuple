@@ -11,7 +11,7 @@ white:true*/
    @class An assignment box is a groupbox that manages the assignment of a set of
    available options to an object. For example, setting up the privileges that
    are associated with a role.<br />
-   Derived from <a href="http://enyojs.com/api/#enyo.Scroller">enyo.Scroller</a>. 
+   Derived from <a href="http://enyojs.com/api/#enyo.Scroller">enyo.Scroller</a>.
    @extends enyo.Scroller
    */
   enyo.kind(/** @lends XV.AssignmentBox# */{
@@ -66,7 +66,8 @@ white:true*/
      *
      * @property {String} type
      * Camelized name of assignable model. Used for drilling down from the assignment
-     *    (link) model to the assignable model.
+     *    (link) model to the assignable model. It is important that this be the attribute
+     *    in the assignment model that contains the assignable model.
      */
     published: {
       assignedCollection: null,
