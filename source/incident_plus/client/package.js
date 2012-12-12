@@ -3,5 +3,6 @@ enyo.depends(
   "en",
   "models",
   "widgets",
-  "views"
+  "views",
+  "postbooks.js"
 );

@@ -16,9 +16,10 @@ var lang = XT.stringsFor("en_US", {
   // ********
   // Labels
   // ********
-  
+
   "_crm": "CRM",
+  "_accessCRMExtension": "Access CRM Extension",
   "_crmDescription": "Corporate Relationship Management",
   "_incidentStatusColors": "Incident Status Colors"
-  
+
 });

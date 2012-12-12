@@ -18,6 +18,7 @@ var lang = XT.stringsFor("en_US", {
   // ********
 
   "_admin": "Admin",
+  "_accessAdminExtension": "Access Admin Extension",
   "_databaseServer": "Server",
   "_databaseServers": "Servers",
   "_organizations": "Organizations",
@@ -26,6 +27,7 @@ var lang = XT.stringsFor("en_US", {
   "_port": "Port",
   "_hostname": "Hostname",
   "_dateAdded": "Date Added",
+  "_licenses": "Licenses",
   "_location": "Location",
   "_privilegeName": "Privilege Name",
   "_user": "User",
