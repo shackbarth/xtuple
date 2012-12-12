@@ -42,13 +42,13 @@ white:true*/
      */
     addPulloutItem: function (inSender, inEvent) {
       if (!this.$.pullout) {
-        if (!this._cachePullouts) { this._cachePullouts = []; }
         this._cachePullouts.push(inEvent);
         return;
       }
       this.$.pullout.addPulloutItem(inSender, inEvent);
     },
     create: function () {
+      this._cachePullouts = [];
       this.inherited(arguments);
       XT.app = this;
       window.onbeforeunload = function () {
