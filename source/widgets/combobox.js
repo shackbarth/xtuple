@@ -163,6 +163,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     collection: "XM.countries"
   });
 
+
   // ..........................................................
   // STATE
   //
@@ -212,6 +213,88 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
         this._countryId = undefined;
       }
       this.buildList();
+    }
+  });
+  
+  /**
+    @name XV.ComboboxWidget
+    @class An input control consisting of fittable columns:
+      label, decorator, and combobox.<br />
+    Used to implement a styled combobox
+    @extends XV.Input
+   */
+  enyo.kind(/** @lends XV.CheckboxWidget# */{
+    name: "XV.ComboboxWidget",
+    //kind: "XV.Input",
+    published: {
+      collection: "",
+      filter: null,
+      keyAttribute: "name",
+      label: "",
+      showLabel: true
+    },
+    components: [
+      {kind: "FittableColumns", components: [
+        {name: "label", content: "", classes: "xv-decorated-label"},
+        {name: "input", kind: "XV.Combobox"/*, onValueChange: "inputChanged"*/}
+      ]}
+    ],
+    /**
+    @todo Document the clear method.
+    */
+    clear: function (options) {
+      this.setValue(false, options);
+    },
+    /**
+    
+    */
+    collectionChanged: function () {
+      this.$.input.setCollection(this.getCollection());
+    },
+    filterChanged: function () {
+      this.$.input.setFilter(this.getFilter());
+    },
+    keyAttributeChanged: function () {
+      this.$.input.setKeyAttribute(this.getKeyAttribute());
+    },
+    /**
+    @todo Document the create method.
+    */
+    create: function () {
+      this.inherited(arguments);
+      this.collectionChanged();
+      this.filterChanged();
+      this.keyAttributeChanged();
+      this.labelChanged();
+    },
+    /**
+    @todo Document the inputChanged method.
+    */
+    inputChanged: function (inSender, inEvent) {
+      var input = this.$.input.getValue();
+      this.setValue(input);
+    },
+    /**
+    @todo Document the labelChanged method.
+    */
+    labelChanged: function () {
+      var label = (this.getLabel() || ("_" + this.attr || "").loc()) + ":";
+      this.$.label.setContent(label);
+    },
+    getValue: function () {
+      return this.$.input.getValue();
+    },
+    /*
+    */
+    setValue: function () {
+      return this.$.input.setValue(arguments);
+    },
+    /**
+    @todo Document the valueChanged method.
+    */
+    valueChanged: function (value) {
+      this.$.input.setValue(value);
+      return value;
     }
   });
 
