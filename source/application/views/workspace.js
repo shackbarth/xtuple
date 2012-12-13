@@ -408,6 +408,7 @@ trailing:true white:true*/
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "number"},
             {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.CheckboxWidget", attr: "isPublic", name: "isPublic"},
             {kind: "XV.AccountWidget", attr: "account"},
             {kind: "XV.ContactWidget", attr: "contact"},
             {kind: "XV.IncidentCategoryPicker", attr: "category"},
@@ -430,7 +431,12 @@ trailing:true white:true*/
         {kind: "XV.IncidentDocumentsBox", attr: "documents"},
         {kind: "XV.IncidentHistoryRelationsBox", attr: "history"}
       ]}
-    ]
+    ],
+    create: function () {
+      this.inherited(arguments);
+      var settings = XT.session.getSettings();
+      this.$.isPublic.setShowing(settings.get('IncidentsPublicPrivate'));
+    }
   };
 
   incidentHash = enyo.mixin(incidentHash, XV.accountNotifyContactMixin);
@@ -610,7 +616,21 @@ trailing:true white:true*/
     name: "XV.OpportunityStageWorkspace",
     kind: "XV.Workspace",
     title: "_opportunityStage".loc(),
-    model: "XM.OpportunityStage"
+    model: "XM.OpportunityStage",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.CheckboxWidget", attr: "deactivate"}
+          ]}
+        ]}
+      ]}
+    ]
   });
 
   XV.registerModelWorkspace("XM.OpportunityStage", "XV.OpportunityStageWorkspace");
@@ -926,7 +946,6 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "username"},
-            {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.LocalePicker", attr: "locale"},
             {kind: "XV.InputWidget", attr: "properName"},
             {kind: "XV.InputWidget", attr: "initials"},

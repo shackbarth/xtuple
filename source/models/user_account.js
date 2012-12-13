@@ -151,7 +151,6 @@ white:true*/
     enforceUpperKey: false,
 
     defaults: {
-      isActive: true,
       disableExport: false
     },
 
