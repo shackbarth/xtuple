@@ -591,7 +591,7 @@ trailing:true white:true*/
       var label = index ? "_back".loc() : "_logout".loc();
       this.$.menuPanels.setIndex(index);
 			// on mobile, only automatically select the first screen if it's the module menu
-			if (!enyo.Panels.isScreenNarrow() || this.$.menuPanels.getIndex() == MODULE_MENU) {
+			if (!enyo.Panels.isScreenNarrow()) {
 				this.$.menuPanels.getActive().select(0);
 				this.setContentPanel(0);
       }
