@@ -592,8 +592,11 @@ trailing:true white:true*/
       this.$.menuPanels.setIndex(index);
 			// on mobile, only automatically select the first screen if it's the module menu
 			if (!enyo.Panels.isScreenNarrow()) {
-				this.$.menuPanels.getActive().select(0);
-				this.setContentPanel(0);
+        this.$.menuPanels.getActive().select(0);
+        this.setContentPanel(0);
+      } else {
+        this.$.menuPanels.getActive().getSelection().clear();
+        this.$.menuPanels.getActive().refresh();
       }
 			this.$.backButton.setContent(label);
       this.$.refreshButton.setShowing(index);
