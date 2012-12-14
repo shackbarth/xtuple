@@ -202,16 +202,16 @@ white:true*/
         this.state = LOADING_SCHEMA;
         text = "_loadingSchema".loc() + "...";
         XT.app.$.postbooks.getStartupText().setContent(text);
-        startupManager.registerCallback(function () {
-          that.startupProcess();
-        });
-
         XT.StartupTask.create({
           taskName: "loadSessionSchema",
           task: function () {
-            var options = {
-              success: _.bind(this.didComplete, this)
-            };
+            var task = this,
+              options = {
+                success: function () {
+                  task.didComplete();
+                  that.startupProcess();
+                }
+              };
             XT.session.loadSessionObjects(XT.session.SCHEMA, options);
           }
         });
@@ -227,9 +227,9 @@ white:true*/
 
         // there's a new startup task count now that
         // the second stage of tasks are being loaded.
-        startupTaskCount = startupManager.get('queue').length
-          + startupManager.get('completed').length
-          + XT.StartupTasks.length;
+        startupTaskCount = startupManager.get('queue').length +
+          startupManager.get('completed').length +
+          XT.StartupTasks.length;
 
         // create a new each callback to manage the completion of this step
         // the previously registered callback isn't doing any harm. It would be
