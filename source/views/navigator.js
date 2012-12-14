@@ -244,7 +244,7 @@ trailing:true white:true*/
       this.fetched[index] = true;
       query = list.getQuery() || {};
       input = this.$.searchInput.getValue();
-      parameterWidget = XT.app ? XT.app.$.pullout.getItem(name) : null;
+      parameterWidget = XT.app ? XT.app.getPullout().getItem(name) : null;
       parameters = parameterWidget ? parameterWidget.getParameters() : [];
       options.showMore = _.isBoolean(options.showMore) ?
         options.showMore : false;
@@ -501,6 +501,7 @@ trailing:true white:true*/
         panel = _.find(contentPanels.children, function (child) {
           return child.index === panelIndex;
         });
+        
       } else if (panelStatus === 'unborn') {
         // panel exists but has not been rendered. Render it.
         module.panels[index].status = 'active';
@@ -526,12 +527,12 @@ trailing:true white:true*/
       if (enyo.Panels.isScreenNarrow()) {
         this.next();
       }
-      
+
       // If we're already here, bail
       if (contentPanels.index === this.$.contentPanels.indexOfChild(panel)) {
         return;
       }
-
+      
       // cache any extraneous content panels
       this.cachePanels();
 
@@ -580,6 +581,7 @@ trailing:true white:true*/
         this.fetch();
       }
     },
+    
     /**
       The header content typically describes to the user the particular query filter in effect.
      */
@@ -594,7 +596,8 @@ trailing:true white:true*/
         this.$.menuPanels.getActive().select(0);
         this.setContentPanel(0);
       } else {
-        this.$.menuPanels.getActive().reset();
+          // on the mobile device, clears selections
+          this.$.menuPanels.getActive().reset();
       }
       
       this.$.backButton.setContent(label);
@@ -660,7 +663,7 @@ trailing:true white:true*/
       this.$.listItem.setContent(label);
       this.$.listItem.addRemoveClass("onyx-selected", isSelected);
     },
-    navTap: function (inSender, inEvent) {
+    navTap: function(inSender, inEvent) {
       var index = inEvent.index;
       if (inSender.isSelected(index)) { this.setContentPanel(index); }
     },
