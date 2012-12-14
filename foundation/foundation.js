@@ -30,6 +30,7 @@ X = {};
   X.https        = require("https");
   X.url          = require("url");
   X.crypto       = require("crypto");
+  X.bcrypt       = require("bcrypt");
 
   X.connect      = require("connect");
   X.pg           = require("pg").native;
@@ -292,7 +293,7 @@ X = {};
     didBecomeReady: function () {
       var wasReady = X.hasBecomeReady,
           queue = X.runQueue, required;
-      
+
       // its an unfortunate oversight that these two variables
       // exist simultaneously...
       X.hasBecomeReady = true;
@@ -300,7 +301,7 @@ X = {};
       if (wasReady) return;
       while (queue.length > 0) (queue.shift())();
       X.runQueue = null;
-      
+
       // now run any of the require statements...
       required = X.required || [];
       while (required.length) {
@@ -382,13 +383,13 @@ X = {};
       }
       return base;
     },
-    
+
     writePidFile: function () {
       X.log("Writing pid file '%@'".f(X.pidFileName));
       X.writeFile(X.pidFile, X.pid);
       X.addCleanupTask(X.cleanupPidFile);
     },
-    
+
     cleanupPidFile: function () {
       if (!X.pidFile) return;
       X.log("Removing pid file.");
@@ -431,7 +432,7 @@ X = {};
   require("./exception");
   require("./filesystem");
   require("./ext/cleanup_task");
-  
+
   (function () {
     var options = "version.txt node_modules/xt/version.txt".w(), i = 0, path;
     for (; i < options.length && X.none(X.version); ++i) {
