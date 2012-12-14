@@ -85,12 +85,12 @@ trailing:true white:true*/
         {name: "menuPanels", kind: "Panels", draggable: false, fit: true,
           margin: 0, components: [
           {name: "moduleMenu", kind: "List", touch: true,
-              onSetupItem: "setupModuleMenuItem",
+              onSetupItem: "setupModuleMenuItem", ontap: "navTap",
               components: [
             {name: "moduleItem", classes: "item enyo-border-box"}
           ]},
           {name: "panelMenu", kind: "List", touch: true,
-             onSetupItem: "setupPanelMenuItem", components: [
+             onSetupItem: "setupPanelMenuItem", ontap: "navTap", components: [
             {name: "listItem", classes: "item enyo-border-box"}
           ]},
           {} // Why do panels only work when there are 3+ objects?
@@ -590,7 +590,7 @@ trailing:true white:true*/
       var label = index ? "_back".loc() : "_logout".loc();
       this.$.menuPanels.setIndex(index);
 			// on mobile, only automatically select the first screen if it's the module menu
-      if (!enyo.Panels.isScreenNarrow() || this.$.menuPanels.getIndex() === MODULE_MENU) {
+      if (!enyo.Panels.isScreenNarrow()) {
         this.$.menuPanels.getActive().select(0);
         this.setContentPanel(0);
       }
@@ -656,7 +656,10 @@ trailing:true white:true*/
 
       this.$.listItem.setContent(label);
       this.$.listItem.addRemoveClass("onyx-selected", isSelected);
-      if (isSelected) { this.setContentPanel(index); }
+    },
+    navTap: function(inSender, inEvent) {
+      var index = inEvent.index;
+      if (inSender.isSelected(index)) { this.setContentPanel(index); }
     },
     showError: function (message) {
       this.$.errorMessage.setContent(message);
