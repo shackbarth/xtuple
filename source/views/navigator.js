@@ -85,12 +85,12 @@ trailing:true white:true*/
         {name: "menuPanels", kind: "Panels", draggable: false, fit: true,
           margin: 0, components: [
           {name: "moduleMenu", kind: "List", touch: true,
-              onSetupItem: "setupModuleMenuItem",
+              onSetupItem: "setupModuleMenuItem", ontap: "navTap",
               components: [
             {name: "moduleItem", classes: "item enyo-border-box"}
           ]},
           {name: "panelMenu", kind: "List", touch: true,
-             onSetupItem: "setupPanelMenuItem", components: [
+             onSetupItem: "setupPanelMenuItem", ontap: "navTap", components: [
             {name: "listItem", classes: "item enyo-border-box"}
           ]},
           {} // Why do panels only work when there are 3+ objects?
@@ -101,7 +101,7 @@ trailing:true white:true*/
         {kind: "onyx.MoreToolbar", name: "contentToolbar",
           classes: "onyx-menu-toolbar", movedClass: "xv-toolbar-moved", components: [
           {kind: "onyx.Grabber"},
-          {name: "rightLabel", style: "width: 100px"},
+          {name: "rightLabel", style: "width: 180px"},
           // The MoreToolbar is a FittableColumnsLayout, so this spacer takes up all available space
           {name: "spacer", content: "", fit: true},
           {name: "newButton", kind: "XV.IconButton",
@@ -501,11 +501,6 @@ trailing:true white:true*/
         panel = _.find(contentPanels.children, function (child) {
           return child.index === panelIndex;
         });
-        // If we're already here, bail
-        if (contentPanels.index === this.$.contentPanels.indexOfChild(panel)) {
-          return;
-        }
-
       } else if (panelStatus === 'unborn') {
         // panel exists but has not been rendered. Render it.
         module.panels[index].status = 'active';
@@ -526,17 +521,22 @@ trailing:true white:true*/
       } else {
         XT.error("Don't know what to do with this panel status");
       }
+      
+      // Mobile device view
+      if (enyo.Panels.isScreenNarrow()) {
+        this.next();
+      }
+      
+      // If we're already here, bail
+      if (contentPanels.index === this.$.contentPanels.indexOfChild(panel)) {
+        return;
+      }
 
       // cache any extraneous content panels
       this.cachePanels();
 
       label = panel && panel.label ? panel.label : "";
       collection = panel && panel.getCollection ? XT.getObjectByName(panel.getCollection()) : false;
-
-			// Mobile device view
-      if (enyo.Panels.isScreenNarrow()) {
-        this.next();
-      }
 
       if (!panel) { return; }
 
@@ -590,10 +590,13 @@ trailing:true white:true*/
       var label = index ? "_back".loc() : "_logout".loc();
       this.$.menuPanels.setIndex(index);
 			// on mobile, only automatically select the first screen if it's the module menu
-      if (!enyo.Panels.isScreenNarrow() || this.$.menuPanels.getIndex() === MODULE_MENU) {
+      if (!enyo.Panels.isScreenNarrow()) {
         this.$.menuPanels.getActive().select(0);
         this.setContentPanel(0);
+      } else {
+        this.$.menuPanels.getActive().reset();
       }
+      
       this.$.backButton.setContent(label);
       this.$.refreshButton.setShowing(index);
       this.$.search.setShowing(index);
@@ -656,7 +659,10 @@ trailing:true white:true*/
 
       this.$.listItem.setContent(label);
       this.$.listItem.addRemoveClass("onyx-selected", isSelected);
-      if (isSelected) { this.setContentPanel(index); }
+    },
+    navTap: function (inSender, inEvent) {
+      var index = inEvent.index;
+      if (inSender.isSelected(index)) { this.setContentPanel(index); }
     },
     showError: function (message) {
       this.$.errorMessage.setContent(message);
