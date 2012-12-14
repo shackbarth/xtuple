@@ -244,7 +244,7 @@ trailing:true white:true*/
       this.fetched[index] = true;
       query = list.getQuery() || {};
       input = this.$.searchInput.getValue();
-      parameterWidget = XT.app ? XT.app.$.pullout.getItem(name) : null;
+      parameterWidget = XT.app ? XT.app.getPullout().getItem(name) : null;
       parameters = parameterWidget ? parameterWidget.getParameters() : [];
       options.showMore = _.isBoolean(options.showMore) ?
         options.showMore : false;
@@ -501,11 +501,7 @@ trailing:true white:true*/
         panel = _.find(contentPanels.children, function (child) {
           return child.index === panelIndex;
         });
-        // If we're already here, bail
-        if (contentPanels.index === this.$.contentPanels.indexOfChild(panel)) {
-          return;
-        }
-
+        
       } else if (panelStatus === 'unborn') {
         // panel exists but has not been rendered. Render it.
         module.panels[index].status = 'active';
@@ -526,17 +522,22 @@ trailing:true white:true*/
       } else {
         XT.error("Don't know what to do with this panel status");
       }
+      
+      // Mobile device view
+      if (enyo.Panels.isScreenNarrow()) {
+        this.next();
+      }
 
+      // If we're already here, bail
+      if (contentPanels.index === this.$.contentPanels.indexOfChild(panel)) {
+        return;
+      }
+      
       // cache any extraneous content panels
       this.cachePanels();
 
       label = panel && panel.label ? panel.label : "";
       collection = panel && panel.getCollection ? XT.getObjectByName(panel.getCollection()) : false;
-
-			// Mobile device view
-      if (enyo.Panels.isScreenNarrow()) {
-        this.next();
-      }
 
       if (!panel) { return; }
 
@@ -580,6 +581,7 @@ trailing:true white:true*/
         this.fetch();
       }
     },
+    
     /**
       The header content typically describes to the user the particular query filter in effect.
      */
@@ -593,7 +595,11 @@ trailing:true white:true*/
       if (!enyo.Panels.isScreenNarrow()) {
         this.$.menuPanels.getActive().select(0);
         this.setContentPanel(0);
+      } else {
+          // on the mobile device, clears selections
+          this.$.menuPanels.getActive().reset();
       }
+      
       this.$.backButton.setContent(label);
       this.$.refreshButton.setShowing(index);
       this.$.search.setShowing(index);
