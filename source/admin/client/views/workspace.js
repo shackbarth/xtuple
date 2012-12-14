@@ -180,6 +180,51 @@ trailing:true white:true*/
         ]}
       ]}
     ],
+    /**
+      If there are any new extensions we'll want to run the pertinent
+      init scripts and orm updaters. It's a bit awkward
+      that the two-stage process goes all the way up here to the presentation
+      layer.
+     */
+    save: function (options) {
+      var that = this,
+        success = options ? options.success : undefined;
+
+      console.log("Model to save", this.getValue());
+      options = options || {};
+      options.success = function (model, result, opts) {
+        var ajax, success, error;
+
+        if (success) {
+          success(model, result, opts);
+        }
+        ajax = new enyo.Ajax({
+          // TODO: it would be nice to further specify exactly
+          // which extensions need to be loaded, but I can't seem
+          // to reliably get from the model a list of checkboxes
+          // that have just been checked
+          url: "/maintenance?key=blerg&organization=" + model.get("name"),
+          handleAs: "json"
+        });
+        success = function (inSender, inResponse) {
+          if (inResponse.status === 'ERROR') {
+            XT.log("Error updating extension scripts", inResponse.message);
+          } else if (inResponse.errorCount > 0) {
+            XT.log("Extension scripts loaded with errors", inResponse);
+          } else {
+            XT.log("Extension scripts loaded successfully", inResponse);
+          }
+        };
+        error = function (inSender, inResponse) {
+          XT.log("Error updating extension scripts", inResponse);
+        };
+        ajax.response(success);
+        ajax.error(error);
+        ajax.go();
+      };
+
+      this.inherited(arguments);
+    },
     model: "XM.Organization"
   });
 
