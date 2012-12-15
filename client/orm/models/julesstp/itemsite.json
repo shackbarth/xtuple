@@ -185,7 +185,7 @@
         "name": "warehous",
         "toOne": {
           "type": "WarehouseInfo",
-          "column": "id",
+          "column": "location_warehous_id"
         }
       },
       {
