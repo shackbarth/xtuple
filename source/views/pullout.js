@@ -34,7 +34,7 @@ white:true*/
                 {name: "historyItem"}
               ]}
             ]},
-            {name: "help", fit: true, content: "help"}
+            {name: "help", fit: true}
           ]}
         ]}
       ]}
@@ -182,6 +182,18 @@ white:true*/
         this.$.pulloutHeader.setContent("_history".loc());
       } else if (name === 'help') {
         this.$.pulloutHeader.setContent("_help".loc());
+        // remove all children
+        // it wouldn't be necessary to delete and create each time
+        // if it would work just to update the src attribute
+        while (this.$.help.children.length) {
+          child = this.$.help.children[0];
+          this.$.help.removeChild(child);
+        }
+        this.$.help.createComponent({
+          tag: "iframe",
+          name: "helpPage",
+          attributes: {src: inEvent.url, height: "90%"}
+        });
       } else {
         this.$.pulloutHeader.setContent("_advancedSearch".loc());
       }
@@ -192,7 +204,7 @@ white:true*/
 
       } else if (inEvent.show) {
         // remove all children
-        while(this.$.container.children.length) {
+        while (this.$.container.children.length) {
           child = this.$.container.children[0];
           this.$.container.removeChild(child);
         }
