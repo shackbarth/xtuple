@@ -672,12 +672,6 @@ trailing:true white:true*/
         pageName = objectName.decamelize().replace(/_/g, "-"),
         url = XT.HELP_URL_ROOT + pageName;
 
-      if (pageName === 'welcome') {
-        // this is an obvious one we don't want to pop up
-        alert("There is no help page for the welcome screen.");
-        return;
-      }
-
       window.open(url, "_blank", "width=400,height=600");
     },
     /**
