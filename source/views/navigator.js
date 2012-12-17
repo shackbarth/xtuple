@@ -101,7 +101,7 @@ trailing:true white:true*/
         {kind: "onyx.MoreToolbar", name: "contentToolbar",
           classes: "onyx-menu-toolbar", movedClass: "xv-toolbar-moved", components: [
           {kind: "onyx.Grabber"},
-          {name: "rightLabel", style: "width: 100px"},
+          {name: "rightLabel", style: "width: 180px"},
           // The MoreToolbar is a FittableColumnsLayout, so this spacer takes up all available space
           {name: "spacer", content: "", fit: true},
           {name: "newButton", kind: "XV.IconButton",

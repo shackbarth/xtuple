@@ -27,7 +27,6 @@ white:true*/
       onNavigatorEvent: "togglePullout",
       onHistoryChange: "refreshHistoryPanel",
       onHistoryItemSelected: "selectHistoryItem",
-      onAnimateProgressFinish: "startupProcess",
       onSearch: "waterfallSearch"
     },
     components: [
@@ -42,13 +41,13 @@ white:true*/
      */
     addPulloutItem: function (inSender, inEvent) {
       if (!this.$.pullout) {
-        if (!this._cachePullouts) { this._cachePullouts = []; }
         this._cachePullouts.push(inEvent);
         return;
       }
       this.$.pullout.addPulloutItem(inSender, inEvent);
     },
     create: function () {
+      this._cachePullouts = [];
       this.inherited(arguments);
       XT.app = this;
       window.onbeforeunload = function () {
@@ -60,7 +59,7 @@ white:true*/
       this.$.pullout.setShowing(showing);
     },
     modelChanged: function (inSender, inEvent) {
-      this.$.container.getNavigator().waterfall("onModelChange", inEvent);
+      this.$.postbooks.getNavigator().waterfall("onModelChange", inEvent);
     },
     parameterDidChange: function (inSender, inEvent) {
       if (this.getIsStarted()) {
@@ -112,7 +111,7 @@ white:true*/
         extprop,
         i = 0,
         task,
-        len,
+        startupTaskCount,
         text,
         inEvent,
         ajax, extensionSuccess, extensionError, extensionLocation, extensionName, extensionPrivilegeName,
@@ -120,6 +119,9 @@ white:true*/
         eachCallback = function () {
           var completed = startupManager.get('completed').length;
           progressBar.animateProgressTo(completed);
+          if (completed === startupTaskCount) {
+            that.startupProcess();
+          }
         };
 
       // 1: Load session data
@@ -127,9 +129,8 @@ white:true*/
         this.state = LOADING_SESSION;
         startupManager.registerCallback(eachCallback, true);
         XT.dataSource.connect();
-        len = startupManager.get('queue').length +
-          startupManager.get('completed').length;
-        progressBar.setMax(len);
+        startupTaskCount = startupManager.get('queue').length + startupManager.get('completed').length;
+        progressBar.setMax(startupTaskCount);
 
       // 2: Download extensions
       } else if (this.state === LOADING_SESSION) {
@@ -165,9 +166,9 @@ white:true*/
             url: extensionLocation + "/builds/" + extensionName + "/" + extensionName + ".js",
             handleAs: "text"
           });
-          ajax.go();
           ajax.response(extensionSuccess);
           ajax.error(extensionError);
+          ajax.go();
         }
 
         if (extensionCount === 0) {
@@ -201,16 +202,16 @@ white:true*/
         this.state = LOADING_SCHEMA;
         text = "_loadingSchema".loc() + "...";
         XT.app.$.postbooks.getStartupText().setContent(text);
-        startupManager.registerCallback(function () {
-          that.startupProcess();
-        });
-
         XT.StartupTask.create({
           taskName: "loadSessionSchema",
           task: function () {
-            var options = {
-              success: _.bind(this.didComplete, this)
-            };
+            var task = this,
+              options = {
+                success: function () {
+                  task.didComplete();
+                  that.startupProcess();
+                }
+              };
             XT.session.loadSessionObjects(XT.session.SCHEMA, options);
           }
         });
@@ -223,6 +224,26 @@ white:true*/
         XT.app.$.postbooks.getStartupText().setContent(text);
         progressBar.setMax(XT.StartupTasks.length);
         progressBar.setProgress(0);
+
+        // there's a new startup task count now that
+        // the second stage of tasks are being loaded.
+        startupTaskCount = startupManager.get('queue').length +
+          startupManager.get('completed').length +
+          XT.StartupTasks.length;
+
+        // create a new each callback to manage the completion of this step
+        // the previously registered callback isn't doing any harm. It would be
+        // best to unregister the previous eachCallback and replicate the code
+        // here that advances the progress bar. This would make the animation look
+        // better. There's not a great way to unregister a startup callback, though.
+        eachCallback = function () {
+          var completed = startupManager.get('completed').length;
+          if (completed === startupTaskCount) {
+            that.startupProcess();
+          }
+        };
+
+        startupManager.registerCallback(eachCallback, true);
         for (i = 0; i < XT.StartupTasks.length; i++) {
           task = XT.StartupTasks[i];
           XT.StartupTask.create(task);

@@ -98,9 +98,9 @@ trailing:true white:true*/
   /**
     @name XV.Workspace
     @class Contains a set of fittable rows which are laid out
-    using the carousel arranger and fitted to the size of the viewport.<br /> 
+    using the carousel arranger and fitted to the size of the viewport.<br />
     Its components can be extended via {@link XV.ExtensionsMixin}.<br />
-  	Derived from <a href="http://enyojs.com/api/#enyo.FittableRows">enyo.FittableRows</a>. 
+    Derived from <a href="http://enyojs.com/api/#enyo.FittableRows">enyo.FittableRows</a>.
     @extends enyo.FittableRows
     @extends XV.EditorMixin
     @extends XV.ExtensionsMixin
@@ -353,7 +353,7 @@ trailing:true white:true*/
     @name XV.WorkspaceContainer
     @class Contains the navigation and content panels which wrap around a workspace.<br />
     See also {@link XV.Workspace}.<br />
-    Derived from <a href="http://enyojs.com/api/#enyo.Panels">enyo.Panels</a>. 
+    Derived from <a href="http://enyojs.com/api/#enyo.Panels">enyo.Panels</a>.
     @extends enyo.Panels
    */
   enyo.kind(/** @lends XV.WorkspaceContainer# */{
@@ -385,16 +385,15 @@ trailing:true white:true*/
         ]}
       ]},
       {kind: "FittableRows", name: "contentPanel", components: [
-        {kind: "onyx.MoreToolbar", name: "contentToolbar", 
-					components: [
+        {kind: "onyx.MoreToolbar", name: "contentToolbar", components: [
           {kind: "onyx.Grabber"},
-          {name: "title", style: "width: 100px"},
-					// The MoreToolbar is a FittableColumnsLayout, so this spacer takes up all available space 
+          {name: "title", style: "width: 180px"},
+					// The MoreToolbar is a FittableColumnsLayout, so this spacer takes up all available space
 					{name: "space", fit: true},
 					{kind: "onyx.Button", name: "refreshButton", disabled: true,
             content: "_refresh".loc(), onclick: "requery"},
 					{kind: "onyx.Button", name: "applyButton", disabled: true,
-	            content: "_apply".loc(), onclick: "apply"},
+            content: "_apply".loc(), onclick: "apply"},
           {kind: "onyx.Button", name: "saveAndNewButton", disabled: true,
             content: "_saveAndNew".loc(), onclick: "saveAndNew"},
           {kind: "onyx.Button", name: "saveButton",
@@ -509,8 +508,8 @@ trailing:true white:true*/
       }
 
 			// Mobile device view
-			if (enyo.Panels.isScreenNarrow()){
-				this.next(); 
+			if (enyo.Panels.isScreenNarrow()) {
+        this.next();
 			}
 
     },
