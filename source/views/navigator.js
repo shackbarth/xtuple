@@ -85,12 +85,12 @@ trailing:true white:true*/
         {name: "menuPanels", kind: "Panels", draggable: false, fit: true,
           margin: 0, components: [
           {name: "moduleMenu", kind: "List", touch: true,
-              onSetupItem: "setupModuleMenuItem", ontap: "navTap",
+              onSetupItem: "setupModuleMenuItem", ontap: "menuTap",
               components: [
             {name: "moduleItem", classes: "item enyo-border-box"}
           ]},
           {name: "panelMenu", kind: "List", touch: true,
-             onSetupItem: "setupPanelMenuItem", ontap: "navTap", components: [
+             onSetupItem: "setupPanelMenuItem", ontap: "panelTap", components: [
             {name: "listItem", classes: "item enyo-border-box"}
           ]},
           {} // Why do panels only work when there are 3+ objects?
@@ -501,15 +501,6 @@ trailing:true white:true*/
         panel = _.find(contentPanels.children, function (child) {
           return child.index === panelIndex;
         });
-        
-        // If we're already here, bail
-        if (contentPanels.index === this.$.contentPanels.indexOfChild(panel)) {
-          // Mobile device view
-          if (enyo.Panels.isScreenNarrow()) {
-            this.next();
-          }
-          return;
-        }
       } else if (panelStatus === 'unborn') {
         // panel exists but has not been rendered. Render it.
         module.panels[index].status = 'active';
@@ -534,6 +525,11 @@ trailing:true white:true*/
       // Mobile device view
       if (enyo.Panels.isScreenNarrow()) {
         this.next();
+      }
+      
+      // If we're already here, bail
+      if (contentPanels.index === this.$.contentPanels.indexOfChild(panel)) {
+        return;
       }
       
       // cache any extraneous content panels
@@ -598,6 +594,8 @@ trailing:true white:true*/
       if (!enyo.Panels.isScreenNarrow()) {
         this.$.menuPanels.getActive().select(0);
         this.setContentPanel(0);
+      } else {
+        this.$.menuPanels.getActive().reset();
       }
       this.$.backButton.setContent(label);
       this.$.refreshButton.setShowing(index);
@@ -631,7 +629,6 @@ trailing:true white:true*/
         isSelected = inSender.isSelected(index);
       this.$.moduleItem.setContent(label);
       this.$.moduleItem.addRemoveClass("onyx-selected", isSelected);
-      if (isSelected) { this.setModule(index); }
     },
     /**
       Renders the leftbar list of objects within a given module. This function
@@ -662,9 +659,13 @@ trailing:true white:true*/
       this.$.listItem.setContent(label);
       this.$.listItem.addRemoveClass("onyx-selected", isSelected);
     },
-    navTap: function(inSender, inEvent) {
+    panelTap: function(inSender, inEvent) {
       var index = inEvent.index;
       if (inSender.isSelected(index)) { this.setContentPanel(index); }
+    },
+    menuTap: function(inSender, inEvent) {
+      var index = inEvent.index;
+      if (inSender.isSelected(index)) { this.setModule(index); }
     },
     showError: function (message) {
       this.$.errorMessage.setContent(message);
