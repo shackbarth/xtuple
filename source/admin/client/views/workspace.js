@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XT:true, XM:true, XV:true, enyo:true, alert:true*/
+/*global XT:true, XM:true, XV:true, enyo:true, alert:true _:true */
 
 (function () {
 
@@ -188,22 +188,38 @@ trailing:true white:true*/
      */
     save: function (options) {
       var that = this,
-        success = options ? options.success : undefined;
+        success = options ? options.success : undefined,
+        newExtensions;
 
-      console.log("Model to save", this.getValue());
+      newExtensions = _.filter(this.getValue().get("extensions").models, function (ext) {
+        return ext.isNew();
+      });
       options = options || {};
       options.success = function (model, result, opts) {
-        var ajax, success, error;
+        var ajax, success, error, newExtensionIds;
 
         if (success) {
           success(model, result, opts);
         }
+
+        if (!newExtensions || newExtensions === []) {
+          // there are no new extensions selected, so no need to run the backend
+          // scripts
+          return;
+        }
+
+        newExtensionIds = _.map(newExtensions, function (ext) {
+          return ext.get("extension").get("id");
+        });
+
         ajax = new enyo.Ajax({
           // TODO: it would be nice to further specify exactly
           // which extensions need to be loaded, but I can't seem
           // to reliably get from the model a list of checkboxes
           // that have just been checked
-          url: "/maintenance?key=blerg&organization=" + model.get("name"),
+          url: "/maintenance?key=blerg"
+            + "&organization=" + model.get("name")
+            + "&extensions=" + JSON.stringify(newExtensionIds),
           handleAs: "json"
         });
         success = function (inSender, inResponse) {
