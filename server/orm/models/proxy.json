@@ -248,6 +248,13 @@
          "type": "String",
          "column": "ext_priv_name"
        }
+     },
+     {
+       "name": "loadOrder",
+       "attr": {
+         "type": "Number",
+         "column": "ext_load_order"
+       }
      }
     ],
     "isSystem": true
