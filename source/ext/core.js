@@ -113,9 +113,9 @@ _.extend(XT, {
     @default 20
    */
   HISTORY_MAX_LENGTH: 20,
-  
+
   extensions: {},
-  
+
   history: [],
 
   /**
@@ -137,7 +137,7 @@ _.extend(XT, {
     //
     for (var i = 0; i < this.history.length; i++) {
       if (this.history[i].modelType === model.recordType &&
-          this.history[i].modelId === model.get("id")) {
+          this.history[i].modelId === model.get(model.idAttribute)) {
         this.history.splice(i, 1);
         i--;
       }
@@ -148,7 +148,7 @@ _.extend(XT, {
     //
     this.history.unshift({
       modelType: model.recordType,
-      modelId: model.get("id"),
+      modelId: model.get(model.idAttribute),
       modelName: model.getValue(model.nameAttribute),
       workspaceType: workspaceType
     });
