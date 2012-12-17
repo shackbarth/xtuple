@@ -95,11 +95,11 @@ white:true*/
     databaseType: 'global',
 
     autoFetchId: false,
-    
+
     defaults: {
       isActive: true
     },
-    
+
     requiredAttributes: [
       "isActive",
       "licenses"
@@ -186,16 +186,18 @@ white:true*/
     enforceUpperKey: false,
 
     databaseType: 'global',
-    
+
+    nameAttribute: 'id',
+
     defaults: {
       isActive: true
     },
-    
+
     requiredAttributes: [
       "isActive",
       "email"
     ],
-    
+
     /**
      * The username attribute must be editable for a new entry.
      */
