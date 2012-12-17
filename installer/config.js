@@ -4,9 +4,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 (function () {
   "use strict";
-  
+
   module.exports = {
     version: "1.0",
+    allowMultipleInstances: true,
     requireDatabase: true,
     requireServer: true,
     orm: {
