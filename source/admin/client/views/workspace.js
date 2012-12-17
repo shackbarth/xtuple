@@ -202,7 +202,7 @@ trailing:true white:true*/
           success(model, result, opts);
         }
 
-        if (!newExtensions || newExtensions === []) {
+        if (!newExtensions || newExtensions.length === 0) {
           // there are no new extensions selected, so no need to run the backend
           // scripts
           return;
