@@ -165,10 +165,17 @@
        }
      },
      {
-       "name": "cloud",
+       "name": "isActive",
        "attr": {
-         "type": "String",
-         "column": "org_cloud"
+         "type": "Boolean",
+         "column": "org_active"
+       }
+     },
+     {
+       "name": "licenses",
+       "attr": {
+         "type": "Number",
+         "column": "org_licenses"
        }
      },
      {
