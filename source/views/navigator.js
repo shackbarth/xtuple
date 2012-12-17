@@ -204,7 +204,7 @@ trailing:true white:true*/
     closeLogoutPopup: function () {
       this.$.logoutPopup.hide();
     },
-    getSelectedModule: function (index) {
+    getSelectedModule: function () {
       return this._selectedModule;
     },
     /**
@@ -605,7 +605,7 @@ trailing:true white:true*/
       var module = this.getModules()[index],
         panels = module.panels || [],
         hasSubmenu = module.hasSubmenu !== false && panels.length;
-      if (module !== this._selectedModule || enyo.Panels.isScreenNarrow()) {  
+      if (module !== this._selectedModule || enyo.Panels.isScreenNarrow()) {
         this._selectedModule = module;
         if (hasSubmenu) {
           this.$.panelMenu.setCount(panels.length);
@@ -661,11 +661,11 @@ trailing:true white:true*/
       this.$.listItem.setContent(label);
       this.$.listItem.addRemoveClass("onyx-selected", isSelected);
     },
-    panelTap: function(inSender, inEvent) {
+    panelTap: function (inSender, inEvent) {
       var index = inEvent.index;
       if (inSender.isSelected(index)) { this.setContentPanel(index); }
     },
-    menuTap: function(inSender, inEvent) {
+    menuTap: function (inSender, inEvent) {
       this.setupModuleMenuItem(inSender, inEvent);
     },
     showError: function (message) {
