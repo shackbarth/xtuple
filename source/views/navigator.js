@@ -605,14 +605,16 @@ trailing:true white:true*/
       var module = this.getModules()[index],
         panels = module.panels || [],
         hasSubmenu = module.hasSubmenu !== false && panels.length;
-      this._selectedModule = module;
-      if (hasSubmenu) {
-        this.$.panelMenu.setCount(panels.length);
-        this.$.panelMenu.render();
-        this.setMenuPanel(PANEL_MENU);
-      } else {
-        // if no submenus, treat lke a panel
-        this.setContentPanel(index);
+      if (module !== this._selectedModule || enyo.Panels.isScreenNarrow()) {  
+        this._selectedModule = module;
+        if (hasSubmenu) {
+          this.$.panelMenu.setCount(panels.length);
+          this.$.panelMenu.render();
+          this.setMenuPanel(PANEL_MENU);
+        } else {
+          // if no submenus, treat lke a panel
+          this.setContentPanel(index);
+        }
       }
     },
     setModules: function (modules) {
@@ -628,7 +630,7 @@ trailing:true white:true*/
         isSelected = inSender.isSelected(index);
       this.$.moduleItem.setContent(label);
       this.$.moduleItem.addRemoveClass("onyx-selected", isSelected);
-      if (inSender.isSelected(index)) { this.setModule(index); }
+      if (isSelected) { this.setModule(index); }
     },
     /**
       Renders the leftbar list of objects within a given module. This function
