@@ -85,7 +85,7 @@ trailing:true white:true*/
         {name: "menuPanels", kind: "Panels", draggable: false, fit: true,
           margin: 0, components: [
           {name: "moduleMenu", kind: "List", touch: true,
-              onSetupItem: "setupModuleMenuItem", 
+              onSetupItem: "setupModuleMenuItem", ontap: "menuTap",
               components: [
             {name: "moduleItem", classes: "item enyo-border-box"}
           ]},
@@ -491,7 +491,7 @@ trailing:true white:true*/
         module = this.getSelectedModule(),
         panelIndex = module && module.panels ? module.panels[index].index : -1,
         panelStatus = module && module.panels ? module.panels[index].status : 'unknown',
-        panel,// = panelIndex > -1 ? this.$.contentPanels.getPanels()[panelIndex] : null,
+        panel,
         label,
         collection,
         model,
@@ -594,8 +594,6 @@ trailing:true white:true*/
       if (!enyo.Panels.isScreenNarrow()) {
         this.$.menuPanels.getActive().select(0);
         this.setContentPanel(0);
-      } else {
-        this.$.menuPanels.getActive().reset();
       }
       this.$.backButton.setContent(label);
       this.$.refreshButton.setShowing(index);
@@ -607,13 +605,14 @@ trailing:true white:true*/
       var module = this.getModules()[index],
         panels = module.panels || [],
         hasSubmenu = module.hasSubmenu !== false && panels.length;
-      if (module !== this._selectedModule) {
-        this._selectedModule = module;
-        if (hasSubmenu) {
-          this.$.panelMenu.setCount(panels.length);
-          this.$.panelMenu.render();
-          this.setMenuPanel(PANEL_MENU);
-        }
+      this._selectedModule = module;
+      if (hasSubmenu) {
+        this.$.panelMenu.setCount(panels.length);
+        this.$.panelMenu.render();
+        this.setMenuPanel(PANEL_MENU);
+      } else {
+        // if no submenus, treat lke a panel
+        this.setContentPanel(index);
       }
     },
     setModules: function (modules) {
