@@ -10,6 +10,21 @@
 
 -- [ END ] initdb
 
+-- [ START ] public
+
+-- public
+\i public/functions/geteffectivextuser.sql
+
+\i public/tables/comment.sql
+\i public/tables/grp.sql;
+\i public/tables/grppriv.sql;
+\i public/tables/pkghead.sql;
+\i public/tables/usrgrp.sql;
+\i public/tables/usrpref.sql;
+\i public/tables/usrpriv.sql;
+\i public/tables/schemaord.sql;
+-- [ END ] public
+
 -- [ START ] xt
 
 -- xt functions
@@ -17,6 +32,7 @@
 \i xt/functions/cntctmerge.sql;
 \i xt/functions/cntctrestore.sql;
 \i xt/functions/createuser.sql;
+\i xt/functions/install_guiscript.sql;
 \i xt/functions/mergecrmaccts.sql;
 \i xt/functions/undomerge.sql;
 
@@ -33,6 +49,14 @@
 \i xt/tables/emlprofile.sql
 \i xt/tables/incdtemlprofile.sql
 \i xt/tables/incdtcatemlprofile.sql
+\i xt/tables/pkgcmd.sql
+\i xt/tables/pkgcmdarg.sql
+\i xt/tables/pkgimage.sql
+\i xt/tables/pkgmetasql.sql
+\i xt/tables/pkgpriv.sql
+\i xt/tables/pkgreport.sql
+\i xt/tables/pkgscript.sql
+\i xt/tables/pkguiform.sql
 \i xt/tables/priv.sql
 \i xt/tables/useracct.sql
 \i xt/tables/userpriv.sql
@@ -53,6 +77,11 @@
 \i xt/views/prjinfo.sql;
 \i xt/views/todoiteminfo.sql;
 \i xt/views/usr.sql;
+
+-- xt guiscripts
+
+\i xt/guiscripts/user.sql;
+\i xt/guiscripts/users.sql;
 
 -- delete system orms
 \i delete_system_orms.sql;
@@ -75,12 +104,3 @@
 \i create_xtbatch_schema.sql;
 \i xtbatch/tables/batch.sql
 
--- public
-\i public/functions/geteffectivextuser.sql
-\i public/tables/comment.sql
-\i public/tables/grp.sql;
-\i public/tables/grppriv.sql;
-\i public/tables/usrgrp.sql;
-\i public/tables/usrpref.sql;
-\i public/tables/usrpriv.sql;
-\i public/tables/schemaord.sql;
