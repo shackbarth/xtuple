@@ -543,9 +543,9 @@ trailing:true white:true*/
       // Make sure the advanced search icon is visible iff there is an advanced
       // search for this list
       if (panel.parameterWidget) {
-        this.$.searchIconButton.setStyle("display: inline");
+        this.$.searchIconButton.setShowing(true);
       } else {
-        this.$.searchIconButton.setStyle("display: none;");
+        this.$.searchIconButton.setShowing(false);
       }
       this.doNavigatorEvent({name: panel.name, show: false});
 
@@ -597,7 +597,7 @@ trailing:true white:true*/
       }
       this.$.backButton.setContent(label);
       this.$.refreshButton.setShowing(index);
-      this.$.search.setShowing(index);
+      this.$.f.setShowing(index);
       this.$.searchIconButton.setShowing(index);
       this.$.contentToolbar.resized();
     },
