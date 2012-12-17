@@ -85,7 +85,7 @@ trailing:true white:true*/
         {name: "menuPanels", kind: "Panels", draggable: false, fit: true,
           margin: 0, components: [
           {name: "moduleMenu", kind: "List", touch: true,
-              onSetupItem: "setupModuleMenuItem", ontap: "menuTap",
+              onSetupItem: "setupModuleMenuItem", 
               components: [
             {name: "moduleItem", classes: "item enyo-border-box"}
           ]},
@@ -629,6 +629,7 @@ trailing:true white:true*/
         isSelected = inSender.isSelected(index);
       this.$.moduleItem.setContent(label);
       this.$.moduleItem.addRemoveClass("onyx-selected", isSelected);
+      if (inSender.isSelected(index)) { this.setModule(index); }
     },
     /**
       Renders the leftbar list of objects within a given module. This function
@@ -664,8 +665,7 @@ trailing:true white:true*/
       if (inSender.isSelected(index)) { this.setContentPanel(index); }
     },
     menuTap: function(inSender, inEvent) {
-      var index = inEvent.index;
-      if (inSender.isSelected(index)) { this.setModule(index); }
+      this.setupModuleMenuItem(inSender, inEvent);
     },
     showError: function (message) {
       this.$.errorMessage.setContent(message);
