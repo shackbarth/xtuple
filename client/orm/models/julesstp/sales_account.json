@@ -1,0 +1,112 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "SalesAccount",
+    "table": "accnt",
+    "idSequenceName": "accnt_accnt_id_seq",
+    "comment": "Sales Account Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainSalesAccount",
+        "read": "ViewSalesAccount",
+        "update": "MaintainSalesAccount",
+        "delete": "MaintainSalesAccount"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "accnt_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "accnt_number"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "accnt_descrip"
+        }
+      },
+      {
+        "name": "comments",
+        "attr": {
+          "type": "String",
+          "column": "accnt_comments"
+        }
+      },
+      {
+        "name": "profit",
+        "attr": {
+          "type": "String",
+          "column": "accnt_profit"
+        }
+      },
+      {
+        "name": "sub",
+        "attr": {
+          "type": "String",
+          "column": "accnt_sub"
+        }
+      },
+      {
+        "name": "accountType",
+        "attr": {
+          "type": "String",
+          "column": "accnt_type"
+        }
+      },
+      {
+        "name": "extref",
+        "attr": {
+          "type": "String",
+          "column": "accnt_extref"
+        }
+      },
+      {
+        "name": "company",
+        "attr": {
+          "type": "String",
+          "column": "accnt_company"
+        }
+      },
+      {
+        "name": "forwardUpdate",
+        "attr": {
+          "type": "Boolean",
+          "column": "accnt_forwardupdate"
+        }
+      },
+      {
+        "name": "subAccountTypeCode",
+        "attr": {
+          "type": "String",
+          "column": "accnt_subaccnttype_code"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "accnt_curr_id"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "accnt_name"
+        }
+      }
+    ]    
+  }
+]
