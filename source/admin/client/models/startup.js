@@ -8,16 +8,6 @@ white:true*/
 
   XT.extensions.admin.initStartup = function () {
     XT.StartupTasks.push({
-      taskName: "loadDatabaseServers",
-      task: function () {
-        var options = {
-          success: _.bind(this.didComplete, this)
-        };
-        XM.databaseServers = new XM.DatabaseServerCollection();
-        XM.databaseServers.fetch(options);
-      }
-    });
-    XT.StartupTasks.push({
       taskName: "loadOrganizations",
       task: function () {
         var options = {
