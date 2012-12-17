@@ -66,8 +66,8 @@ white:true*/
       this.inherited(arguments);
       this._parameterWidgets = {};
       this._pulloutItems = {};
-      this._pulloutItems.history = this.$.container.children[0]; // TODO: consider this.$.history
-      this._pulloutItems.help = this.$.container.children[1];
+      this._pulloutItems.history = this.$.history;
+      this._pulloutItems.help = this.$.help;
       var that = this,
         callback = function () {
           that.preLoadHistory();
