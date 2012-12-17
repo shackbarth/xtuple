@@ -670,8 +670,7 @@ trailing:true white:true*/
       var listName = this.$.contentPanels.getActive().name,
         objectName = listName.substring(0, listName.length - 4), // get rid of the word "list"
         pageName = objectName.decamelize().replace(/_/g, "-"),
-        rootUrl = "http://www.xtuple.org/faq/xtuple-mobile/",
-        url = rootUrl + pageName;
+        url = XT.HELP_URL_ROOT + pageName;
 
       if (pageName === 'welcome') {
         // this is an obvious one we don't want to pop up
