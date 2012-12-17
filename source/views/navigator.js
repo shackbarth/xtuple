@@ -670,9 +670,11 @@ trailing:true white:true*/
       var listName = this.$.contentPanels.getActive().name,
         objectName = listName.substring(0, listName.length - 4), // get rid of the word "list"
         pageName = objectName.decamelize().replace(/_/g, "-"),
-        url = XT.HELP_URL_ROOT + pageName;
+        url = XT.HELP_URL_ROOT + pageName,
+        panel = {name: 'help', show: true, url: url};
 
-      window.open(url, "_blank", "width=400,height=600");
+      this.doNavigatorEvent(panel);
+      //window.open(url, "_blank", "width=400,height=600");
     },
     /**
       Displays the history panel.

@@ -33,7 +33,8 @@ white:true*/
                 onSetupItem: "setupHistoryItem", count: 0, components: [
                 {name: "historyItem"}
               ]}
-            ]}
+            ]},
+            {name: "help", fit: true, content: "help"}
           ]}
         ]}
       ]}
@@ -65,7 +66,8 @@ white:true*/
       this.inherited(arguments);
       this._parameterWidgets = {};
       this._pulloutItems = {};
-      this._pulloutItems.history = this.$.container.children[0];
+      this._pulloutItems.history = this.$.container.children[0]; // TODO: consider this.$.history
+      this._pulloutItems.help = this.$.container.children[1];
       var that = this,
         callback = function () {
           that.preLoadHistory();
@@ -178,6 +180,8 @@ white:true*/
 
       if (name === 'history') {
         this.$.pulloutHeader.setContent("_history".loc());
+      } else if (name === 'help') {
+        this.$.pulloutHeader.setContent("_help".loc());
       } else {
         this.$.pulloutHeader.setContent("_advancedSearch".loc());
       }
@@ -187,7 +191,11 @@ white:true*/
         this.animateToMin();
 
       } else if (inEvent.show) {
-        this.$.container.removeChild(child);
+        // remove all children
+        while(this.$.container.children.length) {
+          child = this.$.container.children[0];
+          this.$.container.removeChild(child);
+        }
         this.$.container.addChild(item);
         this.$.fittableRows.render();
         if (!this.isAtMax()) {
