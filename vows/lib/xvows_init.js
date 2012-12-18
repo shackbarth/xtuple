@@ -290,6 +290,7 @@ white:true*/
 
   // CRUSH QUIET SMASH AND DESTROY ANY NORMAL OUTPUT FOR NOW
   // ...actually just...pipe it to some file...
+  /*
   (function () {
     "use strict";
     XVOWS.log = XT.log = function () {
@@ -317,6 +318,7 @@ white:true*/
       if (XVOWS.outfile) XVOWS.outfile.destroySoon();
     });
   }());
+  */
 
   //......................................
   // INCLUDE ALL THE NECESSARY XM FRAMEWORK
@@ -378,20 +380,21 @@ white:true*/
     };
   }());
 
+  relocate = function () {
+    process.exit();
+  };
 
-
-
-
-
+  XT.dataSource.datasourceUrl = program.host;
+  XT.dataSource.datasourcePort = program.port;
   XT.dataSource.connect(function () {
-
+    console.log(XT.dataSource);
     XT.dataSource.retrieveRecord("XM.User", user, {
       success: function (model, result) {
         console.log("retrieve success");
-        XVOWS.emit("ready");
+        //XVOWS.emit("ready");
       },
-      error: function (model, result) {
-        console.log("retrieve error");
+      error: function (error) {
+        console.log("retrieve error ", error);
       }
     });
   });
