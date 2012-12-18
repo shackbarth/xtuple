@@ -1,0 +1,17 @@
+{
+  "author": "John Rogelstad <jrogelstad@xtuple.com>",
+  "name": "orm",
+  "description": "Postgres foundation for xTuple",
+  "version": "1.0.0-beta",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xtuple/orm.git"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
