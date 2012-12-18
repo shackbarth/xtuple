@@ -252,6 +252,17 @@ white:true*/
   user = program.user;
   organization = program.organization;
 
+  XT.dataSource.retrieveRecord("XM.User", user, {
+    success: function (model, result) {
+      console.log("retrieve success");
+    },
+    error: function (model, result) {
+      console.log("retrieve error");
+    }
+  });
+  return;
+
+
   // create the cache for session control
   sessionCache = X.Cache.create({prefix: "session"});
   userCache = X.Cache.create({prefix: "user"});
