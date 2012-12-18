@@ -68,7 +68,7 @@ trailing:true white:true*/
             {kind: "onyx.Menu", components: [
               {name: "exportItem", content: "_export".loc(), showing: false},
               {name: "myAccountItem", content: "_myAccount".loc()},
-              {name: "helpItem", content: "_help".loc(), showing: false}
+              {name: "helpItem", content: "_help".loc()}
             ]}
           ]},
           {kind: "onyx.Popup", name: "logoutPopup", centered: true,
@@ -141,6 +141,9 @@ trailing:true white:true*/
       {
       case 'exportItem':
         this.exportList();
+        break;
+      case 'helpItem':
+        this.showHelp();
         break;
       case 'myAccountItem':
         this.showMyAccount();
@@ -339,7 +342,7 @@ trailing:true white:true*/
          model;
       if (this._busy  || !input || !key) { return; }
       this._busy = true;
-      
+
       // First find a matching id
       options.success = function (id) {
         var options = {};
@@ -672,6 +675,16 @@ trailing:true white:true*/
       this.$.errorMessage.setContent(message);
       this.$.errorPopup.render();
       this.$.errorPopup.show();
+    },
+    showHelp: function () {
+      var listName = this.$.contentPanels.getActive().name,
+        objectName = listName.substring(0, listName.length - 4), // get rid of the word "list"
+        pageName = objectName.decamelize().replace(/_/g, "-"),
+        url = XT.HELP_URL_ROOT + pageName,
+        panel = {name: 'help', show: true, url: url};
+
+      this.doNavigatorEvent(panel);
+      //window.open(url, "_blank", "width=400,height=600");
     },
     /**
       Displays the history panel.
