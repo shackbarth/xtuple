@@ -85,12 +85,12 @@ trailing:true white:true*/
         {name: "menuPanels", kind: "Panels", draggable: false, fit: true,
           margin: 0, components: [
           {name: "moduleMenu", kind: "List", touch: true,
-              onSetupItem: "setupModuleMenuItem",
+              onSetupItem: "setupModuleMenuItem", ontap: "menuTap",
               components: [
             {name: "moduleItem", classes: "item enyo-border-box"}
           ]},
           {name: "panelMenu", kind: "List", touch: true,
-             onSetupItem: "setupPanelMenuItem", components: [
+             onSetupItem: "setupPanelMenuItem", ontap: "panelTap", components: [
             {name: "listItem", classes: "item enyo-border-box"}
           ]},
           {} // Why do panels only work when there are 3+ objects?
@@ -204,7 +204,7 @@ trailing:true white:true*/
     closeLogoutPopup: function () {
       this.$.logoutPopup.hide();
     },
-    getSelectedModule: function (index) {
+    getSelectedModule: function () {
       return this._selectedModule;
     },
     /**
@@ -491,7 +491,7 @@ trailing:true white:true*/
         module = this.getSelectedModule(),
         panelIndex = module && module.panels ? module.panels[index].index : -1,
         panelStatus = module && module.panels ? module.panels[index].status : 'unknown',
-        panel,// = panelIndex > -1 ? this.$.contentPanels.getPanels()[panelIndex] : null,
+        panel,
         label,
         collection,
         model,
@@ -501,11 +501,6 @@ trailing:true white:true*/
         panel = _.find(contentPanels.children, function (child) {
           return child.index === panelIndex;
         });
-        // If we're already here, bail
-        if (contentPanels.index === this.$.contentPanels.indexOfChild(panel)) {
-          return;
-        }
-
       } else if (panelStatus === 'unborn') {
         // panel exists but has not been rendered. Render it.
         module.panels[index].status = 'active';
@@ -526,26 +521,31 @@ trailing:true white:true*/
       } else {
         XT.error("Don't know what to do with this panel status");
       }
-
+      
+      // Mobile device view
+      if (enyo.Panels.isScreenNarrow()) {
+        this.next();
+      }
+      
+      // If we're already here, bail
+      if (contentPanels.index === this.$.contentPanels.indexOfChild(panel)) {
+        return;
+      }
+      
       // cache any extraneous content panels
       this.cachePanels();
 
       label = panel && panel.label ? panel.label : "";
       collection = panel && panel.getCollection ? XT.getObjectByName(panel.getCollection()) : false;
 
-			// Mobile device view
-      if (enyo.Panels.isScreenNarrow()) {
-        this.next();
-      }
-
       if (!panel) { return; }
 
       // Make sure the advanced search icon is visible iff there is an advanced
       // search for this list
       if (panel.parameterWidget) {
-        this.$.searchIconButton.setStyle("display: inline");
+        this.$.searchIconButton.setShowing(true);
       } else {
-        this.$.searchIconButton.setStyle("display: none;");
+        this.$.searchIconButton.setShowing(false);
       }
       this.doNavigatorEvent({name: panel.name, show: false});
 
@@ -580,6 +580,7 @@ trailing:true white:true*/
         this.fetch();
       }
     },
+    
     /**
       The header content typically describes to the user the particular query filter in effect.
      */
@@ -589,14 +590,14 @@ trailing:true white:true*/
     setMenuPanel: function (index) {
       var label = index ? "_back".loc() : "_logout".loc();
       this.$.menuPanels.setIndex(index);
-			// on mobile, only automatically select the first screen if it's the module menu
-      if (!enyo.Panels.isScreenNarrow() || this.$.menuPanels.getIndex() === MODULE_MENU) {
+			// only automatically select the first screen if it's the module menu
+      if (!enyo.Panels.isScreenNarrow()) {
         this.$.menuPanels.getActive().select(0);
         this.setContentPanel(0);
       }
       this.$.backButton.setContent(label);
       this.$.refreshButton.setShowing(index);
-      this.$.search.setShowing(index);
+      this.$.f.setShowing(index);
       this.$.searchIconButton.setShowing(index);
       this.$.contentToolbar.resized();
     },
@@ -604,12 +605,15 @@ trailing:true white:true*/
       var module = this.getModules()[index],
         panels = module.panels || [],
         hasSubmenu = module.hasSubmenu !== false && panels.length;
-      if (module !== this._selectedModule) {
+      if (module !== this._selectedModule || enyo.Panels.isScreenNarrow()) {
         this._selectedModule = module;
         if (hasSubmenu) {
           this.$.panelMenu.setCount(panels.length);
           this.$.panelMenu.render();
           this.setMenuPanel(PANEL_MENU);
+        } else {
+          // if no submenus, treat lke a panel
+          this.setContentPanel(index);
         }
       }
     },
@@ -656,7 +660,13 @@ trailing:true white:true*/
 
       this.$.listItem.setContent(label);
       this.$.listItem.addRemoveClass("onyx-selected", isSelected);
-      if (isSelected) { this.setContentPanel(index); }
+    },
+    panelTap: function (inSender, inEvent) {
+      var index = inEvent.index;
+      if (inSender.isSelected(index)) { this.setContentPanel(index); }
+    },
+    menuTap: function (inSender, inEvent) {
+      this.setupModuleMenuItem(inSender, inEvent);
     },
     showError: function (message) {
       this.$.errorMessage.setContent(message);
