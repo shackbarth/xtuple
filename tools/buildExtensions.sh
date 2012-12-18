@@ -26,4 +26,9 @@ tools/deploy.sh
 mkdir builds/admin
 mv build/app.js builds/admin/admin.js
 
+cp source/sales/client/root-package.js package.js
+tools/deploy.sh
+mkdir builds/sales
+mv build/app.js builds/sales/sales.js
+
 rm package.js
