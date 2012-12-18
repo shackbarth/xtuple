@@ -114,8 +114,15 @@ white:true*/
         startupTaskCount,
         text,
         inEvent,
-        ajax, extensionSuccess, extensionError, extensionLocation, extensionName, extensionPrivilegeName,
-        extensionCount = 0, extensionsDownloaded = 0,
+        ajax,
+        extensionSuccess,
+        extensionError,
+        extensionLocation,
+        extensionName,
+        extensionPrivilegeName,
+        extensionCount = 0,
+        extensionsDownloaded = 0,
+        extensionPayloads = [],
         eachCallback = function () {
           var completed = startupManager.get('completed').length;
           progressBar.animateProgressTo(completed);
@@ -137,11 +144,26 @@ white:true*/
         this.state = DOWNLOADING_EXTENSIONS;
 
         extensionSuccess = function (inSender, inResponse) {
-          XT.log("Installing extension " + inSender.url);
-          eval(inResponse); // MWA HA HA HA
 
+          // when the extensions come back we don't execute them immediately.
+          // we put them into an array so that we can sort them by the
+          // appropriate load order as defined in the DB table.
+          extensionPayloads.push({
+            payload: inResponse,
+            loadOrder: inSender.loadOrder,
+            name: inSender.extensionName
+          });
           extensionsDownloaded++;
+
           if (extensionsDownloaded === extensionCount) {
+            // sort by load order
+            extensionPayloads = _.sortBy(extensionPayloads, function (payload) {
+              return payload.loadOrder;
+            });
+            _.each(extensionPayloads, function (ext) {
+              XT.log("Installing extension " + ext.name);
+              eval(ext.payload); // MWA HA HA HA
+            });
             that.startupProcess();
           }
         };
@@ -164,7 +186,9 @@ white:true*/
           // /public-extensions/builds/crm/crm.js
           ajax = new enyo.Ajax({
             url: extensionLocation + "/builds/" + extensionName + "/" + extensionName + ".js",
-            handleAs: "text"
+            handleAs: "text",
+            extensionName: extensionName,
+            loadOrder: XT.session.extensions[i].loadOrder
           });
           ajax.response(extensionSuccess);
           ajax.error(extensionError);
