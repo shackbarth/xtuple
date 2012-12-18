@@ -114,6 +114,8 @@ _.extend(XT, {
    */
   HISTORY_MAX_LENGTH: 20,
 
+  HELP_URL_ROOT: "http://www.xtuple.org/faq/xtuple-mobile/",
+
   extensions: {},
 
   history: [],

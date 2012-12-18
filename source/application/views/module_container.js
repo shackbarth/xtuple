@@ -13,7 +13,7 @@ trailing:true white:true*/
         panels: [
         {name: "welcomePage",
           tag: "iframe",
-					style: "border: none;",
+          style: "border: none;",
           attributes: {src: "lib/enyo-x/assets/splash/index.html"}}
       ]},
       {name: "setup", label: "_setup".loc(), panels: [
