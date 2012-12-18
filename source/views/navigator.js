@@ -600,7 +600,7 @@ trailing:true white:true*/
       }
       this.$.backButton.setContent(label);
       this.$.refreshButton.setShowing(index);
-      this.$.f.setShowing(index);
+      this.$.search.setShowing(index);
       this.$.searchIconButton.setShowing(index);
       this.$.contentToolbar.resized();
     },
