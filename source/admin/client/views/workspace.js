@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XT:true, XM:true, XV:true, enyo:true, alert:true*/
+/*global XT:true, XM:true, XV:true, enyo:true, alert:true _:true */
 
 (function () {
 
@@ -180,6 +180,67 @@ trailing:true white:true*/
         ]}
       ]}
     ],
+    /**
+      If there are any new extensions we'll want to run the pertinent
+      init scripts and orm updaters. It's a bit awkward
+      that the two-stage process goes all the way up here to the presentation
+      layer.
+     */
+    save: function (options) {
+      var that = this,
+        success = options ? options.success : undefined,
+        newExtensions;
+
+      newExtensions = _.filter(this.getValue().get("extensions").models, function (ext) {
+        return ext.isNew();
+      });
+      options = options || {};
+      options.success = function (model, result, opts) {
+        var ajax, success, error, newExtensionIds;
+
+        if (success) {
+          success(model, result, opts);
+        }
+
+        if (!newExtensions || newExtensions.length === 0) {
+          // there are no new extensions selected, so no need to run the backend
+          // scripts
+          return;
+        }
+
+        newExtensionIds = _.map(newExtensions, function (ext) {
+          return ext.get("extension").get("id");
+        });
+
+        ajax = new enyo.Ajax({
+          // TODO: it would be nice to further specify exactly
+          // which extensions need to be loaded, but I can't seem
+          // to reliably get from the model a list of checkboxes
+          // that have just been checked
+          url: "/maintenance?key=blerg"
+            + "&organization=" + model.get("name")
+            + "&extensions=" + JSON.stringify(newExtensionIds),
+          handleAs: "json"
+        });
+        success = function (inSender, inResponse) {
+          if (inResponse.status === 'ERROR') {
+            XT.log("Error updating extension scripts", inResponse.message);
+          } else if (inResponse.errorCount > 0) {
+            XT.log("Extension scripts loaded with errors", inResponse);
+          } else {
+            XT.log("Extension scripts loaded successfully", inResponse);
+          }
+        };
+        error = function (inSender, inResponse) {
+          XT.log("Error updating extension scripts", inResponse);
+        };
+        ajax.response(success);
+        ajax.error(error);
+        ajax.go();
+      };
+
+      this.inherited(arguments);
+    },
     model: "XM.Organization"
   });
 
