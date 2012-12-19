@@ -24,6 +24,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       caFile: null,
       saltFile: "./lib/private/salt.txt",
       psqlPath: "/usr/bin/psql",
+      psqlUser: "admin",
 
       // these properties are dynamically registered with the
       // node discovery service
