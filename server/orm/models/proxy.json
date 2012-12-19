@@ -152,9 +152,12 @@
      },
      {
        "name": "databaseServer",
-       "attr": {
-         "type": "String",
-         "column": "org_dbserver_name"
+       "toOne": {
+         "type": "DatabaseServer",
+         "column": "org_dbserver_name",
+         "required": true,
+         "isNested": true,
+         "inverse": "name"
        }
      },
      {
@@ -247,6 +250,13 @@
        "attr": {
          "type": "String",
          "column": "ext_priv_name"
+       }
+     },
+     {
+       "name": "loadOrder",
+       "attr": {
+         "type": "Number",
+         "column": "ext_load_order"
        }
      }
     ],
