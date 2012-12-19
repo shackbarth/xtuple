@@ -175,6 +175,8 @@ white:true*/
 
     recordType: 'XM.User',
 
+    nameAttribute: 'id',
+
     defaults: {
       isActive: true
     },
