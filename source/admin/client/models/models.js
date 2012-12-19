@@ -22,7 +22,7 @@ white:true*/
     databaseType: 'global',
 
     /**
-     * The username attribute must be editable for a new entry.
+     * The documentKey attribute must be editable for a new entry.
      */
     initialize: function (attributes, options) {
       XM.Document.prototype.initialize.apply(this, arguments);
@@ -81,13 +81,18 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.Extension = XM.GlobalDocument.extend(/** @lends XM.Extension.prototype */{
+  XM.Extension = XM.Document.extend(/** @lends XM.Extension.prototype */{
 
     recordType: 'XM.Extension',
 
-    idAttribute: 'name',
+    enforceUpperKey: false,
+
+    autoFetchId: true,
+
+    databaseType: 'global',
 
     documentKey: 'name'
+
   });
 
   /**
