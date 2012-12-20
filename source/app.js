@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true
 white:true*/
-/*global enyo:true, XT:true, _:true, document:true, window:true */
+/*global enyo:true, XT:true, _:true, document:true, window:true, XM:true */
 
 (function () {
 
@@ -123,6 +123,8 @@ white:true*/
         extensionCount = 0,
         extensionsDownloaded = 0,
         extensionPayloads = [],
+        loginInfo,
+        details,
         eachCallback = function () {
           var completed = startupManager.get('completed').length;
           progressBar.animateProgressTo(completed);
@@ -280,6 +282,9 @@ white:true*/
           inEvent = this._cachePullouts[i];
           this.$.pullout.addPulloutItem(null, inEvent);
         }
+        loginInfo = XT.app.$.postbooks.getNavigator().loginInfo();
+        details = XT.session.details;
+        loginInfo.setContent(details.username + " · " + details.organization);
         this.state = RUNNING;
         XT.app.$.postbooks.next();
         XT.app.$.postbooks.getNavigator().activate();
