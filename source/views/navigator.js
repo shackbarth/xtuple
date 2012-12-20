@@ -82,6 +82,7 @@ trailing:true white:true*/
               classes: "onyx-blue xv-popup-button"}
           ]}
         ]},
+        {name: "loginInfo", content: "", classes: "xv-navigator-header"},
         {name: "menuPanels", kind: "Panels", draggable: false, fit: true,
           margin: 0, components: [
           {name: "moduleMenu", kind: "List", touch: true,
@@ -373,6 +374,9 @@ trailing:true white:true*/
       };
       input = upper ? input.toUpperCase() : input;
       Klass.findExisting(key, input, options);
+    },
+    loginInfo: function () {
+      return this.$.loginInfo;
     },
     /**
       Actually logs the user out if they confirm that's what they want to do.
