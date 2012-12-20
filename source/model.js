@@ -1358,8 +1358,9 @@ white:true*/
     */
     findExisting: function (key, value, options) {
       var recordType = this.recordType || this.prototype.recordType,
-        params = [ recordType, key, value, this.id || -1 ];
-      this.dispatch('XM.Model', 'findExisting', params, options);
+        params = [ recordType, key, value, this.id || -1 ],
+        dataSource = options.dataSource || XT.dataSource;
+      dataSource.dispatch('XM.Model', 'findExisting', params, options);
       XT.log("XM.Model.findExisting for: " + recordType);
       return this;
     },
