@@ -499,6 +499,8 @@ white:true*/
       @returns {Object} Receiver
     */
     findExisting: function (key, value, options) {
+      options = options || {};
+      options.databaseType = options.databaseType || this.databaseType;
       return this.getClass().findExisting.call(this, key, value, options);
     },
 
