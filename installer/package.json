@@ -12,7 +12,7 @@
     "node": "*"
   },
   "dependencies": {
-    "xt":"git://github.com/clinuz/node-xt.git",
+    "xt":"git://github.com/xtuple/node-xt.git",
     "socket.io-client": ""
   },
   "devDependencies": {},
