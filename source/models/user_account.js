@@ -158,6 +158,33 @@ white:true*/
       "disableExport",
       "locale"
     ],
+    
+    documentKeyDidChange: function (model, value, options) {
+      var K = XM.Model,
+        that = this,
+        status = this.getStatus();
+      options = options || {};
+
+      if (options.force || !(status & K.READY)) { return; }
+
+      // Check for conflicts
+      if (value && this.isDirty()) {
+        options.success = function (resp) {
+          var err, params = {};
+          if (resp) {
+            params.attr = ("_" + that.documentKey).loc();
+            params.value = value;
+            err = XT.Error.clone('xt1008', { params: params });
+            that.trigger('error', that, err, options);
+          }
+        };
+        this.findExisting("number", value, options);
+      }
+    },
+    
+    findExisting: function (key, value, options) {
+      XM.Account.findExisting("number", value.toUpperCase(), options);
+    },
 
     initialize: function (attributes, options) {
       XM.Document.prototype.initialize.apply(this, arguments);
