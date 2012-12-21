@@ -413,6 +413,4 @@ request: true, process: true, XVOWS: true, ext: true, XM:true, relocate: true, s
     }
   });
 
-  return;
-
 }());
