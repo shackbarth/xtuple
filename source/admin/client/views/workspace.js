@@ -181,6 +181,28 @@ trailing:true white:true*/
       ]}
     ],
     /**
+      As a shortcut we associate
+     */
+    associateAdminUser: function (orgModel) {
+      var admin = new XM.User({id: "admin"}),
+        saveError = function () {
+          XT.log("Error saving admin user");
+        },
+        saveSuccess = function (userModel, result) {
+          XT.log("This new organization has been linked to the admin user.");
+        },
+        fetchError = function () {
+          XT.log("Error fetching admin user", arguments);
+        },
+        fetchSuccess = function (userModel, result) {
+          userModel.get("organizations").add(orgModel);
+          userModel.save(null, {success: saveSuccess, error: saveError});
+        };
+
+
+      admin.fetch({success: fetchSuccess, error: fetchError});
+    },
+    /**
       If there are any new extensions we'll want to run the pertinent
       init scripts and orm updaters. It's a bit awkward
       that the two-stage process goes all the way up here to the presentation
@@ -215,6 +237,7 @@ trailing:true white:true*/
     save: function (options) {
       var that = this,
         success = options ? options.success : undefined,
+        newOrganization = this.getValue().getStatus() === XM.Model.READY_NEW,
         newExtensions;
 
       newExtensions = _.filter(this.getValue().get("extensions").models, function (ext) {
@@ -230,6 +253,11 @@ trailing:true white:true*/
           // there are no new extensions selected, so no need to run the backend
           // scripts
           that.runExtensionScripts(model, newExtensions);
+        }
+
+        if (newOrganization) {
+          XT.log("Associating admin user with new organization", model.getStatusString());
+          that.associateAdminUser(model);
         }
       };
 
