@@ -1,7 +1,11 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
-/*global XT:true, _:true, console:true, X:true, Backbone:true, require:true */
+/*global XT:true, _:true, console:true, X:true, Backbone:true, require:true, DOCUMENT_HOSTNAME:true
+_: true, _fs: true, _path: true, _util:true, vows: true, assert:true, io: true, program: true
+request: true, process: true, XVOWS: true, ext: true, XM:true, relocate: true, setTimeout: true
+
+*/
 
 (function () {
 
@@ -16,9 +20,12 @@ white:true*/
   _                   = require("underscore");
   io                  = require("socket.io-client");
   program             = require("commander");
+  request             = require("request");
   require("tinycolor"); /*tinycolor*/
   Backbone = require("backbone");
   require("backbone-relational");
+
+  DOCUMENT_HOSTNAME = "";
 
   //......................................
   // COMMAND LINE PARSING
@@ -31,9 +38,10 @@ white:true*/
       .option("--spec", "Use the spec reporter")
       .option("-t, --tests [tests]", "Specify space-separated string of test names", tests, ["*"])
       .option("-u, --user [user]", "Global user ID (must be active global user)", "admin@xtuple.com")
+      .option("-P, --password [password]", "Global user password", "")
       .option("-H, --host [host]", "Datasource hostname/ip", "localhost")
       .option("-p, --port [port]", "Datasource port", 443, parseInt)
-      .option("-o, --organization [organization]", "Organization to run against", "production")
+      .option("-o, --organization [organization]", "Organization to run against", "dev")
       .parse(process.argv);
     if (process.argv.length <= 2) {
       program.parse([process.argv[0], process.argv[1], '--help']);
@@ -92,10 +100,10 @@ white:true*/
         // in the future extensions will be loaded from the server
         currentState = LOADING_EXTENSIONS;
         this.console('loading extensions');
-        for (prop in XT.extensions) {
+        for (var prop in XT.extensions) {
           if (XT.extensions.hasOwnProperty(prop)) {
             ext = XT.extensions[prop];
-            for (extprop in ext) {
+            for (var extprop in ext) {
               if (ext.hasOwnProperty(extprop) &&
                   typeof ext[extprop] === "function") {
                 //XT.log('Installing ' + prop + ' ' + extprop);
@@ -109,7 +117,7 @@ white:true*/
         this.console('loading schema');
         options.success = function () {
           that.begin();
-        }
+        };
         currentState = LOADING_SCHEMA;
         XT.StartupTask.create({
           taskName: "loadSessionSchema",
@@ -249,173 +257,160 @@ white:true*/
     nexted: null
   });
 
-  user = program.user;
-  organization = program.organization;
+  //......................................
+  // INCLUDE ALL THE NECESSARY XT FRAMEWORK
+  // DEPENDENCIES
 
-  // create the cache for session control
-  sessionCache = X.Cache.create({prefix: "session"});
-  userCache = X.Cache.create({prefix: "user"});
+  // this will move into node-xt soon
+  X.relativeDependsPath = "";
+  X.depends = function () {
+    var dir = X.relativeDependsPath,
+      files = X.$A(arguments),
+      pathBeforeRecursion;
 
-  K = userCache.model("User");
-  K.findOne({id: user}, ["organizations"], function (err, res) {
-    var msg, organizations;
-    if (err || !res) issue(X.fatal("could not find the requested global user", err.message));
-    organizations = _.pluck(res.organizations, "name");
-    if (organizations.indexOf(organization) === -1) {
-      msg = "Could not find the organization '%@' for user '%@', ".f(organization, user);
-      msg = msg.suf("available organizations are '%@'".f(organizations.join(", ")));
-      issue(X.fatal(msg));
-    }
+    _.each(files, function (file) {
+      if (_fs.statSync(_path.join(dir, file)).isDirectory()) {
+        pathBeforeRecursion = X.relativeDependsPath;
+        X.relativeDependsPath = _path.join(dir, file);
+        X.depends("package.js");
+        X.relativeDependsPath = pathBeforeRecursion;
+      } else {
+        require(_path.join(dir, file));
+      }
+    });
+  };
+  // end node-xt-bound code
 
-    username = res.organizations[organizations.indexOf(organization)].username;
-    sid = X.generateSID();
-    K = sessionCache.model("Session");
-    k = new K((XVOWS.details = details = {
-      id: user,
-      sid: sid,
-      lastModified: X.timestamp(),
-      created: X.timestamp(),
-      username: username,
-      organization: organization,
-      organizations: organizations
-    }));
-    k.save(function (err) {
-      if (err) issue(X.fatal("Could not create a valid session", err.message));
-      X.Object.create({
-        cleanupCompletedEvent: "cleanupCompleted",
-        cleanup: function () {
-          k.remove(_.bind(function () {
-            X.log("Vows session removed");
-            this.emit(this.cleanupCompletedEvent);
-          }, this));
-        },
-        init: function () {
-          X.addCleanupTask(_.bind(this.cleanup, this), this);
-        }
-      });
+  X.relativeDependsPath = _path.join(X.basePath, "node_modules/tools/source");
+  require("tools");
 
-      //......................................
-      // INCLUDE ALL THE NECESSARY XT FRAMEWORK
-      // DEPENDENCIES
-      DOCUMENT_HOSTNAME = "";
+  XT.app = {show: X.$P};
 
-      // this will move into node-xt soon
-      X.relativeDependsPath = "";
-      X.depends = function () {
-        var dir = X.relativeDependsPath,
-          files = X.$A(arguments),
-          pathBeforeRecursion;
-
-        _.each(files, function (file) {
-          if (_fs.statSync(_path.join(dir, file)).isDirectory()) {
-            pathBeforeRecursion = X.relativeDependsPath;
-            X.relativeDependsPath = _path.join(dir, file);
-            X.depends("package.js");
-            X.relativeDependsPath = pathBeforeRecursion;
-          } else {
-            require(_path.join(dir, file));
-          }
+  // suppress normal output and pipe to file
+  (function () {
+    "use strict";
+    XVOWS.log = XT.log = function () {
+      var out = XT.$A(arguments).map(function (arg) {
+        return typeof arg === "string" ? arg: _util.inspect(arg, true, 3);
+      }).join('\n');
+      if (XVOWS.outfile && XVOWS.outfile.writable) {
+        XVOWS.outfile.write("%@\n".f(out), "utf8");
+      } else {
+        XVOWS.outfile = _fs.createWriteStream(_path.join(X.basePath, "run.log"), {
+          flags: "a",
+          encoding: "utf8"
         });
-      };
-      // end node-xt-bound code
-
-      X.relativeDependsPath = _path.join(X.basePath, "node_modules/tools/source");
-      require("tools");
-
-      XT.app = {show: X.$P};
-
-      // CRUSH QUIET SMASH AND DESTROY ANY NORMAL OUTPUT FOR NOW
-      // ...actually just...pipe it to some file...
-      (function () {
-        "use strict";
-        XVOWS.log = XT.log = function () {
-          var out = XT.$A(arguments).map(function (arg) {
-            return typeof arg === "string" ? arg: _util.inspect(arg, true, 3);
-          }).join('\n');
-          if (XVOWS.outfile && XVOWS.outfile.writable) {
-            XVOWS.outfile.write("%@\n".f(out), "utf8");
-          } else {
-            XVOWS.outfile = _fs.createWriteStream(_path.join(X.basePath, "run.log"), {
-              flags: "a",
-              encoding: "utf8"
-            });
-            XVOWS.outfile.on("error", function (err) {
-              throw err;
-            });
-            XVOWS.outfile.write("\n[ENTRY] started %@\n".f((new Date()).toLocaleString()));
-            // write the first output that caused this to open
-            // the stream to begin with
-            XVOWS.outfile.write("%@\n".f(out));
-          }
-        };
-
-        X.addCleanupTask(function (){
-          if (XVOWS.outfile) XVOWS.outfile.destroySoon();
+        XVOWS.outfile.on("error", function (err) {
+          throw err;
         });
-      }());
+        XVOWS.outfile.write("\n[ENTRY] started %@\n".f((new Date()).toLocaleString()));
+        // write the first output that caused this to open
+        // the stream to begin with
+        XVOWS.outfile.write("%@\n".f(out));
+      }
+    };
 
-      //......................................
-      // INCLUDE ALL THE NECESSARY XM FRAMEWORK
-      // DEPENDENCIES
-      //
+    X.addCleanupTask(function () {
+      if (XVOWS.outfile) {
+        XVOWS.outfile.destroySoon();
+      }
+    });
+  }());
 
-      // LOAD ALL MODELS
-      //
-      X.getCookie = function () {
-        return X.json(XVOWS.details);
+  //......................................
+  // INCLUDE ALL THE NECESSARY XM FRAMEWORK
+  // DEPENDENCIES
+  //
+
+  // LOAD ALL MODELS
+  //
+  X.getCookie = function () {
+    return X.json(XVOWS.details);
+  };
+
+
+  X.relativeDependsPath = _path.join(X.basePath, "node_modules/backbone-x/source");
+  require("backbone-x");
+
+  // GRAB THE LOAD ORDER WE WANT TO PRESERVE
+  // FROM THE package.js FILE IN MODELS
+  X.relativeDependsPath = _path.join(X.basePath, "../source/models");
+  require(_path.join(X.basePath, "../source/models", "package.js"));
+  require(_path.join(X.basePath, "../source/ext", "core.js"));
+  require(_path.join(X.basePath, "../source/ext", "datasource.js"));
+  // GRAB THE CRM MODULE
+  require(_path.join(X.basePath, "../../public-extensions/source/crm/client", "core.js"));
+  X.relativeDependsPath = _path.join(X.basePath, "../../public-extensions/source/crm/client/models");
+  require(_path.join(X.basePath, "../../public-extensions/source/crm/client/models", "package.js"));
+  // GRAB THE PROJECT MODULE
+  require(_path.join(X.basePath, "../../public-extensions/source/project/client", "core.js"));
+  X.relativeDependsPath = _path.join(X.basePath, "../../public-extensions/source/project/client/models");
+  require(_path.join(X.basePath, "../../public-extensions/source/project/client/models", "package.js"));
+  // GRAB THE CONNECT MODULE
+  require(_path.join(X.basePath, "../../private-extensions/source/connect/client", "core.js"));
+  X.relativeDependsPath = _path.join(X.basePath, "../../private-extensions/source/connect/client/models");
+  require(_path.join(X.basePath, "../../private-extensions/source/connect/client/models", "package.js"));
+  // GRAB THE INCIDENT PLUS MODULE
+  require(_path.join(X.basePath, "../../public-extensions/source/incident_plus/client", "core.js"));
+  X.relativeDependsPath = _path.join(X.basePath, "../../public-extensions/source/incident_plus/client/models");
+  require(_path.join(X.basePath, "../../public-extensions/source/incident_plus/client/models", "package.js"));
+  // GRAB THE STARTUP TASKS
+  require(_path.join(X.basePath, "../source", "startup.js"));
+
+  // HANEOUS ABOMINATION TO KEEP BACKBONE-
+  // RELATIONAL FROM BOMBING...
+  Backbone.XM = XM;
+
+  require(_path.join(X.basePath, "lib/crud.js"));
+
+  // PROCESS ANY INCOMING ARGS REAL QUICK
+  (function () {
+    "use strict";
+    XVOWS.args = program.tests;
+    XVOWS.console = function () {
+      var args = XT.$A(arguments);
+      args.unshift("[XVOWS] ".yellow);
+      console.log.apply(console, args);
+      if (XVOWS.outfile && XVOWS.outfile.writeable) {
+        XVOWS.log(args);
+      }
+    };
+  }());
+
+  relocate = function () {
+    process.exit();
+  };
+
+  // replicate the two-step authentication and org-selection process
+  // that's done with ajax in the login repository
+  request.post({uri: "https://localhost/login/authenticate",
+      json: true,
+      body: {id: program.user, password: program.password}},
+      function (authError, authResponse, authBody) {
+    if (!authError && authResponse.statusCode === 200) {
+      if (authBody.isError) {
+        X.log(authBody.reason);
+        return;
       }
 
-
-      X.relativeDependsPath = _path.join(X.basePath, "node_modules/backbone-x/source");
-      require("backbone-x");
-
-      // GRAB THE LOAD ORDER WE WANT TO PRESERVE
-      // FROM THE package.js FILE IN MODELS
-      X.relativeDependsPath = _path.join(X.basePath, "../source/models");
-      require(_path.join(X.basePath, "../source/models", "package.js"));
-      require(_path.join(X.basePath, "../source/ext", "core.js"));
-      require(_path.join(X.basePath, "../source/ext", "datasource.js"));
-      // GRAB THE CRM MODULE
-      require(_path.join(X.basePath, "../../client/source/ext/crm", "core.js"));
-      X.relativeDependsPath = _path.join(X.basePath, "../../client/source/ext/crm/models");
-      require(_path.join(X.basePath, "../../client/source/ext/crm/models", "package.js"));
-      // GRAB THE PROJECT MODULE
-      require(_path.join(X.basePath, "../../client/source/ext/project", "core.js"));
-      X.relativeDependsPath = _path.join(X.basePath, "../../client/source/ext/project/models");
-      require(_path.join(X.basePath, "../../client/source/ext/project/models", "package.js"));
-      // GRAB THE CONNECT MODULE
-      require(_path.join(X.basePath, "../../client/source/ext/connect", "core.js"));
-      X.relativeDependsPath = _path.join(X.basePath, "../../client/source/ext/connect/models");
-      require(_path.join(X.basePath, "../../client/source/ext/connect/models", "package.js"));
-      // GRAB THE INCIDENT PLUS MODULE
-      require(_path.join(X.basePath, "../../client/source/ext/incident_plus", "core.js"));
-      X.relativeDependsPath = _path.join(X.basePath, "../../client/source/ext/incident_plus/models");
-      require(_path.join(X.basePath, "../../client/source/ext/incident_plus/models", "package.js"));
-      // GRAB THE STARTUP TASKS
-      require(_path.join(X.basePath, "../source", "startup.js"));
-
-      // HANEOUS ABOMINATION TO KEEP BACKBONE-
-      // RELATIONAL FROM BOMBING...
-      Backbone.XM = XM;
-
-      require(_path.join(X.basePath, "lib/crud.js"));
-
-      // PROCESS ANY INCOMING ARGS REAL QUICK
-      (function () {
-        "use strict";
-        XVOWS.args = program.tests;
-        XVOWS.console = function () {
-          var args = XT.$A(arguments);
-          args.unshift("[XVOWS] ".yellow);
-          console.log.apply(console, args);
-          if (XVOWS.outfile && XVOWS.outfile.writeable) {
-            XVOWS.log(args);
-          }
-        };
-      }());
-
-      XVOWS.emit("ready");
-
-    });
+      request.post({uri: "https://localhost/login/selection",
+          json: true,
+          body: {id: program.user, password: program.password, selected: program.organization}},
+          function (selectError, selectResponse, selectBody) {
+        if (!selectError && selectResponse.statusCode === 200) {
+          XVOWS.details = {
+            id: program.user,
+            sid: authBody.sid,
+            lastModified: authBody.lastModified,
+            created: authBody.created,
+            username: _.find(authBody.organizations, function (org) {return org.name === program.organization; }).username,
+            organization: program.organization,
+            organizations: authBody.organizations
+          };
+          XVOWS.emit("ready");
+        }
+      });
+    }
   });
+
 }());
