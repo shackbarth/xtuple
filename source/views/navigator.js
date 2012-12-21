@@ -236,7 +236,7 @@ trailing:true white:true*/
      */
     fetch: function (options) {
       options = options ? _.clone(options) : {};
-      var index = options.index || this.$.contentPanels.getIndex(),
+      var index = this.$.contentPanels.getIndex(),
         list = this.$.contentPanels.getPanels()[index],
         name = list ? list.name : "",
         query,
@@ -245,7 +245,6 @@ trailing:true white:true*/
         parameters,
         filterDescription;
       if (list instanceof XV.List === false) { return; }
-      this.fetched[index] = true;
       query = list.getQuery() || {};
       input = this.$.searchInput.getValue();
       parameterWidget = XT.app ? XT.app.$.pullout.getItem(name) : null;
@@ -585,6 +584,7 @@ trailing:true white:true*/
       }
       if (panel.fetch && !this.fetched[panelIndex]) {
         this.fetch();
+        this.fetched[panelIndex] = true;
       }
     },
     
