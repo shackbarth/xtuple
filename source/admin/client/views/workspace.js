@@ -186,6 +186,32 @@ trailing:true white:true*/
       that the two-stage process goes all the way up here to the presentation
       layer.
      */
+    runExtensionScripts: function (model, newExtensions) {
+      var newExtensionIds = _.map(newExtensions, function (ext) {
+          return ext.get("extension").get("id");
+        }),
+        ajax = new enyo.Ajax({
+          url: "/maintenance?organization=" + model.get("name") +
+            "&extensions=" + JSON.stringify(newExtensionIds),
+          handleAs: "json"
+        }),
+        success = function (inSender, inResponse) {
+          if (inResponse.status === 'ERROR') {
+            XT.log("Error updating extension scripts", inResponse.message);
+          } else if (inResponse.errorCount > 0) {
+            XT.log("Extension scripts loaded with errors", inResponse);
+          } else {
+            XT.log("Extension scripts loaded successfully", inResponse);
+          }
+        },
+        error = function (inSender, inResponse) {
+          XT.log("Error updating extension scripts", inResponse);
+        };
+
+      ajax.response(success);
+      ajax.error(error);
+      ajax.go();
+    },
     save: function (options) {
       var that = this,
         success = options ? options.success : undefined,
@@ -196,47 +222,15 @@ trailing:true white:true*/
       });
       options = options || {};
       options.success = function (model, result, opts) {
-        var ajax, success, error, newExtensionIds;
-
         if (success) {
           success(model, result, opts);
         }
 
-        if (!newExtensions || newExtensions.length === 0) {
+        if (newExtensions && newExtensions.length > 0) {
           // there are no new extensions selected, so no need to run the backend
           // scripts
-          return;
+          that.runExtensionScripts(model, newExtensions);
         }
-
-        newExtensionIds = _.map(newExtensions, function (ext) {
-          return ext.get("extension").get("id");
-        });
-
-        ajax = new enyo.Ajax({
-          // TODO: it would be nice to further specify exactly
-          // which extensions need to be loaded, but I can't seem
-          // to reliably get from the model a list of checkboxes
-          // that have just been checked
-          url: "/maintenance?key=blerg"
-            + "&organization=" + model.get("name")
-            + "&extensions=" + JSON.stringify(newExtensionIds),
-          handleAs: "json"
-        });
-        success = function (inSender, inResponse) {
-          if (inResponse.status === 'ERROR') {
-            XT.log("Error updating extension scripts", inResponse.message);
-          } else if (inResponse.errorCount > 0) {
-            XT.log("Extension scripts loaded with errors", inResponse);
-          } else {
-            XT.log("Extension scripts loaded successfully", inResponse);
-          }
-        };
-        error = function (inSender, inResponse) {
-          XT.log("Error updating extension scripts", inResponse);
-        };
-        ajax.response(success);
-        ajax.error(error);
-        ajax.go();
       };
 
       this.inherited(arguments);
