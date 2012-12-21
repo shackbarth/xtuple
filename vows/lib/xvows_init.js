@@ -291,7 +291,6 @@ white:true*/
 
   // CRUSH QUIET SMASH AND DESTROY ANY NORMAL OUTPUT FOR NOW
   // ...actually just...pipe it to some file...
-  /*
   (function () {
     "use strict";
     XVOWS.log = XT.log = function () {
@@ -319,7 +318,6 @@ white:true*/
       if (XVOWS.outfile) XVOWS.outfile.destroySoon();
     });
   }());
-  */
 
   //......................................
   // INCLUDE ALL THE NECESSARY XM FRAMEWORK
@@ -410,74 +408,10 @@ white:true*/
           organizations: authBody.organizations
         };
         XVOWS.emit("ready");
-        /*
-        XT.dataSource.datasourceUrl = program.host;
-        XT.dataSource.datasourcePort = program.port;
-        XT.dataSource.connect(function () {
-          XT.dataSource.retrieveRecord("XM.User", user, {
-            success: function (model, result) {
-              console.log("retrieve success");
-              //XVOWS.emit("ready");
-            },
-            error: function (error) {
-              console.log("retrieve error ", error);
-            }
-          });
-        });
-        */
       });
     };
   });
 
   return;
-/*
-  // create the cache for session control
-  sessionCache = X.Cache.create({prefix: "session"});
-  userCache = X.Cache.create({prefix: "user"});
-
-  K = userCache.model("User");
-  K.findOne({id: user}, ["organizations"], function (err, res) {
-    var msg, organizations;
-    if (err || !res) issue(X.fatal("could not find the requested global user", err.message));
-    organizations = _.pluck(res.organizations, "name");
-    if (organizations.indexOf(organization) === -1) {
-      msg = "Could not find the organization '%@' for user '%@', ".f(organization, user);
-      msg = msg.suf("available organizations are '%@'".f(organizations.join(", ")));
-      issue(X.fatal(msg));
-    }
-
-    username = res.organizations[organizations.indexOf(organization)].username;
-    sid = X.generateSID();
-    K = sessionCache.model("Session");
-    k = new K((XVOWS.details = details = {
-      id: user,
-      sid: sid,
-      lastModified: X.timestamp(),
-      created: X.timestamp(),
-      username: username,
-      organization: organization,
-      organizations: organizations
-    }));
-    k.save(function (err) {
-      if (err) issue(X.fatal("Could not create a valid session", err.message));
-      X.Object.create({
-        cleanupCompletedEvent: "cleanupCompleted",
-        cleanup: function () {
-          k.remove(_.bind(function () {
-            X.log("Vows session removed");
-            this.emit(this.cleanupCompletedEvent);
-          }, this));
-        },
-        init: function () {
-          X.addCleanupTask(_.bind(this.cleanup, this), this);
-        }
-      });
-
-
-      XVOWS.emit("ready");
-
-    });
-  });
-*/
 
 }());
