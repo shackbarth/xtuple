@@ -35,7 +35,6 @@ white:true*/
       .option("-t, --tests [tests]", "Specify space-separated string of test names", tests, ["*"])
       .option("-u, --user [user]", "Global user ID (must be active global user)", "admin@xtuple.com")
       .option("-P, --password [password]", "Global user password", "")
-      .option("-n, --username [username]", "Instance username", "admin")
       .option("-H, --host [host]", "Datasource hostname/ip", "localhost")
       .option("-p, --port [port]", "Datasource port", 443, parseInt)
       .option("-o, --organization [organization]", "Organization to run against", "dev")
@@ -387,22 +386,30 @@ white:true*/
 
   request.post({uri: "https://localhost/login/authenticate",
       json: true,
-      body: {id: program.user, password: program.password}}, function (error, response, authBody) {
-    if (!error && response.statusCode === 200) {
+      body: {id: program.user, password: program.password}},
+      function (authError, authResponse, authBody) {
+    if (!authError && authResponse.statusCode === 200) {
+      if (authBody.isError) {
+        X.log(authBody.reason);
+        return;
+      }
 
       request.post({uri: "https://localhost/login/selection",
           json: true,
-          body: {id: program.user, password: program.password, selected: program.organization}}, function (error, response, selectBody) {
-        XVOWS.details = {
-          id: program.user,
-          sid: authBody.sid,
-          lastModified: authBody.lastModified,
-          created: authBody.created,
-          username: program.username,
-          organization: program.organization,
-          organizations: authBody.organizations
-        };
-        XVOWS.emit("ready");
+          body: {id: program.user, password: program.password, selected: program.organization}},
+          function (selectError, selectResponse, selectBody) {
+        if (!selectError && selectResponse.statusCode === 200) {
+          XVOWS.details = {
+            id: program.user,
+            sid: authBody.sid,
+            lastModified: authBody.lastModified,
+            created: authBody.created,
+            username: _.find(authBody.organizations, function (org) {return org.name === program.organization;}).username,
+            organization: program.organization,
+            organizations: authBody.organizations
+          };
+          XVOWS.emit("ready");
+        }
       });
     };
   });
