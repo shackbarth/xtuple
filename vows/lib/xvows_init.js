@@ -1,7 +1,11 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
-/*global XT:true, _:true, console:true, X:true, Backbone:true, require:true */
+/*global XT:true, _:true, console:true, X:true, Backbone:true, require:true, DOCUMENT_HOSTNAME:true
+_: true, _fs: true, _path: true, _util:true, vows: true, assert:true, io: true, program: true
+request: true, process: true, XVOWS: true, ext: true, XM:true, relocate: true, setTimeout: true
+
+*/
 
 (function () {
 
@@ -96,10 +100,10 @@ white:true*/
         // in the future extensions will be loaded from the server
         currentState = LOADING_EXTENSIONS;
         this.console('loading extensions');
-        for (prop in XT.extensions) {
+        for (var prop in XT.extensions) {
           if (XT.extensions.hasOwnProperty(prop)) {
             ext = XT.extensions[prop];
-            for (extprop in ext) {
+            for (var extprop in ext) {
               if (ext.hasOwnProperty(extprop) &&
                   typeof ext[extprop] === "function") {
                 //XT.log('Installing ' + prop + ' ' + extprop);
@@ -113,7 +117,7 @@ white:true*/
         this.console('loading schema');
         options.success = function () {
           that.begin();
-        }
+        };
         currentState = LOADING_SCHEMA;
         XT.StartupTask.create({
           taskName: "loadSessionSchema",
@@ -314,8 +318,10 @@ white:true*/
       }
     };
 
-    X.addCleanupTask(function (){
-      if (XVOWS.outfile) XVOWS.outfile.destroySoon();
+    X.addCleanupTask(function () {
+      if (XVOWS.outfile) {
+        XVOWS.outfile.destroySoon();
+      }
     });
   }());
 
@@ -328,7 +334,7 @@ white:true*/
   //
   X.getCookie = function () {
     return X.json(XVOWS.details);
-  }
+  };
 
 
   X.relativeDependsPath = _path.join(X.basePath, "node_modules/backbone-x/source");
@@ -404,14 +410,14 @@ white:true*/
             sid: authBody.sid,
             lastModified: authBody.lastModified,
             created: authBody.created,
-            username: _.find(authBody.organizations, function (org) {return org.name === program.organization;}).username,
+            username: _.find(authBody.organizations, function (org) {return org.name === program.organization; }).username,
             organization: program.organization,
             organizations: authBody.organizations
           };
           XVOWS.emit("ready");
         }
       });
-    };
+    }
   });
 
   return;
