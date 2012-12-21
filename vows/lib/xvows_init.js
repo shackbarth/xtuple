@@ -257,14 +257,6 @@ request: true, process: true, XVOWS: true, ext: true, XM:true, relocate: true, s
     nexted: null
   });
 
-  user = program.user;
-  organization = program.organization;
-
-
-
-
-
-
   //......................................
   // INCLUDE ALL THE NECESSARY XT FRAMEWORK
   // DEPENDENCIES
@@ -389,7 +381,8 @@ request: true, process: true, XVOWS: true, ext: true, XM:true, relocate: true, s
     process.exit();
   };
 
-
+  // replicate the two-step authentication and org-selection process
+  // that's done with ajax in the login repository
   request.post({uri: "https://localhost/login/authenticate",
       json: true,
       body: {id: program.user, password: program.password}},
