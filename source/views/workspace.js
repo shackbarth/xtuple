@@ -379,6 +379,7 @@ trailing:true white:true*/
           {kind: "onyx.Button", name: "backButton",
             content: "_back".loc(), onclick: "close"}
         ]},
+        {name: "loginInfo", content: "", classes: "xv-navigator-header"},
         {name: "menu", kind: "List", fit: true, touch: true,
            onSetupItem: "setupItem", components: [
           {name: "item", classes: "item enyo-border-box", ontap: "itemTap"}
@@ -387,7 +388,7 @@ trailing:true white:true*/
       {kind: "FittableRows", name: "contentPanel", components: [
         {kind: "onyx.MoreToolbar", name: "contentToolbar", components: [
           {kind: "onyx.Grabber"},
-          {name: "title", style: "width: 180px"},
+          {name: "title", style: "width: 200px"},
 					// The MoreToolbar is a FittableColumnsLayout, so this spacer takes up all available space
 					{name: "space", fit: true},
 					{kind: "onyx.Button", name: "refreshButton", disabled: true,
@@ -429,6 +430,10 @@ trailing:true white:true*/
         ]}
       ]}
     ],
+    create: function () {
+      this.inherited(arguments);
+      this.setLoginInfo();
+    },
     /**
      @todo Document the apply method.
      */
@@ -476,6 +481,10 @@ trailing:true white:true*/
      */
     errorOk: function () {
       this.$.errorPopup.hide();
+    },
+    setLoginInfo: function () {
+      var details = XT.session.details;
+      this.$.loginInfo.setContent(details.username + " · " + details.organization);
     },
     /**
      @todo Document the headerChanged method.

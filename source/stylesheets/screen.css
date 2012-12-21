@@ -97,6 +97,9 @@ body {
   height: 54px;
   width: 50px;
 }
+.enyo-list-page > *:first-child {
+  border-top: 1px solid #0e0e0e;
+}
 .item {
   background-color: #333333;
   border-bottom: 1px solid #0e0e0e;
