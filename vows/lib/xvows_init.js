@@ -16,6 +16,7 @@ white:true*/
   _                   = require("underscore");
   io                  = require("socket.io-client");
   program             = require("commander");
+  request             = require("request");
   require("tinycolor"); /*tinycolor*/
   Backbone = require("backbone");
   require("backbone-relational");
@@ -384,22 +385,26 @@ white:true*/
     process.exit();
   };
 
-  XT.dataSource.datasourceUrl = program.host;
-  XT.dataSource.datasourcePort = program.port;
-  XT.dataSource.connect(function () {
-    console.log(XT.dataSource);
-    XT.dataSource.retrieveRecord("XM.User", user, {
-      success: function (model, result) {
-        console.log("retrieve success");
-        //XVOWS.emit("ready");
-      },
-      error: function (error) {
-        console.log("retrieve error ", error);
-      }
-    });
+  console.log("hi");
+  request.post({uri: "https://localhost/login/authenticate", form: {id: "dev", password: "dev"}}, function (error, response, body) {
+    if (!error && response.statusCode === 200) {
+      XT.dataSource.datasourceUrl = program.host;
+      XT.dataSource.datasourcePort = program.port;
+      XT.dataSource.connect(function () {
+        XT.dataSource.retrieveRecord("XM.User", user, {
+          success: function (model, result) {
+            console.log("retrieve success");
+            XVOWS.emit("ready");
+          },
+          error: function (error) {
+            console.log("retrieve error ", error);
+          }
+        });
+      });
+    }
   });
-    return;
 
+    return;
 
   // create the cache for session control
   sessionCache = X.Cache.create({prefix: "session"});
