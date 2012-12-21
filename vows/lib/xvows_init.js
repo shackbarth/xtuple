@@ -385,26 +385,47 @@ white:true*/
     process.exit();
   };
 
-  console.log("hi");
-  request.post({uri: "https://localhost/login/authenticate", form: {id: "dev", password: "dev"}}, function (error, response, body) {
+  var tempId = "dev";
+  var tempPassword = "dev";
+  var tempOrg = "dev";
+
+  request.post({uri: "https://localhost/login/authenticate",
+      json: true,
+      body: {id: tempId, password: tempPassword}}, function (error, response, authBody) {
     if (!error && response.statusCode === 200) {
-      XT.dataSource.datasourceUrl = program.host;
-      XT.dataSource.datasourcePort = program.port;
-      XT.dataSource.connect(function () {
-        XT.dataSource.retrieveRecord("XM.User", user, {
-          success: function (model, result) {
-            console.log("retrieve success");
-            XVOWS.emit("ready");
-          },
-          error: function (error) {
-            console.log("retrieve error ", error);
-          }
+
+        //console.log("body", authBody);
+      request.post({uri: "https://localhost/login/selection",
+          json: true,
+          body: {id: tempId, password: tempPassword, selected: tempOrg}}, function (error, response, selectBody) {
+        //console.log("body2", selectBody);
+        XVOWS.details = {
+          id: tempId,
+          sid: authBody.sid,
+          lastModified: authBody.lastModified,
+          created: authBody.created,
+          username: "admin", // XXX
+          organization: tempOrg,
+          organizations: authBody.organizations
+        };
+        XT.dataSource.datasourceUrl = program.host;
+        XT.dataSource.datasourcePort = program.port;
+        XT.dataSource.connect(function () {
+          XT.dataSource.retrieveRecord("XM.User", user, {
+            success: function (model, result) {
+              console.log("retrieve success");
+              //XVOWS.emit("ready");
+            },
+            error: function (error) {
+              console.log("retrieve error ", error);
+            }
+          });
         });
       });
-    }
+    };
   });
 
-    return;
+  return;
 
   // create the cache for session control
   sessionCache = X.Cache.create({prefix: "session"});
