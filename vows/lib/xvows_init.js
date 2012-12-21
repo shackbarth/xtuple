@@ -426,7 +426,7 @@ white:true*/
   });
 
   return;
-
+/*
   // create the cache for session control
   sessionCache = X.Cache.create({prefix: "session"});
   userCache = X.Cache.create({prefix: "user"});
@@ -474,4 +474,6 @@ white:true*/
 
     });
   });
+*/
+
 }());
