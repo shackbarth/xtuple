@@ -329,6 +329,7 @@ white:true*/
   // LOAD ALL MODELS
   //
   X.getCookie = function () {
+    //X.log("get cookie", XVOWS.details);
     return X.json(XVOWS.details);
   }
 
@@ -408,6 +409,8 @@ white:true*/
           organization: tempOrg,
           organizations: authBody.organizations
         };
+        XVOWS.emit("ready");
+        /*
         XT.dataSource.datasourceUrl = program.host;
         XT.dataSource.datasourcePort = program.port;
         XT.dataSource.connect(function () {
@@ -421,6 +424,7 @@ white:true*/
             }
           });
         });
+        */
       });
     };
   });
