@@ -34,9 +34,11 @@ white:true*/
       .option("--spec", "Use the spec reporter")
       .option("-t, --tests [tests]", "Specify space-separated string of test names", tests, ["*"])
       .option("-u, --user [user]", "Global user ID (must be active global user)", "admin@xtuple.com")
+      .option("-P, --password [password]", "Global user password", "")
+      .option("-n, --username [username]", "Instance username", "admin")
       .option("-H, --host [host]", "Datasource hostname/ip", "localhost")
       .option("-p, --port [port]", "Datasource port", 443, parseInt)
-      .option("-o, --organization [organization]", "Organization to run against", "production")
+      .option("-o, --organization [organization]", "Organization to run against", "dev")
       .parse(process.argv);
     if (process.argv.length <= 2) {
       program.parse([process.argv[0], process.argv[1], '--help']);
@@ -289,8 +291,7 @@ white:true*/
 
   XT.app = {show: X.$P};
 
-  // CRUSH QUIET SMASH AND DESTROY ANY NORMAL OUTPUT FOR NOW
-  // ...actually just...pipe it to some file...
+  // suppress normal output and pipe to file
   (function () {
     "use strict";
     XVOWS.log = XT.log = function () {
@@ -327,7 +328,6 @@ white:true*/
   // LOAD ALL MODELS
   //
   X.getCookie = function () {
-    //X.log("get cookie", XVOWS.details);
     return X.json(XVOWS.details);
   }
 
@@ -384,27 +384,22 @@ white:true*/
     process.exit();
   };
 
-  var tempId = "dev";
-  var tempPassword = "dev";
-  var tempOrg = "dev";
 
   request.post({uri: "https://localhost/login/authenticate",
       json: true,
-      body: {id: tempId, password: tempPassword}}, function (error, response, authBody) {
+      body: {id: program.user, password: program.password}}, function (error, response, authBody) {
     if (!error && response.statusCode === 200) {
 
-        //console.log("body", authBody);
       request.post({uri: "https://localhost/login/selection",
           json: true,
-          body: {id: tempId, password: tempPassword, selected: tempOrg}}, function (error, response, selectBody) {
-        //console.log("body2", selectBody);
+          body: {id: program.user, password: program.password, selected: program.organization}}, function (error, response, selectBody) {
         XVOWS.details = {
-          id: tempId,
+          id: program.user,
           sid: authBody.sid,
           lastModified: authBody.lastModified,
           created: authBody.created,
-          username: "admin", // XXX
-          organization: tempOrg,
+          username: program.username,
+          organization: program.organization,
           organizations: authBody.organizations
         };
         XVOWS.emit("ready");
