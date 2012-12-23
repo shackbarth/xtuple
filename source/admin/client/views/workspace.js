@@ -184,11 +184,19 @@ trailing:true white:true*/
       As a shortcut we associate
      */
     associateAdminUser: function (orgModel) {
-      var admin = new XM.User({id: "admin"}),
+      var that = this,
+        admin = new XM.User({id: "admin"}),
+        error = function () {
+          XT.log("Error associating admin user", arguments);
+        },
+        associateSuccess = function () {
+          XT.log("Associating admin user success", arguments);
+        },
         saveError = function () {
           XT.log("Error saving admin user", arguments);
         },
-        saveSuccess = function (userModel, result) {
+        saveSuccess = function (userOrgModel, result, options) {
+          //var userModel = options.userModel;
           XT.log("This new organization has been linked to the admin user.", arguments);
         },
         fetchError = function () {
@@ -204,10 +212,13 @@ trailing:true white:true*/
           //userModel.set({organizations: c});
           //userModel.get("organizations").add(orgModel);
           //console.log("2", userModel.get("organizations"));
-          var userOrgModel = new XM.UserOrganization(
-            {user: userModel.get("id"), name: orgModel.get("name"), username: "admin"},
-            {isNew: true, success: saveSuccess, error: saveError});
+          var userOrgModel = new XM.UserOrganization();
+          userOrgModel.on("statusChange", saveSuccess, that);
+          userOrgModel.initialize({name: orgModel.get("name"), username: "admin"},
+            {isNew: true});
+          //userModel.get("organizations").add(userOrgModel);
           //userModel.save(null, {success: saveSuccess, error: saveError});
+          //userOrgModel.save(null, {success: saveSuccess, error: saveError, userModel: userModel});
         };
 
 
