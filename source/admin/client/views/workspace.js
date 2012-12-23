@@ -181,48 +181,33 @@ trailing:true white:true*/
       ]}
     ],
     /**
-      As a shortcut we associate
+      As a shortcut we associate the admin user with the organization if it's new
      */
     associateAdminUser: function (orgModel) {
       var userOrgModel = new XM.UserOrganization({name: orgModel.get("name"), username: "admin"});
       userOrgModel.on("statusChange", this.associateLink, this);
       userOrgModel.initialize(null, {isNew: true});
-
     },
     associateLink: function (userOrgModel, status, options) {
       if (status === XM.Model.READY_NEW) {
+        // for some reason this fails on the first attempt and succeeds on subsequent attempts.
+        // I'm sure there's a better way to do this.
         var admin = new XM.User({id: "admin"}),
-          error = function () {
-            XT.log("Error associating admin user", arguments);
-          },
           saveError = function () {
-            XT.log("Error saving admin user", arguments);
+            //XT.log("Error saving admin user", arguments);
           },
           saveSuccess = function (userOrgModel, result, options) {
-            //var userModel = options.userModel;
             XT.log("This new organization has been linked to the admin user.", arguments);
           },
           fetchError = function () {
-            XT.log("Error fetching admin user", arguments);
+            //XT.log("Error fetching admin user", arguments);
           },
           fetchSuccess = function (userModel, result) {
-            //console.log("0", orgModel);
-            //console.log("1", userModel.get("organizations"));
-            //var c = userModel.get("organizations");
-            //console.log(c);
-            //c.add(orgModel);
-            //console.log(c);
-            //userModel.set({organizations: c});
-            //userModel.get("organizations").add(orgModel);
-            //console.log("2", userModel.get("organizations"));
             userModel.get("organizations").add(userOrgModel);
             userModel.save(null, {success: saveSuccess, error: saveError});
-            //userOrgModel.save(null, {success: saveSuccess, error: saveError, userModel: userModel});
           };
 
         admin.fetch({success: fetchSuccess, error: fetchError});
-
-
       }
     },
 
