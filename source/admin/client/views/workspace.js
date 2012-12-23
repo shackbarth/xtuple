@@ -186,17 +186,28 @@ trailing:true white:true*/
     associateAdminUser: function (orgModel) {
       var admin = new XM.User({id: "admin"}),
         saveError = function () {
-          XT.log("Error saving admin user");
+          XT.log("Error saving admin user", arguments);
         },
         saveSuccess = function (userModel, result) {
-          XT.log("This new organization has been linked to the admin user.");
+          XT.log("This new organization has been linked to the admin user.", arguments);
         },
         fetchError = function () {
           XT.log("Error fetching admin user", arguments);
         },
         fetchSuccess = function (userModel, result) {
-          userModel.get("organizations").add(orgModel);
-          userModel.save(null, {success: saveSuccess, error: saveError});
+          //console.log("0", orgModel);
+          //console.log("1", userModel.get("organizations"));
+          //var c = userModel.get("organizations");
+          //console.log(c);
+          //c.add(orgModel);
+          //console.log(c);
+          //userModel.set({organizations: c});
+          //userModel.get("organizations").add(orgModel);
+          //console.log("2", userModel.get("organizations"));
+          var userOrgModel = new XM.UserOrganization(
+            {user: userModel.get("id"), name: orgModel.get("name"), username: "admin"},
+            {isNew: true, success: saveSuccess, error: saveError});
+          //userModel.save(null, {success: saveSuccess, error: saveError});
         };
 
 
