@@ -8,8 +8,8 @@
   var params = require("./lib/xvows_params");
   exports.xvowsParams = params;
   params.acceptParams("dev", "dev");
-  require("./lib/xvows_init");
-
+  var init = require("./lib/xvows_init");
+  init.initAll();
 
   XVOWS.once("ready", function () {
 

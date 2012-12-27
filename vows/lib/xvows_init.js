@@ -6,12 +6,7 @@ _: true, _fs: true, _path: true, _util:true, vows: true, assert:true, io: true, 
 request: true, process: true, XVOWS: true, ext: true, XM:true, relocate: true, setTimeout: true
 */
 
-(function () {
-
-
-
-
-
+var loadXtDependencies = function () {
 
   //......................................
   // INCLUDE ALL THE NECESSARY XT FRAMEWORK
@@ -42,36 +37,38 @@ request: true, process: true, XVOWS: true, ext: true, XM:true, relocate: true, s
 
   XT.app = {show: X.$P};
 
-  // suppress normal output and pipe to file
-  (function () {
-    "use strict";
-    XVOWS.log = XT.log = function () {
-      var out = XT.$A(arguments).map(function (arg) {
-        return typeof arg === "string" ? arg: _util.inspect(arg, true, 3);
-      }).join('\n');
-      if (XVOWS.outfile && XVOWS.outfile.writable) {
-        XVOWS.outfile.write("%@\n".f(out), "utf8");
-      } else {
-        XVOWS.outfile = _fs.createWriteStream(_path.join(X.basePath, "run.log"), {
-          flags: "a",
-          encoding: "utf8"
-        });
-        XVOWS.outfile.on("error", function (err) {
-          throw err;
-        });
-        XVOWS.outfile.write("\n[ENTRY] started %@\n".f((new Date()).toLocaleString()));
-        // write the first output that caused this to open
-        // the stream to begin with
-        XVOWS.outfile.write("%@\n".f(out));
-      }
-    };
+};
 
-    X.addCleanupTask(function () {
-      if (XVOWS.outfile) {
-        XVOWS.outfile.destroySoon();
-      }
-    });
-  }());
+  // suppress normal output and pipe to file
+var suppressOutput = function () {
+  "use strict";
+  XVOWS.log = XT.log = function () {
+    var out = XT.$A(arguments).map(function (arg) {
+      return typeof arg === "string" ? arg: _util.inspect(arg, true, 3);
+    }).join('\n');
+    if (XVOWS.outfile && XVOWS.outfile.writable) {
+      XVOWS.outfile.write("%@\n".f(out), "utf8");
+    } else {
+      XVOWS.outfile = _fs.createWriteStream(_path.join(X.basePath, "run.log"), {
+        flags: "a",
+        encoding: "utf8"
+      });
+      XVOWS.outfile.on("error", function (err) {
+        throw err;
+      });
+      XVOWS.outfile.write("\n[ENTRY] started %@\n".f((new Date()).toLocaleString()));
+      // write the first output that caused this to open
+      // the stream to begin with
+      XVOWS.outfile.write("%@\n".f(out));
+    }
+  };
+
+  X.addCleanupTask(function () {
+    if (XVOWS.outfile) {
+      XVOWS.outfile.destroySoon();
+    }
+  });
+};
 
   //......................................
   // INCLUDE ALL THE NECESSARY XM FRAMEWORK
@@ -80,6 +77,7 @@ request: true, process: true, XVOWS: true, ext: true, XM:true, relocate: true, s
 
   // LOAD ALL MODELS
   //
+var loadXmDependencies = function () {
   X.getCookie = function () {
     return X.json(XVOWS.details);
   };
@@ -118,8 +116,10 @@ request: true, process: true, XVOWS: true, ext: true, XM:true, relocate: true, s
 
   require(_path.join(X.basePath, "lib/crud.js"));
 
+};
+
   // PROCESS ANY INCOMING ARGS REAL QUICK
-  (function () {
+var processArgs = function () {
     "use strict";
     XVOWS.args = program.tests;
     XVOWS.console = function () {
@@ -130,14 +130,15 @@ request: true, process: true, XVOWS: true, ext: true, XM:true, relocate: true, s
         XVOWS.log(args);
       }
     };
-  }());
+};
 
-  relocate = function () {
-    process.exit();
-  };
+relocate = function () {
+  process.exit();
+};
 
   // replicate the two-step authentication and org-selection process
   // that's done with ajax in the login repository
+var authenticate = function () {
   request.post({uri: "https://localhost/login/authenticate",
       json: true,
       body: {id: program.user, password: program.password}},
@@ -169,5 +170,14 @@ request: true, process: true, XVOWS: true, ext: true, XM:true, relocate: true, s
       X.log("Error on authentication. Is the datasource running?");
     }
   });
+};
 
-}());
+var initAll = function () {
+  loadXtDependencies();
+  suppressOutput();
+  loadXmDependencies();
+  processArgs();
+  authenticate();
+}
+
+exports.initAll = initAll;
