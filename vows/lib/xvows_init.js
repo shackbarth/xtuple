@@ -3,7 +3,7 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, _:true, console:true, X:true, Backbone:true, require:true, DOCUMENT_HOSTNAME:true
 _: true, _fs: true, _path: true, _util:true, vows: true, assert:true, io: true, program: true
-request: true, process: true, XVOWS: true, ext: true, XM:true, relocate: true, setTimeout: true
+request: true, process: true, XVOWS: true, ext: true, XM:true, relocate: true, setTimeout: true, exports: true
 */
 
 //......................................
@@ -34,6 +34,7 @@ var parseCommandLine = function () {
 
 var loadXtDependencies = function () {
 
+  "use strict";
   //......................................
   // INCLUDE ALL THE NECESSARY XT FRAMEWORK
   // DEPENDENCIES
@@ -104,6 +105,7 @@ var suppressOutput = function () {
   // LOAD ALL MODELS
   //
 var loadXmDependencies = function () {
+  "use strict";
   X.getCookie = function () {
     return X.json(XVOWS.details);
   };
@@ -159,12 +161,14 @@ var processArgs = function () {
 };
 
 relocate = function () {
+  "use strict";
   process.exit();
 };
 
   // replicate the two-step authentication and org-selection process
   // that's done with ajax in the login repository
 var authenticate = function () {
+  "use strict";
   request.post({uri: "https://localhost/login/authenticate",
       json: true,
       body: {id: program.user, password: program.password}},
@@ -199,18 +203,20 @@ var authenticate = function () {
 };
 
 var acceptParams = function (user, password) {
+  "use strict";
   program.user = user;
   program.password = password;
 };
 exports.acceptParams = acceptParams;
 
 var initAll = function () {
+  "use strict";
   parseCommandLine();
   loadXtDependencies();
   suppressOutput();
   loadXmDependencies();
   processArgs();
   authenticate();
-}
+};
 
 exports.initAll = initAll;
