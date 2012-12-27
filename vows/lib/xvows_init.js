@@ -161,17 +161,26 @@ var authenticate = function () {
           json: true,
           body: {id: program.user, password: program.password, selected: program.organization}},
           function (selectError, selectResponse, selectBody) {
+        var org;
         if (!selectError && selectResponse.statusCode === 200) {
+          org = _.find(authBody.organizations, function (org) {return org.name === program.organization; });
+          if (!org) {
+            X.log("Invalid organization name");
+            return;
+          }
+
           XVOWS.details = {
             id: program.user,
             sid: authBody.sid,
             lastModified: authBody.lastModified,
             created: authBody.created,
-            username: _.find(authBody.organizations, function (org) {return org.name === program.organization; }).username,
+            username: org.username,
             organization: program.organization,
             organizations: authBody.organizations
           };
           XVOWS.emit("ready");
+        } else {
+          X.log("Error on selection of organization.");
         }
       });
     } else {
