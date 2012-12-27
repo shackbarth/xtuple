@@ -6,31 +6,9 @@ _: true, _fs: true, _path: true, _util:true, vows: true, assert:true, io: true, 
 request: true, process: true, XVOWS: true, ext: true, XM:true, relocate: true, setTimeout: true, exports: true
 */
 
-//......................................
-// COMMAND LINE PARSING
-var parseCommandLine = function () {
-  "use strict";
-  var tests = function (val) {
-    return val.split(" ").map(String);
-  };
-  program
-    .option("--spec", "Use the spec reporter")
-    .option("-t, --tests [tests]", "Specify space-separated string of test names", tests, ["*"])
-    .option("-u, --user [user]", "Global user ID (must be active global user)", "admin@xtuple.com")
-    .option("-P, --password [password]", "Global user password", "")
-    .option("-H, --host [host]", "Datasource hostname/ip", "localhost")
-    .option("-p, --port [port]", "Datasource port", 443, parseInt)
-    .option("-o, --organization [organization]", "Organization to run against", "dev")
-    .parse(process.argv);
-  if (program.spec) {
-    var spec = require(_path.join(X.basePath, "node_modules/vows/lib/vows/reporters/spec"));
-    var suite = require(_path.join(X.basePath, "node_modules/vows/lib/vows/suite")).Suite.prototype;
-    suite.ext_run = suite.run;
-    suite.run = function () {
-      return suite.ext_run.call(this, {reporter: spec});
-    };
-  }
-};
+require("./xt_setup");
+require("./xvows");
+
 
 var loadXtDependencies = function () {
 
@@ -202,16 +180,49 @@ var authenticate = function () {
   });
 };
 
-var acceptParams = function (user, password) {
+
+//......................................
+// COMMAND LINE PARSING
+var parseArgs = function (params) {
   "use strict";
-  program.user = user;
-  program.password = password;
+
+  if (params) {
+    // params passed in programmatically through hash
+    params.user = params.user || "admin@xtuple.com";
+    params.organization = params.organization || "dev";
+    params.host = params.host || "localhost";
+    params.port = params.port || 443;
+    params.tests = params.tests || ['*'];
+
+    X.mixin(program, params);
+    return;
+  }
+  // no hash passed in. Get the params through the CLI arguments.
+
+  var tests = function (val) {
+    return val.split(" ").map(String);
+  };
+  program
+    .option("--spec", "Use the spec reporter")
+    .option("-t, --tests [tests]", "Specify space-separated string of test names", tests, ["*"])
+    .option("-u, --user [user]", "Global user ID (must be active global user)", "admin@xtuple.com")
+    .option("-P, --password [password]", "Global user password", "")
+    .option("-H, --host [host]", "Datasource hostname/ip", "localhost")
+    .option("-p, --port [port]", "Datasource port", 443, parseInt)
+    .option("-o, --organization [organization]", "Organization to run against", "dev")
+    .parse(process.argv);
+  if (program.spec) {
+    var spec = require(_path.join(X.basePath, "node_modules/vows/lib/vows/reporters/spec"));
+    var suite = require(_path.join(X.basePath, "node_modules/vows/lib/vows/suite")).Suite.prototype;
+    suite.ext_run = suite.run;
+    suite.run = function () {
+      return suite.ext_run.call(this, {reporter: spec});
+    };
+  }
 };
-exports.acceptParams = acceptParams;
 
 var initAll = function () {
   "use strict";
-  parseCommandLine();
   loadXtDependencies();
   suppressOutput();
   loadXmDependencies();
@@ -219,4 +230,5 @@ var initAll = function () {
   authenticate();
 };
 
+exports.parseArgs = parseArgs;
 exports.initAll = initAll;

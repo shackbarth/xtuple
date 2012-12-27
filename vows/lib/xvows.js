@@ -208,4 +208,14 @@ request: true, process: true, XVOWS: true, ext: true, XM:true, relocate: true, s
     nexted: null
   });
 
+  XVOWS.once("ready", function () {
+
+    XT.dataSource.datasourceUrl = program.host;
+    XT.dataSource.datasourcePort = program.port;
+
+    XT.dataSource.connect(function () {
+      XT.getStartupManager().registerCallback(_.bind(XVOWS.begin, XVOWS));
+    });
+
+  });
 }());
