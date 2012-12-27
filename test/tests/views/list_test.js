@@ -24,7 +24,7 @@ trailing:true white:true*/
         list = this.$.list,
         mockModel = {
           fetch: function (options) {
-            setTimeout(function () options.success(), options.waitTime);
+            setTimeout(options.success, options.waitTime);
           }
         },
         options = {};
@@ -45,7 +45,7 @@ trailing:true white:true*/
 
       // if the success method of the first call hasn't complained within 300ms,
       // then it has been suppressed, and the test should pass
-      setTimeout(function () that.finish(), 300);
+      setTimeout(that.finish, 300);
     }
   });
 }());
