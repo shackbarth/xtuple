@@ -11,7 +11,6 @@ request: true, process: true, XVOWS: true, ext: true, XM:true, relocate: true, s
 
   // native
   _fs             = X.fs;
-  _path           = X.path;
   _util           = X.util;
 
   // third-party
@@ -19,7 +18,6 @@ request: true, process: true, XVOWS: true, ext: true, XM:true, relocate: true, s
   assert              = require("assert");
   _                   = require("underscore");
   io                  = require("socket.io-client");
-  program             = require("commander");
   request             = require("request");
   require("tinycolor"); /*tinycolor*/
   Backbone = require("backbone");
@@ -27,35 +25,6 @@ request: true, process: true, XVOWS: true, ext: true, XM:true, relocate: true, s
 
   DOCUMENT_HOSTNAME = "";
 
-  //......................................
-  // COMMAND LINE PARSING
-  (function () {
-    "use strict";
-    var tests = function (val) {
-      return val.split(" ").map(String);
-    };
-    program
-      .option("--spec", "Use the spec reporter")
-      .option("-t, --tests [tests]", "Specify space-separated string of test names", tests, ["*"])
-      .option("-u, --user [user]", "Global user ID (must be active global user)", "admin@xtuple.com")
-      .option("-P, --password [password]", "Global user password", "")
-      .option("-H, --host [host]", "Datasource hostname/ip", "localhost")
-      .option("-p, --port [port]", "Datasource port", 443, parseInt)
-      .option("-o, --organization [organization]", "Organization to run against", "dev")
-      .parse(process.argv);
-    if (process.argv.length <= 2) {
-      program.parse([process.argv[0], process.argv[1], '--help']);
-      process.exit(0);
-    }
-    if (program.spec) {
-      var spec = require(_path.join(X.basePath, "node_modules/vows/lib/vows/reporters/spec"));
-      var suite = require(_path.join(X.basePath, "node_modules/vows/lib/vows/suite")).Suite.prototype;
-      suite.ext_run = suite.run;
-      suite.run = function () {
-        return suite.ext_run.call(this, {reporter: spec});
-      };
-    }
-  }());
 
   var sessionCache, userCache, K, sid, k, user, username, organization, details, tmp;
 
