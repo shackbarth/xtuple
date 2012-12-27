@@ -5,9 +5,9 @@
 
   require("./lib/xt_setup");
   require("./lib/xvows");
-  var params = require("./lib/xvows_params");
-  exports.xvowsParams = params;
-  params.acceptParams("dev", "dev");
+  //var params = require("./lib/xvows_params");
+  //exports.xvowsParams = params;
+  //params.acceptParams("dev", "dev");
   var init = require("./lib/xvows_init");
   init.initAll();
 

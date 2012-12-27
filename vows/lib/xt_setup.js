@@ -7,6 +7,7 @@
   // native
   _fs             = X.fs;
   _util           = X.util;
+  _path               = X.path;
 
   // third-party
   vows                = require("vows");
@@ -14,6 +15,7 @@
   _                   = require("underscore");
   io                  = require("socket.io-client");
   request             = require("request");
+  program             = require("commander");
   require("tinycolor"); /*tinycolor*/
   Backbone = require("backbone");
   require("backbone-relational");
