@@ -180,11 +180,11 @@ var authenticate = function () {
           };
           XVOWS.emit("ready");
         } else {
-          X.log("Error on selection of organization.");
+          X.log("Error on selection of organization.", selectError);
         }
       });
     } else {
-      X.log("Error on authentication. Is the datasource running?");
+      X.log("Error on authentication. Is the datasource running?", authError);
     }
   });
 };
