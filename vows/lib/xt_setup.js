@@ -4,6 +4,21 @@
   // to certain tools and convenience mechanisms
   require("xt");
 
+  // native
+  _fs             = X.fs;
+  _util           = X.util;
+
+  // third-party
+  vows                = require("vows");
+  assert              = require("assert");
+  _                   = require("underscore");
+  io                  = require("socket.io-client");
+  request             = require("request");
+  require("tinycolor"); /*tinycolor*/
+  Backbone = require("backbone");
+  require("backbone-relational");
+
+  DOCUMENT_HOSTNAME = "";
   // setup the framework to use only what we need...
   X.setup({
     autoStart: true,

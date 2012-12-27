@@ -4,9 +4,10 @@
   "use strict";
 
   require("./lib/xt_setup");
+  require("./lib/xvows");
   var params = require("./lib/xvows_params");
   exports.xvowsParams = params;
-  //params.acceptParams("dev", "dev");
+  params.acceptParams("dev", "dev");
   require("./lib/xvows_init");
 
 
