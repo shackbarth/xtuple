@@ -1044,4 +1044,10 @@ trailing:true white:true*/
     kind: "XV.NameDescriptionList",
     collection: "XM.UserAccountRoleCollection"
   });
+  
+  enyo.kind({
+    name: "XV.CharacteristicList",
+    kind: "XV.NameDescriptionList",
+    collection: "XM.CharacteristicCollection"
+  });
 }());
