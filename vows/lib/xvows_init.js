@@ -195,22 +195,23 @@ var authenticate = function () {
 var parseArgs = function (params) {
   "use strict";
 
+  var tests = function (val) {
+    return val.split(" ").map(String);
+  };
+
   if (params) {
     // params passed in programmatically through hash
     params.user = params.user || "admin@xtuple.com";
     params.organization = params.organization || "dev";
     params.host = params.host || "localhost";
     params.port = params.port || 443;
-    params.tests = params.tests || ['*'];
+    params.tests = tests(params.tests || '*');
 
     X.mixin(program, params);
     return;
   }
   // no hash passed in. Get the params through the CLI arguments.
 
-  var tests = function (val) {
-    return val.split(" ").map(String);
-  };
   program
     .option("--spec", "Use the spec reporter")
     .option("-t, --tests [tests]", "Specify space-separated string of test names", tests, ["*"])
