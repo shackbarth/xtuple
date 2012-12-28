@@ -62,8 +62,7 @@ trailing:true white:true*/
         options = {
           success: function (result) {
             // TODO: application-wide messaging?!
-            if (!result.password) {
-              // if the password is not passed back it means it was sent successfully to the user
+            if (result.emailSuccess) {
               alert("An e-mail with the new password has been sent to " + that.getValue().id);
             } else {
               // the emailer must have failed.
@@ -80,6 +79,12 @@ trailing:true white:true*/
       if (this.$.resetPasswordPopup) {
         this.$.resetPasswordPopup.hide();
       }
+
+      if (this.getValue().status === XM.Model.READY_DIRTY) {
+        alert("Please save/apply changes before resetting the password.");
+        return;
+      }
+
       XT.dataSource.resetPassword(this.getValue().id, options);
     },
     /**
