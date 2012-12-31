@@ -345,21 +345,21 @@ X = {};
       return json ? json : undefined;
     },
 
-    cleanup: function () {
+    cleanup: function (isError) {
       var queue = this.cleanupQueue || [], task;
       X.cleaningUp = true;
       if (X.cleanedUp) return false;
       if (queue.length <= 0) {
-        X.log("All done. See ya.");
+        X.log("Exiting with status code = ", isError ? 1 : 0);
         X.cleanedUp = true;
-        process.exit(0);
+        process.exit(isError ? 1 : 0);
       }
       task = queue.shift();
       if (task) {
         // TODO: come back and do the elaborate check if it
         // is taking too long test so that it won't hang if
         // a cleanup task fails
-        task.once("isComplete", _.bind(this.cleanup, this));
+        task.once("isComplete", _.bind(this.cleanup, this, isError));
         task.exec();
       }
     },
