@@ -158,19 +158,22 @@ request: true, process: true, XVOWS: true, ext: true, XM:true, relocate: true, s
 
     finish: function () {
       "use strict";
+      var suiteResults, brokenVows;
 
       this.console("testing finished");
       if (XVOWS.statusCallback) {
-        var suiteResults = _.map(vows.suites, function (suite) {
+        suiteResults = _.map(vows.suites, function (suite) {
           return suite.results;
         });
         XVOWS.statusCallback(suiteResults);
       }
-
-      // XXX: unfortunately, node-xt always exits with status zero. Really we'd like to control
-      // that. Pertinent code in xt.js and foundation/foundation.js. I added a statusCallback
-      // as an alternate means of communicating back if the tests succeeded.
-      process.emit("SIGINT"); // let the log cleanup
+      brokenVows = _.reduce(vows.suites, function (memo, suite) {
+        return memo + suite.results.total - suite.results.honored;
+      }, 0);
+      // As a workaround we use the convention in node-xt that a sigkill signal should
+      // exit with a code of 1 (error) and anything else should exit with an exit
+      // code of 0 (normal)
+      brokenVows === 0 ? process.emit("SIGINT") : process.emit("SIGKILL"); // let the log cleanup
     },
 
     next: function (waited) {
