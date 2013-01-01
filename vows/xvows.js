@@ -11,7 +11,7 @@
 The node script in Jenkins looks like this:
 
   var init = require("/home/shackbarth/Devel/git/client/vows/lib/xvows_init");
-  init.parseArgs({user: "dev", password: "dev", tests: "address.js"});
+  init.parseArgs({user: "dev", password: "dev"});
 
   X.basePath = "/home/shackbarth/Devel/git/client/vows";
   XVOWS.statusCallback = function (status) {
