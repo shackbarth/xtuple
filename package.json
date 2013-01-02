@@ -14,7 +14,16 @@
     "backbone-relational":"0.6.0",
     "orm": "git://github.com/xtuple/orm.git#master",
     "tools": "git://github.com/xtuple/tools.git#master",
-    "backbone-x": "git://github.com/xtuple/backbone-x.git#master"
+    "backbone-x": "git://github.com/xtuple/backbone-x.git#master",
+    "ejs": "0.8.x",
+    "express": "3.x.x",
+    "oauth2orize": "0.x.x",
+    "passport": "~0.1.15",
+    "passport-local": "0.1.x",
+    "passport-http": "0.2.x",
+    "passport-http-bearer": "0.2.x",
+    "passport-oauth2-client-password": "0.1.x",
+    "connect-ensure-login": "0.1.x"
   },
   "devDependencies": {},
   "optionalDependencies": {},
