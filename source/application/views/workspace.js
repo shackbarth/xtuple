@@ -1030,7 +1030,6 @@ trailing:true white:true*/
     kind: "XV.Workspace",
     title: "_characteristic".loc(),
     model: "XM.Characteristic",
-    //headerAttrs: ["number", "-", "name"],
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -1039,13 +1038,19 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.AccountTypePicker", attr: "type"},
+            {kind: "XV.CharacteristicTypePicker", attr: "characteristicType"},
             {kind: "XV.CheckboxWidget", attr: "isSearchable"},
             {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isAddresses"},
+            {kind: "XV.ToggleButtonWidget", attr: "isContacts"},
+            {kind: "XV.ToggleButtonWidget", attr: "isAccounts"},
+            {kind: "XV.ToggleButtonWidget", attr: "isItems"},
+            {kind: "XV.ToggleButtonWidget", attr: "isIncidents"},
+            {kind: "XV.ToggleButtonWidget", attr: "isOpportunities"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true},
             {kind: "onyx.GroupboxHeader", content: "_advanced".loc()},
-            {kind: "XV.InputWidget", attr: "inputMask"},
+            {kind: "XV.InputWidget", attr: "mask"},
             {kind: "XV.InputWidget", attr: "validator"}
           ]}
         ]},

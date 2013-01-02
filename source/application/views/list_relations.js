@@ -46,6 +46,30 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // CHARACTERISTIC
+  //
+
+  enyo.kind({
+    name: "XV.CharacteristicOptionListRelations",
+    kind: "XV.ListRelations",
+    orderBy: [
+      {attribute: 'order', descending: true}
+    ],
+    workspace: "XV.CharacteristicWorkspace",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "value", classes: "bold"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+ // ..........................................................
   // PROJECT
   //
 

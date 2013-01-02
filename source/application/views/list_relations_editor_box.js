@@ -4,6 +4,32 @@ trailing:true white:true*/
 /*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true */
 
 (function () {
+  
+   // ..........................................................
+   // CHARACTERISTIC
+   //
+   enyo.kind({
+     name: "XV.CharacteristicOptionEditor",
+     kind: "XV.RelationsEditor",
+     components: [
+       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+         classes: "in-panel", components: [
+         {kind: "XV.InputWidget", attr: "value"},
+         {kind: "XV.InputWidget", attr: "order"}
+       ]}
+     ]
+   });
+
+   enyo.kind({
+     name: "XV.CharacteristicOptionBox",
+     kind: "XV.ListRelationsEditorBox",
+     classes: "xv-project-tasks-box",
+     title: "_options".loc(),
+     editor: "XV.CharacteristicOptionEditor",
+     parentKey: "characteristic",
+     listRelations: "XV.CharacteristicOptionListRelations",
+     fitButtons: false
+   });
 
   // ..........................................................
   // PROJECT

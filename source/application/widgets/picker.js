@@ -208,4 +208,14 @@ regexp:true, undef:true, trailing:true, white:true */
     ]
   });
   
+  // ..........................................................
+  // CHARACTERISTIC TYPE
+  //
+
+  enyo.kind({
+    name: "XV.CharacteristicTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.characteristicTypes"
+  });
+  
 }());
