@@ -3,18 +3,28 @@
 (function () {
   "use strict";
 
-  require("./lib/xt_setup");
-  require("./lib/xvows_init");
+  var init = require("./lib/xvows_init");
+  init.parseArgs(/*{user: "dev", password: "dev"}*/);
+  init.initAll();
 
-  XVOWS.once("ready", function () {
+/*
+The node script in Jenkins looks like this:
 
-    XT.dataSource.datasourceUrl = program.host;
-    XT.dataSource.datasourcePort = program.port;
+  var init = require("/home/shackbarth/Devel/git/client/vows/lib/xvows_init");
+  init.parseArgs({user: "dev", password: "dev"});
 
-    XT.dataSource.connect(function () {
-      XT.getStartupManager().registerCallback(_.bind(XVOWS.begin, XVOWS));
-    });
+  X.basePath = "/home/shackbarth/Devel/git/client/vows";
+  XVOWS.statusCallback = function (status) {
+    var brokenVows = _.reduce(status, function (memo, status) {
+      return memo + status.total - status.honored;
+    }, 0);
 
-  });
+    console.log("Status is", status);
+    console.log("Broken vow count", brokenVows);
+
+  }
+  init.initAll();
+
+*/
 
 }());
