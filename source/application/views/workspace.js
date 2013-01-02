@@ -1038,15 +1038,19 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.CharacteristicTypePicker", attr: "characteristicType"},
+            //{kind: "XV.CharacteristicTypePicker", attr: "characteristicType"},
+            {kind: "XV.InputWidget", attr: "characteristicType"},
             {kind: "XV.CheckboxWidget", attr: "isSearchable"},
             {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
-            {kind: "XV.ToggleButtonWidget", attr: "isAddresses"},
-            {kind: "XV.ToggleButtonWidget", attr: "isContacts"},
-            {kind: "XV.ToggleButtonWidget", attr: "isAccounts"},
-            {kind: "XV.ToggleButtonWidget", attr: "isItems"},
-            {kind: "XV.ToggleButtonWidget", attr: "isIncidents"},
-            {kind: "XV.ToggleButtonWidget", attr: "isOpportunities"},
+            {kind: "XV.ToggleButtonWidget", attr: "isAddresses", label: "_address".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isContacts", label: "_contact".loc()},
+            // customer?
+            {kind: "XV.ToggleButtonWidget", attr: "isAccounts", label: "_crmAccount".loc()},
+            // employee?
+            {kind: "XV.ToggleButtonWidget", attr: "isIncidents", label: "_incident".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isItems", label: "_item".loc()},
+            // lot/serial?
+            {kind: "XV.ToggleButtonWidget", attr: "isOpportunities", label: "_opportunity".loc()},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true},
             {kind: "onyx.GroupboxHeader", content: "_advanced".loc()},
@@ -1054,8 +1058,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "validator"}
           ]}
         ]},
-        {kind: "XV.AccountContactsBox", attr: "options"}
-        //{kind: "XV.CharacteristicOptionsBox, attr: "options"}
+        {kind: "XV.CharacteristicOptionBox", attr: "options"}
       ]}
     ]
   });
