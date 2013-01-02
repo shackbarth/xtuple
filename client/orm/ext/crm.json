@@ -2,66 +2,6 @@
   {
     "context": "crm",
     "nameSpace": "XM",
-    "type": "Account",
-    "table": "crmacct",
-    "isExtension": true,
-    "comment": "Extended by Crm",
-    "relations": [
-      {
-        "column": "crmacct_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
-      {
-        "name": "opportunities",
-        "toMany": {
-          "isNested": true,
-          "type": "AccountOpportunity",
-          "column": "crmacct_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "toDos",
-        "toMany": {
-          "isNested": true,
-          "type": "AccountToDo",
-          "column": "crmacct_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "incidentRelations",
-        "toMany": {
-          "type": "IncidentRelation",
-          "column": "crmacct_id",
-          "inverse": "account"
-        }
-      },
-      {
-        "name": "opportunityRelations",
-        "toMany": {
-          "type": "OpportunityRelation",
-          "column": "crmacct_id",
-          "inverse": "account"
-        }
-      },
-      {
-        "name": "toDoRelations",
-        "toMany": {
-          "type": "ToDoRelation",
-          "column": "crmacct_id",
-          "inverse": "account"
-        }
-      }
-    ],
-    "sequence": 0,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
     "type": "AccountOpportunity",
     "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
@@ -189,6 +129,38 @@
       }
     ],
     "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "crm",
+    "nameSpace": "XM",
+    "type": "Characteristic",
+    "table": "char",
+    "isExtension": true,
+    "comment": "Extended by Crm",
+    "relations": [
+      {
+        "column": "char_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "isIncidents",
+        "attr": {
+          "type": "Boolean",
+          "column": "char_incidents"
+        }
+      },
+      {
+        "name": "isOpportunities",
+        "attr": {
+          "type": "Boolean",
+          "column": "char_opportunity"
+        }
+      }
+    ],
+    "sequence": 0,
     "isSystem": true
   },
   {
@@ -461,6 +433,33 @@
   {
     "context": "crm",
     "nameSpace": "XM",
+    "type": "Customer",
+    "table": "crmacct",
+    "isExtension": true,
+    "comment": "Extended by CRM",
+    "relations": [
+      {
+        "column": "crmacct_cust_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "account",
+        "toOne": {
+          "isNested": true,
+          "type": "Account",
+          "column": "crmacct_id",
+		  "inverse": "id"
+        }
+      }
+	],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "crm",
+    "nameSpace": "XM",
     "type": "Incident",
     "table": "incdt",
     "isExtension": true,
@@ -496,38 +495,6 @@
           "type": "ToDoRelation",
           "column": "incdt_id",
           "inverse": "incident"
-        }
-      }
-    ],
-    "sequence": 0,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
-    "type": "Characteristic",
-    "table": "char",
-    "isExtension": true,
-    "comment": "Extended by Crm",
-    "relations": [
-      {
-        "column": "char_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
-      {
-        "name": "isIncidents",
-        "attr": {
-          "type": "Boolean",
-          "column": "char_incidents"
-        }
-      },
-      {
-        "name": "isOpportunities",
-        "attr": {
-          "type": "Boolean",
-          "column": "char_opportunity"
         }
       }
     ],
