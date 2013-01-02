@@ -23,6 +23,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       certFile: "./lib/private/server.crt",
       caFile: null,
       saltFile: "./lib/private/salt.txt",
+      psqlPath: "psql",
+      psqlUser: "admin",
 
       // these properties are dynamically registered with the
       // node discovery service
