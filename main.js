@@ -80,7 +80,7 @@ _ = require("underscore");
     schema = true;
     sessionObjectLoaded();
   };
-  schemaOptions.success = function () {
+  privsOptions.success = function () {
     privs = true;
     sessionObjectLoaded();
   };
