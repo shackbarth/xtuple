@@ -5,6 +5,7 @@ select xt.install_guiscript('user',  $$
 var userResult;
 var params = new Object();
 var _userTextField = mywindow.findChild("_username");
+var _enhancedAuth = mywindow.findChild('_enhancedAuth');
 var _setParams = { mode: "view" };
 var _canEdit = true;
 var _controls = [
@@ -37,7 +38,10 @@ _userTextField.textChanged.connect(checkMobile);
 
 function showEvent(e) {
   var control;
-  if (!_canEdit) { 
+  if (_canEdit) {
+    _enhancedAuth.setChecked(true);
+    _enhancedAuth.setEnabled(false); 
+  } else {
     for (i = 0; i < _controls.length; i++) {
       control = mywindow.findChild(_controls[i]);
       if (control) {control.setEnabled(false)};
