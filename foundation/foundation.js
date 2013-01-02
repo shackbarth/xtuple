@@ -26,7 +26,6 @@ X = {};
   _     = X._    = require("underscore");
 
   X.util         = require("util");
-  X.http         = require("http");
   X.https        = require("https");
   X.url          = require("url");
   X.crypto       = require("crypto");
