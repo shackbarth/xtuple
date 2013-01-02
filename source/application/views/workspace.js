@@ -1020,5 +1020,41 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.UserAccountRole", "XV.UserAccountRoleWorkspace");
   XV.registerModelWorkspace("XM.UserAccountRoleRelation", "XV.UserAccountRoleWorkspace");
   XV.registerModelWorkspace("XM.UserAccountRoleListItem", "XV.UserAccountRoleWorkspace");
+  
+  // ..........................................................
+  // CHARACTERISTIC
+  //
+  
+  enyo.kind({
+    name: "XV.CharacteristicWorkspace",
+    kind: "XV.Workspace",
+    title: "_characteristic".loc(),
+    model: "XM.Characteristic",
+    //headerAttrs: ["number", "-", "name"],
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.AccountTypePicker", attr: "type"},
+            {kind: "XV.CheckboxWidget", attr: "isSearchable"},
+            {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true},
+            {kind: "onyx.GroupboxHeader", content: "_advanced".loc()},
+            {kind: "XV.InputWidget", attr: "inputMask"},
+            {kind: "XV.InputWidget", attr: "validator"}
+          ]}
+        ]},
+        {kind: "XV.AccountContactsBox", attr: "options"}
+        //{kind: "XV.CharacteristicOptionsBox, attr: "options"}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.Characteristic", "XV.CharacteristicWorkspace");
 
 }());
