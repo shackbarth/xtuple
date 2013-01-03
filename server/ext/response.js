@@ -163,6 +163,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }.property(),
 
     debug: function (message) {
+      if (!X.debugging) return;
       this.get("socket").emit("debug", {message: message});
     },
 
