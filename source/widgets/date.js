@@ -222,10 +222,18 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     /**
      @todo Document valueChanged method.
-     */ 
+     */
     valueChanged: function (value) {
       var dateValue = value;
       value = XV.Date.prototype.valueChanged.call(this, value);
+      if (!this.$.input.value && this.$.input.attributes.value) {
+        // XXX workaround for incident 19171. Something deep into enyo's
+        // setters are causing the attributes value to be updated when
+        // a value is entered but not updated when the empty string is
+        // entered. Seems to only affect date widgets due to the complicated
+        // two-step of turning a inputted value into an actual date.
+        this.$.input.attributes.value = "";
+      }
       this.$.datePick.setValue(value ? dateValue : new Date());
       this.$.datePick.render();
     }
