@@ -4,27 +4,27 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 (function () {
   "use strict";
-  
+
   var _ = X._;
-  
+
   X.colors = require("colors");
-  
+
   require("./ext/string_buffer");
 
   X.io = X.Object.create({
-  
+
     out: function () {
       return this.stdout;
     },
-    
+
     buff: function () {
       return X.StringBuffer.create();
     },
-    
+
     timestamp: function () {
       return (new Date()).toISOString();
     },
-    
+
     log: function () {
       var args = X.$A(arguments), buff = this.buff(), flushed;
       buff.set("color", "grey");
@@ -33,7 +33,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       flushed = this.console.apply(this, args);
       this.hook("log", flushed);
     },
-    
+
     warn: function () {
       var args = X.$A(arguments), buff = this.buff(), flushed;
       buff.set("color", "yellow");
@@ -42,7 +42,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       flushed = this.console.apply(this, args);
       this.hook("warn", flushed);
     },
-    
+
     err: function () {
       var args = X.$A(arguments), buff = this.buff(), flushed;
       buff.set("color", "red");
@@ -51,7 +51,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       flushed = this.console.apply(this, args);
       this.hook("err", flushed);
     },
-    
+
+    // note: this doesn't get used for websocket debugging in node-datasource
     debug: function () {
       var args, buff, flushed;
       if (!X.debugging) return;
@@ -63,7 +64,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       flushed = this.console.apply(this, args);
       this.hook("debug", flushed);
     },
-    
+
     addHook: function (targets, hook) {
       var hooks = this.hooks || (this.hooks = {}), target, i = 0;
       if (X.none(hook) || X.typeOf(hook) !== X.T_FUNCTION) return;
@@ -73,14 +74,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         if (hooks[target]) hooks[target].push(hook);
       }
     },
-    
+
     hook: function (which, content) {
       var hooks = this.hooks[which], i;
       if (X.none(hooks)) return;
       i = hooks.length;
       while (--i > 0) hooks[i](content);
     },
-    
+
     console: function () {
       var args = X.$A(arguments), buff = args.shift(),
           i = 0, out = this.out(), flushed;
@@ -90,7 +91,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       out.write(flushed.color + "\n");
       return flushed;
     },
-    
+
     inspectArray: function () {
       var args = X.$A(arguments), i = 0;
       for (; i < args.length; ++i)
@@ -98,19 +99,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           args[i] = X.util.inspect(args[i]).trim();
       return args;
     },
-    
+
     hooks: {
       log: [],
       warn: [],
       debug: [],
       err: []
     },
-    
+
     stdout: process.stdout,
-    
+
     className: "X.io"
   });
-  
+
   X.log      = _.bind(X.io.log, X.io);
   X.debug    = _.bind(X.io.debug, X.io);
   X.err      = _.bind(X.io.err, X.io);
