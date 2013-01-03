@@ -3,5 +3,6 @@ enyo.depends(
   "en",
   "widgets",
   "views",
+  "app.js",
   "stylesheets/screen.css"
 );

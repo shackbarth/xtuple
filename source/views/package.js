@@ -11,5 +11,8 @@ enyo.depends(
   "assignment_box.js",
   "documents_box.js",
   "screen_carousel.js",
-  "search.js"
+  "search.js",
+  "pullout.js",
+  "my_account_popup.js",
+  "module_container.js"
 );

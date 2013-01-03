@@ -11,12 +11,12 @@ trailing:true white:true*/
     @name XV.Navigator
     @class Contains a set of panels for navigating the app and modules within the app.<br />
     Navigation within the app is accomplished by elements within the menu tool bar, such as history, search, the back button or logout.<br />
-	Navigation within modules in the app is accomplished with a list within the panel menu which displays the menu items for each context.<br /> 
+	Navigation within modules in the app is accomplished with a list within the panel menu which displays the menu items for each context.<br />
 	The root menu (module menu) contains the list of modules and the logout.<br />
-	Only three menus are cached at one time.<br />	
+	Only three menus are cached at one time.<br />
 	Layout: Collapsing Arranger.<br />
     Use to implement the high-level container of all business object lists.<br />
-    Derived from <a href="http://enyojs.com/api/#enyo.Panels">enyo.Panels</a>. 
+    Derived from <a href="http://enyojs.com/api/#enyo.Panels">enyo.Panels</a>.
     @extends enyo.Panels
    */
   enyo.kind(/** @lends XV.Navigator# */{
@@ -52,23 +52,23 @@ trailing:true white:true*/
     components: [
       {kind: "FittableRows", classes: "left", components: [
         {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
-	          {kind: "onyx.Button", name: "backButton", content: "_logout".loc(),
-	            ontap: "backTapped"},
-	          {kind: "Group", name: "iconButtonGroup", tag: null, components: [
-	        	{kind: "XV.IconButton", name: "historyIconButton",
-	             src: "lib/enyo-x/assets/menu-icon-bookmark.png",
-	             ontap: "showHistory", content: "_history".loc()},
-	        	{kind: "XV.IconButton", name: "searchIconButton",
-	             src: "lib/enyo-x/assets/menu-icon-search.png",
-	             ontap: "showParameters", content: "_advancedSearch".loc(), showing: false}
-          	]},
+          {kind: "onyx.Button", name: "backButton", content: "_logout".loc(),
+              ontap: "backTapped"},
+          {kind: "Group", name: "iconButtonGroup", tag: null, components: [
+            {kind: "XV.IconButton", name: "historyIconButton",
+               src: "lib/enyo-x/assets/menu-icon-bookmark.png",
+               ontap: "showHistory", content: "_history".loc()},
+            {kind: "XV.IconButton", name: "searchIconButton",
+               src: "lib/enyo-x/assets/menu-icon-search.png",
+               ontap: "showParameters", content: "_advancedSearch".loc(), showing: false}
+          ]},
           {kind: "onyx.MenuDecorator", style: "margin: 0;", onSelect: "actionSelected", components: [
-			      {kind: "XV.IconButton", src: "lib/enyo-x/assets/menu-icon-gear.png", 
+            {kind: "XV.IconButton", src: "lib/enyo-x/assets/menu-icon-gear.png",
 							content: "_actions".loc()},
             {kind: "onyx.Menu", components: [
               {name: "exportItem", content: "_export".loc(), showing: false},
               {name: "myAccountItem", content: "_myAccount".loc()},
-              {name: "helpItem", content: "_help".loc(), showing: false}
+              {name: "helpItem", content: "_help".loc()}
             ]}
           ]},
           {kind: "onyx.Popup", name: "logoutPopup", centered: true,
@@ -82,15 +82,16 @@ trailing:true white:true*/
               classes: "onyx-blue xv-popup-button"}
           ]}
         ]},
+        {name: "loginInfo", content: "", classes: "xv-navigator-header"},
         {name: "menuPanels", kind: "Panels", draggable: false, fit: true,
           margin: 0, components: [
           {name: "moduleMenu", kind: "List", touch: true,
-              onSetupItem: "setupModuleMenuItem",
+              onSetupItem: "setupModuleMenuItem", ontap: "menuTap",
               components: [
             {name: "moduleItem", classes: "item enyo-border-box"}
           ]},
           {name: "panelMenu", kind: "List", touch: true,
-             onSetupItem: "setupPanelMenuItem", components: [
+             onSetupItem: "setupPanelMenuItem", ontap: "panelTap", components: [
             {name: "listItem", classes: "item enyo-border-box"}
           ]},
           {} // Why do panels only work when there are 3+ objects?
@@ -98,28 +99,27 @@ trailing:true white:true*/
       ]},
       {kind: "FittableRows", components: [
 				// the onyx-menu-toolbar class keeps the popups from being hidden
-	      {kind: "onyx.MoreToolbar", name: "contentToolbar", 
-					classes: "onyx-menu-toolbar", movedClass: "xv-toolbar-moved",
-					components: [
-		        {kind: "onyx.Grabber"}, 
-		        {name: "rightLabel", style: "width: 100px"},
-					// The MoreToolbar is a FittableColumnsLayout, so this spacer takes up all available space
-					{name: "spacer", content: "", fit: true},
-	        {name: "newButton", kind: "XV.IconButton",
-		      	src: "lib/enyo-x/assets/menu-icon-new.png", content: "_new".loc(),
-		        ontap: "newRecord", showing: false},
-	        {name: "refreshButton", kind: "XV.IconButton",
-		        src: "lib/enyo-x/assets/menu-icon-refresh.png", content: "_refresh".loc(),
-		        ontap: "requery", showing: false},
-	        {name: "search", kind: "onyx.InputDecorator", 
-	          showing: false, components: [
-	        	{name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
-	             placeholder: "_search".loc(), onchange: "inputChanged"},
-	          {kind: "Image", src: "lib/enyo-x/assets/search-input-search.png",
-	             name: "searchJump", ontap: "jump"}
-	        	]}
-		      ]},
-        {name: "header", content: "", classes: "xv-navigator-header"},
+        {kind: "onyx.MoreToolbar", name: "contentToolbar",
+          classes: "onyx-menu-toolbar", movedClass: "xv-toolbar-moved", components: [
+          {kind: "onyx.Grabber"},
+          {name: "rightLabel", style: "width: 180px"},
+          // The MoreToolbar is a FittableColumnsLayout, so this spacer takes up all available space
+          {name: "spacer", content: "", fit: true},
+          {name: "newButton", kind: "XV.IconButton",
+            src: "lib/enyo-x/assets/menu-icon-new.png", content: "_new".loc(),
+            ontap: "newRecord", showing: false},
+          {name: "refreshButton", kind: "XV.IconButton",
+            src: "lib/enyo-x/assets/menu-icon-refresh.png", content: "_refresh".loc(),
+            ontap: "requery", showing: false},
+          {name: "search", kind: "onyx.InputDecorator",
+            showing: false, components: [
+            {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
+              placeholder: "_search".loc(), onchange: "inputChanged"},
+            {kind: "Image", src: "lib/enyo-x/assets/search-input-search.png",
+              name: "searchJump", ontap: "jump"}
+          ]}
+        ]},
+        {name: "header", content: "", classes: ""},
         {name: "contentPanels", kind: "Panels", margin: 0, fit: true,
           draggable: false, panelCount: 0},
         {kind: "onyx.Popup", name: "errorPopup", centered: true,
@@ -142,6 +142,9 @@ trailing:true white:true*/
       {
       case 'exportItem':
         this.exportList();
+        break;
+      case 'helpItem':
+        this.showHelp();
         break;
       case 'myAccountItem':
         this.showMyAccount();
@@ -205,7 +208,7 @@ trailing:true white:true*/
     closeLogoutPopup: function () {
       this.$.logoutPopup.hide();
     },
-    getSelectedModule: function (index) {
+    getSelectedModule: function () {
       return this._selectedModule;
     },
     /**
@@ -233,7 +236,7 @@ trailing:true white:true*/
      */
     fetch: function (options) {
       options = options ? _.clone(options) : {};
-      var index = options.index || this.$.contentPanels.getIndex(),
+      var index = this.$.contentPanels.getIndex(),
         list = this.$.contentPanels.getPanels()[index],
         name = list ? list.name : "",
         query,
@@ -242,10 +245,9 @@ trailing:true white:true*/
         parameters,
         filterDescription;
       if (list instanceof XV.List === false) { return; }
-      this.fetched[index] = true;
       query = list.getQuery() || {};
       input = this.$.searchInput.getValue();
-      parameterWidget = XT.app ? XT.app.getPullout().getItem(name) : null;
+      parameterWidget = XT.app ? XT.app.$.pullout.getItem(name) : null;
       parameters = parameterWidget ? parameterWidget.getParameters() : [];
       options.showMore = _.isBoolean(options.showMore) ?
         options.showMore : false;
@@ -340,7 +342,7 @@ trailing:true white:true*/
          model;
       if (this._busy  || !input || !key) { return; }
       this._busy = true;
-      
+
       // First find a matching id
       options.success = function (id) {
         var options = {};
@@ -371,6 +373,9 @@ trailing:true white:true*/
       };
       input = upper ? input.toUpperCase() : input;
       Klass.findExisting(key, input, options);
+    },
+    loginInfo: function () {
+      return this.$.loginInfo;
     },
     /**
       Actually logs the user out if they confirm that's what they want to do.
@@ -492,7 +497,7 @@ trailing:true white:true*/
         module = this.getSelectedModule(),
         panelIndex = module && module.panels ? module.panels[index].index : -1,
         panelStatus = module && module.panels ? module.panels[index].status : 'unknown',
-        panel,// = panelIndex > -1 ? this.$.contentPanels.getPanels()[panelIndex] : null,
+        panel,
         label,
         collection,
         model,
@@ -502,11 +507,6 @@ trailing:true white:true*/
         panel = _.find(contentPanels.children, function (child) {
           return child.index === panelIndex;
         });
-        // If we're already here, bail
-        if (contentPanels.index === this.$.contentPanels.indexOfChild(panel)) {
-          return;
-        }
-
       } else if (panelStatus === 'unborn') {
         // panel exists but has not been rendered. Render it.
         module.panels[index].status = 'active';
@@ -527,26 +527,31 @@ trailing:true white:true*/
       } else {
         XT.error("Don't know what to do with this panel status");
       }
-
+      
+      // Mobile device view
+      if (enyo.Panels.isScreenNarrow()) {
+        this.next();
+      }
+      
+      // If we're already here, bail
+      if (contentPanels.index === this.$.contentPanels.indexOfChild(panel)) {
+        return;
+      }
+      
       // cache any extraneous content panels
       this.cachePanels();
 
       label = panel && panel.label ? panel.label : "";
       collection = panel && panel.getCollection ? XT.getObjectByName(panel.getCollection()) : false;
 
-			// Mobile device view
-      if (enyo.Panels.isScreenNarrow()) {
-        this.next();
-      }
-
       if (!panel) { return; }
 
       // Make sure the advanced search icon is visible iff there is an advanced
       // search for this list
       if (panel.parameterWidget) {
-        this.$.searchIconButton.setStyle("display: inline");
+        this.$.searchIconButton.setShowing(true);
       } else {
-        this.$.searchIconButton.setStyle("display: none;");
+        this.$.searchIconButton.setShowing(false);
       }
       this.doNavigatorEvent({name: panel.name, show: false});
 
@@ -557,7 +562,7 @@ trailing:true white:true*/
 
       // Handle new button
       this.$.newButton.setShowing(panel.canAddNew);
-			this.$.contentToolbar.resized();
+      this.$.contentToolbar.resized();
       if (panel.canAddNew && collection) {
         // Check 'couldCreate' first in case it's an info model.
         model = collection.prototype.model;
@@ -579,38 +584,48 @@ trailing:true white:true*/
       }
       if (panel.fetch && !this.fetched[panelIndex]) {
         this.fetch();
+        this.fetched[panelIndex] = true;
       }
     },
+    
     /**
       The header content typically describes to the user the particular query filter in effect.
      */
     setHeaderContent: function (content) {
       this.$.header.setContent(content);
+      if (content !== "") {
+        this.$.header.setClasses("xv-navigator-header");
+      } else {
+        this.$.header.setClasses("");
+      }
     },
     setMenuPanel: function (index) {
       var label = index ? "_back".loc() : "_logout".loc();
       this.$.menuPanels.setIndex(index);
-			// on mobile, only automatically select the first screen if it's the module menu
-			if (!enyo.Panels.isScreenNarrow() || this.$.menuPanels.getIndex() == MODULE_MENU) {
-				this.$.menuPanels.getActive().select(0);
-				this.setContentPanel(0);
+			// only automatically select the first screen if it's the module menu
+      if (!enyo.Panels.isScreenNarrow()) {
+        this.$.menuPanels.getActive().select(0);
+        this.setContentPanel(0);
       }
-			this.$.backButton.setContent(label);
+      this.$.backButton.setContent(label);
       this.$.refreshButton.setShowing(index);
       this.$.search.setShowing(index);
       this.$.searchIconButton.setShowing(index);
-			this.$.contentToolbar.resized();
+      this.$.contentToolbar.resized();
     },
     setModule: function (index) {
       var module = this.getModules()[index],
         panels = module.panels || [],
         hasSubmenu = module.hasSubmenu !== false && panels.length;
-      if (module !== this._selectedModule) {
+      if (module !== this._selectedModule || enyo.Panels.isScreenNarrow()) {
         this._selectedModule = module;
         if (hasSubmenu) {
           this.$.panelMenu.setCount(panels.length);
           this.$.panelMenu.render();
           this.setMenuPanel(PANEL_MENU);
+        } else {
+          // if no submenus, treat lke a panel
+          this.setContentPanel(index);
         }
       }
     },
@@ -657,12 +672,28 @@ trailing:true white:true*/
 
       this.$.listItem.setContent(label);
       this.$.listItem.addRemoveClass("onyx-selected", isSelected);
-      if (isSelected) { this.setContentPanel(index); }
+    },
+    panelTap: function (inSender, inEvent) {
+      var index = inEvent.index;
+      if (inSender.isSelected(index)) { this.setContentPanel(index); }
+    },
+    menuTap: function (inSender, inEvent) {
+      this.setupModuleMenuItem(inSender, inEvent);
     },
     showError: function (message) {
       this.$.errorMessage.setContent(message);
       this.$.errorPopup.render();
       this.$.errorPopup.show();
+    },
+    showHelp: function () {
+      var listName = this.$.contentPanels.getActive().name,
+        objectName = listName.substring(0, listName.length - 4), // get rid of the word "list"
+        pageName = objectName.decamelize().replace(/_/g, "-"),
+        url = XT.HELP_URL_ROOT + pageName,
+        panel = {name: 'help', show: true, url: url};
+
+      this.doNavigatorEvent(panel);
+      //window.open(url, "_blank", "width=400,height=600");
     },
     /**
       Displays the history panel.
