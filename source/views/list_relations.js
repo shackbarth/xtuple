@@ -10,12 +10,12 @@ trailing:true white:true*/
 
   /**
     @name XV.ListRelations
-    @class A control that displays a list of scrolling rows.<br /> 
+    @class A control that displays a list of scrolling rows.<br />
     Use to attach to a workspace to present related data.<br />
     A superkind of {@link XV.DocumentListRelations}.<br />
-    Derived from <a href="http://enyojs.com/api/#enyo.List">enyo.List</a>. 
+    Derived from <a href="http://enyojs.com/api/#enyo.List">enyo.List</a>.
     @extends enyo.List
-  */ 
+  */
   enyo.kind(/** @lends XV.ListRelations# */{
     name: "XV.ListRelations",
     kind: "List",
@@ -230,6 +230,7 @@ trailing:true white:true*/
             value = this[formatter](value, view, model);
           }
           if (value && value instanceof Date) {
+            value = XT.date.applyTimezoneOffset(value, true);
             value = Globalize.format(value, 'd');
           }
           if (!value && view.placeholder) {

@@ -27,7 +27,8 @@ white:true*/
       onNavigatorEvent: "togglePullout",
       onHistoryChange: "refreshHistoryPanel",
       onHistoryItemSelected: "selectHistoryItem",
-      onSearch: "waterfallSearch"
+      onSearch: "waterfallSearch",
+      onWorkspace: "waterfallWorkspace"
     },
     components: [
       { name: "postbooks", kind: "XV.ModuleContainer",  onTransitionStart: "handlePullout" },
@@ -312,6 +313,9 @@ white:true*/
     },
     waterfallSearch: function (inSender, inEvent) {
       this.$.postbooks.waterfall("onSearch", inEvent);
+    },
+    waterfallWorkspace: function (inSender, inEvent) {
+      this.$.postbooks.waterfall("onWorkspace", inEvent);
     }
   });
 }());
