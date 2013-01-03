@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, _:true, console:true */
@@ -33,7 +33,9 @@ white:true*/
       // attach the session details to the payload
       payload = _.extend(payload, details);
 
-      XT.log("Socket sending: %@".replace("%@", handle), payload);
+      if (XT.debugging) {
+        XT.log("Socket sending: %@".replace("%@", handle), payload);
+      }
 
       sock.json.emit(handle, payload, callback);
 

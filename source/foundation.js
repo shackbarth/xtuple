@@ -9,6 +9,8 @@ XT = {};
 _.extend(XT,
   /** */ {
 
+  debugging: false,
+
   /** */
   K: function (){},
 
