@@ -1038,8 +1038,7 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
-            //{kind: "XV.CharacteristicTypePicker", attr: "characteristicType"},
-            {kind: "XV.InputWidget", attr: "characteristicType"},
+            {kind: "XV.CharacteristicTypePicker", attr: "characteristicType"},
             {kind: "XV.CheckboxWidget", attr: "isSearchable"},
             {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isAddresses", label: "_address".loc()},
