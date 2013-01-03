@@ -29,7 +29,7 @@ white:true*/
       m = new XM.MyModel({id: 1});
       m.fetch();
     </code></pre>
-    
+
     @name XM.Model
     @description To create a new model include `isNew` in the options:
     @param {Object} Attributes
@@ -328,7 +328,9 @@ white:true*/
             for (i = 0; i < children.length; i += 1) {
               children[i].didDestroy();
             }
-            XT.log('Destroy successful');
+            if (XT.debugging) {
+              XT.log('Destroy successful');
+            }
             if (success) { success(model, resp, options); }
           };
           result = Backbone.Model.prototype.destroy.call(this, options);
@@ -343,11 +345,11 @@ white:true*/
       XT.log('Insufficient privileges to destroy');
       return false;
     },
-    
+
     /*
       Forward a dispatch request to the data source. Runs a "dispatchable" database function.
       Include a `success` callback function in options to handle the result.
-      
+
       @param {String} Name of the class
       @param {String} Function name
       @param {Object} Parameters
@@ -378,7 +380,9 @@ white:true*/
         options.cascade = true; // Update status of children
         options.success = function (resp) {
           model.setStatus(K.READY_CLEAN, options);
-          XT.log('Fetch successful');
+          if (XT.debugging) {
+            XT.log('Fetch successful');
+          }
           if (success) { success(model, resp, options); }
         };
         return Backbone.Model.prototype.fetch.call(this, options);
@@ -836,7 +840,9 @@ white:true*/
         options.validateSave = true;
         options.success = function (resp) {
           model.setStatus(K.READY_CLEAN, options);
-          XT.log('Save successful');
+          if (XT.debugging) {
+            XT.log('Save successful');
+          }
           if (success) { success(model, resp, options); }
         };
 
@@ -990,7 +996,7 @@ white:true*/
       } else if (method === 'create' || method === 'update' || method === 'delete') {
         result = dataSource.commitRecord(model, options);
       }
-      
+
       return result || false;
     },
 
