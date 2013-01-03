@@ -516,6 +516,9 @@ body {
   padding: 8px 0 8px 8px;
   margin-right: 5px;
 }
+.xv-groupbox.editor {
+  min-width: 250px;
+}
 .xv-groupbox.in-panel {
   padding: 0;
   margin: 0;
@@ -801,6 +804,10 @@ body {
 /* ProjectTaskListRelationsBox */
 .xv-project-tasks-box.panel {
   width: 675px;
+}
+/* CharacteristicOptionBox */
+.xv-characteristics-box.panel {
+  width: 500px;
 }
 /* Combo Box */
 .xv-combobox {
