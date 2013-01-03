@@ -94,5 +94,22 @@ white:true*/
     var projectStatus = new XM.ProjectStatusModel(projectStatusJson[i]);
     XM.projectStatuses.add(projectStatus);
   }
+  
+  // Characteristic Type
+  var characteristicTypeJson = [
+    { id: "0", name: "_text".loc() },
+    { id: "1", name: "_list".loc() },
+    { id: "2", name: "_date".loc() }
+  ];
+  XM.CharacteristicTypeModel = Backbone.Model.extend({
+  });
+  XM.CharacteristicTypeCollection = Backbone.Collection.extend({
+    model: XM.CharacteristicTypeModel
+  });
+  XM.characteristicTypes = new XM.CharacteristicTypeCollection();
+  for (i = 0; i < characteristicTypeJson.length; i++) {
+    var characteristicType = new XM.CharacteristicTypeModel(characteristicTypeJson[i]);
+    XM.characteristicTypes.add(characteristicType);
+  }
 
 }());

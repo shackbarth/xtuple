@@ -55,14 +55,15 @@ trailing:true white:true*/
     orderBy: [
       {attribute: 'order', descending: true}
     ],
-    workspace: "XV.CharacteristicWorkspace",
+    parentKey: "characteristic",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "value", classes: "bold"}
-            ]}
+          {kind: "XV.ListColumn", classes: "short", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "value", classes: "bold"},
+          ]},
+          {kind: "XV.ListColumn", components: [
+            {kind: "XV.ListAttr", attr: "order"}
           ]}
         ]}
       ]}

@@ -13,7 +13,7 @@ trailing:true white:true*/
      kind: "XV.RelationsEditor",
      components: [
        {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
-         classes: "in-panel", components: [
+         classes: "editor", components: [
          {kind: "XV.InputWidget", attr: "value"},
          {kind: "XV.InputWidget", attr: "order"}
        ]}
@@ -23,7 +23,7 @@ trailing:true white:true*/
    enyo.kind({
      name: "XV.CharacteristicOptionBox",
      kind: "XV.ListRelationsEditorBox",
-     classes: "xv-project-tasks-box",
+     classes: "xv-characteristics-box",
      title: "_options".loc(),
      editor: "XV.CharacteristicOptionEditor",
      parentKey: "characteristic",
