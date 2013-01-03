@@ -216,6 +216,10 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     }
   });
   
+  // ..........................................................
+  // WIDGET
+  //
+  
   /**
     @name XV.ComboboxWidget
     @class An input control consisting of fittable columns:
@@ -225,7 +229,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
    */
   enyo.kind(/** @lends XV.CheckboxWidget# */{
     name: "XV.ComboboxWidget",
-    //kind: "XV.Input",
+    kind: "XV.Input",
     published: {
       collection: "",
       filter: null,
@@ -236,7 +240,12 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     components: [
       {kind: "FittableColumns", components: [
         {name: "label", content: "", classes: "xv-decorated-label"},
-        {name: "input", kind: "XV.Combobox"/*, onValueChange: "inputChanged"*/}
+        {name: "input", kind: "XV.Combobox", style: "width: 64%; padding: 6px; padding-top: 8px",
+          setValue: function (value) {
+            // Input combobox is always silent in this context
+            return XV.Combobox.prototype.setValue.call(this, value, {silent: true});
+          }
+        }
       ]}
     ],
     /**
@@ -266,6 +275,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
       this.filterChanged();
       this.keyAttributeChanged();
       this.labelChanged();
+      this.$.input.buildList();
     },
     /**
     @todo Document the inputChanged method.
@@ -280,21 +290,6 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.attr || "").loc()) + ":";
       this.$.label.setContent(label);
-    },
-    getValue: function () {
-      return this.$.input.getValue();
-    },
-    /*
-    */
-    setValue: function () {
-      return this.$.input.setValue(arguments);
-    },
-    /**
-    @todo Document the valueChanged method.
-    */
-    valueChanged: function (value) {
-      this.$.input.setValue(value);
-      return value;
     }
   });
 
