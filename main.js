@@ -59,7 +59,7 @@ _ = require("underscore");
   // make absolutely sure we're going to start
   options.autoStart = true;
 
-  X.debugging = true;
+  //X.debugging = true;
 
   // set the options
   X.setup(options);
@@ -80,7 +80,7 @@ _ = require("underscore");
     schema = true;
     sessionObjectLoaded();
   };
-  schemaOptions.success = function () {
+  privsOptions.success = function () {
     privs = true;
     sessionObjectLoaded();
   };
