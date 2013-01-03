@@ -52,6 +52,7 @@ trailing:true white:true*/
         panel.setWorkspace(inEvent);
         this.next();
       }
+      return true;
     },
     /**
       Add panels to a module. If any are found to already
