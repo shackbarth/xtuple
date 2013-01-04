@@ -1320,7 +1320,7 @@ white:true*/
       var match = _.find(privString.split(" "), function (priv) {
         return sessionPrivs.get(priv);
       });
-      return !!match; // convert to boolean
+      return !!match; // return true if match is truthy
     },
 
     /**
