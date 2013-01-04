@@ -1281,16 +1281,20 @@ white:true*/
       if (sessionPrivs && sessionPrivs.get) {
         // Check global privileges.
         if (privs.all && privs.all[action]) {
-          isGrantedAll = sessionPrivs.get(privs.all[action]);
+          isGrantedAll = this.checkCompoundPrivs(sessionPrivs, privs.all[action]);
+        }
+        // update privs are always sufficient for viewing as well
+        if (!isGrantedAll && privs.all && action === 'read' && privs.all.update) {
+          isGrantedAll = this.checkCompoundPrivs(sessionPrivs, privs.all.update);
         }
 
         // Check personal privileges.
         if (!isGrantedAll && privs.personal && privs.personal[action]) {
-          isGrantedPersonal = sessionPrivs.get(privs.personal[action]);
+          isGrantedPersonal = this.checkCompoundPrivs(sessionPrivs, privs.personal[action]);
         }
-        if (!isGrantedPersonal && privs.personal && action === 'read'  &&
-            privs.personal.update) {
-          isGrantedPersonal = sessionPrivs.get(privs.personal.update);
+        // update privs are always sufficient for viewing as well
+        if (!isGrantedPersonal && privs.personal && action === 'read' && privs.personal.update) {
+          isGrantedPersonal = this.checkCompoundPrivs(sessionPrivs, privs.personal.update);
         }
       }
 
@@ -1310,6 +1314,10 @@ white:true*/
       }
 
       return isGrantedAll || isGrantedPersonal;
+    },
+
+    checkCompoundPrivs: function (sessionPrivs, privString) {
+      return sessionPrivs.get(privString);
     },
 
     /**
