@@ -258,7 +258,7 @@ regexp:true, undef:true, trailing:true, white:true */
       }
 
       if (value !== oldValue) {
-        if (!this._selectValue(value)) { value = null; }
+        if (!this._selectValue(value) && this._selectValue(value) !== 0) { value = null; }
         if (value !== oldValue) {
           this.value = value;
           if (!options.silent) {
