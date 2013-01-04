@@ -1038,7 +1038,8 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.CharacteristicTypePicker", attr: "characteristicType"},
+            {kind: "XV.CharacteristicTypePicker", name: "typePicker", attr: "characteristicType",
+              onValueChange: "typeValueChanged"},
             {kind: "XV.CheckboxWidget", attr: "isSearchable"},
             {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isAddresses", label: "_address".loc()},
@@ -1052,14 +1053,27 @@ trailing:true white:true*/
             {kind: "XV.ToggleButtonWidget", attr: "isOpportunities", label: "_opportunity".loc()},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true},
-            {kind: "onyx.GroupboxHeader", content: "_advanced".loc()},
-            {kind: "XV.InputWidget", attr: "mask"},
-            {kind: "XV.InputWidget", attr: "validator"}
+            {name: "advancedPanel", components: [
+              {kind: "onyx.GroupboxHeader", content: "_advanced".loc()},
+              {kind: "XV.InputWidget", attr: "mask"},
+              {kind: "XV.InputWidget", attr: "validator"}
+            ]}
           ]}
         ]},
-        {kind: "XV.CharacteristicOptionBox", attr: "options"}
+        {kind: "XV.CharacteristicOptionBox", name: "optionsPanel", attr: "options"}
       ]}
-    ]
+    ],
+    
+    /**
+      Function to determine visibility of "advanced" and "options" panels based
+        on the CharacteristicType
+     */
+    typeValueChanged: function () {
+      var type = this.$.typePicker.getValue();
+      var id = type ? type.id : null;
+      this.$.advancedPanel.setShowing(id === 0); // text
+      this.$.optionsPanel.setShowing(id === 1); // list
+    }
   });
 
   XV.registerModelWorkspace("XM.Characteristic", "XV.CharacteristicWorkspace");

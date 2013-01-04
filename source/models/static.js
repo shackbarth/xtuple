@@ -97,9 +97,9 @@ white:true*/
   
   // Characteristic Type
   var characteristicTypeJson = [
-    { id: "0", name: "_text".loc() },
-    { id: "1", name: "_list".loc() },
-    { id: "2", name: "_date".loc() }
+    { id: 0, name: "_text".loc() },
+    { id: 1, name: "_list".loc() },
+    { id: 2, name: "_date".loc() }
   ];
   XM.CharacteristicTypeModel = Backbone.Model.extend({
   });

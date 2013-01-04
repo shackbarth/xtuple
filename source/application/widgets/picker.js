@@ -215,6 +215,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.CharacteristicTypePicker",
     kind: "XV.PickerWidget",
+    classes: "xv-characteristic-picker",
     collection: "XM.characteristicTypes"
   });
   
