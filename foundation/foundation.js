@@ -26,10 +26,10 @@ X = {};
   _     = X._    = require("underscore");
 
   X.util         = require("util");
-  X.http         = require("http");
   X.https        = require("https");
   X.url          = require("url");
   X.crypto       = require("crypto");
+  X.bcrypt       = require("bcrypt");
 
   X.connect      = require("connect");
   X.pg           = require("pg").native;
@@ -314,7 +314,7 @@ X = {};
     didBecomeReady: function () {
       var wasReady = X.hasBecomeReady,
           queue = X.runQueue, required;
-      
+
       // its an unfortunate oversight that these two variables
       // exist simultaneously...
       X.hasBecomeReady = true;
@@ -322,7 +322,7 @@ X = {};
       if (wasReady) return;
       while (queue.length > 0) (queue.shift())();
       X.runQueue = null;
-      
+
       // now run any of the require statements...
       required = X.required || [];
       while (required.length) {
@@ -366,21 +366,21 @@ X = {};
       return json ? json : undefined;
     },
 
-    cleanup: function () {
+    cleanup: function (isError) {
       var queue = this.cleanupQueue || [], task;
       X.cleaningUp = true;
       if (X.cleanedUp) return false;
       if (queue.length <= 0) {
-        X.log("All done. See ya.");
+        X.log("Exiting with status code = ", isError ? 1 : 0);
         X.cleanedUp = true;
-        process.exit(0);
+        process.exit(isError ? 1 : 0);
       }
       task = queue.shift();
       if (task) {
         // TODO: come back and do the elaborate check if it
         // is taking too long test so that it won't hang if
         // a cleanup task fails
-        task.once("isComplete", _.bind(this.cleanup, this));
+        task.once("isComplete", _.bind(this.cleanup, this, isError));
         task.exec();
       }
     },
@@ -404,13 +404,13 @@ X = {};
       }
       return base;
     },
-    
+
     writePidFile: function () {
       X.log("Writing pid file '%@'".f(X.pidFileName));
       X.writeFile(X.pidFile, X.pid);
       X.addCleanupTask(X.cleanupPidFile);
     },
-    
+
     cleanupPidFile: function () {
       if (!X.pidFile) return;
       X.log("Removing pid file.");
@@ -453,7 +453,7 @@ X = {};
   require("./exception");
   require("./filesystem");
   require("./ext/cleanup_task");
-  
+
   (function () {
     var options = "version.txt node_modules/xt/version.txt".w(), i = 0, path;
     for (; i < options.length && X.none(X.version); ++i) {
