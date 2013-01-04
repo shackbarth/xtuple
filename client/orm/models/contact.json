@@ -850,7 +850,7 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": "ViewAllContacts",
+        "read": "ViewAllContacts MaintainAllContacts",
         "update": false,
         "delete": false
       },
