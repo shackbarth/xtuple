@@ -119,7 +119,7 @@ trailing:true white:true*/
               name: "searchJump", ontap: "jump"}
           ]}
         ]},
-        {name: "header", content: "", classes: "xv-navigator-header"},
+        {name: "header", content: "", classes: ""},
         {name: "contentPanels", kind: "Panels", margin: 0, fit: true,
           draggable: false, panelCount: 0},
         {kind: "onyx.Popup", name: "errorPopup", centered: true,
@@ -593,6 +593,11 @@ trailing:true white:true*/
      */
     setHeaderContent: function (content) {
       this.$.header.setContent(content);
+      if (content !== "") {
+        this.$.header.setClasses("xv-navigator-header");
+      } else {
+        this.$.header.setClasses("");
+      }
     },
     setMenuPanel: function (index) {
       var label = index ? "_back".loc() : "_logout".loc();
