@@ -1317,7 +1317,10 @@ white:true*/
     },
 
     checkCompoundPrivs: function (sessionPrivs, privString) {
-      return sessionPrivs.get(privString);
+      var match = _.find(privString.split(" "), function (priv) {
+        return sessionPrivs.get(priv);
+      });
+      return !!match; // convert to boolean
     },
 
     /**
