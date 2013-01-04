@@ -35,6 +35,9 @@ vows.describe('Check compound privileges').addBatch({
       },
       'but not when the privilege is not on a compoundlist': function (topic) {
         assert.isFalse(XM.Model.checkCompoundPrivs(topic, "ViewAllBar MaintainAllBar"));
+      },
+      'without a crash if the privilege is a boolean': function (topic) {
+        assert.isTrue(XM.Model.checkCompoundPrivs(topic, true));
       }
     }
   }

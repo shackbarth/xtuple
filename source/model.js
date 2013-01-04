@@ -1316,8 +1316,11 @@ white:true*/
       return isGrantedAll || isGrantedPersonal;
     },
 
-    checkCompoundPrivs: function (sessionPrivs, privString) {
-      var match = _.find(privString.split(" "), function (priv) {
+    checkCompoundPrivs: function (sessionPrivs, privileges) {
+      if (typeof privileges !== 'string') {
+        return privileges;
+      }
+      var match = _.find(privileges.split(" "), function (priv) {
         return sessionPrivs.get(priv);
       });
       return !!match; // return true if match is truthy
