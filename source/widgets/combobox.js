@@ -240,7 +240,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     components: [
       {kind: "FittableColumns", components: [
         {name: "label", content: "", classes: "xv-decorated-label"},
-        {name: "input", kind: "XV.Combobox", style: "width: 64%; padding: 6px; padding-top: 8px",
+        {name: "input", kind: "XV.Combobox",
           setValue: function (value) {
             // Input combobox is always silent in this context
             return XV.Combobox.prototype.setValue.call(this, value, {silent: true});
