@@ -163,6 +163,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     collection: "XM.countries"
   });
 
+
   // ..........................................................
   // STATE
   //
@@ -212,6 +213,83 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
         this._countryId = undefined;
       }
       this.buildList();
+    }
+  });
+  
+  // ..........................................................
+  // WIDGET
+  //
+  
+  /**
+    @name XV.ComboboxWidget
+    @class An input control consisting of fittable columns:
+      label, decorator, and combobox.<br />
+    Used to implement a styled combobox
+    @extends XV.Input
+   */
+  enyo.kind(/** @lends XV.CheckboxWidget# */{
+    name: "XV.ComboboxWidget",
+    kind: "XV.Input",
+    published: {
+      collection: "",
+      filter: null,
+      keyAttribute: "name",
+      label: "",
+      showLabel: true
+    },
+    components: [
+      {kind: "FittableColumns", components: [
+        {name: "label", content: "", classes: "xv-decorated-label"},
+        {name: "input", kind: "XV.Combobox", style: "width: 64%; padding: 6px; padding-top: 8px",
+          setValue: function (value) {
+            // Input combobox is always silent in this context
+            return XV.Combobox.prototype.setValue.call(this, value, {silent: true});
+          }
+        }
+      ]}
+    ],
+    /**
+    @todo Document the clear method.
+    */
+    clear: function (options) {
+      this.setValue(false, options);
+    },
+    /**
+    
+    */
+    collectionChanged: function () {
+      this.$.input.setCollection(this.getCollection());
+    },
+    filterChanged: function () {
+      this.$.input.setFilter(this.getFilter());
+    },
+    keyAttributeChanged: function () {
+      this.$.input.setKeyAttribute(this.getKeyAttribute());
+    },
+    /**
+    @todo Document the create method.
+    */
+    create: function () {
+      this.inherited(arguments);
+      this.collectionChanged();
+      this.filterChanged();
+      this.keyAttributeChanged();
+      this.labelChanged();
+      this.$.input.buildList();
+    },
+    /**
+    @todo Document the inputChanged method.
+    */
+    inputChanged: function (inSender, inEvent) {
+      var input = this.$.input.getValue();
+      this.setValue(input);
+    },
+    /**
+    @todo Document the labelChanged method.
+    */
+    labelChanged: function () {
+      var label = (this.getLabel() || ("_" + this.attr || "").loc()) + ":";
+      this.$.label.setContent(label);
     }
   });
 
