@@ -1039,7 +1039,7 @@ trailing:true white:true*/
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.CharacteristicTypePicker", name: "typePicker", attr: "characteristicType",
-              onValueChange: "typeValueChanged"},
+              onValueChange: "typeValueChanged", onValueLoad: "typeValueChanged"},
             {kind: "XV.CheckboxWidget", attr: "isSearchable"},
             {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isAddresses", label: "_address".loc()},
@@ -1071,6 +1071,7 @@ trailing:true white:true*/
     typeValueChanged: function () {
       var type = this.$.typePicker.getValue();
       var id = type ? type.id : null;
+      var test = type.id;
       this.$.advancedPanel.setShowing(id === 0); // text
       this.$.optionsPanel.setShowing(id === 1); // list
     }
