@@ -3,14 +3,14 @@ export PATH=$PATH:/usr/bin:/usr/local/bin
 git pull
 git submodule update --recursive
 ./tools/buildExtensions.sh
-
+pushd . 
 cd source/incident_plus/database/source
  psql \
   -X -A \
   -h localhost \
   -U admin \
   -t \
-  -F ' ' \ 
+  -F ' ' \
   --quiet \
   -c "select org_name as db, org_dbserver_name as server from xt.org where org_active = 't'" \
     global | while read -a Record; do
@@ -20,14 +20,14 @@ cd source/incident_plus/database/source
      psql -U admin -h $server -d $db  -f init_script.sql
 
  done
-
-cd /usr/local/xtuple/database/orm/installer/
+popd
+cd ../database/orm/installer/ 
  psql \
   -X -A \
   -h localhost \
   -U admin \
   -t \
-  -F ' ' \ 
+  -F ' ' \
   --quiet \
   -c "select org_name as db, org_dbserver_name as server from xt.org where org_active = 't'" \
     global | while read -a Record; do
