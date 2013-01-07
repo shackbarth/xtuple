@@ -35,7 +35,7 @@ white:true*/
   enyo.kind(/** @lends XV.ScrollableGroupbox# */{
     name: "XV.ScrollableGroupbox",
     kind: "Scroller",
-    horizontal: "hidden",
+    horizontal: "auto",
     classes: "xv-groupbox xv-scroller",
     published: {
       title: "_overview".loc()
