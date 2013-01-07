@@ -1,6 +1,5 @@
-
->>>>>>> Update master
-rt PATH=$PATH:/usr/bin:/usr/local/bin
+#!/bin/sh
+export PATH=$PATH:/usr/bin:/usr/local/bin
 git pull
 git submodule update --recursive
 ./tools/buildExtensions.sh
@@ -35,6 +34,6 @@ cd /usr/local/xtuple/database/orm/installer/
      db=${Record[0]}
      server=${Record[1]}
     
-    ./installer.js -cli -h $server -d db -u admin -p 5432 -P admin --path ../../../public-extensions/source/incident_plus/database/orm/
+    ./installer.js -cli -h $server -d $db -u admin -p 5432 -P admin --path ../../../public-extensions/source/incident_plus/database/orm/
 
  done
