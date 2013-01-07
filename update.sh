@@ -10,7 +10,7 @@ cd source/incident_plus/database/source
   -h localhost \
   -U admin \
   -t \
-  -F ' ' \ 
+  -F ' ' \
   --quiet \
   -c "select org_name as db, org_dbserver_name as server from xt.org where org_active = 't'" \
     global | while read -a Record; do
@@ -27,7 +27,7 @@ cd /usr/local/xtuple/database/orm/installer/
   -h localhost \
   -U admin \
   -t \
-  -F ' ' \ 
+  -F ' ' \
   --quiet \
   -c "select org_name as db, org_dbserver_name as server from xt.org where org_active = 't'" \
     global | while read -a Record; do
