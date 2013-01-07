@@ -3,7 +3,7 @@ export PATH=$PATH:/usr/bin:/usr/local/bin
 git pull
 git submodule update --recursive
 ./tools/buildExtensions.sh
-
+pushd . 
 cd source/incident_plus/database/source
  psql \
   -X -A \
@@ -20,8 +20,8 @@ cd source/incident_plus/database/source
      psql -U admin -h $server -d $db  -f init_script.sql
 
  done
-
-cd /usr/local/xtuple/database/orm/installer/
+popd
+cd ../database/orm/installer/ 
  psql \
   -X -A \
   -h localhost \
