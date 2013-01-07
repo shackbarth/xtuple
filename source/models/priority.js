@@ -11,18 +11,18 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.Priority = XM.Model.extend({
+  XM.Priority = XM.Document.extend({
     /** @scope XM.Priority.prototype */
 
     recordType: 'XM.Priority',
+    
+    enforceUpperKey: false,
+    
+    documentKey: 'name',
 
     defaults: {
       order: 0
-    },
-
-    requiredAttributes: [
-      "name"
-    ]
+    }
 
   });
 

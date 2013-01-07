@@ -70,7 +70,7 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.IncidentResolution = XM.Model.extend({
+  XM.IncidentResolution = XM.Document.extend({
     /** @scope XM.IncidentResolution.prototype */
 
     recordType: 'XM.IncidentResolution',
