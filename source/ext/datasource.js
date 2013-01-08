@@ -308,6 +308,46 @@ white:true*/
     },
 
     /*
+      Sends a request to node to send out an email
+
+    @param {String} fromAddress
+    @param {String} toAddress
+    @param {String} subject
+    @param {String} text
+    */
+    sendEmail: function (fromAddress, toAddress, subject, text, options) {
+      var that = this,
+        payload = {
+          fromAddress: fromAddress,
+          toAddress: toAddress,
+          subject: subject,
+          text: text
+        },
+        complete = function (response) {
+          var params = {}, error;
+
+          // handle error
+          if (response.isError) {
+            if (options && options.error) {
+              params.error = response.message;
+              error = XT.Error.clone('xt1001', { params: params });
+              options.error.call(that, error);
+            }
+            return;
+          }
+
+          // handle success
+          if (options && options.success) {
+            options.success.call(that, response.data);
+          }
+        };
+
+      return XT.Request
+               .handle('function/email')
+               .notify(complete)
+               .send(payload);
+    },
+    /*
       Determine the list of extensions in use by the user's
       organization.
 
