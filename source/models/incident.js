@@ -214,27 +214,35 @@ white:true*/
 
       options.success = function (model, resp, options) {
         var profile = model.getValue("category.emailProfile"),
-          content,
+          formattedContent = {},
           emailOptions = {error: function () {
             XT.log("Error sending email with incident details");
           }},
-          format = function (s) {
-            return s;
+          format = function (str) {
+            str = str || "";
+            var parser = /\{([^}]+)\}/g, // Finds curly braces
+              tokens,
+              attr;
+            tokens = str.match(parser);
+            _.each(tokens, function (token) {
+              attr = token.slice(1, token.indexOf('}'));
+              str = str.replace(token, model.getValue(attr));
+            });
+            return str;
           };
-
 
         if (profile && profile.attributes) {
           // this profile model has pretty much exactly the right key/value pairs so
           // we can pass it straight to node. We do want to perform the "format" transform
           // on all of the values on the object.
-          content = profile.attributes;
-          _.each(content, function (value, key, list) {
-            content[key] = format(value);
+          _.each(profile.attributes, function (value, key, list) {
+            if (typeof value === 'string') {
+              formattedContent[key] = format(value);
+              console.log(JSON.stringify(formattedContent));
+            }
           });
 
-          XT.dataSource.sendEmail(_.map(content, function (key, value, list) {
-            return {key: format(value)};
-          }), emailOptions);
+          XT.dataSource.sendEmail(formattedContent, emailOptions);
         } // else there's no email profile profiled
 
         if (success) { success(model, resp, options); }
