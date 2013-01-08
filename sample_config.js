@@ -24,7 +24,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       caFile: null,
       saltFile: "./lib/private/salt.txt",
       psqlPath: "psql",
-      psqlUser: "admin",
 
       // These fields need to be filled in for the datasource
       // to be able to email
