@@ -194,6 +194,53 @@ white:true*/
       if (this.get('status') === K.ASSIGNED && !this.get('assignedTo')) {
         return XT.Error.clone('xt2001');
       }
+    },
+
+    save: function (key, value, options) {
+      // Handle both `"key", value` and `{key: value}` -style arguments.
+      if (_.isObject(key) || _.isEmpty(key)) {
+        options = value;
+      }
+      // XXX, sure, this code has a side effect on the options argument.
+      // but if we clone then we miss out on the chance to update the
+      // value arg at the same time, and if key is empty or an object
+      // then it's the value arg that's going to be used by backbone
+      // as the options and so changing options won't do us a lick of good
+
+      //options = options ? _.clone(options) : {};
+
+      var that = this,
+        success = options.success;
+
+      options.success = function (model, resp, options) {
+        var profile = model.getValue("category.emailProfile"),
+          content,
+          emailOptions = {error: function () {
+            XT.log("Error sending email with incident details");
+          }},
+          format = function (s) {
+            return s;
+          };
+
+
+        if (profile && profile.attributes) {
+          // this profile model has pretty much exactly the right key/value pairs so
+          // we can pass it straight to node. We do want to perform the "format" transform
+          // on all of the values on the object.
+          content = profile.attributes;
+          _.each(content, function (value, key, list) {
+            content[key] = format(value);
+          });
+
+          XT.dataSource.sendEmail(_.map(content, function (key, value, list) {
+            return {key: format(value)};
+          }), emailOptions);
+        } // else there's no email profile profiled
+
+        if (success) { success(model, resp, options); }
+      };
+
+      XM.Document.prototype.save.call(this, key, value, options);
     }
 
   });
@@ -442,7 +489,7 @@ white:true*/
     editableModel: 'XM.Incident'
 
   });
-  
+
   /**
     @class
 

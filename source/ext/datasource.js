@@ -339,6 +339,10 @@ white:true*/
           }
         };
 
+      if (payload.body && !payload.text) {
+        // be generous with the inputs
+        payload.text = payload.body
+      }
       return XT.Request
                .handle('function/email')
                .notify(complete)
