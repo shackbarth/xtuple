@@ -73,7 +73,8 @@ trailing:true white:true*/
           error: function (error) {
             alert("Password reset fail");
           },
-          databaseType: "global"
+          databaseType: "global",
+          newUser: inEvent.newUser
         };
 
       if (this.$.resetPasswordPopup) {
@@ -105,7 +106,7 @@ trailing:true white:true*/
             success(model, result, opts);
           }
           that.setValue(model);
-          that.resetPassword();
+          that.resetPassword(null, {newUser: true});
         };
       }
 
