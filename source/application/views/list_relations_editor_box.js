@@ -13,9 +13,9 @@ trailing:true white:true*/
      kind: "XV.RelationsEditor",
      components: [
        {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
-         classes: "editor", components: [
-         {kind: "XV.InputWidget", attr: "value"},
-         {kind: "XV.InputWidget", attr: "order"}
+         classes: "in-panel", style: "border-right: #aaa 1px solid;", components: [
+         {kind: "XV.InputWidget", attr: "value", classes: "editor"},
+         {kind: "XV.InputWidget", attr: "order", style: "border-right: none"}
        ]}
      ]
    });
@@ -23,7 +23,7 @@ trailing:true white:true*/
    enyo.kind({
      name: "XV.CharacteristicOptionBox",
      kind: "XV.ListRelationsEditorBox",
-     classes: "xv-characteristics-box",
+     classes: "xv-list-relations-box",
      title: "_options".loc(),
      editor: "XV.CharacteristicOptionEditor",
      parentKey: "characteristic",
@@ -70,7 +70,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ProjectTasksBox",
     kind: "XV.ListRelationsEditorBox",
-    classes: "xv-project-tasks-box",
+    classes: "xv-list-relations-box",
     title: "_projectTasks".loc(),
     editor: "XV.ProjectTaskEditor",
     parentKey: "project",

@@ -1038,8 +1038,7 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.CharacteristicTypePicker", name: "typePicker", attr: "characteristicType",
-              onValueChange: "typeValueChanged", onValueLoad: "typeValueChanged"},
+            {kind: "XV.CharacteristicTypePicker", name: "typePicker", attr: "characteristicType"},
             {kind: "XV.CheckboxWidget", attr: "isSearchable"},
             {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isAddresses", label: "_address".loc()},
@@ -1063,17 +1062,22 @@ trailing:true white:true*/
         {kind: "XV.CharacteristicOptionBox", name: "optionsPanel", attr: "options"}
       ]}
     ],
+    /**
+      After the controls are updated by the model, determine visibility of panels.
+     */
+    attributesChanged: function (model, options) {
+      this.inherited(arguments);
+      this.typeValueChanged(model);
+    },
     
     /**
       Function to determine visibility of "advanced" and "options" panels based
-        on the CharacteristicType
+        on the characteristicType
      */
-    typeValueChanged: function () {
-      var type = this.$.typePicker.getValue();
-      var id = type ? type.id : null;
-      var test = type.id;
-      this.$.advancedPanel.setShowing(id === 0); // text
-      this.$.optionsPanel.setShowing(id === 1); // list
+    typeValueChanged: function (model) {
+      var type = model.get('characteristicType');
+      this.$.advancedPanel.setShowing(type === XM.Characteristic.TEXT);
+      this.$.optionsPanel.setShowing(type === XM.Characteristic.LIST);
     }
   });
 
