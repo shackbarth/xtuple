@@ -170,7 +170,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "number"},
             {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "onyx.GroupboxHeader", content: "_name".loc()},
-            {kind: "XV.InputWidget", attr: "honorific"},
+            {kind: "XV.HonorificCombobox", attr: "honorific"},
             {kind: "XV.InputWidget", attr: "firstName"},
             {kind: "XV.InputWidget", attr: "middleName"},
             {kind: "XV.InputWidget", attr: "lastName"},
