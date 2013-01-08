@@ -201,16 +201,9 @@ white:true*/
       if (_.isObject(key) || _.isEmpty(key)) {
         options = value;
       }
-      // XXX, sure, this code has a side effect on the options argument.
-      // but if we clone then we miss out on the chance to update the
-      // value arg at the same time, and if key is empty or an object
-      // then it's the value arg that's going to be used by backbone
-      // as the options and so changing options won't do us a lick of good
+      options = options ? _.clone(options) : {};
 
-      //options = options ? _.clone(options) : {};
-
-      var that = this,
-        success = options.success;
+      var success = options.success;
 
       options.success = function (model, resp, options) {
         var profile = model.getValue("category.emailProfile"),
@@ -238,7 +231,6 @@ white:true*/
           _.each(profile.attributes, function (value, key, list) {
             if (typeof value === 'string') {
               formattedContent[key] = format(value);
-              console.log(JSON.stringify(formattedContent));
             }
           });
 
@@ -247,6 +239,11 @@ white:true*/
 
         if (success) { success(model, resp, options); }
       };
+
+      // Handle both `"key", value` and `{key: value}` -style arguments.
+      if (_.isObject(key) || _.isEmpty(key)) {
+        value = options;
+      }
 
       XM.Document.prototype.save.call(this, key, value, options);
     }
