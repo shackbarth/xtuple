@@ -310,10 +310,13 @@ white:true*/
     /*
       Sends a request to node to send out an email
 
-    @param {String} fromAddress
-    @param {String} toAddress
-    @param {String} subject
-    @param {String} text
+    @param {Object} payload
+    @param {String} payload.from
+    @param {String} payload.to
+    @param {String} payload.cc
+    @param {String} payload.bcc
+    @param {String} payload.subject
+    @param {String} payload.text
     */
     sendEmail: function (payload, options) {
       var that = this,
