@@ -1067,7 +1067,9 @@ trailing:true white:true*/
      */
     attributesChanged: function (model, options) {
       this.inherited(arguments);
-      this.typeValueChanged(model);
+      if (this.getValue().getStatus() === XM.Model.READY_CLEAN) {
+        this.typeValueChanged(model);
+      }
     },
     
     /**
