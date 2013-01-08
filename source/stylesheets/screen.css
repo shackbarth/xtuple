@@ -868,6 +868,7 @@ body {
   width: 130px;
   padding: 18px 8px 8px 8px;
   text-align: right;
+  color: black;
 }
 .xv-textarea-input {
   width: 90%;
@@ -875,6 +876,7 @@ body {
   min-height: 100px;
   margin: 6px;
   border: #ddd 2px solid;
+  color: black;
 }
 .xv-documents-picker-label {
   width: 85px;
