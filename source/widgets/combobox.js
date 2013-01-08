@@ -240,7 +240,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     components: [
       {kind: "FittableColumns", components: [
         {name: "label", content: "", classes: "xv-decorated-label"},
-        {name: "input", kind: "XV.Combobox",
+        {name: "input", kind: "XV.Combobox", classes: "xv-comboboxwidget",
           setValue: function (value) {
             // Input combobox is always silent in this context
             return XV.Combobox.prototype.setValue.call(this, value, {silent: true});
@@ -275,6 +275,8 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
       this.filterChanged();
       this.keyAttributeChanged();
       this.labelChanged();
+      this.$.input.$.input.addRemoveClass("xv-comboboxwidget-input", true);
+      this.$.input.$.iconButton.addRemoveClass("xv-comboboxwidget-icon", true);
       this.$.input.buildList();
     },
     /**
