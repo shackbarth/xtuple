@@ -62,18 +62,30 @@ trailing:true white:true*/
         options = {
           success: function (result) {
             // TODO: application-wide messaging?!
-            //alert("An e-mail with the new password has been sent to " + that.getValue().id);
-            alert("The password for " + that.getValue().id + " has been set to " + result.password);
+            if (result.emailSuccess) {
+              alert("An e-mail with the new password has been sent to " + that.getValue().id);
+            } else {
+              // the emailer must have failed.
+              // XXX do we want to fail less gracefully here?
+              alert("The password for " + that.getValue().id + " has been set to " + result.password);
+            }
           },
           error: function (error) {
             alert("Password reset fail");
           },
-          databaseType: "global"
+          databaseType: "global",
+          newUser: inEvent.newUser
         };
 
       if (this.$.resetPasswordPopup) {
         this.$.resetPasswordPopup.hide();
       }
+
+      if (this.getValue().status === XM.Model.READY_DIRTY) {
+        alert("Please save/apply changes before resetting the password.");
+        return;
+      }
+
       XT.dataSource.resetPassword(this.getValue().id, options);
     },
     /**
@@ -94,7 +106,7 @@ trailing:true white:true*/
             success(model, result, opts);
           }
           that.setValue(model);
-          that.resetPassword();
+          that.resetPassword(null, {newUser: true});
         };
       }
 
