@@ -571,6 +571,9 @@ body {
 	border-top: none;
 	border-width: 1px;
 	.border-radius(0);
+	&.editor {
+    border-right: none;
+  }
 }
 
 .xv-groupbox.in-panel > *:last-child {
@@ -778,18 +781,11 @@ body {
   }
 }
 
-/* ProjectTaskListRelationsBox */
-.xv-project-tasks-box {
+/* ListRelationsBox */
+.xv-list-relations-box {
   &.panel {
     width: 675px;
-  }
-}
-
-/* CharacteristicOptionBox */
-.xv-characteristics-box {
-  &.panel {
-    width: 500px;
-  }
+  }  
 }
 
 /* Combo Box */

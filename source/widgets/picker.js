@@ -22,8 +22,7 @@ regexp:true, undef:true, trailing:true, white:true */
         @property {XV.PickerWidget} inEvent.originator This
         @property inEvent.value The value passed up is the key of the object and not the object itself
        */
-      onValueChange: "",
-      onValueLoad: ""
+      onValueChange: ""
     },
     published: {
       attr: null,
@@ -263,11 +262,9 @@ regexp:true, undef:true, trailing:true, white:true */
         if (!this._selectValue(value) && this._selectValue(value) !== 0) { value = null; }
         if (value !== oldValue) {
           this.value = value;
-          inEvent = { originator: this, value: value && value.get ? value.get(key) : value };
           if (!options.silent) {
+            inEvent = { originator: this, value: value && value.get ? value.get(key) : value };
             this.doValueChange(inEvent);
-          } else {
-            this.doValueLoad(inEvent);
           }
         }
       }
