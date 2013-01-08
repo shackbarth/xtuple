@@ -242,7 +242,8 @@ white:true*/
     resetPassword: function (id, options) {
       var that = this,
         payload = {
-          id: id
+          id: id,
+          newUser: options.newUser
         },
         complete = function (response) {
           var params = {}, error;
