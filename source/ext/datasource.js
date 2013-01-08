@@ -315,14 +315,8 @@ white:true*/
     @param {String} subject
     @param {String} text
     */
-    sendEmail: function (fromAddress, toAddress, subject, text, options) {
+    sendEmail: function (payload, options) {
       var that = this,
-        payload = {
-          fromAddress: fromAddress,
-          toAddress: toAddress,
-          subject: subject,
-          text: text
-        },
         complete = function (response) {
           var params = {}, error;
 
