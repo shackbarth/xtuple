@@ -479,7 +479,16 @@
           "column": "crmacct_id"
         }
       },
-	  {
+      {
+        "name": "contactCustomer",
+        "toMany": {
+          "isNested": true,
+          "type": "AccountContact",
+          "column": "crmacct_id",
+          "inverse": "source"
+        }
+      },
+      {
         "name": "contactRelation",
         "toMany": {
           "isNested": true,
@@ -488,7 +497,16 @@
           "inverse": "account"
         }
       },
-	  {
+      {
+        "name": "incidentCustomer",
+        "toMany": {
+          "isNested": true,
+          "type": "AccountIncident",
+          "column": "crmacct_id",
+          "inverse": "source"
+        }
+      },
+      {
         "name": "incidentRelation",
         "toMany": {
           "isNested": true,
@@ -497,7 +515,16 @@
           "inverse": "account"
         }
       },
-	  {
+      {
+        "name": "opportunityCustomer",
+        "toMany": {
+          "isNested": true,
+          "type": "AccountOpportunity",
+          "column": "crmacct_id",
+          "inverse": "source"
+        }
+      },
+      {
         "name": "opportunityRelation",
         "toMany": {
           "isNested": true,
@@ -506,11 +533,38 @@
           "inverse": "account"
         }
       },
-	  {
+      {
+        "name": "toDoCustomer",
+        "toMany": {
+          "isNested": true,
+          "type": "AccountToDo",
+          "column": "crmacct_id",
+          "inverse": "source"
+        }
+      },
+      {
         "name": "toDoRelation",
         "toMany": {
           "isNested": true,
           "type": "ToDoRelation",
+          "column": "crmacct_id",
+          "inverse": "account"
+        }
+      },
+      {
+        "name": "projectCustomer",
+        "toMany": {
+          "isNested": true,
+          "type": "AccountProject",
+          "column": "crmacct_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "projectRelation",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectRelation",
           "column": "crmacct_id",
           "inverse": "account"
         }
@@ -588,98 +642,6 @@
         "attr": {
           "type": "Boolean",
           "column": "char_opportunity"
-        }
-      }
-    ],
-    "sequence": 0,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
-    "type": "IncidentCustomer",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "Incident Customer Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
-          "value": "CRMA"
-        }
-      },
-      {
-        "name": "source",
-        "attr": {
-          "type": "Number",
-          "column": "source_id"
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "target_type",
-          "value": "INCDT"
-        }
-      },
-	  {
-        "name": "target",
-        "attr": {
-          "type": "Number",
-          "column": "target_id"
-        }
-      },
-      {
-        "name": "purpose",
-        "attr": {
-          "type": "String",
-          "column": "purpose"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
-    "type": "IncidentCustomer",
-    "table": "crmacct",
-    "isExtension": true,
-    "comment": "Extended by Crm",
-    "relations": [
-      {
-        "column": "crmacct_id",
-        "inverse": "source"
-      }
-    ],
-    "properties": [
-      {
-        "name": "customer",
-        "toMany": {
-          "isNested": true,
-          "type": "Customer",
-          "column": "crmacct_cust_id",
-          "inverse": "id"
         }
       }
     ],
@@ -865,98 +827,6 @@
   {
     "context": "crm",
     "nameSpace": "XM",
-    "type": "OpportunityCustomer",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "Opportunity Customer Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
-          "value": "CRMA"
-        }
-      },
-      {
-        "name": "source",
-        "attr": {
-          "type": "Number",
-          "column": "source_id"
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "target_type",
-          "value": "OPP"
-        }
-      },
-	  {
-        "name": "target",
-        "attr": {
-          "type": "Number",
-          "column": "target_id"
-        }
-      },
-      {
-        "name": "purpose",
-        "attr": {
-          "type": "String",
-          "column": "purpose"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
-    "type": "OpportunityCustomer",
-    "table": "crmacct",
-    "isExtension": true,
-    "comment": "Extended by Crm",
-    "relations": [
-      {
-        "column": "crmacct_id",
-        "inverse": "source"
-      }
-    ],
-    "properties": [
-      {
-        "name": "customer",
-        "toMany": {
-          "isNested": true,
-          "type": "Customer",
-          "column": "crmacct_cust_id",
-          "inverse": "id"
-        }
-      }
-    ],
-    "sequence": 0,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
     "type": "OpportunityIncident",
     "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
@@ -1132,98 +1002,6 @@
           "type": "ToDoOpportunity",
           "column": "todoitem_id",
           "inverse": "source"
-        }
-      }
-    ],
-    "sequence": 0,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
-    "type": "ToDoCustomer",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "ToDo Customer Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
-          "value": "CRMA"
-        }
-      },
-      {
-        "name": "source",
-        "attr": {
-          "type": "Number",
-          "column": "source_id"
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "target_type",
-          "value": "TODO"
-        }
-      },
-	  {
-        "name": "target",
-        "attr": {
-          "type": "Number",
-          "column": "target_id"
-        }
-      },
-      {
-        "name": "purpose",
-        "attr": {
-          "type": "String",
-          "column": "purpose"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
-    "type": "ToDoCustomer",
-    "table": "crmacct",
-    "isExtension": true,
-    "comment": "Extended by Crm",
-    "relations": [
-      {
-        "column": "crmacct_id",
-        "inverse": "source"
-      }
-    ],
-    "properties": [
-      {
-        "name": "customer",
-        "toMany": {
-          "isNested": true,
-          "type": "Customer",
-          "column": "crmacct_cust_id",
-          "inverse": "id"
         }
       }
     ],
