@@ -1352,7 +1352,16 @@
 		  "type": "Number",
 		  "column": "custgrp_descrip"
 		}
-	  }
+	  },
+	  {
+        "name": "customers",
+        "toMany": {
+          "isNested": true,
+          "type": "CustomerGroupCustomer",
+          "column": "custgrp_id",
+          "inverse": "customerGroup"
+        }
+      }
 	],
 	"isSystem": true
   },
@@ -1363,14 +1372,6 @@
 	"table": "custgrpitem",
 	"idSequenceName": "custgrpitem_custgrpitem_id_seq",
 	"comment": "Customer Group Customer Map",
-	"priveleges": {
-		"all": {
-			"create": "MaintainCustomerGroups",
-			"read": "ViewCustomerGroups",
-			"update": "MaintainCustomerGroups",
-			"delete": "MaintainCustomerGroups"
-			}
-	},
 	"properties": [
 	  {
 		"name": "id",
@@ -1395,6 +1396,7 @@
 		}
 	  }
 	],
+	"isNestedOnly": true,
 	"isSystem": true
   }
 ]
