@@ -21,6 +21,6 @@ if [[ ! ${git_status} =~ 'Already up-to-date.' ]]
   fi
   git submodule update --recursive
   cd tools
-  #./deploy.sh
+  ./deploy.sh
 fi
 
