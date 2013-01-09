@@ -589,6 +589,20 @@ white:true*/
   // Incident status mixin
   XM.IncidentListItem = XM.IncidentListItem.extend(XM.IncidentStatus);
 
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.IncidentEmailProfile = XM.Document.extend(
+    /** @scope XM.IncidentEmailProfile.prototype */ {
+
+    recordType: 'XM.IncidentEmailProfile',
+
+    documentKey: 'name'
+
+  });
+
   // ..........................................................
   // COLLECTIONS
   //
@@ -653,5 +667,16 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.IncidentEmailProfileCollection = XM.Collection.extend({
+    /** @scope XM.IncidentEmailProfileCollection.prototype */
+
+    model: XM.IncidentEmailProfile
+
+  });
 }());
 
