@@ -74,10 +74,10 @@ trailing:true white:true*/
             {kind: "XV.UserAccountWidget", attr: "owner"},
             {kind: "onyx.GroupboxHeader", content: "_primaryContact".loc()},
             {kind: "XV.ContactWidget", attr: "primaryContact",
-              showAddress: true},
+              showAddress: true, label: "_name".loc()},
             {kind: "onyx.GroupboxHeader", content: "_secondaryContact".loc()},
             {kind: "XV.ContactWidget", attr: "secondaryContact",
-              showAddress: true},
+              showAddress: true, label: "_name".loc()},
             {kind: "XV.AccountCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
@@ -845,12 +845,11 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
             {kind: "XV.UserAccountWidget", attr: "owner"},
             {kind: "XV.UserAccountWidget", attr: "assignedTo"},
-            {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
-            {kind: "XV.ContactWidget", attr: "contact"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true},
             {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-            {kind: "XV.AccountWidget", attr: "account"}
+            {kind: "XV.AccountWidget", attr: "account"},
+            {kind: "XV.ContactWidget", attr: "contact"}
           ]}
         ]},
         {kind: "XV.ToDoCommentBox", attr: "comments"},
