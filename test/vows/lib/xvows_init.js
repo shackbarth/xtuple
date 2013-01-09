@@ -93,28 +93,28 @@ var loadXmDependencies = function () {
 
   // GRAB THE LOAD ORDER WE WANT TO PRESERVE
   // FROM THE package.js FILE IN MODELS
-  X.relativeDependsPath = _path.join(X.basePath, "../source/models");
-  require(_path.join(X.basePath, "../source/models", "package.js"));
-  require(_path.join(X.basePath, "../source/ext", "core.js"));
-  require(_path.join(X.basePath, "../source/ext", "datasource.js"));
+  X.relativeDependsPath = _path.join(X.basePath, "../../source/models");
+  require(_path.join(X.basePath, "../../source/models", "package.js"));
+  require(_path.join(X.basePath, "../../source/ext", "core.js"));
+  require(_path.join(X.basePath, "../../source/ext", "datasource.js"));
   // GRAB THE CRM MODULE
-  require(_path.join(X.basePath, "../../public-extensions/source/crm/client", "core.js"));
-  X.relativeDependsPath = _path.join(X.basePath, "../../public-extensions/source/crm/client/models");
-  require(_path.join(X.basePath, "../../public-extensions/source/crm/client/models", "package.js"));
+  require(_path.join(X.basePath, "../../../public-extensions/source/crm/client", "core.js"));
+  X.relativeDependsPath = _path.join(X.basePath, "../../../public-extensions/source/crm/client/models");
+  require(_path.join(X.basePath, "../../../public-extensions/source/crm/client/models", "package.js"));
   // GRAB THE PROJECT MODULE
-  require(_path.join(X.basePath, "../../public-extensions/source/project/client", "core.js"));
-  X.relativeDependsPath = _path.join(X.basePath, "../../public-extensions/source/project/client/models");
-  require(_path.join(X.basePath, "../../public-extensions/source/project/client/models", "package.js"));
+  require(_path.join(X.basePath, "../../../public-extensions/source/project/client", "core.js"));
+  X.relativeDependsPath = _path.join(X.basePath, "../../../public-extensions/source/project/client/models");
+  require(_path.join(X.basePath, "../../../public-extensions/source/project/client/models", "package.js"));
   // GRAB THE CONNECT MODULE
-  require(_path.join(X.basePath, "../../private-extensions/source/connect/client", "core.js"));
-  X.relativeDependsPath = _path.join(X.basePath, "../../private-extensions/source/connect/client/models");
-  require(_path.join(X.basePath, "../../private-extensions/source/connect/client/models", "package.js"));
+  require(_path.join(X.basePath, "../../../private-extensions/source/connect/client", "core.js"));
+  X.relativeDependsPath = _path.join(X.basePath, "../../../private-extensions/source/connect/client/models");
+  require(_path.join(X.basePath, "../../../private-extensions/source/connect/client/models", "package.js"));
   // GRAB THE INCIDENT PLUS MODULE
-  require(_path.join(X.basePath, "../../public-extensions/source/incident_plus/client", "core.js"));
-  X.relativeDependsPath = _path.join(X.basePath, "../../public-extensions/source/incident_plus/client/models");
-  require(_path.join(X.basePath, "../../public-extensions/source/incident_plus/client/models", "package.js"));
+  require(_path.join(X.basePath, "../../../public-extensions/source/incident_plus/client", "core.js"));
+  X.relativeDependsPath = _path.join(X.basePath, "../../../public-extensions/source/incident_plus/client/models");
+  require(_path.join(X.basePath, "../../../public-extensions/source/incident_plus/client/models", "package.js"));
   // GRAB THE STARTUP TASKS
-  require(_path.join(X.basePath, "../source", "startup.js"));
+  require(_path.join(X.basePath, "../../source", "startup.js"));
 
   // HANEOUS ABOMINATION TO KEEP BACKBONE-
   // RELATIONAL FROM BOMBING...
@@ -154,6 +154,9 @@ var authenticate = function () {
     if (!authError && authResponse.statusCode === 200) {
       if (authBody.isError) {
         X.log(authBody.reason);
+        // this sigkill and all others will tell node-xt to exit with status = 1
+        // which in turn will let jenkins know that the build failed.
+        process.emit("SIGKILL");
         return;
       }
 
@@ -166,6 +169,7 @@ var authenticate = function () {
           org = _.find(authBody.organizations, function (org) {return org.name === program.organization; });
           if (!org) {
             X.log("Invalid organization name");
+            process.emit("SIGKILL");
             return;
           }
 
@@ -181,10 +185,12 @@ var authenticate = function () {
           XVOWS.emit("ready");
         } else {
           X.log("Error on selection of organization.", selectError);
+          process.emit("SIGKILL");
         }
       });
     } else {
       X.log("Error on authentication. Is the datasource running?", authError);
+      process.emit("SIGKILL");
     }
   });
 };
