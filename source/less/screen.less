@@ -571,9 +571,6 @@ body {
 	border-top: none;
 	border-width: 1px;
 	.border-radius(0);
-	&.editor {
-    border-right: none;
-  }
 }
 
 .xv-groupbox.in-panel > *:last-child {
@@ -588,6 +585,10 @@ body {
 	/* reset styles that make 'item' look bad if they happen to be there */
 	.border-radius(0);
 	margin: 0;
+}
+
+.xv-groupbox > .in-panel .editor-field {
+  border-right: none;
 }
 
 .xv-groupbox > *:first-child {

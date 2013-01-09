@@ -540,9 +540,6 @@ body {
   -moz-border-radius: 0;
   border-radius: 0;
 }
-.xv-groupbox.in-panel > *:first-child.editor {
-  border-right: none;
-}
 .xv-groupbox.in-panel > *:last-child {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -559,6 +556,9 @@ body {
   -moz-border-radius: 0;
   border-radius: 0;
   margin: 0;
+}
+.xv-groupbox > .in-panel .editor-field {
+  border-right: none;
 }
 .xv-groupbox > *:first-child {
   border-top-color: #aaaaaa;
