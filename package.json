@@ -23,7 +23,8 @@
     "passport-http": "0.2.x",
     "passport-http-bearer": "0.2.x",
     "passport-oauth2-client-password": "0.1.x",
-    "connect-ensure-login": "0.1.x"
+    "connect-ensure-login": "0.1.x",
+    "socket.io":"0.9.x"
   },
   "devDependencies": {},
   "optionalDependencies": {},

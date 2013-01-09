@@ -7,7 +7,7 @@ var users = [
 exports.find = function(id, done) {
   for (var i = 0, len = users.length; i < len; i++) {
     var user = users[i];
-    if (user.id === id) {
+    if (user.id === id.id) {
       return done(null, user);
     }
   }
@@ -17,9 +17,14 @@ exports.find = function(id, done) {
 exports.findByUsername = function(username, done) {
   for (var i = 0, len = users.length; i < len; i++) {
     var user = users[i];
+    X.debug('findByUsername i: ', i);
+    X.debug('users i: ', users);
     if (user.username === username) {
+      X.debug('Found username: ', username);
       return done(null, user);
     }
   }
+
+  X.debug('Cannot find username: ', username);
   return done(null, null);
 };
