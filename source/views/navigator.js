@@ -44,6 +44,7 @@ trailing:true white:true*/
       onWorkspace: ""
     },
     handlers: {
+      onDeleteItem: "showDeletePopup",
       onParameterChange: "requery",
       onItemTap: "itemTap"
     },
@@ -129,7 +130,18 @@ trailing:true white:true*/
           {kind: "onyx.Button", content: "_ok".loc(), ontap: "errorOk",
             classes: "onyx-blue xv-popup-button"}
         ]},
-        {name: "myAccountPopup", kind: "XV.MyAccountPopup"}
+        {name: "myAccountPopup", kind: "XV.MyAccountPopup"},
+        {name: "deletePopup", kind: "onyx.Popup", centered: true, modal: true,
+          floating: true, scrim: true, onHide: "popupHidden", components: [
+          {content: "_confirmDelete".loc()},
+          {content: "_confirmAction".loc()},
+          {tag: "br"},
+          {kind: "onyx.Button", content: "_cancel".loc(), ontap: "cancelDelete",
+            classes: "xv-popup-button"},
+          {kind: "onyx.Button", content: "_ok".loc(), ontap: "deleteItem",
+            classes: "onyx-blue xv-popup-button"}
+        ]
+        }
       ]}
     ],
     /**
@@ -679,6 +691,9 @@ trailing:true white:true*/
     },
     menuTap: function (inSender, inEvent) {
       this.setupModuleMenuItem(inSender, inEvent);
+    },
+    showDeletePopup: function () {
+      this.$.deletePopup.show();
     },
     showError: function (message) {
       this.$.errorMessage.setContent(message);

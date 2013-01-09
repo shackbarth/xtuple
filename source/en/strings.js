@@ -64,9 +64,11 @@ XT.stringsFor("en_US", {
   // ********
 
   "_addressShared": "There are multiple records sharing this Address.",
+  "_confirmAction": "Are you sure this is what you want to do?",
   "_canNotUpdate": "Insufficient privileges to edit the record.",
   "_changeAll": "Change All",
   "_changeOne": "Change only this one",
+  "_confirmDelete": "This will permanently delete this record.",
   "_countryInvalid": "Country is invalid.",
   "_invalidAddress": "Invalid Address",
   "_invalidPassword": "Entry does not match your old password. Please re-enter.",

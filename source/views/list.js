@@ -17,15 +17,28 @@ trailing:true white:true*/
     name: "XV.ListItem",
     classes: "xv-list-item",
     ontap: "itemTap",
+    published: {
+      canDelete: true
+    },
+    events: {
+      onDeleteItem: ""
+    },
     create: function () {
       this.inherited(arguments);
-      this.createComponent({
-        name: "deleteButton",
-        kind: "onyx.IconButton",
-        classes: "xv-list-delete-button",
-        src: "assets/remove-icon.png",
-        showing: false
-      });
+      if (this.getCanDelete()) {
+        this.createComponent({
+          name: "deleteButton",
+          kind: "onyx.IconButton",
+          classes: "xv-list-delete-button",
+          src: "assets/remove-icon.png",
+          showing: false,
+          ontap: "deleteTapped"
+        });
+      }
+    },
+    deleteTapped: function (inSender, inEvent) {
+      this.doDeleteItem(inEvent);
+      return true;
     },
     setSelected: function (inSelected) {
       this.addRemoveClass("item-selected", inSelected);
@@ -129,6 +142,25 @@ trailing:true white:true*/
      */
     getModel: function (index) {
       return this.getValue().models[index];
+    },
+    deleteItem: function (inSender, inEvent) {
+      var index = inEvent.index,
+          collection = this.getValue(),
+          infoModel = collection.at(index),
+          Klass = infoModel ? XT.getObjectByName(infoModel.editableModel) : null,
+          model = new Klass({id: infoModel.id}),
+          fetchOptions = {},
+          that = this;
+          
+      fetchOptions.success = function (result) {
+        var destroyOptions = {};
+        destroyOptions.success = function (result) {
+          collection.remove(infoModel);
+          that.fetched();
+        };
+        model.destroy(destroyOptions);
+      };
+      model.fetch(fetchOptions);
     },
     /**
      @todo Document the getSearchableAttributes method.
@@ -341,6 +373,7 @@ trailing:true white:true*/
         model = this.getValue().models[index],
         isActive = model.getValue('isActive'),
         isNotActive = _.isBoolean(isActive) ? !isActive : false,
+        deleteButton = this.$.listItem.$.deleteButton,
         prop,
         isPlaceholder,
         view,
@@ -377,7 +410,9 @@ trailing:true white:true*/
 
       // Selection
       this.$.listItem.addRemoveClass("item-selected", isSelected);
-      this.$.listItem.$.deleteButton.applyStyle("display", isSelected ? "inline-block" : "none");
+      if (deleteButton) {
+        this.$.listItem.$.deleteButton.applyStyle("display", isSelected ? "inline-block" : "none");
+      }
       
       return true;
     },

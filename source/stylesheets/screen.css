@@ -298,10 +298,6 @@ body {
   padding-bottom: 3px;
   border-bottom: 1px solid #dddddd;
 }
-.xv-list-item > * {
-	display: inline-block;
-	vertical-align: middle;
-}
 @include box-sizing(border-box);
 .xv-list .xv-list-item.header {
   padding-top: 0;
@@ -361,6 +357,14 @@ body {
   color: #f49200;
   background: #226b9a url(../../assets/item-hilite.png) repeat-x bottom;
 }
+.xv-list-item > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+.xv-list-delete-button {
+  float: right;
+  display: none;
+}
 .xv-list-attr {
   padding: 5px;
   font-size: 13px;
@@ -402,11 +406,6 @@ body {
 .xv-list-attr.hyperlink {
   color: blue;
 }
-.xv-list-delete-button {
-	float: right;
-	display: none;
-}
-
 /* Parameter */
 .xv-parameter-item {
   background-color: #ffffff;
