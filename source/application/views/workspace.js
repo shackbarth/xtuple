@@ -1069,7 +1069,7 @@ trailing:true white:true*/
       this.inherited(arguments);
       if (this.getValue().getStatus() === XM.Model.READY_CLEAN ||
         this.getValue().getStatus() === XM.Model.READY_NEW) {
-          this.typeValueChanged(model);
+          this.typeValueChanged();
       }
     },
     
@@ -1077,7 +1077,8 @@ trailing:true white:true*/
       Function to determine visibility of "advanced" and "options" panels based
         on the characteristicType
      */
-    typeValueChanged: function (model) {
+    typeValueChanged: function () {
+      var model = this.value;
       var type = model.get('characteristicType');
       this.$.advancedPanel.setShowing(type === XM.Characteristic.TEXT);
       this.$.optionsPanel.setShowing(type === XM.Characteristic.LIST);
