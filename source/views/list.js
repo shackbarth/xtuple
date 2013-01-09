@@ -17,6 +17,16 @@ trailing:true white:true*/
     name: "XV.ListItem",
     classes: "xv-list-item",
     ontap: "itemTap",
+    create: function () {
+      this.inherited(arguments);
+      this.createComponent({
+        name: "deleteButton",
+        kind: "onyx.IconButton",
+        classes: "xv-list-delete-button",
+        src: "assets/remove-icon.png",
+        showing: false
+      });
+    },
     setSelected: function (inSelected) {
       this.addRemoveClass("item-selected", inSelected);
     }
@@ -49,7 +59,7 @@ trailing:true white:true*/
     @name XV.List
     @class Displays a scrolling list of rows.</br >
     Handles lazy loading. Passes in the first 50 items, and as one scrolls, passes more.<br />
-    Use to display large lists, typically a collection of records retrieved from the database, 
+    Use to display large lists, typically a collection of records retrieved from the database,
     for example a list of accounts, addresses, contacts, incidents, projects, and so forth.
 	But can also be used to display lists stored elsewhere such as state or country abbreviations.<br />
     Related: list, XV.List; row, {@link XV.ListItem}; cell, {@link XV.ListColumn}; data, {@link XV.ListAttr}<br />
@@ -88,6 +98,7 @@ trailing:true white:true*/
       onItemTap: "",
       onWorkspace: ""
     },
+    toggleSelected: true,
     fixedHeight: true,
     handlers: {
       onModelChange: "modelChanged",
@@ -210,7 +221,7 @@ trailing:true white:true*/
      */
     itemTap: function (inSender, inEvent) {
       inEvent.list = this;
-      this.doItemTap(inEvent);
+      //this.doItemTap(inEvent);
     },
     /**
       When a model changes, we are notified. We check the list to see if the
@@ -325,7 +336,11 @@ trailing:true white:true*/
       @todo Document the setupItem method.
       */
     setupItem: function (inSender, inEvent) {
-      var model = this.getValue().models[inEvent.index],
+      var index = inEvent.index,
+        isSelected = inEvent.originator.isSelected(index),
+        model = this.getValue().models[index],
+        isActive = model.getValue('isActive'),
+        isNotActive = _.isBoolean(isActive) ? !isActive : false,
         prop,
         isPlaceholder,
         view,
@@ -356,6 +371,14 @@ trailing:true white:true*/
           view.setContent(value);
         }
       }
+      
+      // Inactive
+      this.$.listItem.addRemoveClass("inactive", isNotActive);
+
+      // Selection
+      this.$.listItem.addRemoveClass("item-selected", isSelected);
+      this.$.listItem.$.deleteButton.applyStyle("display", isSelected ? "inline-block" : "none");
+      
       return true;
     },
      /**

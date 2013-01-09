@@ -298,6 +298,10 @@ body {
   padding-bottom: 3px;
   border-bottom: 1px solid #dddddd;
 }
+.xv-list-item > * {
+	display: inline-block;
+	vertical-align: middle;
+}
 @include box-sizing(border-box);
 .xv-list .xv-list-item.header {
   padding-top: 0;
@@ -398,6 +402,11 @@ body {
 .xv-list-attr.hyperlink {
   color: blue;
 }
+.xv-list-delete-button {
+	float: right;
+	display: none;
+}
+
 /* Parameter */
 .xv-parameter-item {
   background-color: #ffffff;
