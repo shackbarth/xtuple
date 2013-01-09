@@ -35,6 +35,7 @@ trailing:true white:true*/
       {name: "incidentCategoryList", kind: "XV.IncidentCategoryList"},
       {name: "incidentResoulutionList", kind: "XV.IncidentResolutionList"},
       {name: "incidentSeverityList", kind: "XV.IncidentSeverityList"},
+      {name: "incidentEmailProfile", kind: "XV.IncidentEmailProfileList"},
       {name: "opportunitySourceList", kind: "XV.OpportunitySourceList"},
       {name: "opportunityStageList", kind: "XV.OpportunityStageList"},
       {name: "opportunityTypeList", kind: "XV.OpportunityTypeList"},
