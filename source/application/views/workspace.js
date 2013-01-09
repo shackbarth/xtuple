@@ -1043,12 +1043,12 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isAddresses", label: "_address".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isContacts", label: "_contact".loc()},
-            // customer?
+            //{kind: "XV.ToggleButtonWidget", attr: "isCustomers", label: "_customer".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isAccounts", label: "_crmAccount".loc()},
-            // employee?
+            //{kind: "XV.ToggleButtonWidget", attr: "isEmployees", label: "_employee".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isIncidents", label: "_incident".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isItems", label: "_item".loc()},
-            // lot/serial?
+            //{kind: "XV.ToggleButtonWidget", attr: "isLotSerial", label: "_lotSerial".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isOpportunities", label: "_opportunity".loc()},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true},
@@ -1067,8 +1067,9 @@ trailing:true white:true*/
      */
     attributesChanged: function (model, options) {
       this.inherited(arguments);
-      if (this.getValue().getStatus() === XM.Model.READY_CLEAN) {
-        this.typeValueChanged(model);
+      if (this.getValue().getStatus() === XM.Model.READY_CLEAN ||
+        this.getValue().getStatus() === XM.Model.READY_NEW) {
+          this.typeValueChanged(model);
       }
     },
     

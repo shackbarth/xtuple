@@ -227,6 +227,7 @@ var lang = XT.stringsFor("en_US", {
   "_locale": "Locale",
   "_login": "Login",
   "_logout": "Logout",
+  "_lotSerial": "Lot/Serial",
   "_mainAddress": "Main Address",
   "_mask": "Mask",
   "_match": "Match",

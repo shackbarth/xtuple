@@ -14,8 +14,8 @@ trailing:true white:true*/
      components: [
        {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
          classes: "in-panel", style: "border-right: #aaa 1px solid;", components: [
-         {kind: "XV.InputWidget", attr: "value", classes: "editor"},
-         {kind: "XV.InputWidget", attr: "order", style: "border-right: none"}
+         {kind: "XV.InputWidget", attr: "value", classes: "editor-field"},
+         {kind: "XV.NumberWidget", attr: "order", classes: "editor-field"}
        ]}
      ]
    });
