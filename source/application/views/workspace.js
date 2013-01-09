@@ -1,7 +1,7 @@
 /*jshint bitwise:false, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true */
+/*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true, window:true */
 
 (function () {
 
@@ -182,7 +182,8 @@ trailing:true white:true*/
             {kind: "XV.AddressWidget", attr: "address"},
             {kind: "onyx.GroupboxHeader", content: "_information".loc()},
             {kind: "XV.InputWidget", attr: "jobTitle"},
-            {kind: "XV.InputWidget", attr: "primaryEmail"},
+            {kind: "XV.ComboboxWidget", attr: "primaryEmail",
+              keyAttribute: "email"},
             {kind: "XV.InputWidget", attr: "phone"},
             {kind: "XV.InputWidget", attr: "alternate"},
             {kind: "XV.InputWidget", attr: "fax"},
@@ -192,7 +193,8 @@ trailing:true white:true*/
           ]}
         ]},
         {kind: "XV.ContactCommentBox", attr: "comments"},
-        {kind: "XV.ContactDocumentsBox", attr: "documents"}
+        {kind: "XV.ContactDocumentsBox", attr: "documents"},
+        {kind: "XV.ContactEmailBox", attr: "email"}
       ]},
       {kind: "onyx.Popup", name: "multipleAddressPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",
@@ -245,6 +247,18 @@ trailing:true white:true*/
         this.$.multipleAddressPopup.show();
         return true;
       }
+    },
+    modelChanged: function () {
+      this.inherited(arguments);
+      var input = this.findControl("primaryEmail").$.input,
+       value = this.getValue();
+      input._collection = value ? value.get("email") : [];
+      input.buildList();
+    },
+    statusChanged: function () {
+      this.inherited(arguments);
+      var input = this.findControl("primaryEmail").$.input;
+      input.buildList();
     },
     popupHidden: function () {
       if (!this._popupDone) {

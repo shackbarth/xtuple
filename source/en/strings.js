@@ -131,6 +131,7 @@ var lang = XT.stringsFor("en_US", {
   "_dueDays": "Due Days",
   "_effective": "Effective",
   "_email": "Email",
+  "_emailAddresses": "Email Addresses",
   "_emphasisColor": "Emphasis Color",
   "_employee": "Employee",
   "_employees": "Employees",
