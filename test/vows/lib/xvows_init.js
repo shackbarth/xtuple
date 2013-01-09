@@ -147,7 +147,8 @@ relocate = function () {
   // that's done with ajax in the login repository
 var authenticate = function () {
   "use strict";
-  request.post({uri: "https://localhost/login/authenticate",
+  var protocol = program.port === 443 ? "https" : "http";
+  request.post({uri: protocol + "://" + program.host + ":" + program.port + "/login/authenticate",
       json: true,
       body: {id: program.user, password: program.password}},
       function (authError, authResponse, authBody) {
@@ -160,7 +161,7 @@ var authenticate = function () {
         return;
       }
 
-      request.post({uri: "https://localhost/login/selection",
+      request.post({uri: protocol + "://" + program.host + ":" + program.port + "/login/selection",
           json: true,
           body: {id: program.user, password: program.password, selected: program.organization}},
           function (selectError, selectResponse, selectBody) {
