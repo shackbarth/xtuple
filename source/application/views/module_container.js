@@ -17,7 +17,7 @@ trailing:true white:true*/
           attributes: {src: "lib/enyo-x/assets/splash/index.html"}}
       ]},
       {name: "setup", label: "_setup".loc(), panels: [
-        {name: "configureList", kind: "XV.ConfigurationsList"},
+        {name: "configureList", kind: "XV.ConfigurationsList", toggleSelected: false},
         {name: "userAccountList", kind: "XV.UserAccountList"},
         {name: "userAccountRoleList", kind: "XV.UserAccountRoleList"}
       ]}
