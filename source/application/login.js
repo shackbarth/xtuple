@@ -5,21 +5,31 @@ trailing:true white:true*/
 
 (function () {
   // first of 2 types of checks, this being the most obvious test
-  var c = enyo.getCookie("xtsessioncookie"),
-    h = document.location.hostname,
-    p = document.location.protocol,
-    l = document.location.pathname,
-    noAuthRedirect = "%@//%@/login".f(p,h);
+  var // TODO - old way, the next line should be removed.
+      cookie = enyo.getCookie("xtsessioncookie"),
+      hostname = document.location.hostname,
+      path = document.location.pathname,
+      port = document.location.port,
+      protocol = document.location.protocol,
+      // TODO - old way.
+      //noAuthRedirect = "%@//%@:%@/login".f(protocol,hostname,port);
+      // The base domain https://example.com:80
+      noAuthRedirect = "%@//%@:%@".f(protocol,hostname,port);
 
-  if (l.match(/login/g)) { return; }
+  if (path.match(/login/g)) { return; }
   try {
-    c = JSON.parse(c);
-    if (!c.organization) {
+    cookie = JSON.parse(cookie);
+    // TODO - connect.sid cookie is HttpOnly meaning this script cannot access it.
+    // Need to make a call to /session or some path and make sure this user has an org set in their session.
+   if (!cookie.organization) {
       // the user authenticated but didn't choose a database. They're half-logged-in,
       // and we should force them to login fully
-      document.location = noAuthRedirect;
+
+      // TODO - When above org lookup works, then we can redirect.
+      //document.location = noAuthRedirect;
     }
-  } catch (e) {
-    document.location = noAuthRedirect;
+  } catch (err) {
+    // TODO - When above org lookup works, then we can redirect.
+    //document.location = noAuthRedirect;
   }
 }());
