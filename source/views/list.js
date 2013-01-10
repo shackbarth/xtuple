@@ -143,16 +143,21 @@ trailing:true white:true*/
     deleteItem: function (inSender, inEvent) {
       var index = inEvent.index,
           collection = this.getValue(),
-          infoModel = collection.at(index),
-          Klass = infoModel ? XT.getObjectByName(infoModel.editableModel) : null,
-          model = new Klass({id: infoModel.id}),
+          imodel = collection.at(index),
+          model = imodel,
           fetchOptions = {},
-          that = this;
+          that = this,
+          Klass;
           
+      if (imodel instanceof XM.Info) {
+        Klass = XT.getObjectByName(model.editableModel);
+        model = new Klass({id: imodel.id});
+      }
+      
       fetchOptions.success = function (result) {
         var destroyOptions = {};
         destroyOptions.success = function (result) {
-          collection.remove(infoModel);
+          collection.remove(imodel);
           that.fetched();
         };
         model.destroy(destroyOptions);
@@ -431,7 +436,11 @@ trailing:true white:true*/
                 that.renderRow(index);
               }
             };
-            model.used(options);
+            if (model instanceof XM.Info) {
+              XT.getObjectByName(model.editableModel).used(model.id, options);
+            } else {
+              model.used(options);
+            }
           }
           deleteButton.applyStyle("display", that._used[index] === false ? "inline-block" : "none");
           this._used[index] = undefined; // Don't keep stale information
