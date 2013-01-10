@@ -18,7 +18,7 @@ trailing:true white:true*/
       ]},
       {name: "setup", label: "_setup".loc(), panels: [
         {name: "configureList", kind: "XV.ConfigurationsList", toggleSelected: false},
-        {name: "userAccountList", kind: "XV.UserAccountList"},
+        {name: "userAccountList", kind: "XV.UserAccountList", toggleSelected: false},
         {name: "userAccountRoleList", kind: "XV.UserAccountRoleList"}
       ]}
     ]
