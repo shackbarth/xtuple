@@ -7,8 +7,7 @@ var X = X || {};
 X.getCookie = enyo.getCookie;
 
 (function () {
-  var hostname = window.DOCUMENT_HOSTNAME = document.location.hostname,
-      port = document.location.port,
+  var host = document.location.host,
       protocol = document.location.protocol;
 
   window.relocate = function () {
@@ -21,6 +20,6 @@ X.getCookie = enyo.getCookie;
 
     // TODO - old way
     //document.location = "%@//%@/login".f(protocol,hostname),
-    document.location = "%@//%@:%@".f(protocol,hostname,port);
+    document.location = "%@//%@".f(protocol,host);
   };
 }());

@@ -7,14 +7,13 @@ trailing:true white:true*/
   // first of 2 types of checks, this being the most obvious test
   var // TODO - old way, the next line should be removed.
       cookie = enyo.getCookie("xtsessioncookie"),
-      hostname = document.location.hostname,
+      host = document.location.host,
       path = document.location.pathname,
-      port = document.location.port,
       protocol = document.location.protocol,
       // TODO - old way.
       //noAuthRedirect = "%@//%@:%@/login".f(protocol,hostname,port);
       // The base domain https://example.com:80
-      noAuthRedirect = "%@//%@:%@".f(protocol,hostname,port);
+      noAuthRedirect = "%@//%@".f(protocol,host);
 
   if (path.match(/login/g)) { return; }
   try {

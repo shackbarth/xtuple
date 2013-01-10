@@ -353,15 +353,14 @@ white:true*/
 
       XT.log("Attempting to connect to the datasource");
 
-      var hostname = document.location.hostname,
+      var host = document.location.host,
           path = "clientsock",
-          port = document.location.port,
           protocol = document.location.protocol,
           // TODO - old way.
           //url = this.datasourceUrl,
           //port = this.datasourcePort,
           //datasource = "https://%@/clientsock".f(url),
-          datasource = "%@//%@:%@/%@".f(protocol, hostname, port, path),
+          datasource = "%@//%@/%@".f(protocol, host, path),
           self = this,
           didConnect = this.sockDidConnect,
           didError = this.sockDidError;
