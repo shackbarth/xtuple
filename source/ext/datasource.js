@@ -7,9 +7,9 @@ white:true*/
   "use strict";
 
   XT.DataSource = {
-
-    datasourceUrl: DOCUMENT_HOSTNAME,
-    datasourcePort: 443,
+    // TODO - Old way.
+    //datasourceUrl: DOCUMENT_HOSTNAME,
+    //datasourcePort: 443,
     isConnected: false,
 
     /*
