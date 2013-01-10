@@ -1052,14 +1052,14 @@ trailing:true white:true*/
             {kind: "XV.ToggleButtonWidget", attr: "isOpportunities", label: "_opportunity".loc()},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true},
-            {name: "advancedPanel", components: [
+            {name: "advancedPanel", showing: false, components: [
               {kind: "onyx.GroupboxHeader", content: "_advanced".loc()},
               {kind: "XV.InputWidget", attr: "mask"},
               {kind: "XV.InputWidget", attr: "validator"}
             ]}
           ]}
         ]},
-        {kind: "XV.CharacteristicOptionBox", name: "optionsPanel", attr: "options"}
+        {kind: "XV.CharacteristicOptionBox", name: "optionsPanel", attr: "options", showing: false}
       ]}
     ],
     /**
@@ -1069,7 +1069,7 @@ trailing:true white:true*/
       this.inherited(arguments);
       if (this.getValue().getStatus() === XM.Model.READY_CLEAN ||
         this.getValue().getStatus() === XM.Model.READY_NEW) {
-          this.typeValueChanged();
+          this.typeValueChanged(model);
       }
     },
     
@@ -1077,11 +1077,15 @@ trailing:true white:true*/
       Function to determine visibility of "advanced" and "options" panels based
         on the characteristicType
      */
-    typeValueChanged: function () {
-      var model = this.value;
-      var type = model.get('characteristicType');
-      this.$.advancedPanel.setShowing(type === XM.Characteristic.TEXT);
-      this.$.optionsPanel.setShowing(type === XM.Characteristic.LIST);
+    typeValueChanged: function (model) {
+      var type = model ? model.get('characteristicType') : null;
+      var isText = type === XM.Characteristic.TEXT;
+      var isList = type === XM.Characteristic.LIST;
+      this.$.advancedPanel.setShowing(isText);
+      this.$.optionsPanel.setShowing(isList);
+      if (isList){
+        this.$.optionsPanel.render();        
+      }
     }
   });
 
