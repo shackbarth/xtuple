@@ -374,6 +374,8 @@ trailing:true white:true*/
         isNotActive = _.isBoolean(isActive) ? !isActive : false,
         deleteButton = this.$.listItem.$.deleteButton,
         toggleSelected = this.getToggleSelected(),
+        that = this,
+        options = {},
         prop,
         isPlaceholder,
         view,
@@ -418,8 +420,23 @@ trailing:true white:true*/
       // Selection
       if (toggleSelected) {
         this.$.listItem.addRemoveClass("item-selected", isSelected);
-        if (deleteButton) {
-          this.$.listItem.$.deleteButton.applyStyle("display", isSelected ? "inline-block" : "none");
+        if (deleteButton && isSelected) {
+          // Need to find out if this record is "used" to determine whether to show the delete button
+          // That's an async function, so re-render row and reprocess once we have data.
+          if (!this._used) { this._used = {}; }
+          if (!_.isBoolean(this._used[index])) {
+            options.success = function (used) {
+              that._used[index] = used;
+              if (!used) {
+                that.renderRow(index);
+              }
+            };
+            model.used(options);
+          }
+          deleteButton.applyStyle("display", that._used[index] === false ? "inline-block" : "none");
+          this._used[index] = undefined; // Don't keep stale information
+        } else {
+          deleteButton.applyStyle("display", "none");
         }
       }
       
