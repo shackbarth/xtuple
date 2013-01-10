@@ -791,11 +791,8 @@ body {
 
 /* Combo Box */
 .xv-combobox {
-  padding: 6px;
-  padding-top: 8px;
-  padding-right: 0;
   height: 24px;
-  width: 200px;
+  width: 100%;
 	display: inline-block;
 }
 
@@ -804,10 +801,33 @@ body {
   border: 0;
   display: inline-block;
   outline: none;
-  width: 150px; 
+  width: 80%; 
 }
 
 .xv-combobox-icon {
+	margin-left: 8px;
+  display: inline-block;
+}
+
+/* Combo Box Widget */
+.xv-comboboxwidget {
+  padding: 6px;
+  padding-top: 8px;
+  padding-right: 0;
+  height: 24px;
+  width: 200px;
+	display: inline-block;
+}
+
+.xv-comboboxwidget-input {
+  font-size: medium;
+  border: 0;
+  display: inline-block;
+  outline: none;
+  width: 150px; 
+}
+
+.xv-comboboxwidget-icon {
 	margin-left: 4px;
   display: inline-block;
 }
@@ -845,6 +865,7 @@ body {
   width: 130px;
 	padding: 18px 8px 8px 8px;
   text-align: right;
+  color: black;
 }
 
 .xv-textarea-input {
@@ -853,6 +874,7 @@ body {
   min-height: 100px;
   margin: 6px;
 	border: #ddd 2px solid;
+	color: black;
 }
 
 .xv-documents-picker-label {

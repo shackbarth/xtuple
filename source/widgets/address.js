@@ -74,6 +74,13 @@ regexp:true, undef:true, trailing:true, white:true */
         {kind: "onyx.InputDecorator", fit: true,
           classes: "xv-addresswidget-combobox-decorator",
           components: [
+          {kind: "XV.CountryCombobox", name: "country",
+            onValueChange: "countryChanged",
+            placeholder: "_country".loc()}
+        ]},
+        {kind: "onyx.InputDecorator", fit: true,
+          classes: "xv-addresswidget-combobox-decorator",
+          components: [
           {kind: "XV.StateCombobox", name: "state", placeholder: "_state".loc(),
             onValueChange: "inputChanged"}
         ]},
@@ -83,13 +90,6 @@ regexp:true, undef:true, trailing:true, white:true */
           {kind: "onyx.Input", name: "postalCode",
             classes: "xv-addresswidget-input",
             placeholder: "_postalCode".loc(), onchange: "inputChanged"}
-        ]},
-        {kind: "onyx.InputDecorator", fit: true,
-          classes: "xv-addresswidget-combobox-decorator",
-          components: [
-          {kind: "XV.CountryCombobox", name: "country",
-            onValueChange: "countryChanged",
-            placeholder: "_country".loc()}
         ]},
         {tag: "br"},
         {kind: "onyx.Button", content: "_done".loc(), ontap: "done",

@@ -224,7 +224,7 @@ regexp:true, undef:true, trailing:true, white:true */
       @param value Can be a model or the id of a model (String or Number).
         If it is an ID, then the correct model will be fetched and this
         function will be called again recursively with the model.
-      @param {Object} options 
+      @param {Object} options
      */
     setValue: function (value, options) {
       options = options || {};

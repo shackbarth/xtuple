@@ -215,11 +215,11 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
       this.buildList();
     }
   });
-  
+
   // ..........................................................
   // WIDGET
   //
-  
+
   /**
     @name XV.ComboboxWidget
     @class An input control consisting of fittable columns:
@@ -237,15 +237,13 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
       label: "",
       showLabel: true
     },
+    handlers: {
+      onValueChange: "controlValueChanged"
+    },
     components: [
       {kind: "FittableColumns", components: [
         {name: "label", content: "", classes: "xv-decorated-label"},
-        {name: "input", kind: "XV.Combobox",
-          setValue: function (value) {
-            // Input combobox is always silent in this context
-            return XV.Combobox.prototype.setValue.call(this, value, {silent: true});
-          }
-        }
+        {name: "input", kind: "XV.Combobox"}
       ]}
     ],
     /**
@@ -255,7 +253,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
       this.setValue(false, options);
     },
     /**
-    
+
     */
     collectionChanged: function () {
       this.$.input.setCollection(this.getCollection());
@@ -266,6 +264,12 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     keyAttributeChanged: function () {
       this.$.input.setKeyAttribute(this.getKeyAttribute());
     },
+    controlValueChanged: function (inSender, inEvent) {
+      if (inEvent.originator !== this) {
+        this.setValue(inEvent.value);
+        return true;
+      }
+    },
     /**
     @todo Document the create method.
     */
@@ -275,6 +279,8 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
       this.filterChanged();
       this.keyAttributeChanged();
       this.labelChanged();
+      this.$.input.$.input.addRemoveClass("xv-comboboxwidget-input", true);
+      this.$.input.$.iconButton.addRemoveClass("xv-comboboxwidget-icon", true);
       this.$.input.buildList();
     },
     /**
