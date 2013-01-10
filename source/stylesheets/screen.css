@@ -364,6 +364,7 @@ body {
 .xv-list-delete-button {
   float: right;
   display: none;
+  margin-top: -4px;
 }
 .xv-list-attr {
   padding: 5px;
