@@ -44,7 +44,7 @@ trailing:true white:true*/
       onWorkspace: ""
     },
     handlers: {
-      onDeleteItem: "showDeletePopup",
+      onDeleteTap: "showDeletePopup",
       onParameterChange: "requery",
       onItemTap: "itemTap"
     },
@@ -136,9 +136,9 @@ trailing:true white:true*/
           {content: "_confirmDelete".loc()},
           {content: "_confirmAction".loc()},
           {tag: "br"},
-          {kind: "onyx.Button", content: "_cancel".loc(), ontap: "cancelDelete",
+          {kind: "onyx.Button", content: "_cancel".loc(), ontap: "closeDeletePopup",
             classes: "xv-popup-button"},
-          {kind: "onyx.Button", content: "_ok".loc(), ontap: "deleteItem",
+          {kind: "onyx.Button", content: "_ok".loc(), ontap: "deleteOk",
             classes: "onyx-blue xv-popup-button"}
         ]
         }
@@ -214,11 +214,19 @@ trailing:true white:true*/
         this.getPanelCache()[globalIndex] = panelToCache;
       }
     },
+    closeDeletePopup: function () {
+      this._popupDone = true;
+      this.$.deletePopup.hide();
+    },
     /**
       Called if the user does not really want to log out. Just closes the logout popup.
      */
     closeLogoutPopup: function () {
       this.$.logoutPopup.hide();
+    },
+    deleteOk: function () {
+      this.closeDeletePopup();
+      this._deleteEvent.originator.parent.doDeleteItem(this._deleteEvent);
     },
     getSelectedModule: function () {
       return this._selectedModule;
@@ -483,6 +491,11 @@ trailing:true white:true*/
       }
       return true;
     },
+    popupHidden: function (inSender, inEvent) {
+      if (!this._popupDone) {
+        inEvent.originator.show();
+      }
+    },
     requery: function (inSender, inEvent) {
       this.fetch();
     },
@@ -692,7 +705,11 @@ trailing:true white:true*/
     menuTap: function (inSender, inEvent) {
       this.setupModuleMenuItem(inSender, inEvent);
     },
-    showDeletePopup: function () {
+    showDeletePopup: function (inSender, inEvent) {
+      if (this._popupDone !== false) {
+        this._deleteEvent = inEvent;
+      }
+      this._popupDone = false;
       this.$.deletePopup.show();
     },
     showError: function (message) {

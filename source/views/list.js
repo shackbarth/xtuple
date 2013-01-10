@@ -21,6 +21,7 @@ trailing:true white:true*/
       canDelete: true
     },
     events: {
+      onDeleteTap: "",
       onDeleteItem: ""
     },
     create: function () {
@@ -37,7 +38,7 @@ trailing:true white:true*/
       }
     },
     deleteTapped: function (inSender, inEvent) {
-      this.doDeleteItem(inEvent);
+      this.doDeleteTap(inEvent);
       return true;
     },
     setSelected: function (inSelected) {
@@ -114,6 +115,7 @@ trailing:true white:true*/
     toggleSelected: true,
     fixedHeight: true,
     handlers: {
+      onDeleteItem: "deleteItem",
       onModelChange: "modelChanged",
       onSetupItem: "setupItem"
     },
