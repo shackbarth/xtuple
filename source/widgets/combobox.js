@@ -215,11 +215,11 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
       this.buildList();
     }
   });
-  
+
   // ..........................................................
   // WIDGET
   //
-  
+
   /**
     @name XV.ComboboxWidget
     @class An input control consisting of fittable columns:
@@ -253,7 +253,7 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
       this.setValue(false, options);
     },
     /**
-    
+
     */
     collectionChanged: function () {
       this.$.input.setCollection(this.getCollection());
@@ -279,6 +279,8 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
       this.filterChanged();
       this.keyAttributeChanged();
       this.labelChanged();
+      this.$.input.$.input.addRemoveClass("xv-comboboxwidget-input", true);
+      this.$.input.$.iconButton.addRemoveClass("xv-comboboxwidget-icon", true);
       this.$.input.buildList();
     },
     /**
