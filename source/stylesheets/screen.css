@@ -340,7 +340,7 @@ body {
 }
 .xv-list .xv-list-item.item-selected .xv-list-attr.hyperlink {
   color: #f49200;
-  background: #226b9a url(../../assets/item-hilite.png) repeat-x bottom;
+  background: transparent;
 }
 .xv-list .xv-list-item.item-selected .xv-list-attr.header {
   background: #99ccff;
@@ -355,7 +355,7 @@ body {
 }
 .xv-list .xv-list-item.item-selected .xv-list-column .xv-list-attr.hyperlink {
   color: #f49200;
-  background: #226b9a url(../../assets/item-hilite.png) repeat-x bottom;
+  background: transparent;
 }
 .xv-list-item > * {
   display: inline-block;

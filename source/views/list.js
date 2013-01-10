@@ -17,25 +17,20 @@ trailing:true white:true*/
     name: "XV.ListItem",
     classes: "xv-list-item",
     ontap: "itemTap",
-    published: {
-      canDelete: true
-    },
     events: {
       onDeleteTap: "",
       onDeleteItem: ""
     },
     create: function () {
       this.inherited(arguments);
-      if (this.getCanDelete()) {
-        this.createComponent({
-          name: "deleteButton",
-          kind: "onyx.IconButton",
-          classes: "xv-list-delete-button",
-          src: "assets/remove-icon.png",
-          showing: false,
-          ontap: "deleteTapped"
-        });
-      }
+      this.createComponent({
+        name: "deleteButton",
+        kind: "onyx.IconButton",
+        classes: "xv-list-delete-button",
+        src: "assets/remove-icon.png",
+        showing: false,
+        ontap: "deleteTapped"
+      });
     },
     deleteTapped: function (inSender, inEvent) {
       this.doDeleteTap(inEvent);
@@ -65,7 +60,8 @@ trailing:true white:true*/
     name: "XV.ListAttr",
     classes: "xv-list-attr",
     published: {
-      attr: ""
+      attr: "",
+      isKey: false
     }
   });
 
@@ -254,8 +250,10 @@ trailing:true white:true*/
      @todo Document the itemTap method.
      */
     itemTap: function (inSender, inEvent) {
-      inEvent.list = this;
-      //this.doItemTap(inEvent);
+      if (!this.getToggleSelected() || inEvent.originator.isKey) {
+        inEvent.list = this;
+        this.doItemTap(inEvent);
+      }
     },
     /**
       When a model changes, we are notified. We check the list to see if the
@@ -373,37 +371,45 @@ trailing:true white:true*/
       var index = inEvent.index,
         isSelected = inEvent.originator.isSelected(index),
         model = this.getValue().models[index],
-        isActive = model.getValue('isActive'),
+        isActive = model.getValue ? model.getValue('isActive') : true,
         isNotActive = _.isBoolean(isActive) ? !isActive : false,
         deleteButton = this.$.listItem.$.deleteButton,
+        toggleSelected = this.getToggleSelected(),
         prop,
         isPlaceholder,
         view,
         value,
         formatter,
-        attr;
+        attr,
+        classes;
 
       // Loop through all attribute container children and set content
       for (prop in this.$) {
-        if (this.$.hasOwnProperty(prop) && this.$[prop].getAttr) {
-          view = this.$[prop];
-          isPlaceholder = false;
-          attr = this.$[prop].getAttr();
-          value = model.getValue ? model.getValue(attr) : model.get(attr);
-          formatter = view.formatter;
-          if (!value && view.placeholder) {
-            value = view.placeholder;
-            isPlaceholder = true;
+        if (this.$.hasOwnProperty(prop)) {
+          if (this.$[prop].isKey) {
+            classes = toggleSelected ? "bold hyperlink" : "bold";
+            this.$[prop].addRemoveClass(classes, true);
           }
-          view.addRemoveClass("placeholder", isPlaceholder);
-          if (formatter) {
-            value = this[formatter](value, view, model);
+          if (this.$[prop].getAttr) {
+            view = this.$[prop];
+            isPlaceholder = false;
+            attr = this.$[prop].getAttr();
+            value = model.getValue ? model.getValue(attr) : model.get(attr);
+            formatter = view.formatter;
+            if (!value && view.placeholder) {
+              value = view.placeholder;
+              isPlaceholder = true;
+            }
+            view.addRemoveClass("placeholder", isPlaceholder);
+            if (formatter) {
+              value = this[formatter](value, view, model);
+            }
+            if (value && value instanceof Date) {
+              value = XT.date.applyTimezoneOffset(value, true);
+              value = Globalize.format(value, 'd');
+            }
+            view.setContent(value);
           }
-          if (value && value instanceof Date) {
-            value = XT.date.applyTimezoneOffset(value, true);
-            value = Globalize.format(value, 'd');
-          }
-          view.setContent(value);
         }
       }
       
@@ -411,9 +417,11 @@ trailing:true white:true*/
       this.$.listItem.addRemoveClass("inactive", isNotActive);
 
       // Selection
-      this.$.listItem.addRemoveClass("item-selected", isSelected);
-      if (deleteButton) {
-        this.$.listItem.$.deleteButton.applyStyle("display", isSelected ? "inline-block" : "none");
+      if (toggleSelected) {
+        this.$.listItem.addRemoveClass("item-selected", isSelected);
+        if (deleteButton) {
+          this.$.listItem.$.deleteButton.applyStyle("display", isSelected ? "inline-block" : "none");
+        }
       }
       
       return true;
