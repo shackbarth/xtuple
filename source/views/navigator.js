@@ -445,6 +445,13 @@ trailing:true white:true*/
           // XXX try this: only create the first three
           if (panels[n].index < 3) {
             panels[n].status = "active";
+            
+            // Default behavior for Lists is toggle selections
+            // So we can perform actions on rows. If not a List
+            // this property shouldn't hurt anything
+            if (panels[n].toggleSelected === undefined) {
+              panels[n].toggleSelected = true;
+            }
             panel = this.$.contentPanels.createComponent(panels[n]);
             if (panel instanceof XV.List) {
 
@@ -535,6 +542,13 @@ trailing:true white:true*/
       } else if (panelStatus === 'unborn') {
         // panel exists but has not been rendered. Render it.
         module.panels[index].status = 'active';
+        
+        // Default behavior for Lists is toggle selections
+        // So we can perform actions on rows. If not a List
+        // this property shouldn't hurt anything
+        if (module.panels[index].toggleSelected === undefined) {
+          module.panels[index].toggleSelected = true;
+        }
         panel = contentPanels.createComponent(module.panels[index]);
         panel.render();
         if (panel instanceof XV.List) {

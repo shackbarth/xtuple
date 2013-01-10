@@ -108,7 +108,6 @@ trailing:true white:true*/
       onItemTap: "",
       onWorkspace: ""
     },
-    toggleSelected: true,
     fixedHeight: true,
     handlers: {
       onDeleteItem: "deleteItem",

@@ -8,7 +8,7 @@ trailing:true white:true*/
   /**
     @name XV.DocumentListRelations
     @class A control that displays a list of scrolling rows.<br />
-    Use to provide the list of related data to the {@link XV.DocumentsBox}.<br /> 
+    Use to provide the list of related data to the {@link XV.DocumentsBox}.<br />
     @extends XV.ListRelations
    */
   enyo.kind(/** @lends XV.DocumentListRelations# */{
@@ -20,14 +20,16 @@ trailing:true white:true*/
     },
     components: [
       {kind: "XV.ListItem", classes: "header", components: [
-        {kind: "XV.ListAttr", formatter: "formatType", classes: "header"},
-        {kind: "FittableColumns", components: [
-          {kind: "XV.ListAttr", formatter: "formatNumber", classes: "bold"},
-          {kind: "XV.ListAttr", attr: "purpose", fit: true, formatter: "formatPurpose",
-            classes: "right"}
-        ]},
-        {kind: "XV.ListAttr", formatter: "formatDescription",
-          ontap: "openWindow", placeholder: "_noDescription".loc()}
+        {kind: "XV.ListColumn", name: "column", components: [
+          {kind: "XV.ListAttr", formatter: "formatType", classes: "header"},
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListAttr", formatter: "formatNumber", classes: "bold"},
+            {kind: "XV.ListAttr", attr: "purpose", fit: true, formatter: "formatPurpose",
+              classes: "right"}
+          ]},
+          {kind: "XV.ListAttr", formatter: "formatDescription",
+            ontap: "openWindow", placeholder: "_noDescription".loc()}
+        ]}
       ]}
     ],
     orderBy: [
@@ -127,6 +129,11 @@ trailing:true white:true*/
         window.open(path);
         return true;
       }
+    },
+    setupItem: function () {
+      this.inherited(arguments);
+      // Hack: You _will_ conform!
+      this.$.column.applyStyle("width", "100%");
     }
   });
 
@@ -136,7 +143,7 @@ trailing:true white:true*/
     of horizontal rows.<br />
     Made up of a header, scroller, and a row of navigation buttons.<br />
     Use to implement a popup window for the user to define document relationships,
-    for example: the purpose (related to, parent of, child of, duplicate of) and 
+    for example: the purpose (related to, parent of, child of, duplicate of) and
     the type (account, contact, file, incident, item) of object to which the document is related.
     @extends XV.ListRelationsBox
    */
