@@ -113,5 +113,31 @@
      }
     ],
     "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "SessionStore",
+    "table": "xt.sessionstore",
+    "idSequenceName": "sessionstore_sessionstore_id_seq",
+    "comment": "These ARE NOT VALID SESSIONS, see XM.Session for that. node-datasource Express Session Store. By default, this is stored in memory, we persist it to db here.",
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "String",
+         "column": "sessionstore_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "session",
+       "attr": {
+         "type": "String",
+         "column": "sessionstore_session"
+       }
+     }
+    ],
+    "isSystem": true
   }
 ]
