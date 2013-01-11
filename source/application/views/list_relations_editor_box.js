@@ -32,6 +32,29 @@ trailing:true white:true*/
    });
 
   // ..........................................................
+  // CONTACT
+  //
+  enyo.kind({
+    name: "XV.ContactEmailEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.InputWidget", attr: "email"}
+      ]}
+    ]
+  });
+
+  enyo.kind({
+    name: "XV.ContactEmailBox",
+    kind: "XV.ListRelationsEditorBox",
+    title: "_emailAddresses".loc(),
+    editor: "XV.ContactEmailEditor",
+    parentKey: "contact",
+    listRelations: "XV.ContactEmailListRelations"
+  });
+
+  // ..........................................................
   // PROJECT
   //
   enyo.kind({
