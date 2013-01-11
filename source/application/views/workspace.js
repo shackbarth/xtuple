@@ -1033,5 +1033,75 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.UserAccountRole", "XV.UserAccountRoleWorkspace");
   XV.registerModelWorkspace("XM.UserAccountRoleRelation", "XV.UserAccountRoleWorkspace");
   XV.registerModelWorkspace("XM.UserAccountRoleListItem", "XV.UserAccountRoleWorkspace");
+  
+  // ..........................................................
+  // CHARACTERISTIC
+  //
+  
+  enyo.kind({
+    name: "XV.CharacteristicWorkspace",
+    kind: "XV.Workspace",
+    title: "_characteristic".loc(),
+    model: "XM.Characteristic",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.CharacteristicTypePicker", name: "typePicker", attr: "characteristicType"},
+            {kind: "XV.CheckboxWidget", attr: "isSearchable"},
+            {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isAddresses", label: "_address".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isContacts", label: "_contact".loc()},
+            //{kind: "XV.ToggleButtonWidget", attr: "isCustomers", label: "_customer".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isAccounts", label: "_crmAccount".loc()},
+            //{kind: "XV.ToggleButtonWidget", attr: "isEmployees", label: "_employee".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isIncidents", label: "_incident".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isItems", label: "_item".loc()},
+            //{kind: "XV.ToggleButtonWidget", attr: "isLotSerial", label: "_lotSerial".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isOpportunities", label: "_opportunity".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true},
+            {name: "advancedPanel", showing: false, components: [
+              {kind: "onyx.GroupboxHeader", content: "_advanced".loc()},
+              {kind: "XV.InputWidget", attr: "mask"},
+              {kind: "XV.InputWidget", attr: "validator"}
+            ]}
+          ]}
+        ]},
+        {kind: "XV.CharacteristicOptionBox", name: "optionsPanel", attr: "options", showing: false}
+      ]}
+    ],
+    /**
+      After the controls are updated by the model, determine visibility of panels.
+     */
+    attributesChanged: function (model, options) {
+      this.inherited(arguments);
+      if (this.getValue().getStatus() === XM.Model.READY_CLEAN ||
+        this.getValue().getStatus() === XM.Model.READY_NEW) {
+          this.typeValueChanged(model);
+      }
+    },
+    
+    /**
+      Function to determine visibility of "advanced" and "options" panels based
+        on the characteristicType
+     */
+    typeValueChanged: function (model) {
+      var type = model ? model.get('characteristicType') : null;
+      var isText = type === XM.Characteristic.TEXT;
+      var isList = type === XM.Characteristic.LIST;
+      this.$.advancedPanel.setShowing(isText);
+      this.$.optionsPanel.setShowing(isList);
+      if (isList){
+        this.$.optionsPanel.render();        
+      }
+    }
+  });
+
+  XV.registerModelWorkspace("XM.Characteristic", "XV.CharacteristicWorkspace");
 
 }());

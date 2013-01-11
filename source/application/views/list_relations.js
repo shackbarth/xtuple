@@ -80,6 +80,31 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // CHARACTERISTIC
+  //
+
+  enyo.kind({
+    name: "XV.CharacteristicOptionListRelations",
+    kind: "XV.ListRelations",
+    orderBy: [
+      {attribute: 'order', descending: true}
+    ],
+    parentKey: "characteristic",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "value", classes: "bold"},
+          ]},
+          {kind: "XV.ListColumn", components: [
+            {kind: "XV.ListAttr", attr: "order"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+ // ..........................................................
   // PROJECT
   //
 
