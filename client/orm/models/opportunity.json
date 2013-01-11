@@ -655,7 +655,7 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": "ViewAllOpportunities",
+        "read": "ViewAllOpportunities MaintainAllOpportunities",
         "update": false,
         "delete": false
       },
@@ -758,7 +758,7 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": "ViewAllOpportunities",
+        "read": "ViewAllOpportunities MaintainAllOpportunities",
         "update": false,
         "delete": false
       },
