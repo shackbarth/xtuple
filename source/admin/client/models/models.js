@@ -95,11 +95,11 @@ white:true*/
     databaseType: 'global',
 
     autoFetchId: false,
-    
+
     defaults: {
       isActive: true
     },
-    
+
     requiredAttributes: [
       "isActive",
       "licenses"
@@ -174,6 +174,24 @@ white:true*/
 
     @extends XM.Model
   */
+  XM.SessionStore = XM.Model.extend({
+    /** @scope XM.SessionStore.prototype */
+
+    recordType: 'XM.SessionStore',
+
+    idAttribute: 'id',
+
+    databaseType: 'global',
+
+    autoFetchId: false
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
   XM.User = XM.Document.extend({
     /** @scope XM.User.prototype */
 
@@ -186,16 +204,16 @@ white:true*/
     enforceUpperKey: false,
 
     databaseType: 'global',
-    
+
     defaults: {
       isActive: true
     },
-    
+
     requiredAttributes: [
       "isActive",
       "email"
     ],
-    
+
     /**
      * The username attribute must be editable for a new entry.
      */
