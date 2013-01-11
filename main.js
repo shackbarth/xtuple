@@ -107,7 +107,13 @@ var express = require('express'),
  * Express configuration.
  */
 var app = express(),
-    io;
+// TODO - can we get to this through express? connect.utils.parseSignedCookie
+    connect           = require('connect'),
+    parseSignedCookie = connect.utils.parseSignedCookie,
+    MemoryStore = express.session.MemoryStore,
+    cookie = require('express/node_modules/cookie'),
+    io,
+    sessionStore = new MemoryStore();
 
 app.configure(function () {
   "use strict";
@@ -117,7 +123,7 @@ app.configure(function () {
   //app.use(express.logger());
   app.use(express.cookieParser());
   app.use(express.bodyParser());
-  app.use(express.session({ secret: '.T#T@r5EkPM*N@C%9K-iPW!+T' }));
+  app.use(express.session({ store: sessionStore, secret: '.T#T@r5EkPM*N@C%9K-iPW!+T' }));
 
   app.use(passport.initialize());
   app.use(passport.session());
@@ -158,44 +164,75 @@ io = socket.listen(app.listen(2000));
 /**
  * Setup socket.io routes and handlers.
  */
-io.of('/clientsock').on('connection', function (socket) {
+io.of('/clientsock').authorization(function (handshakeData, callback) {
+  "use strict";
 
-  console.log("######### socket.io connected with socket: ", socket);
+  console.log("##### socket.io handshakeData: ", handshakeData);
+
+  if (handshakeData.headers.cookie) {
+    // save parsedSessionId to handshakeData
+    handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
+    handshakeData.sessionId = parseSignedCookie(handshakeData.cookie['connect.sid'], '.T#T@r5EkPM*N@C%9K-iPW!+T');
+
+    console.log("##### send socket.io to deserializeUser: ", handshakeData.sessionId);
+
+    sessionStore.get(handshakeData.sessionId, function (err, session) {
+      var user = session[passport._key]['user'];
+
+      passport.deserializeUser(user, function (err, user) {
+        if (err || !user) {
+          console.log("##### socket.io deserializeUser FAILED: ", err, user);
+        }
+        console.log("##### socket.io deserializeUser: ", user);
+        handshakeData.user = user;
+        callback(null, true);
+      });
+    });
+  }
+  callback(null, true);
+
+
+  console.log("##### socket.io handshakeData: ", handshakeData);
+  handshakeData.foo = 'baz';
+  callback(null, true);
+}).on('connection', function (socket) {
+
+  //console.log("######### socket.io connected with socket: ", socket);
 
   socket.on('session', function (data) {
-    console.log("######### session socket.io with data: ", data)
+    console.log("######### session socket.io with data: ", data);
   });
 
   socket.on('function/retrieveRecord', function (data) {
-    console.log("######### function/retrieveRecord socket.io with data: ", data)
+    console.log("######### function/retrieveRecord socket.io with data: ", data);
   });
 
   socket.on('function/resetPassword', function (data) {
-    console.log("######### function/resetPassword socket.io with data: ", data)
+    console.log("######### function/resetPassword socket.io with data: ", data);
   });
 
   socket.on('function/logout', function (data) {
-    console.log("######### function/logout socket.io with data: ", data)
+    console.log("######### function/logout socket.io with data: ", data);
   });
 
   socket.on('function/fetch', function (data) {
-    console.log("######### function/fetch socket.io with data: ", data)
+    console.log("######### function/fetch socket.io with data: ", data);
   });
 
   socket.on('function/extensions', function (data) {
-    console.log("######### function/extensions socket.io with data: ", data)
+    console.log("######### function/extensions socket.io with data: ", data);
   });
 
   socket.on('function/dispatch', function (data) {
-    console.log("######### function/dispatch socket.io with data: ", data)
+    console.log("######### function/dispatch socket.io with data: ", data);
   });
 
   socket.on('function/commitRecord', function (data) {
-    console.log("######### function/commitRecord socket.io with data: ", data)
+    console.log("######### function/commitRecord socket.io with data: ", data);
   });
 
   socket.on('function/changePassword', function (data) {
-    console.log("######### function/changePassword socket.io with data: ", data)
+    console.log("######### function/changePassword socket.io with data: ", data);
   });
 
   // Tell the client you're connected.

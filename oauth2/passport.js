@@ -167,13 +167,14 @@ passport.deserializeUser(function (user, done) {
       // from the global database and not passport example db array.
 
       // Delete this session from db to force new login.
-      X.debug("######### destry test");
+      X.debug("######### destroy test");
       model.destroy();
 
       // This redirects to /login.
       done(null, false);
     } else {
       // We have a valid cookie, update lastModified time to extend timeout.
+      X.debug("######### passport session check success");
       model.set("lastModified", new Date().getTime());
       model.save(null, saveOptions);
     }
@@ -190,6 +191,7 @@ passport.deserializeUser(function (user, done) {
 
   // TODO - We could call the db session CleanupTask here.
 
+X.debug("######### passport session check");
   // Try and fetch a session matching the cookie user.sid.
   session.fetch(fetchOptions);
 });
