@@ -41,7 +41,8 @@ trailing:true white:true*/
       {name: "opportunityTypeList", kind: "XV.OpportunityTypeList"},
       {name: "classCodeList", kind: "XV.ClassCodeList"},
       {name: "unitList", kind: "XV.UnitList"},
-      {name: "productCategoryList", kind: "XV.ProductCategoryList"}
+      {name: "productCategoryList", kind: "XV.ProductCategoryList"},
+      {name: "characteristicList", kind: "XV.CharacteristicList"}
     ];
 
     XT.app.$.postbooks.appendPanels("setup", panels);
