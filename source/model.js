@@ -1010,7 +1010,7 @@ white:true*/
       @returns {XT.Request} Request
     */
     used: function (options) {
-      return this.dispatch('XM.Model', 'used', [this.recordType, this.id], options);
+      return this.getClass().used(this.id, options);
     },
 
     /**
@@ -1380,6 +1380,20 @@ white:true*/
       options = options ? _.clone(options) : {};
       options.force = true;
       return Backbone.RelationalModel.findOrCreate.call(this, attributes, options);
+    },
+    
+    /**
+      Determine whether this record has been referenced by another. By default
+      this function inspects foreign key relationships on the database, and is
+      therefore dependent on foreign key relationships existing where appropriate
+      to work correctly.
+
+      @param {Number} Id
+      @param {Object} Options
+      @returns {XT.Request} Request
+    */
+    used: function (id, options) {
+      return XT.dataSource.dispatch('XM.Model', 'used', [this.prototype.recordType, id], options);
     },
 
     // ..........................................................
