@@ -213,21 +213,37 @@ select xt.install_js('XT','Data','xtuple', $$
       @returns {Boolean}
     */
     checkPrivilege: function (privilege) {
-      var ret = privilege,
-       sql = 'select coalesce(userpriv_priv_id, userrolepriv_priv_id, -1) > 0 as granted ' +
-             'from xt.priv ' +
-             'left join xt.userpriv on (priv_id=userpriv_priv_id) and (userpriv_username=$1) ' +
-             'left join ( ' +
-             '  select distinct userrolepriv_priv_id ' +
-             '  from xt.userrolepriv ' +
-             '    join xt.useruserrole on (userrolepriv_userrole_id=useruserrole_userrole_id) and (useruserrole_username=$1) ' +
-             '  ) userrolepriv on (userrolepriv_priv_id=priv_id) ' +
-             'where priv_name = $2;';
+      var privArray,
+        ret = privilege,
+        i,
+        res,
+        sql;
       if (typeof privilege === 'string') {
+        
         if (!this._granted) { this._granted = {}; }
         if (this._granted[privilege] !== undefined) { return this._granted[privilege]; }
-        var res = plv8.execute(sql, [ XT.username, privilege ]),
-          ret = res.length ? res[0].granted : false;
+
+        /* The privilege name is allowed to be a set of space-delimited privileges */
+        /* If a user has any of the applicable privileges then they get access */
+        privArray = privilege.split(" ");
+        sql = 'select coalesce(userpriv_priv_id, userrolepriv_priv_id, -1) > 0 as granted ' +
+               'from xt.priv ' +
+               'left join xt.userpriv on (priv_id=userpriv_priv_id) and (userpriv_username=$1) ' +
+               'left join ( ' +
+               '  select distinct userrolepriv_priv_id ' +
+               '  from xt.userrolepriv ' +
+               '    join xt.useruserrole on (userrolepriv_userrole_id=useruserrole_userrole_id) and (useruserrole_username=$1) ' +
+               '  ) userrolepriv on (userrolepriv_priv_id=priv_id) ' +
+               'where priv_name = $2';
+
+        for(i = 1; i < privArray.length; i++) {
+          sql = sql + ' or priv_name = $' + (i + 2);
+        }
+        sql = sql + ";";
+        /* cleverness: the query parameters are just the priv array with the username tacked on front */
+        privArray.unshift(XT.username);
+        res = plv8.execute(sql, privArray),
+        ret = res.length ? res[0].granted : false;
         /* memoize */
         this._granted[privilege] = ret;
       }
