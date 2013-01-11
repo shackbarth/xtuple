@@ -91,6 +91,7 @@
 -- [ START ] xm
 
 -- xm/javascript
+\i xm/javascript/account.sql;
 \i xm/javascript/address.sql;
 \i xm/javascript/contact.sql;
 \i xm/javascript/crm.sql;
