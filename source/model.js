@@ -1010,6 +1010,7 @@ white:true*/
       @returns {XT.Request} Request
     */
     used: function (options) {
+      options.databaseType = this.databaseType;
       return this.getClass().used(this.id, options);
     },
 
@@ -1395,7 +1396,7 @@ white:true*/
       options.force = true;
       return Backbone.RelationalModel.findOrCreate.call(this, attributes, options);
     },
-    
+
     /**
       Determine whether this record has been referenced by another. By default
       this function inspects foreign key relationships on the database, and is
