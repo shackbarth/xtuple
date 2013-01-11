@@ -22,7 +22,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.ContactWidget",
     kind: "XV.RelationWidget",
-    label: "_name".loc(),
+    label: "_contact".loc(),
     collection: "XM.ContactRelationCollection",
     list: "XV.ContactList",
     keyAttribute: "name",
