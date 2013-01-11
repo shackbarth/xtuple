@@ -6,7 +6,7 @@ trailing:true white:true*/
 (function () {
 
   // ..........................................................
-  // CONTACT
+  // ACCOUNT
   //
 
   enyo.kind({
@@ -54,8 +54,67 @@ trailing:true white:true*/
     },
     sendMail: XV.ContactList.prototype.sendMail
   });
+ 
+  // ..........................................................
+  // CONTACT
+  //
+  
+  enyo.kind({
+    name: "XV.ContactEmailListRelations",
+    kind: "XV.ListRelations",
+    orderBy: [
+      {attribute: "email"}
+    ],
+    parentKey: "contact",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "email", classes: "hyperlink", ontap: "sendMail"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ],
+    sendMail: function (inSender, inEvent) {
+      var model = this.getModel(inEvent.index),
+        email = model ? model.getValue('email') : null,
+        win;
+      if (email) {
+        win = window.open('mailto:' + email);
+        win.close();
+      }
+      return true;
+    }
+  });
 
   // ..........................................................
+  // CHARACTERISTIC
+  //
+
+  enyo.kind({
+    name: "XV.CharacteristicOptionListRelations",
+    kind: "XV.ListRelations",
+    orderBy: [
+      {attribute: 'order', descending: true}
+    ],
+    parentKey: "characteristic",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "value", classes: "bold"},
+          ]},
+          {kind: "XV.ListColumn", components: [
+            {kind: "XV.ListAttr", attr: "order"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+ // ..........................................................
   // PROJECT
   //
 
