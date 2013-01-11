@@ -17,6 +17,25 @@ trailing:true white:true*/
     name: "XV.ListItem",
     classes: "xv-list-item",
     ontap: "itemTap",
+    events: {
+      onDeleteTap: "",
+      onDeleteItem: ""
+    },
+    create: function () {
+      this.inherited(arguments);
+      this.createComponent({
+        name: "deleteButton",
+        kind: "onyx.IconButton",
+        classes: "xv-list-delete-button",
+        src: "lib/enyo-x/assets/remove-icon.png",
+        showing: false,
+        ontap: "deleteTapped"
+      });
+    },
+    deleteTapped: function (inSender, inEvent) {
+      this.doDeleteTap(inEvent);
+      return true;
+    },
     setSelected: function (inSelected) {
       this.addRemoveClass("item-selected", inSelected);
     }
@@ -41,7 +60,8 @@ trailing:true white:true*/
     name: "XV.ListAttr",
     classes: "xv-list-attr",
     published: {
-      attr: ""
+      attr: "",
+      isKey: false
     }
   });
 
@@ -49,7 +69,7 @@ trailing:true white:true*/
     @name XV.List
     @class Displays a scrolling list of rows.</br >
     Handles lazy loading. Passes in the first 50 items, and as one scrolls, passes more.<br />
-    Use to display large lists, typically a collection of records retrieved from the database, 
+    Use to display large lists, typically a collection of records retrieved from the database,
     for example a list of accounts, addresses, contacts, incidents, projects, and so forth.
 	But can also be used to display lists stored elsewhere such as state or country abbreviations.<br />
     Related: list, XV.List; row, {@link XV.ListItem}; cell, {@link XV.ListColumn}; data, {@link XV.ListAttr}<br />
@@ -90,6 +110,7 @@ trailing:true white:true*/
     },
     fixedHeight: true,
     handlers: {
+      onDeleteItem: "deleteItem",
       onModelChange: "modelChanged",
       onSetupItem: "setupItem"
     },
@@ -118,6 +139,30 @@ trailing:true white:true*/
      */
     getModel: function (index) {
       return this.getValue().models[index];
+    },
+    deleteItem: function (inSender, inEvent) {
+      var index = inEvent.index,
+          collection = this.getValue(),
+          imodel = collection.at(index),
+          model = imodel,
+          fetchOptions = {},
+          that = this,
+          Klass;
+
+      if (imodel instanceof XM.Info) {
+        Klass = XT.getObjectByName(model.editableModel);
+        model = new Klass({id: imodel.id});
+      }
+
+      fetchOptions.success = function (result) {
+        var destroyOptions = {};
+        destroyOptions.success = function (result) {
+          collection.remove(imodel);
+          that.fetched();
+        };
+        model.destroy(destroyOptions);
+      };
+      model.fetch(fetchOptions);
     },
     /**
      @todo Document the getSearchableAttributes method.
@@ -209,8 +254,10 @@ trailing:true white:true*/
      @todo Document the itemTap method.
      */
     itemTap: function (inSender, inEvent) {
-      inEvent.list = this;
-      this.doItemTap(inEvent);
+      if (!this.getToggleSelected() || inEvent.originator.isKey) {
+        inEvent.list = this;
+        this.doItemTap(inEvent);
+      }
     },
     /**
       When a model changes, we are notified. We check the list to see if the
@@ -325,37 +372,84 @@ trailing:true white:true*/
       @todo Document the setupItem method.
       */
     setupItem: function (inSender, inEvent) {
-      var model = this.getValue().models[inEvent.index],
+      var index = inEvent.index,
+        isSelected = inEvent.originator.isSelected(index),
+        model = this.getValue().models[index],
+        hasDeletePrivileges = model instanceof XM.Info ? model.couldDelete() : model.canDelete(),
+        isActive = model.getValue ? model.getValue('isActive') : true,
+        isNotActive = _.isBoolean(isActive) ? !isActive : false,
+        deleteButton = this.$.listItem.$.deleteButton,
+        toggleSelected = this.getToggleSelected(),
+        that = this,
+        options = {},
         prop,
         isPlaceholder,
         view,
         value,
         formatter,
-        attr;
+        attr,
+        classes;
 
       // Loop through all attribute container children and set content
       for (prop in this.$) {
-        if (this.$.hasOwnProperty(prop) && this.$[prop].getAttr) {
-          view = this.$[prop];
-          isPlaceholder = false;
-          attr = this.$[prop].getAttr();
-          value = model.getValue ? model.getValue(attr) : model.get(attr);
-          formatter = view.formatter;
-          if (!value && view.placeholder) {
-            value = view.placeholder;
-            isPlaceholder = true;
+        if (this.$.hasOwnProperty(prop)) {
+          if (this.$[prop].isKey) {
+            classes = toggleSelected ? "bold hyperlink" : "bold";
+            this.$[prop].addRemoveClass(classes, true);
           }
-          view.addRemoveClass("placeholder", isPlaceholder);
-          if (formatter) {
-            value = this[formatter](value, view, model);
+          if (this.$[prop].getAttr) {
+            view = this.$[prop];
+            isPlaceholder = false;
+            attr = this.$[prop].getAttr();
+            value = model.getValue ? model.getValue(attr) : model.get(attr);
+            formatter = view.formatter;
+            if (!value && view.placeholder) {
+              value = view.placeholder;
+              isPlaceholder = true;
+            }
+            view.addRemoveClass("placeholder", isPlaceholder);
+            if (formatter) {
+              value = this[formatter](value, view, model);
+            }
+            if (value && value instanceof Date) {
+              value = XT.date.applyTimezoneOffset(value, true);
+              value = Globalize.format(value, 'd');
+            }
+            view.setContent(value);
           }
-          if (value && value instanceof Date) {
-            value = XT.date.applyTimezoneOffset(value, true);
-            value = Globalize.format(value, 'd');
-          }
-          view.setContent(value);
         }
       }
+
+      // Inactive
+      this.$.listItem.addRemoveClass("inactive", isNotActive);
+
+      // Selection
+      if (toggleSelected) {
+        this.$.listItem.addRemoveClass("item-selected", isSelected);
+        if (deleteButton && isSelected && hasDeletePrivileges) {
+          // Need to find out if this record is "used" to determine whether to show the delete button
+          // That's an async function, so re-render row and reprocess once we have data.
+          if (!this._used) { this._used = {}; }
+          if (!_.isBoolean(this._used[index])) {
+            options.success = function (used) {
+              that._used[index] = used;
+              if (!used) {
+                that.renderRow(index);
+              }
+            };
+            if (model instanceof XM.Info) {
+              XT.getObjectByName(model.editableModel).used(model.id, options);
+            } else {
+              model.used(options);
+            }
+          }
+          deleteButton.applyStyle("display", that._used[index] === false ? "inline-block" : "none");
+          this._used[index] = undefined; // Don't keep stale information
+        } else {
+          deleteButton.applyStyle("display", "none");
+        }
+      }
+
       return true;
     },
      /**
