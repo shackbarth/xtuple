@@ -148,12 +148,12 @@ trailing:true white:true*/
           fetchOptions = {},
           that = this,
           Klass;
-          
+
       if (imodel instanceof XM.Info) {
         Klass = XT.getObjectByName(model.editableModel);
         model = new Klass({id: imodel.id});
       }
-      
+
       fetchOptions.success = function (result) {
         var destroyOptions = {};
         destroyOptions.success = function (result) {
@@ -375,6 +375,7 @@ trailing:true white:true*/
       var index = inEvent.index,
         isSelected = inEvent.originator.isSelected(index),
         model = this.getValue().models[index],
+        hasDeletePrivileges = model instanceof XM.Info ? model.couldDelete() : model.canDelete(),
         isActive = model.getValue ? model.getValue('isActive') : true,
         isNotActive = _.isBoolean(isActive) ? !isActive : false,
         deleteButton = this.$.listItem.$.deleteButton,
@@ -418,14 +419,14 @@ trailing:true white:true*/
           }
         }
       }
-      
+
       // Inactive
       this.$.listItem.addRemoveClass("inactive", isNotActive);
 
       // Selection
       if (toggleSelected) {
         this.$.listItem.addRemoveClass("item-selected", isSelected);
-        if (deleteButton && isSelected) {
+        if (deleteButton && isSelected && hasDeletePrivileges) {
           // Need to find out if this record is "used" to determine whether to show the delete button
           // That's an async function, so re-render row and reprocess once we have data.
           if (!this._used) { this._used = {}; }
@@ -448,7 +449,7 @@ trailing:true white:true*/
           deleteButton.applyStyle("display", "none");
         }
       }
-      
+
       return true;
     },
      /**
