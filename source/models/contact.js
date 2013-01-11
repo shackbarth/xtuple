@@ -68,10 +68,6 @@ white:true*/
       return name.join(' ');
     },
 
-    used: function (options) {
-      return XT.dataSource.dispatch('XM.Contact', 'used', this.id, options);
-    },
-
     validateSave: function (attributes, options) {
       if (!attributes.firstName && !attributes.lastName) {
         return XT.Error.clone('xt2004');
@@ -79,6 +75,10 @@ white:true*/
     }
 
   });
+  
+  XM.Contact.used = function (id, options) {
+    return XT.dataSource.dispatch('XM.Contact', 'used', id, options);
+  };
 
   // Add mixin
   XM.Contact = XM.Contact.extend(XM.AddressCheckMixin);
