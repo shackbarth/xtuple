@@ -517,6 +517,11 @@ body {
   padding: 8px 0 8px 8px;
   margin-right: 5px;
 }
+.xv-groupbox.editor {
+  min-width: 250px;
+  padding: 0;
+  margin: 0;
+}
 .xv-groupbox.in-panel {
   padding: 0;
   margin: 0;
@@ -551,6 +556,9 @@ body {
   -moz-border-radius: 0;
   border-radius: 0;
   margin: 0;
+}
+.xv-groupbox > .in-panel .editor-field {
+  border-right: none;
 }
 .xv-groupbox > *:first-child {
   border-top-color: #aaaaaa;
@@ -799,8 +807,8 @@ body {
 .xv-relations-editor-box.panel {
   width: 350px;
 }
-/* ProjectTaskListRelationsBox */
-.xv-project-tasks-box.panel {
+/* ListRelationsBox */
+.xv-list-relations-box.panel {
   width: 675px;
 }
 /* Combo Box */

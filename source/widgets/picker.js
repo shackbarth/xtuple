@@ -238,7 +238,8 @@ regexp:true, undef:true, trailing:true, white:true */
       // an id instead of a whole model.
       // note that we assume that all of the possible models are already
       // populated in the menu items of the picker
-      if (value && typeof value !== 'object') {
+      // note: value may be a '0' value
+      if ((value || value === 0) && typeof value !== 'object') {
         actualMenuItem = _.find(this.$.picker.controls, function (menuItem) {
           var ret = false;
           if (menuItem.value && menuItem.value.get) {
@@ -258,7 +259,7 @@ regexp:true, undef:true, trailing:true, white:true */
       }
 
       if (value !== oldValue) {
-        if (!this._selectValue(value)) { value = null; }
+        if (!this._selectValue(value) && this._selectValue(value) !== 0) { value = null; }
         if (value !== oldValue) {
           this.value = value;
           if (!options.silent) {
