@@ -375,7 +375,7 @@ trailing:true white:true*/
       var index = inEvent.index,
         isSelected = inEvent.originator.isSelected(index),
         model = this.getValue().models[index],
-        hasDeletePrivileges = model instanceof XM.Info ? model.couldDelete() : model.canDelete(),
+        hasDeletePrivileges = model instanceof XM.Info ? model.couldDelete() : model.canDelete ? model.canDelete() : false,
         isActive = model.getValue ? model.getValue('isActive') : true,
         isNotActive = _.isBoolean(isActive) ? !isActive : false,
         deleteButton = this.$.listItem.$.deleteButton,
