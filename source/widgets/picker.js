@@ -239,7 +239,7 @@ regexp:true, undef:true, trailing:true, white:true */
       // note that we assume that all of the possible models are already
       // populated in the menu items of the picker
       // note: value may be a '0' value
-      if ((value || value == 0) && typeof value !== 'object') {
+      if ((value || value === 0) && typeof value !== 'object') {
         actualMenuItem = _.find(this.$.picker.controls, function (menuItem) {
           var ret = false;
           if (menuItem.value && menuItem.value.get) {
