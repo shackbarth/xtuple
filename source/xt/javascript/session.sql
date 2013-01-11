@@ -26,8 +26,14 @@ select xt.install_js('XT','Session','xtuple', $$
 
     /* determine culture */
     var culture = 'en';
-    if (rec.language && rec.country) culture = rec.language+'-'+rec.country;
-    else if (rec.language) culture = rec.language;
+    if (!rec) {
+      /* no result. The user probably does not exist */
+      throw "No result for locale. Username probably does not exist in the instance database";
+    } else if (rec.language && rec.country) {
+      culture = rec.language + '-' + rec.country;
+    } else if (rec.language) {
+      culture = rec.language;
+    }
     rec.culture = culture;
 
     return JSON.stringify(rec);
