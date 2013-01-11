@@ -1,4 +1,4 @@
-[
+[  
   {
     "context": "project",
     "nameSpace": "XM",
@@ -492,6 +492,98 @@
           "type": "IncidentRelation",
           "column": "prj_id",
           "inverse": "project"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "ProjectCustomer",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Project Customer Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "CRMA"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "J"
+        }
+      },
+	  {
+        "name": "target",
+        "attr": {
+          "type": "Number",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "ProjectCustomer",
+    "table": "crmacct",
+    "isExtension": true,
+    "comment": "Extended by Project",
+    "relations": [
+      {
+        "column": "crmacct_id",
+        "inverse": "source"
+      }
+    ],
+    "properties": [
+      {
+        "name": "customer",
+        "toMany": {
+          "isNested": true,
+          "type": "Customer",
+          "column": "crmacct_cust_id",
+          "inverse": "id"
         }
       }
     ],

@@ -461,6 +461,120 @@
   {
     "context": "crm",
     "nameSpace": "XM",
+    "type": "Customer",
+    "table": "crmacct",
+    "isExtension": true,
+    "comment": "Extended by Crm",
+    "relations": [
+      {
+        "column": "crmacct_cust_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "account",
+        "attr": {
+          "type": "Number",
+          "column": "crmacct_id"
+        }
+      },
+      {
+        "name": "contactCustomer",
+        "toMany": {
+          "isNested": true,
+          "type": "AccountContact",
+          "column": "crmacct_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "contactRelation",
+        "toMany": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "crmacct_id",
+          "inverse": "account"
+        }
+      },
+      {
+        "name": "incidentCustomer",
+        "toMany": {
+          "isNested": true,
+          "type": "AccountIncident",
+          "column": "crmacct_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "incidentRelation",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentRelation",
+          "column": "crmacct_id",
+          "inverse": "account"
+        }
+      },
+      {
+        "name": "opportunityCustomer",
+        "toMany": {
+          "isNested": true,
+          "type": "AccountOpportunity",
+          "column": "crmacct_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "opportunityRelation",
+        "toMany": {
+          "isNested": true,
+          "type": "OpportunityRelation",
+          "column": "crmacct_id",
+          "inverse": "account"
+        }
+      },
+      {
+        "name": "toDoCustomer",
+        "toMany": {
+          "isNested": true,
+          "type": "AccountToDo",
+          "column": "crmacct_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "toDoRelation",
+        "toMany": {
+          "isNested": true,
+          "type": "ToDoRelation",
+          "column": "crmacct_id",
+          "inverse": "account"
+        }
+      },
+      {
+        "name": "projectCustomer",
+        "toMany": {
+          "isNested": true,
+          "type": "AccountProject",
+          "column": "crmacct_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "projectRelation",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectRelation",
+          "column": "crmacct_id",
+          "inverse": "account"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "crm",
+    "nameSpace": "XM",
     "type": "Incident",
     "table": "incdt",
     "isExtension": true,
