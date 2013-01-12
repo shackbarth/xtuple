@@ -110,21 +110,25 @@ var app = express(),
 // TODO - can we get to this through express? connect.utils.parseSignedCookie
     connect           = require('connect'),
     parseSignedCookie = connect.utils.parseSignedCookie,
-    MemoryStore = express.session.MemoryStore,
+    //MemoryStore = express.session.MemoryStore,
+    XTPGStore = require('./oauth2/db/connect-xt-pg')(express),
     cookie = require('express/node_modules/cookie'),
     io,
-    sessionStore = new MemoryStore();
+    //sessionStore = new MemoryStore();
+    sessionStore = new XTPGStore();
 
 app.configure(function () {
   "use strict";
 
+  // gzip all files served.
+  app.use(express.compress());
+  // Add a basic view engine that will render files from "views" directory.
   app.set('view engine', 'ejs');
   // TODO - This outputs access logs like apache2.
   //app.use(express.logger());
   app.use(express.cookieParser());
   app.use(express.bodyParser());
   app.use(express.session({ store: sessionStore, secret: '.T#T@r5EkPM*N@C%9K-iPW!+T' }));
-
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(app.router);
@@ -140,7 +144,7 @@ require('./oauth2/passport');
  * Setup HTTP routes and handlers.
  */
 //app.get('/', site.index);
-app.use('/assets', express.static('www/login/assets'));
+app.use('/assets', express.static('views/login/assets'));
 app.use('/client', express.static('www/client'));
 app.use('/public-extensions', express.static('www/public-extensions'));
 app.use('/private-extensions', express.static('www/private-extensions'));
