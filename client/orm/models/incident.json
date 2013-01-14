@@ -1499,10 +1499,10 @@
     "comment": "Incident Email Profile Map",
     "privileges": {
       "all": {
-        "create": "MaintainEDIProfiles",
-        "read": "MaintainEDIProfiles",
-        "update": "MaintainEDIProfiles",
-        "delete": "MaintainEDIProfiles"
+        "create": "MaintainEmailProfiles",
+        "read": "ViewEmailProfiles",
+        "update": "MaintainEmailProfiles",
+        "delete": "MaintainEmailProfiles"
       }
     },
     "properties": [
