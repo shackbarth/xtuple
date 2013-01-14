@@ -472,15 +472,27 @@
           "column": "incdtcat_order",
           "required": true
         }
-      },
-      {
-        "name": "emailProfile",
-        "toOne": {
-          "type": "IncidentEmailProfile",
-          "column": "incdtcatemlprofile_incdtemlprofile_id"
-        }
       }
     ],
+    extensions: [{
+      "table": "xt.incdtcatemlprofile",
+      "isExtension": true,
+      "relations": [
+        {
+          "column": "incdtcatemlprofile_incdtcat_id",
+          "inverse": "id"
+        }
+      ],
+      "properties": [
+        {
+          "name": "emailProfile",
+          "toOne": {
+            "type": "IncidentEmailProfile",
+            "column": "incdtcatemlprofile_incdtemlprofile_id"
+          }
+        }
+      ]
+    }],
     "isSystem": true
   },
   {
