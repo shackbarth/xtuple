@@ -296,6 +296,13 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.attr || "").loc()) + ":";
       this.$.label.setContent(label);
+    },
+    /**
+    @todo Document the valueChanged method.
+    */
+    valueChanged: function (value) {
+      this.$.input.setValue(value || "", {silent: true});
+      return value;
     }
   });
 
