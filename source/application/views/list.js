@@ -23,7 +23,7 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "number", isKey: true},
               {kind: "XV.ListAttr", attr: "primaryContact.phone", fit: true,
                 classes: "right"}
             ]},
@@ -112,7 +112,7 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "short",
             components: [
-            {kind: "XV.ListAttr", attr: "code", classes: "bold"}
+            {kind: "XV.ListAttr", attr: "code", isKey: true}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "description"}
@@ -194,9 +194,9 @@ trailing:true white:true*/
             {kind: "FittableColumns", components: [
               {kind: "FittableColumns", components: [
                 {kind: "XV.ListAttr", attr: "firstName",
-                  formatter: "formatFirstName"},
-                {kind: "XV.ListAttr", attr: "lastName", fit: true, classes: "bold",
-                  style: "padding-left: 0px;"}
+                  formatter: "formatFirstName", isKey: true},
+                {kind: "XV.ListAttr", attr: "lastName", fit: true,
+                  style: "padding-left: 0px;", isKey: true}
               ]},
               {kind: "XV.ListAttr", attr: "phone", fit: true, classes: "right"}
             ]},
@@ -223,6 +223,9 @@ trailing:true white:true*/
         value = "_noName".loc();
       } else {
         view.addRemoveClass("bold", _.isEmpty(lastName));
+      }
+      if (this.getToggleSelected()) {
+        view.addRemoveClass("hyperlink", true);
       }
       return value;
     },
@@ -255,7 +258,7 @@ trailing:true white:true*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "XV.ListColumn", classes: "last", components: [
-          {kind: "XV.ListAttr", attr: "name", classes: "bold"}
+          {kind: "XV.ListAttr", attr: "name", isKey: true}
         ]}
       ]}
     ]
@@ -279,7 +282,7 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "number", isKey: true},
               {kind: "XV.ListAttr", attr: "billingContact.phone", fit: true,
                 classes: "right"}
             ]},
@@ -329,7 +332,7 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "number", isKey: true},
               {kind: "XV.ListAttr", attr: "contact.phone", fit: true,
                 classes: "right"}
             ]},
@@ -379,7 +382,7 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "short",
             components: [
-            {kind: "XV.ListAttr", attr: "name", classes: "bold"}
+            {kind: "XV.ListAttr", attr: "name", isKey: true}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "description"}
@@ -406,7 +409,7 @@ trailing:true white:true*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "XV.ListColumn", classes: "last", components: [
-          {kind: "XV.ListAttr", attr: "code", classes: "bold"}
+          {kind: "XV.ListAttr", attr: "code", isKey: true}
         ]}
       ]}
     ]
@@ -426,13 +429,14 @@ trailing:true white:true*/
       {attribute: 'updated', descending: true},
       {attribute: 'number', descending: true, numeric: true}
     ]},
+    toggleSelected: false,
     parameterWidget: "XV.IncidentListParameters",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "number", isKey: true},
               {kind: "XV.ListAttr", attr: "updated", fit: true, formatter: "formatDate",
                 classes: "right"}
             ]},
@@ -558,7 +562,7 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "number", isKey: true},
               {kind: "XV.ListAttr", attr: "unit.name", fit: true,
                 classes: "right"}
             ]},
@@ -607,7 +611,7 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "number", isKey: true},
               {kind: "XV.ListAttr", attr: "targetClose", fit: true,
                 formatter: "formatTargetClose",
                 placeholder: "_noCloseTarget".loc(),
@@ -663,7 +667,7 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "short",
             components: [
-            {kind: "XV.ListAttr", attr: "code", classes: "bold"}
+            {kind: "XV.ListAttr", attr: "code", isKey: true}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "description"}
@@ -691,7 +695,7 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "number", isKey: true},
               {kind: "XV.ListAttr", attr: "dueDate", fit: true,
                 formatter: "formatDueDate",
                 classes: "right"}
@@ -768,7 +772,7 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "number", isKey: true},
               {kind: "XV.ListAttr", attr: "dueDate", fit: true,
                 formatter: "formatDueDate",
                 classes: "right"}
@@ -835,7 +839,7 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "name", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "name", isKey: true},
               {kind: "XV.ListAttr", attr: "dueDate", fit: true,
                 formatter: "formatDueDate", placeholder: "_noDueDate".loc(),
                 classes: "right"}
@@ -890,7 +894,7 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "short",
             components: [
-            {kind: "XV.ListAttr", attr: "name", classes: "bold"}
+            {kind: "XV.ListAttr", attr: "name", isKey: true}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "path"}
@@ -919,7 +923,7 @@ trailing:true white:true*/
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "short", components: [
-            {kind: "XV.ListAttr", attr: "username", classes: "bold"}
+            {kind: "XV.ListAttr", attr: "username", isKey: true}
           ]},
           {kind: "XV.ListColumn", classes: "short", components: [
             {kind: "XV.ListAttr", attr: "propername"}
@@ -941,7 +945,7 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "short",
             components: [
-            {kind: "XV.ListAttr", attr: "abbreviation", classes: "bold"}
+            {kind: "XV.ListAttr", attr: "abbreviation", isKey: true}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "name"}
@@ -988,7 +992,7 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "short",
             components: [
-            {kind: "XV.ListAttr", attr: "name", classes: "bold"}
+            {kind: "XV.ListAttr", attr: "name", isKey: true}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "description"}

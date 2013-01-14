@@ -41,7 +41,17 @@ trailing:true white:true*/
         ]}
       ]}
     ],
-    formatFirstName: XV.ContactList.prototype.formatFirstName,
+    formatFirstName: function (value, view, model) {
+      var lastName = (model.get('lastName') || "").trim(),
+        firstName = (model.get('firstName') || "").trim();
+      if (_.isEmpty(firstName) && _.isEmpty(lastName)) {
+        view.addRemoveClass("placeholder", true);
+        value = "_noName".loc();
+      } else {
+        view.addRemoveClass("bold", _.isEmpty(lastName));
+      }
+      return value;
+    },
     sendMail: XV.ContactList.prototype.sendMail
   });
  
