@@ -474,7 +474,7 @@
         }
       }
     ],
-    extensions: [{
+    "extensions": [{
       "table": "xt.incdtcatemlprofile",
       "isExtension": true,
       "relations": [
