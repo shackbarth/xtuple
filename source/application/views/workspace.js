@@ -1109,7 +1109,7 @@ trailing:true white:true*/
             {kind: "XV.ToggleButtonWidget", attr: "isAddresses", label: "_address".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isContacts", label: "_contact".loc()},
             //{kind: "XV.ToggleButtonWidget", attr: "isCustomers", label: "_customer".loc()},
-            {kind: "XV.ToggleButtonWidget", attr: "isAccounts", label: "_crmAccount".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isAccounts", label: "_account".loc()},
             //{kind: "XV.ToggleButtonWidget", attr: "isEmployees", label: "_employee".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isIncidents", label: "_incident".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isItems", label: "_item".loc()},
