@@ -116,7 +116,9 @@ trailing:true white:true*/
       "MaintainCommentTypes",
       "MaintainCountries",
       "MaintainStates",
-      "MaintainUsers"
+      "MaintainUsers",
+      "ViewEmailProfiles",
+      "MaintainEmailProfiles"
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
 
