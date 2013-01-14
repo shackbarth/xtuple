@@ -7,4 +7,5 @@ select xt.add_constraint('incdtemlprofile','incdtemlprofile_pkey', 'primary key 
 comment on table xt.incdtemlprofile is 'Core table for incident email profiles';
 
 -- this priv does not exist in postbooks so create it here
-select xt.add_priv('ViewEmailProfile', 'Can View Incident Email Profiles', 'ViewEmailProfile', 'Incident', 'xtuple', 'Incident', false);
+select xt.add_priv('ViewEmailProfiles', 'Can View Incident Email Profiles', 'ViewEmailProfiles', 'Incident', 'xtuple', 'Incident', false);
+select xt.add_priv('MaintainEmailProfiles', 'Can Maintain Incident Email Profiles', 'MaintainEmailProfiles', 'Incident', 'xtuple', 'Incident', false);
