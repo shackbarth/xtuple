@@ -131,6 +131,122 @@
   {
     "context": "crm",
     "nameSpace": "XM",
+    "type": "ToDo",
+    "table": "todoitem",
+    "isExtension": true,
+    "comment": "Extended by Crm",
+    "relations": [
+      {
+        "column": "todoitem_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "incident",
+        "toOne": {
+          "isNested": true,
+          "type": "IncidentRelation",
+          "column": "todoitem_incdt_id"
+        }
+      },
+      {
+        "name": "opportunity",
+        "toOne": {
+          "isNested": true,
+          "type": "OpportunityRelation",
+          "column": "todoitem_ophead_id"
+        }
+      },
+      {
+        "name": "incidents",
+        "toMany": {
+          "isNested": true,
+          "type": "ToDoIncident",
+          "column": "todoitem_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "opportunities",
+        "toMany": {
+          "isNested": true,
+          "type": "ToDoOpportunity",
+          "column": "todoitem_id",
+          "inverse": "source"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "crm",
+    "nameSpace": "XM",
+    "type": "ToDoListItem",
+    "table": "todoitem",
+    "isExtension": true,
+    "comment": "Extended by Crm",
+    "relations": [
+      {
+        "column": "todoitem_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "incident",
+        "attr": {
+          "type": "Number",
+          "column": "todoitem_incdt_id"
+        }
+      },
+      {
+        "name": "opportunity",
+        "attr": {
+          "type": "Number",
+          "column": "todoitem_ophead_id"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "crm",
+    "nameSpace": "XM",
+    "type": "ToDoRelation",
+    "table": "todoitem",
+    "isExtension": true,
+    "comment": "Extended by Crm",
+    "relations": [
+      {
+        "column": "todoitem_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "incident",
+        "attr": {
+          "type": "Number",
+          "column": "todoitem_incdt_id"
+        }
+      },
+      {
+        "name": "opportunity",
+        "attr": {
+          "type": "Number",
+          "column": "todoitem_ophead_id"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "crm",
+    "nameSpace": "XM",
     "type": "Incident",
     "table": "incdt",
     "isExtension": true,
@@ -247,122 +363,6 @@
     ],
     "sequence": 0,
     "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
-    "type": "ToDo",
-    "table": "todoitem",
-    "isExtension": true,
-    "comment": "Extended by Crm",
-    "relations": [
-      {
-        "column": "todoitem_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
-      {
-        "name": "incident",
-        "toOne": {
-          "isNested": true,
-          "type": "IncidentRelation",
-          "column": "todoitem_incdt_id"
-        }
-      },
-      {
-        "name": "opportunity",
-        "toOne": {
-          "isNested": true,
-          "type": "OpportunityRelation",
-          "column": "todoitem_ophead_id"
-        }
-      },
-      {
-        "name": "incidents",
-        "toMany": {
-          "isNested": true,
-          "type": "ToDoIncident",
-          "column": "todoitem_id",
-          "inverse": "source"
-        }
-      },
-      {
-        "name": "opportunities",
-        "toMany": {
-          "isNested": true,
-          "type": "ToDoOpportunity",
-          "column": "todoitem_id",
-          "inverse": "source"
-        }
-      }
-    ],
-    "sequence": 0,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
-    "type": "ToDoListItem",
-    "table": "todoitem",
-    "isExtension": true,
-    "comment": "Extended by Crm",
-    "relations": [
-      {
-        "column": "todoitem_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
-      {
-        "name": "incident",
-        "attr": {
-          "type": "Number",
-          "column": "todoitem_incdt_id"
-        }
-      },
-      {
-        "name": "opportunity",
-        "attr": {
-          "type": "Number",
-          "column": "todoitem_ophead_id"
-        }
-      }
-    ],
-    "sequence": 0,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
-    "type": "ToDoRelation",
-    "table": "todoitem",
-    "isExtension": true,
-    "comment": "Extended by Crm",
-    "relations": [
-      {
-        "column": "todoitem_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
-      {
-        "name": "incident",
-        "attr": {
-          "type": "Number",
-          "column": "todoitem_incdt_id"
-        }
-      },
-      {
-        "name": "opportunity",
-        "attr": {
-          "type": "Number",
-          "column": "todoitem_ophead_id"
-        }
-      }
-    ],
-    "sequence": 0,
-    "isSystem": true
-  },
+  }
 ]
 
