@@ -81,6 +81,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         if (isExtension) socket.emit("message", "skipping ahead");
         else {
           socket.emit("message", "unable to continue");
+          X.log("Critical error. Unable to continue. Killing process. ", err.message);
           process.emit("SIGKILL");
           return;
         }
