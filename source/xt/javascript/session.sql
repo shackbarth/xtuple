@@ -18,7 +18,7 @@ select xt.install_js('XT','Session','xtuple', $$
             + 'lang_abbr2 AS "language", '
             + 'country_abbr AS "country" '
             + 'from locale '
-            + 'join usr on usr_locale_id = locale_id '
+            + 'join xt.usr on usr_locale_id = locale_id '
             + 'left join lang on locale_lang_id = lang_id '
             + 'left join country on locale_country_id = country_id '
             + 'where usr_username = $1 ', 
