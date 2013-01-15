@@ -307,6 +307,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.InputWidget", attr: "location"},
+            {kind: "XV.NumberWidget", attr: "loadOrder"},
             {kind: "XV.InputWidget", attr: "privilegeName"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes"}
