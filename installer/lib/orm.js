@@ -8,17 +8,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var _path = X.path, _ = X._, _fs = X.fs, initSocket, testConnection, dive,
       parseFile, calculateDependencies, dependenciesFor, checkDependencies, cleanse,
       installQueue, submit, existing, findExisting;
-  
+
   X.debugging = true;
   X.db = X.Database.create();
-  
+
   initSocket = function (socket) {
     socket.on("refresh", _.bind(this.refresh, this, socket));
     socket.on("install", _.bind(this.install, this, socket));
     socket.on("select", _.bind(this.select, this, socket));
     socket.emit("message", "thanks for connecting to me");
   };
-  
+
   cleanse = function (orm) {
     var ret = _.clone(orm);
     delete ret.undefinedDependencies;
@@ -27,16 +27,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     delete ret.missingDependencies;
     delete ret.enabled;
     delete ret.dependencies;
-    
+
     if (ret.extensions && ret.extensions.length > 0) {
       _.each(ret.extensions, function (ext, i) {
         ret.extensions[i] = cleanse(ext);
       });
     }
-    
+
     return ret;
   };
-  
+
   submit = function (socket, orm, queue, ack, isExtension) {
     var query, extensions, context, extensionList = [], namespace, type;
     context = orm.context;
@@ -81,10 +81,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         if (isExtension) socket.emit("message", "skipping ahead");
         else {
           socket.emit("message", "unable to continue");
+          X.log("Critical error. Unable to continue. Killing process. ", err.message);
+          process.emit("SIGKILL");
           return;
         }
       }
-      
+
       if (!isExtension) socket.installed.push(orm);
       if (c > 0) {
         this.on(socket.id, _.bind(function (c) {
@@ -104,14 +106,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     }, this));
   };
-  
+
   installQueue = function (socket, ack, queue) {
     var installed = socket.installed,
       orms = socket.orms,
       orm, dependencies = [];
     if (!queue || queue.length === 0) { return ack(socket.installed); }
     orm = queue.shift();
-    
+
     if (installed.indexOf(orm) !== -1) {
       return installQueue.call(this, socket, ack, queue);
     }
@@ -131,19 +133,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     submit.call(this, socket, orm, queue, ack);
   };
-  
+
   testConnection = function (socket, ack, options, err, res) {
     if (err) return ack(false);
     socket.databaseOptions = options;
     ack(true);
   };
-  
+
   parseFile = function (path) {
     try {
       return X.json(_fs.readFileSync(path, "utf8"), true);
     } catch (err) { return {isError: true, message: err.message, file: path}; }
   };
-  
+
   dive = function (path, root) {
     var files = X.directoryFiles(path, {fullPath: true}), stat, isTop, ret, content, errors = [];
     isTop = root ? false: true;
@@ -167,7 +169,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return ret;
     }
   };
-  
+
   dependenciesFor = function (socket, orm, dependencies) {
     var properties, extensions, namespace, orms, dep;
     dependencies = dependencies ? dependencies : orm.dependencies ? orm.dependencies : (orm.dependencies = []);
@@ -202,7 +204,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     });
   };
-  
+
   calculateDependencies = function (socket) {
     var orms = socket.orms;
     _.each(orms, function (namespace) {
@@ -218,7 +220,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       });
     });
   };
-  
+
   checkDependencies = function (socket, orm) {
     var enabled = true, dependencies = orm.dependencies, found, orms;
     if (X.typeOf(orm.enabled) !== X.T_UNDEFINED) return orm.enabled;
@@ -241,20 +243,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
     return enabled;
   };
-  
+
   findExisting = function (nameSpace, type) {
     return _.find(existing, function (orm) {
       return orm.namespace === nameSpace && orm.type === type;
     });
   };
-  
+
   X.Server.create({
     port: X.options.orm.port,
     useWebSocket: true,
     name: "ORM",
     autoStart: true,
     init: function () {
-      
+
       // since we're using the over-load-ability of the sub-server
       // interface we create this now using connect
       var server = X.connect.createServer(), root;
@@ -262,10 +264,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       server.use(X.connect.static(root, {redirect: true}));
       server.use(X.connect.directory(root, {icons: true}));
       this.set("server", server);
-      
+
       // super initializer
       this._super.init.call(this);
-      
+
       // map our connections and namespace to the socket initializer
       this.setSocketHandler("/orm", "connection", _.bind(initSocket, this));
     },
@@ -329,7 +331,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             "where not orm_ext;";
       callback = function (err, resp) {
         existing = resp.rows;
-        
+
         // organize and associate the extensions
         _.each(extensions, function (context) {
           _.each(context, function (namespace) {
@@ -355,7 +357,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         socket.orms = orms;
         socket.extensions = extensions;
-        
+
         calculateDependencies.call(this, socket);
         ack(orms);
       };
@@ -368,17 +370,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         if (!options.hasOwnProperty(key)) continue;
         if (options[key] === "") return ack(false);
       }
-      
+
       creds.user = options.username;
       creds.hostname = options.hostname;
       creds.port = options.port;
       creds.password = options.password;
       creds.database = options.organization;
-      
+
       callback = _.bind(testConnection, this, socket, ack, creds);
-      
+
       X.db.query("select * from pg_class limit 1", creds, callback);
     }
   });
-  
+
 }());

@@ -89,6 +89,8 @@ select xt.install_js('XM','Model','xtuple', $$
     var nameSpace = recordType.beforeDot(),
       type = recordType.afterDot(),
       map = XT.Orm.fetch(nameSpace, type),
+      tableName = map.table,
+      tableSuffix = tableName.indexOf('.') ? tableName.afterDot() : tableName,
       sql,
       fkeys,
       uses,
@@ -107,7 +109,7 @@ select xt.install_js('XM','Model','xtuple', $$
           "and conrelid=con.oid " +
           "and f.relname = $1 " +
           "and con.relnamespace=pg_namespace.oid; "
-    fkeys = plv8.execute(sql, [map.table]);
+    fkeys = plv8.execute(sql, [tableSuffix]);
     if (DEBUG) { plv8.elog(NOTICE, 'keys:' ,fkeys.length) }
     for (i = 0; i < fkeys.length; i++) {
       /* Validate */
