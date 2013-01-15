@@ -35,12 +35,14 @@ trailing:true white:true*/
       {name: "incidentCategoryList", kind: "XV.IncidentCategoryList"},
       {name: "incidentResoulutionList", kind: "XV.IncidentResolutionList"},
       {name: "incidentSeverityList", kind: "XV.IncidentSeverityList"},
+      {name: "incidentEmailProfile", kind: "XV.IncidentEmailProfileList"},
       {name: "opportunitySourceList", kind: "XV.OpportunitySourceList"},
       {name: "opportunityStageList", kind: "XV.OpportunityStageList"},
       {name: "opportunityTypeList", kind: "XV.OpportunityTypeList"},
       {name: "classCodeList", kind: "XV.ClassCodeList"},
       {name: "unitList", kind: "XV.UnitList"},
-      {name: "productCategoryList", kind: "XV.ProductCategoryList"}
+      {name: "productCategoryList", kind: "XV.ProductCategoryList"},
+      {name: "characteristicList", kind: "XV.CharacteristicList"}
     ];
 
     XT.app.$.postbooks.appendPanels("setup", panels);
@@ -114,7 +116,9 @@ trailing:true white:true*/
       "MaintainCommentTypes",
       "MaintainCountries",
       "MaintainStates",
-      "MaintainUsers"
+      "MaintainUsers",
+      "ViewEmailProfiles",
+      "MaintainEmailProfiles"
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
 
