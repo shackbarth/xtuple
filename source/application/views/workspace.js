@@ -1134,7 +1134,7 @@ trailing:true white:true*/
       this.inherited(arguments);
       if (this.getValue().getStatus() === XM.Model.READY_CLEAN ||
         this.getValue().getStatus() === XM.Model.READY_NEW) {
-          this.typeValueChanged(model);
+        this.typeValueChanged(model);
       }
     },
     
@@ -1150,6 +1150,8 @@ trailing:true white:true*/
       this.$.optionsPanel.setShowing(isList);
       if (isList) {
         this.$.optionsPanel.render();
+      } else if (isText) {
+        this.$.advancedPanel.render();
       }
       // signal to workspace container that the menu needs to re-render
       this.doMenuChange();
