@@ -1,0 +1,60 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          node 
+# Required-Start:    $remote_fs
+# Required-Stop:     $remote_fs
+# Should-Start:      $all
+# Should-Stop:       $all
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: service and resource monitoring daemon
+# Description:       monit is a utility for managing and monitoring
+#                    processes, programs, files, directories and filesystems
+#                    on a Unix system. Monit conducts automatic maintenance
+#                    and repair and can execute meaningful causal actions
+#                    in error situations.
+### END INIT INFO
+
+set -e
+
+. /lib/lsb/init-functions
+
+NAME=node-datasource
+DESC="datasource"
+MONIT_OPTS=
+PID="/var/run/$NAME.pid"
+OURPATH=/usr/local/bin:/usr/bin
+export PATH=$OURPATH:$PATH
+
+[ -f "/etc/default/$NAME" ] && . /etc/default/$NAME
+
+
+case "$1" in
+  start)
+    log_daemon_msg "Starting $DESC" "$NAME"
+    cd /usr/local/xtuple/node-datasource
+    if [ -e $PID ]
+      then
+        rm $PID
+    fi
+    /usr/local/bin/node main.js -c config.js  2>&1  | logger -t DATASOURCE -p local3.info &
+    echo `pidof node` > $PID
+    ;;
+  stop)
+    log_daemon_msg "Stopping $DESC" "$NAME"
+    kill -TERM `cat $PID`
+    ;;
+  reload)
+    log_daemon_msg "Reloading $DESC configuration" "$NAME"
+    ;;
+  restart|force-reload)
+    $0 stop
+    $0 start
+    ;;
+  *)
+    log_action_msg "Usage: /etc/init.d/$NAME {start|stop|reload|restart|force-reload|syntax|status}"
+    ;;
+esac
+
+exit 0

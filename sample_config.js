@@ -24,7 +24,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       caFile: null,
       saltFile: "./lib/private/salt.txt",
       psqlPath: "psql",
-      psqlUser: "admin",
+      nodePath: "node",
+
+      // These fields need to be filled in for the datasource
+      // to be able to email
+      smtpHost: "mercury.xtuple.com",
+      smtpPort: 587,
+      smtpUser: "_smtp_user_",
+      smtpPassword: "_smtp_password_",
 
       // these properties are dynamically registered with the
       // node discovery service
