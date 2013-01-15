@@ -1148,9 +1148,11 @@ trailing:true white:true*/
       var isList = type === XM.Characteristic.LIST;
       this.$.advancedPanel.setShowing(isText);
       this.$.optionsPanel.setShowing(isList);
-      if (isList){
-        this.$.optionsPanel.render();        
+      if (isList) {
+        this.$.optionsPanel.render();
       }
+      // signal to workspace container that the menu needs to re-render
+      this.doMenuChange();
     }
   });
 
