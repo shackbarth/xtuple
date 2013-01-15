@@ -35,6 +35,8 @@ var _controls = [
 
 //the text changes when the screen gets loaded.
 _userTextField.textChanged.connect(checkMobile);
+toolbox.coreDisconnect(_userTextField, "editingFinished()", mywindow, "sCheck()"); 
+_userTextField.editingFinished.connect(checkExisting);
 
 function showEvent(e) {
   var control;
@@ -66,6 +68,24 @@ function checkMobile()
     QMessageBox.critical(mywindow, qsTr("Unable To Save"), msg);
     _canEdit = false;
   }
+  _userTextField.textChanged.disconnect(checkMobile);
+}
+
+function checkExisting()
+{
+  var sql = "select count(*) as result from pg_user where usename = <? value('username') ?>";
+  var params = { username: _userTextField.text };
+  var qry = toolbox.executeQuery(sql, params);
+  var msg = qsTr("Username is taken. Please enter another username.");
+  if (qry.first()) {
+    if (qry.value('result')) {
+      QMessageBox.critical(mywindow, qsTr("Unable To Save"), msg);
+      _userTextField.clear();
+      _userTextField.setFocus();
+      return;
+    }
+  }
+  mywindow.sCheck();
 }
 
 $$ );

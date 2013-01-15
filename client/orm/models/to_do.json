@@ -614,7 +614,7 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": "ViewAllToDoItems",
+        "read": "ViewAllToDoItems MaintainAllToDoItems",
         "update": false,
         "delete": false
       },
@@ -732,7 +732,7 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": "ViewAllToDoItems",
+        "read": "ViewAllToDoItems MaintainAllToDoItems",
         "update": false,
         "delete": false
       },

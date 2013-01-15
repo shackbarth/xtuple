@@ -502,7 +502,7 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": "ViewAllProjects",
+        "read": "ViewAllProjects MaintainAllProjects",
         "update": false,
         "delete": false
       },
@@ -598,7 +598,7 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": "ViewAllProjects",
+        "read": "ViewAllProjects MaintainAllProjects",
         "update": false,
         "delete": false
       },
@@ -1169,7 +1169,7 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": "ViewAllProjects",
+        "read": "ViewAllProjects MaintainAllProjects",
         "update": false,
         "delete": false
       },
