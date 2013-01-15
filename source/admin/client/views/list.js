@@ -19,7 +19,7 @@ trailing:true white:true*/
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "short", components: [
+          {kind: "XV.ListColumn", components: [
             {kind: "XV.ListAttr", attr: "id", isKey: true}
           ]}
         ]}
