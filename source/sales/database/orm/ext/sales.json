@@ -1,0 +1,29 @@
+[
+  {
+    "context": "sales",
+    "nameSpace": "XM",
+    "type": "Account",
+    "table": "crmacct",
+    "isExtension": true,
+    "comment": "Extended by Sales",
+    "relations": [
+      {
+        "column": "crmacct_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "customer",
+        "toOne": {
+          "isNested": true,
+          "type": "Customer",
+          "column": "crmacct_cust_id",
+          "inverse": "id"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  }  
+]
