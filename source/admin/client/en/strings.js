@@ -29,6 +29,7 @@ var lang = XT.stringsFor("en_US", {
   "_dateAdded": "Date Added",
   "_licenses": "Licenses",
   "_location": "Location",
+  "_loadOrder": "Load Order",
   "_privilegeName": "Privilege Name",
   "_user": "User",
   "_userName": "User Name",
