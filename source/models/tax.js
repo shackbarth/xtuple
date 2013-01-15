@@ -14,7 +14,9 @@ white:true*/
   XM.TaxAuthority = XM.AccountDocument.extend({
     /** @scope XM.TaxAuthority.prototype */
 
-    recordType: 'XM.TaxAuthority'
+    recordType: 'XM.TaxAuthority',
+    
+    documentKey: 'code'
 
   });
   

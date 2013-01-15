@@ -56,6 +56,7 @@ white:true*/
 
           // If we don't hear back, keep going
           timeoutId = setTimeout(function () {
+            console.log("timeout was reached");
             that.callback(null, model);
           }, XVOWS.wait);
         },
@@ -100,6 +101,7 @@ white:true*/
 
           // If we don't hear back, keep going
           timeoutId = setTimeout(function () {
+            console.log("timeout was reached");
             that.callback(null, model);
           }, XVOWS.wait);
         },
@@ -162,6 +164,7 @@ white:true*/
 
           // If we don't hear back, keep going
           timeoutId = setTimeout(function () {
+            console.log("timeout was reached");
             that.callback(null, model);
           }, XVOWS.wait);
         },

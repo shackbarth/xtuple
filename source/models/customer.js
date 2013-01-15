@@ -13,6 +13,8 @@ white:true*/
   */
   XM.Customer = XM.AccountDocument.extend({
     /** @scope XM.Customer.prototype */
+    
+    numberPolicy: XT.session.getSettings().get(this.numberPolicySetting) || XM.Document.MANUAL_NUMBER,
 
     recordType: 'XM.Customer',
 
@@ -21,7 +23,12 @@ white:true*/
     },
 
     requiredAttributes: [
-      "isActive"
+      "isActive",
+      "number",
+      "name",
+      "customerType",
+      "terms",
+      "salesRep"
     ]
 
   });
@@ -35,6 +42,10 @@ white:true*/
     /** @scope XM.CustomerComment.prototype */
 
     recordType: 'XM.CustomerComment',
+    
+    requiredAttributes: [
+      "commentType"
+    ],
 
     sourceName: 'C'
 
@@ -48,7 +59,11 @@ white:true*/
   XM.CustomerCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.CustomerCharacteristic.prototype */
 
-    recordType: 'XM.CustomerCharacteristic'
+    recordType: 'XM.CustomerCharacteristic',
+    
+    requiredAttributes: [
+      "characteristic"
+    ]
 
   });
 
@@ -79,7 +94,20 @@ white:true*/
     isDocumentAssignment: true
 
   });
+  
+  /**
+    @class
 
+    @extends XM.Model
+  */
+  XM.CustomerGroup = XM.Model.extend({
+    /** @scope XM.CustomerGroup.prototype */
+    
+    recordType: 'XM.CustomerGroup',
+    
+    documentKey: 'name'
+    
+  });
 
   /**
     @class
@@ -130,8 +158,17 @@ white:true*/
   */
   XM.CustomerShipto = XM.Document.extend({
     /** @scope XM.CustomerShipto.prototype */
+    
+    numberPolicy: XT.session.getSettings().get(this.numberPolicySetting) || XM.Document.MANUAL_NUMBER,
 
-    recordType: 'XM.CustomerShipto'
+    recordType: 'XM.CustomerShipto',
+    
+    requiredAttributes: [
+      "isActive",
+      "name",
+      "number"
+    ]
+    
 
   });
 
@@ -174,6 +211,20 @@ white:true*/
     /** @scope XM.CustomerCharge.prototype */
 
     recordType: 'XM.ShipCharge',
+
+    documentKey: 'name'
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.ShippingForm = XM.Document.extend({
+    /** @scope */
+
+    recordType: 'XM.ShippingForm',
 
     documentKey: 'name'
 
