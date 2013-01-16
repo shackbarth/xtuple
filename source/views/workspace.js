@@ -123,7 +123,8 @@ trailing:true white:true*/
       onModelChange: "",
       onStatusChange: "",
       onTitleChange: "",
-      onHistoryChange: ""
+      onHistoryChange: "",
+      onMenuChange: "",
     },
     handlers: {
       onValueChange: "controlValueChanged"
@@ -371,7 +372,8 @@ trailing:true white:true*/
       onError: "errorNotify",
       onHeaderChange: "headerChanged",
       onStatusChange: "statusChanged",
-      onTitleChange: "titleChanged"
+      onTitleChange: "titleChanged",
+      onMenuChange: "menuChanged"
     },
     components: [
       {kind: "FittableRows", name: "navigationPanel", classes: "left", components: [
@@ -579,17 +581,21 @@ trailing:true white:true*/
       this.save();
     },
     /**
-     @todo Document the setupItem method.
+     This is called for each row in the menu List.
+     The menu text is derived from the corresponding panel index.
+     If the panel is not visible, then the menu item is also not visible.
      */
     // menu
     setupItem: function (inSender, inEvent) {
       var box = this.getMenuItems()[inEvent.index],
         defaultTitle =  "_menu".loc() + inEvent.index,
-        title = box.getTitle ? box.getTitle() || defaultTitle :
-          box.title ? box.title || defaultTitle : defaultTitle;
+        title = box.getTitle ? box.getTitle() ||
+         defaultTitle : box.title ? box.title || defaultTitle : defaultTitle,
+        visible = box.showing;
       this.$.item.setContent(title);
       this.$.item.box = box;
       this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
+      this.$.item.setShowing(visible);
     },
     /**
       Loads a workspace into the workspace container.
@@ -707,6 +713,15 @@ trailing:true white:true*/
       this.$.title.setContent(title);
       return true;
     },
+    
+    /**
+    This function forces the menu to render and call
+    its setup function for the List.
+     */
+    menuChanged: function (inSender, inEvent) {
+      this.$.menu.render();
+    },
+    
     /**
      @todo Document unsavedCancel method.
      */
