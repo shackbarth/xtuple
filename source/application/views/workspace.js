@@ -1109,7 +1109,7 @@ trailing:true white:true*/
             {kind: "XV.ToggleButtonWidget", attr: "isAddresses", label: "_address".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isContacts", label: "_contact".loc()},
             //{kind: "XV.ToggleButtonWidget", attr: "isCustomers", label: "_customer".loc()},
-            {kind: "XV.ToggleButtonWidget", attr: "isAccounts", label: "_crmAccount".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isAccounts", label: "_account".loc()},
             //{kind: "XV.ToggleButtonWidget", attr: "isEmployees", label: "_employee".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isIncidents", label: "_incident".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isItems", label: "_item".loc()},
@@ -1134,7 +1134,7 @@ trailing:true white:true*/
       this.inherited(arguments);
       if (this.getValue().getStatus() === XM.Model.READY_CLEAN ||
         this.getValue().getStatus() === XM.Model.READY_NEW) {
-          this.typeValueChanged(model);
+        this.typeValueChanged(model);
       }
     },
     
@@ -1148,9 +1148,13 @@ trailing:true white:true*/
       var isList = type === XM.Characteristic.LIST;
       this.$.advancedPanel.setShowing(isText);
       this.$.optionsPanel.setShowing(isList);
-      if (isList){
-        this.$.optionsPanel.render();        
+      if (isList) {
+        this.$.optionsPanel.render();
+      } else if (isText) {
+        this.$.advancedPanel.render();
       }
+      // signal to workspace container that the menu needs to re-render
+      this.doMenuChange();
     }
   });
 
