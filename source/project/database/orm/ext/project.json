@@ -72,6 +72,31 @@
   {
     "context": "project",
     "nameSpace": "XM",
+    "type": "IncidentRelation",
+    "table": "incdt",
+    "isExtension": true,
+    "comment": "Extended by Project",
+    "relations": [
+      {
+        "column": "incdt_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "project",
+        "attr": {
+          "type": "Number",
+          "column": "incdt_prj_id"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
     "type": "Incident",
     "table": "incdt",
     "isExtension": true,
@@ -122,31 +147,6 @@
         "name": "project",
         "toOne": {
           "type": "ProjectRelation",
-          "column": "incdt_prj_id"
-        }
-      }
-    ],
-    "sequence": 0,
-    "isSystem": true
-  },
-  {
-    "context": "project",
-    "nameSpace": "XM",
-    "type": "IncidentRelation",
-    "table": "incdt",
-    "isExtension": true,
-    "comment": "Extended by Project",
-    "relations": [
-      {
-        "column": "incdt_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
-      {
-        "name": "project",
-        "attr": {
-          "type": "Number",
           "column": "incdt_prj_id"
         }
       }
