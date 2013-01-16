@@ -279,8 +279,8 @@ regexp:true, undef:true, trailing:true, white:true, browser:true */
       this.filterChanged();
       this.keyAttributeChanged();
       this.labelChanged();
-      this.$.input.$.input.addRemoveClass("xv-comboboxwidget-input", true);
-      this.$.input.$.iconButton.addRemoveClass("xv-comboboxwidget-icon", true);
+      // this.$.input.$.input.addRemoveClass("xv-comboboxwidget-input", true);
+      // this.$.input.$.iconButton.addRemoveClass("xv-comboboxwidget-icon", true);
       this.$.input.buildList();
     },
     /**

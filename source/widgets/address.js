@@ -85,7 +85,7 @@ regexp:true, undef:true, trailing:true, white:true */
             onValueChange: "inputChanged"}
         ]},
         {kind: "onyx.InputDecorator", fit: true,
-          classes: "xv-addresswidget-input-decorator",
+          classes: "xv-addresswidget-input-decorator short",
           components: [
           {kind: "onyx.Input", name: "postalCode",
             classes: "xv-addresswidget-input",
