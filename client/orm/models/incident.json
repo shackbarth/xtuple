@@ -1512,7 +1512,7 @@
     "privileges": {
       "all": {
         "create": "MaintainEmailProfiles",
-        "read": "ViewEmailProfiles",
+        "read": true,
         "update": "MaintainEmailProfiles",
         "delete": "MaintainEmailProfiles"
       }
