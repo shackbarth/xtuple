@@ -696,14 +696,24 @@ body {
   background: @white;
   display: block;
   margin: 4px;
+  &.short {
+    width: 40%;
+  }  
 }
 
 .xv-addresswidget-combobox-decorator {
   background: @white;
   display: block;
   margin: 4px;
-  width: 70%;
+  width: 80%;
 	padding-right: 0;
+	.xv-combobox-input {
+	  width: 80%;
+	}
+	.xv-combobox {
+    padding: 0;
+    width: 100%;
+  }
 }
 
 .xv-addresswidget-input {
@@ -821,34 +831,11 @@ body {
   border: 0;
   display: inline-block;
   outline: none;
-  width: 150px;
+  width: 80%;
 }
 
 .xv-combobox-icon {
   margin-left: 4px;
-  display: inline-block;
-}
-
-/* Combo Box Widget */
-.xv-comboboxwidget {
-  padding: 6px;
-  padding-top: 8px;
-  padding-right: 0;
-  height: 24px;
-  width: 200px;
-	display: inline-block;
-}
-
-.xv-comboboxwidget-input {
-  font-size: medium;
-  border: 0;
-  display: inline-block;
-  outline: none;
-  width: 150px; 
-}
-
-.xv-comboboxwidget-icon {
-	margin-left: 4px;
   display: inline-block;
 }
 
