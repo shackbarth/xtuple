@@ -201,6 +201,13 @@ white:true*/
       child = this.$.container.children[0];
       if (forceMin || (item && this.isAtMax() && child.name === item.name)) {
         this.animateToMin();
+        //while (this.$.container.children.length) {
+        //  child = this.$.container.children[0];
+        //  this.$.container.removeChild(child);
+        //}
+        // Workaround for enyo bug in which a div hangs out in the floating layer and a second
+        // identical div gets added then second time you pull the pullout. See incident 18672.
+        //enyo.floatingLayer.render();
 
       } else if (inEvent.show) {
         // remove all children
