@@ -19,7 +19,7 @@ exports.scope = function (req, res) {
 
   // TODO: verify that the org is valid for the user
   // TODO: update the session store row to add the org choice
-  console.log("session ID is " + sessionId + " and org is " + selectedOrg);
+  //console.log("session ID is " + sessionId + " and org is " + selectedOrg);
   res.redirect('/client');
 }
 
@@ -42,7 +42,7 @@ exports.scopeForm = function (req, res) {
   res.render('scope', { organizations: organizations });
 };
 
-exports.login = passport.authenticate('local', { successReturnToOrRedirect: '/scope', failureRedirect: '/' });
+exports.login = passport.authenticate('local', { successReturnToOrRedirect: '/login/scope', failureRedirect: '/' });
 
 exports.logout = function (req, res) {
   // TODO - delete the db session.
