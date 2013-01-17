@@ -151,7 +151,7 @@ white:true*/
 
       @param {Object} inSender
       @param {Object} inEvent
-      @param {String} inEvent.name The name of the panel, or the word "history"
+      @param {String} inEvent.name The name of the panel, or the word "history" or "help"
       @param {Boolean} inEvent.show Whether or not we want to show the panel
     */
     togglePullout: function (inSender, inEvent) {
@@ -160,6 +160,7 @@ white:true*/
       var name = inEvent.name,
         item = this.getItem(name),
         child,
+        isGripperOriginated = inSender.kind === 'XV.Pullout',
         forceMin = false;
 
       if (!item) {
@@ -179,8 +180,11 @@ white:true*/
       }
 
       if (name === 'history') {
+        // show the history panel
         this.$.pulloutHeader.setContent("_history".loc());
+
       } else if (name === 'help') {
+        // show the help panel
         this.$.pulloutHeader.setContent("_help".loc());
         // remove all children
         // it wouldn't be necessary to delete and create each time
@@ -194,32 +198,48 @@ white:true*/
           name: "helpPage",
           attributes: {src: inEvent.url, height: "90%"}
         });
+
       } else {
+        // show the advanced search panel
         this.$.pulloutHeader.setContent("_advancedSearch".loc());
       }
-      this.setSelectedPanel(name);
-      child = this.$.container.children[0];
-      if (forceMin || (item && this.isAtMax() && child.name === item.name)) {
-        this.animateToMin();
-        //while (this.$.container.children.length) {
-        //  child = this.$.container.children[0];
-        //  this.$.container.removeChild(child);
-        //}
-        // Workaround for enyo bug in which a div hangs out in the floating layer and a second
-        // identical div gets added then second time you pull the pullout. See incident 18672.
-        //enyo.floatingLayer.render();
 
-      } else if (inEvent.show) {
-        // remove all children
+      this.setSelectedPanel(name);
+
+      if (forceMin || (this.isAtMax() && !isGripperOriginated)) {
+        //
+        // Coerce a minimization of the pullout.
+        // If the animation is gripper-originated it doesn't need to be helped along
+        //
+        this.animateToMin();
+
+      } else if (this.isAtMin() && !isGripperOriginated && inEvent.show) {
+        //
+        // Coerce a maximization of the pullout.
+        // If the animation is gripper-originated it doesn't need to be helped along
+        //
+        this.animateToMax();
+      }
+
+      if (inEvent.show) {
+        //
+        // We only want the selected item to be in the container.
+        // Remove all pre-existing children.
+        //
         while (this.$.container.children.length) {
           child = this.$.container.children[0];
           this.$.container.removeChild(child);
         }
+
+        //
+        // Add the item
+        //
         this.$.container.addChild(item);
         this.$.fittableRows.render();
-        if (!this.isAtMax()) {
-          this.animateToMax();
-        }
+
+        // Workaround for enyo bug in which a div hangs out in the floating layer and a second
+        // identical div gets added then second time you pull the pullout. See incident 18672.
+        enyo.floatingLayer.render();
       }
     }
   });
