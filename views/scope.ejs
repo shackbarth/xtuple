@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>xTuple Login</title>
+		<link rel="shortcut icon" href="assets/favicon.ico" />
+		<!-- -->
+		<meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+	</head>
+	<body class="enyo-unselectable">
+
+	<style type="text/css" media="all">
+	<% include login/stylesheets/screen.css %>
+	</style>
+
+	<section id="login" class="enyo-fit enyo-clip">
+		<header id="header">
+			<img draggable="false" id="header_image" src="assets/logo.png">
+		</header>
+		<section class="enyo-panels enyo-arranger enyo-arranger-fit enyo-panels-fit-narrow" id="main">
+			<div style="transform: translateZ(0px); opacity: 1;" id="form-fields">
+				<form action="/login" method="post">
+					<div class="login-label" id="form-fields_idLabel">Choose Database</div>
+                    <select>
+                    <% for(var i=0; i<organizations.length; i++) {%>
+                       <option value="<%= organizations[i] %>"><%= organizations[i] %></div>
+                    <% } %>
+                    </select>
+					<input class="enyo-tool-decorator onyx-button enyo-unselectable login-button" id="form-fields_loginButton" type="submit" value="Select"/>
+				</form>
+			</div>
+	</section>
+	<label class="login-message-box" id="login_messageBox"></label><div id="X">X</div></section>
+
+	</body>
+</html>
+

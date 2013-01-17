@@ -152,6 +152,8 @@ app.get('/', site.loginForm);
 app.post('/login', site.login);
 app.get('/logout', site.logout);
 app.get('/account', site.account);
+app.get('/scope', site.scopeForm);
+app.post('/login/scope', site.scope);
 
 app.get('/dialog/authorize', oauth2.authorization);
 app.post('/dialog/authorize/decision', oauth2.decision);
