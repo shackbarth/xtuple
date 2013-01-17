@@ -32,18 +32,11 @@ passport.use(new LocalStrategy(
     X.debug('Login attempt done: ', done);
 
     db.users.findByUsername(username, function (err, user) {
-      var bcryptPassword;
-
       if (err) { return done(err); }
       if (!user) {
         return done(null, false);
       }
-      console.log(password);
-      console.log(user);
-      bcryptPassword = X.bcrypt.hashSync(password, 10);
-      console.log(bcryptPassword);
-      console.log(user.get("password"));
-      if (user.get("password") !== bcryptPassword) {
+      if (!X.bcrypt.compareSync(password, user.get('password'))) {
         return done(null, false);
       }
       return done(null, user);
