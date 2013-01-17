@@ -13,18 +13,32 @@ exports.loginForm = function (req, res) {
   res.render('login');
 };
 
+exports.scope = function (req, res) {
+  var sessionId = req.sessionID,
+    selectedOrg = req.body.org;
+
+  // TODO: verify that the org is valid for the user
+  // TODO: update the session store row to add the org choice
+  console.log("session ID is " + sessionId + " and org is " + selectedOrg);
+  res.redirect('/client');
+}
+
 exports.scopeForm = function (req, res) {
   var organizations = ['dev', 'dev2'];
-  // TODO something like this should work once the plumbing works:
-  //var organizations = _.map(req.user.get("organizations").toJSON(), function (org) {return org.name;});
 
-  // TODO it would be nice to choose an org automatically if there's only one.
-  /*
-  it would look something like this maybe
+  // TODO something like this should work once the plumbing works:
+  // try {
+  //   organizations = _.map(req.user.get("organizations").toJSON(), function (org) {return org.name;});
+  // } catch (error) {
+  //   // prevent unauthorized access
+  //   res.render('login');
+  // }
+
+  // choose an org automatically if there's only one.
   if (organizations.length === 1) {
+    req.body.org = organizations[0];
     exports.scope(req, res);
   }
-  */
   res.render('scope', { organizations: organizations });
 };
 
@@ -36,10 +50,6 @@ exports.logout = function (req, res) {
   res.redirect('/');
 }
 
-exports.scope = function (req, res) {
-  // TODO: verify that the org is valid for the user
-  res.redirect('/client');
-}
 
 
 exports.account = [

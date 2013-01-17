@@ -20,9 +20,9 @@
 		</header>
 		<section class="enyo-panels enyo-arranger enyo-arranger-fit enyo-panels-fit-narrow" id="main">
 			<div style="transform: translateZ(0px); opacity: 1;" id="form-fields">
-				<form action="/login" method="post">
+				<form action="/login/scope" method="post">
 					<div class="login-label" id="form-fields_idLabel">Choose Database</div>
-                    <select>
+                    <select name="org">
                     <% for(var i=0; i<organizations.length; i++) {%>
                        <option value="<%= organizations[i] %>"><%= organizations[i] %></div>
                     <% } %>
@@ -31,8 +31,6 @@
 				</form>
 			</div>
 	</section>
-	<label class="login-message-box" id="login_messageBox"></label><div id="X">X</div></section>
-
 	</body>
 </html>
 
