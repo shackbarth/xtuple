@@ -6,9 +6,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   /**
-    Accesses the fetchEngine (below) for a GET request a la Express
+    Can be called by websockets, or the below fetch function, or REST, etc.
    */
-  var fetch = function (payload, callback) {
+  var fetchEngine = function (payload, callback) {
     var organization,
       query,
       options;
@@ -38,12 +38,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       X.database.query(organization, query, callback);
     }
   };
-  exports.fetch = fetch;
+  exports.fetchEngine = fetchEngine;
 
   /**
-    Can be called by websockets, or the above fetch function, or REST, etc.
+    Accesses the fetchEngine (above) for a GET request a la Express
    */
-  exports.fetchEngine = function (req, res) {
+  exports.fetch = function (req, res) {
     var callback = function (err, resp) {
       if (err) {
         res.send(500, {data: err});
@@ -51,7 +51,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         res.send({data: resp});
       }
     };
-    fetch(req.query, callback);
+    fetchEngine(req.query, callback);
   };
 
 }());
