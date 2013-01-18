@@ -326,6 +326,130 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.Currency", "XV.CurrencyWorkspace");
+  
+  // ..........................................................
+  // CONTACT
+  //
+
+  enyo.kind({
+    name: "XV.CustomerWorkspace",
+    kind: "XV.Workspace",
+    title: "_customer".loc(),
+    model: "XM.Customer",
+    headerAttrs: ["firstName", "lastName"],
+    handlers: {
+      onError: "errorNotify"
+    },
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
+            {kind: "onyx.GroupboxHeader", content: "_name".loc()},
+            {kind: "XV.HonorificCombobox", attr: "honorific"},
+            {kind: "XV.InputWidget", attr: "firstName"},
+            {kind: "XV.InputWidget", attr: "middleName"},
+            {kind: "XV.InputWidget", attr: "lastName"},
+            {kind: "XV.InputWidget", attr: "suffix"},
+            {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
+            {kind: "XV.UserAccountWidget", attr: "owner"},
+            {kind: "XV.AccountWidget", attr: "account"},
+            {kind: "onyx.GroupboxHeader", content: "_address".loc()},
+            {kind: "XV.AddressWidget", attr: "address"},
+            {kind: "onyx.GroupboxHeader", content: "_information".loc()},
+            {kind: "XV.InputWidget", attr: "jobTitle"},
+            {kind: "XV.ComboboxWidget", attr: "primaryEmail",
+              keyAttribute: "email"},
+            {kind: "XV.InputWidget", attr: "phone"},
+            {kind: "XV.InputWidget", attr: "alternate"},
+            {kind: "XV.InputWidget", attr: "fax"},
+            {kind: "XV.ContactCharacteristicsWidget", attr: "characteristics"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes"}
+          ]}
+        ]},
+        {kind: "XV.ContactCommentBox", attr: "comments"},
+        {kind: "XV.ContactDocumentsBox", attr: "documents"},
+        {kind: "XV.ContactEmailBox", attr: "email"}
+      ]},
+      {kind: "onyx.Popup", name: "multipleAddressPopup", centered: true,
+        modal: true, floating: true, scrim: true, onShow: "popupShown",
+        onHide: "popupHidden", components: [
+        {content: "_addressShared".loc()},
+        {content: "_whatToDo".loc()},
+        {tag: "br"},
+        {kind: "onyx.Button", content: "_changeOne".loc(), ontap: "addressChangeOne",
+          classes: "onyx-blue xv-popup-button"},
+        {kind: "onyx.Button", content: "_changeAll".loc(), ontap: "addressChangeAll",
+          classes: "xv-popup-button"},
+        {kind: "onyx.Button", content: "_cancel".loc(), ontap: "addressCancel",
+          classes: "xv-popup-button"}
+      ]}
+    ],
+    accountChanged: function () {
+      var account = this.$.accountWidget.getValue();
+      this.$.addressWidget.setAccount(account);
+    },
+    addressChangeAll: function () {
+      var options = {address: XM.Address.CHANGE_ALL};
+      this._popupDone = true;
+      this.$.multipleAddressPopup.hide();
+      this.save(options);
+    },
+    addressChangeOne: function () {
+      var options = {address: XM.Address.CHANGE_ONE};
+      this._popupDone = true;
+      this.$.multipleAddressPopup.hide();
+      this.save(options);
+    },
+    addressCancel: function () {
+      this._popupDone = true;
+      this.$.multipleAddressPopup.hide();
+    },
+    attributesChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      this.accountChanged();
+    },
+    controlValueChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      if (inEvent.originator.name === 'accountWidget') {
+        this.accountChanged();
+      }
+    },
+    errorNotify: function (inSender, inEvent) {
+      // Handle address questions
+      if (inEvent.error.code === 'xt2007') {
+        this._popupDone = false;
+        this.$.multipleAddressPopup.show();
+        return true;
+      }
+    },
+    modelChanged: function () {
+      this.inherited(arguments);
+      var input = this.findControl("primaryEmail").$.input,
+       value = this.getValue();
+      input._collection = value ? value.get("email") : [];
+      input.buildList();
+    },
+    statusChanged: function () {
+      this.inherited(arguments);
+      var input = this.findControl("primaryEmail").$.input;
+      input.buildList();
+    },
+    popupHidden: function () {
+      if (!this._popupDone) {
+        this.$.multipleAddressPopup.show();
+      }
+    }
+  });
+
+  XV.registerModelWorkspace("XM.CustomerRelation", "XV.CustomerWorkspace");
+  XV.registerModelWorkspace("XM.CustomerListItem", "XV.CustomerWorkspace");
+  
 
   // ..........................................................
   // FILE
