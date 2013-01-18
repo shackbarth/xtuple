@@ -37,18 +37,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Pushes the results from the exec calls into the resp object, which will be sent back to
     the client.
    */
-  var logAll = function (resp, stdout, stderr, error) {
+  var logAll = function (respObject, stdout, stderr, error) {
     if (X.options.datasource.verboseMaintenanceLogging) {
       X.log(stdout);
     }
-    resp.log.push(stdout);
+    respObject.log.push(stdout);
     if (stderr) {
-      resp.errorLog.push(stderr);
+      respObject.errorLog.push(stderr);
     }
     if (error !== null) {
-      resp.status = "ERROR";
-      resp.errorCount++;
-      resp.errorLog.push("execution error: " + error);
+      respObject.status = "ERROR";
+      respObject.errorCount++;
+      respObject.errorLog.push("execution error: " + error);
     }
   };
 
@@ -67,15 +67,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
    * The ORM installer commands need to be run sequentially. We create an array of the commands that
    * we have to run and then use recursion to do them one at a time here.
    */
-  var runOrmCommands = function (ormCommands, pgPassword, resp, res) {
-    var that = this,
-       ormCommand,
-       ormCallback;
+  var runOrmCommands = function (ormCommands, pgPassword, respObject, res) {
+    var ormCommand,
+      ormCallback;
 
     // exit strategy
     if (ormCommands.length === 0) {
-      resp.status = resp.status || "SUCCESS";
-      that.respond(res, resp);
+      respObject.status = respObject.status || "SUCCESS";
+      respond(res, respObject);
       return;
     }
 
@@ -83,10 +82,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     ormCallback = function (error, stdout, stderr) {
       // log any relevant information from the orm exec call
       X.log("ORM command returned. " + ormCommands.length + " left");
-      that.logAll(resp, stdout, stderr, error);
+      logAll(respObject, stdout, stderr, error);
 
       // recurse down an ever-shortening array
-      that.runOrmCommands(ormCommands, pgPassword, resp, res);
+      runOrmCommands(ormCommands, pgPassword, respObject, res);
     };
     X.log("Running ORM command: ", ormCommand);
 
@@ -98,13 +97,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     session load, or through the localhost backdoor.
    */
   var install = function (res, args, username) {
-    var that = this,
-      commandCount = 0,
+    var commandCount = 0,
       commandsReturned = 0,
       ormCommands = [],
       ormCount = 0,
       ormsReturned = 0,
-      resp = {commandLog: [], log: [], errorLog: [], errorCount: 0},
+      respObject = {commandLog: [], log: [], errorLog: [], errorCount: 0},
       organizationColl = new XM.OrganizationCollection(),
       //
       // practically all the code is in the success callback of the initial fetch
@@ -155,7 +153,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
                     " -u " + pgUser + " -p " + port + " --path ../../../" + ormDir + " -P ";
 
                 // log any relevant information from the script exec call
-                that.logAll(resp, stdout, stderr, error);
+                logAll(respObject, stdout, stderr, error);
 
                 if (ormsExist && error) {
                   // if the init script failed we might as well not run the orm. But increment
@@ -175,13 +173,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
                   // The way we accomplish this is to push all the orm commands into an array
                   // and then run them sequentially once the array is complete.
                   //
-                  X.log("Pushing (cd " + that.installerDir + " && exec " + ormCommand + pgPassword + ")");
-                  ormCommands.push("(cd " + that.installerDir + " && exec " + ormCommand + pgPassword + ")");
-                  resp.commandLog.push(ormCommand);
+                  X.log("Pushing (cd " + installerDir + " && exec " + ormCommand + pgPassword + ")");
+                  ormCommands.push("(cd " + installerDir + " && exec " + ormCommand + pgPassword + ")");
+                  respObject.commandLog.push(ormCommand);
                 }
 
                 if (ormCount === ormCommands.length) {
-                  that.runOrmCommands(ormCommands, pgPassword, resp, res);
+                  runOrmCommands(ormCommands, pgPassword, respObject, res);
                 }
                 commandsReturned++;
               };
@@ -201,20 +199,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             X.log("Executing (cd " + scriptDir + " && exec " + psqlCommand + ")");
             exec("(cd " + scriptDir + " && exec " + psqlCommand + ")", scriptCallback);
             commandCount++;
-            resp.commandLog.push(psqlCommand);
+            respObject.commandLog.push(psqlCommand);
           });
         });
         if (commandCount === 0) {
           // Report fully back even if no commands were run.
-          resp.status = resp.status || "SUCCESS";
-          that.respond(res, resp);
+          respObject.status = respObject.status || "SUCCESS";
+          respond(res, respObject);
         }
       },
       fetchError = function (model, error) {
-        resp.status = "ERROR";
-        resp.errorCount++;
-        resp.message = "Error while fetching organizations";
-        that.respond(res, resp);
+        respObject.status = "ERROR";
+        respObject.errorCount++;
+        respObject.message = "Error while fetching organizations";
+        respond(res, respObject);
       },
       options,
       query = {
@@ -267,7 +265,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     if (host === "localhost:442") {
       // users accessing this route through the unexposed server don't have to
       // get authenticated. Do the fetch under the node user authority.
-      this.install(res, args, X.options.globalDatabase.nodeUsername);
+      install(res, args, X.options.globalDatabase.nodeUsername);
       return;
     }
 
@@ -275,7 +273,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // TODO: authentication
     // userId = ???
 
-    this.install(res, args, userId);
+    install(res, args, userId);
   };
 
   exports.maintenance = maintenance;

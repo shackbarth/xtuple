@@ -9,15 +9,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   vows.describe('Report route').addBatch({
-    'accessing the report route': {
+    'a GET to the maintenance route': {
       topic: function () {
-        zombie.visit('http://localhost:2000/report?details={json:true}', this.callback);
+        zombie.visit('http://localhost:2000/maintenance?organization=dev&extensions=[1,2,3,4,5]', {maxWait: 100000}, this.callback);
       },
-      'should send us to Pentaho': function (err, browser, status){
+      'should run the maintenance script': function (err, browser, status) {
+        var body, bodyObj;
+
         assert(browser.success);
-        assert.equal(browser.location.host, "maxhammer.xtuple.com:8080");
-        assert.equal(browser.text("title"), "Report Web Viewer"); // that's pentaho's title
+        body = browser.text("body");
+        assert(body);
+        bodyObj = JSON.parse(body);
+        assert.equal(bodyObj.status, "SUCCESS");
       }
     },
   }).export(module);
 }());
+
