@@ -15,9 +15,9 @@
     isActive: true,
     number: "50000",
     name: "TESTCUSTOMER",
-    customerType: "",
-    terms: "",
-    salesRep: ""
+    customerType: 20,
+    terms: 42,
+    salesRep: 29
   };
 
   updateHash = {

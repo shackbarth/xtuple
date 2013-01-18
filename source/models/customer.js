@@ -13,8 +13,6 @@ white:true*/
   */
   XM.Customer = XM.AccountDocument.extend({
     /** @scope XM.Customer.prototype */
-    
-    numberPolicy: XT.session.getSettings().get(this.numberPolicySetting) || XM.Document.MANUAL_NUMBER,
 
     recordType: 'XM.Customer',
 
@@ -24,7 +22,6 @@ white:true*/
 
     requiredAttributes: [
       "isActive",
-      "number",
       "name",
       "customerType",
       "terms",
@@ -42,10 +39,6 @@ white:true*/
     /** @scope XM.CustomerComment.prototype */
 
     recordType: 'XM.CustomerComment',
-    
-    requiredAttributes: [
-      "commentType"
-    ],
 
     sourceName: 'C'
 
@@ -59,11 +52,7 @@ white:true*/
   XM.CustomerCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.CustomerCharacteristic.prototype */
 
-    recordType: 'XM.CustomerCharacteristic',
-    
-    requiredAttributes: [
-      "characteristic"
-    ]
+    recordType: 'XM.CustomerCharacteristic'
 
   });
 
@@ -158,8 +147,6 @@ white:true*/
   */
   XM.CustomerShipto = XM.Document.extend({
     /** @scope XM.CustomerShipto.prototype */
-    
-    numberPolicy: XT.session.getSettings().get(this.numberPolicySetting) || XM.Document.MANUAL_NUMBER,
 
     recordType: 'XM.CustomerShipto',
     
@@ -167,8 +154,49 @@ white:true*/
       "isActive",
       "name",
       "number"
-    ]
+    ],
     
+    // ..........................................................
+    // METHODS
+    //
+
+    initialize: function () {
+      XM.Document.prototype.initialize.apply(this, arguments);
+      this.on('change:customer', this.customerDidChange);
+    },
+
+    customerDidChange: function (model, value, options) {
+      var status = this.getStatus(),
+          customer = this.get("customer"),
+          K = XM.Model;
+          
+      if (customer && status === K.READY_NEW) {
+        var shiptosCollection = customer.get("shiptos"),
+            numberArray = [];
+        //map the number attr of each model in the shiptosCollection to numberArray
+        numberArray = _.map(shiptosCollection.models, function (m) {return m.get("number"); });
+        /* The purpose of the next few lines is to automatically find the next integer number for the new shipto.
+            Sticking a + sign in front of a string will return the number version of the string as long as the
+            string contains only numbers.  If it contains non-numeric characters, it will return NaN (not a number).
+            For example, +"5" will return 5.  But +"shipto5" would return NaN.  So this while loop will continue to
+            loop as long as the string numberArray[i] contains only numeric characters.
+        */
+        numberArray.sort();
+        var i = 0,
+            j = 0;
+        while (!isNaN(+numberArray[i])) {
+          i++;
+          j = numberArray[i];
+        }
+        this.set("number", j + 1);
+        
+        this.set("shipZone", customer.get("shipZone"));
+        this.set("taxZone", customer.get("taxZone"));
+        this.set("shipVia", customer.get("shipVia"));
+        //this.set("shipForm", customer.get("shipForm")); leave off for now
+        this.set("shipCharge", customer.get("shipCharge"));
+      }
+    }
 
   });
 

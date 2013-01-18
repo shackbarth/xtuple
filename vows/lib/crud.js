@@ -90,6 +90,10 @@ white:true*/
             callback = function () {
               var status = model.getStatus(),
                 K = XM.Model;
+                console.log("status is");
+                console.log(model.getStatusString());
+                console.log("record type is");
+                console.log(model.recordType);
               if (status === K.READY_CLEAN) {
                 clearTimeout(timeoutId);
                 model.off('statusChange', callback);
