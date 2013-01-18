@@ -56,21 +56,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     It's helpful for cron scripts to have a 200 or a 500 status based on
     the success of the response data object. We do that in one place, here.
   */
-  var respond = function (xtr, data) {
-    var response = xtr.get("response"),
-      httpStatus = data && data.status === "SUCCESS" ? 200 : 500;
+  var respond = function (res, data) {
+    var httpStatus = data && data.status === "SUCCESS" ? 200 : 500;
 
     X.log("Maintenance is complete");
-    response.writeHead(httpStatus, {"Content-Type": "text/plain"});
-    response.write(JSON.stringify(data));
-    response.end();
+    res.send(httpStatus, JSON.stringify(data));
   };
 
   /**
    * The ORM installer commands need to be run sequentially. We create an array of the commands that
    * we have to run and then use recursion to do them one at a time here.
    */
-  var runOrmCommands = function (ormCommands, pgPassword, resp, xtr) {
+  var runOrmCommands = function (ormCommands, pgPassword, resp, res) {
     var that = this,
        ormCommand,
        ormCallback;
@@ -78,7 +75,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // exit strategy
     if (ormCommands.length === 0) {
       resp.status = resp.status || "SUCCESS";
-      that.respond(xtr, resp);
+      that.respond(res, resp);
       return;
     }
 
@@ -89,7 +86,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       that.logAll(resp, stdout, stderr, error);
 
       // recurse down an ever-shortening array
-      that.runOrmCommands(ormCommands, pgPassword, resp, xtr);
+      that.runOrmCommands(ormCommands, pgPassword, resp, res);
     };
     X.log("Running ORM command: ", ormCommand);
 
@@ -100,7 +97,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     This is the function that does all the work. It can be run after a successful
     session load, or through the localhost backdoor.
    */
-  var install = function (xtr, args, username) {
+  var install = function (res, args, username) {
     var that = this,
       commandCount = 0,
       commandsReturned = 0,
@@ -184,7 +181,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
                 }
 
                 if (ormCount === ormCommands.length) {
-                  that.runOrmCommands(ormCommands, pgPassword, resp, xtr);
+                  that.runOrmCommands(ormCommands, pgPassword, resp, res);
                 }
                 commandsReturned++;
               };
@@ -210,14 +207,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         if (commandCount === 0) {
           // Report fully back even if no commands were run.
           resp.status = resp.status || "SUCCESS";
-          that.respond(xtr, resp);
+          that.respond(res, resp);
         }
       },
       fetchError = function (model, error) {
         resp.status = "ERROR";
         resp.errorCount++;
         resp.message = "Error while fetching organizations";
-        that.respond(xtr, resp);
+        that.respond(res, resp);
       },
       options,
       query = {
@@ -247,7 +244,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // to do, is actually make the call.
     organizationColl.fetch(options);
 
-  },
+  };
 
 
   /**
@@ -260,47 +257,25 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     @class
    */
   var maintenance = function (req, res) {
-    var that = this,
-      originalUrl = xtr.get("url"),
-      cookie = xtr.request.cookies ? xtr.request.cookies.xtsessioncookie : undefined,
-      session,
-      sessionParams,
-      response = xtr.get("response"),
-      args = querystring.parse(url.parse(originalUrl).query);
+    var host = req.headers.host,
+      args = req.query,
+      userId;
 
-    if (xtr.get("host") === "localhost:442") {
+    console.log(host);
+    console.log(req.query);
+
+    if (host === "localhost:442") {
       // users accessing this route through the unexposed server don't have to
       // get authenticated. Do the fetch under the node user authority.
-      this.install(xtr, args, X.options.globalDatabase.nodeUsername);
+      this.install(res, args, X.options.globalDatabase.nodeUsername);
       return;
     }
 
-    if (!cookie) {
-      // XXX this still needs some work
-      response.writeHead(500, {"Content-Type": "text/plain"});
-      response.write("You need a valid cookie!");
-      response.end();
-      return;
-    }
 
-    sessionParams = JSON.parse(cookie);
-    if (!sessionParams.sid) {
-      // XXX this still needs some work
-      response.writeHead(500, {"Content-Type": "text/plain"});
-      response.write("You need a valid cookie!");
-      response.end();
-      return;
-    }
+    // TODO: authentication
+    // userId = ???
 
-    session = X.Session.create(sessionParams);
-
-    session.once("error", _.bind(this.error, this, session, xtr));
-
-    session.once("isReady", function () {
-      // because the session is loaded, session.id is the global username
-      that.install(xtr, args, session.id);
-
-    });
+    this.install(res, args, userId);
   };
 
   exports.maintenance = maintenance;

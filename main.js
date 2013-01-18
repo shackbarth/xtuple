@@ -164,8 +164,8 @@ app.get('/api/userinfo', user.info);
 var report = require('./routes/report');
 app.get('/report', report.report);
 
-//var maintenance = require('./routes/maintenance');
-//app.get('/maintenance', maintenance.maintainance);
+var maintenance = require('./routes/maintenance');
+app.get('/maintenance', maintenance.maintenance);
 
 
 /**

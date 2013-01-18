@@ -14,8 +14,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         zombie.visit('http://localhost:2000/report?details={json:true}', this.callback);
       },
       'should send us to Pentaho': function (err, browser, status){
-        assert.equal(browser.text("title"), "Report Web Viewer"); // that's pentaho's title
         assert(browser.success);
+        assert.equal(browser.text("title"), "Report Web Viewer"); // that's pentaho's title
       }
     },
   }).export(module);
