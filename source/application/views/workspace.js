@@ -328,7 +328,7 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.Currency", "XV.CurrencyWorkspace");
   
   // ..........................................................
-  // CONTACT
+  // CUSTOMER
   //
 
   enyo.kind({
@@ -347,34 +347,47 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.NumberWidget", attr: "number"},
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "customerType"},
             {kind: "XV.CheckboxWidget", attr: "isActive"},
-            {kind: "onyx.GroupboxHeader", content: "_name".loc()},
-            {kind: "XV.HonorificCombobox", attr: "honorific"},
-            {kind: "XV.InputWidget", attr: "firstName"},
-            {kind: "XV.InputWidget", attr: "middleName"},
-            {kind: "XV.InputWidget", attr: "lastName"},
-            {kind: "XV.InputWidget", attr: "suffix"},
-            {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-            {kind: "XV.UserAccountWidget", attr: "owner"},
-            {kind: "XV.AccountWidget", attr: "account"},
-            {kind: "onyx.GroupboxHeader", content: "_address".loc()},
-            {kind: "XV.AddressWidget", attr: "address"},
-            {kind: "onyx.GroupboxHeader", content: "_information".loc()},
-            {kind: "XV.InputWidget", attr: "jobTitle"},
-            {kind: "XV.ComboboxWidget", attr: "primaryEmail",
-              keyAttribute: "email"},
-            {kind: "XV.InputWidget", attr: "phone"},
-            {kind: "XV.InputWidget", attr: "alternate"},
-            {kind: "XV.InputWidget", attr: "fax"},
+            {kind: "onyx.GroupboxHeader", content: "_billingContact".loc()},
+            {kind: "XV.ContactWidget", attr: "billingContact",
+              showAddress: true, label: "_name".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_correspondenceContact".loc()},  
+            {kind: "XV.ContactWidget", attr: "correspondenceContact",
+              showAddress: true, label: "_name".loc()},
             {kind: "XV.ContactCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes"}
+            {kind: "XV.TextArea", attr: "notes"},
+            {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
+            {kind: "XV.InputWidget", attr: "shipVia"},
+            {kind: "XV.InputWidget", attr: "shipForm"},
+            {kind: "XV.InputWidget", attr: "shipCharge"},
+            //{kind: "XV.ToggleButtonWidget", attr: "isBackorder", label: "_acceptsBackorders".loc()},
+            //{kind: "XV.ToggleButtonWidget", attr: "isPartialShip", label: "_acceptsPartial".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isFreeFormShipto", label: "_freeFormShip".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isFreeFormBillto", label: "_freeFormBill".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_terms".loc()},
+            //{kind: "XV.CheckboxWidget", attr: "isSpecifiedBillingRate"}, Enables Rate Widget
+            //{kind: "XV.NumberWidget", attr: "billingRate"},
+            {kind: "XV.InputWidget", attr: "terms"},
+            {kind: "XV.InputWidget", attr: "discount"},
+            {kind: "XV.InputWidget", attr: "creditStatus"},
+            // //{kind: "XV.CheckboxWidget", attr: "isUsesPurchaseOrder"},
+            //{kind: "XV.CheckboxWidget", attr: "isUsesBlanketPOs"},
+            {kind: "XV.InputWidget", attr: "balanceMethod"},
+            {kind: "XV.InputWidget", attr: "creditStatus"},
+            {kind: "XV.NumberWidget", attr: "creditLimit"}
           ]}
         ]},
-        {kind: "XV.ContactCommentBox", attr: "comments"},
-        {kind: "XV.ContactDocumentsBox", attr: "documents"},
-        {kind: "XV.ContactEmailBox", attr: "email"}
+        {kind: "XV.CustomerCommentBox", attr: "comments"},
+        {kind: "XV.CustomerDocumentsBox", attr: "documents"},
+        {kind: "XV.AccountContactsBox", attr: "customerRelations"}
+        // Ship Tos
+        // Item
+        // URLS
+        
       ]},
       {kind: "onyx.Popup", name: "multipleAddressPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",
@@ -391,8 +404,8 @@ trailing:true white:true*/
       ]}
     ],
     accountChanged: function () {
-      var account = this.$.accountWidget.getValue();
-      this.$.addressWidget.setAccount(account);
+      //var account = this.$.accountWidget.getValue();
+      //this.$.addressWidget.setAccount(account);
     },
     addressChangeAll: function () {
       var options = {address: XM.Address.CHANGE_ALL};
@@ -412,13 +425,13 @@ trailing:true white:true*/
     },
     attributesChanged: function (inSender, inEvent) {
       this.inherited(arguments);
-      this.accountChanged();
+      //this.accountChanged();
     },
     controlValueChanged: function (inSender, inEvent) {
       this.inherited(arguments);
-      if (inEvent.originator.name === 'accountWidget') {
-        this.accountChanged();
-      }
+      // if (inEvent.originator.name === 'accountWidget') {
+      //         this.accountChanged();
+      //       }
     },
     errorNotify: function (inSender, inEvent) {
       // Handle address questions
@@ -430,15 +443,15 @@ trailing:true white:true*/
     },
     modelChanged: function () {
       this.inherited(arguments);
-      var input = this.findControl("primaryEmail").$.input,
-       value = this.getValue();
-      input._collection = value ? value.get("email") : [];
-      input.buildList();
+      // var input = this.findControl("primaryEmail").$.input,
+      //  value = this.getValue();
+      // input._collection = value ? value.get("email") : [];
+      // input.buildList();
     },
     statusChanged: function () {
       this.inherited(arguments);
-      var input = this.findControl("primaryEmail").$.input;
-      input.buildList();
+      // var input = this.findControl("primaryEmail").$.input;
+      //       input.buildList();
     },
     popupHidden: function () {
       if (!this._popupDone) {
