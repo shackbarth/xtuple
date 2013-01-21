@@ -155,6 +155,7 @@ app.get('/logout', routes.logout);
 app.get('/account', site.account);
 app.get('/login/scope', routes.scopeForm);
 app.post('/login/scope', routes.scope);
+//app.post('/export', routes.expor); TODO: implement, or delete code
 
 app.get('/dialog/authorize', oauth2.authorization);
 app.post('/dialog/authorize/decision', oauth2.decision);
@@ -164,6 +165,7 @@ app.get('/api/userinfo', user.info);
 
 app.get('/report', routes.report);
 app.get('/maintenance', routes.maintenance);
+app.get('/file', routes.file);
 
 
 /**

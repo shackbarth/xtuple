@@ -13,10 +13,10 @@ organization.js -- admin route. dead code?
 session.js -- replaced by oauth
 session functor?
 logout functor?
+export.js -- can we deprecate this w/ pentaho instead of porting?
 
 NOT DONE
 dataFromKey -- this is being worked on in 19268
-export.js
 file.js
 oauth2auth.js
 oauth2token.js
