@@ -164,7 +164,8 @@ app.get('/login/scope', routes.scopeForm);
 app.post('/login/scope', routes.scope);
 app.get('/logout', routes.logout);
 
-app.get('/email', routes.email);
+app.all('/email', routes.email);
+app.all('/extensions', routes.extensions);
 app.get('/file', routes.file);
 app.get('/maintenance', routes.maintenance);
 app.get('/report', routes.report);

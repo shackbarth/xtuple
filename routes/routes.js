@@ -11,6 +11,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   var auth = require('./auth'),
     email = require('./email'),
+    extensions = require('./extensions'),
     file = require('./file'),
     maintenance = require('./maintenance'),
     redirector = require('./redirector'),
@@ -22,6 +23,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.scope = auth.scope;
   exports.scopeForm = auth.scopeForm;
   exports.email = email.email;
+  exports.extensions = extensions.extensions
   exports.file = file.file;
   exports.maintenance = maintenance.maintenance;
   exports.redirect = redirector.redirect;

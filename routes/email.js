@@ -26,15 +26,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         if (error) {
           X.log("Email error", error);
           // TODO: coordinate these responses with the callback of the datasource in the client
-          res.send(500, "Error emailing");
+          res.send(500, {isError: true, reason: "Error emailing"});
         } else {
-          res.send('{"message": "email success"}');
+          res.send({message: "email success"});
         }
       };
 
 
     // TODO: authentication
-    console.log("email route ho!", mailContent);
+    res.header("Access-Control-Allow-Origin", "*"); // XXX temp until migration
     X.smtpTransport.sendMail(mailContent, callback);
   };
 }());
