@@ -307,6 +307,24 @@ white:true*/
                .send(payload);
     },
 
+    ajaxSuccess: function (inSender, inResponse) {
+      var params = {}, error;
+
+      // handle error
+      if (inResponse.isError) {
+        if (inSender.error) {
+          params.error = inResponse.message;
+          error = XT.Error.clone('xt1001', { params: params });
+          inSender.error.call(this, error);
+        }
+        return;
+      }
+
+      // handle success
+      if (inSender.success) {
+        inSender.success.call(this, inResponse.data);
+      }
+    },
     /*
       Sends a request to node to send out an email
 
@@ -321,73 +339,16 @@ white:true*/
     sendEmail: function (payload, options) {
       var that = this,
         ajax = new enyo.Ajax({
-          url: "/email"
-        }),
-        success = function (inSender, inResponse) {
-          var params = {}, error;
+          url: "http://localhost:2000/email", // XXX temp until migration
+          //url: "/email",
+          success: options ? options.success : undefined,
+          error: options ? options.error : undefined
+        });
 
-          // handle error
-          if (inResponse.isError) {
-            if (options && options.error) {
-              params.error = inResponse.message;
-              error = XT.Error.clone('xt1001', { params: params });
-              options.error.call(that, error);
-            }
-            return;
-          }
-
-          // handle success
-          if (options && options.success) {
-            options.success.call(that, inResponse.data);
-          }
-        },
-        error = function (inSender, inResponse) {
-          XT.log("Error emailing.");
-        };
-
-      if (payload.body && !payload.text) {
-        // be generous with the inputs
-        payload.text = payload.body
-      }
-
-      ajax.response(success);
-      ajax.error(error);
+      ajax.response(this.ajaxSuccess);
       ajax.go(payload);
-
     },
-    /*
 
-    sendEmail: function (payload, options) {
-      var that = this,
-        complete = function (response) {
-          var params = {}, error;
-
-          // handle error
-          if (response.isError) {
-            if (options && options.error) {
-              params.error = response.message;
-              error = XT.Error.clone('xt1001', { params: params });
-              options.error.call(that, error);
-            }
-            return;
-          }
-
-          // handle success
-          if (options && options.success) {
-            options.success.call(that, response.data);
-          }
-        };
-
-      if (payload.body && !payload.text) {
-        // be generous with the inputs
-        payload.text = payload.body
-      }
-      return XT.Request
-               .handle('function/email')
-               .notify(complete)
-               .send(payload);
-    },
-    */
     /*
       Determine the list of extensions in use by the user's
       organization.
@@ -398,30 +359,16 @@ white:true*/
     */
     getExtensionList: function (options) {
       var that = this,
-        payload = {},
-        complete = function (response) {
-          var params = {}, error;
+        ajax = new enyo.Ajax({
+          url: "http://localhost:2000/extensions", // XXX temp until migration
+          //url: "/extensions",
+          success: options ? options.success : undefined,
+          error: options ? options.error : undefined
+        });
 
-          // handle error
-          if (response.isError) {
-            if (options && options.error) {
-              params.error = response.message;
-              error = XT.Error.clone('xt1001', { params: params });
-              options.error.call(that, error);
-            }
-            return;
-          }
+      ajax.response(this.ajaxSuccess);
+      ajax.go();
 
-          // handle success
-          if (options && options.success) {
-            options.success.call(that, response.data);
-          }
-        };
-
-      return XT.Request
-               .handle('function/extensions')
-               .notify(complete)
-               .send(payload);
     },
 
     /* @private */
