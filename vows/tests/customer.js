@@ -12,12 +12,11 @@
     model = new XM.Customer();
 
   createHash = {
-    isActive: true,
-    number: "50000",
     name: "TESTCUSTOMER",
-    customerType: 20,
+    customerType: 19,
     terms: 42,
-    salesRep: 29
+    salesRep: 29,
+    description: "iAmACustomer"
   };
 
   updateHash = {
@@ -42,8 +41,14 @@
       topic: function () {
         return model;
       },
+      'ID is a number': function (model) {
+        assert.isNumber(model.id);
+      },
       'Name is `TESTCUSTOMER`': function (model) {
         assert.equal(model.get('name'), createHash.name);
+      },
+      'Description is `iAmACustomer`': function (model) {
+        assert.equal(model.get('description'), createHash.description);
       }
     }
   }).addBatch({
@@ -53,7 +58,7 @@
           model.set(updateHash);
           return model;
         },
-        'Name is `UPDATETESTCUSTOMER`': function (model) {
+        'Name is `UPDATECUSTOMER`': function (model) {
           assert.equal(model.get('name'), updateHash.name);
         },
         '-> Commit': XVOWS.save(model)
