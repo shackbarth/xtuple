@@ -9,22 +9,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   vows.describe('Report route').addBatch({
-    'a GET to the export route': {
+    'a GET to the file route': {
       topic: function () {
-        zombie.visit('http://localhost:2000/file?recordType=XM.File&id=40', this.callback);
+        zombie.visit('http://localhost:2000/file?recordType=XM.File&id=1', this.callback);
       },
-      'should return some CSV data': function (err, browser, status) {
-        console.log(err);
-
-        var body, bodyObj;
-
+      'should return some data': function (err, browser, status) {
         assert(browser.success);
-        body = browser.text("body");
-        assert(body);
-        bodyObj = JSON.parse(body);
-        assert.equal(bodyObj.status, "SUCCESS");
+        assert(browser.text("body"));
       }
-    },
+    }
   }).export(module);
 }());
 

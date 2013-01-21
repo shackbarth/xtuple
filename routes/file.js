@@ -14,24 +14,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     save the file
    */
 
-
-  // XXX can express figure out the mime type automatically?
-  var contentTypes = {
-    csv: { contentType: "text/csv", encoding: "utf-8" },
-    txt: { contentType: "text/plain", encoding: "utf-8" },
-    png: { contentType: "image/png", encoding: "binary" },
-    jpg: { contentType: "image/jpeg", encoding: "binary" },
-    jpeg: { contentType: "image/jpeg", encoding: "binary" },
-    gif: { contentType: "image/gif", encoding: "binary" }
-  };
-
-  var getContentType = function (extension) {
-    if (contentTypes.hasOwnProperty(extension.toLowerCase())) {
-      return contentTypes[extension];
-    }
-    return { contentType: "application/" + extension, encoding: "binary" };
-  };
-
   var handle = function (req, res) {
     var args = req.query,
       recordType = args.recordType,
@@ -39,6 +21,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       organization,
       queryPayload,
       query;
+
+    console.log(args);
 
     if ((recordType !== 'XM.File' && recordType !== 'XM.Image') || !recordId) {
       // XXX this still needs some work
@@ -53,7 +37,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     query = "select xt.retrieve_record('%@')".f(queryPayload);
 
     X.database.query(organization, query, function (err, result) {
-      var content, data, filename, extension, fileDesc, encoding, buffer;
+      var content, data, filename, extension, isBinaryEncoding, buffer;
 
       if (err) {
         res.send(500, "Error querying database");
@@ -69,8 +53,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         filename = content.description;
         extension = filename ? filename.substring(filename.lastIndexOf('.') + 1) : '';
-        fileDesc = getContentType(extension);
-        encoding = fileDesc.encoding;
+        isBinaryEncoding = extension === 'txt' || extension === 'csv';
 
         // pg represents bytea data as hex. For text data (like a csv file)
         // we need to read to a buffer and then convert to utf-8. For binary
@@ -78,11 +61,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         //
         // The first two characters of the data from pg is \x and must be ignored
         buffer = new Buffer(content.data.substring(2), "hex");
-        data = encoding === 'binary' ? buffer : buffer.toString(encoding);
+        data = isBinaryEncoding ? buffer : buffer.toString("utf-8");
 
-        //res.writeHead(200, {"Content-Type": fileDesc.contentType, "Content-Disposition": "attachment; filename = %@".f(filename) });
-        //res.setHeader('Content-Type', fileDesc.contentType);
-        // XXX can express figure out the mime type automatically?
         res.attachment(filename);
         res.send(data);
       }

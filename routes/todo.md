@@ -4,6 +4,7 @@ report.js -- note that this will have to be updated per the updates in 19268
 fetch.js -- needs functor facade
 auth.js
 selection.js -- merged into auth.js and renamed scope
+file.js
 
 UNNECESSARY (?)
 data.js -- dead code?
@@ -17,7 +18,6 @@ export.js -- can we deprecate this w/ pentaho instead of porting?
 
 NOT DONE
 dataFromKey -- this is being worked on in 19268
-file.js
 oauth2auth.js
 oauth2token.js
 redirector.js
