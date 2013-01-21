@@ -377,7 +377,7 @@ trailing:true white:true*/
             // //{kind: "XV.CheckboxWidget", attr: "isUsesPurchaseOrder"},
             //{kind: "XV.CheckboxWidget", attr: "isUsesBlanketPOs"},
             {kind: "XV.InputWidget", attr: "balanceMethod"},
-            {kind: "XV.InputWidget", attr: "creditStatus"},
+            //{kind: "XV.InputWidget", attr: "creditStatus"},
             {kind: "XV.NumberWidget", attr: "creditLimit"}
           ]}
         ]},
