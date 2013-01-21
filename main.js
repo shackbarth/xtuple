@@ -149,13 +149,8 @@ app.use('/assets', express.static('views/login/assets'));
 app.use('/client', express.static('www/client'));
 app.use('/public-extensions', express.static('www/public-extensions'));
 app.use('/private-extensions', express.static('www/private-extensions'));
-app.get('/', routes.loginForm);
-app.post('/login', routes.login);
-app.get('/logout', routes.logout);
 app.get('/account', site.account);
-app.get('/login/scope', routes.scopeForm);
-app.post('/login/scope', routes.scope);
-//app.post('/export', routes.expor); TODO: implement, or delete code
+//app.post('/export', routes.expor); TODO: implement, or delete the route
 
 app.get('/dialog/authorize', oauth2.authorization);
 app.post('/dialog/authorize/decision', oauth2.decision);
@@ -163,9 +158,16 @@ app.post('/oauth/token', oauth2.token);
 
 app.get('/api/userinfo', user.info);
 
-app.get('/report', routes.report);
-app.get('/maintenance', routes.maintenance);
+app.get('/', routes.loginForm);
+app.post('/login', routes.login);
+app.get('/login/scope', routes.scopeForm);
+app.post('/login/scope', routes.scope);
+app.get('/logout', routes.logout);
+
+app.get('/email', routes.email);
 app.get('/file', routes.file);
+app.get('/maintenance', routes.maintenance);
+app.get('/report', routes.report);
 
 
 /**

@@ -10,7 +10,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     to easily send emails out of the node layer.
    */
 
-  exports.email = function (req, res) {//xtr, session) {
+  exports.email = function (req, res) {
     var args = req.query,
       mailContent = {
         from: args.from,
@@ -22,14 +22,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         text: args.text
       },
       callback = function (error, response) {
+        console.log("callback", error, response);
         if (error) {
           X.log("Email error", error);
+          // TODO: coordinate these responses with the callback of the datasource in the client
           res.send(500, "Error emailing");
         } else {
-          res.send("Email success");
+          res.send('{"message": "email success"}');
         }
       };
 
+
+    // TODO: authentication
+    console.log("email route ho!", mailContent);
     X.smtpTransport.sendMail(mailContent, callback);
   };
 }());
