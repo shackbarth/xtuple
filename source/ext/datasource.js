@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
-/*global XT:true, XM:true, io:true, Backbone:true, _:true, console:true */
+/*global XT:true, XM:true, io:true, Backbone:true, _:true, console:true, enyo:true */
 
 (function () {
   "use strict";
@@ -320,6 +320,45 @@ white:true*/
     */
     sendEmail: function (payload, options) {
       var that = this,
+        ajax = new enyo.Ajax({
+          url: "/email"
+        }),
+        success = function (inSender, inResponse) {
+          var params = {}, error;
+
+          // handle error
+          if (inResponse.isError) {
+            if (options && options.error) {
+              params.error = inResponse.message;
+              error = XT.Error.clone('xt1001', { params: params });
+              options.error.call(that, error);
+            }
+            return;
+          }
+
+          // handle success
+          if (options && options.success) {
+            options.success.call(that, inResponse.data);
+          }
+        },
+        error = function (inSender, inResponse) {
+          XT.log("Error emailing.");
+        };
+
+      if (payload.body && !payload.text) {
+        // be generous with the inputs
+        payload.text = payload.body
+      }
+
+      ajax.response(success);
+      ajax.error(error);
+      ajax.go(payload);
+
+    },
+    /*
+
+    sendEmail: function (payload, options) {
+      var that = this,
         complete = function (response) {
           var params = {}, error;
 
@@ -348,6 +387,7 @@ white:true*/
                .notify(complete)
                .send(payload);
     },
+    */
     /*
       Determine the list of extensions in use by the user's
       organization.
