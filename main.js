@@ -100,6 +100,7 @@ var express = require('express'),
     passport = require('passport'),
     oauth2 = require('./oauth2/oauth2'),
     site = require('./oauth2/site'),
+    routes = require('./routes/routes'),
     socket = require('socket.io'),
     user = require('./oauth2/user');
 
@@ -148,12 +149,12 @@ app.use('/assets', express.static('views/login/assets'));
 app.use('/client', express.static('www/client'));
 app.use('/public-extensions', express.static('www/public-extensions'));
 app.use('/private-extensions', express.static('www/private-extensions'));
-app.get('/', site.loginForm);
-app.post('/login', site.login);
-app.get('/logout', site.logout);
+app.get('/', routes.loginForm);
+app.post('/login', routes.login);
+app.get('/logout', routes.logout);
 app.get('/account', site.account);
-app.get('/login/scope', site.scopeForm);
-app.post('/login/scope', site.scope);
+app.get('/login/scope', routes.scopeForm);
+app.post('/login/scope', routes.scope);
 
 app.get('/dialog/authorize', oauth2.authorization);
 app.post('/dialog/authorize/decision', oauth2.decision);
@@ -161,11 +162,8 @@ app.post('/oauth/token', oauth2.token);
 
 app.get('/api/userinfo', user.info);
 
-var report = require('./routes/report');
-app.get('/report', report.report);
-
-var maintenance = require('./routes/maintenance');
-app.get('/maintenance', maintenance.maintenance);
+app.get('/report', routes.report);
+app.get('/maintenance', routes.maintenance);
 
 
 /**
