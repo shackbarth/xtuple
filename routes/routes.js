@@ -9,23 +9,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Keep track of all of the routes and register them under a single file
    */
 
-  var report = require('./report'),
-    maintenance = require('./maintenance'),
-    auth = require('./auth'),
-    //expor = require('./export'),
+  var auth = require('./auth'),
+    email = require('./email'),
     file = require('./file'),
-    redirector = require('./redirector');
+    maintenance = require('./maintenance'),
+    redirector = require('./redirector'),
+    report = require('./report');
 
-
-  exports.report = report.report;
-  exports.maintenance = maintenance.maintenance;
   exports.login = auth.login;
   exports.loginForm = auth.loginForm;
   exports.logout = auth.logout;
   exports.scope = auth.scope;
   exports.scopeForm = auth.scopeForm;
-  //exports.expor = expor.expor;
+  exports.email = email.email;
   exports.file = file.file;
+  exports.maintenance = maintenance.maintenance;
   exports.redirect = redirector.redirect;
+  exports.report = report.report;
 
 }());
