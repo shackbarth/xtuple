@@ -16,8 +16,20 @@ white:true*/
 
     recordType: 'XM.Customer',
 
-    defaults: {
-      isActive: true
+    defaults: function () {
+      var localCurrency,
+          currencyModel;
+      for (var i = 0; i < XM.currencies.models.length; i++) {
+        currencyModel = XM.currencies.models[i];
+        if (currencyModel.attributes.isBase) {
+          localCurrency = currencyModel;
+        }
+      }
+      return {
+        isActive: true,
+        creditStatus: "G",
+        currency: localCurrency
+      };
     },
 
     requiredAttributes: [
@@ -193,7 +205,6 @@ white:true*/
         this.set("shipZone", customer.get("shipZone"));
         this.set("taxZone", customer.get("taxZone"));
         this.set("shipVia", customer.get("shipVia"));
-        //this.set("shipForm", customer.get("shipForm")); leave off for now
         this.set("shipCharge", customer.get("shipCharge"));
       }
     }
