@@ -6,8 +6,9 @@ auth.js
 selection.js -- merged into auth.js and renamed scope
 file.js
 redirector.js -- need to put into use with a dedicated server on port 80
-email.js -- need to test with updated datasource
-extensions.js -- need to test with updated datasource
+email.js -- test with new client code
+extensions.js -- test with new client code
+resetPassword.js -- test with new client code
 
 UNNECESSARY (?)
 data.js -- dead code?
@@ -30,6 +31,5 @@ dispatch.js
 
 NOT DONE functors -- strip off facade
 changePassword.js -- John is currently working on this in 19343
-logout.js ???
-resetPassword.js
+logout.js
 

@@ -169,6 +169,7 @@ app.all('/extensions', routes.extensions);
 app.get('/file', routes.file);
 app.get('/maintenance', routes.maintenance);
 app.get('/report', routes.report);
+app.get('/resetPassword', routes.resetPassword);
 
 
 /**

@@ -15,7 +15,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     file = require('./file'),
     maintenance = require('./maintenance'),
     redirector = require('./redirector'),
-    report = require('./report');
+    report = require('./report'),
+    resetPassword = require('./resetPassword');
 
   exports.login = auth.login;
   exports.loginForm = auth.loginForm;
@@ -28,5 +29,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.maintenance = maintenance.maintenance;
   exports.redirect = redirector.redirect;
   exports.report = report.report;
+  exports.resetPassword = resetPassword.resetPassword;
 
 }());
