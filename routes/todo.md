@@ -5,6 +5,7 @@ fetch.js -- needs functor facade
 auth.js
 selection.js -- merged into auth.js and renamed scope
 file.js
+redirector.js
 
 UNNECESSARY (?)
 data.js -- dead code?
@@ -20,7 +21,6 @@ NOT DONE
 dataFromKey -- this is being worked on in 19268
 oauth2auth.js
 oauth2token.js
-redirector.js
 
 NOT DONE functors -- will need a facade
 commit.js

@@ -13,7 +13,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     maintenance = require('./maintenance'),
     auth = require('./auth'),
     //expor = require('./export'),
-    file = require('./file');
+    file = require('./file'),
+    redirector = require('./redirector');
 
 
   exports.report = report.report;
@@ -25,5 +26,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.scopeForm = auth.scopeForm;
   //exports.expor = expor.expor;
   exports.file = file.file;
+  exports.redirect = redirector.redirect;
 
 }());

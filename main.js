@@ -173,6 +173,9 @@ app.get('/file', routes.file);
  */
 io = socket.listen(app.listen(2000));
 
+// TODO: start up a server on 80 and throw everything to the redirect route
+//app.get('/redirect', routes.redirect);
+
 /**
  * Setup socket.io routes and handlers.
  */

@@ -14,7 +14,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       options;
 
     // TODO: authenticate
-    // TODO: replace with REST eventually. Or maybe REST will call this?
 
     if (payload && payload.databaseType === 'global') {
       // run this query against the global database
