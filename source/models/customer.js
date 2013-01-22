@@ -313,4 +313,52 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.CustomerTypeCollection = XM.Collection.extend({
+    /** @scope XM.CustomerTypeCollection.prototype */
+
+    model: XM.CustomerType
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.ShipViaCollection = XM.Collection.extend({
+    /** @scope XM.ShipViaCollection.prototype */
+
+    model: XM.ShipVia
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.ShipChargeCollection = XM.Collection.extend({
+    /** @scope XM.ShipChargeCollection.prototype */
+
+    model: XM.ShipCharge
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.ShipZoneCollection = XM.Collection.extend({
+    /** @scope XM.ShipZoneCollection.prototype */
+
+    model: XM.ShipZone
+
+  });
+
 }());

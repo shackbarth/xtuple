@@ -31,5 +31,21 @@ white:true*/
     recordType: 'XM.TaxZone'
 
   });
+  
+  // ..........................................................
+  // COLLECTIONS
+  //
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.TaxZoneCollection = XM.Collection.extend({
+    /** @scope XM.TaxZoneCollection.prototype */
+
+    model: XM.TaxZone
+
+  });
 
 }());

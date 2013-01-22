@@ -13,10 +13,10 @@
 
   createHash = {
     name: "TESTCUSTOMER",
+    number: "HELLO",
     customerType: 19,
     terms: 42,
-    salesRep: 29,
-    description: "iAmACustomer"
+    salesRep: 29
   };
 
   updateHash = {
@@ -41,14 +41,8 @@
       topic: function () {
         return model;
       },
-      'ID is a number': function (model) {
-        assert.isNumber(model.id);
-      },
       'Name is `TESTCUSTOMER`': function (model) {
         assert.equal(model.get('name'), createHash.name);
-      },
-      'Description is `iAmACustomer`': function (model) {
-        assert.equal(model.get('description'), createHash.description);
       }
     }
   }).addBatch({
