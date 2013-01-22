@@ -141,7 +141,7 @@ label.login-message-box.error {
   position: relative;
   max-height: 200px;
 }
-#main #organizations .organization-item {
+.organization-item {
   padding: 8px;
   margin: 10px 0;
   display: block;
