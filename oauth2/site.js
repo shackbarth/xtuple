@@ -13,7 +13,7 @@ exports.loginForm = function(req, res) {
   res.render('login');
 };
 
-exports.login = passport.authenticate('local', { successReturnToOrRedirect: '/client', failureRedirect: '/' });
+exports.login = passport.authenticate('local', { successReturnToOrRedirect: '/scope', failureRedirect: '/' });
 
 exports.logout = function(req, res) {
   // Delete the db session.
@@ -26,9 +26,8 @@ exports.logout = function(req, res) {
 }
 
 exports.account = [
-  //login.ensureLoggedIn({redirectTo: "/logout"}),
+  login.ensureLoggedIn({redirectTo: "/logout"}),
 
-  login.ensureLoggedIn(),
   function(req, res) {
     res.render('account', { user: req.user });
   }
