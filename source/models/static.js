@@ -111,5 +111,5 @@ white:true*/
     var characteristicType = new XM.CharacteristicTypeModel(characteristicTypeJson[i]);
     XM.characteristicTypes.add(characteristicType);
   }
-
+  
 }());

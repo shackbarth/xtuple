@@ -13,6 +13,27 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.accountTypes"
   });
+  
+  // ..........................................................
+  // BALANCE METHOD
+  //
+
+  enyo.kind({
+    name: "XV.BalanceMethodPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.balanceMethods"
+  });
+  
+  // ..........................................................
+  // CHARACTERISTIC TYPE
+  //
+
+  enyo.kind({
+    name: "XV.CharacteristicTypePicker",
+    kind: "XV.PickerWidget",
+    classes: "xv-characteristic-picker",
+    collection: "XM.characteristicTypes"
+  });
 
   // ..........................................................
   // CLASS CODE
@@ -39,6 +60,26 @@ regexp:true, undef:true, trailing:true, white:true */
     orderBy: [
       {attribute: 'name'}
     ]
+  });
+  
+  // ..........................................................
+  // CUSTOMER TYPE
+  //
+
+  enyo.kind({
+    name: "XV.CustomerTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.customerTypes"
+  });
+  
+  // ..........................................................
+  // CREDIT STATUS
+  //
+
+  enyo.kind({
+    name: "XV.CreditStatusPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.creditStatus"
   });
 
   // INCIDENT EMAIL PROFILE
@@ -202,6 +243,46 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.projectStatuses"
   });
+  
+  // ..........................................................
+  // SHIPPING CHARGES
+  //
+
+  enyo.kind({
+    name: "XV.ShippingChargePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.shippingCharges"
+  });
+  
+  // ..........................................................
+  // SHIPPING FORM
+  //
+
+  enyo.kind({
+    name: "XV.ShippingFormPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.shippingforms"
+  });
+  
+  // ..........................................................
+  // SHIP VIA
+  //
+
+  enyo.kind({
+    name: "XV.ShipViaPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.shipVia"
+  });
+  
+  // ..........................................................
+  // TERMS
+  //
+
+  enyo.kind({
+    name: "XV.TermsPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.terms"
+  });  
 
   // ..........................................................
   // UNIT
@@ -216,15 +297,4 @@ regexp:true, undef:true, trailing:true, white:true */
     ]
   });
   
-  // ..........................................................
-  // CHARACTERISTIC TYPE
-  //
-
-  enyo.kind({
-    name: "XV.CharacteristicTypePicker",
-    kind: "XV.PickerWidget",
-    classes: "xv-characteristic-picker",
-    collection: "XM.characteristicTypes"
-  });
-
 }());

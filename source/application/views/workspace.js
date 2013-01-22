@@ -347,23 +347,28 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
-            {kind: "XV.NumberWidget", attr: "number"},
+            {kind: "XV.InputWidget", attr: "number"},
             {kind: "XV.InputWidget", attr: "name"},
-            {kind: "XV.InputWidget", attr: "customerType"},
+            {kind: "XV.CustomerTypePicker", attr: "customerType"},
             {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "onyx.GroupboxHeader", content: "_billingContact".loc()},
             {kind: "XV.ContactWidget", attr: "billingContact",
               showAddress: true, label: "_name".loc()},
-            {kind: "onyx.GroupboxHeader", content: "_correspondenceContact".loc()},  
+            {kind: "onyx.GroupboxHeader", content: "_correspondenceContact".loc()},
             {kind: "XV.ContactWidget", attr: "correspondenceContact",
               showAddress: true, label: "_name".loc()},
             {kind: "XV.ContactCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes"},
-            {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
-            {kind: "XV.InputWidget", attr: "shipVia"},
-            {kind: "XV.InputWidget", attr: "shipForm"},
-            {kind: "XV.InputWidget", attr: "shipCharge"},
+            {kind: "XV.TextArea", attr: "notes"}
+          ]}
+        ]},
+        {kind: "XV.Groupbox", name: "settingsPanel", title: "_settings".loc(), components: [
+          {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "settingsGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.ShipViaPicker", attr: "shipVia"},
+            {kind: "XV.ShippingFormPicker", attr: "shipForm"},
+            {kind: "XV.ShippingChargePicker", attr: "shipCharge"},
             //{kind: "XV.ToggleButtonWidget", attr: "isBackorder", label: "_acceptsBackorders".loc()},
             //{kind: "XV.ToggleButtonWidget", attr: "isPartialShip", label: "_acceptsPartial".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isFreeFormShipto", label: "_freeFormShip".loc()},
@@ -371,20 +376,25 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_terms".loc()},
             //{kind: "XV.CheckboxWidget", attr: "isSpecifiedBillingRate"}, Enables Rate Widget
             //{kind: "XV.NumberWidget", attr: "billingRate"},
-            {kind: "XV.InputWidget", attr: "terms"},
+            {kind: "XV.TermsPicker", attr: "terms"},
             {kind: "XV.InputWidget", attr: "discount"},
-            {kind: "XV.InputWidget", attr: "creditStatus"},
+            {kind: "XV.CreditStatusPicker", attr: "creditStatus"},
             // //{kind: "XV.CheckboxWidget", attr: "isUsesPurchaseOrder"},
             //{kind: "XV.CheckboxWidget", attr: "isUsesBlanketPOs"},
-            {kind: "XV.InputWidget", attr: "balanceMethod"},
-            //{kind: "XV.InputWidget", attr: "creditStatus"},
-            {kind: "XV.NumberWidget", attr: "creditLimit"}
+            {kind: "XV.BalanceMethodPicker", attr: "balanceMethod"},
+            {kind: "XV.NumberWidget", attr: "creditLimit"},
+            {kind: "XV.InputWidget", attr: "creditRating"},
+            // Place on Credit Warning
+            // Place open Sales Orders on Credit hold
+            // Alternate Late Grace Days
+            {kind: "XV.NumberWidget", attr: "graceDays"}
           ]}
         ]},
+        {kind: "XV.CustomerShipToBox", attr: "shiptos"},
+        // Tax
         {kind: "XV.CustomerCommentBox", attr: "comments"},
-        {kind: "XV.CustomerDocumentsBox", attr: "documents"},
-        {kind: "XV.AccountContactsBox", attr: "customerRelations"}
-        // Ship Tos
+        {kind: "XV.CustomerDocumentsBox", attr: "files"},
+        {kind: "XV.AccountContactsBox", attr: "customerContact"}
         // Item
         // URLS
         

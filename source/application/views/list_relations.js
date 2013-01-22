@@ -88,6 +88,36 @@ trailing:true white:true*/
       return true;
     }
   });
+  
+  // ..........................................................
+  // CUSTOMER SHIPTO
+  //
+
+  enyo.kind({
+    name: "XV.CustomerShipToListRelations",
+    kind: "XV.ListRelations",
+    parentKey: "customer",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "number", isKey: true},
+              ]}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "name"},
+            ]}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "contact.name", classes: "italic"},
+            {kind: "XV.ListAttr", attr: "address.formatShort"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
 
   // ..........................................................
   // CHARACTERISTIC

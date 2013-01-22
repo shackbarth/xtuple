@@ -164,7 +164,7 @@ white:true*/
       XM.currencies.fetch(options);
     }
   });
-
+  
   XT.StartupTasks.push({
     taskName: "loadCountries",
     task: function () {

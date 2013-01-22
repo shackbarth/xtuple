@@ -53,6 +53,39 @@ trailing:true white:true*/
     parentKey: "contact",
     listRelations: "XV.ContactEmailListRelations"
   });
+  
+  // ..........................................................
+  // CUSTOMER SHIP-TO
+  //
+  enyo.kind({
+    name: "XV.CustomerShipToEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.InputWidget", attr: "number"},
+        {kind: "XV.InputWidget", attr: "name"},
+        {kind: "XV.CheckboxWidget", attr: "isActive"},
+        {kind: "XV.CheckboxWidget", attr: "isDefault"},
+        {kind: "XV.InputWidget", attr: "salesRep"},
+        {kind: "XV.NumberWidget", attr: "commission"},
+        {kind: "XV.InputWidget", attr: "taxZone"},
+        {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+        {kind: "XV.TextArea", attr: "notes"}
+      ]}
+    ]
+  });
+
+  enyo.kind({
+    name: "XV.CustomerShipToBox",
+    kind: "XV.ListRelationsEditorBox",
+    classes: "xv-list-relations-box",
+    title: "_shipTo".loc(),
+    editor: "XV.CustomerShipToEditor",
+    parentKey: "customer",
+    listRelations: "XV.CustomerShipToListRelations",
+    fitButtons: false
+  });
 
   // ..........................................................
   // PROJECT
