@@ -10,6 +10,7 @@ while getopts ":p" opt; do
   esac
 done
 
+git checkout master
 git_status=$(git pull  2> /dev/null)
 #echo ${git_status}
 if [[  ${git_status} =~ 'Already up-to-date.' ]]  
@@ -21,6 +22,6 @@ if [[  ${git_status} =~ 'Already up-to-date.' ]]
   fi
 fi
 
-git submodule update --recursive
+git submodule update --init --recursive
 npm install
 
