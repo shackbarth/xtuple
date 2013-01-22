@@ -75,6 +75,9 @@ _ = require("underscore");
       X.addCleanupTask(function () {
         clearInterval(X.cachePollingInterval);
       });
+      // TODO - We need a start up script that handles async in the right order.
+      // Sticking this here so it gets called after the session schema is loaded.
+      sessionStore.loadCache();
     }
   };
   schemaOptions.success = function () {
@@ -116,7 +119,7 @@ var app = express(),
     cookie = require('express/node_modules/cookie'),
     io,
     //sessionStore = new MemoryStore();
-    sessionStore = new XTPGStore();
+    sessionStore = new XTPGStore({ hybridCache: true });
 
 app.configure(function () {
   "use strict";
@@ -175,6 +178,8 @@ app.get('/resetPassword', routes.resetPassword);
 /**
  * Start the express server. This is the NEW way.
  */
+// TODO - Active browser sessions can make calls to this server when it hasn't fully started.
+// Need a way to get everything loaded BEFORE we start listening.  Might just move this to the end...
 io = socket.listen(app.listen(2000));
 
 // TODO: start up a server on 80 and throw everything to the redirect route
@@ -262,3 +267,20 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   //socket.emit("disconnect");
 
 });
+
+/**
+ * Job loading section.
+ *
+ * The following are jobs that must be started at start up or scheduled to run periodically.
+ */
+
+// Load XTPGStore into MemoryStore at startup for caching.
+    // TODO - Add an option flag that turns on use of Express's MemoryStore as a memory cache.
+    // TODO - If we ever run multiple processes/servers, MemoryStore must be replaced with something
+    // all processes/servers can use/share and keep in sync like Redis.
+// TODO - Call XTPGStore loadCache function.
+// See sessionObjectLoaded() above were this is for now.
+//sessionStore.loadCache();
+
+// TODO - Check pid file to see if this is already running.
+// Kill process or create  new pid file.
