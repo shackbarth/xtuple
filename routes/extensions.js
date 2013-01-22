@@ -15,7 +15,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         res.send(500, {isError: true, reason: "Error fetching organization"});
       },
       fetchSuccess = function (model, result) {
-        console.log(result);
         var extensions = _.map(model.get("extensions").models, function (orgext) {
           var ext = orgext.get("extension");
           return {

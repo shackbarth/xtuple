@@ -33,3 +33,10 @@ NOT DONE functors -- strip off facade
 changePassword.js -- John is currently working on this in 19343
 logout.js
 
+FUTURE REFACTORING POSSIBILITIES
+errors return 200 with isError: true. Better to return 500?
+the big 4 routes are all very similar. it would be possible to reuse code.
+the routes could declare their paths
+we should put these under test
+unify response formatting
+deprecate databasetype === 'global'
