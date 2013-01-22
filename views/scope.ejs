@@ -43,8 +43,6 @@
           document.scopeForm.submit();
         };
      
-      document.scopeForm.org.style.display = 'none'; 
-      document.scopeForm.loginButton.style.display = 'none'; 
       <% for(var i = 0; i < organizations.length; i++) {%>
         injectedHtml = injectedHtml + '<div onclick=\'javascript: submitOrg("<%= organizations[i] %>");\', ' + 
           'class="organization-item">' + 
@@ -52,6 +50,10 @@
       <% } %>
 
       document.getElementById('scriptDiv').innerHTML = injectedHtml;
+
+      // clever: don't hide the non-js stuff until the js stuff works
+      document.scopeForm.org.style.display = 'none'; 
+      document.scopeForm.loginButton.style.display = 'none'; 
     </script>
   </body>
 </html>
