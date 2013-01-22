@@ -27,10 +27,11 @@
     "connect-ensure-login": "0.1.x",
     "socket.io":"0.9.x",
     "vows":"0.6.3",
-    "zombie":"1.4.1",
     "connect":"2.7.x"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "zombie":"1.4.1"
+  },
   "optionalDependencies": {},
   "engines": {
     "node": "0.6.9"
