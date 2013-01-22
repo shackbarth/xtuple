@@ -46,8 +46,11 @@ passport.use(new LocalStrategy(
 
 
 /**
- * Set Session Cookie to be stored in the browser and persist session data in the database.
+ * Set Session Cookie to be returned to the XTPGStore as XM.SessionStore and
+ * persist as a valid session to XM.Session in the database.
  */
+ // TODO - I'm a little confused here if we need both XM.Session and XM.SessionStore.
+ // This could just return done(null, user); and let XM.SessionStore be the only user session object.
 passport.serializeUser(function (user, done) {
   "use strict";
   var sessionAttributes = {},
@@ -123,6 +126,8 @@ passport.serializeUser(function (user, done) {
 /**
  * Check Session Cookie against the database.
  */
+// TODO - I'm a little confused here if we need both XM.Session and XM.SessionStore.
+// If we only use XM.SessionStore, why do we need to check for valid user here again?
 passport.deserializeUser(function (user, done) {
   "use strict";
   var fetchOptions = {},
