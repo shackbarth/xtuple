@@ -16,7 +16,11 @@ exports.loginForm = function(req, res) {
 exports.login = passport.authenticate('local', { successReturnToOrRedirect: '/client', failureRedirect: '/' });
 
 exports.logout = function(req, res) {
-  // TODO - delete the db session.
+  // Delete the db session.
+  req.session.passport = null;
+  res.clearCookie('connect.sid');
+  req.session.destroy(function() {});
+
   req.logout();
   res.redirect('/');
 }
