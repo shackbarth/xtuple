@@ -36,7 +36,7 @@ passport.use(new LocalStrategy(
       if (!user) {
         return done(null, false);
       }
-      if (user.password !== password) {
+      if (!X.bcrypt.compareSync(password, user.get('password'))) {
         return done(null, false);
       }
       return done(null, user);

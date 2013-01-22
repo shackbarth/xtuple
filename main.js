@@ -61,7 +61,7 @@ _ = require("underscore");
   // Make absolutely sure we're going to start.
   options.autoStart = true;
 
-  X.debugging = true;
+  //X.debugging = true;
 
   // Set the options and start the servers the OLD way.
   X.setup(options);
