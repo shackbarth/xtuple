@@ -68,11 +68,14 @@ white:true*/
     },
 
     start: function () {
-      var c = X.getCookie("xtsessioncookie");
+      XT.app.show();
+      /*
+      var c = X.getCookie("xtsessioncookie") || null;
       try {
         c = JSON.parse(c);
         this.validateSession(c, function () { XT.app.show(); });
       } catch (e) { XT.Session.logout(); }
+      */
     },
 
     logout: function () {
