@@ -76,12 +76,7 @@ white:true*/
     },
 
     logout: function () {
-      XT.Request
-        .handle("function/logout")
-        .notify(function () {
-          relocate();
-        })
-        .send();
+      window.location = "/logout";
     }
 
   };
