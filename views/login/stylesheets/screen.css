@@ -149,6 +149,7 @@ label.login-message-box.error {
   background-color: #ffffff;
   text-transform: uppercase;
   color: #ff6600;
+  cursor:default;
 }
 @include box-sizing(border-box);
 #main #organizations .organization-item:hover {
