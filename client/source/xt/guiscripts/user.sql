@@ -5,6 +5,7 @@ select xt.install_guiscript('user',  $$
 var userResult;
 var params = new Object();
 var _userTextField = mywindow.findChild("_username");
+var _enhancedAuth = mywindow.findChild('_enhancedAuth');
 var _setParams = { mode: "view" };
 var _canEdit = true;
 var _controls = [
@@ -34,10 +35,15 @@ var _controls = [
 
 //the text changes when the screen gets loaded.
 _userTextField.textChanged.connect(checkMobile);
+toolbox.coreDisconnect(_userTextField, "editingFinished()", mywindow, "sCheck()"); 
+_userTextField.editingFinished.connect(checkExisting);
 
 function showEvent(e) {
   var control;
-  if (!_canEdit) { 
+  if (_canEdit) {
+    _enhancedAuth.setChecked(true);
+    _enhancedAuth.setEnabled(false); 
+  } else {
     for (i = 0; i < _controls.length; i++) {
       control = mywindow.findChild(_controls[i]);
       if (control) {control.setEnabled(false)};
@@ -62,6 +68,24 @@ function checkMobile()
     QMessageBox.critical(mywindow, qsTr("Unable To Save"), msg);
     _canEdit = false;
   }
+  _userTextField.textChanged.disconnect(checkMobile);
+}
+
+function checkExisting()
+{
+  var sql = "select count(*) as result from pg_user where usename = <? value('username') ?>";
+  var params = { username: _userTextField.text };
+  var qry = toolbox.executeQuery(sql, params);
+  var msg = qsTr("Username is taken. Please enter another username.");
+  if (qry.first()) {
+    if (qry.value('result')) {
+      QMessageBox.critical(mywindow, qsTr("Unable To Save"), msg);
+      _userTextField.clear();
+      _userTextField.setFocus();
+      return;
+    }
+  }
+  mywindow.sCheck();
 }
 
 $$ );

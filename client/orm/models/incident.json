@@ -474,6 +474,25 @@
         }
       }
     ],
+    "extensions": [{
+      "table": "xt.incdtcatemlprofile",
+      "isExtension": true,
+      "relations": [
+        {
+          "column": "incdtcatemlprofile_incdtcat_id",
+          "inverse": "id"
+        }
+      ],
+      "properties": [
+        {
+          "name": "emailProfile",
+          "toOne": {
+            "type": "IncidentEmailProfile",
+            "column": "incdtcatemlprofile_incdtemlprofile_id"
+          }
+        }
+      ]
+    }],
     "isSystem": true
   },
   {
@@ -932,7 +951,7 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": "ViewAllIncidents",
+        "read": "ViewAllIncidents MaintainAllIncidents",
         "update": false,
         "delete": false
       },
@@ -1028,7 +1047,7 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": "ViewAllIncidents",
+        "read": "ViewAllIncidents MaintainAllIncidents",
         "update": false,
         "delete": false
       },
@@ -1481,6 +1500,96 @@
       }
     ],
     "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentEmailProfile",
+    "table": "xt.incdtemlprofile",
+    "idSequenceName": "emlprofile_emlprofile_id_seq",
+    "comment": "Incident Email Profile Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainEmailProfiles",
+        "read": true,
+        "update": "MaintainEmailProfiles",
+        "delete": "MaintainEmailProfiles"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "emlprofile_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_name"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_descrip"
+        }
+      },
+      {
+        "name": "from",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_from"
+        }
+      },
+      {
+        "name": "replyTo",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_replyto"
+        }
+      },
+      {
+        "name": "to",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_to"
+        }
+      },
+      {
+        "name": "cc",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_cc"
+        }
+      },
+      {
+        "name": "bcc",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_bcc"
+        }
+      },
+      {
+        "name": "subject",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_subject"
+        }
+      },
+      {
+        "name": "body",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_body"
+        }
+      }
+    ],
     "isSystem": true
   }
 ]
