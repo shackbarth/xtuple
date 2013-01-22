@@ -456,18 +456,18 @@
     "extensions": [
       {
         "table": "item",
+        "isChild": true,
         "relations": [
           {
             "column": "item_id",
-            "inverse": "itemsite_item_id"
+            "inverse": "item"
           }
         ],
         "properties": [
           {
             "name": "inventoryUnit",
-            "toOne": {
-              "isNested": true,
-              "type": "ItemRelations",
+            "attr": {
+              "type": "Number",
               "column": "item_inv_uom_id"
             }
           }
