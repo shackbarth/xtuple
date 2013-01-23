@@ -14,11 +14,6 @@ trailing:true white:true*/
   if (l.match(/login/g)) { return; }
   try {
     c = JSON.parse(c);
-    if (!c.organization) {
-      // the user authenticated but didn't choose a database. They're half-logged-in,
-      // and we should force them to login fully
-      document.location = noAuthRedirect;
-    }
   } catch (e) {
     document.location = noAuthRedirect;
   }
