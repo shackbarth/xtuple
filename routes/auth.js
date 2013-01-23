@@ -25,12 +25,42 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   exports.scope = function (req, res) {
     var sessionId = req.sessionID,
-      selectedOrg = req.body.org;
+      userId = req.session.passport.user,
+      selectedOrg = req.body.org,
+      userOrgColl = new XM.UserOrganizationCollection(),
+      success = function (model, response) {
+        if (response.length === 0) {
+          X.log("User " + userId + " has no business trying to log in to organization " + selectedOrg);
+          res.redirect('/');
+          return;
+        }
 
-    // TODO: verify that the org is valid for the user
-    // TODO: update the session store row to add the org choice
-    //console.log("session ID is " + sessionId + " and org is " + selectedOrg);
-    res.redirect('/client');
+        // We can now trust this user's request to log in to this organization
+
+        // update the session store row to add the org choice and username
+        req.session.passport.organization = selectedOrg;
+        req.session.passport.username = response[0].username;
+
+        res.redirect('/client');
+      },
+      error = function (model, error) {
+        X.log("userorg fetch error", error);
+        res.redirect('/');
+      },
+      query = {
+        parameters: [{
+          attribute: "user",
+          value: userId,
+        }, {
+          attribute: "name",
+          value: selectedOrg
+        }]
+      };
+
+    //verify that the org is valid for the user
+    userOrgColl.fetch({query: query, success: success, error: error});
+
+
   }
 
   exports.scopeForm = function (req, res) {
@@ -47,7 +77,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     if (organizations.length === 1) {
       req.body.org = organizations[0];
       exports.scope(req, res);
+      return;
     }
-    res.render('scope', { organizations: organizations });
+    res.render('scopeSubmit', { organizations: organizations });
   };
 }());
