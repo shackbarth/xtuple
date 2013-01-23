@@ -5,5 +5,6 @@ depends(
   "contact.js",
   "incident.js",
   "opportunity.js",
-  "to_do.js"
+  "to_do.js",
+  "startup.js"
 );

@@ -31,4 +31,17 @@ regexp:true, undef:true, trailing:true, white:true */
     }
   });
 
+  // ..........................................................
+  // DATABASE SERVER
+  //
+
+  enyo.kind({
+    name: "XV.DatabaseServerWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.DatabaseServerCollection",
+    list: "XV.DatabaseServerList",
+    idAttribute: "name",
+    keyAttribute: "name",
+    nameAttribute: "description"
+  });
 }());

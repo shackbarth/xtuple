@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XT:true, XM:true, XV:true, enyo:true, alert:true*/
+/*global XT:true, XM:true, XV:true, enyo:true, alert:true _:true */
 
 (function () {
 
@@ -62,18 +62,30 @@ trailing:true white:true*/
         options = {
           success: function (result) {
             // TODO: application-wide messaging?!
-            //alert("An e-mail with the new password has been sent to " + that.getValue().id);
-            alert("The password for " + that.getValue().id + " has been set to " + result.password);
+            if (result.emailSuccess) {
+              alert("An e-mail with the new password has been sent to " + that.getValue().id);
+            } else {
+              // the emailer must have failed.
+              // XXX do we want to fail less gracefully here?
+              alert("The password for " + that.getValue().id + " has been set to " + result.password);
+            }
           },
           error: function (error) {
             alert("Password reset fail");
           },
-          databaseType: "global"
+          databaseType: "global",
+          newUser: inEvent.newUser
         };
 
       if (this.$.resetPasswordPopup) {
         this.$.resetPasswordPopup.hide();
       }
+
+      if (this.getValue().status === XM.Model.READY_DIRTY) {
+        alert("Please save/apply changes before resetting the password.");
+        return;
+      }
+
       XT.dataSource.resetPassword(this.getValue().id, options);
     },
     /**
@@ -94,7 +106,7 @@ trailing:true white:true*/
             success(model, result, opts);
           }
           that.setValue(model);
-          that.resetPassword();
+          that.resetPassword(null, {newUser: true});
         };
       }
 
@@ -180,6 +192,98 @@ trailing:true white:true*/
         ]}
       ]}
     ],
+    /**
+      As a shortcut we associate the admin user with the organization if it's new
+     */
+    associateAdminUser: function (orgModel) {
+      var userOrgModel = new XM.UserOrganization({name: orgModel.get("name"), username: "admin"});
+      userOrgModel.on("statusChange", this.associateLink, this);
+      userOrgModel.initialize(null, {isNew: true});
+    },
+    associateLink: function (userOrgModel, status, options) {
+      if (status === XM.Model.READY_NEW) {
+        // for some reason this fails on the first attempt and succeeds on subsequent attempts.
+        // I'm sure there's a better way to do this.
+        var admin = new XM.User({id: "admin"}),
+          saveError = function () {
+            //XT.log("Error saving admin user", arguments);
+          },
+          saveSuccess = function (userOrgModel, result, options) {
+            XT.log("This new organization has been linked to the admin user.", arguments);
+          },
+          fetchError = function () {
+            //XT.log("Error fetching admin user", arguments);
+          },
+          fetchSuccess = function (userModel, result) {
+            userModel.get("organizations").add(userOrgModel);
+            userModel.save(null, {success: saveSuccess, error: saveError});
+          };
+
+        admin.fetch({success: fetchSuccess, error: fetchError});
+      }
+    },
+
+    /**
+      If there are any new extensions we'll want to run the pertinent
+      init scripts and orm updaters. It's a bit awkward
+      that the two-stage process goes all the way up here to the presentation
+      layer.
+     */
+    runExtensionScripts: function (model, newExtensions) {
+      var newExtensionIds = _.map(newExtensions, function (ext) {
+          return ext.get("extension").get("id");
+        }),
+        ajax = new enyo.Ajax({
+          url: "/maintenance?organization=" + model.get("name") +
+            "&extensions=" + JSON.stringify(newExtensionIds),
+          handleAs: "json"
+        }),
+        success = function (inSender, inResponse) {
+          if (inResponse.status === 'ERROR') {
+            XT.log("Error updating extension scripts", inResponse.message);
+          } else if (inResponse.errorCount > 0) {
+            XT.log("Extension scripts loaded with errors", inResponse);
+          } else {
+            XT.log("Extension scripts loaded successfully", inResponse);
+          }
+        },
+        error = function (inSender, inResponse) {
+          XT.log("Error updating extension scripts", inResponse);
+        };
+
+      ajax.response(success);
+      ajax.error(error);
+      ajax.go();
+    },
+    save: function (options) {
+      var that = this,
+        success = options ? options.success : undefined,
+        newOrganization = this.getValue().getStatus() === XM.Model.READY_NEW,
+        newExtensions;
+
+      newExtensions = _.filter(this.getValue().get("extensions").models, function (ext) {
+        return ext.isNew();
+      });
+      options = options || {};
+      options.success = function (model, result, opts) {
+        if (success) {
+          success(model, result, opts);
+        }
+
+        if (newExtensions && newExtensions.length > 0) {
+          // there are no new extensions selected, so no need to run the backend
+          // scripts
+          that.runExtensionScripts(model, newExtensions);
+        }
+
+        if (newOrganization) {
+          XT.log("Associating admin user with new organization", model.getStatusString());
+          that.associateAdminUser(model);
+        }
+      };
+
+      this.inherited(arguments);
+    },
     model: "XM.Organization"
   });
 
@@ -203,6 +307,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.InputWidget", attr: "location"},
+            {kind: "XV.NumberWidget", attr: "loadOrder"},
             {kind: "XV.InputWidget", attr: "privilegeName"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes"}
