@@ -23,7 +23,7 @@ trailing:true white:true*/
    enyo.kind({
      name: "XV.CharacteristicOptionBox",
      kind: "XV.ListRelationsEditorBox",
-     classes: "xv-characteristic-relations-box",
+     classes: "xv-short-relations-box",
      title: "_options".loc(),
      editor: "XV.CharacteristicOptionEditor",
      parentKey: "characteristic",
@@ -79,7 +79,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.CustomerShipToBox",
     kind: "XV.ListRelationsEditorBox",
-    classes: "xv-list-relations-box",
+    classes: "xv-short-relations-box",
     title: "_shipTo".loc(),
     editor: "XV.CustomerShipToEditor",
     parentKey: "customer",

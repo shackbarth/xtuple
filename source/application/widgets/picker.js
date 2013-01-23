@@ -79,7 +79,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.CreditStatusPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.creditStatus"
+    collection: "XM.creditStatuses"
   });
 
   // INCIDENT EMAIL PROFILE

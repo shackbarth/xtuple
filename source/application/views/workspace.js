@@ -390,13 +390,11 @@ trailing:true white:true*/
             {kind: "XV.NumberWidget", attr: "graceDays"}
           ]}
         ]},
-        {kind: "XV.CustomerShipToBox", attr: "shiptos"},
         // Tax
         {kind: "XV.CustomerCommentBox", attr: "comments"},
-        {kind: "XV.CustomerDocumentsBox", attr: "files"},
-        {kind: "XV.AccountContactsBox", attr: "customerContact"}
-        // Item
-        // URLS
+        {kind: "XV.CustomerDocumentsBox", attr: "documents"},
+        //{kind: "XV.AccountContactsBox", attr: "customerContact"},
+        {kind: "XV.CustomerShipToBox", attr: "shiptos"},
         
       ]},
       {kind: "onyx.Popup", name: "multipleAddressPopup", centered: true,

@@ -216,6 +216,17 @@ white:true*/
       XM.classCodes.fetch(options);
     }
   });
+  
+  // XT.StartupTasks.push({
+  //     taskName: "loadCustomerTypes",
+  //     task: function () {
+  //       var options = {
+  //         success: _.bind(this.didComplete, this)
+  //       };
+  //       XM.customerTypes = new XM.CustomerTypeCollection();
+  //       XM.classCodes.fetch(options);
+  //     }
+  //   });
 
   XT.StartupTasks.push({
     taskName: "loadProductCategories",
