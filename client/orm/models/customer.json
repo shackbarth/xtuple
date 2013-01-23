@@ -700,7 +700,7 @@
       },
       {
         "name": "customer",
-        "toOne": {
+        "attr": {
           "type": "Customer",
           "column": "shipto_cust_id"
         }
