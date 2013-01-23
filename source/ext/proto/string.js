@@ -2,38 +2,42 @@
 /**
 */
 _.extend(String.prototype, {
-  camelize: function() {
+  camelize: function () {
     var args = XT.$A(arguments);
     return XT.String.camelize(this, args);
   },
-  format: function() {
+  decamelize: function () {
+    var args = XT.$A(arguments);
+    return XT.String.decamelize(this, args);
+  },
+  format: function () {
     var args = XT.$A(arguments);
     return XT.String.format(this, args);
   },
-  f: function() {
+  f: function () {
     var args = XT.$A(arguments);
     return XT.String.format(this, args);
   },
-  loc: function() {
+  loc: function () {
     var args = XT.$A(arguments);
-    args.unshift(this);    
+    args.unshift(this);
     return XT.String.loc.apply(XT.String, args);
   },
-  trim: function() {
+  trim: function () {
     return XT.String.trim(this);
   },
-  pluralize: function() {
+  pluralize: function () {
     return owl.pluralize(this);
   },
-  suffix: function() {
+  suffix: function () {
     var args = XT.$A(arguments);
     return XT.String.suffix(this, args);
   },
-  leftPad: function() {
+  leftPad: function () {
     var args = XT.$A(arguments);
     return XT.String.leftPad(this.toString(), args[0], args[1]);
   },
-  rightPad: function() {
+  rightPad: function () {
     var args = XT.$A(arguments);
     return XT.String.rightPad(this.toString(), args[0], args[1]);
   }

@@ -17,6 +17,15 @@ XT.String = {
     return first !== lower ? lower + ret.slice(1) : ret;
   },
 
+   /**
+  Change a camel case string to snake case.
+
+  @returns {String} The argument modified
+  */
+  decamelize: function (str) {
+    return str.replace((/([a-z])([A-Z])/g), '$1_$2').toLowerCase();
+  },
+
   /**
     Localize the string.
   */
@@ -106,11 +115,11 @@ XT.String = {
     }
     return value;
   },
-  
+
   /**
     Pads left
   */
-  leftPad: function(str, padString, length) {
+  leftPad: function (str, padString, length) {
     while (str.length < length)
         str = padString + str;
     return str;
@@ -119,7 +128,7 @@ XT.String = {
   /**
     Pads right
   */
-  rightPad: function(str, padString, length) {
+  rightPad: function (str, padString, length) {
     while (str.length < length)
         str = str + padString;
     return str;
