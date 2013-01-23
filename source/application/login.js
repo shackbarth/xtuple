@@ -5,6 +5,11 @@ trailing:true white:true*/
 
 (function () {
   // first of 2 types of checks, this being the most obvious test
+
+  /*
+  TODO: redo this test using the new cookie. Basically, if there's no cookie
+  we might as well kick the user straight to the login page.
+
   var c = enyo.getCookie("xtsessioncookie"),
     h = document.location.hostname,
     p = document.location.protocol,
@@ -17,4 +22,5 @@ trailing:true white:true*/
   } catch (e) {
     document.location = noAuthRedirect;
   }
+  */
 }());
