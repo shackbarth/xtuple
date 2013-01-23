@@ -35,9 +35,23 @@ white:true*/
     requiredAttributes: [
       "isActive",
       "name",
+      "number",
       "customerType",
       "terms",
-      "salesRep"
+      "salesRep",
+      "backorder",
+      "partialShip",
+      "discount",
+      "balanceMethod",
+      "isFreeFormShipto",
+      "blanketPos",
+      "shipCharge",
+      "creditStatus",
+      "isFreeFormBillto",
+      "usesPos",
+      "autoUpdateStatus",
+      "autoHoldOrders",
+      "preferredWarehouseId"
     ]
 
   });
