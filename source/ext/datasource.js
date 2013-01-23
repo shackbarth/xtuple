@@ -7,9 +7,9 @@ white:true*/
   "use strict";
 
   XT.DataSource = {
-
-    datasourceUrl: DOCUMENT_HOSTNAME,
-    datasourcePort: 443,
+    // TODO - Old way.
+    //datasourceUrl: DOCUMENT_HOSTNAME,
+    //datasourcePort: 443,
     isConnected: false,
 
     /*
@@ -368,16 +368,24 @@ white:true*/
 
       XT.log("Attempting to connect to the datasource");
 
-      var url = this.datasourceUrl,
-        port = 2000,//this.datasourcePort,
-        datasource = "http://localhost:2000/clientsock",//"https://%@/clientsock".f(url),
-        self = this,
-        didConnect = this.sockDidConnect,
-        didError = this.sockDidError;
+      var host = document.location.host,
+          path = "clientsock",
+          protocol = document.location.protocol,
+          // TODO - old way.
+          //url = this.datasourceUrl,
+          //port = this.datasourcePort,
+          //datasource = "https://%@/clientsock".f(url),
+          datasource = "%@//%@/%@".f(protocol, host, path),
+          self = this,
+          didConnect = this.sockDidConnect,
+          didError = this.sockDidError;
 
       // attempt to connect and supply the appropriate
       // responders for the connect and error events
-      this._sock = io.connect(datasource, {port: port, secure: true});
+// TODO - secure = false until express can replace the old way and free up 443.
+      //this._sock = io.connect(datasource, {port: port, secure: true});
+      //this._sock = io.connect(datasource, {port: port, secure: false});
+      this._sock = io.connect(datasource);
       this._sock.on("connect", function () {
         //didConnect.call(self, callback);
       });
