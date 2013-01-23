@@ -173,7 +173,9 @@ white:true*/
   XM.ItemComment = XM.Comment.extend({
     /** @scope XM.ItemComment.prototype */
 
-    recordType: 'XM.ItemComment'
+    recordType: 'XM.ItemComment',
+
+    sourceName: 'I'
 
   });
 

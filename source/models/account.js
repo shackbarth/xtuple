@@ -72,7 +72,7 @@ white:true*/
     // ..........................................................
     // METHODS
     //
-
+    
     validateEdit: function (attributes) {
       if (attributes.parent && attributes.parent.id === this.id) {
         return XT.Error.clone('xt2006');
@@ -80,6 +80,11 @@ white:true*/
     }
 
   });
+  
+  XM.Account.used = function (id, options) {
+    return XT.dataSource.dispatch('XM.Account', 'used', id, options);
+  };
+  
 
   /**
     @class

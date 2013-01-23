@@ -13,12 +13,12 @@ trailing:true white:true*/
         panels: [
         {name: "welcomePage",
           tag: "iframe",
-					style: "border: none;",
+          style: "border: none;",
           attributes: {src: "lib/enyo-x/assets/splash/index.html"}}
       ]},
       {name: "setup", label: "_setup".loc(), panels: [
-        {name: "configureList", kind: "XV.ConfigurationsList"},
-        {name: "userAccountList", kind: "XV.UserAccountList"},
+        {name: "configureList", kind: "XV.ConfigurationsList", toggleSelected: false},
+        {name: "userAccountList", kind: "XV.UserAccountList", toggleSelected: false},
         {name: "userAccountRoleList", kind: "XV.UserAccountRoleList"}
       ]}
     ]

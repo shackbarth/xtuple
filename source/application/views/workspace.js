@@ -1,7 +1,7 @@
 /*jshint bitwise:false, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true */
+/*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true, window:true */
 
 (function () {
 
@@ -74,10 +74,10 @@ trailing:true white:true*/
             {kind: "XV.UserAccountWidget", attr: "owner"},
             {kind: "onyx.GroupboxHeader", content: "_primaryContact".loc()},
             {kind: "XV.ContactWidget", attr: "primaryContact",
-              showAddress: true},
+              showAddress: true, label: "_name".loc()},
             {kind: "onyx.GroupboxHeader", content: "_secondaryContact".loc()},
             {kind: "XV.ContactWidget", attr: "secondaryContact",
-              showAddress: true},
+              showAddress: true, label: "_name".loc()},
             {kind: "XV.AccountCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
@@ -170,7 +170,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "number"},
             {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "onyx.GroupboxHeader", content: "_name".loc()},
-            {kind: "XV.InputWidget", attr: "honorific"},
+            {kind: "XV.HonorificCombobox", attr: "honorific"},
             {kind: "XV.InputWidget", attr: "firstName"},
             {kind: "XV.InputWidget", attr: "middleName"},
             {kind: "XV.InputWidget", attr: "lastName"},
@@ -182,7 +182,8 @@ trailing:true white:true*/
             {kind: "XV.AddressWidget", attr: "address"},
             {kind: "onyx.GroupboxHeader", content: "_information".loc()},
             {kind: "XV.InputWidget", attr: "jobTitle"},
-            {kind: "XV.InputWidget", attr: "primaryEmail"},
+            {kind: "XV.ComboboxWidget", attr: "primaryEmail",
+              keyAttribute: "email"},
             {kind: "XV.InputWidget", attr: "phone"},
             {kind: "XV.InputWidget", attr: "alternate"},
             {kind: "XV.InputWidget", attr: "fax"},
@@ -192,7 +193,8 @@ trailing:true white:true*/
           ]}
         ]},
         {kind: "XV.ContactCommentBox", attr: "comments"},
-        {kind: "XV.ContactDocumentsBox", attr: "documents"}
+        {kind: "XV.ContactDocumentsBox", attr: "documents"},
+        {kind: "XV.ContactEmailBox", attr: "email"}
       ]},
       {kind: "onyx.Popup", name: "multipleAddressPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",
@@ -245,6 +247,18 @@ trailing:true white:true*/
         this.$.multipleAddressPopup.show();
         return true;
       }
+    },
+    modelChanged: function () {
+      this.inherited(arguments);
+      var input = this.findControl("primaryEmail").$.input,
+       value = this.getValue();
+      input._collection = value ? value.get("email") : [];
+      input.buildList();
+    },
+    statusChanged: function () {
+      this.inherited(arguments);
+      var input = this.findControl("primaryEmail").$.input;
+      input.buildList();
     },
     popupHidden: function () {
       if (!this._popupDone) {
@@ -446,6 +460,43 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.IncidentListItem", "XV.IncidentWorkspace");
 
   // ..........................................................
+  // INCIDENT EMAIL PROFILE
+  //
+
+  enyo.kind({
+    name: "XV.IncidentEmailProfileWorkspace",
+    kind: "XV.Workspace",
+    title: "_incidentEmailProfile".loc(),
+    headerAttrs: ["name", "-", "description"],
+    model: "XM.IncidentEmailProfile",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel",
+          style: "width: 480px;", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "onyx.GroupboxHeader", content: "_header".loc()},
+            {kind: "XV.InputWidget", attr: "from"},
+            {kind: "XV.InputWidget", attr: "replyTo"},
+            {kind: "XV.InputWidget", attr: "to"},
+            {kind: "XV.InputWidget", attr: "cc"},
+            {kind: "XV.InputWidget", attr: "bcc"},
+            {kind: "XV.InputWidget", attr: "subject"},
+            {kind: "onyx.GroupboxHeader", content: "_body".loc()},
+            {kind: "XV.TextArea", attr: "body", classes: "max-height"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.IncidentEmailProfile", "XV.IncidentEmailProfileWorkspace");
+
+  // ..........................................................
   // INCIDENT CATEGORY
   //
 
@@ -453,7 +504,22 @@ trailing:true white:true*/
     name: "XV.IncidentCategoryWorkspace",
     kind: "XV.OrderedReferenceWorkspace",
     title: "_incidentCategory".loc(),
-    model: "XM.IncidentCategory"
+    model: "XM.IncidentCategory",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.NumberWidget", attr: "order"},
+            {kind: "XV.IncidentEmailProfilePicker", attr: "emailProfile"}
+          ]}
+        ]}
+      ]}
+    ]
   });
 
   XV.registerModelWorkspace("XM.IncidentCategory", "XV.IncidentCategoryWorkspace");
@@ -845,12 +911,11 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
             {kind: "XV.UserAccountWidget", attr: "owner"},
             {kind: "XV.UserAccountWidget", attr: "assignedTo"},
-            {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
-            {kind: "XV.ContactWidget", attr: "contact"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true},
             {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-            {kind: "XV.AccountWidget", attr: "account"}
+            {kind: "XV.AccountWidget", attr: "account"},
+            {kind: "XV.ContactWidget", attr: "contact"}
           ]}
         ]},
         {kind: "XV.ToDoCommentBox", attr: "comments"},
@@ -1020,5 +1085,79 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.UserAccountRole", "XV.UserAccountRoleWorkspace");
   XV.registerModelWorkspace("XM.UserAccountRoleRelation", "XV.UserAccountRoleWorkspace");
   XV.registerModelWorkspace("XM.UserAccountRoleListItem", "XV.UserAccountRoleWorkspace");
+  
+  // ..........................................................
+  // CHARACTERISTIC
+  //
+  
+  enyo.kind({
+    name: "XV.CharacteristicWorkspace",
+    kind: "XV.Workspace",
+    title: "_characteristic".loc(),
+    model: "XM.Characteristic",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.CharacteristicTypePicker", name: "typePicker", attr: "characteristicType"},
+            {kind: "XV.CheckboxWidget", attr: "isSearchable"},
+            {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isAddresses", label: "_address".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isContacts", label: "_contact".loc()},
+            //{kind: "XV.ToggleButtonWidget", attr: "isCustomers", label: "_customer".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isAccounts", label: "_account".loc()},
+            //{kind: "XV.ToggleButtonWidget", attr: "isEmployees", label: "_employee".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isIncidents", label: "_incident".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isItems", label: "_item".loc()},
+            //{kind: "XV.ToggleButtonWidget", attr: "isLotSerial", label: "_lotSerial".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isOpportunities", label: "_opportunity".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true},
+            {name: "advancedPanel", showing: false, components: [
+              {kind: "onyx.GroupboxHeader", content: "_advanced".loc()},
+              {kind: "XV.InputWidget", attr: "mask"},
+              {kind: "XV.InputWidget", attr: "validator"}
+            ]}
+          ]}
+        ]},
+        {kind: "XV.CharacteristicOptionBox", name: "optionsPanel", attr: "options", showing: false}
+      ]}
+    ],
+    /**
+      After the controls are updated by the model, determine visibility of panels.
+     */
+    attributesChanged: function (model, options) {
+      this.inherited(arguments);
+      if (this.getValue().getStatus() === XM.Model.READY_CLEAN ||
+        this.getValue().getStatus() === XM.Model.READY_NEW) {
+        this.typeValueChanged(model);
+      }
+    },
+    
+    /**
+      Function to determine visibility of "advanced" and "options" panels based
+        on the characteristicType
+     */
+    typeValueChanged: function (model) {
+      var type = model ? model.get('characteristicType') : null;
+      var isText = type === XM.Characteristic.TEXT;
+      var isList = type === XM.Characteristic.LIST;
+      this.$.advancedPanel.setShowing(isText);
+      this.$.optionsPanel.setShowing(isList);
+      if (isList) {
+        this.$.optionsPanel.render();
+      } else if (isText) {
+        this.$.advancedPanel.render();
+      }
+      // signal to workspace container that the menu needs to re-render
+      this.doMenuChange();
+    }
+  });
+
+  XV.registerModelWorkspace("XM.Characteristic", "XV.CharacteristicWorkspace");
 
 }());
