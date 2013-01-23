@@ -184,7 +184,43 @@ white:true*/
     requiredAttributes: [
       "isActive",
       "email"
-    ]
+    ],
+    
+    save: function (key, value, options) {
+      options = options ? _.clone(options) : {};
+      var orgs = this.get("organizations"),
+        that = this,
+        params,
+        sync = [],
+        i,
+        orgOptions = {
+          error: function () {
+            XT.log("Error updating instance database");
+          }
+        };
+      
+      // Cache list of organizations that have changed
+      for (i = 0; i < orgs.length; i++) {
+        if (orgs[i].isDirty()) {
+          sync.push(orgs[i].get("name"));
+        }
+      }
+
+      // Callback after each check
+      options.success = function () {
+        
+        // Update users on instance databases
+        for (i = 0; i < sync.length; i++) {
+          params = {
+            user: that.id,
+            organization: sync[i]
+          };
+          XT.datasource.syncUser(params, orgOptions);
+        }
+      };
+
+      XM.GlobalDocument.prototype.save.call(that, key, value, options);
+    }
   });
 
   /**
@@ -202,7 +238,18 @@ white:true*/
     requiredAttributes: [
       "name",
       "username"
-    ]
+    ],
+    
+    initialize: function (attributes, options) {
+      XM.Model.prototype.initialize.apply(this, arguments);
+      this.on("change:user", this.userDidChange);
+    },
+    
+    userDidChange: function () {
+      if (this.isNew() && !this.get('username')) {
+        this.set("username", this.getParent().id);
+      }
+    }
 
   });
 
