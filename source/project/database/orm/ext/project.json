@@ -1,0 +1,264 @@
+[
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "Account",
+    "table": "crmacct",
+    "isExtension": true,
+    "comment": "Extended by Project",
+    "relations": [
+      {
+        "column": "crmacct_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "projects",
+        "toMany": {
+          "isNested": true,
+          "type": "AccountProject",
+          "column": "crmacct_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "projectRelations",
+        "toMany": {
+          "type": "ProjectRelation",
+          "column": "crmacct_id",
+          "inverse": "account"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "Contact",
+    "table": "cntct",
+    "isExtension": true,
+    "comment": "Extended by Project",
+    "relations": [
+      {
+        "column": "cntct_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "projects",
+        "toMany": {
+          "isNested": true,
+          "type": "ContactProject",
+          "column": "cntct_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "projectRelations",
+        "toMany": {
+          "type": "ProjectRelation",
+          "column": "cntct_id",
+          "inverse": "contact"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "IncidentRelation",
+    "table": "incdt",
+    "isExtension": true,
+    "comment": "Extended by Project",
+    "relations": [
+      {
+        "column": "incdt_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "project",
+        "attr": {
+          "type": "Number",
+          "column": "incdt_prj_id"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "Incident",
+    "table": "incdt",
+    "isExtension": true,
+    "comment": "Extended by Project",
+    "relations": [
+      {
+        "column": "incdt_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "project",
+        "toOne": {
+          "isNested": true,
+          "type": "ProjectRelation",
+          "column": "incdt_prj_id"
+        }
+      },
+      {
+        "name": "projects",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentProject",
+          "column": "incdt_id",
+          "inverse": "source"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "IncidentListItem",
+    "table": "xt.incdtinfo",
+    "isExtension": true,
+    "comment": "Extended by Project",
+    "relations": [
+      {
+        "column": "incdt_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "project",
+        "toOne": {
+          "type": "ProjectRelation",
+          "column": "incdt_prj_id"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "Opportunity",
+    "table": "ophead",
+    "isExtension": true,
+    "comment": "Extended by Project",
+    "relations": [
+      {
+        "column": "ophead_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "projects",
+        "toMany": {
+          "isNested": true,
+          "type": "OpportunityProject",
+          "column": "ophead_id",
+          "inverse": "source"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "Project",
+    "table": "prj",
+    "isExtension": true,
+    "comment": "Extended by Project",
+    "relations": [
+      {
+        "column": "prj_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "opportunities",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectOpportunity",
+          "column": "prj_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "incidents",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectIncident",
+          "column": "prj_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "toDos",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectToDo",
+          "column": "prj_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "incidentRelations",
+        "toMany": {
+          "type": "IncidentRelation",
+          "column": "prj_id",
+          "inverse": "project"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "ToDo",
+    "table": "todoitem",
+    "isExtension": true,
+    "comment": "Extended by Project",
+    "relations": [
+      {
+        "column": "todoitem_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "projects",
+        "toMany": {
+          "isNested": true,
+          "type": "ToDoProject",
+          "column": "todoitem_id",
+          "inverse": "source"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  }
+]
