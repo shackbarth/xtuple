@@ -34,15 +34,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   }
 
   exports.scopeForm = function (req, res) {
-    var organizations = ['dev', 'dev2'];
+    var organizations = [];
 
-    // TODO something like this should work once the plumbing works:
-    // try {
-    //   organizations = _.map(req.user.get("organizations").toJSON(), function (org) {return org.name;});
-    // } catch (error) {
-    //   // prevent unauthorized access
-    //   res.render('login');
-    // }
+     try {
+       organizations = _.map(req.user.get("organizations").toJSON(), function (org) {return org.name;});
+     } catch (error) {
+       // prevent unauthorized access
+       res.render('login');
+     }
 
     // choose an org automatically if there's only one.
     if (organizations.length === 1) {
