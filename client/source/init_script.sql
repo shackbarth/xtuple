@@ -82,6 +82,7 @@
 
 \i xt/guiscripts/user.sql;
 \i xt/guiscripts/users.sql;
+\i xt/guiscripts/userPreferences.sql;
 
 -- delete system orms
 \i delete_system_orms.sql;
