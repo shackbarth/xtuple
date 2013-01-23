@@ -126,7 +126,7 @@
     })
   }).addBatch({
     'DESTROY': XVOWS.destroy(model, {
-      'FINISH XM.Address': function () {
+      'FINISH XM.Country': function () {
         XVOWS.next();
       }
     })

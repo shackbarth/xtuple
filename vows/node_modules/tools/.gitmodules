@@ -1,0 +1,7 @@
+
+[submodule "lib/underscore"]
+	path = lib/underscore
+	url = git://github.com/documentcloud/underscore.git
+[submodule "lib/globalize"]
+	path = lib/globalize
+	url = git://github.com/jquery/globalize.git

@@ -101,6 +101,10 @@ var loadXmDependencies = function () {
   require(_path.join(X.basePath, "../../../public-extensions/source/crm/client", "core.js"));
   X.relativeDependsPath = _path.join(X.basePath, "../../../public-extensions/source/crm/client/models");
   require(_path.join(X.basePath, "../../../public-extensions/source/crm/client/models", "package.js"));
+  // GRAB THE SALES MODULE
+  require(_path.join(X.basePath, "../../../public-extensions/source/sales/client", "core.js"));
+  X.relativeDependsPath = _path.join(X.basePath, "../../../public-extensions/source/sales/client/models");
+  require(_path.join(X.basePath, "../../../public-extensions/source/sales/client/models", "package.js"));
   // GRAB THE PROJECT MODULE
   require(_path.join(X.basePath, "../../../public-extensions/source/project/client", "core.js"));
   X.relativeDependsPath = _path.join(X.basePath, "../../../public-extensions/source/project/client/models");
