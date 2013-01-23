@@ -12,6 +12,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var auth = require('./auth'),
     email = require('./email'),
     extensions = require('./extensions'),
+    data = require('./fetch'),
     file = require('./file'),
     maintenance = require('./maintenance'),
     redirector = require('./redirector'),
@@ -30,5 +31,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.redirect = redirector.redirect;
   exports.report = report.report;
   exports.resetPassword = resetPassword.resetPassword;
+
+  exports.fetch = data.fetch;
+  exports.fetchEngine = data.fetchEngine;
+  exports.dispatch = data.dispatch;
+  exports.dispatchEngine = data.dispatchEngine;
 
 }());

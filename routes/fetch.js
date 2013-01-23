@@ -30,9 +30,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var queryInstanceDatabase = function (queryString, payload, session, callback) {
     var query;
 
-    payload.username = session.TODO_INSTANCE_USERNAME;
+    payload.username = session.passport.username;
     query = queryString.f(JSON.stringify(payload));
-    X.database.query(session.TODO_ORGANIZATION, query, callback);
+    X.database.query(session.passport.organization, query, callback);
   };
 
   var commitEngine = function (payload, session, callback) {
@@ -57,7 +57,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     if (payload && payload.databaseType === 'global') {
       // run this query against the global database
 
-      options = createGlobalOptions(payload, TODO_GLOBAL_USERNAME, callback);
+      options = createGlobalOptions(payload, session.passport.user, callback);
 
       if (!payload.dataHash) {
         callback({message: "Invalid Commit"});
@@ -85,7 +85,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     if (payload && payload.databaseType === 'global') {
       // run this query against the global database
 
-      options = createGlobalOptions(payload, TODO_GLOBAL_USERNAME, callback);
+      options = createGlobalOptions(payload, session.passport.user, callback);
       XT.dataSource.dispatch(payload.className, payload.functionName, payload.parameters, options);
 
     } else {
@@ -108,7 +108,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     if (payload && payload.databaseType === 'global') {
       // run this query against the global database
 
-      options = createGlobalOptions(payload, TODO_GLOBAL_USERNAME, callback);
+      options = createGlobalOptions(payload, session.passport.user, callback);
       XT.dataSource.fetch(options);
 
     } else {
@@ -131,7 +131,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     if (payload && payload.databaseType === 'global') {
       // run this query against the global database
 
-      options = createGlobalOptions(payload, TODO_GLOBAL_USERNAME, callback);
+      options = createGlobalOptions(payload, session.passport.user, callback);
       XT.dataSource.retrieveRecord(payload.recordType, payload.id, options);
 
     } else {

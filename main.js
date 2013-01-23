@@ -247,8 +247,12 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
     console.log("######### function/extensions socket.io with data: ", data);
   });
 
-  socket.on('function/dispatch', function (data) {
+  socket.on('function/dispatch', function (data, callback) {
     console.log("######### function/dispatch socket.io with data: ", data);
+    //run this from client: XT.dataSource.dispatch("XT.Session", "settings", null, {success: function () {console.log(arguments);}, error: function () {console.log(arguments);}});
+    // XXX we need to get this session variable from somewhere
+    var session = {passport: {username: "admin", organization: "dev", user: "admin"}};
+    routes.dispatchEngine(data.payload, session, callback);
   });
 
   socket.on('function/commitRecord', function (data) {
