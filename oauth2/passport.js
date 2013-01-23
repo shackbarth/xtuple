@@ -27,9 +27,6 @@ passport.use(new LocalStrategy(
   },
   function (username, password, done) {
     "use strict";
-    X.debug('Login attempt username: ', username);
-    X.debug('Login attempt password: ', password);
-    X.debug('Login attempt done: ', done);
 
     db.users.findByUsername(username, function (err, user) {
       if (err) { return done(err); }

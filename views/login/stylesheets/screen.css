@@ -141,7 +141,7 @@ label.login-message-box.error {
   position: relative;
   max-height: 200px;
 }
-#main #organizations .organization-item {
+.organization-item {
   padding: 8px;
   margin: 10px 0;
   display: block;
@@ -149,6 +149,7 @@ label.login-message-box.error {
   background-color: #ffffff;
   text-transform: uppercase;
   color: #ff6600;
+  cursor:default;
 }
 @include box-sizing(border-box);
 #main #organizations .organization-item:hover {

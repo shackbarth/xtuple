@@ -49,3 +49,50 @@ exports.findByUsername = function (username, done) {
 
   user.fetch(options);
 };
+
+
+
+    // TODO We might want to use this again in order to increase the
+    // entropy of the bcrypt passwords, so we'll keep in in here for now.
+    /**
+    Switches a user's password hash from MD5 to bcrypt after they have logged in.
+
+    @param {X.Reponse} xtr
+    @param {X.Session} session
+    @param {login payload data with bcrypt password} data
+    recryptPassword: function (xtr, session, data) {
+      var K = this.get("model"),
+          options = {},
+          saveOptions = {},
+          user = new K();
+
+      options.success = function (res) {
+        // Update the user's password with a bcrypt value.
+        user.set({password: data.bcryptpass});
+        user.save(null, saveOptions);
+      };
+      options.error = function (model, err) {
+// TODO Not sure how best to handle an error here. But this should go away soon.
+        X.debug("recryptPassword fetch user error: ", err);
+        xtr.error({isError: true, reason: "You broke it."});
+      };
+
+      saveOptions.success = function (res) {
+        xtr.write(session.get("details")).close();
+      };
+      saveOptions.error = function (model, err) {
+// TODO Not sure how best to handle an error here. But this should go away soon.
+        X.debug("recryptPassword save user error: ", err);
+        xtr.error({isError: true, reason: "You broke it."});
+      };
+
+      options.id = data.id;
+      options.password = data.md5pass;
+      options.username = X.options.globalDatabase.nodeUsername;
+      saveOptions.username = X.options.globalDatabase.nodeUsername;
+
+      // Reload the user so we have access privs.
+      user.fetch(options);
+    },
+   */
+
