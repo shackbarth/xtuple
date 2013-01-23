@@ -79,6 +79,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       exports.scope(req, res);
       return;
     }
-    res.render('scopeSubmit', { organizations: organizations });
+    res.render('scope', { organizations: organizations });
   };
 }());
