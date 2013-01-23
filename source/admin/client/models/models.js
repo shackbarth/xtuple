@@ -348,6 +348,18 @@ white:true*/
 
     @extends XM.Collection
   */
+  XM.SessionStoreCollection = XM.Collection.extend({
+    /** @scope XM.SessionStoreCollection.prototype */
+
+    model: XM.SessionStore
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
   XM.UserCollection = XM.Collection.extend({
     /** @scope XM.UserCollection.prototype */
 
