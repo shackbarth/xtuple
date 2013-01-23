@@ -369,8 +369,8 @@ white:true*/
       XT.log("Attempting to connect to the datasource");
 
       var url = this.datasourceUrl,
-        port = this.datasourcePort,
-        datasource = "https://%@/clientsock".f(url),
+        port = 2000,//this.datasourcePort,
+        datasource = "http://localhost:2000/clientsock",//"https://%@/clientsock".f(url),
         self = this,
         didConnect = this.sockDidConnect,
         didError = this.sockDidError;
