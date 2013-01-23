@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
-/*global XT:true, XM:true, io:true, Backbone:true, _:true, console:true */
+/*global XT:true, XM:true, io:true, Backbone:true, _:true, console:true, enyo:true */
 
 (function () {
   "use strict";
@@ -245,29 +245,15 @@ white:true*/
           id: id,
           newUser: options.newUser
         },
-        complete = function (response) {
-          var params = {}, error;
+        ajax = new enyo.Ajax({
+          url: "http://localhost:2000/resetPassword", // XXX temp until migration
+          //url: "/resetPassword",
+          success: options ? options.success : undefined,
+          error: options ? options.error : undefined
+        });
 
-          // handle error
-          if (response.isError) {
-            if (options && options.error) {
-              params.error = response.message;
-              error = XT.Error.clone('xt1001', { params: params });
-              options.error.call(that, error);
-            }
-            return;
-          }
-
-          // handle success
-          if (options && options.success) {
-            options.success.call(that, response.data);
-          }
-        };
-
-      return XT.Request
-               .handle('function/resetPassword')
-               .notify(complete)
-               .send(payload);
+      ajax.response(this.ajaxSuccess);
+      ajax.go(payload);
     },
 
     /*
@@ -307,6 +293,24 @@ white:true*/
                .send(payload);
     },
 
+    ajaxSuccess: function (inSender, inResponse) {
+      var params = {}, error;
+
+      // handle error
+      if (inResponse.isError) {
+        if (inSender.error) {
+          params.error = inResponse.message;
+          error = XT.Error.clone('xt1001', { params: params });
+          inSender.error.call(this, error);
+        }
+        return;
+      }
+
+      // handle success
+      if (inSender.success) {
+        inSender.success.call(this, inResponse.data);
+      }
+    },
     /*
       Sends a request to node to send out an email
 
@@ -320,34 +324,17 @@ white:true*/
     */
     sendEmail: function (payload, options) {
       var that = this,
-        complete = function (response) {
-          var params = {}, error;
+        ajax = new enyo.Ajax({
+          url: "http://localhost:2000/email", // XXX temp until migration
+          //url: "/email",
+          success: options ? options.success : undefined,
+          error: options ? options.error : undefined
+        });
 
-          // handle error
-          if (response.isError) {
-            if (options && options.error) {
-              params.error = response.message;
-              error = XT.Error.clone('xt1001', { params: params });
-              options.error.call(that, error);
-            }
-            return;
-          }
-
-          // handle success
-          if (options && options.success) {
-            options.success.call(that, response.data);
-          }
-        };
-
-      if (payload.body && !payload.text) {
-        // be generous with the inputs
-        payload.text = payload.body
-      }
-      return XT.Request
-               .handle('function/email')
-               .notify(complete)
-               .send(payload);
+      ajax.response(this.ajaxSuccess);
+      ajax.go(payload);
     },
+
     /*
       Determine the list of extensions in use by the user's
       organization.
@@ -358,30 +345,16 @@ white:true*/
     */
     getExtensionList: function (options) {
       var that = this,
-        payload = {},
-        complete = function (response) {
-          var params = {}, error;
+        ajax = new enyo.Ajax({
+          url: "http://localhost:2000/extensions", // XXX temp until migration
+          //url: "/extensions",
+          success: options ? options.success : undefined,
+          error: options ? options.error : undefined
+        });
 
-          // handle error
-          if (response.isError) {
-            if (options && options.error) {
-              params.error = response.message;
-              error = XT.Error.clone('xt1001', { params: params });
-              options.error.call(that, error);
-            }
-            return;
-          }
+      ajax.response(this.ajaxSuccess);
+      ajax.go();
 
-          // handle success
-          if (options && options.success) {
-            options.success.call(that, response.data);
-          }
-        };
-
-      return XT.Request
-               .handle('function/extensions')
-               .notify(complete)
-               .send(payload);
     },
 
     /* @private */
