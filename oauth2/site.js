@@ -10,12 +10,9 @@ exports.index = function (req, res) {
 };
 
 
-
-
 exports.account = [
-  //login.ensureLoggedIn({redirectTo: "/logout"}),
+  login.ensureLoggedIn({redirectTo: "/logout"}),
 
-  login.ensureLoggedIn(),
   function (req, res) {
     res.render('account', { user: req.user });
   }

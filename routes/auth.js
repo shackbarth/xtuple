@@ -15,7 +15,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   exports.logout = function (req, res) {
-    // TODO - delete the db session.
+    req.session.passport = null;
+    res.clearCookie('connect.sid');
+    req.session.destroy(function () {});
+
     req.logout();
     res.redirect('/');
   }

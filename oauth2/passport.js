@@ -49,156 +49,25 @@ passport.use(new LocalStrategy(
  * Set Session Cookie to be returned to the XTPGStore as XM.SessionStore and
  * persist as a valid session to XM.Session in the database.
  */
- // TODO - I'm a little confused here if we need both XM.Session and XM.SessionStore.
- // This could just return done(null, user); and let XM.SessionStore be the only user session object.
 passport.serializeUser(function (user, done) {
   "use strict";
-  var sessionAttributes = {},
-      saveOptions = {},
-      generateSID,
-      session = {};
-
-  // TODO - Should we move this to X or tools???
-  // No real reuse/DRY needs right now, so it stays here.
-  generateSID = function () {
-    // http://www.ietf.org/rfc/rfc4122.txt
-    var s = [];
-    var hexDigits = "0123456789abcdef";
-    for (var i = 0; i < 36; i++) {
-      s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
-    }
-    s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
-    s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
-    s[8] = s[13] = s[18] = s[23] = "-";
-
-    var uuid = s.join("");
-    return uuid;
-  };
-
-  saveOptions.success = function (model) {
-    // Build user object.
-    if (model) {
-      // Set user session cookie data. Should only include session_sid and session_created for security.
-      // It's vitrually impossible to brute force the combination to get a valid session.
-      user.sid = model.get("sid");
-      user.created = model.get("created");
-      // TODO - Commenting out until we get further along in dev.
-      // Every thing in user here is stored in the cookie, delete what we don't want to store.
-      //delete user.id;
-      //delete user.username;
-      delete user.password;
-      //delete user.name;
-
-      // Return the new user session data for express to use in building the secure session cookie.
-      done(null, user);
-    }
-  };
-  saveOptions.error = function (model, err) {
-    if (err) {
-      // This error should not happen, let's log it to the console.
-      console.trace("Session save failed when creating new session for user: ", user.username);
-
-      // This redirects to /login.
-      done(null, false);
-    }
-  };
-
-  // Create new XM.Session object and initialize it.
-  session = new XM.Session();
-  session.initialize(null, {isNew: true});
-
-  // Set new XM.Session data.
-  sessionAttributes = {
-    id: user.username,
-    sid: generateSID(),
-    lastModified: new Date().getTime(),
-    created: new Date().getTime()
-  };
-  // TODO - if username and org add them???
-  //username: user.username,
-  //organization: user.organization,
-
-  // Save XM.Session to database.
-  session.save(sessionAttributes, saveOptions);
+  done(null, user.get("id"));
 });
 
 
 /**
  * Check Session Cookie against the database.
  */
-// TODO - I'm a little confused here if we need both XM.Session and XM.SessionStore.
-// If we only use XM.SessionStore, why do we need to check for valid user here again?
-passport.deserializeUser(function (user, done) {
+passport.deserializeUser(function (id, done) {
   "use strict";
-  var fetchOptions = {},
-      session = {},
-      saveOptions = {};
 
-  // Create new XM.Session object.
-  session = new XM.Session();
-
-  saveOptions.success = function (model) {
-    // Build user object.
-    if (model) {
-      // TODO - Where does this data go and what is safe to include?
-      // TODO - Do we need the full user/session/org data?
-      user.sid = model.get("sid");
-      user.created = model.get("created");
-
-      user.username = model.get("id");
+  db.users.findByUsername(id, function (err, user) {
+    if (err) { return done(err); }
+    if (!user) {
+      return done(null, false);
     }
-
-    // Return the user data object to express/passport meaning a successful cookie check.
-    done(null, user);
-  };
-  saveOptions.error = function (model, err) {
-    if (err) {
-      // This error should not happen, let's log it to the console.
-      console.trace("Session save failed when updating lastModified timestamp.");
-
-      // This redirects to /login.
-      done(null, false);
-    }
-  };
-
-  fetchOptions.id = user.sid;
-
-  fetchOptions.success = function (model) {
-    // Make sure fetch db session matches cookie session_sid and session_created for security.
-    if ((model.get("sid") !== user.sid) || (model.get("created") !== user.created)) {
-      // If error, assume cookie hacking attempt.
-
-      // TODO - Test this by changing !== to === once user login auth is working
-      // from the global database and not passport example db array.
-
-      // Delete this session from db to force new login.
-      //X.debug("######### destroy test");
-      model.destroy();
-
-      // This redirects to /login.
-      done(null, false);
-    } else {
-      // We have a valid cookie, update lastModified time to extend timeout.
-      //X.debug("######### passport session check success");
-      model.set("lastModified", new Date().getTime());
-      model.save(null, saveOptions);
-    }
-  };
-  fetchOptions.error = function (model, err) {
-    if (err) {
-      // Session was not found. This can happen if cookie is still in the browser, but
-      // db record was removed by CleanupTask because it has timed out.
-
-      // This redirects to /login.
-      done(null, false);
-    }
-  };
-
-  // TODO - We could call the db session CleanupTask here.
-
-  //X.debug("######### passport session check");
-  // Try to fetch a session matching the cookie user.sid.
-  session.fetch(fetchOptions);
+    return done(null, user);
+  });
 });
 
 
