@@ -336,7 +336,7 @@ trailing:true white:true*/
     kind: "XV.Workspace",
     title: "_customer".loc(),
     model: "XM.Customer",
-    headerAttrs: ["firstName", "lastName"],
+    headerAttrs: ["number", "-", "name"],
     handlers: {
       onError: "errorNotify"
     },
