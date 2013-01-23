@@ -702,8 +702,8 @@
     ],
     "isNestedOnly": true,
     "isSystem": true
-    },
-    {
+  },
+  {
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "AccountRelation",
@@ -712,9 +712,18 @@
     "privileges": {
       "all": {
         "create": false,
-        "read": true,
+        "read": "ViewAllCRMAccounts MaintainAllCRMAccounts",
         "update": false,
         "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false,
+        "properties": [
+          "owner.username"
+        ]
       }
     },
     "properties": [
@@ -768,7 +777,7 @@
     "privileges": {
      "all": {
        "create": false,
-       "read": "ViewAllCRMAccounts",
+       "read": "ViewAllCRMAccounts MaintainAllCRMAccounts",
        "update": false,
        "delete": false
      },
