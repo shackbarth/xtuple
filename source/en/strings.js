@@ -12,11 +12,11 @@
 //
 
 var lang = XT.stringsFor("en_US", {
-  
+
   // ********
   // Models
   // ********
-  
+
   "_assigned": "Assigned",
   "_automatic": "Automatic",
   "_automaticOverride": "Override Allowed",
@@ -62,6 +62,7 @@ var lang = XT.stringsFor("en_US", {
   "_addressCharacteristic": "Address Characteristic",
   "_addressComment": "Address Comment",
   "_addresses": "Addresses",
+  "_advanced" : "Advanced",
   "_alarms": "Alarms",
   "_altEmphasisColor": "Alt Emphasis Color",
   "_alternate": "Alternate",
@@ -74,6 +75,8 @@ var lang = XT.stringsFor("en_US", {
   "_balance": "Balance",
   "_balanceExpensesTotal": "Balance Expenses Total",
   "_balanceHoursTotal": "Balance Hours Total",
+  "_bcc": "Bcc",
+  "_body": "Body",
   "_boolean": "Boolean",
   "_budgeted": "Budgeted",
   "_budgetedExpenses": "Budgeted Expenses",
@@ -82,6 +85,7 @@ var lang = XT.stringsFor("en_US", {
   "_budgetedHoursTotal": "Total Hours Budgeted",
   "_canCreateUsers": "Can Create Users",
   "_category": "Category",
+  "_cc": "Cc",
   "_changeLog": "Change Log",
   "_characteristic": "Characteristic",
   "_characteristicType": "Characteristic Type",
@@ -131,6 +135,8 @@ var lang = XT.stringsFor("en_US", {
   "_dueDays": "Due Days",
   "_effective": "Effective",
   "_email": "Email",
+  "_emailAddresses": "Email Addresses",
+  "_emailProfile": "Email Profile",
   "_emphasisColor": "Emphasis Color",
   "_employee": "Employee",
   "_employees": "Employees",
@@ -166,6 +172,7 @@ var lang = XT.stringsFor("en_US", {
   "_grantedUserAccountRoles": "Granted User Account Roles",
   "_groupSequence": "Group Sequence",
   "_groups": "Groups",
+  "_header": "Header",
   "_history": "History",
   "_home": "Home",
   "_honorific": "Honorific",
@@ -175,16 +182,23 @@ var lang = XT.stringsFor("en_US", {
   "_image": "Image",
   "_images": "Images",
   "_incident": "Incident",
-  "_incidentRelations": "Incidents",
-  "_incidents": "Incidents",
   "_incidentCategories": "Incident Categories",
   "_incidentCategory": "Incident Category",
+  "_incidentChangedStatus": "The status of the following incident has been changed to {status}",
+  "_incidentCreatedStatus": "The following incident has been created with status {status}",
+  "_incidentCreated": "The following incident has been CREATED",
+  "_incidentEmailProfile": "Incident Email Profiles",
+  "_incidentEmailProfiles": "Incident Email Profiles",
   "_incidentHistory": "Incident History",
+  "_incidentNewComment": "A new COMMENT has been added to the following incident",
+  "_incidentRelations": "Incidents",
   "_incidentResolution": "Incident Resolution",
   "_incidentResolutions": "Incident Resolutions",
+  "_incidents": "Incidents",
   "_incidentSeverities": "Incident Severities",
   "_incidentSeverity": "Incident Severity",
   "_incidentStatus": "Status",
+  "_incidentUpdated": "The following incident has been UPDATED",
   "_initials": "Initials",
   "_inventoryUnit": "Inventory Unit",
   "_isActive": "Active",
@@ -204,6 +218,7 @@ var lang = XT.stringsFor("en_US", {
   "_isPrinted": "Printed",
   "_isPublic": "Public",
   "_isSold": "Sold",
+  "_isSearchable": "Searchable",
   "_item": "Item",
   "_itemConversion": "Item Conversion",
   "_itemNumber": "Item Number",
@@ -213,16 +228,19 @@ var lang = XT.stringsFor("en_US", {
   "_jobTitle": "Job Title",
   "_language": "Language",
   "_lastName": "Last Name",
+  "_latestComment": "Latest Comment",
   "_limitToList": "Limit to List",
   "_line1": "Line1",
   "_line2": "Line2",
   "_line3": "Line3",
   "_lineNumber": "Line Number",
   "_lines": "Lines",
+  "_list" : "List",
   "_listPrice": "List Price",
   "_locale": "Locale",
   "_login": "Login",
   "_logout": "Logout",
+  "_lotSerial": "Lot/Serial",
   "_mainAddress": "Main Address",
   "_mask": "Mask",
   "_match": "Match",
@@ -327,6 +345,7 @@ var lang = XT.stringsFor("en_US", {
   "_states": "States",
   "_status": "Status",
   "_string": "String",
+  "_subject": "Subject",
   "_suffix": "Suffix",
   "_summary": "Summary",
   "_symbol": "Symbol",
@@ -459,11 +478,11 @@ var lang = XT.stringsFor("en_US", {
   "_viewProductCategories": "View Product Categories",
   "_viewUOMs": "View Units of Measure",
   "_viewTitles": "View Honorifics",
-  
+
   // ********
   // Messages
   // ********
-  
+
   "_assignedToRequiredAssigned": "Assigned to is required when status is 'Assigned'",
   "_attributeIsRequired": "{attr} is required.",
   "_attributeTypeMismatch": "The value of '{attr}' must be type: {type}.",
