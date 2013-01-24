@@ -231,25 +231,14 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
     console.log("######### function/retrieveRecord socket.io with data: ", data);
   });
 
-  socket.on('function/resetPassword', function (data) {
-    console.log("######### function/resetPassword socket.io with data: ", data);
-  });
-
-  socket.on('function/logout', function (data) {
-    console.log("######### function/logout socket.io with data: ", data);
-  });
-
   socket.on('function/fetch', function (data) {
     console.log("######### function/fetch socket.io with data: ", data);
   });
 
-  socket.on('function/extensions', function (data) {
-    console.log("######### function/extensions socket.io with data: ", data);
-  });
-
   socket.on('function/dispatch', function (data, callback) {
     console.log("######### function/dispatch socket.io with data: ", data);
-    //run this from client: XT.dataSource.dispatch("XT.Session", "settings", null, {success: function () {console.log(arguments);}, error: function () {console.log(arguments);}});
+  //run this from client:
+  //XT.dataSource.dispatch("XT.Session", "settings", null, {success: function () {console.log(arguments);}, error: function () {console.log(arguments);}});
     // XXX we need to get this session variable from somewhere
     var session = {passport: {username: "admin", organization: "dev", user: "admin"}};
     routes.dispatchEngine(data.payload, session, callback);
@@ -257,10 +246,6 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
 
   socket.on('function/commitRecord', function (data) {
     console.log("######### function/commitRecord socket.io with data: ", data);
-  });
-
-  socket.on('function/changePassword', function (data) {
-    console.log("######### function/changePassword socket.io with data: ", data);
   });
 
   // Tell the client you're connected.

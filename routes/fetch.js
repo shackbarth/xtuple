@@ -27,12 +27,23 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
   };
 
-  var queryInstanceDatabase = function (queryString, payload, session, callback) {
-    var query;
+  var queryInstanceDatabase = function (queryString, functionName, payload, session, callback) {
+    var query,
+      adaptorCallback = function (err, res) {
+        if (err) {
+          callback({isError: true, error: err}); // XXX not quite sure about the proper formatting of these
+        } else if (res && res.rows && res.rows.length > 0) {
+          // the data comes back in an awkward res.rows[0].dispatch form,
+          // and we want to normalize that here so that the data is in response.data
+          callback({data: JSON.parse(res.rows[0][functionName])});
+        } else {
+          callback({isError: true, error: "No results"});
+        }
+      };
 
     payload.username = session.passport.username;
     query = queryString.f(JSON.stringify(payload));
-    X.database.query(session.passport.organization, query, callback);
+    X.database.query(session.passport.organization, query, adaptorCallback);
   };
 
   var commitEngine = function (payload, session, callback) {
@@ -70,7 +81,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     } else {
       // run this query against an instance database
-      queryInstanceDatabase("select xt.commit_record($$%@$$)", payload, session, callback);
+      queryInstanceDatabase("select xt.commit_record($$%@$$)", "commit_record", payload, session, callback);
     }
   };
   exports.commitEngine = commitEngine;
@@ -90,7 +101,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     } else {
       // run this query against an instance database
-      queryInstanceDatabase("select xt.dispatch('%@')", payload, session, callback);
+      queryInstanceDatabase("select xt.dispatch('%@')", "dispatch", payload, session, callback);
     }
   };
   exports.dispatchEngine = dispatchEngine;
@@ -113,7 +124,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     } else {
       // run this query against an instance database
-      queryInstanceDatabase("select xt.fetch('%@')", payload, session, callback);
+      queryInstanceDatabase("select xt.fetch('%@')", "fetch", payload, session, callback);
     }
   };
   exports.fetchEngine = fetchEngine;
@@ -136,7 +147,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     } else {
       // run this query against an instance database
-      queryInstanceDatabase("select xt.retrieve_record('%@')", payload, session, callback);
+      queryInstanceDatabase("select xt.retrieve_record('%@')", "retrieve_record", payload, session, callback);
     }
   };
   exports.retrieveEngine = retrieveEngine;
