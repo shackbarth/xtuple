@@ -226,8 +226,6 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   //handshakeData.foo = 'baz';
   callback(null, true);
 }).on('connection', function (socket) {
-  // XXX TODO we need to get this session data from somewhere
-
   //console.log("######### socket.io connected with socket: ", socket);
 
   socket.on('session', function (data, callback) {
