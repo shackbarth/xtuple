@@ -18,13 +18,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var createGlobalOptions = function (payload, globalUsername, callback) {
     var options = JSON.parse(JSON.stringify(payload)); // clone
 
+    console.log("global username is", globalUsername);
     options.username = globalUsername;
     options.success = function (resp) {
-      callback(null, resp);
+      console.log("success", arguments);
+      callback({data: resp});
     };
     options.error = function (model, err) {
-      callback(err);
+      console.log("error", arguments);
+      callback({isError: true, error: err});
     };
+    return options;
   };
 
   var queryInstanceDatabase = function (queryString, functionName, payload, session, callback) {

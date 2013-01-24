@@ -180,7 +180,7 @@ app.get('/resetPassword', routes.resetPassword);
  */
 // TODO - Active browser sessions can make calls to this server when it hasn't fully started.
 // Need a way to get everything loaded BEFORE we start listening.  Might just move this to the end...
-io = socket.listen(app.listen(2000));
+io = socket.listen(app.listen(2000), {log: true});
 
 // TODO: start up a server on 80 and throw everything to the redirect route
 //app.get('/redirect', routes.redirect);
