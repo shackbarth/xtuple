@@ -32,9 +32,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.report = report.report;
   exports.resetPassword = resetPassword.resetPassword;
 
+  exports.commit = data.commit;
+  exports.commitEngine = data.commitEngine;
   exports.fetch = data.fetch;
   exports.fetchEngine = data.fetchEngine;
   exports.dispatch = data.dispatch;
   exports.dispatchEngine = data.dispatchEngine;
+  exports.retrieve = data.retrieve;
+  exports.retrieveEngine = data.retrieveEngine;
 
 }());

@@ -220,32 +220,44 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   handshakeData.foo = 'baz';
   callback(null, true);
 }).on('connection', function (socket) {
+  // XXX TODO we need to get this session data from somewhere
+  var mockDevSession = {passport: {username: "admin", organization: "dev", user: "admin"}};
 
   //console.log("######### socket.io connected with socket: ", socket);
 
-  socket.on('session', function (data) {
-    console.log("######### session socket.io with data: ", data);
+  // pretty sure this doesn't have to be a functor
+  //socket.on('session', function (data) {
+  //  console.log("######### session socket.io with data: ", data);
+  //});
+
+  // run this from the client:
+  // XT.dataSource.retrieveRecord("XM.State", 2, {"id":2,"cascade":true,"databaseType":"instance"});
+  socket.on('function/retrieveRecord', function (data, callback) {
+    //console.log("######### function/retrieveRecord socket.io with data: ", data);
+    routes.retrieveEngine(data.payload, mockDevSession, callback);
   });
 
-  socket.on('function/retrieveRecord', function (data) {
-    console.log("######### function/retrieveRecord socket.io with data: ", data);
+  // run this from client:
+  // XT.dataSource.fetch({"query":{"orderBy":[{"attribute":"code"}],"recordType":"XM.Honorific"},"force":true,"parse":true,"databaseType":"instance"});
+  socket.on('function/fetch', function (data, callback) {
+    //console.log("######### function/fetch socket.io with data: ", data);
+    routes.fetchEngine(data.payload, mockDevSession, callback);
   });
 
-  socket.on('function/fetch', function (data) {
-    console.log("######### function/fetch socket.io with data: ", data);
-  });
-
+  // run this from client:
+  // XT.dataSource.dispatch("XT.Session", "settings", null, {success: function () {console.log(arguments);}, error: function () {console.log(arguments);}});
   socket.on('function/dispatch', function (data, callback) {
-    console.log("######### function/dispatch socket.io with data: ", data);
-  //run this from client:
-  //XT.dataSource.dispatch("XT.Session", "settings", null, {success: function () {console.log(arguments);}, error: function () {console.log(arguments);}});
-    // XXX we need to get this session variable from somewhere
-    var session = {passport: {username: "admin", organization: "dev", user: "admin"}};
-    routes.dispatchEngine(data.payload, session, callback);
+    //console.log("######### function/dispatch socket.io with data: ", data);
+    routes.dispatchEngine(data.payload, mockDevSession, callback);
   });
 
-  socket.on('function/commitRecord', function (data) {
-    console.log("######### function/commitRecord socket.io with data: ", data);
+  // run this from the client:
+  // ???
+  // TODO: the first argument to XT.dataSource.commit() is a model and therefore a bit tough to mock
+  // XXX untested
+  socket.on('function/commitRecord', function (data, callback) {
+    //console.log("######### function/commitRecord socket.io with data: ", data);
+    routes.commitEngine(data.payload, mockDevSession, callback);
   });
 
   // Tell the client you're connected.
