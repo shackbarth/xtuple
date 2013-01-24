@@ -39,7 +39,6 @@ white:true*/
     validateSession: function (callback) {
       var self = this,
         complete = function (payload) {
-          console.log("session socket.io payload: ", payload);
           self._didValidateSession.call(self, payload, callback);
         };
 
