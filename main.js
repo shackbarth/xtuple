@@ -147,12 +147,10 @@ require('./oauth2/passport');
 /**
  * Setup HTTP routes and handlers.
  */
-//app.get('/', site.index);
 app.use('/assets', express.static('views/login/assets'));
 app.use('/client', express.static('www/client'));
 app.use('/public-extensions', express.static('www/public-extensions'));
 app.use('/private-extensions', express.static('www/private-extensions'));
-app.get('/account', site.account);
 //app.post('/export', routes.expor); TODO: implement, or delete the route
 
 app.get('/dialog/authorize', oauth2.authorization);
