@@ -1,18 +1,19 @@
 DONE
-maintenance.js
-report.js -- note that this will have to be updated per the updates in 19268
-fetch.js -- in data.js
-dispatch.js -- in data.js
-commit.js -- in data.js, test functor
-retrieve.js -- in data.js
 auth.js
 selection.js -- merged into auth.js and renamed scope
+logout.js -- in auth.js
+fetch.js -- in data.js
+dispatch.js -- in data.js
+commit.js -- in data.js
+retrieve.js -- in data.js
+resetPassword.js
+email.js --test with new client code
+
+maintenance.js
+report.js -- note that this will have to be updated per the updates in 19268
 file.js
 redirector.js -- need to put into use with a dedicated server on port 80
-email.js -- test with new client code
 extensions.js -- test with new client code
-resetPassword.js -- test with new client code
-logout.js -- in auth.js
 session functor
 
 UNNECESSARY (?)

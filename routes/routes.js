@@ -46,14 +46,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   //
   // Data-passthrough routes
   //
-  exports.commit = [ensureLogin(logoutPath), data.commit];
-  exports.commitEngine = [ensureLogin(logoutPath), data.commitEngine];
-  exports.fetch = [ensureLogin(logoutPath), data.fetch];
-  exports.fetchEngine = [ensureLogin(logoutPath), data.fetchEngine];
-  exports.dispatch = [ensureLogin(logoutPath), data.dispatch];
-  exports.dispatchEngine = [ensureLogin(logoutPath), data.dispatchEngine];
-  exports.retrieve = [ensureLogin(logoutPath), data.retrieve];
-  exports.retrieveEngine = [ensureLogin(logoutPath), data.retrieveEngine];
+  // TODO: ensureLoggedIn
+  exports.commit = data.commit;
+  exports.commitEngine = data.commitEngine;
+  exports.fetch = data.fetch;
+  exports.fetchEngine = data.fetchEngine;
+  exports.dispatch = data.dispatch;
+  exports.dispatchEngine = data.dispatchEngine;
+  exports.retrieve = data.retrieve;
+  exports.retrieveEngine = data.retrieveEngine;
 
   //
   // Custom routes
