@@ -1,10 +1,10 @@
 DONE
 maintenance.js
 report.js -- note that this will have to be updated per the updates in 19268
-fetch.js -- needs functor facade
-dispatch.js -- needs functor facade
-commit.js -- needs functor facade
-retrieve.js -- needs functor facade
+fetch.js -- in data.js
+dispatch.js -- in data.js
+commit.js -- in data.js, test functor
+retrieve.js -- in data.js
 auth.js
 selection.js -- merged into auth.js and renamed scope
 file.js
@@ -33,5 +33,5 @@ FUTURE REFACTORING POSSIBILITIES
 errors return 200 with isError: true. Better to return 500?
 the routes could declare their paths. Is the indirection worth the modularity?
 we should put these under test
-unify response formatting
+unify response formatting (DONE! TODO: clean up the client datasource so as not to have to service them both)
 deprecate databasetype === 'global'
