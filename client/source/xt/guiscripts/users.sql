@@ -5,7 +5,10 @@ select xt.install_guiscript('users',  $$
 var _new = mywindow.findChild("_new");
 var xt = { users: {}};
 
-mywindow.findChild("_edit").setText(qsTr("View"));
+function showEvent(e) {
+  var _edit = mywindow.findChild("_edit");
+  _edit.text = qsTr("View");
+}
 
 xt.users.sNew = function()
 {
