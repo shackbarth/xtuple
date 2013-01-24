@@ -20,7 +20,6 @@ database.js -- admin route. dead code?
 datasource.js -- admin route. dead code?
 organization.js -- admin route. dead code?
 session route -- replaced by oauth
-session functor
 export.js -- can we deprecate this w/ pentaho instead of porting?
 oauth2auth.js
 oauth2token.js
@@ -28,6 +27,7 @@ oauth2token.js
 NOT DONE
 route: dataFromKey -- this is being worked on in 19268
 route: changePassword.js -- John is currently working on this in 19343
+session functor https://github.com/bendiy/tools/blob/master/source/session.js#L49
 
 FUTURE REFACTORING POSSIBILITIES
 errors return 200 with isError: true. Better to return 500?

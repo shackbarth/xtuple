@@ -180,7 +180,7 @@ app.get('/resetPassword', routes.resetPassword);
  */
 // TODO - Active browser sessions can make calls to this server when it hasn't fully started.
 // Need a way to get everything loaded BEFORE we start listening.  Might just move this to the end...
-io = socket.listen(app.listen(2000), {log: true});
+io = socket.listen(app.listen(2000), {log: false});
 
 // TODO: start up a server on 80 and throw everything to the redirect route
 //app.get('/redirect', routes.redirect);
@@ -191,24 +191,30 @@ io = socket.listen(app.listen(2000), {log: true});
 io.of('/clientsock').authorization(function (handshakeData, callback) {
   "use strict";
 
-  console.log("##### socket.io handshakeData: ", handshakeData);
+  //console.log("##### socket.io handshakeData: ", handshakeData);
 
   if (handshakeData.headers.cookie) {
     // save parsedSessionId to handshakeData
     handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
     handshakeData.sessionId = parseSignedCookie(handshakeData.cookie['connect.sid'], '.T#T@r5EkPM*N@C%9K-iPW!+T');
 
-    console.log("##### send socket.io to deserializeUser: ", handshakeData.sessionId);
+    //console.log("##### send socket.io to deserializeUser: ", handshakeData.sessionId);
 
     sessionStore.get(handshakeData.sessionId, function (err, session) {
-      var user = session[passport._key]['user'];
+      var userHash = session[passport._key],
+        user = userHash.user,
+        username = userHash.username,
+        organization = userHash.organization;
 
       passport.deserializeUser(user, function (err, user) {
         if (err || !user) {
           console.log("##### socket.io deserializeUser FAILED: ", err, user);
+          return;
         }
-        console.log("##### socket.io deserializeUser: ", user);
+        //console.log("##### socket.io deserializeUser: ", user);
         handshakeData.user = user;
+        handshakeData.username = username;
+        handshakeData.organization = organization;
         callback(null, true);
       });
     });
@@ -216,39 +222,46 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   callback(null, true);
 
 
-  console.log("##### socket.io handshakeData: ", handshakeData);
-  handshakeData.foo = 'baz';
+  //console.log("##### socket.io handshakeData: ", handshakeData);
+  //handshakeData.foo = 'baz';
   callback(null, true);
 }).on('connection', function (socket) {
   // XXX TODO we need to get this session data from somewhere
-  var mockDevSession = {passport: {username: "admin", organization: "dev", user: "admin"}};
 
   //console.log("######### socket.io connected with socket: ", socket);
 
-  // pretty sure this doesn't have to be a functor
-  //socket.on('session', function (data) {
-  //  console.log("######### session socket.io with data: ", data);
-  //});
+  socket.on('session', function (data, callback) {
+    var shake = socket.handshake,
+      session = {passport: {username: shake.username, organization: shake.organization, user: shake.user.id}};
+    console.log("######### session socket.io with data: ", data);
+    callback({data: session});
+  });
 
   // run this from the client:
   // XT.dataSource.retrieveRecord("XM.State", 2, {"id":2,"cascade":true,"databaseType":"instance"});
   socket.on('function/retrieveRecord', function (data, callback) {
     //console.log("######### function/retrieveRecord socket.io with data: ", data);
-    routes.retrieveEngine(data.payload, mockDevSession, callback);
+    var shake = socket.handshake,
+      session = {passport: {username: shake.username, organization: shake.organization, user: shake.user.id}};
+    routes.retrieveEngine(data.payload, session, callback);
   });
 
   // run this from client:
   // XT.dataSource.fetch({"query":{"orderBy":[{"attribute":"code"}],"recordType":"XM.Honorific"},"force":true,"parse":true,"databaseType":"instance"});
   socket.on('function/fetch', function (data, callback) {
     //console.log("######### function/fetch socket.io with data: ", data);
-    routes.fetchEngine(data.payload, mockDevSession, callback);
+    var shake = socket.handshake,
+      session = {passport: {username: shake.username, organization: shake.organization, user: shake.user.id}};
+    routes.fetchEngine(data.payload, session, callback);
   });
 
   // run this from client:
   // XT.dataSource.dispatch("XT.Session", "settings", null, {success: function () {console.log(arguments);}, error: function () {console.log(arguments);}});
   socket.on('function/dispatch', function (data, callback) {
     //console.log("######### function/dispatch socket.io with data: ", data);
-    routes.dispatchEngine(data.payload, mockDevSession, callback);
+    var shake = socket.handshake,
+      session = {passport: {username: shake.username, organization: shake.organization, user: shake.user.id}};
+    routes.dispatchEngine(data.payload, session, callback);
   });
 
   // run this from the client:
@@ -257,7 +270,9 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   // XXX untested
   socket.on('function/commitRecord', function (data, callback) {
     //console.log("######### function/commitRecord socket.io with data: ", data);
-    routes.commitEngine(data.payload, mockDevSession, callback);
+    var shake = socket.handshake,
+      session = {passport: {username: shake.username, organization: shake.organization, user: shake.user.id}};
+    routes.commitEngine(data.payload, session, callback);
   });
 
   // Tell the client you're connected.
