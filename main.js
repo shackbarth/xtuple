@@ -232,7 +232,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
     var shake = socket.handshake,
       session = {passport: {username: shake.username, organization: shake.organization, user: shake.user.id}};
     console.log("######### session socket.io with data: ", data);
-    callback({data: session});
+    callback({data: session.passport, code: 1});
   });
 
   // run this from the client:
