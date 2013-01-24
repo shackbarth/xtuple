@@ -36,20 +36,19 @@ white:true*/
       return this;
     },
 
-    validateSession: function (credentials, callback) {
+    validateSession: function (callback) {
       var self = this,
         complete = function (payload) {
+          console.log("session socket.io payload: ", payload);
           self._didValidateSession.call(self, payload, callback);
         };
 
-      // we store these credentials until we have
-      // acquired a valid session
-      this.details = credentials;
+      //XT.dataSource._sock.on('message', complete(message));
 
       XT.Request
         .handle("session")
         .notify(complete)
-        .send(credentials);
+        .send(null);
     },
 
     _didValidateSession: function (payload, callback) {
@@ -68,14 +67,12 @@ white:true*/
     },
 
     start: function () {
-      XT.app.show();
-      /*
-      var c = X.getCookie("xtsessioncookie") || null;
+      //XT.getStartupManager().start();
+      //XT.app.show();
+
       try {
-        c = JSON.parse(c);
-        this.validateSession(c, function () { XT.app.show(); });
+        this.validateSession(function () { XT.app.show(); });
       } catch (e) { XT.Session.logout(); }
-      */
     },
 
     logout: function () {
