@@ -13,7 +13,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var that = this,
       requestDetails = req.query.details;
 
-    // TODO: authentication
     // TODO: get the path from config
     var pentahoRoot = "http://maxhammer.xtuple.com:8080/pentaho/content/reporting/reportviewer/",
       //requestUrl = pentahoRoot + "report.html?solution=erpbi-reports" +
@@ -24,7 +23,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     res.redirect(redirectUrl);
 
-    // TODO: actually get the data (ideally via the REST API), put it in a temporary table with
+    // TODO: actually get the data from routes.fetchEngine, put it in a temporary table with
     // a key, and use that key as the datakey.
     // TODO: strip out the row offset and row limits from the query
     // TODO: save the query string with the data so that we can give it to the reporting engine

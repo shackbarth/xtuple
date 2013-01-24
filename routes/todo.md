@@ -9,12 +9,12 @@ retrieve.js -- in data.js
 resetPassword.js
 email.js -- TODO: test with new client code
 maintenance.js -- TODO: localhost backdoor
-
 report.js -- note that this will have to be updated per the updates in 19268
-file.js
+file.js -- TODO: this is not working in the client
+
 redirector.js -- need to put into use with a dedicated server on port 80
 extensions.js -- test with new client code
-session functor
+session -- this is done as a pure functor in main.js
 
 UNNECESSARY (?)
 data.js -- dead code?
