@@ -54,7 +54,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       fetchSuccess,
       fetchError = function (err) {
         X.log("Cannot load user to reset password. You are probably a hacker.");
-        res.send({isError: true, error: "No user exists by that ID"});
+        res.send({isError: true, message: "No user exists by that ID"});
       };
 
     //X.debugging = true;
@@ -64,7 +64,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     //res.header("Access-Control-Allow-Origin", "*");
 
     if (!args || !args.id) {
-      res.send({isError: true, error: "need an ID"});
+      res.send({isError: true, message: "need an ID"});
     } else {
       user = XM.User.findOrCreate({id: args.id});
       // that should fix this problem:
@@ -78,7 +78,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         // thanks http://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
         var newPassword = Math.random().toString(36).substr(2, 10),
           updateError = function (model, err) {
-            res.send({isError: true, error: "Error updating password"});
+            res.send({isError: true, message: "Error updating password"});
           },
           updateSuccess = function (result) {
             sendEmail(res, result, newPassword, args.newUser);

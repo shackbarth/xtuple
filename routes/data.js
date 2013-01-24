@@ -28,7 +28,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       callback({data: resp});
     };
     options.error = function (model, err) {
-      callback({isError: true, error: err});
+      callback({isError: true, message: err});
     };
     return options;
   };
@@ -42,13 +42,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var query,
       adaptorCallback = function (err, res) {
         if (err) {
-          callback({isError: true, error: err});
+          callback({isError: true, message: err});
         } else if (res && res.rows && res.rows.length > 0) {
           // the data comes back in an awkward res.rows[0].dispatch form,
           // and we want to normalize that here so that the data is in response.data
           callback({data: JSON.parse(res.rows[0][functionName])});
         } else {
-          callback({isError: true, error: "No results"});
+          callback({isError: true, message: "No results"});
         }
       };
 

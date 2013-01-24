@@ -23,7 +23,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       callback = function (error, response) {
         if (error) {
           X.log("Email error", error);
-          res.send({isError: true, error: "Error emailing"});
+          res.send({isError: true, message: "Error emailing"});
         } else {
           res.send({message: "email success"});
         }
