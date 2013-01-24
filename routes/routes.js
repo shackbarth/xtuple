@@ -6,7 +6,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   /**
-    Keep track of all of the routes and register them under a single file
+    Keep track of all of the routes and make them available from one place.
+    Note that we also determine here which routes are behind the login wall
+    by using ensureLogin.
+
+    Note that this means each route does not take care of its authentication
+    requirements, which is ok because some routes have variable authentication
+    requirements depending on how they're used (maintenance). But that does
+    mean that the routes should not be called directly. They should always
+    be called through these exports.
+
+    It would be possible to make the routes smarter and allow them to "register"
+    themselves and their path. But that would come at the cost of indirection.
    */
 
   var ensureLogin = require('connect-ensure-login').ensureLoggedIn,
@@ -23,19 +34,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   //  TODO: ensure login should be customized to also check for a username and organization
 
+  //
+  // Authentication-related routes
+  //
   exports.login = auth.login;
   exports.loginForm = auth.loginForm;
   exports.logout = auth.logout;
   exports.scope = auth.scope;
   exports.scopeForm = auth.scopeForm;
-  exports.email = [ensureLogin(logoutPath), email.email];
-  exports.extensions = [ensureLogin(logoutPath), extensions.extensions];
-  exports.file = [ensureLogin(logoutPath), file.file];
-  exports.maintenance = maintenance.maintenance; // TODO: authentication restrictions
-  exports.redirect = redirector.redirect;
-  exports.report = [ensureLogin(logoutPath), report.report];
-  exports.resetPassword = [ensureLogin(logoutPath), resetPassword.resetPassword];
 
+  //
+  // Data-passthrough routes
+  //
   exports.commit = [ensureLogin(logoutPath), data.commit];
   exports.commitEngine = [ensureLogin(logoutPath), data.commitEngine];
   exports.fetch = [ensureLogin(logoutPath), data.fetch];
@@ -44,5 +54,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.dispatchEngine = [ensureLogin(logoutPath), data.dispatchEngine];
   exports.retrieve = [ensureLogin(logoutPath), data.retrieve];
   exports.retrieveEngine = [ensureLogin(logoutPath), data.retrieveEngine];
+
+  //
+  // Custom routes
+  //
+  exports.email = [ensureLogin(logoutPath), email.email];
+  exports.extensions = [ensureLogin(logoutPath), extensions.extensions];
+  exports.file = [ensureLogin(logoutPath), file.file];
+  exports.maintenance = maintenance.maintenance; // TODO: authentication restrictions
+  exports.redirect = redirector.redirect;
+  exports.report = [ensureLogin(logoutPath), report.report];
+  exports.resetPassword = [ensureLogin(logoutPath), resetPassword.resetPassword];
 
 }());
