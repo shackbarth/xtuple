@@ -180,34 +180,28 @@ white:true*/
 
       options = options ? _.clone(options) : {};
       var orgs = this.get("organizations"),
-        that = this,
+        model = this,
         params,
-        sync = [],
         i,
         orgOptions = {
           error: function () {
             XT.log("Error updating instance database");
           }
-        };
-      
-      // Cache list of organizations that have changed
-      for (i = 0; i < orgs.length; i++) {
-        if (orgs.at(i).isDirty()) {
-          sync.push(orgs.at(i).get("name"));
-        }
-      }
+        },
+        success = options.success;
 
       // Callback after each check
-      options.success = function () {
+      options.success = function (resp) {
         
         // Update users on instance databases
-        for (i = 0; i < sync.length; i++) {
+        for (i = 0; i < orgs.length; i++) {
           params = {
-            user: that.id,
-            organization: sync[i]
+            user: model.id,
+            organization: orgs.at(i).get("name")
           };
           XT.dataSource.syncUser(params, orgOptions);
         }
+        if (success) { success(model, resp, options); }
       };
       
       // Handle both `"key", value` and `{key: value}` -style arguments.
@@ -215,7 +209,7 @@ white:true*/
         value = options;
       }
 
-      XM.GlobalDocument.prototype.save.call(that, key, value, options);
+      return XM.GlobalDocument.prototype.save.call(this, key, value, options);
     }
 
   });
