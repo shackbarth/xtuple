@@ -24,9 +24,6 @@
 -- xt functions
 \i xt/functions/add_priv.sql
 
--- xt javascript
-\i xt/javascript/user.sql
-
 -- add necessary privs
 
 select xt.add_priv('MaintainDatabaseServers', 'Can Maintain Database Servers', 'MaintainDatabaseServers', 'Admin', 'admin', 'Admin');

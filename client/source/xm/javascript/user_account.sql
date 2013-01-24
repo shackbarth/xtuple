@@ -1,18 +1,23 @@
 select xt.install_js('XM','User','xtuple', $$
-  /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
+  /* Copyright (c) 1999-2013 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
-  XM.User = {};
+  XM.UserAccount = {};
   
-  XM.User.isDispatchable = true;
+  XM.UserAccount.isDispatchable = true;
 
   /** 
-    Pass in a record type and get the next id for that type 
+    Synchronize a User Account with attributes from a global user. Will create
+    PostgreSQL user and associate it with a group if necessary.
 
-    @param {String} record type
-    @returns Number
+    @param {Object} attrs
+    @param {String} attrs.username 
+    @param {String} attrs.group 
+    @param {String} attrs.active
+    @param {String} attrs.properame
+    @param {String} attrs.email
   */
-  XM.User.sync = function(attrs) { 
+  XM.UserAccount.sync = function(attrs) { 
     var findPgUser = 'select usename from pg_user where usename = $1',
       createPgUser = 'create user "' + attrs.username + '" createrole in group ' + attrs.group + ';',
       findXtUser = 'select useracct_username from xt.useracct where useracct_username = $1',

@@ -100,6 +100,7 @@
 \i xm/javascript/incident.sql;
 \i xm/javascript/project.sql;
 \i xm/javascript/to_do.sql;
+\i xm/javascript/user_account.sql;
 -- [ END ] xm
 
 -- xtbatch (TODO: This should be moved elsewhere)
