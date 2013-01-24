@@ -277,14 +277,14 @@
 		}
 	  },
 	  {
-		"name": "blanketPos",
+		"name": "blanketPurchaseOrders",
 		"attr": {
 		  "type": "Boolean",
 		  "column": "cust_blanketpos"
 		}
 	  },
 	  {
-		"name": "usesPos",
+		"name": "usesPurchaseOrders",
 		"attr": {
 		  "type": "Boolean",
 		  "column": "cust_usespos"
@@ -305,7 +305,7 @@
 		}
 	  },
 	  {
-		"name": "preferredWarehouseId",
+		"name": "preferredSite",
 		"attr": {
 		  "type": "Number",
 		  "column": "cust_preferred_warehous_id"
