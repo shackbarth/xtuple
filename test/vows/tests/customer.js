@@ -22,14 +22,14 @@
     discount: 0,
     balanceMethod: "B",
     isFreeFormShipto: true,
-    blanketPos: false,
+    blanketPurchaseOrders: false,
     shipCharge: 4,
     creditStatus: "G",
     isFreeFormBillto: false,
-    usesPos: false,
+    usesPurchaseOrders: false,
     autoUpdateStatus: false,
     autoHoldOrders: false,
-    preferredWarehouseId: 35
+    preferredSite: 35
   };
 
   updateHash = {

@@ -44,14 +44,14 @@ white:true*/
       "discount",
       "balanceMethod",
       "isFreeFormShipto",
-      "blanketPos",
+      "blanketPurchaseOrders",
       "shipCharge",
       "creditStatus",
       "isFreeFormBillto",
-      "usesPos",
+      "usesPurchaseOrders",
       "autoUpdateStatus",
       "autoHoldOrders",
-      "preferredWarehouseId"
+      "preferredSite"
     ]
 
   });
