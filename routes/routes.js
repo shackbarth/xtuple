@@ -12,7 +12,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var auth = require('./auth'),
     email = require('./email'),
     extensions = require('./extensions'),
-    data = require('./fetch'),
+    data = require('./data'),
     file = require('./file'),
     maintenance = require('./maintenance'),
     redirector = require('./redirector'),
