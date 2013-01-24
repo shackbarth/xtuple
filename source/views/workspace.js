@@ -124,7 +124,7 @@ trailing:true white:true*/
       onStatusChange: "",
       onTitleChange: "",
       onHistoryChange: "",
-      onMenuChange: "",
+      onMenuChange: ""
     },
     handlers: {
       onValueChange: "controlValueChanged"
