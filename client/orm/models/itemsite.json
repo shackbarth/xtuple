@@ -28,6 +28,13 @@
           "type": "String",
           "column": "costcat_code"
         }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "costcat_description"
+        }
       }
     ],
     "isSystem": true
@@ -71,20 +78,6 @@
         }
       },
       {
-        "name": "isSold",
-        "attr": {
-          "type": "Boolean",
-          "column": "itemsite_sold"
-        }
-      },
-      {
-        "name": "qtyOnHand",
-        "attr": {
-          "type": "Number",
-          "column": "itemsite_qtyonhand"
-        }
-      },
-      {
         "name": "plannerCode",
         "toOne": {
           "type": "PlannerCode",
@@ -99,59 +92,10 @@
         }
       },
       {
-        "name": "eventFence",
-        "attr": {
-          "type": "Number",
-          "column": "itemsite_multordqty"
-        }
-      },
-      {
-        "name": "stocked",
-        "attr": {
-          "type": "Boolean",
-          "column": "itemsite_stocked"
-        }
-      },
-      {
-        "name": "freeze",
-        "attr": {
-          "type": "Boolean",
-          "column": "itemsite_freeze"
-        }
-      },
-      {
-        "name": "useParams",
-        "attr": {
-          "type": "Boolean",
-          "column": "itemsite_useparams"
-        }
-      },
-      {
-        "name": "soldRanking",
-        "attr": {
-          "type": "Number",
-          "column": "itemsite_soldranking"
-        }
-      },
-      {
-        "name": "createPr",
-        "attr": {
-          "type": "Boolean",
-          "column": "itemsite_createpr"
-        }
-      },
-      {
         "name": "notes",
         "attr": {
           "type": "String",
           "column": "itemsite_notes"
-        }
-      },
-      {
-        "name": "createWo",
-        "attr": {
-          "type": "Number",
-          "column": "itemsite_createwo"
         }
       },
       {
@@ -162,66 +106,10 @@
         }
       },
       {
-        "name": "value",
-        "attr": {
-          "type": "Number",
-          "column": "itemsite_value"
-        }
-      },
-      {
-        "name": "supplyItemsiteId",
-        "attr": {
-          "type": "Number",
-          "column": "itemsite_supply_itemsite_id"
-        }
-      },
-      {
         "name": "planningType",
         "attr": {
           "type": "String",
           "column": "itemsite_planning_type"
-        }
-      },
-      {
-        "name": "woSupply",
-        "attr": {
-          "type": "Boolean",
-          "column": "itemsite_wosupply"
-        }
-      },
-      {
-        "name": "poSupply",
-        "attr": {
-          "type": "Boolean",
-          "column": "itemsite_posupply"
-        }
-      },
-      {
-        "name": "cosDefault",
-        "attr": {
-          "type": "String",
-          "column": "itemsite_cosdefault"
-        }
-      },
-      {
-        "name": "createSoPr",
-        "attr": {
-          "type": "Boolean",
-          "column": "itemsite_createsopr"
-        }
-      },
-      {
-        "name": "createSoPo",
-        "attr": {
-          "type": "Boolean",
-          "column": "itemsite_createsopo"
-        }
-      },
-      {
-        "name": "dropShip",
-        "attr": {
-          "type": "Boolean",
-          "column": "itemsite_dropship"
         }
       },
       {
@@ -232,74 +120,8 @@
           "column": "itemsite_id",
           "inverse": "itemSite"
         }
-      },
-      {
-        "name": "characteristics",
-        "toMany": {
-          "isNested": true,
-          "type": "ItemSiteCharacteristic",
-          "column": "itemsite_id",
-          "inverse": "itemSite"
-        }
       }
     ],
-    "isSystem": true
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
-    "type": "ItemSiteCharacteristic",
-    "table": "charass",
-    "idSequenceName": "charass_charass_id_seq",
-    "comment": "Item Site Characteristic Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": true,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "charass_id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "charass_target_type",
-          "value": "IS"
-        }
-      },
-      {
-        "name": "itemSite",
-        "attr": {
-          "type": "Number",
-          "column": "charass_target_id"
-        }
-      },
-      {
-        "name": "characteristic",
-        "toOne": {
-          "type": "Characteristic",
-          "column": "charass_char_id"
-        }
-      },
-      {
-        "name": "value",
-        "attr": {
-          "type": "String",
-          "column": "charass_value"
-        }
-      }
-    ],
-    "isNestedOnly": true,
     "isSystem": true
   },
   {
@@ -389,10 +211,10 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "ItemSiteListItemSite",
+    "type": "ItemSiteListItem",
     "table": "itemsite",
     "idSequenceName": "itemsite_itemsite_id_seq",
-    "comment": "Itemsite List Itemsite Map",
+    "comment": "Itemsite List Item Map",
     "privileges": {
       "all": {
         "create": false,
@@ -413,7 +235,8 @@
       {
         "name": "item",
         "toOne": {
-          "type": "Item",
+          "isNested": true,
+          "type": "ItemRelation",
           "column": "itemsite_item_id"
         }
       },
@@ -451,29 +274,16 @@
           "type": "CostCategory",
           "column": "itemsite_costcat_id"
         }
-      }
-    ],
-    "extensions": [
+      },
       {
-        "table": "item",
-        "isChild": true,
-        "relations": [
-          {
-            "column": "item_id",
-            "inverse": "item"
-          }
-        ],
-        "properties": [
-          {
-            "name": "inventoryUnit",
-            "attr": {
-              "type": "Number",
-              "column": "item_inv_uom_id"
-            }
-          }
-        ]
+        "name": "inventoryUnit",
+        "toOne": {
+          "type": "ItemRelation",
+          "column": "id",
+          "inverse": "item"
+        }
       }
-    ],
+    ]
     "isSystem": true
   },
   {
@@ -501,13 +311,6 @@
         }
       },
       {
-        "name": "item",
-        "toOne": {
-          "type": "Item",
-          "column": "itemsite_item_id"
-        }
-      },
-      {
         "name": "isActive",
         "attr": {
           "type": "Boolean",
@@ -515,63 +318,20 @@
         }
       },
       {
-        "name": "isSold",
-        "attr": {
-          "type": "Boolean",
-          "column": "itemsite_sold"
-        }
-      },
-      {
-        "name": "plannerCode",
+        "name": "itemRelation",
         "toOne": {
-          "type": "PlannerCode",
-          "column": "itemsite_plancode_id"
+          "type": "ItemRelation",
+          "column": "item",
+          "inverse": "itemsite_item_id",
+          "isNested": true
         }
       },
       {
-        "name": "costCategory",
+        "name": "siteRelation",
         "toOne": {
-          "type": "CostCategory",
-          "column": "itemsite_costcat_id"
-        }
-      },
-      {
-        "name": "supplyItemsiteId",
-        "attr": {
-          "type": "Number",
-          "column": "itemsite_supply_itemsite_id"
-        }
-      },
-      {
-        "name": "planningType",
-        "attr": {
-          "type": "String",
-          "column": "itemsite_planning_type"
-        }
-      },
-      {
-        "name": "cosDefault",
-        "attr": {
-          "type": "String",
-          "column": "itemsite_cosdefault"
-        }
-      },
-      {
-        "name": "comments",
-        "toMany": {
-          "isNested": true,
-          "type": "ItemSiteComment",
-          "column": "itemsite_id",
-          "inverse": "itemSite"
-        }
-      },
-      {
-        "name": "characteristics",
-        "toMany": {
-          "isNested": true,
-          "type": "ItemSiteCharacteristic",
-          "column": "itemsite_id",
-          "inverse": "itemSite"
+          "type": "SiteRelation",
+          "column": "id",
+          "isNested": true
         }
       }
     ],
@@ -606,61 +366,6 @@
         "attr": {
           "type": "String",
           "column": "plancode_code"
-        }
-      }
-    ],
-    "isSystem": true
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
-    "type": "Site",
-    "table": "whsinfo",
-    "idSequenceName": "warehous_warehous_id_seq",
-    "comment": "Site Info Map",
-    "privileges": {
-      "all": {
-        "create": "MaintainWarehouses",
-        "read": true,
-        "update": "MaintainWarehouses",
-        "delete": "MaintainWarehouses"
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "warehous_id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "code",
-        "attr": {
-          "type": "String",
-          "column": "warehous_code"
-        }
-      },
-      {
-        "name": "description",
-        "attr": {
-          "type": "String",
-          "column": "warehous_descrip"
-        }
-      },
-      {
-        "name": "fob",
-        "attr": {
-          "type": "String",
-          "column": "warehous_fob"
-        }
-      },
-      {
-        "name": "isActive",
-        "attr": {
-          "type": "Boolean",
-          "column": "warehous_active"
         }
       }
     ],

@@ -223,9 +223,9 @@
         }
       },
       {
-        "name": "itemSite",
+        "name": "itemSites",
         "toMany": {
-          "type": "ItemSite",
+          "type": "ItemSiteRelation",
           "column": "item_id",
           "inverse": "item",
           "isNested": "true"
