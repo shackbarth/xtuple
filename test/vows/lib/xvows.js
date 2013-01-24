@@ -23,7 +23,7 @@ request: true, process: true, XVOWS: true, ext: true, XM:true, relocate: true, s
   XVOWS = X.Object.create({
     className: "XVOWS",
 
-    wait: 5000,
+    wait: 10000,
 
     init: function () {
       this.nexted = _.bind(this.next, this, [true]);

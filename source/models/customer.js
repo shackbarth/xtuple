@@ -16,12 +16,42 @@ white:true*/
 
     recordType: 'XM.Customer',
 
-    defaults: {
-      isActive: true
+    defaults: function () {
+      var localCurrency,
+          currencyModel;
+      for (var i = 0; i < XM.currencies.models.length; i++) {
+        currencyModel = XM.currencies.models[i];
+        if (currencyModel.attributes.isBase) {
+          localCurrency = currencyModel;
+        }
+      }
+      return {
+        isActive: true,
+        creditStatus: "G",
+        currency: localCurrency
+      };
     },
 
     requiredAttributes: [
-      "isActive"
+      "isActive",
+      "name",
+      "number",
+      "customerType",
+      "terms",
+      "salesRep",
+      "backorder",
+      "partialShip",
+      "discount",
+      "balanceMethod",
+      "isFreeFormShipto",
+      "blanketPurchaseOrders",
+      "shipCharge",
+      "creditStatus",
+      "isFreeFormBillto",
+      "usesPurchaseOrders",
+      "autoUpdateStatus",
+      "autoHoldOrders",
+      "preferredSite"
     ]
 
   });
@@ -79,7 +109,20 @@ white:true*/
     isDocumentAssignment: true
 
   });
+  
+  /**
+    @class
 
+    @extends XM.Model
+  */
+  XM.CustomerGroup = XM.Model.extend({
+    /** @scope XM.CustomerGroup.prototype */
+    
+    recordType: 'XM.CustomerGroup',
+    
+    documentKey: 'name'
+    
+  });
 
   /**
     @class
@@ -131,7 +174,54 @@ white:true*/
   XM.CustomerShipto = XM.Document.extend({
     /** @scope XM.CustomerShipto.prototype */
 
-    recordType: 'XM.CustomerShipto'
+    recordType: 'XM.CustomerShipto',
+    
+    requiredAttributes: [
+      "isActive",
+      "name",
+      "number"
+    ],
+    
+    // ..........................................................
+    // METHODS
+    //
+
+    initialize: function () {
+      XM.Document.prototype.initialize.apply(this, arguments);
+      this.on('change:customer', this.customerDidChange);
+    },
+
+    customerDidChange: function (model, value, options) {
+      var status = this.getStatus(),
+          customer = this.get("customer"),
+          K = XM.Model;
+          
+      if (customer && status === K.READY_NEW) {
+        var shiptosCollection = customer.get("shiptos"),
+            numberArray = [];
+        //map the number attr of each model in the shiptosCollection to numberArray
+        numberArray = _.map(shiptosCollection.models, function (m) {return m.get("number"); });
+        /* The purpose of the next few lines is to automatically find the next integer number for the new shipto.
+            Sticking a + sign in front of a string will return the number version of the string as long as the
+            string contains only numbers.  If it contains non-numeric characters, it will return NaN (not a number).
+            For example, +"5" will return 5.  But +"shipto5" would return NaN.  So this while loop will continue to
+            loop as long as the string numberArray[i] contains only numeric characters.
+        */
+        numberArray.sort();
+        var i = 0,
+            j = 0;
+        while (!isNaN(+numberArray[i])) {
+          i++;
+          j = numberArray[i];
+        }
+        this.set("number", j + 1);
+        
+        this.set("shipZone", customer.get("shipZone"));
+        this.set("taxZone", customer.get("taxZone"));
+        this.set("shipVia", customer.get("shipVia"));
+        this.set("shipCharge", customer.get("shipCharge"));
+      }
+    }
 
   });
 
@@ -178,6 +268,20 @@ white:true*/
     documentKey: 'name'
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.ShippingForm = XM.Document.extend({
+    /** @scope */
+
+    recordType: 'XM.ShippingForm',
+
+    documentKey: 'name'
+
+  });
 
   /**
     @class
@@ -220,6 +324,54 @@ white:true*/
     /** @scope XM.CustomerRelationCollection.prototype */
 
     model: XM.CustomerRelation
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.CustomerTypeCollection = XM.Collection.extend({
+    /** @scope XM.CustomerTypeCollection.prototype */
+
+    model: XM.CustomerType
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.ShipViaCollection = XM.Collection.extend({
+    /** @scope XM.ShipViaCollection.prototype */
+
+    model: XM.ShipVia
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.ShipChargeCollection = XM.Collection.extend({
+    /** @scope XM.ShipChargeCollection.prototype */
+
+    model: XM.ShipCharge
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.ShipZoneCollection = XM.Collection.extend({
+    /** @scope XM.ShipZoneCollection.prototype */
+
+    model: XM.ShipZone
 
   });
 

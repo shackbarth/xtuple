@@ -22,5 +22,21 @@ white:true*/
     }
 
   });
+  
+  // ..........................................................
+  // COLLECTIONS
+  //
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.SalesRepCollection = XM.Collection.extend({
+    /** @scope XM.SalesRepCollection.prototype */
+
+    model: XM.SalesRep
+
+  });
 
 }());

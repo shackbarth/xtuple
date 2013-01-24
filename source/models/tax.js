@@ -14,7 +14,9 @@ white:true*/
   XM.TaxAuthority = XM.AccountDocument.extend({
     /** @scope XM.TaxAuthority.prototype */
 
-    recordType: 'XM.TaxAuthority'
+    recordType: 'XM.TaxAuthority',
+    
+    documentKey: 'code'
 
   });
   
@@ -27,6 +29,22 @@ white:true*/
     /** @scope XM.TaxZone.prototype */
 
     recordType: 'XM.TaxZone'
+
+  });
+  
+  // ..........................................................
+  // COLLECTIONS
+  //
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.TaxZoneCollection = XM.Collection.extend({
+    /** @scope XM.TaxZoneCollection.prototype */
+
+    model: XM.TaxZone
 
   });
 

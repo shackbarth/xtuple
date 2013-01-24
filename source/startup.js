@@ -251,17 +251,6 @@ white:true*/
   });
   
   XT.StartupTasks.push({
-    taskName: "loadShipZones",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.shipZones = new XM.ShipZoneCollection();
-      XM.shipZones.fetch(options);
-    }
-  });
-  
-  XT.StartupTasks.push({
     taskName: "loadShipVia",
     task: function () {
       var options = {
@@ -273,13 +262,68 @@ white:true*/
   });
   
   XT.StartupTasks.push({
-    taskName: "loadShipCharge",
+    taskName: "loadSalesReps",
     task: function () {
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.shipCharge = new XM.ShipChargeCollection();
-      XM.shipCharge.fetch(options);
+      XM.salesReps = new XM.SalesRepCollection();
+      XM.salesReps.fetch(options);
+    }
+  });
+
+  XT.StartupTasks.push({
+    taskName: "loadShipCharges",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      XM.shipCharges = new XM.ShipChargeCollection();
+      XM.shipCharges.fetch(options);
+    }
+  });
+
+  XT.StartupTasks.push({
+    taskName: "loadShipVias",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      XM.shipVias = new XM.ShipViaCollection();
+      XM.shipVias.fetch(options);
+    }
+  });
+
+  XT.StartupTasks.push({
+    taskName: "loadShipZones",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      XM.shipZones = new XM.ShipZoneCollection();
+      XM.shipZones.fetch(options);
+    }
+  });
+  
+  XT.StartupTasks.push({
+    taskName: "loadTaxZones",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      XM.taxZones = new XM.TaxZoneCollection();
+      XM.taxZones.fetch(options);
+    }
+  });
+  
+  XT.StartupTasks.push({
+    taskName: "loadTerms",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      XM.terms = new XM.TermsCollection();
+      XM.terms.fetch(options);
     }
   });
 
