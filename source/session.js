@@ -43,8 +43,6 @@ white:true*/
           self._didValidateSession.call(self, payload, callback);
         };
 
-      //XT.dataSource._sock.on('message', complete(message));
-
       XT.Request
         .handle("session")
         .notify(complete)
@@ -58,7 +56,7 @@ white:true*/
         this.setDetails(payload.data);
         XT.getStartupManager().start();
       } else {
-        return relocate();
+        return XT.Session.logout();
       }
 
       if (callback && callback instanceof Function) {
@@ -67,9 +65,6 @@ white:true*/
     },
 
     start: function () {
-      //XT.getStartupManager().start();
-      //XT.app.show();
-
       try {
         this.validateSession(function () { XT.app.show(); });
       } catch (e) { XT.Session.logout(); }
