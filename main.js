@@ -221,7 +221,6 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   }
   callback(null, true);
 
-
   //console.log("##### socket.io handshakeData: ", handshakeData);
   //handshakeData.foo = 'baz';
   callback(null, true);
@@ -231,7 +230,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   socket.on('session', function (data, callback) {
     var shake = socket.handshake,
       session = {passport: {username: shake.username, organization: shake.organization, user: shake.user.id}};
-    console.log("######### session socket.io with data: ", data);
+    //console.log("######### session socket.io with data: ", data);
     callback({data: session.passport, code: 1});
   });
 

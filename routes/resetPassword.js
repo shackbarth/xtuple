@@ -40,15 +40,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   exports.resetPassword = function (req, res) {
+    // TODO: what is the approprate structure of an error report?
     var args = req.query,
       // the fetch and edit will be made under the authority of the requesting global user
-      requester = "jill",// TODO: GLOBAL_USER
+      requester = req.session.passport.user,
       user,
       message = "Unknown user or invalid password match",
       fetchSuccess,
       fetchError = function (err) {
         X.log("Cannot load user to reset password. You are probably a hacker.");
-        res.send(500, {isError: true, reason: "No user exists by that ID"});
+        res.send({isError: true, error: "No user exists by that ID"});
       };
 
     //X.debugging = true;
@@ -60,20 +61,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // TODO: authenticate
 
     if (!args || !args.id) {
-      res.send(500, {isError: true, reason: "need an ID"});
+      res.send({isError: true, error: "need an ID"});
     } else {
-      user = XM.User.findOrCreate(args.id);
+      user = XM.User.findOrCreate({id: args.id});
+      // that should fix this problem:
+      //user = XM.User.findOrCreate(args.id);
 
-      if (user === null) {
+      //if (user === null) {
         // this bit should not be necessary by my understanding of findOrCreate. Go figure.
-        user = new XM.User({id: args.id});
-      }
+        //user = new XM.User({id: args.id});
+      //}
 
       fetchSuccess = function () {
         // thanks http://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
         var newPassword = Math.random().toString(36).substr(2, 10),
           updateError = function (model, err) {
-            res.send(500, {isError: true, reason: "Error updating password"});
+            res.send({isError: true, error: "Error updating password"});
           },
           updateSuccess = function (result) {
             sendEmail(res, result, newPassword, args.newUser);
