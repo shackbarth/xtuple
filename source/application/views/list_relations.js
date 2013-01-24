@@ -103,11 +103,11 @@ trailing:true white:true*/
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "FittableColumns", components: [
-                {kind: "XV.ListAttr", attr: "number", isKey: true},
+                {kind: "XV.ListAttr", attr: "number", isKey: true}
               ]}
             ]},
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "name"},
+              {kind: "XV.ListAttr", attr: "name"}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
@@ -134,7 +134,7 @@ trailing:true white:true*/
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "short", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "value", classes: "bold"},
+            {kind: "XV.ListAttr", attr: "value", classes: "bold"}
           ]},
           {kind: "XV.ListColumn", components: [
             {kind: "XV.ListAttr", attr: "order"}

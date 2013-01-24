@@ -282,7 +282,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.TermsPicker",
     kind: "XV.PickerWidget",
     collection: "XM.terms"
-  });  
+  });
 
   // ..........................................................
   // UNIT

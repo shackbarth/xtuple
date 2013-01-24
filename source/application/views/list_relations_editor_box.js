@@ -5,31 +5,31 @@ trailing:true white:true*/
 
 (function () {
   
-   // ..........................................................
-   // CHARACTERISTIC
-   //
-   enyo.kind({
-     name: "XV.CharacteristicOptionEditor",
-     kind: "XV.RelationsEditor",
-     components: [
-       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
-         classes: "in-panel", style: "border-right: #aaa 1px solid;", components: [
-         {kind: "XV.InputWidget", attr: "value", classes: "editor-field"},
-         {kind: "XV.NumberWidget", attr: "order", classes: "editor-field"}
-       ]}
-     ]
-   });
+  // ..........................................................
+  // CHARACTERISTIC
+  //
+  enyo.kind({
+    name: "XV.CharacteristicOptionEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+      classes: "in-panel", style: "border-right: #aaa 1px solid;", components: [
+        {kind: "XV.InputWidget", attr: "value", classes: "editor-field"},
+        {kind: "XV.NumberWidget", attr: "order", classes: "editor-field"}
+      ]}
+    ]
+  });
 
-   enyo.kind({
-     name: "XV.CharacteristicOptionBox",
-     kind: "XV.ListRelationsEditorBox",
-     classes: "xv-short-relations-box",
-     title: "_options".loc(),
-     editor: "XV.CharacteristicOptionEditor",
-     parentKey: "characteristic",
-     listRelations: "XV.CharacteristicOptionListRelations",
-     fitButtons: false
-   });
+  enyo.kind({
+    name: "XV.CharacteristicOptionBox",
+    kind: "XV.ListRelationsEditorBox",
+    classes: "xv-short-relations-box",
+    title: "_options".loc(),
+    editor: "XV.CharacteristicOptionEditor",
+    parentKey: "characteristic",
+    listRelations: "XV.CharacteristicOptionListRelations",
+    fitButtons: false
+  });
 
   // ..........................................................
   // CONTACT

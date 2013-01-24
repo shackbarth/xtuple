@@ -394,8 +394,7 @@ trailing:true white:true*/
         {kind: "XV.CustomerCommentBox", attr: "comments"},
         {kind: "XV.CustomerDocumentsBox", attr: "documents"},
         //{kind: "XV.AccountContactsBox", attr: "customerContact"},
-        {kind: "XV.CustomerShipToBox", attr: "shiptos"},
-        
+        {kind: "XV.CustomerShipToBox", attr: "shiptos"}
       ]},
       {kind: "onyx.Popup", name: "multipleAddressPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",

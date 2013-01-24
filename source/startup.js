@@ -217,16 +217,16 @@ white:true*/
     }
   });
   
-  // XT.StartupTasks.push({
-  //     taskName: "loadCustomerTypes",
-  //     task: function () {
-  //       var options = {
-  //         success: _.bind(this.didComplete, this)
-  //       };
-  //       XM.customerTypes = new XM.CustomerTypeCollection();
-  //       XM.classCodes.fetch(options);
-  //     }
-  //   });
+  XT.StartupTasks.push({
+      taskName: "loadCustomerTypes",
+      task: function () {
+        var options = {
+          success: _.bind(this.didComplete, this)
+        };
+        XM.customerTypes = new XM.CustomerTypeCollection();
+        XM.customerTypes.fetch(options);
+      }
+    });
 
   XT.StartupTasks.push({
     taskName: "loadProductCategories",
@@ -247,6 +247,39 @@ white:true*/
       };
       XM.priorities = new XM.PriorityCollection();
       XM.priorities.fetch(options);
+    }
+  });
+  
+  XT.StartupTasks.push({
+    taskName: "loadShipZones",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      XM.shipZones = new XM.ShipZoneCollection();
+      XM.shipZones.fetch(options);
+    }
+  });
+  
+  XT.StartupTasks.push({
+    taskName: "loadShipVia",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      XM.shipVia = new XM.ShipViaCollection();
+      XM.shipVia.fetch(options);
+    }
+  });
+  
+  XT.StartupTasks.push({
+    taskName: "loadShipCharge",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      XM.shipCharge = new XM.ShipChargeCollection();
+      XM.shipCharge.fetch(options);
     }
   });
 
