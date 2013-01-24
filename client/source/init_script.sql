@@ -35,6 +35,7 @@
 \i xt/functions/install_guiscript.sql;
 \i xt/functions/mergecrmaccts.sql;
 \i xt/functions/undomerge.sql;
+\i xt/functions/user_account_sync.sql
 
 -- xt trigger functions
 \i xt/trigger_functions/comment_did_change.sql
@@ -100,7 +101,6 @@
 \i xm/javascript/incident.sql;
 \i xm/javascript/project.sql;
 \i xm/javascript/to_do.sql;
-\i xm/javascript/user_account.sql;
 -- [ END ] xm
 
 -- xtbatch (TODO: This should be moved elsewhere)
