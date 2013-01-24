@@ -9,7 +9,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Defines the email route. Anyone with appropriate permissions can use this
     to easily send emails out of the node layer.
    */
-
   exports.email = function (req, res) {
     var args = req.query,
       mailContent = {
@@ -22,19 +21,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         text: args.text
       },
       callback = function (error, response) {
-        console.log("callback", error, response);
         if (error) {
           X.log("Email error", error);
-          // TODO: coordinate these responses with the callback of the datasource in the client
-          res.send(500, {isError: true, reason: "Error emailing"});
+          res.send({isError: true, message: "Error emailing"});
         } else {
           res.send({message: "email success"});
         }
       };
 
-
-    // TODO: authentication
-    res.header("Access-Control-Allow-Origin", "*"); // XXX temp until migration
+    //res.header("Access-Control-Allow-Origin", "*"); // XXX temp until migration
     X.smtpTransport.sendMail(mailContent, callback);
   };
 }());

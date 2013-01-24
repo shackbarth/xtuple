@@ -1,33 +1,33 @@
 DONE
-maintenance.js
-report.js -- note that this will have to be updated per the updates in 19268
-fetch.js -- in data.js
-dispatch.js -- in data.js
-commit.js -- in data.js, test functor
-retrieve.js -- in data.js
 auth.js
 selection.js -- merged into auth.js and renamed scope
-file.js
-redirector.js -- need to put into use with a dedicated server on port 80
-email.js -- test with new client code
-extensions.js -- test with new client code
-resetPassword.js -- test with new client code
 logout.js -- in auth.js
+fetch.js -- in data.js -- TODO: handle authentication for all 4 of these
+dispatch.js -- in data.js
+commit.js -- in data.js
+retrieve.js -- in data.js
+resetPassword.js
+extensions.js
+session -- this is done as a pure functor in main.js
+email.js -- TODO: test with new client code
+maintenance.js -- TODO: localhost backdoor
+report.js -- note that this will have to be updated per the updates in 19268
+file.js -- TODO: this is not working in the client
+redirector.js -- TODO: need to put into use with a dedicated server on port 80
 
-UNNECESSARY (?)
+UNNECESSARY
 data.js -- dead code?
 database.js -- admin route. dead code?
 datasource.js -- admin route. dead code?
 organization.js -- admin route. dead code?
 session route -- replaced by oauth
-export.js -- can we deprecate this w/ pentaho instead of porting?
 oauth2auth.js
 oauth2token.js
 
 NOT DONE
-route: dataFromKey -- this is being worked on in 19268
-route: changePassword.js -- John is currently working on this in 19343
-session functor https://github.com/bendiy/tools/blob/master/source/session.js#L49
+dataFromKey -- this is being worked on in 19268
+changePassword.js -- John is currently working on this in 19343
+export.js -- can we deprecate this w/ pentaho instead of porting?
 
 FUTURE REFACTORING POSSIBILITIES
 errors return 200 with isError: true. Better to return 500?

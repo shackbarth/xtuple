@@ -12,7 +12,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var organizationName = req.session.passport.organization,
       organization = new XM.Organization(),
       fetchError = function (err) {
-        res.send(500, {isError: true, reason: "Error fetching organization"});
+        res.send({isError: true, message: "Error fetching organization"});
       },
       fetchSuccess = function (model, result) {
         var extensions = _.map(model.get("extensions").models, function (orgext) {
@@ -26,11 +26,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         });
 
         // XXX temp until we get everything on the same port
-        res.header("Access-Control-Allow-Origin", "*");
+        //res.header("Access-Control-Allow-Origin", "*");
         res.send({data: extensions});
       };
 
-    // Fetch the organization to get their extensions
+    // Fetch the organization to get their extensions. Fetch under the authority of node
+    // or else most users would not be able to load their own extensions.
     organization.fetch({
       id: organizationName,
       success: fetchSuccess,

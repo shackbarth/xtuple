@@ -15,6 +15,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   // Sorry for the indirection.
 
+  /**
+    The options parameter in the XT.dataSource calls to the global database are all
+    the same. Notably, we have to massage the client-expected callback to fit into
+    the backboney callback system of XT.dataSource.
+   */
   var createGlobalOptions = function (payload, globalUsername, callback) {
     var options = JSON.parse(JSON.stringify(payload)); // clone
 
@@ -23,22 +28,27 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       callback({data: resp});
     };
     options.error = function (model, err) {
-      callback({isError: true, error: err});
+      callback({isError: true, message: err});
     };
     return options;
   };
 
+  /**
+    To query the instance database we pass in a query string to X.database in a way that's
+    very similar for all four operations. We have to massage the client-expected callback
+    to fit with the native callback of X.database.
+   */
   var queryInstanceDatabase = function (queryString, functionName, payload, session, callback) {
     var query,
       adaptorCallback = function (err, res) {
         if (err) {
-          callback({isError: true, error: err}); // XXX not quite sure about the proper formatting of these
+          callback({isError: true, message: err});
         } else if (res && res.rows && res.rows.length > 0) {
           // the data comes back in an awkward res.rows[0].dispatch form,
           // and we want to normalize that here so that the data is in response.data
           callback({data: JSON.parse(res.rows[0][functionName])});
         } else {
-          callback({isError: true, error: "No results"});
+          callback({isError: true, message: "No results"});
         }
       };
 
@@ -47,6 +57,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     X.database.query(session.passport.organization, query, adaptorCallback);
   };
 
+  /**
+    Does all the work of commit.
+    Can be called by websockets, or the express route (below), or REST, etc.
+   */
   var commitEngine = function (payload, session, callback) {
     var organization,
       query,
@@ -54,8 +68,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       buffer,
       binaryData,
       options;
-
-    // TODO: authenticate
 
     // we need to convert js binary into pg hex (see the file route for
     // the opposite conversion). see issue 18661
@@ -68,9 +80,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     if (payload && payload.databaseType === 'global') {
       // run this query against the global database
-
       options = createGlobalOptions(payload, session.passport.user, callback);
-
       if (!payload.dataHash) {
         callback({message: "Invalid Commit"});
         return;
@@ -87,16 +97,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
   exports.commitEngine = commitEngine;
 
+  /**
+    Does all the work of dispatch.
+    Can be called by websockets, or the express route (below), or REST, etc.
+   */
   var dispatchEngine = function (payload, session, callback) {
     var organization,
       query,
       options;
 
-    // TODO: authenticate
-
     if (payload && payload.databaseType === 'global') {
       // run this query against the global database
-
       options = createGlobalOptions(payload, session.passport.user, callback);
       XT.dataSource.dispatch(payload.className, payload.functionName, payload.parameters, options);
 
@@ -108,18 +119,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.dispatchEngine = dispatchEngine;
 
   /**
-    Can be called by websockets, or the below fetch function, or REST, etc.
+    Does all the work of fetch.
+    Can be called by websockets, or the express route (below), or REST, etc.
    */
   var fetchEngine = function (payload, session, callback) {
     var organization,
       query,
       options;
 
-    // TODO: authenticate
-
     if (payload && payload.databaseType === 'global') {
       // run this query against the global database
-
       options = createGlobalOptions(payload, session.passport.user, callback);
       XT.dataSource.fetch(options);
 
@@ -131,7 +140,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.fetchEngine = fetchEngine;
 
   /**
-    Can be called by websockets, or the below fetch function, or REST, etc.
+    Does all the work of retrieve.
+    Can be called by websockets, or the express route (below), or REST, etc.
    */
   var retrieveEngine = function (payload, session, callback) {
     var organization,
@@ -142,7 +152,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     if (payload && payload.databaseType === 'global') {
       // run this query against the global database
-
       options = createGlobalOptions(payload, session.passport.user, callback);
       XT.dataSource.retrieveRecord(payload.recordType, payload.id, options);
 
@@ -153,6 +162,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
   exports.retrieveEngine = retrieveEngine;
 
+  /**
+    The adaptation of express routes to engine functions is the same for all four operations,
+    so we centralize the code here:
+   */
   var routeAdapter = function (req, res, engineFunction) {
     var callback = function (err, resp) {
       if (err) {
@@ -186,7 +199,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   /**
-    Accesses the fetchEngine (above) for a request a la Express
+    Accesses the retrieveEngine (above) for a request a la Express
    */
   exports.retrieve = function (req, res) {
     routeAdapter(req, res, retrieveEngine);
