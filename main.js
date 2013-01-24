@@ -102,7 +102,6 @@ _ = require("underscore");
 var express = require('express'),
     passport = require('passport'),
     oauth2 = require('./oauth2/oauth2'),
-    site = require('./oauth2/site'),
     routes = require('./routes/routes'),
     user = require('./oauth2/user');
 
