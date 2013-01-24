@@ -5,15 +5,23 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
-  var passport = require('passport')
-    , login = require('connect-ensure-login')
+  var passport = require('passport');
 
+  /**
+    Receives user authentication credentials and has passport do the authentication
+   */
   exports.login = passport.authenticate('local', { successReturnToOrRedirect: '/login/scope', failureRedirect: '/' });
 
+  /**
+    Renders the login form
+   */
   exports.loginForm = function (req, res) {
     res.render('login');
   };
 
+  /**
+    Logs out user by removing the session and sending the user to the login screen.
+   */
   exports.logout = function (req, res) {
     req.session.passport = null;
     res.clearCookie('connect.sid');
@@ -23,6 +31,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     res.redirect('/');
   }
 
+  /**
+    Receives a request telling us which organization a user has selected
+    to log into. Note that we don't trust the client; we check
+    to make sure that the user actually belongs to that organization.
+   */
   exports.scope = function (req, res) {
     var sessionId = req.sessionID,
       userId = req.session.passport.user,
@@ -38,9 +51,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         // We can now trust this user's request to log in to this organization
 
         // update the session store row to add the org choice and username
+        // updating this object magically persists the data into the SessionStore table
         req.session.passport.organization = selectedOrg;
         req.session.passport.username = response[0].username;
 
+        // start the app
         res.redirect('/client');
       },
       error = function (model, error) {
@@ -59,10 +74,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     //verify that the org is valid for the user
     userOrgColl.fetch({query: query, success: success, error: error});
-
-
   }
 
+  /**
+    Loads the form to let the user choose their organization. If there's only one
+    organization for the user we choose for them.
+   */
   exports.scopeForm = function (req, res) {
     var organizations = [];
 
