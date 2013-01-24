@@ -5,19 +5,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
-  var _fs = X.fs,
-    _path = X.path,
-    resetPasswordText = "An xTuple administrator has reset your password to %@" +
+  var resetPasswordText = "An xTuple administrator has reset your password to %@" +
       ". Please log in at mobile.xtuple.com and change your password by clicking " +
       "the gear icon.",
     newUserText = "Welcome to xTuple! A new account has been created for you, with " +
       "username %@ and password %@. Please log in at mobile.xtuple.com and change " +
       "your password by clicking the gear icon.";
 
-  /**
-    Defines the reset password route.
-   */
 
+  /**
+    Sends an email to the user telling them what their new password is. If the email
+    fails, we gracefully just tell the administrator what the new password is.
+    XXX: should we fail so gracefully? There is a security concern here that
+    an admin can see a users password if the email fails.
+   */
   var sendEmail = function (res, result, newPassword, isNewUser) {
     var emailText = isNewUser ? newUserText.f(result.id, newPassword) : resetPasswordText.f(newPassword),
       emailSubject = isNewUser ? "Welcome to xTuple" : "Password reset",
@@ -39,8 +40,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
 
+  /**
+    Resets a user's password. Anyone with ViewGlobalUsers has the authority to do this.
+    Restricting to MaintainGlobalUsers would be nice but it would require us to reimagine
+    how model privileges are handled on the serverside.
+   */
   exports.resetPassword = function (req, res) {
-    // TODO: what is the approprate structure of an error report?
     var args = req.query,
       // the fetch and edit will be made under the authority of the requesting global user
       requester = req.session.passport.user,
@@ -56,9 +61,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     //X.debug(data);
 
     // XXX temp until we get everything on the same port
-    res.header("Access-Control-Allow-Origin", "*");
-
-    // TODO: authenticate
+    //res.header("Access-Control-Allow-Origin", "*");
 
     if (!args || !args.id) {
       res.send({isError: true, error: "need an ID"});
@@ -66,7 +69,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       user = XM.User.findOrCreate({id: args.id});
       // that should fix this problem:
       //user = XM.User.findOrCreate(args.id);
-
       //if (user === null) {
         // this bit should not be necessary by my understanding of findOrCreate. Go figure.
         //user = new XM.User({id: args.id});
