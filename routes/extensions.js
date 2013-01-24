@@ -9,7 +9,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Returns a list of extensions associated with an organization.
    */
   exports.extensions = function (req, res) {
-    var organizationName = "dev", // TODO
+    var organizationName = req.session.passport.organization,
       organization = new XM.Organization(),
       fetchError = function (err) {
         res.send(500, {isError: true, reason: "Error fetching organization"});
