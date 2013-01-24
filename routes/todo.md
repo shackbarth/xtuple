@@ -7,9 +7,9 @@ dispatch.js -- in data.js
 commit.js -- in data.js
 retrieve.js -- in data.js
 resetPassword.js
-email.js --test with new client code
+email.js -- TODO: test with new client code
+maintenance.js -- TODO: localhost backdoor
 
-maintenance.js
 report.js -- note that this will have to be updated per the updates in 19268
 file.js
 redirector.js -- need to put into use with a dedicated server on port 80

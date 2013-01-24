@@ -1,31 +1,14 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true XM:true */
+/*global X:true XM:true, _:true */
 
 (function () {
   "use strict";
 
-  var _ = X._,
-    exec = require('child_process').exec,
+  var exec = require('child_process').exec,
     url = require("url"),
     querystring = require("querystring"),
     path = require('path');
-
-  var error = function (session, xtr) {
-    var response = xtr.get("response"),
-      err = session.get("error");
-
-    if (!err || typeof err !== 'string') {
-      // just please keep the datasource from crashing
-      err = "Error 12933";
-    }
-    //X.warn("error(): ", session.get("error"));
-    session.removeAllListeners();
-    response.writeHead(500, {"Content-Type": "text/plain"});
-    response.write(err);
-    response.end();
-    //xtr.error({isError: true, reason: session.get("error")});
-  };
 
   /*
    * The installer (the orm repo, actually) is an npm-managed dependency
