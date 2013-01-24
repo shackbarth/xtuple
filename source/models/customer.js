@@ -52,7 +52,29 @@ white:true*/
       "autoUpdateStatus",
       "autoHoldOrders",
       "preferredSite"
-    ]
+    ],
+    
+    // ..........................................................
+    // METHODS
+    //
+    
+    /**
+      Return a matching record id for a passed user `key` and `value`. If none
+      found, returns zero.
+
+      @param {String} Property to search on, typically a user key
+      @param {String} Value to search for
+      @param {Object} Options
+      @returns {Object} Receiver
+    */
+    findExisting: function (key, value, options) {
+      var recordType = this.recordType || this.prototype.recordType,
+        params = [ recordType, key, value, this.id || -1 ],
+        dataSource = options.dataSource || XT.dataSource;
+      dataSource.dispatch('XM.Model', 'findExisting', params, options);
+      XT.log("XM.Model.findExisting for: " + recordType);
+      return this;
+    }
 
   });
 
@@ -360,6 +382,18 @@ white:true*/
     /** @scope XM.ShipChargeCollection.prototype */
 
     model: XM.ShipCharge
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.ShippingFormCollection = XM.Collection.extend({
+    /** @scope XM.ShippingFormCollection.prototype */
+
+    model: XM.ShippingForm
 
   });
 
