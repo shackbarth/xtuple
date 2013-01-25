@@ -195,7 +195,7 @@ white:true*/
       var status = this.getStatus(),
           customer = this.get("customer"),
           K = XM.Model;
-          
+
       if (customer && status === K.READY_NEW) {
         var shiptosCollection = customer.get("shiptos"),
             numberArray = [];

@@ -302,6 +302,19 @@ regexp:true, undef:true, trailing:true, white:true */
   });
   
   // ..........................................................
+  // SHIP Zone
+  //
+
+  enyo.kind({
+    name: "XV.ShipZonePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.shipZones",
+    orderBy: [
+      {attribute: 'name'}
+    ]
+  });
+  
+  // ..........................................................
   // TAX ZONE
   //
 

@@ -69,7 +69,13 @@ trailing:true white:true*/
         {kind: "XV.CheckboxWidget", attr: "isDefault"},
         {kind: "XV.SalesRepPicker", attr: "salesRep"},
         {kind: "XV.NumberWidget", attr: "commission"},
+        {kind: "XV.ShipZonePicker", attr: "shipZone"},
         {kind: "XV.TaxZonePicker", attr: "taxZone"},
+        {kind: "XV.ShipViaPicker", attr: "shipVia"},
+        {kind: "XV.ShippingChargePicker", attr: "shipCharge"},
+        {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
+        {kind: "XV.ContactWidget", attr: "contact",
+          showAddress: true, label: "_name".loc()},
         {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
         {kind: "XV.TextArea", attr: "notes"}
       ]}
