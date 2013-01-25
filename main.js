@@ -193,6 +193,10 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   if (handshakeData.headers.cookie) {
     // Save parsedSessionId to handshakeData.
     handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
+    if (!handshakeData.cookie['connect.sid']) {
+      X.debug("socket.io auth no cookie");
+      return callback(null, false);
+    }
     handshakeData.sessionId = parseSignedCookie(handshakeData.cookie['connect.sid'], '.T#T@r5EkPM*N@C%9K-iPW!+T');
 
     sessionStore.get(handshakeData.sessionId, function (err, session) {
@@ -203,7 +207,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
         X.debug("socket.io not authed: ", err);
         err = "socket.io not authed";
         // TODO - This error message isn't making it back to the client.
-        return callback(err, false);
+        return callback({data: session.passport, code: 1}, false);
       }
 
       var userHash = session[passport._key],
@@ -223,6 +227,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
         handshakeData.user = user;
         handshakeData.username = username;
         handshakeData.organization = organization;
+        handshakeData.sessionStore = sessionStore;
         X.debug("socket.io auth success");
         callback(null, true);
       });
@@ -233,37 +238,63 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   }
 }).on('connection', function (socket) {
   "use strict";
+  var shake = socket.handshake,
+      session = {passport: {username: shake.username, organization: shake.organization, user: shake.user.id}},
+      ensuerLoggedIn = function (callback) {
+        // TODO - update session lastAccess: session.touch().save();
+        // TODO - Check if session is still valid.
+        // It's all done here in express 2.x http://www.danielbaulig.de/socket-ioexpress/
+
+        shake.sessionStore.get(shake.sessionId, function (err, session) {
+          // All requests get a session. Make sure the session is authenticated.
+          if (err || !session.passport || !session[passport._key]
+            || !session[passport._key].user
+            || !session[passport._key].username
+            || !session[passport._key].organization) {
+            X.debug("socket.io request not authed: ", shake.headers.cookie);
+            socket.disconnect();
+          } else {
+            // User is still valid, move along.
+            X.debug("socket.io request is authed: ", socket.handshake.headers.cookie);
+            callback();
+          }
+        });
+      };
 
   // To run this from the client:
   // ???
   socket.on('session', function (data, callback) {
-    var shake = socket.handshake,
-      session = {passport: {username: shake.username, organization: shake.organization, user: shake.user.id}};
-    callback({data: session.passport, code: 1});
+    ensuerLoggedIn(function () {
+      X.debug("socket.io session request.");
+      callback({data: session.passport, code: 1});
+    });
   });
 
   // To run this from the client:
   // XT.dataSource.retrieveRecord("XM.State", 2, {"id":2,"cascade":true,"databaseType":"instance"});
   socket.on('function/retrieveRecord', function (data, callback) {
-    var shake = socket.handshake,
-      session = {passport: {username: shake.username, organization: shake.organization, user: shake.user.id}};
-    routes.retrieveEngine(data.payload, session, callback);
+    ensuerLoggedIn(function () {
+      X.debug("socket.io retrieveRecord request.");
+      routes.retrieveEngine(data.payload, session, callback);
+    });
   });
 
   // To run this from client:
   // XT.dataSource.fetch({"query":{"orderBy":[{"attribute":"code"}],"recordType":"XM.Honorific"},"force":true,"parse":true,"databaseType":"instance"});
   socket.on('function/fetch', function (data, callback) {
-    var shake = socket.handshake,
-      session = {passport: {username: shake.username, organization: shake.organization, user: shake.user.id}};
-    routes.fetchEngine(data.payload, session, callback);
+    ensuerLoggedIn(function () {
+      X.debug("socket.io fetch request.");
+      routes.fetchEngine(data.payload, session, callback);
+    });
   });
 
   // To run this from client:
   // XT.dataSource.dispatch("XT.Session", "settings", null, {success: function () {console.log(arguments);}, error: function () {console.log(arguments);}});
   socket.on('function/dispatch', function (data, callback) {
-    var shake = socket.handshake,
-      session = {passport: {username: shake.username, organization: shake.organization, user: shake.user.id}};
-    routes.dispatchEngine(data.payload, session, callback);
+    ensuerLoggedIn(function () {
+      X.debug("socket.io dispatch request.");
+      routes.dispatchEngine(data.payload, session, callback);
+    });
   });
 
   // To run this from the client:
@@ -271,9 +302,10 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   // TODO: The first argument to XT.dataSource.commit() is a model and therefore a bit tough to mock
   // XXX untested
   socket.on('function/commitRecord', function (data, callback) {
-    var shake = socket.handshake,
-      session = {passport: {username: shake.username, organization: shake.organization, user: shake.user.id}};
-    routes.commitEngine(data.payload, session, callback);
+    ensuerLoggedIn(function () {
+      X.debug("socket.io commitRecord request.");
+      routes.commitEngine(data.payload, session, callback);
+    });
   });
 
   // Tell the client it's connected.
