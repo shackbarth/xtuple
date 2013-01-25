@@ -9,7 +9,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Redirect to https keeping the same url otherwise
    */
   exports.redirect = function (req, res) {
-    res.redirect("https://" + req.header('host') + req.route.path);
+    res.redirect("https://" + req.header('host') + req.url);
   };
 
 }());
