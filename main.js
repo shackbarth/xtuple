@@ -162,6 +162,7 @@ app.get('/login/scope', routes.scopeForm);
 app.post('/login/scopeSubmit', routes.scope);
 app.get('/logout', routes.logout);
 
+app.all('/dataFromKey', routes.dataFromKey);
 app.all('/email', routes.email);
 app.all('/extensions', routes.extensions);
 app.get('/file', routes.file);

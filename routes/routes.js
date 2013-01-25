@@ -21,19 +21,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
    */
 
   var logoutPath = {redirectTo: "/logout"},
-
+    // this is going to look magical down where it's used. Basically ensureLoggedIn
+    // is a function that returns another function, and express allows routes to
+    // be defined in such a way as to chain these types of functions together in an array.
     ensureLogin = require('connect-ensure-login').ensureLoggedIn(logoutPath),
     auth = require('./auth'),
     email = require('./email'),
     extensions = require('./extensions'),
     data = require('./data'),
+    dataFromKey = require('./dataFromKey'),
     file = require('./file'),
     maintenance = require('./maintenance'),
     redirector = require('./redirector'),
     report = require('./report'),
     resetPassword = require('./resetPassword');
 
-  //  TODO: ensure login should be customized to also check for a username and organization
+  //  TODO: ensureLoggedIn should be customized to also check for a username and organization
 
   //
   // Authentication-related routes
@@ -60,6 +63,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   //
   // Custom routes
   //
+  exports.dataFromKey = dataFromKey.dataFromKey; // don't authenticate
   exports.email = [ensureLogin, email.email];
   exports.extensions = [ensureLogin, extensions.extensions];
   exports.file = [ensureLogin, file.file];
