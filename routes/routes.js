@@ -26,6 +26,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // be defined in such a way as to chain these types of functions together in an array.
     ensureLogin = require('connect-ensure-login').ensureLoggedIn(logoutPath),
     auth = require('./auth'),
+    changePassword = require('./changePassword'),
     email = require('./email'),
     extensions = require('./extensions'),
     data = require('./data'),
@@ -63,6 +64,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   //
   // Custom routes
   //
+  exports.changePassword = [ensureLogin, changePassword.changePassword];
   exports.dataFromKey = dataFromKey.dataFromKey; // don't authenticate
   exports.email = [ensureLogin, email.email];
   exports.extensions = [ensureLogin, extensions.extensions];
