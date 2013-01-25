@@ -2,7 +2,7 @@ DONE
 auth.js
 selection.js -- merged into auth.js and renamed scope
 logout.js -- in auth.js
-fetch.js -- in data.js -- TODO: handle authentication for all 4 of these
+fetch.js -- in data.js
 dispatch.js -- in data.js
 commit.js -- in data.js
 retrieve.js -- in data.js
@@ -11,9 +11,9 @@ extensions.js
 session -- this is done as a pure functor in main.js
 maintenance.js
 redirector.js
-email.js -- TODO: test with new client code
+email.js
 report.js -- note that this will have to be updated per the updates in 19268
-file.js -- TODO: this is not working in the client
+file.js
 
 UNNECESSARY
 data.js -- dead code?

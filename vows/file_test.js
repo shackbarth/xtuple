@@ -8,14 +8,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
+  // this doesn't work anymore now that we authenticate
   vows.describe('Report route').addBatch({
     'a GET to the file route': {
       topic: function () {
-        zombie.visit('http://localhost:2000/file?recordType=XM.File&id=1', this.callback);
+        var host = "localhost:2000";
+        //var host = "localtest.com";
+        zombie.visit('http://' + host + '/file?recordType=XM.File&id=10', this.callback);
       },
       'should return some data': function (err, browser, status) {
-        assert(browser.success);
-        assert(browser.text("body"));
+        //console.log(err);
+        //assert(browser.success);
+        console.log(browser.text("body"));
+        //assert(browser.text("body"));
+        assert(!JSON.parse(browser.text("body")).isError);
       }
     }
   }).export(module);

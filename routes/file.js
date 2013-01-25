@@ -5,7 +5,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
-  // hostname.com/file?recordType=XM.File&id=40
+  // /file?recordType=XM.File&id=40
 
   /**
     Used to serve up files to the client. Uses res.attachment to prompt browser to
@@ -46,7 +46,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         filename = content.description;
         extension = filename ? filename.substring(filename.lastIndexOf('.') + 1) : '';
-        isBinaryEncoding = extension === 'txt' || extension === 'csv';
+        isBinaryEncoding = extension !== 'txt' && extension !== 'csv';
 
         // pg represents bytea data as hex. For text data (like a csv file)
         // we need to read to a buffer and then convert to utf-8. For binary
