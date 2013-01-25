@@ -69,7 +69,11 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.CustomerTypePicker",
     kind: "XV.PickerWidget",
-    collection: "XM.customerTypes"
+    collection: "XM.customerTypes",
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ]
   });
   
   // ..........................................................
@@ -245,23 +249,42 @@ regexp:true, undef:true, trailing:true, white:true */
   });
   
   // ..........................................................
+  // SALES REP
+  //
+
+  enyo.kind({
+    name: "XV.SalesRepPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.salesReps",
+    orderBy: [
+      {attribute: 'name'}
+    ]
+  });
+  
+  // ..........................................................
   // SHIPPING CHARGES
   //
 
   enyo.kind({
     name: "XV.ShippingChargePicker",
     kind: "XV.PickerWidget",
-    collection: "XM.shippingCharges"
+    collection: "XM.shipCharges",
+    orderBy: [
+      {attribute: 'name'}
+    ]
   });
   
   // ..........................................................
-  // SHIPPING FORM
+  // SHIPPING FORMS
   //
 
   enyo.kind({
     name: "XV.ShippingFormPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.shippingforms"
+    collection: "XM.shippingForms",
+    orderBy: [
+      {attribute: 'name'}
+    ]
   });
   
   // ..........................................................
@@ -271,7 +294,25 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.ShipViaPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.shipVia"
+    collection: "XM.shipVia",
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ]
+  });
+  
+  // ..........................................................
+  // TAX ZONE
+  //
+
+  enyo.kind({
+    name: "XV.TaxZonePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.taxZones",
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ]
   });
   
   // ..........................................................
@@ -281,7 +322,11 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.TermsPicker",
     kind: "XV.PickerWidget",
-    collection: "XM.terms"
+    collection: "XM.terms",
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ]
   });
 
   // ..........................................................

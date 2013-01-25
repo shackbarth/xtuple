@@ -67,9 +67,9 @@ trailing:true white:true*/
         {kind: "XV.InputWidget", attr: "name"},
         {kind: "XV.CheckboxWidget", attr: "isActive"},
         {kind: "XV.CheckboxWidget", attr: "isDefault"},
-        {kind: "XV.InputWidget", attr: "salesRep"},
+        {kind: "XV.SalesRepPicker", attr: "salesRep"},
         {kind: "XV.NumberWidget", attr: "commission"},
-        {kind: "XV.InputWidget", attr: "taxZone"},
+        {kind: "XV.TaxZonePicker", attr: "taxZone"},
         {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
         {kind: "XV.TextArea", attr: "notes"}
       ]}

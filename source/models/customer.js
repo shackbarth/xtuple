@@ -362,6 +362,18 @@ white:true*/
     model: XM.ShipCharge
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.ShippingFormCollection = XM.Collection.extend({
+    /** @scope XM.ShippingFormCollection.prototype */
+
+    model: XM.ShippingForm
+
+  });
 
   /**
     @class
