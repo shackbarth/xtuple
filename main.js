@@ -176,7 +176,7 @@ unexposedServer.get('/maintenance', routes.maintenanceLocalhost);
 unexposedServer.listen(441); // TODO: change to 442 and update route
 
 var redirectServer = express();
-redirectServer.get(/.*/, routes.redirect);
+redirectServer.get(/.*/, routes.redirect); // RegEx for "everything"
 redirectServer.listen(1979); // TODO: change to 80
 // end other servers code. wow that was easy.
 
