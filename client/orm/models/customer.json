@@ -261,7 +261,56 @@
           "column": "cust_id",
           "inverse": "source"
         }
-      }
+      },
+	  {
+		"name": "backorder",
+		"attr": {
+          "type": "Boolean",
+          "column": "cust_backorder"
+		}
+	  },
+	  {
+		"name": "partialShip",
+		"attr": {
+		  "type": "Boolean",
+		  "column": "cust_partialship"
+		}
+	  },
+	  {
+		"name": "blanketPurchaseOrders",
+		"attr": {
+		  "type": "Boolean",
+		  "column": "cust_blanketpos"
+		}
+	  },
+	  {
+		"name": "usesPurchaseOrders",
+		"attr": {
+		  "type": "Boolean",
+		  "column": "cust_usespos"
+		}
+	  },
+	  {
+		"name": "autoUpdateStatus",
+		"attr": {
+		  "type": "Boolean",
+		  "column": "cust_autoupdatestatus"
+		}
+	  },
+	  {
+		"name": "autoHoldOrders",
+		"attr": {
+		  "type": "Boolean",
+		  "column": "cust_autoholdorders"
+		}
+	  },
+	  {
+		"name": "preferredSite",
+		"attr": {
+		  "type": "Number",
+		  "column": "cust_preferred_warehous_id"
+		}
+	  }
     ],
     "isSystem": true,
     "extensions": []
@@ -700,7 +749,7 @@
       },
       {
         "name": "customer",
-        "toOne": {
+        "attr": {
           "type": "Customer",
           "column": "shipto_cust_id"
         }
