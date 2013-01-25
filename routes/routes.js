@@ -20,8 +20,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     themselves and their path. But that would come at the cost of indirection.
    */
 
-  var ensureLogin = require('connect-ensure-login').ensureLoggedIn,
-    logoutPath = {redirectTo: "/logout"},
+  var logoutPath = {redirectTo: "/logout"},
+
+    ensureLogin = require('connect-ensure-login').ensureLoggedIn(logoutPath),
     auth = require('./auth'),
     email = require('./email'),
     extensions = require('./extensions'),
@@ -47,24 +48,28 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   // Data-passthrough routes
   //
   // TODO: ensureLoggedIn
-  exports.commit = data.commit;
+  exports.commit = [ensureLogin, data.commit];
   exports.commitEngine = data.commitEngine;
-  exports.fetch = data.fetch;
+  exports.fetch = [ensureLogin, data.fetch];
   exports.fetchEngine = data.fetchEngine;
-  exports.dispatch = data.dispatch;
+  exports.dispatch = [ensureLogin, data.dispatch];
   exports.dispatchEngine = data.dispatchEngine;
-  exports.retrieve = data.retrieve;
+  exports.retrieve = [ensureLogin, data.retrieve];
   exports.retrieveEngine = data.retrieveEngine;
 
   //
   // Custom routes
   //
-  exports.email = [ensureLogin(logoutPath), email.email];
-  exports.extensions = [ensureLogin(logoutPath), extensions.extensions];
-  exports.file = [ensureLogin(logoutPath), file.file];
-  exports.maintenance = maintenance.maintenance; // TODO: authentication restrictions
+  exports.email = [ensureLogin, email.email];
+  exports.extensions = [ensureLogin, extensions.extensions];
+  exports.file = [ensureLogin, file.file];
+  // the maintenance route as accessible by the app has login restrictions.
+  exports.maintenance = [ensureLogin, maintenance.maintenance];
+  // the maintenance route as accessible through the unexposed server has
+  // no login restrictions. This is for ease of serverside scripting.
+  exports.maintenanceLocalhost = maintenance.maintenance;
   exports.redirect = redirector.redirect;
-  exports.report = [ensureLogin(logoutPath), report.report];
-  exports.resetPassword = [ensureLogin(logoutPath), resetPassword.resetPassword];
+  exports.report = [ensureLogin, report.report];
+  exports.resetPassword = [ensureLogin, resetPassword.resetPassword];
 
 }());

@@ -239,8 +239,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
    */
   var maintenance = function (req, res) {
     var host = req.headers.host,
-      args = req.query,
-      userId;
+      args = req.query;
 
     console.log(host);
     console.log(req.query);
@@ -252,11 +251,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return;
     }
 
-
-    // TODO: authentication
-    // userId = ???
-
-    install(res, args, userId);
+    // access through the main server uses the logged in user's authority
+    install(res, args, req.session.passport.user);
   };
 
   exports.maintenance = maintenance;
