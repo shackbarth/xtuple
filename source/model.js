@@ -603,7 +603,8 @@ white:true*/
             break;
           } else if (value && typeof value === "object") {
             continue;
-          } else if (typeof value === "string") {
+          } else if (typeof value === "string" ||
+                     typeof value === "number") {
             break;
           } else {
             value = "";
