@@ -15,6 +15,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     functorsDirectory: "./lib/functors",
     routesDirectory: "./lib/routes",
     routersDirectory: "./lib/routers",
+    enhancedAuthKey: "xTuple",
     datasource: {
       sessionTimeout: 15,
       bindAddress: "localhost",
