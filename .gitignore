@@ -1,6 +1,7 @@
 *.DS_Store
 build
 *.swp
+/source/ext/imports.js
 tmp
 npm-debug.log
 \.sass-cache
