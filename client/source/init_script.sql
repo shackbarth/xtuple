@@ -18,6 +18,7 @@
 \i public/tables/comment.sql
 \i public/tables/grp.sql;
 \i public/tables/grppriv.sql;
+\i public/tables/itemsite.sql;
 \i public/tables/pkghead.sql;
 \i public/tables/usrgrp.sql;
 \i public/tables/usrpref.sql;
@@ -41,6 +42,7 @@
 \i xt/trigger_functions/useracct_did_change.sql
 \i xt/trigger_functions/grp_did_change.sql
 \i xt/trigger_functions/grppriv_did_change.sql
+\i xt/trigger_functions/itemsitebeforetriggerxt.sql
 \i xt/trigger_functions/usrgrp_did_change.sql
 \i xt/trigger_functions/usrpriv_did_change.sql
 \i xt/trigger_functions/usrpref_did_change.sql

@@ -33,7 +33,7 @@
         "name": "description",
         "attr": {
           "type": "String",
-          "column": "costcat_description"
+          "column": "costcat_descrip"
         }
       }
     ],
@@ -274,16 +274,8 @@
           "type": "CostCategory",
           "column": "itemsite_costcat_id"
         }
-      },
-      {
-        "name": "inventoryUnit",
-        "toOne": {
-          "type": "ItemRelation",
-          "column": "id",
-          "inverse": "item"
-        }
       }
-    ]
+    ],
     "isSystem": true
   },
   {
@@ -321,8 +313,7 @@
         "name": "itemRelation",
         "toOne": {
           "type": "ItemRelation",
-          "column": "item",
-          "inverse": "itemsite_item_id",
+          "column": "itemsite_item_id",
           "isNested": true
         }
       },
@@ -330,7 +321,7 @@
         "name": "siteRelation",
         "toOne": {
           "type": "SiteRelation",
-          "column": "id",
+          "column": "itemsite_warehous_id",
           "isNested": true
         }
       }
