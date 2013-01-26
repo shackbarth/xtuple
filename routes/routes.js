@@ -37,8 +37,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     report = require('./report'),
     resetPassword = require('./resetPassword');
 
-  //  TODO: ensureLoggedIn should be customized to also check for a username and organization
-
   //
   // Authentication-related routes
   //

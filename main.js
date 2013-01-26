@@ -96,6 +96,7 @@ _ = require("underscore");
 
 }());
 
+
 /**
  * Module dependencies.
  */
@@ -104,6 +105,19 @@ var express = require('express'),
     oauth2 = require('./oauth2/oauth2'),
     routes = require('./routes/routes'),
     user = require('./oauth2/user');
+
+/**
+  Define our own authentication criteria for passport. Passport itself defines
+  its authentication function here:
+  https://github.com/jaredhanson/passport/blob/master/lib/passport/http/request.js#L74
+  and we are stomping on that method with our own special business logic.
+  The ensureLoggedIn function will not need to be changed, because that calls this.
+ */
+require('http').IncomingMessage.prototype.isAuthenticated = function () {
+  var creds = this.session.passport;
+  return creds.user && creds.username && creds.organization;
+}
+
 
 /**
  * Express configuration.
