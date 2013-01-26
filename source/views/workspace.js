@@ -17,7 +17,7 @@ trailing:true white:true*/
     controlValueChanged: function (inSender, inEvent) {
       var attrs = {};
       attrs[inEvent.originator.attr] = inEvent.value;
-      this.value.set(attrs);
+      if (this.value) { this.value.set(attrs); }
     },
     /**
       Updates all child controls on the editor where the name of
@@ -124,7 +124,7 @@ trailing:true white:true*/
       onStatusChange: "",
       onTitleChange: "",
       onHistoryChange: "",
-      onMenuChange: "",
+      onMenuChange: ""
     },
     handlers: {
       onValueChange: "controlValueChanged"
@@ -392,10 +392,10 @@ trailing:true white:true*/
           {kind: "onyx.Grabber"},
           {name: "title", style: "width: 200px"},
 					// The MoreToolbar is a FittableColumnsLayout, so this spacer takes up all available space
-					{name: "space", fit: true},
-					{kind: "onyx.Button", name: "refreshButton", disabled: true,
+          {name: "space", fit: true},
+          {kind: "onyx.Button", name: "refreshButton", disabled: true,
             content: "_refresh".loc(), onclick: "requery"},
-					{kind: "onyx.Button", name: "applyButton", disabled: true,
+          {kind: "onyx.Button", name: "applyButton", disabled: true,
             content: "_apply".loc(), onclick: "apply"},
           {kind: "onyx.Button", name: "saveAndNewButton", disabled: true,
             content: "_saveAndNew".loc(), onclick: "saveAndNew"},
@@ -519,9 +519,9 @@ trailing:true white:true*/
       }
 
 			// Mobile device view
-			if (enyo.Panels.isScreenNarrow()) {
+      if (enyo.Panels.isScreenNarrow()) {
         this.next();
-			}
+      }
 
     },
     /**
