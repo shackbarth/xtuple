@@ -49,33 +49,18 @@ white:true*/
 
     idAttribute: 'name',
 
-    documentKey: 'name'
+    documentKey: 'name',
 
-    /*
-     XXX do we want this to be editable?
-    readOnlyAttributes: [
-      "dateAdded"
-    ],
-    */
-
-  });
-
-  /**
-  Don't think this is used
-
-  XM.Datasource = XM.Model.extend({
-
-    recordType: 'XM.Datasource',
-
-    idAttribute: 'name',
-
-    databaseType: 'global',
-
-    autoFetchId: false
+    requiredAttributes: [
+      "hostname",
+      "port",
+      "user",
+      "password"
+    ]
 
   });
 
-  */
+
   /**
     @class
 
@@ -114,7 +99,8 @@ white:true*/
 
     requiredAttributes: [
       "isActive",
-      "licenses"
+      "licenses",
+      "group"
     ]
 
   });
@@ -184,7 +170,48 @@ white:true*/
     requiredAttributes: [
       "isActive",
       "email"
-    ]
+    ],
+
+    save: function (key, value, options) {
+      // Handle both `"key", value` and `{key: value}` -style arguments.
+      if (_.isObject(key) || _.isEmpty(key)) {
+        options = value;
+      }
+
+      options = options ? _.clone(options) : {};
+      var orgs = this.get("organizations"),
+        model = this,
+        params,
+        i,
+        orgOptions = {
+          error: function () {
+            XT.log("Error updating instance database");
+          }
+        },
+        success = options.success;
+
+      // Callback after each check
+      options.success = function (resp) {
+        
+        // Update users on instance databases
+        for (i = 0; i < orgs.length; i++) {
+          params = {
+            user: model.id,
+            organization: orgs.at(i).get("name")
+          };
+          XT.dataSource.syncUser(params, orgOptions);
+        }
+        if (success) { success(model, resp, options); }
+      };
+      
+      // Handle both `"key", value` and `{key: value}` -style arguments.
+      if (_.isObject(key) || _.isEmpty(key)) {
+        value = options;
+      }
+
+      return XM.GlobalDocument.prototype.save.call(this, key, value, options);
+    }
+
   });
 
   /**
@@ -202,7 +229,18 @@ white:true*/
     requiredAttributes: [
       "name",
       "username"
-    ]
+    ],
+
+    initialize: function (attributes, options) {
+      XM.Model.prototype.initialize.apply(this, arguments);
+      this.on("change:user", this.userDidChange);
+    },
+    
+    userDidChange: function () {
+      if (this.isNew() && this.get("user") && !this.get('username')) {
+        this.set("username", this.getParent().id);
+      }
+    }
 
   });
 
