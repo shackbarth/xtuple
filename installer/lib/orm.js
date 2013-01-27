@@ -357,8 +357,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     X.db.query(sql, socket.databaseOptions, callback);
   };
 
-  exports.refresh = refresh;
-  exports.select = select;
-  exports.install = install;
+  var runOrmInstaller = function (creds, path) {
+    var socket = {databaseOptions: creds};
+    select(socket, creds, function () {
+      refresh(socket, {path: path}, function () {
+        install(socket, function () {
+          console.log("all done");
+          process.exit(0);
+        });
+      });
+    });
+  };
+
+  exports.run = runOrmInstaller;
 
 }());

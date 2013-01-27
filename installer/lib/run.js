@@ -17,11 +17,5 @@ var X = {};
   //var path = '../../client/orm';
   var socket = {databaseOptions: creds};
 
-orm.select(socket, creds, function () {
-  orm.refresh(socket, {path: path}, function () {
-    orm.install(socket, function () {
-      console.log("all done");
-      process.exit(0);
-    });
-  });
-});
+
+  orm.run(creds, path);
