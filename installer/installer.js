@@ -3,17 +3,12 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true */
 
-  require('../../../node-xt/foundation/foundation');
-  require('../../../node-xt/database/database');
-
-
 (function () {
-  var X = {};
-  var orm = require('./lib/orm');
-  var argv = process.argv,
+  "use strict";
+  var orm = require('./lib/orm'),
+    argv = process.argv,
     credentials = {},
     path = argv[argv.indexOf("--path") + 1];
-  if (path === 'node') {issue(X.fatal("You must provide a relative path of the orms to install with the --path argument"));}
 
   credentials.hostname = argv[argv.indexOf("-h") + 1];
   credentials.username = argv[argv.indexOf("-u") + 1];
@@ -21,8 +16,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   credentials.organization = argv[argv.indexOf("-d") + 1];
 
   // password is the lone exception here
-  if (argv.indexOf("-P") > -1) credentials.password = argv[argv.indexOf("-P") + 1];
-  else credentials.password = "";
+  if (argv.indexOf("-P") > -1) {
+    credentials.password = argv[argv.indexOf("-P") + 1];
+  } else {
+    credentials.password = "";
+  }
 
   orm.run(credentials, path);
 }());

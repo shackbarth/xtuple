@@ -2,17 +2,21 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true */
 
+require('../../../../node-xt/foundation/foundation');
+require('../../../../node-xt/database/database');
+
 (function () {
   "use strict";
 
-  var _path = X.path, _ = X._, _fs = X.fs, initSocket, testConnection, dive,
-      parseFile, calculateDependencies, dependenciesFor, checkDependencies, cleanse,
-      installQueue, submit, existing, findExisting;
+  var
+    _path = X.path, _ = X._, _fs = X.fs, initSocket, testConnection, dive,
+    parseFile, calculateDependencies, dependenciesFor, checkDependencies, cleanse,
+    installQueue, submit, existing, findExisting, install, select, refresh, runOrmInstaller;
 
   X.debugging = true;
   X.db = X.Database.create();
 
-  var cleanse = function (orm) {
+  cleanse = function (orm) {
     var ret = _.clone(orm);
     delete ret.undefinedDependencies;
     delete ret.failedDependencies;
@@ -30,7 +34,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return ret;
   };
 
-  var submit = function (socket, orm, queue, ack, isExtension) {
+  submit = function (socket, orm, queue, ack, isExtension) {
     //console.log("submit", arguments);
     var query, extensions, context, extensionList = [], namespace, type;
     context = orm.context;
@@ -99,7 +103,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }, this));
   };
 
-  var installQueue = function (socket, ack, queue) {
+  installQueue = function (socket, ack, queue) {
     //console.log("install queue", arguments);
     var installed = socket.installed,
       orms = socket.orms,
@@ -127,19 +131,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     submit.call(this, socket, orm, queue, ack);
   };
 
-  var testConnection = function (socket, ack, options, err, res) {
+  testConnection = function (socket, ack, options, err, res) {
     if (err) return ack(false);
     socket.databaseOptions = options;
     ack(true);
   };
 
-  var parseFile = function (path) {
+  parseFile = function (path) {
     try {
       return X.json(_fs.readFileSync(path, "utf8"), true);
     } catch (err) { return {isError: true, message: err.message, file: path}; }
   };
 
-  var dive = function (path, root) {
+  dive = function (path, root) {
     var files = X.directoryFiles(path, {fullPath: true}), stat, isTop, ret, content, errors = [];
     isTop = root ? false: true;
     _.each(files, function (file) {
@@ -163,7 +167,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
   };
 
-  var dependenciesFor = function (socket, orm, dependencies) {
+  dependenciesFor = function (socket, orm, dependencies) {
     var properties, extensions, namespace, orms, dep;
     dependencies = dependencies ? dependencies : orm.dependencies ? orm.dependencies : (orm.dependencies = []);
     properties = orm.properties || [];
@@ -198,7 +202,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
 
-  var calculateDependencies = function (socket) {
+  calculateDependencies = function (socket) {
     var orms = socket.orms;
     _.each(orms, function (namespace) {
       _.each(_.keys(namespace), function (name) {
@@ -214,7 +218,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
 
-  var checkDependencies = function (socket, orm) {
+  checkDependencies = function (socket, orm) {
     var enabled = true, dependencies = orm.dependencies, found, orms;
     if (X.typeOf(orm.enabled) !== X.T_UNDEFINED) return orm.enabled;
     if (!dependencies || dependencies.length <= 0) return enabled;
@@ -237,14 +241,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return enabled;
   };
 
-  var findExisting = function (nameSpace, type) {
+  findExisting = function (nameSpace, type) {
     return _.find(existing, function (orm) {
       return orm.namespace === nameSpace && orm.type === type;
     });
   };
 
 
-  var install = function (socket, ack) {
+  install = function (socket, ack) {
     var valid = [], installer = _.bind(installQueue, this, socket, ack), orms;
     orms = socket.orms;
     _.each(orms, function (namespace) {
@@ -259,7 +263,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     installer(valid);
   };
 
-  var select =  function (socket, options, ack) {
+  select =  function (socket, options, ack) {
     var key, callback, creds = {};
     for (key in options) {
       if (!options.hasOwnProperty(key)) continue;
@@ -277,7 +281,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     X.db.query("select * from pg_class limit 1", creds, callback);
   };
 
-  var refresh = function (socket, options, ack) {
+  refresh = function (socket, options, ack) {
     options = options || {};
     if (typeof options === 'function') { ack = options; }
     var path = _path.join(X.basePath, options.path || X.options.orm.defaultPath),
@@ -357,7 +361,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     X.db.query(sql, socket.databaseOptions, callback);
   };
 
-  var runOrmInstaller = function (creds, path) {
+  runOrmInstaller = function (creds, path) {
+    console.log("Starting orm installer");
     var socket = {databaseOptions: creds};
     select(socket, creds, function () {
       refresh(socket, {path: path}, function () {
