@@ -78,7 +78,7 @@
       X.db.query(query, socket.databaseOptions, _.bind(function (err, res) {
         var c = extensionList.length;
         if (err) {
-          console.log(err.message);
+          console.log("Error: " + err.message);
           if (isExtension) {
             console.log("skipping ahead");
           } else {
@@ -91,6 +91,7 @@
 
         if (!isExtension) socket.installed.push(orm);
         if (c > 0) {
+          if (typeof NOSERVER === 'undefined') {
           this.on(socket.id, _.bind(function (c) {
             --c;
             if (!extensionList.length) {
@@ -100,9 +101,21 @@
               submit.call(this, socket, extensionList.shift(), queue, ack, true);
             }
           }, this, c));
+          }
           submit.call(this, socket, extensionList.shift(), queue, ack, true);
         } else if (isExtension) {
-          return this.emit(socket.id);
+          if (typeof NOSERVER === 'undefined') {
+            return this.emit(socket.id);
+
+          } else {
+            --c;
+            if (!extensionList.length) {
+              //this.removeAllListeners(socket.id);
+              installQueue.call(this, socket, ack, queue);
+            } else {
+              submit.call(this, socket, extensionList.shift(), queue, ack, true);
+            }
+          }
         } else {
           installQueue.call(this, socket, ack, queue);
         }
@@ -110,7 +123,7 @@
     };
 
     installQueue = function (socket, ack, queue) {
-      //console.log("install queue", arguments);
+      console.log("install queue", arguments);
       var installed = socket.installed,
         orms = socket.orms,
         orm, dependencies = [];
@@ -373,7 +386,7 @@
   exports.install = installCopy;
   exports.submit = submit;
 
-  if (false) {
+  if (typeof NOSERVER === 'undefined') {
   X.Server.create({
     port: X.options.orm.port,
     useWebSocket: true,

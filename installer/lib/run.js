@@ -1,6 +1,7 @@
+NOSERVER = true;
+
 var X = {},
   xt = require('xt');
-
   require('../../../../node-xt/foundation/foundation');
   require('../../../../node-xt/database/database');
 
@@ -17,6 +18,8 @@ var X = {},
 
 orm.select(socket, creds, function () {
   orm.refresh(socket, {path: path}, function () {
-    orm.install(socket);
+    orm.install(socket, function () {
+      console.log("all done");
+    });
   });
 });
