@@ -1,50 +1,22 @@
 select xt.install_guiscript('users',  $$
 
-//This adds a "mobile user" column to the maintain users list
+// Users must be created from global cloud administration
 
 var _new = mywindow.findChild("_new");
-var _edit = mywindow.findChild("_edit");
-var _usr = mywindow.findChild("_usr");
-var _showInactive = mywindow.findChild("_showInactive");
-var omfgThis = mainwindow;
+var xt = { users: {}};
 
-var params = new Object();
-
-omfgThis.userUpdated.connect(sFillListTwo);
-
-_new.clicked.connect(sNewTwo);
-_edit.clicked.connect(sEditTwo);
-_showInactive.toggled.connect(sFillListTwo);
-
-_usr.addColumn("Desktop Client User", -1, 1, true, "usr_db_user");
-
-sFillListTwo();
-
-function sFillListTwo()
-{
-  params.active = qsTr("Active");
-  params.inactive = qsTr("Inactive");
-
-  if(_showInactive.checked) {
-    var qry = toolbox.executeQuery("SELECT usr_id, usr_username, usr_propername, CASE WHEN (usr_active) THEN <? value('active') ?> ELSE <? value('inactive') ?> END AS status, usr_db_user FROM usr ORDER BY usr_username;", params);
-  }
-  else {
-    var qry = toolbox.executeQuery("SELECT usr_id, usr_username, usr_propername, CASE WHEN (usr_active) THEN <? value('active') ?> ELSE <? value('inactive') ?> END AS status, usr_db_user FROM usr WHERE usr_active ORDER BY usr_username;", params);
-  }
-
-  _usr.populate(qry);
+function showEvent(e) {
+  var _edit = mywindow.findChild("_edit");
+  _edit.text = qsTr("View");
 }
 
-function sNewTwo()
+xt.users.sNew = function()
 {
-
-  sFillListTwo();
+  var msg = qsTr("Please contact xTuple to create new users.")
+  QMessageBox.information(mywindow, qsTr("Information"), msg);
 }
 
-function sEditTwo()
-{
-
-  sFillListTwo();
-}
+toolbox.coreDisconnect(_new, "clicked()", mywindow, "sNew()");
+_new.clicked.connect(xt.users.sNew);
 
 $$ );
