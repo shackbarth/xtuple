@@ -8,8 +8,7 @@
     "url": "https://github.com/xtuple/orm.git"
   },
   "dependencies": {
-    "xt":"git://github.com/xtuple/node-xt.git",
-    "socket.io-client": ""
+    "xt":"git://github.com/xtuple/node-xt.git"
   },
   "devDependencies": {},
   "optionalDependencies": {},

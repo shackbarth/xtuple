@@ -8,12 +8,10 @@ require('../../../node-xt/database/database');
 (function () {
   "use strict";
 
-  var
-    _path = X.path, _ = X._, _fs = X.fs,initSocket, testConnection, dive,
+  var _path = X.path, _ = X._, _fs = X.fs, initSocket, testConnection, dive,
     parseFile, calculateDependencies, dependenciesFor, checkDependencies, cleanse,
     installQueue, submit, existing, findExisting, install, select, refresh, runOrmInstaller;
 
-  X.debugging = true;
   X.db = X.Database.create();
 
   cleanse = function (orm) {
