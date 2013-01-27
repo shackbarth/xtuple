@@ -15,7 +15,6 @@ var X = {};
 
   var path = '../../../public-extensions/source/crm/database/orm';
   //var path = '../../client/orm';
-  var socket = {databaseOptions: creds};
 
 
   orm.run(creds, path);
