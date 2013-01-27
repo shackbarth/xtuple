@@ -12,7 +12,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   X.debugging = true;
   X.db = X.Database.create();
 
-  cleanse = function (orm) {
+  var cleanse = function (orm) {
     var ret = _.clone(orm);
     delete ret.undefinedDependencies;
     delete ret.failedDependencies;
@@ -30,7 +30,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return ret;
   };
 
-  submit = function (socket, orm, queue, ack, isExtension) {
+  var submit = function (socket, orm, queue, ack, isExtension) {
     //console.log("submit", arguments);
     var query, extensions, context, extensionList = [], namespace, type;
     context = orm.context;
@@ -99,7 +99,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }, this));
   };
 
-  installQueue = function (socket, ack, queue) {
+  var installQueue = function (socket, ack, queue) {
     //console.log("install queue", arguments);
     var installed = socket.installed,
       orms = socket.orms,
@@ -127,19 +127,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     submit.call(this, socket, orm, queue, ack);
   };
 
-  testConnection = function (socket, ack, options, err, res) {
+  var testConnection = function (socket, ack, options, err, res) {
     if (err) return ack(false);
     socket.databaseOptions = options;
     ack(true);
   };
 
-  parseFile = function (path) {
+  var parseFile = function (path) {
     try {
       return X.json(_fs.readFileSync(path, "utf8"), true);
     } catch (err) { return {isError: true, message: err.message, file: path}; }
   };
 
-  dive = function (path, root) {
+  var dive = function (path, root) {
     var files = X.directoryFiles(path, {fullPath: true}), stat, isTop, ret, content, errors = [];
     isTop = root ? false: true;
     _.each(files, function (file) {
@@ -163,7 +163,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
   };
 
-  dependenciesFor = function (socket, orm, dependencies) {
+  var dependenciesFor = function (socket, orm, dependencies) {
     var properties, extensions, namespace, orms, dep;
     dependencies = dependencies ? dependencies : orm.dependencies ? orm.dependencies : (orm.dependencies = []);
     properties = orm.properties || [];
@@ -198,7 +198,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
 
-  calculateDependencies = function (socket) {
+  var calculateDependencies = function (socket) {
     var orms = socket.orms;
     _.each(orms, function (namespace) {
       _.each(_.keys(namespace), function (name) {
@@ -214,7 +214,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
 
-  checkDependencies = function (socket, orm) {
+  var checkDependencies = function (socket, orm) {
     var enabled = true, dependencies = orm.dependencies, found, orms;
     if (X.typeOf(orm.enabled) !== X.T_UNDEFINED) return orm.enabled;
     if (!dependencies || dependencies.length <= 0) return enabled;
@@ -237,7 +237,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return enabled;
   };
 
-  findExisting = function (nameSpace, type) {
+  var findExisting = function (nameSpace, type) {
     return _.find(existing, function (orm) {
       return orm.namespace === nameSpace && orm.type === type;
     });
