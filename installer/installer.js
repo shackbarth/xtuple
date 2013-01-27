@@ -5,7 +5,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 (function () {
   "use strict";
-  var orm = require('./lib/orm'),
+  var orm = require('./orm'),
     argv = process.argv,
     credentials = {},
     path = argv[argv.indexOf("--path") + 1];
@@ -29,17 +29,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   // if you want to run the installer programatically (i.e. not from the command line)
   // all you have to do is this:
   /*
-
-  var orm = require('./lib/orm'),
+  var orm = require('./orm'),
     creds = {
       hostname: 'localhost',
       username: 'shackbarth',
       port: '5432',
       database: 'dev3',
       organization: 'dev3'
-    };
+    },
+    path = '../../../public-extensions/source/crm/database/orm';
 
-  var path = '../../../public-extensions/source/crm/database/orm';
   orm.run(creds, path);
 
   */

@@ -5,15 +5,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 
 (function () {
-  var orm = require('./lib/orm'),
+    var orm = require('./orm'),
     creds = {
       hostname: 'localhost',
       username: 'shackbarth',
       port: '5432',
       database: 'dev3',
       organization: 'dev3'
-    };
+    },
+    path = '../../../public-extensions/source/crm/database/orm';
 
-  var path = '../../../public-extensions/source/crm/database/orm';
   orm.run(creds, path);
+
 }());
