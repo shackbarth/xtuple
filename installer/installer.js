@@ -10,6 +10,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     credentials = {},
     path = argv[argv.indexOf("--path") + 1];
 
+  //
+  // Grab the credentials from the command line. You can skip this
+  // and go straight to orm.run if you want to access the installer
+  // programatically.
+  //
   credentials.hostname = argv[argv.indexOf("-h") + 1];
   credentials.username = argv[argv.indexOf("-u") + 1];
   credentials.port = argv[argv.indexOf("-p") + 1];
@@ -24,21 +29,3 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   orm.run(credentials, path);
 }());
-
-
-  // if you want to run the installer programatically (i.e. not from the command line)
-  // all you have to do is this:
-  /*
-  var orm = require('./orm'),
-    creds = {
-      hostname: 'localhost',
-      username: 'shackbarth',
-      port: '5432',
-      database: 'dev3',
-      organization: 'dev3'
-    },
-    path = '../../../public-extensions/source/crm/database/orm';
-
-  orm.run(creds, path);
-
-  */
