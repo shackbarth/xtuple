@@ -13,6 +13,7 @@ depends(
   "opportunity.js",
   "priority.js",
   "project.js",
+  "prospect.js",
   "sales_rep.js",
   "static.js",
   "tax.js",
