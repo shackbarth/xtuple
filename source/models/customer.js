@@ -36,10 +36,10 @@ white:true*/
         customerType: settings.get("DefaultCustType"),
         backorder: settings.get("DefaultBackOrders"),
         partialShip: settings.get("DefaultPartialShipments"),
-        isFreeFormShipTo: settings.get("DefaultFreeFormShiptos"),
+        isFreeFormShipto: settings.get("DefaultFreeFormShiptos"),
         autoUpdateStatus: false,
         autoHoldOrders: false,
-        isFreeFormBillTo: false,
+        isFreeFormBillto: false,
         commission: 0,
         blanketPurchaseOrders: false,
         usesPurchaseOrders: false,
@@ -128,15 +128,21 @@ white:true*/
     },
     
     /**
+    
+    */
+    convertFromAccount: function (id) {
+      
+    },
+    
+    /**
       takes an ID, fetches a prospect, and takes all the attributes shared between
       prospect and customer and uses name, contactId, salesRepId, site, taxZone to fill
       the new customer
     */
     convertFromProspect: function (id) {
-      var prospect = new XM.Prospect(),
-          stringy = "{id:" + id + "}";
+      var prospect = new XM.Prospect();
       
-      prospect.fetch(stringy);
+      prospect.fetch(id);
       
       this.name = prospect.name;
       this.billingContact = prospect.contact;
