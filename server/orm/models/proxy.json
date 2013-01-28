@@ -175,6 +175,13 @@
        }
      },
      {
+       "name": "group",
+       "attr": {
+         "type": "String",
+         "column": "org_group"
+       }
+     },
+     {
        "name": "licenses",
        "attr": {
          "type": "Number",

@@ -7,5 +7,6 @@ select xt.add_column('org','org_descrip', 'text');
 select xt.add_column('org','org_cloud', 'text');
 select xt.add_column('org','org_licenses', 'integer');
 select xt.add_column('org','org_active', 'boolean');
+select xt.add_column('org','org_group', 'text');
 
 comment on table xt.org is 'Organizations which technically are databases';
