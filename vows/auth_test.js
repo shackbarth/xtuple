@@ -1,20 +1,14 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true */
+/*global XT:true */
+
+XT = {};
 
 var assert = require('assert'),
   zombie = require('zombie');
 (function () {
   "use strict";
 
-/*
-  zombie.visit('http://enyojs.com/sampler/', function (e, browser) {
-    console.log(arguments);
-    console.log(browser.errors);
-    console.log(browser.text('title'));
-
-  });
-*/
   zombie.visit('http://localhost:2000', {debug: false}, function (e, browser) {
     //
     // This is the login screen
@@ -29,15 +23,19 @@ var assert = require('assert'),
 
         // Note: make sure the app is BUILT
 
-        //console.log(arguments);
-        //console.log(browser.text('title'));
-
+        // not quite sure why zombie doesn't do this redirect, but oh well.
         browser.visit('http://localhost:2000/client/index.html', function (e, browser) {
-          console.log(typeof enyo);
-          console.log(browser.errors);
-          browser.wait(function () {
-            console.log("App is loaded");
-            console.log(browser.window.XT.app.state);
+          //console.log(browser.errors);
+          function appIsReady(window) {
+            return window.XT.app.state === 6;
+          }
+          browser.wait(appIsReady, function () {
+            XT = browser.window.XT;
+
+            //console.log(XT.session.schema);
+            //console.log(XT.session.schema.toJSON());
+            //console.log(JSON.stringify(XT.session.extensions));
+            process.exit(0);
           });
         });
       });
