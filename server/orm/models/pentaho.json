@@ -1,0 +1,41 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "PentahoTempQueryData",
+    "table": "xt.pentahotempqrydata",
+    "comment": "Pentaho Temporary Query Data Map",
+    "properties": [
+     {
+       "name": "key",
+       "attr": {
+         "type": "String",
+         "column": "pentahotempqrydata_key",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "query",
+       "attr": {
+         "type": "String",
+         "column": "pentahotempqrydata_query"
+       }
+     },
+     {
+       "name": "data",
+       "attr": {
+         "type": "String",
+         "column": "pentahotempqrydata_data"
+       }
+     },
+     {
+       "name": "created",
+       "attr": {
+         "type": "Date",
+         "column": "pentahotempqrydata_created"
+       }
+     }
+    ],
+    "isSystem": true
+  }
+]
