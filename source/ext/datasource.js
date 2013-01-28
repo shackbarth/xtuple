@@ -331,6 +331,11 @@ white:true*/
           error: options ? options.error : undefined
         });
 
+      if (payload.body && !payload.text) {
+        // be flexible with the inputs. Node-emailer prefers the term text, but
+        // body is fine for us as well.
+        payload.text = payload.body
+      }
       ajax.response(this.ajaxSuccess);
       ajax.go(payload);
     },
