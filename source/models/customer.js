@@ -39,7 +39,7 @@ white:true*/
         isFreeFormShipTo: settings.get("DefaultFreeFormShiptos"),
         autoUpdateStatus: false,
         autoHoldOrders: false,
-        ifFreeFormBillTo: false,
+        isFreeFormBillTo: false,
         commission: 0,
         blanketPurchaseOrders: false,
         usesPurchaseOrders: false,
@@ -107,6 +107,9 @@ white:true*/
       
     },
     
+    /**
+      
+    */
     statusDidChange: function () {
       var status = this.getStatus(),
           privileges = XT.session.getPrivileges(),
@@ -122,6 +125,27 @@ white:true*/
           this.setReadOnly("customerType", true);
         }
       }
+    },
+    
+    /**
+      takes an ID, fetches a prospect, and takes all the attributes shared between
+      prospect and customer and uses name, contactId, salesRepId, site, taxZone to fill
+      the new customer
+    */
+    convertFromProspect: function (id) {
+      var prospect = new XM.Prospect(),
+          stringy = "{id:" + id + "}";
+      
+      prospect.fetch(stringy);
+      
+      this.name = prospect.name;
+      this.billingContact = prospect.contact;
+      this.salesRep = prospect.salesRep;
+      this.preferredSite = prospect.site;
+      this.taxZone = prospect.taxZone;
+      
+      //destroy the prospect somehow?
+      //prospect.destroy();
     }
 
   });
