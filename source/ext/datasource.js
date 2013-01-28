@@ -346,8 +346,8 @@ white:true*/
     getExtensionList: function (options) {
       var that = this,
         ajax = new enyo.Ajax({
-          url: "http://localhost:2000/extensions", // XXX temp until migration
-          //url: "/extensions",
+          //url: "http://localhost:2000/extensions", // XXX temp until migration
+          url: "/extensions",
           success: options ? options.success : undefined,
           error: options ? options.error : undefined
         });
@@ -393,6 +393,8 @@ white:true*/
         didConnect.call(self, callback);
       });
       this._sock.on("error", function (err) {
+        // TODO - New express conneciton error doesn't send err message back here, but does call this.
+        XT.log("socket.io error SERVER SAID: ", err);
         didError.call(self, err, callback);
       });
       this._sock.on("debug", function (msg) {
