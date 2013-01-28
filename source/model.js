@@ -603,7 +603,8 @@ white:true*/
             break;
           } else if (value && typeof value === "object") {
             continue;
-          } else if (typeof value === "string") {
+          } else if (typeof value === "string" ||
+                     typeof value === "number") {
             break;
           } else {
             value = "";
@@ -1010,7 +1011,8 @@ white:true*/
       @returns {XT.Request} Request
     */
     used: function (options) {
-      return this.dispatch('XM.Model', 'used', [this.recordType, this.id], options);
+      options.databaseType = this.databaseType;
+      return this.getClass().used(this.id, options);
     },
 
     /**
@@ -1281,16 +1283,20 @@ white:true*/
       if (sessionPrivs && sessionPrivs.get) {
         // Check global privileges.
         if (privs.all && privs.all[action]) {
-          isGrantedAll = sessionPrivs.get(privs.all[action]);
+          isGrantedAll = this.checkCompoundPrivs(sessionPrivs, privs.all[action]);
+        }
+        // update privs are always sufficient for viewing as well
+        if (!isGrantedAll && privs.all && action === 'read' && privs.all.update) {
+          isGrantedAll = this.checkCompoundPrivs(sessionPrivs, privs.all.update);
         }
 
         // Check personal privileges.
         if (!isGrantedAll && privs.personal && privs.personal[action]) {
-          isGrantedPersonal = sessionPrivs.get(privs.personal[action]);
+          isGrantedPersonal = this.checkCompoundPrivs(sessionPrivs, privs.personal[action]);
         }
-        if (!isGrantedPersonal && privs.personal && action === 'read'  &&
-            privs.personal.update) {
-          isGrantedPersonal = sessionPrivs.get(privs.personal.update);
+        // update privs are always sufficient for viewing as well
+        if (!isGrantedPersonal && privs.personal && action === 'read' && privs.personal.update) {
+          isGrantedPersonal = this.checkCompoundPrivs(sessionPrivs, privs.personal.update);
         }
       }
 
@@ -1310,6 +1316,16 @@ white:true*/
       }
 
       return isGrantedAll || isGrantedPersonal;
+    },
+
+    checkCompoundPrivs: function (sessionPrivs, privileges) {
+      if (typeof privileges !== 'string') {
+        return privileges;
+      }
+      var match = _.find(privileges.split(" "), function (priv) {
+        return sessionPrivs.get(priv);
+      });
+      return !!match; // return true if match is truthy
     },
 
     /**
@@ -1380,6 +1396,20 @@ white:true*/
       options = options ? _.clone(options) : {};
       options.force = true;
       return Backbone.RelationalModel.findOrCreate.call(this, attributes, options);
+    },
+
+    /**
+      Determine whether this record has been referenced by another. By default
+      this function inspects foreign key relationships on the database, and is
+      therefore dependent on foreign key relationships existing where appropriate
+      to work correctly.
+
+      @param {Number} Id
+      @param {Object} Options
+      @returns {XT.Request} Request
+    */
+    used: function (id, options) {
+      return XT.dataSource.dispatch('XM.Model', 'used', [this.prototype.recordType, id], options);
     },
 
     // ..........................................................

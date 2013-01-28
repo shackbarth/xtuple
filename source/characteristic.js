@@ -33,6 +33,15 @@ white:true*/
       "isItems",
       "order"
     ],
+    
+    contextAttributes: [
+      "isAddresses",
+      "isContacts",
+      "isAccounts",
+      "isItems",
+      "isIncidents",
+      "isOpportunities"
+    ],
 
     //..................................................
     // METHODS
@@ -82,9 +91,15 @@ white:true*/
         values = [],
         i;
 
-      // Validate at least one context selected
-      if (!(this.get('isItems') || this.get('isContacts') ||
-            this.get('isAddresses') || this.get('isAccounts'))) {
+      var contextError = false;
+      for (i = 0; i < this.contextAttributes.length; i++) {
+        var attr = this.contextAttributes[i];
+        if (this.get(attr)) {
+          contextError = true;
+          break;
+        }
+      }
+      if (!contextError) {
         return XT.Error.clone('xt2002');
       }
 
