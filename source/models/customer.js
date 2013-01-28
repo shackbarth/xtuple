@@ -135,9 +135,9 @@ white:true*/
     },
     
     /**
-      takes an ID, fetches a prospect, and takes all the attributes shared between
-      prospect and customer and uses name, contactId, salesRepId, site, taxZone to fill
-      the new customer
+      Creates a new prospect model and fetches based on the given ID.
+      Takes attributes from the prospect model, gives them to this customer
+      model, and destroys the prospect.
     */
     convertFromProspect: function (id) {
       var prospect = new XM.Prospect();
