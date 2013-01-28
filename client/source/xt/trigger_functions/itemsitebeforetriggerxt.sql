@@ -4,6 +4,12 @@ create or replace function xt.itemsitebeforetriggerxt() returns trigger as $$
 
 
   if (TG_OP === 'INSERT') {
+    NEW.itemsite_qtyonhand = NEW.itemsite_qtyonhand || 0;
+    NEW.itemsite_eventfence = NEW.itemsite_eventfence || 0;
+    NEW.itemsite_sold = NEW.itemsite_sold || true;
+    NEW.itemsite_stocked = NEW.itemsite_stocked || true;
+    NEW.itemsite_useparams = NEW.itemsite_useparams || true;
+    NEW.itemsite_value = NEW.itemsite_value || 0;
     NEW.itemsite_reorderlevel = NEW.itemsite_reorderlevel || 0;
     NEW.itemsite_ordertoqty = NEW.itemsite_ordertoqty || 0;
     NEW.itemsite_cyclecountfreq = NEW.itemsite_cyclecountfreq || 0;
