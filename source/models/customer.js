@@ -141,11 +141,10 @@ white:true*/
       @returns {Object} Receiver
     */
     findExisting: function (key, value, options) {
-      var recordType = this.recordType || this.prototype.recordType,
-        params = [ recordType, key, value, this.id || -1 ],
+      var params = [ key, value, this.id || -1 ],
         dataSource = options.dataSource || XT.dataSource;
       dataSource.dispatch('XM.Customer', 'findExisting', params, options);
-      XT.log("XM.Customer.findExisting for: " + recordType);
+      XT.log("XM.Customer.findExisting");
       return this;
     }
 
