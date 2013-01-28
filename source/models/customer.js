@@ -37,6 +37,8 @@ white:true*/
         backorder: settings.get("DefaultBackOrders"),
         partialShip: settings.get("DefaultPartialShipments"),
         isFreeFormShipTo: settings.get("DefaultFreeFormShiptos"),
+        autoUpdateStatus: false,
+        autoHoldOrders: false,
         ifFreeFormBillTo: false,
         commission: 0,
         blanketPurchaseOrders: false,
@@ -85,23 +87,6 @@ white:true*/
     },
     
     /**
-      Return a matching record id for a passed user `key` and `value`. If none
-      found, returns zero.
-
-      @param {String} Property to search on, typically a user key
-      @param {String} Value to search for
-      @param {Object} Options
-      @returns {Object} Receiver
-    */
-    findExisting: function (key, value, options) {
-/*
-      options = options || {};
-      options.databaseType = options.databaseType || this.databaseType;
-      return this.getClass().findExisting.call(this, key, value, options);
-*/
-    },
-    
-    /**
       Sets the readOnlyAttributes array according to different checkboxes
     */
     optionsDidChange: function () {
@@ -141,6 +126,31 @@ white:true*/
 
   });
 
+  // ..........................................................
+  // CLASS METHODS
+  //
+
+  _.extend(XM.Customer, /** @lends XM.Model# */{
+    /**
+      Return a matching record id for a passed user `key` and `value`. If none
+      found, returns zero.
+
+      @param {String} Property to search on, typically a user key
+      @param {String} Value to search for
+      @param {Object} Options
+      @returns {Object} Receiver
+    */
+    findExisting: function (key, value, options) {
+      var recordType = this.recordType || this.prototype.recordType,
+        params = [ recordType, key, value, this.id || -1 ],
+        dataSource = options.dataSource || XT.dataSource;
+      dataSource.dispatch('XM.Customer', 'findExisting', params, options);
+      XT.log("XM.Customer.findExisting for: " + recordType);
+      return this;
+    }
+
+  });
+  
   /**
     @class
 
