@@ -35,6 +35,7 @@
 \i xt/functions/install_guiscript.sql;
 \i xt/functions/mergecrmaccts.sql;
 \i xt/functions/undomerge.sql;
+\i xt/functions/user_account_sync.sql
 
 -- xt trigger functions
 \i xt/trigger_functions/comment_did_change.sql
@@ -82,6 +83,7 @@
 
 \i xt/guiscripts/user.sql;
 \i xt/guiscripts/users.sql;
+\i xt/guiscripts/userPreferences.sql;
 
 -- delete system orms
 \i delete_system_orms.sql;
