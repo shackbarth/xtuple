@@ -56,6 +56,7 @@ white:true*/
 
           // If we don't hear back, keep going
           timeoutId = setTimeout(function () {
+            console.log("timeout was reached");
             that.callback(null, model);
           }, XVOWS.wait);
         },
@@ -89,6 +90,10 @@ white:true*/
             callback = function () {
               var status = model.getStatus(),
                 K = XM.Model;
+                console.log("status is");
+                console.log(model.getStatusString());
+                console.log("record type is");
+                console.log(model.recordType);
               if (status === K.READY_CLEAN) {
                 clearTimeout(timeoutId);
                 model.off('statusChange', callback);
@@ -100,6 +105,7 @@ white:true*/
 
           // If we don't hear back, keep going
           timeoutId = setTimeout(function () {
+            console.log("timeout was reached");
             that.callback(null, model);
           }, XVOWS.wait);
         },
@@ -162,6 +168,7 @@ white:true*/
 
           // If we don't hear back, keep going
           timeoutId = setTimeout(function () {
+            console.log("timeout was reached");
             that.callback(null, model);
           }, XVOWS.wait);
         },

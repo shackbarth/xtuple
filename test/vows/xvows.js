@@ -10,10 +10,10 @@
 /*
 The node script in Jenkins looks like this:
 
-  var init = require("/home/shackbarth/Devel/git/client/vows/lib/xvows_init");
+  var init = require("/home/shackbarth/Devel/git/client/test/vows/lib/xvows_init");
   init.parseArgs({user: "dev", password: "dev"});
 
-  X.basePath = "/home/shackbarth/Devel/git/client/vows";
+  X.basePath = "/home/shackbarth/Devel/git/client/test/vows";
   XVOWS.statusCallback = function (status) {
     var brokenVows = _.reduce(status, function (memo, status) {
       return memo + status.total - status.honored;

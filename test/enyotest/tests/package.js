@@ -1,5 +1,4 @@
 enyo.depends(
-  //"number_widget_test.js"
   //"langTest.js",
   //"KindTest.js",
   //"JsonTest.js",

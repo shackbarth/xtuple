@@ -238,70 +238,81 @@ white:true*/
       XM.priorities.fetch(options);
     }
   });
-
+  
   XT.StartupTasks.push({
-    taskName: "loadIncidentCategories",
+    taskName: "loadTerms",
     task: function () {
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.incidentCategories = new XM.IncidentCategoryCollection();
-      XM.incidentCategories.fetch(options);
+      XM.terms = new XM.TermsCollection();
+      XM.terms.fetch(options);
+    }
+  });
+  
+  XT.StartupTasks.push({
+    taskName: "loadCustomerTypes",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      XM.customerTypes = new XM.CustomerTypeCollection();
+      XM.customerTypes.fetch(options);
     }
   });
 
   XT.StartupTasks.push({
-    taskName: "loadIncidentResolutions",
+    taskName: "loadSalesReps",
     task: function () {
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.incidentResolutions = new XM.IncidentResolutionCollection();
-      XM.incidentResolutions.fetch(options);
+      XM.salesReps = new XM.SalesRepCollection();
+      XM.salesReps.fetch(options);
     }
   });
 
   XT.StartupTasks.push({
-    taskName: "loadIncidentSeverities",
+    taskName: "loadTaxZones",
     task: function () {
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.incidentSeverities = new XM.IncidentSeverityCollection();
-      XM.incidentSeverities.fetch(options);
+      XM.taxZones = new XM.TaxZoneCollection();
+      XM.taxZones.fetch(options);
     }
   });
 
   XT.StartupTasks.push({
-    taskName: "loadOpportunityStages",
+    taskName: "loadShipVias",
     task: function () {
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.opportunityStages = new XM.OpportunityStageCollection();
-      XM.opportunityStages.fetch(options);
+      XM.shipVias = new XM.ShipViaCollection();
+      XM.shipVias.fetch(options);
     }
   });
 
   XT.StartupTasks.push({
-    taskName: "loadOpportunityTypes",
+    taskName: "loadShipCharges",
     task: function () {
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.opportunityTypes = new XM.OpportunityTypeCollection();
-      XM.opportunityTypes.fetch(options);
+      XM.shipCharges = new XM.ShipChargeCollection();
+      XM.shipCharges.fetch(options);
     }
   });
 
   XT.StartupTasks.push({
-    taskName: "loadOpportunitySources",
+    taskName: "loadShipZones",
     task: function () {
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.opportunitySources = new XM.OpportunitySourceCollection();
-      XM.opportunitySources.fetch(options);
+      XM.shipZones = new XM.ShipZoneCollection();
+      XM.shipZones.fetch(options);
     }
   });
 

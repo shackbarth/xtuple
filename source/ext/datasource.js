@@ -308,6 +308,47 @@ white:true*/
     },
 
     /*
+      Sends a request to node to send out an email
+
+    @param {Object} payload
+    @param {String} payload.from
+    @param {String} payload.to
+    @param {String} payload.cc
+    @param {String} payload.bcc
+    @param {String} payload.subject
+    @param {String} payload.text
+    */
+    sendEmail: function (payload, options) {
+      var that = this,
+        complete = function (response) {
+          var params = {}, error;
+
+          // handle error
+          if (response.isError) {
+            if (options && options.error) {
+              params.error = response.message;
+              error = XT.Error.clone('xt1001', { params: params });
+              options.error.call(that, error);
+            }
+            return;
+          }
+
+          // handle success
+          if (options && options.success) {
+            options.success.call(that, response.data);
+          }
+        };
+
+      if (payload.body && !payload.text) {
+        // be generous with the inputs
+        payload.text = payload.body
+      }
+      return XT.Request
+               .handle('function/email')
+               .notify(complete)
+               .send(payload);
+    },
+    /*
       Determine the list of extensions in use by the user's
       organization.
 
