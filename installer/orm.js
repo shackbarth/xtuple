@@ -2,8 +2,8 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true */
 
-require('../../../node-xt/foundation/foundation');
-require('../../../node-xt/database/database');
+require('../node_modules/xt/foundation/foundation');
+require('../node_modules/xt/database/database');
 
 (function () {
   "use strict";
@@ -78,8 +78,9 @@ require('../../../node-xt/database/database');
           console.log("skipping ahead");
         } else {
           console.log("unable to continue");
-          X.log("Critical error. Unable to continue. Killing process. ", err.message);
-          process.emit("SIGKILL");
+          ack(err.message);
+          //X.log("Critical error. Unable to continue. Killing process. ", err.message);
+          //process.emit("SIGKILL");
           return;
         }
       }
@@ -106,7 +107,12 @@ require('../../../node-xt/database/database');
     var installed = socket.installed,
       orms = socket.orms,
       orm, dependencies = [];
-    if (!queue || queue.length === 0) { return ack(socket.installed); }
+    if (!queue || queue.length === 0) {
+      // this is the actual callback! The first arg is an error, which is null if
+      // we've made it this far. The second arg is an array of all the orm names
+      // that have been installed.
+      return ack(null, _.map(socket.installed, function (orm) {return orm.type}));
+    }
     orm = queue.shift();
 
     if (installed.indexOf(orm) !== -1) {
@@ -359,15 +365,18 @@ require('../../../node-xt/database/database');
     X.db.query(sql, socket.databaseOptions, callback);
   };
 
-  runOrmInstaller = function (creds, path) {
-    console.log("Starting orm installer");
+  runOrmInstaller = function (creds, path, callback) {
+    if (!callback) {
+      callback = function () {
+        console.log("all done");
+        process.exit(0);
+      };
+    }
+
     var socket = {databaseOptions: creds};
     select(socket, creds, function () {
       refresh(socket, {path: path}, function () {
-        install(socket, function () {
-          console.log("all done");
-          process.exit(0);
-        });
+        install(socket, callback);
       });
     });
   };

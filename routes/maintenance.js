@@ -8,7 +8,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var exec = require('child_process').exec,
     url = require("url"),
     querystring = require("querystring"),
-    path = require('path');
+    path = require('path'),
+    ormInstaller = require('../installer/orm');
 
   /*
    * The installer (the orm repo, actually) is an npm-managed dependency
@@ -50,29 +51,29 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
    * The ORM installer commands need to be run sequentially. We create an array of the commands that
    * we have to run and then use recursion to do them one at a time here.
    */
-  var runOrmCommands = function (ormCommands, pgPassword, respObject, res) {
+  var runOrmCommands = function (ormArgs, pgPassword, respObject, res) {
     var ormCommand,
       ormCallback;
 
     // exit strategy
-    if (ormCommands.length === 0) {
+    if (ormArgs.length === 0) {
       respObject.status = respObject.status || "SUCCESS";
       respond(res, respObject);
       return;
     }
 
-    ormCommand = ormCommands.pop();
+    ormCommand = ormArgs.pop();
     ormCallback = function (error, stdout, stderr) {
       // log any relevant information from the orm exec call
-      X.log("ORM command returned. " + ormCommands.length + " left");
+      X.log("ORM command returned. " + ormArgs.length + " left");
       logAll(respObject, stdout, stderr, error);
 
       // recurse down an ever-shortening array
-      runOrmCommands(ormCommands, pgPassword, respObject, res);
+      runOrmCommands(ormArgs, pgPassword, respObject, res);
     };
     X.log("Running ORM command: ", ormCommand);
 
-    exec(ormCommand, ormCallback);
+    ormInstaller.run(ormCommand.ormCreds, ormCommand.ormDir, ormCallback);
   };
 
   /**
@@ -82,7 +83,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var install = function (res, args, username) {
     var commandCount = 0,
       commandsReturned = 0,
-      ormCommands = [],
+      ormArgs = [],
       ormCount = 0,
       ormsReturned = 0,
       respObject = {commandLog: [], log: [], errorLog: [], errorCount: 0},
@@ -132,8 +133,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
                 // note that we leave out the password from the command because it will
                 // be reported back to the user
-                var ormCommand = nodePath + " installer.js -cli -h " + host + " -d " + orgName +
-                    " -u " + pgUser + " -p " + port + " --path ../../../" + ormDir + " -P ";
+                var ormCreds = {
+                  hostname: host,
+                  organization: orgName,
+                  username: pgUser,
+                  port: port,
+                  password: pgPassword
+                };
+                //nodePath + " installer.js -cli -h " + host + " -d " + orgName +
+                 //   " -u " + pgUser + " -p " + port + " --path ../../../" + ormDir + " -P ";
 
                 // log any relevant information from the script exec call
                 logAll(respObject, stdout, stderr, error);
@@ -156,13 +164,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
                   // The way we accomplish this is to push all the orm commands into an array
                   // and then run them sequentially once the array is complete.
                   //
-                  X.log("Pushing (cd " + installerDir + " && exec " + ormCommand + pgPassword + ")");
-                  ormCommands.push("(cd " + installerDir + " && exec " + ormCommand + pgPassword + ")");
-                  respObject.commandLog.push(ormCommand);
+                  X.log("Pushing creds for " + ormDir);
+                  ormArgs.push({ormCreds: ormCreds, ormDir: ormDir});//"(cd " + installerDir + " && exec " + ormCommand + pgPassword + ")");
+                  respObject.commandLog.push("Installing orms: " + ormDir);
                 }
 
-                if (ormCount === ormCommands.length) {
-                  runOrmCommands(ormCommands, pgPassword, respObject, res);
+                if (ormCount === ormArgs.length) {
+                  runOrmCommands(ormArgs, pgPassword, respObject, res);
                 }
                 commandsReturned++;
               };
