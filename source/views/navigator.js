@@ -67,6 +67,7 @@ trailing:true white:true*/
             {kind: "XV.IconButton", src: "lib/enyo-x/assets/menu-icon-gear.png",
 							content: "_actions".loc()},
             {kind: "onyx.Menu", components: [
+              {name: "exportCSVItem", content: "_export".loc() + " CSV", showing: false}, // TODO: delete once pentaho is working
               {name: "exportItem", content: "_export".loc(), showing: false},
               {name: "myAccountItem", content: "_myAccount".loc()},
               {name: "helpItem", content: "_help".loc()}
@@ -152,6 +153,9 @@ trailing:true white:true*/
     actionSelected: function (inSender, inEvent) {
       switch (inEvent.originator.name)
       {
+      case 'exportCSVItem': // TODO: delete this case once pentaho is working
+        this.exportListCSV();
+        break;
       case 'exportItem':
         this.exportList();
         break;
@@ -240,6 +244,16 @@ trailing:true white:true*/
       those technologies.
      */
     exportList: function (inSender, inEvent) {
+      var list = this.$.contentPanels.getActive(),
+        query = JSON.parse(JSON.stringify(list.getQuery())); // clone
+
+      delete query.rowLimit;
+      delete query.rowOffset;
+
+      window.open('/report?details={"requestType":"fetch","query":' + JSON.stringify(query) + '}', '_newtab');
+    },
+    // TODO: delete this method once pentaho is working
+    exportListCSV: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),
         query = JSON.parse(JSON.stringify(list.getQuery())); // clone
 
@@ -445,7 +459,7 @@ trailing:true white:true*/
           // XXX try this: only create the first three
           if (panels[n].index < 3) {
             panels[n].status = "active";
-            
+
             // Default behavior for Lists is toggle selections
             // So we can perform actions on rows. If not a List
             // this property shouldn't hurt anything
@@ -542,7 +556,7 @@ trailing:true white:true*/
       } else if (panelStatus === 'unborn') {
         // panel exists but has not been rendered. Render it.
         module.panels[index].status = 'active';
-        
+
         // Default behavior for Lists is toggle selections
         // So we can perform actions on rows. If not a List
         // this property shouldn't hurt anything
@@ -566,17 +580,17 @@ trailing:true white:true*/
       } else {
         XT.error("Don't know what to do with this panel status");
       }
-      
+
       // Mobile device view
       if (enyo.Panels.isScreenNarrow()) {
         this.next();
       }
-      
+
       // If we're already here, bail
       if (contentPanels.index === this.$.contentPanels.indexOfChild(panel)) {
         return;
       }
-      
+
       // cache any extraneous content panels
       this.cachePanels();
 
@@ -598,6 +612,7 @@ trailing:true white:true*/
       // hasn't been loaded yet then the navigator simply won't allow export
       var isAllowedToExport = XM.currentUser && !XM.currentUser.get("disableExport");
       this.$.exportItem.setShowing(collection && isAllowedToExport);
+      this.$.exportCSVItem.setShowing(collection && isAllowedToExport); // TODO: delete once pentaho is working
 
       // Handle new button
       this.$.newButton.setShowing(panel.canAddNew);
@@ -626,7 +641,7 @@ trailing:true white:true*/
         this.fetched[panelIndex] = true;
       }
     },
-    
+
     /**
       The header content typically describes to the user the particular query filter in effect.
      */
