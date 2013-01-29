@@ -71,6 +71,28 @@ X = {};
 
     return _.values(obj);
   };
+  
+  X.relativeDependsPath = "";
+  /**
+    For traversing dependency package files.
+  */
+  X.depends = function () {
+    var dir = this.relativeDependsPath,
+      files = X.$A(arguments),
+      pathBeforeRecursion;
+
+    _.each(files, function (file) {
+      if (_fs.statSync(_path.join(dir, file)).isDirectory()) {
+        pathBeforeRecursion = X.relativeDependsPath;
+        X.relativeDependsPath = _path.join(dir, file);
+        X.depends("package.js");
+        X.relativeDependsPath = pathBeforeRecursion;
+      } else {
+        require(_path.join(dir, file));
+      }
+    });
+  };
+  
   /**
     Adds a function to X. Used internally.
 
@@ -424,7 +446,7 @@ X = {};
       if (X.autoStart) X.didBecomeReady();
     }
   });
-
+  
   require("./proto");
   require("./object");
   require("./io");
@@ -439,5 +461,6 @@ X = {};
       if (X.exists(path)) X.version = X.readFile(path);
     }
     if (X.none(X.version)) X.version = "UNKNOWN";
-  }())
+  }());
+  
 }());
