@@ -63,7 +63,7 @@ white:true*/
   /**
     @class Includes functionality common to xTuple documents uniquely identified by
     a user accessible `documentKey'.
-    @name XM.Document 
+    @name XM.Document
     @extends XM.Model
     @extends XM.DocumentAssignmentsMixin
   */
@@ -163,6 +163,7 @@ white:true*/
           if (resp) {
             params.attr = ("_" + that.documentKey).loc();
             params.value = value;
+            params.response = _.isNumber(resp) ? resp : JSON.parse(resp);
             err = XT.Error.clone('xt1008', { params: params });
             that.trigger('error', that, err, options);
           }
