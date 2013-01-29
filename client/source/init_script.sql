@@ -27,7 +27,6 @@
 \i xt/trigger_functions/useracct_did_change.sql
 \i xt/trigger_functions/grp_did_change.sql
 \i xt/trigger_functions/grppriv_did_change.sql
-\i xt/trigger_functions/itemsite_did_change.sql
 \i xt/trigger_functions/usrgrp_did_change.sql
 \i xt/trigger_functions/usrpriv_did_change.sql
 \i xt/trigger_functions/usrpref_did_change.sql
