@@ -2,15 +2,15 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "PentahoTempQueryData",
-    "table": "xt.pentahotempqrydata",
-    "comment": "Pentaho Temporary Query Data Map",
+    "type": "BiCache",
+    "table": "xt.bicache",
+    "comment": "BI Cache Map",
     "properties": [
      {
        "name": "key",
        "attr": {
          "type": "String",
-         "column": "pentahotempqrydata_key",
+         "column": "bicache_key",
          "isPrimaryKey": true
        }
      },
@@ -18,21 +18,21 @@
        "name": "query",
        "attr": {
          "type": "String",
-         "column": "pentahotempqrydata_query"
+         "column": "bicache_query"
        }
      },
      {
        "name": "data",
        "attr": {
          "type": "String",
-         "column": "pentahotempqrydata_data"
+         "column": "bicache_data"
        }
      },
      {
        "name": "created",
        "attr": {
          "type": "Date",
-         "column": "pentahotempqrydata_created"
+         "column": "bicache_created"
        }
      }
     ],

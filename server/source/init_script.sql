@@ -19,7 +19,7 @@
 \i xt/tables/usr.sql
 \i xt/tables/usrorg.sql
 \i xt/tables/sessionorg.sql
-\i xt/tables/pentahotempqrydata.sql
+\i xt/tables/bicache.sql
 
 
 -- xt functions
