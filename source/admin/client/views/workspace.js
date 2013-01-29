@@ -149,11 +149,10 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.InputWidget", attr: "hostname"},
-            {kind: "XV.NumberWidget", attr: "port"},
-            {kind: "XV.InputWidget", attr: "location"},
-            {kind: "XV.DateWidget", attr: "dateAdded"},
+            {kind: "XV.InputWidget", attr: "port"},
             {kind: "XV.InputWidget", attr: "user"},
-            {kind: "XV.InputWidget", attr: "password", type: "password"}
+            {kind: "XV.InputWidget", attr: "password", type: "password"},
+            {kind: "XV.InputWidget", attr: "location"}
           ]}
         ]}
       ]}
@@ -181,6 +180,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.CheckboxWidget", attr: "isActive"},
+            {kind: "XV.InputWidget", attr: "group"},
             {kind: "XV.NumberWidget", attr: "licenses"},
             {kind: "XV.DatabaseServerWidget", attr: "databaseServer"}
           ]}
