@@ -283,17 +283,6 @@ white:true*/
     }
   });
   
-  // XT.StartupTasks.push({
-  //   taskName: "loadShippingForms",
-  //   task: function () {
-  //     var options = {
-  //       success: _.bind(this.didComplete, this)
-  //     };
-  //     XM.shippingForms = new XM.ShippingFormCollection();
-  //     XM.shippingForms.fetch(options);
-  //   }
-  // });
-
   XT.StartupTasks.push({
     taskName: "loadShipVias",
     task: function () {

@@ -315,6 +315,20 @@ regexp:true, undef:true, trailing:true, white:true */
   });
   
   // ..........................................................
+  // TAX AUTHORITY
+  //
+
+  enyo.kind({
+    name: "XV.TaxAuthorityPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.taxAuthorities",
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ]
+  });
+  
+  // ..........................................................
   // TAX ZONE
   //
 

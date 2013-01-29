@@ -369,7 +369,6 @@ trailing:true white:true*/
             {kind: "XV.SalesRepPicker", attr: "salesRep"},
             {kind: "XV.NumberWidget", attr: "commission"},
             {kind: "XV.ShipViaPicker", attr: "shipVia"},
-            {kind: "XV.ShippingFormPicker", attr: "shipForm"},
             {kind: "XV.ShippingChargePicker", attr: "shipCharge"},
             {kind: "XV.CheckboxWidget", attr: "backorder"},
             {kind: "XV.CheckboxWidget", attr: "partialShip"},
@@ -393,16 +392,15 @@ trailing:true white:true*/
             // {kind: "XV.CheckboxWidget", attr: "autoHoldOrders"},
             {kind: "XV.NumberWidget", attr: "graceDays"},
             {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
-            {kind: "XV.TaxZonePicker", attr: "taxZone", label: "_defaultTaxZone".loc()},
+            {kind: "XV.TaxZonePicker", attr: "taxZone", label: "_defaultTaxZone".loc()}
           ]}
         ]},
-        // Tax
+        {kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
         {kind: "XV.CustomerCommentBox", attr: "comments"},
         {kind: "XV.CustomerDocumentsBox", attr: "documents"},
-        //{kind: "XV.AccountContactsBox", attr: "customerContact"},
         {kind: "XV.CustomerShipToBox", attr: "shiptos"}
       ]},
-      {kind: "onyx.Popup", name: "multipleAddressPopup", centered: true,
+      {kind: "onyx.Popup", name: "findExistingCustomerPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",
         onHide: "popupHidden", components: [
         {content: "_addressShared".loc()},
@@ -416,59 +414,17 @@ trailing:true white:true*/
           classes: "xv-popup-button"}
       ]}
     ],
-    accountChanged: function () {
-      //var account = this.$.accountWidget.getValue();
-      //this.$.addressWidget.setAccount(account);
-    },
-    addressChangeAll: function () {
-      var options = {address: XM.Address.CHANGE_ALL};
-      this._popupDone = true;
-      this.$.multipleAddressPopup.hide();
-      this.save(options);
-    },
-    addressChangeOne: function () {
-      var options = {address: XM.Address.CHANGE_ONE};
-      this._popupDone = true;
-      this.$.multipleAddressPopup.hide();
-      this.save(options);
-    },
-    addressCancel: function () {
-      this._popupDone = true;
-      this.$.multipleAddressPopup.hide();
-    },
-    attributesChanged: function (inSender, inEvent) {
-      this.inherited(arguments);
-      //this.accountChanged();
-    },
-    controlValueChanged: function (inSender, inEvent) {
-      this.inherited(arguments);
-      // if (inEvent.originator.name === 'accountWidget') {
-      //         this.accountChanged();
-      //       }
-    },
     errorNotify: function (inSender, inEvent) {
-      // Handle address questions
+      // Handle customer existing as prospect
       if (inEvent.error.code === 'xt2007') {
         this._popupDone = false;
         this.$.multipleAddressPopup.show();
         return true;
       }
     },
-    modelChanged: function () {
-      this.inherited(arguments);
-      // var input = this.findControl("primaryEmail").$.input,
-      //  value = this.getValue();
-      // input._collection = value ? value.get("email") : [];
-      // input.buildList();
-    },
-    statusChanged: function () {
-      this.inherited(arguments);
-      // var input = this.findControl("primaryEmail").$.input;
-      //       input.buildList();
-    },
     popupHidden: function () {
       if (!this._popupDone) {
-        this.$.multipleAddressPopup.show();
+        this.$.findExistingCustomerPopup.show();
       }
     }
   });

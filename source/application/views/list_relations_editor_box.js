@@ -74,8 +74,7 @@ trailing:true white:true*/
         {kind: "XV.ShipViaPicker", attr: "shipVia"},
         {kind: "XV.ShippingChargePicker", attr: "shipCharge"},
         {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
-        {kind: "XV.ContactWidget", attr: "contact",
-          showAddress: true, label: "_name".loc()},
+        {kind: "XV.ContactWidget", attr: "contact", showAddress: true, label: "_name".loc()},
         {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
         {kind: "XV.TextArea", attr: "notes"}
       ]}
@@ -90,6 +89,37 @@ trailing:true white:true*/
     editor: "XV.CustomerShipToEditor",
     parentKey: "customer",
     listRelations: "XV.CustomerShipToListRelations",
+    fitButtons: false
+  });
+  
+  // ..........................................................
+  // Tax Registrations
+  //
+  enyo.kind({
+    name: "XV.TaxRegistrationEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.TaxAuthorityPicker", attr: "taxAuthority"},
+        {kind: "XV.InputWidget", attr: "number"},
+        {kind: "XV.TaxZonePicker", attr: "taxZone"},
+        {kind: "XV.DateWidget", attr: "effective"},
+        {kind: "XV.DateWidget", attr: "expires"},
+        {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+        {kind: "XV.TextArea", attr: "notes"}
+      ]}
+    ]
+  });
+
+  enyo.kind({
+    name: "XV.TaxRegistrationBox",
+    kind: "XV.ListRelationsEditorBox",
+    classes: "xv-short-relations-box",
+    title: "_taxRegistration".loc(),
+    editor: "XV.TaxRegistrationEditor",
+    parentKey: "customer",
+    listRelations: "XV.TaxRegistrationListRelations",
     fitButtons: false
   });
 
