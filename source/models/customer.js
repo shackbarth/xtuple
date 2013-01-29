@@ -18,7 +18,8 @@ white:true*/
 
     defaults: function () {
       var localCurrency,
-          currencyModel;
+          currencyModel,
+          settings = XT.session.getSettings();
       for (var i = 0; i < XM.currencies.models.length; i++) {
         currencyModel = XM.currencies.models[i];
         if (currencyModel.attributes.isBase) {
@@ -28,9 +29,29 @@ white:true*/
       return {
         isActive: true,
         creditStatus: "G",
-        currency: localCurrency
+        currency: localCurrency,
+        salesRep: settings.get("DefaultSalesRep"),
+        terms: settings.get("DefaultTerms"),
+        shipVia: settings.get("DefaultShipViaId"),
+        customerType: settings.get("DefaultCustType"),
+        backorder: settings.get("DefaultBackOrders"),
+        partialShip: settings.get("DefaultPartialShipments"),
+        isFreeFormShipto: settings.get("DefaultFreeFormShiptos"),
+        autoUpdateStatus: false,
+        autoHoldOrders: false,
+        isFreeFormBillto: false,
+        commission: 0,
+        blanketPurchaseOrders: false,
+        usesPurchaseOrders: false,
+        creditLimit: settings.get("SOCreditLimit"),
+        creditRating: settings.get("SOCreditRate"),
+        balanceMethod: settings.get("DefaultBalanceMethod")
       };
     },
+    
+    readOnlyAttributes: [
+      "blanketPurchaseOrders"
+    ],
 
     requiredAttributes: [
       "isActive",
@@ -50,14 +71,96 @@ white:true*/
       "isFreeFormBillto",
       "usesPurchaseOrders",
       "autoUpdateStatus",
-      "autoHoldOrders",
-      "preferredSite"
+      "autoHoldOrders"
     ],
     
     // ..........................................................
     // METHODS
     //
     
+    /**
+      Initialize
+    */
+    initialize: function () {
+      XM.Document.prototype.initialize.apply(this, arguments);
+      this.on('change:usesPurchaseOrders change:backorder', this.optionsDidChange);
+    },
+    
+    /**
+      Sets the readOnlyAttributes array according to different checkboxes
+    */
+    optionsDidChange: function () {
+      //If usesPurchaseOrders is checked, then blanketPurchaseOrders is read-only and unchecked
+      if (!this.get("usesPurchaseOrders")) {
+        this.setReadOnly("blanketPurchaseOrders", true);
+        this.set("blanketPurchaseOrders", false);
+      } else {
+        this.setReadOnly("blanketPurchaseOrders", false);
+      }
+      
+      if (!this.get("backorder")) {
+        this.setReadOnly("partialShip", true);
+        this.set("partialShip", false);
+      } else {
+        this.setReadOnly("partialShip", false);
+      }
+      
+    },
+    
+    /**
+      
+    */
+    statusDidChange: function () {
+      var status = this.getStatus(),
+          privileges = XT.session.getPrivileges(),
+          K = XM.Model;
+      XM.Document.prototype.statusDidChange.apply(this, arguments);
+      if (status === K.READY_NEW) {
+        if (!privileges.get("MaintainCustomerMastersCustomerType") &&
+          !privileges.get("MaintainCustomerMastersCustomerTypeOnCreate")) {
+          this.setReadOnly("customerType", true);
+        }
+      } else if (status === K.READY_CLEAN) {
+        if (!privileges.get("MaintainCustomerMastersCustomerType")) {
+          this.setReadOnly("customerType", true);
+        }
+      }
+    },
+    
+    /**
+    
+    */
+    convertFromAccount: function (id) {
+      
+    },
+    
+    /**
+      Creates a new prospect model and fetches based on the given ID.
+      Takes attributes from the prospect model, gives them to this customer
+      model, and destroys the prospect.
+    */
+    convertFromProspect: function (id) {
+      var prospect = new XM.Prospect();
+      
+      prospect.fetch(id);
+      
+      this.name = prospect.name;
+      this.billingContact = prospect.contact;
+      this.salesRep = prospect.salesRep;
+      this.preferredSite = prospect.site;
+      this.taxZone = prospect.taxZone;
+      
+      //destroy the prospect somehow?
+      //prospect.destroy();
+    }
+
+  });
+
+  // ..........................................................
+  // CLASS METHODS
+  //
+
+  _.extend(XM.Customer, /** @lends XM.Model# */{
     /**
       Return a matching record id for a passed user `key` and `value`. If none
       found, returns zero.
@@ -68,16 +171,15 @@ white:true*/
       @returns {Object} Receiver
     */
     findExisting: function (key, value, options) {
-      var recordType = this.recordType || this.prototype.recordType,
-        params = [ recordType, key, value, this.id || -1 ],
+      var params = [ key, value, this.id || -1 ],
         dataSource = options.dataSource || XT.dataSource;
-      dataSource.dispatch('XM.Model', 'findExisting', params, options);
-      XT.log("XM.Model.findExisting for: " + recordType);
+      dataSource.dispatch('XM.Customer', 'findExisting', params, options);
+      XT.log("XM.Customer.findExisting");
       return this;
     }
 
   });
-
+  
   /**
     @class
 
