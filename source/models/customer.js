@@ -161,30 +161,6 @@ white:true*/
     }
 
   });
-
-  // ..........................................................
-  // CLASS METHODS
-  //
-
-  _.extend(XM.Customer, /** @lends XM.Model# */{
-    /**
-      Return a matching record id for a passed user `key` and `value`. If none
-      found, returns zero.
-
-      @param {String} Property to search on, typically a user key
-      @param {String} Value to search for
-      @param {Object} Options
-      @returns {Object} Receiver
-    */
-    findExisting: function (key, value, options) {
-      var params = [ key, value, this.id || -1 ],
-        dataSource = options.dataSource || XT.dataSource;
-      dataSource.dispatch('XM.Customer', 'findExisting', params, options);
-      XT.log("XM.Customer.findExisting");
-      return this;
-    }
-
-  });
   
   /**
     @class
