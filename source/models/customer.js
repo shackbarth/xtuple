@@ -108,7 +108,7 @@ white:true*/
     },
     
     /**
-      
+      Sets read only status of customerType according to privs
     */
     statusDidChange: function () {
       var status = this.getStatus(),
@@ -128,54 +128,36 @@ white:true*/
     },
     
     /**
-    
+      Creates a new account model and fetches based on the given ID.
+      Takes attributes from the account model and gives them to this customer model.
     */
     convertFromAccount: function (id) {
+      var _account = new XM.Account();
       
+      _account.fetch(id);
+      
+      this.name = _account.name;
+      this.billingContact = _account.primaryContact;
+      this.correspondenceContact = _account.secondaryContact;
     },
     
     /**
       Creates a new prospect model and fetches based on the given ID.
-      Takes attributes from the prospect model, gives them to this customer
-      model, and destroys the prospect.
+      Takes attributes from the prospect model and gives them to this customer model.
+      The prospect model will be destroyed by the save function.
     */
     convertFromProspect: function (id) {
-      var prospect = new XM.Prospect();
+      var _prospect = new XM.Prospect();
       
-      prospect.fetch(id);
+      _prospect.fetch(id);
       
-      this.name = prospect.name;
-      this.billingContact = prospect.contact;
-      this.salesRep = prospect.salesRep;
-      this.preferredSite = prospect.site;
-      this.taxZone = prospect.taxZone;
+      this.name = _prospect.name;
+      this.billingContact = _prospect.contact;
+      this.salesRep = _prospect.salesRep;
+      this.preferredSite = _prospect.site;
+      this.taxZone = _prospect.taxZone;
       
-      //destroy the prospect somehow?
-      //prospect.destroy();
-    }
-
-  });
-
-  // ..........................................................
-  // CLASS METHODS
-  //
-
-  _.extend(XM.Customer, /** @lends XM.Model# */{
-    /**
-      Return a matching record id for a passed user `key` and `value`. If none
-      found, returns zero.
-
-      @param {String} Property to search on, typically a user key
-      @param {String} Value to search for
-      @param {Object} Options
-      @returns {Object} Receiver
-    */
-    findExisting: function (key, value, options) {
-      var params = [ key, value, this.id || -1 ],
-        dataSource = options.dataSource || XT.dataSource;
-      dataSource.dispatch('XM.Customer', 'findExisting', params, options);
-      XT.log("XM.Customer.findExisting");
-      return this;
+      this.id = _prospect.id;
     }
 
   });
