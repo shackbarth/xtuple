@@ -400,31 +400,40 @@ trailing:true white:true*/
         {kind: "XV.CustomerDocumentsBox", attr: "documents"},
         {kind: "XV.CustomerShipToBox", attr: "shiptos"}
       ]},
-      {kind: "onyx.Popup", name: "findExistingCustomerPopup", centered: true,
+      {kind: "onyx.Popup", name: "findExistingProspectPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",
         onHide: "popupHidden", components: [
-        {content: "_addressShared".loc()},
+        {content: "_customerExistsProspect".loc()},
         {content: "_whatToDo".loc()},
         {tag: "br"},
-        {kind: "onyx.Button", content: "_changeOne".loc(), ontap: "addressChangeOne",
+        {kind: "onyx.Button", name: "convert", content: "_convertProspect".loc(), ontap: "customerConvertProspect",
           classes: "onyx-blue xv-popup-button"},
-        {kind: "onyx.Button", content: "_changeAll".loc(), ontap: "addressChangeAll",
-          classes: "xv-popup-button"},
-        {kind: "onyx.Button", content: "_cancel".loc(), ontap: "addressCancel",
+        {kind: "onyx.Button", name: "cancel", content: "_cancel".loc(), ontap: "customerCancel",
           classes: "xv-popup-button"}
       ]}
     ],
+    customerConvertProspect: function () {
+      var id = this.value.get("id");
+      this._popupDone = true;
+      this.$.findExistingProspectPopup.hide();
+      this.value.convertFromProspect(id);
+    },
     errorNotify: function (inSender, inEvent) {
       // Handle customer existing as prospect
-      if (inEvent.error.code === 'xt2007') {
-        this._popupDone = false;
-        this.$.multipleAddressPopup.show();
+      if (inEvent.error.code === 'xt1008') {
+        var type = inEvent.error.params.response.type;
+        if (type === 'P') { // Prospect
+          this._popupDone = false;
+          this.$.findExistingProspectPopup.setContent("_customerExistsProspect".loc());
+          this.$.convert.setContent("_convertProspect".loc());
+          this.$.findExistingProspectPopup.show();
+        } else if (type === 'A') {}
         return true;
       }
     },
     popupHidden: function () {
       if (!this._popupDone) {
-        this.$.findExistingCustomerPopup.show();
+        this.$.findExistingProspectPopup.show();
       }
     }
   });
