@@ -163,7 +163,7 @@ white:true*/
           if (resp) {
             params.attr = ("_" + that.documentKey).loc();
             params.value = value;
-            params.response = _.isNumber(resp) ? resp : JSON.parse(resp);
+            params.response = resp;
             err = XT.Error.clone('xt1008', { params: params });
             that.trigger('error', that, err, options);
           }
