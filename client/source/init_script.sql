@@ -10,21 +10,6 @@
 
 -- [ END ] initdb
 
--- [ START ] public
-
--- public
-\i public/functions/geteffectivextuser.sql
-
-\i public/tables/comment.sql
-\i public/tables/grp.sql;
-\i public/tables/grppriv.sql;
-\i public/tables/pkghead.sql;
-\i public/tables/usrgrp.sql;
-\i public/tables/usrpref.sql;
-\i public/tables/usrpriv.sql;
-\i public/tables/schemaord.sql;
--- [ END ] public
-
 -- [ START ] xt
 
 -- xt functions
@@ -102,6 +87,22 @@
 \i xm/javascript/project.sql;
 \i xm/javascript/to_do.sql;
 -- [ END ] xm
+
+-- [ START ] public
+
+-- public
+\i public/functions/geteffectivextuser.sql
+
+\i public/tables/comment.sql
+\i public/tables/grp.sql;
+\i public/tables/grppriv.sql;
+\i public/tables/itemsite.sql;
+\i public/tables/pkghead.sql;
+\i public/tables/usrgrp.sql;
+\i public/tables/usrpref.sql;
+\i public/tables/usrpriv.sql;
+\i public/tables/schemaord.sql;
+-- [ END ] public
 
 -- xtbatch (TODO: This should be moved elsewhere)
 \i create_xtbatch_schema.sql;
