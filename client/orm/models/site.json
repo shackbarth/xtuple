@@ -31,17 +31,11 @@
         }
       },
       {
-        "name": "description",
-        "attr": {
-          "type": "String",
-          "column": "warehous_descrip"
-        }
-      },
-      {
-        "name": "fob",
-        "attr": {
-          "type": "String",
-          "column": "warehous_fob"
+        "name": "siteType",
+        "toOne": {
+          "isNested": true,
+          "type": "SiteType",
+          "column": "id"
         }
       },
       {
@@ -52,7 +46,14 @@
         }
       },
       {
-        "name": "contactRelation",
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "warehous_descrip"
+        }
+      },
+      {
+        "name": "contact",
         "toOne": {
           "isNested": true,
           "type": "ContactRelation",
@@ -60,11 +61,26 @@
         }
       },
       {
-        "name": "addressInfo",
+        "name": "address",
         "toOne": {
           "isNested": true,
           "type": "AddressInfo",
           "column": "warehous_addr_id"
+        }
+      },
+      {
+        "name": "taxZone",
+        "toOne": {
+          "isNested": true,
+          "type": "Number",
+          "column": "warehous_taxzone_id"
+        }
+      },
+      {
+        "name": "fob",
+        "attr": {
+          "type": "String",
+          "column": "warehous_fob"
         }
       },
       {
@@ -79,22 +95,6 @@
         "attr": {
           "type": "String",
           "column": "warehous_shipcomments"
-        }
-      },
-      {
-        "name": "siteType",
-        "toOne": {
-          "isNested": true,
-          "type": "SiteType",
-          "column": "id"
-        }
-      },
-      {
-        "name": "taxZone",
-        "toOne": {
-          "isNested": true,
-          "type": "Number",
-          "column": "warehous_taxzone_id"
         }
       },
       {
@@ -239,15 +239,8 @@
         }
       },
       {
-        "name": "addressInfo",
-        "attr": {
-          "type": "Number",
-          "column": "warehous_addr_id"
-        }
-      },
-      {
         "name": "siteType",
-        "attr": {
+        "toOne": {
           "type": "Number",
           "column": "warehous_sitetype_id"
         }
@@ -291,13 +284,6 @@
         "attr": {
           "type": "String",
           "column": "warehous_descrip"
-        }
-      },
-      {
-        "name": "fob",
-        "attr": {
-          "type": "String",
-          "column": "warehous_fob"
         }
       },
       {
