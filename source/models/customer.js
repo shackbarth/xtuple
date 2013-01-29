@@ -128,30 +128,38 @@ white:true*/
     },
     
     /**
-    
+    Creates a new account model and fetches based on the given ID.
+    Takes attributes from the account model and gives them to this customer model.
     */
     convertFromAccount: function (id) {
+      var _account = new XM.Account();
       
+      _account.fetch(id);
+      
+      this.name = _account.name;
+      this.billingContact = _account.primaryContact;
+      this.correspondenceContact = _account.secondaryContact;
+      
+      this.id = _account.id;
     },
     
     /**
       Creates a new prospect model and fetches based on the given ID.
-      Takes attributes from the prospect model, gives them to this customer
-      model, and destroys the prospect.
+      Takes attributes from the prospect model and gives them to this customer model.
+      The prospect model will be destroyed by the save function.
     */
     convertFromProspect: function (id) {
-      var prospect = new XM.Prospect();
+      var _prospect = new XM.Prospect();
       
-      prospect.fetch(id);
+      _prospect.fetch(id);
       
-      this.name = prospect.name;
-      this.billingContact = prospect.contact;
-      this.salesRep = prospect.salesRep;
-      this.preferredSite = prospect.site;
-      this.taxZone = prospect.taxZone;
+      this.name = _prospect.name;
+      this.billingContact = _prospect.contact;
+      this.salesRep = _prospect.salesRep;
+      this.preferredSite = _prospect.site;
+      this.taxZone = _prospect.taxZone;
       
-      //destroy the prospect somehow?
-      //prospect.destroy();
+      this.id = _prospect.id;
     }
 
   });
