@@ -1,8 +1,8 @@
 -- remove old trigger if any
-drop trigger if exists itemsitebeforetriggerxt on public.itemsite;
+drop trigger if exists itemsite_did_change on public.itemsite;
 
 -- create trigger
-create trigger itemsitebeforetriggerxt before insert or update on public.itemsite for each row execute procedure xt.itemsitebeforetriggerxt();
+create trigger itemsite_did_change before insert on public.itemsite for each row execute procedure xt.itemsite_did_change();
 
 
 
