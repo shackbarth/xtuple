@@ -132,16 +132,23 @@ white:true*/
       Takes attributes from the account model and gives them to this customer model.
     */
     convertFromAccount: function (id) {
-      var _account = new XM.Account(),
-          idObj = {};
+      var account = new XM.Account(),
+          fetchOptions = {},
+          that = this;
           
-      idObj.id = id;
+      fetchOptions.id = id;
       
-      _account.fetch(idObj);
-      
-      this.set("name", _account.get("name"));
-      this.set("billingContact", _account.get("primaryContact"));
-      this.set("correspondenceContact", _account.get("secondaryContact"));
+      fetchOptions.success = function (resp) {
+        that.set("name", account.get("name"));
+        that.set("billingContact", account.get("primaryContact"));
+        that.set("correspondenceContact", account.get("secondaryContact"));
+        that.revertStatus();
+      };
+      fetchOptions.error = function (resp) {
+        XT.log("Fetch failed in convertFromAccount");
+      };
+      this.setStatus(XM.Model.BUSY_FETCHING);
+      account.fetch(fetchOptions);
     },
     
     /**
@@ -150,19 +157,28 @@ white:true*/
       The prospect model will be destroyed by the save function.
     */
     convertFromProspect: function (id) {
-      var _prospect = new XM.Prospect(),
-          idObj = {};
+      var prospect = new XM.Prospect(),
+        fetchOptions = {},
+        that = this;
           
-      idObj.id = id;
+      fetchOptions.id = id;
       
-      _prospect.fetch(idObj);
-      
-      this.set("name", _prospect.get("name"));
-      this.set("billingContact", _prospect.get("contact"));
-      this.set("salesRep", _prospect.get("salesRep"));
-      this.set("preferredSite", _prospect.get("site"));
-      this.set("taxZone", _prospect.get("taxZone"));
-      this.set("id", _prospect.get("id"));
+      fetchOptions.success = function (resp) {
+        that.set("name", prospect.get("name"));
+        that.set("billingContact", prospect.get("contact"));
+        that.set("salesRep", prospect.get("salesRep"));
+        that.set("preferredSite", prospect.get("site"));
+        that.set("taxZone", prospect.get("taxZone"));
+        that.setReadOnly("id", false);
+        that.set("id", prospect.get("id"));
+        that.setReadOnly("id", true);
+        that.revertStatus();
+      };
+      fetchOptions.error = function (resp) {
+        XT.log("Fetch failed in convertFromProspect");
+      };
+      this.setStatus(XM.Model.BUSY_FETCHING);
+      prospect.fetch(fetchOptions);
     }
 
   });
