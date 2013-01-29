@@ -132,13 +132,16 @@ white:true*/
       Takes attributes from the account model and gives them to this customer model.
     */
     convertFromAccount: function (id) {
-      var _account = new XM.Account();
+      var _account = new XM.Account(),
+          idObj = {};
+          
+      idObj.id = id;
       
-      _account.fetch(id);
+      _account.fetch(idObj);
       
-      this.name = _account.name;
-      this.billingContact = _account.primaryContact;
-      this.correspondenceContact = _account.secondaryContact;
+      this.set("name", _account.get("name"));
+      this.set("billingContact", _account.get("primaryContact"));
+      this.set("correspondenceContact", _account.get("secondaryContact"));
     },
     
     /**
@@ -147,17 +150,19 @@ white:true*/
       The prospect model will be destroyed by the save function.
     */
     convertFromProspect: function (id) {
-      var _prospect = new XM.Prospect();
+      var _prospect = new XM.Prospect(),
+          idObj = {};
+          
+      idObj.id = id;
       
-      _prospect.fetch(id);
+      _prospect.fetch(idObj);
       
-      this.name = _prospect.name;
-      this.billingContact = _prospect.contact;
-      this.salesRep = _prospect.salesRep;
-      this.preferredSite = _prospect.site;
-      this.taxZone = _prospect.taxZone;
-      
-      this.id = _prospect.id;
+      this.set("name", _prospect.get("name"));
+      this.set("billingContact", _prospect.get("contact"));
+      this.set("salesRep", _prospect.get("salesRep"));
+      this.set("preferredSite", _prospect.get("site"));
+      this.set("taxZone", _prospect.get("taxZone"));
+      this.set("id", _prospect.get("id"));
     }
 
   });
