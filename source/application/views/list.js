@@ -534,7 +534,7 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "short",
             components: [
-            {kind: "XV.ListAttr", attr: "name", classes: "bold"}
+            {kind: "XV.ListAttr", attr: "name", isKey: true}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "description"}
@@ -1075,7 +1075,7 @@ trailing:true white:true*/
     kind: "XV.NameDescriptionList",
     collection: "XM.UserAccountRoleCollection"
   });
-  
+
   enyo.kind({
     name: "XV.CharacteristicList",
     kind: "XV.NameDescriptionList",
