@@ -108,7 +108,7 @@ white:true*/
     },
     
     /**
-      
+      Sets read only status of customerType according to privs
     */
     statusDidChange: function () {
       var status = this.getStatus(),
@@ -128,8 +128,8 @@ white:true*/
     },
     
     /**
-    Creates a new account model and fetches based on the given ID.
-    Takes attributes from the account model and gives them to this customer model.
+      Creates a new account model and fetches based on the given ID.
+      Takes attributes from the account model and gives them to this customer model.
     */
     convertFromAccount: function (id) {
       var _account = new XM.Account();
@@ -139,8 +139,6 @@ white:true*/
       this.name = _account.name;
       this.billingContact = _account.primaryContact;
       this.correspondenceContact = _account.secondaryContact;
-      
-      this.id = _account.id;
     },
     
     /**
