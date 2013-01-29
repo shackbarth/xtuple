@@ -12,8 +12,9 @@ session -- this is done as a pure functor in main.js
 maintenance.js
 redirector.js
 email.js
-report.js -- note that this will have to be updated per the updates in 19268
+report.js
 file.js
+dataFromKey.js
 
 UNNECESSARY
 data.js -- dead code?
@@ -25,7 +26,6 @@ oauth2auth.js
 oauth2token.js
 
 NOT DONE
-dataFromKey -- this is being worked on in 19268
 changePassword.js -- John is currently working on this in 19343
 export.js -- can we deprecate this w/ pentaho instead of porting?
 
