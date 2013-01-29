@@ -227,7 +227,6 @@
         "toMany": {
           "type": "ItemSiteRelation",
           "column": "item_id",
-          "inverse": "item_relation",
           "isNested": "true"
         }
       }
