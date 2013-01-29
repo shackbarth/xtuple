@@ -131,5 +131,90 @@
       }
     ],
     "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "CustomerTaxRegistration",
+    "table": "taxreg",
+    "idSequenceName": "taxreg_taxreg_id_seq",
+    "comment": "Tax Registration Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainTaxAuthorities",
+        "read": "ViewTaxAuthorities",
+        "update": "MaintainTaxAuthorities",
+        "delete": "MaintainTaxAuthorities"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "taxreg_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "customer",
+        "attr": {
+          "type": "Customer",
+          "column": "taxreg_rel_id"
+        }
+      },
+      {
+        "name": "relType",
+        "attr": {
+          "type": "String",
+          "column": "taxreg_rel_type",
+          "value": "C"
+        }
+      },
+      {
+        "name": "taxAuthority",
+        "attr": {
+          "type": "Number",
+          "column": "taxreg_taxauth_id"
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "taxreg_number"
+        }
+      },
+      {
+        "name": "taxZone",
+        "attr": {
+          "type": "Number",
+          "column": "taxreg_taxzone_id"
+        }
+      },
+      {
+        "name": "effective",
+        "attr": {
+          "type": "Date",
+          "column": "taxreg_effective"
+        }
+      },
+      {
+        "name": "expires",
+        "attr": {
+          "type": "Date",
+          "column": "taxreg_expires"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "taxreg_notes"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
   }
 ]
