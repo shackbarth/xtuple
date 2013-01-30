@@ -249,7 +249,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
 
     // access through the main server uses the logged in user's authority
-    install(res, args, req.session.passport.user);
+    install(res, args, req.session.passport.user.id);
   };
 
   exports.maintenance = maintenance;
