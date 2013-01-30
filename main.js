@@ -101,6 +101,8 @@ _ = require("underscore");
  * Module dependencies.
  */
 var express = require('express'),
+    flash = require('connect-flash'),
+    socketio = require('socket.io'),
     passport = require('passport'),
     oauth2 = require('./oauth2/oauth2'),
     routes = require('./routes/routes'),
@@ -114,10 +116,67 @@ var express = require('express'),
   The ensureLoggedIn function will not need to be changed, because that calls this.
  */
 require('http').IncomingMessage.prototype.isAuthenticated = function () {
-  var creds = this.session.passport;
-  return creds.user && creds.username && creds.organization;
+  var creds = this.session.passport.user;
+  return creds.id && creds.username && creds.organization;
 }
 
+
+// TODO - This can be removed after socket.io 1.0.0 update hopefully.
+// We're stomping on Static to apply this fix:
+// https://github.com/LearnBoost/socket.io/issues/932
+// https://github.com/LearnBoost/socket.io/issues/984
+/**
+ * Gzip compress buffers.
+ *
+ * @param {Buffer} data The buffer that needs gzip compression
+ * @param {Function} callback
+ * @api public
+ */
+require('socket.io').Static.prototype.gzip = function (data, callback) {
+  var cp = require('child_process')
+    , gzip = cp.spawn('gzip', ['-9', '-c', '-f', '-n'])
+    , encoding = Buffer.isBuffer(data) ? 'binary' : 'utf8'
+    , buffer = []
+    , err;
+
+  gzip.stdout.on('data', function (data) {
+    buffer.push(data);
+  });
+
+  gzip.stderr.on('data', function (data) {
+    err = data +'';
+    buffer.length = 0;
+  });
+
+  // TODO - This was changed to 'exit' from 'close'.
+  gzip.on('exit', function () {
+    if (err) return callback(err);
+
+    var size = 0
+      , index = 0
+      , i = buffer.length
+      , content;
+
+    while (i--) {
+      size += buffer[i].length;
+    }
+
+    content = new Buffer(size);
+    i = buffer.length;
+
+    buffer.forEach(function (buffer) {
+      var length = buffer.length;
+
+      buffer.copy(content, index, 0, length);
+      index += length;
+    });
+
+    buffer.length = 0;
+    callback(null, content);
+  });
+
+  gzip.stdin.end(data, encoding);
+};
 
 /**
  * Express configuration.
@@ -135,17 +194,22 @@ var app = express(),
 app.configure(function () {
   "use strict";
 
-  // gzip all files served.
+  // gzip all static files served.
   app.use(express.compress());
   // Add a basic view engine that will render files from "views" directory.
   app.set('view engine', 'ejs');
-  // TODO - This outputs access logs like apache2.
+  // TODO - This outputs access logs like apache2 and some other user things.
   //app.use(express.logger());
   app.use(express.cookieParser());
   app.use(express.bodyParser());
-  app.use(express.session({ store: sessionStore, secret: '.T#T@r5EkPM*N@C%9K-iPW!+T' }));
+  // TODO - Need to tweak the expiring of sessions.
+  // Destroy it from the db and cache.
+  // Try to only update it once a minute instead of on EVERY FREAKING REQUEST.
+  //app.use(express.session({ store: sessionStore, secret: '.T#T@r5EkPM*N@C%9K-iPW!+T', cookie: { path: '/', httpOnly: true, maxAge: 60000 } }));
+  app.use(express.session({ store: sessionStore, secret: '.T#T@r5EkPM*N@C%9K-iPW!+T'}));
   app.use(passport.initialize());
   app.use(passport.session());
+  app.use(flash());
   app.use(app.router);
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
@@ -186,7 +250,7 @@ app.get('/report', routes.report);
 app.get('/resetPassword', routes.resetPassword);
 
 
-// let's try to set up the other servers
+// Set up the other servers we run on different ports.
 var unexposedServer = express();
 unexposedServer.get('/maintenance', routes.maintenanceLocalhost);
 unexposedServer.listen(441); // TODO: change to 442 and update route
@@ -194,17 +258,38 @@ unexposedServer.listen(441); // TODO: change to 442 and update route
 var redirectServer = express();
 redirectServer.get(/.*/, routes.redirect); // RegEx for "everything"
 redirectServer.listen(1979); // TODO: change to 80
-// end other servers code. wow that was easy.
 
 /**
  * Start the express server. This is the NEW way.
  */
 // TODO - Active browser sessions can make calls to this server when it hasn't fully started.
+// That can cause it to crash at startup.
 // Need a way to get everything loaded BEFORE we start listening.  Might just move this to the end...
-io = require('socket.io').listen(app.listen(2000), {log: false});
+io = socketio.listen(app.listen(2000));
 
-// TODO: start up a server on 80 and throw everything to the redirect route
-//app.get('/redirect', routes.redirect);
+// TODO - Use NODE_ENV flag to switch between development and production.
+// See "Understanding the configure method" at:
+// https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO
+io.configure(function(){
+  io.set('log', false);
+  // TODO - We need to implement a store for this if we run multiple processes:
+  // https://github.com/LearnBoost/socket.io/tree/0.9/lib/stores
+  //http://stackoverflow.com/questions/9267292/examples-in-using-redisstore-in-socket-io/9275798#9275798
+  //io.set('store', someNewStore);                // Use our someNewStore.
+  io.set('browser client minification', true);  // Send minified file to the client.
+  io.set('browser client etag', true);          // Apply etag caching logic based on version number
+  // TODO - grubmle - See prototype stomp above:
+  // https://github.com/LearnBoost/socket.io/issues/932
+  // https://github.com/LearnBoost/socket.io/issues/984
+  io.set('browser client gzip', true);          // gzip the file.
+  //io.set('log level', 1);                       // Reduce logging.
+  io.set('transports', [                        // Enable all transports.
+      'websocket',
+      'htmlfile',
+      'xhr-polling',
+      'jsonp-polling'
+  ]);
+});
 
 /**
  * Setup socket.io routes and handlers.
@@ -219,70 +304,51 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   if (handshakeData.headers.cookie) {
     // Save parsedSessionId to handshakeData.
     handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
+
     if (!handshakeData.cookie['connect.sid']) {
-      X.debug("socket.io auth no cookie");
       return callback(null, false);
     }
+
+    // Save the sessionId so we can use it to check for valid sessions later on.
     handshakeData.sessionId = parseSignedCookie(handshakeData.cookie['connect.sid'], '.T#T@r5EkPM*N@C%9K-iPW!+T');
 
     sessionStore.get(handshakeData.sessionId, function (err, session) {
       // All requests get a session. Make sure the session is authenticated.
-      if (!session[passport._key].user
-        || !session[passport._key].username
-        || !session[passport._key].organization) {
-        X.debug("socket.io not authed: ", err);
+      if (err || !session.passport || !session.passport.user
+        || !session.passport.user.id
+        || !session.passport.user.organization
+        || !session.passport.user.username) {
+
         err = "socket.io not authed";
         // TODO - This error message isn't making it back to the client.
-        return callback({data: session.passport, code: 1}, false);
+        return callback({data: session.passport.user, code: 1}, false);
       }
 
-      var userHash = session[passport._key],
-        user = userHash.user,
-        username = userHash.username,
-        organization = userHash.organization;
-
-      X.debug("socket.io connection attempt: ", session);
-
-      passport.deserializeUser(user, function (err, user) {
-        if (err || !user) {
-          X.debug("socket.io auth user not found");
-          return callback(err);
-        }
-
-        // Save user and session data here so it can be used by the endpoints at socket.handshake.
-        handshakeData.user = user;
-        handshakeData.username = username;
-        handshakeData.organization = organization;
-        handshakeData.sessionStore = sessionStore;
-        X.debug("socket.io auth success");
-        callback(null, true);
-      });
+      // Add sessionStore here so it can be used to lookup valid session on each request.
+      handshakeData.sessionStore = sessionStore;
+      callback(null, true);
     });
   } else {
-    X.debug("socket.io auth no cookie");
     callback(null, false);
   }
 }).on('connection', function (socket) {
   "use strict";
-  var shake = socket.handshake,
-      session = {passport: {username: shake.username, organization: shake.organization, user: shake.user.id}},
-      ensuerLoggedIn = function (callback) {
+  var ensureLoggedIn = function (callback) {
         // TODO - update session lastAccess: session.touch().save();
-        // TODO - Check if session is still valid.
-        // It's all done here in express 2.x http://www.danielbaulig.de/socket-ioexpress/
 
-        shake.sessionStore.get(shake.sessionId, function (err, session) {
+        socket.handshake.sessionStore.get(socket.handshake.sessionId, function (err, session) {
           // All requests get a session. Make sure the session is authenticated.
-          if (err || !session.passport || !session[passport._key]
-            || !session[passport._key].user
-            || !session[passport._key].username
-            || !session[passport._key].organization) {
-            X.debug("socket.io request not authed: ", shake.headers.cookie);
-            socket.disconnect();
+          if (err || !session || !session.passport || !session.passport.user
+            || !session.passport.user.id
+            || !session.passport.user.organization
+            || !session.passport.user.username) {
+
+            // Tell the client it timed out.
+            socket.emit("timeout");
+            return socket.disconnect();
           } else {
             // User is still valid, move along.
-            X.debug("socket.io request is authed: ", socket.handshake.headers.cookie);
-            callback();
+            callback(session);
           }
         });
       };
@@ -290,17 +356,15 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   // To run this from the client:
   // ???
   socket.on('session', function (data, callback) {
-    ensuerLoggedIn(function () {
-      X.debug("socket.io session request.");
-      callback({data: session.passport, code: 1});
+    ensureLoggedIn(function (session) {
+      callback({data: session.passport.user, code: 1});
     });
   });
 
   // To run this from the client:
   // XT.dataSource.retrieveRecord("XM.State", 2, {"id":2,"cascade":true,"databaseType":"instance"});
   socket.on('function/retrieveRecord', function (data, callback) {
-    ensuerLoggedIn(function () {
-      X.debug("socket.io retrieveRecord request.");
+    ensureLoggedIn(function (session) {
       routes.retrieveEngine(data.payload, session, callback);
     });
   });
@@ -308,8 +372,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   // To run this from client:
   // XT.dataSource.fetch({"query":{"orderBy":[{"attribute":"code"}],"recordType":"XM.Honorific"},"force":true,"parse":true,"databaseType":"instance"});
   socket.on('function/fetch', function (data, callback) {
-    ensuerLoggedIn(function () {
-      X.debug("socket.io fetch request.");
+    ensureLoggedIn(function (session) {
       routes.fetchEngine(data.payload, session, callback);
     });
   });
@@ -317,8 +380,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   // To run this from client:
   // XT.dataSource.dispatch("XT.Session", "settings", null, {success: function () {console.log(arguments);}, error: function () {console.log(arguments);}});
   socket.on('function/dispatch', function (data, callback) {
-    ensuerLoggedIn(function () {
-      X.debug("socket.io dispatch request.");
+    ensureLoggedIn(function (session) {
       routes.dispatchEngine(data.payload, session, callback);
     });
   });
@@ -328,8 +390,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   // TODO: The first argument to XT.dataSource.commit() is a model and therefore a bit tough to mock
   // XXX untested
   socket.on('function/commitRecord', function (data, callback) {
-    ensuerLoggedIn(function () {
-      X.debug("socket.io commitRecord request.");
+    ensureLoggedIn(function (session) {
       routes.commitEngine(data.payload, session, callback);
     });
   });
@@ -345,7 +406,6 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
  */
 
 // Load XTPGStore into MemoryStore at startup for caching.
-    // TODO - Add an option flag that turns on use of Express's MemoryStore as a memory cache.
     // TODO - If we ever run multiple processes/servers, MemoryStore must be replaced with something
     // all processes/servers can use/share and keep in sync like Redis.
 // TODO - Call XTPGStore loadCache function.
