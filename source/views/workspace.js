@@ -17,7 +17,7 @@ trailing:true white:true*/
     controlValueChanged: function (inSender, inEvent) {
       var attrs = {};
       attrs[inEvent.originator.attr] = inEvent.value;
-      this.value.set(attrs);
+      if (this.value) { this.value.set(attrs); }
     },
     /**
       Updates all child controls on the editor where the name of
@@ -124,7 +124,8 @@ trailing:true white:true*/
       onStatusChange: "",
       onTitleChange: "",
       onHistoryChange: "",
-      onMenuChange: ""
+      onMenuChange: "",
+      onNotify: ""
     },
     handlers: {
       onValueChange: "controlValueChanged"
@@ -245,6 +246,7 @@ trailing:true white:true*/
       this.value.on("readOnlyChange", this.attributesChanged, this);
       this.value.on("statusChange", this.statusChanged, this);
       this.value.on("error", this.error, this);
+      this.value.on("notify", this.notify, this);
       if (headerAttrs.length) {
         for (i = 0; i < headerAttrs.length; i++) {
           attr = headerAttrs[i];
@@ -283,6 +285,17 @@ trailing:true white:true*/
           }
         }
       }
+    },
+    /**
+     @todo Document the error method.
+     */
+    notify: function (model, message) {
+      var inEvent = {
+        originator: this,
+        model: model,
+        message: message
+      };
+      this.doNotify(inEvent);
     },
     /**
      @todo Document the requery method.
@@ -373,7 +386,8 @@ trailing:true white:true*/
       onHeaderChange: "headerChanged",
       onStatusChange: "statusChanged",
       onTitleChange: "titleChanged",
-      onMenuChange: "menuChanged"
+      onMenuChange: "menuChanged",
+      onNotify: "notify"
     },
     components: [
       {kind: "FittableRows", name: "navigationPanel", classes: "left", components: [
@@ -392,10 +406,10 @@ trailing:true white:true*/
           {kind: "onyx.Grabber"},
           {name: "title", style: "width: 200px"},
 					// The MoreToolbar is a FittableColumnsLayout, so this spacer takes up all available space
-					{name: "space", fit: true},
-					{kind: "onyx.Button", name: "refreshButton", disabled: true,
+          {name: "space", fit: true},
+          {kind: "onyx.Button", name: "refreshButton", disabled: true,
             content: "_refresh".loc(), onclick: "requery"},
-					{kind: "onyx.Button", name: "applyButton", disabled: true,
+          {kind: "onyx.Button", name: "applyButton", disabled: true,
             content: "_apply".loc(), onclick: "apply"},
           {kind: "onyx.Button", name: "saveAndNewButton", disabled: true,
             content: "_saveAndNew".loc(), onclick: "saveAndNew"},
@@ -423,6 +437,8 @@ trailing:true white:true*/
           {kind: "onyx.Button", content: "_save".loc(), ontap: "unsavedSave",
             classes: "onyx-blue xv-popup-button"}
         ]},
+        // This is used by notify and could be used by other things as well.
+        // We just don't want to break the api by re-naming it
         {kind: "onyx.Popup", name: "errorPopup", centered: true,
           modal: true, floating: true, scrim: true, components: [
           {name: "errorMessage", content: "_error".loc()},
@@ -519,9 +535,9 @@ trailing:true white:true*/
       }
 
 			// Mobile device view
-			if (enyo.Panels.isScreenNarrow()) {
+      if (enyo.Panels.isScreenNarrow()) {
         this.next();
-			}
+      }
 
     },
     /**
@@ -539,6 +555,15 @@ trailing:true white:true*/
      */
     newRecord: function () {
       this.$.workspace.newRecord();
+    },
+    /**
+     @todo Document the notify method.
+     */
+    notify: function (inSender, inEvent) {
+      this.spinnerHide();
+      this.$.errorMessage.setContent(inEvent.message);
+      this.$.errorPopup.render();
+      this.$.errorPopup.show();
     },
     /**
      @todo Document the popupHidden method.

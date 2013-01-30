@@ -75,7 +75,7 @@ regexp:true, undef:true, trailing:true, white:true */
         name = model.get(nameAttribute);
         this.$.picker.createComponent({ value: model, content: name });
       }
-      this.render();
+      this.$.picker.render();
     },
     /**
      @todo Document the clear method.
