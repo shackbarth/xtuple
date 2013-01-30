@@ -17,14 +17,14 @@
         "name": "isSold",
         "attr": {
           "type": "Boolean",
-          "column": "itemsite_sold",
+          "column": "itemsite_sold"
         }
       },
       {
         "name": "soldRanking",
-        "toOne": {
+        "attr": {
           "type": "Number",
-          "column": "itemsite_sold_ranking"
+          "column": "itemsite_soldranking"
         }
       }
     ],
