@@ -49,15 +49,6 @@ trailing:true white:true*/
       parentKey: "contact"
     });
 
-    // ..........................................................
-    // PROJECT
-    //
-
-    enyo.kind({
-      name: "XV.ProjectIncidentListRelations",
-      kind: "XV.IncidentListRelations",
-      parentKey: "project"
-    });
   };
 
 }());
