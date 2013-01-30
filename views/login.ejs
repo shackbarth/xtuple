@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title>xTuple Login</title>
-		<link rel="shortcut icon" href="assets/favicon.ico" />
+		<link rel="shortcut icon" href="/assets/favicon.ico" />
 		<!-- -->
 		<meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
 		<meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -28,6 +28,10 @@
 					<input class="enyo-tool-decorator onyx-button enyo-unselectable login-button" id="form-fields_loginButton" type="submit" value="Sign In"/>
 				</form>
 			</div>
+		</section>
+    <% for(var i = 0; i < message.length; i++) { %>
+      <label class="login-message-box error"><%= message[i] %></label>
+    <% } %>
 	</section>
 	</body>
 </html>
