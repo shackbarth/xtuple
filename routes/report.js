@@ -12,13 +12,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 
   var queryForData = function (session, query, callback) {
-    var userId = session.passport.username,
+    var userId = session.passport.user.username,
       userQueryPayload = '{"requestType":"retrieveRecord","recordType":"XM.UserAccountRelation","id":"%@"}'.f(userId),
       userQuery = "select xt.retrieve_record('%@')".f(userQueryPayload);
 
     // first make sure that the user has permissions to export to CSV
     // (can't trust the client)
-    X.database.query(session.passport.organization, userQuery, function (err, res) {
+    X.database.query(session.passport.user.organization, userQuery, function (err, res) {
       var retrievedRecord;
 
       if (err || !res || res.rowCount < 1) {
@@ -33,7 +33,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return;
       }
 
-      X.database.query(session.passport.organization, query, callback);
+      X.database.query(session.passport.user.organization, query, callback);
     });
   };
 
@@ -43,7 +43,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       query;
 
     requestDetails = JSON.parse(requestDetails);
-    requestDetails.username = req.session.passport.username;
+    requestDetails.username = req.session.passport.user.username;
     requestDetails = JSON.stringify(requestDetails);
     query = "select xt.fetch('%@')".f(requestDetails);
 
