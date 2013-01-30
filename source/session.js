@@ -42,6 +42,7 @@ white:true*/
           self._didValidateSession.call(self, payload, callback);
         };
 
+      // Poll the session socket.io endpoint for valid session data.
       XT.Request
         .handle("session")
         .notify(complete)
@@ -49,24 +50,31 @@ white:true*/
     },
 
     _didValidateSession: function (payload, callback) {
-      // if this is a valid session acquisition, go ahead
-      // and store the properties
       if (payload.code === 1) {
+        // If this is a valid session acquisition, go ahead
+        // and store the properties in XT.Session.details.
         this.setDetails(payload.data);
+
+        // Start the client loading process.
         XT.getStartupManager().start();
       } else {
         return XT.Session.logout();
       }
 
       if (callback && callback instanceof Function) {
-        callback(payload);
+        callback();
       }
     },
 
     start: function () {
       try {
-        this.validateSession(function () { XT.app.show(); });
-      } catch (e) { XT.Session.logout(); }
+        this.validateSession(function () {
+          // Tell the client to show now that we're in startup mode.
+          XT.app.show();
+        });
+      } catch (e) {
+        XT.Session.logout();
+      }
     },
 
     logout: function () {
