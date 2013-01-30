@@ -4,28 +4,10 @@ select xt.install_guiscript('user',  $$
 //checkbox in the desktop client.
 
 var _controls = [
-  "_save",
-  "_active",
-  "_properName",
-  "_initials",
-  "_email",
   "_passwd",
   "_verify",
-  "_locale",
-  "_employee",
-  "_add",
-  "_addAll",
-  "_revoke",
-  "_revokeAll",
-  "_addGroup",
-  "_revokeGroup",
-  "_addSite",
-  "_revokeSite",
-  "_agent",
   "_createUsers",
-  "_enhancedAuth",
-  "_exportContents",
-  "_woTimeClockOnly"
+  "_enhancedAuth"
 ];
 
 function showEvent(e) {
@@ -35,6 +17,5 @@ function showEvent(e) {
     if (control) {control.setEnabled(false)};
   }
 }
-
 
 $$ );
