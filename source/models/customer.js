@@ -351,6 +351,20 @@ white:true*/
     }
 
   });
+  
+  /**
+    @class
+    
+    @extends XM.Model
+  */
+  XM.CustomerTaxRegistration = XM.Document.extend({
+    /** @scope XM.CustomerTaxRegistration */
+    
+    recordType: 'XM.CustomerTaxRegistration',
+    
+    documentKey: 'number'
+    
+  });
 
   /**
     @class
