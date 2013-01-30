@@ -1,0 +1,340 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Site",
+    "table": "whsinfo",
+    "idSequenceName": "warehous_warehous_id_seq",
+    "comment": "Site Info Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainWarehouses",
+        "read": "ViewWarehouses",
+        "update": "MaintainWarehouses",
+        "delete": "MaintainWarehouses"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "warehous_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "warehous_code"
+        }
+      },
+      {
+        "name": "siteType",
+        "toOne": {
+          "isNested": true,
+          "type": "SiteType",
+          "column": "id"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "warehous_active"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "warehous_descrip"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "warehous_cntct_id"
+        }
+      },
+      {
+        "name": "address",
+        "toOne": {
+          "isNested": true,
+          "type": "AddressInfo",
+          "column": "warehous_addr_id"
+        }
+      },
+      {
+        "name": "taxZone",
+        "toOne": {
+          "isNested": true,
+          "type": "Number",
+          "column": "warehous_taxzone_id"
+        }
+      },
+      {
+        "name": "fob",
+        "attr": {
+          "type": "String",
+          "column": "warehous_fob"
+        }
+      },
+      {
+        "name": "shipVia",
+        "attr": {
+          "type": "Number",
+          "column": "warehous_shipvia_id"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "warehous_shipcomments"
+        }
+      },
+      {
+        "name": "comments",
+        "toMany": {
+          "isNested": true,
+          "type": "SiteComment",
+          "column": "id"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "SiteComment",
+    "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
+    "comment": "Site Comment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": "EditOthersComments",
+        "delete": false
+      },
+      "personal": {
+        "update": "EditOwnComments",
+        "properties": [
+          "createdBy"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "comment_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "comment_source",
+          "value": "WH"
+        }
+      },
+      {
+        "name": "site",
+        "attr": {
+          "type": "Number",
+          "column": "comment_source_id"
+        }
+      },
+      {
+        "name": "commentType",
+        "toOne": {
+          "type": "CommentType",
+          "column": "comment_cmnttype_id",
+          "required": true
+        }
+      },
+      {
+        "name": "text",
+        "attr": {
+          "type": "String",
+          "column": "comment_text"
+        }
+      },
+      {
+        "name": "isPublic",
+        "attr": {
+          "type": "Boolean",
+          "column": "comment_public"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "comment_date"
+        }
+      },
+      {
+        "name": "createdBy",
+        "attr": {
+          "type": "String",
+          "column": "comment_user"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "SiteListItem",
+    "table": "whsinfo",
+    "idSequenceName": "warehous_warehous_id_seq",
+    "comment": "Site Info Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainWarehouses",
+        "read": "ViewWarehouses",
+        "update": "MaintainWarehouses",
+        "delete": "MaintainWarehouses"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "warehous_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "SiteRelation",
+          "column": "warehous_code"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "warehous_active"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "warehous_descrip"
+        }
+      },
+      {
+        "name": "siteType",
+        "toOne": {
+          "type": "Number",
+          "column": "warehous_sitetype_id"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "SiteRelation",
+    "table": "whsinfo",
+    "idSequenceName": "warehous_warehous_id_seq",
+    "comment": "Site Info Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainWarehouses",
+        "read": "ViewWarehouses",
+        "update": "MaintainWarehouses",
+        "delete": "MaintainWarehouses"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "warehous_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "warehous_code"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "warehous_descrip"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "warehous_active"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "SiteType",
+    "table": "sitetype",
+    "idSequenceName": "sitetype_sitetype_id_seq",
+    "comment": "Site Type Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainSiteTypes",
+        "read": "ViewSiteTypes",
+        "update": "MaintainSiteTypes",
+        "delete": "MaintainSiteTypes"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "sitetype_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "sitetype_name"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "sitetype_descrip"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]
