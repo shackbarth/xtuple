@@ -400,23 +400,27 @@ trailing:true white:true*/
         {kind: "XV.CustomerDocumentsBox", attr: "documents"},
         {kind: "XV.CustomerShipToBox", attr: "shiptos"}
       ]},
-      {kind: "onyx.Popup", name: "findExistingProspectPopup", centered: true,
+      {kind: "onyx.Popup", name: "findExistingCustomerPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",
         onHide: "popupHidden", components: [
-        {content: "_customerExistsProspect".loc()},
+        {name: "exists"},
         {content: "_whatToDo".loc()},
         {tag: "br"},
-        {kind: "onyx.Button", name: "convert", content: "_convertProspect".loc(), ontap: "customerConvertProspect",
+        {kind: "onyx.Button", name: "convert", ontap: "customerConvert",
           classes: "onyx-blue xv-popup-button"},
         {kind: "onyx.Button", name: "cancel", content: "_cancel".loc(), ontap: "customerCancel",
           classes: "xv-popup-button"}
       ]}
     ],
-    customerConvertProspect: function () {
+    customerConvert: function (inEvent) {
       var id = this.value.get("id");
       this._popupDone = true;
-      this.$.findExistingProspectPopup.hide();
-      this.value.convertFromProspect(id);
+      this.$.findExistingCustomerPopup.hide();
+      if (inEvent.getContent() === "_convertProspect".loc()) {
+        this.value.convertFromProspect(id);
+      } else if (inEvent.getContent() === "_convertAccount".loc()) {
+        this.value.convertFromAccount(id);
+      }
     },
     errorNotify: function (inSender, inEvent) {
       // Handle customer existing as prospect
@@ -424,16 +428,29 @@ trailing:true white:true*/
         var type = inEvent.error.params.response.type;
         if (type === 'P') { // Prospect
           this._popupDone = false;
-          this.$.findExistingProspectPopup.setContent("_customerExistsProspect".loc());
+          this.$.exists.setContent("_customerExistsProspect".loc());
           this.$.convert.setContent("_convertProspect".loc());
-          this.$.findExistingProspectPopup.show();
-        } else if (type === 'A') {}
+          this.$.findExistingCustomerPopup.show();
+        } else if (type === 'A') { // Existing Account
+          this._popupDone = false;
+          this.$.exists.setContent("_customerExistsAccount".loc());
+          this.$.convert.setContent("_convertAccount".loc());
+          this.$.findExistingCustomerPopup.show();
+        } else if (type == 'C') { // Existing Customer
+          // this.$.errorMessage.setContent("_customerExists".loc());
+          // this.$.errorPopup.render();
+          // this.$.errorPopup.show();
+        }
         return true;
       }
     },
+    customerCancel: function () {
+      this._popupDone = true;
+      this.$.findExistingCustomerPopup.hide();
+    },
     popupHidden: function () {
       if (!this._popupDone) {
-        this.$.findExistingProspectPopup.show();
+        this.$.findExistingCustomerPopup.show();
       }
     }
   });

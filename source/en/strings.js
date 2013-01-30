@@ -524,6 +524,7 @@ var lang = XT.stringsFor("en_US", {
   "_attributeNotInSchema": "'{attr}' does not exist in the schema.",
   "_attributeReadOnly": "Can not edit read only attribute(s).",
   "_characteristicContextRequired": "You must set at least one characteristic context to true.",
+  "_customerExists": "A customer with this number already exists.",
   "_customerExistsAccount": "This number is currently assigned to an Account.",
   "_customerExistsProspect": "This number is currently assigned to a Prospect.",
   "_datasourceError": "Data source error: {error}",
