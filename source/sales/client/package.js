@@ -1,8 +1,8 @@
 enyo.depends(
-  "core.js",
   "en",
+  "core.js",
   "models",
-  "widgets",
   "views",
+  "widgets",
   "postbooks.js"
 );
