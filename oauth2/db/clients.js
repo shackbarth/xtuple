@@ -1,5 +1,5 @@
 var clients = [
-    { id: '1', name: 'Samplr', clientId: 'abc123', clientSecret: 'ssh-secret' }
+    //{ id: '1', name: 'Samplr', clientId: 'abc123', clientSecret: 'ssh-secret' }
 ];
 
 
