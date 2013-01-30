@@ -384,7 +384,7 @@ trailing:true white:true*/
             //{kind: "XV.CheckboxWidget", attr: "isSpecifiedBillingRate"}, Enables Rate Widget
             //{kind: "XV.NumberWidget", attr: "billingRate"},
             {kind: "XV.TermsPicker", attr: "terms"},
-            {kind: "XV.InputWidget", attr: "discount"},
+            {kind: "XV.NumberWidget", attr: "discount"},
             {kind: "XV.CreditStatusPicker", attr: "creditStatus"},
             {kind: "XV.CheckboxWidget", attr: "usesPurchaseOrders"},
             {kind: "XV.CheckboxWidget", attr: "blanketPurchaseOrders"},
