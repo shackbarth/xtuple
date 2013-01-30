@@ -181,8 +181,10 @@ white:true*/
       options = options ? _.clone(options) : {};
       var orgs = this.get("organizations"),
         model = this,
+        isNew = model.getStatus() === XM.Model.READY_NEW,
         params,
         i,
+        n,
         orgOptions = {
           error: function () {
             XT.log("Error updating instance database");
@@ -194,6 +196,15 @@ white:true*/
       options.success = function (resp) {
         
         // Update users on instance databases
+        n = orgs.length;
+        if (n && isNew) {
+          orgOptions.success = function (resp) {
+            n--;
+            if (n <= 0) {
+              model.resetPassword(true);
+            }
+          };
+        }
         for (i = 0; i < orgs.length; i++) {
           params = {
             user: model.id,
@@ -210,6 +221,30 @@ white:true*/
       }
 
       return XM.GlobalDocument.prototype.save.call(this, key, value, options);
+    },
+    
+    resetPassword: function (newUser) {
+      var that = this,
+        error,
+        options = {
+          success: function (result) {
+            var message = "An e-mail with the new password has been sent to " + that.id;
+            if (result.emailSuccess) {
+              that.notify(message);
+            }
+          },
+          databaseType: "global",
+          newUser: newUser || false
+        };
+
+      if (this.getStatus() === XM.Model.READY_DIRTY) {
+        error = XT.Error.clone('xt1012');
+        this.trigger('error', this, error, {});
+        return false;
+      }
+
+      XT.dataSource.resetPassword(this.id, options);
+      return this;
     }
 
   });
