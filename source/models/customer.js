@@ -18,7 +18,8 @@ white:true*/
 
     defaults: function () {
       var localCurrency,
-          currencyModel;
+          currencyModel,
+          settings = XT.session.getSettings();
       for (var i = 0; i < XM.currencies.models.length; i++) {
         currencyModel = XM.currencies.models[i];
         if (currencyModel.attributes.isBase) {
@@ -28,9 +29,29 @@ white:true*/
       return {
         isActive: true,
         creditStatus: "G",
-        currency: localCurrency
+        currency: localCurrency,
+        salesRep: settings.get("DefaultSalesRep"),
+        terms: settings.get("DefaultTerms"),
+        shipVia: settings.get("DefaultShipViaId"),
+        customerType: settings.get("DefaultCustType"),
+        backorder: settings.get("DefaultBackOrders"),
+        partialShip: settings.get("DefaultPartialShipments"),
+        isFreeFormShipto: settings.get("DefaultFreeFormShiptos"),
+        autoUpdateStatus: false,
+        autoHoldOrders: false,
+        isFreeFormBillto: false,
+        commission: 0,
+        blanketPurchaseOrders: false,
+        usesPurchaseOrders: false,
+        creditLimit: settings.get("SOCreditLimit"),
+        creditRating: settings.get("SOCreditRate"),
+        balanceMethod: settings.get("DefaultBalanceMethod")
       };
     },
+    
+    readOnlyAttributes: [
+      "blanketPurchaseOrders"
+    ],
 
     requiredAttributes: [
       "isActive",
@@ -50,8 +71,7 @@ white:true*/
       "isFreeFormBillto",
       "usesPurchaseOrders",
       "autoUpdateStatus",
-      "autoHoldOrders",
-      "preferredSite"
+      "autoHoldOrders"
     ],
     
     // ..........................................................
@@ -59,25 +79,110 @@ white:true*/
     //
     
     /**
-      Return a matching record id for a passed user `key` and `value`. If none
-      found, returns zero.
-
-      @param {String} Property to search on, typically a user key
-      @param {String} Value to search for
-      @param {Object} Options
-      @returns {Object} Receiver
+      Initialize
     */
-    findExisting: function (key, value, options) {
-      var recordType = this.recordType || this.prototype.recordType,
-        params = [ recordType, key, value, this.id || -1 ],
-        dataSource = options.dataSource || XT.dataSource;
-      dataSource.dispatch('XM.Model', 'findExisting', params, options);
-      XT.log("XM.Model.findExisting for: " + recordType);
-      return this;
+    initialize: function () {
+      XM.Document.prototype.initialize.apply(this, arguments);
+      this.on('change:usesPurchaseOrders change:backorder', this.optionsDidChange);
+    },
+    
+    /**
+      Sets the readOnlyAttributes array according to different checkboxes
+    */
+    optionsDidChange: function () {
+      //If usesPurchaseOrders is checked, then blanketPurchaseOrders is read-only and unchecked
+      if (!this.get("usesPurchaseOrders")) {
+        this.setReadOnly("blanketPurchaseOrders", true);
+        this.set("blanketPurchaseOrders", false);
+      } else {
+        this.setReadOnly("blanketPurchaseOrders", false);
+      }
+      
+      if (!this.get("backorder")) {
+        this.setReadOnly("partialShip", true);
+        this.set("partialShip", false);
+      } else {
+        this.setReadOnly("partialShip", false);
+      }
+      
+    },
+    
+    /**
+      Sets read only status of customerType according to privs
+    */
+    statusDidChange: function () {
+      var status = this.getStatus(),
+          privileges = XT.session.getPrivileges(),
+          K = XM.Model;
+      XM.Document.prototype.statusDidChange.apply(this, arguments);
+      if (status === K.READY_NEW) {
+        if (!privileges.get("MaintainCustomerMastersCustomerType") &&
+          !privileges.get("MaintainCustomerMastersCustomerTypeOnCreate")) {
+          this.setReadOnly("customerType", true);
+        }
+      } else if (status === K.READY_CLEAN) {
+        if (!privileges.get("MaintainCustomerMastersCustomerType")) {
+          this.setReadOnly("customerType", true);
+        }
+      }
+    },
+    
+    /**
+      Creates a new account model and fetches based on the given ID.
+      Takes attributes from the account model and gives them to this customer model.
+    */
+    convertFromAccount: function (id) {
+      var account = new XM.Account(),
+          fetchOptions = {},
+          that = this;
+          
+      fetchOptions.id = id;
+      
+      fetchOptions.success = function (resp) {
+        that.set("name", account.get("name"));
+        that.set("billingContact", account.get("primaryContact"));
+        that.set("correspondenceContact", account.get("secondaryContact"));
+        that.revertStatus();
+      };
+      fetchOptions.error = function (resp) {
+        XT.log("Fetch failed in convertFromAccount");
+      };
+      this.setStatus(XM.Model.BUSY_FETCHING);
+      account.fetch(fetchOptions);
+    },
+    
+    /**
+      Creates a new prospect model and fetches based on the given ID.
+      Takes attributes from the prospect model and gives them to this customer model.
+      The prospect model will be destroyed by the save function.
+    */
+    convertFromProspect: function (id) {
+      var prospect = new XM.Prospect(),
+        fetchOptions = {},
+        that = this;
+          
+      fetchOptions.id = id;
+      
+      fetchOptions.success = function (resp) {
+        that.set("name", prospect.get("name"));
+        that.set("billingContact", prospect.get("contact"));
+        that.set("salesRep", prospect.get("salesRep"));
+        that.set("preferredSite", prospect.get("site"));
+        that.set("taxZone", prospect.get("taxZone"));
+        that.setReadOnly("id", false);
+        that.set("id", prospect.get("id"));
+        that.setReadOnly("id", true);
+        that.revertStatus();
+      };
+      fetchOptions.error = function (resp) {
+        XT.log("Fetch failed in convertFromProspect");
+      };
+      this.setStatus(XM.Model.BUSY_FETCHING);
+      prospect.fetch(fetchOptions);
     }
 
   });
-
+  
   /**
     @class
 
@@ -217,7 +322,7 @@ white:true*/
       var status = this.getStatus(),
           customer = this.get("customer"),
           K = XM.Model;
-          
+
       if (customer && status === K.READY_NEW) {
         var shiptosCollection = customer.get("shiptos"),
             numberArray = [];
