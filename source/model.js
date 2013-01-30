@@ -733,6 +733,23 @@ white:true*/
     isRequired: function (value) {
       return _.contains(this.requiredAttributes, value);
     },
+    
+    /**
+      A utility function that triggers an `notify` event. Useful for passing along
+      non-critical information to the interface. Bind to `notify` to use.
+      
+        var m = new XM.MyModel();
+        var raiseAlert = function (model, value, options) {
+          alert(value);
+        }
+        m.on('notify', raiseAlert);
+      
+      @param {String} Message
+      @param {Object} Options
+    */
+    notify: function (message, options) {
+      this.trigger('notify', this, message, options);
+    },
 
     /**
       Recursively checks the object against the schema and converts date strings to
