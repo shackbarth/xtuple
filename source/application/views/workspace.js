@@ -340,6 +340,9 @@ trailing:true white:true*/
     handlers: {
       onError: "errorNotify"
     },
+    published: {
+  		existingId: ""
+  	},
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -413,19 +416,19 @@ trailing:true white:true*/
       ]}
     ],
     customerConvert: function (inEvent) {
-      var id = this.value.get("id");
       this._popupDone = true;
       this.$.findExistingCustomerPopup.hide();
       if (inEvent.getContent() === "_convertProspect".loc()) {
-        this.value.convertFromProspect(id);
+        this.value.convertFromProspect(this.existingId);
       } else if (inEvent.getContent() === "_convertAccount".loc()) {
-        this.value.convertFromAccount(id);
+        this.value.convertFromAccount(this.existingId);
       }
     },
     errorNotify: function (inSender, inEvent) {
       // Handle customer existing as prospect
       if (inEvent.error.code === 'xt1008') {
         var type = inEvent.error.params.response.type;
+        this.existingId = inEvent.error.params.response.id;
         if (type === 'P') { // Prospect
           this._popupDone = false;
           this.$.exists.setContent("_customerExistsProspect".loc());
