@@ -25,9 +25,10 @@
     "passport-http-bearer": "0.2.x",
     "passport-oauth2-client-password": "0.1.x",
     "connect-ensure-login": "0.1.x",
-    "socket.io":"0.9.x",
+    "socket.io":"0.9.13",
     "vows":"0.6.3",
-    "connect":"2.7.x"
+    "connect":"2.7.x",
+    "connect-flash":"0.1.x"
   },
   "devDependencies": {
     "zombie":"1.4.1"
