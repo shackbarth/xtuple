@@ -35,7 +35,7 @@
         "toOne": {
           "isNested": true,
           "type": "SiteType",
-          "column": "id"
+          "column": "warehous_sitetype_id"
         }
       },
       {
@@ -71,8 +71,7 @@
       {
         "name": "taxZone",
         "toOne": {
-          "isNested": true,
-          "type": "Number",
+          "type": "TaxZone",
           "column": "warehous_taxzone_id"
         }
       },
@@ -86,7 +85,7 @@
       {
         "name": "shipVia",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "warehous_shipvia_id"
         }
       },
@@ -102,7 +101,8 @@
         "toMany": {
           "isNested": true,
           "type": "SiteComment",
-          "column": "id"
+          "column": "warehous_id",
+          "inverse": "site"
         }
       }
     ],
@@ -241,7 +241,7 @@
       {
         "name": "siteType",
         "toOne": {
-          "type": "Number",
+          "type": "SiteType",
           "column": "warehous_sitetype_id"
         }
       }
