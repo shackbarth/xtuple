@@ -209,6 +209,15 @@
         }
       },
       {
+        "name": "taxRegistration",
+        "toMany": {
+          "isNested": true,
+          "type": "CustomerTaxRegistration",
+          "column": "cust_id",
+          "inverse": "customer"
+        }
+      },
+      {
         "name": "characteristics",
         "toMany": {
           "isNested": true,
