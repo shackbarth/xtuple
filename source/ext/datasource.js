@@ -246,8 +246,7 @@ white:true*/
           newUser: options.newUser
         },
         ajax = new enyo.Ajax({
-          url: "http://localhost:2000/resetPassword", // XXX temp until migration
-          //url: "/resetPassword",
+          url: "/resetPassword",
           success: options ? options.success : undefined,
           error: options ? options.error : undefined
         });
@@ -325,8 +324,7 @@ white:true*/
     sendEmail: function (payload, options) {
       var that = this,
         ajax = new enyo.Ajax({
-          url: "http://localhost:2000/email", // XXX temp until migration
-          //url: "/email",
+          url: "/email",
           success: options ? options.success : undefined,
           error: options ? options.error : undefined
         });
@@ -351,7 +349,6 @@ white:true*/
     getExtensionList: function (options) {
       var that = this,
         ajax = new enyo.Ajax({
-          //url: "http://localhost:2000/extensions", // XXX temp until migration
           url: "/extensions",
           success: options ? options.success : undefined,
           error: options ? options.error : undefined
