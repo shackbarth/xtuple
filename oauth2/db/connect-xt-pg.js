@@ -144,7 +144,7 @@ module.exports = function (connect) {
             // Load this data into the MemoryStore to speed this up next time.
             MemoryStore.set(sid, result, function (err, cache) {
               if (err) {
-                // Could not set. Return error and move along...
+                // Could not set. This shouldn't happen. Return error and move along...
                 console.trace("MemoryStore.set error:");
                 done && done(err);
               } else {
@@ -164,8 +164,8 @@ module.exports = function (connect) {
           // This is called when MemoryStore did not find session data.
           // No need to touch MemoryStore here.
 
-          // Nothing found anywhere, return error and move along...
-          done && done(err);
+          // Nothing found anywhere, no need to return the err, return nothing and move along...
+          done && done();
         };
 
         // Try to fetch a session matching the user's cookie sid.
@@ -222,7 +222,7 @@ module.exports = function (connect) {
               if (err) {
                 // Could not set. Return error and move along.
                 console.trace("MemoryStore.set error:");
-                done && done();
+                done && done(err);
               } else {
                 // Success, MemoryStore updated, move along.
                 done && done();
@@ -234,6 +234,7 @@ module.exports = function (connect) {
           }
         };
         saveOptions.error = function (model, err) {
+          var that = this;
           // This shouldn't happen. How did we get here? Log trace.
           console.trace("XM.SessionStore save error. This shouldn't happen.");
 
@@ -241,16 +242,20 @@ module.exports = function (connect) {
             // Delete any match in MemoryStore.
             MemoryStore.destroy(sid, function (err, cache) {
               if (err) {
-                // Could not destroy. Return error and move along.
+                // Could not destroy. This shouldn't happen. Return error and move along.
                 console.trace("MemoryStore.destroy error:");
                 done && done(err);
               } else {
+                // TODO - This might throw an error because our err object does not includes a stack.
+                // https://github.com/senchalabs/connect/blob/master/lib/middleware/errorHandler.js#L48
                 // MemoryStore destroyed, move along.
-                done && done(err);
+                done && done(that.err);
               }
             });
           } else {
-            // Send error and move along.
+            // TODO - This might throw an error because our err object does not includes a stack.
+            // https://github.com/senchalabs/connect/blob/master/lib/middleware/errorHandler.js#L48
+            // Return nothing and move along.
             done && done(err);
           }
         };
@@ -268,9 +273,9 @@ module.exports = function (connect) {
               // MemoryStore did not have a matching session, update existing or add new.
               MemoryStore.set(sid, JSON.parse(sess), function (err, cache) {
                 if (err) {
-                  // Could not set. Return error and move along.
+                  // Could not set. This shouldn't happen. Return error and move along.
                   console.trace("MemoryStore.set error:");
-                  done && done();
+                  done && done(err);
                 } else {
                   // Nothing to save, MemoryStore updated, move along.
                   done && done();
@@ -353,7 +358,7 @@ module.exports = function (connect) {
           // Delete this session from the MemoryStore as well.
           MemoryStore.destroy(sid, function (err, cache) {
             if (err) {
-              // Could not destroy. Return error and move along.
+              // Could not destroy. This shouldn't happen. Return error and move along.
               console.trace("MemoryStore.destroy error:");
               done && done(err);
             } else {
@@ -370,16 +375,17 @@ module.exports = function (connect) {
           // Did not find a match in the db, delete this session from the MemoryStore, it's invalid.
           MemoryStore.destroy(sid, function (err, cache) {
             if (err) {
-              // Could not destroy. Return error and move along.
+              // Could not destroy. This shouldn't happen. Return error and move along.
               console.trace("MemoryStore.destroy error:");
               done && done(err);
             } else {
-              // MemoryStore destroyed, move along.
-              done && done(err);
+              // MemoryStore destroyed. Return nothing and move along.
+              done && done();
             }
           });
         } else {
-          done && done(err);
+          // Return nothing and move along.
+          done && done();
         }
       };
 
