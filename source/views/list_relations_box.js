@@ -38,7 +38,7 @@ trailing:true white:true*/
       onParentStatusChange: "workspaceModelStatusChanged"
     },
     /**
-     Builds the box that contains the list of relationships: a group box comprised of a header, a scrollable list, 
+     Builds the box that contains the list of relationships: a group box comprised of a header, a scrollable list,
     and navigation buttons.
      */
     create: function () {
