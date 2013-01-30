@@ -1,0 +1,41 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "BiCache",
+    "table": "xt.bicache",
+    "comment": "BI Cache Map",
+    "properties": [
+     {
+       "name": "key",
+       "attr": {
+         "type": "String",
+         "column": "bicache_key",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "query",
+       "attr": {
+         "type": "String",
+         "column": "bicache_query"
+       }
+     },
+     {
+       "name": "data",
+       "attr": {
+         "type": "String",
+         "column": "bicache_data"
+       }
+     },
+     {
+       "name": "created",
+       "attr": {
+         "type": "Date",
+         "column": "bicache_created"
+       }
+     }
+    ],
+    "isSystem": true
+  }
+]

@@ -221,6 +221,14 @@
           "inverse": "source",
           "isNested": true
         }
+      },
+      {
+        "name": "itemSites",
+        "toMany": {
+          "type": "ItemSiteRelation",
+          "column": "item_id",
+          "isNested": "true"
+        }
       }
     ],
     "isSystem": true,
