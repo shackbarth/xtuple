@@ -340,6 +340,9 @@ trailing:true white:true*/
     handlers: {
       onError: "errorNotify"
     },
+    published: {
+  		existingId: ""
+  	},
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -381,7 +384,7 @@ trailing:true white:true*/
             //{kind: "XV.CheckboxWidget", attr: "isSpecifiedBillingRate"}, Enables Rate Widget
             //{kind: "XV.NumberWidget", attr: "billingRate"},
             {kind: "XV.TermsPicker", attr: "terms"},
-            {kind: "XV.InputWidget", attr: "discount"},
+            {kind: "XV.NumberWidget", attr: "discount"},
             {kind: "XV.CreditStatusPicker", attr: "creditStatus"},
             {kind: "XV.CheckboxWidget", attr: "usesPurchaseOrders"},
             {kind: "XV.CheckboxWidget", attr: "blanketPurchaseOrders"},
@@ -395,7 +398,7 @@ trailing:true white:true*/
             {kind: "XV.TaxZonePicker", attr: "taxZone", label: "_defaultTaxZone".loc()}
           ]}
         ]},
-        {kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
+        //{kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
         {kind: "XV.CustomerCommentBox", attr: "comments"},
         {kind: "XV.CustomerDocumentsBox", attr: "documents"},
         {kind: "XV.CustomerShipToBox", attr: "shiptos"}
@@ -403,24 +406,45 @@ trailing:true white:true*/
       {kind: "onyx.Popup", name: "findExistingCustomerPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",
         onHide: "popupHidden", components: [
-        {content: "_addressShared".loc()},
+        {name: "exists"},
         {content: "_whatToDo".loc()},
         {tag: "br"},
-        {kind: "onyx.Button", content: "_changeOne".loc(), ontap: "addressChangeOne",
+        {kind: "onyx.Button", name: "convert", ontap: "customerConvert",
           classes: "onyx-blue xv-popup-button"},
-        {kind: "onyx.Button", content: "_changeAll".loc(), ontap: "addressChangeAll",
-          classes: "xv-popup-button"},
-        {kind: "onyx.Button", content: "_cancel".loc(), ontap: "addressCancel",
+        {kind: "onyx.Button", name: "cancel", content: "_cancel".loc(), ontap: "customerCancel",
           classes: "xv-popup-button"}
       ]}
     ],
+    customerConvert: function (inEvent) {
+      this._popupDone = true;
+      this.$.findExistingCustomerPopup.hide();
+      if (inEvent.getContent() === "_convertProspect".loc()) {
+        this.value.convertFromProspect(this.existingId);
+      } else if (inEvent.getContent() === "_convertAccount".loc()) {
+        this.value.convertFromAccount(this.existingId);
+      }
+    },
     errorNotify: function (inSender, inEvent) {
       // Handle customer existing as prospect
-      if (inEvent.error.code === 'xt2007') {
-        this._popupDone = false;
-        this.$.multipleAddressPopup.show();
-        return true;
+      if (inEvent.error.code === 'xt1008') {
+        var type = inEvent.error.params.response.type;
+        this.existingId = inEvent.error.params.response.id;
+        if (type === 'P') { // Prospect
+          this._popupDone = false;
+          this.$.exists.setContent("_customerExistsProspect".loc());
+          this.$.convert.setContent("_convertProspect".loc());
+          this.$.findExistingCustomerPopup.show();
+        } else if (type === 'A') { // Existing Account
+          this._popupDone = false;
+          this.$.exists.setContent("_customerExistsAccount".loc());
+          this.$.convert.setContent("_convertAccount".loc());
+          this.$.findExistingCustomerPopup.show();
+        } 
       }
+    },
+    customerCancel: function () {
+      this._popupDone = true;
+      this.$.findExistingCustomerPopup.hide();
     },
     popupHidden: function () {
       if (!this._popupDone) {
@@ -431,7 +455,6 @@ trailing:true white:true*/
 
   XV.registerModelWorkspace("XM.CustomerRelation", "XV.CustomerWorkspace");
   XV.registerModelWorkspace("XM.CustomerListItem", "XV.CustomerWorkspace");
-  
 
   // ..........................................................
   // FILE
