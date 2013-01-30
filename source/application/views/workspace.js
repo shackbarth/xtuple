@@ -395,7 +395,7 @@ trailing:true white:true*/
             {kind: "XV.TaxZonePicker", attr: "taxZone", label: "_defaultTaxZone".loc()}
           ]}
         ]},
-        {kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
+        //{kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
         {kind: "XV.CustomerCommentBox", attr: "comments"},
         {kind: "XV.CustomerDocumentsBox", attr: "documents"},
         {kind: "XV.CustomerShipToBox", attr: "shiptos"}
