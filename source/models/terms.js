@@ -19,5 +19,17 @@ white:true*/
     documentKey: 'code'
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.TermsCollection = XM.Collection.extend({
+    /** @scope XM.TermsCollection.prototype */
+
+    model: XM.Terms
+
+  });
 
 }());
