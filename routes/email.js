@@ -33,5 +33,3 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     X.smtpTransport.sendMail(mailContent, callback);
   };
 }());
-
-

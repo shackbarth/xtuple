@@ -15,7 +15,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var args = req.query,
       recordType = args.recordType,
       recordId = args.id,
-      organization = req.session.passport.organization,
+      organization = req.session.passport.user.organization,
       queryPayload,
       query;
 

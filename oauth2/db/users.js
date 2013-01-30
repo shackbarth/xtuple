@@ -1,19 +1,6 @@
-var users = [
-    { id: '1', username: 'bob', password: 'secret', name: 'Bob Smith' },
-    { id: '2', username: 'joe', password: 'password', name: 'Joe Davis' }
-];
-
-/*
-exports.find = function (id, done) {
-  for (var i = 0, len = users.length; i < len; i++) {
-    var user = users[i];
-    if (user.id === id.id) {
-      return done(null, user);
-    }
-  }
-  return done(null, null);
-};
-*/
+/*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
+regexp:true, undef:true, strict:true, trailing:true, white:true */
+/*global X:true, XM:true, console:true*/
 
 /*
   Beware that we don't actually verify the password here. We
@@ -24,6 +11,7 @@ exports.find = function (id, done) {
   old MD5 passwords by now.
 */
 exports.findByUsername = function (username, done) {
+  "use strict";
   var user = new XM.User(),
     options = {};
 
@@ -39,12 +27,12 @@ exports.findByUsername = function (username, done) {
       X.log("Error authenticating user", arguments);
       done(err);
     }
-  }
+  };
 
-  // the user id we're searching for
+  // The user id we're searching for.
   options.id = username;
 
-  // the user under whose authority the query is run
+  // The user under whose authority the query is run.
   options.username = X.options.globalDatabase.nodeUsername;
 
   user.fetch(options);

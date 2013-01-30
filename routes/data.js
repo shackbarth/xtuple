@@ -52,9 +52,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }
       };
 
-    payload.username = session.passport.username;
+    payload.username = session.passport.user.username;
     query = queryString.f(JSON.stringify(payload));
-    X.database.query(session.passport.organization, query, adaptorCallback);
+    X.database.query(session.passport.user.organization, query, adaptorCallback);
   };
 
   /**
@@ -69,8 +69,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       binaryData,
       options;
 
-    // we need to convert js binary into pg hex (see the file route for
-    // the opposite conversion). see issue 18661
+    // We need to convert js binary into pg hex (see the file route for
+    // the opposite conversion). See issue #18661
     if (binaryField) {
       binaryData = payload.dataHash[binaryField];
       buffer = new Buffer(binaryData, "binary"); // XXX uhoh: binary is deprecated but necessary here
@@ -79,8 +79,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
 
     if (payload && payload.databaseType === 'global') {
-      // run this query against the global database
-      options = createGlobalOptions(payload, session.passport.user, callback);
+      // Run this query against the global database.
+      options = createGlobalOptions(payload, session.passport.user.id, callback);
       if (!payload.dataHash) {
         callback({message: "Invalid Commit"});
         return;
@@ -91,7 +91,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       XT.dataSource.commitRecord(payload, options);
 
     } else {
-      // run this query against an instance database
+      // Run this query against an instance database.
       queryInstanceDatabase("select xt.commit_record($$%@$$)", "commit_record", payload, session, callback);
     }
   };
@@ -105,14 +105,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var organization,
       query,
       options;
-
     if (payload && payload.databaseType === 'global') {
-      // run this query against the global database
-      options = createGlobalOptions(payload, session.passport.user, callback);
+      // Run this query against the global database.
+      options = createGlobalOptions(payload, session.passport.user.id, callback);
       XT.dataSource.dispatch(payload.className, payload.functionName, payload.parameters, options);
 
     } else {
-      // run this query against an instance database
+      // Run this query against an instance database.
       queryInstanceDatabase("select xt.dispatch('%@')", "dispatch", payload, session, callback);
     }
   };
@@ -129,7 +128,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     if (payload && payload.databaseType === 'global') {
       // run this query against the global database
-      options = createGlobalOptions(payload, session.passport.user, callback);
+      options = createGlobalOptions(payload, session.passport.user.id, callback);
       XT.dataSource.fetch(options);
 
     } else {
@@ -152,7 +151,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     if (payload && payload.databaseType === 'global') {
       // run this query against the global database
-      options = createGlobalOptions(payload, session.passport.user, callback);
+      options = createGlobalOptions(payload, session.passport.user.id, callback);
       XT.dataSource.retrieveRecord(payload.recordType, payload.id, options);
 
     } else {

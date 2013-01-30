@@ -48,7 +48,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.resetPassword = function (req, res) {
     var args = req.query,
       // the fetch and edit will be made under the authority of the requesting global user
-      requester = req.session.passport.user,
+      requester = req.session.passport.user.id,
       user,
       message = "Unknown user or invalid password match",
       fetchSuccess,

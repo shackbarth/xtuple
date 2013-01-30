@@ -31,10 +31,10 @@ passport.use(new LocalStrategy(
     db.users.findByUsername(username, function (err, user) {
       if (err) { return done(err); }
       if (!user) {
-        return done(null, false);
+        return done(null, false, { message: 'Unknown user ' + username });
       }
       if (!X.bcrypt.compareSync(password, user.get('password'))) {
-        return done(null, false);
+        return done(null, false, { message: 'Invalid password' });
       }
       return done(null, user);
     });
@@ -48,17 +48,20 @@ passport.use(new LocalStrategy(
  */
 passport.serializeUser(function (user, done) {
   "use strict";
-  done(null, user.get("id"));
+  var passportUser = {};
+
+  passportUser.id = user.get("id")
+  done(null, passportUser);
 });
 
 
 /**
  * Check Session Cookie against the database.
  */
-passport.deserializeUser(function (id, done) {
+passport.deserializeUser(function (passportUser, done) {
   "use strict";
 
-  db.users.findByUsername(id, function (err, user) {
+  db.users.findByUsername(passportUser.id, function (err, user) {
     if (err) { return done(err); }
     if (!user) {
       return done(null, false);
