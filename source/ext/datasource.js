@@ -419,7 +419,7 @@ white:true*/
           style: "text-align: center;",
           components: [
             {content: "_sessionTimedOut".loc()},
-            {kind: "onyx.Button", content: "_ok".loc(), tap: function () { relocate(); }}
+            {kind: "onyx.Button", content: "_ok".loc(), tap: function () { XT.session.logout(); }}
           ]
         });
         p.show();
