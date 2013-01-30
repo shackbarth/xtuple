@@ -611,7 +611,8 @@ trailing:true white:true*/
       // I'm skirting around the loading time for XM.currentUser. If this data
       // hasn't been loaded yet then the navigator simply won't allow export
       var isAllowedToExport = XM.currentUser && !XM.currentUser.get("disableExport");
-      this.$.exportItem.setShowing(collection && isAllowedToExport);
+      // XXX the export to pentaho is currently only working on contact as a proof of concept
+      this.$.exportItem.setShowing(collection && isAllowedToExport && label === 'Contacts');
       this.$.exportCSVItem.setShowing(collection && isAllowedToExport); // TODO: delete once pentaho is working
 
       // Handle new button
