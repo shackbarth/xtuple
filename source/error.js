@@ -178,6 +178,10 @@
       code: "xt1011",
       messageKey: "_localResourceNotAllowed"
     },
+    {
+      code: "xt1012",
+      messageKey: "_saveFirst"
+    },
 
     // Application errors
     {
