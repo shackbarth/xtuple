@@ -4,6 +4,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   var vows = require('vows'),
       assert = require('assert'),
+      zombieAuth = require('./zombie_auth'),
       zombie = require('zombie');
 (function () {
   "use strict";
