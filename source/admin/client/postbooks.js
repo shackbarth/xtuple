@@ -15,9 +15,9 @@ trailing:true white:true*/
       label: "_admin".loc(),
       panels: [
         {name: "userList", kind: "XV.UserList"},
-        {name: "databaseServerList", kind: "XV.DatabaseServerList"},
         {name: "organizationList", kind: "XV.OrganizationList"},
-        {name: "extensionList", kind: "XV.ExtensionList"}
+        {name: "extensionList", kind: "XV.ExtensionList"},
+        {name: "databaseServerList", kind: "XV.DatabaseServerList"}
       ]
     };
     XT.app.$.postbooks.insertModule(module, 2);

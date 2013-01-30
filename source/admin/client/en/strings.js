@@ -21,21 +21,22 @@ var lang = XT.stringsFor("en_US", {
   "_accessAdminExtension": "Access Admin Extension",
   "_databaseServer": "Server",
   "_databaseServers": "Servers",
-  "_organizations": "Organizations",
+  "_dateAdded": "Date Added",
+  "_group": "Group",
   "_extension": "Extension",
   "_extensions": "Extensions",
-  "_port": "Port",
   "_hostname": "Hostname",
-  "_dateAdded": "Date Added",
   "_licenses": "Licenses",
   "_location": "Location",
   "_loadOrder": "Load Order",
+  "_organizations": "Organizations",
+  "_port": "Port",
   "_privilegeName": "Privilege Name",
+  "_resetPassword": "Reset Password",
+  "_resetPasswordConfirmation": "Are you sure you want to reset this password?",
   "_user": "User",
   "_userName": "User Name",
   "_users": "Users",
-  "_id": "ID",
-  "_resetPassword": "Reset Password",
-  "_resetPasswordConfirmation": "Are you sure you want to reset this password?"
+  "_id": "ID"
 
 });

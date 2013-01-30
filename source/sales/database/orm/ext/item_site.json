@@ -1,0 +1,34 @@
+[
+  {
+    "context": "sales",
+    "nameSpace": "XM",
+    "type": "ItemSite",
+    "table": "itemsite",
+    "isExtension": true,
+    "comment": "Extended by Sales",
+    "relations": [
+      {
+        "column": "itemsite_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "isSold",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_sold",
+        }
+      },
+      {
+        "name": "soldRanking",
+        "toOne": {
+          "type": "Number",
+          "column": "itemsite_sold_ranking"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  }  
+]
