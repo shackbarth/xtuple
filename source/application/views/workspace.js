@@ -436,12 +436,7 @@ trailing:true white:true*/
           this.$.exists.setContent("_customerExistsAccount".loc());
           this.$.convert.setContent("_convertAccount".loc());
           this.$.findExistingCustomerPopup.show();
-        } else if (type == 'C') { // Existing Customer
-          // this.$.errorMessage.setContent("_customerExists".loc());
-          // this.$.errorPopup.render();
-          // this.$.errorPopup.show();
-        }
-        return true;
+        } 
       }
     },
     customerCancel: function () {
@@ -457,7 +452,6 @@ trailing:true white:true*/
 
   XV.registerModelWorkspace("XM.CustomerRelation", "XV.CustomerWorkspace");
   XV.registerModelWorkspace("XM.CustomerListItem", "XV.CustomerWorkspace");
-  
 
   // ..........................................................
   // FILE
