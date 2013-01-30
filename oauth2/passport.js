@@ -31,10 +31,10 @@ passport.use(new LocalStrategy(
     db.users.findByUsername(username, function (err, user) {
       if (err) { return done(err); }
       if (!user) {
-        return done(null, false, { message: 'Unknown user ' + username });
+        return done(null, false);
       }
       if (!X.bcrypt.compareSync(password, user.get('password'))) {
-        return done(null, false, { message: 'Invalid password' });
+        return done(null, false);
       }
       return done(null, user);
     });
