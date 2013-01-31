@@ -1177,12 +1177,6 @@ white:true*/
 
       // Check read only and privileges.
       if ((status & K.READY) && !_.isEqual(attributes, original)) {
-        for (attr in attributes) {
-          if (attributes[attr] !== this.original(attr) &&
-              this.isReadOnly(attr)) {
-            return XT.Error.clone('xt1005');
-          }
-        }
 
         if (!this.canUpdate() && status !== K.READY_NEW) {
           return XT.Error.clone('xt1010');
