@@ -50,10 +50,6 @@ white:true*/
       };
     },
     
-    readOnlyAttributes: [
-      "blanketPurchaseOrders"
-    ],
-
     requiredAttributes: [
       "isActive",
       "name",
@@ -84,38 +80,35 @@ white:true*/
     */
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
-      this.on('change:usesPurchaseOrders change:backorder', this.optionsDidChange);
+      this.on('change:usesPurchaseOrders', this.purchaseOrdersDidChange);
+      this.on('change:backorder', this.backorderDidChange);
       this.on('change:salesRep', this.salesRepDidChange);
-    },
-    
-    /**
-      Sets the readOnlyAttributes array according to different checkboxes
-    */
-    optionsDidChange: function () {
-      //If usesPurchaseOrders is checked, then blanketPurchaseOrders is read-only and unchecked
-      if (!this.get("usesPurchaseOrders")) {
-        this.setReadOnly("blanketPurchaseOrders", true);
-        this.set("blanketPurchaseOrders", false);
-      } else {
+      if (this.get("usesPurchaseOrders")) {
         this.setReadOnly("blanketPurchaseOrders", false);
       }
-      
-      if (!this.get("backorder")) {
-        this.setReadOnly("partialShip", true);
-        this.set("partialShip", false);
-      } else {
+      if (this.get("backorder")) {
         this.setReadOnly("partialShip", false);
       }
-      
     },
     
-    salesRepDidChange: function () {
-      var salesRep = this.get('salesRep');
-      if (salesRep && (this.getStatus() & XM.Model.READY)) {
-        this.set('commission', salesRep.get('commission'));
+    purchaseOrdersDidChange: function () {
+      if (this.get("usesPurchaseOrders")) {
+        this.setReadOnly("blanketPurchaseOrders", false);
+      } else if (!this.get("usesPurchaseOrders")) {
+        this.set("blanketPurchaseOrders", false, {force: true});
+        this.setReadOnly("blanketPurchaseOrders", true);
       }
     },
     
+    backorderDidChange: function () {
+      if (this.get("backorder")) {
+        this.setReadOnly("partialShip", false);
+      } else if (!this.get("backorder")) {
+        this.set("partialShip", false, {force: true});
+        this.setReadOnly("partialShip", true);
+      }
+    },
+
     /**
       Sets read only status of customerType according to privs
     */
@@ -144,7 +137,7 @@ white:true*/
       var account = new XM.Account(),
           fetchOptions = {},
           that = this;
-          
+
       fetchOptions.id = id;
       
       fetchOptions.success = function (resp) {
@@ -170,9 +163,9 @@ white:true*/
       var prospect = new XM.Prospect(),
         fetchOptions = {},
         that = this;
-          
+
       fetchOptions.id = id;
-      
+
       fetchOptions.success = function (resp) {
         that.set("name", prospect.get("name"));
         that.set("billingContact", prospect.get("contact"));
@@ -401,6 +394,20 @@ white:true*/
       }
     }
 
+  });
+  
+  /**
+    @class
+    
+    @extends XM.Model
+  */
+  XM.CustomerTaxRegistration = XM.Document.extend({
+    /** @scope XM.CustomerTaxRegistration */
+    
+    recordType: 'XM.CustomerTaxRegistration',
+    
+    documentKey: 'number'
+    
   });
 
   /**
