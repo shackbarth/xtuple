@@ -34,18 +34,19 @@ white:true*/
         terms: settings.get("DefaultTerms"),
         shipVia: settings.get("DefaultShipViaId"),
         customerType: settings.get("DefaultCustType"),
-        backorder: settings.get("DefaultBackOrders"),
-        partialShip: settings.get("DefaultPartialShipments"),
-        isFreeFormShipto: settings.get("DefaultFreeFormShiptos"),
+        backorder: settings.get("DefaultBackOrders") || false,
+        partialShip: settings.get("DefaultPartialShipments") || false,
+        isFreeFormShipto: settings.get("DefaultFreeFormShiptos") || false,
         autoUpdateStatus: false,
         autoHoldOrders: false,
         isFreeFormBillto: false,
         commission: 0,
+        discount: 0,
         blanketPurchaseOrders: false,
         usesPurchaseOrders: false,
         creditLimit: settings.get("SOCreditLimit"),
         creditRating: settings.get("SOCreditRate"),
-        balanceMethod: settings.get("DefaultBalanceMethod")
+        balanceMethod: settings.get("DefaultBalanceMethod") || "B"
       };
     },
     
@@ -84,6 +85,7 @@ white:true*/
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
       this.on('change:usesPurchaseOrders change:backorder', this.optionsDidChange);
+      this.on('change:salesRep', this.salesRepDidChange);
     },
     
     /**
@@ -105,6 +107,13 @@ white:true*/
         this.setReadOnly("partialShip", false);
       }
       
+    },
+    
+    salesRepDidChange: function () {
+      var salesRep = this.get('salesRep');
+      if (salesRep && (this.getStatus() & XM.Model.READY)) {
+        this.set('commission', salesRep.get('commission'));
+      }
     },
     
     /**
@@ -143,6 +152,7 @@ white:true*/
         that.set("billingContact", account.get("primaryContact"));
         that.set("correspondenceContact", account.get("secondaryContact"));
         that.revertStatus();
+        that._number = that.get('number');
       };
       fetchOptions.error = function (resp) {
         XT.log("Fetch failed in convertFromAccount");
@@ -173,6 +183,7 @@ white:true*/
         that.set("id", prospect.get("id"));
         that.setReadOnly("id", true);
         that.revertStatus();
+        that._number = that.get('number');
       };
       fetchOptions.error = function (resp) {
         XT.log("Fetch failed in convertFromProspect");
@@ -208,7 +219,21 @@ white:true*/
     recordType: 'XM.CustomerCharacteristic'
 
   });
+  
+  /**
+    @class
 
+    @extends XM.Model
+  */
+  XM.CustomerAccount = XM.Model.extend({
+    /** @scope XM.CustomerAccount.prototype */
+
+    recordType: 'XM.CustomerAccount',
+
+    isDocumentAssignment: true
+
+  });
+  
   /**
     @class
 
@@ -235,20 +260,6 @@ white:true*/
 
     isDocumentAssignment: true
 
-  });
-  
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.CustomerGroup = XM.Model.extend({
-    /** @scope XM.CustomerGroup.prototype */
-    
-    recordType: 'XM.CustomerGroup',
-    
-    documentKey: 'name'
-    
   });
 
   /**
@@ -292,6 +303,32 @@ white:true*/
     isDocumentAssignment: true
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.CustomerTaxRegistration = XM.Model.extend({
+    /** @scope XM.CustomerTaxRegistration.prototype */
+
+    recordType: 'XM.CustomerTaxRegistration'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.CustomerGroup = XM.Model.extend({
+    /** @scope XM.CustomerGroup.prototype */
+    
+    recordType: 'XM.CustomerGroup',
+    
+    documentKey: 'name'
+    
+  });
 
   /**
     @class
@@ -316,37 +353,51 @@ white:true*/
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
       this.on('change:customer', this.customerDidChange);
+      this.on('change:salesRep', this.salesRepDidChange);
     },
 
     customerDidChange: function (model, value, options) {
       var status = this.getStatus(),
-          customer = this.get("customer"),
-          K = XM.Model;
+        customer = this.get("customer"),
+        K = XM.Model,
+        numberArray = [],
+        shiptosCollection;
 
       if (customer && status === K.READY_NEW) {
-        var shiptosCollection = customer.get("shiptos"),
-            numberArray = [];
-        //map the number attr of each model in the shiptosCollection to numberArray
-        numberArray = _.map(shiptosCollection.models, function (m) {return m.get("number"); });
-        /* The purpose of the next few lines is to automatically find the next integer number for the new shipto.
-            Sticking a + sign in front of a string will return the number version of the string as long as the
-            string contains only numbers.  If it contains non-numeric characters, it will return NaN (not a number).
-            For example, +"5" will return 5.  But +"shipto5" would return NaN.  So this while loop will continue to
-            loop as long as the string numberArray[i] contains only numeric characters.
-        */
-        numberArray.sort();
-        var i = 0,
-            j = 0;
-        while (!isNaN(+numberArray[i])) {
-          i++;
-          j = numberArray[i];
+        if (!this.get("number")) {
+          shiptosCollection = customer.get("shiptos");
+          
+          //map the number attr of each model in the shiptosCollection to numberArray
+          numberArray = _.map(shiptosCollection.models, function (m) {return m.get("number"); });
+          /* The purpose of the next few lines is to automatically find the next integer number for the new shipto.
+              Sticking a + sign in front of a string will return the number version of the string as long as the
+              string contains only numbers.  If it contains non-numeric characters, it will return NaN (not a number).
+              For example, +"5" will return 5.  But +"shipto5" would return NaN.  So this while loop will continue to
+              loop as long as the string numberArray[i] contains only numeric characters.
+          */
+          numberArray.sort();
+          var i = 0,
+              j = 0;
+          while (!isNaN(+numberArray[i])) {
+            i++;
+            j = numberArray[i];
+          }
+          this.set("number", j + 1);
         }
-        this.set("number", j + 1);
         
+        // Set defaults from customer
+        this.set("salesRep", customer.get("salesRep"));
         this.set("shipZone", customer.get("shipZone"));
         this.set("taxZone", customer.get("taxZone"));
         this.set("shipVia", customer.get("shipVia"));
         this.set("shipCharge", customer.get("shipCharge"));
+      }
+    },
+    
+    salesRepDidChange: function () {
+      var salesRep = this.get('salesRep');
+      if (salesRep && (this.getStatus() & XM.Model.READY)) {
+        this.set('commission', salesRep.get('commission'));
       }
     }
 
