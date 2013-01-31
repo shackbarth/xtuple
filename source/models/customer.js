@@ -49,10 +49,6 @@ white:true*/
       };
     },
     
-    readOnlyAttributes: [
-      "blanketPurchaseOrders"
-    ],
-
     requiredAttributes: [
       "isActive",
       "name",
@@ -83,30 +79,62 @@ white:true*/
     */
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
-      this.on('change:usesPurchaseOrders change:backorder', this.optionsDidChange);
+      this.on('change:usesPurchaseOrders', this.purchaseOrdersDidChange);
+      this.on('change:backorder', this.backorderDidChange);
+      if (this.get("usesPurchaseOrders")) {
+        this.setReadOnly("blanketPurchaseOrders", false);
+      }
+      if (this.get("backorder")) {
+        this.setReadOnly("partialShip", false);
+      }
+    },
+    
+    purchaseOrdersDidChange: function () {
+      if (this.get("usesPurchaseOrders")) {
+        this.setReadOnly("blanketPurchaseOrders", false);
+      }
+      else if (!this.get("usesPurchaseOrders")) {
+        this.set("blanketPurchaseOrders", false, {force: true});
+        this.setReadOnly("blanketPurchaseOrders", true);
+      }
+    },
+    
+    backorderDidChange: function () {
+      if (this.get("backorder")) {
+        this.setReadOnly("partialShip", false);
+      }
+      else if (!this.get("backorder")) {
+        this.set("partialShip", false, {force: true});
+        this.setReadOnly("partialShip", true);
+      }
     },
     
     /**
-      Sets the readOnlyAttributes array according to different checkboxes
+      Sets the readOnly status of blanketPurchaseOrders
     */
-    optionsDidChange: function () {
-      //If usesPurchaseOrders is checked, then blanketPurchaseOrders is read-only and unchecked
+    /*
+    purchaseOrdersDidChange: function () {
+      this.setReadOnly("blanketPurchaseOrders", false);
       if (!this.get("usesPurchaseOrders")) {
+        this.set("blanketPurchaseOrders", false, {force: true});
         this.setReadOnly("blanketPurchaseOrders", true);
-        this.set("blanketPurchaseOrders", false);
-      } else {
-        this.setReadOnly("blanketPurchaseOrders", false);
       }
-      
+
+    },
+    */
+    /**
+      Sets the readOnly status of partialShip
+    */
+    /*
+    backorderDidChange: function () {
+      this.setReadOnly("partialShip", false);
       if (!this.get("backorder")) {
+        this.set("partialShip", false, {force: true});
         this.setReadOnly("partialShip", true);
-        this.set("partialShip", false);
-      } else {
-        this.setReadOnly("partialShip", false);
       }
       
     },
-    
+    */
     /**
       Sets read only status of customerType according to privs
     */
@@ -135,7 +163,7 @@ white:true*/
       var account = new XM.Account(),
           fetchOptions = {},
           that = this;
-          
+
       fetchOptions.id = id;
       
       fetchOptions.success = function (resp) {
@@ -160,9 +188,9 @@ white:true*/
       var prospect = new XM.Prospect(),
         fetchOptions = {},
         that = this;
-          
+
       fetchOptions.id = id;
-      
+
       fetchOptions.success = function (resp) {
         that.set("name", prospect.get("name"));
         that.set("billingContact", prospect.get("contact"));
