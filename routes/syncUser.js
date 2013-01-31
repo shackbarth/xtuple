@@ -50,6 +50,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     };
 
+    // XXX where's the security?
+
     // Go get 'em
     user.fetch(fetchOptions);
     org.fetch(fetchOptions);
