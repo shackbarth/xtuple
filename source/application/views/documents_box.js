@@ -48,12 +48,6 @@ trailing:true white:true*/
   });
   
   enyo.kind({
-    name: "XV.ProspectDocumentsBox",
-    kind: "XV.DocumentsBox",
-    parentKey: "prospect"
-  });
-  
-  enyo.kind({
     name: "XV.ToDoDocumentsBox",
     kind: "XV.DocumentsBox",
     parentKey: "toDo"

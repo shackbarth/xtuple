@@ -1020,14 +1020,47 @@ trailing:true white:true*/
             {kind: "XV.TextArea", attr: "notes"}//,
             //{kind: "onyx.GroupboxHeader", content: "_quotes".loc()}
           ]}
-        ]},
-        {kind: "XV.ProspectCommentBox", attr: "comments"},
-        {kind: "XV.ProspectDocumentsBox", attr: "documents"}
+        ]}
+      ]},
+      {kind: "onyx.Popup", name: "findExistingAccountPopup", centered: true,
+        modal: true, floating: true, scrim: true, onShow: "popupShown",
+        onHide: "popupHidden", components: [
+        {content: "_customerExistsAccount".loc()},
+        {content: "_whatToDo".loc()},
+        {tag: "br"},
+        {kind: "onyx.Button", name: "convert", ontap: "accountConvert",
+          content: "_convertAccountProspect".loc(), classes: "onyx-blue xv-popup-button"},
+        {kind: "onyx.Button", name: "cancel", content: "_cancel".loc(), ontap: "accountCancel",
+          classes: "xv-popup-button"}
       ]}
     ],
-    errorNotify: function (inSender, inEvent) {}
+    accountConvert: function (inEvent) {
+      this.value.convertFromAccount(this.existingId);
+      this._popupDone = true;
+      this.$.findExistingAccountPopup.hide();
+    },
+    errorNotify: function (inSender, inEvent) {
+      // Handle customer existing as prospect
+      if (inEvent.error.code === 'xt1008') {
+        var type = inEvent.error.params.response.type;
+        this.existingId = inEvent.error.params.response.id;
+        if (type === 'A') { // Existing Account
+          this._popupDone = false;
+          this.$.findExistingAccountPopup.show();
+        }
+      }
+    },
+    accountCancel: function () {
+      this._popupDone = true;
+      this.$.findExistingAccountPopup.hide();
+    },
+    popupHidden: function () {
+      if (!this._popupDone) {
+        this.$.findExistingAccountPopup.show();
+      }
+    }
   });
-
+  
   XV.registerModelWorkspace("XM.ProspectRelation", "XV.ProspectWorkspace");
   XV.registerModelWorkspace("XM.ProspectListItem", "XV.ProspectWorkspace");
 
