@@ -825,7 +825,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ProspectList",
     kind: "XV.List",
-    label: "_customers".loc(),
+    label: "_prospects".loc(),
     collection: "XM.ProspectRelationCollection",
     query: {orderBy: [
       {attribute: 'number'}

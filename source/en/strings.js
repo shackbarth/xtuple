@@ -337,6 +337,7 @@ var lang = XT.stringsFor("en_US", {
   "_projects": "Projects",
   "_properName": "Proper Name",
   "_propername": "Propername",
+  "_prospects": "Prospects",
   "_public": "Public",
   "_purchaseOrderNumber": "Purchase Order",
   "_required": "Required",
