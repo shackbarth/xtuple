@@ -32,6 +32,20 @@ white:true*/
 
   });
   
+  /**
+    @class
+    
+    @extends XM.Model
+  */
+  XM.TaxRegistration = XM.Document.extend({
+    /** @scope XM.TaxRegistration */
+    
+    recordType: 'XM.TaxRegistration',
+    
+    documentKey: 'number'
+    
+  });
+  
   // ..........................................................
   // COLLECTIONS
   //
