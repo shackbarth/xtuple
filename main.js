@@ -178,18 +178,24 @@ require('socket.io').Static.prototype.gzip = function (data, callback) {
   gzip.stdin.end(data, encoding);
 };
 
+var sslOptions = {
+    key: X.fs.readFileSync(X.options.datasource.keyFile),
+    cert: X.fs.readFileSync(X.options.datasource.certFile),
+};
+
 /**
  * Express configuration.
  */
 var app = express(),
-    connect = require('connect'),
-    parseSignedCookie = connect.utils.parseSignedCookie,
-    //MemoryStore = express.session.MemoryStore,
-    XTPGStore = require('./oauth2/db/connect-xt-pg')(express),
-    cookie = require('express/node_modules/cookie'),
-    io,
-    sessionStore = new XTPGStore({ hybridCache: true });
-    //sessionStore = new MemoryStore();
+  server = X.https.createServer(sslOptions, app),
+  connect = require('connect'),
+  parseSignedCookie = connect.utils.parseSignedCookie,
+  //MemoryStore = express.session.MemoryStore,
+  XTPGStore = require('./oauth2/db/connect-xt-pg')(express),
+  cookie = require('express/node_modules/cookie'),
+  io,
+  sessionStore = new XTPGStore({ hybridCache: true });
+  //sessionStore = new MemoryStore();
 
 app.configure(function () {
   "use strict";
@@ -253,11 +259,11 @@ app.get('/resetPassword', routes.resetPassword);
 // Set up the other servers we run on different ports.
 var unexposedServer = express();
 unexposedServer.get('/maintenance', routes.maintenanceLocalhost);
-unexposedServer.listen(441); // TODO: change to 442 and update route
+unexposedServer.listen(442);
 
 var redirectServer = express();
 redirectServer.get(/.*/, routes.redirect); // RegEx for "everything"
-redirectServer.listen(443); // TODO: change to 80
+redirectServer.listen(80);
 
 /**
  * Start the express server. This is the NEW way.
@@ -265,7 +271,7 @@ redirectServer.listen(443); // TODO: change to 80
 // TODO - Active browser sessions can make calls to this server when it hasn't fully started.
 // That can cause it to crash at startup.
 // Need a way to get everything loaded BEFORE we start listening.  Might just move this to the end...
-io = socketio.listen(app.listen(80));
+io = socketio.listen(server.listen(443));
 
 // TODO - Use NODE_ENV flag to switch between development and production.
 // See "Understanding the configure method" at:
