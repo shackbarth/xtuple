@@ -21,27 +21,25 @@ white:true*/
     requiredAttributes: [
       "number"
     ],
-
-    // ..........................................................
-    // METHODS
-    //
-
+    
     /**
-      To always check `XM.Account` for duplicates since it is the parent of all.
-    */
-    documentKeyDidChange: function () {
-      var oldType = this.recordType;
-      var oldKey = this.documentKey;
-      var oldId = this.id;
-      this.recordType = 'XM.Account';
-      this.documentKey = 'number';
-      this.id = -1;
-      XM.Document.prototype.documentKeyDidChange.apply(this, arguments);
-      this.recordType = oldType;
-      this.documentKey = oldKey;
-      this.id = oldId;
-    }
+      Return a matching record id for a passed user `key` and `value`. If none
+      found, returns zero.
 
+      @param {String} Property to search on, typically a user key
+      @param {String} Value to search for
+      @param {Object} Options
+      @returns {Object} Receiver
+    */
+    findExisting: function (key, value, options) {
+      if (this._converted) { return this; }
+      var params = [ key, value, this.id || -1 ],
+        dataSource = options.dataSource || XT.dataSource;
+      dataSource.dispatch('XM.Account', 'findExisting', params, options);
+      XT.log("XM.Account.findExisting");
+      return this;
+    }
+    
   });
 
   /**
@@ -84,31 +82,6 @@ white:true*/
   XM.Account.used = function (id, options) {
     return XT.dataSource.dispatch('XM.Account', 'used', id, options);
   };
-  
-  // ..........................................................
-  // CLASS METHODS
-  //
-
-  _.extend(XM.Account, /** @lends XM.Model# */{
-    /**
-      Return a matching record id for a passed user `key` and `value`. If none
-      found, returns zero.
-
-      @param {String} Property to search on, typically a user key
-      @param {String} Value to search for
-      @param {Object} Options
-      @returns {Object} Receiver
-    */
-    findExisting: function (key, value, options) {
-      var params = [ key, value, this.id || -1 ],
-        dataSource = options.dataSource || XT.dataSource;
-      dataSource.dispatch('XM.Account', 'findExisting', params, options);
-      XT.log("XM.Account.findExisting");
-      return this;
-    }
-
-  });
-  
 
   /**
     @class
