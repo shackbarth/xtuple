@@ -983,6 +983,53 @@ trailing:true white:true*/
 
   XV.registerModelWorkspace("XM.ProjectTask", "XV.ProjectTaskWorkspace");
   XV.registerModelWorkspace("XM.ProjectTaskListItem", "XV.ProjectTaskWorkspace");
+  
+  // ..........................................................
+  // PROSPECT
+  //
+
+  enyo.kind({
+    name: "XV.ProspectWorkspace",
+    kind: "XV.Workspace",
+    title: "_prospect".loc(),
+    model: "XM.Prospect",
+    headerAttrs: ["number", "-", "name"],
+    handlers: {
+      onError: "errorNotify"
+    },
+    published: {
+      existingId: ""
+    },
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
+            {kind: "XV.SalesRepPicker", attr: "salesRep"},
+            {kind: "XV.TaxZonePicker", attr: "taxZone"},
+            {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
+            {kind: "XV.ContactWidget", attr: "contact",
+              showAddress: true, label: "_name".loc()},
+            {kind: "XV.ContactCharacteristicsWidget", attr: "characteristics"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes"}//,
+            //{kind: "onyx.GroupboxHeader", content: "_quotes".loc()}
+          ]}
+        ]},
+        {kind: "XV.ProspectCommentBox", attr: "comments"},
+        {kind: "XV.ProspectDocumentsBox", attr: "documents"}
+      ]}
+    ],
+    errorNotify: function (inSender, inEvent) {}
+  });
+
+  XV.registerModelWorkspace("XM.ProspectRelation", "XV.ProspectWorkspace");
+  XV.registerModelWorkspace("XM.ProspectListItem", "XV.ProspectWorkspace");
 
   // ..........................................................
   // STATE
