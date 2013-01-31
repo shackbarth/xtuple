@@ -6,7 +6,6 @@ fetch.js -- in data.js
 dispatch.js -- in data.js
 commit.js -- in data.js
 retrieve.js -- in data.js
-resetPassword.js
 extensions.js
 session -- this is done as a pure functor in main.js
 maintenance.js
@@ -27,6 +26,8 @@ oauth2token.js
 
 NOT DONE
 changePassword.js -- John is currently working on this in 19343
+resetPassword.js
+syncUser.js
 export.js -- can we deprecate this w/ pentaho instead of porting?
 
 FUTURE REFACTORING POSSIBILITIES
