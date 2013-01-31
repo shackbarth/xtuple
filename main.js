@@ -271,7 +271,7 @@ redirectServer.listen(80);
 // TODO - Active browser sessions can make calls to this server when it hasn't fully started.
 // That can cause it to crash at startup.
 // Need a way to get everything loaded BEFORE we start listening.  Might just move this to the end...
-io = socketio.listen(server.listen(443));
+io = socketio.listen(server.listen(X.options.datasource.port));
 
 // TODO - Use NODE_ENV flag to switch between development and production.
 // See "Understanding the configure method" at:
