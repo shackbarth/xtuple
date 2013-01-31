@@ -62,7 +62,11 @@
         loc;
       for (param in this.params) {
         if (this.params.hasOwnProperty(param)) {
-          loc = (this.params[param] || '_unknown').loc();
+          var paramValue = this.params[param];
+          if (!_.isString(paramValue)) {
+            paramValue = JSON.stringify(paramValue);
+          }
+          loc = (paramValue || '_unknown').loc();
           message = message.replace("{" + param + "}", loc);
         }
       }
