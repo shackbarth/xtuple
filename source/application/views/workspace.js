@@ -1015,7 +1015,6 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
             {kind: "XV.ContactWidget", attr: "contact",
               showAddress: true, label: "_name".loc()},
-            {kind: "XV.ContactCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes"}//,
             //{kind: "onyx.GroupboxHeader", content: "_quotes".loc()}
