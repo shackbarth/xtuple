@@ -341,8 +341,8 @@ trailing:true white:true*/
       onError: "errorNotify"
     },
     published: {
-  		existingId: ""
-  	},
+      existingId: ""
+    },
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -370,8 +370,8 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "settingsGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.SalesRepPicker", attr: "salesRep"},
-            {kind: "XV.NumberWidget", attr: "commission"},
-            {kind: "XV.ShipViaPicker", attr: "shipVia"},
+            {kind: "XV.PercentWidget", attr: "commission"},
+            {kind: "XV.ShipViaCombobox", attr: "shipVia"},
             {kind: "XV.ShippingChargePicker", attr: "shipCharge"},
             {kind: "XV.CheckboxWidget", attr: "backorder"},
             {kind: "XV.CheckboxWidget", attr: "partialShip"},
@@ -384,7 +384,7 @@ trailing:true white:true*/
             //{kind: "XV.CheckboxWidget", attr: "isSpecifiedBillingRate"}, Enables Rate Widget
             //{kind: "XV.NumberWidget", attr: "billingRate"},
             {kind: "XV.TermsPicker", attr: "terms"},
-            {kind: "XV.NumberWidget", attr: "discount"},
+            {kind: "XV.PercentWidget", attr: "discount"},
             {kind: "XV.CreditStatusPicker", attr: "creditStatus"},
             {kind: "XV.CheckboxWidget", attr: "usesPurchaseOrders"},
             {kind: "XV.CheckboxWidget", attr: "blanketPurchaseOrders"},
@@ -400,8 +400,8 @@ trailing:true white:true*/
         ]},
         //{kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
         {kind: "XV.CustomerCommentBox", attr: "comments"},
-        {kind: "XV.CustomerDocumentsBox", attr: "documents"},
-        {kind: "XV.CustomerShipToBox", attr: "shiptos"}
+        {kind: "XV.CustomerShipToBox", attr: "shiptos"},
+        {kind: "XV.CustomerDocumentsBox", attr: "documents"}
       ]},
       {kind: "onyx.Popup", name: "findExistingCustomerPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",
@@ -439,7 +439,7 @@ trailing:true white:true*/
           this.$.exists.setContent("_customerExistsAccount".loc());
           this.$.convert.setContent("_convertAccount".loc());
           this.$.findExistingCustomerPopup.show();
-        } 
+        }
       }
     },
     customerCancel: function () {

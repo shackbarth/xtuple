@@ -251,13 +251,17 @@ white:true*/
   });
   
   XT.StartupTasks.push({
-    taskName: "loadShipVia",
+    taskName: "loadShipVias",
     task: function () {
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.shipVia = new XM.ShipViaCollection();
-      XM.shipVia.fetch(options);
+      options.query = {};
+      options.query.orderBy = [
+        {attribute: 'code'}
+      ];
+      XM.shipVias = new XM.ShipViaCollection();
+      XM.shipVias.fetch(options);
     }
   });
   

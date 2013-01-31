@@ -136,6 +136,7 @@ var lang = XT.stringsFor("en_US", {
   "_date": "Date",
   "_deactivate": "Deactivate",
   "_default": "Default",
+  "_defaults": "Defaults",
   "_defaultTaxZone": "Default Tax Zone",
   "_deferred": "Deferred",
   "_detach": "Detach",
