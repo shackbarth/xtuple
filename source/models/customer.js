@@ -488,6 +488,21 @@ white:true*/
     documentKey: 'name'
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.TaxAuthority = XM.Document.extend({
+    /** @scope XM.TaxAuthority.prototype */
+
+    recordType: 'XM.TaxAuthority',
+
+    documentKey: 'number'
+
+  });
+  
 
   // ..........................................................
   // COLLECTIONS
@@ -562,6 +577,18 @@ white:true*/
     /** @scope XM.ShipZoneCollection.prototype */
 
     model: XM.ShipZone
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.TaxAuthorityCollection = XM.Collection.extend({
+    /** @scope XM.TaxAuthorityCollection.prototype */
+
+    model: XM.TaxAuthority
 
   });
 
