@@ -34,18 +34,19 @@ white:true*/
         terms: settings.get("DefaultTerms"),
         shipVia: settings.get("DefaultShipViaId"),
         customerType: settings.get("DefaultCustType"),
-        backorder: settings.get("DefaultBackOrders"),
-        partialShip: settings.get("DefaultPartialShipments"),
-        isFreeFormShipto: settings.get("DefaultFreeFormShiptos"),
+        backorder: settings.get("DefaultBackOrders") || false,
+        partialShip: settings.get("DefaultPartialShipments") || false,
+        isFreeFormShipto: settings.get("DefaultFreeFormShiptos") || false,
         autoUpdateStatus: false,
         autoHoldOrders: false,
         isFreeFormBillto: false,
         commission: 0,
+        discount: 0,
         blanketPurchaseOrders: false,
         usesPurchaseOrders: false,
         creditLimit: settings.get("SOCreditLimit"),
         creditRating: settings.get("SOCreditRate"),
-        balanceMethod: settings.get("DefaultBalanceMethod")
+        balanceMethod: settings.get("DefaultBalanceMethod") || "B"
       };
     },
     
@@ -151,6 +152,7 @@ white:true*/
         that.set("billingContact", account.get("primaryContact"));
         that.set("correspondenceContact", account.get("secondaryContact"));
         that.revertStatus();
+        that._number = that.get('number');
       };
       fetchOptions.error = function (resp) {
         XT.log("Fetch failed in convertFromAccount");
@@ -181,6 +183,7 @@ white:true*/
         that.set("id", prospect.get("id"));
         that.setReadOnly("id", true);
         that.revertStatus();
+        that._number = that.get('number');
       };
       fetchOptions.error = function (resp) {
         XT.log("Fetch failed in convertFromProspect");
