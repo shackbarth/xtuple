@@ -288,20 +288,6 @@ regexp:true, undef:true, trailing:true, white:true */
   });
   
   // ..........................................................
-  // SHIP VIA
-  //
-
-  enyo.kind({
-    name: "XV.ShipViaPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.shipVia",
-    nameAttribute: "code",
-    orderBy: [
-      {attribute: 'code'}
-    ]
-  });
-  
-  // ..........................................................
   // SHIP Zone
   //
 
