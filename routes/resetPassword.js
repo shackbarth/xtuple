@@ -92,6 +92,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           force: true,
           username: requester
         });
+
+        // Update postgres user passwords
+        X.resetDbServerPassword(user, newPassword);
       };
 
       user.fetch({success: fetchSuccess, error: fetchError, username: requester});

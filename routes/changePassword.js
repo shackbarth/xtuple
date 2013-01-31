@@ -56,9 +56,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     password end can enter a new one of their choice.
    */
   exports.changePassword = function (req, res) {
-    console.log(req);
-    console.log(req.query);
-    console.log(JSON.stringify(req.query));
     var nodeUsername = X.options.globalDatabase.nodeUsername,
       args = req.query,
       // the id to change is not taken from the client but from the session on the server
