@@ -50,6 +50,11 @@ white:true*/
       };
     },
     
+    readOnlyAttributes: [
+      "partialShip",
+      "blanketPurchaseOrders"
+    ],
+    
     requiredAttributes: [
       "isActive",
       "name",
@@ -83,19 +88,13 @@ white:true*/
       this.on('change:usesPurchaseOrders', this.purchaseOrdersDidChange);
       this.on('change:backorder', this.backorderDidChange);
       this.on('change:salesRep', this.salesRepDidChange);
-      if (this.get("usesPurchaseOrders")) {
-        this.setReadOnly("blanketPurchaseOrders", false);
-      }
-      if (this.get("backorder")) {
-        this.setReadOnly("partialShip", false);
-      }
     },
     
     purchaseOrdersDidChange: function () {
       if (this.get("usesPurchaseOrders")) {
         this.setReadOnly("blanketPurchaseOrders", false);
       } else if (!this.get("usesPurchaseOrders")) {
-        this.set("blanketPurchaseOrders", false, {force: true});
+        this.set("blanketPurchaseOrders", false);
         this.setReadOnly("blanketPurchaseOrders", true);
       }
     },
@@ -104,7 +103,7 @@ white:true*/
       if (this.get("backorder")) {
         this.setReadOnly("partialShip", false);
       } else if (!this.get("backorder")) {
-        this.set("partialShip", false, {force: true});
+        this.set("partialShip", false);
         this.setReadOnly("partialShip", true);
       }
     },
