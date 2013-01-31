@@ -463,7 +463,6 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ProspectListParameters",
     kind: "XV.ParameterWidget",
-    characteristicsRole: 'isContacts',
     components: [
       {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
       {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",

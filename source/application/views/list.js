@@ -837,26 +837,26 @@ trailing:true white:true*/
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", isKey: true},
-              {kind: "XV.ListAttr", attr: "billingContact.phone", fit: true,
+              {kind: "XV.ListAttr", attr: "contact.phone", fit: true,
                 classes: "right"}
             ]},
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "name"},
-              {kind: "XV.ListAttr", attr: "billingContact.primaryEmail",
+              {kind: "XV.ListAttr", attr: "contact.primaryEmail",
                 ontap: "sendMail", classes: "right hyperlink"}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "billingContact.name", classes: "italic",
+            {kind: "XV.ListAttr", attr: "contact.name", classes: "italic",
               placeholder: "_noContact".loc()},
-            {kind: "XV.ListAttr", attr: "billingContact.address.formatShort"}
+            {kind: "XV.ListAttr", attr: "contact.address.formatShort"}
           ]}
         ]}
       ]}
     ],
     sendMail: function (inSender, inEvent) {
       var model = this.getModel(inEvent.index),
-        email = model ? model.getValue('billingContact.primaryEmail') : null,
+        email = model ? model.getValue('contact.primaryEmail') : null,
         win;
       if (email) {
         win = window.open('mailto:' + email);
