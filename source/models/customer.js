@@ -216,7 +216,21 @@ white:true*/
     recordType: 'XM.CustomerCharacteristic'
 
   });
+  
+  /**
+    @class
 
+    @extends XM.Model
+  */
+  XM.CustomerAccount = XM.Model.extend({
+    /** @scope XM.CustomerAccount.prototype */
+
+    recordType: 'XM.CustomerAccount',
+
+    isDocumentAssignment: true
+
+  });
+  
   /**
     @class
 
@@ -243,20 +257,6 @@ white:true*/
 
     isDocumentAssignment: true
 
-  });
-  
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.CustomerGroup = XM.Model.extend({
-    /** @scope XM.CustomerGroup.prototype */
-    
-    recordType: 'XM.CustomerGroup',
-    
-    documentKey: 'name'
-    
   });
 
   /**
@@ -299,6 +299,32 @@ white:true*/
 
     isDocumentAssignment: true
 
+  });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.CustomerTaxRegistration = XM.Model.extend({
+    /** @scope XM.CustomerTaxRegistration.prototype */
+
+    recordType: 'XM.CustomerTaxRegistration'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.CustomerGroup = XM.Model.extend({
+    /** @scope XM.CustomerGroup.prototype */
+    
+    recordType: 'XM.CustomerGroup',
+    
+    documentKey: 'name'
+    
   });
 
   /**
