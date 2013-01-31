@@ -22,6 +22,6 @@ if [[  ${git_status} =~ 'Already up-to-date.' ]]
   fi
 fi
 
-git submodule update --init --recursive
 npm install
+killall -TERM node
 
