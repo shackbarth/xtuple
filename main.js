@@ -257,7 +257,7 @@ unexposedServer.listen(441); // TODO: change to 442 and update route
 
 var redirectServer = express();
 redirectServer.get(/.*/, routes.redirect); // RegEx for "everything"
-redirectServer.listen(1979); // TODO: change to 80
+redirectServer.listen(443); // TODO: change to 80
 
 /**
  * Start the express server. This is the NEW way.
@@ -265,12 +265,12 @@ redirectServer.listen(1979); // TODO: change to 80
 // TODO - Active browser sessions can make calls to this server when it hasn't fully started.
 // That can cause it to crash at startup.
 // Need a way to get everything loaded BEFORE we start listening.  Might just move this to the end...
-io = socketio.listen(app.listen(2000));
+io = socketio.listen(app.listen(80));
 
 // TODO - Use NODE_ENV flag to switch between development and production.
 // See "Understanding the configure method" at:
 // https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO
-io.configure(function(){
+io.configure(function (){
   io.set('log', false);
   // TODO - We need to implement a store for this if we run multiple processes:
   // https://github.com/LearnBoost/socket.io/tree/0.9/lib/stores
