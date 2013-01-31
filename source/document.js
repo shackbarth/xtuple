@@ -273,6 +273,7 @@ white:true*/
           } else {
             params.attr = ("_" + model.documentKey).loc();
             params.value = currValue;
+            params.response = resp;
             err = XT.Error.clone('xt1008', { params: params });
             model.trigger('error', model, err, options);
           }
