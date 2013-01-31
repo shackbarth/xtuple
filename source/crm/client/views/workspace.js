@@ -87,6 +87,8 @@ trailing:true white:true*/
     //
   
     extensions = [
+      {kind: "XV.AccountContactsBox", container: "panels",
+        attr: "contactRelations"},
       {kind: "XV.ContactToDosBox", container: "panels",
         attr: "toDoRelations"},
       {kind: "XV.ContactOpportunitiesBox", container: "panels",
@@ -96,6 +98,21 @@ trailing:true white:true*/
     ];
 
     XV.appendExtension("XV.ContactWorkspace", extensions);
+    
+    // ..........................................................
+    // CUSTOMER
+    //
+  
+    extensions = [
+      {kind: "XV.AccountToDosBox", container: "panels",
+        attr: "toDoRelations"},
+      {kind: "XV.AccountOpportunitiesBox", container: "panels",
+        attr: "opportunityRelations"},
+      {kind: "XV.AccountIncidentsBox", container: "panels",
+        attr: "incidentRelations"}
+    ];
+
+    XV.appendExtension("XV.CustomerWorkspace", extensions);
 
     // ..........................................................
     // INCIDENT
