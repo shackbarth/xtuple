@@ -611,8 +611,10 @@ trailing:true white:true*/
       // I'm skirting around the loading time for XM.currentUser. If this data
       // hasn't been loaded yet then the navigator simply won't allow export
       var isAllowedToExport = XM.currentUser && !XM.currentUser.get("disableExport");
-      // XXX the export to pentaho is currently only working on contact as a proof of concept
-      this.$.exportItem.setShowing(collection && isAllowedToExport && label === 'Contacts');
+
+      // XXX temp while we build out BI reports for all of these...
+      var isSupportedInBi = _.indexOf(["Contacts", "Incidents", "To Do", "Accounts", "Opportunities"], label) >= 0;
+      this.$.exportItem.setShowing(collection && isAllowedToExport && isSupportedInBi);
       this.$.exportCSVItem.setShowing(collection && isAllowedToExport); // TODO: delete once pentaho is working
 
       // Handle new button
