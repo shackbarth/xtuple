@@ -67,14 +67,14 @@
       {
         "name": "item",
         "toOne": {
-          "type": "Item",
+          "type": "ItemRelation",
           "column": "itemsite_item_id"
         }
       },
       {
         "name": "site",
         "toOne": {
-          "type": "Site",
+          "type": "SiteRelation",
           "column": "itemsite_warehous_id"
         }
       },
