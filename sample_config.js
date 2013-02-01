@@ -35,7 +35,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       smtpPassword: "_smtp_password_",
 
       // URL of BI server
-      biUrl: "http://maxhammer.xtuple.com:8080/pentaho/content/reporting/reportviewer/report.html?solution=erpbi-reports&path=%2Ftest&locale=en_US&userid=joe&password=password",
+      biUrl: "http://your.bi.solution/report.html?args=sample",
 
       // these properties are dynamically registered with the
       // node discovery service
