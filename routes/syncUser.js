@@ -40,11 +40,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         X.debug("syncUser(): %@".f(query));
 
-        X.database.query(org.get("name"), query, function (err, res) {
+        X.database.query(org.get("name"), query, function (err, result) {
           if (err) {
             res.send({isError: true, message: err});
           } else {
-            res.send({data: res});
+            res.send({data: result});
           }
         });
       }
