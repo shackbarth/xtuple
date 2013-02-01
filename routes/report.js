@@ -40,10 +40,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   exports.report = function (req, res) {
     var requestDetails = req.query.details,
+      requestDetailsQuery,
       query;
 
     requestDetails = JSON.parse(requestDetails);
     requestDetails.username = req.session.passport.user.username;
+    requestDetailsQuery = JSON.stringify(requestDetails.query);
     requestDetails = JSON.stringify(requestDetails);
     query = "select xt.fetch('%@')".f(requestDetails);
 
@@ -54,7 +56,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         attrs = {
           key: randomKey,
-          query: requestDetails,
+          query: requestDetailsQuery,
           data: result.rows[0].fetch,
           created: new Date()
         },

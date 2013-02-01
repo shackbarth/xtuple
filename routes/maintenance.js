@@ -249,7 +249,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var host = req.headers.host,
       args = req.query;
 
-    if (host === "localhost:441") {
+    if (host === "localhost:442") {
       // users accessing this route through the unexposed server don't have to
       // get authenticated. Do the fetch under the node user authority.
       install(res, args, X.options.globalDatabase.nodeUsername);
