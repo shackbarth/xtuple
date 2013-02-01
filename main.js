@@ -178,18 +178,24 @@ require('socket.io').Static.prototype.gzip = function (data, callback) {
   gzip.stdin.end(data, encoding);
 };
 
+var sslOptions = {
+    key: X.fs.readFileSync(X.options.datasource.keyFile),
+    cert: X.fs.readFileSync(X.options.datasource.certFile),
+};
+
 /**
  * Express configuration.
  */
 var app = express(),
-    connect = require('connect'),
-    parseSignedCookie = connect.utils.parseSignedCookie,
-    //MemoryStore = express.session.MemoryStore,
-    XTPGStore = require('./oauth2/db/connect-xt-pg')(express),
-    cookie = require('express/node_modules/cookie'),
-    io,
-    sessionStore = new XTPGStore({ hybridCache: true });
-    //sessionStore = new MemoryStore();
+  server = X.https.createServer(sslOptions, app),
+  connect = require('connect'),
+  parseSignedCookie = connect.utils.parseSignedCookie,
+  //MemoryStore = express.session.MemoryStore,
+  XTPGStore = require('./oauth2/db/connect-xt-pg')(express),
+  cookie = require('express/node_modules/cookie'),
+  io,
+  sessionStore = new XTPGStore({ hybridCache: true });
+  //sessionStore = new MemoryStore();
 
 app.configure(function () {
   "use strict";
@@ -248,16 +254,17 @@ app.get('/file', routes.file);
 app.get('/maintenance', routes.maintenance);
 app.get('/report', routes.report);
 app.get('/resetPassword', routes.resetPassword);
+app.get('/syncUser', routes.syncUser);
 
 
 // Set up the other servers we run on different ports.
 var unexposedServer = express();
 unexposedServer.get('/maintenance', routes.maintenanceLocalhost);
-unexposedServer.listen(441); // TODO: change to 442 and update route
+unexposedServer.listen(442);
 
 var redirectServer = express();
 redirectServer.get(/.*/, routes.redirect); // RegEx for "everything"
-redirectServer.listen(1979); // TODO: change to 80
+redirectServer.listen(80);
 
 /**
  * Start the express server. This is the NEW way.
@@ -265,12 +272,12 @@ redirectServer.listen(1979); // TODO: change to 80
 // TODO - Active browser sessions can make calls to this server when it hasn't fully started.
 // That can cause it to crash at startup.
 // Need a way to get everything loaded BEFORE we start listening.  Might just move this to the end...
-io = socketio.listen(app.listen(2000));
+io = socketio.listen(server.listen(X.options.datasource.port));
 
 // TODO - Use NODE_ENV flag to switch between development and production.
 // See "Understanding the configure method" at:
 // https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO
-io.configure(function(){
+io.configure(function (){
   io.set('log', false);
   // TODO - We need to implement a store for this if we run multiple processes:
   // https://github.com/LearnBoost/socket.io/tree/0.9/lib/stores

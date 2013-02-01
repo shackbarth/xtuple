@@ -50,7 +50,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // the fetch and edit will be made under the authority of the requesting global user
       requester = req.session.passport.user.id,
       user,
-      message = "Unknown user or invalid password match",
       fetchSuccess,
       fetchError = function (err) {
         X.log("Cannot load user to reset password. You are probably a hacker.");
@@ -87,7 +86,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         // bcrypt and update password.
         user.set({password: X.bcrypt.hashSync(newPassword, 10)});
 
-        XT.dataSource.commitRecord(user, {success: updateSuccess, error: updateError, force: true, username: requester});
+        XT.dataSource.commitRecord(user, {
+          success: updateSuccess,
+          error: updateError,
+          force: true,
+          username: requester
+        });
+
+        // Update postgres user passwords
+        X.resetDbServerPassword(user, newPassword);
       };
 
       user.fetch({success: fetchSuccess, error: fetchError, username: requester});

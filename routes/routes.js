@@ -35,7 +35,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     maintenance = require('./maintenance'),
     redirector = require('./redirector'),
     report = require('./report'),
-    resetPassword = require('./resetPassword');
+    resetPassword = require('./resetPassword'),
+    syncUser = require('./syncUser');
 
   //
   // Authentication-related routes
@@ -49,7 +50,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   //
   // Data-passthrough routes
   //
-  // TODO: ensureLoggedIn
+  //
   exports.commit = [ensureLogin, data.commit];
   exports.commitEngine = data.commitEngine;
   exports.fetch = [ensureLogin, data.fetch];
@@ -75,5 +76,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.redirect = redirector.redirect;
   exports.report = [ensureLogin, report.report];
   exports.resetPassword = [ensureLogin, resetPassword.resetPassword];
+  exports.syncUser = [ensureLogin, syncUser.syncUser];
 
 }());
