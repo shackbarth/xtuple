@@ -131,7 +131,7 @@ trailing:true white:true*/
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "short", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "taxAuthority", classes: "bold"}
+            {kind: "XV.ListAttr", attr: "taxAuthority.number", classes: "bold"}
           ]},
           {kind: "XV.ListColumn", components: [
             {kind: "XV.ListAttr", attr: "number"}

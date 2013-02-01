@@ -489,21 +489,6 @@ white:true*/
 
   });
   
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.TaxAuthority = XM.Document.extend({
-    /** @scope XM.TaxAuthority.prototype */
-
-    recordType: 'XM.TaxAuthority',
-
-    documentKey: 'number'
-
-  });
-  
-
   // ..........................................................
   // COLLECTIONS
   //
@@ -580,16 +565,4 @@ white:true*/
 
   });
   
-  /**
-    @class
-
-    @extends XM.Collection
-  */
-  XM.TaxAuthorityCollection = XM.Collection.extend({
-    /** @scope XM.TaxAuthorityCollection.prototype */
-
-    model: XM.TaxAuthority
-
-  });
-
 }());
