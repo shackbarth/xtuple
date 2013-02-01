@@ -58,59 +58,11 @@ trailing:true white:true*/
     },
     model: "XM.User",
     resetPassword: function (inSender, inEvent) {
-      var that = this,
-        options = {
-          success: function (result) {
-            // TODO: application-wide messaging?!
-            if (result.emailSuccess) {
-              alert("An e-mail with the new password has been sent to " + that.getValue().id);
-            } else {
-              // the emailer must have failed.
-              // XXX do we want to fail less gracefully here?
-              alert("The password for " + that.getValue().id + " has been set to " + result.password);
-            }
-          },
-          error: function (error) {
-            alert("Password reset fail");
-          },
-          databaseType: "global",
-          newUser: inEvent.newUser
-        };
-
       if (this.$.resetPasswordPopup) {
         this.$.resetPasswordPopup.hide();
       }
 
-      if (this.getValue().status === XM.Model.READY_DIRTY) {
-        alert("Please save/apply changes before resetting the password.");
-        return;
-      }
-
-      XT.dataSource.resetPassword(this.getValue().id, options);
-    },
-    /**
-      In the case of saving a new user we want to make a second call to reset
-      the password, which will be null after the first call. It's a bit awkward
-      that the two-stage process goes all the way up here to the presentation
-      layer.
-     */
-    save: function (options) {
-      var that = this,
-        isNewUser = this.getValue().getStatus() === XM.Model.READY_NEW,
-        success = options ? options.success : undefined;
-
-      if (isNewUser) {
-        options = options || {};
-        options.success = function (model, result, opts) {
-          if (success) {
-            success(model, result, opts);
-          }
-          that.setValue(model);
-          that.resetPassword(null, {newUser: true});
-        };
-      }
-
-      this.inherited(arguments);
+      this.getValue().resetPassword(inEvent.newUser);
     },
     /**
       We only want the "reset password" button to appear on an edit, not an a "new"

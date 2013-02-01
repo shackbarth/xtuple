@@ -2,30 +2,23 @@
   {
     "context": "sales",
     "nameSpace": "XM",
-    "type": "Account",
-    "table": "crmacct",
+    "type": "Contact",
+    "table": "cntct",
     "isExtension": true,
     "comment": "Extended by Sales",
     "relations": [
       {
-        "column": "crmacct_id",
+        "column": "cntct_id",
         "inverse": "id"
       }
     ],
     "properties": [
       {
-        "name": "customer",
-        "attr": {
-          "type": "Number",
-          "column": "crmacct_cust_id"
-        }
-      },
-      {
         "name": "customers",
         "toMany": {
           "isNested": true,
-          "type": "AccountCustomer",
-          "column": "crmacct_id",
+          "type": "ContactCustomer",
+          "column": "cntct_id",
           "inverse": "source"
         }
       }
