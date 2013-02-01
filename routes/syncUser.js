@@ -20,6 +20,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       userOrg,
       K = XM.Model,
       fetchOptions = {},
+      wasError = false,
       query;
 
     fetchOptions.success = function () {
@@ -50,7 +51,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     };
 
-    // XXX where's the security?
+    fetchOptions.error = function (error) {
+      if (!wasError) { // only error out once
+        wasError = true;
+        res.send({isError: true, message: "Error synching user"});
+      }
+    }
+
+    // if the requesting user doesn't have ViewGlobalUsers or ViewOrganizations
+    // privileges, then the fetch will come back empty, which is what we want
+    fetchOptions.username = req.session.passport.user.username;
 
     // Go get 'em
     user.fetch(fetchOptions);
