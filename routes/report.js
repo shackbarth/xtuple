@@ -45,7 +45,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     requestDetails = JSON.parse(requestDetails);
     requestDetails.username = req.session.passport.user.username;
-    requestDetailsQuery = JSON.stringify(requestDetails.query);
+    requestDetailsQuery = requestDetails.query;
     requestDetails = JSON.stringify(requestDetails);
     query = "select xt.fetch('%@')".f(requestDetails);
 
@@ -56,23 +56,21 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         attrs = {
           key: randomKey,
-          query: requestDetailsQuery,
+          query: JSON.stringify(requestDetailsQuery),
           data: result.rows[0].fetch,
           created: new Date()
         },
         success = function () {
-          // TODO: get the path from config
-          var pentahoRoot = "http://maxhammer.xtuple.com:8080/pentaho/content/reporting/reportviewer/",
-            redirectUrl = pentahoRoot + "report.html?solution=erpbi-reports&path=%2Ftest&name=ContactList.prpt" +
-              "&locale=en_US&userid=joe&password=password&dataKey=" + randomKey;
+          var biUrl = X.options.datasource.biUrl || "",
+            modelName = requestDetailsQuery.recordType.suffix().replace("Item", ""),
+            fileName = modelName + ".prpt",
+            redirectUrl = biUrl + "&name=" + fileName + "&dataKey=" + randomKey;
 
           res.redirect(redirectUrl);
         },
         error = function (model, err, options) {
           res.send({isError: true, message: err});
         };
-
-        //console.log("query", query);
 
       tempDataModel.save(attrs, {success: success, error: error});
     });
