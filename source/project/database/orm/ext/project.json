@@ -2,6 +2,31 @@
   {
     "context": "project",
     "nameSpace": "XM",
+    "type": "IncidentRelation",
+    "table": "incdt",
+    "isExtension": true,
+    "comment": "Extended by Project",
+    "relations": [
+      {
+        "column": "incdt_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "project",
+        "attr": {
+          "type": "Number",
+          "column": "incdt_prj_id"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
     "type": "Account",
     "table": "crmacct",
     "isExtension": true,
@@ -63,31 +88,6 @@
           "type": "ProjectRelation",
           "column": "cntct_id",
           "inverse": "contact"
-        }
-      }
-    ],
-    "sequence": 0,
-    "isSystem": true
-  },
-  {
-    "context": "project",
-    "nameSpace": "XM",
-    "type": "IncidentRelation",
-    "table": "incdt",
-    "isExtension": true,
-    "comment": "Extended by Project",
-    "relations": [
-      {
-        "column": "incdt_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
-      {
-        "name": "project",
-        "attr": {
-          "type": "Number",
-          "column": "incdt_prj_id"
         }
       }
     ],
@@ -220,14 +220,6 @@
           "type": "ProjectToDo",
           "column": "prj_id",
           "inverse": "source"
-        }
-      },
-      {
-        "name": "incidentRelations",
-        "toMany": {
-          "type": "IncidentRelation",
-          "column": "prj_id",
-          "inverse": "project"
         }
       }
     ],
