@@ -109,6 +109,15 @@ var express = require('express'),
     user = require('./oauth2/user');
 
 /**
+ * ###################################################
+ * Overrides section.
+ *
+ * Sometimes we need to change how an npm packages works.
+ * Don't edit the packages directly, override them here.
+ * ###################################################
+ */
+
+/**
   Define our own authentication criteria for passport. Passport itself defines
   its authentication function here:
   https://github.com/jaredhanson/passport/blob/master/lib/passport/http/request.js#L74
@@ -116,9 +125,11 @@ var express = require('express'),
   The ensureLoggedIn function will not need to be changed, because that calls this.
  */
 require('http').IncomingMessage.prototype.isAuthenticated = function () {
+  "use strict";
+
   var creds = this.session.passport.user;
   return creds.id && creds.username && creds.organization;
-}
+};
 
 
 // TODO - This can be removed after socket.io 1.0.0 update hopefully.
@@ -133,29 +144,31 @@ require('http').IncomingMessage.prototype.isAuthenticated = function () {
  * @api public
  */
 require('socket.io').Static.prototype.gzip = function (data, callback) {
-  var cp = require('child_process')
-    , gzip = cp.spawn('gzip', ['-9', '-c', '-f', '-n'])
-    , encoding = Buffer.isBuffer(data) ? 'binary' : 'utf8'
-    , buffer = []
-    , err;
+  "use strict";
+
+  var cp = require('child_process'),
+      gzip = cp.spawn('gzip', ['-9', '-c', '-f', '-n']),
+      encoding = Buffer.isBuffer(data) ? 'binary' : 'utf8',
+      buffer = [],
+      err;
 
   gzip.stdout.on('data', function (data) {
     buffer.push(data);
   });
 
   gzip.stderr.on('data', function (data) {
-    err = data +'';
+    err = data + '';
     buffer.length = 0;
   });
 
-  // TODO - This was changed to 'exit' from 'close'.
+  // Override Here - This was changed to 'exit' from 'close'.
   gzip.on('exit', function () {
     if (err) return callback(err);
 
-    var size = 0
-      , index = 0
-      , i = buffer.length
-      , content;
+    var size = 0,
+        index = 0,
+        i = buffer.length,
+        content;
 
     while (i--) {
       size += buffer[i].length;
@@ -177,6 +190,45 @@ require('socket.io').Static.prototype.gzip = function (data, callback) {
 
   gzip.stdin.end(data, encoding);
 };
+
+// Stomping on express/connect's Cookie.prototype to only update the expires property
+// once a minute. Otherwise it's hit on every session check. This cuts down on chatter.
+require('express/node_modules/connect/lib/middleware/session/cookie').prototype.__defineSetter__("expires", function (date) {
+  "use strict";
+
+  if (date === null || this._expires === null) {
+    // Initialize "this._expires" when creating a new cookie.
+    this._expires = date;
+    this.originalMaxAge = this.maxAge;
+  } else if (date instanceof Date) {
+    // This captures a certain "set" call we are interested in.
+    var expiresDate;
+
+    if (typeof this._expires === 'string') {
+      expiresDate = new Date(this._expires);
+    }
+
+    if (this._expires instanceof Date) {
+      expiresDate = this._expires;
+    }
+
+    // If the difference between the new time, "date", and the old time, "this._expires",
+    // is more than 1 minute, then we update it which updates the db and cache magically.
+    // OR if they match, we need to update "this._expires" so it's a instanceof Date.
+    //console.log("expires: ", date - expiresDate);
+    if ((date - expiresDate > 60000) || (JSON.stringify(date) === JSON.stringify(expiresDate))) {
+      //console.log("expires updated: ", date - expiresDate);
+      this._expires = date;
+      this.originalMaxAge = this.maxAge;
+    }
+  }
+});
+
+/**
+ * ###################################################
+ * END Overrides section.
+ * ###################################################
+ */
 
 /**
  * Express configuration.
@@ -202,11 +254,8 @@ app.configure(function () {
   //app.use(express.logger());
   app.use(express.cookieParser());
   app.use(express.bodyParser());
-  // TODO - Need to tweak the expiring of sessions.
-  // Destroy it from the db and cache.
-  // Try to only update it once a minute instead of on EVERY FREAKING REQUEST.
-  //app.use(express.session({ store: sessionStore, secret: '.T#T@r5EkPM*N@C%9K-iPW!+T', cookie: { path: '/', httpOnly: true, maxAge: 60000 } }));
-  app.use(express.session({ store: sessionStore, secret: '.T#T@r5EkPM*N@C%9K-iPW!+T'}));
+  // TODO - Destroy expired session in the db and cache.
+  app.use(express.session({ store: sessionStore, secret: '.T#T@r5EkPM*N@C%9K-iPW!+T', cookie: { path: '/', httpOnly: true, maxAge: 1800000 } }));
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(flash());
@@ -270,7 +319,9 @@ io = socketio.listen(app.listen(2000));
 // TODO - Use NODE_ENV flag to switch between development and production.
 // See "Understanding the configure method" at:
 // https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO
-io.configure(function(){
+io.configure(function () {
+  "use strict";
+
   io.set('log', false);
   // TODO - We need to implement a store for this if we run multiple processes:
   // https://github.com/LearnBoost/socket.io/tree/0.9/lib/stores
@@ -288,7 +339,8 @@ io.configure(function(){
       'htmlfile',
       'xhr-polling',
       'jsonp-polling'
-  ]);
+    ]
+  );
 });
 
 /**
