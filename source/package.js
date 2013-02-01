@@ -10,5 +10,6 @@ depends(
   "response.js",
   "session.js",
   "locale.js",
-  "ext"
+  "ext",
+  "en"
 );

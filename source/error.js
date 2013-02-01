@@ -62,7 +62,11 @@
         loc;
       for (param in this.params) {
         if (this.params.hasOwnProperty(param)) {
-          loc = (this.params[param] || '_unknown').loc();
+          var paramValue = this.params[param];
+          if (!_.isString(paramValue)) {
+            paramValue = JSON.stringify(paramValue);
+          }
+          loc = (paramValue || '_unknown').loc();
           message = message.replace("{" + param + "}", loc);
         }
       }
@@ -177,6 +181,10 @@
     {
       code: "xt1011",
       messageKey: "_localResourceNotAllowed"
+    },
+    {
+      code: "xt1012",
+      messageKey: "_saveFirst"
     },
 
     // Application errors
