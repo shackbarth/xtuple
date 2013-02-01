@@ -164,7 +164,7 @@ white:true*/
       XM.currencies.fetch(options);
     }
   });
-
+  
   XT.StartupTasks.push({
     taskName: "loadCountries",
     task: function () {
@@ -216,6 +216,17 @@ white:true*/
       XM.classCodes.fetch(options);
     }
   });
+  
+  XT.StartupTasks.push({
+      taskName: "loadCustomerTypes",
+      task: function () {
+        var options = {
+          success: _.bind(this.didComplete, this)
+        };
+        XM.customerTypes = new XM.CustomerTypeCollection();
+        XM.customerTypes.fetch(options);
+      }
+    });
 
   XT.StartupTasks.push({
     taskName: "loadProductCategories",
@@ -240,27 +251,20 @@ white:true*/
   });
   
   XT.StartupTasks.push({
-    taskName: "loadTerms",
+    taskName: "loadShipVias",
     task: function () {
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.terms = new XM.TermsCollection();
-      XM.terms.fetch(options);
+      options.query = {};
+      options.query.orderBy = [
+        {attribute: 'code'}
+      ];
+      XM.shipVias = new XM.ShipViaCollection();
+      XM.shipVias.fetch(options);
     }
   });
   
-  XT.StartupTasks.push({
-    taskName: "loadCustomerTypes",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.customerTypes = new XM.CustomerTypeCollection();
-      XM.customerTypes.fetch(options);
-    }
-  });
-
   XT.StartupTasks.push({
     taskName: "loadSalesReps",
     task: function () {
@@ -269,28 +273,6 @@ white:true*/
       };
       XM.salesReps = new XM.SalesRepCollection();
       XM.salesReps.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadTaxZones",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.taxZones = new XM.TaxZoneCollection();
-      XM.taxZones.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadShipVias",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.shipVias = new XM.ShipViaCollection();
-      XM.shipVias.fetch(options);
     }
   });
 
@@ -304,6 +286,17 @@ white:true*/
       XM.shipCharges.fetch(options);
     }
   });
+  
+  XT.StartupTasks.push({
+    taskName: "loadShipVias",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      XM.shipVias = new XM.ShipViaCollection();
+      XM.shipVias.fetch(options);
+    }
+  });
 
   XT.StartupTasks.push({
     taskName: "loadShipZones",
@@ -313,6 +306,28 @@ white:true*/
       };
       XM.shipZones = new XM.ShipZoneCollection();
       XM.shipZones.fetch(options);
+    }
+  });
+  
+  XT.StartupTasks.push({
+    taskName: "loadTaxZones",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      XM.taxZones = new XM.TaxZoneCollection();
+      XM.taxZones.fetch(options);
+    }
+  });
+  
+  XT.StartupTasks.push({
+    taskName: "loadTerms",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      XM.terms = new XM.TermsCollection();
+      XM.terms.fetch(options);
     }
   });
 

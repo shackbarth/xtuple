@@ -5,31 +5,31 @@ trailing:true white:true*/
 
 (function () {
   
-   // ..........................................................
-   // CHARACTERISTIC
-   //
-   enyo.kind({
-     name: "XV.CharacteristicOptionEditor",
-     kind: "XV.RelationsEditor",
-     components: [
-       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
-         classes: "in-panel", style: "border-right: #aaa 1px solid;", components: [
-         {kind: "XV.InputWidget", attr: "value", classes: "editor-field"},
-         {kind: "XV.NumberWidget", attr: "order", classes: "editor-field"}
-       ]}
-     ]
-   });
+  // ..........................................................
+  // CHARACTERISTIC
+  //
+  enyo.kind({
+    name: "XV.CharacteristicOptionEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+      classes: "in-panel", style: "border-right: #aaa 1px solid;", components: [
+        {kind: "XV.InputWidget", attr: "value", classes: "editor-field"},
+        {kind: "XV.NumberWidget", attr: "order", classes: "editor-field"}
+      ]}
+    ]
+  });
 
-   enyo.kind({
-     name: "XV.CharacteristicOptionBox",
-     kind: "XV.ListRelationsEditorBox",
-     classes: "xv-characteristic-relations-box",
-     title: "_options".loc(),
-     editor: "XV.CharacteristicOptionEditor",
-     parentKey: "characteristic",
-     listRelations: "XV.CharacteristicOptionListRelations",
-     fitButtons: false
-   });
+  enyo.kind({
+    name: "XV.CharacteristicOptionBox",
+    kind: "XV.ListRelationsEditorBox",
+    classes: "xv-short-relations-box",
+    title: "_options".loc(),
+    editor: "XV.CharacteristicOptionEditor",
+    parentKey: "characteristic",
+    listRelations: "XV.CharacteristicOptionListRelations",
+    fitButtons: false
+  });
 
   // ..........................................................
   // CONTACT
@@ -52,6 +52,78 @@ trailing:true white:true*/
     editor: "XV.ContactEmailEditor",
     parentKey: "contact",
     listRelations: "XV.ContactEmailListRelations"
+  });
+  
+  // ..........................................................
+  // CUSTOMER SHIP-TO
+  //
+  enyo.kind({
+    name: "XV.CustomerShipToEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.InputWidget", attr: "number"},
+        {kind: "XV.InputWidget", attr: "name"},
+        {kind: "XV.CheckboxWidget", attr: "isActive"},
+        {kind: "XV.CheckboxWidget", attr: "isDefault"},
+        {kind: "onyx.GroupboxHeader", content: "_address".loc()},
+        {kind: "XV.AddressWidget", attr: "address"},
+        {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
+        {kind: "XV.ContactWidget", attr: "contact", label: "_name".loc()},
+        {kind: "onyx.GroupboxHeader", content: "_defaults".loc()},
+        {kind: "XV.SalesRepPicker", attr: "salesRep"},
+        {kind: "XV.NumberWidget", attr: "commission"},
+        {kind: "XV.ShipZonePicker", attr: "shipZone"},
+        {kind: "XV.TaxZonePicker", attr: "taxZone"},
+        {kind: "XV.ShipViaCombobox", attr: "shipVia"},
+        {kind: "XV.ShippingChargePicker", attr: "shipCharge"},
+        {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+        {kind: "XV.TextArea", attr: "notes"}
+      ]}
+    ]
+  });
+
+  enyo.kind({
+    name: "XV.CustomerShipToBox",
+    kind: "XV.ListRelationsEditorBox",
+    classes: "xv-short-relations-box",
+    title: "_shipTo".loc(),
+    editor: "XV.CustomerShipToEditor",
+    parentKey: "customer",
+    listRelations: "XV.CustomerShipToListRelations",
+    fitButtons: false
+  });
+  
+  // ..........................................................
+  // Tax Registrations
+  //
+  enyo.kind({
+    name: "XV.TaxRegistrationEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.TaxAuthorityPicker", attr: "taxAuthority"},
+        {kind: "XV.InputWidget", attr: "number"},
+        {kind: "XV.TaxZonePicker", attr: "taxZone"},
+        {kind: "XV.DateWidget", attr: "effective"},
+        {kind: "XV.DateWidget", attr: "expires"},
+        {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+        {kind: "XV.TextArea", attr: "notes"}
+      ]}
+    ]
+  });
+
+  enyo.kind({
+    name: "XV.TaxRegistrationBox",
+    kind: "XV.ListRelationsEditorBox",
+    classes: "xv-short-relations-box",
+    title: "_taxRegistration".loc(),
+    editor: "XV.TaxRegistrationEditor",
+    parentKey: "customer",
+    listRelations: "XV.TaxRegistrationListRelations",
+    fitButtons: false
   });
 
   // ..........................................................

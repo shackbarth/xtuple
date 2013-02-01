@@ -326,6 +326,135 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.Currency", "XV.CurrencyWorkspace");
+  
+  // ..........................................................
+  // CUSTOMER
+  //
+
+  enyo.kind({
+    name: "XV.CustomerWorkspace",
+    kind: "XV.Workspace",
+    title: "_customer".loc(),
+    model: "XM.Customer",
+    headerAttrs: ["number", "-", "name"],
+    handlers: {
+      onError: "errorNotify"
+    },
+    published: {
+      existingId: ""
+    },
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.CustomerTypePicker", attr: "customerType"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
+            {kind: "onyx.GroupboxHeader", content: "_billingContact".loc()},
+            {kind: "XV.ContactWidget", attr: "billingContact",
+              showAddress: true, label: "_name".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_correspondenceContact".loc()},
+            {kind: "XV.ContactWidget", attr: "correspondenceContact",
+              showAddress: true, label: "_name".loc()},
+            {kind: "XV.ContactCharacteristicsWidget", attr: "characteristics"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes"}
+          ]}
+        ]},
+        {kind: "XV.Groupbox", name: "settingsPanel", title: "_settings".loc(), components: [
+          {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "settingsGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.SalesRepPicker", attr: "salesRep"},
+            {kind: "XV.PercentWidget", attr: "commission"},
+            {kind: "XV.ShipViaCombobox", attr: "shipVia"},
+            {kind: "XV.ShippingChargePicker", attr: "shipCharge"},
+            {kind: "XV.CheckboxWidget", attr: "backorder"},
+            {kind: "XV.CheckboxWidget", attr: "partialShip"},
+            {kind: "XV.CheckboxWidget", attr: "isFreeFormShipto", label: "_freeFormShip".loc()},
+            {kind: "XV.CheckboxWidget", attr: "isFreeFormBillto", label: "_freeFormBill".loc()},
+            // this is only going to be added by commerical editions
+            // {kind: "XV.InputWidget", attr: "preferredSite"},
+            {kind: "onyx.GroupboxHeader", content: "_terms".loc()},
+            // comes from Time & Expense
+            //{kind: "XV.CheckboxWidget", attr: "isSpecifiedBillingRate"}, Enables Rate Widget
+            //{kind: "XV.NumberWidget", attr: "billingRate"},
+            {kind: "XV.TermsPicker", attr: "terms"},
+            {kind: "XV.PercentWidget", attr: "discount"},
+            {kind: "XV.CreditStatusPicker", attr: "creditStatus"},
+            {kind: "XV.CheckboxWidget", attr: "usesPurchaseOrders"},
+            {kind: "XV.CheckboxWidget", attr: "blanketPurchaseOrders"},
+            {kind: "XV.BalanceMethodPicker", attr: "balanceMethod"},
+            {kind: "XV.NumberWidget", attr: "creditLimit"},
+            {kind: "XV.InputWidget", attr: "creditRating"},
+            // will be added by sales
+            // {kind: "XV.CheckboxWidget", attr: "autoHoldOrders"},
+            {kind: "XV.NumberWidget", attr: "graceDays"},
+            {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
+            {kind: "XV.TaxZonePicker", attr: "taxZone", label: "_defaultTaxZone".loc()}
+          ]}
+        ]},
+        //{kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
+        {kind: "XV.CustomerCommentBox", attr: "comments"},
+        {kind: "XV.CustomerShipToBox", attr: "shiptos"},
+        {kind: "XV.CustomerDocumentsBox", attr: "documents"}
+      ]},
+      {kind: "onyx.Popup", name: "findExistingCustomerPopup", centered: true,
+        modal: true, floating: true, scrim: true, onShow: "popupShown",
+        onHide: "popupHidden", components: [
+        {name: "exists"},
+        {content: "_whatToDo".loc()},
+        {tag: "br"},
+        {kind: "onyx.Button", name: "convert", ontap: "customerConvert",
+          classes: "onyx-blue xv-popup-button"},
+        {kind: "onyx.Button", name: "cancel", content: "_cancel".loc(), ontap: "customerCancel",
+          classes: "xv-popup-button"}
+      ]}
+    ],
+    customerConvert: function (inEvent) {
+      this._popupDone = true;
+      this.$.findExistingCustomerPopup.hide();
+      if (inEvent.getContent() === "_convertProspect".loc()) {
+        this.value.convertFromProspect(this.existingId);
+      } else if (inEvent.getContent() === "_convertAccount".loc()) {
+        this.value.convertFromAccount(this.existingId);
+      }
+    },
+    errorNotify: function (inSender, inEvent) {
+      // Handle customer existing as prospect
+      if (inEvent.error.code === 'xt1008') {
+        var type = inEvent.error.params.response.type;
+        this.existingId = inEvent.error.params.response.id;
+        if (type === 'P') { // Prospect
+          this._popupDone = false;
+          this.$.exists.setContent("_customerExistsProspect".loc());
+          this.$.convert.setContent("_convertProspect".loc());
+          this.$.findExistingCustomerPopup.show();
+        } else if (type === 'A') { // Existing Account
+          this._popupDone = false;
+          this.$.exists.setContent("_customerExistsAccount".loc());
+          this.$.convert.setContent("_convertAccount".loc());
+          this.$.findExistingCustomerPopup.show();
+        }
+      }
+    },
+    customerCancel: function () {
+      this._popupDone = true;
+      this.$.findExistingCustomerPopup.hide();
+    },
+    popupHidden: function () {
+      if (!this._popupDone) {
+        this.$.findExistingCustomerPopup.show();
+      }
+    }
+  });
+
+  XV.registerModelWorkspace("XM.CustomerRelation", "XV.CustomerWorkspace");
+  XV.registerModelWorkspace("XM.CustomerListItem", "XV.CustomerWorkspace");
 
   // ..........................................................
   // FILE

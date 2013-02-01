@@ -42,6 +42,39 @@ white:true*/
   var configuration = new XM.ConfigurationModel(configurationJson);
   XM.configurations.add(configuration);
   
+  // Balance Methods
+  var balanceMethodJson = [
+    { id: "B", name: "_balanceForward".loc() },
+    { id: "O", name: "_openItems".loc() }
+  ];
+  XM.BalanceMethodModel = Backbone.Model.extend({
+  });
+  XM.BalanceMethodCollection = Backbone.Collection.extend({
+    model: XM.BalanceMethodModel
+  });
+  XM.balanceMethods = new XM.BalanceMethodCollection();
+  for (i = 0; i < balanceMethodJson.length; i++) {
+    var balanceMethod = new XM.BalanceMethodModel(balanceMethodJson[i]);
+    XM.balanceMethods.add(balanceMethod);
+  }
+  
+  // Credit Status
+  var creditStatusJson = [
+    { id: "G", name: "_goodStanding".loc() },
+    { id: "W", name: "_creditWarning".loc() },
+    { id: "H", name: "_creditHolding".loc() }
+  ];
+  XM.CreditStatusModel = Backbone.Model.extend({
+  });
+  XM.CreditStatusCollection = Backbone.Collection.extend({
+    model: XM.CreditStatusModel
+  });
+  XM.creditStatuses = new XM.CreditStatusCollection();
+  for (i = 0; i < creditStatusJson.length; i++) {
+    var creditStatus = new XM.CreditStatusModel(creditStatusJson[i]);
+    XM.creditStatuses.add(creditStatus);
+  }
+  
   // Incident Status (TODO: There is actually already a table for this one...)
   var incidentStatusJson = [
     { id: "N", name: "_new".loc() },
@@ -111,5 +144,5 @@ white:true*/
     var characteristicType = new XM.CharacteristicTypeModel(characteristicTypeJson[i]);
     XM.characteristicTypes.add(characteristicType);
   }
-
+  
 }());
