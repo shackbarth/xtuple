@@ -13,6 +13,27 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.accountTypes"
   });
+  
+  // ..........................................................
+  // BALANCE METHOD
+  //
+
+  enyo.kind({
+    name: "XV.BalanceMethodPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.balanceMethods"
+  });
+  
+  // ..........................................................
+  // CHARACTERISTIC TYPE
+  //
+
+  enyo.kind({
+    name: "XV.CharacteristicTypePicker",
+    kind: "XV.PickerWidget",
+    classes: "xv-characteristic-picker",
+    collection: "XM.characteristicTypes"
+  });
 
   // ..........................................................
   // CLASS CODE
@@ -39,6 +60,30 @@ regexp:true, undef:true, trailing:true, white:true */
     orderBy: [
       {attribute: 'name'}
     ]
+  });
+  
+  // ..........................................................
+  // CUSTOMER TYPE
+  //
+
+  enyo.kind({
+    name: "XV.CustomerTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.customerTypes",
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ]
+  });
+  
+  // ..........................................................
+  // CREDIT STATUS
+  //
+
+  enyo.kind({
+    name: "XV.CreditStatusPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.creditStatuses"
   });
 
   // INCIDENT EMAIL PROFILE
@@ -202,6 +247,100 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.projectStatuses"
   });
+  
+  // ..........................................................
+  // SALES REP
+  //
+
+  enyo.kind({
+    name: "XV.SalesRepPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.salesReps",
+    orderBy: [
+      {attribute: 'name'}
+    ]
+  });
+  
+  // ..........................................................
+  // SHIPPING CHARGES
+  //
+
+  enyo.kind({
+    name: "XV.ShippingChargePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.shipCharges",
+    orderBy: [
+      {attribute: 'name'}
+    ]
+  });
+  
+  // ..........................................................
+  // SHIPPING FORMS
+  //
+
+  enyo.kind({
+    name: "XV.ShippingFormPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.shippingForms",
+    orderBy: [
+      {attribute: 'name'}
+    ]
+  });
+  
+  // ..........................................................
+  // SHIP Zone
+  //
+
+  enyo.kind({
+    name: "XV.ShipZonePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.shipZones",
+    orderBy: [
+      {attribute: 'name'}
+    ]
+  });
+  
+  // ..........................................................
+  // TAX AUTHORITY
+  //
+
+  enyo.kind({
+    name: "XV.TaxAuthorityPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.taxAuthorities",
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ]
+  });
+  
+  // ..........................................................
+  // TAX ZONE
+  //
+
+  enyo.kind({
+    name: "XV.TaxZonePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.taxZones",
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ]
+  });
+  
+  // ..........................................................
+  // TERMS
+  //
+
+  enyo.kind({
+    name: "XV.TermsPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.terms",
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ]
+  });
 
   // ..........................................................
   // UNIT
@@ -216,15 +355,4 @@ regexp:true, undef:true, trailing:true, white:true */
     ]
   });
   
-  // ..........................................................
-  // CHARACTERISTIC TYPE
-  //
-
-  enyo.kind({
-    name: "XV.CharacteristicTypePicker",
-    kind: "XV.PickerWidget",
-    classes: "xv-characteristic-picker",
-    collection: "XM.characteristicTypes"
-  });
-
 }());

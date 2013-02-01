@@ -73,6 +73,16 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.Number",
     published: {
       scale: XT.PERCENT_SCALE
+    },
+    getValue: function () {
+      return this.value / 100;
+    },
+    setValue: function (value, options) {
+      return XV.Number.prototype.setValue.call(this, value * 100, options);
+    },
+    validate: function (value) {
+      value = this.inherited(arguments);
+      return value / 100;
     }
   });
   
@@ -81,6 +91,16 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.NumberWidget",
     published: {
       scale: XT.PERCENT_SCALE
+    },
+    getValue: function () {
+      return XV.NumberWidget.prototype.getValue.call(this) * 100;
+    },
+    setValue: function (value, options) {
+      return XV.NumberWidget.prototype.setValue.call(this, value * 100, options);
+    },
+    validate: function (value) {
+      value = this.inherited(arguments);
+      return value / 100;
     }
   });
   
