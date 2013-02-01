@@ -254,7 +254,6 @@ white:true*/
       ajax.response(this.ajaxSuccess);
       ajax.go(payload);
     },
-
     /*
       Change a global password.
 
@@ -265,31 +264,17 @@ white:true*/
     changePassword: function (params, options) {
       var that = this,
         payload = {
-          parameters: params
+          oldPassword: params.oldPassword,
+          newPassword: params.newPassword
         },
-        complete = function (response) {
-          var params = {}, error;
+        ajax = new enyo.Ajax({
+          url: "/changePassword",
+          success: options ? options.success : undefined,
+          error: options ? options.error : undefined
+        });
 
-          // handle error
-          if (response.isError) {
-            if (options && options.error) {
-              params.error = response.message;
-              error = XT.Error.clone('xt1001', { params: params });
-              options.error.call(that, error);
-            }
-            return;
-          }
-
-          // handle success
-          if (options && options.success) {
-            options.success.call(that, response.data);
-          }
-        };
-
-      return XT.Request
-               .handle('function/changePassword')
-               .notify(complete)
-               .send(payload);
+      ajax.response(this.ajaxSuccess);
+      ajax.go(payload);
     },
 
     ajaxSuccess: function (inSender, inResponse) {
