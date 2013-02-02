@@ -231,8 +231,8 @@ require('express/node_modules/connect/lib/middleware/session/cookie').prototype.
  */
 
 var sslOptions = {
-    key: X.fs.readFileSync(X.options.datasource.keyFile),
-    cert: X.fs.readFileSync(X.options.datasource.certFile),
+  key: X.fs.readFileSync(X.options.datasource.keyFile),
+  cert: X.fs.readFileSync(X.options.datasource.certFile),
 };
 
 /**
@@ -396,11 +396,16 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
         // TODO - update session lastAccess: session.touch().save();
 
         socket.handshake.sessionStore.get(socket.handshake.sessionId, function (err, session) {
+          var expires = new Date(session.cookie.expires),
+              current = new Date();
+
           // All requests get a session. Make sure the session is authenticated.
+          // Make sure the sesion hasn't expired yet.
           if (err || !session || !session.passport || !session.passport.user
             || !session.passport.user.id
             || !session.passport.user.organization
-            || !session.passport.user.username) {
+            || !session.passport.user.username
+            || (expires <= current)) {
 
             // Tell the client it timed out.
             socket.emit("timeout");
