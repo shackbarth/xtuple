@@ -66,11 +66,61 @@ white:true*/
       "number",
       "name"
     ],
+    
+    /**
+      A boolean property will be created for each one of these prepended by "is."
+      So a property `isUserAccount` will be created for the attribute `userAccount`.
+      These properties  will be boolean values maintained as their attributes are
+      updated. Each role attribute will be mapped to its corresponding property
+      in `attributeDelegates`.
+    */
+    roleAttributes: [
+      "salesRep",
+      "taxAuthority",
+      "userAccount",
+      "competitor",
+      "partner"
+    ],
 
     // ..........................................................
     // METHODS
     //
+  
+    /**
+      Return the equivilent property name for an account role attribute.
+    */
+    getRolePropertyName: function (role) {
+      return "is" + role.slice(0, 1).toUpperCase() + role.slice(1);
+    },
     
+    initialize: function (attributes, options) {
+      XM.AccountDocument.prototype.initialize.apply(this, arguments);
+      var evt = "",
+        that = this;
+      this.roles = [];
+      
+      // Add event handling for role attributes and add them to listing
+      // of attribute delegates which will be boolean values
+      _.each(this.roleAttributes, function (role) {
+        evt += "change:" + role + " ";
+        that.attributeDelegates[role] = that.getRolePropertyName(role);
+      });
+      evt = evt.trim();
+      this.on(evt, this.roleDidChange);
+      this.roleDidChange();
+    },
+    
+    /**
+      Update the attribute delegate (property) boolean value for each role.
+    */
+    roleDidChange: function (model, value, options) {
+      var that = this;
+      _.each(this.roleAttributes, function (role) {
+        var prop = that.getRolePropertyName(role);
+        that[prop] = that.get(role) ? true : false;
+      });
+    },
+ 
     validateEdit: function (attributes) {
       if (attributes.parent && attributes.parent.id === this.id) {
         return XT.Error.clone('xt2006');

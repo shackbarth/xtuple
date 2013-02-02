@@ -52,6 +52,11 @@ trailing:true white:true*/
   // ..........................................................
   // ACCOUNT
   //
+  
+  enyo.kind({
+    name: "XV.AccountRoleCheckboxWidget",
+    kind: "XV.CheckboxWidget"
+  });
 
   enyo.kind({
     name: "XV.AccountWorkspace",
@@ -84,10 +89,36 @@ trailing:true white:true*/
           ]}
         ]},
         {kind: "XV.AccountCommentBox", attr: "comments"},
+        {kind: "XV.Groupbox", name: "rolesPanel", title: "_roles".loc(),
+          components: [
+          {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "rolesGroup", fit: true,
+            classes: "in-panel", components: []
+          }
+        ]},
         {kind: "XV.AccountDocumentsBox", attr: "documents"},
         {kind: "XV.AccountContactsBox", attr: "contactRelations"}
       ]}
-    ]
+    ],
+    create: function () {
+      this.inherited(arguments);
+      var K = XM.Account.prototype,
+        roles = K.roleAttributes.sort(),
+        that = this;
+        
+      // Loop and add a role checkbox for each role attribute found on the model
+      _.each(roles, function (role) {
+        var attr = K.getRolePropertyName(role);
+        that.createComponent({
+          kind: XV.AccountRoleCheckboxWidget,
+          name: attr + "Control",
+          label: ("_" + role).loc(),
+          attr: attr,
+          container: that.$.rolesGroup,
+          owner: that
+        });
+      });
+    }
   });
 
   XV.registerModelWorkspace("XM.AccountRelation", "XV.AccountWorkspace");
