@@ -15,8 +15,9 @@
     "properties": [
       {
         "name": "customer",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+          "isNested": true,
+          "type": "CustomerRelation",
           "column": "crmacct_cust_id"
         }
       },

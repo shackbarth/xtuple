@@ -7,6 +7,9 @@ white:true*/
   "use strict";
 
   XT.extensions.sales.initAccountModels = function () {
+    
+    XM.Account.prototype.roleAttributes.push("customer");
+    
     /**
       @class
 
