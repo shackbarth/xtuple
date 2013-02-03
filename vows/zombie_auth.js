@@ -22,8 +22,8 @@ Usage:
 (function () {
   "use strict";
 
-  var loadApp = function (username, password, masterCallback) {
-    zombie.visit('http://localhost', {debug: false}, function (e, browser) {
+  var loadApp = function (username, password, host, masterCallback) {
+    zombie.visit(host || 'http://localhost', {debug: false}, function (e, browser) {
       //
       // This is the login screen
       //
@@ -59,7 +59,7 @@ Usage:
 
   exports.loadAdd = loadApp;
 
-  exports.testLoad = function (username, password) {
+  exports.testLoad = function (username, password, host) {
     var secondsToWait = 10;
     console.log("Testing loadup of app.");
 
@@ -68,7 +68,7 @@ Usage:
       process.exit(1);
     }, secondsToWait * 1000);
 
-    loadApp(username, password, function () {
+    loadApp(username, password, host, function () {
       console.log("App loaded successfully.");
       process.exit(0);
     });
