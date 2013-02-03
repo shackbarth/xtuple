@@ -9,6 +9,16 @@ XV = {};
 
 var assert = require('assert'),
   zombie = require('zombie');
+
+
+/**
+Usage:
+
+<pre><code>
+  var zombieTest = require('./vows/zombie_auth');
+  zombieTest.testLoad('username', 'password');
+</code></pre>
+*/
 (function () {
   "use strict";
 
@@ -49,21 +59,20 @@ var assert = require('assert'),
 
   exports.loadAdd = loadApp;
 
-  var sampleUse = function () {
+  exports.testLoad = function (username, password) {
     var secondsToWait = 10;
+    console.log("Testing loadup of app.");
 
     setTimeout(function () {
-      console.log("app did not load in " + secondsToWait + " seconds");
+      console.log("App did not load in " + secondsToWait + " seconds.");
       process.exit(1);
     }, secondsToWait * 1000);
 
-    loadApp('admin', 'somenew', function () {
-      console.log("app loaded successfully");
+    loadApp(username, password, function () {
+      console.log("App loaded successfully.");
       process.exit(0);
     });
   };
-
-  sampleUse();
 
 }());
 
