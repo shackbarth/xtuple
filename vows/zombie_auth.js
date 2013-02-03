@@ -13,7 +13,7 @@ var assert = require('assert'),
   "use strict";
 
   var loadApp = function (username, password, masterCallback) {
-    zombie.visit('http://localhost:2000', {debug: false}, function (e, browser) {
+    zombie.visit('http://localhost', {debug: false}, function (e, browser) {
       //
       // This is the login screen
       //
@@ -27,7 +27,7 @@ var assert = require('assert'),
           // Note: make sure the app is built
 
           // not quite sure why zombie doesn't do this redirect, but oh well.
-          browser.visit('http://localhost:2000/client/index.html', function (e, browser) {
+          browser.visit('http://localhost/client/index.html', function (e, browser) {
             browser.wait(function (window) {
               // this function defines what we're waiting for: for the app state to be 6 (= RUNNING)
               return window.XT.app.state === 6;
@@ -50,13 +50,20 @@ var assert = require('assert'),
   exports.loadAdd = loadApp;
 
   var sampleUse = function () {
+    var secondsToWait = 10;
+
+    setTimeout(function () {
+      console.log("app did not load in " + secondsToWait + " seconds");
+      process.exit(1);
+    }, secondsToWait * 1000);
+
     loadApp('admin', 'somenew', function () {
-      //console.log("App is loaded");
-      //console.log(XM.incidentCategories.toJSON());
-      //console.log(XT.session.schema.toJSON());
+      console.log("app loaded successfully");
       process.exit(0);
     });
   };
+
+  sampleUse();
 
 }());
 
