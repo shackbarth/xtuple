@@ -43,7 +43,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var respond = function (res, data) {
     var httpStatus = data && data.status === "SUCCESS" ? 200 : 500;
 
-    X.log("Maintenance is complete");
+    X.log("Maintenance is complete", JSON.stringify(data));
     res.send(httpStatus, JSON.stringify(data));
   };
 
