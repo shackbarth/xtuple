@@ -330,6 +330,9 @@ require('../node_modules/xt/database/database');
           "from xt.orm " +
           "where not orm_ext;";
     callback = function (err, resp) {
+      if (err) {
+        console.log("Error in xt.orm query callback", err);
+      }
       existing = resp.rows;
 
       // organize and associate the extensions
