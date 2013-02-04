@@ -405,23 +405,23 @@ trailing:true white:true*/
         {kind: "XV.CustomerDocumentsBox", attr: "documents"}
       ]},
       {kind: "onyx.Popup", name: "findExistingCustomerPopup", centered: true,
-        modal: true, floating: true, scrim: true, onShow: "popupShown", 
+        modal: true, floating: true, scrim: true, onShow: "popupShown",
         onHide: "popupHidden", components: [
         {name: "exists"},
-        {content: "_whatToDo".loc()},
+        {name: "whatToDo"},
         {tag: "br"},
-        {kind: "onyx.Button", name: "convert", ontap: "customerConvert",
-          classes: "onyx-blue xv-popup-button"},
+        {kind: "onyx.Button", name: "ok", content: "_ok".loc(), ontap: "customerConvert",
+          classes: "onyx-blue xv-popup-button", type: ""},
         {kind: "onyx.Button", name: "cancel", content: "_cancel".loc(), ontap: "customerCancel",
-          classes: "xv-popup-button"}
+          classes: "xv-popup-button", type: ""}
       ]}
     ],
     customerConvert: function (inEvent) {
       this._popupDone = true;
       this.$.findExistingCustomerPopup.hide();
-      if (inEvent.getContent() === "_convertProspect".loc()) {
+      if (inEvent.type === "prospect") {
         this.value.convertFromProspect(this.existingId);
-      } else if (inEvent.getContent() === "_convertAccount".loc()) {
+      } else if (inEvent.type === "account") {
         this.value.convertFromAccount(this.existingId);
       }
     },
@@ -433,13 +433,15 @@ trailing:true white:true*/
         if (type === 'P') { // Prospect
           this._popupDone = false;
           this.$.exists.setContent("_customerExistsProspect".loc());
-          this.$.convert.setContent("_convertProspect".loc());
+          this.$.whatToDo.setContent("_convertProspect".loc());
+          this.$.ok.type = "prospect";
           this.$.findExistingCustomerPopup.show();
           return true;
         } else if (type === 'A') { // Existing Account
           this._popupDone = false;
           this.$.exists.setContent("_customerExistsAccount".loc());
-          this.$.convert.setContent("_convertAccount".loc());
+          this.$.whatToDo.setContent("_convertAccount".loc());
+          this.$.ok.type = "account";
           this.$.findExistingCustomerPopup.show();
           return true;
         }
@@ -1030,10 +1032,10 @@ trailing:true white:true*/
         modal: true, floating: true, scrim: true, onShow: "popupShown",
         onHide: "popupHidden", components: [
         {content: "_customerExistsAccount".loc()},
-        {content: "_whatToDo".loc()},
+        {name: "whatToDo", content: "_convertAccountProspect".loc()},
         {tag: "br"},
-        {kind: "onyx.Button", name: "convert", ontap: "accountConvert",
-          content: "_convertAccountProspect".loc(), classes: "onyx-blue xv-popup-button"},
+        {kind: "onyx.Button", name: "convert", content: "_ok".loc(), ontap: "accountConvert",
+          classes: "onyx-blue xv-popup-button"},
         {kind: "onyx.Button", name: "cancel", content: "_cancel".loc(), ontap: "accountCancel",
           classes: "xv-popup-button"}
       ]}
