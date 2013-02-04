@@ -41,7 +41,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return;
     }
 
-    ormCommand = ormArray.pop();
+    ormCommand = ormArray.shift();
     ormCallback = function (error, stdout) {
       // log any relevant information from the orm exec call
       X.log("ORM command returned. " + ormArray.length + " left");
@@ -66,7 +66,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return;
     }
 
-    psqlCommand = psqlArray.pop();
+    psqlCommand = psqlArray.shift();
     psqlCallback = function (error, stdout, stderr) {
       // log any relevant information from the orm exec call
       X.log("psql command returned. " + psqlArray.length + " left");
@@ -114,12 +114,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             orgName = org.get("name"),
             flags = "-h " + host + " -p " + port + " -d " + orgName + " -f " + scriptName + "\n",
             psqlCommand = psqlPath + " -U " + pgUser + " " + flags,
-            coreScriptDir = '../database/client/source';
+            ormCreds = {
+              hostname: host,
+              organization: orgName,
+              username: pgUser,
+              port: port,
+              password: pgPassword
+            },
+            coreScriptDir = '../database/client/source',
+            coreOrmDir = '../database/client/orm';
 
           X.log("Running scripts for organization: ", orgName);
           if (args.core) {
             // the user wants us to run the core init script and install the core orms as well
-            psqlArray.push("(cd %@ && exec %@)".f(coreScriptDir, psqlCommand));
+            X.log("Processing core: ", orgName);
+            psqlArray.push({command: "(cd %@ && exec %@)".f(coreScriptDir, psqlCommand), loadOrder: -9999});
+            ormArray.push({ormCreds: ormCreds, ormDir: coreOrmDir, loadOrder: -9999});
           }
 
           _.each(org.get("extensions").models, function (ext) {
@@ -137,17 +147,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               extLoadOrder = ext.get("extension").get("loadOrder"),
               scriptDir = ".." + extLoc + "/source/" + extName + "/database/source",
               execCommand = "(cd %@ && exec %@)".f(scriptDir, psqlCommand),
-              ormDir = ".." + extLoc + "/source/" + extName + "/database/orm",
-              ormCreds = {
-                hostname: host,
-                organization: orgName,
-                username: pgUser,
-                port: port,
-                password: pgPassword
-              };
+              ormDir = ".." + extLoc + "/source/" + extName + "/database/orm";
 
-            X.log("Preparing extension: %@ %@ ".f(orgName, extName));
-            // TODO: order the commands by extension loadOrder
+            X.log("Processing extension: %@ %@ ".f(orgName, extName));
 
             //
             // Within each organization, we have to run each psql command
@@ -159,17 +161,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             //
             // Build psql command array
             //
-            X.log("pushing: " + execCommand);
-            psqlArray.push(execCommand);
-
+            psqlArray.push({command: execCommand, loadOrder: extLoadOrder});
 
             //
             // Build orm command array
             //
             // XXX use fs.existsSync in node 0.8 instead of path.existsSync
             if (path.existsSync(ormDir)) {
-              X.log("Pushing creds for " + ormDir);
-              ormArray.push({ormCreds: ormCreds, ormDir: ormDir, ormLoadOrder: ormLoadOrder});
+              ormArray.push({ormCreds: ormCreds, ormDir: ormDir, loadOrder: extLoadOrder});
             }
           });
 
@@ -177,10 +176,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }); // end loop of organizations
 
         //
-        // We've gotten all of the commands into arrays. Now just run through
-        // them all.
+        // We've gotten all of the commands into arrays. First sort them by
+        // the appropriate load order, then run through them all.
         //
-        console.log("orm array", ormArray);
+        psqlArray = _.sortBy(psqlArray, function (obj) {
+          return obj.loadOrder;
+        });
+        // don't need the load order anymore
+        psqlArray = _.map(psqlArray, function (obj) {
+          return obj.command;
+        });
+        ormArray = _.sortBy(ormArray, function (obj) {
+          return obj.loadOrder;
+        });
         runPsqlCommands(psqlArray, ormArray, respObject, orgCallback);
       },
       fetchError = function (model, error) {
