@@ -282,7 +282,7 @@ require('../node_modules/xt/database/database');
 
     callback = _.bind(testConnection, this, socket, ack, creds);
 
-    X.db.query("select xt.js_init();", creds, callback);
+    X.db.query("select * from pg_class limit 1", creds, callback);
   };
 
   refresh = function (socket, options, ack) {
