@@ -191,10 +191,8 @@ trailing:true white:true*/
           handleAs: "json"
         }),
         success = function (inSender, inResponse) {
-          if (inResponse.status === 'ERROR') {
-            XT.log("Error updating extension scripts", inResponse.message);
-          } else if (inResponse.errorCount > 0) {
-            XT.log("Extension scripts loaded with errors", inResponse);
+          if (inResponse.isError) {
+            XT.log("Error updating extension scripts", inResponse);
           } else {
             XT.log("Extension scripts loaded successfully", inResponse);
           }
