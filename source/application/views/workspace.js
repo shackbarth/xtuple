@@ -55,7 +55,30 @@ trailing:true white:true*/
   
   enyo.kind({
     name: "XV.AccountRoleCheckboxWidget",
-    kind: "XV.CheckboxWidget"
+    kind: "XV.CheckboxWidget",
+    valdiate: function (value) {
+      var model = this.getOwner().getValue(),
+        attr = this.getAttr(),
+        K = XT.session,
+        schema = K.getSchema(),
+        dels,
+        modelAttr,
+        columns,
+        category;
+        
+      if (model) {
+        dels = _.invert(model.attributeDelegates);
+        modelAttr = dels[attr];
+        columns = schema.get(model.get("type")).columns;
+        category = _.findWhere(columns, { name: modelAttr }).category;
+      
+        // If it's not a model backed attribute just update value
+        return category === K.DB_NUMBER && value ? 1 : null;
+        
+      }
+      
+      return null;
+    }
   });
 
   enyo.kind({
@@ -105,15 +128,14 @@ trailing:true white:true*/
       var K = XM.Account.prototype,
         roles = K.roleAttributes.sort(),
         that = this;
-        
+
       // Loop and add a role checkbox for each role attribute found on the model
       _.each(roles, function (role) {
-        var attr = K.getRolePropertyName(role);
         that.createComponent({
           kind: XV.AccountRoleCheckboxWidget,
-          name: attr + "Control",
+          name: role + "Control",
           label: ("_" + role).loc(),
-          attr: attr,
+          attr: role,
           container: that.$.rolesGroup,
           owner: that
         });
