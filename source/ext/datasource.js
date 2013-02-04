@@ -1,15 +1,15 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
-/*global XT:true, XM:true, io:true, Backbone:true, _:true, console:true */
+/*global XT:true, XM:true, io:true, Backbone:true, _:true, console:true, enyo:true */
 
 (function () {
   "use strict";
 
   XT.DataSource = {
-
-    datasourceUrl: DOCUMENT_HOSTNAME,
-    datasourcePort: 443,
+    // TODO - Old way.
+    //datasourceUrl: DOCUMENT_HOSTNAME,
+    //datasourcePort: 443,
     isConnected: false,
 
     /*
@@ -245,31 +245,15 @@ white:true*/
           id: id,
           newUser: options.newUser
         },
-        complete = function (response) {
-          var params = {}, error;
+        ajax = new enyo.Ajax({
+          url: "/resetPassword",
+          success: options ? options.success : undefined,
+          error: options ? options.error : undefined
+        });
 
-          // handle error
-          if (response.isError) {
-            if (options && options.error) {
-              params.error = response.message;
-              error = XT.Error.clone('xt1001', { params: params });
-              options.error.call(that, error);
-            }
-            return;
-          }
-
-          // handle success
-          if (options && options.success) {
-            options.success.call(that, response.data);
-          }
-        };
-
-      return XT.Request
-               .handle('function/resetPassword')
-               .notify(complete)
-               .send(payload);
+      ajax.response(this.ajaxSuccess);
+      ajax.go(payload);
     },
-
     /*
       Change a global password.
 
@@ -280,33 +264,37 @@ white:true*/
     changePassword: function (params, options) {
       var that = this,
         payload = {
-          parameters: params
+          oldPassword: params.oldPassword,
+          newPassword: params.newPassword
         },
-        complete = function (response) {
-          var params = {}, error;
+        ajax = new enyo.Ajax({
+          url: "/changePassword",
+          success: options ? options.success : undefined,
+          error: options ? options.error : undefined
+        });
 
-          // handle error
-          if (response.isError) {
-            if (options && options.error) {
-              params.error = response.message;
-              error = XT.Error.clone('xt1001', { params: params });
-              options.error.call(that, error);
-            }
-            return;
-          }
-
-          // handle success
-          if (options && options.success) {
-            options.success.call(that, response.data);
-          }
-        };
-
-      return XT.Request
-               .handle('function/changePassword')
-               .notify(complete)
-               .send(payload);
+      ajax.response(this.ajaxSuccess);
+      ajax.go(payload);
     },
 
+    ajaxSuccess: function (inSender, inResponse) {
+      var params = {}, error;
+
+      // handle error
+      if (inResponse.isError) {
+        if (inSender.error) {
+          params.error = inResponse.message;
+          error = XT.Error.clone('xt1001', { params: params });
+          inSender.error.call(this, error);
+        }
+        return;
+      }
+
+      // handle success
+      if (inSender.success) {
+        inSender.success.call(this, inResponse.data);
+      }
+    },
     /*
       Sends a request to node to send out an email
 
@@ -320,34 +308,21 @@ white:true*/
     */
     sendEmail: function (payload, options) {
       var that = this,
-        complete = function (response) {
-          var params = {}, error;
-
-          // handle error
-          if (response.isError) {
-            if (options && options.error) {
-              params.error = response.message;
-              error = XT.Error.clone('xt1001', { params: params });
-              options.error.call(that, error);
-            }
-            return;
-          }
-
-          // handle success
-          if (options && options.success) {
-            options.success.call(that, response.data);
-          }
-        };
+        ajax = new enyo.Ajax({
+          url: "/email",
+          success: options ? options.success : undefined,
+          error: options ? options.error : undefined
+        });
 
       if (payload.body && !payload.text) {
-        // be generous with the inputs
+        // be flexible with the inputs. Node-emailer prefers the term text, but
+        // body is fine for us as well.
         payload.text = payload.body
       }
-      return XT.Request
-               .handle('function/email')
-               .notify(complete)
-               .send(payload);
+      ajax.response(this.ajaxSuccess);
+      ajax.go(payload);
     },
+
     /*
       Determine the list of extensions in use by the user's
       organization.
@@ -358,30 +333,15 @@ white:true*/
     */
     getExtensionList: function (options) {
       var that = this,
-        payload = {},
-        complete = function (response) {
-          var params = {}, error;
+        ajax = new enyo.Ajax({
+          url: "/extensions",
+          success: options ? options.success : undefined,
+          error: options ? options.error : undefined
+        });
 
-          // handle error
-          if (response.isError) {
-            if (options && options.error) {
-              params.error = response.message;
-              error = XT.Error.clone('xt1001', { params: params });
-              options.error.call(that, error);
-            }
-            return;
-          }
+      ajax.response(this.ajaxSuccess);
+      ajax.go();
 
-          // handle success
-          if (options && options.success) {
-            options.success.call(that, response.data);
-          }
-        };
-
-      return XT.Request
-               .handle('function/extensions')
-               .notify(complete)
-               .send(payload);
     },
 
     /* @private */
@@ -395,16 +355,24 @@ white:true*/
 
       XT.log("Attempting to connect to the datasource");
 
-      var url = this.datasourceUrl,
-        port = this.datasourcePort,
-        datasource = "https://%@/clientsock".f(url),
-        self = this,
-        didConnect = this.sockDidConnect,
-        didError = this.sockDidError;
+      var host = document.location.host,
+          path = "clientsock",
+          protocol = document.location.protocol,
+          // TODO - old way.
+          //url = this.datasourceUrl,
+          //port = this.datasourcePort,
+          //datasource = "https://%@/clientsock".f(url),
+          datasource = "%@//%@/%@".f(protocol, host, path),
+          self = this,
+          didConnect = this.sockDidConnect,
+          didError = this.sockDidError;
 
       // attempt to connect and supply the appropriate
       // responders for the connect and error events
-      this._sock = io.connect(datasource, {port: port, secure: true});
+// TODO - secure = false until express can replace the old way and free up 443.
+      //this._sock = io.connect(datasource, {port: port, secure: true});
+      //this._sock = io.connect(datasource, {port: port, secure: false});
+      this._sock = io.connect(datasource);
       this._sock.on("connect", function () {
         //didConnect.call(self, callback);
       });
@@ -412,6 +380,8 @@ white:true*/
         didConnect.call(self, callback);
       });
       this._sock.on("error", function (err) {
+        // TODO - New express conneciton error doesn't send err message back here, but does call this.
+        XT.log("socket.io error SERVER SAID: ", err);
         didError.call(self, err, callback);
       });
       this._sock.on("debug", function (msg) {
@@ -431,7 +401,7 @@ white:true*/
           style: "text-align: center;",
           components: [
             {content: "_sessionTimedOut".loc()},
-            {kind: "onyx.Button", content: "_ok".loc(), tap: function () { relocate(); }}
+            {kind: "onyx.Button", content: "_ok".loc(), tap: function () { XT.session.logout(); }}
           ]
         });
         p.show();
