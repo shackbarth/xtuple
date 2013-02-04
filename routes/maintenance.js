@@ -6,8 +6,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   var exec = require('child_process').exec,
-    url = require("url"),
-    querystring = require("querystring"),
     path = require('path'),
     ormInstaller = require('../installer/orm');
 
@@ -25,14 +23,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
     if (error !== null) {
       respObject.isError = true;
-      respObject.errorLog.push("execution error: " + error);
+      respObject.errorLog.push("Execution error: " + error);
     }
   };
-
-
-
-
-
 
   /**
    * The ORM installer commands need to be run sequentially. We create an array of the commands that
@@ -57,8 +50,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // recurse down an ever-shortening array
       runOrmCommands(ormArray, respObject, orgCallback);
     };
-    X.log("Running ORM command: ", ormCommand);
 
+    X.log("Running ORM command: ", ormCommand);
+    respObject.commandLog.push("Installing orms: " + ormCommand.ormDir);
     ormInstaller.run(ormCommand.ormCreds, ormCommand.ormDir, ormCallback);
   };
 
@@ -82,6 +76,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       runPsqlCommands(psqlArray, ormArray, respObject, orgCallback);
     };
 
+    X.log("Running psql command: ", psqlCommand);
+    respObject.commandLog.push("Running pqsl command: " + psqlCommand);
     exec(psqlCommand, psqlCallback);
   };
   /**
@@ -90,6 +86,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
    */
   var install = function (res, args, username) {
     var respObject = {commandLog: [], log: [], errorLog: []},
+      // TODO: run each organization's commands in parallel
+      psqlArray = [],
+      ormArray = [],
+      orgCallback = function (respObj) {
+        X.log("Maintenance is complete", JSON.stringify(respObj));
+        res.send(JSON.stringify(respObj));
+      },
       organizationColl = new XM.OrganizationCollection(),
       //
       // practically all the code is in the success callback of the initial fetch
@@ -102,9 +105,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           // is no way to ensure this from the model layer because model.canUpdate() refers
           // to the node authority in this context, which is omnipotence.
 
-          var psqlArray = [],
-            ormArray = [],
-            scriptName = "init_script.sql",
+          var scriptName = "init_script.sql",
             host = org.get("databaseServer").get("hostname"),
             port = org.get("databaseServer").get("port"),
             pgUser = org.get("databaseServer").get("user"),
@@ -119,8 +120,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           if (args.core) {
             // the user wants us to run the core init script and install the core orms as well
             psqlArray.push("(cd %@ && exec %@)".f(coreScriptDir, psqlCommand));
-
-
           }
 
           _.each(org.get("extensions").models, function (ext) {
@@ -136,6 +135,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             var extLoc = ext.get("extension").get("location"),
               extName = ext.get("extension").get("name"),
               scriptDir = ".." + extLoc + "/source/" + extName + "/database/source",
+              execCommand = "(cd %@ && exec %@)".f(scriptDir, psqlCommand),
               ormDir = ".." + extLoc + "/source/" + extName + "/database/orm",
               ormCreds = {
                 hostname: host,
@@ -158,9 +158,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             //
             // Build psql command array
             //
-            X.log("pushing (cd %@ && exec %@)".f(scriptDir, psqlCommand));
-            psqlArray.push("(cd %@ && exec %@)".f(scriptDir, psqlCommand));
-            respObject.commandLog.push(psqlCommand);
+            X.log("pushing: " + execCommand);
+            psqlArray.push(execCommand);
 
 
             //
@@ -170,28 +169,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             if (path.existsSync(ormDir)) {
               X.log("Pushing creds for " + ormDir);
               ormArray.push({ormCreds: ormCreds, ormDir: ormDir});
-              respObject.commandLog.push("Installing orms: " + ormDir);
             }
           });
 
 
-          console.log("psql commands are ", psqlArray);
-          console.log("orm commands are ", ormArray);
-
-          var orgCallback = function (respObj) {
-            X.log("Maintenance is complete", JSON.stringify(respObj));
-            res.send(JSON.stringify(respObj));
-          };
-
-          runPsqlCommands(psqlArray, ormArray, respObject, orgCallback);
         }); // end loop of organizations
 
-
-        //if (psqlArray.length === 0) {
-          // Report fully back even if no commands were run.
-        //  respObject.status = respObject.status || "SUCCESS";
-        //  res.send(respObject);
-        //}
+        //
+        // We've gotten all of the commands into arrays. Now just run through
+        // them all.
+        //
+        runPsqlCommands(psqlArray, ormArray, respObject, orgCallback);
       },
       fetchError = function (model, error) {
         respObject.isError = true;
