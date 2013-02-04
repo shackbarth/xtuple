@@ -24,8 +24,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       respObject.errorLog.push(stderr);
     }
     if (error !== null) {
-      respObject.status = "ERROR";
-      respObject.errorCount++;
+      respObject.isError = true;
       respObject.errorLog.push("execution error: " + error);
     }
   };
@@ -45,7 +44,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     // exit strategy
     if (ormArray.length === 0) {
-      respObject.status = respObject.status || "SUCCESS";
       orgCallback(respObject);
       return;
     }
@@ -91,7 +89,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     session load, or through the localhost backdoor.
    */
   var install = function (res, args, username) {
-    var respObject = {commandLog: [], log: [], errorLog: [], errorCount: 0},
+    var respObject = {commandLog: [], log: [], errorLog: []},
       organizationColl = new XM.OrganizationCollection(),
       //
       // practically all the code is in the success callback of the initial fetch
@@ -139,8 +137,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               extName = ext.get("extension").get("name"),
               scriptDir = ".." + extLoc + "/source/" + extName + "/database/source",
               ormDir = ".." + extLoc + "/source/" + extName + "/database/orm",
-              // XXX use fs.existsSync in node 0.8 instead of path.existsSync
-              ormsExist = path.existsSync(ormDir),
               ormCreds = {
                 hostname: host,
                 organization: orgName,
@@ -170,10 +166,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             //
             // Build orm command array
             //
-            X.log("Pushing creds for " + ormDir);
-            ormArray.push({ormCreds: ormCreds, ormDir: ormDir});
-            respObject.commandLog.push("Installing orms: " + ormDir);
-
+            // XXX use fs.existsSync in node 0.8 instead of path.existsSync
+            if (path.existsSync(ormDir)) {
+              X.log("Pushing creds for " + ormDir);
+              ormArray.push({ormCreds: ormCreds, ormDir: ormDir});
+              respObject.commandLog.push("Installing orms: " + ormDir);
+            }
           });
 
 
@@ -196,8 +194,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         //}
       },
       fetchError = function (model, error) {
-        respObject.status = "ERROR";
-        respObject.errorCount++;
+        respObject.isError = true;
         respObject.message = "Error while fetching organizations";
         res.send(respObject);
       },
