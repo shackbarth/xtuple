@@ -9,7 +9,7 @@ XT = {};
 _.extend(XT,
   /** */ {
 
-  debugging: false,
+  debugging: true,
 
   /** */
   K: function (){},
