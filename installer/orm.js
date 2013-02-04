@@ -333,7 +333,7 @@ require('../node_modules/xt/database/database');
       if (err) {
         console.log("Error in xt.orm query callback", err);
       }
-      existing = resp.rows;
+      existing = resp ? resp.rows : [];
 
       // organize and associate the extensions
       _.each(extensions, function (context) {
