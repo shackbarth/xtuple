@@ -23,5 +23,7 @@ if [[  ${git_status} =~ 'Already up-to-date.' ]]
 fi
 
 npm install
-killall -TERM node
+monit stop node
+sleep 10
+monit start node
 
