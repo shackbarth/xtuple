@@ -263,6 +263,7 @@ trailing:true white:true*/
     popupHidden: function () {
       if (!this._popupDone) {
         this.$.multipleAddressPopup.show();
+        return true;
       }
     }
   });
@@ -404,7 +405,7 @@ trailing:true white:true*/
         {kind: "XV.CustomerDocumentsBox", attr: "documents"}
       ]},
       {kind: "onyx.Popup", name: "findExistingCustomerPopup", centered: true,
-        modal: true, floating: true, scrim: true, onShow: "popupShown",
+        modal: true, floating: true, scrim: true, onShow: "popupShown", 
         onHide: "popupHidden", components: [
         {name: "exists"},
         {content: "_whatToDo".loc()},
@@ -434,21 +435,25 @@ trailing:true white:true*/
           this.$.exists.setContent("_customerExistsProspect".loc());
           this.$.convert.setContent("_convertProspect".loc());
           this.$.findExistingCustomerPopup.show();
+          return true;
         } else if (type === 'A') { // Existing Account
           this._popupDone = false;
           this.$.exists.setContent("_customerExistsAccount".loc());
           this.$.convert.setContent("_convertAccount".loc());
           this.$.findExistingCustomerPopup.show();
+          return true;
         }
       }
     },
     customerCancel: function () {
       this._popupDone = true;
       this.$.findExistingCustomerPopup.hide();
+      return true;
     },
     popupHidden: function () {
       if (!this._popupDone) {
         this.$.findExistingCustomerPopup.show();
+        return true;
       }
     }
   });
@@ -1046,6 +1051,7 @@ trailing:true white:true*/
         if (type === 'A') { // Existing Account
           this._popupDone = false;
           this.$.findExistingAccountPopup.show();
+          return true;
         }
       }
     },
@@ -1056,6 +1062,7 @@ trailing:true white:true*/
     popupHidden: function () {
       if (!this._popupDone) {
         this.$.findExistingAccountPopup.show();
+        return true;
       }
     }
   });
