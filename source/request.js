@@ -26,6 +26,9 @@ white:true*/
       } else {
         callback = function (response) {
           //notify(_.extend(Object.create(XT.Response), response));
+          if (response && response.isError && XT.debugging) {
+            XT.log("Response error ", response);
+          }
           notify(new XT.Response(response));
         };
       }
