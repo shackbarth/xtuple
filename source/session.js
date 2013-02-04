@@ -36,52 +36,49 @@ white:true*/
       return this;
     },
 
-    validateSession: function (credentials, callback) {
+    validateSession: function (callback) {
       var self = this,
         complete = function (payload) {
           self._didValidateSession.call(self, payload, callback);
         };
 
-      // we store these credentials until we have
-      // acquired a valid session
-      this.details = credentials;
-
+      // Poll the session socket.io endpoint for valid session data.
       XT.Request
         .handle("session")
         .notify(complete)
-        .send(credentials);
+        .send(null);
     },
 
     _didValidateSession: function (payload, callback) {
-      // if this is a valid session acquisition, go ahead
-      // and store the properties
       if (payload.code === 1) {
+        // If this is a valid session acquisition, go ahead
+        // and store the properties in XT.Session.details.
         this.setDetails(payload.data);
+
+        // Start the client loading process.
         XT.getStartupManager().start();
       } else {
-        return relocate();
+        return XT.Session.logout();
       }
 
       if (callback && callback instanceof Function) {
-        callback(payload);
+        callback();
       }
     },
 
     start: function () {
-      var c = X.getCookie("xtsessioncookie");
       try {
-        c = JSON.parse(c);
-        this.validateSession(c, function () { XT.app.show(); });
-      } catch (e) { XT.Session.logout(); }
+        this.validateSession(function () {
+          // Tell the client to show now that we're in startup mode.
+          XT.app.show();
+        });
+      } catch (e) {
+        XT.Session.logout();
+      }
     },
 
     logout: function () {
-      XT.Request
-        .handle("function/logout")
-        .notify(function () {
-          relocate();
-        })
-        .send();
+      window.location = "/logout";
     }
 
   };
