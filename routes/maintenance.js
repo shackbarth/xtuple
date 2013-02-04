@@ -134,6 +134,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
             var extLoc = ext.get("extension").get("location"),
               extName = ext.get("extension").get("name"),
+              extLoadOrder = ext.get("extension").get("loadOrder"),
               scriptDir = ".." + extLoc + "/source/" + extName + "/database/source",
               execCommand = "(cd %@ && exec %@)".f(scriptDir, psqlCommand),
               ormDir = ".." + extLoc + "/source/" + extName + "/database/orm",
@@ -168,7 +169,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             // XXX use fs.existsSync in node 0.8 instead of path.existsSync
             if (path.existsSync(ormDir)) {
               X.log("Pushing creds for " + ormDir);
-              ormArray.push({ormCreds: ormCreds, ormDir: ormDir});
+              ormArray.push({ormCreds: ormCreds, ormDir: ormDir, ormLoadOrder: ormLoadOrder});
             }
           });
 
@@ -179,6 +180,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         // We've gotten all of the commands into arrays. Now just run through
         // them all.
         //
+        console.log("orm array", ormArray);
         runPsqlCommands(psqlArray, ormArray, respObject, orgCallback);
       },
       fetchError = function (model, error) {
