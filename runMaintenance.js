@@ -9,5 +9,7 @@ request('http://localhost:442/maintenance?core=true', function (error, response,
     } else {
       console.log("Maintenance success!", result.commandLog);
     }
+  } else {
+    console.log("Cannot connect to server", error);
   }
 })
