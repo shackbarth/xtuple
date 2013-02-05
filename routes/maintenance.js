@@ -91,7 +91,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       ormArray = [],
       orgCallback = function (respObj) {
         X.log("Maintenance is complete", JSON.stringify(respObj));
-        res.send(JSON.stringify(respObj));
+        res.send(JSON.stringify({data: respObj}));
       },
       organizationColl = new XM.OrganizationCollection(),
       //
