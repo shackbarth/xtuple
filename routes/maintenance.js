@@ -116,9 +116,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               port: port,
               password: pgPassword
             },
-            coreScriptDir = '../database/client/source',
+            group = org.get("group"),
             initInstanceDbDirectory = X.options.datasource.initInstanceDbDirectory || "./scripts",
-            initInstanceDbCommand = "initInstanceDb.sh " + flags,
+            initInstanceDbCommand = "initInstanceDb.sh " + flags + " -g " + group,
+            coreScriptDir = '../database/client/source',
             coreOrmDir = '../database/client/orm';
 
           X.log("Running scripts for organization: ", orgName);
