@@ -107,8 +107,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             pgPassword = org.get("databaseServer").get("password"),
             psqlPath = X.options.datasource.psqlPath || "psql",
             orgName = org.get("name"),
-            flags = "-h " + host + " -p " + port + " -d " + orgName + " -f " + scriptName + "\n",
-            psqlCommand = psqlPath + " -U " + pgUser + " " + flags,
+            flags = " -U " + pgUser + " -h " + host + " -p " + port + " -d " + orgName,
+            psqlCommand = psqlPath + flags + " -f " + scriptName,
             ormCreds = {
               hostname: host,
               organization: orgName,
@@ -117,14 +117,36 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               password: pgPassword
             },
             coreScriptDir = '../database/client/source',
+            initInstanceDbDirectory = X.options.datasource.initInstanceDbDirectory || "./scripts",
+            initInstanceDbCommand = "initInstanceDb.sh " + flags,
             coreOrmDir = '../database/client/orm';
 
           X.log("Running scripts for organization: ", orgName);
-          if (args.core) {
+
+          if (args.initialize) {
+            // this is a brand-new instance database. First run the instance db
+            // initialization script
+
+            // guard against something terrible that shouldn't be possible in the UI.
+            // intialization should only happen to one DB at a time.
+            if (!args.organization) {
+              res.send({isError: true, message: "Initialize every instance DB. Are you crazy?"});
+              return;
+            }
+            X.log("Initializing organization: ", orgName);
+
+            psqlArray.push({
+              command: "%@/%@".f(initInstanceDbDirectory, initInstanceDbCommand),
+              loadOrder: -9999
+            });
+          }
+
+          if (args.initialize || args.core) {
             // the user wants us to run the core init script and install the core orms as well
+            // might as well do this for newly initialized dbs as well
             X.log("Processing core: ", orgName);
-            psqlArray.push({command: "(cd %@ && exec %@)".f(coreScriptDir, psqlCommand), loadOrder: -9999});
-            ormArray.push({ormCreds: ormCreds, ormDir: coreOrmDir, loadOrder: -9999});
+            psqlArray.push({command: "(cd %@ && exec %@)".f(coreScriptDir, psqlCommand), loadOrder: -9990});
+            ormArray.push({ormCreds: ormCreds, ormDir: coreOrmDir, loadOrder: -9990});
           }
 
           _.each(org.get("extensions").models, function (ext) {
