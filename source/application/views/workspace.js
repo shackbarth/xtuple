@@ -60,6 +60,7 @@ trailing:true white:true*/
       linkEnabled: false
     },
     events: {
+      onSavePrompt: "",
       onWorkspace: ""
     },
     handlers: {
@@ -74,9 +75,11 @@ trailing:true white:true*/
     setValue: function (value, options) {
       this.inherited(arguments);
       var isRelation = this.isRelation(),
+        that = this,
         color = "black",
         enabled = false,
         input = this.$.input.getValue(),
+        openWorkspace,
         model,
         recordType,
         relation,
@@ -99,10 +102,23 @@ trailing:true white:true*/
         };
         relation = model.getRelation(this.getAttr());
         recordType = relation.relatedModel.prototype.recordType;
-        this.doWorkspace({
-          workspace: XV.getWorkspace(recordType),
-          attributes: attrs
-        });
+        openWorkspace = function () {
+          that.doWorkspace({
+            workspace: XV.getWorkspace(recordType),
+            attributes: attrs,
+            callback: openWorkspace
+          });
+        };
+        if (model.isDirty()) {
+          this.doSavePrompt({
+            saveCallback: openWorkspace,
+            cancelCallback: function () {
+              that.$.input.setChecked(false);
+            }
+          });
+        } else {
+          openWorkspace();
+        }
       }
     },
     isRelation: function () {
@@ -124,7 +140,6 @@ trailing:true white:true*/
     },
     tapped: function (inSender, inEvent) {
       var value;
-
       if (inEvent.originator.name === "label" &&
           this.getLinkEnabled()) {
         value = this.getValue();
@@ -142,6 +157,9 @@ trailing:true white:true*/
     title: "_account".loc(),
     headerAttrs: ["number", "-", "name"],
     model: "XM.Account",
+    handlers: {
+      onSavePrompt: "savePrompt"
+    },
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -176,6 +194,17 @@ trailing:true white:true*/
         ]},
         {kind: "XV.AccountDocumentsBox", attr: "documents"},
         {kind: "XV.AccountContactsBox", attr: "contactRelations"}
+      ]},
+      {kind: "onyx.Popup", name: "savePromptPopup", centered: true,
+        modal: true, floating: true, scrim: true,
+        onHide: "popupHidden", components: [
+        {content: "_mustSave".loc() },
+        {content: "_saveYourWork?".loc() },
+        {tag: "br"},
+        {kind: "onyx.Button", content: "_cancel".loc(), ontap: "savePromptCancel",
+          classes: "xv-popup-button"},
+        {kind: "onyx.Button", content: "_save".loc(), ontap: "savePromptSave",
+          classes: "onyx-blue xv-popup-button"}
       ]}
     ],
     create: function () {
@@ -195,6 +224,22 @@ trailing:true white:true*/
           owner: that
         });
       });
+
+    },
+    savePrompt: function (inSender, inEvent) {
+      this._popupDone = false;
+      this._inEvent = inEvent;
+      this.$.savePromptPopup.show();
+    },
+    savePromptCancel: function () {
+      this._popupDone = true;
+      this._inEvent.cancelCallback();
+      this.$.savePromptPopup.hide();
+    },
+    savePromptSave: function () {
+      this._popupDone = true;
+      this._inEvent.saveCallback();
+      this.$.savePromptPopup.hide();
     }
   });
 

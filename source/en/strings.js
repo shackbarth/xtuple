@@ -534,6 +534,7 @@ var lang = XT.stringsFor("en_US", {
   "_datasourceError": "Data source error: {error}",
   "_duplicateValues": "Duplicate values are not allowed.",
   "_lengthInvalid": "Length of {attr} must be {length}.",
+  "_mustSave": "You must save your changes before proceeding.",
   "_nameRequired": "A name is required.",
   "_productCategoryRequiredOnSold": "A Product Category is required for sold items.",
   "_recursiveParentDisallowed": "Record is not allowed to reference itself as the parent.",
