@@ -9,6 +9,7 @@ white:true*/
   XT.extensions.sales.initAccountModels = function () {
     
     XM.Account.prototype.roleAttributes.push("customer");
+    XM.Account.prototype.roleAttributes.push("prospect");
     
     /**
       @class
