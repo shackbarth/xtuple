@@ -36,7 +36,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       X.database.query(session.passport.user.organization, query, callback);
     });
   };
-
+  exports.queryForData = queryForData;
 
   exports.report = function (req, res) {
     var requestDetails = req.query.details,
