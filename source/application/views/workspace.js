@@ -263,6 +263,7 @@ trailing:true white:true*/
     popupHidden: function () {
       if (!this._popupDone) {
         this.$.multipleAddressPopup.show();
+        return true;
       }
     }
   });
@@ -407,20 +408,20 @@ trailing:true white:true*/
         modal: true, floating: true, scrim: true, onShow: "popupShown",
         onHide: "popupHidden", components: [
         {name: "exists"},
-        {content: "_whatToDo".loc()},
+        {name: "whatToDo"},
         {tag: "br"},
-        {kind: "onyx.Button", name: "convert", ontap: "customerConvert",
-          classes: "onyx-blue xv-popup-button"},
+        {kind: "onyx.Button", name: "ok", content: "_ok".loc(), ontap: "customerConvert",
+          classes: "onyx-blue xv-popup-button", type: ""},
         {kind: "onyx.Button", name: "cancel", content: "_cancel".loc(), ontap: "customerCancel",
-          classes: "xv-popup-button"}
+          classes: "xv-popup-button", type: ""}
       ]}
     ],
     customerConvert: function (inEvent) {
       this._popupDone = true;
       this.$.findExistingCustomerPopup.hide();
-      if (inEvent.getContent() === "_convertProspect".loc()) {
+      if (inEvent.type === "prospect") {
         this.value.convertFromProspect(this.existingId);
-      } else if (inEvent.getContent() === "_convertAccount".loc()) {
+      } else if (inEvent.type === "account") {
         this.value.convertFromAccount(this.existingId);
       }
     },
@@ -432,23 +433,29 @@ trailing:true white:true*/
         if (type === 'P') { // Prospect
           this._popupDone = false;
           this.$.exists.setContent("_customerExistsProspect".loc());
-          this.$.convert.setContent("_convertProspect".loc());
+          this.$.whatToDo.setContent("_convertProspect".loc());
+          this.$.ok.type = "prospect";
           this.$.findExistingCustomerPopup.show();
+          return true;
         } else if (type === 'A') { // Existing Account
           this._popupDone = false;
           this.$.exists.setContent("_customerExistsAccount".loc());
-          this.$.convert.setContent("_convertAccount".loc());
+          this.$.whatToDo.setContent("_convertAccount".loc());
+          this.$.ok.type = "account";
           this.$.findExistingCustomerPopup.show();
+          return true;
         }
       }
     },
     customerCancel: function () {
       this._popupDone = true;
       this.$.findExistingCustomerPopup.hide();
+      return true;
     },
     popupHidden: function () {
       if (!this._popupDone) {
         this.$.findExistingCustomerPopup.show();
+        return true;
       }
     }
   });
@@ -983,6 +990,87 @@ trailing:true white:true*/
 
   XV.registerModelWorkspace("XM.ProjectTask", "XV.ProjectTaskWorkspace");
   XV.registerModelWorkspace("XM.ProjectTaskListItem", "XV.ProjectTaskWorkspace");
+  
+  // ..........................................................
+  // PROSPECT
+  //
+
+  enyo.kind({
+    name: "XV.ProspectWorkspace",
+    kind: "XV.Workspace",
+    title: "_prospect".loc(),
+    model: "XM.Prospect",
+    headerAttrs: ["number", "-", "name"],
+    handlers: {
+      onError: "errorNotify"
+    },
+    published: {
+      existingId: ""
+    },
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
+            {kind: "XV.SalesRepPicker", attr: "salesRep"},
+            {kind: "XV.TaxZonePicker", attr: "taxZone"},
+            {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
+            {kind: "XV.ContactWidget", attr: "contact",
+              showAddress: true, label: "_name".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes"}//,
+            //{kind: "onyx.GroupboxHeader", content: "_quotes".loc()}
+          ]}
+        ]}
+      ]},
+      {kind: "onyx.Popup", name: "findExistingAccountPopup", centered: true,
+        modal: true, floating: true, scrim: true, onShow: "popupShown",
+        onHide: "popupHidden", components: [
+        {content: "_customerExistsAccount".loc()},
+        {name: "whatToDo", content: "_convertAccountProspect".loc()},
+        {tag: "br"},
+        {kind: "onyx.Button", name: "convert", content: "_ok".loc(), ontap: "accountConvert",
+          classes: "onyx-blue xv-popup-button"},
+        {kind: "onyx.Button", name: "cancel", content: "_cancel".loc(), ontap: "accountCancel",
+          classes: "xv-popup-button"}
+      ]}
+    ],
+    accountConvert: function (inEvent) {
+      this.value.convertFromAccount(this.existingId);
+      this._popupDone = true;
+      this.$.findExistingAccountPopup.hide();
+    },
+    errorNotify: function (inSender, inEvent) {
+      // Handle customer existing as prospect
+      if (inEvent.error.code === 'xt1008') {
+        var type = inEvent.error.params.response.type;
+        this.existingId = inEvent.error.params.response.id;
+        if (type === 'A') { // Existing Account
+          this._popupDone = false;
+          this.$.findExistingAccountPopup.show();
+          return true;
+        }
+      }
+    },
+    accountCancel: function () {
+      this._popupDone = true;
+      this.$.findExistingAccountPopup.hide();
+    },
+    popupHidden: function () {
+      if (!this._popupDone) {
+        this.$.findExistingAccountPopup.show();
+        return true;
+      }
+    }
+  });
+  
+  XV.registerModelWorkspace("XM.ProspectRelation", "XV.ProspectWorkspace");
+  XV.registerModelWorkspace("XM.ProspectListItem", "XV.ProspectWorkspace");
 
   // ..........................................................
   // STATE

@@ -817,6 +817,56 @@ trailing:true white:true*/
     formatHours: XV.ProjectList.prototype.formatHours,
     formatExpenses: XV.ProjectList.prototype.formatExpenses
   });
+  
+  // ..........................................................
+  // PROSPECT
+  //
+
+  enyo.kind({
+    name: "XV.ProspectList",
+    kind: "XV.List",
+    label: "_prospects".loc(),
+    collection: "XM.ProspectRelationCollection",
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    parameterWidget: "XV.ProspectListParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", isKey: true},
+              {kind: "XV.ListAttr", attr: "contact.phone", fit: true,
+                classes: "right"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "name"},
+              {kind: "XV.ListAttr", attr: "contact.primaryEmail",
+                ontap: "sendMail", classes: "right hyperlink"}
+            ]}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "contact.name", classes: "italic",
+              placeholder: "_noContact".loc()},
+            {kind: "XV.ListAttr", attr: "contact.address.formatShort"}
+          ]}
+        ]}
+      ]}
+    ],
+    sendMail: function (inSender, inEvent) {
+      var model = this.getModel(inEvent.index),
+        email = model ? model.getValue('contact.primaryEmail') : null,
+        win;
+      if (email) {
+        win = window.open('mailto:' + email);
+        win.close();
+      }
+      return true;
+    }
+  });
+
+  XV.registerModelList("XM.ProspectRelation", "XV.ProspectList");
 
   // ..........................................................
   // TO DO
