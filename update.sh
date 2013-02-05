@@ -12,7 +12,6 @@ while getopts ":p" opt; do
 done
 
 # update source code
-cd /usr/local/xtuple/database
 git pull
 if [ $PRODUCTION ]
   then
@@ -23,9 +22,9 @@ git submodule update --init --recursive
 # update global db
 cd server/source
 psql -U admin  global -f init_script.sql
-cd /usr/local/xtuple/node-datasource/installer
+cd ../../../node-datasource/installer
 ./installer.js -h localhost -d global -u admin -p 5432 -P admin --path ../../database/server/orm
 
 # update instance dbs
-cd /usr/local/xtuple/node-datasource
+cd ..
 node runMaintenance.js
