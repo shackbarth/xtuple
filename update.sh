@@ -15,7 +15,7 @@ git checkout master
 git pull
 if [ $PRODUCTION ]
   then
-  git checkout `git describe --tags`
+  git checkout `git describe --abbrev=0`
 fi
 git submodule update --init --recursive
 
