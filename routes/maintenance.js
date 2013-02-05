@@ -100,11 +100,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       //
       fetchSuccess = function (collection, response) {
         _.each(collection.models, function (org) {
-          // XXX We ensure that users have ViewOrganizations privileges. It would be better
-          // to ensure that they also have MaintainOrganizations priviliges, but there
-          // is no way to ensure this from the model layer because model.canUpdate() refers
-          // to the node authority in this context, which is omnipotence.
-
           var scriptName = "init_script.sql",
             host = org.get("databaseServer").get("hostname"),
             port = org.get("databaseServer").get("port"),
@@ -244,6 +239,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // users accessing this route through the unexposed server don't have to
       // get authenticated. Do the fetch under the node user authority.
       install(res, args, X.options.globalDatabase.nodeUsername);
+      return;
+    }
+
+    //
+    // If they're not coming in through localhost, make sure the global user
+    // requesting this route has MaintainOrganizations privileges
+    //
+    // XXX not sure if the word Maintain Organizations should be hardcoded
+    if (_.indexOf(req.session.passport.user.globalPrivileges, "MaintainOrganizations") < 0) {
+      res.send({isError: true, message: "You don't have the privileges to do this"});
       return;
     }
 
