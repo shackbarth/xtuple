@@ -183,6 +183,12 @@ var sslOptions = {
     cert: X.fs.readFileSync(X.options.datasource.certFile),
 };
 
+if (X.options.datasource.caFile) {
+  sslOptions.ca = _.map(X.options.datasource.caFile, function (obj) {
+    return X.fs.readFileSync(obj);
+  });
+}
+
 /**
  * Express configuration.
  */
