@@ -488,6 +488,36 @@ white:true*/
     documentKey: 'name'
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.CustomerProspectRelation = XM.Info.extend({
+    /** @scope XM.CustomerProspectRelation.prototype */
+
+    recordType: 'XM.CustomerProspectRelation',
+
+    editableModel: 'XM.Customer',
+
+    descriptionKey: "name"
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.CustomerProspectListItem = XM.Info.extend({
+    /** @scope XM.CustomerProspectListItem.prototype */
+
+    recordType: 'XM.CustomerProspectListItem',
+
+    editableModel: 'XM.Customer'
+
+  });
 
   // ..........................................................
   // COLLECTIONS
@@ -563,6 +593,18 @@ white:true*/
 
     model: XM.ShipZone
 
+  });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.CustomerProspectListItemCollection = XM.Collection.extend({
+    /** @scope XM.CustomerProspectListItemCollection.prototype */
+
+    model: XM.CustomerProspectListItem
+    
   });
 
 }());

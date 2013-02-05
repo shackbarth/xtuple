@@ -313,6 +313,19 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.CustomerRelation", "XV.CustomerList");
+  
+  // ..........................................................
+  // CUSTOMERPROSPECT
+  //
+
+  enyo.kind({
+    name: "XV.CustomerProspectList",
+    kind: "XV.CustomerList",
+    label: "_customerProspect".loc(),
+    collection: "XM.CustomerProspectListItemCollection"
+  });
+
+  XV.registerModelList("XM.CustomerProspectRelation", "XV.CustomerProspectList");
 
   // ..........................................................
   // EMPLOYEE
