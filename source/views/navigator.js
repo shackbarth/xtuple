@@ -67,9 +67,9 @@ trailing:true white:true*/
             {kind: "XV.IconButton", src: "lib/enyo-x/assets/menu-icon-gear.png",
 							content: "_actions".loc()},
             {kind: "onyx.Menu", components: [
-              {name: "exportCSVItem", content: "_export".loc() + " CSV", showing: false}, // TODO: delete once pentaho is working
+              {name: "printItem", content: "_print".loc(), showing: false},
               {name: "exportItem", content: "_export".loc(), showing: false},
-              {name: "myAccountItem", content: "_myAccount".loc()},
+              {name: "myAccountItem", content: "_changePassword".loc()},
               {name: "helpItem", content: "_help".loc()}
             ]}
           ]},
@@ -153,8 +153,8 @@ trailing:true white:true*/
     actionSelected: function (inSender, inEvent) {
       switch (inEvent.originator.name)
       {
-      case 'exportCSVItem': // TODO: delete this case once pentaho is working
-        this.exportListCSV();
+      case 'printItem':
+        this.printList();
         break;
       case 'exportItem':
         this.exportList();
@@ -235,6 +235,15 @@ trailing:true white:true*/
     getSelectedModule: function () {
       return this._selectedModule;
     },
+    printList: function (inSender, inEvent) {
+      var list = this.$.contentPanels.getActive(),
+        query = JSON.parse(JSON.stringify(list.getQuery())); // clone
+
+      delete query.rowLimit;
+      delete query.rowOffset;
+
+      window.open('/report?details={"requestType":"fetch","query":' + JSON.stringify(query) + '}', '_newtab');
+    },
     /**
       Exports the contents of a list to CSV. Note that it will export the entire
       list, not just the part that's been lazy-loaded. Of course, it will apply
@@ -244,16 +253,6 @@ trailing:true white:true*/
       those technologies.
      */
     exportList: function (inSender, inEvent) {
-      var list = this.$.contentPanels.getActive(),
-        query = JSON.parse(JSON.stringify(list.getQuery())); // clone
-
-      delete query.rowLimit;
-      delete query.rowOffset;
-
-      window.open('/report?details={"requestType":"fetch","query":' + JSON.stringify(query) + '}', '_newtab');
-    },
-    // TODO: delete this method once pentaho is working
-    exportListCSV: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),
         query = JSON.parse(JSON.stringify(list.getQuery())); // clone
 
@@ -614,8 +613,8 @@ trailing:true white:true*/
 
       // XXX temp while we build out BI reports for all of these...
       var isSupportedInBi = _.indexOf(["Contacts", "Incidents", "To Do", "Accounts", "Opportunities"], label) >= 0;
-      this.$.exportItem.setShowing(collection && isAllowedToExport && isSupportedInBi);
-      this.$.exportCSVItem.setShowing(collection && isAllowedToExport); // TODO: delete once pentaho is working
+      this.$.printItem.setShowing(collection && isAllowedToExport && isSupportedInBi);
+      this.$.exportItem.setShowing(collection && isAllowedToExport);
 
       // Handle new button
       this.$.newButton.setShowing(panel.canAddNew);
