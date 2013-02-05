@@ -56,28 +56,47 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.AccountRoleCheckboxWidget",
     kind: "XV.CheckboxWidget",
-    valdiate: function (value) {
-      var model = this.getOwner().getValue(),
-        attr = this.getAttr(),
-        K = XT.session,
-        schema = K.getSchema(),
-        dels,
-        modelAttr,
+    published: {
+      linkEnabled: false
+    },
+    handlers: {
+      ontap: "tapped" 
+    },
+    inputChanged: function (inSender, inEvent) {
+      var K = XT.session,
+        model = this.getOwner().getValue(),
+        value = null,
+        color = "black",
+        enabled = false,
+        attr,
         columns,
-        category;
-        
-      if (model) {
-        dels = _.invert(model.attributeDelegates);
-        modelAttr = dels[attr];
-        columns = schema.get(model.get("type")).columns;
-        category = _.findWhere(columns, { name: modelAttr }).category;
+        category,
+        input,
+        hasModel;
       
-        // If it's not a model backed attribute just update value
-        return category === K.DB_NUMBER && value ? 1 : null;
-        
+      // Only update value if it is NOT a model backed attribute
+      if (model) {
+        input = this.$.input.getValue();
+        attr = this.getAttr();
+        columns = K.getSchema().get(model.get("type")).columns;
+        category = _.findWhere(columns, { name: attr }).category;
+        hasModel = category !== K.DB_NUMBER;
+        value = !hasModel && input ? 1 : null;
+        if (hasModel && input) {
+          color = "blue";
+          enabled = true;
+        }
       }
       
-      return null;
+      this.$.label.setStyle("color: " + color);
+      this.setLinkEnabled(enabled);
+      this.setValue(value);
+    },
+    tapped: function (inSender, inEvent) {
+      if (inEvent.originator.name === "label" &&
+          this.getLinkEnabled()) {
+        alert("Tapped!");
+      }
     }
   });
 
