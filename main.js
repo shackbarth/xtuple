@@ -232,7 +232,6 @@ app.use('/assets', express.static('views/login/assets'));
 app.use('/client', express.static('www/client'));
 app.use('/public-extensions', express.static('www/public-extensions'));
 app.use('/private-extensions', express.static('www/private-extensions'));
-//app.post('/export', routes.expor); TODO: implement, or delete the route
 
 app.get('/dialog/authorize', oauth2.authorization);
 app.post('/dialog/authorize/decision', oauth2.decision);
@@ -249,6 +248,7 @@ app.get('/logout', routes.logout);
 app.all('/changePassword', routes.changePassword);
 app.all('/dataFromKey', routes.dataFromKey);
 app.all('/email', routes.email);
+app.all('/export', routes.exxport);
 app.all('/extensions', routes.extensions);
 app.get('/file', routes.file);
 app.get('/maintenance', routes.maintenance);

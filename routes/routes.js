@@ -28,6 +28,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     auth = require('./auth'),
     changePassword = require('./changePassword'),
     email = require('./email'),
+    exxport = require('./export'),
     extensions = require('./extensions'),
     data = require('./data'),
     dataFromKey = require('./dataFromKey'),
@@ -66,6 +67,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.changePassword = [ensureLogin, changePassword.changePassword];
   exports.dataFromKey = dataFromKey.dataFromKey; // don't authenticate
   exports.email = [ensureLogin, email.email];
+  exports.exxport = [ensureLogin, exxport.exxport];
   exports.extensions = [ensureLogin, extensions.extensions];
   exports.file = [ensureLogin, file.file];
   // the maintenance route as accessible by the app has login restrictions.

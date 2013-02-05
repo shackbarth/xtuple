@@ -141,8 +141,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
 
-  // TODO: exception handling
-  var handle = function (req, res) {
+  // export is a reserved word
+  exports.exxport = function (req, res) {
     var requestDetails = req.query.details,
       contentType = 'text/csv',
       query;
@@ -179,6 +179,5 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
 
-  exports.expor = handle;
 
 }());
