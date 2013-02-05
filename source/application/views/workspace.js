@@ -59,43 +59,59 @@ trailing:true white:true*/
     published: {
       linkEnabled: false
     },
+    events: {
+      onWorkspace: ""
+    },
     handlers: {
-      ontap: "tapped" 
+      ontap: "tapped"
     },
     inputChanged: function (inSender, inEvent) {
+      var isNotRelation = !this.isRelation(),
+        input = this.$.input.getValue(),
+        value = isNotRelation && input ? 1 : null;
+      this.setValue(value);
+    },
+    setValue: function (value, options) {
+      this.inherited(arguments);
+      var isRelation = this.isRelation(),
+        color = "black",
+        enabled = false;
+      if (this.getValue() && isRelation) {
+        color = "blue";
+        enabled = true;
+      }
+      this.$.label.setStyle("color: " + color);
+      this.setLinkEnabled(enabled);
+    },
+    isRelation: function () {
+      if (this._isRelation !== undefined) { return this._isRelation; }
       var K = XT.session,
         model = this.getOwner().getValue(),
-        value = null,
-        color = "black",
-        enabled = false,
         attr,
         columns,
-        category,
-        input,
-        hasModel;
-      
-      // Only update value if it is NOT a model backed attribute
+        category;
+        
+      // Is relation is true if it is not a number based attribute
       if (model) {
-        input = this.$.input.getValue();
         attr = this.getAttr();
         columns = K.getSchema().get(model.get("type")).columns;
         category = _.findWhere(columns, { name: attr }).category;
-        hasModel = category !== K.DB_NUMBER;
-        value = !hasModel && input ? 1 : null;
-        if (hasModel && input) {
-          color = "blue";
-          enabled = true;
-        }
+        this._isRelation = category !== K.DB_NUMBER;
       }
-      
-      this.$.label.setStyle("color: " + color);
-      this.setLinkEnabled(enabled);
-      this.setValue(value);
+      return this._isRelation;
     },
     tapped: function (inSender, inEvent) {
+      var value,
+        workspace;
+
       if (inEvent.originator.name === "label" &&
           this.getLinkEnabled()) {
-        alert("Tapped!");
+        value = this.getValue();
+        workspace = XV.getWorkspace(value.recordType);
+        this.doWorkspace({
+          workspace: workspace,
+          id: value.id
+        });
       }
     }
   });
