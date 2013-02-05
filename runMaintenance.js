@@ -1,5 +1,5 @@
 var request = require('request');
-request('http://localhost:442/maintenance', function (error, response, body) {
+request('http://localhost:442/maintenance?core=true', function (error, response, body) {
   if (!error && response.statusCode == 200) {
     var result = JSON.parse(body).data;
 
