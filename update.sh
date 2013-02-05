@@ -18,4 +18,7 @@ if [ $PRODUCTION ]
 fi
 
 npm install
+monit stop node
+sleep 10
+monit start node
 

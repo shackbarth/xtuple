@@ -282,7 +282,7 @@ require('../node_modules/xt/database/database');
 
     callback = _.bind(testConnection, this, socket, ack, creds);
 
-    X.db.query("select xt.js_init();", creds, callback);
+    X.db.query("select * from pg_class limit 1", creds, callback);
   };
 
   refresh = function (socket, options, ack) {
@@ -330,7 +330,10 @@ require('../node_modules/xt/database/database');
           "from xt.orm " +
           "where not orm_ext;";
     callback = function (err, resp) {
-      existing = resp.rows;
+      if (err) {
+        console.log("Error in xt.orm query callback", err);
+      }
+      existing = resp ? resp.rows : [];
 
       // organize and associate the extensions
       _.each(extensions, function (context) {
