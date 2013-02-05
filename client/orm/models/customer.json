@@ -1083,7 +1083,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "CustomerRelation",
-    "table": "custinfo",
+    "table": "xt.customer_prospect",
     "comment": "Customer Relation Map",
     "privileges": {
       "all": {
@@ -1098,7 +1098,7 @@
         "name": "id",
         "attr": {
           "type": "Number",
-          "column": "cust_id",
+          "column": "id",
           "isPrimaryKey": true
         }
       },
@@ -1106,21 +1106,21 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "cust_number"
+          "column": "number"
         }
       },
       {
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "cust_name"
+          "column": "ame"
         }
       },
       {
         "name": "isActive",
         "attr": {
           "type": "Boolean",
-          "column": "cust_active"
+          "column": "active"
         }
       },
       {
@@ -1128,7 +1128,7 @@
         "toOne": {
           "isNested": true,
           "type": "ContactRelation",
-          "column": "cust_cntct_id"
+          "column": "contact"
         }
       },
       {
@@ -1170,7 +1170,7 @@
         "name": "salesRep",
         "toOne": {
           "type": "SalesRep",
-          "column": "cust_salesrep_id"
+          "column": "salesrep_id"
         }
       },
       {
@@ -1191,7 +1191,7 @@
         "name": "taxZone",
         "toOne": {
           "type": "TaxZone",
-          "column": "cust_taxzone_id"
+          "column": "taxzone_id"
         }
       },
       {

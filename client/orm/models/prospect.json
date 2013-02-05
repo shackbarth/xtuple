@@ -103,7 +103,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ProspectRelation",
-    "table": "prospect",
+    "table": "xt.customer_prospect",
     "comment": "Prospect Relation Map",
     "privileges": {
       "all": {
@@ -118,7 +118,7 @@
         "name": "id",
         "attr": {
           "type": "Number",
-          "column": "prospect_id",
+          "column": "id",
           "isPrimaryKey": true
         }
       },
@@ -126,14 +126,14 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "prospect_number"
+          "column": "number"
         }
       },
       {
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "prospect_name"
+          "column": "name"
         }
       },
       {
@@ -141,21 +141,21 @@
         "toOne": {
           "isNested": true,
           "type": "ContactRelation",
-          "column": "prospect_cntct_id"
+          "column": "contact"
         }
       },
       {
         "name": "salesRep",
         "toOne": {
           "type": "SalesRep",
-          "column": "prospect_salesrep_id"
+          "column": "salesrep_id"
         }
       },
       {
         "name": "taxZone",
         "toOne": {
           "type": "TaxZone",
-          "column": "prospect_taxzone_id"
+          "column": "taxzone_id"
         }
       }
     ],
