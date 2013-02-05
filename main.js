@@ -178,10 +178,17 @@ require('socket.io').Static.prototype.gzip = function (data, callback) {
   gzip.stdin.end(data, encoding);
 };
 
-var sslOptions = {
-    key: X.fs.readFileSync(X.options.datasource.keyFile),
-    cert: X.fs.readFileSync(X.options.datasource.certFile),
-};
+//
+// Load the ssl data
+//
+var sslOptions = {}
+sslOptions.key = X.fs.readFileSync(X.options.datasource.keyFile);
+if (X.options.datasource.caFile) {
+  sslOptions.ca = _.map(X.options.datasource.caFile, function (obj) {
+    return X.fs.readFileSync(obj);
+  });
+}
+sslOptions.cert = X.fs.readFileSync(X.options.datasource.certFile);
 
 /**
  * Express configuration.
