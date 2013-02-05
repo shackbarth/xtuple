@@ -455,6 +455,44 @@ trailing:true white:true*/
         defaultKind: "XV.DateWidget"}
     ]
   });
+  
+  // ..........................................................
+  // PROSPECT
+  //
+
+  enyo.kind({
+    name: "XV.ProspectListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "primaryEmail", label: "_primaryEmail".loc(), attr: "primaryEmail"},
+      {name: "phone", label: "_phone".loc(), attr: ["phone", "alternate", "fax"]},
+      {kind: "onyx.GroupboxHeader", content: "_address".loc()},
+      {name: "street", label: "_street".loc(), attr: ["address.line1", "address.line2", "address.line3"]},
+      {name: "city", label: "_city".loc(), attr: "address.city"},
+      {name: "state", label: "_state".loc(), attr: "address.state"},
+      {name: "postalCode", label: "_postalCode".loc(), attr: "address.postalCode"},
+      {name: "country", label: "_country".loc(), attr: "address.country"},
+      {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
+      {name: "account", label: "_account".loc(), attr: ["account.id", "accountParent"], defaultKind: "XV.AccountWidget"},
+      {kind: "onyx.GroupboxHeader", content: "_userAccount".loc()},
+      {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
+    ]
+  });
 
   // ..........................................................
   // TO DO
