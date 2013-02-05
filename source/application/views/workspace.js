@@ -75,13 +75,35 @@ trailing:true white:true*/
       this.inherited(arguments);
       var isRelation = this.isRelation(),
         color = "black",
-        enabled = false;
+        enabled = false,
+        input = this.$.input.getValue(),
+        model,
+        recordType,
+        relation,
+        attrs;
+        
+      // Turn on label link if applicable
       if (this.getValue() && isRelation) {
         color = "blue";
         enabled = true;
       }
       this.$.label.setStyle("color: " + color);
       this.setLinkEnabled(enabled);
+      
+      // Open a workspace to set up this role if necessary
+      if (input && isRelation && !value) {
+        model = this.getOwner().getValue();
+        attrs = {
+          number: model.get("number"),
+          name: model.get("name")
+        };
+        relation = model.getRelation(this.getAttr());
+        recordType = relation.relatedModel.prototype.recordType;
+        this.doWorkspace({
+          workspace: XV.getWorkspace(recordType),
+          attributes: attrs
+        });
+      }
     },
     isRelation: function () {
       if (this._isRelation !== undefined) { return this._isRelation; }
@@ -91,7 +113,7 @@ trailing:true white:true*/
         columns,
         category;
         
-      // Is relation is true if it is not a number based attribute
+      // Relation is true if it is not a number based attribute
       if (model) {
         attr = this.getAttr();
         columns = K.getSchema().get(model.get("type")).columns;
@@ -101,15 +123,13 @@ trailing:true white:true*/
       return this._isRelation;
     },
     tapped: function (inSender, inEvent) {
-      var value,
-        workspace;
+      var value;
 
       if (inEvent.originator.name === "label" &&
           this.getLinkEnabled()) {
         value = this.getValue();
-        workspace = XV.getWorkspace(value.recordType);
         this.doWorkspace({
-          workspace: workspace,
+          workspace: XV.getWorkspace(value.recordType),
           id: value.id
         });
       }
