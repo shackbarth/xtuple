@@ -10,7 +10,8 @@ regexp:true, strict:true, trailing:true, white:false*/
   flag = 1,
   readflag = 0,
   updateflag = 0,
-  deleteflag = 0;
+  deleteflag = 0,
+  fcount = 0;
   exports.readContact = function (browser) {
   utils.pause(10000, function () {
   utils.results('*************** Reading a Contact ***************');

@@ -83,7 +83,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         if (browsername === "internet explorer") {
           caps.version = '10';
         }
-        if ((osname === "Windows 8") && (browsername === "firefox")) {
+        if (osname === "Windows 8") {
           login.login(sldriver, caps, function (sldriver) {
             createContact_FFonWin8.createContact(sldriver, function (sldriver) {
               readContact_FFonWin8.readContact(sldriver);
