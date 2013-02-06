@@ -34,6 +34,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       smtpUser: "_smtp_user_",
       smtpPassword: "_smtp_password_",
 
+      // URL of BI server
+      biUrl: "http://your.bi.solution/report.html?args=sample",
+
       // these properties are dynamically registered with the
       // node discovery service
 
