@@ -219,6 +219,7 @@ regexp:true, undef:true, trailing:true, white:true */
         // Callback options on commit of the workspace
         // Find the model with matching id, fetch and set it.
         callback = function (model) {
+          if (!model) { return; }
           var Model = that._collection.model,
             value = new Model({id: model.id}),
             options = {};

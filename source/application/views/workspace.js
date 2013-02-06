@@ -66,60 +66,15 @@ trailing:true white:true*/
     handlers: {
       ontap: "tapped"
     },
+    clear: function () {
+      this.inherited(arguments);
+      this.$.input.setChecked(false);
+    },
     inputChanged: function (inSender, inEvent) {
       var isNotRelation = !this.isRelation(),
         input = this.$.input.getValue(),
         value = isNotRelation && input ? 1 : null;
       this.setValue(value);
-    },
-    setValue: function (value, options) {
-      this.inherited(arguments);
-      var isRelation = this.isRelation(),
-        that = this,
-        color = "black",
-        enabled = false,
-        input = this.$.input.getValue(),
-        openWorkspace,
-        model,
-        recordType,
-        relation,
-        attrs;
-        
-      // Turn on label link if applicable
-      if (this.getValue() && isRelation) {
-        color = "blue";
-        enabled = true;
-      }
-      this.$.label.setStyle("color: " + color);
-      this.setLinkEnabled(enabled);
-      
-      // Open a workspace to set up this role if necessary
-      if (input && isRelation && !value) {
-        model = this.getOwner().getValue();
-        attrs = {
-          number: model.get("number"),
-          name: model.get("name")
-        };
-        relation = model.getRelation(this.getAttr());
-        recordType = relation.relatedModel.prototype.recordType;
-        openWorkspace = function () {
-          that.doWorkspace({
-            workspace: XV.getWorkspace(recordType),
-            attributes: attrs,
-            callback: openWorkspace
-          });
-        };
-        if (model.isDirty()) {
-          this.doSavePrompt({
-            saveCallback: openWorkspace,
-            cancelCallback: function () {
-              that.$.input.setChecked(false);
-            }
-          });
-        } else {
-          openWorkspace();
-        }
-      }
     },
     isRelation: function () {
       if (this._isRelation !== undefined) { return this._isRelation; }
@@ -137,6 +92,70 @@ trailing:true white:true*/
         this._isRelation = category !== K.DB_NUMBER;
       }
       return this._isRelation;
+    },
+    setValue: function (value, options) {
+      this.inherited(arguments);
+      var isRelation = this.isRelation(),
+        that = this,
+        color = "black",
+        enabled = false,
+        input = this.$.input.getValue(),
+        openWorkspace,
+        callback,
+        model,
+        recordType,
+        relation,
+        attrs;
+        
+      // Turn on label link if applicable
+      if (this.getValue() && isRelation) {
+        color = "blue";
+        enabled = true;
+      }
+      this.$.label.setStyle("color: " + color);
+      this.setLinkEnabled(enabled);
+      
+      // Automatically open a workspace to set up a record for this role if necessary
+      if (input && isRelation && !value) {
+        model = this.getOwner().getValue();
+        attrs = {
+          number: model.get("number"),
+          name: model.get("name")
+        };
+        relation = model.getRelation(this.getAttr());
+        recordType = relation.relatedModel.prototype.recordType;
+        
+        // Callback to handle result of new role
+        callback = function (model) {
+          if (model) {
+            that.getOwner().refresh();
+          } else {
+            that.$.input.setChecked(false);
+          }
+        };
+        
+        // Only open the workspace if `valid` is true
+        openWorkspace = function (valid) {
+          if (valid) {
+            that.doWorkspace({
+              workspace: XV.getWorkspace(recordType),
+              attributes: attrs,
+              callback: callback
+            });
+          } else {
+            that.$.input.setChecked(false);
+          }
+        };
+        
+        // Must have committed all changes before proceeding
+        if (model.isDirty()) {
+          this.doSavePrompt({
+            callback: openWorkspace
+          });
+        } else {
+          openWorkspace(true);
+        }
+      }
     },
     tapped: function (inSender, inEvent) {
       var value;
@@ -233,13 +252,18 @@ trailing:true white:true*/
     },
     savePromptCancel: function () {
       this._popupDone = true;
-      this._inEvent.cancelCallback();
+      this._inEvent.callback(false);
       this.$.savePromptPopup.hide();
     },
     savePromptSave: function () {
+      var that = this,
+        options = {};
+      options.success = function () {
+        that._inEvent.callback(true);
+      }
       this._popupDone = true;
-      this._inEvent.saveCallback();
       this.$.savePromptPopup.hide();
+      this.save(options);
     }
   });
 
