@@ -212,6 +212,7 @@ trailing:true white:true*/
         key = this.parentKey,
         attributes = {},
         callback = function (model) {
+          if (!model) { return; }
           var Model = list.getValue().model,
             value = new Model({id: model.id}),
             options = {};
@@ -239,7 +240,8 @@ trailing:true white:true*/
         model = list.getModel(index),
         workspace = XV.getWorkspace(model.recordType),
         id = model.id,
-        callback = function () {
+        callback = function (m) {
+          if (!m) { return; }
           var options = {};
           options.success = function () {
             list.refresh();

@@ -156,7 +156,14 @@ trailing:true white:true*/
      @todo Document the destroy method.
      */
     destroy: function () {
+      var model = this.getValue();
       this.setModel(null);
+      // If we never saved a new model, make the callback
+      // so the caller can deal with that and destroy it.
+      if (model.isNew()) {
+        if (this.callback) { this.callback(false); }
+        model.destroy();
+      }
       this.inherited(arguments);
     },
     /**

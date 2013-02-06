@@ -480,6 +480,7 @@ trailing:true white:true*/
       // Callback options on commit of the workspace
       // Fetch the corresponding list model and add
       callback = function (model) {
+        if (!model) { return; }
         var Model = list.getValue().model,
           value = new Model({id: model.id}),
           options = {silent: true};
