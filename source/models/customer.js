@@ -494,7 +494,7 @@ white:true*/
     documentKey: 'name'
 
   });
-
+  
   // ..........................................................
   // COLLECTIONS
   //
@@ -570,5 +570,5 @@ white:true*/
     model: XM.ShipZone
 
   });
-
+  
 }());
