@@ -943,8 +943,22 @@ select xt.install_js('XT','Data','xtuple', $$
         ret = this.decrypt(nameSpace, type, ret, encryptionKey);
       }
 
+      ret = ret || {};
+
+
+      /* see if there's a lock in this table */
+      plv8.elog(NOTICE, "map is", JSON.stringify(map));
+      plv8.elog(NOTICE, "type is", type.decamelize());
+      /* we have to determine the oid of the table we're querying */
+      var oidSql = "select pg_class.oid::integer as oid " + 
+        "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " + 
+        "where relname = 'cntct' " +
+        "and nspname = 'public'";
+      var oid = plv8.execute(oidSql)[0].oid;
+      ret.lock = this.tryLock(oid, 5, 'admin');
+
       /* return the results */
-      return ret || {};
+      return ret;
     },
 
     /**
@@ -973,8 +987,28 @@ select xt.install_js('XT','Data','xtuple', $$
         else { ret[prop] = qry[i].value; }
       }
       return ret;
+    },
+
+    tryLock: function (tableOid, recordId, username) {
+      plv8.elog(NOTICE, "Trying lock table", tableOid, recordId); 
+      var selectSql = "select * from xt.lock where lock_table_oid = $1 and lock_record_id = $2",
+        insertSql = "insert into xt.lock (lock_table_oid, lock_record_id, lock_username, lock_acquired) values ($1, $2, $3, $4)",
+        existingLock = plv8.execute(selectSql, [tableOid, recordId]),
+        now;
+
+      if(existingLock.length > 0) {
+        plv8.elog(NOTICE, "the lock looks like this", existingLock[0]);
+        return existingLock[0];
+      }
+
+      now = new Date();
+      plv8.execute(insertSql, [tableOid, recordId, username, now]);
+     
+      return { 
+        username: username,
+        acquired: now
+      }
     }
-    
   }
 
 $$ );
