@@ -135,7 +135,7 @@
        "name": "taxAuthority",
        "toOne": {
          "isNested": true,
-         "type": "TaxAuthority",
+         "type": "TaxAuthorityRelation",
          "column": "crmacct_taxauth_id"
        }
      },
