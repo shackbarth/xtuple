@@ -91,7 +91,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       ormArray = [],
       orgCallback = function (respObj) {
         X.log("Maintenance is complete", JSON.stringify(respObj));
-        res.send(JSON.stringify(respObj));
+        res.send(JSON.stringify({data: respObj}));
       },
       organizationColl = new XM.OrganizationCollection(),
       //
@@ -100,11 +100,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       //
       fetchSuccess = function (collection, response) {
         _.each(collection.models, function (org) {
-          // XXX We ensure that users have ViewOrganizations privileges. It would be better
-          // to ensure that they also have MaintainOrganizations priviliges, but there
-          // is no way to ensure this from the model layer because model.canUpdate() refers
-          // to the node authority in this context, which is omnipotence.
-
           var scriptName = "init_script.sql",
             host = org.get("databaseServer").get("hostname"),
             port = org.get("databaseServer").get("port"),
@@ -112,8 +107,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             pgPassword = org.get("databaseServer").get("password"),
             psqlPath = X.options.datasource.psqlPath || "psql",
             orgName = org.get("name"),
-            flags = "-h " + host + " -p " + port + " -d " + orgName + " -f " + scriptName + "\n",
-            psqlCommand = psqlPath + " -U " + pgUser + " " + flags,
+            flags = " -U " + pgUser + " -h " + host + " -p " + port + " -d " + orgName,
+            psqlCommand = psqlPath + flags + " -f " + scriptName,
             ormCreds = {
               hostname: host,
               organization: orgName,
@@ -121,15 +116,38 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               port: port,
               password: pgPassword
             },
+            group = org.get("group"),
+            initInstanceDbDirectory = X.options.datasource.initInstanceDbDirectory || "./scripts",
+            initInstanceDbCommand = "initInstanceDb.sh " + flags + " -g " + group,
             coreScriptDir = '../database/client/source',
             coreOrmDir = '../database/client/orm';
 
           X.log("Running scripts for organization: ", orgName);
-          if (args.core) {
+
+          if (args.initialize) {
+            // this is a brand-new instance database. First run the instance db
+            // initialization script
+
+            // guard against something terrible that shouldn't be possible in the UI.
+            // intialization should only happen to one DB at a time.
+            if (!args.organization) {
+              res.send({isError: true, message: "Initialize every instance DB. Are you crazy?"});
+              return;
+            }
+            X.log("Initializing organization: ", orgName);
+
+            psqlArray.push({
+              command: "%@/%@".f(initInstanceDbDirectory, initInstanceDbCommand),
+              loadOrder: -9999
+            });
+          }
+
+          if (args.initialize || args.core) {
             // the user wants us to run the core init script and install the core orms as well
+            // might as well do this for newly initialized dbs as well
             X.log("Processing core: ", orgName);
-            psqlArray.push({command: "(cd %@ && exec %@)".f(coreScriptDir, psqlCommand), loadOrder: -9999});
-            ormArray.push({ormCreds: ormCreds, ormDir: coreOrmDir, loadOrder: -9999});
+            psqlArray.push({command: "(cd %@ && exec %@)".f(coreScriptDir, psqlCommand), loadOrder: -9990});
+            ormArray.push({ormCreds: ormCreds, ormDir: coreOrmDir, loadOrder: -9990});
           }
 
           _.each(org.get("extensions").models, function (ext) {
@@ -244,6 +262,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // users accessing this route through the unexposed server don't have to
       // get authenticated. Do the fetch under the node user authority.
       install(res, args, X.options.globalDatabase.nodeUsername);
+      return;
+    }
+
+    //
+    // If they're not coming in through localhost, make sure the global user
+    // requesting this route has MaintainOrganizations privileges
+    //
+    // XXX not sure if the word Maintain Organizations should be hardcoded
+    if (_.indexOf(req.session.passport.user.globalPrivileges, "MaintainOrganizations") < 0) {
+      res.send({isError: true, message: "You don't have the privileges to do this"});
       return;
     }
 

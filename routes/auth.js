@@ -48,7 +48,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var userId = req.session.passport.user.id,
       selectedOrg = req.body.org,
       userOrgColl = new XM.UserOrganizationCollection(),
-      success = function (model, response) {
+      success = function (coll, response) {
+        var privs;
         if (response.length === 0) {
           X.log("User %@ has no business trying to log in to organization %@.".f(userId, selectedOrg));
           res.redirect('/logout');
@@ -59,6 +60,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         // Update the session store row to add the org choice and username.
         // Note: Updating this object magically persists the data into the SessionStore table.
+
+        privs = _.map(coll.models[0].getValue("user.privileges").models, function (privAss) {
+          return privAss.getValue("privilege.name");
+        });
+        req.session.passport.user.globalPrivileges = privs;
         req.session.passport.user.organization = response[0].name;
         req.session.passport.user.username = response[0].username;
 
