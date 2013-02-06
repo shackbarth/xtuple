@@ -18,9 +18,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       X.log(stdout);
     }
     respObject.log.push(stdout);
-    if (stderr) {
-      respObject.errorLog.push(stderr);
-    }
+    //if (stderr) {
+    // was too verbose
+    //  respObject.errorLog.push(stderr);
+    //}
     if (error !== null) {
       respObject.isError = true;
       respObject.errorLog.push("Execution error: " + error);
