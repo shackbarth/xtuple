@@ -181,8 +181,7 @@ trailing:true white:true*/
     /**
      @todo Document the fetch method.
      */
-    fetch: function (id) {
-      var options = {};
+    fetch: function (id, options) {
       options.id = id;
       if (!this.value) { return; }
       this.value.fetch(options);
@@ -267,11 +266,11 @@ trailing:true white:true*/
     /**
      @todo Document the newRecord method.
      */
-    newRecord: function (attributes) {
+    newRecord: function (attributes, options) {
       var attr,
         changes = {},
         that = this,
-        options = {
+        relOptions = {
           success: function () {
             that.attributesChanged(that.value);
           }
@@ -285,13 +284,14 @@ trailing:true white:true*/
         if (attributes.hasOwnProperty(attr)) {
           this.value.setReadOnly(attr);
           if (this.value.getRelation(attr)) {
-            this.value.fetchRelated(attr, options);
+            this.value.fetchRelated(attr, relOptions);
           } else {
             changes[attr] = true;
             this.attributesChanged(this.value, {changes: changes});
           }
         }
       }
+      if (options.success) { options.success.call(this); }
     },
     /**
      @todo Document the error method.
@@ -383,7 +383,8 @@ trailing:true white:true*/
     arrangerKind: "CollapsingArranger",
     classes: "app enyo-unselectable",
     published: {
-      menuItems: []
+      menuItems: [],
+      allowNew: true
     },
     events: {
       onPrevious: ""
@@ -455,6 +456,13 @@ trailing:true white:true*/
         ]}
       ]}
     ],
+    allowNewChanged: function (allowNew) {
+      if (allowNew) {
+        this.$.saveAndNewButton.show();
+      } else {
+        this.$.saveAndNewButton.hide();
+      }
+    },
     create: function () {
       this.inherited(arguments);
       this.setLoginInfo();
@@ -634,9 +642,13 @@ trailing:true white:true*/
       Accepts the following options:
         * workspace: class name (required)
         * id: record id to load. If none, a new record will be created.
+        * allowNew: boolean indicating whether Save and New button is shown.
         * attributes: default attribute values for a new record.
-        * callback: function to call on a successful save. Passes the
-          new or updated model as an argument.
+        * success: function to call from the workspace when the workspace
+          has either succefully fetched or created a model.
+        * callback: function to call on either a successful save, or the user
+          leaves the workspace without saving a new record. Passes the new or
+          updated model as an argument.
     */
     setWorkspace: function (options) {
       var menuItems = [],
@@ -656,9 +668,7 @@ trailing:true white:true*/
           fit: true,
           callback: callback
         };
-        // Callback means something sent us here that must be
-        // finished. Can't go on and do other new things
-        if (allowNew === false) { this.$.saveAndNewButton.hide(); }
+        this.setAllowNew(allowNew);
         workspace = this.createComponent(workspace);
         headerAttrs = workspace.getHeaderAttrs() || [];
         if (headerAttrs.length) {
@@ -668,9 +678,9 @@ trailing:true white:true*/
         }
         this.render();
         if (id || id === false) {
-          workspace.fetch(id);
+          workspace.fetch(id, options);
         } else {
-          workspace.newRecord(attributes);
+          workspace.newRecord(attributes, options);
         }
       }
 
@@ -717,7 +727,7 @@ trailing:true white:true*/
         message;
 
       // Status dictates whether buttons are actionable
-      if (canCreate) {
+      if (canCreate && this.getAllowNew()) {
         this.$.saveAndNewButton.show();
       } else {
         this.$.saveAndNewButton.hide();
