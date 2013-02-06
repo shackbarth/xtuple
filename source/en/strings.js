@@ -109,6 +109,7 @@ var lang = XT.stringsFor("en_US", {
   "_contact": "Contact",
   "_contactRelations": "Contacts",
   "_contacts": "Contacts",
+  "_county": "County",
   "_correspondenceContact": "Correspondence Contact",
   "_countries": "Countries",
   "_created": "Created",

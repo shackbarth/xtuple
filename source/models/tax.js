@@ -11,12 +11,28 @@ white:true*/
 
     @extends XM.AccountDocument
   */
-  XM.TaxAuthorityRelation = XM.AccountDocument.extend({
+  XM.TaxAuthority = XM.AccountDocument.extend({
     /** @scope XM.TaxAuthority.prototype */
+
+    recordType: 'XM.TaxAuthority',
+    
+    documentKey: 'number'
+
+  });
+  
+  XM.TaxAuthority = XM.TaxAuthority.extend(XM.AddressCheckMixin);
+
+  /**
+    @class
+
+    @extends XM.AccountDocument
+  */
+  XM.TaxAuthorityRelation = XM.Info.extend({
+    /** @scope XM.TaxAuthorityRelation.prototype */
 
     recordType: 'XM.TaxAuthorityRelation',
     
-    documentKey: 'number'
+    editableModel: 'XM.TaxAuthority'
 
   });
   
