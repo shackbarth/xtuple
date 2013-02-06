@@ -50,6 +50,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     query = "select xt.fetch('%@')".f(requestDetails);
 
     queryForData(req.session, query, function (err, result) {
+      if (err || !result) {
+        res.send({isError: true, message: err});
+        return;
+      }
       // thanks http://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
       var randomKey = Math.random().toString(36).substr(2, 15),
         tempDataModel = new XM.BiCache(null, {isNew: true}),
