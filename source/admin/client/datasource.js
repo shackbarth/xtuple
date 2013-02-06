@@ -20,29 +20,14 @@ trailing:true white:true*/
     */
     XT.DataSource.syncUser = function (payload, options) {
       var that = this,
-        complete = function (response) {
-          var params = {}, error;
+        ajax = new enyo.Ajax({
+          url: "/syncUser",
+          success: options ? options.success : undefined,
+          error: options ? options.error : undefined
+        });
 
-          // handle error
-          if (response.isError) {
-            if (options && options.error) {
-              params.error = response.message;
-              error = XT.Error.clone('xt1001', { params: params });
-              options.error.call(that, error);
-            }
-            return;
-          }
-
-          // handle success
-          if (options && options.success) {
-            options.success.call(that, response.data);
-          }
-        };
-
-      return XT.Request
-               .handle('function/syncUser')
-               .notify(complete)
-               .send(payload);
+      ajax.response(this.ajaxSuccess);
+      ajax.go(payload);
     };
   };
 

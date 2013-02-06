@@ -151,6 +151,23 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.SessionStore = XM.Model.extend({
+    /** @scope XM.SessionStore.prototype */
+
+    recordType: 'XM.SessionStore',
+
+    idAttribute: 'id',
+
+    databaseType: 'global',
+
+    autoFetchId: false
+
+  });
 
   /**
     @class
@@ -361,6 +378,18 @@ white:true*/
     /** @scope XM.SessionCollection.prototype */
 
     model: XM.Session
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.SessionStoreCollection = XM.Collection.extend({
+    /** @scope XM.SessionStoreCollection.prototype */
+
+    model: XM.SessionStore
 
   });
 
