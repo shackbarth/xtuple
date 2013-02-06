@@ -35,6 +35,7 @@
 \i xt/tables/emlprofile.sql
 \i xt/tables/incdtemlprofile.sql
 \i xt/tables/incdtcatemlprofile.sql
+\i xt/tables/lock.sql
 \i xt/tables/pkgcmd.sql
 \i xt/tables/pkgcmdarg.sql
 \i xt/tables/pkgimage.sql
