@@ -101,6 +101,7 @@ trailing:true white:true*/
         enabled = false,
         input = this.$.input.getValue(),
         openWorkspace,
+        success,
         callback,
         model,
         recordType,
@@ -125,6 +126,13 @@ trailing:true white:true*/
         relation = model.getRelation(this.getAttr());
         recordType = relation.relatedModel.prototype.recordType;
         
+        // Init function for new workspace. Makes sure the workspace understands
+        // The account is already "converted".
+        success = function () {
+          var model = this.getValue();
+          model._number = model.get("number");
+        };
+        
         // Callback to handle result of new role
         callback = function (model) {
           if (model) {
@@ -140,7 +148,9 @@ trailing:true white:true*/
             that.doWorkspace({
               workspace: XV.getWorkspace(recordType),
               attributes: attrs,
-              callback: callback
+              success: success,
+              callback: callback,
+              allowNew: false
             });
           } else {
             that.$.input.setChecked(false);
@@ -260,7 +270,7 @@ trailing:true white:true*/
         options = {};
       options.success = function () {
         that._inEvent.callback(true);
-      }
+      };
       this._popupDone = true;
       this.$.savePromptPopup.hide();
       this.save(options);
