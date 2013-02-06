@@ -9,18 +9,16 @@ while getopts ":p" opt; do
       ;;
   esac
 done
-git checkout master
-git_status=$(git pull  2> /dev/null)
-#echo ${git_status}
-if [[ ! ${git_status} =~ 'Already up-to-date.' ]]  
-  then 
-  if [ $PRODUCTION ]
-	then
-	#echo $PRODUCTION 
-	git checkout `git describe --tags`
-  fi
-  git submodule update --init --recursive
-  cd tools
-  ./deploy.sh
-fi
 
+# update source
+git checkout master
+git pull
+if [ $PRODUCTION ]
+  then
+  git checkout `git describe --abbrev=0`
+fi
+git submodule update --init --recursive
+
+# deploy
+cd tools
+./deploy.sh
