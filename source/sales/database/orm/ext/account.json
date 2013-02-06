@@ -22,6 +22,14 @@
         }
       },
       {
+        "name": "prospect",
+        "toOne": {
+          "isNested": true,
+          "type": "ProspectRelation",
+          "column": "crmacct_prospect_id"
+        }
+      },
+      {
         "name": "customers",
         "toMany": {
           "isNested": true,
