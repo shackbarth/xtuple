@@ -8,9 +8,22 @@ white:true*/
 
   XT.extensions.sales.initAccountModels = function () {
     
-    XM.Account.prototype.roleAttributes.push("customer");
-    XM.Account.prototype.roleAttributes.push("prospect");
+    var proto = XM.Account.prototype;
+    proto.roleAttributes.push("customer");
+    proto.roleAttributes.push("prospect");
     
+    // Disable prospect if account is a customer.
+    var fn = proto.initialize;
+    proto.initialize = function () {
+      fn.apply(this, arguments);
+      this.on("change:customer", this.customerChanged);
+    };
+
+    proto.customerChanged = function () {
+      var hasCustomer = this.get("customer") ? true : false;
+      this.setReadOnly("prospect", hasCustomer);
+    };
+
     /**
       @class
 

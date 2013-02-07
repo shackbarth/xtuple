@@ -36,41 +36,7 @@ trailing:true white:true*/
     XT.app.$.postbooks.insertModule(module, 2);
 
     relevantPrivileges = [
-      "AccessSalesExtension" /*,
-      "MaintainAddresses",
-      "MaintainAllContacts",
-      "MaintainAllCRMAccounts",
-      "MaintainAllIncidents",
-      "MaintainAllProjects",
-      "MaintainPersonalContacts",
-      "MaintainPersonalCRMAccounts",
-      "MaintainPersonalIncidents",
-      "MaintainPersonalProjects",
-      "MaintainPersonalToDoItems",
-      "MaintainTitles",
-      "ViewAllContacts",
-      "ViewAllCRMAccounts",
-      "ViewAllIncidentHistory",
-      "ViewAllIncidents",
-      "ViewAllProjects",
-      "ViewPersonalContacts",
-      "ViewPersonalCRMAccounts",
-      "ViewPersonalIncidents",
-      "ViewPersonalProjects",
-      "ViewTitles",
-      "DeleteItemMasters",
-      "MaintainItemMasters",
-      "MaintainUOMs",
-      "ViewClassCodes",
-      "ViewItemMasters",
-      "ViewUOMs",
-      "ConfigurePM",
-      "EditOthersComments",
-      "EditOwnComments",
-      "MaintainCommentTypes",
-      "MaintainCountries",
-      "MaintainStates",
-      "MaintainUsers" */
+      "AccessSalesExtension"
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
   };
