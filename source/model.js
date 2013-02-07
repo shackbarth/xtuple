@@ -1115,7 +1115,8 @@ white:true*/
           case S.DB_UNKNOWN:
           case S.DB_STRING:
             if (!_.isString(value) &&
-                !isRelation(attr, value, Backbone.HasOne)) {
+                !isRelation(attr, value, Backbone.HasOne) &&
+                attr !== 'lock') {
               params.type = "_string".loc();
               return XT.Error.clone('xt1003', { params: params });
             }
