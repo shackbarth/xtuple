@@ -376,25 +376,6 @@ regexp:true, undef:true, trailing:true, white:true */
         break;
       case 'newItem':
         this.$.customerOrProspectPopup.show();
-        // Callback options on commit of the workspace
-        // Find the model with matching id, fetch and set it.
-        /*
-        callback = function (model) {
-          var Model = that._collection.model,
-            value = new Model({id: model.id}),
-            options = {};
-          options.success = function () {
-            that.setValue(value);
-          };
-          value.fetch(options);
-        };
-        this.doWorkspace({
-          workspace: workspace,
-          callback: callback,
-          allowNew: false
-        });
-        break;
-        */
       }
     }
   });
