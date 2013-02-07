@@ -17,19 +17,11 @@ white:true*/
     recordType: 'XM.Customer',
 
     defaults: function () {
-      var localCurrency,
-          currencyModel,
-          settings = XT.session.getSettings();
-      for (var i = 0; i < XM.currencies.models.length; i++) {
-        currencyModel = XM.currencies.models[i];
-        if (currencyModel.attributes.isBase) {
-          localCurrency = currencyModel;
-        }
-      }
+      var settings = XT.session.getSettings();
       return {
         isActive: true,
         creditStatus: "G",
-        currency: localCurrency,
+        currency: XT.baseCurrency(),
         salesRep: settings.get("DefaultSalesRep"),
         terms: settings.get("DefaultTerms"),
         shipVia: settings.get("DefaultShipViaId"),
@@ -144,7 +136,7 @@ white:true*/
         that.set("billingContact", account.get("primaryContact"));
         that.set("correspondenceContact", account.get("secondaryContact"));
         that.revertStatus();
-        that._number = that.get('number');
+        that._checkConflicts = false;
       };
       fetchOptions.error = function (resp) {
         XT.log("Fetch failed in convertFromAccount");
@@ -175,7 +167,7 @@ white:true*/
         that.set("id", prospect.get("id"));
         that.setReadOnly("id", true);
         that.revertStatus();
-        that._number = that.get('number');
+        that.checkConflicts = false;
       };
       fetchOptions.error = function (resp) {
         XT.log("Fetch failed in convertFromProspect");

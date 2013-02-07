@@ -63,6 +63,20 @@ regexp:true, undef:true, trailing:true, white:true */
   });
   
   // ..........................................................
+  // CURRENCY
+  //
+
+  enyo.kind({
+    name: "XV.CurrencyPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.currencies",
+    nameAttribute: "abbreviation",
+    orderBy: [
+      {attribute: 'abbreviation'}
+    ]
+  });
+  
+  // ..........................................................
   // CUSTOMER TYPE
   //
 

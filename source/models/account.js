@@ -66,11 +66,22 @@ white:true*/
       "number",
       "name"
     ],
+    
+    /**
+      An informational array of attributes that are considered "roles" in the application.
+    */
+    roleAttributes: [
+      "salesRep",
+      "taxAuthority",
+      "userAccount",
+      "competitor",
+      "partner"
+    ],
 
     // ..........................................................
     // METHODS
     //
-    
+
     validateEdit: function (attributes) {
       if (attributes.parent && attributes.parent.id === this.id) {
         return XT.Error.clone('xt2006');

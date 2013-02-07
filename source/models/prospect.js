@@ -43,7 +43,7 @@ white:true*/
         that.set("name", account.get("name"));
         that.set("Contact", account.get("primaryContact"));
         that.revertStatus();
-        that._number = that.get('number');
+        that.checkConflicts = false;
       };
       fetchOptions.error = function (resp) {
         XT.log("Fetch failed in convertFromAccount");

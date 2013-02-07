@@ -5,6 +5,8 @@ trailing:true white:true*/
 
 (function () {
 
+  var hash;
+  
   /**
     Used to notify change of account to contact widget if both exist on
     the same workspace.
@@ -22,6 +24,85 @@ trailing:true white:true*/
       this.inherited(arguments);
       if (inEvent.originator.name === 'accountWidget') {
         this.accountChanged();
+      }
+    }
+  };
+  
+  /**
+    Handles Address change with prompts.
+  */
+  XV.WorkspaceAddressMixin = {
+    create: function () {
+      var ret = this.inherited(arguments);
+      this.createComponent({
+        kind: "onyx.Popup",
+        name: "multipleAddressPopup",
+        centered: true,
+        modal: true,
+        floating: true,
+        scrim: true,
+        onShow: "popupShown",
+        onHide: "popupHidden",
+        components: [
+          {content: "_addressShared".loc()},
+          {content: "_whatToDo".loc()},
+          {tag: "br"},
+          {kind: "onyx.Button", content: "_changeOne".loc(), ontap: "addressChangeOne",
+          classes: "onyx-blue xv-popup-button"},
+          {kind: "onyx.Button", content: "_changeAll".loc(), ontap: "addressChangeAll",
+            classes: "xv-popup-button"},
+          {kind: "onyx.Button", content: "_cancel".loc(), ontap: "addressCancel",
+            classes: "xv-popup-button"}
+        ]
+      });
+      return ret;
+    },
+    getAccount: function () {
+      var model = this.getValue();
+      return model ? model.get('account') : undefined;
+    },
+    accountChanged: function () {
+      var account = this.getAccount();
+      this.$.addressWidget.setAccount(account);
+    },
+    addressChangeAll: function () {
+      var options = {address: XM.Address.CHANGE_ALL};
+      this._popupDone = true;
+      this.$.multipleAddressPopup.hide();
+      this.save(options);
+    },
+    addressChangeOne: function () {
+      var options = {address: XM.Address.CHANGE_ONE};
+      this._popupDone = true;
+      this.$.multipleAddressPopup.hide();
+      this.save(options);
+    },
+    addressCancel: function () {
+      this._popupDone = true;
+      this.$.multipleAddressPopup.hide();
+    },
+    attributesChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      this.accountChanged();
+    },
+    controlValueChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      if (inEvent.originator.name === 'accountWidget') {
+        this.accountChanged();
+      }
+    },
+    errorNotify: function (inSender, inEvent) {
+      // Handle address questions
+      if (inEvent.error.code === 'xt2007') {
+        this._popupDone = false;
+        this.$.multipleAddressPopup.show();
+        return true;
+      }
+    },
+    popupHidden: function () {
+      if (!this._popupDone) {
+        this.$.multipleAddressPopup.show();
+        return true;
       }
     }
   };
@@ -59,6 +140,9 @@ trailing:true white:true*/
     title: "_account".loc(),
     headerAttrs: ["number", "-", "name"],
     model: "XM.Account",
+    handlers: {
+      onSavePrompt: "savePrompt"
+    },
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -84,10 +168,67 @@ trailing:true white:true*/
           ]}
         ]},
         {kind: "XV.AccountCommentBox", attr: "comments"},
+        {kind: "XV.Groupbox", name: "rolesPanel", title: "_roles".loc(),
+          components: [
+          {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "rolesGroup", fit: true,
+            classes: "in-panel", components: []
+          }
+        ]},
         {kind: "XV.AccountDocumentsBox", attr: "documents"},
         {kind: "XV.AccountContactsBox", attr: "contactRelations"}
+      ]},
+      {kind: "onyx.Popup", name: "savePromptPopup", centered: true,
+        modal: true, floating: true, scrim: true,
+        onHide: "popupHidden", components: [
+        {content: "_mustSave".loc() },
+        {content: "_saveYourWork?".loc() },
+        {tag: "br"},
+        {kind: "onyx.Button", content: "_cancel".loc(), ontap: "savePromptCancel",
+          classes: "xv-popup-button"},
+        {kind: "onyx.Button", content: "_save".loc(), ontap: "savePromptSave",
+          classes: "onyx-blue xv-popup-button"}
       ]}
-    ]
+    ],
+    create: function () {
+      this.inherited(arguments);
+      var K = XM.Account.prototype,
+        roles = K.roleAttributes.sort(),
+        that = this;
+
+      // Loop and add a role checkbox for each role attribute found on the model
+      _.each(roles, function (role) {
+        that.createComponent({
+          kind: XV.AccountRoleCheckboxWidget,
+          name: role + "Control",
+          label: ("_" + role).loc(),
+          attr: role,
+          container: that.$.rolesGroup,
+          owner: that
+        });
+      });
+
+    },
+    savePrompt: function (inSender, inEvent) {
+      this._popupDone = false;
+      this._inEvent = inEvent;
+      this.$.savePromptPopup.show();
+    },
+    savePromptCancel: function () {
+      this._popupDone = true;
+      this._inEvent.callback(false);
+      this.$.savePromptPopup.hide();
+    },
+    savePromptSave: function () {
+      var that = this,
+        options = {};
+      options.success = function () {
+        that._inEvent.callback(true);
+      };
+      this._popupDone = true;
+      this.$.savePromptPopup.hide();
+      this.save(options);
+    }
   });
 
   XV.registerModelWorkspace("XM.AccountRelation", "XV.AccountWorkspace");
@@ -150,8 +291,8 @@ trailing:true white:true*/
   // ..........................................................
   // CONTACT
   //
-
-  enyo.kind({
+  
+  hash = {
     name: "XV.ContactWorkspace",
     kind: "XV.Workspace",
     title: "_contact".loc(),
@@ -195,79 +336,13 @@ trailing:true white:true*/
         {kind: "XV.ContactCommentBox", attr: "comments"},
         {kind: "XV.ContactDocumentsBox", attr: "documents"},
         {kind: "XV.ContactEmailBox", attr: "email"}
-      ]},
-      {kind: "onyx.Popup", name: "multipleAddressPopup", centered: true,
-        modal: true, floating: true, scrim: true, onShow: "popupShown",
-        onHide: "popupHidden", components: [
-        {content: "_addressShared".loc()},
-        {content: "_whatToDo".loc()},
-        {tag: "br"},
-        {kind: "onyx.Button", content: "_changeOne".loc(), ontap: "addressChangeOne",
-          classes: "onyx-blue xv-popup-button"},
-        {kind: "onyx.Button", content: "_changeAll".loc(), ontap: "addressChangeAll",
-          classes: "xv-popup-button"},
-        {kind: "onyx.Button", content: "_cancel".loc(), ontap: "addressCancel",
-          classes: "xv-popup-button"}
       ]}
-    ],
-    accountChanged: function () {
-      var account = this.$.accountWidget.getValue();
-      this.$.addressWidget.setAccount(account);
-    },
-    addressChangeAll: function () {
-      var options = {address: XM.Address.CHANGE_ALL};
-      this._popupDone = true;
-      this.$.multipleAddressPopup.hide();
-      this.save(options);
-    },
-    addressChangeOne: function () {
-      var options = {address: XM.Address.CHANGE_ONE};
-      this._popupDone = true;
-      this.$.multipleAddressPopup.hide();
-      this.save(options);
-    },
-    addressCancel: function () {
-      this._popupDone = true;
-      this.$.multipleAddressPopup.hide();
-    },
-    attributesChanged: function (inSender, inEvent) {
-      this.inherited(arguments);
-      this.accountChanged();
-    },
-    controlValueChanged: function (inSender, inEvent) {
-      this.inherited(arguments);
-      if (inEvent.originator.name === 'accountWidget') {
-        this.accountChanged();
-      }
-    },
-    errorNotify: function (inSender, inEvent) {
-      // Handle address questions
-      if (inEvent.error.code === 'xt2007') {
-        this._popupDone = false;
-        this.$.multipleAddressPopup.show();
-        return true;
-      }
-    },
-    modelChanged: function () {
-      this.inherited(arguments);
-      var input = this.findControl("primaryEmail").$.input,
-       value = this.getValue();
-      input._collection = value ? value.get("email") : [];
-      input.buildList();
-    },
-    statusChanged: function () {
-      this.inherited(arguments);
-      var input = this.findControl("primaryEmail").$.input;
-      input.buildList();
-    },
-    popupHidden: function () {
-      if (!this._popupDone) {
-        this.$.multipleAddressPopup.show();
-        return true;
-      }
-    }
-  });
+    ]
+  };
 
+  hash = enyo.mixin(hash, XV.WorkspaceAddressMixin);
+  enyo.kind(hash);
+  
   XV.registerModelWorkspace("XM.ContactRelation", "XV.ContactWorkspace");
   XV.registerModelWorkspace("XM.ContactListItem", "XV.ContactWorkspace");
 
@@ -1071,6 +1146,35 @@ trailing:true white:true*/
   
   XV.registerModelWorkspace("XM.ProspectRelation", "XV.ProspectWorkspace");
   XV.registerModelWorkspace("XM.ProspectListItem", "XV.ProspectWorkspace");
+  
+  // ..........................................................
+  // SALES REP
+  //
+
+  enyo.kind({
+    name: "XV.SalesRepWorkspace",
+    kind: "XV.Workspace",
+    title: "_salesRep".loc(),
+    model: "XM.SalesRep",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.PercentWidget", attr: "commission"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.SalesRep", "XV.SalesRepWorkspace");
+  
 
   // ..........................................................
   // STATE
@@ -1098,6 +1202,44 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.State", "XV.StateWorkspace");
+  
+  // ..........................................................
+  // TAX AUTHORITY
+  //
+
+  hash = {
+    name: "XV.TaxAuthorityWorkspace",
+    kind: "XV.Workspace",
+    title: "_taxAuthority".loc(),
+    model: "XM.TaxAuthority",
+    headerAttrs: ["number", "-", "name"],
+    handlers: {
+      onError: "errorNotify"
+    },
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "externalReference"},
+            {kind: "XV.CurrencyPicker", attr: "currency"},
+            {kind: "XV.InputWidget", attr: "county"},
+            {kind: "onyx.GroupboxHeader", content: "_address".loc()},
+            {kind: "XV.AddressWidget", attr: "address"}
+          ]}
+        ]}
+      ]}
+    ]
+  };
+  
+  hash = enyo.mixin(hash, XV.WorkspaceAddressMixin);
+  enyo.kind(hash);
+
+  XV.registerModelWorkspace("XM.TaxAuthorityRelation", "XV.TaxAuthorityWorkspace");
 
   // ..........................................................
   // TO DO
