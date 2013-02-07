@@ -53,6 +53,7 @@
 
 -- xt javascript
 \i xt/javascript/init.sql;
+\i xt/javascript/lock.sql;
 
 -- xt views
 
