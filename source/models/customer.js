@@ -518,6 +518,18 @@ white:true*/
 
     @extends XM.Collection
   */
+  XM.CustomerRelationCollection = XM.Collection.extend({
+    /** @scope XM.CustomerRelationCollection.prototype */
+
+    model: XM.CustomerRelation
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
   XM.CustomerTypeCollection = XM.Collection.extend({
     /** @scope XM.CustomerTypeCollection.prototype */
 
@@ -584,5 +596,4 @@ white:true*/
     model: XM.CustomerProspectListItem
     
   });
-
 }());
