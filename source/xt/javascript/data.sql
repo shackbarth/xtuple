@@ -946,27 +946,69 @@ select xt.install_js('XT','Data','xtuple', $$
       ret = ret || {};
 
       /* see if there's a lock in this table */
-
-      /* we have to determine the oid of the table we're querying */
-      var actualTableName = map.table.afterDot();
-      var actualTableNamespace = "public"; // default
-      if (actualTableName.indexOf(".") > 0) {
-         actualTableNamespace = actualTableName.beforeDot(); 
-         actualTableName = actualTableName.afterDot();
-      }
-      var oidSql = "select pg_class.oid::integer as oid " + 
-        "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " + 
-        "where relname = $1 " +
-        "and nspname = $2";
-      var oid = plv8.execute(oidSql, [actualTableName, actualTableNamespace])[0].oid;
-
-      /* try the lock, and add one for us if it's not there. Either way, tack it on to the 
-        return object */
       
-      ret.lock = this.tryLock(oid, id, 'admin');
+      var lockRecords = true;
+      /* do not run record locking on global db. This is a hack. */
+      var globalDbTestSql = "select pg_class.oid::integer as oid " + 
+        "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " + 
+        "where relname = 'usrorg' " +
+        "and nspname = 'xt'";
+      var globalDbTestResult = plv8.execute(globalDbTestSql);
+      if(globalDbTestResult.length > 0) {
+        lockRecords = false;
+      }
+      /* end hack */
+
+      if (lockRecords) {
+        /* we have to determine the oid of the table we're querying */
+        var actualTableName = map.table;
+        var actualTableNamespace = "public"; // default
+        if (actualTableName.indexOf(".") > 0) {
+           actualTableNamespace = actualTableName.beforeDot(); 
+           actualTableName = actualTableName.afterDot();
+        }
+        if(DEBUG) plv8.elog(NOTICE, XT.username, "is testing lock on ", actualTableNamespace, actualTableName); 
+        var oidSql = "select pg_class.oid::integer as oid " + 
+          "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " + 
+          "where relname = $1 " +
+          "and nspname = $2";
+        var oid = plv8.execute(oidSql, [actualTableName, actualTableNamespace])[0].oid;
+
+
+        if (typeof id === 'string') {
+          /* we can only put integers into the xt.lock table.
+          XXX probably the best way to do this is to look at the actual ID column if the value
+          called id is a string. This is tough for xt.useracct, because there is no ID column.
+          Er, there is in the table, but not in the map object that we're working with.
+          Hashing it into an integer will work fine, but is inelegant.
+            var idField = XT.Orm.getProperty(map, 'id'); // fails for xt.useracct
+          
+           */
+          id = this.hashToInteger(id);
+        }
+
+        /* try the lock, and add one for us if it's not there. Either way, tack it on to the 
+          return object */
+       
+        ret.lock = this.tryLock(oid, id, XT.username);
+
+        if (DEBUG) plv8.elog(NOTICE, "Lock returned is", ret.lock);
+      }
 
       /* return the results */
       return ret;
+    },
+
+    /* XXX this is hack and probably temporary */
+    hashToInteger: function(s) {
+      var hash = 0, i, char;
+      if (s.length == 0) return hash;
+      for (i = 0; i < s.length; i++) {
+          char = s.charCodeAt(i);
+          hash = ((hash<<5)-hash)+char;
+          hash = hash & hash; // Convert to 32bit integer
+      }
+      return hash;
     },
 
     /**
@@ -1003,6 +1045,8 @@ select xt.install_js('XT','Data','xtuple', $$
         insertSql = "insert into xt.lock (lock_table_oid, lock_record_id, lock_username, lock_acquired) values ($1, $2, $3, $4)",
         existingLock = plv8.execute(selectSql, [tableOid, recordId]),
         now;
+
+      plv8.elog
 
       if(existingLock.length > 0) {
         if (DEBUG) plv8.elog(NOTICE, "Lock found", existingLock[0].lock_username); 
