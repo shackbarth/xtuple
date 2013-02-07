@@ -1046,8 +1046,6 @@ select xt.install_js('XT','Data','xtuple', $$
         existingLock = plv8.execute(selectSql, [tableOid, recordId]),
         now;
 
-      plv8.elog
-
       if(existingLock.length > 0) {
         if (DEBUG) plv8.elog(NOTICE, "Lock found", existingLock[0].lock_username); 
         return {
