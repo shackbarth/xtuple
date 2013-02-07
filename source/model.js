@@ -733,17 +733,17 @@ white:true*/
     isRequired: function (value) {
       return _.contains(this.requiredAttributes, value);
     },
-    
+
     /**
       A utility function that triggers an `notify` event. Useful for passing along
       non-critical information to the interface. Bind to `notify` to use.
-      
+
         var m = new XM.MyModel();
         var raiseAlert = function (model, value, options) {
           alert(value);
         }
         m.on('notify', raiseAlert);
-      
+
       @param {String} Message
       @param {Object} Options
     */
@@ -765,6 +765,9 @@ white:true*/
           iter = parse(iter);
         },
         getColumn = function (type, attr) {
+          if (!XT.session.getSchema().get(type)) {
+            XT.log(type + " not found in schema. Error imminent!");
+          }
           var columns = XT.session.getSchema().get(type).columns;
           return _.find(columns, function (column) {
             return column.name === attr;
@@ -776,6 +779,9 @@ white:true*/
           if (obj.hasOwnProperty(attr)) {
             if (_.isArray(obj[attr])) {
               _.each(obj[attr], parseIter);
+            } else if (attr === 'lock') {
+              // don't try to parse the lock object
+              //obj[attr] = parse(obj[attr]);
             } else if (_.isObject(obj[attr])) {
               obj[attr] = parse(obj[attr]);
             } else {
