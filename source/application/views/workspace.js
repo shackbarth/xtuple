@@ -1232,19 +1232,6 @@ trailing:true white:true*/
             {kind: "XV.AddressWidget", attr: "address"}
           ]}
         ]}
-      ]},
-      {kind: "onyx.Popup", name: "multipleAddressPopup", centered: true,
-        modal: true, floating: true, scrim: true, onShow: "popupShown",
-        onHide: "popupHidden", components: [
-        {content: "_addressShared".loc()},
-        {content: "_whatToDo".loc()},
-        {tag: "br"},
-        {kind: "onyx.Button", content: "_changeOne".loc(), ontap: "addressChangeOne",
-          classes: "onyx-blue xv-popup-button"},
-        {kind: "onyx.Button", content: "_changeAll".loc(), ontap: "addressChangeAll",
-          classes: "xv-popup-button"},
-        {kind: "onyx.Button", content: "_cancel".loc(), ontap: "addressCancel",
-          classes: "xv-popup-button"}
       ]}
     ]
   };
