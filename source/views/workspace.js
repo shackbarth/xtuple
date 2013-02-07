@@ -163,7 +163,6 @@ trailing:true white:true*/
       // so the caller can deal with that and destroy it.
       if (wasNew) {
         if (this.callback) { this.callback(false); }
-        model.destroy();
       }
       this.inherited(arguments);
     },
