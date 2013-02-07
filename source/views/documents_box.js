@@ -272,6 +272,7 @@ trailing:true white:true*/
 
         // Callback when new model is successfully committed
         callback = function (model) {
+          if (!model) { return; }
 
           // First load up the info model version
           // of the model just created
