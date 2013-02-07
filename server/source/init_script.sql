@@ -16,10 +16,12 @@
 \i xt/tables/org.sql
 \i xt/tables/orgext.sql
 \i xt/tables/session.sql
+\i xt/tables/sessionorg.sql
+\i xt/tables/sessionstore.sql
 \i xt/tables/usr.sql
 \i xt/tables/usrorg.sql
 \i xt/tables/sessionorg.sql
-
+\i xt/tables/bicache.sql
 
 -- xt functions
 \i xt/functions/add_priv.sql

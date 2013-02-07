@@ -227,6 +227,57 @@
         }
       },
       {
+        "name": "backorder",
+        "attr": {
+          "type": "Boolean",
+          "column": "cust_backorder"
+        }
+      },
+      {
+        "name": "partialShip",
+        "attr": {
+          "type": "Boolean",
+          "column": "cust_partialship"
+        }
+      },
+      {
+        "name": "blanketPurchaseOrders",
+        "attr": {
+          "type": "Boolean",
+          "column": "cust_blanketpos"
+        }
+      },
+      {
+        "name": "usesPurchaseOrders",
+        "attr": {
+          "type": "Boolean",
+          "column": "cust_usespos"
+        }
+      },
+      {
+        "name": "autoUpdateStatus",
+        "attr": {
+          "type": "Boolean",
+          "column": "cust_autoupdatestatus"
+        }
+      },
+      {
+        "name": "autoHoldOrders",
+        "attr": {
+          "type": "Boolean",
+          "column": "cust_autoholdorders"
+        }
+      },
+      {
+        "name": "accounts",
+        "toMany": {
+          "isNested": true,
+          "type": "CustomerAccount",
+          "column": "cust_id",
+          "inverse": "source"
+        }
+      },
+      {
         "name": "contacts",
         "toMany": {
           "isNested": true,
@@ -270,59 +321,10 @@
           "column": "cust_id",
           "inverse": "source"
         }
-      },
-	  {
-		"name": "backorder",
-		"attr": {
-          "type": "Boolean",
-          "column": "cust_backorder"
-		}
-	  },
-	  {
-		"name": "partialShip",
-		"attr": {
-		  "type": "Boolean",
-		  "column": "cust_partialship"
-		}
-	  },
-	  {
-		"name": "blanketPurchaseOrders",
-		"attr": {
-		  "type": "Boolean",
-		  "column": "cust_blanketpos"
-		}
-	  },
-	  {
-		"name": "usesPurchaseOrders",
-		"attr": {
-		  "type": "Boolean",
-		  "column": "cust_usespos"
-		}
-	  },
-	  {
-		"name": "autoUpdateStatus",
-		"attr": {
-		  "type": "Boolean",
-		  "column": "cust_autoupdatestatus"
-		}
-	  },
-	  {
-		"name": "autoHoldOrders",
-		"attr": {
-		  "type": "Boolean",
-		  "column": "cust_autoholdorders"
-		}
-	  },
-	  {
-		"name": "preferredSite",
-		"attr": {
-		  "type": "Number",
-		  "column": "cust_preferred_warehous_id"
-		}
-	  }
+      }
     ],
-    "isSystem": true,
-    "extensions": []
+    "extensions": [],
+    "isSystem": true
   },
   {
     "context": "xtuple",
@@ -471,16 +473,16 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "CustomerContact",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "Customer Contact Map",
+    "type": "CustomerTaxRegistration",
+    "table": "taxreg",
+    "idSequenceName": "taxreg_taxreg_id_seq",
+    "comment": "Tax Registration Map",
     "privileges": {
       "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
+        "create": "MaintainTaxAuthorities",
+        "read": "ViewTaxAuthorities",
+        "update": "MaintainTaxAuthorities",
+        "delete": "MaintainTaxAuthorities"
       }
     },
     "properties": [
@@ -488,244 +490,66 @@
         "name": "id",
         "attr": {
           "type": "Number",
-          "column": "id",
+          "column": "taxreg_id",
           "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
-          "value": "C"
-        }
-      },
-      {
-        "name": "source",
-        "toOne": {
-          "type": "Customer",
-          "column": "source_id"
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "target_type",
-          "value": "C"
-        }
-      },
-      {
-        "name": "contact",
-        "toOne": {
-          "isNested": true,
-          "type": "ContactRelation",
-          "column": "target_id"
-        }
-      },
-      {
-        "name": "purpose",
-        "attr": {
-          "type": "String",
-          "column": "purpose"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
-    "type": "CustomerCustomer",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "Customer Account Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
-          "value": "C"
-        }
-      },
-      {
-        "name": "source",
-        "toOne": {
-          "type": "Customer",
-          "column": "source_id"
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "target_type",
-          "value": "C"
         }
       },
       {
         "name": "customer",
-        "toOne": {
-          "isNested": true,
-          "type": "CustomerRelation",
-          "column": "target_id"
-        }
-      },
-      {
-        "name": "purpose",
         "attr": {
-          "type": "String",
-          "column": "purpose"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
-    "type": "CustomerFile",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "Customer File Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
-          "value": "C"
-        }
-      },
-      {
-        "name": "source",
-        "toOne": {
           "type": "Customer",
-          "column": "source_id"
+          "column": "taxreg_rel_id"
         }
       },
       {
-        "name": "targetType",
+        "name": "relType",
         "attr": {
           "type": "String",
-          "column": "target_type",
-          "value": "FILE"
-        }
-      },
-      {
-        "name": "file",
-        "toOne": {
-          "isNested": true,
-          "type": "FileRelation",
-          "column": "target_id"
-        }
-      },
-      {
-        "name": "purpose",
-        "attr": {
-          "type": "String",
-          "column": "purpose"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
-    "type": "CustomerItem",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "Customer Item Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
+          "column": "taxreg_rel_type",
           "value": "C"
         }
       },
       {
-        "name": "source",
-        "toOne": {
-          "type": "Customer",
-          "column": "source_id"
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "target_type",
-          "value": "C"
-        }
-      },
-      {
-        "name": "item",
+        "name": "taxAuthority",
         "toOne": {
           "isNested": true,
-          "type": "ItemRelation",
-          "column": "target_id"
+          "type": "TaxAuthorityRelation",
+          "column": "taxreg_taxauth_id"
         }
       },
       {
-        "name": "purpose",
+        "name": "number",
         "attr": {
           "type": "String",
-          "column": "purpose"
+          "column": "taxreg_number"
+        }
+      },
+      {
+        "name": "taxZone",
+        "toOne": {
+          "type": "TaxZone",
+          "column": "taxreg_taxzone_id"
+        }
+      },
+      {
+        "name": "effective",
+        "attr": {
+          "type": "Date",
+          "column": "taxreg_effective"
+        }
+      },
+      {
+        "name": "expires",
+        "attr": {
+          "type": "Date",
+          "column": "taxreg_expires"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "taxreg_notes"
         }
       }
     ],
@@ -861,6 +685,354 @@
         "attr": {
           "type": "String",
           "column": "shipto_shipcomments"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "CustomerAccount",
+    "table": "xt.cust_doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Customer Account Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "CRMA"
+        }
+      },
+      {
+        "name": "account",
+        "toOne": {
+          "isNested": true,
+          "type": "AccountRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "CustomerContact",
+    "table": "xt.cust_doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Customer Contact Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "T"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "CustomerFile",
+    "table": "xt.cust_doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Customer File Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "FILE"
+        }
+      },
+      {
+        "name": "file",
+        "toOne": {
+          "isNested": true,
+          "type": "FileRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "CustomerItem",
+    "table": "xt.cust_doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Customer Item Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "I"
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "CustomerUrl",
+    "table": "xt.cust_doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Customer Url Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "URL"
+        }
+      },
+      {
+        "name": "url",
+        "toOne": {
+          "isNested": true,
+          "type": "Url",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "CustomerCustomer",
+    "table": "xt.cust_doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Customer Customer Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "C"
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "isNested": true,
+          "type": "CustomerRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
         }
       }
     ],
@@ -1011,72 +1183,6 @@
         }
       }
     ],
-    "isSystem": true
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
-    "type": "CustomerUrl",
-    "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
-    "comment": "Customer Url Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "source_type",
-          "value": "C"
-        }
-      },
-      {
-        "name": "source",
-        "toOne": {
-          "type": "Customer",
-          "column": "source_id"
-        }
-      },
-      {
-        "name": "targetType",
-        "attr": {
-          "type": "String",
-          "column": "target_type",
-          "value": "URL"
-        }
-      },
-      {
-        "name": "url",
-        "toOne": {
-          "isNested": true,
-          "type": "Url",
-          "column": "target_id"
-        }
-      },
-      {
-        "name": "purpose",
-        "attr": {
-          "type": "String",
-          "column": "purpose"
-        }
-      }
-    ],
-    "isNestedOnly": true,
     "isSystem": true
   },
   {
