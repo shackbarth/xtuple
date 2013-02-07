@@ -758,7 +758,8 @@ white:true*/
       @param {Object} Response
     */
     parse: function (resp) {
-      var K = XT.Session,
+      var that = this,
+        K = XT.Session,
         column,
         parse,
         parseIter = function (iter) {
@@ -781,7 +782,12 @@ white:true*/
               _.each(obj[attr], parseIter);
             } else if (attr === 'lock') {
               // don't try to parse the lock object
-              //obj[attr] = parse(obj[attr]);
+              // now's a good time to apply the lockout as applicable
+              if (obj[attr] && obj[attr].username !== XT.session.details.username) {
+                // TODO: use enyo messaging
+                alert(obj[attr].username + " has locked this record");
+                that.setReadOnly(true);
+              }
             } else if (_.isObject(obj[attr])) {
               obj[attr] = parse(obj[attr]);
             } else {
