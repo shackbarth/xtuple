@@ -92,8 +92,7 @@ regexp:true, undef:true, trailing:true, white:true */
         // Init function for new workspace. Makes sure the workspace understands
         // The account is already "converted".
         success = function () {
-          var model = this.getValue();
-          model._number = model.get(documentKey);
+          this.getValue().checkConflicts = false;
         };
         
         // Callback to handle result of new role

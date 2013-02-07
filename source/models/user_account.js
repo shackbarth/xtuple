@@ -178,7 +178,7 @@ white:true*/
       if (options.force || !(status & K.READY)) { return; }
 
       // Check for conflicts
-      if (value && this.isDirty() && !this._number) {
+      if (this.checkConflicts && value && this.isDirty() && !this._number) {
         options.success = function (resp) {
           var err, params = {};
           if (resp) {
