@@ -402,9 +402,10 @@ select xt.install_js('XT','Orm','xtuple', $$
       } else {
         if(DEBUG) plv8.elog(NOTICE, 'process base CRUD');
 
-       /* add static values */
-       cols.push("'" + orm.type + "' as \"type\"");
-       cols.push("'read' as \"dataState\"");
+        /* add static values */
+        cols.push("'" + orm.type + "' as \"type\"");
+        cols.push("'read' as \"dataState\"");
+        cols.push("'' as \"lock\"");
 
         /* table */
         clauses = clauses.concat(ormClauses);
