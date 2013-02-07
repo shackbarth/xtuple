@@ -998,7 +998,6 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     tryLock: function (tableOid, recordId, username) {
-      DEBUG = true;
       if (DEBUG) plv8.elog(NOTICE, "Trying lock table", tableOid, recordId); 
       var selectSql = "select * from xt.lock where lock_table_oid = $1 and lock_record_id = $2",
         insertSql = "insert into xt.lock (lock_table_oid, lock_record_id, lock_username, lock_acquired) values ($1, $2, $3, $4)",
