@@ -1,0 +1,173 @@
+/* LESS version of screen.scss file previously in login 
+
+	To compile to .css: lessc screen.less > ../stylesheets/screen.css
+	Use -compress for a compressed .css with no comments
+
+*/
+/*
+	These variables will show in css as their hex values
+*/
+/* Helper classes for css3 */
+.clearfix {
+  *zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.clearfix:after {
+  clear: both;
+}
+.hide-text {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+.input-block-level {
+  display: block;
+  width: 100%;
+  min-height: 30px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+}
+body {
+  /*  width: 320px;*/
+
+}
+body.enyo-unselectable.enyo-body-fit {
+  margin: 0 auto;
+  padding: 0;
+  height: auto;
+}
+label.login-message-box {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: block;
+  margin: 10px auto;
+  font-size: 14px;
+  width: 100%;
+  text-align: center;
+}
+label.login-message-box.error {
+  color: #ff0000;
+}
+#login {
+  position: relative;
+  width: 280px;
+  margin: 80px auto;
+}
+#login img {
+  display: block;
+  margin: 0 auto 5px auto;
+  width: 162px;
+  text-align: center;
+}
+#main {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  background-color: #2f6c9d;
+  padding: 40px 50px 50px 50px;
+  position: relative;
+  overflow: visible;
+  z-index: 2;
+}
+#main div {
+  position: relative;
+}
+#main #form-fields {
+  margin: 0 auto;
+}
+#main .login-input {
+  display: block;
+  width: 97%;
+  margin: 0;
+  text-transform: lowercase;
+  outline: none;
+  color: #666666;
+  font-smoothing: antialiased;
+  font-size: 14px;
+  line-height: 1.5em;
+}
+#main .login-input:-moz-placeholder {
+  color: #d5d5d5;
+}
+#main .login-input:-ms-input-placeholder {
+  color: #d5d5d5;
+}
+#main .login-input::-webkit-input-placeholder {
+  color: #d5d5d5;
+}
+#main .login-label {
+  display: block;
+  margin: 15px auto 7px auto;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: #2f6c9d 2px 2px 1px;
+}
+#main .login-button {
+  display: block;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+  font-size: 11px;
+  padding: 4px;
+  margin: 30px 0 0 72%;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  color: #0e0b38;
+  text-transform: uppercase;
+  text-shadow: #ccc 0 0 0;
+  font-weight: 500;
+}
+#main #organizations {
+  position: relative;
+  max-height: 200px;
+}
+.organization-item {
+  padding: 8px;
+  margin: 10px 0;
+  display: block;
+  position: relative;
+  background-color: #ffffff;
+  text-transform: uppercase;
+  color: #ff6600;
+  cursor:default;
+}
+@include box-sizing(border-box);
+#main #organizations .organization-item:hover {
+  background-color: #ffffff;
+}
+#X {
+  position: fixed;
+  top: 50%;
+  right: -300px;
+  height: 600px;
+  margin-top: -300px;
+  text-align: center;
+  font-size: 1000px;
+  line-height: 550px;
+  font-weight: bold;
+  color: #b8b8b8;
+  color: rgba(255, 255, 255, 0.3);
+  text-rendering: optimizeLegibility;
+  text-shadow: -1px -1px rgba(0, 0, 0, 0.2);
+  opacity: 0.5;
+}

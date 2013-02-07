@@ -15,6 +15,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     functorsDirectory: "./lib/functors",
     routesDirectory: "./lib/routes",
     routersDirectory: "./lib/routers",
+    enhancedAuthKey: "xTuple",
     datasource: {
       sessionTimeout: 15,
       bindAddress: "localhost",
@@ -24,7 +25,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       caFile: null,
       saltFile: "./lib/private/salt.txt",
       psqlPath: "psql",
-      psqlUser: "admin",
+      nodePath: "node",
 
       // These fields need to be filled in for the datasource
       // to be able to email
@@ -32,6 +33,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       smtpPort: 587,
       smtpUser: "_smtp_user_",
       smtpPassword: "_smtp_password_",
+
+      // URL of BI server
+      biUrl: "http://your.bi.solution/report.html?args=sample",
 
       // these properties are dynamically registered with the
       // node discovery service
