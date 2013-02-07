@@ -304,7 +304,99 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.CustomerProspectWidget",
     kind: "XV.RelationWidget",
     collection: "XM.CustomerProspectListItemCollection",
-    list: "XV.CustomerProspectList"
+    list: "XV.CustomerProspectList",
+    create: function () {
+      var ret = this.inherited(arguments);
+      this.createComponent({
+        kind: "onyx.Popup",
+        name: "customerOrProspectPopup",
+        centered: true,
+        modal: true,
+        floating: true,
+        scrim: true,
+        onShow: "popupShown",
+        onHide: "popupHidden",
+        components: [
+          {content: "_customerOrProspect".loc()},
+          {tag: "br"},
+          {kind: "onyx.Button", content: "_customer".loc(), ontap: "newCustomer",
+            classes: "onyx-blue xv-popup-button"},
+          {kind: "onyx.Button", content: "_prospect".loc(), ontap: "newProspect",
+            classes: "onyx-blue xv-popup-button"}
+        ]
+      });
+      this.$.newItem.setDisabled(false);
+      return ret;
+    },
+    newCustomer: function () {
+      this.$.customerOrProspectPopup.hide();
+      this.doWorkspace({
+        workspace: "XV.CustomerWorkspace",
+        allowNew: false
+      });
+    },
+    newProspect: function () {
+      this.$.customerOrProspectPopup.hide();
+      this.doWorkspace({
+        workspace: "XV.ProspectWorkspace",
+        allowNew: false
+      });
+    },
+    /**
+     @menuItemSelected
+     this overrides the menuItemSelected function of RelationWidget to
+     account for the different types of models presented by the widget.
+     */
+    menuItemSelected: function (inSender, inEvent) {
+      var that = this,
+        menuItem = inEvent.originator,
+        list = this.getList(),
+        model = this.getValue(),
+        id = model ? model.id : null,
+        workspace = this._List ? this._List.prototype.getWorkspace() : null,
+        callback;
+      switch (menuItem.name)
+      {
+      case 'searchItem':
+        callback = function (value) {
+          that.setValue(value);
+        };
+        this.doSearch({
+          list: list,
+          searchText: this.$.input.getValue(),
+          callback: callback
+        });
+        break;
+      case 'openItem':
+        this.doWorkspace({
+          workspace: workspace,
+          id: id,
+          allowNew: false
+        });
+        break;
+      case 'newItem':
+        this.$.customerOrProspectPopup.show();
+        // Callback options on commit of the workspace
+        // Find the model with matching id, fetch and set it.
+        /*
+        callback = function (model) {
+          var Model = that._collection.model,
+            value = new Model({id: model.id}),
+            options = {};
+          options.success = function () {
+            that.setValue(value);
+          };
+          value.fetch(options);
+        };
+        this.doWorkspace({
+          workspace: workspace,
+          callback: callback,
+          allowNew: false
+        });
+        break;
+        */
+      }
+    }
   });
   
   // ..........................................................
