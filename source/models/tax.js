@@ -16,7 +16,13 @@ white:true*/
 
     recordType: 'XM.TaxAuthority',
     
-    documentKey: 'number'
+    documentKey: 'number',
+    
+    defaults: function () {
+      return {
+        currency: XT.baseCurrency()
+      };
+    }
 
   });
   

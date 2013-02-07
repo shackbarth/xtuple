@@ -1226,7 +1226,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "number"},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "externalReference"},
-            {kind: "XV.currencyPicker", attr: "currency"},
+            {kind: "XV.CurrencyPicker", attr: "currency"},
             {kind: "XV.InputWidget", attr: "county"},
             {kind: "onyx.GroupboxHeader", content: "_address".loc()},
             {kind: "XV.AddressWidget", attr: "address"}

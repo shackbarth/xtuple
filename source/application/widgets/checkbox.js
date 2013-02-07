@@ -29,18 +29,13 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     isRelation: function () {
       if (this._isRelation !== undefined) { return this._isRelation; }
-      var K = XT.session,
-        model = this.getOwner().getValue(),
-        attr,
-        columns,
-        category;
+      var model = this.getOwner().getValue(),
+        attr;
         
       // Relation is true if it is not a number based attribute
       if (model) {
         attr = this.getAttr();
-        columns = K.getSchema().get(model.get("type")).columns;
-        category = _.findWhere(columns, { name: attr }).category;
-        this._isRelation = category !== K.DB_NUMBER;
+        this._isRelation = _.isObject(model.getRelation(attr));
       }
       return this._isRelation;
     },
@@ -91,7 +86,7 @@ regexp:true, undef:true, trailing:true, white:true */
         // Callback to handle result of new role
         callback = function (model) {
           if (model) {
-            that.getOwner().refresh();
+            that.getOwner().requery();
           } else {
             that.$.input.setChecked(false);
           }
