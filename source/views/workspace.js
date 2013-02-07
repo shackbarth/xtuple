@@ -182,6 +182,7 @@ trailing:true white:true*/
      @todo Document the fetch method.
      */
     fetch: function (id, options) {
+      options = options ? _.clone(options) : {};
       options.id = id;
       if (!this.value) { return; }
       this.value.fetch(options);
