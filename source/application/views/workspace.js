@@ -80,8 +80,7 @@ trailing:true white:true*/
               showAddress: true, label: "_name".loc()},
             {kind: "XV.AccountCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes", fit: true},
-            {kind: "XV.CustomerProspectWidget", label: "Customer/Prospect"}
+            {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
         ]},
         {kind: "XV.AccountCommentBox", attr: "comments"},
