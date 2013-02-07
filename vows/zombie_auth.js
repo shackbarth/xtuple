@@ -22,8 +22,11 @@ Usage:
 (function () {
   "use strict";
 
+  var secondsToWait = 20;
+
   var loadApp = function (username, password, host, masterCallback) {
-    zombie.visit(host || 'http://localhost', {debug: false}, function (e, browser) {
+    var siteRoot = host || 'https://localhost';
+    zombie.visit(siteRoot, {debug: true}, function (e, browser) {
       //
       // This is the login screen
       //
@@ -37,21 +40,17 @@ Usage:
           // Note: make sure the app is built
 
           // not quite sure why zombie doesn't do this redirect, but oh well.
-          browser.visit('http://localhost/client/index.html', function (e, browser) {
-            browser.wait(function (window) {
-              // this function defines what we're waiting for: for the app state to be 6 (= RUNNING)
-              return window.XT.app.state === 6;
-            }, function () {
-              // this is the function that gets run when the above function returns true
-
+          browser.visit(siteRoot + '/client/index.html', function (e, browser) {
+            setTimeout(function () {
               // add the global objects to our global namespace
               XM = browser.window.XM;
               XT = browser.window.XT;
               XV = browser.window.XV;
 
+              console.log(XT.app.state);
               // give control back to whoever called us
               masterCallback();
-            });
+            }, 10000);
           });
         });
     });
@@ -60,17 +59,12 @@ Usage:
   exports.loadAdd = loadApp;
 
   exports.testLoad = function (username, password, host) {
-    var secondsToWait = 10;
     console.log("Testing loadup of app.");
 
-    setTimeout(function () {
-      console.log("App did not load in " + secondsToWait + " seconds.");
-      process.exit(1);
-    }, secondsToWait * 1000);
 
     loadApp(username, password, host, function () {
-      if (!XT || !XT.session || !XT.session.schema) {
-        console.log("App did not load XT.session.schema");
+      if (!XT.app.state || XT.app.state < 6) {
+        console.log("App did not fully load");
         process.exit(1);
       }
       console.log("App loaded successfully.");
