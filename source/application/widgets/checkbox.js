@@ -55,7 +55,10 @@ regexp:true, undef:true, trailing:true, white:true */
         model,
         recordType,
         relation,
-        attrs;
+        documentKey,
+        nameAttribute,
+        attrs = {},
+        Klass;
         
       // Turn on label link if applicable
       if (this.getValue() && isRelation) {
@@ -69,18 +72,28 @@ regexp:true, undef:true, trailing:true, white:true */
       // Automatically open a workspace to set up a record for this role if necessary
       if (input && isRelation && !value) {
         model = this.getOwner().getValue();
-        attrs = {
-          number: model.get("number"),
-          name: model.get("name")
-        };
         relation = model.getRelation(this.getAttr());
         recordType = relation.relatedModel.prototype.recordType;
+        Klass = XT.getObjectByName(recordType);
+        
+        // If it has an editable model it must be an XM.Info model
+        if (Klass.prototype.editableModel) {
+          Klass = XT.getObjectByName(Klass.prototype.editableModel);
+          documentKey = Klass.prototype.documentKey;
+          nameAttribute = Klass.prototype.nameAttribute || "name";
+        } else {
+          documentKey = relation.relatedModel.prototype.documentKey;
+          nameAttribute = relation.relatedModel.prototype.nameAttribute || "name";
+        }
+        // Most account docs will make this upper again, but needs to be lower for user account
+        attrs[documentKey] = model.get("number");
+        attrs[nameAttribute] = model.get("name");
         
         // Init function for new workspace. Makes sure the workspace understands
         // The account is already "converted".
         success = function () {
           var model = this.getValue();
-          model._number = model.get("number");
+          model._number = model.get(documentKey);
         };
         
         // Callback to handle result of new role

@@ -143,12 +143,16 @@ white:true*/
     /** @scope XM.UserAccount.prototype */
 
     idAttribute: 'username',
+    
+    nameAttribute: "properName",
 
     recordType: 'XM.UserAccount',
 
     documentKey: 'username',
 
     enforceUpperKey: false,
+    
+    autoFetchId: false,
 
     defaults: {
       disableExport: false
@@ -162,13 +166,19 @@ white:true*/
     documentKeyDidChange: function (model, value, options) {
       var K = XM.Model,
         that = this,
-        status = this.getStatus();
+        status = this.getStatus(),
+        lower = this.get("username").toLowerCase();
       options = options || {};
+
+      if (value !== lower) {
+        this.set("username", lower, options);
+        return;
+      }
 
       if (options.force || !(status & K.READY)) { return; }
 
       // Check for conflicts
-      if (value && this.isDirty()) {
+      if (value && this.isDirty() && !this._number) {
         options.success = function (resp) {
           var err, params = {};
           if (resp) {
