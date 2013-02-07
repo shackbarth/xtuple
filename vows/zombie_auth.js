@@ -69,6 +69,10 @@ Usage:
     }, secondsToWait * 1000);
 
     loadApp(username, password, host, function () {
+      if (!XT || !XT.session || !XT.session.schema) {
+        console.log("App did not load XT.session.schema");
+        process.exit(1);
+      }
       console.log("App loaded successfully.");
       process.exit(0);
     });
