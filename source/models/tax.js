@@ -11,12 +11,12 @@ white:true*/
 
     @extends XM.AccountDocument
   */
-  XM.TaxAuthority = XM.AccountDocument.extend({
+  XM.TaxAuthorityRelation = XM.AccountDocument.extend({
     /** @scope XM.TaxAuthority.prototype */
 
-    recordType: 'XM.TaxAuthority',
+    recordType: 'XM.TaxAuthorityRelation',
     
-    documentKey: 'code'
+    documentKey: 'number'
 
   });
   
@@ -32,6 +32,20 @@ white:true*/
 
   });
   
+  /**
+    @class
+    
+    @extends XM.Model
+  */
+  XM.TaxRegistration = XM.Document.extend({
+    /** @scope XM.TaxRegistration */
+    
+    recordType: 'XM.TaxRegistration',
+    
+    documentKey: 'number'
+    
+  });
+  
   // ..........................................................
   // COLLECTIONS
   //
@@ -45,6 +59,18 @@ white:true*/
     /** @scope XM.TaxZoneCollection.prototype */
 
     model: XM.TaxZone
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.TaxAuthorityCollection = XM.Collection.extend({
+    /** @scope XM.TaxAuthorityCollection.prototype */
+
+    model: XM.TaxAuthorityRelation
 
   });
 
