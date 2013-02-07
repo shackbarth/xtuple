@@ -118,6 +118,12 @@ white:true*/
       @type {String}
     */
     numberPolicySetting: null,
+    
+    /**
+      Check for conflicts on an already used document key when the key changes
+      and on save.
+    */
+    checkConflicts: true,
 
     // ..........................................................
     // METHODS
@@ -157,7 +163,7 @@ white:true*/
       }
 
       // Check for conflicts
-      if (value && this.isDirty() && !this._number) {
+      if (value && this.isDirty() && !this._number && this.checkConflicts) {
         options.success = function (resp) {
           var err, params = {};
           if (resp) {
@@ -264,8 +270,9 @@ white:true*/
         checkOptions = {};
 
       // Check for number conflicts if we should
-      if ((status === K.READY_NEW && currValue && !this._number) ||
-          (status === K.READY_DIRTY && currValue !== origValue)) {
+      if ((this.checkConflicts &&
+          (status === K.READY_NEW && currValue && !this._number) ||
+          (status === K.READY_DIRTY && currValue !== origValue))) {
         checkOptions.success = function (resp) {
           var err, params = {};
           if (resp === 0) {

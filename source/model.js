@@ -313,7 +313,8 @@ white:true*/
           });
         };
       if ((parent && parent.canUpdate(this)) ||
-          (!parent && canDelete)) {
+          (!parent && canDelete) ||
+           this.getStatus() === K.READY_NEW) {
         this._wasNew = this.isNew(); // Hack so prototype call will still work
         this.setStatus(K.DESTROYED_DIRTY, {cascade: true});
 
