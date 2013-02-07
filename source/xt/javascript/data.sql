@@ -945,17 +945,25 @@ select xt.install_js('XT','Data','xtuple', $$
 
       ret = ret || {};
 
-
       /* see if there's a lock in this table */
-      plv8.elog(NOTICE, "map is", JSON.stringify(map));
-      plv8.elog(NOTICE, "type is", type.decamelize());
+
       /* we have to determine the oid of the table we're querying */
+      var actualTableName = map.table.afterDot();
+      var actualTableNamespace = "public"; // default
+      if (actualTableName.indexOf(".") > 0) {
+         actualTableNamespace = actualTableName.beforeDot(); 
+         actualTableName = actualTableName.afterDot();
+      }
       var oidSql = "select pg_class.oid::integer as oid " + 
         "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " + 
-        "where relname = 'cntct' " +
-        "and nspname = 'public'";
-      var oid = plv8.execute(oidSql)[0].oid;
-      ret.lock = this.tryLock(oid, 5, 'admin');
+        "where relname = $1 " +
+        "and nspname = $2";
+      var oid = plv8.execute(oidSql, [actualTableName, actualTableNamespace])[0].oid;
+
+      /* try the lock, and add one for us if it's not there. Either way, tack it on to the 
+        return object */
+      
+      ret.lock = this.tryLock(oid, id, 'admin');
 
       /* return the results */
       return ret;
@@ -990,17 +998,22 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     tryLock: function (tableOid, recordId, username) {
-      plv8.elog(NOTICE, "Trying lock table", tableOid, recordId); 
+      DEBUG = true;
+      if (DEBUG) plv8.elog(NOTICE, "Trying lock table", tableOid, recordId); 
       var selectSql = "select * from xt.lock where lock_table_oid = $1 and lock_record_id = $2",
         insertSql = "insert into xt.lock (lock_table_oid, lock_record_id, lock_username, lock_acquired) values ($1, $2, $3, $4)",
         existingLock = plv8.execute(selectSql, [tableOid, recordId]),
         now;
 
       if(existingLock.length > 0) {
-        plv8.elog(NOTICE, "the lock looks like this", existingLock[0]);
-        return existingLock[0];
+        if (DEBUG) plv8.elog(NOTICE, "Lock found", existingLock[0].lock_username); 
+        return {
+          username: existingLock[0].lock_username,
+          acquired: existingLock[0].lock_acquired
+        }
       }
 
+      if (DEBUG) plv8.elog(NOTICE, "No lock found. Creating lock."); 
       now = new Date();
       plv8.execute(insertSql, [tableOid, recordId, username, now]);
      
