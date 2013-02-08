@@ -345,25 +345,24 @@ regexp:true, undef:true, trailing:true, white:true */
         nameValue = "",
         descripValue = "",
         Workspace = this._Workspace,
-        Model = Workspace && Workspace.prototype.model ?
-          XT.getObjectByName(Workspace.prototype.model)  : null,
-        originalValue,
-        couldNotCreate = Model ? !Model.canCreate() : true,
+        Model = this._collection.model,
+        id,
+        couldNotCreate = Model ? !Model.prototype.couldCreate() : true,
         setPrivileges = function () {
           if (value && newId) {
             that.$.openItem.setDisabled(!value.couldRead());
           }
         };
 
-      // Here is where we find the model and re-call this method if we're given
-      // an id instead of a whole model.
-      if (_.isNumber(value) || _.isString(value)) {
+      // Make sure we get are setting the right kind of object here.
+      if (_.isNumber(value) || _.isString(value) ||
+         !(value instanceof Model)) {
         if (this.value === value || oldId === value) { return; }
-        originalValue = value;
-        Model = XT.getObjectByName(this._collection.model.prototype.recordType);
+        id = _.isObject(value) ? value.id : value;
+
         value = new Model();
         options = {
-          id: originalValue,
+          id: id,
           success: function () {
             that.setValue(value);
           },
