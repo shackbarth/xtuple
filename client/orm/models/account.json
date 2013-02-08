@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Account",
     "table": "crmacct",
+    "lockable": true,
     "idSequenceName": "crmacct_crmacct_id_seq",
     "orderSequence": "CRMAccountNumber",
     "comment": "Account Map",
