@@ -298,13 +298,13 @@ regexp:true, undef:true, trailing:true, white:true */
   });
   
   // ..........................................................
-  // CUSTOMERPROSPECT
+  // CUSTOMER PROSPECT
   //
 
   enyo.kind({
     name: "XV.CustomerProspectWidget",
     kind: "XV.RelationWidget",
-    collection: "XM.CustomerProspectListItemCollection",
+    collection: "XM.CustomerProspectRelationCollection",
     list: "XV.CustomerProspectList",
     create: function () {
       var ret = this.inherited(arguments);
