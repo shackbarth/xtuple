@@ -103,7 +103,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       });
     } catch (error) {
       // Prevent unauthorized access.
-      res.render('login');
+      res.redirect('/');
+      return;
     }
 
     // Some users may not have any orgs. They should not get this far.
