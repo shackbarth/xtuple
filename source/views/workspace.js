@@ -480,6 +480,8 @@ trailing:true white:true*/
      during the end of the save-and-close process.
      */
     close: function (options) {
+      var model = this.$.workspace.getValue();
+
       options = options || {};
       if (!options.force) {
         if (this.$.workspace.isDirty()) {
@@ -492,9 +494,11 @@ trailing:true white:true*/
       // release the record lock
       XT.dataSource.dispatch('XM.Model',
         'releaseLock',
-        [this.getValue().recordType, this.getValue().id, XT.session.details.username],
+        [model.recordType, model.id, XT.session.details.username],
+        {databaseType: model.databaseType} /*,
         {success: function () {console.log("releaselock success ", arguments);},
-        error: function () {console.log("releaselock error ", arguments);}});
+        error: function () {console.log("releaselock error ", arguments);}}*/);
+
       this.doPrevious();
     },
     /**
