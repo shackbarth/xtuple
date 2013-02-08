@@ -699,6 +699,17 @@ white:true*/
     },
 
     /**
+      Returns true if you have the lock key, or if this model
+      is not lockable. (You can enter the room if you have no
+      key or if there is no lock!)
+
+      @returns {Boolean}
+    */
+    hasLockKey: function () {
+      return !this.get("lock") || this.get("lock").key;
+    },
+
+    /**
       Return whether the model is in a read-only state. If an attribute name or
       object is passed, returns whether those attributes are read-only.
 
@@ -708,7 +719,10 @@ white:true*/
       @returns {Boolean}
     */
     isReadOnly: function (value) {
-      var attr, result;
+      var attr,
+        result,
+        isLockedOut = !this.hasLockKey();
+
       if ((!_.isString(value) && !_.isObject(value)) || this.readOnly) {
         result = this.readOnly;
       } else if (_.isObject(value)) {
@@ -721,7 +735,7 @@ white:true*/
       } else {
         result = _.contains(this.readOnlyAttributes, value);
       }
-      return result;
+      return result || isLockedOut;
     },
 
     /**
@@ -782,12 +796,6 @@ white:true*/
               _.each(obj[attr], parseIter);
             } else if (attr === 'lock') {
               // don't try to parse the lock object
-              // now's a good time to apply the lockout as applicable
-              if (obj[attr] && obj[attr].username !== XT.session.details.username) {
-                // TODO: use enyo messaging
-                alert(obj[attr].username + " has locked this record");
-                that.setReadOnly(true);
-              }
             } else if (_.isObject(obj[attr])) {
               obj[attr] = parse(obj[attr]);
             } else {
