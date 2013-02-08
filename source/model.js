@@ -232,6 +232,26 @@ white:true*/
       XT.log(resp);
     },
 
+    didLockChange: function (model, lock, options) {
+      var that = this;
+      if (lock.key && !this.keyRefresherInterval) {
+        // set up a refresher if it's not already set up
+        this.keyRefresherInterval = setInterval(function () {
+          XT.dataSource.dispatch('XM.Model', 'refreshLock',
+            [that.recordType, that.recordId, lock.key],
+            {databaseType: that.databaseType});
+              //success: function () {console.log("success", arguments); },
+              //error: function () {console.log("error", arguments); }
+
+        }, 25 * 1000);
+
+      } else if (!lock.key && this.keyRefresherInterval) {
+        // if the key is gone, get rid of the refresher
+        clearInterval(this.keyRefresherInterval);
+        this.keyRefresherInterval = undefined;
+      }
+    },
+
     /**
       Return whether the model is in a valid state to `save`.
 
@@ -669,6 +689,7 @@ white:true*/
       this.on('change', this.didChange);
       this.on('error', this.didError);
       this.on('destroy', this.didDestroy);
+      this.on('change:lock', this.didLockChange);
       for (i = 0; i < relations.length; i++) {
         if (relations[i].type === Backbone.HasMany &&
             relations[i].includeInJSON === true) {
@@ -710,7 +731,7 @@ white:true*/
       if (!lock || lock.key) {
         return true;
       } else {
-        console.log(lock.username + " has locked this record at " + lock.acquired);
+        XT.log(lock.username + " has locked this record until " + lock.expires);
         return false;
       }
     },
