@@ -499,6 +499,11 @@ trailing:true white:true*/
         {success: function () {console.log("releaselock success ", arguments);},
         error: function () {console.log("releaselock error ", arguments);}}*/);
 
+      if (model.get("lock") && model.get("lock").key) {
+        // taking the key away from the model's lock will have the effect of telling
+        // the model to stop trying to refresh
+        model.set("lock", {key: null});
+      }
       this.doPrevious();
     },
     /**
