@@ -1,0 +1,86 @@
+[
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "CustomerProject",
+    "table": "xt.cust_doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Customer Project Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "J"
+        }
+      },
+      {
+        "name": "project",
+        "toOne": {
+          "isNested": true,
+          "type": "ProjectRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "Customer",
+    "table": "custinfo",
+    "isExtension": true,
+    "comment": "Extended by Project",
+    "relations": [
+      {
+        "column": "cust_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "projects",
+        "toMany": {
+          "isNested": true,
+          "type": "CustomerProject",
+          "column": "cust_id",
+          "inverse": "source"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

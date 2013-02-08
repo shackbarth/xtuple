@@ -27,50 +27,16 @@ trailing:true white:true*/
     */
     module = {
       name: "sales",
-      label: "_sales".loc() /*,
+      label: "_sales".loc(),
       panels: [
-        {name: "projectList", kind: "XV.ProjectList"},
-        {name: "projectTaskList", kind: "XV.ProjectTaskList"}
-      ]*/
+        {name: "customerList", kind: "XV.CustomerList"},
+        {name: "prospectList", kind: "XV.ProspectList"}
+      ]
     };
     XT.app.$.postbooks.insertModule(module, 2);
 
     relevantPrivileges = [
-      "AccessSalesExtension" /*,
-      "MaintainAddresses",
-      "MaintainAllContacts",
-      "MaintainAllCRMAccounts",
-      "MaintainAllIncidents",
-      "MaintainAllProjects",
-      "MaintainPersonalContacts",
-      "MaintainPersonalCRMAccounts",
-      "MaintainPersonalIncidents",
-      "MaintainPersonalProjects",
-      "MaintainPersonalToDoItems",
-      "MaintainTitles",
-      "ViewAllContacts",
-      "ViewAllCRMAccounts",
-      "ViewAllIncidentHistory",
-      "ViewAllIncidents",
-      "ViewAllProjects",
-      "ViewPersonalContacts",
-      "ViewPersonalCRMAccounts",
-      "ViewPersonalIncidents",
-      "ViewPersonalProjects",
-      "ViewTitles",
-      "DeleteItemMasters",
-      "MaintainItemMasters",
-      "MaintainUOMs",
-      "ViewClassCodes",
-      "ViewItemMasters",
-      "ViewUOMs",
-      "ConfigurePM",
-      "EditOthersComments",
-      "EditOwnComments",
-      "MaintainCommentTypes",
-      "MaintainCountries",
-      "MaintainStates",
-      "MaintainUsers" */
+      "AccessSalesExtension"
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
   };

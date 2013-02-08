@@ -1,0 +1,29 @@
+[
+  {
+    "context": "sales",
+    "nameSpace": "XM",
+    "type": "Opportunity",
+    "table": "ophead",
+    "isExtension": true,
+    "comment": "Extended by Sales",
+    "relations": [
+      {
+        "column": "ophead_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "customers",
+        "toMany": {
+          "isNested": true,
+          "type": "OpportunityCustomer",
+          "column": "ophead_id",
+          "inverse": "source"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  }  
+]

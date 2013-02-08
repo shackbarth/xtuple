@@ -1,0 +1,29 @@
+[
+  {
+    "context": "sales",
+    "nameSpace": "XM",
+    "type": "Incident",
+    "table": "incdt",
+    "isExtension": true,
+    "comment": "Extended by Sales",
+    "relations": [
+      {
+        "column": "incdt_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "customers",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentCustomer",
+          "column": "incdt_id",
+          "inverse": "source"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  }  
+]
