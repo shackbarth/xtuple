@@ -885,6 +885,7 @@ select xt.install_js('XT','Data','xtuple', $$
         ret, sql, pkey = XT.Orm.primaryKey(map),
         context = options.context,
         join = "",
+        rawId = id,
         params = {};
       if(!pkey) throw new Error('No primary key found for {recordType}'.replace(/{recordType}/, recordType));
       if (XT.typeOf(id) === 'string') {
@@ -945,37 +946,15 @@ select xt.install_js('XT','Data','xtuple', $$
 
       ret = ret || {};
 
-      /* see if there's a lock in this table */
-      
-      var lockRecords = true;
-      /* do not run record locking on global db. This is a hack. */
-      var globalDbTestSql = "select pg_class.oid::integer as oid " + 
-        "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " + 
-        "where relname = 'usrorg' " +
-        "and nspname = 'xt'";
-      var globalDbTestResult = plv8.execute(globalDbTestSql);
-      if(globalDbTestResult.length > 0) {
-        lockRecords = false;
-      }
-      /* end hack */
-
-      if (lockRecords) {
+      if (this.doLockRecords()) {
+        /* see if there's a lock in this table */
         if(DEBUG) plv8.elog(NOTICE, XT.username, "is testing lock on ", map.table);
          
         /* we have to determine the oid of the table we're querying */
         var oid = this.getTableOid(map.table);
 
-        if (typeof id === 'string') {
-          /* we can only put integers into the xt.lock table.
-          XXX probably the best way to do this is to look at the actual ID column if the value
-          called id is a string. This is tough for xt.useracct, because there is no ID column.
-          Er, there is in the table, but not in the map object that we're working with.
-          Hashing it into an integer will work fine, but is inelegant.
-            var idField = XT.Orm.getProperty(map, 'id'); // fails for xt.useracct
-          
-           */
-          id = this.hashToInteger(id);
-        }
+        /* the id needs to be an integer. ensure this */
+        id = this.idAsInt(rawId);
 
         /* try the lock, and add one for us if it's not there. Either way, tack it on to the 
           return object */
@@ -987,6 +966,20 @@ select xt.install_js('XT','Data','xtuple', $$
 
       /* return the results */
       return ret;
+    },
+
+    doLockRecords: function () {
+      /* do not run record locking on global db. This is a hack. */
+      var globalDbTestSql = "select pg_class.oid::integer as oid " + 
+        "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " + 
+        "where relname = 'usrorg' " +
+        "and nspname = 'xt'";
+      var globalDbTestResult = plv8.execute(globalDbTestSql);
+      if (globalDbTestResult.length > 0) {
+        return false;
+      } else {
+        return true;
+      }
     },
 
     /*
@@ -1007,16 +1000,28 @@ select xt.install_js('XT','Data','xtuple', $$
 
     },
 
-    /* XXX this is hack and probably temporary */
-    hashToInteger: function(s) {
-      var hash = 0, i, char;
-      if (s.length == 0) return hash;
-      for (i = 0; i < s.length; i++) {
-          char = s.charCodeAt(i);
-          hash = ((hash<<5)-hash)+char;
-          hash = hash & hash; // Convert to 32bit integer
+    idAsInt: function(id) {
+      if (typeof id === 'string') {
+        /* we can only put integers into the xt.lock table.
+        XXX probably the best way to do this is to look at the actual ID column if the value
+        called id is a string. This is tough for xt.useracct, because there is no ID column.
+        Er, there is in the table, but not in the map object that we're working with.
+        Hashing it into an integer will work fine, but is inelegant.
+          var idField = XT.Orm.getProperty(map, 'id'); // fails for xt.useracct
+        
+         */
+        /* XXX this is hack and probably temporary */
+        var hash = 0, i, char;
+        if (id.length == 0) return hash;
+        for (i = 0; i < id.length; i++) {
+            char = id.charCodeAt(i);
+            hash = ((hash<<5)-hash)+char;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+        return hash;
+      } else {
+        return id;
       }
-      return hash;
     },
 
     /**
