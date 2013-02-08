@@ -6,16 +6,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   var exec = require('child_process').exec,
-    url = require("url"),
-    querystring = require("querystring"),
     path = require('path'),
     ormInstaller = require('../installer/orm');
-
-  /*
-   * The installer (the orm repo, actually) is an npm-managed dependency
-   * in node-datasource
-   */
-  var installerDir = "node_modules/orm/installer";
 
   /**
     Pushes the results from the exec calls into the resp object, which will be sent back to
@@ -26,67 +18,82 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       X.log(stdout);
     }
     respObject.log.push(stdout);
-    if (stderr) {
-      respObject.errorLog.push(stderr);
-    }
+    //if (stderr) {
+    // was too verbose
+    //  respObject.errorLog.push(stderr);
+    //}
     if (error !== null) {
-      respObject.status = "ERROR";
-      respObject.errorCount++;
-      respObject.errorLog.push("execution error: " + error);
+      respObject.isError = true;
+      respObject.errorLog.push("Execution error: " + error);
     }
-  };
-
-  /**
-    It's helpful for cron scripts to have a 200 or a 500 status based on
-    the success of the response data object. We do that in one place, here.
-  */
-  var respond = function (res, data) {
-    var httpStatus = data && data.status === "SUCCESS" ? 200 : 500;
-
-    X.log("Maintenance is complete");
-    res.send(httpStatus, JSON.stringify(data));
   };
 
   /**
    * The ORM installer commands need to be run sequentially. We create an array of the commands that
    * we have to run and then use recursion to do them one at a time here.
    */
-  var runOrmCommands = function (ormArgs, pgPassword, respObject, res) {
+  var runOrmCommands = function (ormArray, respObject, orgCallback) {
     var ormCommand,
       ormCallback;
 
     // exit strategy
-    if (ormArgs.length === 0) {
-      respObject.status = respObject.status || "SUCCESS";
-      respond(res, respObject);
+    if (ormArray.length === 0) {
+      orgCallback(respObject);
       return;
     }
 
-    ormCommand = ormArgs.pop();
-    ormCallback = function (error, stdout, stderr) {
+    ormCommand = ormArray.shift();
+    ormCallback = function (error, stdout) {
       // log any relevant information from the orm exec call
-      X.log("ORM command returned. " + ormArgs.length + " left");
-      logAll(respObject, stdout, stderr, error);
+      X.log("ORM command returned. " + ormArray.length + " left");
+      logAll(respObject, stdout, null, error);
 
       // recurse down an ever-shortening array
-      runOrmCommands(ormArgs, pgPassword, respObject, res);
+      runOrmCommands(ormArray, respObject, orgCallback);
     };
-    X.log("Running ORM command: ", ormCommand);
 
+    X.log("Running ORM command: ", ormCommand);
+    respObject.commandLog.push("Installing orms: " + ormCommand.ormDir);
     ormInstaller.run(ormCommand.ormCreds, ormCommand.ormDir, ormCallback);
   };
 
+  var runPsqlCommands = function (psqlArray, ormArray, respObject, orgCallback) {
+    var psqlCommand,
+      psqlCallback;
+
+    // exit strategy: work thrpugh the orm array
+    if (psqlArray.length === 0) {
+      runOrmCommands(ormArray, respObject, orgCallback);
+      return;
+    }
+
+    psqlCommand = psqlArray.shift();
+    psqlCallback = function (error, stdout, stderr) {
+      // log any relevant information from the orm exec call
+      X.log("psql command returned. " + psqlArray.length + " left");
+      logAll(respObject, stdout, stderr, error);
+
+      // recurse down an ever-shortening array
+      runPsqlCommands(psqlArray, ormArray, respObject, orgCallback);
+    };
+
+    X.log("Running psql command: ", psqlCommand);
+    respObject.commandLog.push("Running pqsl command: " + psqlCommand);
+    exec(psqlCommand, psqlCallback);
+  };
   /**
     This is the function that does all the work. It can be run after a successful
     session load, or through the localhost backdoor.
    */
   var install = function (res, args, username) {
-    var commandCount = 0,
-      commandsReturned = 0,
-      ormArgs = [],
-      ormCount = 0,
-      ormsReturned = 0,
-      respObject = {commandLog: [], log: [], errorLog: [], errorCount: 0},
+    var respObject = {commandLog: [], log: [], errorLog: []},
+      // TODO: run each organization's commands in parallel
+      psqlArray = [],
+      ormArray = [],
+      orgCallback = function (respObj) {
+        X.log("Maintenance is complete", JSON.stringify(respObj));
+        res.send(JSON.stringify({data: respObj}));
+      },
       organizationColl = new XM.OrganizationCollection(),
       //
       // practically all the code is in the success callback of the initial fetch
@@ -94,12 +101,56 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       //
       fetchSuccess = function (collection, response) {
         _.each(collection.models, function (org) {
-          // XXX We ensure that users have ViewOrganizations privileges. It would be better
-          // to ensure that they also have MaintainOrganizations priviliges, but there
-          // is no way to ensure this from the model layer because model.canUpdate() refers
-          // to the node authority in this context, which is omnipotence.
+          var scriptName = "init_script.sql",
+            host = org.get("databaseServer").get("hostname"),
+            port = org.get("databaseServer").get("port"),
+            pgUser = org.get("databaseServer").get("user"),
+            pgPassword = org.get("databaseServer").get("password"),
+            psqlPath = X.options.datasource.psqlPath || "psql",
+            orgName = org.get("name"),
+            flags = " -U " + pgUser + " -h " + host + " -p " + port + " -d " + orgName,
+            psqlCommand = psqlPath + flags + " -f " + scriptName,
+            ormCreds = {
+              hostname: host,
+              organization: orgName,
+              username: pgUser,
+              port: port,
+              password: pgPassword
+            },
+            group = org.get("group"),
+            initInstanceDbDirectory = X.options.datasource.initInstanceDbDirectory || "./scripts",
+            initInstanceDbCommand = "initInstanceDb.sh " + flags + " -g " + group,
+            coreScriptDir = '../database/client/source',
+            coreOrmDir = '../database/client/orm';
 
-          X.log("Running scripts for organization: ", org.get("name"));
+          X.log("Running scripts for organization: ", orgName);
+
+          if (args.initialize) {
+            // this is a brand-new instance database. First run the instance db
+            // initialization script
+
+            // guard against something terrible that shouldn't be possible in the UI.
+            // intialization should only happen to one DB at a time.
+            if (!args.organization) {
+              res.send({isError: true, message: "Initialize every instance DB. Are you crazy?"});
+              return;
+            }
+            X.log("Initializing organization: ", orgName);
+
+            psqlArray.push({
+              command: "%@/%@".f(initInstanceDbDirectory, initInstanceDbCommand),
+              loadOrder: -9999
+            });
+          }
+
+          if (args.initialize || args.core) {
+            // the user wants us to run the core init script and install the core orms as well
+            // might as well do this for newly initialized dbs as well
+            X.log("Processing core: ", orgName);
+            psqlArray.push({command: "(cd %@ && exec %@)".f(coreScriptDir, psqlCommand), loadOrder: -9990});
+            ormArray.push({ormCreds: ormCreds, ormDir: coreOrmDir, loadOrder: -9990});
+          }
+
           _.each(org.get("extensions").models, function (ext) {
             //
             // go through all of the extensions of all the organizations...
@@ -109,101 +160,60 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               // then we stop here if this extension at hand is not on that list
               return;
             }
-            X.log("Running scripts for extension: ", ext.get("extension").get("name") + " id: " + ext.get("extension").get("id"));
 
             var extLoc = ext.get("extension").get("location"),
               extName = ext.get("extension").get("name"),
+              extLoadOrder = ext.get("extension").get("loadOrder"),
               scriptDir = ".." + extLoc + "/source/" + extName + "/database/source",
-              ormDir = ".." + extLoc + "/source/" + extName + "/database/orm",
-              // XXX use fs.existsSync in node 0.8 instead of path.existsSync
-              ormsExist = path.existsSync(ormDir),
-              scriptName = "init_script.sql",
-              host = org.get("databaseServer").get("hostname"),
-              port = org.get("databaseServer").get("port"),
-              orgName = org.get("name"),
-              flags = "-h " + host + " -p " + port + " -d " + orgName + " -f " + scriptName + "\n",
-              psqlPath = X.options.datasource.psqlPath || "psql",
-              nodePath = X.options.datasource.nodePath || "node",
-              pgUser = org.get("databaseServer").get("user"),
-              pgPassword = org.get("databaseServer").get("password"),
-              psqlCommand = psqlPath + " -U " + pgUser + " " + flags,
-              scriptCallback = function (error, stdout, stderr) {
-                // in the callback of the init script we will then run the orm installer if
-                // applicable
+              execCommand = "(cd %@ && exec %@)".f(scriptDir, psqlCommand),
+              ormDir = ".." + extLoc + "/source/" + extName + "/database/orm";
 
-                // note that we leave out the password from the command because it will
-                // be reported back to the user
-                var ormCreds = {
-                  hostname: host,
-                  organization: orgName,
-                  username: pgUser,
-                  port: port,
-                  password: pgPassword
-                };
-                //nodePath + " installer.js -cli -h " + host + " -d " + orgName +
-                 //   " -u " + pgUser + " -p " + port + " --path ../../../" + ormDir + " -P ";
+            X.log("Processing extension: %@ %@ ".f(orgName, extName));
 
-                // log any relevant information from the script exec call
-                logAll(respObject, stdout, stderr, error);
+            //
+            // Within each organization, we have to run each psql command
+            // sequentially, and then we need to run all the orm scripts
+            // sequentially. We do this by pushing them to arrays here,
+            // and then recursing down the arrays once they've been built
+            //
 
-                if (ormsExist && error) {
-                  // if the init script failed we might as well not run the orm. But increment
-                  // the counter so that we know when to end.
-                  X.log("Init script failed", error);
-                  ormCount--;
+            //
+            // Build psql command array
+            //
+            psqlArray.push({command: execCommand, loadOrder: extLoadOrder});
 
-                } else if (ormsExist) {
-                  //
-                  // we need to call the orms sequentially, and after the init scripts have
-                  // been run. (Technically, we don't have to wait for *all* the init scripts
-                  // to run before running specific ORMs, just the corresponding one. But
-                  // nevertheless we wait for them all to finish. Also, we run all of the ORMs
-                  // sequentially, even though strictly speaking we only need to run them
-                  // sequentially within a given DB.
-                  //
-                  // The way we accomplish this is to push all the orm commands into an array
-                  // and then run them sequentially once the array is complete.
-                  //
-                  X.log("Pushing creds for " + ormDir);
-                  ormArgs.push({ormCreds: ormCreds, ormDir: ormDir});//"(cd " + installerDir + " && exec " + ormCommand + pgPassword + ")");
-                  respObject.commandLog.push("Installing orms: " + ormDir);
-                }
-
-                if (ormCount === ormArgs.length) {
-                  runOrmCommands(ormArgs, pgPassword, respObject, res);
-                }
-                commandsReturned++;
-              };
-            // Note that until now we've just been setting up our callbacks.
-            // Nothing has been run yet. We're actually still in a callback!
-
-
-            // we need to keep track of the number of orms because we want to report back when every one
-            // of them has been installed. Or, if there are no orms to install, we want to report back when
-            // all of the init scripts have been run. Or, if there are no init scripts
-            // to run then we report back at the end of the function.
-            if (ormsExist) {
-              ormCount++;
+            //
+            // Build orm command array
+            //
+            // XXX use fs.existsSync in node 0.8 instead of path.existsSync
+            if (path.existsSync(ormDir)) {
+              ormArray.push({ormCreds: ormCreds, ormDir: ormDir, loadOrder: extLoadOrder});
             }
-
-            // execute command
-            X.log("Executing (cd " + scriptDir + " && exec " + psqlCommand + ")");
-            exec("(cd " + scriptDir + " && exec " + psqlCommand + ")", scriptCallback);
-            commandCount++;
-            respObject.commandLog.push(psqlCommand);
           });
+
+
+        }); // end loop of organizations
+
+        //
+        // We've gotten all of the commands into arrays. First sort them by
+        // the appropriate load order, then run through them all.
+        //
+        psqlArray = _.sortBy(psqlArray, function (obj) {
+          return obj.loadOrder;
         });
-        if (commandCount === 0) {
-          // Report fully back even if no commands were run.
-          respObject.status = respObject.status || "SUCCESS";
-          respond(res, respObject);
-        }
+        // don't need the load order anymore
+        psqlArray = _.map(psqlArray, function (obj) {
+          return obj.command;
+        });
+        ormArray = _.sortBy(ormArray, function (obj) {
+          return obj.loadOrder;
+        });
+        runPsqlCommands(psqlArray, ormArray, respObject, orgCallback);
       },
       fetchError = function (model, error) {
-        respObject.status = "ERROR";
-        respObject.errorCount++;
+        respObject.isError = true;
         respObject.message = "Error while fetching organizations";
-        respond(res, respObject);
+        res.send(respObject);
       },
       options,
       query = {
@@ -253,6 +263,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // users accessing this route through the unexposed server don't have to
       // get authenticated. Do the fetch under the node user authority.
       install(res, args, X.options.globalDatabase.nodeUsername);
+      return;
+    }
+
+    //
+    // If they're not coming in through localhost, make sure the global user
+    // requesting this route has MaintainOrganizations privileges
+    //
+    // XXX not sure if the word Maintain Organizations should be hardcoded
+    if (_.indexOf(req.session.passport.user.globalPrivileges, "MaintainOrganizations") < 0) {
+      res.send({isError: true, message: "You don't have the privileges to do this"});
       return;
     }
 

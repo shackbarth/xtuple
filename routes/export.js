@@ -2,10 +2,11 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true */
 
+
 (function () {
   "use strict";
 
-  // XXX this is half-implemented and deprecated
+  var queryForData = require('./report').queryForData;
 
   // https://localtest.com/export?details={"requestType":"fetch","query":{"recordType":"XM.Locale"}}
 
@@ -106,79 +107,43 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return csv;
   };
 
-  var queryForCsv = function (query, callback) {
-    var userId = "admin",//TODO // session.get("details").username,
-      userQueryPayload = '{"requestType":"retrieveRecord","recordType":"XM.UserAccountRelation","id":"%@"}'.f(userId),
-      userQuery = "select xt.retrieve_record('%@')".f(userQueryPayload);
 
-    // first make sure that the user has permissions to export to CSV
-    // (can't trust the client)
-    session.query(userQuery, function (err, res) {
-      var retrievedRecord;
-
-      if (err || !res || res.rowCount < 1) {
-        callback("Error verifying user permissions", null);
-        return;
-      }
-
-      retrievedRecord = JSON.parse(res.rows[0].retrieve_record);
-      if (retrievedRecord.disableExport) {
-        // nice try, asshole.
-        callback("Stop trying to hack into our database", null);
-        return;
-      }
-
-      session.query(query, function (err, res) {
-        var resultAsCsv;
-
-        if (err) {
-          callback(err, null);
-        } else {
-          resultAsCsv = jsonToCsv(JSON.parse(res.rows[0].fetch));
-          callback(null, resultAsCsv);
-        }
-      });
-    });
-  };
-
-  // TODO: exception handling
-  var handle = function (req, res) {
+  // export is a reserved word
+  exports.exxport = function (req, res) {
     var requestDetails = req.query.details,
       contentType = 'text/csv',
       query;
 
-
+    requestDetails = JSON.parse(requestDetails);
+    requestDetails.username = req.session.passport.user.username;
+    requestDetails = JSON.stringify(requestDetails);
     query = "select xt.fetch('%@')".f(requestDetails);
 
-    console.log(query);
-
-    // TODO: authentication
-
-    var filename = "export",
-      queryObject,
-      recordType;
-    try {
-      // try to name the file after the record type
-      queryObject = JSON.parse(requestDetails);
-      recordType = queryObject.query.recordType;
-      // suffix() would be better than substring() but doesn't exist here yet
-      filename = recordType.substring(3).replace("ListItem", "Export");
-
-    } catch (error) {
-      // "export" will have to do.
-    }
-
-    queryForCsv(query, function (err, res) {
+    queryForData(req.session, query, function (err, result) {
       if (err) {
-        res.send(500, "Error querying database");
+        res.send({isError: true, message: "Error querying database"});
       } else {
-        // TODO: reimplement
-        //response.writeHead(200, {"Content-Type": contentType, "Content-Disposition": "attachment; filename = %@.csv".f(filename) });
-        res.send(res);
+        var resultAsCsv,
+          filename = "export",
+          queryObject,
+          recordType;
+        try {
+          // try to name the file after the record type
+          queryObject = JSON.parse(requestDetails);
+          recordType = queryObject.query.recordType;
+          // suffix() would be better than substring() but doesn't exist here yet
+          filename = recordType.substring(3).replace("ListItem", "Export");
+
+        } catch (error) {
+          // "export" will have to do.
+        }
+
+        resultAsCsv = jsonToCsv(JSON.parse(result.rows[0].fetch));
+        res.attachment(filename + ".csv");
+        res.send(resultAsCsv);
       }
     });
   };
 
-  exports.expor = handle;
 
 }());

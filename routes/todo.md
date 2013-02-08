@@ -14,6 +14,10 @@ email.js
 report.js
 file.js
 dataFromKey.js
+changePassword.js
+resetPassword.js
+syncUser.js
+export.js
 
 UNNECESSARY
 data.js -- dead code?
@@ -25,10 +29,6 @@ oauth2auth.js
 oauth2token.js
 
 NOT DONE
-changePassword.js -- John is currently working on this in 19343
-resetPassword.js
-syncUser.js
-export.js -- can we deprecate this w/ pentaho instead of porting?
 
 FUTURE REFACTORING POSSIBILITIES
 errors return 200 with isError: true. Better to return 500?

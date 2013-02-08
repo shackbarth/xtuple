@@ -11,17 +11,14 @@ while getopts ":p" opt; do
 done
 
 git checkout master
-git_status=$(git pull  2> /dev/null)
-#echo ${git_status}
-if [[  ${git_status} =~ 'Already up-to-date.' ]]  
-  then 
-  if [ $PRODUCTION ]
-        then
-        echo $PRODUCTION 
-        git checkout `git describe --tags`
-  fi
+git pull
+if [ $PRODUCTION ]
+  then
+  git checkout `git describe --abbrev=0`
 fi
 
 npm install
-killall -TERM node
+monit stop node
+sleep 10
+monit start node
 
