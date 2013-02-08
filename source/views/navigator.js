@@ -67,8 +67,9 @@ trailing:true white:true*/
             {kind: "XV.IconButton", src: "lib/enyo-x/assets/menu-icon-gear.png",
 							content: "_actions".loc()},
             {kind: "onyx.Menu", components: [
+              {name: "printItem", content: "_print".loc(), showing: false},
               {name: "exportItem", content: "_export".loc(), showing: false},
-              {name: "myAccountItem", content: "_myAccount".loc()},
+              {name: "myAccountItem", content: "_changePassword".loc()},
               {name: "helpItem", content: "_help".loc()}
             ]}
           ]},
@@ -152,6 +153,9 @@ trailing:true white:true*/
     actionSelected: function (inSender, inEvent) {
       switch (inEvent.originator.name)
       {
+      case 'printItem':
+        this.printList();
+        break;
       case 'exportItem':
         this.exportList();
         break;
@@ -230,6 +234,15 @@ trailing:true white:true*/
     },
     getSelectedModule: function () {
       return this._selectedModule;
+    },
+    printList: function (inSender, inEvent) {
+      var list = this.$.contentPanels.getActive(),
+        query = JSON.parse(JSON.stringify(list.getQuery())); // clone
+
+      delete query.rowLimit;
+      delete query.rowOffset;
+
+      window.open('/report?details={"requestType":"fetch","query":' + JSON.stringify(query) + '}', '_newtab');
     },
     /**
       Exports the contents of a list to CSV. Note that it will export the entire
@@ -445,7 +458,7 @@ trailing:true white:true*/
           // XXX try this: only create the first three
           if (panels[n].index < 3) {
             panels[n].status = "active";
-            
+
             // Default behavior for Lists is toggle selections
             // So we can perform actions on rows. If not a List
             // this property shouldn't hurt anything
@@ -480,6 +493,7 @@ trailing:true white:true*/
       // Callback options on commit of the workspace
       // Fetch the corresponding list model and add
       callback = function (model) {
+        if (!model) { return; }
         var Model = list.getValue().model,
           value = new Model({id: model.id}),
           options = {silent: true};
@@ -542,7 +556,7 @@ trailing:true white:true*/
       } else if (panelStatus === 'unborn') {
         // panel exists but has not been rendered. Render it.
         module.panels[index].status = 'active';
-        
+
         // Default behavior for Lists is toggle selections
         // So we can perform actions on rows. If not a List
         // this property shouldn't hurt anything
@@ -566,17 +580,17 @@ trailing:true white:true*/
       } else {
         XT.error("Don't know what to do with this panel status");
       }
-      
+
       // Mobile device view
       if (enyo.Panels.isScreenNarrow()) {
         this.next();
       }
-      
+
       // If we're already here, bail
       if (contentPanels.index === this.$.contentPanels.indexOfChild(panel)) {
         return;
       }
-      
+
       // cache any extraneous content panels
       this.cachePanels();
 
@@ -597,6 +611,10 @@ trailing:true white:true*/
       // I'm skirting around the loading time for XM.currentUser. If this data
       // hasn't been loaded yet then the navigator simply won't allow export
       var isAllowedToExport = XM.currentUser && !XM.currentUser.get("disableExport");
+
+      // XXX temp while we build out BI reports for all of these...
+      var isSupportedInBi = _.indexOf(["Contacts", "Incidents", "To Do", "Accounts", "Opportunities"], label) >= 0;
+      this.$.printItem.setShowing(collection && isAllowedToExport && isSupportedInBi);
       this.$.exportItem.setShowing(collection && isAllowedToExport);
 
       // Handle new button
@@ -626,7 +644,7 @@ trailing:true white:true*/
         this.fetched[panelIndex] = true;
       }
     },
-    
+
     /**
       The header content typically describes to the user the particular query filter in effect.
      */

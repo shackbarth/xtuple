@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, trailing:true, white:true */
-/*global XT:true, XV:true, XM:true, Backbone:true, enyo:true, _:true */
+/*global XT:true, XV:true, XM:true, Backbone:true, enyo:true, _:true, X:true */
 
 (function () {
 
@@ -8,7 +8,7 @@ regexp:true, undef:true, trailing:true, white:true */
     @name XV.RelationWidget
     @class A picker control that implements a dropdown list of items which can be selected.<br />
     Unlike the {@link XV.PickerWidget}, the collection is not stored local to the widget.<br />
-    Derived from <a href="http://enyojs.com/api/#enyo.Control">enyo.Control</a>. 
+    Derived from <a href="http://enyojs.com/api/#enyo.Control">enyo.Control</a>.
     @extends enyo.Control
    */
   enyo.kind(/** @lends XV.RelationWidget# */{
@@ -255,6 +255,7 @@ regexp:true, undef:true, trailing:true, white:true */
         // Callback options on commit of the workspace
         // Find the model with matching id, fetch and set it.
         callback = function (model) {
+          if (!model) { return; }
           var Model = that._collection.model,
             value = new Model({id: model.id}),
             options = {};
