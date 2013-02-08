@@ -706,7 +706,13 @@ white:true*/
       @returns {Boolean}
     */
     hasLockKey: function () {
-      return !this.get("lock") || this.get("lock").key;
+      var lock = this.get("lock");
+      if (!lock || lock.key) {
+        return true;
+      } else {
+        console.log(lock.username + " has locked this record at " + lock.acquired);
+        return false;
+      }
     },
 
     /**
@@ -772,8 +778,7 @@ white:true*/
       @param {Object} Response
     */
     parse: function (resp) {
-      var that = this,
-        K = XT.Session,
+      var K = XT.Session,
         column,
         parse,
         parseIter = function (iter) {
