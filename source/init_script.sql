@@ -49,6 +49,7 @@
 
 -- xt tables
 \i xt/tables/js.sql
+\i xt/tables/lock.sql
 \i xt/tables/orm.sql
 \i xt/tables/priv.sql
 \i xt/tables/useracct.sql

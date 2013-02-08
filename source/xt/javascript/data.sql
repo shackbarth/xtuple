@@ -946,82 +946,13 @@ select xt.install_js('XT','Data','xtuple', $$
 
       ret = ret || {};
 
-      if (this.doLockRecords()) {
+      if (map.lockable) {
         /* see if there's a lock in this table */
-        if(DEBUG) plv8.elog(NOTICE, XT.username, "is testing lock on ", map.table);
-         
-        /* we have to determine the oid of the table we're querying */
-        var oid = this.getTableOid(map.table);
-
-        /* the id needs to be an integer. ensure this */
-        id = this.idAsInt(rawId);
-
-        /* try the lock, and add one for us if it's not there. Either way, tack it on to the 
-          return object */
-       
-        ret.lock = this.tryLock(oid, id, XT.username);
-
-        if (DEBUG) plv8.elog(NOTICE, "Lock returned is", ret.lock);
+        ret.lock = this.tryLock(map.table, id, XT.username);
       }
 
       /* return the results */
       return ret;
-    },
-
-    doLockRecords: function () {
-      /* do not run record locking on global db. This is a hack. */
-      var globalDbTestSql = "select pg_class.oid::integer as oid " + 
-        "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " + 
-        "where relname = 'usrorg' " +
-        "and nspname = 'xt'";
-      var globalDbTestResult = plv8.execute(globalDbTestSql);
-      if (globalDbTestResult.length > 0) {
-        return false;
-      } else {
-        return true;
-      }
-    },
-
-    /*
-      Determines the table OID from the table name.
-    */
-    getTableOid: function (tableName) {
-      var tableNamespace = "public"; /* default assumed if no dot in tableName */
-      tableName = tableName.toLowerCase(); /* be generous */
-      if (tableName.indexOf(".") > 0) {
-         tableNamespace = tableName.beforeDot(); 
-         tableName = tableName.afterDot();
-      }
-      var oidSql = "select pg_class.oid::integer as oid " + 
-        "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " + 
-        "where relname = $1 " +
-        "and nspname = $2";
-      return plv8.execute(oidSql, [tableName, tableNamespace])[0].oid;
-
-    },
-
-    idAsInt: function(id) {
-      if (typeof id === 'string') {
-        /* we can only put integers into the xt.lock table.
-        XXX probably the best way to do this is to look at the actual ID column if the value
-        called id is a string. This is tough for xt.useracct, because there is no ID column.
-        Er, there is in the table, but not in the map object that we're working with.
-        Hashing it into an integer will work fine, but is inelegant.
-          var idField = XT.Orm.getProperty(map, 'id'); // fails for xt.useracct
-        
-         */
-        /* XXX this is hack and probably temporary */
-        var hash = 0, i, char;
-        if (id.length == 0) return hash;
-        for (i = 0; i < id.length; i++) {
-            char = id.charCodeAt(i);
-            hash = ((hash<<5)-hash)+char;
-            hash = hash & hash; // Convert to 32bit integer
-        }
-        return hash;
-      } else {
-        return id;
-      }
     },
 
     /**
@@ -1052,12 +983,53 @@ select xt.install_js('XT','Data','xtuple', $$
       return ret;
     },
 
-    tryLock: function (tableOid, recordId, username) {
+    generateGUID: function () {
+      /* http://www.ietf.org/rfc/rfc4122.txt */
+      var s = [];
+      var hexDigits = "0123456789abcdef";
+      for (var i = 0; i < 36; i++) {
+        s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+      }
+      s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+      s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+      s[8] = s[13] = s[18] = s[23] = "-";
+
+      var uuid = s.join("");
+      return uuid;
+    },
+
+    tryLock: function (tableName, id, username, options) {
+      if(DEBUG) plv8.elog(NOTICE, XT.username + "is attempting lock on " + map.table);
+      
+      options = options ? options : {};
+      var tableNamespace = "public"; /* default assumed if no dot in tableName */
+        oidSql = "select pg_class.oid::integer as oid " + 
+                 "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " + 
+                 "where relname = $1 and nspname = $2",
+        deleteSql = "delete from xt.lock where lock_expires < now()",
+        selectSql = "select * " +
+                    "from xt.lock " +
+                    "where lock_table_oid = $1 " + 
+                    " and lock_record_id = $2 " +
+                    " and (lock_pid is not null or lock_expires > now())",
+        insertSql = "insert into xt.lock (lock_table_oid, lock_record_id, lock_username, lock_expires, lock_key) " +
+                     "values ($1, $2, $3, $4, $5)",
+        timeout = options.timeout || 30,
+        expires = new Date(),
+        oid,
+        key;
+
+      tableName = tableName.toLowerCase(); /* be generous */ 
+      if (tableName.indexOf(".") > 0) {
+         tableNamespace = tableName.beforeDot(); 
+         tableName = tableName.afterDot();
+      }
+      oid = plv8.execute(oidSql, [tableName, tableNamespace])[0].oid;
+
       if (DEBUG) plv8.elog(NOTICE, "Trying lock table", tableOid, recordId); 
-      var selectSql = "select * from xt.lock where lock_table_oid = $1 and lock_record_id = $2",
-        insertSql = "insert into xt.lock (lock_table_oid, lock_record_id, lock_username, lock_acquired) values ($1, $2, $3, $4)",
-        existingLock = plv8.execute(selectSql, [tableOid, recordId]),
-        now;
+      
+      existingLock = plv8.execute(selectSql, [oid, id]);
+      plv8.execute(deleteSql); /* Maintenance */
 
       if(existingLock.length > 0) {
         if (DEBUG) plv8.elog(NOTICE, "Lock found", existingLock[0].lock_username); 
@@ -1068,13 +1040,22 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       if (DEBUG) plv8.elog(NOTICE, "No lock found. Creating lock."); 
-      now = new Date();
-      plv8.execute(insertSql, [tableOid, recordId, username, now]);
+      
+      expires = expires.setSeconds(expires.getSeconds() + timeout);
+      key = this.generateGUID();
+      plv8.execute(insertSql, [tableOid, recordId, username, timeout, key]);
+
+      if (DEBUG) plv8.elog(NOTICE, "Lock returned is", ret.lock);
      
       return { 
         username: username,
-        acquired: now
+        acquired: expires,
+        key: key
       }
+    },
+
+    releaseLock: function (key) {
+      plv8.execute('delete from xt.lock where key = $1;', [key]);
     }
   }
 
