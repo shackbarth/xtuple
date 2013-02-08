@@ -105,11 +105,11 @@ trailing:true white:true*/
   
     extensions = [
       {kind: "XV.AccountToDosBox", container: "panels",
-        attr: "toDoRelations"},
+        attr: "toDoRelations", parentAttr: "account"},
       {kind: "XV.AccountOpportunitiesBox", container: "panels",
-        attr: "opportunityRelations"},
+        attr: "opportunityRelations", parentAttr: "account"},
       {kind: "XV.AccountIncidentsBox", container: "panels",
-        attr: "incidentRelations"}
+        attr: "incidentRelations", parentAttr: "account"}
     ];
 
     XV.appendExtension("XV.CustomerWorkspace", extensions);
