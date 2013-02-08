@@ -960,20 +960,10 @@ select xt.install_js('XT','Data','xtuple', $$
       /* end hack */
 
       if (lockRecords) {
+        if(DEBUG) plv8.elog(NOTICE, XT.username, "is testing lock on ", map.table);
+         
         /* we have to determine the oid of the table we're querying */
-        var actualTableName = map.table;
-        var actualTableNamespace = "public"; // default
-        if (actualTableName.indexOf(".") > 0) {
-           actualTableNamespace = actualTableName.beforeDot(); 
-           actualTableName = actualTableName.afterDot();
-        }
-        if(DEBUG) plv8.elog(NOTICE, XT.username, "is testing lock on ", actualTableNamespace, actualTableName); 
-        var oidSql = "select pg_class.oid::integer as oid " + 
-          "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " + 
-          "where relname = $1 " +
-          "and nspname = $2";
-        var oid = plv8.execute(oidSql, [actualTableName, actualTableNamespace])[0].oid;
-
+        var oid = this.getTableOid(map.table);
 
         if (typeof id === 'string') {
           /* we can only put integers into the xt.lock table.
@@ -997,6 +987,24 @@ select xt.install_js('XT','Data','xtuple', $$
 
       /* return the results */
       return ret;
+    },
+
+    /*
+      Determines the table OID from the table name.
+    */
+    getTableOid: function (tableName) {
+      var tableNamespace = "public"; /* default assumed if no dot in tableName */
+      tableName = tableName.toLowerCase(); /* be generous */
+      if (tableName.indexOf(".") > 0) {
+         tableNamespace = tableName.beforeDot(); 
+         tableName = tableName.afterDot();
+      }
+      var oidSql = "select pg_class.oid::integer as oid " + 
+        "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " + 
+        "where relname = $1 " +
+        "and nspname = $2";
+      return plv8.execute(oidSql, [tableName, tableNamespace])[0].oid;
+
     },
 
     /* XXX this is hack and probably temporary */

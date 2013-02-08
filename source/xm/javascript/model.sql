@@ -38,6 +38,19 @@ select xt.install_js('XM','Model','xtuple', $$
     return seq ? plv8.execute(sql, [seq])[0].result : false;
   }
 
+
+  XM.Model.releaseLock = function (tableName, recordId, username) {
+    var tableOid = XT.Data.getTableOid(tableName),
+      sql = "delete from xt.lock where lock_table_oid = $1 and lock_record_id = $2 and lock_username = $3";
+  
+    /* if (DEBUG) */ plv8.elog(NOTICE, "Releasing lock", tableOid, recordId, username); 
+    plv8.execute(sql, [tableOid, recordId, username]);
+    /* TODO: should we return the number of rows affected? */
+
+    return true;
+  }
+
+
   /**
     Release a number back into the sequence pool for a given type. 
 
