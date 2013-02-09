@@ -157,6 +157,54 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "TaxType",
+    "table": "taxtype",
+    "idSequenceName": "taxtype_taxtype_id_seq",
+    "comment": "Tax Zone Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainTaxTypes",
+        "read": true,
+        "update": "MaintainTaxTypes",
+        "delete": "MaintainTaxTypes"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "taxtype_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "taxtype_name"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "taxtype_descrip"
+        }
+      },
+      {
+        "name": "isSystem",
+        "attr": {
+          "type": "Boolean",
+          "column": "taxtype_sys"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "TaxZone",
     "table": "taxzone",
     "idSequenceName": "taxzone_taxzone_id_seq",
