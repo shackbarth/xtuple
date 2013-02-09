@@ -33,7 +33,8 @@
       {
         "name": "customer",
         "toOne": {
-          "type": "CustomerRelation",
+          "isNested": true,
+          "type": "CustomerProspectRelation",
           "column": "quhead_cust_id"
         }
       },
@@ -94,7 +95,7 @@
         }
       },
       {
-        "name": "shiptoZipCode",
+        "name": "shiptoPostalCode",
         "attr": {
           "type": "String",
           "column": "quhead_shiptozipcode"
@@ -185,7 +186,7 @@
         }
       },
       {
-        "name": "billtoZipCode",
+        "name": "billtoPostalCode",
         "attr": {
           "type": "String",
           "column": "quhead_billtozip"
@@ -228,14 +229,6 @@
         }
       },
       {
-        "name": "project",
-        "toMany": {
-          "isNested": true,
-          "type": "ProjectRelation",
-          "column": "quhead_prj_id"
-        }
-      },
-      {
         "name": "miscCharge",
         "attr": {
           "type": "Number",
@@ -259,16 +252,8 @@
       {
         "name": "currency",
         "toOne": {
-          "isNested": true,
           "type": "Currency",
           "column": "quhead_curr_id"
-        }
-      },
-      {
-        "name": "isImported",
-        "attr": {
-          "type": "Boolean",
-          "column": "quhead_imported"
         }
       },
       {
@@ -428,7 +413,6 @@
       {
         "name": "taxZone",
         "toOne": {
-          "isNested": true,
           "type": "TaxZone",
           "column": "quhead_taxzone_id"
         }
@@ -442,15 +426,7 @@
         }
       },
       {
-        "name": "opportunity",
-        "toOne": {
-          "isNested": true,
-          "type": "OpportunityRelation",
-          "column": "quhead_ophead_id"
-        }
-      },
-      {
-        "name": "orderStatus",
+        "name": "status",
         "attr": {
           "type": "String",
           "column": "quhead_status"
@@ -466,7 +442,6 @@
       {
         "name": "shipZone",
         "toOne": {
-          "isNested": true,
           "type": "ShipZone",
           "column": "quhead_shipzone_id"
         }
@@ -561,10 +536,10 @@
   {
     "context": "sales",
     "nameSpace": "XM",
-    "type": "QuoteItem",
+    "type": "QuoteLine",
     "table": "quitem",
     "idSequenceName": "quitem_quitem_id_seq",
-    "comment": "Quote Item Map",
+    "comment": "Quote Line Item Map",
     "privileges": {
       "all": {
         "create": "MaintainQuotes",
@@ -584,8 +559,8 @@
       },
       {
         "name": "quote",
-        "toOne": {
-          "type": "QuoteRelation",
+        "attr": {
+          "type": "Number",
           "column": "quitem_quhead_id"
         }
       },
@@ -599,21 +574,21 @@
       {
         "name": "itemSite",
         "toOne": {
-          "isNested": "true",
+          "isNested": true,
           "type": "ItemSiteRelation",
           "column": "quitem_itemsite_id"
         }
       },
     
       {
-        "name": "schedDate",
+        "name": "scheduleDate",
         "attr": {
           "type": "Date",
           "column": "quitem_scheddate"
         }
       },
       {
-        "name": "qtyOrd",
+        "name": "quantityOrd",
         "attr": {
           "type": "Number",
           "column": "quitem_qtyord"
@@ -634,7 +609,7 @@
         }
       },
       {
-        "name": "custPrice",
+        "name": "customerPrice",
         "attr": {
           "type": "Number",
           "column": "quitem_custprice"
@@ -648,23 +623,15 @@
         }
       },
       {
-        "name": "custPn",
+        "name": "customerPartNumber",
         "attr": {
           "type": "String",
           "column": "quitem_custpn"
         }
       },
       {
-        "name": "isCreateOrder",
-        "attr": {
-          "type": "Boolean",
-          "column": "quitem_createorder"
-        }
-      },
-      {
         "name": "site",
         "toOne": {
-          "isNested": true,
           "type": "SiteRelation",
           "column": "quitem_order_warehous_id"
         }
@@ -678,49 +645,35 @@
         }
       },
       {
-        "name": "prCost",
-        "attr": {
-          "type": "Number",
-          "column": "quitem_prcost"
-        }
-      },
-      {
-        "name": "isImported",
-        "attr": {
-          "type": "Boolean",
-          "column": "quitem_imported"
-        }
-      },
-      {
-        "name": "qtyUom",
-        "attr": {
-          "type": "Number",
+        "name": "quantityUnit",
+        "toOne": {
+          "type": "Unit",
           "column": "quitem_qty_uom_id"
         }
       },
       {
-        "name": "qtyInvUomRatio",
+        "name": "inventoryQuantityUnitRatio",
         "attr": {
           "type": "Number",
           "column": "quitem_qty_invuomratio"
         }
       },
       {
-        "name": "priceUom",
+        "name": "priceUnit",
         "attr": {
           "type": "Number",
           "column": "quitem_price_uom_id"
         }
       },
       {
-        "name": "priceInvUomRatio",
+        "name": "priceUnitRatio",
         "attr": {
           "type": "Number",
           "column": "quitem_price_invuomratio"
         }
       },
       {
-        "name": "promDate",
+        "name": "promiseDate",
         "attr": {
           "type": "Date",
           "column": "quitem_promdate"
@@ -729,16 +682,8 @@
       {
         "name": "taxType",
         "toOne": {
-          "isNested": true,
           "type": "TaxType",
           "column": "quitem_taxtype_id"
-        }
-      },
-      {
-        "name": "isDropShip",
-        "attr": {
-          "type": "Boolean",
-          "column": "quitem_dropship"
         }
       },
       {
@@ -759,10 +704,10 @@
     "comment": "Quote List Item Map",
     "privileges": {
       "all": {
-        "create": "MaintainQuotes",
-        "read": "ViewQuotes",
-        "update": "MaintainQuotes",
-        "delete": "MaintainQuotes"
+        "create": false,
+        "read": "ViewQuotes MaintainQuotes",
+        "update": false,
+        "delete": false
       }
     },
     "properties": [
@@ -783,13 +728,14 @@
       },
       {
         "name": "customer",
-        "attr": {
-          "type": "CustomerRelation",
+        "toOne": {
+          "isNested": true,
+          "type": "CustomerProspectRelation",
           "column": "quhead_cust_id"
         }
       },
       {
-        "name": "custPoNumber",
+        "name": "customerPurchaseOrderNumber",
         "attr": {
           "type": "String",
           "column": "quhead_custponumber"
@@ -810,10 +756,24 @@
          }
       },
       {
+        "name": "expireDate",
+        "attr": {
+          "type": "Date",
+          "column": "quhead_expire"
+         }
+      },
+      {
         "name": "orderNotes",
         "attr": {
           "type": "String",
           "column": "quhead_ordercomments"
+         }
+      },
+      {
+        "name": "orderTotal",
+        "attr": {
+          "type": "Number",
+          "column": "quhead_total"
          }
       },
       {
@@ -854,7 +814,7 @@
         "name": "customer",
         "toOne": {
           "isNested": true,
-          "type": "CustomerRelation",
+          "type": "CustomerProspectRelation",
           "column": "quhead_cust_id"
         }
       },
