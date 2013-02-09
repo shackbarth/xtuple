@@ -995,8 +995,8 @@ select xt.install_js('XT','Data','xtuple', $$
     */
     tryLock: function (table, id, username, options) {
       options = options ? options : {};
-      var tableNamespace = "public"; /* default assumed if no dot in tableName */
-        pid = options.pid || null,
+      var tableNamespace = "public", /* default assumed if no dot in tableName */
+        pid = options.pid || 'null',
         oidSql = "select pg_class.oid::integer as oid " + 
                  "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " + 
                  "where relname = $1 and nspname = $2",
@@ -1011,7 +1011,7 @@ select xt.install_js('XT','Data','xtuple', $$
                     "where lock_table_oid = $1 " + 
                     " and lock_record_id = $2;",
         insertSql = "insert into xt.lock (lock_table_oid, lock_record_id, lock_username, lock_expires, lock_pid) " +
-                     "values ($1, $2, $3, $4, $5) returning lock_id, lock_effective",
+                     "values ($1, $2, $3, {expires}, {pid}) returning lock_id, lock_effective;",
         timeout = options.timeout || 30,
         expires = new Date(),
         oid,
@@ -1053,8 +1053,8 @@ select xt.install_js('XT','Data','xtuple', $$
           }
           
           /* Delete invalid or expired lock */
-          lock = undefined;
           plv8.execute(deleteSql, [lock.lock_id]);
+          lock = undefined;
         }
 
         if (lock) {
@@ -1068,16 +1068,16 @@ select xt.install_js('XT','Data','xtuple', $$
 
       if (DEBUG) plv8.elog(NOTICE, "No lock found. Creating lock."); 
       
-      expires = pid ? null : expires.setSeconds(expires.getSeconds() + timeout);
-      qurey = plv8.execute(insertSql, [tableOid, recordId, username, expires, pid]);
+      expires = pid ? 'null' : expires.setSeconds(expires.getSeconds() + timeout);
+      lock = plv8.execute(insertSql.replace("{expires}", expires).replace("{pid}", pid), [oid, id, username])[0];
 
-      if (DEBUG) plv8.elog(NOTICE, "Lock returned is", query[0].lock_id);
+      if (DEBUG) { plv8.elog(NOTICE, "Lock returned is", lock.lock_id); }
      
       return { 
         username: username,
-        effective: query[0].lock_effective,
+        effective: lock.lock_effective,
         expires: expires,
-        key: query[0].lock_id
+        key: lock.lock_id
       }
     },
 
@@ -1088,7 +1088,7 @@ select xt.install_js('XT','Data','xtuple', $$
     */
     releaseLock: function (key) {
       plv8.execute('delete from xt.lock where lock_id = $1;', [key]);
-    }
+    },
 
     /**
       Renew a lock. Defaults to rewing the lock for 30 seconds.
