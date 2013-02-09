@@ -29,6 +29,26 @@ trailing:true white:true*/
       ajax.response(this.ajaxSuccess);
       ajax.go(payload);
     };
+
+    /*
+      Run the db maintenance script to sync the organization instance database
+
+      @param {Object} payload
+      @param {String} payload.organization
+      @param {Boolean} payload.initialize
+      @param {Array} payload.extensions
+    */
+    XT.DataSource.runMaintenance = function (payload, options) {
+      var that = this,
+        ajax = new enyo.Ajax({
+          url: "/maintenance",
+          success: options ? options.success : undefined,
+          error: options ? options.error : undefined
+        });
+
+      ajax.response(this.ajaxSuccess);
+      ajax.go(payload);
+    };
   };
 
 }());
