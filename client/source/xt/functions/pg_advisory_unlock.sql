@@ -6,7 +6,7 @@ create or replace function xt.pg_advisory_unlock(oid integer, id integer) return
     query = plv8.execute(sql, [oid, id, username, pid]);
 
   if (query.length) {
-    data.releaseLock(query[0].lock_id);
+    data.releaseLock({key: query[0].lock_id});
     return true;
   }
   return false;
