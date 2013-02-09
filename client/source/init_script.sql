@@ -58,6 +58,7 @@
 \i xt/views/doc.sql;
 \i xt/views/crmacctaddr.sql;
 \i xt/views/crmacctcomment.sql;
+\i xt/views/customer_prospect.sql;
 \i xt/views/cust_doc.sql;
 \i xt/views/incdtinfo.sql;
 \i xt/views/opheadinfo.sql;
@@ -84,6 +85,7 @@
 \i xm/javascript/address.sql;
 \i xm/javascript/contact.sql;
 \i xm/javascript/crm.sql;
+\i xm/javascript/customer_prospect.sql;
 \i xm/javascript/database_information.sql;
 \i xm/javascript/incident.sql;
 \i xm/javascript/project.sql;
