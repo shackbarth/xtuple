@@ -983,79 +983,132 @@ select xt.install_js('XT','Data','xtuple', $$
       return ret;
     },
 
-    generateGUID: function () {
-      /* http://www.ietf.org/rfc/rfc4122.txt */
-      var s = [];
-      var hexDigits = "0123456789abcdef";
-      for (var i = 0; i < 36; i++) {
-        s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
-      }
-      s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
-      s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
-      s[8] = s[13] = s[18] = s[23] = "-";
+    /**
+      Creates and returns a lock for a given table. Defaults to a time based lock of 30 seconds
+      unless a timeout option or process id (pid) is passed to specify otherwise. If a pid is passed, the lock
+      is considered infinite as long as the pid is valid.
 
-      var uuid = s.join("");
-      return uuid;
-    },
-
-    tryLock: function (tableName, id, username, options) {
-      if(DEBUG) plv8.elog(NOTICE, XT.username + "is attempting lock on " + map.table);
-      
+      @param {String | Number} Table name or oid
+      @param {Number} Record id
+      @param {String} Username
+      @param {Object} Options: timeout, pid
+    */
+    tryLock: function (table, id, username, options) {
       options = options ? options : {};
       var tableNamespace = "public"; /* default assumed if no dot in tableName */
+        pid = options.pid || null,
         oidSql = "select pg_class.oid::integer as oid " + 
                  "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " + 
                  "where relname = $1 and nspname = $2",
-        deleteSql = "delete from xt.lock where lock_expires < now()",
+        pidSql = "select usename, procpid " +
+                 "from pg_stat_activity " +
+                 "where datname=current_database() " +
+                 " and usename=$1 " +
+                 " and procpid=$2;",
+        deleteSql = "delete from xt.lock where lock_id = $1;",
         selectSql = "select * " +
                     "from xt.lock " +
                     "where lock_table_oid = $1 " + 
-                    " and lock_record_id = $2 " +
-                    " and (lock_pid is not null or lock_expires > now())",
-        insertSql = "insert into xt.lock (lock_table_oid, lock_record_id, lock_username, lock_expires, lock_key) " +
-                     "values ($1, $2, $3, $4, $5)",
+                    " and lock_record_id = $2;",
+        insertSql = "insert into xt.lock (lock_table_oid, lock_record_id, lock_username, lock_expires, lock_pid) " +
+                     "values ($1, $2, $3, $4, $5) returning lock_id, lock_effective",
         timeout = options.timeout || 30,
         expires = new Date(),
         oid,
-        key;
+        query,
+        i,
+        lock,
+        lockExp,
+        pcheck;
 
-      tableName = tableName.toLowerCase(); /* be generous */ 
-      if (tableName.indexOf(".") > 0) {
-         tableNamespace = tableName.beforeDot(); 
-         tableName = tableName.afterDot();
+      /* If passed a table name, look up the oid */
+      if (typeof table === "string") {
+        table = table.toLowerCase(); /* be generous */ 
+        if (table.indexOf(".") > 0) {
+           tableNamespace = table.beforeDot(); 
+           table = table.afterDot();
+        }
+        oid = plv8.execute(oidSql, [table, tableNamespace])[0].oid;
+      } else {
+        oid = table;
       }
-      oid = plv8.execute(oidSql, [tableName, tableNamespace])[0].oid;
 
-      if (DEBUG) plv8.elog(NOTICE, "Trying lock table", tableOid, recordId); 
-      
-      existingLock = plv8.execute(selectSql, [oid, id]);
-      plv8.execute(deleteSql); /* Maintenance */
+      if (DEBUG) plv8.elog(NOTICE, "Trying lock table", oid, id); 
 
-      if(existingLock.length > 0) {
-        if (DEBUG) plv8.elog(NOTICE, "Lock found", existingLock[0].lock_username); 
-        return {
-          username: existingLock[0].lock_username,
-          acquired: existingLock[0].lock_acquired
+      /* See if there are existing lock(s) for this record */
+      query = plv8.execute(selectSql, [oid, id]);
+
+      /* Validate result */
+      if (query.length > 0) {
+        while (query.length) {
+          lock = query.shift();
+
+          /* Make sure if they are pid locks users is still connected */
+          if (lock.lock_pid) {
+            pcheck = plv8.execute(pidSql, [lock.lock_username, lock.lock_pid]);
+            if (pcheck.length) { break; } /* valid lock */
+          } else {
+            lockExp = new Date(lock.lock_expires);
+            if (lockExp > expires) { break; } /* valid lock */
+          }
+          
+          /* Delete invalid or expired lock */
+          lock = undefined;
+          plv8.execute(deleteSql, [lock.lock_id]);
+        }
+
+        if (lock) {
+          if (DEBUG) plv8.elog(NOTICE, "Lock found", lock.lock_username); 
+          return {
+            username: lock.lock_username,
+            effective: lock.lock_effective
+          }
         }
       }
 
       if (DEBUG) plv8.elog(NOTICE, "No lock found. Creating lock."); 
       
-      expires = expires.setSeconds(expires.getSeconds() + timeout);
-      key = this.generateGUID();
-      plv8.execute(insertSql, [tableOid, recordId, username, timeout, key]);
+      expires = pid ? null : expires.setSeconds(expires.getSeconds() + timeout);
+      qurey = plv8.execute(insertSql, [tableOid, recordId, username, expires, pid]);
 
-      if (DEBUG) plv8.elog(NOTICE, "Lock returned is", ret.lock);
+      if (DEBUG) plv8.elog(NOTICE, "Lock returned is", query[0].lock_id);
      
       return { 
         username: username,
-        acquired: expires,
-        key: key
+        effective: query[0].lock_effective,
+        expires: expires,
+        key: query[0].lock_id
       }
     },
 
+    /**
+      Release a lock.
+
+      @param {Number} Key
+    */
     releaseLock: function (key) {
-      plv8.execute('delete from xt.lock where key = $1;', [key]);
+      plv8.execute('delete from xt.lock where lock_id = $1;', [key]);
+    }
+
+    /**
+      Renew a lock. Defaults to rewing the lock for 30 seconds.
+
+      @param {Number} Key
+      @params {Object} Options: timeout
+    */
+    renewLock: function (key, options) {
+      var timeout = options && options.timeout ? options.timeout : 30,
+        selectSql = "select * from xt.lock where lock_id = $1;",
+        updateSql = "update xt.lock set lock_expires = now() + 'interval $1 seconds' where lock_id = $2;",
+        query;
+        
+      query = plv8.execute(selectSql, [key]);
+      if (query.length) {
+        plv8.execute(updateSql, [timeout, key]);
+        return true;
+      } 
+
+      return false;
     }
   }
 
