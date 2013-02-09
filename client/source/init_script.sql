@@ -63,7 +63,7 @@
 \i xt/views/incdtinfo.sql;
 \i xt/views/opheadinfo.sql;
 \i xt/views/prjinfo.sql;
-\i xt/views/quote.sql;
+\i xt/views/quheadinfo.sql;
 \i xt/views/todoiteminfo.sql;
 \i xt/views/usr.sql;
 

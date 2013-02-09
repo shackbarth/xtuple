@@ -1,6 +1,6 @@
-drop view if exists xt.quote cascade;
+drop view if exists xt.quheadinfo cascade;
 
-create or replace view xt.quote as
+create or replace view xt.quheadinfo as
 
   SELECT  query.*, 
           quhead_subtotal + quhead_tax + quhead_freight + quhead_misc AS quhead_total 
@@ -22,6 +22,6 @@ create or replace view xt.quote as
   FROM    quhead
           ) query;
           
-revoke all on xt.quote from public;
-grant all on table xt.quote to group xtrole;
+revoke all on xt.quheadinfo from public;
+grant all on table xt.quheadinfo to group xtrole;
 
