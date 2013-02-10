@@ -239,9 +239,7 @@ white:true*/
         this._keyRefresherInterval = setInterval(function () {
           XT.dataSource.dispatch('XM.Model', 'renewLock',
             [lock.key],
-            {databaseType: that.databaseType});
-              //success: function () {console.log("success", arguments); },
-              //error: function () {console.log("error", arguments); }
+            {databaseType: that.databaseType, automatedRefresh: true});
 
         }, 25 * 1000);
 
