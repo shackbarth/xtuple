@@ -494,7 +494,7 @@ trailing:true white:true*/
       // release the record lock
       XT.dataSource.dispatch('XM.Model',
         'releaseLock',
-        [model.recordType, model.id, XT.session.details.username],
+        {key: model.get("lock").key},
         {databaseType: model.databaseType} /*,
         {success: function () {console.log("releaselock success ", arguments);},
         error: function () {console.log("releaselock error ", arguments);}}*/);
