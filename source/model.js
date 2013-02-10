@@ -234,21 +234,21 @@ white:true*/
 
     didLockChange: function (model, lock, options) {
       var that = this;
-      if (lock.key && !this.keyRefresherInterval) {
+      if (lock.key && !this._keyRefresherInterval) {
         // set up a refresher if it's not already set up
-        this.keyRefresherInterval = setInterval(function () {
-          XT.dataSource.dispatch('XM.Model', 'refreshLock',
-            [that.recordType, that.recordId, lock.key],
+        this._keyRefresherInterval = setInterval(function () {
+          XT.dataSource.dispatch('XM.Model', 'renewLock',
+            [lock.key],
             {databaseType: that.databaseType});
               //success: function () {console.log("success", arguments); },
               //error: function () {console.log("error", arguments); }
 
         }, 25 * 1000);
 
-      } else if (!lock.key && this.keyRefresherInterval) {
+      } else if (!lock.key && this._keyRefresherInterval) {
         // if the key is gone, get rid of the refresher
-        clearInterval(this.keyRefresherInterval);
-        this.keyRefresherInterval = undefined;
+        clearInterval(this._keyRefresherInterval);
+        this._keyRefresherInterval = undefined;
       }
     },
 
