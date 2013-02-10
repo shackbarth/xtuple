@@ -495,9 +495,7 @@ trailing:true white:true*/
       XT.dataSource.dispatch('XM.Model',
         'releaseLock',
         {key: model.get("lock").key},
-        {databaseType: model.databaseType} /*,
-        {success: function () {console.log("releaselock success ", arguments);},
-        error: function () {console.log("releaselock error ", arguments);}}*/);
+        {databaseType: model.databaseType});
 
       if (model.get("lock") && model.get("lock").key) {
         // taking the key away from the model's lock will have the effect of telling
