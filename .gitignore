@@ -8,3 +8,4 @@ tmp
 *.DS_Store
 output.txt
 /*.backup
+node_modules

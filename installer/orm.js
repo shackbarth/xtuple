@@ -2,22 +2,17 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true */
 
+require('../../../node-xt/foundation/foundation');
+require('../../../node-xt/database/database');
+
 (function () {
   "use strict";
 
   var _path = X.path, _ = X._, _fs = X.fs, initSocket, testConnection, dive,
-      parseFile, calculateDependencies, dependenciesFor, checkDependencies, cleanse,
-      installQueue, submit, existing, findExisting;
+    parseFile, calculateDependencies, dependenciesFor, checkDependencies, cleanse,
+    installQueue, submit, existing, findExisting, install, select, refresh, runOrmInstaller;
 
-  X.debugging = true;
   X.db = X.Database.create();
-
-  initSocket = function (socket) {
-    socket.on("refresh", _.bind(this.refresh, this, socket));
-    socket.on("install", _.bind(this.install, this, socket));
-    socket.on("select", _.bind(this.select, this, socket));
-    socket.emit("message", "thanks for connecting to me");
-  };
 
   cleanse = function (orm) {
     var ret = _.clone(orm);
@@ -38,6 +33,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   submit = function (socket, orm, queue, ack, isExtension) {
+    //console.log("submit", arguments);
     var query, extensions, context, extensionList = [], namespace, type;
     context = orm.context;
     namespace = orm.nameSpace;
@@ -70,17 +66,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       });
     }
 
-    socket.emit("message", "installing %@%@.%@".f(isExtension ? "(extension %@) ".f(context): "", orm.nameSpace, orm.type));
+    console.log("installing %@%@.%@".f(isExtension ? "(extension %@) ".f(context): "", orm.nameSpace, orm.type));
 
     query = "select xt.install_orm('%@')".f(X.json(cleanse(orm)));
 
     X.db.query(query, socket.databaseOptions, _.bind(function (err, res) {
       var c = extensionList.length;
       if (err) {
-        socket.emit("message", err.message);
-        if (isExtension) socket.emit("message", "skipping ahead");
-        else {
-          socket.emit("message", "unable to continue");
+        console.log("Error: " + err.message);
+        if (isExtension) {
+          console.log("skipping ahead");
+        } else {
+          console.log("unable to continue");
           X.log("Critical error. Unable to continue. Killing process. ", err.message);
           process.emit("SIGKILL");
           return;
@@ -89,18 +86,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       if (!isExtension) socket.installed.push(orm);
       if (c > 0) {
-        this.on(socket.id, _.bind(function (c) {
-          --c;
-          if (!extensionList.length) {
-            this.removeAllListeners(socket.id);
-            installQueue.call(this, socket, ack, queue);
-          } else {
-            submit.call(this, socket, extensionList.shift(), queue, ack, true);
-          }
-        }, this, c));
         submit.call(this, socket, extensionList.shift(), queue, ack, true);
       } else if (isExtension) {
-        return this.emit(socket.id);
+        // this is the one part I'm worried about SMH
+        --c;
+        if (!extensionList.length) {
+          installQueue.call(this, socket, ack, queue);
+        } else {
+          submit.call(this, socket, extensionList.shift(), queue, ack, true);
+        }
       } else {
         installQueue.call(this, socket, ack, queue);
       }
@@ -108,6 +102,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   installQueue = function (socket, ack, queue) {
+    //console.log("install queue", arguments);
     var installed = socket.installed,
       orms = socket.orms,
       orm, dependencies = [];
@@ -250,137 +245,133 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   };
 
-  X.Server.create({
-    port: X.options.orm.port,
-    useWebSocket: true,
-    name: "ORM",
-    autoStart: true,
-    init: function () {
 
-      // since we're using the over-load-ability of the sub-server
-      // interface we create this now using connect
-      var server = X.connect.createServer(), root;
-      root = _path.join(X.basePath, "www");
-      server.use(X.connect.static(root, {redirect: true}));
-      server.use(X.connect.directory(root, {icons: true}));
-      this.set("server", server);
-
-      // super initializer
-      this._super.init.call(this);
-
-      // map our connections and namespace to the socket initializer
-      this.setSocketHandler("/orm", "connection", _.bind(initSocket, this));
-    },
-    install: function (socket, ack) {
-      var valid = [], installer = _.bind(installQueue, this, socket, ack), orms;
-      orms = socket.orms;
-      _.each(orms, function (namespace) {
-        _.each(namespace, function (orm) {
-          if (orm.enabled) valid.push(orm);
-        });
+  install = function (socket, ack) {
+    var valid = [], installer = _.bind(installQueue, this, socket, ack), orms;
+    orms = socket.orms;
+    _.each(orms, function (namespace) {
+      _.each(namespace, function (orm) {
+        if (orm.enabled) valid.push(orm);
       });
-      socket.installed = [];
-      _.each(existing, function (orm) {
-        socket.installed.push();
+    });
+    socket.installed = [];
+    _.each(existing, function (orm) {
+      socket.installed.push();
+    });
+    installer(valid);
+  };
+
+  select =  function (socket, options, ack) {
+    var key, callback, creds = {};
+    for (key in options) {
+      if (!options.hasOwnProperty(key)) continue;
+      if (options[key] === "") return ack(false);
+    }
+
+    creds.user = options.username;
+    creds.hostname = options.hostname;
+    creds.port = options.port;
+    creds.password = options.password;
+    creds.database = options.organization;
+
+    callback = _.bind(testConnection, this, socket, ack, creds);
+
+    X.db.query("select * from pg_class limit 1", creds, callback);
+  };
+
+  refresh = function (socket, options, ack) {
+    options = options || {};
+    if (typeof options === 'function') { ack = options; }
+    var path = _path.join(X.basePath, options.path || X.options.orm.defaultPath),
+      files,
+      orms,
+      extensions,
+      errors,
+      sql,
+      callback;
+    orms = {};
+    extensions = {};
+    files = dive(path);
+
+    // if the first element is not an array
+    if (X.typeOf(files[0]) === X.T_HASH) {
+      errors = files.shift();
+      errors = errors.errors;
+      _.each(errors, function (error) {
+        console.log("failed to parse %@: %@".f(X.shorten(error.file, 4), error.message));
       });
-      installer(valid);
-    },
-    refresh: function (socket, options, ack) {
-      options = options || {};
-      if (typeof options === 'function') { ack = options; }
-      var path = _path.join(X.basePath, options.path || X.options.orm.defaultPath),
-        files,
-        orms,
-        extensions,
-        errors,
-        sql,
-        callback;
-      orms = {};
-      extensions = {};
-      files = dive(path);
+    }
 
-      // if the first element is not an array
-      if (X.typeOf(files[0]) === X.T_HASH) {
-        errors = files.shift();
-        errors = errors.errors;
-        _.each(errors, function (error) {
-          socket.emit("message", "failed to parse %@: %@".f(X.shorten(error.file, 4), error.message));
-        });
-      }
-
-      // map out the orm's
-      _.each(files, function (file) {
-        _.each(file, function (orm) {
-          var ext, ns, type, ctx;
-          ext = !!orm.isExtension;
-          ns = orm.nameSpace;
-          type = orm.type;
-          ctx = orm.context;
-          if (ext) {
-            extensions = X.addProperties(extensions, ctx, ns, type, orm);
-          } else {
-            orms = X.addProperties(orms, ns, type, orm);
-          }
-        });
+    // map out the orm's
+    _.each(files, function (file) {
+      _.each(file, function (orm) {
+        var ext, ns, type, ctx;
+        ext = !!orm.isExtension;
+        ns = orm.nameSpace;
+        type = orm.type;
+        ctx = orm.context;
+        if (ext) {
+          extensions = X.addProperties(extensions, ctx, ns, type, orm);
+        } else {
+          orms = X.addProperties(orms, ns, type, orm);
+        }
       });
+    });
 
-      // Get a list of existing orms
-      sql = "select orm_namespace as namespace, " +
-            " orm_type as type " +
-            "from xt.orm " +
-            "where not orm_ext;";
-      callback = function (err, resp) {
-        existing = resp.rows;
+    // Get a list of existing orms
+    sql = "select orm_namespace as namespace, " +
+          " orm_type as type " +
+          "from xt.orm " +
+          "where not orm_ext;";
+    callback = function (err, resp) {
+      existing = resp.rows;
 
-        // organize and associate the extensions
-        _.each(extensions, function (context) {
-          _.each(context, function (namespace) {
-            _.each(_.keys(namespace), function (name) {
-              var ext, ns, type, orm;
-              ext = namespace[name];
-              ns = ext.nameSpace;
-              type = ext.type;
-              try {
-                orm = orms[ns][type];
-              } catch (err) { return; }
-              if (orm) {
-                if (!orm.extensions) { orm.extensions = []; }
-                orm.extensions.push(ext);
-              } else if (findExisting(ns, type)) {
-                orms = X.addProperties(orms, ns, type, ext);
-              } else {
-                socket.emit("message", "no base orm for extension %@.%@".f(ns, type));
-              }
-            });
+      // organize and associate the extensions
+      _.each(extensions, function (context) {
+        _.each(context, function (namespace) {
+          _.each(_.keys(namespace), function (name) {
+            var ext, ns, type, orm;
+            ext = namespace[name];
+            ns = ext.nameSpace;
+            type = ext.type;
+            try {
+              orm = orms[ns][type];
+            } catch (err) { return; }
+            if (orm) {
+              if (!orm.extensions) { orm.extensions = []; }
+              orm.extensions.push(ext);
+            } else if (findExisting(ns, type)) {
+              orms = X.addProperties(orms, ns, type, ext);
+            } else {
+              console.log("no base orm for extension %@.%@".f(ns, type));
+            }
           });
         });
+      });
 
-        socket.orms = orms;
-        socket.extensions = extensions;
+      socket.orms = orms;
+      socket.extensions = extensions;
 
-        calculateDependencies.call(this, socket);
-        ack(orms);
-      };
-      _.bind(callback, this);
-      X.db.query(sql, socket.databaseOptions, callback);
-    },
-    select: function (socket, options, ack) {
-      var key, callback, creds = {};
-      for (key in options) {
-        if (!options.hasOwnProperty(key)) continue;
-        if (options[key] === "") return ack(false);
-      }
+      calculateDependencies.call(this, socket);
+      ack(orms);
+    };
+    _.bind(callback, this);
+    X.db.query(sql, socket.databaseOptions, callback);
+  };
 
-      creds.user = options.username;
-      creds.hostname = options.hostname;
-      creds.port = options.port;
-      creds.password = options.password;
-      creds.database = options.organization;
+  runOrmInstaller = function (creds, path) {
+    console.log("Starting orm installer");
+    var socket = {databaseOptions: creds};
+    select(socket, creds, function () {
+      refresh(socket, {path: path}, function () {
+        install(socket, function () {
+          console.log("all done");
+          process.exit(0);
+        });
+      });
+    });
+  };
 
-      callback = _.bind(testConnection, this, socket, ack, creds);
-
-      X.db.query("select * from pg_class limit 1", creds, callback);
-    }
-  });
+  exports.run = runOrmInstaller;
 
 }());
