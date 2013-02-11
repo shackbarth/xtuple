@@ -1,6 +1,6 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true white:true*/
+trailing:true white:true, bitwise:false*/
 /*global XT:true, XM:true, XV:true, enyo:true*/
 
 (function () {
@@ -23,6 +23,7 @@ trailing:true white:true*/
       attr: null,
       value: null,
       title: "",
+      parentAttr: "id",
       parentKey: "",
       listRelations: "",
       searchList: "",
@@ -97,6 +98,7 @@ trailing:true white:true*/
         key = this.getParentKey(),
         parent = list.getParent(),
         searchList = this.getSearchList(),
+        attr = this.getParentAttr(),
         inEvent,
 
         // Callback to handle selection...
@@ -114,7 +116,7 @@ trailing:true white:true*/
           var Klass = XT.getObjectByName(selectedModel.editableModel),
             model = new Klass({id: selectedModel.id}),
             InfoKlass = model.getRelation(key).relatedModel,
-            infoModel = new InfoKlass({id: parent.id}),
+            infoModel = new InfoKlass({id: parent.get(attr)}),
             listModel = new ListModel({id : selectedModel.id}),
             setAndSave = function () {
               var K = XM.Model,
@@ -208,8 +210,8 @@ trailing:true white:true*/
     newItem: function () {
       var list = this.$.list,
         parent = this.$.list.getParent(),
+        attr = this.getParentAttr(),
         workspace = XV.getWorkspace(list.value.model.prototype.recordType),
-        key = this.parentKey,
         attributes = {},
         callback = function (model) {
           if (!model) { return; }
@@ -222,7 +224,7 @@ trailing:true white:true*/
           value.fetch(options);
         },
         inEvent;
-      attributes[key] = parent.id;
+      attributes[attr] = parent.get(attr);
       inEvent = {
         originator: this,
         workspace: workspace,
