@@ -19,6 +19,8 @@
 \i xt/functions/createuser.sql;
 \i xt/functions/install_guiscript.sql;
 \i xt/functions/mergecrmaccts.sql;
+\i xt/functions/pg_advisory_unlock;
+\i xt/functions/trylock.sql;
 \i xt/functions/undomerge.sql;
 \i xt/functions/user_account_sync.sql
 
@@ -58,6 +60,7 @@
 \i xt/views/doc.sql;
 \i xt/views/crmacctaddr.sql;
 \i xt/views/crmacctcomment.sql;
+\i xt/views/customer_prospect.sql;
 \i xt/views/cust_doc.sql;
 \i xt/views/incdtinfo.sql;
 \i xt/views/opheadinfo.sql;
@@ -83,6 +86,7 @@
 \i xm/javascript/address.sql;
 \i xm/javascript/contact.sql;
 \i xm/javascript/crm.sql;
+\i xm/javascript/customer_prospect.sql;
 \i xm/javascript/database_information.sql;
 \i xm/javascript/incident.sql;
 \i xm/javascript/project.sql;

@@ -94,6 +94,69 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "TaxAuthorityRelation",
+    "table": "taxauth",
+    "idSequenceName": "taxauth_taxauth_id_seq",
+    "comment": "Tax Authority Relation",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "taxauth_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "taxauth_code"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "taxauth_name"
+        }
+      }
+    ],
+    "isSystem": true,
+    "extensions": [
+      {
+        "table": "crmacct",
+        "isChild": true,
+        "relations": [
+          {
+            "column": "crmacct_taxauth_id",
+            "inverse": "id"
+          }
+        ],
+        "properties": [
+          {
+            "name": "account",
+            "toOne": {
+              "type": "Account",
+              "column": "crmacct_id"
+            }
+          }
+        ],
+        "sequence": 0
+      }
+    ]
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "TaxZone",
     "table": "taxzone",
     "idSequenceName": "taxzone_taxzone_id_seq",

@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Account",
     "table": "crmacct",
+    "lockable": true,
     "idSequenceName": "crmacct_crmacct_id_seq",
     "orderSequence": "CRMAccountNumber",
     "comment": "Account Map",
@@ -118,6 +119,7 @@
      {
        "name": "userAccount",
        "toOne": {
+         "isNested": true,
          "type": "UserAccountRelation",
          "column": "crmacct_usr_username",
          "inverse": "username"
@@ -127,16 +129,29 @@
        "name": "salesRep",
        "toOne": {
          "type": "SalesRep",
-         "column": "crmacct_salesrep_id",
-         "inverse": "id"
+         "column": "crmacct_salesrep_id"
        }
      },
      {
        "name": "taxAuthority",
        "toOne": {
-         "type": "TaxAuthority",
-         "column": "crmacct_taxauth_id",
-         "inverse": "id"
+         "isNested": true,
+         "type": "TaxAuthorityRelation",
+         "column": "crmacct_taxauth_id"
+       }
+     },
+     {
+       "name": "partner",
+       "attr": {
+         "type": "Number",
+         "column": "crmacct_partner_id"
+       }
+     },
+     {
+       "name": "competitor",
+       "attr": {
+         "type": "Number",
+         "column": "crmacct_competitor_id"
        }
      },
      {
