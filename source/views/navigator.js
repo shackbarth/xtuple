@@ -57,14 +57,14 @@ trailing:true white:true*/
               ontap: "backTapped"},
           {kind: "Group", name: "iconButtonGroup", tag: null, components: [
             {kind: "XV.IconButton", name: "historyIconButton",
-               src: "lib/enyo-x/assets/menu-icon-bookmark.png",
+               src: "/client/lib/enyo-x/assets/menu-icon-bookmark.png",
                ontap: "showHistory", content: "_history".loc()},
             {kind: "XV.IconButton", name: "searchIconButton",
-               src: "lib/enyo-x/assets/menu-icon-search.png",
+               src: "/client/lib/enyo-x/assets/menu-icon-search.png",
                ontap: "showParameters", content: "_advancedSearch".loc(), showing: false}
           ]},
           {kind: "onyx.MenuDecorator", style: "margin: 0;", onSelect: "actionSelected", components: [
-            {kind: "XV.IconButton", src: "lib/enyo-x/assets/menu-icon-gear.png",
+            {kind: "XV.IconButton", src: "/client/lib/enyo-x/assets/menu-icon-gear.png",
 							content: "_actions".loc()},
             {kind: "onyx.Menu", components: [
               {name: "printItem", content: "_print".loc(), showing: false},
@@ -108,16 +108,16 @@ trailing:true white:true*/
           // The MoreToolbar is a FittableColumnsLayout, so this spacer takes up all available space
           {name: "spacer", content: "", fit: true},
           {name: "newButton", kind: "XV.IconButton",
-            src: "lib/enyo-x/assets/menu-icon-new.png", content: "_new".loc(),
+            src: "/client/lib/enyo-x/assets/menu-icon-new.png", content: "_new".loc(),
             ontap: "newRecord", showing: false},
           {name: "refreshButton", kind: "XV.IconButton",
-            src: "lib/enyo-x/assets/menu-icon-refresh.png", content: "_refresh".loc(),
+            src: "/client/lib/enyo-x/assets/menu-icon-refresh.png", content: "_refresh".loc(),
             ontap: "requery", showing: false},
           {name: "search", kind: "onyx.InputDecorator",
             showing: false, components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
               placeholder: "_search".loc(), onchange: "inputChanged"},
-            {kind: "Image", src: "lib/enyo-x/assets/search-input-search.png",
+            {kind: "Image", src: "/client/lib/enyo-x/assets/search-input-search.png",
               name: "searchJump", ontap: "jump"}
           ]}
         ]},

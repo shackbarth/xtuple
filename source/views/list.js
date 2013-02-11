@@ -27,7 +27,7 @@ trailing:true white:true*/
         name: "deleteButton",
         kind: "onyx.IconButton",
         classes: "xv-list-delete-button",
-        src: "lib/enyo-x/assets/remove-icon.png",
+        src: "/client/lib/enyo-x/assets/remove-icon.png",
         showing: false,
         ontap: "deleteTapped"
       });
