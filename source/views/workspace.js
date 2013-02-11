@@ -476,9 +476,12 @@ trailing:true white:true*/
       this.save();
     },
     /**
-     @todo Document the close method.
+     Backs out of the workspace. This can be done using the back button, or
+     during the end of the save-and-close process.
      */
     close: function (options) {
+      var model = this.$.workspace.getValue();
+
       options = options || {};
       if (!options.force) {
         if (this.$.workspace.isDirty()) {
@@ -488,6 +491,8 @@ trailing:true white:true*/
           return;
         }
       }
+
+      if (model.hasLockKey()) { model.releaseLock(); }
       this.doPrevious();
     },
     /**
@@ -557,7 +562,9 @@ trailing:true white:true*/
 
     },
     /**
-     @todo Document the modelSaved method.
+     Once a model has been saved we take our next action depending on
+     which of the save-and-X actions were actually requested. This
+     is part of the callback of the save operation.
      */
     modelSaved: function () {
       if (this._saveState === SAVE_CLOSE) {
@@ -756,7 +763,7 @@ trailing:true white:true*/
       this.$.title.setContent(title);
       return true;
     },
-    
+
     /**
     This function forces the menu to render and call
     its setup function for the List.
@@ -764,7 +771,7 @@ trailing:true white:true*/
     menuChanged: function (inSender, inEvent) {
       this.$.menu.render();
     },
-    
+
     /**
      @todo Document unsavedCancel method.
      */
