@@ -493,7 +493,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
       };
 
   // Save socket.id to the session store so we can disconnect that socket server side
-  // when a session is timed out. That should nodify the client imediately they have timed out.
+  // when a session is timed out. That should notify the client imediately they have timed out.
   socket.handshake.session.socket = {id: socket.id};
   socket.handshake.session.save();
 
