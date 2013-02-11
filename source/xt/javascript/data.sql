@@ -404,6 +404,7 @@ select xt.install_js('XT','Data','xtuple', $$
       var nameSpace = key.beforeDot().camelize().toUpperCase(),
         type = key.afterDot().classify(),
         hasAccess = this.checkPrivileges(nameSpace, type, value, false);
+      
       if(!hasAccess) throw new Error("Access Denied.");    
       if(value && value.dataState) {
         if(value.dataState === this.CREATED_STATE) { 
@@ -560,9 +561,19 @@ select xt.install_js('XT','Data','xtuple', $$
       var orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
         sql = this.prepareUpdate(orm, value),
         pkey = XT.Orm.primaryKey(orm),
+        lockKey = value.lock && value.lock.key ? value.lock.key : false,
+        lock,
         ext,
         rows,
         i;
+
+      /* Test for lock */
+      if (orm.lockable) {
+        lock = this.tryLock(orm.table, value[pkey], {key: lockKey});
+        if (!lock.key) {
+          plv8.elog(ERROR, "Can not obtain a lock on the record.");
+        }
+      }
         
       /* handle extensions on the same table */
       for (i = 0; i < orm.extensions.length; i++) {
@@ -595,7 +606,12 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       /* okay, now lets handle arrays */
-      this.commitArrays(orm, value); 
+      this.commitArrays(orm, value);
+
+      /* release any lock */
+      if (orm.lockable) {
+        this.releaseLock({table: orm.table, id: value[pkey]});
+      }
     },
 
     /**
@@ -696,8 +712,9 @@ select xt.install_js('XT','Data','xtuple', $$
     deleteRecord: function(key, value) {
       var record = XT.decamelize(value), sql = '',
         orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
+        nameKey = XT.Orm.primaryKey(orm),
+        lockKey = value.lock && value.lock.key ? value.lock.key : false,
         sql,
-        nameKey,
         columnKey,
         prop,
         ormp,
@@ -705,6 +722,14 @@ select xt.install_js('XT','Data','xtuple', $$
         values,
         ext,
         i;
+
+      /* Test for lock */
+      if (orm.lockable) {
+        lock = this.tryLock(orm.table, value[nameKey], {key: lockKey});
+        if (!lock.key) {
+          plv8.elog(ERROR, "Can not obtain a lock on the record.");
+        }
+      }
           
       /* Delete children first */
      for (prop in record) {
@@ -740,6 +765,11 @@ select xt.install_js('XT','Data','xtuple', $$
       
       /* commit the record */
       plv8.execute(sql, [record[nameKey]]); 
+
+      /* release any lock */
+      if (orm.lockable) {
+        this.releaseLock({table: orm.table, id: value[nameKey]});
+      }
     },
 
     /** 
@@ -885,6 +915,7 @@ select xt.install_js('XT','Data','xtuple', $$
         ret, sql, pkey = XT.Orm.primaryKey(map),
         context = options.context,
         join = "",
+        rawId = id,
         params = {};
       if(!pkey) throw new Error('No primary key found for {recordType}'.replace(/{recordType}/, recordType));
       if (XT.typeOf(id) === 'string') {
@@ -943,8 +974,15 @@ select xt.install_js('XT','Data','xtuple', $$
         ret = this.decrypt(nameSpace, type, ret, encryptionKey);
       }
 
+      /* obtain lock if required */
+      if (ret && map.lockable) {
+        ret.lock = this.tryLock(map.table, id, XT.username, options);
+      }
+
+      ret = ret || {};
+
       /* return the results */
-      return ret || {};
+      return ret;
     },
 
     /**
@@ -973,8 +1011,166 @@ select xt.install_js('XT','Data','xtuple', $$
         else { ret[prop] = qry[i].value; }
       }
       return ret;
+    },
+
+    /**
+      Get the oid for a given table name.
+
+      @param {String} table name
+      @returns {Number}
+    */
+    getTableOid: function (table) {
+      var namespace = "public", /* default assumed if no dot in name */
+       sql = "select pg_class.oid::integer as oid " + 
+             "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " + 
+             "where relname = $1 and nspname = $2";
+      name = table.toLowerCase(); /* be generous */ 
+      if (table.indexOf(".") > 0) {
+         namespace = table.beforeDot(); 
+         table = table.afterDot();
+      }
+      return plv8.execute(sql, [table, namespace])[0].oid;
+    },
+
+    /**
+      Creates and returns a lock for a given table. Defaults to a time based lock of 30 seconds
+      unless aternate timeout option or process id (pid) is passed. If a pid is passed, the lock
+      is considered infinite as long as the pid is valid. If a previous lock key is passed and it is
+      valid, a new lock will be granted.
+
+      @param {String | Number} Table name or oid
+      @param {Number} Record id
+      @param {Object} Options: timeout, pid, key
+    */
+    tryLock: function (table, id, options) {
+      options = options ? options : {};
+      var pid = options.pid || null,
+        username = XT.username,
+        pidSql = "select usename, procpid " +
+                 "from pg_stat_activity " +
+                 "where datname=current_database() " +
+                 " and usename=$1 " +
+                 " and procpid=$2;",
+        deleteSql = "delete from xt.lock where lock_id = $1;",
+        selectSql = "select * " +
+                    "from xt.lock " +
+                    "where lock_table_oid = $1 " + 
+                    " and lock_record_id = $2;",
+        insertSqlPid = "insert into xt.lock (lock_table_oid, lock_record_id, lock_username, lock_pid) " +
+                     "values ($1, $2, $3, $4) returning lock_id, lock_effective;",
+        insertSqlExp = "insert into xt.lock (lock_table_oid, lock_record_id, lock_username, lock_expires) " +
+                     "values ($1, $2, $3, $4) returning lock_id, lock_effective;",
+        timeout = options.timeout || 30,
+        expires = new Date(),
+        oid,
+        query,
+        i,
+        lock,
+        lockExp,
+        pcheck;
+
+      /* If passed a table name, look up the oid */
+      oid = typeof table === "string" ? this.getTableOid(table) : table;
+
+      if (DEBUG) plv8.elog(NOTICE, "Trying lock table", oid, id); 
+
+      /* See if there are existing lock(s) for this record */
+      query = plv8.execute(selectSql, [oid, id]);
+
+      /* Validate result */
+      if (query.length > 0) {
+        while (query.length) {
+          lock = query.shift();
+
+          /* See if we are confirming our own lock */
+          if (options.key && options.key === lock.lock_id) {
+            /* Go on and we'll get a new lock */
+          
+          /* Make sure if they are pid locks users is still connected */
+          } else if (lock.lock_pid) {
+            pcheck = plv8.execute(pidSql, [lock.lock_username, lock.lock_pid]);
+            if (pcheck.length) { break; } /* valid lock */
+          } else {
+            lockExp = new Date(lock.lock_expires);
+            plv8.elog(NOTICE, "Lock found", lockExp > expires, lockExp, expires); 
+            if (lockExp > expires) { break; } /* valid lock */
+          }
+          
+          /* Delete invalid or expired lock */
+          plv8.execute(deleteSql, [lock.lock_id]);
+          lock = undefined;
+        }
+
+        if (lock) {
+          if (DEBUG) plv8.elog(NOTICE, "Lock found", lock.lock_username); 
+          return {
+            username: lock.lock_username,
+            effective: lock.lock_effective
+          }
+        }
+      }
+
+      if (DEBUG) plv8.elog(NOTICE, "Creating lock."); 
+
+      if (pid) {
+        lock = plv8.execute(insertSqlPid, [oid, id, username, pid])[0];
+      } else {
+        expires = new Date(expires.setSeconds(expires.getSeconds() + timeout));
+        lock = plv8.execute(insertSqlExp, [oid, id, username, expires])[0];
+      }
+
+      if (DEBUG) { plv8.elog(NOTICE, "Lock returned is", lock.lock_id); }
+     
+      return { 
+        username: username,
+        effective: lock.lock_effective,
+        key: lock.lock_id
+      }
+    },
+
+    /**
+      Release a lock. Pass either options with a key, or table, id and username.
+
+      @param {Object} Options: key or table and id
+    */
+    releaseLock: function (options) {
+      var oid,
+        username = XT.username,
+        sqlKey = 'delete from xt.lock where lock_id = $1;',
+        sqlUsr = 'delete from xt.lock where lock_table_oid = $1 and lock_record_id = $2 and lock_username = $3;';
+      if (options.key) {
+        plv8.execute(sqlKey, [options.key]);
+      } else {
+        oid = typeof options.table === "string" ? this.getTableOid(options.table) : options.table;
+        plv8.elog(NOTICE, oid, options.id, username)
+        plv8.execute(sqlUsr, [oid, options.id, username]);
+      }
+    },
+
+    /**
+      Renew a lock. Defaults to rewing the lock for 30 seconds.
+
+      @param {Number} Key
+      @params {Object} Options: timeout
+      @returns {Date} New expiration or false.
+    */
+    renewLock: function (key, options) {
+      var timeout = options && options.timeout ? options.timeout : 30,
+        expires = new Date(),
+        selectSql = "select * from xt.lock where lock_id = $1;",
+        updateSql = "update xt.lock set lock_expires = $1 where lock_id = $2;",
+        query;
+
+      if (typeof key !== "number") { return false; }
+      expires = new Date(expires.setSeconds(expires.getSeconds() + timeout));
+      query = plv8.execute(selectSql, [key]);
+      if (query.length) {
+        plv8.execute(updateSql, [expires, key]);
+        return true;
+      } 
+
+      return false;
     }
-    
   }
 
 $$ );

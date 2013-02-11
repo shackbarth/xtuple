@@ -36,6 +36,25 @@ select xt.install_js('XM','Model','xtuple', $$
         sql = 'select fetchNextNumber($1) as result';
 
     return seq ? plv8.execute(sql, [seq])[0].result : false;
+  },
+
+  /**
+    Renew a record lock. Defaults to renewal of 30 seconds.
+
+    @param {Number} key
+    @param {Object} Options: timeout
+  */
+  XM.Model.renewLock = function (key, options) {
+    return XT.Data.renewLock(key, options);
+  }
+
+  /**
+    Release a record lock.
+
+    @param {Number} key
+  */
+  XM.Model.releaseLock = function (key) {
+    return XT.Data.releaseLock(key);
   }
 
   /**

@@ -405,6 +405,7 @@ select xt.install_js('XT','Orm','xtuple', $$
        /* add static values */
        cols.push("'" + orm.type + "' as \"type\"");
        cols.push("'read' as \"dataState\"");
+       if (orm.lockable) { cols.push("null as \"lock\""); }
 
         /* table */
         clauses = clauses.concat(ormClauses);
@@ -469,4 +470,3 @@ select xt.install_js('XT','Orm','xtuple', $$
     plv8.execute(query);
   };
 $$ );
-
