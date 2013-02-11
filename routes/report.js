@@ -51,7 +51,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     queryForData(req.session, query, function (err, result) {
       if (err || !result) {
-        res.send({isError: true, message: err});
+        res.send({
+          isError: true,
+          error: err,
+          message: err.params && err.params.error && err.params.error.message
+        });
         return;
       }
       // thanks http://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
@@ -73,7 +77,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           res.redirect(redirectUrl);
         },
         error = function (model, err, options) {
-          res.send({isError: true, message: err});
+          res.send({
+            isError: true,
+            error: err,
+            message: err.params && err.params.error && err.params.error.message
+          });
         };
 
       tempDataModel.save(attrs, {success: success, error: error});
