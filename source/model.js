@@ -4,7 +4,7 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
-/*global XT:true, XM:true, Backbone:true, _:true */
+/*global XT:true, XM:true, Backbone:true, _:true, setInterval:true, clearInterval:true */
 
 (function () {
   "use strict";
@@ -241,45 +241,34 @@ white:true*/
       var options = {validateSave: true};
       return !this.validate || !this.validate(this.attributes, options);
     },
-
-    /**
-      Return the original value of an attribute the last time fetch was called.
-
-      @returns {Object}
-    */
-    original: function (attr) {
-      var parts,
-        value,
-        i;
-      // Search path
-      if (attr.indexOf('.') !== -1) {
-        parts = attr.split('.');
-        value = this;
-        for (i = 0; i < parts.length; i++) {
-          value = value.original(parts[i]);
-          if (value && value instanceof Date) {
-            break;
-          } else if (value && typeof value === "object") {
-            continue;
-          } else if (typeof value === "string") {
-            break;
-          } else {
-            value = "";
-            break;
+    
+    lockDidChange: function (model, lock) {
+      var that = this,
+        options = {};
+      if (lock.key && !this._keyRefresherInterval) {
+        options.automatedRefresh = true;
+        options.success = function (renewed) {
+          // If for any reason the lock was not renewed (maybe got disconnected?)
+          // Update the model so it knows.
+          var lock;
+          if (!renewed) {
+            lock = _.clone(that.get('lock'));
+            delete lock.key;
+            that.set('lock', lock);
           }
-        }
-        return value;
+        };
+
+        // set up a refresher if it's not already set up
+        this._keyRefresherInterval = setInterval(function () {
+          this.dispatch('XM.Model', 'renewLock', [lock.key], options);
+
+        }, 25 * 1000);
+
+      } else if (!lock.key && this._keyRefresherInterval) {
+        // if the key is gone, get rid of the refresher
+        clearInterval(this._keyRefresherInterval);
+        that._keyRefresherInterval = undefined;
       }
-      return this.prime[attr] || this.get(attr);
-    },
-
-    /**
-      Return all the original values of the attributes the last time fetch was called.
-
-      @returns {Array}
-    */
-    originalAttributes: function () {
-      return _.defaults(_.clone(this.prime), _.clone(this.attributes));
     },
 
     /**
@@ -670,6 +659,7 @@ white:true*/
       this.on('change', this.didChange);
       this.on('error', this.didError);
       this.on('destroy', this.didDestroy);
+      this.on('change:lock', this.lockDidChange);
       for (i = 0; i < relations.length; i++) {
         if (relations[i].type === Backbone.HasMany &&
             relations[i].includeInJSON === true) {
@@ -700,6 +690,24 @@ white:true*/
     },
 
     /**
+      Returns true if you have the lock key, or if this model
+      is not lockable. (You can enter the room if you have no
+      key or if there is no lock!). When this value is true and the
+      `isLockable` is true it means the user has a application lock
+      on the object at the database level so that no other users can
+      edit the record.
+      
+      This is not to be confused with the `isLocked` function that
+      is used by Backbone-relational to manage events on relations.
+
+      @returns {Boolean}
+    */
+    hasLockKey: function () {
+      var lock = this.get("lock");
+      return !lock || lock.key ? true : false;
+    },
+
+    /**
       Return whether the model is in a read-only state. If an attribute name or
       object is passed, returns whether those attributes are read-only.
 
@@ -709,7 +717,10 @@ white:true*/
       @returns {Boolean}
     */
     isReadOnly: function (value) {
-      var attr, result;
+      var attr,
+        result,
+        isLockedOut = !this.hasLockKey();
+
       if ((!_.isString(value) && !_.isObject(value)) || this.readOnly) {
         result = this.readOnly;
       } else if (_.isObject(value)) {
@@ -722,7 +733,7 @@ white:true*/
       } else {
         result = _.contains(this.readOnlyAttributes, value);
       }
-      return result;
+      return result || isLockedOut;
     },
 
     /**
@@ -734,22 +745,62 @@ white:true*/
     isRequired: function (value) {
       return _.contains(this.requiredAttributes, value);
     },
-    
+
     /**
       A utility function that triggers an `notify` event. Useful for passing along
       non-critical information to the interface. Bind to `notify` to use.
-      
+
         var m = new XM.MyModel();
         var raiseAlert = function (model, value, options) {
           alert(value);
         }
         m.on('notify', raiseAlert);
-      
+
       @param {String} Message
       @param {Object} Options
     */
     notify: function (message, options) {
       this.trigger('notify', this, message, options);
+    },
+    
+    /**
+      Return the original value of an attribute the last time fetch was called.
+
+      @returns {Object}
+    */
+    original: function (attr) {
+      var parts,
+        value,
+        i;
+      // Search path
+      if (attr.indexOf('.') !== -1) {
+        parts = attr.split('.');
+        value = this;
+        for (i = 0; i < parts.length; i++) {
+          value = value.original(parts[i]);
+          if (value && value instanceof Date) {
+            break;
+          } else if (value && typeof value === "object") {
+            continue;
+          } else if (typeof value === "string") {
+            break;
+          } else {
+            value = "";
+            break;
+          }
+        }
+        return value;
+      }
+      return this.prime[attr] || this.get(attr);
+    },
+
+    /**
+      Return all the original values of the attributes the last time fetch was called.
+
+      @returns {Array}
+    */
+    originalAttributes: function () {
+      return _.defaults(_.clone(this.prime), _.clone(this.attributes));
     },
 
     /**
@@ -766,6 +817,9 @@ white:true*/
           iter = parse(iter);
         },
         getColumn = function (type, attr) {
+          if (!XT.session.getSchema().get(type)) {
+            XT.log(type + " not found in schema. Error imminent!");
+          }
           var columns = XT.session.getSchema().get(type).columns;
           return _.find(columns, function (column) {
             return column.name === attr;
@@ -777,6 +831,8 @@ white:true*/
           if (obj.hasOwnProperty(attr)) {
             if (_.isArray(obj[attr])) {
               _.each(obj[attr], parseIter);
+            } else if (attr === 'lock') {
+              // don't try to parse the lock object
             } else if (_.isObject(obj[attr])) {
               obj[attr] = parse(obj[attr]);
             } else {
@@ -792,6 +848,24 @@ white:true*/
         return obj;
       };
       return parse(resp);
+    },
+    
+    /**
+      If the model has a lock on the object at the server level, it
+      will be released.
+    */
+    releaseLock: function () {
+      var lock = _.clone(this.get('lock')),
+        key = lock ? lock.key : false,
+        that = this,
+        options = {};
+      if (key) {
+        options.success = function () {
+          delete lock.key;
+          that.set('lock', lock);
+        };
+        this.dispatch('XM.Model', 'releaseLock', {key: key});
+      }
     },
 
     /**
@@ -1110,7 +1184,8 @@ white:true*/
           case S.DB_UNKNOWN:
           case S.DB_STRING:
             if (!_.isString(value) &&
-                !isRelation(attr, value, Backbone.HasOne)) {
+                !isRelation(attr, value, Backbone.HasOne) &&
+                attr !== 'lock') {
               params.type = "_string".loc();
               return XT.Error.clone('xt1003', { params: params });
             }
