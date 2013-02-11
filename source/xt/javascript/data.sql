@@ -1161,11 +1161,12 @@ select xt.install_js('XT','Data','xtuple', $$
         updateSql = "update xt.lock set lock_expires = $1 where lock_id = $2;",
         query;
 
-      expires = expires.setSeconds(expires.getSeconds() + timeout);
+      if (typeof key !== "number") { return false; }
+      expires = new Date(expires.setSeconds(expires.getSeconds() + timeout));
       query = plv8.execute(selectSql, [key]);
       if (query.length) {
-        plv8.execute(updateSql, [expires.toJSON(), key]);
-        return expires;
+        plv8.execute(updateSql, [expires, key]);
+        return true;
       } 
 
       return false;

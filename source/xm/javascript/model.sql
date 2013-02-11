@@ -45,7 +45,7 @@ select xt.install_js('XM','Model','xtuple', $$
     @param {Object} Options: timeout
   */
   XM.Model.renewLock = function (key, options) {
-    XT.Data.renewLock(key, options);
+    return XT.Data.renewLock(key, options);
   }
 
   /**
@@ -54,7 +54,7 @@ select xt.install_js('XM','Model','xtuple', $$
     @param {Number} key
   */
   XM.Model.releaseLock = function (key) {
-    XT.Data.releaseLock(key);
+    return XT.Data.releaseLock(key);
   }
 
   /**
