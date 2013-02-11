@@ -347,12 +347,20 @@ regexp:true, undef:true, trailing:true, white:true */
         Workspace = this._Workspace,
         Model = this._collection.model,
         id,
-        couldNotCreate = Model ? !Model.prototype.couldCreate() : true,
+        couldNotCreate = true, // we'll be setting this soon
         setPrivileges = function () {
           if (value && newId) {
             that.$.openItem.setDisabled(!value.couldRead());
           }
         };
+
+      if (Model && Model.prototype.couldCreate) {
+        // model is a list item or relation
+        couldNotCreate = !Model.prototype.couldCreate();
+      } else if (Model) {
+        // model is a first-class model
+        couldNotCreate = !Model.prototype.canCreate();
+      }
 
       // Make sure we get are setting the right kind of object here.
       if (_.isNumber(value) || _.isString(value) ||
