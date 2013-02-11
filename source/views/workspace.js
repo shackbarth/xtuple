@@ -491,17 +491,8 @@ trailing:true white:true*/
           return;
         }
       }
-      // release the record lock
-      XT.dataSource.dispatch('XM.Model',
-        'releaseLock',
-        {key: model.get("lock").key},
-        {databaseType: model.databaseType});
 
-      if (model.get("lock") && model.get("lock").key) {
-        // taking the key away from the model's lock will have the effect of telling
-        // the model to stop trying to refresh
-        model.set("lock", {key: null});
-      }
+      if (model.hasLockKey()) { model.releaseLock(); }
       this.doPrevious();
     },
     /**
