@@ -40,15 +40,6 @@ trailing:true white:true*/
 
     XV.appendExtension("XV.IncidentWorkspace", extensions);
   
-    // ..........................................................
-    // PROJECT
-    //
-  
-    extensions = [
-      {kind: "XV.ProjectIncidentsBox", container: "panels", attr: "incidentRelations"}
-    ];
-
-    XV.appendExtension("XV.ProjectWorkspace", extensions);
   };
 
 }());
