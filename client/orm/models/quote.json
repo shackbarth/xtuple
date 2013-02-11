@@ -48,6 +48,7 @@
       {
         "name": "shipto",
         "toOne": {
+	  "isNested": true,
           "type": "CustomerShiptoRelation",
           "column": "quhead_shipto_id"
         }
@@ -195,7 +196,7 @@
       {
         "name": "commission",
         "attr": {
-          "type": "String",
+          "type": "Number",
           "column": "quhead_commission"
         }
       },
@@ -216,7 +217,6 @@
       {
         "name": "site",
         "toOne": {
-          "isNested": true,
           "type": "SiteRelation",
           "column": "quhead_warehous_id"
         }
@@ -272,8 +272,9 @@
       },
       {
         "name": "shiptoContact",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+	  "isNested": true,
+          "type": "ContactRelation",
           "column": "quhead_shipto_cntct_id"
         }
       },
@@ -342,8 +343,9 @@
       },
       {
         "name": "billtoContact",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+	  "isNested": true,
+          "type": "ContactRelation",
           "column": "quhead_billto_cntct_id"
         }
       },
@@ -415,14 +417,6 @@
         "toOne": {
           "type": "TaxZone",
           "column": "quhead_taxzone_id"
-        }
-      },
-      {
-        "name": "taxType",
-        "toOne": {
-          "isNested": true,
-          "type": "TaxType",
-          "column": "quhead_taxtype_id"
         }
       },
       {
