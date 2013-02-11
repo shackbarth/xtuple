@@ -19,6 +19,8 @@
 \i xt/functions/createuser.sql;
 \i xt/functions/install_guiscript.sql;
 \i xt/functions/mergecrmaccts.sql;
+\i xt/functions/pg_advisory_unlock;
+\i xt/functions/trylock.sql;
 \i xt/functions/undomerge.sql;
 \i xt/functions/user_account_sync.sql
 
