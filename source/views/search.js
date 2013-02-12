@@ -10,7 +10,7 @@ trailing:true white:true*/
     @class High-level container showing a list of searchable items available to the advanced
     search widget.<br />
     Used for attaching documents, searching for relational widget values, etc.<br />
-    Derived from <a href="http://enyojs.com/api/#enyo.Panels">enyo.Panels</a>. 
+    Derived from <a href="http://enyojs.com/api/#enyo.Panels">enyo.Panels</a>.
     @extends enyo.Panels
    */
   enyo.kind(/** @lends XV.SearchContainer# */{
@@ -27,7 +27,7 @@ trailing:true white:true*/
      * @property {} defaultParameterItemValues
      *   Filter parameters applied to the parameter widget and that are editable by the user.
      * @todo What is the type for each of these properties?
-     */  
+     */
     published: {
       callback: null,
       conditions: null,
@@ -59,7 +59,7 @@ trailing:true white:true*/
             components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
               placeholder: "_search".loc(), onchange: "requery"},
-            {kind: "Image", src: "lib/enyo-x/assets/search-input-search.png"}
+            {kind: "Image", src: "/client/lib/enyo-x/assets/search-input-search.png"}
           ]}
         ]}
       ]}
