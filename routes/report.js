@@ -52,15 +52,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var bicacheCollection = new XM.BiCacheCollection(),
         fetchOptions = {},
         date,
-        hourLifespan = 36,
-        i,
+        hourLifespan = 24,
         currentDate = new Date().getTime(),
         dateDifference;
     
     /* the fetchOptions.success function below destroys any bicache models
-        that are older than the number of hours in hourLifespan. */
+        that are older than the number of hours set in the hourLifespan variable. */
     fetchOptions.success = function () {
-      for (i = 0; i++; i < bicacheCollection.length) {
+      for (var i = 0; i < bicacheCollection.length; i++) {
         date = bicacheCollection.models[i].get("created");
         date = date.getTime();
         dateDifference = currentDate - date;
