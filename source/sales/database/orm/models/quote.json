@@ -96,7 +96,7 @@
         }
       },
       {
-        "name": "quote",
+        "name": "source",
         "attr": {
           "type": "Number",
           "column": "comment_source_id"

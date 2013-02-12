@@ -1,5 +1,5 @@
 [ 
-    {
+  {
     "context": "crm",
     "nameSpace": "XM",
     "type": "Quote",
@@ -21,25 +21,7 @@
           "column": "quhead_id",
           "inverse": "source"
         }
-      }
-    ],
-    "sequence": 0,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
-    "type": "Quote",
-    "table": "quhead",
-    "isExtension": true,
-    "comment": "Extended by CRM",
-    "relations": [
-      {
-        "column": "quhead_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
+      },
       {
         "name": "opportunities",
         "toMany": {
@@ -48,25 +30,7 @@
           "column": "quhead_id",
           "inverse": "source"
         }
-      }
-    ],
-    "sequence": 0,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
-    "type": "Quote",
-    "table": "quhead",
-    "isExtension": true,
-    "comment": "Extended by CRM",
-    "relations": [
-      {
-        "column": "quhead_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
+      },
       {
         "name": "incidents",
         "toMany": {
@@ -75,25 +39,7 @@
           "column": "quhead_id",
           "inverse": "source"
         }
-      }
-    ],
-    "sequence": 0,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
-    "type": "Quote",
-    "table": "quhead",
-    "isExtension": true,
-    "comment": "Extended by CRM",
-    "relations": [
-      {
-        "column": "quhead_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
+      },
       {
         "name": "toDos",
         "toOne": {
