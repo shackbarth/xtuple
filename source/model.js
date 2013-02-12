@@ -260,7 +260,7 @@ white:true*/
 
         // set up a refresher if it's not already set up
         this._keyRefresherInterval = setInterval(function () {
-          this.dispatch('XM.Model', 'renewLock', [lock.key], options);
+          that.dispatch('XM.Model', 'renewLock', [lock.key], options);
 
         }, 25 * 1000);
 
