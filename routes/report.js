@@ -50,16 +50,29 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     query = "select xt.fetch('%@')".f(requestDetails);
 
     var bicacheCollection = new XM.BiCacheCollection(),
-        fetchOptions = {};
-        
-    fetchOptions.success = function (resp) {
-      var date = bicacheCollection.models[0].get("bicache_created");
-      console.log(date);
+        fetchOptions = {},
+        date,
+        hourLifespan = 36,
+        i,
+        currentDate = new Date().getTime(),
+        dateDifference;
+    
+    /* the fetchOptions.success function below destroys any bicache models
+        that are older than the number of hours in hourLifespan. */
+    fetchOptions.success = function () {
+      for (i = 0; i++; i < bicacheCollection.length) {
+        date = bicacheCollection.models[i].get("created");
+        date = date.getTime();
+        dateDifference = currentDate - date;
+        if (dateDifference > (1000 * 60 * 60 * hourLifespan)) {
+          bicacheCollection.models[i].destroy();
+        }
+      }
     };
-    fetchOptions.error = function (resp) {
+    fetchOptions.error = function () {
       console.log("Couldn't fetch the BiCacheCollection");
     };
-    bicacheCollection.fetch();
+    bicacheCollection.fetch(fetchOptions);
 
     queryForData(req.session, query, function (err, result) {
       if (err || !result) {
