@@ -143,8 +143,15 @@
       }
     ],
     "properties": [
-      {
-        "name": "contactRelation",
+     {
+        "name": "account",
+        "attr": {
+         "type": "Number",
+         "column": "crmacct_id"
+        }
+     },
+     {
+        "name": "contactRelations",
         "toMany": {
           "isNested": true,
           "type": "ContactRelation",
@@ -153,7 +160,7 @@
         }
       },
       {
-        "name": "incidentRelation",
+        "name": "incidentRelations",
         "toMany": {
           "isNested": true,
           "type": "IncidentRelation",
@@ -162,7 +169,7 @@
         }
       },
       {
-        "name": "opportunityRelation",
+        "name": "opportunityRelations",
         "toMany": {
           "isNested": true,
           "type": "OpportunityRelation",
@@ -171,7 +178,7 @@
         }
       },
       {
-        "name": "toDoRelation",
+        "name": "toDoRelations",
         "toMany": {
           "isNested": true,
           "type": "ToDoRelation",
