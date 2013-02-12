@@ -14,6 +14,13 @@
     ],
     "properties": [
       {
+        "name": "project",
+        "attr": {
+          "type": "Number",
+          "column": "quhead_prj_id"
+        }
+      },
+      {
         "name": "projects",
         "toMany": {
           "isNested": true,

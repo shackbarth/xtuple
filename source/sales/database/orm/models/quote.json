@@ -257,6 +257,7 @@
       {
         "name": "customer",
         "toOne": {
+          "isNested": true,
           "type": "CustomerProspectRelation",
           "column": "target_id"
         }
