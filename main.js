@@ -485,7 +485,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
 }).on('connection', function (socket) {
   "use strict";
 
-  var ensureLoggedIn = function (callback) {
+  var ensureLoggedIn = function (callback, payload) {
         socket.handshake.sessionStore.get(socket.handshake.sessionID, function (err, session) {
           var expires,
               current;
@@ -508,8 +508,11 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
           } else {
             // User is still valid
 
-            // Update session expiration timeout.
-            socket.handshake.session.touch().save();
+            // Update session expiration timeout, unless this is an automated call of
+            // some sort (e.g. lock refresh)
+            if (!payload || !payload.automatedRefresh) {
+              socket.handshake.session.touch().save();
+            }
 
             // Move along.
             callback(session);
@@ -527,7 +530,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   socket.on('session', function (data, callback) {
     ensureLoggedIn(function (session) {
       callback({data: session.passport.user, code: 1});
-    });
+    }, data && data.payload);
   });
 
   // To run this from the client:
@@ -535,7 +538,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   socket.on('function/retrieveRecord', function (data, callback) {
     ensureLoggedIn(function (session) {
       routes.retrieveEngine(data.payload, session, callback);
-    });
+    }, data && data.payload);
   });
 
   // To run this from client:
@@ -543,7 +546,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   socket.on('function/fetch', function (data, callback) {
     ensureLoggedIn(function (session) {
       routes.fetchEngine(data.payload, session, callback);
-    });
+    }, data && data.payload);
   });
 
   // To run this from client:
@@ -551,7 +554,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   socket.on('function/dispatch', function (data, callback) {
     ensureLoggedIn(function (session) {
       routes.dispatchEngine(data.payload, session, callback);
-    });
+    }, data && data.payload);
   });
 
   // To run this from the client:
@@ -561,7 +564,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   socket.on('function/commitRecord', function (data, callback) {
     ensureLoggedIn(function (session) {
       routes.commitEngine(data.payload, session, callback);
-    });
+    }, data && data.payload);
   });
 
   // Tell the client it's connected.
