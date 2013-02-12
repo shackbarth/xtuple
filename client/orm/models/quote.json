@@ -48,7 +48,7 @@
       {
         "name": "shipto",
         "toOne": {
-	  "isNested": true,
+          "isNested": true,
           "type": "CustomerShiptoRelation",
           "column": "quhead_shipto_id"
         }
@@ -273,7 +273,7 @@
       {
         "name": "shiptoContact",
         "toOne": {
-	  "isNested": true,
+          "isNested": true,
           "type": "ContactRelation",
           "column": "quhead_shipto_cntct_id"
         }
@@ -344,7 +344,7 @@
       {
         "name": "billtoContact",
         "toOne": {
-	  "isNested": true,
+          "isNested": true,
           "type": "ContactRelation",
           "column": "quhead_billto_cntct_id"
         }
