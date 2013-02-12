@@ -18,10 +18,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
   //----------- To write results to the results file
   exports.results = function (message) {
-    fs.appendFile('./results.txt', '--' + message + '--\n', function (err) {
-      if (err) throw err;
-      console.log(message);
-    });
+    console.log(message);
   };
   // ---------- To return the current date and time ---------
   exports.getDate = function (callback) {
