@@ -500,6 +500,20 @@ white:true*/
     editableModel: 'XM.Customer'
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.CustomerProspectRelation = XM.Info.extend({
+    /** @scope XM.CustomerProspectReltion.prototype */
+
+    recordType: 'XM.CustomerProspectRelation',
+
+    editableModel: 'XM.Customer'
+
+  });
 
   // ..........................................................
   // COLLECTIONS
@@ -586,6 +600,18 @@ white:true*/
     /** @scope XM.CustomerProspectListItemCollection.prototype */
 
     model: XM.CustomerProspectListItem
+    
+  });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.CustomerProspectRelationCollection = XM.Collection.extend({
+    /** @scope XM.CustomerProspectRelationCollection.prototype */
+
+    model: XM.CustomerProspectRelation
     
   });
 }());

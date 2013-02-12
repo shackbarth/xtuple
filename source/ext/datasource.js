@@ -225,6 +225,7 @@ white:true*/
           }
         };
 
+      payload.automatedRefresh = options.automatedRefresh;
       payload.databaseType = options.databaseType;
       return XT.Request
                .handle('function/dispatch')
