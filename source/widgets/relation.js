@@ -354,9 +354,9 @@ regexp:true, undef:true, trailing:true, white:true */
           }
         };
 
-      if (Model && Model.prototype.couldCreate) {
+      if (Model && Model.couldCreate) {
         // model is a list item or relation
-        couldNotCreate = !Model.prototype.couldCreate();
+        couldNotCreate = !Model.couldCreate();
       } else if (Model) {
         // model is a first-class model
         couldNotCreate = !Model.canCreate();
