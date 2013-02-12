@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Contact",
     "table": "cntct",
+    "lockable": true,
     "idSequenceName": "cntct_cntct_id_seq",
     "orderSequence": "ContactNumber",
     "comment": "Contact Map",
@@ -1288,6 +1289,7 @@
     "nameSpace": "XM",
     "type": "Honorific",
     "table": "hnfc",
+    "lockable": true,
     "idSequenceName": "hnfc_hnfc_id_seq",
     "comment": "Honorific Map",
     "privileges": {

@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "LedgerAccount",
     "table": "accnt",
+    "lockable": true,
     "idSequenceName": "accnt_accnt_id_seq",
     "comment": "Ledger Account Map",
     "privileges": {

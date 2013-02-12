@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Incident",
     "table": "incdt",
+    "lockable": true,
     "idSequenceName": "incdt_incdt_id_seq",
     "orderSequence": "IncidentNumber",
     "comment": "Incident Map",
@@ -432,6 +433,7 @@
     "nameSpace": "XM",
     "type": "IncidentCategory",
     "table": "incdtcat",
+    "lockable": true,
     "idSequenceName": "incdtcat_incdtcat_id_seq",
     "comment": "Incident Category Map",
     "privileges": {
@@ -1343,6 +1345,7 @@
     "nameSpace": "XM",
     "type": "IncidentResolution",
     "table": "incdtresolution",
+    "lockable": true,
     "idSequenceName": "incdtresolution_incdtresolution_id_seq",
     "comment": "Incident Resolution Map",
     "privileges": {
@@ -1392,6 +1395,7 @@
     "nameSpace": "XM",
     "type": "IncidentSeverity",
     "table": "incdtseverity",
+    "lockable": true,
     "idSequenceName": "incdtseverity_incdtseverity_id_seq",
     "comment": "Incident Severity Map",
     "privileges": {

@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "ExpenseCategory",
     "table": "expcat",
+    "lockable": true,
     "idSequenceName": "expcat_expcat_id_seq",
     "comment": "Expense Category Map",
     "privileges": {

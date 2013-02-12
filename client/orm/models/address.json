@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Address",
     "table": "addr",
+    "lockable": true,
     "idSequenceName": "addr_addr_id_seq",
     "orderSequence": "AddressNumber",
     "comment": "Address Map",
@@ -261,6 +262,7 @@
     "nameSpace": "XM",
     "type": "AddressInfo",
     "table": "addr",
+    "lockable": true,
     "idSequenceName": "addr_addr_id_seq",
     "orderSequence": "AddressNumber",
     "comment": "Address Info Map",
@@ -352,6 +354,7 @@
     "nameSpace": "XM",
     "type": "Country",
     "table": "country",
+    "lockable": true,
     "idSequenceName": "country_country_id_seq",
     "comment": "Country Map",
     "privileges": {
@@ -424,6 +427,7 @@
     "nameSpace": "XM",
     "type": "State",
     "table": "state",
+    "lockable": true,
     "idSequenceName": "state_state_id_seq",
     "comment": "State Map",
     "privileges": {

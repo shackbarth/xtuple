@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Characteristic",
     "table": "char",
+    "lockable": true,
     "idSequenceName": "char_char_id_seq",
     "comment": "Characteristic Map",
     "privileges": {
