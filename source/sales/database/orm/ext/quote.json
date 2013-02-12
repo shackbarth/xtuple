@@ -1,0 +1,92 @@
+[ 
+  {
+    "context": "sales",
+    "nameSpace": "XM",
+    "type": "Quote",
+    "table": "quhead",
+    "isExtension": true,
+    "comment": "Extended by Sales",
+    "relations": [
+      {
+        "column": "quhead_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "files",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteFile",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "contacts",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteContact",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "urls",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteUrl",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "items",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteItem",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "customers",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteCustomer",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "sales",
+    "nameSpace": "XM",
+    "type": "Prospect",
+    "table": "prospect",
+    "isExtension": true,
+    "comment": "Extended by Sales",
+    "relations": [
+      {
+        "column": "prospect_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "quotes",
+        "toMany": {
+          "isNested": true,
+          "type": "Quote",
+          "column": "prospect_id",
+          "inverse": "customer"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  } 
+]
