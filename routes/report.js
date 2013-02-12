@@ -55,6 +55,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         hourLifespan = 24,
         currentDate = new Date().getTime(),
         dateDifference;
+        
+    /*
+      TODO: the date filter logic could be in the fetch itself to improve performance
+    */
     
     /* the fetchOptions.success function below destroys any bicache models
         that are older than the number of hours set in the hourLifespan variable. */
