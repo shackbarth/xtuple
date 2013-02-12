@@ -1145,6 +1145,7 @@ select xt.install_js('XT','Data','xtuple', $$
         plv8.elog(NOTICE, oid, options.id, username)
         plv8.execute(sqlUsr, [oid, options.id, username]);
       }
+      return true;
     },
 
     /**
