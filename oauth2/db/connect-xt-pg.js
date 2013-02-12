@@ -48,53 +48,89 @@ module.exports = function (connect) {
     Store.call(this, options);
     this.prefix = null == options.prefix ? 'sess:' : options.prefix;
     this.hybridCache = null == options.hybridCache ? false : options.hybridCache;
-
-    X.debug("this.hybridCache = ", this.hybridCache);
+    this.sessions = {};
 
     // Load all the data from XM.SessionStore into the Express MemoryStore for caching.
-    this.loadCache = function (options) {
+    this.loadSessions = function (options, callback) {
       // TODO - options could be used to only load parital dataset of recently active sessions.
       // It could also be used to help process/server syncing if we move to something like Redis.
 
-      if (self.hybridCache) {
-        var fetchOptions = {};
+      var fetchOptions = {};
 
-        fetchOptions.success = function (sessions) {
-          var callback,
-              sid,
-              sess;
+      fetchOptions.success = function (sessionstore) {
+        var sid,
+            sess;
 
-          callback = function () {
-            // TODO - Don't need to do anything here, but MemoryStore.set() needs a callback.
-          };
+        // Flush any sessions before reloading it.
+        self.sessions = {};
 
-          _.each(sessions, function (model) {
-            sid = model.id;
-            sess = JSON.parse(model.session);
+        _.each(sessionstore, function (model, id, collection) {
+          sid = model.id;
+          sess = JSON.parse(model.session);
 
+          if (self.hybridCache) {
             // Store the session data in the Express MemeoryStore for caching.
-            MemoryStore.set(sid, sess, callback);
-          });
-        };
-        fetchOptions.error = function (sessions, err) {
-          X.debug("Session Collection fetch failed.");
-        };
+            MemoryStore.set(sid, sess, function () {});
+          }
 
-        // TODO - This is REALLY SLOW if there are 10,000 sessions in the table and we use collection.fetch().
-        // var sessionsCollection = new XM.SessionStoreCollection();
-        //sessionsCollection.fetch(fetchOptions);
+          self.sessions[sid] = sess;
+        });
 
-        // Fetch all records from XM.SessionStore and load them into the Express MemoryStore.
-        fetchOptions.query = {
-          requestType: "fetch",
-          recordType: "XM.SessionStore"
-        };
+        // Now that sessions are loaded, we'll call the callback that was waiting for them.
+        if (callback &&  typeof callback === 'function') {
+          callback();
+        }
+      };
+      fetchOptions.error = function (sessionstore, err) {
+        X.debug("Session Collection fetch failed.");
 
-        // fetchOptions.username = GLOBAL_USERNAME; // TODO
-        fetchOptions.username = 'node';
-        XT.dataSource.fetch(fetchOptions);
-      }
+        // Now that sessions are loaded, we'll call the callback that was waiting for them.
+        if (callback &&  typeof callback === 'function') {
+          callback("Session Collection fetch failed.");
+        }
+      };
+
+      // TODO - This is REALLY SLOW if there are 10,000 sessions in the table and we use collection.fetch().
+      // var sessionsCollection = new XM.SessionStoreCollection();
+      //sessionsCollection.fetch(fetchOptions);
+
+      // Fetch all records from XM.SessionStore and load them into the Express MemoryStore.
+      fetchOptions.query = {
+        requestType: "fetch",
+        recordType: "XM.SessionStore"
+      };
+
+      // fetchOptions.username = GLOBAL_USERNAME; // TODO
+      fetchOptions.username = 'node';
+      XT.dataSource.fetch(fetchOptions);
     };
+
+    // Loops through the sessions, find the ones that are expired and sends that session data
+    // to the callback function. This allows us to expire session from code that has access to
+    // stuff like socket.io in main.js.
+    this.expireSessions = function (callback) {
+      this.loadSessions(null, function (err) {
+        if (err) {
+          return;
+        }
+
+        _.each(self.sessions, function (val, key, list) {
+          var expires = new Date(val.cookie.expires),
+              now = new Date();
+
+          if ((expires - now) <= 0) {
+            //X.debug("Session: ", key, " expired ", (expires - now));
+            callback(key, val);
+          } else {
+            //X.debug("Session: ", key, " expires in ", (expires - now));
+          }
+        });
+      });
+    };
+
+    X.debug("XTPGStore SessionStore using hybridCache = ", this.hybridCache);
+    // Prime this.sessions and MemoryCache on initialization.
+    this.loadSessions();
   }
 
   /**
@@ -394,6 +430,44 @@ module.exports = function (connect) {
     } catch (err) {
       done && done(err);
     }
+  };
+
+  /**
+   * Invoke the given callback `fn` with all active sessions.
+   *
+   * @param {Function} fn
+   * @api public
+   */
+  XTPGStore.prototype.all = function (fn) {
+    this.loadSessions(null, function (err) {
+      if (err) {
+        return fn(err);
+      }
+
+      var arr = [],
+          keys = Object.keys(this.sessions);
+
+      for (var i = 0, len = keys.length; i < len; ++i) {
+        arr.push(this.sessions[keys[i]]);
+      }
+      fn(null, arr);
+    });
+  };
+
+  /**
+   * Fetch number of sessions.
+   *
+   * @param {Function} fn
+   * @api public
+   */
+  XTPGStore.prototype.length = function (fn) {
+    this.loadSessions(null, function (err) {
+      if (err) {
+        return fn(err);
+      }
+
+      fn(null, Object.keys(this.sessions).length);
+    });
   };
 
   return XTPGStore;
