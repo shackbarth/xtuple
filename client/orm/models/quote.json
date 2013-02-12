@@ -439,6 +439,60 @@
           "type": "ShipZone",
           "column": "quhead_shipzone_id"
         }
+      },
+      {
+        "name": "quoteLines",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteLine",
+          "column": "quhead_id",
+          "inverse": "quote"
+        }
+      },
+      {
+        "name": "comments",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteComment",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "files",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteFile",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "contacts",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteContact",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "urls",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteUrl",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "items",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteItem",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
       }
     ],
     "isSystem": true
