@@ -14,6 +14,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             browser.type(el, data1.data.username, function (err) {
               if (err) {
                 console.log('Site not accessable');
+		process.exit(1);
               }
               else {
                 browser.elementById(loginObj.obj.pwd_id, function (err, el2) {
