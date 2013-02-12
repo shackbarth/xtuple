@@ -1,7 +1,8 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
-/*global XT:true, XM:true, io:true, Backbone:true, _:true, console:true, enyo:true */
+/*global XT:true, XM:true, io:true, Backbone:true, _:true, console:true, enyo:true
+  document:true, relocate:true, setTimeout:true*/
 
 (function () {
   "use strict";
@@ -241,16 +242,15 @@ white:true*/
     @param {Function} options.error callback
     */
     resetPassword: function (id, options) {
-      var that = this,
-        payload = {
-          id: id,
-          newUser: options.newUser
-        },
-        ajax = new enyo.Ajax({
-          url: "/resetPassword",
-          success: options ? options.success : undefined,
-          error: options ? options.error : undefined
-        });
+      var payload = {
+            id: id,
+            newUser: options.newUser
+          },
+          ajax = new enyo.Ajax({
+            url: "/resetPassword",
+            success: options ? options.success : undefined,
+            error: options ? options.error : undefined
+          });
 
       ajax.response(this.ajaxSuccess);
       ajax.go(payload);
@@ -263,16 +263,15 @@ white:true*/
     @param {Function} options.error callback
     */
     changePassword: function (params, options) {
-      var that = this,
-        payload = {
-          oldPassword: params.oldPassword,
-          newPassword: params.newPassword
-        },
-        ajax = new enyo.Ajax({
-          url: "/changePassword",
-          success: options ? options.success : undefined,
-          error: options ? options.error : undefined
-        });
+      var payload = {
+            oldPassword: params.oldPassword,
+            newPassword: params.newPassword
+          },
+          ajax = new enyo.Ajax({
+            url: "/changePassword",
+            success: options ? options.success : undefined,
+            error: options ? options.error : undefined
+          });
 
       ajax.response(this.ajaxSuccess);
       ajax.go(payload);
@@ -308,17 +307,16 @@ white:true*/
     @param {String} payload.text
     */
     sendEmail: function (payload, options) {
-      var that = this,
-        ajax = new enyo.Ajax({
-          url: "/email",
-          success: options ? options.success : undefined,
-          error: options ? options.error : undefined
-        });
+      var ajax = new enyo.Ajax({
+            url: "/email",
+            success: options ? options.success : undefined,
+            error: options ? options.error : undefined
+          });
 
       if (payload.body && !payload.text) {
         // be flexible with the inputs. Node-emailer prefers the term text, but
         // body is fine for us as well.
-        payload.text = payload.body
+        payload.text = payload.body;
       }
       ajax.response(this.ajaxSuccess);
       ajax.go(payload);
@@ -333,12 +331,11 @@ white:true*/
     @param {Function} options.error callback
     */
     getExtensionList: function (options) {
-      var that = this,
-        ajax = new enyo.Ajax({
-          url: "/extensions",
-          success: options ? options.success : undefined,
-          error: options ? options.error : undefined
-        });
+      var ajax = new enyo.Ajax({
+            url: "/extensions",
+            success: options ? options.success : undefined,
+            error: options ? options.error : undefined
+          });
 
       ajax.response(this.ajaxSuccess);
       ajax.go();
@@ -359,21 +356,13 @@ white:true*/
       var host = document.location.host,
           path = "clientsock",
           protocol = document.location.protocol,
-          // TODO - old way.
-          //url = this.datasourceUrl,
-          //port = this.datasourcePort,
-          //datasource = "https://%@/clientsock".f(url),
           datasource = "%@//%@/%@".f(protocol, host, path),
           self = this,
           didConnect = this.sockDidConnect,
           didError = this.sockDidError;
 
-      // attempt to connect and supply the appropriate
-      // responders for the connect and error events
-// TODO - secure = false until express can replace the old way and free up 443.
-      //this._sock = io.connect(datasource, {port: port, secure: true});
-      //this._sock = io.connect(datasource, {port: port, secure: false});
-      this._sock = io.connect(datasource);
+      // Attempt to connect and supply the appropriate responders for the connect and error events.
+      this._sock = io.connect(datasource, {secure: false});
       this._sock.on("connect", function () {
         //didConnect.call(self, callback);
       });
@@ -381,23 +370,22 @@ white:true*/
         didConnect.call(self, callback);
       });
       this._sock.on("error", function (err) {
-        // TODO - New express conneciton error doesn't send err message back here, but does call this.
-        XT.log("socket.io error SERVER SAID: ", err);
+        // New express conneciton error doesn't send err message back here, but does call this.
+        XT.log("SERVER ERROR.");
         didError.call(self, err, callback);
       });
+      this._sock.on("connect_failed", function (err) {
+        // This app has not even started yet. Don't bother with the popup because it won't work.
+        XT.log("AUTHENTICATION INVALID: ", err);
+        relocate();
+        return;
+      });
+
       this._sock.on("debug", function (msg) {
         XT.log("SERVER DEBUG => ", msg);
       });
 
       this._sock.on("timeout", function (msg) {
-
-        if (XT.app.state < 6) {
-          // this app has not even started yet. Don't bother with the popup because it won't work.
-          XT.log("AUTHENTICATION INVALID");
-          XT.session.logout();
-          return;
-        }
-
         XT.log("SERVER SAID YOU TIMED OUT");
         var p = XT.app.createComponent({
           kind: "onyx.Popup",
