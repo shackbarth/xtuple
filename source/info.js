@@ -46,7 +46,7 @@ white:true*/
       @returns {Boolean}
     */
     couldCreate: function () {
-      return this.getClass().couldCreate(this);
+      return this.getClass().couldCreate();
     },
 
     /**
@@ -56,7 +56,7 @@ white:true*/
       @returns {Boolean}
     */
     couldRead: function () {
-      return this.getClass().couldRead(this);
+      return this.getClass().couldRead();
     },
 
     /**
@@ -66,7 +66,7 @@ white:true*/
       @returns {Boolean}
     */
     couldUpdate: function () {
-      return this.getClass().couldUpdate(this);
+      return this.getClass().couldUpdate();
     },
 
     /**
@@ -76,7 +76,7 @@ white:true*/
       @returns {Boolean}
     */
     couldDelete: function () {
-      return this.getClass().couldDelete(this);
+      return this.getClass().couldDelete();
     },
   });
 
@@ -92,8 +92,8 @@ white:true*/
 
       @returns {Boolean}
     */
-    couldCreate: function (model) {
-      var Klass = XM[model.editableModel.suffix()];
+    couldCreate: function () {
+      var Klass = XM[this.prototype.editableModel.suffix()];
       return Klass.canCreate();
     },
 
@@ -103,8 +103,8 @@ white:true*/
 
       @returns {Boolean}
     */
-    couldRead: function (model) {
-      var Klass = XM[model.editableModel.suffix()];
+    couldRead: function () {
+      var Klass = XM[this.prototype.editableModel.suffix()];
       return Klass.canRead(this);
     },
 
@@ -114,8 +114,8 @@ white:true*/
 
       @returns {Boolean}
     */
-    couldUpdate: function (model) {
-      var Klass = XM[model.editableModel.suffix()];
+    couldUpdate: function () {
+      var Klass = XM[this.prototype.editableModel.suffix()];
       return Klass.canUpdate(this);
     },
 
@@ -125,8 +125,8 @@ white:true*/
 
       @returns {Boolean}
     */
-    couldDelete: function (model) {
-      var Klass = XM[model.editableModel.suffix()];
+    couldDelete: function () {
+      var Klass = XM[this.prototype.editableModel.suffix()];
       return Klass.canDelete(this);
     }
 
