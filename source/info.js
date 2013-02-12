@@ -56,7 +56,7 @@ white:true*/
       @returns {Boolean}
     */
     couldRead: function () {
-      return this.getClass().couldRead();
+      return this.getClass().couldRead(this);
     },
 
     /**
@@ -66,7 +66,7 @@ white:true*/
       @returns {Boolean}
     */
     couldUpdate: function () {
-      return this.getClass().couldUpdate();
+      return this.getClass().couldUpdate(this);
     },
 
     /**
@@ -76,7 +76,7 @@ white:true*/
       @returns {Boolean}
     */
     couldDelete: function () {
-      return this.getClass().couldDelete();
+      return this.getClass().couldDelete(this);
     },
   });
 
@@ -99,35 +99,44 @@ white:true*/
 
     /**
     Use this function to find out whether a user could read the
-    `editableModel` version of this record.
+    `editableModel` version of this record or model.
+
+      @param {XM.Info} model Optional argument to ask about a specific
+        model. If this is falsy we ask about the class generally.
 
       @returns {Boolean}
     */
-    couldRead: function () {
+    couldRead: function (model) {
       var Klass = XM[this.prototype.editableModel.suffix()];
-      return Klass.canRead(this);
+      return Klass.canRead(model || this);
     },
 
     /**
     Use this function to find out whether a user could update the
-    `editableModel` version of this record.
+    `editableModel` version of this record or model.
+
+      @param {XM.Info} model Optional argument to ask about a specific
+        model. If this is falsy we ask about the class generally.
 
       @returns {Boolean}
     */
-    couldUpdate: function () {
+    couldUpdate: function (model) {
       var Klass = XM[this.prototype.editableModel.suffix()];
-      return Klass.canUpdate(this);
+      return Klass.canUpdate(model || this);
     },
 
     /**
       Use this function to find out whether a user could delete the
-      `editableModel` version of this record.
+      `editableModel` version of this record or model.
+
+      @param {XM.Info} model Optional argument to ask about a specific
+        model. If this is falsy we ask about the class generally.
 
       @returns {Boolean}
     */
-    couldDelete: function () {
+    couldDelete: function (model) {
       var Klass = XM[this.prototype.editableModel.suffix()];
-      return Klass.canDelete(this);
+      return Klass.canDelete(model || this);
     }
 
   });
