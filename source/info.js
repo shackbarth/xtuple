@@ -55,7 +55,7 @@ white:true*/
 
       @returns {Boolean}
     */
-    couldRead: function (this) {
+    couldRead: function () {
       return this.getClass().couldRead(this);
     },
 
@@ -65,7 +65,7 @@ white:true*/
 
       @returns {Boolean}
     */
-    couldUpdate: function (this) {
+    couldUpdate: function () {
       return this.getClass().couldUpdate(this);
     },
 
@@ -75,7 +75,7 @@ white:true*/
 
       @returns {Boolean}
     */
-    couldDelete: function (this) {
+    couldDelete: function () {
       return this.getClass().couldDelete(this);
     },
   });
