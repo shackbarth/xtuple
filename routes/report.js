@@ -49,6 +49,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     requestDetails = JSON.stringify(requestDetails);
     query = "select xt.fetch('%@')".f(requestDetails);
 
+    var bicacheCollection = new XM.BiCacheCollection(),
+        fetchOptions = {};
+        
+    fetchOptions.success = function (resp) {
+      var date = bicacheCollection.models[0].get("bicache_created");
+      console.log(date);
+    };
+    fetchOptions.error = function (resp) {
+      console.log("Couldn't fetch the BiCacheCollection");
+    };
+    bicacheCollection.fetch();
+
     queryForData(req.session, query, function (err, result) {
       if (err || !result) {
         res.send({
