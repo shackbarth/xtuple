@@ -390,8 +390,15 @@ white:true*/
       });
 
       this._sock.on("timeout", function (msg) {
-        XT.log("SERVER SAID YOU TIMED OUT");
 
+        if (XT.app.state < 6) {
+          // this app has not even started yet. Don't bother with the popup because it won't work.
+          XT.log("AUTHENTICATION INVALID");
+          XT.session.logout();
+          return;
+        }
+
+        XT.log("SERVER SAID YOU TIMED OUT");
         var p = XT.app.createComponent({
           kind: "onyx.Popup",
           centered: true,
