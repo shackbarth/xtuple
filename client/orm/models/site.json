@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Site",
     "table": "whsinfo",
+    "lockable": true,
     "idSequenceName": "warehous_warehous_id_seq",
     "comment": "Site Info Map",
     "privileges": {
@@ -301,6 +302,7 @@
     "nameSpace": "XM",
     "type": "SiteType",
     "table": "sitetype",
+    "lockable": true,
     "idSequenceName": "sitetype_sitetype_id_seq",
     "comment": "Site Type Map",
     "privileges": {

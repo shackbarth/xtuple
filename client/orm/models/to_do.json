@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "ToDo",
     "table": "todoitem",
+    "lockable": true,
     "idSequenceName": "todoitem_todoitem_id_seq",
     "comment": "ToDo Map",
     "privileges": {

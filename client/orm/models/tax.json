@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "TaxAuthority",
     "table": "taxauth",
+    "lockable": true,
     "idSequenceName": "taxauth_taxauth_id_seq",
     "comment": "Tax Authority Map",
     "privileges": {
@@ -159,6 +160,7 @@
     "nameSpace": "XM",
     "type": "TaxZone",
     "table": "taxzone",
+    "lockable": true,
     "idSequenceName": "taxzone_taxzone_id_seq",
     "comment": "Tax Zone Map",
     "privileges": {
