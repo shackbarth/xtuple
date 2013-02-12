@@ -6,7 +6,7 @@
     "table": "quhead",
     "isExtension": true,
     "comment": "Extended by Sales",
-    "relations": [
+    "relations": [ 
       {
         "column": "quhead_id",
         "inverse": "id"
@@ -29,6 +29,32 @@
   {
     "context": "sales",
     "nameSpace": "XM",
+    "type": "Opportunity",
+    "table": "ophead",
+    "isExtension": true,
+    "comment": "Extended by Sales",
+    "relations": [
+      {
+        "column": "ophead_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "quoteRelations",
+        "toMany": {
+          "type": "QuoteRelation",
+          "column": "ophead_id",
+          "inverse": "opportunity"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "sales",
+    "nameSpace": "XM",
     "type": "Prospect",
     "table": "prospect",
     "isExtension": true,
@@ -41,10 +67,9 @@
     ],
     "properties": [
       {
-        "name": "quotes",
+        "name": "quoteRelations",
         "toMany": {
-          "isNested": true,
-          "type": "Quote",
+          "type": "QuoteRelation",
           "column": "prospect_id",
           "inverse": "customer"
         }

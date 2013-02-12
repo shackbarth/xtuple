@@ -760,6 +760,13 @@
           "type": "SiteRelation",
           "column": "quhead_warehous_id"
         }
+      },
+      {
+        "name": "opportunity",
+        "attr": {
+          "type": "Number",
+          "column": "quhead_ophead_id"
+        }
       }
     ],
     "isSystem": true
