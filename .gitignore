@@ -2,6 +2,7 @@
 build
 *.swp
 /source/ext/imports.js
+/test/selenium/lib/loginData.js
 tmp
 npm-debug.log
 \.sass-cache
