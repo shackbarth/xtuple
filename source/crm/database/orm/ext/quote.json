@@ -1,0 +1,56 @@
+[ 
+  {
+    "context": "crm",
+    "nameSpace": "XM",
+    "type": "Quote",
+    "table": "quhead",
+    "isExtension": true,
+    "comment": "Extended by CRM",
+    "relations": [
+      {
+        "column": "quhead_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "accounts",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteAccount",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "opportunities",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteOpportunity",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "incidents",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteIncident",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "toDos",
+        "toOne": {
+          "isNested": true,
+          "type": "QuoteToDo",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  }
+]
