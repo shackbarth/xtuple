@@ -1,7 +1,7 @@
 /*jshint bitwise:false, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XV:true, XM:true, _:true, onyx:true, enyo:true, XT:true */
+/*global XV:true, XM:true, _:true, onyx:true, enyo:true, XT:true, Globalize:true */
 
 (function () {
   var SAVE_APPLY = 1;
@@ -124,6 +124,7 @@ trailing:true white:true*/
       onStatusChange: "",
       onTitleChange: "",
       onHistoryChange: "",
+      onLockChange: "",
       onMenuChange: "",
       onNotify: ""
     },
@@ -216,6 +217,9 @@ trailing:true white:true*/
     isDirty: function () {
       return this.value ? this.value.isDirty() : false;
     },
+    lockChanged: function () {
+      this.doLockChange({hasKey: this.getValue().hasLockKey()});
+    },
     /**
      @todo Document the modelChanged method.
      */
@@ -250,6 +254,7 @@ trailing:true white:true*/
       // Create new instance and bindings
       this.value = new Klass();
       this.value.on("change", this.attributesChanged, this);
+      this.value.on("change:lock", this.lockChanged, this);
       this.value.on("readOnlyChange", this.attributesChanged, this);
       this.value.on("statusChange", this.statusChanged, this);
       this.value.on("error", this.error, this);
@@ -393,6 +398,7 @@ trailing:true white:true*/
     handlers: {
       onError: "errorNotify",
       onHeaderChange: "headerChanged",
+      onLockChange: "lockChanged",
       onStatusChange: "statusChanged",
       onTitleChange: "titleChanged",
       onMenuChange: "menuChanged",
@@ -416,6 +422,8 @@ trailing:true white:true*/
           {name: "title", style: "width: 200px"},
 					// The MoreToolbar is a FittableColumnsLayout, so this spacer takes up all available space
           {name: "space", fit: true},
+          {kind: "Image", showing: false, name: "lockImage", ontap: "lockTapped",
+            src: "/client/lib/enyo-x/assets/menu-icon-lock.png"},
           {kind: "onyx.Button", name: "refreshButton", disabled: true,
             content: "_refresh".loc(), onclick: "requery"},
           {kind: "onyx.Button", name: "applyButton", disabled: true,
@@ -453,6 +461,13 @@ trailing:true white:true*/
           {name: "errorMessage", content: "_error".loc()},
           {tag: "br"},
           {kind: "onyx.Button", content: "_ok".loc(), ontap: "errorOk",
+            classes: "onyx-blue xv-popup-button"}
+        ]},
+        {kind: "onyx.Popup", name: "lockPopup", centered: true,
+          modal: true, floating: true, components: [
+          {name: "lockMessage", content: ""},
+          {tag: "br"},
+          {kind: "onyx.Button", content: "_ok".loc(), ontap: "lockOk",
             classes: "onyx-blue xv-popup-button"}
         ]}
       ]}
@@ -560,6 +575,24 @@ trailing:true white:true*/
         this.next();
       }
 
+    },
+    lockChanged: function (inSender, inEvent) {
+      this.$.lockImage.setShowing(!inEvent.hasKey);
+    },
+    lockOk: function () {
+      this.$.lockPopup.hide();
+    },
+    /**
+     @todo Document the notify method.
+     */
+    lockTapped: function (inSender, inEvent) {
+      var lock = this.$.workspace.getValue().get("lock"),
+        effective = Globalize.format(new Date(lock.effective), "t");
+      this.$.lockMessage.setContent("_lockInfo".loc()
+                                               .replace("{user}", lock.username)
+                                               .replace("{effective}", effective));
+      this.$.lockPopup.render();
+      this.$.lockPopup.show();
     },
     /**
      Once a model has been saved we take our next action depending on

@@ -80,6 +80,7 @@ XT.stringsFor("en_US", {
   "_loadingSchema": "Loading Schema",
   "_loadingSessionData": "Loading Session Data",
   "_localResourceNotAllowed": "Not allowed to load local resource",
+  "_lockInfo": "This record has been locked by {user} since {effective}.",
   "_logoutConfirmation": "Are you sure you want to log out?",
   "_newPassword": "New Password",
   "_noDescription": "No Description",
