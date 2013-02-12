@@ -1,4 +1,5 @@
-[ {
+[ 
+  {
     "context": "sales",
     "nameSpace": "XM",
     "type": "QuoteAccount",
@@ -51,90 +52,6 @@
         "attr": {
           "type": "String",
           "column": "purpose"
-        }
-      }
-    ],
-    "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "sales",
-    "nameSpace": "XM",
-    "type": "QuoteComment",
-    "table": "comment",
-    "idSequenceName": "quhead_quhead_id_seq",
-    "comment": "Quote Comment Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": "EditOthersComments",
-        "delete": false
-      },
-      "personal": {
-        "update": "EditOwnComments",
-        "properties": [
-          "createdBy"
-        ]
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "comment_id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "sourceType",
-        "attr": {
-          "type": "String",
-          "column": "comment_source",
-          "value": "Q"
-        }
-      },
-      {
-        "name": "source",
-        "attr": {
-          "type": "Number",
-          "column": "comment_source_id"
-        }
-      },
-      {
-        "name": "commentType",
-        "toOne": {
-          "type": "CommentType",
-          "column": "comment_cmnttype_id"
-        }
-      },
-      {
-        "name": "text",
-        "attr": {
-          "type": "String",
-          "column": "comment_text"
-        } 
-      },
-      { 
-        "name": "isPublic",
-        "attr": {
-          "type": "Boolean",
-          "column": "comment_public"
-        }
-      },
-      {
-        "name": "created",
-        "attr": {
-          "type": "Date",
-          "column": "comment_date"
-        }
-      },
-      {
-        "name": "createdBy",
-        "attr": {
-          "type": "String",
-          "column": "comment_user"
         }
       }
     ],
