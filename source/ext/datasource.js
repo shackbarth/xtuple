@@ -362,7 +362,7 @@ white:true*/
           didError = this.sockDidError;
 
       // Attempt to connect and supply the appropriate responders for the connect and error events.
-      this._sock = io.connect(datasource, {secure: false});
+      this._sock = io.connect(datasource, {secure: true});
       this._sock.on("connect", function () {
         //didConnect.call(self, callback);
       });
