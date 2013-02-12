@@ -445,7 +445,6 @@
       {
         "name": "itemSite",
         "toOne": {
-          "isNested": true,
           "type": "ItemSiteRelation",
           "column": "quitem_itemsite_id"
         }
