@@ -1,6 +1,8 @@
 #!/bin/bash 
 PRODUCTION=''
 
+rm -rf deploy
+
 while getopts ":p" opt; do
   case $opt in
     p)
