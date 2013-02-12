@@ -129,25 +129,14 @@ white:true*/
     // METHODS
     //
 
-    /**
-      Returns whether the current record can be created based on privilege
-      settings.
-
-      @returns {Boolean}
-    */
-    canCreate: function () {
-      return this.getClass().canCreate();
-    },
-
-    /**
-      Returns whether the current record can be read based on privilege
-      settings.
-
-      @returns {Boolean}
-    */
-    canRead: function () {
-      return this.getClass().canRead(this);
-    },
+    //
+    // All four of the canVerb functions are defined below as class-level
+    // functions (akin to static functions). Two of those functions are here
+    // as instance functions as well. These just call the class functions.
+    // Notice that canCreate and canRead are missing here. This is on purpose.
+    // Once we have an instance created, there's no reason to ask if we can create
+    // it.
+    //
 
     /**
       Returns whether the current record can be updated based on privilege
