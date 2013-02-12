@@ -254,6 +254,13 @@ white:true*/
     lockDidChange: function (model, lock) {
       var that = this,
         options = {};
+      
+      // Clear any old refresher
+      if (this._keyRefresherInterval) {
+        clearInterval(this._keyRefresherInterval);
+        that._keyRefresherInterval = undefined;
+      }
+        
       if (lock && lock.key && !this._keyRefresherInterval) {
         options.automatedRefresh = true;
         options.success = function (renewed) {
@@ -267,16 +274,11 @@ white:true*/
           }
         };
 
-        // set up a refresher if it's not already set up
+        // set up a refresher
         this._keyRefresherInterval = setInterval(function () {
           that.dispatch('XM.Model', 'renewLock', [lock.key], options);
-
         }, 25 * 1000);
 
-      } else if (!lock.key && this._keyRefresherInterval) {
-        // if the key is gone, get rid of the refresher
-        clearInterval(this._keyRefresherInterval);
-        that._keyRefresherInterval = undefined;
       }
     },
 
@@ -864,16 +866,13 @@ white:true*/
       will be released.
     */
     releaseLock: function () {
-      var lock = _.clone(this.get('lock')),
-        key = lock ? lock.key : false,
-        that = this,
-        options = {};
+      var lock = JSON.parse(JSON.stringify(this.get('lock'))), // Deep copy
+        key = lock ? lock.key : false;
       if (key) {
-        options.success = function () {
-          delete lock.key;
-          that.set('lock', lock);
-        };
         this.dispatch('XM.Model', 'releaseLock', {key: key});
+        delete lock.key;
+        this.attributes.lock = lock;
+        this.lockDidChange(this, lock);
       }
     },
 
