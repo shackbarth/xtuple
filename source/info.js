@@ -15,7 +15,7 @@ white:true*/
     The special `could` privileges are designed to take personal privilege settings
     into account, so it is important that info models have the necessary attributes
     such as `owner` and/or `assignedTo` to check for access.
-    
+
     @name XM.Info
     @extends XM.Model
   */
@@ -40,13 +40,60 @@ white:true*/
     //
 
     /**
+      Returns whether the current record could be created on the editableModel
+      based on privilege settings.
+
+      @returns {Boolean}
+    */
+    couldCreate: function () {
+      return this.getClass().couldCreate();
+    },
+
+    /**
+      Returns whether the current record could be read on the editableModel
+      based on privilege settings.
+
+      @returns {Boolean}
+    */
+    couldRead: function () {
+      return this.getClass().couldRead();
+    },
+
+    /**
+      Returns whether the current record could be updated on the editableModel
+      based on privilege settings.
+
+      @returns {Boolean}
+    */
+    couldUpdate: function () {
+      return this.getClass().couldUpdate();
+    },
+
+    /**
+      Returns whether the current record could be deleted on the editableModel
+      based on privilege settings.
+
+      @returns {Boolean}
+    */
+    couldDelete: function () {
+      return this.getClass().couldDelete();
+    },
+  });
+
+
+  // ..........................................................
+  // CLASS METHODS
+  //
+
+  _.extend(XM.Info, /** @lends XM.Info# */{
+    /**
       Use this function to find out whether a user could create records on the
       `editableModel`.
 
       @returns {Boolean}
     */
     couldCreate: function () {
-      var Klass = XM[this.editableModel.suffix()];
+      var Klass = XM[this.prototype.editableModel.suffix()];
       return Klass.canCreate();
     },
 
@@ -57,7 +104,7 @@ white:true*/
       @returns {Boolean}
     */
     couldRead: function () {
-      var Klass = XM[this.editableModel.suffix()];
+      var Klass = XM[this.prototype.editableModel.suffix()];
       return Klass.canRead(this);
     },
 
@@ -68,7 +115,7 @@ white:true*/
       @returns {Boolean}
     */
     couldUpdate: function () {
-      var Klass = XM[this.editableModel.suffix()];
+      var Klass = XM[this.prototype.editableModel.suffix()];
       return Klass.canUpdate(this);
     },
 
@@ -79,7 +126,7 @@ white:true*/
       @returns {Boolean}
     */
     couldDelete: function () {
-      var Klass = XM[this.editableModel.suffix()];
+      var Klass = XM[this.prototype.editableModel.suffix()];
       return Klass.canDelete(this);
     }
 
