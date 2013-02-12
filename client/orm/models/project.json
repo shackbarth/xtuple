@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Project",
     "table": "prj",
+    "lockable": true,
     "idSequenceName": "prj_prj_id_seq",
     "comment": "Project Map",
     "privileges": {

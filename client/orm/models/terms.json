@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Terms",
     "table": "terms",
+    "lockable": true,
     "idSequenceName": "terms_terms_id_seq",
     "comment": "Terms Map",
     "privileges": {

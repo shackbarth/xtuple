@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Customer",
     "table": "custinfo",
+    "lockable": true,
     "idSequenceName": "cust_cust_id_seq",
     "orderSequence": "CRMAccountNumber",
     "comment": "Customer Map",
@@ -1149,6 +1150,7 @@
     "nameSpace": "XM",
     "type": "CustomerType",
     "table": "custtype",
+    "lockable": true,
     "idSequenceName": "custtype_custtype_id_seq",
     "comment": "Vendor Type Map",
     "privileges": {
@@ -1354,6 +1356,7 @@
     "nameSpace": "XM",
     "type": "ShipCharge",
     "table": "shipchrg",
+    "lockable": true,
     "idSequenceName": "shipchrg_shipchrg_id_seq",
     "comment": "Ship Charge Map",
     "privileges": {
@@ -1402,6 +1405,7 @@
     "nameSpace": "XM",
     "type": "ShipVia",
     "table": "shipvia",
+    "lockable": true,
     "idSequenceName": "shipvia_shipvia_id_seq",
     "comment": "Ship Via Map",
     "privileges": {
@@ -1443,6 +1447,7 @@
     "nameSpace": "XM",
     "type": "ShipZone",
     "table": "shipzone",
+    "lockable": true,
     "idSequenceName": "shipzone_shipzone_id_seq",
     "comment": "Ship Zone Map",
     "privileges": {
@@ -1484,6 +1489,7 @@
     "nameSpace": "XM",
     "type": "CustomerGroup",
     "table": "custgrp",
+    "lockable": true,
     "idSequenceName": "custgrp_custgrp_id_seq",
     "comment": "Customer Group Map",
     "priveleges": {
