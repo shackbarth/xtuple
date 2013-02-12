@@ -241,7 +241,7 @@ white:true*/
       var options = {validateSave: true};
       return !this.validate || !this.validate(this.attributes, options);
     },
-    
+
     lockDidChange: function (model, lock) {
       var that = this,
         options = {};
@@ -696,7 +696,7 @@ white:true*/
       `isLockable` is true it means the user has a application lock
       on the object at the database level so that no other users can
       edit the record.
-      
+
       This is not to be confused with the `isLocked` function that
       is used by Backbone-relational to manage events on relations.
 
@@ -762,7 +762,7 @@ white:true*/
     notify: function (message, options) {
       this.trigger('notify', this, message, options);
     },
-    
+
     /**
       Return the original value of an attribute the last time fetch was called.
 
@@ -849,7 +849,7 @@ white:true*/
       };
       return parse(resp);
     },
-    
+
     /**
       If the model has a lock on the object at the server level, it
       will be released.
