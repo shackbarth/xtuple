@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "CostCategory",
     "table": "costcat",
+    "lockable": true,
     "idSequenceName": "costcat_costcat_id_seq",
     "comment": "Cost Category Map",
     "privileges": {
@@ -45,6 +46,7 @@
     "nameSpace": "XM",
     "type": "ItemSite",
     "table": "itemsite",
+    "lockable": true,
     "idSequenceName": "itemsite_itemsite_id_seq",
     "comment": "Itemsite Map",
     "privileges": {
@@ -321,6 +323,7 @@
     "nameSpace": "XM",
     "type": "PlannerCode",
     "table": "plancode",
+    "lockable": true,
     "idSequenceName": "plancode_plancode_id_seq",
     "comment": "Planner Code Map",
     "privileges": {

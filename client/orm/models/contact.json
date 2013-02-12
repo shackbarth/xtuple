@@ -1289,6 +1289,7 @@
     "nameSpace": "XM",
     "type": "Honorific",
     "table": "hnfc",
+    "lockable": true,
     "idSequenceName": "hnfc_hnfc_id_seq",
     "comment": "Honorific Map",
     "privileges": {

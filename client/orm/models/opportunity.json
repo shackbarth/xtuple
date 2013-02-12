@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Opportunity",
     "table": "ophead",
+    "lockable": true,
     "idSequenceName": "ophead_ophead_id_seq",
     "orderSequence": "OpportunityNumber",
     "comment": "Opportunity Map",
@@ -1028,6 +1029,7 @@
     "nameSpace": "XM",
     "type": "OpportunitySource",
     "table": "opsource",
+    "lockable": true,
     "idSequenceName": "opsource_opsource_id_seq",
     "comment": "Opportunity Source Map",
     "privileges": {
@@ -1069,6 +1071,7 @@
     "nameSpace": "XM",
     "type": "OpportunityStage",
     "table": "opstage",
+    "lockable": true,
     "idSequenceName": "opstage_opstage_id_seq",
     "comment": "Opportunity Stage Map",
     "privileges": {
@@ -1118,6 +1121,7 @@
     "nameSpace": "XM",
     "type": "OpportunityType",
     "table": "optype",
+    "lockable": true,
     "idSequenceName": "optype_optype_id_seq",
     "comment": "Opportunity Type Map",
     "privileges": {
