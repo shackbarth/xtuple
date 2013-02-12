@@ -245,7 +245,7 @@ white:true*/
     lockDidChange: function (model, lock) {
       var that = this,
         options = {};
-      if (lock.key && !this._keyRefresherInterval) {
+      if (lock && lock.key && !this._keyRefresherInterval) {
         options.automatedRefresh = true;
         options.success = function (renewed) {
           // If for any reason the lock was not renewed (maybe got disconnected?)
