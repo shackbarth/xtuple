@@ -359,7 +359,7 @@ regexp:true, undef:true, trailing:true, white:true */
         couldNotCreate = !Model.prototype.couldCreate();
       } else if (Model) {
         // model is a first-class model
-        couldNotCreate = !Model.prototype.canCreate();
+        couldNotCreate = !Model.canCreate();
       }
 
       // Make sure we get are setting the right kind of object here.
