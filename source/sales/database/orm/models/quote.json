@@ -257,7 +257,6 @@
       {
         "name": "customer",
         "toOne": {
-          "isNested": true,
           "type": "CustomerProspectRelation",
           "column": "target_id"
         }
@@ -672,7 +671,7 @@
          }
       },
       {
-        "name": "orderStatus",
+        "name": "status",
         "attr": {
           "type": "String",
           "column": "quhead_status"
@@ -759,7 +758,6 @@
       {
         "name": "site",
         "toOne": {
-          "isNested": true,
           "type": "SiteRelation",
           "column": "quhead_warehous_id"
         }
