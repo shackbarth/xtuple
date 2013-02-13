@@ -75,9 +75,6 @@ _ = require("underscore");
       X.addCleanupTask(function () {
         clearInterval(X.cachePollingInterval);
       });
-      // TODO - We need a start up script that handles async in the right order.
-      // Sticking this here so it gets called after the session schema is loaded.
-      sessionStore.loadCache();
     }
   };
   schemaOptions.success = function () {
@@ -129,17 +126,13 @@ require('http').IncomingMessage.prototype.isAuthenticated = function () {
 
   var creds = this.session.passport.user;
 
-  if (creds.id && creds.username && creds.organization) {
+  if (creds && creds.id && creds.username && creds.organization) {
     return true;
   } else {
-
-    // TODO - Load the session first and get the socket.id so it can be disconnected.
-    // TODO - Destroy expired session in the db and cache.
-
+    destroySession(this.sessionID, this.session);
     return false;
   }
 };
-
 
 // TODO - This can be removed after socket.io 1.0.0 update hopefully.
 // We're stomping on Static to apply this fix:
@@ -239,22 +232,24 @@ require('express/node_modules/connect/lib/middleware/session/cookie').prototype.
 // gets removed when the user closes the browser. We still set express.session.cookie.maxAge
 // below so our persisted session gets an expires value, but not the browser cookie.
 // See this issue for more details: https://github.com/senchalabs/connect/issues/328
-require('express/node_modules/cookie').serialize = function (name, val, opt){
-    // Need to add encode here for the stomp to work.
-    var encode = encodeURIComponent;
+require('express/node_modules/cookie').serialize = function (name, val, opt) {
+  "use strict";
 
-    var pairs = [name + '=' + encode(val)];
-    opt = opt || {};
+  // Need to add encode here for the stomp to work.
+  var encode = encodeURIComponent;
 
-    if (opt.maxAge) pairs.push('Max-Age=' + opt.maxAge);
-    if (opt.domain) pairs.push('Domain=' + opt.domain);
-    if (opt.path) pairs.push('Path=' + opt.path);
-    // TODO - Override here, skip this.
-    //if (opt.expires) pairs.push('Expires=' + opt.expires.toUTCString());
-    if (opt.httpOnly) pairs.push('HttpOnly');
-    if (opt.secure) pairs.push('Secure');
+  var pairs = [name + '=' + encode(val)];
+  opt = opt || {};
 
-    return pairs.join('; ');
+  if (opt.maxAge) pairs.push('Max-Age=' + opt.maxAge);
+  if (opt.domain) pairs.push('Domain=' + opt.domain);
+  if (opt.path) pairs.push('Path=' + opt.path);
+  // TODO - Override here, skip this.
+  //if (opt.expires) pairs.push('Expires=' + opt.expires.toUTCString());
+  if (opt.httpOnly) pairs.push('HttpOnly');
+  if (opt.secure) pairs.push('Secure');
+
+  return pairs.join('; ');
 };
 
 /**
@@ -266,10 +261,13 @@ require('express/node_modules/cookie').serialize = function (name, val, opt){
 //
 // Load the ssl data
 //
-var sslOptions = {}
+var sslOptions = {};
+
 sslOptions.key = X.fs.readFileSync(X.options.datasource.keyFile);
 if (X.options.datasource.caFile) {
   sslOptions.ca = _.map(X.options.datasource.caFile, function (obj) {
+    "use strict";
+
     return X.fs.readFileSync(obj);
   });
 }
@@ -365,6 +363,41 @@ redirectServer.listen(80);
 // Need a way to get everything loaded BEFORE we start listening.  Might just move this to the end...
 io = socketio.listen(server.listen(X.options.datasource.port));
 
+/**
+ * Destroy a single session.
+ * @param {Object} val - Session object.
+ * @param {String} key - Session id.
+ */
+var destroySession = function (key, val) {
+  "use strict";
+
+  var sessionID;
+
+  // Timeout socket.
+  if (val && val.socket && val.socket.id) {
+    _.each(io.sockets.sockets, function (sockVal, sockKey, sockList) {
+      if (val.socket.id === sockKey) {
+        _.each(sockVal.manager.namespaces, function (spaceVal, spaceKey, spaceList) {
+          sockVal.flags.endpoint = spaceVal.name;
+          // Tell the client it timed out. This will redirect the client to /logout
+          // which will destroy the session, but we can't rely on the client for that.
+          sockVal.emit("timeout");
+        });
+
+        // Disconnect socket.
+        sockVal.disconnect();
+      }
+    });
+  }
+
+  sessionID = key.replace(sessionStore.prefix, '');
+
+  // Destroy session here incase the client never hits /logout.
+  sessionStore.destroy(sessionID, function (err) {
+    //X.debug("Session destroied: ", key, " error: ", err);
+  });
+};
+
 // TODO - Use NODE_ENV flag to switch between development and production.
 // See "Understanding the configure method" at:
 // https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO
@@ -416,19 +449,21 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
     handshakeData.sessionID = parseSignedCookie(handshakeData.cookie['connect.sid'], '.T#T@r5EkPM*N@C%9K-iPW!+T');
 
     sessionStore.get(handshakeData.sessionID, function (err, session) {
+      if (err) {
+        return callback(err);
+      }
+
       // All requests get a session. Make sure the session is authenticated.
-      if (err || !session || !session.passport || !session.passport.user
+      if (!session || !session.passport || !session.passport.user
         || !session.passport.user.id
         || !session.passport.user.organization
         || !session.passport.user.username
         || !session.cookie || !session.cookie.expires) {
 
-        // TODO - Load the session first and get the socket.id so it can be disconnected.
-        // TODO - Destroy expired session in the db and cache.
+        destroySession(handshakeData.sessionID, session);
 
-        err = "socket.io not authed";
-        // TODO - This error message isn't making it back to the client.
-        return callback({data: err, code: 1}, false);
+        // Not an error exactly, but the cookie is invalid. The user probably logged off.
+        return callback(null, false);
       }
 
       var Session = require('express/node_modules/connect/lib/middleware/session').Session,
@@ -463,24 +498,14 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
             || !session.passport.user.username
             || !session.cookie || !session.cookie.expires) {
 
-            // TODO - Destroy expired session in the db and cache.
-
-            // Tell the client it timed out. This will redirect the client to /logout
-            // which will destroy the session, but we can't rely on the client for that.
-            socket.emit("timeout");
-            return socket.disconnect();
+            return destroySession(socket.handshake.sessionID, session);
           }
 
           // Make sure the sesion hasn't expired yet.
           expires = new Date(session.cookie.expires);
           current = new Date();
           if (expires <= current) {
-            // TODO - Destroy expired session in the db and cache.
-
-            // Tell the client it timed out. This will redirect the client to /logout
-            // which will destroy the session, but we can't rely on the client for that.
-            socket.emit("timeout");
-            return socket.disconnect();
+            return destroySession(socket.handshake.sessionID, session);
           } else {
             // User is still valid
 
@@ -497,7 +522,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
       };
 
   // Save socket.id to the session store so we can disconnect that socket server side
-  // when a session is timed out. That should nodify the client imediately they have timed out.
+  // when a session is timed out. That should notify the client imediately they have timed out.
   socket.handshake.session.socket = {id: socket.id};
   socket.handshake.session.save();
 
@@ -553,28 +578,13 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
  * The following are jobs that must be started at start up or scheduled to run periodically.
  */
 
-// Load XTPGStore into MemoryStore at startup for caching.
-    // TODO - If we ever run multiple processes/servers, MemoryStore must be replaced with something
-    // all processes/servers can use/share and keep in sync like Redis.
-// TODO - Call XTPGStore loadCache function.
-// See sessionObjectLoaded() above were this is for now.
-//sessionStore.loadCache();
-
 // TODO - Check pid file to see if this is already running.
 // Kill process or create new pid file.
 
+// Run the expireSessions cleanup/garbage collection once a minute.
+setInterval(function () {
+    "use strict";
 
-// TODO - Load the session first and get the socket.id so it can be disconnected.
-// TODO - Destroy expired session in the db and cache.
-    // This code will loop through all socket.io connections and emit the "timeout" event
-    // which tells the client immediately it has timed out.
-    // Now we just need to filter that my timed out session's socket.ids
-    /*
-    _.each(io.sockets.sockets, function (val, key, list) {
-      _.each(val.manager.namespaces, function (spaceVal, spaceKey, spaceList) {
-        val.flags.endpoint = spaceVal.name;
-        val.emit("timeout");
-      })
-      val.disconnect();
-    });
-    */
+    //X.debug("session cleanup called at: ", new Date());
+    sessionStore.expireSessions(destroySession);
+  }, 60000);
