@@ -2,8 +2,8 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true */
 
-require('../node_modules/xt/foundation/foundation');
-require('../node_modules/xt/database/database');
+require('../xt/foundation/foundation');
+require('../xt/database/database');
 
 (function () {
   "use strict";
