@@ -10,3 +10,12 @@
 [submodule "lib/enyo-x/lib/gts-plugins"]
 	path = lib/enyo-x/lib/gts-plugins
 	url = https://bitbucket.org/GlitchTechScience/gts-plugins.git
+[submodule "lib/enyo-x/enyo"]
+	path = lib/enyo-x/enyo
+	url = https://github.com/enyojs/enyo.git
+[submodule "lib/enyo-x/lib/onyx"]
+	path = lib/enyo-x/lib/onyx
+	url = https://github.com/enyojs/onyx.git
+[submodule "lib/enyo-x/lib/layout"]
+	path = lib/enyo-x/lib/layout
+	url = https://github.com/enyojs/layout.git
