@@ -1,0 +1,15 @@
+[submodule "lib/onyx"]
+	path = lib/onyx
+	url = git://github.com/enyojs/onyx.git
+[submodule "lib/layout"]
+	path = lib/layout
+	url = git://github.com/enyojs/layout.git
+[submodule "lib/gts-plugins"]
+	path = lib/gts-plugins
+	url = https://bitbucket.org/GlitchTechScience/gts-plugins.git
+[submodule "enyo"]
+	path = enyo
+	url = git://github.com/enyojs/enyo.git
+[submodule "lib/tools"]
+	path = lib/tools
+	url = git://github.com/xtuple/tools.git
