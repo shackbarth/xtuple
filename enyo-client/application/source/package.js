@@ -1,8 +1,8 @@
 enyo.depends(
   "preliminaries.js",
-  "../lib/tools",
-  "../lib/backbone-x",
-  "../lib/enyo-x",
+  "../../../lib/tools",
+  "../../../lib/backbone-x",
+  "../../../lib/enyo-x",
   "en",
   "models",
   "application",
