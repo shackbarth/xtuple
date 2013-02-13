@@ -89,25 +89,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       lockConflicts;
 
     org = org || "_all"; // the org is blank for all-org maintenance requests
+    // let's hope we never have a database named "_all"
 
     // the keys of the maintenanceLocks object are org names (or _all), and
     // the values are the expiration time in milliseconds.
     X.maintenanceLocks = X.maintenanceLocks || {};
 
-    console.log(org);
-    console.log(typeof now);
-    console.log(typeof expires);
-    console.log(X.maintenanceLocks);
-
     lockConflicts = _.map(X.maintenanceLocks, function (value, key) {
       // if the orgs are the same (note that _all hits every org)
       // and the expiration has not passed, then there's a lock conflict
-      console.log("lockedout", key, now, key > now);
-      console.log("lockedout", key === org || key === '_all' || org === 'all');
-      return (key === org || key === '_all' || org === 'all') && value > now;
+      return (key === org || key === '_all' || org === '_all') && value > now;
     });
-
-    console.log(lockConflicts);
 
     if (_.indexOf(lockConflicts, true) >= 0) {
       // there is a lock conflict. Do not allow this maintenance to happen
@@ -116,12 +108,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     // no lock conflict. Add a lock.
     X.maintenanceLocks[org] = expires;
-    console.log(typeof X.maintenanceLocks[org]);
     return true;
   };
 
 
   var releaseLock = function (org) {
+    org = org || "_all"; // the org is blank for all-org maintenance requests
     delete X.maintenanceLocks[org];
   };
 
