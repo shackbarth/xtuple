@@ -1,0 +1,3 @@
+[submodule "orm"]
+	path = orm
+	url = git://github.com/xtuple/orm.git

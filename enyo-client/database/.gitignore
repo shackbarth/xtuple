@@ -1,0 +1,11 @@
+# ignore swap files
+*.swp
+
+# ignore tmp directories
+tmp
+# ignore OSX .DS_Store files
+*.DS_Store
+output.txt
+/*.backup
+
+*.log

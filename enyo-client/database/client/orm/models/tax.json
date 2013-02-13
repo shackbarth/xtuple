@@ -1,0 +1,246 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "TaxAuthority",
+    "table": "taxauth",
+    "idSequenceName": "taxauth_taxauth_id_seq",
+    "comment": "Tax Authority Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainTaxAuthorities",
+        "read": "ViewTaxAuthorities",
+        "update": "MaintainTaxAuthorities",
+        "delete": "MaintainTaxAuthorities"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "taxauth_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "taxauth_code"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "taxauth_name"
+        }
+      },
+      {
+        "name": "externalReference",
+        "attr": {
+          "type": "String",
+          "column": "taxauth_extref"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "taxauth_curr_id"
+        }
+      },
+      {
+        "name": "county",
+        "attr": {
+          "type": "String",
+          "column": "taxauth_county"
+        }
+      },
+      {
+        "name": "address",
+        "toOne": {
+          "isNested": true,
+          "type": "AddressInfo",
+          "column": "taxauth_addr_id"
+        }
+      }
+    ],
+    "isSystem": true,
+    "extensions": [
+      {
+        "table": "crmacct",
+        "isChild": true,
+        "relations": [
+          {
+            "column": "crmacct_taxauth_id",
+            "inverse": "id"
+          }
+        ],
+        "properties": [
+          {
+            "name": "account",
+            "toOne": {
+              "type": "Account",
+              "column": "crmacct_id"
+            }
+          }
+        ],
+        "sequence": 0
+      }
+    ]
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "TaxAuthorityRelation",
+    "table": "taxauth",
+    "idSequenceName": "taxauth_taxauth_id_seq",
+    "comment": "Tax Authority Relation",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "taxauth_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "taxauth_code"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "taxauth_name"
+        }
+      }
+    ],
+    "isSystem": true,
+    "extensions": [
+      {
+        "table": "crmacct",
+        "isChild": true,
+        "relations": [
+          {
+            "column": "crmacct_taxauth_id",
+            "inverse": "id"
+          }
+        ],
+        "properties": [
+          {
+            "name": "account",
+            "toOne": {
+              "type": "Account",
+              "column": "crmacct_id"
+            }
+          }
+        ],
+        "sequence": 0
+      }
+    ]
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "TaxType",
+    "table": "taxtype",
+    "idSequenceName": "taxtype_taxtype_id_seq",
+    "comment": "Tax Zone Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainTaxTypes",
+        "read": true,
+        "update": "MaintainTaxTypes",
+        "delete": "MaintainTaxTypes"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "taxtype_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "taxtype_name"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "taxtype_descrip"
+        }
+      },
+      {
+        "name": "isSystem",
+        "attr": {
+          "type": "Boolean",
+          "column": "taxtype_sys"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "TaxZone",
+    "table": "taxzone",
+    "idSequenceName": "taxzone_taxzone_id_seq",
+    "comment": "Tax Zone Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainTaxZones",
+        "read": true,
+        "update": "MaintainTaxZones",
+        "delete": "MaintainTaxZones"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "taxzone_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "taxzone_code"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "taxzone_descrip"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

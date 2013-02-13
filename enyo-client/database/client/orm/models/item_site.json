@@ -1,0 +1,363 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "CostCategory",
+    "table": "costcat",
+    "lockable": true,
+    "idSequenceName": "costcat_costcat_id_seq",
+    "comment": "Cost Category Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainCostCategories",
+        "read": true,
+        "update": "MaintainCostCategories",
+        "delete": "MaintainCostCategories"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "costcat_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "costcat_code"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "costcat_descrip"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemSite",
+    "table": "itemsite",
+    "lockable": true,
+    "idSequenceName": "itemsite_itemsite_id_seq",
+    "comment": "Itemsite Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainItemSites",
+        "read": "ViewItemSites",
+        "update": "MaintainItemSites",
+        "delete": "MaintainItemSites"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "itemsite_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "type": "ItemRelation",
+          "column": "itemsite_item_id"
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "itemsite_warehous_id"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_active"
+        }
+      },
+      {
+        "name": "plannerCode",
+        "toOne": {
+          "type": "PlannerCode",
+          "column": "itemsite_plancode_id"
+        }
+      },
+      {
+        "name": "costCategory",
+        "toOne": {
+          "type": "CostCategory",
+          "column": "itemsite_costcat_id"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "itemsite_notes"
+        }
+      },
+      {
+        "name": "comments",
+        "toMany": {
+          "isNested": true,
+          "type": "ItemSiteComment",
+          "column": "itemsite_id",
+          "inverse": "itemSite"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemSiteComment",
+    "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
+    "comment": "Item Site Comment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": "EditOthersComments",
+        "delete": false
+      },
+      "personal": {
+        "update": "EditOwnComments",
+        "properties": [
+          "createdBy"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "comment_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "comment_source",
+          "value": "IS"
+        }
+      },
+      {
+        "name": "itemSite",
+        "attr": {
+          "type": "Number",
+          "column": "comment_source_id"
+        }
+      },
+      {
+        "name": "commentType",
+        "toOne": {
+          "type": "CommentType",
+          "column": "comment_cmnttype_id"
+        }
+      },
+      {
+        "name": "text",
+        "attr": {
+          "type": "String",
+          "column": "comment_text"
+        }
+      },
+      {
+        "name": "isPublic",
+        "attr": {
+          "type": "Boolean",
+          "column": "comment_public"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "comment_date"
+        }
+      },
+      {
+        "name": "createdBy",
+        "attr": {
+          "type": "String",
+          "column": "comment_user"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemSiteListItem",
+    "table": "itemsite",
+    "idSequenceName": "itemsite_itemsite_id_seq",
+    "comment": "Itemsite List Item Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewItemSites",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "itemsite_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "itemsite_item_id"
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "isNested": true,
+          "type": "SiteRelation",
+          "column": "itemsite_warehous_id"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_active"
+        }
+      },
+      {
+        "name": "plannerCode",
+        "toOne": {
+          "type": "PlannerCode",
+          "column": "itemsite_plancode_id"
+        }
+      },
+      {
+        "name": "costCategory",
+        "toOne": {
+          "type": "CostCategory",
+          "column": "itemsite_costcat_id"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemSiteRelation",
+    "table": "itemsite",
+    "idSequenceName": "itemsite_itemsite_id_seq",
+    "comment": "Itemsite Relation Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainItemSites",
+        "read": "ViewItemSites",
+        "update": "MaintainItemSites",
+        "delete": "MaintainItemSites"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "itemsite_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_active"
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "type": "ItemRelation",
+          "column": "itemsite_item_id",
+          "isNested": true
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "itemsite_warehous_id",
+          "isNested": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "PlannerCode",
+    "table": "plancode",
+    "lockable": true,
+    "idSequenceName": "plancode_plancode_id_seq",
+    "comment": "Planner Code Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainPlannerCodes",
+        "read": true,
+        "update": "MaintainPlannerCodes",
+        "delete": "MaintainPlannerCodes"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "plancode_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "plancode_code"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "plancode_name"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

@@ -1,0 +1,1274 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Quote",
+    "table": "quhead",
+    "idSequenceName": "quhead_quhead_id_seq",
+    "comment": "Quote Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainQuotes",
+        "read": "ViewQuotes",
+        "update": "MaintainQuotes",
+        "delete": "MaintainQuotes"
+      }   
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "quhead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "quhead_number"
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "isNested": true,
+          "type": "CustomerProspectRelation",
+          "column": "quhead_cust_id"
+        }
+      },
+      {
+        "name": "quoteDate",
+        "attr": {
+          "type": "Date",
+          "column": "quhead_quotedate"
+        }
+      },
+      {
+        "name": "shipto",
+        "toOne": {
+          "isNested": true,
+          "type": "CustomerShiptoRelation",
+          "column": "quhead_shipto_id"
+        }
+      },
+      {
+        "name": "shiptoName",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptoname"
+        }
+      },
+      {
+        "name": "shiptoAddress1",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptoaddress1"
+        }
+      },
+      {
+        "name": "shiptoAddress2",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptoaddress2"
+        }
+      },
+      {
+        "name": "shiptoAddress3",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptoaddress3"
+        }
+      },
+      {
+        "name": "shiptoCity",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptocity"
+        }
+      },
+      {
+        "name": "shiptoState",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptostate"
+        }
+      },
+      {
+        "name": "shiptoPostalCode",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptozipcode"
+        }
+      },
+      {
+        "name": "shiptoPhone",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptophone"
+        }
+      },
+      {
+        "name": "salesRep",
+        "toOne": {
+          "type": "SalesRep",
+          "column": "quhead_salesrep_id"
+        }
+      },
+      {
+        "name": "terms",
+        "toOne": {
+          "type": "Terms",
+          "column": "quhead_terms_id"
+        }
+      },
+      {
+        "name": "freight",
+        "attr": {
+          "type": "Number",
+          "column": "quhead_freight"
+        }
+      },
+      {
+        "name": "orderNotes",
+        "attr": {
+          "type": "String",
+          "column": "quhead_ordercomments"
+        }
+      },
+      {
+        "name": "shipNotes",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipcomments"
+        }
+      },
+      {
+        "name": "billtoName",
+        "attr": {
+          "type": "String",
+          "column": "quhead_billtoname"
+        }
+      },
+      {
+        "name": "billtoAddress1",
+        "attr": {
+          "type": "String",
+          "column": "quhead_billtoaddress1"
+        }
+      },
+      {
+        "name": "billtoAddress2",
+        "attr": {
+          "type": "String",
+          "column": "quhead_billtoaddress2"
+        }
+      },
+      {
+        "name": "billtoAddress3",
+        "attr": {
+          "type": "String",
+          "column": "quhead_billtoaddress3"
+        }
+      },
+      {
+        "name": "billtoCity",
+        "attr": {
+          "type": "String",
+          "column": "quhead_billtocity"
+        }
+      },
+      {
+        "name": "billtoState",
+        "attr": {
+          "type": "String",
+          "column": "quhead_billtostate"
+        }
+      },
+      {
+        "name": "billtoPostalCode",
+        "attr": {
+          "type": "String",
+          "column": "quhead_billtozip"
+        }
+      },
+      {
+        "name": "commission",
+        "attr": {
+          "type": "Number",
+          "column": "quhead_commission"
+        }
+      },
+      {
+        "name": "fob",
+        "attr": {
+          "type": "String",
+          "column": "quhead_fob"
+        }
+      },
+      {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipvia"
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "quhead_warehous_id"
+        }
+      },
+      {
+        "name": "packDate",
+        "attr": {
+          "type": "Date",
+          "column": "quhead_packdate"
+        }
+      },
+      {
+        "name": "miscCharge",
+        "attr": {
+          "type": "Number",
+          "column": "quhead_misc"
+        }
+      },
+      {
+        "name": "billtoCountry",
+        "attr": {
+          "type": "String",
+          "column": "quhead_billtocountry"
+        }
+      },
+      {
+        "name": "shiptoCountry",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptocountry"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "quhead_curr_id"
+        }
+      },
+      {
+        "name": "expireDate",
+        "attr": {
+          "type": "Date",
+          "column": "quhead_expire"
+        }
+      },
+      {
+        "name": "calculateFreight",
+        "attr": {
+          "type": "Boolean",
+          "column": "quhead_calcfreight"
+        }
+      },
+      {
+        "name": "shiptoContact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "quhead_shipto_cntct_id"
+        }
+      },
+      {
+        "name": "shiptoContactHonorific",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipto_cntct_honorific"
+        }
+      },
+      {
+        "name": "shiptoContactFirstName",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipto_cntct_first_name"
+        }
+      },
+      {
+        "name": "shiptoContactMiddleName",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipto_cntct_middle"
+        }
+      },
+      {
+        "name": "shiptoContactLastName",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipto_cntct_last_name"
+        }
+      },
+      {
+        "name": "shiptoContactSuffix",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipto_cntct_suffix"
+        }
+      },
+      {
+        "name": "shiptoContactPhone",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipto_cntct_phone"
+        }
+      },
+      {
+        "name": "shiptoContactTitle",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipto_cntct_suffix"
+        }
+      },
+      {
+        "name": "shiptoContactFax",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipto_cntct_fax"
+        }
+      },
+      {
+        "name": "shiptoContactEmail",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipto_cntct_email"
+        }
+      },
+      {
+        "name": "billtoContact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "quhead_billto_cntct_id"
+        }
+      },
+      {
+        "name": "billtoContactHonorific",
+        "attr": {
+          "type": "String",
+          "column": "quhead_billto_cntct_honorific"
+        }
+      },
+      {
+        "name": "billtoContactFirstName",
+        "attr": {
+          "type": "String",
+          "column": "quhead_billto_cntct_first_name"
+        }
+      },
+      {
+        "name": "billtoContactMiddleName",
+        "attr": {
+          "type": "String",
+          "column": "quhead_billto_cntct_middle"
+        }
+      },
+      {
+        "name": "billtoContactLastName",
+        "attr": {
+          "type": "String",
+          "column": "quhead_billto_cntct_last_name"
+        }
+      },
+      {
+        "name": "billtoContactSuffix",
+        "attr": {
+          "type": "String",
+          "column": "quhead_billto_cntct_suffix"
+        }
+      },
+      {
+        "name": "billtoContactPhone",
+        "attr": {
+          "type": "String",
+          "column": "quhead_billto_cntct_phone"
+        }
+      },
+      {
+        "name": "billtoContactTitle",
+        "attr": {
+          "type": "String",
+          "column": "quhead_billto_cntct_title"
+        }
+      },
+      {
+        "name": "billtoContactFax",
+        "attr": {
+          "type": "String",
+          "column": "quhead_billto_cntct_fax"
+        }
+      },
+      {
+        "name": "billtoContactEmail",
+        "attr": {
+          "type": "String",
+          "column": "quhead_billto_cntct_email"
+        }
+      },
+      {
+        "name": "taxZone",
+        "toOne": {
+          "type": "TaxZone",
+          "column": "quhead_taxzone_id"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "quhead_status"
+        }
+      },
+      {
+        "name": "saleType",
+        "attr": {
+          "type": "Number",
+          "column": "quhead_saletype_id"
+        }
+      },
+      {
+        "name": "shipZone",
+        "toOne": {
+          "type": "ShipZone",
+          "column": "quhead_shipzone_id"
+        }
+      },
+      {
+        "name": "quoteLines",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteLine",
+          "column": "quhead_id",
+          "inverse": "quote"
+        }
+      },
+      {
+        "name": "comments",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteComment",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "files",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteFile",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "contacts",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteContact",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "urls",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteUrl",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "items",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteItem",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+    {
+    "context": "xtupl",
+    "nameSpace": "XM",
+    "type": "QuoteAccount",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Quote Account Map",
+    "canUpdate": false,
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "Qquhead_id"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "CRMA"
+        }
+      },
+      {
+        "name": "account",
+        "toOne": {
+          "isNested": true,
+          "type": "AccountRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "QuoteComment",
+    "table": "comment",
+    "idSequenceName": "quhead_quhead_id_seq",
+    "comment": "Quote Comment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": "EditOthersComments",
+        "delete": false
+      },
+      "personal": {
+        "update": "EditOwnComments",
+        "properties": [
+          "createdBy"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "comment_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "comment_source",
+          "value": "Q"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "comment_source_id"
+        }
+      },
+      {
+        "name": "commentType",
+        "toOne": {
+          "type": "CommentType",
+          "column": "comment_cmnttype_id"
+        }
+      },
+      {
+        "name": "text",
+        "attr": {
+          "type": "String",
+          "column": "comment_text"
+        } 
+      },
+      { 
+        "name": "isPublic",
+        "attr": {
+          "type": "Boolean",
+          "column": "comment_public"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "comment_date"
+        }
+      },
+      {
+        "name": "createdBy",
+        "attr": {
+          "type": "String",
+          "column": "comment_user"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "QuoteContact",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Quote Contact Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "Qquhead_id"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "T"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "QuoteFile",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Quote File Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "Qquhead_id"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "FILE"
+        }
+      },
+      {
+        "name": "file",
+        "toOne": {
+          "isNested": true,
+          "type": "FileRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "QuoteItem",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Quote Item Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "Qquhead_id"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "I"
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "QuoteLine",
+    "table": "quitem",
+    "idSequenceName": "quitem_quitem_id_seq",
+    "comment": "Quote Line Item Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainQuotes",
+        "read": "ViewQuotes",
+        "update": "MaintainQuotes",
+        "delete": "MaintainQuotes"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "quitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "quote",
+        "attr": {
+          "type": "Number",
+          "column": "quitem_quhead_id"
+        }
+      },
+      {
+        "name": "lineNumber",
+        "attr": {
+          "type": "Number",
+          "column": "quitem_linenumber"
+        }
+      },
+      {
+        "name": "itemSite",
+        "toOne": {
+          "type": "ItemSiteRelation",
+          "column": "quitem_itemsite_id"
+        }
+      },
+    
+      {
+        "name": "scheduleDate",
+        "attr": {
+          "type": "Date",
+          "column": "quitem_scheddate"
+        }
+      },
+      {
+        "name": "quantityOrd",
+        "attr": {
+          "type": "Number",
+          "column": "quitem_qtyord"
+        }
+      },
+      {
+        "name": "unitCost",
+        "attr": {
+          "type": "Number",
+          "column": "quitem_unitcost"
+        }
+      },
+      {
+        "name": "price",
+        "attr": {
+          "type": "Number",
+          "column": "quitem_price"
+        }
+      },
+      {
+        "name": "customerPrice",
+        "attr": {
+          "type": "Number",
+          "column": "quitem_custprice"
+        }
+      },
+      {
+        "name": "memo",
+        "attr": {
+          "type": "String",
+          "column": "quitem_memo"
+        }
+      },
+      {
+        "name": "customerPartNumber",
+        "attr": {
+          "type": "String",
+          "column": "quitem_custpn"
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "quitem_order_warehous_id"
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "quitem_item_id"
+        }
+      },
+      {
+        "name": "quantityUnit",
+        "toOne": {
+          "type": "Unit",
+          "column": "quitem_qty_uom_id"
+        }
+      },
+      {
+        "name": "inventoryQuantityUnitRatio",
+        "attr": {
+          "type": "Number",
+          "column": "quitem_qty_invuomratio"
+        }
+      },
+      {
+        "name": "priceUnit",
+        "attr": {
+          "type": "Number",
+          "column": "quitem_price_uom_id"
+        }
+      },
+      {
+        "name": "priceUnitRatio",
+        "attr": {
+          "type": "Number",
+          "column": "quitem_price_invuomratio"
+        }
+      },
+      {
+        "name": "promiseDate",
+        "attr": {
+          "type": "Date",
+          "column": "quitem_promdate"
+        }
+      },
+      {
+        "name": "taxType",
+        "toOne": {
+          "type": "TaxType",
+          "column": "quitem_taxtype_id"
+        }
+      },
+      {
+        "name": "priceMode",
+        "attr": {
+          "type": "String",
+          "column": "quitem_pricemode"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "QuoteLineCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Quote Line Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "QI"
+        }
+      },
+      {
+        "name": "incident",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "QuoteListItem",
+    "table": "xt.quheadinfo",
+    "comment": "Quote List Item Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewQuotes MaintainQuotes",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "quhead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "quhead_number"
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "isNested": true,
+          "type": "CustomerProspectRelation",
+          "column": "quhead_cust_id"
+        }
+      },
+      {
+        "name": "customerPurchaseOrderNumber",
+        "attr": {
+          "type": "String",
+          "column": "quhead_custponumber"
+         }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "quhead_status"
+         }
+      },
+      {
+        "name": "quoteDate",
+        "attr": {
+          "type": "Date",
+          "column": "quhead_quotedate"
+         }
+      },
+      {
+        "name": "expireDate",
+        "attr": {
+          "type": "Date",
+          "column": "quhead_expire"
+         }
+      },
+      {
+        "name": "orderNotes",
+        "attr": {
+          "type": "String",
+          "column": "quhead_ordercomments"
+         }
+      },
+      {
+        "name": "orderTotal",
+        "attr": {
+          "type": "Number",
+          "column": "quhead_total"
+         }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "QuoteRelation",
+    "table": "quhead",
+    "idSequenceName": "quhead_quhead_id_seq",
+    "comment": "Quote Relation Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainQuotes",
+        "read": "ViewQuotes",
+        "update": "MaintainQuotes",
+        "delete": "MaintainQuotes"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "quhead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "customer",
+        "toOne": {
+          "isNested": true,
+          "type": "CustomerProspectRelation",
+          "column": "quhead_cust_id"
+        }
+      },
+      {
+        "name": "shipto",
+        "toOne": {
+          "isNested": true,
+          "type": "CustomerShiptoRelation",
+          "column": "quhead_shipto_id"
+        }
+      },
+      {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipvia"
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "quhead_warehous_id"
+        }
+      },
+      {
+        "name": "opportunity",
+        "attr": {
+          "type": "Number",
+          "column": "quhead_ophead_id"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "QuoteUrl",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Quote Url Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "Qquhead_id"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "URL"
+        }
+      },
+      {
+        "name": "url",
+        "toOne": {
+          "isNested": true,
+          "type": "Url",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  }
+]

@@ -1,0 +1,79 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Terms",
+    "table": "terms",
+    "lockable": true,
+    "idSequenceName": "terms_terms_id_seq",
+    "comment": "Terms Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainTerms",
+        "read": true,
+        "update": "MaintainTerms",
+        "delete": "MaintainTerms"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "terms_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "terms_code"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "terms_descrip"
+        }
+      },
+      {
+        "name": "termsType",
+        "attr": {
+          "type": "String",
+          "column": "terms_type"
+        }
+      },
+      {
+        "name": "dueDays",
+        "attr": {
+          "type": "Number",
+          "column": "terms_duedays"
+        }
+      },
+      {
+        "name": "discountDays",
+        "attr": {
+          "type": "Number",
+          "column": "terms_discdays"
+        }
+      },
+      {
+        "name": "discountPercent",
+        "attr": {
+          "type": "Number",
+          "column": "terms_discprcnt"
+        }
+      },
+      {
+        "name": "cutOffDay",
+        "attr": {
+          "type": "Number",
+          "column": "terms_cutoffday"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

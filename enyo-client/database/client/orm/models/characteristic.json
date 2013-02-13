@@ -1,0 +1,170 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Characteristic",
+    "table": "char",
+    "lockable": true,
+    "idSequenceName": "char_char_id_seq",
+    "comment": "Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainCharacteristics",
+        "read": true,
+        "update": "MaintainCharacteristics",
+        "delete": "MaintainCharacteristics"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "char_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "char_name"
+        }
+      },
+      {
+        "name": "characteristicType",
+        "attr": {
+          "type": "Number",
+          "column": "char_type"
+        }
+      },
+      {
+        "name": "isSearchable",
+        "attr": {
+          "type": "Boolean",
+          "column": "char_search",
+          "required": true
+        }
+      },
+      {
+        "name": "order",
+        "attr": {
+          "type": "Number",
+          "column": "char_order"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "char_notes"
+        }
+      },
+      {
+        "name": "mask",
+        "attr": {
+          "type": "String",
+          "column": "char_mask"
+        }
+      },
+      {
+        "name": "validator",
+        "attr": {
+          "type": "String",
+          "column": "char_validator"
+        }
+      },
+      {
+        "name": "options",
+        "toMany": {
+          "type": "CharacteristicOption",
+          "column": "char_id",
+          "inverse": "characteristic",
+          "isNested": true
+        }
+      },
+      {
+        "name": "isAddresses",
+        "attr": {
+          "type": "Boolean",
+          "column": "char_addresses",
+          "required": true
+        }
+      },
+      {
+        "name": "isContacts",
+        "attr": {
+          "type": "Boolean",
+          "column": "char_contacts",
+          "required": true
+        }
+      },
+      {
+        "name": "isAccounts",
+        "attr": {
+          "type": "Boolean",
+          "column": "char_crmaccounts"
+        }
+      },
+      {
+        "name": "isItems",
+        "attr": {
+          "type": "Boolean",
+          "column": "char_items",
+          "required": true
+        }
+      }
+    ],
+    "isSystem": true,
+    "extensions": []
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "CharacteristicOption",
+    "table": "charopt",
+    "idSequenceName": "charopt_charopt_id_seq",
+    "comment": "Characteristic Option Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charopt_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "characteristic",
+        "attr": {
+          "type": "Number",
+          "column": "charopt_char_id"
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charopt_value"
+        }
+      },
+      {
+        "name": "order",
+        "attr": {
+          "type": "Number",
+          "column": "charopt_order"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  }
+]

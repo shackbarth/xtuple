@@ -1,0 +1,147 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "LedgerAccount",
+    "table": "accnt",
+    "lockable": true,
+    "idSequenceName": "accnt_accnt_id_seq",
+    "comment": "Ledger Account Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainChartOfAccounts",
+        "read": "MaintainChartOfAccounts",
+        "update": "MaintainChartOfAccounts",
+        "delete": "MaintainChartOfAccounts"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "accnt_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "company",
+        "attr": {
+          "type": "String",
+          "column": "accnt_company"
+        }
+      },
+      {
+        "name": "profitCenter",
+        "attr": {
+          "type": "String",
+          "column": "accnt_profit"
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "accnt_number"
+        }
+      },
+      {
+        "name": "subAccount",
+        "attr": {
+          "type": "String",
+          "column": "accnt_sub"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "accnt_descrip"
+        }
+      },
+      {
+        "name": "externalReference",
+        "attr": {
+          "type": "String",
+          "column": "accnt_extref"
+        }
+      },
+      {
+        "name": "accountType",
+        "attr": {
+          "type": "String",
+          "column": "accnt_type"
+        }
+      },
+      {
+        "name": "subType",
+        "attr": {
+          "type": "String",
+          "column": "accnt_subaccnttype_code"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "accnt_active"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "accnt_comments"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "LedgerAccountRelation",
+    "table": "accnt",
+    "comment": "Ledger Account Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "accnt_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "accnt_name"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "accnt_descrip"
+        }
+      },
+      {
+        "name": "accountType",
+        "attr": {
+          "type": "String",
+          "column": "accnt_type"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

@@ -1,0 +1,58 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Currency",
+    "table": "curr_symbol",
+    "lockable": true,
+    "idSequenceName": "curr_symbol_curr_id_seq",
+    "comment": "Currency Map",
+    "privileges": {
+      "all": {
+        "create": "CreateNewCurrency",
+        "read": true,
+        "update": "MaintainCurrencies",
+        "delete": "MaintainCurrencies"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "curr_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "curr_name"
+        }
+      },
+      {
+        "name": "symbol",
+        "attr": {
+          "type": "String",
+          "column": "curr_symbol"
+        }
+      },
+      {
+        "name": "abbreviation",
+        "attr": {
+          "type": "String",
+          "column": "curr_abbr"
+        }
+      },
+      {
+        "name": "isBase",
+        "attr": {
+          "type": "Boolean",
+          "column": "curr_base"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]
