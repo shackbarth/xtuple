@@ -1,9 +1,0 @@
-[submodule "lib/backbone"]
-	path = lib/backbone
-	url = git://github.com/documentcloud/backbone.git
-[submodule "lib/Backbone-relational"]
-	path = lib/Backbone-relational
-	url = git://github.com/PaulUithol/Backbone-relational.git
-[submodule "lib/tools"]
-	path = lib/tools
-	url = git://github.com/xtuple/tools.git

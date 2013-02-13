@@ -1,18 +1,1 @@
-[submodule "enyo"]
-	path = enyo
-	url = git://github.com/enyojs/enyo.git
-[submodule "lib/onyx"]
-	path = lib/onyx
-	url = git://github.com/enyojs/onyx.git
-[submodule "lib/layout"]
-	path = lib/layout
-	url = git://github.com/enyojs/layout.git
-[submodule "lib/enyo-x"]
-	path = lib/enyo-x
-	url = git://github.com/xtuple/enyo-x.git
-[submodule "lib/backbone-x"]
-	path = lib/backbone-x
-	url = git://github.com/xtuple/backbone-x.git
-[submodule "lib/tools"]
-	path = lib/tools
-	url = git://github.com/xtuple/tools.git
+
