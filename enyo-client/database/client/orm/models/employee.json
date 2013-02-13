@@ -1,0 +1,350 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Employee",
+    "table": "emp",
+    "lockable": true,
+    "idSequenceName": "emp_emp_id_seq",
+    "orderSequence": "CRMAccountNumber",
+    "comment": "Employee Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainEmployees",
+        "read": "ViewEmployees",
+        "update": "MaintainEmployees",
+        "delete": "MaintainEmployees"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "emp_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "emp_number"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "emp_name"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "emp_active"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactInfo",
+          "column": "emp_cntct_id"
+        }
+      },
+      {
+        "name": "startDate",
+        "attr": {
+          "type": "Date",
+          "column": "emp_startdate"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccount",
+          "column": "emp_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "manager",
+        "toOne": {
+          "isNested": true,
+          "type": "EmployeeRelation",
+          "column": "emp_mgr_emp_id",
+          "inverse": "id"
+        }
+      },
+      {
+        "name": "wageType",
+        "attr": {
+          "type": "String",
+          "column": "emp_wage_type"
+        }
+      },
+      {
+        "name": "wage",
+        "attr": {
+          "type": "Number",
+          "column": "emp_wage"
+        }
+      },
+      {
+        "name": "wageCurrency",
+        "toOne": {
+          "type": "Currency",
+          "column": "emp_wage_curr_id"
+        }
+      },
+      {
+        "name": "wagePeriod",
+        "attr": {
+          "type": "String",
+          "column": "emp_wage_period"
+        }
+      },
+      {
+        "name": "billingRate",
+        "attr": {
+          "type": "Number",
+          "column": "emp_extrate"
+        }
+      },
+      {
+        "name": "billingPeriod",
+        "attr": {
+          "type": "String",
+          "column": "emp_extrate_period"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "emp_notes"
+        }
+      },
+      {
+        "name": "comments",
+        "toMany": {
+          "isNested": true,
+          "type": "EmployeeComment",
+          "column": "emp_id",
+          "inverse": "employee"
+        }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "EmployeeCharacteristic",
+          "column": "emp_id",
+          "inverse": "employee"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "EmployeeRelation",
+    "table": "emp",
+    "comment": "Employee Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "emp_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "emp_number"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "emp_name"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "emp_active"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "emp_cntct_id"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "EmployeeComment",
+    "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
+    "comment": "Employee Comment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": "EditOthersComments",
+        "delete": false
+      },
+      "personal": {
+        "update": "EditOwnComments",
+        "properties": [
+          "createdBy"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "comment_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "comment_source",
+          "value": "EMP"
+        }
+      },
+      {
+        "name": "employee",
+        "attr": {
+          "type": "Number",
+          "column": "comment_source_id"
+        }
+      },
+      {
+        "name": "commentType",
+        "toOne": {
+          "type": "CommentType",
+          "column": "comment_cmnttype_id",
+          "required": true
+        }
+      },
+      {
+        "name": "text",
+        "attr": {
+          "type": "String",
+          "column": "comment_text"
+        }
+      },
+      {
+        "name": "isPublic",
+        "attr": {
+          "type": "Boolean",
+          "column": "comment_public"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "comment_date"
+        }
+      },
+      {
+        "name": "createdBy",
+        "attr": {
+          "type": "String",
+          "column": "comment_user"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "EmployeeCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Employee Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "EMP"
+        }
+      },
+      {
+        "name": "employee",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  }
+]

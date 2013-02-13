@@ -1,0 +1,163 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "CommentType",
+    "table": "cmnttype",
+    "idSequenceName": "cmnttype_cmnttype_id_seq",
+    "comment": "Comment Type Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainCommentTypes",
+        "read": true,
+        "update": "MaintainCommentTypes",
+        "delete": "MaintainCommentTypes"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cmnttype_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "cmnttype_name"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "cmnttype_descrip"
+        }
+      },
+      {
+        "name": "isSystem",
+        "attr": {
+          "type": "Boolean",
+          "column": "cmnttype_sys"
+        }
+      },
+      {
+        "name": "commentsEditable",
+        "attr": {
+          "type": "Boolean",
+          "column": "cmnttype_editable"
+        }
+      },
+      {
+        "name": "order",
+        "attr": {
+          "type": "Number",
+          "column": "cmnttype_order",
+          "required": true
+        }
+      },
+      {
+        "name": "sources",
+        "toMany": {
+          "type": "CommentTypeSource",
+          "column": "cmnttype_id",
+          "inverse": "comment_type",
+          "isNested": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "CommentTypeSource",
+    "table": "cmnttypesource",
+    "idSequenceName": "cmnttypesource_cmnttypesource_id_seq",
+    "comment": "Comment Type Source Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cmnttypesource_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "commentType",
+        "attr": {
+          "type": "Number",
+          "column": "cmnttypesource_cmnttype_id"
+        }
+      },
+      {
+        "name": "source",
+        "toOne": {
+          "type": "Source",
+          "column": "cmnttypesource_source_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Source",
+    "table": "source",
+    "comment": "Comment Type Source Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "source_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "module",
+        "attr": {
+          "type": "String",
+          "column": "source_module"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "source_name"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "source_descrip"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

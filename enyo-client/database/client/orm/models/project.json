@@ -1,0 +1,1575 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Project",
+    "table": "prj",
+    "lockable": true,
+    "idSequenceName": "prj_prj_id_seq",
+    "comment": "Project Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainAllProjects",
+        "read": "ViewAllProjects",
+        "update": "MaintainAllProjects",
+        "delete": "MaintainAllProjects"
+      },
+      "personal": {
+        "create": "MaintainPersonalProjects",
+        "read": "ViewPersonalProjects",
+        "update": "MaintainPersonalProjects",
+        "delete": "MaintainPersonalProjects",
+        "properties": [
+          "owner.username",
+          "assignedTo.username"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "prj_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "prj_number"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "prj_name"
+        }
+      },
+      {
+        "name": "account",
+        "toOne": {
+          "isNested": true,
+          "type": "AccountRelation",
+          "column": "prj_crmacct_id"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "prj_cntct_id"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "prj_descrip"
+        }
+      },
+      {
+        "name": "startDate",
+        "attr": {
+          "type": "Date",
+          "column": "prj_start_date"
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "prj_due_date",
+          "required": true
+        }
+      },
+      {
+        "name": "assignDate",
+        "attr": {
+          "type": "Date",
+          "column": "prj_assigned_date"
+        }
+      },
+      {
+        "name": "completeDate",
+        "attr": {
+          "type": "Date",
+          "column": "prj_completed_date"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "prj_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "prj_status"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "prj_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "recurrences",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectRecurrence",
+          "column": "prj_id",
+          "inverse": "project"
+        }
+      },
+      {
+        "name": "comments",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectComment",
+          "column": "prj_id",
+          "inverse": "project"
+        }
+      },
+      {
+        "name": "tasks",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectTask",
+          "column": "prj_id",
+          "inverse": "project"
+        }
+      },
+      {
+        "name": "accounts",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectAccount",
+          "column": "prj_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "contacts",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectContact",
+          "column": "prj_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "items",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectItem",
+          "column": "prj_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "files",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectFile",
+          "column": "prj_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "urls",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectUrl",
+          "column": "prj_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "projects",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectProject",
+          "column": "prj_id",
+          "inverse": "source"
+        }
+      }
+    ],
+    "isSystem": true,
+    "sourceCode": "J",
+    "extensions": []
+  },
+  {
+    "context": "crm",
+    "nameSpace": "XM",
+    "type": "ProjectAccount",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Project Account Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "J"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "CRMA"
+        }
+      },
+      {
+        "name": "account",
+        "toOne": {
+          "isNested": true,
+          "type": "AccountRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ProjectComment",
+    "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
+    "comment": "Project Comment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": "EditOthersComments",
+        "delete": false
+      },
+      "personal": {
+        "update": "EditOwnComments",
+        "properties": [
+          "createdBy"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "comment_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "comment_source",
+          "value": "J"
+        }
+      },
+      {
+        "name": "project",
+        "attr": {
+          "type": "Number",
+          "column": "comment_source_id"
+        }
+      },
+      {
+        "name": "commentType",
+        "toOne": {
+          "type": "CommentType",
+          "column": "comment_cmnttype_id",
+          "required": true
+        }
+      },
+      {
+        "name": "text",
+        "attr": {
+          "type": "String",
+          "column": "comment_text"
+        }
+      },
+      {
+        "name": "isPublic",
+        "attr": {
+          "type": "Boolean",
+          "column": "comment_public"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "comment_date"
+        }
+      },
+      {
+        "name": "createdBy",
+        "attr": {
+          "type": "String",
+          "column": "comment_user"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ProjectContact",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Project Contact Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "J"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "T"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ProjectFile",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Project File Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "J"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "FILE"
+        }
+      },
+      {
+        "name": "file",
+        "toOne": {
+          "isNested": true,
+          "type": "FileRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ProjectRelation",
+    "table": "prj",
+    "comment": "Project Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewAllProjects MaintainAllProjects",
+        "update": false,
+        "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false,
+        "properties": [
+          "owner.username",
+          "assignedTo.username"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "prj_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "prj_number"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "prj_name"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "prj_status"
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "prj_due_date"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "prj_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "prj_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "account",
+        "attr": {
+          "type": "Number",
+          "column": "prj_crmacct_id"
+        }
+      },
+      {
+        "name": "contact",
+        "attr": {
+          "type": "Number",
+          "column": "prj_cntct_id"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ProjectListItem",
+    "table": "xt.prjinfo",
+    "comment": "Project List Item Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewAllProjects MaintainAllProjects",
+        "update": false,
+        "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false,
+        "properties": [
+          "owner.username",
+          "assignedTo.username"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "prj_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "prj_number"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "prj_name"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "prj_status"
+        }
+      },
+      {
+        "name": "startDate",
+        "attr": {
+          "type": "Date",
+          "column": "prj_start_date"
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "prj_due_date"
+        }
+      },
+      {
+        "name": "assignDate",
+        "attr": {
+          "type": "Date",
+          "column": "prj_assigned_date"
+        }
+      },
+      {
+        "name": "completeDate",
+        "attr": {
+          "type": "Date",
+          "column": "prj_completed_date"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "prj_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "prj_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "account",
+        "toOne": {
+          "isNested": true,
+          "type": "AccountRelation",
+          "column": "prj_crmacct_id"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "prj_cntct_id"
+        }
+      },
+      {
+        "name": "budgetedHours",
+        "attr": {
+          "type": "Number",
+          "column": "prj_hours_budget"
+        }
+      },
+      {
+        "name": "actualHours",
+        "attr": {
+          "type": "Number",
+          "column": "prj_hours_actual"
+        }
+      },
+      {
+        "name": "balanceHours",
+        "attr": {
+          "type": "Number",
+          "column": "prj_hours_balance"
+        }
+      },
+      {
+        "name": "budgetedExpenses",
+        "attr": {
+          "type": "Number",
+          "column": "prj_exp_budget"
+        }
+      },
+      {
+        "name": "actualExpenses",
+        "attr": {
+          "type": "Number",
+          "column": "prj_exp_actual"
+        }
+      },
+      {
+        "name": "balanceExpenses",
+        "attr": {
+          "type": "Number",
+          "column": "prj_exp_balance"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ProjectItem",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Project Item Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "J"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "I"
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ProjectProject",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Project Project Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "J"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "J"
+        }
+      },
+      {
+        "name": "project",
+        "toOne": {
+          "isNested": true,
+          "type": "ProjectRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ProjectRecurrence",
+    "table": "recur",
+    "idSequenceName": "recur_recur_id_seq",
+    "comment": "Project Recurrence Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "recur_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "parentType",
+        "attr": {
+          "type": "String",
+          "column": "recur_parent_type",
+          "value": "J"
+        }
+      },
+      {
+        "name": "project",
+        "attr": {
+          "type": "Number",
+          "column": "recur_parent_id"
+        }
+      },
+      {
+        "name": "period",
+        "attr": {
+          "type": "String",
+          "column": "recur_period"
+        }
+      },
+      {
+        "name": "frequency",
+        "attr": {
+          "type": "Number",
+          "column": "recur_freq"
+        }
+      },
+      {
+        "name": "startDate",
+        "attr": {
+          "type": "Date",
+          "column": "recur_start"
+        }
+      },
+      {
+        "name": "endDate",
+        "attr": {
+          "type": "Date",
+          "column": "recur_end"
+        }
+      },
+      {
+        "name": "maximum",
+        "attr": {
+          "type": "Number",
+          "column": "recur_max"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ProjectTask",
+    "table": "prjtask",
+    "idSequenceName": "prjtask_prjtask_id_seq",
+    "comment": "Project Task Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainAllProjects",
+        "read": "ViewAllProjects",
+        "update": "MaintainAllProjects",
+        "delete": "MaintainAllProjects"
+      },
+      "personal": {
+        "create": "MaintainPersonalProjects",
+        "read": "ViewPersonalProjects",
+        "update": "MaintainPersonalProjects",
+        "delete": "MaintainPersonalProjects",
+        "properties": [
+          "owner.username",
+          "assignedTo.username",
+          "projectOwner.username",
+          "projectAssignedTo.username"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "prjtask_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "prjtask_number"
+        }
+      },
+      {
+        "name": "project",
+        "attr": {
+          "type": "Number",
+          "column": "prjtask_prj_id"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "prjtask_name"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "prjtask_descrip"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "prjtask_status"
+        }
+      },
+      {
+        "name": "budgetedHours",
+        "attr": {
+          "type": "Number",
+          "column": "prjtask_hours_budget"
+        }
+      },
+      {
+        "name": "actualHours",
+        "attr": {
+          "type": "Number",
+          "column": "prjtask_hours_actual"
+        }
+      },
+      {
+        "name": "budgetedExpenses",
+        "attr": {
+          "type": "Number",
+          "column": "prjtask_exp_budget"
+        }
+      },
+      {
+        "name": "actualExpenses",
+        "attr": {
+          "type": "Number",
+          "column": "prjtask_exp_actual"
+        }
+      },
+      {
+        "name": "startDate",
+        "attr": {
+          "type": "Date",
+          "column": "prjtask_start_date"
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "prjtask_due_date",
+          "required": true
+        }
+      },
+      {
+        "name": "assignDate",
+        "attr": {
+          "type": "Date",
+          "column": "prjtask_assigned_date"
+        }
+      },
+      {
+        "name": "completeDate",
+        "attr": {
+          "type": "Date",
+          "column": "prjtask_completed_date"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "prjtask_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "prjtask_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "comments",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectTaskComment",
+          "column": "prjtask_id",
+          "inverse": "project_task"
+        }
+      },
+      {
+        "name": "alarms",
+        "toMany": {
+          "isNested": true,
+          "type": "ProjectTaskAlarm",
+          "column": "prjtask_id",
+          "inverse": "project_task"
+        }
+      }
+    ],
+    "extensions": [
+      {
+        "table": "prj",
+        "isChild": true,
+        "relations": [
+          {
+            "column": "prj_id",
+            "inverse": "project"
+          }
+        ],
+        "properties": [
+          {
+            "name": "projectAssignedTo",
+            "toOne": {
+              "isNested": true,
+              "type": "UserAccountRelation",
+              "column": "prj_username",
+              "inverse": "username"
+            }
+          },
+          {
+            "name": "projectOwner",
+            "toOne": {
+              "isNested": true,
+              "type": "UserAccountRelation",
+              "column": "prj_owner_username",
+              "inverse": "username"
+            }
+          }
+        ],
+        "nameSpace": "XM"
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ProjectTaskListItem",
+    "table": "prjtask",
+    "comment": "Project Task List Item Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewAllProjects MaintainAllProjects",
+        "update": false,
+        "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false,
+        "properties": [
+          "owner.username",
+          "assignedTo.username",
+          "projectOwner.username",
+          "projectAssignedTo.username"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "prjtask_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "prjtask_number"
+        }
+      },
+      {
+        "name": "project",
+        "toOne": {
+          "isNested": true,
+          "type": "ProjectRelation",
+          "column": "prjtask_prj_id"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "prjtask_name"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "prjtask_status"
+        }
+      },
+      {
+        "name": "budgetedHours",
+        "attr": {
+          "type": "Number",
+          "column": "prjtask_hours_budget"
+        }
+      },
+      {
+        "name": "actualHours",
+        "attr": {
+          "type": "Number",
+          "column": "prjtask_hours_actual"
+        }
+      },
+      {
+        "name": "budgetedExpenses",
+        "attr": {
+          "type": "Number",
+          "column": "prjtask_exp_budget"
+        }
+      },
+      {
+        "name": "actualExpenses",
+        "attr": {
+          "type": "Number",
+          "column": "prjtask_exp_actual"
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "prjtask_due_date"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "prjtask_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "prjtask_owner_username",
+          "inverse": "username"
+        }
+      }
+    ],
+    "extensions": [
+      {
+        "table": "prj",
+        "isChild": true,
+        "relations": [
+          {
+            "column": "prj_id",
+            "inverse": "project"
+          }
+        ],
+        "properties": [
+          {
+            "name": "projectAssignedTo",
+            "toOne": {
+              "isNested": true,
+              "type": "UserAccountRelation",
+              "column": "prj_username",
+              "inverse": "username"
+            }
+          },
+          {
+            "name": "projectOwner",
+            "toOne": {
+              "isNested": true,
+              "type": "UserAccountRelation",
+              "column": "prj_owner_username",
+              "inverse": "username"
+            }
+          }
+        ],
+        "nameSpace": "XM"
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ProjectTaskAlarm",
+    "table": "alarm",
+    "idSequenceName": "alarm_alarm_id_seq",
+    "orderSequence": "AlarmNumber",
+    "comment": "Project Task Alarm Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "alarm_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "Number",
+          "column": "alarm_number"
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "Number",
+          "column": "alarm_source",
+          "value": "TA"
+        }
+      },
+      {
+        "name": "projectTask",
+        "attr": {
+          "type": "Number",
+          "column": "alarm_source_id"
+        }
+      },
+      {
+        "name": "isEvent",
+        "attr": {
+          "type": "Boolean",
+          "column": "alarm_event"
+        }
+      },
+      {
+        "name": "eventRecipient",
+        "attr": {
+          "type": "String",
+          "column": "alarm_event_recipient"
+        }
+      },
+      {
+        "name": "isMessage",
+        "attr": {
+          "type": "Boolean",
+          "column": "alarm_sysmsg"
+        }
+      },
+      {
+        "name": "messageRecipient",
+        "attr": {
+          "type": "String",
+          "column": "alarm_sysmsg_recipient"
+        }
+      },
+      {
+        "name": "offset",
+        "attr": {
+          "type": "Number",
+          "column": "alarm_time_offset"
+        }
+      },
+      {
+        "name": "qualifier",
+        "attr": {
+          "type": "String",
+          "column": "alarm_time_qualifier"
+        }
+      },
+      {
+        "name": "time",
+        "attr": {
+          "type": "Date",
+          "column": "alarm_time"
+        }
+      },
+      {
+        "name": "trigger",
+        "attr": {
+          "type": "Date",
+          "column": "alarm_trigger"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ProjectTaskComment",
+    "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
+    "comment": "Project Task Comment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": "EditOthersComments",
+        "delete": false
+      },
+      "personal": {
+        "update": "EditOwnComments",
+        "properties": [
+          "createdBy"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "comment_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "comment_source",
+          "value": "TA"
+        }
+      },
+      {
+        "name": "projectTask",
+        "attr": {
+          "type": "Number",
+          "column": "comment_source_id"
+        }
+      },
+      {
+        "name": "commentType",
+        "toOne": {
+          "type": "CommentType",
+          "column": "comment_cmnttype_id",
+          "required": true
+        }
+      },
+      {
+        "name": "text",
+        "attr": {
+          "type": "String",
+          "column": "comment_text"
+        }
+      },
+      {
+        "name": "isPublic",
+        "attr": {
+          "type": "Boolean",
+          "column": "comment_public"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "comment_date"
+        }
+      },
+      {
+        "name": "createdBy",
+        "attr": {
+          "type": "String",
+          "column": "comment_user"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ProjectUrl",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Project Url Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "J"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "URL"
+        }
+      },
+      {
+        "name": "url",
+        "toOne": {
+          "isNested": true,
+          "type": "Url",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  }
+]

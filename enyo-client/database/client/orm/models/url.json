@@ -1,0 +1,43 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Url",
+    "table": "urlinfo",
+    "idSequenceName": "urlinfo_url_id_seq",
+    "comment": "URL Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "url_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "url_title"
+        }
+      },
+      {
+        "name": "path",
+        "attr": {
+          "type": "String",
+          "column": "url_url"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

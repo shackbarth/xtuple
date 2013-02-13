@@ -1,0 +1,1322 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Contact",
+    "table": "cntct",
+    "lockable": true,
+    "idSequenceName": "cntct_cntct_id_seq",
+    "orderSequence": "ContactNumber",
+    "comment": "Contact Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainAllContacts",
+        "read": "ViewAllContacts",
+        "update": "MaintainAllContacts",
+        "delete": "MaintainAllContacts"
+      },
+      "personal": {
+        "create": "MaintainPersonalContacts",
+        "read": "ViewPersonalContacts",
+        "update": "MaintainPersonalContacts",
+        "delete": "MaintainPersonalContacts",
+        "properties": [
+          "owner.username"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cntct_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "cntct_number"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "cntct_active"
+        }
+      },
+      {
+        "name": "honorific",
+        "attr": {
+          "type": "String",
+          "column": "cntct_honorific"
+        }
+      },
+      {
+        "name": "firstName",
+        "attr": {
+          "type": "String",
+          "column": "cntct_first_name"
+        }
+      },
+      {
+        "name": "middleName",
+        "attr": {
+          "type": "String",
+          "column": "cntct_middle"
+        }
+      },
+      {
+        "name": "lastName",
+        "attr": {
+          "type": "String",
+          "column": "cntct_last_name"
+        }
+      },
+      {
+        "name": "suffix",
+        "attr": {
+          "type": "String",
+          "column": "cntct_suffix"
+        }
+      },
+      {
+        "name": "jobTitle",
+        "attr": {
+          "type": "String",
+          "column": "cntct_title"
+        }
+      },
+      {
+        "name": "initials",
+        "attr": {
+          "type": "String",
+          "column": "cntct_initials"
+        }
+      },
+      {
+        "name": "phone",
+        "attr": {
+          "type": "String",
+          "column": "cntct_phone"
+        }
+      },
+      {
+        "name": "alternate",
+        "attr": {
+          "type": "String",
+          "column": "cntct_phone2"
+        }
+      },
+      {
+        "name": "fax",
+        "attr": {
+          "type": "String",
+          "column": "cntct_fax"
+        }
+      },
+      {
+        "name": "primaryEmail",
+        "attr": {
+          "type": "String",
+          "column": "cntct_email"
+        }
+      },
+      {
+        "name": "webAddress",
+        "attr": {
+          "type": "String",
+          "column": "cntct_webaddr"
+        }
+      },
+      {
+        "name": "account",
+        "toOne": {
+          "isNested": true,
+          "type": "AccountRelation",
+          "column": "cntct_crmacct_id"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "cntct_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "cntct_notes"
+        }
+      },
+      {
+        "name": "address",
+        "toOne": {
+          "isNested": true,
+          "type": "AddressInfo",
+          "column": "cntct_addr_id"
+        }
+      },
+      {
+        "name": "email",
+        "toMany": {
+          "type": "ContactEmail",
+          "column": "cntct_id",
+          "inverse": "contact",
+          "isNested": true
+        }
+      },
+      {
+        "name": "comments",
+        "toMany": {
+          "type": "ContactComment",
+          "column": "cntct_id",
+          "inverse": "contact",
+          "isNested": true
+        }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "type": "ContactCharacteristic",
+          "column": "cntct_id",
+          "inverse": "contact",
+          "isNested": true
+        }
+      },
+      {
+        "name": "accounts",
+        "toMany": {
+          "type": "ContactAccount",
+          "column": "cntct_id",
+          "inverse": "source",
+          "isNested": true
+        }
+      },
+      {
+        "name": "contacts",
+        "toMany": {
+          "type": "ContactContact",
+          "column": "cntct_id",
+          "inverse": "source",
+          "isNested": true
+        }
+      },
+      {
+        "name": "items",
+        "toMany": {
+          "type": "ContactItem",
+          "column": "cntct_id",
+          "inverse": "source",
+          "isNested": true
+        }
+      },
+      {
+        "name": "files",
+        "toMany": {
+          "type": "ContactFile",
+          "column": "cntct_id",
+          "inverse": "source",
+          "isNested": true
+        }
+      },
+      {
+        "name": "urls",
+        "toMany": {
+          "type": "ContactUrl",
+          "column": "cntct_id",
+          "inverse": "source",
+          "isNested": true
+        }
+      }
+    ],
+    "isSystem": true,
+    "sourceCode": "T"
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ContactInfo",
+    "table": "cntct",
+    "idSequenceName": "cntct_cntct_id_seq",
+    "orderSequence": "ContactNumber",
+    "comment": "Contact Info Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainAllContacts",
+        "read": "ViewAllContacts",
+        "update": "MaintainAllContacts",
+        "delete": "MaintainAllContacts"
+      },
+      "personal": {
+        "create": "MaintainPersonalContacts",
+        "read": "ViewPersonalContacts",
+        "update": "MaintainPersonalContacts",
+        "delete": "MaintainPersonalContacts",
+        "properties": [
+          "owner.username"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cntct_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "cntct_number"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "cntct_active"
+        }
+      },
+      {
+        "name": "honorific",
+        "attr": {
+          "type": "String",
+          "column": "cntct_honorific"
+        }
+      },
+      {
+        "name": "firstName",
+        "attr": {
+          "type": "String",
+          "column": "cntct_first_name"
+        }
+      },
+      {
+        "name": "middleName",
+        "attr": {
+          "type": "String",
+          "column": "cntct_middle"
+        }
+      },
+      {
+        "name": "lastName",
+        "attr": {
+          "type": "String",
+          "column": "cntct_last_name"
+        }
+      },
+      {
+        "name": "suffix",
+        "attr": {
+          "type": "String",
+          "column": "cntct_suffix"
+        }
+      },
+      {
+        "name": "jobTitle",
+        "attr": {
+          "type": "String",
+          "column": "cntct_title"
+        }
+      },
+      {
+        "name": "initials",
+        "attr": {
+          "type": "String",
+          "column": "cntct_initials"
+        }
+      },
+      {
+        "name": "phone",
+        "attr": {
+          "type": "String",
+          "column": "cntct_phone"
+        }
+      },
+      {
+        "name": "alternate",
+        "attr": {
+          "type": "String",
+          "column": "cntct_phone2"
+        }
+      },
+      {
+        "name": "fax",
+        "attr": {
+          "type": "String",
+          "column": "cntct_fax"
+        }
+      },
+      {
+        "name": "primaryEmail",
+        "attr": {
+          "type": "String",
+          "column": "cntct_email"
+        }
+      },
+      {
+        "name": "webAddress",
+        "attr": {
+          "type": "String",
+          "column": "cntct_webaddr"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "cntct_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "address",
+        "toOne": {
+          "isNested": true,
+          "type": "AddressInfo",
+          "column": "cntct_addr_id"
+        }
+      },
+      {
+        "name": "email",
+        "toMany": {
+          "type": "ContactEmail",
+          "column": "cntct_id",
+          "inverse": "contact",
+          "isNested": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ContactAccount",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Contact Account Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "T"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "CRMA"
+        }
+      },
+      {
+        "name": "account",
+        "toOne": {
+          "isNested": true,
+          "type": "AccountRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ContactCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Contact Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "CNTCT"
+        }
+      },
+      {
+        "name": "contact",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ContactListItemCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Contact List Item Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "CNTCT"
+        }
+      },
+      {
+        "name": "contact",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ContactComment",
+    "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
+    "comment": "Contact Comment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": "EditOthersComments",
+        "delete": false
+      },
+      "personal": {
+        "update": "EditOwnComments",
+        "properties": [
+          "createdBy"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "comment_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "comment_source",
+          "value": "T"
+        }
+      },
+      {
+        "name": "contact",
+        "attr": {
+          "type": "Number",
+          "column": "comment_source_id"
+        }
+      },
+      {
+        "name": "commentType",
+        "toOne": {
+          "type": "CommentType",
+          "column": "comment_cmnttype_id",
+          "required": true
+        }
+      },
+      {
+        "name": "text",
+        "attr": {
+          "type": "String",
+          "column": "comment_text"
+        }
+      },
+      {
+        "name": "isPublic",
+        "attr": {
+          "type": "Boolean",
+          "column": "comment_public"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "comment_date"
+        }
+      },
+      {
+        "name": "createdBy",
+        "attr": {
+          "type": "String",
+          "column": "comment_user"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ContactContact",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Contact Contact Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "T"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "T"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ContactEmail",
+    "table": "cntcteml",
+    "idSequenceName": "cntcteml_cntcteml_id_seq",
+    "comment": "Contact Email Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cntcteml_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "contact",
+        "attr": {
+          "type": "Number",
+          "column": "cntcteml_cntct_id"
+        }
+      },
+      {
+        "name": "email",
+        "attr": {
+          "type": "String",
+          "column": "cntcteml_email"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ContactFile",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Contact File Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "T"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "FILE"
+        }
+      },
+      {
+        "name": "file",
+        "toOne": {
+          "isNested": true,
+          "type": "FileRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ContactListItem",
+    "table": "cntct",
+    "comment": "Contact List Item Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewAllContacts MaintainAllContacts",
+        "update": false,
+        "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false,
+        "properties": [
+          "owner.username"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cntct_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "cntct_active"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "cntct_name"
+        }
+      },
+      {
+        "name": "firstName",
+        "attr": {
+          "type": "String",
+          "column": "cntct_first_name"
+        }
+      },
+      {
+        "name": "lastName",
+        "attr": {
+          "type": "String",
+          "column": "cntct_last_name"
+        }
+      },
+      {
+        "name": "jobTitle",
+        "attr": {
+          "type": "String",
+          "column": "cntct_title"
+        }
+      },
+      {
+        "name": "phone",
+        "attr": {
+          "type": "String",
+          "column": "cntct_phone"
+        }
+      },
+      {
+        "name": "alternate",
+        "attr": {
+          "type": "String",
+          "column": "cntct_phone2"
+        }
+      },
+      {
+        "name": "fax",
+        "attr": {
+          "type": "String",
+          "column": "cntct_fax"
+        }
+      },
+      {
+        "name": "primaryEmail",
+        "attr": {
+          "type": "String",
+          "column": "cntct_email"
+        }
+      },
+      {
+        "name": "webAddress",
+        "attr": {
+          "type": "String",
+          "column": "cntct_webaddr"
+        }
+      },
+      {
+        "name": "address",
+        "toOne": {
+          "isNested": true,
+          "type": "AddressInfo",
+          "column": "cntct_addr_id"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "cntct_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "account",
+        "toOne": {
+          "isNested": true,
+          "type": "AccountRelation",
+          "column": "cntct_crmacct_id"
+        }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "type": "ContactListItemCharacteristic",
+          "column": "cntct_id",
+          "inverse": "contact",
+          "isNested": true
+        }
+      }
+    ],
+    "extensions": [
+      {
+        "table": "crmacct",
+        "nameSpace": "XM",
+        "relations": [
+          {
+            "column": "crmacct_id",
+            "inverse": "account"
+          }
+        ],
+        "properties": [
+          {
+            "name": "accountParent",
+            "toOne": {
+              "type": "AccountRelation",
+              "column": "crmacct_parent_id"
+            }
+          }
+        ]
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ContactRelation",
+    "table": "cntct",
+    "comment": "Contact Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewAllContacts MaintainAllContacts",
+        "update": false,
+        "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false,
+        "properties": [
+          "owner.username"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "cntct_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "cntct_active"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "cntct_name"
+        }
+      },
+      {
+        "name": "firstName",
+        "attr": {
+          "type": "String",
+          "column": "cntct_first_name"
+        }
+      },
+      {
+        "name": "lastName",
+        "attr": {
+          "type": "String",
+          "column": "cntct_last_name"
+        }
+      },
+      {
+        "name": "jobTitle",
+        "attr": {
+          "type": "String",
+          "column": "cntct_title"
+        }
+      },
+      {
+        "name": "phone",
+        "attr": {
+          "type": "String",
+          "column": "cntct_phone"
+        }
+      },
+      {
+        "name": "alternate",
+        "attr": {
+          "type": "String",
+          "column": "cntct_phone2"
+        }
+      },
+      {
+        "name": "fax",
+        "attr": {
+          "type": "String",
+          "column": "cntct_fax"
+        }
+      },
+      {
+        "name": "primaryEmail",
+        "attr": {
+          "type": "String",
+          "column": "cntct_email"
+        }
+      },
+      {
+        "name": "webAddress",
+        "attr": {
+          "type": "String",
+          "column": "cntct_webaddr"
+        }
+      },
+      {
+        "name": "address",
+        "toOne": {
+          "isNested": true,
+          "type": "AddressInfo",
+          "column": "cntct_addr_id"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "cntct_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "account",
+        "attr": {
+          "type": "Number",
+          "column": "cntct_crmacct_id"
+        }
+      }
+    ],
+    "extensions": [
+      {
+        "table": "crmacct",
+        "nameSpace": "XM",
+        "relations": [
+          {
+            "column": "crmacct_id",
+            "inverse": "account"
+          }
+        ],
+        "properties": [
+          {
+            "name": "accountParent",
+            "toOne": {
+              "type": "AccountRelation",
+              "column": "crmacct_parent_id"
+            }
+          }
+        ]
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ContactItem",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Contact Item Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "T"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "I"
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ContactUrl",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Contact Url Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "T"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "URL"
+        }
+      },
+      {
+        "name": "url",
+        "toOne": {
+          "isNested": true,
+          "type": "Url",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Honorific",
+    "table": "hnfc",
+    "lockable": true,
+    "idSequenceName": "hnfc_hnfc_id_seq",
+    "comment": "Honorific Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainTitles",
+        "read": true,
+        "update": "MaintainTitles",
+        "delete": "MaintainTitles"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "hnfc_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "hnfc_code"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

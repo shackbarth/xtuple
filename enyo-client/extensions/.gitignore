@@ -1,0 +1,6 @@
+/build
+/builds
+/deploy
+*.swp
+/*.DS_Store
+.DS_Store

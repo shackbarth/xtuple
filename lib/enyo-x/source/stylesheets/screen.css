@@ -1,0 +1,921 @@
+/* LESS version of screen.scss file previously in client 
+
+	To compile to .css: lessc screen.less > ../stylesheets/screen.css
+	Use -compress for a compressed .css with no comments
+
+*/
+/*
+	These variables will show in css as their hex values
+*/
+/* Helper classes for css3 */
+.clearfix {
+  *zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.clearfix:after {
+  clear: both;
+}
+.hide-text {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+.input-block-level {
+  display: block;
+  width: 100%;
+  min-height: 30px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+body {
+  font-family: "arial", "arial black";
+}
+.bggrad {
+  /* Radial Gradient */
+
+  background-color: #333333;
+  background-image: -webkit-gradient(radial, center center, 0, center center, 460, from(#696969), to(#333333));
+  background-image: -webkit-radial-gradient(circle, #696969, #333333);
+  background-image: -moz-radial-gradient(circle, #696969, #333333);
+  background-image: -o-radial-gradient(circle, #696969, #333333);
+  background-repeat: no-repeat;
+  background-color: #999999;
+}
+.app > * {
+  width: 320px;
+  -webkit-box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
+  background: #555555;
+}
+.panels > * {
+  border: 2px solid #333333;
+  font-size: 5em;
+}
+.wide > * {
+  min-width: 50%;
+}
+.developer-ui-container {
+  -webkit-box-shadow: #333333 4px 4px 10px -4px;
+  -moz-box-shadow: #333333 4px 4px 10px -4px;
+  box-shadow: #333333 4px 4px 10px -4px;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-right-radius: 10px;
+  top: 100px;
+  left: 0;
+  position: absolute;
+  background-color: #dddddd;
+  z-index: 10;
+}
+.developer-ui-container .developer-rows .row {
+  display: block;
+  margin: 10px;
+}
+.developer-ui-container .onyx-grabber.developer-grabber {
+  -webkit-box-shadow: #333333 4px 4px 10px -4px;
+  -moz-box-shadow: #333333 4px 4px 10px -4px;
+  box-shadow: #333333 4px 4px 10px -4px;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-right-radius: 10px;
+  -webkit-border-bottom-right-radius: 10px;
+  -moz-border-radius-bottomright: 10px;
+  border-bottom-right-radius: 10px;
+  background-color: #dddddd;
+  position: absolute;
+  right: -47px;
+  top: 0;
+  height: 54px;
+  width: 50px;
+}
+.item {
+  background-color: #333333;
+  border-bottom: 1px solid #0e0e0e;
+  position: relative;
+  padding: 16px 12px;
+}
+.item.onyx-selected {
+  background-color: #226b9a;
+}
+.onyx-button.save {
+  background-color: #35a8ee;
+}
+.left {
+  color: #ffffff;
+}
+.right-float {
+  float: right;
+  display: block;
+}
+.left-float {
+  float: left;
+  display: block;
+  margin-right: 3px;
+}
+.text-shadow-none {
+  text-shadow: none;
+}
+.text-shadow-0 {
+  text-shadow: 0px 0px black;
+}
+.xt-app {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.xt-app .xv-postbooks {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.xv-login .xv-login-form {
+  position: absolute;
+  height: 250px;
+  width: 300px;
+  top: 50%;
+  left: 50%;
+  margin-top: -125px;
+  margin-left: -150px;
+}
+.xv-login .xv-login-form .xv-message-box {
+  font-size: 12px;
+  text-align: center;
+  padding: 10px;
+}
+.xv-login .xv-login-form .xv-message-box.error {
+  color: #ff0000;
+}
+.xv-login .xv-organizations-selection {
+  position: absolute;
+  height: 300px;
+  width: 400px;
+  top: 50%;
+  left: 50%;
+  margin-top: -150px;
+  margin-left: -200px;
+}
+.xv-login .xv-organizations-selection .xv-organization-row {
+  padding: 5px;
+  cursor: pointer;
+}
+.xv-login .xv-organizations-selection .xv-organization-row:hover {
+  background-color: #dddddd;
+}
+.xv-startup-panel .xv-startup-divider {
+  width: 70%;
+  margin: 0 auto 8px auto;
+  top: 200px;
+  position: relative;
+  color: #f49200;
+  text-transform: uppercase;
+  font-family: Segoe UI, Prelude Medium, Helvetica, Verdana, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+}
+.xv-startup-panel .xv-startup-progress {
+  width: 70%;
+  margin: 0 auto 0 auto;
+  top: 200px;
+  position: relative;
+}
+.xv-my-account-popup {
+  background-color: #ffffff;
+  color: #000;
+}
+.xv-my-account-popup .xv-message {
+  color: red;
+  padding: 5px;
+}
+.xv-my-account-popup .onyx-button {
+  margin: 0 auto 0 auto;
+}
+.xv-my-account-popup .onyx-input {
+  padding-left: 10px;
+  float: right;
+}
+/* Pullout */
+.slim-datewidget($labelVisibility, $pickerVisibility: visible) .xv-input-decorator {
+  padding: 0;
+  height: 32px;
+}
+.slim-datewidget($labelVisibility, $pickerVisibility: visible) .xv-label {
+  visibility: $labelVisibility;
+}
+.slim-datewidget($labelVisibility, $pickerVisibility: visible) .onyx-icon {
+  visibility: $pickerVisibility;
+  vertical-align: top;
+}
+.slim-datewidget($labelVisibility, $pickerVisibility: visible) .onyx-input {
+  width: 90px;
+  vertical-align: top;
+}
+/* 
+	Media query for responsive design. This adapts to smaller
+	displays.
+*/
+@media (max-width: 480px) {
+  .pullout-menu {
+    display: block;
+    margin: 0;
+  }
+  .app-panels > * {
+    min-width: 100%;
+    max-width: 100%;
+  }
+}
+.xv-pullout-header {
+  text-align: center;
+  padding: 10px 0;
+}
+.pullout {
+  position: absolute;
+  top: 57px;
+  left: 0;
+  bottom: 0;
+  width: 320px;
+  background: #dddddd;
+}
+.pullout-shadow {
+  position: absolute;
+  height: 100%;
+  width: 20px;
+  right: -20px;
+  /** this is weird and indicates the REAL need to change the
+	    whatever the css system is...this relative path is different... **/
+
+  background: url("../../assets/sliding-shadow.png") repeat-y;
+  background-size: 20px 2px;
+}
+.pullout-grabbutton {
+  position: absolute;
+  height: 54px;
+  width: 50px;
+  bottom: 20px;
+  right: -46px;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-right-radius: 10px;
+  -webkit-border-bottom-right-radius: 10px;
+  -moz-border-radius-bottomright: 10px;
+  border-bottom-right-radius: 10px;
+  background-color: #dddddd;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
+}
+.pullout-toolbar {
+  padding-top: 4px;
+  text-align: center;
+}
+/*
+	XV Views
+*/
+/* List */
+.xv-list {
+  background-color: #ffffff;
+}
+.xv-list .xv-list-item {
+  background-color: #ffffff;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #dddddd;
+}
+@include box-sizing(border-box);
+.xv-list .xv-list-item.header {
+  padding-top: 0;
+}
+.xv-list .xv-list-item.inactive {
+  background-color: #8d8d8d;
+  color: black;
+}
+.xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr {
+  background-color: #8d8d8d;
+}
+.xv-list .xv-list-item.inactive .xv-list-column .xv-list-attr.placeholder {
+  color: #8d8d8d;
+}
+.xv-list .xv-list-item .xv-list-column.short {
+  width: 150px;
+}
+.xv-list .xv-list-item .xv-list-column.first {
+  width: 300px;
+}
+.xv-list .xv-list-item .xv-list-column.second {
+  width: 165px;
+}
+.xv-list .xv-list-item .xv-list-column.third {
+  width: 75px;
+}
+.xv-list .xv-list-item .xv-list-column.money {
+  width: 85px;
+}
+.xv-list .xv-list-item.item-selected {
+  background: #226b9a url(../../assets/item-hilite.png) repeat-x bottom;
+}
+.xv-list .xv-list-item.item-selected .xv-list-attr {
+  color: #ffffff;
+  background: none;
+}
+.xv-list .xv-list-item.item-selected .xv-list-attr.placeholder {
+  font-style: italic;
+  color: #99ccff;
+}
+.xv-list .xv-list-item.item-selected .xv-list-attr.hyperlink {
+  color: #f49200;
+  background: transparent;
+}
+.xv-list .xv-list-item.item-selected .xv-list-attr.header {
+  background: #99ccff;
+}
+.xv-list .xv-list-item.item-selected .xv-list-column .xv-list-attr {
+  color: #ffffff;
+  background: none;
+}
+.xv-list .xv-list-item.item-selected .xv-list-column .xv-list-attr.placeholder {
+  font-style: italic;
+  color: SkyBlue;
+}
+.xv-list .xv-list-item.item-selected .xv-list-column .xv-list-attr.hyperlink {
+  color: #f49200;
+  background: transparent;
+}
+.xv-list-item > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+.xv-list-delete-button {
+  float: right;
+  display: none;
+  margin-top: -4px;
+}
+.xv-list-attr {
+  padding: 5px;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: black;
+  background-color: #ffffff;
+}
+.xv-list-attr.header {
+  padding: 4px;
+  background: #8d8d8d;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+.xv-list-attr.right {
+  position: absolute;
+  right: 0;
+  height: 20px;
+}
+.xv-list-attr.text-align-right {
+  text-align: right;
+}
+.xv-list-attr.bold {
+  font-weight: bold;
+}
+.xv-list-attr.error {
+  color: #ff0000;
+}
+.xv-list-attr.italic {
+  font-style: italic;
+}
+.xv-list-attr.placeholder {
+  font-style: italic;
+  color: #93a1a1;
+}
+.xv-list-attr.hyperlink {
+  color: blue;
+}
+/* Parameter */
+.xv-parameter-item {
+  background-color: #ffffff;
+  /* this ain't right */
+
+}
+.xv-parameter-item .xv-label {
+  color: #000;
+}
+.xv-parameter-item .xv-decorated-label {
+  color: #000;
+}
+.xv-parameter-item .xv-picker {
+  width: 150px;
+}
+.xv-parameter-item .xv-radiogroup {
+  padding: 6px;
+  margin-left: 130px;
+  /* hack */
+
+}
+.xv-parameter-item .xv-relationwidget .xv-subinput {
+  width: 127px;
+}
+.xv-parameter-item .xv-datewidget .xv-subinput {
+  width: 127px;
+}
+/* Navigator */
+.xv-navigator-header {
+  font-size: small;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #ff6600;
+  padding-left: 20px;
+  border-bottom: 1px solid #0e0e0e;
+}
+.xv-workspace-header {
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 8px 0 0 8px;
+}
+/* Characteristics */
+.xv-characteristic-picker .onyx-picker-decorator .onyx-button {
+  width: 130px;
+}
+.xv-characteristic-item {
+  border-bottom: 1px solid #aaaaaa;
+}
+.xv-characteristic-item .onyx-input-decorator > input {
+  width: 150px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.xv-characteristic-button {
+  margin-right: 4px;
+}
+.xv-characteristic-buttons {
+  margin: 8px;
+}
+.xv-popup-button {
+  margin: 4px;
+}
+.xv-scroller {
+  background: #ffffff;
+}
+.xv-error {
+  color: #ff0000;
+}
+.xv-negative {
+  color: #c51616;
+}
+.xv-assignment-box .xv-decorated-label {
+  width: 85%;
+}
+.xv-assignment-box .xv-label {
+  width: 250px;
+}
+.xv-parameter-title {
+  padding-top: 8px;
+  font-size: large;
+  text-align: center;
+}
+/* CommentBox */
+.xv-comment-box {
+  /* Resets the margin/padding value for blockquote tag in comments */
+
+}
+.xv-comment-box .xv-comment-box-repeater {
+  background: #ffffff;
+  max-width: 320px;
+}
+.xv-comment-box .xv-comment-box-label {
+  padding: 5px;
+  font-size: small;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.xv-comment-box .xv-comment-box-textblock {
+  padding: 5px;
+  font-size: small;
+  overflow: hidden;
+}
+.xv-comment-box .xv-comment-box-textblock.disabled {
+  opacity: 0.6;
+}
+.xv-comment-box blockquote {
+  margin: 0 15px 10px 15px;
+  padding: 0;
+}
+/* Groupbox.css */
+.xv-groupbox {
+  min-width: 320px;
+  padding: 8px 0 8px 8px;
+  margin-right: 5px;
+}
+.xv-groupbox.editor {
+  min-width: 250px;
+  padding: 0;
+  margin: 0;
+}
+.xv-groupbox.in-panel {
+  padding: 0;
+  margin: 0;
+}
+.xv-groupbox.panel {
+  min-width: 330px;
+}
+.xv-groupbox .onyx-input-decorator > input {
+  width: 80%;
+}
+.xv-groupbox.in-panel > *:first-child {
+  border-top-color: #aaaaaa;
+  border-top: none;
+  border-width: 1px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+.xv-groupbox.in-panel > *:last-child {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  border-bottom: none;
+}
+.xv-groupbox > * {
+  display: block;
+  border: 1px #aaaaaa solid;
+  border-top-width: 0;
+  /* reset styles that make 'item' look bad if they happen to be there */
+
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  margin: 0;
+}
+.xv-groupbox > .in-panel .editor-field {
+  border-right: none;
+}
+.xv-groupbox > *:first-child {
+  border-top-color: #aaaaaa;
+  border-width: 1px;
+  -webkit-border-top-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 4px;
+  -moz-border-radius-topright: 4px;
+  border-top-right-radius: 4px;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
+}
+.xv-groupbox > *:last-child {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
+}
+.xv-groupbox > *:first-child:last-child {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.xv-groupbox-header {
+  padding: 5px 10px;
+  color: #ffffff;
+  font-family: Segoe UI, Neue Helvetica, Helvectica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  background-color: #333333;
+  border: none;
+  /* This image doesn't exist */
+
+  background: #555555 url(../../images/gradient.png) repeat-x 0 10px;
+}
+.xv-groupbox .onyx-input-decorator {
+  /* This resets the border for this element */
+
+  border: 0;
+}
+.xv-groupbox > .onyx-input-decorator {
+  border-color: #aaaaaa;
+  border-width: 0 1px 1px 1px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.xv-groupbox .xv-inputwidget {
+  background-color: #ffffff;
+}
+.xv-groupbox > .onyx-input-decorator:first-child {
+  border-width: 1px;
+  -webkit-border-top-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 4px;
+  -moz-border-radius-topright: 4px;
+  border-top-right-radius: 4px;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
+}
+.xv-groupbox > .onyx-input-decorator:last-child {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
+}
+.xv-groupbox > .onyx-input-decorator:first-child:last-child {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.xv-groupbox-buttons {
+  border: none;
+}
+.xv-groupbox-buttons .xv-groupbox-button-single {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
+}
+.xv-groupbox-buttons .xv-groupbox-button-center {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+.xv-groupbox-buttons .xv-groupbox-button-left {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-bottom-left-radius: 4px;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-right-radius: 0;
+}
+.xv-groupbox-buttons .xv-groupbox-button-right {
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  border-bottom-right-radius: 4px;
+}
+/*
+	XV Widgets
+*/
+/* AddressWidget.scss */
+.xv-addresswidget {
+  background-color: #ffffff;
+  padding: 4px;
+}
+.xv-addresswidget .xv-addresswidget-viewer {
+  border: 0;
+  font-size: medium;
+  display: inline;
+}
+.xv-addresswidget .xv-addresswidget-viewer.placeholder {
+  font-style: italic;
+  color: #93a1a1;
+}
+.xv-addresswidget-input-decorator {
+  background: #ffffff;
+  display: block;
+  margin: 4px;
+}
+.xv-addresswidget-input-decorator.short {
+  width: 40%;
+}
+.xv-addresswidget-combobox-decorator {
+  background: #ffffff;
+  display: block;
+  margin: 4px;
+  width: 80%;
+  padding-right: 0;
+}
+.xv-addresswidget-combobox-decorator .xv-combobox-input {
+  width: 80%;
+}
+.xv-addresswidget-combobox-decorator .xv-combobox {
+  padding: 0;
+  width: 100%;
+}
+.xv-addresswidget-input {
+  width: 100%;
+}
+.xv-addresswidget-button {
+  margin-right: 4px;
+}
+.xv-addresswidget-buttons {
+  margin-top: 4px;
+}
+.xv-addresswidget-editor-header {
+  padding: 4px;
+}
+.xv-addresswidget-editor {
+  width: 320px;
+  padding: 8px;
+  padding-right: 16px;
+}
+.xv-addresslist-attr {
+  padding: 5px;
+  font-size: 13px;
+  white-space: normal;
+  overflow: auto;
+  color: #000;
+  background-color: #ffffff;
+}
+/* RelationWidget */
+.xv-relationwidget-completer {
+  left: -200px;
+  top: 15px;
+}
+.xv-relationwidget-column.left {
+  padding-right: 18px;
+  color: #000;
+  width: 140px;
+}
+.xv-relationwidget-icon {
+  top: 2px;
+  left: 8px;
+  position: relative;
+}
+.xv-relationwidget-description {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-indent: 140px;
+  font-size: small;
+  padding-bottom: 4px;
+  max-width: 325px;
+}
+.xv-relationwidget-description.disabled {
+  opacity: 0.4;
+}
+.xv-relationwidget-description.label {
+  text-indent: 0;
+  text-align: right;
+}
+.xv-relationwidget-description.hasLabel {
+  text-indent: 0;
+}
+.xv-relationwidget-description.hyperlink {
+  color: blue;
+}
+/* RelationsEditorBox */
+.xv-relations-editor-box .xv-groupbox {
+  margin-right: 0;
+  padding: 0;
+  border: none;
+}
+.xv-relations-editor-box.panel {
+  width: 350px;
+}
+/* ListRelationsBox */
+.xv-list-relations-box.panel {
+  width: 675px;
+}
+.xv-short-relations-box.panel {
+  width: 500px;
+}
+/* Combo Box */
+.xv-combobox {
+  padding: 6px;
+  padding-top: 8px;
+  padding-right: 0;
+  height: 24px;
+  width: 200px;
+  display: inline-block;
+}
+.xv-combobox-input {
+  font-size: medium;
+  border: 0;
+  display: inline-block;
+  outline: none;
+  width: 80%;
+}
+.xv-combobox-icon {
+  margin-left: 4px;
+  display: inline-block;
+}
+/* Picker */
+.onyx-picker .onyx-menu-item {
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.xv-pickerwidget {
+  background-color: #ffffff;
+}
+.xv-picker {
+  width: 160px;
+  text-align: left;
+}
+.xv-label {
+  width: 130px;
+  padding: 8px;
+  text-align: right;
+}
+.xv-decorated-label {
+  width: 130px;
+  padding: 14px 8px 8px 8px;
+  text-align: right;
+}
+.xv-picker-label {
+  width: 130px;
+  padding: 18px 8px 8px 8px;
+  text-align: right;
+  color: black;
+}
+.xv-textarea-input {
+  width: 90%;
+  height: 100%;
+  min-height: 100px;
+  margin: 6px;
+  border: #ddd 2px solid;
+  color: black;
+}
+.xv-documents-picker-label {
+  width: 85px;
+  padding: 16px 8px 8px 8px;
+  text-align: right;
+}
+.xv-documents-picker {
+  width: 120px;
+  margin: 6px;
+}
+.xv-half-check {
+  background: transparent url("../../assets/checkbox.png") no-repeat 0 -96px scroll;
+}
+.xv-textarea {
+  background-color: #ffffff;
+}
+.xv-textarea.max-height {
+  height: 100%;
+}
+.xv-menuitem.disabled {
+  color: #696969;
+}
+.xv-button-bar .onyx-button {
+  margin: 0 40px 0 40px;
+}
+/* This is for styling the moved items in the more toolbar*/
+.xv-toolbar-moved {
+  width: 220px;
+}

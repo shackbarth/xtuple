@@ -1,0 +1,51 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Priority",
+    "table": "incdtpriority",
+    "lockable": true,
+    "idSequenceName": "incdtpriority_incdtpriority_id_seq",
+    "comment": "Priority Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainIncidentPriorities",
+        "read": true,
+        "update": "MaintainIncidentPriorities",
+        "delete": "MaintainIncidentPriorities"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "incdtpriority_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "incdtpriority_name"
+        }
+      },
+      {
+        "name": "order",
+        "attr": {
+          "type": "Number",
+          "column": "incdtpriority_order"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "incdtpriority_descrip"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

@@ -1,0 +1,476 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Address",
+    "table": "addr",
+    "lockable": true,
+    "idSequenceName": "addr_addr_id_seq",
+    "orderSequence": "AddressNumber",
+    "comment": "Address Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainAddresses",
+        "read": "ViewAddresses",
+        "update": "MaintainAddresses",
+        "delete": "MaintainAddresses"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "addr_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "addr_number"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "addr_active"
+        }
+      },
+      {
+        "name": "line1",
+        "attr": {
+          "type": "String",
+          "column": "addr_line1"
+        }
+      },
+      {
+        "name": "line2",
+        "attr": {
+          "type": "String",
+          "column": "addr_line2"
+        }
+      },
+      {
+        "name": "line3",
+        "attr": {
+          "type": "String",
+          "column": "addr_line3"
+        }
+      },
+      {
+        "name": "city",
+        "attr": {
+          "type": "String",
+          "column": "addr_city"
+        }
+      },
+      {
+        "name": "state",
+        "attr": {
+          "type": "String",
+          "column": "addr_state"
+        }
+      },
+      {
+        "name": "postalCode",
+        "attr": {
+          "type": "String",
+          "column": "addr_postalcode"
+        }
+      },
+      {
+        "name": "country",
+        "attr": {
+          "type": "String",
+          "column": "addr_country"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "addr_notes"
+        }
+      },
+      {
+        "name": "comments",
+        "toMany": {
+          "isNested": true,
+          "type": "AddressComment",
+          "column": "addr_id",
+          "inverse": "address"
+        }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "AddressCharacteristic",
+          "column": "addr_id",
+          "inverse": "address"
+        }
+      }
+    ],
+    "isSystem": true,
+    "sourceCode": "ADDR"
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "AddressCharacteristic",
+    "table": "charass",
+    "comment": "Address Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "ADDR"
+        }
+      },
+      {
+        "name": "address",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id"
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "AddressComment",
+    "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
+    "comment": "Address Comment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": "EditOthersComments",
+        "delete": false
+      },
+      "personal": {
+        "update": "EditOwnComments",
+        "properties": [
+          "createdBy"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "comment_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "comment_source",
+          "value": "ADDR"
+        }
+      },
+      {
+        "name": "address",
+        "attr": {
+          "type": "Number",
+          "column": "comment_source_id"
+        }
+      },
+      {
+        "name": "commentType",
+        "toOne": {
+          "type": "CommentType",
+          "column": "comment_cmnttype_id"
+        }
+      },
+      {
+        "name": "text",
+        "attr": {
+          "type": "String",
+          "column": "comment_text"
+        }
+      },
+      {
+        "name": "isPublic",
+        "attr": {
+          "type": "Boolean",
+          "column": "comment_public"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "comment_date"
+        }
+      },
+      {
+        "name": "createdBy",
+        "attr": {
+          "type": "String",
+          "column": "comment_user"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "AddressInfo",
+    "table": "addr",
+    "lockable": true,
+    "idSequenceName": "addr_addr_id_seq",
+    "orderSequence": "AddressNumber",
+    "comment": "Address Info Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "addr_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "addr_number"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "addr_active"
+        }
+      },
+      {
+        "name": "line1",
+        "attr": {
+          "type": "String",
+          "column": "addr_line1"
+        }
+      },
+      {
+        "name": "line2",
+        "attr": {
+          "type": "String",
+          "column": "addr_line2"
+        }
+      },
+      {
+        "name": "line3",
+        "attr": {
+          "type": "String",
+          "column": "addr_line3"
+        }
+      },
+      {
+        "name": "city",
+        "attr": {
+          "type": "String",
+          "column": "addr_city"
+        }
+      },
+      {
+        "name": "state",
+        "attr": {
+          "type": "String",
+          "column": "addr_state"
+        }
+      },
+      {
+        "name": "postalCode",
+        "attr": {
+          "type": "String",
+          "column": "addr_postalcode"
+        }
+      },
+      {
+        "name": "country",
+        "attr": {
+          "type": "String",
+          "column": "addr_country"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Country",
+    "table": "country",
+    "lockable": true,
+    "idSequenceName": "country_country_id_seq",
+    "comment": "Country Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainCountries",
+        "read": true,
+        "update": "MaintainCountries",
+        "delete": "MaintainCountries"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "country_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "abbreviation",
+        "attr": {
+          "type": "String",
+          "column": "country_abbr",
+          "required": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "country_name",
+          "required": true
+        }
+      },
+      {
+        "name": "currencyName",
+        "attr": {
+          "type": "String",
+          "column": "country_curr_name"
+        }
+      },
+      {
+        "name": "currencySymbol",
+        "attr": {
+          "type": "String",
+          "column": "country_curr_symbol"
+        }
+      },
+      {
+        "name": "currencyAbbreviation",
+        "attr": {
+          "type": "String",
+          "column": "country_curr_abbr",
+          "required": true
+        }
+      },
+      {
+        "name": "currencyNumber",
+        "attr": {
+          "type": "String",
+          "column": "country_curr_number"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "State",
+    "table": "state",
+    "lockable": true,
+    "idSequenceName": "state_state_id_seq",
+    "comment": "State Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainStates",
+        "read": true,
+        "update": "MaintainStates",
+        "delete": "MaintainStates"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "state_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "state_name"
+        }
+      },
+      {
+        "name": "abbreviation",
+        "attr": {
+          "type": "String",
+          "column": "state_abbr",
+          "required": true
+        }
+      },
+      {
+        "name": "country",
+        "toOne": {
+          "type": "Country",
+          "column": "state_country_id",
+          "required": true
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

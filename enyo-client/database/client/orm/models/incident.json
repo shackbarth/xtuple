@@ -1,0 +1,1599 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Incident",
+    "table": "incdt",
+    "lockable": true,
+    "idSequenceName": "incdt_incdt_id_seq",
+    "orderSequence": "IncidentNumber",
+    "comment": "Incident Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainAllIncidents",
+        "read": "ViewAllIncidents",
+        "update": "MaintainAllIncidents",
+        "delete": "MaintainAllIncidents"
+      },
+      "personal": {
+        "create": "MaintainPersonalIncidents",
+        "read": "ViewPersonalIncidents",
+        "update": "MaintainPersonalIncidents",
+        "delete": "MaintainPersonalIncidents",
+        "properties": [
+          "owner.username",
+          "assignedTo.username"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "incdt_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "Number",
+          "column": "incdt_number"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "incdt_summary",
+          "required": true
+        }
+      },
+      {
+        "name": "category",
+        "toOne": {
+          "type": "IncidentCategory",
+          "column": "incdt_incdtcat_id",
+          "required": true
+        }
+      },
+      {
+        "name": "isPublic",
+        "attr": {
+          "type": "Boolean",
+          "column": "incdt_public"
+        }
+      },
+      {
+        "name": "account",
+        "toOne": {
+          "isNested": true,
+          "type": "AccountRelation",
+          "column": "incdt_crmacct_id",
+          "required": true
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "incdt_cntct_id",
+          "required": true
+        }
+      },
+      {
+        "name": "priority",
+        "toOne": {
+          "type": "Priority",
+          "column": "incdt_incdtpriority_id"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "incdt_status"
+        }
+      },
+      {
+        "name": "resolution",
+        "toOne": {
+          "type": "IncidentResolution",
+          "column": "incdt_incdtresolution_id"
+        }
+      },
+      {
+        "name": "severity",
+        "toOne": {
+          "type": "IncidentSeverity",
+          "column": "incdt_incdtseverity_id"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "incdt_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "incdt_assigned_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "incdt_descrip"
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "incdt_item_id"
+        }
+      },
+      {
+        "name": "recurrences",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentRecurrence",
+          "column": "incdt_id",
+          "inverse": "incident"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "incdt_timestamp"
+        }
+      },
+      {
+        "name": "updated",
+        "attr": {
+          "type": "Date",
+          "column": "incdt_updated"
+        }
+      },
+      {
+        "name": "alarms",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentAlarm",
+          "column": "incdt_id",
+          "inverse": "incident"
+        }
+      },
+      {
+        "name": "history",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentHistory",
+          "column": "incdt_id",
+          "inverse": "incident"
+        }
+      },
+      {
+        "name": "comments",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentComment",
+          "column": "incdt_id",
+          "inverse": "incident"
+        }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentCharacteristic",
+          "column": "incdt_id",
+          "inverse": "incident"
+        }
+      },
+      {
+        "name": "contacts",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentContact",
+          "column": "incdt_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "items",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentItem",
+          "column": "incdt_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "files",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentFile",
+          "column": "incdt_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "urls",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentUrl",
+          "column": "incdt_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "accounts",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentAccount",
+          "column": "incdt_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "incidents",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentIncident",
+          "column": "incdt_id",
+          "inverse": "source"
+        }
+      }
+    ],
+    "isSystem": true,
+    "sourceCode": "INCDT",
+    "extensions": []
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentAccount",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Incident Account Map",
+    "canUpdate": false,
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "INCDT"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "CRMA"
+        }
+      },
+      {
+        "name": "account",
+        "toOne": {
+          "isNested": true,
+          "type": "AccountRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentAlarm",
+    "table": "alarm",
+    "idSequenceName": "alarm_alarm_id_seq",
+    "orderSequence": "AlarmNumber",
+    "comment": "Incident Alarm Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "alarm_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "Number",
+          "column": "alarm_number"
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "Number",
+          "column": "alarm_source",
+          "value": "INCDT"
+        }
+      },
+      {
+        "name": "incident",
+        "attr": {
+          "type": "Number",
+          "column": "alarm_source_id"
+        }
+      },
+      {
+        "name": "isEvent",
+        "attr": {
+          "type": "Boolean",
+          "column": "alarm_event"
+        }
+      },
+      {
+        "name": "eventRecipient",
+        "attr": {
+          "type": "String",
+          "column": "alarm_event_recipient"
+        }
+      },
+      {
+        "name": "isMessage",
+        "attr": {
+          "type": "Boolean",
+          "column": "alarm_sysmsg"
+        }
+      },
+      {
+        "name": "messageRecipient",
+        "attr": {
+          "type": "String",
+          "column": "alarm_sysmsg_recipient"
+        }
+      },
+      {
+        "name": "offset",
+        "attr": {
+          "type": "Number",
+          "column": "alarm_time_offset"
+        }
+      },
+      {
+        "name": "qualifier",
+        "attr": {
+          "type": "String",
+          "column": "alarm_time_qualifier"
+        }
+      },
+      {
+        "name": "time",
+        "attr": {
+          "type": "Date",
+          "column": "alarm_time"
+        }
+      },
+      {
+        "name": "trigger",
+        "attr": {
+          "type": "Date",
+          "column": "alarm_trigger"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentCategory",
+    "table": "incdtcat",
+    "lockable": true,
+    "idSequenceName": "incdtcat_incdtcat_id_seq",
+    "comment": "Incident Category Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainIncidentCategories",
+        "read": true,
+        "update": "MaintainIncidentCategories",
+        "delete": "MaintainIncidentCategories"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "incdtcat_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "incdtcat_descrip"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "incdtcat_name"
+        }
+      },
+      {
+        "name": "order",
+        "attr": {
+          "type": "Number",
+          "column": "incdtcat_order",
+          "required": true
+        }
+      }
+    ],
+    "extensions": [{
+      "table": "xt.incdtcatemlprofile",
+      "isExtension": true,
+      "relations": [
+        {
+          "column": "incdtcatemlprofile_incdtcat_id",
+          "inverse": "id"
+        }
+      ],
+      "properties": [
+        {
+          "name": "emailProfile",
+          "toOne": {
+            "type": "IncidentEmailProfile",
+            "column": "incdtcatemlprofile_incdtemlprofile_id"
+          }
+        }
+      ]
+    }],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Incident Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "INCDT"
+        }
+      },
+      {
+        "name": "incident",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentListItemCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Incident List Item Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "INCDT"
+        }
+      },
+      {
+        "name": "incident",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentComment",
+    "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
+    "comment": "Incident Comment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": "EditOthersComments",
+        "delete": false
+      },
+      "personal": {
+        "update": "EditOwnComments",
+        "properties": [
+          "createdBy"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "comment_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "comment_source",
+          "value": "INCDT"
+        }
+      },
+      {
+        "name": "incident",
+        "attr": {
+          "type": "Number",
+          "column": "comment_source_id"
+        }
+      },
+      {
+        "name": "commentType",
+        "toOne": {
+          "type": "CommentType",
+          "column": "comment_cmnttype_id",
+          "required": true
+        }
+      },
+      {
+        "name": "text",
+        "attr": {
+          "type": "String",
+          "column": "comment_text"
+        }
+      },
+      {
+        "name": "isPublic",
+        "attr": {
+          "type": "Boolean",
+          "column": "comment_public"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "comment_date"
+        }
+      },
+      {
+        "name": "createdBy",
+        "attr": {
+          "type": "String",
+          "column": "comment_user"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentContact",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Incident Contact Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "INCDT"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "T"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentFile",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Incident File Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "INCDT"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "FILE"
+        }
+      },
+      {
+        "name": "file",
+        "toOne": {
+          "isNested": true,
+          "type": "FileRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentHistory",
+    "table": "incdthist",
+    "idSequenceName": "incdthist_incdthist_id_seq",
+    "comment": "Incident History Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "incdthist_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "incident",
+        "attr": {
+          "type": "Number",
+          "column": "incdthist_incdt_id"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "incdthist_descrip"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "incdthist_timestamp"
+        }
+      },
+      {
+        "name": "createdBy",
+        "attr": {
+          "type": "String",
+          "column": "incdthist_username"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentIncident",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Incident Incident Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "INCDT"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "INCDT"
+        }
+      },
+      {
+        "name": "incident",
+        "toOne": {
+          "isNested": true,
+          "type": "IncidentRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentRelation",
+    "table": "xt.incdtinfo",
+    "comment": "Incident Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewAllIncidents MaintainAllIncidents",
+        "update": false,
+        "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false,
+        "properties": [
+          "owner.username",
+          "assignedTo.username"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "incdt_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "Number",
+          "column": "incdt_number"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "incdt_summary"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "incdt_status"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "incdt_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "incdt_assigned_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "updated",
+        "attr": {
+          "type": "Date",
+          "column": "incdt_updated"
+        }
+      },
+      {
+        "name": "account",
+        "attr": {
+          "type": "Number",
+          "column": "incdt_crmacct_id"
+        }
+      },
+      {
+        "name": "contact",
+        "attr": {
+          "type": "Number",
+          "column": "incdt_cntct_id"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentListItem",
+    "table": "xt.incdtinfo",
+    "comment": "Incident List Item Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewAllIncidents MaintainAllIncidents",
+        "update": false,
+        "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false,
+        "properties": [
+          "owner.username",
+          "assignedTo.username"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "incdt_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "incdt_number"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "incdt_summary"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "incdt_status"
+        }
+      },
+      {
+        "name": "category",
+        "toOne": {
+          "type": "IncidentCategory",
+          "column": "incdt_incdtcat_id"
+        }
+      },
+      {
+        "name": "account",
+        "toOne": {
+          "isNested": true,
+          "type": "AccountRelation",
+          "column": "incdt_crmacct_id"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "incdt_cntct_id"
+        }
+      },
+      {
+        "name": "severity",
+        "toOne": {
+          "type": "IncidentSeverity",
+          "column": "incdt_incdtseverity_id"
+        }
+      },
+      {
+        "name": "priority",
+        "toOne": {
+          "type": "Priority",
+          "column": "incdt_incdtpriority_id"
+        }
+      },
+      {
+        "name": "resolution",
+        "toOne": {
+          "type": "IncidentResolution",
+          "column": "incdt_incdtresolution_id"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "incdt_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "incdt_assigned_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "incdt_timestamp"
+        }
+      },
+      {
+        "name": "updated",
+        "attr": {
+          "type": "Date",
+          "column": "incdt_updated"
+        }
+      },
+      {
+        "name": "priorityOrder",
+        "attr": {
+          "type": "Number",
+          "column": "incdtpriority_order"
+        }
+      },
+      {
+        "name": "statusOrder",
+        "attr": {
+          "type": "Number",
+          "column": "status_seq"
+        }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "IncidentListItemCharacteristic",
+          "column": "incdt_id",
+          "inverse": "incident"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentItem",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Incident Item Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "INCDT"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "I"
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentRecurrence",
+    "table": "recur",
+    "idSequenceName": "recur_recur_id_seq",
+    "comment": "Incident Recurrence Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "recur_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "parentType",
+        "attr": {
+          "type": "String",
+          "column": "recur_parent_type",
+          "value": "INCDT"
+        }
+      },
+      {
+        "name": "incident",
+        "attr": {
+          "type": "Number",
+          "column": "recur_parent_id"
+        }
+      },
+      {
+        "name": "period",
+        "attr": {
+          "type": "String",
+          "column": "recur_period"
+        }
+      },
+      {
+        "name": "frequency",
+        "attr": {
+          "type": "Number",
+          "column": "recur_freq"
+        }
+      },
+      {
+        "name": "startDate",
+        "attr": {
+          "type": "Date",
+          "column": "recur_start"
+        }
+      },
+      {
+        "name": "endDate",
+        "attr": {
+          "type": "Date",
+          "column": "recur_end"
+        }
+      },
+      {
+        "name": "maximum",
+        "attr": {
+          "type": "Number",
+          "column": "recur_max"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentResolution",
+    "table": "incdtresolution",
+    "lockable": true,
+    "idSequenceName": "incdtresolution_incdtresolution_id_seq",
+    "comment": "Incident Resolution Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainIncidentResolutions",
+        "read": true,
+        "update": "MaintainIncidentResolutions",
+        "delete": "MaintainIncidentResolutions"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "incdtresolution_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "incdtresolution_name"
+        }
+      },
+      {
+        "name": "order",
+        "attr": {
+          "type": "Number",
+          "column": "incdtresolution_order",
+          "required": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "incdtresolution_descrip"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentSeverity",
+    "table": "incdtseverity",
+    "lockable": true,
+    "idSequenceName": "incdtseverity_incdtseverity_id_seq",
+    "comment": "Incident Severity Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainIncidentSeverities",
+        "read": true,
+        "update": "MaintainIncidentSeverities",
+        "delete": "MaintainIncidentSeverities"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "incdtseverity_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "incdtseverity_name"
+        }
+      },
+      {
+        "name": "order",
+        "attr": {
+          "type": "Number",
+          "column": "incdtseverity_order",
+          "required": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "incdtseverity_descrip"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentUrl",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Incident Url Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "INCDT"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "URL"
+        }
+      },
+      {
+        "name": "url",
+        "toOne": {
+          "isNested": true,
+          "type": "Url",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "IncidentEmailProfile",
+    "table": "xt.incdtemlprofile",
+    "idSequenceName": "emlprofile_emlprofile_id_seq",
+    "comment": "Incident Email Profile Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainEmailProfiles",
+        "read": true,
+        "update": "MaintainEmailProfiles",
+        "delete": "MaintainEmailProfiles"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "emlprofile_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_name"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_descrip"
+        }
+      },
+      {
+        "name": "from",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_from"
+        }
+      },
+      {
+        "name": "replyTo",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_replyto"
+        }
+      },
+      {
+        "name": "to",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_to"
+        }
+      },
+      {
+        "name": "cc",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_cc"
+        }
+      },
+      {
+        "name": "bcc",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_bcc"
+        }
+      },
+      {
+        "name": "subject",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_subject"
+        }
+      },
+      {
+        "name": "body",
+        "attr": {
+          "type": "String",
+          "column": "emlprofile_body"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

@@ -1,0 +1,1130 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ToDo",
+    "table": "todoitem",
+    "lockable": true,
+    "idSequenceName": "todoitem_todoitem_id_seq",
+    "comment": "ToDo Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainAllToDoItems",
+        "read": "ViewAllToDoItems",
+        "update": "MaintainAllToDoItems",
+        "delete": "MaintainAllToDoItems"
+      },
+      "personal": {
+        "create": "MaintainPersonalToDoItems",
+        "read": "ViewPersonalToDoItems",
+        "update": "MaintainPersonalToDoItems",
+        "delete": "MaintainPersonalToDoItems",
+        "properties": [
+          "owner.username",
+          "assignedTo.username"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "todoitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "todoitem_name"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "todoitem_description"
+        }
+      },
+      {
+        "name": "account",
+        "toOne": {
+          "isNested": true,
+          "type": "AccountRelation",
+          "column": "todoitem_crmacct_id"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "todoitem_cntct_id"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "todoitem_status"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "todoitem_active"
+        }
+      },
+      {
+        "name": "startDate",
+        "attr": {
+          "type": "Date",
+          "column": "todoitem_start_date"
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "todoitem_due_date",
+          "required": true
+        }
+      },
+      {
+        "name": "assignDate",
+        "attr": {
+          "type": "Date",
+          "column": "todoitem_assigned_date"
+        }
+      },
+      {
+        "name": "completeDate",
+        "attr": {
+          "type": "Date",
+          "column": "todoitem_completed_date"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "todoitem_notes"
+        }
+      },
+      {
+        "name": "priority",
+        "toOne": {
+          "type": "Priority",
+          "column": "todoitem_priority_id"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "todoitem_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "todoitem_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "alarms",
+        "toMany": {
+          "isNested": true,
+          "type": "ToDoAlarm",
+          "column": "todoitem_id",
+          "inverse": "to_do"
+        }
+      },
+      {
+        "name": "comments",
+        "toMany": {
+          "isNested": true,
+          "type": "ToDoComment",
+          "column": "todoitem_id",
+          "inverse": "to_do"
+        }
+      },
+      {
+        "name": "accounts",
+        "toMany": {
+          "isNested": true,
+          "type": "ToDoAccount",
+          "column": "todoitem_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "contacts",
+        "toMany": {
+          "isNested": true,
+          "type": "ToDoContact",
+          "column": "todoitem_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "items",
+        "toMany": {
+          "isNested": true,
+          "type": "ToDoItem",
+          "column": "todoitem_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "files",
+        "toMany": {
+          "isNested": true,
+          "type": "ToDoFile",
+          "column": "todoitem_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "urls",
+        "toMany": {
+          "isNested": true,
+          "type": "ToDoUrl",
+          "column": "todoitem_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "toDos",
+        "toMany": {
+          "isNested": true,
+          "type": "ToDoToDo",
+          "column": "todoitem_id",
+          "inverse": "source"
+        }
+      }
+    ],
+    "isSystem": true,
+    "sourceCode": "TODO",
+    "extensions": []
+  },
+  {
+    "context": "crm",
+    "nameSpace": "XM",
+    "type": "ToDoAccount",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "ToDo Account Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "TODO"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "CRMA"
+        }
+      },
+      {
+        "name": "account",
+        "toOne": {
+          "isNested": true,
+          "type": "AccountRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ToDoAlarm",
+    "table": "alarm",
+    "idSequenceName": "alarm_alarm_id_seq",
+    "orderSequence": "AlarmNumber",
+    "comment": "ToDo Alarm Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "alarm_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "alarm_number"
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "Number",
+          "column": "alarm_source",
+          "value": "TODO"
+        }
+      },
+      {
+        "name": "toDo",
+        "attr": {
+          "type": "Number",
+          "column": "alarm_source_id"
+        }
+      },
+      {
+        "name": "isEvent",
+        "attr": {
+          "type": "Boolean",
+          "column": "alarm_event"
+        }
+      },
+      {
+        "name": "eventRecipient",
+        "attr": {
+          "type": "String",
+          "column": "alarm_event_recipient"
+        }
+      },
+      {
+        "name": "isMessage",
+        "attr": {
+          "type": "Boolean",
+          "column": "alarm_sysmsg"
+        }
+      },
+      {
+        "name": "messageRecipient",
+        "attr": {
+          "type": "String",
+          "column": "alarm_sysmsg_recipient"
+        }
+      },
+      {
+        "name": "offset",
+        "attr": {
+          "type": "Number",
+          "column": "alarm_time_offset"
+        }
+      },
+      {
+        "name": "qualifier",
+        "attr": {
+          "type": "String",
+          "column": "alarm_time_qualifier"
+        }
+      },
+      {
+        "name": "time",
+        "attr": {
+          "type": "Date",
+          "column": "alarm_time"
+        }
+      },
+      {
+        "name": "trigger",
+        "attr": {
+          "type": "Date",
+          "column": "alarm_trigger"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ToDoComment",
+    "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
+    "comment": "ToDo Comment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": "EditOthersComments",
+        "delete": false
+      },
+      "personal": {
+        "update": "EditOwnComments",
+        "properties": [
+          "createdBy"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "comment_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "comment_source",
+          "value": "TD"
+        }
+      },
+      {
+        "name": "toDo",
+        "attr": {
+          "type": "Number",
+          "column": "comment_source_id"
+        }
+      },
+      {
+        "name": "commentType",
+        "toOne": {
+          "type": "CommentType",
+          "column": "comment_cmnttype_id",
+          "required": true
+        }
+      },
+      {
+        "name": "text",
+        "attr": {
+          "type": "String",
+          "column": "comment_text"
+        }
+      },
+      {
+        "name": "isPublic",
+        "attr": {
+          "type": "Boolean",
+          "column": "comment_public"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "comment_date"
+        }
+      },
+      {
+        "name": "createdBy",
+        "attr": {
+          "type": "String",
+          "column": "comment_user"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ToDoContact",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "ToDo Contact Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "TODO"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "T"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ToDoFile",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "ToDo File Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "TODO"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "FILE"
+        }
+      },
+      {
+        "name": "file",
+        "toOne": {
+          "isNested": true,
+          "type": "FileRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ToDoRelation",
+    "table": "xt.todoiteminfo",
+    "comment": "Todo Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewAllToDoItems MaintainAllToDoItems",
+        "update": false,
+        "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false,
+        "properties": [
+          "owner.username",
+          "assignedTo.username"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "todoitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "todoitem_name"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "todoitem_description"
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "todoitem_due_date"
+        }
+      },
+      {
+        "name": "contact",
+        "attr": {
+          "type": "Number",
+          "column": "todoitem_cntct_id"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "todoitem_status"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "todoitem_active"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "todoitem_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "todoitem_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "account",
+        "attr": {
+          "type": "Number",
+          "column": "todoitem_crmacct_id"
+        }
+      },
+      {
+        "name": "priority",
+        "toOne": {
+          "type": "Priority",
+          "column": "todoitem_priority_id"
+        }
+      },
+      {
+        "name": "priorityOrder",
+        "attr": {
+          "type": "Number",
+          "column": "priority_order"
+        }
+      }
+    ],
+    "isSystem": true,
+    "extensions": []
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ToDoListItem",
+    "table": "xt.todoiteminfo",
+    "comment": "Todo List Item Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewAllToDoItems MaintainAllToDoItems",
+        "update": false,
+        "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false,
+        "properties": [
+          "owner.username",
+          "assignedTo.username"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "todoitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "todoitem_name"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "todoitem_description"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "todoitem_cntct_id"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "todoitem_status"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "todoitem_active"
+        }
+      },
+      {
+        "name": "startDate",
+        "attr": {
+          "type": "Date",
+          "column": "todoitem_start_date"
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "todoitem_due_date"
+        }
+      },
+      {
+        "name": "priority",
+        "toOne": {
+          "type": "Priority",
+          "column": "todoitem_priority_id"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "todoitem_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "todoitem_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "account",
+        "toOne": {
+          "isNested": true,
+          "type": "AccountRelation",
+          "column": "todoitem_crmacct_id"
+        }
+      },
+      {
+        "name": "priorityOrder",
+        "attr": {
+          "type": "Number",
+          "column": "priority_order"
+        }
+      }
+    ],
+    "isSystem": true,
+    "extensions": []
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ToDoItem",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "ToDo Item Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "TODO"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "I"
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ToDoRecurrence",
+    "table": "recur",
+    "idSequenceName": "recur_recur_id_seq",
+    "comment": "To Do Recurrence Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "recur_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "parentType",
+        "attr": {
+          "type": "String",
+          "column": "recur_parent_type",
+          "value": "TODO"
+        }
+      },
+      {
+        "name": "toDo",
+        "attr": {
+          "type": "Number",
+          "column": "recur_parent_id"
+        }
+      },
+      {
+        "name": "period",
+        "attr": {
+          "type": "String",
+          "column": "recur_period"
+        }
+      },
+      {
+        "name": "frequency",
+        "attr": {
+          "type": "Number",
+          "column": "recur_freq"
+        }
+      },
+      {
+        "name": "startDate",
+        "attr": {
+          "type": "Date",
+          "column": "recur_start"
+        }
+      },
+      {
+        "name": "endDate",
+        "attr": {
+          "type": "Date",
+          "column": "recur_end"
+        }
+      },
+      {
+        "name": "maximum",
+        "attr": {
+          "type": "Number",
+          "column": "recur_max"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ToDoToDo",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "ToDo ToDo Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "TODO"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "TODO"
+        }
+      },
+      {
+        "name": "toDo",
+        "toOne": {
+          "isNested": true,
+          "type": "ToDoRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ToDoUrl",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "ToDo Url Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "TODO"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "URL"
+        }
+      },
+      {
+        "name": "url",
+        "toOne": {
+          "isNested": true,
+          "type": "Url",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  }
+]

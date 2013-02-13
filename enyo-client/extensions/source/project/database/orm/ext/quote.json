@@ -1,0 +1,35 @@
+[
+  {
+    "context": "project",
+    "nameSpace": "XM",
+    "type": "Quote",
+    "table": "quhead",
+    "isExtension": true,
+    "comment": "Extended by Project",
+    "relations": [
+      {
+        "column": "quhead_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "project",
+        "attr": {
+          "type": "Number",
+          "column": "quhead_prj_id"
+        }
+      },
+      {
+        "name": "projects",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteProject",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

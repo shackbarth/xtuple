@@ -1,0 +1,930 @@
+/* LESS version of screen.scss file previously in client 
+
+	To compile to .css: lessc screen.less > ../stylesheets/screen.css
+	Use -compress for a compressed .css with no comments
+
+*/
+
+/*
+	These variables will show in css as their hex values
+*/
+@highlight  : #d6f1ff;
+@orange     : #f60;
+@bright-orange	:	#f49200;
+@sky-blue 	: #9cf;
+@slate-blue : #226b9a;
+@light-blue	:	#35a8ee;
+@blue				:	#0000ff;
+@silver			:	#aaa;
+@smoke 			: #ddd;
+@gray 			: #8d8d8d;
+@med-gray		:	#999;
+@charcoal		: #555;
+@dim-gray		: #696969;
+@dark-gray	:	#333;
+@blue-gray	: #93a1a1;
+@near-black	: #0e0e0e;
+@white      : #fff;
+@red				:	#c51616;
+@bright-red	:	#ff0000;
+
+
+/* Helper classes for css3 */
+@import "mixins.less";
+
+body {
+  font-family: "arial", "arial black";
+}
+
+.bggrad {
+	/* Radial Gradient */
+	#gradient > .radial(@dim-gray, @dark-gray);
+  background-color: @med-gray;
+}
+
+.app > * {
+	width: 320px;
+	.box-shadow(-4px -4px 4px rgba(0,0,0,0.3));
+	background: @charcoal;
+}
+
+.panels > * {
+	border: 2px solid @dark-gray;
+	font-size: 5em;
+}
+
+.wide > * {
+	min-width: 50%;
+}
+
+.developer-ui-container {
+  .box-shadow(#333 4px 4px 10px -4px);
+	.border-top-right-radius(10px);
+  top: 100px;
+  left: 0;
+  position: absolute;
+  background-color: @smoke;
+  z-index: 10;
+  .developer-rows {
+    .row {
+      display: block;
+      margin: 10px;
+    }
+  }
+  .onyx-grabber {
+    &.developer-grabber {
+      .box-shadow(#333 4px 4px 10px -4px);
+      .border-top-right-radius(10px);
+      .border-bottom-right-radius(10px);
+      background-color: @smoke;
+      position: absolute;
+      right: -47px;
+      top: 0;
+      height: 54px;
+      width: 50px;
+    }
+  }
+}
+
+.item {
+	background-color: @dark-gray;
+	border-bottom: 1px solid @near-black;
+	position: relative;
+	padding: 16px 12px;
+}
+
+.item.onyx-selected {
+	background-color: @slate-blue;
+}
+
+.onyx-button.save {
+	background-color: @light-blue;
+}
+
+.left {
+	color: @white;
+}
+
+.right-float {
+	float: right;
+	display: block;
+}
+
+.left-float {
+	float: left;
+	display: block;
+	margin-right: 3px;
+}
+
+// XXX hack here (and in other places that reference issue 18397)
+// can be removed once enyo fixes ENYO-1104
+.text-shadow-none {
+   text-shadow: none;
+}
+.text-shadow-0 {
+  text-shadow: 0px 0px black;
+}
+// end hack
+
+.xt-app {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  .xv-postbooks {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+.xv-login {
+  .xv-login-form {
+    position: absolute;
+    height: 250px;
+    width: 300px;
+    top: 50%;
+    left: 50%;
+    margin-top: -125px;
+    margin-left: -150px;
+    .xv-message-box {
+      font-size: 12px;
+      &.error {
+        color: @bright-red;
+      }
+      text-align: center;
+      padding: 10px;
+    }
+  }
+  .xv-organizations-selection {
+    position: absolute;
+    height: 300px;
+    width: 400px;
+    top: 50%;
+    left: 50%;
+    margin-top: -150px;
+    margin-left: -200px;
+    .xv-organization-row {
+      padding: 5px;
+      cursor: pointer;
+      &:hover {
+        background-color: @smoke;
+      }
+    }
+  }
+}
+
+.xv-startup-panel {
+  .xv-startup-divider {
+    width: 70%;
+		margin: 0 auto 8px auto;
+    top: 200px;
+    position: relative;
+  	color: @bright-orange;
+  	text-transform: uppercase;
+  	font-family: Segoe UI, Prelude Medium, Helvetica, Verdana, sans-serif;
+  	font-size: 14px;
+  	font-weight: bold;
+		border: none;
+  }
+  .xv-startup-progress {
+    width: 70%;
+		margin: 0 auto 0 auto;
+    top: 200px;
+    position: relative;
+  }
+}
+
+.xv-my-account-popup {
+  background-color: @white;
+  color: #000;
+  .xv-message {
+    color:red;
+    padding: 5px;
+  }
+  .onyx-button {
+		margin: 0 auto 0 auto;
+  }
+  .onyx-input {
+    padding-left: 10px;
+    float: right;
+  }
+}
+
+/* Pullout */
+.slim-datewidget($labelVisibility, $pickerVisibility: visible) {
+  .xv-input-decorator {
+    padding: 0;
+    height: 32px;
+  }
+  .xv-label {
+    visibility: $labelVisibility;
+  }
+  .onyx-icon {
+    visibility: $pickerVisibility;
+    vertical-align: top;
+  }
+  .onyx-input {
+    width: 90px;
+    vertical-align: top;
+  }
+}
+
+/* 
+	Media query for responsive design. This adapts to smaller
+	displays.
+*/
+@media (max-width: 480px) {
+	.pullout-menu {
+		display: block;
+		margin: 0;
+	}
+	.app-panels > * {
+       min-width: 100%;
+       max-width: 100%;
+   }
+}
+
+.xv-pullout-header {
+	text-align: center;
+	padding: 10px 0;
+}
+
+.pullout {
+	position: absolute;
+	top: 57px;
+	left: 0;
+	bottom: 0;
+	width: 320px;
+	background: @smoke;
+}
+
+.pullout-shadow {
+	position: absolute;
+	height: 100%;
+	width: 20px;
+	right: -20px;
+	/** this is weird and indicates the REAL need to change the
+	    whatever the css system is...this relative path is different... **/
+	background: url("../../assets/sliding-shadow.png") repeat-y;
+	background-size: 20px 2px;
+}
+
+.pullout-grabbutton {
+	position: absolute;
+	height: 54px;
+	width: 50px;
+	bottom: 20px;
+	right: -46px;
+	.border-radius-all(0, 10px, 10px, 0);
+	background-color: @smoke;
+	box-shadow: 4px 4px 4px rgba(0,0,0,0.3);
+}
+
+.pullout-toolbar {
+	padding-top: 4px;
+	text-align: center;
+}
+
+/*
+	XV Views
+*/
+
+/* List */
+.xv-list {
+  background-color: @white;
+  .xv-list-item {
+    @include box-sizing(border-box);
+    background-color: @white;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid @smoke;
+    &.header {
+      padding-top: 0;    
+    }
+    &.inactive {
+      background-color: @gray;
+      color: black;
+      .xv-list-column {
+        .xv-list-attr {
+          background-color: @gray;
+          &.placeholder {
+            color: @gray;
+          }
+        }
+      }
+    }
+    .xv-list-column {
+      &.short {
+        width: 150px;
+      }
+      &.first {
+        width: 300px;
+      }
+      &.second {
+        width: 165px;
+      }
+      &.third {
+        width: 75px;
+      }
+      &.money {
+        width: 85px;
+      }
+    }
+    &.item-selected {
+			background: @slate-blue url(../../assets/item-hilite.png) repeat-x bottom;
+			.xv-list-attr {
+        color: @white;
+        background: none;
+        &.placeholder {
+          font-style: italic;
+          color: @sky-blue;
+        }
+        &.hyperlink {
+          color: @bright-orange;
+          background: transparent;
+        }
+      }
+      .xv-list-attr {
+        &.header {
+          background: @sky-blue;
+        }
+      }
+			.xv-list-column {
+			  .xv-list-attr {
+          color: @white;
+          background: none;
+          &.placeholder {
+            font-style: italic;
+            color: SkyBlue;
+          }
+          &.hyperlink {
+            color: @bright-orange;
+            background: transparent;
+          }
+        }
+      }
+    }
+  }
+}
+
+.xv-list-item > * {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.xv-list-delete-button {
+  float: right;
+  display: none;
+  margin-top: -4px;
+}
+
+.xv-list-attr {
+  padding: 5px;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: black;
+  background-color: @white;
+  &.header {
+    padding: 4px;
+    background: @gray;
+    font-size: 11px;
+  	font-weight: bold;
+  	text-transform: uppercase;
+  	color: @white;
+  }
+  &.right {
+    position: absolute;
+    right: 0;
+    height: 20px;
+  }
+  &.text-align-right {
+    text-align: right;
+  }
+  &.bold {
+    font-weight: bold;
+  }
+  &.error {
+    color: @bright-red;
+  }
+  &.italic {
+    font-style: italic;
+  }
+  &.placeholder {
+    font-style: italic;
+    color: @blue-gray;
+  }
+  &.hyperlink {
+    color: blue;
+  }
+}
+
+/* Parameter */
+.xv-parameter-item {
+  background-color: @white;
+  .xv-label {
+    color: #000;
+  }
+  .xv-decorated-label {
+    color: #000;
+  }
+  .xv-picker {
+    width: 150px;
+  }
+  .xv-radiogroup {
+    padding: 6px;
+    margin-left: 130px; /* hack */
+  }
+  /* this ain't right */
+  .xv-relationwidget {
+    .xv-subinput {
+     width: 127px;
+    }
+  }
+  .xv-datewidget {
+    .xv-subinput {
+      width: 127px;
+    }
+  }
+}
+
+/* Navigator */
+.xv-navigator-header {
+  font-size: small;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: @orange;
+  padding-left: 20px;
+  border-bottom: 1px solid @near-black;
+}
+
+.xv-workspace-header {
+  color: @white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 8px 0 0 8px;
+}
+
+/* Characteristics */
+.xv-characteristic-picker {
+  .onyx-picker-decorator .onyx-button {
+    width: 130px;
+  }
+}
+
+.xv-characteristic-item {
+  border-bottom: 1px solid @silver;
+  .onyx-input-decorator > input {
+    width: 150px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+}
+
+.xv-characteristic-button {
+  margin-right: 4px;
+}
+
+.xv-characteristic-buttons {
+  margin: 8px;
+}
+
+.xv-popup-button {
+  margin: 4px;
+}
+
+.xv-scroller {
+  background: @white;
+}
+
+.xv-error {
+  color: @bright-red;
+}
+
+.xv-negative {
+	color: @red;
+}
+
+.xv-assignment-box {
+  .xv-decorated-label {
+    width: 85%;  
+  }
+  .xv-label {
+    width: 250px;  
+  }
+}
+
+.xv-parameter-title {
+  padding-top: 8px;
+  font-size: large;
+  text-align: center;
+}
+
+/* CommentBox */
+.xv-comment-box {
+  .xv-comment-box-repeater {
+    background: @white;
+    max-width: 320px;
+  }
+  .xv-comment-box-label {
+    padding: 5px;
+    font-size: small;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .xv-comment-box-textblock {
+    padding: 5px;
+    font-size: small;
+    overflow: hidden;
+    &.disabled {
+      opacity: 0.6;
+    }
+  }
+	/* Resets the margin/padding value for blockquote tag in comments */
+	blockquote {
+		margin: 0 15px 10px 15px;
+		padding: 0;
+	}
+}
+
+/* Groupbox.css */
+.xv-groupbox {
+  min-width: 320px;
+  padding: 8px 0 8px 8px;
+  margin-right: 5px;
+  &.editor {
+    min-width: 250px;
+    padding: 0;
+		margin: 0;
+  }
+  &.in-panel {
+		padding: 0;
+		margin: 0;
+	}
+  &.panel {
+    min-width: 330px;
+  }
+	.onyx-input-decorator > input {
+    width: 80%;
+  }
+}
+
+.xv-groupbox.in-panel > *:first-child {
+	border-top-color: @silver;
+	border-top: none;
+	border-width: 1px;
+	.border-radius(0);
+}
+
+.xv-groupbox.in-panel > *:last-child {
+	.border-radius(0);
+	border-bottom: none;
+}
+
+.xv-groupbox > * {
+	display: block;
+	border: 1px @silver solid;
+	border-top-width: 0;
+	/* reset styles that make 'item' look bad if they happen to be there */
+	.border-radius(0);
+	margin: 0;
+}
+
+.xv-groupbox > .in-panel .editor-field {
+  border-right: none;
+}
+
+.xv-groupbox > *:first-child {
+	border-top-color: @silver;
+	border-width: 1px;
+	.border-radius-all(4px, 4px, 0, 0);
+}
+
+.xv-groupbox > *:last-child {
+	.border-radius-all(0, 0, 4px, 4px);
+}
+
+.xv-groupbox > *:first-child:last-child {
+	.border-radius(4px);
+}
+
+.xv-groupbox-header {
+	padding: 5px 10px;
+	color: @white;
+	font-family: Segoe UI, Neue Helvetica, Helvectica, Arial, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	text-transform: uppercase;
+	background-color: @dark-gray;
+	border: none;
+	/* This image doesn't exist */
+	background: @charcoal url(../../images/gradient.png) repeat-x 0 10px;
+}
+
+.xv-groupbox .onyx-input-decorator {
+	/* This resets the border for this element */
+	border: 0;
+}
+
+.xv-groupbox > .onyx-input-decorator {
+	border-color: @silver;
+	border-width: 0 1px 1px 1px;
+	.border-radius(4px);
+}
+
+.xv-groupbox .xv-inputwidget {
+  background-color: @white;
+}
+
+.xv-groupbox > .onyx-input-decorator:first-child {
+	border-width: 1px;
+	.border-radius-all(4px, 4px, 0, 0);
+}
+
+.xv-groupbox > .onyx-input-decorator:last-child {
+	.border-radius-all(0, 0, 4px, 4px);
+}
+
+.xv-groupbox > .onyx-input-decorator:first-child:last-child {
+	.border-radius(4px);
+}
+
+.xv-groupbox-buttons {
+	border: none;
+	.xv-groupbox-button-single {
+		.border-radius-all(0, 0, 4px, 4px);
+	}
+	.xv-groupbox-button-center {
+		.border-radius(0);
+	}
+	.xv-groupbox-button-left {
+  	.border-radius-all(0, 0, 0, 4px);
+	}
+	.xv-groupbox-button-right {
+  	.border-radius-all(0, 0, 4px, 0);
+	}
+}
+
+/*
+	XV Widgets
+*/
+
+/* AddressWidget.scss */
+.xv-addresswidget {
+  background-color: @white;
+  padding: 4px;
+  .xv-addresswidget-viewer {
+    border: 0;
+    font-size: medium;
+    display: inline;
+    &.placeholder {
+      font-style: italic;
+      color: @blue-gray;
+    }
+  }
+}
+
+.xv-addresswidget-input-decorator {
+  background: @white;
+  display: block;
+  margin: 4px;
+  &.short {
+    width: 40%;
+  }  
+}
+
+.xv-addresswidget-combobox-decorator {
+  background: @white;
+  display: block;
+  margin: 4px;
+  width: 80%;
+	padding-right: 0;
+	.xv-combobox-input {
+	  width: 80%;
+	}
+	.xv-combobox {
+    padding: 0;
+    width: 100%;
+  }
+}
+
+.xv-addresswidget-input {
+  width: 100%;
+}
+
+.xv-addresswidget-button {
+  margin-right: 4px;
+}
+
+.xv-addresswidget-buttons {
+  margin-top: 4px;
+}
+
+.xv-addresswidget-editor-header {
+  padding: 4px;
+}
+
+.xv-addresswidget-editor {
+  width: 320px;
+  padding: 8px;
+  padding-right: 16px;
+}
+
+.xv-addresslist-attr {
+  padding: 5px;
+  font-size: 13px;
+  white-space: normal;
+  overflow: auto;
+  color: #000;
+  background-color: @white;
+}
+
+/* RelationWidget */
+.xv-relationwidget-completer {
+  left: -200px; 
+  top: 15px;
+}
+
+.xv-relationwidget-column {
+  &.left {
+    padding-right: 18px;
+    color: #000;
+    width: 140px;
+  }
+}
+
+.xv-relationwidget-icon {
+  top: 2px;
+  left: 8px;
+  position: relative;
+}
+
+.xv-relationwidget-description {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-indent: 140px;
+  font-size: small;
+  padding-bottom: 4px;
+  max-width: 325px;
+  &.disabled {
+    opacity: 0.4;
+  }
+  &.label {
+    text-indent: 0; 
+    text-align: right;
+    
+  }
+  &.hasLabel {
+    text-indent: 0;
+  }
+  &.hyperlink {
+    color: blue;
+  }
+}
+
+/* RelationsEditorBox */
+.xv-relations-editor-box {
+  .xv-groupbox {
+    margin-right: 0;
+		padding: 0;
+    border: none;
+  }
+  &.panel {
+    width: 350px;
+  }
+}
+
+/* ListRelationsBox */
+.xv-list-relations-box {
+  &.panel {
+    width: 675px;
+  }  
+}
+
+.xv-short-relations-box {
+  &.panel {
+    width: 500px;
+  }  
+}
+
+/* Combo Box */
+.xv-combobox {
+  padding: 6px;
+  padding-top: 8px;
+  padding-right: 0;
+  height: 24px;
+  width: 200px;
+  display: inline-block;
+}
+
+.xv-combobox-input {
+  font-size: medium;
+  border: 0;
+  display: inline-block;
+  outline: none;
+  width: 80%;
+}
+
+.xv-combobox-icon {
+  margin-left: 4px;
+  display: inline-block;
+}
+
+/* Picker */
+.onyx-picker .onyx-menu-item {
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.xv-pickerwidget {
+  background-color: @white;
+}
+
+.xv-picker {
+  width: 160px;
+  text-align: left;
+}
+
+.xv-label {
+  width: 130px;
+  padding: 8px;
+  text-align: right;
+}
+
+.xv-decorated-label {
+  width: 130px;
+	padding: 14px 8px 8px 8px;
+  text-align: right;
+}
+
+.xv-picker-label {
+  width: 130px;
+	padding: 18px 8px 8px 8px;
+  text-align: right;
+  color: black;
+}
+
+.xv-textarea-input {
+  width: 90%;
+  height: 100%;
+  min-height: 100px;
+  margin: 6px;
+	border: #ddd 2px solid;
+	color: black;
+}
+
+.xv-documents-picker-label {
+  width: 85px;
+	padding: 16px 8px 8px 8px;
+  text-align: right;
+}
+
+.xv-documents-picker {
+  width: 120px;
+  margin: 6px;
+}
+
+.xv-half-check {
+	background:
+		transparent
+		url("../../assets/checkbox.png")
+		no-repeat
+		0 -96px
+		scroll;
+}
+
+.xv-textarea {
+  background-color: @white;
+  &.max-height {
+    height: 100%;
+  }
+}
+
+.xv-menuitem {
+  &.disabled {
+    color: @dim-gray;
+  }
+}
+
+.xv-button-bar {
+  .onyx-button {
+		// TODO: center buttons, spacing in between (margin: auto on bar)
+		margin: 0 40px 0 40px;
+  }
+}
+
+/* This is for styling the moved items in the more toolbar*/
+.xv-toolbar-moved {
+	width: 220px;
+}

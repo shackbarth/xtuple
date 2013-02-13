@@ -1,0 +1,11 @@
+enyo.depends(
+  "list.js",
+  "list_relations.js",
+  "list_relations_box.js",
+  "list_relations_editor_box.js",
+  "workspace.js",
+  "comment_box.js",
+  "assignment_box.js",
+  "documents_box.js",
+  "module_container.js"
+);

@@ -1,0 +1,1044 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ClassCode",
+    "table": "classcode",
+    "lockable": true,
+    "idSequenceName": "classcode_classcode_id_seq",
+    "comment": "Class Code Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainClassCodes",
+        "read": true,
+        "update": "MaintainClassCodes",
+        "delete": "MaintainClassCodes"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "classcode_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "classcode_code"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "classcode_descrip"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Item",
+    "table": "item",
+    "lockable": true,
+    "idSequenceName": "item_item_id_seq",
+    "comment": "Item Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainItemMasters",
+        "read": "ViewItemMasters",
+        "update": "MaintainItemMasters",
+        "delete": "DeleteItemMasters"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "item_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "item_number"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "item_active"
+        }
+      },
+      {
+        "name": "description1",
+        "attr": {
+          "type": "String",
+          "column": "item_descrip1"
+        }
+      },
+      {
+        "name": "description2",
+        "attr": {
+          "type": "String",
+          "column": "item_descrip2"
+        }
+      },
+      {
+        "name": "classCode",
+        "toOne": {
+          "type": "ClassCode",
+          "column": "item_classcode_id",
+          "required": true
+        }
+      },
+      {
+        "name": "inventoryUnit",
+        "toOne": {
+          "type": "Unit",
+          "column": "item_inv_uom_id",
+          "required": true
+        }
+      },
+      {
+        "name": "isFractional",
+        "attr": {
+          "type": "Boolean",
+          "column": "item_fractional"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "item_comments"
+        }
+      },
+      {
+        "name": "isSold",
+        "attr": {
+          "type": "Boolean",
+          "column": "item_sold"
+        }
+      },
+      {
+        "name": "productCategory",
+        "toOne": {
+          "type": "ProductCategory",
+          "column": "item_prodcat_id",
+          "required": true
+        }
+      },
+      {
+        "name": "listPrice",
+        "attr": {
+          "type": "Number",
+          "column": "item_listprice"
+        }
+      },
+      {
+        "name": "priceUnit",
+        "toOne": {
+          "type": "Unit",
+          "column": "item_price_uom_id",
+          "required": true
+        }
+      },
+      {
+        "name": "extendedDescription",
+        "attr": {
+          "type": "String",
+          "column": "item_extdescrip"
+        }
+      },
+      {
+        "name": "comments",
+        "toMany": {
+          "isNested": true,
+          "type": "ItemComment",
+          "column": "item_id",
+          "inverse": "item"
+        }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "type": "ItemCharacteristic",
+          "column": "item_id",
+          "inverse": "item",
+          "isNested": true
+        }
+      },
+      {
+        "name": "accounts",
+        "toMany": {
+          "type": "ContactAccount",
+          "column": "item_id",
+          "inverse": "source",
+          "isNested": true
+        }
+      },
+      {
+        "name": "contacts",
+        "toMany": {
+          "type": "ItemContact",
+          "column": "item_id",
+          "inverse": "source",
+          "isNested": true
+        }
+      },
+      {
+        "name": "items",
+        "toMany": {
+          "type": "ItemItem",
+          "column": "item_id",
+          "inverse": "source",
+          "isNested": true
+        }
+      },
+      {
+        "name": "files",
+        "toMany": {
+          "type": "ItemFile",
+          "column": "item_id",
+          "inverse": "source",
+          "isNested": true
+        }
+      },
+      {
+        "name": "urls",
+        "toMany": {
+          "type": "ItemUrl",
+          "column": "item_id",
+          "inverse": "source",
+          "isNested": true
+        }
+      },
+      {
+        "name": "itemSites",
+        "toMany": {
+          "type": "ItemSiteRelation",
+          "column": "item_id",
+          "isNested": "true"
+        }
+      }
+    ],
+    "isSystem": true,
+    "sourceCode": "I"
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemAccount",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Item Account Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "I"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "CRMA"
+        }
+      },
+      {
+        "name": "account",
+        "toOne": {
+          "isNested": true,
+          "type": "AccountRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemAlias",
+    "table": "itemalias",
+    "idSequenceName": "itemalias_itemalias_id_seq",
+    "comment": "Item Alias Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "itemalias_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "item",
+        "attr": {
+          "type": "Number",
+          "column": "itemalias_item_id"
+        }
+      },
+      {
+        "name": "aliasNumber",
+        "attr": {
+          "type": "String",
+          "column": "itemalias_number"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "itemalias_comments"
+        }
+      },
+      {
+        "name": "useDescription",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemalias_usedescrip"
+        }
+      },
+      {
+        "name": "description1",
+        "attr": {
+          "type": "String",
+          "column": "itemalias_descrip1"
+        }
+      },
+      {
+        "name": "description2",
+        "attr": {
+          "type": "String",
+          "column": "itemalias_descrip2"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemCharacteristic",
+    "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Item Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "I"
+        }
+      },
+      {
+        "name": "item",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemComment",
+    "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
+    "comment": "Item Comment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": "EditOthersComments",
+        "delete": false
+      },
+      "personal": {
+        "update": "EditOwnComments",
+        "properties": [
+          "createdBy"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "comment_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "comment_source",
+          "value": "I"
+        }
+      },
+      {
+        "name": "item",
+        "attr": {
+          "type": "Number",
+          "column": "comment_source_id"
+        }
+      },
+      {
+        "name": "commentType",
+        "toOne": {
+          "type": "CommentType",
+          "column": "comment_cmnttype_id",
+          "required": true
+        }
+      },
+      {
+        "name": "text",
+        "attr": {
+          "type": "String",
+          "column": "comment_text"
+        }
+      },
+      {
+        "name": "isPublic",
+        "attr": {
+          "type": "Boolean",
+          "column": "comment_public"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "comment_date"
+        }
+      },
+      {
+        "name": "createdBy",
+        "attr": {
+          "type": "String",
+          "column": "comment_user"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemContact",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Item Contact Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "I"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "T"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemFile",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Item File Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "toOne": {
+          "type": "Item",
+          "column": "source_type",
+          "value": "I"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "FILE"
+        }
+      },
+      {
+        "name": "file",
+        "toOne": {
+          "isNested": true,
+          "type": "FileRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemListItem",
+    "table": "item",
+    "comment": "Item List Item Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewItemMasters",
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "item_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "item_number"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "item_active"
+        }
+      },
+      {
+        "name": "description1",
+        "attr": {
+          "type": "String",
+          "column": "item_descrip1"
+        }
+      },
+      {
+        "name": "description2",
+        "attr": {
+          "type": "String",
+          "column": "item_descrip2"
+        }
+      },
+      {
+        "name": "classCode",
+        "toOne": {
+          "type": "ClassCode",
+          "column": "item_classcode_id"
+        }
+      },
+      {
+        "name": "inventoryUnit",
+        "toOne": {
+          "type": "Unit",
+          "column": "item_inv_uom_id"
+        }
+      },
+      {
+        "name": "isSold",
+        "attr": {
+          "type": "Boolean",
+          "column": "item_sold"
+        }
+      },
+      {
+        "name": "productCategory",
+        "toOne": {
+          "type": "ProductCategory",
+          "column": "item_prodcat_id"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemRelation",
+    "table": "item",
+    "comment": "Item Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "item_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "item_number"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "item_active"
+        }
+      },
+      {
+        "name": "description1",
+        "attr": {
+          "type": "String",
+          "column": "item_descrip1"
+        }
+      },
+      {
+        "name": "description2",
+        "attr": {
+          "type": "String",
+          "column": "item_descrip2"
+        }
+      },
+      {
+        "name": "inventoryUnit",
+        "toOne": {
+          "type": "Unit",
+          "column": "item_inv_uom_id"
+        }
+      },
+      {
+        "name": "isFractional",
+        "attr": {
+          "type": "Boolean",
+          "column": "item_fractional"
+        }
+      },
+      {
+        "name": "isSold",
+        "attr": {
+          "type": "Boolean",
+          "column": "item_sold"
+        }
+      },
+      {
+        "name": "listPrice",
+        "attr": {
+          "type": "Number",
+          "column": "item_listprice"
+        }
+      },
+      {
+        "name": "priceUnit",
+        "toOne": {
+          "type": "Unit",
+          "column": "item_price_uom_id"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemItem",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Item Item Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "I"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "I"
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemRelation",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemUrl",
+    "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Item Url Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "I"
+        }
+      },
+      {
+        "name": "source",
+        "attr": {
+          "type": "Number",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "URL"
+        }
+      },
+      {
+        "name": "url",
+        "toOne": {
+          "isNested": true,
+          "type": "Url",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ProductCategory",
+    "table": "prodcat",
+    "lockable": true,
+    "idSequenceName": "prodcat_prodcat_id_seq",
+    "comment": "Product Category Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainProductCategories",
+        "read": true,
+        "update": "MaintainProductCategories",
+        "delete": "MaintainProductCategories"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "prodcat_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "prodcat_code"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "prodcat_descrip"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Unit",
+    "table": "uom",
+    "lockable": true,
+    "idSequenceName": "uom_uom_id_seq",
+    "comment": "Unit Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainUOMs",
+        "read": true,
+        "update": "MaintainUOMs",
+        "delete": "MaintainUOMs"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "uom_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "uom_name"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "uom_descrip"
+        }
+      },
+      {
+        "name": "isItemWeight",
+        "attr": {
+          "type": "Boolean",
+          "column": "uom_item_weight"
+        }
+      }
+    ],
+    "isSystem": true
+  }
+]

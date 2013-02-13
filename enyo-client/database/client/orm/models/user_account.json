@@ -1,0 +1,637 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Language",
+    "table": "lang",
+    "idSequenceName": "lang_lang_id_seq",
+    "comment": "Language Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "lang_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "lang_name"
+        }
+      },
+      {
+        "name": "abbreviationShort",
+        "attr": {
+          "type": "String",
+          "column": "lang_abbr2"
+        }
+      },
+      {
+        "name": "abbreviationLong",
+        "attr": {
+          "type": "String",
+          "column": "lang_abbr3"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Privilege",
+    "table": "xt.priv",
+    "comment": "Privilege Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "priv_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "group",
+        "attr": {
+          "type": "String",
+          "column": "priv_group"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "priv_name"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Locale",
+    "table": "locale",
+    "idSequenceName": "locale_locale_id_seq",
+    "comment": "Locale Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainLocales",
+        "read": true,
+        "update": "MaintainLocales",
+        "delete": "MaintainLocales"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "locale_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "locale_code"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "locale_descrip",
+          "required": true
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "locale_comments"
+        }
+      },
+      {
+        "name": "language",
+        "toOne": {
+          "type": "Language",
+          "column": "locale_lang_id"
+        }
+      },
+      {
+        "name": "country",
+        "toOne": {
+          "type": "Country",
+          "column": "locale_country_id"
+        }
+      },
+      {
+        "name": "errorColor",
+        "attr": {
+          "type": "String",
+          "column": "locale_error_color",
+          "required": true
+        }
+      },
+      {
+        "name": "warningColor",
+        "attr": {
+          "type": "String",
+          "column": "locale_warning_color",
+          "required": true
+        }
+      },
+      {
+        "name": "emphasisColor",
+        "attr": {
+          "type": "String",
+          "column": "locale_emphasis_color",
+          "required": true
+        }
+      },
+      {
+        "name": "altEmphasisColor",
+        "attr": {
+          "type": "String",
+          "column": "locale_altemphasis_color",
+          "required": true
+        }
+      },
+      {
+        "name": "expiredColor",
+        "attr": {
+          "type": "String",
+          "column": "locale_expired_color",
+          "required": true
+        }
+      },
+      {
+        "name": "futureColor",
+        "attr": {
+          "type": "String",
+          "column": "locale_future_color",
+          "required": true
+        }
+      },
+      {
+        "name": "currencyScale",
+        "attr": {
+          "type": "Number",
+          "column": "locale_curr_scale",
+          "required": true
+        }
+      },
+      {
+        "name": "salesPriceScale",
+        "attr": {
+          "type": "Number",
+          "column": "locale_salesprice_scale",
+          "required": true
+        }
+      },
+      {
+        "name": "purchasePriceScale",
+        "attr": {
+          "type": "Number",
+          "column": "locale_purchprice_scale",
+          "required": true
+        }
+      },
+      {
+        "name": "extendedPriceScale",
+        "attr": {
+          "type": "Number",
+          "column": "locale_extprice_scale",
+          "required": true
+        }
+      },
+      {
+        "name": "costScale",
+        "attr": {
+          "type": "Number",
+          "column": "locale_cost_scale",
+          "required": true
+        }
+      },
+      {
+        "name": "quantityScale",
+        "attr": {
+          "type": "Number",
+          "column": "locale_qty_scale",
+          "required": true
+        }
+      },
+      {
+        "name": "quantityPerScale",
+        "attr": {
+          "type": "Number",
+          "column": "locale_qtyper_scale",
+          "required": true
+        }
+      },
+      {
+        "name": "unitRatioScale",
+        "attr": {
+          "type": "Number",
+          "column": "locale_uomratio_scale",
+          "required": true
+        }
+      },
+      {
+        "name": "percentScale",
+        "attr": {
+          "type": "Number",
+          "column": "locale_percent_scale",
+          "required": true
+        }
+      },
+      {
+        "name": "weightScale",
+        "attr": {
+          "type": "Number",
+          "column": "locale_weight_scale",
+          "required": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "UserAccount",
+    "table": "xt.useracct",
+    "comment": "User Account Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainUsers",
+        "read": "MaintainUsers",
+        "update": "MaintainUsers",
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "username",
+        "attr": {
+          "type": "String",
+          "column": "useracct_username",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "properName",
+        "attr": {
+          "type": "String",
+          "column": "useracct_propername"
+        }
+      },
+      {
+        "name": "initials",
+        "attr": {
+          "type": "String",
+          "column": "useracct_initials"
+        }
+      },
+      {
+        "name": "email",
+        "attr": {
+          "type": "String",
+          "column": "useracct_email"
+        }
+      },
+      {
+        "name": "locale",
+        "toOne": {
+          "type": "Locale",
+          "column": "useracct_locale_id"
+        }
+      },
+      {
+        "name": "disableExport",
+        "attr": {
+          "type": "Boolean",
+          "column": "useracct_disable_export",
+          "required": true
+        }
+      },
+      {
+        "name": "grantedPrivileges",
+        "toMany": {
+          "column": "useracct_username",
+          "type": "UserAccountPrivilegeAssignment",
+          "inverse": "userAccount",
+          "isNested": true
+        }
+      },
+      {
+        "name": "userAccountRoles",
+        "toMany": {
+          "type": "UserAccountRole",
+          "isNested": true
+        }
+      },
+      {
+        "name": "grantedUserAccountRoles",
+        "toMany": {
+          "column": "useracct_username",
+          "type": "UserAccountUserAccountRoleAssignment",
+          "inverse": "userAccount",
+          "isNested": true
+        }
+      }
+    ],
+    "isSystem": true,
+    "sourceCode": "U"
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "UserAccountRelation",
+    "table": "xt.useracct",
+    "comment": "User Account Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "username",
+        "attr": {
+          "type": "String",
+          "column": "useracct_username",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "propername",
+        "attr": {
+          "type": "String",
+          "column": "useracct_propername"
+        }
+      },
+      {
+        "name": "email",
+        "attr": {
+          "type": "String",
+          "column": "useracct_email"
+        }
+      },
+      {
+        "name": "disableExport",
+        "attr": {
+          "type": "Boolean",
+          "column": "useracct_disable_export"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "UserAccountPrivilegeAssignment",
+    "table": "usrpriv",
+    "idSequenceName": "usrpriv_usrpriv_id_seq",
+    "comment": "User Account Privilege Assignment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "usrpriv_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "userAccount",
+        "attr": {
+          "type": "String",
+          "column": "usrpriv_username",
+          "required": true
+        }
+      },
+      {
+        "name": "privilege",
+        "toOne": {
+          "type": "Privilege",
+          "column": "usrpriv_priv_id",
+          "required": true
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "UserAccountRole",
+    "table": "grp",
+    "idSequenceName": "grp_grp_id_seq",
+    "comment": "User Account Role Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainGroups",
+        "read": "MaintainGroups",
+        "update": "MaintainGroups",
+        "delete": "MaintainGroups"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "grp_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "grp_name"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "grp_descrip"
+        }
+      },
+      {
+        "name": "grantedPrivileges",
+        "toMany": {
+          "type": "UserAccountRolePrivilegeAssignment",
+          "column": "grp_id",
+          "inverse": "user_account_role",
+          "isNested": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "UserAccountRoleRelation",
+    "table": "grp",
+    "comment": "User Account Role Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "grp_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "grp_name"
+        }
+      },
+      {
+        "name": "grantedPrivileges",
+        "toMany": {
+          "type": "UserAccountRolePrivilegeAssignment",
+          "column": "grp_id",
+          "inverse": "user_account_role",
+          "isNested": true
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "UserAccountRolePrivilegeAssignment",
+    "table": "grppriv",
+    "idSequenceName": "grppriv_grppriv_id_seq",
+    "comment": "User Account Role Privilege Assignment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "grppriv_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "userAccountRole",
+        "attr": {
+          "type": "UserAccountRole",
+          "column": "grppriv_grp_id"
+        }
+      },
+      {
+        "name": "privilege",
+        "toOne": {
+          "type": "Privilege",
+          "column": "grppriv_priv_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "UserAccountUserAccountRoleAssignment",
+    "table": "usrgrp",
+    "idSequenceName": "usrgrp_usrgrp_id_seq",
+    "comment": "User User Role Assignment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "usrgrp_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "userAccount",
+        "attr": {
+          "type": "String",
+          "column": "usrgrp_username"
+        }
+      },
+      {
+        "name": "userAccountRole",
+        "toOne": {
+          "type": "UserAccountRole",
+          "column": "usrgrp_grp_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  }
+]
