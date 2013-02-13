@@ -20,7 +20,7 @@ _ = require("underscore");
   /**
    * Include the X framework.
    */
-  require("xt");
+  require("./xt");
 
   // Loop through files and load the dependencies.
   X.relativeDependsPath = "";
@@ -43,10 +43,10 @@ _ = require("underscore");
 
   // Load other xTuple libraries using X.depends above.
   require("backbone-relational");
-  X.relativeDependsPath = X.path.join(X.basePath, "node_modules/tools/source");
-  require("tools");
-  X.relativeDependsPath = X.path.join(X.basePath, "node_modules/backbone-x/source");
-  require("backbone-x");
+  X.relativeDependsPath = X.path.join(X.basePath, "../lib/tools/source");
+  require("../lib/tools");
+  X.relativeDependsPath = X.path.join(X.basePath, "../lib/backbone-x/source");
+  require("../lib/backbone-x");
   Backbone.XM = XM;
 
   // Argh!!! Hack because `XT` has it's own string format function that
@@ -319,8 +319,8 @@ require('./oauth2/passport');
  * Setup HTTP routes and handlers.
  */
 app.use('/assets', express.static('views/login/assets', { maxAge: 86400000 }));
-app.use('/client', express.static('www/client', { maxAge: 86400000 }));
-app.use('/public-extensions', express.static('www/public-extensions', { maxAge: 86400000 }));
+app.use('/client', express.static('../enyo-client/application', { maxAge: 86400000 }));
+app.use('/public-extensions', express.static('../enyo-client/extensions', { maxAge: 86400000 }));
 app.use('/private-extensions', express.static('www/private-extensions', { maxAge: 86400000 }));
 
 app.get('/dialog/authorize', oauth2.authorization);
