@@ -31,6 +31,8 @@ white:true*/
     /** @scope XM.ProductCategory.prototype */
 
     recordType: 'XM.ProductCategory',
+    
+    nameAttribute: 'code',
 
     documentKey: 'code'
 
