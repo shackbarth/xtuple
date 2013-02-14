@@ -30,7 +30,7 @@ white:true*/
       'name',
       'symbol'
     ],
-
+    
     // ..........................................................
     // METHODS
     //
@@ -109,6 +109,19 @@ white:true*/
     }
 
   });
+  
+  /**
+    @class
+  
+    @extends XM.Document
+  */
+  XM.CurrencyRate = XM.Document.extend({
+    /** @scope XM.CurrencyRate.prototype */
+  
+    recordType: 'XM.CurrencyRate'
+  
+  });
+  
 
   // ..........................................................
   // COLLECTIONS
@@ -124,6 +137,18 @@ white:true*/
 
     model: XM.Currency
 
+  });
+  
+  /**
+    @class
+  
+    @extends XM.Collection
+  */
+  XM.CurrencyRateCollection = XM.Collection.extend({
+    /** @scope XM.CurrencyRateCollection.prototype */
+  
+    model: XM.CurrencyRate
+  
   });
 
 }());

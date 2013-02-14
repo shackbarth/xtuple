@@ -54,5 +54,60 @@
       }
     ],
     "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "CurrencyRate",
+    "table": "curr_rate",
+    "idSequenceName": "curr_rate_curr_id_seq",
+    "comment": "Currency Map",
+    "privileges": {
+      "all": {
+        "create": "CreateNewCurrency",
+        "read": true,
+        "update": "MaintainCurrencies",
+        "delete": "MaintainCurrencies"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "curr_rate_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "currency",
+        "attr": {
+          "type": "Number",
+          "column": "curr_id"
+        }
+      },
+      {
+        "name": "rate",
+        "attr": {
+          "type": "Number",
+          "column": "curr_rate"
+        }
+      },
+      {
+        "name": "effective",
+        "attr": {
+          "type": "Date",
+          "column": "curr_effective"
+        }
+      },
+      {
+        "name": "expires",
+        "attr": {
+          "type": "Date",
+          "column": "curr_expires"
+        }
+      }
+    ],
+    "isSystem": true
   }
 ]

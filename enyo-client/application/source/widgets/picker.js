@@ -65,9 +65,27 @@ regexp:true, undef:true, trailing:true, white:true */
   // ..........................................................
   // CURRENCY
   //
-
+  
   enyo.kind({
     name: "XV.CurrencyPicker",
+    kind: "XV.Picker",
+    /**
+     Overriding the itemSelected function from picker so that
+     the event may bubble up.
+     */
+    itemSelected: function (inSender, inEvent) {
+      var value = this.$.picker.getSelected().value;
+      this.setValue(value);
+    },
+    collection: "XM.currencies",
+    nameAttribute: "abbreviation",
+    orderBy: [
+      {attribute: 'abbreviation'}
+    ]
+  });
+  
+  enyo.kind({
+    name: "XV.CurrencyPickerWidget",
     kind: "XV.PickerWidget",
     collection: "XM.currencies",
     nameAttribute: "abbreviation",
