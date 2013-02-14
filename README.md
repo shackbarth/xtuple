@@ -30,5 +30,5 @@ build the extensions
 
 start the datasource
     
-    cd node-datasource
+    cd ../../node-datasource
     sudo ./main.js
