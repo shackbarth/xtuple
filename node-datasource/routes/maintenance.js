@@ -81,17 +81,62 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     respObject.commandLog.push("Running pqsl command: " + psqlCommand);
     exec(psqlCommand, psqlCallback);
   };
+
+  var addLock = function (org) {
+    var now = new Date().getTime(),
+      timeoutInMinutes = 5,
+      expires = now + 1000 * 60 * timeoutInMinutes,
+      lockConflicts;
+
+    org = org || "_all"; // the org is blank for all-org maintenance requests
+    // let's hope we never have a database named "_all"
+
+    // the keys of the maintenanceLocks object are org names (or _all), and
+    // the values are the expiration time in milliseconds.
+    X.maintenanceLocks = X.maintenanceLocks || {};
+
+    lockConflicts = _.map(X.maintenanceLocks, function (value, key) {
+      // if the orgs are the same (note that _all hits every org)
+      // and the expiration has not passed, then there's a lock conflict
+      return (key === org || key === '_all' || org === '_all') && value > now;
+    });
+
+    if (_.indexOf(lockConflicts, true) >= 0) {
+      // there is a lock conflict. Do not allow this maintenance to happen
+      return false;
+    }
+
+    // no lock conflict. Add a lock.
+    X.maintenanceLocks[org] = expires;
+    return true;
+  };
+
+
+  var releaseLock = function (org) {
+    org = org || "_all"; // the org is blank for all-org maintenance requests
+    delete X.maintenanceLocks[org];
+  };
+
+
   /**
     This is the function that does all the work. It can be run after a successful
     session load, or through the localhost backdoor.
    */
   var install = function (res, args, username) {
+
+    if (!addLock(args.organization)) {
+      res.send({data:{isError: true, message: "Maintenance already underway."}});
+      return;
+    }
+
+
     var respObject = {commandLog: [], log: [], errorLog: []},
       // TODO: run each organization's commands in parallel
       psqlArray = [],
       ormArray = [],
       orgCallback = function (respObj) {
-        X.log("Maintenance is complete", JSON.stringify(respObj));
+        X.log("Maintenance is complete", JSON.stringify(respObj.commandLog));
+        releaseLock(args.organization);
         res.send(JSON.stringify({data: respObj}));
       },
       organizationColl = new XM.OrganizationCollection(),
@@ -132,7 +177,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             // guard against something terrible that shouldn't be possible in the UI.
             // intialization should only happen to one DB at a time.
             if (!args.organization) {
-              res.send({isError: true, message: "Initialize every instance DB. Are you crazy?"});
+              releaseLock(); // args.organization is falsy so no reason to pass it
+              res.send({data:{isError: true, message: "Initialize every instance DB. Are you crazy?"}});
               return;
             }
             X.log("Initializing organization: ", orgName);
@@ -213,7 +259,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       fetchError = function (model, error) {
         respObject.isError = true;
         respObject.message = "Error while fetching organizations";
-        res.send(respObject);
+        releaseLock(args.organization);
+        res.send({data: respObject});
       },
       options,
       query = {
