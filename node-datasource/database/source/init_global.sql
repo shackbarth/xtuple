@@ -1,9 +1,9 @@
 -- [ START ] initdb
 
 -- run core orm scripts
-\cd ../../orm/source;
+\cd ../../../lib/orm/source;
 \i init_script.sql;
-\cd ../../server/source;
+\cd ../../../node-datasource/database/source;
 
 -- [ END ] initdb
 
