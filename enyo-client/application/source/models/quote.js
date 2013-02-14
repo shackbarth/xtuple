@@ -17,9 +17,15 @@ white:true*/
     recordType: 'XM.Quote',
 
     defaults: function () {
-      var settings = XT.session.getSettings();
+      //var settings = XT.session.getSettings();
       return {
-        
+        //auto order #
+        quoteDate: this.getTodaysDate()
+        //tax zone: none
+        //site: probably the metric default
+        //sale type: same
+        //quote status: open
+        //shipping zone: probably the metric default
       };
     },
     
@@ -28,7 +34,13 @@ white:true*/
     ],
     
     requiredAttributes: [
-      
+      "id",
+      "number",
+      "quoteDate",
+      //at least 1 line item?
+      "customer",
+      "miscCharge",
+      "calculateFreight"
     ],
     
     // ..........................................................
@@ -40,7 +52,240 @@ white:true*/
     */
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
+    },
+    
+    /**
+      getTodaysDate
+      
+      returns today's date, properly formatted to be inserted into a SQL table.
+    */
+    getTodaysDate: function () {
+      var fullDate = new Date(),
+      //Date() returns datetime in a strange format. Formatting to sql date standard
+      day = fullDate.getDate(),
+      //getMonth() returns 0 for january, so + 1 adjusts for that
+      month = fullDate.getMonth() + 1,
+      year = fullDate.getFullYear(),
+      date;
+      
+      //need to prefix 0's if day or month is just a single digit
+      if (day < 10) {
+        day = "0" + day;
+      }
+      if (month < 10) {
+        month = "0" + month;
+      }
+      
+      date = year + "-" + month + "-" + day;
     }
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Comment
+  */
+  XM.QuoteComment = XM.Comment.extend({
+    /** @scope XM.QuoteComment.prototype */
+
+    recordType: 'XM.QuoteComment',
+
+    sourceName: 'C'
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Account
+  */
+  XM.QuoteAccount = XM.Model.extend({
+    /** @scope XM.QuoteAccount.prototype */
+
+    recordType: 'XM.QuoteAccount',
+    
+    isDocumentAssignment: true
+    
+  });
+  
+  /**
+    @class
+
+    @extends XM.Contact
+  */
+  XM.QuoteContact = XM.Model.extend({
+    /** @scope XM.QuoteContact.prototype */
+
+    recordType: 'XM.QuoteContact',
+    
+    isDocumentAssignment: true
+    
+  });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.QuoteFile = XM.Model.extend({
+    /** @scope XM.QuoteFile.prototype */
+
+    recordType: 'XM.QuoteFile',
+
+    isDocumentAssignment: true
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.QuoteItem = XM.Model.extend({
+    /** @scope XM.QuoteItem.prototype */
+
+    recordType: 'XM.QuoteItem',
+
+    isDocumentAssignment: true
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.QuoteLine = XM.Model.extend({
+    /** @scope XM.QuoteLine.prototype */
+
+    recordType: 'XM.QuoteLine'
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.QuoteLineCharacteristic = XM.Model.extend({
+    /** @scope XM.QuoteLineCharacteristic.prototype */
+
+    recordType: 'XM.QuoteLineCharacteristic'
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.QuoteListItem = XM.Info.extend({
+    /** @scope XM.QuoteListItem.prototype */
+
+    recordType: 'XM.QuoteListItem',
+
+    editableModel: 'XM.Quote'
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.QuoteRelation = XM.Info.extend({
+    /** @scope XM.QuoteRelation.prototype */
+
+    recordType: 'XM.QuoteRelation',
+
+    editableModel: 'XM.Quote',
+
+    descriptionKey: "number"
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.QuoteUrl = XM.Model.extend({
+    /** @scope XM.QuoteUrl.prototype */
+
+    recordType: 'XM.QuoteUrl',
+
+    isDocumentAssignment: true
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.QuoteProject = XM.Model.extend({
+    /** @scope XM.QuoteProject.prototype */
+
+    recordType: 'XM.QuoteProject',
+
+    isDocumentAssignment: true
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.QuoteIncident = XM.Model.extend({
+    /** @scope XM.QuoteIncident.prototype */
+
+    recordType: 'XM.QuoteIncident',
+
+    isDocumentAssignment: true
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.QuoteOpportunity = XM.Model.extend({
+    /** @scope XM.QuoteOpportunity.prototype */
+
+    recordType: 'XM.QuoteOpportunity',
+
+    isDocumentAssignment: true
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.QuoteToDo = XM.Model.extend({
+    /** @scope XM.QuoteToDo.prototype */
+
+    recordType: 'XM.QuoteToDo',
+
+    isDocumentAssignment: true
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.QuoteCustomer = XM.Model.extend({
+    /** @scope XM.QuoteCustomer.prototype */
+
+    recordType: 'XM.QuoteCustomer',
+
+    isDocumentAssignment: true
 
   });
 
@@ -57,6 +302,18 @@ white:true*/
     /** @scope XM.QuoteCollection.prototype */
 
     model: XM.Quote
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.QuoteRelationCollection = XM.Collection.extend({
+    /** @scope XM.QuoteRelationCollection.prototype */
+
+    model: XM.QuoteRelation
 
   });
 
