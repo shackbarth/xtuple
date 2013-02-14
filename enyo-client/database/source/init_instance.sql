@@ -1,9 +1,9 @@
 -- [ START ] initdb
 
 -- run core orm scripts
-\cd ../../orm/source;
+\cd ../../../lib/orm/source;
 \i init_script.sql;
-\cd ../../client/source;
+\cd ../../../enyo-client/database/source;
 
 -- drop xm views
 \i drop_xm_views.sql;

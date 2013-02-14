@@ -1,4 +1,4 @@
-/* LESS version of screen.scss file previously in client 
+/* LESS version of screen.scss file previously in client
 
 	To compile to .css: lessc screen.less > ../stylesheets/screen.css
 	Use -compress for a compressed .css with no comments
@@ -223,7 +223,7 @@ body {
   width: 90px;
   vertical-align: top;
 }
-/* 
+/*
 	Media query for responsive design. This adapts to smaller
 	displays.
 */
@@ -328,7 +328,7 @@ body {
   width: 85px;
 }
 .xv-list .xv-list-item.item-selected {
-  background: #226b9a url(../../assets/item-hilite.png) repeat-x bottom;
+  background: #226b9a url("../../assets/item-hilite.png") repeat-x bottom;
 }
 .xv-list .xv-list-item.item-selected .xv-list-attr {
   color: #ffffff;
@@ -615,7 +615,7 @@ body {
   border: none;
   /* This image doesn't exist */
 
-  background: #555555 url(../../images/gradient.png) repeat-x 0 10px;
+  background: #555555 url("../../images/gradient.png") repeat-x 0 10px;
 }
 .xv-groupbox .onyx-input-decorator {
   /* This resets the border for this element */
