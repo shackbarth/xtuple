@@ -318,7 +318,6 @@ require('./oauth2/passport');
  */
 app.use('/assets', express.static('views/login/assets', { maxAge: 86400000 }));
 app.use('/client', express.static('../enyo-client/application', { maxAge: 86400000 }));
-app.use('/client/lib', express.static('../lib', { maxAge: 86400000 }));
 app.use('/public-extensions', express.static('../enyo-client/extensions', { maxAge: 86400000 }));
 app.use('/private-extensions', express.static('../../private-extensions', { maxAge: 86400000 }));
 
