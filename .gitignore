@@ -1,0 +1,14 @@
+node-datasource/.DS_Store
+node-datasource/node_modules
+node-datasource/npm-debug.log
+node-datasource/pid*
+node-datasource/config*
+node-datasource/datasource.log
+node-datasource/datasource-err.log
+node-datasource/www
+node-datasource/lib/private
+*.swp
+node-datasource/pid/*
+
+enyo-client/extensions/debug.js
+
