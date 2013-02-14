@@ -5,7 +5,8 @@ enyo.depends(
   "../lib/enyo-x",
   "en",
   "models",
-  "application",
+  "widgets",
+  "views",
   "startup.js",
   "app.js",
   "ext"
