@@ -14,6 +14,7 @@ depends(
   "priority.js",
   "project.js",
   "prospect.js",
+  "quote.js",
   "sales_rep.js",
   "static.js",
   "tax.js",
