@@ -20,7 +20,7 @@ white:true*/
       //var settings = XT.session.getSettings();
       return {
         //auto order #
-        quoteDate: this.getTodaysDate()
+        //quote date: today's date
         //tax zone: none
         //site: probably the metric default
         //sale type: same
@@ -52,33 +52,8 @@ white:true*/
     */
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
-    },
-    
-    /**
-      getTodaysDate
-      
-      returns today's date, properly formatted to be inserted into a SQL table.
-    */
-    getTodaysDate: function () {
-      var fullDate = new Date(),
-      //Date() returns datetime in a strange format. Formatting to sql date standard
-      day = fullDate.getDate(),
-      //getMonth() returns 0 for january, so + 1 adjusts for that
-      month = fullDate.getMonth() + 1,
-      year = fullDate.getFullYear(),
-      date;
-      
-      //need to prefix 0's if day or month is just a single digit
-      if (day < 10) {
-        day = "0" + day;
-      }
-      if (month < 10) {
-        month = "0" + month;
-      }
-      
-      date = year + "-" + month + "-" + day;
     }
-
+    
   });
   
   /**
