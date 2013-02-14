@@ -829,7 +829,8 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.AccountWidget", attr: "account"},
             {kind: "XV.ContactWidget", attr: "contact"},
-            {kind: "XV.MoneyWidget", attr: "amount"},
+            {kind: "XV.MoneyWidget", attr: {amount: "amount", currency: "currency"}, effective: new Date(),
+              label: "_amount".loc()},
             {kind: "XV.PercentWidget", attr: "probability"},
             {kind: "onyx.GroupboxHeader", content: "_status".loc()},
             {kind: "XV.OpportunityStagePicker", attr: "opportunityStage",
@@ -1226,7 +1227,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "number"},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "externalReference"},
-            {kind: "XV.CurrencyPicker", attr: "currency"},
+            {kind: "XV.CurrencyPickerWidget", attr: "currency"},
             {kind: "XV.InputWidget", attr: "county"},
             {kind: "onyx.GroupboxHeader", content: "_address".loc()},
             {kind: "XV.AddressWidget", attr: "address"}
