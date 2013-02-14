@@ -165,8 +165,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             group = org.get("group"),
             initInstanceDbDirectory = X.options.datasource.initInstanceDbDirectory || "./scripts",
             initInstanceDbCommand = "initInstanceDb.sh " + flags + " -g " + group,
-            coreScriptDir = '../database/client/source',
-            coreOrmDir = '../database/client/orm';
+            corePsqlCommand = psqlPath + flags + " -f init_instance.sql",
+            coreScriptDir = '../enyo-client/database/source',
+            coreOrmDir = '../enyo-client/database/orm';
 
           X.log("Running scripts for organization: ", orgName);
 
@@ -193,7 +194,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             // the user wants us to run the core init script and install the core orms as well
             // might as well do this for newly initialized dbs as well
             X.log("Processing core: ", orgName);
-            psqlArray.push({command: "(cd %@ && exec %@)".f(coreScriptDir, psqlCommand), loadOrder: -9990});
+            psqlArray.push({command: "(cd %@ && exec %@)".f(coreScriptDir, corePsqlCommand), loadOrder: -9990});
             ormArray.push({ormCreds: ormCreds, ormDir: coreOrmDir, loadOrder: -9990});
           }
 
@@ -207,8 +208,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               return;
             }
 
-            var extLoc = ext.get("extension").get("location"),
-              extName = ext.get("extension").get("name"),
+            var extLoc = ext.get("extension").get("location");
+            if (extLoc === '/public-extensions') {
+              // reverse-compatibility requires us to honor the path '/public-extensions'
+              // even if that's not the actual path anymore.
+              extLoc = '/enyo-client/extensions';
+            } else if (extLoc === '/private-extensions') {
+              // likewise with /private-extensions
+              extLoc = '/../private-extensions';
+            }
+
+            var extName = ext.get("extension").get("name"),
               extLoadOrder = ext.get("extension").get("loadOrder"),
               scriptDir = ".." + extLoc + "/source/" + extName + "/database/source",
               execCommand = "(cd %@ && exec %@)".f(scriptDir, psqlCommand),
