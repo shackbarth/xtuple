@@ -10,6 +10,7 @@ depends(
   "file.js",
   "incident.js",
   "item.js",
+  "item_site.js",
   "opportunity.js",
   "priority.js",
   "project.js",

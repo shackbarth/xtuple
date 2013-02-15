@@ -66,7 +66,7 @@ white:true*/
 
     recordType: 'XM.QuoteComment',
 
-    sourceName: 'C'
+    sourceName: 'Q'
 
   });
   
@@ -273,8 +273,8 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.QuoteCollection = XM.Collection.extend({
-    /** @scope XM.QuoteCollection.prototype */
+  XM.QuoteListItemCollection = XM.Collection.extend({
+    /** @scope XM.QuoteListItemCollection.prototype */
 
     model: XM.Quote
 
