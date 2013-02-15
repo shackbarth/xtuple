@@ -1,8 +1,7 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global XVOWS:true, XT:true, XM:true, _:true, setTimeout:true,
-  clearTimeout:true, vows:true, module:true, assert:true, console:true */
+/*global XT:true, XM:true, process:true, module:true, require:true */
 
 (function () {
   "use strict";
@@ -20,13 +19,12 @@
         var m = new XM.Contact(null, {isNew: true});
 
         assert.isTrue(m.isReadOnly("type"));
+      },
+      teardown : function () {
+        console.log("teardown", arguments);
+        // TODO: this errors out unhelpfully
+        // process.exit(0);
       }
     }
   }).export(module);
-
-
-
-
-
-
 }());

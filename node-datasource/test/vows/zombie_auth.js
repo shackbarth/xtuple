@@ -24,6 +24,7 @@ Usage:
 
   var secondsToWait = 10;
 
+  // TODO: we should be able to get the creds from a gitignored json file
   var loadApp = function (username, password, host, callback) {
     var siteRoot = host || 'https://localhost:443',
       appLoaded;
