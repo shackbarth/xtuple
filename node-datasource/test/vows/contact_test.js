@@ -1,14 +1,32 @@
-var zombieAuth = require("./zombie_auth");
+/*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
+  immed:true, eqeqeq:true, forin:true, latedef:true,
+  newcap:true, noarg:true, undef:true */
+/*global XVOWS:true, XT:true, XM:true, _:true, setTimeout:true,
+  clearTimeout:true, vows:true, module:true, assert:true, console:true */
 
-zombieAuth.loadApp('admin', 'somenew', undefined, function () {
-  var m = new XM.Contact(null, {isNew: true});
+(function () {
+  "use strict";
 
-  // TODO: actually use vows and assert etc.
-  if (!m.isReadOnly("type")) {
-    console.log("Fail! Type should be readonly");
-    process.exit(1);
-  }
+  var zombieAuth = require("./zombie_auth"),
+    vows = require("vows"),
+    assert = require("assert");
 
-  console.log("All tests pass");
-  process.exit(0);
-});
+  vows.describe('Contact testing').addBatch({
+    'When we load up our app': {
+      topic: function () {
+        zombieAuth.loadApp('admin', 'somenew', undefined, this.callback);
+      },
+      'We should be able to create a new contact': function (err, browser, status) {
+        var m = new XM.Contact(null, {isNew: true});
+
+        assert.isTrue(m.isReadOnly("type"));
+      }
+    }
+  }).export(module);
+
+
+
+
+
+
+}());
