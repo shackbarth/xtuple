@@ -15,16 +15,26 @@
       topic: function () {
         zombieAuth.loadApp('admin', 'somenew', undefined, this.callback);
       },
-      'We should be able to create a new contact': function (err, browser, status) {
-        var m = new XM.Contact(null, {isNew: true});
-
-        assert.isTrue(m.isReadOnly("type"));
+      'We should be able to create a new contact': {
+        topic: function () {
+          return new XM.Contact(null, {isNew: true});
+        },
+        'whose type is read-only': function (topic) {
+          assert.isTrue(topic.isReadOnly("type"));
+        },
+        'and whose business logic is such-and-such': function (topic) {
+          assert.equal (topic.businessLogic, undefined);//"such-and-such");
+        },
+        'and we can create a workspace to front it': function (topic) {
+          var workspace = new XV.ContactWorkspace();
+          workspace.setValue(topic);
+          assert.equal (workspace.getValue().recordType, 'XM.Contact');
+        }
       },
-      teardown : function () {
-        console.log("teardown", arguments);
-        // TODO: this errors out unhelpfully
-        // process.exit(0);
-      }
+      // run with command vows and not node for it to exit upon completion
+      //teardown : function () {
+        //console.log("teardown", arguments);
+      //}
     }
   }).export(module);
 }());
