@@ -24,7 +24,7 @@ var _ = require("underscore"),
     @param {String|Object} Model
     @param {Object} Vows
   */
-  exports.create = function (modelName, createHash) {
+  exports.create = function (modelName, createHash, updateHash) {
     var model;
     var context = {
       topic: function () {
@@ -70,7 +70,7 @@ var _ = require("underscore"),
       'ID is valid': function (model) {
         assert.isNumber(model.id);
       },
-      '-> Set values': {
+      'And then we can set the values': {
         topic: function (model) {
           model.set(createHash);
           return model;
@@ -78,7 +78,7 @@ var _ = require("underscore"),
         'Last Error is null': function (model) {
           assert.isNull(model.lastError);
         },
-        '-> Save': {
+        'And then we can save the values': {
           topic: function () {
             var that = this,
               timeoutId,
@@ -86,18 +86,12 @@ var _ = require("underscore"),
                 var status = model.getStatus(),
                   K = XM.Model;
 
-                console.log("status is");
-                console.log(model.getStatusString());
-                console.log("record type is");
-                console.log(model.recordType);
                 if (status === K.READY_CLEAN) {
                   clearTimeout(timeoutId);
                   model.off('statusChange', callback);
                   that.callback(null, model);
                 }
               };
-            console.log("model 4", model);
-            console.log(model);
             model.on('statusChange', callback);
             model.save();
 
@@ -109,7 +103,29 @@ var _ = require("underscore"),
           },
           'Status is `READY_CLEAN`': function (model) {
             console.log("here am i", arguments);
-            assert.equal(model.getStatusString(), 'READY_CLEAN');
+            assert.equal(model.getStatus(), XM.Model.READY_CLEAN);
+          },
+          'And the values are as we set them': function (model) {
+            _.each(createHash, function (value, key) {
+              assert.equal(model.get(key), value);
+            });
+          },
+          'And then we can update the values': {
+            topic: function () {
+              model.set(updateHash);
+              return model;
+            },
+            'The updated values have been updated': function (model) {
+              _.each(_.extend(createHash, updateHash), function (value, key) {
+                assert.equal(model.get(key), value);
+              });
+            }//,
+
+            //'And then we can save those update values': {
+
+
+
+            //}
           }
         }
       }

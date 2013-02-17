@@ -14,7 +14,11 @@ var XVOWS = XVOWS || {};
     crud = require('../crud');
 
   var createHash = {
-    code: "Mista"
+    code: "Mista" + String(Math.random() * 10000)
+  };
+
+  var updateHash = {
+    code: "Flista" + String(Math.random() * 10000)
   };
 
   vows.describe('Contact testing').addBatch({
@@ -24,7 +28,7 @@ var XVOWS = XVOWS || {};
       },
 
 
-      'CREATE ': crud.create(model, createHash)
+      'CREATE ': crud.create(model, createHash, updateHash)
     }
   }).export(module);
 }());
