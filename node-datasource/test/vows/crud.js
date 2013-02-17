@@ -12,6 +12,7 @@ var _ = require("underscore"),
 
   var waitTime = 10000;
 
+
   /**
     Creates a working model and automatically checks state
     is `READY_NEW` and a valid `id` immediately afterward.
@@ -23,8 +24,8 @@ var _ = require("underscore"),
     @param {String|Object} Model
     @param {Object} Vows
   */
-  exports.create = function (model, vows) {
-    vows = vows || {};
+  exports.create = function (modelName, createHash) {
+    var model;
     var context = {
       topic: function () {
         var that = this,
@@ -47,10 +48,7 @@ var _ = require("underscore"),
             }
           };
 
-        if (typeof model === 'string') {
-          Klass = XM[model];
-          model = new Klass();
-        }
+        model = new XM[modelName]();
         model.on('change:id', callback);
         // Add an event handler when using a model with an AUTO...NUMBER.
         if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
@@ -69,60 +67,54 @@ var _ = require("underscore"),
       },
       'ID is valid': function (model) {
         assert.isNumber(model.id);
-      }
-    };
-
-    // Add in any other passed vows
-    _.extend(context, vows);
-    return context;
-  };
-
-  /**
-    Saves the working model and automatically checks state
-    is `READY_CLEAN` immediately afterward.
-
-    @param {String|Object} Model
-    @param {Object} Vows
-  */
-  exports.save = function (model, vows) {
-    vows = vows || {};
-    var context = {
-      topic: function () {
-        var that = this,
-          timeoutId,
-          callback = function () {
-            var status = model.getStatus(),
-              K = XM.Model;
-
-            console.log("status is");
-            console.log(model.getStatusString());
-            console.log("record type is");
-            console.log(model.recordType);
-            if (status === K.READY_CLEAN) {
-              clearTimeout(timeoutId);
-              model.off('statusChange', callback);
-              that.callback(null, model);
-            }
-          };
-        model.on('statusChange', callback);
-        model.save();
-
-        // If we don't hear back, keep going
-        timeoutId = setTimeout(function () {
-          console.log("timeout was reached");
-          that.callback(null, model);
-        }, waitTime);
       },
-      'Status is `READY_CLEAN`': function (model) {
-        assert.equal(model.getStatusString(), 'READY_CLEAN');
+      '-> Set values': {
+        topic: function (model) {
+          model.set(createHash);
+          return model;
+        },
+        'Last Error is null': function (model) {
+          assert.isNull(model.lastError);
+        },
+        '-> Save': {
+          topic: function () {
+            var that = this,
+              timeoutId,
+              callback = function () {
+                var status = model.getStatus(),
+                  K = XM.Model;
+
+                console.log("status is");
+                console.log(model.getStatusString());
+                console.log("record type is");
+                console.log(model.recordType);
+                if (status === K.READY_CLEAN) {
+                  clearTimeout(timeoutId);
+                  model.off('statusChange', callback);
+                  that.callback(null, model);
+                }
+              };
+            console.log("model 4", model);
+            console.log(model);
+            model.on('statusChange', callback);
+            model.save();
+
+            // If we don't hear back, keep going
+            timeoutId = setTimeout(function () {
+              console.log("timeout was reached");
+              that.callback(null, model);
+            }, waitTime);
+          },
+          'Status is `READY_CLEAN`': function (model) {
+            console.log("here am i", arguments);
+            assert.equal(model.getStatusString(), 'READY_CLEAN');
+          }
+        }
       }
     };
 
-    // Add in any other passed vows
-    _.extend(context, vows);
     return context;
   };
-
   /**
     Check before updating the working model that the state is `READY_CLEAN`.
 

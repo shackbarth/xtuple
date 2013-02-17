@@ -1,7 +1,7 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global XT:true, XM:true, process:true, module:true, require:true */
+/*global XT:true, XM:true, XV:true, process:true, module:true, require:true */
 
 var XVOWS = XVOWS || {};
 (function () {
@@ -10,8 +10,12 @@ var XVOWS = XVOWS || {};
   var zombieAuth = require("./zombie_auth"),
     vows = require("vows"),
     assert = require("assert"),
-    modelName = "Contact",
-    crud = require('../xvows/lib/crud');
+    model = "Contact",
+    crud = require('./crud');
+
+  var createHash = {
+    number: "TESTCONTACT"
+  };
 
   vows.describe('Contact testing').addBatch({
     'When we load up our app': {
@@ -20,21 +24,8 @@ var XVOWS = XVOWS || {};
       },
 
 
-      'CREATE ': crud.create(modelName/*, {
-var XVOWS = XVOWS || {};
-        '-> Set values': {
-          topic: function (model) {
-            model.set(createHash);
-            return model;
-          },
-          'Last Error is null': function (model) {
-            assert.isNull(model.lastError);
-          },
-          '-> Save': XVOWS.save(model)
-        }
-      }*/)
-
-    /*  'We should be able to create a new contact': {
+      'CREATE ': crud.create(model, createHash),
+      'We should be able to create a new contact': {
         topic: function () {
           return new XM.Contact(null, {isNew: true});
         },
@@ -42,15 +33,15 @@ var XVOWS = XVOWS || {};
           assert.isTrue(topic.isReadOnly("type"));
         },
         'and whose business logic is such-and-such': function (topic) {
-          assert.equal (topic.businessLogic, undefined);//"such-and-such");
+          assert.equal(topic.businessLogic, undefined);//"such-and-such");
         },
         'and we can create a workspace to front it': function (topic) {
           var workspace = new XV.ContactWorkspace();
           workspace.setValue(topic);
-          assert.equal (workspace.getValue().recordType, 'XM.Contact');
+          assert.equal(workspace.getValue().recordType, 'XM.Contact');
         }
-      },
-      */
+      }
+
       // run with command vows and not node for it to exit upon completion
       //teardown : function () {
         //console.log("teardown", arguments);
