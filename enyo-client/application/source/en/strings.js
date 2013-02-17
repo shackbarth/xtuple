@@ -347,6 +347,7 @@ var lang = XT.stringsFor("en_US", {
   "_required": "Required",
   "_qualifier": "Qualifier",
   "_quantity": "Quantity",
+  "_quote": "Quote",
   "_quotes": "Quotes",
   "_recurrences": "Recurrences",
   "_recurring": "Recurring",

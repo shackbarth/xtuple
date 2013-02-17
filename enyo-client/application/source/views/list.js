@@ -880,6 +880,64 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.ProspectRelation", "XV.ProspectList");
+  
+  // ..........................................................
+  // QUOTE
+  //
+
+  enyo.kind({
+    name: "XV.QuoteList",
+    kind: "XV.List",
+    label: "_quotes".loc(),
+    collection: "XM.QuoteRelationCollection",
+    parameterWidget: "XV.QuoteListParameters",
+    query: {orderBy: [
+      {attribute: 'priorityOrder'},
+      {attribute: 'dueDate'},
+      {attribute: 'name'},
+      {attribute: 'id', numeric: true}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "name", isKey: true},
+              {kind: "XV.ListAttr", attr: "dueDate", fit: true,
+                formatter: "formatDueDate", placeholder: "_noDueDate".loc(),
+                classes: "right"}
+            ]},
+            {kind: "XV.ListAttr", attr: "description",
+              placeholder: "_noDescription".loc()}
+          ]},
+          {kind: "XV.ListColumn", classes: "second",
+            components: [
+            {kind: "XV.ListAttr", attr: "account.name", classes: "italic",
+              placeholder: "_noAccountName".loc()},
+            {kind: "XV.ListAttr", attr: "contact.name"}
+          ]},
+          {kind: "XV.ListColumn", classes: "third",
+            components: [
+            {kind: "XV.ListAttr", attr: "getToDoStatusString"},
+            {kind: "XV.ListAttr", attr: "owner.username"}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "priority.name",
+              placeholder: "_noPriority".loc()}
+          ]}
+        ]}
+      ]}
+    ],
+    formatDueDate: function (value, view, model) {
+      var today = new Date(),
+        isLate = (model.get('isActive') &&
+          XT.date.compareDate(value, today) < 1);
+      view.addRemoveClass("error", isLate);
+      return value;
+    }
+  });
+
+  XV.registerModelList("XM.QuoteRelation", "XV.QuoteList");
 
   // ..........................................................
   // TO DO
