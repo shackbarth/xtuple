@@ -3,19 +3,38 @@
   newcap:true, noarg:true, undef:true */
 /*global XT:true, XM:true, process:true, module:true, require:true */
 
+var XVOWS = XVOWS || {};
 (function () {
   "use strict";
 
   var zombieAuth = require("./zombie_auth"),
     vows = require("vows"),
-    assert = require("assert");
+    assert = require("assert"),
+    modelName = "Contact",
+    crud = require('../xvows/lib/crud');
 
   vows.describe('Contact testing').addBatch({
     'When we load up our app': {
       topic: function () {
         zombieAuth.loadApp('admin', 'somenew', undefined, this.callback);
       },
-      'We should be able to create a new contact': {
+
+
+      'CREATE ': crud.create(modelName/*, {
+var XVOWS = XVOWS || {};
+        '-> Set values': {
+          topic: function (model) {
+            model.set(createHash);
+            return model;
+          },
+          'Last Error is null': function (model) {
+            assert.isNull(model.lastError);
+          },
+          '-> Save': XVOWS.save(model)
+        }
+      }*/)
+
+    /*  'We should be able to create a new contact': {
         topic: function () {
           return new XM.Contact(null, {isNew: true});
         },
@@ -31,6 +50,7 @@
           assert.equal (workspace.getValue().recordType, 'XM.Contact');
         }
       },
+      */
       // run with command vows and not node for it to exit upon completion
       //teardown : function () {
         //console.log("teardown", arguments);

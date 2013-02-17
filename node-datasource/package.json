@@ -27,8 +27,8 @@
     "request":"2.12.0"
   },
   "devDependencies": {
-    "zombie":"1.4.1"
-    "vows":"0.7.0",
+    "zombie":"1.4.1",
+    "vows":"0.7.0"
   },
   "optionalDependencies": {},
   "engines": {
