@@ -25,6 +25,7 @@ var XVOWS = XVOWS || {};
 
 
       'CREATE ': crud.create(model, createHash),
+
       'We should be able to create a new contact': {
         topic: function () {
           return new XM.Contact(null, {isNew: true});

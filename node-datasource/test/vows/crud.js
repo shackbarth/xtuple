@@ -49,6 +49,8 @@ var _ = require("underscore"),
           };
 
         model = new XM[modelName]();
+        console.log("ra", model.requiredAttributes);
+
         model.on('change:id', callback);
         // Add an event handler when using a model with an AUTO...NUMBER.
         if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
