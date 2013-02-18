@@ -6,7 +6,7 @@ trailing:true white:true*/
 (function () {
 
   var hash;
-  
+
   /**
     Used to notify change of account to contact widget if both exist on
     the same workspace.
@@ -27,7 +27,7 @@ trailing:true white:true*/
       }
     }
   };
-  
+
   /**
     Handles Address change with prompts.
   */
@@ -291,7 +291,7 @@ trailing:true white:true*/
   // ..........................................................
   // CONTACT
   //
-  
+
   hash = {
     name: "XV.ContactWorkspace",
     kind: "XV.Workspace",
@@ -342,7 +342,7 @@ trailing:true white:true*/
 
   hash = enyo.mixin(hash, XV.WorkspaceAddressMixin);
   enyo.kind(hash);
-  
+
   XV.registerModelWorkspace("XM.ContactRelation", "XV.ContactWorkspace");
   XV.registerModelWorkspace("XM.ContactListItem", "XV.ContactWorkspace");
 
@@ -402,7 +402,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.Currency", "XV.CurrencyWorkspace");
-  
+
   // ..........................................................
   // CUSTOMER
   //
@@ -1066,7 +1066,7 @@ trailing:true white:true*/
 
   XV.registerModelWorkspace("XM.ProjectTask", "XV.ProjectTaskWorkspace");
   XV.registerModelWorkspace("XM.ProjectTaskListItem", "XV.ProjectTaskWorkspace");
-  
+
   // ..........................................................
   // PROSPECT
   //
@@ -1144,10 +1144,36 @@ trailing:true white:true*/
       }
     }
   });
-  
+
   XV.registerModelWorkspace("XM.ProspectRelation", "XV.ProspectWorkspace");
   XV.registerModelWorkspace("XM.ProspectListItem", "XV.ProspectWorkspace");
-  
+
+  // ..........................................................
+  // QUOTE
+  //
+
+  enyo.kind({
+    name: "XV.QuoteWorkspace",
+    kind: "XV.Workspace",
+    title: "_quote".loc(),
+    model: "XM.Quote",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.QuoteRelation", "XV.QuoteWorkspace");
+  XV.registerModelWorkspace("XM.QuoteListItem", "XV.QuoteWorkspace");
+
   // ..........................................................
   // SALES REP
   //
@@ -1175,7 +1201,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.SalesRep", "XV.SalesRepWorkspace");
-  
+
 
   // ..........................................................
   // STATE
@@ -1203,7 +1229,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.State", "XV.StateWorkspace");
-  
+
   // ..........................................................
   // TAX AUTHORITY
   //
@@ -1236,7 +1262,7 @@ trailing:true white:true*/
       ]}
     ]
   };
-  
+
   hash = enyo.mixin(hash, XV.WorkspaceAddressMixin);
   enyo.kind(hash);
 
@@ -1445,11 +1471,11 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.UserAccountRole", "XV.UserAccountRoleWorkspace");
   XV.registerModelWorkspace("XM.UserAccountRoleRelation", "XV.UserAccountRoleWorkspace");
   XV.registerModelWorkspace("XM.UserAccountRoleListItem", "XV.UserAccountRoleWorkspace");
-  
+
   // ..........................................................
   // CHARACTERISTIC
   //
-  
+
   enyo.kind({
     name: "XV.CharacteristicWorkspace",
     kind: "XV.Workspace",
@@ -1497,7 +1523,7 @@ trailing:true white:true*/
         this.typeValueChanged(model);
       }
     },
-    
+
     /**
       Function to determine visibility of "advanced" and "options" panels based
         on the characteristicType

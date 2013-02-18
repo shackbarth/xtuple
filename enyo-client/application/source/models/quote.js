@@ -276,7 +276,7 @@ white:true*/
   XM.QuoteListItemCollection = XM.Collection.extend({
     /** @scope XM.QuoteListItemCollection.prototype */
 
-    model: XM.Quote
+    model: XM.QuoteListItem
 
   });
   

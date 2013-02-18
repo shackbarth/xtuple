@@ -450,9 +450,11 @@ var lang = XT.stringsFor("en_US", {
   "_noNumber": "No Number",
   "_noPhone": "No Phone",
   "_noPriority": "No Priority",
+  "_noPurchaseOrder": "No Purchase Order Number",
   "_noSalesRep": "No Sales Rep",
   "_noSeverity": "No Severity",
   "_noStage": "No Stage",
+  "_noStatus": "No Status",
   "_noTerms": "No Terms",
   "_noType": "No Type",
 
