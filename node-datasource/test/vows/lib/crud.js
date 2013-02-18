@@ -37,12 +37,12 @@ var _ = require("underscore"),
                 clearTimeout(timeoutId);
                 model.off('change:' + model.documentKey, initCallback);
                 model.off('change:id', initCallback);
-                that.callback(null, model);
+                that.callback(model);
               }
             } else {
               clearTimeout(timeoutId);
               model.off('change:id', initCallback);
-              that.callback(null, model);
+              that.callback(model);
             }
           };
 
@@ -73,52 +73,66 @@ var _ = require("underscore"),
           return model;
         },
         'Last Error is null': function (model) {
+          if (model.lastError) {
+            console.log("Error setting model:", JSON.stringify(model.lastError));
+          }
           assert.isNull(model.lastError);
         },
         'And then we can save the values': {
           topic: function () {
             var that = this,
-              success = function () {
-                console.log("Success saving");
-                that.callback(null, model);
+              saveSuccess = function (model) {
+                that.callback(model);
               },
-              error = function (error) {
-                console.log("Error saving");
-                that.callback(null, error);
+              saveError = function (model, error) {
+                that.callback(model, error);
               };
 
-            model.save(null, {success: success, error: error});
+            model.save(null, {success: saveSuccess, error: saveError});
           },
-          'Status is `READY_CLEAN`': function (model) {
-            assert.equal(model.getStatusString(), "READY_CLEAN");
+          'There was no error saving': function (model, error) {
+            if (error) {
+              console.log("Error saving model:", JSON.stringify(error));
+            }
+            assert.isUndefined(error && JSON.stringify(error));
           },
-          'And the values are as we set them': function (model) {
+          'Status is `READY_CLEAN`': function (model, error) {
+            assert.equal("READY_CLEAN", model.getStatusString());
+          },
+          'And the values are as we set them': function (model, error) {
             _.each(createHash, function (value, key) {
-              assert.equal(model.get(key), value);
+              if (typeof (model.get(key)) === 'object') {
+                assert.equal(model.get(key).id, value);
+              } else {
+                assert.equal(model.get(key), value);
+              }
             });
           },
-          'And then we can update the values': {
-            topic: function () {
+         'And then we can update the values': {
+            topic: function (foo, bar) {
               model.set(updateHash);
               return model;
             },
-            'The updated values have been updated': function (model) {
+            'The updated values have been updated': function (model, err) {
               _.each(_.extend(createHash, updateHash), function (value, key) {
-                assert.equal(model.get(key), value);
+                if (typeof (model.get(key)) === 'object') {
+                  assert.equal(model.get(key).id, value);
+                } else {
+                  assert.equal(model.get(key), value);
+                }
               });
             },
-
-            'And then we can save those update values': {
+            'And then we can save those updated values': {
               topic: function () {
                 var that = this,
-                  success = function () {
-                    that.callback(null, model);
+                  updateSuccess = function () {
+                    that.callback(model);
                   },
-                  error = function (error) {
-                    that.callback(null, error);
+                  updateError = function (model, error) {
+                    that.callback(error);
                   };
 
-                model.save(null, {success: success, error: error});
+                model.save(null, {success: updateSuccess, error: updateError});
               },
               'Status is `READY_CLEAN`': function (model) {
                 assert.equal(model.getStatusString(), "READY_CLEAN");
@@ -127,10 +141,10 @@ var _ = require("underscore"),
                 topic: function () {
                   var that = this,
                     destroySuccess = function (model) {
-                      that.callback(null, model);
+                      that.callback(model);
                     },
                     destroyError = function (error) {
-                      that.callback(null, error);
+                      that.callback(error);
                     };
 
                   model.destroy({success: destroySuccess, error: destroyError});
@@ -139,8 +153,8 @@ var _ = require("underscore"),
                   assert.equal(model.getStatusString(), 'DESTROYED_CLEAN');
                 }
               }
-            }
-          }
+            } // end save of update
+          } // end update
         }
       }
     };

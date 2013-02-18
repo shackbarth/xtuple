@@ -14,7 +14,7 @@
 
   var createHash = {
     name: "TESTCUSTOMER",
-    number: "HELLO",
+    number: "HELLO" + Math.random(),
     customerType: 19,
     terms: 42,
     salesRep: 29,
@@ -29,8 +29,7 @@
     isFreeFormBillto: false,
     usesPurchaseOrders: false,
     autoUpdateStatus: false,
-    autoHoldOrders: false,
-    preferredSite: 35
+    autoHoldOrders: false
   };
 
   var updateHash = {
