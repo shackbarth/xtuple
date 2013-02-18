@@ -8,7 +8,8 @@ XM = {};
 XV = {};
 
 var assert = require('assert'),
-  zombie = require('zombie');
+  zombie = require('zombie'),
+  loginData = require('../../shared/loginData');
 
 
 /**
@@ -29,11 +30,10 @@ Usage:
     if (typeof arguments[0] === 'function') {
       // if the sole parameter is the callback, then we get the auth data from a file
       callback = arguments[0];
-      username = "admin";
-      password = "somenew";
-      host = "https://localhost:443";
+      username = loginData.data.username;
+      password = loginData.data.pwd;
+      host = loginData.data.webaddress || "https://localhost:443";
     }
-
     zombie.visit(host, {debug: false}, function (e, browser) {
       //
       // This is the login screen

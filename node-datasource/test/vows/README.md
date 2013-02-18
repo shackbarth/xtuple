@@ -2,6 +2,11 @@ Zombie Vows
 
 We can use vows with zombie to test our models, kinds, and routes programmatically.
 
+Login credentials should stored in the gitignored file 
+/path/to/xtuple/node-datasource/test/shared/loginData.js
+
+You'll want to copy the sample in the same directory and update the values appropriately.
+
 To run a test, do:
   
   cd /path/to/xtuple/node-datasource/test

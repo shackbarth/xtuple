@@ -14,7 +14,7 @@ var XVOWS = XVOWS || {};
   vows.describe('The NumberWidget kind').addBatch({
     'When we load up our app': {
       topic: function () {
-        zombieAuth.loadApp('admin', 'somenew', undefined, this.callback);
+        zombieAuth.loadApp(this.callback);
       },
       'we can create a NumberWidget': {
         topic: function () {
