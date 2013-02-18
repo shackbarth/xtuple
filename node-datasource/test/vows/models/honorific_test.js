@@ -35,7 +35,6 @@ var XVOWS = XVOWS || {};
           // This is trivial I know but there's not much here to test
           assert.equal(topic.recordType, "XM.Honorific");
         }
-
       }
     }
   }).export(module);
