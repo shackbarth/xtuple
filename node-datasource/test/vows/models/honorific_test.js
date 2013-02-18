@@ -7,11 +7,11 @@ var XVOWS = XVOWS || {};
 (function () {
   "use strict";
 
-  var zombieAuth = require("../zombie_auth"),
+  var zombieAuth = require("../lib/zombie_auth"),
     vows = require("vows"),
     assert = require("assert"),
     model = "Honorific",
-    crud = require('../crud');
+    crud = require('../lib/crud');
 
   var createHash = {
     code: "Mista" + String(Math.random() * 10000)
