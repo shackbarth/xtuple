@@ -23,7 +23,7 @@ var _ = require("underscore"),
     @param {createHash} Properties to pass into the creation of the model
     @param {updateHash} Properties to test updating
   */
-  exports.create = function (modelName, createHash, updateHash) {
+  exports.testCrudOperations = function (modelName, createHash, updateHash) {
     var model;
     var context = {
       topic: function () {

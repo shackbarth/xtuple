@@ -7,9 +7,9 @@ var XVOWS = XVOWS || {};
 (function () {
   "use strict";
 
-  var zombieAuth = require("../lib/zombie_auth"),
-    vows = require("vows"),
+  var vows = require("vows"),
     assert = require("assert"),
+    zombieAuth = require("../lib/zombie_auth"),
     crud = require('../lib/crud');
 
   var createHash = {
@@ -25,7 +25,7 @@ var XVOWS = XVOWS || {};
       topic: function () {
         zombieAuth.loadApp('admin', 'somenew', undefined, this.callback);
       },
-      'We can run the CRUD tests for Honorific': crud.create("Honorific", createHash, updateHash),
+      'We can run the CRUD tests for Honorific': crud.testCrudOperations("Honorific", createHash, updateHash),
 
       'We can test business logic for Honorific': {
         topic: function () {
