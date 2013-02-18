@@ -15,6 +15,7 @@ var XVOWS = XVOWS || {};
   // TODO: flesh these out
   var createHash = {
     number: "TESTCONTACT",
+    name: "TESTCONTACTNAME",
     address: 3
   };
 
@@ -27,9 +28,11 @@ var XVOWS = XVOWS || {};
       topic: function () {
         zombieAuth.loadApp(this.callback);
       },
-      'We can run the CRUD tests for Honorific': crud.testCrudOperations("Contact", createHash, updateHash),
 
-      'We can test business logic for Honorific': {
+      // TODO: this is not working yet
+      'We can run the CRUD tests for Contact': crud.testCrudOperations("Contact", createHash, updateHash),
+
+      'We can test business logic for Contact': {
         topic: function () {
           return new XM.Contact();
         },
