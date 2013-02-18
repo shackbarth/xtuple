@@ -30,28 +30,26 @@ var _ = require("underscore"),
       topic: function () {
         var that = this,
           timeoutId,
-          Klass,
           auto_regex = XM.Document.AUTO_NUMBER + "|" + XM.Document.AUTO_OVERRIDE_NUMBER,
-          callback = function (model, value) {
+          initCallback = function (model, value) {
             if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
               // Check that the AUTO...NUMBER property has been set.
               if (model.get(model.documentKey) && model.id) {
                 clearTimeout(timeoutId);
-                model.off('change:' + model.documentKey, callback);
-                model.off('change:id', callback);
+                model.off('change:' + model.documentKey, initCallback);
+                model.off('change:id', initCallback);
                 that.callback(null, model);
               }
             } else {
               clearTimeout(timeoutId);
-              model.off('change:id', callback);
+              model.off('change:id', initCallback);
               that.callback(null, model);
             }
           };
 
         model = new XM[modelName]();
-        console.log("ra", model.requiredAttributes);
 
-        model.on('change:id', callback);
+        model.on('change:id', initCallback);
         // Add an event handler when using a model with an AUTO...NUMBER.
         if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
           model.on('change:' + model.documentKey, callback);
@@ -81,29 +79,19 @@ var _ = require("underscore"),
         'And then we can save the values': {
           topic: function () {
             var that = this,
-              timeoutId,
-              callback = function () {
-                var status = model.getStatus(),
-                  K = XM.Model;
-
-                if (status === K.READY_CLEAN) {
-                  clearTimeout(timeoutId);
-                  model.off('statusChange', callback);
-                  that.callback(null, model);
-                }
+              success = function () {
+                console.log("Success saving");
+                that.callback(null, model);
+              },
+              error = function (error) {
+                console.log("Error saving");
+                that.callback(null, error);
               };
-            model.on('statusChange', callback);
-            model.save();
 
-            // If we don't hear back, keep going
-            timeoutId = setTimeout(function () {
-              console.log("timeout was reached");
-              that.callback(null, model);
-            }, waitTime);
+            model.save(null, {success: success, error: error});
           },
           'Status is `READY_CLEAN`': function (model) {
-            console.log("here am i", arguments);
-            assert.equal(model.getStatus(), XM.Model.READY_CLEAN);
+            assert.equal(model.getStatusString(), "READY_CLEAN");
           },
           'And the values are as we set them': function (model) {
             _.each(createHash, function (value, key) {
@@ -119,13 +107,43 @@ var _ = require("underscore"),
               _.each(_.extend(createHash, updateHash), function (value, key) {
                 assert.equal(model.get(key), value);
               });
-            }//,
+            },
 
-            //'And then we can save those update values': {
+            'And then we can save those update values': {
+              topic: function () {
+                var that = this,
+                  success = function () {
+                    console.log("Success saving");
+                    that.callback(null, model);
+                  },
+                  error = function (error) {
+                    console.log("Error saving");
+                    that.callback(null, error);
+                  };
 
+                model.save(null, {success: success, error: error});
+              },
+              'Status is `READY_CLEAN`': function (model) {
+                assert.equal(model.getStatusString(), "READY_CLEAN");
+              },
+              'And then we can delete the model': {
+                topic: function () {
+                  var that = this,
+                    destroySuccess = function (model) {
+                      that.callback(null, model);
+                    },
+                    destroyError = function (error) {
+                      console.log("Destroy error");
+                      that.callback(null, error);
+                    };
 
-
-            //}
+                  model.destroy({success: destroySuccess, error: destroyError});
+                },
+                'Status is `DESTROYED_CLEAN`': function (model) {
+                  assert.equal(model.getStatusString(), 'DESTROYED_CLEAN');
+                }
+              }
+            }
           }
         }
       }

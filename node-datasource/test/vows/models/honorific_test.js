@@ -14,11 +14,11 @@ var XVOWS = XVOWS || {};
     crud = require('../lib/crud');
 
   var createHash = {
-    code: "Mista" + String(Math.random() * 10000)
+    code: "Mistar"
   };
 
   var updateHash = {
-    code: "Flista" + String(Math.random() * 10000)
+    code: "Flistar"
   };
 
   vows.describe('Contact testing').addBatch({
