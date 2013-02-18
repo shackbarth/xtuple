@@ -10,7 +10,6 @@ var XVOWS = XVOWS || {};
   var zombieAuth = require("../lib/zombie_auth"),
     vows = require("vows"),
     assert = require("assert"),
-    model = "Honorific",
     crud = require('../lib/crud');
 
   var createHash = {
@@ -21,18 +20,20 @@ var XVOWS = XVOWS || {};
     code: "Dame"
   };
 
-  vows.describe('Contact testing').addBatch({
+  vows.describe('Honorific testing').addBatch({
     'When we load up our app': {
       topic: function () {
         zombieAuth.loadApp('admin', 'somenew', undefined, this.callback);
       },
-      'We can run the CRUD tests': crud.create(model, createHash, updateHash),
-      'We can test business logic': {
+      'We can run the CRUD tests for Honorific': crud.create("Honorific", createHash, updateHash),
+
+      'We can test business logic for Honorific': {
         topic: function () {
           return new XM.Honorific();
         },
         'The record type is XM.Honorific': function (topic) {
-          assert.equal(topic.recordType, "Honey");
+          // This is trivial I know but there's not much here to test
+          assert.equal(topic.recordType, "XM.Honorific");
         }
 
       }

@@ -12,10 +12,8 @@ var _ = require("underscore"),
 
   var waitTime = 10000;
 
-
   /**
-    Creates a working model and automatically checks state
-    is `READY_NEW` and a valid `id` immediately afterward.
+    Performs all the CRUD tests on the model.
 
     Note: This function assumes the `id` is fetched automatically.
     For models with manually created ids such as 'XM.UserAccount',
@@ -114,11 +112,9 @@ var _ = require("underscore"),
               topic: function () {
                 var that = this,
                   success = function () {
-                    console.log("Success saving");
                     that.callback(null, model);
                   },
                   error = function (error) {
-                    console.log("Error saving");
                     that.callback(null, error);
                   };
 
@@ -134,7 +130,6 @@ var _ = require("underscore"),
                       that.callback(null, model);
                     },
                     destroyError = function (error) {
-                      console.log("Destroy error");
                       that.callback(null, error);
                     };
 
