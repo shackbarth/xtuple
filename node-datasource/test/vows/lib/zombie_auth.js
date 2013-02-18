@@ -72,7 +72,7 @@ Usage:
               clearTimeout(timeout);
 
               // give control back to whoever called us
-              callback();
+              callback(browser);
             }
           }, 100);
         });
