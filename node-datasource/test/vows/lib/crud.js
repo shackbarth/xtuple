@@ -21,8 +21,9 @@ var _ = require("underscore"),
     For models with manually created ids such as 'XM.UserAccount',
     create a topic manually.
 
-    @param {String|Object} Model
-    @param {Object} Vows
+    @param {String} modelName
+    @param {createHash} Properties to pass into the creation of the model
+    @param {updateHash} Properties to test updating
   */
   exports.create = function (modelName, createHash, updateHash) {
     var model;
@@ -148,68 +149,6 @@ var _ = require("underscore"),
         }
       }
     };
-
     return context;
   };
-  /**
-    Check before updating the working model that the state is `READY_CLEAN`.
-
-    @param {String|Object} Model
-    @param {Object} Vows
-  */
-  exports.update = function (model, vows) {
-    vows = vows || {};
-    var context = {
-      topic: function () {
-        return model;
-      },
-      'Status is `READY_CLEAN`': function (model) {
-        assert.equal(model.getStatusString(), 'READY_CLEAN');
-      }
-    };
-
-    // Add in any other passed vows
-    _.extend(context, vows);
-    return context;
-  },
-
-  /**
-    Destorys the working model and automatically checks state
-    is `DESTROYED_CLEAN` immediately afterward.
-
-    @param {Object} Vows
-  */
-  exports.destroy = function (model, vows, obj) {
-    vows = vows || {};
-    var context = {
-      topic: function () {
-        var that = this,
-          timeoutId,
-          callback = function () {
-            var status = model.getStatus(),
-              K = XM.Model;
-            if (status === K.DESTROYED_CLEAN) {
-              clearTimeout(timeoutId);
-              model.off('statusChange', callback);
-              that.callback(null, model);
-            }
-          };
-        model.on('statusChange', callback);
-        model.destroy();
-
-        // If we don't hear back, keep going
-        timeoutId = setTimeout(function () {
-          console.log("timeout was reached");
-          that.callback(null, model);
-        }, waitTime);
-      },
-      'Status is `DESTROYED_CLEAN`': function (model) {
-        assert.equal(model.getStatusString(), 'DESTROYED_CLEAN');
-      }
-    };
-    // Add in any other passed vows
-    _.extend(context, vows);
-    return context;
-  };
-
 }());

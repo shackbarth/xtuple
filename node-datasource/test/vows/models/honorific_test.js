@@ -14,11 +14,11 @@ var XVOWS = XVOWS || {};
     crud = require('../lib/crud');
 
   var createHash = {
-    code: "Mistar"
+    code: "Herr"
   };
 
   var updateHash = {
-    code: "Flistar"
+    code: "Dame"
   };
 
   vows.describe('Contact testing').addBatch({
@@ -26,9 +26,16 @@ var XVOWS = XVOWS || {};
       topic: function () {
         zombieAuth.loadApp('admin', 'somenew', undefined, this.callback);
       },
+      'We can run the CRUD tests': crud.create(model, createHash, updateHash),
+      'We can test business logic': {
+        topic: function () {
+          return new XM.Honorific();
+        },
+        'The record type is XM.Honorific': function (topic) {
+          assert.equal(topic.recordType, "Honey");
+        }
 
-
-      'CREATE ': crud.create(model, createHash, updateHash)
+      }
     }
   }).export(module);
 }());
