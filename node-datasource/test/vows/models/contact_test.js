@@ -7,14 +7,19 @@ var XVOWS = XVOWS || {};
 (function () {
   "use strict";
 
-  var zombieAuth = require("./zombie_auth"),
-    vows = require("vows"),
+  var vows = require("vows"),
     assert = require("assert"),
-    model = "Contact",
-    crud = require('./crud');
+    zombieAuth = require("../lib/zombie_auth"),
+    crud = require('../lib/crud');
 
+  // TODO: flesh these out
   var createHash = {
-    number: "TESTCONTACT"
+    number: "TESTCONTACT",
+    address: 3
+  };
+
+  var updateHash = {
+    number: "TESTEDCONTACT"
   };
 
   vows.describe('Contact testing').addBatch({
@@ -22,19 +27,18 @@ var XVOWS = XVOWS || {};
       topic: function () {
         zombieAuth.loadApp('admin', 'somenew', undefined, this.callback);
       },
+      'We can run the CRUD tests for Honorific': crud.testCrudOperations("Contact", createHash, updateHash),
 
-
-      'CREATE ': crud.create(model, createHash),
-
-      'We should be able to create a new contact': {
+      'We can test business logic for Honorific': {
         topic: function () {
-          return new XM.Contact(null, {isNew: true});
+          return new XM.Contact();
+        },
+        'The record type is XM.Contact': function (topic) {
+          // TODO: test business logic for real
+          assert.equal(topic.recordType, "XM.Contact");
         },
         'whose type is read-only': function (topic) {
           assert.isTrue(topic.isReadOnly("type"));
-        },
-        'and whose business logic is such-and-such': function (topic) {
-          assert.equal(topic.businessLogic, undefined);//"such-and-such");
         },
         'and we can create a workspace to front it': function (topic) {
           var workspace = new XV.ContactWorkspace();
@@ -42,11 +46,6 @@ var XVOWS = XVOWS || {};
           assert.equal(workspace.getValue().recordType, 'XM.Contact');
         }
       }
-
-      // run with command vows and not node for it to exit upon completion
-      //teardown : function () {
-        //console.log("teardown", arguments);
-      //}
     }
   }).export(module);
 }());

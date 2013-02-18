@@ -51,7 +51,7 @@ var _ = require("underscore"),
         model.on('change:id', initCallback);
         // Add an event handler when using a model with an AUTO...NUMBER.
         if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
-          model.on('change:' + model.documentKey, callback);
+          model.on('change:' + model.documentKey, initCallback);
         }
         model.initialize(null, {isNew: true});
 
