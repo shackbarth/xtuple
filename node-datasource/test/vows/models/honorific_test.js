@@ -23,7 +23,7 @@ var XVOWS = XVOWS || {};
   vows.describe('Honorific testing').addBatch({
     'When we load up our app': {
       topic: function () {
-        zombieAuth.loadApp('admin', 'somenew', undefined, this.callback);
+        zombieAuth.loadApp(this.callback);
       },
       'We can run the CRUD tests for Honorific': crud.testCrudOperations("Honorific", createHash, updateHash),
 

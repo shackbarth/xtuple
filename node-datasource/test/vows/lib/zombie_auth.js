@@ -26,9 +26,15 @@ Usage:
 
   // TODO: we should be able to get the creds from a gitignored json file
   var loadApp = exports.loadApp = function (username, password, host, callback) {
-    var siteRoot = host || 'https://localhost:443';
+    if (typeof arguments[0] === 'function') {
+      // if the sole parameter is the callback, then we get the auth data from a file
+      callback = arguments[0];
+      username = "admin";
+      password = "somenew";
+      host = "https://localhost:443";
+    }
 
-    zombie.visit(siteRoot, {debug: false}, function (e, browser) {
+    zombie.visit(host, {debug: false}, function (e, browser) {
       //
       // This is the login screen
       //
