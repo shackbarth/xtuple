@@ -11,6 +11,9 @@ var XVOWS = XVOWS || {};
     vows = require("vows"),
     assert = require("assert");
 
+  /**
+    Test the number widget.
+   */
   vows.describe('The NumberWidget kind').addBatch({
     'When we load up our app': {
       topic: function () {

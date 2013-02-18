@@ -20,6 +20,9 @@ var XVOWS = XVOWS || {};
     code: "Dame"
   };
 
+  /**
+    Test the Honorific model
+   */
   vows.describe('Honorific testing').addBatch({
     'When we load up our app': {
       topic: function () {

@@ -15,6 +15,21 @@ var _ = require("underscore"),
   /**
     Performs all the CRUD tests on the model.
 
+    The way this function is included in all of the model tests
+    looks a little magical, because of the way that vows obfuscates
+    its inner workings to make the test suite not look very javascripty.
+
+    This function returns the major inner component of a vow, which is
+    just an object with one attribute named topic and other attributes
+    whose values are functions to be called after the topic is run.
+
+    Vows has some problems with dealing with errors, which is why it's
+    recommended that you run it with the --no-errors flag. This code
+    will not work without it if there are any problems with the models
+    under test. Even with this flag, vows sometimes doesn't make it to
+    the end of the tests and hangs without providing helpful error
+    messages. This should be fixed.
+
     Note: This function assumes the `id` is fetched automatically.
     For models with manually created ids such as 'XM.UserAccount',
     create a topic manually.

@@ -36,12 +36,17 @@
     name: "UPDATETESTCUSTOMER"
   };
 
+  /**
+    Test the Customer model
+   */
   vows.describe('Customer testing').addBatch({
     'When we load up our app': {
       topic: function () {
         zombieAuth.loadApp(this.callback);
       },
       'We can run the CRUD tests for Customer': crud.testCrudOperations("Customer", createHash, updateHash)
+
+      // XXX look at honorific test to see how business logic can also be tested alongside CRUD operations
     }
   }).export(module);
 }());
