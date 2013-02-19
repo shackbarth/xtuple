@@ -19,7 +19,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       },
       'a GET to the export route': {
         topic: function (browser) {
-          var url = "https://localhost:443/export?details={%22requestType%22:%22fetch%22,%22query%22:{%22recordType%22:%22XM.Locale%22}}";
+          var url = "https://localhost:443/export?details={%22query%22:{%22recordType%22:%22XM.Locale%22}}";
           browser.visit(url, {debug: false}, this.callback);
         },
         'should return ok': function (err, browser, status) {
