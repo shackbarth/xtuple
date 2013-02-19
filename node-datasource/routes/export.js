@@ -110,27 +110,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   // export is a reserved word
   exports.exxport = function (req, res) {
-    var requestDetails = req.query.details,
+    var requestDetails = JSON.parse(req.query.details),
       contentType = 'text/csv',
       query;
 
-    requestDetails = JSON.parse(requestDetails);
-    requestDetails.username = req.session.passport.user.username;
-    requestDetails = JSON.stringify(requestDetails);
-    query = "select xt.fetch('%@')".f(requestDetails);
-
-    queryForData(req.session, query, function (err, result) {
-      if (err) {
-        res.send({isError: true, message: "Error querying database"});
+    queryForData(req.session, requestDetails, function (result) {
+      if (result.isError) {
+        res.send(result);
       } else {
         var resultAsCsv,
           filename = "export",
-          queryObject,
           recordType;
         try {
           // try to name the file after the record type
-          queryObject = JSON.parse(requestDetails);
-          recordType = queryObject.query.recordType;
+          recordType = requestDetails.query.recordType;
           // suffix() would be better than substring() but doesn't exist here yet
           filename = recordType.substring(3).replace("ListItem", "Export");
 
@@ -138,7 +131,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           // "export" will have to do.
         }
 
-        resultAsCsv = jsonToCsv(JSON.parse(result.rows[0].fetch));
+        resultAsCsv = jsonToCsv(result.data);
         res.attachment(filename + ".csv");
         res.send(resultAsCsv);
       }
