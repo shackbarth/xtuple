@@ -244,20 +244,6 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.QuoteToDo = XM.Model.extend({
-    /** @scope XM.QuoteToDo.prototype */
-
-    recordType: 'XM.QuoteToDo',
-
-    isDocumentAssignment: true
-
-  });
-  
-  /**
-    @class
-
-    @extends XM.Model
-  */
   XM.QuoteCustomer = XM.Model.extend({
     /** @scope XM.QuoteCustomer.prototype */
 
