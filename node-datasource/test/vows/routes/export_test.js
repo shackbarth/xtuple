@@ -29,17 +29,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           assert.notEqual(browser.text("title"), "xTuple Login");
         },
         'should return CSV data': function (err, browser, status) {
-          console.log(browser.text("body"));
           var body = browser.text("body"),
-            bodyLines = body.split(",");
+            bodyLines = body.split(","),
+            jsonError = "We should not be able to parse the result as JSON!";
 
           try {
             var dummy = JSON.parse(body);
             // I'm sure there's a better assert method for this.
-            assert.equal("", "Fail! We should see CSV instead of a JSON object");
           } catch (dummyError) {
-
+            jsonError = dummyError;
           }
+          assert.isFunction(jsonError);
 
           assert.ok(bodyLines.length > 10);
         }
