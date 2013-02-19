@@ -31,26 +31,10 @@
         }
       },
       {
-        "name": "customer",
-        "toOne": {
-          "isNested": true,
-          "type": "CustomerProspectRelation",
-          "column": "quhead_cust_id"
-        }
-      },
-      {
         "name": "quoteDate",
         "attr": {
           "type": "Date",
           "column": "quhead_quotedate"
-        }
-      },
-      {
-        "name": "shipto",
-        "toOne": {
-          "isNested": true,
-          "type": "CustomerShiptoRelation",
-          "column": "quhead_shipto_id"
         }
       },
       {
@@ -339,14 +323,6 @@
         "attr": {
           "type": "String",
           "column": "quhead_shipto_cntct_email"
-        }
-      },
-      {
-        "name": "billtoContact",
-        "toOne": {
-          "isNested": true,
-          "type": "ContactRelation",
-          "column": "quhead_billto_cntct_id"
         }
       },
       {
