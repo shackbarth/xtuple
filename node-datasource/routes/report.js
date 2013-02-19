@@ -33,8 +33,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return;
       }
 
-      console.log(query);
-
       if (query.id) {
         // this is a request for a single record
         data.retrieveEngine(query, session, callback);
