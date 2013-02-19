@@ -140,6 +140,7 @@ trailing:true white:true*/
     title: "_account".loc(),
     headerAttrs: ["number", "-", "name"],
     model: "XM.Account",
+    allowPrint: true,
     handlers: {
       onSavePrompt: "savePrompt"
     },
@@ -625,6 +626,7 @@ trailing:true white:true*/
     title: "_incident".loc(),
     headerAttrs: ["number", "-", "description"],
     model: "XM.Incident",
+    allowPrint: true,
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -818,6 +820,7 @@ trailing:true white:true*/
     title: "_opportunity".loc(),
     headerAttrs: ["number", "-", "name"],
     model: "XM.Opportunity",
+    allowPrint: true,
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -1252,6 +1255,7 @@ trailing:true white:true*/
     title: "_toDo".loc(),
     headerAttrs: ["name"],
     model: "XM.ToDo",
+    allowPrint: true,
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
