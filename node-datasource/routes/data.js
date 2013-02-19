@@ -147,8 +147,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       query,
       options;
 
-    // TODO: authenticate
-
     if (payload && payload.databaseType === 'global') {
       // run this query against the global database
       options = createGlobalOptions(payload, session.passport.user.id, callback);
