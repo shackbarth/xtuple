@@ -54,6 +54,12 @@ white:true*/
   });
   
   enyo.kind({
+    name: "XV.QuoteCommentBox",
+    kind: "XV.CommentBox",
+    model: "XM.QuoteComment"
+  });
+  
+  enyo.kind({
     name: "XV.ToDoCommentBox",
     kind: "XV.CommentBox",
     model: "XM.ToDoComment"

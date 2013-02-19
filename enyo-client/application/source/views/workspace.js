@@ -1187,7 +1187,9 @@ trailing:true white:true*/
             {kind: "XV.ShipViaCombobox", attr: "shipVia"},
             {kind: "XV.ShipZonePicker", attr: "shipZone"}
           ]}
-        ]}
+        ]},
+        {kind: "XV.QuoteCommentBox", attr: "comments"},
+        {kind: "XV.QuoteDocumentsBox", attr: "documents"}
       ]}
     ]
   });
