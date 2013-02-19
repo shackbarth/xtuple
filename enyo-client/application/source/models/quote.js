@@ -75,80 +75,80 @@ white:true*/
 
     @extends XM.Account
   */
-  // XM.QuoteAccount = XM.Model.extend({
-  //   /** @scope XM.QuoteAccount.prototype */
-  // 
-  //   recordType: 'XM.QuoteAccount',
-  //   
-  //   isDocumentAssignment: true
-  //   
-  // });
+  XM.QuoteAccount = XM.Model.extend({
+    /** @scope XM.QuoteAccount.prototype */
+  
+    recordType: 'XM.QuoteAccount',
+    
+    isDocumentAssignment: true
+    
+  });
   
   /**
     @class
 
     @extends XM.Contact
   */
-  // XM.QuoteContact = XM.Model.extend({
-  //   /** @scope XM.QuoteContact.prototype */
-  // 
-  //   recordType: 'XM.QuoteContact',
-  //   
-  //   isDocumentAssignment: true
-  //   
-  // });
+  XM.QuoteContact = XM.Model.extend({
+    /** @scope XM.QuoteContact.prototype */
+  
+    recordType: 'XM.QuoteContact',
+    
+    isDocumentAssignment: true
+    
+  });
   
   /**
     @class
 
     @extends XM.Model
   */
-  // XM.QuoteFile = XM.Model.extend({
-  //   /** @scope XM.QuoteFile.prototype */
-  // 
-  //   recordType: 'XM.QuoteFile',
-  // 
-  //   isDocumentAssignment: true
-  // 
-  // });
+  XM.QuoteFile = XM.Model.extend({
+    /** @scope XM.QuoteFile.prototype */
+  
+    recordType: 'XM.QuoteFile',
+  
+    isDocumentAssignment: true
+  
+  });
   
   /**
     @class
 
     @extends XM.Model
   */
-  // XM.QuoteItem = XM.Model.extend({
-  //   /** @scope XM.QuoteItem.prototype */
-  // 
-  //   recordType: 'XM.QuoteItem',
-  // 
-  //   isDocumentAssignment: true
-  // 
-  // });
+  XM.QuoteItem = XM.Model.extend({
+    /** @scope XM.QuoteItem.prototype */
+  
+    recordType: 'XM.QuoteItem',
+  
+    isDocumentAssignment: true
+  
+  });
   
   /**
     @class
 
     @extends XM.Model
   */
-  // XM.QuoteLine = XM.Model.extend({
-  //    /** @scope XM.QuoteLine.prototype */
-  // 
-  //    recordType: 'XM.QuoteLine'
-  // 
-  //  });
+  XM.QuoteLine = XM.Model.extend({
+     /** @scope XM.QuoteLine.prototype */
+  
+     recordType: 'XM.QuoteLine'
+  
+   });
   
   /**
     @class
 
     @extends XM.Model
   */
-  // XM.QuoteLineCharacteristic = XM.Model.extend({
-  //   /** @scope XM.QuoteLineCharacteristic.prototype */
-  // 
-  //   recordType: 'XM.QuoteLineCharacteristic'
-  // 
-  // });
+  XM.QuoteLineCharacteristic = XM.Model.extend({
+    /** @scope XM.QuoteLineCharacteristic.prototype */
+  
+    recordType: 'XM.QuoteLineCharacteristic'
+  
+  });
   
   /**
     @class
@@ -185,56 +185,56 @@ white:true*/
 
     @extends XM.Model
   */
-  // XM.QuoteUrl = XM.Model.extend({
-  //   /** @scope XM.QuoteUrl.prototype */
-  // 
-  //   recordType: 'XM.QuoteUrl',
-  // 
-  //   isDocumentAssignment: true
-  // 
-  // });
+  XM.QuoteUrl = XM.Model.extend({
+    /** @scope XM.QuoteUrl.prototype */
+  
+    recordType: 'XM.QuoteUrl',
+  
+    isDocumentAssignment: true
+  
+  });
   
   /**
     @class
 
     @extends XM.Model
   */
-  // XM.QuoteProject = XM.Model.extend({
-  //    /** @scope XM.QuoteProject.prototype */
-  // 
-  //    recordType: 'XM.QuoteProject',
-  // 
-  //    isDocumentAssignment: true
-  // 
-  //  });
+  XM.QuoteProject = XM.Model.extend({
+     /** @scope XM.QuoteProject.prototype */
+  
+     recordType: 'XM.QuoteProject',
+  
+     isDocumentAssignment: true
+  
+   });
   
   /**
     @class
 
     @extends XM.Model
   */
-  // XM.QuoteIncident = XM.Model.extend({
-  //    /** @scope XM.QuoteIncident.prototype */
-  // 
-  //    recordType: 'XM.QuoteIncident',
-  // 
-  //    isDocumentAssignment: true
-  // 
-  //  });
+  XM.QuoteIncident = XM.Model.extend({
+     /** @scope XM.QuoteIncident.prototype */
+  
+     recordType: 'XM.QuoteIncident',
+  
+     isDocumentAssignment: true
+  
+   });
   
   /**
     @class
 
     @extends XM.Model
   */
-  // XM.QuoteOpportunity = XM.Model.extend({
-  //   /** @scope XM.QuoteOpportunity.prototype */
-  // 
-  //   recordType: 'XM.QuoteOpportunity',
-  // 
-  //   isDocumentAssignment: true
-  // 
-  // });
+  XM.QuoteOpportunity = XM.Model.extend({
+    /** @scope XM.QuoteOpportunity.prototype */
+  
+    recordType: 'XM.QuoteOpportunity',
+  
+    isDocumentAssignment: true
+  
+  });
   
   /**
     @class
