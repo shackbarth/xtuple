@@ -1157,6 +1157,7 @@ trailing:true white:true*/
     kind: "XV.Workspace",
     title: "_quote".loc(),
     model: "XM.Quote",
+    headerAttrs: ["number"],
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -1164,7 +1165,27 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
-
+            {kind: "XV.InputWidget", attr: "number", label: "_orderNumber".loc()},
+            {kind: "XV.TermsPicker", attr: "terms"},
+            {kind: "XV.DateWidget", attr: "quoteDate", label: "_orderDate".loc()},
+            {kind: "XV.DateWidget", attr: "scheduledDate"}, // attribute?
+            {kind: "XV.DateWidget", attr: "packDate"},
+            {kind: "XV.PercentWidget", attr: "commission"},
+            {kind: "XV.TaxZonePicker", attr: "taxZone"},
+            {kind: "XV.SitePicker", attr: "site"},
+            {kind: "XV.SaleTypePicker", attr: "saleType"},
+            {kind: "XV.InputWidget", attr: "status"},
+            {kind: "XV.DateWidget", attr: "expireDate", label: "_expires".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
+            {kind: "XV.ContactWidget", attr: "billTo",
+              showAddress: true, label: "_name".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
+            {kind: "XV.ContactWidget", attr: "shipto",
+              showAddress: true, label: "_name".loc()},
+            {kind: "XV.InputWidget", attr: "fob"},
+            {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber", label: "_custPO".loc()},
+            {kind: "XV.ShipViaCombobox", attr: "shipVia"},
+            {kind: "XV.ShipZonePicker", attr: "shipZone"}
           ]}
         ]}
       ]}

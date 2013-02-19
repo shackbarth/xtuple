@@ -61,14 +61,14 @@ white:true*/
 
     @extends XM.Comment
   */
-  // XM.QuoteComment = XM.Comment.extend({
-  //   /** @scope XM.QuoteComment.prototype */
-  // 
-  //   recordType: 'XM.QuoteComment',
-  // 
-  //   sourceName: 'Q'
-  // 
-  // });
+  XM.QuoteComment = XM.Comment.extend({
+    /** @scope XM.QuoteComment.prototype */
+
+    recordType: 'XM.QuoteComment',
+
+    sourceName: 'Q'
+
+  });
   
   /**
     @class
@@ -132,11 +132,11 @@ white:true*/
     @extends XM.Model
   */
   // XM.QuoteLine = XM.Model.extend({
-  //   /** @scope XM.QuoteLine.prototype */
+  //    /** @scope XM.QuoteLine.prototype */
   // 
-  //   recordType: 'XM.QuoteLine'
+  //    recordType: 'XM.QuoteLine'
   // 
-  // });
+  //  });
   
   /**
     @class
@@ -200,13 +200,13 @@ white:true*/
     @extends XM.Model
   */
   // XM.QuoteProject = XM.Model.extend({
-  //   /** @scope XM.QuoteProject.prototype */
+  //    /** @scope XM.QuoteProject.prototype */
   // 
-  //   recordType: 'XM.QuoteProject',
+  //    recordType: 'XM.QuoteProject',
   // 
-  //   isDocumentAssignment: true
+  //    isDocumentAssignment: true
   // 
-  // });
+  //  });
   
   /**
     @class
@@ -214,13 +214,13 @@ white:true*/
     @extends XM.Model
   */
   // XM.QuoteIncident = XM.Model.extend({
-  //   /** @scope XM.QuoteIncident.prototype */
+  //    /** @scope XM.QuoteIncident.prototype */
   // 
-  //   recordType: 'XM.QuoteIncident',
+  //    recordType: 'XM.QuoteIncident',
   // 
-  //   isDocumentAssignment: true
+  //    isDocumentAssignment: true
   // 
-  // });
+  //  });
   
   /**
     @class
@@ -242,13 +242,13 @@ white:true*/
     @extends XM.Model
   */
   // XM.QuoteToDo = XM.Model.extend({
-  //   /** @scope XM.QuoteToDo.prototype */
+  //    /** @scope XM.QuoteToDo.prototype */
   // 
-  //   recordType: 'XM.QuoteToDo',
+  //    recordType: 'XM.QuoteToDo',
   // 
-  //   isDocumentAssignment: true
+  //    isDocumentAssignment: true
   // 
-  // });
+  //  });
   
   /**
     @class
