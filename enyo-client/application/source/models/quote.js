@@ -55,6 +55,57 @@ white:true*/
     */
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
+      this.on('change:billtoContact', this.billtoContactDidChange);
+      this.on('change:shiptoContact', this.shiptoContactDidChange);
+      var status = this.getStatus();
+      if (status === XM.Model.READY_NEW) {
+        this.setReadOnly("billtoAddress1", false);
+        this.setReadOnly("billtoAddress2", false);
+        this.setReadOnly("billtoAddress3", false);
+        this.setReadOnly("billtoCity", false);
+        this.setReadOnly("billtoState", false);
+        this.setReadOnly("billtoPostalCode", false);
+        this.setReadOnly("billtoPhone", false);
+        this.setReadOnly("billtoContactHonorific", false);
+        this.setReadOnly("billtoContactFirstName", false);
+        this.setReadOnly("billtoContactMiddleName", false);
+        this.setReadOnly("billtoContactLastName", false);
+        this.setReadOnly("billtoContactSuffix", false);
+        this.setReadOnly("billtoContactPhone", false);
+        this.setReadOnly("billtoContactTitle", false);
+        this.setReadOnly("billtoContactFax", false);
+        this.setReadOnly("billtoContactEmail", false);
+        this.setReadOnly("shiptoAddress1", false);
+        this.setReadOnly("shiptoAddress2", false);
+        this.setReadOnly("shiptoAddress3", false);
+        this.setReadOnly("shiptoCity", false);
+        this.setReadOnly("shiptoState", false);
+        this.setReadOnly("shiptoPostalCode", false);
+        this.setReadOnly("shiptoPhone", false);
+        this.setReadOnly("shiptoContactHonorific", false);
+        this.setReadOnly("shiptoContactFirstName", false);
+        this.setReadOnly("shiptoContactMiddleName", false);
+        this.setReadOnly("shiptoContactLastName", false);
+        this.setReadOnly("shiptoContactSuffix", false);
+        this.setReadOnly("shiptoContactPhone", false);
+        this.setReadOnly("shiptoContactTitle", false);
+        this.setReadOnly("shiptoContactFax", false);
+        this.setReadOnly("shiptoContactEmail", false);
+      }
+    },
+    
+    /**
+      billtoContactDidChange
+    */
+    billtoContactDidChange: function (model, value, options) {
+
+    },
+    
+    /**
+      shiptoContactDidChange
+    */
+    shiptoContactDidChange: function (model, value, options) {
+
     }
     
   });
