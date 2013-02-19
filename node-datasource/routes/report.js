@@ -88,6 +88,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         attrs = {
           key: randomKey,
+          // TODO: this will be null for a single-record request. Then again, I don't know if we
+          // need to describe the query on such requests, or how we should describe them.
+          // requestDetails.recordType and requestDetails.id are the two pieces of information
           query: JSON.stringify(requestDetails.query),
           data: JSON.stringify(result.data),
           created: new Date()
