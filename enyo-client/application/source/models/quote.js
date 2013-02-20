@@ -301,6 +301,19 @@ white:true*/
     isDocumentAssignment: true
 
   });
+  
+  /*
+    @extends XM.Model
+  */
+  /*
+  XM.QuoteToDo = XM.Model.extend({
+    
+    recordType: 'XM.QuoteToDo',
+    
+    isDocumentAssignment: true
+    
+  });
+  */
 
   // ..........................................................
   // COLLECTIONS
