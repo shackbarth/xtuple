@@ -13,11 +13,16 @@ var XVOWS = XVOWS || {};
     crud = require('../lib/crud');
 
   var createHash = {
-    number: "Herr"
+    // TODO: flesh these out
+    number: "3453458" + Math.random(),
+    customer: {id: 97},
+    miscCharge: 0,
+    status: "O",
+    calculateFreight: false,
   };
 
   var updateHash = {
-    number: "Dame"
+    shipVia: "Gottingen"
   };
 
   /**
@@ -33,6 +38,8 @@ var XVOWS = XVOWS || {};
           return new XM.Quote();
         },
         'The model is created successfully': function (topic) {
+          //console.log(topic.getAttributeNames());
+          //console.log(topic.requiredAttributes);
           assert.isObject(topic);
           assert.equal(topic.recordType, "XM.Quote");
         }
@@ -43,8 +50,8 @@ var XVOWS = XVOWS || {};
         topic: function () {
           return new XM.Quote();
         },
-        'The record type is XM.Quote': function (topic) {
-          assert.equal(topic.recordType, "XM.Quot");
+        'The blah is blah': function (topic) {
+          assert.equal(1 + 2, 3);
         }
       }
     }

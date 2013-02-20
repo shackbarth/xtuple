@@ -107,7 +107,7 @@ var _ = require("underscore"),
           },
           'There was no error saving': function (model, error) {
             if (error) {
-              console.log("Error saving model:", JSON.stringify(error));
+              console.log("Error saving model:", JSON.stringify(error), model.toJSON());
             }
             assert.isUndefined(error && JSON.stringify(error));
           },
