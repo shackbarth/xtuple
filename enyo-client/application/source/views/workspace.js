@@ -6,7 +6,7 @@ trailing:true white:true*/
 (function () {
 
   var hash;
-  
+
   /**
     Used to notify change of account to contact widget if both exist on
     the same workspace.
@@ -27,7 +27,7 @@ trailing:true white:true*/
       }
     }
   };
-  
+
   /**
     Handles Address change with prompts.
   */
@@ -291,7 +291,7 @@ trailing:true white:true*/
   // ..........................................................
   // CONTACT
   //
-  
+
   hash = {
     name: "XV.ContactWorkspace",
     kind: "XV.Workspace",
@@ -342,7 +342,7 @@ trailing:true white:true*/
 
   hash = enyo.mixin(hash, XV.WorkspaceAddressMixin);
   enyo.kind(hash);
-  
+
   XV.registerModelWorkspace("XM.ContactRelation", "XV.ContactWorkspace");
   XV.registerModelWorkspace("XM.ContactListItem", "XV.ContactWorkspace");
 
@@ -402,7 +402,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.Currency", "XV.CurrencyWorkspace");
-  
+
   // ..........................................................
   // CUSTOMER
   //
@@ -829,7 +829,8 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.AccountWidget", attr: "account"},
             {kind: "XV.ContactWidget", attr: "contact"},
-            {kind: "XV.MoneyWidget", attr: "amount"},
+            {kind: "XV.MoneyWidget", attr: {amount: "amount", currency: "currency"}, //effective: new Date(),
+              label: "_amount".loc()},
             {kind: "XV.PercentWidget", attr: "probability"},
             {kind: "onyx.GroupboxHeader", content: "_status".loc()},
             {kind: "XV.OpportunityStagePicker", attr: "opportunityStage",
@@ -1047,9 +1048,9 @@ trailing:true white:true*/
             {kind: "XV.QuantityWidget", attr: "actualHours",
               label: "_actual".loc()},
             {kind: "onyx.GroupboxHeader", content: "_expenses".loc()},
-            {kind: "XV.MoneyWidget", attr: "budgetedExpenses",
+            {kind: "XV.NumberWidget", attr: "budgetedExpenses", scale: XT.MONEY_SCALE,
               label: "_budgeted".loc()},
-            {kind: "XV.MoneyWidget", attr: "actualExpenses",
+            {kind: "XV.NumberWidget", attr: "actualExpenses", scale: XT.MONEY_SCALE,
               label: "_actual".loc()},
             {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
             {kind: "XV.UserAccountWidget", attr: "owner"},
@@ -1065,7 +1066,7 @@ trailing:true white:true*/
 
   XV.registerModelWorkspace("XM.ProjectTask", "XV.ProjectTaskWorkspace");
   XV.registerModelWorkspace("XM.ProjectTaskListItem", "XV.ProjectTaskWorkspace");
-  
+
   // ..........................................................
   // PROSPECT
   //
@@ -1143,10 +1144,59 @@ trailing:true white:true*/
       }
     }
   });
-  
+
   XV.registerModelWorkspace("XM.ProspectRelation", "XV.ProspectWorkspace");
   XV.registerModelWorkspace("XM.ProspectListItem", "XV.ProspectWorkspace");
-  
+
+  // ..........................................................
+  // QUOTE
+  //
+
+  enyo.kind({
+    name: "XV.QuoteWorkspace",
+    kind: "XV.Workspace",
+    title: "_quote".loc(),
+    model: "XM.Quote",
+    headerAttrs: ["number"],
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number", label: "_orderNumber".loc()},
+            {kind: "XV.TermsPicker", attr: "terms"},
+            {kind: "XV.DateWidget", attr: "quoteDate", label: "_orderDate".loc()},
+            {kind: "XV.DateWidget", attr: "scheduledDate"}, // attribute?
+            {kind: "XV.DateWidget", attr: "packDate"},
+            {kind: "XV.PercentWidget", attr: "commission"},
+            {kind: "XV.TaxZonePicker", attr: "taxZone"},
+            {kind: "XV.SitePicker", attr: "site"},
+            {kind: "XV.SaleTypePicker", attr: "saleType"},
+            {kind: "XV.InputWidget", attr: "status"},
+            {kind: "XV.DateWidget", attr: "expireDate", label: "_expires".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
+            {kind: "XV.ContactWidget", attr: "billTo",
+              showAddress: true, label: "_name".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
+            {kind: "XV.ContactWidget", attr: "shipto",
+              showAddress: true, label: "_name".loc()},
+            {kind: "XV.InputWidget", attr: "fob"},
+            {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber", label: "_custPO".loc()},
+            {kind: "XV.ShipViaCombobox", attr: "shipVia"},
+            {kind: "XV.ShipZonePicker", attr: "shipZone"}
+          ]}
+        ]},
+        {kind: "XV.QuoteCommentBox", attr: "comments"},
+        {kind: "XV.QuoteDocumentsBox", attr: "documents"}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.QuoteRelation", "XV.QuoteWorkspace");
+  XV.registerModelWorkspace("XM.QuoteListItem", "XV.QuoteWorkspace");
+
   // ..........................................................
   // SALES REP
   //
@@ -1174,7 +1224,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.SalesRep", "XV.SalesRepWorkspace");
-  
+
 
   // ..........................................................
   // STATE
@@ -1202,7 +1252,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.State", "XV.StateWorkspace");
-  
+
   // ..........................................................
   // TAX AUTHORITY
   //
@@ -1226,7 +1276,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "number"},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "externalReference"},
-            {kind: "XV.CurrencyPicker", attr: "currency"},
+            {kind: "XV.CurrencyPickerWidget", attr: "currency"},
             {kind: "XV.InputWidget", attr: "county"},
             {kind: "onyx.GroupboxHeader", content: "_address".loc()},
             {kind: "XV.AddressWidget", attr: "address"}
@@ -1235,7 +1285,7 @@ trailing:true white:true*/
       ]}
     ]
   };
-  
+
   hash = enyo.mixin(hash, XV.WorkspaceAddressMixin);
   enyo.kind(hash);
 
@@ -1444,11 +1494,11 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.UserAccountRole", "XV.UserAccountRoleWorkspace");
   XV.registerModelWorkspace("XM.UserAccountRoleRelation", "XV.UserAccountRoleWorkspace");
   XV.registerModelWorkspace("XM.UserAccountRoleListItem", "XV.UserAccountRoleWorkspace");
-  
+
   // ..........................................................
   // CHARACTERISTIC
   //
-  
+
   enyo.kind({
     name: "XV.CharacteristicWorkspace",
     kind: "XV.Workspace",
@@ -1496,7 +1546,7 @@ trailing:true white:true*/
         this.typeValueChanged(model);
       }
     },
-    
+
     /**
       Function to determine visibility of "advanced" and "options" panels based
         on the characteristicType

@@ -880,6 +880,49 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.ProspectRelation", "XV.ProspectList");
+  
+  // ..........................................................
+  // QUOTE
+  //
+
+  enyo.kind({
+    name: "XV.QuoteList",
+    kind: "XV.List",
+    label: "_quotes".loc(),
+    collection: "XM.QuoteListItemCollection",
+    parameterWidget: "XV.QuoteListParameters",
+    query: {orderBy: [
+      {attribute: 'id'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", isKey: true},
+              {kind: "XV.ListAttr", attr: "quoteDate", fit: true, classes: "right"}
+            ]},
+            {kind: "XV.ListAttr", attr: "customer.name"}
+          ]},
+          {kind: "XV.ListColumn", classes: "second",
+            components: [
+            {kind: "XV.ListAttr", attr: "customerPurchaseOrderNumber",
+              placeholder: "_noPurchaseOrder".loc()}
+          ]},
+          {kind: "XV.ListColumn", classes: "third",
+            components: [
+            {kind: "XV.ListAttr", attr: "status",
+              placeholder: "_noStatus".loc()}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "orderNotes"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.QuoteRelation", "XV.QuoteList");
 
   // ..........................................................
   // TO DO

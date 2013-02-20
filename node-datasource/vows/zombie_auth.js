@@ -24,8 +24,9 @@ Usage:
 
   var secondsToWait = 10;
 
-  var loadApp = function (username, password, host, masterCallback) {
-    var siteRoot = host || 'https://localhost';
+  var loadApp = function (username, password, host, callback) {
+    var siteRoot = host || 'https://localhost:443',
+      appLoaded;
     zombie.visit(siteRoot, {debug: false}, function (e, browser) {
       //
       // This is the login screen
@@ -43,37 +44,40 @@ Usage:
 
           // Plan to give up after a set time
           setTimeout(function () {
-            masterCallback();
+            if (!appLoaded) {
+              console.log("App did not fully load");
+              process.exit(1);
+            }
           }, secondsToWait * 1000);
 
           // Check frequently to see if the app is loaded, and move forward when it is
           setInterval(function () {
-            if (browser.window.XT && browser.window.XT.app && browser.window.XT.app.state === 6) {
+
+            // TODO: clear out this interval if appLoaded
+
+            if (browser.window.XT && browser.window.XT.app && browser.window.XT.app.state === 6 && !appLoaded) {
               // add the global objects to our global namespace
               XM = browser.window.XM;
               XT = browser.window.XT;
               XV = browser.window.XV;
 
+              appLoaded = true;
+
               // give control back to whoever called us
-              masterCallback();
+              callback();
             }
           }, 100);
         });
     });
   };
 
-  exports.loadAdd = loadApp;
+  exports.loadApp = loadApp;
 
   exports.testLoad = function (username, password, host) {
     console.log("Testing loadup of app.");
 
     loadApp(username, password, host, function () {
-      if (!XT || !XT.app || !XT.app.state || XT.app.state < 6) {
-        console.log("App did not fully load");
-        process.exit(1);
-      }
       console.log("App loaded successfully.");
-      process.exit(0);
     });
   };
 

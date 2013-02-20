@@ -31,14 +31,6 @@
         }
       },
       {
-        "name": "customer",
-        "toOne": {
-          "isNested": true,
-          "type": "CustomerProspectRelation",
-          "column": "quhead_cust_id"
-        }
-      },
-      {
         "name": "quoteDate",
         "attr": {
           "type": "Date",
@@ -324,14 +316,6 @@
         "attr": {
           "type": "String",
           "column": "quhead_shipto_cntct_email"
-        }
-      },
-      {
-        "name": "billtoContact",
-        "toOne": {
-          "isNested": true,
-          "type": "ContactRelation",
-          "column": "quhead_billto_cntct_id"
         }
       },
       {
