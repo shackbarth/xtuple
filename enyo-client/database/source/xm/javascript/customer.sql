@@ -5,12 +5,7 @@ select xt.install_js('XM','Customer','xtuple', $$
   XM.Customer = {};
 
   XM.Customer.isDispatchable = true;
-
-  XM.Customer.options = [
-    "ShiptoId",
-    "Quantity",
-    "EffectiveDate"
-  ]
+  
   
   /*itemprice(pitemid integer, pcustid integer, pshiptoid integer, pqty numeric, pqtyuom integer, ppriceuom integer, pcurrid integer, peffective date */
   /**
@@ -26,10 +21,27 @@ select xt.install_js('XM','Customer','xtuple', $$
    @returns Number 
   */
  
-  XM.Customer.price = function(price) {
+  XM.Customer.price = function(item, customer, quantity, options) {
+    options = options || {};
+    var err;
+    if(item === undefined) err = "item id can not be blank";
+    if(customer === undefined) err = "customer id can not be blank";
+    if(quatity === undefined) err = "quantity can not be blank";
+    if(!err) {
     var 
-        data = Object.create(XT.Data);
-    return plv8.execute("select itemprice($1::integer, $2::integer, $3::integer, $4::integer, $5::integer, $6::integer, $7::integer, $8::date) as result;", [price.itemId, price.custId, price.shiptoId, price.qty, price.qtyUomId, price.priceUomId, price.currencyId, price.effectiveDate])[0].result; 
+      today=new Date(),
+      effective = options.effective || today,
+      shipto = options.shipto || -1,
+      quantityUom = options.quantityUom || plv8.execute("select item_inv_uom_id as result from item where item_id = $1;", [item])[0].result,
+      priceUom = options.priceUom || plv8.execute("select item_price_uom_id as result from item where item_id = $1;", [item])[0].result,
+      currency = options.currency || plv8.execute("select basecurrid() as result")[0].result,
+      effective = options.effective || today;
+    
+      return plv8.execute("select itemprice($1, $2, $3, $4, $5, $6, $7, $8) as result;", [item, customer, shipto, quantity, quantityUom, priceUom, currency, effective])[0].result; 
+    }
+    
+    throw new Error(err);
   }
+  
 
 $$ );
