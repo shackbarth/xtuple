@@ -87,6 +87,7 @@
 \i xm/javascript/address.sql;
 \i xm/javascript/contact.sql;
 \i xm/javascript/crm.sql;
+\i xm/javascript/customer.sql;
 \i xm/javascript/customer_prospect.sql;
 \i xm/javascript/database_information.sql;
 \i xm/javascript/incident.sql;
