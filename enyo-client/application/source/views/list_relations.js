@@ -300,3 +300,31 @@ enyo.kind({
     ]}
   ]
 });
+
+// ..........................................................
+// QUOTE LINE ITEM
+//
+
+enyo.kind({
+  name: "XV.QuoteLineItemListRelations",
+  kind: "XV.ListRelations",
+  orderBy: [
+    {attribute: "number"}
+  ],
+  parentKey: "quote",
+  components: [
+    {kind: "XV.ListItem", components: [
+      {kind: "FittableRows", components: [
+        {kind: "XV.ListColumn", classes: "first", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListAttr", attr: ""},
+            {kind: "XV.ListAttr", attr: "", fit: true, classes: "right"}
+          ]},
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListAttr", attr: ""}
+          ]}
+        ]}
+      ]}
+    ]}
+  ]
+});

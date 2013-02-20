@@ -290,9 +290,7 @@ white:true*/
   
   });
 
-  /**
-    @class
-
+  /*
     @extends XM.Model
   */
   XM.QuoteCustomer = XM.Model.extend({

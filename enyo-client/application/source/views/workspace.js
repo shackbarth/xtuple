@@ -1185,9 +1185,14 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "fob"},
             {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber", label: "_custPO".loc()},
             {kind: "XV.ShipViaCombobox", attr: "shipVia"},
-            {kind: "XV.ShipZonePicker", attr: "shipZone"}
+            {kind: "XV.ShipZonePicker", attr: "shipZone"},
+            {kind: "onyx.GroupboxHeader", content: "_orderNotes".loc()},
+            {kind: "XV.TextArea", attr: "orderNotes", fit: true},
+            {kind: "onyx.GroupboxHeader", content: "_shippingNotes".loc()},
+            {kind: "XV.TextArea", attr: "shippingNotes", fit: true}
           ]}
         ]},
+        {kind: "XV.QuoteLineItemBox", attr: "quoteLine"},
         {kind: "XV.QuoteCommentBox", attr: "comments"},
         {kind: "XV.QuoteDocumentsBox", attr: "documents"}
       ]}
