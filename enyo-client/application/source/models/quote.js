@@ -280,5 +280,19 @@ white:true*/
     model: XM.QuoteRelation
 
   });
+  
+  /**
+    @class
+    
+    @extends XM.Model
+  */
+  XM.QuoteToDo = XM.Document.extend({
+    /** @scope XM.QuoteToDo */
+    
+    recordType: 'XM.QuoteToDo',
+    
+    documentKey: 'number'
+    
+  });
 
 }());

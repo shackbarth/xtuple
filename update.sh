@@ -20,6 +20,7 @@ fi
 
 # update libraries
 git submodule update --init --recursive
+cd node-datasource
 npm install
 
 # restart the datasource
@@ -29,7 +30,7 @@ monit start node
 sleep 10
 
 # update global db
-cd node-datasource/database/source
+cd database/source
 psql -U admin  global -f init_global.sql
 cd ../../installer
 ./installer.js -h localhost -d global -u admin -p 5432 -P admin --path ../database/orm
@@ -43,7 +44,7 @@ cd ../enyo-client/extensions
 ./tools/buildExtensions.sh
 
 # deploy enyo client
-cd ..
+cd ../application
 rm -rf deploy
 cd tools
 ./deploy.sh
