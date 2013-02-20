@@ -17,22 +17,25 @@ white:true*/
     recordType: 'XM.Quote',
 
     defaults: function () {
-      //var settings = XT.session.getSettings();
+      var //settings = XT.session.getSettings(),
+          today = new Date();
       return {
         //auto order #
-        //quote date: today's date
+        quoteDate: today,
         //tax zone: none
         //site: probably the metric default
         //sale type: same
-        //quote status: open
+        status: "Open"
         //shipping zone: probably the metric default
       };
     },
-    
+/*
     readOnlyAttributes: [
-    
+      when customer# or shipto# are not filled, then all of the corresponding address stuff is read only.
+        also the contact name.
+      the "new" button on line items is read only when customer is blank.
     ],
-    
+*/
     requiredAttributes: [
       "id",
       "number",
@@ -73,7 +76,7 @@ white:true*/
   /**
     @class
 
-    @extends XM.Account
+    @extends XM.Model
   */
   XM.QuoteAccount = XM.Model.extend({
     /** @scope XM.QuoteAccount.prototype */
@@ -87,7 +90,7 @@ white:true*/
   /**
     @class
 
-    @extends XM.Contact
+    @extends XM.Model
   */
   XM.QuoteContact = XM.Model.extend({
     /** @scope XM.QuoteContact.prototype */
