@@ -129,6 +129,7 @@ var lang = XT.stringsFor("en_US", {
   "_currencyNumber": "Currency Number",
   "_currencySymbol": "Currency Symbol",
   "_custPO": "Custumer PO",
+  "_customerPartNumber": "Customer P/N",
   "_custPrice": "Cust. Price",
   "_customer": "Customer",
   "_customerType": "Customer Type",
