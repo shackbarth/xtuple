@@ -46,14 +46,6 @@
         }
       },
       {
-        "name": "shipto",
-        "toOne": {
-          "isNested": true,
-          "type": "CustomerShiptoRelation",
-          "column": "quhead_shipto_id"
-        }
-      },
-      {
         "name": "shiptoName",
         "attr": {
           "type": "String",
@@ -212,13 +204,6 @@
         "attr": {
           "type": "String",
           "column": "quhead_shipvia"
-        }
-      },
-      {
-        "name": "site",
-        "toOne": {
-          "type": "SiteRelation",
-          "column": "quhead_warehous_id"
         }
       },
       {
@@ -1174,25 +1159,10 @@
         }
       },
       {
-        "name": "shipto",
-        "toOne": {
-          "isNested": true,
-          "type": "CustomerShiptoRelation",
-          "column": "quhead_shipto_id"
-        }
-      },
-      {
         "name": "shipVia",
         "attr": {
           "type": "String",
           "column": "quhead_shipvia"
-        }
-      },
-      {
-        "name": "site",
-        "toOne": {
-          "type": "SiteRelation",
-          "column": "quhead_warehous_id"
         }
       },
       {

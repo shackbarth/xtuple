@@ -341,5 +341,16 @@ white:true*/
       XM.taxAuthorities.fetch(options);
     }
   });
+  
+  XT.StartupTasks.push({
+    taskName: "loadCurrencyRates",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      XM.currencyRates = new XM.CurrencyRateCollection();
+      XM.currencyRates.fetch(options);
+    }
+  });
 
 }());
