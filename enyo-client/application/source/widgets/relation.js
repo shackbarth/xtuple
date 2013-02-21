@@ -382,6 +382,18 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // CUSTOMER SHIPTO
+  //
+
+  enyo.kind({
+    name: "XV.CustomerShiptoWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.CustomerShiptoRelationCollection",
+    list: "XV.CustomerShiptoList"
+  });
+
+
+  // ..........................................................
   // EMPLOYEE
   //
 
@@ -438,7 +450,6 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.ProjectRelationCollection",
     list: "XV.ProjectList"
   });
-
 
   // ..........................................................
   // USER ACCOUNT
