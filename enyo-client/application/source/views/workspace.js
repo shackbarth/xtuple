@@ -1181,7 +1181,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "status"},
             {kind: "XV.DateWidget", attr: "expireDate", label: "_expires".loc()},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
-            {kind: "XV.ContactWidget", attr: "billTo", showAddress: true, label: "_billTo".loc()},
+            {kind: "XV.CustomerProspectWidget", attr: "customer", showAddress: true, label: "_billTo".loc()},
             {kind: "XV.InputWidget", attr: "billtoName", label: "_name".loc()},
             {kind: "XV.InputWidget", attr: "billtoAddress1", label: "_address1".loc()},
             {kind: "XV.InputWidget", attr: "billtoAddress2", label: "_address2".loc()},
@@ -1217,6 +1217,20 @@ trailing:true white:true*/
         {kind: "XV.QuoteDocumentsBox", attr: "documents"}
       ]}
     ],
+    customerChanged: function () {
+      var customer = this.$.customerProspectWidget.getValue();
+      this.$.customerShiptoWidget.setCustomer(customer);
+    },
+    attributesChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      this.customerChanged();
+    },
+    controlValueChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      if (inEvent.originator.name === 'customerWidget') {
+        this.customerChanged();
+      }
+    },
     copyBilltoToShipto: function () {
       this.getValue().copyBilltoToShipto();
     }

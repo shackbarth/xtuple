@@ -389,7 +389,13 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.CustomerShiptoWidget",
     kind: "XV.RelationWidget",
     collection: "XM.CustomerShiptoRelationCollection",
-    list: "XV.CustomerShiptoList"
+    list: "XV.CustomerShiptoList",
+    published: {
+      customer: null
+    },
+    customerChanged: function () {
+      console.log("accountChanged", arguments);
+    }
   });
 
 
