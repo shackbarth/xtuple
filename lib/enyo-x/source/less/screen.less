@@ -1,4 +1,4 @@
-/* LESS version of screen.scss file previously in client 
+/* LESS version of screen.scss file previously in client
 
 	To compile to .css: lessc screen.less > ../stylesheets/screen.css
 	Use -compress for a compressed .css with no comments
@@ -233,7 +233,7 @@ body {
   }
 }
 
-/* 
+/*
 	Media query for responsive design. This adapts to smaller
 	displays.
 */
@@ -303,7 +303,7 @@ body {
     padding-bottom: 3px;
     border-bottom: 1px solid @smoke;
     &.header {
-      padding-top: 0;    
+      padding-top: 0;
     }
     &.inactive {
       background-color: @gray;
@@ -513,10 +513,10 @@ body {
 
 .xv-assignment-box {
   .xv-decorated-label {
-    width: 85%;  
+    width: 85%;
   }
   .xv-label {
-    width: 250px;  
+    width: 250px;
   }
 }
 
@@ -644,6 +644,19 @@ body {
   background-color: @white;
 }
 
+.xv-groupbox .xv-moneywidget {
+  background-color: @white;
+  padding-top: 6px;
+  padding-bottom: 2px;
+
+  .onyx-input-decorator {
+    width: 100px;
+  }
+  .xv-picker {
+    width: 95px;
+  }
+}
+
 .xv-groupbox > .onyx-input-decorator:first-child {
 	border-width: 1px;
 	.border-radius-all(4px, 4px, 0, 0);
@@ -698,7 +711,7 @@ body {
   margin: 4px;
   &.short {
     width: 40%;
-  }  
+  }
 }
 
 .xv-addresswidget-combobox-decorator {
@@ -749,7 +762,7 @@ body {
 
 /* RelationWidget */
 .xv-relationwidget-completer {
-  left: -200px; 
+  left: -200px;
   top: 15px;
 }
 
@@ -779,9 +792,9 @@ body {
     opacity: 0.4;
   }
   &.label {
-    text-indent: 0; 
+    text-indent: 0;
     text-align: right;
-    
+
   }
   &.hasLabel {
     text-indent: 0;
@@ -807,13 +820,13 @@ body {
 .xv-list-relations-box {
   &.panel {
     width: 675px;
-  }  
+  }
 }
 
 .xv-short-relations-box {
   &.panel {
     width: 500px;
-  }  
+  }
 }
 
 /* Combo Box */

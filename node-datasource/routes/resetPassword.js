@@ -65,13 +65,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     if (!args || !args.id) {
       res.send({isError: true, message: "need an ID"});
     } else {
-      user = XM.User.findOrCreate({id: args.id});
-      // that should fix this problem:
-      //user = XM.User.findOrCreate(args.id);
-      //if (user === null) {
-        // this bit should not be necessary by my understanding of findOrCreate. Go figure.
-        //user = new XM.User({id: args.id});
-      //}
+      user = XM.User.findOrCreate(args.id) || new XM.User({id: args.id});
 
       fetchSuccess = function () {
         // thanks http://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
