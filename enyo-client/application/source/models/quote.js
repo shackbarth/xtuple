@@ -342,5 +342,29 @@ white:true*/
     model: XM.QuoteRelation
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.QuoteSiteCollection = XM.Collection.extend({
+    /** @scope XM.QuoteSiteCollection.prototype */
+
+    model: XM.QuoteSite
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.QuoteSaleTypeCollection = XM.Collection.extend({
+    /** @scope XM.QuoteSaleTypeCollection.prototype */
+
+    model: XM.QuoteSaleType
+
+  });
 
 }());
