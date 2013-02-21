@@ -1168,7 +1168,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "number", label: "_orderNumber".loc()},
             {kind: "XV.TermsPicker", attr: "terms"},
             {kind: "XV.DateWidget", attr: "quoteDate", label: "_orderDate".loc()},
-            {kind: "XV.DateWidget", attr: "scheduledDate"}, // attribute?
+            {kind: "XV.DateWidget", attr: "scheduleDate"}, // attribute?
             {kind: "XV.DateWidget", attr: "packDate"},
             {kind: "XV.PercentWidget", attr: "commission"},
             {kind: "XV.TaxZonePicker", attr: "taxZone"},
@@ -1192,7 +1192,7 @@ trailing:true white:true*/
             {kind: "XV.TextArea", attr: "shippingNotes", fit: true}
           ]}
         ]},
-        {kind: "XV.QuoteLineItemBox", attr: "quoteLine"},
+        {kind: "XV.QuoteLineItemBox", attr: "quoteLines"},
         {kind: "XV.QuoteCommentBox", attr: "comments"},
         {kind: "XV.QuoteDocumentsBox", attr: "documents"}
       ]}
