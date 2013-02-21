@@ -330,7 +330,7 @@ enyo.kind({
         {kind: "XV.ListColumn", classes: "third",
           components: [
           {kind: "XV.ListAttr", attr: "quantityOrd"},
-          //{kind: "XV.ListAttr", attr: "shipped"},
+          //{kind: "XV.ListAttr", attr: "shipped"}, // Inventory
           {kind: "XV.ListAttr", attr: "quantityUnit.name"}
         ]},
         {kind: "XV.ListColumn", style: "width: 80;",
