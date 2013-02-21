@@ -5,6 +5,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
+  var retrieveEngine = require('./data').retrieveEngine;
   // /file?recordType=XM.File&id=40
 
   /**
@@ -15,34 +16,25 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var args = req.query,
       recordType = args.recordType,
       recordId = args.id,
-      organization = req.session.passport.user.organization,
-      queryPayload,
-      query;
+      queryPayload;
 
     if ((recordType !== 'XM.File' && recordType !== 'XM.Image') || !recordId) {
-      res.send({isError: true, message:"Invalid request"});
+      res.send({isError: true, message: "Invalid request"});
       return;
     }
 
-    // TODO: this should be refactored to use routes.retrieveEngine
+    queryPayload = {
+      recordType: recordType,
+      id: Number(recordId)
+    };
 
-    queryPayload = '{"requestType":"retrieveRecord","recordType":"%@","id":"%@"}'.f(recordType, recordId);
-    query = "select xt.retrieve_record('%@')".f(queryPayload);
-
-    X.database.query(organization, query, function (err, result) {
+    retrieveEngine(queryPayload, req.session, function (result) {
       var content, data, filename, extension, isBinaryEncoding, buffer;
 
-      if (err) {
-        res.send({isError: true, message: "Error querying database"});
-      } else if (res.rowCount === 0) {
-        res.send({isError: true, message: "Record not found"});
+      if (result.isError) {
+        res.send(result);
       } else {
-        content = JSON.parse(result.rows[0].retrieve_record);
-
-        if (!content || !content.data) {
-          res.send({isError: true, message: "Record content not found"});
-          return;
-        }
+        content = result.data;
 
         filename = content.description;
         extension = filename ? filename.substring(filename.lastIndexOf('.') + 1) : '';

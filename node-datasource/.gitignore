@@ -1,0 +1,10 @@
+node_modules
+npm-debug.log
+pid*
+config*
+datasource.log
+datasource-err.log
+www
+lib/private
+pid/*
+test/shared/loginData.js
