@@ -41,12 +41,12 @@ white:true*/
         balanceMethod: settings.get("DefaultBalanceMethod") || "B"
       };
     },
-    
+
     readOnlyAttributes: [
       "partialShip",
       "blanketPurchaseOrders"
     ],
-    
+
     requiredAttributes: [
       "isActive",
       "name",
@@ -67,11 +67,11 @@ white:true*/
       "autoUpdateStatus",
       "autoHoldOrders"
     ],
-    
+
     // ..........................................................
     // METHODS
     //
-    
+
     /**
       Initialize
     */
@@ -81,7 +81,7 @@ white:true*/
       this.on('change:backorder', this.backorderDidChange);
       this.on('change:salesRep', this.salesRepDidChange);
     },
-    
+
     purchaseOrdersDidChange: function () {
       if (this.get("usesPurchaseOrders")) {
         this.setReadOnly("blanketPurchaseOrders", false);
@@ -90,7 +90,7 @@ white:true*/
         this.setReadOnly("blanketPurchaseOrders", true);
       }
     },
-    
+
     backorderDidChange: function () {
       if (this.get("backorder")) {
         this.setReadOnly("partialShip", false);
@@ -119,7 +119,7 @@ white:true*/
         }
       }
     },
-    
+
     /**
       Creates a new account model and fetches based on the given ID.
       Takes attributes from the account model and gives them to this customer model.
@@ -130,7 +130,7 @@ white:true*/
           that = this;
 
       fetchOptions.id = id;
-      
+
       fetchOptions.success = function (resp) {
         that.set("name", account.get("name"));
         that.set("billingContact", account.get("primaryContact"));
@@ -144,7 +144,7 @@ white:true*/
       this.setStatus(XM.Model.BUSY_FETCHING);
       account.fetch(fetchOptions);
     },
-    
+
     /**
       Creates a new prospect model and fetches based on the given ID.
       Takes attributes from the prospect model and gives them to this customer model.
@@ -177,7 +177,7 @@ white:true*/
     }
 
   });
-  
+
   /**
     @class
 
@@ -203,7 +203,7 @@ white:true*/
     recordType: 'XM.CustomerCharacteristic'
 
   });
-  
+
   /**
     @class
 
@@ -217,7 +217,7 @@ white:true*/
     isDocumentAssignment: true
 
   });
-  
+
   /**
     @class
 
@@ -287,7 +287,7 @@ white:true*/
     isDocumentAssignment: true
 
   });
-  
+
   /**
     @class
 
@@ -307,11 +307,11 @@ white:true*/
   */
   XM.CustomerGroup = XM.Model.extend({
     /** @scope XM.CustomerGroup.prototype */
-    
+
     recordType: 'XM.CustomerGroup',
-    
+
     documentKey: 'name'
-    
+
   });
 
   /**
@@ -323,13 +323,13 @@ white:true*/
     /** @scope XM.CustomerShipto.prototype */
 
     recordType: 'XM.CustomerShipto',
-    
+
     requiredAttributes: [
       "isActive",
       "name",
       "number"
     ],
-    
+
     // ..........................................................
     // METHODS
     //
@@ -350,7 +350,7 @@ white:true*/
       if (customer && status === K.READY_NEW) {
         if (!this.get("number")) {
           shiptosCollection = customer.get("shiptos");
-          
+
           //map the number attr of each model in the shiptosCollection to numberArray
           numberArray = _.map(shiptosCollection.models, function (m) {return m.get("number"); });
           /* The purpose of the next few lines is to automatically find the next integer number for the new shipto.
@@ -368,7 +368,7 @@ white:true*/
           }
           this.set("number", j + 1);
         }
-        
+
         // Set defaults from customer
         this.set("salesRep", customer.get("salesRep"));
         this.set("shipZone", customer.get("shipZone"));
@@ -377,7 +377,7 @@ white:true*/
         this.set("shipCharge", customer.get("shipCharge"));
       }
     },
-    
+
     salesRepDidChange: function () {
       var salesRep = this.get('salesRep');
       if (salesRep && (this.getStatus() & XM.Model.READY)) {
@@ -386,19 +386,19 @@ white:true*/
     }
 
   });
-  
+
   /**
     @class
-    
+
     @extends XM.Model
   */
   XM.CustomerTaxRegistration = XM.Document.extend({
     /** @scope XM.CustomerTaxRegistration */
-    
+
     recordType: 'XM.CustomerTaxRegistration',
-    
+
     documentKey: 'number'
-    
+
   });
 
   /**
@@ -412,6 +412,19 @@ white:true*/
     recordType: 'XM.CustomerType',
 
     documentKey: 'code'
+
+  });
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.CustomerShiptoRelation = XM.Info.extend({
+    /** @scope XM.CustomerRelation.prototype */
+
+    recordType: 'XM.CustomerShiptoRelation',
+
+    editableModel: 'XM.CustomerShipto'
 
   });
 
@@ -444,7 +457,7 @@ white:true*/
     documentKey: 'name'
 
   });
-  
+
   /**
     @class
 
@@ -486,7 +499,7 @@ white:true*/
     documentKey: 'name'
 
   });
-  
+
   /**
     @class
 
@@ -500,7 +513,7 @@ white:true*/
     editableModel: 'XM.Customer'
 
   });
-  
+
   /**
     @class
 
@@ -566,7 +579,7 @@ white:true*/
     model: XM.ShipCharge
 
   });
-  
+
   /**
     @class
 
@@ -590,7 +603,7 @@ white:true*/
     model: XM.ShipZone
 
   });
-  
+
   /**
     @class
 
@@ -600,9 +613,9 @@ white:true*/
     /** @scope XM.CustomerProspectListItemCollection.prototype */
 
     model: XM.CustomerProspectListItem
-    
+
   });
-  
+
   /**
     @class
 
@@ -612,6 +625,18 @@ white:true*/
     /** @scope XM.CustomerProspectRelationCollection.prototype */
 
     model: XM.CustomerProspectRelation
-    
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.CustomerShiptoRelationCollection = XM.Collection.extend({
+    /** @scope XM.CustomerProspectRelationCollection.prototype */
+
+    model: XM.CustomerShiptoRelation
+
   });
 }());

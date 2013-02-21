@@ -125,7 +125,7 @@ trailing:true white:true*/
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
     ]
   });
-  
+
   // ..........................................................
   // CUSTOMER
   //
@@ -165,6 +165,18 @@ trailing:true white:true*/
     ]
   });
 
+  // ..........................................................
+  // CUSTOMER SHIPTO
+  //
+
+  enyo.kind({
+    name: "XV.CustomerShiptoParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_shipto".loc()},
+      {name: "name", label: "_name".loc(), attr: "name"}
+    ]
+  });
   // ..........................................................
   // FILE
   //
@@ -455,7 +467,7 @@ trailing:true white:true*/
         defaultKind: "XV.DateWidget"}
     ]
   });
-  
+
   // ..........................................................
   // PROSPECT
   //
@@ -493,7 +505,7 @@ trailing:true white:true*/
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
     ]
   });
-  
+
   // ..........................................................
   // QUOTE
   //

@@ -333,7 +333,11 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.CustomerShiptoList",
     kind: "XV.List",
-    collection: "XM.CustomerShiptoCollection",
+    collection: "XM.CustomerShiptoRelationCollection",
+    parameterWidget: "XV.CustomerShiptoParameters",
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
