@@ -6,7 +6,7 @@ trailing:true white:true*/
 (function () {
 
   var hash;
-  
+
   /**
     Used to notify change of account to contact widget if both exist on
     the same workspace.
@@ -27,7 +27,7 @@ trailing:true white:true*/
       }
     }
   };
-  
+
   /**
     Handles Address change with prompts.
   */
@@ -140,6 +140,7 @@ trailing:true white:true*/
     title: "_account".loc(),
     headerAttrs: ["number", "-", "name"],
     model: "XM.Account",
+    allowPrint: true,
     handlers: {
       onSavePrompt: "savePrompt"
     },
@@ -291,12 +292,13 @@ trailing:true white:true*/
   // ..........................................................
   // CONTACT
   //
-  
+
   hash = {
     name: "XV.ContactWorkspace",
     kind: "XV.Workspace",
     title: "_contact".loc(),
     model: "XM.Contact",
+    allowPrint: true,
     headerAttrs: ["firstName", "lastName"],
     handlers: {
       onError: "errorNotify"
@@ -342,7 +344,7 @@ trailing:true white:true*/
 
   hash = enyo.mixin(hash, XV.WorkspaceAddressMixin);
   enyo.kind(hash);
-  
+
   XV.registerModelWorkspace("XM.ContactRelation", "XV.ContactWorkspace");
   XV.registerModelWorkspace("XM.ContactListItem", "XV.ContactWorkspace");
 
@@ -402,7 +404,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.Currency", "XV.CurrencyWorkspace");
-  
+
   // ..........................................................
   // CUSTOMER
   //
@@ -624,6 +626,7 @@ trailing:true white:true*/
     title: "_incident".loc(),
     headerAttrs: ["number", "-", "description"],
     model: "XM.Incident",
+    allowPrint: true,
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -817,6 +820,7 @@ trailing:true white:true*/
     title: "_opportunity".loc(),
     headerAttrs: ["number", "-", "name"],
     model: "XM.Opportunity",
+    allowPrint: true,
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -1066,7 +1070,7 @@ trailing:true white:true*/
 
   XV.registerModelWorkspace("XM.ProjectTask", "XV.ProjectTaskWorkspace");
   XV.registerModelWorkspace("XM.ProjectTaskListItem", "XV.ProjectTaskWorkspace");
-  
+
   // ..........................................................
   // PROSPECT
   //
@@ -1144,10 +1148,10 @@ trailing:true white:true*/
       }
     }
   });
-  
+
   XV.registerModelWorkspace("XM.ProspectRelation", "XV.ProspectWorkspace");
   XV.registerModelWorkspace("XM.ProspectListItem", "XV.ProspectWorkspace");
-  
+
   // ..........................................................
   // SALES REP
   //
@@ -1175,7 +1179,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.SalesRep", "XV.SalesRepWorkspace");
-  
+
 
   // ..........................................................
   // STATE
@@ -1203,7 +1207,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.State", "XV.StateWorkspace");
-  
+
   // ..........................................................
   // TAX AUTHORITY
   //
@@ -1236,7 +1240,7 @@ trailing:true white:true*/
       ]}
     ]
   };
-  
+
   hash = enyo.mixin(hash, XV.WorkspaceAddressMixin);
   enyo.kind(hash);
 
@@ -1252,6 +1256,7 @@ trailing:true white:true*/
     title: "_toDo".loc(),
     headerAttrs: ["name"],
     model: "XM.ToDo",
+    allowPrint: true,
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -1445,11 +1450,11 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.UserAccountRole", "XV.UserAccountRoleWorkspace");
   XV.registerModelWorkspace("XM.UserAccountRoleRelation", "XV.UserAccountRoleWorkspace");
   XV.registerModelWorkspace("XM.UserAccountRoleListItem", "XV.UserAccountRoleWorkspace");
-  
+
   // ..........................................................
   // CHARACTERISTIC
   //
-  
+
   enyo.kind({
     name: "XV.CharacteristicWorkspace",
     kind: "XV.Workspace",
@@ -1497,7 +1502,7 @@ trailing:true white:true*/
         this.typeValueChanged(model);
       }
     },
-    
+
     /**
       Function to determine visibility of "advanced" and "options" panels based
         on the characteristicType
