@@ -305,7 +305,6 @@ white:true*/
   /*
     @extends XM.Model
   */
-  /*
   XM.QuoteToDo = XM.Model.extend({
     
     recordType: 'XM.QuoteToDo',
@@ -313,7 +312,6 @@ white:true*/
     isDocumentAssignment: true
     
   });
-  */
 
   // ..........................................................
   // COLLECTIONS
