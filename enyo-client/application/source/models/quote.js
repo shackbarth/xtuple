@@ -29,13 +29,16 @@ white:true*/
         //shipping zone: probably the metric default
       };
     },
-/*
-    readOnlyAttributes: [
-      when customer# or shipto# are not filled, then all of the corresponding address stuff is read only.
-        also the contact name.
-      the "new" button on line items is read only when customer is blank.
-    ],
-*/
+    
+    /*
+      calculated fields used by the line items panel
+    */
+    margin: 0.0,
+    freightWeight: 0.0,
+    subtotal: 0.0,
+    tax: 0.0,
+    total: 0.0,
+
     requiredAttributes: [
       "id",
       "number",
@@ -55,6 +58,7 @@ white:true*/
     */
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
+      this.on('add:item remove:item', this.itemsDidChange);
       this.on('change:billtoContact', this.billtoContactDidChange);
       this.on('change:shiptoContact', this.shiptoContactDidChange);
       var status = this.getStatus();
@@ -92,6 +96,55 @@ white:true*/
         this.setReadOnly("shiptoContactFax", false);
         this.setReadOnly("shiptoContactEmail", false);
       }
+    },
+    
+    /**
+      itemsDidChange
+      
+      Used to update calculated fiels.
+      Called when the user adds or removes a line item.
+    */
+    itemsDidChange: function (model, value, options) {
+      var that = this,
+        changed;
+      this.margin = 0.0;
+      this.freightWeight = 0.0;
+      this.subtotal = 0.0;
+      this.tax = 0.0;
+      this.total = 0.0;
+/*
+      // Total up item data
+      _.each(this.get('items').models, function (item) {
+        that.margin = XT.math.add(that.margin,
+          item.get('margin'), XT.MONEY_SCALE);
+        that.freightWeight = XT.math.add(that.freightWeight,
+          item.get('freightWeight'), XT.WEIGHT_SCALE);
+        that.subtotal = XT.math.add(that.subtotal,
+          item.get('subtotal'), XT.MONEY_SCALE);
+        that.tax = XT.math.add(that.tax,
+          item.get('tax'), XT.MONEY_SCALE);
+        that.total = XT.math.add(that.total,
+          item.get('total'), XT.MONEY_SCALE);
+      });
+      this.balanceHoursTotal = XT.math.subtract(this.budgetedHoursTotal,
+        this.actualHoursTotal, XT.QTY_SCALE);
+      this.balanceExpensesTotal = XT.math.subtract(this.budgetedExpensesTotal,
+        this.actualExpensesTotal, XT.QTY_SCALE);
+*/
+      //Total up everything
+      _.each(this.get('items').models, function (item) {
+        
+      });
+
+      // Notify change
+      changed = {
+        margin: this.margin,
+        freightWeight: this.freightWeight,
+        subtotal: this.subtotal,
+        tax: this.tax,
+        total: this.total
+      };
+      this.trigger("change", this, changed);
     },
     
     /**
