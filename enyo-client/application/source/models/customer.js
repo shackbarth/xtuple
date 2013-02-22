@@ -394,16 +394,18 @@ white:true*/
   */
   XM.CustomerShiptoRelation = XM.Document.extend({
     /** @scope XM.CustomerShiptoRelation */
-    
+
     recordType: 'XM.CustomerShiptoRelation',
-    
+
+    editableModel: 'XM.CustomerShipto',
+
     documentKey: 'number'
-    
+
   });
-  
+
   /**
     @class
-    
+
     @extends XM.Model
   */
   XM.CustomerTaxRegistration = XM.Document.extend({
@@ -426,19 +428,6 @@ white:true*/
     recordType: 'XM.CustomerType',
 
     documentKey: 'code'
-
-  });
-  /**
-    @class
-
-    @extends XM.Info
-  */
-  XM.CustomerShiptoRelation = XM.Info.extend({
-    /** @scope XM.CustomerRelation.prototype */
-
-    recordType: 'XM.CustomerShiptoRelation',
-
-    editableModel: 'XM.CustomerShipto'
 
   });
 
