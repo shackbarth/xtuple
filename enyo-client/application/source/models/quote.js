@@ -133,7 +133,7 @@ white:true*/
 */
       //Total up everything
       _.each(this.get('items').models, function (item) {
-        
+        //margin stuff
       });
 
       // Notify change
