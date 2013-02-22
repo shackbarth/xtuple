@@ -173,7 +173,10 @@ trailing:true white:true*/
     name: "XV.CustomerShiptoParameters",
     kind: "XV.ParameterWidget",
     components: [
-      {kind: "onyx.GroupboxHeader", content: "_shipto".loc()},
+      {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
+      // TODO: this must not be editable
+      {name: "customer", label: "_customer".loc(), attr: "customer", defaultKind: "XV.CustomerWidget"},
+      {name: "number", label: "_number".loc(), attr: "number"},
       {name: "name", label: "_name".loc(), attr: "name"}
     ]
   });
