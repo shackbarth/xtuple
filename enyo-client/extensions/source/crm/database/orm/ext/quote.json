@@ -42,7 +42,7 @@
       },
       {
         "name": "toDos",
-        "toOne": {
+        "toMany": {
           "isNested": true,
           "type": "QuoteToDo",
           "column": "quhead_id",
