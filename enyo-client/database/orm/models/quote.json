@@ -46,6 +46,14 @@
         }
       },
       {
+        "name": "shipto",
+        "toOne": {
+          "isNested": true,
+          "type": "CustomerShiptoRelation",
+          "column": "quhead_shipto_id"
+        }
+      },
+      {
         "name": "shiptoName",
         "attr": {
           "type": "String",
