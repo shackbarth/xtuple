@@ -215,6 +215,13 @@
         }
       },
       {
+        "name": "site",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "quhead_warehous_id"
+        }
+      },
+      {
         "name": "packDate",
         "attr": {
           "type": "Date",

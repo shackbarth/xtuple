@@ -17,6 +17,7 @@ depends(
   "prospect.js",
   "quote.js",
   "sales_rep.js",
+  "site.js",
   "static.js",
   "tax.js",
   "terms.js",
