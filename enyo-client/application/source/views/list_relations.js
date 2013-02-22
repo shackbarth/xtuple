@@ -350,11 +350,6 @@ enyo.kind({
           {kind: "XV.ListAttr", attr: "", classes: "text-align-right"},
           {kind: "XV.ListAttr", attr: "custPrice", classes: "text-align-right"},
           {kind: "XV.ListAttr", attr: "", classes: "text-align-right"}
-        ]},
-        {kind: "XV.ListColumn", classes: "last",
-          components: [
-          {kind: "XV.ListAttr", attr: "customerPartNumber"},
-          {kind: "XV.ListAttr", attr: ""}
         ]}
       ]}
     ]}

@@ -187,13 +187,12 @@ trailing:true white:true*/
         {kind: "XV.SitePicker", attr: "site"},
         {kind: "XV.InputWidget", attr: "customerPartNumber"},
         {kind: "XV.NumberWidget", attr: "quantityOrd"},
-        {kind: "XV.InputWidget", attr: "quantityUnit"},
+        {kind: "XV.UnitWidget", attr: "quantityUnit"},
         {kind: "XV.NumberWidget", attr: "quantityShip"},
         {kind: "XV.PercentWidget", attr: "discount"},
         // {kind: "XV.MoneyWidget", attr: {amount: "amount", currency: "currency"},
         //   label: "_unitPrice".loc()},
-        
-        
+        {kind: "XV.UnitWidget", attr: "priceUnit"},
         {kind: "XV.NumberWidget", attr: "extended", label: "_extendedPrice".loc()},
         {kind: "XV.DateWidget", attr: "scheduleDate"},
         {kind: "XV.DateWidget", attr: "promiseDate"},

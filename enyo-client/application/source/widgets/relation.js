@@ -91,7 +91,8 @@ regexp:true, undef:true, trailing:true, white:true */
           {name: "webAddress", ontap: "openWindow",
             classes: "xv-relationwidget-description hasLabel hyperlink"},
           {name: "address", classes: "xv-relationwidget-description hasLabel",
-            allowHtml: true}
+            allowHtml: true},
+          {name: "additionalInfo", showing: false}
         ]}
       ]}
     ],
@@ -414,7 +415,8 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.ItemRelationCollection",
     list: "XV.ItemList",
     nameAttribute: "description1",
-    descripAttribute: "description2"
+    descripAttribute: "description2"//,
+    //additionalAttribute: "inventoryUnit.name"
   });
 
   // ..........................................................
