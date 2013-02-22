@@ -31,7 +31,7 @@ regexp:true, undef:true, trailing:true, white:true */
     published: {
       showAddress: false,
     },
-    filterRestrictionType: "account",
+    filterRestrictionType: ["account", "accountParent"],
     components: [
       {kind: "FittableColumns", components: [
         {name: "label", content: "", classes: "xv-decorated-label"},
@@ -261,12 +261,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.RelationWidget",
     collection: "XM.CustomerShiptoRelationCollection",
     list: "XV.CustomerShiptoList",
-    published: {
-      customer: null
-    },
-    customerChanged: function () {
-      console.log("accountChanged", arguments);
-    }
+    filterRestrictionType: ["customer"]
   });
 
 

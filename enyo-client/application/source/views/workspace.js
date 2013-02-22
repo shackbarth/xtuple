@@ -1219,7 +1219,7 @@ trailing:true white:true*/
     ],
     customerChanged: function () {
       var customer = this.$.customerProspectWidget.getValue();
-      this.$.customerShiptoWidget.setCustomer(customer);
+      this.$.customerShiptoWidget.setFilterRestriction(customer);
     },
     attributesChanged: function (inSender, inEvent) {
       this.inherited(arguments);
