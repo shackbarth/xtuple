@@ -95,7 +95,7 @@ regexp:true, undef:true, trailing:true, white:true */
         ]}
       ]}
     ],
-    autocomplete: function () {
+    autocomplete: function (callback) {
       var key = this.getKeyAttribute(),
         attr = this.getValue() ? this.getValue().get(key) : "",
         value = this.$.input.getValue(),
@@ -122,7 +122,7 @@ regexp:true, undef:true, trailing:true, white:true */
           }]
         };
         this._collection.fetch({
-          success: enyo.bind(this, "_fetchSuccess"),
+          success: enyo.bind(this, "_fetchSuccess", callback),
           query: query
         });
       } else if (!value) {

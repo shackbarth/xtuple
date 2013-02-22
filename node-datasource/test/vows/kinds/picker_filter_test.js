@@ -19,11 +19,14 @@ var XVOWS = XVOWS || {};
       topic: function () {
         zombieAuth.loadApp(this.callback);
       },
-      'we can create a Picker Widget': {
+      'we can create a Contact Picker Widget': {
         topic: function () {
-          return new XV.NumberWidget();
+          var widget = new XV.ContactWidget();
+          widget.$.input.setValue("a");
+          widget.autocomplete(this.callback);
         },
         'which can deal with decimals': function (topic) {
+          console.log(topic.getValue());
           assert.equal(topic.kind, "XV.ContactPicker");
         }
       }
