@@ -14,7 +14,7 @@ trailing:true white:true*/
   XV.accountNotifyContactMixin = {
     accountChanged: function () {
       var account = this.$.accountWidget.getValue();
-      this.$.contactWidget.setAccount(account);
+      this.$.contactWidget.setFilterRestriction(account);
     },
     attributesChanged: function (inSender, inEvent) {
       this.inherited(arguments);
@@ -866,7 +866,7 @@ trailing:true white:true*/
       var account;
       if (inEvent.originator.name === 'accountWidget') {
         account = this.$.accountWidget.getValue();
-        this.$.contactWidget.setAccount(account);
+        this.$.contactWidget.setFilterRestriction(account);
       }
     }
   };
@@ -1014,7 +1014,7 @@ trailing:true white:true*/
       var account;
       if (inEvent.originator.name === 'accountWidget') {
         account = this.$.accountWidget.getValue();
-        this.$.contactWidget.setAccount(account);
+        this.$.contactWidget.setFilterRestriction(account);
       }
     }
   };
@@ -1379,7 +1379,7 @@ trailing:true white:true*/
       var account;
       if (inEvent.originator.name === 'accountWidget') {
         account = this.$.accountWidget.getValue();
-        this.$.contactWidget.setAccount(account);
+        this.$.contactWidget.setFilterRestriction(account);
       }
     }
   };

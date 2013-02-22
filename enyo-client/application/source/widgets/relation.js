@@ -30,8 +30,8 @@ regexp:true, undef:true, trailing:true, white:true */
     descripAttribute: "phone",
     published: {
       showAddress: false,
-      account: null
     },
+    filterRestrictionType: "account",
     components: [
       {kind: "FittableColumns", components: [
         {name: "label", content: "", classes: "xv-decorated-label"},
@@ -99,7 +99,7 @@ regexp:true, undef:true, trailing:true, white:true */
       var key = this.getKeyAttribute(),
         attr = this.getValue() ? this.getValue().get(key) : "",
         value = this.$.input.getValue(),
-        account = this.getAccount(),
+        account = this.getFilterRestriction(),
         query,
         parameters = [{
           attribute: key,
@@ -147,7 +147,7 @@ regexp:true, undef:true, trailing:true, white:true */
         attr = this.getValue() ? this.getValue().get(key) : "",
         value = this.$.input.getValue(),
         completer = this.$.completer,
-        account = this.getAccount(),
+        account = this.getFilterRestriction(),
         parameters = [{
           attribute: key,
           operator: "BEGINS_WITH",
@@ -186,7 +186,7 @@ regexp:true, undef:true, trailing:true, white:true */
         model = this.getValue(),
         id = model ? model.id : null,
         workspace = this._List ? this._List.prototype.getWorkspace() : null,
-        account = this.getAccount(),
+        account = this.getFilterRestriction(),
         parameterItemValues = [],
         callback;
       switch (menuItem.name)
