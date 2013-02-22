@@ -99,7 +99,7 @@ regexp:true, undef:true, trailing:true, white:true */
       var key = this.getKeyAttribute(),
         attr = this.getValue() ? this.getValue().get(key) : "",
         value = this.$.input.getValue(),
-        account = this.getFilterRestriction(),
+        filter = this.getFilterRestriction(),
         query,
         parameters = [{
           attribute: key,
@@ -108,10 +108,10 @@ regexp:true, undef:true, trailing:true, white:true */
         }];
 
       if (value && value !== attr) {
-        if (account) {
+        if (filter) {
           parameters.push({
-            attribute: ['account', 'accountParent'],
-            value: account
+            attribute: [this.getFilterRestrictionType(), this.getFilterRestrictionType() + 'Parent'],
+            value: filter
           });
         }
         query = {
@@ -147,7 +147,7 @@ regexp:true, undef:true, trailing:true, white:true */
         attr = this.getValue() ? this.getValue().get(key) : "",
         value = this.$.input.getValue(),
         completer = this.$.completer,
-        account = this.getFilterRestriction(),
+        filter = this.getFilterRestriction(),
         parameters = [{
           attribute: key,
           operator: "BEGINS_WITH",
@@ -158,10 +158,10 @@ regexp:true, undef:true, trailing:true, white:true */
       // Look up if value changed
       if (value && value !== attr &&
           inEvent.keyCode !== 9) {
-        if (account) {
+        if (filter) {
           parameters.push({
-            attribute: ['account', 'accountParent'],
-            value: account
+            attribute: [this.getFilterRestrictionType(), this.getFilterRestrictionType() + 'Parent'],
+            value: filter
           });
         }
         query = {
@@ -186,7 +186,7 @@ regexp:true, undef:true, trailing:true, white:true */
         model = this.getValue(),
         id = model ? model.id : null,
         workspace = this._List ? this._List.prototype.getWorkspace() : null,
-        account = this.getFilterRestriction(),
+        filter = this.getFilterRestriction(),
         parameterItemValues = [],
         callback;
       switch (menuItem.name)
@@ -195,10 +195,10 @@ regexp:true, undef:true, trailing:true, white:true */
         callback = function (value) {
           that.setValue(value);
         };
-        if (account) {
+        if (filter) {
           parameterItemValues.push({
-            name: 'account',
-            value: account
+            name: this.getFilterRestrictionType(),
+            value: filter
           });
         }
         this.doSearch({
