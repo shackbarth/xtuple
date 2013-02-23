@@ -12,11 +12,13 @@ var XVOWS = XVOWS || {};
     zombieAuth = require("../lib/zombie_auth"),
     crud = require('../lib/crud');
 
-  var createHash = {
+  var data = {};
+
+  data.createHash = {
     code: "Herr"
   };
 
-  var updateHash = {
+  data.updateHash = {
     code: "Dame"
   };
 
@@ -26,9 +28,14 @@ var XVOWS = XVOWS || {};
   vows.describe('Honorific testing').addBatch({
     'When we load up our app': {
       topic: function () {
-        zombieAuth.loadApp(this.callback);
+        var that = this,
+          callback = function () {
+            data.model = new XM.Honorific();
+            that.callback(null, data);
+          };
+        zombieAuth.loadApp(callback);
       },
-      'We can run the CRUD tests for Honorific': crud.testCrudOperations("Honorific", createHash, updateHash),
+      'We can run the CRUD tests for Honorific': crud.testCrudOperations(data),
 
       'We can test business logic for Honorific': {
         topic: function () {
