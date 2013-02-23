@@ -22,11 +22,8 @@ var XVOWS = XVOWS || {};
     code: "Dame"
   };
 
-  /**
-    Test the Honorific model
-   */
-  vows.describe('Honorific testing').addBatch({
-    'When we load up our app': {
+  vows.describe('XM.ShipVia CRUD test').addBatch({
+    'INITIALIZE ': {
       topic: function () {
         var that = this,
           callback = function () {
@@ -35,17 +32,50 @@ var XVOWS = XVOWS || {};
           };
         zombieAuth.loadApp(callback);
       },
-      'We can run the CRUD tests for Honorific': crud.testCrudOperations(data),
-
-      'We can test business logic for Honorific': {
-        topic: function () {
-          return new XM.Honorific();
-        },
-        'The record type is XM.Honorific': function (topic) {
-          // This is trivial I know but there's not much here to test
-          assert.equal(topic.recordType, "XM.Honorific");
-        }
+      'The record type is XM.Honorific': function (data) {
+        assert.equal(data.model.recordType, "XM.Honorific");
       }
     }
+  }).addBatch({
+    'CREATE ': crud.create(data, {
+      '-> Set values': {
+        topic: function (data) {
+          data.model.set(data.createHash);
+          return data;
+        },
+        'Last Error is null': function (data) {
+          assert.isNull(data.model.lastError);
+        },
+        '-> Save': crud.save(data)
+      }
+    })
+  }).addBatch({
+    'READ': {
+      topic: function () {
+        return data;
+      },
+      'ID is a number': function (data) {
+        assert.isNumber(data.model.id);
+      },
+      'Code is `Herr`': function (data) {
+        assert.equal(data.model.get('code'), data.createHash.code);
+      }
+    }
+  }).addBatch({
+    'UPDATE ': crud.update(data, {
+      '-> Set values': {
+        topic: function () {
+          data.model.set(data.updateHash);
+          return data;
+        },
+        'Code is `Dame`': function (data) {
+          assert.equal(data.model.get('code'), data.updateHash.code);
+        },
+        '-> Commit': crud.save(data)
+      }
+    })
+  }).addBatch({
+    'DESTROY': crud.destroy(data)
   }).export(module);
+  
 }());
