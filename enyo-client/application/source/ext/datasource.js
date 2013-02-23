@@ -243,14 +243,19 @@ white:true*/
     */
     resetPassword: function (id, options) {
       var payload = {
-            id: id,
-            newUser: options.newUser
+            id: id
           },
           ajax = new enyo.Ajax({
             url: "/resetPassword",
             success: options ? options.success : undefined,
             error: options ? options.error : undefined
           });
+
+      if (options.newUser) {
+        // we don't want to send false at all, because false turns
+        // into "false" over the wire which is truthy.
+        payload.newUser = options.newUser;
+      }
 
       ajax.response(this.ajaxSuccess);
       ajax.go(payload);
