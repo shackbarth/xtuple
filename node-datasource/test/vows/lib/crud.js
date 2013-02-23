@@ -10,7 +10,7 @@ var _ = require("underscore"),
 (function () {
   "use strict";
 
-  var waitTime = 10000;
+  exports.waitTime = 10000;
   
   /**
     Creates a working model and automatically checks state
@@ -58,7 +58,7 @@ var _ = require("underscore"),
         timeoutId = setTimeout(function () {
           console.log("timeout was reached");
           that.callback(null, data);
-        }, waitTime);
+        }, exports.waitTime);
       },
       'Status is `READY_NEW`': function (data) {
         assert.equal(data.model.getStatusString(), 'READY_NEW');
@@ -103,7 +103,7 @@ var _ = require("underscore"),
         timeoutId = setTimeout(function () {
           console.log("timeout was reached");
           that.callback(null, data);
-        }, waitTime);
+        }, exports.waitTime);
       },
       'Status is `READY_CLEAN`': function (data) {
         assert.equal(data.model.getStatusString(), 'READY_CLEAN');
@@ -167,7 +167,7 @@ var _ = require("underscore"),
         timeoutId = setTimeout(function () {
           console.log("timeout was reached");
           that.callback(null, data);
-        }, waitTime);
+        }, exports.waitTime);
       },
       'Status is `DESTROYED_CLEAN`': function (data) {
         assert.equal(data.model.getStatusString(), 'DESTROYED_CLEAN');

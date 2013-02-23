@@ -1,109 +1,121 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global XVOWS:true, XT:true, XM:true, _:true, setTimeout:true,
-  clearTimeout:true, vows:true, module:true, assert:true, console:true */
+/*global XM:true, XV:true, module:true, require:true, assert: true, _:true, clearTimeout:true, setTimeout:true */
 
 (function () {
   "use strict";
 
-  var createHash,
-    updateHash,
+  var vows = require("vows"),
+    assert = require("assert"),
+    _ = require("underscore"),
+    zombieAuth = require("../lib/zombie_auth"),
+    crud = require('../lib/crud'),
     dueDate = new Date(),
-    model = new XM.Project(),
     commentType;
 
   dueDate.setDate(dueDate.getDate() + 30);
 
-  createHash = {
+  var data = {};
+  
+  data.createHash = {
     number: 'crud_test',
     name: 'Test CRUD operations',
     dueDate: dueDate
   };
 
-  updateHash = {
+  data.updateHash = {
     name: 'Test Update operation'
   };
 
-  // Get the comment type id from it's name.
-  commentType = _.find(XM.commentTypes.models, function (item) {
-    return item.get('name') === 'General';
-  });
-
   vows.describe('XM.Project CRUD test').addBatch({
-    'CREATE ': XVOWS.create(model, {
+    'INITIALIZE ': {
+      topic: function () {
+        var that = this,
+          callback = function () {
+            data.model = new XM.Project();
+            that.callback(null, data);
+          };
+        zombieAuth.loadApp(callback);
+      },
+      'The record type is XM.Project': function (data) {
+        assert.equal(data.model.recordType, "XM.Project");
+      }
+    }
+  }).addBatch({
+    'CREATE ': crud.create(data, {
       '-> Set values': {
-        topic: function (model) {
-          model.set(createHash);
-          return model;
+        topic: function (data) {
+          data.model.set(data.createHash);
+          return data;
         },
-        'Last Error is null': function (model) {
-          assert.isNull(model.lastError);
+        'Last Error is null': function (data) {
+          assert.isNull(data.model.lastError);
         },
-        '-> Save': XVOWS.save(model)
+        '-> Save': crud.save(data)
       }
     })
   }).addBatch({
     'CHECKS PARAMETERS ': {
       topic: function () {
-        return model;
+        return data;
       },
       'Last Error is null': function (model) {
         assert.isNull(model.lastError);
       },
       '-> `requiredAttributes`': {
         topic: function () {
-          return model;
+          return data;
         },
-        'Name is required': function (model) {
-          assert.isTrue(_.contains(model.requiredAttributes, "name"));
+        'Name is required': function (data) {
+          assert.isTrue(_.contains(data.model.requiredAttributes, "name"));
         },
-        'Due date is required': function (model) {
-          assert.isTrue(_.contains(model.requiredAttributes, "dueDate"));
+        'Due date is required': function (data) {
+          assert.isTrue(_.contains(data.model.requiredAttributes, "dueDate"));
         }
       }
     }
   }).addBatch({
     'READ': {
       topic: function () {
-        return model;
+        return data;
       },
-      'Number is `CRUD_TEST`': function (model) {
-        assert.equal(model.get('number'), 'CRUD_TEST'); // Was capitalized!
+      'Number is `CRUD_TEST`': function (data) {
+        assert.equal(data.model.get('number'), 'CRUD_TEST'); // Was capitalized!
       },
-      'Name is `Test CRUD operations`': function (model) {
-        assert.equal(model.get('name'), 'Test CRUD operations');
+      'Name is `Test CRUD operations`': function (data) {
+        assert.equal(data.model.get('name'), 'Test CRUD operations');
       }
     }
   }).addBatch({
-    'UPDATE ': XVOWS.update(model, {
+    'UPDATE ': crud.update(data, {
       '-> Set values': {
         topic: function () {
-          model.set(updateHash);
-          return model;
+          data.model.set(data.updateHash);
+          return data;
         },
-        'Last Error is null': function (model) {
-          assert.isNull(model.lastError);
+        'Last Error is null': function (data) {
+          assert.isNull(data.model.lastError);
         },
-        'Name is "Test Update operation"': function (model) {
-          assert.equal(model.get('name'), 'Test Update operation');
+        'Name is "Test Update operation"': function (data) {
+          assert.equal(data.model.get('name'), 'Test Update operation');
         },
-        'Status is `READY_DIRTY`': function (model) {
-          assert.equal(model.getStatusString(), 'READY_DIRTY');
+        'Status is `READY_DIRTY`': function (data) {
+          assert.equal(data.model.getStatusString(), 'READY_DIRTY');
         },
-        '-> Commit': XVOWS.save(model)
+        '-> Commit': crud.save(data)
       }
     })
   }).addBatch({
     'COMMENT ': {
       topic: function () {
-        return model;
+        return data;
       },
-      'Last Error is null': function (model) {
-        assert.isNull(model.lastError);
+      'Last Error is null': function (data) {
+        assert.isNull(data.model.lastError);
       },
       '-> add comment': {
-        topic: function (model) {
+        topic: function (data) {
           var that = this,
             timeoutId,
             comment = new XM.ProjectComment(),
@@ -114,13 +126,13 @@
             };
 
           // Must add comment to the project first then initialize
-          model.get('comments').add(comment);
+          data.model.get('comments').add(comment);
           comment.on('change:id', callback);
           comment.initialize(null, {isNew: true});
 
           // If we don't hear back, keep going
           timeoutId = setTimeout(function () {
-            that.callback(null, model);
+            that.callback(null, comment);
           }, 5000); // five seconds
         },
         'Comment Status is READY_NEW': function (comment) {
@@ -143,6 +155,12 @@
                   that.callback(null, model);
                 }
               };
+              
+            // Get the comment type id from it's name.
+            commentType = _.find(XM.commentTypes.models, function (item) {
+              return item.get('name') === 'General';
+            });
+              
             comment.set({
               commentType: commentType,
               text: 'My first comment'
@@ -153,7 +171,7 @@
             // If we don't hear back, keep going
             timeoutId = setTimeout(function () {
               that.callback(null, model);
-            }, XVOWS.wait);
+            }, crud.waitTime);
           },
           'Status is READY_CLEAN': function (model) {
             assert.equal(model.getStatusString(), 'READY_CLEAN');
@@ -168,13 +186,13 @@
   .addBatch({
     'TASK': {
       topic: function () {
-        return model;
+        return data;
       },
-      'Last Error is null': function (model) {
-        assert.isNull(model.lastError);
+      'Last Error is null': function (data) {
+        assert.isNull(data.model.lastError);
       },
       '-> add task': {
-        topic: function (model) {
+        topic: function (data) {
           var that = this,
             timeoutId,
             task = new XM.ProjectTask(),
@@ -185,13 +203,13 @@
             };
 
           // Must add task to the project first then initialize
-          model.get('tasks').add(task);
+          data.model.get('tasks').add(task);
           task.on('change:id', callback);
           task.initialize(null, {isNew: true});
 
           // If we don't hear back, keep going
           timeoutId = setTimeout(function () {
-            that.callback(null, model);
+            that.callback(null, task);
           }, 5000); // five seconds
         },
         'Task Status is READY_NEW': function (task) {
@@ -210,7 +228,7 @@
                   K = XM.Model;
                 if (status === K.READY_CLEAN) {
                   clearTimeout(timeoutId);
-                  model.off('statusChange', callback);
+                  data.model.off('statusChange', callback);
                   that.callback(null, model);
                 }
               };
@@ -225,7 +243,7 @@
             // If we don't hear back, keep going
             timeoutId = setTimeout(function () {
               that.callback(null, model);
-            }, XVOWS.wait);
+            }, crud.waitTime);
           },
           'Status is READY_CLEAN': function (model) {
             assert.equal(model.getStatusString(), 'READY_CLEAN');
@@ -236,12 +254,8 @@
         }
       }
     }
-  })
-  .addBatch({
-    'DESTROY': XVOWS.destroy(model, {
-      'FINISH XM.Project': function () {
-        XVOWS.next();
-      }
-    })
-  }).run();
+  }).addBatch({
+    'DESTROY': crud.destroy(data)
+  }).export(module);
+  
 }());
