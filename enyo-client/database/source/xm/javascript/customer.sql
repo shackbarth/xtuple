@@ -9,38 +9,31 @@ select xt.install_js('XM','Customer','xtuple', $$
   XM.Customer.options = [
     "ShiptoId",
     "Quantity",
-    "QuantityUomId",
-    "PriceUomId",
-    "CurrencyId",
-    "EffectiveDate",
-    "AsOfDate"
+    "EffectiveDate"
   ]
   
+  /*itemprice(pitemid integer, pcustid integer, pshiptoid integer, pqty numeric, pqtyuom integer, ppriceuom integer, pcurrid integer, peffective date */
   /**
    Return a price for an item on a sales order/quote based on input. 
    @param {Number} item id
    @param {Number} customer id
    @param {Number} shipto id
+   @param {Number} qty 
    @param {Number} qty uom id
    @param {Number} price uom id
    @param {Number} currency id
+   @param {Date} effective date
    @returns Number 
   */
  
-  XM.Customer.price = function() {
-  
+  XM.Customer.price = function(itemId, customerId, shipto, qty, qtyUomId, priceUomId, currencyId, effective) {
     var shipto = options.ShiptoId || -1;
-    var qty = options.Quantity || 1;
-/* I need this    var qtyuom = options.QuantityUomId || -1; */
-/* I need this    var priceuom = options.PriceUomId || -1;  */
-/* I need this    var currency = options.CurrencyId || -1;  */
-    var effectivedate = options.EffectiveDate || current_date;
-    var asofdate = options.AsOfDate || current_date;
-    
+    var qty = options.Quantity || -1;
+    var effective = options.effectiveDate || -1;
     var ret,
-        sql = 'select itemprice($1, $2, shipto, qty, $3, $4, $5, effectivedate, asofdate) as result;',
+        sql = 'select itemprice($1::integer, $2::integer, $3::integer, $4::integer, $5::integer, $6::integer, $7::integer, $8::date) as result;',
         err;
-    ret = plv8.execute(sql);
+    ret = plv8.execute(sql, [itemId, customerId, shipto, qty, qtyUomId, priceUomId, currencyId, effective]).[0].result; 
     return ret;
   }
 
