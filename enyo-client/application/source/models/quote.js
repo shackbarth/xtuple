@@ -43,7 +43,7 @@ white:true*/
       "id",
       "number",
       "quoteDate",
-      //at least 1 line item?
+      "items", //at least 1 line item?
       "customer",
       "miscCharge",
       "calculateFreight"
@@ -59,8 +59,11 @@ white:true*/
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
       this.on('add:item remove:item', this.itemsDidChange);
-      this.on('change:billtoContact', this.billtoContactDidChange);
-      this.on('change:shiptoContact', this.shiptoContactDidChange);
+      //this.on('change:billtoContact', this.billtoContactDidChange);
+      //this.on('change:shiptoContact', this.shiptoContactDidChange);
+      
+      this.on('change:billtoName', this.billtoContactDidChange);
+      this.on('change:shiptoName', this.shiptoContactDidChange);
       var status = this.getStatus();
       if (status === XM.Model.READY_NEW) {
         this.setReadOnly("billtoAddress1", false);
@@ -112,28 +115,13 @@ white:true*/
       this.subtotal = 0.0;
       this.tax = 0.0;
       this.total = 0.0;
-/*
-      // Total up item data
-      _.each(this.get('items').models, function (item) {
-        that.margin = XT.math.add(that.margin,
-          item.get('margin'), XT.MONEY_SCALE);
-        that.freightWeight = XT.math.add(that.freightWeight,
-          item.get('freightWeight'), XT.WEIGHT_SCALE);
-        that.subtotal = XT.math.add(that.subtotal,
-          item.get('subtotal'), XT.MONEY_SCALE);
-        that.tax = XT.math.add(that.tax,
-          item.get('tax'), XT.MONEY_SCALE);
-        that.total = XT.math.add(that.total,
-          item.get('total'), XT.MONEY_SCALE);
-      });
-      this.balanceHoursTotal = XT.math.subtract(this.budgetedHoursTotal,
-        this.actualHoursTotal, XT.QTY_SCALE);
-      this.balanceExpensesTotal = XT.math.subtract(this.budgetedExpensesTotal,
-        this.actualExpensesTotal, XT.QTY_SCALE);
-*/
+
       //Total up everything
       _.each(this.get('items').models, function (item) {
         //margin stuff
+        //freightWeight stuff
+        that.subtotal = XT.math.add(that.subtotal,
+          item.get('listPrice'), XT.MONEY_SCALE);
       });
 
       // Notify change
@@ -151,7 +139,9 @@ white:true*/
       billtoContactDidChange
     */
     billtoContactDidChange: function (model, value, options) {
-
+      var status = this.getStatus(),
+        billtoName = this.get("billtoName");
+        
     },
     
     /**
