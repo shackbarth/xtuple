@@ -103,75 +103,33 @@ white:true*/
       "group"
     ],
 
-    save: function (key, value, options) {
-      // Handle both `"key", value` and `{key: value}` -style arguments.
-      if (_.isObject(key) || _.isEmpty(key)) {
-        options = value;
-      }
-
-      options = options ? _.clone(options) : {};
+    /**
+      @param {Array} extensions The extensions to restrict installation to
+      @param {String} template The name of the template postbooks DB to
+        initialize to, or falsy if we don't want to initialize
+     */
+    runMaintenance: function (extensions, template) {
       var that = this,
-        // need to look at these before the save, else they're not considered
-        // new by the model
-        newExtensions = _.filter(this.get("extensions").models, function (ext) {
-          return ext.isNew();
-        }),
-        isNew = that.getStatus() === XM.Model.READY_NEW,
-        success = options.success;
+        params = {},
+        maintenanceOptions = {};
 
-      // There are two extra steps that we want to take upon the
-      // save of an organization:
-      // 1. (If the org is new) Run an IT-maintained script on
-      // the server to instantiate a new instance database.
-      // 2. (If there are any extensions added) Run the maintenance
-      // script to install the extension orms)
-      //
-      // These are both administered through the same call to the
-      // maintenance route.
-      options.success = function (resp) {
-        var params = {},
-          maintenanceOptions = {
-            error: function (err) {
-              XT.log("Database maintenance system error", err);
-            }
-          },
-          newExtensionIds = _.map(newExtensions, function (ext) {
-            return ext.get("extension").get("id");
-          });
-
-        if (newExtensionIds.length === 0 && !isNew) {
-          // no need to run maintenance
-          if (success) { success(that, resp, options); }
-          return;
-        }
-
-        if (isNew) {
-          // keep the argument out of the URL altogether if not, because
-          // the maintenance route will be fooled by the truthy string "false"
-          params.initialize = isNew;
-        }
-        params.organization = that.get("name");
-        params.extensions = JSON.stringify(newExtensionIds);
-
-        maintenanceOptions.success = function (inResponse) {
-          if (inResponse.isError) {
-            XT.log("Database maintenance error", inResponse);
-          } else {
-            XT.log("Database maintenance successful", inResponse);
-          }
-        }
-        XT.dataSource.runMaintenance(params, maintenanceOptions);
-
-        if (success) { success(that, resp, options); }
-      };
-
-      // Handle both `"key", value` and `{key: value}` -style arguments.
-      if (_.isObject(key) || _.isEmpty(key)) {
-        value = options;
+      if (template) {
+        // keep the argument out of the URL altogether if not, because
+        // the maintenance route will be fooled by the truthy string "false"
+        params.initialize = template;
       }
+      params.organization = that.get("name");
+      params.extensions = JSON.stringify(extensions);
 
-      return XM.GlobalDocument.prototype.save.call(this, key, value, options);
-    },
+      maintenanceOptions.success = function (inResponse) {
+        if (inResponse.isError) {
+          XT.log("Database maintenance error", inResponse);
+        } else {
+          XT.log("Database maintenance successful", inResponse);
+        }
+      };
+      XT.dataSource.runMaintenance(params, maintenanceOptions);
+    }
 
   });
 
