@@ -10,7 +10,7 @@ if [ $# -lt 1 ] ; then
 fi
  
 #Process the arguments
-while getopts c:hin: opt
+while getopts chin: opt
 do
    case "$opt" in
       c) cell=$OPTARG;;
