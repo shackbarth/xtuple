@@ -113,13 +113,17 @@ white:true*/
         params = {},
         maintenanceOptions = {};
 
+      params.organization = that.get("name");
+
       if (template) {
         // keep the argument out of the URL altogether if not, because
         // the maintenance route will be fooled by the truthy string "false"
         params.initialize = template;
       }
-      params.organization = that.get("name");
-      params.extensions = JSON.stringify(extensions);
+
+      if (extensions) {
+        params.extensions = JSON.stringify(extensions);
+      }
 
       maintenanceOptions.success = function (inResponse) {
         if (inResponse.isError) {

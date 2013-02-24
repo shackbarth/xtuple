@@ -164,18 +164,24 @@ trailing:true white:true*/
         templateDb = buttonName.replace("DbButton", "");
 
       this.getValue().runMaintenance(null, templateDb);
+      this.$.chooseTemplatePopup.hide();
+      // TODO: I suppose that if the user wanted to close the workspace
+      // and the hack below prevented him, now would be an ok time to
+      // close the workspace
     },
     save: function (options) {
-      var self = this,
-        showPopup = function () {
-          self.$.chooseTemplatePopup.show();
-        },
+      var that = this,
         success = options ? options.success : undefined,
         newOrganization = this.getValue().getStatus() === XM.Model.READY_NEW,
         newExtensionIds,
         newExtensions = _.filter(this.getValue().get("extensions").models, function (ext) {
           return ext.isNew();
         });
+
+      if (newOrganization) {
+        // hack: don't the workspace close out if we're going to be popping up a popup soon
+        this.parent.parent._saveState = 1; //SAVE_APPLY
+      }
 
       options = options || {};
       options.success = function (model, result, opts) {
@@ -188,10 +194,11 @@ trailing:true white:true*/
           // ask the user if they want to init the db. Don't worry about the newExtensions
           // in this case, because we'll be installing them all, which is what happens
           // if you don't specify a restriction
-          //that.$.chooseTemplatePopup.show();
-          showPopup();
+          that.$.chooseTemplatePopup.show();
 
-        } else if (newExtensions && newExtensions.length > 0) {
+        } else
+
+        if (newExtensions && newExtensions.length > 0) {
           // not a new organization, but some updates to extensions. Run maintenance
           // on the extensions that have just been added
           newExtensionIds = _.map(newExtensions, function (ext) {

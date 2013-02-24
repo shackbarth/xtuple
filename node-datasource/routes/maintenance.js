@@ -164,7 +164,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             },
             group = org.get("group"),
             initInstanceDbDirectory = X.options.datasource.initInstanceDbDirectory || "./scripts",
-            initInstanceDbCommand = "initInstanceDb.sh " + flags + " -g " + group,
+            initInstanceDbCommand = "initInstanceDb.sh " + flags + " -g " + group + " -t " + args.initialize,
             corePsqlCommand = psqlPath + flags + " -f init_instance.sql",
             coreScriptDir = '../enyo-client/database/source',
             coreOrmDir = '../enyo-client/database/orm';
@@ -316,7 +316,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var host = req.headers.host,
       args = req.query;
 
-    console.log("args", args);
     if (host === "localhost:442") {
       // users accessing this route through the unexposed server don't have to
       // get authenticated. Do the fetch under the node user authority.
