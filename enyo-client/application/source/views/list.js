@@ -313,7 +313,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.CustomerRelation", "XV.CustomerList");
-  
+
   // ..........................................................
   // CUSTOMERPROSPECT
   //
@@ -326,6 +326,33 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.CustomerProspectRelation", "XV.CustomerProspectList");
+
+  // ..........................................................
+  // CUSTOMER SHIPTO
+  //
+  enyo.kind({
+    name: "XV.CustomerShiptoList",
+    kind: "XV.List",
+    collection: "XM.CustomerShiptoRelationCollection",
+    parameterWidget: "XV.CustomerShiptoParameters",
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "name", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+  XV.registerModelList("XM.CustomerShiptoRelation", "XV.CustomerShiptoList");
 
   // ..........................................................
   // EMPLOYEE
@@ -830,7 +857,7 @@ trailing:true white:true*/
     formatHours: XV.ProjectList.prototype.formatHours,
     formatExpenses: XV.ProjectList.prototype.formatExpenses
   });
-  
+
   // ..........................................................
   // PROSPECT
   //
@@ -880,7 +907,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.ProspectRelation", "XV.ProspectList");
-  
+
   // ..........................................................
   // QUOTE
   //

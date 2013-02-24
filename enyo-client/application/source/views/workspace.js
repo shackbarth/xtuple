@@ -14,7 +14,7 @@ trailing:true white:true*/
   XV.accountNotifyContactMixin = {
     accountChanged: function () {
       var account = this.$.accountWidget.getValue();
-      this.$.contactWidget.setAccount(account);
+      this.$.contactWidget.setFilterRestriction(account);
     },
     attributesChanged: function (inSender, inEvent) {
       this.inherited(arguments);
@@ -866,7 +866,7 @@ trailing:true white:true*/
       var account;
       if (inEvent.originator.name === 'accountWidget') {
         account = this.$.accountWidget.getValue();
-        this.$.contactWidget.setAccount(account);
+        this.$.contactWidget.setFilterRestriction(account);
       }
     }
   };
@@ -1014,7 +1014,7 @@ trailing:true white:true*/
       var account;
       if (inEvent.originator.name === 'accountWidget') {
         account = this.$.accountWidget.getValue();
-        this.$.contactWidget.setAccount(account);
+        this.$.contactWidget.setFilterRestriction(account);
       }
     }
   };
@@ -1181,11 +1181,27 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "status"},
             {kind: "XV.DateWidget", attr: "expireDate", label: "_expires".loc()},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
-            {kind: "XV.ContactWidget", attr: "billTo",
-              showAddress: true, label: "_name".loc()},
+            {kind: "XV.CustomerProspectWidget", attr: "customer", showAddress: true, label: "_billTo".loc()},
+            {kind: "XV.InputWidget", attr: "billtoName", label: "_name".loc()},
+            {kind: "XV.InputWidget", attr: "billtoAddress1", label: "_address1".loc()},
+            {kind: "XV.InputWidget", attr: "billtoAddress2", label: "_address2".loc()},
+            {kind: "XV.InputWidget", attr: "billtoAddress3", label: "_address3".loc()},
+            {kind: "XV.InputWidget", attr: "billtoCity", label: "_city".loc()},
+            {kind: "XV.InputWidget", attr: "billtoState", label: "_state".loc()},
+            {kind: "XV.InputWidget", attr: "billtoPostalCode", label: "_postalCode".loc()},
+            {kind: "XV.InputWidget", attr: "billtoCountry", label: "_country".loc()},
+            {kind: "onyx.Button", content: "_copyToShipTo".loc(), ontap: "copyBilltoToShipto"},
             {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
-            {kind: "XV.ContactWidget", attr: "shipto",
-              showAddress: true, label: "_name".loc()},
+            {kind: "XV.CustomerShiptoWidget", attr: "shipto", showAddress: true, label: "_name".loc()},
+            {kind: "XV.InputWidget", attr: "shiptoName", label: "_name".loc()},
+            {kind: "XV.InputWidget", attr: "shiptoAddress1", label: "_address1".loc()},
+            {kind: "XV.InputWidget", attr: "shiptoAddress2", label: "_address2".loc()},
+            {kind: "XV.InputWidget", attr: "shiptoAddress3", label: "_address3".loc()},
+            {kind: "XV.InputWidget", attr: "shiptoCity", label: "_city".loc()},
+            {kind: "XV.InputWidget", attr: "shiptoState", label: "_state".loc()},
+            {kind: "XV.InputWidget", attr: "shiptoPostalCode", label: "_postalCode".loc()},
+            {kind: "XV.InputWidget", attr: "shiptoCountry", label: "_country".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_otherStuff".loc()},
             {kind: "XV.InputWidget", attr: "fob"},
             {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber", label: "_custPO".loc()},
             {kind: "XV.ShipViaCombobox", attr: "shipVia"},
@@ -1200,7 +1216,24 @@ trailing:true white:true*/
         {kind: "XV.QuoteCommentBox", attr: "comments"},
         {kind: "XV.QuoteDocumentsBox", attr: "documents"}
       ]}
-    ]
+    ],
+    customerChanged: function () {
+      var customer = this.$.customerProspectWidget.getValue();
+      this.$.customerShiptoWidget.setFilterRestriction(customer);
+    },
+    attributesChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      this.customerChanged();
+    },
+    controlValueChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      if (inEvent.originator.name === 'customerWidget') {
+        this.customerChanged();
+      }
+    },
+    copyBilltoToShipto: function () {
+      this.getValue().copyBilltoToShipto();
+    }
   });
 
   XV.registerModelWorkspace("XM.QuoteRelation", "XV.QuoteWorkspace");
@@ -1346,7 +1379,7 @@ trailing:true white:true*/
       var account;
       if (inEvent.originator.name === 'accountWidget') {
         account = this.$.accountWidget.getValue();
-        this.$.contactWidget.setAccount(account);
+        this.$.contactWidget.setFilterRestriction(account);
       }
     }
   };

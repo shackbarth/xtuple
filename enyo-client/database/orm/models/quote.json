@@ -31,6 +31,14 @@
         }
       },
       {
+        "name": "customer",
+        "toOne": {
+          "isNested": true,
+          "type": "CustomerProspectRelation",
+          "column": "quhead_cust_id"
+        }
+      },
+      {
         "name": "quoteDate",
         "attr": {
           "type": "Date",
