@@ -1,26 +1,32 @@
 #!/bin/bash
  
-#Set a default value for the $cell variable
-cell="test"
- 
-#Check to see if at least one argument was specified
-if [ $# -lt 1 ] ; then
-   echo "You must specify at least 1 argument."
-   exit 1
-fi
+PROG=`basename $0`
+
+usage() {
+  echo "$PROG usage:"
+  echo
+  echo "-H	Print this help and exit"
+  echo "-U	User Account"
+  echo "-d	Database name to create"
+  echo "-h	Hostname"
+  echo "-p	Port"
+  echo "-g	Group"
+  echo "-t  Type of database to create"
+  echo
+}
  
 #Process the arguments
-while getopts chin: opt
+while getopts U:Hd:h: opt
 do
    case "$opt" in
-      c) cell=$OPTARG;;
-      h) usage;;
-      i) info="yes";;
-      n) name=$OPTARG;;
+      U) PGUSER=$OPTARG;;
+      H) usage;;
+      d) ORGNAME=$OPTARG;;
+      h) HOSTNAME=$OPTARG;;
       \?) usage;;
    esac
 done
 
-echo $cell
-echo $name
-echo 'hi'
+echo $PGUSER
+echo $ORGNAME
+echo $HOSTNAME
