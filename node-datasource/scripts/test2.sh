@@ -1,31 +1,26 @@
-#!/bin/sh
-
-#http://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash
-
-# A POSIX variable
-OPTIND=1         # Reset in case getopts has been used previously in the shell.
-
-# Initialize our own variables:
-output_file=""
-verbose=0
-
-while getopts "h?vf:" opt; do
-    case "$opt" in
-    h|\?)
-        show_help
-        exit 0
-        ;;
-    v)  verbose=1
-        ;;
-    f)  output_file=$OPTARG
-        ;;
-    esac
+#!/bin/bash
+ 
+#Set a default value for the $cell variable
+cell="test"
+ 
+#Check to see if at least one argument was specified
+if [ $# -lt 1 ] ; then
+   echo "You must specify at least 1 argument."
+   exit 1
+fi
+ 
+#Process the arguments
+while getopts c:hin: opt
+do
+   case "$opt" in
+      c) cell=$OPTARG;;
+      h) usage;;
+      i) info="yes";;
+      n) name=$OPTARG;;
+      \?) usage;;
+   esac
 done
 
-shift $((OPTIND-1))
-
-[ "$1" = "--" ] && shift
-
-echo "verbose=$verbose, output_file='$output_file', Leftovers: $@"
-
-# End of file
+echo $cell
+echo $name
+echo 'hi'
