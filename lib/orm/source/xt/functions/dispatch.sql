@@ -29,7 +29,12 @@ create or replace function xt.dispatch(data_hash text) returns text as $$
   if(obj[f]) method = obj[f].curry(args);
   else throw new Error('Function ' + dataHash.className + '.' + f + ' not found.');
 
-  ret = obj.isDispatchable ? method() : false;
+  try {
+    ret = obj.isDispatchable ? method() : false;
+  } catch (error) {
+    plv8.elog(NOTICE, "Error caught", error);
+    plv8.elog(ERROR, "Error caught", error);
+  }
 
   return dataHash.isJSON ? JSON.stringify(ret) : ret;
 
