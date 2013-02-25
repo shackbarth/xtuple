@@ -80,7 +80,7 @@ white:true*/
   */
   XM.QuoteAccount = XM.Model.extend({
     /** @scope XM.QuoteAccount.prototype */
-
+  
     recordType: 'XM.QuoteAccount',
     
     isDocumentAssignment: true
@@ -94,7 +94,7 @@ white:true*/
   */
   XM.QuoteContact = XM.Model.extend({
     /** @scope XM.QuoteContact.prototype */
-
+  
     recordType: 'XM.QuoteContact',
     
     isDocumentAssignment: true
@@ -108,11 +108,11 @@ white:true*/
   */
   XM.QuoteFile = XM.Model.extend({
     /** @scope XM.QuoteFile.prototype */
-
+  
     recordType: 'XM.QuoteFile',
-
+  
     isDocumentAssignment: true
-
+  
   });
   
   /**
@@ -122,11 +122,11 @@ white:true*/
   */
   XM.QuoteItem = XM.Model.extend({
     /** @scope XM.QuoteItem.prototype */
-
+  
     recordType: 'XM.QuoteItem',
-
+  
     isDocumentAssignment: true
-
+  
   });
   
   /**
@@ -135,11 +135,11 @@ white:true*/
     @extends XM.Model
   */
   XM.QuoteLine = XM.Model.extend({
-    /** @scope XM.QuoteLine.prototype */
-
-    recordType: 'XM.QuoteLine'
-
-  });
+     /** @scope XM.QuoteLine.prototype */
+  
+     recordType: 'XM.QuoteLine'
+  
+   });
   
   /**
     @class
@@ -148,9 +148,9 @@ white:true*/
   */
   XM.QuoteLineCharacteristic = XM.Model.extend({
     /** @scope XM.QuoteLineCharacteristic.prototype */
-
+  
     recordType: 'XM.QuoteLineCharacteristic'
-
+  
   });
   
   /**
@@ -190,11 +190,11 @@ white:true*/
   */
   XM.QuoteUrl = XM.Model.extend({
     /** @scope XM.QuoteUrl.prototype */
-
+  
     recordType: 'XM.QuoteUrl',
-
+  
     isDocumentAssignment: true
-
+  
   });
   
   /**
@@ -203,13 +203,13 @@ white:true*/
     @extends XM.Model
   */
   XM.QuoteProject = XM.Model.extend({
-    /** @scope XM.QuoteProject.prototype */
-
-    recordType: 'XM.QuoteProject',
-
-    isDocumentAssignment: true
-
-  });
+     /** @scope XM.QuoteProject.prototype */
+  
+     recordType: 'XM.QuoteProject',
+  
+     isDocumentAssignment: true
+  
+   });
   
   /**
     @class
@@ -217,13 +217,13 @@ white:true*/
     @extends XM.Model
   */
   XM.QuoteIncident = XM.Model.extend({
-    /** @scope XM.QuoteIncident.prototype */
-
-    recordType: 'XM.QuoteIncident',
-
-    isDocumentAssignment: true
-
-  });
+     /** @scope XM.QuoteIncident.prototype */
+  
+     recordType: 'XM.QuoteIncident',
+  
+     isDocumentAssignment: true
+  
+   });
   
   /**
     @class
@@ -232,11 +232,11 @@ white:true*/
   */
   XM.QuoteOpportunity = XM.Model.extend({
     /** @scope XM.QuoteOpportunity.prototype */
-
+  
     recordType: 'XM.QuoteOpportunity',
-
+  
     isDocumentAssignment: true
-
+  
   });
   
   /**

@@ -300,3 +300,58 @@ enyo.kind({
     ]}
   ]
 });
+
+// ..........................................................
+// QUOTE LINE ITEM
+//
+
+enyo.kind({
+  name: "XV.QuoteLineItemListRelations",
+  kind: "XV.ListRelations",
+  orderBy: [
+    {attribute: "number"}
+  ],
+  parentKey: "quote",
+  components: [
+    {kind: "XV.ListItem", components: [
+      {kind: "FittableColumns", components: [
+        {kind: "XV.ListColumn", classes: "first", components: [
+          {kind: "FittableColumns", components: [
+            {kind: "XV.ListAttr", attr: "lineNumber", classes: "bold"},
+            {kind: "XV.ListAttr", attr: "scheduleDate", fit: true, classes: "right"}
+          ]},
+          {kind: "XV.ListAttr", attr: "item.number"}
+        ]},
+        {kind: "XV.ListColumn", classes: "third",
+          components: [
+          {kind: "XV.ListAttr", attr: "quote.status"},
+          {kind: "XV.ListAttr", attr: "itemSite"}
+        ]},
+        {kind: "XV.ListColumn", classes: "third",
+          components: [
+          {kind: "XV.ListAttr", attr: "quantityOrd"},
+          //{kind: "XV.ListAttr", attr: "shipped"}, // Inventory
+          {kind: "XV.ListAttr", attr: "quantityUnit.name"}
+        ]},
+        {kind: "XV.ListColumn", style: "width: 80;",
+          components: [
+          {content: "_price".loc() + ":", classes: "xv-list-attr",
+            style: "text-align: right;"},
+          {content: "_extended".loc() + ":", classes: "xv-list-attr",
+            style: "text-align: right;"},
+          {content: "_custPrice".loc() + ":", classes: "xv-list-attr",
+            style: "text-align: right;"},
+          {content: "_discount".loc() + ":", classes: "xv-list-attr",
+            style: "text-align: right;"}
+        ]},
+        {kind: "XV.ListColumn", classes: "money",
+          components: [
+          {kind: "XV.ListAttr", attr: "price", classes: "text-align-right"},
+          {kind: "XV.ListAttr", attr: "", classes: "text-align-right"},
+          {kind: "XV.ListAttr", attr: "custPrice", classes: "text-align-right"},
+          {kind: "XV.ListAttr", attr: "", classes: "text-align-right"}
+        ]}
+      ]}
+    ]}
+  ]
+});
