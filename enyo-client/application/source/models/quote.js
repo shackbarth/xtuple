@@ -125,6 +125,8 @@ white:true*/
     */
     billtoDidChange: function (model, value, options) {
       var theValue = value;
+      
+      this.setReadOnly("items", false);
         
       if (theValue) {
         for (var i = 0; i < this.billtoAttrArray.length; i++) {
@@ -194,8 +196,9 @@ white:true*/
       copyBilltoToShipto
     */
     copyBilltoToShipto: function () {
+      this.set("shipto", null);
       for (var i = 0; i < this.billtoAttrArray.length; i++) {
-        this.set(this.shiptoAttrArray[i], this.billtoAttrArray[i]);
+        this.set(this.shiptoAttrArray[i], this.get(this.billtoAttrArray[i]));
       }
     }
     
