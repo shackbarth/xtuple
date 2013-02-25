@@ -144,6 +144,8 @@ white:true*/
     billtoNameDidChange: function (model, value, options) {
       var status = this.getStatus();
       
+      //need to do model fetching stuff that populates the other stuff
+      
       if (!this.get("billtoName") && (status !== XM.Model.READY_NEW)) {
         this.setReadOnly("items", false);
         this.setReadOnly("billtoName", false);
@@ -195,6 +197,7 @@ white:true*/
       copyBilltoToShipto
     */
     copyBilltoToShipto: function (model, value, options) {
+      //need to do model fetching stuff that populates the other stuff
       this.set("shiptoName", this.get("billtoName"));
       this.set("shiptoAddress1", this.get("billtoAddress1"));
       this.set("shiptoAddress2", this.get("billtoAddress2"));
