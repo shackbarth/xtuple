@@ -59,11 +59,15 @@ white:true*/
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
       this.on('add:item remove:item', this.itemsDidChange);
+      //NOTE
+      // this isn't supposed to be billtoName.  Should be like, billto or billtoNumber or something
+      // this is how I had it before Steve upped 19453b
       this.on('change:billtoName', this.billtoNameDidChange);
       this.on('change:shiptoName', this.shiptoNameDidChange);
       var status = this.getStatus();
       if (!this.get("billtoName") && (status === XM.Model.READY_NEW)) {
         this.setReadOnly("items", true);
+        this.setReadOnly("billtoName", true);
         this.setReadOnly("billtoAddress1", true);
         this.setReadOnly("billtoAddress2", true);
         this.setReadOnly("billtoAddress3", true);
@@ -80,6 +84,7 @@ white:true*/
         this.setReadOnly("billtoContactTitle", true);
         this.setReadOnly("billtoContactFax", true);
         this.setReadOnly("billtoContactEmail", true);
+        this.setReadOnly("shiptoName", true);
         this.setReadOnly("shiptoAddress1", true);
         this.setReadOnly("shiptoAddress2", true);
         this.setReadOnly("shiptoAddress3", true);
@@ -141,6 +146,7 @@ white:true*/
       
       if (!this.get("billtoName") && (status !== XM.Model.READY_NEW)) {
         this.setReadOnly("items", false);
+        this.setReadOnly("billtoName", false);
         this.setReadOnly("billtoAddress1", false);
         this.setReadOnly("billtoAddress2", false);
         this.setReadOnly("billtoAddress3", false);
@@ -157,6 +163,7 @@ white:true*/
         this.setReadOnly("billtoContactTitle", false);
         this.setReadOnly("billtoContactFax", false);
         this.setReadOnly("billtoContactEmail", false);
+        this.setReadOnly("shiptoName", false);
         this.setReadOnly("shiptoAddress1", false);
         this.setReadOnly("shiptoAddress2", false);
         this.setReadOnly("shiptoAddress3", false);
@@ -188,7 +195,23 @@ white:true*/
       copyBilltoToShipto
     */
     copyBilltoToShipto: function (model, value, options) {
-      
+      this.set("shiptoName", this.get("billtoName"));
+      this.set("shiptoAddress1", this.get("billtoAddress1"));
+      this.set("shiptoAddress2", this.get("billtoAddress2"));
+      this.set("shiptoAddress3", this.get("billtoAddress3"));
+      this.set("shiptoCity", this.get("billtoCity"));
+      this.set("shiptoState", this.get("billtoState"));
+      this.set("shiptoPostalCode", this.get("billtoPostalCode"));
+      this.set("shiptoPhone", this.get("billtoPhone"));
+      this.set("shiptoContactHonorific", this.get("billtoContactHonorific"));
+      this.set("shiptoContactFirstName", this.get("billtoContactFirstName"));
+      this.set("shiptoContactMiddleName", this.get("billtoContactMiddleName"));
+      this.set("shiptoContactLastName", this.get("billtoContactLastName"));
+      this.set("shiptoContactSuffix", this.get("billtoContactSuffix"));
+      this.set("shiptoContactPhone", this.get("billtoContactPhone"));
+      this.set("shiptoContactTitle", this.get("billtoContactTitle"));
+      this.set("shiptoContactFax", this.get("billtoContactFax"));
+      this.set("shiptoContactEmail", this.get("billtoContactEmail"));
     }
     
   });
