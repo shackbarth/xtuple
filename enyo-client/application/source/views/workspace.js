@@ -1192,7 +1192,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "billtoCountry", label: "_country".loc()},
             {kind: "onyx.Button", content: "_copyToShipTo".loc(), ontap: "copyBilltoToShipto"},
             {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
-            {kind: "XV.CustomerShiptoWidget", attr: "shipto", showAddress: true, label: "_name".loc()},
+            {kind: "XV.CustomerShiptoWidget", attr: "shipto", showAddress: true, label: "_shipTo".loc()},
             {kind: "XV.InputWidget", attr: "shiptoName", label: "_name".loc()},
             {kind: "XV.InputWidget", attr: "shiptoAddress1", label: "_address1".loc()},
             {kind: "XV.InputWidget", attr: "shiptoAddress2", label: "_address2".loc()},
