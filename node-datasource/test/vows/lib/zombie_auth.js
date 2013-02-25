@@ -98,6 +98,9 @@ Simplest possible usage:
               XM = browser.window.XM;
               XT = browser.window.XT;
               XV = browser.window.XV;
+              
+              // Another hack: quiet the logs here.
+              XT.log = function () {};
 
               // clear out both is interval and the I'm-giving-up timeout
               // we really want neither to be run again.
