@@ -147,14 +147,15 @@ trailing:true white:true*/
         modal: true, floating: true, scrim: true,
         onHide: "popupHidden", components: [
         {content: "_chooseTemplate".loc() },
+        {content: "_initDbWarning".loc() },
         {tag: "br"},
         {kind: "onyx.Button", name: "demoDbButton", content: "_demo".loc(), ontap: "chooseTemplate",
           classes: "xv-popup-button"},
         {kind: "onyx.Button", name: "quickstartDbButton", content: "_quickStart".loc(), ontap: "chooseTemplate",
           classes: "xv-popup-button"},
-        {kind: "onyx.Button", name: "blankDbButton", content: "_blank".loc(), ontap: "chooseTemplate",
+        {kind: "onyx.Button", name: "emptyDbButton", content: "_empty".loc(), ontap: "chooseTemplate",
           classes: "xv-popup-button"},
-        {kind: "onyx.Button", name: "DbButton", content: "_no".loc(), ontap: "chooseTemplate",
+        {kind: "onyx.Button", name: "DbButton", content: "_none".loc(), ontap: "chooseTemplate",
           classes: "onyx-blue xv-popup-button"}
       ]}
     ],
