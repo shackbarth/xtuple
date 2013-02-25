@@ -183,10 +183,21 @@ trailing:true white:true*/
       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
         classes: "in-panel", components: [
         {kind: "XV.InputWidget", attr: "lineNumber"},
-        {kind: "onyx.GroupboxHeader", content: "_item".loc()},
         {kind: "XV.ItemWidget", attr: "item"},
         {kind: "XV.SitePicker", attr: "site"},
-        {kind: "XV.InputWidget", attr: "customerPartNumber"}
+        {kind: "XV.InputWidget", attr: "customerPartNumber"},
+        {kind: "XV.NumberWidget", attr: "quantityOrd"},
+        {kind: "XV.UnitWidget", attr: "quantityUnit"},
+        {kind: "XV.NumberWidget", attr: "quantityShip"},
+        {kind: "XV.PercentWidget", attr: "discount"},
+        // {kind: "XV.MoneyWidget", attr: {amount: "amount", currency: "currency"},
+        //   label: "_unitPrice".loc()},
+        {kind: "XV.UnitWidget", attr: "priceUnit"},
+        {kind: "XV.NumberWidget", attr: "extended", label: "_extendedPrice".loc()},
+        {kind: "XV.DateWidget", attr: "scheduleDate"},
+        {kind: "XV.DateWidget", attr: "promiseDate"},
+        {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+        {kind: "XV.TextArea", attr: "memo", fit: true}  
       ]}
     ]
   });

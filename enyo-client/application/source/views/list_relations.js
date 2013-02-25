@@ -330,7 +330,7 @@ enyo.kind({
         {kind: "XV.ListColumn", classes: "third",
           components: [
           {kind: "XV.ListAttr", attr: "quantityOrd"},
-          //{kind: "XV.ListAttr", attr: "shipped"},
+          //{kind: "XV.ListAttr", attr: "shipped"}, // Inventory
           {kind: "XV.ListAttr", attr: "quantityUnit.name"}
         ]},
         {kind: "XV.ListColumn", style: "width: 80;",
@@ -350,11 +350,6 @@ enyo.kind({
           {kind: "XV.ListAttr", attr: "", classes: "text-align-right"},
           {kind: "XV.ListAttr", attr: "custPrice", classes: "text-align-right"},
           {kind: "XV.ListAttr", attr: "", classes: "text-align-right"}
-        ]},
-        {kind: "XV.ListColumn", classes: "last",
-          components: [
-          {kind: "XV.ListAttr", attr: "customerPartNumber"},
-          {kind: "XV.ListAttr", attr: ""}
         ]}
       ]}
     ]}
