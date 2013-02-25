@@ -125,7 +125,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var install = function (res, args, username) {
 
     if (!addLock(args.organization)) {
-      res.send({data:{isError: true, message: "Maintenance already underway."}});
+      res.send({data: {isError: true, message: "Maintenance already underway."}});
       return;
     }
 
@@ -164,8 +164,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               password: pgPassword
             },
             group = org.get("group"),
-            initInstanceDbDirectory = X.options.datasource.initInstanceDbDirectory || "./scripts",
+            initInstanceDbDir = X.options.datasource.initInstanceDbDirectory || "./scripts",
             initInstanceDbCommand,
+            xTupleDbDir,
             corePsqlCommand = psqlPath + flags + " -f init_instance.sql",
             coreScriptDir = '../enyo-client/database/source',
             coreOrmDir = '../enyo-client/database/orm';
@@ -180,19 +181,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             // intialization should only happen to one DB at a time.
             if (!args.organization) {
               releaseLock(); // args.organization is falsy so no reason to pass it
-              res.send({data:{isError: true, message: "Initialize every instance DB. Are you crazy?"}});
+              res.send({data: {isError: true, message: "Initialize every instance DB. Are you crazy?"}});
               return;
             }
             X.log("Initializing organization: ", orgName);
             // this is ugly. We have to pass the path to the pqsl commands to the script
             psqlDir = psqlPath === 'psql' ? "implicit" : psqlPath.substring(0, psqlPath.length - 4);
+            xTupleDbDir = X.options.datasource.xTupleDbDir || "/usr/local/xtuple/databases";
 
             initInstanceDbCommand = "initInstanceDb.sh " +
               flags + " -g " + group +
               " -t " + args.initialize +
-              " -r " + psqlDir,
+              " -r " + psqlDir +
+              " -x " + xTupleDbDir;
+
             psqlArray.push({
-              command: "(cd %@ && exec ./%@)".f(initInstanceDbDirectory, initInstanceDbCommand),
+              command: "(cd %@ && exec ./%@)".f(initInstanceDbDir, initInstanceDbCommand),
               loadOrder: -9999
             });
           }

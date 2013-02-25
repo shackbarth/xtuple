@@ -13,11 +13,12 @@ usage() {
   echo "-g	Group"
   echo "-t  Type of database to create"
   echo "-r  Dir of psql binaries"
+  echo "-x  Dir of xtuple database files"
   echo
 }
  
 #Process the arguments
-while getopts U:Hd:h:p:g:t:r: opt
+while getopts U:Hd:h:p:g:t:r:x: opt
 do
    case "$opt" in
       U) PGUSER=$OPTARG;;
@@ -26,14 +27,21 @@ do
       h) DBSERVERHOST=$OPTARG;;
       p) PORT=$OPTARG;;
       g) GROUPNAME=$OPTARG;;
-      t) POSTBOOKSTYPE=$OPTARG;;
+      t) DATABASETYPE=$OPTARG;;
       r) BINARYDIR=$OPTARG;;
+      x) XTUPLEDBDIR=$OPTARG;;
       \?) usage;;
    esac
 done
 
-# TODO: backup file should depend on postbooks type
-BACKUPFILE='/home/shackbarth/Devel/tools/xtuple/masterref-4.0.0.backup' 
+# backup files need to be in the directory as specified by the config.js file
+# and need to be named
+# demo-current.backup
+# quickstart-current.backup
+# empty-current.backup
+
+# TODO: dynamically get these via wget
+BACKUPFILE=$XTUPLEDBDIR'/'$DATABASETYPE'-current.backup' 
 
 if [ $BINARYDIR = "implicit" ]; then
   $BINARYDIR=""
