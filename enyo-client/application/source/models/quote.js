@@ -19,6 +19,7 @@ white:true*/
     defaults: function () {
       var //settings = XT.session.getSettings(),
           today = new Date();
+
       return {
         //auto order #
         quoteDate: today,
@@ -49,6 +50,18 @@ white:true*/
       "calculateFreight"
     ],
     
+    billtoAttrArray: ["billtoName", "billtoAddress1", "billtoAddress2", "billtoAddress3", "billtoCity",
+                        "billtoState", "billtoPostalCode", "billtoCountry", "billtoPhone", "billtoContactHonorific",
+                        "billtoContactFirstName", "billtoContactMiddleName", "billtoContactLastName",
+                        "billtoContactSuffix", "billtoContactPhone", "billtoContactTitle",
+                        "billtoContactFax", "billtoContactEmail"],
+
+    shiptoAttrArray: ["shiptoName", "shiptoAddress1", "shiptoAddress2", "shiptoAddress3", "shiptoCity",
+                        "shiptoState", "shiptoPostalCode", "shiptoCountry", "shiptoPhone", "shiptoContactHonorific",
+                        "shiptoContactFirstName", "shiptoContactMiddleName", "shiptoContactLastName",
+                        "shiptoContactSuffix", "shiptoContactPhone", "shiptoContactTitle",
+                        "shiptoContactFax", "shiptoContactEmail"],
+    
     // ..........................................................
     // METHODS
     //
@@ -59,48 +72,17 @@ white:true*/
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
       this.on('add:item remove:item', this.itemsDidChange);
-      //NOTE
-      // this isn't supposed to be billtoName.  Should be like, billto or billtoNumber or something
-      // this is how I had it before Steve upped 19453b
-      this.on('change:billtoName', this.billtoNameDidChange);
-      this.on('change:shiptoName', this.shiptoNameDidChange);
+      this.on('change:customer', this.billtoDidChange);
+      this.on('change:shipto', this.shiptoDidChange);
       var status = this.getStatus();
       if (!this.get("billtoName") && (status === XM.Model.READY_NEW)) {
         this.setReadOnly("items", true);
-        this.setReadOnly("billtoName", true);
-        this.setReadOnly("billtoAddress1", true);
-        this.setReadOnly("billtoAddress2", true);
-        this.setReadOnly("billtoAddress3", true);
-        this.setReadOnly("billtoCity", true);
-        this.setReadOnly("billtoState", true);
-        this.setReadOnly("billtoPostalCode", true);
-        this.setReadOnly("billtoPhone", true);
-        this.setReadOnly("billtoContactHonorific", true);
-        this.setReadOnly("billtoContactFirstName", true);
-        this.setReadOnly("billtoContactMiddleName", true);
-        this.setReadOnly("billtoContactLastName", true);
-        this.setReadOnly("billtoContactSuffix", true);
-        this.setReadOnly("billtoContactPhone", true);
-        this.setReadOnly("billtoContactTitle", true);
-        this.setReadOnly("billtoContactFax", true);
-        this.setReadOnly("billtoContactEmail", true);
-        this.setReadOnly("shiptoName", true);
-        this.setReadOnly("shiptoAddress1", true);
-        this.setReadOnly("shiptoAddress2", true);
-        this.setReadOnly("shiptoAddress3", true);
-        this.setReadOnly("shiptoCity", true);
-        this.setReadOnly("shiptoState", true);
-        this.setReadOnly("shiptoPostalCode", true);
-        this.setReadOnly("shiptoPhone", true);
-        this.setReadOnly("shiptoContactHonorific", true);
-        this.setReadOnly("shiptoContactFirstName", true);
-        this.setReadOnly("shiptoContactMiddleName", true);
-        this.setReadOnly("shiptoContactLastName", true);
-        this.setReadOnly("shiptoContactSuffix", true);
-        this.setReadOnly("shiptoContactPhone", true);
-        this.setReadOnly("shiptoContactTitle", true);
-        this.setReadOnly("shiptoContactFax", true);
-        this.setReadOnly("shiptoContactEmail", true);
+        for (var i = 0; i < this.billtoAttrArray.length; i++) {
+          this.setReadOnly(this.billtoAttrArray[i], true);
+        }
+        for (i = 0; i < this.shiptoAttrArray.length; i++) {
+          this.setReadOnly(this.shiptoAttrArray[i], true);
+        }
       }
     },
     
@@ -139,82 +121,80 @@ white:true*/
     },
     
     /**
-      billtoContactDidChange
+      billtoDidChange
     */
-    billtoNameDidChange: function (model, value, options) {
-      var status = this.getStatus();
-      
-      //need to do model fetching stuff that populates the other stuff
-      
-      if (!this.get("billtoName") && (status !== XM.Model.READY_NEW)) {
-        this.setReadOnly("items", false);
-        this.setReadOnly("billtoName", false);
-        this.setReadOnly("billtoAddress1", false);
-        this.setReadOnly("billtoAddress2", false);
-        this.setReadOnly("billtoAddress3", false);
-        this.setReadOnly("billtoCity", false);
-        this.setReadOnly("billtoState", false);
-        this.setReadOnly("billtoPostalCode", false);
-        this.setReadOnly("billtoPhone", false);
-        this.setReadOnly("billtoContactHonorific", false);
-        this.setReadOnly("billtoContactFirstName", false);
-        this.setReadOnly("billtoContactMiddleName", false);
-        this.setReadOnly("billtoContactLastName", false);
-        this.setReadOnly("billtoContactSuffix", false);
-        this.setReadOnly("billtoContactPhone", false);
-        this.setReadOnly("billtoContactTitle", false);
-        this.setReadOnly("billtoContactFax", false);
-        this.setReadOnly("billtoContactEmail", false);
-        this.setReadOnly("shiptoName", false);
-        this.setReadOnly("shiptoAddress1", false);
-        this.setReadOnly("shiptoAddress2", false);
-        this.setReadOnly("shiptoAddress3", false);
-        this.setReadOnly("shiptoCity", false);
-        this.setReadOnly("shiptoState", false);
-        this.setReadOnly("shiptoPostalCode", false);
-        this.setReadOnly("shiptoPhone", false);
-        this.setReadOnly("shiptoContactHonorific", false);
-        this.setReadOnly("shiptoContactFirstName", false);
-        this.setReadOnly("shiptoContactMiddleName", false);
-        this.setReadOnly("shiptoContactLastName", false);
-        this.setReadOnly("shiptoContactSuffix", false);
-        this.setReadOnly("shiptoContactPhone", false);
-        this.setReadOnly("shiptoContactTitle", false);
-        this.setReadOnly("shiptoContactFax", false);
-        this.setReadOnly("shiptoContactEmail", false);
-      }
+    billtoDidChange: function (model, value, options) {
+      var theValue = value;
         
+      if (theValue) {
+        for (var i = 0; i < this.billtoAttrArray.length; i++) {
+          this.setReadOnly(this.billtoAttrArray[i], false);
+        }
+        for (i = 0; i < this.shiptoAttrArray.length; i++) {
+          this.setReadOnly(this.shiptoAttrArray[i], false);
+        }
+        //I want to use a for loop here but I can't due
+        //  due to the wonkiness of CustomerProspectRelation.
+        //  Will look into it later.
+        //  Also, for some reason we decided to call the contact "billingContact" for Customer
+        //    and just "contact" for Prospect, hence the almost-duplicate code below.
+        if (theValue.editableModel === "XM.Customer") {
+          this.set("billtoName", theValue.get("name"));
+          this.set("billtoAddress1", theValue.getValue("billingContact.address.line1"));
+          this.set("billtoAddress2", theValue.getValue("billingContact.address.line2"));
+          this.set("billtoAddress3", theValue.getValue("billingContact.address.line3"));
+          this.set("billtoCity", theValue.getValue("billingContact.address.city"));
+          this.set("billtoState", theValue.getValue("billingContact.address.state"));
+          this.set("billtoPostalCode", theValue.getValue("billingContact.address.postalCode"));
+          this.set("billtoCountry", theValue.getValue("billingContact.address.country"));
+        }
+        else if (theValue.editableModel === "XM.Prospect") {
+          this.set("billtoName", theValue.get("name"));
+          this.set("billtoAddress1", theValue.getValue("contact.address.line1"));
+          this.set("billtoAddress2", theValue.getValue("contact.address.line2"));
+          this.set("billtoAddress3", theValue.getValue("contact.address.line3"));
+          this.set("billtoCity", theValue.getValue("contact.address.city"));
+          this.set("billtoState", theValue.getValue("contact.address.state"));
+          this.set("billtoPostalCode", theValue.getValue("contact.address.postalCode"));
+          this.set("billtoCountry", theValue.getValue("contact.address.country"));
+        }
+      }
+      
+      //TODO: there should be a default ship to for this, and we want
+      //  to make the shipTo use it.  BUT we don't want to override what's already there
+      //  if something is already there.
     },
     
     /**
-      shiptoContactDidChange
+      shiptoDidChange
     */
-    shiptoNameDidChange: function (model, value, options) {
-
+    shiptoDidChange: function (model, value, options) {
+      var theValue = value;
+      
+      if (theValue) {
+        for (var i = 0; i < this.shiptoAttrArray.length; i++) {
+          this.setReadOnly(this.shiptoAttrArray[i], false);
+        }
+        if (theValue.editableModel === "XM.CustomerShipto") {
+          this.set("shiptoName", theValue.get("name"));
+          this.set("shiptoAddress1", theValue.getValue("contact.address.line1"));
+          this.set("shiptoAddress2", theValue.getValue("contact.address.line2"));
+          this.set("shiptoAddress3", theValue.getValue("contact.address.line3"));
+          this.set("shiptoCity", theValue.getValue("contact.address.city"));
+          this.set("shiptoState", theValue.getValue("contact.address.state"));
+          this.set("shiptoPostalCode", theValue.getValue("contact.address.postalCode"));
+          this.set("shiptoCountry", theValue.getValue("contact.address.country"));
+        }
+      }
     },
     
     /**
       copyBilltoToShipto
     */
-    copyBilltoToShipto: function (model, value, options) {
-      //need to do model fetching stuff that populates the other stuff
-      this.set("shiptoName", this.get("billtoName"));
-      this.set("shiptoAddress1", this.get("billtoAddress1"));
-      this.set("shiptoAddress2", this.get("billtoAddress2"));
-      this.set("shiptoAddress3", this.get("billtoAddress3"));
-      this.set("shiptoCity", this.get("billtoCity"));
-      this.set("shiptoState", this.get("billtoState"));
-      this.set("shiptoPostalCode", this.get("billtoPostalCode"));
-      this.set("shiptoPhone", this.get("billtoPhone"));
-      this.set("shiptoContactHonorific", this.get("billtoContactHonorific"));
-      this.set("shiptoContactFirstName", this.get("billtoContactFirstName"));
-      this.set("shiptoContactMiddleName", this.get("billtoContactMiddleName"));
-      this.set("shiptoContactLastName", this.get("billtoContactLastName"));
-      this.set("shiptoContactSuffix", this.get("billtoContactSuffix"));
-      this.set("shiptoContactPhone", this.get("billtoContactPhone"));
-      this.set("shiptoContactTitle", this.get("billtoContactTitle"));
-      this.set("shiptoContactFax", this.get("billtoContactFax"));
-      this.set("shiptoContactEmail", this.get("billtoContactEmail"));
+    copyBilltoToShipto: function () {
+      for (var i = 0; i < this.billtoAttrArray.length; i++) {
+        this.set(this.shiptoAttrArray[i], this.billtoAttrArray[i]);
+      }
     }
     
   });
