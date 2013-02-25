@@ -147,6 +147,11 @@ white:true*/
           this.set("billtoState", theValue.getValue("billingContact.address.state"));
           this.set("billtoPostalCode", theValue.getValue("billingContact.address.postalCode"));
           this.set("billtoCountry", theValue.getValue("billingContact.address.country"));
+          //the code below sets the shipTo of this quote as the default for this cust if shipto is empty.
+          if (!this.get("shipto")) {
+            this.set("shipto", theValue.get("defaultShipto"));
+          }
+          
         }
         else if (theValue.editableModel === "XM.Prospect") {
           this.set("billtoName", theValue.get("name"));
@@ -160,9 +165,6 @@ white:true*/
         }
       }
       
-      //TODO: there should be a default ship to for this, and we want
-      //  to make the shipTo use it.  BUT we don't want to override what's already there
-      //  if something is already there.
     },
     
     /**
