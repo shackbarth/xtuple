@@ -25,7 +25,7 @@ white:true*/
         //tax zone: none
         //site: probably the metric default
         //sale type: same
-        status: "Open"
+        quoteStatus: "Open"
         //shipping zone: probably the metric default
       };
     },
@@ -59,13 +59,88 @@ white:true*/
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
       this.on('add:item remove:item', this.itemsDidChange);
-      //this.on('change:billtoContact', this.billtoContactDidChange);
-      //this.on('change:shiptoContact', this.shiptoContactDidChange);
-      
-      this.on('change:billtoName', this.billtoContactDidChange);
-      this.on('change:shiptoName', this.shiptoContactDidChange);
+      this.on('change:billtoName', this.billtoNameDidChange);
+      this.on('change:shiptoName', this.shiptoNameDidChange);
       var status = this.getStatus();
-      if (status === XM.Model.READY_NEW) {
+      if (!this.get("billtoName") && (status === XM.Model.READY_NEW)) {
+        this.setReadOnly("items", true);
+        this.setReadOnly("billtoAddress1", true);
+        this.setReadOnly("billtoAddress2", true);
+        this.setReadOnly("billtoAddress3", true);
+        this.setReadOnly("billtoCity", true);
+        this.setReadOnly("billtoState", true);
+        this.setReadOnly("billtoPostalCode", true);
+        this.setReadOnly("billtoPhone", true);
+        this.setReadOnly("billtoContactHonorific", true);
+        this.setReadOnly("billtoContactFirstName", true);
+        this.setReadOnly("billtoContactMiddleName", true);
+        this.setReadOnly("billtoContactLastName", true);
+        this.setReadOnly("billtoContactSuffix", true);
+        this.setReadOnly("billtoContactPhone", true);
+        this.setReadOnly("billtoContactTitle", true);
+        this.setReadOnly("billtoContactFax", true);
+        this.setReadOnly("billtoContactEmail", true);
+        this.setReadOnly("shiptoAddress1", true);
+        this.setReadOnly("shiptoAddress2", true);
+        this.setReadOnly("shiptoAddress3", true);
+        this.setReadOnly("shiptoCity", true);
+        this.setReadOnly("shiptoState", true);
+        this.setReadOnly("shiptoPostalCode", true);
+        this.setReadOnly("shiptoPhone", true);
+        this.setReadOnly("shiptoContactHonorific", true);
+        this.setReadOnly("shiptoContactFirstName", true);
+        this.setReadOnly("shiptoContactMiddleName", true);
+        this.setReadOnly("shiptoContactLastName", true);
+        this.setReadOnly("shiptoContactSuffix", true);
+        this.setReadOnly("shiptoContactPhone", true);
+        this.setReadOnly("shiptoContactTitle", true);
+        this.setReadOnly("shiptoContactFax", true);
+        this.setReadOnly("shiptoContactEmail", true);
+      }
+    },
+    
+    /**
+      itemsDidChange
+      
+      Used to update calculated fiels.
+      Called when the user adds or removes a line item.
+    */
+    itemsDidChange: function (model, value, options) {
+      var that = this,
+        changed;
+      //this.margin = 0.0;
+      //this.freightWeight = 0.0;
+      this.subtotal = 0.0;
+      this.tax = 0.0;
+      this.total = 0.0;
+
+      //Total up everything
+      _.each(this.get('items').models, function (item) {
+        //margin stuff
+        //freightWeight stuff
+        that.subtotal = XT.math.add(that.subtotal,
+          item.get('listPrice'), XT.MONEY_SCALE);
+      });
+
+      // Notify change
+      changed = {
+        //margin: this.margin,
+        //freightWeight: this.freightWeight,
+        subtotal: this.subtotal,
+        tax: this.tax,
+        total: this.total
+      };
+      this.trigger("change", this, changed);
+    },
+    
+    /**
+      billtoContactDidChange
+    */
+    billtoNameDidChange: function (model, value, options) {
+      var status = this.getStatus();
+      
+      if (!this.get("billtoName") && (status !== XM.Model.READY_NEW)) {
+        this.setReadOnly("items", false);
         this.setReadOnly("billtoAddress1", false);
         this.setReadOnly("billtoAddress2", false);
         this.setReadOnly("billtoAddress3", false);
@@ -99,56 +174,21 @@ white:true*/
         this.setReadOnly("shiptoContactFax", false);
         this.setReadOnly("shiptoContactEmail", false);
       }
-    },
-    
-    /**
-      itemsDidChange
-      
-      Used to update calculated fiels.
-      Called when the user adds or removes a line item.
-    */
-    itemsDidChange: function (model, value, options) {
-      var that = this,
-        changed;
-      this.margin = 0.0;
-      this.freightWeight = 0.0;
-      this.subtotal = 0.0;
-      this.tax = 0.0;
-      this.total = 0.0;
-
-      //Total up everything
-      _.each(this.get('items').models, function (item) {
-        //margin stuff
-        //freightWeight stuff
-        that.subtotal = XT.math.add(that.subtotal,
-          item.get('listPrice'), XT.MONEY_SCALE);
-      });
-
-      // Notify change
-      changed = {
-        margin: this.margin,
-        freightWeight: this.freightWeight,
-        subtotal: this.subtotal,
-        tax: this.tax,
-        total: this.total
-      };
-      this.trigger("change", this, changed);
-    },
-    
-    /**
-      billtoContactDidChange
-    */
-    billtoContactDidChange: function (model, value, options) {
-      var status = this.getStatus(),
-        billtoName = this.get("billtoName");
         
     },
     
     /**
       shiptoContactDidChange
     */
-    shiptoContactDidChange: function (model, value, options) {
+    shiptoNameDidChange: function (model, value, options) {
 
+    },
+    
+    /**
+      copyBilltoToShipto
+    */
+    copyBilltoToShipto: function (model, value, options) {
+      
     }
     
   });
