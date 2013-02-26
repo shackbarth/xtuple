@@ -149,26 +149,30 @@ regexp:true, undef:true, trailing:true, white:true */
     /**
     @todo Document the setValue method.
     */
-    setValue: function (value, options, attrib) {
+    setValue: function (value, options) {
       options = options || {};
       var oldValue, inEvent;
-      if (attrib === "amount") {
-        oldValue = this.amount;
-        if (oldValue !== value) {
-          this.setAmount(value);
-          this.valueChanged(value);
-          inEvent = { value: value, originator: this };
-          if (!options.silent) { this.doValueChange(inEvent); }
-          // Set base label with calculated value
-          this.setBaseAmount(value);
-        }
-      } else if (attrib === "currency") {
-        oldValue = this.getCurrency();
-        if (oldValue !== value) {
-          this.setCurrency(value);
-          this.$.picker.setValue(value || XT.baseCurrency());
-          // Set base label with calculated value
-          this.setBaseAmount(this.getAmount());
+      for (attr in value) {
+        if (value.hasOwnProperty(attr)) {
+          if (attr === "amount") {
+            oldValue = this.amount;
+            if (oldValue !== value[attr]) {
+              this.setAmount(value[attr]);
+              this.valueChanged(value[attr]);
+              inEvent = { value: value[attr], originator: this };
+              if (!options.silent) { this.doValueChange(inEvent); }
+              // Set base label with calculated value
+              this.setBaseAmount(value[attr]);
+            }
+          } else if (attr === "currency") {
+            oldValue = this.getCurrency();
+            if (oldValue !== value[attr]) {
+              this.setCurrency(value[attr]);
+              this.$.picker.setValue(value[attr] || XT.baseCurrency());
+              // Set base label with calculated value
+              this.setBaseAmount(this.getAmount());
+            }
+          }
         }
       }
     },
