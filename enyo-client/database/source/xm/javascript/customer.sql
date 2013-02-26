@@ -24,9 +24,9 @@ select xt.install_js('XM','Customer','xtuple', $$
   XM.Customer.price = function(item, customer, quantity, options) {
     options = options || {};
     var err;
-    if(item === undefined) err = "item id can not be blank";
-    if(customer === undefined) err = "customer id can not be blank";
-    if(quatity === undefined) err = "quantity can not be blank";
+    if(item === undefined) err = "Item id can not be blank.";
+    if(customer === undefined) err = "Customer id can not be blank.";
+    if(quantity === undefined) err = "Quantity can not be blank.";
     if(!err) {
     var 
       today=new Date(),
