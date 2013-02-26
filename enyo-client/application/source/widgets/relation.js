@@ -29,7 +29,8 @@ regexp:true, undef:true, trailing:true, white:true */
     nameAttribute: "jobTitle",
     descripAttribute: "phone",
     published: {
-      showAddress: false
+      showAddress: false,
+      account: null
     },
     filterRestrictionType: ["account", "accountParent"],
     components: [
