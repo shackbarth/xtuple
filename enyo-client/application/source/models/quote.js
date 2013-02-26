@@ -24,9 +24,9 @@ white:true*/
         //auto order #
         quoteDate: today,
         //tax zone: none
-        //site: probably the metric default
+        //site: only exists in standard edition.
         //sale type: same
-        quoteStatus: "Open"
+        quoteStatus: "O"
         //shipping zone: probably the metric default
       };
     },
@@ -122,6 +122,8 @@ white:true*/
     
     /**
       billtoDidChange
+      
+      Populates billto information based on the entered customer/prospect #.
     */
     billtoDidChange: function (model, value, options) {
       var theValue = value;
@@ -171,6 +173,9 @@ white:true*/
     
     /**
       shiptoDidChange
+      
+      When the user-entered shipto number changes, this function populates the rest of
+      the fields accordingly.
     */
     shiptoDidChange: function (model, value, options) {
       var theValue = value;
@@ -194,6 +199,9 @@ white:true*/
     
     /**
       copyBilltoToShipto
+      
+      This function empties all of the shipto information, then
+      takes all the info from the billto and copies it to the shipto.
     */
     copyBilltoToShipto: function () {
       this.set("shipto", undefined);
@@ -295,6 +303,10 @@ white:true*/
     /** @scope XM.QuoteLineCharacteristic.prototype */
   
     recordType: 'XM.QuoteLineCharacteristic'
+    
+    //there should be some default characteristics that are pulled automatically
+    //  these are reconstructed when the item site changes
+    //  should probably have an itemsitedidchange function
   
   });
   
@@ -406,6 +418,32 @@ white:true*/
     isDocumentAssignment: true
     
   });
+  
+  /**
+    @extends XM.Model
+  */
+  XM.QuoteStatus = {
+    /** @scope XM.QuoteStatus */
+
+    /**
+    Returns quote status as a localized string.
+
+    @returns {String}
+    */
+    getQuoteStatusString: function () {
+      if (this.get("quoteStatus") === "O") {
+        return '_open'.loc();
+      }
+      if (this.get("quoteStatus") === "C") {
+        return '_closed'.loc();
+      }
+    },
+
+    isActive: function () {
+      return (this.get("quoteStatus") !== "C");
+    }
+
+  };
 
   // ..........................................................
   // COLLECTIONS
