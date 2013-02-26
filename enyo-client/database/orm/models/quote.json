@@ -412,7 +412,7 @@
         }
       },
       {
-        "name": "status",
+        "name": "quoteStatus",
         "attr": {
           "type": "String",
           "column": "quhead_status"
@@ -1117,7 +1117,7 @@
          }
       },
       {
-        "name": "status",
+        "name": "quoteStatus",
         "attr": {
           "type": "String",
           "column": "quhead_status"
