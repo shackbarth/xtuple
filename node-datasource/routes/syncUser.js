@@ -60,7 +60,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     // if the requesting user doesn't have ViewGlobalUsers or ViewOrganizations
     // privileges, then the fetch will come back empty, which is what we want
-    fetchOptions.username = req.session.passport.user.username;
+    fetchOptions.username = req.session.passport.user.id;
 
     // Go get 'em
     user.fetch(fetchOptions);
