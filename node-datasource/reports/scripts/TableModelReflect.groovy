@@ -1,6 +1,18 @@
 import org.pentaho.reporting.engine.classic.core.util.TypedTableModel;
 import java.net.*;
 import groovy.json.*;
+import org.pentaho.reporting.libraries.base.util.DebugLog;
+
+/******************************************************************************************
+To configure logging, remove <appender-ref ref="CONSOLE"/> from /resources/log4j.xml
+in order to make FILE the default.  The file is at {user.home}/.pentaho/logs/prd.  Use
+DebugLog.log().
+
+Based on problems in Groovy 1.8 (used by report designer).  Groovy 1.8 does not recognize
+decimals as BigDecimal (it does in release 2.1).  Instead, it recognizes them as String. 
+Also as null is recognized as String it was necessary to convert Integers to Sting also.
+
+******************************************************************************************/
 
 class TableModelReflect{
 
@@ -94,15 +106,17 @@ class TableModelReflect{
         /****************************************************************************
         Create a properties map with types of each property.  Merge results for every
         object as some objects may not have all properties.  Do not replace existing 
-        keys with value Map and Integer with String as a null value has type String.
-        When finished, remove Maps as these are not actualy columns
+        keys with value Map and Integer with String as a null value has type String.  
+        Do not replace BigDecimal with Integer as numbers may not have decimal point,
+        but be BigDecimal. When finished, remove Maps as these are not actualy columns
         ****************************************************************************/
         def rowMap = [:]
         def rowMapProperties = [:]
         for (int i; i < result.size(); i++) {
             rowMap = jsonProp(result[i], '')
             rowMap.each { it ->
-                if (rowMapProperties[it.key]  != 'java.util.HashMap' && rowMapProperties[it.key]  != 'java.lang.Integer') {
+                if ((rowMapProperties[it.key]  != 'java.util.HashMap' && rowMapProperties[it.key]  != 'java.math.BigDecimal') &&
+                   !( rowMapProperties[it.key] == 'java.lang.Integer' && it.value == 'java.lang.String')) {
                     rowMapProperties[it.key] = it.value
                 }
             }
@@ -133,12 +147,14 @@ class TableModelReflect{
         
         /****************************************************************************
         Now create a list of property types to be used in TypedTabelModel, 
-        removing unsupported.  
+        removing unsupported.
         ****************************************************************************/
         def Class[] rowListReportTypes = new Class[rowMapProperties.size()]
         for (int n; n < rowListTypes.size(); n++) {
-            if (rowListTypes[n].toString() == 'class java.lang.Boolean'  || rowListTypes[n].toString() == 'class java.util.ArrayList') {
-                rowListReportTypes[n] = 'java.lang.String' as Class
+            if (rowListTypes[n].toString() == 'class java.lang.Boolean'  ||
+                rowListTypes[n].toString() == 'class java.util.ArrayList' ||
+                rowListTypes[n].toString() == 'class java.lang.Integer') {
+                    rowListReportTypes[n] = 'java.lang.String' as Class
              }
              else {
                 rowListReportTypes[n] =  rowListTypes[n]
@@ -162,13 +178,29 @@ class TableModelReflect{
                         row[m] = prop.toString()
                 }
                 else if (prop != null) {
-                    if( rowListTypes[m].toString() == 'class java.lang.String'){
+                    if( rowListTypes[m].toString() =='class java.math.BigDecimal'){
+                        def bigDec = new BigDecimal(prop)
+                        bigDec = bigDec.setScale(3, BigDecimal.ROUND_UP)
+                        //Groovy is defaulting to float.  So force it to create a 3 precision BigDecimal  
+                        row[m] = bigDec
+                    }
+                    else if( rowListTypes[m].toString() =='class java.lang.String') {
+                        if (prop.toString().indexOf(',') > -1) {
+                            row[m] = '"' + prop.toString() + '"'
                         }
-                        
-                    row[m] = rowListTypes[m].newInstance(prop)
+                        else {
+                            row[m] = prop.toString()
+                        }
+                    }
+                   else if( rowListTypes[m].toString() =='class java.lang.Integer') {
+                        row[m] = prop.toString()
+                    } 
+                    else {
+                        row[m] = rowListTypes[m].newInstance(prop)
+                    }
                 }
                 else {
-                    if (rowListTypes[m].toString() == 'class java.lang.Integer'  || rowListTypes[m].toString() == 'class java.lang.BigDecimal') {
+                    if (rowListTypes[m].toString() == 'class java.lang.Integer'  || rowListTypes[m].toString() == 'class java.math.BigDecimal') {
                         row[m] = rowListTypes[m].newInstance(0)
                     }
                     else {

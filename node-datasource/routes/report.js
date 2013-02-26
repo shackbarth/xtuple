@@ -96,7 +96,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         success = function () {
           var biUrl = X.options.datasource.biUrl || "",
             recordType = requestDetails.query ? requestDetails.query.recordType : requestDetails.recordType,
-            modelName = recordType.suffix().replace("Item", ""),
+            modelName = recordType.suffix().replace("ListItem", "List").replace("Relation", "List"),
             fileName = modelName + ".prpt",
             redirectUrl = biUrl + "&name=" + fileName + "&dataKey=" + randomKey;
 
