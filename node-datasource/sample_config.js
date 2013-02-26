@@ -24,6 +24,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       certFile: "./lib/private/server.crt",
       caFile: null,
       saltFile: "./lib/private/salt.txt",
+      xTupleDbDir: "/usr/local/xtuple/databases",
       psqlPath: "psql",
       nodePath: "node",
 
