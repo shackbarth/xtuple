@@ -22,7 +22,7 @@ var XVOWS = XVOWS || {};
     code: "Dame"
   };
 
-  vows.describe('XM.ShipVia CRUD test').addBatch({
+  vows.describe('XM.Honorific CRUD test').addBatch({
     'INITIALIZE ': {
       topic: function () {
         var that = this,
