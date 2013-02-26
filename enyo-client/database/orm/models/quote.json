@@ -3,7 +3,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "Quote",
-    "table": "quhead",
+    "table": "quheadinfo",
     "idSequenceName": "quhead_quhead_id_seq",
     "comment": "Quote Map",
     "privileges": {
@@ -440,6 +440,27 @@
           "column": "quhead_shipzone_id"
         }
       },
+      {
+        "name": "subtotal",
+        "attr": {
+          "type": "Number",
+          "column": "subtotal"
+        }
+      },  
+      {
+        "name": "taxTotal",
+        "attr": {
+          "type": "Number",
+          "column": "tax_total"
+        }
+      },   
+      {
+        "name": "total",
+        "attr": {
+          "type": "Number",
+          "column": "total"
+        }
+      },     
       {
         "name": "quoteLines",
         "toMany": {
@@ -1132,10 +1153,10 @@
          }
       },
       {
-        "name": "orderTotal",
+        "name": "total",
         "attr": {
           "type": "Number",
-          "column": "quhead_total"
+          "column": "total"
          }
       }
     ],
