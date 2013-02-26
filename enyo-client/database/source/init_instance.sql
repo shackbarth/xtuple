@@ -20,6 +20,9 @@
 \i xt/functions/install_guiscript.sql;
 \i xt/functions/mergecrmaccts.sql;
 \i xt/functions/pg_advisory_unlock;
+\i xt/functions/quote_subtotal;
+\i xt/functions/quote_tax_total;
+\i xt/functions/quote_total;
 \i xt/functions/trylock.sql;
 \i xt/functions/undomerge.sql;
 \i xt/functions/user_account_sync.sql

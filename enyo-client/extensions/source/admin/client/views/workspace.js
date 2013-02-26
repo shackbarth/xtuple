@@ -142,9 +142,77 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_extensions".loc()},
           {kind: "XV.OrganizationExtensionAssignmentBox", attr: "extensions" }
         ]}
+      ]},
+      {kind: "onyx.Popup", name: "chooseTemplatePopup", centered: true,
+        modal: true, floating: true, scrim: true,
+        onHide: "popupHidden", components: [
+        {content: "_chooseTemplate".loc() },
+        {content: "_initDbWarning".loc() },
+        {tag: "br"},
+        {kind: "onyx.Button", name: "demoDbButton", content: "_demo".loc(), ontap: "chooseTemplate",
+          classes: "xv-popup-button"},
+        {kind: "onyx.Button", name: "quickstartDbButton", content: "_quickStart".loc(), ontap: "chooseTemplate",
+          classes: "xv-popup-button"},
+        {kind: "onyx.Button", name: "emptyDbButton", content: "_empty".loc(), ontap: "chooseTemplate",
+          classes: "xv-popup-button"},
+        {kind: "onyx.Button", name: "DbButton", content: "_none".loc(), ontap: "chooseTemplate",
+          classes: "onyx-blue xv-popup-button"}
       ]}
     ],
-    model: "XM.Organization"
+    model: "XM.Organization",
+    chooseTemplate: function (inSender, inEvent) {
+      var buttonName = inEvent.originator.name,
+        templateDb = buttonName.replace("DbButton", "");
+
+      this.getValue().runMaintenance(null, templateDb);
+      this.$.chooseTemplatePopup.hide();
+      // TODO: I suppose that if the user wanted to close the workspace
+      // and the hack below prevented him, now would be an ok time to
+      // close the workspace
+    },
+    save: function (options) {
+      var that = this,
+        success = options ? options.success : undefined,
+        newOrganization = this.getValue().getStatus() === XM.Model.READY_NEW,
+        newExtensionIds,
+        newExtensions = _.filter(this.getValue().get("extensions").models, function (ext) {
+          return ext.isNew();
+        });
+
+      if (newOrganization) {
+        // hack: don't the workspace close out if we're going to be popping up a popup soon
+        this.parent.parent._saveState = 1; //SAVE_APPLY
+      }
+
+      options = options || {};
+      options.success = function (model, result, opts) {
+        if (success) {
+          // do whatever else we were supposed to do
+          success(model, result, opts);
+        }
+
+        if (newOrganization) {
+          // ask the user if they want to init the db. Don't worry about the newExtensions
+          // in this case, because we'll be installing them all, which is what happens
+          // if you don't specify a restriction
+          that.$.chooseTemplatePopup.show();
+
+        } else
+
+        if (newExtensions && newExtensions.length > 0) {
+          // not a new organization, but some updates to extensions. Run maintenance
+          // on the extensions that have just been added
+          newExtensionIds = _.map(newExtensions, function (ext) {
+            return ext.get("extension").get("id");
+          });
+          model.runMaintenance(newExtensionIds);
+        }
+      };
+
+      // XXX this exits the workspace which it must not do if we are to use the popup
+      this.inherited(arguments);
+    }
+
   });
 
   XV.registerModelWorkspace("XM.Organization", "XV.OrganizationWorkspace");
