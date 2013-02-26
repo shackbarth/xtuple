@@ -40,7 +40,7 @@ select xt.install_js('XM','Quote','xtuple', $$
    @param {Number} amount
    @returns Number 
   */  
-  XM.Quote.calculateItemTaxAmount = function(taxZoneId, taxTypeId, effective, currencyId, amount) {
+  XM.Quote.calculateTaxAmount = function(taxZoneId, taxTypeId, effective, currencyId, amount) {
   
     return plv8.execute("select calculatetax($1, $2, $3, $4, $5) as result;", [taxZoneId, taxTypeId, effective, currencyId, amount])[0].result; 
   }
