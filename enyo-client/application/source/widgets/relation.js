@@ -29,7 +29,7 @@ regexp:true, undef:true, trailing:true, white:true */
     nameAttribute: "jobTitle",
     descripAttribute: "phone",
     published: {
-      showAddress: false,
+      showAddress: false
     },
     filterRestrictionType: ["account", "accountParent"],
     components: [
@@ -91,8 +91,7 @@ regexp:true, undef:true, trailing:true, white:true */
           {name: "webAddress", ontap: "openWindow",
             classes: "xv-relationwidget-description hasLabel hyperlink"},
           {name: "address", classes: "xv-relationwidget-description hasLabel",
-            allowHtml: true},
-          {name: "additionalInfo", showing: false}
+            allowHtml: true}
         ]}
       ]}
     ],
@@ -299,8 +298,7 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.ItemRelationCollection",
     list: "XV.ItemList",
     nameAttribute: "description1",
-    descripAttribute: "description2"//,
-    //additionalAttribute: "inventoryUnit.name"
+    descripAttribute: "description2"
   });
 
   // ..........................................................
