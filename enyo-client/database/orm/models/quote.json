@@ -428,8 +428,8 @@
       },
       {
         "name": "saleType",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+          "type": "SaleType",
           "column": "quhead_saletype_id"
         }
       },
