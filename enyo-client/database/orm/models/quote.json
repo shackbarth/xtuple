@@ -420,8 +420,8 @@
       },
       {
         "name": "saleType",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+          "type": "SaleType",
           "column": "quhead_saletype_id"
         }
       },
@@ -855,7 +855,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "QuoteLine",
-    "table": "quitem",
+    "table": "xt.quiteminfo",
     "idSequenceName": "quitem_quitem_id_seq",
     "comment": "Quote Line Item Map",
     "privileges": {
@@ -896,7 +896,6 @@
           "column": "quitem_itemsite_id"
         }
       },
-    
       {
         "name": "scheduleDate",
         "attr": {
@@ -905,7 +904,7 @@
         }
       },
       {
-        "name": "quantityOrd",
+        "name": "quantity",
         "attr": {
           "type": "Number",
           "column": "quitem_qtyord"
@@ -933,7 +932,7 @@
         }
       },
       {
-        "name": "memo",
+        "name": "notes",
         "attr": {
           "type": "String",
           "column": "quitem_memo"
@@ -1008,6 +1007,20 @@
         "attr": {
           "type": "String",
           "column": "quitem_pricemode"
+        }
+      },
+      {
+        "name": "extendedPrice",
+        "attr": {
+          "type": "String",
+          "column": "ext_price"
+        }
+      },
+      {
+        "name": "tax",
+        "attr": {
+          "type": "String",
+          "column": "tax"
         }
       }
     ],
