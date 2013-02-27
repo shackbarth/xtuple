@@ -71,7 +71,8 @@ white:true*/
     */
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
-      this.on('add:item remove:item', this.itemsDidChange);
+      //this.on('add:item remove:item', this.itemsDidChange);
+      this.on('change:items', this.itemsDidChange);
       this.on('change:customer', this.billtoDidChange);
       this.on('change:shipto', this.shiptoDidChange);
       var status = this.getStatus();
@@ -207,6 +208,20 @@ white:true*/
       this.set("shipto", undefined);
       for (var i = 0; i < this.shiptoAttrArray.length; i++) {
         this.set(this.shiptoAttrArray[i], this.get(this.billtoAttrArray[i]));
+      }
+    },
+    
+    /**
+    Returns quote status as a localized string.
+
+    @returns {String}
+    */
+    getQuoteStatusString: function () {
+      if (this.get("quoteStatus") === "O") {
+        return '_open'.loc();
+      }
+      if (this.get("quoteStatus") === "C") {
+        return '_closed'.loc();
       }
     }
     
@@ -418,32 +433,6 @@ white:true*/
     isDocumentAssignment: true
     
   });
-  
-  /**
-    @extends XM.Model
-  */
-  XM.QuoteStatus = {
-    /** @scope XM.QuoteStatus */
-
-    /**
-    Returns quote status as a localized string.
-
-    @returns {String}
-    */
-    getQuoteStatusString: function () {
-      if (this.get("quoteStatus") === "O") {
-        return '_open'.loc();
-      }
-      if (this.get("quoteStatus") === "C") {
-        return '_closed'.loc();
-      }
-    },
-
-    isActive: function () {
-      return (this.get("quoteStatus") !== "C");
-    }
-
-  };
 
   // ..........................................................
   // COLLECTIONS
