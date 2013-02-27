@@ -1178,7 +1178,7 @@ trailing:true white:true*/
             {kind: "XV.TaxZonePicker", attr: "taxZone"},
             {kind: "XV.SitePicker", attr: "site"},
             {kind: "XV.SaleTypePicker", attr: "saleType"},
-            {kind: "XV.InputWidget", attr: "status"},
+            {kind: "XV.InputWidget", attr: "quoteStatus", label: "_status".loc()},
             {kind: "XV.DateWidget", attr: "expireDate", label: "_expires".loc()},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
             {kind: "XV.CustomerProspectWidget", attr: "customer", showAddress: true, label: "_billTo".loc()},
