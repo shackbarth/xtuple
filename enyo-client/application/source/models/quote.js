@@ -44,7 +44,6 @@ white:true*/
       "id",
       "number",
       "quoteDate",
-      "items", //at least 1 line item?
       "customer",
       "miscCharge",
       "calculateFreight"
@@ -71,13 +70,13 @@ white:true*/
     */
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
-      //this.on('add:item remove:item', this.itemsDidChange);
-      this.on('change:items', this.itemsDidChange);
+      //this.on('add:item remove:item', this.quoteLinesDidChange);
+      this.on('change:quoteLines', this.quoteLinesDidChange);
       this.on('change:customer', this.billtoDidChange);
       this.on('change:shipto', this.shiptoDidChange);
       var status = this.getStatus();
       if (!this.get("billtoName") && (status === XM.Model.READY_NEW)) {
-        this.setReadOnly("items", true);
+        this.setReadOnly("quoteLines", true);
         for (var i = 0; i < this.billtoAttrArray.length; i++) {
           this.setReadOnly(this.billtoAttrArray[i], true);
         }
@@ -88,12 +87,12 @@ white:true*/
     },
     
     /**
-      itemsDidChange
+      quoteLinesDidChange
       
       Used to update calculated fiels.
       Called when the user adds or removes a line item.
     */
-    itemsDidChange: function (model, value, options) {
+    quoteLinesDidChange: function (model, value, options) {
       var that = this,
         changed;
       //this.margin = 0.0;
@@ -103,7 +102,7 @@ white:true*/
       this.total = 0.0;
 
       //Total up everything
-      _.each(this.get('items').models, function (item) {
+      _.each(this.get('quoteLines').models, function (item) {
         //margin stuff
         //freightWeight stuff
         that.subtotal = XT.math.add(that.subtotal,
@@ -129,7 +128,7 @@ white:true*/
     billtoDidChange: function (model, value, options) {
       var theValue = value;
       
-      this.setReadOnly("items", false);
+      this.setReadOnly("quoteLines", false);
         
       if (theValue) {
         for (var i = 0; i < this.billtoAttrArray.length; i++) {
@@ -225,6 +224,26 @@ white:true*/
       }
     }
     
+  });
+  
+  /**
+    @class
+
+    @extends XM.Document
+  */
+  XM.QuoteLine = XM.Document.extend({
+    /** @scope XM.QuoteLine.prototype */
+    
+    recordType: 'XM.QuoteLine',
+    
+    defaults: function () {
+      //this.lineNumber = asdf.get("quoteLines").length + 1;
+    },
+    
+    requiredAttributes: [
+    
+    ]
+
   });
   
   /**
