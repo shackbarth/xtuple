@@ -41,12 +41,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var queryInstanceDatabase = function (queryString, functionName, payload, session, callback) {
     var query,
       adaptorCallback = function (err, res) {
+        var data;
+
         if (err) {
           callback({isError: true, error: err, message: err.message});
         } else if (res && res.rows && res.rows.length > 0) {
           // the data comes back in an awkward res.rows[0].dispatch form,
           // and we want to normalize that here so that the data is in response.data
-          callback({data: JSON.parse(res.rows[0][functionName])});
+          try {
+            data = JSON.parse(res.rows[0][functionName]);
+          } catch (error) {
+            data = {isError: true, message: "Cannot parse data"};
+          }
+          callback({data: data});
         } else {
           callback({isError: true, message: "No results"});
         }
@@ -146,8 +153,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var organization,
       query,
       options;
-
-    // TODO: authenticate
 
     if (payload && payload.databaseType === 'global') {
       // run this query against the global database

@@ -3,7 +3,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "Quote",
-    "table": "quhead",
+    "table": "quheadinfo",
     "idSequenceName": "quhead_quhead_id_seq",
     "comment": "Quote Map",
     "privileges": {
@@ -43,6 +43,14 @@
         "attr": {
           "type": "Date",
           "column": "quhead_quotedate"
+        }
+      },
+      {
+        "name": "shipto",
+        "toOne": {
+          "isNested": true,
+          "type": "CustomerShiptoRelation",
+          "column": "quhead_shipto_id"
         }
       },
       {
@@ -204,6 +212,13 @@
         "attr": {
           "type": "String",
           "column": "quhead_shipvia"
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "quhead_warehous_id"
         }
       },
       {
@@ -425,6 +440,27 @@
           "column": "quhead_shipzone_id"
         }
       },
+      {
+        "name": "subtotal",
+        "attr": {
+          "type": "Number",
+          "column": "subtotal"
+        }
+      },  
+      {
+        "name": "taxTotal",
+        "attr": {
+          "type": "Number",
+          "column": "tax_total"
+        }
+      },   
+      {
+        "name": "total",
+        "attr": {
+          "type": "Number",
+          "column": "total"
+        }
+      },     
       {
         "name": "quoteLines",
         "toMany": {
@@ -1117,10 +1153,10 @@
          }
       },
       {
-        "name": "orderTotal",
+        "name": "total",
         "attr": {
           "type": "Number",
-          "column": "quhead_total"
+          "column": "total"
          }
       }
     ],

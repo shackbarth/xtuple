@@ -9,7 +9,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     When a client asks us to run a report, run it, save it in a temporary table,
     and redirect to pentaho with a key that will allow pentaho to access the report.
    */
-
+  var data = require("./data");
 
   var queryForData = function (session, query, callback) {
     var userId = session.passport.user.username,
@@ -33,21 +33,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return;
       }
 
-      X.database.query(session.passport.user.organization, query, callback);
+      if (query.id) {
+        // this is a request for a single record
+        data.retrieveEngine(query, session, callback);
+      } else {
+        // this is a request for multiple records
+        data.fetchEngine(query, session, callback);
+      }
     });
   };
   exports.queryForData = queryForData;
 
   exports.report = function (req, res) {
-    var requestDetails = req.query.details,
-      requestDetailsQuery,
-      query;
-
-    requestDetails = JSON.parse(requestDetails);
-    requestDetails.username = req.session.passport.user.username;
-    requestDetailsQuery = requestDetails.query;
-    requestDetails = JSON.stringify(requestDetails);
-    query = "select xt.fetch('%@')".f(requestDetails);
+    var requestDetails = JSON.parse(req.query.details);
 
     var bicacheCollection = new XM.BiCacheCollection(),
         fetchOptions = {},
@@ -55,11 +53,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         hourLifespan = 24,
         currentDate = new Date().getTime(),
         dateDifference;
-        
+
     /*
       TODO: the date filter logic could be in the fetch itself to improve performance
     */
-    
+
     /* the fetchOptions.success function below destroys any bicache models
         that are older than the number of hours set in the hourLifespan variable. */
     fetchOptions.success = function () {
@@ -77,13 +75,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
     bicacheCollection.fetch(fetchOptions);
 
-    queryForData(req.session, query, function (err, result) {
-      if (err || !result) {
-        res.send({
-          isError: true,
-          error: err,
-          message: err.params && err.params.error && err.params.error.message
-        });
+    queryForData(req.session, requestDetails, function (result) {
+      if (result.isError) {
+        res.send(result);
         return;
       }
       // thanks http://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
@@ -92,13 +86,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         attrs = {
           key: randomKey,
-          query: JSON.stringify(requestDetailsQuery),
-          data: result.rows[0].fetch,
+          // TODO: this will be null for a single-record request. Then again, I don't know if we
+          // need to describe the query on such requests, or how we should describe them.
+          // requestDetails.recordType and requestDetails.id are the two pieces of information
+          query: JSON.stringify(requestDetails.query),
+          data: JSON.stringify(result.data),
           created: new Date()
         },
         success = function () {
           var biUrl = X.options.datasource.biUrl || "",
-            modelName = requestDetailsQuery.recordType.suffix().replace("Item", ""),
+            recordType = requestDetails.query ? requestDetails.query.recordType : requestDetails.recordType,
+            modelName = recordType.suffix().replace("ListItem", "List").replace("Relation", "List"),
             fileName = modelName + ".prpt",
             redirectUrl = biUrl + "&name=" + fileName + "&dataKey=" + randomKey;
 

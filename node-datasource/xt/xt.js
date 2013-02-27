@@ -64,10 +64,6 @@ require('./foundation');
 
     if (X.requireDatabase) require("./database");
     if (X.requireServer) require("./server");
-    if (X.requireCache) {
-      require('./database/cache');
-      require("./database/ext/mongoose_schema");
-    }
 
     X.pid = process.pid;
 

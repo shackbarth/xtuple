@@ -392,6 +392,20 @@ white:true*/
     
     @extends XM.Model
   */
+  XM.CustomerShiptoRelation = XM.Document.extend({
+    /** @scope XM.CustomerShiptoRelation */
+    
+    recordType: 'XM.CustomerShiptoRelation',
+    
+    documentKey: 'number'
+    
+  });
+  
+  /**
+    @class
+    
+    @extends XM.Model
+  */
   XM.CustomerTaxRegistration = XM.Document.extend({
     /** @scope XM.CustomerTaxRegistration */
     
