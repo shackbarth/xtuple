@@ -134,65 +134,6 @@ require('http').IncomingMessage.prototype.isAuthenticated = function () {
   }
 };
 
-// TODO - This can be removed after socket.io 1.0.0 update hopefully.
-// We're stomping on Static to apply this fix:
-// https://github.com/LearnBoost/socket.io/issues/932
-// https://github.com/LearnBoost/socket.io/issues/984
-/**
- * Gzip compress buffers.
- *
- * @param {Buffer} data The buffer that needs gzip compression
- * @param {Function} callback
- * @api public
- */
-require('socket.io').Static.prototype.gzip = function (data, callback) {
-  "use strict";
-
-  var cp = require('child_process'),
-      gzip = cp.spawn('gzip', ['-9', '-c', '-f', '-n']),
-      encoding = Buffer.isBuffer(data) ? 'binary' : 'utf8',
-      buffer = [],
-      err;
-
-  gzip.stdout.on('data', function (data) {
-    buffer.push(data);
-  });
-
-  gzip.stderr.on('data', function (data) {
-    err = data + '';
-    buffer.length = 0;
-  });
-
-  // Override Here - This was changed to 'exit' from 'close'.
-  gzip.on('exit', function () {
-    if (err) return callback(err);
-
-    var size = 0,
-        index = 0,
-        i = buffer.length,
-        content;
-
-    while (i--) {
-      size += buffer[i].length;
-    }
-
-    content = new Buffer(size);
-    i = buffer.length;
-
-    buffer.forEach(function (buffer) {
-      var length = buffer.length;
-
-      buffer.copy(content, index, 0, length);
-      index += length;
-    });
-
-    buffer.length = 0;
-    callback(null, content);
-  });
-
-  gzip.stdin.end(data, encoding);
-};
-
 // Stomping on express/connect's Cookie.prototype to only update the expires property
 // once a minute. Otherwise it's hit on every session check. This cuts down on chatter.
 // See more details here: https://github.com/senchalabs/connect/issues/670
@@ -278,8 +219,7 @@ sslOptions.cert = X.fs.readFileSync(X.options.datasource.certFile);
  */
 var app = express(),
   server = X.https.createServer(sslOptions, app),
-  connect = require('connect'),
-  parseSignedCookie = connect.utils.parseSignedCookie,
+  parseSignedCookie = require('express/node_modules/connect').utils.parseSignedCookie,
   //MemoryStore = express.session.MemoryStore,
   XTPGStore = require('./oauth2/db/connect-xt-pg')(express),
   io,
