@@ -191,7 +191,7 @@ trailing:true white:true*/
         {kind: "XV.NumberWidget", attr: "quantityShip"},
         {kind: "XV.PercentWidget", attr: "discount"},
         {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "currency"},
-                  label: "_unitPrice".loc()},
+          label: "_unitPrice".loc(), currencyDisabled: true},
         {kind: "XV.UnitWidget", attr: "priceUnit"},
         {kind: "XV.NumberWidget", attr: "extended", label: "_extendedPrice".loc()},
         {kind: "XV.DateWidget", attr: "scheduleDate"},
