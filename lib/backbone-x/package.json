@@ -2,7 +2,7 @@
   "author": "John Rogelstad <john@xtuple.com>",
   "name": "backbone-x",
   "description": "Model framework for xTuple",
-  "version": "1.0.8",
+  "version": "1.3.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/xtuple/backbone-x.git"
