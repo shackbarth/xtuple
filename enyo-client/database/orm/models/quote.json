@@ -3,7 +3,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "Quote",
-    "table": "quhead",
+    "table": "quheadinfo",
     "idSequenceName": "quhead_quhead_id_seq",
     "comment": "Quote Map",
     "privileges": {
@@ -43,6 +43,14 @@
         "attr": {
           "type": "Date",
           "column": "quhead_quotedate"
+        }
+      },
+      {
+        "name": "shipto",
+        "toOne": {
+          "isNested": true,
+          "type": "CustomerShiptoRelation",
+          "column": "quhead_shipto_id"
         }
       },
       {
@@ -420,8 +428,8 @@
       },
       {
         "name": "saleType",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+          "type": "SaleType",
           "column": "quhead_saletype_id"
         }
       },
@@ -432,6 +440,27 @@
           "column": "quhead_shipzone_id"
         }
       },
+      {
+        "name": "subtotal",
+        "attr": {
+          "type": "Number",
+          "column": "subtotal"
+        }
+      },  
+      {
+        "name": "taxTotal",
+        "attr": {
+          "type": "Number",
+          "column": "tax_total"
+        }
+      },   
+      {
+        "name": "total",
+        "attr": {
+          "type": "Number",
+          "column": "total"
+        }
+      },     
       {
         "name": "quoteLines",
         "toMany": {
@@ -834,7 +863,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "QuoteLine",
-    "table": "quitem",
+    "table": "xt.quiteminfo",
     "idSequenceName": "quitem_quitem_id_seq",
     "comment": "Quote Line Item Map",
     "privileges": {
@@ -875,7 +904,6 @@
           "column": "quitem_itemsite_id"
         }
       },
-    
       {
         "name": "scheduleDate",
         "attr": {
@@ -884,7 +912,7 @@
         }
       },
       {
-        "name": "quantityOrd",
+        "name": "quantity",
         "attr": {
           "type": "Number",
           "column": "quitem_qtyord"
@@ -912,7 +940,7 @@
         }
       },
       {
-        "name": "memo",
+        "name": "notes",
         "attr": {
           "type": "String",
           "column": "quitem_memo"
@@ -987,6 +1015,20 @@
         "attr": {
           "type": "String",
           "column": "quitem_pricemode"
+        }
+      },
+      {
+        "name": "extendedPrice",
+        "attr": {
+          "type": "String",
+          "column": "ext_price"
+        }
+      },
+      {
+        "name": "tax",
+        "attr": {
+          "type": "String",
+          "column": "tax"
         }
       }
     ],
@@ -1124,10 +1166,10 @@
          }
       },
       {
-        "name": "orderTotal",
+        "name": "total",
         "attr": {
           "type": "Number",
-          "column": "quhead_total"
+          "column": "total"
          }
       }
     ],

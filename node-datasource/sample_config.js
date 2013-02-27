@@ -24,6 +24,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       certFile: "./lib/private/server.crt",
       caFile: null,
       saltFile: "./lib/private/salt.txt",
+      xTupleDbDir: "/usr/local/xtuple/databases",
       psqlPath: "psql",
       nodePath: "node",
 
@@ -64,32 +65,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       password: "admin",
       nodeUsername: "node"
     },
-    cache: {
-      session: {
-        hostname: "localhost",
-        port: 27017,
-        schemaDirectory: "./mongo_schemas/session",
-        database: "xtdb"
-      },
-      users: {
-        hostname: "localhost",
-        port: 27017,
-        schemaDirectory: "./mongo_schemas/users",
-        database: "xtusers"
-      },
-      proxy: {
-        hostname: "localhost",
-        port: 27017,
-        schemaDirectory: "./mongo_schemas/proxy",
-        database: "xtproxy"
-      }
-    },
     required: [
       "lib/ext/session",
       "lib/ext/database",
       "lib/ext/router",
       "lib/servers",
-      "lib/ext/caches",
       "lib/ext/datasource",
       "lib/ext/models"
     ]

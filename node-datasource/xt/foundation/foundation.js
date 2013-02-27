@@ -33,7 +33,6 @@ X = {};
 
   X.connect      = require("connect");
   X.pg           = require("pg").native;
-  X.mongoose     = require("mongoose");
 
   /**
    Returns the global X
@@ -71,7 +70,7 @@ X = {};
 
     return _.values(obj);
   };
-  
+
   X.relativeDependsPath = "";
   /**
     For traversing dependency package files.
@@ -92,7 +91,7 @@ X = {};
       }
     });
   };
-  
+
   /**
     Adds a function to X. Used internally.
 
@@ -446,7 +445,7 @@ X = {};
       if (X.autoStart) X.didBecomeReady();
     }
   });
-  
+
   require("./proto");
   require("./object");
   require("./io");
@@ -462,5 +461,5 @@ X = {};
     }
     if (X.none(X.version)) X.version = "UNKNOWN";
   }());
-  
+
 }());

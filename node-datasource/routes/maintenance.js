@@ -70,14 +70,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     psqlCommand = psqlArray.shift();
     psqlCallback = function (error, stdout, stderr) {
       // log any relevant information from the orm exec call
-      X.log("psql command returned. " + psqlArray.length + " left");
+      X.log("command returned. " + psqlArray.length + " left");
       logAll(respObject, stdout, stderr, error);
 
       // recurse down an ever-shortening array
       runPsqlCommands(psqlArray, ormArray, respObject, orgCallback);
     };
 
-    X.log("Running psql command: ", psqlCommand);
+    X.log("Running command: ", psqlCommand);
     respObject.commandLog.push("Running pqsl command: " + psqlCommand);
     exec(psqlCommand, psqlCallback);
   };
@@ -125,7 +125,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var install = function (res, args, username) {
 
     if (!addLock(args.organization)) {
-      res.send({data:{isError: true, message: "Maintenance already underway."}});
+      res.send({data: {isError: true, message: "Maintenance already underway."}});
       return;
     }
 
@@ -152,6 +152,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             pgUser = org.get("databaseServer").get("user"),
             pgPassword = org.get("databaseServer").get("password"),
             psqlPath = X.options.datasource.psqlPath || "psql",
+            psqlDir,
             orgName = org.get("name"),
             flags = " -U " + pgUser + " -h " + host + " -p " + port + " -d " + orgName,
             psqlCommand = psqlPath + flags + " -f " + scriptName,
@@ -163,8 +164,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               password: pgPassword
             },
             group = org.get("group"),
-            initInstanceDbDirectory = X.options.datasource.initInstanceDbDirectory || "./scripts",
-            initInstanceDbCommand = "initInstanceDb.sh " + flags + " -g " + group,
+            initInstanceDbDir = X.options.datasource.initInstanceDbDirectory || "./scripts",
+            initInstanceDbCommand,
+            xTupleDbDir,
             corePsqlCommand = psqlPath + flags + " -f init_instance.sql",
             coreScriptDir = '../enyo-client/database/source',
             coreOrmDir = '../enyo-client/database/orm';
@@ -179,13 +181,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             // intialization should only happen to one DB at a time.
             if (!args.organization) {
               releaseLock(); // args.organization is falsy so no reason to pass it
-              res.send({data:{isError: true, message: "Initialize every instance DB. Are you crazy?"}});
+              res.send({data: {isError: true, message: "Initialize every instance DB. Are you crazy?"}});
               return;
             }
             X.log("Initializing organization: ", orgName);
+            // this is ugly. We have to pass the path to the pqsl commands to the script
+            psqlDir = psqlPath === 'psql' ? "implicit" : psqlPath.substring(0, psqlPath.length - 4);
+            xTupleDbDir = X.options.datasource.xTupleDbDir || "/usr/local/xtuple/databases";
+
+            initInstanceDbCommand = "initInstanceDb.sh " +
+              flags + " -g " + group +
+              " -t " + args.initialize +
+              " -r " + psqlDir +
+              " -x " + xTupleDbDir;
 
             psqlArray.push({
-              command: "%@/%@".f(initInstanceDbDirectory, initInstanceDbCommand),
+              command: "(cd %@ && exec ./%@)".f(initInstanceDbDir, initInstanceDbCommand),
               loadOrder: -9999
             });
           }
