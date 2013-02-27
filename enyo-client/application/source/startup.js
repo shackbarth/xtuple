@@ -320,6 +320,17 @@ white:true*/
     }
   });
   
+  // XT.StartupTasks.push({
+  //   taskName: "loadSites",
+  //   task: function () {
+  //     var options = {
+  //       success: _.bind(this.didComplete, this)
+  //     };
+  //     XM.sites = new XM.SiteCollection();
+  //     XM.sites.fetch(options);
+  //   }
+  // });
+  
   XT.StartupTasks.push({
     taskName: "loadTaxZones",
     task: function () {
