@@ -253,7 +253,14 @@ white:true*/
               model.resetPassword(true);
             }
           };
+
+        } else if (isNew) {
+          // reset the password even if there are no orgs added.
+          // of course we'll have to add some if we want the
+          // login to be useful.
+          model.resetPassword(true);
         }
+
         for (i = 0; i < orgs.length; i++) {
           params = {
             user: model.id,
