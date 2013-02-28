@@ -186,7 +186,7 @@ trailing:true white:true*/
         {kind: "XV.ItemWidget", attr: "item"},
         {kind: "XV.SitePicker", attr: "site"},
         {kind: "XV.InputWidget", attr: "customerPartNumber"},
-        {kind: "XV.NumberWidget", attr: "quantityOrd"},
+        {kind: "XV.NumberWidget", attr: "quantity"},
         {kind: "XV.UnitWidget", attr: "quantityUnit"},
         {kind: "XV.NumberWidget", attr: "quantityShip"},
         {kind: "XV.PercentWidget", attr: "discount"},
