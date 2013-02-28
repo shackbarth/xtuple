@@ -207,7 +207,7 @@ trailing:true white:true*/
     ],
     launchWorkspace: function (inSender, inEvent) {
       var id = this.getValue().id;
-      this.doWorkspace({workspace: "XV.QuoteLineItemWorkspace", id: id});
+      this.doWorkspace({workspace: "XV.QuoteLineWorkspace", id: id});
       return true;
     }
   });
