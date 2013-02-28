@@ -21,11 +21,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       K = XM.Model,
       fetchOptions = {},
       wasError = false,
+      callbackReached = false,
       query;
 
     fetchOptions.success = function () {
       if (user.getStatus() === K.READY_CLEAN &&
-           org.getStatus() === K.READY_CLEAN) {
+           org.getStatus() === K.READY_CLEAN &&
+           !callbackReached) {
+
+        // we don't want to execute this twice in case both async calls get hit
+        // at the same time, because if you call res.send twice it crashes the
+        // datasource.
+        callbackReached = true;
+
         userOrg = user.get('organizations').where({name: args.organization})[0];
 
         // The values we will set the user account record to
