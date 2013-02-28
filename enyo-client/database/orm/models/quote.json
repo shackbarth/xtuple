@@ -324,7 +324,7 @@
         "name": "shiptoContactTitle",
         "attr": {
           "type": "String",
-          "column": "quhead_shipto_cntct_suffix"
+          "column": "quhead_shipto_cntct_title"
         }
       },
       {

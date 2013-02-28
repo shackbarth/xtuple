@@ -324,7 +324,7 @@ enyo.kind({
         ]},
         {kind: "XV.ListColumn", classes: "third",
           components: [
-          {kind: "XV.ListAttr", attr: "quote.status"},
+          {kind: "XV.ListAttr", attr: "quote.getQuoteStatusString"},
           {kind: "XV.ListAttr", attr: "itemSite"}
         ]},
         {kind: "XV.ListColumn", classes: "third",
