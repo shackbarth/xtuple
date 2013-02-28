@@ -180,7 +180,7 @@ trailing:true white:true*/
     name: "XV.QuoteLineItemEditor",
     kind: "XV.RelationsEditor",
     events: {
-      onWorkspace: ""
+      onChildWorkspace: ""
     },
     components: [
       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
@@ -207,7 +207,7 @@ trailing:true white:true*/
     ],
     launchWorkspace: function (inSender, inEvent) {
       var id = this.getValue().id;
-      this.doWorkspace({workspace: "XV.QuoteLineWorkspace", id: id});
+      this.doChildWorkspace({workspace: "XV.QuoteLineWorkspace", id: id});
       return true;
     }
   });
