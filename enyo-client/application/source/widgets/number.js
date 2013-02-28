@@ -3,11 +3,11 @@ regexp:true, undef:true, trailing:true, white:true */
 /*global XT:true, XV:true, Globalize:true, enyo:true, _:true */
 
 (function () {
-  
+
   // ..........................................................
   // COST
   //
-  
+
   enyo.kind({
     name: "XV.Cost",
     kind: "XV.Number",
@@ -15,7 +15,7 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.COST_SCALE
     }
   });
-  
+
   enyo.kind({
     name: "XV.CostWidget",
     kind: "XV.NumberWidget",
@@ -23,11 +23,11 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.COST_SCALE
     }
   });
-  
+
   // ..........................................................
   // EXTENDED PRICE
   //
-  
+
   enyo.kind({
     name: "XV.ExtendedPrice",
     kind: "XV.Number",
@@ -35,7 +35,7 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.EXTENDED_PRICE_SCALE
     }
   });
-  
+
   enyo.kind({
     name: "XV.ExtendedPriceWidget",
     kind: "XV.NumberWidget",
@@ -43,11 +43,11 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.EXTENDED_PRICE_SCALE
     }
   });
-  
+
   // ..........................................................
   // MONEY
   //
-  
+
   enyo.kind({
     kind: "XV.NumberWidget",
     name: "XV.MoneyWidget",
@@ -56,7 +56,9 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.MONEY_SCALE,
       amount: null,
       currency: null,
-      effective: null
+      effective: null,
+      currencyDisabled: false,
+      currencyShowing: true
     },
     handlers: {
       onSelect: "inputChanged"
@@ -86,6 +88,8 @@ regexp:true, undef:true, trailing:true, white:true */
      */
     create: function () {
       this.inherited(arguments);
+      this.$.picker.setDisabled(this.getCurrencyDisabled());
+      this.$.picker.setShowing(this.getCurrencyShowing());
       if (this.getEffective()) {
         this.$.basePanel.setShowing(true);
         this.$.baseLabel.setContent(XT.baseCurrency().get('abbreviation'));
@@ -97,41 +101,41 @@ regexp:true, undef:true, trailing:true, white:true */
     getEffective: function () {
       return this.effective;
     },
-    
+
     /**
       Returns the published currency value.
      */
     getCurrency: function () {
       return this.currency;
     },
-    
+
     /**
       Sets the value of the published currency value.
      */
     setCurrency: function (value) {
       this.currency = value;
     },
-    
+
     /**
       Returns the published amount value.
      */
     getAmount: function () {
       return this.amount;
     },
-    
+
     /**
     Sets the value of the published currency value.
     */
     setAmount: function (value) {
       this.amount = value;
     },
-    
+
     setBaseAmount: function (value) {
       var amt = value * this.getFixedRate(this.getEffective(), this.getCurrency());
       amt = amt || amt === 0 ? Globalize.format(amt, "n" + this.getScale()) : "";
       this.$.baseAmount.setContent(amt);
     },
-    
+
     /**
     If the effective date is available,
     calculate the base currency amount based on the fixed rate
@@ -145,30 +149,41 @@ regexp:true, undef:true, trailing:true, white:true */
         this.setBaseAmount(value);
       }
     },
-    
+
     /**
-    @todo Document the setValue method.
+    This setDisabled function is all or nothing for both widgets
+    depending on value
+    */
+    setDisabled: function (isDisabled) {
+      this.$.input.setDisabled(isDisabled);
+      this.$.picker.setDisabled(this.currencyDisabled || isDisabled);
+    },
+
+    /**
+    This setValue function handles a value which is an
+      object consisting of two key/value pairs for the
+      amount and currency controls.
     */
     setValue: function (value, options) {
       options = options || {};
       var oldValue, inEvent;
-      for (attr in value) {
-        if (value.hasOwnProperty(attr)) {
-          if (attr === "amount") {
+      for (var attribute in value) {
+        if (value.hasOwnProperty(attribute)) {
+          if (attribute === "amount") {
             oldValue = this.amount;
-            if (oldValue !== value[attr]) {
-              this.setAmount(value[attr]);
-              this.valueChanged(value[attr]);
-              inEvent = { value: value[attr], originator: this };
+            if (oldValue !== value[attribute]) {
+              this.setAmount(value[attribute]);
+              this.valueChanged(value[attribute]);
+              inEvent = { value: value[attribute], originator: this };
               if (!options.silent) { this.doValueChange(inEvent); }
               // Set base label with calculated value
-              this.setBaseAmount(value[attr]);
+              this.setBaseAmount(value[attribute]);
             }
-          } else if (attr === "currency") {
+          } else if (attribute === "currency") {
             oldValue = this.getCurrency();
-            if (oldValue !== value[attr]) {
-              this.setCurrency(value[attr]);
-              this.$.picker.setValue(value[attr] || XT.baseCurrency());
+            if (oldValue !== value[attribute]) {
+              this.setCurrency(value[attribute]);
+              this.$.picker.setValue(value[attribute] || XT.baseCurrency());
               // Set base label with calculated value
               this.setBaseAmount(this.getAmount());
             }
@@ -176,7 +191,7 @@ regexp:true, undef:true, trailing:true, white:true */
         }
       }
     },
-    
+
     /**
      Retrieves the fixed currency rate using the current currency and effective date.
      */
@@ -190,11 +205,11 @@ regexp:true, undef:true, trailing:true, white:true */
       return rate ? rate.get('rate') : null;
     }
   });
-  
+
   // ..........................................................
   // PERCENT
   //
-  
+
   enyo.kind({
     name: "XV.Percent",
     kind: "XV.Number",
@@ -212,7 +227,7 @@ regexp:true, undef:true, trailing:true, white:true */
       return value / 100;
     }
   });
-  
+
   enyo.kind({
     name: "XV.PercentWidget",
     kind: "XV.NumberWidget",
@@ -230,11 +245,11 @@ regexp:true, undef:true, trailing:true, white:true */
       return value / 100;
     }
   });
-  
+
   // ..........................................................
   // PURCHASE PRICE
   //
-  
+
   enyo.kind({
     name: "XV.PurchasePrice",
     kind: "XV.Number",
@@ -242,7 +257,7 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.PURCHASE_PRICE_SCALE
     }
   });
-  
+
   enyo.kind({
     name: "XV.PurchasePriceWidget",
     kind: "XV.NumberWidget",
@@ -250,11 +265,11 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.PURCHASE_PRICE_SCALE
     }
   });
-  
+
   // ..........................................................
   // QUANTITY
   //
-  
+
   enyo.kind({
     name: "XV.Quantity",
     kind: "XV.Number",
@@ -262,7 +277,7 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.QTY_SCALE
     }
   });
-  
+
   enyo.kind({
     name: "XV.QuantityWidget",
     kind: "XV.NumberWidget",
@@ -270,11 +285,11 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.QTY_SCALE
     }
   });
-  
+
   // ..........................................................
   // QUANTITY PER
   //
-  
+
   enyo.kind({
     name: "XV.QuantityPer",
     kind: "XV.Number",
@@ -282,7 +297,7 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.QTY_PER_SCALE
     }
   });
-  
+
   enyo.kind({
     name: "XV.QuantityPerWidget",
     kind: "XV.NumberWidget",
@@ -290,11 +305,11 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.QTY_PER_SCALE
     }
   });
-  
+
   // ..........................................................
   // SALES PRICE
   //
-  
+
   enyo.kind({
     name: "XV.SalesPrice",
     kind: "XV.Number",
@@ -302,7 +317,7 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.SALES_PRICE_SCALE
     }
   });
-  
+
   enyo.kind({
     name: "XV.SalesPriceWidget",
     kind: "XV.NumberWidget",
@@ -310,11 +325,11 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.SALES_PRICE_SCALE
     }
   });
-  
+
   // ..........................................................
   // UNIT RATIO
   //
-  
+
   enyo.kind({
     name: "XV.UnitRatio",
     kind: "XV.Number",
@@ -322,7 +337,7 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.UNIT_RATIO_SCALE
     }
   });
-  
+
   enyo.kind({
     name: "XV.UnitRatioWidget",
     kind: "XV.NumberWidget",
@@ -330,11 +345,11 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.UNIT_RATIO_SCALE
     }
   });
-  
+
   // ..........................................................
   // WEIGHT
   //
-  
+
   enyo.kind({
     name: "XV.Weight",
     kind: "XV.Number",
@@ -342,7 +357,7 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.WEIGHT_SCALE
     }
   });
-  
+
   enyo.kind({
     name: "XV.WeightWidget",
     kind: "XV.NumberWidget",

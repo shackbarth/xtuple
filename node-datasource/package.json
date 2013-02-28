@@ -2,29 +2,28 @@
   "author": "xTuple <dev@xtuple.com>",
   "name": "node-datasource",
   "description": "",
-  "version": "0.0.1",
+  "version": "1.0.8",
   "repository": {
     "type": "git",
     "url": "https://github.com/xtuple/xtuple.git"
   },
   "dependencies": {
-    "underscore":"1.3.3",
     "backbone":"0.9.2",
-    "backbone-relational":"0.6.0",
-    "nodemailer":"0.3.37",
+    "backbone-relational":"0.6.x",
+    "connect-ensure-login": "0.1.x",
+    "connect-flash":"0.1.x",
     "ejs": "0.8.x",
-    "express": "3.x.x",
-    "oauth2orize": "0.x.x",
-    "passport": "~0.1.15",
-    "passport-local": "0.1.x",
+    "express": "3.1.x",
+    "nodemailer":"0.3.x",
+    "oauth2orize": "0.1.x",
+    "passport": "0.1.x",
     "passport-http": "0.2.x",
     "passport-http-bearer": "0.2.x",
+    "passport-local": "0.1.x",
     "passport-oauth2-client-password": "0.1.x",
-    "connect-ensure-login": "0.1.x",
-    "socket.io":"0.9.13",
-    "connect":"2.7.x",
-    "connect-flash":"0.1.x",
-    "request":"2.12.0"
+    "request":"2.14.x",
+    "socket.io":"0.9.x",
+    "underscore":"1.4.x"
   },
   "devDependencies": {
     "zombie":"1.4.1",
@@ -32,7 +31,7 @@
   },
   "optionalDependencies": {},
   "engines": {
-    "node": "0.6.9"
+    "node": "0.8.x"
   },
   "main": "xt",
   "scripts": {

@@ -1178,7 +1178,7 @@ trailing:true white:true*/
             {kind: "XV.TaxZonePicker", attr: "taxZone"},
             {kind: "XV.SitePicker", attr: "site"},
             {kind: "XV.SaleTypePicker", attr: "saleType"},
-            {kind: "XV.InputWidget", attr: "status"},
+            {kind: "XV.InputWidget", attr: "getQuoteStatusString", label: "_status".loc()},
             {kind: "XV.DateWidget", attr: "expireDate", label: "_expires".loc()},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
             {kind: "XV.CustomerProspectWidget", attr: "customer", showAddress: true, label: "_billTo".loc()},
@@ -1190,7 +1190,8 @@ trailing:true white:true*/
               city: "billtoCity",
               state: "billtoState",
               postalCode: "billtoPostalCode",
-              country: "billtoCountry"}
+              country: "billtoCountry"
+            }
             },
             {kind: "onyx.Button", content: "_copyToShipTo".loc(), ontap: "copyBilltoToShipto"},
             {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
@@ -1203,7 +1204,8 @@ trailing:true white:true*/
               city: "shiptoCity",
               state: "shiptoState",
               postalCode: "shiptoPostalCode",
-              country: "shiptoCountry"}
+              country: "shiptoCountry"
+            }
             },
             {kind: "onyx.GroupboxHeader", content: "_otherStuff".loc()},
             {kind: "XV.InputWidget", attr: "fob"},
