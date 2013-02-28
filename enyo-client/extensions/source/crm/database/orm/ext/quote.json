@@ -14,15 +14,6 @@
     ],
     "properties": [
       {
-        "name": "accounts",
-        "toMany": {
-          "isNested": true,
-          "type": "QuoteAccount",
-          "column": "quhead_id",
-          "inverse": "source"
-        }
-      },
-      {
         "name": "opportunities",
         "toMany": {
           "isNested": true,
