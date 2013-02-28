@@ -1,0 +1,50 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "SaleType",
+    "table": "saletype",
+    "lockable": true,
+    "idSequenceName": "saletype_saletype_id_seq",
+    "comment": "Sale Type Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainSaleTypes",
+        "read": "ViewSalesTypes",
+        "update": "MaintainSaleTypes",
+        "delete": "MaintainSaleTypes"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "saletype_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "saletype_code"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "saletype_descr"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "saletype_active"
+        }
+      }
+    ]
+  }
+]
