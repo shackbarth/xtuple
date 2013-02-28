@@ -101,7 +101,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.InputWidget", attr: "hostname"},
-            {kind: "XV.DateWidget", attr: "port"},
+            {kind: "XV.NumberWidget", attr: "port"},
             {kind: "XV.InputWidget", attr: "user"},
             {kind: "XV.InputWidget", attr: "password", type: "password"},
             {kind: "XV.InputWidget", attr: "location"}
