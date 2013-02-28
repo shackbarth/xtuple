@@ -179,6 +179,9 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.QuoteLineItemEditor",
     kind: "XV.RelationsEditor",
+    events: {
+      onWorkspace: ""
+    },
     components: [
       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
         classes: "in-panel", components: [
@@ -203,7 +206,9 @@ trailing:true white:true*/
       ]}
     ],
     launchWorkspace: function (inSender, inEvent) {
-      alert("Here we go!");
+      var id = this.getValue().id;
+      this.doWorkspace({workspace: "XV.QuoteLineItemWorkspace", id: id});
+      return true;
     }
   });
 
