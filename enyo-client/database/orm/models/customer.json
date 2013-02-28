@@ -1553,8 +1553,8 @@
       },
       {
         "name": "customerGroup",
-        "toOne": {
-          "type": "CustomerGroup",
+        "attr": {
+          "type": "Number",
           "column": "custgrpitem_custgrp_id"
         }
       },
@@ -1562,7 +1562,7 @@
         "name": "customer",
         "toOne":	{
           "isNested": true,
-          "type": "Customer",
+          "type": "CustomerRelation",
           "column": "custgrpitem_cust_id"
         }
       }
