@@ -5,8 +5,8 @@
 \i init_script.sql;
 \cd ../../../enyo-client/database/source;
 
--- drop xm views
-\i drop_xm_views.sql;
+-- delete system orms
+\i delete_system_orms.sql;
 
 -- [ END ] initdb
 
@@ -80,9 +80,6 @@
 \i xt/guiscripts/user.sql;
 \i xt/guiscripts/users.sql;
 \i xt/guiscripts/userPreferences.sql;
-
--- delete system orms
-\i delete_system_orms.sql;
 
 -- [ END ] xt
 
