@@ -4,7 +4,7 @@ trailing:true white:true*/
 /*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true */
 
 (function () {
-  
+
   // ..........................................................
   // CHARACTERISTIC
   //
@@ -53,7 +53,7 @@ trailing:true white:true*/
     parentKey: "contact",
     listRelations: "XV.ContactEmailListRelations"
   });
-  
+
   // ..........................................................
   // CUSTOMER SHIP-TO
   //
@@ -94,7 +94,7 @@ trailing:true white:true*/
     listRelations: "XV.CustomerShipToListRelations",
     fitButtons: false
   });
-  
+
   // ..........................................................
   // TAX REGISTRATIONS
   //
@@ -172,7 +172,7 @@ trailing:true white:true*/
     listRelations: "XV.ProjectTaskListRelations",
     fitButtons: false
   });
-  
+
   // ..........................................................
   // QUOTE LINE ITEMS
   //
@@ -197,9 +197,14 @@ trailing:true white:true*/
         {kind: "XV.DateWidget", attr: "scheduleDate"},
         {kind: "XV.DateWidget", attr: "promiseDate"},
         {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-        {kind: "XV.TextArea", attr: "memo", fit: true}  
+        {kind: "XV.TextArea", attr: "memo", fit: true},
+        {kind: "onyx.GroupboxHeader", content: "_advanced".loc()},
+        {kind: "onyx.Button", ontap: "launchWorkspace", content: "_advanced".loc()}
       ]}
-    ]
+    ],
+    launchWorkspace: function (inSender, inEvent) {
+      alert("Here we go!");
+    }
   });
 
   enyo.kind({
