@@ -45,7 +45,7 @@
           "column": "saletype_active"
         }
       }
-    ]
-  },
-  isSystem: true
+    ],
+    "isSystem": true
+  }
 ]

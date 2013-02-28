@@ -489,6 +489,15 @@
         }
       },
       {
+        "name": "accounts",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteAccount",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
+      },
+      {
         "name": "contacts",
         "toMany": {
           "isNested": true,
@@ -518,7 +527,7 @@
     ],
     "isSystem": true
   },
-    {
+  {
     "context": "xtupl",
     "nameSpace": "XM",
     "type": "QuoteAccount",
