@@ -410,7 +410,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.sites",
     orderBy: [
-      {attribute: 'name'}
+      {attribute: 'code'}
     ]
   });
   

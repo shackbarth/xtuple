@@ -833,7 +833,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.AccountWidget", attr: "account"},
             {kind: "XV.ContactWidget", attr: "contact"},
-            {kind: "XV.MoneyWidget", attr: {amount: "amount", currency: "currency"}, effective: new Date(),
+            {kind: "XV.MoneyWidget", attr: {amount: "amount", currency: "currency"}, //effective: new Date(),
               label: "_amount".loc()},
             {kind: "XV.PercentWidget", attr: "probability"},
             {kind: "onyx.GroupboxHeader", content: "_status".loc()},
@@ -1178,29 +1178,35 @@ trailing:true white:true*/
             {kind: "XV.TaxZonePicker", attr: "taxZone"},
             {kind: "XV.SitePicker", attr: "site"},
             {kind: "XV.SaleTypePicker", attr: "saleType"},
-            {kind: "XV.InputWidget", attr: "status"},
+            {kind: "XV.InputWidget", attr: "getQuoteStatusString", label: "_status".loc()},
             {kind: "XV.DateWidget", attr: "expireDate", label: "_expires".loc()},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
             {kind: "XV.CustomerProspectWidget", attr: "customer", showAddress: true, label: "_billTo".loc()},
-            {kind: "XV.InputWidget", attr: "billtoName", label: "_name".loc()},
-            {kind: "XV.InputWidget", attr: "billtoAddress1", label: "_address1".loc()},
-            {kind: "XV.InputWidget", attr: "billtoAddress2", label: "_address2".loc()},
-            {kind: "XV.InputWidget", attr: "billtoAddress3", label: "_address3".loc()},
-            {kind: "XV.InputWidget", attr: "billtoCity", label: "_city".loc()},
-            {kind: "XV.InputWidget", attr: "billtoState", label: "_state".loc()},
-            {kind: "XV.InputWidget", attr: "billtoPostalCode", label: "_postalCode".loc()},
-            {kind: "XV.InputWidget", attr: "billtoCountry", label: "_country".loc()},
+            {kind: "XV.AddressFieldsWidget", attr: {
+              name: "billtoName",
+              line1: "billtoAddress1",
+              line2: "billtoAddress2",
+              line3: "billtoAddress3",
+              city: "billtoCity",
+              state: "billtoState",
+              postalCode: "billtoPostalCode",
+              country: "billtoCountry"
+            }
+            },
             {kind: "onyx.Button", content: "_copyToShipTo".loc(), ontap: "copyBilltoToShipto"},
             {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
             {kind: "XV.CustomerShiptoWidget", attr: "shipto", showAddress: true, label: "_name".loc()},
-            {kind: "XV.InputWidget", attr: "shiptoName", label: "_name".loc()},
-            {kind: "XV.InputWidget", attr: "shiptoAddress1", label: "_address1".loc()},
-            {kind: "XV.InputWidget", attr: "shiptoAddress2", label: "_address2".loc()},
-            {kind: "XV.InputWidget", attr: "shiptoAddress3", label: "_address3".loc()},
-            {kind: "XV.InputWidget", attr: "shiptoCity", label: "_city".loc()},
-            {kind: "XV.InputWidget", attr: "shiptoState", label: "_state".loc()},
-            {kind: "XV.InputWidget", attr: "shiptoPostalCode", label: "_postalCode".loc()},
-            {kind: "XV.InputWidget", attr: "shiptoCountry", label: "_country".loc()},
+            {kind: "XV.AddressFieldsWidget", attr: {
+              name: "shiptoName",
+              line1: "shiptoAddress1",
+              line2: "shiptoAddress2",
+              line3: "shiptoAddress3",
+              city: "shiptoCity",
+              state: "shiptoState",
+              postalCode: "shiptoPostalCode",
+              country: "shiptoCountry"
+            }
+            },
             {kind: "onyx.GroupboxHeader", content: "_otherStuff".loc()},
             {kind: "XV.InputWidget", attr: "fob"},
             {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber", label: "_custPO".loc()},
@@ -1238,6 +1244,32 @@ trailing:true white:true*/
 
   XV.registerModelWorkspace("XM.QuoteRelation", "XV.QuoteWorkspace");
   XV.registerModelWorkspace("XM.QuoteListItem", "XV.QuoteWorkspace");
+
+
+  // ..........................................................
+  // QUOTE LINE ITEM
+  //
+
+  enyo.kind({
+    name: "XV.QuoteLineWorkspace",
+    kind: "XV.Workspace",
+    title: "_quoteLine".loc(),
+    model: "XM.QuoteLine",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.NumberWidget", attr: "lineNumber"},
+            {kind: "XV.NumberWidget", attr: "quantity"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
 
   // ..........................................................
   // SALES REP
