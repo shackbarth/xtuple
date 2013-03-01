@@ -4,7 +4,7 @@ trailing:true white:true*/
 /*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true */
 
 (function () {
-  
+
   // ..........................................................
   // CHARACTERISTIC
   //
@@ -53,7 +53,7 @@ trailing:true white:true*/
     parentKey: "contact",
     listRelations: "XV.ContactEmailListRelations"
   });
-  
+
   // ..........................................................
   // CUSTOMER SHIP-TO
   //
@@ -94,7 +94,7 @@ trailing:true white:true*/
     listRelations: "XV.CustomerShipToListRelations",
     fitButtons: false
   });
-  
+
   // ..........................................................
   // TAX REGISTRATIONS
   //
@@ -172,13 +172,16 @@ trailing:true white:true*/
     listRelations: "XV.ProjectTaskListRelations",
     fitButtons: false
   });
-  
+
   // ..........................................................
   // QUOTE LINE ITEMS
   //
   enyo.kind({
     name: "XV.QuoteLineItemEditor",
     kind: "XV.RelationsEditor",
+    events: {
+      onChildWorkspace: ""
+    },
     components: [
       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
         classes: "in-panel", components: [
@@ -186,7 +189,7 @@ trailing:true white:true*/
         {kind: "XV.ItemWidget", attr: "item"},
         {kind: "XV.SitePicker", attr: "site"},
         {kind: "XV.InputWidget", attr: "customerPartNumber"},
-        {kind: "XV.NumberWidget", attr: "quantityOrd"},
+        {kind: "XV.NumberWidget", attr: "quantity"},
         {kind: "XV.UnitWidget", attr: "quantityUnit"},
         {kind: "XV.NumberWidget", attr: "quantityShip"},
         {kind: "XV.PercentWidget", attr: "discount"},
@@ -197,9 +200,16 @@ trailing:true white:true*/
         {kind: "XV.DateWidget", attr: "scheduleDate"},
         {kind: "XV.DateWidget", attr: "promiseDate"},
         {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-        {kind: "XV.TextArea", attr: "memo", fit: true}  
+        {kind: "XV.TextArea", attr: "memo", fit: true},
+        {kind: "onyx.GroupboxHeader", content: "_advanced".loc()},
+        {kind: "onyx.Button", ontap: "launchWorkspace", content: "_advanced".loc()}
       ]}
-    ]
+    ],
+    launchWorkspace: function (inSender, inEvent) {
+      var id = this.getValue().id;
+      this.doChildWorkspace({workspace: "XV.QuoteLineWorkspace", id: id});
+      return true;
+    }
   });
 
   enyo.kind({

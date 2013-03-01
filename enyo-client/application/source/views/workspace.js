@@ -1245,6 +1245,32 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.QuoteRelation", "XV.QuoteWorkspace");
   XV.registerModelWorkspace("XM.QuoteListItem", "XV.QuoteWorkspace");
 
+
+  // ..........................................................
+  // QUOTE LINE ITEM
+  //
+
+  enyo.kind({
+    name: "XV.QuoteLineWorkspace",
+    kind: "XV.Workspace",
+    title: "_quoteLine".loc(),
+    model: "XM.QuoteLine",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.NumberWidget", attr: "lineNumber"},
+            {kind: "XV.NumberWidget", attr: "quantity"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+
   // ..........................................................
   // SALES REP
   //

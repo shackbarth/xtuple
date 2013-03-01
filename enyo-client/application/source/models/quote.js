@@ -70,7 +70,7 @@ white:true*/
     */
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
-      //this.on('add:item remove:item', this.quoteLinesDidChange);
+      this.on('add:item remove:item', this.quoteLinesDidChange);
       this.on('change:quoteLines', this.quoteLinesDidChange);
       this.on('change:customer', this.billtoDidChange);
       this.on('change:shipto', this.shiptoDidChange);
@@ -229,20 +229,67 @@ white:true*/
   /**
     @class
 
-    @extends XM.Document
+    @extends XM.Model
   */
-  XM.QuoteLine = XM.Document.extend({
+  XM.QuoteLine = XM.Model.extend({
     /** @scope XM.QuoteLine.prototype */
     
     recordType: 'XM.QuoteLine',
     
     defaults: function () {
-      //this.lineNumber = asdf.get("quoteLines").length + 1;
+      
+      //site, which is a customer default
+      
     },
     
-    requiredAttributes: [
+    initialize: function () {
+      XM.Model.prototype.initialize.apply(this, arguments);
+      this.on('change:item', this.itemChanged);
+      this.on('change:quantity change:itemsite change:scheduleDate', this.determinePrice);
+      this.set("lineNumber", this.getParent().get("quoteLines").length + 1);
+      //need a recalculatePrice function that forces the recalculation
+    },
     
-    ]
+    readOnlyAttributes: [
+      "lineNumber"
+    ],
+    
+    requiredAttributes: [
+      "id",
+      "item",
+      "quote",
+      "lineNumber",
+      "quantity",
+      "quantityUnit",
+      "price",
+      "priceUnit",
+      "scheduleDate"
+    ],
+    
+    itemChanged: function (model, value, options) {
+      XT.log("asdf");
+      //need to select default UOM's and stuff
+    },
+    
+    //salesorderitem.cpp line 1803,
+    //effectiveDate that has to do with the currency date
+    //asOf date which is the price effective date
+    //
+    determinePrice: function () {
+      var customer = this.getParent().get("customer"),
+        item = this.get("itemSite").get("item"),
+        quantity = this.get("quantity"),
+        shipto = this.getParent().get("shipto"),
+        quantityUnit = this.get("quantityUnit"),
+        priceUnit = this.get("priceUnit"),
+        currency = this.getParent().get("currency"),
+        callback = function (price) {
+          this.set('customerPrice', price);
+          this.set('price', price);
+        };
+      
+      //needs to dispatch to xm.customer.price
+    }
 
   });
   
