@@ -26,6 +26,22 @@ white:true*/
 
   });
   
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.ItemSiteRelation = XM.Info.extend({
+    /** @scope XM.ItemSiteRelation.prototype */
+
+    recordType: 'XM.ItemSiteRelation',
+
+    editableModel: 'XM.ItemSite',
+
+    descriptionKey: "number"
+
+  });
+  
   // ..........................................................
   // COLLECTIONS
   //
@@ -39,6 +55,18 @@ white:true*/
     /** @scope XM.ItemSiteCollection.prototype */
 
     model: XM.ItemSite
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.ItemSiteRelationCollection = XM.Collection.extend({
+    /** @scope XM.ItemSiteRelationCollection.prototype */
+
+    model: XM.ItemRelationSite
 
   });
 
