@@ -36,9 +36,7 @@ white:true*/
 
     recordType: 'XM.ItemSiteRelation',
 
-    editableModel: 'XM.ItemSite',
-
-    descriptionKey: "number"
+    editableModel: 'XM.ItemSite'
 
   });
   
@@ -63,10 +61,10 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.ItemSiteRelationCollection = XM.Collection.extend({
-    /** @scope XM.ItemSiteRelationCollection.prototype */
+  XM.ItemSiteListItemCollection = XM.Collection.extend({
+    /** @scope XM.ItemSiteListItemCollection.prototype */
 
-    model: XM.ItemRelationSite
+    model: XM.ItemSiteListItem
 
   });
 

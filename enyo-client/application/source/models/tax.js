@@ -74,7 +74,9 @@ white:true*/
   XM.TaxCode = XM.Document.extend({
     /** @scope XM.TaxCode.prototype */
 
-    recordType: 'XM.TaxCode'
+    recordType: 'XM.TaxCode',
+    
+    documentKey: 'code'
 
   });
   
@@ -86,7 +88,9 @@ white:true*/
   XM.TaxType = XM.Document.extend({
     /** @scope XM.TaxType.prototype */
 
-    recordType: 'XM.TaxType'
+    recordType: 'XM.TaxType',
+    
+    documentKey: 'name'
 
   });
   
