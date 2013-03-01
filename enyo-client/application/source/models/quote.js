@@ -70,6 +70,7 @@ white:true*/
     */
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
+      this.on('add:item remove:item', this.quoteLinesDidChange);
       this.on('change:quoteLines', this.quoteLinesDidChange);
       this.on('change:customer', this.billtoDidChange);
       this.on('change:shipto', this.shiptoDidChange);
