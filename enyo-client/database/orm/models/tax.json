@@ -82,7 +82,7 @@
           {
             "name": "account",
             "toOne": {
-              "type": "Account",
+              "type": "AccountRelation",
               "column": "crmacct_id"
             }
           }
@@ -131,28 +131,7 @@
       }
     ],
     "isSystem": true,
-    "extensions": [
-      {
-        "table": "crmacct",
-        "isChild": true,
-        "relations": [
-          {
-            "column": "crmacct_taxauth_id",
-            "inverse": "id"
-          }
-        ],
-        "properties": [
-          {
-            "name": "account",
-            "toOne": {
-              "type": "Account",
-              "column": "crmacct_id"
-            }
-          }
-        ],
-        "sequence": 0
-      }
-    ]
+    "extensions": []
   },
   {
     "context": "xtuple",
