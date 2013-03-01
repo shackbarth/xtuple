@@ -401,4 +401,30 @@ regexp:true, undef:true, trailing:true, white:true */
     ]
   });
   
+  // ..........................................................
+  // SITE
+  //
+
+  enyo.kind({
+    name: "XV.SitePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.sites",
+    orderBy: [
+      {attribute: 'code'}
+    ]
+  });
+  
+  // ..........................................................
+  // SALE TYPE
+  //
+
+  enyo.kind({
+    name: "XV.SaleTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.saleTypes",
+    orderBy: [
+      {attribute: 'name'}
+    ]
+  });
+  
 }());

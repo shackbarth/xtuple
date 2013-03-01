@@ -3,7 +3,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "Quote",
-    "table": "quheadinfo",
+    "table": "xt.quheadinfo",
     "idSequenceName": "quhead_quhead_id_seq",
     "comment": "Quote Map",
     "privileges": {
@@ -324,7 +324,7 @@
         "name": "shiptoContactTitle",
         "attr": {
           "type": "String",
-          "column": "quhead_shipto_cntct_suffix"
+          "column": "quhead_shipto_cntct_title"
         }
       },
       {
@@ -339,14 +339,6 @@
         "attr": {
           "type": "String",
           "column": "quhead_shipto_cntct_email"
-        }
-      },
-      {
-        "name": "billtoContact",
-        "toOne": {
-          "isNested": true,
-          "type": "ContactRelation",
-          "column": "quhead_billto_cntct_id"
         }
       },
       {
@@ -420,7 +412,7 @@
         }
       },
       {
-        "name": "status",
+        "name": "quoteStatus",
         "attr": {
           "type": "String",
           "column": "quhead_status"
@@ -1147,7 +1139,7 @@
          }
       },
       {
-        "name": "status",
+        "name": "quoteStatus",
         "attr": {
           "type": "String",
           "column": "quhead_status"

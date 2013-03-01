@@ -4,7 +4,7 @@ trailing:true white:true*/
 /*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true */
 
 (function () {
-  
+
   // ..........................................................
   // CHARACTERISTIC
   //
@@ -53,7 +53,7 @@ trailing:true white:true*/
     parentKey: "contact",
     listRelations: "XV.ContactEmailListRelations"
   });
-  
+
   // ..........................................................
   // CUSTOMER SHIP-TO
   //
@@ -94,9 +94,9 @@ trailing:true white:true*/
     listRelations: "XV.CustomerShipToListRelations",
     fitButtons: false
   });
-  
+
   // ..........................................................
-  // Tax Registrations
+  // TAX REGISTRATIONS
   //
   enyo.kind({
     name: "XV.TaxRegistrationEditor",
@@ -170,6 +170,56 @@ trailing:true white:true*/
     editor: "XV.ProjectTaskEditor",
     parentKey: "project",
     listRelations: "XV.ProjectTaskListRelations",
+    fitButtons: false
+  });
+
+  // ..........................................................
+  // QUOTE LINE ITEMS
+  //
+  enyo.kind({
+    name: "XV.QuoteLineItemEditor",
+    kind: "XV.RelationsEditor",
+    events: {
+      onChildWorkspace: ""
+    },
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.InputWidget", attr: "lineNumber"},
+        {kind: "XV.ItemWidget", attr: "item"},
+        {kind: "XV.SitePicker", attr: "site"},
+        {kind: "XV.InputWidget", attr: "customerPartNumber"},
+        {kind: "XV.NumberWidget", attr: "quantity"},
+        {kind: "XV.UnitWidget", attr: "quantityUnit"},
+        {kind: "XV.NumberWidget", attr: "quantityShip"},
+        {kind: "XV.PercentWidget", attr: "discount"},
+        {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "currency"},
+          label: "_unitPrice".loc(), currencyDisabled: true},
+        {kind: "XV.UnitWidget", attr: "priceUnit"},
+        {kind: "XV.NumberWidget", attr: "extended", label: "_extendedPrice".loc()},
+        {kind: "XV.DateWidget", attr: "scheduleDate"},
+        {kind: "XV.DateWidget", attr: "promiseDate"},
+        {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+        {kind: "XV.TextArea", attr: "memo", fit: true},
+        {kind: "onyx.GroupboxHeader", content: "_advanced".loc()},
+        {kind: "onyx.Button", ontap: "launchWorkspace", content: "_advanced".loc()}
+      ]}
+    ],
+    launchWorkspace: function (inSender, inEvent) {
+      var id = this.getValue().id;
+      this.doChildWorkspace({workspace: "XV.QuoteLineWorkspace", id: id});
+      return true;
+    }
+  });
+
+  enyo.kind({
+    name: "XV.QuoteLineItemBox",
+    kind: "XV.ListRelationsEditorBox",
+    classes: "xv-list-relations-box",
+    title: "_lineItems".loc(),
+    editor: "XV.QuoteLineItemEditor",
+    parentKey: "quote",
+    listRelations: "XV.QuoteLineItemListRelations",
     fitButtons: false
   });
 
