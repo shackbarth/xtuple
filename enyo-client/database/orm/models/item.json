@@ -607,8 +607,8 @@
       },
       {
         "name": "sourceType",
-        "toOne": {
-          "type": "Item",
+        "attr": {
+          "type": "String",
           "column": "source_type",
           "value": "I"
         }
