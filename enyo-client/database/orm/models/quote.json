@@ -3,7 +3,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "Quote",
-    "table": "quheadinfo",
+    "table": "xt.quheadinfo",
     "idSequenceName": "quhead_quhead_id_seq",
     "comment": "Quote Map",
     "privileges": {
