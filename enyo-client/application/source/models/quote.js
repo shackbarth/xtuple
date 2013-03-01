@@ -279,7 +279,6 @@ white:true*/
     ],
     
     itemChanged: function (model, value, options) {
-      XT.log("asdf");
       //need to select default UOM's and stuff
     }
 
