@@ -220,7 +220,30 @@ trailing:true white:true*/
     editor: "XV.QuoteLineItemEditor",
     parentKey: "quote",
     listRelations: "XV.QuoteLineItemListRelations",
-    fitButtons: false
+    fitButtons: false,
+    
+    create: function () {
+      this.inherited(arguments);
+      //TODO: needs to be some padding here
+      
+      // Bottom Panel with calculations
+      this.createComponent({
+        kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "XV.ScrollableGroupbox", name: "pricePanel",
+            classes: "in-panel", components: [
+            {kind: "XV.CurrencyPickerWidget", attr: "currency"},
+            {kind: "XV.NumberWidget", attr: "margin"},
+            //{kind: "XV.TextArea", attr: "miscChargeDesc", fit: true} - needs GL
+            // Charge Sales Account - needs GL
+            {kind: "XV.NumberWidget", attr: "freightWeight"},
+            {kind: "XV.NumberWidget", attr: "subtotal"},
+            // {kind: "XV.NumberWidget", attr: "miscCharge"}, - needs GL
+            {kind: "XV.NumberWidget", attr: "calculateFreight", label: "_freight".loc()},
+            {kind: "XV.NumberWidget", attr: "taxTotal", label: "_tax".loc()},
+            {kind: "XV.NumberWidget", attr: "total"}
+        ]}
+      ]});
+    }
   });
 
 }());
