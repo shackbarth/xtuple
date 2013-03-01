@@ -46,6 +46,13 @@
         }
       },
       {
+        "name": "scheduleDate",
+        "attr": {
+          "type": "Date",
+          "column": "schedule_date"
+        }
+      },
+      {
         "name": "shipto",
         "toOne": {
           "isNested": true,
@@ -934,6 +941,13 @@
         }
       },
       {
+        "name": "listPrice",
+        "attr": {
+          "type": "Number",
+          "column": "list_price"
+        }
+      },
+      {
         "name": "customerPrice",
         "attr": {
           "type": "Number",
@@ -941,10 +955,10 @@
         }
       },
       {
-        "name": "notes",
+        "name": "customerDiscount",
         "attr": {
-          "type": "String",
-          "column": "quitem_memo"
+          "type": "Number",
+          "column": "cust_discount"
         }
       },
       {
@@ -1030,6 +1044,13 @@
         "attr": {
           "type": "String",
           "column": "tax"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "quitem_memo"
         }
       }
     ],
