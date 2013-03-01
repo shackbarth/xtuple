@@ -324,12 +324,12 @@ enyo.kind({
         ]},
         {kind: "XV.ListColumn", classes: "third",
           components: [
-          {kind: "XV.ListAttr", attr: "quote.status"},
+          {kind: "XV.ListAttr", attr: "quote.getQuoteStatusString"},
           {kind: "XV.ListAttr", attr: "itemSite"}
         ]},
         {kind: "XV.ListColumn", classes: "third",
           components: [
-          {kind: "XV.ListAttr", attr: "quantityOrd"},
+          {kind: "XV.ListAttr", attr: "quantity"},
           //{kind: "XV.ListAttr", attr: "shipped"}, // Inventory
           {kind: "XV.ListAttr", attr: "quantityUnit.name"}
         ]},
