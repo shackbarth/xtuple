@@ -234,15 +234,28 @@ white:true*/
   XM.QuoteLine = XM.Model.extend({
     /** @scope XM.QuoteLine.prototype */
     
+    //need itemSite relation widget.  this widget will search on the customer and the site or something.
+    // john says no "clean" way to do it w/ views
+    //look up function called custItem.  Need a dispatchable function on the database side called XM.Customer.Items, where
+    //  you pass in a customer ID and maybe some other criteria and it filters the list of items based upon that stuff.
+    
     recordType: 'XM.QuoteLine',
     
     defaults: function () {
       
       //site, which is a customer default
+      XT.log("quoteline defaults");
+      var customer = this.get("customer");
+      
+      //need itemSite relation widget.  this widget will search on the customer and the site or something.
+      // john says no "clean" way to do it w/ views
+      //look up function called custItem.  Need a dispatchable function on the database side called XM.Customer.Items, where
+      //  you pass in a customer ID and maybe some other criteria and it filters the list of items based upon that stuff.
       
     },
     
     initialize: function () {
+      XT.log("quoteline initialize");
       XM.Model.prototype.initialize.apply(this, arguments);
       this.on('change:item', this.itemChanged);
       this.on('change:quantity change:itemsite change:scheduleDate', this.determinePrice);
@@ -269,26 +282,6 @@ white:true*/
     itemChanged: function (model, value, options) {
       XT.log("asdf");
       //need to select default UOM's and stuff
-    },
-    
-    //salesorderitem.cpp line 1803,
-    //effectiveDate that has to do with the currency date
-    //asOf date which is the price effective date
-    //
-    determinePrice: function () {
-      var customer = this.getParent().get("customer"),
-        item = this.get("itemSite").get("item"),
-        quantity = this.get("quantity"),
-        shipto = this.getParent().get("shipto"),
-        quantityUnit = this.get("quantityUnit"),
-        priceUnit = this.get("priceUnit"),
-        currency = this.getParent().get("currency"),
-        callback = function (price) {
-          this.set('customerPrice', price);
-          this.set('price', price);
-        };
-      
-      //needs to dispatch to xm.customer.price
     }
 
   });
