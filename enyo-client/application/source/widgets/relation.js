@@ -30,8 +30,8 @@ regexp:true, undef:true, trailing:true, white:true */
     descripAttribute: "phone",
     published: {
       showAddress: false,
-      account: null
     },
+    filterRestrictionType: ["account", "accountParent"],
     components: [
       {kind: "FittableColumns", components: [
         {name: "label", content: "", classes: "xv-decorated-label"},
@@ -91,44 +91,11 @@ regexp:true, undef:true, trailing:true, white:true */
           {name: "webAddress", ontap: "openWindow",
             classes: "xv-relationwidget-description hasLabel hyperlink"},
           {name: "address", classes: "xv-relationwidget-description hasLabel",
-            allowHtml: true}
+            allowHtml: true},
+          {name: "additionalInfo", showing: false}
         ]}
       ]}
     ],
-    autocomplete: function () {
-      var key = this.getKeyAttribute(),
-        attr = this.getValue() ? this.getValue().get(key) : "",
-        value = this.$.input.getValue(),
-        account = this.getAccount(),
-        query,
-        parameters = [{
-          attribute: key,
-          operator: "BEGINS_WITH",
-          value: value
-        }];
-
-      if (value && value !== attr) {
-        if (account) {
-          parameters.push({
-            attribute: ['account', 'accountParent'],
-            value: account
-          });
-        }
-        query = {
-          parameters: parameters,
-          rowLimit: 1,
-          orderBy: [{
-            attribute: key
-          }]
-        };
-        this._collection.fetch({
-          success: enyo.bind(this, "_fetchSuccess"),
-          query: query
-        });
-      } else if (!value) {
-        this.setValue(null);
-      }
-    },
     disabledChanged: function () {
       this.inherited(arguments);
       var disabled = this.getDisabled();
@@ -139,101 +106,6 @@ regexp:true, undef:true, trailing:true, white:true */
         this.$.fax.addRemoveClass("disabled", disabled);
         this.$.primaryEmail.addRemoveClass("disabled", disabled);
         this.$.webAddress.addRemoveClass("disabled", disabled);
-      }
-    },
-    keyUp: function (inSender, inEvent) {
-      var query,
-        key = this.getKeyAttribute(),
-        attr = this.getValue() ? this.getValue().get(key) : "",
-        value = this.$.input.getValue(),
-        completer = this.$.completer,
-        account = this.getAccount(),
-        parameters = [{
-          attribute: key,
-          operator: "BEGINS_WITH",
-          value: value
-        }];
-      inEvent.activator = this.$.decorator;
-
-      // Look up if value changed
-      if (value && value !== attr &&
-          inEvent.keyCode !== 9) {
-        if (account) {
-          parameters.push({
-            attribute: ['account', 'accountParent'],
-            value: account
-          });
-        }
-        query = {
-          parameters: parameters,
-          rowLimit: 10,
-          orderBy: [{
-            attribute: key
-          }]
-        };
-        this._collection.fetch({
-          success: enyo.bind(this, "_collectionFetchSuccess"),
-          query: query
-        });
-      } else {
-        completer.waterfall("onRequestHideMenu", inEvent);
-      }
-    },
-    menuItemSelected: function (inSender, inEvent) {
-      var that = this,
-        menuItem = inEvent.originator,
-        list = this.getList(),
-        model = this.getValue(),
-        id = model ? model.id : null,
-        workspace = this._List ? this._List.prototype.getWorkspace() : null,
-        account = this.getAccount(),
-        parameterItemValues = [],
-        callback;
-      switch (menuItem.name)
-      {
-      case 'searchItem':
-        callback = function (value) {
-          that.setValue(value);
-        };
-        if (account) {
-          parameterItemValues.push({
-            name: 'account',
-            value: account
-          });
-        }
-        this.doSearch({
-          list: list,
-          searchText: this.$.input.getValue(),
-          callback: callback,
-          parameterItemValues: parameterItemValues
-        });
-        break;
-      case 'openItem':
-        this.doWorkspace({
-          workspace: workspace,
-          id: id,
-          allowNew: false
-        });
-        break;
-      case 'newItem':
-        // Callback options on commit of the workspace
-        // Find the model with matching id, fetch and set it.
-        callback = function (model) {
-          if (!model) { return; }
-          var Model = that._collection.model,
-            value = new Model({id: model.id}),
-            options = {};
-          options.success = function () {
-            that.setValue(value);
-          };
-          value.fetch(options);
-        };
-        this.doWorkspace({
-          workspace: workspace,
-          callback: callback,
-          allowNew: false
-        });
-        break;
       }
     },
     setValue: function (value, options) {
@@ -382,6 +254,19 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // CUSTOMER SHIPTO
+  //
+
+  enyo.kind({
+    name: "XV.CustomerShiptoWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.CustomerShiptoRelationCollection",
+    list: "XV.CustomerShiptoList",
+    filterRestrictionType: ["customer"]
+  });
+
+
+  // ..........................................................
   // EMPLOYEE
   //
 
@@ -414,7 +299,8 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.ItemRelationCollection",
     list: "XV.ItemList",
     nameAttribute: "description1",
-    descripAttribute: "description2"
+    descripAttribute: "description2"//,
+    //additionalAttribute: "inventoryUnit.name"
   });
 
   // ..........................................................
@@ -438,7 +324,6 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.ProjectRelationCollection",
     list: "XV.ProjectList"
   });
-
 
   // ..........................................................
   // USER ACCOUNT

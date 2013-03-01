@@ -108,7 +108,7 @@ Simplest possible usage:
               clearTimeout(timeout);
 
               // give control back to whoever called us
-              callback(browser);
+              callback(/*browser*/); // XXX needed for route tests but creates an unspecified error now???
             }
           }, 100); // 100 = check to see if the app is loaded every 0.1 seconds
         });

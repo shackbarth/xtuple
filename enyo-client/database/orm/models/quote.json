@@ -342,14 +342,6 @@
         }
       },
       {
-        "name": "billtoContact",
-        "toOne": {
-          "isNested": true,
-          "type": "ContactRelation",
-          "column": "quhead_billto_cntct_id"
-        }
-      },
-      {
         "name": "billtoContactHonorific",
         "attr": {
           "type": "String",
