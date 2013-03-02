@@ -244,8 +244,8 @@ white:true*/
     defaults: function () {
       
       //site, which is a customer default
-      XT.log("quoteline defaults");
-      var customer = this.get("customer");
+      
+      //var customer = this.getParent().get("customer");
       
       //need itemSite relation widget.  this widget will search on the customer and the site or something.
       // john says no "clean" way to do it w/ views
@@ -255,7 +255,6 @@ white:true*/
     },
     
     initialize: function () {
-      XT.log("quoteline initialize");
       XM.Model.prototype.initialize.apply(this, arguments);
       this.on('change:item', this.itemChanged);
       this.on('change:quantity change:itemsite change:scheduleDate', this.determinePrice);
@@ -280,7 +279,6 @@ white:true*/
     ],
     
     itemChanged: function (model, value, options) {
-      XT.log("asdf");
       //need to select default UOM's and stuff
     }
 
