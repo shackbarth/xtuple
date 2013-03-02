@@ -15,6 +15,8 @@ white:true*/
     /** @scope XM.Quote.prototype */
 
     recordType: 'XM.Quote',
+    
+    dateAttribute: "quoteDate",
 
     defaults: function () {
       var //settings = XT.session.getSettings(),
@@ -249,7 +251,7 @@ white:true*/
       this._updatePrice = true;
       this.on('change:discount', this.calculateFromDiscount);
       this.on('change:quantity change:price', this.calculateExtendedPrice);
-      this.on('change:quote', this.quoteChanged);
+      this.on('change:quote', this.parentChanged);
     },
     
     readOnlyAttributes: [
@@ -299,7 +301,7 @@ white:true*/
         priceUnitRatio = this.get("priceUnitRatio"),
         price = this.get("price") || 0,
         extPrice =  (quantity * quantityUnitRatio / priceUnitRatio) * price;
-      extPrice = XT.Math.round(extPrice, XT.EXTENDED_PRICE_SCALE);
+      extPrice = XT.toExtendedPrice(extPrice);
       this.set("extendedPrice", extPrice, {force: true});
       return this;
     },
@@ -308,28 +310,82 @@ white:true*/
       Recalculates and sets price from customer price based on user defined
       discount/markup.
       
-      return {Object} Receiver
+      returns {Object} Receiver
     */
     calculateFromDiscount: function () {
-      var K = XM.QuoteLine,
+      var K = this.getClass(),
         discount = this.get("discount"),
         customerPrice = this.get("customer"),
-        mode = this.get("priceMode"),
-        sense = mode === K.MARKUP_MODE ? 1 : -1;
+        sense = this.get("priceMode") === K.MARKUP_MODE ? -1 : 1;
       if (!customerPrice) {
-        this.attributes.discount = undefined; // Avoid recursive looping
+        this.set("discount", undefined);
       } else if (this._updatePrice) {
         this.set("price", customerPrice - customerPrice * discount * sense);
       }
       return this;
     },
     
+    /**
+      Calculate and set discount and markup percentages.
+       
+      returns {Object} Receiver
+    */
     calculatePercentages: function () {
-      // calculateExtendedPrice???
+      var that = this,
+        parent = this.getParent(),
+        currency = parent.get("currency"),
+        parentDate = parent.get(parent.dateAttribute),
+        price = this.get("price"),
+        options = {};
+      options.success = function (basePrice) {
+        var K = that.getClass(),
+          priceMode = that.get("priceMode"),
+          customerPrice = that.get("customerPrice"),
+          listCost = that.get("listCost"),
+          listPrice = that.get("listPrice"),
+          attrs = {
+            discount: undefined,
+            listPriceDiscount: undefined,
+            listCostMarkup: undefined
+          };
+
+        if (price === 0) {
+          attrs.discount = priceMode === K.MARKUP_MODE ? 0 : 1;
+          attrs.listPriceDiscount = 1;
+          attrs.listCostMarkup = 0;
+        } else {
+          if (listPrice) {
+            attrs.listPriceDiscount = XT.toPercent(1 - basePrice / listPrice);
+          }
+          if (listCost) {
+            attrs.listCostMarkup = XT.toPercent(basePrice / listCost - 1);
+          }
+          if (customerPrice) {
+            attrs.discount = priceMode === K.MARKUP_MODE ?
+              XT.toPercent(price / customerPrice - 1) : // Markup
+              XT.toPercent(1 - price / customerPrice);  // Discount
+          }
+        }
+        
+        // TODO: Handle characteristics
+        this.set(attrs, {force: true});
+      };
+      options.error = function (error) {
+        this.trigger("error", error);
+      };
+        
+      // Convert price to base, then do the real work in the callback
+      currency.toBase(price, parentDate, options);
+      
+      return this;
     },
     
     determinePrice: function (force) {
       
+    },
+    
+    parentChanged: function () {
+      // TODO: Calculate next line number if applicable
     },
     
     populateItem: function () {
@@ -354,10 +410,6 @@ white:true*/
     
     priceUnitChanged: function () {
       
-    },
-    
-    quoteChanged: function () {
-      // TODO: Calculate next line number if applicable
     },
     
     quantityUnitChanged: function () {
