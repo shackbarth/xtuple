@@ -1260,10 +1260,23 @@ trailing:true white:true*/
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
-            classes: "in-panel", components: [
-            {kind: "XV.NumberWidget", attr: "lineNumber"},
-            {kind: "XV.NumberWidget", attr: "quantity"}
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "lineNumber"},
+            {kind: "XV.ItemWidget", attr: "item"},
+            {kind: "XV.SitePicker", attr: "site"},
+            {kind: "XV.InputWidget", attr: "customerPartNumber"},
+            {kind: "XV.NumberWidget", attr: "quantityOrd"},
+            {kind: "XV.UnitWidget", attr: "quantityUnit"},
+            {kind: "XV.NumberWidget", attr: "quantityShip"},
+            {kind: "XV.PercentWidget", attr: "discount"},
+            {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "currency"},
+              label: "_unitPrice".loc(), currencyDisabled: true},
+            {kind: "XV.UnitWidget", attr: "priceUnit"},
+            {kind: "XV.NumberWidget", attr: "extended", label: "_extendedPrice".loc()},
+            {kind: "XV.DateWidget", attr: "scheduleDate"},
+            {kind: "XV.DateWidget", attr: "promiseDate"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "memo", fit: true}
           ]}
         ]}
       ]}
