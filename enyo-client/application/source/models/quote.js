@@ -238,15 +238,16 @@ white:true*/
     
     defaults: function () {
       return {
-        priceMode: XM.QuoteLine.DISCOUNT_MODE
+        quantityUnitRatio: 1,
+        priceMode: XM.QuoteLine.DISCOUNT_MODE,
+        priceUnitRatio: 1
       };
     },
     
     initialize: function () {
       XM.Model.prototype.initialize.apply(this, arguments);
-      this.on('change:item', this.itemChanged);
-      this.on('change:quantity change:itemsite change:scheduleDate', this.determinePrice);
-      this.set("lineNumber", this.getParent().get("quoteLines").length + 1);
+      this.on('change:quote', this.quoteChanged);
+      this.on('change:quantity change:price', this.calculateExtendedPrice);
     },
     
     readOnlyAttributes: [
@@ -275,14 +276,28 @@ white:true*/
       "lineNumber",
       "quantity",
       "quantityUnit",
+      "quantityUnitRatio",
       "price",
       "priceMode",
       "priceUnit",
+      "priceUnitRatio",
       "scheduleDate"
     ],
     
-    calculateExtendedPrice: function () {
+    /**
+      Calculates and sets the extended price.
       
+      returns {Object} Receiver
+    */
+    calculateExtendedPrice: function () {
+      var quantity = this.get("quantity") || 0,
+        quantityUnitRatio = this.get("quantityUnitRatio"),
+        priceUnitRatio = this.get("priceUnitRatio"),
+        price = this.get("price") || 0,
+        extPrice =  (quantity * quantityUnitRatio / priceUnitRatio) * price;
+      extPrice = XT.Math.round(extPrice, XT.EXTENDED_PRICE_SCALE);
+      this.set("extendedPrice", extPrice, {force: true});
+      return this;
     },
     
     calculateFromDiscount: function () {
@@ -290,15 +305,11 @@ white:true*/
     },
     
     calculatePercentages: function () {
-      
+      // calculateExtendedPrice???
     },
     
     determinePrice: function (force) {
       
-    },
-    
-    itemChanged: function (model, value, options) {
-      //need to select default UOM's and stuff
     },
     
     populateItem: function () {
@@ -325,8 +336,12 @@ white:true*/
       
     },
     
+    quoteChanged: function () {
+      // TODO: Calculate next line number if applicable
+    },
+    
     quantityUnitChanged: function () {
-      
+      this.calculateExtendedPrice();
     },
     
     recalculatePrice: function () {

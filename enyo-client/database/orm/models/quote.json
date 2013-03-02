@@ -942,7 +942,7 @@
         }
       },
       {
-        "name": "inventoryQuantityUnitRatio",
+        "name": "quantityUnitRatio",
         "attr": {
           "type": "Number",
           "column": "quitem_qty_invuomratio"
