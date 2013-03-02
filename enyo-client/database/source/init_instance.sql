@@ -22,8 +22,10 @@
 \i xt/functions/mergecrmaccts.sql;
 \i xt/functions/pg_advisory_unlock.sql;
 \i xt/functions/quote_line_customer_discount.sql;
+\i xt/functions/quote_line_list_cost_markup.sql;
 \i xt/functions/quote_line_extended_price.sql;
 \i xt/functions/quote_line_list_price.sql;
+\i xt/functions/quote_line_list_price_discount.sql;
 \i xt/functions/quote_line_tax.sql;
 \i xt/functions/quote_schedule_date.sql;
 \i xt/functions/quote_subtotal.sql;

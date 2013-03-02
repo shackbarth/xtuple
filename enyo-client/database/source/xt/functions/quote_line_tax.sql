@@ -1,5 +1,5 @@
 create or replace function xt.quote_line_tax(quitem) returns numeric stable as $$
-  select coalesce(sum(tax),0)
+  select round(coalesce(sum(tax),0),6)
   from (
     select (calculatetaxdetail(
       quhead_taxzone_id, 

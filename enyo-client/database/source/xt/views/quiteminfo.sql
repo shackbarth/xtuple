@@ -3,11 +3,15 @@ drop view if exists xt.quiteminfo cascade;
 create or replace view xt.quiteminfo as
 
   select quitem.*,
+    item_listcost as list_cost,
+    xt.quote_line_list_cost_markup(quitem) as list_cost_markup,
     xt.quote_line_list_price(quitem) as list_price,
+    xt.quote_line_list_price_discount(quitem) as list_price_discount,
     xt.quote_line_customer_discount(quitem) as cust_discount,
     xt.quote_line_extended_price(quitem) as ext_price,
     xt.quote_line_tax(quitem) as tax
-  from quitem;
+  from quitem
+    left join item on quitem_item_id=item_id;
           
 revoke all on xt.quiteminfo from public;
 grant all on table xt.quiteminfo to group xtrole;
