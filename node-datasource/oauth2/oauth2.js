@@ -1,7 +1,8 @@
 /**
  * Module dependencies.
  */
-var oauth2orize = require('oauth2orize')
+var auth = require('../routes/auth')
+  , oauth2orize = require('oauth2orize')
   , passport = require('passport')
   , login = require('connect-ensure-login')
   , db = require('./db')
@@ -48,10 +49,10 @@ server.deserializeClient(function(id, done) {
 // the application.  The application issues a code, which is bound to these
 // values, and will be exchanged for an access token.
 
-server.grant(oauth2orize.grant.code(function(client, redirectURI, user, ares, done) {
+server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, done) {
   var code = utils.uid(16)
 
-  db.authorizationCodes.save(code, client.id, redirectURI, user.id, function(err) {
+  db.authorizationCodes.save(code, client.id, redirectURI, user.id, function (err) {
     if (err) { return done(err); }
     done(null, code);
   });
@@ -63,17 +64,89 @@ server.grant(oauth2orize.grant.code(function(client, redirectURI, user, ares, do
 // application issues an access token on behalf of the user who authorized the
 // code.
 
-server.exchange(oauth2orize.exchange.code(function(client, code, redirectURI, done) {
-  db.authorizationCodes.find(code, function(err, authCode) {
+server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, done) {
+  db.authorizationCodes.find(code, function (err, authCode) {
     if (err) { return done(err); }
     if (client.id !== authCode.clientID) { return done(null, false); }
     if (redirectURI !== authCode.redirectURI) { return done(null, false); }
 
-    var token = utils.uid(256)
-    db.accessTokens.save(token, authCode.userID, authCode.clientID, function(err) {
-      if (err) { return done(err); }
-      done(null, token);
+    // Create the tokens.
+    var accessToken = utils.uid(256),
+        refreshToken = utils.uid(256),
+        params = {};
+
+    params.token_type = 'bearer';
+    params.expires_in = new Date(today.getTime() + (24 * 60 * 60 * 1000));
+
+    // Save the accessToken.
+    // TODO - Save params.expires_in and use that to validate tokens.
+    db.accessTokens.save(accessToken, authCode.userID, authCode.clientID, function (err) {
+      if (err) {
+        return done(err);
+      }
+
+      // TODO - Need a refreshToken store.
+      // It should have:
+      // - user_id,
+      // - client_id, - Client sending Oauth requests.
+      // - redirect_uri, - Determines where the response is sent.
+      // - scope, - List of scopes that access was granted for for this token. Just one org and maybe the userinfo scope.
+      // - state, - Indicates any state which may be useful to your application upon receipt of the response.
+      // - approval_prompt, - Indicates if the user should be re-prompted for consent.
+      // - auth_code, - Removed after first exchange for...
+      // - auth_code_issued, - Datetime auth code was issued. If more than 30 minutes have passed without exchange, remove whole row.
+      // - auth_code_expires_in, - GMT datetime when this code expires.
+      // - refresh_token, - Does not expire
+      // - refresh_token_issued, - Datetime refresh token was created
+      // - refresh_expires_in, - GMT datetime when this token expires.
+      // - access_token, - Current issued/valid access token.
+      // - access_token_issued, - GMT datetime when this token was issued.
+      // - access_expires_in, - GMT datetime when this token expires.
+      // - token_type, - Bearer for now, MAC later
+      // - access_type, - online or offline
+      // - delegate, - user_id for which the application is requesting delegated access as.
+
+      // TODO - Need client store.
+      // It should have:
+      // - client_id, - Generated id
+      // - client_secret, - Generated random key.
+      // - client_name, - Name of app requesting permission.
+      // - client_email, - Contact email for the client app.
+      // - client_web_site, - URL for the client app.
+      // - client_logo, - logo image for the client app.
+      // - client_type, - "web_server", "installed_app", "service_account"
+      // - active, - Boolean to deactivate a client.
+      // - issued, - Datetime client was registered.
+      // - auth_uri,
+      // - token_uri,
+      // - redirect_uris, - URIs registered for this client to redirect to.
+      // - delegated_access, - Boolean if "service_account" can act on behalf of other users
+      // - client_x509_cert_url, - Public key cert for "service_account"
+      // - auth_provider_x509_cert_url
+
+      // Save the refreshToken.
+      db.accessTokens.save(refreshToken, authCode.userID, client.id, function (err) {
+        if (err) {
+          return done(err);
+        }
+
+        // TODO - Now that the auth code has been exchanged, we need to delete it.
+
+        // Send the tokens along.
+        done(null, accessToken, refreshToken, params);
+      });
     });
+  });
+}));
+
+server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken, scope, done) {
+  db.accessTokens.save(refreshToken, scope, client.id, function (err, accessToken) {
+    if (err) { return done(err); }
+
+    // TODO - This needs to repeat lots of the above token issuing code.
+    // token_type, expires_in, refreshToken, etc.
+
+    done(null, accessToken);
   });
 }));
 
@@ -96,8 +169,7 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectURI, do
 // first, and rendering the `dialog` view.
 
 exports.authorization = [
-  login.ensureLoggedIn(),
-  server.authorization(function(clientID, redirectURI, done) {
+  server.authorization(function(clientID, redirectURI, scope, type, done) {
     db.clients.findByClientId(clientID, function(err, client) {
       if (err) { return done(err); }
       // WARNING: For security purposes, it is highly advisable to check that
@@ -107,10 +179,28 @@ exports.authorization = [
       return done(null, client, redirectURI);
     });
   }),
+  function(req, res, next){
+    // Load the OAuth req data into the session so it can access it on login redirects.
+    if (req.oauth2) {
+      req.session.oauth2 = req.oauth2;
+      next();
+    }
+
+    // TODO - Client should be able to get a token for a userinfo REST call but
+    // not have a selected org. login.ensureLoggedIn() needs to support this.
+    // This would allow a client not to specify a scope, receive an error that includes
+    // the URI to call to get a user's scope/org list: 'https://mobile.xtuple.com/auth/userinfo.xxx'
+  },
+  login.ensureLoggedIn({redirectTo: "/"}),
   function(req, res){
     res.render('dialog', { transactionID: req.oauth2.transactionID, user: req.user, client: req.oauth2.client });
   }
 ]
+
+
+//  function(req, res, next){
+//    auth.scopeForm(req, res, next);
+//  },
 
 // user decision endpoint
 //
@@ -120,7 +210,7 @@ exports.authorization = [
 // a response.
 
 exports.decision = [
-  login.ensureLoggedIn(),
+  login.ensureLoggedIn({redirectTo: "/"}),
   server.decision()
 ]
 

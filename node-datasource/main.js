@@ -126,7 +126,9 @@ require('http').IncomingMessage.prototype.isAuthenticated = function () {
 
   var creds = this.session.passport.user;
 
+// TODO - This needs to support OAuth 2.0 logins which will not have an org set yet.
   if (creds && creds.id && creds.username && creds.organization) {
+  //if (creds && creds.id) {
     return true;
   } else {
     destroySession(this.sessionID, this.session);

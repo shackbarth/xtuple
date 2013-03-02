@@ -121,7 +121,7 @@ passport.use(new BearerStrategy(
       if (err) { return done(err); }
       if (!token) { return done(null, false); }
 
-      db.users.find(token.userID, function (err, user) {
+      db.users.findByUsername(token.userID, function (err, user) {
         if (err) { return done(err); }
         if (!user) { return done(null, false); }
         // to keep this example simple, restricted scopes are not implemented,

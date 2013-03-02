@@ -1,5 +1,9 @@
+// TODO - Need to store and check against:
+// -- approved callback URLs
+// -- client type, e.g. "installed applicaion", "web server", "service account"
+// OAuth 2.0 server should respond differently based on the cleint type.
 var clients = [
-    //{ id: '1', name: 'Samplr', clientId: 'abc123', clientSecret: 'ssh-secret' }
+    { id: '1', name: 'xTuple', clientId: '766398752140.apps.googleusercontent.com', clientSecret: 'sXZdl3_RJgykttfoT_BOyJuK' }
 ];
 
 
