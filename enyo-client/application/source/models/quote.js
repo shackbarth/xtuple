@@ -234,24 +234,12 @@ white:true*/
   XM.QuoteLine = XM.Model.extend({
     /** @scope XM.QuoteLine.prototype */
     
-    //need itemSite relation widget.  this widget will search on the customer and the site or something.
-    // john says no "clean" way to do it w/ views
-    //look up function called custItem.  Need a dispatchable function on the database side called XM.Customer.Items, where
-    //  you pass in a customer ID and maybe some other criteria and it filters the list of items based upon that stuff.
-    
     recordType: 'XM.QuoteLine',
     
     defaults: function () {
-      
-      //site, which is a customer default
-      
-      //var customer = this.getParent().get("customer");
-      
-      //need itemSite relation widget.  this widget will search on the customer and the site or something.
-      // john says no "clean" way to do it w/ views
-      //look up function called custItem.  Need a dispatchable function on the database side called XM.Customer.Items, where
-      //  you pass in a customer ID and maybe some other criteria and it filters the list of items based upon that stuff.
-      
+      return {
+        priceMode: XM.QuoteLine.DISCOUNT_MODE
+      };
     },
     
     initialize: function () {
@@ -259,28 +247,132 @@ white:true*/
       this.on('change:item', this.itemChanged);
       this.on('change:quantity change:itemsite change:scheduleDate', this.determinePrice);
       this.set("lineNumber", this.getParent().get("quoteLines").length + 1);
-      //need a recalculatePrice function that forces the recalculation
     },
     
     readOnlyAttributes: [
-      "lineNumber"
+      "customerPrice",
+      "extendedPrice",
+      "inventoryQuantityUnitRatio",
+      "item",
+      "lineNumber",
+      "listCost",
+      "listCostMarkup",
+      "listPrice",
+      "listPriceDiscount",
+      "priceMode",
+      "priceUnitRatio",
+      "profit",
+      "site",
+      "tax",
+      "unitCost"
     ],
     
     requiredAttributes: [
-      "id",
+      "itemSite",
       "item",
+      "site",
       "quote",
       "lineNumber",
       "quantity",
       "quantityUnit",
       "price",
+      "priceMode",
       "priceUnit",
       "scheduleDate"
     ],
     
+    calculateExtendedPrice: function () {
+      
+    },
+    
+    calculateFromDiscount: function () {
+      
+    },
+    
+    calculatePercentages: function () {
+      
+    },
+    
+    determinePrice: function (force) {
+      
+    },
+    
     itemChanged: function (model, value, options) {
       //need to select default UOM's and stuff
+    },
+    
+    populateItem: function () {
+      
+    },
+    
+    populateItemSubstitutes: function () {
+      
+    },
+    
+    populateItemsite: function () {
+      
+    },
+    
+    populateHistory: function () {
+      
+    },
+    
+    populateTax: function () {
+      
+    },
+    
+    priceUnitChanged: function () {
+      
+    },
+    
+    quantityUnitChanged: function () {
+      
+    },
+    
+    recalculatePrice: function () {
+      
+    },
+    
+    scheduleDateChanged: function () {
+      
+    },
+    
+    substitute: function () {
+      
     }
+
+  });
+  
+  // ..........................................................
+  // CLASS METHODS
+  //
+
+  _.extend(XM.QuoteLine, /** @lends XM.QuoteLine# */{
+
+    // ..........................................................
+    // CONSTANTS
+    //
+
+    /**
+      Discount is calculated normally.
+
+      @static
+      @constant
+      @type String
+      @default D
+    */
+    DISCOUNT_MODE: "D",
+
+    /**
+      Discount is calculated as markup. This means sign on
+      customer discount should be reversed for presentation purposes.
+
+      @static
+      @constant
+      @type String
+      @default M
+    */
+    MARKUP_MODE: "M"
 
   });
   
