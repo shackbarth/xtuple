@@ -246,8 +246,10 @@ white:true*/
     
     initialize: function () {
       XM.Model.prototype.initialize.apply(this, arguments);
-      this.on('change:quote', this.quoteChanged);
+      this._updatePrice = true;
+      this.on('change:discount', this.calculateFromDiscount);
       this.on('change:quantity change:price', this.calculateExtendedPrice);
+      this.on('change:quote', this.quoteChanged);
     },
     
     readOnlyAttributes: [
@@ -269,6 +271,7 @@ white:true*/
     ],
     
     requiredAttributes: [
+      "customerPrice",
       "itemSite",
       "item",
       "site",
@@ -281,7 +284,8 @@ white:true*/
       "priceMode",
       "priceUnit",
       "priceUnitRatio",
-      "scheduleDate"
+      "scheduleDate",
+      "unitCost"
     ],
     
     /**
@@ -300,8 +304,24 @@ white:true*/
       return this;
     },
     
-    calculateFromDiscount: function () {
+    /**
+      Recalculates and sets price from customer price based on user defined
+      discount/markup.
       
+      return {Object} Receiver
+    */
+    calculateFromDiscount: function () {
+      var K = XM.QuoteLine,
+        discount = this.get("discount"),
+        customerPrice = this.get("customer"),
+        mode = this.get("priceMode"),
+        sense = mode === K.MARKUP_MODE ? 1 : -1;
+      if (!customerPrice) {
+        this.attributes.discount = undefined; // Avoid recursive looping
+      } else if (this._updatePrice) {
+        this.set("price", customerPrice - customerPrice * discount * sense);
+      }
+      return this;
     },
     
     calculatePercentages: function () {

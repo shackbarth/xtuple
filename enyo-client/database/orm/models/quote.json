@@ -956,7 +956,7 @@
         }
       },
       {
-        "name": "customerDiscount",
+        "name": "discount",
         "attr": {
           "type": "Number",
           "column": "cust_discount"
