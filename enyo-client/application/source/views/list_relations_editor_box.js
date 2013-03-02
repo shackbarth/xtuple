@@ -202,7 +202,7 @@ trailing:true white:true*/
         {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
         {kind: "XV.TextArea", attr: "memo", fit: true},
         {kind: "onyx.GroupboxHeader", content: "_advanced".loc()},
-        {kind: "onyx.Button", ontap: "launchWorkspace", content: "_advanced".loc()}
+        {kind: "onyx.Button", ontap: "launchWorkspace", content: "_openAdvancedTab".loc()}
       ]}
     ],
     launchWorkspace: function (inSender, inEvent) {
