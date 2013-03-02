@@ -913,62 +913,6 @@
         }
       },
       {
-        "name": "scheduleDate",
-        "attr": {
-          "type": "Date",
-          "column": "quitem_scheddate"
-        }
-      },
-      {
-        "name": "quantity",
-        "attr": {
-          "type": "Number",
-          "column": "quitem_qtyord"
-        }
-      },
-      {
-        "name": "unitCost",
-        "attr": {
-          "type": "Number",
-          "column": "quitem_unitcost"
-        }
-      },
-      {
-        "name": "price",
-        "attr": {
-          "type": "Number",
-          "column": "quitem_price"
-        }
-      },
-      {
-        "name": "listPrice",
-        "attr": {
-          "type": "Number",
-          "column": "list_price"
-        }
-      },
-      {
-        "name": "customerPrice",
-        "attr": {
-          "type": "Number",
-          "column": "quitem_custprice"
-        }
-      },
-      {
-        "name": "customerDiscount",
-        "attr": {
-          "type": "Number",
-          "column": "cust_discount"
-        }
-      },
-      {
-        "name": "customerPartNumber",
-        "attr": {
-          "type": "String",
-          "column": "quitem_custpn"
-        }
-      },
-      {
         "name": "site",
         "toOne": {
           "type": "SiteRelation",
@@ -981,6 +925,13 @@
           "isNested": true,
           "type": "ItemRelation",
           "column": "quitem_item_id"
+        }
+      },
+      {
+        "name": "quantity",
+        "attr": {
+          "type": "Number",
+          "column": "quitem_qtyord"
         }
       },
       {
@@ -998,6 +949,83 @@
         }
       },
       {
+        "name": "customerPrice",
+        "attr": {
+          "type": "Number",
+          "column": "quitem_custprice"
+        }
+      },
+      {
+        "name": "customerDiscount",
+        "attr": {
+          "type": "Number",
+          "column": "cust_discount"
+        }
+      },
+      {
+        "name": "price",
+        "attr": {
+          "type": "Number",
+          "column": "quitem_price"
+        }
+      },
+      {
+        "name": "scheduleDate",
+        "attr": {
+          "type": "Date",
+          "column": "quitem_scheddate"
+        }
+      },
+      {
+        "name": "promiseDate",
+        "attr": {
+          "type": "Date",
+          "column": "quitem_promdate"
+        }
+      },
+      {
+        "name": "unitCost",
+        "attr": {
+          "type": "Number",
+          "column": "quitem_unitcost"
+        }
+      },
+      {
+        "name": "listCost",
+        "attr": {
+          "type": "Number",
+          "column": "list_cost"
+        }
+      },
+      {
+        "name": "listCostMarkup",
+        "attr": {
+          "type": "Number",
+          "column": "list_cost_markup"
+        }
+      },
+      {
+        "name": "listPrice",
+        "attr": {
+          "type": "Number",
+          "column": "list_price"
+        }
+      },
+      {
+        "name": "listPriceDiscount",
+        "attr": {
+          "type": "Number",
+          "column": "list_price_discount"
+        }
+      },
+      {
+        "name": "customerPartNumber",
+        "attr": {
+          "type": "String",
+          "column": "quitem_custpn"
+        }
+      },
+      {
         "name": "priceUnit",
         "attr": {
           "type": "Number",
@@ -1012,20 +1040,6 @@
         }
       },
       {
-        "name": "promiseDate",
-        "attr": {
-          "type": "Date",
-          "column": "quitem_promdate"
-        }
-      },
-      {
-        "name": "taxType",
-        "toOne": {
-          "type": "TaxType",
-          "column": "quitem_taxtype_id"
-        }
-      },
-      {
         "name": "priceMode",
         "attr": {
           "type": "String",
@@ -1035,8 +1049,22 @@
       {
         "name": "extendedPrice",
         "attr": {
-          "type": "String",
+          "type": "Number",
           "column": "ext_price"
+        }
+      },
+      {
+        "name": "profit",
+        "attr": {
+          "type": "String",
+          "column": "profit"
+        }
+      },
+      {
+        "name": "taxType",
+        "toOne": {
+          "type": "TaxType",
+          "column": "quitem_taxtype_id"
         }
       },
       {

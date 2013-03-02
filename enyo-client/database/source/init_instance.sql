@@ -24,6 +24,7 @@
 \i xt/functions/quote_line_customer_discount.sql;
 \i xt/functions/quote_line_list_cost_markup.sql;
 \i xt/functions/quote_line_extended_price.sql;
+\i xt/functions/quote_line_line_profit.sql;
 \i xt/functions/quote_line_list_price.sql;
 \i xt/functions/quote_line_list_price_discount.sql;
 \i xt/functions/quote_line_tax.sql;

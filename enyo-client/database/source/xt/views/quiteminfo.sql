@@ -9,6 +9,7 @@ create or replace view xt.quiteminfo as
     xt.quote_line_list_price_discount(quitem) as list_price_discount,
     xt.quote_line_customer_discount(quitem) as cust_discount,
     xt.quote_line_extended_price(quitem) as ext_price,
+    xt.quote_line_profit(quitem) as profit,
     xt.quote_line_tax(quitem) as tax
   from quitem
     left join item on quitem_item_id=item_id;
