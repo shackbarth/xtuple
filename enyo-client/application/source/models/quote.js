@@ -16,7 +16,7 @@ white:true*/
 
     recordType: 'XM.Quote',
     
-    dateAttribute: "quoteDate",
+    documentDateKey: "quoteDate",
 
     defaults: function () {
       var //settings = XT.session.getSettings(),
@@ -250,8 +250,17 @@ white:true*/
       XM.Model.prototype.initialize.apply(this, arguments);
       this._updatePrice = true;
       this.on('change:discount', this.calculateFromDiscount);
+      this.on('change:itemSite', this.recalculatePrice);
+      this.on('change:quantity', this.determinePrice);
       this.on('change:quantity change:price', this.calculateExtendedPrice);
+      this.on('change:price', this.calculatePercentages);
+      this.on('change:price change:unitCost', this.calculateProfit);
       this.on('change:quote', this.parentChanged);
+      
+      // Only recalculate price on date changes if pricing is date driven
+      if (XT.session.settings.get("soPriceEffective") === "ScheduleDate") {
+        this.on('change:scheduleDate', this.determinePrice);
+      }
     },
     
     readOnlyAttributes: [
@@ -334,7 +343,7 @@ white:true*/
       var that = this,
         parent = this.getParent(),
         currency = parent.get("currency"),
-        parentDate = parent.get(parent.dateAttribute),
+        parentDate = parent.get(parent.documentDateKey),
         price = this.get("price"),
         options = {};
       options.success = function (basePrice) {
@@ -380,8 +389,114 @@ white:true*/
       return this;
     },
     
+    calculateProfit: function () {
+      var unitCost = this.get("unitCost"),
+        price = this.get("price"),
+        parent = this.get("parent"),
+        effective = this.get(parent.documentDateKey),
+        currency = parent.get("currency"),
+        that = this,
+        options = {},
+        opt = {force: true};
+      if (price) {
+        if (unitCost) {
+          options.success = function (value) {
+            that.set("profit", (value - unitCost) / unitCost, opt);
+          };
+          currency.toBase(price, effective, options);
+        } else {
+          this.set("profit", 1, opt);
+        }
+      } else {
+        this.set("profit", undefined, opt);
+      }
+    },
+    
     determinePrice: function (force) {
-      
+      var settings = XT.session.settings,
+        K = this.getClass(),
+        asOf = new Date(),
+        canUpdate = this.canUpdate(),
+        customerPrice = this.get("customerPrice"),
+        ignoreDiscount = settings.get("IgnoreCustDisc"),
+        isConfigured = this.getValue("itemSite.item.isConfigured"),
+        item = this.getValue("itemSite.item"),
+        itemSite = this.get("itemSite"),
+        editing = !this.isNew(),
+        options = {},
+        parent = this.getParent(),
+        parentDate = parent.get(parent.documentDateKey),
+        customer = parent.get("customer"),
+        currency = parent.get("currency"),
+        price = this.get("price"),
+        priceUnit = this.get("priceUnit"),
+        effectivePolicy = settings.get("soPriceEffective"),
+        quantity = this.get("quantity"),
+        quantityUnit = this.get("quantityUnit"),
+        scheduleDate = this.get("scheduleDate"),
+        that = this,
+        updatePolicy = settings.get("UpdatePriceLineEdit");
+        
+      // Make sure we have all the necessary values
+      if (canUpdate && itemSite && quantity && quantityUnit && priceUnit) {
+        
+        // Handle alternate price effectivity settings
+        if (effectivePolicy === "ScheduleDate") {
+          asOf = scheduleDate;
+        } else if (effectivePolicy === "OrderDate") {
+          asOf = parentDate;
+        }
+        
+        // Determine whether updating only net price or just customer price
+        if (editing) {
+          if (customerPrice !== price &&
+             (ignoreDiscount || (updatePolicy === K.NEVER_UPDATE && !force))) {
+            this._updatePrice = false;
+          } else if (updatePolicy !== K.ALWAYS_UPDATE) {
+            // TO DO: We need to prompt the user. How?
+            this._updatePrice = false;
+          }
+        }
+        
+        if (isConfigured) {
+          // TO DO: Loop through characteristics and get pricing
+        }
+        
+        // Get the price
+        options.success = function (resp) {
+          var priceMode;
+          
+          // Handle no price found scenario
+          if (resp.price === -9999) {
+            that.notify("_noPriceFound".loc());
+            this.set("customerPrice", undefined);
+            this.set("price", undefined);
+            if (that.hasChanges("quantity")) {
+              this.set("quantity", undefined);
+            } else {
+              this.set("scheduleDate", undefined);
+            }
+            
+          // Handle normal scenario
+          } else {
+            priceMode = (resp.type === "N" ||
+                         resp.type === "D" ||
+                         resp.type === "P") ? K.DISCOUNT_MODE : K.MARKUP_MODE;
+            that.set("priceMode", priceMode);
+            that.set("customerPrice", resp.price); // TO DO: Need to add char price totals here too
+          }
+        };
+        options.error = function (err) {
+          that.trigger("error", err);
+        };
+        options.asOf = asOf;
+        options.quantityUnit = quantityUnit;
+        options.priceUnit = priceUnit;
+        options.currency = currency;
+        options.effective = parentDate;
+        customer.price(item, quantity, options);
+      }
+     
     },
     
     parentChanged: function () {
@@ -409,15 +524,15 @@ white:true*/
     },
     
     priceUnitChanged: function () {
-      
+      this.determinePrice(true);
     },
     
     quantityUnitChanged: function () {
-      this.calculateExtendedPrice();
+      this.determinePrice(true);
     },
     
     recalculatePrice: function () {
-      
+      this.determinePrice(true);
     },
     
     scheduleDateChanged: function () {
@@ -451,15 +566,34 @@ white:true*/
     DISCOUNT_MODE: "D",
 
     /**
-      Discount is calculated as markup. This means sign on
-      customer discount should be reversed for presentation purposes.
+      Never update automatically pricing once a line item has been saved.
 
       @static
       @constant
       @type String
       @default M
     */
-    MARKUP_MODE: "M"
+    NEVER_UPDATE: 1,
+    
+    /**
+      Prompt user whether to update pricing on a saved line item.
+
+      @static
+      @constant
+      @type String
+      @default 2
+    */
+    PROMPT_UPDATE: 2,
+
+    /**
+      Always update pricing automatically.
+
+      @static
+      @constant
+      @type String
+      @default 3
+    */
+    ALWAYS_UPDATE: 3
 
   });
   

@@ -567,6 +567,7 @@ var lang = XT.stringsFor("en_US", {
   "_lengthInvalid": "Length of {attr} must be {length}.",
   "_mustSave": "You must save your changes before proceeding.",
   "_nameRequired": "A name is required.",
+  "_noPriceFound": "This item is marked as exclusive and no qualifying price was found.",
   "_productCategoryRequiredOnSold": "A Product Category is required for sold items.",
   "_recursiveParentDisallowed": "Record is not allowed to reference itself as the parent.",
   "_recordNotFound": "Record not found.",

@@ -5,6 +5,39 @@ white:true*/
 
 (function () {
   "use strict";
+  
+  /**
+    Retrieve the customer's price for a given item and quantity.
+    
+    @param {XM.Item} Item
+    @param {Number} Quantity
+    @param {Object} Options - success (callback), asOf, quantityUnit, priceUnit, currency, effective
+    @returns {Object} Receiver
+  */
+  var price = function (item, quantity, options) {
+    if (!item || !quantity || !options || !options.success) { return; }
+    var opts = {},
+      params;
+    if (options.asOf) {
+      opts.asOf = options.asOf;
+    }
+    if (options.quantityUnit) {
+      opts.quantityUnitId = options.quantityUnit.id;
+    }
+    if (options.priceUnit) {
+      opts.priceUnitId = options.priceUnit.id;
+    }
+    if (options.currency) {
+      opts.currencyId = options.currency.id;
+    }
+    if (options.effective) {
+      opts.effective = options.effective;
+    }
+    params = [this.id, item.id, quantity, opts];
+    this.dispatch("XM.Customer", "price", params, options);
+    return this;
+  };
+  
 
   /**
     @class
@@ -81,22 +114,32 @@ white:true*/
       this.on('change:backorder', this.backorderDidChange);
       this.on('change:salesRep', this.salesRepDidChange);
     },
-
-    purchaseOrdersDidChange: function () {
-      if (this.get("usesPurchaseOrders")) {
-        this.setReadOnly("blanketPurchaseOrders", false);
-      } else if (!this.get("usesPurchaseOrders")) {
-        this.set("blanketPurchaseOrders", false);
-        this.setReadOnly("blanketPurchaseOrders", true);
-      }
-    },
-
+    
     backorderDidChange: function () {
       if (this.get("backorder")) {
         this.setReadOnly("partialShip", false);
       } else if (!this.get("backorder")) {
         this.set("partialShip", false);
         this.setReadOnly("partialShip", true);
+      }
+    },
+    
+    /**
+      Retrieve the customer's price for a given item and quantity.
+
+      @param {XM.Item} Item
+      @param {Number} Quantity
+      @param {Object} Options - success (callback), asOf, quantityUnit, priceUnit, currency, effective
+      @returns {Object} Receiver
+    */
+    price: price,
+    
+    purchaseOrdersDidChange: function () {
+      if (this.get("usesPurchaseOrders")) {
+        this.setReadOnly("blanketPurchaseOrders", false);
+      } else if (!this.get("usesPurchaseOrders")) {
+        this.set("blanketPurchaseOrders", false);
+        this.setReadOnly("blanketPurchaseOrders", true);
       }
     },
 
@@ -443,7 +486,17 @@ white:true*/
 
     editableModel: 'XM.Customer',
 
-    descriptionKey: "name"
+    descriptionKey: "name",
+    
+    /**
+      Retrieve the customer's price for a given item and quantity.
+
+      @param {XM.Item} Item
+      @param {Number} Quantity
+      @param {Object} Options - success (callback), asOf, quantityUnit, priceUnit, currency, effective
+      @returns {Object} Receiver
+    */
+    price: price
 
   });
 

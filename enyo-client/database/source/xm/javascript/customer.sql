@@ -12,7 +12,7 @@ select xt.install_js('XM','Customer','xtuple', $$
    @param {Number} item id
    @param {Number} customer id
    @param {Number} quantity
-   @param {Object} options:  quantityUom, priceUom, currency, effective, asOf
+   @param {Object} options:  asOf, quantityUnitId, priceUnitId, currencyId, effective
    @returns Object 
   */
  
@@ -20,9 +20,9 @@ select xt.install_js('XM','Customer','xtuple', $$
     options = options || {};
     var today = new Date(),
       shipto = options.shipto || -1,
-      quantityUom,
-      priceUom,
-      currency,
+      quantityUnitId,
+      priceUnitId,
+      currencyId,
       effective,
       asOf,
       result,
@@ -37,12 +37,12 @@ select xt.install_js('XM','Customer','xtuple', $$
     };
     if(err) { plv8.elog(ERROR, err + " is required.") }
 
-    quantityUom = options.quantityUom || plv8.execute("select item_inv_uom_id as result from item where item_id = $1;", [item])[0].result,
-    priceUom = options.priceUom || plv8.execute("select item_price_uom_id as result from item where item_id = $1;", [item])[0].result,
-    currency = options.currency || plv8.execute("select basecurrid() as result")[0].result,
+    quantityUnitId = options.quantityUomId || plv8.execute("select item_inv_uom_id as result from item where item_id = $1;", [item])[0].result,
+    priceUnitId = options.priceUomId || plv8.execute("select item_price_uom_id as result from item where item_id = $1;", [item])[0].result,
+    currency = options.currencyId || plv8.execute("select basecurrid() as result")[0].result,
     effective = options.effective ? new Date(options.effective) : today,
     asOf = options.asOf ? new Date(options.asOf) : today,
-    result = plv8.execute("select itemipsprice($1, $2, $3, $4, $5, $6, $7, $8::date, $9::date, null) as result;", [item, customer, shipto, quantity, quantityUom, priceUom, currency, effective, asOf])[0].result;
+    result = plv8.execute("select itemipsprice($1, $2, $3, $4, $5, $6, $7, $8::date, $9::date, null) as result;", [item, customer, shipto, quantity, quantityUnitId, priceUnitId, currencyId, effective, asOf])[0].result;
 
     result = { price: result.itemprice_price, type: result.itemprice_type };
     return JSON.stringify(result); 

@@ -118,6 +118,13 @@
         }
       },
       {
+        "name": "isConfigured",
+        "attr": {
+          "type": "Boolean",
+          "column": "item_config"
+        }
+      },
+      {
         "name": "notes",
         "attr": {
           "type": "String",
@@ -144,6 +151,13 @@
         "attr": {
           "type": "Number",
           "column": "item_listprice"
+        }
+      },
+      {
+        "name": "listCost",
+        "attr": {
+          "type": "Number",
+          "column": "item_listcost"
         }
       },
       {
@@ -802,10 +816,24 @@
         }
       },
       {
+        "name": "isConfigured",
+        "attr": {
+          "type": "Number",
+          "column": "item_config"
+        }
+      },
+      {
         "name": "listPrice",
         "attr": {
           "type": "Number",
           "column": "item_listprice"
+        }
+      },
+      {
+        "name": "listCost",
+        "attr": {
+          "type": "Number",
+          "column": "item_listcost"
         }
       },
       {
