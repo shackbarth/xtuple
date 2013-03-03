@@ -26,6 +26,20 @@ white:true*/
 
   });
   
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.ItemSiteRelation = XM.Info.extend({
+    /** @scope XM.ItemSiteRelation.prototype */
+
+    recordType: 'XM.ItemSiteRelation',
+
+    editableModel: 'XM.ItemSite'
+
+  });
+  
   // ..........................................................
   // COLLECTIONS
   //
@@ -39,6 +53,18 @@ white:true*/
     /** @scope XM.ItemSiteCollection.prototype */
 
     model: XM.ItemSite
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.ItemSiteListItemCollection = XM.Collection.extend({
+    /** @scope XM.ItemSiteListItemCollection.prototype */
+
+    model: XM.ItemSiteListItem
 
   });
 
