@@ -913,21 +913,6 @@
         }
       },
       {
-        "name": "site",
-        "toOne": {
-          "type": "SiteRelation",
-          "column": "quitem_order_warehous_id"
-        }
-      },
-      {
-        "name": "item",
-        "toOne": {
-          "isNested": true,
-          "type": "ItemRelation",
-          "column": "quitem_item_id"
-        }
-      },
-      {
         "name": "quantity",
         "attr": {
           "type": "Number",

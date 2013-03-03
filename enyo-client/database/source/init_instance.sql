@@ -100,6 +100,7 @@
 \i xm/javascript/customer.sql;
 \i xm/javascript/database_information.sql;
 \i xm/javascript/incident.sql;
+\i xm/javascript/item.sql;
 \i xm/javascript/project.sql;
 \i xm/javascript/quote.sql;
 \i xm/javascript/to_do.sql;

@@ -32,8 +32,6 @@ insert into quitem (
   quitem_memo,
   quitem_custpn,
   quitem_createorder,
-  quitem_order_warehous_id,
-  quitem_item_id,
   quitem_prcost,
   quitem_imported,
   quitem_qty_uom_id,
@@ -44,8 +42,10 @@ insert into quitem (
   quitem_taxtype_id,
   quitem_dropship,
   quitem_itemsrc_id,
-  quitem_pricemode
-) values (
+  quitem_pricemode,
+  quitem_order_warehous_id,
+  quitem_item_id
+) select
   new.quitem_id,
   new.quitem_quhead_id,
   new.quitem_linenumber,
@@ -58,8 +58,6 @@ insert into quitem (
   new.quitem_memo,
   new.quitem_custpn,
   new.quitem_createorder,
-  new.quitem_order_warehous_id,
-  new.quitem_item_id,
   new.quitem_prcost,
   new.quitem_imported,
   new.quitem_qty_uom_id,
@@ -70,8 +68,13 @@ insert into quitem (
   new.quitem_taxtype_id,
   new.quitem_dropship,
   new.quitem_itemsrc_id,
-  new.quitem_pricemode
-);
+  new.quitem_pricemode,
+  warehous_id,
+  item_id
+from itemsite
+  join item on item_id=itemsite_item_id
+  join whsinfo on warehous_id=itemsite_warehous_id
+where itemsite_id=new.quitem_itemsite_id;
 
 create or replace rule "_UPDATE" as on update to xt.quiteminfo do instead
 
@@ -79,7 +82,6 @@ update quitem set
   quitem_id=new.quitem_id,
   quitem_quhead_id=new.quitem_quhead_id,
   quitem_linenumber=new.quitem_linenumber,
-  quitem_itemsite_id=new.quitem_itemsite_id,
   quitem_scheddate=new.quitem_scheddate,
   quitem_qtyord=new.quitem_qtyord,
   quitem_unitcost=new.quitem_unitcost,
@@ -88,8 +90,6 @@ update quitem set
   quitem_memo=new.quitem_memo,
   quitem_custpn=new.quitem_custpn,
   quitem_createorder=new.quitem_createorder,
-  quitem_order_warehous_id=new.quitem_order_warehous_id,
-  quitem_item_id=new.quitem_item_id,
   quitem_prcost=new.quitem_prcost,
   quitem_imported=new.quitem_imported,
   quitem_qty_uom_id=new.quitem_qty_uom_id,
