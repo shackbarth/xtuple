@@ -6,36 +6,60 @@ white:true*/
 (function () {
   "use strict";
   
-  /**
-    Retrieve the customer's price for a given item and quantity.
+  XM.CustomerMixin = {
     
-    @param {XM.Item} Item
-    @param {Number} Quantity
-    @param {Object} Options - success (callback), asOf, quantityUnit, priceUnit, currency, effective
-    @returns {Object} Receiver
-  */
-  var price = function (item, quantity, options) {
-    if (!item || !quantity || !options || !options.success) { return; }
-    var opts = {},
-      params;
-    if (options.asOf) {
-      opts.asOf = options.asOf;
+    /**
+      Request whether a customer can purchase a given item on a given date.
+    
+      @param {XM.Item} Item
+      @param {Number} ScheduleDate
+      @param {XM.Item} Shipto (optional)
+      @param {Object} Options - success (callback), shipto
+      @returns {Object} Receiver
+    */
+    canPurchase: function (item, scheduleDate, options) {
+      if (!item || !scheduleDate || !options || !options.success) { return; }
+      var params,
+        shiptoId = options.shipto ? options.shipto.id : -1;
+      params = [this.id, item.id, scheduleDate, shiptoId];
+      this.dispatch("XM.Customer", "canPurchase", params, options);
+      return this;
+    },
+    
+    /**
+      Retrieve the customer's price for a given item and quantity.
+    
+      @param {XM.Item} Item
+      @param {Number} Quantity
+      @param {Object} Options - success (callback), asOf, shipto, quantityUnit, priceUnit, currency, effective
+      @returns {Object} Receiver
+    */
+    price: function (item, quantity, options) {
+      if (!item || !quantity || !options || !options.success) { return; }
+      var opts = {},
+        params;
+      if (options.asOf) {
+        opts.asOf = options.asOf;
+      }
+      if (options.shipto) {
+        opts.shiptoId = options.shipto.id;
+      }
+      if (options.quantityUnit) {
+        opts.quantityUnitId = options.quantityUnit.id;
+      }
+      if (options.priceUnit) {
+        opts.priceUnitId = options.priceUnit.id;
+      }
+      if (options.currency) {
+        opts.currencyId = options.currency.id;
+      }
+      if (options.effective) {
+        opts.effective = options.effective;
+      }
+      params = [this.id, item.id, quantity, opts];
+      this.dispatch("XM.Customer", "price", params, options);
+      return this;
     }
-    if (options.quantityUnit) {
-      opts.quantityUnitId = options.quantityUnit.id;
-    }
-    if (options.priceUnit) {
-      opts.priceUnitId = options.priceUnit.id;
-    }
-    if (options.currency) {
-      opts.currencyId = options.currency.id;
-    }
-    if (options.effective) {
-      opts.effective = options.effective;
-    }
-    params = [this.id, item.id, quantity, opts];
-    this.dispatch("XM.Customer", "price", params, options);
-    return this;
   };
   
 
@@ -123,16 +147,6 @@ white:true*/
         this.setReadOnly("partialShip", true);
       }
     },
-    
-    /**
-      Retrieve the customer's price for a given item and quantity.
-
-      @param {XM.Item} Item
-      @param {Number} Quantity
-      @param {Object} Options - success (callback), asOf, quantityUnit, priceUnit, currency, effective
-      @returns {Object} Receiver
-    */
-    price: price,
     
     purchaseOrdersDidChange: function () {
       if (this.get("usesPurchaseOrders")) {
@@ -429,6 +443,9 @@ white:true*/
     }
 
   });
+  
+  // Add in item mixin
+  XM.Customer = XM.Customer.extend(XM.CustomerMixin);
 
   /**
     @class
@@ -486,19 +503,12 @@ white:true*/
 
     editableModel: 'XM.Customer',
 
-    descriptionKey: "name",
-    
-    /**
-      Retrieve the customer's price for a given item and quantity.
-
-      @param {XM.Item} Item
-      @param {Number} Quantity
-      @param {Object} Options - success (callback), asOf, quantityUnit, priceUnit, currency, effective
-      @returns {Object} Receiver
-    */
-    price: price
+    descriptionKey: "name"
 
   });
+  
+  // Add in item mixin
+  XM.CustomerRelation = XM.CustomerRelation.extend(XM.CustomerMixin);
 
   /**
     @class

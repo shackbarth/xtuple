@@ -260,6 +260,7 @@ white:true*/
       this.on('change:quote', this.parentDidChange);
       this.on('change:taxType change:extendedPrice', this.calculateTax);
       this.on('change:quantityUnit change:priceUnit', this.unitDidChange);
+      this.on('change:scheduleDate', this.scheduleDateDidChange);
       
       // Only recalculate price on date changes if pricing is date driven
       if (XT.session.settings.get("soPriceEffective") === "ScheduleDate") {
@@ -487,9 +488,26 @@ white:true*/
       }
     },
     
-    
     calculateTax: function () {
-      
+      var parent = this.getParent(),
+        recordType = parent.recordType,
+        amount = this.get("extendedPrice"),
+        taxType = this.get("taxType"),
+        taxZone = parent.get("taxZone"),
+        effective = parent.get(parent.documentDateKey),
+        currency = parent.get("currency"),
+        that = this,
+        options = {},
+        params;
+      if (taxType && taxZone && effective && currency && amount) {
+        params = [taxZone.id, taxType.id, effective, currency.id, amount];
+        options.success = function (tax) {
+          that.set("tax", tax);
+        };
+        this.dispatch(recordType, "calculateTaxAmount", params, options);
+      } else {
+        this.set("tax", 0);
+      }
     },
     
     /**
@@ -527,6 +545,7 @@ white:true*/
         // Fetch and update selling units
         unitOptions.success = function (resp) {
           // Set the collection
+          that.sellingUnits.reset(resp);
           
           // Set the item default selections
           that.set("quantityUnit", item.get("inventoryUnit"));
@@ -557,20 +576,24 @@ white:true*/
       }
     },
     
-    populateItemSubstitutes: function () {
-      // TO DO
-    },
-
-    populateHistory: function () {
-      // TO DO
-    },
-    
     scheduleDateChanged: function () {
-      
-    },
-    
-    substitute: function () {
-      
+      var item = this.getValue("itemSite.item"),
+        parent = this.get("parent"),
+        customer = parent.get("customer"),
+        shipto = parent.get("shipto"),
+        scheduleDate = this.get("scheduleDate"),
+        that = this,
+        options = {};
+      if (item && scheduleDate) {
+        options.success = function (canPurchase) {
+          if (!canPurchase) {
+            that.notify("_noPurchase".loc());
+            that.unset("scheduleDate");
+          }
+        };
+        options.shipto = shipto;
+        customer.canPurchase(item, scheduleDate, options);
+      }
     },
     
     unitDidChange: function () {
