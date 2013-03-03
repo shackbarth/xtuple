@@ -16,52 +16,39 @@ white:true*/
 
     recordType: 'XM.Quote',
     
+    numberPolicySetting: 'QUNumberGeneration',
+    
     documentDateKey: "quoteDate",
 
     defaults: function () {
-      var //settings = XT.session.getSettings(),
-          today = new Date();
-
+      var K = this.getClass();
       return {
-        //auto order #
-        quoteDate: today,
-        //tax zone: none
-        //site: only exists in standard edition.
-        //sale type: same
-        quoteStatus: "O"
-        //shipping zone: probably the metric default
+        quoteDate: new Date(),
+        quoteStatus: K.OPEN_STATUS
       };
     },
-    
-    /*
-      calculated fields used by the line items panel
-    */
-    margin: 0.0,
-    freightWeight: 0.0,
-    subtotal: 0.0,
-    tax: 0.0,
-    total: 0.0,
 
     requiredAttributes: [
-      "id",
-      "number",
-      "quoteDate",
+      "calculateFreight",
       "customer",
-      "miscCharge",
-      "calculateFreight"
+      "quoteDate",
+      "salesRep",
+      "terms"
     ],
     
     billtoAttrArray: ["billtoName", "billtoAddress1", "billtoAddress2", "billtoAddress3", "billtoCity",
-                        "billtoState", "billtoPostalCode", "billtoCountry", "billtoPhone", "billtoContactHonorific",
-                        "billtoContactFirstName", "billtoContactMiddleName", "billtoContactLastName",
-                        "billtoContactSuffix", "billtoContactPhone", "billtoContactTitle",
-                        "billtoContactFax", "billtoContactEmail"],
+      "billtoState", "billtoPostalCode", "billtoCountry", "billtoPhone", "billtoContactHonorific",
+      "billtoContactFirstName", "billtoContactMiddleName", "billtoContactLastName",
+      "billtoContactSuffix", "billtoContactPhone", "billtoContactTitle",
+      "billtoContactFax", "billtoContactEmail"
+    ],
 
     shiptoAttrArray: ["shiptoName", "shiptoAddress1", "shiptoAddress2", "shiptoAddress3", "shiptoCity",
-                        "shiptoState", "shiptoPostalCode", "shiptoCountry", "shiptoPhone", "shiptoContactHonorific",
-                        "shiptoContactFirstName", "shiptoContactMiddleName", "shiptoContactLastName",
-                        "shiptoContactSuffix", "shiptoContactPhone", "shiptoContactTitle",
-                        "shiptoContactFax", "shiptoContactEmail"],
+      "shiptoState", "shiptoPostalCode", "shiptoCountry", "shiptoPhone", "shiptoContactHonorific",
+      "shiptoContactFirstName", "shiptoContactMiddleName", "shiptoContactLastName",
+      "shiptoContactSuffix", "shiptoContactPhone", "shiptoContactTitle",
+      "shiptoContactFax", "shiptoContactEmail"
+    ],
     
     // ..........................................................
     // METHODS
@@ -73,8 +60,7 @@ white:true*/
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
       this.on('add:item remove:item', this.lineItemsDidChange);
-      this.on('change:lineItems', this.lineItemsDidChange);
-      this.on('change:customer', this.billtoDidChange);
+      this.on('change:customer', this.customerDidChange);
       this.on('change:shipto', this.shiptoDidChange);
       var status = this.getStatus();
       if (!this.get("billtoName") && (status === XM.Model.READY_NEW)) {
@@ -89,112 +75,132 @@ white:true*/
     },
     
     /**
-      lineItemsDidChange
-      
       Used to update calculated fiels.
-      Called when the user adds or removes a line item.
     */
     lineItemsDidChange: function (model, value, options) {
-      var that = this,
-        changed;
-      //this.margin = 0.0;
-      //this.freightWeight = 0.0;
-      this.subtotal = 0.0;
-      this.tax = 0.0;
-      this.total = 0.0;
+      var K = XM.Model,
+        status = this.getStatus(),
+        that = this,
+        subtotal;
 
-      //Total up everything
-      _.each(this.get('lineItems').models, function (item) {
-        //margin stuff
-        //freightWeight stuff
-        that.subtotal = XT.math.add(that.subtotal,
-          item.get('listPrice'), XT.MONEY_SCALE);
-      });
-
-      // Notify change
-      changed = {
-        //margin: this.margin,
-        //freightWeight: this.freightWeight,
-        subtotal: this.subtotal,
-        tax: this.tax,
-        total: this.total
-      };
-      this.trigger("change", this, changed);
+      if (status & K.READY) {
+        // Total up everything
+        _.each(this.get('lineItems').models, function (lineItem) {
+          var price = lineItem.get('listPrice');
+          that.subtotal = XT.math.add(that.subtotal, price, XT.MONEY_SCALE);
+        });
+      
+        this.set("subtotal", subtotal);
+      
+        // TODO: Margin, weight, taxes, total
+      }
     },
     
     /**
-      billtoDidChange
-      
-      Populates billto information based on the entered customer/prospect #.
+      Populates billto information based on the entered customer.
     */
-    billtoDidChange: function (model, value, options) {
-      var theValue = value;
+    customerDidChange: function (model, value, options) {
+      var K = XM.Model,
+        status = this.getStatus(),
+        customer = this.get("customer"),
+        isFreeFormBillto = customer ? customer.get("isFreeFormBillto") : false,
+        isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : false,
+        billContact = customer ? customer.get("billingContact") || customer.get("contact") : false,
+        billAddress = billContact ? billContact("address") : false,
+        opts = {force: true},
+        that = this,
+        unsetBillto = function () {
+          that.unset("billtoName", opts);
+          that.unset("billtoAddress1", opts);
+          that.unset("billtoAddress2", opts);
+          that.unset("billtoAddress3", opts);
+          that.unset("billtoCity", opts);
+          that.unset("billtoState", opts);
+          that.unset("billtoPostalCode", opts);
+          that.unset("billtoCountry", opts);
+        };
       
-      this.setReadOnly("lineItems", false);
-        
-      if (theValue) {
+      if (status & K.READY) {
+        // Handle case of prospect that has no free form settings
+        isFreeFormBillto = isFreeFormBillto === undefined ? true : isFreeFormBillto;
+        isFreeFormShipto = isFreeFormShipto === undefined ? true : isFreeFormShipto;
+      
+        this.setReadOnly("lineItems", !customer);
+      
+        // Set read only state for free form billto
         for (var i = 0; i < this.billtoAttrArray.length; i++) {
-          this.setReadOnly(this.billtoAttrArray[i], false);
+          this.setReadOnly(this.billtoAttrArray[i], isFreeFormBillto);
         }
+      
+        // Set read only state for free form shipto
         for (i = 0; i < this.shiptoAttrArray.length; i++) {
-          this.setReadOnly(this.shiptoAttrArray[i], false);
+          this.setReadOnly(this.shiptoAttrArray[i], isFreeFormShipto);
         }
-        //I want to use a for loop here but I can't due
-        //  due to the wonkiness of CustomerProspectRelation.
-        //  Will look into it later.
-        //  Also, for some reason we decided to call the contact "billingContact" for Customer
-        //    and just "contact" for Prospect, hence the almost-duplicate code below.
-        if (theValue.editableModel === "XM.Customer") {
-          this.set("billtoName", theValue.get("name"));
-          this.set("billtoAddress1", theValue.getValue("billingContact.address.line1"));
-          this.set("billtoAddress2", theValue.getValue("billingContact.address.line2"));
-          this.set("billtoAddress3", theValue.getValue("billingContact.address.line3"));
-          this.set("billtoCity", theValue.getValue("billingContact.address.city"));
-          this.set("billtoState", theValue.getValue("billingContact.address.state"));
-          this.set("billtoPostalCode", theValue.getValue("billingContact.address.postalCode"));
-          this.set("billtoCountry", theValue.getValue("billingContact.address.country"));
-          //the code below sets the shipTo of this quote as the default for this cust if shipto is empty.
-          if (!this.get("shipto")) {
-            this.set("shipto", theValue.get("defaultShipto"));
+      
+        // Set customer default data
+        if (customer) {
+          this.set("billtoName", customer.get("name"), opts);
+          this.set("salesRep", customer.get("salesRep"));
+          this.set("commission", customer.get("commission"));
+          this.set("terms", customer.get("terms"));
+          this.set("taxZone", customer.get("taxZone"));
+          this.set("shipVia", customer.get("shipVia"));
+          this.set("site", customer.get("preferredSite"));
+          this.set("currency", customer.get("currency"));
+          if (billAddress) {
+            this.set("billtoAddress1", billAddress.getValue("line1"), opts);
+            this.set("billtoAddress2", billAddress.getValue("line2"), opts);
+            this.set("billtoAddress3", billAddress.getValue("line3"), opts);
+            this.set("billtoCity", billAddress.getValue("city"), opts);
+            this.set("billtoState", billAddress.getValue("state"), opts);
+            this.set("billtoPostalCode", billAddress.getValue("postalCode"), opts);
+            this.set("billtoCountry", billAddress.getValue("country"), opts);
+            this.set("shipto", customer.get("shipto"));
+          } else {
+            unsetBillto();
           }
-          
-        }
-        else if (theValue.editableModel === "XM.Prospect") {
-          this.set("billtoName", theValue.get("name"));
-          this.set("billtoAddress1", theValue.getValue("contact.address.line1"));
-          this.set("billtoAddress2", theValue.getValue("contact.address.line2"));
-          this.set("billtoAddress3", theValue.getValue("contact.address.line3"));
-          this.set("billtoCity", theValue.getValue("contact.address.city"));
-          this.set("billtoState", theValue.getValue("contact.address.state"));
-          this.set("billtoPostalCode", theValue.getValue("contact.address.postalCode"));
-          this.set("billtoCountry", theValue.getValue("contact.address.country"));
+        } else {
+          this.unset("salesRep");
+          this.unset("commission");
+          this.unset("terms");
+          this.unset("taxZone");
+          this.unset("shipVia");
+          this.unset("currency");
+          unsetBillto();
+          this.unset("shipto", opts);
+          this.unset("shiptoName", opts);
+          this.unset("shiptoAddress1", opts);
+          this.unset("shiptoAddress2", opts);
+          this.unset("shiptoAddress3", opts);
+          this.unset("shiptoCity", opts);
+          this.unset("shiptoState", opts);
+          this.unset("shiptoPostalCode", opts);
+          this.unset("shiptoCountry", opts);
         }
       }
-      
     },
     
     /**
-      shiptoDidChange
-      
-      When the user-entered shipto number changes, this function populates the rest of
-      the fields accordingly.
+      Populate shipto defaults
     */
-    shiptoDidChange: function (model, value, options) {
-      var theValue = value;
+    shiptoDidChange: function () {
+      var K = XM.Model,
+        status = this.getStatus(),
+        shipto = this.get("shipto"),
+        shiptoContact = shipto ? shipto.get("contact") : false,
+        shiptoAddress = shiptoContact ? shiptoContact.get("address") : false,
+        opts = {force: true};
       
-      if (theValue) {
-        for (var i = 0; i < this.shiptoAttrArray.length; i++) {
-          this.setReadOnly(this.shiptoAttrArray[i], false);
-        }
-        if (theValue.editableModel === "XM.CustomerShipto") {
-          this.set("shiptoName", theValue.get("name"));
-          this.set("shiptoAddress1", theValue.getValue("contact.address.line1"));
-          this.set("shiptoAddress2", theValue.getValue("contact.address.line2"));
-          this.set("shiptoAddress3", theValue.getValue("contact.address.line3"));
-          this.set("shiptoCity", theValue.getValue("contact.address.city"));
-          this.set("shiptoState", theValue.getValue("contact.address.state"));
-          this.set("shiptoPostalCode", theValue.getValue("contact.address.postalCode"));
-          this.set("shiptoCountry", theValue.getValue("contact.address.country"));
+      if ((status & K.READY) && shipto) {
+        this.set("shiptoName", shipto.get("name"), opts);
+        if (shiptoAddress) {
+          this.set("shiptoAddress1", shiptoAddress.getValue("line1"), opts);
+          this.set("shiptoAddress2", shiptoAddress.getValue("line2"), opts);
+          this.set("shiptoAddress3", shiptoAddress.getValue("line3"), opts);
+          this.set("shiptoCity", shiptoAddress.getValue("city"), opts);
+          this.set("shiptoState", shiptoAddress.getValue("state"), opts);
+          this.set("shiptoPostalCode", shiptoAddress.getValue("postalCode"), opts);
+          this.set("shiptoCountry", shiptoAddress.getValue("country"), opts);
         }
       }
     },
@@ -218,14 +224,71 @@ white:true*/
     @returns {String}
     */
     getQuoteStatusString: function () {
-      if (this.get("quoteStatus") === "O") {
-        return '_open'.loc();
+      var K = this.getClass(),
+        status = this.get("status");
+      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
+    },
+    
+    validateSave: function () {
+      var pricePolicy = XT.session.settings.get("soPriceEffective"),
+        scheduleDate = this.get("scheduleDate"),
+        customer = this.get("customer"),
+        shipto = this.get("shipto"),
+        total = this.get("total"),
+        lineItems = this.get("lineItems"),
+        params = {};
+        
+      if (pricePolicy === "ScheduleDate" && !scheduleDate) {
+        params.attr = "_scheduleDate".loc();
+        return XT.Error.clone('xt1004', { params: params });
       }
-      if (this.get("quoteStatus") === "C") {
-        return '_closed'.loc();
+      
+      if (!customer.get("isFreeFormShipto") && !shipto) {
+        params.attr = "_shipto".loc();
+        return XT.Error.clone('xt1004', { params: params });
+      }
+      
+      if (total < 0) {
+        return XT.Error.clone('xt2011');
+      }
+      
+      if (!lineItems.length) {
+        return XT.Error.clone('xt2012');
       }
     }
     
+  });
+  
+  // ..........................................................
+  // CLASS METHODS
+  //
+
+  _.extend(XM.Quote, /** @lends XM.QuoteLine# */{
+
+    // ..........................................................
+    // CONSTANTS
+    //
+
+    /**
+      Quote is open.
+
+      @static
+      @constant
+      @type String
+      @default O
+    */
+    OPEN_STATUS: "O",
+
+    /**
+      Quote is closed.
+
+      @static
+      @constant
+      @type String
+      @default C
+    */
+    CLOSED_STATUS: "C"
+   
   });
   
   /**
