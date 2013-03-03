@@ -72,13 +72,13 @@ white:true*/
     */
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
-      this.on('add:item remove:item', this.quoteLinesDidChange);
-      this.on('change:quoteLines', this.quoteLinesDidChange);
+      this.on('add:item remove:item', this.lineItemsDidChange);
+      this.on('change:lineItems', this.lineItemsDidChange);
       this.on('change:customer', this.billtoDidChange);
       this.on('change:shipto', this.shiptoDidChange);
       var status = this.getStatus();
       if (!this.get("billtoName") && (status === XM.Model.READY_NEW)) {
-        this.setReadOnly("quoteLines", true);
+        this.setReadOnly("lineItems", true);
         for (var i = 0; i < this.billtoAttrArray.length; i++) {
           this.setReadOnly(this.billtoAttrArray[i], true);
         }
@@ -89,12 +89,12 @@ white:true*/
     },
     
     /**
-      quoteLinesDidChange
+      lineItemsDidChange
       
       Used to update calculated fiels.
       Called when the user adds or removes a line item.
     */
-    quoteLinesDidChange: function (model, value, options) {
+    lineItemsDidChange: function (model, value, options) {
       var that = this,
         changed;
       //this.margin = 0.0;
@@ -104,7 +104,7 @@ white:true*/
       this.total = 0.0;
 
       //Total up everything
-      _.each(this.get('quoteLines').models, function (item) {
+      _.each(this.get('lineItems').models, function (item) {
         //margin stuff
         //freightWeight stuff
         that.subtotal = XT.math.add(that.subtotal,
@@ -130,7 +130,7 @@ white:true*/
     billtoDidChange: function (model, value, options) {
       var theValue = value;
       
-      this.setReadOnly("quoteLines", false);
+      this.setReadOnly("lineItems", false);
         
       if (theValue) {
         for (var i = 0; i < this.billtoAttrArray.length; i++) {
@@ -421,7 +421,6 @@ white:true*/
         ignoreDiscount = settings.get("IgnoreCustDisc"),
         isConfigured = this.getValue("itemSite.item.isConfigured"),
         item = this.getValue("itemSite.item"),
-        itemSite = this.get("itemSite"),
         editing = !this.isNew(),
         options = {},
         parent = this.getParent(),
@@ -438,7 +437,7 @@ white:true*/
         updatePolicy = settings.get("UpdatePriceLineEdit");
         
       // Make sure we have all the necessary values
-      if (canUpdate && itemSite && quantity && quantityUnit && priceUnit) {
+      if (canUpdate && item && quantity && quantityUnit && priceUnit) {
         
         // Handle alternate price effectivity settings
         if (effectivePolicy === "ScheduleDate") {
@@ -447,7 +446,7 @@ white:true*/
           asOf = parentDate;
         }
         
-        // Determine whether updating only net price or just customer price
+        // Determine whether updating net price or just customer price
         if (editing) {
           if (customerPrice !== price &&
              (ignoreDiscount || (updatePolicy === K.NEVER_UPDATE && !force))) {
@@ -484,6 +483,9 @@ white:true*/
                          resp.type === "P") ? K.DISCOUNT_MODE : K.MARKUP_MODE;
             that.set("priceMode", priceMode);
             that.set("customerPrice", resp.price); // TO DO: Need to add char price totals here too
+            if (that._updatePrice) {
+              that.set("price", resp.price);
+            }
           }
         };
         options.error = function (err) {
@@ -496,11 +498,16 @@ white:true*/
         options.effective = parentDate;
         customer.price(item, quantity, options);
       }
-     
     },
     
     parentChanged: function () {
-      // TODO: Calculate next line number if applicable
+      var parent = this.getParent(),
+        lineNumber = this.get("lineNumber");
+        
+      // Set next line number
+      if (parent && !lineNumber) {
+        this.set("lineNumber", parent.get("lineItems").length);
+      }
     },
     
     populateItem: function () {

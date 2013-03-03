@@ -461,7 +461,7 @@
         }
       },     
       {
-        "name": "quoteLines",
+        "name": "lineItems",
         "toMany": {
           "isNested": true,
           "type": "QuoteLine",
