@@ -60,10 +60,10 @@ white:true*/
     /**
       Initialize
     */
-    initialize: function () {
+    initialize: function (attributes, options) {
       XM.Document.prototype.initialize.apply(this, arguments);
       this.freightTaxDetail = [];
-      this.on('add:item remove:item', this.lineItemsDidChange);
+      this.on('add:lineItems remove:lineItems', this.calculateTotals);
       this.on('change:customer', this.customerDidChange);
       this.on('change:shipto', this.shiptoDidChange);
     },
@@ -71,7 +71,7 @@ white:true*/
     /**
       Used to update calculated fiels.
     */
-    lineItemsDidChange: function (model, value, options) {
+    calculateTotals: function (model, value, options) {
       var K = XM.Model,
         status = this.getStatus(),
         miscCharge = this.get("miscCharge") || 0.0,
@@ -95,12 +95,12 @@ white:true*/
         // Collect line item detail
         _.each(this.get('lineItems').models, function (lineItem) {
           var extPrice = lineItem.get('extendedPrice'),
-            quantity = lineItem.get("quantity"),
-            unitCost = lineItem.get("unitCost"),
+            quantity = lineItem.get("quantity") || 0,
+            unitCost = lineItem.get("unitCost") || 0,
             item = lineItem.getValue("itemSite.item"),
-            prodWeight = item.get("productWeight"),
-            packWeight = item.get("packageWeight"),
-            itemWeight = add(prodWeight, packWeight, scale),
+            prodWeight = item ? item.get("productWeight") : 0,
+            packWeight = item ? item.get("packageWeight") : 0,
+            itemWeight = item ? add(prodWeight, packWeight, scale) : 0,
             invUnitRatio = lineItem.get("inventoryUnitRaito"),
             grossWeight = itemWeight * quantity * invUnitRatio;
 
@@ -261,7 +261,7 @@ white:true*/
         }
       }
     },
-
+    
     /**
       Populate shipto defaults
     */
@@ -407,7 +407,7 @@ white:true*/
       };
     },
 
-    initialize: function () {
+    initialize: function (attributes, options) {
       XM.Model.prototype.initialize.apply(this, arguments);
       this.taxDetail = [];
       this._updatePrice = true;
@@ -429,7 +429,7 @@ white:true*/
         this.on('change:scheduleDate', this.calculatePrice);
       }
 
-      this.sellingUnits = new XM.UnitsCollection();
+      this.sellingUnits = new XM.UnitCollection();
     },
 
     readOnlyAttributes: [
@@ -542,6 +542,8 @@ white:true*/
     calculatePrice: function (force) {
       var settings = XT.session.settings,
         K = this.getClass(),
+        that = this,
+        isReady = this.getStatus() & K.READY,
         asOf = new Date(),
         canUpdate = this.canUpdate(),
         customerPrice = this.get("customerPrice"),
@@ -550,28 +552,35 @@ white:true*/
         item = this.getValue("itemSite.item"),
         editing = !this.isNew(),
         options = {},
-        parent = this.getParent(),
-        parentDate = parent.get(parent.documentDateKey),
-        customer = parent.get("customer"),
-        currency = parent.get("currency"),
         price = this.get("price"),
         priceUnit = this.get("priceUnit"),
         effectivePolicy = settings.get("soPriceEffective"),
         quantity = this.get("quantity"),
         quantityUnit = this.get("quantityUnit"),
         scheduleDate = this.get("scheduleDate"),
-        that = this,
         updatePolicy = settings.get("UpdatePriceLineEdit"),
-        readOnlyCache = this.isReadOnly("price");
+        readOnlyCache = this.isReadOnly("price"),
+        parent = this.getParent(),
+        parentDate,
+        customer,
+        currency;
+
+      // If no parent, don't bother
+      if (!parent) { return; }
+      
+      parentDate = parent.get(parent.documentDateKey);
+      customer = parent.get("customer");
+      currency = parent.get("currency");
 
       // Make sure we have all the necessary values
-      if (canUpdate && item && quantity && quantityUnit && priceUnit) {
+      if (isReady && canUpdate && customer && currency &&
+          item && quantity && quantityUnit && priceUnit) {
 
         // Handle alternate price effectivity settings
         if (effectivePolicy === "ScheduleDate") {
           asOf = scheduleDate;
         } else if (effectivePolicy === "OrderDate") {
-          asOf = parentDate;
+          asOf = parentDate || new Date();
         }
 
         // Determine whether updating net price or just customer price
@@ -659,15 +668,24 @@ white:true*/
 
     calculateTax: function () {
       var parent = this.getParent(),
-        recordType = parent.recordType,
         amount = this.get("extendedPrice"),
         taxTypeId = this.getValue("taxType.id"),
-        taxZoneId = parent.getValue("taxZone.id"),
-        effective = parent.get(parent.documentDateKey),
-        currency = parent.get("currency"),
+        recordType,
+        taxZoneId,
+        effective,
+        currency,
         that = this,
         options = {},
         params;
+        
+      // If no parent, don't bother
+      if (!parent) { return; }
+      
+      recordType = parent.recordType;
+      taxZoneId = parent.getValue("taxZone.id");
+      effective = parent.get(parent.documentDateKey);
+      currency = parent.get("currency");
+      
       if (effective && currency && amount) {
         params = [taxZoneId, taxTypeId, effective, currency.id, amount];
         options.success = function (resp) {
@@ -754,10 +772,10 @@ white:true*/
         // TODO: Get default characteristics
       }
     },
-
+    
     parentDidChange: function () {
       var parent = this.getParent(),
-        lineNumber = this.get("lineNumber");
+       lineNumber = this.get("lineNumber");
 
       // Set next line number
       if (parent && !lineNumber) {
@@ -767,7 +785,7 @@ white:true*/
 
     recalculateParent: function () {
       var parent = this.getParent();
-      if (parent) { parent.lineItemsDidChange(); }
+      if (parent) { parent.calculateTotals(); }
     },
 
     scheduleDateChanged: function () {
@@ -915,18 +933,6 @@ white:true*/
     recordType: 'XM.QuoteItem',
 
     isDocumentAssignment: true
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.QuoteLine = XM.Model.extend({
-     /** @scope XM.QuoteLine.prototype */
-
-    recordType: 'XM.QuoteLine'
 
   });
 
