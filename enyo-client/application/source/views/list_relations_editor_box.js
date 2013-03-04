@@ -254,6 +254,7 @@ trailing:true white:true*/
     valueChanged: function () {
       var value = this.getValue();
       this.$.list.setValue(value);
+      this.$.pricePanel.setValue(this.getValue().quote)
     },
     
     launchWorkspace: function (inSender, inEvent) {
