@@ -236,7 +236,6 @@ trailing:true white:true*/
             //{kind: "XV.TextArea", attr: "miscChargeDesc", fit: true} - needs GL
             // Charge Sales Account - needs GL
             {kind: "XV.NumberWidget", attr: "freightWeight"},
-            {kind: "XV.NumberWidget", attr: "subtotal"},
             {kind: "XV.MoneyWidget", attr: {amount: "subtotal", currency: "currency"},
               label: "_subtotal".loc(), currencyShowing: false},
             // {kind: "XV.NumberWidget", attr: "miscCharge"}, - needs GL
