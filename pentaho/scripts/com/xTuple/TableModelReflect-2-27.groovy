@@ -1,3 +1,5 @@
+package com.xTuple;
+
 import org.pentaho.reporting.engine.classic.core.util.TypedTableModel;
 import java.net.*;
 import groovy.json.*;
