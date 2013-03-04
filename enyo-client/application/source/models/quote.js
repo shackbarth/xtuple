@@ -94,15 +94,15 @@ white:true*/
       if (status & K.READY) {
         // Collect line item detail
         _.each(this.get('lineItems').models, function (lineItem) {
-          var extPrice = lineItem.get('extendedPrice'),
+          var extPrice = lineItem.get('extendedPrice') || 0,
             quantity = lineItem.get("quantity") || 0,
             unitCost = lineItem.get("unitCost") || 0,
             item = lineItem.getValue("itemSite.item"),
             prodWeight = item ? item.get("productWeight") : 0,
             packWeight = item ? item.get("packageWeight") : 0,
             itemWeight = item ? add(prodWeight, packWeight, scale) : 0,
-            invUnitRatio = lineItem.get("inventoryUnitRaito"),
-            grossWeight = itemWeight * quantity * invUnitRatio;
+            quantityUnitRatio = lineItem.get("quantityUnitRatio"),
+            grossWeight = itemWeight * quantity * quantityUnitRatio;
 
           weights.push(grossWeight);
           subtotals.push(extPrice);
@@ -203,7 +203,6 @@ white:true*/
       }
 
       if (status & K.READY) {
-
         // Set customer default data
         if (customer) {
           this.set("billtoName", customer.get("name"), opts);
@@ -214,6 +213,7 @@ white:true*/
           this.set("shipVia", customer.get("shipVia"));
           this.set("site", customer.get("preferredSite"));
           this.set("currency", customer.get("currency"));
+          this.set("shipto", customer.get("shipto"));
           if (billtoContact) {
             this.set("billtoContact", billtoContact);
             this.set("billtoContactHonorific", billtoContact.get("honoroific"));
@@ -236,7 +236,6 @@ white:true*/
             this.set("billtoState", billtoAddress.getValue("state"), opts);
             this.set("billtoPostalCode", billtoAddress.getValue("postalCode"), opts);
             this.set("billtoCountry", billtoAddress.getValue("country"), opts);
-            this.set("shipto", customer.get("shipto"));
           } else {
             unsetBilltoAddress();
           }
@@ -247,6 +246,7 @@ white:true*/
           this.unset("taxZone");
           this.unset("shipVia");
           this.unset("currency");
+          this.unset("shipZone");
           unsetBilltoAddress();
           unsetBilltoContact();
           this.unset("shipto", opts);
@@ -275,6 +275,11 @@ white:true*/
 
       if ((status & K.READY) && shipto) {
         this.set("shiptoName", shipto.get("name"), opts);
+        this.set("salesRep", shipto.get("salesRep"));
+        this.set("commission", shipto.get("commission"));
+        this.set("taxZone", shipto.get("taxZone"));
+        this.set("shipZone", shipto.get("shipZone"));
+        this.set("shipVia", shipto.get("shipVia"));
         if (shiptoContact) {
           this.set("shiptoContact", shiptoContact);
           this.set("shiptoContactHonorific", shiptoContact.get("honoroific"));
