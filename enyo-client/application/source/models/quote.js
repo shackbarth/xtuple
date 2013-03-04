@@ -26,7 +26,8 @@ white:true*/
       var K = this.getClass();
       return {
         quoteDate: new Date(),
-        status: K.OPEN_STATUS
+        status: K.OPEN_STATUS,
+        saleType: XM.saleTypes.at(0)
       };
     },
 
@@ -159,7 +160,7 @@ white:true*/
         isFreeFormBillto = customer ? customer.get("isFreeFormBillto") : false,
         isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : false,
         billtoContact = customer ? customer.get("billingContact") || customer.get("contact") : false,
-        billtoAddress = billtoContact ? billtoContact("address") : false,
+        billtoAddress = billtoContact ? billtoContact.get("address") : false,
         opts = {force: true},
         that = this,
         unsetBilltoAddress = function () {
@@ -173,16 +174,16 @@ white:true*/
           that.unset("billtoCountry", opts);
         },
         unsetBilltoContact = function () {
-          this.unset("billtoContact");
-          this.unset("billtoContactHonorific");
-          this.unset("billtoContactFirstName");
-          this.unset("billtoContactMiddleName");
-          this.unset("billtoContactLastName");
-          this.unset("billtoContactSuffix");
-          this.unset("billtoContactTitle");
-          this.unset("billtoContactPhone");
-          this.unset("billtoContactFax");
-          this.unset("billtoContactEmail");
+          that.unset("billtoContact");
+          that.unset("billtoContactHonorific");
+          that.unset("billtoContactFirstName");
+          that.unset("billtoContactMiddleName");
+          that.unset("billtoContactLastName");
+          that.unset("billtoContactSuffix");
+          that.unset("billtoContactTitle");
+          that.unset("billtoContactPhone");
+          that.unset("billtoContactFax");
+          that.unset("billtoContactEmail");
         };
 
       // Handle case of prospect that has no free form settings

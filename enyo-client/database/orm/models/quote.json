@@ -81,6 +81,13 @@
         }
       },
       {
+        "name": "taxZone",
+        "toOne": {
+          "type": "TaxZone",
+          "column": "quhead_taxzone_id"
+        }
+      },
+      {
         "name": "site",
         "toOne": {
           "type": "SiteRelation",
