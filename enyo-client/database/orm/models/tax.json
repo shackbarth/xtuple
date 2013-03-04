@@ -82,7 +82,7 @@
           {
             "name": "account",
             "toOne": {
-              "type": "Account",
+              "type": "AccountRelation",
               "column": "crmacct_id"
             }
           }
@@ -131,28 +131,117 @@
       }
     ],
     "isSystem": true,
-    "extensions": [
-      {
-        "table": "crmacct",
-        "isChild": true,
-        "relations": [
-          {
-            "column": "crmacct_taxauth_id",
-            "inverse": "id"
-          }
-        ],
-        "properties": [
-          {
-            "name": "account",
-            "toOne": {
-              "type": "Account",
-              "column": "crmacct_id"
-            }
-          }
-        ],
-        "sequence": 0
+    "extensions": []
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "TaxClass",
+    "table": "taxclass",
+    "idSequenceName": "taxclass_taxclass_id_seq",
+    "comment": "Tax Class Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainTaxClasses",
+        "read": true,
+        "update": "MaintainTaxClasses",
+        "delete": "MaintainTaxClasses"
       }
-    ]
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "taxclass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "taxclass_code"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "taxclass_descrip"
+        }
+      },
+      {
+        "name": "sequence",
+        "attr": {
+          "type": "Number",
+          "column": "taxclass_sequence"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "TaxCode",
+    "table": "tax",
+    "idSequenceName": "tax_tax_id_seq",
+    "comment": "Tax Code Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainTaxCodes",
+        "read": true,
+        "update": "MaintainTaxCodes",
+        "delete": "MaintainTaxCodes"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "tax_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "tax_code"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "tax_descrip"
+        }
+      },
+      {
+        "name": "class",
+        "toOne": {
+          "type": "TaxClass",
+          "column": "tax_taxclass_id"
+        }
+      },
+      {
+        "name": "authority",
+        "toOne": {
+          "type": "TaxAuthorityRelation",
+          "column": "tax_taxauth_id"
+        }
+      },
+      {
+        "name": "basis",
+        "attr": {
+          "type": "Number",
+          "column": "tax_basis_tax_id"
+        }
+      }
+    ],
+    "isSystem": true
   },
   {
     "context": "xtuple",

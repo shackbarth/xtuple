@@ -275,6 +275,17 @@ white:true*/
       XM.salesReps.fetch(options);
     }
   });
+  
+  // XT.StartupTasks.push({
+  //    taskName: "loadSaleTypes",
+  //    task: function () {
+  //      var options = {
+  //        success: _.bind(this.didComplete, this)
+  //      };
+  //      XM.saleTypes = new XM.QuoteSaleTypeCollection();
+  //      XM.saleTypes.fetch(options);
+  //    }
+  // });
 
   XT.StartupTasks.push({
     taskName: "loadShipCharges",
@@ -308,6 +319,17 @@ white:true*/
       XM.shipZones.fetch(options);
     }
   });
+  
+  // XT.StartupTasks.push({
+  //   taskName: "loadSites",
+  //   task: function () {
+  //     var options = {
+  //       success: _.bind(this.didComplete, this)
+  //     };
+  //     XM.sites = new XM.SiteCollection();
+  //     XM.sites.fetch(options);
+  //   }
+  // });
   
   XT.StartupTasks.push({
     taskName: "loadTaxZones",

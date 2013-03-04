@@ -119,6 +119,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       exports.scope(req, res);
       return;
     }
-    res.render('scope', { organizations: organizations, message: req.flash('orgerror')  });
+    res.render('scope', { organizations: organizations.sort(), message: req.flash('orgerror')  });
   };
 }());
