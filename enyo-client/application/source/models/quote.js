@@ -126,7 +126,7 @@ white:true*/
           });
           
           // Subtotal first to make sure we round by subtotal
-          subtotal = add(taxes, scale);
+          subtotal = add(taxes, 6);
           
           // Now add to tax grand total
           taxTotal = add(taxTotal, subtotal, scale);
@@ -672,8 +672,8 @@ white:true*/
         options.success = function (resp) {
           var tax;
           if (resp.length) {
-            tax = XT.math.add(_.pluck(resp, "tax"), XT.SALES_PRICE_SCALE);
-            that.set("tax", tax);
+            tax = XT.math.add(_.pluck(resp, "tax"), 6);
+            that.set("tax", XT.math.round(tax, XT.SALES_PRICE_SCALE));
           } else {
             that.taxDetail = [];
             that.set("tax", 0);
