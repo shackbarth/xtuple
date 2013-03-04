@@ -179,9 +179,6 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.QuoteLineItemEditor",
     kind: "XV.RelationsEditor",
-    events: {
-      onChildWorkspace: ""
-    },
     components: [
       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
         classes: "in-panel", components: [
@@ -200,22 +197,18 @@ trailing:true white:true*/
         {kind: "XV.DateWidget", attr: "scheduleDate"},
         {kind: "XV.DateWidget", attr: "promiseDate"},
         {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-        {kind: "XV.TextArea", attr: "memo", fit: true},
-        {kind: "onyx.GroupboxHeader", content: "_advanced".loc()},
-        {kind: "onyx.Button", ontap: "launchWorkspace", content: "_advanced".loc()}
+        {kind: "XV.TextArea", attr: "memo", fit: true}
       ]}
-    ],
-    launchWorkspace: function (inSender, inEvent) {
-      var id = this.getValue().id;
-      this.doChildWorkspace({workspace: "XV.QuoteLineWorkspace", id: id});
-      return true;
-    }
+    ]
   });
 
   enyo.kind({
     name: "XV.QuoteLineItemBox",
     kind: "XV.ListRelationsEditorBox",
     classes: "xv-list-relations-box",
+    events: {
+      onChildWorkspace: ""
+    },
     title: "_lineItems".loc(),
     editor: "XV.QuoteLineItemEditor",
     parentKey: "quote",
@@ -243,14 +236,29 @@ trailing:true white:true*/
             {kind: "XV.MoneyWidget", attr: {amount: "taxTotal", currency: "currency"},
               label: "_tax".loc(), currencyShowing: false},
             {kind: "XV.MoneyWidget", attr: {amount: "total", currency: "currency"},
-              label: "_total".loc(), currencyShowing: false},
+              label: "_total".loc(), currencyShowing: false}
         ]}
       ]});
+      
+      this.createComponent({
+        kind: "onyx.Button",
+        content: "_expand".loc(),
+        ontap: "launchWorkspace",
+        container: this.$.navigationButtonPanel
+      });
     },
     
+    /**
+    @todo Document overridden function
+    */
     valueChanged: function () {
       var value = this.getValue();
       this.$.list.setValue(value);
+    },
+    
+    launchWorkspace: function (inSender, inEvent) {
+      this.doChildWorkspace({workspace: "XV.QuoteLineWorkspace", collection: this.getValue()});
+      return true;
     }
   });
 
