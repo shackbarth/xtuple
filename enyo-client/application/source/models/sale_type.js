@@ -30,7 +30,7 @@ white:true*/
   XM.SaleTypeCollection = XM.Collection.extend({
     /** @scope XM.SaleTypeCollection.prototype */
 
-    model: XM.SaleTye
+    model: XM.SaleType
 
   });
 

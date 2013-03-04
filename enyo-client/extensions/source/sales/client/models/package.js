@@ -6,6 +6,6 @@ depends(
   "item.js",
   "opportunity.js",
   "project.js",
-  "sale_type.js",
-  "to_do.js"
+  "to_do.js",
+  "startup.js"
 );
