@@ -70,7 +70,7 @@ white:true*/
     */
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
-      //this.on('add:item remove:item', this.quoteLinesDidChange);
+      this.on('add:item remove:item', this.quoteLinesDidChange);
       this.on('change:quoteLines', this.quoteLinesDidChange);
       this.on('change:customer', this.billtoDidChange);
       this.on('change:shipto', this.shiptoDidChange);
@@ -229,20 +229,58 @@ white:true*/
   /**
     @class
 
-    @extends XM.Document
+    @extends XM.Model
   */
-  XM.QuoteLine = XM.Document.extend({
+  XM.QuoteLine = XM.Model.extend({
     /** @scope XM.QuoteLine.prototype */
+    
+    //need itemSite relation widget.  this widget will search on the customer and the site or something.
+    // john says no "clean" way to do it w/ views
+    //look up function called custItem.  Need a dispatchable function on the database side called XM.Customer.Items, where
+    //  you pass in a customer ID and maybe some other criteria and it filters the list of items based upon that stuff.
     
     recordType: 'XM.QuoteLine',
     
     defaults: function () {
-      //this.lineNumber = asdf.get("quoteLines").length + 1;
+      
+      //site, which is a customer default
+      
+      //var customer = this.getParent().get("customer");
+      
+      //need itemSite relation widget.  this widget will search on the customer and the site or something.
+      // john says no "clean" way to do it w/ views
+      //look up function called custItem.  Need a dispatchable function on the database side called XM.Customer.Items, where
+      //  you pass in a customer ID and maybe some other criteria and it filters the list of items based upon that stuff.
+      
     },
     
-    requiredAttributes: [
+    initialize: function () {
+      XM.Model.prototype.initialize.apply(this, arguments);
+      this.on('change:item', this.itemChanged);
+      this.on('change:quantity change:itemsite change:scheduleDate', this.determinePrice);
+      this.set("lineNumber", this.getParent().get("quoteLines").length + 1);
+      //need a recalculatePrice function that forces the recalculation
+    },
     
-    ]
+    readOnlyAttributes: [
+      "lineNumber"
+    ],
+    
+    requiredAttributes: [
+      "id",
+      "item",
+      "quote",
+      "lineNumber",
+      "quantity",
+      "quantityUnit",
+      "price",
+      "priceUnit",
+      "scheduleDate"
+    ],
+    
+    itemChanged: function (model, value, options) {
+      //need to select default UOM's and stuff
+    }
 
   });
   

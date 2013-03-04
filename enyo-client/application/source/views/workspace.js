@@ -1172,7 +1172,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "number", label: "_orderNumber".loc()},
             {kind: "XV.TermsPicker", attr: "terms"},
             {kind: "XV.DateWidget", attr: "quoteDate", label: "_orderDate".loc()},
-            {kind: "XV.DateWidget", attr: "scheduleDate"}, // attribute?
+            //{kind: "XV.DateWidget", attr: "scheduleDate"}, // attribute?
             {kind: "XV.DateWidget", attr: "packDate"},
             {kind: "XV.PercentWidget", attr: "commission"},
             {kind: "XV.TaxZonePicker", attr: "taxZone"},
