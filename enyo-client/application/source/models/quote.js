@@ -651,7 +651,7 @@ white:true*/
     calculateProfit: function () {
       var unitCost = this.get("unitCost"),
         price = this.get("price"),
-        parent = this.get("parent"),
+        parent = this.getParent(),
         effective = this.get(parent.documentDateKey),
         currency = parent.get("currency"),
         that = this,
