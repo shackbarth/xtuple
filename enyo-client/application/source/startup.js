@@ -164,7 +164,7 @@ white:true*/
       XM.currencies.fetch(options);
     }
   });
-  
+
   XT.StartupTasks.push({
     taskName: "loadCountries",
     task: function () {
@@ -216,7 +216,7 @@ white:true*/
       XM.classCodes.fetch(options);
     }
   });
-  
+
   XT.StartupTasks.push({
       taskName: "loadCustomerTypes",
       task: function () {
@@ -249,7 +249,7 @@ white:true*/
       XM.priorities.fetch(options);
     }
   });
-  
+
   XT.StartupTasks.push({
     taskName: "loadShipVias",
     task: function () {
@@ -264,7 +264,7 @@ white:true*/
       XM.shipVias.fetch(options);
     }
   });
-  
+
   XT.StartupTasks.push({
     taskName: "loadSalesReps",
     task: function () {
@@ -286,7 +286,7 @@ white:true*/
       XM.shipCharges.fetch(options);
     }
   });
-  
+
   XT.StartupTasks.push({
     taskName: "loadShipVias",
     task: function () {
@@ -309,17 +309,51 @@ white:true*/
     }
   });
   
-  // XT.StartupTasks.push({
-  //   taskName: "loadSites",
-  //   task: function () {
-  //     var options = {
-  //       success: _.bind(this.didComplete, this)
-  //     };
-  //     XM.sites = new XM.SiteCollection();
-  //     XM.sites.fetch(options);
-  //   }
-  // });
-  
+  XT.StartupTasks.push({
+    taskName: "loadCostCategories",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      options.query = {};
+      options.query.orderBy = [
+        {attribute: 'code'}
+      ];
+      XM.costCategories = new XM.CostCategoryCollection();
+      XM.costCategories.fetch(options);
+    }
+  });
+
+  XT.StartupTasks.push({
+    taskName: "loadPlannerCodes",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      options.query = {};
+      options.query.orderBy = [
+        {attribute: 'code'}
+      ];
+      XM.plannerCodes = new XM.PlannerCodeCollection();
+      XM.plannerCodes.fetch(options);
+    }
+  });
+
+  XT.StartupTasks.push({
+    taskName: "loadSites",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      options.query = {};
+      options.query.orderBy = [
+        {attribute: 'code'}
+      ];
+      XM.sites = new XM.SiteCollection();
+      XM.sites.fetch(options);
+    }
+  });
+
   XT.StartupTasks.push({
     taskName: "loadTaxZones",
     task: function () {
@@ -330,7 +364,7 @@ white:true*/
       XM.taxZones.fetch(options);
     }
   });
-  
+
   XT.StartupTasks.push({
     taskName: "loadTerms",
     task: function () {
@@ -341,7 +375,7 @@ white:true*/
       XM.terms.fetch(options);
     }
   });
-  
+
   XT.StartupTasks.push({
     taskName: "loadCurrencyRates",
     task: function () {
