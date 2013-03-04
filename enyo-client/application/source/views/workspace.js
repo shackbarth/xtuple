@@ -1261,7 +1261,7 @@ trailing:true white:true*/
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "lineNumber"},
+            {kind: "XV.NumberWidget", attr: "lineNumber"},
             {kind: "XV.ItemWidget", attr: "item"},
             {kind: "XV.SitePicker", attr: "site"},
             {kind: "XV.InputWidget", attr: "customerPartNumber"},
@@ -1269,7 +1269,7 @@ trailing:true white:true*/
             {kind: "XV.UnitWidget", attr: "quantityUnit"},
             {kind: "XV.NumberWidget", attr: "quantityShip"},
             {kind: "XV.PercentWidget", attr: "discount"},
-            {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "currency"},
+            {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "quote.currency"},
               label: "_unitPrice".loc(), currencyDisabled: true},
             {kind: "XV.UnitWidget", attr: "priceUnit"},
             {kind: "XV.NumberWidget", attr: "extended", label: "_extendedPrice".loc()},

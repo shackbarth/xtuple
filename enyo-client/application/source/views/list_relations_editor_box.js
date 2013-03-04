@@ -182,7 +182,7 @@ trailing:true white:true*/
     components: [
       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
         classes: "in-panel", components: [
-        {kind: "XV.InputWidget", attr: "lineNumber"},
+        {kind: "XV.NumberWidget", attr: "lineNumber"},
         {kind: "XV.ItemWidget", attr: "item"},
         {kind: "XV.SitePicker", attr: "site"},
         {kind: "XV.InputWidget", attr: "customerPartNumber"},
