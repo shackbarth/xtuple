@@ -237,10 +237,14 @@ trailing:true white:true*/
             // Charge Sales Account - needs GL
             {kind: "XV.NumberWidget", attr: "freightWeight"},
             {kind: "XV.NumberWidget", attr: "subtotal"},
+            {kind: "XV.MoneyWidget", attr: {amount: "subtotal", currency: "currency"},
+              label: "_subtotal".loc(), currencyShowing: false},
             // {kind: "XV.NumberWidget", attr: "miscCharge"}, - needs GL
             {kind: "XV.NumberWidget", attr: "calculateFreight", label: "_freight".loc()},
-            {kind: "XV.NumberWidget", attr: "taxTotal", label: "_tax".loc()},
-            {kind: "XV.NumberWidget", attr: "total"}
+            {kind: "XV.MoneyWidget", attr: {amount: "taxTotal", currency: "currency"},
+              label: "_tax".loc(), currencyShowing: false},
+            {kind: "XV.MoneyWidget", attr: {amount: "total", currency: "currency"},
+              label: "_total".loc(), currencyShowing: false},
         ]}
       ]});
     }
