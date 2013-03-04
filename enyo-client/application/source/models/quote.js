@@ -115,20 +115,20 @@ white:true*/
         taxCodes = _.groupBy(taxDetails, function (detail) {
           return detail.taxCode.id;
         });
-        
+
         // Loop through each tax code group and subtotal
         _.each(taxCodes, function (group) {
           var taxes = [],
             subtotal;
-            
+
           // Collect array of taxes
           _.each(group, function (detail) {
             taxes.push(detail.tax);
           });
-          
+
           // Subtotal first to make sure we round by subtotal
           subtotal = add(taxes, 6);
-          
+
           // Now add to tax grand total
           taxTotal = add(taxTotal, subtotal, scale);
         });
@@ -426,7 +426,7 @@ white:true*/
 
       // Only recalculate price on date changes if pricing is date driven
       if (XT.session.settings.get("soPriceEffective") === "ScheduleDate") {
-        this.on('change:scheduleDate', this.determinePrice);
+        this.on('change:scheduleDate', this.calculatePrice);
       }
 
       this.sellingUnits = new XM.UnitsCollection();
@@ -584,7 +584,7 @@ white:true*/
             this._updatePrice = false;
           }
         }
-        
+
         // Don't allow user editing of price until we hear back from the server
         this.setReadOnly("price", true);
 
@@ -618,7 +618,7 @@ white:true*/
               that.set("price", resp.price, {force: true});
             }
           }
-          
+
           // Allow editing again if we could before
           this.setReadOnly("price", readOnlyCache);
         };
@@ -744,7 +744,7 @@ white:true*/
           }
         };
         item.taxType(taxOptions);
-        
+
         // Fetch and update unit cost
         itemOptions.success = function (cost) {
           that.set("unitCost", cost, {force: true});
@@ -764,7 +764,7 @@ white:true*/
         this.set("lineNumber", parent.get("lineItems").length);
       }
     },
-    
+
     recalculateParent: function () {
       var parent = this.getParent();
       if (parent) { parent.lineItemsDidChange(); }
