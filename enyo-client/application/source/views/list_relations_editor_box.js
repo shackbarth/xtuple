@@ -227,8 +227,8 @@ trailing:true white:true*/
       
       // Bottom Panel with calculations
       this.createComponent({
-        kind: "XV.Groupbox", name: "pricePanel", style: "margin-top: 10px;", components: [
-          {kind: "onyx.GroupboxHeader", content: "_totals".loc()},
+        kind: "XV.RelationsEditor", name: "pricePanel", style: "margin-top: 10px;", components: [
+          //{kind: "onyx.GroupboxHeader", content: "_totals".loc()},
           {kind: "XV.ScrollableGroupbox", name: "priceGroup",
             classes: "in-panel", components: [
             {kind: "XV.CurrencyPickerWidget", attr: "currency"},
@@ -246,6 +246,11 @@ trailing:true white:true*/
               label: "_total".loc(), currencyShowing: false},
         ]}
       ]});
+    },
+    
+    valueChanged: function () {
+      var value = this.getValue();
+      this.$.list.setValue(value);
     }
   });
 
