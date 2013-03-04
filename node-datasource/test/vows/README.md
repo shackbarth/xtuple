@@ -7,6 +7,12 @@ Login credentials should stored in the gitignored file
 
 You'll want to copy the sample in the same directory and update the values appropriately.
 
+At the moment, the user that you use for testing must have access to only one organization.
+
+After configuring loginData.js, go to your /xtuple/enyo-client/application/tools directory and do:
+
+sudo bash deploy.sh
+
 To run a test, do:
   
   cd /path/to/xtuple/node-datasource/test

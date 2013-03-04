@@ -275,17 +275,6 @@ white:true*/
       XM.salesReps.fetch(options);
     }
   });
-  
-  // XT.StartupTasks.push({
-  //    taskName: "loadSaleTypes",
-  //    task: function () {
-  //      var options = {
-  //        success: _.bind(this.didComplete, this)
-  //      };
-  //      XM.saleTypes = new XM.QuoteSaleTypeCollection();
-  //      XM.saleTypes.fetch(options);
-  //    }
-  // });
 
   XT.StartupTasks.push({
     taskName: "loadShipCharges",
