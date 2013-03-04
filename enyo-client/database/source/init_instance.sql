@@ -21,8 +21,14 @@
 \i xt/functions/install_guiscript.sql;
 \i xt/functions/mergecrmaccts.sql;
 \i xt/functions/pg_advisory_unlock.sql;
+\i xt/functions/quote_line_customer_discount.sql;
+\i xt/functions/quote_line_list_cost_markup.sql;
 \i xt/functions/quote_line_extended_price.sql;
+\i xt/functions/quote_line_line_profit.sql;
+\i xt/functions/quote_line_list_price.sql;
+\i xt/functions/quote_line_list_price_discount.sql;
 \i xt/functions/quote_line_tax.sql;
+\i xt/functions/quote_schedule_date.sql;
 \i xt/functions/quote_subtotal.sql;
 \i xt/functions/quote_tax_total.sql;
 \i xt/functions/quote_total.sql;
@@ -92,7 +98,6 @@
 \i xm/javascript/contact.sql;
 \i xm/javascript/crm.sql;
 \i xm/javascript/customer.sql;
-\i xm/javascript/customer_prospect.sql;
 \i xm/javascript/database_information.sql;
 \i xm/javascript/incident.sql;
 \i xm/javascript/project.sql;
