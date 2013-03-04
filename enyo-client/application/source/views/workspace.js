@@ -1218,7 +1218,7 @@ trailing:true white:true*/
             {kind: "XV.TextArea", attr: "shippingNotes", fit: true}
           ]}
         ]},
-        {kind: "XV.QuoteLineItemBox", attr: "quoteLines"},
+        {kind: "XV.QuoteLineItemBox", attr: "lineItems"},
         {kind: "XV.QuoteCommentBox", attr: "comments"},
         {kind: "XV.QuoteDocumentsBox", attr: "documents"}
       ]}

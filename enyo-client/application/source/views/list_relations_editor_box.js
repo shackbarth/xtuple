@@ -224,7 +224,6 @@ trailing:true white:true*/
       });
     },
     launchWorkspace: function (inSender, inEvent) {
-      var id = this.getValue().id;
       this.doChildWorkspace({workspace: "XV.QuoteLineWorkspace", collection: this.getValue()});
       return true;
     }
