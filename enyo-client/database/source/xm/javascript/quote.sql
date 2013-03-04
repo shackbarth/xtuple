@@ -28,7 +28,8 @@ select xt.install_js('XM','Quote','xtuple', $$
     ret = plv8.execute(sql, [taxZoneId || -1, taxTypeId || -1, effective, currencyId, amount]);
     for (var i = 0; i < ret.length; i++) ret[i].taxCode = XT.camelize(ret[i].taxCode);
     return ret;
-  }
+  };
+  
   /**
    Return the calculated tax amount for a given amount, currency, and date.
 
@@ -42,5 +43,5 @@ select xt.install_js('XM','Quote','xtuple', $$
   XM.Quote.calculateTaxAmount = function(taxZoneId, taxTypeId, effective, currencyId, amount) {
   
     return plv8.execute("select calculatetax($1, $2, $3, $4, $5) as result;", [taxZoneId, taxTypeId, effective, currencyId, amount])[0].result; 
-  }
+  };
 $$ );
