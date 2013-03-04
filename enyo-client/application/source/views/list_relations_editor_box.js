@@ -214,8 +214,32 @@ trailing:true white:true*/
     parentKey: "quote",
     listRelations: "XV.QuoteLineItemListRelations",
     fitButtons: false,
+    
     create: function () {
       this.inherited(arguments);
+      
+      // Bottom Panel with calculations
+      this.createComponent({
+        kind: "XV.RelationsEditor", name: "pricePanel", style: "margin-top: 10px;", components: [
+          //{kind: "onyx.GroupboxHeader", content: "_totals".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "priceGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.CurrencyPickerWidget", attr: "currency"},
+            {kind: "XV.NumberWidget", attr: "margin"},
+            //{kind: "XV.TextArea", attr: "miscChargeDesc", fit: true} - needs GL
+            // Charge Sales Account - needs GL
+            {kind: "XV.NumberWidget", attr: "freightWeight"},
+            {kind: "XV.MoneyWidget", attr: {amount: "subtotal", currency: "currency"},
+              label: "_subtotal".loc(), currencyShowing: false},
+            // {kind: "XV.NumberWidget", attr: "miscCharge"}, - needs GL
+            {kind: "XV.NumberWidget", attr: "calculateFreight", label: "_freight".loc()},
+            {kind: "XV.MoneyWidget", attr: {amount: "taxTotal", currency: "currency"},
+              label: "_tax".loc(), currencyShowing: false},
+            {kind: "XV.MoneyWidget", attr: {amount: "total", currency: "currency"},
+              label: "_total".loc(), currencyShowing: false}
+        ]}
+      ]});
+      
       this.createComponent({
         kind: "onyx.Button",
         content: "_expand".loc(),
@@ -223,6 +247,15 @@ trailing:true white:true*/
         container: this.$.navigationButtonPanel
       });
     },
+    
+    /**
+    @todo Document overridden function
+    */
+    valueChanged: function () {
+      var value = this.getValue();
+      this.$.list.setValue(value);
+    },
+    
     launchWorkspace: function (inSender, inEvent) {
       this.doChildWorkspace({workspace: "XV.QuoteLineWorkspace", collection: this.getValue()});
       return true;
