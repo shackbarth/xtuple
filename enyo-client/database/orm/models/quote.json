@@ -459,7 +459,14 @@
           "type": "Number",
           "column": "total"
         }
-      },     
+      },  
+      {
+        "name": "margin",
+        "attr": {
+          "type": "Number",
+          "column": "margin"
+        }
+      },   
       {
         "name": "lineItems",
         "toMany": {
