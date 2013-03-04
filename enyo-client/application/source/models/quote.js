@@ -106,7 +106,7 @@ white:true*/
           weights.push(grossWeight);
           subtotals.push(extPrice);
           costs.push(quantity * unitCost);
-          taxDetails.concat(lineItem.taxDetail);
+          taxDetails = taxDetails.concat(lineItem.taxDetail);
         });
 
         // Total taxes
@@ -132,14 +132,12 @@ white:true*/
           taxTotal = add(taxTotal, subtotal, scale);
         });
 
-        // Totalling calculations
+        // Totaling calculations
         freightWeight = add(weights, scale);
         subtotal = add(subtotals, scale);
         costTotal = add(costs, scale);
         margin = substract(subtotal, costTotal, scale);
-        subtotals.push(miscCharge);
-        subtotals.push(freight);
-        subtotals.push(taxTotal);
+        subtotals = subtotals.concat([miscCharge, freight, taxTotal]);
         total = add(subtotals, scale);
 
         // Set values
@@ -422,6 +420,8 @@ white:true*/
       this.on('change:taxType change:extendedPrice', this.calculateTax);
       this.on('change:quantityUnit change:priceUnit', this.unitDidChange);
       this.on('change:scheduleDate', this.scheduleDateDidChange);
+      this.on('change:extendedPrice change:unitCost change:itemSite',
+        this.recalculateParent());
 
       // Only recalculate price on date changes if pricing is date driven
       if (XT.session.settings.get("soPriceEffective") === "ScheduleDate") {
@@ -477,11 +477,9 @@ white:true*/
         quantityUnitRatio = this.get("quantityUnitRatio"),
         priceUnitRatio = this.get("priceUnitRatio"),
         price = this.get("price") || 0,
-        extPrice =  (quantity * quantityUnitRatio / priceUnitRatio) * price,
-        parent = this.getParent();
+        extPrice =  (quantity * quantityUnitRatio / priceUnitRatio) * price;
       extPrice = XT.toExtendedPrice(extPrice);
       this.set("extendedPrice", extPrice, {force: true});
-      if (parent) { parent.lineItemsDidChange(); }
       return this;
     },
 
@@ -562,7 +560,8 @@ white:true*/
         quantityUnit = this.get("quantityUnit"),
         scheduleDate = this.get("scheduleDate"),
         that = this,
-        updatePolicy = settings.get("UpdatePriceLineEdit");
+        updatePolicy = settings.get("UpdatePriceLineEdit"),
+        readOnlyCache = this.isReadOnly("price");
 
       // Make sure we have all the necessary values
       if (canUpdate && item && quantity && quantityUnit && priceUnit) {
@@ -584,6 +583,9 @@ white:true*/
             this._updatePrice = false;
           }
         }
+        
+        // Don't allow user editing of price until we hear back from the server
+        this.setReadOnly("price", true);
 
         if (isConfigured) {
           // TO DO: Loop through characteristics and get pricing
@@ -597,7 +599,7 @@ white:true*/
           if (resp.price === -9999) {
             that.notify("_noPriceFound".loc());
             this.unset("customerPrice");
-            this.unset("price");
+            this.unset("price", {force: true});
             if (that.hasChanges("quantity")) {
               this.unset("quantity");
             } else {
@@ -612,9 +614,12 @@ white:true*/
             that.set("priceMode", priceMode);
             that.set("customerPrice", resp.price); // TO DO: Need to add char price totals here too
             if (that._updatePrice) {
-              that.set("price", resp.price);
+              that.set("price", resp.price, {force: true});
             }
           }
+          
+          // Allow editing again if we could before
+          this.setReadOnly("price", readOnlyCache);
         };
         options.error = function (err) {
           that.trigger("error", err);
@@ -673,7 +678,7 @@ white:true*/
             that.taxDetail = [];
             that.set("tax", 0);
           }
-          if (parent) { parent.lineItemsDidChange(); }
+          this.recalculateParent();
         };
         this.dispatch(recordType, "calculateTaxDetail", params, options);
       } else {
@@ -701,19 +706,22 @@ white:true*/
     },
 
     itemSiteDidChange: function () {
-      var item = this.getValue("itemSite.item"),
-        parent = this.getParent(),
+      var K = XM.Model,
+        item = this.getValue("itemSite.item"),
+        status = this.getStatus(),
         that = this,
         unitOptions = {},
-        taxOptions = {};
+        taxOptions = {},
+        itemOptions = {};
 
       // Reset values
       this.unset("quantityUnit");
       this.unset("priceUnit");
       this.unset("taxType");
+      this.unset("unitCost");
       this.sellingUnits.reset();
 
-      if (item) {
+      if ((status & K.READY) && item) {
         // Fetch and update selling units
         unitOptions.success = function (resp) {
           // Set the collection
@@ -735,10 +743,14 @@ white:true*/
           }
         };
         item.taxType(taxOptions);
+        
+        // Fetch and update unit cost
+        itemOptions.success = function (cost) {
+          that.set("unitCost", cost, {force: true});
+        };
+        item.standardCost(itemOptions);
 
         // TODO: Get default characteristics
-        
-        if (parent) { parent.lineItemsDidChange(); }
       }
     },
 
@@ -750,6 +762,10 @@ white:true*/
       if (parent && !lineNumber) {
         this.set("lineNumber", parent.get("lineItems").length);
       }
+    },
+    
+    recalculateParent: function () {
+      var parent = this.getParent();
       if (parent) { parent.lineItemsDidChange(); }
     },
 

@@ -6,6 +6,17 @@ select xt.install_js('XM','item','xtuple', $$
   
   XM.Item.isDispatchable = true;
 
+  /**
+    Returns the standard unit cost for an item.
+    
+    @param {Number} item id
+    @returns {Number}
+  */
+  XM.Item.standardCost = function(itemId) {
+    var sql = 'select itemcost($1) as cost';
+    return plv8.execute(sql, [itemId])[0].cost;
+  }
+
   /** 
    Return the selling units of measure for a given item id.
 

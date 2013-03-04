@@ -5,15 +5,25 @@ white:true*/
 
 (function () {
   "use strict";
-  
+
   /**
     Mixin for item classes
   */
   XM.ItemMixin = {
-    
+
+    /**
+      Requests the standard cost of an item.
+
+      @param {Object} Options: success, error
+    */
+    standardCost: function (options) {
+      // TO DO: We need this for quote, sales order etc. but what about ViewCost privilege?
+      this.dispatch("XM.Item", "standardCost", this.id, options);
+    },
+
     /**
       Requests an array of selling units from the server.
-      
+
       @param {Object} Options: success, error
     */
     sellingUnits: function (options) {
@@ -22,16 +32,16 @@ white:true*/
 
     /**
       Requests on array of selling units from the server.
-      
+
       @param {Object} Options: success, error
     */
     materialIssueUnits: function (options) {
       this.dispatch("XM.Item", "materialIssueUnits", this.id, options);
     },
-    
+
     /**
       Requests a tax type based on a  specified tax zone from the server.
-      
+
       @param {XM.TaxZone} Tax Zone
       @param {Object} Options: success, error
     */
@@ -65,7 +75,7 @@ white:true*/
     /** @scope XM.ProductCategory.prototype */
 
     recordType: 'XM.ProductCategory',
-    
+
     nameAttribute: 'code',
 
     documentKey: 'code'
@@ -186,7 +196,7 @@ white:true*/
     }
 
   });
-  
+
   // Add in item mixin
   XM.Item = XM.Item.extend(XM.ItemMixin);
 
@@ -315,7 +325,7 @@ white:true*/
     descriptionKey: 'description1'
 
   });
-  
+
   // Add in item mixin
   XM.ItemRelation = XM.ItemRelation.extend(XM.ItemMixin);
 
