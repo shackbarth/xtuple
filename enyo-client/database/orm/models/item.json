@@ -169,10 +169,17 @@
         }
       },
       {
-        "name": "extendedDescription",
+        "name": "productWeight",
         "attr": {
-          "type": "String",
-          "column": "item_extdescrip"
+          "type": "Number",
+          "column": "item_prodweight"
+        }
+      },
+      {
+        "name": "packageWeight",
+        "attr": {
+          "type": "Number",
+          "column": "item_packweight"
         }
       },
       {
@@ -841,6 +848,20 @@
         "toOne": {
           "type": "Unit",
           "column": "item_price_uom_id"
+        }
+      },
+      {
+        "name": "productWeight",
+        "attr": {
+          "type": "Number",
+          "column": "item_prodweight"
+        }
+      },
+      {
+        "name": "packageWeight",
+        "attr": {
+          "type": "Number",
+          "column": "item_packweight"
         }
       }
     ],

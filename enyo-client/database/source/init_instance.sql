@@ -28,6 +28,7 @@
 \i xt/functions/quote_line_list_price.sql;
 \i xt/functions/quote_line_list_price_discount.sql;
 \i xt/functions/quote_line_tax.sql;
+\i xt/functions/quote_freight_weight.sql;
 \i xt/functions/quote_schedule_date.sql;
 \i xt/functions/quote_subtotal.sql;
 \i xt/functions/quote_tax_total.sql;

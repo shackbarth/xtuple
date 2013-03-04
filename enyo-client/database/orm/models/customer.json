@@ -322,6 +322,13 @@
           "column": "cust_id",
           "inverse": "source"
         }
+      },
+      {
+        "name": "preferredSite",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "cust_preferred_warehous_id"
+        }
       }
     ],
     "extensions": [],
@@ -1307,6 +1314,13 @@
         "toOne": {
           "type": "ShipCharge",
           "column": "cust_shipchrg_id"
+        }
+      },
+      {
+        "name": "preferredSite",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "cust_preferred_warehous_id"
         }
       }
     ],

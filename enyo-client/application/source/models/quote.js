@@ -24,7 +24,7 @@ white:true*/
       var K = this.getClass();
       return {
         quoteDate: new Date(),
-        quoteStatus: K.OPEN_STATUS
+        status: K.OPEN_STATUS
       };
     },
 
@@ -80,19 +80,52 @@ white:true*/
     lineItemsDidChange: function (model, value, options) {
       var K = XM.Model,
         status = this.getStatus(),
-        that = this,
-        subtotal;
+        scale = XT.MONEY_SCALE,
+        taxDetails = [],
+        costs = 0.0,
+        subtotal = 0.0,
+        miscCharge = this.get("miscCharge") || 0.0,
+        freight = this.get("freight") || 0.0,
+        freightWeight = 0.0,
+        totalTax = 0.0,
+        total,
+        margin;
 
       if (status & K.READY) {
-        // Total up everything
+        // Total up line item detail
         _.each(this.get('lineItems').models, function (lineItem) {
-          var price = lineItem.get('listPrice');
-          that.subtotal = XT.math.add(that.subtotal, price, XT.MONEY_SCALE);
+          var extPrice = lineItem.get('extendedPrice'),
+            taxDetail = lineItem.taxDetail,
+            qty = lineItem.get("quantity"),
+            cost = lineItem.get("unitCost"),
+            item = lineItem.getValue("itemSite.item"),
+            prodWeight = item.get("productWeight"),
+            packWeight = item.get("packageWeight"),
+            itemWeight = XT.math.add(prodWeight, packWeight, scale),
+            invUnitRatio = lineItem.get("inventoryUnitRaito"),
+            grossWeight = itemWeight * qty * invUnitRatio;
+          
+          freightWeight = XT.math.add(freightWeight, grossWeight, scale);
+          subtotal = XT.math.add(subtotal, extPrice, scale);
+          costs = XT.math.add(costs, qty * cost, scale);
+          taxDetails.push(taxDetail);
         });
+        
+        // Total taxes
       
+        // Final calculations
+        total = XT.math.add(subtotal, freight, scale);
+        total = XT.math.add(total, miscCharge, scale);
+        total = XT.math.add(total, totalTax, scale);
+        margin = XT.math.substract(subtotal, costs, scale);
+        
+        // Set values
+        this.set("freightWeight", freightWeight);
         this.set("subtotal", subtotal);
-      
-        // TODO: Margin, weight, taxes, total
+        this.set("total", total);
+        this.set("margin", margin);
+        
+        // TODO: weight, taxes
       }
     },
     
@@ -105,11 +138,11 @@ white:true*/
         customer = this.get("customer"),
         isFreeFormBillto = customer ? customer.get("isFreeFormBillto") : false,
         isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : false,
-        billContact = customer ? customer.get("billingContact") || customer.get("contact") : false,
-        billAddress = billContact ? billContact("address") : false,
+        billtoContact = customer ? customer.get("billingContact") || customer.get("contact") : false,
+        billtoAddress = billtoContact ? billtoContact("address") : false,
         opts = {force: true},
         that = this,
-        unsetBillto = function () {
+        unsetBilltoAddress = function () {
           that.unset("billtoName", opts);
           that.unset("billtoAddress1", opts);
           that.unset("billtoAddress2", opts);
@@ -118,6 +151,18 @@ white:true*/
           that.unset("billtoState", opts);
           that.unset("billtoPostalCode", opts);
           that.unset("billtoCountry", opts);
+        },
+        unsetBilltoContact = function () {
+          this.unset("billtoContact");
+          this.unset("billtoContactHonorific");
+          this.unset("billtoContactFirstName");
+          this.unset("billtoContactMiddleName");
+          this.unset("billtoContactLastName");
+          this.unset("billtoContactSuffix");
+          this.unset("billtoContactTitle");
+          this.unset("billtoContactPhone");
+          this.unset("billtoContactFax");
+          this.unset("billtoContactEmail");
         };
       
       if (status & K.READY) {
@@ -147,17 +192,31 @@ white:true*/
           this.set("shipVia", customer.get("shipVia"));
           this.set("site", customer.get("preferredSite"));
           this.set("currency", customer.get("currency"));
-          if (billAddress) {
-            this.set("billtoAddress1", billAddress.getValue("line1"), opts);
-            this.set("billtoAddress2", billAddress.getValue("line2"), opts);
-            this.set("billtoAddress3", billAddress.getValue("line3"), opts);
-            this.set("billtoCity", billAddress.getValue("city"), opts);
-            this.set("billtoState", billAddress.getValue("state"), opts);
-            this.set("billtoPostalCode", billAddress.getValue("postalCode"), opts);
-            this.set("billtoCountry", billAddress.getValue("country"), opts);
+          if (billtoContact) {
+            this.set("billtoContact", billtoContact);
+            this.set("billtoContactHonorific", billtoContact.get("honoroific"));
+            this.set("billtoContactFirstName", billtoContact.get("firstName"));
+            this.set("billtoContactMiddleName", billtoContact.get("middleName"));
+            this.set("billtoContactLastName", billtoContact.get("lastName"));
+            this.set("billtoContactSuffix", billtoContact.get("suffix"));
+            this.set("billtoContactTitle", billtoContact.get("title"));
+            this.set("billtoContactPhone", billtoContact.get("phone"));
+            this.set("billtoContactFax", billtoContact.get("fax"));
+            this.set("billtoContactEmail", billtoContact.get("email"));
+          } else {
+            unsetBilltoContact();
+          }
+          if (billtoAddress) {
+            this.set("billtoAddress1", billtoAddress.getValue("line1"), opts);
+            this.set("billtoAddress2", billtoAddress.getValue("line2"), opts);
+            this.set("billtoAddress3", billtoAddress.getValue("line3"), opts);
+            this.set("billtoCity", billtoAddress.getValue("city"), opts);
+            this.set("billtoState", billtoAddress.getValue("state"), opts);
+            this.set("billtoPostalCode", billtoAddress.getValue("postalCode"), opts);
+            this.set("billtoCountry", billtoAddress.getValue("country"), opts);
             this.set("shipto", customer.get("shipto"));
           } else {
-            unsetBillto();
+            unsetBilltoAddress();
           }
         } else {
           this.unset("salesRep");
@@ -166,7 +225,8 @@ white:true*/
           this.unset("taxZone");
           this.unset("shipVia");
           this.unset("currency");
-          unsetBillto();
+          unsetBilltoAddress();
+          unsetBilltoContact();
           this.unset("shipto", opts);
           this.unset("shiptoName", opts);
           this.unset("shiptoAddress1", opts);
@@ -193,6 +253,18 @@ white:true*/
       
       if ((status & K.READY) && shipto) {
         this.set("shiptoName", shipto.get("name"), opts);
+        if (shiptoContact) {
+          this.set("shiptoContact", shiptoContact);
+          this.set("shiptoContactHonorific", shiptoContact.get("honoroific"));
+          this.set("shiptoContactFirstName", shiptoContact.get("firstName"));
+          this.set("shiptoContactMiddleName", shiptoContact.get("middleName"));
+          this.set("shiptoContactLastName", shiptoContact.get("lastName"));
+          this.set("shiptoContactSuffix", shiptoContact.get("suffix"));
+          this.set("shiptoContactTitle", shiptoContact.get("title"));
+          this.set("shiptoContactPhone", shiptoContact.get("phone"));
+          this.set("shiptoContactFax", shiptoContact.get("fax"));
+          this.set("shiptoContactEmail", shiptoContact.get("email"));
+        }
         if (shiptoAddress) {
           this.set("shiptoAddress1", shiptoAddress.getValue("line1"), opts);
           this.set("shiptoAddress2", shiptoAddress.getValue("line2"), opts);
