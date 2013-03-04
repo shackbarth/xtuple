@@ -224,12 +224,12 @@ trailing:true white:true*/
     
     create: function () {
       this.inherited(arguments);
-      //TODO: needs to be some padding here
       
       // Bottom Panel with calculations
       this.createComponent({
-        kind: "XV.Groupbox", name: "mainPanel", components: [
-          {kind: "XV.ScrollableGroupbox", name: "pricePanel",
+        kind: "XV.Groupbox", name: "pricePanel", style: "margin-top: 10px;", components: [
+          {kind: "onyx.GroupboxHeader", content: "_totals".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "priceGroup",
             classes: "in-panel", components: [
             {kind: "XV.CurrencyPickerWidget", attr: "currency"},
             {kind: "XV.NumberWidget", attr: "margin"},
