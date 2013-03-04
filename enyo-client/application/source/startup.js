@@ -354,17 +354,6 @@ white:true*/
   });
   
   XT.StartupTasks.push({
-    taskName: "loadTaxAuthorites",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.taxAuthorities = new XM.TaxAuthorityCollection();
-      XM.taxAuthorities.fetch(options);
-    }
-  });
-  
-  XT.StartupTasks.push({
     taskName: "loadCurrencyRates",
     task: function () {
       var options = {
