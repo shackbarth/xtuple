@@ -15,10 +15,12 @@ white:true*/
     /** @scope XM.Quote.prototype */
 
     recordType: 'XM.Quote',
-    
+
     numberPolicySetting: 'QUNumberGeneration',
-    
+
     documentDateKey: "quoteDate",
+
+    freightTaxDetail: undefined,
 
     defaults: function () {
       var K = this.getClass();
@@ -35,7 +37,7 @@ white:true*/
       "salesRep",
       "terms"
     ],
-    
+
     billtoAttrArray: ["billtoName", "billtoAddress1", "billtoAddress2", "billtoAddress3", "billtoCity",
       "billtoState", "billtoPostalCode", "billtoCountry", "billtoPhone", "billtoContactHonorific",
       "billtoContactFirstName", "billtoContactMiddleName", "billtoContactLastName",
@@ -49,86 +51,106 @@ white:true*/
       "shiptoContactSuffix", "shiptoContactPhone", "shiptoContactTitle",
       "shiptoContactFax", "shiptoContactEmail"
     ],
-    
+
     // ..........................................................
     // METHODS
     //
-    
+
     /**
       Initialize
     */
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
+      this.freightTaxDetail = [];
       this.on('add:item remove:item', this.lineItemsDidChange);
       this.on('change:customer', this.customerDidChange);
       this.on('change:shipto', this.shiptoDidChange);
-      var status = this.getStatus();
-      if (!this.get("billtoName") && (status === XM.Model.READY_NEW)) {
-        this.setReadOnly("lineItems", true);
-        for (var i = 0; i < this.billtoAttrArray.length; i++) {
-          this.setReadOnly(this.billtoAttrArray[i], true);
-        }
-        for (i = 0; i < this.shiptoAttrArray.length; i++) {
-          this.setReadOnly(this.shiptoAttrArray[i], true);
-        }
-      }
     },
-    
+
     /**
       Used to update calculated fiels.
     */
     lineItemsDidChange: function (model, value, options) {
       var K = XM.Model,
         status = this.getStatus(),
-        scale = XT.MONEY_SCALE,
-        taxDetails = [],
-        costs = 0.0,
-        subtotal = 0.0,
         miscCharge = this.get("miscCharge") || 0.0,
         freight = this.get("freight") || 0.0,
-        freightWeight = 0.0,
-        totalTax = 0.0,
+        scale = XT.MONEY_SCALE,
+        add = XT.math.add,
+        substract = XT.math.subtract,
+        subtotals = [],
+        taxDetails = [],
+        costs = [],
+        weights = [],
+        subtotal,
+        freightWeight,
+        taxTotal = 0.0,
+        costTotal,
         total,
-        margin;
+        margin,
+        taxCodes;
 
       if (status & K.READY) {
-        // Total up line item detail
+        // Collect line item detail
         _.each(this.get('lineItems').models, function (lineItem) {
           var extPrice = lineItem.get('extendedPrice'),
-            taxDetail = lineItem.taxDetail,
-            qty = lineItem.get("quantity"),
-            cost = lineItem.get("unitCost"),
+            quantity = lineItem.get("quantity"),
+            unitCost = lineItem.get("unitCost"),
             item = lineItem.getValue("itemSite.item"),
             prodWeight = item.get("productWeight"),
             packWeight = item.get("packageWeight"),
-            itemWeight = XT.math.add(prodWeight, packWeight, scale),
+            itemWeight = add(prodWeight, packWeight, scale),
             invUnitRatio = lineItem.get("inventoryUnitRaito"),
-            grossWeight = itemWeight * qty * invUnitRatio;
-          
-          freightWeight = XT.math.add(freightWeight, grossWeight, scale);
-          subtotal = XT.math.add(subtotal, extPrice, scale);
-          costs = XT.math.add(costs, qty * cost, scale);
-          taxDetails.push(taxDetail);
+            grossWeight = itemWeight * quantity * invUnitRatio;
+
+          weights.push(grossWeight);
+          subtotals.push(extPrice);
+          costs.push(quantity * unitCost);
+          taxDetails.concat(lineItem.taxDetail);
+        });
+
+        // Total taxes
+        // First group amounts by tax code
+        taxCodes = _.groupBy(taxDetails, function (detail) {
+          return detail.taxCode.id;
         });
         
-        // Total taxes
-      
-        // Final calculations
-        total = XT.math.add(subtotal, freight, scale);
-        total = XT.math.add(total, miscCharge, scale);
-        total = XT.math.add(total, totalTax, scale);
-        margin = XT.math.substract(subtotal, costs, scale);
-        
+        // Loop through each tax code group and subtotal
+        _.each(taxCodes, function (group) {
+          var taxes = [],
+            subtotal;
+            
+          // Collect array of taxes
+          _.each(group, function (detail) {
+            taxes.push(detail.tax);
+          });
+          
+          // Subtotal first to make sure we round by subtotal
+          subtotal = add(taxes, scale);
+          
+          // Now add to tax grand total
+          taxTotal = add(taxTotal, subtotal, scale);
+        });
+
+        // Totalling calculations
+        freightWeight = add(weights, scale);
+        subtotal = add(subtotals, scale);
+        costTotal = add(costs, scale);
+        margin = substract(subtotal, costTotal, scale);
+        subtotals.push(miscCharge);
+        subtotals.push(freight);
+        subtotals.push(taxTotal);
+        total = add(subtotals, scale);
+
         // Set values
         this.set("freightWeight", freightWeight);
         this.set("subtotal", subtotal);
+        this.set("taxTotal", taxTotal);
         this.set("total", total);
         this.set("margin", margin);
-        
-        // TODO: weight, taxes
       }
     },
-    
+
     /**
       Populates billto information based on the entered customer.
     */
@@ -164,24 +186,25 @@ white:true*/
           this.unset("billtoContactFax");
           this.unset("billtoContactEmail");
         };
-      
+
+      // Handle case of prospect that has no free form settings
+      isFreeFormBillto = isFreeFormBillto === undefined ? true : isFreeFormBillto;
+      isFreeFormShipto = isFreeFormShipto === undefined ? true : isFreeFormShipto;
+
+      this.setReadOnly("lineItems", !customer);
+
+      // Set read only state for free form billto
+      for (var i = 0; i < this.billtoAttrArray.length; i++) {
+        this.setReadOnly(this.billtoAttrArray[i], isFreeFormBillto);
+      }
+
+      // Set read only state for free form shipto
+      for (i = 0; i < this.shiptoAttrArray.length; i++) {
+        this.setReadOnly(this.shiptoAttrArray[i], isFreeFormShipto);
+      }
+
       if (status & K.READY) {
-        // Handle case of prospect that has no free form settings
-        isFreeFormBillto = isFreeFormBillto === undefined ? true : isFreeFormBillto;
-        isFreeFormShipto = isFreeFormShipto === undefined ? true : isFreeFormShipto;
-      
-        this.setReadOnly("lineItems", !customer);
-      
-        // Set read only state for free form billto
-        for (var i = 0; i < this.billtoAttrArray.length; i++) {
-          this.setReadOnly(this.billtoAttrArray[i], isFreeFormBillto);
-        }
-      
-        // Set read only state for free form shipto
-        for (i = 0; i < this.shiptoAttrArray.length; i++) {
-          this.setReadOnly(this.shiptoAttrArray[i], isFreeFormShipto);
-        }
-      
+
         // Set customer default data
         if (customer) {
           this.set("billtoName", customer.get("name"), opts);
@@ -239,7 +262,7 @@ white:true*/
         }
       }
     },
-    
+
     /**
       Populate shipto defaults
     */
@@ -250,7 +273,7 @@ white:true*/
         shiptoContact = shipto ? shipto.get("contact") : false,
         shiptoAddress = shiptoContact ? shiptoContact.get("address") : false,
         opts = {force: true};
-      
+
       if ((status & K.READY) && shipto) {
         this.set("shiptoName", shipto.get("name"), opts);
         if (shiptoContact) {
@@ -276,10 +299,10 @@ white:true*/
         }
       }
     },
-    
+
     /**
       copyBilltoToShipto
-      
+
       This function empties all of the shipto information, then
       takes all the info from the billto and copies it to the shipto.
     */
@@ -289,7 +312,7 @@ white:true*/
         this.set(this.shiptoAttrArray[i], this.get(this.billtoAttrArray[i]));
       }
     },
-    
+
     /**
     Returns quote status as a localized string.
 
@@ -300,7 +323,7 @@ white:true*/
         status = this.get("status");
       return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
     },
-    
+
     validateSave: function () {
       var pricePolicy = XT.session.settings.get("soPriceEffective"),
         scheduleDate = this.get("scheduleDate"),
@@ -309,28 +332,28 @@ white:true*/
         total = this.get("total"),
         lineItems = this.get("lineItems"),
         params = {};
-        
+
       if (pricePolicy === "ScheduleDate" && !scheduleDate) {
         params.attr = "_scheduleDate".loc();
         return XT.Error.clone('xt1004', { params: params });
       }
-      
+
       if (!customer.get("isFreeFormShipto") && !shipto) {
         params.attr = "_shipto".loc();
         return XT.Error.clone('xt1004', { params: params });
       }
-      
+
       if (total < 0) {
         return XT.Error.clone('xt2011');
       }
-      
+
       if (!lineItems.length) {
         return XT.Error.clone('xt2012');
       }
     }
-    
+
   });
-  
+
   // ..........................................................
   // CLASS METHODS
   //
@@ -360,9 +383,9 @@ white:true*/
       @default C
     */
     CLOSED_STATUS: "C"
-   
+
   });
-  
+
   /**
     @class
 
@@ -370,11 +393,13 @@ white:true*/
   */
   XM.QuoteLine = XM.Model.extend({
     /** @scope XM.QuoteLine.prototype */
-    
+
     recordType: 'XM.QuoteLine',
-    
+
     sellingUnits: undefined,
-    
+
+    taxDetail: undefined,
+
     defaults: function () {
       return {
         quantityUnitRatio: 1,
@@ -382,9 +407,10 @@ white:true*/
         priceUnitRatio: 1
       };
     },
-    
+
     initialize: function () {
       XM.Model.prototype.initialize.apply(this, arguments);
+      this.taxDetail = [];
       this._updatePrice = true;
       this.on('change:discount', this.discountDidChange);
       this.on("change:itemSite", this.itemSiteDidChange);
@@ -396,15 +422,15 @@ white:true*/
       this.on('change:taxType change:extendedPrice', this.calculateTax);
       this.on('change:quantityUnit change:priceUnit', this.unitDidChange);
       this.on('change:scheduleDate', this.scheduleDateDidChange);
-      
+
       // Only recalculate price on date changes if pricing is date driven
       if (XT.session.settings.get("soPriceEffective") === "ScheduleDate") {
         this.on('change:scheduleDate', this.determinePrice);
       }
-      
+
       this.sellingUnits = new XM.UnitsCollection();
     },
-    
+
     readOnlyAttributes: [
       "customerPrice",
       "extendedPrice",
@@ -422,7 +448,7 @@ white:true*/
       "tax",
       "unitCost"
     ],
-    
+
     requiredAttributes: [
       "customerPrice",
       "itemSite",
@@ -440,10 +466,10 @@ white:true*/
       "scheduleDate",
       "unitCost"
     ],
-    
+
     /**
       Calculates and sets the extended price.
-      
+
       returns {Object} Receiver
     */
     calculateExtendedPrice: function () {
@@ -451,15 +477,17 @@ white:true*/
         quantityUnitRatio = this.get("quantityUnitRatio"),
         priceUnitRatio = this.get("priceUnitRatio"),
         price = this.get("price") || 0,
-        extPrice =  (quantity * quantityUnitRatio / priceUnitRatio) * price;
+        extPrice =  (quantity * quantityUnitRatio / priceUnitRatio) * price,
+        parent = this.getParent();
       extPrice = XT.toExtendedPrice(extPrice);
       this.set("extendedPrice", extPrice, {force: true});
+      if (parent) { parent.lineItemsDidChange(); }
       return this;
     },
-    
+
     /**
       Calculate and set discount and markup percentages.
-       
+
       returns {Object} Receiver
     */
     calculatePercentages: function () {
@@ -498,20 +526,20 @@ white:true*/
               XT.toPercent(1 - price / customerPrice);  // Discount
           }
         }
-        
+
         // TODO: Handle characteristics
         this.set(attrs, {force: true});
       };
       options.error = function (error) {
         this.trigger("error", error);
       };
-        
+
       // Convert price to base, then do the real work in the callback
       currency.toBase(price, parentDate, options);
-      
+
       return this;
     },
-    
+
     calculatePrice: function (force) {
       var settings = XT.session.settings,
         K = this.getClass(),
@@ -535,17 +563,17 @@ white:true*/
         scheduleDate = this.get("scheduleDate"),
         that = this,
         updatePolicy = settings.get("UpdatePriceLineEdit");
-        
+
       // Make sure we have all the necessary values
       if (canUpdate && item && quantity && quantityUnit && priceUnit) {
-        
+
         // Handle alternate price effectivity settings
         if (effectivePolicy === "ScheduleDate") {
           asOf = scheduleDate;
         } else if (effectivePolicy === "OrderDate") {
           asOf = parentDate;
         }
-        
+
         // Determine whether updating net price or just customer price
         if (editing) {
           if (customerPrice !== price &&
@@ -556,15 +584,15 @@ white:true*/
             this._updatePrice = false;
           }
         }
-        
+
         if (isConfigured) {
           // TO DO: Loop through characteristics and get pricing
         }
-        
+
         // Get the price
         options.success = function (resp) {
           var priceMode;
-          
+
           // Handle no price found scenario
           if (resp.price === -9999) {
             that.notify("_noPriceFound".loc());
@@ -575,7 +603,7 @@ white:true*/
             } else {
               this.unset("scheduleDate");
             }
-            
+
           // Handle normal scenario
           } else {
             priceMode = (resp.type === "N" ||
@@ -599,7 +627,7 @@ white:true*/
         customer.price(item, quantity, options);
       }
     },
-    
+
     calculateProfit: function () {
       var unitCost = this.get("unitCost"),
         price = this.get("price"),
@@ -622,33 +650,41 @@ white:true*/
         this.unset("profit", opt);
       }
     },
-    
+
     calculateTax: function () {
       var parent = this.getParent(),
         recordType = parent.recordType,
         amount = this.get("extendedPrice"),
-        taxType = this.get("taxType"),
-        taxZone = parent.get("taxZone"),
+        taxTypeId = this.getValue("taxType.id"),
+        taxZoneId = parent.getValue("taxZone.id"),
         effective = parent.get(parent.documentDateKey),
         currency = parent.get("currency"),
         that = this,
         options = {},
         params;
-      if (taxType && taxZone && effective && currency && amount) {
-        params = [taxZone.id, taxType.id, effective, currency.id, amount];
-        options.success = function (tax) {
-          that.set("tax", tax);
+      if (effective && currency && amount) {
+        params = [taxZoneId, taxTypeId, effective, currency.id, amount];
+        options.success = function (resp) {
+          var tax;
+          if (resp.length) {
+            tax = XT.math.add(_.pluck(resp, "tax"), XT.SALES_PRICE_SCALE);
+            that.set("tax", tax);
+          } else {
+            that.taxDetail = [];
+            that.set("tax", 0);
+          }
+          if (parent) { parent.lineItemsDidChange(); }
         };
-        this.dispatch(recordType, "calculateTaxAmount", params, options);
+        this.dispatch(recordType, "calculateTaxDetail", params, options);
       } else {
         this.set("tax", 0);
       }
     },
-    
+
     /**
       Recalculates and sets price from customer price based on user defined
       discount/markup.
-      
+
       returns {Object} Receiver
     */
     discountDidChange: function () {
@@ -663,31 +699,32 @@ white:true*/
       }
       return this;
     },
-    
+
     itemSiteDidChange: function () {
       var item = this.getValue("itemSite.item"),
+        parent = this.getParent(),
         that = this,
         unitOptions = {},
         taxOptions = {};
-      
+
       // Reset values
       this.unset("quantityUnit");
       this.unset("priceUnit");
       this.unset("taxType");
       this.sellingUnits.reset();
-      
+
       if (item) {
         // Fetch and update selling units
         unitOptions.success = function (resp) {
           // Set the collection
           that.sellingUnits.reset(resp);
-          
+
           // Set the item default selections
           that.set("quantityUnit", item.get("inventoryUnit"));
           that.set("priceUnit", item.get("priceUnit"));
         };
         item.sellingUnits(unitOptions);
-        
+
         // Fetch and update tax type
         taxOptions.success = function (id) {
           var taxType = XM.taxTypes.get(id);
@@ -698,19 +735,24 @@ white:true*/
           }
         };
         item.taxType(taxOptions);
+
+        // TODO: Get default characteristics
+        
+        if (parent) { parent.lineItemsDidChange(); }
       }
     },
-    
+
     parentDidChange: function () {
       var parent = this.getParent(),
         lineNumber = this.get("lineNumber");
-        
+
       // Set next line number
       if (parent && !lineNumber) {
         this.set("lineNumber", parent.get("lineItems").length);
       }
+      if (parent) { parent.lineItemsDidChange(); }
     },
-    
+
     scheduleDateChanged: function () {
       var item = this.getValue("itemSite.item"),
         parent = this.get("parent"),
@@ -730,13 +772,13 @@ white:true*/
         customer.canPurchase(item, scheduleDate, options);
       }
     },
-    
+
     unitDidChange: function () {
       this.calculatePrice(true);
     }
 
   });
-  
+
   // ..........................................................
   // CLASS METHODS
   //
@@ -766,7 +808,7 @@ white:true*/
       @default M
     */
     NEVER_UPDATE: 1,
-    
+
     /**
       Prompt user whether to update pricing on a saved line item.
 
@@ -788,7 +830,7 @@ white:true*/
     ALWAYS_UPDATE: 3
 
   });
-  
+
   /**
     @class
 
@@ -802,7 +844,7 @@ white:true*/
     sourceName: 'Q'
 
   });
-  
+
   /**
     @class
 
@@ -810,13 +852,13 @@ white:true*/
   */
   XM.QuoteAccount = XM.Model.extend({
     /** @scope XM.QuoteAccount.prototype */
-  
+
     recordType: 'XM.QuoteAccount',
-    
+
     isDocumentAssignment: true
-    
+
   });
-  
+
   /**
     @class
 
@@ -824,13 +866,13 @@ white:true*/
   */
   XM.QuoteContact = XM.Model.extend({
     /** @scope XM.QuoteContact.prototype */
-  
+
     recordType: 'XM.QuoteContact',
-    
+
     isDocumentAssignment: true
-    
+
   });
-  
+
   /**
     @class
 
@@ -838,13 +880,13 @@ white:true*/
   */
   XM.QuoteFile = XM.Model.extend({
     /** @scope XM.QuoteFile.prototype */
-  
+
     recordType: 'XM.QuoteFile',
-  
+
     isDocumentAssignment: true
-  
+
   });
-  
+
   /**
     @class
 
@@ -852,13 +894,13 @@ white:true*/
   */
   XM.QuoteItem = XM.Model.extend({
     /** @scope XM.QuoteItem.prototype */
-  
+
     recordType: 'XM.QuoteItem',
-  
+
     isDocumentAssignment: true
-  
+
   });
-  
+
   /**
     @class
 
@@ -866,11 +908,11 @@ white:true*/
   */
   XM.QuoteLine = XM.Model.extend({
      /** @scope XM.QuoteLine.prototype */
-  
+
     recordType: 'XM.QuoteLine'
-  
+
   });
-  
+
   /**
     @class
 
@@ -878,15 +920,15 @@ white:true*/
   */
   XM.QuoteLineCharacteristic = XM.Model.extend({
     /** @scope XM.QuoteLineCharacteristic.prototype */
-  
+
     recordType: 'XM.QuoteLineCharacteristic'
-    
+
     //there should be some default characteristics that are pulled automatically
     //  these are reconstructed when the item site changes
     //  should probably have an itemsitedidchange function
-  
+
   });
-  
+
   /**
     @class
 
@@ -900,7 +942,7 @@ white:true*/
     editableModel: 'XM.Quote'
 
   });
-  
+
   /**
     @class
 
@@ -916,7 +958,7 @@ white:true*/
     descriptionKey: "number"
 
   });
-  
+
   /**
     @class
 
@@ -924,13 +966,13 @@ white:true*/
   */
   XM.QuoteUrl = XM.Model.extend({
     /** @scope XM.QuoteUrl.prototype */
-  
+
     recordType: 'XM.QuoteUrl',
-  
+
     isDocumentAssignment: true
-  
+
   });
-  
+
   /**
     @class
 
@@ -938,13 +980,13 @@ white:true*/
   */
   XM.QuoteProject = XM.Model.extend({
      /** @scope XM.QuoteProject.prototype */
-  
+
     recordType: 'XM.QuoteProject',
-  
+
     isDocumentAssignment: true
-  
+
   });
-  
+
   /**
     @class
 
@@ -952,13 +994,13 @@ white:true*/
   */
   XM.QuoteIncident = XM.Model.extend({
      /** @scope XM.QuoteIncident.prototype */
-  
+
     recordType: 'XM.QuoteIncident',
-  
+
     isDocumentAssignment: true
-  
+
   });
-  
+
   /**
     @class
 
@@ -966,11 +1008,11 @@ white:true*/
   */
   XM.QuoteOpportunity = XM.Model.extend({
     /** @scope XM.QuoteOpportunity.prototype */
-  
+
     recordType: 'XM.QuoteOpportunity',
-  
+
     isDocumentAssignment: true
-  
+
   });
 
   /*
@@ -984,16 +1026,16 @@ white:true*/
     isDocumentAssignment: true
 
   });
-  
+
   /*
     @extends XM.Model
   */
   XM.QuoteToDo = XM.Model.extend({
-    
+
     recordType: 'XM.QuoteToDo',
-    
+
     isDocumentAssignment: true
-    
+
   });
 
   // ..........................................................
@@ -1011,7 +1053,7 @@ white:true*/
     model: XM.QuoteListItem
 
   });
-  
+
   /**
     @class
 
