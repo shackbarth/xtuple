@@ -7,16 +7,14 @@ regexp:true, strict:true, trailing:true, white:false*/
   var contactData = require('./contactData.js'),
   contactObj = require('./contactObj.js'),
   utils = require('./utils.js'),
-  flag = 1,
-  readflag = 0,
-  updateflag = 0,
-  deleteflag = 0,
-  fcount = 0;
-  exports.readContact = function (browser) {
+  fcount = 0,
+  readContactObj;
+  exports.readContact = function (browser, test, fname, callback) {
+  readContactObj = contactObj.readObj1.readContact_xpath + fname +  "')]";
   utils.pause(10000, function () {
   utils.results('*************** Reading a Contact ***************');
-  browser.waitForElementByXPath(contactObj.readObj1.readContact_xpath, 60000, function () {
-  browser.elementByXPath(contactObj.readObj1.readContact_xpath, function (err, el3) {
+  browser.waitForElementByXPath(readContactObj, 60000, function () {
+  browser.elementByXPath(readContactObj, function (err, el3) {
   browser.clickElement(el3, function () {
   utils.pause(6000, function () {
   browser.elementByXPath(contactObj.readObj1.overview_xpath, function (err, overviewEl) {
@@ -26,7 +24,7 @@ regexp:true, strict:true, trailing:true, white:false*/
   else utils.results('Contact Heading verified');
   browser.elementByXPath(contactObj.readObj1.cfname_xpath, function (err, el4) {
   browser.getValue(el4, function (err, value) {
-  if (value === contactData.VARIABLES.contact_fname) {
+  if (value === fname) {
   utils.results('PASS: First name verified');
   }
   else {
@@ -124,8 +122,11 @@ regexp:true, strict:true, trailing:true, white:false*/
   fcount++;
   }
   utils.pause(4000, function () {
-  if (fcount > 0) {
-    readflag = 1;
+  if(fcount > 0) {
+    test.ok(false, 'contact read failed');
+  }
+  else {
+    test.ok(true, 'contact read successfully');
   }
   process.nextTick(function () {
   utils.results('***** Updating the contact *****');
@@ -150,18 +151,19 @@ regexp:true, strict:true, trailing:true, white:false*/
   utils.pause(5000, function () {
   browser.elementByXPath(contactObj.readObj1.contactsHeading_xpath, function (err, headingEl) {
   browser.clickElement(headingEl, function () {
-  browser.elementByXPath(contactObj.readObj1.readContact_xpath, function (err, contactEl) {
+  browser.elementByXPath(readContactObj, function (err, contactEl) {
   browser.clickElement(contactEl, function () {
   utils.results('Opening the contact For verification');
   utils.pause(4000, function () {
   browser.elementByXPath(contactObj.readObj1.contactmname2_xpath, function (err, el30) {
   browser.getValue(el30, function (err, value) {
-  if (value === contactData.VARIABLES.contact_newmname) {
+  if(value === contactData.VARIABLES.contact_newmname)  {
+  test.ok(true, 'contact update successful');
   utils.results("Contact updated with new middle name");
   }
   else {
+  test.ok(false, 'contact update failed');
   utils.results("Contact not updated with new middle name");
-  updateflag = 1;
   }
   browser.elementByXPath(contactObj.readObj1.backButton_xpath, function (err, el31) {
   browser.clickElement(el31, function () {
@@ -179,42 +181,17 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.elementByXPath(contactObj.readObj1.deleteOkButton_xpath, function (err, el35) {
   browser.clickElement(el35, function () {
   utils.pause(5000, function () {
-  browser.hasElementByXPath(contactObj.readObj1.readContact_xpath, function (err, flag2) {
+  browser.hasElementByXPath(readContactObj, function (err, flag2) {
   if (flag2) {
+    test.ok(false, 'Contact deletion failed');
     utils.results('Contact not deleted');
-    deleteflag = 1;
   }
   else {
+    test.ok(true, 'contact deleted successfully');
     utils.results('contact deleted sucessfully');
   }
   utils.pause(2000, function () {
-  if((readflag === 1) || (updateflag === 1) || (deleteflag === 1))
-  {
-  if (readflag === 1) {
-  utils.results('Test failed at READ contact scenario');
-  }
-  if (updateflag === 1) {
-  utils.results('Test failed at Update contact scenario');
-  }
-  if (deleteflag === 1) {
-  utils.results('Test failed at Delete contact scenario');
-  }
-  setTimeout(function () {
-  browser.quit();
-  setTimeout(function () {
-  process.exit(1);
-  },2000);
-  },2000);
-  }
-  else {
-  utils.results('Test passed');
-  setTimeout(function () {
-  browser.quit();
-  setTimeout(function () {
-  process.exit(0);
-  },2000);
-  },2000);
-  }
+  callback(browser, test);
   });
   });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});
   });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});};

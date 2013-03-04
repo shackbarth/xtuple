@@ -8,7 +8,8 @@
     "url": "https://github.com/vinaysingu/Aurora_Sel.git"
   },
    "dependencies": {
-    "wd":"*"
+    "wd":"*",
+    "nodeunit":"*"
     },
   "devDependencies": {},
   "optionalDependencies": {},
