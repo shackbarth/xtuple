@@ -183,21 +183,19 @@ trailing:true white:true*/
       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
         classes: "in-panel", components: [
         {kind: "XV.NumberWidget", attr: "lineNumber"},
-        {kind: "XV.ItemWidget", attr: "item"},
         {kind: "XV.SitePicker", attr: "site"},
         {kind: "XV.InputWidget", attr: "customerPartNumber"},
         {kind: "XV.NumberWidget", attr: "quantity"},
         {kind: "XV.UnitWidget", attr: "quantityUnit"},
-        {kind: "XV.NumberWidget", attr: "quantityShip"},
         {kind: "XV.PercentWidget", attr: "discount"},
-        {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "currency"},
+        {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "quote.currency"},
           label: "_unitPrice".loc(), currencyDisabled: true},
         {kind: "XV.UnitWidget", attr: "priceUnit"},
-        {kind: "XV.NumberWidget", attr: "extended", label: "_extendedPrice".loc()},
+        {kind: "XV.NumberWidget", attr: "extendedPrice"},
         {kind: "XV.DateWidget", attr: "scheduleDate"},
         {kind: "XV.DateWidget", attr: "promiseDate"},
         {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-        {kind: "XV.TextArea", attr: "memo", fit: true}
+        {kind: "XV.TextArea", attr: "notes", fit: true}
       ]}
     ]
   });
@@ -214,10 +212,10 @@ trailing:true white:true*/
     parentKey: "quote",
     listRelations: "XV.QuoteLineItemListRelations",
     fitButtons: false,
-    
+
     create: function () {
       this.inherited(arguments);
-      
+
       // Bottom Panel with calculations
       this.createComponent({
         kind: "XV.RelationsEditor", name: "pricePanel", style: "margin-top: 10px;", components: [
@@ -239,7 +237,7 @@ trailing:true white:true*/
               label: "_total".loc(), currencyShowing: false}
         ]}
       ]});
-      
+
       this.createComponent({
         kind: "onyx.Button",
         content: "_expand".loc(),
@@ -247,7 +245,7 @@ trailing:true white:true*/
         container: this.$.navigationButtonPanel
       });
     },
-    
+
     /**
     @todo Document overridden function
     */
@@ -255,7 +253,7 @@ trailing:true white:true*/
       var value = this.getValue();
       this.$.list.setValue(value);
     },
-    
+
     launchWorkspace: function (inSender, inEvent) {
       this.doChildWorkspace({workspace: "XV.QuoteLineWorkspace", collection: this.getValue()});
       return true;
