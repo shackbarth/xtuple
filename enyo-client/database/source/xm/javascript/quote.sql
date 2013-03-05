@@ -5,6 +5,7 @@ select xt.install_js('XM','Quote','xtuple', $$
   XM.Quote = {};
 
   XM.Quote.isDispatchable = true;
+  
   /**
    Return the calculated tax detail for a given amount, currency, and date.
 
