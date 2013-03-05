@@ -25,12 +25,13 @@ white:true*/
     freightTaxDetail: undefined,
 
     defaults: function () {
-      var K = this.getClass();
+      var K = this.getClass(),
+        settings = XT.session.settings;
       return {
         quoteDate: new Date(),
         status: K.OPEN_STATUS,
         saleType: XM.saleTypes.at(0),
-        calculateFreight: XT.session.settings.get("CalculateFreight"),
+        calculateFreight: settings.get("CalculateFreight"),
         margin: 0,
         subtotal: 0,
         taxTotal: 0,
@@ -556,10 +557,12 @@ white:true*/
     taxDetail: undefined,
 
     defaults: function () {
+      var allowASAP = XT.session.settings.get("AllowASAPShipSchedules");
       return {
         quantityUnitRatio: 1,
         priceMode: XM.QuoteLine.DISCOUNT_MODE,
-        priceUnitRatio: 1
+        priceUnitRatio: 1,
+        scheduleDate: allowASAP ? new Date() : undefined
       };
     },
 
