@@ -201,6 +201,31 @@ trailing:true white:true*/
   });
 
   enyo.kind({
+    name: "XV.QuoteLineItemSummary",
+    kind: "XV.RelationsEditor",
+    style: "margin-top: 10px;",
+    components: [
+    {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
+    {kind: "XV.ScrollableGroupbox", name: "totalGroup",
+      classes: "in-panel", components: [
+      {kind: "XV.CurrencyPickerWidget", attr: "currency"},
+      {kind: "XV.NumberWidget", attr: "margin"},
+      //{kind: "XV.TextArea", attr: "miscChargeDesc", fit: true} - needs GL
+      // Charge Sales Account - needs GL
+      {kind: "XV.NumberWidget", attr: "freightWeight"},
+      {kind: "XV.MoneyWidget", attr: {amount: "subtotal", currency: "currency"},
+        label: "_subtotal".loc(), currencyShowing: false},
+      // {kind: "XV.NumberWidget", attr: "miscCharge"}, - needs GL
+      {kind: "XV.NumberWidget", attr: "freight", label: "_freight".loc()},
+      {kind: "XV.MoneyWidget", attr: {amount: "taxTotal", currency: "currency"},
+        label: "_tax".loc(), currencyShowing: false},
+      {kind: "XV.MoneyWidget", attr: {amount: "total", currency: "currency"},
+        label: "_total".loc(), currencyShowing: false}
+      ]}
+    ]
+  });
+
+  enyo.kind({
     name: "XV.QuoteLineItemBox",
     kind: "XV.ListRelationsEditorBox",
     classes: "xv-list-relations-box",
@@ -217,26 +242,7 @@ trailing:true white:true*/
       this.inherited(arguments);
 
       // Bottom Panel with calculations
-      this.createComponent({
-        kind: "XV.RelationsEditor", name: "pricePanel", style: "margin-top: 10px;", components: [
-          //{kind: "onyx.GroupboxHeader", content: "_totals".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "priceGroup",
-            classes: "in-panel", components: [
-            {kind: "XV.CurrencyPickerWidget", attr: "currency"},
-            {kind: "XV.NumberWidget", attr: "margin"},
-            //{kind: "XV.TextArea", attr: "miscChargeDesc", fit: true} - needs GL
-            // Charge Sales Account - needs GL
-            {kind: "XV.NumberWidget", attr: "freightWeight"},
-            {kind: "XV.MoneyWidget", attr: {amount: "subtotal", currency: "currency"},
-              label: "_subtotal".loc(), currencyShowing: false},
-            // {kind: "XV.NumberWidget", attr: "miscCharge"}, - needs GL
-            {kind: "XV.NumberWidget", attr: "calculateFreight", label: "_freight".loc()},
-            {kind: "XV.MoneyWidget", attr: {amount: "taxTotal", currency: "currency"},
-              label: "_tax".loc(), currencyShowing: false},
-            {kind: "XV.MoneyWidget", attr: {amount: "total", currency: "currency"},
-              label: "_total".loc(), currencyShowing: false}
-        ]}
-      ]});
+      this.summary = this.createComponent({kind: "XV.QuoteLineItemSummary", name: "totalsPanel"});
 
       this.createComponent({
         kind: "onyx.Button",
@@ -252,6 +258,7 @@ trailing:true white:true*/
     valueChanged: function () {
       var value = this.getValue();
       this.$.list.setValue(value);
+      this.summary.setValue(this.getValue().quote);
     },
 
     launchWorkspace: function (inSender, inEvent) {
