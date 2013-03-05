@@ -1027,8 +1027,8 @@
       },
       {
         "name": "priceUnit",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+          "type": "Unit",
           "column": "quitem_price_uom_id"
         }
       },
