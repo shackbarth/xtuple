@@ -5,7 +5,7 @@ select xt.install_js('XM','Quote','xtuple', $$
   XM.Quote = {};
 
   XM.Quote.isDispatchable = true;
-
+  
   /**
    Returns an array of freight detail records based on input
 
