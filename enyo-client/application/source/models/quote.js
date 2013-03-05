@@ -532,7 +532,7 @@ white:true*/
         }
 
         // TODO: Handle characteristics
-        this.set(attrs, {force: true});
+        that.set(attrs, {force: true});
       };
       options.error = function (error) {
         this.trigger("error", error);
@@ -634,7 +634,7 @@ white:true*/
           }
 
           // Allow editing again if we could before
-          this.setReadOnly("price", readOnlyCache);
+          that.setReadOnly("price", readOnlyCache);
         };
         options.error = function (err) {
           that.trigger("error", err);
@@ -702,7 +702,7 @@ white:true*/
             that.taxDetail = [];
             that.set("tax", 0);
           }
-          this.recalculateParent();
+          that.recalculateParent();
         };
         this.dispatch(recordType, "calculateTaxDetail", params, options);
       } else {
@@ -731,6 +731,8 @@ white:true*/
 
     itemSiteDidChange: function () {
       var K = XM.Model,
+        parent = this.getParent(),
+        taxZone = parent ? parent.get("taxZone") : undefined,
         item = this.getValue("itemSite.item"),
         status = this.getStatus(),
         that = this,
@@ -748,8 +750,11 @@ white:true*/
       if ((status & K.READY) && item) {
         // Fetch and update selling units
         unitOptions.success = function (resp) {
-          // Set the collection
-          that.sellingUnits.reset(resp);
+          // Resolve and add each id found
+          _.each(resp, function (id) {
+            var unit = XM.units.get(id);
+            that.sellingUnits.add(unit);
+          });
 
           // Set the item default selections
           that.set("quantityUnit", item.get("inventoryUnit"));
@@ -766,7 +771,7 @@ white:true*/
             that.unset("taxType");
           }
         };
-        item.taxType(taxOptions);
+        item.taxType(taxZone, taxOptions);
 
         // Fetch and update unit cost
         itemOptions.success = function (cost) {
