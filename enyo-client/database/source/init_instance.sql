@@ -106,6 +106,7 @@
 \i xm/javascript/item.sql;
 \i xm/javascript/project.sql;
 \i xm/javascript/quote.sql;
+\i xm/javascript/sales.sql;
 \i xm/javascript/to_do.sql;
 -- [ END ] xm
 
