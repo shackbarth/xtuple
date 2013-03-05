@@ -102,6 +102,7 @@
 \i xm/javascript/incident.sql;
 \i xm/javascript/project.sql;
 \i xm/javascript/quote.sql;
+\i xm/javascript/sales.sql;
 \i xm/javascript/to_do.sql;
 -- [ END ] xm
 
