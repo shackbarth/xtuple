@@ -19,7 +19,7 @@ white:true*/
     numberPolicySetting: 'QUNumberGeneration',
 
     documentDateKey: "quoteDate",
-    
+
     freightDetail: undefined,
 
     freightTaxDetail: undefined,
@@ -30,7 +30,13 @@ white:true*/
         quoteDate: new Date(),
         status: K.OPEN_STATUS,
         saleType: XM.saleTypes.at(0),
-        calculateFreight: XT.session.settings.get("CalculateFreight")
+        calculateFreight: XT.session.settings.get("CalculateFreight"),
+        margin: 0,
+        subtotal: 0,
+        taxTotal: 0,
+        freight: 0,
+        miscCharge: 0,
+        total: 0
         // TO DO: site = user's preferred site?
       };
     },
@@ -73,24 +79,23 @@ white:true*/
       this.on('add:lineItems remove:lineItems change:miscCharge',
         this.calculateTotals);
     },
-    
+
     /**
       Requests freight calculations from the server.
-      
+
       @param {Object} Options: success, error
+      @returns {Object} Receiver
     */
     calculateFreight: function (options) {
       options = options ? _.clone(options) : options;
-      var K = this.getClass(),
-        customer = this.get("customer"),
+      var customer = this.get("customer"),
         shipto = this.get("shipto"),
         currency = this.get("currency"),
-        parent = this.getParent(),
-        docDate = parent ? this.get(parent.documentDateKey) : false,
+        docDate = this.get(this.documentDateKey),
         shipZone = this.get("shipZone"),
         shipVia = this.get("shipVia"),
         lineItems = this.get("lineItems").models,
-        includePackageWeight = XT.session.settings("IncludePackageWeight"),
+        includePackageWeight = XT.session.settings.get("IncludePackageWeight"),
         freightDetail = this.freightDetail,
         scale = XT.WEIGHT_SCALE,
         that = this,
@@ -106,7 +111,7 @@ white:true*/
         freightClass,
         siteClass = [],
         i;
-        
+
       if (customer && currency && docDate && lineItems.length) {
         // Collect data needed for freight
         for (i = 0; i < lineItems.length; i++) {
@@ -126,15 +131,15 @@ white:true*/
             weight = XT.math.add(weight, item.get("packageWeight"), scale);
           }
           weight = XT.math.round(weight * quantity * quantityUnitRatio, scale);
-        
+
           existing = _.where(siteClass, {
             site: site,
             freightClass: freightClass
           });
-        
-          if (existing) {
-            weight = XT.math.add(weight, existing.weight, scale);
-            existing.weight = weight;
+
+          if (existing.length) {
+            weight = XT.math.add(weight, existing[0].weight, scale);
+            existing[0].weight = weight;
           } else {
             siteClass.push({
               site: site,
@@ -143,7 +148,7 @@ white:true*/
             });
           }
         }
-      
+
         if (siteClass.length) {
           // Loop through each site/class and fetch freight detail for that
           // combination. When we have them all, add it up and pass through
@@ -157,7 +162,10 @@ white:true*/
                 shipZone ? shipZone.id : null,
                 docDate,
                 shipVia || "",
-                currency.id
+                currency.id,
+                item.site.id,
+                item.freightClass ? item.freightClass.id : null,
+                item.weight
               ],
               dispOptions = {
                 success: function (resp) {
@@ -166,26 +174,29 @@ white:true*/
                   counter--;
                   if (!counter) { // Means we heard back from all requests
                     // Add 'em up
-                    freight = XT.math.add(_.pluck(freight, "total"), scale);
+                    freight = XT.math.add(_.pluck(freightDetail, "total"), scale);
                     that.set("freight", freight);
-                    
+
                     // Forward original callback
                     if (options.success) { options.success(); }
                   }
                 }
               };
-            that.dispatch(K, "freightDetail", params, dispOptions);
+            that.dispatch(that.recordType, "freightDetail", params, dispOptions);
           });
-          return;
+          return this;
         }
       }
 
       // Default if we couldn't calculate
       if (options.success) { options.success(); }
+      return this;
     },
 
     /**
       Used to update calculated fields.
+
+      @returns {Object} Receiver
     */
     calculateTotals: function () {
       var K = XM.Model,
@@ -197,92 +208,14 @@ white:true*/
       if (status & K.READY) {
         if (calculateFreight) {
           options.success = function () {
-            that._calcualteTotals();
+            that._calculateTotals();
           };
-          this.calcualteFreight(options);
+          this.calculateFreight(options);
         } else {
           this._calculateTotals();
         }
       }
-    },
-    
-    /** @private
-    
-      Function that actually does the calculation work
-    */
-    _calculateTotals: function () {
-      var miscCharge = this.get("miscCharge") || 0.0,
-        freight = this.get("freight") || 0.0,
-        scale = XT.MONEY_SCALE,
-        add = XT.math.add,
-        substract = XT.math.subtract,
-        subtotals = [],
-        taxDetails = [],
-        costs = [],
-        weights = [],
-        subtotal,
-        freightWeight,
-        taxTotal = 0.0,
-        costTotal,
-        total,
-        margin,
-        taxCodes;
-        
-      // Collect line item detail
-      _.each(this.get('lineItems').models, function (lineItem) {
-        var extPrice = lineItem.get('extendedPrice') || 0,
-          quantity = lineItem.get("quantity") || 0,
-          unitCost = lineItem.get("unitCost") || 0,
-          item = lineItem.getValue("itemSite.item"),
-          prodWeight = item ? item.get("productWeight") : 0,
-          packWeight = item ? item.get("packageWeight") : 0,
-          itemWeight = item ? add(prodWeight, packWeight, scale) : 0,
-          quantityUnitRatio = lineItem.get("quantityUnitRatio"),
-          grossWeight = itemWeight * quantity * quantityUnitRatio;
-
-        weights.push(grossWeight);
-        subtotals.push(extPrice);
-        costs.push(quantity * unitCost);
-        taxDetails = taxDetails.concat(lineItem.taxDetail);
-      });
-
-      // Total taxes
-      // First group amounts by tax code
-      taxCodes = _.groupBy(taxDetails, function (detail) {
-        return detail.taxCode.id;
-      });
-
-      // Loop through each tax code group and subtotal
-      _.each(taxCodes, function (group) {
-        var taxes = [],
-          subtotal;
-
-        // Collect array of taxes
-        _.each(group, function (detail) {
-          taxes.push(detail.tax);
-        });
-
-        // Subtotal first to make sure we round by subtotal
-        subtotal = add(taxes, 6);
-
-        // Now add to tax grand total
-        taxTotal = add(taxTotal, subtotal, scale);
-      });
-
-      // Totaling calculations
-      freightWeight = add(weights, scale);
-      subtotal = add(subtotals, scale);
-      costTotal = add(costs, scale);
-      margin = substract(subtotal, costTotal, scale);
-      subtotals = subtotals.concat([miscCharge, freight, taxTotal]);
-      total = add(subtotals, scale);
-
-      // Set values
-      this.set("freightWeight", freightWeight);
-      this.set("subtotal", subtotal);
-      this.set("taxTotal", taxTotal);
-      this.set("total", total);
-      this.set("margin", margin);
+      return this;
     },
 
     /**
@@ -396,7 +329,7 @@ white:true*/
         }
       }
     },
-    
+
     /**
       Populate shipto defaults
     */
@@ -489,6 +422,89 @@ white:true*/
       if (!lineItems.length) {
         return XT.Error.clone('xt2012');
       }
+    },
+
+    // ..........................................................
+    // PRIVATE
+    //
+
+    /** @private
+
+      Function that actually does the calculation work
+    */
+    _calculateTotals: function () {
+      var miscCharge = this.get("miscCharge") || 0.0,
+        freight = this.get("freight") || 0.0,
+        scale = XT.MONEY_SCALE,
+        add = XT.math.add,
+        substract = XT.math.subtract,
+        subtotals = [],
+        taxDetails = [],
+        costs = [],
+        weights = [],
+        subtotal,
+        freightWeight,
+        taxTotal = 0.0,
+        costTotal,
+        total,
+        margin,
+        taxCodes;
+
+      // Collect line item detail
+      _.each(this.get('lineItems').models, function (lineItem) {
+        var extPrice = lineItem.get('extendedPrice') || 0,
+          quantity = lineItem.get("quantity") || 0,
+          unitCost = lineItem.get("unitCost") || 0,
+          item = lineItem.getValue("itemSite.item"),
+          prodWeight = item ? item.get("productWeight") : 0,
+          packWeight = item ? item.get("packageWeight") : 0,
+          itemWeight = item ? add(prodWeight, packWeight, scale) : 0,
+          quantityUnitRatio = lineItem.get("quantityUnitRatio"),
+          grossWeight = itemWeight * quantity * quantityUnitRatio;
+
+        weights.push(grossWeight);
+        subtotals.push(extPrice);
+        costs.push(quantity * unitCost);
+        taxDetails = taxDetails.concat(lineItem.taxDetail);
+      });
+
+      // Total taxes
+      // First group amounts by tax code
+      taxCodes = _.groupBy(taxDetails, function (detail) {
+        return detail.taxCode.id;
+      });
+
+      // Loop through each tax code group and subtotal
+      _.each(taxCodes, function (group) {
+        var taxes = [],
+          subtotal;
+
+        // Collect array of taxes
+        _.each(group, function (detail) {
+          taxes.push(detail.tax);
+        });
+
+        // Subtotal first to make sure we round by subtotal
+        subtotal = add(taxes, 6);
+
+        // Now add to tax grand total
+        taxTotal = add(taxTotal, subtotal, scale);
+      });
+
+      // Totaling calculations
+      freightWeight = add(weights, scale);
+      subtotal = add(subtotals, scale);
+      costTotal = add(costs, scale);
+      margin = substract(subtotal, costTotal, scale);
+      subtotals = subtotals.concat([miscCharge, freight, taxTotal]);
+      total = add(subtotals, scale);
+
+      // Set values
+      this.set("freightWeight", freightWeight);
+      this.set("subtotal", subtotal);
+      this.set("taxTotal", taxTotal);
+      this.set("total", total);
+      this.set("margin", margin);
     }
 
   });
@@ -704,7 +720,7 @@ white:true*/
 
       // If no parent, don't bother
       if (!parent) { return; }
-      
+
       parentDate = parent.get(parent.documentDateKey);
       customer = parent.get("customer");
       currency = parent.get("currency");
@@ -814,15 +830,15 @@ white:true*/
         that = this,
         options = {},
         params;
-        
+
       // If no parent, don't bother
       if (!parent) { return; }
-      
+
       recordType = parent.recordType;
       taxZoneId = parent.getValue("taxZone.id");
       effective = parent.get(parent.documentDateKey);
       currency = parent.get("currency");
-      
+
       if (effective && currency && amount) {
         params = [taxZoneId, taxTypeId, effective, currency.id, amount];
         options.success = function (resp) {
@@ -914,7 +930,7 @@ white:true*/
         // TODO: Get default characteristics
       }
     },
-    
+
     parentDidChange: function () {
       var parent = this.getParent(),
        lineNumber = this.get("lineNumber");
