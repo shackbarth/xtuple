@@ -184,11 +184,17 @@ regexp:true, undef:true, trailing:true, white:true */
             }
           } else if (attribute === "currency") {
             oldValue = this.getCurrency();
+<<<<<<< HEAD
             if (oldValue !== newValue) {
               this.setCurrency(newValue || XT.baseCurrency());
               this.$.picker.setValue(this.getCurrency());
               // only show the base panel if there is an effect date AND the currency doesn't match the base
               this.$.basePanel.setShowing(this.getEffective() && (this.getCurrency() !== XT.baseCurrency()));
+=======
+            if (oldValue !== value[attribute]) {
+              this.setCurrency(value[attribute]);
+              this.$.picker.setValue(value[attribute] || XT.baseCurrency(), options);
+>>>>>>> STEVE/19453d
               // Set base label with calculated value
               this.setBaseAmount(this.getAmount());
             }

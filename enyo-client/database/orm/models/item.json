@@ -44,6 +44,48 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "FreightClass",
+    "table": "freightclass",
+    "lockable": true,
+    "idSequenceName": "freightclass_freightclass_id_seq",
+    "comment": "Freight Class Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainFreightClasses",
+        "read": true,
+        "update": "MaintainFreightClasses",
+        "delete": "MaintainFreightClasses"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "freightclass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "freightclass_code"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "freightclass_descrip"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "Item",
     "table": "item",
     "lockable": true,
@@ -144,6 +186,13 @@
           "type": "ProductCategory",
           "column": "item_prodcat_id",
           "required": true
+        }
+      },
+      {
+        "name": "freightClass",
+        "toOne": {
+          "type": "FreightClass",
+          "column": "item_freightclass_id"
         }
       },
       {
@@ -827,6 +876,13 @@
         "attr": {
           "type": "Number",
           "column": "item_config"
+        }
+      },
+      {
+        "name": "freightClass",
+        "toOne": {
+          "type": "FreightClass",
+          "column": "item_freightclass_id"
         }
       },
       {
