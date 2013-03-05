@@ -695,11 +695,11 @@ white:true*/
         params = [taxZoneId, taxTypeId, effective, currency.id, amount];
         options.success = function (resp) {
           var tax;
+          that.taxDetail = resp;
           if (resp.length) {
             tax = XT.math.add(_.pluck(resp, "tax"), 6);
             that.set("tax", XT.math.round(tax, XT.SALES_PRICE_SCALE));
           } else {
-            that.taxDetail = [];
             that.set("tax", 0);
           }
           that.recalculateParent();
