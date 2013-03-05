@@ -45,7 +45,7 @@ select xt.install_js('XM','item','xtuple', $$
     @returns {Number} tax type id
   */
   XM.Item.taxType = function(itemId, taxZoneId) {
-    var sql = 'select getItemTaxType($1, $2) as "taxType";'
+    var sql = 'select getItemTaxType($1, $2::integer) as "taxType";'
     return plv8.execute(sql, [itemId, taxZoneId])[0].taxType;
   }
 
@@ -89,7 +89,7 @@ select xt.install_js('XM','item','xtuple', $$
             + "where uomtype_name=$2 "
             + " and itemuomconv_item_id=$1) as units ";
 
-     return JSON.stringify(plv8.execute(sql, [itemId, type])[0]);
+     return JSON.stringify(plv8.execute(sql, [itemId, type])[0].units);
   }
 
 $$ );

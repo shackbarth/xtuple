@@ -46,7 +46,7 @@ white:true*/
       @param {Object} Options: success, error
     */
     taxType: function (taxZone, options) {
-      this.dispatch("XM.Item", "taxType", [this.id, taxZone.id], options);
+      this.dispatch("XM.Item", "taxType", [this.id, taxZone ? taxZone.id : null], options);
     }
   };
 

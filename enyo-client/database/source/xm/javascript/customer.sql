@@ -4,9 +4,9 @@ select xt.install_js('XM','Customer','xtuple', $$
 
   XM.Customer = {};
 
-  isDispatchable = true;
+  XM.Customer.isDispatchable = true;
 
-  canPurchase = function (customerId, itemId, scheduleDate, shiptoId) {
+  XM.Customer.canPurchase = function (customerId, itemId, scheduleDate, shiptoId) {
     var sql = 'select customerCanPurchase($1, $2, $3, $4) as canPurchase;';
     return plv8.execute(sql, [itemId, customerId, shiptoId, scheduleDate])[0].canPurchase;
   };
@@ -20,7 +20,7 @@ select xt.install_js('XM','Customer','xtuple', $$
    @param {Object} options:  asOf, shiptoId, quantityUnitId, priceUnitId, currencyId, effective
    @returns Object 
   */
-  price = function(customerId, itemId, quantity, options) {
+  XM.Customer.price = function(customerId, itemId, quantity, options) {
     options = options || {};
     var today = new Date(),
       shiptoId = options.shiptoId || -1,
@@ -41,9 +41,9 @@ select xt.install_js('XM','Customer','xtuple', $$
     };
     if(err) { plv8.elog(ERROR, err + " is required.") }
 
-    quantityUnitId = options.quantityUomId || plv8.execute("select item_inv_uom_id as result from item where item_id = $1;", [item])[0].result,
-    priceUnitId = options.priceUomId || plv8.execute("select item_price_uom_id as result from item where item_id = $1;", [item])[0].result,
-    currency = options.currencyId || plv8.execute("select basecurrid() as result")[0].result,
+    quantityUnitId = options.quantityUnitId || plv8.execute("select item_inv_uom_id as result from item where item_id = $1;", [itemId])[0].result,
+    priceUnitId = options.priceUnitId || plv8.execute("select item_price_uom_id as result from item where item_id = $1;", [itemId])[0].result,
+    currencyId = options.currencyId || plv8.execute("select basecurrid() as result")[0].result,
     effective = options.effective ? new Date(options.effective) : today,
     asOf = options.asOf ? new Date(options.asOf) : today,
     result = plv8.execute("select itemipsprice($1, $2, $3, $4, $5, $6, $7, $8::date, $9::date, null) as result;", [itemId, customerId, shiptoId, quantity, quantityUnitId, priceUnitId, currencyId, effective, asOf])[0].result;
