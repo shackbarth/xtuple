@@ -1277,7 +1277,8 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
-        ]}
+        ]},
+        {kind: "XV.QuoteLineCommentBox", attr: "comments"}
       ]}
     ]
   });

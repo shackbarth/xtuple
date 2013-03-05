@@ -962,6 +962,20 @@ white:true*/
   /**
     @class
 
+    @extends XM.Comment
+  */
+  XM.QuoteLineComment = XM.Comment.extend({
+    /** @scope XM.QuoteLineComment.prototype */
+
+    recordType: 'XM.QuoteLineComment',
+
+    sourceName: 'QI'
+
+  });
+
+  /**
+    @class
+
     @extends XM.Info
   */
   XM.QuoteListItem = XM.Info.extend({
