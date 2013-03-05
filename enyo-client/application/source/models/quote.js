@@ -195,6 +195,26 @@ white:true*/
     },
 
     /**
+      If there are line items, this function should set the date to the first scheduled
+      date.
+    */
+    calculateScheduleDate: function () {
+      var lineItems = this.get("lineItems").models,
+        scheduleDate;
+
+      if (lineItems.length) {
+        _.each(lineItems, function (line) {
+          var lineSchedDate = line.get("scheduleDate");
+          scheduleDate = scheduleDate || lineSchedDate;
+          if (XT.date.compareDate(scheduleDate, lineSchedDate) > 1) {
+            scheduleDate = lineSchedDate;
+          }
+        });
+        this.set("scheduleDate", scheduleDate);
+      }
+    },
+
+    /**
       Used to update calculated fields.
 
       @returns {Object} Receiver
@@ -936,11 +956,21 @@ white:true*/
 
     parentDidChange: function () {
       var parent = this.getParent(),
-       lineNumber = this.get("lineNumber");
+       lineNumber = this.get("lineNumber"),
+       scheduleDate;
 
       // Set next line number
       if (parent && !lineNumber) {
         this.set("lineNumber", parent.get("lineItems").length);
+      }
+
+      // Default to schedule date of header
+      if (parent) {
+        scheduleDate = parent.get("scheduleDate");
+        if (scheduleDate) {
+          this.set("scheduleDate", scheduleDate);
+        }
+        parent.calculateScheduleDate();
       }
     },
 
@@ -949,15 +979,15 @@ white:true*/
       if (parent) { parent.calculateTotals(); }
     },
 
-    scheduleDateChanged: function () {
+    scheduleDateDidChange: function () {
       var item = this.getValue("itemSite.item"),
-        parent = this.get("parent"),
+        parent = this.getParent(),
         customer = parent.get("customer"),
         shipto = parent.get("shipto"),
         scheduleDate = this.get("scheduleDate"),
         that = this,
         options = {};
-      if (item && scheduleDate) {
+      if (customer && item && scheduleDate) {
         options.success = function (canPurchase) {
           if (!canPurchase) {
             that.notify("_noPurchase".loc());
@@ -967,6 +997,9 @@ white:true*/
         options.shipto = shipto;
         customer.canPurchase(item, scheduleDate, options);
       }
+
+      // Header should always show first schedule date
+      if (parent) { parent.calculateScheduleDate(); }
     },
 
     unitDidChange: function () {
