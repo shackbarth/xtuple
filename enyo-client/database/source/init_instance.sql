@@ -24,14 +24,17 @@
 \i xt/functions/quote_line_customer_discount.sql;
 \i xt/functions/quote_line_list_cost_markup.sql;
 \i xt/functions/quote_line_extended_price.sql;
-\i xt/functions/quote_line_line_profit.sql;
+\i xt/functions/quote_line_profit.sql;
 \i xt/functions/quote_line_list_price.sql;
 \i xt/functions/quote_line_list_price_discount.sql;
 \i xt/functions/quote_line_tax.sql;
+\i xt/functions/quote_freight_weight.sql;
 \i xt/functions/quote_schedule_date.sql;
 \i xt/functions/quote_subtotal.sql;
 \i xt/functions/quote_tax_total.sql;
 \i xt/functions/quote_total.sql;
+\i xt/functions/quote_total_cost.sql;
+\i xt/functions/quote_margin.sql;
 \i xt/functions/trylock.sql;
 \i xt/functions/undomerge.sql;
 \i xt/functions/user_account_sync.sql
@@ -100,6 +103,7 @@
 \i xm/javascript/customer.sql;
 \i xm/javascript/database_information.sql;
 \i xm/javascript/incident.sql;
+\i xm/javascript/item.sql;
 \i xm/javascript/project.sql;
 \i xm/javascript/quote.sql;
 \i xm/javascript/to_do.sql;

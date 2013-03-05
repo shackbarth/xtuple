@@ -190,7 +190,49 @@ white:true*/
      */
     getHistory: function () {
       return this.history;
+    },
+    
+    toMoney: function (value) {
+      return XT.math.round(value, XT.MONEY_SCALE);
+    },
+    
+    toQuantity: function (value) {
+      return XT.math.round(value, XT.QTY_SCALE);
+    },
+    
+    toQuantityPer: function (value) {
+      return XT.math.round(value, XT.QTY_PER_SCALE);
+    },
+    
+    toCost: function (value) {
+      return XT.math.round(value, XT.COST_SCALE);
+    },
+    
+    toSalesPrice: function (value) {
+      return XT.math.round(value, XT.SALES_PRICE_SCALE);
+    },
+    
+    toPurchasePrice: function (value) {
+      return XT.math.round(value, XT.PURCHASE_PRICE_SCALE);
+    },
+    
+    toExtendedPrice: function (value) {
+      return XT.math.round(value, XT.EXTENDED_PRICE_SCALE);
+    },
+    
+    toUnitRatio: function (value) {
+      return XT.math.round(value, XT.UNIT_RATIO_SCALE);
+    },
+    
+    toPercent: function (value) {
+      // Models store percent as decimal, so add two
+      return XT.math.round(value, XT.PERCENT_SCALE + 2);
+    },
+    
+    toWeight: function (value) {
+      return XT.math.round(value, XT.WEIGHT_SCALE);
     }
+    
   });
 
 }());

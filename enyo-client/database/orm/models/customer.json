@@ -322,6 +322,13 @@
           "column": "cust_id",
           "inverse": "source"
         }
+      },
+      {
+        "name": "preferredSite",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "cust_preferred_warehous_id"
+        }
       }
     ],
     "extensions": [],
@@ -1141,6 +1148,13 @@
           "type": "String",
           "column": "shipto_shipvia"
         }
+      },
+      {
+        "name": "shipZone",
+        "toOne": {
+          "type": "ShipZone",
+          "column": "shipto_shipzone_id"
+        }
       }
     ],
     "isSystem": true
@@ -1303,10 +1317,24 @@
         }
       },
       {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "cust_shipvia"
+        }
+      },
+      {
         "name": "shipCharge",
         "toOne": {
           "type": "ShipCharge",
           "column": "cust_shipchrg_id"
+        }
+      },
+      {
+        "name": "preferredSite",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "cust_preferred_warehous_id"
         }
       }
     ],
