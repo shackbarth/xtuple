@@ -938,7 +938,7 @@ trailing:true white:true*/
           ]},
           {kind: "XV.ListColumn", classes: "third",
             components: [
-            {kind: "XV.ListAttr", attr: "status",
+            {kind: "XV.ListAttr", attr: "getQuoteStatusString",
               placeholder: "_noStatus".loc()}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [

@@ -7,6 +7,81 @@ select xt.install_js('XM','Quote','xtuple', $$
   XM.Quote.isDispatchable = true;
   
   /**
+   Returns an array of freight detail records based on input
+
+   @param {Number} Customer id
+   @param {Number} Shipto id
+   @param {Number} Ship Zone id
+   @param {Date} Quote Date
+   @param {String} Ship Via
+   @param {Number} Currency Id
+   @param {Number} Site Id
+   @param {Number} Freight Class Id
+   @param {Number} Weight
+   
+   @returns Array 
+  */
+  XM.Quote.freightDetail = function(customerId, shiptoId, shipZoneId, quoteDate, shipVia, currencyId, siteId, freightClassId, weight) {
+    var sql1 = "select custtype_id, custtype_code from custinfo join custtype on custtype_id=cust_custtype_id where cust_id=$1;",
+      sql2 = "select shipto_num from shiptoinfo where shipto_id=$1;",
+      sql3 = "select currconcat($1) as currabbr;",
+      sql4 = "select * from calculatefreightdetail($1, $2, $3, $4, $5, $6, $7::date, $8, $9, $10, $11, $12, $13::numeric);",
+      customerTypeId,
+      customerTypeCode,
+      currencyAbbreviation,
+      shipToNumber,
+      query,
+      row,
+      results = [],
+      i;
+
+    /* Fetch customer type information */
+    query = plv8.execute(sql1, [customerId]);
+    if (!query.length) { plv8.elog(ERROR, "Invalid Customer") };
+    customerTypeId = query[0].custtype_id;
+    customerTypeCode = query[0].custtype_code;
+
+    /* Fetch shipto information */
+    if (shiptoId) {
+      query = plv8.execute(sql2, [shiptoId]);
+      if (!query.length) { plv8.elog(ERROR, "Invalid Shipto") };
+      shiptoNumber = query[0].shipto_num;
+    } else {
+      shiptoId = -1;
+      shiptoNumber = "";
+    }
+
+    /* Fetch currency */
+    query = plv8.execute(sql3, [currencyId]);
+    if (!query.length) { plv8.elog(ERROR, "Invalid Currency") };
+    currencyAbbreviation = query[0].currabbr;
+
+    /* Get the data */
+    query = plv8.execute(sql4, [customerId, customerTypeId, customerTypeCode,
+      shiptoId, shipZoneId, shiptoNumber, quoteDate, shipVia, currencyId, currencyAbbreviation,
+      siteId, freightClassId, weight]);
+
+    /* Finally, map to JavaScript friendly names */
+    for (i = 0; i < query.length; i++) {
+      row = query[i];
+      results.push({
+        schedule: row.freightdata_schedule,
+        from: row.freightdata_from,
+        to: row.freightdata_to,
+        shipVia: row.freightdata_shipvia,
+        freightClass: row.freightdata_freightclass,
+        weight: row.freightdata_weight,
+        unit: row.freightdata_uom,
+        price: row.freightdata_price,
+        type: row.freightdata_type,
+        total: row.freightdata_total,
+        currency: row.freightdata_currency
+      });
+    }
+    return JSON.stringify(results);
+  };
+
+  /**
    Return the calculated tax detail for a given amount, currency, and date.
 
    @param {Number} tax zone id
