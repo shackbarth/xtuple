@@ -1148,6 +1148,13 @@
           "type": "String",
           "column": "shipto_shipvia"
         }
+      },
+      {
+        "name": "shipZone",
+        "toOne": {
+          "type": "ShipZone",
+          "column": "shipto_shipzone_id"
+        }
       }
     ],
     "isSystem": true
@@ -1307,6 +1314,13 @@
         "toOne": {
           "type": "TaxZone",
           "column": "cust_taxzone_id"
+        }
+      },
+      {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "cust_shipvia"
         }
       },
       {

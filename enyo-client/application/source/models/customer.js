@@ -5,12 +5,12 @@ white:true*/
 
 (function () {
   "use strict";
-  
+
   XM.CustomerMixin = {
-    
+
     /**
       Request whether a customer can purchase a given item on a given date.
-    
+
       @param {XM.Item} Item
       @param {Number} ScheduleDate
       @param {XM.Item} Shipto (optional)
@@ -25,10 +25,10 @@ white:true*/
       this.dispatch("XM.Customer", "canPurchase", params, options);
       return this;
     },
-    
+
     /**
       Retrieve the customer's price for a given item and quantity.
-    
+
       @param {XM.Item} Item
       @param {Number} Quantity
       @param {Object} Options - success (callback), asOf, shipto, quantityUnit, priceUnit, currency, effective
@@ -61,7 +61,6 @@ white:true*/
       return this;
     }
   };
-  
 
   /**
     @class
@@ -138,7 +137,7 @@ white:true*/
       this.on('change:backorder', this.backorderDidChange);
       this.on('change:salesRep', this.salesRepDidChange);
     },
-    
+
     backorderDidChange: function () {
       if (this.get("backorder")) {
         this.setReadOnly("partialShip", false);
@@ -147,7 +146,7 @@ white:true*/
         this.setReadOnly("partialShip", true);
       }
     },
-    
+
     purchaseOrdersDidChange: function () {
       if (this.get("usesPurchaseOrders")) {
         this.setReadOnly("blanketPurchaseOrders", false);
@@ -443,7 +442,7 @@ white:true*/
     }
 
   });
-  
+
   // Add in item mixin
   XM.Customer = XM.Customer.extend(XM.CustomerMixin);
 
@@ -506,7 +505,7 @@ white:true*/
     descriptionKey: "name"
 
   });
-  
+
   // Add in item mixin
   XM.CustomerRelation = XM.CustomerRelation.extend(XM.CustomerMixin);
 
@@ -593,6 +592,9 @@ white:true*/
     editableModel: 'XM.Customer'
 
   });
+  
+  // Add in item mixin
+  XM.CustomerProspectRelation = XM.CustomerProspectRelation.extend(XM.CustomerMixin);
 
   // ..........................................................
   // COLLECTIONS
