@@ -6,9 +6,18 @@ select xt.install_js('XM','Customer','xtuple', $$
 
   XM.Customer.isDispatchable = true;
 
+  /**
+    Determin whether a customer can purchase a given item
+
+    @param {Number} Customer id
+    @param {Number} Item id
+    @param {Date} Schedule date
+    @param {Number} Shipto id
+    @returns {Boolean}
+  */
   XM.Customer.canPurchase = function (customerId, itemId, scheduleDate, shiptoId) {
-    var sql = 'select customerCanPurchase($1, $2, $3, $4) as canPurchase;';
-    return plv8.execute(sql, [itemId, customerId, shiptoId, scheduleDate])[0].canPurchase;
+    var sql = 'select customerCanPurchase($1, $2, $3, $4::date) as canpurchase;';
+    return plv8.execute(sql, [itemId, customerId, shiptoId, scheduleDate])[0].canpurchase;
   };
   
   XM.Customer.options = [

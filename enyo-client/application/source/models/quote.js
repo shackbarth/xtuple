@@ -20,14 +20,25 @@ white:true*/
 
     documentDateKey: "quoteDate",
 
+    freightDetail: undefined,
+
     freightTaxDetail: undefined,
 
     defaults: function () {
-      var K = this.getClass();
+      var K = this.getClass(),
+        settings = XT.session.settings;
       return {
         quoteDate: new Date(),
         status: K.OPEN_STATUS,
-        saleType: XM.saleTypes.at(0)
+        saleType: XM.saleTypes.at(0),
+        calculateFreight: settings.get("CalculateFreight"),
+        margin: 0,
+        subtotal: 0,
+        taxTotal: 0,
+        freight: 0,
+        miscCharge: 0,
+        total: 0
+        // TO DO: site = user's preferred site?
       };
     },
 
@@ -62,92 +73,170 @@ white:true*/
     */
     initialize: function (attributes, options) {
       XM.Document.prototype.initialize.apply(this, arguments);
+      this.freightDetail = [];
       this.freightTaxDetail = [];
-      this.on('add:lineItems remove:lineItems', this.calculateTotals);
       this.on('change:customer', this.customerDidChange);
       this.on('change:shipto', this.shiptoDidChange);
+      this.on('add:lineItems remove:lineItems change:miscCharge',
+        this.calculateTotals);
     },
 
     /**
-      Used to update calculated fiels.
+      Requests freight calculations from the server.
+
+      @param {Object} Options: success, error
+      @returns {Object} Receiver
     */
-    calculateTotals: function (model, value, options) {
-      var K = XM.Model,
-        status = this.getStatus(),
-        miscCharge = this.get("miscCharge") || 0.0,
-        freight = this.get("freight") || 0.0,
-        scale = XT.MONEY_SCALE,
-        add = XT.math.add,
-        substract = XT.math.subtract,
-        subtotals = [],
-        taxDetails = [],
-        costs = [],
-        weights = [],
-        subtotal,
-        freightWeight,
-        taxTotal = 0.0,
-        costTotal,
-        total,
-        margin,
-        taxCodes;
+    calculateFreight: function (options) {
+      options = options ? _.clone(options) : options;
+      var customer = this.get("customer"),
+        shipto = this.get("shipto"),
+        currency = this.get("currency"),
+        docDate = this.get(this.documentDateKey),
+        shipZone = this.get("shipZone"),
+        shipVia = this.get("shipVia"),
+        lineItems = this.get("lineItems").models,
+        includePackageWeight = XT.session.settings.get("IncludePackageWeight"),
+        freightDetail = this.freightDetail,
+        scale = XT.WEIGHT_SCALE,
+        that = this,
+        counter,
+        existing,
+        line,
+        itemSite,
+        quantity,
+        quantityUnitRatio,
+        weight,
+        site,
+        item,
+        freightClass,
+        siteClass = [],
+        i;
 
-      if (status & K.READY) {
-        // Collect line item detail
-        _.each(this.get('lineItems').models, function (lineItem) {
-          var extPrice = lineItem.get('extendedPrice') || 0,
-            quantity = lineItem.get("quantity") || 0,
-            unitCost = lineItem.get("unitCost") || 0,
-            item = lineItem.getValue("itemSite.item"),
-            prodWeight = item ? item.get("productWeight") : 0,
-            packWeight = item ? item.get("packageWeight") : 0,
-            itemWeight = item ? add(prodWeight, packWeight, scale) : 0,
-            quantityUnitRatio = lineItem.get("quantityUnitRatio"),
-            grossWeight = itemWeight * quantity * quantityUnitRatio;
+      if (customer && currency && docDate && lineItems.length) {
+        // Collect data needed for freight
+        for (i = 0; i < lineItems.length; i++) {
+          line = lineItems[i];
+          itemSite = line.get("itemSite");
+          if (!itemSite) {
+            siteClass = [];
+            break;
+          }
+          site = itemSite.get("site");
+          item = itemSite.get("item");
+          freightClass = item.getValue("freightClass");
+          weight = item.get("productWeight");
+          quantity = line.get("quantity");
+          quantityUnitRatio = line.get("quantityUnitRatio");
+          if (includePackageWeight) {
+            weight = XT.math.add(weight, item.get("packageWeight"), scale);
+          }
+          weight = XT.math.round(weight * quantity * quantityUnitRatio, scale);
 
-          weights.push(grossWeight);
-          subtotals.push(extPrice);
-          costs.push(quantity * unitCost);
-          taxDetails = taxDetails.concat(lineItem.taxDetail);
-        });
-
-        // Total taxes
-        // First group amounts by tax code
-        taxCodes = _.groupBy(taxDetails, function (detail) {
-          return detail.taxCode.id;
-        });
-
-        // Loop through each tax code group and subtotal
-        _.each(taxCodes, function (group) {
-          var taxes = [],
-            subtotal;
-
-          // Collect array of taxes
-          _.each(group, function (detail) {
-            taxes.push(detail.tax);
+          existing = _.where(siteClass, {
+            site: site,
+            freightClass: freightClass
           });
 
-          // Subtotal first to make sure we round by subtotal
-          subtotal = add(taxes, 6);
+          if (existing.length) {
+            weight = XT.math.add(weight, existing[0].weight, scale);
+            existing[0].weight = weight;
+          } else {
+            siteClass.push({
+              site: site,
+              freightClass: freightClass,
+              weight: weight
+            });
+          }
+        }
 
-          // Now add to tax grand total
-          taxTotal = add(taxTotal, subtotal, scale);
-        });
+        if (siteClass.length) {
+          // Loop through each site/class and fetch freight detail for that
+          // combination. When we have them all, add it up and pass through
+          // to original caller
+          freightDetail.length = 0;
+          counter = siteClass.length;
+          _.each(siteClass, function (item) {
+            var params = [
+                customer.id,
+                shipto ? shipto.id : null,
+                shipZone ? shipZone.id : null,
+                docDate,
+                shipVia || "",
+                currency.id,
+                item.site.id,
+                item.freightClass ? item.freightClass.id : null,
+                item.weight
+              ],
+              dispOptions = {
+                success: function (resp) {
+                  var freight;
+                  freightDetail = freightDetail.concat(resp);
+                  counter--;
+                  if (!counter) { // Means we heard back from all requests
+                    // Add 'em up
+                    freight = XT.math.add(_.pluck(freightDetail, "total"), scale);
+                    that.set("freight", freight);
 
-        // Totaling calculations
-        freightWeight = add(weights, scale);
-        subtotal = add(subtotals, scale);
-        costTotal = add(costs, scale);
-        margin = substract(subtotal, costTotal, scale);
-        subtotals = subtotals.concat([miscCharge, freight, taxTotal]);
-        total = add(subtotals, scale);
-
-        // Set values
-        this.set("freightWeight", freightWeight);
-        this.set("subtotal", subtotal);
-        this.set("taxTotal", taxTotal);
-        this.set("total", total);
-        this.set("margin", margin);
+                    // Forward original callback
+                    if (options.success) { options.success(); }
+                  }
+                }
+              };
+            that.dispatch(that.recordType, "freightDetail", params, dispOptions);
+          });
+          return this;
+        }
       }
+
+      // Default if we couldn't calculate
+      if (options.success) { options.success(); }
+      return this;
+    },
+
+    /**
+      If there are line items, this function should set the date to the first scheduled
+      date.
+    */
+    calculateScheduleDate: function () {
+      var lineItems = this.get("lineItems").models,
+        scheduleDate;
+
+      if (lineItems.length) {
+        _.each(lineItems, function (line) {
+          var lineSchedDate = line.get("scheduleDate");
+          scheduleDate = scheduleDate || lineSchedDate;
+          if (XT.date.compareDate(scheduleDate, lineSchedDate) > 1) {
+            scheduleDate = lineSchedDate;
+          }
+        });
+        this.set("scheduleDate", scheduleDate);
+      }
+    },
+
+    /**
+      Used to update calculated fields.
+
+      @returns {Object} Receiver
+    */
+    calculateTotals: function () {
+      var K = XM.Model,
+        status = this.getStatus(),
+        calculateFreight = this.get("calculateFreight"),
+        that = this,
+        options = {};
+
+      if (status & K.READY) {
+        if (calculateFreight) {
+          options.success = function () {
+            that._calculateTotals();
+          };
+          this.calculateFreight(options);
+        } else {
+          this._calculateTotals();
+        }
+      }
+      return this;
     },
 
     /**
@@ -261,7 +350,7 @@ white:true*/
         }
       }
     },
-    
+
     /**
       Populate shipto defaults
     */
@@ -354,6 +443,89 @@ white:true*/
       if (!lineItems.length) {
         return XT.Error.clone('xt2012');
       }
+    },
+
+    // ..........................................................
+    // PRIVATE
+    //
+
+    /** @private
+
+      Function that actually does the calculation work
+    */
+    _calculateTotals: function () {
+      var miscCharge = this.get("miscCharge") || 0.0,
+        freight = this.get("freight") || 0.0,
+        scale = XT.MONEY_SCALE,
+        add = XT.math.add,
+        substract = XT.math.subtract,
+        subtotals = [],
+        taxDetails = [],
+        costs = [],
+        weights = [],
+        subtotal,
+        freightWeight,
+        taxTotal = 0.0,
+        costTotal,
+        total,
+        margin,
+        taxCodes;
+
+      // Collect line item detail
+      _.each(this.get('lineItems').models, function (lineItem) {
+        var extPrice = lineItem.get('extendedPrice') || 0,
+          quantity = lineItem.get("quantity") || 0,
+          unitCost = lineItem.get("unitCost") || 0,
+          item = lineItem.getValue("itemSite.item"),
+          prodWeight = item ? item.get("productWeight") : 0,
+          packWeight = item ? item.get("packageWeight") : 0,
+          itemWeight = item ? add(prodWeight, packWeight, scale) : 0,
+          quantityUnitRatio = lineItem.get("quantityUnitRatio"),
+          grossWeight = itemWeight * quantity * quantityUnitRatio;
+
+        weights.push(grossWeight);
+        subtotals.push(extPrice);
+        costs.push(quantity * unitCost);
+        taxDetails = taxDetails.concat(lineItem.taxDetail);
+      });
+
+      // Total taxes
+      // First group amounts by tax code
+      taxCodes = _.groupBy(taxDetails, function (detail) {
+        return detail.taxCode.id;
+      });
+
+      // Loop through each tax code group and subtotal
+      _.each(taxCodes, function (group) {
+        var taxes = [],
+          subtotal;
+
+        // Collect array of taxes
+        _.each(group, function (detail) {
+          taxes.push(detail.tax);
+        });
+
+        // Subtotal first to make sure we round by subtotal
+        subtotal = add(taxes, 6);
+
+        // Now add to tax grand total
+        taxTotal = add(taxTotal, subtotal, scale);
+      });
+
+      // Totaling calculations
+      freightWeight = add(weights, scale);
+      subtotal = add(subtotals, scale);
+      costTotal = add(costs, scale);
+      margin = substract(subtotal, costTotal, scale);
+      subtotals = subtotals.concat([miscCharge, freight, taxTotal]);
+      total = add(subtotals, scale);
+
+      // Set values
+      this.set("freightWeight", freightWeight);
+      this.set("subtotal", subtotal);
+      this.set("taxTotal", taxTotal);
+      this.set("total", total);
+      this.set("margin", margin);
     }
 
   });
@@ -405,10 +577,12 @@ white:true*/
     taxDetail: undefined,
 
     defaults: function () {
+      var allowASAP = XT.session.settings.get("AllowASAPShipSchedules");
       return {
         quantityUnitRatio: 1,
         priceMode: XM.QuoteLine.DISCOUNT_MODE,
-        priceUnitRatio: 1
+        priceUnitRatio: 1,
+        scheduleDate: allowASAP ? new Date() : undefined
       };
     },
 
@@ -441,7 +615,6 @@ white:true*/
       "customerPrice",
       "extendedPrice",
       "inventoryQuantityUnitRatio",
-      "item",
       "lineNumber",
       "listCost",
       "listCostMarkup",
@@ -458,8 +631,6 @@ white:true*/
     requiredAttributes: [
       "customerPrice",
       "itemSite",
-      "item",
-      "site",
       "quote",
       "lineNumber",
       "quantity",
@@ -572,7 +743,7 @@ white:true*/
 
       // If no parent, don't bother
       if (!parent) { return; }
-      
+
       parentDate = parent.get(parent.documentDateKey);
       customer = parent.get("customer");
       currency = parent.get("currency");
@@ -682,15 +853,15 @@ white:true*/
         that = this,
         options = {},
         params;
-        
+
       // If no parent, don't bother
       if (!parent) { return; }
-      
+
       recordType = parent.recordType;
       taxZoneId = parent.getValue("taxZone.id");
       effective = parent.get(parent.documentDateKey);
       currency = parent.get("currency");
-      
+
       if (effective && currency && amount) {
         params = [taxZoneId, taxTypeId, effective, currency.id, amount];
         options.success = function (resp) {
@@ -782,14 +953,24 @@ white:true*/
         // TODO: Get default characteristics
       }
     },
-    
+
     parentDidChange: function () {
       var parent = this.getParent(),
-       lineNumber = this.get("lineNumber");
+       lineNumber = this.get("lineNumber"),
+       scheduleDate;
 
       // Set next line number
       if (parent && !lineNumber) {
         this.set("lineNumber", parent.get("lineItems").length);
+      }
+
+      // Default to schedule date of header
+      if (parent) {
+        scheduleDate = parent.get("scheduleDate");
+        if (scheduleDate) {
+          this.set("scheduleDate", scheduleDate);
+        }
+        parent.calculateScheduleDate();
       }
     },
 
@@ -798,15 +979,15 @@ white:true*/
       if (parent) { parent.calculateTotals(); }
     },
 
-    scheduleDateChanged: function () {
+    scheduleDateDidChange: function () {
       var item = this.getValue("itemSite.item"),
-        parent = this.get("parent"),
+        parent = this.getParent(),
         customer = parent.get("customer"),
         shipto = parent.get("shipto"),
         scheduleDate = this.get("scheduleDate"),
         that = this,
         options = {};
-      if (item && scheduleDate) {
+      if (customer && item && scheduleDate) {
         options.success = function (canPurchase) {
           if (!canPurchase) {
             that.notify("_noPurchase".loc());
@@ -816,6 +997,9 @@ white:true*/
         options.shipto = shipto;
         customer.canPurchase(item, scheduleDate, options);
       }
+
+      // Header should always show first schedule date
+      if (parent) { parent.calculateScheduleDate(); }
     },
 
     unitDidChange: function () {
