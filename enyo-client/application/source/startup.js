@@ -353,6 +353,21 @@ white:true*/
       XM.sites.fetch(options);
     }
   });
+  
+  XT.StartupTasks.push({
+    taskName: "loadTaxTypes",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      options.query = {};
+      options.query.orderBy = [
+        {attribute: 'name'}
+      ];
+      XM.taxTypes = new XM.TaxTypeCollection();
+      XM.taxTypes.fetch(options);
+    }
+  });
 
   XT.StartupTasks.push({
     taskName: "loadTaxZones",
