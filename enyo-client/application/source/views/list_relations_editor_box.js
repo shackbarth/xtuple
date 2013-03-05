@@ -218,7 +218,7 @@ trailing:true white:true*/
       {kind: "XV.MoneyWidget", attr: {amount: "subtotal", currency: "currency"},
         label: "_subtotal".loc(), currencyShowing: false},
       // {kind: "XV.NumberWidget", attr: "miscCharge"}, - needs GL
-      {kind: "XV.NumberWidget", attr: "calculateFreight", label: "_freight".loc()},
+      {kind: "XV.NumberWidget", attr: "freight", label: "_freight".loc()},
       {kind: "XV.MoneyWidget", attr: {amount: "taxTotal", currency: "currency"},
         label: "_tax".loc(), currencyShowing: false},
       {kind: "XV.MoneyWidget", attr: {amount: "total", currency: "currency"},
