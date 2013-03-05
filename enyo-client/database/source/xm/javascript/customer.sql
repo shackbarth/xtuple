@@ -6,10 +6,76 @@ select xt.install_js('XM','Customer','xtuple', $$
 
   XM.Customer.isDispatchable = true;
 
+  /**
+    Determin whether a customer can purchase a given item
+
+    @param {Number} Customer id
+    @param {Number} Item id
+    @param {Date} Schedule date
+    @param {Number} Shipto id
+    @returns {Boolean}
+  */
   XM.Customer.canPurchase = function (customerId, itemId, scheduleDate, shiptoId) {
-    var sql = 'select customerCanPurchase($1, $2, $3, $4) as canPurchase;';
-    return plv8.execute(sql, [itemId, customerId, shiptoId, scheduleDate])[0].canPurchase;
+    var sql = 'select customerCanPurchase($1, $2, $3, $4::date) as canpurchase;';
+    return plv8.execute(sql, [itemId, customerId, shiptoId, scheduleDate])[0].canpurchase;
   };
+  
+  XM.Customer.options = [
+    "CustomerChangeLog",
+    "DefaultShipFormId",
+    "DefaultShipViaId",
+    "DefaultBalanceMethod",
+    "DefaultCustType",
+    "DefaultSalesRep",
+    "DefaultTerms",
+    "DefaultPartialShipments",
+    "DefaultBackOrders",
+    "DefaultFreeFormShiptos",
+    "SOCreditLimit",
+    "SOCreditRate"
+  ]
+  
+  /* 
+  Return Customer configuration settings.
+
+  @returns {Object}
+  */
+  XM.Customer.settings = function() {
+    var keys = XM.Customer.options.slice(0),
+        data = Object.create(XT.Data),
+        inum = {},
+        ret = {},
+        qry;
+
+    ret = XT.extend(ret, data.retrieveMetrics(keys));
+    
+    return JSON.stringify(ret);
+  }
+  
+  /* 
+  Update Customer configuration settings. Only valid options as defined in the array
+  XM.Customer.options will be processed.
+
+   @param {Object} settings
+   @returns {Boolean}
+  */
+  XM.Customer.commitSettings = function(settings) {
+    var sql, options = XM.Customer.options.slice(0),
+        data = Object.create(XT.Data), metrics = {};
+    
+    /* check privileges */
+    if(!data.checkPrivilege('ConfigureSales')) throw new Error('Access Denied');
+    
+  /* update remaining options as metrics
+       first make sure we pass an object that only has valid metric options for this type */
+    for(var i = 0; i < options.length; i++) {
+      var prop = options[i];
+      if(settings[prop] !== undefined) metrics[prop] = settings[prop];
+    }
+ 
+    return data.commitMetrics(metrics);
+  }
+  
   
   /**
    Returns an object with a price and type for a given customer, item and quantity.

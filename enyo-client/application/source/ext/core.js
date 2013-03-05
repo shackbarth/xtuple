@@ -76,10 +76,10 @@ white:true*/
       @static
       @constant
       @type Number
-      @default 0
+      @default 2
     */
-    EXTENDED_PRICE_SCALE: 4,
-
+    EXTENDED_PRICE_SCALE: 2,
+    
     /**
       System precision scale for unit conversion ratios.
 
