@@ -31,18 +31,18 @@ done
 # update source
 
 git checkout master
-if [ $? ]
-  then
-    echo "error checking out master"
-    exit $?
-fi
-exit
+#if [ $? ]
+#  then
+#    echo "error checking out master"
+#    exit $?
+#fi
+#exit
 git pull
-if [ $? ]
-  then
-    echo "error pulling master"
-    exit $?
-fi
+#if [ $? ]
+#  then
+#    echo "error pulling master"
+#    exit $?
+#fi
 
 if [ $PRODUCTION ]
   then
@@ -56,11 +56,11 @@ fi
 
 # update libraries
 git submodule update --init --recursive
-if [ $? ]
-  then
-    echo "error updating submodules"
-    exit $?
-fi
+#if [ $? ]
+#  then
+#    echo "error updating submodules"
+#    exit $?
+#fi
 cd node-datasource
 npm install
 
