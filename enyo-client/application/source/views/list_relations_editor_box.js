@@ -191,7 +191,7 @@ trailing:true white:true*/
         {kind: "XV.NumberWidget", attr: "quantityShip"},
         {kind: "XV.PercentWidget", attr: "discount"},
         {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "currency"},
-          label: "_unitPrice".loc(), currencyDisabled: true},
+          label: "_unitPrice".loc(), currencyDisabled: true, effective: new Date()},
         {kind: "XV.UnitWidget", attr: "priceUnit"},
         {kind: "XV.NumberWidget", attr: "extended", label: "_extendedPrice".loc()},
         {kind: "XV.DateWidget", attr: "scheduleDate"},
@@ -216,13 +216,13 @@ trailing:true white:true*/
       // Charge Sales Account - needs GL
       {kind: "XV.NumberWidget", attr: "freightWeight"},
       {kind: "XV.MoneyWidget", attr: {amount: "subtotal", currency: "currency"},
-        label: "_subtotal".loc(), currencyShowing: false},
+        label: "_subtotal".loc(), currencyShowing: false, effective: new Date()},
       // {kind: "XV.NumberWidget", attr: "miscCharge"}, - needs GL
       {kind: "XV.NumberWidget", attr: "freight", label: "_freight".loc()},
       {kind: "XV.MoneyWidget", attr: {amount: "taxTotal", currency: "currency"},
-        label: "_tax".loc(), currencyShowing: false},
+        label: "_tax".loc(), currencyShowing: false, effective: new Date()},
       {kind: "XV.MoneyWidget", attr: {amount: "total", currency: "currency"},
-        label: "_total".loc(), currencyShowing: false}
+        label: "_total".loc(), currencyShowing: false, effective: new Date()}
       ]}
     ]
   });
