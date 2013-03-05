@@ -261,7 +261,7 @@ white:true*/
         }
       }
     },
-    
+
     /**
       Populate shipto defaults
     */
@@ -441,7 +441,6 @@ white:true*/
       "customerPrice",
       "extendedPrice",
       "inventoryQuantityUnitRatio",
-      "item",
       "lineNumber",
       "listCost",
       "listCostMarkup",
@@ -458,8 +457,6 @@ white:true*/
     requiredAttributes: [
       "customerPrice",
       "itemSite",
-      "item",
-      "site",
       "quote",
       "lineNumber",
       "quantity",
@@ -572,7 +569,7 @@ white:true*/
 
       // If no parent, don't bother
       if (!parent) { return; }
-      
+
       parentDate = parent.get(parent.documentDateKey);
       customer = parent.get("customer");
       currency = parent.get("currency");
@@ -682,15 +679,15 @@ white:true*/
         that = this,
         options = {},
         params;
-        
+
       // If no parent, don't bother
       if (!parent) { return; }
-      
+
       recordType = parent.recordType;
       taxZoneId = parent.getValue("taxZone.id");
       effective = parent.get(parent.documentDateKey);
       currency = parent.get("currency");
-      
+
       if (effective && currency && amount) {
         params = [taxZoneId, taxTypeId, effective, currency.id, amount];
         options.success = function (resp) {
@@ -782,7 +779,7 @@ white:true*/
         // TODO: Get default characteristics
       }
     },
-    
+
     parentDidChange: function () {
       var parent = this.getParent(),
        lineNumber = this.get("lineNumber");

@@ -255,7 +255,8 @@ trailing:true white:true*/
     },
 
     launchWorkspace: function (inSender, inEvent) {
-      this.doChildWorkspace({workspace: "XV.QuoteLineWorkspace", collection: this.getValue()});
+      var index = Number(this.$.list.getFirstSelected()); // XXX ???
+      this.doChildWorkspace({workspace: "XV.QuoteLineWorkspace", collection: this.getValue(), index: index});
       return true;
     }
   });
