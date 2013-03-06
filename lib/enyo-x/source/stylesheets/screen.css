@@ -1,11 +1,11 @@
-/* LESS version of screen.scss file previously in client 
+/* LESS version of screen.scss file previously in client
 
-	To compile to .css: lessc screen.less > ../stylesheets/screen.css
-	Use -compress for a compressed .css with no comments
+  To compile to .css: lessc screen.less > ../stylesheets/screen.css
+  Use -compress for a compressed .css with no comments
 
 */
 /*
-	These variables will show in css as their hex values
+  These variables will show in css as their hex values
 */
 /* Helper classes for css3 */
 .clearfix {
@@ -223,9 +223,9 @@ body {
   width: 90px;
   vertical-align: top;
 }
-/* 
-	Media query for responsive design. This adapts to smaller
-	displays.
+/*
+  Media query for responsive design. This adapts to smaller
+  displays.
 */
 @media (max-width: 480px) {
   .pullout-menu {
@@ -255,7 +255,7 @@ body {
   width: 20px;
   right: -20px;
   /** this is weird and indicates the REAL need to change the
-	    whatever the css system is...this relative path is different... **/
+      whatever the css system is...this relative path is different... **/
 
   background: url("../../assets/sliding-shadow.png") repeat-y;
   background-size: 20px 2px;
@@ -286,7 +286,7 @@ body {
   text-align: center;
 }
 /*
-	XV Views
+  XV Views
 */
 /* List */
 .xv-list {
@@ -326,6 +326,9 @@ body {
 }
 .xv-list .xv-list-item .xv-list-column.money {
   width: 85px;
+}
+.xv-list .xv-list-item .xv-list-column.descr {
+  width: 250px;
 }
 .xv-list .xv-list-item.item-selected {
   background: #226b9a url(../../assets/item-hilite.png) repeat-x bottom;
@@ -728,7 +731,7 @@ body {
   border-bottom-right-radius: 4px;
 }
 /*
-	XV Widgets
+  XV Widgets
 */
 /* AddressWidget.scss */
 .xv-addresswidget {
