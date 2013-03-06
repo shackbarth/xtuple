@@ -144,14 +144,14 @@ white:true*/
           }
           weight = XT.math.round(weight * quantity * quantityUnitRatio, scale);
 
-          existing = _.where(siteClass, {
+          existing = _.findWhere(siteClass, {
             site: site,
             freightClass: freightClass
           });
 
-          if (existing.length) {
-            weight = XT.math.add(weight, existing[0].weight, scale);
-            existing[0].weight = weight;
+          if (existing) {
+            weight = XT.math.add(weight, existing.weight, scale);
+            existing.weight = weight;
           } else {
             siteClass.push({
               site: site,
@@ -986,10 +986,13 @@ white:true*/
       var parent = this.getParent(),
         taxZone = parent ? parent.get("taxZone") : undefined,
         item = this.getValue("itemSite.item"),
+        characteristics = this.get("characteristics"),
         that = this,
         unitOptions = {},
         taxOptions = {},
-        itemOptions = {};
+        itemOptions = {},
+        itemCharAttrs,
+        charTypes;
         
       // Fetch and update selling units
       if (item) {
@@ -1010,6 +1013,7 @@ white:true*/
       this.unset("priceUnit");
       this.unset("taxType");
       this.unset("unitCost");
+      characteristics.reset();
       this.sellingUnits.reset();
       
       if (!item) { return; }
@@ -1050,8 +1054,35 @@ white:true*/
         that.set("unitCost", cost);
       };
       item.standardCost(itemOptions);
+      
+      // Set sort for characteristics
+      if (!characteristics.comparator) {
+        characteristics.comparator = function (a, b) {
+          var aOrd = a.getValue("characteristic.order"),
+            aName = a.getValue("characteristic.name"),
+            bOrd = b.getValue("characteristic.order"),
+            bName = b.getValue("characteristic.name");
+          if (aOrd === bOrd) {
+            return aName === bName ? 0 : (aName > bName ? 1 : -1);
+          } else {
+            return aOrd > bOrd ? 1 : -1;
+          }
+        };
+      }
 
-      // TODO: Get default characteristics
+      // Build characteristics (get pricing in calculatePrice function)
+      itemCharAttrs = _.pluck(item.get("characteristics").models, "attributes");
+      charTypes = _.unique(_.pluck(itemCharAttrs, "characteristic"));
+      _.each(charTypes, function (char) {
+        var quoteLineChar = new XM.QuoteLineCharacteristic(null, {isNew: true}),
+          defaultChar = _.find(itemCharAttrs, function (attrs) {
+            return attrs.isDefault === true &&
+              attrs.characteristic.id === char.id;
+          });
+        quoteLineChar.set("characteristic", char);
+        quoteLineChar.set("value", defaultChar ? defaultChar.value : "");
+        characteristics.add(quoteLineChar);
+      });
     },
 
     parentDidChange: function () {
@@ -1245,9 +1276,9 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.CharacteristicAssignment
   */
-  XM.QuoteLineCharacteristic = XM.Model.extend({
+  XM.QuoteLineCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.QuoteLineCharacteristic.prototype */
 
     recordType: 'XM.QuoteLineCharacteristic'
