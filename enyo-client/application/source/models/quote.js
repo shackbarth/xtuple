@@ -50,6 +50,16 @@ white:true*/
       "terms"
     ],
 
+    readOnlyAttributes: [
+      "freightWeight",
+      "lineItems",
+      "margin",
+      "status",
+      "subtotal",
+      "taxTotal",
+      "total"
+    ],
+
     billtoAttrArray: ["billtoName", "billtoAddress1", "billtoAddress2", "billtoAddress3", "billtoCity",
       "billtoState", "billtoPostalCode", "billtoCountry", "billtoPhone", "billtoContactHonorific",
       "billtoContactFirstName", "billtoContactMiddleName", "billtoContactLastName",
@@ -77,6 +87,7 @@ white:true*/
       this.freightTaxDetail = [];
       this.on('change:customer', this.customerDidChange);
       this.on('change:shipto', this.shiptoDidChange);
+      this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
       this.on('add:lineItems remove:lineItems change:miscCharge',
         this.calculateTotals);
     },
@@ -404,7 +415,7 @@ white:true*/
         shiptoAddress = shiptoContact ? shiptoContact.get("address") : false;
 
       if (this.isNotReady() || !shipto) { return; }
-      
+
       this.set("shiptoName", shipto.get("name"));
       this.set("salesRep", shipto.get("salesRep"));
       this.set("commission", shipto.get("commission"));
@@ -462,6 +473,19 @@ white:true*/
       };
       this.dispatch('XM.Quote', 'fetchNumber', null, options);
       return this;
+    },
+
+    lineItemsDidChange: function () {
+      var lineItems = this.get("lineItems");
+      this.setReadOnly("currency", lineItems.length);
+    },
+
+    statusDidChange: function () {
+      XM.Document.prototype.statusDidChange.apply(this, arguments);
+      var status = this.getStatus();
+      if (status === XM.Model.READY_CLEAN) {
+        this.setReadOnly("customer");
+      }
     },
 
     validateSave: function () {
@@ -652,6 +676,7 @@ white:true*/
       this.on('change:scheduleDate', this.scheduleDateDidChange);
       this.on('change:extendedPrice change:unitCost change:itemSite',
         this.recalculateParent());
+      this.on('statusChange', this.statusDidChange);
 
       // Only recalculate price on date changes if pricing is date driven
       if (XT.session.settings.get("soPriceEffective") === "ScheduleDate") {
@@ -1057,6 +1082,13 @@ white:true*/
 
       // Header should always show first schedule date
       if (parent) { parent.calculateScheduleDate(); }
+    },
+
+    statusDidChange: function () {
+      var status = this.getStatus();
+      if (status === XM.Model.READY_CLEAN) {
+        this.setReadOnly("itemSite");
+      }
     },
 
     unitDidChange: function () {
