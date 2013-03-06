@@ -87,6 +87,16 @@ white:true*/
 
   });
 
+  _.extend(XM.ItemSiteListItem, /** @lends XM.ItemSiteListItem# */{
+    /**
+      Item site has no searchable attributes by default, so we have to provide some, or
+      errors occur (e.g. the search screen)
+     */
+    getSearchableAttributes: function () {
+      return ["item.number", "site.code"];
+    }
+  });
+
   // ..........................................................
   // COLLECTIONS
   //
