@@ -91,7 +91,7 @@ select xt.install_js('XM','Quote','xtuple', $$
    @param {Number} amount
    @returns Array 
   */
-  XM.Quote.calculateTaxDetail = function(taxZoneId, taxTypeId, effective, currencyId, amount) {
+  XM.Quote.taxDetail = function(taxZoneId, taxTypeId, effective, currencyId, amount) {
     var ret,
         sql = 'select tx as "taxCode", bs as "basisTaxCode", ' 
             + '  taxdetail_taxclass_sequence as "sequence", taxdetail_taxrate_percent as "percent", '
