@@ -248,6 +248,7 @@ trailing:true white:true*/
         kind: "onyx.Button",
         content: "_expand".loc(),
         ontap: "launchWorkspace",
+        classes: "xv-groupbox-button-right",
         container: this.$.navigationButtonPanel
       });
     },
@@ -259,6 +260,8 @@ trailing:true white:true*/
       var value = this.getValue();
       this.$.list.setValue(value);
       this.summary.setValue(this.getValue().quote);
+      // change the styling of the last button to make room for the new button
+      this.$.doneButton.setClasses("xv-groupbox-button-center");
     },
 
     launchWorkspace: function (inSender, inEvent) {
@@ -267,7 +270,8 @@ trailing:true white:true*/
         workspace: "XV.QuoteLineWorkspace",
         collection: this.getValue(),
         index: index,
-        listRelations: this.$.list});
+        listRelations: this.$.list
+        });
       return true;
     }
   });
