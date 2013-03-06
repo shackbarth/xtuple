@@ -88,9 +88,7 @@ white:true*/
       @returns {Object} Receiver
     */
     calculateFreight: function (options) {
-      var K = XM.Model,
-        status = this.getStatus(),
-        customer = this.get("customer"),
+      var customer = this.get("customer"),
         shipto = this.get("shipto"),
         currency = this.get("currency"),
         docDate = this.get(this.documentDateKey),
@@ -113,7 +111,7 @@ white:true*/
         siteClass = [],
         i;
 
-      if (!(status & K.READY)) { return this; }
+      if (this.isNotReady()) { return this; }
 
       if (customer && currency && docDate && lineItems.length) {
         // Collect data needed for freight
@@ -203,9 +201,7 @@ white:true*/
       @returns {Object} Receiver
     */
     calculateFreightTax: function (options) {
-      var K = XM.Model,
-        status = this.getStatus(),
-        amount = this.get("freight"),
+      var amount = this.get("freight"),
         taxType = _.where(_.pluck(XM.taxTypes.models, "attributes"), {name: "Freight"})[0],
         taxTypeId = taxType.id,
         taxZoneId = this.getValue("taxZone.id"),
@@ -215,7 +211,7 @@ white:true*/
         dispOptions = {},
         params;
 
-      if (!(status & K.READY)) { return this; }
+      if (this.isNotReady()) { return this; }
 
       if (effective && currency && amount) {
         params = [taxZoneId, taxTypeId, effective, currency.id, amount];
@@ -235,12 +231,10 @@ white:true*/
       @returns {Object} Receiver
     */
     calculateScheduleDate: function () {
-      var K = XM.Model,
-        status = this.getStatus(),
-        lineItems = this.get("lineItems").models,
+      var lineItems = this.get("lineItems").models,
         scheduleDate;
 
-      if (!(status & K.READY)) { return this; }
+      if (this.isNotReady()) { return this; }
 
       if (lineItems.length) {
         _.each(lineItems, function (line) {
@@ -261,13 +255,11 @@ white:true*/
       @returns {Object} Receiver
     */
     calculateTotals: function () {
-      var K = XM.Model,
-        status = this.getStatus(),
-        calculateFreight = this.get("calculateFreight"),
+      var calculateFreight = this.get("calculateFreight"),
         that = this,
         options = {};
 
-      if (!(status & K.READY)) { return this; }
+      if (this.isNotReady()) { return this; }
 
       if (calculateFreight) {
         options.success = function () {
@@ -298,9 +290,7 @@ white:true*/
       Populates billto information based on the entered customer.
     */
     customerDidChange: function (model, value, options) {
-      var K = XM.Model,
-        status = this.getStatus(),
-        customer = this.get("customer"),
+      var customer = this.get("customer"),
         isFreeFormBillto = customer ? customer.get("isFreeFormBillto") : false,
         isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : false,
         billtoContact = customer ? customer.get("billingContact") || customer.get("contact") : false,
@@ -345,7 +335,7 @@ white:true*/
         this.setReadOnly(this.shiptoAttrArray[i], isFreeFormShipto);
       }
 
-      if (!(status & K.READY)) { return; }
+      if (this.isNotReady()) { return; }
 
       // Set customer default data
       if (customer) {
@@ -409,13 +399,11 @@ white:true*/
       Populate shipto defaults
     */
     shiptoDidChange: function () {
-      var K = XM.Model,
-        status = this.getStatus(),
-        shipto = this.get("shipto"),
+      var shipto = this.get("shipto"),
         shiptoContact = shipto ? shipto.get("contact") : false,
         shiptoAddress = shiptoContact ? shiptoContact.get("address") : false;
 
-      if (!(status & K.READY) || !shipto) { return; }
+      if (this.isNotReady() || !shipto) { return; }
       
       this.set("shiptoName", shipto.get("name"));
       this.set("salesRep", shipto.get("salesRep"));
@@ -780,9 +768,7 @@ white:true*/
     calculatePrice: function (force) {
       var settings = XT.session.settings,
         K = this.getClass(),
-        status = this.getStatus(),
         that = this,
-        isReady = this.getStatus() & K.READY,
         asOf = new Date(),
         canUpdate = this.canUpdate(),
         customerPrice = this.get("customerPrice"),
@@ -805,14 +791,14 @@ white:true*/
         currency;
 
       // If no parent, don't bother
-      if (!parent || !(status & K.READY)) { return; }
+      if (!parent || this.isNotReady()) { return; }
 
       parentDate = parent.get(parent.documentDateKey);
       customer = parent.get("customer");
       currency = parent.get("currency");
 
       // Make sure we have all the necessary values
-      if (isReady && canUpdate && customer && currency &&
+      if (canUpdate && customer && currency &&
           item && quantity && quantityUnit && priceUnit) {
 
         // Handle alternate price effectivity settings
@@ -883,9 +869,7 @@ white:true*/
     },
 
     calculateProfit: function () {
-      var K = XM.Model,
-        status = this.getStatus(),
-        unitCost = this.get("unitCost"),
+      var unitCost = this.get("unitCost"),
         price = this.get("price"),
         parent = this.getParent(),
         effective = this.get(parent.documentDateKey),
@@ -893,7 +877,7 @@ white:true*/
         that = this,
         options = {};
 
-      if (!(status & K.READY)) { return; }
+      if (this.isNotReady()) { return; }
 
       if (price) {
         if (unitCost) {
@@ -910,9 +894,7 @@ white:true*/
     },
 
     calculateTax: function () {
-      var K = XM.Model,
-        parent = this.getParent(),
-        status = this.getStatus(),
+      var parent = this.getParent(),
         amount = this.get("extendedPrice"),
         taxTypeId = this.getValue("taxType.id"),
         recordType,
@@ -924,7 +906,7 @@ white:true*/
         params;
 
       // If no parent, don't bother
-      if (!parent || !(status & K.READY)) { return; }
+      if (!parent || this.isNotReady()) { return; }
 
       recordType = parent.recordType;
       taxZoneId = parent.getValue("taxZone.id");
@@ -958,12 +940,11 @@ white:true*/
     */
     discountDidChange: function () {
       var K = this.getClass(),
-        status = this.getStatus(),
         discount = this.get("discount"),
         customerPrice = this.get("customer"),
         sense = this.get("priceMode") === K.MARKUP_MODE ? -1 : 1;
 
-      if (!(status & K.READY)) { return; }
+      if (this.isNotReady()) { return; }
 
       if (!customerPrice) {
         this.unset("discount");
@@ -974,11 +955,9 @@ white:true*/
     },
 
     itemSiteDidChange: function () {
-      var K = XM.Model,
-        parent = this.getParent(),
+      var parent = this.getParent(),
         taxZone = parent ? parent.get("taxZone") : undefined,
         item = this.getValue("itemSite.item"),
-        status = this.getStatus(),
         that = this,
         unitOptions = {},
         taxOptions = {},
@@ -991,7 +970,7 @@ white:true*/
       this.unset("unitCost");
       this.sellingUnits.reset();
 
-      if (!(status & K.READY) || !item) { return; }
+      if (this.isNotReady() || !item) { return; }
 
       // Fetch and update selling units
       unitOptions.success = function (resp) {
@@ -1028,13 +1007,11 @@ white:true*/
     },
 
     parentDidChange: function () {
-      var K = XM.Model,
-       status = this.getStatus(),
-       parent = this.getParent(),
+      var parent = this.getParent(),
        lineNumber = this.get("lineNumber"),
        scheduleDate;
 
-      if (!(status & K.READY)) { return; }
+      if (this.isNotReady()) { return; }
 
       // Set next line number
       if (parent && !lineNumber) {
@@ -1057,9 +1034,7 @@ white:true*/
     },
 
     scheduleDateDidChange: function () {
-      var K = XM.Model,
-        status = this.getStatus(),
-        item = this.getValue("itemSite.item"),
+      var item = this.getValue("itemSite.item"),
         parent = this.getParent(),
         customer = parent.get("customer"),
         shipto = parent.get("shipto"),
@@ -1067,7 +1042,7 @@ white:true*/
         that = this,
         options = {};
 
-      if (!(status & K.READY)) { return; }
+      if (this.isNotReady()) { return; }
 
       if (customer && item && scheduleDate) {
         options.success = function (canPurchase) {
