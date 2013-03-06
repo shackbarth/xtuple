@@ -36,7 +36,19 @@ select xt.install_js('XM','Sales','xtuple', $$
     "ShowQuotesAfterSO",
     "soPriceEffective",
     "UpdatePriceLineEdit",
-    "IgnoreCustDisc"
+    "IgnoreCustDisc",
+    "CustomerChangeLog",
+    "DefaultShipFormId",
+    "DefaultShipViaId",
+    "DefaultBalanceMethod",
+    "DefaultCustType",
+    "DefaultSalesRep",
+    "DefaultTerms",
+    "DefaultPartialShipments",
+    "DefaultBackOrders",
+    "DefaultFreeFormShiptos",
+    "SOCreditLimit",
+    "SOCreditRate"
   ]
   
   /* 
