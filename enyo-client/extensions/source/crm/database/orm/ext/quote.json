@@ -3,7 +3,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "Quote",
-    "table": "quhead",
+    "table": "xt.quheadinfo",
     "isExtension": true,
     "comment": "Extended by CRM",
     "relations": [

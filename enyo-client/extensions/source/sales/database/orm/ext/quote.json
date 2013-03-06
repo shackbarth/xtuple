@@ -3,7 +3,7 @@
     "context": "sales",
     "nameSpace": "XM",
     "type": "Quote",
-    "table": "quhead",
+    "table": "xt.quheadinfo",
     "isExtension": true,
     "comment": "Extended by Sales",
     "relations": [ 
