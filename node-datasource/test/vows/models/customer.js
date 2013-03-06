@@ -1,9 +1,9 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global XVOWS:true, XT:true, XM:true, _:true, setTimeout:true,
-  clearTimeout:true, vows:true, module:true, assert:true, console:true */
+/*global XT:true, XM:true, XV:true, process:true, module:true, require:true */
 
+var XVOWS = XVOWS || {};
 (function () {
   "use strict";
 
@@ -12,9 +12,11 @@
     zombieAuth = require("../lib/zombie_auth"),
     crud = require('../lib/crud');
 
-  var createHash = {
-    name: "TESTCUSTOMER",
-    number: "HELLO" + Math.random(),
+  var data = {};
+
+  data.createHash = {
+    name: "Test Customer",
+    number: "TESTCUSTOMER",
     customerType: 19,
     terms: 42,
     salesRep: 29,
@@ -32,21 +34,64 @@
     autoHoldOrders: false
   };
 
-  var updateHash = {
+  data.updateHash = {
     name: "UPDATETESTCUSTOMER"
   };
 
-  /**
-    Test the Customer model
-   */
-  vows.describe('Customer testing').addBatch({
-    'When we load up our app': {
+  vows.describe('XM.Customer CRUD test').addBatch({
+    'INITIALIZE ': {
       topic: function () {
-        zombieAuth.loadApp(this.callback);
+        var that = this,
+          callback = function () {
+            data.model = new XM.Customer();
+            that.callback(null, data);
+          };
+        zombieAuth.loadApp(callback);
       },
-      'We can run the CRUD tests for Customer': crud.testCrudOperations("Customer", createHash, updateHash)
-
-      // XXX look at honorific test to see how business logic can also be tested alongside CRUD operations
+      'The record type is XM.Customer': function (data) {
+        assert.equal(data.model.recordType, "XM.Customer");
+      }
     }
+  }).addBatch({
+    'CREATE ': crud.create(data, {
+      '-> Set values': {
+        topic: function (data) {
+          data.model.set(data.createHash);
+          return data;
+        },
+        'Last Error is null': function (data) {
+          assert.isNull(data.model.lastError);
+        },
+        '-> Save': crud.save(data)
+      }
+    })
+  }).addBatch({
+    'READ': {
+      topic: function () {
+        return data;
+      },
+      'ID is a number': function (data) {
+        assert.isNumber(data.model.id);
+      },
+      'Number is `TESTCUSTOMER`': function (data) {
+        assert.equal(data.model.get('number'), data.createHash.number);
+      }
+    }
+  }).addBatch({
+    'UPDATE ': crud.update(data, {
+      '-> Set values': {
+        topic: function () {
+          data.model.set(data.updateHash);
+          return data;
+        },
+        'Number is `UPDATETESTCUSTOMER`': function (data) {
+          assert.equal(data.model.get('number'), data.updateHash.number);
+        },
+        '-> Commit': crud.save(data)
+      }
+    })
+  }).addBatch({
+    'DESTROY': crud.destroy(data)
   }).export(module);
+  
 }());
