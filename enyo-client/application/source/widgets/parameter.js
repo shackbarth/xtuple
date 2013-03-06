@@ -343,6 +343,34 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // ITEM SITE
+  //
+
+  enyo.kind({
+    name: "XV.ItemSiteListParameters",
+    kind: "XV.ParameterWidget",
+    // ??? characteristicsRole: 'isItems',
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_itemSite".loc()},
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {name: "itemNumber", label: "_itemNumber".loc(), attr: "item.number"},
+      {name: "siteCode", label: "_siteCode".loc(), attr: "site.code"}
+    ]
+  });
+
+  // ..........................................................
   // OPPORTUNITY
   //
 

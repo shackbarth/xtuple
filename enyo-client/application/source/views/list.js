@@ -631,6 +631,46 @@ trailing:true white:true*/
   XV.registerModelList("XM.ItemRelation", "XV.ItemList");
 
   // ..........................................................
+  // ITEM SITE
+  //
+
+  enyo.kind({
+    name: "XV.ItemSiteList",
+    kind: "XV.List",
+    label: "_itemSites".loc(),
+    collection: "XM.ItemSiteListItemCollection",
+    query: {orderBy: [
+      {attribute: 'item.number'}
+    ]},
+    parameterWidget: "XV.ItemSiteListParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "item.number", isKey: true},
+              {kind: "XV.ListAttr", attr: "item.unit.name", fit: true, classes: "right"}
+            ]},
+            {kind: "XV.ListAttr", attr: "item.description1"}
+          ]},
+          {kind: "XV.ListColumn", classes: "second",
+            components: [
+            {kind: "XV.ListAttr", attr: "site.code", classes: "bold"},
+            {kind: "XV.ListAttr", attr: "site.description"}
+          ]}
+        ]}
+      ]}
+    ],
+    formatActive: function (value, view, model) {
+      return value ? "_active".loc() : "";
+    },
+    formatSold: function (value, view, model) {
+      return value ? "_sold".loc() : "";
+    }
+  });
+
+  XV.registerModelList("XM.ItemRelation", "XV.ItemList");
+  // ..........................................................
   // OPPORTUNITY
   //
 

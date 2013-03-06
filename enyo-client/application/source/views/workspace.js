@@ -1263,7 +1263,7 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", classes: "in-panel", fit: true, components: [
             {kind: "XV.NumberWidget", attr: "lineNumber"},
-            {content: "TODO: ITEMSITE"},
+            {kind: "XV.ItemSiteWidget", attr: "itemSite"},
             {kind: "XV.NumberWidget", attr: "quantity"},
             {kind: "XV.UnitWidget", attr: "quantityUnit"},
             {kind: "XV.NumberWidget", attr: "quantityUnitRatio"},

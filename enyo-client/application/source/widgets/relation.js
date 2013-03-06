@@ -303,6 +303,19 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // ITEM SITE
+  //
+
+  enyo.kind({
+    name: "XV.ItemSiteWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.ItemSiteRelationCollection",
+    list: "XV.ItemSiteList",
+    nameAttribute: "item.number",
+    descripAttribute: "site.code"
+  });
+
+  // ..........................................................
   // OPPORTUNITY
   //
 
