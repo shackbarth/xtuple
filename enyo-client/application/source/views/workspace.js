@@ -1193,7 +1193,10 @@ trailing:true white:true*/
               country: "billtoCountry"
             }
             },
-            {kind: "onyx.Button", content: "_copyToShipTo".loc(), ontap: "copyBilltoToShipto"},
+            {classes: "xv-addresswidget-buttons", components: [
+              {kind: "onyx.Button", content: "_copyToShipTo".loc(), ontap: "copyBilltoToShipto",
+                style: "margin-left: 4px; margin-bottom: 4px;"}
+            ]},
             {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
             {kind: "XV.CustomerShiptoWidget", attr: "shipto", showAddress: true, label: "_name".loc()},
             {kind: "XV.AddressFieldsWidget", attr: {
