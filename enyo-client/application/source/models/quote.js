@@ -267,6 +267,20 @@ white:true*/
       }
       return this;
     },
+    
+    /**
+      copyBilltoToShipto
+
+      This function clears the shipto, then
+      takes all the info from the billto and copies it to the shipto.
+    */
+    copyBilltoToShipto: function () {
+      var i;
+      this.unset("shipto");
+      for (i = 0; i < this.shiptoAttrArray.length; i++) {
+        this.set(this.shiptoAttrArray[i], this.get(this.billtoAttrArray[i]));
+      }
+    },
 
     /**
       Populates billto information based on the entered customer.
@@ -421,19 +435,6 @@ white:true*/
     },
 
     /**
-      copyBilltoToShipto
-
-      This function empties all of the shipto information, then
-      takes all the info from the billto and copies it to the shipto.
-    */
-    copyBilltoToShipto: function () {
-      this.unset("shipto");
-      for (var i = 0; i < this.shiptoAttrArray.length; i++) {
-        this.set(this.shiptoAttrArray[i], this.get(this.billtoAttrArray[i]));
-      }
-    },
-
-    /**
     Returns quote status as a localized string.
 
     @returns {String}
@@ -442,6 +443,25 @@ white:true*/
       var K = this.getClass(),
         status = this.get("status");
       return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
+    },
+    
+    /**
+      Fetch the next quote number. Need a special over-ride here because of peculiar
+      behavior of quote numbering different from all other generated numbers.
+    */
+    fetchNumber: function () {
+      var that = this,
+        options = {},
+        D = XM.Document;
+      options.success = function (resp) {
+        that._number = resp.toString();
+        that.set(that.documentKey, that._number);
+        if (that.numberPolicy === D.AUTO_NUMBER) {
+          that.setReadOnly(that.documentKey);
+        }
+      };
+      this.dispatch('XM.Quote', 'fetchNumber', null, options);
+      return this;
     },
 
     validateSave: function () {
