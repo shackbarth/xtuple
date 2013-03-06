@@ -88,7 +88,9 @@ white:true*/
       @returns {Object} Receiver
     */
     calculateFreight: function (options) {
-      var customer = this.get("customer"),
+      var K = XM.Model,
+        status = this.getStatus(),
+        customer = this.get("customer"),
         shipto = this.get("shipto"),
         currency = this.get("currency"),
         docDate = this.get(this.documentDateKey),
@@ -110,6 +112,8 @@ white:true*/
         freightClass,
         siteClass = [],
         i;
+
+      if (!(status & K.READY)) { return this; }
 
       if (customer && currency && docDate && lineItems.length) {
         // Collect data needed for freight
@@ -194,12 +198,14 @@ white:true*/
 
     /**
       Requests freight tax detail from the server.
-    
+
       @param {Object} Options: success, error
       @returns {Object} Receiver
     */
     calculateFreightTax: function (options) {
-      var amount = this.get("freight"),
+      var K = XM.Model,
+        status = this.getStatus(),
+        amount = this.get("freight"),
         taxType = _.where(_.pluck(XM.taxTypes.models, "attributes"), {name: "Freight"})[0],
         taxTypeId = taxType.id,
         taxZoneId = this.getValue("taxZone.id"),
@@ -208,6 +214,8 @@ white:true*/
         that = this,
         dispOptions = {},
         params;
+
+      if (!(status & K.READY)) { return this; }
 
       if (effective && currency && amount) {
         params = [taxZoneId, taxTypeId, effective, currency.id, amount];
@@ -223,12 +231,16 @@ white:true*/
     /**
       If there are line items, this function should set the date to the first scheduled
       date.
-      
+
       @returns {Object} Receiver
     */
     calculateScheduleDate: function () {
-      var lineItems = this.get("lineItems").models,
+      var K = XM.Model,
+        status = this.getStatus(),
+        lineItems = this.get("lineItems").models,
         scheduleDate;
+
+      if (!(status & K.READY)) { return this; }
 
       if (lineItems.length) {
         _.each(lineItems, function (line) {
@@ -255,19 +267,19 @@ white:true*/
         that = this,
         options = {};
 
-      if (status & K.READY) {
-        if (calculateFreight) {
-          options.success = function () {
-            that._calculateTotals();
-          };
-          this.calculateFreight(options);
-        } else {
-          this._calculateTotals();
-        }
+      if (!(status & K.READY)) { return this; }
+
+      if (calculateFreight) {
+        options.success = function () {
+          that._calculateTotals();
+        };
+        this.calculateFreight(options);
+      } else {
+        this._calculateTotals();
       }
       return this;
     },
-    
+
     /**
       copyBilltoToShipto
 
@@ -333,63 +345,63 @@ white:true*/
         this.setReadOnly(this.shiptoAttrArray[i], isFreeFormShipto);
       }
 
-      if (status & K.READY) {
-        // Set customer default data
-        if (customer) {
-          this.set("billtoName", customer.get("name"));
-          this.set("salesRep", customer.get("salesRep"));
-          this.set("commission", customer.get("commission"));
-          this.set("terms", customer.get("terms"));
-          this.set("taxZone", customer.get("taxZone"));
-          this.set("shipVia", customer.get("shipVia"));
-          this.set("site", customer.get("preferredSite"));
-          this.set("currency", customer.get("currency"));
-          this.set("shipto", customer.get("shipto"));
-          if (billtoContact) {
-            this.set("billtoContact", billtoContact);
-            this.set("billtoContactHonorific", billtoContact.get("honoroific"));
-            this.set("billtoContactFirstName", billtoContact.get("firstName"));
-            this.set("billtoContactMiddleName", billtoContact.get("middleName"));
-            this.set("billtoContactLastName", billtoContact.get("lastName"));
-            this.set("billtoContactSuffix", billtoContact.get("suffix"));
-            this.set("billtoContactTitle", billtoContact.get("title"));
-            this.set("billtoContactPhone", billtoContact.get("phone"));
-            this.set("billtoContactFax", billtoContact.get("fax"));
-            this.set("billtoContactEmail", billtoContact.get("email"));
-          } else {
-            unsetBilltoContact();
-          }
-          if (billtoAddress) {
-            this.set("billtoAddress1", billtoAddress.getValue("line1"));
-            this.set("billtoAddress2", billtoAddress.getValue("line2"));
-            this.set("billtoAddress3", billtoAddress.getValue("line3"));
-            this.set("billtoCity", billtoAddress.getValue("city"));
-            this.set("billtoState", billtoAddress.getValue("state"));
-            this.set("billtoPostalCode", billtoAddress.getValue("postalCode"));
-            this.set("billtoCountry", billtoAddress.getValue("country"));
-          } else {
-            unsetBilltoAddress();
-          }
+      if (!(status & K.READY)) { return; }
+
+      // Set customer default data
+      if (customer) {
+        this.set("billtoName", customer.get("name"));
+        this.set("salesRep", customer.get("salesRep"));
+        this.set("commission", customer.get("commission"));
+        this.set("terms", customer.get("terms"));
+        this.set("taxZone", customer.get("taxZone"));
+        this.set("shipVia", customer.get("shipVia"));
+        this.set("site", customer.get("preferredSite"));
+        this.set("currency", customer.get("currency"));
+        this.set("shipto", customer.get("shipto"));
+        if (billtoContact) {
+          this.set("billtoContact", billtoContact);
+          this.set("billtoContactHonorific", billtoContact.get("honoroific"));
+          this.set("billtoContactFirstName", billtoContact.get("firstName"));
+          this.set("billtoContactMiddleName", billtoContact.get("middleName"));
+          this.set("billtoContactLastName", billtoContact.get("lastName"));
+          this.set("billtoContactSuffix", billtoContact.get("suffix"));
+          this.set("billtoContactTitle", billtoContact.get("title"));
+          this.set("billtoContactPhone", billtoContact.get("phone"));
+          this.set("billtoContactFax", billtoContact.get("fax"));
+          this.set("billtoContactEmail", billtoContact.get("email"));
         } else {
-          this.unset("salesRep");
-          this.unset("commission");
-          this.unset("terms");
-          this.unset("taxZone");
-          this.unset("shipVia");
-          this.unset("currency");
-          this.unset("shipZone");
-          unsetBilltoAddress();
           unsetBilltoContact();
-          this.unset("shipto");
-          this.unset("shiptoName");
-          this.unset("shiptoAddress1");
-          this.unset("shiptoAddress2");
-          this.unset("shiptoAddress3");
-          this.unset("shiptoCity");
-          this.unset("shiptoState");
-          this.unset("shiptoPostalCode");
-          this.unset("shiptoCountry");
         }
+        if (billtoAddress) {
+          this.set("billtoAddress1", billtoAddress.getValue("line1"));
+          this.set("billtoAddress2", billtoAddress.getValue("line2"));
+          this.set("billtoAddress3", billtoAddress.getValue("line3"));
+          this.set("billtoCity", billtoAddress.getValue("city"));
+          this.set("billtoState", billtoAddress.getValue("state"));
+          this.set("billtoPostalCode", billtoAddress.getValue("postalCode"));
+          this.set("billtoCountry", billtoAddress.getValue("country"));
+        } else {
+          unsetBilltoAddress();
+        }
+      } else {
+        this.unset("salesRep");
+        this.unset("commission");
+        this.unset("terms");
+        this.unset("taxZone");
+        this.unset("shipVia");
+        this.unset("currency");
+        this.unset("shipZone");
+        unsetBilltoAddress();
+        unsetBilltoContact();
+        this.unset("shipto");
+        this.unset("shiptoName");
+        this.unset("shiptoAddress1");
+        this.unset("shiptoAddress2");
+        this.unset("shiptoAddress3");
+        this.unset("shiptoCity");
+        this.unset("shiptoState");
+        this.unset("shiptoPostalCode");
+        this.unset("shiptoCountry");
       }
     },
 
@@ -403,34 +415,34 @@ white:true*/
         shiptoContact = shipto ? shipto.get("contact") : false,
         shiptoAddress = shiptoContact ? shiptoContact.get("address") : false;
 
-      if ((status & K.READY) && shipto) {
-        this.set("shiptoName", shipto.get("name"));
-        this.set("salesRep", shipto.get("salesRep"));
-        this.set("commission", shipto.get("commission"));
-        this.set("taxZone", shipto.get("taxZone"));
-        this.set("shipZone", shipto.get("shipZone"));
-        this.set("shipVia", shipto.get("shipVia"));
-        if (shiptoContact) {
-          this.set("shiptoContact", shiptoContact);
-          this.set("shiptoContactHonorific", shiptoContact.get("honoroific"));
-          this.set("shiptoContactFirstName", shiptoContact.get("firstName"));
-          this.set("shiptoContactMiddleName", shiptoContact.get("middleName"));
-          this.set("shiptoContactLastName", shiptoContact.get("lastName"));
-          this.set("shiptoContactSuffix", shiptoContact.get("suffix"));
-          this.set("shiptoContactTitle", shiptoContact.get("title"));
-          this.set("shiptoContactPhone", shiptoContact.get("phone"));
-          this.set("shiptoContactFax", shiptoContact.get("fax"));
-          this.set("shiptoContactEmail", shiptoContact.get("email"));
-        }
-        if (shiptoAddress) {
-          this.set("shiptoAddress1", shiptoAddress.getValue("line1"));
-          this.set("shiptoAddress2", shiptoAddress.getValue("line2"));
-          this.set("shiptoAddress3", shiptoAddress.getValue("line3"));
-          this.set("shiptoCity", shiptoAddress.getValue("city"));
-          this.set("shiptoState", shiptoAddress.getValue("state"));
-          this.set("shiptoPostalCode", shiptoAddress.getValue("postalCode"));
-          this.set("shiptoCountry", shiptoAddress.getValue("country"));
-        }
+      if (!(status & K.READY) || !shipto) { return; }
+      
+      this.set("shiptoName", shipto.get("name"));
+      this.set("salesRep", shipto.get("salesRep"));
+      this.set("commission", shipto.get("commission"));
+      this.set("taxZone", shipto.get("taxZone"));
+      this.set("shipZone", shipto.get("shipZone"));
+      this.set("shipVia", shipto.get("shipVia"));
+      if (shiptoContact) {
+        this.set("shiptoContact", shiptoContact);
+        this.set("shiptoContactHonorific", shiptoContact.get("honoroific"));
+        this.set("shiptoContactFirstName", shiptoContact.get("firstName"));
+        this.set("shiptoContactMiddleName", shiptoContact.get("middleName"));
+        this.set("shiptoContactLastName", shiptoContact.get("lastName"));
+        this.set("shiptoContactSuffix", shiptoContact.get("suffix"));
+        this.set("shiptoContactTitle", shiptoContact.get("title"));
+        this.set("shiptoContactPhone", shiptoContact.get("phone"));
+        this.set("shiptoContactFax", shiptoContact.get("fax"));
+        this.set("shiptoContactEmail", shiptoContact.get("email"));
+      }
+      if (shiptoAddress) {
+        this.set("shiptoAddress1", shiptoAddress.getValue("line1"));
+        this.set("shiptoAddress2", shiptoAddress.getValue("line2"));
+        this.set("shiptoAddress3", shiptoAddress.getValue("line3"));
+        this.set("shiptoCity", shiptoAddress.getValue("city"));
+        this.set("shiptoState", shiptoAddress.getValue("state"));
+        this.set("shiptoPostalCode", shiptoAddress.getValue("postalCode"));
+        this.set("shiptoCountry", shiptoAddress.getValue("country"));
       }
     },
 
@@ -444,7 +456,7 @@ white:true*/
         status = this.get("status");
       return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
     },
-    
+
     /**
       Fetch the next quote number. Need a special over-ride here because of peculiar
       behavior of quote numbering different from all other generated numbers.
@@ -768,6 +780,7 @@ white:true*/
     calculatePrice: function (force) {
       var settings = XT.session.settings,
         K = this.getClass(),
+        status = this.getStatus(),
         that = this,
         isReady = this.getStatus() & K.READY,
         asOf = new Date(),
@@ -792,7 +805,7 @@ white:true*/
         currency;
 
       // If no parent, don't bother
-      if (!parent) { return; }
+      if (!parent || !(status & K.READY)) { return; }
 
       parentDate = parent.get(parent.documentDateKey);
       customer = parent.get("customer");
@@ -870,13 +883,18 @@ white:true*/
     },
 
     calculateProfit: function () {
-      var unitCost = this.get("unitCost"),
+      var K = XM.Model,
+        status = this.getStatus(),
+        unitCost = this.get("unitCost"),
         price = this.get("price"),
         parent = this.getParent(),
         effective = this.get(parent.documentDateKey),
         currency = parent.get("currency"),
         that = this,
         options = {};
+
+      if (!(status & K.READY)) { return; }
+
       if (price) {
         if (unitCost) {
           options.success = function (value) {
@@ -892,7 +910,9 @@ white:true*/
     },
 
     calculateTax: function () {
-      var parent = this.getParent(),
+      var K = XM.Model,
+        parent = this.getParent(),
+        status = this.getStatus(),
         amount = this.get("extendedPrice"),
         taxTypeId = this.getValue("taxType.id"),
         recordType,
@@ -904,7 +924,7 @@ white:true*/
         params;
 
       // If no parent, don't bother
-      if (!parent) { return; }
+      if (!parent || !(status & K.READY)) { return; }
 
       recordType = parent.recordType;
       taxZoneId = parent.getValue("taxZone.id");
@@ -938,9 +958,13 @@ white:true*/
     */
     discountDidChange: function () {
       var K = this.getClass(),
+        status = this.getStatus(),
         discount = this.get("discount"),
         customerPrice = this.get("customer"),
         sense = this.get("priceMode") === K.MARKUP_MODE ? -1 : 1;
+
+      if (!(status & K.READY)) { return; }
+
       if (!customerPrice) {
         this.unset("discount");
       } else if (this._updatePrice) {
@@ -967,46 +991,50 @@ white:true*/
       this.unset("unitCost");
       this.sellingUnits.reset();
 
-      if ((status & K.READY) && item) {
-        // Fetch and update selling units
-        unitOptions.success = function (resp) {
-          // Resolve and add each id found
-          _.each(resp, function (id) {
-            var unit = XM.units.get(id);
-            that.sellingUnits.add(unit);
-          });
+      if (!(status & K.READY) || !item) { return; }
 
-          // Set the item default selections
-          that.set("quantityUnit", item.get("inventoryUnit"));
-          that.set("priceUnit", item.get("priceUnit"));
-        };
-        item.sellingUnits(unitOptions);
+      // Fetch and update selling units
+      unitOptions.success = function (resp) {
+        // Resolve and add each id found
+        _.each(resp, function (id) {
+          var unit = XM.units.get(id);
+          that.sellingUnits.add(unit);
+        });
 
-        // Fetch and update tax type
-        taxOptions.success = function (id) {
-          var taxType = XM.taxTypes.get(id);
-          if (taxType) {
-            that.set("taxType", taxType);
-          } else {
-            that.unset("taxType");
-          }
-        };
-        item.taxType(taxZone, taxOptions);
+        // Set the item default selections
+        that.set("quantityUnit", item.get("inventoryUnit"));
+        that.set("priceUnit", item.get("priceUnit"));
+      };
+      item.sellingUnits(unitOptions);
 
-        // Fetch and update unit cost
-        itemOptions.success = function (cost) {
-          that.set("unitCost", cost);
-        };
-        item.standardCost(itemOptions);
+      // Fetch and update tax type
+      taxOptions.success = function (id) {
+        var taxType = XM.taxTypes.get(id);
+        if (taxType) {
+          that.set("taxType", taxType);
+        } else {
+          that.unset("taxType");
+        }
+      };
+      item.taxType(taxZone, taxOptions);
 
-        // TODO: Get default characteristics
-      }
+      // Fetch and update unit cost
+      itemOptions.success = function (cost) {
+        that.set("unitCost", cost);
+      };
+      item.standardCost(itemOptions);
+
+      // TODO: Get default characteristics
     },
 
     parentDidChange: function () {
-      var parent = this.getParent(),
+      var K = XM.Model,
+       status = this.getStatus(),
+       parent = this.getParent(),
        lineNumber = this.get("lineNumber"),
        scheduleDate;
+
+      if (!(status & K.READY)) { return; }
 
       // Set next line number
       if (parent && !lineNumber) {
@@ -1029,13 +1057,18 @@ white:true*/
     },
 
     scheduleDateDidChange: function () {
-      var item = this.getValue("itemSite.item"),
+      var K = XM.Model,
+        status = this.getStatus(),
+        item = this.getValue("itemSite.item"),
         parent = this.getParent(),
         customer = parent.get("customer"),
         shipto = parent.get("shipto"),
         scheduleDate = this.get("scheduleDate"),
         that = this,
         options = {};
+
+      if (!(status & K.READY)) { return; }
+
       if (customer && item && scheduleDate) {
         options.success = function (canPurchase) {
           if (!canPurchase) {
