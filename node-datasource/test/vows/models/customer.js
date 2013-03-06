@@ -35,7 +35,7 @@ var XVOWS = XVOWS || {};
   };
 
   data.updateHash = {
-    name: "UPDATETESTCUSTOMER"
+    number: "UPDATETESTCUSTOMER"
   };
 
   vows.describe('XM.Customer CRUD test').addBatch({
@@ -43,6 +43,8 @@ var XVOWS = XVOWS || {};
       topic: function () {
         var that = this,
           callback = function () {
+            var prefSite = XM.sites.get(35);
+            data.createHash.preferredSite = prefSite; //this has to be set here because XM.sites hasn't loaded yet
             data.model = new XM.Customer();
             that.callback(null, data);
           };
