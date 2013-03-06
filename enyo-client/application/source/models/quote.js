@@ -743,10 +743,13 @@ white:true*/
     calculatePercentages: function () {
       var that = this,
         parent = this.getParent(),
-        currency = parent.get("currency"),
-        parentDate = parent.get(parent.documentDateKey),
+        currency = parent ? parent.get("currency") : false,
+        parentDate = parent ? parent.get(parent.documentDateKey) : false,
         price = this.get("price"),
         options = {};
+        
+      if (this.isNotReady()) { return; }
+        
       options.success = function (basePrice) {
         var K = that.getClass(),
           priceMode = that.get("priceMode"),
@@ -987,6 +990,18 @@ white:true*/
         unitOptions = {},
         taxOptions = {},
         itemOptions = {};
+        
+      // Fetch and update selling units
+      if (item) {
+        unitOptions.success = function (resp) {
+          // Resolve and add each id found
+          _.each(resp, function (id) {
+            var unit = XM.units.get(id);
+            that.sellingUnits.add(unit);
+          });
+        };
+        item.sellingUnits(unitOptions);
+      }
 
       if (this.isNotReady()) { return; }
 
@@ -998,6 +1013,12 @@ white:true*/
       this.sellingUnits.reset();
       
       if (!item) { return; }
+      
+      // Set the item default selections
+      this.set("quantityUnit", item.get("inventoryUnit"));
+      this.set("priceUnit", item.get("priceUnit"));
+      this.set("listCost", item.get("listPrice"));
+      this.set("listPrice", item.get("listCost"));
 
       // Fetch and update selling units
       unitOptions.success = function (resp) {
