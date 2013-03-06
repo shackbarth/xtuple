@@ -1207,7 +1207,7 @@ trailing:true white:true*/
               country: "shiptoCountry"
             }
             },
-            {kind: "onyx.GroupboxHeader", content: "_otherStuff".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_shipping".loc()},
             {kind: "XV.InputWidget", attr: "fob"},
             {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber", label: "_custPO".loc()},
             {kind: "XV.ShipViaCombobox", attr: "shipVia"},
