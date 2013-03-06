@@ -230,6 +230,13 @@ white:true*/
       };
       this.setStatus(XM.Model.BUSY_FETCHING);
       prospect.fetch(fetchOptions);
+    },
+    
+    salesRepDidChange: function () {
+      var salesRep = this.get('salesRep');
+      if (salesRep && (this.getStatus() & XM.Model.READY)) {
+        this.set('commission', salesRep.get('commission'));
+      }
     }
 
   });
