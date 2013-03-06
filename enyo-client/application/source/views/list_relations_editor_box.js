@@ -205,22 +205,22 @@ trailing:true white:true*/
     kind: "XV.RelationsEditor",
     style: "margin-top: 10px;",
     components: [
-    {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
-    {kind: "XV.ScrollableGroupbox", name: "totalGroup",
-      classes: "in-panel", components: [
-      {kind: "XV.CurrencyPickerWidget", attr: "currency"},
-      {kind: "XV.NumberWidget", attr: "margin"},
-      //{kind: "XV.TextArea", attr: "miscChargeDesc", fit: true} - needs GL
-      // Charge Sales Account - needs GL
-      {kind: "XV.NumberWidget", attr: "freightWeight"},
-      {kind: "XV.MoneyWidget", attr: {amount: "subtotal", currency: "currency"},
-        label: "_subtotal".loc(), currencyShowing: false, effective: new Date()},
-      // {kind: "XV.NumberWidget", attr: "miscCharge"}, - needs GL
-      {kind: "XV.NumberWidget", attr: "freight", label: "_freight".loc()},
-      {kind: "XV.MoneyWidget", attr: {amount: "taxTotal", currency: "currency"},
-        label: "_tax".loc(), currencyShowing: false, effective: new Date()},
-      {kind: "XV.MoneyWidget", attr: {amount: "total", currency: "currency"},
-        label: "_total".loc(), currencyShowing: false, effective: new Date()}
+      {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
+      {kind: "XV.ScrollableGroupbox", name: "totalGroup",
+        classes: "in-panel", components: [
+        {kind: "XV.CurrencyPickerWidget", attr: "currency"},
+        {kind: "XV.NumberWidget", attr: "margin"},
+        //{kind: "XV.TextArea", attr: "miscChargeDesc", fit: true} - needs GL
+        // Charge Sales Account - needs GL
+        {kind: "XV.NumberWidget", attr: "freightWeight"},
+        {kind: "XV.MoneyWidget", attr: {amount: "subtotal", currency: "currency"},
+          label: "_subtotal".loc(), currencyShowing: false, effective: new Date()},
+        // {kind: "XV.NumberWidget", attr: "miscCharge"}, - needs GL
+        {kind: "XV.NumberWidget", attr: "freight", label: "_freight".loc()},
+        {kind: "XV.MoneyWidget", attr: {amount: "taxTotal", currency: "currency"},
+          label: "_tax".loc(), currencyShowing: false, effective: new Date()},
+        {kind: "XV.MoneyWidget", attr: {amount: "total", currency: "currency"},
+          label: "_total".loc(), currencyShowing: false, effective: new Date()}
       ]}
     ]
   });
@@ -271,7 +271,7 @@ trailing:true white:true*/
         collection: this.getValue(),
         index: index,
         listRelations: this.$.list
-        });
+      });
       return true;
     }
   });
