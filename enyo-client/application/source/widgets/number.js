@@ -183,7 +183,7 @@ regexp:true, undef:true, trailing:true, white:true */
             oldValue = this.getCurrency();
             if (oldValue !== value[attribute]) {
               this.setCurrency(value[attribute]);
-              this.$.picker.setValue(value[attribute] || XT.baseCurrency());
+              this.$.picker.setValue(value[attribute] || XT.baseCurrency(), options);
               // Set base label with calculated value
               this.setBaseAmount(this.getAmount());
             }
