@@ -778,6 +778,11 @@ body {
 .xv-addresswidget-buttons {
   margin-top: 4px;
 }
+.xv-button-section {
+  margin-top: 4px;
+  margin: 0;
+  background-color: #555555;
+}
 .xv-addresswidget-editor-header {
   padding: 4px;
 }

@@ -1193,9 +1193,9 @@ trailing:true white:true*/
               country: "billtoCountry"
             }
             },
-            {classes: "xv-addresswidget-buttons", components: [
+            {classes: "xv-button-section", components: [
               {kind: "onyx.Button", content: "_copyToShipTo".loc(), ontap: "copyBilltoToShipto",
-                style: "margin-left: 4px; margin-bottom: 4px;"}
+                style: "margin: 4px;"}
             ]},
             {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
             {kind: "XV.CustomerShiptoWidget", attr: "shipto", showAddress: true, label: "_name".loc()},
