@@ -313,7 +313,48 @@ regexp:true, undef:true, trailing:true, white:true */
     list: "XV.ItemSiteList",
     keyAttribute: "item.number",
     nameAttribute: "item.number",
-    descripAttribute: "site.code"
+    descripAttribute: "site.code",
+    /**
+      Add a site picker to the bottom of the component array
+    */
+    create: function () {
+      this.inherited(arguments);
+      this.createComponent(
+        {
+          kind: "XV.SitePicker",
+          name: "sitePicker",
+          /**
+            The ItemSite widget might want to restrict the list to a specific
+            set of site IDs, as specified in the options object
+           */
+          filter: function (models, options) {
+            var siteIds = options && options.siteIds,
+              matches = _.filter(this._collection.models, function (model) {
+                return !siteIds || _.indexOf(siteIds, model.getValue("id")) >= 0;
+              });
+
+            return matches || [];
+          }
+        }
+      );
+    },
+    /**
+      We only want the picker to show Site models with an ItemSite Item that
+      was just picked.
+     */
+    relationSelected: function (inSender, inEvent) {
+      this.inherited(arguments);
+
+      var itemId = this.getValue().getValue("item.id"),
+        matches = _.filter(this._collection.models, function (model) {
+          return model.getValue("item.id") === itemId;
+        }),
+        siteIds = _.map(matches, function (model) {
+          return model.getValue("site.id");
+        });
+
+      this.$.sitePicker.buildList({siteIds: siteIds});
+    }
   });
 
   // ..........................................................
