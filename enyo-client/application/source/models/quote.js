@@ -988,14 +988,14 @@ white:true*/
         taxOptions = {},
         itemOptions = {};
 
+      if (this.isNotReady() || !item) { return; }
+
       // Reset values
       this.unset("quantityUnit");
       this.unset("priceUnit");
       this.unset("taxType");
       this.unset("unitCost");
       this.sellingUnits.reset();
-
-      if (this.isNotReady() || !item) { return; }
 
       // Fetch and update selling units
       unitOptions.success = function (resp) {
