@@ -323,6 +323,8 @@ regexp:true, undef:true, trailing:true, white:true */
         {
           kind: "XV.SitePicker",
           name: "sitePicker",
+          label: "_site".loc(),
+          showing: false,
           /**
             The ItemSite widget might want to restrict the list to a specific
             set of site IDs, as specified in the options object
@@ -346,6 +348,7 @@ regexp:true, undef:true, trailing:true, white:true */
       this.inherited(arguments);
 
       var itemId = this.getValue().getValue("item.id"),
+        // matches are an array of ItemSite models, whose Item was just picked
         matches = _.filter(this._collection.models, function (model) {
           return model.getValue("item.id") === itemId;
         }),
@@ -353,6 +356,7 @@ regexp:true, undef:true, trailing:true, white:true */
           return model.getValue("site.id");
         });
 
+      this.$.sitePicker.setShowing(true);
       this.$.sitePicker.buildList({siteIds: siteIds});
     }
   });
