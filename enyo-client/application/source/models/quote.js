@@ -969,7 +969,7 @@ white:true*/
     discountDidChange: function () {
       var K = this.getClass(),
         discount = this.get("discount"),
-        customerPrice = this.get("customer"),
+        customerPrice = this.get("customerPrice"),
         sense = this.get("priceMode") === K.MARKUP_MODE ? -1 : 1;
 
       if (this.isNotReady()) { return; }
