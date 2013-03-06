@@ -13,7 +13,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.accountTypes"
   });
-  
+
   // ..........................................................
   // BALANCE METHOD
   //
@@ -23,7 +23,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.balanceMethods"
   });
-  
+
   // ..........................................................
   // CHARACTERISTIC TYPE
   //
@@ -61,11 +61,11 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'name'}
     ]
   });
-  
+
   // ..........................................................
   // CURRENCY
   //
-  
+
   enyo.kind({
     name: "XV.CurrencyPicker",
     kind: "XV.Picker",
@@ -83,7 +83,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'abbreviation'}
     ]
   });
-  
+
   enyo.kind({
     name: "XV.CurrencyPickerWidget",
     kind: "XV.PickerWidget",
@@ -93,7 +93,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'abbreviation'}
     ]
   });
-  
+
   // ..........................................................
   // CUSTOMER TYPE
   //
@@ -107,7 +107,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'code'}
     ]
   });
-  
+
   // ..........................................................
   // CREDIT STATUS
   //
@@ -279,7 +279,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.projectStatuses"
   });
-  
+
   // ..........................................................
   // SALES REP
   //
@@ -292,7 +292,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'name'}
     ]
   });
-  
+
   // ..........................................................
   // SHIPPING CHARGES
   //
@@ -305,7 +305,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'name'}
     ]
   });
-  
+
   // ..........................................................
   // SHIPPING FORMS
   //
@@ -318,7 +318,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'name'}
     ]
   });
-  
+
   // ..........................................................
   // SHIP Zone
   //
@@ -331,7 +331,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'name'}
     ]
   });
-  
+
   // ..........................................................
   // TAX AUTHORITY
   //
@@ -345,7 +345,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'code'}
     ]
   });
-  
+
   // ..........................................................
   // TAX ZONE
   //
@@ -359,7 +359,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'code'}
     ]
   });
-  
+
   // ..........................................................
   // TAX ZONE
   //
@@ -373,7 +373,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'number'}
     ]
   });
-  
+
   // ..........................................................
   // TERMS
   //
@@ -400,7 +400,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'name'}
     ]
   });
-  
+
   // ..........................................................
   // SITE
   //
@@ -413,7 +413,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'code'}
     ]
   });
-  
+
   // ..........................................................
   // SALE TYPE
   //
@@ -426,5 +426,18 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'name'}
     ]
   });
-  
+
+  // ..........................................................
+  // TAX TYPE
+  //
+
+  enyo.kind({
+    name: "XV.TaxTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.taxTypes",
+    orderBy: [
+      {attribute: 'name'}
+    ]
+  });
+
 }());

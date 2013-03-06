@@ -1261,19 +1261,30 @@ trailing:true white:true*/
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", classes: "in-panel", components: [
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", classes: "in-panel", fit: true, components: [
             {kind: "XV.NumberWidget", attr: "lineNumber"},
-            {kind: "XV.SitePicker", attr: "site"},
-            {kind: "XV.InputWidget", attr: "customerPartNumber"},
+            {content: "TODO: ITEMSITE"},
             {kind: "XV.NumberWidget", attr: "quantity"},
             {kind: "XV.UnitWidget", attr: "quantityUnit"},
+            {kind: "XV.NumberWidget", attr: "quantityUnitRatio"},
+            {kind: "XV.NumberWidget", attr: "customerPrice"},
             {kind: "XV.PercentWidget", attr: "discount"},
+            {kind: "XV.NumberWidget", attr: "price"},
+            {kind: "XV.DateWidget", attr: "scheduleDate"},
+            //{kind: "XV.DateWidget", attr: "promiseDate"}, TODO: this is conditional on sales settings
             {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "quote.currency"},
               label: "_unitPrice".loc(), currencyDisabled: true},
+            {kind: "XV.NumberWidget", attr: "listCost"},
+            {kind: "XV.NumberWidget", attr: "listCostMarkup"},
+            {kind: "XV.NumberWidget", attr: "listPrice"},
+            {kind: "XV.NumberWidget", attr: "listPriceDiscount"},
+            {kind: "XV.InputWidget", attr: "customerPartNumber"},
             {kind: "XV.UnitWidget", attr: "priceUnit"},
+            {kind: "XV.InputWidget", attr: "priceMode"},
             {kind: "XV.NumberWidget", attr: "extendedPrice"},
-            {kind: "XV.DateWidget", attr: "scheduleDate"},
-            {kind: "XV.DateWidget", attr: "promiseDate"},
+            {kind: "XV.NumberWidget", attr: "profit"},
+            {kind: "XV.TaxTypePicker", attr: "taxType"},
+            {kind: "XV.NumberWidget", attr: "tax"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}

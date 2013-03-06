@@ -187,6 +187,7 @@ regexp:true, undef:true, trailing:true, white:true */
             if (oldValue !== newValue) {
               this.setCurrency(newValue || XT.baseCurrency());
               this.$.picker.setValue(this.getCurrency());
+
               // only show the base panel if there is an effect date AND the currency doesn't match the base
               this.$.basePanel.setShowing(this.getEffective() && (this.getCurrency() !== XT.baseCurrency()));
               // Set base label with calculated value
