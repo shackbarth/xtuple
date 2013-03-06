@@ -203,7 +203,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.QuoteLineItemSummary",
     kind: "XV.RelationsEditor",
-    style: "margin-top: 10px;",
+    style: "margin-top: 10px",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
       {kind: "XV.ScrollableGroupbox", name: "totalGroup",

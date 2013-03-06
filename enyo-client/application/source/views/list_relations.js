@@ -320,12 +320,12 @@ enyo.kind({
             {kind: "XV.ListAttr", attr: "lineNumber", classes: "bold"},
             {kind: "XV.ListAttr", attr: "scheduleDate", fit: true, classes: "right"}
           ]},
-          {kind: "XV.ListAttr", attr: "item.number"}
+          {kind: "XV.ListAttr", attr: "item"}
         ]},
         {kind: "XV.ListColumn", classes: "third",
           components: [
           {kind: "XV.ListAttr", attr: "quote.getQuoteStatusString"},
-          {kind: "XV.ListAttr", attr: "itemSite"}
+          {kind: "XV.ListAttr", attr: "site"}
         ]},
         {kind: "XV.ListColumn", classes: "third",
           components: [
