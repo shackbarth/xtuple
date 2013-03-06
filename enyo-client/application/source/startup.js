@@ -205,6 +205,21 @@ white:true*/
       XM.units.fetch(options);
     }
   });
+  
+  XT.StartupTasks.push({
+    taskName: "loadFreightClasses",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      options.query = {};
+      options.query.orderBy = [
+        {attribute: 'code'}
+      ];
+      XM.freightClasses = new XM.FreightClassCollection();
+      XM.freightClasses.fetch(options);
+    }
+  });
 
   XT.StartupTasks.push({
     taskName: "loadClassCodes",
@@ -212,6 +227,10 @@ white:true*/
       var options = {
         success: _.bind(this.didComplete, this)
       };
+      options.query = {};
+      options.query.orderBy = [
+        {attribute: 'code'}
+      ];
       XM.classCodes = new XM.ClassCodeCollection();
       XM.classCodes.fetch(options);
     }

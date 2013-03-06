@@ -65,6 +65,22 @@ white:true*/
     enforceUpperKey: false
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Document
+  */
+  XM.FreightClass = XM.Document.extend({
+    /** @scope XM.FreightClass.prototype */
+
+    recordType: 'XM.FreightClass',
+
+    documentKey: 'code',
+
+    enforceUpperKey: false
+
+  });
 
   /**
     @class
@@ -342,6 +358,18 @@ white:true*/
    /** @scope XM.ClassCodeCollection.prototype */
 
     model: XM.ClassCode
+
+  });
+  
+  /**
+   @class
+
+   @extends XM.Collection
+  */
+  XM.FreightClassCollection = XM.Collection.extend({
+   /** @scope XM.FreightClassCollection.prototype */
+
+    model: XM.FreightClass
 
   });
 
