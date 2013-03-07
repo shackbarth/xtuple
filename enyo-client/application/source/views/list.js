@@ -668,8 +668,32 @@ trailing:true white:true*/
       return value ? "_sold".loc() : "";
     },
     fetch: function (options) {
-      console.log(options);
-      this.inherited(arguments);
+      var that = this,
+        dispatchOptions,
+        success = options && options.success;
+
+      if (options && options.extraOptions) {
+        // this list has been spawned in the context where we need to
+        // filter the Item Sites by custitem. This requires a dispatch
+        // function.
+        dispatchOptions = {
+          success: function (data) {
+            that.getValue().reset(data);
+            that.fetched();
+            if (success) {
+              success(data);
+            }
+          }
+        }
+        XM.ItemSite.dispatchForCollection(this.getQuery(),
+          options.extraOptions.customer,
+          options.extraOptions.shipto,
+          dispatchOptions);
+
+      } else {
+        this.inherited(arguments);
+
+      }
     }
   });
 

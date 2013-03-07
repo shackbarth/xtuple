@@ -348,14 +348,18 @@ regexp:true, undef:true, trailing:true, white:true */
       );
     },
     shiptoChanged: function (inSender, inEvent) {
-      var extraSearchOptions = this.getExtraSearchOptions() || {};
-      extraSearchOptions.shipto = this.getShipto();
-      this.setExtraSearchOptions(extraSearchOptions);
+      if (this.getShipto()) {
+        var extraSearchOptions = this.getExtraSearchOptions() || {};
+        extraSearchOptions.shipto = this.getShipto().id;
+        this.setExtraSearchOptions(extraSearchOptions);
+      }
     },
     customerChanged: function (inSender, inEvent) {
-      var extraSearchOptions = this.getExtraSearchOptions() || {};
-      extraSearchOptions.customer = this.getCustomer();
-      this.setExtraSearchOptions(extraSearchOptions);
+      if (this.getCustomer()) {
+        var extraSearchOptions = this.getExtraSearchOptions() || {};
+        extraSearchOptions.customer = this.getCustomer().id;
+        this.setExtraSearchOptions(extraSearchOptions);
+      }
     },
     /**
       This is going to have to be a dispatch function, due to the
