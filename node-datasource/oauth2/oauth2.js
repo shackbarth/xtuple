@@ -91,7 +91,8 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
       var params = {};
 
       params.token_type = model.get("tokenType");
-      params.expires_in = new Date() - expires;
+      // Google sends time tell expires instead of just the time it expires at, so...
+      params.expires_in = (new Date() - expires) / 1000; // Seconds until the token expires.
 
       // Send the tokens along.
       return done(null, model.get("accessToken"), model.get("refreshToken"), params);
