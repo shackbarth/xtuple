@@ -330,7 +330,7 @@ enyo.kind({
           components: [
           {content: "_ordered".loc() + ":", classes: "xv-list-attr",
             style: "text-align: right;"},
-          {content: "_uom".loc() + ":", classes: "xv-list-attr",
+          {content: "_quantityUnit".loc() + ":", classes: "xv-list-attr",
             style: "text-align: right;"},
         ]},
         {kind: "XV.ListColumn", classes: "third",
