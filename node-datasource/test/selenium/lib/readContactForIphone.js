@@ -53,7 +53,7 @@ regexp:true, strict:true, trailing:true, white:false*/
   utils.results('FAIL: Last name incorrect');
   fcount++;
   }
-  browser.elementByXPath(contactObj.readObj1.addressEditButton_xpath, function (err, el7) {
+  /*browser.elementByXPath(contactObj.readObj1.addressEditButton_xpath, function (err, el7) {
   browser.clickElement(el7, function () {
   browser.elementByXPath(contactObj.readObj1.addressLine1_xpath, function (err, el8) {
   browser.getValue(el8, function (err,value) {
@@ -102,6 +102,7 @@ regexp:true, strict:true, trailing:true, white:false*/
   fcount++;
   }
   browser.elementByXPath(contactObj.readObj1.cnotes_xpath, function (err,el11) {
+  browser.moveTo(el11, function () {
   browser.getValue(el11, function (err,value) {
   if (value === contactData.VARIABLES.contact_notes) {
   utils.results('PASS: Contact notes verified');
@@ -109,7 +110,7 @@ regexp:true, strict:true, trailing:true, white:false*/
   else {
   utils.results('FAIL: Contact Notes incorrect');
   fcount++;
-  }
+  }*/
   browser.elementByXPath(contactObj.readObj1.caccount_xpath, function (err,el11) {
   browser.getValue(el11, function (err,value) {
   if (value === contactData.VARIABLES.contact_account) {
@@ -200,7 +201,7 @@ regexp:true, strict:true, trailing:true, white:false*/
     callback(browser, test);
   });
   });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});
-  });});});});});});});});});});});});});});});});});});});});});});});});});});});});});};
+  });});});});});});});});});});});});});});};/*});});});});});});});});});});});});});});});});};*/
 }());
 
 
