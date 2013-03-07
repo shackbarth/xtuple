@@ -47,6 +47,11 @@ white:true*/
     }
 
   });
+  _.extend(XM.ItemSite, /** @lends XM.ItemSite# */{
+    dispatchForCollection: function (query, customerId, shiptoId, options) {
+      XT.dataSource.dispatch("XM.Item", "availableItems", [query, customerId, shiptoId], options);
+    }
+  });
 
   /**
     @class
@@ -72,7 +77,9 @@ white:true*/
 
     editableModel: 'XM.ItemSite'
 
+
   });
+
 
   /**
     @class

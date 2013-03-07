@@ -312,7 +312,8 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.ItemSiteRelationCollection",
     list: "XV.ItemSiteList",
     published: {
-      customer: null
+      customer: null,
+      shipto: null
     },
     keyAttribute: "item.number",
     nameAttribute: "item.number",
@@ -345,6 +346,32 @@ regexp:true, undef:true, trailing:true, white:true */
           }
         }
       );
+    },
+    /**
+      This is going to have to be a dispatch function, due to the
+      complexity of customer-specific items
+     */
+    fetchCollection: function (value, rowLimit, callbackName) {
+      var customerId = this.getCustomer() && this.getCustomer().id,
+        shiptoId = this.getShipto() && this.getShipto().id,
+        options = {
+          success: enyo.bind(this, callbackName)
+        },
+        key = this.getKeyAttribute(),
+        parameters = [{
+          attribute: key,
+          operator: "BEGINS_WITH",
+          value: value
+        }],
+        query = {
+          parameters: parameters,
+          rowLimit: rowLimit,
+          orderBy: [{
+            attribute: key
+          }]
+        };
+
+      XM.ItemSite.dispatchForCollection(query, customerId, shiptoId, options);
     },
     /**
       We only want the picker to show Site models with an ItemSite Item that

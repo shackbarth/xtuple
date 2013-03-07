@@ -6,6 +6,10 @@ select xt.install_js('XM','item','xtuple', $$
   
   XM.Item.isDispatchable = true;
 
+  XM.Item.availableItems = function (query, customerId, shiptoId) {
+    return JSON.stringify({data: []});
+  };
+
   /**
     Returns the standard unit cost for an item.
     

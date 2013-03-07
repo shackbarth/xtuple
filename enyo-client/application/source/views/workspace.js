@@ -1292,15 +1292,26 @@ trailing:true white:true*/
         {kind: "XV.QuoteLineCommentBox", attr: "comments"}
       ]}
     ],
+    /**
+      The item site widget will need to know about the customer and the shipto
+      for narrowing down of item options.
+     */
     attributesChanged: function (model, options) {
       this.inherited(arguments);
 
       if (this.getValue().getStatus() & XM.Model.READY
-          && this.getValue("quote.customer")
+          && this.getValue().getValue("quote.customer")
           // XXX don't bother setting it twice? Could it possibly change?
           && !this.$.itemSiteWidget.getCustomer()) {
-        this.$.itemSiteWidget.setCustomer(this.getValue("quote.customer"));
+        this.$.itemSiteWidget.setCustomer(this.getValue().getValue("quote.customer"));
       }
+      if (this.getValue().getStatus() & XM.Model.READY
+          && this.getValue().getValue("quote.shipto")
+          // XXX don't bother setting it twice? Could it possibly change?
+          && !this.$.itemSiteWidget.getShipto()) {
+        this.$.itemSiteWidget.setShipto(this.getValue().getValue("quote.shipto"));
+      }
+
     }
   });
 
