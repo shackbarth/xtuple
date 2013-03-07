@@ -5,10 +5,12 @@ regexp:true, strict:true, trailing:true, white:false */
   "use strict";
   var contactData = require('./contactData.js'),
   contactObj = require('./contactObj.js'),
+  readContactObj,
   utils = require('./utils.js');
-  exports.createContact = function (browser,callback) {
+  exports.createContact = function (browser, test, fname, callback) {
+  readContactObj = contactObj.readObj1.readContact_xpath + fname +  "')]";
   utils.results('*****Creating a New Contact*****');
-  utils.pause(10000, function () {
+  utils.pause(20000, function () {
   browser.windowHandle(function (err,win) {
   browser.maximize(win, function () {
   browser.elementByXPath(contactObj.Obj.crmlink_xpath, function (err,el1) {
@@ -23,7 +25,7 @@ regexp:true, strict:true, trailing:true, white:false */
   browser.elementByXPath(contactObj.Obj.overview_xpath, function (err, overviewEl) {
   browser.clickElement(overviewEl, function () {
   browser.elementByXPath(contactObj.Obj.cfname_xpath, function (err, el4) {
-  browser.type(el4, contactData.VARIABLES.contact_fname, function () {
+  browser.type(el4, fname, function () {
   browser.elementByXPath(contactObj.Obj.cmname_xpath, function (err, el5) {
   browser.type(el5, contactData.VARIABLES.contact_mname, function () {
   browser.elementByXPath(contactObj.Obj.clname_xpath, function (err, el6) {
@@ -58,26 +60,26 @@ regexp:true, strict:true, trailing:true, white:false */
   browser.clickElement(el17, function () {
   utils.pause(4000, function () {
   browser.elementByXPath(contactObj.readObj1.searchField_xpath, function (err,el27) {
-  browser.type(el27,contactData.VARIABLES.contact_fname + "\uE007", function () {
+  browser.type(el27, fname + "\uE007", function () {
   utils.pause(6000, function () {
   browser.elementByXPath(contactObj.readObj1.contactsHeading_xpath, function (err,headingEl) {
   browser.clickElement(headingEl, function () {
-  browser.waitForVisibleByXPath(contactObj.readObj1.readContact_xpath, 60000, function () {
-  browser.elementByXPath(contactObj.readObj1.readContact_xpath, function (err,contactEl) {
+  browser.waitForVisibleByXPath(readContactObj, 60000, function () {
+  browser.elementByXPath(readContactObj, function (err,contactEl) {
   browser.isDisplayed(contactEl, function (err,displayed) {
   if(displayed) {
-    utils.results('contact saved');
+  test.ok(displayed, 'contact saved');
+  callback(browser,test);
   }
   else {
-    utils.results('contact not saved');
-    process.nextTick(function () {
-    utils.pause(1000, function () {
-    browser.quit();
-    utils.pause(1000, function () {
-    process.exit(1);
-    });});});
+  test.ok(false, 'contact not saved');
+  setTimeout(function () {
+  browser.quit();
+  setTimeout(function () {
+  test.done();
+  },2000);
+  },2000);
   }
-  callback(browser);
   });});});});});});});});});});});});});});});});});});});});});});});});});});});});});
   });});});});});});});});});});});});});});});});});});});});});});});});});});});});};
 }());
