@@ -7,7 +7,14 @@ select xt.install_js('XM','item','xtuple', $$
   XM.Item.isDispatchable = true;
 
   XM.Item.availableItems = function (query, customerId, shiptoId) {
-    return JSON.stringify({data: []});
+    var clause = XT.Data.buildClause("XM", "Item", query);
+    var sql = 'select * from custitem($1, $2, $3);';
+
+    plv8.elog(NOTICE, "clause is ", JSON.stringify(clause));
+    return JSON.stringify(plv8.execute(sql, [customerId, shiptoId, new Date()]));
+
+    
+    /*return JSON.stringify({data: []});*/
   };
 
   /**

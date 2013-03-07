@@ -31,26 +31,27 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Object} Parameters - optional
       @returns {Object}
     */
-    buildClause: function (nameSpace, type, parameters) {
-     parameters = parameters || [];
-     var orm = XT.Orm.fetch(nameSpace, type),
-       privileges = orm.privileges,
-       param,
-       childOrm,
-       clause,
-       orClause,
-       clauses = [],
-       attr,
-       parts,
-       op,
-       arg,
-       i,
-       n,
-       c,
-       cnt = 1,
-       ret = {},
-       conds = [],
-       prop;
+    buildClause: function (nameSpace, type, parameters, orderBy) {
+      parameters = parameters || [];
+      var orm = XT.Orm.fetch(nameSpace, type),
+        privileges = orm.privileges,
+        param,
+        childOrm,
+        clause,
+        orClause,
+        clauses = [],
+        attr,
+        parts,
+        op,
+        arg,
+        i,
+        n,
+        c,
+        cnt = 1,
+        ret = {},
+        conds = [],
+        list = [],
+        prop;
 
       ret.conditions = "";
       ret.parameters = [];
@@ -201,8 +202,45 @@ select xt.install_js('XT','Data','xtuple', $$
           }
         }
       }
-
       ret.conditions = (clauses.length ? '(' + clauses.join(' and ') + ')' : ret.conditions) || true;
+
+      /* Massage ordeBy with quoted identifiers */
+      if (orderBy) {
+        for (i = 0; i < orderBy.length; i++) {
+          /* handle path case */
+          if (orderBy[i].attribute.indexOf('.') > -1) {
+            attr = "";
+            parts = orderBy[i].attribute.split('.');
+            for (n = 0; n < parts.length; n++) {
+              prop = XT.Orm.getProperty(orm, parts[n]);
+              if (!prop) {
+                plv8.elog(ERROR, 'Attribute not found in map: ' + parts[n]);
+              }
+              attr += '"' + parts[n] + '"';
+              if (n < parts.length - 1) {
+                attr = "(" + attr + ").";
+                orm = XT.Orm.fetch(nameSpace, prop.toOne.type); 
+              }
+            }
+          /* normal case */
+          } else {
+            prop = XT.Orm.getProperty(orm, orderBy[i].attribute);
+            if (!prop) {
+              plv8.elog(ERROR, 'Attribute not found in map: ' + orderBy[i].attribute);
+            }
+            attr = '"' + orderBy[i].attribute + '"';
+          }
+          if (orderBy[i].isEmpty) {
+            attr = "length(" + attr + ")=0";
+          }       
+          if (orderBy[i].descending) {
+            attr += " desc";
+          }
+          list.push(attr);
+        }
+      }
+      ret.orderBy = list.length ? 'order by ' + list.join(',') : '';
+
       return ret;
     },
 
@@ -828,48 +866,11 @@ select xt.install_js('XT','Data','xtuple', $$
         n,
         attr,
         parts,
-        list = [],
-        clause = this.buildClause(nameSpace, type, parameters),
+        clause = this.buildClause(nameSpace, type, parameters, orderBy),
         sql = 'select * from {table} where {key} in ' +
               '(select {key} from {table} where {conditions} {orderBy} {limit} {offset}) ' +
               '{orderBy}';
 
-      /* Massage ordeBy with quoted identifiers */
-      if (orderBy) {
-        for (i = 0; i < orderBy.length; i++) {
-          /* handle path case */
-          if (orderBy[i].attribute.indexOf('.') > -1) {
-            attr = "";
-            parts = orderBy[i].attribute.split('.');
-            for (n = 0; n < parts.length; n++) {
-              prop = XT.Orm.getProperty(orm, parts[n]);
-              if (!prop) {
-                plv8.elog(ERROR, 'Attribute not found in map: ' + parts[n]);
-              }
-              attr += '"' + parts[n] + '"';
-              if (n < parts.length - 1) {
-                attr = "(" + attr + ").";
-                orm = XT.Orm.fetch(nameSpace, prop.toOne.type); 
-              }
-            }
-          /* normal case */
-          } else {
-            prop = XT.Orm.getProperty(orm, orderBy[i].attribute);
-            if (!prop) {
-              plv8.elog(ERROR, 'Attribute not found in map: ' + orderBy[i].attribute);
-            }
-            attr = '"' + orderBy[i].attribute + '"';
-          }
-          if (orderBy[i].isEmpty) {
-            attr = "length(" + attr + ")=0";
-          }       
-          if (orderBy[i].descending) {
-            attr += " desc";
-          }
-          list.push(attr);
-        }
-      }
-      orderBy = list.length ? 'order by ' + list.join(',') : '';
 
       /* validate - don't bother running the query if the user has no privileges */
       if(!this.checkPrivileges(nameSpace, type)) { return []; };
@@ -878,7 +879,7 @@ select xt.install_js('XT','Data','xtuple', $$
       sql = sql.replace(/{table}/g, table)
                .replace(/{key}/g, key)
                .replace('{conditions}', clause.conditions)
-               .replace(/{orderBy}/g, orderBy)
+               .replace(/{orderBy}/g, clause.orderBy)
                .replace('{limit}', limit)
                .replace('{offset}', offset);
       if(DEBUG) { plv8.elog(NOTICE, 'sql = ', sql); }
