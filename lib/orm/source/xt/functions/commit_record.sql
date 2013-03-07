@@ -1,18 +1,26 @@
 create or replace function xt.commit_record(data_hash text) returns text as $$
+
   var dataHash = JSON.parse(data_hash),
       recordType = dataHash.recordType,
       encryptionKey = dataHash.encryptionKey,
       data = Object.create(XT.Data),
-      key, orm;
+      key,
+      orm
+      ret;
 
   if (dataHash.username) { XT.username = dataHash.username; }
- 
+
   delete dataHash.recordType;
   data.commitRecord(recordType, dataHash.dataHash, encryptionKey);
   orm = XT.Orm.fetch(recordType.beforeDot(), recordType.afterDot());
   key = XT.Orm.primaryKey(orm);
-  return JSON.stringify(data.retrieveRecord(recordType, dataHash.dataHash[key]));
-  
+  ret = data.retrieveRecord(recordType, dataHash.dataHash[key]);
+
+  /* Unset XT.username so it isn't cached for future queries. */
+  XT.username = undefined;
+
+  return JSON.stringify(ret);
+
 $$ language plv8;
 /*
 select xt.js_init();
@@ -42,7 +50,7 @@ select xt.commit_record(
         "id":739893,
         "contact":12171,
         "created":"2011-12-21 12:47:12.756437-05",
-        "createdBy":"admin", 
+        "createdBy":"admin",
         "commentType": 3,
         "text":"booya!",
         "isPublic":false,
@@ -52,7 +60,7 @@ select xt.commit_record(
         "id":739894,
         "contact":12171,
         "created":"2011-12-21 12:47:12.756437-05",
-        "createdBy":"admin", 
+        "createdBy":"admin",
         "commentType": 3,
         "text":"Now is the time for all good men...",
         "isPublic":false,
@@ -95,7 +103,7 @@ select xt.commit_record(
         "id":739893,
         "contact":12171,
         "created":"2011-12-21 12:47:12.756437-05",
-        "createdBy":"admin", 
+        "createdBy":"admin",
         "commentType": 3,
         "text":"booya!",
         "isPublic":false,
@@ -104,7 +112,7 @@ select xt.commit_record(
         "id":739894,
         "contact":12171,
         "created":"2011-12-21 12:47:12.756437-05",
-        "createdBy":"admin", 
+        "createdBy":"admin",
         "commentType": 3,
         "text":"Now is NOT the time for all good men...",
         "isPublic":false,
@@ -147,7 +155,7 @@ select xt.commit_record(
         "id":739893,
         "contact":12171,
         "created":"2011-12-21 12:47:12.756437-05",
-        "createdBy":"admin", 
+        "createdBy":"admin",
         "commentType": 3,
         "text":"booya!",
         "isPublic":false,
@@ -158,7 +166,7 @@ select xt.commit_record(
         "id":739894,
         "contact":12171,
         "date":"2011-12-21 12:47:12.756437-05",
-        "username":"admin", 
+        "username":"admin",
         "comment_type": 3,
         "text":"Now is the time for all good men...",
         "isPublic":false,
