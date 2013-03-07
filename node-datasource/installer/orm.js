@@ -181,7 +181,7 @@ require('../xt/database/database');
     _.each(properties, function (property) {
       var which, type, ns;
       if (property.toOne || property.toMany) {
-        if (property.toOne && !property.toOne.isNested) return;
+        if (property.toOne && property.toOne.isNested === false) return;
         which = property.toOne ? property.toOne: property.toMany;
         type = which.type;
         ns = orm.nameSpace;

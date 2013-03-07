@@ -1,3 +1,5 @@
+drop function if exists xt.add_column(text, text, text, text, text);
+
 create or replace function xt.add_column(table_name text, column_name text, type_name text, constraint_text text default null, schema_name text default 'xt', column_comment text default null) returns boolean volatile as $$
 declare
   count integer;

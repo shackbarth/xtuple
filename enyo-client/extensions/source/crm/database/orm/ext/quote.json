@@ -3,7 +3,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "Quote",
-    "table": "quhead",
+    "table": "xt.quheadinfo",
     "isExtension": true,
     "comment": "Extended by CRM",
     "relations": [
@@ -13,15 +13,6 @@
       }
     ],
     "properties": [
-      {
-        "name": "accounts",
-        "toMany": {
-          "isNested": true,
-          "type": "QuoteAccount",
-          "column": "quhead_id",
-          "inverse": "source"
-        }
-      },
       {
         "name": "opportunities",
         "toMany": {

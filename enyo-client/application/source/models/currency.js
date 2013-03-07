@@ -1,11 +1,13 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
-/*global XT:true, XM:true, Backbone:true, _:true, console:true */
+/*global XT:true, XM:true, Backbone:true, _:true, console:true, Globalize:true */
 
 (function () {
   "use strict";
 
+  var _rateCache;
+  
   /**
     @class
 
@@ -36,11 +38,9 @@ white:true*/
     //
 
     abbreviationDidChange: function (model, value, options) {
-      var K = XM.Model,
-        that = this,
-        status = this.getStatus(),
+      var that = this,
         checkOptions = {};
-      if ((options && options.force) || !(status & K.READY)) { return; }
+      if (this.isNotReady()) { return; }
 
       checkOptions.success = function (resp) {
         var err, params = {};
@@ -92,6 +92,93 @@ white:true*/
       } else {
         XM.Document.prototype.save.call(model, key, value, options);
       }
+    },
+    
+    /**
+      Converts a value in the currency instance to base value via the success
+      callback in options.
+      
+      @param {Number} Local value
+      @param {Date} asOf
+      @param {Function} Options
+      @returns {Object} Receiver
+    */
+    toBase: function (localValue, asOf, options) {
+      options = options ? _.clone(options) : {};
+      var that = this,
+        rates = new XM.CurrencyRateCollection(),
+        fetchOptions = {},
+        baseValue,
+        rate,
+        params,
+        err;
+        
+      // If invalid arguments, bail
+      if (!this.id || !asOf || !options.success) { return this; }
+      
+      // If we're already the base currency, then just pass through
+      if (this.get("isBase")) {
+        options.success(localValue);
+        return this;
+      }
+      
+      // See if we already have the rate
+      rate = _.find(_rateCache.models, function (rate) {
+        var effective = rate.get("effective"),
+          expires = rate.get("expires");
+        return rate.id === that.id && XT.Date.inRange(asOf, effective, expires);
+      });
+
+      // If we have conversion data already, use it
+      if (rate) {
+        baseValue = localValue / rate.get("rate");
+        options.success(baseValue);
+        
+      // Otherwise, go get it
+      } else {
+        // Define the query
+        fetchOptions.query = {
+          parameters: [
+            {
+              attribute: "effective",
+              operator: ">=",
+              value: asOf
+            },
+            {
+              attribute: "expires",
+              operator: "<=",
+              value: asOf
+            }
+          ]
+        };
+        
+        // Define the results handler
+        fetchOptions.success = function () {
+          // If no results report an error
+          if (!rates.length) {
+            if (options.error) {
+              params.currency = this.get("abbreviation");
+              params.asOf = Globalize.format(asOf, "d");
+              err = XT.Error.clone('xt2010', { params: params });
+              options.error(err);
+            }
+            return;
+          }
+          rate = rates.at(0);
+          
+          // Cache rate for later use
+          _rateCache.add(rate);
+          
+          // Calculate value
+          baseValue = localValue / rate.get("rate");
+          
+          // Forward result
+          options.success(baseValue);
+        };
+        rates.fetch(fetchOptions);
+      }
+
+      return this;
     },
 
     toString: function () {
@@ -150,5 +237,7 @@ white:true*/
     model: XM.CurrencyRate
   
   });
+  
+  _rateCache = new XM.CurrencyRateCollection();
 
 }());

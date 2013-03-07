@@ -5,8 +5,9 @@
 \i init_script.sql;
 \cd ../../../enyo-client/database/source;
 
--- drop xm views
+-- delete system orms
 \i drop_xm_views.sql;
+\i delete_system_orms.sql;
 
 -- [ END ] initdb
 
@@ -19,7 +20,21 @@
 \i xt/functions/createuser.sql;
 \i xt/functions/install_guiscript.sql;
 \i xt/functions/mergecrmaccts.sql;
-\i xt/functions/pg_advisory_unlock;
+\i xt/functions/pg_advisory_unlock.sql;
+\i xt/functions/quote_line_customer_discount.sql;
+\i xt/functions/quote_line_list_cost_markup.sql;
+\i xt/functions/quote_line_extended_price.sql;
+\i xt/functions/quote_line_profit.sql;
+\i xt/functions/quote_line_list_price.sql;
+\i xt/functions/quote_line_list_price_discount.sql;
+\i xt/functions/quote_line_tax.sql;
+\i xt/functions/quote_freight_weight.sql;
+\i xt/functions/quote_schedule_date.sql;
+\i xt/functions/quote_subtotal.sql;
+\i xt/functions/quote_tax_total.sql;
+\i xt/functions/quote_total.sql;
+\i xt/functions/quote_total_cost.sql;
+\i xt/functions/quote_margin.sql;
 \i xt/functions/trylock.sql;
 \i xt/functions/undomerge.sql;
 \i xt/functions/user_account_sync.sql
@@ -66,6 +81,7 @@
 \i xt/views/opheadinfo.sql;
 \i xt/views/prjinfo.sql;
 \i xt/views/quheadinfo.sql;
+\i xt/views/quiteminfo.sql;
 \i xt/views/todoiteminfo.sql;
 \i xt/views/usr.sql;
 
@@ -74,9 +90,6 @@
 \i xt/guiscripts/user.sql;
 \i xt/guiscripts/users.sql;
 \i xt/guiscripts/userPreferences.sql;
-
--- delete system orms
-\i delete_system_orms.sql;
 
 -- [ END ] xt
 
@@ -87,10 +100,13 @@
 \i xm/javascript/address.sql;
 \i xm/javascript/contact.sql;
 \i xm/javascript/crm.sql;
-\i xm/javascript/customer_prospect.sql;
+\i xm/javascript/customer.sql;
 \i xm/javascript/database_information.sql;
 \i xm/javascript/incident.sql;
+\i xm/javascript/item.sql;
 \i xm/javascript/project.sql;
+\i xm/javascript/quote.sql;
+\i xm/javascript/sales.sql;
 \i xm/javascript/to_do.sql;
 -- [ END ] xm
 

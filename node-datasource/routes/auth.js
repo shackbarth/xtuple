@@ -192,6 +192,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
 
     // We've got nothing, let the user choose their scope/org.
-    res.render('scope', { organizations: organizations, message: req.flash('orgerror')  });
+    res.render('scope', { organizations: organizations.sort(), message: req.flash('orgerror') });
   };
 }());
