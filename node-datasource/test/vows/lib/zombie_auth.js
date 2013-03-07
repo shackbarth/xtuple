@@ -99,8 +99,10 @@ Simplest possible usage:
               XT = browser.window.XT;
               XV = browser.window.XV;
               
-              // Another hack: quiet the logs here.
-              XT.log = function () {};
+              //TODO: improve error reporting
+              XT.log = function () {
+                //console.log(JSON.stringify(arguments));
+              };
 
               // clear out both is interval and the I'm-giving-up timeout
               // we really want neither to be run again.
