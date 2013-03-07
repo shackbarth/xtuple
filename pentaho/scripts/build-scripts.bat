@@ -1,5 +1,6 @@
 echo ON
-call groovyc -cp C:\pentaho\reportDesigner\lib\* TableModelReflect.groovy
+call groovyc -cp .\lib\* com\xTuple\TableModelReflect.groovy
+call groovyc -cp .\lib\* com\xTuple\PropertyBundle.groovy
 echo ran compile
-call jar -cf mobileReportScripts.jar *.class
+call jar -cf xTupleScripts.jar com\xTuple\*.class
 echo ran jar
