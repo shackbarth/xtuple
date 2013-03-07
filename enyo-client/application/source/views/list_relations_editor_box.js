@@ -182,22 +182,45 @@ trailing:true white:true*/
     components: [
       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
         classes: "in-panel", components: [
-        {kind: "XV.InputWidget", attr: "lineNumber"},
-        {kind: "XV.ItemWidget", attr: "item"},
+        {kind: "XV.NumberWidget", attr: "lineNumber"},
         {kind: "XV.SitePicker", attr: "site"},
         {kind: "XV.InputWidget", attr: "customerPartNumber"},
         {kind: "XV.NumberWidget", attr: "quantity"},
         {kind: "XV.UnitWidget", attr: "quantityUnit"},
-        {kind: "XV.NumberWidget", attr: "quantityShip"},
         {kind: "XV.PercentWidget", attr: "discount"},
         {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "currency"},
-          label: "_unitPrice".loc(), currencyDisabled: true},
+          label: "_unitPrice".loc(), currencyDisabled: true, effective: new Date()},
         {kind: "XV.UnitWidget", attr: "priceUnit"},
-        {kind: "XV.NumberWidget", attr: "extended", label: "_extendedPrice".loc()},
+        {kind: "XV.NumberWidget", attr: "extendedPrice"},
         {kind: "XV.DateWidget", attr: "scheduleDate"},
         {kind: "XV.DateWidget", attr: "promiseDate"},
         {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-        {kind: "XV.TextArea", attr: "memo", fit: true}
+        {kind: "XV.TextArea", attr: "notes", fit: true}
+      ]}
+    ]
+  });
+
+  enyo.kind({
+    name: "XV.QuoteLineItemSummary",
+    kind: "XV.RelationsEditor",
+    style: "margin-top: 10px",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
+      {kind: "XV.ScrollableGroupbox", name: "totalGroup",
+        classes: "in-panel", components: [
+        {kind: "XV.CurrencyPickerWidget", attr: "currency"},
+        {kind: "XV.NumberWidget", attr: "margin"},
+        //{kind: "XV.TextArea", attr: "miscChargeDesc", fit: true} - needs GL
+        // Charge Sales Account - needs GL
+        {kind: "XV.NumberWidget", attr: "freightWeight"},
+        {kind: "XV.MoneyWidget", attr: {amount: "subtotal", currency: "currency"},
+          label: "_subtotal".loc(), currencyShowing: false, effective: new Date()},
+        // {kind: "XV.NumberWidget", attr: "miscCharge"}, - needs GL
+        {kind: "XV.NumberWidget", attr: "freight", label: "_freight".loc()},
+        {kind: "XV.MoneyWidget", attr: {amount: "taxTotal", currency: "currency"},
+          label: "_tax".loc(), currencyShowing: false, effective: new Date()},
+        {kind: "XV.MoneyWidget", attr: {amount: "total", currency: "currency"},
+          label: "_total".loc(), currencyShowing: false, effective: new Date()}
       ]}
     ]
   });
@@ -214,17 +237,41 @@ trailing:true white:true*/
     parentKey: "quote",
     listRelations: "XV.QuoteLineItemListRelations",
     fitButtons: false,
+
     create: function () {
       this.inherited(arguments);
+
+      // Bottom Panel with calculations
+      this.summary = this.createComponent({kind: "XV.QuoteLineItemSummary", name: "totalsPanel"});
+
       this.createComponent({
         kind: "onyx.Button",
         content: "_expand".loc(),
         ontap: "launchWorkspace",
+        classes: "xv-groupbox-button-right",
         container: this.$.navigationButtonPanel
       });
     },
+
+    /**
+    Set the current model into the List Relation and the Summary Editor Panel
+    */
+    valueChanged: function () {
+      var value = this.getValue();
+      this.$.list.setValue(value);
+      this.summary.setValue(this.getValue().quote);
+      // change the styling of the last button to make room for the new button
+      this.$.doneButton.setClasses("xv-groupbox-button-center");
+    },
+
     launchWorkspace: function (inSender, inEvent) {
-      this.doChildWorkspace({workspace: "XV.QuoteLineWorkspace", collection: this.getValue()});
+      var index = Number(this.$.list.getFirstSelected());
+      this.doChildWorkspace({
+        workspace: "XV.QuoteLineWorkspace",
+        collection: this.getValue(),
+        index: index,
+        listRelations: this.$.list
+      });
       return true;
     }
   });

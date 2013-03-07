@@ -13,7 +13,7 @@ select xt.install_js('XM','item','xtuple', $$
     @returns {Number}
   */
   XM.Item.standardCost = function(itemId) {
-    var sql = 'select itemcost($1) as cost';
+    var sql = 'select stdcost($1) as cost';
     return plv8.execute(sql, [itemId])[0].cost;
   }
 

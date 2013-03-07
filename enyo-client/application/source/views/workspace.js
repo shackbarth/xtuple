@@ -1193,7 +1193,10 @@ trailing:true white:true*/
               country: "billtoCountry"
             }
             },
-            {kind: "onyx.Button", content: "_copyToShipTo".loc(), ontap: "copyBilltoToShipto"},
+            {classes: "xv-button-section", components: [
+              {kind: "onyx.Button", content: "_copyToShipTo".loc(), ontap: "copyBilltoToShipto",
+                style: "margin: 4px;"}
+            ]},
             {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
             {kind: "XV.CustomerShiptoWidget", attr: "shipto", showAddress: true, label: "_name".loc()},
             {kind: "XV.AddressFieldsWidget", attr: {
@@ -1207,7 +1210,7 @@ trailing:true white:true*/
               country: "shiptoCountry"
             }
             },
-            {kind: "onyx.GroupboxHeader", content: "_otherStuff".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_shipping".loc()},
             {kind: "XV.InputWidget", attr: "fob"},
             {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber", label: "_custPO".loc()},
             {kind: "XV.ShipViaCombobox", attr: "shipVia"},
@@ -1255,30 +1258,41 @@ trailing:true white:true*/
     kind: "XV.Workspace",
     title: "_quoteLine".loc(),
     model: "XM.QuoteLine",
+    modelAmnesty: true,
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "lineNumber"},
-            {kind: "XV.ItemWidget", attr: "item"},
-            {kind: "XV.SitePicker", attr: "site"},
-            {kind: "XV.InputWidget", attr: "customerPartNumber"},
-            {kind: "XV.NumberWidget", attr: "quantityOrd"},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", classes: "in-panel", fit: true, components: [
+            {kind: "XV.NumberWidget", attr: "lineNumber"},
+            {content: "TODO: ITEMSITE"},
+            {kind: "XV.NumberWidget", attr: "quantity"},
             {kind: "XV.UnitWidget", attr: "quantityUnit"},
-            {kind: "XV.NumberWidget", attr: "quantityShip"},
+            {kind: "XV.NumberWidget", attr: "quantityUnitRatio"},
+            {kind: "XV.NumberWidget", attr: "customerPrice"},
             {kind: "XV.PercentWidget", attr: "discount"},
-            {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "currency"},
-              label: "_unitPrice".loc(), currencyDisabled: true},
-            {kind: "XV.UnitWidget", attr: "priceUnit"},
-            {kind: "XV.NumberWidget", attr: "extended", label: "_extendedPrice".loc()},
+            {kind: "XV.NumberWidget", attr: "price"},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
-            {kind: "XV.DateWidget", attr: "promiseDate"},
+            //{kind: "XV.DateWidget", attr: "promiseDate"}, TODO: this is conditional on sales settings
+            {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "quote.currency"},
+              label: "_unitPrice".loc(), currencyDisabled: true},
+            {kind: "XV.NumberWidget", attr: "listCost"},
+            {kind: "XV.NumberWidget", attr: "listCostMarkup"},
+            {kind: "XV.NumberWidget", attr: "listPrice"},
+            {kind: "XV.NumberWidget", attr: "listPriceDiscount"},
+            {kind: "XV.InputWidget", attr: "customerPartNumber"},
+            {kind: "XV.UnitWidget", attr: "priceUnit"},
+            {kind: "XV.InputWidget", attr: "priceMode"},
+            {kind: "XV.NumberWidget", attr: "extendedPrice"},
+            {kind: "XV.NumberWidget", attr: "profit"},
+            {kind: "XV.TaxTypePicker", attr: "taxType"},
+            {kind: "XV.NumberWidget", attr: "tax"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "memo", fit: true}
+            {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
-        ]}
+        ]},
+        {kind: "XV.QuoteLineCommentBox", attr: "comments"}
       ]}
     ]
   });
