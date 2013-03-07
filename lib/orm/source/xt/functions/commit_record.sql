@@ -5,7 +5,7 @@ create or replace function xt.commit_record(data_hash text) returns text as $$
       encryptionKey = dataHash.encryptionKey,
       data = Object.create(XT.Data),
       key,
-      orm
+      orm,
       ret;
 
   if (dataHash.username) { XT.username = dataHash.username; }
