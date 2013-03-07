@@ -421,6 +421,20 @@ regexp:true, undef:true, trailing:true, white:true */
         }
         return true;
       }
+    },
+    /**
+      Because we fetch with a dispatch the collection doesn't get refreshed by default. Do that.
+    */
+    _collectionFetchSuccess: function (data) {
+      this._collection.reset(data);
+      this.inherited(arguments);
+    },
+    /**
+      Because we fetch with a dispatch the collection doesn't get refreshed by default. Do that.
+    */
+    _fetchSuccess: function (data) {
+      this._collection.reset(data);
+      this.inherited(arguments);
     }
   });
 
