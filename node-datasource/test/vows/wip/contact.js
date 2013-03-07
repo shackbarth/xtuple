@@ -15,9 +15,8 @@ var XVOWS = XVOWS || {};
   var data = {};
 
   data.createHash = {
-    id: 123456789, //id isn't being set automatically upon creation of a new contact model.
-                      //is this by design?
-    number: "TESTCONTACT"
+    number: "TESTCONTACT",
+    address: 3
   };
 
   data.updateHash = {
@@ -71,7 +70,7 @@ var XVOWS = XVOWS || {};
           return data;
         },
         'Name is `Mike`': function (data) {
-          assert.equal(data.updateHash.name, data.model.get("name"));
+          assert.equal(data.model.get("name"), data.updateHash.name);
         },
         '-> Commit': crud.save(data)
       }
