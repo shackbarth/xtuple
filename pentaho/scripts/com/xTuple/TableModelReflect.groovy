@@ -3,7 +3,7 @@ package com.xTuple;
 import org.pentaho.reporting.engine.classic.core.util.TypedTableModel;
 import java.net.*;
 import groovy.json.*;
-import org.pentaho.reporting.libraries.base.util.DebugLog;
+//import org.pentaho.reporting.libraries.base.util.DebugLog;
 
 /******************************************************************************************
 To configure logging, remove <appender-ref ref="CONSOLE"/> from /resources/log4j.xml
