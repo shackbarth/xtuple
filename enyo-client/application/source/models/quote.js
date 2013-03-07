@@ -801,10 +801,11 @@ white:true*/
         canUpdate = this.canUpdate(),
         customerPrice = this.get("customerPrice"),
         ignoreDiscount = settings.get("IgnoreCustDisc"),
-        isConfigured = this.getValue("itemSite.item.isConfigured"),
         item = this.getValue("itemSite.item"),
+        characteristics = this.get("characteristics"),
+        isConfigured = item ? item.get("isConfigured") : false,
+        counter = isConfigured ? characteristics.length + 1 : 1,
         editing = !this.isNew(),
-        options = {},
         price = this.get("price"),
         priceUnit = this.get("priceUnit"),
         effectivePolicy = settings.get("soPriceEffective"),
@@ -814,9 +815,24 @@ white:true*/
         updatePolicy = settings.get("UpdatePriceLineEdit"),
         readOnlyCache = this.isReadOnly("price"),
         parent = this.getParent(),
+        prices = [],
+        itemOptions = {},
+        charOptions = {},
         parentDate,
         customer,
-        currency;
+        currency,
+        
+        // Set price after we have item and all characteristics prices
+        setPrice = function () {
+          var totalPrice = XT.math.add(prices, XT.SALES_PRICE_SCALE);
+          that.set("customerPrice", totalPrice);
+          if (that._updatePrice) {
+            that.set("price", totalPrice);
+          }
+          
+          // Allow editing again if we could before
+          that.setReadOnly("price", readOnlyCache);
+        };
 
       // If no parent, don't bother
       if (!parent || this.isNotReady()) { return; }
@@ -850,49 +866,65 @@ white:true*/
         // Don't allow user editing of price until we hear back from the server
         this.setReadOnly("price", true);
 
-        if (isConfigured) {
-          // TO DO: Loop through characteristics and get pricing
-        }
-
-        // Get the price
-        options.success = function (resp) {
+        // Get the item price
+        itemOptions.asOf = asOf;
+        itemOptions.currency = currency;
+        itemOptions.effective = parentDate;
+        itemOptions.error = function (err) {
+          that.trigger("error", err);
+        };
+        
+        charOptions = _.clone(itemOptions); // Some params are shared
+        
+        itemOptions.quantityUnit = quantityUnit;
+        itemOptions.priceUnit = priceUnit;
+        itemOptions.success = function (resp) {
           var priceMode;
 
           // Handle no price found scenario
           if (resp.price === -9999) {
+            counter = -1;
             that.notify("_noPriceFound".loc());
-            this.unset("customerPrice");
-            this.unset("price");
+            if (that._updatePrice) {
+              that.unset("customerPrice");
+              that.unset("price");
+            }
             if (that.hasChanges("quantity")) {
-              this.unset("quantity");
+              that.unset("quantity");
             } else {
-              this.unset("scheduleDate");
+              that.unset("scheduleDate");
             }
 
           // Handle normal scenario
           } else {
+            counter--;
             priceMode = (resp.type === "N" ||
                          resp.type === "D" ||
                          resp.type === "P") ? K.DISCOUNT_MODE : K.MARKUP_MODE;
             that.set("priceMode", priceMode);
-            that.set("customerPrice", resp.price); // TO DO: Need to add char price totals here too
-            if (that._updatePrice) {
-              that.set("price", resp.price);
-            }
+            prices.push(resp.price);
+            if (!counter) { setPrice(); }
           }
-
-          // Allow editing again if we could before
-          that.setReadOnly("price", readOnlyCache);
         };
-        options.error = function (err) {
+        itemOptions.error = function (err) {
           that.trigger("error", err);
         };
-        options.asOf = asOf;
-        options.quantityUnit = quantityUnit;
-        options.priceUnit = priceUnit;
-        options.currency = currency;
-        options.effective = parentDate;
-        customer.price(item, quantity, options);
+        customer.itemPrice(item, quantity, itemOptions);
+        
+        // Get characteristic prices
+        if (isConfigured) {
+          _.each(characteristics.models, function (char) {
+            var characteristic = char.get("characteristic"),
+              value = char.get("value");
+            charOptions.success = function (price) {
+              counter--;
+              char.set("price", price);
+              prices.push(price);
+              if (!counter) { setPrice(); }
+            };
+            customer.characteristicPrice(item, characteristic, value, quantity, charOptions);
+          });
+        }
       }
     },
 
