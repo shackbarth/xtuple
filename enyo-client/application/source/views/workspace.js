@@ -1271,7 +1271,7 @@ trailing:true white:true*/
             {kind: "XV.PercentWidget", attr: "discount"},
             {kind: "XV.NumberWidget", attr: "price"},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
-            //{kind: "XV.DateWidget", attr: "promiseDate"}, TODO: this is conditional on sales settings
+            {kind: "XV.DateWidget", attr: "promiseDate", showing: false}, //TODO: this is conditional on sales settings
             {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "quote.currency"},
               label: "_unitPrice".loc(), currencyDisabled: true},
             {kind: "XV.NumberWidget", attr: "listCost"},
