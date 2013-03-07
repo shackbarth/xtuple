@@ -179,9 +179,7 @@ white:true*/
     },
 
     inventoryUnitDidChange: function (model, value, options) {
-      var status = this.getStatus(),
-        K = XM.Model;
-      if ((options && options.force) || !(status & K.READY)) { return; }
+      if (this.isNotReady()) { return; }
       if (value) { this.set('priceUnit', value); }
     },
 
