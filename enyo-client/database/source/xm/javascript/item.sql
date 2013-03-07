@@ -7,22 +7,11 @@ select xt.install_js('XM','item','xtuple', $$
   XM.Item.isDispatchable = true;
 
   /**
-    Fetch an array of records from the database.
-
-    @param {String} record type
-    @param {Object} conditions
-    @param {Object} parameters
-    @param {String} order by - optional
-    @param {Number} row limit - optional
-    @param {Number} row offset - optional
-    @returns Array
-  */
-  /*var itemFetch = function (recordType, parameters, orderBy, rowLimit, rowOffset) { */
-  var next = function() {
-    plv8.elog(NOTICE, JSON.stringify(arguments));
-    return JSON.stringify({data: []});
-  };
-
+    Runs what amounts to a fetch based on the query, with the extra
+    restriction that the results are limited by the custitem function,
+    which makes sure that the customer (and/or shipto) is allowed to
+    ship this function
+   */
   XM.Item.availableItems = function (query, customerId, shiptoId) {
     var nameSpace = "XM",
       type = "ItemSite",
@@ -45,17 +34,13 @@ select xt.install_js('XM','item','xtuple', $$
 
     /* Restrict results to items that are associated with the customer and/or shipto */ 
     var custItemSql = 'select * from custitem($1, $2, $3);';
-    var allowedArray = plv8.execute(custItemSql, [customerId, shiptoId, new Date()]);
-    plv8.elog(NOTICE, JSON.stringify(allowedArray));
+    var allowedArray = plv8.execute(custItemSql, [customerId, shiptoId, new Date()]); /* TODO: which date? */
     var allowedIds = [];
     for(var i = 0; i < allowedArray.length; i++) {
       allowedIds.push(allowedArray[i].custitem);
     }
-    plv8.elog(NOTICE, JSON.stringify(allowedIds));
     var sqlFriendlyAllowedIds = JSON.stringify(allowedIds).replace("[", "").replace("]", "");
-    plv8.elog(NOTICE, sqlFriendlyAllowedIds);
     custItemFilter = ' and ((("item")."id" in (' + sqlFriendlyAllowedIds + '))) ';
-    plv8.elog(NOTICE, custItemFilter);
 
     /* query the model */
     sql = sql.replace(/{table}/g, table)
@@ -73,14 +58,6 @@ select xt.install_js('XM','item','xtuple', $$
     return recs;
   };
   
-  /*
-    var clause = XT.Data.buildClause("XM", "Item", query);
-  };
-  */
-
-
-
-
   /**
     Returns the standard unit cost for an item.
     
