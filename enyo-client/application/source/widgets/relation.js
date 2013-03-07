@@ -314,6 +314,9 @@ regexp:true, undef:true, trailing:true, white:true */
     keyAttribute: "item.number",
     nameAttribute: "item.number",
     descripAttribute: "site.code",
+    handlers: {
+      onValueChange: "theValueChanged"
+    },
     /**
       Add a site picker to the bottom of the component array
     */
@@ -344,9 +347,13 @@ regexp:true, undef:true, trailing:true, white:true */
       We only want the picker to show Site models with an ItemSite Item that
       was just picked.
      */
-    relationSelected: function (inSender, inEvent) {
+    setValue: function (value, options) {
       this.inherited(arguments);
 
+      if (!this._collection || this._collection.length === 0) {
+        // we're not ready to filter down the site picker
+        return;
+      }
       var itemId = this.getValue().getValue("item.id"),
         // matches are an array of ItemSite models, whose Item was just picked
         matches = _.filter(this._collection.models, function (model) {
@@ -358,6 +365,32 @@ regexp:true, undef:true, trailing:true, white:true */
 
       this.$.sitePicker.setShowing(true);
       this.$.sitePicker.buildList({siteIds: siteIds});
+      this.$.sitePicker.setValue(this.getValue().getValue("site"), {silent: true});
+    },
+    theValueChanged: function (inSender, inEvent) {
+      var itemId,
+        siteId,
+        itemSite;
+      console.log("The value changed", inEvent);
+      if (inEvent.originator.name === 'sitePicker') {
+        // the site picker has changed. Update the item site value, but do not propagate this.
+
+        // the user has just selected a specific site based on the ones available for that item
+        // use the itemsite with the item we are on, plus the site that was chosen
+        itemId = this.getValue().getValue("item.id");
+        siteId = inEvent.originator.getValue().id;
+        itemSiteModel = _.find(this._collection.models, function (model) {
+          return model.getValue("item.id") === itemId && model.getValue("site.id") === siteId;
+        });
+        if (itemSiteModel) {
+          console.log("picked itemsite model is", itemSiteModel.toJSON());
+          this.setValue(itemSiteModel);
+        } else {
+          // Why is this._collection already filtered?
+          console.log("this shouldn't happen");
+        }
+        return true;
+      }
     }
   });
 
