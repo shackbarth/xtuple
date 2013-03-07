@@ -101,7 +101,7 @@ Simplest possible usage:
               
               //TODO: improve error reporting
               XT.log = function () {
-                console.log(JSON.stringify(arguments));
+                //console.log(JSON.stringify(arguments));
               };
 
               // clear out both is interval and the I'm-giving-up timeout
