@@ -347,6 +347,16 @@ regexp:true, undef:true, trailing:true, white:true */
         }
       );
     },
+    shiptoChanged: function (inSender, inEvent) {
+      var extraSearchOptions = this.getExtraSearchOptions() || {};
+      extraSearchOptions.shipto = this.getShipto();
+      this.setExtraSearchOptions(extraSearchOptions);
+    },
+    customerChanged: function (inSender, inEvent) {
+      var extraSearchOptions = this.getExtraSearchOptions() || {};
+      extraSearchOptions.customer = this.getCustomer();
+      this.setExtraSearchOptions(extraSearchOptions);
+    },
     /**
       This is going to have to be a dispatch function, due to the
       complexity of customer-specific items

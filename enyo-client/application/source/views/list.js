@@ -666,10 +666,14 @@ trailing:true white:true*/
     },
     formatSold: function (value, view, model) {
       return value ? "_sold".loc() : "";
+    },
+    fetch: function (options) {
+      console.log(options);
+      this.inherited(arguments);
     }
   });
 
-  XV.registerModelList("XM.ItemRelation", "XV.ItemList");
+  XV.registerModelList("XM.ItemSiteRelation", "XV.ItemSiteList");
   // ..........................................................
   // OPPORTUNITY
   //
