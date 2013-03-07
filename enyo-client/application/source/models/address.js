@@ -186,7 +186,7 @@ white:true*/
           findExistingOptions.success = function (resp) {
             // If found, set the address with found id
             if (resp) {
-              address.set('id', resp, {force: true}); // Id is all that matters...
+              address.set('id', resp); // Id is all that matters...
               address.status = K.READY_CLEAN; // So we don't come back here
             }
 
