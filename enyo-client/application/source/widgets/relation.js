@@ -311,6 +311,9 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.RelationWidget",
     collection: "XM.ItemSiteRelationCollection",
     list: "XV.ItemSiteList",
+    published: {
+      customer: null
+    },
     keyAttribute: "item.number",
     nameAttribute: "item.number",
     descripAttribute: "site.code",

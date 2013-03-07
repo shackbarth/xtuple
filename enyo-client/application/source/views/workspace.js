@@ -1263,7 +1263,7 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", classes: "in-panel", fit: true, components: [
             {kind: "XV.NumberWidget", attr: "lineNumber"},
-            {kind: "XV.ItemSiteWidget", attr: "itemSite"},
+            {kind: "XV.ItemSiteWidget", attr: "itemSite", name: "itemSiteWidget"},
             {kind: "XV.NumberWidget", attr: "quantity"},
             {kind: "XV.UnitWidget", attr: "quantityUnit"},
             {kind: "XV.NumberWidget", attr: "quantityUnitRatio"},
@@ -1291,7 +1291,17 @@ trailing:true white:true*/
         ]},
         {kind: "XV.QuoteLineCommentBox", attr: "comments"}
       ]}
-    ]
+    ],
+    attributesChanged: function (model, options) {
+      this.inherited(arguments);
+
+      if (this.getValue().getStatus() & XM.Model.READY
+          && this.getValue("quote.customer")
+          // XXX don't bother setting it twice? Could it possibly change?
+          && !this.$.itemSiteWidget.getCustomer()) {
+        this.$.itemSiteWidget.setCustomer(this.getValue("quote.customer"));
+      }
+    }
   });
 
 
