@@ -20,7 +20,6 @@ select xt.install_js('XM','item','xtuple', $$
       key = XT.Orm.primaryKey(orm),
       limit = query.rowLimit ? 'limit ' + query.rowLimit : '',
       offset = query.rowOffset ? 'offset ' + query.rowOffset : '',
-      recs = null,
       parts,
       custItemFilter = "",
       clause = XT.Data.buildClause("XM", "ItemSite", query.parameters, query.orderBy),
@@ -51,11 +50,7 @@ select xt.install_js('XM','item','xtuple', $$
              .replace('{limit}', limit)
              .replace('{offset}', offset);
     plv8.elog(NOTICE, 'sql = ', sql);
-    recs = plv8.execute(sql, clause.parameters);
-    /*for (var i = 0; i < recs.length; i++) {  	
-      recs[i] = this.decrypt(nameSpace, type, recs[i]);	  	
-    }*/
-    return recs;
+    return plv8.execute(sql, clause.parameters);
   };
   
   /**
