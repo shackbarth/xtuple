@@ -12,7 +12,8 @@ var XVOWS = XVOWS || {};
     zombieAuth = require("../lib/zombie_auth"),
     crud = require('../lib/crud');
 
-  var data = {};
+  var data = {},
+    deleteData = {};
 
   data.createHash = {
     name: "Test Customer",
@@ -35,7 +36,7 @@ var XVOWS = XVOWS || {};
   };
 
   data.updateHash = {
-    number: "UPDATETESTCUSTOMER"
+    name: "Updated Test Customer"
   };
 
   vows.describe('XM.Customer CRUD test').addBatch({
@@ -83,17 +84,42 @@ var XVOWS = XVOWS || {};
     'UPDATE ': crud.update(data, {
       '-> Set values': {
         topic: function () {
+          deleteData.accntId = data.model.get("account");
+          deleteData.accountModel = new XM.Account();
           data.model.set(data.updateHash);
           return data;
         },
-        'Number is `UPDATETESTCUSTOMER`': function (data) {
-          assert.equal(data.model.get('number'), data.updateHash.number);
+        'Name is `Updated Test Customer`': function (data) {
+          assert.equal(data.model.get('name'), data.updateHash.name);
         },
         '-> Commit': crud.save(data)
       }
     })
   }).addBatch({
-    'DESTROY': crud.destroy(data)
+    'DESTROY CUSTOMER': crud.destroy(data),
+    'DESTROY ASSOCIATED ACCOUNT': {
+      topic: function () {
+        var that = this,
+          fetchOptions = {};
+          
+        fetchOptions.id = deleteData.accntId;
+        
+        fetchOptions.success = function () {
+          var destroyOptions = {};
+          console.log("fetch success");
+          destroyOptions.success = function () {
+            console.log("destroy success");
+            that.callback(null, data);
+          };
+          deleteData.accountModel.destroy(destroyOptions);
+        };
+        deleteData.accountModel.fetch(fetchOptions);
+        
+      },
+      'Five is a number.': function (data) {
+        assert.isNumber(5);
+      }
+    }
   }).export(module);
   
 }());
