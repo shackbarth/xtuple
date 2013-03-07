@@ -13,6 +13,8 @@ white:true*/
   */
   XM.SaleType = XM.Document.extend({
     /** @scope XM.SaleType.prototype */
+    
+    documentKey: 'code',
 
     recordType: 'XM.SaleType'
     

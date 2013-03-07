@@ -11,29 +11,32 @@ var XVOWS = XVOWS || {};
     assert = require("assert"),
     zombieAuth = require("../lib/zombie_auth"),
     crud = require('../lib/crud');
-
+    
   var data = {};
 
   data.createHash = {
-    code: "Herr"
+    id: 123456789,
+    code: 'theCode',
+    description: 'aSaleType',
+    isActive: true
   };
 
   data.updateHash = {
-    code: "Dame"
+    description: 'anotherSaleType'
   };
 
-  vows.describe('XM.Address CRUD test').addBatch({
+  vows.describe('XM.SaleType CRUD test').addBatch({
     'INITIALIZE ': {
       topic: function () {
         var that = this,
           callback = function () {
-            data.model = new XM.Address();
+            data.model = new XM.SaleType();
             that.callback(null, data);
           };
         zombieAuth.loadApp(callback);
       },
-      'The record type is XM.Address': function (data) {
-        assert.equal(data.model.recordType, "XM.Address");
+      'The record type is XM.SaleType': function (data) {
+        assert.equal(data.model.recordType, "XM.SaleType");
       }
     }
   }).addBatch({
@@ -56,26 +59,7 @@ var XVOWS = XVOWS || {};
       },
       'ID is a number': function (data) {
         assert.isNumber(data.model.id);
-      },
-      'Code is `Herr`': function (data) {
-        assert.equal(data.model.get('code'), data.createHash.code);
       }
     }
-  }).addBatch({
-    'UPDATE ': crud.update(data, {
-      '-> Set values': {
-        topic: function () {
-          data.model.set(data.updateHash);
-          return data;
-        },
-        'Code is `Dame`': function (data) {
-          assert.equal(data.model.get('code'), data.updateHash.code);
-        },
-        '-> Commit': crud.save(data)
-      }
-    })
-  }).addBatch({
-    'DESTROY': crud.destroy(data)
   }).export(module);
-  
 }());
