@@ -12,43 +12,72 @@ var XVOWS = XVOWS || {};
     zombieAuth = require("../lib/zombie_auth"),
     crud = require('../lib/crud');
 
-  // TODO: flesh these out
-  var createHash = {
-    number: "TESTCONTACT",
-    name: "TESTCONTACTNAME",
-    address: 3
+  var data = {};
+
+  data.createHash = {
+    id: 123456789, //id isn't being set automatically upon creation of a new contact model.
+                      //is this by design?
+    number: "TESTCONTACT"
   };
 
-  var updateHash = {
-    number: "TESTEDCONTACT"
+  data.updateHash = {
+    firstName: "Mike"
   };
 
-  vows.describe('Contact testing').addBatch({
-    'When we load up our app': {
+  vows.describe('XM.Contact CRUD test').addBatch({
+    'INITIALIZE ': {
       topic: function () {
-        zombieAuth.loadApp(this.callback);
+        var that = this,
+          callback = function () {
+            data.model = new XM.Contact();
+            that.callback(null, data);
+          };
+        zombieAuth.loadApp(callback);
       },
-
-      // TODO: this is not working yet
-      'We can run the CRUD tests for Contact': crud.testCrudOperations("Contact", createHash, updateHash),
-
-      'We can test business logic for Contact': {
-        topic: function () {
-          return new XM.Contact();
-        },
-        'The record type is XM.Contact': function (topic) {
-          // TODO: test business logic for real
-          assert.equal(topic.recordType, "XM.Contact");
-        },
-        'whose type is read-only': function (topic) {
-          assert.isTrue(topic.isReadOnly("type"));
-        },
-        'and we can create a workspace to front it': function (topic) {
-          var workspace = new XV.ContactWorkspace();
-          workspace.setValue(topic);
-          assert.equal(workspace.getValue().recordType, 'XM.Contact');
-        }
+      'The record type is XM.Contact': function (data) {
+        assert.equal(data.model.recordType, "XM.Contact");
       }
     }
+  }).addBatch({
+    'CREATE ': crud.create(data, {
+      '-> Set values': {
+        topic: function (data) {
+          data.model.set(data.createHash);
+          return data;
+        },
+        'Last Error is null': function (data) {
+          assert.isNull(data.model.lastError);
+        },
+        '-> Save': crud.save(data)
+      }
+    })
+  }).addBatch({
+    'READ': {
+      topic: function () {
+        return data;
+      },
+      'ID is a number': function (data) {
+        assert.isNumber(data.model.id);
+      },
+      'Five equals five.': function (data) {
+        assert.equal(5, 5);
+      }
+    }
+  }).addBatch({
+    'UPDATE ': crud.update(data, {
+      '-> Set values': {
+        topic: function () {
+          data.model.set(data.updateHash);
+          return data;
+        },
+        'Name is `Mike`': function (data) {
+          assert.equal(data.updateHash.name, data.model.get("name"));
+        },
+        '-> Commit': crud.save(data)
+      }
+    })
+  }).addBatch({
+    'DESTROY': crud.destroy(data)
   }).export(module);
+  
 }());

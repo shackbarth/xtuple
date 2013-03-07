@@ -40,6 +40,7 @@ white:true*/
     numberPolicy: XM.Document.AUTO_NUMBER,
 
     defaults: function () {
+      //id is not being set automatically with new XM.Contact()
       return {
         owner: XM.currentUser,
         isActive: true
