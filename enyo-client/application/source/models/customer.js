@@ -73,14 +73,16 @@ white:true*/
     recordType: 'XM.Customer',
 
     defaults: function () {
-      var settings = XT.session.getSettings();
+      var settings = XT.session.getSettings(),
+        shipViaModel = XM.shipVias.get(settings.get("DefaultShipViaId"));
       return {
         isActive: true,
         creditStatus: "G",
         currency: XT.baseCurrency(),
         salesRep: settings.get("DefaultSalesRep"),
         terms: settings.get("DefaultTerms"),
-        shipVia: settings.get("DefaultShipViaId"),
+        shipVia: shipViaModel.get("code") + "-" +
+          shipViaModel.get("description"),
         customerType: settings.get("DefaultCustType"),
         backorder: settings.get("DefaultBackOrders") || false,
         partialShip: settings.get("DefaultPartialShipments") || false,
@@ -230,6 +232,12 @@ white:true*/
       };
       this.setStatus(XM.Model.BUSY_FETCHING);
       prospect.fetch(fetchOptions);
+    },
+    
+    salesRepDidChange: function () {
+      var salesRep = this.get('salesRep');
+      if (!salesRep || this.isNotReady()) { return; }
+      this.set('commission', salesRep.get('commission'));
     }
 
   });
@@ -436,9 +444,8 @@ white:true*/
 
     salesRepDidChange: function () {
       var salesRep = this.get('salesRep');
-      if (salesRep && (this.getStatus() & XM.Model.READY)) {
-        this.set('commission', salesRep.get('commission'));
-      }
+      if (!salesRep || this.isNotReady()) { return; }
+      this.set('commission', salesRep.get('commission'));
     }
 
   });

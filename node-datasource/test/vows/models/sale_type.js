@@ -1,7 +1,7 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global XT:true, XM:true, XV:true, process:true, module:true, require:true */
+/*global XM:true, XV:true, module:true, require:true, assert: true */
 
 var XVOWS = XVOWS || {};
 (function () {
@@ -15,25 +15,27 @@ var XVOWS = XVOWS || {};
   var data = {};
 
   data.createHash = {
-    code: "Herr"
+    id: 123456789,
+    code: "TESTSALETYPE",
+    description: "Test Sale Type"
   };
 
   data.updateHash = {
-    code: "Dame"
+    description: "Changed Descrip"
   };
 
-  vows.describe('XM.Address CRUD test').addBatch({
+  vows.describe('XM.SaleType CRUD test').addBatch({
     'INITIALIZE ': {
       topic: function () {
         var that = this,
           callback = function () {
-            data.model = new XM.Address();
+            data.model = new XM.SaleType();
             that.callback(null, data);
           };
         zombieAuth.loadApp(callback);
       },
-      'The record type is XM.Address': function (data) {
-        assert.equal(data.model.recordType, "XM.Address");
+      'The record type is XM.SaleType': function (data) {
+        assert.equal(data.model.recordType, "XM.SaleType");
       }
     }
   }).addBatch({
@@ -57,8 +59,11 @@ var XVOWS = XVOWS || {};
       'ID is a number': function (data) {
         assert.isNumber(data.model.id);
       },
-      'Code is `Herr`': function (data) {
+      'Code is `TESTSALETYPE`': function (data) {
         assert.equal(data.model.get('code'), data.createHash.code);
+      },
+      'Description is `Test Sale Type`': function (data) {
+        assert.equal(data.model.get('description'), data.createHash.description);
       }
     }
   }).addBatch({
@@ -68,8 +73,8 @@ var XVOWS = XVOWS || {};
           data.model.set(data.updateHash);
           return data;
         },
-        'Code is `Dame`': function (data) {
-          assert.equal(data.model.get('code'), data.updateHash.code);
+        'Description is `Change Descrip`': function (data) {
+          assert.equal(data.model.get('description'), data.updateHash.description);
         },
         '-> Commit': crud.save(data)
       }

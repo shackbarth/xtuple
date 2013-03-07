@@ -5,6 +5,14 @@ select xt.install_js('XM','Quote','xtuple', $$
   XM.Quote = {};
 
   XM.Quote.isDispatchable = true;
+
+  /**
+    Fetch the next quote number. Need a special over-ride here because of peculiar
+    behavior of quote numbering different from all other generated numbers.
+  */
+  XM.Quote.fetchNumber = function () {
+    return plv8.execute("select fetchqunumber() as number")[0].number;
+  };
   
   /**
    Returns an array of freight detail records based on input
@@ -91,7 +99,7 @@ select xt.install_js('XM','Quote','xtuple', $$
    @param {Number} amount
    @returns Array 
   */
-  XM.Quote.calculateTaxDetail = function(taxZoneId, taxTypeId, effective, currencyId, amount) {
+  XM.Quote.taxDetail = function(taxZoneId, taxTypeId, effective, currencyId, amount) {
     var ret,
         sql = 'select tx as "taxCode", bs as "basisTaxCode", ' 
             + '  taxdetail_taxclass_sequence as "sequence", taxdetail_taxrate_percent as "percent", '

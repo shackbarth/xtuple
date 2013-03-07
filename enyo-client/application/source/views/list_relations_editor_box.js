@@ -188,8 +188,8 @@ trailing:true white:true*/
         {kind: "XV.NumberWidget", attr: "quantity"},
         {kind: "XV.UnitWidget", attr: "quantityUnit"},
         {kind: "XV.PercentWidget", attr: "discount"},
-        {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "quote.currency"},
-          label: "_unitPrice".loc(), currencyDisabled: true},
+        {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "currency"},
+          label: "_unitPrice".loc(), currencyDisabled: true, effective: new Date()},
         {kind: "XV.UnitWidget", attr: "priceUnit"},
         {kind: "XV.NumberWidget", attr: "extendedPrice"},
         {kind: "XV.DateWidget", attr: "scheduleDate"},
@@ -203,24 +203,24 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.QuoteLineItemSummary",
     kind: "XV.RelationsEditor",
-    style: "margin-top: 10px;",
+    style: "margin-top: 10px",
     components: [
-    {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
-    {kind: "XV.ScrollableGroupbox", name: "totalGroup",
-      classes: "in-panel", components: [
-      {kind: "XV.CurrencyPickerWidget", attr: "currency"},
-      {kind: "XV.NumberWidget", attr: "margin"},
-      //{kind: "XV.TextArea", attr: "miscChargeDesc", fit: true} - needs GL
-      // Charge Sales Account - needs GL
-      {kind: "XV.NumberWidget", attr: "freightWeight"},
-      {kind: "XV.MoneyWidget", attr: {amount: "subtotal", currency: "currency"},
-        label: "_subtotal".loc(), currencyShowing: false},
-      // {kind: "XV.NumberWidget", attr: "miscCharge"}, - needs GL
-      {kind: "XV.NumberWidget", attr: "freight", label: "_freight".loc()},
-      {kind: "XV.MoneyWidget", attr: {amount: "taxTotal", currency: "currency"},
-        label: "_tax".loc(), currencyShowing: false},
-      {kind: "XV.MoneyWidget", attr: {amount: "total", currency: "currency"},
-        label: "_total".loc(), currencyShowing: false}
+      {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
+      {kind: "XV.ScrollableGroupbox", name: "totalGroup",
+        classes: "in-panel", components: [
+        {kind: "XV.CurrencyPickerWidget", attr: "currency"},
+        {kind: "XV.NumberWidget", attr: "margin"},
+        //{kind: "XV.TextArea", attr: "miscChargeDesc", fit: true} - needs GL
+        // Charge Sales Account - needs GL
+        {kind: "XV.NumberWidget", attr: "freightWeight"},
+        {kind: "XV.MoneyWidget", attr: {amount: "subtotal", currency: "currency"},
+          label: "_subtotal".loc(), currencyShowing: false, effective: new Date()},
+        // {kind: "XV.NumberWidget", attr: "miscCharge"}, - needs GL
+        {kind: "XV.NumberWidget", attr: "freight", label: "_freight".loc()},
+        {kind: "XV.MoneyWidget", attr: {amount: "taxTotal", currency: "currency"},
+          label: "_tax".loc(), currencyShowing: false, effective: new Date()},
+        {kind: "XV.MoneyWidget", attr: {amount: "total", currency: "currency"},
+          label: "_total".loc(), currencyShowing: false, effective: new Date()}
       ]}
     ]
   });
@@ -248,17 +248,20 @@ trailing:true white:true*/
         kind: "onyx.Button",
         content: "_expand".loc(),
         ontap: "launchWorkspace",
+        classes: "xv-groupbox-button-right",
         container: this.$.navigationButtonPanel
       });
     },
 
     /**
-    @todo Document overridden function
+    Set the current model into the List Relation and the Summary Editor Panel
     */
     valueChanged: function () {
       var value = this.getValue();
       this.$.list.setValue(value);
       this.summary.setValue(this.getValue().quote);
+      // change the styling of the last button to make room for the new button
+      this.$.doneButton.setClasses("xv-groupbox-button-center");
     },
 
     launchWorkspace: function (inSender, inEvent) {
@@ -267,7 +270,8 @@ trailing:true white:true*/
         workspace: "XV.QuoteLineWorkspace",
         collection: this.getValue(),
         index: index,
-        listRelations: this.$.list});
+        listRelations: this.$.list
+      });
       return true;
     }
   });
