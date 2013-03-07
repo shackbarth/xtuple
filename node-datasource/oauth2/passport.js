@@ -88,7 +88,7 @@ passport.use(new BasicStrategy(
     db.clients.findByClientId(username, function (err, client) {
       if (err) { return done(err); }
       if (!client) { return done(null, false); }
-      if (client.clientSecret !== password) { return done(null, false); }
+      if (client.get("clientSecret") !== password) { return done(null, false); }
       return done(null, client);
     });
   }
@@ -100,7 +100,7 @@ passport.use(new ClientPasswordStrategy(
     db.clients.findByClientId(clientId, function (err, client) {
       if (err) { return done(err); }
       if (!client) { return done(null, false); }
-      if (client.clientSecret !== clientSecret) { return done(null, false); }
+      if (client.get("clientSecret") !== clientSecret) { return done(null, false); }
       return done(null, client);
     });
   }
@@ -117,11 +117,11 @@ passport.use(new ClientPasswordStrategy(
 passport.use(new BearerStrategy(
   function (accessToken, done) {
     "use strict";
-    db.accessTokens.find(accessToken, function (err, token) {
+    db.accessTokens.findByAccessToken(accessToken, function (err, token) {
       if (err) { return done(err); }
       if (!token) { return done(null, false); }
 
-      db.users.findByUsername(token.userID, function (err, user) {
+      db.users.findByUsername(token.get("user"), function (err, user) {
         if (err) { return done(err); }
         if (!user) { return done(null, false); }
         // to keep this example simple, restricted scopes are not implemented,

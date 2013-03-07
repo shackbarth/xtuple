@@ -50,10 +50,17 @@ server.deserializeClient(function(id, done) {
 // values, and will be exchanged for an access token.
 
 server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, done) {
-  var code = utils.uid(16)
+  if (!client || !user || !redirectURI || !ares) { return done(null, false); }
 
-  db.authorizationCodes.save(code, client.id, redirectURI, user.id, function (err) {
-    if (err) { return done(err); }
+  // Generate the auth code.
+  var code = utils.uid(16);
+
+  // Save auth data to the database.
+  db.authorizationCodes.save(code, client.get("clientID"), redirectURI, user.id, ares.scope, function (err) {
+    if (err) {
+      return done(err);
+    }
+
     done(null, code);
   });
 }));
@@ -67,75 +74,45 @@ server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, d
 server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, done) {
   db.authorizationCodes.find(code, function (err, authCode) {
     if (err) { return done(err); }
-    if (client.id !== authCode.clientID) { return done(null, false); }
-    if (redirectURI !== authCode.redirectURI) { return done(null, false); }
+    if (!authCode || !client) { return done(null, false); }
+    if (client.get("clientID") !== authCode.get("clientID")) { return done(null, false); }
+    if (redirectURI !== authCode.get("redirectURI")) { return done(null, false); }
 
     // Create the tokens.
     var accessToken = utils.uid(256),
         refreshToken = utils.uid(256),
-        params = {};
+        saveOptions = {},
+        today = new Date(),
+        expires = new Date(today.getTime() + (24 * 60 * 60 * 1000)),
+        tokenAttributes = {},
+        tokenType = 'bearer';
 
-    params.token_type = 'bearer';
-    params.expires_in = new Date(today.getTime() + (24 * 60 * 60 * 1000));
+    saveOptions.success = function (model) {
+      var params = {};
 
-    // Save the accessToken.
-    // TODO - Save params.expires_in and use that to validate tokens.
-    db.accessTokens.save(accessToken, authCode.userID, authCode.clientID, function (err) {
-      if (err) {
-        return done(err);
-      }
+      params.token_type = model.get("tokenType");
+      params.expires_in = new Date() - expires;
 
-      // TODO - Need a refreshToken store.
-      // It should have:
-      // - user_id,
-      // - client_id, - Client sending Oauth requests.
-      // - redirect_uri, - Determines where the response is sent.
-      // - scope, - List of scopes that access was granted for for this token. Just one org and maybe the userinfo scope.
-      // - state, - Indicates any state which may be useful to your application upon receipt of the response.
-      // - approval_prompt, - Indicates if the user should be re-prompted for consent.
-      // - auth_code, - Removed after first exchange for...
-      // - auth_code_issued, - Datetime auth code was issued. If more than 30 minutes have passed without exchange, remove whole row.
-      // - auth_code_expires_in, - GMT datetime when this code expires.
-      // - refresh_token, - Does not expire
-      // - refresh_token_issued, - Datetime refresh token was created
-      // - refresh_expires_in, - GMT datetime when this token expires.
-      // - access_token, - Current issued/valid access token.
-      // - access_token_issued, - GMT datetime when this token was issued.
-      // - access_expires_in, - GMT datetime when this token expires.
-      // - token_type, - Bearer for now, MAC later
-      // - access_type, - online or offline
-      // - delegate, - user_id for which the application is requesting delegated access as.
+      // Send the tokens along.
+      return done(null, model.get("accessToken"), model.get("refreshToken"), params);
+    };
+    saveOptions.error = function (model, err) {
+      return done && done(err);
+    };
 
-      // TODO - Need client store.
-      // It should have:
-      // - client_id, - Generated id
-      // - client_secret, - Generated random key.
-      // - client_name, - Name of app requesting permission.
-      // - client_email, - Contact email for the client app.
-      // - client_web_site, - URL for the client app.
-      // - client_logo, - logo image for the client app.
-      // - client_type, - "web_server", "installed_app", "service_account"
-      // - active, - Boolean to deactivate a client.
-      // - issued, - Datetime client was registered.
-      // - auth_uri,
-      // - token_uri,
-      // - redirect_uris, - URIs registered for this client to redirect to.
-      // - delegated_access, - Boolean if "service_account" can act on behalf of other users
-      // - client_x509_cert_url, - Public key cert for "service_account"
-      // - auth_provider_x509_cert_url
+    // Set model values and save.
+    authCode.set("state", "Token Issued");
+    authCode.set("authCode", null);
+    authCode.set("authCodeExpires", new Date());
+    authCode.set("refreshToken", refreshToken);
+    authCode.set("refreshIssued", new Date());
+    authCode.set("accessToken", accessToken);
+    authCode.set("accessIssued", new Date());
+    authCode.set("accessExpires", expires);
+    authCode.set("tokenType", tokenType);
+    authCode.set("accessType", "offline"); // Default for now...
 
-      // Save the refreshToken.
-      db.accessTokens.save(refreshToken, authCode.userID, client.id, function (err) {
-        if (err) {
-          return done(err);
-        }
-
-        // TODO - Now that the auth code has been exchanged, we need to delete it.
-
-        // Send the tokens along.
-        done(null, accessToken, refreshToken, params);
-      });
-    });
+    authCode.save(null, saveOptions);
   });
 }));
 
@@ -172,11 +149,24 @@ exports.authorization = [
   server.authorization(function(clientID, redirectURI, scope, type, done) {
     db.clients.findByClientId(clientID, function(err, client) {
       if (err) { return done(err); }
-      // WARNING: For security purposes, it is highly advisable to check that
-      //          redirectURI provided by the client matches one registered with
-      //          the server.  For simplicity, this example does not.  You have
-      //          been warned.
-      return done(null, client, redirectURI);
+      if (!client) { return done(null, false); }
+
+      var matches = false;
+
+      // For security purposes, we check that redirectURI provided
+      // by the client matches one registered with the server.
+      _.each(client.get("redirectURIs"), function (value, key, list) {
+        // Check if the requested redirectURI is in approved client.redirectURIs.
+        if (value === redirectURI) {
+          matches = true;
+        }
+      });
+
+      if (matches) {
+        return done(null, client, redirectURI);
+      } else {
+        return done(null, false);
+      }
     });
   }),
   function(req, res, next){
@@ -192,8 +182,15 @@ exports.authorization = [
     // the URI to call to get a user's scope/org list: 'https://mobile.xtuple.com/auth/userinfo.xxx'
   },
   login.ensureLoggedIn({redirectTo: "/"}),
-  function(req, res){
-    res.render('dialog', { transactionID: req.oauth2.transactionID, user: req.user, client: req.oauth2.client });
+  function(req, res, next){
+    var scope;
+
+    if (req.session && req.session.passport && req.session.passport.user && req.session.passport.user.organization) {
+      scope = req.session.passport.user.organization;
+      res.render('dialog', { transactionID: req.oauth2.transactionID, user: req.user.id, client: req.oauth2.client.get("clientName"), scope: scope });
+    } else {
+      next(new Error('Invalid OAuth 2.0 scope.'));
+    }
   }
 ]
 
@@ -211,7 +208,17 @@ exports.authorization = [
 
 exports.decision = [
   login.ensureLoggedIn({redirectTo: "/"}),
-  server.decision()
+  server.decision(function(req, next){
+    // Add the approved scope/org to req.oauth2.res.
+    var ares = {};
+
+    if (req.session && req.session.passport && req.session.passport.user && req.session.passport.user.organization) {
+      ares.scope = req.session.passport.user.organization;
+      return next(null, ares);
+    } else {
+      return next(new Error('Invalid OAuth 2.0 scope.'));
+    }
+  })
 ]
 
 

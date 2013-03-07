@@ -61,6 +61,34 @@ white:true*/
 
     @extends XM.Model
   */
+  XM.Oauth2client = XM.SimpleModel.extend({
+    /** @scope XM.Organization.prototype */
+
+    recordType: 'XM.Oauth2client',
+
+    databaseType: 'global'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.Oauth2token = XM.SimpleModel.extend({
+    /** @scope XM.Organization.prototype */
+
+    recordType: 'XM.Oauth2token',
+
+    databaseType: 'global'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
   XM.Organization = XM.Model.extend({
     /** @scope XM.Organization.prototype */
 
@@ -236,6 +264,30 @@ white:true*/
     /** @scope XM.DatasourceCollection.prototype */
 
     model: XM.DatabaseServer
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.Oauth2clientCollection = XM.Collection.extend({
+    /** @scope XM.OrganizationCollection.prototype */
+
+    model: XM.Oauth2client
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.Oauth2tokenCollection = XM.Collection.extend({
+    /** @scope XM.OrganizationCollection.prototype */
+
+    model: XM.Oauth2token
+
   });
 
   /**
