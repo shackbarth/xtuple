@@ -20,7 +20,7 @@ Simplest possible usage:
 (function () {
   "use strict";
 
-  var secondsToWait = 10;
+  var secondsToWait = 20;
 
   /**
     Loads up the xTuple environment and makes the global variables globally available.
@@ -85,7 +85,7 @@ Simplest possible usage:
           var timeout = setTimeout(function () {
               console.log("App did not fully load");
               process.exit(1);
-          }, secondsToWait * 1000);
+            }, secondsToWait * 1000);
 
           //
           // Check frequently to see if the app is loaded, and move forward when it is
