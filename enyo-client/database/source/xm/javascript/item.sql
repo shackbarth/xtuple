@@ -6,16 +6,80 @@ select xt.install_js('XM','item','xtuple', $$
   
   XM.Item.isDispatchable = true;
 
-  XM.Item.availableItems = function (query, customerId, shiptoId) {
-    var clause = XT.Data.buildClause("XM", "Item", query);
-    var sql = 'select * from custitem($1, $2, $3);';
+  /**
+    Fetch an array of records from the database.
 
-    plv8.elog(NOTICE, "clause is ", JSON.stringify(clause));
-    return JSON.stringify(plv8.execute(sql, [customerId, shiptoId, new Date()]));
-
-    
-    /*return JSON.stringify({data: []});*/
+    @param {String} record type
+    @param {Object} conditions
+    @param {Object} parameters
+    @param {String} order by - optional
+    @param {Number} row limit - optional
+    @param {Number} row offset - optional
+    @returns Array
+  */
+  /*var itemFetch = function (recordType, parameters, orderBy, rowLimit, rowOffset) { */
+  var next = function() {
+    plv8.elog(NOTICE, JSON.stringify(arguments));
+    return JSON.stringify({data: []});
   };
+
+  XM.Item.availableItems = function (query, customerId, shiptoId) {
+    var nameSpace = "XM",
+      type = "ItemSite",
+      table = (nameSpace + '."' + type + '"').decamelize(),
+      orm = XT.Orm.fetch(nameSpace, type),
+      key = XT.Orm.primaryKey(orm),
+      limit = query.rowLimit ? 'limit ' + query.rowLimit : '',
+      offset = query.rowOffset ? 'offset ' + query.rowOffset : '',
+      recs = null,
+      parts,
+      custItemFilter = "",
+      clause = XT.Data.buildClause("XM", "ItemSite", query.parameters, query.orderBy),
+      sql = 'select * from {table} where {key} in ' +
+            '(select {key} from {table} where {conditions} {custItemFilter} {orderBy} {limit} {offset}) ' +
+            '{orderBy}';
+
+
+    /* validate - don't bother running the query if the user has no privileges */
+    if(!XT.Data.checkPrivileges(nameSpace, type)) { return []; };
+
+    /* Restrict results to items that are associated with the customer and/or shipto */ 
+    var custItemSql = 'select * from custitem($1, $2, $3);';
+    var allowedArray = plv8.execute(custItemSql, [customerId, shiptoId, new Date()]);
+    plv8.elog(NOTICE, JSON.stringify(allowedArray));
+    var allowedIds = [];
+    for(var i = 0; i < allowedArray.length; i++) {
+      allowedIds.push(allowedArray[i].custitem);
+    }
+    plv8.elog(NOTICE, JSON.stringify(allowedIds));
+    var sqlFriendlyAllowedIds = JSON.stringify(allowedIds).replace("[", "").replace("]", "");
+    plv8.elog(NOTICE, sqlFriendlyAllowedIds);
+    custItemFilter = ' and ((("item")."id" in (' + sqlFriendlyAllowedIds + '))) ';
+    plv8.elog(NOTICE, custItemFilter);
+
+    /* query the model */
+    sql = sql.replace(/{table}/g, table)
+             .replace(/{key}/g, key)
+             .replace('{conditions}', clause.conditions)
+             .replace('{custItemFilter}', custItemFilter)
+             .replace(/{orderBy}/g, clause.orderBy)
+             .replace('{limit}', limit)
+             .replace('{offset}', offset);
+    plv8.elog(NOTICE, 'sql = ', sql);
+    recs = plv8.execute(sql, clause.parameters);
+    /*for (var i = 0; i < recs.length; i++) {  	
+      recs[i] = this.decrypt(nameSpace, type, recs[i]);	  	
+    }*/
+    return recs;
+  };
+  
+  /*
+    var clause = XT.Data.buildClause("XM", "Item", query);
+  };
+  */
+
+
+
 
   /**
     Returns the standard unit cost for an item.

@@ -28,7 +28,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
       @param {String} Name space
       @param {String} Type
-      @param {Object} Parameters - optional
+      @param {Array} Parameters - optional
       @returns {Object}
     */
     buildClause: function (nameSpace, type, parameters, orderBy) {
@@ -845,9 +845,8 @@ select xt.install_js('XT','Data','xtuple', $$
       Fetch an array of records from the database.
 
       @param {String} record type
-      @param {Object} conditions
-      @param {Object} parameters
-      @param {String} order by - optional
+      @param {Array} parameters
+      @param {Array} order by - optional
       @param {Number} row limit - optional
       @param {Number} row offset - optional
       @returns Array
