@@ -182,11 +182,8 @@ white:true*/
     },
 
     assignedToDidChange: function (model, value, options) {
-      var status = this.getStatus(),
-        I = XM.Incident,
-        K = XM.Model;
-      if ((options && options.force) || !(status & K.READY)) { return; }
-      if (value) { this.set('status', I.ASSIGNED); }
+      if (this.isNotReady()) { return; }
+      if (value) { this.set('status', XM.Incident.ASSIGNED); }
     },
 
     validateSave: function () {

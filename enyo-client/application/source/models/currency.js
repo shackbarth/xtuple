@@ -38,11 +38,9 @@ white:true*/
     //
 
     abbreviationDidChange: function (model, value, options) {
-      var K = XM.Model,
-        that = this,
-        status = this.getStatus(),
+      var that = this,
         checkOptions = {};
-      if ((options && options.force) || !(status & K.READY)) { return; }
+      if (this.isNotReady()) { return; }
 
       checkOptions.success = function (resp) {
         var err, params = {};

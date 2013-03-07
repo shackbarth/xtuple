@@ -25,6 +25,35 @@ white:true*/
       this.dispatch("XM.Customer", "canPurchase", params, options);
       return this;
     },
+    
+    /**
+      Retrieve the customer's price for a given item and quantity.
+
+      @param {XM.Item} Item
+      @param {Number} Quantity
+      @param {Object} Options - success (callback), asOf, shipto, quantityUnit, priceUnit, currency, effective
+      @returns {Object} Receiver
+    */
+    characteristicPrice: function (item, characteristic, value, quantity, options) {
+      if (!item || !quantity || !options || !options.success) { return; }
+      var opts = {},
+        params;
+      if (options.asOf) {
+        opts.asOf = options.asOf;
+      }
+      if (options.shipto) {
+        opts.shiptoId = options.shipto.id;
+      }
+      if (options.currency) {
+        opts.currencyId = options.currency.id;
+      }
+      if (options.effective) {
+        opts.effective = options.effective;
+      }
+      params = [this.id, item.id, characteristic.id, value, quantity, opts];
+      this.dispatch("XM.Customer", "characteristicPrice", params, options);
+      return this;
+    },
 
     /**
       Retrieve the customer's price for a given item and quantity.
@@ -34,7 +63,7 @@ white:true*/
       @param {Object} Options - success (callback), asOf, shipto, quantityUnit, priceUnit, currency, effective
       @returns {Object} Receiver
     */
-    price: function (item, quantity, options) {
+    itemPrice: function (item, quantity, options) {
       if (!item || !quantity || !options || !options.success) { return; }
       var opts = {},
         params;
@@ -57,7 +86,7 @@ white:true*/
         opts.effective = options.effective;
       }
       params = [this.id, item.id, quantity, opts];
-      this.dispatch("XM.Customer", "price", params, options);
+      this.dispatch("XM.Customer", "itemPrice", params, options);
       return this;
     }
   };
@@ -80,7 +109,7 @@ white:true*/
         currency: XT.baseCurrency(),
         salesRep: settings.get("DefaultSalesRep"),
         terms: settings.get("DefaultTerms"),
-        shipVia: settings.get("DefaultShipViaId"),
+        shipVia: this.getShipViaValue(),
         customerType: settings.get("DefaultCustType"),
         backorder: settings.get("DefaultBackOrders") || false,
         partialShip: settings.get("DefaultPartialShipments") || false,
@@ -145,6 +174,19 @@ white:true*/
         this.set("partialShip", false);
         this.setReadOnly("partialShip", true);
       }
+    },
+    
+    getShipViaValue: function () {
+      var ret,
+        shipViaModel = XM.shipVias.get(XT.session.getSettings().get("DefaultShipViaId"));
+      if (shipViaModel) {
+        ret = shipViaModel.get("code") + "-" + shipViaModel.get("description");
+      }
+      else {
+        ret = "";
+      }
+      
+      return ret;
     },
 
     purchaseOrdersDidChange: function () {
