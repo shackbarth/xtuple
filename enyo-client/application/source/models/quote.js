@@ -834,7 +834,8 @@ white:true*/
 
       // Make sure we have necessary values
       if (canUpdate && customer && currency &&
-          item && quantity && quantityUnit && priceUnit) {
+          item && quantity && quantityUnit && priceUnit &&
+          this.priceAsOfDate()) {
         
         // Determine whether updating net price or only customer price
         if (editing) {
@@ -1078,6 +1079,21 @@ white:true*/
         parent.calculateScheduleDate();
       }
     },
+    
+    priceAsOfDate: function () {
+      var asOf = new Date(),
+        parent = this.getParent(),
+        parentDate = parent ? parent.get(parent.documentDateKey) : false,
+        effectivePolicy = XT.session.settings.get("soPriceEffective");
+      
+      // Handle alternate price effectivity settings
+      if (effectivePolicy === "ScheduleDate") {
+        asOf = this.get("scheduleDate");
+      } else if (effectivePolicy === "OrderDate") {
+        asOf = parentDate;
+      }
+      return asOf;
+    },
 
     recalculateParent: function () {
       var parent = this.getParent();
@@ -1125,19 +1141,16 @@ white:true*/
       This sholud only be called by `calculatePrice`.
     */
     _calculatePrice: function () {
-      var settings = XT.session.settings,
-        K = this.getClass(),
+      var K = this.getClass(),
         that = this,
-        asOf = new Date(),
         item = this.getValue("itemSite.item"),
         characteristics = this.get("characteristics"),
         isConfigured = item ? item.get("isConfigured") : false,
         counter = isConfigured ? characteristics.length + 1 : 1,
         priceUnit = this.get("priceUnit"),
-        effectivePolicy = settings.get("soPriceEffective"),
+        asOf = this.priceAsOfDate(),
         quantity = this.get("quantity"),
         quantityUnit = this.get("quantityUnit"),
-        scheduleDate = this.get("scheduleDate"),
         readOnlyCache = this.isReadOnly("price"),
         parent = this.getParent(),
         prices = [],
@@ -1162,13 +1175,6 @@ white:true*/
       parentDate = parent.get(parent.documentDateKey);
       customer = parent.get("customer");
       currency = parent.get("currency");
-
-      // Handle alternate price effectivity settings
-      if (effectivePolicy === "ScheduleDate") {
-        asOf = scheduleDate;
-      } else if (effectivePolicy === "OrderDate") {
-        asOf = parentDate || new Date();
-      }
       
       // Don't allow user editing of price until we hear back from the server
       this.setReadOnly("price", true);
