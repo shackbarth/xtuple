@@ -98,7 +98,7 @@ white:true*/
       @param {Object} Options: success, error
       @returns {Object} Receiver
     */
-    calculateFreight: function (options) {
+    calculateFreight: function () {
       var customer = this.get("customer"),
         shipto = this.get("shipto"),
         currency = this.get("currency"),
@@ -189,8 +189,8 @@ white:true*/
                     freight = XT.math.add(_.pluck(that.freightDetail, "total"), scale);
                     that.set("freight", freight);
 
-                    // Now calculate tax, while forwarding the callback options
-                    that.calculateFreightTax(options);
+                    // Now calculate tax
+                    that.calculateFreightTax();
                   }
                 }
               };
@@ -201,7 +201,7 @@ white:true*/
       }
 
       // Default if we couldn't calculate
-      if (options.success) { options.success(); }
+      this._calculateTotals();
       return this;
     },
 
@@ -211,7 +211,7 @@ white:true*/
       @param {Object} Options: success, error
       @returns {Object} Receiver
     */
-    calculateFreightTax: function (options) {
+    calculateFreightTax: function () {
       var amount = this.get("freight"),
         taxType = _.where(_.pluck(XM.taxTypes.models, "attributes"), {name: "Freight"})[0],
         taxTypeId = taxType.id,
@@ -228,7 +228,7 @@ white:true*/
         params = [taxZoneId, taxTypeId, effective, currency.id, amount];
         dispOptions.success = function (resp) {
           that.freightTaxDetail = resp;
-          if (options.success) { options.success(); }
+          that._calculateTotals();
         };
         this.dispatch(this.recordType, "taxDetail", params, dispOptions);
       }
@@ -266,17 +266,12 @@ white:true*/
       @returns {Object} Receiver
     */
     calculateTotals: function () {
-      var calculateFreight = this.get("calculateFreight"),
-        that = this,
-        options = {};
+      var calculateFreight = this.get("calculateFreight");
 
       if (this.isNotReady()) { return this; }
 
       if (calculateFreight) {
-        options.success = function () {
-          that._calculateTotals();
-        };
-        this.calculateFreight(options);
+        this.calculateFreight();
       } else {
         this._calculateTotals();
       }
@@ -405,6 +400,22 @@ white:true*/
         this.unset("shiptoCountry");
       }
     },
+    
+    recalculatePrices: function () {
+      var that = this,
+        msg = "_recalcuateAll?".loc(),
+        options = {
+          callback: function (answer) {
+            if (answer) {
+              _.each(that.get("lineItems").models, function (lineItem) {
+                lineItem.calculatePrice(true);
+              });
+              that.calculateFreight();
+            }
+          }
+        };
+      this.notify(msg, options);
+    },
 
     /**
       Populate shipto defaults
@@ -443,6 +454,7 @@ white:true*/
         this.set("shiptoPostalCode", shiptoAddress.getValue("postalCode"));
         this.set("shiptoCountry", shiptoAddress.getValue("country"));
       }
+      this.recalculatePrices();
     },
 
     /**
@@ -478,6 +490,7 @@ white:true*/
     lineItemsDidChange: function () {
       var lineItems = this.get("lineItems");
       this.setReadOnly("currency", lineItems.length);
+      this.setReadOnly("customer", lineItems.length);
     },
 
     statusDidChange: function () {
@@ -793,139 +806,57 @@ white:true*/
       return this;
     },
 
+    /**
+      Calculate the price for this line item
+      
+      @param{Boolean} force - force the net price to update, even if settings indicate not to.
+      @returns {Object} Receiver
+    */
     calculatePrice: function (force) {
       var settings = XT.session.settings,
         K = this.getClass(),
         that = this,
-        asOf = new Date(),
         canUpdate = this.canUpdate(),
-        customerPrice = this.get("customerPrice"),
+        discount = this.get("discount"),
         ignoreDiscount = settings.get("IgnoreCustDisc"),
         item = this.getValue("itemSite.item"),
-        characteristics = this.get("characteristics"),
-        isConfigured = item ? item.get("isConfigured") : false,
-        counter = isConfigured ? characteristics.length + 1 : 1,
         editing = !this.isNew(),
-        price = this.get("price"),
         priceUnit = this.get("priceUnit"),
-        effectivePolicy = settings.get("soPriceEffective"),
         quantity = this.get("quantity"),
         quantityUnit = this.get("quantityUnit"),
-        scheduleDate = this.get("scheduleDate"),
         updatePolicy = settings.get("UpdatePriceLineEdit"),
-        readOnlyCache = this.isReadOnly("price"),
         parent = this.getParent(),
-        prices = [],
-        itemOptions = {},
-        charOptions = {},
-        parentDate,
-        customer,
-        currency,
-        
-        // Set price after we have item and all characteristics prices
-        setPrice = function () {
-          var totalPrice = XT.math.add(prices, XT.SALES_PRICE_SCALE);
-          that.set("customerPrice", totalPrice);
-          if (that._updatePrice) {
-            that.set("price", totalPrice);
-          }
-          
-          // Allow editing again if we could before
-          that.setReadOnly("price", readOnlyCache);
-        };
+        customer = parent ? parent.get("customer") : false,
+        currency = parent ? parent.get("currency") :false;
 
       // If no parent, don't bother
       if (!parent || this.isNotReady()) { return; }
 
-      parentDate = parent.get(parent.documentDateKey);
-      customer = parent.get("customer");
-      currency = parent.get("currency");
-
-      // Make sure we have all the necessary values
+      // Make sure we have necessary values
       if (canUpdate && customer && currency &&
-          item && quantity && quantityUnit && priceUnit) {
-
-        // Handle alternate price effectivity settings
-        if (effectivePolicy === "ScheduleDate") {
-          asOf = scheduleDate;
-        } else if (effectivePolicy === "OrderDate") {
-          asOf = parentDate || new Date();
-        }
-
-        // Determine whether updating net price or just customer price
+          item && quantity && quantityUnit && priceUnit &&
+          this.priceAsOfDate()) {
+        
+        // Determine whether updating net price or only customer price
         if (editing) {
-          if (customerPrice !== price &&
-             (ignoreDiscount || (updatePolicy === K.NEVER_UPDATE && !force))) {
+          if (!force &&
+              (discount && ignoreDiscount) ||
+              (updatePolicy === K.NEVER_UPDATE)) {
             this._updatePrice = false;
           } else if (updatePolicy !== K.ALWAYS_UPDATE) {
-            // TO DO: We need to prompt the user. How?
-            this._updatePrice = false;
+            this.notify("_updatePrice?".loc(), {
+              type: K.QUESTION,
+              callback: function (answer) {
+                that._updatePrice = answer;
+                that._calculatePrice();
+              }
+            });
+            return this;
           }
         }
-
-        // Don't allow user editing of price until we hear back from the server
-        this.setReadOnly("price", true);
-
-        // Get the item price
-        itemOptions.asOf = asOf;
-        itemOptions.currency = currency;
-        itemOptions.effective = parentDate;
-        itemOptions.error = function (err) {
-          that.trigger("error", err);
-        };
-        
-        charOptions = _.clone(itemOptions); // Some params are shared
-        
-        itemOptions.quantityUnit = quantityUnit;
-        itemOptions.priceUnit = priceUnit;
-        itemOptions.success = function (resp) {
-          var priceMode;
-
-          // Handle no price found scenario
-          if (resp.price === -9999) {
-            counter = -1;
-            that.notify("_noPriceFound".loc());
-            if (that._updatePrice) {
-              that.unset("customerPrice");
-              that.unset("price");
-            }
-            if (that.hasChanges("quantity")) {
-              that.unset("quantity");
-            } else {
-              that.unset("scheduleDate");
-            }
-
-          // Handle normal scenario
-          } else {
-            counter--;
-            priceMode = (resp.type === "N" ||
-                         resp.type === "D" ||
-                         resp.type === "P") ? K.DISCOUNT_MODE : K.MARKUP_MODE;
-            that.set("priceMode", priceMode);
-            prices.push(resp.price);
-            if (!counter) { setPrice(); }
-          }
-        };
-        itemOptions.error = function (err) {
-          that.trigger("error", err);
-        };
-        customer.itemPrice(item, quantity, itemOptions);
-        
-        // Get characteristic prices
-        if (isConfigured) {
-          _.each(characteristics.models, function (char) {
-            var characteristic = char.get("characteristic"),
-              value = char.get("value");
-            charOptions.success = function (price) {
-              counter--;
-              char.set("price", price);
-              prices.push(price);
-              if (!counter) { setPrice(); }
-            };
-            customer.characteristicPrice(item, characteristic, value, quantity, charOptions);
-          });
-        }
+        this._calculatePrice();
       }
+      return this;
     },
 
     calculateProfit: function () {
@@ -1024,7 +955,9 @@ white:true*/
         taxOptions = {},
         itemOptions = {},
         itemCharAttrs,
-        charTypes;
+        charTypes,
+        len,
+        i;
         
       // Fetch and update selling units
       if (item) {
@@ -1045,8 +978,13 @@ white:true*/
       this.unset("priceUnit");
       this.unset("taxType");
       this.unset("unitCost");
-      characteristics.reset();
       this.sellingUnits.reset();
+      
+      // Destroy old characteristics
+      len = characteristics.length;
+      for (i = 0; i < len; i++) {
+        characteristics.at(0).destroy();
+      }
       
       if (!item) { return; }
       
@@ -1102,7 +1040,7 @@ white:true*/
         };
       }
 
-      // Build characteristics (get pricing in calculatePrice function)
+      // Build characteristics
       itemCharAttrs = _.pluck(item.get("characteristics").models, "attributes");
       charTypes = _.unique(_.pluck(itemCharAttrs, "characteristic"));
       _.each(charTypes, function (char) {
@@ -1113,8 +1051,11 @@ white:true*/
           });
         quoteLineChar.set("characteristic", char);
         quoteLineChar.set("value", defaultChar ? defaultChar.value : "");
+        quoteLineChar.on("change:value", that.calculatePrice);
         characteristics.add(quoteLineChar);
       });
+      
+      this.calculatePrice();
     },
 
     parentDidChange: function () {
@@ -1137,6 +1078,21 @@ white:true*/
         }
         parent.calculateScheduleDate();
       }
+    },
+    
+    priceAsOfDate: function () {
+      var asOf = new Date(),
+        parent = this.getParent(),
+        parentDate = parent ? parent.get(parent.documentDateKey) : false,
+        effectivePolicy = XT.session.settings.get("soPriceEffective");
+      
+      // Handle alternate price effectivity settings
+      if (effectivePolicy === "ScheduleDate") {
+        asOf = this.get("scheduleDate");
+      } else if (effectivePolicy === "OrderDate") {
+        asOf = parentDate;
+      }
+      return asOf;
     },
 
     recalculateParent: function () {
@@ -1179,6 +1135,109 @@ white:true*/
 
     unitDidChange: function () {
       this.calculatePrice(true);
+    },
+    
+    /** @private
+      This sholud only be called by `calculatePrice`.
+    */
+    _calculatePrice: function () {
+      var K = this.getClass(),
+        that = this,
+        item = this.getValue("itemSite.item"),
+        characteristics = this.get("characteristics"),
+        isConfigured = item ? item.get("isConfigured") : false,
+        counter = isConfigured ? characteristics.length + 1 : 1,
+        priceUnit = this.get("priceUnit"),
+        asOf = this.priceAsOfDate(),
+        quantity = this.get("quantity"),
+        quantityUnit = this.get("quantityUnit"),
+        readOnlyCache = this.isReadOnly("price"),
+        parent = this.getParent(),
+        prices = [],
+        itemOptions = {},
+        charOptions = {},
+        parentDate,
+        customer,
+        currency,
+        
+        // Set price after we have item and all characteristics prices
+        setPrice = function () {
+          var totalPrice = XT.math.add(prices, XT.SALES_PRICE_SCALE);
+          that.set("customerPrice", totalPrice);
+          if (that._updatePrice) {
+            that.set("price", totalPrice);
+          }
+          
+          // Allow editing again if we could before
+          that.setReadOnly("price", readOnlyCache);
+        };
+
+      parentDate = parent.get(parent.documentDateKey);
+      customer = parent.get("customer");
+      currency = parent.get("currency");
+      
+      // Don't allow user editing of price until we hear back from the server
+      this.setReadOnly("price", true);
+
+      // Get the item price
+      itemOptions.asOf = asOf;
+      itemOptions.currency = currency;
+      itemOptions.effective = parentDate;
+      itemOptions.error = function (err) {
+        that.trigger("error", err);
+      };
+      
+      charOptions = _.clone(itemOptions); // Some params are shared
+      
+      itemOptions.quantityUnit = quantityUnit;
+      itemOptions.priceUnit = priceUnit;
+      itemOptions.success = function (resp) {
+        var priceMode;
+
+        // Handle no price found scenario
+        if (resp.price === -9999) {
+          counter = -1;
+          that.notify("_noPriceFound".loc(), { type: K.WARNING });
+          if (that._updatePrice) {
+            that.unset("customerPrice");
+            that.unset("price");
+          }
+          if (that.hasChanges("quantity")) {
+            that.unset("quantity");
+          } else {
+            that.unset("scheduleDate");
+          }
+
+        // Handle normal scenario
+        } else {
+          counter--;
+          priceMode = (resp.type === "N" ||
+                       resp.type === "D" ||
+                       resp.type === "P") ? K.DISCOUNT_MODE : K.MARKUP_MODE;
+          that.set("priceMode", priceMode);
+          prices.push(resp.price);
+          if (!counter) { setPrice(); }
+        }
+      };
+      itemOptions.error = function (err) {
+        that.trigger("error", err);
+      };
+      customer.itemPrice(item, quantity, itemOptions);
+      
+      // Get characteristic prices
+      if (isConfigured) {
+        _.each(characteristics.models, function (char) {
+          var characteristic = char.get("characteristic"),
+            value = char.get("value");
+          charOptions.success = function (price) {
+            counter--;
+            char.set("price", price);
+            prices.push(price);
+            if (!counter) { setPrice(); }
+          };
+          customer.characteristicPrice(item, characteristic, value, quantity, charOptions);
+        });
+      }
     }
 
   });
@@ -1313,7 +1372,11 @@ white:true*/
   XM.QuoteLineCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.QuoteLineCharacteristic.prototype */
 
-    recordType: 'XM.QuoteLineCharacteristic'
+    recordType: 'XM.QuoteLineCharacteristic',
+    
+    readOnlyAttributes: [
+      "price"
+    ]
 
   });
 
