@@ -110,12 +110,9 @@ var XVOWS = XVOWS || {};
         
           fetchOptionsAccnt.success = function () {
             var destroyOptionsAccnt = {};
-            console.log("accnt fetch success");
             destroyOptionsAccnt.success = function () {
-              console.log("accnt destroy success");
               that.callback(null, data);
             };
-            console.log("pre accnt destroy");
             deleteData.accountModel.destroy(destroyOptionsAccnt);
           };
           deleteData.accountModel.fetch(fetchOptionsAccnt);
