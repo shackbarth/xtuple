@@ -1,4 +1,4 @@
-/* LESS version of screen.scss file previously in client 
+/* LESS version of screen.scss file previously in client
 
 	To compile to .css: lessc screen.less > ../stylesheets/screen.css
 	Use -compress for a compressed .css with no comments
@@ -223,7 +223,7 @@ body {
   width: 90px;
   vertical-align: top;
 }
-/* 
+/*
 	Media query for responsive design. This adapts to smaller
 	displays.
 */
@@ -795,6 +795,9 @@ body {
 .xv-relationwidget-completer {
   left: -200px;
   top: 15px;
+}
+.xv-completer-sidecar {
+  color: #93a1a1;
 }
 .xv-relationwidget-column.left {
   padding-right: 18px;
