@@ -318,35 +318,6 @@ regexp:true, undef:true, trailing:true, white:true */
     keyAttribute: "item.number",
     sidecarAttribute: "site.code",
     nameAttribute: "site.code",
-    handlers: {
-      onValueChange: "theValueChanged"
-    },
-    /**
-      Add a site picker to the bottom of the component array
-    */
-    create: function () {
-      this.inherited(arguments);
-      this.createComponent(
-        {
-          kind: "XV.SitePicker",
-          name: "sitePicker",
-          label: "_site".loc(),
-          showing: false,
-          /**
-            The ItemSite widget might want to restrict the list to a specific
-            set of site IDs, as specified in the options object
-           */
-          filter: function (models, options) {
-            var siteIds = options && options.siteIds,
-              matches = _.filter(this._collection.models, function (model) {
-                return !siteIds || _.indexOf(siteIds, model.getValue("id")) >= 0;
-              });
-
-            return matches || [];
-          }
-        }
-      );
-    },
     shiptoChanged: function (inSender, inEvent) {
       if (this.getShipto()) {
         var extraSearchOptions = this.getExtraSearchOptions() || {};
@@ -386,55 +357,6 @@ regexp:true, undef:true, trailing:true, white:true */
         };
 
       XM.ItemSite.dispatchForCollection(query, customerId, shiptoId, options);
-    },
-    /**
-      We only want the picker to show Site models with an ItemSite Item that
-      was just picked.
-     */
-    setValue: function (value, options) {
-      this.inherited(arguments);
-
-      if (!this._collection || this._collection.length === 0) {
-        // we're not ready to filter down the site picker
-        return;
-      }
-      var itemId = this.getValue().getValue("item.id"),
-        // matches are an array of ItemSite models, whose Item was just picked
-        matches = _.filter(this._collection.models, function (model) {
-          return model.getValue("item.id") === itemId;
-        }),
-        siteIds = _.map(matches, function (model) {
-          return model.getValue("site.id");
-        });
-
-      this.$.sitePicker.setShowing(true);
-      this.$.sitePicker.buildList({siteIds: siteIds});
-      this.$.sitePicker.setValue(this.getValue().getValue("site"), {silent: true});
-    },
-    theValueChanged: function (inSender, inEvent) {
-      var itemId,
-        siteId,
-        itemSite;
-      console.log("The value changed", inEvent);
-      if (inEvent.originator.name === 'sitePicker') {
-        // the site picker has changed. Update the item site value, but do not propagate this.
-
-        // the user has just selected a specific site based on the ones available for that item
-        // use the itemsite with the item we are on, plus the site that was chosen
-        itemId = this.getValue().getValue("item.id");
-        siteId = inEvent.originator.getValue().id;
-        itemSiteModel = _.find(this._collection.models, function (model) {
-          return model.getValue("item.id") === itemId && model.getValue("site.id") === siteId;
-        });
-        if (itemSiteModel) {
-          console.log("picked itemsite model is", itemSiteModel.toJSON());
-          this.setValue(itemSiteModel);
-        } else {
-          // Why is this._collection already filtered?
-          console.log("this shouldn't happen");
-        }
-        return true;
-      }
     },
     /**
       Because we fetch with a dispatch the collection doesn't get refreshed by default. Do that.
