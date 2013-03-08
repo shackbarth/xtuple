@@ -311,9 +311,6 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.RelationWidget",
     collection: "XM.ItemSiteRelationCollection",
     list: "XV.ItemSiteList",
-    published: {
-      bespokeFilter: {}
-    },
     keyAttribute: "item.number",
     sidecarAttribute: "site.code",
     nameAttribute: "site.code",
@@ -325,45 +322,6 @@ regexp:true, undef:true, trailing:true, white:true */
     bespokeFilterChanged: function (inSender, inEvent) {
       this._collection.bespokeFilter = this.getBespokeFilter();
     },
-    /**
-      This is going to have to be a dispatch function, due to the
-      complexity of customer-specific items
-    fetchCollection: function (value, rowLimit, callbackName) {
-      var customerId = this.getCustomer() && this.getCustomer().id,
-        shiptoId = this.getShipto() && this.getShipto().id,
-        options = {
-          success: enyo.bind(this, callbackName)
-        },
-        key = this.getKeyAttribute(),
-        parameters = [{
-          attribute: key,
-          operator: "BEGINS_WITH",
-          value: value
-        }],
-        query = {
-          parameters: parameters,
-          rowLimit: rowLimit,
-          orderBy: [{
-            attribute: key
-          }]
-        };
-
-    },
-     */
-    /**
-      Because we fetch with a dispatch the collection doesn't get refreshed by default. Do that.
-    _collectionFetchSuccess: function (data) {
-      this._collection.reset(data);
-      this.inherited(arguments);
-    },
-    */
-    /**
-      Because we fetch with a dispatch the collection doesn't get refreshed by default. Do that.
-    _fetchSuccess: function (data) {
-      this._collection.reset(data);
-      this.inherited(arguments);
-    }
-    */
   });
 
   // ..........................................................
