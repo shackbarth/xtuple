@@ -96,30 +96,32 @@ var XVOWS = XVOWS || {};
       }
     })
   }).addBatch({
-    'DESTROY CUSTOMER': crud.destroy(data),
-    'DESTROY ASSOCIATED ACCOUNT': {
-      topic: function () {
-        var that = this,
-          fetchOptions = {};
-          
-        fetchOptions.id = deleteData.accntId;
+    'DESTROY': crud.destroy(data, {
+      '-> Set values': {
+        //Destroy the customer.  When that is successful, destroy the account
+        'customer destroyed': function (data) {
+          assert.isTrue(data.model.getStatus() === XM.Model.DESTROYED_CLEAN);
+        },
+        topic: function () {
+          var that = this,
+            fetchOptionsAccnt = {};
         
-        fetchOptions.success = function () {
-          var destroyOptions = {};
-          console.log("fetch success");
-          destroyOptions.success = function () {
-            console.log("destroy success");
-            that.callback(null, data);
+          fetchOptionsAccnt.id = deleteData.accntId;
+        
+          fetchOptionsAccnt.success = function () {
+            var destroyOptionsAccnt = {};
+            console.log("accnt fetch success");
+            destroyOptionsAccnt.success = function () {
+              console.log("accnt destroy success");
+              that.callback(null, data);
+            };
+            console.log("pre accnt destroy");
+            deleteData.accountModel.destroy(destroyOptionsAccnt);
           };
-          deleteData.accountModel.destroy(destroyOptions);
-        };
-        deleteData.accountModel.fetch(fetchOptions);
-        
-      },
-      'Five is a number.': function (data) {
-        assert.isNumber(5);
+          deleteData.accountModel.fetch(fetchOptionsAccnt);
+        }
       }
-    }
+    })
   }).export(module);
   
 }());
