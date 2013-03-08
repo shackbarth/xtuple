@@ -126,6 +126,7 @@ white:true*/
       this.on('change:shipto', this.shiptoDidChange);
       this.on('change:shipVia', this.calculateFreight);
       this.on('change:taxZone', this.recalculateTaxes);
+      this.on('change:site', this.siteDidChange);
       this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
       this.on('add:lineItems remove:lineItems change:miscCharge',
         this.calculateTotals);
@@ -465,7 +466,7 @@ white:true*/
         };
       this.notify(msg, options);
     },
-    
+
     /**
       Re-evaluate taxes for all line items and freight.
     */
@@ -485,7 +486,7 @@ white:true*/
         shiptoAddress = shiptoContact ? shiptoContact.get("address") : false;
 
       if (this.isNotReady() || !shipto) { return; }
-      
+
       this.off(this.shipAddressEvents, this.shiptoAddressDidChange);
       this.set("shiptoName", shipto.get("name"));
       this.set("salesRep", shipto.get("salesRep"));
@@ -517,11 +518,17 @@ white:true*/
       this.on(this.shipAddressEvents, this.shiptoAddressDidChange);
       this.recalculatePrices();
     },
-    
+
     shiptoAddressDidChange: function () {
       // If the address was manually changed, then clear shipto
       if (this.isNotReady()) { return; }
       this.unset("shipto");
+    },
+
+    siteDidChange: function () {
+      if (this.isNotReady()) { return; }
+      var fob = this.getValue("site.fob") || "";
+      this.set("fob", fob);
     },
 
     /**
