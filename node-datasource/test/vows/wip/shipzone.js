@@ -1,71 +1,85 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global XVOWS:true, XT:true, XM:true, _:true, setTimeout:true,
-  clearTimeout:true, vows:true, module:true, assert:true, console:true */
+/*global XM:true, XV:true, module:true, require:true, assert: true */
 
+var XVOWS = XVOWS || {};
 (function () {
   "use strict";
 
-  var createHash,
-    updateHash,
-    model = new XM.ShipZone();
+  var vows = require("vows"),
+    assert = require("assert"),
+    zombieAuth = require("../lib/zombie_auth"),
+    crud = require('../lib/crud');
 
-  createHash = {
+  var data = {};
+
+  data.createHash = {
     name: "TESTSHIPZONE",
-    description: "iAmAShipZone"
+    description: "Test Ship Zone"
   };
 
-  updateHash = {
+  data.updateHash = {
     name: "UPDATETESTSHIPZONE"
   };
 
   vows.describe('XM.ShipZone CRUD test').addBatch({
-    'CREATE ': XVOWS.create(model, {
+    'INITIALIZE ': {
+      topic: function () {
+        var that = this,
+          callback = function () {
+            data.model = new XM.ShipZone();
+            that.callback(null, data);
+          };
+        zombieAuth.loadApp(callback);
+      },
+      'The record type is XM.ShipZone': function (data) {
+        assert.equal(data.model.recordType, "XM.ShipZone");
+      }
+    }
+  }).addBatch({
+    'CREATE ': crud.create(data, {
       '-> Set values': {
-        topic: function (model) {
-          model.set(createHash);
-          return model;
+        topic: function (data) {
+          data.model.set(data.createHash);
+          return data;
         },
-        'Last Error is null': function (model) {
-          assert.isNull(model.lastError);
+        'Last Error is null': function (data) {
+          assert.isNull(data.model.lastError);
         },
-        '-> Save': XVOWS.save(model)
+        '-> Save': crud.save(data)
       }
     })
   }).addBatch({
     'READ': {
       topic: function () {
-        return model;
+        return data;
       },
-      'ID is a number': function (model) {
-        assert.isNumber(model.id);
+      'ID is a number': function (data) {
+        assert.isNumber(data.model.id);
       },
-      'Name is `TESTSHIPZONE`': function (model) {
-        assert.equal(model.get('name'), createHash.name);
+      'Name is `TESTSHIPZONE`': function (data) {
+        assert.equal(data.model.get('name'), data.createHash.name);
       },
-      'Description is `iAmAShipZone`': function (model) {
-        assert.equal(model.get('description'), createHash.description);
+      'Description is `Test Ship Zone`': function (data) {
+        assert.equal(data.model.get('description'), data.createHash.description);
       }
     }
   }).addBatch({
-    'UPDATE ': XVOWS.update(model, {
+    'UPDATE ': crud.update(data, {
       '-> Set values': {
         topic: function () {
-          model.set(updateHash);
-          return model;
+          data.model.set(data.updateHash);
+          return data;
         },
-        'Name is `UPDATETESTSHIPZONE`': function (model) {
-          assert.equal(model.get('name'), updateHash.name);
+        'Name is `UPDATETESTSHIPZONE`': function (data) {
+          assert.equal(data.model.get('name'), data.updateHash.name);
         },
-        '-> Commit': XVOWS.save(model)
+        '-> Commit': crud.save(data)
       }
     })
   }).addBatch({
-    'DESTROY': XVOWS.destroy(model, {
-      'FINISH XM.ShipZone': function () {
-        XVOWS.next();
-      }
-    })
-  }).run();
+    'DESTROY': crud.destroy(data)
+  }).export(module);
+  
 }());

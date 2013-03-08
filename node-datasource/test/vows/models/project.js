@@ -61,7 +61,7 @@
         return data;
       },
       'Last Error is null': function (model) {
-        assert.isNull(model.lastError);
+        assert.isTrue(_.isEmpty(model.lastError));
       },
       '-> `requiredAttributes`': {
         topic: function () {

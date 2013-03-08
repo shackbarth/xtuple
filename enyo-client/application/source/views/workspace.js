@@ -1193,7 +1193,10 @@ trailing:true white:true*/
               country: "billtoCountry"
             }
             },
-            {kind: "onyx.Button", content: "_copyToShipTo".loc(), ontap: "copyBilltoToShipto"},
+            {classes: "xv-button-section", components: [
+              {kind: "onyx.Button", content: "_copyToShipTo".loc(), ontap: "copyBilltoToShipto",
+                style: "margin: 4px;"}
+            ]},
             {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
             {kind: "XV.CustomerShiptoWidget", attr: "shipto", showAddress: true, label: "_name".loc()},
             {kind: "XV.AddressFieldsWidget", attr: {
@@ -1207,7 +1210,7 @@ trailing:true white:true*/
               country: "shiptoCountry"
             }
             },
-            {kind: "onyx.GroupboxHeader", content: "_otherStuff".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_shipping".loc()},
             {kind: "XV.InputWidget", attr: "fob"},
             {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber", label: "_custPO".loc()},
             {kind: "XV.ShipViaCombobox", attr: "shipVia"},

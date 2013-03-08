@@ -1,134 +1,83 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global XVOWS:true, XT:true, XM:true, _:true, setTimeout:true,
-  clearTimeout:true, vows:true, module:true, assert:true, console:true */
+/*global XT:true, XM:true, XV:true, process:true, module:true, require:true */
 
+var XVOWS = XVOWS || {};
 (function () {
   "use strict";
 
-  var createHash,
-    updateHash,
-    model = new XM.State();
+  var vows = require("vows"),
+    assert = require("assert"),
+    zombieAuth = require("../lib/zombie_auth"),
+    crud = require('../lib/crud');
 
-  // Get the country id from it's name.
-  var cid = function (cname) {
-    var iterator = function (country) {
-        return country.get('name') === cname;
-      },
-      found = _.find(XM.countries.models, iterator);
+  var data = {};
 
-    if (found && found.hasOwnProperty('id')) {
-      return found.id;
-    }
-    else {
-      return null;
-    }
+  data.createHash = {
+    name: "Milky Way",
+    abbreviation: "MW",
+    country: 214  //arbitrary number, must match actual country_id
   };
 
-  createHash = {
-    name: 'Plasma',
-    abbreviation: 'PL',
-    country: cid('United States')
-  };
-
-  updateHash = {
-    name: 'Gas',
-    abbreviation: 'GS',
-    country: cid('Australia')
+  data.updateHash = {
+    abbreviation: "XY"
   };
 
   vows.describe('XM.State CRUD test').addBatch({
-    'CREATE ': XVOWS.create(model, {
-      '-> Set values': {
-        topic: function (model) {
-          model.set(createHash);
-          return model;
-        },
-        'Last Error is null': function (model) {
-          assert.isNull(model.lastError);
-        },
-        '-> Save': XVOWS.save(model)
-      }
-    })
-  }).addBatch({
-    'CHECKS PARAMETERS ': {
+    'INITIALIZE ': {
       topic: function () {
-        return model;
+        var that = this,
+          callback = function () {
+            data.model = new XM.State();
+            that.callback(null, data);
+          };
+        zombieAuth.loadApp(callback);
       },
-      'Last Error is null': function (model) {
-        assert.isNull(model.lastError);
-      },
-      '-> `requiredAttributes`': {
-        topic: function () {
-          return model;
-        },
-        'Abbreviation is required': function (model) {
-          assert.isTrue(_.contains(model.requiredAttributes, "abbreviation"));
-        },
-        'Country is required': function (model) {
-          assert.isTrue(_.contains(model.requiredAttributes, "country"));
-        },
-        'Name is required': function (model) {
-          assert.isTrue(_.contains(model.requiredAttributes, "name"));
-        }
+      'The record type is XM.State': function (data) {
+        assert.equal(data.model.recordType, "XM.State");
       }
     }
+  }).addBatch({
+    'CREATE ': crud.create(data, {
+      '-> Set values': {
+        topic: function (data) {
+          data.model.set(data.createHash);
+          return data;
+        },
+        'Last Error is null': function (data) {
+          assert.isNull(data.model.lastError);
+        },
+        '-> Save': crud.save(data)
+      }
+    })
   }).addBatch({
     'READ': {
       topic: function () {
-        return model;
+        return data;
       },
-      'Name is `Plasma`': function (model) {
-        assert.equal(model.get('name'), createHash.name);
+      'ID is a number': function (data) {
+        assert.isNumber(data.model.id);
       },
-      'Abbreviation is `PL`': function (model) {
-        assert.equal(model.get('abbreviation'), createHash.abbreviation);
-      },
-      'ID is a number': function (model) {
-        assert.isNumber(model.get('id'));
-      },
-      'Country is an object': function (model) {
-        assert.isObject(model.get('country'));
-      },
-      'Country ID is `United States\'s`': function (model) {
-        assert.equal(model.get('country').get('id'), createHash.country);
+      'Name is `Milky Way`': function (data) {
+        assert.equal(data.model.get('name'), data.createHash.name);
       }
     }
   }).addBatch({
-    'UPDATE ': XVOWS.update(model, {
+    'UPDATE ': crud.update(data, {
       '-> Set values': {
         topic: function () {
-          model.set(updateHash);
-          return model;
+          data.model.set(data.updateHash);
+          return data;
         },
-        'Last Error is null': function (model) {
-          assert.isNull(model.lastError);
+        'Abbr is `XY`': function (data) {
+          assert.equal(data.model.get('abbreviation'), data.updateHash.abbreviation);
         },
-        'Name is `Gas`': function (model) {
-          assert.equal(model.get('name'), updateHash.name);
-        },
-        'Abbreviation is `GS`': function (model) {
-          assert.equal(model.get('abbreviation'), updateHash.abbreviation);
-        },
-        'Country is an object': function (model) {
-          assert.isObject(model.get('country'));
-        },
-        'Country ID is `Australia\'s`': function (model) {
-          assert.equal(model.get('country').get('id'),
-            updateHash.country);
-        },
-        'Status is `READY_DIRTY`': function (model) {
-          assert.equal(model.getStatusString(), 'READY_DIRTY');
-        },
-        '-> Commit': XVOWS.save(model)
+        '-> Commit': crud.save(data)
       }
     })
   }).addBatch({
-    'DESTROY': XVOWS.destroy(model, {
-      'FINISH XM.State': function () {
-        XVOWS.next();
-      }
-    })
-  }).run();
+    'DESTROY': crud.destroy(data)
+  }).export(module);
+  
 }());

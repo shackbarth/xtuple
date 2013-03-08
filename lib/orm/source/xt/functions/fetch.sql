@@ -7,12 +7,16 @@ create or replace function xt.fetch(data_hash text) returns text as $$
     parameters = query.parameters,
     rowLimit = query.rowLimit;
     rowOffset = query.rowOffset,
-    data = Object.create(XT.Data), recs = null, 
+    data = Object.create(XT.Data),
+    recs = null,
     prettyPrint = query.prettyPrint ? 2 : null;
-    
+
   if (dataHash.username) { XT.username = dataHash.username; }
   recs = data.fetch(recordType, parameters, orderBy, rowLimit, rowOffset);
- 
+
+  /* Unset XT.username so it isn't cached for future queries. */
+  XT.username = undefined;
+
   /* return the results */
   return JSON.stringify(recs, null, prettyPrint);
 
@@ -28,7 +32,7 @@ select xt.fetch($${ "username": "admin",
                           }, {
                            "attribute": "lastName",
                            "value": "Farley"
-                         }], 
+                         }],
                          "prettyPrint": true
                          }
                        }$$);
@@ -40,7 +44,7 @@ select xt.fetch($${ "username": "admin",
                            "attribute": "name",
                            "operator": "MATCHES",
                            "value": "Frank"
-                          }], 
+                          }],
                           "orderBy": [{
                             "attribute": "lastName"
                           }, {
@@ -72,7 +76,7 @@ select xt.fetch($${ "username": "admin",
                            "attribute": "number",
                            "operator": "BEGINS_WITH",
                            "value": "B"
-                          }], 
+                          }],
                          "prettyPrint": true
                          }
                        }$$);
@@ -84,7 +88,7 @@ select xt.fetch($${ "username": "admin",
                            "attribute":"dueDate",
                            "operator": ">=",
                            "value": "2009-07-17T12:13:01.506Z"
-                          }], 
+                          }],
                          "prettyPrint": true
                          }
                        }$$);
@@ -100,7 +104,7 @@ select xt.fetch($${ "username": "admin",
                            "attribute": "firstName",
                            "operator": "BEGINS_WITH",
                            "value": "M"
-                         }], 
+                         }],
                          "prettyPrint": true
                          }
                        }$$);

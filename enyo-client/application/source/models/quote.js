@@ -50,6 +50,16 @@ white:true*/
       "terms"
     ],
 
+    readOnlyAttributes: [
+      "freightWeight",
+      "lineItems",
+      "margin",
+      "status",
+      "subtotal",
+      "taxTotal",
+      "total"
+    ],
+
     billtoAttrArray: ["billtoName", "billtoAddress1", "billtoAddress2", "billtoAddress3", "billtoCity",
       "billtoState", "billtoPostalCode", "billtoCountry", "billtoPhone", "billtoContactHonorific",
       "billtoContactFirstName", "billtoContactMiddleName", "billtoContactLastName",
@@ -77,6 +87,7 @@ white:true*/
       this.freightTaxDetail = [];
       this.on('change:customer', this.customerDidChange);
       this.on('change:shipto', this.shiptoDidChange);
+      this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
       this.on('add:lineItems remove:lineItems change:miscCharge',
         this.calculateTotals);
     },
@@ -88,9 +99,7 @@ white:true*/
       @returns {Object} Receiver
     */
     calculateFreight: function (options) {
-      var K = XM.Model,
-        status = this.getStatus(),
-        customer = this.get("customer"),
+      var customer = this.get("customer"),
         shipto = this.get("shipto"),
         currency = this.get("currency"),
         docDate = this.get(this.documentDateKey),
@@ -113,7 +122,7 @@ white:true*/
         siteClass = [],
         i;
 
-      if (!(status & K.READY)) { return this; }
+      if (this.isNotReady()) { return this; }
 
       if (customer && currency && docDate && lineItems.length) {
         // Collect data needed for freight
@@ -203,9 +212,7 @@ white:true*/
       @returns {Object} Receiver
     */
     calculateFreightTax: function (options) {
-      var K = XM.Model,
-        status = this.getStatus(),
-        amount = this.get("freight"),
+      var amount = this.get("freight"),
         taxType = _.where(_.pluck(XM.taxTypes.models, "attributes"), {name: "Freight"})[0],
         taxTypeId = taxType.id,
         taxZoneId = this.getValue("taxZone.id"),
@@ -215,7 +222,7 @@ white:true*/
         dispOptions = {},
         params;
 
-      if (!(status & K.READY)) { return this; }
+      if (this.isNotReady()) { return this; }
 
       if (effective && currency && amount) {
         params = [taxZoneId, taxTypeId, effective, currency.id, amount];
@@ -235,12 +242,10 @@ white:true*/
       @returns {Object} Receiver
     */
     calculateScheduleDate: function () {
-      var K = XM.Model,
-        status = this.getStatus(),
-        lineItems = this.get("lineItems").models,
+      var lineItems = this.get("lineItems").models,
         scheduleDate;
 
-      if (!(status & K.READY)) { return this; }
+      if (this.isNotReady()) { return this; }
 
       if (lineItems.length) {
         _.each(lineItems, function (line) {
@@ -261,13 +266,11 @@ white:true*/
       @returns {Object} Receiver
     */
     calculateTotals: function () {
-      var K = XM.Model,
-        status = this.getStatus(),
-        calculateFreight = this.get("calculateFreight"),
+      var calculateFreight = this.get("calculateFreight"),
         that = this,
         options = {};
 
-      if (!(status & K.READY)) { return this; }
+      if (this.isNotReady()) { return this; }
 
       if (calculateFreight) {
         options.success = function () {
@@ -298,9 +301,7 @@ white:true*/
       Populates billto information based on the entered customer.
     */
     customerDidChange: function (model, value, options) {
-      var K = XM.Model,
-        status = this.getStatus(),
-        customer = this.get("customer"),
+      var customer = this.get("customer"),
         isFreeFormBillto = customer ? customer.get("isFreeFormBillto") : false,
         isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : false,
         billtoContact = customer ? customer.get("billingContact") || customer.get("contact") : false,
@@ -345,7 +346,7 @@ white:true*/
         this.setReadOnly(this.shiptoAttrArray[i], isFreeFormShipto);
       }
 
-      if (!(status & K.READY)) { return; }
+      if (this.isNotReady()) { return; }
 
       // Set customer default data
       if (customer) {
@@ -409,14 +410,12 @@ white:true*/
       Populate shipto defaults
     */
     shiptoDidChange: function () {
-      var K = XM.Model,
-        status = this.getStatus(),
-        shipto = this.get("shipto"),
+      var shipto = this.get("shipto"),
         shiptoContact = shipto ? shipto.get("contact") : false,
         shiptoAddress = shiptoContact ? shiptoContact.get("address") : false;
 
-      if (!(status & K.READY) || !shipto) { return; }
-      
+      if (this.isNotReady() || !shipto) { return; }
+
       this.set("shiptoName", shipto.get("name"));
       this.set("salesRep", shipto.get("salesRep"));
       this.set("commission", shipto.get("commission"));
@@ -474,6 +473,19 @@ white:true*/
       };
       this.dispatch('XM.Quote', 'fetchNumber', null, options);
       return this;
+    },
+
+    lineItemsDidChange: function () {
+      var lineItems = this.get("lineItems");
+      this.setReadOnly("currency", lineItems.length);
+    },
+
+    statusDidChange: function () {
+      XM.Document.prototype.statusDidChange.apply(this, arguments);
+      var status = this.getStatus();
+      if (status === XM.Model.READY_CLEAN) {
+        this.setReadOnly("customer");
+      }
     },
 
     validateSave: function () {
@@ -664,6 +676,7 @@ white:true*/
       this.on('change:scheduleDate', this.scheduleDateDidChange);
       this.on('change:extendedPrice change:unitCost change:itemSite',
         this.recalculateParent());
+      this.on('statusChange', this.statusDidChange);
 
       // Only recalculate price on date changes if pricing is date driven
       if (XT.session.settings.get("soPriceEffective") === "ScheduleDate") {
@@ -730,10 +743,13 @@ white:true*/
     calculatePercentages: function () {
       var that = this,
         parent = this.getParent(),
-        currency = parent.get("currency"),
-        parentDate = parent.get(parent.documentDateKey),
+        currency = parent ? parent.get("currency") : false,
+        parentDate = parent ? parent.get(parent.documentDateKey) : false,
         price = this.get("price"),
         options = {};
+        
+      if (this.isNotReady()) { return; }
+        
       options.success = function (basePrice) {
         var K = that.getClass(),
           priceMode = that.get("priceMode"),
@@ -780,9 +796,7 @@ white:true*/
     calculatePrice: function (force) {
       var settings = XT.session.settings,
         K = this.getClass(),
-        status = this.getStatus(),
         that = this,
-        isReady = this.getStatus() & K.READY,
         asOf = new Date(),
         canUpdate = this.canUpdate(),
         customerPrice = this.get("customerPrice"),
@@ -805,14 +819,14 @@ white:true*/
         currency;
 
       // If no parent, don't bother
-      if (!parent || !(status & K.READY)) { return; }
+      if (!parent || this.isNotReady()) { return; }
 
       parentDate = parent.get(parent.documentDateKey);
       customer = parent.get("customer");
       currency = parent.get("currency");
 
       // Make sure we have all the necessary values
-      if (isReady && canUpdate && customer && currency &&
+      if (canUpdate && customer && currency &&
           item && quantity && quantityUnit && priceUnit) {
 
         // Handle alternate price effectivity settings
@@ -883,9 +897,7 @@ white:true*/
     },
 
     calculateProfit: function () {
-      var K = XM.Model,
-        status = this.getStatus(),
-        unitCost = this.get("unitCost"),
+      var unitCost = this.get("unitCost"),
         price = this.get("price"),
         parent = this.getParent(),
         effective = this.get(parent.documentDateKey),
@@ -893,7 +905,7 @@ white:true*/
         that = this,
         options = {};
 
-      if (!(status & K.READY)) { return; }
+      if (this.isNotReady()) { return; }
 
       if (price) {
         if (unitCost) {
@@ -910,9 +922,7 @@ white:true*/
     },
 
     calculateTax: function () {
-      var K = XM.Model,
-        parent = this.getParent(),
-        status = this.getStatus(),
+      var parent = this.getParent(),
         amount = this.get("extendedPrice"),
         taxTypeId = this.getValue("taxType.id"),
         recordType,
@@ -924,7 +934,7 @@ white:true*/
         params;
 
       // If no parent, don't bother
-      if (!parent || !(status & K.READY)) { return; }
+      if (!parent || this.isNotReady()) { return; }
 
       recordType = parent.recordType;
       taxZoneId = parent.getValue("taxZone.id");
@@ -958,12 +968,11 @@ white:true*/
     */
     discountDidChange: function () {
       var K = this.getClass(),
-        status = this.getStatus(),
         discount = this.get("discount"),
-        customerPrice = this.get("customer"),
+        customerPrice = this.get("customerPrice"),
         sense = this.get("priceMode") === K.MARKUP_MODE ? -1 : 1;
 
-      if (!(status & K.READY)) { return; }
+      if (this.isNotReady()) { return; }
 
       if (!customerPrice) {
         this.unset("discount");
@@ -974,15 +983,27 @@ white:true*/
     },
 
     itemSiteDidChange: function () {
-      var K = XM.Model,
-        parent = this.getParent(),
+      var parent = this.getParent(),
         taxZone = parent ? parent.get("taxZone") : undefined,
         item = this.getValue("itemSite.item"),
-        status = this.getStatus(),
         that = this,
         unitOptions = {},
         taxOptions = {},
         itemOptions = {};
+        
+      // Fetch and update selling units
+      if (item) {
+        unitOptions.success = function (resp) {
+          // Resolve and add each id found
+          _.each(resp, function (id) {
+            var unit = XM.units.get(id);
+            that.sellingUnits.add(unit);
+          });
+        };
+        item.sellingUnits(unitOptions);
+      }
+
+      if (this.isNotReady()) { return; }
 
       // Reset values
       this.unset("quantityUnit");
@@ -990,8 +1011,14 @@ white:true*/
       this.unset("taxType");
       this.unset("unitCost");
       this.sellingUnits.reset();
-
-      if (!(status & K.READY) || !item) { return; }
+      
+      if (!item) { return; }
+      
+      // Set the item default selections
+      this.set("quantityUnit", item.get("inventoryUnit"));
+      this.set("priceUnit", item.get("priceUnit"));
+      this.set("listCost", item.get("listPrice"));
+      this.set("listPrice", item.get("listCost"));
 
       // Fetch and update selling units
       unitOptions.success = function (resp) {
@@ -1028,13 +1055,11 @@ white:true*/
     },
 
     parentDidChange: function () {
-      var K = XM.Model,
-       status = this.getStatus(),
-       parent = this.getParent(),
+      var parent = this.getParent(),
        lineNumber = this.get("lineNumber"),
        scheduleDate;
 
-      if (!(status & K.READY)) { return; }
+      if (this.isNotReady()) { return; }
 
       // Set next line number
       if (parent && !lineNumber) {
@@ -1057,9 +1082,7 @@ white:true*/
     },
 
     scheduleDateDidChange: function () {
-      var K = XM.Model,
-        status = this.getStatus(),
-        item = this.getValue("itemSite.item"),
+      var item = this.getValue("itemSite.item"),
         parent = this.getParent(),
         customer = parent.get("customer"),
         shipto = parent.get("shipto"),
@@ -1067,7 +1090,7 @@ white:true*/
         that = this,
         options = {};
 
-      if (!(status & K.READY)) { return; }
+      if (this.isNotReady()) { return; }
 
       if (customer && item && scheduleDate) {
         options.success = function (canPurchase) {
@@ -1082,6 +1105,13 @@ white:true*/
 
       // Header should always show first schedule date
       if (parent) { parent.calculateScheduleDate(); }
+    },
+
+    statusDidChange: function () {
+      var status = this.getStatus();
+      if (status === XM.Model.READY_CLEAN) {
+        this.setReadOnly("itemSite");
+      }
     },
 
     unitDidChange: function () {
