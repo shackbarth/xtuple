@@ -139,6 +139,41 @@ white:true*/
   });
 
   /**
+    If we have a special extra filter enabled, we need to perform a dispatch
+    instead of a fetch to get the data we need. This is because we only want
+    to show items that are associated with particular customers, shiptos,
+    or effective dates.
+   */
+  var bespokeFetch = function (options) {
+    var that = this,
+      success;
+
+    if (!this.bespokeFilter || this.bespokeFilter === {}) {
+      // just do a normal fetch
+      XM.Collection.prototype.fetch.call(this, options);
+    } else {
+      // we have to do a special dispatch to fetch the data.
+
+      // because it's a dipatch call and not a fetch, the collection doesn't get
+      // updated automatically. We have to do that by hand on success.
+      success = options.success;
+      options.success = function (data) {
+        that.reset(data);
+
+        if (success) {
+          success(data);
+        }
+      };
+
+      XT.dataSource.dispatch("XM.Item", "availableItems",
+        [options.query,
+          this.bespokeFilter.customerId,
+          this.bespokeFilter.shiptoId,
+          this.bespokeFilter.effectiveDate || new Date()],
+        options);
+    }
+  }
+  /**
     @class
 
     @extends XM.Collection
@@ -147,35 +182,7 @@ white:true*/
 
     model: XM.ItemSiteRelation,
 
-    fetch: function (options) {
-      var that = this,
-        success;
-
-      if (!this.bespokeFilter || this.bespokeFilter === {}) {
-        // just do a normal fetch
-        XM.Collection.prototype.fetch.call(this, options);
-      } else {
-        // we have to do a special dispatch to fetch the data.
-
-        // because it's a dipatch call and not a fetch, the collection doesn't get
-        // updated automatically. We have to do that by hand on success.
-        success = options.success;
-        options.success = function (data) {
-          that.reset(data);
-
-          if (success) {
-            success(data);
-          }
-        };
-
-        XT.dataSource.dispatch("XM.Item", "availableItems",
-          [options.query,
-            this.bespokeFilter.customerId,
-            this.bespokeFilter.shiptoId,
-            this.bespokeFilter.effectiveDate || new Date()],
-          options);
-      }
-    }
+    fetch: bespokeFetch
 
   });
 
@@ -186,7 +193,9 @@ white:true*/
   */
   XM.ItemSiteListItemCollection = XM.Collection.extend(/** @lends XM.ItemSiteListItemCollection.prototype */{
 
-    model: XM.ItemSiteListItem
+    model: XM.ItemSiteListItem,
+
+    fetch: bespokeFetch
 
   });
 
