@@ -314,6 +314,7 @@ regexp:true, undef:true, trailing:true, white:true */
     keyAttribute: "item.number",
     sidecarAttribute: "site.code",
     nameAttribute: "site.code",
+    descripAttribute: "item.inventoryUnit.name",
     /**
       Make sure the collection knows about the bespoke filter,
       because it's the collection that has to decide to use
@@ -321,7 +322,7 @@ regexp:true, undef:true, trailing:true, white:true */
      */
     bespokeFilterChanged: function (inSender, inEvent) {
       this._collection.bespokeFilter = this.getBespokeFilter();
-    },
+    }
   });
 
   // ..........................................................
