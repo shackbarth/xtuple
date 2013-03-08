@@ -316,8 +316,8 @@ regexp:true, undef:true, trailing:true, white:true */
       shipto: null
     },
     keyAttribute: "item.number",
-    nameAttribute: "item.number",
-    descripAttribute: "site.code",
+    sidecarAttribute: "site.code",
+    nameAttribute: "site.code",
     handlers: {
       onValueChange: "theValueChanged"
     },

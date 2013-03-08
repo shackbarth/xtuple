@@ -75,9 +75,11 @@ white:true*/
 
     recordType: 'XM.ItemSiteRelation',
 
-    editableModel: 'XM.ItemSite'
+    editableModel: 'XM.ItemSite',
 
-
+    numberSite: function () {
+      return this.getValue("item.number") + " " + this.getValue("site.code");
+    }
   });
 
 
