@@ -1024,7 +1024,9 @@ white:true*/
         taxOptions = {},
         itemOptions = {},
         itemCharAttrs,
-        charTypes;
+        charTypes,
+        len,
+        i;
         
       // Fetch and update selling units
       if (item) {
@@ -1045,8 +1047,13 @@ white:true*/
       this.unset("priceUnit");
       this.unset("taxType");
       this.unset("unitCost");
-      characteristics.reset();
       this.sellingUnits.reset();
+      
+      // Destroy old characteristics
+      len = characteristics.length;
+      for (i = 0; i < len; i++) {
+        characteristics.at(0).destroy();
+      }
       
       if (!item) { return; }
       
@@ -1102,7 +1109,7 @@ white:true*/
         };
       }
 
-      // Build characteristics (get pricing in calculatePrice function)
+      // Build characteristics
       itemCharAttrs = _.pluck(item.get("characteristics").models, "attributes");
       charTypes = _.unique(_.pluck(itemCharAttrs, "characteristic"));
       _.each(charTypes, function (char) {
@@ -1113,8 +1120,11 @@ white:true*/
           });
         quoteLineChar.set("characteristic", char);
         quoteLineChar.set("value", defaultChar ? defaultChar.value : "");
+        quoteLineChar.on("change:value", that.calculatePrice);
         characteristics.add(quoteLineChar);
       });
+      
+      this.calculatePrice();
     },
 
     parentDidChange: function () {
