@@ -125,6 +125,7 @@ white:true*/
       this.on('change:customer', this.customerDidChange);
       this.on('change:shipto', this.shiptoDidChange);
       this.on('change:shipVia', this.calculateFreight);
+      this.on('change:taxZone', this.recalculateTaxes);
       this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
       this.on('add:lineItems remove:lineItems change:miscCharge',
         this.calculateTotals);
@@ -300,16 +301,19 @@ white:true*/
     },
 
     /**
-      Used to update calculated fields.
+      Used to update calculated fields. The `calcFreight` option is useful
+      if it is know that freight has not changed, such as when only taxes
+      are known to have changed.
 
+      @param {Boolean} Calculate freight - default=true
       @returns {Object} Receiver
     */
-    calculateTotals: function () {
+    calculateTotals: function (calcFreight) {
       var calculateFreight = this.get("calculateFreight");
 
       if (this.isNotReady()) { return this; }
 
-      if (calculateFreight) {
+      if (calculateFreight && calcFreight !== false) {
         this.calculateFreight();
       } else {
         this._calculateTotals();
@@ -440,6 +444,12 @@ white:true*/
       }
     },
 
+    /**
+      Re-evaluate prices for all line items and freight. Will raise a notification question
+      prompting whether the user really wants to proceed with a complete recalculation. The
+      callback attached to this notification must be affirmatively answered for the recalculation
+      to proceed.
+    */
     recalculatePrices: function () {
       var that = this,
         msg = "_recalcuateAll?".loc(),
@@ -454,6 +464,16 @@ white:true*/
           }
         };
       this.notify(msg, options);
+    },
+    
+    /**
+      Re-evaluate taxes for all line items and freight.
+    */
+    recalculateTaxes: function () {
+      _.each(this.get("lineItems").models, function (lineItem) {
+        lineItem.calculateTax();
+      });
+      this.calculateFreightTax();
     },
 
     /**
@@ -962,7 +982,7 @@ white:true*/
           } else {
             that.set("tax", 0);
           }
-          that.recalculateParent();
+          that.recalculateParent(false);
         };
         this.dispatch(recordType, "taxDetail", params, options);
       } else {
@@ -1142,9 +1162,9 @@ white:true*/
       return asOf;
     },
 
-    recalculateParent: function () {
+    recalculateParent: function (calcFreight) {
       var parent = this.getParent();
-      if (parent) { parent.calculateTotals(); }
+      if (parent) { parent.calculateTotals(calcFreight); }
     },
 
     scheduleDateDidChange: function () {
