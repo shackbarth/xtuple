@@ -23,13 +23,13 @@ select xt.install_js('XM','Customer','xtuple', $$
   /**
    Returns an object with a price and type for a given customer, item and quantity.
 
-   @param {Number} item id
    @param {Number} customer id
+   @param {Number} item id
    @param {Number} quantity
    @param {Object} options:  asOf, shiptoId, quantityUnitId, priceUnitId, currencyId, effective
    @returns Object 
   */
-  XM.Customer.price = function(customerId, itemId, quantity, options) {
+  XM.Customer.itemPrice = function(customerId, itemId, quantity, options) {
     options = options || {};
     var today = new Date(),
       shiptoId = options.shiptoId || -1,
@@ -59,6 +59,46 @@ select xt.install_js('XM','Customer','xtuple', $$
 
     result = { price: result.itemprice_price, type: result.itemprice_type };
     return JSON.stringify(result); 
+  }
+
+  /**
+   Returns a price for a given customer, item, characteristic and quantity.
+
+   @param {Number} customer id
+   @param {Number} item id
+   @param {Number} characteristic id
+   @param {Number} characteristic value
+   @param {Number} quantity
+   @param {Object} options:  asOf, shiptoId, currencyId, effective
+   @returns Object 
+  */
+  XM.Customer.characteristicPrice = function(customerId, itemId, characteristicId, value, quantity, options) {
+    options = options || {};
+    var today = new Date(),
+      shiptoId = options.shiptoId || -1,
+      currencyId,
+      effective,
+      asOf,
+      result,
+      err;
+
+    if (!itemId) {
+      err = "Item";
+    } else if (!customerId) {
+      err = "Characteristic";
+    } else if (!customerId) {
+      err = "Customer";
+    } else if (!quantity) {
+      err = "Quantity" 
+    };
+    if(err) { plv8.elog(ERROR, err + " is required.") }
+
+    currencyId = options.currencyId || plv8.execute("select basecurrid() as result")[0].result,
+    effective = options.effective ? new Date(options.effective) : today,
+    asOf = options.asOf ? new Date(options.asOf) : today,
+    result = plv8.execute("select itemcharprice($1, $2, $3, $4, $5, $6, $7, $8::date, $9::date) as result;", [itemId, characteristicId, value, customerId, shiptoId, quantity, currencyId, effective, asOf])[0].result;
+
+    return result; 
   }
   
 $$ );
