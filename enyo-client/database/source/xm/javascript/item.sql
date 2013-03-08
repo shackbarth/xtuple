@@ -12,7 +12,7 @@ select xt.install_js('XM','item','xtuple', $$
     which makes sure that the customer (and/or shipto) is allowed to
     ship this function
    */
-  XM.Item.availableItems = function (query, customerId, shiptoId) {
+  XM.Item.availableItems = function (query, customerId, shiptoId, effectiveDate) {
     var nameSpace = "XM",
       type = "ItemSite",
       table = (nameSpace + '."' + type + '"').decamelize(),
@@ -33,7 +33,7 @@ select xt.install_js('XM','item','xtuple', $$
 
     /* Restrict results to items that are associated with the customer and/or shipto */ 
     var custItemSql = 'select * from custitem($1, $2, $3);';
-    var allowedArray = plv8.execute(custItemSql, [customerId, shiptoId, new Date()]); /* TODO: which date? */
+    var allowedArray = plv8.execute(custItemSql, [customerId, shiptoId, effectiveDate]);
     var allowedIds = [];
     for(var i = 0; i < allowedArray.length; i++) {
       allowedIds.push(allowedArray[i].custitem);
