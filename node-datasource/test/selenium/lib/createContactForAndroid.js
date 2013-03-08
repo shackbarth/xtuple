@@ -5,8 +5,10 @@ regexp:true, strict:true, trailing:true, white:false*/
   "use strict";
   var contactData = require('./contactData.js'),
   contactObj = require('./contactObj.js'),
+  readContactObj,
   utils = require('./utils.js');
-  exports.createContact = function (browser,callback) {
+  exports.createContact = function (browser, test, fname, callback) {
+  readContactObj = contactObj.readObj1.readContact_xpath + fname +  "')]";
   utils.pause(10000, function () {
   utils.results('*****Creating a New Contact*****');
   browser.elementByXPath(contactObj.Obj.crmlink_xpath, function (err, el1) {
@@ -24,7 +26,7 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.elementByXPath(contactObj.Obj.overview_xpath, function (err, overviewEl) {
   browser.clickElement(overviewEl, function () {
   browser.elementByXPath(contactObj.Obj.cfname_xpath, function (err, el4) {
-  browser.type(el4, contactData.VARIABLES.contact_fname + '\uE004', function () {
+  browser.type(el4, fname + '\uE004', function () {
   utils.pause(2000, function () {
   browser.elementByXPath(contactObj.Obj.cmname_xpath, function (err, el5) {
   browser.type(el5, contactData.VARIABLES.contact_mname + '\uE004', function () {
@@ -65,7 +67,7 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.clickElement(toolBarEl, function () {
   utils.pause(4000, function () {
   browser.elementByXPath(contactObj.readObj1.searchField_xpath, function (err,el27) {
-  browser.type(el27,contactData.VARIABLES.contact_fname, function () { //------ Enters the contact first name in the search field and hits 'Refresh' button
+  browser.type(el27, fname, function () { //------ Enters the contact first name in the search field and hits 'Refresh' button
   utils.pause(2000, function () {
   browser.elementByXPath(contactObj.readObj1.refreshButton_xpath, function (err, el26) {
   browser.clickElement(el26, function () {
@@ -73,22 +75,22 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.elementByXPath(contactObj.readObj1.newToolBar_xpath, function (err, toolBarEl) {
   browser.clickElement(toolBarEl, function () {
   utils.pause(20000, function () {
-  browser.waitForVisibleByXPath(contactObj.readObj1.readContact_xpath, 60000, function () {
-  browser.elementByXPath(contactObj.readObj1.readContact_xpath, function (err,contactEl) {
+  browser.waitForVisibleByXPath(readContactObj, 60000, function () {
+  browser.elementByXPath(readContactObj, function (err,contactEl) {
   browser.isDisplayed(contactEl, function (err, displayed) {
   if (displayed) {
-    utils.results('contact saved');
+    test.ok(displayed, 'contact saved');
+    callback(browser,test);
   }
   else {
-    utils.results('contact not saved');
-    process.nextTick(function () {utils.pause(1000, function () {
+    test.ok(false, 'contact not saved');
+    setTimeout(function () {
     browser.quit();
-    utils.pause(1000, function () {
-    process.exit(1);
-    });
-    });});
+    setTimeout(function () {
+    test.done();
+    },2000);
+    },2000);
   }
-  callback(browser);
   });});});});});});});});});});});});
   });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});
   });});});});});});});});});});});});});});});});});});});});});});});});});});};

@@ -101,13 +101,12 @@ white:true*/
       which can be one of five options.
     */
     toDoStatusDidChange: function (model, value, options) {
-      var status = this.getStatus(),
-        proxy = this.getToDoStatusProxy(),
+      var proxy = this.getToDoStatusProxy(),
         startDate = this.get('startDate'),
         completeDate = this.get('completeDate'),
         K = XM.ToDo,
         attrStatus = K.NEITHER;
-      if ((options && options.force) || !(status & XM.Model.READY)) { return; }
+      if (this.isNotReady()) { return; }
 
       // Set the `status` attribute with appropriate value
       if (completeDate) {

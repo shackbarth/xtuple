@@ -179,9 +179,7 @@ white:true*/
     },
 
     inventoryUnitDidChange: function (model, value, options) {
-      var status = this.getStatus(),
-        K = XM.Model;
-      if ((options && options.force) || !(status & K.READY)) { return; }
+      if (this.isNotReady()) { return; }
       if (value) { this.set('priceUnit', value); }
     },
 
@@ -227,6 +225,18 @@ white:true*/
     recordType: 'XM.ItemListItem',
 
     editableModel: 'XM.Item'
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Characteristic
+  */
+  XM.ItemListItemCharacteristic = XM.CharacteristicAssignment.extend({
+    /** @scope XM.ItemListItmeCharacteristic.prototype */
+
+    recordType: 'XM.ItemListItemCharacteristic'
 
   });
 
@@ -344,6 +354,18 @@ white:true*/
 
   // Add in item mixin
   XM.ItemRelation = XM.ItemRelation.extend(XM.ItemMixin);
+  
+  /**
+    @class
+
+    @extends XM.Characteristic
+  */
+  XM.ItemRelationCharacteristic = XM.CharacteristicAssignment.extend({
+    /** @scope XM.ItemRelationCharacteristic.prototype */
+
+    recordType: 'XM.ItemRelationCharacteristic'
+
+  });
 
   // ..........................................................
   // COLLECTIONS

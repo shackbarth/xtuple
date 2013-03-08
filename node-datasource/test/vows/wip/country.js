@@ -1,134 +1,83 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global XVOWS:true, XT:true, XM:true, _:true, setTimeout:true,
-  clearTimeout:true, vows:true, module:true, assert:true, console:true */
+/*global XT:true, XM:true, XV:true, process:true, module:true, require:true */
 
+var XVOWS = XVOWS || {};
 (function () {
   "use strict";
 
-  var createHash,
-    updateHash,
-    model = new XM.Country();
+  var vows = require("vows"),
+    assert = require("assert"),
+    zombieAuth = require("../lib/zombie_auth"),
+    crud = require('../lib/crud');
 
-  createHash = {
-    name: 'Elbonia',
-    abbreviation: 'EL',
-    currencyAbbreviation: 'PIC',
-    currencyName: 'Pico',
-    currencySymbol: '!'
+  var data = {};
+
+  data.createHash = {
+    name: "Outer Space",
+    abbreviation: "OS",
+    currencyAbbreviation: "USD"
   };
 
-  updateHash = {
-    abbreviation: 'EB'
+  data.updateHash = {
+    abbreviation: "XY"
   };
 
   vows.describe('XM.Country CRUD test').addBatch({
-    'CREATE ': XVOWS.create(model, {
+    'INITIALIZE ': {
+      topic: function () {
+        var that = this,
+          callback = function () {
+            data.model = new XM.Country();
+            that.callback(null, data);
+          };
+        zombieAuth.loadApp(callback);
+      },
+      'The record type is XM.Country': function (data) {
+        assert.equal(data.model.recordType, "XM.Country");
+      }
+    }
+  }).addBatch({
+    'CREATE ': crud.create(data, {
       '-> Set values': {
-        topic: function (model) {
-          model.set(createHash);
-          return model;
+        topic: function (data) {
+          data.model.set(data.createHash);
+          return data;
         },
-        'Last Error is null': function (model) {
-          assert.isNull(model.lastError);
+        'Last Error is null': function (data) {
+          assert.isNull(data.model.lastError);
         },
-        '-> Save': XVOWS.save(model)
+        '-> Save': crud.save(data)
       }
     })
-  }).addBatch({
-    'CHECKS PARAMETERS ': {
-      topic: function () {
-        return model;
-      },
-      'Last Error is null': function (model) {
-        assert.isNull(model.lastError);
-      },
-      '-> `requiredAttributes`': {
-        topic: function () {
-          return model;
-        },
-        'Abbreviation is required': function (model) {
-          assert.isTrue(_.contains(model.requiredAttributes, "abbreviation"));
-        },
-        'currencyAbbreviation is required': function (model) {
-          assert.isTrue(_.contains(model.requiredAttributes, "currencyAbbreviation"));
-        },
-        'Name is required': function (model) {
-          assert.isTrue(_.contains(model.requiredAttributes, "name"));
-        }
-      }
-    }
-  }).addBatch({
-    'CHECKS METHODS ': {
-      topic: function () {
-        return model;
-      },
-      'Last Error is null': function (model) {
-        assert.isNull(model.lastError);
-      },
-      '-> `validateEdit`': {
-        topic: function () {
-          return model;
-        },
-        'Abbreviation must be 2 letters': function (model) {
-          var err = model.validate({ abbreviation: 'TOO_LONG'});
-          assert.equal(err.code, 'xt1006'); // Error code for invalid length
-          assert.equal(err.params.length, 2); // The length it should be
-        },
-        'Currency Abbreviation must be 3 letters': function (model) {
-          var err = model.validate({ currencyAbbreviation: 'TOO_LONG'});
-          assert.equal(err.code, 'xt1006'); // Error code for invalid length
-          assert.equal(err.params.length, 3); // The length it should be
-        }
-      }
-    }
   }).addBatch({
     'READ': {
       topic: function () {
-        return model;
+        return data;
       },
-      'ID is a number': function (model) {
-        assert.isNumber(model.id);
+      'ID is a number': function (data) {
+        assert.isNumber(data.model.id);
       },
-      'Name is `Elbonia`': function (model) {
-        assert.equal(model.get('name'), createHash.name);
-      },
-      'Abbreviation is `EL`': function (model) {
-        assert.equal(model.get('abbreviation'), createHash.abbreviation);
-      },
-      'Currency Name is `Pico`': function (model) {
-        assert.equal(model.get('currencyName'), createHash.currencyName);
-      },
-      'Currency Abbreviation is `PIC`': function (model) {
-        assert.equal(model.get('currencyAbbreviation'),
-          createHash.currencyAbbreviation);
+      'Name is `Outer Space`': function (data) {
+        assert.equal(data.model.get('name'), data.createHash.name);
       }
     }
   }).addBatch({
-    'UPDATE ': XVOWS.update(model, {
+    'UPDATE ': crud.update(data, {
       '-> Set values': {
         topic: function () {
-          model.set(updateHash);
-          return model;
+          data.model.set(data.updateHash);
+          return data;
         },
-        'Last Error is null': function (model) {
-          assert.isNull(model.lastError);
+        'Abbr is `XY`': function (data) {
+          assert.equal(data.model.get('abbreviation'), data.updateHash.abbreviation);
         },
-        'Abbreviation is `EB`': function (model) {
-          assert.equal(model.get('abbreviation'), updateHash.abbreviation);
-        },
-        'Status is `READY_DIRTY`': function (model) {
-          assert.equal(model.getStatusString(), 'READY_DIRTY');
-        },
-        '-> Commit': XVOWS.save(model)
+        '-> Commit': crud.save(data)
       }
     })
   }).addBatch({
-    'DESTROY': XVOWS.destroy(model, {
-      'FINISH XM.Country': function () {
-        XVOWS.next();
-      }
-    })
-  }).run();
+    'DESTROY': crud.destroy(data)
+  }).export(module);
+  
 }());
