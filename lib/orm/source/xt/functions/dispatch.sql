@@ -12,7 +12,7 @@ create or replace function xt.dispatch(data_hash text) returns text as $$
           return __method.apply(this, args.concat(Array.prototype.slice.call(arguments)));
       }
     }
- }
+  }
 
   /* process */
   var dataHash = JSON.parse(data_hash),
@@ -22,14 +22,24 @@ create or replace function xt.dispatch(data_hash text) returns text as $$
       f = dataHash.functionName,
       params = dataHash.parameters,
       args = params instanceof Array ? params : [params],
-      method, ret;
+      method,
+      ret;
 
   if (dataHash.username) { XT.username = dataHash.username; }
 
-  if(obj[f]) method = obj[f].curry(args);
-  else throw new Error('Function ' + dataHash.className + '.' + f + ' not found.');
+  if (obj[f]) {
+    method = obj[f].curry(args);
+  } else {
+    /* Unset XT.username so it isn't cached for future queries. */
+    XT.username = undefined;
+
+    throw new Error('Function ' + dataHash.className + '.' + f + ' not found.');
+  }
 
   ret = obj.isDispatchable ? method() : false;
+
+  /* Unset XT.username so it isn't cached for future queries. */
+  XT.username = undefined;
 
   return dataHash.isJSON ? JSON.stringify(ret) : ret;
 
