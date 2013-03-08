@@ -349,7 +349,6 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ItemSiteListParameters",
     kind: "XV.ParameterWidget",
-    // ??? characteristicsRole: 'isItems',
     components: [
       {kind: "onyx.GroupboxHeader", content: "_itemSite".loc()},
       {name: "itemNumber", label: "_itemNumber".loc(), attr: "item.number"},
