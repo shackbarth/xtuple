@@ -311,6 +311,9 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.RelationWidget",
     collection: "XM.ItemSiteRelationCollection",
     list: "XV.ItemSiteList",
+    published: {
+      defaultSite: null // {XM.SiteRelation}
+    },
     keyAttribute: "item.number",
     sidecarAttribute: "site.code",
     nameAttribute: "site.code",
@@ -322,6 +325,13 @@ regexp:true, undef:true, trailing:true, white:true */
      */
     bespokeFilterChanged: function (inSender, inEvent) {
       this._collection.bespokeFilter = this.getBespokeFilter();
+    },
+    /**
+      Make sure the collection knows about the default site,
+      because it is used to sort the results.
+     */
+    defaultSiteChanged: function (inSender, inEvent) {
+      this._collection.defaultSite = this.getDefaultSite();
     }
   });
 

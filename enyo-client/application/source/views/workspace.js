@@ -1302,7 +1302,7 @@ trailing:true white:true*/
     attributesChanged: function (model, options) {
       this.inherited(arguments);
 
-      if (this.getValue().getStatus() & XM.Model.READY) {
+      if (model.isReady()) {
         // clone or else bespokeFilterChanged never gets run
         var bespokeFilter = JSON.parse(JSON.stringify(this.$.itemSiteWidget.getBespokeFilter() || {}));
 
@@ -1310,6 +1310,9 @@ trailing:true white:true*/
         bespokeFilter.shiptoId = model.getValue("quote.shipto.id");
         bespokeFilter.effectiveDate = model.getValue("priceAsOfDate");
         this.$.itemSiteWidget.setBespokeFilter(bespokeFilter);
+        if (model.getValue("quote.site")) {
+          this.$.itemSiteWidget.setDefaultSite(model.getValue("quote.site"));
+        }
       }
     }
   });

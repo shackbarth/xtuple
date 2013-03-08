@@ -179,7 +179,12 @@ white:true*/
 
     model: XM.ItemSiteRelation,
 
-    fetch: bespokeFetch
+    fetch: bespokeFetch,
+
+    comparator: function (itemSite) {
+      var defaultSiteOrder = itemSite.getValue("site.id") === this.defaultSite.id ? 'aa' : 'zz';
+      return itemSite.getValue("item.number") + defaultSiteOrder + itemSite.getValue("site.code");
+    }
 
   });
 
