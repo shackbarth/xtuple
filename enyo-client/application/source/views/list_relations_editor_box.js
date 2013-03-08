@@ -189,21 +189,34 @@ trailing:true white:true*/
         {kind: "XV.UnitWidget", attr: "quantityUnit"},
         {kind: "XV.PercentWidget", attr: "discount"},
         {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "currency"},
-          label: "_unitPrice".loc(), currencyDisabled: true, effective: new Date()},
+          label: "_unitPrice".loc(), currencyDisabled: true},
         {kind: "XV.UnitWidget", attr: "priceUnit"},
-        {kind: "XV.NumberWidget", attr: "extendedPrice"},
+        {kind: "XV.MoneyWidget", attr: {amount: "extendedPrice", currency: "currency"},
+          label: "_extendedPrice".loc(), currencyDisabled: true},
         {kind: "XV.DateWidget", attr: "scheduleDate"},
         {kind: "XV.DateWidget", attr: "promiseDate"},
         {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
         {kind: "XV.TextArea", attr: "notes", fit: true}
       ]}
-    ]
+    ],
+    
+    setValue: function (value) {
+      this.inherited(arguments);
+      _.each(this.$, function (control) {
+        if (control.kind === "XV.MoneyWidget") {
+          control.setEffective(value.get("quote").get("quoteDate"));
+        }
+      });
+    }
   });
 
   enyo.kind({
     name: "XV.QuoteLineItemSummary",
     kind: "XV.RelationsEditor",
     style: "margin-top: 10px",
+    published: {
+      quoteDate: null
+    },
     components: [
       {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
       {kind: "XV.ScrollableGroupbox", name: "totalGroup",
@@ -214,15 +227,24 @@ trailing:true white:true*/
         // Charge Sales Account - needs GL
         {kind: "XV.NumberWidget", attr: "freightWeight"},
         {kind: "XV.MoneyWidget", attr: {amount: "subtotal", currency: "currency"},
-          label: "_subtotal".loc(), currencyShowing: false, effective: new Date()},
+          label: "_subtotal".loc(), currencyShowing: false},
         // {kind: "XV.NumberWidget", attr: "miscCharge"}, - needs GL
         {kind: "XV.NumberWidget", attr: "freight", label: "_freight".loc()},
         {kind: "XV.MoneyWidget", attr: {amount: "taxTotal", currency: "currency"},
-          label: "_tax".loc(), currencyShowing: false, effective: new Date()},
+          label: "_tax".loc(), currencyShowing: false},
         {kind: "XV.MoneyWidget", attr: {amount: "total", currency: "currency"},
-          label: "_total".loc(), currencyShowing: false, effective: new Date()}
+          label: "_total".loc(), currencyShowing: false}
       ]}
-    ]
+    ],
+
+    setValue: function (value) {
+      this.inherited(arguments);
+      _.each(this.$, function (control) {
+        if (control.kind === "XV.MoneyWidget") {
+          control.setEffective(value.get("quoteDate"));
+        }
+      });
+    }
   });
 
   enyo.kind({
@@ -257,8 +279,7 @@ trailing:true white:true*/
     Set the current model into the List Relation and the Summary Editor Panel
     */
     valueChanged: function () {
-      var value = this.getValue();
-      this.$.list.setValue(value);
+      this.inherited(arguments);
       this.summary.setValue(this.getValue().quote);
       // change the styling of the last button to make room for the new button
       this.$.doneButton.setClasses("xv-groupbox-button-center");

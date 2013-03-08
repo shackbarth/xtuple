@@ -92,16 +92,22 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.picker.setDisabled(this.getCurrencyDisabled());
       this.$.picker.setShowing(this.getCurrencyShowing());
       // only show the base panel if there is an effect date AND the currency doesn't match the base
-      if (this.getEffective() && (this.getCurrency() !== XT.baseCurrency())) {
-        this.$.basePanel.setShowing(true);
-        this.$.baseLabel.setContent(XT.baseCurrency().get('abbreviation'));
-      }
+      this.setBasePanelShowing();
     },
     /**
       Returns the published effective value.
      */
     getEffective: function () {
       return this.effective;
+    },
+    
+    /**
+      Sets the effective date and sets visibility
+      of base panel based on value.
+     */
+    setEffective: function (value) {
+      this.effective = value;
+      this.setBasePanelShowing();
     },
 
     /**
@@ -130,6 +136,18 @@ regexp:true, undef:true, trailing:true, white:true */
     */
     setAmount: function (value) {
       this.amount = value;
+    },
+    
+    /**
+      Sets visibility of base panel
+     */
+    setBasePanelShowing: function () {
+      var showing = this.getEffective() && (this.getCurrency() !== XT.baseCurrency());
+      this.$.basePanel.setShowing(showing);
+      if (showing) {
+        this.$.baseLabel.setContent(XT.baseCurrency().get('abbreviation'));
+        this.setBaseAmount(this.getAmount());
+      }
     },
 
     setBaseAmount: function (value) {
@@ -187,11 +205,9 @@ regexp:true, undef:true, trailing:true, white:true */
             if (oldValue !== newValue) {
               this.setCurrency(newValue || XT.baseCurrency());
               this.$.picker.setValue(this.getCurrency());
-
               // only show the base panel if there is an effect date AND the currency doesn't match the base
-              this.$.basePanel.setShowing(this.getEffective() && (this.getCurrency() !== XT.baseCurrency()));
               // Set base label with calculated value
-              this.setBaseAmount(this.getAmount());
+              this.setBasePanelShowing();
             }
           }
         }
