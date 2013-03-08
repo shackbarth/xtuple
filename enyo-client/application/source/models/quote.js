@@ -123,6 +123,7 @@ white:true*/
       this.freightDetail = [];
       this.freightTaxDetail = [];
       this.on('change:customer', this.customerDidChange);
+      this.on('change:freight', this.freightDidChange);
       this.on('change:shipto', this.shiptoDidChange);
       this.on('change:shipVia', this.calculateFreight);
       this.on('change:taxZone', this.recalculateTaxes);
@@ -228,7 +229,9 @@ white:true*/
                   if (!counter) { // Means we heard back from all requests
                     // Add 'em up
                     freight = XT.math.add(_.pluck(that.freightDetail, "total"), scale);
+                    this.off('change:freight', this.freightDidChange);
                     that.set("freight", freight);
+                    this.on('change:freight', this.freightDidChange);
 
                     // Now calculate tax
                     that.calculateFreightTax();
@@ -446,7 +449,38 @@ white:true*/
     },
 
     /**
-      Re-evaluate prices for all line items and freight. Will raise a notification question
+      If the user changed the freight determine whether they want the automatic calculation
+      turned on or off as a result of their change. This function will trigger a `notify` call
+      asking the question, which must be answered via the attached callback to complete the process.
+    */
+    freightDidChange: function () {
+      if (this.isNotReady()) { return; }
+      var calculateFreight = this.get("calculateFreight"),
+        freight = this.get("freight"),
+        that = this,
+        message,
+        options = {};
+      options.type = XM.Model.QUESTION;
+      options.callback = function (answer) {
+        if (answer) {
+          that.set("calculateFreight", !calculateFreight);
+        } else {
+          that.set("freight", that.previous("freight"));
+        }
+      };
+      if (calculateFreight) {
+        message = "_manualFreight?".loc();
+      } else if (!calculateFreight && !freight &&
+                 XT.session.settings.get("CalculateFreight")) {
+        message = "_autmaticFreight?".loc();
+      } else {
+        return;
+      }
+      this.notify(message, options);
+    },
+
+    /**
+      Re-evaluate prices for all line items and freight. Will raise a `notify` question
       prompting whether the user really wants to proceed with a complete recalculation. The
       callback attached to this notification must be affirmatively answered for the recalculation
       to proceed.
