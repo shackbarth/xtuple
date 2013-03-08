@@ -584,9 +584,11 @@ var lang = XT.stringsFor("en_US", {
   "_noPriceFound": "This item is marked as exclusive and no qualifying price was found.",
   "_noPurchase": "This item may not be purchased in this date. Please select another date or item.",
   "_productCategoryRequiredOnSold": "A Product Category is required for sold items.",
+  "_recalculateAll?": "Do you want to recalculate all prices line items, taxes, and freight ?",
   "_recursiveParentDisallowed": "Record is not allowed to reference itself as the parent.",
   "_recordNotFound": "Record not found.",
   "_recordStatusNotEditable": "Record with status of `{status}` is not editable.",
+  "_updatePrice?": "You have changed the price basis, do you want to update the Price?",
   "_valueExists": "Record with {attr} of '{value}' already exists.",
   "_whatToDo": "What would you like to do?"
 });
