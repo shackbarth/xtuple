@@ -88,9 +88,11 @@ regexp:true, undef:true, trailing:true, white:true */
      */
     create: function () {
       this.inherited(arguments);
+      // the currency picker may be disabled or hidden on creation in certain situations
       this.$.picker.setDisabled(this.getCurrencyDisabled());
       this.$.picker.setShowing(this.getCurrencyShowing());
-      if (this.getEffective()) {
+      // only show the base panel if there is an effect date AND the currency doesn't match the base
+      if (this.getEffective() && (this.getCurrency() !== XT.baseCurrency())) {
         this.$.basePanel.setShowing(true);
         this.$.baseLabel.setContent(XT.baseCurrency().get('abbreviation'));
       }
@@ -166,24 +168,28 @@ regexp:true, undef:true, trailing:true, white:true */
     */
     setValue: function (value, options) {
       options = options || {};
-      var oldValue, inEvent;
+      var oldValue, inEvent, newValue;
       for (var attribute in value) {
         if (value.hasOwnProperty(attribute)) {
+          newValue = value[attribute];
           if (attribute === "amount") {
             oldValue = this.amount;
-            if (oldValue !== value[attribute]) {
-              this.setAmount(value[attribute]);
-              this.valueChanged(value[attribute]);
-              inEvent = { value: value[attribute], originator: this };
+            if (oldValue !== newValue) {
+              this.setAmount(newValue);
+              this.valueChanged(newValue);
+              inEvent = { value: newValue, originator: this };
               if (!options.silent) { this.doValueChange(inEvent); }
               // Set base label with calculated value
-              this.setBaseAmount(value[attribute]);
+              this.setBaseAmount(newValue);
             }
           } else if (attribute === "currency") {
             oldValue = this.getCurrency();
-            if (oldValue !== value[attribute]) {
-              this.setCurrency(value[attribute]);
-              this.$.picker.setValue(value[attribute] || XT.baseCurrency(), options);
+            if (oldValue !== newValue) {
+              this.setCurrency(newValue || XT.baseCurrency());
+              this.$.picker.setValue(this.getCurrency());
+
+              // only show the base panel if there is an effect date AND the currency doesn't match the base
+              this.$.basePanel.setShowing(this.getEffective() && (this.getCurrency() !== XT.baseCurrency()));
               // Set base label with calculated value
               this.setBaseAmount(this.getAmount());
             }

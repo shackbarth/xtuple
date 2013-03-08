@@ -1193,7 +1193,10 @@ trailing:true white:true*/
               country: "billtoCountry"
             }
             },
-            {kind: "onyx.Button", content: "_copyToShipTo".loc(), ontap: "copyBilltoToShipto"},
+            {classes: "xv-button-section", components: [
+              {kind: "onyx.Button", content: "_copyToShipTo".loc(), ontap: "copyBilltoToShipto",
+                style: "margin: 4px;"}
+            ]},
             {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
             {kind: "XV.CustomerShiptoWidget", attr: "shipto", showAddress: true, label: "_name".loc()},
             {kind: "XV.AddressFieldsWidget", attr: {
@@ -1207,7 +1210,7 @@ trailing:true white:true*/
               country: "shiptoCountry"
             }
             },
-            {kind: "onyx.GroupboxHeader", content: "_otherStuff".loc()},
+            {kind: "onyx.GroupboxHeader", content: "_shipping".loc()},
             {kind: "XV.InputWidget", attr: "fob"},
             {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber", label: "_custPO".loc()},
             {kind: "XV.ShipViaCombobox", attr: "shipVia"},
@@ -1271,7 +1274,7 @@ trailing:true white:true*/
             {kind: "XV.PercentWidget", attr: "discount"},
             {kind: "XV.NumberWidget", attr: "price"},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
-            {kind: "XV.DateWidget", attr: "promiseDate"},
+            //{kind: "XV.DateWidget", attr: "promiseDate"}, TODO: this is conditional on sales settings
             {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "quote.currency"},
               label: "_unitPrice".loc(), currencyDisabled: true},
             {kind: "XV.NumberWidget", attr: "listCost"},
@@ -1280,7 +1283,6 @@ trailing:true white:true*/
             {kind: "XV.NumberWidget", attr: "listPriceDiscount"},
             {kind: "XV.InputWidget", attr: "customerPartNumber"},
             {kind: "XV.UnitWidget", attr: "priceUnit"},
-            {kind: "XV.NumberWidget", attr: "priceUnitRatio"},
             {kind: "XV.InputWidget", attr: "priceMode"},
             {kind: "XV.NumberWidget", attr: "extendedPrice"},
             {kind: "XV.NumberWidget", attr: "profit"},

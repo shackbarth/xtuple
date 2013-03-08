@@ -3,7 +3,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 //---- Utils file containing the necessary utilities -----
 (function () {
   "use strict";
-  var fs = require('fs');
+  var fs = require('fs'),
+    desiredcaps = require('../environments.js');
   //--------- To accept input text --------
   exports.input = function (callback) {
     var stdin = process.stdin,
@@ -18,6 +19,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
   //----------- To write results to the results file
   exports.results = function (message) {
+    /*fs.appendFile('./results.txt', '--' + message + '--\n', function (err) {
+      if (err) throw err;
+      
+    });*/
     console.log(message);
   };
   // ---------- To return the current date and time ---------
@@ -79,4 +84,5 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
     func();
   };
+
 }());

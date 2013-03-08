@@ -395,6 +395,7 @@ var lang = XT.stringsFor("en_US", {
   "_settings": "Settings",
   "_setup": "Setup",
   "_severity": "Severity",
+  "_shipping": "Shipping",
   "_shipCharge": "Shipping Charges",
   "_shipForm": "Shipping Form",
   "_shipVia": "Ship Via",
