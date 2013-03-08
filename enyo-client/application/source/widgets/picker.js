@@ -422,6 +422,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.SaleTypePicker",
     kind: "XV.PickerWidget",
     collection: "XM.saleTypes",
+    nameAttribute: "code",
     orderBy: [
       {attribute: 'name'}
     ]
