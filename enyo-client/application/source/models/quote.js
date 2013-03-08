@@ -60,19 +60,56 @@ white:true*/
       "total"
     ],
 
-    billtoAttrArray: ["billtoName", "billtoAddress1", "billtoAddress2", "billtoAddress3", "billtoCity",
-      "billtoState", "billtoPostalCode", "billtoCountry", "billtoPhone", "billtoContactHonorific",
-      "billtoContactFirstName", "billtoContactMiddleName", "billtoContactLastName",
-      "billtoContactSuffix", "billtoContactPhone", "billtoContactTitle",
-      "billtoContactFax", "billtoContactEmail"
+    billtoAttrArray: [
+      "billtoName",
+      "billtoAddress1",
+      "billtoAddress2",
+      "billtoAddress3",
+      "billtoCity",
+      "billtoState",
+      "billtoPostalCode",
+      "billtoCountry",
+      "billtoPhone",
+      "billtoContactHonorific",
+      "billtoContactFirstName",
+      "billtoContactMiddleName",
+      "billtoContactLastName",
+      "billtoContactSuffix",
+      "billtoContactPhone",
+      "billtoContactTitle",
+      "billtoContactFax",
+      "billtoContactEmail"
     ],
 
-    shiptoAttrArray: ["shiptoName", "shiptoAddress1", "shiptoAddress2", "shiptoAddress3", "shiptoCity",
-      "shiptoState", "shiptoPostalCode", "shiptoCountry", "shiptoPhone", "shiptoContactHonorific",
-      "shiptoContactFirstName", "shiptoContactMiddleName", "shiptoContactLastName",
-      "shiptoContactSuffix", "shiptoContactPhone", "shiptoContactTitle",
-      "shiptoContactFax", "shiptoContactEmail"
+    shiptoAttrArray: [
+      "shiptoName",
+      "shiptoAddress1",
+      "shiptoAddress2",
+      "shiptoAddress3",
+      "shiptoCity",
+      "shiptoState",
+      "shiptoPostalCode",
+      "shiptoCountry",
+      "shiptoPhone",
+      "shiptoContactHonorific",
+      "shiptoContactFirstName",
+      "shiptoContactMiddleName",
+      "shiptoContactLastName",
+      "shiptoContactSuffix",
+      "shiptoContactPhone",
+      "shiptoContactTitle",
+      "shiptoContactFax",
+      "shiptoContactEmail"
     ],
+
+    shipAddressEvents: "change:shiptoName " +
+                       "change:shiptoAddress1 " +
+                       "change:shiptoAddress2 " +
+                       "change:shiptoAddress3 " +
+                       "change:shiptoCity " +
+                       "change:shiptoState " +
+                       "change:shiptoPostalCode  " +
+                       "change:shiptoCountry",
 
     // ..........................................................
     // METHODS
@@ -87,9 +124,11 @@ white:true*/
       this.freightTaxDetail = [];
       this.on('change:customer', this.customerDidChange);
       this.on('change:shipto', this.shiptoDidChange);
+      this.on('change:shipVia', this.calculateFreight);
       this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
       this.on('add:lineItems remove:lineItems change:miscCharge',
         this.calculateTotals);
+      this.on(this.shipAddressEvents, this.shiptoAddressDidChange);
     },
 
     /**
@@ -400,7 +439,7 @@ white:true*/
         this.unset("shiptoCountry");
       }
     },
-    
+
     recalculatePrices: function () {
       var that = this,
         msg = "_recalcuateAll?".loc(),
@@ -426,7 +465,8 @@ white:true*/
         shiptoAddress = shiptoContact ? shiptoContact.get("address") : false;
 
       if (this.isNotReady() || !shipto) { return; }
-
+      
+      this.off(this.shipAddressEvents, this.shiptoAddressDidChange);
       this.set("shiptoName", shipto.get("name"));
       this.set("salesRep", shipto.get("salesRep"));
       this.set("commission", shipto.get("commission"));
@@ -454,7 +494,14 @@ white:true*/
         this.set("shiptoPostalCode", shiptoAddress.getValue("postalCode"));
         this.set("shiptoCountry", shiptoAddress.getValue("country"));
       }
+      this.on(this.shipAddressEvents, this.shiptoAddressDidChange);
       this.recalculatePrices();
+    },
+    
+    shiptoAddressDidChange: function () {
+      // If the address was manually changed, then clear shipto
+      if (this.isNotReady()) { return; }
+      this.unset("shipto");
     },
 
     /**
@@ -760,9 +807,9 @@ white:true*/
         parentDate = parent ? parent.get(parent.documentDateKey) : false,
         price = this.get("price"),
         options = {};
-        
+
       if (this.isNotReady()) { return; }
-        
+
       options.success = function (basePrice) {
         var K = that.getClass(),
           priceMode = that.get("priceMode"),
@@ -808,7 +855,7 @@ white:true*/
 
     /**
       Calculate the price for this line item
-      
+
       @param{Boolean} force - force the net price to update, even if settings indicate not to.
       @returns {Object} Receiver
     */
@@ -836,7 +883,7 @@ white:true*/
       if (canUpdate && customer && currency &&
           item && quantity && quantityUnit && priceUnit &&
           this.priceAsOfDate()) {
-        
+
         // Determine whether updating net price or only customer price
         if (editing) {
           if (!force &&
@@ -958,7 +1005,7 @@ white:true*/
         charTypes,
         len,
         i;
-        
+
       // Fetch and update selling units
       if (item) {
         unitOptions.success = function (resp) {
@@ -979,15 +1026,15 @@ white:true*/
       this.unset("taxType");
       this.unset("unitCost");
       this.sellingUnits.reset();
-      
+
       // Destroy old characteristics
       len = characteristics.length;
       for (i = 0; i < len; i++) {
         characteristics.at(0).destroy();
       }
-      
+
       if (!item) { return; }
-      
+
       // Set the item default selections
       this.set("quantityUnit", item.get("inventoryUnit"));
       this.set("priceUnit", item.get("priceUnit"));
@@ -1024,7 +1071,7 @@ white:true*/
         that.set("unitCost", cost);
       };
       item.standardCost(itemOptions);
-      
+
       // Set sort for characteristics
       if (!characteristics.comparator) {
         characteristics.comparator = function (a, b) {
@@ -1054,7 +1101,7 @@ white:true*/
         quoteLineChar.on("change:value", that.calculatePrice);
         characteristics.add(quoteLineChar);
       });
-      
+
       this.calculatePrice();
     },
 
@@ -1079,13 +1126,13 @@ white:true*/
         parent.calculateScheduleDate();
       }
     },
-    
+
     priceAsOfDate: function () {
       var asOf = new Date(),
         parent = this.getParent(),
         parentDate = parent ? parent.get(parent.documentDateKey) : false,
         effectivePolicy = XT.session.settings.get("soPriceEffective");
-      
+
       // Handle alternate price effectivity settings
       if (effectivePolicy === "ScheduleDate") {
         asOf = this.get("scheduleDate");
@@ -1136,7 +1183,7 @@ white:true*/
     unitDidChange: function () {
       this.calculatePrice(true);
     },
-    
+
     /** @private
       This sholud only be called by `calculatePrice`.
     */
@@ -1159,7 +1206,7 @@ white:true*/
         parentDate,
         customer,
         currency,
-        
+
         // Set price after we have item and all characteristics prices
         setPrice = function () {
           var totalPrice = XT.math.add(prices, XT.SALES_PRICE_SCALE);
@@ -1167,7 +1214,7 @@ white:true*/
           if (that._updatePrice) {
             that.set("price", totalPrice);
           }
-          
+
           // Allow editing again if we could before
           that.setReadOnly("price", readOnlyCache);
         };
@@ -1175,7 +1222,7 @@ white:true*/
       parentDate = parent.get(parent.documentDateKey);
       customer = parent.get("customer");
       currency = parent.get("currency");
-      
+
       // Don't allow user editing of price until we hear back from the server
       this.setReadOnly("price", true);
 
@@ -1186,9 +1233,9 @@ white:true*/
       itemOptions.error = function (err) {
         that.trigger("error", err);
       };
-      
+
       charOptions = _.clone(itemOptions); // Some params are shared
-      
+
       itemOptions.quantityUnit = quantityUnit;
       itemOptions.priceUnit = priceUnit;
       itemOptions.success = function (resp) {
@@ -1223,7 +1270,7 @@ white:true*/
         that.trigger("error", err);
       };
       customer.itemPrice(item, quantity, itemOptions);
-      
+
       // Get characteristic prices
       if (isConfigured) {
         _.each(characteristics.models, function (char) {
@@ -1373,7 +1420,7 @@ white:true*/
     /** @scope XM.QuoteLineCharacteristic.prototype */
 
     recordType: 'XM.QuoteLineCharacteristic',
-    
+
     readOnlyAttributes: [
       "price"
     ]
