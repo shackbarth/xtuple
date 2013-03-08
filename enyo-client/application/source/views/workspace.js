@@ -1303,10 +1303,12 @@ trailing:true white:true*/
       this.inherited(arguments);
 
       if (this.getValue().getStatus() & XM.Model.READY) {
-        var bespokeFilter = JSON.parse(JSON.stringify(this.$.itemSiteWidget.getBespokeFilter() || {})); // clone
+        // clone or else bespokeFilterChanged never gets run
+        var bespokeFilter = JSON.parse(JSON.stringify(this.$.itemSiteWidget.getBespokeFilter() || {}));
+
         bespokeFilter.customerId = model.getValue("quote.customer.id");
         bespokeFilter.shiptoId = model.getValue("quote.shipto.id");
-        // TODO: date
+        bespokeFilter.effectiveDate = model.getValue("priceAsOfDate");
         this.$.itemSiteWidget.setBespokeFilter(bespokeFilter);
       }
     }
