@@ -9,7 +9,10 @@ create or replace function xt.retrieve_record(data_hash text) returns text as $$
 
   if (dataHash.username) { XT.username = dataHash.username; }
   ret = data.retrieveRecord(dataHash.recordType, dataHash.id, encryptionKey, options);
-  
+
+  /* Unset XT.username so it isn't cached for future queries. */
+  XT.username = undefined;
+
   /* return the results */
   return JSON.stringify(ret, null, prettyPrint);
 
@@ -17,7 +20,7 @@ $$ language plv8;
 /*
 select xt.retrieve_record('{
   "username": "admin",
-  "recordType":"XM.Contact", 
+  "recordType":"XM.Contact",
   "id": 1,
   "prettyPrint": true
   }'
