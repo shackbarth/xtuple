@@ -166,7 +166,8 @@ white:true*/
         [options.query,
           this.bespokeFilter.customerId,
           this.bespokeFilter.shiptoId,
-          this.bespokeFilter.effectiveDate || new Date()],
+          this.bespokeFilter.effectiveDate || new Date(),
+          this.defaultSite && this.defaultSite.id],
         options);
     }
   }
@@ -182,7 +183,8 @@ white:true*/
     fetch: bespokeFetch,
 
     comparator: function (itemSite) {
-      var defaultSiteOrder = itemSite.getValue("site.id") === this.defaultSite.id ? 'aa' : 'zz';
+      var defaultSiteId = this.defaultSite ? this.defaultSite.id : -5;
+      var defaultSiteOrder = itemSite.getValue("site.id") === defaultSiteId ? 'aa' : 'zz';
       return itemSite.getValue("item.number") + defaultSiteOrder + itemSite.getValue("site.code");
     }
 

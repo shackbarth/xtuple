@@ -12,7 +12,7 @@ select xt.install_js('XM','item','xtuple', $$
     which makes sure that the customer (and/or shipto) is allowed to
     ship this function
    */
-  XM.Item.availableItems = function (query, customerId, shiptoId, effectiveDate) {
+  XM.Item.availableItems = function (query, customerId, shiptoId, effectiveDate, defaultSiteId) {
     var nameSpace = "XM",
       type = "ItemSite",
       table = (nameSpace + '."' + type + '"').decamelize(),
@@ -22,10 +22,13 @@ select xt.install_js('XM','item','xtuple', $$
       offset = query.rowOffset ? 'offset ' + query.rowOffset : '',
       parts,
       custItemFilter = "",
+      defaultSiteOrderBy = "",
+      defaultSiteOrderByAgain = "",
+      defaultSiteId = defaultSiteId || -1,
       clause = XT.Data.buildClause("XM", "ItemSite", query.parameters, query.orderBy),
       sql = 'select * from {table} where {key} in ' +
-            '(select {key} from {table} where {conditions} {custItemFilter} {orderBy} {limit} {offset}) ' +
-            '{orderBy}';
+            '(select {key} from {table} where {conditions} {custItemFilter} {orderBy} {defaultSiteOrderBy} {limit} {offset}) ' +
+            '{orderBy} {defaultSiteOrderByAgain}';
 
 
     /* validate - don't bother running the query if the user has no privileges */
@@ -41,12 +44,24 @@ select xt.install_js('XM','item','xtuple', $$
     var sqlFriendlyAllowedIds = JSON.stringify(allowedIds).replace("[", "").replace("]", "");
     custItemFilter = ' and ((("item")."id" in (' + sqlFriendlyAllowedIds + '))) ';
 
+    /* 
+    We want the default site to be listed above the others if there is one. 
+    To prevent SQL injection we have to set it as a parameter, which defaults to harmless -1.
+    Clever: sneakily push this param onto the end of the array we already have 
+    */
+    clause.parameters.push(defaultSiteId);
+    defaultSiteOrderBy = ", (\"site\").\"id\" = $" + clause.parameters.length + " DESC";
+    clause.parameters.push(defaultSiteId);
+    defaultSiteOrderByAgain = ", (\"site\").\"id\" = $" + clause.parameters.length + " DESC";
+
     /* query the model */
     sql = sql.replace(/{table}/g, table)
              .replace(/{key}/g, key)
              .replace('{conditions}', clause.conditions)
              .replace('{custItemFilter}', custItemFilter)
              .replace(/{orderBy}/g, clause.orderBy)
+             .replace('{defaultSiteOrderBy}', defaultSiteOrderBy)
+             .replace('{defaultSiteOrderByAgain}', defaultSiteOrderByAgain)
              .replace('{limit}', limit)
              .replace('{offset}', offset);
     if (DEBUG) { plv8.elog(NOTICE, 'sql = ', sql); }
