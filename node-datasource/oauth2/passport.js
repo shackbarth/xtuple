@@ -121,6 +121,8 @@ passport.use(new BearerStrategy(
       if (err) { return done(err); }
       if (!token) { return done(null, false); }
 
+      // TODO - Check if accessToken has expired.
+
       db.users.findByUsername(token.get("user"), function (err, user) {
         if (err) { return done(err); }
         if (!user) { return done(null, false); }

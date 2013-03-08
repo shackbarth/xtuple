@@ -75,15 +75,21 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
   db.authorizationCodes.find(code, function (err, authCode) {
     if (err) { return done(err); }
     if (!authCode || !client) { return done(null, false); }
-    if (client.get("clientID") !== authCode.get("clientID")) { return done(null, false); }
-    if (redirectURI !== authCode.get("redirectURI")) { return done(null, false); }
+    if (client.get("clientID") !== authCode.get("clientID")) { return done(new Error("Invalid clientID.")); }
+    if (redirectURI !== authCode.get("redirectURI")) { return done(new Error("Invalid redirectURI.")); }
+
+    // Auth code is only valid for 10 minutes. Has it expired yet?
+    if ((new Date(authCode.get("authCodeExpires")) - new Date()) < 0) {
+      authCode.destroy();
+      return done(new Error("Authorization code has expired."));
+    }
 
     // Create the tokens.
     var accessToken = utils.uid(256),
         refreshToken = utils.uid(256),
         saveOptions = {},
         today = new Date(),
-        expires = new Date(today.getTime() + (24 * 60 * 60 * 1000)),
+        expires = new Date(today.getTime() + (60 * 60 * 1000)), // One hour from now.
         tokenAttributes = {},
         tokenType = 'bearer';
 
@@ -91,10 +97,10 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
       var params = {};
 
       params.token_type = model.get("tokenType");
-      // Google sends time tell expires instead of just the time it expires at, so...
-      params.expires_in = (new Date() - expires) / 1000; // Seconds until the token expires.
+      // Google sends time until expires instead of just the time it expires at, so...
+      params.expires_in = Math.round(((expires - new Date()) / 1000) - 60); // Seconds until the token expires with 60 sec padding.
 
-      // Send the tokens along.
+      // Send the tokens and params along.
       return done(null, model.get("accessToken"), model.get("refreshToken"), params);
     };
     saveOptions.error = function (model, err) {

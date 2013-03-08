@@ -21,7 +21,7 @@ exports.find = function (code, done) {
       X.log(message);
 
       // No match or multiple which is not allowed. Send nothing.
-      return done(null, null);
+      return done(new Error(message));
     }
 
     // Send that XM.Oauth2token model along.
@@ -60,6 +60,8 @@ exports.save = function (code, clientID, redirectURI, userID, scope, done) {
 
   var authCode = new XM.Oauth2token(),
       saveOptions = {},
+      today = new Date(),
+      expires = new Date(today.getTime() + (10 * 60 * 1000)), // 10 minutes from now.
       initCallback = function (model, value) {
         if (model.id) {
           // Now that model is ready, set attributes and save.
@@ -70,7 +72,8 @@ exports.save = function (code, clientID, redirectURI, userID, scope, done) {
             scope: scope,
             state: "Auth Code Issued",
             authCode: code,
-            authCodeIssued: new Date(),
+            authCodeIssued: today,
+            authCodeExpires: expires,
             tokenType: "bearer"
           };
 
