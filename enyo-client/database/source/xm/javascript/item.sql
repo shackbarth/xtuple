@@ -49,7 +49,7 @@ select xt.install_js('XM','item','xtuple', $$
              .replace(/{orderBy}/g, clause.orderBy)
              .replace('{limit}', limit)
              .replace('{offset}', offset);
-    plv8.elog(NOTICE, 'sql = ', sql);
+    if (DEBUG) { plv8.elog(NOTICE, 'sql = ', sql); }
     return JSON.stringify(plv8.execute(sql, clause.parameters));
   };
   
