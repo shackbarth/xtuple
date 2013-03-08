@@ -142,7 +142,7 @@ regexp:true, undef:true, trailing:true, white:true */
       Sets visibility of base panel
      */
     setBasePanelShowing: function () {
-      var showing = this.getEffective() && (this.getCurrency() !== XT.baseCurrency());
+      var showing = this.getEffective(); //&& (this.getCurrency() !== XT.baseCurrency());
       this.$.basePanel.setShowing(showing);
       if (showing) {
         this.$.baseLabel.setContent(XT.baseCurrency().get('abbreviation'));
@@ -151,6 +151,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
 
     setBaseAmount: function (value) {
+      //this.getCurrency().toBase(value, this.getEffective());
       var amt = value * this.getFixedRate(this.getEffective(), this.getCurrency());
       amt = amt || amt === 0 ? Globalize.format(amt, "n" + this.getScale()) : "";
       this.$.baseAmount.setContent(amt);

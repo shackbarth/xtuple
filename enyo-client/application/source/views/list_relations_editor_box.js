@@ -189,25 +189,16 @@ trailing:true white:true*/
         {kind: "XV.UnitWidget", attr: "quantityUnit"},
         {kind: "XV.PercentWidget", attr: "discount"},
         {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "currency"},
-          label: "_unitPrice".loc(), currencyDisabled: true},
+          label: "_unitPrice".loc(), currencyDisabled: true, effective: "quote.quoteDate"},
         {kind: "XV.UnitWidget", attr: "priceUnit"},
         {kind: "XV.MoneyWidget", attr: {amount: "extendedPrice", currency: "currency"},
-          label: "_extendedPrice".loc(), currencyDisabled: true},
+          label: "_extendedPrice".loc(), currencyDisabled: true, effective: "quote.quoteDate"},
         {kind: "XV.DateWidget", attr: "scheduleDate"},
         {kind: "XV.DateWidget", attr: "promiseDate"},
         {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
         {kind: "XV.TextArea", attr: "notes", fit: true}
       ]}
-    ],
-    
-    setValue: function (value) {
-      this.inherited(arguments);
-      _.each(this.$, function (control) {
-        if (control.kind === "XV.MoneyWidget") {
-          control.setEffective(value.get("quote").get("quoteDate"));
-        }
-      });
-    }
+    ]
   });
 
   enyo.kind({
@@ -227,24 +218,15 @@ trailing:true white:true*/
         // Charge Sales Account - needs GL
         {kind: "XV.NumberWidget", attr: "freightWeight"},
         {kind: "XV.MoneyWidget", attr: {amount: "subtotal", currency: "currency"},
-          label: "_subtotal".loc(), currencyShowing: false},
+          label: "_subtotal".loc(), currencyShowing: false, effective: "quoteDate"},
         // {kind: "XV.NumberWidget", attr: "miscCharge"}, - needs GL
         {kind: "XV.NumberWidget", attr: "freight", label: "_freight".loc()},
         {kind: "XV.MoneyWidget", attr: {amount: "taxTotal", currency: "currency"},
-          label: "_tax".loc(), currencyShowing: false},
+          label: "_tax".loc(), currencyShowing: false, effective: "quoteDate"},
         {kind: "XV.MoneyWidget", attr: {amount: "total", currency: "currency"},
-          label: "_total".loc(), currencyShowing: false}
+          label: "_total".loc(), currencyShowing: false, effective: "quoteDate"}
       ]}
-    ],
-
-    setValue: function (value) {
-      this.inherited(arguments);
-      _.each(this.$, function (control) {
-        if (control.kind === "XV.MoneyWidget") {
-          control.setEffective(value.get("quoteDate"));
-        }
-      });
-    }
+    ]
   });
 
   enyo.kind({
