@@ -1299,19 +1299,13 @@ trailing:true white:true*/
     attributesChanged: function (model, options) {
       this.inherited(arguments);
 
-      if (this.getValue().getStatus() & XM.Model.READY
-          && this.getValue().getValue("quote.customer")
-          // XXX don't bother setting it twice? Could it possibly change?
-          && !this.$.itemSiteWidget.getCustomer()) {
-        this.$.itemSiteWidget.setCustomer(this.getValue().getValue("quote.customer"));
+      if (this.getValue().getStatus() & XM.Model.READY) {
+        var bespokeFilter = JSON.parse(JSON.stringify(this.$.itemSiteWidget.getBespokeFilter() || {})); // clone
+        bespokeFilter.customerId = model.getValue("quote.customer.id");
+        bespokeFilter.shiptoId = model.getValue("quote.shipto.id");
+        // TODO: date
+        this.$.itemSiteWidget.setBespokeFilter(bespokeFilter);
       }
-      if (this.getValue().getStatus() & XM.Model.READY
-          && this.getValue().getValue("quote.shipto")
-          // XXX don't bother setting it twice? Could it possibly change?
-          && !this.$.itemSiteWidget.getShipto()) {
-        this.$.itemSiteWidget.setShipto(this.getValue().getValue("quote.shipto"));
-      }
-
     }
   });
 

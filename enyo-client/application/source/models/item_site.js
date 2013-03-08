@@ -47,11 +47,6 @@ white:true*/
     }
 
   });
-  _.extend(XM.ItemSite, /** @lends XM.ItemSite# */{
-    dispatchForCollection: function (query, customerId, shiptoId, options) {
-      XT.dataSource.dispatch("XM.Item", "availableItems", [query, customerId, shiptoId, new Date()], options);
-    }
-  });
 
   /**
     @class
@@ -150,7 +145,37 @@ white:true*/
   */
   XM.ItemSiteRelationCollection = XM.Collection.extend(/** @lends XM.ItemSiteRelationCollection.prototype */{
 
-    model: XM.ItemSiteRelation
+    model: XM.ItemSiteRelation,
+
+    fetch: function (options) {
+      var that = this,
+        success;
+
+      if (!this.bespokeFilter || this.bespokeFilter === {}) {
+        // just do a normal fetch
+        XM.Collection.prototype.fetch.call(this, options);
+      } else {
+        // we have to do a special dispatch to fetch the data.
+
+        // because it's a dipatch call and not a fetch, the collection doesn't get
+        // updated automatically. We have to do that by hand on success.
+        success = options.success;
+        options.success = function (data) {
+          that.reset(data);
+
+          if (success) {
+            success(data);
+          }
+        };
+
+        XT.dataSource.dispatch("XM.Item", "availableItems",
+          [options.query,
+            this.bespokeFilter.customerId,
+            this.bespokeFilter.shiptoId,
+            this.bespokeFilter.effectiveDate || new Date()],
+          options);
+      }
+    }
 
   });
 

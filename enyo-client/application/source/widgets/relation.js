@@ -312,30 +312,22 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.ItemSiteRelationCollection",
     list: "XV.ItemSiteList",
     published: {
-      customer: null,
-      shipto: null
+      bespokeFilter: {}
     },
     keyAttribute: "item.number",
     sidecarAttribute: "site.code",
     nameAttribute: "site.code",
-    shiptoChanged: function (inSender, inEvent) {
-      if (this.getShipto()) {
-        var extraSearchOptions = this.getExtraSearchOptions() || {};
-        extraSearchOptions.shipto = this.getShipto().id;
-        this.setExtraSearchOptions(extraSearchOptions);
-      }
-    },
-    customerChanged: function (inSender, inEvent) {
-      if (this.getCustomer()) {
-        var extraSearchOptions = this.getExtraSearchOptions() || {};
-        extraSearchOptions.customer = this.getCustomer().id;
-        this.setExtraSearchOptions(extraSearchOptions);
-      }
+    /**
+      Make sure the collection knows about the bespoke filter,
+      because it's the collection that has to decide to use
+      a dispatch with the bespoke filter if it's there.
+     */
+    bespokeFilterChanged: function (inSender, inEvent) {
+      this._collection.bespokeFilter = this.getBespokeFilter();
     },
     /**
       This is going to have to be a dispatch function, due to the
       complexity of customer-specific items
-     */
     fetchCollection: function (value, rowLimit, callbackName) {
       var customerId = this.getCustomer() && this.getCustomer().id,
         shiptoId = this.getShipto() && this.getShipto().id,
@@ -356,22 +348,22 @@ regexp:true, undef:true, trailing:true, white:true */
           }]
         };
 
-      XM.ItemSite.dispatchForCollection(query, customerId, shiptoId, options);
     },
+     */
     /**
       Because we fetch with a dispatch the collection doesn't get refreshed by default. Do that.
-    */
     _collectionFetchSuccess: function (data) {
       this._collection.reset(data);
       this.inherited(arguments);
     },
+    */
     /**
       Because we fetch with a dispatch the collection doesn't get refreshed by default. Do that.
-    */
     _fetchSuccess: function (data) {
       this._collection.reset(data);
       this.inherited(arguments);
     }
+    */
   });
 
   // ..........................................................
