@@ -229,9 +229,7 @@ white:true*/
                   if (!counter) { // Means we heard back from all requests
                     // Add 'em up
                     freight = XT.math.add(_.pluck(that.freightDetail, "total"), scale);
-                    this.off('change:freight', this.freightDidChange);
-                    that.set("freight", freight);
-                    this.on('change:freight', this.freightDidChange);
+                    that.set("freight", freight, {silent: true});
 
                     // Now calculate tax
                     that.calculateFreightTax();
@@ -348,28 +346,29 @@ white:true*/
         isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : false,
         billtoContact = customer ? customer.get("billingContact") || customer.get("contact") : false,
         billtoAddress = billtoContact ? billtoContact.get("address") : false,
+        billtoAttrs,
         that = this,
         unsetBilltoAddress = function () {
-          that.unset("billtoName");
-          that.unset("billtoAddress1");
-          that.unset("billtoAddress2");
-          that.unset("billtoAddress3");
-          that.unset("billtoCity");
-          that.unset("billtoState");
-          that.unset("billtoPostalCode");
-          that.unset("billtoCountry");
+          that.unset("billtoName")
+              .unset("billtoAddress1")
+              .unset("billtoAddress2")
+              .unset("billtoAddress3")
+              .unset("billtoCity")
+              .unset("billtoState")
+              .unset("billtoPostalCode")
+              .unset("billtoCountry");
         },
         unsetBilltoContact = function () {
-          that.unset("billtoContact");
-          that.unset("billtoContactHonorific");
-          that.unset("billtoContactFirstName");
-          that.unset("billtoContactMiddleName");
-          that.unset("billtoContactLastName");
-          that.unset("billtoContactSuffix");
-          that.unset("billtoContactTitle");
-          that.unset("billtoContactPhone");
-          that.unset("billtoContactFax");
-          that.unset("billtoContactEmail");
+          that.unset("billtoContact")
+              .unset("billtoContactHonorific")
+              .unset("billtoContactFirstName")
+              .unset("billtoContactMiddleName")
+              .unset("billtoContactLastName")
+              .unset("billtoContactSuffix")
+              .unset("billtoContactTitle")
+              .unset("billtoContactPhone")
+              .unset("billtoContactFax")
+              .unset("billtoContactEmail");
         };
 
       // Handle case of prospect that has no free form settings
@@ -392,59 +391,76 @@ white:true*/
 
       // Set customer default data
       if (customer) {
-        this.set("billtoName", customer.get("name"));
-        this.set("salesRep", customer.get("salesRep"));
-        this.set("commission", customer.get("commission"));
-        this.set("terms", customer.get("terms"));
-        this.set("taxZone", customer.get("taxZone"));
-        this.set("shipVia", customer.get("shipVia"));
-        this.set("site", customer.get("preferredSite"));
-        this.set("currency", customer.get("currency"));
-        this.set("shipto", customer.get("shipto"));
+        billtoAttrs = {
+          billtoName: customer.get("name"),
+          salesRep: customer.get("salesRep"),
+          commission: customer.get("commission"),
+          terms: customer.get("terms"),
+          taxZone: customer.get("taxZone"),
+          shipVia: customer.get("shipVia"),
+          site: customer.get("preferredSite"),
+          currency: customer.get("currency"),
+          shipto: customer.get("shipto")
+        };
         if (billtoContact) {
-          this.set("billtoContact", billtoContact);
-          this.set("billtoContactHonorific", billtoContact.get("honoroific"));
-          this.set("billtoContactFirstName", billtoContact.get("firstName"));
-          this.set("billtoContactMiddleName", billtoContact.get("middleName"));
-          this.set("billtoContactLastName", billtoContact.get("lastName"));
-          this.set("billtoContactSuffix", billtoContact.get("suffix"));
-          this.set("billtoContactTitle", billtoContact.get("title"));
-          this.set("billtoContactPhone", billtoContact.get("phone"));
-          this.set("billtoContactFax", billtoContact.get("fax"));
-          this.set("billtoContactEmail", billtoContact.get("email"));
+          _.extend(billtoAttrs, {
+            billtoContact: billtoContact,
+            billtoContactHonorific: billtoContact.get("honoroific"),
+            billtoContactFirstName: billtoContact.get("firstName"),
+            billtoContactMiddleName: billtoContact.get("middleName"),
+            billtoContactLastName: billtoContact.get("lastName"),
+            billtoContactSuffix: billtoContact.get("suffix"),
+            billtoContactTitle: billtoContact.get("title"),
+            billtoContactPhone: billtoContact.get("phone"),
+            billtoContactFax: billtoContact.get("fax"),
+            billtoContactEmail: billtoContact.get("email")
+          });
         } else {
           unsetBilltoContact();
         }
         if (billtoAddress) {
-          this.set("billtoAddress1", billtoAddress.getValue("line1"));
-          this.set("billtoAddress2", billtoAddress.getValue("line2"));
-          this.set("billtoAddress3", billtoAddress.getValue("line3"));
-          this.set("billtoCity", billtoAddress.getValue("city"));
-          this.set("billtoState", billtoAddress.getValue("state"));
-          this.set("billtoPostalCode", billtoAddress.getValue("postalCode"));
-          this.set("billtoCountry", billtoAddress.getValue("country"));
+          _.extend(billtoAttrs, {
+            billtoAddress1: billtoAddress.getValue("line1"),
+            billtoAddress2: billtoAddress.getValue("line2"),
+            billtoAddress3: billtoAddress.getValue("line3"),
+            billtoCity: billtoAddress.getValue("city"),
+            billtoState: billtoAddress.getValue("state"),
+            billtoPostalCode: billtoAddress.getValue("postalCode"),
+            billtoCountry: billtoAddress.getValue("country")
+          });
         } else {
           unsetBilltoAddress();
         }
+        this.set(billtoAttrs);
       } else {
-        this.unset("salesRep");
-        this.unset("commission");
-        this.unset("terms");
-        this.unset("taxZone");
-        this.unset("shipVia");
-        this.unset("currency");
-        this.unset("shipZone");
+        this.unset("salesRep")
+            .unset("commission")
+            .unset("terms")
+            .unset("taxZone")
+            .unset("shipVia")
+            .unset("currency")
+            .unset("shipZone")
+            .unset("shipto")
+            .unset("shiptoName")
+            .unset("shiptoAddress1")
+            .unset("shiptoAddress2")
+            .unset("shiptoAddress3")
+            .unset("shiptoCity")
+            .unset("shiptoState")
+            .unset("shiptoPostalCode")
+            .unset("shiptoCountry")
+            .unset("shiptoContact")
+            .unset("shiptoHonoroific")
+            .unset("shiptoContactFirstName")
+            .unset("shiptoContactMiddleName")
+            .unset("shiptoContactLastName")
+            .unset("shiptoContactSuffix")
+            .unset("shiptoContactTitle")
+            .unset("shiptoContactPhone")
+            .unset("shiptoContactFax")
+            .unset("shiptoContactEmail");
         unsetBilltoAddress();
         unsetBilltoContact();
-        this.unset("shipto");
-        this.unset("shiptoName");
-        this.unset("shiptoAddress1");
-        this.unset("shiptoAddress2");
-        this.unset("shiptoAddress3");
-        this.unset("shiptoCity");
-        this.unset("shiptoState");
-        this.unset("shiptoPostalCode");
-        this.unset("shiptoCountry");
       }
     },
 
@@ -517,39 +533,45 @@ white:true*/
     shiptoDidChange: function () {
       var shipto = this.get("shipto"),
         shiptoContact = shipto ? shipto.get("contact") : false,
-        shiptoAddress = shiptoContact ? shiptoContact.get("address") : false;
+        shiptoAddress = shiptoContact ? shiptoContact.get("address") : false,
+        shiptoAttrs;
 
       if (this.isNotReady() || !shipto) { return; }
 
-      this.off(this.shipAddressEvents, this.shiptoAddressDidChange);
-      this.set("shiptoName", shipto.get("name"));
-      this.set("salesRep", shipto.get("salesRep"));
-      this.set("commission", shipto.get("commission"));
-      this.set("taxZone", shipto.get("taxZone"));
-      this.set("shipZone", shipto.get("shipZone"));
-      this.set("shipVia", shipto.get("shipVia"));
+      shiptoAttrs = {
+        shiptoName: shipto.get("name"),
+        salesRep: shipto.get("salesRep"),
+        commission: shipto.get("commission"),
+        taxZone: shipto.get("taxZone"),
+        shipZone: shipto.get("shipZone"),
+        shipVia: shipto.get("shipVia")
+      };
       if (shiptoContact) {
-        this.set("shiptoContact", shiptoContact);
-        this.set("shiptoContactHonorific", shiptoContact.get("honoroific"));
-        this.set("shiptoContactFirstName", shiptoContact.get("firstName"));
-        this.set("shiptoContactMiddleName", shiptoContact.get("middleName"));
-        this.set("shiptoContactLastName", shiptoContact.get("lastName"));
-        this.set("shiptoContactSuffix", shiptoContact.get("suffix"));
-        this.set("shiptoContactTitle", shiptoContact.get("title"));
-        this.set("shiptoContactPhone", shiptoContact.get("phone"));
-        this.set("shiptoContactFax", shiptoContact.get("fax"));
-        this.set("shiptoContactEmail", shiptoContact.get("email"));
+        _.extend(shiptoAttrs, {
+          shiptoContact: shiptoContact,
+          shiptoContactHonorific: shiptoContact.get("honoroific"),
+          shiptoContactFirstName: shiptoContact.get("firstName"),
+          shiptoContactMiddleName: shiptoContact.get("middleName"),
+          shiptoContactLastName: shiptoContact.get("lastName"),
+          shiptoContactSuffix: shiptoContact.get("suffix"),
+          shiptoContactTitle: shiptoContact.get("title"),
+          shiptoContactPhone: shiptoContact.get("phone"),
+          shiptoContactFax: shiptoContact.get("fax"),
+          shiptoContactEmail: shiptoContact.get("email")
+        });
       }
       if (shiptoAddress) {
-        this.set("shiptoAddress1", shiptoAddress.getValue("line1"));
-        this.set("shiptoAddress2", shiptoAddress.getValue("line2"));
-        this.set("shiptoAddress3", shiptoAddress.getValue("line3"));
-        this.set("shiptoCity", shiptoAddress.getValue("city"));
-        this.set("shiptoState", shiptoAddress.getValue("state"));
-        this.set("shiptoPostalCode", shiptoAddress.getValue("postalCode"));
-        this.set("shiptoCountry", shiptoAddress.getValue("country"));
+        _.extend(shiptoAttrs, {
+          shiptoAddress1: shiptoAddress.getValue("line1"),
+          shiptoAddress2: shiptoAddress.getValue("line2"),
+          shiptoAddress3: shiptoAddress.getValue("line3"),
+          shiptoCity: shiptoAddress.getValue("city"),
+          shiptoState: shiptoAddress.getValue("state"),
+          shiptoPostalCode: shiptoAddress.getValue("postalCode"),
+          shiptoCountry: shiptoAddress.getValue("country")
+        });
       }
-      this.on(this.shipAddressEvents, this.shiptoAddressDidChange);
+      this.set(shiptoAttrs, {silent: true});
       this.recalculatePrices();
     },
 
