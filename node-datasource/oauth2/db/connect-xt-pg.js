@@ -46,8 +46,8 @@ module.exports = function (connect) {
 
     options = options || {};
     Store.call(this, options);
-    this.prefix = null == options.prefix ? 'sess:' : options.prefix;
-    this.hybridCache = null == options.hybridCache ? false : options.hybridCache;
+    this.prefix = null === options.prefix ? 'sess:' : options.prefix;
+    this.hybridCache = null === options.hybridCache ? false : options.hybridCache;
     this.sessions = {};
 
     // Load all the data from XM.SessionStore into the Express MemoryStore for caching.
@@ -102,7 +102,7 @@ module.exports = function (connect) {
 
       // fetchOptions.username = GLOBAL_USERNAME; // TODO
       fetchOptions.username = 'node';
-      XT.dataSource.fetch(fetchOptions);
+      XT.dataSource.fetch(null, fetchOptions);
     };
 
     // Loops through the sessions, find the ones that are expired and sends that session data
@@ -238,7 +238,8 @@ module.exports = function (connect) {
     try {
       var fetchCache,
           fetchDB,
-          that = this;
+          that = this,
+          K = XM.Model;
 
       sid = this.prefix + sid;
       sess = JSON.stringify(sess);
@@ -298,13 +299,14 @@ module.exports = function (connect) {
 
         fetchOptions.id = sid;
 
-        fetchOptions.success = function (model) {
+        fetchOptions.success = function (model, resp) {
+          var status = model.getStatus();
           // Fetch found this session, update it and save.
           model.set("session", sess);
 
           // Set gets called a lot. There isn't always a change to save and save will fail.
           // Check if this model has changed before trying to save it.
-          if (model.getStatusString() === "READY_CLEAN") {
+          if (status === K.READY_CLEAN) {
             if (that.hybridCache) {
               // MemoryStore did not have a matching session, update existing or add new.
               MemoryStore.set(sid, JSON.parse(sess), function (err, cache) {
@@ -321,7 +323,7 @@ module.exports = function (connect) {
               // Nothing to save, move along.
               done && done();
             }
-          } else if (model.getStatusString() === "READY_DIRTY") {
+          } else if (status === K.READY_DIRTY) {
             // Try to save XM.SessionStore to database.
             model.save(null, saveOptions);
           }

@@ -69,9 +69,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Can be called by websockets, or the express route (below), or REST, etc.
    */
   var commitEngine = function (payload, session, callback) {
-    var organization,
-      query,
-      binaryField = payload.binaryField,
+    var binaryField = payload.binaryField,
       buffer,
       binaryData,
       options;
@@ -109,9 +107,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Can be called by websockets, or the express route (below), or REST, etc.
    */
   var dispatchEngine = function (payload, session, callback) {
-    var organization,
-      query,
-      options;
+    var options;
     if (payload && payload.databaseType === 'global') {
       // Run this query against the global database.
       options = createGlobalOptions(payload, session.passport.user.id, callback);
@@ -129,14 +125,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Can be called by websockets, or the express route (below), or REST, etc.
    */
   var fetchEngine = function (payload, session, callback) {
-    var organization,
-      query,
-      options;
+    var options;
 
     if (payload && payload.databaseType === 'global') {
       // run this query against the global database
       options = createGlobalOptions(payload, session.passport.user.id, callback);
-      XT.dataSource.fetch(options);
+      XT.dataSource.fetch(null, options);
 
     } else {
       // run this query against an instance database
@@ -150,14 +144,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Can be called by websockets, or the express route (below), or REST, etc.
    */
   var retrieveEngine = function (payload, session, callback) {
-    var organization,
-      query,
-      options;
+    var options;
 
     if (payload && payload.databaseType === 'global') {
       // run this query against the global database
       options = createGlobalOptions(payload, session.passport.user.id, callback);
-      XT.dataSource.retrieveRecord(payload.recordType, payload.id, options);
+      XT.dataSource.retrieveRecord(payload, options);
 
     } else {
       // run this query against an instance database

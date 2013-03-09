@@ -19,7 +19,7 @@ white:true*/
     @param {Object} query
     @param {Object} options
     */
-    fetch: function (options) {
+    fetch: function (collection, options) {
       options = options ? _.clone(options) : {};
       var that = this,
         payload = {},
@@ -42,7 +42,7 @@ white:true*/
           // currently dealing with two different protocols for response formatting
           dataHash = response.data.rows ? JSON.parse(response.data.rows[0].fetch) : response.data;
           if (options && options.success) {
-            options.success.call(that, dataHash);
+            options.success.call(that, collection, dataHash, options);
           }
         };
 
@@ -96,7 +96,7 @@ white:true*/
     @param {Number} id
     @param {Object} options
     */
-    retrieveRecord: function (recordType, id, options) {
+    retrieveRecord: function (model, options) {
       var that = this,
         payload = {},
         complete = function (response) {
@@ -126,13 +126,13 @@ white:true*/
 
           // Handle success
           if (options && options.success) {
-            options.success.call(that, dataHash);
+            options.success.call(that, model, dataHash, options);
           }
         };
 
       payload.requestType = 'retrieveRecord';
-      payload.recordType = recordType;
-      payload.id = id;
+      payload.recordType = model.recordType;
+      payload.id = options.id || model.id;
       payload.databaseType = options.databaseType;
       payload.options = { context: options.context };
 
@@ -169,7 +169,7 @@ white:true*/
           dataHash = response.data.rows ? JSON.parse(response.data.rows[0].commit_record) : response.data;
           //dataHash = JSON.parse(response.data.rows[0].commit_record);
           if (options && options.success) {
-            options.success.call(that, dataHash);
+            options.success.call(that, model, dataHash, options);
           }
         };
 
@@ -222,7 +222,7 @@ white:true*/
           dataHash = response.data.rows ? JSON.parse(response.data.rows[0].dispatch) : response.data;
           //dataHash = JSON.parse(response.data.rows[0].dispatch);
           if (options && options.success) {
-            options.success.call(that, dataHash);
+            options.success.call(that, dataHash, options);
           }
         };
 
@@ -243,13 +243,13 @@ white:true*/
     */
     resetPassword: function (id, options) {
       var payload = {
-            id: id
-          },
-          ajax = new enyo.Ajax({
-            url: "/resetPassword",
-            success: options ? options.success : undefined,
-            error: options ? options.error : undefined
-          });
+          id: id
+        },
+        ajax = new enyo.Ajax({
+          url: "/resetPassword",
+          success: options ? options.success : undefined,
+          error: options ? options.error : undefined
+        });
 
       if (options.newUser) {
         // we don't want to send false at all, because false turns
@@ -269,14 +269,14 @@ white:true*/
     */
     changePassword: function (params, options) {
       var payload = {
-            oldPassword: params.oldPassword,
-            newPassword: params.newPassword
-          },
-          ajax = new enyo.Ajax({
-            url: "/changePassword",
-            success: options ? options.success : undefined,
-            error: options ? options.error : undefined
-          });
+          oldPassword: params.oldPassword,
+          newPassword: params.newPassword
+        },
+        ajax = new enyo.Ajax({
+          url: "/changePassword",
+          success: options ? options.success : undefined,
+          error: options ? options.error : undefined
+        });
 
       ajax.response(this.ajaxSuccess);
       ajax.go(payload);
@@ -313,10 +313,10 @@ white:true*/
     */
     sendEmail: function (payload, options) {
       var ajax = new enyo.Ajax({
-            url: "/email",
-            success: options ? options.success : undefined,
-            error: options ? options.error : undefined
-          });
+          url: "/email",
+          success: options ? options.success : undefined,
+          error: options ? options.error : undefined
+        });
 
       if (payload.body && !payload.text) {
         // be flexible with the inputs. Node-emailer prefers the term text, but
@@ -337,10 +337,10 @@ white:true*/
     */
     getExtensionList: function (options) {
       var ajax = new enyo.Ajax({
-            url: "/extensions",
-            success: options ? options.success : undefined,
-            error: options ? options.error : undefined
-          });
+          url: "/extensions",
+          success: options ? options.success : undefined,
+          error: options ? options.error : undefined
+        });
 
       ajax.response(this.ajaxSuccess);
       ajax.go();
