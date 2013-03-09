@@ -1,12 +1,16 @@
+/*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
+regexp:true, undef:true, strict:true, trailing:true, white:true */
+/*global X:true, XM:true, _:true, console:true*/
+
 /**
  * Module dependencies.
  */
-var auth = require('../routes/auth')
-  , oauth2orize = require('oauth2orize')
-  , passport = require('passport')
-  , login = require('connect-ensure-login')
-  , db = require('./db')
-  , utils = require('./utils');
+var auth = require('../routes/auth'),
+    oauth2orize = require('oauth2orize'),
+    passport = require('passport'),
+    login = require('connect-ensure-login'),
+    db = require('./db'),
+    utils = require('./utils');
 
 // create OAuth 2.0 server
 var server = oauth2orize.createServer();
@@ -24,12 +28,16 @@ var server = oauth2orize.createServer();
 // simple matter of serializing the client's ID, and deserializing by finding
 // the client by ID from the database.
 
-server.serializeClient(function(client, done) {
+server.serializeClient(function (client, done) {
+  "use strict";
+
   return done(null, client.id);
 });
 
-server.deserializeClient(function(id, done) {
-  db.clients.find(id, function(err, client) {
+server.deserializeClient(function (id, done) {
+  "use strict";
+
+  db.clients.find(id, function (err, client) {
     if (err) { return done(err); }
     return done(null, client);
   });
@@ -50,17 +58,25 @@ server.deserializeClient(function(id, done) {
 // values, and will be exchanged for an access token.
 
 server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, done) {
+  "use strict";
+
   if (!client || !user || !redirectURI || !ares) { return done(null, false); }
 
   // Generate the auth code.
-  var code = utils.uid(16);
+  var code = utils.uid(16),
+      salt = '$2a$10$' + client.get("clientID").substring(0, 22),
+      codehash = X.bcrypt.hashSync(code, salt);
+
+  // The authCode can be used to get a refreshToken and accessToken. We bcrypt the authCode
+  // so if our database is ever compromised, the stored authCode hashes are worthless.
 
   // Save auth data to the database.
-  db.authorizationCodes.save(code, client.get("clientID"), redirectURI, user.id, ares.scope, function (err) {
+  db.authorizationCodes.save(codehash, client.get("clientID"), redirectURI, user.id, ares.scope, function (err) {
     if (err) {
       return done(err);
     }
 
+    // Return the code to the client.
     done(null, code);
   });
 }));
@@ -72,11 +88,39 @@ server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, d
 // code.
 
 server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, done) {
-  db.authorizationCodes.find(code, function (err, authCode) {
+  "use strict";
+
+  if (!client || !code || !redirectURI) { return done(null, false); }
+
+  // Best practice is to use a random salt in each bcrypt hash. Since we need to query the
+  // database for a valid authCode, we would have to loop through all the hashes
+  // and hash the authCode the client sent using each salt and check for a match.
+  // That could take a lot of CPU if there are 1000's of authCodes. Instead, we will
+  // use known salt we can look up that is also in the request to exchange authCodes.
+  // The salt is the client_id trimmer to 22 characters. Unfortunately, this trade off means
+  // the bcrypt salt will be shared across all authCodes issued for a single client.
+
+  if (client.get("clientID").length < 22) {
+    console.trace("OAuth 2.0 clientID, ", client.get("clientID"), " is too short to use for bcrypt salt.");
+    return done(new Error("Invalid authorization code."));
+  }
+
+  // bcrypt the code before looking for a matching hash.
+  var salt = '$2a$10$' + client.get("clientID").substring(0, 22),
+      codehash = X.bcrypt.hashSync(code, salt);
+
+  db.authorizationCodes.find(codehash, function (err, authCode) {
     if (err) { return done(err); }
-    if (!authCode || !client) { return done(null, false); }
+    if (!authCode) { return done(null, false); }
     if (client.get("clientID") !== authCode.get("clientID")) { return done(new Error("Invalid clientID.")); }
     if (redirectURI !== authCode.get("redirectURI")) { return done(new Error("Invalid redirectURI.")); }
+
+    // Now that we've looked up the bcrypt authCode hash, double check that the code
+    // sent by the client actually matches using compareSync() this time.
+    if (!X.bcrypt.compareSync(code, authCode.get("authCode"))) {
+      console.trace("OAuth 2.0 authCode failed bcrypt compare. WTF?? This should not happen.");
+      return done(new Error("Invalid authorization code."));
+    }
 
     // Auth code is only valid for 10 minutes. Has it expired yet?
     if ((new Date(authCode.get("authCodeExpires")) - new Date()) < 0) {
@@ -84,16 +128,27 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
       return done(new Error("Authorization code has expired."));
     }
 
-    // Create the tokens.
     var accessToken = utils.uid(256),
         refreshToken = utils.uid(256),
+        accesshash,
+        refreshhash,
         saveOptions = {},
         today = new Date(),
         expires = new Date(today.getTime() + (60 * 60 * 1000)), // One hour from now.
-        tokenAttributes = {},
         tokenType = 'bearer';
 
+    // A refreshToken is like a password. It currently never expires and with it, you can
+    // get a new accessToken. We bcrypt the refreshToken so if our database is ever
+    // compromised, the stored refreshToken hashes are worthless.
+    refreshhash = X.bcrypt.hashSync(refreshToken, salt),
+
+    // The accessToken is only valid for 1 hour and must be sent with each request to
+    // the REST API. The bcrypt hash calculation on each request would be too expensive.
+    // Therefore, we do not need to bcrypt the accessToken, just SHA1 it.
+    accesshash = X.crypto.createHash('sha1').update(accessToken).digest("hex");
+
     saveOptions.success = function (model) {
+      if (!model) { return done(null, false); }
       var params = {};
 
       params.token_type = model.get("tokenType");
@@ -101,7 +156,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
       params.expires_in = Math.round(((expires - new Date()) / 1000) - 60); // Seconds until the token expires with 60 sec padding.
 
       // Send the tokens and params along.
-      return done(null, model.get("accessToken"), model.get("refreshToken"), params);
+      return done(null, accessToken, refreshToken, params);
     };
     saveOptions.error = function (model, err) {
       return done && done(err);
@@ -111,9 +166,9 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
     authCode.set("state", "Token Issued");
     authCode.set("authCode", null);
     authCode.set("authCodeExpires", new Date());
-    authCode.set("refreshToken", refreshToken);
+    authCode.set("refreshToken", refreshhash);
     authCode.set("refreshIssued", new Date());
-    authCode.set("accessToken", accessToken);
+    authCode.set("accessToken", accesshash);
     authCode.set("accessIssued", new Date());
     authCode.set("accessExpires", expires);
     authCode.set("tokenType", tokenType);
@@ -124,8 +179,36 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
 }));
 
 server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken, scope, done) {
-  db.accessTokens.save(refreshToken, scope, client.id, function (err, accessToken) {
+  "use strict";
+
+  if (!client || !refreshToken || !scope) { return done(null, false); }
+
+  // Best practice is to use a random salt in each bcrypt hash. Since we need to query the
+  // database for a valid refreshToken, we would have to loop through all the hashes
+  // and hash the refreshToken the client sent using each salt and check for a match.
+  // That could take a lot of CPU if there are 1000's of refreshTokens. Instead, we will
+  // use known salt we can look up that is also in the request to use refreshTokens.
+  // The salt is the client_id trimmer to 22 characters. Unfortunately, this trade off means
+  // the bcrypt salt will be shared across all refreshTokens issued for a single client.
+
+  if (client.get("clientID").length < 22) {
+    console.trace("OAuth 2.0 clientID, ", client.get("clientID"), " is too short to use for bcrypt salt.");
+    return done(new Error("Invalid refresh token."));
+  }
+
+  // bcrypt the refreshToken before looking for a matching hash.
+  var salt = '$2a$10$' + client.get("clientID").substring(0, 22),
+      refreshhash = X.bcrypt.hashSync(refreshToken, salt);
+
+  db.accessTokens.save(refreshhash, scope, client.id, function (err, accessToken) {
     if (err) { return done(err); }
+
+    // Now that we've looked up the bcrypt hash, double check that the code
+    // sent by the client actually matches using compareSync() this time.
+    if (!X.bcrypt.compareSync(refreshToken, accessToken.get("refreshToken"))) {
+      console.trace("OAuth 2.0 authCode failed bcrypt compare. WTF?? This should not happen.");
+      return done(new Error("Invalid authorization code."));
+    }
 
     // TODO - This needs to repeat lots of the above token issuing code.
     // token_type, expires_in, refreshToken, etc.
@@ -153,8 +236,10 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
 // first, and rendering the `dialog` view.
 
 exports.authorization = [
-  server.authorization(function(clientID, redirectURI, scope, type, done) {
-    db.clients.findByClientId(clientID, function(err, client) {
+  server.authorization(function (clientID, redirectURI, scope, type, done) {
+    "use strict";
+
+    db.clients.findByClientId(clientID, function (err, client) {
       if (err) { return done(err); }
       if (!client) { return done(null, false); }
 
@@ -176,7 +261,9 @@ exports.authorization = [
       }
     });
   }),
-  function(req, res, next){
+  function (req, res, next) {
+    "use strict";
+
     // Load the OAuth req data into the session so it can access it on login redirects.
     if (req.oauth2) {
       req.session.oauth2 = req.oauth2;
@@ -189,7 +276,9 @@ exports.authorization = [
     // the URI to call to get a user's scope/org list: 'https://mobile.xtuple.com/auth/userinfo.xxx'
   },
   login.ensureLoggedIn({redirectTo: "/"}),
-  function(req, res, next){
+  function (req, res, next) {
+    "use strict";
+
     var scope;
 
     if (req.session && req.session.passport && req.session.passport.user && req.session.passport.user.organization) {
@@ -199,12 +288,8 @@ exports.authorization = [
       next(new Error('Invalid OAuth 2.0 scope.'));
     }
   }
-]
+];
 
-
-//  function(req, res, next){
-//    auth.scopeForm(req, res, next);
-//  },
 
 // user decision endpoint
 //
@@ -215,7 +300,9 @@ exports.authorization = [
 
 exports.decision = [
   login.ensureLoggedIn({redirectTo: "/"}),
-  server.decision(function(req, next){
+  server.decision(function (req, next) {
+    "use strict";
+
     // Add the approved scope/org to req.oauth2.res.
     var ares = {};
 
@@ -226,7 +313,7 @@ exports.decision = [
       return next(new Error('Invalid OAuth 2.0 scope.'));
     }
   })
-]
+];
 
 
 // token endpoint
@@ -240,4 +327,4 @@ exports.token = [
   passport.authenticate(['basic', 'oauth2-client-password'], { session: false }),
   server.token(),
   server.errorHandler()
-]
+];

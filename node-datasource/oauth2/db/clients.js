@@ -86,4 +86,5 @@ exports.findByClientId = function (clientID, done) {
 };
 
 // TODO - Need an admin iterface that can add new clients.
-// TODO - Need a save/destroy function for that admin interface to call.
+// TODO - Need a save function for that admin interface to call.
+// TODO - client_id MUST be atleast 22 characters long for use in bcrypt salt.
