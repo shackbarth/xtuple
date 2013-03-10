@@ -1266,7 +1266,7 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", classes: "in-panel", fit: true, components: [
             {kind: "XV.NumberWidget", attr: "lineNumber"},
-            {content: "TODO: ITEMSITE"},
+            {kind: "XV.ItemSiteWidget", attr: "itemSite", name: "itemSiteWidget"},
             {kind: "XV.NumberWidget", attr: "quantity"},
             {kind: "XV.UnitWidget", attr: "quantityUnit"},
             {kind: "XV.NumberWidget", attr: "quantityUnitRatio"},
@@ -1274,7 +1274,7 @@ trailing:true white:true*/
             {kind: "XV.PercentWidget", attr: "discount"},
             {kind: "XV.NumberWidget", attr: "price"},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
-            //{kind: "XV.DateWidget", attr: "promiseDate"}, TODO: this is conditional on sales settings
+            {kind: "XV.DateWidget", attr: "promiseDate", showing: false}, //TODO: this is conditional on sales settings
             {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "quote.currency"},
               label: "_unitPrice".loc(), currencyDisabled: true},
             {kind: "XV.NumberWidget", attr: "listCost"},
@@ -1294,7 +1294,27 @@ trailing:true white:true*/
         ]},
         {kind: "XV.QuoteLineCommentBox", attr: "comments"}
       ]}
-    ]
+    ],
+    /**
+      The item site widget will need to know about the customer and the shipto
+      for narrowing down of item options.
+     */
+    attributesChanged: function (model, options) {
+      this.inherited(arguments);
+
+      if (model.isReady()) {
+        // clone or else bespokeFilterChanged never gets run
+        var bespokeFilter = JSON.parse(JSON.stringify(this.$.itemSiteWidget.getBespokeFilter() || {}));
+
+        bespokeFilter.customerId = model.getValue("quote.customer.id");
+        bespokeFilter.shiptoId = model.getValue("quote.shipto.id");
+        bespokeFilter.effectiveDate = model.getValue("priceAsOfDate");
+        this.$.itemSiteWidget.setBespokeFilter(bespokeFilter);
+        if (model.getValue("quote.site")) {
+          this.$.itemSiteWidget.setDefaultSite(model.getValue("quote.site"));
+        }
+      }
+    }
   });
 
 

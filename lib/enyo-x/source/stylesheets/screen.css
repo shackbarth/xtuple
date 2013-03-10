@@ -804,6 +804,9 @@ body {
   left: -200px;
   top: 15px;
 }
+.xv-completer-sidecar {
+  color: #93a1a1;
+}
 .xv-relationwidget-column.left {
   padding-right: 18px;
   color: #000;
