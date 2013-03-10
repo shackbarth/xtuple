@@ -455,12 +455,7 @@ trailing:true white:true*/
             {kind: "XV.CheckboxWidget", attr: "partialShip"},
             {kind: "XV.CheckboxWidget", attr: "isFreeFormShipto", label: "_freeFormShip".loc()},
             {kind: "XV.CheckboxWidget", attr: "isFreeFormBillto", label: "_freeFormBill".loc()},
-            // this is only going to be added by commerical editions
-            // {kind: "XV.InputWidget", attr: "preferredSite"},
             {kind: "onyx.GroupboxHeader", content: "_terms".loc()},
-            // comes from Time & Expense
-            //{kind: "XV.CheckboxWidget", attr: "isSpecifiedBillingRate"}, Enables Rate Widget
-            //{kind: "XV.NumberWidget", attr: "billingRate"},
             {kind: "XV.TermsPicker", attr: "terms"},
             {kind: "XV.PercentWidget", attr: "discount"},
             {kind: "XV.CreditStatusPicker", attr: "creditStatus"},
@@ -469,16 +464,14 @@ trailing:true white:true*/
             {kind: "XV.BalanceMethodPicker", attr: "balanceMethod"},
             {kind: "XV.NumberWidget", attr: "creditLimit"},
             {kind: "XV.InputWidget", attr: "creditRating"},
-            // will be added by sales
-            // {kind: "XV.CheckboxWidget", attr: "autoHoldOrders"},
             {kind: "XV.NumberWidget", attr: "graceDays"},
             {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
             {kind: "XV.TaxZonePicker", attr: "taxZone", label: "_defaultTaxZone".loc()}
           ]}
         ]},
-        {kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
         {kind: "XV.CustomerCommentBox", attr: "comments"},
         {kind: "XV.CustomerShipToBox", attr: "shiptos"},
+        {kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
         {kind: "XV.CustomerDocumentsBox", attr: "documents"}
       ]},
       {kind: "onyx.Popup", name: "findExistingCustomerPopup", centered: true,
