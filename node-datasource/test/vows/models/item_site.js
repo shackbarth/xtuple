@@ -80,6 +80,58 @@ var XVOWS = XVOWS || {};
     })
   }).addBatch({
     'DESTROY': crud.destroy(data)
+
+  }).addBatch({
+    'We can create a new collection and run a non-filtered fetch': {
+      topic: function () {
+        var that = this,
+          coll = new XM.ItemSiteRelationCollection(),
+          success = function (data) {
+            that.callback(null, data);
+          },
+          error = function (error) {
+            console.log("error!", arguments);
+            that.callback(error);
+          };
+
+        var query = {"orderBy":[{"attribute":"item.number"}],"parameters":[]};
+        coll.fetch({query: query, success: success, error: error});
+      },
+      'we do get them all back': function (error, topic) {
+        assert.isNull(error);
+        assert.equal(topic.length, 64);
+      }
+
+
+    }
+
+  }).addBatch({
+    'We can create a new collection and run a filtered fetch': {
+      topic: function () {
+        var that = this,
+          coll = new XM.ItemSiteRelationCollection(),
+          success = function (data) {
+            that.callback(null, data);
+          },
+          error = function (error) {
+            console.log("error!", arguments);
+            that.callback(error);
+          };
+        coll.bespokeFilter = {
+          customerId: 97
+        };
+
+        var query = {"orderBy":[{"attribute":"item.number"}],"parameters":[]};
+        coll.fetch({query: query, success: success, error: error});
+      },
+      'we do not get them all back': function (error, topic) {
+        assert.isNull(error);
+        assert.isTrue(topic.length < 64);
+      }
+
+
+    }
+
   }).export(module);
 
 }());
