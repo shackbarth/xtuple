@@ -132,8 +132,8 @@ white:true*/
       this.on('change:taxZone', this.recalculateTaxes);
       this.on('change:site', this.siteDidChange);
       this.on(this.shipAddressEvents, this.shiptoAddressDidChange);
-      if (XT.session.settings.get("soPriceEffective") === "ScheduleDate") {
-        this.on('change:scheduleDate', this.recalculatePrices);
+      if (XT.session.settings.get("soPriceEffective") === "OrderDate") {
+        this.on('change:' + this.documentDateKey, this.recalculatePrices);
       }
     },
 
@@ -468,6 +468,36 @@ white:true*/
     },
 
     /**
+      Fetch the next quote number. Need a special over-ride here because of peculiar
+      behavior of quote numbering different from all other generated numbers.
+    */
+    fetchNumber: function () {
+      var that = this,
+        options = {},
+        D = XM.Document;
+      options.success = function (resp) {
+        that._number = resp.toString();
+        that.set(that.documentKey, that._number);
+        if (that.numberPolicy === D.AUTO_NUMBER) {
+          that.setReadOnly(that.documentKey);
+        }
+      };
+      this.dispatch('XM.Quote', 'fetchNumber', null, options);
+      return this;
+    },
+
+    /**
+    Returns quote status as a localized string.
+
+    @returns {String}
+    */
+    getQuoteStatusString: function () {
+      var K = this.getClass(),
+        status = this.get("status");
+      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
+    },
+
+    /**
       If the user changed the freight determine whether they want the automatic calculation
       turned on or off as a result of their change. This function will trigger a `notify` call
       asking the question, which must be answered via the attached callback to complete the process.
@@ -488,14 +518,20 @@ white:true*/
         }
       };
       if (calculateFreight) {
-        message = "_manualFreight?".loc();
+        message = "_manualFreight".loc() + "_continue?".loc();
       } else if (!calculateFreight && !freight &&
                  XT.session.settings.get("CalculateFreight")) {
-        message = "_autmaticFreight?".loc();
+        message = "_autmaticFreight".loc() + "_continue?".loc();
       } else {
         return;
       }
       this.notify(message, options);
+    },
+
+    lineItemsDidChange: function () {
+      var lineItems = this.get("lineItems");
+      this.setReadOnly("currency", lineItems.length);
+      this.setReadOnly("customer", lineItems.length);
     },
 
     /**
@@ -528,6 +564,76 @@ white:true*/
         lineItem.calculateTax();
       });
       this.calculateFreightTax();
+    },
+
+    scheduleDateDidChange: function () {
+      var  message = "_rescheduleAll".loc() + "_continue?".loc(),
+        customer = this.get("customer"),
+        scheduleDate = this.get("scheduleDate"),
+        lineItems = this.get("lineItems"),
+        options = {},
+        that = this;
+
+      if (this.isNotReady || !lineItems.length) { return; }
+
+      options.type = XM.Model.QUESTION;
+
+      // If user wants to reschedule, check whether all lines
+      // can be updated to the requested schedule date
+      options.callback = function (answer) {
+        var counter = lineItems.length,
+          custOptions = {},
+          results = [],
+          id,
+          reschedule = function (ids) {
+            _.each(ids, function (id) {
+              lineItems.get(id).set("scheduleDate", scheduleDate);
+            });
+          };
+
+        if (answer) {
+          // Callback for each check
+          custOptions.succes = function (canPurchase) {
+            counter--;
+            if (canPurchase) { results.push(id); }
+
+            // If all items have been checked, proceed
+            if (!counter) {
+              
+              // First check for mix of items that can be rescheduled and not
+              // If partial, then ask if they only want to reschedule partial
+              if (results.length && results.length !== lineItems.length) {
+                message = "_partialReschedule".loc() + "_continue?".loc();
+                options.callback = function (answer) {
+                  if (answer) { reschedule(results); }
+                  
+                  // Recalculate the date because some lines may not have changed
+                  that.calculateScheduleDate();
+                };
+                that.notify(message, options);
+
+              // If we have results, then reschedule all of them
+              } else if (results.length) {
+                reschedule(results);
+
+              // No lines can be rescheduled, just tell user "no can do"
+              } else {
+                that.notify("_noReschedule".loc());
+                that.calculateScheduleDate(); // Recalculate the date
+              }
+            }
+          };
+
+          // Loop through each item and see if we can sell on
+          // requested date
+          _.each(lineItems, function (line) {
+            var item = line.getValue("itemSite.item");
+            id = line.id;
+            customer.canPurchase(item, scheduleDate, custOptions);
+          });
+        }
+      };
+      this.notify(message, options);
     },
 
     /**
@@ -588,42 +694,6 @@ white:true*/
       if (this.isNotReady()) { return; }
       var fob = this.getValue("site.fob") || "";
       this.set("fob", fob);
-    },
-
-    /**
-    Returns quote status as a localized string.
-
-    @returns {String}
-    */
-    getQuoteStatusString: function () {
-      var K = this.getClass(),
-        status = this.get("status");
-      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
-    },
-
-    /**
-      Fetch the next quote number. Need a special over-ride here because of peculiar
-      behavior of quote numbering different from all other generated numbers.
-    */
-    fetchNumber: function () {
-      var that = this,
-        options = {},
-        D = XM.Document;
-      options.success = function (resp) {
-        that._number = resp.toString();
-        that.set(that.documentKey, that._number);
-        if (that.numberPolicy === D.AUTO_NUMBER) {
-          that.setReadOnly(that.documentKey);
-        }
-      };
-      this.dispatch('XM.Quote', 'fetchNumber', null, options);
-      return this;
-    },
-
-    lineItemsDidChange: function () {
-      var lineItems = this.get("lineItems");
-      this.setReadOnly("currency", lineItems.length);
-      this.setReadOnly("customer", lineItems.length);
     },
 
     statusDidChange: function () {
@@ -1239,6 +1309,7 @@ white:true*/
         customer = parent.get("customer"),
         shipto = parent.get("shipto"),
         scheduleDate = this.get("scheduleDate"),
+        effectivePolicy = XT.session.settings.get("soPriceEffective"),
         that = this,
         options = {};
 
@@ -1249,6 +1320,10 @@ white:true*/
           if (!canPurchase) {
             that.notify("_noPurchase".loc());
             that.unset("scheduleDate");
+          } else {
+            if (effectivePolicy === "ScheduleDate") {
+              that.recalculatePrice();
+            }
           }
         };
         options.shipto = shipto;
