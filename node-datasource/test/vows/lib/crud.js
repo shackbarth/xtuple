@@ -111,11 +111,11 @@ var _ = require("underscore"),
       'And the values are as we set them': function (error, data) {
         var hashToTest = data.updated ? _.extend(data.createHash, data.updateHash) : data.createHash;
         _.each(hashToTest, function (value, key) {
-          if (typeof (data.model.get(key)) === 'object') {
-            assert.equal(data.model.get(key).id, value);
-          } else {
+          //if (typeof (data.model.get(key)) === 'object' && typeof value === 'number') {
+          //  assert.equal(data.model.get(key).id, value);
+          //} else {
             assert.equal(data.model.get(key), value);
-          }
+          //}
         });
       }
     };
@@ -135,6 +135,7 @@ var _ = require("underscore"),
     vows = vows || {};
     var context = {
       topic: function () {
+        data.updated = true;
         return data;
       },
       'Status is `READY_CLEAN`': function (data) {
