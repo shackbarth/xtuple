@@ -1089,6 +1089,15 @@
           "inverse": "quoteLine",
           "isNested": true
         }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "type": "QuoteLineCharacteristic",
+          "column": "quitem_id",
+          "inverse": "quoteLine",
+          "isNested": true
+        }
       }
     ],
     "isSystem": true
@@ -1126,7 +1135,7 @@
         }
       },
       {
-        "name": "incident",
+        "name": "quoteLine",
         "attr": {
           "type": "Number",
           "column": "charass_target_id"
@@ -1145,6 +1154,13 @@
         "attr": {
           "type": "String",
           "column": "charass_value"
+        }
+      },
+      {
+        "name": "price",
+        "attr": {
+          "type": "Number",
+          "column": "charass_price"
         }
       }
     ],

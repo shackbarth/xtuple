@@ -227,6 +227,18 @@ white:true*/
     editableModel: 'XM.Item'
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Characteristic
+  */
+  XM.ItemListItemCharacteristic = XM.CharacteristicAssignment.extend({
+    /** @scope XM.ItemListItmeCharacteristic.prototype */
+
+    recordType: 'XM.ItemListItemCharacteristic'
+
+  });
 
   /**
     @class
@@ -342,6 +354,18 @@ white:true*/
 
   // Add in item mixin
   XM.ItemRelation = XM.ItemRelation.extend(XM.ItemMixin);
+  
+  /**
+    @class
+
+    @extends XM.Characteristic
+  */
+  XM.ItemRelationCharacteristic = XM.CharacteristicAssignment.extend({
+    /** @scope XM.ItemRelationCharacteristic.prototype */
+
+    recordType: 'XM.ItemRelationCharacteristic'
+
+  });
 
   // ..........................................................
   // COLLECTIONS
