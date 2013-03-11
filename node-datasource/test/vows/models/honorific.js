@@ -30,7 +30,7 @@ var XVOWS = XVOWS || {};
             data.model = new XM.Honorific();
             that.callback(null, data);
           };
-        zombieAuth.loadApp(callback);
+        zombieAuth.loadApp({callback: callback, verbose: false});
       },
       'The record type is XM.Honorific': function (data) {
         assert.equal(data.model.recordType, "XM.Honorific");
@@ -53,12 +53,6 @@ var XVOWS = XVOWS || {};
     'READ': {
       topic: function () {
         return data;
-      },
-      'ID is a number': function (data) {
-        assert.isNumber(data.model.id);
-      },
-      'Code is `Herr`': function (data) {
-        assert.equal(data.model.get('code'), data.createHash.code);
       }
     }
   }).addBatch({
@@ -68,14 +62,11 @@ var XVOWS = XVOWS || {};
           data.model.set(data.updateHash);
           return data;
         },
-        'Code is `Dame`': function (data) {
-          assert.equal(data.model.get('code'), data.updateHash.code);
-        },
         '-> Commit': crud.save(data)
       }
     })
   }).addBatch({
     'DESTROY': crud.destroy(data)
   }).export(module);
-  
+
 }());
