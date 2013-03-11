@@ -172,7 +172,6 @@ var _ = require("underscore"),
         }, exports.waitTime);
       },
       'Status is `DESTROYED_CLEAN`': function (data) {
-        console.log(arguments);
         assert.equal(data.model.getStatusString(), 'DESTROYED_CLEAN');
       }
     };
