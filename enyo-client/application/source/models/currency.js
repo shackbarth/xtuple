@@ -148,6 +148,11 @@ white:true*/
               attribute: "expires",
               operator: ">=",
               value: asOf
+            },
+            {
+              attribute: "currency",
+              operator: "=",
+              value: this.id
             }
           ]
         };
