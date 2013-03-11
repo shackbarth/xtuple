@@ -11,7 +11,7 @@ var _ = require("underscore"),
   "use strict";
 
   exports.waitTime = 10000;
-  
+
   /**
     Creates a working model and automatically checks state
     is `READY_NEW` and a valid `id` immediately afterward.
@@ -107,6 +107,16 @@ var _ = require("underscore"),
       },
       'Status is `READY_CLEAN`': function (data) {
         assert.equal(data.model.getStatusString(), 'READY_CLEAN');
+      },
+      'And the values are as we set them': function (error, data) {
+        var hashToTest = data.updated ? _.extend(data.createHash, data.updateHash) : data.createHash;
+        _.each(hashToTest, function (value, key) {
+          if (typeof (data.model.get(key)) === 'object') {
+            assert.equal(data.model.get(key).id, value);
+          } else {
+            assert.equal(data.model.get(key), value);
+          }
+        });
       }
     };
 
@@ -177,5 +187,5 @@ var _ = require("underscore"),
     _.extend(context, vows);
     return context;
   };
-  
+
 }());

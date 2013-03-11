@@ -66,6 +66,7 @@ var XVOWS = XVOWS || {};
       '-> Set values': {
         topic: function () {
           data.model.set(data.updateHash);
+          data.updated = true;
           return data;
         },
         'Code is `Dame`': function (data) {
@@ -77,5 +78,5 @@ var XVOWS = XVOWS || {};
   }).addBatch({
     'DESTROY': crud.destroy(data)
   }).export(module);
-  
+
 }());
