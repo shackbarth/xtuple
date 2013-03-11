@@ -15,11 +15,11 @@ var XVOWS = XVOWS || {};
   var data = {};
 
   data.createHash = {
-    code: "Herr"
+    line1: "123 Main St"
   };
 
   data.updateHash = {
-    code: "Dame"
+    line1: "456 Main St"
   };
 
   vows.describe('XM.Address CRUD test').addBatch({
@@ -53,12 +53,6 @@ var XVOWS = XVOWS || {};
     'READ': {
       topic: function () {
         return data;
-      },
-      'ID is a number': function (data) {
-        assert.isNumber(data.model.id);
-      },
-      'Code is `Herr`': function (data) {
-        assert.equal(data.model.get('code'), data.createHash.code);
       }
     }
   }).addBatch({
@@ -67,9 +61,6 @@ var XVOWS = XVOWS || {};
         topic: function () {
           data.model.set(data.updateHash);
           return data;
-        },
-        'Code is `Dame`': function (data) {
-          assert.equal(data.model.get('code'), data.updateHash.code);
         },
         '-> Commit': crud.save(data)
       }
