@@ -187,7 +187,7 @@ trailing:true white:true*/
         {kind: "XV.InputWidget", attr: "customerPartNumber"},
         {kind: "XV.NumberWidget", attr: "quantity"},
         {kind: "XV.UnitWidget", attr: "quantityUnit"},
-        {kind: "XV.PercentWidget", attr: "discount"},
+        {kind: "XV.PercentWidget", attr: "listPriceDiscount"},
         {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "currency"},
           label: "_unitPrice".loc(), currencyDisabled: true, effective: "quote.quoteDate"},
         {kind: "XV.UnitWidget", attr: "priceUnit"},

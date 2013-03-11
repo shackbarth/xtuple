@@ -354,9 +354,12 @@ enyo.kind({
           {kind: "XV.ListAttr", attr: "listPrice", classes: "text-align-right"},
           {kind: "XV.ListAttr", attr: "extendedPrice", classes: "text-align-right"},
           {kind: "XV.ListAttr", attr: "customerPrice", classes: "text-align-right"},
-          {kind: "XV.ListAttr", attr: "listPriceDiscount", classes: "text-align-right"}
+          {kind: "XV.ListAttr", attr: "listPriceDiscount", classes: "text-align-right", formatter: "formatPercentage"}
         ]}
       ]}
     ]}
-  ]
+  ],
+  formatPercentage: function (value, view, model) {
+    return value * 100;
+  }
 });
