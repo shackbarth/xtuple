@@ -105,7 +105,7 @@ var _ = require("underscore"),
           that.callback(null, data);
         }, exports.waitTime);
       },
-      'Status is `READY_CLEAN`': function (data) {
+      'Status is `READY_CLEAN`': function (error, data) {
         assert.equal(data.model.getStatusString(), 'READY_CLEAN');
       },
       'And the values are as we set them': function (error, data) {

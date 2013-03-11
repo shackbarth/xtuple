@@ -30,7 +30,7 @@ var XVOWS = XVOWS || {};
             data.model = new XM.Honorific();
             that.callback(null, data);
           };
-        zombieAuth.loadApp(callback);
+        zombieAuth.loadApp({callback: callback, verbose: false});
       },
       'The record type is XM.Honorific': function (data) {
         assert.equal(data.model.recordType, "XM.Honorific");

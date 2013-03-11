@@ -33,23 +33,38 @@ Simplest possible usage:
     use a user who is only associated with one organization. Both of these limitations
     should be fixed when we get a chance.
 
-    @param {String} username
-    @param {String} password
-    @param {String} host
-    @param {Function} callback. This function will be called with the zombie browser
+    @param {Object} options
+    @param {String} options.username
+    @param {String} options.password
+    @param {String} options.host
+    @param {Boolean} options.verbose
+    @param {Function} options.callback. This function will be called with the zombie browser
       as a parameter if the app loads up successfully.
 
-   */
-  var loadApp = exports.loadApp = function (username, password, host, callback) {
-    var loginData;
+    Supported signatures are:
+    loadApp(callback);
+    loadApp({username: "admin", password: "somenew", callback: callback});
+    loadApp({callback: callback, verbose: true});
+  */
+  var loadApp = exports.loadApp = function (options) {
+    options = options || {};
+
+    var username = options.username,
+      password = options.password,
+      host = options.host,
+      callback = options.callback,
+      verboseMode = options.verbose,
+      loginData;
 
     //
     // Handle multiple signatures
     //
-    if (arguments.length === 1 && typeof arguments[0] === 'function') {
+    if (typeof arguments[0] === 'function') {
       // if the sole parameter is the callback, then we get the auth data from a file
       callback = arguments[0];
+    }
 
+    if (!username || !password) {
       try {
         loginData = require('../../shared/loginData');
       } catch (err) {
@@ -62,6 +77,9 @@ Simplest possible usage:
       host = loginData.data.webaddress;
     }
     host = host || "https://localhost:443";
+
+
+
 
     zombie.visit(host, {debug: false}, function (e, browser) {
       //
@@ -101,7 +119,9 @@ Simplest possible usage:
 
               //TODO: improve error reporting
               XT.log = function () {
-                console.log(JSON.stringify(arguments));
+                if (verboseMode) {
+                  console.log(JSON.stringify(arguments));
+                }
               };
 
               // clear out both is interval and the I'm-giving-up timeout
