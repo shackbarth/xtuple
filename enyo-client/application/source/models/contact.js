@@ -41,7 +41,6 @@ white:true*/
 
     defaults: function () {
       return {
-        owner: XM.currentUser,
         isActive: true
       };
     },
