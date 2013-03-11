@@ -151,17 +151,14 @@ regexp:true, undef:true, trailing:true, white:true */
     },
 
     setBaseAmount: function (value) {
-      var options = {}, amt = value;
+      var options = {}, amt = value, that = this;
       if (amt) {
         options.success = function (basePrice) {
           amt = basePrice;
-          amt = amt || amt === 0 ? Globalize.format(amt, "n" + this.getScale()) : "";
-          this.$.baseAmount.setContent(amt);
+          amt = amt || amt === 0 ? Globalize.format(amt, "n" + that.getScale()) : "";
+          that.$.baseAmount.setContent(amt);
         };
-        options.error = function (error) {
-          this.trigger("error", error);
-        };
-        this.getCurrency().toBase(amt, this.getEffective(), options);
+        that.getCurrency().toBase(amt, that.getEffective(), options);
       }
     },
 
@@ -209,7 +206,6 @@ regexp:true, undef:true, trailing:true, white:true */
             if (oldValue !== newValue) {
               this.setCurrency(newValue || XT.baseCurrency());
               this.$.picker.setValue(this.getCurrency());
-              
             }
           }
           // only show the base panel if there is an effect date AND the currency doesn't match the base

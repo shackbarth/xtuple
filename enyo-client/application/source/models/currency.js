@@ -141,12 +141,12 @@ white:true*/
           parameters: [
             {
               attribute: "effective",
-              operator: ">=",
+              operator: "<=",
               value: asOf
             },
             {
               attribute: "expires",
-              operator: "<=",
+              operator: ">=",
               value: asOf
             }
           ]
