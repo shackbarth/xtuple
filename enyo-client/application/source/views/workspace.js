@@ -1266,7 +1266,8 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", classes: "in-panel", fit: true, components: [
             {kind: "XV.NumberWidget", attr: "lineNumber"},
-            {kind: "XV.ItemSiteWidget", attr: "itemSite", name: "itemSiteWidget"},
+            {kind: "XV.ItemSiteWidget", attr: "itemSite", name: "itemSiteWidget",
+              filterRestrictionType: "item.isSold", filterRestriction: true},
             {kind: "XV.NumberWidget", attr: "quantity"},
             {kind: "XV.UnitWidget", attr: "quantityUnit"},
             {kind: "XV.NumberWidget", attr: "quantityUnitRatio"},
