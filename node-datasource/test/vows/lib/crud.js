@@ -111,11 +111,17 @@ var _ = require("underscore"),
       'And the values are as we set them': function (error, data) {
         var hashToTest = data.updated ? _.extend(data.createHash, data.updateHash) : data.createHash;
         _.each(hashToTest, function (value, key) {
-          //if (typeof (data.model.get(key)) === 'object' && typeof value === 'number') {
-          //  assert.equal(data.model.get(key).id, value);
-          //} else {
+          // depending on how we represent sub-objects, we want to verify them in different ways
+          if (typeof (data.model.get(key)) === 'object' && typeof value === 'object') {
+            // if the data is a model and the test hash looks like {contact: {id: 7}}
+            assert.equal(data.model.get(key).id, value.id);
+          } else if (typeof (data.model.get(key)) === 'object' && typeof value === 'number') {
+            // if the data is a model and the test hash looks like {contact: 7}
+            assert.equal(data.model.get(key).id, value);
+          } else {
+            // default case, such as comparing strings to strings etc.
             assert.equal(data.model.get(key), value);
-          //}
+          }
         });
       }
     };
