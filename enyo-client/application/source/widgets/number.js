@@ -155,14 +155,14 @@ regexp:true, undef:true, trailing:true, white:true */
       if (amt) {
         options.success = function (basePrice) {
           amt = basePrice;
+          amt = amt || amt === 0 ? Globalize.format(amt, "n" + this.getScale()) : "";
+          this.$.baseAmount.setContent(amt);
         };
         options.error = function (error) {
           this.trigger("error", error);
         };
         this.getCurrency().toBase(amt, this.getEffective(), options);
-        amt = amt || amt === 0 ? Globalize.format(amt, "n" + this.getScale()) : "";
       }
-      this.$.baseAmount.setContent(amt);
     },
 
     /**
