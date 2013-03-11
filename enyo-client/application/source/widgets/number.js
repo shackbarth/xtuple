@@ -88,11 +88,10 @@ regexp:true, undef:true, trailing:true, white:true */
      */
     create: function () {
       this.inherited(arguments);
+      this.$.baseLabel.setContent(XT.baseCurrency().get('abbreviation'));
       // the currency picker may be disabled or hidden on creation in certain situations
       this.$.picker.setDisabled(this.getCurrencyDisabled());
       this.$.picker.setShowing(this.getCurrencyShowing());
-      // only show the base panel if there is an effective date AND the currency doesn't match the base
-      this.setBasePanelShowing();
     },
     /**
       Returns the published effective value.
@@ -143,22 +142,20 @@ regexp:true, undef:true, trailing:true, white:true */
      */
     setBasePanelShowing: function () {
       var showing = _.isDate(this.getEffective()) && this.getCurrency() && !this.getCurrency().get("isBase");
-      this.$.basePanel.setShowing(showing);
       if (showing) {
-        this.$.baseLabel.setContent(XT.baseCurrency().get('abbreviation'));
         this.setBaseAmount(this.getAmount());
       }
+      this.$.basePanel.setShowing(showing);
     },
 
     setBaseAmount: function (value) {
-      var options = {}, amt = value, that = this;
-      if (amt) {
+      var options = {}, that = this;
+      if (value || value === 0) {
         options.success = function (basePrice) {
-          amt = basePrice;
-          amt = amt || amt === 0 ? Globalize.format(amt, "n" + that.getScale()) : "";
+          var amt = basePrice || basePrice === 0 ? Globalize.format(basePrice, "n" + that.getScale()) : "";
           that.$.baseAmount.setContent(amt);
         };
-        that.getCurrency().toBase(amt, that.getEffective(), options);
+        that.getCurrency().toBase(value, that.getEffective(), options);
       }
     },
 
