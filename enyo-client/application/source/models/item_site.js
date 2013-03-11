@@ -44,7 +44,14 @@ white:true*/
 
     defaults: {
       isActive: true
-    }
+    },
+
+    requiredAttributes: [
+      "id",
+      "number",
+      "plannerCode",
+      "costCategory"
+    ]
 
   });
 
