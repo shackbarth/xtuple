@@ -122,16 +122,19 @@ white:true*/
       XM.Document.prototype.initialize.apply(this, arguments);
       this.freightDetail = [];
       this.freightTaxDetail = [];
+      this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
+      this.on('add:lineItems remove:lineItems change:miscCharge', this.calculateTotals);
       this.on('change:customer', this.customerDidChange);
       this.on('change:freight', this.freightDidChange);
       this.on('change:shipto', this.shiptoDidChange);
+      this.on('change:scheduleDate', this.scheduleDateDidChange);
       this.on('change:shipVia', this.calculateFreight);
       this.on('change:taxZone', this.recalculateTaxes);
       this.on('change:site', this.siteDidChange);
-      this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
-      this.on('add:lineItems remove:lineItems change:miscCharge',
-        this.calculateTotals);
       this.on(this.shipAddressEvents, this.shiptoAddressDidChange);
+      if (XT.session.settings.get("soPriceEffective") === "ScheduleDate") {
+        this.on('change:scheduleDate', this.recalculatePrices);
+      }
     },
 
     /**
@@ -297,7 +300,7 @@ white:true*/
             scheduleDate = lineSchedDate;
           }
         });
-        this.set("scheduleDate", scheduleDate);
+        this.set("scheduleDate", scheduleDate, {silent: true});
       }
       return this;
     },
