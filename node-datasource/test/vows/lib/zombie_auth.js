@@ -98,7 +98,7 @@ Simplest possible usage:
               XM = browser.window.XM;
               XT = browser.window.XT;
               XV = browser.window.XV;
-              
+
               //TODO: improve error reporting
               XT.log = function () {
                 //console.log(JSON.stringify(arguments));
