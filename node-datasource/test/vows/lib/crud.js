@@ -158,6 +158,8 @@ var _ = require("underscore"),
               clearTimeout(timeoutId);
               model.off('statusChange', callback);
               that.callback(null, data);
+            } else if (status === K.ERROR) {
+              that.callback(data.model.lastError);
             }
           };
         model.on('statusChange', callback);
@@ -170,6 +172,7 @@ var _ = require("underscore"),
         }, exports.waitTime);
       },
       'Status is `DESTROYED_CLEAN`': function (data) {
+        console.log(arguments);
         assert.equal(data.model.getStatusString(), 'DESTROYED_CLEAN');
       }
     };

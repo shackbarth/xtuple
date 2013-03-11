@@ -15,8 +15,8 @@ var XVOWS = XVOWS || {};
   var data = {};
 
   data.createHash = {
-    number: "TESTCONTACT",
-    address: 3
+    firstName: "Michael",
+    primaryEmail: "modonnell@xtuple.com"
   };
 
   data.updateHash = {
@@ -42,6 +42,7 @@ var XVOWS = XVOWS || {};
       '-> Set values': {
         topic: function (data) {
           data.model.set(data.createHash);
+          data.model.unset('address'); //because asynchronus nonsense
           return data;
         },
         'Last Error is null': function (data) {
