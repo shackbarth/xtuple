@@ -101,8 +101,6 @@ var XVOWS = XVOWS || {};
         assert.isNull(error);
         assert.equal(topic.length, 64);
       }
-
-
     }
 
   }).addBatch({
@@ -128,8 +126,60 @@ var XVOWS = XVOWS || {};
         assert.isNull(error);
         assert.isTrue(topic.length < 64);
       }
+    }
 
+  }).addBatch({
+    'We can create a new collection and run a filtered fetch for one query': {
+      topic: function () {
+        var that = this,
+          coll = new XM.ItemSiteRelationCollection(),
+          success = function (data) {
+            that.callback(null, data);
+          },
+          error = function (error) {
+            console.log("error!", arguments);
+            that.callback(error);
+          };
+        coll.bespokeFilter = {
+          customerId: 97
+        };
 
+        var query = {"orderBy":[{"attribute":"item.number"}],"parameters":[], rowOffset:0, rowLimit:1};
+        coll.fetch({query: query, success: success, error: error});
+      },
+      'we get back an itemsite': function (error, topic) {
+        assert.isNull(error);
+        assert.equal(topic.length, 1);
+        assert.equal(topic[0].site.id, 37);
+      }
+    }
+  }).addBatch({
+    'We can create a new collection and run a filtered fetch for one query with a default site': {
+      topic: function () {
+        var that = this,
+          coll = new XM.ItemSiteRelationCollection(),
+          success = function (data) {
+            that.callback(null, data);
+          },
+          error = function (error) {
+            console.log("error!", arguments);
+            that.callback(error);
+          };
+        coll.bespokeFilter = {
+          customerId: 97
+        };
+        coll.defaultSite = {
+          id: 35
+        };
+
+        var query = {"orderBy":[{"attribute":"item.number"}],"parameters":[], rowOffset:0, rowLimit:1};
+        coll.fetch({query: query, success: success, error: error});
+      },
+      'we get back an itemsite with the default site first': function (error, topic) {
+        assert.isNull(error);
+        assert.equal(topic.length, 1);
+        assert.equal(topic[0].site.id, 35);
+      }
     }
 
   }).export(module);
