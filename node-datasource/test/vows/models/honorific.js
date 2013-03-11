@@ -53,12 +53,6 @@ var XVOWS = XVOWS || {};
     'READ': {
       topic: function () {
         return data;
-      },
-      'ID is a number': function (data) {
-        assert.isNumber(data.model.id);
-      },
-      'Code is `Herr`': function (data) {
-        assert.equal(data.model.get('code'), data.createHash.code);
       }
     }
   }).addBatch({
@@ -68,9 +62,6 @@ var XVOWS = XVOWS || {};
           data.model.set(data.updateHash);
           data.updated = true;
           return data;
-        },
-        'Code is `Dame`': function (data) {
-          assert.equal(data.model.get('code'), data.updateHash.code);
         },
         '-> Commit': crud.save(data)
       }
