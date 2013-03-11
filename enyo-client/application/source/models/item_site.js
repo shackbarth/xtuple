@@ -51,12 +51,7 @@ white:true*/
       "number",
       "plannerCode",
       "costCategory"
-    ],
-
-    // currently only used for ItemSiteRelation and ItemSiteListItem
-    // I put it in here for testing
-    fetch: bespokeFetch
-
+    ]
 
   });
 
