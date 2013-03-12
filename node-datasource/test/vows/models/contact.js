@@ -15,25 +15,26 @@ var XVOWS = XVOWS || {};
   var data = {};
 
   data.createHash = {
-    code: "Herr"
+    firstName: "Michael",
+    primaryEmail: "modonnell@xtuple.com"
   };
 
   data.updateHash = {
-    code: "Dame"
+    firstName: "Mike"
   };
 
-  vows.describe('XM.Address CRUD test').addBatch({
+  vows.describe('XM.Contact CRUD test').addBatch({
     'INITIALIZE ': {
       topic: function () {
         var that = this,
           callback = function () {
-            data.model = new XM.Address();
+            data.model = new XM.Contact();
             that.callback(null, data);
           };
         zombieAuth.loadApp(callback);
       },
-      'The record type is XM.Address': function (data) {
-        assert.equal(data.model.recordType, "XM.Address");
+      'The record type is XM.Contact': function (data) {
+        assert.equal(data.model.recordType, "XM.Contact");
       }
     }
   }).addBatch({
@@ -41,6 +42,7 @@ var XVOWS = XVOWS || {};
       '-> Set values': {
         topic: function (data) {
           data.model.set(data.createHash);
+          data.model.unset('address'); //because asynchronus nonsense
           return data;
         },
         'Last Error is null': function (data) {
@@ -57,8 +59,8 @@ var XVOWS = XVOWS || {};
       'ID is a number': function (data) {
         assert.isNumber(data.model.id);
       },
-      'Code is `Herr`': function (data) {
-        assert.equal(data.model.get('code'), data.createHash.code);
+      'Five equals five.': function (data) {
+        assert.equal(5, 5);
       }
     }
   }).addBatch({
@@ -68,8 +70,8 @@ var XVOWS = XVOWS || {};
           data.model.set(data.updateHash);
           return data;
         },
-        'Code is `Dame`': function (data) {
-          assert.equal(data.model.get('code'), data.updateHash.code);
+        'Name is `Mike`': function (data) {
+          assert.equal(data.model.get("name"), data.updateHash.name);
         },
         '-> Commit': crud.save(data)
       }

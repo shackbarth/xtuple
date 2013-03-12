@@ -15,27 +15,25 @@ var XVOWS = XVOWS || {};
   var data = {};
 
   data.createHash = {
-    name: "Outer Space",
-    abbreviation: "OS",
-    currencyAbbreviation: "USD"
+    line1: "123 Main St"
   };
 
   data.updateHash = {
-    abbreviation: "XY"
+    line1: "456 Main St"
   };
 
-  vows.describe('XM.Country CRUD test').addBatch({
+  vows.describe('XM.Address CRUD test').addBatch({
     'INITIALIZE ': {
       topic: function () {
         var that = this,
           callback = function () {
-            data.model = new XM.Country();
+            data.model = new XM.Address();
             that.callback(null, data);
           };
         zombieAuth.loadApp(callback);
       },
-      'The record type is XM.Country': function (data) {
-        assert.equal(data.model.recordType, "XM.Country");
+      'The record type is XM.Address': function (data) {
+        assert.equal(data.model.recordType, "XM.Address");
       }
     }
   }).addBatch({
