@@ -112,15 +112,27 @@ select xt.install_js('XM','item','xtuple', $$
   }
 
   /**
+    Returns whether a unit of measure is fractional for a particular item.
+    
+    @param {Number} item id
+    @param {Number} unit id
+    @returns {Boolean}
+  */
+  XM.Item.unitFractional = function(itemId, unitId) {
+    var sql = 'select itemuomfractionalbyuom($1, $2) as "fractional"';
+    return plv8.execute(sql, [itemId, nitId])[0].fractional;
+  }
+
+  /**
     Returns a unit of measure conversion ratio for a given item, from unit and to unit.
     
     @param {Number} item id
     @param {Number} from unit id
     @param {Number} to unit id
-    @returns {Number} conversion ratio
+    @returns {Number}
   */
   XM.Item.unitToUnitRatio = function(itemId, fromUnitId, toUnitId) {
-    var sql = 'select itemUomToUomRatio($1, $2, $3) as "ratio"';
+    var sql = 'select itemuomtouomratio($1, $2, $3) as "ratio"';
     return plv8.execute(sql, [itemId, fromUnitId, toUnitId])[0].ratio;
   }
   
