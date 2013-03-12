@@ -36,17 +36,17 @@ var XVOWS = XVOWS || {};
             var fetchOptions = {};
             fetchOptions.id = 97; //must be an actual customer or prospect ID
             fetchOptions.success = function (resp) {
-              data.model.set('customer', data.model.custProspRel);
+              that.callback(null, data);
             };
             fetchOptions.error = function (resp) {
-              assert.isFalse('Customer/Prospect Relation fetch failed.  Please use an actual cust/prosp ID');
+              that.callback("Could not fetch CustomerProspectRelation.  Please use an actual cust/prosp ID");
             };
             data.model.custProspRel.fetch(fetchOptions);
-            that.callback(null, data);
           };
-        zombieAuth.loadApp(callback);
+        zombieAuth.loadApp({callback: callback, verbose: true});
       },
-      'The record type is XM.Quote': function (data) {
+      'The record type is XM.Quote': function (error, data) {
+        assert.isNull(error);
         assert.equal(data.model.recordType, "XM.Quote");
       }
     }
@@ -54,6 +54,7 @@ var XVOWS = XVOWS || {};
     'CREATE ': crud.create(data, {
       '-> Set values': {
         topic: function (data) {
+          data.model.set('customer', data.model.custProspRel);
           data.model.set(data.createHash);
           return data;
         },
