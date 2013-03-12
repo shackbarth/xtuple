@@ -759,7 +759,7 @@ white:true*/
       _.each(this.get('lineItems').models, function (lineItem) {
         var extPrice = lineItem.get('extendedPrice') || 0,
           quantity = lineItem.get("quantity") || 0,
-          standardCost = lineItem.get("standardCost") || 0,
+          standardCost = lineItem.getValue("itemSite.item.standardCost") || 0,
           item = lineItem.getValue("itemSite.item"),
           prodWeight = item ? item.get("productWeight") : 0,
           packWeight = item ? item.get("packageWeight") : 0,
@@ -885,14 +885,13 @@ white:true*/
       this.on('change:quantity', this.calculatePrice);
       this.on('change:quantity change:price', this.calculateExtendedPrice);
       this.on('change:price', this.calculatePercentages);
-      this.on('change:price change:standardCost', this.calculateProfit);
       this.on('change:quote', this.parentDidChange);
       this.on('change:taxType change:extendedPrice', this.calculateTax);
       this.on('change:quantity', this.quantityDidChange);
       this.on('change:quantityUnit change:priceUnit', this.unitDidChange);
       this.on('change:scheduleDate', this.scheduleDateDidChange);
-      this.on('change:extendedPrice change:standardCost change:itemSite',
-        this.recalculateParent());
+      this.on('change:extendedPrice', this.recalculateParent);
+      this.on('change:extendedPrice', this.calculateProfit);
       this.on('statusChange', this.statusDidChange);
 
       // Only recalculate price on date changes if pricing is date driven
@@ -916,12 +915,10 @@ white:true*/
     },
 
     readOnlyAttributes: [
-      "averageCost",
       "customerPrice",
       "extendedPrice",
       "inventoryQuantityUnitRatio",
       "lineNumber",
-      "listCost",
       "listCostMarkup",
       "listPrice",
       "listPriceDiscount",
@@ -929,7 +926,6 @@ white:true*/
       "priceUnitRatio",
       "profit",
       "site",
-      "standardCost",
       "tax"
     ],
 
@@ -983,7 +979,7 @@ white:true*/
         var K = that.getClass(),
           priceMode = that.get("priceMode"),
           customerPrice = that.get("customerPrice"),
-          listCost = that.get("listCost"),
+          listCost = that.get("itemSite.item.listCost"),
           listPrice = that.get("listPrice"),
           attrs = {
             discount: undefined,
@@ -1077,11 +1073,11 @@ white:true*/
     },
 
     calculateProfit: function () {
-      var standardCost = this.get("standardCost"),
+      var standardCost = this.getValue("itemSite.item.standardCost"),
         price = this.get("price"),
         parent = this.getParent(),
-        effective = this.get(parent.documentDateKey),
-        currency = parent.get("currency"),
+        effective = parent ? parent.get(parent.documentDateKey) : false,
+        currency = parent ? parent.get("currency") : false,
         that = this,
         options = {};
 
@@ -1090,7 +1086,7 @@ white:true*/
       if (price) {
         if (standardCost) {
           options.success = function (value) {
-            that.set("profit", (value - standardCost) / standardCost);
+            that.set("profit", XT.toPercent((value - standardCost) / standardCost));
           };
           currency.toBase(price, effective, options);
         } else {
@@ -1165,7 +1161,6 @@ white:true*/
     itemSiteDidChange: function () {
       var parent = this.getParent(),
         taxZone = parent ? parent.get("taxZone") : undefined,
-        averageCost = this.getValue("itemSite.averageCost"),
         item = this.getValue("itemSite.item"),
         characteristics = this.get("characteristics"),
         that = this,
@@ -1195,9 +1190,6 @@ white:true*/
       this.unset("priceUnit");
       this.unset("priceUnitRatio");
       this.unset("taxType");
-      this.unset("averageCost");
-      this.unset("standardCost");
-      this.unset("listCost");
       this.sellingUnits.reset();
 
       // Destroy old characteristics
@@ -1212,10 +1204,6 @@ white:true*/
       this.set("quantityUnit", item.get("inventoryUnit"));
       this.set("priceUnit", item.get("priceUnit"));
       this.set("priceUnitRatio", item.get("priceUnitRatio"));
-      this.set("averageCost", averageCost);
-      this.set("standardCost", item.get("standardCost"));
-      this.set("listCost", item.get("listPrice"));
-      this.set("listPrice", item.get("listCost"));
 
       // Fetch and update selling units
       unitOptions.success = function (resp) {
@@ -1273,6 +1261,8 @@ white:true*/
       });
 
       this.calculatePrice();
+      this.calculateProfit();
+      this.recalculateParent();
     },
 
     parentDidChange: function () {
