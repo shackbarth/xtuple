@@ -187,11 +187,12 @@ trailing:true white:true*/
         {kind: "XV.InputWidget", attr: "customerPartNumber"},
         {kind: "XV.NumberWidget", attr: "quantity"},
         {kind: "XV.UnitWidget", attr: "quantityUnit"},
-        {kind: "XV.PercentWidget", attr: "discount"},
-        {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "currency"},
-          label: "_unitPrice".loc(), currencyDisabled: true, effective: new Date()},
+        {kind: "XV.PercentWidget", attr: "listPriceDiscount"},
+        {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "quote.currency"},
+          label: "_unitPrice".loc(), currencyDisabled: true, effective: "quote.quoteDate"},
         {kind: "XV.UnitWidget", attr: "priceUnit"},
-        {kind: "XV.NumberWidget", attr: "extendedPrice"},
+        {kind: "XV.MoneyWidget", attr: {amount: "extendedPrice", currency: "quote.currency"},
+          label: "_extendedPrice".loc(), currencyDisabled: true, effective: "quote.quoteDate"},
         {kind: "XV.DateWidget", attr: "scheduleDate"},
         {kind: "XV.DateWidget", attr: "promiseDate"},
         {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
@@ -204,6 +205,9 @@ trailing:true white:true*/
     name: "XV.QuoteLineItemSummary",
     kind: "XV.RelationsEditor",
     style: "margin-top: 10px",
+    published: {
+      quoteDate: null
+    },
     components: [
       {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
       {kind: "XV.ScrollableGroupbox", name: "totalGroup",
@@ -214,13 +218,13 @@ trailing:true white:true*/
         // Charge Sales Account - needs GL
         {kind: "XV.NumberWidget", attr: "freightWeight"},
         {kind: "XV.MoneyWidget", attr: {amount: "subtotal", currency: "currency"},
-          label: "_subtotal".loc(), currencyShowing: false, effective: new Date()},
+          label: "_subtotal".loc(), currencyShowing: false, effective: "quoteDate"},
         // {kind: "XV.NumberWidget", attr: "miscCharge"}, - needs GL
         {kind: "XV.NumberWidget", attr: "freight", label: "_freight".loc()},
         {kind: "XV.MoneyWidget", attr: {amount: "taxTotal", currency: "currency"},
-          label: "_tax".loc(), currencyShowing: false, effective: new Date()},
+          label: "_tax".loc(), currencyShowing: false, effective: "quoteDate"},
         {kind: "XV.MoneyWidget", attr: {amount: "total", currency: "currency"},
-          label: "_total".loc(), currencyShowing: false, effective: new Date()}
+          label: "_total".loc(), currencyShowing: false, effective: "quoteDate"}
       ]}
     ]
   });
@@ -257,8 +261,7 @@ trailing:true white:true*/
     Set the current model into the List Relation and the Summary Editor Panel
     */
     valueChanged: function () {
-      var value = this.getValue();
-      this.$.list.setValue(value);
+      this.inherited(arguments);
       this.summary.setValue(this.getValue().quote);
       // change the styling of the last button to make room for the new button
       this.$.doneButton.setClasses("xv-groupbox-button-center");

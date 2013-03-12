@@ -175,6 +175,8 @@ var _ = require("underscore"),
               clearTimeout(timeoutId);
               model.off('statusChange', callback);
               that.callback(null, data);
+            } else if (status === K.ERROR) {
+              that.callback(data.model.lastError);
             }
           };
         model.on('statusChange', callback);
