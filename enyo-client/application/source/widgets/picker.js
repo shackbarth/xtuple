@@ -408,6 +408,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.SitePicker",
     kind: "XV.PickerWidget",
+    nameAttribute: "code",
     collection: "XM.sites",
     orderBy: [
       {attribute: 'code'}
@@ -422,6 +423,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.SaleTypePicker",
     kind: "XV.PickerWidget",
     collection: "XM.saleTypes",
+    nameAttribute: "code",
     orderBy: [
       {attribute: 'name'}
     ]

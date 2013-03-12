@@ -82,5 +82,5 @@ var XVOWS = XVOWS || {};
   }).addBatch({
     'DESTROY': crud.destroy(data)
   }).export(module);
-  
+
 }());

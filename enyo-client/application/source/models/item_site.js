@@ -11,8 +11,7 @@ white:true*/
 
     @extends XM.Document
   */
-  XM.CostCategory = XM.Document.extend({
-    /** @scope XM.CostCategory.prototype */
+  XM.CostCategory = XM.Document.extend(/** @lends XM.CostCategory.prototype */{
 
     recordType: 'XM.CostCategory',
 
@@ -25,8 +24,7 @@ white:true*/
 
     @extends XM.Document
   */
-  XM.PlannerCode = XM.Document.extend({
-    /** @scope XM.PlannerCode.prototype */
+  XM.PlannerCode = XM.Document.extend(/** @lends XM.PlannerCode.prototype */{
 
     recordType: 'XM.PlannerCode',
 
@@ -40,24 +38,29 @@ white:true*/
 
     @extends XM.Document
   */
-  XM.ItemSite = XM.Document.extend({
-    /** @scope XM.ItemSite.prototype */
+  XM.ItemSite = XM.Document.extend(/** @lends XM.ItemSite.prototype */{
 
     recordType: 'XM.ItemSite',
 
     defaults: {
       isActive: true
-    }
+    },
+
+    requiredAttributes: [
+      "id",
+      "number",
+      "plannerCode",
+      "costCategory"
+    ]
 
   });
-  
+
   /**
     @class
 
     @extends XM.Comments
   */
-  XM.ItemSiteComment = XM.Comment.extend({
-    /** @scope XM.ItemSiteComment.prototype */
+  XM.ItemSiteComment = XM.Comment.extend(/** @lends XM.ItemSiteComment.prototype */{
 
     recordType: 'XM.ItemSiteComment',
 
@@ -70,13 +73,36 @@ white:true*/
 
     @extends XM.Info
   */
-  XM.ItemSiteRelation = XM.Info.extend({
-    /** @scope XM.ItemSiteRelation.prototype */
+  XM.ItemSiteRelation = XM.Info.extend(/** @lends XM.ItemSiteRelation.prototype */{
 
     recordType: 'XM.ItemSiteRelation',
 
     editableModel: 'XM.ItemSite'
 
+  });
+
+
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.ItemSiteListItem = XM.Info.extend(/** @lends XM.ItemSiteListItem.prototype */{
+
+    recordType: 'XM.ItemSiteListItem',
+
+    editableModel: 'XM.ItemSite'
+
+  });
+
+  _.extend(XM.ItemSiteListItem, /** @lends XM.ItemSiteListItem# */{
+    /**
+      Item site has no searchable attributes by default, so we have to provide some, or
+      errors occur (e.g. the search screen)
+     */
+    getSearchableAttributes: function () {
+      return ["item.number", "site.code"];
+    }
   });
 
   // ..........................................................
@@ -88,8 +114,7 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.CostCategoryCollection = XM.Collection.extend({
-    /** @scope XM.CostCategoryCollection.prototype */
+  XM.CostCategoryCollection = XM.Collection.extend(/** @lends XM.CostCategoryCollection.prototype */{
 
     model: XM.CostCategory
 
@@ -100,8 +125,7 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.PlannerCodeCollection = XM.Collection.extend({
-    /** @scope XM.PlannerCodeCollection.prototype */
+  XM.PlannerCodeCollection = XM.Collection.extend(/** @lends XM.PlannerCodeCollection.prototype */{
 
     model: XM.PlannerCode
 
@@ -112,10 +136,64 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.ItemSiteCollection = XM.Collection.extend({
-    /** @scope XM.ItemSiteCollection.prototype */
+  XM.ItemSiteCollection = XM.Collection.extend(/** @lends XM.ItemSiteCollection.prototype */{
 
     model: XM.ItemSite
+
+  });
+
+  /**
+    If we have a special extra filter enabled, we need to perform a dispatch
+    instead of a fetch to get the data we need. This is because we only want
+    to show items that are associated with particular customers, shiptos,
+    or effective dates.
+   */
+  var bespokeFetch = function (options) {
+    var that = this,
+      success;
+
+    if (!this.bespokeFilter || this.bespokeFilter === {}) {
+      // just do a normal fetch
+      XM.Collection.prototype.fetch.call(this, options);
+    } else {
+      // we have to do a special dispatch to fetch the data.
+
+      // because it's a dipatch call and not a fetch, the collection doesn't get
+      // updated automatically. We have to do that by hand on success.
+      success = options.success;
+      options.success = function (data) {
+        that.reset(data);
+
+        if (success) {
+          success(data);
+        }
+      };
+
+      XT.dataSource.dispatch("XM.Item", "availableItems",
+        [options.query,
+          this.bespokeFilter.customerId,
+          this.bespokeFilter.shiptoId,
+          this.bespokeFilter.effectiveDate || new Date(),
+          this.defaultSite && this.defaultSite.id],
+        options);
+    }
+  }
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.ItemSiteRelationCollection = XM.Collection.extend(/** @lends XM.ItemSiteRelationCollection.prototype */{
+
+    model: XM.ItemSiteRelation,
+
+    fetch: bespokeFetch,
+
+    comparator: function (itemSite) {
+      var defaultSiteId = this.defaultSite ? this.defaultSite.id : -5;
+      var defaultSiteOrder = itemSite.getValue("site.id") === defaultSiteId ? 'aa' : 'zz';
+      return itemSite.getValue("item.number") + defaultSiteOrder + itemSite.getValue("site.code");
+    }
 
   });
 
@@ -124,10 +202,11 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.ItemSiteListItemCollection = XM.Collection.extend({
-    /** @scope XM.ItemSiteListItemCollection.prototype */
+  XM.ItemSiteListItemCollection = XM.Collection.extend(/** @lends XM.ItemSiteListItemCollection.prototype */{
 
-    model: XM.ItemSiteListItem
+    model: XM.ItemSiteListItem,
+
+    fetch: bespokeFetch
 
   });
 

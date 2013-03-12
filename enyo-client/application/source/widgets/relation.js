@@ -303,6 +303,39 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // ITEM SITE
+  //
+
+  enyo.kind({
+    name: "XV.ItemSiteWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.ItemSiteRelationCollection",
+    list: "XV.ItemSiteList",
+    published: {
+      defaultSite: null // {XM.SiteRelation}
+    },
+    keyAttribute: "item.number",
+    sidecarAttribute: "site.code",
+    nameAttribute: "site.code",
+    descripAttribute: "item.inventoryUnit.name",
+    /**
+      Make sure the collection knows about the bespoke filter,
+      because it's the collection that has to decide to use
+      a dispatch with the bespoke filter if it's there.
+     */
+    bespokeFilterChanged: function (inSender, inEvent) {
+      this._collection.bespokeFilter = this.getBespokeFilter();
+    },
+    /**
+      Make sure the collection knows about the default site,
+      because it is used to sort the results.
+     */
+    defaultSiteChanged: function (inSender, inEvent) {
+      this._collection.defaultSite = this.getDefaultSite();
+    }
+  });
+
+  // ..........................................................
   // OPPORTUNITY
   //
 
