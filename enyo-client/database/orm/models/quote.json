@@ -542,7 +542,7 @@
     "isSystem": true
   },
   {
-    "context": "xtupl",
+    "context": "xtuple",
     "nameSpace": "XM",
     "type": "QuoteAccount",
     "table": "xt.doc",
@@ -949,6 +949,13 @@
         }
       },
       {
+        "name": "basePrice",
+        "attr": {
+          "type": "Number",
+          "column": "base_price"
+        }
+      },
+      {
         "name": "customerPrice",
         "attr": {
           "type": "Number",
@@ -981,20 +988,6 @@
         "attr": {
           "type": "Date",
           "column": "quitem_promdate"
-        }
-      },
-      {
-        "name": "unitCost",
-        "attr": {
-          "type": "Number",
-          "column": "quitem_unitcost"
-        }
-      },
-      {
-        "name": "listCost",
-        "attr": {
-          "type": "Number",
-          "column": "list_cost"
         }
       },
       {
