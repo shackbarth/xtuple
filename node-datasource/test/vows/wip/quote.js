@@ -16,7 +16,6 @@ var XVOWS = XVOWS || {};
 
   data.createHash = {
     calculateFreight: false,
-    customer: 97,
     quoteDate: new Date(),
     salesRep: 29,
     terms: 42
@@ -32,6 +31,17 @@ var XVOWS = XVOWS || {};
         var that = this,
           callback = function () {
             data.model = new XM.Quote();
+            //need to create and fetch a CustomerProspectRelation
+            data.model.custProspRel = new XM.CustomerProspectRelation();
+            var fetchOptions = {};
+            fetchOptions.id = 97; //must be an actual customer or prospect ID
+            fetchOptions.success = function (resp) {
+              data.model.set('customer', data.model.custProspRel);
+            };
+            fetchOptions.error = function (resp) {
+              assert.isFalse('Customer/Prospect Relation fetch failed.  Please use an actual cust/prosp ID');
+            };
+            data.model.custProspRel.fetch(fetchOptions);
             that.callback(null, data);
           };
         zombieAuth.loadApp(callback);
