@@ -357,6 +357,21 @@ white:true*/
       XM.plannerCodes.fetch(options);
     }
   });
+  
+  XT.StartupTasks.push({
+    taskName: "loadSaleTypes",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      options.query = {};
+      options.query.orderBy = [
+        {attribute: 'code'}
+      ];
+      XM.saleTypes = new XM.SaleTypeCollection();
+      XM.saleTypes.fetch(options);
+    }
+  });
 
   XT.StartupTasks.push({
     taskName: "loadSites",
