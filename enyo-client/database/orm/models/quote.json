@@ -984,27 +984,6 @@
         }
       },
       {
-        "name": "standardCost",
-        "attr": {
-          "type": "Number",
-          "column": "std_cost"
-        }
-      },
-      {
-        "name": "averageCost",
-        "attr": {
-          "type": "Number",
-          "column": "avg_cost"
-        }
-      },
-      {
-        "name": "listCost",
-        "attr": {
-          "type": "Number",
-          "column": "list_cost"
-        }
-      },
-      {
         "name": "listCostMarkup",
         "attr": {
           "type": "Number",
