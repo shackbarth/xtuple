@@ -3,10 +3,10 @@ regexp:true, undef:true, trailing:true, white:true */
 /*global XT:true, XV:true, Globalize:true, enyo:true, _:true */
 
 (function () {
-  
-// ..........................................................
-// HONORIFIC
-//
+
+  // ..........................................................
+  // HONORIFIC
+  //
 
   /**
     @class A combobox backed by the XM.honorifics collection.
@@ -21,7 +21,17 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.honorifics"
   });
 
-  
+  // ..........................................................
+  // QUOTE LINE CHARACTERISTIC
+  //
+
+  enyo.kind({
+    name: "XV.QuoteLineCharacteristicCombobox",
+    kind: "XV.ComboboxWidget",
+    collection: "XM.shipVias",
+    keyAttribute: "value"
+  });
+
   // ..........................................................
   // SHIP VIA
   //
@@ -33,5 +43,5 @@ regexp:true, undef:true, trailing:true, white:true */
     label: "_shipVia".loc(),
     keyAttribute: "code"
   });
-  
+
 }());
