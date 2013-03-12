@@ -90,13 +90,15 @@ white:true*/
     name: "XV.QuoteLineCharacteristicItem",
     kind: "XV.CharacteristicItem",
     components: [
-      {name: "label"},
-      {kind: "XV.QuoteLineCharacteristicCombobox", name: "combobox", attr: "value", showLabel: false}
+      {kind: "XV.QuoteLineCharacteristicCombobox", name: "combobox", attr: "value", showLabel: false},
+      {name: "price"}
     ],
     valueChanged: function (inSender, inEvent) {
       var model = this.getValue(),
         value = model.get('value'),
-        itemCharacteristics = model.collection.quoteLine.getValue("itemSite.item.characteristics"),
+        quoteLine = model.collection.quoteLine,
+        itemCharacteristics = quoteLine.getValue("itemSite.item.characteristics"),
+        itemIsSold = quoteLine.getValue("itemSite.item.isSold"),
         //values = _.map(itemCharacteristics.models, function (chr) {return chr.get("value");}),
         characteristic = model.getValue('characteristic'),
         //options = characteristic.getValue('options'),
@@ -106,6 +108,11 @@ white:true*/
 
       this.$.combobox.setLabel(characteristicName);
       this.$.combobox.setValue(value, {silent: true});
+
+      this.$.price.setShowing(itemIsSold);
+      if (itemIsSold) {
+        this.$.price.setContent(model.get("price"));
+      }
     }
   });
 
