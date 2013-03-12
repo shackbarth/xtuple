@@ -425,7 +425,7 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.saleTypes",
     nameAttribute: "code",
     orderBy: [
-      {attribute: 'name'}
+      {attribute: 'code'}
     ]
   });
 
