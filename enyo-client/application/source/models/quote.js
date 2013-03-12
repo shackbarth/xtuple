@@ -602,14 +602,14 @@ white:true*/
 
             // If all items have been checked, proceed
             if (!counter) {
-              
+
               // First check for mix of items that can be rescheduled and not
               // If partial, then ask if they only want to reschedule partial
               if (results.length && results.length !== lineItems.length) {
                 message = "_partialReschedule".loc() + "_continue?".loc();
                 options.callback = function (answer) {
                   if (answer) { reschedule(results); }
-                  
+
                   // Recalculate the date because some lines may not have changed
                   that.calculateScheduleDate();
                 };
@@ -878,7 +878,7 @@ white:true*/
       var settings = XT.session.settings,
         privileges = XT.session.privileges;
       this.taxDetail = [];
-      this._updatePrice = true;
+      this._updatePrice = true; // TODO: This probably is un-needed.
       this._isFractional = false;
       this.on('change:discount', this.discountDidChange);
       this.on("change:itemSite", this.itemSiteDidChange);
@@ -898,7 +898,7 @@ white:true*/
       if (settings.get("soPriceEffective") === "ScheduleDate") {
         this.on('change:scheduleDate', this.calculatePrice);
       }
-      
+
       //  Disable the Discount Percent stuff if we don't allow them
       if (!settings.get("AllowDiscounts") &&
         !privileges.get("OverridePrice")) {
@@ -1144,16 +1144,30 @@ white:true*/
     */
     discountDidChange: function () {
       var K = this.getClass(),
+        isConfigured = this.getValue("itemSite.item.isConfigured"),
+        characteristics = this.get("characteristics").models,
         discount = this.get("discount"),
         customerPrice = this.get("customerPrice"),
-        sense = this.get("priceMode") === K.MARKUP_MODE ? -1 : 1;
+        sense = this.get("priceMode") === K.MARKUP_MODE ? -1 : 1,
+        scale = XT.SALES_PRICE_SCALE,
+        charPrices = 0,
+        discounted,
+        price;
 
       if (this.isNotReady()) { return; }
 
       if (!customerPrice) {
         this.unset("discount");
       } else if (this._updatePrice) {
-        this.set("price", customerPrice - customerPrice * discount * sense);
+        discounted = customerPrice * discount * sense;
+        price = XT.math.subtract(customerPrice, discounted, scale);
+        if (isConfigured) {
+          _.each(characteristics, function (char) {
+            charPrices += char.get("price");
+          });
+        }
+        this.set("price", price);
+        this.set("basePrice", XT.math.subtract(price, charPrices, scale));
       }
       return this;
     },
@@ -1307,9 +1321,9 @@ white:true*/
         quantityUnitRatio = this.get("quantityUnitRatio"),
         itemIsNotFractional = !this.get("itemSite.item.isFractional"),
         scale = this._isFractional ? 2 : 0;
-        
+
       if (this.isNotReady()) { return; }
-        
+
       // Check inventory quantity against conversion fractional setting
       // If invalid, notify user and update to a valid quantity
       if (itemIsNotFractional) {
@@ -1370,20 +1384,20 @@ white:true*/
       this.quantityDidChange();
       this.calculatePrice(true);
     },
-    
+
     validateSave: function () {
       var quantity = this.get("quantity");
-            
+
       // Check quantity
       if ((quantity || 0) <= 0) {
         return XT.Error.clone('xt2013');
       }
-      
+
       // Check order quantity against fractional setting
       if (!this._isFractional && Math.round(quantity) !== quantity) {
         return XT.Error.clone('xt2014');
       }
-      
+
     },
 
     /** @private
@@ -1464,6 +1478,7 @@ white:true*/
                        resp.type === "D" ||
                        resp.type === "P") ? K.DISCOUNT_MODE : K.MARKUP_MODE;
           that.set("priceMode", priceMode);
+          that.set("basePrice", resp.price);
           prices.push(resp.price);
           if (!counter) { setPrice(); }
         }

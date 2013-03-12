@@ -3,6 +3,7 @@ drop view if exists xt.quiteminfo cascade;
 create or replace view xt.quiteminfo as
 
   select quitem.*,
+    xt.quote_line_base_price(quitem) as base_price,
     xt.quote_line_list_cost_markup(quitem) as list_cost_markup,
     xt.quote_line_list_price(quitem) as list_price,
     xt.quote_line_list_price_discount(quitem) as list_price_discount,
