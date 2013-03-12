@@ -22,6 +22,7 @@
 \i xt/functions/install_guiscript.sql;
 \i xt/functions/mergecrmaccts.sql;
 \i xt/functions/pg_advisory_unlock.sql;
+\i xt/functions/quote_line_base_price.sql;
 \i xt/functions/quote_line_customer_discount.sql;
 \i xt/functions/quote_line_list_cost_markup.sql;
 \i xt/functions/quote_line_extended_price.sql;
