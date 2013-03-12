@@ -1155,6 +1155,13 @@
           "type": "ShipZone",
           "column": "shipto_shipzone_id"
         }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "shipto_shipcomments"
+        }
       }
     ],
     "isSystem": true

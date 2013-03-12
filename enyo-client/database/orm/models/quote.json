@@ -542,7 +542,7 @@
     "isSystem": true
   },
   {
-    "context": "xtupl",
+    "context": "xtuple",
     "nameSpace": "XM",
     "type": "QuoteAccount",
     "table": "xt.doc",
@@ -984,10 +984,17 @@
         }
       },
       {
-        "name": "unitCost",
+        "name": "standardCost",
         "attr": {
           "type": "Number",
-          "column": "quitem_unitcost"
+          "column": "std_cost"
+        }
+      },
+      {
+        "name": "averageCost",
+        "attr": {
+          "type": "Number",
+          "column": "avg_cost"
         }
       },
       {

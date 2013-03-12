@@ -3,6 +3,8 @@ drop view if exists xt.quiteminfo cascade;
 create or replace view xt.quiteminfo as
 
   select quitem.*,
+    stdcost(item_id) as std_cost,
+    xt.average_cost(quitem_itemsite_id) as avg_cost,
     item_listcost as list_cost,
     xt.quote_line_list_cost_markup(quitem) as list_cost_markup,
     xt.quote_line_list_price(quitem) as list_price,
@@ -52,7 +54,7 @@ insert into quitem (
   new.quitem_itemsite_id,
   new.quitem_scheddate,
   new.quitem_qtyord,
-  new.quitem_unitcost,
+  stdcost(item_id),
   new.quitem_price,
   new.quitem_custprice,
   new.quitem_memo,
@@ -84,7 +86,6 @@ update quitem set
   quitem_linenumber=new.quitem_linenumber,
   quitem_scheddate=new.quitem_scheddate,
   quitem_qtyord=new.quitem_qtyord,
-  quitem_unitcost=new.quitem_unitcost,
   quitem_price=new.quitem_price,
   quitem_custprice=new.quitem_custprice,
   quitem_memo=new.quitem_memo,
