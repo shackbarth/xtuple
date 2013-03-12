@@ -120,6 +120,7 @@ white:true*/
     */
     initialize: function (attributes, options) {
       XM.Document.prototype.initialize.apply(this, arguments);
+      var pricePolicy = XT.session.settings.get("soPriceEffective");
       this.freightDetail = [];
       this.freightTaxDetail = [];
       this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
@@ -132,8 +133,10 @@ white:true*/
       this.on('change:taxZone', this.recalculateTaxes);
       this.on('change:site', this.siteDidChange);
       this.on(this.shipAddressEvents, this.shiptoAddressDidChange);
-      if (XT.session.settings.get("soPriceEffective") === "OrderDate") {
+      if (pricePolicy === "OrderDate") {
         this.on('change:' + this.documentDateKey, this.recalculatePrices);
+      } else if (pricePolicy === "ScheduleDate") {
+        this.requiredAttributes.push("scheduleDate");
       }
     },
 
@@ -578,7 +581,7 @@ white:true*/
 
       options.type = XM.Model.QUESTION;
 
-      // If user wants to reschedule, check whether all lines
+      // Confirm the user really wants to reschedule, then check whether all lines
       // can be updated to the requested schedule date
       options.callback = function (answer) {
         var counter = lineItems.length,
@@ -653,7 +656,8 @@ white:true*/
         commission: shipto.get("commission"),
         taxZone: shipto.get("taxZone"),
         shipZone: shipto.get("shipZone"),
-        shipVia: shipto.get("shipVia")
+        shipVia: shipto.get("shipVia"),
+        shipNotes: shipto.get("notes")
       };
       if (shiptoContact) {
         _.extend(shiptoAttrs, {
@@ -705,18 +709,11 @@ white:true*/
     },
 
     validateSave: function () {
-      var pricePolicy = XT.session.settings.get("soPriceEffective"),
-        scheduleDate = this.get("scheduleDate"),
-        customer = this.get("customer"),
+      var customer = this.get("customer"),
         shipto = this.get("shipto"),
         total = this.get("total"),
         lineItems = this.get("lineItems"),
         params = {};
-
-      if (pricePolicy === "ScheduleDate" && !scheduleDate) {
-        params.attr = "_scheduleDate".loc();
-        return XT.Error.clone('xt1004', { params: params });
-      }
 
       if (!customer.get("isFreeFormShipto") && !shipto) {
         params.attr = "_shipto".loc();
@@ -878,8 +875,11 @@ white:true*/
 
     initialize: function (attributes, options) {
       XM.Model.prototype.initialize.apply(this, arguments);
+      var settings = XT.session.settings,
+        privileges = XT.session.privileges;
       this.taxDetail = [];
       this._updatePrice = true;
+      this._isFractional = false;
       this.on('change:discount', this.discountDidChange);
       this.on("change:itemSite", this.itemSiteDidChange);
       this.on('change:quantity', this.calculatePrice);
@@ -888,6 +888,7 @@ white:true*/
       this.on('change:price change:unitCost', this.calculateProfit);
       this.on('change:quote', this.parentDidChange);
       this.on('change:taxType change:extendedPrice', this.calculateTax);
+      this.on('change:quantity', this.quantityDidChange);
       this.on('change:quantityUnit change:priceUnit', this.unitDidChange);
       this.on('change:scheduleDate', this.scheduleDateDidChange);
       this.on('change:extendedPrice change:unitCost change:itemSite',
@@ -895,8 +896,20 @@ white:true*/
       this.on('statusChange', this.statusDidChange);
 
       // Only recalculate price on date changes if pricing is date driven
-      if (XT.session.settings.get("soPriceEffective") === "ScheduleDate") {
+      if (settings.get("soPriceEffective") === "ScheduleDate") {
         this.on('change:scheduleDate', this.calculatePrice);
+      }
+      
+      //  Disable the Discount Percent stuff if we don't allow them
+      if (!settings.get("AllowDiscounts") &&
+        !privileges.get("OverridePrice")) {
+        this.setReadOnly('price');
+        this.setReadyOnl('discount');
+      }
+
+      if (settings.get("DisableSalesOrderPriceOverride") ||
+        !privileges.get("OverridePrice")) {
+        this.setReadOnly('price');
       }
 
       this.sellingUnits = new XM.UnitCollection();
@@ -1298,6 +1311,27 @@ white:true*/
       return asOf;
     },
 
+    quantityDidChange: function () {
+      var quantity = this.get("quantity"),
+        quantityUnitRatio = this.get("quantityUnitRatio"),
+        itemIsNotFractional = !this.get("itemSite.item.isFractional");
+        
+      if (this.isNotReady()) { return; }
+        
+      // Check inventory quantity against fractional setting
+      if (itemIsNotFractional) {
+        if (Math.abs((quantity * quantityUnitRatio) -
+            Math.round(quantity * quantityUnitRatio)) > 0.01) {
+          this.notify("_updateFractional?".loc(), {
+            type: XM.Model.QUESTION,
+            callback: function () {
+              // TODO: Finish this
+            }
+          });
+        }
+      }
+    },
+
     recalculateParent: function (calcFreight) {
       var parent = this.getParent();
       if (parent) { parent.calculateTotals(calcFreight); }
@@ -1342,7 +1376,24 @@ white:true*/
     },
 
     unitDidChange: function () {
+      // TODO: Look up UOM ratio
+      this.quantityDidChange();
       this.calculatePrice(true);
+    },
+    
+    validateSave: function () {
+      var quantity = this.get("quantity");
+            
+      // Check quantity
+      if ((quantity || 0) <= 0) {
+        return XT.Error.clone('xt2013');
+      }
+      
+      // Check order quantity against fractional setting
+      if (!this._isFractional && Math.round(quantity) !== quantity) {
+        return XT.Error.clone('xt2014');
+      }
+      
     },
 
     /** @private

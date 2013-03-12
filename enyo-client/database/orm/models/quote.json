@@ -542,7 +542,7 @@
     "isSystem": true
   },
   {
-    "context": "xtupl",
+    "context": "xtuple",
     "nameSpace": "XM",
     "type": "QuoteAccount",
     "table": "xt.doc",
