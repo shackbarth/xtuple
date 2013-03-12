@@ -330,7 +330,7 @@ enyo.kind({
           components: [
           {content: "_ordered".loc() + ":", classes: "xv-list-attr",
             style: "text-align: right;"},
-          {content: "_uom".loc() + ":", classes: "xv-list-attr",
+          {content: "_quantityUnit".loc() + ":", classes: "xv-list-attr",
             style: "text-align: right;"},
         ]},
         {kind: "XV.ListColumn", classes: "third",
@@ -354,9 +354,12 @@ enyo.kind({
           {kind: "XV.ListAttr", attr: "listPrice", classes: "text-align-right"},
           {kind: "XV.ListAttr", attr: "extendedPrice", classes: "text-align-right"},
           {kind: "XV.ListAttr", attr: "customerPrice", classes: "text-align-right"},
-          {kind: "XV.ListAttr", attr: "listPriceDiscount", classes: "text-align-right"}
+          {kind: "XV.ListAttr", attr: "listPriceDiscount", classes: "text-align-right", formatter: "formatPercentage"}
         ]}
       ]}
     ]}
-  ]
+  ],
+  formatPercentage: function (value, view, model) {
+    return value * 100;
+  }
 });

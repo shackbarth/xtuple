@@ -139,7 +139,7 @@ white:true*/
 
     destroy: function () {
       var address = this.get('address');
-      if (address.isNew()) { address.releaseNumber(); }
+      if (address && address.isNew()) { address.releaseNumber(); }
       XM.Document.prototype.destroy.apply(this, arguments);
     },
 
