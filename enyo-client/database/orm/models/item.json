@@ -495,6 +495,20 @@
           "type": "String",
           "column": "charass_value"
         }
+      },
+      {
+        "name": "isDefault",
+        "attr": {
+          "type": "Boolean",
+          "column": "charass_default"
+        }
+      },
+      {
+        "name": "price",
+        "attr": {
+          "type": "Number",
+          "column": "charass_price"
+        }
       }
     ],
     "isNestedOnly": true,
@@ -795,8 +809,88 @@
           "type": "ProductCategory",
           "column": "item_prodcat_id"
         }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "type": "ItemListItemCharacteristic",
+          "column": "item_id",
+          "inverse": "item",
+          "isNested": true
+        }
       }
     ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemListItemCharacteristic",
+    "table": "charass",
+    "comment": "Item List Item Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "I"
+        }
+      },
+      {
+        "name": "item",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      },
+      {
+        "name": "isDefault",
+        "attr": {
+          "type": "Boolean",
+          "column": "charass_default"
+        }
+      },
+      {
+        "name": "price",
+        "attr": {
+          "type": "Number",
+          "column": "charass_price"
+        }
+      }
+    ],
+    "isNestedOnly": true,
     "isSystem": true
   },
   {
@@ -919,8 +1013,88 @@
           "type": "Number",
           "column": "item_packweight"
         }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "type": "ItemRelationCharacteristic",
+          "column": "item_id",
+          "inverse": "item",
+          "isNested": true
+        }
       }
     ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemRelationCharacteristic",
+    "table": "charass",
+    "comment": "Item Relation Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "I"
+        }
+      },
+      {
+        "name": "item",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      },
+      {
+        "name": "isDefault",
+        "attr": {
+          "type": "Boolean",
+          "column": "charass_default"
+        }
+      },
+      {
+        "name": "price",
+        "attr": {
+          "type": "Number",
+          "column": "charass_price"
+        }
+      }
+    ],
+    "isNestedOnly": true,
     "isSystem": true
   },
   {

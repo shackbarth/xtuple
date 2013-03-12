@@ -11,7 +11,7 @@ var _ = require("underscore"),
   "use strict";
 
   exports.waitTime = 10000;
-  
+
   /**
     Creates a working model and automatically checks state
     is `READY_NEW` and a valid `id` immediately afterward.
@@ -105,8 +105,24 @@ var _ = require("underscore"),
           that.callback(null, data);
         }, exports.waitTime);
       },
-      'Status is `READY_CLEAN`': function (data) {
+      'Status is `READY_CLEAN`': function (error, data) {
         assert.equal(data.model.getStatusString(), 'READY_CLEAN');
+      },
+      'And the values are as we set them': function (error, data) {
+        var hashToTest = data.updated ? _.extend(data.createHash, data.updateHash) : data.createHash;
+        _.each(hashToTest, function (value, key) {
+          // depending on how we represent sub-objects, we want to verify them in different ways
+          if (typeof (data.model.get(key)) === 'object' && typeof value === 'object') {
+            // if the data is a model and the test hash looks like {contact: {id: 7}}
+            assert.equal(data.model.get(key).id, value.id);
+          } else if (typeof (data.model.get(key)) === 'object' && typeof value === 'number') {
+            // if the data is a model and the test hash looks like {contact: 7}
+            assert.equal(data.model.get(key).id, value);
+          } else {
+            // default case, such as comparing strings to strings etc.
+            assert.equal(data.model.get(key), value);
+          }
+        });
       }
     };
 
@@ -125,6 +141,7 @@ var _ = require("underscore"),
     vows = vows || {};
     var context = {
       topic: function () {
+        data.updated = true;
         return data;
       },
       'Status is `READY_CLEAN`': function (data) {
@@ -179,5 +196,5 @@ var _ = require("underscore"),
     _.extend(context, vows);
     return context;
   };
-  
+
 }());

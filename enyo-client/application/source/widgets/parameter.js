@@ -343,6 +343,20 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // ITEM SITE
+  //
+
+  enyo.kind({
+    name: "XV.ItemSiteListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_itemSite".loc()},
+      {name: "itemNumber", label: "_itemNumber".loc(), attr: "item.number"},
+      {name: "siteCode", label: "_siteCode".loc(), attr: "site.code"}
+    ]
+  });
+
+  // ..........................................................
   // OPPORTUNITY
   //
 
