@@ -97,10 +97,10 @@ white:true*/
       var model = this.getValue(),
         value = model.get('value'),
         itemCharacteristics = model.collection.quoteLine.getValue("itemSite.item.characteristics"),
-        values = _.map(itemCharacteristics.models, function (chr) {return chr.get("value");}),
+        //values = _.map(itemCharacteristics.models, function (chr) {return chr.get("value");}),
         characteristic = model.getValue('characteristic'),
-        characteristicName = characteristic.getValue('name'),
-        options = characteristic.getValue('options');
+        //options = characteristic.getValue('options'),
+        characteristicName = characteristic.getValue('name');
 
       this.$.combobox.setCollection(itemCharacteristics); // options??
 
@@ -126,12 +126,6 @@ white:true*/
       this.inherited(arguments);
       // just undo the super-class function.
       this.show();
-    },
-    setValue: function (value) {
-      var itemCharacteristics;
-
-      this.inherited(arguments);
-      itemCharacteristics = this.value.quoteLine.getValue("itemSite.item.characteristics");
     }
   });
 
