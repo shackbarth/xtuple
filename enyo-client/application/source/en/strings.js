@@ -594,6 +594,7 @@ var lang = XT.stringsFor("en_US", {
   "_recordNotFound": "Record not found.",
   "_recordStatusNotEditable": "Record with status of `{status}` is not editable.",
   "_rescheduleAll": "Changing this date will update the Schedule Date on all editable line items.",
+  "_updateFractional": "The quantity ordered and unit of measure selected will result in a fractional inventory qty for this item. This item does not allow fractional quantities; the quantity will be updated accordingly.",
   "_updatePrice?": "You have changed the price basis, do you want to update the Price?",
   "_valueExists": "Record with {attr} of '{value}' already exists.",
   "_whatToDo": "What would you like to do?"

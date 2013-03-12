@@ -897,7 +897,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ItemRelation",
-    "table": "item",
+    "table": "xt.iteminfo",
     "comment": "Item Relation Map",
     "privileges": {
       "all": {
@@ -987,6 +987,13 @@
         }
       },
       {
+        "name": "standardCost",
+        "attr": {
+          "type": "Number",
+          "column": "std_cost"
+        }
+      },
+      {
         "name": "listCost",
         "attr": {
           "type": "Number",
@@ -998,6 +1005,13 @@
         "toOne": {
           "type": "Unit",
           "column": "item_price_uom_id"
+        }
+      },
+      {
+        "name": "priceUnitRatio",
+        "attr": {
+          "type": "Number",
+          "column": "inv_price_ratio"
         }
       },
       {

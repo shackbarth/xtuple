@@ -759,7 +759,7 @@ white:true*/
       _.each(this.get('lineItems').models, function (lineItem) {
         var extPrice = lineItem.get('extendedPrice') || 0,
           quantity = lineItem.get("quantity") || 0,
-          unitCost = lineItem.get("unitCost") || 0,
+          standardCost = lineItem.get("standardCost") || 0,
           item = lineItem.getValue("itemSite.item"),
           prodWeight = item ? item.get("productWeight") : 0,
           packWeight = item ? item.get("packageWeight") : 0,
@@ -769,7 +769,7 @@ white:true*/
 
         weights.push(grossWeight);
         subtotals.push(extPrice);
-        costs.push(quantity * unitCost);
+        costs.push(quantity * standardCost);
         taxDetails = taxDetails.concat(lineItem.taxDetail);
       });
 
@@ -885,13 +885,13 @@ white:true*/
       this.on('change:quantity', this.calculatePrice);
       this.on('change:quantity change:price', this.calculateExtendedPrice);
       this.on('change:price', this.calculatePercentages);
-      this.on('change:price change:unitCost', this.calculateProfit);
+      this.on('change:price change:standardCost', this.calculateProfit);
       this.on('change:quote', this.parentDidChange);
       this.on('change:taxType change:extendedPrice', this.calculateTax);
       this.on('change:quantity', this.quantityDidChange);
       this.on('change:quantityUnit change:priceUnit', this.unitDidChange);
       this.on('change:scheduleDate', this.scheduleDateDidChange);
-      this.on('change:extendedPrice change:unitCost change:itemSite',
+      this.on('change:extendedPrice change:standardCost change:itemSite',
         this.recalculateParent());
       this.on('statusChange', this.statusDidChange);
 
@@ -916,6 +916,7 @@ white:true*/
     },
 
     readOnlyAttributes: [
+      "averageCost",
       "customerPrice",
       "extendedPrice",
       "inventoryQuantityUnitRatio",
@@ -928,8 +929,8 @@ white:true*/
       "priceUnitRatio",
       "profit",
       "site",
-      "tax",
-      "unitCost"
+      "standardCost",
+      "tax"
     ],
 
     requiredAttributes: [
@@ -944,8 +945,7 @@ white:true*/
       "priceMode",
       "priceUnit",
       "priceUnitRatio",
-      "scheduleDate",
-      "unitCost"
+      "scheduleDate"
     ],
 
     /**
@@ -1009,7 +1009,6 @@ white:true*/
           }
         }
 
-        // TODO: Handle characteristics
         that.set(attrs);
       };
       options.error = function (error) {
@@ -1038,6 +1037,7 @@ white:true*/
         item = this.getValue("itemSite.item"),
         editing = !this.isNew(),
         priceUnit = this.get("priceUnit"),
+        priceUnitRatio = this.get("priceUnitRatio"),
         quantity = this.get("quantity"),
         quantityUnit = this.get("quantityUnit"),
         updatePolicy = settings.get("UpdatePriceLineEdit"),
@@ -1050,7 +1050,8 @@ white:true*/
 
       // Make sure we have necessary values
       if (canUpdate && customer && currency &&
-          item && quantity && quantityUnit && priceUnit &&
+          item && quantity && quantityUnit &&
+          priceUnit && priceUnitRatio &&
           this.priceAsOfDate()) {
 
         // Determine whether updating net price or only customer price
@@ -1076,7 +1077,7 @@ white:true*/
     },
 
     calculateProfit: function () {
-      var unitCost = this.get("unitCost"),
+      var standardCost = this.get("standardCost"),
         price = this.get("price"),
         parent = this.getParent(),
         effective = this.get(parent.documentDateKey),
@@ -1087,9 +1088,9 @@ white:true*/
       if (this.isNotReady()) { return; }
 
       if (price) {
-        if (unitCost) {
+        if (standardCost) {
           options.success = function (value) {
-            that.set("profit", (value - unitCost) / unitCost);
+            that.set("profit", (value - standardCost) / standardCost);
           };
           currency.toBase(price, effective, options);
         } else {
@@ -1164,12 +1165,12 @@ white:true*/
     itemSiteDidChange: function () {
       var parent = this.getParent(),
         taxZone = parent ? parent.get("taxZone") : undefined,
+        averageCost = this.getValue("itemSite.averageCost"),
         item = this.getValue("itemSite.item"),
         characteristics = this.get("characteristics"),
         that = this,
         unitOptions = {},
         taxOptions = {},
-        itemOptions = {},
         itemCharAttrs,
         charTypes,
         len,
@@ -1192,8 +1193,11 @@ white:true*/
       // Reset values
       this.unset("quantityUnit");
       this.unset("priceUnit");
+      this.unset("priceUnitRatio");
       this.unset("taxType");
-      this.unset("unitCost");
+      this.unset("averageCost");
+      this.unset("standardCost");
+      this.unset("listCost");
       this.sellingUnits.reset();
 
       // Destroy old characteristics
@@ -1207,6 +1211,9 @@ white:true*/
       // Set the item default selections
       this.set("quantityUnit", item.get("inventoryUnit"));
       this.set("priceUnit", item.get("priceUnit"));
+      this.set("priceUnitRatio", item.get("priceUnitRatio"));
+      this.set("averageCost", averageCost);
+      this.set("standardCost", item.get("standardCost"));
       this.set("listCost", item.get("listPrice"));
       this.set("listPrice", item.get("listCost"));
 
@@ -1234,12 +1241,6 @@ white:true*/
         }
       };
       item.taxType(taxZone, taxOptions);
-
-      // Fetch and update unit cost
-      itemOptions.success = function (cost) {
-        that.set("unitCost", cost);
-      };
-      item.standardCost(itemOptions);
 
       // Set sort for characteristics
       if (!characteristics.comparator) {
@@ -1314,20 +1315,19 @@ white:true*/
     quantityDidChange: function () {
       var quantity = this.get("quantity"),
         quantityUnitRatio = this.get("quantityUnitRatio"),
-        itemIsNotFractional = !this.get("itemSite.item.isFractional");
+        itemIsNotFractional = !this.get("itemSite.item.isFractional"),
+        scale = this._isFractional ? 2 : 0;
         
       if (this.isNotReady()) { return; }
         
-      // Check inventory quantity against fractional setting
+      // Check inventory quantity against conversion fractional setting
+      // If invalid, notify user and update to a valid quantity
       if (itemIsNotFractional) {
         if (Math.abs((quantity * quantityUnitRatio) -
             Math.round(quantity * quantityUnitRatio)) > 0.01) {
-          this.notify("_updateFractional?".loc(), {
-            type: XM.Model.QUESTION,
-            callback: function () {
-              // TODO: Finish this
-            }
-          });
+          this.notify("_updateFractional".loc());
+          quantity = XT.math.round((quantity * quantityUnitRatio + 0.5) / quantityUnitRatio, scale);
+          this.set("quantity", quantity);
         }
       }
     },
