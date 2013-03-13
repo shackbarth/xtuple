@@ -42,9 +42,9 @@ var XVOWS = XVOWS || {};
     'CREATE ': crud.create(data, {
       '-> Set values': {
         topic: function (data) {
-          data.model.set('opportunityStage', XM.opportunityStages.at(0));
-          data.model.set('opportunitySource', XM.opportunitySources.at(0));
-          data.model.set('opportunityType', XM.opportunityTypes.at(0));
+          data.model.set('opportunityStage', XM.opportunityStages.where({description: 'Internal'}));
+          data.model.set('opportunitySource', XM.opportunitySources.where({name: 'RECEIVED'}));
+          data.model.set('opportunityType', XM.opportunityTypes.where({name: 'PRODUCT'}));
           data.model.set(data.createHash);
           return data;
         },
