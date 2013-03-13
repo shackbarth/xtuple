@@ -17,7 +17,7 @@ var XVOWS = XVOWS || {};
   data.createHash = {
     account: 1,
     name: 'Mike'
-    //opportunityStage, opportunitySource, and opportunityType are objects
+    //opportunityStage, opportunitySource, and opportunityType
   };
 
   data.updateHash = {
@@ -29,9 +29,6 @@ var XVOWS = XVOWS || {};
       topic: function () {
         var that = this,
           callback = function () {
-            data.stage = new XM.OpportunityStage();
-            data.source = new XM.OpportunitySource();
-            data.type = new XM.OpportunityType();
             data.model = new XM.Opportunity();
             that.callback(null, data);
           };
@@ -45,9 +42,9 @@ var XVOWS = XVOWS || {};
     'CREATE ': crud.create(data, {
       '-> Set values': {
         topic: function (data) {
-          data.model.set('opportunityStage', data.stage);
-          data.model.set('opportunitySource', data.source);
-          data.model.set('opportunityStage', data.type);
+          data.model.set('opportunityStage', XM.opportunityStages.at(0));
+          data.model.set('opportunitySource', XM.opportunitySources.at(0));
+          data.model.set('opportunityType', XM.opportunityTypes.at(0));
           data.model.set(data.createHash);
           return data;
         },
