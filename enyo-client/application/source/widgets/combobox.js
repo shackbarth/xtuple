@@ -44,14 +44,13 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.QuoteLineCharacteristicCombobox",
     kind: "XV.ComboboxWidget",
     keyAttribute: "value",
-    create: function () {
-      this.inherited(arguments);
-      this.createComponent({
-        container: this.$.fittableColumns,
-        name: "comboboxNote",
-        classes: "xv-combobox-note"
-      });
-    },
+    components: [
+      {kind: "FittableColumns", name: "fittableColumns", components: [
+        {name: "label", content: "", classes: "xv-decorated-label", style: "width: 100px;"},
+        {name: "input", kind: "XV.Combobox", style: "width: 175px;"},
+        {name: "comboboxNote", classes: "xv-combobox-note"}
+      ]}
+    ],
     /**
       Populate the note field
 

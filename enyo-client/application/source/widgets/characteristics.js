@@ -94,6 +94,34 @@ white:true*/
       {name: "price"}
     ],
     /**
+      The price display is bound to the price attribute of the model, although we only want
+      to show it if the quote line's item isSold
+     */
+    priceChanged: function () {
+      var model = this.getValue(),
+        quoteLine = model.collection.quoteLine,
+        itemIsSold = quoteLine.getValue("itemSite.item.isSold"),
+        note = itemIsSold ? Globalize.format( model.get("price"), "c" ) : "";
+
+      console.log("setting " + model.getValue("characteristic.id")
+      + " price of " + model.get("price")  +
+      " for ", this.$.combobox && this.$.combobox.getLabel(), this.id);
+      if (this.$.combobox) {
+        this.$.combobox.setNote(note);
+      }
+    },
+    controlValueChanged: function (inSender, inEvent) {
+      var model = this.getValue(),
+        quoteLine = model.collection.quoteLine,
+        itemIsSold = quoteLine.getValue("itemSite.item.isSold"),
+        note = itemIsSold ? Globalize.format( model.get("price"), "c" ) : "";
+
+      this.inherited(arguments);
+
+      this.$.combobox.setNote(note);
+      return true;
+    },
+    /**
       Look at the characteristic of this model, and look at the characteristics of the item
       to pass to the combobox not just the value that has been changed but a dropdown
       collection that represents all of the item's characteristic values possible for this
@@ -128,7 +156,10 @@ white:true*/
       this.$.combobox.setValue(value, {silent: true});
 
       // put the price alongside the value if the item isSold
-      this.$.combobox.setNote(itemIsSold ? model.get("price") : "");
+      //this.$.combobox.setNote(itemIsSold ? model.get("price") : "");
+
+      console.log("binding " + characteristicId + " to ", this.$.combobox.getLabel(), this.id);
+      this.getValue().on("change:price", this.priceChanged, this);
     }
   });
 
