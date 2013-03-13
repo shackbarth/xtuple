@@ -12,8 +12,7 @@ var XVOWS = XVOWS || {};
     zombieAuth = require("../lib/zombie_auth"),
     crud = require('../lib/crud');
 
-  var data = {},
-    deleteData = {};
+  var data = {};
 
   data.createHash = {
     number: "MIKEPROSPECT",
@@ -61,8 +60,6 @@ var XVOWS = XVOWS || {};
     'UPDATE ': crud.update(data, {
       '-> Set values': {
         topic: function () {
-          deleteData.cntctId = data.model.get("contact");
-          deleteData.accountModel = new XM.Account();
           data.model.set(data.updateHash);
           return data;
         },
@@ -70,28 +67,7 @@ var XVOWS = XVOWS || {};
       }
     })
   }).addBatch({
-    'DESTROY': crud.destroy(data, {
-      '-> Set values': {
-        'prospect destroyed': function (data) {
-          assert.isTrue(data.model.getStatus() === XM.Model.DESTROYED_CLEAN);
-        },
-        topic: function () {
-          var that = this,
-            fetchOptionsAccnt = {};
-
-          fetchOptionsAccnt.id = deleteData.accntId;
-
-          fetchOptionsAccnt.success = function () {
-            var destroyOptionsAccnt = {};
-            destroyOptionsAccnt.success = function () {
-              that.callback(null, data);
-            };
-            deleteData.accountModel.destroy(destroyOptionsAccnt);
-          };
-          deleteData.accountModel.fetch(fetchOptionsAccnt);
-        }
-      }
-    })
+    'DESTROY': crud.destroy(data)
   }).export(module);
   
 }());
