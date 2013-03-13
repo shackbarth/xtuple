@@ -93,22 +93,41 @@ white:true*/
       {kind: "XV.QuoteLineCharacteristicCombobox", name: "combobox", attr: "value", showLabel: false},
       {name: "price"}
     ],
+    /**
+      Look at the characteristic of this model, and look at the characteristics of the item
+      to pass to the combobox not just the value that has been changed but a dropdown
+      collection that represents all of the item's characteristic values possible for this
+      characteristic.
+     */
     valueChanged: function (inSender, inEvent) {
       var model = this.getValue(),
         value = model.get('value'),
-        quoteLine = model.collection.quoteLine,
-        itemCharacteristics = quoteLine.getValue("itemSite.item.characteristics"),
-        itemIsSold = quoteLine.getValue("itemSite.item.isSold"),
-        //values = _.map(itemCharacteristics.models, function (chr) {return chr.get("value");}),
         characteristic = model.getValue('characteristic'),
-        //options = characteristic.getValue('options'),
-        characteristicName = characteristic.getValue('name');
+        characteristicId = characteristic.get('id'),
+        characteristicName = characteristic.get('name'),
+        quoteLine = model.collection.quoteLine,
+        allItemCharacteristics = quoteLine.getValue("itemSite.item.characteristics"),
+        // filter for only the models of the appropriate characteristic
+        // allItemCharacteristics may be "", in which case we want an empty array
+        // we can use this underscore method in backbone but it unfortunately
+        // returns an array of models instead of a collection
+        relevantArray = allItemCharacteristics ? allItemCharacteristics.filter(function (model) {
+          return model.getValue("characteristic.id") === characteristicId
+        }) : [],
+        // so we have to make it a collection here
+        relevantItemCharacteristics = new XM.CharacteristicCollection(relevantArray),
+        itemIsSold = quoteLine.getValue("itemSite.item.isSold");
 
-      this.$.combobox.setCollection(itemCharacteristics); // options??
+      // pass the backing collection to the combobox
+      this.$.combobox.setCollection(relevantItemCharacteristics);
 
+      // for this type of characteristic, the label is just a label and not a picker
       this.$.combobox.setLabel(characteristicName);
+
+      // set the selected value of the combobox
       this.$.combobox.setValue(value, {silent: true});
 
+      // put the price alongside the value if the item isSold
       this.$.combobox.setNote(itemIsSold ? model.get("price") : "");
     }
   });
