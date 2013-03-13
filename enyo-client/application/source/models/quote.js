@@ -52,6 +52,7 @@ white:true*/
 
     readOnlyAttributes: [
       "freightWeight",
+      "getQuoteStatusString",
       "lineItems",
       "margin",
       "status",
@@ -879,16 +880,16 @@ white:true*/
         privileges = XT.session.privileges;
       this.taxDetail = [];
       this._updatePrice = true; // TODO: This probably is un-needed.
-      this._isFractional = false;
+      this._unitIsFractional = false;
       this.on('change:discount', this.discountDidChange);
       this.on("change:itemSite", this.itemSiteDidChange);
       this.on('change:quantity', this.calculatePrice);
       this.on('change:quantity change:price', this.calculateExtendedPrice);
       this.on('change:price', this.calculatePercentages);
+      this.on('change:priceUnit', this.priceUnitDidChange);
       this.on('change:quote', this.parentDidChange);
       this.on('change:taxType change:extendedPrice', this.calculateTax);
-      this.on('change:quantity', this.quantityDidChange);
-      this.on('change:quantityUnit change:priceUnit', this.unitDidChange);
+      this.on('change:quantityUnit', this.quantityUnitDidChange);
       this.on('change:scheduleDate', this.scheduleDateDidChange);
       this.on('change:extendedPrice', this.recalculateParent);
       this.on('change:extendedPrice', this.calculateProfit);
@@ -1316,13 +1317,88 @@ white:true*/
       return asOf;
     },
 
-    quantityDidChange: function () {
+    priceUnitDidChange: function () {
+      var quantityUnit = this.get("quantityUnit"),
+        priceUnit = this.get("priceUnit"),
+        item = this.getValue("itemSite.item"),
+        inventoryUnit = item ? this.getValue("inventoryUnit") : false,
+        that = this,
+        options = {};
+        
+      if (!inventoryUnit || !quantityUnit || !priceUnit || this.isNotReady()) { return; }
+      
+      if (inventoryUnit.id === priceUnit.id) {
+        this.set("priceUnitRatio", 1);
+      } else {
+        // Unset price ratio so we can't save until we get an answer
+        that.unset("priceUnitRatio");
+        
+        // Lookup unit of measure ratio
+        options.success = function (ratio) {
+          that.set("priceUnitRatio", ratio);
+          that.calculatePrice(true);
+        };
+        item.unitToUnitRatio(inventoryUnit, quantityUnit, options);
+      }
+    },
+
+    quantityUnitDidChange: function () {
+      var quantity = this.get("quantity"),
+        quantityUnit = this.get("quantityUnit"),
+        item = this.getValue("itemSite.item"),
+        inventoryUnit = item ? item.get("inventoryUnit") : false,
+        that = this,
+        options = {},
+        isFractionalCache,
+        ratioCache;
+
+      if (!inventoryUnit || !quantityUnit || this.isNotReady()) { return; }
+
+      if (quantityUnit.id === item.get("inventoryUnit").id) {
+        this.set("quantityUnitRatio", 1);
+        this._unitIsFractional = item.get("isFractional");
+        this.setReadOnly("priceUnit", false);
+      } else {
+        // Unset so we can not save until we get a new ratio value
+        this.unset("quantityUnitRatio");
+
+        // Price unit must be set to quantity unit and be read only
+        this.set("priceUnit", quantityUnit);
+        this.setReadOnly("priceUnit", true);
+
+        // Lookup unit of measure ratio and fractional
+        options.success = function (resp) {
+          if (_.isNumber(resp) && _.isUndefined(isFractionalCache)) {
+            ratioCache = resp; // Got ratio back, but no fractional yet
+          } else if (_.isBoolean(resp) && _.isUndefined(ratioCache)) {
+            isFractionalCache = resp; // Got fractional back but no ratio yet
+          } else {
+            that._unitIsFractional = _.isBoolean(isFractionalCache) ?
+              isFractionalCache : resp;
+            that.set("quantityUnitRatio", ratioCache || resp);
+            if (!that._unitIsFractional && Math.round(quantity) !== quantity) {
+              that.unset("quantity");
+              that.notify("_notFractional".loc);
+            } else {
+              that.calculatePrice(true);
+            }
+          }
+        };
+        item.unitToUnitRatio(inventoryUnit, quantityUnit, options);
+        item.unitFractional(quantityUnit, options);
+      }
+    },
+
+    recalculateParent: function (calcFreight) {
+      var parent = this.getParent();
+      if (parent) { parent.calculateTotals(calcFreight); }
+    },
+
+    save: function () {
       var quantity = this.get("quantity"),
         quantityUnitRatio = this.get("quantityUnitRatio"),
         itemIsNotFractional = !this.get("itemSite.item.isFractional"),
-        scale = this._isFractional ? 2 : 0;
-
-      if (this.isNotReady()) { return; }
+        scale = this._unitIsFractional ? 2 : 0;
 
       // Check inventory quantity against conversion fractional setting
       // If invalid, notify user and update to a valid quantity
@@ -1330,15 +1406,14 @@ white:true*/
         if (Math.abs((quantity * quantityUnitRatio) -
             Math.round(quantity * quantityUnitRatio)) > 0.01) {
           this.notify("_updateFractional".loc());
-          quantity = XT.math.round((quantity * quantityUnitRatio + 0.5) / quantityUnitRatio, scale);
+          quantity = XT.math.add(quantity * quantityUnitRatio, 0.5, 1);
+          quantity = quantity / quantityUnitRatio;
+          quantity = XT.math.round(quantity, scale);
           this.set("quantity", quantity);
+          return false;
         }
       }
-    },
-
-    recalculateParent: function (calcFreight) {
-      var parent = this.getParent();
-      if (parent) { parent.calculateTotals(calcFreight); }
+      return XM.Document.prototype.save.apply(this, arguments);
     },
 
     scheduleDateDidChange: function () {
@@ -1360,7 +1435,7 @@ white:true*/
             that.unset("scheduleDate");
           } else {
             if (effectivePolicy === "ScheduleDate") {
-              that.recalculatePrice();
+              that.calculatePrice();
             }
           }
         };
@@ -1379,12 +1454,6 @@ white:true*/
       }
     },
 
-    unitDidChange: function () {
-      // TODO: Look up UOM ratio
-      this.quantityDidChange();
-      this.calculatePrice(true);
-    },
-
     validateSave: function () {
       var quantity = this.get("quantity");
 
@@ -1394,7 +1463,7 @@ white:true*/
       }
 
       // Check order quantity against fractional setting
-      if (!this._isFractional && Math.round(quantity) !== quantity) {
+      if (!this._unitIsFractional && Math.round(quantity) !== quantity) {
         return XT.Error.clone('xt2014');
       }
 
