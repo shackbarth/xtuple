@@ -118,12 +118,10 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.TaxRegistrationBox",
     kind: "XV.ListRelationsEditorBox",
-    classes: "xv-short-relations-box",
     title: "_taxRegistration".loc(),
     editor: "XV.TaxRegistrationEditor",
     parentKey: "customer",
-    listRelations: "XV.TaxRegistrationListRelations",
-    fitButtons: false
+    listRelations: "XV.TaxRegistrationListRelations"
   });
 
   // ..........................................................
