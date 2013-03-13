@@ -702,10 +702,10 @@ white:true*/
     },
 
     statusDidChange: function () {
-      XM.Document.prototype.statusDidChange.apply(this, arguments);
       var status = this.getStatus();
       if (status === XM.Model.READY_CLEAN) {
         this.setReadOnly("customer");
+        this.setReadOnly("number");
       }
     },
 

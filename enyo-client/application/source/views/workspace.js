@@ -1262,33 +1262,44 @@ trailing:true white:true*/
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", classes: "in-panel", fit: true, components: [
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", fit: true, components: [
             {kind: "XV.NumberWidget", attr: "lineNumber"},
-            {kind: "XV.ItemSiteWidget", attr: "itemSite", name: "itemSiteWidget",
-              filterRestrictionType: "item.isSold", filterRestriction: true},
+            {kind: "XV.ItemSiteWidget", attr: "itemSite",
+              name: "itemSiteWidget",
+              filterRestrictionType: "item.isSold",
+              filterRestriction: true},
             {kind: "XV.NumberWidget", attr: "quantity"},
             {kind: "XV.UnitWidget", attr: "quantityUnit"},
-            {kind: "XV.NumberWidget", attr: "quantityUnitRatio"},
-            {kind: "XV.NumberWidget", attr: "customerPrice"},
             {kind: "XV.PercentWidget", attr: "discount"},
             {kind: "XV.NumberWidget", attr: "price"},
+            {kind: "XV.UnitWidget", attr: "priceUnit"},
+            {kind: "XV.NumberWidget", attr: "extendedPrice"},
+            {kind: "onyx.GroupboxHeader", content: "_delivery".loc()},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
-            {kind: "XV.DateWidget", attr: "promiseDate", showing: false}, //TODO: this is conditional on sales settings
-            {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "quote.currency"},
-              label: "_unitPrice".loc(), currencyDisabled: true},
-            {kind: "XV.NumberWidget", attr: "listCost"},
+            {kind: "XV.DateWidget", attr: "promiseDate", showing: false},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true}
+          ]}
+        ]},
+        {kind: "XV.Groupbox", name: "detailsPanel", title: "_detail".loc(),
+          components: [
+          {kind: "onyx.GroupboxHeader", content: "_costs".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "detailGroup",
+            classes: "in-panel", fit: true, components: [
+            {kind: "XV.NumberWidget", attr: "itemSite.item.standardCost",
+              label: "_standardCost".loc()},
+            {kind: "XV.NumberWidget", attr: "itemSite.averageCost",
+              label: "_averageCost".loc()},
+            {kind: "XV.NumberWidget", attr: "itemSite.item.listCost",
+              label: "_listCost".loc()},
             {kind: "XV.NumberWidget", attr: "listCostMarkup"},
             {kind: "XV.NumberWidget", attr: "listPrice"},
             {kind: "XV.NumberWidget", attr: "listPriceDiscount"},
-            {kind: "XV.InputWidget", attr: "customerPartNumber"},
-            {kind: "XV.UnitWidget", attr: "priceUnit"},
-            {kind: "XV.InputWidget", attr: "priceMode"},
-            {kind: "XV.NumberWidget", attr: "extendedPrice"},
             {kind: "XV.NumberWidget", attr: "profit"},
+            {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
             {kind: "XV.TaxTypePicker", attr: "taxType"},
-            {kind: "XV.NumberWidget", attr: "tax"},
-            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes", fit: true}
+            {kind: "XV.NumberWidget", attr: "tax"}
           ]}
         ]},
         {kind: "XV.QuoteLineCommentBox", attr: "comments"}
@@ -1313,6 +1324,11 @@ trailing:true white:true*/
           this.$.itemSiteWidget.setDefaultSite(model.getValue("quote.site"));
         }
       }
+    },
+    create: function () {
+      this.inherited(arguments);
+      var promiseDate = this.findControl("promiseDate");
+      promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
     }
   });
 
