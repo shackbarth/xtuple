@@ -103,9 +103,9 @@ white:true*/
         itemIsSold = quoteLine.getValue("itemSite.item.isSold"),
         note = itemIsSold ? Globalize.format( model.get("price"), "c" ) : "";
 
-      console.log("setting " + model.getValue("characteristic.id")
-      + " price of " + model.get("price")  +
-      " for ", this.$.combobox && this.$.combobox.getLabel(), this.id);
+      //console.log("setting " + model.getValue("characteristic.id")
+      //+ " price of " + model.get("price")  +
+      //" for ", this.$.combobox && this.$.combobox.getLabel(), this.id);
       if (this.$.combobox) {
         this.$.combobox.setNote(note);
       }
@@ -158,7 +158,7 @@ white:true*/
       // put the price alongside the value if the item isSold
       //this.$.combobox.setNote(itemIsSold ? model.get("price") : "");
 
-      console.log("binding " + characteristicId + " to ", this.$.combobox.getLabel(), this.id);
+      //console.log("binding " + characteristicId + " to ", this.$.combobox.getLabel(), this.id);
       this.getValue().on("change:price", this.priceChanged, this);
     }
   });
