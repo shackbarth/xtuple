@@ -1219,7 +1219,40 @@ trailing:true white:true*/
             {kind: "XV.TextArea", attr: "shippingNotes", fit: true}
           ]}
         ]},
-        {kind: "XV.QuoteLineItemBox", attr: "lineItems"},
+        {kind: "FittableRows", title: "_lineItems".loc(), components: [
+          {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true},
+          {kind: "XV.Groupbox", name: "totalGroup",
+            components: [
+            {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
+            {kind: "FittableColumns", components: [
+              {kind: "FittableRows", components: [
+                {kind: "XV.CurrencyPickerWidget", attr: "currency"},
+                {kind: "XV.NumberWidget", attr: "margin"},
+                {kind: "XV.NumberWidget", attr: "freightWeight"}
+              ]},
+              {kind: "FittableRows", components: [
+                {kind: "XV.MoneyWidget", attr:
+                  {amount: "subtotal", currency: "currency"},
+                  label: "_subtotal".loc(), currencyShowing: false,
+                  effective: "quoteDate"},
+                {kind: "XV.MoneyWidget", attr:
+                  {amount: "miscCharge", currency: "currency"},
+                  label: "_miscCharge".loc(), currencyShowing: false,
+                  effective: "quoteDate"},
+                {kind: "XV.NumberWidget", attr: "freight",
+                  label: "_freight".loc()},
+                {kind: "XV.MoneyWidget", attr:
+                  {amount: "taxTotal", currency: "currency"},
+                  label: "_tax".loc(), currencyShowing: false,
+                  effective: "quoteDate"},
+                {kind: "XV.MoneyWidget", attr:
+                  {amount: "total", currency: "currency"},
+                  label: "_total".loc(), currencyShowing: false,
+                  effective: "quoteDate"}
+              ]}
+            ]}
+          ]}
+        ]},
         {kind: "XV.QuoteCommentBox", attr: "comments"},
         {kind: "XV.QuoteDocumentsBox", attr: "documents"}
       ]}

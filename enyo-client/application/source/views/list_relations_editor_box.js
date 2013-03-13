@@ -204,34 +204,6 @@ trailing:true white:true*/
   });
 
   enyo.kind({
-    name: "XV.QuoteLineItemSummary",
-    kind: "XV.RelationsEditor",
-    style: "margin-top: 10px",
-    published: {
-      quoteDate: null
-    },
-    components: [
-      {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
-      {kind: "XV.ScrollableGroupbox", name: "totalGroup",
-        classes: "in-panel", components: [
-        {kind: "XV.CurrencyPickerWidget", attr: "currency"},
-        {kind: "XV.NumberWidget", attr: "margin"},
-        //{kind: "XV.TextArea", attr: "miscChargeDesc", fit: true} - needs GL
-        // Charge Sales Account - needs GL
-        {kind: "XV.NumberWidget", attr: "freightWeight"},
-        {kind: "XV.MoneyWidget", attr: {amount: "subtotal", currency: "currency"},
-          label: "_subtotal".loc(), currencyShowing: false, effective: "quoteDate"},
-        // {kind: "XV.NumberWidget", attr: "miscCharge"}, - needs GL
-        {kind: "XV.NumberWidget", attr: "freight", label: "_freight".loc()},
-        {kind: "XV.MoneyWidget", attr: {amount: "taxTotal", currency: "currency"},
-          label: "_tax".loc(), currencyShowing: false, effective: "quoteDate"},
-        {kind: "XV.MoneyWidget", attr: {amount: "total", currency: "currency"},
-          label: "_total".loc(), currencyShowing: false, effective: "quoteDate"}
-      ]}
-    ]
-  });
-
-  enyo.kind({
     name: "XV.QuoteLineItemBox",
     kind: "XV.ListRelationsEditorBox",
     classes: "xv-list-relations-box",
@@ -246,10 +218,6 @@ trailing:true white:true*/
 
     create: function () {
       this.inherited(arguments);
-
-      // Bottom Panel with calculations
-      this.summary = this.createComponent({kind: "XV.QuoteLineItemSummary", name: "totalsPanel"});
-
       this.createComponent({
         kind: "onyx.Button",
         content: "_expand".loc(),
@@ -264,7 +232,6 @@ trailing:true white:true*/
     */
     valueChanged: function () {
       this.inherited(arguments);
-      this.summary.setValue(this.getValue().quote);
       // change the styling of the last button to make room for the new button
       this.$.doneButton.setClasses("xv-groupbox-button-center");
     },

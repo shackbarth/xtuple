@@ -55,6 +55,7 @@ white:true*/
       "getQuoteStatusString",
       "lineItems",
       "margin",
+      "miscCharge",
       "status",
       "subtotal",
       "taxTotal",
