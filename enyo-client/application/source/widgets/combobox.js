@@ -47,7 +47,7 @@ regexp:true, undef:true, trailing:true, white:true */
     components: [
       {kind: "FittableColumns", name: "fittableColumns", components: [
         {name: "label", content: "", classes: "xv-decorated-label", style: "width: 100px;"},
-        {name: "input", kind: "XV.Combobox", style: "width: 175px;"},
+        {name: "input", kind: "XV.Combobox", style: "width: 200px;"},
         {name: "comboboxNote", classes: "xv-combobox-note"}
       ]}
     ],

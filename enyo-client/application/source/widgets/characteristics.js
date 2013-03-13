@@ -103,23 +103,14 @@ white:true*/
         itemIsSold = quoteLine.getValue("itemSite.item.isSold"),
         note = itemIsSold ? Globalize.format( model.get("price"), "c" ) : "";
 
-      //console.log("setting " + model.getValue("characteristic.id")
-      //+ " price of " + model.get("price")  +
-      //" for ", this.$.combobox && this.$.combobox.getLabel(), this.id);
-      if (this.$.combobox) {
-        this.$.combobox.setNote(note);
-      }
-    },
-    controlValueChanged: function (inSender, inEvent) {
-      var model = this.getValue(),
-        quoteLine = model.collection.quoteLine,
-        itemIsSold = quoteLine.getValue("itemSite.item.isSold"),
-        note = itemIsSold ? Globalize.format( model.get("price"), "c" ) : "";
-
-      this.inherited(arguments);
-
       this.$.combobox.setNote(note);
-      return true;
+    },
+    /**
+      Remove bindings
+     */
+    destroy: function () {
+      this.getValue().off("change:price", this.priceChanged, this);
+      this.inherited(arguments);
     },
     /**
       Look at the characteristic of this model, and look at the characteristics of the item
@@ -155,10 +146,7 @@ white:true*/
       // set the selected value of the combobox
       this.$.combobox.setValue(value, {silent: true});
 
-      // put the price alongside the value if the item isSold
-      //this.$.combobox.setNote(itemIsSold ? model.get("price") : "");
-
-      //console.log("binding " + characteristicId + " to ", this.$.combobox.getLabel(), this.id);
+      // bind the price label to the price attribute on the model
       this.getValue().on("change:price", this.priceChanged, this);
     }
   });
@@ -180,6 +168,20 @@ white:true*/
       this.inherited(arguments);
       // just undo the super-class function.
       this.show();
+    },
+    setValue: function (value) {
+      this.inherited(arguments);
+
+      // TODO: hide it if there are no characteristics to show
+      // this doesn't quite work yet
+      //if (value
+      //    && value.quoteLine
+      //    && value.quoteLine.getValue("itemSite.item.characteristics")
+      //    && value.quoteLine.getValue("itemSite.item.characteristics").length) {
+      //  this.show();
+      //} else {
+      //  this.hide();
+      //}
     }
   });
 
