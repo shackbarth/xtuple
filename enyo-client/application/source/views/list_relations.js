@@ -365,14 +365,5 @@ enyo.kind({
   formatPrice: function (value, view, model) {
     view.addRemoveClass("error", value < 0);
     return Globalize.format(value, "c" + XT.MONEY_SCALE);
-  },
-  valueChanged: function () {
-    
-    
-    this.inherited(arguments);
-    // XM.Quote.DISCOUNT_MODE
-    // XM.Quote.MARKUP_MODE
-    // value.get("priceMode")
-    // this.$.priceModeLabel.setContent("_markup".loc() + ":");
   }
 });
