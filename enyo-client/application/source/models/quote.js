@@ -1324,7 +1324,7 @@ white:true*/
         that = this,
         options = {};
         
-      if (!quantityUnit || !priceUnit || this.isNotReady()) { return; }
+      if (!inventoryUnit || !quantityUnit || !priceUnit || this.isNotReady()) { return; }
       
       if (inventoryUnit.id === priceUnit.id) {
         this.set("priceUnitRatio", 1);
@@ -1344,14 +1344,14 @@ white:true*/
     quantityUnitDidChange: function () {
       var quantity = this.get("quantity"),
         quantityUnit = this.get("quantityUnit"),
-        item = this.get("itemSite.item"),
+        item = this.getValue("itemSite.item"),
         inventoryUnit = item ? item.get("inventoryUnit") : false,
         that = this,
         options = {},
         isFractionalCache,
         ratioCache;
 
-      if (!item || this.isNotReady()) { return; }
+      if (!inventoryUnit || !quantityUnit || this.isNotReady()) { return; }
 
       if (quantityUnit.id === item.get("inventoryUnit").id) {
         this.set("quantityUnitRatio", 1);
@@ -1379,7 +1379,7 @@ white:true*/
               that.unset("quantity");
               that.notify("_notFractional".loc);
             } else {
-              this.calculatePrice(true);
+              that.calculatePrice(true);
             }
           }
         };

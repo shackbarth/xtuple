@@ -120,7 +120,7 @@ select xt.install_js('XM','item','xtuple', $$
   */
   XM.Item.unitFractional = function(itemId, unitId) {
     var sql = 'select itemuomfractionalbyuom($1, $2) as "fractional"';
-    return plv8.execute(sql, [itemId, nitId])[0].fractional;
+    return plv8.execute(sql, [itemId, unitId])[0].fractional;
   }
 
   /**
