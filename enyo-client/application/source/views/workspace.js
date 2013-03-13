@@ -1162,8 +1162,7 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "number",
-              label: "_orderNumber".loc()},
+            {kind: "XV.InputWidget", attr: "number"},
             {kind: "XV.DateWidget", attr: "quoteDate"},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
             {kind: "XV.DateWidget", attr: "expireDate"},
