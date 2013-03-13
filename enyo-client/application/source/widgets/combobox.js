@@ -49,7 +49,7 @@ regexp:true, undef:true, trailing:true, white:true */
       this.createComponent({
         container: this.$.fittableColumns,
         name: "comboboxNote",
-        classes: "xv-combobox-note" // TODO: css
+        classes: "xv-combobox-note"
       });
     },
     /**
