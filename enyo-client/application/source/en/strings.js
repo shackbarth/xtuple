@@ -284,6 +284,7 @@ var lang = XT.stringsFor("en_US", {
   "_lotSerial": "Lot/Serial",
   "_mainAddress": "Main Address",
   "_margin": "Margin",
+  "_markup": "Markup",
   "_mask": "Mask",
   "_match": "Match",
   "_maximum": "Maximum",
