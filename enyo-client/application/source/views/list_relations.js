@@ -331,12 +331,12 @@ enyo.kind({
           {content: "_ordered".loc() + ":", classes: "xv-list-attr",
             style: "text-align: right;"},
           {content: "_quantityUnit".loc() + ":", classes: "xv-list-attr",
-            style: "text-align: right;"},
+            style: "text-align: right;"}
         ]},
         {kind: "XV.ListColumn", classes: "third",
           components: [
           {kind: "XV.ListAttr", attr: "quantity"},
-          {kind: "XV.ListAttr", attr: "quantityUnit.name"},
+          {kind: "XV.ListAttr", attr: "quantityUnit.name"}
         ]},
         {kind: "XV.ListColumn", classes: "money",
           components: [
