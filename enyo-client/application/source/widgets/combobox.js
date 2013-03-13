@@ -43,8 +43,23 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.QuoteLineCharacteristicCombobox",
     kind: "XV.ComboboxWidget",
-    collection: "XM.shipVias",
-    keyAttribute: "value"
+    keyAttribute: "value",
+    create: function () {
+      this.inherited(arguments);
+      this.createComponent({
+        container: this.$.fittableColumns,
+        name: "comboboxNote",
+        classes: "xv-combobox-note" // TODO: css
+      });
+    },
+    /**
+      Populate the note field
+
+      @param {String} value
+     */
+    setNote: function (value) {
+      this.$.comboboxNote.setContent(value);
+    }
   });
 
   // ..........................................................

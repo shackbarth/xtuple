@@ -109,10 +109,7 @@ white:true*/
       this.$.combobox.setLabel(characteristicName);
       this.$.combobox.setValue(value, {silent: true});
 
-      this.$.price.setShowing(itemIsSold);
-      if (itemIsSold) {
-        this.$.price.setContent(model.get("price"));
-      }
+      this.$.combobox.setNote(itemIsSold ? model.get("price") : "");
     }
   });
 
