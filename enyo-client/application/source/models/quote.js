@@ -52,6 +52,7 @@ white:true*/
 
     readOnlyAttributes: [
       "freightWeight",
+      "getQuoteStatusString",
       "lineItems",
       "margin",
       "status",
