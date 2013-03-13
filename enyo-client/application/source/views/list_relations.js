@@ -54,11 +54,11 @@ trailing:true white:true*/
     },
     sendMail: XV.ContactList.prototype.sendMail
   });
- 
+
   // ..........................................................
   // CONTACT
   //
-  
+
   enyo.kind({
     name: "XV.ContactEmailListRelations",
     kind: "XV.ListRelations",
@@ -88,7 +88,7 @@ trailing:true white:true*/
       return true;
     }
   });
-  
+
   // ..........................................................
   // CUSTOMER SHIPTO
   //
@@ -118,7 +118,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   // ..........................................................
   // TAX REGISTRATION
   //
@@ -331,12 +331,12 @@ enyo.kind({
           {content: "_ordered".loc() + ":", classes: "xv-list-attr",
             style: "text-align: right;"},
           {content: "_quantityUnit".loc() + ":", classes: "xv-list-attr",
-            style: "text-align: right;"},
+            style: "text-align: right;"}
         ]},
         {kind: "XV.ListColumn", classes: "third",
           components: [
           {kind: "XV.ListAttr", attr: "quantity"},
-          {kind: "XV.ListAttr", attr: "quantityUnit.name"},
+          {kind: "XV.ListAttr", attr: "quantityUnit.name"}
         ]},
         {kind: "XV.ListColumn", classes: "money",
           components: [
@@ -346,20 +346,24 @@ enyo.kind({
             style: "text-align: right;"},
           {content: "_custPrice".loc() + ":", classes: "xv-list-attr",
             style: "text-align: right;"},
-          {content: "_discount".loc() + ":", classes: "xv-list-attr",
+          {name: "priceModeLabel", content: "_discount".loc() + ":", classes: "xv-list-attr",
             style: "text-align: right;"}
         ]},
         {kind: "XV.ListColumn", classes: "third",
           components: [
-          {kind: "XV.ListAttr", attr: "listPrice", classes: "text-align-right"},
-          {kind: "XV.ListAttr", attr: "extendedPrice", classes: "text-align-right"},
-          {kind: "XV.ListAttr", attr: "customerPrice", classes: "text-align-right"},
+          {kind: "XV.ListAttr", attr: "listPrice", classes: "text-align-right", formatter: "formatPrice"},
+          {kind: "XV.ListAttr", attr: "extendedPrice", classes: "text-align-right", formatter: "formatPrice"},
+          {kind: "XV.ListAttr", attr: "customerPrice", classes: "text-align-right", formatter: "formatPrice"},
           {kind: "XV.ListAttr", attr: "listPriceDiscount", classes: "text-align-right", formatter: "formatPercentage"}
         ]}
       ]}
     ]}
   ],
   formatPercentage: function (value, view, model) {
-    return value * 100;
+    return value * 100 + "%";
+  },
+  formatPrice: function (value, view, model) {
+    view.addRemoveClass("error", value < 0);
+    return Globalize.format(value, "c" + XT.MONEY_SCALE);
   }
 });

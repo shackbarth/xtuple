@@ -192,11 +192,15 @@ trailing:true white:true*/
         {kind: "XV.MoneyWidget", attr: {amount: "extendedPrice", currency: "quote.currency"},
           label: "_extendedPrice".loc(), currencyDisabled: true, effective: "quote.quoteDate"},
         {kind: "XV.DateWidget", attr: "scheduleDate"},
-        {kind: "XV.DateWidget", attr: "promiseDate"},
+        {kind: "XV.DateWidget", name: "promiseDate", attr: "promiseDate", showing: false},
         {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
         {kind: "XV.TextArea", attr: "notes", fit: true}
       ]}
-    ]
+    ],
+    create: function () {
+      this.inherited(arguments);
+      this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
+    }
   });
 
   enyo.kind({
