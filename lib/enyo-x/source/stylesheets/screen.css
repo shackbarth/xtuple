@@ -875,6 +875,10 @@ body {
   margin-left: 4px;
   display: inline-block;
 }
+.xv-combobox-note {
+  padding: 14px 3px 8px 3px;
+  text-align: left;
+}
 /* Picker */
 .onyx-picker .onyx-menu-item {
   text-align: left;
