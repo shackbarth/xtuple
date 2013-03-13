@@ -1287,6 +1287,7 @@ trailing:true white:true*/
             {kind: "XV.NumberWidget", attr: "profit"},
             {kind: "XV.TaxTypePicker", attr: "taxType"},
             {kind: "XV.NumberWidget", attr: "tax"},
+            {kind: "XV.QuoteLineCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
