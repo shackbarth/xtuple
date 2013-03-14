@@ -181,6 +181,10 @@ trailing:true white:true*/
       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
         classes: "in-panel", components: [
         {kind: "XV.NumberWidget", attr: "lineNumber"},
+        {kind: "XV.ItemSiteWidget", attr: "itemSite",
+          name: "itemSiteWidget",
+          filterRestrictionType: "item.isSold",
+          filterRestriction: true},
         {kind: "XV.NumberWidget", attr: "quantity"},
         {kind: "XV.UnitWidget", attr: "quantityUnit"},
         {kind: "XV.PercentWidget", name: "discount", attr: "discount", label: "_discount".loc()},
