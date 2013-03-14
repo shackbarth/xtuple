@@ -169,7 +169,7 @@ white:true*/
         }
       };
 
-      XT.dataSource.dispatch("XM.Item", "availableItems",
+      XT.dataSource.dispatch("XM.ItemSite", "itemsForCustomer",
         [options.query,
           this.bespokeFilter.customerId,
           this.bespokeFilter.shiptoId,
