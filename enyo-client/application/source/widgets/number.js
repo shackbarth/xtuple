@@ -99,7 +99,7 @@ regexp:true, undef:true, trailing:true, white:true */
     getEffective: function () {
       return this.effective;
     },
-    
+
     /**
       Sets the effective date and sets visibility
       of base panel based on value.
@@ -136,7 +136,7 @@ regexp:true, undef:true, trailing:true, white:true */
     setAmount: function (value) {
       this.amount = value;
     },
-    
+
     /**
       Sets visibility of base panel
      */
@@ -168,6 +168,7 @@ regexp:true, undef:true, trailing:true, white:true */
       // only show the base panel if there is an effect date AND the currency doesn't match the base
       // Set base label with calculated value
       this.setBasePanelShowing();
+      this.inherited(arguments);
     },
 
     /**
@@ -182,11 +183,22 @@ regexp:true, undef:true, trailing:true, white:true */
     /**
     This setValue function handles a value which is an
       object consisting of two key/value pairs for the
-      amount and currency controls.
+      amount and currency controls. It can also handle just
+      a number as the value, which it will assume to be the amount
     */
     setValue: function (value, options) {
+      var oldValue,
+        inEvent,
+        amountAttr,
+        newValue;
+
+      // support how this function is used by the base class.
+      // assume if we get a number, that means the amount
+      if (typeof value === 'number') {
+        value = {amount: value};
+      }
+
       options = options || {};
-      var oldValue, inEvent, newValue;
       for (var attribute in value) {
         if (value.hasOwnProperty(attribute)) {
           newValue = value[attribute];
@@ -195,7 +207,11 @@ regexp:true, undef:true, trailing:true, white:true */
             if (oldValue !== newValue) {
               this.setAmount(newValue);
               this.valueChanged(newValue);
-              inEvent = { value: newValue, originator: this };
+              // the subwidget does not know its own attr, but we know what
+              // it is because it's stored in our attr hash. substitute it.
+              // that's all the workspace needs to know about the originator
+              amountAttr = this.attr.amount;
+              inEvent = { value: newValue, originator: {attr: amountAttr }};
               if (!options.silent) { this.doValueChange(inEvent); }
             }
           } else if (attribute === "currency") {
