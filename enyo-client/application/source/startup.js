@@ -357,6 +357,21 @@ white:true*/
       XM.plannerCodes.fetch(options);
     }
   });
+  
+  XT.StartupTasks.push({
+    taskName: "loadSaleTypes",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      options.query = {};
+      options.query.orderBy = [
+        {attribute: 'code'}
+      ];
+      XM.saleTypes = new XM.SaleTypeCollection();
+      XM.saleTypes.fetch(options);
+    }
+  });
 
   XT.StartupTasks.push({
     taskName: "loadSites",
@@ -385,6 +400,17 @@ white:true*/
       ];
       XM.taxTypes = new XM.TaxTypeCollection();
       XM.taxTypes.fetch(options);
+    }
+  });
+  
+  XT.StartupTasks.push({
+    taskName: "loadTaxAuthorities",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      XM.taxAuthorities = new XM.TaxAuthorityCollection();
+      XM.taxAuthorities.fetch(options);
     }
   });
 

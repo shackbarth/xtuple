@@ -15,12 +15,14 @@
 
 -- xt functions
 \i xt/functions/add_priv.sql;
+\i xt/functions/average_cost.sql;
 \i xt/functions/cntctmerge.sql;
 \i xt/functions/cntctrestore.sql;
 \i xt/functions/createuser.sql;
 \i xt/functions/install_guiscript.sql;
 \i xt/functions/mergecrmaccts.sql;
 \i xt/functions/pg_advisory_unlock.sql;
+\i xt/functions/quote_line_base_price.sql;
 \i xt/functions/quote_line_customer_discount.sql;
 \i xt/functions/quote_line_list_cost_markup.sql;
 \i xt/functions/quote_line_extended_price.sql;
@@ -78,6 +80,8 @@
 \i xt/views/customer_prospect.sql;
 \i xt/views/cust_doc.sql;
 \i xt/views/incdtinfo.sql;
+\i xt/views/iteminfo.sql;
+\i xt/views/itemsiteinfo.sql;
 \i xt/views/opheadinfo.sql;
 \i xt/views/prjinfo.sql;
 \i xt/views/quheadinfo.sql;

@@ -88,20 +88,25 @@ regexp:true, undef:true, trailing:true, white:true */
      */
     create: function () {
       this.inherited(arguments);
+      this.$.baseLabel.setContent(XT.baseCurrency().get('abbreviation'));
       // the currency picker may be disabled or hidden on creation in certain situations
       this.$.picker.setDisabled(this.getCurrencyDisabled());
       this.$.picker.setShowing(this.getCurrencyShowing());
-      // only show the base panel if there is an effect date AND the currency doesn't match the base
-      if (this.getEffective() && (this.getCurrency() !== XT.baseCurrency())) {
-        this.$.basePanel.setShowing(true);
-        this.$.baseLabel.setContent(XT.baseCurrency().get('abbreviation'));
-      }
     },
     /**
       Returns the published effective value.
      */
     getEffective: function () {
       return this.effective;
+    },
+    
+    /**
+      Sets the effective date and sets visibility
+      of base panel based on value.
+     */
+    setEffective: function (value) {
+      this.effective = value;
+      this.setBasePanelShowing();
     },
 
     /**
@@ -131,11 +136,27 @@ regexp:true, undef:true, trailing:true, white:true */
     setAmount: function (value) {
       this.amount = value;
     },
+    
+    /**
+      Sets visibility of base panel
+     */
+    setBasePanelShowing: function () {
+      var showing = _.isDate(this.getEffective()) && this.getCurrency() && !this.getCurrency().get("isBase");
+      if (showing) {
+        this.setBaseAmount(this.getAmount());
+      }
+      this.$.basePanel.setShowing(showing);
+    },
 
     setBaseAmount: function (value) {
-      var amt = value * this.getFixedRate(this.getEffective(), this.getCurrency());
-      amt = amt || amt === 0 ? Globalize.format(amt, "n" + this.getScale()) : "";
-      this.$.baseAmount.setContent(amt);
+      var options = {}, that = this;
+      if (value || value === 0) {
+        options.success = function (basePrice) {
+          var amt = basePrice || basePrice === 0 ? Globalize.format(basePrice, "n" + that.getScale()) : "";
+          that.$.baseAmount.setContent(amt);
+        };
+        that.getCurrency().toBase(value, that.getEffective(), options);
+      }
     },
 
     /**
@@ -144,12 +165,9 @@ regexp:true, undef:true, trailing:true, white:true */
     when the amount or currency are changed.
     */
     inputChanged: function (inSender, inEvent) {
-      if (this.effective) {
-        var input = this.$.input.getValue(),
-          value = this.validate(input);
-        // Set base label with calculated value
-        this.setBaseAmount(value);
-      }
+      // only show the base panel if there is an effect date AND the currency doesn't match the base
+      // Set base label with calculated value
+      this.setBasePanelShowing();
     },
 
     /**
@@ -179,36 +197,19 @@ regexp:true, undef:true, trailing:true, white:true */
               this.valueChanged(newValue);
               inEvent = { value: newValue, originator: this };
               if (!options.silent) { this.doValueChange(inEvent); }
-              // Set base label with calculated value
-              this.setBaseAmount(newValue);
             }
           } else if (attribute === "currency") {
             oldValue = this.getCurrency();
             if (oldValue !== newValue) {
               this.setCurrency(newValue || XT.baseCurrency());
               this.$.picker.setValue(this.getCurrency());
-
-              // only show the base panel if there is an effect date AND the currency doesn't match the base
-              this.$.basePanel.setShowing(this.getEffective() && (this.getCurrency() !== XT.baseCurrency()));
-              // Set base label with calculated value
-              this.setBaseAmount(this.getAmount());
             }
           }
+          // only show the base panel if there is an effect date AND the currency doesn't match the base
+          // Set base label with calculated value
+          this.setBasePanelShowing();
         }
       }
-    },
-
-    /**
-     Retrieves the fixed currency rate using the current currency and effective date.
-     */
-    getFixedRate: function (effDate, curr) {
-      if (!curr) { curr = XT.baseCurrency(); }
-      var rate = null;
-      rate = _.find(XM.currencyRates.models, function (currRate) {
-        return (currRate.get('currency') === curr.get('id')) &&
-          (effDate > currRate.get('effective') && effDate < currRate.get('expires'));
-      });
-      return rate ? rate.get('rate') : null;
     }
   });
 
