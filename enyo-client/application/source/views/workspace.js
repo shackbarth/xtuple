@@ -1211,7 +1211,7 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_orderNotes".loc()},
             {kind: "XV.TextArea", attr: "orderNotes", fit: true},
             {kind: "onyx.GroupboxHeader", content: "_shippingNotes".loc()},
-            {kind: "XV.TextArea", attr: "shippingNotes", fit: true}
+            {kind: "XV.TextArea", attr: "shipNotes", fit: true}
           ]}
         ]},
         {kind: "FittableRows", title: "_lineItems".loc(), components: [
