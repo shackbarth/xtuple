@@ -80,7 +80,7 @@ white:true*/
         currency: XT.baseCurrency(),
         salesRep: settings.get("DefaultSalesRep"),
         terms: settings.get("DefaultTerms"),
-        shipVia: settings.get("DefaultShipViaId"),
+        shipVia: this.getShipViaValue(),
         customerType: settings.get("DefaultCustType"),
         backorder: settings.get("DefaultBackOrders") || false,
         partialShip: settings.get("DefaultPartialShipments") || false,
@@ -145,6 +145,19 @@ white:true*/
         this.set("partialShip", false);
         this.setReadOnly("partialShip", true);
       }
+    },
+    
+    getShipViaValue: function () {
+      var ret,
+        shipViaModel = XM.shipVias.get(XT.session.getSettings().get("DefaultShipViaId"));
+      if (shipViaModel) {
+        ret = shipViaModel.get("code") + "-" + shipViaModel.get("description");
+      }
+      else {
+        ret = "";
+      }
+      
+      return ret;
     },
 
     purchaseOrdersDidChange: function () {
