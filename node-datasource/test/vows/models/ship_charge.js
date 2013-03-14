@@ -15,27 +15,28 @@ var XVOWS = XVOWS || {};
   var data = {};
 
   data.createHash = {
-    name: "Milky Way",
-    abbreviation: "MW",
-    country: 214  //arbitrary number, must match actual country_id
+    name: "Test Ship Charge",
+    description: "iAmAShipCharge",
+    isCustomerPay: true
   };
 
   data.updateHash = {
-    abbreviation: "XY"
+    name: "Update Test Ship Charge",
+    isCustomerPay: false
   };
 
-  vows.describe('XM.State CRUD test').addBatch({
+  vows.describe('XM.ShipCharge CRUD test').addBatch({
     'INITIALIZE ': {
       topic: function () {
         var that = this,
           callback = function () {
-            data.model = new XM.State();
+            data.model = new XM.ShipCharge();
             that.callback(null, data);
           };
         zombieAuth.loadApp(callback);
       },
-      'The record type is XM.State': function (data) {
-        assert.equal(data.model.recordType, "XM.State");
+      'The record type is XM.ShipCharge': function (data) {
+        assert.equal(data.model.recordType, "XM.ShipCharge");
       }
     }
   }).addBatch({
@@ -55,12 +56,6 @@ var XVOWS = XVOWS || {};
     'READ': {
       topic: function () {
         return data;
-      },
-      'ID is a number': function (data) {
-        assert.isNumber(data.model.id);
-      },
-      'Name is `Milky Way`': function (data) {
-        assert.equal(data.model.get('name'), data.createHash.name);
       }
     }
   }).addBatch({
@@ -69,9 +64,6 @@ var XVOWS = XVOWS || {};
         topic: function () {
           data.model.set(data.updateHash);
           return data;
-        },
-        'Abbr is `XY`': function (data) {
-          assert.equal(data.model.get('abbreviation'), data.updateHash.abbreviation);
         },
         '-> Commit': crud.save(data)
       }

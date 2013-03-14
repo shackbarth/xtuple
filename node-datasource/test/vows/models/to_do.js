@@ -1,7 +1,7 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global XM:true, XV:true, module:true, require:true, assert: true */
+/*global XT:true, XM:true, XV:true, process:true, module:true, require:true */
 
 var XVOWS = XVOWS || {};
 (function () {
@@ -12,29 +12,30 @@ var XVOWS = XVOWS || {};
     zombieAuth = require("../lib/zombie_auth"),
     crud = require('../lib/crud');
 
-  var data = {};
+  var data = {},
+    today = new Date();
 
   data.createHash = {
-    name: "TESTSHIPZONE",
-    description: "Test Ship Zone"
+    dueDate: today,
+    name: "Pass the VOWS tests"
   };
 
   data.updateHash = {
-    name: "UPDATETESTSHIPZONE"
+    name: "Updated"
   };
 
-  vows.describe('XM.ShipZone CRUD test').addBatch({
+  vows.describe('XM.ToDo CRUD test').addBatch({
     'INITIALIZE ': {
       topic: function () {
         var that = this,
           callback = function () {
-            data.model = new XM.ShipZone();
+            data.model = new XM.ToDo();
             that.callback(null, data);
           };
         zombieAuth.loadApp(callback);
       },
-      'The record type is XM.ShipZone': function (data) {
-        assert.equal(data.model.recordType, "XM.ShipZone");
+      'The record type is XM.ToDo': function (data) {
+        assert.equal(data.model.recordType, "XM.ToDo");
       }
     }
   }).addBatch({
@@ -54,15 +55,6 @@ var XVOWS = XVOWS || {};
     'READ': {
       topic: function () {
         return data;
-      },
-      'ID is a number': function (data) {
-        assert.isNumber(data.model.id);
-      },
-      'Name is `TESTSHIPZONE`': function (data) {
-        assert.equal(data.model.get('name'), data.createHash.name);
-      },
-      'Description is `Test Ship Zone`': function (data) {
-        assert.equal(data.model.get('description'), data.createHash.description);
       }
     }
   }).addBatch({
@@ -71,9 +63,6 @@ var XVOWS = XVOWS || {};
         topic: function () {
           data.model.set(data.updateHash);
           return data;
-        },
-        'Name is `UPDATETESTSHIPZONE`': function (data) {
-          assert.equal(data.model.get('name'), data.updateHash.name);
         },
         '-> Commit': crud.save(data)
       }

@@ -15,33 +15,36 @@ var XVOWS = XVOWS || {};
   var data = {};
 
   data.createHash = {
-    name: "Outer Space",
-    abbreviation: "OS",
-    currencyAbbreviation: "USD"
+    account: 1,
+    name: 'Mike'
+    //opportunityStage, opportunitySource, and opportunityType
   };
 
   data.updateHash = {
-    abbreviation: "XY"
+    name: 'Mikey'
   };
 
-  vows.describe('XM.Country CRUD test').addBatch({
+  vows.describe('XM.Opportunity CRUD test').addBatch({
     'INITIALIZE ': {
       topic: function () {
         var that = this,
           callback = function () {
-            data.model = new XM.Country();
+            data.model = new XM.Opportunity();
             that.callback(null, data);
           };
         zombieAuth.loadApp(callback);
       },
-      'The record type is XM.Country': function (data) {
-        assert.equal(data.model.recordType, "XM.Country");
+      'The record type is XM.Opportunity': function (data) {
+        assert.equal(data.model.recordType, "XM.Opportunity");
       }
     }
   }).addBatch({
     'CREATE ': crud.create(data, {
       '-> Set values': {
         topic: function (data) {
+          data.model.set('opportunityStage', XM.opportunityStages.where({description: 'Internal'}));
+          data.model.set('opportunitySource', XM.opportunitySources.where({name: 'RECEIVED'}));
+          data.model.set('opportunityType', XM.opportunityTypes.where({name: 'PRODUCT'}));
           data.model.set(data.createHash);
           return data;
         },
@@ -55,12 +58,6 @@ var XVOWS = XVOWS || {};
     'READ': {
       topic: function () {
         return data;
-      },
-      'ID is a number': function (data) {
-        assert.isNumber(data.model.id);
-      },
-      'Name is `Outer Space`': function (data) {
-        assert.equal(data.model.get('name'), data.createHash.name);
       }
     }
   }).addBatch({
@@ -69,9 +66,6 @@ var XVOWS = XVOWS || {};
         topic: function () {
           data.model.set(data.updateHash);
           return data;
-        },
-        'Abbr is `XY`': function (data) {
-          assert.equal(data.model.get('abbreviation'), data.updateHash.abbreviation);
         },
         '-> Commit': crud.save(data)
       }
