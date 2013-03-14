@@ -16,7 +16,7 @@ var XVOWS = XVOWS || {};
     extra = {};
 
   data.createHash = {
-    number: "MIKEPROSPECT",
+    number: "TESTPROSPECT",
     name: "Mike"
   };
 
@@ -56,6 +56,9 @@ var XVOWS = XVOWS || {};
       topic: function () {
         extra.accountId = data.model.get('account');
         return data;
+      },
+      'Last Error is null': function (data) {
+        assert.isNull(data.model.lastError);
       }
     }
   }).addBatch({
