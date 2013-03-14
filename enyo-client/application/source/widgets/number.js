@@ -202,7 +202,7 @@ regexp:true, undef:true, trailing:true, white:true */
             oldValue = this.getCurrency();
             if (oldValue !== newValue) {
               this.setCurrency(newValue || XT.baseCurrency());
-              this.$.picker.setValue(this.getCurrency());
+              this.$.picker.setValue(this.getCurrency(), options);
             }
           }
           // only show the base panel if there is an effect date AND the currency doesn't match the base
