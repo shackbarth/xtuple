@@ -1304,7 +1304,8 @@ trailing:true white:true*/
               filterRestriction: true},
             {kind: "XV.NumberWidget", attr: "quantity"},
             {kind: "XV.UnitWidget", attr: "quantityUnit"},
-            {kind: "XV.PercentWidget", attr: "discount"},
+            {kind: "XV.PercentWidget", name: "discount",
+              attr: "discount", label: "_discount".loc()},
             {kind: "XV.NumberWidget", attr: "price"},
             {kind: "XV.UnitWidget", attr: "priceUnit"},
             {kind: "XV.NumberWidget", attr: "extendedPrice"},
@@ -1341,7 +1342,8 @@ trailing:true white:true*/
     ],
     /**
       The item site widget will need to know about the customer and the shipto
-      for narrowing down of item options.
+      for narrowing down of item options. When the model changes, check the priceMode field to see if it is in
+      Discount or Markup mode and change the label accordingly.
      */
     attributesChanged: function (model, options) {
       this.inherited(arguments);
@@ -1356,6 +1358,13 @@ trailing:true white:true*/
         this.$.itemSiteWidget.setBespokeFilter(bespokeFilter);
         if (model.getValue("quote.site")) {
           this.$.itemSiteWidget.setDefaultSite(model.getValue("quote.site"));
+        }
+
+        var pm = model.get("priceMode");
+        if (pm === "N" || pm === "D" || pm === "P") { // discount
+          this.$.discount.setLabel("_discount".loc());
+        } else { // markup
+          this.$.discount.setLabel("_markup".loc());
         }
       }
     },
