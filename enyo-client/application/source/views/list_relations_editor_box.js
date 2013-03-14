@@ -181,9 +181,13 @@ trailing:true white:true*/
       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
         classes: "in-panel", components: [
         {kind: "XV.NumberWidget", attr: "lineNumber"},
+        {kind: "XV.ItemSiteWidget", attr: "itemSite",
+          name: "itemSiteWidget",
+          filterRestrictionType: "item.isSold",
+          filterRestriction: true},
         {kind: "XV.NumberWidget", attr: "quantity"},
         {kind: "XV.UnitWidget", attr: "quantityUnit"},
-        {kind: "XV.PercentWidget", attr: "discount"},
+        {kind: "XV.PercentWidget", name: "discount", attr: "discount", label: "_discount".loc()},
         {kind: "XV.MoneyWidget", attr: {amount: "price", currency: "quote.currency"},
           label: "_price".loc(), currencyDisabled: true, effective: "quote.quoteDate"},
         {kind: "XV.UnitWidget", attr: "priceUnit"},
@@ -198,6 +202,19 @@ trailing:true white:true*/
     create: function () {
       this.inherited(arguments);
       this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
+    },
+    /**
+      When the model changes, check the priceMode field to see if it is in
+        Discount or Markup mode and change the label accordingly.
+    */
+    attributesChanged: function (model, options) {
+      this.inherited(arguments);
+      var pm = model.get("priceMode");
+      if (pm === "N" || pm === "D" || pm === "P") { // discount
+        this.$.discount.setLabel("_discount".loc());
+      } else { // markup
+        this.$.discount.setLabel("_markup".loc());
+      }
     }
   });
 
