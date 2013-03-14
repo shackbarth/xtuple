@@ -94,11 +94,9 @@ white:true*/
     },
 
     assignedToDidChange: function (model, value, options) {
-      var status = this.getStatus(),
-        K = XM.Model,
-        assignedTo,
+      var assignedTo,
         assignDate;
-      if ((options && options.force) || !(status & K.READY)) { return; }
+      if (this.isNotRead()) { return; }
 
       // Set the assign date if it hasn't been already
       assignedTo = this.get('assignedTo');

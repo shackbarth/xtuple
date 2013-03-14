@@ -4,7 +4,7 @@ trailing:true white:true*/
 /*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true */
 
 (function () {
-  
+
   // ..........................................................
   // CHARACTERISTIC
   //
@@ -53,7 +53,7 @@ trailing:true white:true*/
     parentKey: "contact",
     listRelations: "XV.ContactEmailListRelations"
   });
-  
+
   // ..........................................................
   // CUSTOMER SHIP-TO
   //
@@ -94,9 +94,9 @@ trailing:true white:true*/
     listRelations: "XV.CustomerShipToListRelations",
     fitButtons: false
   });
-  
+
   // ..........................................................
-  // Tax Registrations
+  // TAX REGISTRATIONS
   //
   enyo.kind({
     name: "XV.TaxRegistrationEditor",
@@ -171,6 +171,109 @@ trailing:true white:true*/
     parentKey: "project",
     listRelations: "XV.ProjectTaskListRelations",
     fitButtons: false
+  });
+
+  // ..........................................................
+  // QUOTE LINE ITEMS
+  //
+  enyo.kind({
+    name: "XV.QuoteLineItemEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+        classes: "in-panel", components: [
+        {kind: "XV.NumberWidget", attr: "lineNumber"},
+        {kind: "XV.SitePicker", attr: "site"},
+        {kind: "XV.InputWidget", attr: "customerPartNumber"},
+        {kind: "XV.NumberWidget", attr: "quantity"},
+        {kind: "XV.UnitWidget", attr: "quantityUnit"},
+        {kind: "XV.PercentWidget", attr: "discount"},
+        {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "currency"},
+          label: "_unitPrice".loc(), currencyDisabled: true, effective: new Date()},
+        {kind: "XV.UnitWidget", attr: "priceUnit"},
+        {kind: "XV.NumberWidget", attr: "extendedPrice"},
+        {kind: "XV.DateWidget", attr: "scheduleDate"},
+        {kind: "XV.DateWidget", attr: "promiseDate"},
+        {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+        {kind: "XV.TextArea", attr: "notes", fit: true}
+      ]}
+    ]
+  });
+
+  enyo.kind({
+    name: "XV.QuoteLineItemSummary",
+    kind: "XV.RelationsEditor",
+    style: "margin-top: 10px",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
+      {kind: "XV.ScrollableGroupbox", name: "totalGroup",
+        classes: "in-panel", components: [
+        {kind: "XV.CurrencyPickerWidget", attr: "currency"},
+        {kind: "XV.NumberWidget", attr: "margin"},
+        //{kind: "XV.TextArea", attr: "miscChargeDesc", fit: true} - needs GL
+        // Charge Sales Account - needs GL
+        {kind: "XV.NumberWidget", attr: "freightWeight"},
+        {kind: "XV.MoneyWidget", attr: {amount: "subtotal", currency: "currency"},
+          label: "_subtotal".loc(), currencyShowing: false, effective: new Date()},
+        // {kind: "XV.NumberWidget", attr: "miscCharge"}, - needs GL
+        {kind: "XV.NumberWidget", attr: "freight", label: "_freight".loc()},
+        {kind: "XV.MoneyWidget", attr: {amount: "taxTotal", currency: "currency"},
+          label: "_tax".loc(), currencyShowing: false, effective: new Date()},
+        {kind: "XV.MoneyWidget", attr: {amount: "total", currency: "currency"},
+          label: "_total".loc(), currencyShowing: false, effective: new Date()}
+      ]}
+    ]
+  });
+
+  enyo.kind({
+    name: "XV.QuoteLineItemBox",
+    kind: "XV.ListRelationsEditorBox",
+    classes: "xv-list-relations-box",
+    events: {
+      onChildWorkspace: ""
+    },
+    title: "_lineItems".loc(),
+    editor: "XV.QuoteLineItemEditor",
+    parentKey: "quote",
+    listRelations: "XV.QuoteLineItemListRelations",
+    fitButtons: false,
+
+    create: function () {
+      this.inherited(arguments);
+
+      // Bottom Panel with calculations
+      this.summary = this.createComponent({kind: "XV.QuoteLineItemSummary", name: "totalsPanel"});
+
+      this.createComponent({
+        kind: "onyx.Button",
+        content: "_expand".loc(),
+        ontap: "launchWorkspace",
+        classes: "xv-groupbox-button-right",
+        container: this.$.navigationButtonPanel
+      });
+    },
+
+    /**
+    Set the current model into the List Relation and the Summary Editor Panel
+    */
+    valueChanged: function () {
+      var value = this.getValue();
+      this.$.list.setValue(value);
+      this.summary.setValue(this.getValue().quote);
+      // change the styling of the last button to make room for the new button
+      this.$.doneButton.setClasses("xv-groupbox-button-center");
+    },
+
+    launchWorkspace: function (inSender, inEvent) {
+      var index = Number(this.$.list.getFirstSelected());
+      this.doChildWorkspace({
+        workspace: "XV.QuoteLineWorkspace",
+        collection: this.getValue(),
+        index: index,
+        listRelations: this.$.list
+      });
+      return true;
+    }
   });
 
 }());

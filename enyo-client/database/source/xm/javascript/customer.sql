@@ -5,43 +5,60 @@ select xt.install_js('XM','Customer','xtuple', $$
   XM.Customer = {};
 
   XM.Customer.isDispatchable = true;
-  
-  
-  /*itemprice(pitemid integer, pcustid integer, pshiptoid integer, pqty numeric, pqtyuom integer, ppriceuom integer, pcurrid integer, peffective date */
+
   /**
-   Return a price for an item on a sales order/quote based on input. 
+    Determin whether a customer can purchase a given item
+
+    @param {Number} Customer id
+    @param {Number} Item id
+    @param {Date} Schedule date
+    @param {Number} Shipto id
+    @returns {Boolean}
+  */
+  XM.Customer.canPurchase = function (customerId, itemId, scheduleDate, shiptoId) {
+    var sql = 'select customerCanPurchase($1, $2, $3, $4::date) as canpurchase;';
+    return plv8.execute(sql, [itemId, customerId, shiptoId, scheduleDate])[0].canpurchase;
+  };
+  
+  /**
+   Returns an object with a price and type for a given customer, item and quantity.
+
    @param {Number} item id
    @param {Number} customer id
-   @param {Number} shipto id
-   @param {Number} qty 
-   @param {Number} qty uom id
-   @param {Number} price uom id
-   @param {Number} currency id
-   @param {Date} effective date
-   @returns Number 
+   @param {Number} quantity
+   @param {Object} options:  asOf, shiptoId, quantityUnitId, priceUnitId, currencyId, effective
+   @returns Object 
   */
- 
-  XM.Customer.price = function(item, customer, quantity, options) {
+  XM.Customer.price = function(customerId, itemId, quantity, options) {
     options = options || {};
-    var err;
-    if(item === undefined) err = "Item id can not be blank.";
-    if(customer === undefined) err = "Customer id can not be blank.";
-    if(quantity === undefined) err = "Quantity can not be blank.";
-    if(!err) {
-    var 
-      today=new Date(),
-      effective = options.effective || today,
-      shipto = options.shipto || -1,
-      quantityUom = options.quantityUom || plv8.execute("select item_inv_uom_id as result from item where item_id = $1;", [item])[0].result,
-      priceUom = options.priceUom || plv8.execute("select item_price_uom_id as result from item where item_id = $1;", [item])[0].result,
-      currency = options.currency || plv8.execute("select basecurrid() as result")[0].result,
-      effective = options.effective || today;
-    
-      return plv8.execute("select itemprice($1, $2, $3, $4, $5, $6, $7, $8) as result;", [item, customer, shipto, quantity, quantityUom, priceUom, currency, effective])[0].result; 
-    }
-    
-    throw new Error(err);
+    var today = new Date(),
+      shiptoId = options.shiptoId || -1,
+      quantityUnitId,
+      priceUnitId,
+      currencyId,
+      effective,
+      asOf,
+      result,
+      err;
+
+    if (!itemId) {
+      err = "Item";
+    } else if (!customerId) {
+      err = "Customer";
+    } else if (!quantity) {
+      err = "Quantity" 
+    };
+    if(err) { plv8.elog(ERROR, err + " is required.") }
+
+    quantityUnitId = options.quantityUnitId || plv8.execute("select item_inv_uom_id as result from item where item_id = $1;", [itemId])[0].result,
+    priceUnitId = options.priceUnitId || plv8.execute("select item_price_uom_id as result from item where item_id = $1;", [itemId])[0].result,
+    currencyId = options.currencyId || plv8.execute("select basecurrid() as result")[0].result,
+    effective = options.effective ? new Date(options.effective) : today,
+    asOf = options.asOf ? new Date(options.asOf) : today,
+    result = plv8.execute("select itemipsprice($1, $2, $3, $4, $5, $6, $7, $8::date, $9::date, null) as result;", [itemId, customerId, shiptoId, quantity, quantityUnitId, priceUnitId, currencyId, effective, asOf])[0].result;
+
+    result = { price: result.itemprice_price, type: result.itemprice_type };
+    return JSON.stringify(result); 
   }
   
-
 $$ );

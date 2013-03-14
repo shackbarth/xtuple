@@ -3,7 +3,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "Quote",
-    "table": "quheadinfo",
+    "table": "xt.quheadinfo",
     "idSequenceName": "quhead_quhead_id_seq",
     "comment": "Quote Map",
     "privileges": {
@@ -46,74 +46,17 @@
         }
       },
       {
-        "name": "shipto",
-        "toOne": {
-          "isNested": true,
-          "type": "CustomerShiptoRelation",
-          "column": "quhead_shipto_id"
-        }
-      },
-      {
-        "name": "shiptoName",
+        "name": "packDate",
         "attr": {
-          "type": "String",
-          "column": "quhead_shiptoname"
+          "type": "Date",
+          "column": "quhead_packdate"
         }
       },
       {
-        "name": "shiptoAddress1",
+        "name": "scheduleDate",
         "attr": {
-          "type": "String",
-          "column": "quhead_shiptoaddress1"
-        }
-      },
-      {
-        "name": "shiptoAddress2",
-        "attr": {
-          "type": "String",
-          "column": "quhead_shiptoaddress2"
-        }
-      },
-      {
-        "name": "shiptoAddress3",
-        "attr": {
-          "type": "String",
-          "column": "quhead_shiptoaddress3"
-        }
-      },
-      {
-        "name": "shiptoCity",
-        "attr": {
-          "type": "String",
-          "column": "quhead_shiptocity"
-        }
-      },
-      {
-        "name": "shiptoState",
-        "attr": {
-          "type": "String",
-          "column": "quhead_shiptostate"
-        }
-      },
-      {
-        "name": "shiptoPostalCode",
-        "attr": {
-          "type": "String",
-          "column": "quhead_shiptozipcode"
-        }
-      },
-      {
-        "name": "shiptoPhone",
-        "attr": {
-          "type": "String",
-          "column": "quhead_shiptophone"
-        }
-      },
-      {
-        "name": "salesRep",
-        "toOne": {
-          "type": "SalesRep",
-          "column": "quhead_salesrep_id"
+          "type": "Date",
+          "column": "schedule_date"
         }
       },
       {
@@ -124,24 +67,52 @@
         }
       },
       {
-        "name": "freight",
+        "name": "salesRep",
+        "toOne": {
+          "type": "SalesRep",
+          "column": "quhead_salesrep_id"
+        }
+      },
+      {
+        "name": "commission",
         "attr": {
           "type": "Number",
-          "column": "quhead_freight"
+          "column": "quhead_commission"
         }
       },
       {
-        "name": "orderNotes",
-        "attr": {
-          "type": "String",
-          "column": "quhead_ordercomments"
+        "name": "taxZone",
+        "toOne": {
+          "type": "TaxZone",
+          "column": "quhead_taxzone_id"
         }
       },
       {
-        "name": "shipNotes",
+        "name": "site",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "quhead_warehous_id"
+        }
+      },
+      {
+        "name": "saleType",
+        "toOne": {
+          "type": "SaleType",
+          "column": "quhead_saletype_id"
+        }
+      },
+      {
+        "name": "status",
         "attr": {
           "type": "String",
-          "column": "quhead_shipcomments"
+          "column": "quhead_status"
+        }
+      },
+      {
+        "name": "expireDate",
+        "attr": {
+          "type": "Date",
+          "column": "quhead_expire"
         }
       },
       {
@@ -187,55 +158,6 @@
         }
       },
       {
-        "name": "billtoPostalCode",
-        "attr": {
-          "type": "String",
-          "column": "quhead_billtozip"
-        }
-      },
-      {
-        "name": "commission",
-        "attr": {
-          "type": "Number",
-          "column": "quhead_commission"
-        }
-      },
-      {
-        "name": "fob",
-        "attr": {
-          "type": "String",
-          "column": "quhead_fob"
-        }
-      },
-      {
-        "name": "shipVia",
-        "attr": {
-          "type": "String",
-          "column": "quhead_shipvia"
-        }
-      },
-      {
-        "name": "site",
-        "toOne": {
-          "type": "SiteRelation",
-          "column": "quhead_warehous_id"
-        }
-      },
-      {
-        "name": "packDate",
-        "attr": {
-          "type": "Date",
-          "column": "quhead_packdate"
-        }
-      },
-      {
-        "name": "miscCharge",
-        "attr": {
-          "type": "Number",
-          "column": "quhead_misc"
-        }
-      },
-      {
         "name": "billtoCountry",
         "attr": {
           "type": "String",
@@ -243,102 +165,10 @@
         }
       },
       {
-        "name": "shiptoCountry",
+        "name": "billtoPostalCode",
         "attr": {
           "type": "String",
-          "column": "quhead_shiptocountry"
-        }
-      },
-      {
-        "name": "currency",
-        "toOne": {
-          "type": "Currency",
-          "column": "quhead_curr_id"
-        }
-      },
-      {
-        "name": "expireDate",
-        "attr": {
-          "type": "Date",
-          "column": "quhead_expire"
-        }
-      },
-      {
-        "name": "calculateFreight",
-        "attr": {
-          "type": "Boolean",
-          "column": "quhead_calcfreight"
-        }
-      },
-      {
-        "name": "shiptoContact",
-        "toOne": {
-          "isNested": true,
-          "type": "ContactRelation",
-          "column": "quhead_shipto_cntct_id"
-        }
-      },
-      {
-        "name": "shiptoContactHonorific",
-        "attr": {
-          "type": "String",
-          "column": "quhead_shipto_cntct_honorific"
-        }
-      },
-      {
-        "name": "shiptoContactFirstName",
-        "attr": {
-          "type": "String",
-          "column": "quhead_shipto_cntct_first_name"
-        }
-      },
-      {
-        "name": "shiptoContactMiddleName",
-        "attr": {
-          "type": "String",
-          "column": "quhead_shipto_cntct_middle"
-        }
-      },
-      {
-        "name": "shiptoContactLastName",
-        "attr": {
-          "type": "String",
-          "column": "quhead_shipto_cntct_last_name"
-        }
-      },
-      {
-        "name": "shiptoContactSuffix",
-        "attr": {
-          "type": "String",
-          "column": "quhead_shipto_cntct_suffix"
-        }
-      },
-      {
-        "name": "shiptoContactPhone",
-        "attr": {
-          "type": "String",
-          "column": "quhead_shipto_cntct_phone"
-        }
-      },
-      {
-        "name": "shiptoContactTitle",
-        "attr": {
-          "type": "String",
-          "column": "quhead_shipto_cntct_suffix"
-        }
-      },
-      {
-        "name": "shiptoContactFax",
-        "attr": {
-          "type": "String",
-          "column": "quhead_shipto_cntct_fax"
-        }
-      },
-      {
-        "name": "shiptoContactEmail",
-        "attr": {
-          "type": "String",
-          "column": "quhead_shipto_cntct_email"
+          "column": "quhead_billtozip"
         }
       },
       {
@@ -413,24 +243,180 @@
         }
       },
       {
-        "name": "taxZone",
+        "name": "shipto",
         "toOne": {
-          "type": "TaxZone",
-          "column": "quhead_taxzone_id"
+          "isNested": true,
+          "type": "CustomerShiptoRelation",
+          "column": "quhead_shipto_id"
         }
       },
       {
-        "name": "status",
+        "name": "shiptoName",
         "attr": {
           "type": "String",
-          "column": "quhead_status"
+          "column": "quhead_shiptoname"
         }
       },
       {
-        "name": "saleType",
+        "name": "shiptoAddress1",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptoaddress1"
+        }
+      },
+      {
+        "name": "shiptoAddress2",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptoaddress2"
+        }
+      },
+      {
+        "name": "shiptoAddress3",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptoaddress3"
+        }
+      },
+      {
+        "name": "shiptoCity",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptocity"
+        }
+      },
+      {
+        "name": "shiptoState",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptostate"
+        }
+      },
+      {
+        "name": "shiptoCountry",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptocountry"
+        }
+      },
+      {
+        "name": "shiptoPostalCode",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptozipcode"
+        }
+      },
+      {
+        "name": "shiptoContact",
         "toOne": {
-          "type": "SaleType",
-          "column": "quhead_saletype_id"
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "quhead_shipto_cntct_id"
+        }
+      },
+      {
+        "name": "shiptoContactHonorific",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipto_cntct_honorific"
+        }
+      },
+      {
+        "name": "shiptoContactFirstName",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipto_cntct_first_name"
+        }
+      },
+      {
+        "name": "shiptoContactMiddleName",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipto_cntct_middle"
+        }
+      },
+      {
+        "name": "shiptoContactLastName",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipto_cntct_last_name"
+        }
+      },
+      {
+        "name": "shiptoContactSuffix",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipto_cntct_suffix"
+        }
+      },
+      {
+        "name": "shiptoContactPhone",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipto_cntct_phone"
+        }
+      },
+      {
+        "name": "shiptoContactTitle",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipto_cntct_title"
+        }
+      },
+      {
+        "name": "shiptoContactFax",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipto_cntct_fax"
+        }
+      },
+      {
+        "name": "shiptoContactEmail",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipto_cntct_email"
+        }
+      },
+      {
+        "name": "orderNotes",
+        "attr": {
+          "type": "String",
+          "column": "quhead_ordercomments"
+        }
+      },
+      {
+        "name": "shipNotes",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipcomments"
+        }
+      },
+      {
+        "name": "fob",
+        "attr": {
+          "type": "String",
+          "column": "quhead_fob"
+        }
+      },
+      {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shipvia"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "quhead_curr_id"
+        }
+      },
+      {
+        "name": "calculateFreight",
+        "attr": {
+          "type": "Boolean",
+          "column": "quhead_calcfreight"
         }
       },
       {
@@ -441,17 +427,45 @@
         }
       },
       {
+        "name": "margin",
+        "attr": {
+          "type": "Number",
+          "column": "margin"
+        }
+      },
+      {
+        "name": "freightWeight",
+        "attr": {
+          "type": "Number",
+          "column": "freight_weight"
+        }
+      },
+      {
         "name": "subtotal",
         "attr": {
           "type": "Number",
           "column": "subtotal"
         }
-      },  
+      }, 
       {
         "name": "taxTotal",
         "attr": {
           "type": "Number",
           "column": "tax_total"
+        }
+      },
+      {
+        "name": "miscCharge",
+        "attr": {
+          "type": "Number",
+          "column": "quhead_misc"
+        }
+      },
+      {
+        "name": "freight",
+        "attr": {
+          "type": "Number",
+          "column": "quhead_freight"
         }
       },   
       {
@@ -460,9 +474,9 @@
           "type": "Number",
           "column": "total"
         }
-      },     
+      },  
       {
-        "name": "quoteLines",
+        "name": "lineItems",
         "toMany": {
           "isNested": true,
           "type": "QuoteLine",
@@ -484,6 +498,15 @@
         "toMany": {
           "isNested": true,
           "type": "QuoteFile",
+          "column": "quhead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "accounts",
+        "toMany": {
+          "isNested": true,
+          "type": "QuoteAccount",
           "column": "quhead_id",
           "inverse": "source"
         }
@@ -518,7 +541,7 @@
     ],
     "isSystem": true
   },
-    {
+  {
     "context": "xtupl",
     "nameSpace": "XM",
     "type": "QuoteAccount",
@@ -905,67 +928,10 @@
         }
       },
       {
-        "name": "scheduleDate",
-        "attr": {
-          "type": "Date",
-          "column": "quitem_scheddate"
-        }
-      },
-      {
         "name": "quantity",
         "attr": {
           "type": "Number",
           "column": "quitem_qtyord"
-        }
-      },
-      {
-        "name": "unitCost",
-        "attr": {
-          "type": "Number",
-          "column": "quitem_unitcost"
-        }
-      },
-      {
-        "name": "price",
-        "attr": {
-          "type": "Number",
-          "column": "quitem_price"
-        }
-      },
-      {
-        "name": "customerPrice",
-        "attr": {
-          "type": "Number",
-          "column": "quitem_custprice"
-        }
-      },
-      {
-        "name": "notes",
-        "attr": {
-          "type": "String",
-          "column": "quitem_memo"
-        }
-      },
-      {
-        "name": "customerPartNumber",
-        "attr": {
-          "type": "String",
-          "column": "quitem_custpn"
-        }
-      },
-      {
-        "name": "site",
-        "toOne": {
-          "type": "SiteRelation",
-          "column": "quitem_order_warehous_id"
-        }
-      },
-      {
-        "name": "item",
-        "toOne": {
-          "isNested": true,
-          "type": "ItemRelation",
-          "column": "quitem_item_id"
         }
       },
       {
@@ -976,24 +942,38 @@
         }
       },
       {
-        "name": "inventoryQuantityUnitRatio",
+        "name": "quantityUnitRatio",
         "attr": {
           "type": "Number",
           "column": "quitem_qty_invuomratio"
         }
       },
       {
-        "name": "priceUnit",
+        "name": "customerPrice",
         "attr": {
           "type": "Number",
-          "column": "quitem_price_uom_id"
+          "column": "quitem_custprice"
         }
       },
       {
-        "name": "priceUnitRatio",
+        "name": "discount",
         "attr": {
           "type": "Number",
-          "column": "quitem_price_invuomratio"
+          "column": "cust_discount"
+        }
+      },
+      {
+        "name": "price",
+        "attr": {
+          "type": "Number",
+          "column": "quitem_price"
+        }
+      },
+      {
+        "name": "scheduleDate",
+        "attr": {
+          "type": "Date",
+          "column": "quitem_scheddate"
         }
       },
       {
@@ -1004,10 +984,59 @@
         }
       },
       {
-        "name": "taxType",
+        "name": "unitCost",
+        "attr": {
+          "type": "Number",
+          "column": "quitem_unitcost"
+        }
+      },
+      {
+        "name": "listCost",
+        "attr": {
+          "type": "Number",
+          "column": "list_cost"
+        }
+      },
+      {
+        "name": "listCostMarkup",
+        "attr": {
+          "type": "Number",
+          "column": "list_cost_markup"
+        }
+      },
+      {
+        "name": "listPrice",
+        "attr": {
+          "type": "Number",
+          "column": "list_price"
+        }
+      },
+      {
+        "name": "listPriceDiscount",
+        "attr": {
+          "type": "Number",
+          "column": "list_price_discount"
+        }
+      },
+      {
+        "name": "customerPartNumber",
+        "attr": {
+          "type": "String",
+          "column": "quitem_custpn"
+        }
+      },
+      {
+        "name": "priceUnit",
         "toOne": {
-          "type": "TaxType",
-          "column": "quitem_taxtype_id"
+          "type": "Unit",
+          "column": "quitem_price_uom_id"
+        }
+      },
+      {
+        "name": "priceUnitRatio",
+        "attr": {
+          "type": "Number",
+          "column": "quitem_price_invuomratio"
         }
       },
       {
@@ -1020,8 +1049,22 @@
       {
         "name": "extendedPrice",
         "attr": {
-          "type": "String",
+          "type": "Number",
           "column": "ext_price"
+        }
+      },
+      {
+        "name": "profit",
+        "attr": {
+          "type": "String",
+          "column": "profit"
+        }
+      },
+      {
+        "name": "taxType",
+        "toOne": {
+          "type": "TaxType",
+          "column": "quitem_taxtype_id"
         }
       },
       {
@@ -1029,6 +1072,22 @@
         "attr": {
           "type": "String",
           "column": "tax"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "quitem_memo"
+        }
+      },
+      {
+        "name": "comments",
+        "toMany": {
+          "type": "QuoteLineComment",
+          "column": "quitem_id",
+          "inverse": "quoteLine",
+          "isNested": true
         }
       }
     ],
@@ -1086,6 +1145,91 @@
         "attr": {
           "type": "String",
           "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "QuoteLineComment",
+    "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
+    "comment": "Quote Line Comment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": "EditOthersComments",
+        "delete": false
+      },
+      "personal": {
+        "update": "EditOwnComments",
+        "properties": [
+          "createdBy"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "comment_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "comment_source",
+          "value": "QI"
+        }
+      },
+      {
+        "name": "quoteLine",
+        "attr": {
+          "type": "Number",
+          "column": "comment_source_id"
+        }
+      },
+      {
+        "name": "commentType",
+        "toOne": {
+          "type": "CommentType",
+          "column": "comment_cmnttype_id",
+          "required": true
+        }
+      },
+      {
+        "name": "text",
+        "attr": {
+          "type": "String",
+          "column": "comment_text"
+        }
+      },
+      {
+        "name": "isPublic",
+        "attr": {
+          "type": "Boolean",
+          "column": "comment_public"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "comment_date"
+        }
+      },
+      {
+        "name": "createdBy",
+        "attr": {
+          "type": "String",
+          "column": "comment_user"
         }
       }
     ],

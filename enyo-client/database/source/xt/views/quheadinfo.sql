@@ -2,7 +2,13 @@ drop view if exists xt.quheadinfo cascade;
 
 create or replace view xt.quheadinfo as
 
-  select quhead.*, xt.quote_subtotal(quhead_id) as subtotal, xt.quote_tax_total(quhead_id) as tax_total, xt.quote_total(quhead_id) as total
+  select quhead.*,
+    xt.quote_schedule_date(quhead) as schedule_date,
+    xt.quote_freight_weight(quhead) as freight_weight,
+    xt.quote_subtotal(quhead) as subtotal,
+    xt.quote_tax_total(quhead) as tax_total,
+    xt.quote_total(quhead) as total,
+    xt.quote_margin(quhead) as margin
   from quhead;
           
 revoke all on xt.quheadinfo from public;

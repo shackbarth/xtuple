@@ -1,25 +1,66 @@
 #!/bin/bash 
 PRODUCTION=''
+HOST='localhost'
 
-while getopts ":p" opt; do
+usage()
+{
+   cat << EOF
+   usage: $0 options
+   update the environment
+   OPTIONS:
+   -h target host
+   -p production mode
+EOF
+}	
+while getopts ":ph:" opt; do
   case $opt in
     p)
       PRODUCTION=true
       echo 'production mode'
       ;;
+    h)
+      HOST=$OPTARG
+      ;;
+    ?)
+      usage
+      exit
+      ;;
   esac
 done
 
 # update source
+
 git checkout master
+if [ $? != 0  ]
+  then
+    echo "error checking out master"
+    exit $?
+fi
+
 git pull
+if [ $? != 0  ]
+  then
+    echo "error pulling master"
+    exit $?
+fi
+
 if [ $PRODUCTION ]
   then
   git checkout `git describe --abbrev=0`
+  if [ $? != 0  ]
+    then
+      echo "error checking out latest tag"
+      exit $?
+  fi
 fi
 
 # update libraries
 git submodule update --init --recursive
+if [ $? != 0  ]
+  then
+    echo "error updating submodules"
+    exit $?
+fi
 cd node-datasource
 npm install
 
@@ -31,9 +72,9 @@ sleep 10
 
 # update global db
 cd database/source
-psql -U admin  global -f init_global.sql
+psql -U admin  -h $HOST global -f init_global.sql
 cd ../../installer
-./installer.js -h localhost -d global -u admin -p 5432 -P admin --path ../database/orm
+./installer.js -h $HOST -d global -u admin -p 5432 -P admin --path ../database/orm
 
 # update instance dbs
 cd ..

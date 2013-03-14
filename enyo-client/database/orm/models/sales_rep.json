@@ -68,7 +68,7 @@
           {
             "name": "account",
             "toOne": {
-              "type": "Account",
+              "type": "AccountRelation",
               "column": "crmacct_id"
             }
           }

@@ -11,6 +11,35 @@ white:true*/
 
     @extends XM.Document
   */
+  XM.CostCategory = XM.Document.extend({
+    /** @scope XM.CostCategory.prototype */
+
+    recordType: 'XM.CostCategory',
+
+    documentKey: "code"
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Document
+  */
+  XM.PlannerCode = XM.Document.extend({
+    /** @scope XM.PlannerCode.prototype */
+
+    recordType: 'XM.PlannerCode',
+
+    documentKey: "code"
+
+  });
+
+
+  /**
+    @class
+
+    @extends XM.Document
+  */
   XM.ItemSite = XM.Document.extend({
     /** @scope XM.ItemSite.prototype */
 
@@ -18,17 +47,65 @@ white:true*/
 
     defaults: {
       isActive: true
-    },
-    
-    requiredAttributes: [
-      "id"
-    ]
+    }
 
   });
   
+  /**
+    @class
+
+    @extends XM.Comments
+  */
+  XM.ItemSiteComment = XM.Comment.extend({
+    /** @scope XM.ItemSiteComment.prototype */
+
+    recordType: 'XM.ItemSiteComment',
+
+    sourceName: 'IS'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.ItemSiteRelation = XM.Info.extend({
+    /** @scope XM.ItemSiteRelation.prototype */
+
+    recordType: 'XM.ItemSiteRelation',
+
+    editableModel: 'XM.ItemSite'
+
+  });
+
   // ..........................................................
   // COLLECTIONS
   //
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.CostCategoryCollection = XM.Collection.extend({
+    /** @scope XM.CostCategoryCollection.prototype */
+
+    model: XM.CostCategory
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.PlannerCodeCollection = XM.Collection.extend({
+    /** @scope XM.PlannerCodeCollection.prototype */
+
+    model: XM.PlannerCode
+
+  });
 
   /**
     @class
@@ -39,6 +116,18 @@ white:true*/
     /** @scope XM.ItemSiteCollection.prototype */
 
     model: XM.ItemSite
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.ItemSiteListItemCollection = XM.Collection.extend({
+    /** @scope XM.ItemSiteListItemCollection.prototype */
+
+    model: XM.ItemSiteListItem
 
   });
 

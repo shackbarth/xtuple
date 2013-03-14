@@ -11,16 +11,44 @@ white:true*/
 
     @extends XM.Document
   */
-  XM.Site = XM.Document.extend(/** @lends XM.Site.prototype */{
-    // TODO: this needs to be fleshed out
-    recordType: 'XM.Site',
+  XM.SiteType = XM.Document.extend(/** @lends XM.Site.prototype */{
 
-    requiredAttributes: [
-      "id"
-    ]
+    recordType: 'XM.SiteType',
+
+    documentKey: 'name'
 
   });
 
+  /**
+    @class
+
+    @extends XM.Document
+  */
+  XM.Site = XM.Document.extend(/** @lends XM.Site.prototype */{
+    // TODO: this needs to be fleshed out
+    recordType: 'XM.Site'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Comments
+  */
+  XM.SiteComment = XM.Comment.extend({
+    /** @scope XM.SiteComment.prototype */
+
+    recordType: 'XM.SiteComment',
+
+    sourceName: 'W'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Info
+  */
   XM.SiteRelation = XM.Info.extend(/** @lends XM.SiteRelation.prototype */{
 
     recordType: 'XM.SiteRelation',

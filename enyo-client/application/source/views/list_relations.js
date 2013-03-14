@@ -300,3 +300,63 @@ enyo.kind({
     ]}
   ]
 });
+
+// ..........................................................
+// QUOTE LINE ITEM
+//
+
+enyo.kind({
+  name: "XV.QuoteLineItemListRelations",
+  kind: "XV.ListRelations",
+  orderBy: [
+    {attribute: "number"}
+  ],
+  parentKey: "quote",
+  components: [
+    {kind: "XV.ListItem", components: [
+      {kind: "FittableColumns", components: [
+        {kind: "XV.ListColumn", classes: "descr", components: [
+          {kind: "XV.ListAttr", attr: "lineNumber", classes: "bold"},
+          {kind: "XV.ListAttr", attr: "itemSite.item.description1", fit: true},
+          {kind: "XV.ListAttr", attr: "itemSite.item.number"}
+        ]},
+        {kind: "XV.ListColumn", classes: "third",
+          components: [
+          {kind: "XV.ListAttr", attr: "scheduleDate"},
+          {kind: "XV.ListAttr", attr: "quote.getQuoteStatusString"},
+          {kind: "XV.ListAttr", attr: "itemSite.site.code"}
+        ]},
+        {kind: "XV.ListColumn", style: "third",
+          components: [
+          {content: "_ordered".loc() + ":", classes: "xv-list-attr",
+            style: "text-align: right;"},
+          {content: "_uom".loc() + ":", classes: "xv-list-attr",
+            style: "text-align: right;"},
+        ]},
+        {kind: "XV.ListColumn", classes: "third",
+          components: [
+          {kind: "XV.ListAttr", attr: "quantity"},
+          {kind: "XV.ListAttr", attr: "quantityUnit.name"},
+        ]},
+        {kind: "XV.ListColumn", classes: "money",
+          components: [
+          {content: "_price".loc() + ":", classes: "xv-list-attr",
+            style: "text-align: right;"},
+          {content: "_extended".loc() + ":", classes: "xv-list-attr",
+            style: "text-align: right;"},
+          {content: "_custPrice".loc() + ":", classes: "xv-list-attr",
+            style: "text-align: right;"},
+          {content: "_discount".loc() + ":", classes: "xv-list-attr",
+            style: "text-align: right;"}
+        ]},
+        {kind: "XV.ListColumn", classes: "third",
+          components: [
+          {kind: "XV.ListAttr", attr: "listPrice", classes: "text-align-right"},
+          {kind: "XV.ListAttr", attr: "extendedPrice", classes: "text-align-right"},
+          {kind: "XV.ListAttr", attr: "customerPrice", classes: "text-align-right"},
+          {kind: "XV.ListAttr", attr: "listPriceDiscount", classes: "text-align-right"}
+        ]}
+      ]}
+    ]}
+  ]
+});

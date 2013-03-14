@@ -285,7 +285,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         if(props[i].name === 'dataState') throw new Error("Can not use 'dataState' as a property name.");
 
         /* process attributes */
-        if(props[i].attr || (props[i].toOne && !props[i].toOne.isNested)) {
+        if(props[i].attr || (props[i].toOne && props[i].toOne.isNested === false)) {
           if(DEBUG) plv8.elog(NOTICE, 'building attribute');
           attr = props[i].attr ? props[i].attr : props[i].toOne;
           isVisible = attr.value ? false : true;
@@ -304,7 +304,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         }
 
         /* process toOne  */
-        if(props[i].toOne && props[i].toOne.isNested) {
+        if(props[i].toOne && props[i].toOne.isNested !== false) {
           toOne = props[i].toOne;
           table = base.nameSpace.decamelize() + '.' + toOne.type.decamelize();
           type = table.afterDot();
