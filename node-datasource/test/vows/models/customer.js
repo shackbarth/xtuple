@@ -17,7 +17,7 @@ var XVOWS = XVOWS || {};
 
   data.createHash = {
     name: "Test Customer",
-    number: "TESTCUSTOMER",
+    number: "MIKECUSTOMER",
     customerType: 19,
     terms: 42,
     salesRep: 29,

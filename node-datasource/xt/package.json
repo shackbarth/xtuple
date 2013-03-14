@@ -2,7 +2,7 @@
   "author": "W. Cole Davis <cole@xtuple.com>",
   "name": "xt",
   "description": "Node.js framework for xTuple",
-  "version": "1.0.8",
+  "version": "1.4.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/xtuple/node-xt.git"
