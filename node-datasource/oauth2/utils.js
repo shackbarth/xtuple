@@ -9,6 +9,10 @@
  * @api private
  */
 exports.uid = function(len) {
+
+// TODO - This is not very unique. Already had a collision in testing with OAuth tokens, utils.uid(256). Needs to be some kind of uuid.
+// http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
+
   var buf = []
     , chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
     , charlen = chars.length;

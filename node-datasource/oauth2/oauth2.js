@@ -128,6 +128,8 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
       return done(new Error("Authorization code has expired."));
     }
 
+// TODO - Tokens needs to be some kind of uuid.
+//http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
     var accessToken = utils.uid(256),
         refreshToken = utils.uid(256),
         accesshash,
@@ -172,7 +174,10 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
     authCode.set("accessIssued", new Date());
     authCode.set("accessExpires", expires);
     authCode.set("tokenType", tokenType);
-    authCode.set("accessType", "offline"); // Default for now...
+
+// TODO - Remove this, it's just for testing.
+    authCode.set("accessType", accessToken);
+    //authCode.set("accessType", "offline"); // Default for now...
 
     authCode.save(null, saveOptions);
   });

@@ -105,6 +105,12 @@ var express = require('express'),
     socketio = require('socket.io'),
     user = require('./oauth2/user');
 
+// TODO - for testing. remove...
+//http://stackoverflow.com/questions/13091037/node-js-heap-snapshots-and-google-chrome-snapshot-viewer
+//var heapdump = require("heapdump");
+// Use it!: https://github.com/c4milo/node-webkit-agent
+//var agent = require('webkit-devtools-agent');
+
 /**
  * ###################################################
  * Overrides section.
@@ -225,8 +231,12 @@ var app = express(),
   //MemoryStore = express.session.MemoryStore,
   XTPGStore = require('./oauth2/db/connect-xt-pg')(express),
   io,
-  sessionStore = new XTPGStore({ hybridCache: true });
-  //sessionStore = new MemoryStore();
+  //sessionStore = new MemoryStore(),
+  sessionStore = new XTPGStore({ hybridCache: true }),
+  Session = require('express/node_modules/connect/lib/middleware/session').Session,
+  Cookie = require('express/node_modules/connect/lib/middleware/session/cookie'),
+  cookie = require('express/node_modules/cookie');
+
 
 app.configure(function () {
   "use strict";
@@ -236,9 +246,16 @@ app.configure(function () {
   // Add a basic view engine that will render files from "views" directory.
   app.set('view engine', 'ejs');
   // TODO - This outputs access logs like apache2 and some other user things.
+  //http://stackoverflow.com/questions/13516898/disable-csrf-validation-for-some-requests-on-express
+  //http://stackoverflow.com/questions/9348505/avoiding-image-logging-in-express-js/9351428#9351428
   //app.use(express.logger());
   app.use(express.cookieParser());
   app.use(express.bodyParser());
+
+// TODO - Need to conditionally load session here. REST API using OAuth tokens, not sessions.
+// so not all route endpoints should require sessions.
+// Something like this:
+//http://stackoverflow.com/questions/9348505/avoiding-image-logging-in-express-js/9351428#9351428
 
   // See cookie stopm above for more details.
   app.use(express.session({ store: sessionStore, secret: '.T#T@r5EkPM*N@C%9K-iPW!+T', cookie: { path: '/', httpOnly: true, secure: true, maxAge: 1800000 } }));
@@ -285,7 +302,6 @@ app.get('/maintenance', routes.maintenance);
 app.get('/report', routes.report);
 app.get('/resetPassword', routes.resetPassword);
 app.get('/syncUser', routes.syncUser);
-
 
 // Set up the other servers we run on different ports.
 var unexposedServer = express();
@@ -377,8 +393,6 @@ io.configure(function () {
 io.of('/clientsock').authorization(function (handshakeData, callback) {
   "use strict";
 
-  var cookie = require('express/node_modules/cookie');
-
   if (handshakeData.headers.cookie) {
     handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
 
@@ -406,9 +420,6 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
         // Not an error exactly, but the cookie is invalid. The user probably logged off.
         return callback(null, false);
       }
-
-      var Session = require('express/node_modules/connect/lib/middleware/session').Session,
-          Cookie = require('express/node_modules/connect/lib/middleware/session/cookie');
 
       // Prep the cookie and create a session object so we can touch() it on each request below.
       session.cookie.expires = new Date(session.cookie.expires);
