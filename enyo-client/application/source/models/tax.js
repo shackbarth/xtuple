@@ -97,6 +97,19 @@ white:true*/
   // ..........................................................
   // COLLECTIONS
   //
+ 
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.TaxAuthorityCollection = XM.Collection.extend({
+    /** @scope XM.TaxCodeCollection.prototype */
+
+    model: XM.TaxAuthority
+
+  });
+ 
   
   /**
     @class

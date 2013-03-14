@@ -1218,7 +1218,7 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
             {kind: "FittableColumns", components: [
               {kind: "FittableRows", components: [
-                {kind: "XV.CurrencyPickerWidget", attr: "currency"},
+                {kind: "XV.CurrencyPicker", attr: "currency"},
                 {kind: "XV.NumberWidget", attr: "margin"},
                 {kind: "XV.NumberWidget", attr: "freightWeight"}
               ]},
@@ -1303,9 +1303,7 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_delivery".loc()},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
             {kind: "XV.DateWidget", attr: "promiseDate", showing: false},
-            {kind: "XV.QuoteLineCharacteristicsWidget", attr: "characteristics"},
-            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes", fit: true}
+            {kind: "XV.QuoteLineCharacteristicsWidget", attr: "characteristics"}
           ]}
         ]},
         {kind: "XV.Groupbox", name: "detailsPanel", title: "_detail".loc(),
@@ -1319,13 +1317,15 @@ trailing:true white:true*/
               label: "_averageCost".loc()},
             {kind: "XV.NumberWidget", attr: "itemSite.item.listCost",
               label: "_listCost".loc()},
-            {kind: "XV.NumberWidget", attr: "listCostMarkup"},
+            {kind: "XV.PercentWidget", attr: "listCostMarkup"},
             {kind: "XV.NumberWidget", attr: "listPrice"},
-            {kind: "XV.NumberWidget", attr: "listPriceDiscount"},
-            {kind: "XV.NumberWidget", attr: "profit"},
+            {kind: "XV.PercentWidget", attr: "listPriceDiscount"},
+            {kind: "XV.PercentWidget", attr: "profit"},
             {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
             {kind: "XV.TaxTypePicker", attr: "taxType"},
-            {kind: "XV.NumberWidget", attr: "tax"}
+            {kind: "XV.NumberWidget", attr: "tax"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
         ]},
         {kind: "XV.QuoteLineCommentBox", attr: "comments"}
@@ -1438,7 +1438,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "number"},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "externalReference"},
-            {kind: "XV.CurrencyPickerWidget", attr: "currency"},
+            {kind: "XV.CurrencyPicker", attr: "currency"},
             {kind: "XV.InputWidget", attr: "county"},
             {kind: "onyx.GroupboxHeader", content: "_address".loc()},
             {kind: "XV.AddressWidget", attr: "address"}
