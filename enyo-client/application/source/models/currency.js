@@ -58,6 +58,29 @@ white:true*/
       XM.Document.prototype.initialize.apply(this, arguments);
       this.on('change:abbreviation', this.abbreviationDidChange);
     },
+    
+    /**
+      Formats a value to a localized string.
+      
+      @param {Number} Value
+      @returns {String}
+    */
+    format: function (value, scale) {
+      scale = _.isUndefined(scale) ? 2 : scale;
+      var previous = Globalize.culture().numberFormat.currency.symbol,
+        symbol = this.get("symbol"),
+        result;
+        
+      // Change current currency
+      Globalize.culture().numberFormat.currency.symbol = symbol;
+      
+      // Format the value
+      result = Globalize.format(value, "c" + scale);
+      
+      // Reset currency back to previous
+      Globalize.culture().numberFormat.currency.symbol = previous;
+      return result;
+    },
 
     /**
       This version of `save` first checks to see if the abbreviation already

@@ -1320,6 +1320,13 @@
          }
       },
       {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "quhead_curr_id"
+         }
+      },
+      {
         "name": "total",
         "attr": {
           "type": "Number",
