@@ -131,6 +131,31 @@
   {
     "context": "crm",
     "nameSpace": "XM",
+    "type": "Prospect",
+    "table": "crmacct",
+    "isExtension": true,
+    "isChild": true,
+    "comment": "Extended by Crm",
+    "relations": [
+      {
+        "column": "crmacct_prospect_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+     {
+        "name": "account",
+        "attr": {
+         "type": "Number",
+         "column": "crmacct_id"
+        }
+     }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "crm",
+    "nameSpace": "XM",
     "type": "Customer",
     "table": "crmacct",
     "isExtension": true,
