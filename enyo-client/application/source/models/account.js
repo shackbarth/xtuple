@@ -36,7 +36,7 @@ white:true*/
       var params = [ key, value, this.id || -1 ],
         dataSource = options.dataSource || XT.dataSource;
       dataSource.dispatch('XM.Account', 'findExisting', params, options);
-      XT.log("XM.Account.findExisting");
+      XT.log("XM.Account.findExisting. returning " + this);
       return this;
     }
     

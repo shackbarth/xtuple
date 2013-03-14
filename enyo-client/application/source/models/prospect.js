@@ -30,7 +30,7 @@ white:true*/
     
     /**
       Creates a new account model and fetches based on the given ID.
-      Takes attributes from the account model and gives them to this customer model.
+      Takes attributes from the account model and gives them to this prospect model.
     */
     convertFromAccount: function (id) {
       var account = new XM.Account(),
