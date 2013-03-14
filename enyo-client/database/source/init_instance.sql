@@ -108,6 +108,7 @@
 \i xm/javascript/database_information.sql;
 \i xm/javascript/incident.sql;
 \i xm/javascript/item.sql;
+\i xm/javascript/item_site.sql;
 \i xm/javascript/project.sql;
 \i xm/javascript/quote.sql;
 \i xm/javascript/sales.sql;

@@ -100,7 +100,10 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.creditStatuses"
   });
 
+  // ..........................................................
   // INCIDENT EMAIL PROFILE
+  //
+  
   enyo.kind({
     name: "XV.IncidentEmailProfilePicker",
     kind: "XV.PickerWidget",
