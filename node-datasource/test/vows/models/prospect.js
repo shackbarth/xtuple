@@ -54,25 +54,7 @@ var XVOWS = XVOWS || {};
   }).addBatch({
     'READ': {
       topic: function () {
-        /*I need to fetch the newly created account here.
-         I would do it in the destroy batch, but when the
-         prospect is destroyed, the prospect ID is stripped
-         from the crmacct.  Also need to fetch ProspectRelation for this to work.
-        */
-        var that = this,
-          fetchOptions,
-          fetchOptions2,
-          prospRel = new XM.ProspectRelation();
-        extra.accountModel = new XM.Account();
-        fetchOptions.prospect = data.model.get('id');  //this doesn't work because accountModel.prospect is a ProspectRelation, not an id
-        extra.canDelete = false;
-        fetchOptions.success = function () {
-          extra.canDelete = true;
-        };
-        fetchOptions.error = function () {
-          that.callback("Could not fetch the matching account.");
-        };
-        extra.accountModel.fetch(fetchOptions);
+        extra.accountId = data.model.get('account');
         return data;
       }
     }
@@ -81,7 +63,6 @@ var XVOWS = XVOWS || {};
       '-> Set values': {
         topic: function () {
           data.model.set(data.updateHash);
-          extra.id = data.model.get('id');
           return data;
         },
         '-> Commit': crud.save(data)
@@ -90,23 +71,27 @@ var XVOWS = XVOWS || {};
   }).addBatch({
     'DESTROY': crud.destroy(data, {
       '-> Set values': {
-        //Destroy the prospect.  Make sure that wass successful, then destroy the account
-        'prospect destroyed': function (data) {
-          assert.isTrue(data.model.getStatus() === XM.Model.DESTROYED_CLEAN);
-        },
         topic: function () {
           var that = this,
-            destroyOptions = {};
-          if (!extra.canDelete) {
-            that.callback("Cannot delete the account because the fetch was unsuccessful.");
-          }
-          destroyOptions.success = function () {
-            that.callback(null);
+            fetchOptions = {},
+            accountModel = new XM.Account();
+            
+          fetchOptions.id = extra.accountId;
+          
+          fetchOptions.success = function () {
+            var destroyOptions = {};
+            destroyOptions.success = function () {
+              that.callback(null, data);
+            };
+            destroyOptions.error = function () {
+              that.callback("Error destroying the newly created account.");
+            };
+            accountModel.destroy(destroyOptions);
           };
-          destroyOptions.error = function () {
-            that.callback("Was able to fetch the newly created account, but destroy was unsuccessful.");
+          fetchOptions.error = function () {
+            that.callback("Error fetching the newly created account.");
           };
-          extra.accountModel.destroy();
+          accountModel.fetch(fetchOptions);
         }
       }
     })
