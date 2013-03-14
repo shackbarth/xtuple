@@ -140,7 +140,7 @@ trailing:true white:true*/
     title: "_account".loc(),
     headerAttrs: ["number", "-", "name"],
     model: "XM.Account",
-    allowPrint: false,
+    allowPrint: true,
     handlers: {
       onSavePrompt: "savePrompt"
     },
@@ -298,7 +298,7 @@ trailing:true white:true*/
     kind: "XV.Workspace",
     title: "_contact".loc(),
     model: "XM.Contact",
-    allowPrint: false,
+    allowPrint: true,
     headerAttrs: ["firstName", "lastName"],
     handlers: {
       onError: "errorNotify"
@@ -414,6 +414,7 @@ trailing:true white:true*/
     kind: "XV.Workspace",
     title: "_customer".loc(),
     model: "XM.Customer",
+    allowPrint: true,
     headerAttrs: ["number", "-", "name"],
     handlers: {
       onError: "errorNotify"
@@ -619,7 +620,7 @@ trailing:true white:true*/
     title: "_incident".loc(),
     headerAttrs: ["number", "-", "description"],
     model: "XM.Incident",
-    allowPrint: false,
+    allowPrint: true,
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -813,7 +814,7 @@ trailing:true white:true*/
     title: "_opportunity".loc(),
     headerAttrs: ["number", "-", "name"],
     model: "XM.Opportunity",
-    allowPrint: false,
+    allowPrint: true,
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -1073,6 +1074,7 @@ trailing:true white:true*/
     kind: "XV.Workspace",
     title: "_prospect".loc(),
     model: "XM.Prospect",
+    allowPrint: true,
     headerAttrs: ["number", "-", "name"],
     handlers: {
       onError: "errorNotify"
@@ -1154,6 +1156,7 @@ trailing:true white:true*/
     kind: "XV.Workspace",
     title: "_quote".loc(),
     model: "XM.Quote",
+    allowPrint: true,
     headerAttrs: ["number"],
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
@@ -1463,7 +1466,7 @@ trailing:true white:true*/
     title: "_toDo".loc(),
     headerAttrs: ["name"],
     model: "XM.ToDo",
-    allowPrint: false,
+    allowPrint: true,
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
