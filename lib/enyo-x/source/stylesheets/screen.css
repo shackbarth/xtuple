@@ -850,7 +850,7 @@ body {
 }
 /* ListRelationsBox */
 .xv-list-relations-box.panel {
-  width: 675px;
+  width: 625px;
 }
 .xv-short-relations-box.panel {
   width: 500px;
@@ -874,6 +874,10 @@ body {
 .xv-combobox-icon {
   margin-left: 4px;
   display: inline-block;
+}
+.xv-combobox-note {
+  padding: 14px 3px 8px 3px;
+  text-align: left;
 }
 /* Picker */
 .onyx-picker .onyx-menu-item {

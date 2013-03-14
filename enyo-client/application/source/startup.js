@@ -402,6 +402,17 @@ white:true*/
       XM.taxTypes.fetch(options);
     }
   });
+  
+  XT.StartupTasks.push({
+    taskName: "loadTaxAuthorities",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      XM.taxAuthorities = new XM.TaxAuthorityCollection();
+      XM.taxAuthorities.fetch(options);
+    }
+  });
 
   XT.StartupTasks.push({
     taskName: "loadTaxZones",

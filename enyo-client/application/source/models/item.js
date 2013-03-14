@@ -10,43 +10,76 @@ white:true*/
     Mixin for item classes
   */
   XM.ItemMixin = {
-
     /**
-      Requests the standard cost of an item.
+      Requests on array of material issue units from the server.
 
-      @param {Object} Options: success, error
+      @param {Object} Options
+      @param {Function} [options.success] Callback if request succeeds
+      @param {Function} [options.error] Callback if request fails
+      @returns {Object} Receiver
     */
-    standardCost: function (options) {
-      // TO DO: We need this for quote, sales order etc. but what about ViewCost privilege?
-      this.dispatch("XM.Item", "standardCost", this.id, options);
+    materialIssueUnits: function (options) {
+      this.dispatch("XM.Item", "materialIssueUnits", this.id, options);
+      return this;
     },
 
     /**
       Requests an array of selling units from the server.
 
-      @param {Object} Options: success, error
+      @param {Object} Options
+      @param {Function} [options.success] Callback if request succeeds
+      @param {Function} [options.error] Callback if request fails
+      @returns {Object} Receiver
     */
     sellingUnits: function (options) {
       this.dispatch("XM.Item", "sellingUnits", this.id, options);
-    },
-
-    /**
-      Requests on array of selling units from the server.
-
-      @param {Object} Options: success, error
-    */
-    materialIssueUnits: function (options) {
-      this.dispatch("XM.Item", "materialIssueUnits", this.id, options);
+      return this;
     },
 
     /**
       Requests a tax type based on a  specified tax zone from the server.
 
       @param {XM.TaxZone} Tax Zone
-      @param {Object} Options: success, error
+      @param {Object} Options
+      @param {Function} [options.success] Callback if request succeeds
+      @param {Function} [options.error] Callback if request fails
+      @returns {Object} Receiver
     */
     taxType: function (taxZone, options) {
-      this.dispatch("XM.Item", "taxType", [this.id, taxZone ? taxZone.id : null], options);
+      var params = [this.id, taxZone ? taxZone.id : null];
+      this.dispatch("XM.Item", "taxType", params, options);
+      return this;
+    },
+
+    /**
+      Requests from the server whether a unit of measure is fractional for this item.
+
+      @param {XM.Unit} Unit
+      @param {Object} Options
+      @param {Function} [options.success] Callback if request succeeds
+      @param {Function} [options.error] Callback if request fails
+      @returns {Object} Receiver
+    */
+    unitFractional: function (unit, options) {
+      var params =  [this.id, unit.id];
+      this.dispatch("XM.Item", "unitFractional", params, options);
+      return this;
+    },
+
+    /**
+      Requests a unit of measure conversion ratio from the server for this item.
+
+      @param {XM.Unit} From Unit
+      @param {XM.Unit} To Unit
+      @param {Object} Options
+      @param {Function} [options.success] Callback if request succeeds
+      @param {Function} [options.error] Callback if request fails
+      @returns {Object} Receiver
+    */
+    unitToUnitRatio: function (fromUnit, toUnit, options) {
+      var params =  [this.id, fromUnit.id, toUnit.id];
+      this.dispatch("XM.Item", "unitToUnitRatio", params, options);
+      return this;
     }
   };
 
@@ -65,7 +98,7 @@ white:true*/
     enforceUpperKey: false
 
   });
-  
+
   /**
     @class
 
@@ -227,7 +260,7 @@ white:true*/
     editableModel: 'XM.Item'
 
   });
-  
+
   /**
     @class
 
@@ -354,7 +387,7 @@ white:true*/
 
   // Add in item mixin
   XM.ItemRelation = XM.ItemRelation.extend(XM.ItemMixin);
-  
+
   /**
     @class
 
@@ -382,7 +415,7 @@ white:true*/
     model: XM.ClassCode
 
   });
-  
+
   /**
    @class
 

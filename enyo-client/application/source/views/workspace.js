@@ -456,12 +456,7 @@ trailing:true white:true*/
             {kind: "XV.CheckboxWidget", attr: "partialShip"},
             {kind: "XV.CheckboxWidget", attr: "isFreeFormShipto", label: "_freeFormShip".loc()},
             {kind: "XV.CheckboxWidget", attr: "isFreeFormBillto", label: "_freeFormBill".loc()},
-            // this is only going to be added by commerical editions
-            // {kind: "XV.InputWidget", attr: "preferredSite"},
             {kind: "onyx.GroupboxHeader", content: "_terms".loc()},
-            // comes from Time & Expense
-            //{kind: "XV.CheckboxWidget", attr: "isSpecifiedBillingRate"}, Enables Rate Widget
-            //{kind: "XV.NumberWidget", attr: "billingRate"},
             {kind: "XV.TermsPicker", attr: "terms"},
             {kind: "XV.PercentWidget", attr: "discount"},
             {kind: "XV.CreditStatusPicker", attr: "creditStatus"},
@@ -470,16 +465,14 @@ trailing:true white:true*/
             {kind: "XV.BalanceMethodPicker", attr: "balanceMethod"},
             {kind: "XV.NumberWidget", attr: "creditLimit"},
             {kind: "XV.InputWidget", attr: "creditRating"},
-            // will be added by sales
-            // {kind: "XV.CheckboxWidget", attr: "autoHoldOrders"},
             {kind: "XV.NumberWidget", attr: "graceDays"},
             {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
             {kind: "XV.TaxZonePicker", attr: "taxZone", label: "_defaultTaxZone".loc()}
           ]}
         ]},
-        {kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
-        {kind: "XV.CustomerCommentBox", attr: "comments"},
         {kind: "XV.CustomerShipToBox", attr: "shiptos"},
+        {kind: "XV.CustomerCommentBox", attr: "comments"},
+        {kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
         {kind: "XV.CustomerDocumentsBox", attr: "documents"}
       ]},
       {kind: "onyx.Popup", name: "findExistingCustomerPopup", centered: true,
@@ -1172,8 +1165,7 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "number",
-              label: "_orderNumber".loc()},
+            {kind: "XV.InputWidget", attr: "number"},
             {kind: "XV.DateWidget", attr: "quoteDate"},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
             {kind: "XV.DateWidget", attr: "expireDate"},
@@ -1222,7 +1214,40 @@ trailing:true white:true*/
             {kind: "XV.TextArea", attr: "shippingNotes", fit: true}
           ]}
         ]},
-        {kind: "XV.QuoteLineItemBox", attr: "lineItems"},
+        {kind: "FittableRows", title: "_lineItems".loc(), components: [
+          {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true},
+          {kind: "XV.Groupbox", name: "totalGroup",
+            components: [
+            {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
+            {kind: "FittableColumns", components: [
+              {kind: "FittableRows", components: [
+                {kind: "XV.CurrencyPicker", attr: "currency"},
+                {kind: "XV.NumberWidget", attr: "margin"},
+                {kind: "XV.NumberWidget", attr: "freightWeight"}
+              ]},
+              {kind: "FittableRows", components: [
+                {kind: "XV.MoneyWidget", attr:
+                  {amount: "subtotal", currency: "currency"},
+                  label: "_subtotal".loc(), currencyShowing: false,
+                  effective: "quoteDate"},
+                {kind: "XV.MoneyWidget", attr:
+                  {amount: "miscCharge", currency: "currency"},
+                  label: "_miscCharge".loc(), currencyShowing: false,
+                  effective: "quoteDate"},
+                {kind: "XV.NumberWidget", attr: "freight",
+                  label: "_freight".loc()},
+                {kind: "XV.MoneyWidget", attr:
+                  {amount: "taxTotal", currency: "currency"},
+                  label: "_tax".loc(), currencyShowing: false,
+                  effective: "quoteDate"},
+                {kind: "XV.MoneyWidget", attr:
+                  {amount: "total", currency: "currency"},
+                  label: "_total".loc(), currencyShowing: false,
+                  effective: "quoteDate"}
+              ]}
+            ]}
+          ]}
+        ]},
         {kind: "XV.QuoteCommentBox", attr: "comments"},
         {kind: "XV.QuoteDocumentsBox", attr: "documents"}
       ]}
@@ -1265,29 +1290,41 @@ trailing:true white:true*/
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", classes: "in-panel", fit: true, components: [
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", fit: true, components: [
             {kind: "XV.NumberWidget", attr: "lineNumber"},
-            {kind: "XV.ItemSiteWidget", attr: "itemSite", name: "itemSiteWidget",
-              filterRestrictionType: "item.isSold", filterRestriction: true},
+            {kind: "XV.ItemSiteWidget", attr: "itemSite",
+              name: "itemSiteWidget",
+              filterRestrictionType: "item.isSold",
+              filterRestriction: true},
             {kind: "XV.NumberWidget", attr: "quantity"},
             {kind: "XV.UnitWidget", attr: "quantityUnit"},
-            {kind: "XV.NumberWidget", attr: "quantityUnitRatio"},
-            {kind: "XV.NumberWidget", attr: "customerPrice"},
             {kind: "XV.PercentWidget", attr: "discount"},
             {kind: "XV.NumberWidget", attr: "price"},
-            {kind: "XV.DateWidget", attr: "scheduleDate"},
-            {kind: "XV.DateWidget", attr: "promiseDate", showing: false}, //TODO: this is conditional on sales settings
-            {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "quote.currency"},
-              label: "_unitPrice".loc(), currencyDisabled: true},
-            {kind: "XV.NumberWidget", attr: "listCost"},
-            {kind: "XV.NumberWidget", attr: "listCostMarkup"},
-            {kind: "XV.NumberWidget", attr: "listPrice"},
-            {kind: "XV.NumberWidget", attr: "listPriceDiscount"},
-            {kind: "XV.InputWidget", attr: "customerPartNumber"},
             {kind: "XV.UnitWidget", attr: "priceUnit"},
-            {kind: "XV.InputWidget", attr: "priceMode"},
             {kind: "XV.NumberWidget", attr: "extendedPrice"},
-            {kind: "XV.NumberWidget", attr: "profit"},
+            {kind: "onyx.GroupboxHeader", content: "_delivery".loc()},
+            {kind: "XV.DateWidget", attr: "scheduleDate"},
+            {kind: "XV.DateWidget", attr: "promiseDate", showing: false},
+            {kind: "XV.QuoteLineCharacteristicsWidget", attr: "characteristics"}
+          ]}
+        ]},
+        {kind: "XV.Groupbox", name: "detailsPanel", title: "_detail".loc(),
+          components: [
+          {kind: "onyx.GroupboxHeader", content: "_costs".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "detailGroup",
+            classes: "in-panel", fit: true, components: [
+            {kind: "XV.NumberWidget", attr: "itemSite.item.standardCost",
+              label: "_standardCost".loc()},
+            {kind: "XV.NumberWidget", attr: "itemSite.averageCost",
+              label: "_averageCost".loc()},
+            {kind: "XV.NumberWidget", attr: "itemSite.item.listCost",
+              label: "_listCost".loc()},
+            {kind: "XV.PercentWidget", attr: "listCostMarkup"},
+            {kind: "XV.NumberWidget", attr: "listPrice"},
+            {kind: "XV.PercentWidget", attr: "listPriceDiscount"},
+            {kind: "XV.PercentWidget", attr: "profit"},
+            {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
             {kind: "XV.TaxTypePicker", attr: "taxType"},
             {kind: "XV.NumberWidget", attr: "tax"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
@@ -1316,6 +1353,11 @@ trailing:true white:true*/
           this.$.itemSiteWidget.setDefaultSite(model.getValue("quote.site"));
         }
       }
+    },
+    create: function () {
+      this.inherited(arguments);
+      var promiseDate = this.findControl("promiseDate");
+      promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
     }
   });
 
@@ -1399,7 +1441,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "number"},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "externalReference"},
-            {kind: "XV.CurrencyPickerWidget", attr: "currency"},
+            {kind: "XV.CurrencyPicker", attr: "currency"},
             {kind: "XV.InputWidget", attr: "county"},
             {kind: "onyx.GroupboxHeader", content: "_address".loc()},
             {kind: "XV.AddressWidget", attr: "address"}

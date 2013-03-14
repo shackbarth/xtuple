@@ -826,11 +826,13 @@ trailing:true white:true*/
     },
     formatHours: function (value, view, model) {
       view.addRemoveClass("error", value < 0);
-      return Globalize.format(value, "n" + 2) + " " + "_hrs".loc();
+      var scale = XT.session.locale.attributes.quantityScale;
+      return Globalize.format(value, "n" + scale) + " " + "_hrs".loc();
     },
     formatExpenses: function (value, view, model) {
       view.addRemoveClass("error", value < 0);
-      return Globalize.format(value, "c" + XT.MONEY_SCALE);
+      var scale = XT.session.locale.attributes.currencyScale;
+      return Globalize.format(value, "c" + scale);
     }
   });
 
@@ -967,7 +969,8 @@ trailing:true white:true*/
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", isKey: true},
-              {kind: "XV.ListAttr", attr: "quoteDate", fit: true, classes: "right"}
+              {kind: "XV.ListAttr", attr: "quoteDate", fit: true,
+                classes: "right", formatter: "formatExpireDate"}
             ]},
             {kind: "XV.ListAttr", attr: "customer.name"}
           ]},
@@ -986,7 +989,13 @@ trailing:true white:true*/
           ]}
         ]}
       ]}
-    ]
+    ],
+    formatExpireDate: function (value, view, model) {
+      var isLate = model && model.get('expireDate') &&
+        (XT.date.compareDate(value, new Date()) < 1);
+      view.addRemoveClass("error", isLate);
+      return value;
+    }
   });
 
   XV.registerModelList("XM.QuoteRelation", "XV.QuoteList");
