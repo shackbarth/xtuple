@@ -13,29 +13,29 @@ var XVOWS = XVOWS || {};
     crud = require('../lib/crud');
 
   var data = {},
-    today = new Date();
+    extra = {};
 
   data.createHash = {
-    dueDate: today,
-    name: "Pass the VOWS tests"
+    number: "TESTPROSPECT",
+    name: "Mike"
   };
 
   data.updateHash = {
     name: "Updated"
   };
 
-  vows.describe('XM.ToDo CRUD test').addBatch({
+  vows.describe('XM.Prospect CRUD test').addBatch({
     'INITIALIZE ': {
       topic: function () {
         var that = this,
           callback = function () {
-            data.model = new XM.ToDo();
+            data.model = new XM.Prospect();
             that.callback(null, data);
           };
         zombieAuth.loadApp(callback);
       },
-      'The record type is XM.ToDo': function (data) {
-        assert.equal(data.model.recordType, "XM.ToDo");
+      'The record type is XM.Prospect': function (data) {
+        assert.equal(data.model.recordType, "XM.Prospect");
       }
     }
   }).addBatch({
@@ -54,6 +54,7 @@ var XVOWS = XVOWS || {};
   }).addBatch({
     'READ': {
       topic: function () {
+        extra.accountId = data.model.get('account');
         return data;
       },
       'Last Error is null': function (data) {
@@ -71,7 +72,32 @@ var XVOWS = XVOWS || {};
       }
     })
   }).addBatch({
-    'DESTROY': crud.destroy(data)
+    'DESTROY': crud.destroy(data, {
+      '-> Set values': {
+        topic: function () {
+          var that = this,
+            fetchOptions = {},
+            accountModel = new XM.Account();
+            
+          fetchOptions.id = extra.accountId;
+          
+          fetchOptions.success = function () {
+            var destroyOptions = {};
+            destroyOptions.success = function () {
+              that.callback(null, data);
+            };
+            destroyOptions.error = function () {
+              that.callback("Error destroying the newly created account.");
+            };
+            accountModel.destroy(destroyOptions);
+          };
+          fetchOptions.error = function () {
+            that.callback("Error fetching the newly created account.");
+          };
+          accountModel.fetch(fetchOptions);
+        }
+      }
+    })
   }).export(module);
   
 }());
