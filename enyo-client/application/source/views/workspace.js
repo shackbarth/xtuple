@@ -1222,7 +1222,10 @@ trailing:true white:true*/
             {kind: "FittableColumns", components: [
               {kind: "FittableRows", components: [
                 {kind: "XV.CurrencyPicker", attr: "currency"},
-                {kind: "XV.NumberWidget", attr: "margin"},
+                {kind: "XV.MoneyWidget", attr:
+                  {amount: "margin", currency: "currency"},
+                  label: "_margin".loc(), currencyShowing: false,
+                  effective: "quoteDate"},
                 {kind: "XV.NumberWidget", attr: "freightWeight"}
               ]},
               {kind: "FittableRows", components: [
@@ -1234,8 +1237,10 @@ trailing:true white:true*/
                   {amount: "miscCharge", currency: "currency"},
                   label: "_miscCharge".loc(), currencyShowing: false,
                   effective: "quoteDate"},
-                {kind: "XV.NumberWidget", attr: "freight",
-                  label: "_freight".loc()},
+                {kind: "XV.MoneyWidget", attr:
+                  {amount: "freight", currency: "currency"},
+                  label: "_freight".loc(), currencyShowing: false,
+                  effective: "quoteDate"},
                 {kind: "XV.MoneyWidget", attr:
                   {amount: "taxTotal", currency: "currency"},
                   label: "_tax".loc(), currencyShowing: false,

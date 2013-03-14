@@ -11,17 +11,13 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.Cost",
     kind: "XV.Number",
-    published: {
-      scale: XT.COST_SCALE
-    }
+    scale: XT.COST_SCALE
   });
 
   enyo.kind({
     name: "XV.CostWidget",
     kind: "XV.NumberWidget",
-    published: {
-      scale: XT.COST_SCALE
-    }
+    scale: XT.COST_SCALE
   });
 
   // ..........................................................
@@ -31,17 +27,13 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.ExtendedPrice",
     kind: "XV.Number",
-    published: {
-      scale: XT.EXTENDED_PRICE_SCALE
-    }
+    scale: XT.EXTENDED_PRICE_SCALE
   });
 
   enyo.kind({
     name: "XV.ExtendedPriceWidget",
     kind: "XV.NumberWidget",
-    published: {
-      scale: XT.EXTENDED_PRICE_SCALE
-    }
+    scale: XT.EXTENDED_PRICE_SCALE
   });
 
   // ..........................................................
@@ -218,7 +210,7 @@ regexp:true, undef:true, trailing:true, white:true */
             oldValue = this.getCurrency();
             if (oldValue !== newValue) {
               this.setCurrency(newValue || XT.baseCurrency());
-              this.$.picker.setValue(this.getCurrency());
+              this.$.picker.setValue(this.getCurrency(), options);
             }
           }
           // only show the base panel if there is an effect date AND the currency doesn't match the base
@@ -236,36 +228,26 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.Percent",
     kind: "XV.Number",
-    published: {
-      scale: XT.PERCENT_SCALE
-    },
-    getValue: function () {
-      return this.value / 100;
-    },
-    setValue: function (value, options) {
-      return XV.Number.prototype.setValue.call(this, value * 100, options);
-    },
+    scale: XT.PERCENT_SCALE,
     validate: function (value) {
-      value = this.inherited(arguments);
-      return value / 100;
+      return value && _.isNumber(value) ? value / 100 : null;
+    },
+    valueChanged: function (value) {
+      value = !_.isNaN(value) ? value * 100 : value;
+      XV.Number.prototype.valueChanged.call(this, value);
     }
   });
 
   enyo.kind({
     name: "XV.PercentWidget",
     kind: "XV.NumberWidget",
-    published: {
-      scale: XT.PERCENT_SCALE
-    },
-    getValue: function () {
-      return XV.NumberWidget.prototype.getValue.call(this) * 100;
-    },
-    setValue: function (value, options) {
-      return XV.NumberWidget.prototype.setValue.call(this, value * 100, options);
-    },
+    scale: XT.PERCENT_SCALE,
     validate: function (value) {
-      value = this.inherited(arguments);
-      return value / 100;
+      return value && !_.isNaN(value) ? value / 100 : null;
+    },
+    valueChanged: function (value) {
+      value = !_.isNaN(value) ? value * 100 : value;
+      XV.NumberWidget.prototype.valueChanged.call(this, value);
     }
   });
 
@@ -276,17 +258,13 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.PurchasePrice",
     kind: "XV.Number",
-    published: {
-      scale: XT.PURCHASE_PRICE_SCALE
-    }
+    scale: XT.PURCHASE_PRICE_SCALE
   });
 
   enyo.kind({
     name: "XV.PurchasePriceWidget",
     kind: "XV.NumberWidget",
-    published: {
-      scale: XT.PURCHASE_PRICE_SCALE
-    }
+    scale: XT.PURCHASE_PRICE_SCALE
   });
 
   // ..........................................................
@@ -296,17 +274,13 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.Quantity",
     kind: "XV.Number",
-    published: {
-      scale: XT.QTY_SCALE
-    }
+    scale: XT.QTY_SCALE
   });
 
   enyo.kind({
     name: "XV.QuantityWidget",
     kind: "XV.NumberWidget",
-    published: {
-      scale: XT.QTY_SCALE
-    }
+    scale: XT.QTY_SCALE
   });
 
   // ..........................................................
@@ -316,17 +290,13 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.QuantityPer",
     kind: "XV.Number",
-    published: {
-      scale: XT.QTY_PER_SCALE
-    }
+    scale: XT.QTY_PER_SCALE
   });
 
   enyo.kind({
     name: "XV.QuantityPerWidget",
     kind: "XV.NumberWidget",
-    published: {
-      scale: XT.QTY_PER_SCALE
-    }
+    scale: XT.QTY_PER_SCALE
   });
 
   // ..........................................................
@@ -336,17 +306,13 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.SalesPrice",
     kind: "XV.Number",
-    published: {
-      scale: XT.SALES_PRICE_SCALE
-    }
+    scale: XT.SALES_PRICE_SCALE
   });
 
   enyo.kind({
     name: "XV.SalesPriceWidget",
     kind: "XV.NumberWidget",
-    published: {
-      scale: XT.SALES_PRICE_SCALE
-    }
+    scale: XT.SALES_PRICE_SCALE
   });
 
   // ..........................................................
@@ -356,17 +322,13 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.UnitRatio",
     kind: "XV.Number",
-    published: {
-      scale: XT.UNIT_RATIO_SCALE
-    }
+    scale: XT.UNIT_RATIO_SCALE
   });
 
   enyo.kind({
     name: "XV.UnitRatioWidget",
     kind: "XV.NumberWidget",
-    published: {
-      scale: XT.UNIT_RATIO_SCALE
-    }
+    scale: XT.UNIT_RATIO_SCALE
   });
 
   // ..........................................................
@@ -376,17 +338,13 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.Weight",
     kind: "XV.Number",
-    published: {
-      scale: XT.WEIGHT_SCALE
-    }
+    scale: XT.WEIGHT_SCALE
   });
 
   enyo.kind({
     name: "XV.WeightWidget",
     kind: "XV.NumberWidget",
-    published: {
-      scale: XT.WEIGHT_SCALE
-    }
+    scale: XT.WEIGHT_SCALE
   });
 
 }());
