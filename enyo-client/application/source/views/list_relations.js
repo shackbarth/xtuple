@@ -350,11 +350,7 @@ trailing:true white:true*/
         scale = XT.session.locale.attributes.percentScale;
       return currency.format(value, scale);
     },
-    formatPrice: function (value, view, model) {
-      var currency = model.getParent().get("currency"),
-        scale = XT.session.locale.attributes.salesPriceScale;
-      return currency.format(value, scale);
-    },
+    formatPrice: XV.QuoteList.prototype.formatPrice,
     formatQuantity: function (value, view, model) {
       var scale = XT.session.locale.attributes.quantityScale;
       return Globalize.format(value, "n" + scale);

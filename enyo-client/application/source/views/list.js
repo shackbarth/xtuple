@@ -969,22 +969,28 @@ trailing:true white:true*/
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", isKey: true},
-              {kind: "XV.ListAttr", attr: "quoteDate", fit: true,
-                classes: "right", formatter: "formatExpireDate"}
+              {kind: "XV.ListAttr", attr: "getQuoteStatusString"}
             ]},
-            {kind: "XV.ListAttr", attr: "customer.name"}
-          ]},
-          {kind: "XV.ListColumn", classes: "second",
-            components: [
-            {kind: "XV.ListAttr", attr: "customerPurchaseOrderNumber",
-              placeholder: "_noPurchaseOrder".loc()}
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "customer.name"}
+            ]}
           ]},
           {kind: "XV.ListColumn", classes: "third",
             components: [
-            {kind: "XV.ListAttr", attr: "getQuoteStatusString",
-              placeholder: "_noStatus".loc()}
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "quoteDate", fit: true,
+                classes: "right", formatter: "formatExpireDate"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "total", formatter: "formatPrice"}
+            ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "shiptoName", classes: "italic"},
+            {kind: "XV.ListAttr", attr: "shiptoAddress1.formatShort"}
+          ]},
+
+          {kind: "XV.ListColumn", classes: "last", components: [
             {kind: "XV.ListAttr", attr: "orderNotes"}
           ]}
         ]}
@@ -995,6 +1001,11 @@ trailing:true white:true*/
         (XT.date.compareDate(value, new Date()) < 1);
       view.addRemoveClass("error", isLate);
       return value;
+    },
+    formatPrice: function (value, view, model) {
+      var currency = model.get("currency"),
+        scale = XT.session.locale.attributes.salesPriceScale;
+      return currency.format(value, scale);
     }
   });
 
