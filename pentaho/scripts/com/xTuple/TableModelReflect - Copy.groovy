@@ -27,8 +27,7 @@ class TableModelReflect{
     
       def json = [:]
       struct.each { it ->
-
-             if (it.value.getClass() == java.util.HashMap) {             
+             if (it.value.getClass() == java.util.HashMap) {
                     json[prefix + '.' + it.key] = it.value.getClass().toString().minus('class ')
                     def childJson = [:]
                     childJson = jsonProp(it.value, prefix + '.' + it.key)
@@ -38,12 +37,20 @@ class TableModelReflect{
             }
             else {
                     def theClass =  it.value.getClass().toString().minus('class ')
-                    json[prefix + '.' + it.key] = theClass
+                    if ( !(theClass.equals('java.lang.Integer')) && 
+                         !(theClass.equals('java.math.BigDecimal')) && 
+                         !(theClass.equals('java.util.ArrayList')) && 
+                         !(theClass.equals('java.lang.Boolean')) && 
+                         !(theClass.equals('java.lang.String'))) {
+                        json[prefix + '.' + it.key] = 'java.lang.String'
+                    }
+                    else {
+                        json[prefix + '.' + it.key] = theClass
+                    }
             }
     
       }
-      return json
-
+      json
     }
 
     /***************************************************************
@@ -86,13 +93,11 @@ class TableModelReflect{
         // connection.setConnectTimeout(10000)
         connection.connect()
         def Object result
+        def Object subResult
         def Object strings
         if (connection.responseCode == 200 || connection.responseCode == 201) {
             def slurper = new JsonSlurper()
             result = slurper.parseText(connection.content.text).data
-
-            println result
-            
             if (childParm != null) {
                 result = result[0][childParm]
             }
@@ -120,8 +125,9 @@ class TableModelReflect{
         }
         rowMapProperties = rowMapProperties.findAll{ it.value != 'java.util.HashMap'}
         
+        
         /****************************************************************************
-        Create a list of column keys to be used in TypedTabelModel and
+        Create a list of column keys to be used in TypedTabelModel
         ****************************************************************************/
         def String[] rowListColumns = new String[rowMapProperties.size()]
         def k= 0
@@ -132,16 +138,13 @@ class TableModelReflect{
         
         /****************************************************************************
         Create a list of column types.  We keep some unsupported types in
-        this list so we can translate properties to Strings wehn we load rows.
-        Get casting exception if we try:
-        rowListTypes[l] = rowMapProperties[rowListColumns[l]] as Class 
-        so we use brute force switch  
+        this list so we can translate properties to Strings wehn we load rows  
         ****************************************************************************/
         def l = 0
-        def String[] rowListTypes = new String[rowMapProperties.size()]
+        def Class[] rowListTypes = new Class[rowMapProperties.size()]
         rowListColumns.each{
-            rowListTypes[l] = rowMapProperties[rowListColumns[l]] 
-            l++
+             rowListTypes[l] = rowMapProperties[rowListColumns[l]] as Class
+             l++
         }
         
         /****************************************************************************
@@ -150,7 +153,14 @@ class TableModelReflect{
         ****************************************************************************/
         def Class[] rowListReportTypes = new Class[rowMapProperties.size()]
         for (int n; n < rowListTypes.size(); n++) {
-            rowListReportTypes[n] = 'java.lang.String'
+            if (rowListTypes[n].toString() == 'class java.lang.Boolean'  ||
+                rowListTypes[n].toString() == 'class java.util.ArrayList' ||
+                rowListTypes[n].toString() == 'class java.lang.Integer') {
+                    rowListReportTypes[n] = 'java.lang.String' as Class
+             }
+             else {
+                rowListReportTypes[n] =  rowListTypes[n]
+             }
         }
         
         /****************************************************************************
@@ -166,25 +176,41 @@ class TableModelReflect{
             for(int m; m < rowListColumns.size(); m++) {
                 def keyTokens = rowListColumns[m].tokenize('.')
                 def prop = findProp(result[j], keyTokens)
-                
-                 if( rowListTypes[m].toString() =='java.math.BigDecimal'){
-                     if (prop == null) {
-                         prop = 0
-                     }
-                     def bigDec = new BigDecimal(prop)
-                     bigDec = bigDec.setScale(3, BigDecimal.ROUND_UP)
-                     //Groovy is defaulting to float.  So force it to create a 3 precision BigDecimal  
-                     row[m] = bigDec.toString()
-                 }
-                 else if (prop.toString().indexOf(',') > -1) {
-                     row[m] = '"' + prop.toString() + '"'
-                 }
-                 else {
-                    row[m] = prop.toString()
-                 }
-
+                if (rowListTypes[m].toString() == 'class java.lang.Boolean'  || rowListTypes[m].toString() == 'class java.util.ArrayList') {
+                        row[m] = prop.toString()
+                }
+                else if (prop != null) {
+                    if( rowListTypes[m].toString() =='class java.math.BigDecimal'){
+                        def bigDec = new BigDecimal(prop)
+                        bigDec = bigDec.setScale(3, BigDecimal.ROUND_UP)
+                        //Groovy is defaulting to float.  So force it to create a 3 precision BigDecimal  
+                        row[m] = bigDec
+                    }
+                    else if( rowListTypes[m].toString() =='class java.lang.String') {
+                        if (prop.toString().indexOf(',') > -1) {
+                            row[m] = '"' + prop.toString() + '"'
+                        }
+                        else {
+                            row[m] = prop.toString()
+                        }
+                    }
+                   else if( rowListTypes[m].toString() =='class java.lang.Integer') {
+                        row[m] = prop.toString()
+                    } 
+                    else {
+                        row[m] = rowListTypes[m].newInstance(prop)
+                    }
+                }
+                else {
+                    if (rowListTypes[m].toString() == 'class java.lang.Integer'  || rowListTypes[m].toString() == 'class java.math.BigDecimal') {
+                        row[m] = rowListTypes[m].newInstance(0)
+                    }
+                    else {
+                        row[m] = rowListTypes[m].newInstance('')
+                    }
+                }
             }
-
+         //   println row
             model.addRow(row)
         }
     return model
