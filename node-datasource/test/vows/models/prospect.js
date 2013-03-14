@@ -16,12 +16,12 @@ var XVOWS = XVOWS || {};
     extra = {};
 
   data.createHash = {
-    number: "TESTPROSPECT",
-    name: "Mike"
+    number: "SHOWERBEER",
+    name: "They are delicious"
   };
 
   data.updateHash = {
-    name: "Updated"
+    name: "!!"
   };
 
   vows.describe('XM.Prospect CRUD test').addBatch({
