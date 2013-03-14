@@ -341,16 +341,19 @@ trailing:true white:true*/
       ]}
     ],
     formatExtendedPrice: function (value, view, model) {
-      var scale = XT.session.locale.attributes.extendedPriceScale;
-      return Globalize.format(value, "c" + scale);
+      var currency = model.getParent().get("currency"),
+        scale = XT.session.locale.attributes.extendedPriceScale;
+      return currency.format(value, scale);
     },
     formatPercentage: function (value, view, model) {
-      var scale = XT.session.locale.attributes.percentScale;
-      return Globalize.format(value, "p" + scale);
+      var currency = model.getParent().get("currency"),
+        scale = XT.session.locale.attributes.percentScale;
+      return currency.format(value, scale);
     },
     formatPrice: function (value, view, model) {
-      var scale = XT.session.locale.attributes.salesPriceScale;
-      return Globalize.format(value, "c" + scale);
+      var currency = model.getParent().get("currency"),
+        scale = XT.session.locale.attributes.salesPriceScale;
+      return currency.format(value, scale);
     },
     formatQuantity: function (value, view, model) {
       var scale = XT.session.locale.attributes.quantityScale;
