@@ -1332,6 +1332,20 @@
           "type": "Number",
           "column": "total"
          }
+      },
+      {
+        "name": "shiptoName",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptoname"
+        }
+      },
+      {
+        "name": "shiptoAddress1",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptoaddress1"
+        }
       }
     ],
     "isSystem": true
