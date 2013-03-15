@@ -16,12 +16,12 @@ var XVOWS = XVOWS || {};
     extra = {};
 
   data.createHash = {
-    number: "TESTPROSPECT",
-    name: "Mike"
+    number: "SHOWERBEER",
+    name: "They are delicious"
   };
 
   data.updateHash = {
-    name: "Updated"
+    name: "!!"
   };
 
   vows.describe('XM.Prospect CRUD test').addBatch({
@@ -66,6 +66,7 @@ var XVOWS = XVOWS || {};
       '-> Set values': {
         topic: function () {
           data.model.set(data.updateHash);
+          extra.accountId = data.model.get('account');
           return data;
         },
         '-> Commit': crud.save(data)
@@ -73,11 +74,16 @@ var XVOWS = XVOWS || {};
     })
   }).addBatch({
     'DESTROY': crud.destroy(data, {
-      '-> Set values': {
+      '-> Destroy the account': {
+        //Destroy the prospect.  When that is successful, destroy the account
+        'prospect destroyed': function (data) {
+          assert.isTrue(data.model.getStatus() === XM.Model.DESTROYED_CLEAN);
+        },
         topic: function () {
           var that = this,
-            fetchOptions = {},
-            accountModel = new XM.Account();
+            fetchOptions = {};
+            
+          extra.accountModel = new XM.Account();
             
           fetchOptions.id = extra.accountId;
           
@@ -89,12 +95,15 @@ var XVOWS = XVOWS || {};
             destroyOptions.error = function () {
               that.callback("Error destroying the newly created account.");
             };
-            accountModel.destroy(destroyOptions);
+            extra.accountModel.destroy(destroyOptions);
           };
           fetchOptions.error = function () {
             that.callback("Error fetching the newly created account.");
           };
-          accountModel.fetch(fetchOptions);
+          extra.accountModel.fetch(fetchOptions);
+        },
+        'account destroyed': function (data) {
+          assert.isTrue(extra.accountModel.getStatus() === XM.Model.DESTROYED_CLEAN);
         }
       }
     })
