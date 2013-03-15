@@ -971,7 +971,7 @@ trailing:true white:true*/
               {kind: "XV.ListAttr", attr: "number", isKey: true,
                 fit: true},
               {kind: "XV.ListAttr", attr: "getQuoteStatusString",
-                classes: "right"}  
+                classes: "right"}
             ]},
             {kind: "XV.ListAttr", attr: "customer.name"}
           ]},
