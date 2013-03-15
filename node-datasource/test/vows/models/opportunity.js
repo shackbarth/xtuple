@@ -58,6 +58,9 @@ var XVOWS = XVOWS || {};
     'READ': {
       topic: function () {
         return data;
+      },
+      'Last Error is null': function (data) {
+        assert.isNull(data.model.lastError);
       }
     }
   }).addBatch({
