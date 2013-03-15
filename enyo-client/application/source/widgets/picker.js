@@ -378,7 +378,7 @@ regexp:true, undef:true, trailing:true, white:true */
   //
 
   enyo.kind({
-    name: "XV.UnitWidget",
+    name: "XV.UnitPicker",
     kind: "XV.PickerWidget",
     collection: "XM.units",
     orderBy: [

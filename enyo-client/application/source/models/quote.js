@@ -519,7 +519,7 @@ white:true*/
         if (answer) {
           that.set("calculateFreight", !calculateFreight);
         } else {
-          that.set("freight", that.previous("freight"));
+          that.set("freight", that.previous("freight"), {silent: true});
         }
       };
       if (calculateFreight) {
@@ -810,7 +810,7 @@ white:true*/
       total = add(subtotals, scale);
 
       // Set values
-      this.set("freightWeight", freightWeight);
+      this.set("freightWeight", freightWeight, {silent: true});
       this.set("subtotal", subtotal);
       this.set("taxTotal", taxTotal);
       this.set("total", total);
