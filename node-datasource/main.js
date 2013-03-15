@@ -295,8 +295,6 @@ app.configure(function () {
   app.set('view engine', 'ejs');
 
   // TODO - This outputs access logs like apache2 and some other user things.
-  //http://stackoverflow.com/questions/13516898/disable-csrf-validation-for-some-requests-on-express
-  //http://stackoverflow.com/questions/9348505/avoiding-image-logging-in-express-js/9351428#9351428
   //app.use(express.logger());
 
   app.use(express.cookieParser());

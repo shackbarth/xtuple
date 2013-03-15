@@ -2,11 +2,6 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, XM:true, console:true*/
 
-// TODO - Need to store and check against:
-// -- approved callback URLs
-// -- client type, e.g. "installed applicaion", "web server", "service account"
-// OAuth 2.0 server should respond differently based on the cleint type.
-
 /**
  * Find an matching client by id in the database.
  *
