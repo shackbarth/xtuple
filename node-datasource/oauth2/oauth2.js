@@ -223,6 +223,9 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
 }));
 
 
+// TODO - We need a token revoke endpoint some day.
+//https://developers.google.com/accounts/docs/OAuth2WebServer#tokenrevoke
+
 
 // user authorization endpoint
 //
@@ -254,7 +257,7 @@ exports.authorization = [
       // by the client matches one registered with the server.
       _.each(client.get("redirectURIs"), function (value, key, list) {
         // Check if the requested redirectURI is in approved client.redirectURIs.
-        if (value === redirectURI) {
+        if (value.redirectURI && value.redirectURI === redirectURI) {
           matches = true;
         }
       });

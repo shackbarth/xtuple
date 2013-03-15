@@ -3,15 +3,15 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "Oauth2client",
-    "table": "xt.oauth2client",
-    "idSequenceName": "oauth2client_oauth2client_id_seq",
+    "table": "xt.oa2client",
+    "idSequenceName": "oa2client_oa2client_id_seq",
     "comment": "Defines global OAuth 2.0 server registered client storage.",
     "properties": [
      {
        "name": "id",
        "attr": {
          "type": "Number",
-         "column": "oauth2client_id",
+         "column": "oa2client_id",
          "isPrimaryKey": true
        }
      },
@@ -19,105 +19,140 @@
        "name": "clientID",
        "attr": {
          "type": "String",
-         "column": "oauth2client_client_id"
+         "column": "oa2client_client_id"
        }
      },
      {
        "name": "clientSecret",
        "attr": {
          "type": "String",
-         "column": "oauth2client_client_secret"
+         "column": "oa2client_client_secret"
        }
      },
      {
        "name": "clientName",
        "attr": {
          "type": "String",
-         "column": "oauth2client_client_name"
+         "column": "oa2client_client_name"
        }
      },
      {
        "name": "clientEmail",
        "attr": {
          "type": "String",
-         "column": "oauth2client_client_email"
+         "column": "oa2client_client_email"
        }
      },
      {
        "name": "clientWebSite",
        "attr": {
          "type": "String",
-         "column": "oauth2client_client_web_site"
+         "column": "oa2client_client_web_site"
        }
      },
      {
        "name": "clientLogo",
        "attr": {
          "type": "String",
-         "column": "oauth2client_client_logo"
+         "column": "oa2client_client_logo"
        }
      },
      {
        "name": "clientType",
        "attr": {
          "type": "String",
-         "column": "oauth2client_client_type"
+         "column": "oa2client_client_type"
        }
      },
      {
        "name": "isActive",
        "attr": {
          "type": "Boolean",
-         "column": "oauth2client_active"
+         "column": "oa2client_active"
        }
      },
      {
        "name": "issued",
        "attr": {
          "type": "Date",
-         "column": "oauth2client_issued"
+         "column": "oa2client_issued"
        }
      },
      {
        "name": "authURI",
        "attr": {
          "type": "String",
-         "column": "oauth2client_auth_uri"
+         "column": "oa2client_auth_uri"
        }
      },
      {
        "name": "tokenURI",
        "attr": {
          "type": "String",
-         "column": "oauth2client_token_uri"
+         "column": "oa2client_token_uri"
        }
      },
      {
        "name": "redirectURIs",
-       "attr": {
-         "type": "String",
-         "column": "oauth2client_redirect_uris"
+       "toMany": {
+         "isNested": true,
+         "type": "Oauth2clientRedirs",
+         "column": "oa2client_id",
+         "inverse": "clientID"
        }
      },
      {
        "name": "delegatedAccess",
        "attr": {
          "type": "String",
-         "column": "oauth2client_delegated_access"
+         "column": "oa2client_delegated_access"
        }
      },
      {
        "name": "clientX509CertURL",
        "attr": {
          "type": "String",
-         "column": "oauth2client_client_x509_cert_url"
+         "column": "oa2client_client_x509_cert_url"
        }
      },
      {
        "name": "authProviderX509CertURL",
        "attr": {
          "type": "String",
-         "column": "oauth2client_auth_provider_x509_cert_url"
+         "column": "oa2client_auth_provider_x509_cert_url"
+       }
+     }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Oauth2clientRedirs",
+    "table": "xt.oa2clientredirs",
+    "idSequenceName": "oa2clientredirs_oa2clientredirs_id_seq",
+    "comment": "Maps redirect URIs to OAuth 2.0 clients.",
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "oa2clientredirs_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "clientID",
+       "attr": {
+         "type": "Number",
+         "column": "oa2clientredirs_oa2client_id"
+       }
+     },
+     {
+       "name": "redirectURI",
+       "attr": {
+         "type": "String",
+         "column": "oa2clientredirs_redirect_uri"
        }
      }
     ],
@@ -127,15 +162,15 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "Oauth2token",
-    "table": "xt.oauth2token",
-    "idSequenceName": "oauth2token_oauth2token_id_seq",
+    "table": "xt.oa2token",
+    "idSequenceName": "oa2token_oa2token_id_seq",
     "comment": "Defines global OAuth 2.0 server token storage.",
     "properties": [
      {
        "name": "id",
        "attr": {
          "type": "Number",
-         "column": "oauth2token_id",
+         "column": "oa2token_id",
          "isPrimaryKey": true
        }
      },
@@ -143,126 +178,126 @@
        "name": "user",
        "attr": {
          "type": "String",
-         "column": "oauth2token_usr_id"
+         "column": "oa2token_usr_id"
        }
      },
      {
        "name": "clientID",
        "attr": {
          "type": "String",
-         "column": "oauth2token_client_id"
+         "column": "oa2token_client_id"
        }
      },
      {
        "name": "redirectURI",
        "attr": {
          "type": "String",
-         "column": "oauth2token_redirect_uri"
+         "column": "oa2token_redirect_uri"
        }
      },
      {
        "name": "scope",
        "attr": {
          "type": "String",
-         "column": "oauth2token_scope"
+         "column": "oa2token_scope"
        }
      },
      {
        "name": "state",
        "attr": {
          "type": "String",
-         "column": "oauth2token_state"
+         "column": "oa2token_state"
        }
      },
      {
        "name": "approvalPrompt",
        "attr": {
          "type": "Boolean",
-         "column": "oauth2token_approval_prompt"
+         "column": "oa2token_approval_prompt"
        }
      },
      {
        "name": "authCode",
        "attr": {
          "type": "String",
-         "column": "oauth2token_auth_code"
+         "column": "oa2token_auth_code"
        }
      },
      {
        "name": "authCodeIssued",
        "attr": {
          "type": "Date",
-         "column": "oauth2token_auth_code_issued"
+         "column": "oa2token_auth_code_issued"
        }
      },
      {
        "name": "authCodeExpires",
        "attr": {
          "type": "Date",
-         "column": "oauth2token_auth_code_expires"
+         "column": "oa2token_auth_code_expires"
        }
      },
      {
        "name": "refreshToken",
        "attr": {
          "type": "String",
-         "column": "oauth2token_refresh_token"
+         "column": "oa2token_refresh_token"
        }
      },
      {
        "name": "refreshIssued",
        "attr": {
          "type": "Date",
-         "column": "oauth2token_refresh_issued"
+         "column": "oa2token_refresh_issued"
        }
      },
      {
        "name": "refreshExpires",
        "attr": {
          "type": "Date",
-         "column": "oauth2token_refresh_expires"
+         "column": "oa2token_refresh_expires"
        }
      },
      {
        "name": "accessToken",
        "attr": {
          "type": "String",
-         "column": "oauth2token_access_token"
+         "column": "oa2token_access_token"
        }
      },
      {
        "name": "accessIssued",
        "attr": {
          "type": "Date",
-         "column": "oauth2token_access_issued"
+         "column": "oa2token_access_issued"
        }
      },
      {
        "name": "accessExpires",
        "attr": {
          "type": "Date",
-         "column": "oauth2token_access_expires"
+         "column": "oa2token_access_expires"
        }
      },
      {
        "name": "tokenType",
        "attr": {
          "type": "String",
-         "column": "oauth2token_token_type"
+         "column": "oa2token_token_type"
        }
      },
      {
        "name": "accessType",
        "attr": {
          "type": "String",
-         "column": "oauth2token_access_type"
+         "column": "oa2token_access_type"
        }
      },
      {
        "name": "delegate",
        "attr": {
          "type": "String",
-         "column": "oauth2token_delegate"
+         "column": "oa2token_delegate"
        }
      }
     ],

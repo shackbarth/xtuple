@@ -14,8 +14,9 @@
 \i xt/tables/datasource.sql
 \i xt/tables/dbserver.sql
 \i xt/tables/ext.sql
-\i xt/tables/oauth2client.sql
-\i xt/tables/oauth2token.sql
+\i xt/tables/oa2client.sql
+\i xt/tables/oa2clientredirs.sql
+\i xt/tables/oa2token.sql
 \i xt/tables/org.sql
 \i xt/tables/orgext.sql
 \i xt/tables/session.sql

@@ -169,7 +169,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         // It depends on the scenario. Some support user interaction and can select an org, others
         // do not and should get an error.
 
-
       }
 
       // TODO - No scope is sent.

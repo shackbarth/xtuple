@@ -77,6 +77,20 @@ white:true*/
 
     @extends XM.SimpleModel
   */
+  XM.Oauth2clientRedirs = XM.SimpleModel.extend({
+    /** @scope XM.Organization.prototype */
+
+    recordType: 'XM.Oauth2clientRedirs',
+
+    databaseType: 'global'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.SimpleModel
+  */
   XM.Oauth2token = XM.SimpleModel.extend({
     /** @scope XM.Organization.prototype */
 
@@ -282,6 +296,17 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.Oauth2clientRedirsCollection = XM.Collection.extend({
+    /** @scope XM.OrganizationCollection.prototype */
+
+    model: XM.Oauth2clientRedirs
+
+  });
   /**
     @class
 
