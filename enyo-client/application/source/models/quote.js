@@ -1738,7 +1738,18 @@ white:true*/
 
     recordType: 'XM.QuoteListItem',
 
-    editableModel: 'XM.Quote'
+    editableModel: 'XM.Quote',
+    
+    /**
+    Returns quote status as a localized string.
+
+    @returns {String}
+    */
+    getQuoteStatusString: function () {
+      var K = this.getClass(),
+        status = this.get("status");
+      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
+    }
 
   });
 
