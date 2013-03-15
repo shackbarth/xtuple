@@ -545,6 +545,21 @@ trailing:true white:true*/
           return param;
         }
       },
+      {name: "excludeProspects", label: "_excludeProspects".loc(), attr: "customer.status", defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '!=',
+              value: "P"
+            };
+          }
+          return param;
+        }
+      },
+      {name: "customerPurchaseOrderNumber", attr: "customerPurchaseOrderNumber",
+        label: "_custPO".loc()},
       {kind: "onyx.GroupboxHeader", content: "_quoteDate".loc()},
       {name: "createdFromDate", label: "_fromDate".loc(),
         filterLabel: "_quoteDate".loc() + " " + "_fromDate".loc(),
