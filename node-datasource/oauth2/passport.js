@@ -48,6 +48,7 @@ passport.use(new LocalStrategy(
  */
 passport.serializeUser(function (user, done) {
   "use strict";
+
   var passportUser = {};
 
   passportUser.id = user.get("id");
@@ -85,6 +86,7 @@ passport.deserializeUser(function (passportUser, done) {
 passport.use(new BasicStrategy(
   function (username, password, done) {
     "use strict";
+
     db.clients.findByClientId(username, function (err, client) {
       if (err) { return done(err); }
       if (!client) { return done(null, false); }
@@ -97,6 +99,7 @@ passport.use(new BasicStrategy(
 passport.use(new ClientPasswordStrategy(
   function (clientId, clientSecret, done) {
     "use strict";
+
     db.clients.findByClientId(clientId, function (err, client) {
       if (err) { return done(err); }
       if (!client) { return done(null, false); }

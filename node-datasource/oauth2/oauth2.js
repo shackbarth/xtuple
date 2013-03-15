@@ -63,7 +63,7 @@ server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, d
   if (!client || !user || !redirectURI || !ares) { return done(null, false); }
 
   // Generate the auth code.
-  var code = utils.uid(16),
+  var code = utils.generateUUID(),
       salt = '$2a$10$' + client.get("clientID").substring(0, 22),
       codehash = X.bcrypt.hashSync(code, salt);
 
@@ -128,10 +128,8 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
       return done(new Error("Authorization code has expired."));
     }
 
-// TODO - Tokens needs to be some kind of uuid.
-//http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
-    var accessToken = utils.uid(256),
-        refreshToken = utils.uid(256),
+    var accessToken = utils.generateUUID(),
+        refreshToken = utils.generateUUID(),
         accesshash,
         refreshhash,
         saveOptions = {},
@@ -174,10 +172,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
     authCode.set("accessIssued", today);
     authCode.set("accessExpires", expires);
     authCode.set("tokenType", tokenType);
-
-// TODO - Remove this, it's just for testing.
-    authCode.set("accessType", accessToken + "####" + refreshToken);
-    //authCode.set("accessType", "offline"); // Default for now...
+    authCode.set("accessType", "offline"); // Default for now...
 
     authCode.save(null, saveOptions);
   });
@@ -224,9 +219,7 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
       return done(new Error("Refresh token has expired."));
     }
 
-// TODO - Tokens needs to be some kind of uuid.
-//http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
-    var accessToken = utils.uid(256),
+    var accessToken = utils.generateUUID(),
         accesshash,
         saveOptions = {},
         today = new Date(),
@@ -259,9 +252,6 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
     token.set("accessToken", accesshash);
     token.set("accessIssued", today);
     token.set("accessExpires", expires);
-
-// TODO - Remove this, it's just for testing.
-    token.set("accessType", accessToken + "####" + refreshToken);
 
     token.save(null, saveOptions);
   });

@@ -132,9 +132,7 @@ require('http').IncomingMessage.prototype.isAuthenticated = function () {
 
   var creds = this.session.passport.user;
 
-// TODO - This needs to support OAuth 2.0 logins which will not have an org set yet.
   if (creds && creds.id && creds.username && creds.organization) {
-  //if (creds && creds.id) {
     return true;
   } else {
     destroySession(this.sessionID, this.session);
@@ -239,6 +237,8 @@ var app = express(),
 
 // Conditionally load express.session(). REST API endpoints using OAuth tokens do not get sessions.
 var conditionalExpressSession = function (req, res, next) {
+  "use strict";
+
   // REST API endpoints start with "/api" in their path.
   if ((/^\/api/i).test(req.path)) {
     next();
@@ -254,10 +254,12 @@ var conditionalExpressSession = function (req, res, next) {
 
     init_session(req, res, next);
   }
-}
+};
 
 // Conditionally load passport.session(). REST API endpoints using OAuth tokens do not get sessions.
 var conditionalPassportSession = function (req, res, next) {
+  "use strict";
+
   // REST API endpoints start with "/api" in their path.
   if ((/^\/api/i).test(req.path)) {
     next();
@@ -267,10 +269,12 @@ var conditionalPassportSession = function (req, res, next) {
 
     init_passportSessions(req, res, next);
   }
-}
+};
 
 // flash() requires sessions, so it has to be loaded conditionally.
 var conditionalFlash = function (req, res, next) {
+  "use strict";
+
   // REST API endpoints start with "/api" in their path.
   if ((/^\/api/i).test(req.path)) {
     next();
@@ -280,7 +284,7 @@ var conditionalFlash = function (req, res, next) {
 
     init_flash(req, res, next);
   }
-}
+};
 
 app.configure(function () {
   "use strict";

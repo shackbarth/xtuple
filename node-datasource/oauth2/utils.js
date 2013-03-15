@@ -1,27 +1,28 @@
+/*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
+regexp:true, undef:true, strict:true, trailing:true, white:true */
+
 /**
- * Return a unique identifier with the given `len`.
+ * Return a universally unique identifier.
  *
- *     utils.uid(10);
- *     // => "FDaS435D2z"
+ * We're using this solution:
+ * http://stackoverflow.com/a/8809472/251019
+ * From here:
+ * http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
  *
- * @param {Number} len
  * @return {String}
  * @api private
  */
-exports.uid = function(len) {
+exports.generateUUID = function () {
+  "use strict";
 
-// TODO - This is not very unique. Already had a collision in testing with OAuth tokens, utils.uid(256). Needs to be some kind of uuid.
-// http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
+  var d = new Date().getTime();
+  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = (d + Math.random() * 16) % 16 | 0;
+      d = Math.floor(d / 16);
+      return (c === 'x' ? r : (r&0x7|0x8)).toString(16);
+    });
 
-  var buf = []
-    , chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    , charlen = chars.length;
-
-  for (var i = 0; i < len; ++i) {
-    buf.push(chars[getRandomInt(0, charlen - 1)]);
-  }
-
-  return buf.join('');
+  return uuid;
 };
 
 /**
@@ -34,5 +35,7 @@ exports.uid = function(len) {
  */
 
 function getRandomInt(min, max) {
+  "use strict";
+
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }

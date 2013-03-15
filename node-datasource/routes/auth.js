@@ -81,7 +81,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         req.session.passport.user.organization = response[0].name;
         req.session.passport.user.username = response[0].username;
 
-// TODO - req.oauth probably isn't enough here...
+// TODO - req.oauth probably isn't enough here, but it's working 2013-03-15...
         // If this is an OAuth 2.0 login with only 1 org.
         if (req.oauth2) {
           return next();
@@ -125,9 +125,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         scopes = [];
 
     try {
-      // TODO - XM.Model version
-      //organizations = _.map(req.user.get("organizations").toJSON(), function (org) {
-      // TODO - XM.SimpleModel version
       organizations = _.map(req.user.get("organizations"), function (org) {
         return org.name;
       });

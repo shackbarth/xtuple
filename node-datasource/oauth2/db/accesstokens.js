@@ -1,6 +1,10 @@
+/*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
+regexp:true, undef:true, strict:true, trailing:true, white:true */
+/*global X:true, XM:true, console:true*/
 
-exports.findByAccessToken = function(key, done) {
+exports.findByAccessToken = function (key, done) {
   "use strict";
+
   var code = new XM.Oauth2tokenCollection(),
       options = {};
 
@@ -31,8 +35,9 @@ exports.findByAccessToken = function(key, done) {
   code.fetch(options);
 };
 
-exports.findByRefreshToken = function(key, done) {
+exports.findByRefreshToken = function (key, done) {
   "use strict";
+
   var code = new XM.Oauth2tokenCollection(),
       options = {};
 
