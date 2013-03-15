@@ -456,12 +456,7 @@ trailing:true white:true*/
             {kind: "XV.CheckboxWidget", attr: "partialShip"},
             {kind: "XV.CheckboxWidget", attr: "isFreeFormShipto", label: "_freeFormShip".loc()},
             {kind: "XV.CheckboxWidget", attr: "isFreeFormBillto", label: "_freeFormBill".loc()},
-            // this is only going to be added by commerical editions
-            // {kind: "XV.InputWidget", attr: "preferredSite"},
             {kind: "onyx.GroupboxHeader", content: "_terms".loc()},
-            // comes from Time & Expense
-            //{kind: "XV.CheckboxWidget", attr: "isSpecifiedBillingRate"}, Enables Rate Widget
-            //{kind: "XV.NumberWidget", attr: "billingRate"},
             {kind: "XV.TermsPicker", attr: "terms"},
             {kind: "XV.PercentWidget", attr: "discount"},
             {kind: "XV.CreditStatusPicker", attr: "creditStatus"},
@@ -470,16 +465,14 @@ trailing:true white:true*/
             {kind: "XV.BalanceMethodPicker", attr: "balanceMethod"},
             {kind: "XV.NumberWidget", attr: "creditLimit"},
             {kind: "XV.InputWidget", attr: "creditRating"},
-            // will be added by sales
-            // {kind: "XV.CheckboxWidget", attr: "autoHoldOrders"},
             {kind: "XV.NumberWidget", attr: "graceDays"},
             {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
             {kind: "XV.TaxZonePicker", attr: "taxZone", label: "_defaultTaxZone".loc()}
           ]}
         ]},
-        {kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
-        {kind: "XV.CustomerCommentBox", attr: "comments"},
         {kind: "XV.CustomerShipToBox", attr: "shiptos"},
+        {kind: "XV.CustomerCommentBox", attr: "comments"},
+        {kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
         {kind: "XV.CustomerDocumentsBox", attr: "documents"}
       ]},
       {kind: "onyx.Popup", name: "findExistingCustomerPopup", centered: true,
@@ -785,7 +778,7 @@ trailing:true white:true*/
             {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.InputWidget", attr: "description1"},
             {kind: "XV.InputWidget", attr: "description2"},
-            {kind: "XV.UnitWidget", attr: "inventoryUnit"},
+            {kind: "XV.UnitPicker", attr: "inventoryUnit"},
             {kind: "XV.ClassCodePicker", attr: "classCode"},
             {kind: "XV.CheckboxWidget", attr: "isFractional"},
             {kind: "onyx.GroupboxHeader", content: "_product".loc()},
@@ -793,7 +786,7 @@ trailing:true white:true*/
             {kind: "XV.ProductCategoryPicker", attr: "productCategory",
               label: "_category".loc()},
             {kind: "XV.SalesPriceWidget", attr: "listPrice"},
-            {kind: "XV.UnitWidget", attr: "priceUnit"},
+            {kind: "XV.UnitPicker", attr: "priceUnit"},
             {kind: "XV.ItemCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader",
               content: "_extendedDescription".loc()},
@@ -1172,59 +1165,96 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "number", label: "_orderNumber".loc()},
-            {kind: "XV.TermsPicker", attr: "terms"},
-            {kind: "XV.DateWidget", attr: "quoteDate", label: "_orderDate".loc()},
-            //{kind: "XV.DateWidget", attr: "scheduleDate"}, // attribute?
-            {kind: "XV.DateWidget", attr: "packDate"},
-            {kind: "XV.PercentWidget", attr: "commission"},
-            {kind: "XV.TaxZonePicker", attr: "taxZone"},
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.DateWidget", attr: "quoteDate"},
+            {kind: "XV.DateWidget", attr: "scheduleDate"},
+            {kind: "XV.DateWidget", attr: "expireDate"},
+            {kind: "XV.InputWidget", attr: "getQuoteStatusString",
+              label: "_status".loc()},
             {kind: "XV.SitePicker", attr: "site"},
-            {kind: "XV.SaleTypePicker", attr: "saleType"},
-            {kind: "XV.InputWidget", attr: "getQuoteStatusString", label: "_status".loc()},
-            {kind: "XV.DateWidget", attr: "expireDate", label: "_expires".loc()},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
-            {kind: "XV.CustomerProspectWidget", attr: "customer", showAddress: true, label: "_billTo".loc()},
-            {kind: "XV.AddressFieldsWidget", attr: {
-              name: "billtoName",
-              line1: "billtoAddress1",
-              line2: "billtoAddress2",
-              line3: "billtoAddress3",
-              city: "billtoCity",
-              state: "billtoState",
-              postalCode: "billtoPostalCode",
-              country: "billtoCountry"
-            }
+            {kind: "XV.CustomerProspectWidget", attr: "customer",
+              showAddress: true, label: "_customer".loc(),
+              nameAttribute: ""},
+            {kind: "XV.AddressFieldsWidget", attr:
+              {name: "billtoName", line1: "billtoAddress1",
+                line2: "billtoAddress2", line3: "billtoAddress3",
+                city: "billtoCity", state: "billtoState",
+                postalCode: "billtoPostalCode", country: "billtoCountry"}
             },
             {classes: "xv-button-section", components: [
-              {kind: "onyx.Button", content: "_copyToShipTo".loc(), ontap: "copyBilltoToShipto",
+              {kind: "onyx.Button", content: "_copyToShipTo".loc(),
+                ontap: "copyBilltoToShipto",
                 style: "margin: 4px;"}
             ]},
             {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
-            {kind: "XV.CustomerShiptoWidget", attr: "shipto", showAddress: true, label: "_name".loc()},
-            {kind: "XV.AddressFieldsWidget", attr: {
-              name: "shiptoName",
-              line1: "shiptoAddress1",
-              line2: "shiptoAddress2",
-              line3: "shiptoAddress3",
-              city: "shiptoCity",
-              state: "shiptoState",
-              postalCode: "shiptoPostalCode",
-              country: "shiptoCountry"
-            }
+            {kind: "XV.CustomerShiptoWidget", attr: "shipto",
+              showAddress: true, label: "_number".loc(),
+              nameAttribute: ""},
+            {kind: "XV.AddressFieldsWidget",
+              attr: {name: "shiptoName", line1: "shiptoAddress1",
+                line2: "shiptoAddress2", line3: "shiptoAddress3",
+                city: "shiptoCity", state: "shiptoState",
+                postalCode: "shiptoPostalCode", country: "shiptoCountry"}
             },
+            {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
+            {kind: "XV.TermsPicker", attr: "terms"},
+            {kind: "XV.SalesRepPicker", attr: "salesRep"},
+            {kind: "XV.PercentWidget", attr: "commission"},
+            {kind: "XV.TaxZonePicker", attr: "taxZone"},
+            {kind: "XV.SaleTypePicker", attr: "saleType"},
             {kind: "onyx.GroupboxHeader", content: "_shipping".loc()},
+            {kind: "XV.DateWidget", attr: "packDate"},
             {kind: "XV.InputWidget", attr: "fob"},
-            {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber", label: "_custPO".loc()},
+            {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber",
+              label: "_custPO".loc()},
             {kind: "XV.ShipViaCombobox", attr: "shipVia"},
             {kind: "XV.ShipZonePicker", attr: "shipZone"},
             {kind: "onyx.GroupboxHeader", content: "_orderNotes".loc()},
             {kind: "XV.TextArea", attr: "orderNotes", fit: true},
             {kind: "onyx.GroupboxHeader", content: "_shippingNotes".loc()},
-            {kind: "XV.TextArea", attr: "shippingNotes", fit: true}
+            {kind: "XV.TextArea", attr: "shipNotes", fit: true}
           ]}
         ]},
-        {kind: "XV.QuoteLineItemBox", attr: "lineItems"},
+        {kind: "FittableRows", title: "_lineItems".loc(), components: [
+          {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true},
+          {kind: "XV.Groupbox", name: "totalGroup",
+            components: [
+            {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
+            {kind: "FittableColumns", components: [
+              {kind: "FittableRows", components: [
+                {kind: "XV.CurrencyPicker", attr: "currency"},
+                {kind: "XV.MoneyWidget", attr:
+                  {amount: "margin", currency: "currency"},
+                  label: "_margin".loc(), currencyShowing: false,
+                  effective: "quoteDate"},
+                {kind: "XV.NumberWidget", attr: "freightWeight"}
+              ]},
+              {kind: "FittableRows", components: [
+                {kind: "XV.MoneyWidget", attr:
+                  {amount: "subtotal", currency: "currency"},
+                  label: "_subtotal".loc(), currencyShowing: false,
+                  effective: "quoteDate"},
+                {kind: "XV.MoneyWidget", attr:
+                  {amount: "miscCharge", currency: "currency"},
+                  label: "_miscCharge".loc(), currencyShowing: false,
+                  effective: "quoteDate"},
+                {kind: "XV.MoneyWidget", attr:
+                  {amount: "freight", currency: "currency"},
+                  label: "_freight".loc(), currencyShowing: false,
+                  effective: "quoteDate"},
+                {kind: "XV.MoneyWidget", attr:
+                  {amount: "taxTotal", currency: "currency"},
+                  label: "_tax".loc(), currencyShowing: false,
+                  effective: "quoteDate"},
+                {kind: "XV.MoneyWidget", attr:
+                  {amount: "total", currency: "currency"},
+                  label: "_total".loc(), currencyShowing: false,
+                  effective: "quoteDate"}
+              ]}
+            ]}
+          ]}
+        ]},
         {kind: "XV.QuoteCommentBox", attr: "comments"},
         {kind: "XV.QuoteDocumentsBox", attr: "documents"}
       ]}
@@ -1267,28 +1297,47 @@ trailing:true white:true*/
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", classes: "in-panel", fit: true, components: [
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", fit: true, components: [
             {kind: "XV.NumberWidget", attr: "lineNumber"},
-            {content: "TODO: ITEMSITE"},
-            {kind: "XV.NumberWidget", attr: "quantity"},
-            {kind: "XV.UnitWidget", attr: "quantityUnit"},
-            {kind: "XV.NumberWidget", attr: "quantityUnitRatio"},
-            {kind: "XV.NumberWidget", attr: "customerPrice"},
-            {kind: "XV.PercentWidget", attr: "discount"},
-            {kind: "XV.NumberWidget", attr: "price"},
+            {kind: "XV.ItemSiteWidget", attr: "itemSite",
+              name: "itemSiteWidget",
+              filterRestrictionType: "item.isSold",
+              filterRestriction: true},
+            {kind: "XV.QuantityWidget", attr: "quantity"},
+            {kind: "XV.UnitPicker", name: "quantityUnitPicker", attr: "quantityUnit"},
+            {kind: "XV.PercentWidget", name: "discount", attr: "discount"},
+            {kind: "XV.MoneyWidget", attr:
+              {amount: "price", currency: "quote.currency"},
+              label: "_price".loc(), currencyDisabled: true,
+              effective: "quote.quoteDate", scale: XT.SALES_PRICE_SCALE},
+            {kind: "XV.UnitPicker", name: "priceUnitPicker", attr: "priceUnit"},
+            {kind: "XV.MoneyWidget", attr:
+              {amount: "extendedPrice", currency: "quote.currency"},
+              label: "_extendedPrice".loc(), currencyDisabled: true,
+              effective: "quote.quoteDate", scale: XT.EXTENDED_PRICE_SCALE},
+            {kind: "onyx.GroupboxHeader", content: "_delivery".loc()},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
-            //{kind: "XV.DateWidget", attr: "promiseDate"}, TODO: this is conditional on sales settings
-            {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "quote.currency"},
-              label: "_unitPrice".loc(), currencyDisabled: true},
-            {kind: "XV.NumberWidget", attr: "listCost"},
-            {kind: "XV.NumberWidget", attr: "listCostMarkup"},
+            {kind: "XV.DateWidget", attr: "promiseDate", showing: false},
+            {kind: "XV.QuoteLineCharacteristicsWidget", attr: "characteristics"}
+          ]}
+        ]},
+        {kind: "XV.Groupbox", name: "detailsPanel", title: "_detail".loc(),
+          components: [
+          {kind: "onyx.GroupboxHeader", content: "_costs".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "detailGroup",
+            classes: "in-panel", fit: true, components: [
+            {kind: "XV.NumberWidget", attr: "itemSite.item.standardCost",
+              label: "_standardCost".loc()},
+            {kind: "XV.NumberWidget", attr: "itemSite.averageCost",
+              label: "_averageCost".loc()},
+            {kind: "XV.NumberWidget", attr: "itemSite.item.listCost",
+              label: "_listCost".loc()},
+            {kind: "XV.PercentWidget", attr: "listCostMarkup"},
             {kind: "XV.NumberWidget", attr: "listPrice"},
-            {kind: "XV.NumberWidget", attr: "listPriceDiscount"},
-            {kind: "XV.InputWidget", attr: "customerPartNumber"},
-            {kind: "XV.UnitWidget", attr: "priceUnit"},
-            {kind: "XV.InputWidget", attr: "priceMode"},
-            {kind: "XV.NumberWidget", attr: "extendedPrice"},
-            {kind: "XV.NumberWidget", attr: "profit"},
+            {kind: "XV.PercentWidget", attr: "listPriceDiscount"},
+            {kind: "XV.PercentWidget", attr: "profit"},
+            {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
             {kind: "XV.TaxTypePicker", attr: "taxType"},
             {kind: "XV.NumberWidget", attr: "tax"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
@@ -1297,7 +1346,69 @@ trailing:true white:true*/
         ]},
         {kind: "XV.QuoteLineCommentBox", attr: "comments"}
       ]}
-    ]
+    ],
+    /**
+      The item site widget will need to know about the customer and the shipto
+      for narrowing down of item options. When the model changes, check the priceMode field to see if it is in
+      Discount or Markup mode and change the label accordingly.
+     */
+    attributesChanged: function (model, options) {
+      this.inherited(arguments);
+
+      if (model.isReady()) {
+        // clone or else bespokeFilterChanged never gets run
+        var bespokeFilter = JSON.parse(JSON.stringify(this.$.itemSiteWidget.getBespokeFilter() || {}));
+
+        bespokeFilter.customerId = model.getValue("quote.customer.id") || null;
+        bespokeFilter.shiptoId = model.getValue("quote.shipto.id") || null;
+        bespokeFilter.effectiveDate = model.getValue("priceAsOfDate");
+        this.$.itemSiteWidget.setBespokeFilter(bespokeFilter);
+        if (model.getValue("quote.site")) {
+          this.$.itemSiteWidget.setDefaultSite(model.getValue("quote.site"));
+        }
+
+        // XXX there must be a better place to bind these selling units
+        var sellingUnits = this.value && this.value.getValue("sellingUnits");
+        if (sellingUnits) {
+          sellingUnits.on("add", this.setSellingUnits, this);
+          sellingUnits.on("remove", this.setSellingUnits, this);
+          if (model.getStatus() === XM.Model.READY_CLEAN) {
+            // kick it off for the initial drilldown
+            this.setSellingUnits();
+          }
+        }
+        var pm = model.get("priceMode");
+        if (pm === "N" || pm === "D" || pm === "P") { // discount
+          this.$.discount.setLabel("_discount".loc());
+        } else { // markup
+          this.$.discount.setLabel("_markup".loc());
+        }
+      }
+    },
+    create: function () {
+      this.inherited(arguments);
+      var promiseDate = this.findControl("promiseDate");
+      promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
+    },
+    /**
+      Remove bindings
+     */
+    destroy: function () {
+      var sellingUnits = this.value.getValue("sellingUnits");
+      if (sellingUnits) {
+        sellingUnits.off("add", this.setSellingUnits, this);
+        sellingUnits.off("remove", this.setSellingUnits, this);
+      }
+
+      this.inherited(arguments);
+    },
+    setSellingUnits: function () {
+      var units = _.map(this.getValue().getValue("sellingUnits").models, function (model) {
+        return model.get("id");
+      });
+      this.$.quantityUnitPicker.setAllowedUnits(units);
+      this.$.priceUnitPicker.setAllowedUnits(units);
+    }
   });
 
 
@@ -1380,7 +1491,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "number"},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "externalReference"},
-            {kind: "XV.CurrencyPickerWidget", attr: "currency"},
+            {kind: "XV.CurrencyPicker", attr: "currency"},
             {kind: "XV.InputWidget", attr: "county"},
             {kind: "onyx.GroupboxHeader", content: "_address".loc()},
             {kind: "XV.AddressWidget", attr: "address"}

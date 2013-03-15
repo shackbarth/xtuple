@@ -179,6 +179,9 @@ class TableModelReflect{
                  else if (prop.toString().indexOf(',') > -1) {
                      row[m] = '"' + prop.toString() + '"'
                  }
+                 else if (prop == null) {
+                     row[m] = ""
+                     }
                  else {
                     row[m] = prop.toString()
                  }
