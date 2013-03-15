@@ -33,7 +33,7 @@ select xt.install_js('XM','Quote','xtuple', $$
     var sql1 = "select custtype_id, custtype_code from custinfo join custtype on custtype_id=cust_custtype_id where cust_id=$1;",
       sql2 = "select shipto_num from shiptoinfo where shipto_id=$1;",
       sql3 = "select currconcat($1) as currabbr;",
-      sql4 = "select * from calculatefreightdetail($1, $2, $3, $4, $5, $6, $7::date, $8, $9, $10, $11, $12, $13::numeric);",
+      sql4 = "select * from calculatefreightdetail($1, $2, $3, $4::integer, $5::integer, $6, $7::date, $8, $9, $10, $11, $12::integer, $13::numeric);",
       customerTypeId,
       customerTypeCode,
       currencyAbbreviation,

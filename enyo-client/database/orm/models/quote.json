@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Quote",
     "table": "xt.quheadinfo",
+    "lockable": true,
     "idSequenceName": "quhead_quhead_id_seq",
     "comment": "Quote Map",
     "privileges": {
@@ -542,7 +543,7 @@
     "isSystem": true
   },
   {
-    "context": "xtupl",
+    "context": "xtuple",
     "nameSpace": "XM",
     "type": "QuoteAccount",
     "table": "xt.doc",
@@ -949,6 +950,13 @@
         }
       },
       {
+        "name": "basePrice",
+        "attr": {
+          "type": "Number",
+          "column": "base_price"
+        }
+      },
+      {
         "name": "customerPrice",
         "attr": {
           "type": "Number",
@@ -981,20 +989,6 @@
         "attr": {
           "type": "Date",
           "column": "quitem_promdate"
-        }
-      },
-      {
-        "name": "unitCost",
-        "attr": {
-          "type": "Number",
-          "column": "quitem_unitcost"
-        }
-      },
-      {
-        "name": "listCost",
-        "attr": {
-          "type": "Number",
-          "column": "list_cost"
         }
       },
       {
@@ -1089,6 +1083,15 @@
           "inverse": "quoteLine",
           "isNested": true
         }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "type": "QuoteLineCharacteristic",
+          "column": "quitem_id",
+          "inverse": "quoteLine",
+          "isNested": true
+        }
       }
     ],
     "isSystem": true
@@ -1126,7 +1129,7 @@
         }
       },
       {
-        "name": "incident",
+        "name": "quoteLine",
         "attr": {
           "type": "Number",
           "column": "charass_target_id"
@@ -1145,6 +1148,13 @@
         "attr": {
           "type": "String",
           "column": "charass_value"
+        }
+      },
+      {
+        "name": "price",
+        "attr": {
+          "type": "Number",
+          "column": "charass_price"
         }
       }
     ],
@@ -1310,11 +1320,32 @@
          }
       },
       {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "quhead_curr_id"
+         }
+      },
+      {
         "name": "total",
         "attr": {
           "type": "Number",
           "column": "total"
          }
+      },
+      {
+        "name": "shiptoName",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptoname"
+        }
+      },
+      {
+        "name": "shiptoAddress1",
+        "attr": {
+          "type": "String",
+          "column": "quhead_shiptoaddress1"
+        }
       }
     ],
     "isSystem": true
