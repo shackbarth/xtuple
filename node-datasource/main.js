@@ -256,6 +256,7 @@ app.configure(function () {
 // so not all route endpoints should require sessions.
 // Something like this:
 //http://stackoverflow.com/questions/9348505/avoiding-image-logging-in-express-js/9351428#9351428
+//http://stackoverflow.com/questions/13516898/disable-csrf-validation-for-some-requests-on-express
 
   // See cookie stopm above for more details.
   app.use(express.session({ store: sessionStore, secret: '.T#T@r5EkPM*N@C%9K-iPW!+T', cookie: { path: '/', httpOnly: true, secure: true, maxAge: 1800000 } }));
