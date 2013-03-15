@@ -125,7 +125,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         scopes = [];
 
     try {
-      organizations = _.map(req.user.get("organizations").toJSON(), function (org) {
+      // TODO - XM.Model version
+      //organizations = _.map(req.user.get("organizations").toJSON(), function (org) {
+      // TODO - XM.SimpleModel version
+      organizations = _.map(req.user.get("organizations"), function (org) {
         return org.name;
       });
     } catch (error) {

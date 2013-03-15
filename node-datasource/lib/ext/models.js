@@ -11,7 +11,8 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.DatabaseServer = XM.SimpleModel.extend({
+  // TODO - Switch to SimpleModel and fix bugs.
+  XM.DatabaseServer = XM.Model.extend({
     /** @scope XM.DatabaseServer.prototype */
 
     recordType: 'XM.DatabaseServer',
@@ -27,7 +28,7 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
   XM.Datasource = XM.SimpleModel.extend({
     /** @scope XM.Datasource.prototype */
@@ -47,7 +48,8 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.Extension = XM.SimpleModel.extend({
+  // TODO - Switch to SimpleModel and fix bugs.
+  XM.Extension = XM.Model.extend({
     /** @scope XM.Extension.prototype */
 
     recordType: 'XM.Extension',
@@ -59,7 +61,7 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
   XM.Oauth2client = XM.SimpleModel.extend({
     /** @scope XM.Organization.prototype */
@@ -73,7 +75,7 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
   XM.Oauth2token = XM.SimpleModel.extend({
     /** @scope XM.Organization.prototype */
@@ -89,7 +91,8 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.Organization = XM.SimpleModel.extend({
+  // TODO - Switch to SimpleModel and fix bugs.
+  XM.Organization = XM.Model.extend({
     /** @scope XM.Organization.prototype */
 
     recordType: 'XM.Organization',
@@ -107,7 +110,8 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.OrganizationExtension = XM.SimpleModel.extend({
+  // TODO - Switch to SimpleModel and fix bugs. This almost works, just see some output to the datasource log.
+  XM.OrganizationExtension = XM.Model.extend({
     /** @scope XM.OrganizationExtension.prototype */
 
     recordType: 'XM.OrganizationExtension',
@@ -120,7 +124,7 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
   XM.Session = XM.SimpleModel.extend({
     /** @scope XM.Session.prototype */
@@ -138,7 +142,7 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
   XM.SessionOrganization = XM.SimpleModel.extend({
     /** @scope XM.SessionOrganization.prototype */
@@ -152,7 +156,7 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
   XM.SessionStore = XM.SimpleModel.extend({
     /** @scope XM.SessionStore.prototype */
@@ -170,7 +174,7 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
   XM.User = XM.SimpleModel.extend({
     /** @scope XM.User.prototype */
@@ -186,7 +190,7 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
   XM.UserOrganization = XM.SimpleModel.extend({
     /** @scope XM.UserOrganization.prototype */
@@ -200,7 +204,7 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
   XM.GlobalPrivilege = XM.SimpleModel.extend(/** @lends XM.GlobalPrivilege.prototype */{
 
@@ -213,7 +217,7 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
   XM.UserGlobalPrivilegeAssignment = XM.SimpleModel.extend(/** @lends XM.UserGlobalPrivilegeAssignment.prototype */{
 
@@ -226,7 +230,7 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
   XM.BiCache = XM.SimpleModel.extend(/** @lends XM.BiCache.prototype */{
 
