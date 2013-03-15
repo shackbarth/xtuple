@@ -59,17 +59,22 @@ regexp:true, undef:true, trailing:true, white:true */
       {kind: "FittableColumns", components: [
         {name: "label", content: "", classes: "xv-label"},
         {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
-            components: [
-          {name: "input", kind: "onyx.Input", attr: "amount", onchange: "inputChanged", onkeydown: "keyDown"}
+          components: [
+          {name: "input", kind: "onyx.Input", attr: "amount",
+            onchange: "inputChanged", onkeydown: "keyDown"}
         ]},
-        {name: "picker", kind: "XV.CurrencyPicker", attr: "currency"}
+        {name: "picker", kind: "XV.CurrencyPicker",
+          attr: "currency", showLabel: false}
       ]},
-      {kind: "FittableColumns", name: "basePanel", showing: false, components: [
+      {kind: "FittableColumns", name: "basePanel", showing: false,
+        components: [
         {name: "spacer", content: "", classes: "xv-label"},
-        {kind: "onyx.InputDecorator", classes: "xv-input-decorator", components: [
+        {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
+          components: [
           {name: "baseAmount"}
         ]},
-        {kind: "onyx.InputDecorator", classes: "xv-input-decorator", components: [
+        {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
+          components: [
           {name: "baseLabel"}
         ]}
       ]}
