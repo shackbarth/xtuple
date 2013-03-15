@@ -969,7 +969,7 @@ trailing:true white:true*/
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", isKey: true},
-              {kind: "XV.ListAttr", attr: "quoteDate", fit: true,
+              {kind: "XV.ListAttr", attr: "expireDate", fit: true,
                 classes: "right", formatter: "formatExpireDate"}
             ]},
             {kind: "XV.ListAttr", attr: "customer.name"}
