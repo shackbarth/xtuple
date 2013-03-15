@@ -415,6 +415,7 @@ var lang = XT.stringsFor("en_US", {
   "_siteCode": "Site Code",
   "_showCompleted": "Show Complete",
   "_showCompletedOnly": "Show Complete Only",
+  "_showExpired": "Show Expired",
   "_showInactive": "Show Inactive",
   "_sold": "Sold",
   "_source": "Source",

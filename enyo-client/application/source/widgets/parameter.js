@@ -532,19 +532,19 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_quote".loc()},
-      // {name: "showInactive", label: "_showInactive".loc(), attr: "isActive", defaultKind: "XV.CheckboxWidget",
-      //   getParameter: function () {
-      //     var param;
-      //     if (!this.getValue()) {
-      //       param = {
-      //         attribute: this.getAttr(),
-      //         operator: '=',
-      //         value: true
-      //       };
-      //     }
-      //     return param;
-      //   }
-      // },
+      {name: "showExpired", label: "_showExpired".loc(), attr: "expireDate", defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '<=',
+              value: new Date()
+            };
+          }
+          return param;
+        }
+      }
       // {name: "name", label: "_name".loc(), attr: "name"},
       // {name: "description", label: "_description".loc(), attr: "description"},
       // {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
