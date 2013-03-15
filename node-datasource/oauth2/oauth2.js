@@ -155,7 +155,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
 
       params.token_type = model.get("tokenType");
       // Google sends time until expires instead of just the time it expires at, so...
-      params.expires_in = Math.round(((expires - new Date()) / 1000) - 60); // Seconds until the token expires with 60 sec padding.
+      params.expires_in = Math.round(((expires - today) / 1000) - 60); // Seconds until the token expires with 60 sec padding.
 
       // Send the tokens and params along.
       return done(null, accessToken, refreshToken, params);
@@ -167,26 +167,26 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
     // Set model values and save.
     authCode.set("state", "Token Issued");
     authCode.set("authCode", null);
-    authCode.set("authCodeExpires", new Date());
+    authCode.set("authCodeExpires", today);
     authCode.set("refreshToken", refreshhash);
-    authCode.set("refreshIssued", new Date());
+    authCode.set("refreshIssued", today);
     authCode.set("accessToken", accesshash);
-    authCode.set("accessIssued", new Date());
+    authCode.set("accessIssued", today);
     authCode.set("accessExpires", expires);
     authCode.set("tokenType", tokenType);
 
 // TODO - Remove this, it's just for testing.
-    authCode.set("accessType", accessToken);
+    authCode.set("accessType", accessToken + "####" + refreshToken);
     //authCode.set("accessType", "offline"); // Default for now...
 
     authCode.save(null, saveOptions);
   });
 }));
 
-server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken, scope, done) {
+server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken, done) {
   "use strict";
 
-  if (!client || !refreshToken || !scope) { return done(null, false); }
+  if (!client || !refreshToken) { return done(null, false); }
 
   // Best practice is to use a random salt in each bcrypt hash. Since we need to query the
   // database for a valid refreshToken, we would have to loop through all the hashes
@@ -205,20 +205,65 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
   var salt = '$2a$10$' + client.get("clientID").substring(0, 22),
       refreshhash = X.bcrypt.hashSync(refreshToken, salt);
 
-  db.accessTokens.save(refreshhash, scope, client.id, function (err, accessToken) {
+  db.accessTokens.findByRefreshToken(refreshhash, function (err, token) {
     if (err) { return done(err); }
+    if (!token) { return done(null, false); }
+    if (client.get("clientID") !== token.get("clientID")) { return done(new Error("Invalid clientID.")); }
 
-    // Now that we've looked up the bcrypt hash, double check that the code
+    // Now that we've looked up the bcrypt refreshToken hash, double check that the code
     // sent by the client actually matches using compareSync() this time.
-    if (!X.bcrypt.compareSync(refreshToken, accessToken.get("refreshToken"))) {
-      console.trace("OAuth 2.0 authCode failed bcrypt compare. WTF?? This should not happen.");
-      return done(new Error("Invalid authorization code."));
+    if (!X.bcrypt.compareSync(refreshToken, token.get("refreshToken"))) {
+      console.trace("OAuth 2.0 refreshToken failed bcrypt compare. WTF?? This should not happen.");
+      return done(new Error("Invalid refresh token."));
     }
 
-    // TODO - This needs to repeat lots of the above token issuing code.
-    // token_type, expires_in, refreshToken, etc.
+    // Refresh tokens do not currently expire, but we might add that feature in the future. Has it expired yet?
+    // TODO - refreshExpires === null means refreshToken doesn't expire. If we change that, determine how to handle null.
+    if (token.get("refreshExpires") && ((new Date(token.get("refreshExpires")) - new Date()) < 0)) {
+      token.destroy();
+      return done(new Error("Refresh token has expired."));
+    }
 
-    done(null, accessToken);
+// TODO - Tokens needs to be some kind of uuid.
+//http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
+    var accessToken = utils.uid(256),
+        accesshash,
+        saveOptions = {},
+        today = new Date(),
+        expires = new Date(today.getTime() + (60 * 60 * 1000)); // One hour from now.
+
+    // The accessToken is only valid for 1 hour and must be sent with each request to
+    // the REST API. The bcrypt hash calculation on each request would be too expensive.
+    // Therefore, we do not need to bcrypt the accessToken, just SHA1 it.
+    accesshash = X.crypto.createHash('sha1').update(accessToken).digest("hex");
+
+    saveOptions.success = function (model) {
+      if (!model) { return done(null, false); }
+      var params = {};
+
+      params.token_type = model.get("tokenType");
+      // Google sends time until expires instead of just the time it expires at, so...
+      params.expires_in = Math.round(((expires - today) / 1000) - 60); // Seconds until the token expires with 60 sec padding.
+
+      // Send the accessToken and params along.
+      // We do not send the refreshToken because they already have it.
+// TODO - oauth2orize seems to need refreshToken in the call back for now.
+      return done(null, accessToken, refreshToken, params);
+    };
+    saveOptions.error = function (model, err) {
+      return done && done(err);
+    };
+
+    // Set model values and save.
+    token.set("state", "Token Refreshed");
+    token.set("accessToken", accesshash);
+    token.set("accessIssued", today);
+    token.set("accessExpires", expires);
+
+// TODO - Remove this, it's just for testing.
+    token.set("accessType", accessToken + "####" + refreshToken);
+
+    token.save(null, saveOptions);
   });
 }));
 
