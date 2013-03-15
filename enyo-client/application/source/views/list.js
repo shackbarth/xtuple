@@ -968,29 +968,23 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", isKey: true},
-              {kind: "XV.ListAttr", attr: "getQuoteStatusString"}
+              {kind: "XV.ListAttr", attr: "number", isKey: true,
+                fit: true},
+              {kind: "XV.ListAttr", attr: "getQuoteStatusString",
+                classes: "right"}  
             ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "customer.name"}
-            ]}
+            {kind: "XV.ListAttr", attr: "customer.name"}
           ]},
-          {kind: "XV.ListColumn", classes: "third",
-            components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "expireDate", fit: true,
-                classes: "right", formatter: "formatExpireDate"}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "total", formatter: "formatPrice"}
-            ]}
+          {kind: "XV.ListColumn", classes: "second", components: [
+            {kind: "XV.ListAttr", attr: "expireDate",
+              formatter: "formatExpireDate"},
+            {kind: "XV.ListAttr", attr: "total", formatter: "formatPrice"}
           ]},
-          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+          {kind: "XV.ListColumn", classes: "last", components: [
             {kind: "XV.ListAttr", attr: "shiptoName", classes: "italic"},
             {kind: "XV.ListAttr", attr: "shiptoAddress1.formatShort"}
           ]},
-
-          {kind: "XV.ListColumn", classes: "last", components: [
+          {kind: "XV.ListColumn", classes: "descr", fit: true, components: [
             {kind: "XV.ListAttr", attr: "orderNotes"}
           ]}
         ]}
@@ -1003,8 +997,7 @@ trailing:true white:true*/
       return value;
     },
     formatPrice: function (value, view, model) {
-      var parent = model.getParent(),
-        currency = parent ? parent.get("currency") : false,
+      var currency = model ? model.get("currency") : false,
         scale = XT.session.locale.attributes.salesPriceScale;
       return currency ? currency.format(value, scale) : "";
     }

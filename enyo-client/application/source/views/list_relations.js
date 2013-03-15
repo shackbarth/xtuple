@@ -352,7 +352,12 @@ trailing:true white:true*/
         scale = XT.session.locale.attributes.percentPriceScale;
       return currency ? currency.format(value, scale) : "";
     },
-    formatPrice: XV.QuoteList.prototype.formatPrice,
+    formatPrice: function (value, view, model) {
+      var parent = model.getParent(),
+        currency = parent ? parent.get("currency") : false,
+        scale = XT.session.locale.attributes.salesPriceScale;
+      return currency ? currency.format(value, scale) : "";
+    },
     formatQuantity: function (value, view, model) {
       var scale = XT.session.locale.attributes.quantityScale;
       return Globalize.format(value, "n" + scale);
