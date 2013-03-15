@@ -978,7 +978,7 @@ trailing:true white:true*/
           {kind: "XV.ListColumn", classes: "third",
             components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "quoteDate", fit: true,
+              {kind: "XV.ListAttr", attr: "expireDate", fit: true,
                 classes: "right", formatter: "formatExpireDate"}
             ]},
             {kind: "FittableColumns", components: [
@@ -1003,9 +1003,10 @@ trailing:true white:true*/
       return value;
     },
     formatPrice: function (value, view, model) {
-      var currency = model.get("currency"),
+      var parent = model.getParent(),
+        currency = parent ? parent.get("currency") : false,
         scale = XT.session.locale.attributes.salesPriceScale;
-      return currency.format(value, scale);
+      return currency ? currency.format(value, scale) : "";
     }
   });
 
