@@ -56,11 +56,8 @@ var XVOWS = XVOWS || {};
       topic: function () {
         return data;
       },
-      'ID is a number': function (data) {
-        assert.isNumber(data.model.id);
-      },
-      'Name is `Outer Space`': function (data) {
-        assert.equal(data.model.get('name'), data.createHash.name);
+      'Last Error is null': function (data) {
+        assert.isNull(data.model.lastError);
       }
     }
   }).addBatch({
@@ -69,9 +66,6 @@ var XVOWS = XVOWS || {};
         topic: function () {
           data.model.set(data.updateHash);
           return data;
-        },
-        'Abbr is `XY`': function (data) {
-          assert.equal(data.model.get('abbreviation'), data.updateHash.abbreviation);
         },
         '-> Commit': crud.save(data)
       }

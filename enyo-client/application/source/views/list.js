@@ -631,6 +631,46 @@ trailing:true white:true*/
   XV.registerModelList("XM.ItemRelation", "XV.ItemList");
 
   // ..........................................................
+  // ITEM SITE
+  //
+
+  enyo.kind({
+    name: "XV.ItemSiteList",
+    kind: "XV.List",
+    label: "_itemSites".loc(),
+    collection: "XM.ItemSiteListItemCollection",
+    query: {orderBy: [
+      {attribute: 'item.number'}
+    ]},
+    parameterWidget: "XV.ItemSiteListParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "item.number", isKey: true},
+              {kind: "XV.ListAttr", attr: "item.unit.name", fit: true, classes: "right"}
+            ]},
+            {kind: "XV.ListAttr", attr: "item.description1"}
+          ]},
+          {kind: "XV.ListColumn", classes: "second",
+            components: [
+            {kind: "XV.ListAttr", attr: "site.code", classes: "bold"},
+            {kind: "XV.ListAttr", attr: "site.description"}
+          ]}
+        ]}
+      ]}
+    ],
+    formatActive: function (value, view, model) {
+      return value ? "_active".loc() : "";
+    },
+    formatSold: function (value, view, model) {
+      return value ? "_sold".loc() : "";
+    }
+  });
+
+  XV.registerModelList("XM.ItemSiteRelation", "XV.ItemSiteList");
+  // ..........................................................
   // OPPORTUNITY
   //
 
@@ -786,11 +826,13 @@ trailing:true white:true*/
     },
     formatHours: function (value, view, model) {
       view.addRemoveClass("error", value < 0);
-      return Globalize.format(value, "n" + 2) + " " + "_hrs".loc();
+      var scale = XT.session.locale.attributes.quantityScale;
+      return Globalize.format(value, "n" + scale) + " " + "_hrs".loc();
     },
     formatExpenses: function (value, view, model) {
       view.addRemoveClass("error", value < 0);
-      return Globalize.format(value, "c" + XT.MONEY_SCALE);
+      var scale = XT.session.locale.attributes.currencyScale;
+      return Globalize.format(value, "c" + scale);
     }
   });
 
@@ -926,27 +968,39 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", isKey: true},
-              {kind: "XV.ListAttr", attr: "quoteDate", fit: true, classes: "right"}
+              {kind: "XV.ListAttr", attr: "number", isKey: true,
+                fit: true},
+              {kind: "XV.ListAttr", attr: "getQuoteStatusString",
+                classes: "right"}
             ]},
             {kind: "XV.ListAttr", attr: "customer.name"}
           ]},
-          {kind: "XV.ListColumn", classes: "second",
-            components: [
-            {kind: "XV.ListAttr", attr: "customerPurchaseOrderNumber",
-              placeholder: "_noPurchaseOrder".loc()}
+          {kind: "XV.ListColumn", classes: "second", components: [
+            {kind: "XV.ListAttr", attr: "expireDate",
+              formatter: "formatExpireDate"},
+            {kind: "XV.ListAttr", attr: "total", formatter: "formatPrice"}
           ]},
-          {kind: "XV.ListColumn", classes: "third",
-            components: [
-            {kind: "XV.ListAttr", attr: "getQuoteStatusString",
-              placeholder: "_noStatus".loc()}
+          {kind: "XV.ListColumn", classes: "last", components: [
+            {kind: "XV.ListAttr", attr: "shiptoName", classes: "italic"},
+            {kind: "XV.ListAttr", attr: "shiptoAddress1.formatShort"}
           ]},
-          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+          {kind: "XV.ListColumn", classes: "descr", fit: true, components: [
             {kind: "XV.ListAttr", attr: "orderNotes"}
           ]}
         ]}
       ]}
-    ]
+    ],
+    formatExpireDate: function (value, view, model) {
+      var isLate = model && model.get('expireDate') &&
+        (XT.date.compareDate(value, new Date()) < 1);
+      view.addRemoveClass("error", isLate);
+      return value;
+    },
+    formatPrice: function (value, view, model) {
+      var currency = model ? model.get("currency") : false,
+        scale = XT.session.locale.attributes.salesPriceScale;
+      return currency ? currency.format(value, scale) : "";
+    }
   });
 
   XV.registerModelList("XM.QuoteRelation", "XV.QuoteList");

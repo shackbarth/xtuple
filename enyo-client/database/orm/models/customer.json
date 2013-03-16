@@ -1155,6 +1155,13 @@
           "type": "ShipZone",
           "column": "shipto_shipzone_id"
         }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "shipto_shipcomments"
+        }
       }
     ],
     "isSystem": true
@@ -1714,10 +1721,24 @@
         }
       },
       {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "cust_shipvia"
+        }
+      },
+      {
         "name": "shipCharge",
         "toOne": {
           "type": "ShipCharge",
           "column": "cust_shipchrg_id"
+        }
+      },
+      {
+        "name": "preferredSite",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "site"
         }
       },
       {

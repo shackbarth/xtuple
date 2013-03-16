@@ -293,6 +293,13 @@
           "type": "Boolean",
           "column": "warehous_active"
         }
+      },
+      {
+        "name": "fob",
+        "attr": {
+          "type": "String",
+          "column": "warehous_fob"
+        }
       }
     ],
     "isSystem": true

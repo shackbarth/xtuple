@@ -272,7 +272,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ItemSiteRelation",
-    "table": "itemsite",
+    "table": "xt.itemsiteinfo",
     "idSequenceName": "itemsite_itemsite_id_seq",
     "comment": "Itemsite Relation Map",
     "privileges": {
@@ -313,6 +313,13 @@
           "type": "SiteRelation",
           "column": "itemsite_warehous_id",
           "isNested": true
+        }
+      },
+      {
+        "name": "averageCost",
+        "attr": {
+          "type": "Number",
+          "column": "avg_cost"
         }
       }
     ],
