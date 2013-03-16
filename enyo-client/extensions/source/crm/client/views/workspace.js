@@ -115,6 +115,11 @@ trailing:true white:true*/
     ];
 
     XV.appendExtension("XV.CustomerWorkspace", extensions);
+    
+    XV.registerModelWorkspace("XM.CustomerContactRelation", "XV.ContactWorkspace");
+    XV.registerModelWorkspace("XM.CustomerIncidentRelation", "XV.IncidentWorkspace");
+    XV.registerModelWorkspace("XM.CustomerOpportunityRelation", "XV.OpportunityWorkspace");
+    XV.registerModelWorkspace("XM.CustomerToDoRelation", "XV.ToDoWorkspace");
 
     // ..........................................................
     // INCIDENT
