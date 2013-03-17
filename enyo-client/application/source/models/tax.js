@@ -76,7 +76,9 @@ white:true*/
 
     recordType: 'XM.TaxCode',
     
-    documentKey: 'code'
+    documentKey: 'code',
+    
+    enforceUpperKey: false
 
   });
   
