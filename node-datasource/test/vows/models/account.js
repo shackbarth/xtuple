@@ -15,7 +15,8 @@ var XVOWS = XVOWS || {};
   var data = {};
 
   data.createHash = {
-    number: "test account"
+    number: "test account",
+    name: "A test Account"
   };
 
   data.updateHash = {
