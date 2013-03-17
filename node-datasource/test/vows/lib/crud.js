@@ -115,6 +115,10 @@ var _ = require("underscore"),
           if (typeof (data.model.get(key)) === 'object' && typeof value === 'object') {
             // if the data is a model and the test hash looks like {contact: {id: 7}}
             assert.equal(data.model.get(key).id, value.id);
+          } else if (key === data.model.documentKey &&
+              data.model.enforceUpperKey === true) {
+              // this is the document key, so it should have been made upper case
+            assert.equal(data.model.get(key), value.toUpperCase());
           } else if (typeof (data.model.get(key)) === 'object' && typeof value === 'number') {
             // if the data is a model and the test hash looks like {contact: 7}
             assert.equal(data.model.get(key).id, value);

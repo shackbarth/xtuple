@@ -103,7 +103,7 @@ regexp:true, undef:true, trailing:true, white:true */
   // ..........................................................
   // INCIDENT EMAIL PROFILE
   //
-  
+
   enyo.kind({
     name: "XV.IncidentEmailProfilePicker",
     kind: "XV.PickerWidget",
@@ -381,9 +381,33 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.UnitPicker",
     kind: "XV.PickerWidget",
     collection: "XM.units",
+    published: {
+      allowedUnits: null
+    },
     orderBy: [
       {attribute: 'name'}
-    ]
+    ],
+    /**
+      Rebuild the list per the filter when it changes
+     */
+    allowedUnitsChanged: function () {
+      this.buildList();
+    },
+    /**
+      If we've been given a special filter restriction, apply it
+     */
+    filter: function (models, options) {
+      var that = this;
+      if (this.getAllowedUnits()) {
+        return _.filter(models, function (model) {
+          var id = model.get("id");
+          return _.indexOf(that.getAllowedUnits(), id) >= 0;
+        });
+        //return allowedUnits;
+      } else {
+        return this.inherited(arguments);
+      }
+    }
   });
 
   // ..........................................................
