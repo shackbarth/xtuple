@@ -186,11 +186,12 @@ white:true*/
       if (value) { this.set('status', XM.Incident.ASSIGNED); }
     },
 
-    validateSave: function () {
+    validate: function () {
       var K = XM.Incident;
       if (this.get('status') === K.ASSIGNED && !this.get('assignedTo')) {
         return XT.Error.clone('xt2001');
       }
+      return XM.Document.prototype.validate.apply(this, arguments);
     },
 
     save: function (key, value, options) {

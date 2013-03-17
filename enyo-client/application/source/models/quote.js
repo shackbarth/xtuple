@@ -710,7 +710,7 @@ white:true*/
       }
     },
 
-    validateSave: function () {
+    validate: function () {
       var customer = this.get("customer"),
         shipto = this.get("shipto"),
         total = this.get("total"),
@@ -729,6 +729,8 @@ white:true*/
       if (!lineItems.length) {
         return XT.Error.clone('xt2012');
       }
+      
+      return XM.Document.prototype.validate.apply(this, arguments);
     },
 
     // ..........................................................
@@ -1455,7 +1457,7 @@ white:true*/
       }
     },
 
-    validateSave: function () {
+    validate: function () {
       var quantity = this.get("quantity");
 
       // Check quantity
@@ -1467,7 +1469,8 @@ white:true*/
       if (!this._unitIsFractional && Math.round(quantity) !== quantity) {
         return XT.Error.clone('xt2014');
       }
-
+      
+      return XM.Document.prototype.validate.apply(this, arguments);
     },
 
     /** @private
