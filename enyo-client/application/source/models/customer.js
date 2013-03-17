@@ -533,7 +533,9 @@ white:true*/
 
     recordType: 'XM.CustomerType',
 
-    documentKey: 'code'
+    documentKey: 'code',
+    
+    enforceUpperKey: false
 
   });
 
@@ -566,21 +568,9 @@ white:true*/
 
     recordType: 'XM.ShipCharge',
 
-    documentKey: 'name'
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.ShippingForm = XM.Document.extend({
-    /** @scope */
-
-    recordType: 'XM.ShippingForm',
-
-    documentKey: 'name'
+    documentKey: 'name',
+    
+    enforceUpperKey: false
 
   });
 
@@ -594,7 +584,9 @@ white:true*/
 
     recordType: 'XM.ShipVia',
 
-    documentKey: 'code'
+    documentKey: 'code',
+    
+    enforceUpperKey: false
 
   });
 
@@ -608,7 +600,9 @@ white:true*/
 
     recordType: 'XM.ShipZone',
 
-    documentKey: 'name'
+    documentKey: 'name',
+    
+    enforceUpperKey: false
 
   });
 
