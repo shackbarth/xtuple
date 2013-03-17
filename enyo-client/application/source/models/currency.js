@@ -6,8 +6,9 @@ white:true*/
 (function () {
   "use strict";
 
-  var _rateCache;
-  
+  var _rateCache,
+    _activeRequests = [];
+
   /**
     @class
 
@@ -32,7 +33,7 @@ white:true*/
       'name',
       'symbol'
     ],
-    
+
     // ..........................................................
     // METHODS
     //
@@ -58,10 +59,10 @@ white:true*/
       XM.Document.prototype.initialize.apply(this, arguments);
       this.on('change:abbreviation', this.abbreviationDidChange);
     },
-    
+
     /**
       Formats a value to a localized string.
-      
+
       @param {Number} Value
       @returns {String}
     */
@@ -70,13 +71,13 @@ white:true*/
       var previous = Globalize.culture().numberFormat.currency.symbol,
         symbol = this.get("symbol"),
         result;
-        
+
       // Change current currency
       Globalize.culture().numberFormat.currency.symbol = symbol;
-      
+
       // Format the value
       result = Globalize.format(value, "c" + scale);
-      
+
       // Reset currency back to previous
       Globalize.culture().numberFormat.currency.symbol = previous;
       return result;
@@ -116,14 +117,15 @@ white:true*/
         XM.Document.prototype.save.call(model, key, value, options);
       }
     },
-    
+
     /**
       Converts a value in the currency instance to base value via the success
       callback in options.
-      
+
       @param {Number} Local value
       @param {Date} asOf
-      @param {Function} Options
+      @param {Object} Options
+      @param {Function} [options.success] callback on successful response
       @returns {Object} Receiver
     */
     toBase: function (localValue, asOf, options) {
@@ -134,76 +136,105 @@ white:true*/
         baseValue,
         rate,
         params,
-        err;
-        
+        err,
+        request;
+
       // If invalid arguments, bail
       if (!this.id || !asOf || !options.success) { return this; }
-      
+
       // If we're already the base currency, then just pass through
       if (this.get("isBase")) {
         options.success(localValue);
         return this;
       }
-      
+
       // See if we already have the rate
       rate = _.find(_rateCache.models, function (rate) {
         var effective = rate.get("effective"),
           expires = rate.get("expires");
-        return rate.id === that.id && XT.Date.inRange(asOf, effective, expires);
+        return rate.id === that.id && XT.date.inRange(asOf, effective, expires);
       });
 
       // If we have conversion data already, use it
       if (rate) {
         baseValue = localValue / rate.get("rate");
         options.success(baseValue);
-        
-      // Otherwise, go get it
+
+      // Otherwise, see if we already have a request out for this rate
       } else {
-        // Define the query
-        fetchOptions.query = {
-          parameters: [
-            {
-              attribute: "effective",
-              operator: "<=",
-              value: asOf
-            },
-            {
-              attribute: "expires",
-              operator: ">=",
-              value: asOf
-            },
-            {
-              attribute: "currency",
-              operator: "=",
-              value: this.id
+        request = _.find(_activeRequests, function (request) {
+          return request.currency.id === that.id &&
+            XT.date.compareDate(asOf, request.asOf) === 0;
+        });
+
+        // We've already asked for this, so add the callback
+        // for this call to the list
+        if (request) {
+          request.callbacks.push({
+            localValue: localValue,
+            callback: options.success
+          });
+
+        // Otherwise, go get it
+        } else {
+          // Define the query
+          fetchOptions.query = {
+            parameters: [
+              {
+                attribute: "effective",
+                operator: "<=",
+                value: asOf
+              },
+              {
+                attribute: "expires",
+                operator: ">=",
+                value: asOf
+              },
+              {
+                attribute: "currency",
+                operator: "=",
+                value: this.id
+              }
+            ]
+          };
+
+          request = {
+            currency: this,
+            asOf: asOf,
+            callbacks: [{
+              value: localValue,
+              callback: options.success
+            }]
+          };
+          _activeRequests.push(request);
+
+          // Define the results handler
+          fetchOptions.success = function () {
+            // If no results report an error
+            if (!rates.length) {
+              if (options.error) {
+                params.currency = this.get("abbreviation");
+                params.asOf = Globalize.format(asOf, "d");
+                err = XT.Error.clone('xt2010', { params: params });
+                options.error(err);
+              }
+              return;
             }
-          ]
-        };
-        
-        // Define the results handler
-        fetchOptions.success = function () {
-          // If no results report an error
-          if (!rates.length) {
-            if (options.error) {
-              params.currency = this.get("abbreviation");
-              params.asOf = Globalize.format(asOf, "d");
-              err = XT.Error.clone('xt2010', { params: params });
-              options.error(err);
-            }
-            return;
-          }
-          rate = rates.at(0);
-          
-          // Cache rate for later use
-          _rateCache.add(rate);
-          
-          // Calculate value
-          baseValue = localValue / rate.get("rate");
-          
-          // Forward result
-          options.success(baseValue);
-        };
-        rates.fetch(fetchOptions);
+            rate = rates.at(0);
+
+            // Cache rate for later use
+            _rateCache.add(rate);
+
+            // Forward result to callbacks
+            _.each(request.callbacks, function (obj) {
+              baseValue = obj.localValue / rate.get("rate");
+              obj.callback(baseValue);
+            });
+          };
+
+          // Make the request
+          rates.fetch(fetchOptions);
+        }
       }
 
       return this;
@@ -224,19 +255,19 @@ white:true*/
     }
 
   });
-  
+
   /**
     @class
-  
+
     @extends XM.Document
   */
   XM.CurrencyRate = XM.Document.extend({
     /** @scope XM.CurrencyRate.prototype */
-  
+
     recordType: 'XM.CurrencyRate'
-  
+
   });
-  
+
 
   // ..........................................................
   // COLLECTIONS
@@ -253,19 +284,19 @@ white:true*/
     model: XM.Currency
 
   });
-  
+
   /**
     @class
-  
+
     @extends XM.Collection
   */
   XM.CurrencyRateCollection = XM.Collection.extend({
     /** @scope XM.CurrencyRateCollection.prototype */
-  
+
     model: XM.CurrencyRate
-  
+
   });
-  
+
   _rateCache = new XM.CurrencyRateCollection();
 
 }());

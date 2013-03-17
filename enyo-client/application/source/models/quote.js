@@ -810,7 +810,7 @@ white:true*/
       total = add(subtotals, scale);
 
       // Set values
-      this.set("freightWeight", freightWeight, {silent: true});
+      this.set("freightWeight", freightWeight);
       this.set("subtotal", subtotal);
       this.set("taxTotal", taxTotal);
       this.set("total", total);
