@@ -212,7 +212,6 @@ white:true*/
     },
 
     inventoryUnitDidChange: function (model, value, options) {
-      if (this.isNotReady()) { return; }
       if (value) { this.set('priceUnit', value); }
     },
 

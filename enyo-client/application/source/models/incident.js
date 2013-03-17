@@ -182,7 +182,6 @@ white:true*/
     },
 
     assignedToDidChange: function (model, value, options) {
-      if (this.isNotReady()) { return; }
       if (value) { this.set('status', XM.Incident.ASSIGNED); }
     },
 

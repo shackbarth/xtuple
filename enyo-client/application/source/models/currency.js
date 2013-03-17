@@ -41,7 +41,6 @@ white:true*/
     abbreviationDidChange: function (model, value, options) {
       var that = this,
         checkOptions = {};
-      if (this.isNotReady()) { return; }
 
       checkOptions.success = function (resp) {
         var err, params = {};

@@ -172,8 +172,6 @@ white:true*/
         siteClass = [],
         i;
 
-      if (this.isNotReady()) { return this; }
-
       if (customer && currency && docDate && lineItems.length) {
         // Collect data needed for freight
         for (i = 0; i < lineItems.length; i++) {
@@ -272,8 +270,6 @@ white:true*/
         dispOptions = {},
         params;
 
-      if (this.isNotReady()) { return this; }
-
       if (effective && currency && amount) {
         params = [taxZoneId, taxTypeId, effective, currency.id, amount];
         dispOptions.success = function (resp) {
@@ -294,8 +290,6 @@ white:true*/
     calculateScheduleDate: function () {
       var lineItems = this.get("lineItems").models,
         scheduleDate;
-
-      if (this.isNotReady()) { return this; }
 
       if (lineItems.length) {
         _.each(lineItems, function (line) {
@@ -320,8 +314,6 @@ white:true*/
     */
     calculateTotals: function (calcFreight) {
       var calculateFreight = this.get("calculateFreight");
-
-      if (this.isNotReady()) { return this; }
 
       if (calculateFreight && calcFreight !== false) {
         this.calculateFreight();
@@ -394,8 +386,6 @@ white:true*/
       for (i = 0; i < this.shiptoAttrArray.length; i++) {
         this.setReadOnly(this.shiptoAttrArray[i], isFreeFormShipto);
       }
-
-      if (this.isNotReady()) { return; }
 
       // Set customer default data
       if (customer) {
@@ -508,7 +498,6 @@ white:true*/
       asking the question, which must be answered via the attached callback to complete the process.
     */
     freightDidChange: function () {
-      if (this.isNotReady()) { return; }
       var calculateFreight = this.get("calculateFreight"),
         freight = this.get("freight"),
         that = this,
@@ -579,7 +568,7 @@ white:true*/
         options = {},
         that = this;
 
-      if (this.isNotReady || !lineItems.length) { return; }
+      if (!lineItems.length) { return; }
 
       options.type = XM.Model.QUESTION;
 
@@ -650,7 +639,7 @@ white:true*/
         shiptoAddress = shiptoContact ? shiptoContact.get("address") : false,
         shiptoAttrs;
 
-      if (this.isNotReady() || !shipto) { return; }
+      if (!shipto) { return; }
 
       shiptoAttrs = {
         shiptoName: shipto.get("name"),
@@ -692,12 +681,10 @@ white:true*/
 
     shiptoAddressDidChange: function () {
       // If the address was manually changed, then clear shipto
-      if (this.isNotReady()) { return; }
       this.unset("shipto");
     },
 
     siteDidChange: function () {
-      if (this.isNotReady()) { return; }
       var fob = this.getValue("site.fob") || "";
       this.set("fob", fob);
     },
@@ -977,8 +964,6 @@ white:true*/
         price = this.get("price"),
         options = {};
 
-      if (this.isNotReady()) { return; }
-
       options.success = function (basePrice) {
         var K = that.getClass(),
           priceMode = that.get("priceMode"),
@@ -1046,7 +1031,7 @@ white:true*/
         currency = parent ? parent.get("currency") :false;
 
       // If no parent, don't bother
-      if (!parent || this.isNotReady()) { return; }
+      if (!parent) { return; }
 
       // Make sure we have necessary values
       if (canUpdate && customer && currency &&
@@ -1085,8 +1070,6 @@ white:true*/
         that = this,
         options = {};
 
-      if (this.isNotReady()) { return; }
-
       if (price) {
         if (standardCost) {
           options.success = function (value) {
@@ -1114,7 +1097,7 @@ white:true*/
         params;
 
       // If no parent, don't bother
-      if (!parent || this.isNotReady()) { return; }
+      if (!parent) { return; }
 
       recordType = parent.recordType;
       taxZoneId = parent.getValue("taxZone.id");
@@ -1158,8 +1141,6 @@ white:true*/
         discounted,
         price;
 
-      if (this.isNotReady()) { return; }
-
       if (!customerPrice) {
         this.unset("discount");
       } else if (this._updatePrice) {
@@ -1200,8 +1181,6 @@ white:true*/
         };
         item.sellingUnits(unitOptions);
       }
-
-      if (this.isNotReady()) { return; }
 
       // Reset values
       this.unset("quantityUnit");
@@ -1288,8 +1267,6 @@ white:true*/
        lineNumber = this.get("lineNumber"),
        scheduleDate;
 
-      if (this.isNotReady()) { return; }
-
       // Set next line number
       if (parent && !lineNumber) {
         this.set("lineNumber", parent.get("lineItems").length);
@@ -1327,8 +1304,8 @@ white:true*/
         inventoryUnit = item ? this.getValue("inventoryUnit") : false,
         that = this,
         options = {};
-        
-      if (!inventoryUnit || !quantityUnit || !priceUnit || this.isNotReady()) { return; }
+    
+      if (!inventoryUnit || !quantityUnit || !priceUnit) { return; }
       
       if (inventoryUnit.id === priceUnit.id) {
         this.set("priceUnitRatio", 1);
@@ -1355,7 +1332,7 @@ white:true*/
         isFractionalCache,
         ratioCache;
 
-      if (!inventoryUnit || !quantityUnit || this.isNotReady()) { return; }
+      if (!inventoryUnit || !quantityUnit) { return; }
 
       if (quantityUnit.id === item.get("inventoryUnit").id) {
         this.set("quantityUnitRatio", 1);
@@ -1428,8 +1405,6 @@ white:true*/
         effectivePolicy = XT.session.settings.get("soPriceEffective"),
         that = this,
         options = {};
-
-      if (this.isNotReady()) { return; }
 
       if (customer && item && scheduleDate) {
         options.success = function (canPurchase) {
