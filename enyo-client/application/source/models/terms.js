@@ -16,7 +16,9 @@ white:true*/
 
     recordType: 'XM.Terms',
     
-    documentKey: 'code'
+    documentKey: 'code',
+    
+    enforceUpperKey: false
 
   });
   
