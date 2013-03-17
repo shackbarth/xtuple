@@ -1305,13 +1305,13 @@ trailing:true white:true*/
               filterRestrictionType: "item.isSold",
               filterRestriction: true},
             {kind: "XV.QuantityWidget", attr: "quantity"},
-            {kind: "XV.UnitPicker", attr: "quantityUnit"},
-            {kind: "XV.PercentWidget", attr: "discount"},
+            {kind: "XV.UnitPicker", name: "quantityUnitPicker", attr: "quantityUnit"},
+            {kind: "XV.PercentWidget", name: "discount", attr: "discount"},
             {kind: "XV.MoneyWidget", attr:
               {amount: "price", currency: "quote.currency"},
               label: "_price".loc(), currencyDisabled: true,
               effective: "quote.quoteDate", scale: XT.SALES_PRICE_SCALE},
-            {kind: "XV.UnitPicker", attr: "priceUnit"},
+            {kind: "XV.UnitPicker", name: "priceUnitPicker", attr: "priceUnit"},
             {kind: "XV.MoneyWidget", attr:
               {amount: "extendedPrice", currency: "quote.currency"},
               label: "_extendedPrice".loc(), currencyDisabled: true,
@@ -1349,7 +1349,8 @@ trailing:true white:true*/
     ],
     /**
       The item site widget will need to know about the customer and the shipto
-      for narrowing down of item options.
+      for narrowing down of item options. When the model changes, check the priceMode field to see if it is in
+      Discount or Markup mode and change the label accordingly.
      */
     attributesChanged: function (model, options) {
       this.inherited(arguments);
@@ -1358,12 +1359,29 @@ trailing:true white:true*/
         // clone or else bespokeFilterChanged never gets run
         var bespokeFilter = JSON.parse(JSON.stringify(this.$.itemSiteWidget.getBespokeFilter() || {}));
 
-        bespokeFilter.customerId = model.getValue("quote.customer.id");
-        bespokeFilter.shiptoId = model.getValue("quote.shipto.id");
+        bespokeFilter.customerId = model.getValue("quote.customer.id") || null;
+        bespokeFilter.shiptoId = model.getValue("quote.shipto.id") || null;
         bespokeFilter.effectiveDate = model.getValue("priceAsOfDate");
         this.$.itemSiteWidget.setBespokeFilter(bespokeFilter);
         if (model.getValue("quote.site")) {
           this.$.itemSiteWidget.setDefaultSite(model.getValue("quote.site"));
+        }
+
+        // XXX there must be a better place to bind these selling units
+        var sellingUnits = this.value && this.value.getValue("sellingUnits");
+        if (sellingUnits) {
+          sellingUnits.on("add", this.setSellingUnits, this);
+          sellingUnits.on("remove", this.setSellingUnits, this);
+          if (model.getStatus() === XM.Model.READY_CLEAN) {
+            // kick it off for the initial drilldown
+            this.setSellingUnits();
+          }
+        }
+        var pm = model.get("priceMode");
+        if (pm === "N" || pm === "D" || pm === "P") { // discount
+          this.$.discount.setLabel("_discount".loc());
+        } else { // markup
+          this.$.discount.setLabel("_markup".loc());
         }
       }
     },
@@ -1371,6 +1389,25 @@ trailing:true white:true*/
       this.inherited(arguments);
       var promiseDate = this.findControl("promiseDate");
       promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
+    },
+    /**
+      Remove bindings
+     */
+    destroy: function () {
+      var sellingUnits = this.value.getValue("sellingUnits");
+      if (sellingUnits) {
+        sellingUnits.off("add", this.setSellingUnits, this);
+        sellingUnits.off("remove", this.setSellingUnits, this);
+      }
+
+      this.inherited(arguments);
+    },
+    setSellingUnits: function () {
+      var units = _.map(this.getValue().getValue("sellingUnits").models, function (model) {
+        return model.get("id");
+      });
+      this.$.quantityUnitPicker.setAllowedUnits(units);
+      this.$.priceUnitPicker.setAllowedUnits(units);
     }
   });
 

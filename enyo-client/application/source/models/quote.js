@@ -810,7 +810,7 @@ white:true*/
       total = add(subtotals, scale);
 
       // Set values
-      this.set("freightWeight", freightWeight, {silent: true});
+      this.set("freightWeight", freightWeight);
       this.set("subtotal", subtotal);
       this.set("taxTotal", taxTotal);
       this.set("total", total);
@@ -1738,7 +1738,18 @@ white:true*/
 
     recordType: 'XM.QuoteListItem',
 
-    editableModel: 'XM.Quote'
+    editableModel: 'XM.Quote',
+    
+    /**
+    Returns quote status as a localized string.
+
+    @returns {String}
+    */
+    getQuoteStatusString: function () {
+      var K = this.getClass(),
+        status = this.get("status");
+      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
+    }
 
   });
 
