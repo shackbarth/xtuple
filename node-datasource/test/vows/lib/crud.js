@@ -60,10 +60,10 @@ var _ = require("underscore"),
           that.callback(null, data);
         }, exports.waitTime);
       },
-      'Status is `READY_NEW`': function (data) {
+      'Status is `READY_NEW`': function (error, data) {
         assert.equal(data.model.getStatusString(), 'READY_NEW');
       },
-      'ID is valid': function (data) {
+      'ID is valid': function (error, data) {
         assert.isNumber(data.model.id);
       }
     };
@@ -109,6 +109,9 @@ var _ = require("underscore"),
         assert.equal(data.model.getStatusString(), 'READY_CLEAN');
       },
       'And the values are as we set them': function (error, data) {
+        if (!data.autoTestAttributes) {
+          return;
+        }
         var hashToTest = data.updated ? _.extend(data.createHash, data.updateHash) : data.createHash;
         _.each(hashToTest, function (value, key) {
           // depending on how we represent sub-objects, we want to verify them in different ways
