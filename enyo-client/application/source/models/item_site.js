@@ -38,7 +38,7 @@ white:true*/
 
     @extends XM.Document
   */
-  XM.ItemSite = XM.Document.extend(/** @lends XM.ItemSite.prototype */{
+  XM.ItemSite = XM.Model.extend(/** @lends XM.ItemSite.prototype */{
 
     recordType: 'XM.ItemSite',
 
