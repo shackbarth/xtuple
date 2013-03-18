@@ -14,7 +14,7 @@ var XVOWS = XVOWS || {};
 
   var data = {};
 
-  data.autoTestAttributes = false;
+  data.autoTestAttributes = true;
 
   data.createHash = {
     item: {id: 333},
@@ -62,9 +62,6 @@ var XVOWS = XVOWS || {};
       },
       'ID is a number': function (data) {
         assert.isNumber(data.model.id);
-      },
-      'isSold is true': function (data) {
-        assert.equal(data.model.get('isSold'), data.createHash.isSold);
       }
     }
   }).addBatch({
@@ -73,9 +70,6 @@ var XVOWS = XVOWS || {};
         topic: function (data) {
           data.model.set(data.updateHash);
           return data;
-        },
-        'isSold is false': function (data) {
-          assert.equal(data.model.get('isSold'), data.updateHash.isSold);
         },
         '-> Commit': crud.save(data)
       }
