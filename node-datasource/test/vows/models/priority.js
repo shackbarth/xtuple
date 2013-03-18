@@ -24,7 +24,7 @@ var XVOWS = XVOWS || {};
 
   vows.describe('XM.Priority CRUD test').addBatch({
 
-    'INITIALIZE ': {
+    'We can INITIALIZE a Priority Model': {
       topic: function () {
         var that = this,
           callback = function () {
@@ -33,43 +33,43 @@ var XVOWS = XVOWS || {};
           };
         zombieAuth.loadApp(callback);
       },
-      'The record type is XM.Priority': function (data) {
+      'Verify the record type is XM.Priority': function (data) {
         assert.equal(data.model.recordType, "XM.Priority");
       },
-      'The enforceUpperKey is false': function (data){
+      'Verify the enforceUpperKey is false': function (data){
         assert.equal(data.model.enforceUpperKey, false);
       },
-      'The documentKey is name': function (data) {
+      'Verify the documentKey is name': function (data) {
         assert.equal(data.model.documentKey, "name");
       },
-			'The order is 0': function(data){
+			'Verify the order is 0': function(data){
 				assert.equal(data.model.defaults.order, 0);
 			}
 
     }
   }).addBatch({
-    'CREATE ': crud.create(data, {
+    'We can CREATE a Priority Model ': crud.create(data, {
       '-> Set values': {
         topic: function (data) {
           data.model.set(data.createHash);
           return data;
         },
-        'Last Error is null': function (data) {
+        'Verify the Last Error is null': function (data) {
           assert.isNull(data.model.lastError);
         },
-        '-> Save': crud.save(data)
+        '-> Save the Incident': crud.save(data)
       }
 		})
 /*	}).addBatch({
 	
-		'Duplicate ': crud.create(data, {
-      '-> Set values': {
+		'We cannot Duplicate a Priority ': crud.create(data, {
+      '-> Set values as a Duplicate Priority': {
         topic: function (data) {
           data.model.set(data.createHash);
           return data;
         },
-        '-> Save': crud.save(data),
-				'Last Error is true': function (data) {
+        '-> Attempt to Save Duplicate Priority': crud.save(data),
+				'Verify the Last Error is true': function (data) {
 					console.log(data.model.lastError.toString());
 					assert.fail("", data.model.lastError);
 				}
@@ -77,34 +77,34 @@ var XVOWS = XVOWS || {};
     })
 */
   }).addBatch({
-    'READ': {
+    'We can READ from a Priority Model': {
       topic: function () {
         return data;
       },
-      'ID is a number': function (data) {
+      'Verify the ID is a number': function (data) {
         assert.isNumber(data.model.id);
       },
-      'Name is `createHash`': function (data) {
+      'Verify the Name is from createHash': function (data) {
         assert.equal(data.model.get('name'), data.createHash.name);
       }
     }
   }).addBatch({
-    'UPDATE ': crud.update(data, {
-      '-> Set values': {
+    'We can UPDATE a Priority Model ': crud.update(data, {
+      '-> Set values to the Priority': {
         topic: function () {
           data.model.set(data.updateHash);
           return data;
         },
-        'Name is updateHash': function (data) {
+        'Verify the Name is from updateHash': function (data) {
           assert.equal(data.model.get('name'), data.updateHash.name);
         },
-        '-> Commit': crud.save(data)
+        '-> Commit the Priority': crud.save(data)
       }
     })
 
 
   }).addBatch({
-    'DESTROY': crud.destroy(data)
+    'We can DESTROY a Priority Model': crud.destroy(data)
 		
   }).export(module);
 

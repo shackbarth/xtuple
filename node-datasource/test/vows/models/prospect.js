@@ -25,7 +25,7 @@ var XVOWS = XVOWS || {};
   };
 
   vows.describe('XM.Prospect CRUD test').addBatch({
-    'INITIALIZE ': {
+    'We can INITIALIZE a Prospect Model ': {
       topic: function () {
         var that = this,
           callback = function () {
@@ -34,49 +34,49 @@ var XVOWS = XVOWS || {};
           };
         zombieAuth.loadApp(callback);
       },
-      'The record type is XM.Prospect': function (data) {
+      'Verify the record type is XM.Prospect': function (data) {
         assert.equal(data.model.recordType, "XM.Prospect");
       }
     }
   }).addBatch({
-    'CREATE ': crud.create(data, {
-      '-> Set values': {
+    'We can CREATE a Prospect Model': crud.create(data, {
+      '-> Set values to the Prospect': {
         topic: function (data) {
           data.model.set(data.createHash);
           return data;
         },
-        'Last Error is null': function (data) {
+        'Verify the Last Error is null': function (data) {
           assert.isNull(data.model.lastError);
         },
-        '-> Save': crud.save(data)
+        '-> Save the Prospect': crud.save(data)
       }
     })
   }).addBatch({
-    'READ': {
+    'We can READ the Prospect Model': {
       topic: function () {
         extra.accountId = data.model.get('account');
         return data;
       },
-      'Last Error is null': function (data) {
+      'Verify the Last Error is null': function (data) {
         assert.isNull(data.model.lastError);
       }
     }
   }).addBatch({
-    'UPDATE ': crud.update(data, {
-      '-> Set values': {
+    'We can UPDATE a Prospect Model ': crud.update(data, {
+      '-> Set values to the Prospect': {
         topic: function () {
           data.model.set(data.updateHash);
           extra.accountId = data.model.get('account');
           return data;
         },
-        '-> Commit': crud.save(data)
+        '-> Commit the Prospect': crud.save(data)
       }
     })
   }).addBatch({
-    'DESTROY': crud.destroy(data, {
-      '-> Destroy the account': {
+    'We can DESTROY a Prospect Model': crud.destroy(data, {
+      '-> Destroy the Prospect account': {
         //Destroy the prospect.  When that is successful, destroy the account
-        'prospect destroyed': function (data) {
+        'When the prospect is destroyed': function (data) {
           assert.isTrue(data.model.getStatus() === XM.Model.DESTROYED_CLEAN);
         },
         topic: function () {
@@ -102,7 +102,7 @@ var XVOWS = XVOWS || {};
           };
           extra.accountModel.fetch(fetchOptions);
         },
-        'account destroyed': function (data) {
+        'We will account destroyed': function (data) {
           assert.isTrue(extra.accountModel.getStatus() === XM.Model.DESTROYED_CLEAN);
         }
       }
