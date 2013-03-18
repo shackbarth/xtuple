@@ -78,8 +78,14 @@ Simplest possible usage:
     }
     host = host || "https://localhost:443";
 
-
-
+    // when we run all our tests we only want to have to log in for the first one
+    if (XT.app) {
+      if (verboseMode) {
+        console.log("Using pre-existing zombie session");
+      }
+      callback(); // TODO: callback(XZ.browser);
+      return;
+    }
 
     zombie.visit(host, {debug: false}, function (e, browser) {
       //
