@@ -992,8 +992,8 @@
         "properties": [
           {
             "name": "accountParent",
-            "toOne": {
-              "type": "AccountRelation",
+            "attr": {
+              "type": "Number",
               "column": "crmacct_parent_id"
             }
           }
@@ -1142,8 +1142,8 @@
         "properties": [
           {
             "name": "accountParent",
-            "toOne": {
-              "type": "AccountRelation",
+            "attr": {
+              "type": "Number",
               "column": "crmacct_parent_id"
             }
           }
