@@ -25,7 +25,7 @@ var XVOWS = XVOWS || {};
   };
 
   vows.describe('XM.State CRUD test').addBatch({
-    'INITIALIZE ': {
+    'We can INITIALIZE a State Model ': {
       topic: function () {
         var that = this,
           callback = function () {
@@ -34,50 +34,50 @@ var XVOWS = XVOWS || {};
           };
         zombieAuth.loadApp(callback);
       },
-      'The record type is XM.State': function (data) {
+      'Verify the record type is XM.State': function (data) {
         assert.equal(data.model.recordType, "XM.State");
       }
     }
   }).addBatch({
-    'CREATE ': crud.create(data, {
+    'We can CREATE a State Model ': crud.create(data, {
       '-> Set values': {
         topic: function (data) {
           data.model.set(data.createHash);
           return data;
         },
-        'Last Error is null': function (data) {
+        'Verify the Last Error is null': function (data) {
           assert.isNull(data.model.lastError);
         },
-        '-> Save': crud.save(data)
+        '-> Save the State': crud.save(data)
       }
     })
   }).addBatch({
-    'READ': {
+    'We can READ a State Model': {
       topic: function () {
         return data;
       },
-      'ID is a number': function (data) {
+      'State ID is a number': function (data) {
         assert.isNumber(data.model.id);
       },
-      'Name is `Milky Way`': function (data) {
+      'State Name is `Milky Way`': function (data) {
         assert.equal(data.model.get('name'), data.createHash.name);
       }
     }
   }).addBatch({
-    'UPDATE ': crud.update(data, {
-      '-> Set values': {
+    'We can UPDATE a State Model ': crud.update(data, {
+      '-> Set values to a State': {
         topic: function () {
           data.model.set(data.updateHash);
           return data;
         },
-        'Abbr is `XY`': function (data) {
+        'Verify the State Abbr is `XY`': function (data) {
           assert.equal(data.model.get('abbreviation'), data.updateHash.abbreviation);
         },
-        '-> Commit': crud.save(data)
+        '-> Commit the State': crud.save(data)
       }
     })
   }).addBatch({
-    'DESTROY': crud.destroy(data)
+    'We can DESTROY a State Model': crud.destroy(data)
   }).export(module);
   
 }());
