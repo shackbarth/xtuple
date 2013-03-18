@@ -15,7 +15,7 @@ var XVOWS = XVOWS || {};
   var data = {};
 
   data.createHash = {
-    code: "TESTSALETY",
+    code: "TESTSALE" + Math.random(),
     description: "Test Sale Type"
   };
 
