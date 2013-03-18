@@ -26,7 +26,7 @@ var XVOWS = XVOWS || {};
   };
 
   vows.describe('XM.ShipCharge CRUD test').addBatch({
-    'INITIALIZE ': {
+    'We can INITIALIZE a ShipCharge Model': {
       topic: function () {
         var that = this,
           callback = function () {
@@ -35,44 +35,44 @@ var XVOWS = XVOWS || {};
           };
         zombieAuth.loadApp(callback);
       },
-      'The record type is XM.ShipCharge': function (data) {
+      'Verify the record type is XM.ShipCharge': function (data) {
         assert.equal(data.model.recordType, "XM.ShipCharge");
       }
     }
   }).addBatch({
-    'CREATE ': crud.create(data, {
-      '-> Set values': {
+    'We can CREATE a ShipCharge Model ': crud.create(data, {
+      '-> Set values to a Ship Charge': {
         topic: function (data) {
           data.model.set(data.createHash);
           return data;
         },
-        'Last Error is null': function (data) {
+        'Verify the Last Error is null': function (data) {
           assert.isNull(data.model.lastError);
         },
-        '-> Save': crud.save(data)
+        '-> Save the Ship Charge': crud.save(data)
       }
     })
   }).addBatch({
-    'READ': {
+    'We can READ a Ship Charge Model': {
       topic: function () {
         return data;
       },
-      'Last Error is null': function (data) {
+      'Verify the Last Error is null': function (data) {
         assert.isNull(data.model.lastError);
       }
     }
   }).addBatch({
-    'UPDATE ': crud.update(data, {
-      '-> Set values': {
+    'We can UPDATE a Ship Charge Model ': crud.update(data, {
+      '-> Set valuesto a Ship Charge': {
         topic: function () {
           data.model.set(data.updateHash);
           return data;
         },
-        '-> Commit': crud.save(data)
+        '-> Commit to a Ship Charge': crud.save(data)
       }
     })
   }).addBatch({
-    'DESTROY': crud.destroy(data)
+    'We can DESTROY a Ship Charge Model': crud.destroy(data)
   }).export(module);
   
 }());

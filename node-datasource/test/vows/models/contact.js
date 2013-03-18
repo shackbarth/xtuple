@@ -24,7 +24,7 @@ var XVOWS = XVOWS || {};
   };
 
   vows.describe('XM.Contact CRUD test').addBatch({
-    'INITIALIZE ': {
+    'We can INITIALIZE a Contact Model': {
       topic: function () {
         var that = this,
           callback = function () {
@@ -33,26 +33,26 @@ var XVOWS = XVOWS || {};
           };
         zombieAuth.loadApp(callback);
       },
-      'The record type is XM.Contact': function (data) {
+      'Verify the record type is XM.Contact': function (data) {
         assert.equal(data.model.recordType, "XM.Contact");
       }
     }
   }).addBatch({
-    'CREATE ': crud.create(data, {
-      '-> Set values': {
+    'We can CREATE a Contact ': crud.create(data, {
+      '-> Set values of the Contact': {
         topic: function (data) {
           data.model.set(data.createHash);
           data.model.unset('address'); //because asynchronus nonsense
           return data;
         },
-        'Last Error is null': function (data) {
+        'Verify the Last Error is null': function (data) {
           assert.isNull(data.model.lastError);
         },
-        '-> Save': crud.save(data)
+        '-> Save the Contact': crud.save(data)
       }
     })
   }).addBatch({
-    'READ': {
+    'We can READ a Contact': {
       topic: function () {
         return data;
       },
@@ -64,20 +64,20 @@ var XVOWS = XVOWS || {};
       }
     }
   }).addBatch({
-    'UPDATE ': crud.update(data, {
-      '-> Set values': {
+    'We can UPDATE a Contact Model': crud.update(data, {
+      '-> Set values of the Contact': {
         topic: function () {
           data.model.set(data.updateHash);
           return data;
         },
-        'Name is `Mike`': function (data) {
+        'Contact Name is `Mike`': function (data) {
           assert.equal(data.model.get("name"), data.updateHash.name);
         },
-        '-> Commit': crud.save(data)
+        '-> Commit the Contact': crud.save(data)
       }
     })
   }).addBatch({
-    'DESTROY': crud.destroy(data)
+    'We can DESTROY a Contact Model': crud.destroy(data)
   }).export(module);
   
 }());
