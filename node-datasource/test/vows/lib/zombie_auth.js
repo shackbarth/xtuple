@@ -117,9 +117,9 @@ Simplest possible usage:
               XT = browser.window.XT;
               XV = browser.window.XV;
 
-              //TODO: improve error reporting
-              XT.log = function () {
-                if (verboseMode) {
+              XT.log = function (message) {
+                // log if verbose mode or if the log is an error
+                if (verboseMode || (message && message.code)) {
                   console.log(JSON.stringify(arguments));
                 }
               };

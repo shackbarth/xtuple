@@ -48,7 +48,6 @@ white:true*/
 
     requiredAttributes: [
       "id",
-      "number",
       "plannerCode",
       "costCategory"
     ]
