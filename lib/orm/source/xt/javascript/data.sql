@@ -632,7 +632,8 @@ select xt.install_js('XT','Data','xtuple', $$
           /* Determine whether to insert or update */
           sql = 'select ' + ext.relations[0].column + ' from ' + ext.table +
                 ' where ' + ext.relations[0].column + ' = $1;';
-                plv8.elog(NOTICE, 'sql =', sql, value[pkey]);
+          
+          if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql, value[pkey]); }
           rows = plv8.execute(sql, [value[pkey]]);
           if (rows.length) {
             sql = this.prepareUpdate(ext, value);
@@ -1092,7 +1093,7 @@ select xt.install_js('XT','Data','xtuple', $$
             if (pcheck.length) { break; } /* valid lock */
           } else {
             lockExp = new Date(lock.lock_expires);
-            plv8.elog(NOTICE, "Lock found", lockExp > expires, lockExp, expires); 
+            if (DEBUG) { plv8.elog(NOTICE, "Lock found", lockExp > expires, lockExp, expires); }
             if (lockExp > expires) { break; } /* valid lock */
           }
           
@@ -1142,7 +1143,8 @@ select xt.install_js('XT','Data','xtuple', $$
         plv8.execute(sqlKey, [options.key]);
       } else {
         oid = typeof options.table === "string" ? this.getTableOid(options.table) : options.table;
-        plv8.elog(NOTICE, oid, options.id, username)
+        
+        if (DEBUG) { plv8.elog(NOTICE, oid, options.id, username); }
         plv8.execute(sqlUsr, [oid, options.id, username]);
       }
       return true;
