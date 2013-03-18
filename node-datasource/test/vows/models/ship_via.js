@@ -24,7 +24,7 @@ var XVOWS = XVOWS || {};
   };
 
   vows.describe('XM.ShipVia CRUD test').addBatch({
-    'INITIALIZE ': {
+    'We can INITIALIZE a Ship Via Model ': {
       topic: function () {
         var that = this,
           callback = function () {
@@ -33,53 +33,53 @@ var XVOWS = XVOWS || {};
           };
         zombieAuth.loadApp(callback);
       },
-      'The record type is XM.ShipVia': function (data) {
+      'Verify the record type is XM.ShipVia': function (data) {
         assert.equal(data.model.recordType, "XM.ShipVia");
       }
     }
   }).addBatch({
-    'CREATE ': crud.create(data, {
-      '-> Set values': {
+    'We can CREATE a Ship Via Model ': crud.create(data, {
+      '-> Set values to Ship Via': {
         topic: function (data) {
           data.model.set(data.createHash);
           return data;
         },
-        'Last Error is null': function (data) {
+        'Verify the Last Error is null': function (data) {
           assert.isNull(data.model.lastError);
         },
-        '-> Save': crud.save(data)
+        '-> Save the Ship Via': crud.save(data)
       }
     })
   }).addBatch({
-    'READ': {
+    'We can READ a Ship Via Model': {
       topic: function () {
         return data;
       },
-      'ID is a number': function (data) {
+      'Ship Via ID is a number': function (data) {
         assert.isNumber(data.model.id);
       },
-      'Code is `TESTSHIPVIA`': function (data) {
+      'Ship Via Code is `TESTSHIPVIA`': function (data) {
         assert.equal(data.model.get('code'), data.createHash.code);
       },
-      'Description is `Test Ship Via`': function (data) {
+      'Ship Via Description is `Test Ship Via`': function (data) {
         assert.equal(data.model.get('description'), data.createHash.description);
       }
     }
   }).addBatch({
-    'UPDATE ': crud.update(data, {
-      '-> Set values': {
+    'We can UPDATE a Ship Via Model ': crud.update(data, {
+      '-> Set values to a Ship Via': {
         topic: function () {
           data.model.set(data.updateHash);
           return data;
         },
-        'Code is `UPDATETESTSHIPVIA`': function (data) {
+        'Ship Via Code is `UPDATETESTSHIPVIA`': function (data) {
           assert.equal(data.model.get('code'), data.updateHash.code);
         },
-        '-> Commit': crud.save(data)
+        '-> Commit a Ship Via': crud.save(data)
       }
     })
   }).addBatch({
-    'DESTROY': crud.destroy(data)
+    'We can DESTROY a Ship Via Model': crud.destroy(data)
   }).export(module);
   
 }());

@@ -15,7 +15,8 @@ var XVOWS = XVOWS || {};
   var data = {};
 
   data.createHash = {
-    number: "test account"
+    number: "test account",
+    name: "A test Account"
   };
 
   data.updateHash = {
@@ -23,7 +24,7 @@ var XVOWS = XVOWS || {};
   };
 
   vows.describe('XM.Account CRUD test').addBatch({
-    'INITIALIZE ': {
+    'We can INITIALIZE an Account Model': {
       topic: function () {
         var that = this,
           callback = function () {
@@ -37,39 +38,39 @@ var XVOWS = XVOWS || {};
       }
     }
   }).addBatch({
-    'CREATE ': crud.create(data, {
+    'We can CREATE an Account Model': crud.create(data, {
       '-> Set values': {
         topic: function (data) {
           data.model.set(data.createHash);
           return data;
         },
-        'Last Error is null': function (data) {
+        'Verify the Last Error is null': function (data) {
           assert.isNull(data.model.lastError);
         },
-        '-> Save': crud.save(data)
+        '-> Save Account': crud.save(data)
       }
     })
   }).addBatch({
-    'READ': {
+    'We can READ an Account Model': {
       topic: function () {
         return data;
       },
-      'Last Error is null': function (data) {
+      'Verify the Last Error is null': function (data) {
         assert.isNull(data.model.lastError);
       }
     }
   }).addBatch({
-    'UPDATE ': crud.update(data, {
+    'We can UPDATE an Account Model': crud.update(data, {
       '-> Set values': {
         topic: function () {
           data.model.set(data.updateHash);
           return data;
         },
-        '-> Commit': crud.save(data)
+        '-> Commit Account': crud.save(data)
       }
     })
   }).addBatch({
-    'DESTROY': crud.destroy(data)
+    'We can DESTROY an Account Model': crud.destroy(data)
   }).export(module);
   
 }());

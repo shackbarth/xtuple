@@ -67,7 +67,7 @@ white:true*/
         }
 
         // Format attribute if it's `HasOne` relation
-        if (relation && relation.type === Backbone.HasOne && relation.isNested) {
+        if (relation && relation.type === Backbone.HasOne) { // && relation.isNested) { TODO: Re-add this if we get nonNested back?
           klass = XT.getObjectByName(relation.relatedModel);
           idAttribute = klass.prototype.idAttribute;
           param.attribute = param.attribute + '.' + idAttribute;
@@ -243,13 +243,13 @@ white:true*/
     */
     resetPassword: function (id, options) {
       var payload = {
-            id: id
-          },
-          ajax = new enyo.Ajax({
-            url: "/resetPassword",
-            success: options ? options.success : undefined,
-            error: options ? options.error : undefined
-          });
+          id: id
+        },
+        ajax = new enyo.Ajax({
+          url: "/resetPassword",
+          success: options ? options.success : undefined,
+          error: options ? options.error : undefined
+        });
 
       if (options.newUser) {
         // we don't want to send false at all, because false turns
@@ -269,14 +269,14 @@ white:true*/
     */
     changePassword: function (params, options) {
       var payload = {
-            oldPassword: params.oldPassword,
-            newPassword: params.newPassword
-          },
-          ajax = new enyo.Ajax({
-            url: "/changePassword",
-            success: options ? options.success : undefined,
-            error: options ? options.error : undefined
-          });
+          oldPassword: params.oldPassword,
+          newPassword: params.newPassword
+        },
+        ajax = new enyo.Ajax({
+          url: "/changePassword",
+          success: options ? options.success : undefined,
+          error: options ? options.error : undefined
+        });
 
       ajax.response(this.ajaxSuccess);
       ajax.go(payload);
@@ -313,10 +313,10 @@ white:true*/
     */
     sendEmail: function (payload, options) {
       var ajax = new enyo.Ajax({
-            url: "/email",
-            success: options ? options.success : undefined,
-            error: options ? options.error : undefined
-          });
+          url: "/email",
+          success: options ? options.success : undefined,
+          error: options ? options.error : undefined
+        });
 
       if (payload.body && !payload.text) {
         // be flexible with the inputs. Node-emailer prefers the term text, but
@@ -337,10 +337,10 @@ white:true*/
     */
     getExtensionList: function (options) {
       var ajax = new enyo.Ajax({
-            url: "/extensions",
-            success: options ? options.success : undefined,
-            error: options ? options.error : undefined
-          });
+          url: "/extensions",
+          success: options ? options.success : undefined,
+          error: options ? options.error : undefined
+        });
 
       ajax.response(this.ajaxSuccess);
       ajax.go();

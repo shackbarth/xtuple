@@ -60,10 +60,10 @@ var _ = require("underscore"),
           that.callback(null, data);
         }, exports.waitTime);
       },
-      'Status is `READY_NEW`': function (data) {
+      'Status is `READY_NEW`': function (error, data) {
         assert.equal(data.model.getStatusString(), 'READY_NEW');
       },
-      'ID is valid': function (data) {
+      'ID is valid': function (error, data) {
         assert.isNumber(data.model.id);
       }
     };
@@ -109,12 +109,19 @@ var _ = require("underscore"),
         assert.equal(data.model.getStatusString(), 'READY_CLEAN');
       },
       'And the values are as we set them': function (error, data) {
+        if (!data.autoTestAttributes) {
+          return;
+        }
         var hashToTest = data.updated ? _.extend(data.createHash, data.updateHash) : data.createHash;
         _.each(hashToTest, function (value, key) {
           // depending on how we represent sub-objects, we want to verify them in different ways
           if (typeof (data.model.get(key)) === 'object' && typeof value === 'object') {
             // if the data is a model and the test hash looks like {contact: {id: 7}}
             assert.equal(data.model.get(key).id, value.id);
+          } else if (key === data.model.documentKey &&
+              data.model.enforceUpperKey === true) {
+              // this is the document key, so it should have been made upper case
+            assert.equal(data.model.get(key), value.toUpperCase());
           } else if (typeof (data.model.get(key)) === 'object' && typeof value === 'number') {
             // if the data is a model and the test hash looks like {contact: 7}
             assert.equal(data.model.get(key).id, value);
@@ -176,7 +183,7 @@ var _ = require("underscore"),
               model.off('statusChange', callback);
               that.callback(null, data);
             } else if (status === K.ERROR) {
-              that.callback(data.model.lastError);
+              that.callback(data.model.lastError || "Unspecified error");
             }
           };
         model.on('statusChange', callback);
@@ -188,7 +195,8 @@ var _ = require("underscore"),
           that.callback(null, data);
         }, exports.waitTime);
       },
-      'Status is `DESTROYED_CLEAN`': function (data) {
+      'Status is `DESTROYED_CLEAN`': function (error, data) {
+        assert.equal(error, null);
         assert.equal(data.model.getStatusString(), 'DESTROYED_CLEAN');
       }
     };

@@ -14,6 +14,8 @@ var XVOWS = XVOWS || {};
 
   var data = {};
 
+  data.autoTestAttributes = true;
+
   data.createHash = {
     item: {id: 333},
     site: {id: 37}, // NOTE the item and site have to be a combo that doesn't yet exist
@@ -34,9 +36,9 @@ var XVOWS = XVOWS || {};
             data.model = new XM.ItemSite();
             that.callback(null, data);
           };
-        zombieAuth.loadApp(callback);
+        zombieAuth.loadApp({callback: callback, verbose: false});
       },
-      'The record type is XM.ItemSite': function (data) {
+      'The record type is XM.ItemSite': function (error, data) {
         assert.equal(data.model.recordType, "XM.ItemSite");
       }
     }
@@ -60,20 +62,14 @@ var XVOWS = XVOWS || {};
       },
       'ID is a number': function (data) {
         assert.isNumber(data.model.id);
-      },
-      'isSold is true': function (data) {
-        assert.equal(data.model.get('isSold'), data.createHash.isSold);
       }
     }
   }).addBatch({
     'UPDATE ': crud.update(data, {
       '-> Set values': {
-        topic: function () {
+        topic: function (data) {
           data.model.set(data.updateHash);
           return data;
-        },
-        'isSold is false': function (data) {
-          assert.equal(data.model.get('isSold'), data.updateHash.isSold);
         },
         '-> Commit': crud.save(data)
       }
