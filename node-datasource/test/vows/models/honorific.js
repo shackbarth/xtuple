@@ -23,7 +23,7 @@ var XVOWS = XVOWS || {};
   };
 
   vows.describe('XM.Honorific CRUD test').addBatch({
-    'INITIALIZE ': {
+    'We can INITIALIZE a Honorific Model ': {
       topic: function () {
         var that = this,
           callback = function () {
@@ -32,41 +32,41 @@ var XVOWS = XVOWS || {};
           };
         zombieAuth.loadApp({callback: callback, verbose: false});
       },
-      'The record type is XM.Honorific': function (data) {
+      'Verify the record type is XM.Honorific': function (data) {
         assert.equal(data.model.recordType, "XM.Honorific");
       }
     }
   }).addBatch({
-    'CREATE ': crud.create(data, {
-      '-> Set values': {
+    'We can CREATE a Honorific Model ': crud.create(data, {
+      '-> Set values to the Honorific': {
         topic: function (data) {
           data.model.set(data.createHash);
           return data;
         },
-        'Last Error is null': function (data) {
+        'Verify Last Error is null': function (data) {
           assert.isNull(data.model.lastError);
         },
-        '-> Save': crud.save(data)
+        '-> Save the Honorific': crud.save(data)
       }
     })
   }).addBatch({
-    'READ': {
+    'We can READ the Honorific': {
       topic: function () {
         return data;
       }
     }
   }).addBatch({
-    'UPDATE ': crud.update(data, {
+    'We can UPDATE the Honorific ': crud.update(data, {
       '-> Set values': {
         topic: function () {
           data.model.set(data.updateHash);
           return data;
         },
-        '-> Commit': crud.save(data)
+        '-> Commit to the Honorific': crud.save(data)
       }
     })
   }).addBatch({
-    'DESTROY': crud.destroy(data)
+    'We can DESTROY a Honorific Model': crud.destroy(data)
   }).export(module);
 
 }());

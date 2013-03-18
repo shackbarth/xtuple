@@ -27,7 +27,7 @@ var XVOWS = XVOWS || {};
   };
 
   vows.describe('XM.Incident CRUD test').addBatch({
-    'INITIALIZE ': {
+    'We can INITIALIZE an Incident Model ': {
       topic: function () {
         var that = this,
           callback = function () {
@@ -57,14 +57,14 @@ var XVOWS = XVOWS || {};
           };
         zombieAuth.loadApp(callback);
       },
-      'The record type is XM.Incident': function (error, data) {
+      'Verify the record type is XM.Incident': function (error, data) {
         assert.isNull(error);
         assert.equal(data.model.recordType, "XM.Incident");
       }
     }
   }).addBatch({
-    'CREATE ': crud.create(data, {
-      '-> Set values': {
+    'We can CREATE an Incident Model ': crud.create(data, {
+      '-> Set values to the Incident': {
         topic: function (data) {
           data.model.set('priority', XM.priorities.at(0));
           data.model.set('category', XM.incidentCategories.at(2));
@@ -73,33 +73,33 @@ var XVOWS = XVOWS || {};
           data.model.set(data.createHash);
           return data;
         },
-        'Last Error is null': function (data) {
+        'Verify Last Error is null': function (data) {
           assert.isNull(data.model.lastError);
         },
-        '-> Save': crud.save(data)
+        '-> Save the Incident': crud.save(data)
       }
     })
   }).addBatch({
-    'READ': {
+    'We can READ an Incident Model': {
       topic: function () {
         return data;
       },
-      'Last Error is null': function (data) {
+      'Verify the Last Error is null': function (data) {
         assert.isNull(data.model.lastError);
       }
     }
   }).addBatch({
-    'UPDATE ': crud.update(data, {
-      '-> Set values': {
+    'We can UPDATE an Incident Model ': crud.update(data, {
+      '-> Set values to an Incident': {
         topic: function () {
           data.model.set(data.updateHash);
           return data;
         },
-        '-> Commit': crud.save(data)
+        '-> Commit to an Incident': crud.save(data)
       }
     })
   }).addBatch({
-    'DESTROY': crud.destroy(data)
+    'We can DESTROY an Incident Model': crud.destroy(data)
   }).export(module);
   
 }());

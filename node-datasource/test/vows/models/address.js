@@ -23,7 +23,7 @@ var XVOWS = XVOWS || {};
   };
 
   vows.describe('XM.Address CRUD test').addBatch({
-    'INITIALIZE ': {
+    'We can INITIALIZE an Address Model': {
       topic: function () {
         var that = this,
           callback = function () {
@@ -32,44 +32,44 @@ var XVOWS = XVOWS || {};
           };
         zombieAuth.loadApp(callback);
       },
-      'The record type is XM.Address': function (data) {
+      'Verify the record type is XM.Address': function (data) {
         assert.equal(data.model.recordType, "XM.Address");
       }
     }
   }).addBatch({
-    'CREATE ': crud.create(data, {
-      '-> Set values': {
+    'We can CREATE an Address Model': crud.create(data, {
+      '-> Set values to the Address': {
         topic: function (data) {
           data.model.set(data.createHash);
           return data;
         },
-        'Last Error is null': function (data) {
+        'Verify the Last Error is null': function (data) {
           assert.isNull(data.model.lastError);
         },
-        '-> Save': crud.save(data)
+        '-> Save Address': crud.save(data)
       }
     })
   }).addBatch({
-    'READ': {
+    'We can READ the Address Model': {
       topic: function () {
         return data;
       },
-      'Last Error is null': function (data) {
+      'Verify the Last Error is null': function (data) {
         assert.isNull(data.model.lastError);
       }
     }
   }).addBatch({
-    'UPDATE ': crud.update(data, {
-      '-> Set values': {
+    'We can UPDATE the Address Model ': crud.update(data, {
+      '-> Set values to the Address': {
         topic: function () {
           data.model.set(data.updateHash);
           return data;
         },
-        '-> Commit': crud.save(data)
+        '-> Commit Address': crud.save(data)
       }
     })
   }).addBatch({
-    'DESTROY': crud.destroy(data)
+    'We can DESTROY an Address Model': crud.destroy(data)
   }).export(module);
   
 }());
