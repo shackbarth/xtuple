@@ -15,8 +15,7 @@ var XVOWS = XVOWS || {};
   var data = {};
 
   data.createHash = {
-    id: 123456789,
-    code: "TESTSALETYPE",
+    code: "TESTSALETY",
     description: "Test Sale Type"
   };
 
@@ -24,8 +23,10 @@ var XVOWS = XVOWS || {};
     description: "Changed Descrip"
   };
 
+  data.autoTestAttributes = true;
+
   vows.describe('XM.SaleType CRUD test').addBatch({
-    'INITIALIZE ': {
+    'Initialize SaleType ': {
       topic: function () {
         var that = this,
           callback = function () {
@@ -39,7 +40,7 @@ var XVOWS = XVOWS || {};
       }
     }
   }).addBatch({
-    'CREATE ': crud.create(data, {
+    'Create SaleType ': crud.create(data, {
       '-> Set values': {
         topic: function (data) {
           data.model.set(data.createHash);
@@ -52,35 +53,26 @@ var XVOWS = XVOWS || {};
       }
     })
   }).addBatch({
-    'READ': {
+    'Read SaleType': {
       topic: function () {
         return data;
       },
       'ID is a number': function (data) {
         assert.isNumber(data.model.id);
-      },
-      'Code is `TESTSALETYPE`': function (data) {
-        assert.equal(data.model.get('code'), data.createHash.code);
-      },
-      'Description is `Test Sale Type`': function (data) {
-        assert.equal(data.model.get('description'), data.createHash.description);
       }
     }
   }).addBatch({
-    'UPDATE ': crud.update(data, {
+    'Update SaleType': crud.update(data, {
       '-> Set values': {
         topic: function () {
           data.model.set(data.updateHash);
           return data;
         },
-        'Description is `Change Descrip`': function (data) {
-          assert.equal(data.model.get('description'), data.updateHash.description);
-        },
         '-> Commit': crud.save(data)
       }
     })
   }).addBatch({
-    'DESTROY': crud.destroy(data)
+    'Destroy SaleType': crud.destroy(data)
   }).export(module);
 
 }());
