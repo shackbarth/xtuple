@@ -86,7 +86,7 @@ regexp:true, undef:true, trailing:true, white:true */
     create: function () {
       this.inherited(arguments);
       this.setCurrency(XT.baseCurrency());
-      this.$.picker.setValue(this.getCurrency());
+      this.$.picker.setValue(this.getCurrency(), {silent: true});
       this.$.baseLabel.setContent(XT.baseCurrency().get('abbreviation'));
       // the currency picker may be disabled or hidden on creation in certain situations
       this.$.picker.setDisabled(this.getCurrencyDisabled());
