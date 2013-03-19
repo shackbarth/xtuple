@@ -13,7 +13,7 @@ var XVOWS = XVOWS || {};
 
   var data = {
     recordType: "XM.Honorific",
-    autoCheckAttributes: true,
+    autoTestAttributes: true,
     createHash: {
       code: "Herr"
     },
