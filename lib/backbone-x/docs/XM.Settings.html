@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Info</title>
+    <title>JSDoc: Class: Settings</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: Info</h1>
+    <h1 class="page-title">Class: Settings</h1>
     
     
 
@@ -27,17 +27,8 @@
     
 <header>
     <h2>
-    Info
+    Settings
     </h2>
-    
-        <div class="class-description">An abstract model whose subclasses are lightweight versions of full models.
-    `info` models are suitable for displaying information on lists and widgets.
-    Usually they are not themselves editable, but special functions are included that
-    allow the `info` model to determine whether its "full" counterpart is editable.
-
-    The special `could` privileges are designed to take personal privilege settings
-    into account, so it is important that info models have the necessary attributes
-    such as `owner` and/or `assignedTo` to check for access.</div>
     
 </header>  
 
@@ -71,62 +62,6 @@
         <h3 class="subsection-title">Members</h3>
         
         <dl>
-            
-<dt>
-    <h4 class="name" id="autoFetchId"><span class="type-signature"></span>autoFetchId<span class="type-signature"> :Boolean</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        Set to true if you want an id fetched from the server when the `isNew` option
-      is passed on a new model.
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from"><ul class="dummy"><li>
-		<a href="XM.Model.html#autoFetchId">XM.Model#autoFetchId</a>
-	</li></dd>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>model.js, line 47</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-</dd>
-
-        
             
 <dt>
     <h4 class="name" id="binaryField"><span class="type-signature"></span>binaryField<span class="type-signature"></span></h4>
@@ -772,57 +707,6 @@
         
             
 <dt>
-    <h4 class="name" id="editableModel"><span class="type-signature"></span>editableModel<span class="type-signature"> :String</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        The "full" editable counterpart for this model. This is model whose privileges
-      will be checked in `could` functions.
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>info.js, line 30</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
     <h4 class="name" id="EMPTY"><span class="type-signature">&lt;constant> </span>EMPTY<span class="type-signature"> :Number</span></h4>
     
     
@@ -1148,6 +1032,61 @@
 	
 	<dt class="tag-source">Source:</dt>
 	<dd class="tag-source"><ul class="dummy"><li>model.js, line 76</li></ul></dd>
+	
+    
+    
+	
+	
+	
+	
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="readOnly"><span class="type-signature"></span>readOnly<span class="type-signature"> :Boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Indicates whether the model is read only.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+	
+	
+	
+
+	
+	<dt class="inherited-from">Inherited From:</dt>
+	<dd class="inherited-from"><ul class="dummy"><li>
+		<a href="XM.Model.html#readOnly">XM.Model#readOnly</a>
+	</li></dd>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source"><ul class="dummy"><li>model.js, line 83</li></ul></dd>
 	
     
     
@@ -1707,8 +1646,7 @@
     
     
     <div class="description">
-        Use this function to find out whether a user can create records before
-      instantiating one.
+        Reimplemented to always return false.
     </div>
     
 
@@ -1727,11 +1665,6 @@
 	
 
 	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from"><ul class="dummy"><li>
-		<a href="XM.Model.html#canCreate">XM.Model#canCreate</a>
-	</li></dd>
-	
 	
 	
 	
@@ -1745,7 +1678,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>model.js, line 1343</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>settings.js, line 98</li></ul></dd>
 	
     
     
@@ -1794,8 +1727,7 @@
     
     
     <div class="description">
-        Returns whether the current record can be deleted based on privilege
-      settings.
+        Reimplemented to always return false.
     </div>
     
 
@@ -1814,99 +1746,6 @@
 	
 
 	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from"><ul class="dummy"><li>
-		<a href="XM.Model.html#canDelete">XM.Model#canDelete</a>
-	</li></dd>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>model.js, line 157</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">Boolean</span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="canDelete"><span class="type-signature"></span>canDelete</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Returns whether a user has access to delete a record of this type. If a
-      record is passed that involves personal privileges, it will validate
-      whether that particular record is deletable.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from"><ul class="dummy"><li>
-		<a href="XM.Model.html#canDelete">XM.Model#canDelete</a>
-	</li></dd>
-	
 	
 	
 	
@@ -1920,7 +1759,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>model.js, line 1375</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>settings.js, line 107</li></ul></dd>
 	
     
     
@@ -2109,8 +1948,7 @@
     
     
     <div class="description">
-        Use this function to find out whether a user can read this record type
-      before any have been loaded.
+        Reimplemented to always return false.
     </div>
     
 
@@ -2129,11 +1967,6 @@
 	
 
 	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from"><ul class="dummy"><li>
-		<a href="XM.Model.html#canRead">XM.Model#canRead</a>
-	</li></dd>
-	
 	
 	
 	
@@ -2147,7 +1980,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>model.js, line 1353</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>settings.js, line 116</li></ul></dd>
 	
     
     
@@ -2196,8 +2029,7 @@
     
     
     <div class="description">
-        Returns whether the current record can be updated based on privilege
-      settings.
+        Reimplemented.
     </div>
     
 
@@ -2216,99 +2048,6 @@
 	
 
 	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from"><ul class="dummy"><li>
-		<a href="XM.Model.html#canUpdate">XM.Model#canUpdate</a>
-	</li></dd>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>model.js, line 147</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">Boolean</span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="canUpdate"><span class="type-signature"></span>canUpdate</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Returns whether a user has access to update a record of this type. If a
-      record is passed that involves personal privileges, it will validate
-      whether that particular record is updatable.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from"><ul class="dummy"><li>
-		<a href="XM.Model.html#canUpdate">XM.Model#canUpdate</a>
-	</li></dd>
-	
 	
 	
 	
@@ -2322,7 +2061,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>model.js, line 1364</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>settings.js, line 125</li></ul></dd>
 	
     
     
@@ -2424,809 +2163,6 @@
     
     
     
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="couldCreate"><span class="type-signature"></span>couldCreate</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Returns whether the current record could be created on the editableModel
-      based on privilege settings.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>info.js, line 48</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">Boolean</span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="couldCreate"><span class="type-signature"></span>couldCreate</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Use this function to find out whether a user could create records on the
-      `editableModel`.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>info.js, line 95</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">Boolean</span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="couldDelete"><span class="type-signature"></span>couldDelete</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Returns whether the current record could be deleted on the editableModel
-      based on privilege settings.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>info.js, line 78</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">Boolean</span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="couldDelete"><span class="type-signature"></span>couldDelete</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Use this function to find out whether a user could delete the
-      `editableModel` version of this record or model.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>model</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type"><a href="XM.Info.html">XM.Info</a></span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Optional argument to ask about a specific
-        model. If this is falsy we ask about the class generally.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>info.js, line 137</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">Boolean</span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="couldRead"><span class="type-signature"></span>couldRead</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Returns whether the current record could be read on the editableModel
-      based on privilege settings.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>info.js, line 58</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">Boolean</span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="couldRead"><span class="type-signature"></span>couldRead</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Use this function to find out whether a user could read the
-    `editableModel` version of this record or model.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>model</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type"><a href="XM.Info.html">XM.Info</a></span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Optional argument to ask about a specific
-        model. If this is falsy we ask about the class generally.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>info.js, line 109</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">Boolean</span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="couldUpdate"><span class="type-signature"></span>couldUpdate</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Returns whether the current record could be updated on the editableModel
-      based on privilege settings.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>info.js, line 68</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">Boolean</span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="couldUpdate"><span class="type-signature"></span>couldUpdate</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Use this function to find out whether a user could update the
-    `editableModel` version of this record or model.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>model</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type"><a href="XM.Info.html">XM.Info</a></span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Optional argument to ask about a specific
-        model. If this is falsy we ask about the class generally.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>info.js, line 123</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">Boolean</span>
-
-
-	</dd>
-</dl>
-
-        
     
     
 </dd>
@@ -6320,123 +5256,6 @@
         
             
 <dt>
-    <h4 class="name" id="parse"><span class="type-signature"></span>parse</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Recursively checks the object against the schema and converts date strings to
-      date objects.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>Response</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last"></td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from"><ul class="dummy"><li>
-		<a href="XM.Model.html#parse">XM.Model#parse</a>
-	</li></dd>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>model.js, line 850</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
     <h4 class="name" id="releaseLock"><span class="type-signature"></span>releaseLock</h4>
     
     
@@ -6555,74 +5374,6 @@
 	
 	<dt class="tag-source">Source:</dt>
 	<dd class="tag-source"><ul class="dummy"><li>model.js, line 912</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="save"><span class="type-signature"></span>save</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Reimplemented.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from"><ul class="dummy"><li>
-		<a href="XM.Model.html#save">XM.Model#save</a>
-	</li></dd>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>model.js, line 941</li></ul></dd>
 	
     
     
@@ -6802,8 +5553,7 @@
     
     
     <div class="description">
-        Set the status on the model. Triggers `statusChange` event. Option set to
-      `cascade` will propagate status recursively to all HasMany children.
+        Reimplemented to discard `dataState`.
     </div>
     
 
@@ -6870,11 +5620,6 @@
 	
 
 	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from"><ul class="dummy"><li>
-		<a href="XM.Model.html#setStatus">XM.Model#setStatus</a>
-	</li></dd>
-	
 	
 	
 	
@@ -6888,7 +5633,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>model.js, line 1043</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>settings.js, line 50</li></ul></dd>
 	
     
     
@@ -6919,7 +5664,7 @@
     
     
     <div class="description">
-        Sync to xTuple data source.
+        Reimplemented to invoke `settings` and `commitSettings` functions.
     </div>
     
 
@@ -6938,11 +5683,6 @@
 	
 
 	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from"><ul class="dummy"><li>
-		<a href="XM.Model.html#sync">XM.Model#sync</a>
-	</li></dd>
-	
 	
 	
 	
@@ -6956,7 +5696,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>model.js, line 1103</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>settings.js, line 58</li></ul></dd>
 	
     
     
@@ -7284,159 +6024,6 @@
         
             
 <dt>
-    <h4 class="name" id="validate"><span class="type-signature"></span>validate</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Default validation checks `attributes` for:<br />
-        &#42; Data type integrity.<br />
-        &#42; Required fields when `validateSave=true` option is passed.<br />
-        &#42; Read Only and Privileges (when editing).<br />
-      <br />
-      Returns `undefined` if the validation succeeded, or some value, usually
-      an error message, if it fails.<br />
-      <br />
-      Use the `force` option to ignore validation. This is useful when
-      higher level function calls passing through `set` need to skip
-      validation to work properly.<br />
-      <br />
-      It is recommended customizations be implemented on `validateEdit` or
-      `validateSave` to reduce risk of accidentally over-writing or losing
-      logic included in the base validate function.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>Attributes</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last"></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>Options</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last"></td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from"><ul class="dummy"><li>
-		<a href="XM.Model.html#validate">XM.Model#validate</a>
-	</li></dd>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>model.js, line 1167</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
     <h4 class="name" id="validateEdit"><span class="type-signature"></span>validateEdit</h4>
     
     
@@ -7740,7 +6327,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Mon Mar 18 2013 08:04:28 GMT-0500 (CDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Mon Mar 18 2013 08:04:29 GMT-0500 (CDT)
 </footer>
 
 <script> prettyPrint(); </script>

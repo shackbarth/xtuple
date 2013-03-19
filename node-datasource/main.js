@@ -249,7 +249,7 @@ var conditionalExpressSession = function (req, res, next) {
           store: sessionStore,
           secret: '.T#T@r5EkPM*N@C%9K-iPW!+T',
           // See cookie stomp above for more details on how this session cookie works.
-          cookie: { path: '/', httpOnly: true, secure: true, maxAge: 1800000 }
+          cookie: { path: '/', httpOnly: true, secure: true, maxAge: 3600000 }
         });
 
     init_session(req, res, next);
