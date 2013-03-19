@@ -12,72 +12,26 @@ var XVOWS = XVOWS || {};
     zombieAuth = require("../lib/zombie_auth"),
     crud = require('../lib/crud');
 
-  var data = {};
-
-  data.autoTestAttributes = true;
-
-  data.createHash = {
-    item: {id: 333},
-    site: {id: 37}, // NOTE the item and site have to be a combo that doesn't yet exist
-    plannerCode: {id: 27, code: "NONE"},
-    costCategory: {id: 30, code: "FINISHED"},
-    isSold: false
+  var data = {
+    recordType: "XM.ItemSite",
+    autoTestAttributes: true,
+    createHash: {
+      item: {id: 333},
+      site: {id: 37}, // NOTE the item and site have to be a combo that doesn't yet exist
+      plannerCode: {id: 27, code: "NONE"},
+      costCategory: {id: 30, code: "FINISHED"},
+      isSold: false
+    },
+    updateHash: {
+      isSold: true
+    }
   };
 
-  data.updateHash = {
-    isSold: true
-  };
-
-  vows.describe('XM.ItemSite CRUD test').addBatch({
-    'INITIALIZE ': {
-      topic: function () {
-        var that = this,
-          callback = function () {
-            data.model = new XM.ItemSite();
-            that.callback(null, data);
-          };
-        zombieAuth.loadApp({callback: callback, verbose: false});
-      },
-      'The record type is XM.ItemSite': function (error, data) {
-        assert.equal(data.model.recordType, "XM.ItemSite");
-      }
-    }
-  }).addBatch({
-    'CREATE ': crud.create(data, {
-      '-> Set values': {
-        topic: function (data) {
-          data.model.set(data.createHash);
-          return data;
-        },
-        'Last Error is null': function (data) {
-          assert.isNull(data.model.lastError);
-        },
-        '-> Save': crud.save(data)
-      }
-    })
-  }).addBatch({
-    'READ': {
-      topic: function () {
-        return data;
-      },
-      'ID is a number': function (data) {
-        assert.isNumber(data.model.id);
-      }
-    }
-  }).addBatch({
-    'UPDATE ': crud.update(data, {
-      '-> Set values': {
-        topic: function (data) {
-          data.model.set(data.updateHash);
-          return data;
-        },
-        '-> Commit': crud.save(data)
-      }
-    })
-  }).addBatch({
-    'DESTROY': crud.destroy(data)
+  vows.describe('XM.ItemSite tests').addBatch({
+    'We can run the ItemSite CRUD tests ': crud.runAllCrud(data)
 
   }).addBatch({
+    // Business-logic specific tests to be run outside of crud
     'We can create a new collection and run a non-filtered fetch': {
       topic: function () {
         var that = this,

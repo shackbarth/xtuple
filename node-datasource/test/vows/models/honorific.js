@@ -8,7 +8,6 @@ var XVOWS = XVOWS || {};
   "use strict";
 
   var vows = require("vows"),
-    assert = require("assert"),
     crud = require('../lib/crud');
 
   var data = {
@@ -23,7 +22,7 @@ var XVOWS = XVOWS || {};
   };
 
   vows.describe('XM.Honorific CRUD test').addBatch({
-    'We can run the CRUD tests ': crud.runAllCrud(data)
+    'We can run the Honorific CRUD tests ': crud.runAllCrud(data)
   }).export(module);
 
 }());
