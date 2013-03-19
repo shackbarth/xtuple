@@ -11,20 +11,18 @@ var XVOWS = XVOWS || {};
     assert = require("assert"),
     crud = require('../lib/crud');
 
-  var data = {};
-
-  data.recordType = "XM.Honorific";
-
-  data.createHash = {
-    code: "Herr" + Math.random()
-  };
-
-  data.updateHash = {
-    code: "Dame" + Math.random()
+  var data = {
+    recordType: "XM.Honorific",
+    createHash: {
+      code: "Herr"
+    },
+    updateHash: {
+      code: "Dame"
+    }
   };
 
   vows.describe('XM.Honorific CRUD test').addBatch({
-    'We can initialize a model ': crud.runAllCrud(data)
+    'We can run the CRUD tests ': crud.runAllCrud(data)
   }).export(module);
 
 }());
