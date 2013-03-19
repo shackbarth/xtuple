@@ -874,6 +874,20 @@
         }
       },
       {
+        "name": "amount",
+        "attr": {
+          "type": "Number",
+          "column": "ophead_amount"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "ophead_curr_id"
+        }
+      },
+      {
         "name": "priorityOrder",
         "attr": {
           "type": "Number",

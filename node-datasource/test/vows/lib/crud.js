@@ -183,7 +183,7 @@ var _ = require("underscore"),
               model.off('statusChange', callback);
               that.callback(null, data);
             } else if (status === K.ERROR) {
-              that.callback(data.model.lastError);
+              that.callback(data.model.lastError || "Unspecified error");
             }
           };
         model.on('statusChange', callback);
@@ -195,7 +195,8 @@ var _ = require("underscore"),
           that.callback(null, data);
         }, exports.waitTime);
       },
-      'Status is `DESTROYED_CLEAN`': function (data) {
+      'Status is `DESTROYED_CLEAN`': function (error, data) {
+        assert.equal(error, null);
         assert.equal(data.model.getStatusString(), 'DESTROYED_CLEAN');
       }
     };
