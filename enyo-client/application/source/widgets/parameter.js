@@ -558,8 +558,20 @@ trailing:true white:true*/
           return param;
         }
       },
+      {name: "showClosed", label: "_showClosed".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '!=',
+              value: 'C'
+            };
+          }
+          return param;
+        }
+      },
       {name: "number", label: "_number".loc(), attr: "number"},
-      {name: "status", attr: "status", label: "_status".loc(), defaultKind: "XV.QuoteStatusPicker"},
       {name: "salesRep", attr: "salesRep", label: "_salesRep".loc(), defaultKind: "XV.SalesRepPicker"},
       {kind: "onyx.GroupboxHeader", content: "_customer".loc()},
       {name: "customer", attr: "customer", label: "_customer".loc(), defaultKind: "XV.CustomerProspectWidget"},

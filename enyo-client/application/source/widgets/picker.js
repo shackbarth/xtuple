@@ -266,16 +266,6 @@ regexp:true, undef:true, trailing:true, white:true */
   });
   
   // ..........................................................
-  // TAX TYPE
-  //
-
-  enyo.kind({
-    name: "XV.QuoteStatusPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.quoteStatuses"
-  });
-
-  // ..........................................................
   // SALES REP
   //
 

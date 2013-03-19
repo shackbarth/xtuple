@@ -1746,7 +1746,7 @@ white:true*/
     @returns {String}
     */
     getQuoteStatusString: function () {
-      var K = this.getClass(),
+      var K = XM.Quote,
         status = this.get("status");
       return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
     }
