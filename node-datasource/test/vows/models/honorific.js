@@ -50,12 +50,6 @@ var XVOWS = XVOWS || {};
       }
     })
   }).addBatch({
-    'We can READ the Honorific': {
-      topic: function () {
-        return data;
-      }
-    }
-  }).addBatch({
     'We can UPDATE the Honorific ': crud.update(data, {
       '-> Set values': {
         topic: function () {
