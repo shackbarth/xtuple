@@ -15,13 +15,13 @@ var XVOWS = XVOWS || {};
   var data = {};
 
   data.createHash = {
-    name: "Outer Space",
-    abbreviation: "OS",
+    name: "Sandwich Islands",
+    abbreviation: "WQ",
     currencyAbbreviation: "USD"
   };
 
   data.updateHash = {
-    abbreviation: "XY"
+    abbreviation: "QQ"
   };
 
   vows.describe('XM.Country CRUD test').addBatch({
