@@ -24,7 +24,7 @@ var XVOWS = XVOWS || {};
   };
 
   vows.describe('XM.ShipZone CRUD test').addBatch({
-    'INITIALIZE ': {
+    'We can INITIALIZE a Ship Zone Model': {
       topic: function () {
         var that = this,
           callback = function () {
@@ -33,53 +33,53 @@ var XVOWS = XVOWS || {};
           };
         zombieAuth.loadApp(callback);
       },
-      'The record type is XM.ShipZone': function (data) {
+      'Verify the record type is XM.ShipZone': function (data) {
         assert.equal(data.model.recordType, "XM.ShipZone");
       }
     }
   }).addBatch({
-    'CREATE ': crud.create(data, {
-      '-> Set values': {
+    'We can CREATE a Ship Zone Model ': crud.create(data, {
+      '-> Set values to the Ship Zone': {
         topic: function (data) {
           data.model.set(data.createHash);
           return data;
         },
-        'Last Error is null': function (data) {
+        'Verify the Last Error is null': function (data) {
           assert.isNull(data.model.lastError);
         },
-        '-> Save': crud.save(data)
+        '-> Save the Ship Zone': crud.save(data)
       }
     })
   }).addBatch({
-    'READ': {
+    'We can READ a Ship Zone Model': {
       topic: function () {
         return data;
       },
-      'ID is a number': function (data) {
+      'Verify the Ship Zone ID is a number': function (data) {
         assert.isNumber(data.model.id);
       },
-      'Name is `TESTSHIPZONE`': function (data) {
+      'Verify the Ship Zone Name is `TESTSHIPZONE`': function (data) {
         assert.equal(data.model.get('name'), data.createHash.name);
       },
-      'Description is `Test Ship Zone`': function (data) {
+      'Verify the Ship Zone Description is `Test Ship Zone`': function (data) {
         assert.equal(data.model.get('description'), data.createHash.description);
       }
     }
   }).addBatch({
-    'UPDATE ': crud.update(data, {
-      '-> Set values': {
+    'We can UPDATE a Ship Zone Model': crud.update(data, {
+      '-> Set values to Ship Zone': {
         topic: function () {
           data.model.set(data.updateHash);
           return data;
         },
-        'Name is `UPDATETESTSHIPZONE`': function (data) {
+        'Verify the Ship Zone Name is `UPDATETESTSHIPZONE`': function (data) {
           assert.equal(data.model.get('name'), data.updateHash.name);
         },
-        '-> Commit': crud.save(data)
+        '-> Commit the Ship Zone': crud.save(data)
       }
     })
   }).addBatch({
-    'DESTROY': crud.destroy(data)
+    'We can DESTROY a Ship Zone Model': crud.destroy(data)
   }).export(module);
   
 }());
