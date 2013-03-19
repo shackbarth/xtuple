@@ -109,17 +109,10 @@
        }
      },
      {
-       "name": "clientX509CertURL",
+       "name": "clientX509PubCert",
        "attr": {
          "type": "String",
-         "column": "oa2client_client_x509_cert_url"
-       }
-     },
-     {
-       "name": "authProviderX509CertURL",
-       "attr": {
-         "type": "String",
-         "column": "oa2client_auth_provider_x509_cert_url"
+         "column": "oa2client_client_x509_pub_cert"
        }
      }
     ],

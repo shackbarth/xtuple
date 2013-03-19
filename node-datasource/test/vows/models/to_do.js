@@ -25,7 +25,7 @@ var XVOWS = XVOWS || {};
   };
 
   vows.describe('XM.ToDo CRUD test').addBatch({
-    'INITIALIZE ': {
+    'We can INITIALIZE a ToDo Model ': {
       topic: function () {
         var that = this,
           callback = function () {
@@ -34,44 +34,44 @@ var XVOWS = XVOWS || {};
           };
         zombieAuth.loadApp(callback);
       },
-      'The record type is XM.ToDo': function (data) {
+      'Verify the record type is XM.ToDo': function (data) {
         assert.equal(data.model.recordType, "XM.ToDo");
       }
     }
   }).addBatch({
-    'CREATE ': crud.create(data, {
-      '-> Set values': {
+    'We can CREATE a ToDo Model ': crud.create(data, {
+      '-> Set values to ToDo': {
         topic: function (data) {
           data.model.set(data.createHash);
           return data;
         },
-        'Last Error is null': function (data) {
+        'Verify the Last Error is null': function (data) {
           assert.isNull(data.model.lastError);
         },
-        '-> Save': crud.save(data)
+        '-> Save the ToDo': crud.save(data)
       }
     })
   }).addBatch({
-    'READ': {
+    'We can READ a ToDo Model': {
       topic: function () {
         return data;
       },
-      'Last Error is null': function (data) {
+      'Verify the Last Error is null': function (data) {
         assert.isNull(data.model.lastError);
       }
     }
   }).addBatch({
-    'UPDATE ': crud.update(data, {
-      '-> Set values': {
+    'We can UPDATE a ToDo Model ': crud.update(data, {
+      '-> Set values to ToDo': {
         topic: function () {
           data.model.set(data.updateHash);
           return data;
         },
-        '-> Commit': crud.save(data)
+        '-> Commit a ToDo': crud.save(data)
       }
     })
   }).addBatch({
-    'DESTROY': crud.destroy(data)
+    'We can DESTROY a ToDo Model': crud.destroy(data)
   }).export(module);
   
 }());

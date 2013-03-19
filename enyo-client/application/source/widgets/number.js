@@ -85,55 +85,16 @@ regexp:true, undef:true, trailing:true, white:true */
      */
     create: function () {
       this.inherited(arguments);
+      this.setCurrency(XT.baseCurrency());
+      this.$.picker.setValue(this.getCurrency(), {silent: true});
       this.$.baseLabel.setContent(XT.baseCurrency().get('abbreviation'));
       // the currency picker may be disabled or hidden on creation in certain situations
       this.$.picker.setDisabled(this.getCurrencyDisabled());
       this.$.picker.setShowing(this.getCurrencyShowing());
     },
-    /**
-      Returns the published effective value.
-     */
-    getEffective: function () {
-      return this.effective;
-    },
-
-    /**
-      Sets the effective date and sets visibility
-      of base panel based on value.
-     */
-    setEffective: function (value) {
-      this.effective = value;
+    effectiveChanged: function () {
       this.setBasePanelShowing();
     },
-
-    /**
-      Returns the published currency value.
-     */
-    getCurrency: function () {
-      return this.currency;
-    },
-
-    /**
-      Sets the value of the published currency value.
-     */
-    setCurrency: function (value) {
-      this.currency = value;
-    },
-
-    /**
-      Returns the published amount value.
-     */
-    getAmount: function () {
-      return this.amount;
-    },
-
-    /**
-    Sets the value of the published currency value.
-    */
-    setAmount: function (value) {
-      this.amount = value;
-    },
-
     /**
       Sets visibility of base panel
      */
@@ -213,8 +174,8 @@ regexp:true, undef:true, trailing:true, white:true */
             }
           } else if (attribute === "currency") {
             oldValue = this.getCurrency();
-            if (oldValue !== newValue) {
-              this.setCurrency(newValue || XT.baseCurrency());
+            if (newValue && oldValue !== newValue) {
+              this.setCurrency(newValue);
               this.$.picker.setValue(this.getCurrency(), options);
             }
           }

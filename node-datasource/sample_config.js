@@ -17,7 +17,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     routersDirectory: "./lib/routers",
     enhancedAuthKey: "xTuple",
     datasource: {
-      sessionTimeout: 15,
       bindAddress: "localhost",
       port: 443,
       keyFile: "./lib/private/key.pem",

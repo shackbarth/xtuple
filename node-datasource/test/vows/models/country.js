@@ -15,17 +15,17 @@ var XVOWS = XVOWS || {};
   var data = {};
 
   data.createHash = {
-    name: "Outer Space",
-    abbreviation: "OS",
+    name: "Sandwich Islands",
+    abbreviation: "WQ",
     currencyAbbreviation: "USD"
   };
 
   data.updateHash = {
-    abbreviation: "XY"
+    abbreviation: "QQ"
   };
 
   vows.describe('XM.Country CRUD test').addBatch({
-    'INITIALIZE ': {
+    'We can INITIALIZE a Country Model ': {
       topic: function () {
         var that = this,
           callback = function () {
@@ -34,44 +34,44 @@ var XVOWS = XVOWS || {};
           };
         zombieAuth.loadApp(callback);
       },
-      'The record type is XM.Country': function (data) {
+      'Verify the record type is XM.Country': function (data) {
         assert.equal(data.model.recordType, "XM.Country");
       }
     }
   }).addBatch({
-    'CREATE ': crud.create(data, {
-      '-> Set values': {
+    'We can CREATE a Country Model ': crud.create(data, {
+      '-> Set values of the Country': {
         topic: function (data) {
           data.model.set(data.createHash);
           return data;
         },
-        'Last Error is null': function (data) {
+        'Verify the Last Error is null': function (data) {
           assert.isNull(data.model.lastError);
         },
         '-> Save': crud.save(data)
       }
     })
   }).addBatch({
-    'READ': {
+    'We can READ a Country Model': {
       topic: function () {
         return data;
       },
-      'Last Error is null': function (data) {
+      'Verify Last Error is null': function (data) {
         assert.isNull(data.model.lastError);
       }
     }
   }).addBatch({
-    'UPDATE ': crud.update(data, {
-      '-> Set values': {
+    'We can UPDATE a Country Model ': crud.update(data, {
+      '-> Set values of the Country': {
         topic: function () {
           data.model.set(data.updateHash);
           return data;
         },
-        '-> Commit': crud.save(data)
+        '-> Commit a Country': crud.save(data)
       }
     })
   }).addBatch({
-    'DESTROY': crud.destroy(data)
+    'We can DESTROY a Country Model': crud.destroy(data)
   }).export(module);
   
 }());
