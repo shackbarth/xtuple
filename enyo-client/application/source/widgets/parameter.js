@@ -558,22 +558,9 @@ trailing:true white:true*/
           return param;
         }
       },
-      // {name: "showOpenOnly", label: "_showOpenOnly".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
-      //   getParameter: function () {
-      //     var param;
-      //     if (this.getValue()) {
-      //       param = {
-      //         attribute: this.getAttr(),
-      //         operator: '=',
-      //         value: "O"
-      //       };
-      //     }
-      //     return param;
-      //   }
-      // },
       {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "status", attr: "status", label: "_status".loc(), defaultKind: "XV.QuoteStatusPicker"},
       {name: "salesRep", attr: "salesRep", label: "_salesRep".loc(), defaultKind: "XV.SalesRepPicker"},
-      // {name: "itemSite", attr: "lineItems.itemSite", label: "_itemSite".loc(), defaultKind: "XV.ItemSiteWidget"},
       {kind: "onyx.GroupboxHeader", content: "_customer".loc()},
       {name: "customer", attr: "customer", label: "_customer".loc(), defaultKind: "XV.CustomerProspectWidget"},
       {name: "customerType", attr: "customer.customerType", label: "_customerType".loc(), defaultKind: "XV.CustomerTypePicker"},

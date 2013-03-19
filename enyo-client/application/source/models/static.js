@@ -145,4 +145,20 @@ white:true*/
     XM.characteristicTypes.add(characteristicType);
   }
   
+  // Quote Status
+  var quoteStatusJson = [
+    { id: "O", name: "_open".loc() },
+    { id: "C", name: "_closed".loc() }
+  ];
+  XM.QuoteStatusModel = Backbone.Model.extend({
+  });
+  XM.QuoteStatusCollection = Backbone.Collection.extend({
+    model: XM.QuoteStatusModel
+  });
+  XM.quoteStatuses = new XM.QuoteStatusCollection();
+  for (i = 0; i < quoteStatusJson.length; i++) {
+    var quoteStatus = new XM.QuoteStatusModel(quoteStatusJson[i]);
+    XM.quoteStatuses.add(quoteStatus);
+  }
+  
 }());
