@@ -545,19 +545,6 @@ trailing:true white:true*/
           return param;
         }
       },
-      {name: "excludeProspects", label: "_excludeProspects".loc(), attr: "customer.status", defaultKind: "XV.CheckboxWidget",
-        getParameter: function () {
-          var param;
-          if (this.getValue()) {
-            param = {
-              attribute: this.getAttr(),
-              operator: '!=',
-              value: "P"
-            };
-          }
-          return param;
-        }
-      },
       {name: "showClosed", label: "_showClosed".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
         getParameter: function () {
           var param;
@@ -566,6 +553,19 @@ trailing:true white:true*/
               attribute: this.getAttr(),
               operator: '!=',
               value: 'C'
+            };
+          }
+          return param;
+        }
+      },
+      {name: "excludeProspects", label: "_excludeProspects".loc(), attr: "customer.status", defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '!=',
+              value: "P"
             };
           }
           return param;
