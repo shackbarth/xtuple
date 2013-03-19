@@ -8,65 +8,20 @@ var XVOWS = XVOWS || {};
   "use strict";
 
   var vows = require("vows"),
-    assert = require("assert"),
-    zombieAuth = require("../lib/zombie_auth"),
-    crud = require('../lib/crud');
-
-  var data = {};
-
-  data.createHash = {
-    code: "Herr"
-  };
-
-  data.updateHash = {
-    code: "Dame"
-  };
+    crud = require('../lib/crud'),
+    data = {
+      recordType: "XM.Honorific",
+      autoTestAttributes: true,
+      createHash: {
+        code: "Herr"
+      },
+      updateHash: {
+        code: "Dame"
+      }
+    };
 
   vows.describe('XM.Honorific CRUD test').addBatch({
-    'We can INITIALIZE a Honorific Model ': {
-      topic: function () {
-        var that = this,
-          callback = function () {
-            data.model = new XM.Honorific();
-            that.callback(null, data);
-          };
-        zombieAuth.loadApp({callback: callback, verbose: false});
-      },
-      'Verify the record type is XM.Honorific': function (data) {
-        assert.equal(data.model.recordType, "XM.Honorific");
-      }
-    }
-  }).addBatch({
-    'We can CREATE a Honorific Model ': crud.create(data, {
-      '-> Set values to the Honorific': {
-        topic: function (data) {
-          data.model.set(data.createHash);
-          return data;
-        },
-        'Verify Last Error is null': function (data) {
-          assert.isNull(data.model.lastError);
-        },
-        '-> Save the Honorific': crud.save(data)
-      }
-    })
-  }).addBatch({
-    'We can READ the Honorific': {
-      topic: function () {
-        return data;
-      }
-    }
-  }).addBatch({
-    'We can UPDATE the Honorific ': crud.update(data, {
-      '-> Set values': {
-        topic: function () {
-          data.model.set(data.updateHash);
-          return data;
-        },
-        '-> Commit to the Honorific': crud.save(data)
-      }
-    })
-  }).addBatch({
-    'We can DESTROY a Honorific Model': crud.destroy(data)
+    'We can run the XM.Honorific CRUD tests ': crud.runAllCrud(data)
   }).export(module);
 
 }());
