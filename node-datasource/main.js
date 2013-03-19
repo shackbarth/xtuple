@@ -239,7 +239,7 @@ app.configure(function () {
   app.use(express.bodyParser());
 
   // See cookie stopm above for more details.
-  app.use(express.session({ store: sessionStore, secret: '.T#T@r5EkPM*N@C%9K-iPW!+T', cookie: { path: '/', httpOnly: true, secure: true, maxAge: 1800000 } }));
+  app.use(express.session({ store: sessionStore, secret: '.T#T@r5EkPM*N@C%9K-iPW!+T', cookie: { path: '/', httpOnly: true, secure: true, maxAge: 3600000 } }));
 
   app.use(passport.initialize());
   app.use(passport.session());
