@@ -15,11 +15,11 @@ var XVOWS = XVOWS || {};
   var data = {};
 
   data.createHash = {
-    code: "Herr"
+    code: "Herr" + Math.random()
   };
 
   data.updateHash = {
-    code: "Dame"
+    code: "Dame" + Math.random()
   };
 
   vows.describe('XM.Honorific CRUD test').addBatch({
@@ -30,7 +30,7 @@ var XVOWS = XVOWS || {};
             data.model = new XM.Honorific();
             that.callback(null, data);
           };
-        zombieAuth.loadApp({callback: callback, verbose: false});
+        zombieAuth.loadApp({callback: callback, verbose: true});
       },
       'Verify the record type is XM.Honorific': function (data) {
         assert.equal(data.model.recordType, "XM.Honorific");
@@ -62,11 +62,11 @@ var XVOWS = XVOWS || {};
           data.model.set(data.updateHash);
           return data;
         },
-        '-> Commit to the Honorific': crud.save(data)
+        '-> Commit to the Honorific': crud.save(data, {
+          'destroy': crud.destroy(data)
+        })
       }
     })
-  }).addBatch({
-    'We can DESTROY a Honorific Model': crud.destroy(data)
   }).export(module);
 
 }());
