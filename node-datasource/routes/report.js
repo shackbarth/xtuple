@@ -62,9 +62,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         that are older than the number of hours set in the hourLifespan variable. */
     fetchOptions.success = function () {
       for (var i = 0; i < bicacheCollection.length; i++) {
-        date = bicacheCollection.models[i].get("created");
-        date = date.getTime();
-        dateDifference = currentDate - date;
+        date = new Date(bicacheCollection.models[i].get("created"));
+        dateDifference = currentDate - date.getTime();
         if (dateDifference > (1000 * 60 * 60 * hourLifespan)) {
           bicacheCollection.models[i].destroy();
         }

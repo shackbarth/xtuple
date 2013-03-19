@@ -6,6 +6,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 XT = {};
 XM = {};
 XV = {};
+XZ = {}; // xTuple Zombie. Used to help zombie within the context of these tests.
 
 var assert = require('assert'),
   zombie = require('zombie');
@@ -83,7 +84,7 @@ Simplest possible usage:
       if (verboseMode) {
         console.log("Using pre-existing zombie session");
       }
-      callback(); // TODO: callback(XZ.browser);
+      callback();
       return;
     }
 
@@ -122,6 +123,7 @@ Simplest possible usage:
               XM = browser.window.XM;
               XT = browser.window.XT;
               XV = browser.window.XV;
+              XZ.browser = browser;
 
               XT.log = function (message) {
                 // log if verbose mode or if the log is an error
@@ -136,7 +138,7 @@ Simplest possible usage:
               clearTimeout(timeout);
 
               // give control back to whoever called us
-              callback(/*browser*/); // XXX needed for route tests but creates an unspecified error now???
+              callback();
             }
           }, 100); // 100 = check to see if the app is loaded every 0.1 seconds
         });
