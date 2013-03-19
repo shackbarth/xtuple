@@ -1027,7 +1027,7 @@ trailing:true white:true*/
     query: {orderBy: [
       {attribute: 'code'}
     ]},
-    parameterWidget: "XV.ItemSiteListParameters",
+    parameterWidget: "XV.SiteListParameters",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [

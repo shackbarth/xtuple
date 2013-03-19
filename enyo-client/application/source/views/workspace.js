@@ -1440,6 +1440,42 @@ trailing:true white:true*/
 
   XV.registerModelWorkspace("XM.SalesRep", "XV.SalesRepWorkspace");
 
+  // ..........................................................
+  // SITE
+  //
+
+  enyo.kind({
+    name: "XV.SiteWorkspace",
+    kind: "XV.Workspace",
+    title: "_site".loc(),
+    model: "XM.Site",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
+            // ???{kind: "XV.SiteTypePicker", attr: "siteType"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.ContactWidget", attr: "contact"},
+            {kind: "XV.AddressWidget", attr: "address"},
+            {kind: "XV.TaxZonePicker", attr: "taxZone"},
+            {kind: "XV.InputWidget", attr: "fob"},
+            // ???{kind: "XV.NumberWidget", attr: "shipVia"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true}
+          ]}
+        ]},
+        {kind: "XV.SiteCommentBox", attr: "comments"}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.SiteRelation", "XV.SiteWorkspace");
+  XV.registerModelWorkspace("XM.SiteListItem", "XV.SiteWorkspace");
 
   // ..........................................................
   // STATE

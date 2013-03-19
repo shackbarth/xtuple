@@ -564,6 +564,19 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // SITE
+  //
+
+  enyo.kind({
+    name: "XV.SiteListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_site".loc()},
+      {name: "code", label: "_code".loc(), attr: "code"}
+    ]
+  });
+
+  // ..........................................................
   // TO DO
   //
 
