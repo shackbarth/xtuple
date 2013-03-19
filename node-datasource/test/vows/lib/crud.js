@@ -5,6 +5,7 @@ white:true*/
 setTimeout:true, clearTimeout: true, exports: true */
 
 var _ = require("underscore"),
+  zombieAuth = require("./zombie_auth"),
   assert = require("assert");
 
 (function () {
@@ -206,31 +207,44 @@ var _ = require("underscore"),
   };
 
   var runAllCrud = exports.runAllCrud = function (data) {
-    var context = create(data, {
-      '-> Set values to the model': {
-        topic: function (data) {
-          data.model.set(data.createHash);
-          return data;
-        },
-        // create vows
-        'Verify the last error is null': function (data) {
-          assert.isNull(data.model.lastError);
-        },
-        '-> Save the model': save(data, {
-          'We can update the model ': update(data, {
-            '-> Set values': {
-              topic: function () {
-                data.model.set(data.updateHash);
-                return data;
-              },
-              '-> Commit to the model': save(data, {
-                'destroy': destroy(data)
-              })
-            }
+    var context = {
+      topic: function () {
+        var that = this,
+          callback = function () {
+            data.model = new XM[data.recordType.substring(3)]();
+            that.callback(null, data);
+          };
+        zombieAuth.loadApp({callback: callback, verbose: false});
+      },
+      'Verify the record type is correct': function (data) {
+        assert.equal(data.model.recordType, data.recordType);
+      },
+      'We can create a model ': create(data, {
+        '-> Set values to the model': {
+          topic: function (data) {
+            data.model.set(data.createHash);
+            return data;
+          },
+          // create vows
+          'Verify the last error is null': function (data) {
+            assert.isNull(data.model.lastError);
+          },
+          '-> Save the model': save(data, {
+            'We can update the model ': update(data, {
+              '-> Set values': {
+                topic: function () {
+                  data.model.set(data.updateHash);
+                  return data;
+                },
+                '-> Commit to the model': save(data, {
+                  'destroy': destroy(data)
+                })
+              }
+            })
           })
-        })
-      }
-    });
+        }
+      })
+    };
     return context;
   };
 

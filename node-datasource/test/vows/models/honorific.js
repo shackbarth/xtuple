@@ -9,7 +9,6 @@ var XVOWS = XVOWS || {};
 
   var vows = require("vows"),
     assert = require("assert"),
-    zombieAuth = require("../lib/zombie_auth"),
     crud = require('../lib/crud');
 
   var data = {};
@@ -25,20 +24,7 @@ var XVOWS = XVOWS || {};
   };
 
   vows.describe('XM.Honorific CRUD test').addBatch({
-    'We can initialize a model ': {
-      topic: function () {
-        var that = this,
-          callback = function () {
-            data.model = new XM.Honorific();
-            that.callback(null, data);
-          };
-        zombieAuth.loadApp({callback: callback, verbose: true});
-      },
-      'Verify the record type is correct': function (data) {
-        assert.equal(data.model.recordType, data.recordType);
-      },
-      'We can create a model ': crud.runAllCrud(data)
-    }
+    'We can initialize a model ': crud.runAllCrud(data)
   }).export(module);
 
 }());
