@@ -15,9 +15,13 @@ var XVOWS = XVOWS || {};
   var data = {};
 
   data.createHash = {
-    account: 1,
-    name: 'Mike'
-    //opportunityStage, opportunitySource, and opportunityType
+    account: {
+      id: 1
+    },
+    name: 'Mike',
+    opportunityStage: { id: 1 },
+    opportunitySource: { id: 1 },
+    opportunityType: { id: 1 }
   };
 
   data.updateHash = {
@@ -25,7 +29,7 @@ var XVOWS = XVOWS || {};
   };
 
   vows.describe('XM.Opportunity CRUD test').addBatch({
-    'INITIALIZE ': {
+    'Initialize Opportunity': {
       topic: function () {
         var that = this,
           callback = function () {
@@ -39,7 +43,7 @@ var XVOWS = XVOWS || {};
       }
     }
   }).addBatch({
-    'CREATE ': crud.create(data, {
+    'Create Opportunity ': crud.create(data, {
       '-> Set values': {
         topic: function (data) {
           data.model.set('opportunityStage', XM.opportunityStages.where({description: 'Internal'}));
@@ -55,7 +59,7 @@ var XVOWS = XVOWS || {};
       }
     })
   }).addBatch({
-    'READ': {
+    'Read Opportunity': {
       topic: function () {
         return data;
       },
@@ -64,7 +68,7 @@ var XVOWS = XVOWS || {};
       }
     }
   }).addBatch({
-    'UPDATE ': crud.update(data, {
+    'Update Opportunity ': crud.update(data, {
       '-> Set values': {
         topic: function () {
           data.model.set(data.updateHash);
@@ -74,7 +78,7 @@ var XVOWS = XVOWS || {};
       }
     })
   }).addBatch({
-    'DESTROY': crud.destroy(data)
+    'Destroy Opportunity': crud.destroy(data)
   }).export(module);
-  
+
 }());

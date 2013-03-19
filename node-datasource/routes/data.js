@@ -44,7 +44,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         var data;
 
         if (err) {
-          callback({isError: true, error: err, message: err.message});
+          callback({isError: true, error: err, message: err.message, description: err.message});
         } else if (res && res.rows && res.rows.length > 0) {
           // the data comes back in an awkward res.rows[0].dispatch form,
           // and we want to normalize that here so that the data is in response.data
