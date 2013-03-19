@@ -9,25 +9,24 @@ var XVOWS = XVOWS || {};
 
   var vows = require("vows"),
     assert = require("assert"),
-    crud = require('../lib/crud');
-
-  var data = {
-    recordType: "XM.ItemSite",
-    autoTestAttributes: true,
-    createHash: {
-      item: {id: 333},
-      site: {id: 37}, // NOTE the item and site have to be a combo that doesn't yet exist
-      plannerCode: {id: 27, code: "NONE"},
-      costCategory: {id: 30, code: "FINISHED"},
-      isSold: false
-    },
-    updateHash: {
-      isSold: true
-    }
-  };
+    crud = require('../lib/crud'),
+    data = {
+      recordType: "XM.ItemSite",
+      autoTestAttributes: true,
+      createHash: {
+        item: {id: 333},
+        site: {id: 37}, // NOTE the item and site have to be a combo that doesn't yet exist
+        plannerCode: {id: 27, code: "NONE"},
+        costCategory: {id: 30, code: "FINISHED"},
+        isSold: false
+      },
+      updateHash: {
+        isSold: true
+      }
+    };
 
   vows.describe('XM.ItemSite tests').addBatch({
-    'We can run the ItemSite CRUD tests ': crud.runAllCrud(data)
+    'We can run the XM.ItemSite CRUD tests ': crud.runAllCrud(data)
 
   }).addBatch({
     // Business-logic specific tests to be run outside of crud

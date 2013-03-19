@@ -8,23 +8,22 @@ var XVOWS = XVOWS || {};
   "use strict";
 
   var vows = require("vows"),
-    crud = require('../lib/crud');
-
-  var data = {
-    recordType: "XM.State",
-    autoTestAttributes: true,
-    createHash: {
-      name: "Milky Way",
-      abbreviation: "MW",
-      country: 214  //arbitrary number, must match actual country_id
-    },
-    updateHash: {
-      abbreviation: "XY"
-    }
-  };
+    crud = require('../lib/crud'),
+    data = {
+      recordType: "XM.State",
+      autoTestAttributes: true,
+      createHash: {
+        name: "Milky Way",
+        abbreviation: "MW",
+        country: 214  //arbitrary number, must match actual country_id
+      },
+      updateHash: {
+        abbreviation: "XY"
+      }
+    };
 
   vows.describe('XM.State CRUD test').addBatch({
-    'We can run the State CRUD tests ': crud.runAllCrud(data)
+    'We can run the XM.State CRUD tests ': crud.runAllCrud(data)
   }).export(module);
 
 }());
