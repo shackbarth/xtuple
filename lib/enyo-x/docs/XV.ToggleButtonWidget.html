@@ -27,8 +27,6 @@
     
 <header>
     <h2>
-        <span class="ancestors"><a href="XV.html">XV</a>.</span>
-    
     ToggleButtonWidget
     </h2>
     
@@ -44,64 +42,8 @@
     
     
     
-        
-<dt>
-    <h4 class="name" id="ToggleButtonWidget"><span class="type-signature"></span>new ToggleButtonWidget</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>toggle_button.js, line 51</li></ul></dd>
-	
-    
-    
-	
-	
-	
-	
-</dl>
-
-    
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
+          
+           
     
     </div>
     
@@ -268,6 +210,12 @@
 <dd>
     
     
+    <div class="description">
+        The disabledChanged method, and many below it, are here to deal with the fact that XV.Input does
+     not inherit from onyx.input or enyo.input, and so insofar as it needs to support their APIs, we
+     have to redeclare the methods and pass through the data.
+    </div>
+    
 
     
     
@@ -302,20 +250,13 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>input.js, line 54</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>input.js, line 58</li></ul></dd>
 	
     
     
 	
 	
 	
-	
-	<dt class="tag-todo">To Do:</dt>
-	<dd class="tag-todo">
-        <ul>
-            <li>Document the disabledChanged method.</li>
-        </ul>
-	</dd>
 	
 </dl>
 
@@ -373,7 +314,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>input.js, line 60</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>input.js, line 64</li></ul></dd>
 	
     
     
@@ -510,7 +451,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>input.js, line 79</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>input.js, line 83</li></ul></dd>
 	
     
     
@@ -614,8 +555,8 @@
     
     
     <div class="description">
-        Not applicable in the context of a toggle button, 
-	 even though it is available to input widgets generally.
+        Not applicable in the context of a toggle button,
+   even though it is available to input widgets generally.
     </div>
     
 
@@ -711,7 +652,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>input.js, line 97</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>input.js, line 101</li></ul></dd>
 	
     
     
@@ -748,6 +689,11 @@
 <dd>
     
     
+    <div class="description">
+        Pass through attributes intended for onyx input inside.
+      XXX is this necessary given disabledChanged function above?
+    </div>
+    
 
     
     
@@ -782,20 +728,13 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>input.js, line 139</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>input.js, line 138</li></ul></dd>
 	
     
     
 	
 	
 	
-	
-	<dt class="tag-todo">To Do:</dt>
-	<dd class="tag-todo">
-        <ul>
-            <li>Document the setDisabled method.</li>
-        </ul>
-	</dd>
 	
 </dl>
 
@@ -818,6 +757,10 @@
 </dt>
 <dd>
     
+    
+    <div class="description">
+        Pass through attributes intended for onyx input inside.
+    </div>
     
 
     
@@ -853,20 +796,13 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>input.js, line 133</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>input.js, line 144</li></ul></dd>
 	
     
     
 	
 	
 	
-	
-	<dt class="tag-todo">To Do:</dt>
-	<dd class="tag-todo">
-        <ul>
-            <li>Document the setInputStyle method.</li>
-        </ul>
-	</dd>
 	
 </dl>
 
@@ -924,7 +860,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>input.js, line 106</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>input.js, line 110</li></ul></dd>
 	
     
     
@@ -995,7 +931,7 @@
 	
 	
 	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source"><ul class="dummy"><li>input.js, line 120</li></ul></dd>
+	<dd class="tag-source"><ul class="dummy"><li>input.js, line 124</li></ul></dd>
 	
     
     
@@ -1104,13 +1040,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="XV.html">XV</a></li><li><a href="XV.AddressWidget.html">AddressWidget</a></li><li><a href="XV.AssignmentBox.html">AssignmentBox</a></li><li><a href="XV.CharacteristicItem.html">CharacteristicItem</a></li><li><a href="XV.CharacteristicPicker.html">CharacteristicPicker</a></li><li><a href="XV.CharacteristicsWidget.html">CharacteristicsWidget</a></li><li><a href="XV.Checkbox.html">Checkbox</a></li><li><a href="XV.CheckboxWidget.html">CheckboxWidget</a></li><li><a href="XV.Combobox.html">Combobox</a></li><li><a href="XV.CommentBox.html">CommentBox</a></li><li><a href="XV.CommentBoxItem.html">CommentBoxItem</a></li><li><a href="XV.CommentTypePicker.html">CommentTypePicker</a></li><li><a href="XV.Completer.html">Completer</a></li><li><a href="XV.CountryCombobox.html">CountryCombobox</a></li><li><a href="XV.Date.html">Date</a></li><li><a href="XV.DateWidget.html">DateWidget</a></li><li><a href="XV.DocumentListRelations.html">DocumentListRelations</a></li><li><a href="XV.DocumentsBox.html">DocumentsBox</a></li><li><a href="XV.EditorMixin.html">EditorMixin</a></li><li><a href="XV.ExtensionsMixin.html">ExtensionsMixin</a></li><li><a href="XV.FileInput.html">FileInput</a></li><li><a href="XV.Groupbox.html">Groupbox</a></li><li><a href="XV.Input.html">Input</a></li><li><a href="XV.InputWidget.html">InputWidget</a></li><li><a href="XV.List.html">List</a></li><li><a href="XV.ListAttr.html">ListAttr</a></li><li><a href="XV.ListColumn.html">ListColumn</a></li><li><a href="XV.ListItem.html">ListItem</a></li><li><a href="XV.ListRelations.html">ListRelations</a></li><li><a href="XV.ListRelationsBox.html">ListRelationsBox</a></li><li><a href="XV.ListRelationsEditorBox.html">ListRelationsEditorBox</a></li><li><a href="XV.MenuItem.html">MenuItem</a></li><li><a href="XV.Navigator.html">Navigator</a></li><li><a href="XV.Number.html">Number</a></li><li><a href="XV.NumberWidget.html">NumberWidget</a></li><li><a href="XV.OptionsPicker.html">OptionsPicker</a></li><li><a href="XV.ParameterItem.html">ParameterItem</a></li><li><a href="XV.ParameterWidget.html">ParameterWidget</a></li><li><a href="XV.PickerWidget.html">PickerWidget</a></li><li><a href="XV.RelationsEditor.html">RelationsEditor</a></li><li><a href="XV.RelationWidget.html">RelationWidget</a></li><li><a href="XV.ScreenCarousel.html">ScreenCarousel</a></li><li><a href="XV.ScrollableGroupbox.html">ScrollableGroupbox</a></li><li><a href="XV.Scroller.html">Scroller</a></li><li><a href="XV.SearchContainer.html">SearchContainer</a></li><li><a href="XV.StateCombobox.html">StateCombobox</a></li><li><a href="XV.TextArea.html">TextArea</a></li><li><a href="XV.ToggleButton.html">ToggleButton</a></li><li><a href="XV.ToggleButtonWidget.html">ToggleButtonWidget</a></li><li><a href="XV.Workspace.html">Workspace</a></li><li><a href="XV.WorkspaceContainer.html">WorkspaceContainer</a></li></ul><h3>Global</h3><ul><li><a href="global.html#destroy">destroy</a></li><li><a href="global.html#setValue">setValue</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="XV.AddressFieldsWidget.html">AddressFieldsWidget</a></li><li><a href="XV.AddressWidget.html">AddressWidget</a></li><li><a href="XV.CharacteristicItem.html">CharacteristicItem</a></li><li><a href="XV.CharacteristicPicker.html">CharacteristicPicker</a></li><li><a href="XV.CharacteristicsWidget.html">CharacteristicsWidget</a></li><li><a href="XV.Checkbox.html">Checkbox</a></li><li><a href="XV.CheckboxWidget.html">CheckboxWidget</a></li><li><a href="XV.Combobox.html">Combobox</a></li><li><a href="XV.ComboboxWidget.html">ComboboxWidget</a></li><li><a href="XV.Completer.html">Completer</a></li><li><a href="XV.CountryCombobox.html">CountryCombobox</a></li><li><a href="XV.Date.html">Date</a></li><li><a href="XV.DateWidget.html">DateWidget</a></li><li><a href="XV.FileInput.html">FileInput</a></li><li><a href="XV.IconButton.html">IconButton</a></li><li><a href="XV.Input.html">Input</a></li><li><a href="XV.InputWidget.html">InputWidget</a></li><li><a href="XV.MenuItem.html">MenuItem</a></li><li><a href="XV.Number.html">Number</a></li><li><a href="XV.NumberWidget.html">NumberWidget</a></li><li><a href="XV.OptionsPicker.html">OptionsPicker</a></li><li><a href="XV.ParameterItem.html">ParameterItem</a></li><li><a href="XV.ParameterWidget.html">ParameterWidget</a></li><li><a href="XV.Picker.html">Picker</a></li><li><a href="XV.PickerWidget.html">PickerWidget</a></li><li><a href="XV.RelationWidget.html">RelationWidget</a></li><li><a href="XV.StateCombobox.html">StateCombobox</a></li><li><a href="XV.TextArea.html">TextArea</a></li><li><a href="XV.ToggleButton.html">ToggleButton</a></li><li><a href="XV.ToggleButtonWidget.html">ToggleButtonWidget</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Tue Nov 27 2012 20:13:49 GMT-0600 (CST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Mon Mar 18 2013 08:14:12 GMT-0500 (CDT)
 </footer>
 
 <script> prettyPrint(); </script>
