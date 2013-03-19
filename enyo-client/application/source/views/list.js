@@ -697,7 +697,11 @@ trailing:true white:true*/
                 placeholder: "_noCloseTarget".loc(),
                 classes: "right"}
             ]},
-            {kind: "XV.ListAttr", attr: "name"}
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "name"},
+              {kind: "XV.ListAttr", attr: "amount", classes: "right",
+                formatter: "formatAmount"}
+            ]}
           ]},
           {kind: "XV.ListColumn", classes: "second",
             components: [
@@ -720,6 +724,11 @@ trailing:true white:true*/
         ]}
       ]}
     ],
+    formatAmount: function (value, view, model) {
+      var currency = model ? model.get("currency") : false,
+        scale = XT.session.locale.attributes.moneyScale;
+      return currency ? currency.format(value, scale) : "";
+    },
     formatTargetClose: function (value, view, model) {
       var isLate = model && model.get('isActive') &&
         (XT.date.compareDate(value, new Date()) < 1);
