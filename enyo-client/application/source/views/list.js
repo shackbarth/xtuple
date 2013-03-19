@@ -670,6 +670,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.ItemSiteRelation", "XV.ItemSiteList");
+
   // ..........................................................
   // OPPORTUNITY
   //
@@ -1013,6 +1014,42 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.QuoteRelation", "XV.QuoteList");
+
+  // ..........................................................
+  // SITE
+  //
+
+  enyo.kind({
+    name: "XV.SiteList",
+    kind: "XV.List",
+    label: "_sites".loc(),
+    collection: "XM.SiteListItemCollection",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    parameterWidget: "XV.ItemSiteListParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "code", isKey: true},
+              {kind: "XV.ListAttr", attr: "description", fit: true, classes: "right"}
+            ]},
+            {kind: "XV.ListAttr", attr: "item.description1"}
+          ]},
+          {kind: "XV.ListColumn", classes: "second",
+            components: [
+            {kind: "XV.ListAttr", attr: "site.code", classes: "bold"},
+            {kind: "XV.ListAttr", attr: "site.description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.SiteRelation", "XV.SiteList");
+
 
   // ..........................................................
   // TO DO
