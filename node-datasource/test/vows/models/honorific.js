@@ -14,6 +14,8 @@ var XVOWS = XVOWS || {};
 
   var data = {};
 
+  data.recordType = "XM.Honorific";
+
   data.createHash = {
     code: "Herr" + Math.random()
   };
@@ -23,7 +25,7 @@ var XVOWS = XVOWS || {};
   };
 
   vows.describe('XM.Honorific CRUD test').addBatch({
-    'We can INITIALIZE a Honorific Model ': {
+    'We can initialize a model ': {
       topic: function () {
         var that = this,
           callback = function () {
@@ -32,27 +34,27 @@ var XVOWS = XVOWS || {};
           };
         zombieAuth.loadApp({callback: callback, verbose: true});
       },
-      'Verify the record type is XM.Honorific': function (data) {
-        assert.equal(data.model.recordType, "XM.Honorific");
+      'Verify the record type is correct': function (data) {
+        assert.equal(data.model.recordType, data.recordType);
       },
-      'We can CREATE a Honorific Model ': crud.create(data, {
-        '-> Set values to the Honorific': {
+      'We can create a model ': crud.create(data, {
+        '-> Set values to the model': {
           topic: function (data) {
             data.model.set(data.createHash);
             return data;
           },
           // create vows
-          'Verify Last Error is null': function (data) {
+          'Verify the last error is null': function (data) {
             assert.isNull(data.model.lastError);
           },
-          '-> Save the Honorific': crud.save(data, {
-            'We can UPDATE the Honorific ': crud.update(data, {
+          '-> Save the model': crud.save(data, {
+            'We can update the model ': crud.update(data, {
               '-> Set values': {
                 topic: function () {
                   data.model.set(data.updateHash);
                   return data;
                 },
-                '-> Commit to the Honorific': crud.save(data, {
+                '-> Commit to the model': crud.save(data, {
                   'destroy': crud.destroy(data)
                 })
               }
