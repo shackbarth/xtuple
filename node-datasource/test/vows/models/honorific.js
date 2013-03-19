@@ -37,31 +37,7 @@ var XVOWS = XVOWS || {};
       'Verify the record type is correct': function (data) {
         assert.equal(data.model.recordType, data.recordType);
       },
-      'We can create a model ': crud.create(data, {
-        '-> Set values to the model': {
-          topic: function (data) {
-            data.model.set(data.createHash);
-            return data;
-          },
-          // create vows
-          'Verify the last error is null': function (data) {
-            assert.isNull(data.model.lastError);
-          },
-          '-> Save the model': crud.save(data, {
-            'We can update the model ': crud.update(data, {
-              '-> Set values': {
-                topic: function () {
-                  data.model.set(data.updateHash);
-                  return data;
-                },
-                '-> Commit to the model': crud.save(data, {
-                  'destroy': crud.destroy(data)
-                })
-              }
-            })
-          })
-        }
-      })
+      'We can create a model ': crud.runAllCrud(data)
     }
   }).export(module);
 

@@ -23,7 +23,7 @@ var _ = require("underscore"),
     @param {Object} Data
     @param {Object} Vows
   */
-  exports.create = function (data, vows) {
+  var create = exports.create = function (data, vows) {
     vows = vows || {};
     var context = {
       topic: function () {
@@ -80,7 +80,7 @@ var _ = require("underscore"),
     @param {Object} Data
     @param {Object} Vows
   */
-  exports.save = function (data, vows) {
+  var save = exports.save = function (data, vows) {
     vows = vows || {};
     var context = {
       topic: function () {
@@ -144,7 +144,7 @@ var _ = require("underscore"),
     @param {Object} Data
     @param {Object} Vows
   */
-  exports.update = function (data, vows) {
+  var update = exports.update = function (data, vows) {
     vows = vows || {};
     var context = {
       topic: function () {
@@ -168,7 +168,7 @@ var _ = require("underscore"),
     @param {Data}
     @param {Object} Vows
   */
-  exports.destroy = function (data, vows) {
+  var destroy = exports.destroy = function (data, vows) {
     vows = vows || {};
     var context = {
       topic: function () {
@@ -204,5 +204,36 @@ var _ = require("underscore"),
     _.extend(context, vows);
     return context;
   };
+
+  var runAllCrud = exports.runAllCrud = function (data) {
+    var context = create(data, {
+      '-> Set values to the model': {
+        topic: function (data) {
+          data.model.set(data.createHash);
+          return data;
+        },
+        // create vows
+        'Verify the last error is null': function (data) {
+          assert.isNull(data.model.lastError);
+        },
+        '-> Save the model': save(data, {
+          'We can update the model ': update(data, {
+            '-> Set values': {
+              topic: function () {
+                data.model.set(data.updateHash);
+                return data;
+              },
+              '-> Commit to the model': save(data, {
+                'destroy': destroy(data)
+              })
+            }
+          })
+        })
+      }
+    });
+    return context;
+  };
+
+
 
 }());
