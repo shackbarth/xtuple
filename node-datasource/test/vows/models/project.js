@@ -19,13 +19,13 @@
   var data = {};
   
   data.createHash = {
-    number: 'crud_test',
-    name: 'Test CRUD operations',
+    number: 'crud_project',
+    name: 'Test CRUD Project operations',
     dueDate: dueDate
   };
 
   data.updateHash = {
-    name: 'Test Update operation'
+    name: 'Test Update Project operation'
   };
 
   vows.describe('XM.Project CRUD test').addBatch({
@@ -81,10 +81,10 @@
         return data;
       },
       'Project Number is `CRUD_TEST`': function (data) {
-        assert.equal(data.model.get('number'), 'CRUD_TEST'); // Was capitalized!
+        assert.equal(data.model.get('number'), data.createHash.number.toUpperCase()); // Was capitalized!
       },
       'Project Name is `Test CRUD operations`': function (data) {
-        assert.equal(data.model.get('name'), 'Test CRUD operations');
+        assert.equal(data.model.get('name'), data.createHash.name);
       }
     }
   }).addBatch({
@@ -98,7 +98,7 @@
           assert.isNull(data.model.lastError);
         },
         'Project Name is "Test Update operation"': function (data) {
-          assert.equal(data.model.get('name'), 'Test Update operation');
+          assert.equal(data.model.get('name'), data.updateHash.name);
         },
         'Project Status is `READY_DIRTY`': function (data) {
           assert.equal(data.model.getStatusString(), 'READY_DIRTY');
