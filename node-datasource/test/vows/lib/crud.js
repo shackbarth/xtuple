@@ -206,6 +206,10 @@ var _ = require("underscore"),
     return context;
   };
 
+  /**
+    String all CRUD tests together so that simple models can be
+    tested with a single function
+   */
   var runAllCrud = exports.runAllCrud = function (data) {
     var context = {
       topic: function () {
