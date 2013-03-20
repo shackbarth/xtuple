@@ -212,7 +212,6 @@ white:true*/
     },
 
     inventoryUnitDidChange: function (model, value, options) {
-      if (this.isNotReady()) { return; }
       if (value) { this.set('priceUnit', value); }
     },
 
@@ -234,12 +233,13 @@ white:true*/
       }
     },
 
-    validateSave: function () {
+    validate: function () {
       var isSold = this.get('isSold'),
         productCategory = this.get('productCategory');
       if (isSold && (productCategory.id || -1) === -1) {
         return XT.Error.clone('xt2005');
       }
+      return XM.Document.prototype.validate.apply(this, arguments);
     }
 
   });

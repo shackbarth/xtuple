@@ -81,10 +81,11 @@ white:true*/
     // METHODS
     //
 
-    validateEdit: function (attributes) {
+    validate: function (attributes) {
       if (attributes.parent && attributes.parent.id === this.id) {
         return XT.Error.clone('xt2006');
       }
+      return XM.Document.prototype.validate.apply(this, arguments);
     }
 
   });

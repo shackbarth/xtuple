@@ -20,12 +20,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     the same. Notably, we have to massage the client-expected callback to fit into
     the backboney callback system of XT.dataSource.
    */
-  var createGlobalOptions = function (payload, globalUsername, callback) {
-    var options = JSON.parse(JSON.stringify(payload)); // clone
+  var createGlobalOptions = function (payload, globalUsername, callback, returnsModel) {
+    var options = JSON.parse(JSON.stringify(payload)), // clone
+      resp = returnsModel !== false ? 1 : 0;
 
     options.username = globalUsername;
-    options.success = function (resp) {
-      callback({data: resp});
+    options.success = function () {
+      callback({data: arguments[resp]});
     };
     options.error = function (model, err) {
       callback({isError: true, message: err});
@@ -69,9 +70,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Can be called by websockets, or the express route (below), or REST, etc.
    */
   var commitEngine = function (payload, session, callback) {
-    var organization,
-      query,
-      binaryField = payload.binaryField,
+    var binaryField = payload.binaryField,
       buffer,
       binaryData,
       options;
@@ -109,12 +108,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Can be called by websockets, or the express route (below), or REST, etc.
    */
   var dispatchEngine = function (payload, session, callback) {
-    var organization,
-      query,
-      options;
+    var options;
     if (payload && payload.databaseType === 'global') {
       // Run this query against the global database.
-      options = createGlobalOptions(payload, session.passport.user.id, callback);
+      options = createGlobalOptions(payload, session.passport.user.id, callback, false);
       XT.dataSource.dispatch(payload.className, payload.functionName, payload.parameters, options);
 
     } else {
@@ -129,14 +126,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Can be called by websockets, or the express route (below), or REST, etc.
    */
   var fetchEngine = function (payload, session, callback) {
-    var organization,
-      query,
-      options;
+    var options;
 
     if (payload && payload.databaseType === 'global') {
       // run this query against the global database
       options = createGlobalOptions(payload, session.passport.user.id, callback);
-      XT.dataSource.fetch(options);
+      XT.dataSource.fetch([], options);
 
     } else {
       // run this query against an instance database
@@ -150,14 +145,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Can be called by websockets, or the express route (below), or REST, etc.
    */
   var retrieveEngine = function (payload, session, callback) {
-    var organization,
-      query,
-      options;
+    var options;
 
     if (payload && payload.databaseType === 'global') {
       // run this query against the global database
       options = createGlobalOptions(payload, session.passport.user.id, callback);
-      XT.dataSource.retrieveRecord(payload.recordType, payload.id, options);
+      XT.dataSource.retrieveRecord(payload, options);
 
     } else {
       // run this query against an instance database
