@@ -235,9 +235,9 @@ white:true*/
                   if (!counter) { // Means we heard back from all requests
                     // Add 'em up
                     freight = XT.math.add(_.pluck(that.freightDetail, "total"), scale);
-                    this.off('change:freight', this.freightDidChange);
+                    that.off('change:freight', that.freightDidChange);
                     that.set("freight", freight);
-                    this.on('change:freight', this.freightDidChange);
+                    that.on('change:freight', that.freightDidChange);
 
                     // Now calculate tax
                     that.calculateFreightTax();
