@@ -1524,9 +1524,9 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
-            {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.PriorityPicker", attr: "priority"},
             {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
             {kind: "XV.DateWidget", attr: "dueDate"},

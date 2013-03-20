@@ -104,6 +104,8 @@ trailing:true white:true*/
     //
   
     extensions = [
+      {kind: "XV.AccountContactsBox", container: "panels",
+        attr: "contactRelations", parentAttr: "account"},
       {kind: "XV.AccountToDosBox", container: "panels",
         attr: "toDoRelations", parentAttr: "account"},
       {kind: "XV.AccountOpportunitiesBox", container: "panels",
@@ -113,6 +115,11 @@ trailing:true white:true*/
     ];
 
     XV.appendExtension("XV.CustomerWorkspace", extensions);
+    
+    XV.registerModelWorkspace("XM.CustomerContactRelation", "XV.ContactWorkspace");
+    XV.registerModelWorkspace("XM.CustomerIncidentRelation", "XV.IncidentWorkspace");
+    XV.registerModelWorkspace("XM.CustomerOpportunityRelation", "XV.OpportunityWorkspace");
+    XV.registerModelWorkspace("XM.CustomerToDoRelation", "XV.ToDoWorkspace");
 
     // ..........................................................
     // INCIDENT

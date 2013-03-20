@@ -65,7 +65,7 @@ white:true*/
       return this;
     },
 
-    validateEdit: function (attributes, options) {
+    validate: function (attributes, options) {
       var settings = XT.session.getSettings(),
         strict = settings.get('StrictAddressCountry'),
         country = attributes.country,
@@ -80,6 +80,7 @@ white:true*/
           return XT.Error.clone('xt2008');
         }
       }
+      return XM.Document.prototype.validate.apply(this, arguments);
     }
 
   };
@@ -284,7 +285,7 @@ white:true*/
     // METHODS
     //
 
-    validateEdit: function (attributes) {
+    validate: function (attributes) {
       var params = {};
 
       if (attributes.abbreviation &&
@@ -300,6 +301,7 @@ white:true*/
         params.length = "3";
         return XT.Error.clone('xt1006', { params: params });
       }
+      return XM.Document.prototype.validate.apply(this, arguments);
     }
 
   });
