@@ -315,7 +315,7 @@ trailing:true white:true*/
   XV.registerModelList("XM.CustomerRelation", "XV.CustomerList");
 
   // ..........................................................
-  // CUSTOMERPROSPECT
+  // CUSTOMER PROSPECT
   //
 
   enyo.kind({
