@@ -50,6 +50,19 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // COST CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.CostCategoryPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.costCategories",
+    orderBy: [
+      {attribute: 'code'}
+    ]
+  });
+
+  // ..........................................................
   // COUNTRY
   //
 
@@ -228,6 +241,20 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // PLANNER CODE
+  //
+
+  enyo.kind({
+    name: "XV.PlannerCodePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.plannerCodes",
+    orderBy: [
+      {attribute: 'name'}
+    ]
+  });
+
+
+  // ..........................................................
   // PRIORITY
   //
 
@@ -314,6 +341,19 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.shipZones",
     orderBy: [
       {attribute: 'name'}
+    ]
+  });
+
+  // ..........................................................
+  // PLANNER CODE
+  //
+
+  enyo.kind({
+    name: "XV.SitePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.sites",
+    orderBy: [
+      {attribute: 'code'}
     ]
   });
 

@@ -848,10 +848,10 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.ItemWidget", attr: "item"},
-            //{kind: "XV.SiteWidget", attr: "site"},
+            {kind: "XV.SitePicker", attr: "site"},
             {kind: "XV.CheckboxWidget", attr: "isActive"},
-            //{kind: "XV.PlannerCodePicker", attr: "plannerCode"},
-            //{kind: "XV.CostCategoryPicker", attr: "costCategory"},
+            {kind: "XV.PlannerCodePicker", attr: "plannerCode"},
+            {kind: "XV.CostCategoryPicker", attr: "costCategory"},
             {kind: "XV.CheckboxWidget", attr: "isSold"},
             {kind: "XV.NumberWidget", attr: "soldRanking"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
