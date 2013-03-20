@@ -25,8 +25,10 @@ white:true*/
     @extends XM.Document
   */
   XM.Site = XM.Document.extend(/** @lends XM.Site.prototype */{
-    // TODO: this needs to be fleshed out
-    recordType: 'XM.Site'
+
+    recordType: 'XM.Site',
+
+    documentKey: 'code'
 
   });
 
