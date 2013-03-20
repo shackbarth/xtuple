@@ -1171,7 +1171,6 @@ trailing:true white:true*/
             {kind: "XV.DateWidget", attr: "expireDate"},
             {kind: "XV.InputWidget", attr: "getQuoteStatusString",
               label: "_status".loc()},
-            {kind: "XV.SitePicker", attr: "site"},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
             {kind: "XV.CustomerProspectWidget", attr: "customer",
               showAddress: true, label: "_customer".loc(),
@@ -1197,19 +1196,20 @@ trailing:true white:true*/
                 city: "shiptoCity", state: "shiptoState",
                 postalCode: "shiptoPostalCode", country: "shiptoCountry"}
             },
+            {kind: "onyx.GroupboxHeader", content: "_shipping".loc()},
+            {kind: "XV.SitePicker", attr: "site"},
+            {kind: "XV.DateWidget", attr: "packDate"},
+            {kind: "XV.InputWidget", attr: "fob"},
+            {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber",
+             label: "_custPO".loc()},
+            {kind: "XV.ShipViaCombobox", attr: "shipVia"},
+            {kind: "XV.ShipZonePicker", attr: "shipZone"},
             {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
             {kind: "XV.TermsPicker", attr: "terms"},
             {kind: "XV.SalesRepPicker", attr: "salesRep"},
             {kind: "XV.PercentWidget", attr: "commission"},
             {kind: "XV.TaxZonePicker", attr: "taxZone"},
             {kind: "XV.SaleTypePicker", attr: "saleType"},
-            {kind: "onyx.GroupboxHeader", content: "_shipping".loc()},
-            {kind: "XV.DateWidget", attr: "packDate"},
-            {kind: "XV.InputWidget", attr: "fob"},
-            {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber",
-              label: "_custPO".loc()},
-            {kind: "XV.ShipViaCombobox", attr: "shipVia"},
-            {kind: "XV.ShipZonePicker", attr: "shipZone"},
             {kind: "onyx.GroupboxHeader", content: "_orderNotes".loc()},
             {kind: "XV.TextArea", attr: "orderNotes", fit: true},
             {kind: "onyx.GroupboxHeader", content: "_shippingNotes".loc()},
@@ -1305,13 +1305,15 @@ trailing:true white:true*/
               filterRestrictionType: "item.isSold",
               filterRestriction: true},
             {kind: "XV.QuantityWidget", attr: "quantity"},
-            {kind: "XV.UnitPicker", name: "quantityUnitPicker", attr: "quantityUnit"},
+            {kind: "XV.UnitPicker", name: "quantityUnitPicker",
+              attr: "quantityUnit"},
             {kind: "XV.PercentWidget", name: "discount", attr: "discount"},
             {kind: "XV.MoneyWidget", attr:
               {amount: "price", currency: "quote.currency"},
               label: "_price".loc(), currencyDisabled: true,
               effective: "quote.quoteDate", scale: XT.SALES_PRICE_SCALE},
-            {kind: "XV.UnitPicker", name: "priceUnitPicker", attr: "priceUnit"},
+            {kind: "XV.UnitPicker", name: "priceUnitPicker",
+              attr: "priceUnit"},
             {kind: "XV.MoneyWidget", attr:
               {amount: "extendedPrice", currency: "quote.currency"},
               label: "_extendedPrice".loc(), currencyDisabled: true,
@@ -1319,7 +1321,8 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_delivery".loc()},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
             {kind: "XV.DateWidget", attr: "promiseDate", showing: false},
-            {kind: "XV.QuoteLineCharacteristicsWidget", attr: "characteristics"}
+            {kind: "XV.QuoteLineCharacteristicsWidget",
+              attr: "characteristics"}
           ]}
         ]},
         {kind: "XV.Groupbox", name: "detailsPanel", title: "_detail".loc(),
@@ -1354,6 +1357,7 @@ trailing:true white:true*/
      */
     attributesChanged: function (model, options) {
       this.inherited(arguments);
+      var site = model.getValue("quote.site");
 
       if (model.isReady()) {
         // clone or else bespokeFilterChanged never gets run
@@ -1363,20 +1367,8 @@ trailing:true white:true*/
         bespokeFilter.shiptoId = model.getValue("quote.shipto.id") || null;
         bespokeFilter.effectiveDate = model.getValue("priceAsOfDate");
         this.$.itemSiteWidget.setBespokeFilter(bespokeFilter);
-        if (model.getValue("quote.site")) {
-          this.$.itemSiteWidget.setDefaultSite(model.getValue("quote.site"));
-        }
+        this.$.itemSiteWidget.setDefaultSite(site);
 
-        // XXX there must be a better place to bind these selling units
-        var sellingUnits = this.value && this.value.getValue("sellingUnits");
-        if (sellingUnits) {
-          sellingUnits.on("add", this.setSellingUnits, this);
-          sellingUnits.on("remove", this.setSellingUnits, this);
-          if (model.getStatus() === XM.Model.READY_CLEAN) {
-            // kick it off for the initial drilldown
-            this.setSellingUnits();
-          }
-        }
         var pm = model.get("priceMode");
         if (pm === "N" || pm === "D" || pm === "P") { // discount
           this.$.discount.setLabel("_discount".loc());
@@ -1390,24 +1382,14 @@ trailing:true white:true*/
       var promiseDate = this.findControl("promiseDate");
       promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
     },
-    /**
-      Remove bindings
-     */
-    destroy: function () {
-      var sellingUnits = this.value.getValue("sellingUnits");
-      if (sellingUnits) {
-        sellingUnits.off("add", this.setSellingUnits, this);
-        sellingUnits.off("remove", this.setSellingUnits, this);
-      }
-
+    valueChanged: function () {
       this.inherited(arguments);
-    },
-    setSellingUnits: function () {
-      var units = _.map(this.getValue().getValue("sellingUnits").models, function (model) {
-        return model.get("id");
-      });
-      this.$.quantityUnitPicker.setAllowedUnits(units);
-      this.$.priceUnitPicker.setAllowedUnits(units);
+      var model = this.getValue(),
+        sellingUnits = model ? model.sellingUnits : false;
+      if (sellingUnits) {
+        this.$.quantityUnitPicker.setCollection(sellingUnits);
+        this.$.priceUnitPicker.setCollection(sellingUnits);
+      }
     }
   });
 
