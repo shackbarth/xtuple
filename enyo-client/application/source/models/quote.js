@@ -7,9 +7,26 @@ white:true*/
   "use strict";
 
   /**
+    Mixin for shared quote function.
+  */
+  XM.QuoteMixin = {
+    /**
+    Returns quote status as a localized string.
+
+    @returns {String}
+    */
+    getQuoteStatusString: function () {
+      var K = XM.Quote,
+        status = this.get("status");
+      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
+    }
+  };
+
+  /**
     @class
 
     @extends XM.Document
+    @extends XM.QuoteMixin
   */
   XM.Quote = XM.Document.extend({
     /** @scope XM.Quote.prototype */
@@ -487,17 +504,6 @@ white:true*/
     },
 
     /**
-    Returns quote status as a localized string.
-
-    @returns {String}
-    */
-    getQuoteStatusString: function () {
-      var K = this.getClass(),
-        status = this.get("status");
-      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
-    },
-
-    /**
       If the user changed the freight determine whether they want the automatic calculation
       turned on or off as a result of their change. This function will trigger a `notify` call
       asking the question, which must be answered via the attached callback to complete the process.
@@ -844,6 +850,7 @@ white:true*/
   // CLASS METHODS
   //
 
+  XM.Quote = XM.Quote.extend(XM.QuoteMixin);
   _.extend(XM.Quote, /** @lends XM.QuoteLine# */{
 
     // ..........................................................
@@ -1747,20 +1754,11 @@ white:true*/
 
     recordType: 'XM.QuoteListItem',
 
-    editableModel: 'XM.Quote',
-
-    /**
-    Returns quote status as a localized string.
-
-    @returns {String}
-    */
-    getQuoteStatusString: function () {
-      var K = this.getClass(),
-        status = this.get("status");
-      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
-    }
+    editableModel: 'XM.Quote'
 
   });
+  
+  XM.QuoteListItem = XM.QuoteListItem.extend(XM.QuoteMixin);
 
   /**
     @class

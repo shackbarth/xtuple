@@ -980,16 +980,18 @@ trailing:true white:true*/
               {kind: "XV.ListAttr", attr: "number", isKey: true,
                 fit: true},
               {kind: "XV.ListAttr", attr: "getQuoteStatusString",
-                classes: "right"}
+                style: "padding-left: 24px"},
+              {kind: "XV.ListAttr", attr: "expireDate",
+                formatter: "formatExpireDate", classes: "right",
+                placeholder: "_noExpiration".loc()}
             ]},
-            {kind: "XV.ListAttr", attr: "customer.name"}
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "customer.name"},
+              {kind: "XV.ListAttr", attr: "total", formatter: "formatPrice",
+                classes: "right"}
+            ]}
           ]},
           {kind: "XV.ListColumn", classes: "second", components: [
-            {kind: "XV.ListAttr", attr: "expireDate",
-              formatter: "formatExpireDate"},
-            {kind: "XV.ListAttr", attr: "total", formatter: "formatPrice"}
-          ]},
-          {kind: "XV.ListColumn", classes: "last", components: [
             {kind: "XV.ListAttr", attr: "shiptoName", classes: "italic"},
             {kind: "XV.ListAttr", attr: "shiptoAddress1.formatShort"}
           ]},
