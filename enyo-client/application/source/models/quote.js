@@ -528,7 +528,7 @@ white:true*/
       }
       this.notify(message, options);
     },
-    
+
     fetch: function (options) {
       // Need to fetch selling units of measure after a regular fetch
       var that = this;
@@ -579,6 +579,15 @@ white:true*/
         lineItem.calculateTax();
       });
       this.calculateFreightTax();
+    },
+
+    /**
+      Release the current quote number. Need a special over-ride here because of peculiar
+      behavior of quote numbering different from all other generated numbers.
+    */
+    releaseNumber: function () {
+      this.dispatch('XM.Quote', 'releaseNumber', this.get("number"));
+      return this;
     },
 
     scheduleDateDidChange: function () {
@@ -739,7 +748,7 @@ white:true*/
       if (!lineItems.length) {
         return XT.Error.clone('xt2012');
       }
-      
+
       return XM.Document.prototype.validate.apply(this, arguments);
     },
 
@@ -1179,21 +1188,21 @@ white:true*/
       }
       return this;
     },
-    
+
     /**
       Updates `sellingUnits` array from server
-      
+
       @returns {Object} Receiver
     */
     fetchSellingUnits: function () {
       var that = this,
         item = this.getValue("itemSite.item"),
         options = {};
-        
+
       this.sellingUnits.reset();
-      
+
       if (!item) { return this; }
-      
+
       // Fetch and update selling units
       options.success = function (resp) {
         // Resolve and add each id found
@@ -1326,15 +1335,15 @@ white:true*/
         inventoryUnit = item ? this.getValue("inventoryUnit") : false,
         that = this,
         options = {};
-    
+
       if (!inventoryUnit || !quantityUnit || !priceUnit) { return; }
-      
+
       if (inventoryUnit.id === priceUnit.id) {
         this.set("priceUnitRatio", 1);
       } else {
         // Unset price ratio so we can't save until we get an answer
         that.unset("priceUnitRatio");
-        
+
         // Lookup unit of measure ratio
         options.success = function (ratio) {
           that.set("priceUnitRatio", ratio);
@@ -1466,7 +1475,7 @@ white:true*/
       if (!this._unitIsFractional && Math.round(quantity) !== quantity) {
         return XT.Error.clone('xt2014');
       }
-      
+
       return XM.Document.prototype.validate.apply(this, arguments);
     },
 
@@ -1739,7 +1748,7 @@ white:true*/
     recordType: 'XM.QuoteListItem',
 
     editableModel: 'XM.Quote',
-    
+
     /**
     Returns quote status as a localized string.
 
