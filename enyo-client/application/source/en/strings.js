@@ -338,6 +338,8 @@ var lang = XT.stringsFor("en_US", {
   "_percent": "Percent",
   "_period": "Period",
   "_phone": "Phone",
+  "_plannerCode": "Planner Code",
+  "_plannerCodes": "Planner Codes",
   "_pleaseLogin": "Please Login",
   "_policy": "Policy",
   "_postbooks": "PostBooks",

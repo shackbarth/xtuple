@@ -741,6 +741,35 @@ trailing:true white:true*/
   XV.registerModelList("XM.OpportunityRelation", "XV.OpportunityList");
 
   // ..........................................................
+  // PLANNER CODE
+  //
+
+  enyo.kind({
+    name: "XV.PlannerCodeList",
+    kind: "XV.List",
+    label: "_plannerCodes".loc(),
+    collection: "XM.PlannerCodeCollection",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    parameterWidget: "XV.PlannerCodeListParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "code", isKey: true},
+              {kind: "XV.ListAttr", attr: "name", fit: true, classes: "right"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.PlannerCode", "XV.PlannerCodeList");
+
+  // ..........................................................
   // PRODUCT CATEGORY
   //
 
