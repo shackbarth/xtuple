@@ -20,7 +20,7 @@ var XVOWS = XVOWS || {};
     number: "MIKECUST",
     customerType: 19,
     terms: 42,
-    salesRep: 29,
+    //salesRep: must be fetched
     backorder: true,
     partialShip: true,
     discount: 0,
@@ -59,6 +59,17 @@ var XVOWS = XVOWS || {};
     'CREATE ': crud.create(data, {
       '-> Set values': {
         topic: function (data) {
+          var that = this,
+            fetchOptions = {},
+            rep = new XM.SalesRep();
+          fetchOptions.id = 30;
+          fetchOptions.success = function () {
+            data.model.set('salesRep', rep);
+          };
+          fetchOptions.error = function () {
+            that.callback("Error fetching a SalesRep");
+          };
+          rep.fetch(fetchOptions);
           data.model.set(data.createHash);
           return data;
         },

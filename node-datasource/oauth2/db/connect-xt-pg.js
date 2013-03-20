@@ -102,7 +102,7 @@ module.exports = function (connect) {
 
       // fetchOptions.username = GLOBAL_USERNAME; // TODO
       fetchOptions.username = 'node';
-      XT.dataSource.fetch(fetchOptions);
+      XT.dataSource.fetch(null, fetchOptions);
     };
 
     // Loops through the sessions, find the ones that are expired and sends that session data
@@ -298,7 +298,7 @@ module.exports = function (connect) {
 
         fetchOptions.id = sid;
 
-        fetchOptions.success = function (model) {
+        fetchOptions.success = function (model, resp) {
           // Fetch found this session, update it and save.
           model.set("session", sess);
 

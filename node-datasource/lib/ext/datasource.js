@@ -14,7 +14,7 @@ white:true*/
     @param {Object} query
     @param {Object} options
     */
-    fetch: function (options) {
+    fetch: function (collection, options) {
       options = options ? _.clone(options) : {};
       var that = this,
         payload = {},
@@ -38,7 +38,12 @@ white:true*/
           // Handle success
           dataHash = JSON.parse(response.rows[0].fetch);
           if (options && options.success) {
-            options.success.call(that, dataHash);
+            if (collection) {
+              options.success.call(that, collection, dataHash, options);
+            // Support for legacy code
+            } else {
+              options.success.call(that, dataHash);
+            }
           }
         };
 
@@ -91,7 +96,7 @@ white:true*/
     @param {Number} id
     @param {Object} options
     */
-    retrieveRecord: function (recordType, id, options) {
+    retrieveRecord: function (model, options) {
       var that = this,
         payload = {},
         conn = X.options.globalDatabase,
@@ -121,12 +126,12 @@ white:true*/
 
           // Handle success
           if (options && options.success) {
-            options.success.call(that, dataHash);
+            options.success.call(that, model, dataHash, options);
           }
         };
 
-      payload.recordType = recordType;
-      payload.id = id;
+      payload.recordType = model.recordType;
+      payload.id = options.id || model.id;
       payload.options = { context: options.context };
       payload.username = options.username;
       payload = JSON.stringify(payload);
@@ -163,7 +168,7 @@ white:true*/
           // Handle ok or complete hash response
           dataHash = JSON.parse(response.rows[0].commit_record);
           if (options && options.success) {
-            options.success.call(that, dataHash);
+            options.success.call(that, model, dataHash, options);
           }
         };
 
@@ -218,7 +223,7 @@ white:true*/
             } catch (err) {
               dataHash = response.rows[0].dispatch;
             }
-            options.success.call(that, dataHash);
+            options.success.call(that, dataHash, options);
           }
         };
       payload = JSON.stringify(payload);
