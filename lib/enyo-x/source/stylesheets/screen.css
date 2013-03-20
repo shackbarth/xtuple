@@ -945,3 +945,15 @@ body {
 .xv-toolbar-moved {
   width: 220px;
 }
+.xv-totals-panel {
+  background: #ffffff;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background-color: #ffffff;
+}
+.xv-totals-panel .onyx-input,
+.xv-totals-panel .onyx-button {
+  font-size: 14px;
+}
