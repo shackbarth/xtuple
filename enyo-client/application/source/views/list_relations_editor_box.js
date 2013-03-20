@@ -186,14 +186,16 @@ trailing:true white:true*/
           filterRestrictionType: "item.isSold",
           filterRestriction: true},
         {kind: "XV.QuantityWidget", attr: "quantity"},
-        {kind: "XV.UnitPicker", attr: "quantityUnit"},
+        {kind: "XV.UnitPicker", attr: "quantityUnit",
+          name: "quantityUnitPicker"},
         {kind: "XV.PercentWidget", name: "discount", attr: "discount",
           label: "_discount".loc()},
         {kind: "XV.MoneyWidget", attr:
           {amount: "price", currency: "quote.currency"},
           label: "_price".loc(), currencyDisabled: true,
           effective: "quote.quoteDate", scale: XT.SALES_PRICE_SCALE},
-        {kind: "XV.UnitPicker", attr: "priceUnit"},
+        {kind: "XV.UnitPicker", attr: "priceUnit",
+          name: "priceUnitPicker"},
         {kind: "XV.MoneyWidget", attr:
           {amount: "extendedPrice", currency: "quote.currency"},
           label: "_extendedPrice".loc(), currencyDisabled: true,
@@ -220,6 +222,15 @@ trailing:true white:true*/
         this.$.discount.setLabel("_discount".loc());
       } else { // markup
         this.$.discount.setLabel("_markup".loc());
+      }
+    },
+    valueChanged: function () {
+      this.inherited(arguments);
+      var model = this.getValue(),
+        sellingUnits = model ? model.sellingUnits : false;
+      if (sellingUnits) {
+        this.$.quantityUnitPicker.setCollection(sellingUnits);
+        this.$.priceUnitPicker.setCollection(sellingUnits);
       }
     }
   });

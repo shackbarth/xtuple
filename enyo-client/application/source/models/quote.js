@@ -521,6 +521,19 @@ white:true*/
       }
       this.notify(message, options);
     },
+    
+    fetch: function (options) {
+      // Need to fetch selling units of measure after a regular fetch
+      var that = this;
+      options = options ? _.clone(options) : {};
+      options.success = function () {
+        var lineItems = that.get("lineItems").models;
+        _.each(lineItems, function (line) {
+          line.fetchSellingUnits();
+        });
+      };
+      XM.Document.prototype.fetch.call(this, options);
+    },
 
     lineItemsDidChange: function () {
       var lineItems = this.get("lineItems");
@@ -1156,6 +1169,32 @@ white:true*/
       }
       return this;
     },
+    
+    /**
+      Updates `sellingUnits` array from server
+      
+      @returns {Object} Receiver
+    */
+    fetchSellingUnits: function () {
+      var that = this,
+        item = this.getValue("itemSite.item"),
+        options = {};
+        
+      this.sellingUnits.reset();
+      
+      if (!item) { return this; }
+      
+      // Fetch and update selling units
+      options.success = function (resp) {
+        // Resolve and add each id found
+        _.each(resp, function (id) {
+          var unit = XM.units.get(id);
+          that.sellingUnits.add(unit);
+        });
+      };
+      item.sellingUnits(options);
+      return this;
+    },
 
     itemSiteDidChange: function () {
       var parent = this.getParent(),
@@ -1163,31 +1202,18 @@ white:true*/
         item = this.getValue("itemSite.item"),
         characteristics = this.get("characteristics"),
         that = this,
-        unitOptions = {},
-        taxOptions = {},
+        options = {},
         itemCharAttrs,
         charTypes,
         len,
         i;
-
-      // Fetch and update selling units
-      if (item) {
-        unitOptions.success = function (resp) {
-          // Resolve and add each id found
-          _.each(resp, function (id) {
-            var unit = XM.units.get(id);
-            that.sellingUnits.add(unit);
-          });
-        };
-        item.sellingUnits(unitOptions);
-      }
 
       // Reset values
       this.unset("quantityUnit");
       this.unset("priceUnit");
       this.unset("priceUnitRatio");
       this.unset("taxType");
-      this.sellingUnits.reset();
+      this.fetchSellingUnits();
 
       // Destroy old characteristics
       len = characteristics.length;
@@ -1202,22 +1228,8 @@ white:true*/
       this.set("priceUnit", item.get("priceUnit"));
       this.set("priceUnitRatio", item.get("priceUnitRatio"));
 
-      // Fetch and update selling units
-      unitOptions.success = function (resp) {
-        // Resolve and add each id found
-        _.each(resp, function (id) {
-          var unit = XM.units.get(id);
-          that.sellingUnits.add(unit);
-        });
-
-        // Set the item default selections
-        that.set("quantityUnit", item.get("inventoryUnit"));
-        that.set("priceUnit", item.get("priceUnit"));
-      };
-      item.sellingUnits(unitOptions);
-
       // Fetch and update tax type
-      taxOptions.success = function (id) {
+      options.success = function (id) {
         var taxType = XM.taxTypes.get(id);
         if (taxType) {
           that.set("taxType", taxType);
@@ -1225,7 +1237,7 @@ white:true*/
           that.unset("taxType");
         }
       };
-      item.taxType(taxZone, taxOptions);
+      item.taxType(taxZone, options);
 
       // Set sort for characteristics
       if (!characteristics.comparator) {
