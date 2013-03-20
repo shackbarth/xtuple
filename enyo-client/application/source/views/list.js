@@ -1362,6 +1362,12 @@ trailing:true white:true*/
   });
 
   enyo.kind({
+    name: "XV.SiteTypeList",
+    kind: "XV.NameDescriptionList",
+    collection: "XM.SiteTypeCollection"
+  });
+
+  enyo.kind({
     name: "XV.UserAccountRoleList",
     kind: "XV.NameDescriptionList",
     collection: "XM.UserAccountRoleCollection"

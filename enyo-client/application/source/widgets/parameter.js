@@ -616,6 +616,19 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // SITE TYPE
+  //
+
+  enyo.kind({
+    name: "XV.SiteTypeListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_siteType".loc()},
+      {name: "name", label: "_name".loc(), attr: "name"}
+    ]
+  });
+
+  // ..........................................................
   // TO DO
   //
 

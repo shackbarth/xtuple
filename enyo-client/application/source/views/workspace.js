@@ -1566,6 +1566,19 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.SiteListItem", "XV.SiteWorkspace");
 
   // ..........................................................
+  // SITE TYPE
+  //
+
+  enyo.kind({
+    name: "XV.SiteTypeWorkspace",
+    kind: "XV.Workspace",
+    title: "_siteType".loc(),
+    model: "XM.SiteType"
+  });
+
+  XV.registerModelWorkspace("XM.SiteType", "XV.SiteTypeWorkspace");
+
+  // ..........................................................
   // STATE
   //
 
