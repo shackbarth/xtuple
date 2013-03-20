@@ -57,6 +57,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.CostCategoryPicker",
     kind: "XV.PickerWidget",
     collection: "XM.costCategories",
+    nameAttribute: "code",
     orderBy: [
       {attribute: 'code'}
     ]
@@ -461,6 +462,19 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.sites",
     orderBy: [
       {attribute: 'code'}
+    ]
+  });
+
+  // ..........................................................
+  // SITE TYPE
+  //
+
+  enyo.kind({
+    name: "XV.SiteTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.siteTypes",
+    orderBy: [
+      {attribute: 'name'}
     ]
   });
 

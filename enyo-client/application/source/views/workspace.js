@@ -858,7 +858,7 @@ trailing:true white:true*/
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
         ]},
-        //{kind: "XV.ItemSiteCommentBox", attr: "comments"}
+        {kind: "XV.ItemSiteCommentBox", attr: "comments"}
       ]}
     ]
   });
@@ -1546,7 +1546,7 @@ trailing:true white:true*/
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "code"},
             {kind: "XV.CheckboxWidget", attr: "isActive"},
-            // ???{kind: "XV.SiteTypePicker", attr: "siteType"},
+            {kind: "XV.SiteTypePicker", attr: "siteType"},
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.ContactWidget", attr: "contact"},
             {kind: "XV.AddressWidget", attr: "address"},

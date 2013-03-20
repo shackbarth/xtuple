@@ -51,6 +51,21 @@ white:true*/
         XM.saleTypes.fetch(options);
       }
     });
+
+    XT.StartupTasks.push({
+      taskName: "loadSiteTypes",
+      task: function () {
+        var options = {
+            success: _.bind(this.didComplete, this)
+          };
+        options.query = {};
+        options.query.orderBy = [
+          {attribute: 'name'}
+        ];
+        XM.siteTypes = new XM.SiteTypeCollection();
+        XM.siteTypes.fetch(options);
+      }
+    });
   };
 
 }());

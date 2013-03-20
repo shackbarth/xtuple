@@ -50,8 +50,18 @@ white:true*/
       "id",
       "plannerCode",
       "costCategory"
-    ]
+    ],
 
+    /**
+      Users must not be able to set the site except for new itemsites
+     */
+    statusDidChange: function () {
+      var K = isReadOnly = this.getStatus() !== XM.Model.READY_NEW;
+      this.setReadOnly('site', isReadOnly);
+    }
+
+    // TODO: if the user selects an already-used item and site combination, he
+    // gets an error from the database
   });
 
   /**
