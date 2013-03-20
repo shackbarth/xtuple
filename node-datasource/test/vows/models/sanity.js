@@ -20,23 +20,34 @@ var XVOWS = XVOWS || {};
       topic: function () {
         zombieAuth.loadApp(this.callback);
       },
-      'we take the XM namespace': {
+      'we look at the XM namespace': {
         topic: function () {
           return XM;
         },
         'all models should contain their required attributes': function (topic) {
+          var columns,
+            model,
+            errors = null;
+
           _.each(topic, function (value, key) {
             if (key.substring(0, 1) === key.toUpperCase().substring(0, 1) &&
                 typeof value === 'function' &&
                 XT.session.schema.get(key)) {
-              var columns = _.map(XT.session.schema.get(key).columns, function (column) {
+              columns = _.map(XT.session.schema.get(key).columns, function (column) {
                 return column.name;
               });
-              _.each(value.prototype.requiredAttributes, function (attr) {
-                assert.ok(_.indexOf(columns, attr) >= 0);
+
+              model = new XM[key]();
+              _.each(model.requiredAttributes, function (attr) {
+
+                if (_.indexOf(columns, attr) < 0) {
+                  errors = errors || [];
+                  errors.push("Required field " + attr + " is not in model " + key);
+                }
               });
             }
           });
+          assert.isNull(errors);
         }
       }
     }
