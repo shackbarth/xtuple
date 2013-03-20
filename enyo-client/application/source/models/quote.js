@@ -483,6 +483,27 @@ white:true*/
         unsetBilltoContact();
       }
     },
+    
+    /**
+      Fetch selling units of measure after a regular fetch
+      and also silence `add` and `remove` events.
+    */
+    fetch: function (options) {
+      var that = this;
+      options = options ? _.clone(options) : {};
+      this.off('add:lineItems remove:lineItems', this.lineItemsDidChange);
+      this.off('add:lineItems remove:lineItems', this.calculateTotals);
+      options.success = function () {
+        var lineItems = that.get("lineItems").models;
+        _.each(lineItems, function (line) {
+          line.fetchSellingUnits();
+        });
+
+        that.on('add:lineItems remove:lineItems', that.lineItemsDidChange);
+        that.on('add:lineItems remove:lineItems', that.calculateTotals);
+      };
+      return XM.Document.prototype.fetch.call(this, options);
+    },
 
     /**
       Fetch the next quote number. Need a special over-ride here because of peculiar
@@ -533,19 +554,6 @@ white:true*/
         return;
       }
       this.notify(message, options);
-    },
-
-    fetch: function (options) {
-      // Need to fetch selling units of measure after a regular fetch
-      var that = this;
-      options = options ? _.clone(options) : {};
-      options.success = function () {
-        var lineItems = that.get("lineItems").models;
-        _.each(lineItems, function (line) {
-          line.fetchSellingUnits();
-        });
-      };
-      XM.Document.prototype.fetch.call(this, options);
     },
 
     lineItemsDidChange: function () {
@@ -1757,7 +1765,7 @@ white:true*/
     editableModel: 'XM.Quote'
 
   });
-  
+
   XM.QuoteListItem = XM.QuoteListItem.extend(XM.QuoteMixin);
 
   /**
