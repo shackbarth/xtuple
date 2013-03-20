@@ -235,7 +235,9 @@ white:true*/
                   if (!counter) { // Means we heard back from all requests
                     // Add 'em up
                     freight = XT.math.add(_.pluck(that.freightDetail, "total"), scale);
-                    that.set("freight", freight, {silent: true});
+                    that.off('change:freight', that.freightDidChange);
+                    that.set("freight", freight);
+                    that.on('change:freight', that.freightDidChange);
 
                     // Now calculate tax
                     that.calculateFreightTax();
@@ -299,7 +301,9 @@ white:true*/
             scheduleDate = lineSchedDate;
           }
         });
-        this.set("scheduleDate", scheduleDate, {silent: true});
+        this.off('change:scheduleDate', this.scheduleDateDidChange);
+        this.set("scheduleDate", scheduleDate);
+        this.on('change:scheduleDate', this.scheduleDateDidChange);
       }
       return this;
     },
@@ -346,6 +350,7 @@ white:true*/
         isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : false,
         billtoContact = customer ? customer.get("billingContact") || customer.get("contact") : false,
         billtoAddress = billtoContact ? billtoContact.get("address") : false,
+        defaultShipto = customer.get("defaultShipto"),
         billtoAttrs,
         that = this,
         unsetBilltoAddress = function () {
@@ -398,7 +403,7 @@ white:true*/
           shipVia: customer.get("shipVia"),
           site: customer.get("preferredSite"),
           currency: customer.get("currency"),
-          shipto: customer.get("shipto")
+          shipto: defaultShipto ? defaultShipto.attributes : undefined
         };
         if (billtoContact) {
           _.extend(billtoAttrs, {
@@ -508,7 +513,9 @@ white:true*/
         if (answer) {
           that.set("calculateFreight", !calculateFreight);
         } else {
-          that.set("freight", that.previous("freight"), {silent: true});
+          that.off('change:freight', that.freightDidChange);
+          that.set("freight", that.previous("freight"));
+          that.on('change:freight', that.freightDidChange);
         }
       };
       if (calculateFreight) {
@@ -520,6 +527,19 @@ white:true*/
         return;
       }
       this.notify(message, options);
+    },
+
+    fetch: function (options) {
+      // Need to fetch selling units of measure after a regular fetch
+      var that = this;
+      options = options ? _.clone(options) : {};
+      options.success = function () {
+        var lineItems = that.get("lineItems").models;
+        _.each(lineItems, function (line) {
+          line.fetchSellingUnits();
+        });
+      };
+      XM.Document.prototype.fetch.call(this, options);
     },
 
     lineItemsDidChange: function () {
@@ -536,7 +556,8 @@ white:true*/
     */
     recalculatePrices: function () {
       var that = this,
-        msg = "_recalcuateAll?".loc(),
+        lineItems = this.get("lineItems"),
+        msg = "_recalculateAll?".loc(),
         options = {
           callback: function (answer) {
             if (answer) {
@@ -547,7 +568,7 @@ white:true*/
             }
           }
         };
-      this.notify(msg, options);
+      if (lineItems.length) { this.notify(msg, options); }
     },
 
     /**
@@ -558,6 +579,15 @@ white:true*/
         lineItem.calculateTax();
       });
       this.calculateFreightTax();
+    },
+
+    /**
+      Release the current quote number. Need a special over-ride here because of peculiar
+      behavior of quote numbering different from all other generated numbers.
+    */
+    releaseNumber: function () {
+      this.dispatch('XM.Quote', 'releaseNumber', this.get("number"));
+      return this;
     },
 
     scheduleDateDidChange: function () {
@@ -675,7 +705,9 @@ white:true*/
           shiptoCountry: shiptoAddress.getValue("country")
         });
       }
-      this.set(shiptoAttrs, {silent: true});
+      this.off(this.shipAddressEvents, this.shiptoAddressDidChange);
+      this.set(shiptoAttrs);
+      this.on(this.shipAddressEvents, this.shiptoAddressDidChange);
       this.recalculatePrices();
     },
 
@@ -716,7 +748,7 @@ white:true*/
       if (!lineItems.length) {
         return XT.Error.clone('xt2012');
       }
-      
+
       return XM.Document.prototype.validate.apply(this, arguments);
     },
 
@@ -1157,37 +1189,50 @@ white:true*/
       return this;
     },
 
+    /**
+      Updates `sellingUnits` array from server
+
+      @returns {Object} Receiver
+    */
+    fetchSellingUnits: function () {
+      var that = this,
+        item = this.getValue("itemSite.item"),
+        options = {};
+
+      this.sellingUnits.reset();
+
+      if (!item) { return this; }
+
+      // Fetch and update selling units
+      options.success = function (resp) {
+        // Resolve and add each id found
+        _.each(resp, function (id) {
+          var unit = XM.units.get(id);
+          that.sellingUnits.add(unit);
+        });
+      };
+      item.sellingUnits(options);
+      return this;
+    },
+
     itemSiteDidChange: function () {
       var parent = this.getParent(),
         taxZone = parent ? parent.get("taxZone") : undefined,
         item = this.getValue("itemSite.item"),
         characteristics = this.get("characteristics"),
         that = this,
-        unitOptions = {},
-        taxOptions = {},
+        options = {},
         itemCharAttrs,
         charTypes,
         len,
         i;
-
-      // Fetch and update selling units
-      if (item) {
-        unitOptions.success = function (resp) {
-          // Resolve and add each id found
-          _.each(resp, function (id) {
-            var unit = XM.units.get(id);
-            that.sellingUnits.add(unit);
-          });
-        };
-        item.sellingUnits(unitOptions);
-      }
 
       // Reset values
       this.unset("quantityUnit");
       this.unset("priceUnit");
       this.unset("priceUnitRatio");
       this.unset("taxType");
-      this.sellingUnits.reset();
+      this.fetchSellingUnits();
 
       // Destroy old characteristics
       len = characteristics.length;
@@ -1202,22 +1247,8 @@ white:true*/
       this.set("priceUnit", item.get("priceUnit"));
       this.set("priceUnitRatio", item.get("priceUnitRatio"));
 
-      // Fetch and update selling units
-      unitOptions.success = function (resp) {
-        // Resolve and add each id found
-        _.each(resp, function (id) {
-          var unit = XM.units.get(id);
-          that.sellingUnits.add(unit);
-        });
-
-        // Set the item default selections
-        that.set("quantityUnit", item.get("inventoryUnit"));
-        that.set("priceUnit", item.get("priceUnit"));
-      };
-      item.sellingUnits(unitOptions);
-
       // Fetch and update tax type
-      taxOptions.success = function (id) {
+      options.success = function (id) {
         var taxType = XM.taxTypes.get(id);
         if (taxType) {
           that.set("taxType", taxType);
@@ -1225,7 +1256,7 @@ white:true*/
           that.unset("taxType");
         }
       };
-      item.taxType(taxZone, taxOptions);
+      item.taxType(taxZone, options);
 
       // Set sort for characteristics
       if (!characteristics.comparator) {
@@ -1304,15 +1335,15 @@ white:true*/
         inventoryUnit = item ? this.getValue("inventoryUnit") : false,
         that = this,
         options = {};
-    
+
       if (!inventoryUnit || !quantityUnit || !priceUnit) { return; }
-      
+
       if (inventoryUnit.id === priceUnit.id) {
         this.set("priceUnitRatio", 1);
       } else {
         // Unset price ratio so we can't save until we get an answer
         that.unset("priceUnitRatio");
-        
+
         // Lookup unit of measure ratio
         options.success = function (ratio) {
           that.set("priceUnitRatio", ratio);
@@ -1444,7 +1475,7 @@ white:true*/
       if (!this._unitIsFractional && Math.round(quantity) !== quantity) {
         return XT.Error.clone('xt2014');
       }
-      
+
       return XM.Document.prototype.validate.apply(this, arguments);
     },
 
@@ -1717,7 +1748,7 @@ white:true*/
     recordType: 'XM.QuoteListItem',
 
     editableModel: 'XM.Quote',
-    
+
     /**
     Returns quote status as a localized string.
 
