@@ -206,11 +206,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         // let the user of this dispatch be the global username of the user making the request
         options.username = this.get("details").id;
         if (payload.requestType === 'fetch') {
-          XT.dataSource.fetch(options);
+          XT.dataSource.fetch(null, options);
         } else if (payload.requestType === 'dispatch') {
           XT.dataSource.dispatch(payload.className, payload.functionName, payload.parameters, options);
         } else if (payload.requestType === 'retrieveRecord') {
-          XT.dataSource.retrieveRecord(payload.recordType, payload.id, options);
+          XT.dataSource.retrieveRecord(payload, options);
         } else if (payload.requestType === 'commitRecord') {
           if (!payload.dataHash) { return this.set("error", "invalid commit"); }
           // Passing payload through, but trick dataSource into thinking it's a Model:
@@ -303,7 +303,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         recordType: "XM.Session",
         parameters: [
           { attribute: "id", value: this.get("id") || -1 },
-          { attribute: "sid", value: this.get("sid") || -1 },
+          { attribute: "sid", value: this.get("sid") || -1 }
 // TODO - This doesn't work.
 // PostgreSQL error: Error: operator does not exist: bigint = date
           //{ attribute: "created", value: this.get("created") || -1 }
@@ -325,7 +325,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         callback(err);
       };
 
-      XT.dataSource.fetch(validateOptions);
+      XT.dataSource.fetch(null, validateOptions);
       return this;
     },
 

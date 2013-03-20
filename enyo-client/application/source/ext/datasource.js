@@ -19,7 +19,7 @@ white:true*/
     @param {Object} query
     @param {Object} options
     */
-    fetch: function (options) {
+    fetch: function (collection, options) {
       options = options ? _.clone(options) : {};
       var that = this,
         payload = {},
@@ -42,7 +42,7 @@ white:true*/
           // currently dealing with two different protocols for response formatting
           dataHash = response.data.rows ? JSON.parse(response.data.rows[0].fetch) : response.data;
           if (options && options.success) {
-            options.success.call(that, dataHash);
+            options.success.call(that, collection, dataHash, options);
           }
         };
 
@@ -96,7 +96,7 @@ white:true*/
     @param {Number} id
     @param {Object} options
     */
-    retrieveRecord: function (recordType, id, options) {
+    retrieveRecord: function (model, options) {
       var that = this,
         payload = {},
         complete = function (response) {
@@ -126,13 +126,13 @@ white:true*/
 
           // Handle success
           if (options && options.success) {
-            options.success.call(that, dataHash);
+            options.success.call(that, model, dataHash, options);
           }
         };
 
       payload.requestType = 'retrieveRecord';
-      payload.recordType = recordType;
-      payload.id = id;
+      payload.recordType = model.recordType;
+      payload.id = options.id || model.id;
       payload.databaseType = options.databaseType;
       payload.options = { context: options.context };
 
@@ -169,7 +169,7 @@ white:true*/
           dataHash = response.data.rows ? JSON.parse(response.data.rows[0].commit_record) : response.data;
           //dataHash = JSON.parse(response.data.rows[0].commit_record);
           if (options && options.success) {
-            options.success.call(that, dataHash);
+            options.success.call(that, model, dataHash, options);
           }
         };
 
@@ -222,7 +222,7 @@ white:true*/
           dataHash = response.data.rows ? JSON.parse(response.data.rows[0].dispatch) : response.data;
           //dataHash = JSON.parse(response.data.rows[0].dispatch);
           if (options && options.success) {
-            options.success.call(that, dataHash);
+            options.success.call(that, dataHash, options);
           }
         };
 

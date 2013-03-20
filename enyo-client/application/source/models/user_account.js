@@ -173,8 +173,6 @@ white:true*/
         return;
       }
 
-      if (this.isNotReady()) { return; }
-
       // Check for conflicts
       if (this.checkConflicts && value && this.isDirty() && !this._number) {
         options.success = function (resp) {

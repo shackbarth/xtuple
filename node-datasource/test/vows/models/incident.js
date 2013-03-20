@@ -36,11 +36,11 @@ var XVOWS = XVOWS || {};
             var accntFetchOptions = {};
             accntFetchOptions.id = 1;
             accntFetchOptions.success = function (resp) {
-              console.log("account fetch success");
+              //console.log("account fetch success");
               var cntctFetchOptions = {};
               cntctFetchOptions.id = 1;
               cntctFetchOptions.success = function (resp) {
-                console.log("contact fetch success");
+                //console.log("contact fetch success");
                 that.callback(null, data);
               };
               cntctFetchOptions.error = function (resp) {
