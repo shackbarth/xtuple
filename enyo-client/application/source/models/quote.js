@@ -235,7 +235,9 @@ white:true*/
                   if (!counter) { // Means we heard back from all requests
                     // Add 'em up
                     freight = XT.math.add(_.pluck(that.freightDetail, "total"), scale);
-                    that.set("freight", freight, {silent: true});
+                    this.off('change:freight', this.freightDidChange);
+                    that.set("freight", freight);
+                    this.on('change:freight', this.freightDidChange);
 
                     // Now calculate tax
                     that.calculateFreightTax();
@@ -299,7 +301,9 @@ white:true*/
             scheduleDate = lineSchedDate;
           }
         });
-        this.set("scheduleDate", scheduleDate, {silent: true});
+        this.off('change:scheduleDate', this.scheduleDateDidChange);
+        this.set("scheduleDate", scheduleDate);
+        this.on('change:scheduleDate', this.scheduleDateDidChange);
       }
       return this;
     },
@@ -346,6 +350,7 @@ white:true*/
         isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : false,
         billtoContact = customer ? customer.get("billingContact") || customer.get("contact") : false,
         billtoAddress = billtoContact ? billtoContact.get("address") : false,
+        defaultShipto = customer.get("defaultShipto"),
         billtoAttrs,
         that = this,
         unsetBilltoAddress = function () {
@@ -398,7 +403,7 @@ white:true*/
           shipVia: customer.get("shipVia"),
           site: customer.get("preferredSite"),
           currency: customer.get("currency"),
-          shipto: customer.get("shipto")
+          shipto: defaultShipto ? defaultShipto.attributes : undefined
         };
         if (billtoContact) {
           _.extend(billtoAttrs, {
@@ -508,7 +513,9 @@ white:true*/
         if (answer) {
           that.set("calculateFreight", !calculateFreight);
         } else {
-          that.set("freight", that.previous("freight"), {silent: true});
+          that.off('change:freight', that.freightDidChange);
+          that.set("freight", that.previous("freight"));
+          that.on('change:freight', that.freightDidChange);
         }
       };
       if (calculateFreight) {
@@ -549,7 +556,8 @@ white:true*/
     */
     recalculatePrices: function () {
       var that = this,
-        msg = "_recalcuateAll?".loc(),
+        lineItems = this.get("lineItems"),
+        msg = "_recalculateAll?".loc(),
         options = {
           callback: function (answer) {
             if (answer) {
@@ -560,7 +568,7 @@ white:true*/
             }
           }
         };
-      this.notify(msg, options);
+      if (lineItems.length) { this.notify(msg, options); }
     },
 
     /**
@@ -688,7 +696,9 @@ white:true*/
           shiptoCountry: shiptoAddress.getValue("country")
         });
       }
-      this.set(shiptoAttrs, {silent: true});
+      this.off(this.shipAddressEvents, this.shiptoAddressDidChange);
+      this.set(shiptoAttrs);
+      this.on(this.shipAddressEvents, this.shiptoAddressDidChange);
       this.recalculatePrices();
     },
 
