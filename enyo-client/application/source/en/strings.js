@@ -113,6 +113,8 @@ var lang = XT.stringsFor("en_US", {
   "_contactRelations": "Contacts",
   "_contacts": "Contacts",
   "_copyToShipTo": "Copy to Ship To",
+  "_costCategories": "Cost Categories",
+  "_costCategory": "Cost Category",
   "_costs": "Costs",
   "_county": "County",
   "_correspondenceContact": "Correspondence Contact",

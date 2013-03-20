@@ -349,6 +349,33 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.ContactListItem", "XV.ContactWorkspace");
 
   // ..........................................................
+  // COST CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.CostCategoryWorkspace",
+    kind: "XV.Workspace",
+    title: "_costCategory".loc(),
+    model: "XM.CostCategory",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.CostCategory", "XV.CostCategoryWorkspace");
+
+
+  // ..........................................................
   // COUNTRY
   //
 

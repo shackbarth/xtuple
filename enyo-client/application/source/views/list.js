@@ -244,6 +244,35 @@ trailing:true white:true*/
   XV.registerModelList("XM.ContactRelation", "XV.ContactList");
 
   // ..........................................................
+  // COST CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.CostCategoryList",
+    kind: "XV.List",
+    label: "_costCategories".loc(),
+    collection: "XM.CostCategoryCollection",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    parameterWidget: "XV.CostCategoryListParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "code", isKey: true},
+              {kind: "XV.ListAttr", attr: "description", fit: true, classes: "right"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.CostCategory", "XV.CostCategoryList");
+
+  // ..........................................................
   // CURRENCY
   //
 

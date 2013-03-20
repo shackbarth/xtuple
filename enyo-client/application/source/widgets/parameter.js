@@ -127,6 +127,19 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // COST CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.CostCategoryListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_CostCategory".loc()},
+      {name: "code", label: "_code".loc(), attr: "code"}
+    ]
+  });
+
+  // ..........................................................
   // CUSTOMER
   //
 
@@ -584,6 +597,19 @@ trailing:true white:true*/
     name: "XV.SiteListParameters",
     kind: "XV.ParameterWidget",
     components: [
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
       {kind: "onyx.GroupboxHeader", content: "_site".loc()},
       {name: "code", label: "_code".loc(), attr: "code"}
     ]
