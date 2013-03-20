@@ -832,6 +832,41 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.ItemListItem", "XV.ItemWorkspace");
 
   // ..........................................................
+  // ITEM SITE
+  //
+
+  enyo.kind({
+    name: "XV.ItemSiteWorkspace",
+    kind: "XV.Workspace",
+    title: "_itemSite".loc(),
+    model: "XM.ItemSite",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.ItemWidget", attr: "item"},
+            //{kind: "XV.SiteWidget", attr: "site"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
+            //{kind: "XV.PlannerCodePicker", attr: "plannerCode"},
+            //{kind: "XV.CostCategoryPicker", attr: "costCategory"},
+            {kind: "XV.CheckboxWidget", attr: "isSold"},
+            {kind: "XV.NumberWidget", attr: "soldRanking"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true}
+          ]}
+        ]},
+        //{kind: "XV.ItemSiteCommentBox", attr: "comments"}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.ItemSiteRelation", "XV.ItemSiteWorkspace");
+  XV.registerModelWorkspace("XM.ItemSiteListItem", "XV.ItemSiteWorkspace");
+
+  // ..........................................................
   // OPPORTUNITY
   //
 
