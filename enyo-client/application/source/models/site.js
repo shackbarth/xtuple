@@ -90,6 +90,16 @@ white:true*/
 
     @extends XM.Collection
   */
+  XM.SiteTypeCollection = XM.Collection.extend(/** @lends XM.SiteTypeCollection.prototype */{
+
+    model: XM.SiteType
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
   XM.SiteRelationCollection = XM.Collection.extend(/** @lends XM.SiteRelationCollection.prototype */{
 
     model: XM.SiteRelation
