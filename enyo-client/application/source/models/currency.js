@@ -261,8 +261,7 @@ white:true*/
 
     @extends XM.Document
   */
-  XM.CurrencyRate = XM.Document.extend({
-    /** @scope XM.CurrencyRate.prototype */
+  XM.CurrencyRate = XM.Model.extend(/** @lends XM.CurrencyRate.prototype */{
 
     recordType: 'XM.CurrencyRate'
 

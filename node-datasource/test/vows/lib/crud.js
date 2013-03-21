@@ -98,7 +98,13 @@ var _ = require("underscore"),
             }
           };
         model.on('statusChange', callback);
-        model.save();
+        if (model.validate()) {
+          console.log("Error imminent!", JSON.stringify(model.validate()));
+        }
+        model.save(null, {
+          success: function () {console.log("success");},
+          error: function () {console.log("error");}
+        });
 
         // If we don't hear back, keep going
         timeoutId = setTimeout(function () {
