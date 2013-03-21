@@ -7,6 +7,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
  */
 var auth = require('../routes/auth'),
     oauth2orize = require('oauth2orize'),
+    jwtBearer = require('oauth2orize-jwt-bearer').Exchange,
     passport = require('passport'),
     login = require('connect-ensure-login'),
     db = require('./db'),
@@ -257,7 +258,7 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
 }));
 
 // TODO - docs.
-server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', oauth2orize.exchange.jwtBearer(function(client, data, signature, done) {
+server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(function (client, data, signature, done) {
   var pub = client,
       verifier = X.crypto.createVerify("RSA-SHA256");
 
@@ -416,7 +417,7 @@ exports.decision = [
 // authenticate when making requests to this endpoint.
 
 exports.token = [
-  passport.authenticate(['basic', 'oauth2-client-password'], { session: false }),
+  passport.authenticate(['basic', 'oauth2-client-password', 'oauth2-jwt-bearer'], { session: false }),
   server.token(),
   server.errorHandler()
 ];
