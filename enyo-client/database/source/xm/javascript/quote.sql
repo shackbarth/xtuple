@@ -94,7 +94,7 @@ select xt.install_js('XM','Quote','xtuple', $$
     behavior of quote numbering different from all other generated numbers.
 
     @param {String} Number
-    @returns Boolean
+    @returns Number
   */
   XM.Quote.releaseNumber = function (num) {
     return plv8.execute("select releasequnumber($1) as result", [num])[0].result;
