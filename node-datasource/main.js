@@ -348,6 +348,36 @@ app.get('/report', routes.report);
 app.get('/resetPassword', routes.resetPassword);
 app.get('/syncUser', routes.syncUser);
 
+
+// TODO - testing. Remove this...
+app.get('/jwt', function (req, res, next) {
+  var pub = X.fs.readFileSync(X.options.datasource.pubKeyFile),
+      data = {
+        "iss":"asdf",
+        "scope":"sdfg",
+        "aud":"dfgh",
+        "exp":1328554467,
+        "iat":1328550987
+      },
+      matches = false,
+      pem = X.fs.readFileSync(X.options.datasource.keyFile),
+      signed = '',
+      signer = X.crypto.createSign("RSA-SHA256"),
+      verifier = X.crypto.createVerify("RSA-SHA256");
+
+  signer.update(JSON.stringify(data));
+  signature = signer.sign(pem, 'base64');
+
+  console.log(signature);
+
+  verifier.update(JSON.stringify(data));
+  matches = verifier.verify(pub, signature, 'base64');
+
+  console.log(matches);
+
+  next();
+});
+
 // Set up the other servers we run on different ports.
 var unexposedServer = express();
 unexposedServer.get('/maintenance', routes.maintenanceLocalhost);

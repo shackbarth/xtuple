@@ -240,8 +240,7 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
 
       // Send the accessToken and params along.
       // We do not send the refreshToken because they already have it.
-// TODO - oauth2orize seems to need refreshToken in the call back for now.
-      return done(null, accessToken, refreshToken, params);
+      return done(null, accessToken, null, params);
     };
     saveOptions.error = function (model, err) {
       return done && done(err);
@@ -255,6 +254,56 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
 
     token.save(null, saveOptions);
   });
+}));
+
+// TODO - docs.
+server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', oauth2orize.exchange.jwtBearer(function(client, data, signature, done) {
+  var pub = client,
+      verifier = X.crypto.createVerify("RSA-SHA256");
+
+  // TODO - Load your pubKey registered to the client from the file system or database
+
+  verifier.update(JSON.stringify(data));
+
+  if (verifier.verify(pub, signature, 'base64')) {
+
+    // TODO - base64url decode data then verify client_id, scope and expiration are valid
+
+    var accessToken = utils.generateUUID(),
+        accesshash,
+        saveOptions = {},
+        today = new Date(),
+        expires = new Date(today.getTime() + (60 * 60 * 1000)); // One hour from now.
+
+    // The accessToken is only valid for 1 hour and must be sent with each request to
+    // the REST API. The bcrypt hash calculation on each request would be too expensive.
+    // Therefore, we do not need to bcrypt the accessToken, just SHA1 it.
+    accesshash = X.crypto.createHash('sha1').update(accessToken).digest("hex");
+
+    saveOptions.success = function (model) {
+      if (!model) { return done(null, false); }
+      var params = {};
+
+      params.token_type = model.get("tokenType");
+      // Google sends time until expires instead of just the time it expires at, so...
+      params.expires_in = Math.round(((expires - today) / 1000) - 60); // Seconds until the token expires with 60 sec padding.
+
+      // Send the accessToken and params along.
+      // We do not send the refreshToken because they already have it.
+      return done(null, accessToken, null, params);
+    };
+    saveOptions.error = function (model, err) {
+      return done && done(err);
+    };
+
+    // Set model values and save.
+    token.set("state", "Token Refreshed");
+    token.set("accessToken", accesshash);
+    token.set("accessIssued", today);
+    token.set("accessExpires", expires);
+
+    token.save(null, saveOptions);
+  }
 }));
 
 
