@@ -13,7 +13,7 @@ var XVOWS = XVOWS || {};
       recordType: "XM.Site",
       autoTestAttributes: true,
       createHash: {
-        code: "BE2",
+        code: "B2E2",
         description: "Between Egypt and Eritrea",
         siteType: {id: 2}
       },

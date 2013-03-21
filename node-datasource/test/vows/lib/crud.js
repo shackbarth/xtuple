@@ -99,8 +99,9 @@ var _ = require("underscore"),
           };
         model.on('statusChange', callback);
         model.save(null, {
-          success: function () {console.log("success");},
-          error: function () {console.log("error");}
+          error: function (model, error, options) {
+            console.log("error saving", JSON.stringify(error));
+          }
         });
 
         // If we don't hear back, keep going

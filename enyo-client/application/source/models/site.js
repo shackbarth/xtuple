@@ -29,7 +29,7 @@ white:true*/
     recordType: 'XM.Site',
 
     documentKey: 'code'
-
+    // TODO: take the Default GL trigger off
   });
 
   /**
