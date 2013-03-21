@@ -5,6 +5,27 @@ white:true*/
 
 (function () {
   "use strict";
+  
+  /**
+    @namespace
+
+    A mixin shared by project models that share common project status
+    functionality.
+  */
+  XM.QuoteStatus = {
+    /** @scope XM.ProjectStatus */
+
+    /**
+    Returns project status as a localized string.
+
+    @returns {String}
+    */
+    getProjectStatusString: function () {
+      var K = XM.Quote,
+        status = this.get("status");
+      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
+    }
+  };
 
   /**
     Mixin for shared quote function.
@@ -856,6 +877,9 @@ white:true*/
     }
 
   });
+  
+  // Add in quote status mixin
+  XM.Quote = XM.Quote.extend(XM.QuoteStatus);
 
   // ..........................................................
   // CLASS METHODS
@@ -1217,6 +1241,8 @@ white:true*/
         item = this.getValue("itemSite.item"),
         options = {};
 
+      this.unset("quantityUnit");
+      this.unset("priceUnit");
       this.sellingUnits.reset();
 
       if (!item) { return this; }
@@ -1227,6 +1253,13 @@ white:true*/
         _.each(resp, function (id) {
           var unit = XM.units.get(id);
           that.sellingUnits.add(unit);
+        });
+        
+        // Set the item default selections
+        that.set({
+          quantityUnit: item.get("inventoryUnit"),
+          priceUnit: item.get("priceUnit"),
+          priceUnitRatio: item.get("priceUnitRatio")
         });
       };
       item.sellingUnits(options);
@@ -1246,8 +1279,6 @@ white:true*/
         i;
 
       // Reset values
-      this.unset("quantityUnit");
-      this.unset("priceUnit");
       this.unset("priceUnitRatio");
       this.unset("taxType");
       this.fetchSellingUnits();
@@ -1259,11 +1290,6 @@ white:true*/
       }
 
       if (!item) { return; }
-
-      // Set the item default selections
-      this.set("quantityUnit", item.get("inventoryUnit"));
-      this.set("priceUnit", item.get("priceUnit"));
-      this.set("priceUnitRatio", item.get("priceUnitRatio"));
 
       // Fetch and update tax type
       options.success = function (id) {
@@ -1768,6 +1794,9 @@ white:true*/
     editableModel: 'XM.Quote'
 
   });
+  
+  // Add in quote status mixin
+  XM.QuoteListItem = XM.QuoteListItem.extend(XM.QuoteStatus);
 
   XM.QuoteListItem = XM.QuoteListItem.extend(XM.QuoteMixin);
 
