@@ -1184,6 +1184,7 @@ trailing:true white:true*/
             },
             {classes: "xv-button-section", components: [
               {kind: "onyx.Button", content: "_copyToShipTo".loc(),
+                name: "copyAddressButton",
                 ontap: "copyBilltoToShipto",
                 style: "margin: 4px;"}
             ]},
@@ -1266,6 +1267,10 @@ trailing:true white:true*/
     },
     attributesChanged: function (inSender, inEvent) {
       this.inherited(arguments);
+      var model = this.getValue(),
+        customer = model ? model.get("customer") : false,
+        isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : true;
+      this.$.copyAddressButton.setDisabled(!isFreeFormShipto);
       this.customerChanged();
     },
     controlValueChanged: function (inSender, inEvent) {
