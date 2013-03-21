@@ -48,9 +48,10 @@ passport.use(new LocalStrategy(
  */
 passport.serializeUser(function (user, done) {
   "use strict";
+
   var passportUser = {};
 
-  passportUser.id = user.get("id")
+  passportUser.id = user.get("id");
   done(null, passportUser);
 });
 
@@ -85,10 +86,11 @@ passport.deserializeUser(function (passportUser, done) {
 passport.use(new BasicStrategy(
   function (username, password, done) {
     "use strict";
+
     db.clients.findByClientId(username, function (err, client) {
       if (err) { return done(err); }
       if (!client) { return done(null, false); }
-      if (client.clientSecret !== password) { return done(null, false); }
+      if (client.get("clientSecret") !== password) { return done(null, false); }
       return done(null, client);
     });
   }
@@ -97,10 +99,11 @@ passport.use(new BasicStrategy(
 passport.use(new ClientPasswordStrategy(
   function (clientId, clientSecret, done) {
     "use strict";
+
     db.clients.findByClientId(clientId, function (err, client) {
       if (err) { return done(err); }
       if (!client) { return done(null, false); }
-      if (client.clientSecret !== clientSecret) { return done(null, false); }
+      if (client.get("clientSecret") !== clientSecret) { return done(null, false); }
       return done(null, client);
     });
   }
@@ -117,11 +120,25 @@ passport.use(new ClientPasswordStrategy(
 passport.use(new BearerStrategy(
   function (accessToken, done) {
     "use strict";
-    db.accessTokens.find(accessToken, function (err, token) {
+
+    // Best practice is to use a random salt in each hash. Since we need to query the
+    // database for a valid accessToken, we would have to loop through all the hashes
+    // and hash the accessToken the client sent using each salt and check for a match.
+    // That could take a lot of CPU if there are 1000's of accessToken. Instead, we will
+    // not use any salt for this hash. An accessToken is only valid for 1 hour so the
+    // risk of cracking the SHA1 hash in that time is small.
+    var accesshash = X.crypto.createHash('sha1').update(accessToken).digest("hex");
+
+    db.accessTokens.findByAccessToken(accesshash, function (err, token) {
       if (err) { return done(err); }
       if (!token) { return done(null, false); }
 
-      db.users.find(token.userID, function (err, user) {
+      // The accessToken is only valid for 1 hour. Has it expired yet?
+      if ((new Date(token.get("accessExpires")) - new Date()) < 0) {
+        return done(new Error("Access token has expired."));
+      }
+
+      db.users.findByUsername(token.get("user"), function (err, user) {
         if (err) { return done(err); }
         if (!user) { return done(null, false); }
         // to keep this example simple, restricted scopes are not implemented,

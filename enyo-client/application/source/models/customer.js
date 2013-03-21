@@ -276,7 +276,7 @@ white:true*/
     
     salesRepDidChange: function () {
       var salesRep = this.get('salesRep');
-      if (!salesRep || this.isNotReady()) { return; }
+      if (!salesRep) { return; }
       this.set('commission', salesRep.get('commission'));
     }
 
@@ -484,7 +484,7 @@ white:true*/
 
     salesRepDidChange: function () {
       var salesRep = this.get('salesRep');
-      if (!salesRep || this.isNotReady()) { return; }
+      if (!salesRep) { return; }
       this.set('commission', salesRep.get('commission'));
     }
 
