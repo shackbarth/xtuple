@@ -276,7 +276,7 @@ white:true*/
     
     salesRepDidChange: function () {
       var salesRep = this.get('salesRep');
-      if (!salesRep || this.isNotReady()) { return; }
+      if (!salesRep) { return; }
       this.set('commission', salesRep.get('commission'));
     }
 
@@ -484,7 +484,7 @@ white:true*/
 
     salesRepDidChange: function () {
       var salesRep = this.get('salesRep');
-      if (!salesRep || this.isNotReady()) { return; }
+      if (!salesRep) { return; }
       this.set('commission', salesRep.get('commission'));
     }
 
@@ -634,7 +634,34 @@ white:true*/
 
   });
   
-  // Add in item mixin
+  // ..........................................................
+  // CLASS METHODS
+  //
+
+  _.extend(XM.CustomerProspectRelation, {
+
+    /**
+      Customer/Prospect is Prospect.
+
+      @static
+      @constant
+      @type String
+      @default P
+    */
+    PROSPECT_STATUS: 'P',
+
+    /**
+      Customer/Prospect is Customer.
+      @static
+      @constant
+      @type String
+      @default C
+    */
+    CUSTOMER_STATUS: 'C'
+
+  });
+  
+  // Add in mixins
   XM.CustomerProspectRelation = XM.CustomerProspectRelation.extend(XM.CustomerMixin);
 
   // ..........................................................

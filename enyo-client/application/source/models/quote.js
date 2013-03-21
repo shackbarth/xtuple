@@ -5,11 +5,49 @@ white:true*/
 
 (function () {
   "use strict";
+  
+  /**
+    @namespace
+
+    A mixin shared by project models that share common project status
+    functionality.
+  */
+  XM.QuoteStatus = {
+    /** @scope XM.ProjectStatus */
+
+    /**
+    Returns project status as a localized string.
+
+    @returns {String}
+    */
+    getProjectStatusString: function () {
+      var K = XM.Quote,
+        status = this.get("status");
+      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
+    }
+  };
+
+  /**
+    Mixin for shared quote function.
+  */
+  XM.QuoteMixin = {
+    /**
+    Returns quote status as a localized string.
+
+    @returns {String}
+    */
+    getQuoteStatusString: function () {
+      var K = XM.Quote,
+        status = this.get("status");
+      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
+    }
+  };
 
   /**
     @class
 
     @extends XM.Document
+    @extends XM.QuoteMixin
   */
   XM.Quote = XM.Document.extend({
     /** @scope XM.Quote.prototype */
@@ -84,6 +122,7 @@ white:true*/
     ],
 
     shiptoAttrArray: [
+      "shipto",
       "shiptoName",
       "shiptoAddress1",
       "shiptoAddress2",
@@ -116,6 +155,24 @@ white:true*/
     // ..........................................................
     // METHODS
     //
+    
+    applyCustomerSettings: function () {
+      var customer = this.get("customer"),
+        isFreeFormBillto = customer ? customer.get("isFreeFormBillto") : false,
+        isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : false;
+
+      // Handle case of prospect that has no free form settings
+      isFreeFormBillto = isFreeFormBillto === undefined ? true : isFreeFormBillto;
+      isFreeFormShipto = isFreeFormShipto === undefined ? true : isFreeFormShipto;
+
+      this.setReadOnly("lineItems", !customer);
+
+      // Set read only state for free form billto
+      this.setReadOnly(this.billtoAttrArray, !isFreeFormBillto);
+
+      // Set read only state for free form shipto
+      this.setReadOnly(this.shiptoAttrArray, !isFreeFormShipto);
+    },
 
     /**
       Initialize
@@ -171,8 +228,6 @@ white:true*/
         freightClass,
         siteClass = [],
         i;
-
-      if (this.isNotReady()) { return this; }
 
       if (customer && currency && docDate && lineItems.length) {
         // Collect data needed for freight
@@ -237,7 +292,9 @@ white:true*/
                   if (!counter) { // Means we heard back from all requests
                     // Add 'em up
                     freight = XT.math.add(_.pluck(that.freightDetail, "total"), scale);
-                    that.set("freight", freight, {silent: true});
+                    that.off('change:freight', that.freightDidChange);
+                    that.set("freight", freight);
+                    that.on('change:freight', that.freightDidChange);
 
                     // Now calculate tax
                     that.calculateFreightTax();
@@ -272,8 +329,6 @@ white:true*/
         dispOptions = {},
         params;
 
-      if (this.isNotReady()) { return this; }
-
       if (effective && currency && amount) {
         params = [taxZoneId, taxTypeId, effective, currency.id, amount];
         dispOptions.success = function (resp) {
@@ -295,8 +350,6 @@ white:true*/
       var lineItems = this.get("lineItems").models,
         scheduleDate;
 
-      if (this.isNotReady()) { return this; }
-
       if (lineItems.length) {
         _.each(lineItems, function (line) {
           var lineSchedDate = line.get("scheduleDate");
@@ -305,7 +358,9 @@ white:true*/
             scheduleDate = lineSchedDate;
           }
         });
-        this.set("scheduleDate", scheduleDate, {silent: true});
+        this.off('change:scheduleDate', this.scheduleDateDidChange);
+        this.set("scheduleDate", scheduleDate);
+        this.on('change:scheduleDate', this.scheduleDateDidChange);
       }
       return this;
     },
@@ -320,8 +375,6 @@ white:true*/
     */
     calculateTotals: function (calcFreight) {
       var calculateFreight = this.get("calculateFreight");
-
-      if (this.isNotReady()) { return this; }
 
       if (calculateFreight && calcFreight !== false) {
         this.calculateFreight();
@@ -350,10 +403,9 @@ white:true*/
     */
     customerDidChange: function (model, value, options) {
       var customer = this.get("customer"),
-        isFreeFormBillto = customer ? customer.get("isFreeFormBillto") : false,
-        isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : false,
         billtoContact = customer ? customer.get("billingContact") || customer.get("contact") : false,
         billtoAddress = billtoContact ? billtoContact.get("address") : false,
+        defaultShipto = customer.get("defaultShipto"),
         billtoAttrs,
         that = this,
         unsetBilltoAddress = function () {
@@ -379,23 +431,7 @@ white:true*/
               .unset("billtoContactEmail");
         };
 
-      // Handle case of prospect that has no free form settings
-      isFreeFormBillto = isFreeFormBillto === undefined ? true : isFreeFormBillto;
-      isFreeFormShipto = isFreeFormShipto === undefined ? true : isFreeFormShipto;
-
-      this.setReadOnly("lineItems", !customer);
-
-      // Set read only state for free form billto
-      for (var i = 0; i < this.billtoAttrArray.length; i++) {
-        this.setReadOnly(this.billtoAttrArray[i], isFreeFormBillto);
-      }
-
-      // Set read only state for free form shipto
-      for (i = 0; i < this.shiptoAttrArray.length; i++) {
-        this.setReadOnly(this.shiptoAttrArray[i], isFreeFormShipto);
-      }
-
-      if (this.isNotReady()) { return; }
+      this.applyCustomerSettings();
 
       // Set customer default data
       if (customer) {
@@ -408,7 +444,7 @@ white:true*/
           shipVia: customer.get("shipVia"),
           site: customer.get("preferredSite"),
           currency: customer.get("currency"),
-          shipto: customer.get("shipto")
+          shipto: defaultShipto ? defaultShipto.attributes : undefined
         };
         if (billtoContact) {
           _.extend(billtoAttrs, {
@@ -471,6 +507,27 @@ white:true*/
         unsetBilltoContact();
       }
     },
+    
+    /**
+      Fetch selling units of measure after a regular fetch
+      and also silence `add` and `remove` events.
+    */
+    fetch: function (options) {
+      var that = this;
+      options = options ? _.clone(options) : {};
+      this.off('add:lineItems remove:lineItems', this.lineItemsDidChange);
+      this.off('add:lineItems remove:lineItems', this.calculateTotals);
+      options.success = function () {
+        var lineItems = that.get("lineItems").models;
+        _.each(lineItems, function (line) {
+          line.fetchSellingUnits();
+        });
+
+        that.on('add:lineItems remove:lineItems', that.lineItemsDidChange);
+        that.on('add:lineItems remove:lineItems', that.calculateTotals);
+      };
+      return XM.Document.prototype.fetch.call(this, options);
+    },
 
     /**
       Fetch the next quote number. Need a special over-ride here because of peculiar
@@ -492,23 +549,11 @@ white:true*/
     },
 
     /**
-    Returns quote status as a localized string.
-
-    @returns {String}
-    */
-    getQuoteStatusString: function () {
-      var K = this.getClass(),
-        status = this.get("status");
-      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
-    },
-
-    /**
       If the user changed the freight determine whether they want the automatic calculation
       turned on or off as a result of their change. This function will trigger a `notify` call
       asking the question, which must be answered via the attached callback to complete the process.
     */
     freightDidChange: function () {
-      if (this.isNotReady()) { return; }
       var calculateFreight = this.get("calculateFreight"),
         freight = this.get("freight"),
         that = this,
@@ -519,7 +564,9 @@ white:true*/
         if (answer) {
           that.set("calculateFreight", !calculateFreight);
         } else {
-          that.set("freight", that.previous("freight"), {silent: true});
+          that.off('change:freight', that.freightDidChange);
+          that.set("freight", that.previous("freight"));
+          that.on('change:freight', that.freightDidChange);
         }
       };
       if (calculateFreight) {
@@ -547,7 +594,8 @@ white:true*/
     */
     recalculatePrices: function () {
       var that = this,
-        msg = "_recalcuateAll?".loc(),
+        lineItems = this.get("lineItems"),
+        msg = "_recalculateAll?".loc(),
         options = {
           callback: function (answer) {
             if (answer) {
@@ -558,7 +606,7 @@ white:true*/
             }
           }
         };
-      this.notify(msg, options);
+      if (lineItems.length) { this.notify(msg, options); }
     },
 
     /**
@@ -571,6 +619,15 @@ white:true*/
       this.calculateFreightTax();
     },
 
+    /**
+      Release the current quote number. Need a special over-ride here because of peculiar
+      behavior of quote numbering different from all other generated numbers.
+    */
+    releaseNumber: function () {
+      this.dispatch('XM.Quote', 'releaseNumber', this.get("number"));
+      return this;
+    },
+
     scheduleDateDidChange: function () {
       var  message = "_rescheduleAll".loc() + "_continue?".loc(),
         customer = this.get("customer"),
@@ -579,7 +636,7 @@ white:true*/
         options = {},
         that = this;
 
-      if (this.isNotReady || !lineItems.length) { return; }
+      if (!lineItems.length) { return; }
 
       options.type = XM.Model.QUESTION;
 
@@ -650,7 +707,7 @@ white:true*/
         shiptoAddress = shiptoContact ? shiptoContact.get("address") : false,
         shiptoAttrs;
 
-      if (this.isNotReady() || !shipto) { return; }
+      if (!shipto) { return; }
 
       shiptoAttrs = {
         shiptoName: shipto.get("name"),
@@ -686,18 +743,18 @@ white:true*/
           shiptoCountry: shiptoAddress.getValue("country")
         });
       }
-      this.set(shiptoAttrs, {silent: true});
+      this.off(this.shipAddressEvents, this.shiptoAddressDidChange);
+      this.set(shiptoAttrs);
+      this.on(this.shipAddressEvents, this.shiptoAddressDidChange);
       this.recalculatePrices();
     },
 
     shiptoAddressDidChange: function () {
       // If the address was manually changed, then clear shipto
-      if (this.isNotReady()) { return; }
       this.unset("shipto");
     },
 
     siteDidChange: function () {
-      if (this.isNotReady()) { return; }
       var fob = this.getValue("site.fob") || "";
       this.set("fob", fob);
     },
@@ -705,12 +762,12 @@ white:true*/
     statusDidChange: function () {
       var status = this.getStatus();
       if (status === XM.Model.READY_CLEAN) {
-        this.setReadOnly("customer");
-        this.setReadOnly("number");
+        this.setReadOnly(["number", "customer"], true);
+        this.applyCustomerSettings();
       }
     },
 
-    validateSave: function () {
+    validate: function () {
       var customer = this.get("customer"),
         shipto = this.get("shipto"),
         total = this.get("total"),
@@ -729,6 +786,8 @@ white:true*/
       if (!lineItems.length) {
         return XT.Error.clone('xt2012');
       }
+
+      return XM.Document.prototype.validate.apply(this, arguments);
     },
 
     // ..........................................................
@@ -818,11 +877,15 @@ white:true*/
     }
 
   });
+  
+  // Add in quote status mixin
+  XM.Quote = XM.Quote.extend(XM.QuoteStatus);
 
   // ..........................................................
   // CLASS METHODS
   //
 
+  XM.Quote = XM.Quote.extend(XM.QuoteMixin);
   _.extend(XM.Quote, /** @lends XM.QuoteLine# */{
 
     // ..........................................................
@@ -975,8 +1038,6 @@ white:true*/
         price = this.get("price"),
         options = {};
 
-      if (this.isNotReady()) { return; }
-
       options.success = function (basePrice) {
         var K = that.getClass(),
           priceMode = that.get("priceMode"),
@@ -1044,7 +1105,7 @@ white:true*/
         currency = parent ? parent.get("currency") :false;
 
       // If no parent, don't bother
-      if (!parent || this.isNotReady()) { return; }
+      if (!parent) { return; }
 
       // Make sure we have necessary values
       if (canUpdate && customer && currency &&
@@ -1083,8 +1144,6 @@ white:true*/
         that = this,
         options = {};
 
-      if (this.isNotReady()) { return; }
-
       if (price) {
         if (standardCost) {
           options.success = function (value) {
@@ -1112,7 +1171,7 @@ white:true*/
         params;
 
       // If no parent, don't bother
-      if (!parent || this.isNotReady()) { return; }
+      if (!parent) { return; }
 
       recordType = parent.recordType;
       taxZoneId = parent.getValue("taxZone.id");
@@ -1156,8 +1215,6 @@ white:true*/
         discounted,
         price;
 
-      if (this.isNotReady()) { return; }
-
       if (!customerPrice) {
         this.unset("discount");
       } else if (this._updatePrice) {
@@ -1174,39 +1231,57 @@ white:true*/
       return this;
     },
 
+    /**
+      Updates `sellingUnits` array from server
+
+      @returns {Object} Receiver
+    */
+    fetchSellingUnits: function () {
+      var that = this,
+        item = this.getValue("itemSite.item"),
+        options = {};
+
+      this.unset("quantityUnit");
+      this.unset("priceUnit");
+      this.sellingUnits.reset();
+
+      if (!item) { return this; }
+
+      // Fetch and update selling units
+      options.success = function (resp) {
+        // Resolve and add each id found
+        _.each(resp, function (id) {
+          var unit = XM.units.get(id);
+          that.sellingUnits.add(unit);
+        });
+        
+        // Set the item default selections
+        that.set({
+          quantityUnit: item.get("inventoryUnit"),
+          priceUnit: item.get("priceUnit"),
+          priceUnitRatio: item.get("priceUnitRatio")
+        });
+      };
+      item.sellingUnits(options);
+      return this;
+    },
+
     itemSiteDidChange: function () {
       var parent = this.getParent(),
         taxZone = parent ? parent.get("taxZone") : undefined,
         item = this.getValue("itemSite.item"),
         characteristics = this.get("characteristics"),
         that = this,
-        unitOptions = {},
-        taxOptions = {},
+        options = {},
         itemCharAttrs,
         charTypes,
         len,
         i;
 
-      // Fetch and update selling units
-      if (item) {
-        unitOptions.success = function (resp) {
-          // Resolve and add each id found
-          _.each(resp, function (id) {
-            var unit = XM.units.get(id);
-            that.sellingUnits.add(unit);
-          });
-        };
-        item.sellingUnits(unitOptions);
-      }
-
-      if (this.isNotReady()) { return; }
-
       // Reset values
-      this.unset("quantityUnit");
-      this.unset("priceUnit");
       this.unset("priceUnitRatio");
       this.unset("taxType");
-      this.sellingUnits.reset();
+      this.fetchSellingUnits();
 
       // Destroy old characteristics
       len = characteristics.length;
@@ -1216,27 +1291,8 @@ white:true*/
 
       if (!item) { return; }
 
-      // Set the item default selections
-      this.set("quantityUnit", item.get("inventoryUnit"));
-      this.set("priceUnit", item.get("priceUnit"));
-      this.set("priceUnitRatio", item.get("priceUnitRatio"));
-
-      // Fetch and update selling units
-      unitOptions.success = function (resp) {
-        // Resolve and add each id found
-        _.each(resp, function (id) {
-          var unit = XM.units.get(id);
-          that.sellingUnits.add(unit);
-        });
-
-        // Set the item default selections
-        that.set("quantityUnit", item.get("inventoryUnit"));
-        that.set("priceUnit", item.get("priceUnit"));
-      };
-      item.sellingUnits(unitOptions);
-
       // Fetch and update tax type
-      taxOptions.success = function (id) {
+      options.success = function (id) {
         var taxType = XM.taxTypes.get(id);
         if (taxType) {
           that.set("taxType", taxType);
@@ -1244,7 +1300,7 @@ white:true*/
           that.unset("taxType");
         }
       };
-      item.taxType(taxZone, taxOptions);
+      item.taxType(taxZone, options);
 
       // Set sort for characteristics
       if (!characteristics.comparator) {
@@ -1286,8 +1342,6 @@ white:true*/
        lineNumber = this.get("lineNumber"),
        scheduleDate;
 
-      if (this.isNotReady()) { return; }
-
       // Set next line number
       if (parent && !lineNumber) {
         this.set("lineNumber", parent.get("lineItems").length);
@@ -1325,15 +1379,15 @@ white:true*/
         inventoryUnit = item ? this.getValue("inventoryUnit") : false,
         that = this,
         options = {};
-        
-      if (!inventoryUnit || !quantityUnit || !priceUnit || this.isNotReady()) { return; }
-      
+
+      if (!inventoryUnit || !quantityUnit || !priceUnit) { return; }
+
       if (inventoryUnit.id === priceUnit.id) {
         this.set("priceUnitRatio", 1);
       } else {
         // Unset price ratio so we can't save until we get an answer
         that.unset("priceUnitRatio");
-        
+
         // Lookup unit of measure ratio
         options.success = function (ratio) {
           that.set("priceUnitRatio", ratio);
@@ -1353,7 +1407,7 @@ white:true*/
         isFractionalCache,
         ratioCache;
 
-      if (!inventoryUnit || !quantityUnit || this.isNotReady()) { return; }
+      if (!inventoryUnit || !quantityUnit) { return; }
 
       if (quantityUnit.id === item.get("inventoryUnit").id) {
         this.set("quantityUnitRatio", 1);
@@ -1427,8 +1481,6 @@ white:true*/
         that = this,
         options = {};
 
-      if (this.isNotReady()) { return; }
-
       if (customer && item && scheduleDate) {
         options.success = function (canPurchase) {
           if (!canPurchase) {
@@ -1455,7 +1507,7 @@ white:true*/
       }
     },
 
-    validateSave: function () {
+    validate: function () {
       var quantity = this.get("quantity");
 
       // Check quantity
@@ -1468,6 +1520,7 @@ white:true*/
         return XT.Error.clone('xt2014');
       }
 
+      return XM.Document.prototype.validate.apply(this, arguments);
     },
 
     /** @private
@@ -1738,20 +1791,14 @@ white:true*/
 
     recordType: 'XM.QuoteListItem',
 
-    editableModel: 'XM.Quote',
-    
-    /**
-    Returns quote status as a localized string.
-
-    @returns {String}
-    */
-    getQuoteStatusString: function () {
-      var K = this.getClass(),
-        status = this.get("status");
-      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
-    }
+    editableModel: 'XM.Quote'
 
   });
+  
+  // Add in quote status mixin
+  XM.QuoteListItem = XM.QuoteListItem.extend(XM.QuoteStatus);
+
+  XM.QuoteListItem = XM.QuoteListItem.extend(XM.QuoteMixin);
 
   /**
     @class

@@ -224,8 +224,11 @@ regexp:true, undef:true, trailing:true, white:true */
         menuItem = inEvent.originator,
         list = this.getList(),
         model = this.getValue(),
+        K = model.getClass(),
+        status = model.get("status"),
         id = model ? model.id : null,
-        workspace = this._List ? this._List.prototype.getWorkspace() : null,
+        workspace = status === K.PROSPECT_STATUS ?
+          'XV.ProspectWorkspace' : 'XV.CustomerWorkspace',
         callback;
       switch (menuItem.name)
       {

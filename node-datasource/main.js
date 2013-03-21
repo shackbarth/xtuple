@@ -105,6 +105,12 @@ var express = require('express'),
     socketio = require('socket.io'),
     user = require('./oauth2/user');
 
+// TODO - for testing. remove...
+//http://stackoverflow.com/questions/13091037/node-js-heap-snapshots-and-google-chrome-snapshot-viewer
+//var heapdump = require("heapdump");
+// Use it!: https://github.com/c4milo/node-webkit-agent
+//var agent = require('webkit-devtools-agent');
+
 /**
  * ###################################################
  * Overrides section.
@@ -223,8 +229,62 @@ var app = express(),
   //MemoryStore = express.session.MemoryStore,
   XTPGStore = require('./oauth2/db/connect-xt-pg')(express),
   io,
-  sessionStore = new XTPGStore({ hybridCache: true });
-  //sessionStore = new MemoryStore();
+  //sessionStore = new MemoryStore(),
+  sessionStore = new XTPGStore({ hybridCache: true }),
+  Session = require('express/node_modules/connect/lib/middleware/session').Session,
+  Cookie = require('express/node_modules/connect/lib/middleware/session/cookie'),
+  cookie = require('express/node_modules/cookie');
+
+// Conditionally load express.session(). REST API endpoints using OAuth tokens do not get sessions.
+var conditionalExpressSession = function (req, res, next) {
+  "use strict";
+
+  // REST API endpoints start with "/api" in their path.
+  if ((/^\/api/i).test(req.path)) {
+    next();
+  } else {
+    // Instead of doing app.use(express.session()) we call the package directly
+    // which returns a function(req, res, next) we can call to do the same thing.
+    var init_session = express.session({
+          store: sessionStore,
+          secret: '.T#T@r5EkPM*N@C%9K-iPW!+T',
+          // See cookie stomp above for more details on how this session cookie works.
+          cookie: { path: '/', httpOnly: true, secure: true, maxAge: 3600000 }
+        });
+
+    init_session(req, res, next);
+  }
+};
+
+// Conditionally load passport.session(). REST API endpoints using OAuth tokens do not get sessions.
+var conditionalPassportSession = function (req, res, next) {
+  "use strict";
+
+  // REST API endpoints start with "/api" in their path.
+  if ((/^\/api/i).test(req.path)) {
+    next();
+  } else {
+    // Instead of doing app.use(passport.session())
+    var init_passportSessions = passport.session();
+
+    init_passportSessions(req, res, next);
+  }
+};
+
+// flash() requires sessions, so it has to be loaded conditionally.
+var conditionalFlash = function (req, res, next) {
+  "use strict";
+
+  // REST API endpoints start with "/api" in their path.
+  if ((/^\/api/i).test(req.path)) {
+    next();
+  } else {
+    // Instead of doing app.use(flash())
+    var init_flash = flash();
+
+    init_flash(req, res, next);
+  }
+};
 
 app.configure(function () {
   "use strict";
@@ -233,17 +293,21 @@ app.configure(function () {
   app.use(express.compress());
   // Add a basic view engine that will render files from "views" directory.
   app.set('view engine', 'ejs');
+
   // TODO - This outputs access logs like apache2 and some other user things.
   //app.use(express.logger());
+
   app.use(express.cookieParser());
   app.use(express.bodyParser());
 
-  // See cookie stopm above for more details.
-  app.use(express.session({ store: sessionStore, secret: '.T#T@r5EkPM*N@C%9K-iPW!+T', cookie: { path: '/', httpOnly: true, secure: true, maxAge: 3600000 } }));
-
+  // Conditionally load session packages. Based off these examples:
+  // http://stackoverflow.com/questions/9348505/avoiding-image-logging-in-express-js/9351428#9351428
+  // http://stackoverflow.com/questions/13516898/disable-csrf-validation-for-some-requests-on-express
+  app.use(conditionalExpressSession);
   app.use(passport.initialize());
-  app.use(passport.session());
-  app.use(flash());
+  app.use(conditionalPassportSession);
+  app.use(conditionalFlash);
+
   app.use(app.router);
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
@@ -283,7 +347,6 @@ app.get('/maintenance', routes.maintenance);
 app.get('/report', routes.report);
 app.get('/resetPassword', routes.resetPassword);
 app.get('/syncUser', routes.syncUser);
-
 
 // Set up the other servers we run on different ports.
 var unexposedServer = express();
@@ -375,8 +438,6 @@ io.configure(function () {
 io.of('/clientsock').authorization(function (handshakeData, callback) {
   "use strict";
 
-  var cookie = require('express/node_modules/cookie');
-
   if (handshakeData.headers.cookie) {
     handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
 
@@ -404,9 +465,6 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
         // Not an error exactly, but the cookie is invalid. The user probably logged off.
         return callback(null, false);
       }
-
-      var Session = require('express/node_modules/connect/lib/middleware/session').Session,
-          Cookie = require('express/node_modules/connect/lib/middleware/session/cookie');
 
       // Prep the cookie and create a session object so we can touch() it on each request below.
       session.cookie.expires = new Date(session.cookie.expires);

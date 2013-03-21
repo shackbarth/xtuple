@@ -177,6 +177,7 @@ var lang = XT.stringsFor("en_US", {
   "_error": "Error",
   "_errorColor": "Error Color",
   "_eventRecipient": "Event Recipient",
+  "_excludeProspects": "Exclude Prospects",
   "_expenses": "Expenses",
   "_expiredColor": "Expired Color",
   "_expires": "Expires",
@@ -413,8 +414,10 @@ var lang = XT.stringsFor("en_US", {
   "_shippingNotes": "Shipping Notes",
   "_site": "Site",
   "_siteCode": "Site Code",
+  "_showClosed": "Show Closed",
   "_showCompleted": "Show Complete",
   "_showCompletedOnly": "Show Complete Only",
+  "_showExpired": "Show Expired",
   "_showInactive": "Show Inactive",
   "_sold": "Sold",
   "_source": "Source",
@@ -482,16 +485,16 @@ var lang = XT.stringsFor("en_US", {
   "_xtuplePostbooks": "PostBooks",
 
   // ********
-  // Messages
+  // Placeholders
   // ********
 
-  "_exitPageWarning": "You are about to leave the xTuple application.",
   "_noAccountName": "No Account Name",
   "_noAddress": "No Address",
   "_noCategory": "No Category",
   "_noCloseTarget": "No Close Target",
   "_noContact": "No Contact",
   "_noEmail": "No Email",
+  "_noExpiration": "No Expiration",
   "_noJobTitle": "No Job Title",
   "_noName": "No Name",
   "_noNumber": "No Number",
@@ -592,6 +595,7 @@ var lang = XT.stringsFor("en_US", {
   "_customerOrProspect": "Would you like to create a new Customer or a new Prospect?",
   "_datasourceError": "Data source error: {error}",
   "_duplicateValues": "Duplicate values are not allowed.",
+  "_exitPageWarning": "You are about to leave the xTuple application.",
   "_lengthInvalid": "Length of {attr} must be {length}.",
   "_manualFreight": "Manually editing the freight will disable automatic freight recalculations.",
   "_mustSave": "You must save your changes before proceeding.",
