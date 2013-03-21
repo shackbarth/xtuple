@@ -1217,6 +1217,8 @@ white:true*/
         item = this.getValue("itemSite.item"),
         options = {};
 
+      this.unset("quantityUnit");
+      this.unset("priceUnit");
       this.sellingUnits.reset();
 
       if (!item) { return this; }
@@ -1227,6 +1229,13 @@ white:true*/
         _.each(resp, function (id) {
           var unit = XM.units.get(id);
           that.sellingUnits.add(unit);
+        });
+        
+        // Set the item default selections
+        that.set({
+          quantityUnit: item.get("inventoryUnit"),
+          priceUnit: item.get("priceUnit"),
+          priceUnitRatio: item.get("priceUnitRatio")
         });
       };
       item.sellingUnits(options);
@@ -1246,8 +1255,6 @@ white:true*/
         i;
 
       // Reset values
-      this.unset("quantityUnit");
-      this.unset("priceUnit");
       this.unset("priceUnitRatio");
       this.unset("taxType");
       this.fetchSellingUnits();
@@ -1259,11 +1266,6 @@ white:true*/
       }
 
       if (!item) { return; }
-
-      // Set the item default selections
-      this.set("quantityUnit", item.get("inventoryUnit"));
-      this.set("priceUnit", item.get("priceUnit"));
-      this.set("priceUnitRatio", item.get("priceUnitRatio"));
 
       // Fetch and update tax type
       options.success = function (id) {
