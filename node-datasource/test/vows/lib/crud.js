@@ -98,9 +98,6 @@ var _ = require("underscore"),
             }
           };
         model.on('statusChange', callback);
-        if (model.validate()) {
-          console.log("Error imminent!", JSON.stringify(model.validate()));
-        }
         model.save(null, {
           success: function () {console.log("success");},
           error: function () {console.log("error");}

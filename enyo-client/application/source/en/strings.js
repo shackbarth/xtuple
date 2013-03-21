@@ -424,7 +424,7 @@ var lang = XT.stringsFor("en_US", {
   "_showCompletedOnly": "Show Complete Only",
   "_showInactive": "Show Inactive",
   "_sold": "Sold",
-  "_soldRankins": "Sold Ranking",
+  "_soldRanking": "Sold Ranking",
   "_source": "Source",
   "_sourceType": "Source Type",
   "_stage": "Stage",
