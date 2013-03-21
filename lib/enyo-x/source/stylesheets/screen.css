@@ -939,6 +939,8 @@ body {
   color: #696969;
 }
 .xv-button-bar .onyx-button {
+  /* TODO: center buttons, spacing in between (margin: auto on bar) */
+
   margin: 0 40px 0 40px;
 }
 /* This is for styling the moved items in the more toolbar*/
@@ -946,14 +948,17 @@ body {
   width: 220px;
 }
 .xv-totals-panel {
-  background: #ffffff;
+  background-color: #ffffff;
   font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  background-color: #ffffff;
 }
 .xv-totals-panel .onyx-input,
 .xv-totals-panel .onyx-button {
   font-size: 14px;
+}
+/* This is to style the base currency labels to look like the inputs */
+.xv-money-label {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
 }

@@ -950,7 +950,7 @@ body {
 
 .xv-button-bar {
   .onyx-button {
-    // TODO: center buttons, spacing in between (margin: auto on bar)
+    /* TODO: center buttons, spacing in between (margin: auto on bar) */
     margin: 0 40px 0 40px;
   }
 }
@@ -961,13 +961,17 @@ body {
 }
 
 .xv-totals-panel {
-  background: @white;
+  background-color: @white;
   font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  background-color: @white;
   .onyx-input, .onyx-button {
     font-size: 14px;
   }
+}
+
+/* This is to style the base currency labels to look like the inputs */
+.xv-money-label {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
 }
