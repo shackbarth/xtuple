@@ -7,9 +7,26 @@ white:true*/
   "use strict";
 
   /**
+    Mixin for shared quote function.
+  */
+  XM.QuoteMixin = {
+    /**
+    Returns quote status as a localized string.
+
+    @returns {String}
+    */
+    getQuoteStatusString: function () {
+      var K = XM.Quote,
+        status = this.get("status");
+      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
+    }
+  };
+
+  /**
     @class
 
     @extends XM.Document
+    @extends XM.QuoteMixin
   */
   XM.Quote = XM.Document.extend({
     /** @scope XM.Quote.prototype */
@@ -84,6 +101,7 @@ white:true*/
     ],
 
     shiptoAttrArray: [
+      "shipto",
       "shiptoName",
       "shiptoAddress1",
       "shiptoAddress2",
@@ -116,6 +134,24 @@ white:true*/
     // ..........................................................
     // METHODS
     //
+    
+    applyCustomerSettings: function () {
+      var customer = this.get("customer"),
+        isFreeFormBillto = customer ? customer.get("isFreeFormBillto") : false,
+        isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : false;
+
+      // Handle case of prospect that has no free form settings
+      isFreeFormBillto = isFreeFormBillto === undefined ? true : isFreeFormBillto;
+      isFreeFormShipto = isFreeFormShipto === undefined ? true : isFreeFormShipto;
+
+      this.setReadOnly("lineItems", !customer);
+
+      // Set read only state for free form billto
+      this.setReadOnly(this.billtoAttrArray, !isFreeFormBillto);
+
+      // Set read only state for free form shipto
+      this.setReadOnly(this.shiptoAttrArray, !isFreeFormShipto);
+    },
 
     /**
       Initialize
@@ -346,8 +382,6 @@ white:true*/
     */
     customerDidChange: function (model, value, options) {
       var customer = this.get("customer"),
-        isFreeFormBillto = customer ? customer.get("isFreeFormBillto") : false,
-        isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : false,
         billtoContact = customer ? customer.get("billingContact") || customer.get("contact") : false,
         billtoAddress = billtoContact ? billtoContact.get("address") : false,
         defaultShipto = customer.get("defaultShipto"),
@@ -376,21 +410,7 @@ white:true*/
               .unset("billtoContactEmail");
         };
 
-      // Handle case of prospect that has no free form settings
-      isFreeFormBillto = isFreeFormBillto === undefined ? true : isFreeFormBillto;
-      isFreeFormShipto = isFreeFormShipto === undefined ? true : isFreeFormShipto;
-
-      this.setReadOnly("lineItems", !customer);
-
-      // Set read only state for free form billto
-      for (var i = 0; i < this.billtoAttrArray.length; i++) {
-        this.setReadOnly(this.billtoAttrArray[i], isFreeFormBillto);
-      }
-
-      // Set read only state for free form shipto
-      for (i = 0; i < this.shiptoAttrArray.length; i++) {
-        this.setReadOnly(this.shiptoAttrArray[i], isFreeFormShipto);
-      }
+      this.applyCustomerSettings();
 
       // Set customer default data
       if (customer) {
@@ -466,6 +486,27 @@ white:true*/
         unsetBilltoContact();
       }
     },
+    
+    /**
+      Fetch selling units of measure after a regular fetch
+      and also silence `add` and `remove` events.
+    */
+    fetch: function (options) {
+      var that = this;
+      options = options ? _.clone(options) : {};
+      this.off('add:lineItems remove:lineItems', this.lineItemsDidChange);
+      this.off('add:lineItems remove:lineItems', this.calculateTotals);
+      options.success = function () {
+        var lineItems = that.get("lineItems").models;
+        _.each(lineItems, function (line) {
+          line.fetchSellingUnits();
+        });
+
+        that.on('add:lineItems remove:lineItems', that.lineItemsDidChange);
+        that.on('add:lineItems remove:lineItems', that.calculateTotals);
+      };
+      return XM.Document.prototype.fetch.call(this, options);
+    },
 
     /**
       Fetch the next quote number. Need a special over-ride here because of peculiar
@@ -484,17 +525,6 @@ white:true*/
       };
       this.dispatch('XM.Quote', 'fetchNumber', null, options);
       return this;
-    },
-
-    /**
-    Returns quote status as a localized string.
-
-    @returns {String}
-    */
-    getQuoteStatusString: function () {
-      var K = this.getClass(),
-        status = this.get("status");
-      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
     },
 
     /**
@@ -527,19 +557,6 @@ white:true*/
         return;
       }
       this.notify(message, options);
-    },
-
-    fetch: function (options) {
-      // Need to fetch selling units of measure after a regular fetch
-      var that = this;
-      options = options ? _.clone(options) : {};
-      options.success = function () {
-        var lineItems = that.get("lineItems").models;
-        _.each(lineItems, function (line) {
-          line.fetchSellingUnits();
-        });
-      };
-      XM.Document.prototype.fetch.call(this, options);
     },
 
     lineItemsDidChange: function () {
@@ -724,8 +741,8 @@ white:true*/
     statusDidChange: function () {
       var status = this.getStatus();
       if (status === XM.Model.READY_CLEAN) {
-        this.setReadOnly("customer");
-        this.setReadOnly("number");
+        this.setReadOnly(["number", "customer"], true);
+        this.applyCustomerSettings();
       }
     },
 
@@ -844,6 +861,7 @@ white:true*/
   // CLASS METHODS
   //
 
+  XM.Quote = XM.Quote.extend(XM.QuoteMixin);
   _.extend(XM.Quote, /** @lends XM.QuoteLine# */{
 
     // ..........................................................
@@ -1747,20 +1765,11 @@ white:true*/
 
     recordType: 'XM.QuoteListItem',
 
-    editableModel: 'XM.Quote',
-
-    /**
-    Returns quote status as a localized string.
-
-    @returns {String}
-    */
-    getQuoteStatusString: function () {
-      var K = this.getClass(),
-        status = this.get("status");
-      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
-    }
+    editableModel: 'XM.Quote'
 
   });
+
+  XM.QuoteListItem = XM.QuoteListItem.extend(XM.QuoteMixin);
 
   /**
     @class
