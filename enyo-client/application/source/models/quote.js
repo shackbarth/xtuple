@@ -5,6 +5,27 @@ white:true*/
 
 (function () {
   "use strict";
+  
+  /**
+    @namespace
+
+    A mixin shared by project models that share common project status
+    functionality.
+  */
+  XM.QuoteStatus = {
+    /** @scope XM.ProjectStatus */
+
+    /**
+    Returns project status as a localized string.
+
+    @returns {String}
+    */
+    getProjectStatusString: function () {
+      var K = XM.Quote,
+        status = this.get("status");
+      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
+    }
+  };
 
   /**
     @class
@@ -482,17 +503,6 @@ white:true*/
     },
 
     /**
-    Returns quote status as a localized string.
-
-    @returns {String}
-    */
-    getQuoteStatusString: function () {
-      var K = this.getClass(),
-        status = this.get("status");
-      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
-    },
-
-    /**
       If the user changed the freight determine whether they want the automatic calculation
       turned on or off as a result of their change. This function will trigger a `notify` call
       asking the question, which must be answered via the attached callback to complete the process.
@@ -807,6 +817,9 @@ white:true*/
     }
 
   });
+  
+  // Add in quote status mixin
+  XM.Quote = XM.Quote.extend(XM.QuoteStatus);
 
   // ..........................................................
   // CLASS METHODS
@@ -1724,12 +1737,15 @@ white:true*/
     @returns {String}
     */
     getQuoteStatusString: function () {
-      var K = this.getClass(),
+      var K = XM.Quote,
         status = this.get("status");
       return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
     }
 
   });
+  
+  // Add in quote status mixin
+  XM.QuoteListItem = XM.QuoteListItem.extend(XM.QuoteStatus);
 
   /**
     @class
