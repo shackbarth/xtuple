@@ -6,7 +6,7 @@ white:true*/
 (function () {
   "use strict";
 
-  XT.extensions.crm.initSettings = function () {
+  XT.extensions.sales.initSettings = function () {
     /**
       @class
 
