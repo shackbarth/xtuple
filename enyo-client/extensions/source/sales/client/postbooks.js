@@ -37,7 +37,8 @@ trailing:true white:true*/
     XT.app.$.postbooks.insertModule(module, 2);
 
     relevantPrivileges = [
-      "AccessSalesExtension"
+      "AccessSalesExtension",
+      "ConfigureSO",
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
   };

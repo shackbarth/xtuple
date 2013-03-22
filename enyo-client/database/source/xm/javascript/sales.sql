@@ -87,7 +87,7 @@ select xt.install_js('XM','Sales','xtuple', $$
         data = Object.create(XT.Data), metrics = {};
         
     /* check privileges */
-    if(!data.checkPrivilege('ConfigureSales')) throw new Error('Access Denied');
+    if(!data.checkPrivilege('ConfigureSO')) throw new Error('Access Denied');
 
     /* update numbers */
     if(settings['NextSalesOrderNumber']) {

@@ -1,6 +1,7 @@
 var depends = (typeof enyo !== 'undefined') ? enyo.depends : X.depends;
 depends(
   "account.js",
+  "configure.js",
   "contact.js",
   "incident.js",
   "item.js",
