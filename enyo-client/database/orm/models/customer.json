@@ -1755,6 +1755,13 @@
           "type": "String",
           "column": "status"
         }
+      },
+      {
+        "name": "customerType",
+        "attr": {
+          "type": "Number",
+          "column": "type"
+        }
       }
     ],
     "extensions": [],
