@@ -5,6 +5,27 @@ white:true*/
 
 (function () {
   "use strict";
+  
+  /**
+    @namespace
+
+    A mixin shared by project models that share common project status
+    functionality.
+  */
+  XM.QuoteStatus = {
+    /** @scope XM.ProjectStatus */
+
+    /**
+    Returns project status as a localized string.
+
+    @returns {String}
+    */
+    getProjectStatusString: function () {
+      var K = XM.Quote,
+        status = this.get("status");
+      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
+    }
+  };
 
   /**
     Mixin for shared quote function.
@@ -856,6 +877,9 @@ white:true*/
     }
 
   });
+  
+  // Add in quote status mixin
+  XM.Quote = XM.Quote.extend(XM.QuoteStatus);
 
   // ..........................................................
   // CLASS METHODS
@@ -1767,9 +1791,23 @@ white:true*/
 
     recordType: 'XM.QuoteListItem',
 
-    editableModel: 'XM.Quote'
+    editableModel: 'XM.Quote',
+    
+    /**
+    Returns quote status as a localized string.
+
+    @returns {String}
+    */
+    getQuoteStatusString: function () {
+      var K = XM.Quote,
+        status = this.get("status");
+      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
+    }
 
   });
+  
+  // Add in quote status mixin
+  XM.QuoteListItem = XM.QuoteListItem.extend(XM.QuoteStatus);
 
   XM.QuoteListItem = XM.QuoteListItem.extend(XM.QuoteMixin);
 
