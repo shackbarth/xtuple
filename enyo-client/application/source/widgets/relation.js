@@ -315,7 +315,7 @@ regexp:true, undef:true, trailing:true, white:true */
     published: {
       defaultSite: null // {XM.SiteRelation}
     },
-    keyAttribute: "item.number",
+    keyAttribute: ["item.number", "item.barcode"],
     sidecarAttribute: "site.code",
     nameAttribute: "item.description1",
     descripAttribute: "item.description2"
