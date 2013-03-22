@@ -83,6 +83,7 @@ class TableModelReflect{
         HttpURLConnection connection = (HttpURLConnection) url.openConnection()
         connection.setRequestMethod("GET")
         connection.setRequestProperty("content-type", "application/json");
+        TrustModifier.relaxHostChecking(connection);
         // connection.setConnectTimeout(10000)
         connection.connect()
         def Object result
@@ -94,8 +95,6 @@ class TableModelReflect{
             if (result == null) {
                throw new Exception("Null data from node datasource: " + url)
             }            
-
-            println "result is: " + result
  
            } else {
                throw new Exception("Connect to node datasource: " + url + " failed, response code: " + connection.responseCode)
