@@ -35,7 +35,7 @@ select xt.install_js('XM','item_site','xtuple', $$
     if(!XT.Data.checkPrivileges(nameSpace, type)) { return []; };
 
     /* Restrict results to items that are associated with the customer and/or shipto */ 
-    var custItemSql = 'select * from custitem($1, $2, $3);';
+    var custItemSql = 'select * from custitem($1, $2::integer, $3::date);';
     var allowedArray = plv8.execute(custItemSql, [customerId, shiptoId, effectiveDate]);
     var allowedIds = [];
     for(var i = 0; i < allowedArray.length; i++) {
