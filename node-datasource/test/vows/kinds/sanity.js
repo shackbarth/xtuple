@@ -28,6 +28,8 @@ var XVOWS = XVOWS || {};
           var kind,
             errors = null,
             master = new enyo.Control,
+            // XXX this is a little hackish
+            knownAbstractKinds = ['ListRelationsBox', 'ListRelationsEditorBox', 'AssignmentBox'];
             child;
 
           _.each(topic, function (value, key) {
@@ -35,7 +37,7 @@ var XVOWS = XVOWS || {};
                 typeof value === 'function') {
               console.log(key, value);
               // XXX why are these three kinds not instantiable?
-              if (_.indexOf(['ListRelationsBox', 'ListRelationsEditorBox', 'AssignmentBox'], key) >= 0) {
+              if (_.indexOf(knownAbstractKinds, key) >= 0) {
                 return;
               }
               child = master.createComponent({

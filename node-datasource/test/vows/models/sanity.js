@@ -27,6 +27,8 @@ var XVOWS = XVOWS || {};
         'all models should contain their required attributes': function (topic) {
           var columns,
             model,
+            // XXX deal with this better
+            settingsModels = ['Crm', 'DatabaseInformation'],
             errors = null;
 
           _.each(topic, function (value, key) {
@@ -40,7 +42,7 @@ var XVOWS = XVOWS || {};
               model = new XM[key]();
               _.each(model.requiredAttributes, function (attr) {
 
-                if (_.indexOf(columns, attr) < 0) {
+                if (_.indexOf(columns, attr) < 0 && _.indexOf(settingsModels, key) < 0) {
                   errors = errors || [];
                   errors.push("Required field " + attr + " is not in model " + key);
                 }

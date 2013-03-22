@@ -244,7 +244,7 @@ var _ = require("underscore"),
                 }
               },
               fetchError = function () {
-                console.log("fetch error", arguments);
+                console.log("fetch error", JSON.stringify(arguments));
               };
 
             _.each(data.createHash, function (value, key) {
