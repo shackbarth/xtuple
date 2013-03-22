@@ -14,6 +14,7 @@
 var lang = XT.stringsFor("en_US", {
 
   "_sales": "Sales",
+  "_salesDescription": "Customer and Sales Order Management",
   "_accessSalesExtension": "Access Sales Extension"
 
 });

@@ -33,12 +33,11 @@ trailing:true white:true*/
     // ..........................................................
     // CONFIGURE
     //
-    /*
     enyo.kind({
-      name: "XV.CrmWorkspace",
+      name: "XV.SalesWorkspace",
       kind: "XV.Workspace",
-      title: "_configure".loc() + " " + "_crm".loc(),
-      model: "XM.Crm",
+      title: "_configure".loc() + " " + "_sales".loc(),
+      model: "XM.Sales",
       components: [
         {kind: "Panels", arrangerKind: "CarouselArranger",
           fit: true, components: [
@@ -46,49 +45,62 @@ trailing:true white:true*/
             {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
               classes: "in-panel", components: [
               {kind: "onyx.GroupboxHeader",
-                content: "_account".loc()},
+                content: "_invoice".loc()},
               {kind: "XV.NumberPolicyPicker",
-                attr: "CRMAccountNumberGeneration",
+                attr: "InvcNumberGeneration",
                 label: "_number".loc() + " " + "_policy".loc()},
-              {kind: "XV.InputWidget", attr: "NextCRMAccountNumber",
-                label: "_nextNumber".loc()},
-              {kind: "onyx.GroupboxHeader",
-                content: "_country".loc()},
-              {kind: "XV.CountryPicker", attr: "DefaultAddressCountry",
-                label: "_default".loc(), idAttribute: "name"},
-              {kind: "XV.ToggleButtonWidget", attr: "StrictAddressCountry",
-                label: "_limitToList".loc()},
-              {kind: "onyx.GroupboxHeader", content: "_incident".loc()},
-              {kind: "XV.InputWidget", attr: "NextIncidentNumber",
-                label: "_nextNumber".loc()},
-              {kind: "XV.ToggleButtonWidget", attr: "IncidentsPublicPrivate",
-                label: "_public".loc() + " " + "_flag".loc()},
-              {kind: "XV.CheckboxWidget", attr: "IncidentPublicDefault",
-                label: "_default".loc() + " " + "_public".loc()},
-              {kind: "onyx.GroupboxHeader",
-                content: "_incidentStatusColors".loc()},
-              {kind: "XV.InputWidget", attr: "IncidentNewColor",
-                label: "_new".loc()},
-              {kind: "XV.InputWidget", attr: "IncidentFeedbackColor",
-                label: "_feedback".loc()},
-              {kind: "XV.InputWidget", attr: "IncidentConfirmedColor",
-                label: "_confirmed".loc()},
-              {kind: "XV.InputWidget", attr: "IncidentAssignedColor",
-                label: "_assigned".loc()},
-              {kind: "XV.InputWidget", attr: "IncidentResolvedColor",
-                label: "_resolved".loc()},
-              {kind: "XV.InputWidget", attr: "IncidentClosedColor",
-                label: "_closed".loc()},
-              {kind: "onyx.GroupboxHeader", content: "_opportunity".loc()},
-              {kind: "XV.ToggleButtonWidget", attr: "OpportunityChangeLog",
-                label: "_changeLog".loc()}
+              {kind: "XV.NumberWidget", attr: "SOCreditLimit",
+                label: "_SOCreditLimit".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "IncludePackageWeight",
+                label: "_includePackageWeight".loc()},
             ]}
           ]}
         ]}
       ]
     });
-*/
 
+/*
+AllowASAPShipSchedules: true
+AllowDiscounts: true
+AlwaysShowSaveAndAdd: true
+AutoAllocateCreditMemos: false
+AutoSelectForBilling: true
+CMNumberGeneration: "A"
+CONumberGeneration: "A"
+CalculateFreight: true
+CustomerChangeLog: true
+DefaultBackOrders: true
+DefaultBalanceMethod: "B"
+DefaultCustType: 18
+DefaultFreeFormShiptos: true
+DefaultPartialShipments: true
+DefaultPrintSOOnSave: false
+DefaultSalesRep: 29
+DefaultShipFormId: 12
+DefaultShipViaId: 13
+DefaultTerms: 42
+DisableSalesOrderPriceOverride: false
+EnableSOShipping: true
+FirmSalesOrderPackingList: true
+HideSOMiscCharge: false
+IgnoreCustDisc: false
+IncludePackageWeight: true
+InvcNumberGeneration: "A"
+InvoiceDateSource: "shipdate"
+NextCreditMemoNumber: 70001
+NextInvoiceNumber: 60136
+NextQuoteNumber: 40018
+NextSalesOrderNumber: 50238
+QUNumberGeneration: "O"
+RestrictCreditMemos: false
+SOCreditLimit: 20000
+SOCreditRate: "No check"
+SalesOrderChangeLog: true
+ShowQuotesAfterSO: true
+UpdatePriceLineEdit: 2
+UsePromiseDate: true
+soPriceEffective: "CurrentDate"
+*/
 
   };
 

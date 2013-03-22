@@ -17,7 +17,7 @@ white:true*/
 
       recordType: 'XM.Sales',
 
-      privileges: 'ConfigureSales',
+      privileges: 'ConfigureSO',
 
       validate: function (attributes, options) {
         /*
