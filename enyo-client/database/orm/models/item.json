@@ -196,6 +196,13 @@
         }
       },
       {
+        "name": "barcode",
+        "attr": {
+          "type": "String",
+          "column": "item_upccode"
+        }
+      },
+      {
         "name": "listPrice",
         "attr": {
           "type": "Number",
@@ -811,6 +818,13 @@
         }
       },
       {
+        "name": "barcode",
+        "attr": {
+          "type": "String",
+          "column": "item_upccode"
+        }
+      },
+      {
         "name": "characteristics",
         "toMany": {
           "type": "ItemListItemCharacteristic",
@@ -977,6 +991,13 @@
         "toOne": {
           "type": "FreightClass",
           "column": "item_freightclass_id"
+        }
+      },
+      {
+        "name": "barcode",
+        "attr": {
+          "type": "String",
+          "column": "item_upccode"
         }
       },
       {

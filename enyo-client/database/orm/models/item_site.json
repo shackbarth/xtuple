@@ -88,6 +88,13 @@
         }
       },
       {
+        "name": "isSold",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_sold"
+        }
+      },
+      {
         "name": "plannerCode",
         "toOne": {
           "type": "PlannerCode",
@@ -252,6 +259,13 @@
         }
       },
       {
+        "name": "isSold",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_sold"
+        }
+      },
+      {
         "name": "plannerCode",
         "toOne": {
           "type": "PlannerCode",
@@ -297,6 +311,13 @@
         "attr": {
           "type": "Boolean",
           "column": "itemsite_active"
+        }
+      },
+      {
+        "name": "isSold",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_sold"
         }
       },
       {

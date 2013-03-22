@@ -12,45 +12,16 @@ white:true*/
     //datasourceUrl: DOCUMENT_HOSTNAME,
     //datasourcePort: 443,
     isConnected: false,
-
-    /*
-    Returns a record array based on a query.
-
-    @param {Object} query
-    @param {Object} options
+    
+    /**
+      Helper function to convert parameters to data source friendly formats
+      
+      @param {String} Record Type
+      @param {Object} Query parameters
     */
-    fetch: function (collection, options) {
-      options = options ? _.clone(options) : {};
-      var that = this,
-        payload = {},
-        parameters = options.query.parameters,
-        prop,
-        complete = function (response) {
-          var dataHash, params = {}, error;
-
-          // Handle error
-          if (response.isError) {
-            if (options && options.error) {
-              params.error = response.message;
-              error = XT.Error.clone('xt1001', { params: params });
-              options.error.call(that, error);
-            }
-            return;
-          }
-
-          // Handle success
-          // currently dealing with two different protocols for response formatting
-          dataHash = response.data.rows ? JSON.parse(response.data.rows[0].fetch) : response.data;
-          if (options && options.success) {
-            options.success.call(that, collection, dataHash, options);
-          }
-        };
-
-
-      // Helper function to convert parameters to data source friendly formats
-      var format = function (param) {
-        var recordType = options.query.recordType,
-          klass = recordType ? XT.getObjectByName(recordType) : null,
+    formatParameters: function (recordType, params) {
+      _.each(params, function (param) {
+        var klass = recordType ? XT.getObjectByName(recordType) : null,
           relations = klass ? klass.prototype.relations : [],
           relation = _.find(relations, function (rel) {
             return rel.key === param.attribute;
@@ -72,11 +43,43 @@ white:true*/
           idAttribute = klass.prototype.idAttribute;
           param.attribute = param.attribute + '.' + idAttribute;
         }
+      });
+    },
 
-      };
+    /*
+    Returns a record array based on a query.
 
-      for (prop in parameters) {
-        format(parameters[prop]);
+    @param {Object} query
+    @param {Object} options
+    */
+    fetch: function (collection, options) {
+      options = options ? _.clone(options) : {};
+      var that = this,
+        payload = {},
+        parameters = options.query.parameters,
+        complete = function (response) {
+          var dataHash, params = {}, error;
+
+          // Handle error
+          if (response.isError) {
+            if (options && options.error) {
+              params.error = response.message;
+              error = XT.Error.clone('xt1001', { params: params });
+              options.error.call(that, error);
+            }
+            return;
+          }
+
+          // Handle success
+          // currently dealing with two different protocols for response formatting
+          dataHash = response.data.rows ? JSON.parse(response.data.rows[0].fetch) : response.data;
+          if (options && options.success) {
+            options.success.call(that, collection, dataHash, options);
+          }
+        };
+
+      if (parameters && parameters.length) {
+        this.formatParameters(options.query.recordType, parameters);
       }
 
       payload.requestType = 'fetch';
