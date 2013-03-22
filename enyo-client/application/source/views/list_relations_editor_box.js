@@ -231,7 +231,7 @@ trailing:true white:true*/
         parent.off("change:quoteDate", this.quoteDateChanged, this);
         this.value.off("change:scheduleDate", this.scheduleDateChanged, this);
       }
-      this.inherited(arguments);
+      XV.EditorMixin.setValue.apply(this, arguments);
       // Add new bindings
       if (this.value) {
         parent = value.getParent();
