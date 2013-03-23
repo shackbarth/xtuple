@@ -258,23 +258,26 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
 }));
 
 // TODO - docs.
-server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(function (client, data, signature, done) {
-  var pub = client,
+server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(function (client, header, claimSet, signature, done) {
+  var data = header + "." + claimSet,
+      pub = client.get("clientX509PubCert"),
       verifier = X.crypto.createVerify("RSA-SHA256");
 
   // TODO - Load your pubKey registered to the client from the file system or database
 
-  verifier.update(JSON.stringify(data));
+  verifier.update(data);
 
-  if (verifier.verify(pub, signature, 'base64')) {
+  if (verifier.verify(pub, utils.base64urlDecode(signature), 'base64')) {
 
     // TODO - base64url decode data then verify client_id, scope and expiration are valid
 
     var accessToken = utils.generateUUID(),
         accesshash,
+        initCallback,
         saveOptions = {},
         today = new Date(),
-        expires = new Date(today.getTime() + (60 * 60 * 1000)); // One hour from now.
+        expires = new Date(today.getTime() + (60 * 60 * 1000)), // One hour from now.
+        token = new XM.Oauth2token;
 
     // The accessToken is only valid for 1 hour and must be sent with each request to
     // the REST API. The bcrypt hash calculation on each request would be too expensive.
@@ -297,13 +300,31 @@ server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(functio
       return done && done(err);
     };
 
-    // Set model values and save.
-    token.set("state", "Token Refreshed");
-    token.set("accessToken", accesshash);
-    token.set("accessIssued", today);
-    token.set("accessExpires", expires);
+    initCallback = function (model, value) {
+      if (model.id) {
+        // Now that model is ready, set attributes and save.
+        var tokenAttributes = {
+          accessToken: accessToken,
+          accessIssued: today,
+          accessExpires: expires,
+          clientID: client.get("clientID"),
+          scope: "scope",
+          state: "JWT Access Token Issued",
+          tokenType: "bearer"
+        };
 
-    token.save(null, saveOptions);
+        // Try to save auth code data to the database.
+        model.save(tokenAttributes, saveOptions);
+      } else {
+        return done && done(new Error('Cannot save authenticating code. No id set.'));
+      }
+    };
+
+    // Register on change of id callback to know when the model is initialized.
+    token.on('change:id', initCallback);
+
+    // Set model values and save.
+    token.initialize(null, {isNew: true});
   }
 }));
 

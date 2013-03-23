@@ -1,6 +1,7 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 
+var that = this;
 /**
  * Return a universally unique identifier.
  *
@@ -26,6 +27,35 @@ exports.generateUUID = function () {
 };
 
 /**
+ * JSON Web Token (JWT) encode/decode helper functions.
+ */
+exports.base64urlUnescape = function (str) {
+  "use strict";
+
+  str += new Array(5 - str.length % 4).join('=');
+  return str.replace(/\-/g, '+').replace(/_/g, '/');
+}
+
+exports.base64urlDecode = function (str) {
+  "use strict";
+
+  return new Buffer(that.base64urlUnescape(str), 'base64').toString();
+}
+
+exports.base64urlEscape = function (str) {
+  "use strict";
+
+  return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+}
+
+exports.base64urlEncode = function (str) {
+  "use strict";
+
+  return that.base64urlEscape(new Buffer(str).toString('base64'));
+}
+
+
+/**
  * Retrun a random int, used by `utils.uid()`
  *
  * @param {Number} min
@@ -34,7 +64,7 @@ exports.generateUUID = function () {
  * @api private
  */
 
-function getRandomInt(min, max) {
+exports.getRandomInt = function (min, max) {
   "use strict";
 
   return Math.floor(Math.random() * (max - min + 1)) + min;
