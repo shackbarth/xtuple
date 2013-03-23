@@ -33,7 +33,7 @@ white:true*/
           param.value = param.value.toJSON();
 
         // Format record if applicable
-        } else if (param.value instanceof XM.Model) {
+        } else if (_.isObject(param.value)) {
           param.value = param.value.id;
         }
 

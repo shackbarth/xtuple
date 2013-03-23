@@ -223,6 +223,7 @@ trailing:true white:true*/
     },
     setValue: function (value) {
       var parent,
+       site,
        effectivePolicy = XT.session.settings.get("soPriceEffective");
       // Remove any old bindings
       if (this.value) {
@@ -243,6 +244,8 @@ trailing:true white:true*/
           this.value.on("change:scheduleDate", this.scheduleDateChanged, this);
           this.changeItemSiteParameter("scheduleDate", "effectiveDate");
         }
+        site = parent ? parent.get("site") : false;
+        if (site) { this.$.itemSiteWidget.setSelectedSite(site); }
       }
       this.changeItemSiteParameter("customer");
       this.changeItemSiteParameter("shipto");

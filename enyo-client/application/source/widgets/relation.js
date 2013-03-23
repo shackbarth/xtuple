@@ -307,18 +307,122 @@ regexp:true, undef:true, trailing:true, white:true */
   // ITEM SITE
   //
 
-  enyo.kind({
-    name: "XV.ItemSiteWidget",
+  var _privateItemSiteWidget = enyo.kind({
     kind: "XV.RelationWidget",
     collection: "XM.ItemSiteRelationCollection",
     list: "XV.ItemSiteList",
-    published: {
-      defaultSite: null // {XM.SiteRelation}
-    },
     keyAttribute: ["item.number", "item.barcode"],
-    sidecarAttribute: "site.code",
     nameAttribute: "item.description1",
     descripAttribute: "item.description2"
+  });
+
+  enyo.kind({
+    name: "XV.ItemSiteWidget",
+    published: {
+      sites: null,
+      selectedSite: null,
+      attr: null,
+      value: null,
+      placeholder: null,
+      disabled: false
+    },
+    handlers: {
+      "onValueChange": "controlValueChanged"
+    },
+    events: {
+      "onValueChange": ""
+    },
+    components: [
+      {kind: "FittableRows", components: [
+        {kind: _privateItemSiteWidget, name: "privateItemSiteWidget",
+          label: "_item".loc()},
+        {kind: "XV.SitePicker", name: "sitePicker", label: "_site".loc()}
+      ]}
+    ],
+    /**
+      Add a parameter to the query object on the widget. Parameter conventions should
+      follow those described in the documentation for `XM.Collection`.
+
+      @seealso XM.Collection
+      @param {Object} Param
+      @returns {Object} Receiver
+    */
+    addParameter: function (param) {
+      this.$.privateItemSiteWidget.addParameter(param);
+    },
+    /**
+      Empty out the widget
+     */
+    clear: function (options) {
+      this.$.privateItemSiteWidget.clear(options);
+    },
+    controlValueChanged: function (inSender, inEvent) {
+      var value = inEvent.value;
+      if (inEvent.originator.name === 'privateItemSiteWidget') {
+        if (value && value.get) {
+          this.setSelectedSite(value.get("site"));
+        }
+        return true;
+      } else if (inEvent.originator.name === 'sitePicker') {
+        return true;
+      }
+    },
+    /**
+     @todo Document the focus method.
+     */
+    focus: function () {
+      this.$.privateItemSiteWidget.focus();
+    },
+    placeholderChanged: function () {
+      var placeholder = this.getPlaceholder();
+      this.$.privateItemSiteWidget.setPlaceholder(placeholder);
+    },
+    /**
+      Removes a query parameter by attribute name from the widget's query object.
+
+      @param {String} Attribute
+      @returns {Object} Receiver
+    */
+    removeParameter: function (attr) {
+      this.$.privateItemSiteWidget.removeParameter(attr);
+    },
+    /**
+      Pass through attributes intended for onyx input inside.
+      XXX is this necessary given disabledChanged function above?
+    */
+    setDisabled: function (isDisabled) {
+      this.$.privateItemSiteWidget.setDisabled(isDisabled);
+      this.$.sitePicker.setDisabled(isDisabled);
+    },
+    selectedSiteChanged: function () {
+      var site = this.getSelectedSite();
+      this.$.sitePicker.setValue(site);
+      if (site) {
+        this.$.privateItemSiteWidget.addParameter({
+          attribute: "site",
+          value: site
+        });
+      } else {
+        this.$.privateItemSiteWidget.removeParameter("site");
+      }
+    },
+    validate: function (value) {
+      return value;
+    },
+    setValue: function (value, options) {
+      options = options || {};
+      var oldValue = this.getValue(),
+        inEvent,
+        site;
+      if (oldValue !== value) {
+        this.value = value;
+        site = value && value.get ? value.get("site") : undefined;
+        this.$.privateItemSiteWidget.setValue(value, options);
+        this.$.sitePicker.setValue(site);
+        inEvent = { value: value };
+        if (!options.silent) { this.doValueChange(inEvent); }
+      }
+    }
   });
 
   // ..........................................................
