@@ -492,11 +492,12 @@ white:true*/
       and also silence `add` and `remove` events.
     */
     fetch: function (options) {
-      var that = this;
+      var that = this,
+        success = options.success;
       options = options ? _.clone(options) : {};
       this.off('add:lineItems remove:lineItems', this.lineItemsDidChange);
       this.off('add:lineItems remove:lineItems', this.calculateTotals);
-      options.success = function () {
+      options.success = function (model, resp, options) {
         var lineItems = that.get("lineItems").models;
         _.each(lineItems, function (line) {
           line.fetchSellingUnits();
@@ -504,6 +505,7 @@ white:true*/
 
         that.on('add:lineItems remove:lineItems', that.lineItemsDidChange);
         that.on('add:lineItems remove:lineItems', that.calculateTotals);
+        if (success) { success(model, resp, options); }
       };
       return XM.Document.prototype.fetch.call(this, options);
     },
