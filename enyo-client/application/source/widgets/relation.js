@@ -324,7 +324,8 @@ regexp:true, undef:true, trailing:true, white:true */
       attr: null,
       value: null,
       placeholder: null,
-      disabled: false
+      disabled: false,
+      query: null
     },
     handlers: {
       "onValueChange": "controlValueChanged"
@@ -357,15 +358,57 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.privateItemSiteWidget.clear(options);
     },
     controlValueChanged: function (inSender, inEvent) {
-      var value = inEvent.value;
+      var value = inEvent.value,
+        disabledCache = this.$.sitePicker.getDisabled(),
+        sitePicker = this.$.sitePicker,
+        options = {},
+        site,
+        item;
       if (inEvent.originator.name === 'privateItemSiteWidget') {
+        sitePicker.itemSites.reset();
+        sitePicker.buildList();
         if (value && value.get) {
-          this.setSelectedSite(value.get("site"));
+          this.setValue(value); // In case an id was transformed to a model
+          // Select the matching site
+          site = value.get("site");
+          this.setSelectedSite(site);
+          // Don't allow another selection until we've fetch an updated list
+          sitePicker.setDisabled(true);
+          // Go fetch alternate sites for this item
+          item = value.get("item");
+          options.query = { parameters: [{attribute: "item", value: item}]};
+          options.success = function () {
+            sitePicker.buildList();
+            sitePicker.setDisabled(disabledCache);
+          };
+          this.$.sitePicker.itemSites.fetch(options);
         }
         return true;
       } else if (inEvent.originator.name === 'sitePicker') {
+        this.setSelectedSite(value);
+        this.$.privateItemSiteWidget.setDisabled(_.isNull(value));
+        if (!value) { this.$.privateItemSiteWidget.clear(); }
         return true;
       }
+    },
+    create: function () {
+      this.inherited(arguments);
+      // Filter for site picker. Limit list of models if item sites
+      // are specified
+      var filter = function (models, options) {
+        var ids;
+        if (this.itemSites.length) {
+          // Consolidate all the site ids
+          ids = _.pluck(_.pluck(_.pluck(this.itemSites.models, "attributes"), 'site'), 'id');
+          return _.filter(models, function (model) {
+            return _.contains(ids, model.id);
+          });
+        }
+        return models;
+      };
+      this.$.sitePicker.itemSites = new XM.ItemSiteRelationCollection();
+      this.$.sitePicker.filter = filter;
+      this.queryChanged();
     },
     /**
      @todo Document the focus method.
@@ -376,6 +419,9 @@ regexp:true, undef:true, trailing:true, white:true */
     placeholderChanged: function () {
       var placeholder = this.getPlaceholder();
       this.$.privateItemSiteWidget.setPlaceholder(placeholder);
+    },
+    queryChanged: function () {
+      this.$.privateItemSiteWidget.setQuery(this.getQuery());
     },
     /**
       Removes a query parameter by attribute name from the widget's query object.
@@ -396,7 +442,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     selectedSiteChanged: function () {
       var site = this.getSelectedSite();
-      this.$.sitePicker.setValue(site);
+      this.$.sitePicker.setValue(site, {silent: true});
       if (site) {
         this.$.privateItemSiteWidget.addParameter({
           attribute: "site",
@@ -417,8 +463,7 @@ regexp:true, undef:true, trailing:true, white:true */
       if (oldValue !== value) {
         this.value = value;
         site = value && value.get ? value.get("site") : undefined;
-        this.$.privateItemSiteWidget.setValue(value, options);
-        this.$.sitePicker.setValue(site);
+        this.$.privateItemSiteWidget.setValue(value);
         inEvent = { value: value };
         if (!options.silent) { this.doValueChange(inEvent); }
       }
