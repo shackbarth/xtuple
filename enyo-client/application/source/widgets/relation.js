@@ -464,7 +464,7 @@ regexp:true, undef:true, trailing:true, white:true */
         this.$.privateItemSiteWidget.addParameter({
           attribute: "site",
           value: site
-        });
+        }, true);
       } else {
         this.$.privateItemSiteWidget.removeParameter("site");
       }

@@ -18,7 +18,7 @@ trailing:true white:true*/
         this.$.contactWidget.addParameter({
           attribute: ["account", "accountParent"],
           value: account.id
-        });
+        }, true);
       } else {
         this.$.contactWidget.removeParameter("account");
       }
@@ -1261,8 +1261,8 @@ trailing:true white:true*/
     customerChanged: function () {
       var customer = this.$.customerProspectWidget.getValue(),
         id = customer ? customer.get("account") : -1;
-      this.$.billtoContact.addParameter({attribute: "account", value: id});
-      this.$.shiptoContact.addParameter({attribute: "account", value: id});
+      this.$.billtoContact.addParameter({attribute: "account", value: id}, true);
+      this.$.shiptoContact.addParameter({attribute: "account", value: id}, true);
       if (customer) {
         this.$.customerShiptoWidget.setDisabled(false);
         this.$.customerShiptoWidget.addParameter({
