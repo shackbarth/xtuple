@@ -313,7 +313,10 @@ regexp:true, undef:true, trailing:true, white:true */
     list: "XV.ItemSiteList",
     keyAttribute: ["item.number", "item.barcode"],
     nameAttribute: "item.description1",
-    descripAttribute: "item.description2"
+    descripAttribute: "item.description2",
+    style: "border-bottom-color: rgb(170, 170, 170); " +
+      "border-bottom-width: 1px; " +
+      "border-bottom-style: solid;"
   });
 
   enyo.kind({
