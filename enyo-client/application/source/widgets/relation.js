@@ -361,6 +361,8 @@ regexp:true, undef:true, trailing:true, white:true */
       var value = inEvent.value,
         disabledCache = this.$.sitePicker.getDisabled(),
         sitePicker = this.$.sitePicker,
+        isNull = _.isNull(value),
+        itemSite,
         options = {},
         site,
         item;
@@ -381,13 +383,25 @@ regexp:true, undef:true, trailing:true, white:true */
             sitePicker.buildList();
             sitePicker.setDisabled(disabledCache);
           };
-          this.$.sitePicker.itemSites.fetch(options);
+          sitePicker.itemSites.fetch(options);
         }
         return true;
       } else if (inEvent.originator.name === 'sitePicker') {
         this.setSelectedSite(value);
-        this.$.privateItemSiteWidget.setDisabled(_.isNull(value));
-        if (!value) { this.$.privateItemSiteWidget.clear(); }
+        this.$.privateItemSiteWidget.setDisabled(isNull);
+        if (isNull) {
+          this.$.privateItemSiteWidget.clear();
+        } else {
+          itemSite = this.$.privateItemSiteWidget.getValue();
+          // Change item site selection if the site changed
+          if (itemSite && itemSite.getValue("site.id") !== value &&
+              sitePicker.itemSites.length) {
+            itemSite = _.find(sitePicker.itemSites.models, function (model) {
+              return model.getValue("site.id") === value;
+            });
+            this.$.privateItemSiteWidget.setValue(itemSite);
+          }
+        }
         return true;
       }
     },
