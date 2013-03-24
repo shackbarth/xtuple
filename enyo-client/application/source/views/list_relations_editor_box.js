@@ -320,12 +320,17 @@ trailing:true white:true*/
       this.createComponent({
         kind: "onyx.Button",
         content: "_expand".loc(),
+        name: "expandButton",
         ontap: "launchWorkspace",
         classes: "xv-groupbox-button-right",
         container: this.$.navigationButtonPanel
       });
     },
 
+    disabledChanged: function () {
+      this.inherited(arguments);
+      this.$.expandButton.setDisabled(this.getDisabled());
+    },
     /**
     Set the current model into the List Relation and the Summary Editor Panel
     */

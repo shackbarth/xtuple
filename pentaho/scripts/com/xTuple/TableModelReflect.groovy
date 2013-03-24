@@ -83,6 +83,7 @@ class TableModelReflect{
         HttpURLConnection connection = (HttpURLConnection) url.openConnection()
         connection.setRequestMethod("GET")
         connection.setRequestProperty("content-type", "application/json");
+        TrustModifier.relaxHostChecking(connection);
         // connection.setConnectTimeout(10000)
         connection.connect()
         def Object result
@@ -90,14 +91,25 @@ class TableModelReflect{
         if (connection.responseCode == 200 || connection.responseCode == 201) {
             def slurper = new JsonSlurper()
             result = slurper.parseText(connection.content.text).data
-
-            println result
             
-            if (childParm != null) {
-                result = result[0][childParm]
-            }
+            if (result == null) {
+               throw new Exception("Null data from node datasource: " + url)
+            }            
+ 
            } else {
-             DebugLog.log("Error Connecting to " + url)
+               throw new Exception("Connect to node datasource: " + url + " failed, response code: " + connection.responseCode)
+        }
+
+        /****************************************************************************
+        If this is a list report we get a data:[] ArrayList.  Otherwise convert 
+        data:{} to ArrayList.  If there is a childParm, get the child ArrayList
+        ****************************************************************************/
+        if (result.getClass() != java.util.ArrayList)
+        {
+            result = [result];
+        }
+        if (childParm != null) {
+            result = result[0][childParm]
         }
         
         /****************************************************************************

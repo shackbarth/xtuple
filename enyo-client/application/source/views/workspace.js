@@ -1149,6 +1149,7 @@ trailing:true white:true*/
     title: "_quote".loc(),
     model: "XM.Quote",
     allowPrint: true,
+    printOnSaveSetting: "DefaultPrintSOOnSave",
     headerAttrs: ["number", "-", "billtoName"],
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
