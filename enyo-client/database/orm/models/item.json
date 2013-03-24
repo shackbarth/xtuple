@@ -973,6 +973,13 @@
         }
       },
       {
+        "name": "classCode",
+        "toOne": {
+          "type": "ClassCode",
+          "column": "item_classcode_id"
+        }
+      },
+      {
         "name": "isSold",
         "attr": {
           "type": "Boolean",

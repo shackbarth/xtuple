@@ -373,7 +373,19 @@ trailing:true white:true*/
       {name: "itemDescription", label: "_description".loc(), attr: ["item.description1", "item.description2"]},
       {kind: "onyx.GroupboxHeader", content: "_site".loc()},
       {name: "siteCode", label: "_code".loc(), attr: "site.code"},
-      {name: "siteDescription", label: "_description".loc(), attr: "site.description"}
+      {name: "siteDescription", label: "_description".loc(), attr: "site.description"},
+      {kind: "onyx.GroupboxHeader", content: "_classCode".loc()},
+      {name: "classCode", label: "_equals".loc(), attr: "item.classCode.id",
+        defaultKind: "XV.ClassCodePicker"},
+      {name: "classCodePattern", label: "_code".loc(), attr: "item.classCode.code"},
+      {kind: "onyx.GroupboxHeader", content: "_costCategory".loc()},
+      {name: "costCategory", label: "_equals".loc(), attr: "costCategory",
+        defaultKind: "XV.CostCategoryPicker"},
+      {name: "costCategoryPattern", label: "_code".loc(), attr: "costCategory.code"},
+      {kind: "onyx.GroupboxHeader", content: "_plannerCode".loc()},
+      {name: "plannerCode", label: "_equals".loc(), attr: "plannerCode",
+        defaultKind: "XV.PlannerCodePicker"},
+      {name: "plannerCodePattern", label: "_code".loc(), attr: "plannerCode.code"}
     ]
   });
 

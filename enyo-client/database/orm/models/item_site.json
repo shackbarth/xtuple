@@ -337,6 +337,20 @@
         }
       },
       {
+        "name": "costCategory",
+        "toOne": {
+          "type": "CostCategory",
+          "column": "itemsite_costcat_id"
+        }
+      },
+      {
+        "name": "plannerCode",
+        "toOne": {
+          "type": "PlannerCode",
+          "column": "itemsite_plancode_id"
+        }
+      },
+      {
         "name": "averageCost",
         "attr": {
           "type": "Number",
