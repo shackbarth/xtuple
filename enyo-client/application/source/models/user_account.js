@@ -163,6 +163,13 @@ white:true*/
       "locale"
     ],
     
+    bindEvents: function () {
+      XM.Document.prototype.bindEvents.apply(this, arguments);
+      this.on('statusChange', this.statusChanged);
+      this.on('change:username', this.usernameChanged);
+      this.statusChanged();
+    },
+    
     documentKeyDidChange: function (model, value, options) {
       var that = this,
         lower = this.get("username").toLowerCase();
@@ -190,13 +197,6 @@ white:true*/
     
     findExisting: function (key, value, options) {
       XM.Account.findExisting("number", value.toUpperCase(), options);
-    },
-
-    initialize: function (attributes, options) {
-      XM.Document.prototype.initialize.apply(this, arguments);
-      this.on('statusChange', this.statusChanged);
-      this.on('change:username', this.usernameChanged);
-      this.statusChanged();
     },
     
     usernameChanged: function () {

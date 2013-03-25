@@ -37,6 +37,7 @@ select xt.install_js('XT','Data','xtuple', $$
         privileges = orm.privileges,
         param,
         childOrm,
+        prevOrm,
         clause,
         orClause,
         clauses = [],
@@ -211,6 +212,7 @@ select xt.install_js('XT','Data','xtuple', $$
           if (orderBy[i].attribute.indexOf('.') > -1) {
             attr = "";
             parts = orderBy[i].attribute.split('.');
+            prevOrm = orm;
             for (n = 0; n < parts.length; n++) {
               prop = XT.Orm.getProperty(orm, parts[n]);
               if (!prop) {
@@ -222,6 +224,7 @@ select xt.install_js('XT','Data','xtuple', $$
                 orm = XT.Orm.fetch(nameSpace, prop.toOne.type); 
               }
             }
+            orm = prevOrm;
           /* normal case */
           } else {
             prop = XT.Orm.getProperty(orm, orderBy[i].attribute);

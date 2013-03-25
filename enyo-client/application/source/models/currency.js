@@ -54,8 +54,8 @@ white:true*/
       this.findExisting('abbreviation', value, checkOptions);
     },
 
-    initialize: function () {
-      XM.Document.prototype.initialize.apply(this, arguments);
+    bindEvents: function () {
+      XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on('change:abbreviation', this.abbreviationDidChange);
     },
 
@@ -108,7 +108,6 @@ white:true*/
             model.trigger('error', model, err, options);
           }
         };
-        checkOptions.error = Backbone.wrapError(null, model, options);
         this.findExisting('abbreviation', currAbbr, checkOptions);
 
       // Otherwise just go ahead and save

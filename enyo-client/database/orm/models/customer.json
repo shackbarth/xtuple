@@ -1755,6 +1755,13 @@
           "type": "String",
           "column": "status"
         }
+      },
+      {
+        "name": "account",
+        "attr": {
+          "type": "Number",
+          "column": "crmacct_id"
+        }
       }
     ],
     "extensions": [],
@@ -1817,6 +1824,13 @@
         "attr": {
           "type": "String",
           "column": "status"
+        }
+      },
+      {
+        "name": "customerType",
+        "attr": {
+          "type": "Number",
+          "column": "type"
         }
       }
     ],

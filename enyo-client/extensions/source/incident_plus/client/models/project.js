@@ -8,10 +8,10 @@ white:true*/
 
   XT.extensions.incidentPlus.initProjectModels = function () {
   
-    var init = XM.Project.prototype.initialize;
+    var init = XM.Project.prototype.bindEvents;
     XM.Project = XM.Project.extend({
 
-      initialize: function () {
+      bindEvents: function () {
         init.apply(this, arguments);
         this.on('add:versions remove:versions', this.versionsDidChange);
       },
