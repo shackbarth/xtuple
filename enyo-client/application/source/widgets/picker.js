@@ -48,6 +48,20 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'code'}
     ]
   });
+  
+  // ..........................................................
+  // COST CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.CostCategoryPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.costCategories",
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ]
+  });
 
   // ..........................................................
   // COUNTRY
@@ -224,6 +238,20 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.opportunityTypes",
     orderBy: [
       {attribute: 'name'}
+    ]
+  });
+  
+  // ..........................................................
+  // PLANNER CODE
+  //
+
+  enyo.kind({
+    name: "XV.PlannerCodePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.plannerCodes",
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
     ]
   });
 

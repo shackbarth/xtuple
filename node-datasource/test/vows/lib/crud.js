@@ -226,8 +226,48 @@ var _ = require("underscore"),
       'We can create a model ': create(data, {
         '-> Set values to the model': {
           topic: function (data) {
-            data.model.set(data.createHash);
-            return data;
+            // allow the test to use a shorthand mock for these submodels, and
+            // flesh them out here. This is very very clever.
+            var that = this,
+              objectsToFetch = 0,
+              objectsFetched = 0,
+              fetchSuccess = function (model, response, options) {
+                // swap in this model for the mock
+                data.model.set(options.key, model, {silent: true});
+                objectsFetched++;
+                if (objectsFetched === objectsToFetch) {
+                  that.callback(null, data);
+                }
+              },
+              fetchError = function () {
+                console.log("fetch error", arguments);
+              };
+
+            _.each(data.createHash, function (value, key) {
+              if (typeof value === 'object') {
+                var fetchObject = {
+                    success: fetchSuccess,
+                    error: fetchError,
+                    key: key
+                  },
+                  relatedModel,
+                  relatedModelName = _.find(data.model.relations, function (relation) {
+                    return relation.key === key;
+                  }).relatedModel;
+
+                relatedModel = new XM[relatedModelName.substring(3)]();
+                fetchObject[relatedModel.idAttribute] = value.id;
+                relatedModel.fetch(fetchObject);
+                objectsToFetch++;
+              }
+            })
+
+            // if there are no models to substitute we won't be doing this whole callback
+            // rigamorole.
+            if (objectsToFetch === 0) {
+              data.model.set(data.createHash);
+              return data;
+            }
           },
           // create vows
           'Verify the last error is null': function (data) {

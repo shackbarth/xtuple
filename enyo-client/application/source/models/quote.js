@@ -5,27 +5,6 @@ white:true*/
 
 (function () {
   "use strict";
-  
-  /**
-    @namespace
-
-    A mixin shared by project models that share common project status
-    functionality.
-  */
-  XM.QuoteStatus = {
-    /** @scope XM.ProjectStatus */
-
-    /**
-    Returns project status as a localized string.
-
-    @returns {String}
-    */
-    getProjectStatusString: function () {
-      var K = XM.Quote,
-        status = this.get("status");
-      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
-    }
-  };
 
   /**
     Mixin for shared quote function.
@@ -75,8 +54,8 @@ white:true*/
         taxTotal: 0,
         freight: 0,
         miscCharge: 0,
-        total: 0
-        // TO DO: site = user's preferred site?
+        total: 0,
+        site: XT.defaultSite()
       };
     },
 
@@ -173,15 +152,10 @@ white:true*/
       // Set read only state for free form shipto
       this.setReadOnly(this.shiptoAttrArray, !isFreeFormShipto);
     },
-
-    /**
-      Initialize
-    */
-    initialize: function (attributes, options) {
-      XM.Document.prototype.initialize.apply(this, arguments);
+    
+    bindEvents: function () {
+      XM.Document.prototype.bindEvents.apply(this, arguments);
       var pricePolicy = XT.session.settings.get("soPriceEffective");
-      this.freightDetail = [];
-      this.freightTaxDetail = [];
       this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
       this.on('add:lineItems remove:lineItems change:miscCharge', this.calculateTotals);
       this.on('change:customer', this.customerDidChange);
@@ -197,6 +171,15 @@ white:true*/
       } else if (pricePolicy === "ScheduleDate") {
         this.requiredAttributes.push("scheduleDate");
       }
+    },
+
+    /**
+      Initialize
+    */
+    initialize: function (attributes, options) {
+      XM.Document.prototype.initialize.apply(this, arguments);
+      this.freightDetail = [];
+      this.freightTaxDetail = [];
     },
 
     /**
@@ -442,9 +425,8 @@ white:true*/
           terms: customer.get("terms"),
           taxZone: customer.get("taxZone"),
           shipVia: customer.get("shipVia"),
-          site: customer.get("preferredSite"),
-          currency: customer.get("currency"),
-          shipto: defaultShipto ? defaultShipto.attributes : undefined
+          site: customer.get("preferredSite") || this.get("site"),
+          currency: customer.get("currency")
         };
         if (billtoContact) {
           _.extend(billtoAttrs, {
@@ -476,6 +458,7 @@ white:true*/
           unsetBilltoAddress();
         }
         this.set(billtoAttrs);
+        if (defaultShipto) { this.set("shipto", defaultShipto.attributes); }
       } else {
         this.unset("salesRep")
             .unset("commission")
@@ -513,11 +496,12 @@ white:true*/
       and also silence `add` and `remove` events.
     */
     fetch: function (options) {
-      var that = this;
+      var that = this,
+        success = options.success;
       options = options ? _.clone(options) : {};
       this.off('add:lineItems remove:lineItems', this.lineItemsDidChange);
       this.off('add:lineItems remove:lineItems', this.calculateTotals);
-      options.success = function () {
+      options.success = function (model, resp, options) {
         var lineItems = that.get("lineItems").models;
         _.each(lineItems, function (line) {
           line.fetchSellingUnits();
@@ -525,6 +509,7 @@ white:true*/
 
         that.on('add:lineItems remove:lineItems', that.lineItemsDidChange);
         that.on('add:lineItems remove:lineItems', that.calculateTotals);
+        if (success) { success(model, resp, options); }
       };
       return XM.Document.prototype.fetch.call(this, options);
     },
@@ -878,9 +863,6 @@ white:true*/
 
   });
   
-  // Add in quote status mixin
-  XM.Quote = XM.Quote.extend(XM.QuoteStatus);
-
   // ..........................................................
   // CLASS METHODS
   //
@@ -937,14 +919,10 @@ white:true*/
         scheduleDate: allowASAP ? new Date() : undefined
       };
     },
-
-    initialize: function (attributes, options) {
-      XM.Model.prototype.initialize.apply(this, arguments);
-      var settings = XT.session.settings,
-        privileges = XT.session.privileges;
-      this.taxDetail = [];
-      this._updatePrice = true; // TODO: This probably is un-needed.
-      this._unitIsFractional = false;
+    
+    bindEvents: function (attributes, options) {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
+      var settings = XT.session.settings;
       this.on('change:discount', this.discountDidChange);
       this.on("change:itemSite", this.itemSiteDidChange);
       this.on('change:quantity', this.calculatePrice);
@@ -963,6 +941,15 @@ white:true*/
       if (settings.get("soPriceEffective") === "ScheduleDate") {
         this.on('change:scheduleDate', this.calculatePrice);
       }
+    },
+
+    initialize: function (attributes, options) {
+      XM.Model.prototype.initialize.apply(this, arguments);
+      var settings = XT.session.settings,
+        privileges = XT.session.privileges;
+      this.taxDetail = [];
+      this._updatePrice = true; // TODO: This probably is un-needed.
+      this._unitIsFractional = false;
 
       //  Disable the Discount Percent stuff if we don't allow them
       if (!settings.get("AllowDiscounts") &&
@@ -1795,9 +1782,7 @@ white:true*/
 
   });
   
-  // Add in quote status mixin
-  XM.QuoteListItem = XM.QuoteListItem.extend(XM.QuoteStatus);
-
+  // Add in quote mixin
   XM.QuoteListItem = XM.QuoteListItem.extend(XM.QuoteMixin);
 
   /**

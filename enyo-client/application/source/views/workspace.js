@@ -14,7 +14,14 @@ trailing:true white:true*/
   XV.accountNotifyContactMixin = {
     accountChanged: function () {
       var account = this.$.accountWidget.getValue();
-      this.$.contactWidget.setFilterRestriction(account);
+      if (account) {
+        this.$.contactWidget.addParameter({
+          attribute: ["account", "accountParent"],
+          value: account.id
+        }, true);
+      } else {
+        this.$.contactWidget.removeParameter("account");
+      }
     },
     attributesChanged: function (inSender, inEvent) {
       this.inherited(arguments);
@@ -855,15 +862,7 @@ trailing:true white:true*/
         {kind: "XV.OpportunityCommentBox", attr: "comments"},
         {kind: "XV.OpportunityDocumentsBox", attr: "documents"}
       ]}
-    ],
-    controlValueChanged: function (inSender, inEvent) {
-      this.inherited(arguments);
-      var account;
-      if (inEvent.originator.name === 'accountWidget') {
-        account = this.$.accountWidget.getValue();
-        this.$.contactWidget.setFilterRestriction(account);
-      }
-    }
+    ]
   };
 
   opportunityHash = enyo.mixin(opportunityHash, XV.accountNotifyContactMixin);
@@ -1003,15 +1002,7 @@ trailing:true white:true*/
         {kind: "XV.ProjectCommentBox", attr: "comments"},
         {kind: "XV.ContactDocumentsBox", attr: "documents"}
       ]}
-    ],
-    controlValueChanged: function (inSender, inEvent) {
-      this.inherited(arguments);
-      var account;
-      if (inEvent.originator.name === 'accountWidget') {
-        account = this.$.accountWidget.getValue();
-        this.$.contactWidget.setFilterRestriction(account);
-      }
-    }
+    ]
   };
 
   projectHash = enyo.mixin(projectHash, XV.accountNotifyContactMixin);
@@ -1158,6 +1149,7 @@ trailing:true white:true*/
     title: "_quote".loc(),
     model: "XM.Quote",
     allowPrint: true,
+    printOnSaveSetting: "DefaultPrintSOOnSave",
     headerAttrs: ["number", "-", "billtoName"],
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
@@ -1188,16 +1180,21 @@ trailing:true white:true*/
                 ontap: "copyBilltoToShipto",
                 style: "margin: 4px;"}
             ]},
+            {kind: "XV.ContactWidget", attr: "billtoContact",
+              name: "billtoContact"},
             {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
             {kind: "XV.CustomerShiptoWidget", attr: "shipto",
               showAddress: true, label: "_number".loc(),
               nameAttribute: ""},
             {kind: "XV.AddressFieldsWidget",
+              disabled: true,
               attr: {name: "shiptoName", line1: "shiptoAddress1",
                 line2: "shiptoAddress2", line3: "shiptoAddress3",
                 city: "shiptoCity", state: "shiptoState",
                 postalCode: "shiptoPostalCode", country: "shiptoCountry"}
             },
+            {kind: "XV.ContactWidget", attr: "shiptoContact",
+              name: "shiptoContact"},
             {kind: "onyx.GroupboxHeader", content: "_shipping".loc()},
             {kind: "XV.SitePicker", attr: "site"},
             {kind: "XV.DateWidget", attr: "packDate"},
@@ -1262,8 +1259,19 @@ trailing:true white:true*/
       ]}
     ],
     customerChanged: function () {
-      var customer = this.$.customerProspectWidget.getValue();
-      this.$.customerShiptoWidget.setFilterRestriction(customer);
+      var customer = this.$.customerProspectWidget.getValue(),
+        id = customer ? customer.get("account") : -1;
+      this.$.billtoContact.addParameter({attribute: "account", value: id}, true);
+      this.$.shiptoContact.addParameter({attribute: "account", value: id}, true);
+      if (customer) {
+        this.$.customerShiptoWidget.setDisabled(false);
+        this.$.customerShiptoWidget.addParameter({
+          attribute: "customer",
+          value: customer.id
+        });
+      } else {
+        this.$.customerShiptoWidget.setDisabled(true);
+      }
     },
     attributesChanged: function (inSender, inEvent) {
       this.inherited(arguments);
@@ -1292,7 +1300,7 @@ trailing:true white:true*/
   // QUOTE LINE ITEM
   //
 
-  enyo.kind({
+  var quoteLineItem = enyo.mixin(XV.QuoteLineMixin, {
     name: "XV.QuoteLineWorkspace",
     kind: "XV.Workspace",
     title: "_quoteLine".loc(),
@@ -1308,8 +1316,12 @@ trailing:true white:true*/
             {kind: "XV.NumberWidget", attr: "lineNumber"},
             {kind: "XV.ItemSiteWidget", attr: "itemSite",
               name: "itemSiteWidget",
-              filterRestrictionType: "item.isSold",
-              filterRestriction: true},
+              query: {parameters: [
+              {attribute: "item.isSold", value: true},
+              {attribute: "item.isActive", value: true},
+              {attribute: "isSold", value: true},
+              {attribute: "isActive", value: true}
+            ]}},
             {kind: "XV.QuantityWidget", attr: "quantity"},
             {kind: "XV.UnitPicker", name: "quantityUnitPicker",
               attr: "quantityUnit"},
@@ -1326,7 +1338,8 @@ trailing:true white:true*/
               effective: "quote.quoteDate", scale: XT.EXTENDED_PRICE_SCALE},
             {kind: "onyx.GroupboxHeader", content: "_delivery".loc()},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
-            {kind: "XV.DateWidget", attr: "promiseDate", showing: false},
+            {kind: "XV.DateWidget", attr: "promiseDate", showing: false,
+              name: "promiseDate"},
             {kind: "XV.QuoteLineCharacteristicsWidget",
               attr: "characteristics"}
           ]}
@@ -1355,50 +1368,10 @@ trailing:true white:true*/
         ]},
         {kind: "XV.QuoteLineCommentBox", attr: "comments"}
       ]}
-    ],
-    /**
-      The item site widget will need to know about the customer and the shipto
-      for narrowing down of item options. When the model changes, check the priceMode field to see if it is in
-      Discount or Markup mode and change the label accordingly.
-     */
-    attributesChanged: function (model, options) {
-      this.inherited(arguments);
-      var site = model.getValue("quote.site");
-
-      if (model.isReady()) {
-        // clone or else bespokeFilterChanged never gets run
-        var bespokeFilter = JSON.parse(JSON.stringify(this.$.itemSiteWidget.getBespokeFilter() || {}));
-
-        bespokeFilter.customerId = model.getValue("quote.customer.id") || null;
-        bespokeFilter.shiptoId = model.getValue("quote.shipto.id") || null;
-        bespokeFilter.effectiveDate = model.getValue("priceAsOfDate");
-        this.$.itemSiteWidget.setBespokeFilter(bespokeFilter);
-        this.$.itemSiteWidget.setDefaultSite(site);
-
-        var pm = model.get("priceMode");
-        if (pm === "N" || pm === "D" || pm === "P") { // discount
-          this.$.discount.setLabel("_discount".loc());
-        } else { // markup
-          this.$.discount.setLabel("_markup".loc());
-        }
-      }
-    },
-    create: function () {
-      this.inherited(arguments);
-      var promiseDate = this.findControl("promiseDate");
-      promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
-    },
-    valueChanged: function () {
-      this.inherited(arguments);
-      var model = this.getValue(),
-        sellingUnits = model ? model.sellingUnits : false;
-      if (sellingUnits) {
-        this.$.quantityUnitPicker.setCollection(sellingUnits);
-        this.$.priceUnitPicker.setCollection(sellingUnits);
-      }
-    }
+    ]
   });
-
+  
+  enyo.kind(quoteLineItem);
 
   // ..........................................................
   // SALES REP
@@ -1534,15 +1507,7 @@ trailing:true white:true*/
         {kind: "XV.ToDoCommentBox", attr: "comments"},
         {kind: "XV.ToDoDocumentsBox", attr: "documents"}
       ]}
-    ],
-    controlValueChanged: function (inSender, inEvent) {
-      this.inherited(arguments);
-      var account;
-      if (inEvent.originator.name === 'accountWidget') {
-        account = this.$.accountWidget.getValue();
-        this.$.contactWidget.setFilterRestriction(account);
-      }
-    }
+    ]
   };
 
   toDoHash = enyo.mixin(toDoHash, XV.accountNotifyContactMixin);
