@@ -320,19 +320,6 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // SHIPPING FORMS
-  //
-
-  enyo.kind({
-    name: "XV.ShippingFormPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.shippingForms",
-    orderBy: [
-      {attribute: 'name'}
-    ]
-  });
-
-  // ..........................................................
   // SHIP ZONE
   //
 

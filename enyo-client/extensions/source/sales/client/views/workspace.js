@@ -137,8 +137,6 @@ trailing:true white:true*/
               // XXX Number value won't work with combobox
               //{kind: "XV.ShipViaPicker", attr: "DefaultShipViaId",
               //  label: "_shipVia".loc()},
-              //{kind: "XV.ShippingFormPicker", attr: "DefaultShipFormId",
-              //  label: "_shipForm".loc()},
               {kind: "XV.TermsPicker", attr: "DefaultTerms",
                 label: "_terms".loc()},
               {kind: "XV.BalanceMethodPicker", attr: "DefaultBalanceMethod",
