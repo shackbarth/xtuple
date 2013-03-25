@@ -54,8 +54,8 @@ white:true*/
       this.findExisting('abbreviation', value, checkOptions);
     },
 
-    initialize: function () {
-      XM.Document.prototype.initialize.apply(this, arguments);
+    bindEvents: function () {
+      XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on('change:abbreviation', this.abbreviationDidChange);
     },
 
