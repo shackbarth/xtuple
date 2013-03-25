@@ -29,7 +29,7 @@ var XVOWS = XVOWS || {};
             errors = null,
             master = new enyo.Control,
             // XXX this is a little hackish
-            knownAbstractKinds = ['ListRelationsBox', 'ListRelationsEditorBox', 'AssignmentBox'];
+            knownAbstractKinds = ['ListRelationsBox', 'ListRelationsEditorBox', 'AssignmentBox'],
             child;
 
           _.each(topic, function (value, key) {
