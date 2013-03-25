@@ -160,8 +160,8 @@ white:true*/
     /**
       Initialize
     */
-    initialize: function () {
-      XM.Document.prototype.initialize.apply(this, arguments);
+    bindEvents: function () {
+      XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on('change:usesPurchaseOrders', this.purchaseOrdersDidChange);
       this.on('change:backorder', this.backorderDidChange);
       this.on('change:salesRep', this.salesRepDidChange);
@@ -423,7 +423,7 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.CustomerShipto = XM.Document.extend({
+  XM.CustomerShipto = XM.Model.extend({
     /** @scope XM.CustomerShipto.prototype */
 
     recordType: 'XM.CustomerShipto',
@@ -438,8 +438,8 @@ white:true*/
     // METHODS
     //
 
-    initialize: function () {
-      XM.Document.prototype.initialize.apply(this, arguments);
+    bindEvents: function () {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on('change:customer', this.customerDidChange);
       this.on('change:salesRep', this.salesRepDidChange);
     },

@@ -147,36 +147,60 @@ white:true*/
     to show items that are associated with particular customers, shiptos,
     or effective dates.
    */
-  var bespokeFetch = function (options) {
+  var fetch = function (options) {
+    options = options ? options : {};
     var that = this,
-      success;
+      params = options.query ? options.query.parameters : [],
+      param = _.findWhere(params, {attribute: "customer"}),
+      customerId,
+      shiptoId,
+      effectiveDate,
+      success,
+      omit = function (params, attr) {
+        return _.filter(params, function (param) {
+          return param.attribute !== attr;
+        });
+      };
 
-    if (!this.bespokeFilter || this.bespokeFilter === {}) {
-      // just do a normal fetch
-      XM.Collection.prototype.fetch.call(this, options);
-    } else {
-      // we have to do a special dispatch to fetch the data.
+    if (param) {
 
-      // because it's a dipatch call and not a fetch, the collection doesn't get
+      // We have to do a special dispatch to fetch the data based on customer.
+      // Because it's a dipatch call and not a fetch, the collection doesn't get
       // updated automatically. We have to do that by hand on success.
+      customerId = param.value.id;
+      params = omit(params, "customer");
+
+      // Find shipto
+      param = _.findWhere(params, {attribute: "shipto"});
+      if (param) {
+        shiptoId = param.value.id;
+        params = omit(params, "shipto");
+      }
+
+      // Find effective Date
+      param = _.findWhere(params, {attribute: "effectiveDate"});
+      if (param) {
+        effectiveDate = param ? param.value : null;
+        params = omit(params, "effectiveDate");
+      }
+      options.query.parameters = params;
+      XT.dataSource.formatParameters("XM.ItemSite", options.query.parameters);
+
+      // Dispatch the query
       success = options.success;
       options.success = function (data) {
         that.reset(data);
-
-        if (success) {
-          success(data);
-        }
+        if (success) { success(data); }
       };
-
       XT.dataSource.dispatch("XM.ItemSite", "itemsForCustomer",
-        [options.query,
-          this.bespokeFilter.customerId,
-          this.bespokeFilter.shiptoId,
-          this.bespokeFilter.effectiveDate || new Date(),
-          this.defaultSite && this.defaultSite.id],
-        options);
+        [customerId, shiptoId, effectiveDate, options.query], options);
+
+    } else {
+      // Otherwise just do a normal fetch
+      XM.Collection.prototype.fetch.call(this, options);
     }
-  }
+  };
+
   /**
     @class
 
@@ -186,7 +210,7 @@ white:true*/
 
     model: XM.ItemSiteRelation,
 
-    fetch: bespokeFetch,
+    fetch: fetch,
 
     comparator: function (itemSite) {
       var defaultSiteId = this.defaultSite ? this.defaultSite.id : -5;
@@ -205,7 +229,7 @@ white:true*/
 
     model: XM.ItemSiteListItem,
 
-    fetch: bespokeFetch
+    fetch: fetch
 
   });
 
