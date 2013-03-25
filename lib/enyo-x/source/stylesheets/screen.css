@@ -517,7 +517,7 @@ body {
   overflow: hidden;
 }
 .xv-comment-box .xv-comment-box-textblock.disabled {
-  opacity: 0.6;
+  color: #696969;
 }
 .xv-comment-box blockquote {
   margin: 0 15px 10px 15px;
@@ -747,6 +747,9 @@ body {
   font-style: italic;
   color: #93a1a1;
 }
+.xv-addresswidget .xv-addresswidget-viewer.disabled {
+  color: #696969;
+}
 .xv-addresswidget-input-decorator {
   background: #ffffff;
   display: block;
@@ -827,7 +830,7 @@ body {
   max-width: 325px;
 }
 .xv-relationwidget-description.disabled {
-  opacity: 0.4;
+  color: #696969;
 }
 .xv-relationwidget-description.label {
   text-indent: 0;
