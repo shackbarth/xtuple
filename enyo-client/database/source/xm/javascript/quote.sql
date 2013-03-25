@@ -90,6 +90,18 @@ select xt.install_js('XM','Quote','xtuple', $$
   };
 
   /**
+    Release a quote number. Need a special over-ride here because of peculiar
+    behavior of quote numbering different from all other generated numbers.
+
+    @param {String} Number
+    @returns Number
+  */
+  XM.Quote.releaseNumber = function (num) {
+    return plv8.execute("select releasequnumber($1) as result", [num])[0].result;
+  };
+  
+
+  /**
    Return the calculated tax detail for a given amount, currency, and date.
 
    @param {Number} tax zone id

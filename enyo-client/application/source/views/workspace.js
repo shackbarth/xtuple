@@ -14,7 +14,14 @@ trailing:true white:true*/
   XV.accountNotifyContactMixin = {
     accountChanged: function () {
       var account = this.$.accountWidget.getValue();
-      this.$.contactWidget.setFilterRestriction(account);
+      if (account) {
+        this.$.contactWidget.addParameter({
+          attribute: ["account", "accountParent"],
+          value: account.id
+        }, true);
+      } else {
+        this.$.contactWidget.removeParameter("account");
+      }
     },
     attributesChanged: function (inSender, inEvent) {
       this.inherited(arguments);
@@ -533,6 +540,7 @@ trailing:true white:true*/
 
   XV.registerModelWorkspace("XM.CustomerRelation", "XV.CustomerWorkspace");
   XV.registerModelWorkspace("XM.CustomerListItem", "XV.CustomerWorkspace");
+  XV.registerModelWorkspace("XM.CustomerProspectListItem", "XV.CustomerWorkspace");
 
   // ..........................................................
   // FILE
@@ -854,15 +862,7 @@ trailing:true white:true*/
         {kind: "XV.OpportunityCommentBox", attr: "comments"},
         {kind: "XV.OpportunityDocumentsBox", attr: "documents"}
       ]}
-    ],
-    controlValueChanged: function (inSender, inEvent) {
-      this.inherited(arguments);
-      var account;
-      if (inEvent.originator.name === 'accountWidget') {
-        account = this.$.accountWidget.getValue();
-        this.$.contactWidget.setFilterRestriction(account);
-      }
-    }
+    ]
   };
 
   opportunityHash = enyo.mixin(opportunityHash, XV.accountNotifyContactMixin);
@@ -1002,15 +1002,7 @@ trailing:true white:true*/
         {kind: "XV.ProjectCommentBox", attr: "comments"},
         {kind: "XV.ContactDocumentsBox", attr: "documents"}
       ]}
-    ],
-    controlValueChanged: function (inSender, inEvent) {
-      this.inherited(arguments);
-      var account;
-      if (inEvent.originator.name === 'accountWidget') {
-        account = this.$.accountWidget.getValue();
-        this.$.contactWidget.setFilterRestriction(account);
-      }
-    }
+    ]
   };
 
   projectHash = enyo.mixin(projectHash, XV.accountNotifyContactMixin);
@@ -1157,7 +1149,8 @@ trailing:true white:true*/
     title: "_quote".loc(),
     model: "XM.Quote",
     allowPrint: true,
-    headerAttrs: ["number"],
+    printOnSaveSetting: "DefaultPrintSOOnSave",
+    headerAttrs: ["number", "-", "billtoName"],
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -1171,7 +1164,6 @@ trailing:true white:true*/
             {kind: "XV.DateWidget", attr: "expireDate"},
             {kind: "XV.InputWidget", attr: "getQuoteStatusString",
               label: "_status".loc()},
-            {kind: "XV.SitePicker", attr: "site"},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
             {kind: "XV.CustomerProspectWidget", attr: "customer",
               showAddress: true, label: "_customer".loc(),
@@ -1184,32 +1176,39 @@ trailing:true white:true*/
             },
             {classes: "xv-button-section", components: [
               {kind: "onyx.Button", content: "_copyToShipTo".loc(),
+                name: "copyAddressButton",
                 ontap: "copyBilltoToShipto",
                 style: "margin: 4px;"}
             ]},
+            {kind: "XV.ContactWidget", attr: "billtoContact",
+              name: "billtoContact"},
             {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
             {kind: "XV.CustomerShiptoWidget", attr: "shipto",
               showAddress: true, label: "_number".loc(),
               nameAttribute: ""},
             {kind: "XV.AddressFieldsWidget",
+              disabled: true,
               attr: {name: "shiptoName", line1: "shiptoAddress1",
                 line2: "shiptoAddress2", line3: "shiptoAddress3",
                 city: "shiptoCity", state: "shiptoState",
                 postalCode: "shiptoPostalCode", country: "shiptoCountry"}
             },
+            {kind: "XV.ContactWidget", attr: "shiptoContact",
+              name: "shiptoContact"},
+            {kind: "onyx.GroupboxHeader", content: "_shipping".loc()},
+            {kind: "XV.SitePicker", attr: "site"},
+            {kind: "XV.DateWidget", attr: "packDate"},
+            {kind: "XV.InputWidget", attr: "fob"},
+            {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber",
+             label: "_custPO".loc()},
+            {kind: "XV.ShipViaCombobox", attr: "shipVia"},
+            {kind: "XV.ShipZonePicker", attr: "shipZone"},
             {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
             {kind: "XV.TermsPicker", attr: "terms"},
             {kind: "XV.SalesRepPicker", attr: "salesRep"},
             {kind: "XV.PercentWidget", attr: "commission"},
             {kind: "XV.TaxZonePicker", attr: "taxZone"},
             {kind: "XV.SaleTypePicker", attr: "saleType"},
-            {kind: "onyx.GroupboxHeader", content: "_shipping".loc()},
-            {kind: "XV.DateWidget", attr: "packDate"},
-            {kind: "XV.InputWidget", attr: "fob"},
-            {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber",
-              label: "_custPO".loc()},
-            {kind: "XV.ShipViaCombobox", attr: "shipVia"},
-            {kind: "XV.ShipZonePicker", attr: "shipZone"},
             {kind: "onyx.GroupboxHeader", content: "_orderNotes".loc()},
             {kind: "XV.TextArea", attr: "orderNotes", fit: true},
             {kind: "onyx.GroupboxHeader", content: "_shippingNotes".loc()},
@@ -1260,11 +1259,26 @@ trailing:true white:true*/
       ]}
     ],
     customerChanged: function () {
-      var customer = this.$.customerProspectWidget.getValue();
-      this.$.customerShiptoWidget.setFilterRestriction(customer);
+      var customer = this.$.customerProspectWidget.getValue(),
+        id = customer ? customer.get("account") : -1;
+      this.$.billtoContact.addParameter({attribute: "account", value: id}, true);
+      this.$.shiptoContact.addParameter({attribute: "account", value: id}, true);
+      if (customer) {
+        this.$.customerShiptoWidget.setDisabled(false);
+        this.$.customerShiptoWidget.addParameter({
+          attribute: "customer",
+          value: customer.id
+        });
+      } else {
+        this.$.customerShiptoWidget.setDisabled(true);
+      }
     },
     attributesChanged: function (inSender, inEvent) {
       this.inherited(arguments);
+      var model = this.getValue(),
+        customer = model ? model.get("customer") : false,
+        isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : true;
+      this.$.copyAddressButton.setDisabled(!isFreeFormShipto);
       this.customerChanged();
     },
     controlValueChanged: function (inSender, inEvent) {
@@ -1286,7 +1300,7 @@ trailing:true white:true*/
   // QUOTE LINE ITEM
   //
 
-  enyo.kind({
+  var quoteLineItem = enyo.mixin(XV.QuoteLineMixin, {
     name: "XV.QuoteLineWorkspace",
     kind: "XV.Workspace",
     title: "_quoteLine".loc(),
@@ -1302,24 +1316,32 @@ trailing:true white:true*/
             {kind: "XV.NumberWidget", attr: "lineNumber"},
             {kind: "XV.ItemSiteWidget", attr: "itemSite",
               name: "itemSiteWidget",
-              filterRestrictionType: "item.isSold",
-              filterRestriction: true},
+              query: {parameters: [
+              {attribute: "item.isSold", value: true},
+              {attribute: "item.isActive", value: true},
+              {attribute: "isSold", value: true},
+              {attribute: "isActive", value: true}
+            ]}},
             {kind: "XV.QuantityWidget", attr: "quantity"},
-            {kind: "XV.UnitPicker", name: "quantityUnitPicker", attr: "quantityUnit"},
+            {kind: "XV.UnitPicker", name: "quantityUnitPicker",
+              attr: "quantityUnit"},
             {kind: "XV.PercentWidget", name: "discount", attr: "discount"},
             {kind: "XV.MoneyWidget", attr:
               {amount: "price", currency: "quote.currency"},
               label: "_price".loc(), currencyDisabled: true,
               effective: "quote.quoteDate", scale: XT.SALES_PRICE_SCALE},
-            {kind: "XV.UnitPicker", name: "priceUnitPicker", attr: "priceUnit"},
+            {kind: "XV.UnitPicker", name: "priceUnitPicker",
+              attr: "priceUnit"},
             {kind: "XV.MoneyWidget", attr:
               {amount: "extendedPrice", currency: "quote.currency"},
               label: "_extendedPrice".loc(), currencyDisabled: true,
               effective: "quote.quoteDate", scale: XT.EXTENDED_PRICE_SCALE},
             {kind: "onyx.GroupboxHeader", content: "_delivery".loc()},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
-            {kind: "XV.DateWidget", attr: "promiseDate", showing: false},
-            {kind: "XV.QuoteLineCharacteristicsWidget", attr: "characteristics"}
+            {kind: "XV.DateWidget", attr: "promiseDate", showing: false,
+              name: "promiseDate"},
+            {kind: "XV.QuoteLineCharacteristicsWidget",
+              attr: "characteristics"}
           ]}
         ]},
         {kind: "XV.Groupbox", name: "detailsPanel", title: "_detail".loc(),
@@ -1346,71 +1368,10 @@ trailing:true white:true*/
         ]},
         {kind: "XV.QuoteLineCommentBox", attr: "comments"}
       ]}
-    ],
-    /**
-      The item site widget will need to know about the customer and the shipto
-      for narrowing down of item options. When the model changes, check the priceMode field to see if it is in
-      Discount or Markup mode and change the label accordingly.
-     */
-    attributesChanged: function (model, options) {
-      this.inherited(arguments);
-
-      if (model.isReady()) {
-        // clone or else bespokeFilterChanged never gets run
-        var bespokeFilter = JSON.parse(JSON.stringify(this.$.itemSiteWidget.getBespokeFilter() || {}));
-
-        bespokeFilter.customerId = model.getValue("quote.customer.id") || null;
-        bespokeFilter.shiptoId = model.getValue("quote.shipto.id") || null;
-        bespokeFilter.effectiveDate = model.getValue("priceAsOfDate");
-        this.$.itemSiteWidget.setBespokeFilter(bespokeFilter);
-        if (model.getValue("quote.site")) {
-          this.$.itemSiteWidget.setDefaultSite(model.getValue("quote.site"));
-        }
-
-        // XXX there must be a better place to bind these selling units
-        var sellingUnits = this.value && this.value.getValue("sellingUnits");
-        if (sellingUnits) {
-          sellingUnits.on("add", this.setSellingUnits, this);
-          sellingUnits.on("remove", this.setSellingUnits, this);
-          if (model.getStatus() === XM.Model.READY_CLEAN) {
-            // kick it off for the initial drilldown
-            this.setSellingUnits();
-          }
-        }
-        var pm = model.get("priceMode");
-        if (pm === "N" || pm === "D" || pm === "P") { // discount
-          this.$.discount.setLabel("_discount".loc());
-        } else { // markup
-          this.$.discount.setLabel("_markup".loc());
-        }
-      }
-    },
-    create: function () {
-      this.inherited(arguments);
-      var promiseDate = this.findControl("promiseDate");
-      promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
-    },
-    /**
-      Remove bindings
-     */
-    destroy: function () {
-      var sellingUnits = this.value.getValue("sellingUnits");
-      if (sellingUnits) {
-        sellingUnits.off("add", this.setSellingUnits, this);
-        sellingUnits.off("remove", this.setSellingUnits, this);
-      }
-
-      this.inherited(arguments);
-    },
-    setSellingUnits: function () {
-      var units = _.map(this.getValue().getValue("sellingUnits").models, function (model) {
-        return model.get("id");
-      });
-      this.$.quantityUnitPicker.setAllowedUnits(units);
-      this.$.priceUnitPicker.setAllowedUnits(units);
-    }
+    ]
   });
-
+  
+  enyo.kind(quoteLineItem);
 
   // ..........................................................
   // SALES REP
@@ -1546,15 +1507,7 @@ trailing:true white:true*/
         {kind: "XV.ToDoCommentBox", attr: "comments"},
         {kind: "XV.ToDoDocumentsBox", attr: "documents"}
       ]}
-    ],
-    controlValueChanged: function (inSender, inEvent) {
-      this.inherited(arguments);
-      var account;
-      if (inEvent.originator.name === 'accountWidget') {
-        account = this.$.accountWidget.getValue();
-        this.$.contactWidget.setFilterRestriction(account);
-      }
-    }
+    ]
   };
 
   toDoHash = enyo.mixin(toDoHash, XV.accountNotifyContactMixin);
@@ -1733,12 +1686,9 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isAddresses", label: "_address".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isContacts", label: "_contact".loc()},
-            //{kind: "XV.ToggleButtonWidget", attr: "isCustomers", label: "_customer".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isAccounts", label: "_account".loc()},
-            //{kind: "XV.ToggleButtonWidget", attr: "isEmployees", label: "_employee".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isIncidents", label: "_incident".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isItems", label: "_item".loc()},
-            //{kind: "XV.ToggleButtonWidget", attr: "isLotSerial", label: "_lotSerial".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isOpportunities", label: "_opportunity".loc()},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true},

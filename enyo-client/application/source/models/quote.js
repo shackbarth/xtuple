@@ -5,22 +5,17 @@ white:true*/
 
 (function () {
   "use strict";
-  
+
   /**
-    @namespace
-
-    A mixin shared by project models that share common project status
-    functionality.
+    Mixin for shared quote function.
   */
-  XM.QuoteStatus = {
-    /** @scope XM.ProjectStatus */
-
+  XM.QuoteMixin = {
     /**
-    Returns project status as a localized string.
+    Returns quote status as a localized string.
 
     @returns {String}
     */
-    getProjectStatusString: function () {
+    getQuoteStatusString: function () {
       var K = XM.Quote,
         status = this.get("status");
       return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
@@ -31,6 +26,7 @@ white:true*/
     @class
 
     @extends XM.Document
+    @extends XM.QuoteMixin
   */
   XM.Quote = XM.Document.extend({
     /** @scope XM.Quote.prototype */
@@ -58,8 +54,8 @@ white:true*/
         taxTotal: 0,
         freight: 0,
         miscCharge: 0,
-        total: 0
-        // TO DO: site = user's preferred site?
+        total: 0,
+        site: XT.defaultSite()
       };
     },
 
@@ -105,6 +101,7 @@ white:true*/
     ],
 
     shiptoAttrArray: [
+      "shipto",
       "shiptoName",
       "shiptoAddress1",
       "shiptoAddress2",
@@ -137,15 +134,28 @@ white:true*/
     // ..........................................................
     // METHODS
     //
+    
+    applyCustomerSettings: function () {
+      var customer = this.get("customer"),
+        isFreeFormBillto = customer ? customer.get("isFreeFormBillto") : false,
+        isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : false;
 
-    /**
-      Initialize
-    */
-    initialize: function (attributes, options) {
-      XM.Document.prototype.initialize.apply(this, arguments);
+      // Handle case of prospect that has no free form settings
+      isFreeFormBillto = isFreeFormBillto === undefined ? true : isFreeFormBillto;
+      isFreeFormShipto = isFreeFormShipto === undefined ? true : isFreeFormShipto;
+
+      this.setReadOnly("lineItems", !customer);
+
+      // Set read only state for free form billto
+      this.setReadOnly(this.billtoAttrArray, !isFreeFormBillto);
+
+      // Set read only state for free form shipto
+      this.setReadOnly(this.shiptoAttrArray, !isFreeFormShipto);
+    },
+    
+    bindEvents: function () {
+      XM.Document.prototype.bindEvents.apply(this, arguments);
       var pricePolicy = XT.session.settings.get("soPriceEffective");
-      this.freightDetail = [];
-      this.freightTaxDetail = [];
       this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
       this.on('add:lineItems remove:lineItems change:miscCharge', this.calculateTotals);
       this.on('change:customer', this.customerDidChange);
@@ -161,6 +171,15 @@ white:true*/
       } else if (pricePolicy === "ScheduleDate") {
         this.requiredAttributes.push("scheduleDate");
       }
+    },
+
+    /**
+      Initialize
+    */
+    initialize: function (attributes, options) {
+      XM.Document.prototype.initialize.apply(this, arguments);
+      this.freightDetail = [];
+      this.freightTaxDetail = [];
     },
 
     /**
@@ -256,7 +275,9 @@ white:true*/
                   if (!counter) { // Means we heard back from all requests
                     // Add 'em up
                     freight = XT.math.add(_.pluck(that.freightDetail, "total"), scale);
-                    that.set("freight", freight, {silent: true});
+                    that.off('change:freight', that.freightDidChange);
+                    that.set("freight", freight);
+                    that.on('change:freight', that.freightDidChange);
 
                     // Now calculate tax
                     that.calculateFreightTax();
@@ -320,7 +341,9 @@ white:true*/
             scheduleDate = lineSchedDate;
           }
         });
-        this.set("scheduleDate", scheduleDate, {silent: true});
+        this.off('change:scheduleDate', this.scheduleDateDidChange);
+        this.set("scheduleDate", scheduleDate);
+        this.on('change:scheduleDate', this.scheduleDateDidChange);
       }
       return this;
     },
@@ -363,10 +386,9 @@ white:true*/
     */
     customerDidChange: function (model, value, options) {
       var customer = this.get("customer"),
-        isFreeFormBillto = customer ? customer.get("isFreeFormBillto") : false,
-        isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : false,
         billtoContact = customer ? customer.get("billingContact") || customer.get("contact") : false,
         billtoAddress = billtoContact ? billtoContact.get("address") : false,
+        defaultShipto = customer.get("defaultShipto"),
         billtoAttrs,
         that = this,
         unsetBilltoAddress = function () {
@@ -392,21 +414,7 @@ white:true*/
               .unset("billtoContactEmail");
         };
 
-      // Handle case of prospect that has no free form settings
-      isFreeFormBillto = isFreeFormBillto === undefined ? true : isFreeFormBillto;
-      isFreeFormShipto = isFreeFormShipto === undefined ? true : isFreeFormShipto;
-
-      this.setReadOnly("lineItems", !customer);
-
-      // Set read only state for free form billto
-      for (var i = 0; i < this.billtoAttrArray.length; i++) {
-        this.setReadOnly(this.billtoAttrArray[i], isFreeFormBillto);
-      }
-
-      // Set read only state for free form shipto
-      for (i = 0; i < this.shiptoAttrArray.length; i++) {
-        this.setReadOnly(this.shiptoAttrArray[i], isFreeFormShipto);
-      }
+      this.applyCustomerSettings();
 
       // Set customer default data
       if (customer) {
@@ -417,9 +425,8 @@ white:true*/
           terms: customer.get("terms"),
           taxZone: customer.get("taxZone"),
           shipVia: customer.get("shipVia"),
-          site: customer.get("preferredSite"),
-          currency: customer.get("currency"),
-          shipto: customer.get("shipto")
+          site: customer.get("preferredSite") || this.get("site"),
+          currency: customer.get("currency")
         };
         if (billtoContact) {
           _.extend(billtoAttrs, {
@@ -451,6 +458,7 @@ white:true*/
           unsetBilltoAddress();
         }
         this.set(billtoAttrs);
+        if (defaultShipto) { this.set("shipto", defaultShipto.attributes); }
       } else {
         this.unset("salesRep")
             .unset("commission")
@@ -481,6 +489,29 @@ white:true*/
         unsetBilltoAddress();
         unsetBilltoContact();
       }
+    },
+    
+    /**
+      Fetch selling units of measure after a regular fetch
+      and also silence `add` and `remove` events.
+    */
+    fetch: function (options) {
+      var that = this,
+        success = options.success;
+      options = options ? _.clone(options) : {};
+      this.off('add:lineItems remove:lineItems', this.lineItemsDidChange);
+      this.off('add:lineItems remove:lineItems', this.calculateTotals);
+      options.success = function (model, resp, options) {
+        var lineItems = that.get("lineItems").models;
+        _.each(lineItems, function (line) {
+          line.fetchSellingUnits();
+        });
+
+        that.on('add:lineItems remove:lineItems', that.lineItemsDidChange);
+        that.on('add:lineItems remove:lineItems', that.calculateTotals);
+        if (success) { success(model, resp, options); }
+      };
+      return XM.Document.prototype.fetch.call(this, options);
     },
 
     /**
@@ -518,7 +549,9 @@ white:true*/
         if (answer) {
           that.set("calculateFreight", !calculateFreight);
         } else {
-          that.set("freight", that.previous("freight"), {silent: true});
+          that.off('change:freight', that.freightDidChange);
+          that.set("freight", that.previous("freight"));
+          that.on('change:freight', that.freightDidChange);
         }
       };
       if (calculateFreight) {
@@ -546,7 +579,8 @@ white:true*/
     */
     recalculatePrices: function () {
       var that = this,
-        msg = "_recalcuateAll?".loc(),
+        lineItems = this.get("lineItems"),
+        msg = "_recalculateAll?".loc(),
         options = {
           callback: function (answer) {
             if (answer) {
@@ -557,7 +591,7 @@ white:true*/
             }
           }
         };
-      this.notify(msg, options);
+      if (lineItems.length) { this.notify(msg, options); }
     },
 
     /**
@@ -568,6 +602,15 @@ white:true*/
         lineItem.calculateTax();
       });
       this.calculateFreightTax();
+    },
+
+    /**
+      Release the current quote number. Need a special over-ride here because of peculiar
+      behavior of quote numbering different from all other generated numbers.
+    */
+    releaseNumber: function () {
+      this.dispatch('XM.Quote', 'releaseNumber', this.get("number"));
+      return this;
     },
 
     scheduleDateDidChange: function () {
@@ -685,7 +728,9 @@ white:true*/
           shiptoCountry: shiptoAddress.getValue("country")
         });
       }
-      this.set(shiptoAttrs, {silent: true});
+      this.off(this.shipAddressEvents, this.shiptoAddressDidChange);
+      this.set(shiptoAttrs);
+      this.on(this.shipAddressEvents, this.shiptoAddressDidChange);
       this.recalculatePrices();
     },
 
@@ -702,8 +747,8 @@ white:true*/
     statusDidChange: function () {
       var status = this.getStatus();
       if (status === XM.Model.READY_CLEAN) {
-        this.setReadOnly("customer");
-        this.setReadOnly("number");
+        this.setReadOnly(["number", "customer"], true);
+        this.applyCustomerSettings();
       }
     },
 
@@ -726,7 +771,7 @@ white:true*/
       if (!lineItems.length) {
         return XT.Error.clone('xt2012');
       }
-      
+
       return XM.Document.prototype.validate.apply(this, arguments);
     },
 
@@ -818,13 +863,11 @@ white:true*/
 
   });
   
-  // Add in quote status mixin
-  XM.Quote = XM.Quote.extend(XM.QuoteStatus);
-
   // ..........................................................
   // CLASS METHODS
   //
 
+  XM.Quote = XM.Quote.extend(XM.QuoteMixin);
   _.extend(XM.Quote, /** @lends XM.QuoteLine# */{
 
     // ..........................................................
@@ -876,14 +919,10 @@ white:true*/
         scheduleDate: allowASAP ? new Date() : undefined
       };
     },
-
-    initialize: function (attributes, options) {
-      XM.Model.prototype.initialize.apply(this, arguments);
-      var settings = XT.session.settings,
-        privileges = XT.session.privileges;
-      this.taxDetail = [];
-      this._updatePrice = true; // TODO: This probably is un-needed.
-      this._unitIsFractional = false;
+    
+    bindEvents: function (attributes, options) {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
+      var settings = XT.session.settings;
       this.on('change:discount', this.discountDidChange);
       this.on("change:itemSite", this.itemSiteDidChange);
       this.on('change:quantity', this.calculatePrice);
@@ -902,6 +941,15 @@ white:true*/
       if (settings.get("soPriceEffective") === "ScheduleDate") {
         this.on('change:scheduleDate', this.calculatePrice);
       }
+    },
+
+    initialize: function (attributes, options) {
+      XM.Model.prototype.initialize.apply(this, arguments);
+      var settings = XT.session.settings,
+        privileges = XT.session.privileges;
+      this.taxDetail = [];
+      this._updatePrice = true; // TODO: This probably is un-needed.
+      this._unitIsFractional = false;
 
       //  Disable the Discount Percent stuff if we don't allow them
       if (!settings.get("AllowDiscounts") &&
@@ -1170,37 +1218,57 @@ white:true*/
       return this;
     },
 
+    /**
+      Updates `sellingUnits` array from server
+
+      @returns {Object} Receiver
+    */
+    fetchSellingUnits: function () {
+      var that = this,
+        item = this.getValue("itemSite.item"),
+        options = {};
+
+      this.unset("quantityUnit");
+      this.unset("priceUnit");
+      this.sellingUnits.reset();
+
+      if (!item) { return this; }
+
+      // Fetch and update selling units
+      options.success = function (resp) {
+        // Resolve and add each id found
+        _.each(resp, function (id) {
+          var unit = XM.units.get(id);
+          that.sellingUnits.add(unit);
+        });
+        
+        // Set the item default selections
+        that.set({
+          quantityUnit: item.get("inventoryUnit"),
+          priceUnit: item.get("priceUnit"),
+          priceUnitRatio: item.get("priceUnitRatio")
+        });
+      };
+      item.sellingUnits(options);
+      return this;
+    },
+
     itemSiteDidChange: function () {
       var parent = this.getParent(),
         taxZone = parent ? parent.get("taxZone") : undefined,
         item = this.getValue("itemSite.item"),
         characteristics = this.get("characteristics"),
         that = this,
-        unitOptions = {},
-        taxOptions = {},
+        options = {},
         itemCharAttrs,
         charTypes,
         len,
         i;
 
-      // Fetch and update selling units
-      if (item) {
-        unitOptions.success = function (resp) {
-          // Resolve and add each id found
-          _.each(resp, function (id) {
-            var unit = XM.units.get(id);
-            that.sellingUnits.add(unit);
-          });
-        };
-        item.sellingUnits(unitOptions);
-      }
-
       // Reset values
-      this.unset("quantityUnit");
-      this.unset("priceUnit");
       this.unset("priceUnitRatio");
       this.unset("taxType");
-      this.sellingUnits.reset();
+      this.fetchSellingUnits();
 
       // Destroy old characteristics
       len = characteristics.length;
@@ -1210,27 +1278,8 @@ white:true*/
 
       if (!item) { return; }
 
-      // Set the item default selections
-      this.set("quantityUnit", item.get("inventoryUnit"));
-      this.set("priceUnit", item.get("priceUnit"));
-      this.set("priceUnitRatio", item.get("priceUnitRatio"));
-
-      // Fetch and update selling units
-      unitOptions.success = function (resp) {
-        // Resolve and add each id found
-        _.each(resp, function (id) {
-          var unit = XM.units.get(id);
-          that.sellingUnits.add(unit);
-        });
-
-        // Set the item default selections
-        that.set("quantityUnit", item.get("inventoryUnit"));
-        that.set("priceUnit", item.get("priceUnit"));
-      };
-      item.sellingUnits(unitOptions);
-
       // Fetch and update tax type
-      taxOptions.success = function (id) {
+      options.success = function (id) {
         var taxType = XM.taxTypes.get(id);
         if (taxType) {
           that.set("taxType", taxType);
@@ -1238,7 +1287,7 @@ white:true*/
           that.unset("taxType");
         }
       };
-      item.taxType(taxZone, taxOptions);
+      item.taxType(taxZone, options);
 
       // Set sort for characteristics
       if (!characteristics.comparator) {
@@ -1317,15 +1366,15 @@ white:true*/
         inventoryUnit = item ? this.getValue("inventoryUnit") : false,
         that = this,
         options = {};
-    
+
       if (!inventoryUnit || !quantityUnit || !priceUnit) { return; }
-      
+
       if (inventoryUnit.id === priceUnit.id) {
         this.set("priceUnitRatio", 1);
       } else {
         // Unset price ratio so we can't save until we get an answer
         that.unset("priceUnitRatio");
-        
+
         // Lookup unit of measure ratio
         options.success = function (ratio) {
           that.set("priceUnitRatio", ratio);
@@ -1457,7 +1506,7 @@ white:true*/
       if (!this._unitIsFractional && Math.round(quantity) !== quantity) {
         return XT.Error.clone('xt2014');
       }
-      
+
       return XM.Document.prototype.validate.apply(this, arguments);
     },
 
@@ -1744,8 +1793,8 @@ white:true*/
 
   });
   
-  // Add in quote status mixin
-  XM.QuoteListItem = XM.QuoteListItem.extend(XM.QuoteStatus);
+  // Add in quote mixin
+  XM.QuoteListItem = XM.QuoteListItem.extend(XM.QuoteMixin);
 
   /**
     @class

@@ -174,7 +174,94 @@ trailing:true white:true*/
   // ..........................................................
   // QUOTE LINE ITEMS
   //
-  enyo.kind({
+  
+  /**
+    Mixin to share common quote line functionality
+  */
+  XV.QuoteLineMixin = {
+    create: function () {
+      this.inherited(arguments);
+      this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
+    },
+    /**
+     When the model changes, check the priceMode field to see if it is in
+       Discount or Markup mode and change the label accordingly.
+    */
+    attributesChanged: function (model, options) {
+      this.inherited(arguments);
+      var pm = model.get("priceMode");
+      if (pm === "N" || pm === "D" || pm === "P") { // discount
+        this.$.discount.setLabel("_discount".loc());
+      } else { // markup
+        this.$.discount.setLabel("_markup".loc());
+      }
+    },
+    changeItemSiteParameter: function (attr, param, isParent) {
+      param = param ? param : attr;
+      isParent = _.isBoolean(isParent) ? isParent : true;
+      var model = this.getValue(),
+       parent = model ? model.getParent() : false,
+       value = isParent && parent ? parent.get(attr) :
+         (model ? model.get(attr) : false);
+      if (value) {
+        this.$.itemSiteWidget.addParameter({
+          attribute: param,
+          value: value
+        });
+      } else {
+        this.$.itemSiteWidget.removeParameter(param);
+      }
+    },
+    shiptoChanged: function () {
+      this.changeItemSiteParameter("shipto");
+    },
+    scheduleDateChanged: function () {
+      this.changeItemSiteParameter("scheduleDate", "effectiveDate", false);
+    },
+    quoteDateChanged: function () {
+      this.changeItemSiteParameter("quoteDate", "effectiveDate");
+    },
+    setValue: function (value) {
+      var parent,
+       site,
+       effectivePolicy = XT.session.settings.get("soPriceEffective");
+      // Remove any old bindings
+      if (this.value) {
+        parent = value.getParent();
+        parent.off("change:shipto", this.shiptoChanged, this);
+        parent.off("change:quoteDate", this.quoteDateChanged, this);
+        this.value.off("change:scheduleDate", this.scheduleDateChanged, this);
+      }
+      XV.EditorMixin.setValue.apply(this, arguments);
+      // Add new bindings
+      if (this.value) {
+        parent = value.getParent();
+        parent.on("change:shipto", this.shiptoChanged, this);
+        if (effectivePolicy === "OrderDate") {
+          parent.on("change:quoteDate", this.quoteDateChanged, this);
+          this.changeItemSiteParameter("quoteDate", "effectiveDate");
+        } else if (effectivePolicy === "ScheduleDate") {
+          this.value.on("change:scheduleDate", this.scheduleDateChanged, this);
+          this.changeItemSiteParameter("scheduleDate", "effectiveDate");
+        }
+        site = parent ? parent.get("site") : false;
+        if (site) { this.$.itemSiteWidget.setSelectedSite(site); }
+      }
+      this.changeItemSiteParameter("customer");
+      this.changeItemSiteParameter("shipto");
+    },
+    valueChanged: function () {
+      this.inherited(arguments);
+      var model = this.getValue(),
+        sellingUnits = model ? model.sellingUnits : false;
+      if (sellingUnits) {
+        this.$.quantityUnitPicker.setCollection(sellingUnits);
+        this.$.priceUnitPicker.setCollection(sellingUnits);
+      }
+    }
+  };
+  
+  var quoteLineItem = enyo.mixin(XV.QuoteLineMixin, {
     name: "XV.QuoteLineItemEditor",
     kind: "XV.RelationsEditor",
     components: [
@@ -183,17 +270,23 @@ trailing:true white:true*/
         {kind: "XV.NumberWidget", attr: "lineNumber"},
         {kind: "XV.ItemSiteWidget", attr: "itemSite",
           name: "itemSiteWidget",
-          filterRestrictionType: "item.isSold",
-          filterRestriction: true},
+          query: {parameters: [
+          {attribute: "item.isSold", value: true},
+          {attribute: "item.isActive", value: true},
+          {attribute: "isSold", value: true},
+          {attribute: "isActive", value: true}
+        ]}},
         {kind: "XV.QuantityWidget", attr: "quantity"},
-        {kind: "XV.UnitPicker", attr: "quantityUnit"},
+        {kind: "XV.UnitPicker", attr: "quantityUnit",
+          name: "quantityUnitPicker"},
         {kind: "XV.PercentWidget", name: "discount", attr: "discount",
           label: "_discount".loc()},
         {kind: "XV.MoneyWidget", attr:
           {amount: "price", currency: "quote.currency"},
           label: "_price".loc(), currencyDisabled: true,
           effective: "quote.quoteDate", scale: XT.SALES_PRICE_SCALE},
-        {kind: "XV.UnitPicker", attr: "priceUnit"},
+        {kind: "XV.UnitPicker", attr: "priceUnit",
+          name: "priceUnitPicker"},
         {kind: "XV.MoneyWidget", attr:
           {amount: "extendedPrice", currency: "quote.currency"},
           label: "_extendedPrice".loc(), currencyDisabled: true,
@@ -204,25 +297,10 @@ trailing:true white:true*/
         {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
         {kind: "XV.TextArea", attr: "notes", fit: true}
       ]}
-    ],
-    create: function () {
-      this.inherited(arguments);
-      this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
-    },
-    /**
-      When the model changes, check the priceMode field to see if it is in
-        Discount or Markup mode and change the label accordingly.
-    */
-    attributesChanged: function (model, options) {
-      this.inherited(arguments);
-      var pm = model.get("priceMode");
-      if (pm === "N" || pm === "D" || pm === "P") { // discount
-        this.$.discount.setLabel("_discount".loc());
-      } else { // markup
-        this.$.discount.setLabel("_markup".loc());
-      }
-    }
+    ]
   });
+  
+  enyo.kind(quoteLineItem);
 
   enyo.kind({
     name: "XV.QuoteLineItemBox",
@@ -242,12 +320,17 @@ trailing:true white:true*/
       this.createComponent({
         kind: "onyx.Button",
         content: "_expand".loc(),
+        name: "expandButton",
         ontap: "launchWorkspace",
         classes: "xv-groupbox-button-right",
         container: this.$.navigationButtonPanel
       });
     },
 
+    disabledChanged: function () {
+      this.inherited(arguments);
+      this.$.expandButton.setDisabled(this.getDisabled());
+    },
     /**
     Set the current model into the List Relation and the Summary Editor Panel
     */
