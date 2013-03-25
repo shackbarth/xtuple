@@ -100,7 +100,7 @@ var _ = require("underscore"),
         model.on('statusChange', callback);
         model.save(null, {
           error: function (model, error, options) {
-            console.log("error saving", JSON.stringify(error));
+            that.callback(JSON.stringify(error));
           }
         });
 
@@ -110,7 +110,8 @@ var _ = require("underscore"),
           that.callback(null, data);
         }, exports.waitTime);
       },
-      'Status is `READY_CLEAN`': function (error, data) {
+      'Save was successful': function (error, data) {
+        assert.equal(error, null);
         assert.equal(data.model.getStatusString(), 'READY_CLEAN');
       },
       'And the values are as we set them': function (error, data) {
@@ -232,6 +233,7 @@ var _ = require("underscore"),
           topic: function (data) {
             // allow the test to use a shorthand mock for these submodels, and
             // flesh them out here. This is very very clever.
+
             var that = this,
               objectsToFetch = 0,
               objectsFetched = 0,
@@ -244,9 +246,13 @@ var _ = require("underscore"),
                 }
               },
               fetchError = function () {
-                console.log("fetch error", JSON.stringify(arguments));
+                console.log("Error fleshing out mock models", JSON.stringify(arguments));
+                // proceed anyway.
+                objectsFetched++;
+                if (objectsFetched === objectsToFetch) {
+                  that.callback(null, data);
+                }
               };
-
             _.each(data.createHash, function (value, key) {
               if (typeof value === 'object') {
                 var fetchObject = {
@@ -265,7 +271,6 @@ var _ = require("underscore"),
                 objectsToFetch++;
               }
             })
-
             // if there are no models to substitute we won't be doing this whole callback
             // rigamorole.
             if (objectsToFetch === 0) {
