@@ -406,7 +406,7 @@ white:true*/
       var customer = this.get("customer"),
         billtoContact = customer ? customer.get("billingContact") || customer.get("contact") : false,
         billtoAddress = billtoContact ? billtoContact.get("address") : false,
-        defaultShipto = customer.get("defaultShipto"),
+        defaultShipto = customer ? customer.get("defaultShipto") : false,
         billtoAttrs,
         that = this,
         unsetBilltoAddress = function () {
@@ -943,7 +943,7 @@ white:true*/
       var settings = XT.session.settings;
       this.on('change:discount', this.discountDidChange);
       this.on("change:itemSite", this.itemSiteDidChange);
-      this.on('change:quantity', this.calculatePrice);
+      this.on('change:quantity', this.quantityDidChange);
       this.on('change:quantity change:price', this.calculateExtendedPrice);
       this.on('change:price', this.calculatePercentages);
       this.on('change:priceUnit', this.priceUnitDidChange);
@@ -1389,6 +1389,7 @@ white:true*/
 
       if (inventoryUnit.id === priceUnit.id) {
         this.set("priceUnitRatio", 1);
+        that.calculatePrice(true);
       } else {
         // Unset price ratio so we can't save until we get an answer
         that.unset("priceUnitRatio");
@@ -1400,6 +1401,11 @@ white:true*/
         };
         item.unitToUnitRatio(inventoryUnit, quantityUnit, options);
       }
+    },
+    
+    quantityDidChange: function () {
+      this.calculatePrice();
+      this.recalculateParent();
     },
 
     quantityUnitDidChange: function () {
@@ -1414,16 +1420,18 @@ white:true*/
 
       if (!inventoryUnit || !quantityUnit) { return; }
 
+      this.set("priceUnit", quantityUnit);
       if (quantityUnit.id === item.get("inventoryUnit").id) {
         this.set("quantityUnitRatio", 1);
         this._unitIsFractional = item.get("isFractional");
         this.setReadOnly("priceUnit", false);
+        that.calculatePrice(true);
+        that.recalculateParent();
       } else {
         // Unset so we can not save until we get a new ratio value
         this.unset("quantityUnitRatio");
 
         // Price unit must be set to quantity unit and be read only
-        this.set("priceUnit", quantityUnit);
         this.setReadOnly("priceUnit", true);
 
         // Lookup unit of measure ratio and fractional
@@ -1441,6 +1449,7 @@ white:true*/
               that.notify("_notFractional".loc);
             } else {
               that.calculatePrice(true);
+              that.recalculateParent();
             }
           }
         };
@@ -1593,7 +1602,7 @@ white:true*/
       itemOptions.currency = currency;
       itemOptions.effective = parentDate;
       itemOptions.error = function (err) {
-        that.trigger("error", err);
+        that.trigger("invalid", err);
       };
 
       charOptions = _.clone(itemOptions); // Some params are shared
