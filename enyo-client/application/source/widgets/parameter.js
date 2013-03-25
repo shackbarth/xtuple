@@ -572,7 +572,8 @@ trailing:true white:true*/
             param = {
               attribute: this.getAttr(),
               operator: '>=',
-              value: new Date()
+              value: new Date(),
+              includeNull: true
             };
           }
           return param;
