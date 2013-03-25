@@ -44,63 +44,120 @@ trailing:true white:true*/
           {kind: "XV.Groupbox", name: "mainPanel", components: [
             {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
               classes: "in-panel", components: [
-              {kind: "onyx.GroupboxHeader",
-                content: "_invoice".loc()},
-              {kind: "XV.NumberPolicyPicker",
-                attr: "InvcNumberGeneration",
+              // TODO: where does IgnoreCustDisc (boolean) go ?
+              // TODO: worry about too-long label text
+
+              {kind: "onyx.GroupboxHeader", content: "_salesOrder".loc()},
+              {kind: "XV.NumberPolicyPicker", attr: "CONumberGeneration", // XXX really CO?
                 label: "_number".loc() + " " + "_policy".loc()},
-              {kind: "XV.NumberWidget", attr: "SOCreditLimit",
-                label: "_SOCreditLimit".loc()},
+              {kind: "XV.NumberWidget", attr: "NextSalesOrderNumber",
+                label: "_nextNumber".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "DefaultPrintSOOnSave",
+                label: "_printOnSave".loc()},
+
+              {kind: "onyx.GroupboxHeader", content: "_quote".loc()},
+              {kind: "XV.NumberPolicyPicker", attr: "QUNumberGeneration",
+                label: "_number".loc() + " " + "_policy".loc()},
+              {kind: "XV.NumberWidget", attr: "NextQuoteNumber",
+                label: "_nextNumber".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "ShowQuotesAfterSO",
+                label: "_showQuotesAfterConverted".loc()},
+
+              {kind: "onyx.GroupboxHeader", content: "_creditMemo".loc()},
+              {kind: "XV.NumberPolicyPicker", attr: "CMNumberGeneration",
+                label: "_number".loc() + " " + "_policy".loc()},
+              {kind: "XV.NumberWidget", attr: "NextCreditMemoNumber",
+                label: "_nextNumber".loc()},
+
+              {kind: "onyx.GroupboxHeader", content: "_invoice".loc()},
+              {kind: "XV.NumberPolicyPicker", attr: "InvcNumberGeneration",
+                label: "_number".loc() + " " + "_policy".loc()},
+              {kind: "XV.NumberWidget", attr: "NextInvoiceNumber",
+                label: "_nextNumber".loc()},
+              {kind: "XV.InputWidget", attr: "InvoiceDateSource",
+                label: "_invoiceDateSource".loc()}, // TODO: radiobutton?
+
+              {kind: "onyx.GroupboxHeader", content: "_dateControl".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "AllowASAPShipSchedules",
+                label: "_allowASAPShipSchedules".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "UsePromiseDate",
+                label: "_usePromiseDate".loc()},
+
+              {kind: "onyx.GroupboxHeader", content: "_changeLog".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "CustomerChangeLog",
+                label: "_postCustomerChanges".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "SalesOrderChangeLog",
+                label: "_postSalesOrderChanges".loc()},
+
+              {kind: "onyx.GroupboxHeader", content: "_shipControl".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "AlwaysShowSaveAndAdd",
+                label: "_showSaveAndAddbutton".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "EnableSOShipping",
+                label: "_enableSOShipping".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "FirmSalesOrderPackingList",
+                label: "_firmSalesOrdersWhenAddedToPackingList".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "AutoSelectForBilling",
+                label: "_autoSelectForBilling".loc()},
+
+              {kind: "onyx.GroupboxHeader", content: "_creditControl".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "AutoAllocateCreditMemos",
+                label: "_autoAllocateCreditMemos".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "RestrictCreditMemos",
+                label: "_restrictCreditMemos".loc()}
+            ]}
+          ]},
+          {kind: "XV.Groupbox", name: "pricePanel", title: "_price".loc(), components: [
+            {kind: "XV.ScrollableGroupbox", name: "priceGroup", fit: true,
+              classes: "in-panel", components: [
+              {kind: "onyx.GroupboxHeader", content: "_priceControl".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "AllowDiscounts",
+                label: "_allowDiscounts".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "DisableSalesOrderPriceOverride",
+                label: "_disableSalesOrderPriceOverride".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "HideSOMiscCharge",
+                label: "_hideSOMiscCharge".loc()},
+              {kind: "XV.InputWidget", attr: "soPriceEffective",
+                label: "_priceEffectiveDate".loc()}, // TODO: radiobutton?
+              {kind: "onyx.GroupboxHeader", content: "_freightPricing".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "CalculateFreight",
+                label: "_useCalculatedFreightPricing".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "IncludePackageWeight",
                 label: "_includePackageWeight".loc()},
+              {kind: "XV.NumberWidget", attr: "UpdatePriceLineEdit", label: "_pricingOnLineItemEdits".loc()}, // TODO: radiobutton?
+            ]}
+          ]},
+          {kind: "XV.Groupbox", name: "defaultsPanel", title: "_defaults".loc(), components: [
+            {kind: "XV.ScrollableGroupbox", name: "defaultsGroup", fit: true,
+              classes: "in-panel", components: [
+              {kind: "onyx.GroupboxHeader", content: "_customerDefaults".loc()},
+              {kind: "XV.InputWidget", attr: "DefaultCustType",
+                label: "_customerType".loc()},
+              {kind: "XV.InputWidget", attr: "DefaultSalesRep",
+                label: "_salesRep".loc()},
+              {kind: "XV.InputWidget", attr: "DefaultShipViaId",
+                label: "_shipVia".loc()},
+              {kind: "XV.InputWidget", attr: "DefaultShipFormId",
+                label: "_shipForm".loc()},
+              {kind: "XV.InputWidget", attr: "DefaultTerms",
+                label: "_terms".loc()},
+              {kind: "XV.InputWidget", attr: "DefaultBalanceMethod",
+                label: "_balanceMethod".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "DefaultPartialShipments",
+                label: "_acceptsPartialShipments".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "DefaultBackOrders",
+                label: "_acceptsBackOrders".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "DefaultFreeFormShiptos",
+                label: "_allowFreeFormShiptos".loc()},
+              {kind: "XV.NumberWidget", attr: "SOCreditLimit",
+                label: "_creditLimit".loc()},
+              {kind: "XV.InputWidget", attr: "SOCreditRate",
+                label: "_creditRating".loc()},
             ]}
           ]}
         ]}
       ]
     });
 
-/*
-AllowASAPShipSchedules: true
-AllowDiscounts: true
-AlwaysShowSaveAndAdd: true
-AutoAllocateCreditMemos: false
-AutoSelectForBilling: true
-CMNumberGeneration: "A"
-CONumberGeneration: "A"
-CalculateFreight: true
-CustomerChangeLog: true
-DefaultBackOrders: true
-DefaultBalanceMethod: "B"
-DefaultCustType: 18
-DefaultFreeFormShiptos: true
-DefaultPartialShipments: true
-DefaultPrintSOOnSave: false
-DefaultSalesRep: 29
-DefaultShipFormId: 12
-DefaultShipViaId: 13
-DefaultTerms: 42
-DisableSalesOrderPriceOverride: false
-EnableSOShipping: true
-FirmSalesOrderPackingList: true
-HideSOMiscCharge: false
-IgnoreCustDisc: false
-IncludePackageWeight: true
-InvcNumberGeneration: "A"
-InvoiceDateSource: "shipdate"
-NextCreditMemoNumber: 70001
-NextInvoiceNumber: 60136
-NextQuoteNumber: 40018
-NextSalesOrderNumber: 50238
-QUNumberGeneration: "O"
-RestrictCreditMemos: false
-SOCreditLimit: 20000
-SOCreditRate: "No check"
-SalesOrderChangeLog: true
-ShowQuotesAfterSO: true
-UpdatePriceLineEdit: 2
-UsePromiseDate: true
-soPriceEffective: "CurrentDate"
-*/
 
   };
 
