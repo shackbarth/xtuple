@@ -1458,7 +1458,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   enyo.kind(quoteLineItem);
 
   // ..........................................................
@@ -1513,7 +1513,6 @@ trailing:true white:true*/
             {kind: "XV.AddressWidget", attr: "address"},
             {kind: "XV.TaxZonePicker", attr: "taxZone"},
             {kind: "XV.InputWidget", attr: "fob"},
-            // ???{kind: "XV.NumberWidget", attr: "shipVia"},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}

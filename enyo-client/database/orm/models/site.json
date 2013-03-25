@@ -84,13 +84,6 @@
         }
       },
       {
-        "name": "shipVia",
-        "attr": {
-          "type": "String",
-          "column": "warehous_shipvia_id"
-        }
-      },
-      {
         "name": "notes",
         "attr": {
           "type": "String",
