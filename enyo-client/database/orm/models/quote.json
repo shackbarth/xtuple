@@ -1334,6 +1334,13 @@
          }
       },
       {
+        "name": "salesRep",
+        "attr": {
+          "type": "Number",
+          "column": "quhead_salesrep_id"
+         }
+      },
+      {
         "name": "shiptoName",
         "attr": {
           "type": "String",

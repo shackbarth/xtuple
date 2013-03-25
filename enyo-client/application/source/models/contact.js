@@ -67,10 +67,11 @@ white:true*/
       return name.join(' ');
     },
 
-    validateSave: function (attributes, options) {
+    validate: function (attributes, options) {
       if (!attributes.firstName && !attributes.lastName) {
         return XT.Error.clone('xt2004');
       }
+      return XM.Document.prototype.validate.apply(this, arguments);
     }
 
   });

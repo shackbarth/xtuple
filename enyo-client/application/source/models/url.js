@@ -28,10 +28,11 @@ white:true*/
       path: 'http:'
     },
     
-    validateSave: function (attributes, options) {
+    validate: function (attributes, options) {
       if (!this.validateUrl(attributes.path)) {
         return XT.Error.clone('xt2009');
       }
+      return XM.Document.prototype.validate.apply(this, arguments);
     },
     
     validateUrl: function (value) {
