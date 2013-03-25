@@ -5,6 +5,7 @@ white:true*/
 setTimeout:true, clearTimeout: true, exports: true */
 
 var _ = require("underscore"),
+  zombieAuth = require("./zombie_auth"),
   assert = require("assert");
 
 (function () {
@@ -23,7 +24,7 @@ var _ = require("underscore"),
     @param {Object} Data
     @param {Object} Vows
   */
-  exports.create = function (data, vows) {
+  var create = exports.create = function (data, vows) {
     vows = vows || {};
     var context = {
       topic: function () {
@@ -80,7 +81,7 @@ var _ = require("underscore"),
     @param {Object} Data
     @param {Object} Vows
   */
-  exports.save = function (data, vows) {
+  var save = exports.save = function (data, vows) {
     vows = vows || {};
     var context = {
       topic: function () {
@@ -144,7 +145,7 @@ var _ = require("underscore"),
     @param {Object} Data
     @param {Object} Vows
   */
-  exports.update = function (data, vows) {
+  var update = exports.update = function (data, vows) {
     vows = vows || {};
     var context = {
       topic: function () {
@@ -168,7 +169,7 @@ var _ = require("underscore"),
     @param {Data}
     @param {Object} Vows
   */
-  exports.destroy = function (data, vows) {
+  var destroy = exports.destroy = function (data, vows) {
     vows = vows || {};
     var context = {
       topic: function () {
@@ -204,5 +205,93 @@ var _ = require("underscore"),
     _.extend(context, vows);
     return context;
   };
+
+  /**
+    String all CRUD tests together so that simple models can be
+    tested with a single function
+   */
+  var runAllCrud = exports.runAllCrud = function (data) {
+    var context = {
+      topic: function () {
+        var that = this,
+          callback = function () {
+            data.model = new XM[data.recordType.substring(3)]();
+            that.callback(null, data);
+          };
+        zombieAuth.loadApp({callback: callback, verbose: false});
+      },
+      'Verify the record type is correct': function (data) {
+        assert.equal(data.model.recordType, data.recordType);
+      },
+      'We can create a model ': create(data, {
+        '-> Set values to the model': {
+          topic: function (data) {
+            // allow the test to use a shorthand mock for these submodels, and
+            // flesh them out here. This is very very clever.
+            var that = this,
+              objectsToFetch = 0,
+              objectsFetched = 0,
+              fetchSuccess = function (model, response, options) {
+                // swap in this model for the mock
+                data.model.set(options.key, model, {silent: true});
+                objectsFetched++;
+                if (objectsFetched === objectsToFetch) {
+                  that.callback(null, data);
+                }
+              },
+              fetchError = function () {
+                console.log("fetch error", arguments);
+              };
+
+            _.each(data.createHash, function (value, key) {
+              if (typeof value === 'object') {
+                var fetchObject = {
+                    success: fetchSuccess,
+                    error: fetchError,
+                    key: key
+                  },
+                  relatedModel,
+                  relatedModelName = _.find(data.model.relations, function (relation) {
+                    return relation.key === key;
+                  }).relatedModel;
+
+                relatedModel = new XM[relatedModelName.substring(3)]();
+                fetchObject[relatedModel.idAttribute] = value.id;
+                relatedModel.fetch(fetchObject);
+                objectsToFetch++;
+              }
+            })
+
+            // if there are no models to substitute we won't be doing this whole callback
+            // rigamorole.
+            if (objectsToFetch === 0) {
+              data.model.set(data.createHash);
+              return data;
+            }
+          },
+          // create vows
+          'Verify the last error is null': function (data) {
+            assert.isNull(data.model.lastError);
+          },
+          '-> Save the model': save(data, {
+            'We can update the model ': update(data, {
+              '-> Set values': {
+                topic: function () {
+                  data.model.set(data.updateHash);
+                  return data;
+                },
+                '-> Commit to the model': save(data, {
+                  'destroy': destroy(data)
+                })
+              }
+            })
+          })
+        }
+      })
+    };
+    return context;
+  };
+
+
 
 }());

@@ -41,7 +41,6 @@ white:true*/
     abbreviationDidChange: function (model, value, options) {
       var that = this,
         checkOptions = {};
-      if (this.isNotReady()) { return; }
 
       checkOptions.success = function (resp) {
         var err, params = {};
@@ -55,8 +54,8 @@ white:true*/
       this.findExisting('abbreviation', value, checkOptions);
     },
 
-    initialize: function () {
-      XM.Document.prototype.initialize.apply(this, arguments);
+    bindEvents: function () {
+      XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on('change:abbreviation', this.abbreviationDidChange);
     },
 
@@ -109,7 +108,6 @@ white:true*/
             model.trigger('error', model, err, options);
           }
         };
-        checkOptions.error = Backbone.wrapError(null, model, options);
         this.findExisting('abbreviation', currAbbr, checkOptions);
 
       // Otherwise just go ahead and save
@@ -244,7 +242,7 @@ white:true*/
       return this.get('abbreviation') + ' - ' + this.get('symbol');
     },
 
-    validateEdit: function (attributes) {
+    validate: function (attributes) {
       var params = {};
       if (attributes.abbreviation &&
           attributes.abbreviation.length !== 3) {
@@ -252,6 +250,7 @@ white:true*/
         params.length = "3";
         return XT.Error.clone('xt1006', { params: params });
       }
+      return XM.Document.prototype.validate.apply(this, arguments);
     }
 
   });

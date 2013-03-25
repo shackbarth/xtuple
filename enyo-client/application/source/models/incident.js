@@ -176,21 +176,21 @@ white:true*/
     // METHODS
     //
 
-    initialize: function () {
-      XM.Document.prototype.initialize.apply(this, arguments);
+    bindEvents: function () {
+      XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on('change:assignedTo', this.assignedToDidChange);
     },
 
     assignedToDidChange: function (model, value, options) {
-      if (this.isNotReady()) { return; }
       if (value) { this.set('status', XM.Incident.ASSIGNED); }
     },
 
-    validateSave: function () {
+    validate: function () {
       var K = XM.Incident;
       if (this.get('status') === K.ASSIGNED && !this.get('assignedTo')) {
         return XT.Error.clone('xt2001');
       }
+      return XM.Document.prototype.validate.apply(this, arguments);
     },
 
     save: function (key, value, options) {

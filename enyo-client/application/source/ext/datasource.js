@@ -12,6 +12,39 @@ white:true*/
     //datasourceUrl: DOCUMENT_HOSTNAME,
     //datasourcePort: 443,
     isConnected: false,
+    
+    /**
+      Helper function to convert parameters to data source friendly formats
+      
+      @param {String} Record Type
+      @param {Object} Query parameters
+    */
+    formatParameters: function (recordType, params) {
+      _.each(params, function (param) {
+        var klass = recordType ? XT.getObjectByName(recordType) : null,
+          relations = klass ? klass.prototype.relations : [],
+          relation = _.find(relations, function (rel) {
+            return rel.key === param.attribute;
+          }),
+          idAttribute;
+
+        // Format date if applicable
+        if (param.value instanceof Date) {
+          param.value = param.value.toJSON();
+
+        // Format record if applicable
+        } else if (_.isObject(param.value)) {
+          param.value = param.value.id;
+        }
+
+        // Format attribute if it's `HasOne` relation
+        if (relation && relation.type === Backbone.HasOne) { // && relation.isNested) { TODO: Re-add this if we get nonNested back?
+          klass = XT.getObjectByName(relation.relatedModel);
+          idAttribute = klass.prototype.idAttribute;
+          param.attribute = param.attribute + '.' + idAttribute;
+        }
+      });
+    },
 
     /*
     Returns a record array based on a query.
@@ -19,12 +52,11 @@ white:true*/
     @param {Object} query
     @param {Object} options
     */
-    fetch: function (options) {
+    fetch: function (collection, options) {
       options = options ? _.clone(options) : {};
       var that = this,
         payload = {},
         parameters = options.query.parameters,
-        prop,
         complete = function (response) {
           var dataHash, params = {}, error;
 
@@ -42,41 +74,12 @@ white:true*/
           // currently dealing with two different protocols for response formatting
           dataHash = response.data.rows ? JSON.parse(response.data.rows[0].fetch) : response.data;
           if (options && options.success) {
-            options.success.call(that, dataHash);
+            options.success.call(that, collection, dataHash, options);
           }
         };
 
-
-      // Helper function to convert parameters to data source friendly formats
-      var format = function (param) {
-        var recordType = options.query.recordType,
-          klass = recordType ? XT.getObjectByName(recordType) : null,
-          relations = klass ? klass.prototype.relations : [],
-          relation = _.find(relations, function (rel) {
-            return rel.key === param.attribute;
-          }),
-          idAttribute;
-
-        // Format date if applicable
-        if (param.value instanceof Date) {
-          param.value = param.value.toJSON();
-
-        // Format record if applicable
-        } else if (param.value instanceof XM.Model) {
-          param.value = param.value.id;
-        }
-
-        // Format attribute if it's `HasOne` relation
-        if (relation && relation.type === Backbone.HasOne) { // && relation.isNested) { TODO: Re-add this if we get nonNested back?
-          klass = XT.getObjectByName(relation.relatedModel);
-          idAttribute = klass.prototype.idAttribute;
-          param.attribute = param.attribute + '.' + idAttribute;
-        }
-
-      };
-
-      for (prop in parameters) {
-        format(parameters[prop]);
+      if (parameters && parameters.length) {
+        this.formatParameters(options.query.recordType, parameters);
       }
 
       payload.requestType = 'fetch';
@@ -96,7 +99,7 @@ white:true*/
     @param {Number} id
     @param {Object} options
     */
-    retrieveRecord: function (recordType, id, options) {
+    retrieveRecord: function (model, options) {
       var that = this,
         payload = {},
         complete = function (response) {
@@ -126,13 +129,13 @@ white:true*/
 
           // Handle success
           if (options && options.success) {
-            options.success.call(that, dataHash);
+            options.success.call(that, model, dataHash, options);
           }
         };
 
       payload.requestType = 'retrieveRecord';
-      payload.recordType = recordType;
-      payload.id = id;
+      payload.recordType = model.recordType;
+      payload.id = options.id || model.id;
       payload.databaseType = options.databaseType;
       payload.options = { context: options.context };
 
@@ -169,7 +172,7 @@ white:true*/
           dataHash = response.data.rows ? JSON.parse(response.data.rows[0].commit_record) : response.data;
           //dataHash = JSON.parse(response.data.rows[0].commit_record);
           if (options && options.success) {
-            options.success.call(that, dataHash);
+            options.success.call(that, model, dataHash, options);
           }
         };
 
@@ -222,7 +225,7 @@ white:true*/
           dataHash = response.data.rows ? JSON.parse(response.data.rows[0].dispatch) : response.data;
           //dataHash = JSON.parse(response.data.rows[0].dispatch);
           if (options && options.success) {
-            options.success.call(that, dataHash);
+            options.success.call(that, dataHash, options);
           }
         };
 

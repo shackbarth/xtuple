@@ -351,8 +351,41 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_itemSite".loc()},
-      {name: "itemNumber", label: "_itemNumber".loc(), attr: "item.number"},
-      {name: "siteCode", label: "_siteCode".loc(), attr: "site.code"}
+      {name: "itemWidget", label: "_item".loc(), attr: "item",
+        defaultKind: "XV.ItemWidget"},
+      {name: "site", label: "_site".loc(), attr: "site",
+        defaultKind: "XV.SitePicker"},
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {kind: "onyx.GroupboxHeader", content: "_item".loc()},
+      {name: "itemNumber", label: "_number".loc(), attr: "item.number"},
+      {name: "itemDescription", label: "_description".loc(), attr: ["item.description1", "item.description2"]},
+      {kind: "onyx.GroupboxHeader", content: "_site".loc()},
+      {name: "siteCode", label: "_code".loc(), attr: "site.code"},
+      {name: "siteDescription", label: "_description".loc(), attr: "site.description"},
+      {kind: "onyx.GroupboxHeader", content: "_classCode".loc()},
+      {name: "classCode", label: "_equals".loc(), attr: "item.classCode.id",
+        defaultKind: "XV.ClassCodePicker"},
+      {name: "classCodePattern", label: "_code".loc(), attr: "item.classCode.code"},
+      {kind: "onyx.GroupboxHeader", content: "_costCategory".loc()},
+      {name: "costCategory", label: "_equals".loc(), attr: "costCategory",
+        defaultKind: "XV.CostCategoryPicker"},
+      {name: "costCategoryPattern", label: "_code".loc(), attr: "costCategory.code"},
+      {kind: "onyx.GroupboxHeader", content: "_plannerCode".loc()},
+      {name: "plannerCode", label: "_equals".loc(), attr: "plannerCode",
+        defaultKind: "XV.PlannerCodePicker"},
+      {name: "plannerCodePattern", label: "_code".loc(), attr: "plannerCode.code"}
     ]
   });
 
@@ -532,34 +565,62 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_quote".loc()},
-      // {name: "showInactive", label: "_showInactive".loc(), attr: "isActive", defaultKind: "XV.CheckboxWidget",
-      //   getParameter: function () {
-      //     var param;
-      //     if (!this.getValue()) {
-      //       param = {
-      //         attribute: this.getAttr(),
-      //         operator: '=',
-      //         value: true
-      //       };
-      //     }
-      //     return param;
-      //   }
-      // },
-      // {name: "name", label: "_name".loc(), attr: "name"},
-      // {name: "description", label: "_description".loc(), attr: "description"},
-      // {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-      // {name: "account", label: "_account".loc(), attr: "account", defaultKind: "XV.AccountWidget"},
-      // {name: "contact", label: "_contact".loc(), attr: "contact", defaultKind: "XV.ContactWidget"},
-      // {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
-      // {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"},
-      // {name: "assignedTo", label: "_assignedTo".loc(), attr: "assignedTo", defaultKind: "XV.UserAccountWidget"},
-      // {kind: "onyx.GroupboxHeader", content: "_dueDate".loc()},
-      // {name: "fromDate", label: "_fromDate".loc(), attr: "dueDate", operator: ">=",
-      //   filterLabel: "_from".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
-      //   defaultKind: "XV.DateWidget"},
-      // {name: "toDate", label: "_toDate".loc(), attr: "dueDate", operator: "<=",
-      //   filterLabel: "_to".loc() + " " + "_dueDate".loc() + " " + "_date".loc(),
-      //   defaultKind: "XV.DateWidget"}
+      {name: "showExpired", label: "_showExpired".loc(), attr: "expireDate", defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '>=',
+              value: new Date(),
+              includeNull: true
+            };
+          }
+          return param;
+        }
+      },
+      {name: "showClosed", label: "_showClosed".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '!=',
+              value: 'C'
+            };
+          }
+          return param;
+        }
+      },
+      {name: "excludeProspects", label: "_excludeProspects".loc(), attr: "customer.status", defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '!=',
+              value: "P"
+            };
+          }
+          return param;
+        }
+      },
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "salesRep", attr: "salesRep", label: "_salesRep".loc(), defaultKind: "XV.SalesRepPicker"},
+      {kind: "onyx.GroupboxHeader", content: "_customer".loc()},
+      {name: "customer", attr: "customer", label: "_customer".loc(), defaultKind: "XV.CustomerProspectWidget"},
+      {name: "customerType", attr: "customer.customerType", label: "_customerType".loc(), defaultKind: "XV.CustomerTypePicker"},
+      {name: "customerPurchaseOrderNumber", attr: "customerPurchaseOrderNumber",
+        label: "_custPO".loc()},
+      {kind: "onyx.GroupboxHeader", content: "_quoteDate".loc()},
+      {name: "createdFromDate", label: "_fromDate".loc(),
+        filterLabel: "_quoteDate".loc() + " " + "_fromDate".loc(),
+        attr: "quoteDate", operator: ">=",
+        defaultKind: "XV.DateWidget"},
+      {name: "createdToDate", label: "_toDate".loc(),
+        filterLabel: "_quoteDate".loc() + " " + "_toDate".loc(),
+        attr: "quoteDate", operator: "<=",
+        defaultKind: "XV.DateWidget"}
     ]
   });
 

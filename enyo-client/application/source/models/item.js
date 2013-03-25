@@ -204,15 +204,14 @@ white:true*/
     // METHODS
     //
 
-    initialize: function () {
-      XM.Document.prototype.initialize.apply(this, arguments);
+    bindEvents: function () {
+      XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on('change:inventoryUnit', this.inventoryUnitDidChange);
       this.on('change:isSold', this.isSoldDidChange);
       this.on('statusChange', this.isSoldDidChange);
     },
 
     inventoryUnitDidChange: function (model, value, options) {
-      if (this.isNotReady()) { return; }
       if (value) { this.set('priceUnit', value); }
     },
 
@@ -234,12 +233,13 @@ white:true*/
       }
     },
 
-    validateSave: function () {
+    validate: function () {
       var isSold = this.get('isSold'),
         productCategory = this.get('productCategory');
       if (isSold && (productCategory.id || -1) === -1) {
         return XT.Error.clone('xt2005');
       }
+      return XM.Document.prototype.validate.apply(this, arguments);
     }
 
   });

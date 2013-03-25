@@ -71,8 +71,8 @@ white:true*/
     // METHODS
     //
 
-    initialize: function () {
-      XM.Document.prototype.initialize.apply(this, arguments);
+    bindEvents: function () {
+      XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on('change:status', this.projectStatusDidChange);
       this.statusDidChange();
     },
@@ -132,6 +132,11 @@ white:true*/
     // ..........................................................
     // METHODS
     //
+    
+    bindEvents: function () {
+      XM.ProjectBase.prototype.bindEvents.apply(this, arguments);
+      this.on('add:tasks remove:tasks', this.tasksDidChange);
+    },
 
     /**
     Return a copy of this project with a given number and date offset.
@@ -144,11 +149,6 @@ white:true*/
     */
     copy: function (options) {
       return XM.Project.copy(this, options);
-    },
-
-    initialize: function () {
-      XM.ProjectBase.prototype.initialize.apply(this, arguments);
-      this.on('add:tasks remove:tasks', this.tasksDidChange);
     },
 
     /**
@@ -332,8 +332,8 @@ white:true*/
     // METHODS
     //
 
-    initialize: function () {
-      XM.ProjectBase.prototype.initialize.apply(this, arguments);
+    bindEvents: function () {
+      XM.ProjectBase.prototype.bindEvents.apply(this, arguments);
       var event = 'change:budgetedHours change:actualHours ' +
                   'change:budgetedExpenses change:actualExpenses';
       this.on(event, this.valuesDidChange);

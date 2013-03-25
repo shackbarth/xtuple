@@ -8,8 +8,8 @@
     "url": "https://github.com/xtuple/xtuple.git"
   },
   "dependencies": {
-    "backbone":"0.9.2",
-    "backbone-relational":"0.6.x",
+    "backbone":"0.9.10",
+    "backbone-relational": "git://github.com/PaulUithol/Backbone-relational.git#0.8.0",
     "connect-ensure-login": "0.1.x",
     "connect-flash":"0.1.x",
     "ejs": "0.8.x",
