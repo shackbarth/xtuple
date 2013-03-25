@@ -1760,7 +1760,14 @@
         "name": "customerType",
         "attr": {
           "type": "Number",
-          "column": "type"
+          "column": "type" 
+        }
+      },
+      {
+        "name": "account",
+        "attr": {
+          "type": "Number",
+          "column": "crmacct_id"
         }
       }
     ],

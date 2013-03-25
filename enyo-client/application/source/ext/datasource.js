@@ -12,6 +12,39 @@ white:true*/
     //datasourceUrl: DOCUMENT_HOSTNAME,
     //datasourcePort: 443,
     isConnected: false,
+    
+    /**
+      Helper function to convert parameters to data source friendly formats
+      
+      @param {String} Record Type
+      @param {Object} Query parameters
+    */
+    formatParameters: function (recordType, params) {
+      _.each(params, function (param) {
+        var klass = recordType ? XT.getObjectByName(recordType) : null,
+          relations = klass ? klass.prototype.relations : [],
+          relation = _.find(relations, function (rel) {
+            return rel.key === param.attribute;
+          }),
+          idAttribute;
+
+        // Format date if applicable
+        if (param.value instanceof Date) {
+          param.value = param.value.toJSON();
+
+        // Format record if applicable
+        } else if (_.isObject(param.value)) {
+          param.value = param.value.id;
+        }
+
+        // Format attribute if it's `HasOne` relation
+        if (relation && relation.type === Backbone.HasOne) { // && relation.isNested) { TODO: Re-add this if we get nonNested back?
+          klass = XT.getObjectByName(relation.relatedModel);
+          idAttribute = klass.prototype.idAttribute;
+          param.attribute = param.attribute + '.' + idAttribute;
+        }
+      });
+    },
 
     /*
     Returns a record array based on a query.
@@ -24,7 +57,6 @@ white:true*/
       var that = this,
         payload = {},
         parameters = options.query.parameters,
-        prop,
         complete = function (response) {
           var dataHash, params = {}, error;
 
@@ -46,37 +78,8 @@ white:true*/
           }
         };
 
-
-      // Helper function to convert parameters to data source friendly formats
-      var format = function (param) {
-        var recordType = options.query.recordType,
-          klass = recordType ? XT.getObjectByName(recordType) : null,
-          relations = klass ? klass.prototype.relations : [],
-          relation = _.find(relations, function (rel) {
-            return rel.key === param.attribute;
-          }),
-          idAttribute;
-
-        // Format date if applicable
-        if (param.value instanceof Date) {
-          param.value = param.value.toJSON();
-
-        // Format record if applicable
-        } else if (param.value instanceof XM.Model) {
-          param.value = param.value.id;
-        }
-
-        // Format attribute if it's `HasOne` relation
-        if (relation && relation.type === Backbone.HasOne) { // && relation.isNested) { TODO: Re-add this if we get nonNested back?
-          klass = XT.getObjectByName(relation.relatedModel);
-          idAttribute = klass.prototype.idAttribute;
-          param.attribute = param.attribute + '.' + idAttribute;
-        }
-
-      };
-
-      for (prop in parameters) {
-        format(parameters[prop]);
+      if (parameters && parameters.length) {
+        this.formatParameters(options.query.recordType, parameters);
       }
 
       payload.requestType = 'fetch';
