@@ -106,7 +106,7 @@ trailing:true white:true*/
                 label: "_restrictCreditMemos".loc()}
             ]}
           ]},
-          {kind: "XV.Groupbox", name: "pricePanel", title: "_price".loc(), components: [
+          {kind: "XV.Groupbox", name: "pricePanel", title: "_pricing".loc(), components: [
             {kind: "XV.ScrollableGroupbox", name: "priceGroup", fit: true,
               classes: "in-panel", components: [
               {kind: "onyx.GroupboxHeader", content: "_priceControl".loc()},
@@ -126,7 +126,7 @@ trailing:true white:true*/
               {kind: "XV.NumberWidget", attr: "UpdatePriceLineEdit", label: "_pricingOnLineItemEdits".loc()}, // TODO: radiobutton?
             ]}
           ]},
-          {kind: "XV.Groupbox", name: "defaultsPanel", title: "_defaults".loc(), components: [
+          {kind: "XV.Groupbox", name: "defaultsPanel", title: "_customerDefaults".loc(), components: [
             {kind: "XV.ScrollableGroupbox", name: "defaultsGroup", fit: true,
               classes: "in-panel", components: [
               {kind: "onyx.GroupboxHeader", content: "_customerDefaults".loc()},
