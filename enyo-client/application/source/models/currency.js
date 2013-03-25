@@ -108,7 +108,6 @@ white:true*/
             model.trigger('error', model, err, options);
           }
         };
-        checkOptions.error = Backbone.wrapError(null, model, options);
         this.findExisting('abbreviation', currAbbr, checkOptions);
 
       // Otherwise just go ahead and save
