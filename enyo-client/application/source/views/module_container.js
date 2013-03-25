@@ -14,7 +14,7 @@ trailing:true white:true*/
         {name: "welcomePage",
           tag: "iframe",
           style: "border: none;",
-          attributes: {src: "/client/lib/enyo-x/assets/splash/index.html"}}
+          attributes: {src: "https://www.xtuple.com/welcome"}}
       ]},
       {name: "setup", label: "_setup".loc(), panels: [
         {name: "configureList", kind: "XV.ConfigurationsList", toggleSelected: false},
