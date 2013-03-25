@@ -94,11 +94,11 @@ white:true*/
 
         if (resp && resp.length > 0) {
           // validation fail. This pair already exists
-          params.attr = "_item".loc() + " " + "_site".loc();
-          params.value = [that.get("item"), that.get("site")];
+          params.attr = "_item".loc() + " " + "_and".loc() + " " + "_site".loc();
+          params.value = [that.getValue("item.number"), that.getValue("site.code")];
           params.response = resp;
           err = XT.Error.clone('xt1008', { params: params });
-          that.trigger('error', that, err, options);
+          that.trigger('invalid', that, err, options);
           if (typeof callback === 'function') {
             callback(err);
           }

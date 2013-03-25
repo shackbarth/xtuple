@@ -70,6 +70,7 @@ var lang = XT.stringsFor("en_US", {
   "_alternate": "Alternate",
   "_alternateAddresses": "Alternate Addresses",
   "_amount": "Amount",
+  "_and": "and",
   "_array": "Array",
   "_assignDate": "Assign Date",
   "_assignedTo": "Assigned To",
