@@ -129,7 +129,6 @@
 \i public/tables/usrpref.sql;
 \i public/tables/usrpriv.sql;
 \i public/tables/schemaord.sql;
-\i public/tables/site.sql;
 -- [ END ] public
 
 -- xtbatch (TODO: This should be moved elsewhere)
