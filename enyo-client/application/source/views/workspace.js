@@ -1227,7 +1227,7 @@ trailing:true white:true*/
                   {amount: "margin", currency: "currency"},
                   label: "_margin".loc(), currencyShowing: false,
                   effective: "quoteDate"},
-                {kind: "XV.NumberWidget", attr: "freightWeight"}
+                {kind: "XV.WeightWidget", attr: "freightWeight"}
               ]},
               {kind: "FittableRows", components: [
                 {kind: "XV.MoneyWidget", attr:

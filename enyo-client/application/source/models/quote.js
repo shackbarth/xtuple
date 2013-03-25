@@ -250,10 +250,19 @@ white:true*/
         }
 
         if (siteClass.length) {
+          // If we already have a request pending we need to communicate
+          // when that is done to start over because something has changed.
+          if (this._pendingFreightRequest) {
+            if (!this._invalidFreightRequest) {
+              this._invalidFreightRequest = true;
+            }
+            return this;
+          }
           // Loop through each site/class and fetch freight detail for that
           // combination. When we have them all, add it up and pass through
           // to original caller
-          that.freightDetail = [];
+          this._pendingFreightRequest = true;
+          this.freightDetail = [];
           counter = siteClass.length;
           _.each(siteClass, function (item) {
             var params = [
@@ -270,17 +279,26 @@ white:true*/
               dispOptions = {
                 success: function (resp) {
                   var freight;
-                  that.freightDetail = that.freightDetail.concat(resp);
                   counter--;
+                  if (!that._freightRequestInvalid) {
+                    that.freightDetail = that.freightDetail.concat(resp);
+                  }
                   if (!counter) { // Means we heard back from all requests
-                    // Add 'em up
-                    freight = XT.math.add(_.pluck(that.freightDetail, "total"), scale);
-                    that.off('change:freight', that.freightDidChange);
-                    that.set("freight", freight);
-                    that.on('change:freight', that.freightDidChange);
-
-                    // Now calculate tax
-                    that.calculateFreightTax();
+                    delete that._pendingFreightRequest;
+                    if (that._freightRequestInvalid) {
+                      // Restart the request
+                      delete that._freightRequestInvalid;
+                      that.calculateFreight();
+                    } else {
+                      // Add 'em up
+                      freight = XT.math.add(_.pluck(that.freightDetail, "total"), scale);
+                      that.off('change:freight', that.freightDidChange);
+                      that.set("freight", freight);
+                      that.on('change:freight', that.freightDidChange);
+                      
+                      // Now calculate tax
+                      that.calculateFreightTax();
+                    }
                   }
                 }
               };
