@@ -1522,8 +1522,10 @@ trailing:true white:true*/
     ]
   });
 
-  XV.registerModelWorkspace("XM.SiteRelation", "XV.SiteWorkspace");
-  XV.registerModelWorkspace("XM.SiteListItem", "XV.SiteWorkspace");
+  // TODO: The site workspace won't work until the default GL trigger is
+  // taken out of the database-side code. Uncomment these once that's done:
+  //XV.registerModelWorkspace("XM.SiteRelation", "XV.SiteWorkspace");
+  //XV.registerModelWorkspace("XM.SiteListItem", "XV.SiteWorkspace");
 
   // ..........................................................
   // SITE TYPE
