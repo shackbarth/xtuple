@@ -1029,7 +1029,7 @@ trailing:true white:true*/
     collection: "XM.QuoteListItemCollection",
     parameterWidget: "XV.QuoteListParameters",
     query: {orderBy: [
-      {attribute: 'id'}
+      {attribute: 'number'}
     ]},
     components: [
       {kind: "XV.ListItem", components: [

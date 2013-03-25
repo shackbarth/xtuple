@@ -14,13 +14,6 @@
     ],
     "properties": [
       {
-        "name": "isSold",
-        "attr": {
-          "type": "Boolean",
-          "column": "itemsite_sold"
-        }
-      },
-      {
         "name": "soldRanking",
         "attr": {
           "type": "Number",
