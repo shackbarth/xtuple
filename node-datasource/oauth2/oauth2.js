@@ -290,7 +290,7 @@ server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(functio
         token = new XM.Oauth2token();
 
     // Verify JWT was formed correctly.
-    if (!decodedHeader || decodedHeader.length !== 2 || !decodedHeader.alg || !decodedHeader.typ) {
+    if (!decodedHeader || !decodedHeader.alg || !decodedHeader.typ) {
       return done(new Error("Invalid JWT header."));
     }
     if (!decodedClaimSet || decodedClaimSet.length < 5 || !decodedClaimSet.iss || !decodedClaimSet.scope
@@ -376,7 +376,7 @@ server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(functio
 
           // Send the accessToken and params along.
           // We do not send the refreshToken because they already have it.
-          return done(null, accessToken, null, params);
+          return done(null, accessToken, params);
         };
         saveOptions.error = function (model, err) {
           return done && done(err);
@@ -386,13 +386,16 @@ server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(functio
           if (model.id) {
             // Now that model is ready, set attributes and save.
             var tokenAttributes = {
-              accessToken: accesshash,
-              accessIssued: today,
-              accessExpires: expires,
               clientID: client.get("clientID"),
               scope: JSON.stringify(scopes),
               state: "JWT Access Token Issued",
-              tokenType: "bearer"
+              approvalPrompt: false,
+              accessToken: accesshash,
+              accessIssued: today,
+              accessExpires: expires,
+              tokenType: "bearer",
+              accessType: "offline",
+              delegate: user.get("id")
             };
 
             // Try to save access token data to the database.
