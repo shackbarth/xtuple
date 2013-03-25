@@ -48,7 +48,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'code'}
     ]
   });
-  
+
   // ..........................................................
   // COST CATEGORY
   //
@@ -240,7 +240,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'name'}
     ]
   });
-  
+
   // ..........................................................
   // PLANNER CODE
   //
@@ -292,7 +292,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.projectStatuses"
   });
-  
+
   // ..........................................................
   // SALES REP
   //
@@ -333,7 +333,7 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // SHIP Zone
+  // SHIP ZONE
   //
 
   enyo.kind({
