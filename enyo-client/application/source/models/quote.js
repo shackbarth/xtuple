@@ -152,15 +152,10 @@ white:true*/
       // Set read only state for free form shipto
       this.setReadOnly(this.shiptoAttrArray, !isFreeFormShipto);
     },
-
-    /**
-      Initialize
-    */
-    initialize: function (attributes, options) {
-      XM.Document.prototype.initialize.apply(this, arguments);
+    
+    bindEvents: function () {
+      XM.Document.prototype.bindEvents.apply(this, arguments);
       var pricePolicy = XT.session.settings.get("soPriceEffective");
-      this.freightDetail = [];
-      this.freightTaxDetail = [];
       this.on('add:lineItems remove:lineItems', this.lineItemsDidChange);
       this.on('add:lineItems remove:lineItems change:miscCharge', this.calculateTotals);
       this.on('change:customer', this.customerDidChange);
@@ -176,6 +171,15 @@ white:true*/
       } else if (pricePolicy === "ScheduleDate") {
         this.requiredAttributes.push("scheduleDate");
       }
+    },
+
+    /**
+      Initialize
+    */
+    initialize: function (attributes, options) {
+      XM.Document.prototype.initialize.apply(this, arguments);
+      this.freightDetail = [];
+      this.freightTaxDetail = [];
     },
 
     /**
@@ -422,8 +426,7 @@ white:true*/
           taxZone: customer.get("taxZone"),
           shipVia: customer.get("shipVia"),
           site: customer.get("preferredSite") || this.get("site"),
-          currency: customer.get("currency"),
-          shipto: defaultShipto ? defaultShipto.attributes : undefined
+          currency: customer.get("currency")
         };
         if (billtoContact) {
           _.extend(billtoAttrs, {
@@ -455,6 +458,7 @@ white:true*/
           unsetBilltoAddress();
         }
         this.set(billtoAttrs);
+        if (defaultShipto) { this.set("shipto", defaultShipto.attributes); }
       } else {
         this.unset("salesRep")
             .unset("commission")
@@ -915,14 +919,10 @@ white:true*/
         scheduleDate: allowASAP ? new Date() : undefined
       };
     },
-
-    initialize: function (attributes, options) {
-      XM.Model.prototype.initialize.apply(this, arguments);
-      var settings = XT.session.settings,
-        privileges = XT.session.privileges;
-      this.taxDetail = [];
-      this._updatePrice = true; // TODO: This probably is un-needed.
-      this._unitIsFractional = false;
+    
+    bindEvents: function (attributes, options) {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
+      var settings = XT.session.settings;
       this.on('change:discount', this.discountDidChange);
       this.on("change:itemSite", this.itemSiteDidChange);
       this.on('change:quantity', this.calculatePrice);
@@ -941,6 +941,15 @@ white:true*/
       if (settings.get("soPriceEffective") === "ScheduleDate") {
         this.on('change:scheduleDate', this.calculatePrice);
       }
+    },
+
+    initialize: function (attributes, options) {
+      XM.Model.prototype.initialize.apply(this, arguments);
+      var settings = XT.session.settings,
+        privileges = XT.session.privileges;
+      this.taxDetail = [];
+      this._updatePrice = true; // TODO: This probably is un-needed.
+      this._unitIsFractional = false;
 
       //  Disable the Discount Percent stuff if we don't allow them
       if (!settings.get("AllowDiscounts") &&
