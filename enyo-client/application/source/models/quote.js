@@ -1553,19 +1553,37 @@ white:true*/
 
         // Set price after we have item and all characteristics prices
         setPrice = function () {
+          // Allow editing again if we could before
+          that.setReadOnly("price", readOnlyCache);
+          
+          // If price was requested before this response,
+          // then bail out and start over
+          if (that._invalidPriceRequest) {
+            delete that._invalidPriceRequest;
+            delete that._pendingPriceRequest;
+            that._calculatePrice();
+            return;
+          }
+          
           var totalPrice = XT.math.add(prices, XT.SALES_PRICE_SCALE);
           that.set("customerPrice", totalPrice);
           if (that._updatePrice) {
             that.set("price", totalPrice);
           }
-
-          // Allow editing again if we could before
-          that.setReadOnly("price", readOnlyCache);
         };
 
       parentDate = parent.get(parent.documentDateKey);
       customer = parent.get("customer");
       currency = parent.get("currency");
+      
+      // If we already have a request pending we need to indicate
+      // when that is done to start over because something has changed.
+      if (this._pendingPriceRequest) {
+        if (!this._invalidPriceRequest) {
+          this._invalidPriceRequest = true;
+        }
+        return;
+      }
 
       // Don't allow user editing of price until we hear back from the server
       this.setReadOnly("price", true);
@@ -1586,7 +1604,7 @@ white:true*/
         var priceMode;
 
         // Handle no price found scenario
-        if (resp.price === -9999) {
+        if (resp.price === -9999 && !that._invalidPriceRequest) {
           counter = -1;
           that.notify("_noPriceFound".loc(), { type: K.WARNING });
           if (that._updatePrice) {
@@ -1602,12 +1620,14 @@ white:true*/
         // Handle normal scenario
         } else {
           counter--;
-          priceMode = (resp.type === "N" ||
-                       resp.type === "D" ||
-                       resp.type === "P") ? K.DISCOUNT_MODE : K.MARKUP_MODE;
-          that.set("priceMode", priceMode);
-          that.set("basePrice", resp.price);
-          prices.push(resp.price);
+          if (!that._invalidPriceRequest) {
+            priceMode = (resp.type === "N" ||
+                         resp.type === "D" ||
+                         resp.type === "P") ? K.DISCOUNT_MODE : K.MARKUP_MODE;
+            that.set("priceMode", priceMode);
+            that.set("basePrice", resp.price);
+            prices.push(resp.price);
+          }
           if (!counter) { setPrice(); }
         }
       };
@@ -1623,8 +1643,10 @@ white:true*/
             value = char.get("value");
           charOptions.success = function (price) {
             counter--;
-            char.set("price", price);
-            prices.push(price);
+            if (!that._invalidPriceRequest) {
+              char.set("price", price);
+              prices.push(price);
+            }
             if (!counter) { setPrice(); }
           };
           customer.characteristicPrice(item, characteristic, value, quantity, charOptions);
