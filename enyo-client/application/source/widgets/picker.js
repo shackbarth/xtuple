@@ -48,20 +48,6 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'code'}
     ]
   });
-  
-  // ..........................................................
-  // COST CATEGORY
-  //
-
-  enyo.kind({
-    name: "XV.CostCategoryPicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.costCategories",
-    nameAttribute: "code",
-    orderBy: [
-      {attribute: 'code'}
-    ]
-  });
 
   // ..........................................................
   // COST CATEGORY
@@ -254,7 +240,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'name'}
     ]
   });
-  
+
   // ..........................................................
   // PLANNER CODE
   //
@@ -268,20 +254,6 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'code'}
     ]
   });
-
-  // ..........................................................
-  // PLANNER CODE
-  //
-
-  enyo.kind({
-    name: "XV.PlannerCodePicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.plannerCodes",
-    orderBy: [
-      {attribute: 'name'}
-    ]
-  });
-
 
   // ..........................................................
   // PRIORITY
@@ -320,7 +292,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.projectStatuses"
   });
-  
+
   // ..........................................................
   // SALES REP
   //
