@@ -522,7 +522,7 @@ white:true*/
       options.success = function (model, resp, options) {
         var lineItems = that.get("lineItems").models;
         _.each(lineItems, function (line) {
-          line.fetchSellingUnits();
+          line.fetchSellingUnits(false);
         });
 
         that.on('add:lineItems remove:lineItems', that.lineItemsDidChange);
@@ -1239,15 +1239,19 @@ white:true*/
     /**
       Updates `sellingUnits` array from server
 
+      @param {Boolean} Set default units from item. Default = true;
       @returns {Object} Receiver
     */
-    fetchSellingUnits: function () {
+    fetchSellingUnits: function (resetDefaults) {
+      resetDefaults = _.isBoolean(resetDefaults) ? resetDefaults : true;
       var that = this,
         item = this.getValue("itemSite.item"),
         options = {};
 
-      this.unset("quantityUnit");
-      this.unset("priceUnit");
+      if (resetDefaults) {
+        this.unset("quantityUnit");
+        this.unset("priceUnit");
+      }
       this.sellingUnits.reset();
 
       if (!item) { return this; }
@@ -1261,11 +1265,13 @@ white:true*/
         });
         
         // Set the item default selections
-        that.set({
-          quantityUnit: item.get("inventoryUnit"),
-          priceUnit: item.get("priceUnit"),
-          priceUnitRatio: item.get("priceUnitRatio")
-        });
+        if (resetDefaults) {
+          that.set({
+            quantityUnit: item.get("inventoryUnit"),
+            priceUnit: item.get("priceUnit"),
+            priceUnitRatio: item.get("priceUnitRatio")
+          });
+        }
       };
       item.sellingUnits(options);
       return this;
