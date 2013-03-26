@@ -5,8 +5,9 @@
 \i init_script.sql;
 \cd ../../../enyo-client/database/source;
 
--- delete views
+-- delete system orms
 \i drop_xm_views.sql;
+\i delete_system_orms.sql;
 
 -- [ END ] initdb
 
