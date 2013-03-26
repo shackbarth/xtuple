@@ -161,14 +161,33 @@ passport.use(new BearerStrategy(
         return done(new Error("Access token has expired."));
       }
 
-      db.users.findByUsername(token.get("user"), function (err, user) {
-        if (err) { return done(err); }
-        if (!user) { return done(null, false); }
-        // to keep this example simple, restricted scopes are not implemented,
-        // and this is just for illustrative purposes
-        var info = { scope: '*' };
-        done(null, user, info);
-      });
+      var tokenUser = token.get("user");
+
+      // If this is a JWT access token, "user" is empty. Try to load the "delegate"
+      if (!tokenUser) {
+        tokenUser = token.get("delegate");
+      }
+
+      if (tokenUser) {
+        db.users.findByUsername(token.get("user"), function (err, user) {
+          if (err) { return done(err); }
+          if (!user) { return done(null, false); }
+
+          var scopes = token.get("scope"),
+              info = {};
+
+          try {
+            scopes = JSON.parse(scopes);
+          } catch (error) {
+            if (!Array.isArray(scopes)) { scopes = [ scopes ]; }
+          }
+
+          info = { scope: scopes };
+          done(null, user, info);
+        });
+      } else {
+        return done(null, false);
+      }
     });
   }
 ));
