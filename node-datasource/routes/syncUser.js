@@ -13,8 +13,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.syncUser = function (req, res) {
     var args = req.query,
       attrs,
-      user = XM.User.findOrCreate(args.user) ||
-        new XM.User({ id: args.user }),
+      user = new XM.User({ id: args.user }),
       org = XM.Organization.findOrCreate(args.organization) ||
         new XM.Organization({ name: args.organization }),
       userOrg,
