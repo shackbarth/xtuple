@@ -30,6 +30,12 @@ white:true*/
   });
 
   enyo.kind({
+    name: "XV.ItemSiteCommentBox",
+    kind: "XV.CommentBox",
+    model: "XM.ItemSiteComment"
+  });
+
+  enyo.kind({
     name: "XV.ItemCommentBox",
     kind: "XV.CommentBox",
     model: "XM.ItemComment"
@@ -57,6 +63,12 @@ white:true*/
     name: "XV.QuoteCommentBox",
     kind: "XV.CommentBox",
     model: "XM.QuoteComment"
+  });
+
+  enyo.kind({
+    name: "XV.SiteCommentBox",
+    kind: "XV.CommentBox",
+    model: "XM.SiteComment"
   });
 
   enyo.kind({

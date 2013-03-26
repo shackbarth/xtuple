@@ -3,6 +3,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global XT:true, XM:true, XV: true */
 
 // global objects
+enyo = {};
 XT = {};
 XM = {};
 XV = {};
@@ -120,6 +121,7 @@ Simplest possible usage:
             if (browser.window.XT && browser.window.XT.app && browser.window.XT.app.state === 6) {
 
               // add the global objects to our global namespace
+              enyo = browser.window.enyo;
               XM = browser.window.XM;
               XT = browser.window.XT;
               XV = browser.window.XV;

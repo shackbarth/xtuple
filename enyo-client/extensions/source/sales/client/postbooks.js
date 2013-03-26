@@ -15,20 +15,15 @@ trailing:true white:true*/
     // ..........................................................
     // APPLICATION
     //
-    /*
-    panels = [
-      {name: "honorificList", kind: "XV.HonorificList"},
-      {name: "accountList", kind: "XV.AccountList"},
-      {name: "contactList", kind: "XV.ContactList"},
-      {name: "itemList", kind: "XV.ItemList"},
-      {name: "classCodeList", kind: "XV.ClassCodeList"},
-      {name: "unitList", kind: "XV.UnitList"},
-      {name: "stateList", kind: "XV.StateList"},
-      {name: "countryList", kind: "XV.CountryList"}
-    ];
 
+    panels = [
+      {name: "siteList", kind: "XV.SiteList"},
+      {name: "siteTypeList", kind: "XV.SiteTypeList"},
+      {name: "itemSiteList", kind: "XV.ItemSiteList"},
+      {name: "costCategoryList", kind: "XV.CostCategoryList"},
+      {name: "plannerCodeList", kind: "XV.PlannerCodeList"}
+    ];
     XT.app.$.postbooks.appendPanels("setup", panels);
-    */
 
     configurationJson = {
       model: "XM.sales",

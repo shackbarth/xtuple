@@ -119,8 +119,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     organization for the user we choose for them.
    */
   exports.scopeForm = function (req, res, next) {
-    var org,
-        organizations = [],
+    var organizations = [],
         scope,
         scopes = [];
 
@@ -140,6 +139,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       if (req.session.oauth2.req && req.session.oauth2.req.scope && req.session.oauth2.req.scope.length > 0) {
         // Loop through the scope URIs and convert them to org names.
         _.each(req.session.oauth2.req.scope, function (value, key, list) {
+          var org;
+
           // Get the org from the scope URI e.g. 'dev' from: 'https://mobile.xtuple.com/auth/dev'
           scope = url.parse(value, true);
           org = scope.path.match(/\/auth\/(.*)/)[1] || null;

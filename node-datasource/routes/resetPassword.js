@@ -65,7 +65,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     if (!args || !args.id) {
       res.send({isError: true, message: "need an ID"});
     } else {
-      user = XM.User.findOrCreate(args.id) || new XM.User({id: args.id});
+      user = new XM.User({id: args.id});
 
       fetchSuccess = function () {
         // thanks http://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript

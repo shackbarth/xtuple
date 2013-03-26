@@ -1757,6 +1757,13 @@
         }
       },
       {
+        "name": "customerType",
+        "attr": {
+          "type": "Number",
+          "column": "type" 
+        }
+      },
+      {
         "name": "account",
         "attr": {
           "type": "Number",
