@@ -827,7 +827,7 @@ white:true*/
           item = lineItem.getValue("itemSite.item"),
           prodWeight = item ? item.get("productWeight") : 0,
           packWeight = item ? item.get("packageWeight") : 0,
-          itemWeight = item ? add(prodWeight, packWeight, scale) : 0,
+          itemWeight = item ? add(prodWeight, packWeight, XT.WEIGHT_SCALE) : 0,
           quantityUnitRatio = lineItem.get("quantityUnitRatio"),
           grossWeight = itemWeight * quantity * quantityUnitRatio;
 
@@ -864,7 +864,7 @@ white:true*/
       });
 
       // Totaling calculations
-      freightWeight = add(weights, scale);
+      freightWeight = add(weights, XT.WEIGHT_SCALE);
       subtotal = add(subtotals, scale);
       costTotal = add(costs, scale);
       margin = substract(subtotal, costTotal, scale);
@@ -1395,7 +1395,7 @@ white:true*/
       var quantityUnit = this.get("quantityUnit"),
         priceUnit = this.get("priceUnit"),
         item = this.getValue("itemSite.item"),
-        inventoryUnit = item ? this.getValue("inventoryUnit") : false,
+        inventoryUnit = item ? item.getValue("inventoryUnit") : false,
         that = this,
         options = {};
 
@@ -1403,6 +1403,7 @@ white:true*/
 
       if (inventoryUnit.id === priceUnit.id) {
         this.set("priceUnitRatio", 1);
+        that.calculateExtendedPrice();
         that.calculatePrice(true);
       } else {
         // Unset price ratio so we can't save until we get an answer
@@ -1411,9 +1412,10 @@ white:true*/
         // Lookup unit of measure ratio
         options.success = function (ratio) {
           that.set("priceUnitRatio", ratio);
+          that.calculateExtendedPrice();
           that.calculatePrice(true);
         };
-        item.unitToUnitRatio(inventoryUnit, quantityUnit, options);
+        item.unitToUnitRatio(priceUnit, inventoryUnit, options);
       }
     },
     
@@ -1467,7 +1469,7 @@ white:true*/
             }
           }
         };
-        item.unitToUnitRatio(inventoryUnit, quantityUnit, options);
+        item.unitToUnitRatio(quantityUnit, inventoryUnit, options);
         item.unitFractional(quantityUnit, options);
       }
     },
