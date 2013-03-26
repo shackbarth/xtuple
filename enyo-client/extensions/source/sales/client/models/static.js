@@ -11,9 +11,9 @@ white:true*/
 
   // Invoice Date Sources
   var invoiceDateSourceJson = [
-    { id: "currentdate???", name: "_currentDate".loc() },
+    { id: "currdate", name: "_currentDate".loc() },
     { id: "shipdate", name: "_shipDate".loc() },
-    { id: "scheduleddate???", name: "_scheduledDate".loc() }
+    { id: "scheddate", name: "_scheduledDate".loc() }
   ];
   XM.InvoiceDateSourceModel = Backbone.Model.extend({
   });
@@ -28,9 +28,9 @@ white:true*/
 
   // Line Item Edit Behaviors
   var lineItemEditBehaviorJson = [
-    { id: -1, name: "_update".loc() },
-    { id: 2, name: "_doNotUpdate".loc() },
-    { id: -3, name: "_prompt".loc() }
+    { id: 3, name: "_update".loc() },
+    { id: 1, name: "_doNotUpdate".loc() },
+    { id: 2, name: "_prompt".loc() }
   ];
   XM.LineItemEditBehaviorModel = Backbone.Model.extend({
   });
@@ -46,8 +46,8 @@ white:true*/
   // Price Effective Dates
   var priceEffectiveDateJson = [
     { id: "CurrentDate", name: "_current".loc() },
-    { id: "OrderDate???", name: "_order".loc() },
-    { id: "ScheduledDate???", name: "_scheduled".loc() }
+    { id: "OrderDate", name: "_order".loc() },
+    { id: "ScheduleDate", name: "_scheduled".loc() }
   ];
   XM.PriceEffectiveDateModel = Backbone.Model.extend({
   });
