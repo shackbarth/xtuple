@@ -73,6 +73,11 @@ select xt.install_js('XT','Orm','xtuple', $$
     sequence = newJson.sequence ? newJson.sequence : 0;
     isExtension = newJson.isExtension ? true : false;
     if(oldOrm) {
+      if(oldOrm.json === json) {
+        /* the json is identical. do not bother to change it */
+        plv8.elog(NOTICE, "ORM definition has not changed");
+        return;
+      }
       oldJson = JSON.parse(oldOrm.json);
       if(oldJson.isSystem && !newJson.isSystem) throw new Error("A system map already exists for" + nameSpace + '.' + type);
       if(oldOrm.isExtension !== isExtension) throw new Error("Can not change extension state for " + nameSpace + '.' + type);
