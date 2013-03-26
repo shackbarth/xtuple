@@ -955,14 +955,14 @@ body {
 .xv-totals-panel {
   padding: 0;
   background-color: #ffffff;
-  font-size: 14px;
+  font-size: 13px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .xv-totals-panel .onyx-input,
 .xv-totals-panel .onyx-button {
-  font-size: 14px;
+  font-size: 13px;
 }
 .xv-totals-panel .xv-label,
 .xv-totals-panel .onyx-input-decorator {
