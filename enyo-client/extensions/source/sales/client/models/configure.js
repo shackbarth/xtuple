@@ -20,18 +20,25 @@ white:true*/
       privileges: 'ConfigureSO',
 
       validate: function (attributes, options) {
-        /*
+        // XXX not sure if number widgets can fail in this way.
         var params = { type: "_number".loc() };
-        if (attributes.NextCRMAccountNumber !== undefined &&
-            isNaN(attributes.NextCRMAccountNumber)) {
-          params.attr = "_account".loc() + " " + "_number".loc();
+        if (attributes.NextSalesOrderNumber !== undefined &&
+            isNaN(attributes.NextSalesOrderNumber)) {
+          params.attr = "_salesOrder".loc() + " " + "_number".loc();
           return XT.Error.clone('xt1003', { params: params });
-        } else if (attributes.NextIncidentNumber &&
-            isNaN(attributes.NextIncidentNumber)) {
-          params.attr = "_incident".loc() + " " + "_number".loc();
+        } else if (attributes.NextQuoteNumber &&
+            isNaN(attributes.NextQuoteNumber)) {
+          params.attr = "_quote".loc() + " " + "_number".loc();
+          return XT.Error.clone('xt1003', { params: params });
+        } else if (attributes.NextCreditMemoNumber &&
+            isNaN(attributes.NextCreditMemoNumber)) {
+          params.attr = "_creditMemo".loc() + " " + "_number".loc();
+          return XT.Error.clone('xt1003', { params: params });
+        } else if (attributes.NextInvoiceNumber &&
+            isNaN(attributes.NextInvoiceNumber)) {
+          params.attr = "_invoice".loc() + " " + "_number".loc();
           return XT.Error.clone('xt1003', { params: params });
         }
-        */
       }
 
     });
