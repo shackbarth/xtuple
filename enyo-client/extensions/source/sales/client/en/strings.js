@@ -13,7 +13,52 @@
 
 var lang = XT.stringsFor("en_US", {
 
+  "_acceptsBackOrders": "Accepts Back Orders",
+  "_acceptsPartialShipments": "Accepts Partial Shipments",
+  "_accessSalesExtension": "Access Sales Extension",
+  "_allowASAPShipSchedules": "Allow ASAP Schedule Dates",
+  "_allowDiscounts": "Allow Price Discounts",
+  "_allowFreeFormShiptos": "Allow Free Form Ship-Tos",
+  "_autoAllocateCreditMemos": "Allocate Credit Memos to New Sales Order on Save",
+  "_autoSelectForBilling": "Check 'Select for Billing' option on Ship Order",
+  "_customerDefaults": "Customer Defaults",
+  "_creditControl": "Credit Control",
+  "_creditMemo": "Credit Memo",
+  "_current": "Current",
+  "_currentDate": "Current Date",
+  "_dateControl": "Date Control",
+  "_disableSalesOrderPriceOverride": "Disallow Override of Sale Price on Sales Order",
+  "_doNotUpdate": "Do Not Update",
+  "_enableSOShipping": "Enable Shipping Interface from Sales Order screen",
+  "_firmSalesOrdersWhenAddedToPackingList": "Firm Sales Orders when added to Packing List Batch",
+  "_freightPricing": "Freight Pricing",
+  "_hideSOMiscCharge": "Hide Misc. Charge on Sales Order screen",
+  "_ignoreIfDiscounted": "Ignore if Discounted",
+  "_includePackageWeight": "Include Package Weight in Freight Calculation",
+  "_invoice": "Invoice",
+  "_invoiceDateSource": "Invoice Date Source",
+  "_postCustomerChanges": "Post Customer Changes",
+  "_postSalesOrderChanges": "Post Sales Order Changes",
+  "_priceControl": "Price Control",
+  "_priceEffectiveDate": "Price Effective Date",
+  "_pricing": "Pricing",
+  "_pricingOnLineItemEdits": "Pricing on Line Item edits",
+  "_printOnSave": "Print on Save",
+  "_prompt": "Prompt",
+  "_restrictCreditMemos": "Restrict Credit Memos to Items on their Apply-to Document",
   "_sales": "Sales",
-  "_accessSalesExtension": "Access Sales Extension"
+  "_salesDescription": "Customer and Sales Order Management",
+  "_salesOrder": "Sales Order",
+  "_scheduled": "Scheduled",
+  "_scheduledDate": "Scheduled Date",
+  "_shipControl": "Ship Control",
+  "_shipDate": "Ship Date",
+  "_showQuotesAfterConverted": "Show Quotes after Conversion to SO",
+  "_showSaveAndAddbutton": "Show 'Save and Add to Packing List' Button on Sales Order",
+  "_update": "Update",
+  "_useCalculatedFreightPricing": "Use calculated Freight values by default",
+  "_usePromiseDates": "Enable Promise Dates"
+
+
 
 });
