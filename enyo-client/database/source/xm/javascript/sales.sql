@@ -106,7 +106,7 @@ select xt.install_js('XM','Sales','xtuple', $$
     options.remove('NextQuoteNumber');
 
     if(settings['NextInvoiceNumber']) {
-      plv8.execute('select setNextInNumber($1)', [settings['NextInvoiceNumber'] - 0]);
+      plv8.execute('select setNextInvcNumber($1)', [settings['NextInvoiceNumber'] - 0]);
     }
     options.remove('NextInvoiceNumber');
   
