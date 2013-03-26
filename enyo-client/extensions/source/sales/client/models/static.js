@@ -26,4 +26,38 @@ white:true*/
     XM.invoiceDateSources.add(invoiceDateSource);
   }
 
+  // Line Item Edit Behaviors
+  var lineItemEditBehaviorJson = [
+    { id: -1, name: "_update".loc() },
+    { id: 2, name: "_doNotUpdate".loc() },
+    { id: -3, name: "_prompt".loc() }
+  ];
+  XM.LineItemEditBehaviorModel = Backbone.Model.extend({
+  });
+  XM.LineItemEditBehaviorCollection = Backbone.Collection.extend({
+    model: XM.LineItemEditBehaviorModel
+  });
+  XM.lineItemEditBehaviors = new XM.LineItemEditBehaviorCollection();
+  for (i = 0; i < lineItemEditBehaviorJson.length; i++) {
+    var lineItemEditBehavior = new XM.LineItemEditBehaviorModel(lineItemEditBehaviorJson[i]);
+    XM.lineItemEditBehaviors.add(lineItemEditBehavior);
+  }
+
+  // Price Effective Dates
+  var priceEffectiveDateJson = [
+    { id: "CurrentDate", name: "_current".loc() },
+    { id: "OrderDate???", name: "_order".loc() },
+    { id: "ScheduledDate???", name: "_scheduled".loc() }
+  ];
+  XM.PriceEffectiveDateModel = Backbone.Model.extend({
+  });
+  XM.PriceEffectiveDateCollection = Backbone.Collection.extend({
+    model: XM.PriceEffectiveDateModel
+  });
+  XM.priceEffectiveDates = new XM.PriceEffectiveDateCollection();
+  for (i = 0; i < priceEffectiveDateJson.length; i++) {
+    var priceEffectiveDate = new XM.PriceEffectiveDateModel(priceEffectiveDateJson[i]);
+    XM.priceEffectiveDates.add(priceEffectiveDate);
+  }
+
 }());

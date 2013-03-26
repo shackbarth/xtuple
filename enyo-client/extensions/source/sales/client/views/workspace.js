@@ -72,7 +72,7 @@ trailing:true white:true*/
                 label: "_number".loc() + " " + "_policy".loc()},
               {kind: "XV.NumberWidget", attr: "NextInvoiceNumber",
                 label: "_nextNumber".loc()},
-              // Note I don't bother to define a kind for this picker
+              // Not bothering to define a kind
               {kind: "XV.PickerWidget", attr: "InvoiceDateSource",
                 label: "_invoiceDateSource".loc(), collection: "XM.invoiceDateSources"},
 
@@ -115,15 +115,17 @@ trailing:true white:true*/
                 label: "_disableSalesOrderPriceOverride".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "HideSOMiscCharge",
                 label: "_hideSOMiscCharge".loc()},
-              {kind: "XV.InputWidget", attr: "soPriceEffective",
-                label: "_priceEffectiveDate".loc()}, // TODO: radiobutton?
+              // Not bothering to define a kind
+              {kind: "XV.PickerWidget", attr: "soPriceEffective",
+                label: "_priceEffectiveDate".loc(), collection: "XM.priceEffectiveDates"},
               {kind: "onyx.GroupboxHeader", content: "_freightPricing".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "CalculateFreight",
                 label: "_useCalculatedFreightPricing".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "IncludePackageWeight",
                 label: "_includePackageWeight".loc()},
-              {kind: "XV.NumberWidget", attr: "UpdatePriceLineEdit",
-                label: "_pricingOnLineItemEdits".loc()}, // TODO: radiobutton?
+              // Not bothering to define a kind
+              {kind: "XV.PickerWidget", attr: "UpdatePriceLineEdit",
+                label: "_pricingOnLineItemEdits".loc(), collection: "XM.lineItemEditBehaviors"},
               {kind: "XV.ToggleButtonWidget", attr: "IgnoreCustDisc",
                 label: "_ignoreIfDiscounted".loc()}
             ]}
