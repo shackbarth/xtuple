@@ -356,6 +356,33 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.ContactListItem", "XV.ContactWorkspace");
 
   // ..........................................................
+  // COST CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.CostCategoryWorkspace",
+    kind: "XV.Workspace",
+    title: "_costCategory".loc(),
+    model: "XM.CostCategory",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.CostCategory", "XV.CostCategoryWorkspace");
+
+
+  // ..........................................................
   // COUNTRY
   //
 
@@ -813,6 +840,41 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.ItemListItem", "XV.ItemWorkspace");
 
   // ..........................................................
+  // ITEM SITE
+  //
+
+  enyo.kind({
+    name: "XV.ItemSiteWorkspace",
+    kind: "XV.Workspace",
+    title: "_itemSite".loc(),
+    model: "XM.ItemSite",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.ItemWidget", attr: "item"},
+            {kind: "XV.SitePicker", attr: "site"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
+            {kind: "XV.PlannerCodePicker", attr: "plannerCode"},
+            {kind: "XV.CostCategoryPicker", attr: "costCategory"},
+            {kind: "XV.CheckboxWidget", attr: "isSold"},
+            {kind: "XV.NumberWidget", attr: "soldRanking"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true}
+          ]}
+        ]},
+        {kind: "XV.ItemSiteCommentBox", attr: "comments"}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.ItemSiteRelation", "XV.ItemSiteWorkspace");
+  XV.registerModelWorkspace("XM.ItemSiteListItem", "XV.ItemSiteWorkspace");
+
+  // ..........................................................
   // OPPORTUNITY
   //
 
@@ -835,7 +897,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.AccountWidget", attr: "account"},
             {kind: "XV.ContactWidget", attr: "contact"},
-            {kind: "XV.MoneyWidget", attr: {amount: "amount", currency: "currency"}, //effective: new Date(),
+            {kind: "XV.MoneyWidget", attr: {amount: "amount", currency: "currency"},
               label: "_amount".loc()},
             {kind: "XV.PercentWidget", attr: "probability"},
             {kind: "onyx.GroupboxHeader", content: "_status".loc()},
@@ -923,6 +985,32 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.OpportunityType", "XV.OpportunityTypeWorkspace");
+
+  // ..........................................................
+  // PLANNER CODE
+  //
+
+  enyo.kind({
+    name: "XV.PlannerCodeWorkspace",
+    kind: "XV.Workspace",
+    title: "_plannerCode".loc(),
+    model: "XM.PlannerCode",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "name"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.PlannerCode", "XV.PlannerCodeWorkspace");
 
   // ..........................................................
   // PRIORITY
@@ -1220,7 +1308,7 @@ trailing:true white:true*/
           {kind: "XV.Groupbox", name: "totalGroup",
             components: [
             {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
-            {kind: "FittableColumns", components: [
+            {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
               {kind: "FittableRows", components: [
                 {kind: "XV.CurrencyPicker", attr: "currency"},
                 {kind: "XV.MoneyWidget", attr:
@@ -1370,7 +1458,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   enyo.kind(quoteLineItem);
 
   // ..........................................................
@@ -1401,6 +1489,56 @@ trailing:true white:true*/
 
   XV.registerModelWorkspace("XM.SalesRep", "XV.SalesRepWorkspace");
 
+  // ..........................................................
+  // SITE
+  //
+
+  enyo.kind({
+    name: "XV.SiteWorkspace",
+    kind: "XV.Workspace",
+    title: "_site".loc(),
+    model: "XM.Site",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
+            {kind: "XV.SiteTypePicker", attr: "siteType"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.ContactWidget", attr: "contact"},
+            {kind: "XV.AddressWidget", attr: "address"},
+            {kind: "XV.TaxZonePicker", attr: "taxZone"},
+            {kind: "XV.InputWidget", attr: "fob"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true}
+          ]}
+        ]},
+        {kind: "XV.SiteCommentBox", attr: "comments"}
+      ]}
+    ]
+  });
+
+  // TODO: The site workspace won't work until the default GL trigger is
+  // taken out of the database-side code. Uncomment these once that's done:
+  //XV.registerModelWorkspace("XM.SiteRelation", "XV.SiteWorkspace");
+  //XV.registerModelWorkspace("XM.SiteListItem", "XV.SiteWorkspace");
+
+  // ..........................................................
+  // SITE TYPE
+  //
+
+  enyo.kind({
+    name: "XV.SiteTypeWorkspace",
+    kind: "XV.Workspace",
+    title: "_siteType".loc(),
+    model: "XM.SiteType"
+  });
+
+  XV.registerModelWorkspace("XM.SiteType", "XV.SiteTypeWorkspace");
 
   // ..........................................................
   // STATE
@@ -1485,9 +1623,9 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
-            {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.PriorityPicker", attr: "priority"},
             {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
             {kind: "XV.DateWidget", attr: "dueDate"},
