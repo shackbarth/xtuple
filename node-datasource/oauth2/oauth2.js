@@ -72,6 +72,8 @@ server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, d
   // The authCode can be used to get a refreshToken and accessToken. We bcrypt the authCode
   // so if our database is ever compromised, the stored authCode hashes are worthless.
 
+  if (!Array.isArray(ares.scope)) { ares.scope = [ ares.scope ]; }
+
   // Save auth data to the database.
   db.authorizationCodes.save(codehash, client.get("clientID"), redirectURI, user.id, ares.scope, function (err) {
     if (err) {
