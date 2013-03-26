@@ -105,7 +105,7 @@ white:true*/
 
     @extends XM.Model
   */
-  // TODO - Switch to SimpleModel and fix bugs.
+  // TODO - Switch to SimpleModel and fix bugs including removing findOrCreate.
   XM.Organization = XM.Model.extend({
     /** @scope XM.Organization.prototype */
 

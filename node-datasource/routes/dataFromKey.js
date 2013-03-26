@@ -12,7 +12,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.dataFromKey = function (req, res) {
 
     var dataKey = (req.query && req.query.dataKey) || -1,
-      tempDataModel = XM.BiCache.findOrCreate(dataKey) || new XM.BiCache({key: dataKey});
+      tempDataModel = new XM.BiCache({key: dataKey});
 
     tempDataModel.fetch({success: function (model, result) {
       res.setHeader("Content-Type", "application/json");

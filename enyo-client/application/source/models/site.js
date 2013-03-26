@@ -25,8 +25,10 @@ white:true*/
     @extends XM.Document
   */
   XM.Site = XM.Document.extend(/** @lends XM.Site.prototype */{
-    // TODO: this needs to be fleshed out
-    recordType: 'XM.Site'
+
+    recordType: 'XM.Site',
+
+    documentKey: 'code'
 
   });
 
@@ -35,8 +37,7 @@ white:true*/
 
     @extends XM.Comments
   */
-  XM.SiteComment = XM.Comment.extend({
-    /** @scope XM.SiteComment.prototype */
+  XM.SiteComment = XM.Comment.extend(/** @lends XM.SiteComment.prototype */{
 
     recordType: 'XM.SiteComment',
 
@@ -52,6 +53,19 @@ white:true*/
   XM.SiteRelation = XM.Info.extend(/** @lends XM.SiteRelation.prototype */{
 
     recordType: 'XM.SiteRelation',
+
+    editableModel: 'XM.Site'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Info
+  */
+  XM.SiteListItem = XM.Info.extend(/** @lends XM.SiteListItem.prototype */{
+
+    recordType: 'XM.SiteListItem',
 
     editableModel: 'XM.Site'
 
@@ -76,9 +90,29 @@ white:true*/
 
     @extends XM.Collection
   */
+  XM.SiteTypeCollection = XM.Collection.extend(/** @lends XM.SiteTypeCollection.prototype */{
+
+    model: XM.SiteType
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
   XM.SiteRelationCollection = XM.Collection.extend(/** @lends XM.SiteRelationCollection.prototype */{
 
     model: XM.SiteRelation
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.SiteListItemCollection = XM.Collection.extend(/** @lends XM.SiteListItemCollection.prototype */{
+
+    model: XM.SiteListItem
   });
 
 }());

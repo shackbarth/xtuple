@@ -127,6 +127,19 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // COST CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.CostCategoryListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_CostCategory".loc()},
+      {name: "code", label: "_code".loc(), attr: "code"}
+    ]
+  });
+
+  // ..........................................................
   // CUSTOMER
   //
 
@@ -440,6 +453,19 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // PLANNER CODE
+  //
+
+  enyo.kind({
+    name: "XV.PlannerCodeListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_plannerCode".loc()},
+      {name: "code", label: "_code".loc(), attr: "code"}
+    ]
+  });
+
+  // ..........................................................
   // PROJECT
   //
 
@@ -621,6 +647,45 @@ trailing:true white:true*/
         filterLabel: "_quoteDate".loc() + " " + "_toDate".loc(),
         attr: "quoteDate", operator: "<=",
         defaultKind: "XV.DateWidget"}
+    ]
+  });
+
+  // ..........................................................
+  // SITE
+  //
+
+  enyo.kind({
+    name: "XV.SiteListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {kind: "onyx.GroupboxHeader", content: "_site".loc()},
+      {name: "code", label: "_code".loc(), attr: "code"}
+    ]
+  });
+
+  // ..........................................................
+  // SITE TYPE
+  //
+
+  enyo.kind({
+    name: "XV.SiteTypeListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_siteType".loc()},
+      {name: "name", label: "_name".loc(), attr: "name"}
     ]
   });
 
