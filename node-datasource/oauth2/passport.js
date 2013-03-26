@@ -9,6 +9,7 @@ var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
     BasicStrategy = require('passport-http').BasicStrategy,
     ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy,
+    ClientJWTBearerStrategy = require('passport-oauth2-jwt-bearer').Strategy,
     BearerStrategy = require('passport-http-bearer').Strategy,
     db = require('./db');
 
@@ -104,6 +105,28 @@ passport.use(new ClientPasswordStrategy(
       if (err) { return done(err); }
       if (!client) { return done(null, false); }
       if (client.get("clientSecret") !== clientSecret) { return done(null, false); }
+      return done(null, client);
+    });
+  }
+));
+
+
+/**
+ * JSON Web Token (JWT) Bearer Strategy
+ *
+ * This strategy authenticates clients using a JWT's Claim Set's "iss" value. The "iss"
+ * is extracted from the JWT so a matching client can be looked up.  You do not need
+ * to validate the JWT with the signature.  That will be done by the JSON Web Token (JWT)
+ * Bearer Token Exchange Middleware for OAuth2orize.  We will just look up a matching
+ * client and pass it along to the exhange middleware for full validation.
+ */
+passport.use(new ClientJWTBearerStrategy(
+  function (claimSetIss, done) {
+    "use strict";
+
+    db.clients.findByClientId(claimSetIss, function (err, client) {
+      if (err) { return done(err); }
+      if (!client) { return done(null, false); }
       return done(null, client);
     });
   }
