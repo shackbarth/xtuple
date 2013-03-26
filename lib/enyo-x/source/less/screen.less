@@ -548,7 +548,7 @@ body {
     font-size: small;
     overflow: hidden;
     &.disabled {
-      opacity: 0.6;
+      color: @dim-gray;
     }
   }
   /* Resets the margin/padding value for blockquote tag in comments */
@@ -705,6 +705,9 @@ body {
       font-style: italic;
       color: @blue-gray;
     }
+    &.disabled {
+      color: @dim-gray;
+    }
   }
 }
 
@@ -802,7 +805,7 @@ body {
   padding-bottom: 4px;
   max-width: 325px;
   &.disabled {
-    opacity: 0.4;
+    color: @dim-gray;
   }
   &.label {
     text-indent: 0;

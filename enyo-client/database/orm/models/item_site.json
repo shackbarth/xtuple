@@ -88,6 +88,13 @@
         }
       },
       {
+        "name": "isSold",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_sold"
+        }
+      },
+      {
         "name": "plannerCode",
         "toOne": {
           "type": "PlannerCode",
@@ -252,6 +259,13 @@
         }
       },
       {
+        "name": "isSold",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_sold"
+        }
+      },
+      {
         "name": "plannerCode",
         "toOne": {
           "type": "PlannerCode",
@@ -300,6 +314,13 @@
         }
       },
       {
+        "name": "isSold",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_sold"
+        }
+      },
+      {
         "name": "item",
         "toOne": {
           "type": "ItemRelation",
@@ -313,6 +334,20 @@
           "type": "SiteRelation",
           "column": "itemsite_warehous_id",
           "isNested": true
+        }
+      },
+      {
+        "name": "costCategory",
+        "toOne": {
+          "type": "CostCategory",
+          "column": "itemsite_costcat_id"
+        }
+      },
+      {
+        "name": "plannerCode",
+        "toOne": {
+          "type": "PlannerCode",
+          "column": "itemsite_plancode_id"
         }
       },
       {

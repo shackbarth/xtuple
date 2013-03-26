@@ -244,6 +244,35 @@ trailing:true white:true*/
   XV.registerModelList("XM.ContactRelation", "XV.ContactList");
 
   // ..........................................................
+  // COST CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.CostCategoryList",
+    kind: "XV.List",
+    label: "_costCategories".loc(),
+    collection: "XM.CostCategoryCollection",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    parameterWidget: "XV.CostCategoryListParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "code", isKey: true},
+              {kind: "XV.ListAttr", attr: "description", fit: true, classes: "right"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.CostCategory", "XV.CostCategoryList");
+
+  // ..........................................................
   // CURRENCY
   //
 
@@ -315,7 +344,7 @@ trailing:true white:true*/
   XV.registerModelList("XM.CustomerRelation", "XV.CustomerList");
 
   // ..........................................................
-  // CUSTOMERPROSPECT
+  // CUSTOMER PROSPECT
   //
 
   enyo.kind({
@@ -670,6 +699,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.ItemSiteRelation", "XV.ItemSiteList");
+
   // ..........................................................
   // OPPORTUNITY
   //
@@ -738,6 +768,35 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.OpportunityRelation", "XV.OpportunityList");
+
+  // ..........................................................
+  // PLANNER CODE
+  //
+
+  enyo.kind({
+    name: "XV.PlannerCodeList",
+    kind: "XV.List",
+    label: "_plannerCodes".loc(),
+    collection: "XM.PlannerCodeCollection",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    parameterWidget: "XV.PlannerCodeListParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "code", isKey: true},
+              {kind: "XV.ListAttr", attr: "name", fit: true, classes: "right"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.PlannerCode", "XV.PlannerCodeList");
 
   // ..........................................................
   // PRODUCT CATEGORY
@@ -970,7 +1029,7 @@ trailing:true white:true*/
     collection: "XM.QuoteListItemCollection",
     parameterWidget: "XV.QuoteListParameters",
     query: {orderBy: [
-      {attribute: 'id'}
+      {attribute: 'number'}
     ]},
     components: [
       {kind: "XV.ListItem", components: [
@@ -980,16 +1039,18 @@ trailing:true white:true*/
               {kind: "XV.ListAttr", attr: "number", isKey: true,
                 fit: true},
               {kind: "XV.ListAttr", attr: "getQuoteStatusString",
-                classes: "right"}
+                style: "padding-left: 24px"},
+              {kind: "XV.ListAttr", attr: "expireDate",
+                formatter: "formatExpireDate", classes: "right",
+                placeholder: "_noExpiration".loc()}
             ]},
-            {kind: "XV.ListAttr", attr: "customer.name"}
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "customer.name"},
+              {kind: "XV.ListAttr", attr: "total", formatter: "formatPrice",
+                classes: "right"}
+            ]}
           ]},
           {kind: "XV.ListColumn", classes: "second", components: [
-            {kind: "XV.ListAttr", attr: "expireDate",
-              formatter: "formatExpireDate"},
-            {kind: "XV.ListAttr", attr: "total", formatter: "formatPrice"}
-          ]},
-          {kind: "XV.ListColumn", classes: "last", components: [
             {kind: "XV.ListAttr", attr: "shiptoName", classes: "italic"},
             {kind: "XV.ListAttr", attr: "shiptoAddress1.formatShort"}
           ]},
@@ -1013,6 +1074,42 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.QuoteRelation", "XV.QuoteList");
+
+  // ..........................................................
+  // SITE
+  //
+
+  enyo.kind({
+    name: "XV.SiteList",
+    kind: "XV.List",
+    label: "_sites".loc(),
+    collection: "XM.SiteListItemCollection",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    parameterWidget: "XV.SiteListParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "code", isKey: true},
+              {kind: "XV.ListAttr", attr: "description", fit: true, classes: "right"}
+            ]},
+            {kind: "XV.ListAttr", attr: "item.description1"}
+          ]},
+          {kind: "XV.ListColumn", classes: "second",
+            components: [
+            {kind: "XV.ListAttr", attr: "site.code", classes: "bold"},
+            {kind: "XV.ListAttr", attr: "site.description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.SiteRelation", "XV.SiteList");
+
 
   // ..........................................................
   // TO DO
@@ -1264,6 +1361,12 @@ trailing:true white:true*/
     published: {
       query: {orderBy: [{ attribute: 'name' }] }
     }
+  });
+
+  enyo.kind({
+    name: "XV.SiteTypeList",
+    kind: "XV.NameDescriptionList",
+    collection: "XM.SiteTypeCollection"
   });
 
   enyo.kind({

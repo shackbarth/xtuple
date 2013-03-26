@@ -50,6 +50,20 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // COST CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.CostCategoryPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.costCategories",
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ]
+  });
+
+  // ..........................................................
   // COUNTRY
   //
 
@@ -228,6 +242,20 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // PLANNER CODE
+  //
+
+  enyo.kind({
+    name: "XV.PlannerCodePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.plannerCodes",
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ]
+  });
+
+  // ..........................................................
   // PRIORITY
   //
 
@@ -264,7 +292,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.projectStatuses"
   });
-  
+
   // ..........................................................
   // SALES REP
   //
@@ -314,6 +342,19 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.shipZones",
     orderBy: [
       {attribute: 'name'}
+    ]
+  });
+
+  // ..........................................................
+  // PLANNER CODE
+  //
+
+  enyo.kind({
+    name: "XV.SitePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.sites",
+    orderBy: [
+      {attribute: 'code'}
     ]
   });
 
@@ -386,28 +427,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     orderBy: [
       {attribute: 'name'}
-    ],
-    /**
-      Rebuild the list per the filter when it changes
-     */
-    allowedUnitsChanged: function () {
-      this.buildList();
-    },
-    /**
-      If we've been given a special filter restriction, apply it
-     */
-    filter: function (models, options) {
-      var that = this;
-      if (this.getAllowedUnits()) {
-        return _.filter(models, function (model) {
-          var id = model.get("id");
-          return _.indexOf(that.getAllowedUnits(), id) >= 0;
-        });
-        //return allowedUnits;
-      } else {
-        return this.inherited(arguments);
-      }
-    }
+    ]
   });
 
   // ..........................................................
@@ -421,6 +441,19 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.sites",
     orderBy: [
       {attribute: 'code'}
+    ]
+  });
+
+  // ..........................................................
+  // SITE TYPE
+  //
+
+  enyo.kind({
+    name: "XV.SiteTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.siteTypes",
+    orderBy: [
+      {attribute: 'name'}
     ]
   });
 

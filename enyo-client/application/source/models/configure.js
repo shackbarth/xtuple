@@ -15,16 +15,16 @@ white:true*/
     /** @scope XM.DatabaseInformation.prototype */
 
     recordType: 'XM.DatabaseInformation',
-    
+
     privileges: 'ConfigDatabaseInfo',
-    
+
     readOnlyAttributes: [
       "DatabaseName",
       "ServerVersion"
     ]
 
   });
-  
+
   XM.databaseInformation = new XM.DatabaseInformation();
 
 }());
