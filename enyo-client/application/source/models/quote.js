@@ -944,15 +944,11 @@ white:true*/
       this.on('change:discount', this.discountDidChange);
       this.on("change:itemSite", this.itemSiteDidChange);
       this.on('change:quantity', this.quantityDidChange);
-      this.on('change:quantity change:price', this.calculateExtendedPrice);
-      this.on('change:price', this.calculatePercentages);
       this.on('change:priceUnit', this.priceUnitDidChange);
       this.on('change:quote', this.parentDidChange);
-      this.on('change:taxType change:extendedPrice', this.calculateTax);
+      this.on('change:taxType', this.calculateTax);
       this.on('change:quantityUnit', this.quantityUnitDidChange);
       this.on('change:scheduleDate', this.scheduleDateDidChange);
-      this.on('change:extendedPrice', this.recalculateParent);
-      this.on('change:extendedPrice', this.calculateProfit);
       this.on('statusChange', this.statusDidChange);
 
       // Only recalculate price on date changes if pricing is date driven
@@ -1027,6 +1023,9 @@ white:true*/
         extPrice =  (quantity * quantityUnitRatio / priceUnitRatio) * price;
       extPrice = XT.toExtendedPrice(extPrice);
       this.set("extendedPrice", extPrice);
+      this.calculateProfit();
+      this.calculateTax();
+      this.recalculateParent();
       return this;
     },
 
@@ -1584,6 +1583,8 @@ white:true*/
           that.set("customerPrice", totalPrice);
           if (that._updatePrice) {
             that.set("price", totalPrice);
+            that.calculateExtendedPrice();
+            that.calculatePercentages();
           }
         };
 
