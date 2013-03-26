@@ -44,8 +44,6 @@ trailing:true white:true*/
           {kind: "XV.Groupbox", name: "mainPanel", components: [
             {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
               classes: "in-panel", components: [
-              // TODO: where does IgnoreCustDisc (boolean) go ?
-              // TODO: worry about too-long label text
 
               {kind: "onyx.GroupboxHeader", content: "_salesOrder".loc()},
               {kind: "XV.NumberPolicyPicker", attr: "CONumberGeneration", // XXX really CO?
@@ -81,7 +79,7 @@ trailing:true white:true*/
               {kind: "XV.ToggleButtonWidget", attr: "AllowASAPShipSchedules",
                 label: "_allowASAPShipSchedules".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "UsePromiseDate",
-                label: "_usePromiseDate".loc()},
+                label: "_usePromiseDates".loc()},
 
               {kind: "onyx.GroupboxHeader", content: "_changeLog".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "CustomerChangeLog",
@@ -92,18 +90,18 @@ trailing:true white:true*/
               {kind: "onyx.GroupboxHeader", content: "_shipControl".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "AlwaysShowSaveAndAdd",
                 label: "_showSaveAndAddbutton".loc()},
-              {kind: "XV.ToggleButtonWidget", attr: "EnableSOShipping",
-                label: "_enableSOShipping".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "FirmSalesOrderPackingList",
                 label: "_firmSalesOrdersWhenAddedToPackingList".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "EnableSOShipping",
+                label: "_enableSOShipping".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "AutoSelectForBilling",
                 label: "_autoSelectForBilling".loc()},
 
               {kind: "onyx.GroupboxHeader", content: "_creditControl".loc()},
-              {kind: "XV.ToggleButtonWidget", attr: "AutoAllocateCreditMemos",
-                label: "_autoAllocateCreditMemos".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "RestrictCreditMemos",
-                label: "_restrictCreditMemos".loc()}
+                label: "_restrictCreditMemos".loc()},
+              {kind: "XV.ToggleButtonWidget", attr: "AutoAllocateCreditMemos",
+                label: "_autoAllocateCreditMemos".loc()}
             ]}
           ]},
           {kind: "XV.Groupbox", name: "pricePanel", title: "_pricing".loc(), components: [
@@ -123,7 +121,10 @@ trailing:true white:true*/
                 label: "_useCalculatedFreightPricing".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "IncludePackageWeight",
                 label: "_includePackageWeight".loc()},
-              {kind: "XV.NumberWidget", attr: "UpdatePriceLineEdit", label: "_pricingOnLineItemEdits".loc()}, // TODO: radiobutton?
+              {kind: "XV.NumberWidget", attr: "UpdatePriceLineEdit",
+                label: "_pricingOnLineItemEdits".loc()}, // TODO: radiobutton?
+              {kind: "XV.ToggleButtonWidget", attr: "IgnoreCustDisc",
+                label: "_ignoreIfDiscounted".loc()}
             ]}
           ]},
           {kind: "XV.Groupbox", name: "defaultsPanel", title: "_customerDefaults".loc(), components: [
