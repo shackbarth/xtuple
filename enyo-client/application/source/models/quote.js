@@ -250,10 +250,19 @@ white:true*/
         }
 
         if (siteClass.length) {
+          // If we already have a request pending we need to communicate
+          // when that is done to start over because something has changed.
+          if (this._pendingFreightRequest) {
+            if (!this._invalidFreightRequest) {
+              this._invalidFreightRequest = true;
+            }
+            return this;
+          }
           // Loop through each site/class and fetch freight detail for that
           // combination. When we have them all, add it up and pass through
           // to original caller
-          that.freightDetail = [];
+          this._pendingFreightRequest = true;
+          this.freightDetail = [];
           counter = siteClass.length;
           _.each(siteClass, function (item) {
             var params = [
@@ -270,17 +279,26 @@ white:true*/
               dispOptions = {
                 success: function (resp) {
                   var freight;
-                  that.freightDetail = that.freightDetail.concat(resp);
                   counter--;
+                  if (!that._freightRequestInvalid) {
+                    that.freightDetail = that.freightDetail.concat(resp);
+                  }
                   if (!counter) { // Means we heard back from all requests
-                    // Add 'em up
-                    freight = XT.math.add(_.pluck(that.freightDetail, "total"), scale);
-                    that.off('change:freight', that.freightDidChange);
-                    that.set("freight", freight);
-                    that.on('change:freight', that.freightDidChange);
-
-                    // Now calculate tax
-                    that.calculateFreightTax();
+                    delete that._pendingFreightRequest;
+                    if (that._freightRequestInvalid) {
+                      // Restart the request
+                      delete that._freightRequestInvalid;
+                      that.calculateFreight();
+                    } else {
+                      // Add 'em up
+                      freight = XT.math.add(_.pluck(that.freightDetail, "total"), scale);
+                      that.off('change:freight', that.freightDidChange);
+                      that.set("freight", freight);
+                      that.on('change:freight', that.freightDidChange);
+                      
+                      // Now calculate tax
+                      that.calculateFreightTax();
+                    }
                   }
                 }
               };
@@ -388,7 +406,7 @@ white:true*/
       var customer = this.get("customer"),
         billtoContact = customer ? customer.get("billingContact") || customer.get("contact") : false,
         billtoAddress = billtoContact ? billtoContact.get("address") : false,
-        defaultShipto = customer.get("defaultShipto"),
+        defaultShipto = customer ? customer.get("defaultShipto") : false,
         billtoAttrs,
         that = this,
         unsetBilltoAddress = function () {
@@ -504,7 +522,7 @@ white:true*/
       options.success = function (model, resp, options) {
         var lineItems = that.get("lineItems").models;
         _.each(lineItems, function (line) {
-          line.fetchSellingUnits();
+          line.fetchSellingUnits(false);
         });
 
         that.on('add:lineItems remove:lineItems', that.lineItemsDidChange);
@@ -809,7 +827,7 @@ white:true*/
           item = lineItem.getValue("itemSite.item"),
           prodWeight = item ? item.get("productWeight") : 0,
           packWeight = item ? item.get("packageWeight") : 0,
-          itemWeight = item ? add(prodWeight, packWeight, scale) : 0,
+          itemWeight = item ? add(prodWeight, packWeight, XT.WEIGHT_SCALE) : 0,
           quantityUnitRatio = lineItem.get("quantityUnitRatio"),
           grossWeight = itemWeight * quantity * quantityUnitRatio;
 
@@ -846,7 +864,7 @@ white:true*/
       });
 
       // Totaling calculations
-      freightWeight = add(weights, scale);
+      freightWeight = add(weights, XT.WEIGHT_SCALE);
       subtotal = add(subtotals, scale);
       costTotal = add(costs, scale);
       margin = substract(subtotal, costTotal, scale);
@@ -925,16 +943,13 @@ white:true*/
       var settings = XT.session.settings;
       this.on('change:discount', this.discountDidChange);
       this.on("change:itemSite", this.itemSiteDidChange);
-      this.on('change:quantity', this.calculatePrice);
-      this.on('change:quantity change:price', this.calculateExtendedPrice);
-      this.on('change:price', this.calculatePercentages);
+      this.on("change:price", this.priceDidChange);
+      this.on('change:quantity', this.quantityDidChange);
       this.on('change:priceUnit', this.priceUnitDidChange);
       this.on('change:quote', this.parentDidChange);
-      this.on('change:taxType change:extendedPrice', this.calculateTax);
+      this.on('change:taxType', this.calculateTax);
       this.on('change:quantityUnit', this.quantityUnitDidChange);
       this.on('change:scheduleDate', this.scheduleDateDidChange);
-      this.on('change:extendedPrice', this.recalculateParent);
-      this.on('change:extendedPrice', this.calculateProfit);
       this.on('statusChange', this.statusDidChange);
 
       // Only recalculate price on date changes if pricing is date driven
@@ -1009,6 +1024,9 @@ white:true*/
         extPrice =  (quantity * quantityUnitRatio / priceUnitRatio) * price;
       extPrice = XT.toExtendedPrice(extPrice);
       this.set("extendedPrice", extPrice);
+      this.calculateProfit();
+      this.calculateTax();
+      this.recalculateParent();
       return this;
     },
 
@@ -1212,7 +1230,10 @@ white:true*/
             charPrices += char.get("price");
           });
         }
+        this.off("price", this.priceDidChange);
         this.set("price", price);
+        this.on("price", this.priceDidChange);
+        this.priceDidChange();
         this.set("basePrice", XT.math.subtract(price, charPrices, scale));
       }
       return this;
@@ -1221,15 +1242,19 @@ white:true*/
     /**
       Updates `sellingUnits` array from server
 
+      @param {Boolean} Set default units from item. Default = true;
       @returns {Object} Receiver
     */
-    fetchSellingUnits: function () {
+    fetchSellingUnits: function (resetDefaults) {
+      resetDefaults = _.isBoolean(resetDefaults) ? resetDefaults : true;
       var that = this,
         item = this.getValue("itemSite.item"),
         options = {};
 
-      this.unset("quantityUnit");
-      this.unset("priceUnit");
+      if (resetDefaults) {
+        this.unset("quantityUnit");
+        this.unset("priceUnit");
+      }
       this.sellingUnits.reset();
 
       if (!item) { return this; }
@@ -1243,11 +1268,13 @@ white:true*/
         });
         
         // Set the item default selections
-        that.set({
-          quantityUnit: item.get("inventoryUnit"),
-          priceUnit: item.get("priceUnit"),
-          priceUnitRatio: item.get("priceUnitRatio")
-        });
+        if (resetDefaults) {
+          that.set({
+            quantityUnit: item.get("inventoryUnit"),
+            priceUnit: item.get("priceUnit"),
+            priceUnitRatio: item.get("priceUnitRatio")
+          });
+        }
       };
       item.sellingUnits(options);
       return this;
@@ -1358,12 +1385,17 @@ white:true*/
       }
       return asOf;
     },
+    
+    priceDidChange: function () {
+      this.calculateExtendedPrice();
+      this.calculatePercentages();
+    },
 
     priceUnitDidChange: function () {
       var quantityUnit = this.get("quantityUnit"),
         priceUnit = this.get("priceUnit"),
         item = this.getValue("itemSite.item"),
-        inventoryUnit = item ? this.getValue("inventoryUnit") : false,
+        inventoryUnit = item ? item.getValue("inventoryUnit") : false,
         that = this,
         options = {};
 
@@ -1371,6 +1403,8 @@ white:true*/
 
       if (inventoryUnit.id === priceUnit.id) {
         this.set("priceUnitRatio", 1);
+        that.calculateExtendedPrice();
+        that.calculatePrice(true);
       } else {
         // Unset price ratio so we can't save until we get an answer
         that.unset("priceUnitRatio");
@@ -1378,10 +1412,16 @@ white:true*/
         // Lookup unit of measure ratio
         options.success = function (ratio) {
           that.set("priceUnitRatio", ratio);
+          that.calculateExtendedPrice();
           that.calculatePrice(true);
         };
-        item.unitToUnitRatio(inventoryUnit, quantityUnit, options);
+        item.unitToUnitRatio(priceUnit, inventoryUnit, options);
       }
+    },
+    
+    quantityDidChange: function () {
+      this.calculatePrice();
+      this.recalculateParent();
     },
 
     quantityUnitDidChange: function () {
@@ -1396,16 +1436,18 @@ white:true*/
 
       if (!inventoryUnit || !quantityUnit) { return; }
 
+      this.set("priceUnit", quantityUnit);
       if (quantityUnit.id === item.get("inventoryUnit").id) {
         this.set("quantityUnitRatio", 1);
         this._unitIsFractional = item.get("isFractional");
         this.setReadOnly("priceUnit", false);
+        that.calculatePrice(true);
+        that.recalculateParent();
       } else {
         // Unset so we can not save until we get a new ratio value
         this.unset("quantityUnitRatio");
 
         // Price unit must be set to quantity unit and be read only
-        this.set("priceUnit", quantityUnit);
         this.setReadOnly("priceUnit", true);
 
         // Lookup unit of measure ratio and fractional
@@ -1423,10 +1465,11 @@ white:true*/
               that.notify("_notFractional".loc);
             } else {
               that.calculatePrice(true);
+              that.recalculateParent();
             }
           }
         };
-        item.unitToUnitRatio(inventoryUnit, quantityUnit, options);
+        item.unitToUnitRatio(quantityUnit, inventoryUnit, options);
         item.unitFractional(quantityUnit, options);
       }
     },
@@ -1535,19 +1578,40 @@ white:true*/
 
         // Set price after we have item and all characteristics prices
         setPrice = function () {
+          // Allow editing again if we could before
+          that.setReadOnly("price", readOnlyCache);
+          
+          // If price was requested before this response,
+          // then bail out and start over
+          if (that._invalidPriceRequest) {
+            delete that._invalidPriceRequest;
+            delete that._pendingPriceRequest;
+            that._calculatePrice();
+            return;
+          }
+          
           var totalPrice = XT.math.add(prices, XT.SALES_PRICE_SCALE);
           that.set("customerPrice", totalPrice);
           if (that._updatePrice) {
+            that.off("price", that.priceDidChange);
             that.set("price", totalPrice);
+            that.on("price", that.priceDidChange);
+            that.priceDidChange();
           }
-
-          // Allow editing again if we could before
-          that.setReadOnly("price", readOnlyCache);
         };
 
       parentDate = parent.get(parent.documentDateKey);
       customer = parent.get("customer");
       currency = parent.get("currency");
+      
+      // If we already have a request pending we need to indicate
+      // when that is done to start over because something has changed.
+      if (this._pendingPriceRequest) {
+        if (!this._invalidPriceRequest) {
+          this._invalidPriceRequest = true;
+        }
+        return;
+      }
 
       // Don't allow user editing of price until we hear back from the server
       this.setReadOnly("price", true);
@@ -1557,7 +1621,7 @@ white:true*/
       itemOptions.currency = currency;
       itemOptions.effective = parentDate;
       itemOptions.error = function (err) {
-        that.trigger("error", err);
+        that.trigger("invalid", err);
       };
 
       charOptions = _.clone(itemOptions); // Some params are shared
@@ -1568,7 +1632,7 @@ white:true*/
         var priceMode;
 
         // Handle no price found scenario
-        if (resp.price === -9999) {
+        if (resp.price === -9999 && !that._invalidPriceRequest) {
           counter = -1;
           that.notify("_noPriceFound".loc(), { type: K.WARNING });
           if (that._updatePrice) {
@@ -1584,12 +1648,14 @@ white:true*/
         // Handle normal scenario
         } else {
           counter--;
-          priceMode = (resp.type === "N" ||
-                       resp.type === "D" ||
-                       resp.type === "P") ? K.DISCOUNT_MODE : K.MARKUP_MODE;
-          that.set("priceMode", priceMode);
-          that.set("basePrice", resp.price);
-          prices.push(resp.price);
+          if (!that._invalidPriceRequest) {
+            priceMode = (resp.type === "N" ||
+                         resp.type === "D" ||
+                         resp.type === "P") ? K.DISCOUNT_MODE : K.MARKUP_MODE;
+            that.set("priceMode", priceMode);
+            that.set("basePrice", resp.price);
+            prices.push(resp.price);
+          }
           if (!counter) { setPrice(); }
         }
       };
@@ -1605,8 +1671,10 @@ white:true*/
             value = char.get("value");
           charOptions.success = function (price) {
             counter--;
-            char.set("price", price);
-            prices.push(price);
+            if (!that._invalidPriceRequest) {
+              char.set("price", price);
+              prices.push(price);
+            }
             if (!counter) { setPrice(); }
           };
           customer.characteristicPrice(item, characteristic, value, quantity, charOptions);
