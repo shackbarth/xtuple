@@ -8,5 +8,6 @@ depends(
   "opportunity.js",
   "project.js",
   "to_do.js",
-  "startup.js"
+  "startup.js",
+  "static.js"
 );

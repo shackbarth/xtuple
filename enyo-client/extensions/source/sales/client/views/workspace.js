@@ -46,7 +46,7 @@ trailing:true white:true*/
               classes: "in-panel", components: [
 
               {kind: "onyx.GroupboxHeader", content: "_salesOrder".loc()},
-              {kind: "XV.NumberPolicyPicker", attr: "CONumberGeneration", // XXX really CO?
+              {kind: "XV.NumberPolicyPicker", attr: "CONumberGeneration",
                 label: "_number".loc() + " " + "_policy".loc()},
               {kind: "XV.NumberWidget", attr: "NextSalesOrderNumber",
                 label: "_nextNumber".loc()},
@@ -72,8 +72,9 @@ trailing:true white:true*/
                 label: "_number".loc() + " " + "_policy".loc()},
               {kind: "XV.NumberWidget", attr: "NextInvoiceNumber",
                 label: "_nextNumber".loc()},
-              {kind: "XV.InputWidget", attr: "InvoiceDateSource",
-                label: "_invoiceDateSource".loc()}, // TODO: radiobutton?
+              // Note I don't bother to define a kind for this picker
+              {kind: "XV.PickerWidget", attr: "InvoiceDateSource",
+                label: "_invoiceDateSource".loc(), collection: "XM.invoiceDateSources"},
 
               {kind: "onyx.GroupboxHeader", content: "_dateControl".loc()},
               {kind: "XV.ToggleButtonWidget", attr: "AllowASAPShipSchedules",
