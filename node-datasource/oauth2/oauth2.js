@@ -7,9 +7,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
  */
 var auth = require('../routes/auth'),
     oauth2orize = require('oauth2orize'),
+    jwtBearer = require('oauth2orize-jwt-bearer').Exchange,
     passport = require('passport'),
     login = require('connect-ensure-login'),
     db = require('./db'),
+    url = require('url'),
     utils = require('./utils');
 
 // create OAuth 2.0 server
@@ -97,7 +99,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
   // and hash the authCode the client sent using each salt and check for a match.
   // That could take a lot of CPU if there are 1000's of authCodes. Instead, we will
   // use known salt we can look up that is also in the request to exchange authCodes.
-  // The salt is the client_id trimmer to 22 characters. Unfortunately, this trade off means
+  // The salt is the client_id trimmed to 22 characters. Unfortunately, this trade off means
   // the bcrypt salt will be shared across all authCodes issued for a single client.
 
   if (client.get("clientID").length < 22) {
@@ -178,6 +180,11 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
   });
 }));
 
+// Exchange a refresh token for a new access tokens. The callback accepts the
+// `Oauth2client` model, `Oauth2token` model and a done callback. If these
+// values are valid, the application issues an access token on behalf of the
+// user who authorized the code.
+
 server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken, done) {
   "use strict";
 
@@ -188,7 +195,7 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
   // and hash the refreshToken the client sent using each salt and check for a match.
   // That could take a lot of CPU if there are 1000's of refreshTokens. Instead, we will
   // use known salt we can look up that is also in the request to use refreshTokens.
-  // The salt is the client_id trimmer to 22 characters. Unfortunately, this trade off means
+  // The salt is the client_id trimmed to 22 characters. Unfortunately, this trade off means
   // the bcrypt salt will be shared across all refreshTokens issued for a single client.
 
   if (client.get("clientID").length < 22) {
@@ -240,8 +247,7 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
 
       // Send the accessToken and params along.
       // We do not send the refreshToken because they already have it.
-// TODO - oauth2orize seems to need refreshToken in the call back for now.
-      return done(null, accessToken, refreshToken, params);
+      return done(null, accessToken, null, params);
     };
     saveOptions.error = function (model, err) {
       return done && done(err);
@@ -255,6 +261,163 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
 
     token.save(null, saveOptions);
   });
+}));
+
+// Exchange a JSON Web Token (JWT) for a new access tokens. The callback accepts
+// the `Oauth2client` model, the JWT base64URLencoded header, claimSet and
+// signature parts and a done callback. If these values are valid, the
+// application issues an access token on behalf of the user in the JWT `prn`
+// proptery.
+
+server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(function (client, header, claimSet, signature, done) {
+  "use strict";
+
+  var data = header + "." + claimSet,
+      pub = client.get("clientX509PubCert"),
+      verifier = X.crypto.createVerify("RSA-SHA256");
+
+  verifier.update(data);
+
+  if (verifier.verify(pub, utils.base64urlDecode(signature), 'base64')) {
+    var accessToken = utils.generateUUID(),
+        accesshash,
+        decodedHeader = JSON.parse(utils.base64urlDecode(header)),
+        decodedClaimSet = JSON.parse(utils.base64urlDecode(claimSet)),
+        initCallback,
+        saveOptions = {},
+        today = new Date(),
+        expires = new Date(today.getTime() + (60 * 60 * 1000)), // One hour from now.
+        token = new XM.Oauth2token();
+
+    // Verify JWT was formed correctly.
+    if (!decodedHeader || !decodedHeader.alg || !decodedHeader.typ) {
+      return done(new Error("Invalid JWT header."));
+    }
+    if (!decodedClaimSet || decodedClaimSet.length < 5 || !decodedClaimSet.iss || !decodedClaimSet.scope
+      || !decodedClaimSet.aud || !decodedClaimSet.exp || !decodedClaimSet.iat) {
+      return done(new Error("Invalid JWT claim set."));
+    }
+    if (((new Date(decodedClaimSet.exp)).getTime() <= 0) || ((new Date(decodedClaimSet.iat)).getTime() <= 0) // exp && iat are NOT valid epoch timestamps.
+      || (((new Date(decodedClaimSet.exp * 1000)).getTime()) - ((new Date(decodedClaimSet.iat * 1000)).getTime()) <= 0) // exp - iat <= 0
+      || (((new Date(decodedClaimSet.exp * 1000)).getTime()) - ((new Date(decodedClaimSet.iat * 1000)).getTime()) > 3600000) // exp is more than 1 hour from the iat time.
+      || (((new Date(decodedClaimSet.iat * 1000)) - today) > 0) // Great Scott! JWT was issued in the future.
+      ) {
+      return done(new Error("Invalid JWT timestamps."));
+    }
+
+    // Is the JWT ClaimSet.iss a valid clientID?
+    if (client.get("clientID") !== decodedClaimSet.iss) {
+      return done(new Error("Invalid JWT iss."));
+    }
+
+    // JWT is only valid for 1 hour. Has it expired yet?
+    if (((new Date(decodedClaimSet.exp * 1000)) - today) < 0) {
+      return done(new Error("JWT has expired."));
+    }
+
+    // Validate decodedClaimSet.prn user and scopes.
+    if (client.get("delegatedAccess") && decodedClaimSet.prn) {
+      db.users.findByUsername(decodedClaimSet.prn, function (err, user) {
+        if (err) { return done(new Error("Invalid JWT delegate user.")); }
+        if (!user) { return done(null, false); }
+
+        var organizations = [],
+            separator = ' ',
+            jwtScopes = decodedClaimSet.scope.split(separator),
+            scope,
+            scopes = [];
+
+        if (!Array.isArray(jwtScopes)) { jwtScopes = [ jwtScopes ]; }
+
+        try {
+          // Get user's orgs.
+          organizations = _.map(user.get("organizations"), function (org) {
+            return org.name;
+          });
+        } catch (error) {
+          // Prevent unauthorized access.
+          return done(new Error("Invalid JWT delegate user."));
+        }
+
+        // Loop through the scope URIs and convert them to org names.
+        _.each(jwtScopes, function (scopeValue, scopeKey, scopeList) {
+          var scopeOrg;
+
+          // Get the org from the scope URI e.g. 'dev' from: 'https://mobile.xtuple.com/auth/dev'
+          scope = url.parse(scopeValue, true);
+          scopeOrg = scope.path.match(/\/auth\/(.*)/)[1] || null;
+
+          // Loop through the user's org and make sure the requested scope is valid.
+          _.each(organizations, function (orgValue, orgKey, orgList) {
+            if (orgValue === scopeOrg) {
+              scopes[scopeKey] = scopeOrg;
+            }
+          });
+        });
+
+        if (scopes.length < 1) {
+          return done(new Error("Invalid JWT scope."));
+        }
+
+        // JWT is valid, create access token, save and return it.
+
+        // The accessToken is only valid for 1 hour and must be sent with each request to
+        // the REST API. The bcrypt hash calculation on each request would be too expensive.
+        // Therefore, we do not need to bcrypt the accessToken, just SHA1 it.
+        accesshash = X.crypto.createHash('sha1').update(accessToken).digest("hex");
+
+        saveOptions.success = function (model) {
+          if (!model) { return done(null, false); }
+          var params = {};
+
+          params.token_type = model.get("tokenType");
+          // Google sends time until expires instead of just the time it expires at, so...
+          params.expires_in = Math.round(((expires - today) / 1000) - 60); // Seconds until the token expires with 60 sec padding.
+
+          // Send the accessToken and params along.
+          // We do not send the refreshToken because they already have it.
+          return done(null, accessToken, params);
+        };
+        saveOptions.error = function (model, err) {
+          return done && done(err);
+        };
+
+        initCallback = function (model, value) {
+          if (model.id) {
+            // Now that model is ready, set attributes and save.
+            var tokenAttributes = {
+              clientID: client.get("clientID"),
+              scope: JSON.stringify(scopes),
+              state: "JWT Access Token Issued",
+              approvalPrompt: false,
+              accessToken: accesshash,
+              accessIssued: today,
+              accessExpires: expires,
+              tokenType: "bearer",
+              accessType: "offline",
+              delegate: user.get("id")
+            };
+
+            // Try to save access token data to the database.
+            model.save(tokenAttributes, saveOptions);
+          } else {
+            return done && done(new Error('Cannot save access token. No id set.'));
+          }
+        };
+
+        // Register on change of id callback to know when the model is initialized.
+        token.on('change:id', initCallback);
+
+        // Set model values and save.
+        token.initialize(null, {isNew: true});
+      });
+    } else {
+      // No prn, throw error for now.
+      return done(new Error("Invalid JWT. No delegate user."));
+
+      // TODO - Handle public scopes with no delegatedAccess users if we ever need to.
+    }
+  }
 }));
 
 
@@ -367,7 +530,7 @@ exports.decision = [
 // authenticate when making requests to this endpoint.
 
 exports.token = [
-  passport.authenticate(['basic', 'oauth2-client-password'], { session: false }),
+  passport.authenticate(['basic', 'oauth2-client-password', 'oauth2-jwt-bearer'], { session: false }),
   server.token(),
   server.errorHandler()
 ];

@@ -48,7 +48,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'code'}
     ]
   });
-  
+
   // ..........................................................
   // COST CATEGORY
   //
@@ -240,7 +240,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'name'}
     ]
   });
-  
+
   // ..........................................................
   // PLANNER CODE
   //
@@ -292,7 +292,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.projectStatuses"
   });
-  
+
   // ..........................................................
   // SALES REP
   //
@@ -342,6 +342,19 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.shipZones",
     orderBy: [
       {attribute: 'name'}
+    ]
+  });
+
+  // ..........................................................
+  // PLANNER CODE
+  //
+
+  enyo.kind({
+    name: "XV.SitePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.sites",
+    orderBy: [
+      {attribute: 'code'}
     ]
   });
 
@@ -428,6 +441,19 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.sites",
     orderBy: [
       {attribute: 'code'}
+    ]
+  });
+
+  // ..........................................................
+  // SITE TYPE
+  //
+
+  enyo.kind({
+    name: "XV.SiteTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.siteTypes",
+    orderBy: [
+      {attribute: 'name'}
     ]
   });
 
