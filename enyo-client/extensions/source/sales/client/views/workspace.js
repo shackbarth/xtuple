@@ -135,9 +135,8 @@ trailing:true white:true*/
                 label: "_customerType".loc()},
               {kind: "XV.SalesRepPicker", attr: "DefaultSalesRep",
                 label: "_salesRep".loc()},
-              // XXX Number value won't work with combobox
-              //{kind: "XV.ShipViaPicker", attr: "DefaultShipViaId",
-              //  label: "_shipVia".loc()},
+              {kind: "XV.ShipViaPicker", attr: "DefaultShipViaId",
+                label: "_shipVia".loc()},
               {kind: "XV.TermsPicker", attr: "DefaultTerms",
                 label: "_terms".loc()},
               {kind: "XV.BalanceMethodPicker", attr: "DefaultBalanceMethod",
