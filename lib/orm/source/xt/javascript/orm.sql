@@ -75,7 +75,8 @@ select xt.install_js('XT','Orm','xtuple', $$
     if(oldOrm) {
       if(oldOrm.json === json) {
         /* the json is identical. do not bother to change it */
-        plv8.elog(NOTICE, "ORM definition has not changed");
+        /* TODO: this logic could move into the orm installer for extra performance gains */
+        if (DEBUG) { plv8.elog(NOTICE, "ORM definition has not changed"); }
         return;
       }
       oldJson = JSON.parse(oldOrm.json);
