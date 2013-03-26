@@ -943,6 +943,7 @@ white:true*/
       var settings = XT.session.settings;
       this.on('change:discount', this.discountDidChange);
       this.on("change:itemSite", this.itemSiteDidChange);
+      this.on("change:price", this.priceDidChange);
       this.on('change:quantity', this.quantityDidChange);
       this.on('change:priceUnit', this.priceUnitDidChange);
       this.on('change:quote', this.parentDidChange);
@@ -1229,7 +1230,10 @@ white:true*/
             charPrices += char.get("price");
           });
         }
+        this.off("price", this.priceDidChange);
         this.set("price", price);
+        this.on("price", this.priceDidChange);
+        this.priceDidChange();
         this.set("basePrice", XT.math.subtract(price, charPrices, scale));
       }
       return this;
@@ -1380,6 +1384,11 @@ white:true*/
         asOf = parentDate;
       }
       return asOf;
+    },
+    
+    priceDidChange: function () {
+      this.calculateExtendedPrice();
+      this.calculatePercentages();
     },
 
     priceUnitDidChange: function () {
@@ -1582,9 +1591,10 @@ white:true*/
           var totalPrice = XT.math.add(prices, XT.SALES_PRICE_SCALE);
           that.set("customerPrice", totalPrice);
           if (that._updatePrice) {
+            that.off("price", that.priceDidChange);
             that.set("price", totalPrice);
-            that.calculateExtendedPrice();
-            that.calculatePercentages();
+            that.on("price", that.priceDidChange);
+            that.priceDidChange();
           }
         };
 
