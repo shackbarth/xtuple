@@ -775,7 +775,11 @@ white:true*/
         shipto = this.get("shipto"),
         total = this.get("total"),
         lineItems = this.get("lineItems"),
-        params = {};
+        params = {},
+        error;
+        
+      error = XM.Document.prototype.validate.apply(this, arguments);
+      if (error) { return error; }
 
       if (!customer.get("isFreeFormShipto") && !shipto) {
         params.attr = "_shipto".loc();
@@ -790,7 +794,7 @@ white:true*/
         return XT.Error.clone('xt2012');
       }
 
-      return XM.Document.prototype.validate.apply(this, arguments);
+      return;
     },
 
     // ..........................................................
