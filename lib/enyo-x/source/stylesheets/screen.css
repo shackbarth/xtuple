@@ -37,6 +37,7 @@
 }
 body {
   font-family: "arial", "arial black";
+  font-size: 100%;
 }
 .bggrad {
   /* Radial Gradient */
@@ -313,22 +314,22 @@ body {
   color: #8d8d8d;
 }
 .xv-list .xv-list-item .xv-list-column.short {
-  width: 150px;
+  width: 9em;
 }
 .xv-list .xv-list-item .xv-list-column.first {
-  width: 300px;
+  width: 19em;
 }
 .xv-list .xv-list-item .xv-list-column.second {
-  width: 165px;
+  width: 10em;
 }
 .xv-list .xv-list-item .xv-list-column.third {
-  width: 75px;
+  width: 4.5em;
 }
 .xv-list .xv-list-item .xv-list-column.money {
-  width: 85px;
+  width: 5em;
 }
 .xv-list .xv-list-item .xv-list-column.descr {
-  width: 250px;
+  width: 15.56em;
 }
 .xv-list .xv-list-item.item-selected {
   background: #226b9a url(../../assets/item-hilite.png) repeat-x bottom;
@@ -371,7 +372,7 @@ body {
 }
 .xv-list-attr {
   padding: 5px;
-  font-size: 13px;
+  font-size: .8em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -381,7 +382,7 @@ body {
 .xv-list-attr.header {
   padding: 4px;
   background: #8d8d8d;
-  font-size: 11px;
+  font-size: .7em;
   font-weight: bold;
   text-transform: uppercase;
   color: #ffffff;
@@ -641,7 +642,7 @@ body {
   padding-bottom: 2px;
 }
 .xv-groupbox .xv-moneywidget .onyx-input-decorator {
-  width: 100px;
+  width: 95px;
 }
 .xv-groupbox .xv-moneywidget .xv-picker {
   width: 95px;
@@ -942,9 +943,38 @@ body {
   color: #696969;
 }
 .xv-button-bar .onyx-button {
+  /* TODO: center buttons, spacing in between (margin: auto on bar) */
+
   margin: 0 40px 0 40px;
 }
 /* This is for styling the moved items in the more toolbar*/
 .xv-toolbar-moved {
   width: 220px;
+}
+.xv-totals-panel {
+  padding: 0;
+  background-color: #ffffff;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.xv-totals-panel .onyx-input,
+.xv-totals-panel .onyx-button {
+  font-size: 13px;
+}
+.xv-totals-panel .xv-label,
+.xv-totals-panel .onyx-input-decorator {
+  padding: 3px;
+}
+.xv-totals-panel .xv-label,
+.xv-totals-panel .xv-picker-label {
+  width: 110px;
+}
+/* This is to style the base currency labels to look like the inputs */
+.xv-money-label {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
+}
+.xv-money-label .currency {
+  text-align: center;
 }

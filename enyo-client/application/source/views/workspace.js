@@ -897,7 +897,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.AccountWidget", attr: "account"},
             {kind: "XV.ContactWidget", attr: "contact"},
-            {kind: "XV.MoneyWidget", attr: {amount: "amount", currency: "currency"}, //effective: new Date(),
+            {kind: "XV.MoneyWidget", attr: {amount: "amount", currency: "currency"},
               label: "_amount".loc()},
             {kind: "XV.PercentWidget", attr: "probability"},
             {kind: "onyx.GroupboxHeader", content: "_status".loc()},
@@ -1308,7 +1308,7 @@ trailing:true white:true*/
           {kind: "XV.Groupbox", name: "totalGroup",
             components: [
             {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
-            {kind: "FittableColumns", components: [
+            {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
               {kind: "FittableRows", components: [
                 {kind: "XV.CurrencyPicker", attr: "currency"},
                 {kind: "XV.MoneyWidget", attr:
@@ -1623,9 +1623,9 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
-            {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.PriorityPicker", attr: "priority"},
             {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
             {kind: "XV.DateWidget", attr: "dueDate"},

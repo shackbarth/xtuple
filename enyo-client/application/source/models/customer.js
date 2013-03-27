@@ -25,7 +25,7 @@ white:true*/
       this.dispatch("XM.Customer", "canPurchase", params, options);
       return this;
     },
-    
+
     /**
       Retrieve the customer's price for a given item and quantity.
 
@@ -175,7 +175,7 @@ white:true*/
         this.setReadOnly("partialShip", true);
       }
     },
-    
+
     getShipViaValue: function () {
       var ret,
         shipViaModel = XM.shipVias.get(XT.session.getSettings().get("DefaultShipViaId"));
@@ -185,7 +185,7 @@ white:true*/
       else {
         ret = "";
       }
-      
+
       return ret;
     },
 
@@ -273,7 +273,7 @@ white:true*/
       this.setStatus(XM.Model.BUSY_FETCHING);
       prospect.fetch(fetchOptions);
     },
-    
+
     salesRepDidChange: function () {
       var salesRep = this.get('salesRep');
       if (!salesRep) { return; }
@@ -534,7 +534,7 @@ white:true*/
     recordType: 'XM.CustomerType',
 
     documentKey: 'code',
-    
+
     enforceUpperKey: false
 
   });
@@ -569,7 +569,7 @@ white:true*/
     recordType: 'XM.ShipCharge',
 
     documentKey: 'name',
-    
+
     enforceUpperKey: false
 
   });
@@ -585,7 +585,7 @@ white:true*/
     recordType: 'XM.ShipVia',
 
     documentKey: 'code',
-    
+
     enforceUpperKey: false
 
   });
@@ -601,7 +601,7 @@ white:true*/
     recordType: 'XM.ShipZone',
 
     documentKey: 'name',
-    
+
     enforceUpperKey: false
 
   });
@@ -633,7 +633,7 @@ white:true*/
     editableModel: 'XM.Customer'
 
   });
-  
+
   // ..........................................................
   // CLASS METHODS
   //
@@ -660,7 +660,7 @@ white:true*/
     CUSTOMER_STATUS: 'C'
 
   });
-  
+
   // Add in mixins
   XM.CustomerProspectRelation = XM.CustomerProspectRelation.extend(XM.CustomerMixin);
 
@@ -713,18 +713,6 @@ white:true*/
     /** @scope XM.ShipChargeCollection.prototype */
 
     model: XM.ShipCharge
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Collection
-  */
-  XM.ShippingFormCollection = XM.Collection.extend({
-    /** @scope XM.ShippingFormCollection.prototype */
-
-    model: XM.ShippingForm
 
   });
 
