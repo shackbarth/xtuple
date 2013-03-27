@@ -991,7 +991,6 @@ white:true*/
       "inventoryQuantityUnitRatio",
       "lineNumber",
       "listCostMarkup",
-      "listPrice",
       "listPriceDiscount",
       "priceMode",
       "priceUnitRatio",
@@ -1051,8 +1050,8 @@ white:true*/
         var K = that.getClass(),
           priceMode = that.get("priceMode"),
           customerPrice = that.get("customerPrice"),
-          listCost = that.get("itemSite.item.listCost"),
-          listPrice = that.get("listPrice"),
+          listCost = that.getValue("itemSite.item.listCost"),
+          listPrice = that.getValue("itemSite.item.listPrice"),
           attrs = {
             discount: undefined,
             listPriceDiscount: undefined,
