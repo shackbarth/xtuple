@@ -9,9 +9,8 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
-  // TODO - Switch to SimpleModel and fix bugs.
   XM.DatabaseServer = XM.SimpleModel.extend({
     /** @scope XM.DatabaseServer.prototype */
 
@@ -46,9 +45,8 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
-  // TODO - Switch to SimpleModel and fix bugs.
   XM.Extension = XM.SimpleModel.extend({
     /** @scope XM.Extension.prototype */
 
@@ -103,9 +101,8 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
-  // TODO - Switch to SimpleModel and fix bugs including removing findOrCreate.
   XM.Organization = XM.SimpleModel.extend({
     /** @scope XM.Organization.prototype */
 
@@ -122,9 +119,8 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
-  // TODO - Switch to SimpleModel and fix bugs. This almost works, just see some output to the datasource log.
   XM.OrganizationExtension = XM.SimpleModel.extend({
     /** @scope XM.OrganizationExtension.prototype */
 
