@@ -1,6 +1,6 @@
 /*jshint node:true, bitwise:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, issue:true */
+/*global X:true, _:true, issue:true */
 
 (function () {
   "use strict";
@@ -25,7 +25,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       @param {String} options.password postgres password
     */
     conString: function (options) {
-      options.password = options.password? options.password.pre(":"): "";
+      options.password = options.password ? options.password.pre(":"): "";
       return "tcp://{user}{password}@{hostname}:{port}/{database}".f(options);
     },
 
@@ -50,11 +50,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           "{hostname}:{port}/{database} => %@".f(options, err.message)));
         return callback(err);
       }
-      if (ranInit === true) client.hasRunInit = true;
+      if (ranInit === true) { client.hasRunInit = true; }
       if (!client.hasRunInit) {
         client.query("set plv8.start_proc = \"xt.js_init\";", _.bind(
           this.connected, this, query, options, callback, err, client, true));
-      } else client.query(query, callback);
+      } else {
+        client.query(query, callback);
+      }
     },
 
     /**
@@ -71,7 +73,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      */
     cleanup: function () {
       X.log("Waiting for database pool to drain");
-      if (X.pg) X.pg.end();
+      if (X.pg) { X.pg.end(); }
       this.emit(this.cleanupCompletedEvent);
     }
   });
