@@ -70,7 +70,7 @@ white:true*/
         strict = settings.get('StrictAddressCountry'),
         country = attributes.country,
         found;
-        
+
       // Validate country if setting says to do so
       if (country && strict) {
         found = _.find(XM.countries.models, function (c) {
