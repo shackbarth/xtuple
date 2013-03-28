@@ -23,6 +23,10 @@ _ = require("underscore");
   require("./xt");
 
   // Loop through files and load the dependencies.
+  // Apes the enyo package process
+  // TODO: it would be nice to use a more standardized way
+  // of loading our libraries (tools and backbone-x) here
+  // in node.
   X.relativeDependsPath = "";
   X.depends = function () {
     var dir = X.relativeDependsPath,
@@ -244,7 +248,7 @@ var conditionalExpressSession = function (req, res, next) {
     next();
   } else {
     // Instead of doing app.use(express.session()) we call the package directly
-    // which returns a function(req, res, next) we can call to do the same thing.
+    // which returns a function (req, res, next) we can call to do the same thing.
     var init_session = express.session({
           store: sessionStore,
           secret: '.T#T@r5EkPM*N@C%9K-iPW!+T',
