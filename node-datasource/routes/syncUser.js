@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, XM:true, XT:true */
+/*global X:true, XM:true, _:true, XT:true */
 
 (function () {
   "use strict";
@@ -33,11 +33,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         // datasource.
         callbackReached = true;
 
-        userOrg = user.get('organizations').where({name: args.organization})[0];
+        _.each(user.get('organizations'), function (orgValue, orgKey, orgList) {
+          if (orgValue.name === args.organization) {
+            userOrg = orgValue;
+          }
+        });
 
         // The values we will set the user account record to
         attrs = {
-          username: userOrg.get("username"),
+          username: userOrg.username,
           group: org.get("group"), // Database role
           active: user.get("isActive"),
           propername: user.get("properName"),
@@ -46,7 +50,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         query = "select xt.user_account_sync($$%@$$)".f(JSON.stringify(attrs));
 
-        X.debug("syncUser(): %@".f(query));
+        //X.debug("syncUser(): %@".f(query));
 
         X.database.query(org.get("name"), query, function (err, result) {
           if (err) {
@@ -63,7 +67,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         wasError = true;
         res.send({isError: true, message: "Error synching user"});
       }
-    }
+    };
 
     // if the requesting user doesn't have ViewGlobalUsers or ViewOrganizations
     // privileges, then the fetch will come back empty, which is what we want
