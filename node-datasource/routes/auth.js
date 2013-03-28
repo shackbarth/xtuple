@@ -94,6 +94,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }
       });
 
+      if (!userOrg || !userName) {
+        // This shouldn't happen.
+        X.log("User %@ has no business trying to log in to organization %@.".f(userId, selectedOrg));
+        res.redirect('/logout');
+        return;
+      }
+
       req.session.passport.user.globalPrivileges = privs;
       req.session.passport.user.organization = userOrg;
       req.session.passport.user.username = userName;
