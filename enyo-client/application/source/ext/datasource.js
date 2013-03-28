@@ -12,10 +12,10 @@ white:true*/
     //datasourceUrl: DOCUMENT_HOSTNAME,
     //datasourcePort: 443,
     isConnected: false,
-    
+
     /**
       Helper function to convert parameters to data source friendly formats
-      
+
       @param {String} Record Type
       @param {Object} Query parameters
     */
@@ -58,7 +58,7 @@ white:true*/
         payload = {},
         parameters = options.query.parameters,
         complete = function (response) {
-          var dataHash, params = {}, error;
+          var params = {}, error;
 
           // Handle error
           if (response.isError) {
@@ -70,11 +70,8 @@ white:true*/
             return;
           }
 
-          // Handle success
-          // currently dealing with two different protocols for response formatting
-          dataHash = response.data.rows ? JSON.parse(response.data.rows[0].fetch) : response.data;
           if (options && options.success) {
-            options.success.call(that, collection, dataHash, options);
+            options.success.call(that, collection, response.data, options);
           }
         };
 
@@ -103,7 +100,7 @@ white:true*/
       var that = this,
         payload = {},
         complete = function (response) {
-          var dataHash, params = {}, error;
+          var params = {}, error;
 
           // Handle error
           if (response.isError) {
@@ -114,12 +111,9 @@ white:true*/
             }
             return;
           }
-          // currently dealing with two different protocols for response formatting
-          dataHash = response.data.rows ? JSON.parse(response.data.rows[0].retrieve_record) : response.data;
-          //dataHash = JSON.parse(response.data.rows[0].retrieve_record);
 
           // Handle no data as error
-          if (_.isEmpty(dataHash)) {
+          if (_.isEmpty(response.data)) {
             if (options && options.error) {
               error = XT.Error.clone('xt1007');
               options.error.call(that, error);
@@ -129,7 +123,7 @@ white:true*/
 
           // Handle success
           if (options && options.success) {
-            options.success.call(that, model, dataHash, options);
+            options.success.call(that, model, response.data, options);
           }
         };
 
@@ -155,7 +149,7 @@ white:true*/
       var that = this,
         payload = {},
         complete = function (response) {
-          var dataHash, params = {}, error;
+          var params = {}, error;
 
           // Handle error
           if (response.isError) {
@@ -167,12 +161,8 @@ white:true*/
             return;
           }
 
-          // Handle ok or complete hash response
-          // currently dealing with two different protocols for response formatting
-          dataHash = response.data.rows ? JSON.parse(response.data.rows[0].commit_record) : response.data;
-          //dataHash = JSON.parse(response.data.rows[0].commit_record);
           if (options && options.success) {
-            options.success.call(that, model, dataHash, options);
+            options.success.call(that, model, response.data, options);
           }
         };
 
@@ -207,7 +197,7 @@ white:true*/
           parameters: params
         },
         complete = function (response) {
-          var dataHash, params = {}, error;
+          var params = {}, error;
 
           // handle error
           if (response.isError) {
@@ -219,13 +209,8 @@ white:true*/
             return;
           }
 
-          // handle success
-          // currently dealing with two different protocols for response formatting
-          // TODO: long-term solution for all of these in this file
-          dataHash = response.data.rows ? JSON.parse(response.data.rows[0].dispatch) : response.data;
-          //dataHash = JSON.parse(response.data.rows[0].dispatch);
           if (options && options.success) {
-            options.success.call(that, dataHash, options);
+            options.success.call(that, response.data, options);
           }
         };
 
