@@ -66,24 +66,11 @@ _ = require("underscore");
   // Set the options and start the servers the OLD way.
   X.setup(options);
 
-
-  // Initiate the internal session.
-  sessionObjectLoaded = function () {
-    if (schema && privs) {
-      // Start polling for expired user sessions and delete the records.
-      X.cachePollingInterval = setInterval(X.Session.pollCache, 10000);
-      X.addCleanupTask(function () {
-        clearInterval(X.cachePollingInterval);
-      });
-    }
-  };
   schemaOptions.success = function () {
     schema = true;
-    sessionObjectLoaded();
   };
   privsOptions.success = function () {
     privs = true;
-    sessionObjectLoaded();
   };
   privsOptions.username = X.options.globalDatabase.nodeUsername;
 
