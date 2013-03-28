@@ -12,9 +12,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     requireDatabase: true,
     requireServer: true,
     requireCache: true,
-    functorsDirectory: "./lib/functors",
-    routesDirectory: "./lib/routes",
-    routersDirectory: "./lib/routers",
     enhancedAuthKey: "xTuple",
     datasource: {
       bindAddress: "localhost",
@@ -65,10 +62,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       nodeUsername: "node"
     },
     required: [
-      "lib/ext/session",
       "lib/ext/database",
-      "lib/ext/router",
-      "lib/servers",
       "lib/ext/datasource",
       "lib/ext/models"
     ]
