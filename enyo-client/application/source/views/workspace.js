@@ -504,6 +504,7 @@ trailing:true white:true*/
             {kind: "XV.TaxZonePicker", attr: "taxZone", label: "_defaultTaxZone".loc()}
           ]}
         ]},
+        {kind: "XV.QuoteListRelationsBox", attr: "quoteRelations"},
         {kind: "XV.CustomerShipToBox", attr: "shiptos"},
         {kind: "XV.CustomerCommentBox", attr: "comments"},
         {kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
@@ -1178,10 +1179,10 @@ trailing:true white:true*/
             {kind: "XV.ContactWidget", attr: "contact",
               showAddress: true, label: "_name".loc()},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes"}//,
-            //{kind: "onyx.GroupboxHeader", content: "_quotes".loc()}
+            {kind: "XV.TextArea", attr: "notes"}
           ]}
-        ]}
+        ]},
+        {kind: "XV.QuoteListRelationsBox", attr: "quoteRelations"}
       ]},
       {kind: "onyx.Popup", name: "findExistingAccountPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",
