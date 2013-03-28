@@ -6,7 +6,11 @@ trailing:true white:true*/
 (function () {
 
   XT.extensions.sales.initPostbooks = function () {
-    var module, panels, relevantPrivileges;
+    var module,
+      panels,
+      relevantPrivileges,
+      configurationJson,
+      configuration;
 
     // ..........................................................
     // APPLICATION
@@ -21,6 +25,15 @@ trailing:true white:true*/
     ];
     XT.app.$.postbooks.appendPanels("setup", panels);
 
+    configurationJson = {
+      model: "XM.sales",
+      name: "_sales".loc(),
+      description: "_salesDescription".loc(),
+      workspace: "XV.SalesWorkspace"
+    };
+    configuration = new XM.ConfigurationModel(configurationJson);
+    XM.configurations.add(configuration);
+
     module = {
       name: "sales",
       label: "_sales".loc(),
@@ -33,7 +46,8 @@ trailing:true white:true*/
     XT.app.$.postbooks.insertModule(module, 2);
 
     relevantPrivileges = [
-      "AccessSalesExtension"
+      "AccessSalesExtension",
+      "ConfigureSO",
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
   };

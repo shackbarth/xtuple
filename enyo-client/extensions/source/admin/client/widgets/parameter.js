@@ -6,6 +6,20 @@ trailing:true white:true*/
 (function () {
 
   // ..........................................................
+  // DATABASE SERVER
+  //
+
+  enyo.kind({
+    name: "XV.DatabaseServerParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_databaseServer".loc()},
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "description", label: "_description".loc(), attr: "description"}
+    ]
+  });
+
+  // ..........................................................
   // ORGANIZATION
   //
 

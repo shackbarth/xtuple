@@ -56,12 +56,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         res.send({isError: true, message: "No user exists by that ID"});
       };
 
-    //X.debugging = true;
-    //X.debug(data);
-
-    // XXX temp until we get everything on the same port
-    //res.header("Access-Control-Allow-Origin", "*");
-
     if (!args || !args.id) {
       res.send({isError: true, message: "need an ID"});
     } else {
@@ -73,7 +67,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           updateError = function (model, err) {
             res.send({isError: true, message: "Error updating password"});
           },
-          updateSuccess = function (result) {
+          updateSuccess = function (model, result) {
             sendEmail(res, result, newPassword, args.newUser);
           };
 

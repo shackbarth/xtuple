@@ -188,7 +188,7 @@ trailing:true white:true*/
        Discount or Markup mode and change the label accordingly.
     */
     attributesChanged: function (model, options) {
-      this.inherited(arguments);
+      XV.EditorMixin.attributesChanged.apply(this, arguments);
       var pm = model.get("priceMode");
       if (pm === "N" || pm === "D" || pm === "P") { // discount
         this.$.discount.setLabel("_discount".loc());

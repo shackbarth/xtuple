@@ -897,7 +897,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.AccountWidget", attr: "account"},
             {kind: "XV.ContactWidget", attr: "contact"},
-            {kind: "XV.MoneyWidget", attr: {amount: "amount", currency: "currency"}, //effective: new Date(),
+            {kind: "XV.MoneyWidget", attr: {amount: "amount", currency: "currency"},
               label: "_amount".loc()},
             {kind: "XV.PercentWidget", attr: "probability"},
             {kind: "onyx.GroupboxHeader", content: "_status".loc()},
@@ -1308,14 +1308,14 @@ trailing:true white:true*/
           {kind: "XV.Groupbox", name: "totalGroup",
             components: [
             {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
-            {kind: "FittableColumns", components: [
+            {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
               {kind: "FittableRows", components: [
                 {kind: "XV.CurrencyPicker", attr: "currency"},
                 {kind: "XV.MoneyWidget", attr:
                   {amount: "margin", currency: "currency"},
                   label: "_margin".loc(), currencyShowing: false,
                   effective: "quoteDate"},
-                {kind: "XV.NumberWidget", attr: "freightWeight"}
+                {kind: "XV.WeightWidget", attr: "freightWeight"}
               ]},
               {kind: "FittableRows", components: [
                 {kind: "XV.MoneyWidget", attr:
@@ -1437,14 +1437,15 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_costs".loc()},
           {kind: "XV.ScrollableGroupbox", name: "detailGroup",
             classes: "in-panel", fit: true, components: [
-            {kind: "XV.NumberWidget", attr: "itemSite.item.standardCost",
+            {kind: "XV.CostWidget", attr: "itemSite.item.standardCost",
               label: "_standardCost".loc()},
-            {kind: "XV.NumberWidget", attr: "itemSite.averageCost",
+            {kind: "XV.CostWidget", attr: "itemSite.averageCost",
               label: "_averageCost".loc()},
-            {kind: "XV.NumberWidget", attr: "itemSite.item.listCost",
+            {kind: "XV.CostWidget", attr: "itemSite.item.listCost",
               label: "_listCost".loc()},
             {kind: "XV.PercentWidget", attr: "listCostMarkup"},
-            {kind: "XV.NumberWidget", attr: "listPrice"},
+            {kind: "XV.SalesPriceWidget", attr: "itemSite.item.listPrice",
+              label: "_listPrice".loc()},
             {kind: "XV.PercentWidget", attr: "listPriceDiscount"},
             {kind: "XV.PercentWidget", attr: "profit"},
             {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
@@ -1623,9 +1624,9 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
-            {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.PriorityPicker", attr: "priority"},
             {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
             {kind: "XV.DateWidget", attr: "dueDate"},

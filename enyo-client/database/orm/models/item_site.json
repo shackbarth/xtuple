@@ -291,10 +291,10 @@
     "comment": "Itemsite Relation Map",
     "privileges": {
       "all": {
-        "create": "MaintainItemSites",
-        "read": "ViewItemSites",
-        "update": "MaintainItemSites",
-        "delete": "MaintainItemSites"
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
       }
     },
     "properties": [
