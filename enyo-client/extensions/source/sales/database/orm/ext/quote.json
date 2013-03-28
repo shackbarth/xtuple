@@ -77,5 +77,31 @@
     ],
     "sequence": 0,
     "isSystem": true
+  },
+  {
+    "context": "sales",
+    "nameSpace": "XM",
+    "type": "Customer",
+    "table": "custinfo",
+    "isExtension": true,
+    "comment": "Extended by Sales",
+    "relations": [
+      {
+        "column": "cust_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "quoteRelations",
+        "toMany": {
+          "type": "QuoteRelation",
+          "column": "cust_id",
+          "inverse": "customer"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
   } 
 ]
