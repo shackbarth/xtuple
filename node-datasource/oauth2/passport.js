@@ -11,7 +11,8 @@ var passport = require('passport'),
     ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy,
     ClientJWTBearerStrategy = require('passport-oauth2-jwt-bearer').Strategy,
     BearerStrategy = require('passport-http-bearer').Strategy,
-    db = require('./db');
+    db = require('./db'),
+    privateSalt = X.fs.readFileSync(X.options.datasource.saltFile).toString();
 
 
 /**
@@ -150,7 +151,7 @@ passport.use(new BearerStrategy(
     // That could take a lot of CPU if there are 1000's of accessToken. Instead, we will
     // not use any salt for this hash. An accessToken is only valid for 1 hour so the
     // risk of cracking the SHA1 hash in that time is small.
-    var accesshash = X.crypto.createHash('sha1').update(accessToken).digest("hex");
+    var accesshash = X.crypto.createHash('sha1').update(privateSalt + accessToken).digest("hex");
 
     db.accessTokens.findByAccessToken(accesshash, function (err, token) {
       if (err) { return done(err); }

@@ -10,10 +10,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     debugging: true,
     allowMultipleInstances: true,
     requireDatabase: true,
-    requireServer: true,
-    requireCache: true,
     enhancedAuthKey: "xTuple",
     datasource: {
+      sessionTimeout: 60,
+      requireCache: true,
       bindAddress: "localhost",
       port: 443,
       keyFile: "./lib/private/key.pem",
