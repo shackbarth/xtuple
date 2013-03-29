@@ -55,8 +55,9 @@ var XVOWS = XVOWS || {};
         }
       }
     }
+
   }).addBatch({
-    'We can take an address': {
+    'We can take an address that is ': {
       topic: function () {
         var that = this,
           model = new XM.Address(),
