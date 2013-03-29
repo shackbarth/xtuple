@@ -52,6 +52,101 @@ white:true*/
       return XM.Address.formatShort(this);
     },
 
+    save: function (key, value, options) {
+      var that = this,
+        maxUse = this.isNew() ? 0 : 1,
+        findExistingOptions = {},
+        useCountOptions = {},
+        isValid = this.isValid(),
+        K = XM.Model;
+
+      // Perform address checks if warranted
+      if (isValid && this.getStatus() !== K.READY_CLEAN) {
+        // Handle both `"key", value` and `{key: value}` -style arguments.
+        if (_.isObject(key) || _.isEmpty(key)) {
+          options = value ? _.clone(value) : {};
+        } else {
+          options = options ? _.clone(options) : {};
+        }
+
+        // If the address is empty set it to null // XXX how to do this on parent?
+        if (this.isEmpty()) {
+          if (this.isNew()) { this.releaseNumber(); }
+          this.clear(); // XXX???
+          //this.set('address', null);
+
+        // If dirty, see if this address already exists
+        } else if (this.isDirty()) {
+          // Callback: call save on the original again
+          findExistingOptions.success = function (resp) {
+            // If found, set the address with found id
+            if (resp) {
+              that.set('id', resp); // Id is all that matters...
+              that.status = K.READY_CLEAN; // So we don't come back here
+            }
+
+            useCountOptions.success = function (resp) {
+              var error,
+                K = XM.Address,
+                notifyOptions = {},
+                message,
+                callback,
+                newAddress;
+              // If address is used then we need to handle that
+              if (resp > maxUse) {
+                // ask the user if they want to CHANGE_ONE or CHANGE_ALL
+                notifyOptions.type = XM.Model.QUESTION;
+                notifyOptions.callback = function (answer) {
+                  var changeOneCallback;
+
+                  if (answer) {
+                    // just change this one by creating a new model
+                    // Callback after successfull copy
+                    // Only proceed when we have both an id and number from the server
+                    changeOneCallback = function () {
+                      var id = newAddress.id,
+                        number = newAddress.get('number');
+                      if (id && number) {
+                        newAddress.off('change:id change:number', callback);
+                        // ??? model.set('address', newAddress);
+                        // how to point the parent at this new model?
+                        newAddress.save(null);
+                      }
+                    };
+                    newAddress = that.copy();
+                    newAddress.on('change:id change:number', callback);
+                    changeOneCallback(); // In case the data was here before event handlers could respond
+                  } else {
+                    // change all the reference by updating this model
+                    that.save(key, value, options);
+                  }
+                };
+                message = "_changeAll?".loc();
+                this.notify(message, notifyOptions);
+              }
+              // Perform the check: find out how many places this address is used
+              that.useCount(useCountOptions);
+            };
+          };
+          XM.Address.findExisting(that.get('line1'),
+                                  that.get('line2'),
+                                  that.get('line3'),
+                                  that.get('city'),
+                                  that.get('state'),
+                                  that.get('postalCode'),
+                                  that.get('country'),
+                                  findExistingOptions);
+
+        // If it is new, save it first
+        } else if (this.isNew()) {
+          XM.Document.prototype.save.call(that, key, value, options);
+        }
+      }
+
+      // No problem with address, just save the record
+      // If record was invalid, this will bubble up the error
+      XM.Document.prototype.save.call(this, key, value, options);
+    },
     /**
       Success response returns an integer from the server indicating how many times the address
       is used by other records.
@@ -149,118 +244,8 @@ white:true*/
       if (options && options.isNew && this.get('address') === null) {
         this.set('address', new XM.AddressInfo(null, {isNew: true}));
       }
-    },
-
-    save: function (key, value, options) {
-      var model = this,
-        address = this.get("address"),
-        addressStatus = address ? address.getStatus() : false,
-        maxUse = this.isNew() ? 0 : 1,
-        addressOptions = {},
-        findExistingOptions = {},
-        useCountOptions = {},
-        isValid = this.isValid(),
-        K = XM.Model;
-
-      // Perform address checks if warranted
-      if (isValid && address && addressStatus !== K.READY_CLEAN) {
-        // Handle both `"key", value` and `{key: value}` -style arguments.
-        if (_.isObject(key) || _.isEmpty(key)) {
-          options = value ? _.clone(value) : {};
-        } else {
-          options = options ? _.clone(options) : {};
-        }
-
-        // Callback: call save on the original again
-        addressOptions.success = function (resp) {
-          XM.Document.prototype.save.call(model, key, value, options);
-        };
-
-        // If the address is empty set it to null
-        if (address.isEmpty()) {
-          if (address.isNew()) { address.releaseNumber(); }
-          this.set('address', null);
-
-        // If dirty, see if this address already exists
-        } else if (address.isDirty() && !options.existingChecked) {
-          // Callback: call save on the original again
-          findExistingOptions.success = function (resp) {
-            // If found, set the address with found id
-            if (resp) {
-              address.set('id', resp); // Id is all that matters...
-              address.status = K.READY_CLEAN; // So we don't come back here
-            }
-
-            // Try saving again
-            options.existingChecked = true;
-            if (_.isObject(key) || _.isEmpty(key)) { value = options; }
-            model.save(key, value, options);
-          };
-          XM.Address.findExisting(address.get('line1'),
-                                  address.get('line2'),
-                                  address.get('line3'),
-                                  address.get('city'),
-                                  address.get('state'),
-                                  address.get('postalCode'),
-                                  address.get('country'),
-                                  findExistingOptions);
-          return;
-
-        // If it is new, save it first
-        } else if (address.isNew()) {
-          address.save(null, addressOptions);
-          return;
-
-        // If it has changed, check to see if used elsewhere
-        } else if (address.isDirty()) {
-          // Callback: define what to do after use count check
-          useCountOptions.success = function (resp) {
-            var error,
-              K = XM.Address,
-              callback,
-              newAddress;
-            // If address is used then we need to handle that
-            if (resp > maxUse) {
-              // If no address option passed, then error
-              if (!_.isNumber(options.address)) {
-                error = XT.Error.clone('xt2007');
-                model.trigger('error', model, error, options);
-                return;
-
-              // `CHANGE_ONE` is always the fallback as it's the safest
-              } else if (options.address !== K.CHANGE_ALL) {
-                // Callback after successfull copy
-                // Only proceed when we have both an id and number from the server
-                callback = function () {
-                  var id = newAddress.id,
-                    number = newAddress.get('number');
-                  if (id && number) {
-                    newAddress.off('change:id change:number', callback);
-                    model.set('address', newAddress);
-                    newAddress.save(null, addressOptions);
-                  }
-                };
-                newAddress = address.copy();
-                newAddress.on('change:id change:number', callback);
-                callback(); // In case the data was here before event handlers could respond
-                return;
-              }
-            }
-
-            // No problem so save the address and original model after that
-            address.save(null, addressOptions);
-          };
-
-          // Perform the check: find out how many places this address is used
-          address.useCount(useCountOptions);
-          return;
-        }
-      }
-
-      // No problem with address, just save the record
-      // If record was invalid, this will bubble up the error
-      XM.Document.prototype.save.call(model, key, value, options);
     }
+
   };
 
   /**
