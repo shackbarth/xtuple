@@ -19,7 +19,6 @@ white:true*/
     // ..........................................................
     // METHODS
     //
-
     /**
       Set default country if applicable.
     */
@@ -52,7 +51,7 @@ white:true*/
       return XM.Address.formatShort(this);
     },
 
-    save: function (key, value, options) {
+    saveAddress: function (options) {
       var that = this,
         maxUse = this.isNew() ? 0 : 1,
         findExistingOptions = {},
@@ -60,14 +59,9 @@ white:true*/
         isValid = this.isValid(),
         K = XM.Model;
 
+      options = options || {};
       // Perform address checks if warranted
       if (isValid && this.getStatus() !== K.READY_CLEAN) {
-        // Handle both `"key", value` and `{key: value}` -style arguments.
-        if (_.isObject(key) || _.isEmpty(key)) {
-          options = value ? _.clone(value) : {};
-        } else {
-          options = options ? _.clone(options) : {};
-        }
 
         // If the address is empty set it to null // XXX how to do this on parent?
         if (this.isEmpty()) {
@@ -118,15 +112,15 @@ white:true*/
                     changeOneCallback(); // In case the data was here before event handlers could respond
                   } else {
                     // change all the reference by updating this model
-                    that.save(key, value, options);
+                    that.save(null, options);
                   }
                 };
                 message = "_changeAll?".loc();
-                this.notify(message, notifyOptions);
+                that.notify(message, notifyOptions);
               }
-              // Perform the check: find out how many places this address is used
-              that.useCount(useCountOptions);
             };
+            // Perform the check: find out how many places this address is used
+            that.useCount(useCountOptions);
           };
           XM.Address.findExisting(that.get('line1'),
                                   that.get('line2'),
@@ -139,13 +133,13 @@ white:true*/
 
         // If it is new, save it first
         } else if (this.isNew()) {
-          XM.Document.prototype.save.call(that, key, value, options);
+          XM.Document.prototype.save.call(that, null, options);
         }
       }
 
       // No problem with address, just save the record
       // If record was invalid, this will bubble up the error
-      XM.Document.prototype.save.call(this, key, value, options);
+      XM.Document.prototype.save.call(this, null, options);
     },
     /**
       Success response returns an integer from the server indicating how many times the address
