@@ -103,7 +103,7 @@ require('../xt/database/database');
   };
 
   installQueue = function (socket, ack, queue) {
-    //console.log("install queue", arguments);
+    console.log("install queue", queue.length, queue[0].type);
     var installed = socket.installed,
       orms = socket.orms,
       orm, dependencies = [];
@@ -121,6 +121,7 @@ require('../xt/database/database');
     if (orm.dependencies) {
       _.each(orm.dependencies, function (dependency) {
         var d = orms[dependency.nameSpace][dependency.type];
+        console.log(dependency.type);
         if (!installed.contains(d)) {
           dependencies.push(d);
         }
@@ -253,10 +254,12 @@ require('../xt/database/database');
 
 
   install = function (socket, ack) {
+    //console.log("install", JSON.stringify(Object.keys(socket.orms.XM)));
     var valid = [], installer = _.bind(installQueue, this, socket, ack), orms;
     orms = socket.orms;
     _.each(orms, function (namespace) {
       _.each(namespace, function (orm) {
+        if (!orm.enabled) console.log("install", JSON.stringify(orm));
         if (orm.enabled) valid.push(orm);
       });
     });
@@ -264,6 +267,7 @@ require('../xt/database/database');
     _.each(existing, function (orm) {
       socket.installed.push();
     });
+    console.log("installed", JSON.stringify(socket.installed));
     installer(valid);
   };
 
@@ -362,6 +366,7 @@ require('../xt/database/database');
       socket.extensions = extensions;
 
       calculateDependencies.call(this, socket);
+      console.log("calc dep", JSON.stringify(Object.keys(socket.orms.XM)));
       ack(orms);
     };
     _.bind(callback, this);

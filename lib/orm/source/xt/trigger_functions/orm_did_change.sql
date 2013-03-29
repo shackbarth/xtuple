@@ -3,11 +3,28 @@ create or replace function xt.orm_did_change() returns trigger as $$
   var view, views = [], i = 1, res, n;
 
 
-  /* Don't bother updating if nothing has changed 
+  /* Don't bother updating if nothing has changed */
   if (TG_OP === 'UPDATE' && NEW && OLD && NEW.orm_json === OLD.orm_json) {
-    return NEW; 
+    
+    /* It's possible that the view has been dropped even if the XM.Orm table is still there */
+    /* If the view has been dropped, we want to install it */ 
+    var viewType = NEW.orm_type.decamelize();
+    var viewNsp = NEW.orm_namespace.decamelize();
+    var viewCountSql = "select count(*) as count " +
+      "from pg_class c " + 
+      "join pg_namespace n on (c.relnamespace=n.oid) " +
+      "where nspname like $1 " +
+      "and relname like $2";
+    plv8.elog(NOTICE, viewCountSql, viewNsp, viewType);
+    var viewCount = plv8.execute(viewCountSql, [viewNsp, viewType]);
+    if(viewCount[0].count > 0) {
+      plv8.elog(NOTICE, "***View is already here!!!");
+      return NEW; 
+    } else {
+
+      plv8.elog(NOTICE, "***View has been dropped!!!", JSON.stringify(viewCount));
+    }
   }
-  */
 
   /* Validate */
   if(TG_OP === 'INSERT' || TG_OP === 'UPDATE') {
