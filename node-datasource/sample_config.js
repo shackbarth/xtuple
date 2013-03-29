@@ -14,6 +14,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     datasource: {
       sessionTimeout: 60,
       requireCache: true,
+      pgPoolSize: 3,
       bindAddress: "localhost",
       port: 443,
       keyFile: "./lib/private/key.pem",
