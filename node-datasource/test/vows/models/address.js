@@ -12,64 +12,40 @@ var XVOWS = XVOWS || {};
     zombieAuth = require("../lib/zombie_auth"),
     crud = require('../lib/crud');
 
-  var data = {};
-
-  data.createHash = {
-    line1: "123 Main St"
-  };
-
-  data.updateHash = {
-    line1: "456 Main St"
+  var data = {
+    recordType: "XM.Address",
+    autoTestAttributes: true,
+    createHash: {
+      line1: "123 Main St"
+    },
+    updateHash: {
+      line1: "456 Main St"
+    }
   };
 
   vows.describe('XM.Address CRUD test').addBatch({
-    'We can INITIALIZE an Address Model': {
+    'We can run the XM.Address CRUD tests ': crud.runAllCrud(data)
+
+  }).addBatch({
+    // Business-logic specific tests to be run outside of crud
+    'We can take a model that is in use somewhere else': {
       topic: function () {
         var that = this,
-          callback = function () {
-            data.model = new XM.Address();
-            that.callback(null, data);
+          model = new XM.Address(),
+          success = function (resp) {
+            that.callback(null, model);
+          },
+          error = function (err) {
+            that.callback(err);
           };
-        zombieAuth.loadApp(callback);
+
+        model.fetch({id: 41, success: success, error: error});
       },
-      'Verify the record type is XM.Address': function (data) {
-        assert.equal(data.model.recordType, "XM.Address");
+      'we do get them all back': function (error, topic) {
+        assert.isNull(error);
+        assert.equal(topic.get("line1"), "Ungargasse 60 ");
       }
     }
-  }).addBatch({
-    'We can CREATE an Address Model': crud.create(data, {
-      '-> Set values to the Address': {
-        topic: function (data) {
-          data.model.set(data.createHash);
-          return data;
-        },
-        'Verify the Last Error is null': function (data) {
-          assert.isNull(data.model.lastError);
-        },
-        '-> Save Address': crud.save(data)
-      }
-    })
-  }).addBatch({
-    'We can READ the Address Model': {
-      topic: function () {
-        return data;
-      },
-      'Verify the Last Error is null': function (data) {
-        assert.isNull(data.model.lastError);
-      }
-    }
-  }).addBatch({
-    'We can UPDATE the Address Model ': crud.update(data, {
-      '-> Set values to the Address': {
-        topic: function () {
-          data.model.set(data.updateHash);
-          return data;
-        },
-        '-> Commit Address': crud.save(data)
-      }
-    })
-  }).addBatch({
-    'We can DESTROY an Address Model': crud.destroy(data)
+
   }).export(module);
-  
 }());
