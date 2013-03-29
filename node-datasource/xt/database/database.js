@@ -14,7 +14,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   @extends X.Object
  */
   X.Database = X.Object.extend(/** @lends X.Database */{
-    poolSize: X.options.datasource.pgPoolSize,
+    poolSize: X.options.datasource.pgPoolSize || 10,
     className: "X.Database",
     cleanupCompletedEvent: "cleanupCompleted",
 

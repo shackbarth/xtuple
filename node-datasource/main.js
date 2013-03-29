@@ -216,11 +216,11 @@ var app = express(),
   XTPGStore = require('./oauth2/db/connect-xt-pg')(express),
   io,
   //sessionStore = new MemoryStore(),
-  sessionStore = new XTPGStore({ hybridCache: X.options.datasource.requireCache }),
+  sessionStore = new XTPGStore({ hybridCache: X.options.datasource.requireCache || false }),
   Session = require('express/node_modules/connect/lib/middleware/session').Session,
   Cookie = require('express/node_modules/connect/lib/middleware/session/cookie'),
   cookie = require('express/node_modules/cookie'),
-  privateSalt = X.fs.readFileSync(X.options.datasource.saltFile).toString();
+  privateSalt = X.fs.readFileSync(X.options.datasource.saltFile).toString() || 'somesecret';
 
 // Conditionally load express.session(). REST API endpoints using OAuth tokens do not get sessions.
 var conditionalExpressSession = function (req, res, next) {
@@ -240,7 +240,7 @@ var conditionalExpressSession = function (req, res, next) {
           path: '/',
           httpOnly: true,
           secure: true,
-          maxAge: (X.options.datasource.sessionTimeout * 60 * 1000)
+          maxAge: (X.options.datasource.sessionTimeout * 60 * 1000) || 3600000
         }
       });
 
