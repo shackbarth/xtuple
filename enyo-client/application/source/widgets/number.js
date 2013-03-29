@@ -205,9 +205,6 @@ regexp:true, undef:true, trailing:true, white:true */
             this.setLocalAmount(newValue);
             // set the amount from the model, the base value in the published field
             this.setBaseValue(newValue);
-            // set this base price into the base amount label
-            var amt = newValue || newValue === 0 ? Globalize.format(newValue, "n" + this.getScale()) : "";
-            this.$.baseAmountLabel.setContent(amt);
             // the subwidget does not know its own attr, but we know what
             // it is because it's stored in our attr hash. substitute it.
             // that's all the workspace needs to know about the originator
@@ -219,14 +216,15 @@ regexp:true, undef:true, trailing:true, white:true */
             if (newValue && oldValue !== newValue) {
               this.setCurrency(newValue);
               this.$.picker.setValue(this.getCurrency(), options);
-              this.setLocalAmount(this.getBaseValue());
             }
             // only show the base panel if there is an effective date AND the currency doesn't match the base
             // Set base label with calculated value
             this.setBasePanelShowing();
-            this.setBaseAmount(this.getLocalValue());
+            this.setLocalAmount(this.getBaseValue());
           }
-          
+          // set this base price into the base amount label
+          var amt = this.getBaseValue() || this.getBaseValue() === 0 ? Globalize.format(this.getBaseValue(), "n" + this.getScale()) : "";
+          this.$.baseAmountLabel.setContent(amt);
         }
       }
     }
