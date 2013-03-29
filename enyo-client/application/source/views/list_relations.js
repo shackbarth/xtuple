@@ -305,17 +305,16 @@ trailing:true white:true*/
     name: "XV.QuoteListRelations",
     kind: "XV.ListRelations",
     orderBy: [
-      {attribute: 'number', descending: true}
+      {attribute: 'id', descending: true}
     ],
-    workspace: "XV.QuoteWorkspace",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "id", classes: "bold"},
               {kind: "XV.ListAttr", attr: "customer", fit: true},
-              {kind: "XV.ListAttr", attr: "quoteDate", classes: "right"}
+              {kind: "XV.ListAttr", attr: "shipVia", classes: "right"}
             ]}
           ]}
         ]}
