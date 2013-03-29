@@ -46,7 +46,8 @@ regexp:true, undef:true, trailing:true, white:true */
     classes: "xv-moneywidget",
     published: {
       scale: XT.MONEY_SCALE,
-      amount: null,
+      localValue: null,
+      baseValue: null,
       currency: null,
       effective: null,
       currencyDisabled: false,
@@ -71,11 +72,11 @@ regexp:true, undef:true, trailing:true, white:true */
         {name: "spacer", content: "", classes: "xv-label"},
         {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
           components: [
-          {name: "baseAmount", classes: "xv-money-label"}
+          {name: "baseAmountLabel", classes: "xv-money-label"}
         ]},
         {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
           components: [
-          {name: "baseLabel", classes: "xv-money-label, currency"}
+          {name: "baseCurrencyLabel", classes: "xv-money-label, currency"}
         ]}
       ]}
     ],
@@ -87,7 +88,7 @@ regexp:true, undef:true, trailing:true, white:true */
       this.inherited(arguments);
       this.setCurrency(XT.baseCurrency());
       this.$.picker.setValue(this.getCurrency(), {silent: true});
-      this.$.baseLabel.setContent(XT.baseCurrency().get('abbreviation'));
+      this.$.baseCurrencyLabel.setContent(XT.baseCurrency().get('abbreviation'));
       // the currency picker may be disabled or hidden on creation in certain situations
       this.$.picker.setDisabled(this.getCurrencyDisabled());
       this.$.picker.setShowing(this.getCurrencyShowing());
@@ -96,41 +97,75 @@ regexp:true, undef:true, trailing:true, white:true */
       // input decorator
       this.$.picker.$.inputWrapper.removeClass("onyx-input-decorator");
     },
+    
     effectiveChanged: function () {
       this.setBasePanelShowing();
+      this.setLocalAmount(this.getBaseValue());
     },
+    
     /**
-      Sets visibility of base panel
+      Sets visibility of base panel. This panel is shown if there is an effective date and currency
+        and the currency is not currently base.
      */
     setBasePanelShowing: function () {
       var showing = _.isDate(this.getEffective()) && this.getCurrency() && !this.getCurrency().get("isBase");
-      if (showing) {
-        this.setBaseAmount(this.getAmount());
-      }
       this.$.basePanel.setShowing(showing);
     },
-
+    
+    /**
+      Converts the local value to the base amount and sets this value in the model
+     */
     setBaseAmount: function (value) {
       var options = {}, that = this;
       if (value || value === 0) {
         options.success = function (basePrice) {
+          // set this base price into the model and published field
+          that.setValue(basePrice);
+          that.setBaseValue(basePrice);
+          // set this base price into the base amount label
           var amt = basePrice || basePrice === 0 ? Globalize.format(basePrice, "n" + that.getScale()) : "";
-          that.$.baseAmount.setContent(amt);
+          that.$.baseAmountLabel.setContent(amt);
         };
         that.getCurrency().toBase(value, that.getEffective(), options);
+      } else {
+        that.setValue(null);
+        that.setBaseValue(null);
       }
     },
-
+    
+    /**
+      Converts the base value to the local value and sets this value in the widget
+     */
+    setLocalAmount: function (value) {
+      if (this.getCurrency().get("isBase")) {
+        // we're at base, so just set the fields with the base value we have
+        this.valueChanged(this.getBaseValue());
+        this.setLocalValue(this.getBaseValue());
+      } else {
+        var options = {}, that = this;
+        if (value || value === 0) {
+          options.success = function (localAmount) {
+            // set this local amount into published and input fields
+            that.valueChanged(localAmount);
+            that.setLocalValue(localAmount);
+          };
+          that.getCurrency().fromBase(value, that.getEffective(), options);
+        }
+      }
+    },
+    
     /**
     If the effective date is available,
     calculate the base currency amount based on the fixed rate
     when the amount or currency are changed.
     */
     inputChanged: function (inSender, inEvent) {
-      // only show the base panel if there is an effect date AND the currency doesn't match the base
-      // Set base label with calculated value
+      // only show the base panel if there is an effective date AND the currency doesn't match the base
+      // Set the model and the base label with calculated base value.
       this.setBasePanelShowing();
-      this.inherited(arguments);
+      var input = this.validate(this.$.input.getValue());
+      this.setBaseAmount(input);
+      this.setLocalValue(input);
     },
 
     /**
@@ -156,7 +191,7 @@ regexp:true, undef:true, trailing:true, white:true */
 
       // support how this function is used by the base class.
       // assume if we get a number, that means the amount
-      if (typeof value === 'number') {
+      if (_.isNumber(value)) {
         value = {amount: value};
       }
 
@@ -165,27 +200,33 @@ regexp:true, undef:true, trailing:true, white:true */
         if (value.hasOwnProperty(attribute)) {
           newValue = value[attribute];
           if (attribute === "amount") {
-            oldValue = this.amount;
-            if (oldValue !== newValue) {
-              this.setAmount(newValue);
-              this.valueChanged(newValue);
-              // the subwidget does not know its own attr, but we know what
-              // it is because it's stored in our attr hash. substitute it.
-              // that's all the workspace needs to know about the originator
-              amountAttr = this.attr.amount;
-              inEvent = { value: newValue, originator: {attr: amountAttr }};
-              if (!options.silent) { this.doValueChange(inEvent); }
-            }
+            // this amount value from the model is stored in base currency.
+            // we need to convert this value to local currency and set published and input fields
+            this.setLocalAmount(newValue);
+            // set the amount from the model, the base value in the published field
+            this.setBaseValue(newValue);
+            // set this base price into the base amount label
+            var amt = newValue || newValue === 0 ? Globalize.format(newValue, "n" + this.getScale()) : "";
+            this.$.baseAmountLabel.setContent(amt);
+            // the subwidget does not know its own attr, but we know what
+            // it is because it's stored in our attr hash. substitute it.
+            // that's all the workspace needs to know about the originator
+            amountAttr = this.attr.amount;
+            inEvent = { value: this.getLocalValue(), originator: {attr: amountAttr }};
+            if (!options.silent) { this.doValueChange(inEvent); }
           } else if (attribute === "currency") {
             oldValue = this.getCurrency();
             if (newValue && oldValue !== newValue) {
               this.setCurrency(newValue);
               this.$.picker.setValue(this.getCurrency(), options);
+              this.setLocalAmount(this.getBaseValue());
             }
+            // only show the base panel if there is an effective date AND the currency doesn't match the base
+            // Set base label with calculated value
+            this.setBasePanelShowing();
+            this.setBaseAmount(this.getLocalValue());
           }
-          // only show the base panel if there is an effect date AND the currency doesn't match the base
-          // Set base label with calculated value
-          this.setBasePanelShowing();
+          
         }
       }
     }

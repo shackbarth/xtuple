@@ -237,6 +237,122 @@ white:true*/
 
       return this;
     },
+    
+    /**
+       Converts a value in the currency instance to a local value via the success
+       callback in options.
+
+       @param {Number} base value
+       @param {Date} asOf
+       @param {Object} Options
+       @param {Function} [options.success] callback on successful response
+       @returns {Object} Receiver
+     */
+     fromBase: function (baseValue, asOf, options) {
+       options = options ? _.clone(options) : {};
+       var that = this,
+         rates = new XM.CurrencyRateCollection(),
+         fetchOptions = {},
+         localValue,
+         rate,
+         params,
+         err,
+         request;
+
+       // If invalid arguments, bail
+       if (!this.id || !asOf || !options.success) { return this; }
+
+       // See if we already have the rate
+       rate = _.find(_rateCache.models, function (rate) {
+         var effective = rate.get("effective"),
+           expires = rate.get("expires");
+         return rate.id === that.id && XT.date.inRange(asOf, effective, expires);
+       });
+
+       // If we have conversion data already, use it
+       if (rate) {
+         localValue = baseValue / rate.get("rate");
+         options.success(localValue);
+
+       // Otherwise, see if we already have a request out for this rate
+       } else {
+         request = _.find(_activeRequests, function (request) {
+           return request.currency.id === that.id &&
+             XT.date.compareDate(asOf, request.asOf) === 0;
+         });
+
+         // We've already asked for this, so add the callback
+         // for this call to the list
+         if (request) {
+           request.callbacks.push({
+             baseValue: baseValue,
+             callback: options.success
+           });
+
+         // Otherwise, go get it
+         } else {
+           // Define the query
+           fetchOptions.query = {
+             parameters: [
+               {
+                 attribute: "effective",
+                 operator: "<=",
+                 value: asOf
+               },
+               {
+                 attribute: "expires",
+                 operator: ">=",
+                 value: asOf
+               },
+               {
+                 attribute: "currency",
+                 operator: "=",
+                 value: this.id
+               }
+             ]
+           };
+
+           request = {
+             currency: this,
+             asOf: asOf,
+             callbacks: [{
+               value: baseValue,
+               callback: options.success
+             }]
+           };
+           _activeRequests.push(request);
+
+           // Define the results handler
+           fetchOptions.success = function () {
+             // If no results report an error
+             if (!rates.length) {
+               if (options.error) {
+                 params.currency = this.get("abbreviation");
+                 params.asOf = Globalize.format(asOf, "d");
+                 err = XT.Error.clone('xt2010', { params: params });
+                 options.error(err);
+               }
+               return;
+             }
+             rate = rates.at(0);
+
+             // Cache rate for later use
+             _rateCache.add(rate);
+
+             // Forward result to callbacks
+             _.each(request.callbacks, function (obj) {
+               localValue = obj.baseValue / rate.get("rate");
+               obj.callback(localValue);
+             });
+           };
+
+           // Make the request
+           rates.fetch(fetchOptions);
+         }
+       }
+
+       return this;
+     },
 
     toString: function () {
       return this.get('abbreviation') + ' - ' + this.get('symbol');
