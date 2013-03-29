@@ -117,6 +117,10 @@ white:true*/
                 };
                 message = "_changeAll?".loc();
                 that.notify(message, notifyOptions);
+
+              } else {
+                // the model is not in use. Just update it
+                that.save(null, options);
               }
             };
             // Perform the check: find out how many places this address is used
@@ -139,7 +143,11 @@ white:true*/
 
       // No problem with address, just save the record
       // If record was invalid, this will bubble up the error
-      XM.Document.prototype.save.call(this, null, options);
+      var saveResult = XM.Document.prototype.save.call(this, null, options);
+      // XXX it would be really nice if XM.Model.save called a callback if no changes to save
+      if (!saveResult && options.success) {
+        options.success(this);
+      }
     },
     /**
       Success response returns an integer from the server indicating how many times the address
@@ -149,7 +157,6 @@ white:true*/
       @returns Receiver
     */
     useCount: function (options) {
-      console.log("XM.Address.useCount for: " + this.id);
       XT.dataSource.dispatch('XM.Address', 'useCount', this.id, options);
       return this;
     },
