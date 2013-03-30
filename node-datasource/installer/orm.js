@@ -328,8 +328,7 @@ require('../xt/database/database');
         "join pg_namespace n on (c.relnamespace=n.oid)  " +
         "where nspname like 'xm' " +
         ") views on lower(orm_type) = viewName " +
-        "where not orm_ext " +
-        "and viewName is null " +
+        "where viewName is null " +
         ")",
       testConnection = function (data, ack, options, err, res) {
         if (err) return ack(false);
