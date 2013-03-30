@@ -14,12 +14,15 @@ require('../xt/database/database');
 
   X.db = X.Database.create();
 
+  /**
+    Prepares the orm for insertion into the database by cleaning out all the junk
+    that we attached to it for the sake of these calculations.
+   */
   cleanse = function (orm) {
     var ret = _.clone(orm);
     delete ret.undefinedDependencies;
     delete ret.failedDependencies;
     delete ret.filename;
-    delete ret.missingDependencies;
     delete ret.enabled;
     delete ret.dependencies;
 
@@ -140,10 +143,7 @@ require('../xt/database/database');
         var d = orms[dependency.nameSpace][dependency.type];
         if (!installed.contains(d)) {
           // only install dependencies that have not already been installed
-          console.log("got to install");
           dependencies.push(d);
-        } else {
-          console.log("already installed");
         }
       });
       if (dependencies.length > 0) {
@@ -197,8 +197,7 @@ require('../xt/database/database');
   };
 
   /**
-    Adds a dependencies array to the orm, as well as a missingDependencies array,
-    which I don't think is used for anything.
+    Adds a dependencies array to the orm.
    */
   dependenciesFor = function (data, orm, dependencies) {
     var properties, extensions, namespace, orms, dep;
@@ -206,10 +205,8 @@ require('../xt/database/database');
     properties = orm.properties || [];
     extensions = orm.extensions || [];
     orms = data.orms;
-    if (!orm.missingDependencies) { orm.missingDependencies = []; }
     _.each(properties, function (property) {
       var which, type, ns;
-      console.log("prop is", property);
       if (property.toOne || property.toMany) {
         if (property.toOne && property.toOne.isNested === false) return;
         which = property.toOne ? property.toOne: property.toMany;
@@ -217,7 +214,6 @@ require('../xt/database/database');
         ns = orm.nameSpace;
         dep = {nameSpace: ns, type: type};
         if (!dependencies.contains(dep) && !findExisting(ns, type)) {
-          console.log("pushing dep", ns, type);
           dependencies.push({nameSpace: ns, type: type});
         }
       }
@@ -226,18 +222,11 @@ require('../xt/database/database');
       if (!extension.nameSpace) extension.nameSpace = orm.nameSpace;
       dependenciesFor(data, extension, dependencies);
     });
-    namespace = orm.table.match(/^(.*)\./);
-    _.each(dependencies, function (dependency) {
-      var ns, type;
-      ns = orms[dependency.nameSpace];
-      type = ns[dependency.type];
-      if (X.none(type)) {
-        console.log("pushing missing dep", dependency.namespace, dependency.type);
-        orm.missingDependencies.push("%@.%@".f(dependency.nameSpace, dependency.type));
-      }
-    });
   };
 
+  /**
+    Not sure what this does.
+   */
   checkDependencies = function (data, orm) {
     var enabled = true, dependencies = orm.dependencies, found, orms;
     if (X.typeOf(orm.enabled) !== X.T_UNDEFINED) return orm.enabled;
@@ -263,7 +252,6 @@ require('../xt/database/database');
 
   /**
     For each ORM, calculates that ORMs dependencies
-
    */
   calculateDependencies = function (data) {
     var orms = data.orms;
@@ -275,7 +263,7 @@ require('../xt/database/database');
         //console.log("after", orm);
       });
     });
-    // what does this do ??? XXX
+
     _.each(orms, function (namespace) {
       _.each(_.keys(namespace), function (name) {
         var orm = namespace[name];
@@ -284,6 +272,12 @@ require('../xt/database/database');
     });
   };
 
+  /**
+    Checks to see if the orm is already installed, using the global
+    existing variable. Note that existing is populated from xt.orm,
+    and assumes that xt.orm is in sync with the actual views that
+    are created from the orm records.
+   */
   findExisting = function (nameSpace, type) {
     return _.find(existing, function (orm) {
       return orm.namespace === nameSpace && orm.type === type;
@@ -292,19 +286,16 @@ require('../xt/database/database');
 
 
   install = function (data, ack) {
-    //console.log("install", JSON.stringify(Object.keys(data.orms.XM)));
     var valid = [], installer = _.bind(installQueue, this, data, ack), orms;
     orms = data.orms;
     _.each(orms, function (namespace) {
       _.each(namespace, function (orm) {
-        if (!orm.enabled) console.log("install", JSON.stringify(orm));
         if (orm.enabled) valid.push(orm);
       });
     });
     data.installed = [];
     console.log("existing length is", existing.length);
     _.each(existing, function (orm) {
-      //data.installed.push(); // XXX buggy?
       data.installed.push(orm);
     });
     console.log("these orms are already installed", data.installed.length);
