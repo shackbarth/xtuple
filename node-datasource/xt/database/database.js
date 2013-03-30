@@ -44,18 +44,29 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     /**
       Connected.
     */
-    connected: function (query, options, callback, err, client, ranInit) {
+    connected: function (query, options, callback, err, client, done, ranInit) {
       if (err) {
         issue(X.warning("Failed to connect to database: " +
           "{hostname}:{port}/{database} => %@".f(options, err.message)));
         return callback(err);
       }
-      if (ranInit === true) { client.hasRunInit = true; }
+
+      if (ranInit === true) {
+        client.hasRunInit = true;
+      }
+
       if (!client.hasRunInit) {
         client.query("set plv8.start_proc = \"xt.js_init\";", _.bind(
-          this.connected, this, query, options, callback, err, client, true));
+          this.connected, this, query, options, callback, err, client, done, true));
       } else {
-        client.query(query, callback);
+
+        client.query(query, _.wrap(callback, function (func, err, result) {
+            // Call the call back.
+            func(err, result);
+            // Release the client from the pool.
+            done();
+          })
+        );
       }
     },
 
