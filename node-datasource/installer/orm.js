@@ -32,12 +32,12 @@ require('../xt/database/database');
     return ret;
   };
 
-  submit = function (socket, orm, queue, ack, isExtension) {
+  submit = function (data, orm, queue, ack, isExtension) {
     //console.log("submit", arguments);
     var query, extensions, context, extensionList = [], namespace, type;
     context = orm.context;
     namespace = orm.nameSpace;
-    extensions = socket.extensions;
+    extensions = data.extensions;
     type = orm.type;
 
     if (!isExtension) {
@@ -70,7 +70,7 @@ require('../xt/database/database');
 
     query = "select xt.install_orm('%@')".f(X.json(cleanse(orm)));
 
-    X.db.query(query, socket.databaseOptions, _.bind(function (err, res) {
+    X.db.query(query, data.databaseOptions, _.bind(function (err, res) {
       var c = extensionList.length;
       if (err) {
         console.log("Error: " + err.message);
@@ -85,39 +85,51 @@ require('../xt/database/database');
         }
       }
 
-      if (!isExtension) socket.installed.push(orm);
+      if (!isExtension) data.installed.push(orm);
       if (c > 0) {
-        submit.call(this, socket, extensionList.shift(), queue, ack, true);
+        submit.call(this, data, extensionList.shift(), queue, ack, true);
       } else if (isExtension) {
         // this is the one part I'm worried about SMH
         --c;
         if (!extensionList.length) {
-          installQueue.call(this, socket, ack, queue);
+          installQueue.call(this, data, ack, queue);
         } else {
-          submit.call(this, socket, extensionList.shift(), queue, ack, true);
+          submit.call(this, data, extensionList.shift(), queue, ack, true);
         }
       } else {
-        installQueue.call(this, socket, ack, queue);
+        installQueue.call(this, data, ack, queue);
       }
     }, this));
   };
 
-  installQueue = function (socket, ack, queue) {
-    console.log("install queue", queue.length, queue[0].type);
-    var installed = socket.installed,
-      orms = socket.orms,
+
+  /**
+    Iterates recursively down the queue of orms to install.
+    Initially called with a queue in no particular order.
+    However, we do know the dependencies of each orm.
+
+    @param data
+    @param data.installed {Array} Array of ORMs (as JSON) that have already been installed
+   */
+  installQueue = function (data, ack, queue) {
+    console.log("install queue", queue.length, queue.length && queue[0].type);
+    var installed = data.installed,
+      orms = data.orms,
       orm, dependencies = [];
     if (!queue || queue.length === 0) {
       // this is the actual callback! The first arg is an error, which is null if
       // we've made it this far. The second arg is an array of all the orm names
       // that have been installed.
-      return ack(null, _.map(socket.installed, function (orm) {return orm.type}));
+      return ack(null, _.map(data.installed, function (orm) {return orm.type}));
     }
     orm = queue.shift();
 
     if (installed.indexOf(orm) !== -1) {
-      return installQueue.call(this, socket, ack, queue);
+      return installQueue.call(this, data, ack, queue);
     }
+    //
+    // Dependencies of this orm need to be installed before this orm.
+    //
     if (orm.dependencies) {
       _.each(orm.dependencies, function (dependency) {
         var d = orms[dependency.nameSpace][dependency.type];
@@ -129,16 +141,17 @@ require('../xt/database/database');
       if (dependencies.length > 0) {
         dependencies.push(orm);
         dependencies = dependencies.concat(queue);
-        return installQueue.call(this, socket, ack, dependencies);
+        return installQueue.call(this, data, ack, dependencies);
+        // do NOT install this orm! We'll get to it when the time is right.
       }
     }
 
-    submit.call(this, socket, orm, queue, ack);
+    submit.call(this, data, orm, queue, ack);
   };
 
-  testConnection = function (socket, ack, options, err, res) {
+  testConnection = function (data, ack, options, err, res) {
     if (err) return ack(false);
-    socket.databaseOptions = options;
+    data.databaseOptions = options;
     ack(true);
   };
 
@@ -172,12 +185,12 @@ require('../xt/database/database');
     }
   };
 
-  dependenciesFor = function (socket, orm, dependencies) {
+  dependenciesFor = function (data, orm, dependencies) {
     var properties, extensions, namespace, orms, dep;
     dependencies = dependencies ? dependencies : orm.dependencies ? orm.dependencies : (orm.dependencies = []);
     properties = orm.properties || [];
     extensions = orm.extensions || [];
-    orms = socket.orms;
+    orms = data.orms;
     if (!orm.missingDependencies) { orm.missingDependencies = []; }
     _.each(properties, function (property) {
       var which, type, ns;
@@ -194,7 +207,7 @@ require('../xt/database/database');
     });
     _.each(extensions, function (extension) {
       if (!extension.nameSpace) extension.nameSpace = orm.nameSpace;
-      dependenciesFor(socket, extension, dependencies);
+      dependenciesFor(data, extension, dependencies);
     });
     namespace = orm.table.match(/^(.*)\./);
     _.each(dependencies, function (dependency) {
@@ -207,27 +220,27 @@ require('../xt/database/database');
     });
   };
 
-  calculateDependencies = function (socket) {
-    var orms = socket.orms;
+  calculateDependencies = function (data) {
+    var orms = data.orms;
     _.each(orms, function (namespace) {
       _.each(_.keys(namespace), function (name) {
         var orm = namespace[name];
-        dependenciesFor(socket, orm);
+        dependenciesFor(data, orm);
       });
     });
     _.each(orms, function (namespace) {
       _.each(_.keys(namespace), function (name) {
         var orm = namespace[name];
-        orm.enabled = checkDependencies(socket, orm);
+        orm.enabled = checkDependencies(data, orm);
       });
     });
   };
 
-  checkDependencies = function (socket, orm) {
+  checkDependencies = function (data, orm) {
     var enabled = true, dependencies = orm.dependencies, found, orms;
     if (X.typeOf(orm.enabled) !== X.T_UNDEFINED) return orm.enabled;
     if (!dependencies || dependencies.length <= 0) return enabled;
-    orms = socket.orms;
+    orms = data.orms;
     _.each(dependencies, function (dependency) {
       found = orms[dependency.nameSpace][dependency.type];
       if (X.none(found)) {
@@ -236,7 +249,7 @@ require('../xt/database/database');
         enabled = false;
         return;
       }
-      if (!checkDependencies(socket, found)) {
+      if (!checkDependencies(data, found)) {
         if (!orm.failedDependencies) { orm.failedDependencies = []; }
         orm.failedDependencies.push("%@.%@".f(found.nameSpace, found.type));
         enabled = false;
@@ -253,25 +266,25 @@ require('../xt/database/database');
   };
 
 
-  install = function (socket, ack) {
-    //console.log("install", JSON.stringify(Object.keys(socket.orms.XM)));
-    var valid = [], installer = _.bind(installQueue, this, socket, ack), orms;
-    orms = socket.orms;
+  install = function (data, ack) {
+    //console.log("install", JSON.stringify(Object.keys(data.orms.XM)));
+    var valid = [], installer = _.bind(installQueue, this, data, ack), orms;
+    orms = data.orms;
     _.each(orms, function (namespace) {
       _.each(namespace, function (orm) {
         if (!orm.enabled) console.log("install", JSON.stringify(orm));
         if (orm.enabled) valid.push(orm);
       });
     });
-    socket.installed = [];
+    data.installed = [];
     _.each(existing, function (orm) {
-      socket.installed.push();
+      data.installed.push();
     });
-    console.log("installed", JSON.stringify(socket.installed));
+    console.log("installed", JSON.stringify(data.installed));
     installer(valid);
   };
 
-  select =  function (socket, options, ack) {
+  select =  function (data, options, ack) {
     var key, callback, creds = {};
     for (key in options) {
       if (!options.hasOwnProperty(key)) continue;
@@ -284,12 +297,12 @@ require('../xt/database/database');
     creds.password = options.password;
     creds.database = options.organization;
 
-    callback = _.bind(testConnection, this, socket, ack, creds);
+    callback = _.bind(testConnection, this, data, ack, creds);
 
     X.db.query("select * from pg_class limit 1", creds, callback);
   };
 
-  refresh = function (socket, options, ack) {
+  refresh = function (data, options, ack) {
     options = options || {};
     if (typeof options === 'function') { ack = options; }
     var path = _path.join(X.basePath, options.path || X.options.orm.defaultPath),
@@ -362,15 +375,15 @@ require('../xt/database/database');
         });
       });
 
-      socket.orms = orms;
-      socket.extensions = extensions;
+      data.orms = orms;
+      data.extensions = extensions;
 
-      calculateDependencies.call(this, socket);
-      console.log("calc dep", JSON.stringify(Object.keys(socket.orms.XM)));
+      calculateDependencies.call(this, data);
+      console.log("calc dep", JSON.stringify(Object.keys(data.orms.XM)));
       ack(orms);
     };
     _.bind(callback, this);
-    X.db.query(sql, socket.databaseOptions, callback);
+    X.db.query(sql, data.databaseOptions, callback);
   };
 
   runOrmInstaller = function (creds, path, callback) {
@@ -381,10 +394,10 @@ require('../xt/database/database');
       };
     }
 
-    var socket = {databaseOptions: creds};
-    select(socket, creds, function () {
-      refresh(socket, {path: path}, function () {
-        install(socket, callback);
+    var data = {databaseOptions: creds};
+    select(data, creds, function () {
+      refresh(data, {path: path}, function () {
+        install(data, callback);
       });
     });
   };
