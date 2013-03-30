@@ -8,7 +8,7 @@ require('../xt/database/database');
 (function () {
   "use strict";
 
-  var _path = X.path, _ = X._, _fs = X.fs, initSocket, testConnection, dive,
+  var _path = X.path, _ = X._, _fs = X.fs, initSocket, dive,
     parseFile, calculateDependencies, dependenciesFor, checkDependencies, cleanse,
     installQueue, submit, existing, findExisting, install, select, refresh, runOrmInstaller;
 
@@ -32,6 +32,9 @@ require('../xt/database/database');
     return ret;
   };
 
+  /**
+    Here is the function that actually installs the ORM!
+   */
   submit = function (data, orm, queue, ack, isExtension) {
     //console.log("submit", arguments);
     var query, extensions, context, extensionList = [], namespace, type;
@@ -89,7 +92,6 @@ require('../xt/database/database');
       if (c > 0) {
         submit.call(this, data, extensionList.shift(), queue, ack, true);
       } else if (isExtension) {
-        // this is the one part I'm worried about SMH
         --c;
         if (!extensionList.length) {
           installQueue.call(this, data, ack, queue);
@@ -110,6 +112,8 @@ require('../xt/database/database');
 
     @param data
     @param data.installed {Array} Array of ORMs (as JSON) that have already been installed
+    @param ack {Function} callback function to be eventually called to return out of this
+      whole installer
    */
   installQueue = function (data, ack, queue) {
     console.log("install queue", queue.length, queue.length && queue[0].type);
@@ -130,12 +134,17 @@ require('../xt/database/database');
     //
     // Dependencies of this orm need to be installed before this orm.
     //
+    console.log("orm dep", orm.dependencies);
     if (orm.dependencies) {
       _.each(orm.dependencies, function (dependency) {
         var d = orms[dependency.nameSpace][dependency.type];
-        console.log(dependency.type);
+        console.log("dependency is", dependency.type);
         if (!installed.contains(d)) {
+          // only install dependencies that have not already been installed
+          console.log("got to install");
           dependencies.push(d);
+        } else {
+          console.log("already installed");
         }
       });
       if (dependencies.length > 0) {
@@ -147,12 +156,6 @@ require('../xt/database/database');
     }
 
     submit.call(this, data, orm, queue, ack);
-  };
-
-  testConnection = function (data, ack, options, err, res) {
-    if (err) return ack(false);
-    data.databaseOptions = options;
-    ack(true);
   };
 
   parseFile = function (path) {
@@ -201,6 +204,7 @@ require('../xt/database/database');
         ns = orm.nameSpace;
         dep = {nameSpace: ns, type: type};
         if (!dependencies.contains(dep) && !findExisting(ns, type)) {
+          console.log("pushing dep", ns, type);
           dependencies.push({nameSpace: ns, type: type});
         }
       }
@@ -215,6 +219,7 @@ require('../xt/database/database');
       ns = orms[dependency.nameSpace];
       type = ns[dependency.type];
       if (X.none(type)) {
+          console.log("pushing missing dep", dependency.namespace, dependency.type);
         orm.missingDependencies.push("%@.%@".f(dependency.nameSpace, dependency.type));
       }
     });
@@ -284,8 +289,18 @@ require('../xt/database/database');
     installer(valid);
   };
 
+  /*
+    Puts the options into the data object and verifies that the DB is
+    connected by making an otherwise useless call.
+  */
   select =  function (data, options, ack) {
-    var key, callback, creds = {};
+    var key, callback, creds = {},
+      testConnection = function (data, ack, options, err, res) {
+        if (err) return ack(false);
+        data.databaseOptions = options;
+        ack(true);
+      };
+
     for (key in options) {
       if (!options.hasOwnProperty(key)) continue;
       if (options[key] === "") return ack(false);
@@ -386,6 +401,9 @@ require('../xt/database/database');
     X.db.query(sql, data.databaseOptions, callback);
   };
 
+  /**
+    Entry point for installer. Chains together call to select, then refresh, then install.
+   */
   runOrmInstaller = function (creds, path, callback) {
     if (!callback) {
       callback = function () {
