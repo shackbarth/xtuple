@@ -134,11 +134,10 @@ require('../xt/database/database');
     //
     // Dependencies of this orm need to be installed before this orm.
     //
-    console.log("orm dep", orm.dependencies);
+    console.log("orm dependencies are", orm.dependencies);
     if (orm.dependencies) {
       _.each(orm.dependencies, function (dependency) {
         var d = orms[dependency.nameSpace][dependency.type];
-        console.log("dependency is", dependency.type);
         if (!installed.contains(d)) {
           // only install dependencies that have not already been installed
           console.log("got to install");
@@ -151,19 +150,28 @@ require('../xt/database/database');
         dependencies.push(orm);
         dependencies = dependencies.concat(queue);
         return installQueue.call(this, data, ack, dependencies);
-        // do NOT install this orm! We'll get to it when the time is right.
+        // do NOT install this orm right now! We'll get to it when the time is right.
       }
     }
 
     submit.call(this, data, orm, queue, ack);
   };
 
+  /**
+    Parse a json file and return the json.
+    @param {String} path
+
+    @returns {Object}
+   */
   parseFile = function (path) {
     try {
       return X.json(_fs.readFileSync(path, "utf8"), true);
     } catch (err) { return {isError: true, message: err.message, file: path}; }
   };
 
+  /**
+    Recurse into the file structure to parse the json files.
+   */
   dive = function (path, root) {
     var files = X.directoryFiles(path, {fullPath: true}), stat, isTop, ret, content, errors = [];
     isTop = root ? false: true;
@@ -188,6 +196,10 @@ require('../xt/database/database');
     }
   };
 
+  /**
+    Adds a dependencies array to the orm, as well as a missingDependencies array,
+    which I don't think is used for anything.
+   */
   dependenciesFor = function (data, orm, dependencies) {
     var properties, extensions, namespace, orms, dep;
     dependencies = dependencies ? dependencies : orm.dependencies ? orm.dependencies : (orm.dependencies = []);
@@ -197,6 +209,7 @@ require('../xt/database/database');
     if (!orm.missingDependencies) { orm.missingDependencies = []; }
     _.each(properties, function (property) {
       var which, type, ns;
+      console.log("prop is", property);
       if (property.toOne || property.toMany) {
         if (property.toOne && property.toOne.isNested === false) return;
         which = property.toOne ? property.toOne: property.toMany;
@@ -219,25 +232,9 @@ require('../xt/database/database');
       ns = orms[dependency.nameSpace];
       type = ns[dependency.type];
       if (X.none(type)) {
-          console.log("pushing missing dep", dependency.namespace, dependency.type);
+        console.log("pushing missing dep", dependency.namespace, dependency.type);
         orm.missingDependencies.push("%@.%@".f(dependency.nameSpace, dependency.type));
       }
-    });
-  };
-
-  calculateDependencies = function (data) {
-    var orms = data.orms;
-    _.each(orms, function (namespace) {
-      _.each(_.keys(namespace), function (name) {
-        var orm = namespace[name];
-        dependenciesFor(data, orm);
-      });
-    });
-    _.each(orms, function (namespace) {
-      _.each(_.keys(namespace), function (name) {
-        var orm = namespace[name];
-        orm.enabled = checkDependencies(data, orm);
-      });
     });
   };
 
@@ -264,6 +261,29 @@ require('../xt/database/database');
     return enabled;
   };
 
+  /**
+    For each ORM, calculates that ORMs dependencies
+
+   */
+  calculateDependencies = function (data) {
+    var orms = data.orms;
+    _.each(orms, function (namespace) {
+      _.each(_.keys(namespace), function (name) {
+        var orm = namespace[name];
+        //console.log("before", orm);
+        dependenciesFor(data, orm);
+        //console.log("after", orm);
+      });
+    });
+    // what does this do ??? XXX
+    _.each(orms, function (namespace) {
+      _.each(_.keys(namespace), function (name) {
+        var orm = namespace[name];
+        orm.enabled = checkDependencies(data, orm);
+      });
+    });
+  };
+
   findExisting = function (nameSpace, type) {
     return _.find(existing, function (orm) {
       return orm.namespace === nameSpace && orm.type === type;
@@ -282,19 +302,44 @@ require('../xt/database/database');
       });
     });
     data.installed = [];
+    console.log("existing length is", existing.length);
     _.each(existing, function (orm) {
-      data.installed.push();
+      //data.installed.push(); // XXX buggy?
+      data.installed.push(orm);
     });
-    console.log("installed", JSON.stringify(data.installed));
+    console.log("these orms are already installed", data.installed.length);
     installer(valid);
   };
 
   /*
-    Puts the options into the data object and verifies that the DB is
-    connected by making an otherwise useless call.
+    Puts the options into the data object and runs the clearing sql call.
+    The clearing sql call: we get into trouble when there are orms "registered"
+    with a row in the xt.orm table, but without an actual view defined. This
+    happens if some other trigger cascade-deletes a view. Generally speaking
+    these triggers don't know to delete the related xt.orm row. Because we
+    frequently use the presence of a row as a proxy for the presence of the
+    view, it's very dangerous if these fall out of sync. This sql call
+    erases any xt.orm row that has no view. Assumption: the views will always
+    be in the xm namespace.
+
+    The clearing sql call is also useful as a verification that the db is
+    connected. In an earlier incarnation this was just a useless/harmless
+    placeholder call.
   */
   select =  function (data, options, ack) {
     var key, callback, creds = {},
+      clearingSql = "delete from xt.orm  " +
+        "where orm_id in ( " +
+        "select orm_id from xt.orm  " +
+        "left join ( " +
+        "select replace(relname, '_', '') as viewName " +
+        "from pg_class c   " +
+        "join pg_namespace n on (c.relnamespace=n.oid)  " +
+        "where nspname like 'xm' " +
+        ") views on lower(orm_type) = viewName " +
+        "where not orm_ext " +
+        "and viewName is null " +
+        ")",
       testConnection = function (data, ack, options, err, res) {
         if (err) return ack(false);
         data.databaseOptions = options;
@@ -314,9 +359,14 @@ require('../xt/database/database');
 
     callback = _.bind(testConnection, this, data, ack, creds);
 
-    X.db.query("select * from pg_class limit 1", creds, callback);
+    X.db.query(clearingSql, creds, callback);
   };
 
+  /**
+    Parses the orms from their files.
+    Also looks at all the orms currently "registered" in the
+    the XT.Orm table and calculates dependencies
+   */
   refresh = function (data, options, ack) {
     options = options || {};
     if (typeof options === 'function') { ack = options; }
@@ -366,6 +416,7 @@ require('../xt/database/database');
         console.log("Error in xt.orm query callback", err);
       }
       existing = resp ? resp.rows : [];
+      console.log("just set existing length ", existing.length);
 
       // organize and associate the extensions
       _.each(extensions, function (context) {
@@ -404,7 +455,7 @@ require('../xt/database/database');
   /**
     Entry point for installer. Chains together call to select, then refresh, then install.
    */
-  runOrmInstaller = function (creds, path, callback) {
+  exports.run = runOrmInstaller = function (creds, path, callback) {
     if (!callback) {
       callback = function () {
         console.log("all done");
@@ -419,7 +470,5 @@ require('../xt/database/database');
       });
     });
   };
-
-  exports.run = runOrmInstaller;
 
 }());
