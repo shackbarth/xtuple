@@ -119,7 +119,6 @@ require('../xt/database/database');
       whole installer
    */
   installQueue = function (data, ack, queue) {
-    console.log("install queue", queue.length, queue.length && queue[0].type);
     var installed = data.installed,
       orms = data.orms,
       orm, dependencies = [];
@@ -137,7 +136,6 @@ require('../xt/database/database');
     //
     // Dependencies of this orm need to be installed before this orm.
     //
-    console.log("orm dependencies are", orm.dependencies);
     if (orm.dependencies) {
       _.each(orm.dependencies, function (dependency) {
         var d = orms[dependency.nameSpace][dependency.type];
@@ -258,9 +256,7 @@ require('../xt/database/database');
     _.each(orms, function (namespace) {
       _.each(_.keys(namespace), function (name) {
         var orm = namespace[name];
-        //console.log("before", orm);
         dependenciesFor(data, orm);
-        //console.log("after", orm);
       });
     });
 
@@ -294,11 +290,9 @@ require('../xt/database/database');
       });
     });
     data.installed = [];
-    console.log("existing length is", existing.length);
     _.each(existing, function (orm) {
       data.installed.push(orm);
     });
-    console.log("these orms are already installed", data.installed.length);
     installer(valid);
   };
 
@@ -406,7 +400,6 @@ require('../xt/database/database');
         console.log("Error in xt.orm query callback", err);
       }
       existing = resp ? resp.rows : [];
-      console.log("just set existing length ", existing.length);
 
       // organize and associate the extensions
       _.each(extensions, function (context) {
@@ -435,7 +428,6 @@ require('../xt/database/database');
       data.extensions = extensions;
 
       calculateDependencies.call(this, data);
-      console.log("calc dep", JSON.stringify(Object.keys(data.orms.XM)));
       ack(orms);
     };
     _.bind(callback, this);
