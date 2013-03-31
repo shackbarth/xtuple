@@ -1,10 +1,19 @@
-drop view if exists xt.opheadinfo cascade;
+DO $$
+  var dropSql = "drop view if exists xt.opheadinfo cascade;";
+  var sql = "create or replace view xt.opheadinfo as  " +
+   "select ophead.*, coalesce(incdtpriority_order, 99999) as priority_order " +
+   "from ophead " +
+     "left join incdtpriority on (ophead_priority_id=incdtpriority_id); ";
 
-create or replace view xt.opheadinfo as 
+  try {
+    plv8.execute(sql);
+  } catch (error) {
+    /* let's cascade-drop the view and try again */
+    plv8.execute(dropSql);
+    plv8.execute(sql);
+  }
 
-   select ophead.*, coalesce(incdtpriority_order, 99999) as priority_order
-   from ophead
-     left join incdtpriority on (ophead_priority_id=incdtpriority_id);
+$$ language plv8;
 
 grant all on table xt.opheadinfo to xtrole;
 
