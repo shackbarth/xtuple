@@ -18,7 +18,6 @@ DO $$
   try {
     plv8.execute(sql);
   } catch (error) {
-    
     /* let's cascade-drop the view and try again */
     plv8.execute(dropSql);
     plv8.execute(sql);
