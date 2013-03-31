@@ -14,7 +14,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   @extends X.Object
  */
   X.Database = X.Object.extend(/** @lends X.Database */{
-    poolSize: X.options.datasource.pgPoolSize || 10,
+    poolSize: X.options.datasource.pgPoolSize || 15,
     className: "X.Database",
     cleanupCompletedEvent: "cleanupCompleted",
 
@@ -30,57 +30,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
 
     /**
-      Perform query
-
-      @param {String} query
-      @param {Object} options
-      @param {Function} callback
-     */
-    query: function (query, options, callback) {
-      var str = this.conString(_.clone(options));
-      X.pg.connect(str, _.bind(this.connected, this, query, options, callback));
-    },
-
-    /**
-      Connected.
-    */
-    connected: function (query, options, callback, err, client, done, ranInit) {
-      if (err) {
-        issue(X.warning("Failed to connect to database: " +
-          "{hostname}:{port}/{database} => %@".f(options, err.message)));
-        return callback(err);
-      }
-
-      if (ranInit === true) {
-        client.hasRunInit = true;
-      }
-
-      if (!client.hasRunInit) {
-        client.query("set plv8.start_proc = \"xt.js_init\";", _.bind(
-          this.connected, this, query, options, callback, err, client, done, true));
-      } else {
-
-        client.query(query, _.wrap(callback, function (func, err, result) {
-            // Call the call back.
-            func(err, result);
-            // Release the client from the pool.
-            done();
-          })
-        );
-      }
-    },
-
-    /**
-      Initializes database by setting the default pool size
-     */
-    init: function () {
-      X.addCleanupTask(_.bind(this.cleanup, this), this);
-      X.pg.defaults.poolSize = this.poolSize;
-    },
-
-    /**
       Waits for database pool to drain and finishes cleanup
-
      */
     cleanup: function () {
       X.log("Waiting for database pool to drain");

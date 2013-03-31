@@ -35,7 +35,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           database: organization,
           password: res.models[0].get("databaseServer").password
         };
-        that._super.query.call(that, dbQuery, options, done);
+        XT.dataSource.query(dbQuery, options, done);
       };
 
       fetchOptions.error = function (res, err) {

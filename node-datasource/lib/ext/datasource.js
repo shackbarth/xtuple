@@ -7,6 +7,134 @@ white:true*/
   "use strict";
 
   XT.dataSource = X.Database.create({
+    requestNum: 0,
+    callbacks: {},
+
+    /**
+     * Initializes database by setting the default pool size
+     */
+    init: function () {
+      var that = this;
+
+      // TODO - I don't think the cleanup task is needed when using a child pgworker.
+      // It may not ne needed at all anymore. BT 2013-03-31
+      X.addCleanupTask(_.bind(this.cleanup, this), this);
+      X.pg.defaults.poolSize = this.poolSize;
+
+      if (X.options.datasource.pgWorker) {
+        // Single worker version.
+        this.worker = require('child_process').fork(__dirname + '/pgworker.js');
+        this.worker.on('message', function (m) {
+          var callback = that.callbacks[m.id];
+          delete that.callbacks[m.id];
+
+          if (m.err) {
+            issue(X.warning("Failed to connect to database: " +
+              "{hostname}:{port}/{database} => %@".f(m.options, m.err.message)));
+            return callback(m.err);
+          }
+
+          callback(m.err, m.result);
+        });
+      }
+
+      // NOTE: Round robin benchmarks are slower then the above single pgworker code.
+      // Round robin workers version. This might be useful in the future.
+      // if (require('os').cpus().length > 1) {
+      //   this.numWorkers = require('os').cpus().length * 2;
+      //   //this.numWorkers = 1;
+      // } else {
+      //   this.numWorkers = 1;
+      // }
+
+      // X.log("Number of pgWorkers = ", this.numWorkers);
+
+      // this.nextWorker = 0;
+      // this.workers = [];
+      // for (var i=0; i < this.numWorkers; i++) {
+      //   var worker = require('child_process').fork(__dirname + '/pgworker.js');
+      //   this.workers.push(worker);
+
+      //   worker.on('message', function(m) {
+      //     var callback = that.callbacks[m.id];
+      //     delete that.callbacks[m.id];
+
+      //     if (m.err) {
+      //       issue(X.warning("Failed to connect to database: " +
+      //         "{hostname}:{port}/{database} => %@".f(m.options, m.err.message)));
+      //       return callback(m.err);
+      //     }
+
+      //     callback(m.err, m.result);
+      //   })
+      // }
+    },
+
+    /**
+      Perform query
+
+      @param {String} query
+      @param {Object} options
+      @param {Function} callback
+     */
+    query: function (query, options, callback) {
+      var str = this.conString(_.clone(options));
+
+      if (X.options.datasource.pgWorker) {
+        this.requestNum += 1;
+
+        this.callbacks[this.requestNum] = callback;
+        // Single worker version.
+        this.worker.send({id: this.requestNum, query: query, options: options, conString: str, poolSize: this.poolSize});
+
+        // NOTE: Round robin benchmarks are slower then the above single pgworker code.
+        // Round robin workers version. This might be useful in the future.
+        // var worker = this.workers[this.nextWorker];
+        // this.nextWorker += 1;
+        // if (this.nextWorker === this.workers.length) {
+        //   this.nextWorker = 0;
+        // }
+        // worker.send({id: this.requestNum, query: query, options: options, conString: str});
+      } else {
+        X.pg.connect(str, _.bind(this.connected, this, query, options, callback));
+      }
+    },
+
+    /**
+     * Connected.
+     *
+     * NOIE: This is only used when not using a seperate pgWorker process.
+     * It's useful if you need to run the node-inspector debugger which breaks on multiple processes.
+     * See: https://github.com/dannycoates/node-inspector/issues/130
+     * You can also just run, "kill -USR1 12345", to start the debugger on a running process
+     * instead of starting node with the debugger running: "sudo node --debug-brk main.js".
+    */
+    connected: function (query, options, callback, err, client, done, ranInit) {
+      if (err) {
+        issue(X.warning("Failed to connect to database: " +
+          "{hostname}:{port}/{database} => %@".f(options, err.message)));
+        done();
+        return callback(err);
+      }
+
+      if (ranInit === true) {
+        client.hasRunInit = true;
+      }
+
+      if (!client.hasRunInit) {
+        client.query("set plv8.start_proc = \"xt.js_init\";", _.bind(
+          this.connected, this, query, options, callback, err, client, done, true));
+      } else {
+
+        client.query(query, function (err, result) {
+          // Release the client from the pool.
+          done();
+
+          // Call the call back.
+          callback(err, result);
+        });
+      }
+    },
 
     /*
     Returns a record array based on a query.
