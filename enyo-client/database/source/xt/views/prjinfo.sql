@@ -1,7 +1,7 @@
 DO $$
   var dropSql = "drop view if exists xt.prjinfo cascade;";
   var sql = "create or replace view xt.prjinfo as " +
-   "select 123, " +
+   "select " +
    "prj_id, prj_number, prj_name, prj_status, prj_start_date, prj_assigned_date, prj_due_date, prj_completed_date, " +
    "prj_username, prj_owner_username, prj_crmacct_id, prj_cntct_id, " +
    "coalesce(sum(prjtask_hours_budget),0) as prj_hours_budget, " +
@@ -18,22 +18,11 @@ DO $$
   try {
     plv8.execute(sql);
   } catch (error) {
-    /* TODO: this will never really error out until we stop wiping out all the views at the top of init_instance */
-    plv8.elog(NOTICE, "error is", error);
-
-    var dependencies = XT.Orm.viewDependencies("xt.prjinfo");
-    /* TODO: why is this empty!?! */
-    plv8.elog(NOTICE, JSON.stringify(dependencies));
-
-    /* TODO: delete these dependencies dynamically */
-    plv8.execute("drop view if exists xm.project_list_item");
-    plv8.execute("delete from xt.orm where orm_type LIKE 'ProjectListItem'");
     
-    /* TODO: uncomment this to drop and rebuild */
+    /* let's cascade-drop the view and try again */
     plv8.execute(dropSql);
     plv8.execute(sql);
   }
-  /* TODO: do the same for every view */
 
 $$ language plv8;
 
