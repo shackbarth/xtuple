@@ -1,18 +1,27 @@
-drop view if exists xt.quiteminfo cascade;
+DO $$
+  var dropSql = "drop view if exists xt.quiteminfo cascade;";
+  var sql = "create or replace view xt.quiteminfo as " +
+  "select quitem.*, " +
+    "xt.quote_line_base_price(quitem) as base_price, " +
+    "xt.quote_line_list_cost_markup(quitem) as list_cost_markup, " +
+    "xt.quote_line_list_price(quitem) as list_price, " +
+    "xt.quote_line_list_price_discount(quitem) as list_price_discount, " +
+    "xt.quote_line_customer_discount(quitem) as cust_discount, " +
+    "xt.quote_line_extended_price(quitem) as ext_price, " +
+    "xt.quote_line_profit(quitem) as profit, " +
+    "xt.quote_line_tax(quitem) as tax " +
+  "from quitem " +
+    "left join item on quitem_item_id=item_id; ";
 
-create or replace view xt.quiteminfo as
+  try {
+    plv8.execute(sql);
+  } catch (error) {
+    /* let's cascade-drop the view and try again */
+    plv8.execute(dropSql);
+    plv8.execute(sql);
+  }
 
-  select quitem.*,
-    xt.quote_line_base_price(quitem) as base_price,
-    xt.quote_line_list_cost_markup(quitem) as list_cost_markup,
-    xt.quote_line_list_price(quitem) as list_price,
-    xt.quote_line_list_price_discount(quitem) as list_price_discount,
-    xt.quote_line_customer_discount(quitem) as cust_discount,
-    xt.quote_line_extended_price(quitem) as ext_price,
-    xt.quote_line_profit(quitem) as profit,
-    xt.quote_line_tax(quitem) as tax
-  from quitem
-    left join item on quitem_item_id=item_id;
+$$ language plv8;
           
 revoke all on xt.quiteminfo from public;
 grant all on table xt.quiteminfo to group xtrole;
