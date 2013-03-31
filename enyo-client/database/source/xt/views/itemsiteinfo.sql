@@ -1,10 +1,19 @@
-drop view if exists xt.itemsiteinfo cascade;
+DO $$
+  var dropSql = "drop view if exists xt.itemsiteinfo cascade;";
+  var sql = "create or replace view xt.itemsiteinfo as " + 
+   "select *," + 
+     "xt.average_cost(itemsite_id) as avg_cost " +
+   "from itemsite; ";
 
-create or replace view xt.itemsiteinfo as 
+  try {
+    plv8.execute(sql);
+  } catch (error) {
+    /* let's cascade-drop the view and try again */
+    plv8.execute(dropSql);
+    plv8.execute(sql);
+  }
 
-   select *,
-     xt.average_cost(itemsite_id) as avg_cost
-   from itemsite;
+$$ language plv8;
 
 grant all on table xt.itemsiteinfo to xtrole;
 
