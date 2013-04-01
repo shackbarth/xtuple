@@ -32,15 +32,28 @@ trailing:true white:true*/
   });
   
   // ..........................................................
-  // QUOTE
+  // CUSTOMER QUOTE
   //
 
   enyo.kind({
-    name: "XV.QuoteListRelationsBox",
+    name: "XV.CustomerQuoteListRelationsBox",
     kind: "XV.ListRelationsBox",
     title: "_quotes".loc(),
     parentKey: "customer",
-    listRelations: "XV.QuoteListRelations",
+    listRelations: "XV.CustomerQuoteListRelations",
+    searchList: "XV.QuoteList"
+  });
+  
+  // ..........................................................
+  // PROSPECT QUOTE
+  //
+
+  enyo.kind({
+    name: "XV.ProspectQuoteListRelationsBox",
+    kind: "XV.ListRelationsBox",
+    title: "_quotes".loc(),
+    parentKey: "prospect",
+    listRelations: "XV.ProspectQuoteListRelations",
     searchList: "XV.QuoteList"
   });
 

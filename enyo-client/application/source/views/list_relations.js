@@ -298,15 +298,42 @@ trailing:true white:true*/
   });
   
   // ..........................................................
-  // QUOTE
+  // CUSTOMER QUOTE
   //
 
   enyo.kind({
-    name: "XV.QuoteListRelations",
+    name: "XV.CustomerQuoteListRelations",
     kind: "XV.ListRelations",
     orderBy: [
       {attribute: 'id', descending: true}
     ],
+    parentKey: "customer",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "id", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "customer", fit: true},
+              {kind: "XV.ListAttr", attr: "shipVia", classes: "right"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+  
+  // ..........................................................
+  // CUSTOMER QUOTE
+  //
+
+  enyo.kind({
+    name: "XV.ProspectQuoteListRelations",
+    kind: "XV.ListRelations",
+    orderBy: [
+      {attribute: 'id', descending: true}
+    ],
+    parentKey: "prospect",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [

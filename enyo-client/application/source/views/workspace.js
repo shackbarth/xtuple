@@ -504,7 +504,7 @@ trailing:true white:true*/
             {kind: "XV.TaxZonePicker", attr: "taxZone", label: "_defaultTaxZone".loc()}
           ]}
         ]},
-        {kind: "XV.QuoteListRelationsBox", attr: "quoteRelations"},
+        {kind: "XV.CustomerQuoteListRelationsBox", attr: "quoteRelations"},
         {kind: "XV.CustomerShipToBox", attr: "shiptos"},
         {kind: "XV.CustomerCommentBox", attr: "comments"},
         {kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
@@ -1182,7 +1182,7 @@ trailing:true white:true*/
             {kind: "XV.TextArea", attr: "notes"}
           ]}
         ]},
-        {kind: "XV.QuoteListRelationsBox", attr: "quoteRelations"}
+        {kind: "XV.ProspectQuoteListRelationsBox", attr: "quoteRelations"}
       ]},
       {kind: "onyx.Popup", name: "findExistingAccountPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",
