@@ -28,50 +28,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
 
     /**
-      Perform query
-
-      @param {String} query
-      @param {Object} options
-      @param {Function} callback
-     */
-    query: function (query, options, callback) {
-      var str = this.conString(_.clone(options));
-      X.pg.connect(str, _.bind(this.connected, this, query, options, callback));
-    },
-
-    /**
-     * Connected.
-     *
-     * NOIE: This is only used when running the installer.
-    */
-    connected: function (query, options, callback, err, client, done, ranInit) {
-      if (err) {
-        issue(X.warning("Failed to connect to database: " +
-          "{hostname}:{port}/{database} => %@".f(options, err.message)));
-        done();
-        return callback(err);
-      }
-
-      if (ranInit === true) {
-        client.hasRunInit = true;
-      }
-
-      if (!client.hasRunInit) {
-        client.query("set plv8.start_proc = \"xt.js_init\";", _.bind(
-          this.connected, this, query, options, callback, err, client, done, true));
-      } else {
-
-        client.query(query, function (err, result) {
-          // Release the client from the pool.
-          done();
-
-          // Call the call back.
-          callback(err, result);
-        });
-      }
-    },
-
-    /**
       Waits for database pool to drain and finishes cleanup
      */
     cleanup: function () {

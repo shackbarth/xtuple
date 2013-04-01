@@ -2,13 +2,6 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, XT:true, _:true */
 
-XT = {};
-_ = require("underscore");
-
-require('../xt/foundation/foundation');
-require('../xt/database/database');
-require('../lib/ext/datasource');
-
 (function () {
   "use strict";
 
@@ -30,6 +23,12 @@ require('../lib/ext/datasource');
     select,
     submit,
     testConnection;
+
+  // When ran from the maintenance route, we already have XT.dataSource.
+  // When ran from the installer, we need to included it after X.options is set.
+  if (typeof XT.dataSource === 'undefined') {
+    require('../lib/ext/datasource');
+  }
 
   X.db = XT.dataSource;
 
