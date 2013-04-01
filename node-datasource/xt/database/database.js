@@ -12,7 +12,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   @extends X.Object
  */
   X.Database = X.Object.extend(/** @lends X.Database */{
-    poolSize: X.options && X.options.datasource & X.options.datasource.pgPoolSize ? X.options.datasource.pgPoolSize : 15,
+    poolSize: X.options && X.options.datasource && (typeof X.options.datasource.pgPoolSize !== 'undefined') ? X.options.datasource.pgPoolSize : 1,
     className: "X.Database",
     cleanupCompletedEvent: "cleanupCompleted",
 
