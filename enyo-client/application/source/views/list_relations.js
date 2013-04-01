@@ -324,7 +324,7 @@ trailing:true white:true*/
   });
   
   // ..........................................................
-  // CUSTOMER QUOTE
+  // PROSPECT QUOTE
   //
 
   enyo.kind({
