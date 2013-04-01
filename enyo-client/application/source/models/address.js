@@ -108,8 +108,11 @@ white:true*/
                       }
                     };
                     newAddress = that.copy();
-                    newAddress.on('change:id change:number', callback);
+                    newAddress.on('change:id change:number', changeOneCallback);
                     changeOneCallback(); // In case the data was here before event handlers could respond
+
+                    that.fetch({id: that.id}); // refresh the original address to clear out changes
+
                   } else {
                     // change all the reference by updating this model
                     that.save(null, options);

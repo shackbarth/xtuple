@@ -31,7 +31,7 @@ var XVOWS = XVOWS || {};
     'We can take an address': {
       topic: function () {
         var that = this,
-          model = new XM.Address(),
+          model = new XM.AddressInfo(),
           success = function (resp) {
             that.callback(null, model);
           },
@@ -60,7 +60,7 @@ var XVOWS = XVOWS || {};
     'We can take an address that is not in use': {
       topic: function () {
         var that = this,
-          model = new XM.Address(),
+          model = new XM.AddressInfo(),
           success = function (resp) {
             that.callback(null, model);
           },
@@ -94,7 +94,7 @@ var XVOWS = XVOWS || {};
     'We can take an address that is in use somewhere else': {
       topic: function () {
         var that = this,
-          model = new XM.Address(),
+          model = new XM.AddressInfo(),
           success = function (resp) {
             that.callback(null, model);
           },
@@ -107,19 +107,13 @@ var XVOWS = XVOWS || {};
       'and change and save it': {
         topic: function (model) {
           var that = this,
-            success = function (resp) {
-              that.callback(null, model);
-            },
-            error = function (err) {
-              that.callback(err);
-            },
             callbackAdaptor = function (model, message, options) {
               that.callback(null, {model: model, message: message, options: options});
             };
 
           model.on("notify", callbackAdaptor);
           model.set({line1: "TestAddress" + Math.random()});
-          model.saveAddress(/*{success: success, error: error}*/);
+          model.saveAddress();
         },
         'we get asked by the model if we want to change one or change all': function (error, topic) {
           assert.isString(topic.message);
@@ -139,7 +133,70 @@ var XVOWS = XVOWS || {};
           'then we just save the model with the new value': function (error, topic) {
             assert.equal(topic.getStatusString(), "READY_CLEAN");
             assert.equal(topic.id, 3);
+            assert.equal(topic.get("line1").substring(0, 11), "TestAddress");
           }
+        }
+      }
+    }
+  }).addBatch({
+    'We can take an address that is in use somewhere else': {
+      topic: function () {
+        var that = this,
+          model = new XM.AddressInfo(),
+          success = function (resp) {
+            that.callback(null, model);
+          },
+          error = function (err) {
+            that.callback(err);
+          };
+
+        model.fetch({id: 6, success: success, error: error});
+      },
+      'and change and save it': {
+        topic: function (model) {
+          var that = this,
+            callbackAdaptor = function (model, message, options) {
+              that.callback(null, {model: model, message: message, options: options});
+            };
+
+          model.on("notify", callbackAdaptor);
+          model.set({line1: "TestAddress" + Math.random()});
+          model.saveAddress();
+        },
+        // redundant:
+        //'we get asked by the model if we want to change one or change all': function (error, topic) {
+        //  assert.isString(topic.message);
+        //  assert.isFunction(topic.options.callback);
+        //},
+        'and if we say we want to change just the one': {
+          topic: function (notifyObj) {
+            var that = this,
+              model = notifyObj.model,
+              timeoutId,
+              callbackAdaptor = function (model, status, options) {
+                clearTimeout(timeoutId);
+                if (model.getStatus() === XM.Model.READY_CLEAN) {
+                  that.callback(null, model);
+                }
+              }
+            // we expect the status of the original model not to change
+            model.on('statusChange', callbackAdaptor);
+            // we expect the timeout to get hit
+            timeoutId = setTimeout(function () {
+              that.callback(null, model);
+            }, 5 * 1000);
+
+
+            notifyObj.options.callback(true);
+          },
+          'then we do not change the pre-existing model': function (error, topic) {
+            assert.equal(topic.get("line1").substring(0, 11), "Bedrijvenzo");
+            assert.equal(topic.getStatusString(), "READY_CLEAN");
+            assert.equal(topic.id, 6);
+          }//,
+          //'we create a new one with the new data': function (error, topic) {
+          // TODO
+          //}
         }
       }
     }
