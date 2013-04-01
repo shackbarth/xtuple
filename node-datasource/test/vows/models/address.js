@@ -57,7 +57,7 @@ var XVOWS = XVOWS || {};
     }
 
   }).addBatch({
-    'We can take an address that is ': {
+    'We can take an address that is not in use': {
       topic: function () {
         var that = this,
           model = new XM.Address(),
@@ -68,24 +68,31 @@ var XVOWS = XVOWS || {};
             that.callback(err);
           };
 
-        model.fetch({id: 41, success: success, error: error});
+        model.fetch({id: 10, success: success, error: error});
       },
-      'if we save without changing it': {
+      'and change and save it': {
         topic: function (model) {
           var that = this,
             success = function (resp) {
               that.callback(null, model);
+            },
+            error = function (err) {
+              that.callback(err);
             };
 
-          return model.saveAddress({success: success});
+          model.set({line1: "TestAddress" + Math.random()});
+          model.saveAddress({success: success, error: error});
         },
-        'nothing much happens': function (error, topic) {
+        'we simply update that address': function (error, topic) {
+          assert.equal(topic.get("line1").substring(0, 11), "TestAddress");
+          assert.equal(topic.id, 10);
           assert.equal(topic.getStatusString(), "READY_CLEAN");
         }
       }
     }
   /*
 
+      this.value.on("notify", this.notify, this);
   toytruck addresses in use:
 [1, 2, 28, 3, 3, 33, 34, 37, 4, 40, 40, 41, 5, 6, 6, 7, 8, 9, 9, null, null, null, null, null, null, null, null, null, null]
 

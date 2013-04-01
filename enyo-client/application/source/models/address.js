@@ -64,7 +64,7 @@ white:true*/
       if (isValid && this.getStatus() !== K.READY_CLEAN) {
 
         // If the address is empty set it to null // XXX how to do this on parent?
-        if (this.isEmpty()) {
+        if (this.getStatus() === XM.EMPTY) {
           if (this.isNew()) { this.releaseNumber(); }
           this.clear(); // XXX???
           //this.set('address', null);
@@ -72,6 +72,9 @@ white:true*/
         // If dirty, see if this address already exists
         } else if (this.isDirty()) {
           // Callback: call save on the original again
+          findExistingOptions.error = function (err) {
+            console.log("findexistingerr");
+          };
           findExistingOptions.success = function (resp) {
             // If found, set the address with found id
             if (resp) {
@@ -126,7 +129,7 @@ white:true*/
             // Perform the check: find out how many places this address is used
             that.useCount(useCountOptions);
           };
-          XM.Address.findExisting(that.get('line1'),
+          return XM.Address.findExisting(that.get('line1'),
                                   that.get('line2'),
                                   that.get('line3'),
                                   that.get('city'),
@@ -135,9 +138,6 @@ white:true*/
                                   that.get('country'),
                                   findExistingOptions);
 
-        // If it is new, save it first
-        } else if (this.isNew()) {
-          XM.Document.prototype.save.call(that, null, options);
         }
       }
 
@@ -357,7 +357,6 @@ white:true*/
           country: country
         };
       XT.dataSource.dispatch('XM.Address', 'findExisting', params, options);
-      console.log("XM.Address.findExisting");
       return this;
     },
 
