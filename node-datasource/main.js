@@ -62,7 +62,7 @@ _ = require("underscore");
 
   //X.debugging = true;
 
-  // Set the options and start the servers the OLD way.
+  // Set the options.
   X.setup(options);
 
   schemaOptions.success = function () {
