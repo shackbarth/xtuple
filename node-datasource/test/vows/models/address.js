@@ -127,7 +127,13 @@ var XVOWS = XVOWS || {};
         },
         'and if we say we want to change all': {
           topic: function (notifyObj) {
-            notifyObj.model.on('change', this.callback);
+            var that = this,
+              callbackAdaptor = function (model, status, options) {
+                if (model.getStatus() === XM.Model.READY_CLEAN) {
+                  that.callback(null, model);
+                }
+              }
+            notifyObj.model.on('statusChange', callbackAdaptor);
             notifyObj.options.callback(false);
           },
           'then we just save the model with the new value': function (error, topic) {
