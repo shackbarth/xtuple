@@ -103,7 +103,7 @@ white:true*/
     /**
      * Connected.
      *
-     * NOIE: This is only used when not using a seperate pgWorker process.
+     * NOTE: This is only used when not using a seperate pgWorker process.
      * It's useful if you need to run the node-inspector debugger which breaks on multiple processes.
      * See: https://github.com/dannycoates/node-inspector/issues/130
      * You can also just run, "kill -USR1 12345", to start the debugger on a running process
