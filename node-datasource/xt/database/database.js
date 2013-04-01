@@ -5,8 +5,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
-  var _ = X._;
-
  /**
   Functionality for dealing with postgres
 

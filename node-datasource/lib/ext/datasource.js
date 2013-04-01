@@ -21,7 +21,7 @@ white:true*/
       X.addCleanupTask(_.bind(this.cleanup, this), this);
       X.pg.defaults.poolSize = this.poolSize;
 
-      if (X.options.datasource.pgWorker) {
+      if (X.options && X.options.datasource && X.options.datasource.pgWorker) {
         // Single worker version.
         this.worker = require('child_process').fork(__dirname + '/pgworker.js');
         this.worker.on('message', function (m) {
@@ -80,7 +80,7 @@ white:true*/
     query: function (query, options, callback) {
       var str = this.conString(_.clone(options));
 
-      if (X.options.datasource.pgWorker) {
+      if (X.options && X.options.datasource && X.options.datasource.pgWorker) {
         this.requestNum += 1;
 
         this.callbacks[this.requestNum] = callback;
