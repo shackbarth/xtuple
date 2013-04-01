@@ -14,7 +14,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   @extends X.Object
  */
   X.Database = X.Object.extend(/** @lends X.Database */{
-    poolSize: X.options.datasource.pgPoolSize || 15,
+    poolSize: X.options && X.options.datasource & X.options.datasource.pgPoolSize ? X.options.datasource.pgPoolSize : 15,
     className: "X.Database",
     cleanupCompletedEvent: "cleanupCompleted",
 
@@ -27,6 +27,50 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     conString: function (options) {
       options.password = options.password ? options.password.pre(":"): "";
       return "tcp://{user}{password}@{hostname}:{port}/{database}".f(options);
+    },
+
+    /**
+      Perform query
+
+      @param {String} query
+      @param {Object} options
+      @param {Function} callback
+     */
+    query: function (query, options, callback) {
+      var str = this.conString(_.clone(options));
+      X.pg.connect(str, _.bind(this.connected, this, query, options, callback));
+    },
+
+    /**
+     * Connected.
+     *
+     * NOIE: This is only used when running the installer.
+    */
+    connected: function (query, options, callback, err, client, done, ranInit) {
+      if (err) {
+        issue(X.warning("Failed to connect to database: " +
+          "{hostname}:{port}/{database} => %@".f(options, err.message)));
+        done();
+        return callback(err);
+      }
+
+      if (ranInit === true) {
+        client.hasRunInit = true;
+      }
+
+      if (!client.hasRunInit) {
+        client.query("set plv8.start_proc = \"xt.js_init\";", _.bind(
+          this.connected, this, query, options, callback, err, client, done, true));
+      } else {
+
+        client.query(query, function (err, result) {
+          // Release the client from the pool.
+          done();
+
+          // Call the call back.
+          callback(err, result);
+        });
+      }
     },
 
     /**
