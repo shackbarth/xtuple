@@ -39,54 +39,9 @@ trailing:true white:true*/
     Handles Address change with prompts.
   */
   XV.WorkspaceAddressMixin = {
-    create: function () {
-      var ret = this.inherited(arguments);
-      this.createComponent({
-        kind: "onyx.Popup",
-        name: "multipleAddressPopup",
-        centered: true,
-        modal: true,
-        floating: true,
-        scrim: true,
-        onShow: "popupShown",
-        onHide: "popupHidden",
-        components: [
-          {content: "_addressShared".loc()},
-          {content: "_whatToDo".loc()},
-          {tag: "br"},
-          {kind: "onyx.Button", content: "_changeOne".loc(), ontap: "addressChangeOne",
-          classes: "onyx-blue xv-popup-button"},
-          {kind: "onyx.Button", content: "_changeAll".loc(), ontap: "addressChangeAll",
-            classes: "xv-popup-button"},
-          {kind: "onyx.Button", content: "_cancel".loc(), ontap: "addressCancel",
-            classes: "xv-popup-button"}
-        ]
-      });
-      return ret;
-    },
-    getAccount: function () {
-      var model = this.getValue();
-      return model ? model.get('account') : undefined;
-    },
     accountChanged: function () {
       var account = this.getAccount();
       this.$.addressWidget.setAccount(account);
-    },
-    addressChangeAll: function () {
-      var options = {address: XM.Address.CHANGE_ALL};
-      this._popupDone = true;
-      this.$.multipleAddressPopup.hide();
-      this.save(options);
-    },
-    addressChangeOne: function () {
-      var options = {address: XM.Address.CHANGE_ONE};
-      this._popupDone = true;
-      this.$.multipleAddressPopup.hide();
-      this.save(options);
-    },
-    addressCancel: function () {
-      this._popupDone = true;
-      this.$.multipleAddressPopup.hide();
     },
     attributesChanged: function (inSender, inEvent) {
       this.inherited(arguments);
@@ -98,19 +53,14 @@ trailing:true white:true*/
         this.accountChanged();
       }
     },
-    errorNotify: function (inSender, inEvent) {
-      // Handle address questions
-      if (inEvent.error.code === 'xt2007') {
-        this._popupDone = false;
-        this.$.multipleAddressPopup.show();
-        return true;
-      }
+    getAccount: function () {
+      var model = this.getValue();
+      return model ? model.get('account') : undefined;
     },
-    popupHidden: function () {
-      if (!this._popupDone) {
-        this.$.multipleAddressPopup.show();
-        return true;
-      }
+    modelChanged: function () {
+      this.inherited(arguments);
+      // FIXME: address is null at this moment
+      this.value.get("address").on("notify", this.notify);
     }
   };
 

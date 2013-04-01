@@ -200,23 +200,8 @@ var XVOWS = XVOWS || {};
         }
       }
     }
-  /*
 
-      this.value.on("notify", this.notify, this);
-  toytruck addresses in use:
-[1, 2, 28, 3, 3, 33, 34, 37, 4, 40, 40, 41, 5, 6, 6, 7, 8, 9, 9, null, null, null, null, null, null, null, null, null, null]
-
-  toytruck addresses:
-[1, 10, 11, 12, 13, 14, 15, 16, 17, 19, 2, 20, 24, 27, 28, 29, 3, 30, 31, 33, 34, 35, 36, 37, 4, 40, 41, 42, 43, 44, 45, 46, 5, 6, 7, 8, 9]
-
-  If the address is empty we set it to null
-OK  If the address is clean we do nothing
-  If the address is dirty but not in use, we just save it
-  If the address is dirty and in use, we ask the user if they want to change one or change all
-    If the user wants to change one, then we create a new address with the new value
-      and don't touch the old one
-    If the user want to change all, then we just save the model in question
-  */
+  //TODO: If the address is empty we set it to null
 
 
   }).export(module);
