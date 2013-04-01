@@ -90,6 +90,53 @@ var XVOWS = XVOWS || {};
         }
       }
     }
+  }).addBatch({
+    'We can take an address that is in use somewhere else': {
+      topic: function () {
+        var that = this,
+          model = new XM.Address(),
+          success = function (resp) {
+            that.callback(null, model);
+          },
+          error = function (err) {
+            that.callback(err);
+          };
+
+        model.fetch({id: 3, success: success, error: error});
+      },
+      'and change and save it': {
+        topic: function (model) {
+          var that = this,
+            success = function (resp) {
+              that.callback(null, model);
+            },
+            error = function (err) {
+              that.callback(err);
+            },
+            callbackAdaptor = function (model, message, options) {
+              that.callback(null, {model: model, message: message, options: options});
+            };
+
+          model.on("notify", callbackAdaptor);
+          model.set({line1: "TestAddress" + Math.random()});
+          model.saveAddress(/*{success: success, error: error}*/);
+        },
+        'we get asked by the model if we want to change one or change all': function (error, topic) {
+          assert.isString(topic.message);
+          assert.isFunction(topic.options.callback);
+        },
+        'and if we say we want to change all': {
+          topic: function (notifyObj) {
+            notifyObj.model.on('change', this.callback);
+            notifyObj.options.callback(false);
+          },
+          'then we just save the model with the new value': function (error, topic) {
+            assert.equal(topic.getStatusString(), "READY_CLEAN");
+            assert.equal(topic.id, 3);
+          }
+        }
+      }
+    }
   /*
 
       this.value.on("notify", this.notify, this);

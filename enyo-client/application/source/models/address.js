@@ -72,9 +72,6 @@ white:true*/
         // If dirty, see if this address already exists
         } else if (this.isDirty()) {
           // Callback: call save on the original again
-          findExistingOptions.error = function (err) {
-            console.log("findexistingerr");
-          };
           findExistingOptions.success = function (resp) {
             // If found, set the address with found id
             if (resp) {
@@ -118,7 +115,7 @@ white:true*/
                     that.save(null, options);
                   }
                 };
-                message = "_changeAll?".loc();
+                message = "_changeOne?".loc();
                 that.notify(message, notifyOptions);
 
               } else {
@@ -140,7 +137,6 @@ white:true*/
 
         }
       }
-
       // No problem with address, just save the record
       // If record was invalid, this will bubble up the error
       var saveResult = XM.Document.prototype.save.call(this, null, options);
