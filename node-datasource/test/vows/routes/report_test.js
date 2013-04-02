@@ -20,7 +20,10 @@ var vows = require('vows'),
       'a GET to the report route for a list': {
         topic: function () {
           var that = this,
-            url = "https://localhost:443/report?details={%22query%22:{%22recordType%22:%22XM.Locale%22}}",
+            // XXX using the Locale business object, of all the options, is confusing because
+            // we are also verifying the user's locale information.
+            url = "https://localhost:443/report?details={%22query%22:{%22recordType%22:%22XM.Locale%22}," +
+              "%22locale%22:{%22currencyScale%22:5}}",
             // turn the zombie callback into the vows callback per the befuddling vows requirements
             callbackAdapter = function (err, browser, status) {
               that.callback(null, {browser: browser});
@@ -30,8 +33,7 @@ var vows = require('vows'),
         'should return ok': function (error, topic) {
           assert.ok(topic.browser.success);
         },
-        'should go to maxhammer': function (error, topic) {
-          assert.equal(topic.browser.location.host, "maxhammer.xtuple.com:8080");
+        'should go to pentaho': function (error, topic) {
           assert.equal(topic.browser.text("title"), "Report Web Viewer"); // that's pentaho's title
         },
         'should generate a data key which we can ask about': {
@@ -59,6 +61,10 @@ var vows = require('vows'),
           'which will give us data with locale information': function (error, topic) {
             var results = JSON.parse(topic.browser.text("body")).data;
             assert.ok(results[0].language);
+          },
+          'which will give us the user locale info': function (error, topic) {
+            var results = JSON.parse(topic.browser.text("body")).locale;
+            assert.isNumber(results.currencyScale);
           }
         }
       }
@@ -74,7 +80,9 @@ var vows = require('vows'),
             callbackAdapter = function (err, browser, status) {
               that.callback(null, {browser: browser});
             },
-            url = "https://localhost:443/report?details={%22recordType%22:%22XM.Locale%22,%22id%22:3}";
+            url = "https://localhost:443/report?details={%22recordType%22:%22XM.Locale%22,%22id%22:3," +
+              "%22locale%22:{%22currencyScale%22:5}}";
+
           XZ.browser.visit(url, {debug: false}, callbackAdapter);
         },
         'should return ok': function (error, topic) {
@@ -106,6 +114,10 @@ var vows = require('vows'),
             var result = JSON.parse(topic.browser.text("body")).data;
             assert.equal(typeof result, "object");
             assert.ok(result.language);
+          },
+          'which will give us the user locale info': function (error, topic) {
+            var results = JSON.parse(topic.browser.text("body")).locale;
+            assert.isNumber(results.currencyScale);
           }
         }
       }
