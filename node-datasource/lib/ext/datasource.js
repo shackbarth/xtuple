@@ -36,6 +36,17 @@ white:true*/
 
           callback(m.err, m.result);
         });
+
+        this.worker.on('exit', function (code, signal) {
+          var pid = that.worker.pid,
+              exitCode = that.worker.exitCode,
+              signalCode = that.worker.signalCode;
+
+          X.err('pgWorker ' + pid + ' died (exitCode: ' + exitCode + ' signalCode: ' + signalCode + '). Cannot run any more queries.');
+
+          // TODO - Figure out how to restart the worker.  This doesn't work.
+          //that.worker = require('child_process').fork(__dirname + '/pgworker.js');
+        });
       }
 
       // NOTE: Round robin benchmarks are slower then the above single pgworker code.
