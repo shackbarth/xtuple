@@ -65,7 +65,7 @@ trailing:true white:true*/
     name: "XV.ProspectQuoteListRelationsBox",
     kind: "XV.ListRelationsBox",
     title: "_quotes".loc(),
-    parentKey: "prospect",
+    parentKey: "customer",
     listRelations: "XV.ProspectQuoteListRelations",
     searchList: "XV.QuoteList"
   });

@@ -358,7 +358,7 @@ trailing:true white:true*/
     orderBy: [
       {attribute: 'id', descending: true}
     ],
-    parentKey: "prospect",
+    parentKey: "customer",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
