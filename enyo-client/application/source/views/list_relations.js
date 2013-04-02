@@ -338,8 +338,7 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "id", classes: "bold"},
-              {kind: "XV.ListAttr", attr: "customer", fit: true},
+              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
               {kind: "XV.ListAttr", attr: "shipVia", classes: "right"}
             ]}
           ]}
@@ -364,8 +363,7 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "id", classes: "bold"},
-              {kind: "XV.ListAttr", attr: "customer", fit: true},
+              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
               {kind: "XV.ListAttr", attr: "shipVia", classes: "right"}
             ]}
           ]}

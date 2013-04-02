@@ -49,13 +49,6 @@
     ],
     "properties": [
       {
-        "name": "prospect",
-        "attr": {
-          "type": "Number",
-          "column": "quhead_cust_id"
-        }
-      },
-      {
         "name": "opportunity",
         "attr": {
           "type": "Number",
