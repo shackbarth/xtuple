@@ -19,6 +19,7 @@ trailing:true white:true*/
     panels = [
       {name: "siteList", kind: "XV.SiteList"},
       {name: "siteTypeList", kind: "XV.SiteTypeList"},
+      {name: "saleTypeList", kind: "XV.SaleTypeList"},
       {name: "itemSiteList", kind: "XV.ItemSiteList"},
       {name: "costCategoryList", kind: "XV.CostCategoryList"},
       {name: "plannerCodeList", kind: "XV.PlannerCodeList"}

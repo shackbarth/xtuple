@@ -153,7 +153,7 @@ trailing:true white:true*/
               {kind: "XV.NumberWidget", attr: "SOCreditLimit",
                 label: "_creditLimit".loc()},
               {kind: "XV.InputWidget", attr: "SOCreditRate",
-                label: "_creditRating".loc()},
+                label: "_creditRating".loc()}
             ]}
           ]}
         ]}
@@ -162,5 +162,31 @@ trailing:true white:true*/
 
 
   };
+  
+  // ..........................................................
+  // SALE TYPE
+  //
+
+  enyo.kind({
+    name: "XV.SaleTypeWorkspace",
+    kind: "XV.Workspace",
+    title: "_saleType".loc(),
+    model: "XM.SaleType",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.SaleType", "XV.SaleTypeWorkspace");
 
 }());

@@ -400,6 +400,7 @@ var lang = XT.stringsFor("en_US", {
   "_roles": "Roles",
   "_salesRep": "Sales Rep",
   "_saleType": "Sale Type",
+  "_saleTypes": "Sale Types",
   "_schedule": "Schedule",
   "_scheduleDate": "Schedule Date",
   "_secondaryContact": "Secondary Contact",

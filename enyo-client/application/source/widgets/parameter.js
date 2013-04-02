@@ -649,6 +649,33 @@ trailing:true white:true*/
         defaultKind: "XV.DateWidget"}
     ]
   });
+  
+  // ..........................................................
+  // SaleType
+  //
+
+  enyo.kind({
+    name: "XV.SaleTypeListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {kind: "onyx.GroupboxHeader", content: "_saleTypes".loc()},
+      {name: "code", label: "_code".loc(), attr: "code"},
+      {name: "description", label: "_description", attr: "description"}
+    ]
+  });
 
   // ..........................................................
   // SITE
