@@ -32,6 +32,15 @@ regexp:true, strict:true, trailing:true, white:false */
   browser.type(el5, contactData.VARIABLES.contact_mname, function (err) {
   browser.elementByXPath(contactObj.Obj.clname_xpath, function (err, el6) {
   browser.type(el6, contactData.VARIABLES.contact_lname, function (err) {
+  browser.elementByXPath(contactObj.Obj.caccount_xpath, function (err, el15) {
+  browser.type(el15, contactData.VARIABLES.contact_account + '\uE004', function () {
+  utils.pause(2000, function () {
+  browser.elementByXPath(contactObj.Obj.cowner_xpath, function (err, el16) {
+  browser.clear(el16, function () {
+  utils.pause(2000,function () {
+  browser.type(el16, contactData.VARIABLES.contact_owner, function (err) {
+  browser.type(el16, '\uE004', function () {
+  utils.pause(2000,function () {
   browser.elementByXPath(contactObj.Obj.addressEditButton_xpath, function (err, el7) {
   browser.clickElement(el7, function (err) {
   browser.waitForElementByXPath(contactObj.Obj.addressLine1_xpath, 4000, function (err) {
@@ -53,11 +62,14 @@ regexp:true, strict:true, trailing:true, white:false */
   browser.elementByXPath(contactObj.Obj.charecinput_xpath, function (err, el13) {
   browser.type(el13,contactData.VARIABLES.contact_bday, function (err) {
   browser.elementByXPath(contactObj.Obj.caccount_xpath, function (err, el15) {
-  browser.type(el15, contactData.VARIABLES.contact_account + '\uE004', function (err) {
   utils.pause(2000,function () {
+  browser.elementByXPathOrNull(contactObj.Obj.saveToolBar_xpath, function (err, toolbarEl) {
+  browser.clickElement(toolbarEl, function () {
+  utils.pause(4000, function () {
   browser.elementByXPath(contactObj.Obj.savebutton_xpath, function (err, el17) {
   browser.clickElement(el17, function (err) {
   utils.pause(4000,function () {
+  browser.waitForElementByXPath(contactObj.readObj1.searchField_xpath, 5000, function (err) {
   browser.elementByXPath(contactObj.readObj1.searchField_xpath, function (err, el27) {
   browser.type(el27, fname + "\uE007", function (err) {
   utils.pause(6000,function () {
@@ -79,6 +91,6 @@ regexp:true, strict:true, trailing:true, white:false */
   },2000);
   },2000);
   }
-  });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});
-  });});});});});});};
+  });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});
+  });});});});});});});});});});});});});};
 }());
