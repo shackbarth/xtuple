@@ -6,6 +6,7 @@ trailing:true white:true*/
 (function () {
 
   XT.extensions.sales.initWorkspaces = function () {
+    var extensions;
 
     // ..........................................................
     // ACCOUNT
@@ -160,6 +161,15 @@ trailing:true white:true*/
       ]
     });
 
+    // ..........................................................
+    // INCIDENT
+    //
+
+    extensions = [
+      {kind: "XV.OpportunityQuoteListRelationsBox", container: "panels", attr: "quoteRelations"}
+    ];
+
+    XV.appendExtension("XV.OpportunityWorkspace", extensions);
 
   };
 

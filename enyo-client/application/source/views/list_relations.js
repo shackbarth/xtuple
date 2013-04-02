@@ -296,7 +296,32 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
+  // ..........................................................
+  // OPPORTUNITY QUOTE
+  //
+
+  enyo.kind({
+    name: "XV.OpportunityQuoteListRelations",
+    kind: "XV.ListRelations",
+    orderBy: [
+      {attribute: 'id', descending: true}
+    ],
+    parentKey: "opportunity",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "shipVia", classes: "right"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
   // ..........................................................
   // CUSTOMER QUOTE
   //
@@ -322,7 +347,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   // ..........................................................
   // PROSPECT QUOTE
   //

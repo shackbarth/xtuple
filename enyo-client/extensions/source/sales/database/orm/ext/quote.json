@@ -21,6 +21,46 @@
           "column": "quhead_id",
           "inverse": "source"
         }
+      },
+      {
+        "name": "opportunity",
+        "toOne": {
+          "isNested": true,
+          "type": "OpportunityRelation",
+          "column": "quhead_ophead_id"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "sales",
+    "nameSpace": "XM",
+    "type": "QuoteListItem",
+    "table": "xt.quheadinfo",
+    "isExtension": true,
+    "comment": "Extended by Sales",
+    "relations": [
+      {
+        "column": "quhead_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "prospect",
+        "attr": {
+          "type": "Number",
+          "column": "quhead_cust_id"
+        }
+      },
+      {
+        "name": "opportunity",
+        "attr": {
+          "type": "Number",
+          "column": "quhead_ophead_id"
+        }
       }
     ],
     "sequence": 0,

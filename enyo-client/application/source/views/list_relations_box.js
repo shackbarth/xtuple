@@ -30,7 +30,20 @@ trailing:true white:true*/
     listRelations: "XV.IncidentHistoryListRelations",
     canOpen: false
   });
-  
+
+  // ..........................................................
+  // OPPORTUNITY QUOTE
+  //
+
+  enyo.kind({
+    name: "XV.OpportunityQuoteListRelationsBox",
+    kind: "XV.ListRelationsBox",
+    title: "_quotes".loc(),
+    parentKey: "opportunity",
+    listRelations: "XV.OpportunityQuoteListRelations",
+    searchList: "XV.QuoteList"
+  });
+
   // ..........................................................
   // CUSTOMER QUOTE
   //
@@ -43,7 +56,7 @@ trailing:true white:true*/
     listRelations: "XV.CustomerQuoteListRelations",
     searchList: "XV.QuoteList"
   });
-  
+
   // ..........................................................
   // PROSPECT QUOTE
   //
