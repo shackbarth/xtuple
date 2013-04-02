@@ -9,7 +9,7 @@ regexp:true, strict:true, trailing:true, white:false*/
   utils = require('./utils.js');
   exports.createContact = function (browser, test, fname, callback) {
   readContactObj = contactObj.readObj1.readContact_xpath + fname +  "')]";
-  utils.pause(10000, function () {
+  utils.pause(40000, function () {
   utils.results('*****Creating a New Contact*****');
   browser.elementByXPath(contactObj.Obj.crmlink_xpath, function (err,el1) {
   browser.clickElement(el1, function () {
@@ -36,7 +36,15 @@ regexp:true, strict:true, trailing:true, white:false*/
   utils.pause(2000, function () {
   browser.elementByXPath(contactObj.Obj.clname_xpath, function (err, el6) {
   browser.type(el6, contactData.VARIABLES.contact_lname, function () {
-  browser.elementByXPath(contactObj.Obj.addressEditButton_xpath, function (err, el7) {
+  browser.elementByXPath(contactObj.Obj.caccount_xpath, function (err, el15) {
+  browser.type(el15, contactData.VARIABLES.contact_account, function () {
+  utils.pause(2000, function () {
+  browser.elementByXPath(contactObj.Obj.cowner_xpath, function (err, el16) {
+  browser.clear(el16, function () {
+  utils.pause(2000,function () {
+  browser.type(el16, contactData.VARIABLES.contact_owner, function () {
+  utils.pause(2000,function () {
+  /*browser.elementByXPath(contactObj.Obj.addressEditButton_xpath, function (err, el7) {
   browser.clickElement(el7, function () {
   browser.waitForElementByXPath(contactObj.Obj.addressLine1_xpath, 4000, function () {
   browser.elementByXPath(contactObj.Obj.addressLine1_xpath, function (err, el8) {
@@ -44,7 +52,7 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.elementByXPath(contactObj.Obj.addressLine2_xpath, function (err, addrLine2) {
   browser.type(addrLine2, ' ', function () {
   browser.elementByXPath(contactObj.Obj.addressDoneButton_xpath, function (err, doneEl) {
-  browser.clickElement(doneEl, function () {
+  browser.clickElement(doneEl, function () {*/
   browser.elementByXPath(contactObj.Obj.jobtitle_xpath, function (err,el9) {
   browser.type(el9,contactData.VARIABLES.contact_jobtitle, function () {
   browser.elementByXPath(contactObj.Obj.email_xpath, function (err, el10) {
@@ -58,8 +66,6 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.type(el13,contactData.VARIABLES.contact_bday, function () {
   browser.elementByXPath(contactObj.Obj.cnotes_xpath, function (err, el14) {
   browser.type(el14, contactData.VARIABLES.contact_notes, function () {
-  browser.elementByXPath(contactObj.Obj.caccount_xpath, function (err, el15) {
-  browser.type(el15, contactData.VARIABLES.contact_account, function () {
   utils.pause(2000, function () {
   browser.elementByXPathOrNull(contactObj.Obj.saveToolBar_xpath, function (err, toolbarEl) {
   browser.clickElement(toolbarEl, function () {
@@ -70,14 +76,14 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.clickElement(toolBarEl, function () {
   utils.pause(4000, function () {
   browser.elementByXPath(contactObj.readObj1.searchField_xpath, function (err,el27) {
-  browser.type(el27, fname, function () { //------ Enters the contact first name in the search field and hits 'Refresh' button
+  browser.type(el27, fname, function () {
   utils.pause(2000, function () {
   browser.elementByXPath(contactObj.readObj1.refreshButton_xpath, function (err, el26) {
   browser.clickElement(el26, function () {
   utils.pause(6000, function () {
   browser.elementByXPath(contactObj.readObj1.contactsHeading_xpath, function (err,headingEl) {
   browser.clickElement(headingEl, function () {
-  browser.waitForVisibleByXPath("//div[contains(text(),'"+ fname +"')]", 60000, function () {
+  browser.waitForVisibleByXPath(readContactObj, 60000, function () {
   browser.elementByXPath(readContactObj, function (err,contactEl) {
   browser.isDisplayed(contactEl, function (err,displayed) {
   if (displayed)  {
@@ -93,6 +99,6 @@ regexp:true, strict:true, trailing:true, white:false*/
     },2000);
     },2000);
   }
-  });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});
-  });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});};
+  });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});
+  });});});});});});});});});});});});});});});});});});});});};
 }());
