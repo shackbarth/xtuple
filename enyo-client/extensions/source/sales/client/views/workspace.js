@@ -164,6 +164,32 @@ trailing:true white:true*/
   };
   
   // ..........................................................
+  // FREIGHT CLASS
+  //
+
+  enyo.kind({
+    name: "XV.FreightClassWorkspace",
+    kind: "XV.Workspace",
+    title: "_freightClass".loc(),
+    model: "XM.FreightClass",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.FreightClass", "XV.FreightClassWorkspace");
+  
+  // ..........................................................
   // SALE TYPE
   //
 

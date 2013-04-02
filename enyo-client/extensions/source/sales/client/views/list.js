@@ -6,6 +6,36 @@ trailing:true white:true*/
 (function () {
   
   // ..........................................................
+  // FREIGHT CLASS
+  //
+
+  enyo.kind({
+    name: "XV.FreightClassList",
+    kind: "XV.List",
+    label: "_freightClass".loc(),
+    collection: "XM.FreightClassCollection",
+    parameterWidget: "XV.FreightClassListParameters",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "code", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.FreightClassRelation", "XV.FreightClassList");
+  
+  // ..........................................................
   // SALE TYPE
   //
 

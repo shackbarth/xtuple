@@ -33,6 +33,7 @@ var lang = XT.stringsFor("en_US", {
   "_doNotUpdate": "Do Not Update",
   "_enableSOShipping": "Enable Shipping Interface from Sales Order screen",
   "_firmSalesOrdersWhenAddedToPackingList": "Firm Sales Orders when added to Packing List Batch",
+  "_freightClass": "Freight Class",
   "_freightPricing": "Freight Pricing",
   "_hideSOMiscCharge": "Hide Misc. Charge on Sales Order screen",
   "_ignoreIfDiscounted": "Ignore if Discounted",

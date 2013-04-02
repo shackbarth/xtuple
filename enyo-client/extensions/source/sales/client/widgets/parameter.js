@@ -6,6 +6,20 @@ trailing:true white:true*/
 (function () {
   
   // ..........................................................
+  // FREIGHT CLASS
+  //
+
+  enyo.kind({
+    name: "XV.FreightClassListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_freightClass".loc()},
+      {name: "code", label: "_code".loc(), attr: "code"},
+      {name: "description", label: "_description", attr: "description"}
+    ]
+  });
+  
+  // ..........................................................
   // SALE TYPE
   //
 
