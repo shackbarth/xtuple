@@ -100,7 +100,7 @@ regexp:true, undef:true, trailing:true, white:true */
     
     effectiveChanged: function () {
       this.setBasePanelShowing();
-      this.setLocalAmount(this.getBaseValue());
+      this.setLocal(this.getBaseValue());
     },
     
     /**
@@ -115,9 +115,9 @@ regexp:true, undef:true, trailing:true, white:true */
     /**
       Converts the local value to the base amount and sets this value in the model
      */
-    setBaseAmount: function (value) {
+    setBase: function (input) {
       var options = {}, that = this;
-      if (value || value === 0) {
+      if (input || input === 0) {
         options.success = function (basePrice) {
           // set this base price into the model and published field
           that.setValue(basePrice);
@@ -126,7 +126,7 @@ regexp:true, undef:true, trailing:true, white:true */
           var amt = basePrice || basePrice === 0 ? Globalize.format(basePrice, "n" + that.getScale()) : "";
           that.$.baseAmountLabel.setContent(amt);
         };
-        that.getCurrency().toBase(value, that.getEffective(), options);
+        that.getCurrency().toBase(input, that.getEffective(), options);
       } else {
         that.setValue(null);
         that.setBaseValue(null);
@@ -136,20 +136,20 @@ regexp:true, undef:true, trailing:true, white:true */
     /**
       Converts the base value to the local value and sets this value in the widget
      */
-    setLocalAmount: function (value) {
+    setLocal: function (input) {
       if (this.getCurrency().get("isBase")) {
         // we're at base, so just set the fields with the base value we have
         this.valueChanged(this.getBaseValue());
         this.setLocalValue(this.getBaseValue());
       } else {
         var options = {}, that = this;
-        if (value || value === 0) {
+        if (input || input === 0) {
           options.success = function (localAmount) {
             // set this local amount into published and input fields
             that.valueChanged(localAmount);
             that.setLocalValue(localAmount);
           };
-          that.getCurrency().fromBase(value, that.getEffective(), options);
+          that.getCurrency().fromBase(input, that.getEffective(), options);
         }
       }
     },
@@ -164,7 +164,7 @@ regexp:true, undef:true, trailing:true, white:true */
       // Set the model and the base label with calculated base value.
       this.setBasePanelShowing();
       var input = this.validate(this.$.input.getValue());
-      this.setBaseAmount(input);
+      this.setBase(input);
       this.setLocalValue(input);
     },
 
@@ -202,7 +202,7 @@ regexp:true, undef:true, trailing:true, white:true */
           if (attribute === "amount") {
             // this amount value from the model is stored in base currency.
             // we need to convert this value to local currency and set published and input fields
-            this.setLocalAmount(newValue);
+            this.setLocal(newValue);
             // set the amount from the model, the base value in the published field
             this.setBaseValue(newValue);
             // the subwidget does not know its own attr, but we know what
@@ -220,7 +220,7 @@ regexp:true, undef:true, trailing:true, white:true */
             // only show the base panel if there is an effective date AND the currency doesn't match the base
             // Set base label with calculated value
             this.setBasePanelShowing();
-            this.setLocalAmount(this.getBaseValue());
+            this.setLocal(this.getBaseValue());
           }
           // set this base price into the base amount label
           var amt = this.getBaseValue() || this.getBaseValue() === 0 ? Globalize.format(this.getBaseValue(), "n" + this.getScale()) : "";

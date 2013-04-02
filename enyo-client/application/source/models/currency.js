@@ -229,6 +229,10 @@ white:true*/
               obj.callback(baseValue);
             });
           };
+          
+          fetchOptions.error = function () {
+            XT.log("Fetch rate failed in toBase in Currency");
+          };
 
           // Make the request
           rates.fetch(fetchOptions);
@@ -344,6 +348,10 @@ white:true*/
                localValue = obj.baseValue / rate.get("rate");
                obj.callback(localValue);
              });
+           };
+           
+           fetchOptions.error = function () {
+             XT.log("Fetch rate failed in fromBase in Currency");
            };
 
            // Make the request
