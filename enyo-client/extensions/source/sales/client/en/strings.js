@@ -26,8 +26,10 @@ var lang = XT.stringsFor("en_US", {
   "_creditMemo": "Credit Memo",
   "_current": "Current",
   "_currentDate": "Current Date",
+  "_cutOffDay": "Cutoff Day",
   "_dateControl": "Date Control",
   "_disableSalesOrderPriceOverride": "Disallow Override of Sale Price on Sales Order",
+  "_discountDays": "Discount Days",
   "_doNotUpdate": "Do Not Update",
   "_enableSOShipping": "Enable Shipping Interface from Sales Order screen",
   "_firmSalesOrdersWhenAddedToPackingList": "Firm Sales Orders when added to Packing List Batch",
@@ -55,6 +57,7 @@ var lang = XT.stringsFor("en_US", {
   "_shipDate": "Ship Date",
   "_showQuotesAfterConverted": "Show Quotes after Conversion to SO",
   "_showSaveAndAddbutton": "Show 'Save and Add to Packing List' Button on Sales Order",
+  "_termsType": "Terms Type",
   "_update": "Update",
   "_useCalculatedFreightPricing": "Use calculated Freight values by default",
   "_usePromiseDates": "Enable Promise Dates"

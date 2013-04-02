@@ -6,7 +6,7 @@ trailing:true white:true*/
 (function () {
   
   // ..........................................................
-  // SaleType
+  // SALE TYPE
   //
 
   enyo.kind({
@@ -27,6 +27,20 @@ trailing:true white:true*/
         }
       },
       {kind: "onyx.GroupboxHeader", content: "_saleTypes".loc()},
+      {name: "code", label: "_code".loc(), attr: "code"},
+      {name: "description", label: "_description", attr: "description"}
+    ]
+  });
+  
+  // ..........................................................
+  // TERMS
+  //
+
+  enyo.kind({
+    name: "XV.TermsListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_Terms".loc()},
       {name: "code", label: "_code".loc(), attr: "code"},
       {name: "description", label: "_description", attr: "description"}
     ]

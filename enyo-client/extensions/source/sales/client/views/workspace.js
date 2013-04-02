@@ -188,5 +188,35 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.SaleType", "XV.SaleTypeWorkspace");
+  
+  // ..........................................................
+  // TERMS
+  //
+
+  enyo.kind({
+    name: "XV.TermsWorkspace",
+    kind: "XV.Workspace",
+    title: "_terms".loc(),
+    model: "XM.Terms",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.TermsTypePicker", attr: "termsType"},
+            {kind: "XV.NumberWidget", attr: "dueDays"},
+            {kind: "XV.NumberWidget", attr: "discountDays"},
+            {kind: "XV.NumberWidget", attr: "cutOffDay"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.Terms", "XV.TermsWorkspace");
 
 }());
