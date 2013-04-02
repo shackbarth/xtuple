@@ -33,6 +33,20 @@ trailing:true white:true*/
   });
   
   // ..........................................................
+  // SHIP ZONE
+  //
+
+  enyo.kind({
+    name: "XV.ShipZoneListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_shipZones".loc()},
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "description", label: "_description", attr: "description"}
+    ]
+  });
+  
+  // ..........................................................
   // TERMS
   //
 

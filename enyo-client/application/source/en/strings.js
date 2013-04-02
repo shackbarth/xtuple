@@ -419,6 +419,7 @@ var lang = XT.stringsFor("en_US", {
   "_shipVia": "Ship Via",
   "_shipTo": "Ship To",
   "_shipZone": "Ship Zone",
+  "_shipZones": "Ship Zones",
   "_shippingNotes": "Shipping Notes",
   "_site": "Site",
   "_siteCode": "Site Code",

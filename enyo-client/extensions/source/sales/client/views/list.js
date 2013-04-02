@@ -36,6 +36,36 @@ trailing:true white:true*/
   XV.registerModelList("XM.SaleTypeRelation", "XV.SaleTypeList");
   
   // ..........................................................
+  // SHIP ZONE
+  //
+
+  enyo.kind({
+    name: "XV.ShipZoneList",
+    kind: "XV.List",
+    label: "_shipZones".loc(),
+    collection: "XM.ShipZoneCollection",
+    parameterWidget: "XV.ShipZoneListParameters",
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "name", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.ShipZoneRelation", "XV.ShipZoneList");
+  
+  // ..........................................................
   // TERMS
   //
 

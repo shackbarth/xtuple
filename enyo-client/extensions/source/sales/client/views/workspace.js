@@ -190,6 +190,32 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.SaleType", "XV.SaleTypeWorkspace");
   
   // ..........................................................
+  // SHIP ZONE
+  //
+
+  enyo.kind({
+    name: "XV.ShipZoneWorkspace",
+    kind: "XV.Workspace",
+    title: "_shipZone".loc(),
+    model: "XM.ShipZone",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.ShipZone", "XV.ShipZoneWorkspace");
+  
+  // ..........................................................
   // TERMS
   //
 

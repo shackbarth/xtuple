@@ -20,6 +20,7 @@ trailing:true white:true*/
       {name: "siteList", kind: "XV.SiteList"},
       {name: "siteTypeList", kind: "XV.SiteTypeList"},
       {name: "saleTypeList", kind: "XV.SaleTypeList"},
+      {name: "shipZoneList", kind: "XV.ShipZoneList"},
       {name: "termsList", kind: "XV.TermsList"},
       {name: "itemSiteList", kind: "XV.ItemSiteList"},
       {name: "costCategoryList", kind: "XV.CostCategoryList"},
