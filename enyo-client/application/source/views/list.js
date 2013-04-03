@@ -382,6 +382,36 @@ trailing:true white:true*/
     ]
   });
   XV.registerModelList("XM.CustomerShiptoRelation", "XV.CustomerShiptoList");
+  
+  // ..........................................................
+  // CUSTOMER TYPE LIST
+  //
+
+  enyo.kind({
+    name: "XV.CustomerTypeList",
+    kind: "XV.List",
+    label: "_customerTypes".loc(),
+    collection: "XM.CustomerTypeCollection",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    parameterWidget: "XV.PlannerCodeListParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "code", isKey: true},
+              {kind: "XV.ListAttr", attr: "description", fit: true, classes: "right"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.CustomerType", "XV.CustomerTypeList");
+  
 
   // ..........................................................
   // EMPLOYEE
