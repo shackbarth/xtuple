@@ -150,6 +150,9 @@ regexp:true, undef:true, trailing:true, white:true */
             that.setLocalValue(localAmount);
             that.$.input.setValue(localAmount);
           };
+          options.error = function (err) {
+            console.log("error");
+          };
           that.getCurrency().fromBase(input, that.getEffective(), options);
         }
       }
@@ -179,10 +182,17 @@ regexp:true, undef:true, trailing:true, white:true */
     },
 
     /**
-    This setValue function handles a value which is an
+      This setValue function handles a value which is an
       object consisting of two key/value pairs for the
-      amount and currency controls. It can also handle just
-      a number as the value, which it will assume to be the amount
+      amount and currency controls. It will typically be called this
+      way by the workspace, with silent:true, and in this case it
+      has to appropriately propagate the values to the widgets.
+
+      It can also handle just a number as the value, which it will assume
+      to be the amount. The function will be called in this manner
+      by the inputChanged function of the base class, and we need to
+      have it work correctly in that context as well, mostly just repackaging
+      the event as a valueChanged event.
     */
     setValue: function (value, options) {
       var oldValue,
@@ -236,14 +246,13 @@ regexp:true, undef:true, trailing:true, white:true */
     },
 
     /**
-      Intercept the valuechanged event and perform the following transformations:
+      Intercept the valueChanged event and perform the following transformations:
       if the event is coming from the amount field, convert that local amount
       to the base amount.
       If the event is coming from the currency picker, add to it the base amount,
       which needs to be calculated.
      */
     valueChanged: function (inSender, inEvent) {
-      console.log(inEvent && inEvent.value);
       console.log(inEvent && inEvent.originator && inEvent.originator.kind);
     }
   });

@@ -150,7 +150,11 @@ white:true*/
       rate = _.find(_rateCache.models, function (rate) {
         var effective = rate.get("effective"),
           expires = rate.get("expires");
-        return rate.id === that.id && XT.date.inRange(asOf, effective, expires);
+         // it would be nice if we could compare the rate against the rate here, but
+         // given that we're in a model that only knows the currency id as its id, we
+         // have to compare the CURRENCY of the rate against that.id, and then
+         // perform the effective date filter as well.
+         return rate.get("currency") === that.id && XT.date.inRange(asOf, effective, expires);
       });
 
       // If we have conversion data already, use it
@@ -200,7 +204,7 @@ white:true*/
             currency: this,
             asOf: asOf,
             callbacks: [{
-              value: localValue,
+              localValue: localValue,
               callback: options.success
             }]
           };
@@ -229,7 +233,7 @@ white:true*/
               obj.callback(baseValue);
             });
           };
-          
+
           fetchOptions.error = function () {
             XT.log("Fetch rate failed in toBase in Currency");
           };
@@ -241,7 +245,7 @@ white:true*/
 
       return this;
     },
-    
+
     /**
        Converts a value in the currency instance to a local value via the success
        callback in options.
@@ -270,7 +274,11 @@ white:true*/
        rate = _.find(_rateCache.models, function (rate) {
          var effective = rate.get("effective"),
            expires = rate.get("expires");
-         return rate.id === that.id && XT.date.inRange(asOf, effective, expires);
+         // it would be nice if we could compare the rate against the rate here, but
+         // given that we're in a model that only knows the currency id as its id, we
+         // have to compare the CURRENCY of the rate against that.id, and then
+         // perform the effective date filter as well.
+         return rate.get("currency") === that.id && XT.date.inRange(asOf, effective, expires);
        });
 
        // If we have conversion data already, use it
@@ -320,7 +328,7 @@ white:true*/
              currency: this,
              asOf: asOf,
              callbacks: [{
-               value: baseValue,
+               baseValue: baseValue,
                callback: options.success
              }]
            };
@@ -349,7 +357,7 @@ white:true*/
                obj.callback(localValue);
              });
            };
-           
+
            fetchOptions.error = function () {
              XT.log("Fetch rate failed in fromBase in Currency");
            };
