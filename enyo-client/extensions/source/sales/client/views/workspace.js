@@ -337,6 +337,33 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.TaxCode", "XV.TaxCodeWorkspace");
   
   // ..........................................................
+  // TAX TYPE
+  //
+
+  enyo.kind({
+    name: "XV.TaxTypeWorkspace",
+    kind: "XV.Workspace",
+    title: "_taxType".loc(),
+    model: "XM.TaxType",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.CheckboxWidget", attr: "isSystem"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.TaxType", "XV.TaxTypeWorkspace");
+  
+  // ..........................................................
   // TERMS
   //
 

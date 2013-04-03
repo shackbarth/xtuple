@@ -186,6 +186,36 @@ trailing:true white:true*/
   XV.registerModelList("XM.TaxCodeRelation", "XV.TaxCodeList");
   
   // ..........................................................
+  // TAX TYPE
+  //
+
+  enyo.kind({
+    name: "XV.TaxTypeList",
+    kind: "XV.List",
+    label: "_taxType".loc(),
+    collection: "XM.TaxTypeCollection",
+    parameterWidget: "XV.TaxTypeListParameters",
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "name", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.TaxTypeRelation", "XV.TaxTypeList");
+  
+  // ..........................................................
   // TERMS
   //
 
