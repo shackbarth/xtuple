@@ -336,7 +336,7 @@ trailing:true white:true*/
     ]
   });
 
-  XV.registerModelWorkspace("XM.TaxCode", "XV.TaxCodeWorkspace");
+  XV.registerModelWorkspace("XM.TaxAuthority", "XV.TaxAuthorityWorkspace");
   
   // ..........................................................
   // TAX CODE
