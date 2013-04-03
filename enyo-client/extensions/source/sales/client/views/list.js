@@ -156,6 +156,36 @@ trailing:true white:true*/
   XV.registerModelList("XM.ShipZoneRelation", "XV.ShipZoneList");
   
   // ..........................................................
+  // TAX AUTHORITY
+  //
+
+  enyo.kind({
+    name: "XV.TaxAuthorityList",
+    kind: "XV.List",
+    label: "_taxAuthority".loc(),
+    collection: "XM.TaxAuthorityCollection",
+    parameterWidget: "XV.TaxAuthorityListParameters",
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "number", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "name"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.TaxAuthorityRelation", "XV.TaxAuthorityList");
+  
+  // ..........................................................
   // TAX CODE
   //
 
@@ -184,6 +214,36 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.TaxCodeRelation", "XV.TaxCodeList");
+  
+  // ..........................................................
+  // TAX CLASS
+  //
+
+  enyo.kind({
+    name: "XV.TaxClassList",
+    kind: "XV.List",
+    label: "_taxClass".loc(),
+    collection: "XM.TaxClassCollection",
+    parameterWidget: "XV.TaxClassListParameters",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "code", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.TaxClassRelation", "XV.TaxClassList");
   
   // ..........................................................
   // TAX TYPE

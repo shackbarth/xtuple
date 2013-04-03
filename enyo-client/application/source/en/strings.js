@@ -411,6 +411,7 @@ var lang = XT.stringsFor("en_US", {
   "_secondaryContact": "Secondary Contact",
   "_selectOrganization": "Select Organization",
   "_sense": "Sense",
+  "_sequence": "Sequence",
   "_series": "Series",
   "_sessionTimedOut": "Your session has timed out",
   "_settings": "Settings",

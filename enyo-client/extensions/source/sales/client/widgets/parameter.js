@@ -104,6 +104,20 @@ trailing:true white:true*/
   });
   
   // ..........................................................
+  // TAX AUTHORITY
+  //
+
+  enyo.kind({
+    name: "XV.TaxAuthorityListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_taxAuthority".loc()},
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "name", label: "_name".loc(), attr: "name"}
+    ]
+  });
+  
+  // ..........................................................
   // TAX CODE
   //
 
@@ -112,6 +126,20 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_taxCode".loc()},
+      {name: "code", label: "_code".loc(), attr: "code"},
+      {name: "description", label: "_description", attr: "description"}
+    ]
+  });
+  
+  // ..........................................................
+  // TAX CLASS
+  //
+
+  enyo.kind({
+    name: "XV.TaxClassListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_taxClass".loc()},
       {name: "code", label: "_code".loc(), attr: "code"},
       {name: "description", label: "_description", attr: "description"}
     ]
