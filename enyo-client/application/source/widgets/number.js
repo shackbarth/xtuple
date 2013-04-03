@@ -48,7 +48,6 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.MONEY_SCALE,
       localValue: null, // {Number} the number in the user field
       baseValue: null, // {Number} the amount in the base currency
-      currency: null,
       effective: null,
       currencyDisabled: false,
       currencyShowing: true
@@ -85,8 +84,7 @@ regexp:true, undef:true, trailing:true, white:true */
      */
     create: function () {
       this.inherited(arguments);
-      this.setCurrency(XT.baseCurrency());
-      this.$.picker.setValue(this.getCurrency(), {silent: true});
+      this.$.picker.setValue(XT.baseCurrency(), {silent: true});
       this.$.baseCurrencyLabel.setContent(XT.baseCurrency().get('abbreviation'));
       // the currency picker may be disabled or hidden on creation in certain situations
       this.$.picker.setDisabled(this.getCurrencyDisabled());
@@ -107,7 +105,9 @@ regexp:true, undef:true, trailing:true, white:true */
         and the currency is not currently base.
      */
     setBasePanelShowing: function () {
-      var showing = _.isDate(this.getEffective()) && this.getCurrency() && !this.getCurrency().get("isBase");
+
+      var currency = this.$.picker.value,
+        showing = _.isDate(this.getEffective()) && currency && !currency.get("isBase");
       this.$.basePanel.setShowing(showing);
     },
 
@@ -172,7 +172,7 @@ regexp:true, undef:true, trailing:true, white:true */
       var options = {},
         that = this;
 
-      if (this.getCurrency().get("isBase")) {
+      if (this.$.picker.value.get("isBase")) {
         // we're at base, so just set the fields with the base value we have
         this.setLocalValue(this.getBaseValue());
         this.$.input.setValue(this.getBaseValue());
@@ -186,7 +186,7 @@ regexp:true, undef:true, trailing:true, white:true */
           options.error = function (err) {
             console.log("error");
           };
-          that.getCurrency().fromBase(input, that.getEffective(), options);
+          that.$.picker.value.fromBase(input, that.getEffective(), options);
         }
       }
     },
@@ -261,10 +261,9 @@ regexp:true, undef:true, trailing:true, white:true */
             inEvent = { value: newValue, originator: {attr: amountAttr }};
             if (!options.silent) { this.doValueChange(inEvent); }
           } else if (attribute === "currency") {
-            oldValue = this.getCurrency();
+            oldValue = this.$.picker.value;
             if (newValue && oldValue !== newValue) {
-              this.setCurrency(newValue);
-              this.$.picker.setValue(this.getCurrency(), options);
+              this.$.picker.setValue(newValue, options);
             }
             // only show the base panel if there is an effective date AND the currency doesn't match the base
             // Set base label with calculated value
