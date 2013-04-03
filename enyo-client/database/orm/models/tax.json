@@ -221,8 +221,8 @@
       },
       {
         "name": "class",
-        "toOne": {
-          "type": "TaxClass",
+        "attr": {
+          "type": "Number",
           "column": "tax_taxclass_id"
         }
       },
