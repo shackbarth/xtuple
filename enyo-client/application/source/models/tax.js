@@ -5,6 +5,34 @@ white:true*/
 
 (function () {
   "use strict";
+  
+  /**
+    @class
+
+    @extends XM.AccountDocument
+  */
+  XM.TaxClass = XM.AccountDocument.extend({
+    /** @scope XM.TaxClass.prototype */
+
+    recordType: 'XM.TaxClass'
+
+  });
+
+  XM.TaxClass = XM.TaxClass.extend(XM.AddressCheckMixin);
+  
+  /**
+    @class
+
+    @extends XM.AccountDocument
+  */
+  XM.TaxClassRelation = XM.Info.extend({
+    /** @scope XM.TaxClassRelation.prototype */
+
+    recordType: 'XM.TaxClassRelation',
+
+    editableModel: 'XM.TaxClass'
+
+  });
 
   /**
     @class

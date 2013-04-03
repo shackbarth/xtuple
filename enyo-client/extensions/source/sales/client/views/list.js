@@ -156,6 +156,36 @@ trailing:true white:true*/
   XV.registerModelList("XM.ShipZoneRelation", "XV.ShipZoneList");
   
   // ..........................................................
+  // TAX CODE
+  //
+
+  enyo.kind({
+    name: "XV.TaxCodeList",
+    kind: "XV.List",
+    label: "_taxCode".loc(),
+    collection: "XM.TaxCodeCollection",
+    parameterWidget: "XV.TaxCodeListParameters",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "code", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.TaxCodeRelation", "XV.TaxCodeList");
+  
+  // ..........................................................
   // TERMS
   //
 

@@ -22,6 +22,7 @@ trailing:true white:true*/
       {name: "saleTypeList", kind: "XV.SaleTypeList"},
       {name: "shipZoneList", kind: "XV.ShipZoneList"},
       {name: "salesRepList", kind: "XV.SalesRepList"},
+      {name: "taxCodeList", kind: "XV.TaxCodeList"},
       {name: "termsList", kind: "XV.TermsList"},
       {name: "customerGroupList", kind: "XV.CustomerGroupList"},
       {name: "freightClassList", kind: "XV.FreightClassList"},
