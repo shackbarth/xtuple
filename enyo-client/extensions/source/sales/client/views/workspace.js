@@ -242,6 +242,36 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.SaleType", "XV.SaleTypeWorkspace");
   
   // ..........................................................
+  // SALES REP
+  //
+
+  enyo.kind({
+    name: "XV.SalesRepWorkspace",
+    kind: "XV.Workspace",
+    title: "_salesRep".loc(),
+    model: "XM.SalesRep",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.NumberWidget", attr: "commission"}
+            //method is a 1-char column on the sales rep table, but it looks like it's unused?
+            // column emp_id is deprecated
+            //enhanced commissions widget?
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.SalesRep", "XV.SalesRepWorkspace");
+  
+  // ..........................................................
   // SHIP ZONE
   //
 

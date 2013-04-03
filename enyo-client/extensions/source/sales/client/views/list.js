@@ -96,6 +96,36 @@ trailing:true white:true*/
   XV.registerModelList("XM.SaleTypeRelation", "XV.SaleTypeList");
   
   // ..........................................................
+  // SALES REP
+  //
+
+  enyo.kind({
+    name: "XV.SalesRepList",
+    kind: "XV.List",
+    label: "_salesRep".loc(),
+    collection: "XM.SalesRepCollection",
+    parameterWidget: "XV.SalesRepListParameters",
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "number", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "name"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.SalesRepRelation", "XV.SalesRepList");
+  
+  // ..........................................................
   // SHIP ZONE
   //
 

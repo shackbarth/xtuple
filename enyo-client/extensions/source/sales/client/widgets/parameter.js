@@ -61,6 +61,35 @@ trailing:true white:true*/
   });
   
   // ..........................................................
+  // SALES REP
+  //
+
+  enyo.kind({
+    name: "XV.SalesRepListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {kind: "onyx.GroupboxHeader", content: "_salesRep".loc()},
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "name", label: "_name".loc(), attr: "name"},
+  	{name: "commission", label: "_commission".loc(), attr: "commission"},
+  	{name: "method", label: "_method".loc(), attr: "method"}
+    ]
+  });
+  
+  // ..........................................................
   // SHIP ZONE
   //
 
