@@ -117,9 +117,12 @@ regexp:true, undef:true, trailing:true, white:true */
     setBase: function (inEvent) {
       var options = {},
         that = this,
-        value = inEvent.value;
+        secondEvent,
+        amountAttr,
+        fromPicker = inEvent.originator.kind === 'XV.CurrencyPicker',
+        amount = fromPicker ? this.getLocalValue() : inEvent.value;
 
-      if (value || value === 0) {
+      if (amount || amount === 0) {
         options.success = function (basePrice) {
           // set this base price into the model and published field
           that.setBaseValue(basePrice);
@@ -131,12 +134,31 @@ regexp:true, undef:true, trailing:true, white:true */
           // swap this base price into the event instead of the local price.
           // we do not want to tell the model about the local price.
           // the model does not care to be bothered with such trivialities.
-          inEvent.value = basePrice;
-          inEvent.transformed = true;
 
-          that.doValueChange(inEvent);
+          if (fromPicker) {
+            // bubble up the change to the picker
+            inEvent.transformed = true;
+            secondEvent = _.clone(inEvent);
+            that.doValueChange(inEvent);
+
+            // also bubble up the transformed change to the amount field
+            secondEvent.value = basePrice;
+            amountAttr = that.attr.amount;
+            secondEvent.originator = { attr: amountAttr };
+            that.doValueChange(secondEvent);
+
+          } else {
+            // it was the amount field that was changed.
+            // only bubble up the change to the amount field
+            inEvent.value = basePrice;
+            inEvent.transformed = true;
+
+            that.doValueChange(inEvent);
+          }
+
+
         };
-        that.getCurrency().toBase(value, that.getEffective(), options);
+        that.$.picker.value.toBase(amount, that.getEffective(), options);
       } else {
         that.setValue(null);
         that.setBaseValue(null);
