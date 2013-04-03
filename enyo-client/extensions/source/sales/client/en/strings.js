@@ -26,6 +26,7 @@ var lang = XT.stringsFor("en_US", {
   "_creditMemo": "Credit Memo",
   "_current": "Current",
   "_currentDate": "Current Date",
+  "_customerGroup": "Customer Groups",
   "_cutOffDay": "Cutoff Day",
   "_dateControl": "Date Control",
   "_disableSalesOrderPriceOverride": "Disallow Override of Sale Price on Sales Order",

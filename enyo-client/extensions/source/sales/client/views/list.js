@@ -6,6 +6,36 @@ trailing:true white:true*/
 (function () {
   
   // ..........................................................
+  // CUSTOMER GROUP
+  //
+
+  enyo.kind({
+    name: "XV.CustomerGroupList",
+    kind: "XV.List",
+    label: "_customerGroup".loc(),
+    collection: "XM.CustomerGroupCollection",
+    parameterWidget: "XV.CustomerGroupListParameters",
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "name", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.CustomerGroupRelation", "XV.CustomerGroupList");
+  
+  // ..........................................................
   // FREIGHT CLASS
   //
 
