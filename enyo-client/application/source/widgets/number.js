@@ -112,20 +112,31 @@ regexp:true, undef:true, trailing:true, white:true */
     },
 
     /**
-      Converts the local value to the base amount and sets this value in the model
+      Converts the local value to the base amount and bubbles that value in a new event
      */
-    setBase: function (input) {
-      var options = {}, that = this;
-      if (input || input === 0) {
+    setBase: function (inEvent) {
+      var options = {},
+        that = this,
+        value = inEvent.value;
+
+      if (value || value === 0) {
         options.success = function (basePrice) {
           // set this base price into the model and published field
-          //that.setValue(basePrice);
           that.setBaseValue(basePrice);
+
           // set this base price into the base amount label
           var amt = basePrice || basePrice === 0 ? Globalize.format(basePrice, "n" + that.getScale()) : "";
           that.$.baseAmountLabel.setContent(amt);
+
+          // swap this base price into the event instead of the local price.
+          // we do not want to tell the model about the local price.
+          // the model does not care to be bothered with such trivialities.
+          inEvent.value = basePrice;
+          inEvent.transformed = true;
+
+          that.doValueChange(inEvent);
         };
-        that.getCurrency().toBase(input, that.getEffective(), options);
+        that.getCurrency().toBase(value, that.getEffective(), options);
       } else {
         that.setValue(null);
         that.setBaseValue(null);
@@ -251,9 +262,15 @@ regexp:true, undef:true, trailing:true, white:true */
       to the base amount.
       If the event is coming from the currency picker, add to it the base amount,
       which needs to be calculated.
+
+      Note that we don't want to catch the event that we ourselves emit after
+      we do the transform.
      */
     valueChanged: function (inSender, inEvent) {
-      console.log(inEvent && inEvent.originator && inEvent.originator.kind);
+      if (!inEvent.transformed) {
+        this.setBase(inEvent);
+        return true;
+      }
     }
   });
 

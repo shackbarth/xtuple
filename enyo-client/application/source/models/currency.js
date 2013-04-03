@@ -283,7 +283,7 @@ white:true*/
 
        // If we have conversion data already, use it
        if (rate) {
-         localValue = baseValue / rate.get("rate");
+         localValue = baseValue * rate.get("rate");
          options.success(localValue);
 
        // Otherwise, see if we already have a request out for this rate
