@@ -49,7 +49,7 @@ regexp:true, strict:true, trailing:true, white:false*/
   else {utils.results('FAIL: Last name incorrect');
   fcount++;
   }
-  browser.elementByXPath(contactObj.readObj1.addressEditButton_xpath, function (err, el7) {
+  /*browser.elementByXPath(contactObj.readObj1.addressEditButton_xpath, function (err, el7) {
   browser.clickElement(el7, function () {
   browser.elementByXPath(contactObj.readObj1.addressLine1_xpath, function (err, el8) {
   browser.getValue(el8, function (err, value) {
@@ -62,6 +62,18 @@ regexp:true, strict:true, trailing:true, white:false*/
   }
   browser.elementByXPath(contactObj.readObj1.addressDoneButton_xpath, function (err, el9) {
   browser.clickElement(el9, function () {
+  browser.elementByXPath(contactObj.readObj1.email_xpath, function (err, el11) {
+  browser.click(el11, function(err) {
+  browser.getValue(el11, function (err, value) {
+  console.log(' value:' + value);
+  console.log(contactData.VARIABLES.contact_email);
+  if (value === contactData.VARIABLES.contact_email) {
+  utils.results('PASS: Email verified');
+  }
+  else {
+  utils.results('FAIL: Email incorrect');
+  fcount++;
+  }*/
   browser.elementByXPath(contactObj.readObj1.jobtitle_xpath, function (err, el10) {
   browser.getValue(el10, function (err, value) {
   if (value === contactData.VARIABLES.contact_jobtitle) {
@@ -69,15 +81,6 @@ regexp:true, strict:true, trailing:true, white:false*/
   }
   else {
   utils.results('FAIL: Job Title incorrect');
-  fcount++;
-  }
-  browser.elementByXPath(contactObj.readObj1.email_xpath, function (err, el11) {
-  browser.getValue(el11, function (err, value) {
-  if (value === contactData.VARIABLES.contact_email) {
-  utils.results('PASS: Email verified');
-  }
-  else {
-  utils.results('FAIL: Email incorrect');
   fcount++;
   }
   browser.elementByXPath(contactObj.readObj1.phone_xpath, function (err, el11) {
@@ -194,6 +197,6 @@ regexp:true, strict:true, trailing:true, white:false*/
   callback(browser, test);
   });
   });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});
-  });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});};
+  });});});});});});});});});});});});});});});});});});});});});});});};
 }());
 

@@ -143,23 +143,27 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.elementByXPath(contactObj.readObj1.cmname_xpath, function (err, el22) {
   browser.clear(el22, function () {
   browser.elementByXPath(contactObj.readObj1.cmname_xpath, function (err, el24) {
-  browser.type(el24,contactData.VARIABLES.contact_newmname + '\uE004', function () {
-  utils.pause(2000,function () {
+  browser.type(el24,contactData.VARIABLES.contact_newmname, function () {
+  browser.type(el24, '\uE004', function () {
+  utils.pause(4000,function () {
+  browser.elementByXPathOrNull(contactObj.readObj1.saveToolBar_xpath, function (err, toolbarEl) {
+  browser.clickElement(toolbarEl, function () {
+  utils.pause(4000, function () {
   browser.elementByXPath(contactObj.readObj1.savebutton_xpath, function (err, el25) {
   browser.clickElement(el25, function () {
-  utils.pause(2000, function () {
+  utils.pause(4000, function () {
   process.nextTick(function () {
   utils.results('***** Verifying the contact Update*****');
   });
   browser.elementByXPath(contactObj.readObj1.refreshButton_xpath, function (err, el26) {
   browser.clickElement(el26, function () {
-  utils.pause(2000, function () {
+  utils.pause(4000, function () {
   browser.elementByXPath(contactObj.readObj1.contactsHeading_xpath, function (err, headingEl) {
   browser.clickElement(headingEl, function () {
   browser.elementByXPath(readContactObj,function (err,contactEl) {
   browser.clickElement(contactEl, function () {
   utils.results('Opening the contact For verification');
-  utils.pause(2000,function () {
+  utils.pause(4000,function () {
   browser.elementByXPath(contactObj.readObj1.contactmname2_xpath,function (err,el30) {
   browser.getValue(el30, function (err,value) {
   if(value === contactData.VARIABLES.contact_newmname)  {
@@ -198,6 +202,6 @@ regexp:true, strict:true, trailing:true, white:false*/
   utils.pause(2000,function () {
   callback(browser, test);
   });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});
-  });});});});});});});});});});});});});});});});});});});});});});};
+  });});});});});});});});});});});});});});});});});});});});});});});});});});};
 }());
 
