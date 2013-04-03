@@ -87,15 +87,7 @@ regexp:true, undef:true, trailing:true, white:true */
     nameAttribute: "abbreviation",
     orderBy: [
       {attribute: 'abbreviation'}
-    ],
-    /**
-      This override is here because the itemSelected in the parent class
-      returns true and does not allow the event to bubble up.
-     */
-    itemSelected: function (inSender, inEvent) {
-      var value = this.$.picker.getSelected().value;
-      this.setValue(value);
-    }
+    ]
   });
 
   // ..........................................................
