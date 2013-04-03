@@ -97,7 +97,7 @@ regexp:true, undef:true, trailing:true, white:true */
 
     effectiveChanged: function () {
       this.setBasePanelShowing();
-      this.setLocal(this.getBaseValue());
+      this.setLocal();
     },
 
     /**
@@ -168,7 +168,7 @@ regexp:true, undef:true, trailing:true, white:true */
     /**
       Converts the base value to the local value and sets this value in the widget
      */
-    setLocal: function (input) {
+    setLocal: function () {
       var options = {},
         that = this;
 
@@ -177,7 +177,7 @@ regexp:true, undef:true, trailing:true, white:true */
         this.setLocalValue(this.getBaseValue());
         this.$.input.setValue(this.getBaseValue());
       } else {
-        if (input || input === 0) {
+        if (this.getBaseValue() || this.getBaseValue() === 0) {
           options.success = function (localAmount) {
             // set this local amount into published and input fields
             that.setLocalValue(localAmount);
@@ -186,24 +186,10 @@ regexp:true, undef:true, trailing:true, white:true */
           options.error = function (err) {
             console.log("error");
           };
-          that.$.picker.value.fromBase(input, that.getEffective(), options);
+          that.$.picker.value.fromBase(this.getBaseValue(), that.getEffective(), options);
         }
       }
     },
-
-    /**
-    If the effective date is available,
-    calculate the base currency amount based on the fixed rate
-    when the amount or currency are changed.
-    inputChanged: function (inSender, inEvent) {
-      // only show the base panel if there is an effective date AND the currency doesn't match the base
-      // Set the model and the base label with calculated base value.
-      this.setBasePanelShowing();
-      var input = this.validate(this.$.input.getValue());
-      this.setBase(input);
-      this.setLocalValue(input);
-    },
-    */
 
     /**
     This setDisabled function is all or nothing for both widgets
@@ -251,7 +237,7 @@ regexp:true, undef:true, trailing:true, white:true */
             } else {
               // set the amount from the model, the base value in the published field
               this.setBaseValue(newValue);
-              this.setLocal(newValue);
+              this.setLocal();
             }
 
             // the subwidget does not know its own attr, but we know what
@@ -268,7 +254,7 @@ regexp:true, undef:true, trailing:true, white:true */
             // only show the base panel if there is an effective date AND the currency doesn't match the base
             // Set base label with calculated value
             this.setBasePanelShowing();
-            this.setLocal(this.getBaseValue());
+            this.setLocal();
           }
           // set this base price into the base amount label
           var amt = this.getBaseValue() || this.getBaseValue() === 0 ? Globalize.format(this.getBaseValue(), "n" + this.getScale()) : "";
