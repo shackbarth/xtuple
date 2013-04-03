@@ -14,7 +14,7 @@ white:true*/
   XM.TaxClass = XM.AccountDocument.extend({
     /** @scope XM.TaxClass.prototype */
 
-    recordType: 'XM.TaxClass'
+    recordType: 'XM.TaxClass',
 
   });
 
@@ -137,6 +137,18 @@ white:true*/
     /** @scope XM.TaxCodeCollection.prototype */
 
     model: XM.TaxAuthority
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.TaxClassCollection = XM.Collection.extend({
+    /** @scope XM.TaxCodeCollection.prototype */
+
+    model: XM.TaxClass
 
   });
  

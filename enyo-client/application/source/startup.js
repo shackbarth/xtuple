@@ -413,6 +413,17 @@ white:true*/
       XM.taxAuthorities.fetch(options);
     }
   });
+  
+  XT.StartupTasks.push({
+    taskName: "loadTaxClasses",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this)
+      };
+      XM.taxClasses = new XM.TaxClassCollection();
+      XM.taxClasses.fetch(options);
+    }
+  });
 
   XT.StartupTasks.push({
     taskName: "loadTaxZones",

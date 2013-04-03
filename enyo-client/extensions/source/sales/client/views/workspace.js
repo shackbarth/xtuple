@@ -308,6 +308,35 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.ShipZone", "XV.ShipZoneWorkspace");
   
   // ..........................................................
+  // TAX CODE
+  //
+
+  enyo.kind({
+    name: "XV.TaxCodeWorkspace",
+    kind: "XV.Workspace",
+    title: "_taxCode".loc(),
+    model: "XM.TaxCode",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.TaxClassPicker", attr: "class", label: "_taxClass".loc()},
+            {kind: "XV.TaxAuthorityPicker", attr: "authority", label: "_taxAuthority".loc()},
+            {kind: "XV.NumberWidget", attr: "basis"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.TaxCode", "XV.TaxCodeWorkspace");
+  
+  // ..........................................................
   // TERMS
   //
 
