@@ -120,7 +120,7 @@ regexp:true, undef:true, trailing:true, white:true */
       if (input || input === 0) {
         options.success = function (basePrice) {
           // set this base price into the model and published field
-          that.setValue(basePrice);
+          that.setModelAmount(basePrice);
           that.setBaseValue(basePrice);
           // set this base price into the base amount label
           var amt = basePrice || basePrice === 0 ? Globalize.format(basePrice, "n" + that.getScale()) : "";
@@ -128,7 +128,7 @@ regexp:true, undef:true, trailing:true, white:true */
         };
         that.getCurrency().toBase(input, that.getEffective(), options);
       } else {
-        that.setValue(null);
+        that.setModelAmount(null);
         that.setBaseValue(null);
       }
     },
@@ -175,6 +175,13 @@ regexp:true, undef:true, trailing:true, white:true */
     setDisabled: function (isDisabled) {
       this.$.input.setDisabled(isDisabled);
       this.$.picker.setDisabled(this.currencyDisabled || isDisabled);
+    },
+    
+    /**
+      This function sets the amount value in the model 
+    */
+    setModelAmount: function (value) {
+      //this.$.input.setValue(value);
     },
 
     /**
