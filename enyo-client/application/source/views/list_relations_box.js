@@ -31,4 +31,43 @@ trailing:true white:true*/
     canOpen: false
   });
 
+  // ..........................................................
+  // OPPORTUNITY QUOTE
+  //
+
+  enyo.kind({
+    name: "XV.OpportunityQuoteListRelationsBox",
+    kind: "XV.ListRelationsBox",
+    title: "_quotes".loc(),
+    parentKey: "opportunity",
+    listRelations: "XV.OpportunityQuoteListRelations",
+    searchList: "XV.QuoteList"
+  });
+
+  // ..........................................................
+  // CUSTOMER QUOTE
+  //
+
+  enyo.kind({
+    name: "XV.CustomerQuoteListRelationsBox",
+    kind: "XV.ListRelationsBox",
+    title: "_quotes".loc(),
+    parentKey: "customer",
+    listRelations: "XV.CustomerQuoteListRelations",
+    searchList: "XV.QuoteList"
+  });
+
+  // ..........................................................
+  // PROSPECT QUOTE
+  //
+
+  enyo.kind({
+    name: "XV.ProspectQuoteListRelationsBox",
+    kind: "XV.ListRelationsBox",
+    title: "_quotes".loc(),
+    parentKey: "customer",
+    listRelations: "XV.ProspectQuoteListRelations",
+    searchList: "XV.QuoteList"
+  });
+
 }());
