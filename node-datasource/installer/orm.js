@@ -1,18 +1,36 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true */
-
-require('../xt/foundation/foundation');
-require('../xt/database/database');
+/*global X:true, XT:true, _:true */
 
 (function () {
   "use strict";
 
-  var _path = X.path, _ = X._, _fs = X.fs, initSocket, testConnection, dive,
-    parseFile, calculateDependencies, dependenciesFor, checkDependencies, cleanse,
-    installQueue, submit, existing, findExisting, install, select, refresh, runOrmInstaller;
+  var _path = X.path,
+    _ = X._,
+    _fs = X.fs,
+    calculateDependencies,
+    checkDependencies,
+    cleanse,
+    dependenciesFor,
+    dive,
+    existing,
+    findExisting,
+    install,
+    installQueue,
+    parseFile,
+    refresh,
+    runOrmInstaller,
+    select,
+    submit,
+    testConnection;
 
-  X.db = X.Database.create();
+  // When ran from the maintenance route, we already have XT.dataSource.
+  // When ran from the installer, we need to included it after X.options is set.
+  if (typeof XT.dataSource === 'undefined') {
+    require('../lib/ext/datasource');
+  }
+
+  X.db = XT.dataSource;
 
   cleanse = function (orm) {
     var ret = _.clone(orm);
@@ -111,7 +129,9 @@ require('../xt/database/database');
       // this is the actual callback! The first arg is an error, which is null if
       // we've made it this far. The second arg is an array of all the orm names
       // that have been installed.
-      return ack(null, _.map(socket.installed, function (orm) {return orm.type}));
+      return ack(null, _.map(socket.installed, function (orm) {
+        return orm.type;
+      }));
     }
     orm = queue.shift();
 

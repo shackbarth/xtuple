@@ -27,7 +27,8 @@ trailing:true white:true*/
       {name: "freightClassList", kind: "XV.FreightClassList"},
       {name: "itemSiteList", kind: "XV.ItemSiteList"},
       {name: "costCategoryList", kind: "XV.CostCategoryList"},
-      {name: "plannerCodeList", kind: "XV.PlannerCodeList"}
+      {name: "plannerCodeList", kind: "XV.PlannerCodeList"},
+      {name: "customerTypeList", kind: "XV.CustomerTypeList"}
     ];
     XT.app.$.postbooks.appendPanels("setup", panels);
 

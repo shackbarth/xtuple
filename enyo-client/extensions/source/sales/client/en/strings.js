@@ -22,6 +22,7 @@ var lang = XT.stringsFor("en_US", {
   "_autoAllocateCreditMemos": "Allocate Credit Memos to New Sales Order on Save",
   "_autoSelectForBilling": "Check 'Select for Billing' option on Ship Order",
   "_customerDefaults": "Customer Defaults",
+  "_customerTypes": "Customer Types",
   "_creditControl": "Credit Control",
   "_creditMemo": "Credit Memo",
   "_current": "Current",
