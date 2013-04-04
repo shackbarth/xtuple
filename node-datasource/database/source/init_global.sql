@@ -24,6 +24,13 @@
 
 \i xt/tables/usr.sql
 \i xt/tables/usrorg.sql
+\i xt/tables/sessionorg.sql
+
+\i xt/tables/oa2client.sql
+\i xt/tables/oa2clientredirs.sql
+\i xt/tables/oa2token.sql
+
+\i xt/tables/bicache.sql
 
 \i xt/tables/oa2client.sql
 \i xt/tables/oa2clientredirs.sql

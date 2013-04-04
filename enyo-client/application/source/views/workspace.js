@@ -504,6 +504,7 @@ trailing:true white:true*/
             {kind: "XV.TaxZonePicker", attr: "taxZone", label: "_defaultTaxZone".loc()}
           ]}
         ]},
+        {kind: "XV.CustomerQuoteListRelationsBox", attr: "quoteRelations"},
         {kind: "XV.CustomerShipToBox", attr: "shiptos"},
         {kind: "XV.CustomerCommentBox", attr: "comments"},
         {kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
@@ -821,6 +822,7 @@ trailing:true white:true*/
             {kind: "XV.ProductCategoryPicker", attr: "productCategory",
               label: "_category".loc()},
             {kind: "XV.SalesPriceWidget", attr: "listPrice"},
+            {kind: "XV.CostWidget", attr: "listCost"},
             {kind: "XV.UnitPicker", attr: "priceUnit"},
             {kind: "XV.ItemCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader",
@@ -1178,10 +1180,10 @@ trailing:true white:true*/
             {kind: "XV.ContactWidget", attr: "contact",
               showAddress: true, label: "_name".loc()},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes"}//,
-            //{kind: "onyx.GroupboxHeader", content: "_quotes".loc()}
+            {kind: "XV.TextArea", attr: "notes"}
           ]}
-        ]}
+        ]},
+        {kind: "XV.ProspectQuoteListRelationsBox", attr: "quoteRelations"}
       ]},
       {kind: "onyx.Popup", name: "findExistingAccountPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",

@@ -384,6 +384,14 @@
           "column": "ophead_id",
           "inverse": "opportunity"
         }
+      },
+      {
+        "name": "quoteRelations",
+        "toMany": {
+          "type": "QuoteRelation",
+          "column": "ophead_id",
+          "inverse": "opportunity"
+        }
       }
     ],
     "sequence": 0,
