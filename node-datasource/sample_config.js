@@ -52,9 +52,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // servers, etc.
       location: "NA"
     },
-    administratorInterface: {
-      port: 9090
-    },
     globalDatabase: {
       hostname: "localhost",
       port: 5432,
