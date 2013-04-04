@@ -15,14 +15,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         res.send({isError: true, message: "Error fetching organization"});
       },
       fetchSuccess = function (model, result) {
-        var extensions = _.map(model.get("extensions").models, function (orgext) {
-          var ext = orgext.get("extension");
-          return {
-            name: ext.get("name"),
-            location: ext.get("location"),
-            loadOrder: ext.get("loadOrder"),
-            privilegeName: ext.get("privilegeName")
+        var extensions = _.map(model.get("extensions"), function (orgext) {
+          var ext = orgext.extension,
+              extDetails = {};
+
+          extDetails = {
+            name: ext.name,
+            location: ext.location,
+            loadOrder: ext.loadOrder,
+            privilegeName: ext.privilegeName
           };
+          return extDetails;
         });
 
         // XXX temp until we get everything on the same port
