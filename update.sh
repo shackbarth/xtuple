@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 PRODUCTION=''
 HOST='localhost'
 
@@ -11,7 +11,7 @@ usage()
    -h target host
    -p production mode
 EOF
-}	
+}
 while getopts ":ph:" opt; do
   case $opt in
     p)
@@ -61,7 +61,9 @@ if [ $? != 0  ]
     echo "error updating submodules"
     exit $?
 fi
-cd node-datasource
+
+# remove all npm packages and reinstall them to get the latest.
+rm -rf node_modules
 npm install
 
 # restart the datasource

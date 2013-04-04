@@ -32,6 +32,12 @@
 
 \i xt/tables/bicache.sql
 
+\i xt/tables/oa2client.sql
+\i xt/tables/oa2clientredirs.sql
+\i xt/tables/oa2token.sql
+
+\i xt/tables/bicache.sql
+
 -- xt functions
 \i xt/functions/add_priv.sql
 
