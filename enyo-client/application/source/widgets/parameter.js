@@ -193,6 +193,20 @@ trailing:true white:true*/
       {name: "name", label: "_name".loc(), attr: "name"}
     ]
   });
+  
+  // ..........................................................
+  // CUSTOMER TYPE
+  //
+
+  enyo.kind({
+    name: "XV.CustomerTypeListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_customerType".loc()},
+      {name: "code", label: "_code".loc(), attr: "code"}
+    ]
+  });
+  
   // ..........................................................
   // FILE
   //

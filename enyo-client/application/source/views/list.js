@@ -395,7 +395,7 @@ trailing:true white:true*/
     query: {orderBy: [
       {attribute: 'code'}
     ]},
-    parameterWidget: "XV.PlannerCodeListParameters",
+    parameterWidget: "XV.CustomerTypeListParameters",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
@@ -411,7 +411,6 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.CustomerType", "XV.CustomerTypeList");
-  
 
   // ..........................................................
   // EMPLOYEE
