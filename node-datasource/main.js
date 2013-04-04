@@ -13,7 +13,6 @@ _ = require("underscore");
   var options = require("./lib/options"),
     schema = false,
     privs = false,
-    sessionObjectLoaded,
     schemaOptions = {},
     privsOptions = {};
 
@@ -63,27 +62,14 @@ _ = require("underscore");
 
   //X.debugging = true;
 
-  // Set the options and start the servers the OLD way.
+  // Set the options.
   X.setup(options);
 
-
-  // Initiate the internal session.
-  sessionObjectLoaded = function () {
-    if (schema && privs) {
-      // Start polling for expired user sessions and delete the records.
-      X.cachePollingInterval = setInterval(X.Session.pollCache, 10000);
-      X.addCleanupTask(function () {
-        clearInterval(X.cachePollingInterval);
-      });
-    }
-  };
   schemaOptions.success = function () {
     schema = true;
-    sessionObjectLoaded();
   };
   privsOptions.success = function () {
     privs = true;
-    sessionObjectLoaded();
   };
   privsOptions.username = X.options.globalDatabase.nodeUsername;
 
@@ -230,10 +216,11 @@ var app = express(),
   XTPGStore = require('./oauth2/db/connect-xt-pg')(express),
   io,
   //sessionStore = new MemoryStore(),
-  sessionStore = new XTPGStore({ hybridCache: true }),
+  sessionStore = new XTPGStore({ hybridCache: X.options.datasource.requireCache || false }),
   Session = require('express/node_modules/connect/lib/middleware/session').Session,
   Cookie = require('express/node_modules/connect/lib/middleware/session/cookie'),
-  cookie = require('express/node_modules/cookie');
+  cookie = require('express/node_modules/cookie'),
+  privateSalt = X.fs.readFileSync(X.options.datasource.saltFile).toString() || 'somesecret';
 
 // Conditionally load express.session(). REST API endpoints using OAuth tokens do not get sessions.
 var conditionalExpressSession = function (req, res, next) {
@@ -246,11 +233,16 @@ var conditionalExpressSession = function (req, res, next) {
     // Instead of doing app.use(express.session()) we call the package directly
     // which returns a function(req, res, next) we can call to do the same thing.
     var init_session = express.session({
-          store: sessionStore,
-          secret: '.T#T@r5EkPM*N@C%9K-iPW!+T',
-          // See cookie stomp above for more details on how this session cookie works.
-          cookie: { path: '/', httpOnly: true, secure: true, maxAge: 3600000 }
-        });
+        store: sessionStore,
+        secret: privateSalt,
+        // See cookie stomp above for more details on how this session cookie works.
+        cookie: {
+          path: '/',
+          httpOnly: true,
+          secure: true,
+          maxAge: (X.options.datasource.sessionTimeout * 60 * 1000) || 3600000
+        }
+      });
 
     init_session(req, res, next);
   }
@@ -446,7 +438,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
     }
 
     // Add sessionID so we can use it to check for valid sessions on each request below.
-    handshakeData.sessionID = parseSignedCookie(handshakeData.cookie['connect.sid'], '.T#T@r5EkPM*N@C%9K-iPW!+T');
+    handshakeData.sessionID = parseSignedCookie(handshakeData.cookie['connect.sid'], privateSalt);
 
     sessionStore.get(handshakeData.sessionID, function (err, session) {
       if (err) {

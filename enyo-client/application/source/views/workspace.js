@@ -449,6 +449,7 @@ trailing:true white:true*/
             {kind: "XV.TaxZonePicker", attr: "taxZone", label: "_defaultTaxZone".loc()}
           ]}
         ]},
+        {kind: "XV.CustomerQuoteListRelationsBox", attr: "quoteRelations"},
         {kind: "XV.CustomerShipToBox", attr: "shiptos"},
         {kind: "XV.CustomerCommentBox", attr: "comments"},
         {kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
@@ -513,6 +514,32 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.CustomerRelation", "XV.CustomerWorkspace");
   XV.registerModelWorkspace("XM.CustomerListItem", "XV.CustomerWorkspace");
   XV.registerModelWorkspace("XM.CustomerProspectListItem", "XV.CustomerWorkspace");
+  
+  // ..........................................................
+  // CUSTOMER TYPE
+  //
+
+  enyo.kind({
+    name: "XV.CustomerTypeWorkspace",
+    kind: "XV.Workspace",
+    title: "_customerType".loc(),
+    model: "XM.CustomerType",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.CustomerType", "XV.CustomerTypeWorkspace");
 
   // ..........................................................
   // FILE
@@ -766,6 +793,7 @@ trailing:true white:true*/
             {kind: "XV.ProductCategoryPicker", attr: "productCategory",
               label: "_category".loc()},
             {kind: "XV.SalesPriceWidget", attr: "listPrice"},
+            {kind: "XV.CostWidget", attr: "listCost"},
             {kind: "XV.UnitPicker", attr: "priceUnit"},
             {kind: "XV.ItemCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader",
@@ -1123,10 +1151,10 @@ trailing:true white:true*/
             {kind: "XV.ContactWidget", attr: "contact",
               showAddress: true, label: "_name".loc()},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-            {kind: "XV.TextArea", attr: "notes"}//,
-            //{kind: "onyx.GroupboxHeader", content: "_quotes".loc()}
+            {kind: "XV.TextArea", attr: "notes"}
           ]}
-        ]}
+        ]},
+        {kind: "XV.ProspectQuoteListRelationsBox", attr: "quoteRelations"}
       ]},
       {kind: "onyx.Popup", name: "findExistingAccountPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",

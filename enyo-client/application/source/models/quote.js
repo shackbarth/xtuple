@@ -134,7 +134,7 @@ white:true*/
     // ..........................................................
     // METHODS
     //
-    
+
     applyCustomerSettings: function () {
       var customer = this.get("customer"),
         isFreeFormBillto = customer ? customer.get("isFreeFormBillto") : false,
@@ -152,7 +152,7 @@ white:true*/
       // Set read only state for free form shipto
       this.setReadOnly(this.shiptoAttrArray, !isFreeFormShipto);
     },
-    
+
     bindEvents: function () {
       XM.Document.prototype.bindEvents.apply(this, arguments);
       var pricePolicy = XT.session.settings.get("soPriceEffective");
@@ -295,7 +295,7 @@ white:true*/
                       that.off('change:freight', that.freightDidChange);
                       that.set("freight", freight);
                       that.on('change:freight', that.freightDidChange);
-                      
+
                       // Now calculate tax
                       that.calculateFreightTax();
                     }
@@ -508,15 +508,16 @@ white:true*/
         unsetBilltoContact();
       }
     },
-    
+
     /**
       Fetch selling units of measure after a regular fetch
       and also silence `add` and `remove` events.
     */
     fetch: function (options) {
+      options = options ? _.clone(options) : {};
+
       var that = this,
         success = options.success;
-      options = options ? _.clone(options) : {};
       this.off('add:lineItems remove:lineItems', this.lineItemsDidChange);
       this.off('add:lineItems remove:lineItems', this.calculateTotals);
       options.success = function (model, resp, options) {
@@ -777,7 +778,7 @@ white:true*/
         lineItems = this.get("lineItems"),
         params = {},
         error;
-        
+
       error = XM.Document.prototype.validate.apply(this, arguments);
       if (error) { return error; }
 
@@ -884,7 +885,7 @@ white:true*/
     }
 
   });
-  
+
   // ..........................................................
   // CLASS METHODS
   //
@@ -941,7 +942,7 @@ white:true*/
         scheduleDate: allowASAP ? new Date() : undefined
       };
     },
-    
+
     bindEvents: function (attributes, options) {
       XM.Model.prototype.bindEvents.apply(this, arguments);
       var settings = XT.session.settings;
@@ -1269,7 +1270,7 @@ white:true*/
           var unit = XM.units.get(id);
           that.sellingUnits.add(unit);
         });
-        
+
         // Set the item default selections
         if (resetDefaults) {
           that.set({
@@ -1388,7 +1389,7 @@ white:true*/
       }
       return asOf;
     },
-    
+
     priceDidChange: function () {
       this.calculateExtendedPrice();
       this.calculatePercentages();
@@ -1421,7 +1422,7 @@ white:true*/
         item.unitToUnitRatio(priceUnit, inventoryUnit, options);
       }
     },
-    
+
     quantityDidChange: function () {
       this.calculatePrice();
       this.recalculateParent();
@@ -1583,7 +1584,7 @@ white:true*/
         setPrice = function () {
           // Allow editing again if we could before
           that.setReadOnly("price", readOnlyCache);
-          
+
           // If price was requested before this response,
           // then bail out and start over
           if (that._invalidPriceRequest) {
@@ -1592,7 +1593,7 @@ white:true*/
             that._calculatePrice();
             return;
           }
-          
+
           var totalPrice = XT.math.add(prices, XT.SALES_PRICE_SCALE);
           that.set("customerPrice", totalPrice);
           if (that._updatePrice) {
@@ -1606,7 +1607,7 @@ white:true*/
       parentDate = parent.get(parent.documentDateKey);
       customer = parent.get("customer");
       currency = parent.get("currency");
-      
+
       // If we already have a request pending we need to indicate
       // when that is done to start over because something has changed.
       if (this._pendingPriceRequest) {
@@ -1850,7 +1851,7 @@ white:true*/
     recordType: 'XM.QuoteListItem',
 
     editableModel: 'XM.Quote',
-    
+
     /**
     Returns quote status as a localized string.
 
@@ -1863,7 +1864,7 @@ white:true*/
     }
 
   });
-  
+
   // Add in quote mixin
   XM.QuoteListItem = XM.QuoteListItem.extend(XM.QuoteMixin);
 
