@@ -51,6 +51,16 @@ white:true*/
       return XM.Address.formatShort(this);
     },
 
+    isAllEmpty: function () {
+      return !this.get("line1") &&
+        !this.get("line2") &&
+        !this.get("line3") &&
+        !this.get("city") &&
+        !this.get("state") &&
+        !this.get("postalCode") &&
+        !this.get("country");
+    },
+
     /**
       Success response returns an integer from the server indicating how many times the address
       is used by other records.
