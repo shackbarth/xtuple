@@ -276,6 +276,36 @@ trailing:true white:true*/
   XV.registerModelList("XM.TaxTypeRelation", "XV.TaxTypeList");
   
   // ..........................................................
+  // TAX ZONE
+  //
+
+  enyo.kind({
+    name: "XV.TaxZoneList",
+    kind: "XV.List",
+    label: "_taxZone".loc(),
+    collection: "XM.TaxZoneCollection",
+    parameterWidget: "XV.TaxZoneListParameters",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "code", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.TaxZoneRelation", "XV.TaxZoneList");
+  
+  // ..........................................................
   // TERMS
   //
 

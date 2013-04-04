@@ -160,6 +160,20 @@ trailing:true white:true*/
   });
   
   // ..........................................................
+  // TAX ZONE
+  //
+
+  enyo.kind({
+    name: "XV.TaxZoneListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_taxZone".loc()},
+      {name: "code", label: "_code".loc(), attr: "code"},
+      {name: "description", label: "_description", attr: "description"}
+    ]
+  });
+  
+  // ..........................................................
   // TERMS
   //
 
