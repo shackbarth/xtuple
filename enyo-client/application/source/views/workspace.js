@@ -56,11 +56,6 @@ trailing:true white:true*/
     getAccount: function () {
       var model = this.getValue();
       return model ? model.get('account') : undefined;
-    },
-    modelChanged: function () {
-      this.inherited(arguments);
-      // FIXME: address is null at this moment
-      this.value.get("address").on("notify", this.notify);
     }
   };
 
