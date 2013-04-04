@@ -14,8 +14,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var args = req.query,
       attrs,
       user = new XM.User({ id: args.user }),
-      org = XM.Organization.findOrCreate(args.organization) ||
-        new XM.Organization({ name: args.organization }),
+      org = new XM.Organization({ name: args.organization }),
       userOrg,
       K = XM.Model,
       fetchOptions = {},
@@ -28,7 +27,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
            org.getStatus() === K.READY_CLEAN &&
            !callbackReached) {
 
-        // we don't want to execute this twice in case both async calls get hit
+        // We don't want to execute this twice in case both async calls get hit
         // at the same time, because if you call res.send twice it crashes the
         // datasource.
         callbackReached = true;

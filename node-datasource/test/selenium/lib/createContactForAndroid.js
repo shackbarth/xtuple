@@ -9,7 +9,7 @@ regexp:true, strict:true, trailing:true, white:false*/
   utils = require('./utils.js');
   exports.createContact = function (browser, test, fname, callback) {
   readContactObj = contactObj.readObj1.readContact_xpath + fname +  "')]";
-  utils.pause(10000, function () {
+  utils.pause(40000, function () {
   utils.results('*****Creating a New Contact*****');
   browser.elementByXPath(contactObj.Obj.crmlink_xpath, function (err, el1) {
   browser.clickElement(el1, function () {
@@ -55,9 +55,15 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.type(el13,contactData.VARIABLES.contact_bday, function () {
   browser.elementByXPath(contactObj.Obj.cnotes_xpath, function (err, el14) {
   browser.type(el14, contactData.VARIABLES.contact_notes, function () {
+  utils.pause(2000,function () {//--
+  browser.elementByXPath(contactObj.Obj.cowner_xpath, function (err, el16) {
+  browser.clear(el16, function () {
+  utils.pause(2000,function () {
+  browser.type(el16, contactData.VARIABLES.contact_owner, function (err) {
+  browser.type(el16, '\uE004', function () {
+  utils.pause(2000,function () { //--
   browser.elementByXPath(contactObj.Obj.caccount_xpath, function (err, el15) {
   browser.type(el15, contactData.VARIABLES.contact_account + '\uE004', function () {
-  utils.pause(2000, function () {
   browser.elementByXPathOrNull(contactObj.Obj.saveToolBar_xpath, function (err, toolbarEl) {
   browser.clickElement(toolbarEl, function () {
   browser.elementByXPath(contactObj.Obj.savebutton_xpath, function (err, el17) {
@@ -67,7 +73,7 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.clickElement(toolBarEl, function () {
   utils.pause(4000, function () {
   browser.elementByXPath(contactObj.readObj1.searchField_xpath, function (err,el27) {
-  browser.type(el27, fname, function () { //------ Enters the contact first name in the search field and hits 'Refresh' button
+  browser.type(el27, fname, function () {
   utils.pause(2000, function () {
   browser.elementByXPath(contactObj.readObj1.refreshButton_xpath, function (err, el26) {
   browser.clickElement(el26, function () {
@@ -79,19 +85,19 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.elementByXPath(readContactObj, function (err,contactEl) {
   browser.isDisplayed(contactEl, function (err, displayed) {
   if (displayed) {
-    test.ok(displayed, 'contact saved');
-    callback(browser,test);
+  test.ok(displayed, 'contact saved');
+  callback(browser,test);
   }
   else {
-    test.ok(false, 'contact not saved');
-    setTimeout(function () {
-    browser.quit();
-    setTimeout(function () {
-    test.done();
-    },2000);
-    },2000);
+  test.ok(false, 'contact not saved');
+  setTimeout(function () {
+  browser.quit();
+  setTimeout(function () {
+  test.done();
+  },2000);
+  },2000);
   }
   });});});});});});});});});});});});
   });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});
-  });});});});});});});});});});});});});});});});});});});});});});});});});});};
+  });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});};
 }());

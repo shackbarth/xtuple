@@ -3,7 +3,8 @@ exports.caps = [
     version: ' ',
     platform: 'Windows 7',
     tags: ["selenium test"],
-    name: "CRUD contact on Chrome and Windows 7"
+    name: "CRUD contact on Chrome and Windows 7",
+    "screen-resolution": "1280x1024"
     },
   { browserName: 'firefox', 
     version: '19',
@@ -17,6 +18,29 @@ exports.caps = [
     platform: 'Linux',
     tags: ["selenium test"],
     name: "CRU contact on  android"
-    }
+    },
+  {
+    browserName: 'iphone',
+    version: '5',
+    platform: 'Mac 10.6',
+    tags: ["selenium test"],
+    name: "CRUD contact on  iPad"
+  },
+  {
+    browserName: 'safari',
+    version: '5',
+    platform: 'Mac 10.6',
+    tags: ["selenium test"],
+    name: "CRUD contact on Safari - Mac",
+    "screen-resolution": "1024x768"
+  },
+  {
+    browserName: 'firefox',
+    version: '11',
+    platform: 'Linux',
+    tags: ["selenium test"],
+    name: "CRUD contact on Chrome-Linux",
+    "screen-resolution": "1024x768"
+  }
 ];
 

@@ -140,6 +140,7 @@ var lang = XT.stringsFor("en_US", {
   "_custPrice": "Cust. Price",
   "_customer": "Customer",
   "_customerType": "Customer Type",
+  "_customerTypes": "Customer Types",
   "_customerPrice": "Customer Price",
   "_customers": "Customers",
   "_customerProspect": "Customer / Prospect",
