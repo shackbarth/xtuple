@@ -5,6 +5,6 @@ config*
 datasource.log
 datasource-err.log
 www
-lib/private
+lib/private/*
 pid/*
 test/shared/loginData.js
