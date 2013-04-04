@@ -386,7 +386,7 @@ trailing:true white:true*/
   // ..........................................................
   // CUSTOMER TYPE LIST
   //
-
+  
   enyo.kind({
     name: "XV.CustomerTypeList",
     kind: "XV.List",
@@ -395,15 +395,15 @@ trailing:true white:true*/
     query: {orderBy: [
       {attribute: 'code'}
     ]},
-    parameterWidget: "XV.CustomerTypeListParameters",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "code", isKey: true},
-              {kind: "XV.ListAttr", attr: "description", fit: true, classes: "right"}
-            ]}
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "code", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
           ]}
         ]}
       ]}
