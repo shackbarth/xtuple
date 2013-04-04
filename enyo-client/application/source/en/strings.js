@@ -96,6 +96,7 @@ var lang = XT.stringsFor("en_US", {
   "_canCreateUsers": "Can Create Users",
   "_category": "Category",
   "_cc": "Cc",
+  "_changeAll?": "Would you like to update the address across them all?",
   "_changeLog": "Change Log",
   "_characteristic": "Characteristic",
   "_characteristicType": "Characteristic Type",
