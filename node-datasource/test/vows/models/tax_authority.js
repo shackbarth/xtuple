@@ -64,7 +64,7 @@ var XVOWS = XVOWS || {};
     'UPDATE ': crud.update(data, {
       '-> Set values': {
         topic: function () {
-          deleteData.accntId = data.model.get("account");
+          deleteData.accntId = data.model.get("account").get("id");
           deleteData.accountModel = new XM.Account();
           data.model.set(data.updateHash);
           return data;
