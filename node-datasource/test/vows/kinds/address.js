@@ -1,7 +1,7 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global XT:true, XM:true, XV:true, process:true, module:true, require:true */
+/*global XT:true, XM:true, XV:true, process:true, module:true, require:true, clearTimeout:true, setTimeout:true */
 
 var XVOWS = XVOWS || {};
 (function () {
@@ -136,9 +136,10 @@ var XVOWS = XVOWS || {};
                 if (model.getStatus() === XM.Model.READY_CLEAN) {
                   that.callback(null, model);
                 }
-              }
+              };
+
             notifyObj.model.on('statusChange', callbackAdaptor);
-            notifyObj.callback(false);
+            notifyObj.callback(true);
           },
           'then we just save the model with the new value': function (error, topic) {
             assert.equal(topic.getStatusString(), "READY_CLEAN");
@@ -148,14 +149,15 @@ var XVOWS = XVOWS || {};
         }
       }
     }
-/*
   }).addBatch({
     'We can take an address that is in use somewhere else': {
       topic: function () {
         var that = this,
+          widget = new XV.AddressWidget(),
           model = new XM.AddressInfo(),
           success = function (resp) {
-            that.callback(null, model);
+            widget.setValue(model);
+            that.callback(null, widget);
           },
           error = function (err) {
             that.callback(err);
@@ -164,54 +166,43 @@ var XVOWS = XVOWS || {};
         model.fetch({id: 6, success: success, error: error});
       },
       'and change and save it': {
-        topic: function (model) {
-          var that = this,
-            callbackAdaptor = function (model, message, options) {
-              that.callback(null, {model: model, message: message, options: options});
-            };
+        topic: function (widget) {
+          var that = this;
 
-          model.on("notify", callbackAdaptor);
-          model.set({line1: "TestAddress" + Math.random()});
-          model.saveAddress();
+          widget.getValue().set({line1: "TestAddress" + Math.random()});
+          // hack doNotify to make it suit our purposes
+          widget.doNotify = function (inEvent) {
+            that.callback(null, {widget: widget, event: inEvent});
+          };
+          widget.saveAddress();
         },
-        // redundant:
-        //'we get asked by the model if we want to change one or change all': function (error, topic) {
-        //  assert.isString(topic.message);
-        //  assert.isFunction(topic.options.callback);
-        //},
         'and if we say we want to change just the one': {
-          topic: function (notifyObj) {
+          topic: function (obj) {
             var that = this,
-              model = notifyObj.model,
+              notifyObj = obj.event,
+              widget = obj.widget,
               timeoutId,
               callbackAdaptor = function (model, status, options) {
-                clearTimeout(timeoutId);
                 if (model.getStatus() === XM.Model.READY_CLEAN) {
                   that.callback(null, model);
                 }
-              }
-            // we expect the status of the original model not to change
-            model.on('statusChange', callbackAdaptor);
+              };
+
+            notifyObj.model.on('statusChange', callbackAdaptor);
             // we expect the timeout to get hit
-            timeoutId = setTimeout(function () {
-              that.callback(null, model);
-            }, 5 * 1000);
-
-
-            notifyObj.options.callback(true);
+            notifyObj.callback(false); // false = do not change all. change one.
           },
-          'then we do not change the pre-existing model': function (error, topic) {
-            assert.equal(topic.get("line1").substring(0, 11), "Bedrijvenzo");
+          'then the old model should have been reset to its original value': function (error, topic) {
             assert.equal(topic.getStatusString(), "READY_CLEAN");
             assert.equal(topic.id, 6);
-          }//,
+            assert.equal(topic.get("line1").substring(0, 13), "Bedrijvenzone");
+          }
           //'we create a new one with the new data': function (error, topic) {
           // TODO
           //}
         }
       }
     }
-*/
   //TODO: If the address is empty we set it to null
 
 
