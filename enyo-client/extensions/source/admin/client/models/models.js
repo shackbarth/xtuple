@@ -60,6 +60,19 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.Campaign = XM.Document.extend(/** @lends XM.Campaign.prototype */{
+
+    recordType: 'XM.Campaign',
+
+    databaseType: 'global'
+
+  });
+
 
   /**
     @class
@@ -464,6 +477,17 @@ white:true*/
   XM.ExtensionCollection = XM.Collection.extend(/** @lends XM.SessionCollection.prototype */{
 
     model: XM.Extension
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.CampaignCollection = XM.Collection.extend(/** @lends XM.CampaignCollection.prototype */{
+
+    model: XM.Campaign
 
   });
 

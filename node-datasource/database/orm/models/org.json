@@ -366,7 +366,7 @@
        }
      },
      {
-       "name": "note",
+       "name": "notes",
        "attr": {
          "type": "String",
          "column": "cmpg_note"
