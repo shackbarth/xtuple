@@ -181,30 +181,37 @@ var XVOWS = XVOWS || {};
             var that = this,
               notifyObj = obj.event,
               widget = obj.widget,
-              timeoutId,
               callbackAdaptor = function (model, status, options) {
                 if (model.getStatus() === XM.Model.READY_CLEAN) {
-                  that.callback(null, model);
+                  that.callback(null, {model: model, widget: widget});
                 }
               };
 
             notifyObj.model.on('statusChange', callbackAdaptor);
-            // we expect the timeout to get hit
             notifyObj.callback(false); // false = do not change all. change one.
           },
           'then the old model should have been reset to its original value': function (error, topic) {
-            assert.equal(topic.getStatusString(), "READY_CLEAN");
-            assert.equal(topic.id, 6);
-            assert.equal(topic.get("line1").substring(0, 13), "Bedrijvenzone");
+            var model = topic.model;
+
+            assert.equal(model.getStatusString(), "READY_CLEAN");
+            assert.equal(model.id, 6);
+            assert.equal(model.get("line1").substring(0, 13), "Bedrijvenzone");
+          },
+          'we wait a sec': {
+            topic: function (obj) {
+              var that = this;
+              setTimeout(function () {
+                that.callback(null, obj.widget.getValue());
+              }, 1000);
+            },
+            'and the widget will now be backed by a new model with the updated information': function (error, topic) {
+              assert.equal(topic.getStatusString(), "READY_CLEAN");
+              assert.notEqual(topic.id, 6);
+              assert.equal(topic.get("line1").substring(0, 11), "TestAddress");
+            }
           }
-          //'we create a new one with the new data': function (error, topic) {
-          // TODO
-          //}
         }
       }
     }
-  //TODO: If the address is empty we set it to null
-
-
   }).export(module);
 }());
