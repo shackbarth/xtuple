@@ -145,15 +145,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // on the organization collection
       //
       fetchSuccess = function (collection, response) {
-        _.each(collection.models, function (org) {
+        _.each(response, function (org, index) {
           var scriptName = "init_script.sql",
-            host = org.get("databaseServer").get("hostname"),
-            port = org.get("databaseServer").get("port"),
-            pgUser = org.get("databaseServer").get("user"),
-            pgPassword = org.get("databaseServer").get("password"),
+            host = org.databaseServer.hostname,
+            port = org.databaseServer.port,
+            pgUser = org.databaseServer.user,
+            pgPassword = org.databaseServer.password,
             psqlPath = X.options.datasource.psqlPath || "psql",
             psqlDir,
-            orgName = org.get("name"),
+            orgName = org.name,
             flags = " -U " + pgUser + " -h " + host + " -p " + port + " -d " + orgName,
             psqlCommand = psqlPath + flags + " -f " + scriptName,
             ormCreds = {
@@ -163,7 +163,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               port: port,
               password: pgPassword
             },
-            group = org.get("group"),
+            group = org.group,
             initInstanceDbDir = X.options.datasource.initInstanceDbDirectory || "./scripts",
             initInstanceDbCommand,
             xTupleDbDir,
@@ -209,17 +209,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             ormArray.push({ormCreds: ormCreds, ormDir: coreOrmDir, loadOrder: -9990});
           }
 
-          _.each(org.get("extensions").models, function (ext) {
+          _.each(org.extensions, function (ext) {
             //
             // go through all of the extensions of all the organizations...
             //
-            if (args.extensions && JSON.parse(args.extensions).indexOf(ext.get("extension").id) < 0) {
+            if (args.extensions && JSON.parse(args.extensions).indexOf(ext.extension.id) < 0) {
               // if the user has specified that only some extensions are to be loaded,
               // then we stop here if this extension at hand is not on that list
               return;
             }
 
-            var extLoc = ext.get("extension").get("location");
+            var extLoc = ext.extension.location;
             if (extLoc === '/public-extensions') {
               // reverse-compatibility requires us to honor the path '/public-extensions'
               // even if that's not the actual path anymore.
@@ -229,8 +229,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               extLoc = '/../private-extensions';
             }
 
-            var extName = ext.get("extension").get("name"),
-              extLoadOrder = ext.get("extension").get("loadOrder"),
+            var extName = ext.extension.name,
+              extLoadOrder = ext.extension.loadOrder,
               scriptDir = ".." + extLoc + "/source/" + extName + "/database/source",
               execCommand = "(cd %@ && exec %@)".f(scriptDir, psqlCommand),
               ormDir = ".." + extLoc + "/source/" + extName + "/database/orm";

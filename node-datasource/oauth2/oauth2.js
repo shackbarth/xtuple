@@ -12,7 +12,8 @@ var auth = require('../routes/auth'),
     login = require('connect-ensure-login'),
     db = require('./db'),
     url = require('url'),
-    utils = require('./utils');
+    utils = require('./utils'),
+    privateSalt = X.fs.readFileSync(X.options.datasource.saltFile).toString();
 
 // create OAuth 2.0 server
 var server = oauth2orize.createServer();
@@ -149,7 +150,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
     // The accessToken is only valid for 1 hour and must be sent with each request to
     // the REST API. The bcrypt hash calculation on each request would be too expensive.
     // Therefore, we do not need to bcrypt the accessToken, just SHA1 it.
-    accesshash = X.crypto.createHash('sha1').update(accessToken).digest("hex");
+    accesshash = X.crypto.createHash('sha1').update(privateSalt + accessToken).digest("hex");
 
     saveOptions.success = function (model) {
       if (!model) { return done(null, false); }
@@ -237,7 +238,7 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
     // The accessToken is only valid for 1 hour and must be sent with each request to
     // the REST API. The bcrypt hash calculation on each request would be too expensive.
     // Therefore, we do not need to bcrypt the accessToken, just SHA1 it.
-    accesshash = X.crypto.createHash('sha1').update(accessToken).digest("hex");
+    accesshash = X.crypto.createHash('sha1').update(privateSalt + accessToken).digest("hex");
 
     saveOptions.success = function (model) {
       if (!model) { return done(null, false); }
@@ -366,7 +367,7 @@ server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(functio
         // The accessToken is only valid for 1 hour and must be sent with each request to
         // the REST API. The bcrypt hash calculation on each request would be too expensive.
         // Therefore, we do not need to bcrypt the accessToken, just SHA1 it.
-        accesshash = X.crypto.createHash('sha1').update(accessToken).digest("hex");
+        accesshash = X.crypto.createHash('sha1').update(privateSalt + accessToken).digest("hex");
 
         saveOptions.success = function (model) {
           if (!model) { return done(null, false); }

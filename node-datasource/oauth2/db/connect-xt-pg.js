@@ -128,7 +128,7 @@ module.exports = function (connect) {
       });
     };
 
-    X.debug("XTPGStore SessionStore using hybridCache = ", this.hybridCache);
+    X.log("SessionStore using hybridCache = ", this.hybridCache);
     // Prime this.sessions and MemoryCache on initialization.
     this.loadSessions();
   }
