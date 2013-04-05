@@ -822,7 +822,6 @@ trailing:true white:true*/
             {kind: "XV.ProductCategoryPicker", attr: "productCategory",
               label: "_category".loc()},
             {kind: "XV.SalesPriceWidget", attr: "listPrice"},
-            {kind: "XV.CostWidget", attr: "listCost"},
             {kind: "XV.UnitPicker", attr: "priceUnit"},
             {kind: "XV.ItemCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader",
@@ -1307,7 +1306,7 @@ trailing:true white:true*/
         ]},
         {kind: "FittableRows", title: "_lineItems".loc(), components: [
           {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true},
-          {kind: "XV.Groupbox", name: "totalGroup",
+          {kind: "XV.Groupbox", fit: true, name: "totalGroup",
             components: [
             {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
             {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [

@@ -155,8 +155,6 @@ regexp:true, undef:true, trailing:true, white:true */
 
             that.doValueChange(inEvent);
           }
-
-
         };
         that.$.picker.value.toBase(amount, that.getEffective(), options);
       } else {
