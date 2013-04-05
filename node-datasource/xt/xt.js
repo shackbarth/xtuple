@@ -63,7 +63,6 @@ require('./foundation');
     );
 
     if (X.requireDatabase) require("./database");
-    if (X.requireServer) require("./server");
 
     X.pid = process.pid;
 

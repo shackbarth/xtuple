@@ -142,7 +142,9 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.elementByXPath(contactObj.readObj1.cmname_xpath, function (err,el22) {
   browser.clear(el22, function () {
   browser.elementByXPath(contactObj.readObj1.cmname_xpath, function (err,el24) {
-  browser.type(el24, contactData.VARIABLES.contact_newmname + '\uE004', function () {
+  browser.type(el24, contactData.VARIABLES.contact_newmname, function () {
+  browser.type(el24, '\uE004', function () {
+  utils.pause(2000, function () {
   browser.elementByXPathOrNull(contactObj.readObj1.saveToolBar_xpath, function (err, toolbarEl) {
   browser.clickElement(toolbarEl, function () {
   utils.pause(2000, function () {
@@ -179,6 +181,6 @@ regexp:true, strict:true, trailing:true, white:false*/
   utils.pause(2000, function () {
   callback(browser, test);
   });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});
-  });});});});});});});});});});});});});});});});});});});});};
+  });});});});});});});});});});});});});});});});});});});});});});};
 }());
 

@@ -28,7 +28,7 @@ var XVOWS = XVOWS || {};
           var columns,
             model,
             // XXX deal with this better
-            settingsModels = ['Crm', 'DatabaseInformation'],
+            settingsModels = ['Crm', 'Sales', 'DatabaseInformation'],
             errors = null;
 
           _.each(topic, function (value, key) {
