@@ -374,5 +374,46 @@
      }
     ],
     "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "CampaignRelation",
+    "table": "xt.cmpg",
+    "idSequenceName": "orgext_orgext_id_seq",
+    "comment": "Campaign Relation Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "cmpg_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "number",
+       "attr": {
+         "type": "String",
+         "column": "cmpg_number"
+       }
+     },
+     {
+       "name": "description",
+       "attr": {
+         "type": "String",
+         "column": "cmpg_descrip"
+       }
+     }
+    ],
+    "isSystem": true
   }
 ]

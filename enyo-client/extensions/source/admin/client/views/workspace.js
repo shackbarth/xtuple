@@ -166,6 +166,7 @@ trailing:true white:true*/
             {kind: "XV.NumberWidget", attr: "licenses"},
             {kind: "XV.DatabaseServerWidget", attr: "databaseServer"},
             {kind: "onyx.GroupboxHeader", content: "_attributes".loc()},
+            {kind: "XV.CampaignWidget", attr: "campaign"},
             {kind: "XV.DateWidget", attr: "createdDate"},
             {kind: "XV.DateWidget", attr: "expirationDate"},
             {kind: "XV.InputWidget", attr: "source"},

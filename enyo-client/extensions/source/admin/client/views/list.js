@@ -61,7 +61,8 @@ trailing:true white:true*/
     name: "XV.CampaignList",
     kind: "XV.List",
     label: "_campaigns".loc(),
-    collection: "XM.CampaignCollection",
+    collection: "XM.CampaignRelationCollection",
+    parameterWidget: "XV.CampaignParameters",
     query: {orderBy: [
       {attribute: 'id'}
     ]},
