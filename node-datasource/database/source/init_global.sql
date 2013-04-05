@@ -14,6 +14,7 @@
 \i xt/tables/datasource.sql
 \i xt/tables/dbserver.sql
 \i xt/tables/ext.sql
+\i xt/tables/cmpg.sql
 \i xt/tables/org.sql
 \i xt/tables/orgext.sql
 -- TODO Remove session in a future version after it has had time to be dropped.
