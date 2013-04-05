@@ -112,6 +112,7 @@ var lang = XT.stringsFor("en_US", {
   "_company": "Company",
   "_competitor": "Competitor",
   "_completeDate": "Complete Date",
+  "_configureSO": "Configure Sales Orders",
   "_contact": "Contact",
   "_contactRelations": "Contacts",
   "_contacts": "Contacts",

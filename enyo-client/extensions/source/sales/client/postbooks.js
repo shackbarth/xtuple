@@ -60,6 +60,20 @@ trailing:true white:true*/
     relevantPrivileges = [
       "AccessSalesExtension",
       "ConfigureSO",
+      "MaintainTaxAssignments",
+      "MaintainTaxClasses",
+      "MaintainTaxCodes",
+      "MaintainTaxReconciliations",
+      "MaintainTaxRegistrations",
+      "MaintainTaxTypes",
+      "MaintainTaxZones",
+      "ViewTaxAssignments",
+      "ViewTaxClasses",
+      "ViewTaxCodes",
+      "ViewTaxReconciliations",
+      "ViewTaxRegistrations",
+      "ViewTaxTypes",
+      "ViewTaxZones"
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
   };
