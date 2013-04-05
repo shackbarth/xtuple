@@ -23,7 +23,7 @@ var XVOWS = XVOWS || {};
     }
   };
 
-  vows.describe('The NumberWidget kind').addBatch({
+  vows.describe('The Address Widget').addBatch({
     'When we load up our app': {
       topic: function () {
         zombieAuth.loadApp(this.callback);
