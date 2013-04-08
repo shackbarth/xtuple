@@ -42,7 +42,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.CustomerGroupCustomerList",
     kind: "XV.List",
-    label: "_customerGroupCustomer".loc(),
+    label: "_customers".loc(),
     collection: "XM.CustomerGroupCustomerCollection",
     parameterWidget: "XV.CustomerGroupCustomerListParameters",
     query: {orderBy: [

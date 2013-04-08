@@ -192,7 +192,8 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"}
           ]}
-        ]}
+        ]},
+        {kind: "XV.CustomerGroupCustomerBox", attr: "customers"}
       ]}
     ]
   });

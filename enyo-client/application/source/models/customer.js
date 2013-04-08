@@ -705,6 +705,18 @@ white:true*/
     model: XM.CustomerType
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.CustomerGroupCustomerCollection = XM.Collection.extend({
+    /** @scope XM.CustomerGroupCustomerCollection.prototype */
+
+    model: XM.CustomerGroupCustomer
+
+  });
 
   /**
     @class
