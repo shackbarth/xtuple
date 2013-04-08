@@ -50,28 +50,21 @@ white:true*/
   // These will be loaded after all extensions are loaded
   if (!XT.StartupTasks) {
     XT.StartupTasks = [];
-/*
-    XT.pushStartupTask = function (taskName, cacheName, collectionName, query) {
+
+    XT.cacheCollection = function (taskName, cacheName, collectionName, query) {
       XT.StartupTasks.push({
-        taskName: "loadHonorifics",
+        taskName: taskName,
         task: function () {
           var options = {};
 
-          XM.honorifics = new XM.HonorificCollection();
-          options.success = _.bind(this.didCompleteCache, this, XM.honorifics);
-          options.query = {};
-          options.query.orderBy = [
-            {attribute: 'code'}
-          ];
-          XM.honorifics.fetch(options);
+          XM[cacheName] = new XM[collectionName]();
+          options.success = _.bind(this.didCompleteCache, this, XM[cacheName]);
+          options.query = query || {};
+          XM[cacheName].fetch(options);
         }
       });
-
     }
-    */
   }
-
-
 
   XT.StartupTasks.push({
     taskName: "loadCurrentUser",
@@ -84,6 +77,11 @@ white:true*/
       XM.currentUser.fetch(options);
     }
   });
+
+  XT.cacheCollection("loadHonorifics", "honorifics", "HonorificCollection",
+    {orderBy: [
+      {attribute: 'code'}
+    ]});
 
   XT.StartupTasks.push({
     taskName: "loadHonorifics",
