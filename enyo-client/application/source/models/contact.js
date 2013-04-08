@@ -75,7 +75,7 @@ white:true*/
     }
 
   });
-  
+
   XM.Contact.used = function (id, options) {
     return XT.dataSource.dispatch('XM.Contact', 'used', id, options);
   };
@@ -226,7 +226,7 @@ white:true*/
     editableModel: 'XM.Contact'
 
   });
-  
+
   /**
     @class
 
@@ -248,8 +248,9 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.HonorificCollection = XM.Collection.extend({
-    /** @scope XM.HonorificCollection.prototype */
+  XM.HonorificCollection = XM.Collection.extend(/** @lends XM.HonorificCollection.prototype */{
+
+    isAutoSync: true,
 
     model: XM.Honorific
 

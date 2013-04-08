@@ -48,7 +48,30 @@ white:true*/
   });
 
   // These will be loaded after all extensions are loaded
-  if (!XT.StartupTasks) { XT.StartupTasks = []; }
+  if (!XT.StartupTasks) {
+    XT.StartupTasks = [];
+/*
+    XT.pushStartupTask = function (taskName, cacheName, collectionName, query) {
+      XT.StartupTasks.push({
+        taskName: "loadHonorifics",
+        task: function () {
+          var options = {};
+
+          XM.honorifics = new XM.HonorificCollection();
+          options.success = _.bind(this.didCompleteCache, this, XM.honorifics);
+          options.query = {};
+          options.query.orderBy = [
+            {attribute: 'code'}
+          ];
+          XM.honorifics.fetch(options);
+        }
+      });
+
+    }
+    */
+  }
+
+
 
   XT.StartupTasks.push({
     taskName: "loadCurrentUser",
@@ -65,10 +88,10 @@ white:true*/
   XT.StartupTasks.push({
     taskName: "loadHonorifics",
     task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
+      var options = {};
+
       XM.honorifics = new XM.HonorificCollection();
+      options.success = _.bind(this.didCompleteCache, this, XM.honorifics);
       options.query = {};
       options.query.orderBy = [
         {attribute: 'code'}
@@ -205,7 +228,7 @@ white:true*/
       XM.units.fetch(options);
     }
   });
-  
+
   XT.StartupTasks.push({
     taskName: "loadFreightClasses",
     task: function () {
@@ -327,7 +350,7 @@ white:true*/
       XM.shipZones.fetch(options);
     }
   });
-  
+
   XT.StartupTasks.push({
     taskName: "loadCostCategories",
     task: function () {
@@ -357,7 +380,7 @@ white:true*/
       XM.plannerCodes.fetch(options);
     }
   });
-  
+
   XT.StartupTasks.push({
     taskName: "loadSaleTypes",
     task: function () {
@@ -387,7 +410,7 @@ white:true*/
       XM.sites.fetch(options);
     }
   });
-  
+
   XT.StartupTasks.push({
     taskName: "loadTaxTypes",
     task: function () {
@@ -402,7 +425,7 @@ white:true*/
       XM.taxTypes.fetch(options);
     }
   });
-  
+
   XT.StartupTasks.push({
     taskName: "loadTaxAuthorities",
     task: function () {
