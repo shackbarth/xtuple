@@ -73,7 +73,19 @@ trailing:true white:true*/
       "ViewTaxReconciliations",
       "ViewTaxRegistrations",
       "ViewTaxTypes",
-      "ViewTaxZones"
+      "ViewTaxZones",
+      "MaintainFreightClasses",
+      "MaintainCustomerGroups",
+      "MaintainSalesReps",
+      "MaintainShipZones",
+      "MaintainTerms",
+      "MaintainSaleTypes",
+      "ViewFreightClasses",
+      "ViewCustomerGroups",
+      "ViewSalesReps",
+      "ViewShipZones",
+      "ViewTerms",
+      "ViewSaleTypes"
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
   };
