@@ -62,13 +62,22 @@ white:true*/
       {orderBy: [
         {attribute: 'code'}
       ]}
+      You can even put two attributes in this string if you put a space between them.
+      "order name" will be treated as
+      {orderBy: [
+        {attribute: 'order'},
+        {attribute: 'name'}
+      ]}
+
    */
-  XT.cacheCollection = function (taskName, cacheName, collectionName, query) {
+  XT.cacheCollection = function (cacheName, collectionName, query) {
+    var orderBy;
+
     cacheName = cacheName.suffix(); // strip off the XM
     collectionName = collectionName.suffix(); // strip off the XM
 
     XT.StartupTasks.push({
-      taskName: taskName,
+      taskName: "Load " + cacheName,
       task: function () {
         var options = {};
 
@@ -76,9 +85,12 @@ white:true*/
         options.success = _.bind(this.didCompleteCache, this, XM[cacheName]);
 
         if (typeof query === "string") {
-          options.query = {orderBy: [
-            {attribute: query}
-          ]}
+          console.log("query", query);
+          orderBy = _.map(query.split(" "), function (s) {
+            return {attribute: s};
+          });
+          options.query = {orderBy: orderBy};
+          console.log("order after", JSON.stringify(options.query));
         } else {
           options.query = query || {};
         }
@@ -86,7 +98,7 @@ white:true*/
         XM[cacheName].fetch(options);
       }
     });
-  }
+  };
 
   XT.StartupTasks.push({
     taskName: "loadCurrentUser",
@@ -100,30 +112,11 @@ white:true*/
     }
   });
 
-  XT.cacheCollection("loadHonorifics", "XM.honorifics", "XM.HonorificCollection", "code");
-
-  XT.StartupTasks.push({
-    taskName: "loadSources",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.sources = new XM.SourceCollection();
-      XM.sources.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadCommentTypes",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.commentTypes = new XM.CommentTypeCollection();
-      XM.commentTypes.fetch(options);
-    }
-  });
-
+  XT.cacheCollection("XM.honorifics", "XM.HonorificCollection", "code");
+  XT.cacheCollection("XM.sources", "XM.SourceCollection");
+  XT.cacheCollection("XM.commentTypes", "XM.CommentTypeCollection");
+  XT.cacheCollection("XM.characteristics", "XM.CharacteristicCollection", "order name");
+/*
   XT.StartupTasks.push({
     taskName: "loadCharacteristics",
     task: function () {
@@ -140,7 +133,7 @@ white:true*/
       XM.characteristics.fetch(options);
     }
   });
-
+*/
   XT.StartupTasks.push({
     taskName: "loadLanguages",
     task: function () {
