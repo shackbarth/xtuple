@@ -48,9 +48,7 @@ white:true*/
   });
 
   // These will be loaded after all extensions are loaded
-  if (!XT.StartupTasks) {
-    XT.StartupTasks = [];
-  }
+  if (!XT.StartupTasks) { XT.StartupTasks = []; }
 
   /**
     @param {String} taskName. Call it anything you like
@@ -103,21 +101,6 @@ white:true*/
   });
 
   XT.cacheCollection("loadHonorifics", "XM.honorifics", "XM.HonorificCollection", "code");
-
-  XT.StartupTasks.push({
-    taskName: "loadHonorifics",
-    task: function () {
-      var options = {};
-
-      XM.honorifics = new XM.HonorificCollection();
-      options.success = _.bind(this.didCompleteCache, this, XM.honorifics);
-      options.query = {};
-      options.query.orderBy = [
-        {attribute: 'code'}
-      ];
-      XM.honorifics.fetch(options);
-    }
-  });
 
   XT.StartupTasks.push({
     taskName: "loadSources",
