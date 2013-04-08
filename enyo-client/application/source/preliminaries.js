@@ -1,14 +1,16 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global X:true, enyo:true*/
+/*global XT:true, enyo:true*/
 
 XT = typeof XT !== 'undefined' ? XT : {};
 
 (function () {
-  var host = document.location.host,
-      protocol = document.location.protocol;
+  //var host = document.location.host,
+  //    protocol = document.location.protocol;
 
+  /*
+  This is now XT.session.logout
   window.relocate = function () {
     if (window.onbeforeunload) {
       // if we've set up a "are you sure you want to leave?" warning, disable that
@@ -21,14 +23,14 @@ XT = typeof XT !== 'undefined' ? XT : {};
     //document.location = "%@//%@/login".f(protocol,hostname),
     document.location = "%@//%@".f(protocol,host);
   };
-
+  */
   XT.setVersion = function (version) {
     var navigator = XT.app.$.postbooks.$.navigator;
     navigator.createComponent({
       container: navigator.$.gearMenu,
       content: "_version".loc() + " " + version,
       classes: "xv-version-label"
-    })
+    });
   };
 
 }());
