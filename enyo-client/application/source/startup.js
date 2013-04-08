@@ -50,20 +50,44 @@ white:true*/
   // These will be loaded after all extensions are loaded
   if (!XT.StartupTasks) {
     XT.StartupTasks = [];
+  }
 
-    XT.cacheCollection = function (taskName, cacheName, collectionName, query) {
-      XT.StartupTasks.push({
-        taskName: taskName,
-        task: function () {
-          var options = {};
+  /**
+    @param {String} taskName. Call it anything you like
+    @param {String} cacheName. The location of the cache.
+      e.g. XM.honorifics.
+    @param {String} collectionName. The collection name, e.g. XM.HonorificCollection
+    @param {Object|String} query. An optional parameter for the fetch options to specify
+      the query. In the most common case you'll just be setting the orderBy attribute.
+      If so, you can just pass in the attribute name.
+      so "code" will be treated like
+      {orderBy: [
+        {attribute: 'code'}
+      ]}
+   */
+  XT.cacheCollection = function (taskName, cacheName, collectionName, query) {
+    cacheName = cacheName.suffix(); // strip off the XM
+    collectionName = collectionName.suffix(); // strip off the XM
 
-          XM[cacheName] = new XM[collectionName]();
-          options.success = _.bind(this.didCompleteCache, this, XM[cacheName]);
+    XT.StartupTasks.push({
+      taskName: taskName,
+      task: function () {
+        var options = {};
+
+        XM[cacheName] = new XM[collectionName]();
+        options.success = _.bind(this.didCompleteCache, this, XM[cacheName]);
+
+        if (typeof query === "string") {
+          options.query = {orderBy: [
+            {attribute: query}
+          ]}
+        } else {
           options.query = query || {};
-          XM[cacheName].fetch(options);
         }
-      });
-    }
+
+        XM[cacheName].fetch(options);
+      }
+    });
   }
 
   XT.StartupTasks.push({
@@ -78,10 +102,7 @@ white:true*/
     }
   });
 
-  XT.cacheCollection("loadHonorifics", "honorifics", "HonorificCollection",
-    {orderBy: [
-      {attribute: 'code'}
-    ]});
+  XT.cacheCollection("loadHonorifics", "XM.honorifics", "XM.HonorificCollection", "code");
 
   XT.StartupTasks.push({
     taskName: "loadHonorifics",
