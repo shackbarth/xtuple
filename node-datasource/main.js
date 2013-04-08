@@ -60,8 +60,6 @@ _ = require("underscore");
   // Make absolutely sure we're going to start.
   options.autoStart = true;
 
-  //X.debugging = true;
-
   // Set the options.
   X.setup(options);
 
@@ -231,7 +229,7 @@ var conditionalExpressSession = function (req, res, next) {
     next();
   } else {
     // Instead of doing app.use(express.session()) we call the package directly
-    // which returns a function(req, res, next) we can call to do the same thing.
+    // which returns a function (req, res, next) we can call to do the same thing.
     var init_session = express.session({
         store: sessionStore,
         secret: privateSalt,
@@ -519,7 +517,11 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   // ???
   socket.on('session', function (data, callback) {
     ensureLoggedIn(function (session) {
-      callback({data: session.passport.user, code: 1});
+      callback({
+        data: session.passport.user,
+        code: 1,
+        debugging: X.options.datasource.debugging,
+        version: X.version});
     }, data && data.payload);
   });
 
