@@ -175,7 +175,15 @@ passport.use(new BearerStrategy(
           if (!user) { return done(null, false); }
 
           var scopes = token.get("scope"),
-              info = {};
+            sql = 'select orm_namespace, orm_type from xt.orm group by orm_namespace, orm_type;',
+            ormCallback = function (ormErr, orms) {
+              if (ormErr) { return done(ormErr); }
+
+              var info = {};
+
+              info = { scope: scopes, orm: orms.rows };
+              done(null, user, info);
+            };
 
           try {
             scopes = JSON.parse(scopes);
@@ -183,8 +191,11 @@ passport.use(new BearerStrategy(
             if (!Array.isArray(scopes)) { scopes = [ scopes ]; }
           }
 
-          info = { scope: scopes };
-          done(null, user, info);
+          // Get ORM models for this org.
+// TODO - If there are multiple scopes, they should only relate to one org.
+// e.g. [dev.contact, dev.customer, dev.salesorder.readonly] can all be distilled to the "dev" org.
+// TODO - Extract a single org from the scopes.
+          X.database.query(scopes[0], sql, ormCallback);
         });
       } else {
         return done(null, false);

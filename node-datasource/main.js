@@ -323,6 +323,14 @@ app.post('/oauth/token', oauth2.token);
 
 app.get('/api/userinfo', user.info);
 
+// TODO - May not need relations at all.
+app.all('/api/v1alpha1/:model/:id/:relation/:relid/*', routes.restRouter);
+app.all('/api/v1alpha1/:model/:id/:relation/*', routes.restRouter);
+
+app.all('/api/v1alpha1/:model/:id/*', routes.restRouter);
+app.all('/api/v1alpha1/:model/*', routes.restRouter);
+app.all('/api/v1alpha1/*', routes.restRouter);
+
 app.get('/', routes.loginForm);
 app.post('/login', routes.login);
 app.get('/login/scope', routes.scopeForm);
