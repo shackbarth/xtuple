@@ -16,7 +16,6 @@ trailing:true white:true*/
   XV.CustomerMixin = {
     create: function () {
       this.inherited(arguments);
-      this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
     },
     attributesChanged: function (model, options) {
       XV.EditorMixin.attributesChanged.apply(this, arguments);
@@ -70,7 +69,6 @@ trailing:true white:true*/
 
     disabledChanged: function () {
       this.inherited(arguments);
-      this.$.expandButton.setDisabled(this.getDisabled());
     },
     /**
     Set the current model into the List Relation and the Summary Editor Panel
