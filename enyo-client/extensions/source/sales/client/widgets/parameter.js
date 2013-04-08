@@ -20,6 +20,20 @@ trailing:true white:true*/
   });
   
   // ..........................................................
+  // CUSTOMER GROUP CUSTOMER
+  //
+
+  enyo.kind({
+    name: "XV.CustomerGroupCustomerListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_customerGroupCustomer".loc()},
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "description", label: "_description".loc(), attr: "description"}
+    ]
+  });
+  
+  // ..........................................................
   // FREIGHT CLASS
   //
 

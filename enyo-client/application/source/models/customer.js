@@ -417,6 +417,20 @@ white:true*/
     documentKey: 'name'
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.CustomerGroupCustomer = XM.Model.extend({
+    /** @scope XM.CustomerGroupCustomer.prototype */
+
+    recordType: 'XM.CustomerGroupCustomer',
+
+    documentKey: 'name'
+
+  });
 
   /**
     @class

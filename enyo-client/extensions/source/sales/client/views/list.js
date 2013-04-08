@@ -36,6 +36,36 @@ trailing:true white:true*/
   XV.registerModelList("XM.CustomerGroupRelation", "XV.CustomerGroupList");
   
   // ..........................................................
+  // CUSTOMER GROUP CUSTOMER
+  //
+
+  enyo.kind({
+    name: "XV.CustomerGroupCustomerList",
+    kind: "XV.List",
+    label: "_customerGroupCustomer".loc(),
+    collection: "XM.CustomerGroupCustomerCollection",
+    parameterWidget: "XV.CustomerGroupCustomerListParameters",
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "name", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.CustomerGroupCustomerRelation", "XV.CustomerGroupCustomerList");
+  
+  // ..........................................................
   // FREIGHT CLASS
   //
 
