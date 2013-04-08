@@ -1,24 +1,4 @@
 {
-  "author": "John Rogelstad <john@xtuple.com>",
   "name": "backbone-x",
-  "description": "Model framework for xTuple",
-  "version": "1.4.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/xtuple/backbone-x.git"
-  },
-  "dependencies": {},
-  "devDependencies": {},
-  "optionalDependencies": {},
-  "engines": {
-    "node": "*"
-  },
-  "main": "source/package.js",
-  "dependencies": {
-    "backbone":"0.9.2",
-    "backbone-relational":"0.6.x",
-    "underscore":"1.4.x",
-    "vows":"0.7.0"
-  },
-  "scripts": {}
+  "main": "source/package.js"
 }
