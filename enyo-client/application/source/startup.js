@@ -85,12 +85,10 @@ white:true*/
         options.success = _.bind(this.didCompleteCache, this, XM[cacheName]);
 
         if (typeof query === "string") {
-          console.log("query", query);
           orderBy = _.map(query.split(" "), function (s) {
             return {attribute: s};
           });
           options.query = {orderBy: orderBy};
-          console.log("order after", JSON.stringify(options.query));
         } else {
           options.query = query || {};
         }
@@ -112,60 +110,6 @@ white:true*/
     }
   });
 
-  XT.cacheCollection("XM.honorifics", "XM.HonorificCollection", "code");
-  XT.cacheCollection("XM.sources", "XM.SourceCollection");
-  XT.cacheCollection("XM.commentTypes", "XM.CommentTypeCollection");
-  XT.cacheCollection("XM.characteristics", "XM.CharacteristicCollection", "order name");
-/*
-  XT.StartupTasks.push({
-    taskName: "loadCharacteristics",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this),
-        query: {
-          orderBy: [
-            {attribute: 'order'},
-            {attribute: 'name'}
-          ]
-        }
-      };
-      XM.characteristics = new XM.CharacteristicCollection();
-      XM.characteristics.fetch(options);
-    }
-  });
-*/
-  XT.StartupTasks.push({
-    taskName: "loadLanguages",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.languages = new XM.LanguageCollection();
-      XM.languages.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadLocales",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.locales = new XM.LocaleCollection();
-      XM.locales.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadPrivileges",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.privileges = new XM.PrivilegeCollection();
-      XM.privileges.fetch(options);
-    }
-  });
 
   XT.StartupTasks.push({
     taskName: "loadCurrencies",
@@ -183,286 +127,36 @@ white:true*/
     }
   });
 
-  XT.StartupTasks.push({
-    taskName: "loadCountries",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      options.query = {};
-      options.query.orderBy = [
-        {attribute: 'name'}
-      ];
-      XM.countries = new XM.CountryCollection();
-      XM.countries.fetch(options);
-    }
-  });
+  XT.cacheCollection("XM.honorifics", "XM.HonorificCollection", "code");
+  XT.cacheCollection("XM.sources", "XM.SourceCollection");
+  XT.cacheCollection("XM.commentTypes", "XM.CommentTypeCollection");
+  XT.cacheCollection("XM.characteristics", "XM.CharacteristicCollection", "order name");
+  XT.cacheCollection("XM.languages", "XM.LanguageCollection");
+  XT.cacheCollection("XM.locales", "XM.LocaleCollection");
+  XT.cacheCollection("XM.privileges", "XM.PrivilegeCollection");
+  XT.cacheCollection("XM.countries", "XM.CountryCollection", "name");
+  XT.cacheCollection("XM.states", "XM.StateCollection", "abbreviation");
+  XT.cacheCollection("XM.units", "XM.UnitCollection");
+  XT.cacheCollection("XM.freightClasses", "XM.FreightClassCollection", "code");
+  XT.cacheCollection("XM.classCodes", "XM.ClassCodeCollection", "code");
+  XT.cacheCollection("XM.customerTypes", "XM.CustomerTypeCollection");
+  XT.cacheCollection("XM.productCategories", "XM.ProductCategoryCollection");
+  XT.cacheCollection("XM.priorities", "XM.PriorityCollection");
 
-  XT.StartupTasks.push({
-    taskName: "loadStates",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      options.query = {};
-      options.query.orderBy = [
-        {attribute: 'abbreviation'}
-      ];
-      XM.states = new XM.StateCollection();
-      XM.states.fetch(options);
-    }
-  });
 
-  XT.StartupTasks.push({
-    taskName: "loadUnits",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.units = new XM.UnitCollection();
-      XM.units.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadFreightClasses",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      options.query = {};
-      options.query.orderBy = [
-        {attribute: 'code'}
-      ];
-      XM.freightClasses = new XM.FreightClassCollection();
-      XM.freightClasses.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadClassCodes",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      options.query = {};
-      options.query.orderBy = [
-        {attribute: 'code'}
-      ];
-      XM.classCodes = new XM.ClassCodeCollection();
-      XM.classCodes.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-      taskName: "loadCustomerTypes",
-      task: function () {
-        var options = {
-          success: _.bind(this.didComplete, this)
-        };
-        XM.customerTypes = new XM.CustomerTypeCollection();
-        XM.customerTypes.fetch(options);
-      }
-    });
-
-  XT.StartupTasks.push({
-    taskName: "loadProductCategories",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.productCategories = new XM.ProductCategoryCollection();
-      XM.productCategories.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadPriorities",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.priorities = new XM.PriorityCollection();
-      XM.priorities.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadShipVias",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      options.query = {};
-      options.query.orderBy = [
-        {attribute: 'code'}
-      ];
-      XM.shipVias = new XM.ShipViaCollection();
-      XM.shipVias.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadSalesReps",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.salesReps = new XM.SalesRepCollection();
-      XM.salesReps.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadShipCharges",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.shipCharges = new XM.ShipChargeCollection();
-      XM.shipCharges.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadShipVias",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.shipVias = new XM.ShipViaCollection();
-      XM.shipVias.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadShipZones",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.shipZones = new XM.ShipZoneCollection();
-      XM.shipZones.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadCostCategories",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      options.query = {};
-      options.query.orderBy = [
-        {attribute: 'code'}
-      ];
-      XM.costCategories = new XM.CostCategoryCollection();
-      XM.costCategories.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadPlannerCodes",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      options.query = {};
-      options.query.orderBy = [
-        {attribute: 'code'}
-      ];
-      XM.plannerCodes = new XM.PlannerCodeCollection();
-      XM.plannerCodes.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadSaleTypes",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      options.query = {};
-      options.query.orderBy = [
-        {attribute: 'code'}
-      ];
-      XM.saleTypes = new XM.SaleTypeCollection();
-      XM.saleTypes.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadSites",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      options.query = {};
-      options.query.orderBy = [
-        {attribute: 'code'}
-      ];
-      XM.sites = new XM.SiteCollection();
-      XM.sites.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadTaxTypes",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      options.query = {};
-      options.query.orderBy = [
-        {attribute: 'name'}
-      ];
-      XM.taxTypes = new XM.TaxTypeCollection();
-      XM.taxTypes.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadTaxAuthorities",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.taxAuthorities = new XM.TaxAuthorityCollection();
-      XM.taxAuthorities.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadTaxZones",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.taxZones = new XM.TaxZoneCollection();
-      XM.taxZones.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadTerms",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.terms = new XM.TermsCollection();
-      XM.terms.fetch(options);
-    }
-  });
-
-  XT.StartupTasks.push({
-    taskName: "loadCurrencyRates",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this)
-      };
-      XM.currencyRates = new XM.CurrencyRateCollection();
-      XM.currencyRates.fetch(options);
-    }
-  });
+  XT.cacheCollection("XM.shipVias", "XM.ShipViaCollection", "code");
+  XT.cacheCollection("XM.salesReps", "XM.SalesRepCollection");
+  XT.cacheCollection("XM.shipCharges", "XM.ShipChargeCollection");
+  XT.cacheCollection("XM.shipVias", "XM.ShipViaCollection");
+  XT.cacheCollection("XM.shipZones", "XM.ShipZoneCollection");
+  XT.cacheCollection("XM.costCategories", "XM.CostCategoryCollection", "code");
+  XT.cacheCollection("XM.plannerCodes", "XM.PlannerCodeCollection", "code");
+  XT.cacheCollection("XM.saleTypes", "XM.SaleTypeCollection", "code");
+  XT.cacheCollection("XM.sites", "XM.SiteCollection", "code");
+  XT.cacheCollection("XM.taxTypes", "XM.TaxTypeCollection", "name");
+  XT.cacheCollection("XM.taxAuthorities", "XM.TaxAuthorityCollection");
+  XT.cacheCollection("XM.taxZones", "XM.TaxZoneCollection");
+  XT.cacheCollection("XM.terms", "XM.TermsCollection");
+  XT.cacheCollection("XM.currencyRates", "XM.CurrencyRateCollection");
 
 }());
