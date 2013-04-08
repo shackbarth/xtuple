@@ -145,4 +145,20 @@ white:true*/
     XM.characteristicTypes.add(characteristicType);
   }
   
+  // Terms Type
+  var termsTypeJson = [
+    { id: "D", name: "_days".loc() },
+    { id: "P", name: "_proximo".loc() }
+  ];
+  XM.TermsTypeModel = Backbone.Model.extend({
+  });
+  XM.TermsTypeCollection = Backbone.Collection.extend({
+    model: XM.TermsTypeModel
+  });
+  XM.termsTypes = new XM.TermsTypeCollection();
+  for (i = 0; i < termsTypeJson.length; i++) {
+    var termsType = new XM.TermsTypeModel(termsTypeJson[i]);
+    XM.termsTypes.add(termsType);
+  }
+  
 }());
