@@ -26,7 +26,8 @@ XT = typeof XT !== 'undefined' ? XT : {};
     var navigator = XT.app.$.postbooks.$.navigator;
     navigator.createComponent({
       container: navigator.$.gearMenu,
-      content: "_version".loc() + " " + version
+      content: "_version".loc() + " " + version,
+      classes: "xv-version-label"
     })
   };
 

@@ -208,6 +208,9 @@ body {
   padding-left: 10px;
   float: right;
 }
+.xv-version-label {
+  padding: 10px;
+}
 /* Pullout */
 .slim-datewidget($labelVisibility, $pickerVisibility: visible) .xv-input-decorator {
   padding: 0;
