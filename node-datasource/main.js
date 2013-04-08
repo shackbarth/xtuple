@@ -79,6 +79,17 @@ _ = require("underscore");
 
 
 /**
+  Grab the version number from the package.json file.
+ */
+
+var packageJson = X.fs.readFileSync("../package.json");
+try {
+  X.version = JSON.parse(packageJson).version;
+} catch (error) {
+
+}
+
+/**
  * Module dependencies.
  */
 var express = require('express'),
@@ -521,7 +532,8 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
         data: session.passport.user,
         code: 1,
         debugging: X.options.datasource.debugging,
-        version: X.version});
+        version: X.version
+      });
     }, data && data.payload);
   });
 

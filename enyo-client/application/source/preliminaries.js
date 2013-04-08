@@ -3,8 +3,7 @@ latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
 /*global X:true, enyo:true*/
 
-var X = X || {};
-X.getCookie = enyo.getCookie;
+XT = typeof XT !== 'undefined' ? XT : {};
 
 (function () {
   var host = document.location.host,
@@ -22,4 +21,13 @@ X.getCookie = enyo.getCookie;
     //document.location = "%@//%@/login".f(protocol,hostname),
     document.location = "%@//%@".f(protocol,host);
   };
+
+  XT.setVersion = function (version) {
+    var navigator = XT.app.$.postbooks.$.navigator;
+    navigator.createComponent({
+      container: navigator.$.gearMenu,
+      content: "_version".loc() + " " + version
+    })
+  };
+
 }());
