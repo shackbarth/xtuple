@@ -1,22 +1,25 @@
+/*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
+  immed:true, eqeqeq:true, forin:true, latedef:true,
+  newcap:true, noarg:true, undef:true */
+/*global XT:true, XM:true, XV:true, process:true, module:true, require:true */
+
+var XVOWS = XVOWS || {};
 (function () {
- "use strict";
+  "use strict";
   var vows = require("vows"),
-    assert = require("assert"),
-    _ = require("underscore"),
-    zombieAuth = require("../lib/zombie_auth.js"),
-    crud = require("../lib/crud.js");
-  var data = { 
-  recordType : "XM.ClassCode",
-  autoTestAttributes : true,
-  createHash : {
-    code: 'test code',
-    description: 'code description'
-  },
-  updateHash : {
-    description : 'update description'
-  }
+    crud = require("../lib/crud.js"),
+    data = {
+    recordType : "XM.ClassCode",
+    autoTestAttributes : true,
+    createHash : {
+      code: 'test code',
+      description: 'code description'
+    },
+    updateHash : {
+      description : 'update description'
+    }
   };
-   vows.describe('XM.Class Code CRUD test').addBatch({
+  vows.describe('XM.Class Code CRUD test').addBatch({
     'We can run the XM.Class Code CRUD tests ': crud.runAllCrud(data)
   }).export(module);
 }());
