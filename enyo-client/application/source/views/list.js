@@ -784,7 +784,8 @@ trailing:true white:true*/
       ]}
     ],
     formatAmount: function (value, view, model) {
-      var currency = model ? model.get("currency") : false,
+      // opportunity is stored as base currency
+      var currency = model ? XT.baseCurrency() : false,
         scale = XT.session.locale.attributes.moneyScale;
       return currency ? currency.format(value, scale) : "";
     },

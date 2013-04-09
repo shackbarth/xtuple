@@ -417,7 +417,7 @@ trailing:true white:true*/
     ],
     formatExtendedPrice: function (value, view, model) {
       var parent = model.getParent(),
-        currency = parent ? parent.get("currency") : false,
+        currency = parent ? XT.baseCurrency() : false,
         scale = XT.session.locale.attributes.extendedPriceScale;
       return currency ? currency.format(value, scale) : "";
     },
@@ -429,7 +429,7 @@ trailing:true white:true*/
     },
     formatPrice: function (value, view, model) {
       var parent = model.getParent(),
-        currency = parent ? parent.get("currency") : false,
+        currency = parent ? XT.baseCurrency() : false,
         scale = XT.session.locale.attributes.salesPriceScale;
       return currency ? currency.format(value, scale) : "";
     },

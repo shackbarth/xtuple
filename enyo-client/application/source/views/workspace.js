@@ -793,7 +793,6 @@ trailing:true white:true*/
             {kind: "XV.ProductCategoryPicker", attr: "productCategory",
               label: "_category".loc()},
             {kind: "XV.SalesPriceWidget", attr: "listPrice"},
-            {kind: "XV.CostWidget", attr: "listCost"},
             {kind: "XV.UnitPicker", attr: "priceUnit"},
             {kind: "XV.ItemCharacteristicsWidget", attr: "characteristics"},
             {kind: "onyx.GroupboxHeader",
@@ -870,7 +869,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.AccountWidget", attr: "account"},
             {kind: "XV.ContactWidget", attr: "contact"},
-            {kind: "XV.MoneyWidget", attr: {amount: "amount", currency: "currency"},
+            {kind: "XV.MoneyWidget", attr: {amount: "amount", currency: "currency"}, effective: new Date(),
               label: "_amount".loc()},
             {kind: "XV.PercentWidget", attr: "probability"},
             {kind: "onyx.GroupboxHeader", content: "_status".loc()},
@@ -1276,41 +1275,43 @@ trailing:true white:true*/
             {kind: "XV.TextArea", attr: "shipNotes", fit: true}
           ]}
         ]},
-        {kind: "FittableRows", title: "_lineItems".loc(), components: [
+        {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel", components: [
           {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true},
-          {kind: "XV.Groupbox", name: "totalGroup",
-            components: [
-            {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
-            {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
-              {kind: "FittableRows", components: [
-                {kind: "XV.CurrencyPicker", attr: "currency"},
-                {kind: "XV.MoneyWidget", attr:
-                  {amount: "margin", currency: "currency"},
-                  label: "_margin".loc(), currencyShowing: false,
-                  effective: "quoteDate"},
-                {kind: "XV.WeightWidget", attr: "freightWeight"}
-              ]},
-              {kind: "FittableRows", components: [
-                {kind: "XV.MoneyWidget", attr:
-                  {amount: "subtotal", currency: "currency"},
-                  label: "_subtotal".loc(), currencyShowing: false,
-                  effective: "quoteDate"},
-                {kind: "XV.MoneyWidget", attr:
-                  {amount: "miscCharge", currency: "currency"},
-                  label: "_miscCharge".loc(), currencyShowing: false,
-                  effective: "quoteDate"},
-                {kind: "XV.MoneyWidget", attr:
-                  {amount: "freight", currency: "currency"},
-                  label: "_freight".loc(), currencyShowing: false,
-                  effective: "quoteDate"},
-                {kind: "XV.MoneyWidget", attr:
-                  {amount: "taxTotal", currency: "currency"},
-                  label: "_tax".loc(), currencyShowing: false,
-                  effective: "quoteDate"},
-                {kind: "XV.MoneyWidget", attr:
-                  {amount: "total", currency: "currency"},
-                  label: "_total".loc(), currencyShowing: false,
-                  effective: "quoteDate"}
+          // Quote Summary Panel
+          {kind: "FittableRows", fit: true, name: "totalGroup", components: [
+            {kind: "XV.Groupbox", components: [
+              {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
+              {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
+                {kind: "FittableRows", components: [
+                  {kind: "XV.CurrencyPicker", attr: "currency"},
+                  {kind: "XV.MoneyWidget", attr:
+                    {amount: "margin", currency: "currency"},
+                    label: "_margin".loc(), currencyShowing: false,
+                    effective: "quoteDate"},
+                  {kind: "XV.WeightWidget", attr: "freightWeight"}
+                ]},
+                {kind: "FittableRows", components: [
+                  {kind: "XV.MoneyWidget", attr:
+                    {amount: "subtotal", currency: "currency"},
+                    label: "_subtotal".loc(), currencyShowing: false,
+                    effective: "quoteDate"},
+                  {kind: "XV.MoneyWidget", attr:
+                    {amount: "miscCharge", currency: "currency"},
+                    label: "_miscCharge".loc(), currencyShowing: false,
+                    effective: "quoteDate"},
+                  {kind: "XV.MoneyWidget", attr:
+                    {amount: "freight", currency: "currency"},
+                    label: "_freight".loc(), currencyShowing: false,
+                    effective: "quoteDate"},
+                  {kind: "XV.MoneyWidget", attr:
+                    {amount: "taxTotal", currency: "currency"},
+                    label: "_tax".loc(), currencyShowing: false,
+                    effective: "quoteDate"},
+                  {kind: "XV.MoneyWidget", attr:
+                    {amount: "total", currency: "currency"},
+                    label: "_total".loc(), currencyShowing: false,
+                    effective: "quoteDate"}
+                ]}
               ]}
             ]}
           ]}
@@ -1346,6 +1347,9 @@ trailing:true white:true*/
       this.inherited(arguments);
       if (inEvent.originator.name === 'customerWidget') {
         this.customerChanged();
+      }
+      if (inEvent.originator.name == 'currencyPicker') {
+        this.$.lineItemsPanel.render();
       }
     },
     copyBilltoToShipto: function () {
