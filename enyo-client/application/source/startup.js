@@ -55,9 +55,8 @@ white:true*/
     @param {String} cacheName. The location of the cache.
       e.g. XM.honorifics.
     @param {String} collectionName. The collection name, e.g. XM.HonorificCollection
-    @param {Object|String} query. An optional parameter for the fetch options to specify
-      the query. In the most common case you'll just be setting the orderBy attribute.
-      If so, you can just pass in the attribute name.
+    @param {String} orderAttribute. An optional parameter for the fetch options to specify
+      the query. Just pass in the attribute name.
       so "code" will be treated like
       {orderBy: [
         {attribute: 'code'}
@@ -68,9 +67,10 @@ white:true*/
         {attribute: 'order'},
         {attribute: 'name'}
       ]}
-
+      This function will also set a comparator on the collection so that this ordering
+      is made by default if a new record is added.
    */
-  XT.cacheCollection = function (cacheName, collectionName, query) {
+  XT.cacheCollection = function (cacheName, collectionName, orderAttribute) {
     var orderBy;
 
     cacheName = cacheName.suffix(); // strip off the XM
@@ -79,19 +79,32 @@ white:true*/
     XT.StartupTasks.push({
       taskName: "Load " + cacheName,
       task: function () {
-        var options = {};
+        var orderBy,
+          options = {};
 
         XM[cacheName] = new XM[collectionName]();
         options.success = _.bind(this.didCompleteCache, this, XM[cacheName]);
 
-        if (typeof query === "string") {
-          orderBy = _.map(query.split(" "), function (s) {
+        if (typeof orderAttribute === "string") {
+          orderBy = _.map(orderAttribute.split(" "), function (s) {
             return {attribute: s};
           });
           options.query = {orderBy: orderBy};
+
+          // set the comparator on the collection
+          XM[collectionName].prototype.comparator = function (model) {
+            var attrs = orderAttribute.split(" ");
+
+            if (attrs.length === 1) {
+              return model.get(attrs[0]);
+            } else if (attrs.length === 2) {
+              return model.get(attrs[0]) + model.get(attrs[1]);
+            } // XXX this is not yet generalized to n > 2
+          };
         } else {
-          options.query = query || {};
+          options.query = {};
         }
+
 
         XM[cacheName].fetch(options);
       }
@@ -106,7 +119,7 @@ white:true*/
   XT.cacheCollection("XM.currencyRates", "XM.CurrencyRateCollection");
   XT.cacheCollection("XM.customerTypes", "XM.CustomerTypeCollection");
   XT.cacheCollection("XM.freightClasses", "XM.FreightClassCollection", "code");
-  XT.cacheCollection("XM.honorifics", "XM.HonorificCollection");
+  XT.cacheCollection("XM.honorifics", "XM.HonorificCollection", "code");
   XT.cacheCollection("XM.languages", "XM.LanguageCollection");
   XT.cacheCollection("XM.locales", "XM.LocaleCollection");
   XT.cacheCollection("XM.plannerCodes", "XM.PlannerCodeCollection", "code");

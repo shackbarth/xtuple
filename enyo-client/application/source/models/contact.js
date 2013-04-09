@@ -250,10 +250,6 @@ white:true*/
   */
   XM.HonorificCollection = XM.Collection.extend(/** @lends XM.HonorificCollection.prototype */{
 
-    comparator: function (honorific) {
-      return honorific.get("code");
-    },
-
     model: XM.Honorific
 
   });
