@@ -14,6 +14,9 @@ white:true*/
     XT.cacheCollection("XM.opportunitySources", "XM.OpportunitySourceCollection");
     XT.cacheCollection("XM.opportunityStages", "XM.OpportunityStageCollection");
     XT.cacheCollection("XM.opportunityTypes", "XM.OpportunityTypeCollection");
+    XT.cacheCollection("XM.classCodes", "XM.ClassCodeCollection", "code");
+    XT.cacheCollection("XM.freightClasses", "XM.FreightClassCollection", "code");
+    XT.cacheCollection("XM.productCategories", "XM.ProductCategoryCollection");
   };
 
 }());
