@@ -76,15 +76,21 @@ white:true*/
     cacheName = cacheName.suffix(); // strip off the XM
     collectionName = collectionName.suffix(); // strip off the XM
 
+    if (XM[cacheName]) {
+      // the cache already exists. Do not re-fetch
+      // this might happen legitimately if multiple extensions declare a need
+      // for the same cache.
+      return;
+    }
+
+    XM[cacheName] = new XM[collectionName]();
     XT.StartupTasks.push({
       taskName: "Load " + cacheName,
       task: function () {
         var orderBy,
           options = {};
 
-        XM[cacheName] = new XM[collectionName]();
         options.success = _.bind(this.didCompleteCache, this, XM[cacheName]);
-
         if (typeof orderAttribute === "string") {
           orderBy = _.map(orderAttribute.split(" "), function (s) {
             return {attribute: s};
@@ -105,39 +111,25 @@ white:true*/
           options.query = {};
         }
 
-
         XM[cacheName].fetch(options);
       }
     });
   };
 
   XT.cacheCollection("XM.characteristics", "XM.CharacteristicCollection", "order name");
-  XT.cacheCollection("XM.classCodes", "XM.ClassCodeCollection", "code");
   XT.cacheCollection("XM.commentTypes", "XM.CommentTypeCollection");
-  XT.cacheCollection("XM.costCategories", "XM.CostCategoryCollection", "code");
   XT.cacheCollection("XM.countries", "XM.CountryCollection", "name");
   XT.cacheCollection("XM.currencyRates", "XM.CurrencyRateCollection");
-  XT.cacheCollection("XM.customerTypes", "XM.CustomerTypeCollection");
-  XT.cacheCollection("XM.freightClasses", "XM.FreightClassCollection", "code");
   XT.cacheCollection("XM.honorifics", "XM.HonorificCollection", "code");
   XT.cacheCollection("XM.languages", "XM.LanguageCollection");
   XT.cacheCollection("XM.locales", "XM.LocaleCollection");
-  XT.cacheCollection("XM.plannerCodes", "XM.PlannerCodeCollection", "code");
   XT.cacheCollection("XM.priorities", "XM.PriorityCollection");
   XT.cacheCollection("XM.privileges", "XM.PrivilegeCollection");
-  XT.cacheCollection("XM.productCategories", "XM.ProductCategoryCollection");
-  XT.cacheCollection("XM.salesReps", "XM.SalesRepCollection");
-  XT.cacheCollection("XM.saleTypes", "XM.SaleTypeCollection", "code");
-  XT.cacheCollection("XM.sites", "XM.SiteCollection", "code");
-  XT.cacheCollection("XM.shipCharges", "XM.ShipChargeCollection");
-  XT.cacheCollection("XM.shipVias", "XM.ShipViaCollection", "code");
-  XT.cacheCollection("XM.shipZones", "XM.ShipZoneCollection");
   XT.cacheCollection("XM.sources", "XM.SourceCollection");
   XT.cacheCollection("XM.states", "XM.StateCollection", "abbreviation");
   XT.cacheCollection("XM.taxAuthorities", "XM.TaxAuthorityCollection");
   XT.cacheCollection("XM.taxTypes", "XM.TaxTypeCollection", "name");
   XT.cacheCollection("XM.taxZones", "XM.TaxZoneCollection");
-  XT.cacheCollection("XM.terms", "XM.TermsCollection");
   XT.cacheCollection("XM.units", "XM.UnitCollection");
 
   /**
