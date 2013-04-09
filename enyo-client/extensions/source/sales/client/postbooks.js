@@ -55,6 +55,18 @@ trailing:true white:true*/
     relevantPrivileges = [
       "AccessSalesExtension",
       "ConfigureSO",
+      "MaintainFreightClasses",
+      "MaintainCustomerGroups",
+      "MaintainSalesReps",
+      "MaintainShipZones",
+      "MaintainTerms",
+      "MaintainSaleTypes",
+      "ViewFreightClasses",
+      "ViewCustomerGroups",
+      "ViewSalesReps",
+      "ViewShipZones",
+      "ViewTerms",
+      "ViewSaleTypes"
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
   };
