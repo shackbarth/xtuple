@@ -9,17 +9,17 @@ var XVOWS = XVOWS || {};
   var vows = require("vows"),
     crud = require("../lib/crud.js"),
     data = {
-      recordType : "XM.OpportunityType",
-      autoTestAttributes : true,
-      createHash : {
-        name : 'Test Name',
-        description : 'Test Description'
-      },
-      updateHash : {
-        description : 'Updated Description'
-      }
-    };
-  vows.describe('XM.OpportunityType CRUD test').addBatch({
-    'We can run the XM.OpportunityType CRUD tests ': crud.runAllCrud(data)
+    recordType : "XM.ClassCode",
+    autoTestAttributes : true,
+    createHash : {
+      code: 'test code',
+      description: 'code description'
+    },
+    updateHash : {
+      description : 'update description'
+    }
+  };
+  vows.describe('XM.Class Code CRUD test').addBatch({
+    'We can run the XM.Class Code CRUD tests ': crud.runAllCrud(data)
   }).export(module);
 }());
