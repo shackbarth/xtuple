@@ -227,4 +227,4 @@ where quhead_id = old.quhead_id;
 
 create or replace rule "_DELETE" as on delete to xt.quheadinfo do instead
 
-delete from quhead where quhead_id = old.quhead_id;
+select deletequote(old.quhead_id);

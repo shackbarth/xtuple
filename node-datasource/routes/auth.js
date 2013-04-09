@@ -54,64 +54,87 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.scope = function (req, res, next) {
     var userId = req.session.passport.user.id,
       selectedOrg = req.body.org,
-      userOrgColl = new XM.UserOrganizationCollection(),
-      success = function (coll, response) {
-        var privs;
-        if (response.length === 0) {
-          if (req.session && req.session.oauth2 && req.session.oauth2.redirectURI) {
-            X.log("OAuth 2.0 User %@ has no business trying to log in to organization %@.".f(userId, selectedOrg));
-            res.redirect(req.session.oauth2.redirectURI + '?error=access_denied');
-            return;
-          }
+      user = new XM.User(),
+      options = {};
 
-          X.log("User %@ has no business trying to log in to organization %@.".f(userId, selectedOrg));
-          res.redirect('/logout');
+    options.success = function (response) {
+      var privs,
+          userOrg,
+          userName;
+
+      if (response.length === 0) {
+        if (req.session && req.session.oauth2 && req.session.oauth2.redirectURI) {
+          X.log("OAuth 2.0 User %@ has no business trying to log in to organization %@.".f(userId, selectedOrg));
+          res.redirect(req.session.oauth2.redirectURI + '?error=access_denied');
           return;
         }
 
-        // We can now trust this user's request to log in to this organization.
-
-        // Update the session store row to add the org choice and username.
-        // Note: Updating this object magically persists the data into the SessionStore table.
-
-        privs = _.map(coll.models[0].getValue("user.privileges").models, function (privAss) {
-          return privAss.getValue("privilege.name");
-        });
-        req.session.passport.user.globalPrivileges = privs;
-        req.session.passport.user.organization = response[0].name;
-        req.session.passport.user.username = response[0].username;
-
-// TODO - req.oauth probably isn't enough here, but it's working 2013-03-15...
-        // If this is an OAuth 2.0 login with only 1 org.
-        if (req.oauth2) {
-          return next();
-        }
-
-        // If this is an OAuth 2.0 login with more than 1 org.
-        if (req.session.returnTo) {
-          res.redirect(req.session.returnTo);
-        } else {
-          // Redirect to start loading the client app.
-          res.redirect('/client');
-        }
-      },
-      error = function (model, error) {
-        X.log("userorg fetch error", error);
+        X.log("User %@ has no business trying to log in to organization %@.".f(userId, selectedOrg));
         res.redirect('/logout');
         return;
-      },
-      query = {
-        parameters: [{
-          attribute: "user",
-          value: userId
-        }, {
-          attribute: "name",
-          value: selectedOrg
-        }]
-      };
+      } else if (response.length > 1) {
+        X.log("More than one User: %@ exists.".f(userId));
+        res.redirect('/logout');
+        return;
+      }
+
+      // We can now trust this user's request to log in to this organization.
+
+      // Update the session store row to add the org choice and username.
+      // Note: Updating this object magically persists the data into the SessionStore table.
+
+      privs = _.map(response.get("privileges"), function (privAss) {
+        return privAss.privilege.name;
+      });
+
+      _.each(response.get('organizations'), function (orgValue, orgKey, orgList) {
+        if (orgValue.name === selectedOrg) {
+          userOrg = orgValue.name;
+          userName = orgValue.username;
+        }
+      });
+
+      if (!userOrg || !userName) {
+        // This shouldn't happen.
+        X.log("User %@ has no business trying to log in to organization %@.".f(userId, selectedOrg));
+        res.redirect('/logout');
+        return;
+      }
+
+      req.session.passport.user.globalPrivileges = privs;
+      req.session.passport.user.organization = userOrg;
+      req.session.passport.user.username = userName;
+
+// TODO - req.oauth probably isn't enough here, but it's working 2013-03-15...
+      // If this is an OAuth 2.0 login with only 1 org.
+      if (req.oauth2) {
+        return next();
+      }
+
+      // If this is an OAuth 2.0 login with more than 1 org.
+      if (req.session.returnTo) {
+        res.redirect(req.session.returnTo);
+      } else {
+        // Redirect to start loading the client app.
+        res.redirect('/client');
+      }
+    };
+
+    options.error = function (model, error) {
+      X.log("userorg fetch error", error);
+      res.redirect('/logout');
+      return;
+    };
+
+
+    // The user id we're searching for.
+    options.id = userId;
+
+    // The user under whose authority the query is run.
+    options.username = X.options.globalDatabase.nodeUsername;
 
     // Verify that the org is valid for the user.
-    userOrgColl.fetch({ query: query, success: success, error: error });
+    user.fetch(options);
   };
 
   /**
@@ -119,8 +142,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     organization for the user we choose for them.
    */
   exports.scopeForm = function (req, res, next) {
-    var org,
-        organizations = [],
+    var organizations = [],
         scope,
         scopes = [];
 
@@ -140,6 +162,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       if (req.session.oauth2.req && req.session.oauth2.req.scope && req.session.oauth2.req.scope.length > 0) {
         // Loop through the scope URIs and convert them to org names.
         _.each(req.session.oauth2.req.scope, function (value, key, list) {
+          var org;
+
           // Get the org from the scope URI e.g. 'dev' from: 'https://mobile.xtuple.com/auth/dev'
           scope = url.parse(value, true);
           org = scope.path.match(/\/auth\/(.*)/)[1] || null;

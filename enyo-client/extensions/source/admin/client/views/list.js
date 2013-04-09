@@ -32,7 +32,8 @@ trailing:true white:true*/
   //
   enyo.kind({
     name: "XV.DatabaseServerList",
-    kind: "XV.NameDescriptionList"
+    kind: "XV.NameDescriptionList",
+    parameterWidget: "XV.DatabaseServerParameters"
   });
 
   // ..........................................................

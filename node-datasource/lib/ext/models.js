@@ -9,10 +9,9 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
-  // TODO - Switch to SimpleModel and fix bugs.
-  XM.DatabaseServer = XM.Model.extend({
+  XM.DatabaseServer = XM.SimpleModel.extend({
     /** @scope XM.DatabaseServer.prototype */
 
     recordType: 'XM.DatabaseServer',
@@ -46,10 +45,9 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
-  // TODO - Switch to SimpleModel and fix bugs.
-  XM.Extension = XM.Model.extend({
+  XM.Extension = XM.SimpleModel.extend({
     /** @scope XM.Extension.prototype */
 
     recordType: 'XM.Extension',
@@ -103,10 +101,9 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
-  // TODO - Switch to SimpleModel and fix bugs.
-  XM.Organization = XM.Model.extend({
+  XM.Organization = XM.SimpleModel.extend({
     /** @scope XM.Organization.prototype */
 
     recordType: 'XM.Organization',
@@ -122,10 +119,9 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
-  // TODO - Switch to SimpleModel and fix bugs. This almost works, just see some output to the datasource log.
-  XM.OrganizationExtension = XM.Model.extend({
+  XM.OrganizationExtension = XM.SimpleModel.extend({
     /** @scope XM.OrganizationExtension.prototype */
 
     recordType: 'XM.OrganizationExtension',

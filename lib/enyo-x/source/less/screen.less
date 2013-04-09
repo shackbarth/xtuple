@@ -1,6 +1,7 @@
 /* LESS version of screen.scss file previously in client
 
-  To compile to .css: lessc screen.less > ../stylesheets/screen.css
+  To compile to .css: 
+  lessc screen.less > ../stylesheets/screen.css
   Use -compress for a compressed .css with no comments
 
 */
@@ -34,6 +35,7 @@
 
 body {
   font-family: "arial", "arial black";
+  font-size: 100%;
 }
 
 .bggrad {
@@ -214,6 +216,10 @@ body {
   }
 }
 
+.xv-version-label {
+  padding: 10px;
+}
+
 /* Pullout */
 .slim-datewidget($labelVisibility, $pickerVisibility: visible) {
   .xv-input-decorator {
@@ -289,6 +295,18 @@ body {
   text-align: center;
 }
 
+#app_pullout_container,
+#app_pullout_help,
+#app_pullout_help_helpPage {
+ height: 100%;
+}
+
+#app_pullout_help_helpPage {
+  border: none;
+  height: 100%;
+  width: 100%;
+}
+
 /*
   XV Views
 */
@@ -319,22 +337,22 @@ body {
     }
     .xv-list-column {
       &.short {
-        width: 150px;
+        width: 9em;
       }
       &.first {
-        width: 300px;
+        width: 19em;
       }
       &.second {
-        width: 165px;
+        width: 10em;
       }
       &.third {
-        width: 75px;
+        width: 4.5em;
       }
       &.money {
-        width: 85px;
+        width: 5em;
       }
       &.descr {
-        width: 250px;
+        width: 15.56em;
       }
     }
     &.item-selected {
@@ -387,7 +405,7 @@ body {
 
 .xv-list-attr {
   padding: 5px;
-  font-size: 13px;
+  font-size: .8em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -396,7 +414,7 @@ body {
   &.header {
     padding: 4px;
     background: @gray;
-    font-size: 11px;
+    font-size: .7em;
     font-weight: bold;
     text-transform: uppercase;
     color: @white;
@@ -548,7 +566,7 @@ body {
     font-size: small;
     overflow: hidden;
     &.disabled {
-      opacity: 0.6;
+      color: @dim-gray;
     }
   }
   /* Resets the margin/padding value for blockquote tag in comments */
@@ -653,7 +671,7 @@ body {
   padding-bottom: 2px;
 
   .onyx-input-decorator {
-    width: 100px;
+    width: 95px;
   }
   .xv-picker {
     width: 95px;
@@ -704,6 +722,9 @@ body {
     &.placeholder {
       font-style: italic;
       color: @blue-gray;
+    }
+    &.disabled {
+      color: @dim-gray;
     }
   }
 }
@@ -802,7 +823,7 @@ body {
   padding-bottom: 4px;
   max-width: 325px;
   &.disabled {
-    opacity: 0.4;
+    color: @dim-gray;
   }
   &.label {
     text-indent: 0;
@@ -950,7 +971,7 @@ body {
 
 .xv-button-bar {
   .onyx-button {
-    // TODO: center buttons, spacing in between (margin: auto on bar)
+    /* TODO: center buttons, spacing in between (margin: auto on bar) */
     margin: 0 40px 0 40px;
   }
 }
@@ -958,4 +979,33 @@ body {
 /* This is for styling the moved items in the more toolbar*/
 .xv-toolbar-moved {
   width: 220px;
+}
+
+.xv-totals-panel {
+  padding: 0;
+  background-color: @white;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  .onyx-input, .onyx-button {
+    font-size: 13px;
+  }
+}
+
+.xv-totals-panel {
+  .xv-label, .onyx-input-decorator {
+    padding: 3px;
+  }
+  .xv-label, .xv-picker-label {
+    width: 110px;
+  }
+}
+
+/* This is to style the base currency labels to look like the inputs */
+.xv-money-label {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
+  .currency {
+    text-align: center;
+  }
 }

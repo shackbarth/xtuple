@@ -69,7 +69,7 @@ exports.save = function (code, clientID, redirectURI, userID, scope, done) {
             user: userID,
             clientID: clientID,
             redirectURI: redirectURI,
-            scope: scope,
+            scope: JSON.stringify(scope),
             state: "Auth Code Issued",
             authCode: code,
             authCodeIssued: today,

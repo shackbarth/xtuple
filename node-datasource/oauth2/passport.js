@@ -9,8 +9,10 @@ var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
     BasicStrategy = require('passport-http').BasicStrategy,
     ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy,
+    ClientJWTBearerStrategy = require('passport-oauth2-jwt-bearer').Strategy,
     BearerStrategy = require('passport-http-bearer').Strategy,
-    db = require('./db');
+    db = require('./db'),
+    privateSalt = X.fs.readFileSync(X.options.datasource.saltFile).toString();
 
 
 /**
@@ -109,6 +111,28 @@ passport.use(new ClientPasswordStrategy(
   }
 ));
 
+
+/**
+ * JSON Web Token (JWT) Bearer Strategy
+ *
+ * This strategy authenticates clients using a JWT's Claim Set's "iss" value. The "iss"
+ * is extracted from the JWT so a matching client can be looked up.  You do not need
+ * to validate the JWT with the signature.  That will be done by the JSON Web Token (JWT)
+ * Bearer Token Exchange Middleware for OAuth2orize.  We will just look up a matching
+ * client and pass it along to the exhange middleware for full validation.
+ */
+passport.use(new ClientJWTBearerStrategy(
+  function (claimSetIss, done) {
+    "use strict";
+
+    db.clients.findByClientId(claimSetIss, function (err, client) {
+      if (err) { return done(err); }
+      if (!client) { return done(null, false); }
+      return done(null, client);
+    });
+  }
+));
+
 /**
  * BearerStrategy
  *
@@ -127,7 +151,7 @@ passport.use(new BearerStrategy(
     // That could take a lot of CPU if there are 1000's of accessToken. Instead, we will
     // not use any salt for this hash. An accessToken is only valid for 1 hour so the
     // risk of cracking the SHA1 hash in that time is small.
-    var accesshash = X.crypto.createHash('sha1').update(accessToken).digest("hex");
+    var accesshash = X.crypto.createHash('sha1').update(privateSalt + accessToken).digest("hex");
 
     db.accessTokens.findByAccessToken(accesshash, function (err, token) {
       if (err) { return done(err); }
@@ -138,14 +162,33 @@ passport.use(new BearerStrategy(
         return done(new Error("Access token has expired."));
       }
 
-      db.users.findByUsername(token.get("user"), function (err, user) {
-        if (err) { return done(err); }
-        if (!user) { return done(null, false); }
-        // to keep this example simple, restricted scopes are not implemented,
-        // and this is just for illustrative purposes
-        var info = { scope: '*' };
-        done(null, user, info);
-      });
+      var tokenUser = token.get("user");
+
+      // If this is a JWT access token, "user" is empty. Try to load the "delegate"
+      if (!tokenUser) {
+        tokenUser = token.get("delegate");
+      }
+
+      if (tokenUser) {
+        db.users.findByUsername(token.get("user"), function (err, user) {
+          if (err) { return done(err); }
+          if (!user) { return done(null, false); }
+
+          var scopes = token.get("scope"),
+              info = {};
+
+          try {
+            scopes = JSON.parse(scopes);
+          } catch (error) {
+            if (!Array.isArray(scopes)) { scopes = [ scopes ]; }
+          }
+
+          info = { scope: scopes };
+          done(null, user, info);
+        });
+      } else {
+        return done(null, false);
+      }
     });
   }
 ));

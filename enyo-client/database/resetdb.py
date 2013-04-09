@@ -24,13 +24,13 @@ out = open('output.txt', 'w')
 
 try:
   print "Dropping database", args.H, args.d, "if it exists"
-  subprocess.call(['dropdb', '-h', args.H, args.d], stdout=out, stderr=out)
+  subprocess.call(['dropdb', '-U', args.u, '-h', args.H, args.d], stdout=out, stderr=out)
   print "Creating database", args.d
   subprocess.call(['createdb', '-U', args.u, '-h', args.H, '-T', 'template1', args.d], stdout=out, stderr=out)
   print "Restoring from backup file", args.b
   subprocess.call(['pg_restore', '-U', args.u, '-h', args.H, '-d', args.d, args.b], stdout=out, stderr=out)
-  print "Running init script 'source/init_script.sql'"
-  subprocess.call(['psql', '-U', args.u, '-h', args.H, '-d', args.d, '-f', 'init_script.sql'], cwd='source', stdout=out, stderr=out)
+  print "Running init script 'source/init_instance.sql'"
+  subprocess.call(['psql', '-U', args.u, '-h', args.H, '-d', args.d, '-f', 'init_instance.sql'], cwd='source', stdout=out, stderr=out)
 finally:
   out.close()
 

@@ -322,8 +322,8 @@ white:true*/
       "username"
     ],
 
-    initialize: function (attributes, options) {
-      XM.Model.prototype.initialize.apply(this, arguments);
+    bindEvents: function (attributes, options) {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on("change:user", this.userDidChange);
     },
 

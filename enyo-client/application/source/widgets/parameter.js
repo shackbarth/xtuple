@@ -127,6 +127,19 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // COST CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.CostCategoryListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_CostCategory".loc()},
+      {name: "code", label: "_code".loc(), attr: "code"}
+    ]
+  });
+
+  // ..........................................................
   // CUSTOMER
   //
 
@@ -180,6 +193,7 @@ trailing:true white:true*/
       {name: "name", label: "_name".loc(), attr: "name"}
     ]
   });
+  
   // ..........................................................
   // FILE
   //
@@ -351,8 +365,41 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_itemSite".loc()},
-      {name: "itemNumber", label: "_itemNumber".loc(), attr: "item.number"},
-      {name: "siteCode", label: "_siteCode".loc(), attr: "site.code"}
+      {name: "itemWidget", label: "_item".loc(), attr: "item",
+        defaultKind: "XV.ItemWidget"},
+      {name: "site", label: "_site".loc(), attr: "site",
+        defaultKind: "XV.SitePicker"},
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {kind: "onyx.GroupboxHeader", content: "_item".loc()},
+      {name: "itemNumber", label: "_number".loc(), attr: "item.number"},
+      {name: "itemDescription", label: "_description".loc(), attr: ["item.description1", "item.description2"]},
+      {kind: "onyx.GroupboxHeader", content: "_site".loc()},
+      {name: "siteCode", label: "_code".loc(), attr: "site.code"},
+      {name: "siteDescription", label: "_description".loc(), attr: "site.description"},
+      {kind: "onyx.GroupboxHeader", content: "_classCode".loc()},
+      {name: "classCode", label: "_equals".loc(), attr: "item.classCode.id",
+        defaultKind: "XV.ClassCodePicker"},
+      {name: "classCodePattern", label: "_code".loc(), attr: "item.classCode.code"},
+      {kind: "onyx.GroupboxHeader", content: "_costCategory".loc()},
+      {name: "costCategory", label: "_equals".loc(), attr: "costCategory",
+        defaultKind: "XV.CostCategoryPicker"},
+      {name: "costCategoryPattern", label: "_code".loc(), attr: "costCategory.code"},
+      {kind: "onyx.GroupboxHeader", content: "_plannerCode".loc()},
+      {name: "plannerCode", label: "_equals".loc(), attr: "plannerCode",
+        defaultKind: "XV.PlannerCodePicker"},
+      {name: "plannerCodePattern", label: "_code".loc(), attr: "plannerCode.code"}
     ]
   });
 
@@ -403,6 +450,19 @@ trailing:true white:true*/
       {name: "toTargetDate", label: "_toDate".loc(), attr: "targetClose", operator: "<=",
         filterLabel: "_to".loc() + " " + "_targetClose".loc() + " " + "_date".loc(),
         defaultKind: "XV.DateWidget"}
+    ]
+  });
+
+  // ..........................................................
+  // PLANNER CODE
+  //
+
+  enyo.kind({
+    name: "XV.PlannerCodeListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_plannerCode".loc()},
+      {name: "code", label: "_code".loc(), attr: "code"}
     ]
   });
 
@@ -539,7 +599,8 @@ trailing:true white:true*/
             param = {
               attribute: this.getAttr(),
               operator: '>=',
-              value: new Date()
+              value: new Date(),
+              includeNull: true
             };
           }
           return param;
@@ -587,6 +648,45 @@ trailing:true white:true*/
         filterLabel: "_quoteDate".loc() + " " + "_toDate".loc(),
         attr: "quoteDate", operator: "<=",
         defaultKind: "XV.DateWidget"}
+    ]
+  });
+
+  // ..........................................................
+  // SITE
+  //
+
+  enyo.kind({
+    name: "XV.SiteListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {kind: "onyx.GroupboxHeader", content: "_site".loc()},
+      {name: "code", label: "_code".loc(), attr: "code"}
+    ]
+  });
+
+  // ..........................................................
+  // SITE TYPE
+  //
+
+  enyo.kind({
+    name: "XV.SiteTypeListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_siteType".loc()},
+      {name: "name", label: "_name".loc(), attr: "name"}
     ]
   });
 

@@ -71,11 +71,11 @@ regexp:true, undef:true, trailing:true, white:true */
         {name: "spacer", content: "", classes: "xv-label"},
         {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
           components: [
-          {name: "baseAmount"}
+          {name: "baseAmount", classes: "xv-money-label"}
         ]},
         {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
           components: [
-          {name: "baseLabel"}
+          {name: "baseLabel", classes: "xv-money-label, currency"}
         ]}
       ]}
     ],
@@ -91,6 +91,10 @@ regexp:true, undef:true, trailing:true, white:true */
       // the currency picker may be disabled or hidden on creation in certain situations
       this.$.picker.setDisabled(this.getCurrencyDisabled());
       this.$.picker.setShowing(this.getCurrencyShowing());
+      
+      // this is for styling of the picker since the PickerWidget has a built in
+      // input decorator
+      this.$.picker.$.inputWrapper.removeClass("onyx-input-decorator");
     },
     effectiveChanged: function () {
       this.setBasePanelShowing();

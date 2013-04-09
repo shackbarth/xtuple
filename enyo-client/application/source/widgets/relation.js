@@ -31,7 +31,6 @@ regexp:true, undef:true, trailing:true, white:true */
     published: {
       showAddress: false
     },
-    filterRestrictionType: ["account", "accountParent"],
     components: [
       {kind: "FittableColumns", components: [
         {name: "label", content: "", classes: "xv-decorated-label"},
@@ -224,9 +223,9 @@ regexp:true, undef:true, trailing:true, white:true */
         menuItem = inEvent.originator,
         list = this.getList(),
         model = this.getValue(),
-        id = model ? model.id : null,
-        workspace = this._List ? this._List.prototype.getWorkspace() : null,
+        K, status, id, workspace,
         callback;
+
       switch (menuItem.name)
       {
       case 'searchItem':
@@ -240,6 +239,11 @@ regexp:true, undef:true, trailing:true, white:true */
         });
         break;
       case 'openItem':
+        K = model.getClass();
+        status = model.get("status");
+        id = model ? model.id : null;
+        workspace = status === K.PROSPECT_STATUS ? 'XV.ProspectWorkspace' : 'XV.CustomerWorkspace';
+
         this.doWorkspace({
           workspace: workspace,
           id: id,
@@ -305,32 +309,183 @@ regexp:true, undef:true, trailing:true, white:true */
   // ITEM SITE
   //
 
-  enyo.kind({
-    name: "XV.ItemSiteWidget",
+  var _privateItemSiteWidget = enyo.kind({
     kind: "XV.RelationWidget",
     collection: "XM.ItemSiteRelationCollection",
     list: "XV.ItemSiteList",
-    published: {
-      defaultSite: null // {XM.SiteRelation}
-    },
-    keyAttribute: "item.number",
-    sidecarAttribute: "site.code",
+    keyAttribute: ["item.number", "item.barcode"],
     nameAttribute: "item.description1",
     descripAttribute: "item.description2",
+    style: "border-bottom-color: rgb(170, 170, 170); " +
+      "border-bottom-width: 1px; " +
+      "border-bottom-style: solid;"
+  });
+
+  enyo.kind({
+    name: "XV.ItemSiteWidget",
+    published: {
+      sites: null,
+      selectedSite: null,
+      attr: null,
+      value: null,
+      placeholder: null,
+      disabled: false,
+      query: null
+    },
+    handlers: {
+      "onValueChange": "controlValueChanged"
+    },
+    events: {
+      "onValueChange": ""
+    },
+    components: [
+      {kind: "FittableRows", components: [
+        {kind: _privateItemSiteWidget, name: "privateItemSiteWidget",
+          label: "_item".loc()},
+        {kind: "XV.SitePicker", name: "sitePicker", label: "_site".loc()}
+      ]}
+    ],
     /**
-      Make sure the collection knows about the bespoke filter,
-      because it's the collection that has to decide to use
-      a dispatch with the bespoke filter if it's there.
-     */
-    bespokeFilterChanged: function (inSender, inEvent) {
-      this._collection.bespokeFilter = this.getBespokeFilter();
+      Add a parameter to the query object on the widget. Parameter conventions should
+      follow those described in the documentation for `XM.Collection`.
+
+      @seealso XM.Collection
+      @param {Object} Param
+      @returns {Object} Receiver
+    */
+    addParameter: function (param) {
+      this.$.privateItemSiteWidget.addParameter(param);
     },
     /**
-      Make sure the collection knows about the default site,
-      because it is used to sort the results.
+      Empty out the widget
      */
-    defaultSiteChanged: function (inSender, inEvent) {
-      this._collection.defaultSite = this.getDefaultSite();
+    clear: function (options) {
+      this.$.privateItemSiteWidget.clear(options);
+    },
+    controlValueChanged: function (inSender, inEvent) {
+      var value = inEvent.value,
+        disabledCache = this.$.sitePicker.getDisabled(),
+        sitePicker = this.$.sitePicker,
+        isNull = _.isNull(value),
+        itemSite,
+        options = {},
+        site,
+        item;
+      if (inEvent.originator.name === 'privateItemSiteWidget') {
+        sitePicker.itemSites.reset();
+        sitePicker.buildList();
+        if (value && value.get) {
+          this.setValue(value); // In case an id was transformed to a model
+          // Select the matching site
+          site = value.get("site");
+          this.setSelectedSite(site);
+          // Don't allow another selection until we've fetch an updated list
+          sitePicker.setDisabled(true);
+          // Go fetch alternate sites for this item
+          item = value.get("item");
+          options.query = { parameters: [{attribute: "item", value: item}]};
+          options.success = function () {
+            sitePicker.buildList();
+            sitePicker.setDisabled(disabledCache);
+          };
+          sitePicker.itemSites.fetch(options);
+        }
+        return true;
+      } else if (inEvent.originator.name === 'sitePicker') {
+        this.setSelectedSite(value);
+        this.$.privateItemSiteWidget.setDisabled(isNull);
+        if (isNull) {
+          this.$.privateItemSiteWidget.clear();
+        } else {
+          itemSite = this.$.privateItemSiteWidget.getValue();
+          // Change item site selection if the site changed
+          if (itemSite && itemSite.getValue("site.id") !== value &&
+              sitePicker.itemSites.length) {
+            itemSite = _.find(sitePicker.itemSites.models, function (model) {
+              return model.getValue("site.id") === value;
+            });
+            this.$.privateItemSiteWidget.setValue(itemSite);
+          }
+        }
+        return true;
+      }
+    },
+    create: function () {
+      this.inherited(arguments);
+      // Filter for site picker. Limit list of models if item sites
+      // are specified
+      var filter = function (models, options) {
+        var ids;
+        if (this.itemSites.length) {
+          // Consolidate all the site ids
+          ids = _.pluck(_.pluck(_.pluck(this.itemSites.models, "attributes"), 'site'), 'id');
+          return _.filter(models, function (model) {
+            return _.contains(ids, model.id);
+          });
+        }
+        return models;
+      };
+      this.$.sitePicker.itemSites = new XM.ItemSiteRelationCollection();
+      this.$.sitePicker.filter = filter;
+      this.queryChanged();
+    },
+    /**
+     @todo Document the focus method.
+     */
+    focus: function () {
+      this.$.privateItemSiteWidget.focus();
+    },
+    placeholderChanged: function () {
+      var placeholder = this.getPlaceholder();
+      this.$.privateItemSiteWidget.setPlaceholder(placeholder);
+    },
+    queryChanged: function () {
+      this.$.privateItemSiteWidget.setQuery(this.getQuery());
+    },
+    /**
+      Removes a query parameter by attribute name from the widget's query object.
+
+      @param {String} Attribute
+      @returns {Object} Receiver
+    */
+    removeParameter: function (attr) {
+      this.$.privateItemSiteWidget.removeParameter(attr);
+    },
+    /**
+      Pass through attributes intended for onyx input inside.
+      XXX is this necessary given disabledChanged function above?
+    */
+    setDisabled: function (isDisabled) {
+      this.$.privateItemSiteWidget.setDisabled(isDisabled);
+      this.$.sitePicker.setDisabled(isDisabled);
+    },
+    selectedSiteChanged: function () {
+      var site = this.getSelectedSite();
+      this.$.sitePicker.setValue(site, {silent: true});
+      if (site) {
+        this.$.privateItemSiteWidget.addParameter({
+          attribute: "site",
+          value: site
+        }, true);
+      } else {
+        this.$.privateItemSiteWidget.removeParameter("site");
+      }
+    },
+    validate: function (value) {
+      return value;
+    },
+    setValue: function (value, options) {
+      options = options || {};
+      var oldValue = this.getValue(),
+        inEvent,
+        site;
+      if (oldValue !== value) {
+        this.value = value;
+        site = value && value.get ? value.get("site") : undefined;
+        this.$.privateItemSiteWidget.setValue(value);
+        inEvent = { value: value };
+        if (!options.silent) { this.doValueChange(inEvent); }
+      }
     }
   });
 

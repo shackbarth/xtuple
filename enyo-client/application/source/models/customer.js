@@ -25,7 +25,7 @@ white:true*/
       this.dispatch("XM.Customer", "canPurchase", params, options);
       return this;
     },
-    
+
     /**
       Retrieve the customer's price for a given item and quantity.
 
@@ -160,8 +160,8 @@ white:true*/
     /**
       Initialize
     */
-    initialize: function () {
-      XM.Document.prototype.initialize.apply(this, arguments);
+    bindEvents: function () {
+      XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on('change:usesPurchaseOrders', this.purchaseOrdersDidChange);
       this.on('change:backorder', this.backorderDidChange);
       this.on('change:salesRep', this.salesRepDidChange);
@@ -175,7 +175,7 @@ white:true*/
         this.setReadOnly("partialShip", true);
       }
     },
-    
+
     getShipViaValue: function () {
       var ret,
         shipViaModel = XM.shipVias.get(XT.session.getSettings().get("DefaultShipViaId"));
@@ -185,7 +185,7 @@ white:true*/
       else {
         ret = "";
       }
-      
+
       return ret;
     },
 
@@ -273,7 +273,7 @@ white:true*/
       this.setStatus(XM.Model.BUSY_FETCHING);
       prospect.fetch(fetchOptions);
     },
-    
+
     salesRepDidChange: function () {
       var salesRep = this.get('salesRep');
       if (!salesRep) { return; }
@@ -423,7 +423,7 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.CustomerShipto = XM.Document.extend({
+  XM.CustomerShipto = XM.Model.extend({
     /** @scope XM.CustomerShipto.prototype */
 
     recordType: 'XM.CustomerShipto',
@@ -438,8 +438,8 @@ white:true*/
     // METHODS
     //
 
-    initialize: function () {
-      XM.Document.prototype.initialize.apply(this, arguments);
+    bindEvents: function () {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on('change:customer', this.customerDidChange);
       this.on('change:salesRep', this.salesRepDidChange);
     },
@@ -534,7 +534,7 @@ white:true*/
     recordType: 'XM.CustomerType',
 
     documentKey: 'code',
-    
+
     enforceUpperKey: false
 
   });
@@ -569,7 +569,7 @@ white:true*/
     recordType: 'XM.ShipCharge',
 
     documentKey: 'name',
-    
+
     enforceUpperKey: false
 
   });
@@ -585,7 +585,7 @@ white:true*/
     recordType: 'XM.ShipVia',
 
     documentKey: 'code',
-    
+
     enforceUpperKey: false
 
   });
@@ -601,7 +601,7 @@ white:true*/
     recordType: 'XM.ShipZone',
 
     documentKey: 'name',
-    
+
     enforceUpperKey: false
 
   });
@@ -633,8 +633,35 @@ white:true*/
     editableModel: 'XM.Customer'
 
   });
-  
-  // Add in item mixin
+
+  // ..........................................................
+  // CLASS METHODS
+  //
+
+  _.extend(XM.CustomerProspectRelation, {
+
+    /**
+      Customer/Prospect is Prospect.
+
+      @static
+      @constant
+      @type String
+      @default P
+    */
+    PROSPECT_STATUS: 'P',
+
+    /**
+      Customer/Prospect is Customer.
+      @static
+      @constant
+      @type String
+      @default C
+    */
+    CUSTOMER_STATUS: 'C'
+
+  });
+
+  // Add in mixins
   XM.CustomerProspectRelation = XM.CustomerProspectRelation.extend(XM.CustomerMixin);
 
   // ..........................................................
@@ -694,22 +721,22 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.ShippingFormCollection = XM.Collection.extend({
-    /** @scope XM.ShippingFormCollection.prototype */
+  XM.ShipZoneCollection = XM.Collection.extend({
+    /** @scope XM.ShipZoneCollection.prototype */
 
-    model: XM.ShippingForm
+    model: XM.ShipZone
 
   });
-
+  
   /**
     @class
 
     @extends XM.Collection
   */
-  XM.ShipZoneCollection = XM.Collection.extend({
-    /** @scope XM.ShipZoneCollection.prototype */
+  XM.CustomerGroupCollection = XM.Collection.extend({
+    /** @scope XM.CustomerGroupCollection.prototype */
 
-    model: XM.ShipZone
+    model: XM.CustomerGroup
 
   });
 

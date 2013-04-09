@@ -55,7 +55,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // note: this doesn't get used for websocket debugging in node-datasource
     debug: function () {
       var args, buff, flushed;
-      if (!X.debugging) return;
+      if (!X.options.datasource.debugging) return;
       args = X.$A(arguments);
       buff = this.buff();
       buff.set("color", "blue");

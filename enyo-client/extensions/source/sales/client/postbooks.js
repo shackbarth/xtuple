@@ -6,25 +6,41 @@ trailing:true white:true*/
 (function () {
 
   XT.extensions.sales.initPostbooks = function () {
-    var module, panels, relevantPrivileges;
+    var module,
+      panels,
+      relevantPrivileges,
+      configurationJson,
+      configuration;
 
     // ..........................................................
     // APPLICATION
     //
-    /*
-    panels = [
-      {name: "honorificList", kind: "XV.HonorificList"},
-      {name: "accountList", kind: "XV.AccountList"},
-      {name: "contactList", kind: "XV.ContactList"},
-      {name: "itemList", kind: "XV.ItemList"},
-      {name: "classCodeList", kind: "XV.ClassCodeList"},
-      {name: "unitList", kind: "XV.UnitList"},
-      {name: "stateList", kind: "XV.StateList"},
-      {name: "countryList", kind: "XV.CountryList"}
-    ];
 
+    panels = [
+      {name: "siteList", kind: "XV.SiteList"},
+      {name: "siteTypeList", kind: "XV.SiteTypeList"},
+      {name: "saleTypeList", kind: "XV.SaleTypeList"},
+      {name: "shipZoneList", kind: "XV.ShipZoneList"},
+      {name: "salesRepList", kind: "XV.SalesRepList"},
+      {name: "termsList", kind: "XV.TermsList"},
+      {name: "customerGroupList", kind: "XV.CustomerGroupList"},
+      {name: "freightClassList", kind: "XV.FreightClassList"},
+      {name: "itemSiteList", kind: "XV.ItemSiteList"},
+      {name: "costCategoryList", kind: "XV.CostCategoryList"},
+      {name: "plannerCodeList", kind: "XV.PlannerCodeList"},
+      {name: "customerTypeList", kind: "XV.CustomerTypeList"}
+    ];
     XT.app.$.postbooks.appendPanels("setup", panels);
-    */
+
+    configurationJson = {
+      model: "XM.sales",
+      name: "_sales".loc(),
+      description: "_salesDescription".loc(),
+      workspace: "XV.SalesWorkspace"
+    };
+    configuration = new XM.ConfigurationModel(configurationJson);
+    XM.configurations.add(configuration);
+
     module = {
       name: "sales",
       label: "_sales".loc(),
@@ -37,7 +53,20 @@ trailing:true white:true*/
     XT.app.$.postbooks.insertModule(module, 2);
 
     relevantPrivileges = [
-      "AccessSalesExtension"
+      "AccessSalesExtension",
+      "ConfigureSO",
+      "MaintainFreightClasses",
+      "MaintainCustomerGroups",
+      "MaintainSalesReps",
+      "MaintainShipZones",
+      "MaintainTerms",
+      "MaintainSaleTypes",
+      "ViewFreightClasses",
+      "ViewCustomerGroups",
+      "ViewSalesReps",
+      "ViewShipZones",
+      "ViewTerms",
+      "ViewSaleTypes"
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
   };
