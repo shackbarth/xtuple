@@ -98,35 +98,6 @@ white:true*/
     });
   };
 
-  XT.StartupTasks.push({
-    taskName: "loadCurrentUser",
-    task: function () {
-      var options = {
-        success: _.bind(this.didComplete, this),
-        id: XT.session.details.username
-      };
-      XM.currentUser = new XM.UserAccountRelation();
-      XM.currentUser.fetch(options);
-    }
-  });
-
-
-  XT.StartupTasks.push({
-    taskName: "loadCurrencies",
-    task: function () {
-      var options = {
-        success: _.bind(function () {
-          XM.baseCurrency = _.find(XM.currencies.models, function (currency) {
-            return currency.get("isBase");
-          });
-          this.didComplete();
-        }, this)
-      };
-      XM.currencies = new XM.CurrencyCollection();
-      XM.currencies.fetch(options);
-    }
-  });
-
   XT.cacheCollection("XM.characteristics", "XM.CharacteristicCollection", "order name");
   XT.cacheCollection("XM.classCodes", "XM.ClassCodeCollection", "code");
   XT.cacheCollection("XM.commentTypes", "XM.CommentTypeCollection");
@@ -156,4 +127,34 @@ white:true*/
   XT.cacheCollection("XM.terms", "XM.TermsCollection");
   XT.cacheCollection("XM.units", "XM.UnitCollection");
 
+  /**
+    These ones are a little custom and need to be done longhand.
+   */
+  XT.StartupTasks.push({
+    taskName: "loadCurrentUser",
+    task: function () {
+      var options = {
+        success: _.bind(this.didComplete, this),
+        id: XT.session.details.username
+      };
+      XM.currentUser = new XM.UserAccountRelation();
+      XM.currentUser.fetch(options);
+    }
+  });
+
+  XT.StartupTasks.push({
+    taskName: "loadCurrencies",
+    task: function () {
+      var options = {
+        success: _.bind(function () {
+          XM.baseCurrency = _.find(XM.currencies.models, function (currency) {
+            return currency.get("isBase");
+          });
+          this.didComplete();
+        }, this)
+      };
+      XM.currencies = new XM.CurrencyCollection();
+      XM.currencies.fetch(options);
+    }
+  });
 }());
