@@ -100,6 +100,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             fileName = modelName + ".prpt",
             redirectUrl = biUrl + "&name=" + fileName + "&dataKey=" + randomKey;
 
+          if (requestDetails.locale && requestDetails.locale.get("culture")) {
+            console.log("setting accept language to ", requestDetails.locale.get("culture"));
+            res.set("Accept-Language", requestDetails.locale.get("culture"));
+          }
           res.redirect(redirectUrl);
         },
         error = function (model, err, options) {
@@ -109,8 +113,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             message: err.params && err.params.error && err.params.error.message
           });
         };
-
-      tempDataModel.save(attrs, {success: success, error: error});
+      tempDataModel.save(attrs, {
+        success: success,
+        error: error,
+        username: X.options.globalDatabase.nodeUsername
+      });
     });
   };
 
