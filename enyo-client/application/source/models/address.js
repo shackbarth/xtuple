@@ -24,7 +24,7 @@ white:true*/
     */
     initialize: function (attributes, options) {
       XM.Document.prototype.initialize.apply(this, arguments);
-      if (options && options.isNew) {
+      if (options && options.isNew && !this.get('country')) {
         var settings = XT.session ? XT.session.getSettings() : null,
           country = settings ? settings.get('DefaultAddressCountry') : null;
         if (country) { this.set('country', country); }
