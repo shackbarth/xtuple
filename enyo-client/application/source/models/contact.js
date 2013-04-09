@@ -244,8 +244,7 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.HonorificCollection = XM.Collection.extend({
-    /** @scope XM.HonorificCollection.prototype */
+  XM.HonorificCollection = XM.Collection.extend(/** @lends XM.HonorificCollection.prototype */{
 
     model: XM.Honorific
 

@@ -7,16 +7,7 @@ white:true*/
   "use strict";
 
   XT.extensions.incidentPlus.initStartup = function () {
-    XT.StartupTasks.push({
-      taskName: "loadProjectVersions",
-      task: function () {
-        var options = {
-          success: _.bind(this.didComplete, this)
-        };
-        XM.projectVersions = new XM.ProjectVersionCollection();
-        XM.projectVersions.fetch(options);
-      }
-    });
+    XT.cacheCollection("XM.projectVersions", "XM.ProjectVersionCollection");
   };
 
 }());
