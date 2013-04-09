@@ -193,6 +193,7 @@ trailing:true white:true*/
       {name: "name", label: "_name".loc(), attr: "name"}
     ]
   });
+  
   // ..........................................................
   // FILE
   //

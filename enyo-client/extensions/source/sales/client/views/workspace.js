@@ -6,6 +6,7 @@ trailing:true white:true*/
 (function () {
 
   XT.extensions.sales.initWorkspaces = function () {
+    var extensions;
 
     // ..........................................................
     // ACCOUNT
@@ -153,14 +154,187 @@ trailing:true white:true*/
               {kind: "XV.NumberWidget", attr: "SOCreditLimit",
                 label: "_creditLimit".loc()},
               {kind: "XV.InputWidget", attr: "SOCreditRate",
-                label: "_creditRating".loc()},
+                label: "_creditRating".loc()}
             ]}
           ]}
         ]}
       ]
     });
 
+    // ..........................................................
+    // INCIDENT
+    //
+
+    extensions = [
+      {kind: "XV.OpportunityQuoteListRelationsBox", container: "panels", attr: "quoteRelations"}
+    ];
+
+    XV.appendExtension("XV.OpportunityWorkspace", extensions);
 
   };
+  
+  // ..........................................................
+  // CUSTOMER GROUP
+  //
+
+  enyo.kind({
+    name: "XV.CustomerGroupWorkspace",
+    kind: "XV.Workspace",
+    title: "_customerGroup".loc(),
+    model: "XM.CustomerGroup",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.CustomerGroup", "XV.CustomerGroupWorkspace");
+  
+  // ..........................................................
+  // FREIGHT CLASS
+  //
+
+  enyo.kind({
+    name: "XV.FreightClassWorkspace",
+    kind: "XV.Workspace",
+    title: "_freightClass".loc(),
+    model: "XM.FreightClass",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.FreightClass", "XV.FreightClassWorkspace");
+  
+  // ..........................................................
+  // SALE TYPE
+  //
+
+  enyo.kind({
+    name: "XV.SaleTypeWorkspace",
+    kind: "XV.Workspace",
+    title: "_saleType".loc(),
+    model: "XM.SaleType",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.SaleType", "XV.SaleTypeWorkspace");
+  
+  // ..........................................................
+  // SALES REP
+  //
+
+  enyo.kind({
+    name: "XV.SalesRepWorkspace",
+    kind: "XV.Workspace",
+    title: "_salesRep".loc(),
+    model: "XM.SalesRep",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.NumberWidget", attr: "commission"}
+            //method is a 1-char column on the sales rep table, but it looks like it's unused?
+            // column emp_id is deprecated
+            //enhanced commissions widget?
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.SalesRep", "XV.SalesRepWorkspace");
+  
+  // ..........................................................
+  // SHIP ZONE
+  //
+
+  enyo.kind({
+    name: "XV.ShipZoneWorkspace",
+    kind: "XV.Workspace",
+    title: "_shipZone".loc(),
+    model: "XM.ShipZone",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.ShipZone", "XV.ShipZoneWorkspace");
+  
+  // ..........................................................
+  // TERMS
+  //
+
+  enyo.kind({
+    name: "XV.TermsWorkspace",
+    kind: "XV.Workspace",
+    title: "_terms".loc(),
+    model: "XM.Terms",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.TermsTypePicker", attr: "termsType"},
+            {kind: "XV.NumberWidget", attr: "dueDays"},
+            {kind: "XV.NumberWidget", attr: "discountDays"},
+            {kind: "XV.NumberWidget", attr: "cutOffDay"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.Terms", "XV.TermsWorkspace");
 
 }());

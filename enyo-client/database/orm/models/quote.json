@@ -1382,10 +1382,16 @@
         }
       },
       {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "quhead_number"
+        }
+      },
+      {
         "name": "customer",
-        "toOne": {
-          "isNested": true,
-          "type": "CustomerProspectRelation",
+        "attr": {
+          "type": "Number",
           "column": "quhead_cust_id"
         }
       },
