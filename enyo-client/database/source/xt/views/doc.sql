@@ -1,29 +1,38 @@
-drop view if exists xt.doc cascade;
+DO $$
+  var dropSql = "drop view if exists xt.doc cascade;";
+  var sql = "create or replace view xt.doc as " + 
+   "select " +
+    "docass_id as id, " +
+    "docass_source_type as source_type, " +
+    "docass_source_id as source_id, " +
+    "docass_target_type as target_type, " +
+    "docass_target_id as target_id, " +
+    "docass_purpose as purpose " +
+   "from docass " +
+   "union all " +
+   /* (inverse) */
+   "select " +
+    "docass_id as id, " +
+    "docass_target_type as source_type, " +
+    "docass_target_id as source_id, " +
+    "docass_source_type target_type, " +
+    "docass_source_id as target_id, " +
+    "case  " +
+     "when docass_purpose = 'A' then 'C' " +
+     "when docass_purpose = 'C' then 'A' " +
+     "else docass_purpose " +
+    "end as purpose " +
+   "from public.docass; ";
 
-create or replace view xt.doc as 
+  try {
+    plv8.execute(sql);
+  } catch (error) {
+    /* let's cascade-drop the view and try again */
+    plv8.execute(dropSql);
+    plv8.execute(sql);
+  }
 
-   select
-    docass_id as id,
-    docass_source_type as source_type,
-    docass_source_id as source_id,
-    docass_target_type as target_type,
-    docass_target_id as target_id,
-    docass_purpose as purpose
-   from docass
-   union all
-   -- (inverse)
-   select
-    docass_id as id,
-    docass_target_type as source_type,
-    docass_target_id as source_id,
-    docass_source_type target_type,
-    docass_source_id as target_id,
-    case 
-     when docass_purpose = 'A' then 'C'
-     when docass_purpose = 'C' then 'A'
-     else docass_purpose
-    end as purpose
-   from public.docass;
+$$ language plv8;
 
 grant all on table xt.doc to xtrole;
 

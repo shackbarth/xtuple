@@ -1,30 +1,40 @@
-drop view if exists xt.crmacctcomment cascade;
+DO $$
+  var dropSql = "drop view if exists xt.crmacctcomment cascade;";
+  var sql = "create view xt.crmacctcomment as " +
+    /* Account comments */
+    "select comment_id, comment_source_id, comment_date, comment_user, comment_text, comment_cmnttype_id, comment_source, comment_public " +
+    "from comment " +
+    "  left join cmnttype on (comment_cmnttype_id=cmnttype_id) " +
+    "where (comment_source='CRMA') " +
+    "union " +
+    /* Customer comments */
+    "select comment_id, crmacct_id, comment_date, comment_user, comment_text, comment_cmnttype_id, comment_source, comment_public " +
+    "from comment " +
+    "  join crmacct on (comment_source_id=crmacct_cust_id) " +
+    "where (comment_source='C') " +
+    "union  " +
+    /* Vendor comments */
+    "select comment_id, crmacct_id, comment_date, comment_user, comment_text, comment_cmnttype_id, comment_source, comment_public " +
+    "from comment " +
+    "  join crmacct on (comment_source_id=crmacct_vend_id) " +
+    "where (comment_source='V') " +
+    "union " +
+    /* Contact comments */
+    "select comment_id, crmacct_id, comment_date, comment_user, comment_text, comment_cmnttype_id, comment_source, comment_public " +
+    "from comment " +
+    "  join cntct on (comment_source_id=cntct_id) " +
+    "  join crmacct on (cntct_crmacct_id=crmacct_id) " +
+    "where (comment_source='T');"
 
-create view xt.crmacctcomment as 
--- Account comments
-select comment_id, comment_source_id, comment_date, comment_user, comment_text, comment_cmnttype_id, comment_source, comment_public
-from comment
-  left join cmnttype on (comment_cmnttype_id=cmnttype_id) 
-where (comment_source='CRMA')
-union
--- Customer comments
-select comment_id, crmacct_id, comment_date, comment_user, comment_text, comment_cmnttype_id, comment_source, comment_public
-from comment
-  join crmacct on (comment_source_id=crmacct_cust_id)
-where (comment_source='C')
-union 
--- Vendor comments
-select comment_id, crmacct_id, comment_date, comment_user, comment_text, comment_cmnttype_id, comment_source, comment_public
-from comment
-  join crmacct on (comment_source_id=crmacct_vend_id)
-where (comment_source='V')
-union
--- Contact comments
-select comment_id, crmacct_id, comment_date, comment_user, comment_text, comment_cmnttype_id, comment_source, comment_public
-from comment
-  join cntct on (comment_source_id=cntct_id)
-  join crmacct on (cntct_crmacct_id=crmacct_id)
-where (comment_source='T');
+  try {
+    plv8.execute(sql);
+  } catch (error) {
+    /* let's cascade-drop the view and try again */
+    plv8.execute(dropSql);
+    plv8.execute(sql);
+  }
+
+$$ language plv8;
 
 grant all on table xt.doc to xtrole;
 
