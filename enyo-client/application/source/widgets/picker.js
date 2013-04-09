@@ -414,6 +414,17 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'code'}
     ]
   });
+  
+  // ..........................................................
+  // TERMS TYPE
+  //
+
+  enyo.kind({
+    name: "XV.TermsTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.termsTypes",
+    nameAttribute: "name"
+  });
 
   // ..........................................................
   // UNIT

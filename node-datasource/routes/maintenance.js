@@ -145,7 +145,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // on the organization collection
       //
       fetchSuccess = function (collection, response) {
-        _.each(collection, function (org) {
+        _.each(response, function (org, index) {
           var scriptName = "init_script.sql",
             host = org.databaseServer.hostname,
             port = org.databaseServer.port,
@@ -209,7 +209,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             ormArray.push({ormCreds: ormCreds, ormDir: coreOrmDir, loadOrder: -9990});
           }
 
-          _.each(org.get("extensions"), function (ext) {
+          _.each(org.extensions, function (ext) {
             //
             // go through all of the extensions of all the organizations...
             //

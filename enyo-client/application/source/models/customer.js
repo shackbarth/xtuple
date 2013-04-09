@@ -727,6 +727,18 @@ white:true*/
     model: XM.ShipZone
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.CustomerGroupCollection = XM.Collection.extend({
+    /** @scope XM.CustomerGroupCollection.prototype */
+
+    model: XM.CustomerGroup
+
+  });
 
   /**
     @class
