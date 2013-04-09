@@ -40,6 +40,14 @@ regexp:true, undef:true, trailing:true, white:true */
   // MONEY
   //
 
+  /**
+    The widget is created with an attr value that is an object composed of two key-values pairs.
+    These pairs include the amount (localValue or baseValue) and the currency attribute strings from the model.
+    The workspace replaces the attribute name string value
+    The localValue key should be used if the model stores the local currency and the baseValue key should
+    be used if the models stores the base currency.
+    The effective attribute should contain the date by which calculations
+   */
   enyo.kind({
     kind: "XV.NumberWidget",
     name: "XV.MoneyWidget",
@@ -50,7 +58,8 @@ regexp:true, undef:true, trailing:true, white:true */
       baseValue: null, // {Number} the amount in the base currency
       effective: null,
       currencyDisabled: false,
-      currencyShowing: true
+      currencyShowing: true,
+      localMode: true
     },
     handlers: {
       onValueChange: "valueChanged" // intercepts events from the picker or the field
@@ -93,11 +102,16 @@ regexp:true, undef:true, trailing:true, white:true */
       // this is for styling of the picker since the PickerWidget has a built in
       // input decorator
       this.$.picker.$.inputWrapper.removeClass("onyx-input-decorator");
+      
+      // set the "mode" of this widget, whether or not it directly saves the local
+      // value to the model, or if it converts it to and from the base value.
+      this.setLocalMode(_.has(this.attr, "localValue"));
     },
 
     effectiveChanged: function () {
       this.setBasePanelShowing();
-      this.setLocal();
+      // TODO: fix this
+      //this.setLocal();
     },
 
     /**
@@ -105,7 +119,6 @@ regexp:true, undef:true, trailing:true, white:true */
         and the currency is not currently base.
      */
     setBasePanelShowing: function () {
-
       var currency = this.$.picker.value,
         showing = _.isDate(this.getEffective()) && currency && !currency.get("isBase");
       this.$.basePanel.setShowing(showing);
@@ -131,9 +144,10 @@ regexp:true, undef:true, trailing:true, white:true */
           var amt = basePrice || basePrice === 0 ? Globalize.format(basePrice, "n" + that.getScale()) : "";
           that.$.baseAmountLabel.setContent(amt);
 
+          // if this widget is not in local mode,
           // swap this base price into the event instead of the local price.
           // we do not want to tell the model about the local price.
-          // the model does not care to be bothered with such trivialities.
+          // otherwise, it will want to know about local.
 
           if (fromPicker) {
             // bubble up the change to the picker
@@ -142,17 +156,26 @@ regexp:true, undef:true, trailing:true, white:true */
             that.doValueChange(inEvent);
 
             // also bubble up the transformed change to the amount field
-            secondEvent.value = basePrice;
-            amountAttr = that.attr.amount;
+            if (this.getLocalMode()) {
+              secondEvent.value = amount;
+              amountAttr = that.attr.localValue;
+            } else {
+              secondEvent.value = basePrice;
+              amountAttr = that.attr.baseValue;
+              
+            }
             secondEvent.originator = { attr: amountAttr };
             that.doValueChange(secondEvent);
 
           } else {
             // it was the amount field that was changed.
             // only bubble up the change to the amount field
-            inEvent.value = basePrice;
+            if (this.getLocalMode()) {
+              inEvent.value = amount;
+            } else {
+              inEvent.value = basePrice;
+            }
             inEvent.transformed = true;
-
             that.doValueChange(inEvent);
           }
         };
@@ -217,31 +240,37 @@ regexp:true, undef:true, trailing:true, white:true */
         amountAttr,
         fromUser = false,
         newValue;
-
-      // support how this function is used by the base class.
-      // assume if we get a number, that means the amount
+        
+      // supports how this function is used by the base class.
+      // assume if we get a number, that means the localValue or baseValue
       if (_.isNumber(value)) {
         fromUser = true;
-        value = {amount: value};
+        if (this.getLocalMode()) {
+          value = {localValue: value};
+        } else {
+          value = {baseValue: value};
+        }
       }
 
       options = options || {};
       for (var attribute in value) {
         if (value.hasOwnProperty(attribute)) {
           newValue = value[attribute];
-          if (attribute === "amount") {
+          if (attribute === "localValue" || attribute === "baseValue") {
             if (fromUser) {
               this.setLocalValue(newValue);
-            } else {
-              // set the amount from the model, the base value in the published field
+            } else if (this.getLocalMode()) { // this value is in local, don't do any conversions
+              amountAttr = this.attr.localValue;
+              this.setLocalValue(newValue);
+              this.$.input.setValue(newValue);
+            } else { // this value is in base, have to convert to local before setting
+              amountAttr = this.attr.baseValue;
               this.setBaseValue(newValue);
               this.setLocal();
             }
-
             // the subwidget does not know its own attr, but we know what
             // it is because it's stored in our attr hash. substitute it.
             // that's all the workspace needs to know about the originator
-            amountAttr = this.attr.amount;
             inEvent = { value: newValue, originator: {attr: amountAttr }};
             if (!options.silent) { this.doValueChange(inEvent); }
           } else if (attribute === "currency") {
@@ -252,7 +281,10 @@ regexp:true, undef:true, trailing:true, white:true */
             // only show the base panel if there is an effective date AND the currency doesn't match the base
             // Set base label with calculated value
             this.setBasePanelShowing();
-            this.setLocal();
+            // only set local if we're not in local model
+            if (!this.getLocalMode()) {
+              this.setLocal();
+            }
           }
           // set this base price into the base amount label
           var amt = this.getBaseValue() || this.getBaseValue() === 0 ? Globalize.format(this.getBaseValue(), "n" + this.getScale()) : "";
