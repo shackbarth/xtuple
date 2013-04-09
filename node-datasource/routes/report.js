@@ -89,6 +89,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           // need to describe the query on such requests, or how we should describe them.
           // requestDetails.recordType and requestDetails.id are the two pieces of information
           query: JSON.stringify(requestDetails.query),
+          locale: JSON.stringify(requestDetails.locale),
           data: JSON.stringify(result.data),
           created: new Date()
         },
@@ -99,6 +100,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             fileName = modelName + ".prpt",
             redirectUrl = biUrl + "&name=" + fileName + "&dataKey=" + randomKey;
 
+          if (requestDetails.locale && requestDetails.locale.culture) {
+            res.set("Accept-Language", requestDetails.locale.culture);
+          }
           res.redirect(redirectUrl);
         },
         error = function (model, err, options) {
@@ -108,8 +112,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             message: err.params && err.params.error && err.params.error.message
           });
         };
-
-      tempDataModel.save(attrs, {success: success, error: error});
+      tempDataModel.save(attrs, {
+        success: success,
+        error: error,
+        username: X.options.globalDatabase.nodeUsername
+      });
     });
   };
 

@@ -2,6 +2,7 @@
 
 select xt.add_column('bicache','bicache_key', 'text', 'primary key');
 select xt.add_column('bicache','bicache_query', 'text');
+select xt.add_column('bicache','bicache_locale', 'text');
 select xt.add_column('bicache','bicache_data', 'text');
 select xt.add_column('bicache','bicache_created', 'timestamp');
 
