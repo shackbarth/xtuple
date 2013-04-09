@@ -74,43 +74,66 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
     bicacheCollection.fetch(fetchOptions);
 
-    queryForData(req.session, requestDetails, function (result) {
+    var queryForDataCallback = function (result) {
+      var recordType = requestDetails.query ? requestDetails.query.recordType : requestDetails.recordType,
+        modelName = recordType.suffix().replace("ListItem", "").replace("Relation", "");
+
       if (result.isError) {
         res.send(result);
         return;
       }
-      // thanks http://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
-      var randomKey = Math.random().toString(36).substr(2, 15),
-        tempDataModel = new XM.BiCache(null, {isNew: true}),
 
-        attrs = {
-          key: randomKey,
-          // TODO: this will be null for a single-record request. Then again, I don't know if we
-          // need to describe the query on such requests, or how we should describe them.
-          // requestDetails.recordType and requestDetails.id are the two pieces of information
-          query: JSON.stringify(requestDetails.query),
-          data: JSON.stringify(result.data),
-          created: new Date()
-        },
-        success = function () {
-          var biUrl = X.options.datasource.biUrl || "",
-            recordType = requestDetails.query ? requestDetails.query.recordType : requestDetails.recordType,
-            modelName = recordType.suffix().replace("ListItem", "List").replace("Relation", "List"),
-            fileName = modelName + ".prpt",
-            redirectUrl = biUrl + "&name=" + fileName + "&dataKey=" + randomKey;
+      var saveBiCache = function (err, schemaResult) {
+        var schema = schemaResult && schemaResult.rows.length && schemaResult.rows[0].getschema;
 
-          res.redirect(redirectUrl);
-        },
-        error = function (model, err, options) {
-          res.send({
-            isError: true,
-            error: err,
-            message: err.params && err.params.error && err.params.error.message
-          });
-        };
+        // thanks http://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
+        var randomKey = Math.random().toString(36).substr(2, 15),
+          tempDataModel = new XM.BiCache(null, {isNew: true}),
+          attrs = {
+            key: randomKey,
+            // TODO: this will be null for a single-record request. Then again, I don't know if we
+            // need to describe the query on such requests, or how we should describe them.
+            // requestDetails.recordType and requestDetails.id are the two pieces of information
+            query: JSON.stringify(requestDetails.query),
+            locale: JSON.stringify(requestDetails.locale),
+            data: JSON.stringify(result.data),
+            schema: schema,
+            created: new Date()
+          },
+          success = function () {
+            var biUrl = X.options.datasource.biUrl || "",
+              fileName = modelName + "List.prpt",
+              redirectUrl = biUrl + "&name=" + fileName + "&dataKey=" + randomKey;
 
-      tempDataModel.save(attrs, {success: success, error: error});
-    });
+            if (requestDetails.locale && requestDetails.locale.culture) {
+              res.set("Accept-Language", requestDetails.locale.culture);
+            }
+            // step 4: redirect to the report tool
+            res.redirect(redirectUrl);
+          },
+          error = function (model, err, options) {
+            res.send({
+              isError: true,
+              error: err,
+              message: err.params && err.params.error && err.params.error.message
+            });
+          };
+
+        // step 3: save to the bicache table
+        tempDataModel.save(attrs, {
+          success: success,
+          error: error,
+          username: X.options.globalDatabase.nodeUsername
+        });
+      }
+
+      // step 2: get the schema
+      X.database.query(req.session.passport.user.organization,
+        "select xt.getSchema('%@', '%@');".f(recordType.substring(0, 2), modelName), saveBiCache);
+    };
+
+    // step 1: get the data
+    queryForData(req.session, requestDetails, queryForDataCallback);
   };
 
 }());

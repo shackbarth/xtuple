@@ -77,7 +77,7 @@
       {
         "name": "commission",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "quhead_commission"
         }
       },
@@ -931,7 +931,7 @@
       {
         "name": "quantity",
         "attr": {
-          "type": "Number",
+          "type": "Quantity",
           "column": "quitem_qtyord"
         }
       },
@@ -945,35 +945,35 @@
       {
         "name": "quantityUnitRatio",
         "attr": {
-          "type": "Number",
+          "type": "UnitRatio",
           "column": "quitem_qty_invuomratio"
         }
       },
       {
         "name": "basePrice",
         "attr": {
-          "type": "Number",
+          "type": "SalesPrice",
           "column": "base_price"
         }
       },
       {
         "name": "customerPrice",
         "attr": {
-          "type": "Number",
+          "type": "SalesPrice",
           "column": "quitem_custprice"
         }
       },
       {
         "name": "discount",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "cust_discount"
         }
       },
       {
         "name": "price",
         "attr": {
-          "type": "Number",
+          "type": "SalesPrice",
           "column": "quitem_price"
         }
       },
@@ -994,21 +994,21 @@
       {
         "name": "listCostMarkup",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "list_cost_markup"
         }
       },
       {
         "name": "listPrice",
         "attr": {
-          "type": "Number",
+          "type": "Money",
           "column": "list_price"
         }
       },
       {
         "name": "listPriceDiscount",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "list_price_discount"
         }
       },
@@ -1029,7 +1029,7 @@
       {
         "name": "priceUnitRatio",
         "attr": {
-          "type": "Number",
+          "type": "UnitRatio",
           "column": "quitem_price_invuomratio"
         }
       },
@@ -1043,7 +1043,7 @@
       {
         "name": "extendedPrice",
         "attr": {
-          "type": "Number",
+          "type": "ExtendedPrice",
           "column": "ext_price"
         }
       },
@@ -1153,7 +1153,7 @@
       {
         "name": "price",
         "attr": {
-          "type": "Number",
+          "type": "Money",
           "column": "charass_price"
         }
       }
