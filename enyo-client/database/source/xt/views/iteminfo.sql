@@ -1,11 +1,21 @@
-drop view if exists xt.iteminfo cascade;
+DO $$
+  var dropSql = "drop view if exists xt.iteminfo cascade;";
+  var sql = "create or replace view xt.iteminfo as  " +
+   "select *, " +
+     "stdcost(item_id) as std_cost, " +
+     "iteminvpricerat(item_id) as inv_price_ratio " +
+   "from item; " ;
 
-create or replace view xt.iteminfo as 
+  try {
+    plv8.execute(sql);
+  } catch (error) {
+    /* let's cascade-drop the view and try again */
+    plv8.execute(dropSql);
+    plv8.execute(sql);
+  }
 
-   select *,
-     stdcost(item_id) as std_cost,
-     iteminvpricerat(item_id) as inv_price_ratio
-   from item;
+$$ language plv8;
+
 
 grant all on table xt.iteminfo to xtrole;
 

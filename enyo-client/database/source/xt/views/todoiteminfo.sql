@@ -1,10 +1,19 @@
-drop view if exists xt.todoiteminfo cascade;
+DO $$
+  var dropSql = "drop view if exists xt.todoiteminfo cascade;";
+  var sql = "create or replace view xt.todoiteminfo as  " +
+   "select todoitem.*, coalesce(incdtpriority_order, 99999) as priority_order " +
+   "from todoitem " +
+     "left join incdtpriority on (todoitem_priority_id=incdtpriority_id); ";
 
-create or replace view xt.todoiteminfo as 
+  try {
+    plv8.execute(sql);
+  } catch (error) {
+    /* let's cascade-drop the view and try again */
+    plv8.execute(dropSql);
+    plv8.execute(sql);
+  }
 
-   select todoitem.*, coalesce(incdtpriority_order, 99999) as priority_order
-   from todoitem
-     left join incdtpriority on (todoitem_priority_id=incdtpriority_id);
+$$ language plv8;
 
 grant all on table xt.todoiteminfo to xtrole;
 

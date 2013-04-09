@@ -2,6 +2,12 @@ create or replace function xt.orm_did_change() returns trigger as $$
 
   var view, views = [], i = 1, res, n;
 
+
+  /* Don't bother updating if nothing has changed */
+  if (TG_OP === 'UPDATE' && NEW && OLD && NEW.orm_json === OLD.orm_json) {
+    return NEW;
+  }
+
   /* Validate */
   if(TG_OP === 'INSERT' || TG_OP === 'UPDATE') {
     view = NEW.orm_namespace.decamelize() + '.' + NEW.orm_type.decamelize();
