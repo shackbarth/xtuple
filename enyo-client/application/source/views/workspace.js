@@ -516,6 +516,33 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.CustomerProspectListItem", "XV.CustomerWorkspace");
   
   // ..........................................................
+  // CUSTOMER GROUP
+  //
+
+  enyo.kind({
+    name: "XV.CustomerGroupWorkspace",
+    kind: "XV.Workspace",
+    title: "_customerGroup".loc(),
+    model: "XM.CustomerGroup",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]},
+        {kind: "XV.CustomerGroupCustomerBox", attr: "customers"}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.CustomerGroup", "XV.CustomerGroupWorkspace");
+  
+  // ..........................................................
   // CUSTOMER TYPE
   //
 
@@ -590,7 +617,32 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.FileRelation", "XV.FileWorkspace");
+  
+  // ..........................................................
+  // FREIGHT CLASS
+  //
 
+  enyo.kind({
+    name: "XV.FreightClassWorkspace",
+    kind: "XV.Workspace",
+    title: "_freightClass".loc(),
+    model: "XM.FreightClass",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.FreightClass", "XV.FreightClassWorkspace");
 
   // ..........................................................
   // HONORIFIC
@@ -1348,7 +1400,7 @@ trailing:true white:true*/
       if (inEvent.originator.name === 'customerWidget') {
         this.customerChanged();
       }
-      if (inEvent.originator.name == 'currencyPicker') {
+      if (inEvent.originator.name === 'currencyPicker') {
         this.$.lineItemsPanel.render();
       }
     },
@@ -1466,6 +1518,58 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.SalesRep", "XV.SalesRepWorkspace");
+  
+  // ..........................................................
+  // SALE TYPE
+  //
+
+  enyo.kind({
+    name: "XV.SaleTypeWorkspace",
+    kind: "XV.Workspace",
+    title: "_saleType".loc(),
+    model: "XM.SaleType",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.SaleType", "XV.SaleTypeWorkspace");
+  
+  // ..........................................................
+  // SHIP ZONE
+  //
+
+  enyo.kind({
+    name: "XV.ShipZoneWorkspace",
+    kind: "XV.Workspace",
+    title: "_shipZone".loc(),
+    model: "XM.ShipZone",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.ShipZone", "XV.ShipZoneWorkspace");
 
   // ..........................................................
   // SITE
@@ -1582,6 +1686,145 @@ trailing:true white:true*/
   enyo.kind(hash);
 
   XV.registerModelWorkspace("XM.TaxAuthorityRelation", "XV.TaxAuthorityWorkspace");
+  
+  // ..........................................................
+  // TAX CODE
+  //
+
+  enyo.kind({
+    name: "XV.TaxCodeWorkspace",
+    kind: "XV.Workspace",
+    title: "_taxCode".loc(),
+    model: "XM.TaxCode",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.TaxClassPicker", attr: "class", label: "_taxClass".loc()},
+            {kind: "XV.TaxAuthorityPicker", attr: "authority", label: "_taxAuthority".loc()},
+            {kind: "XV.NumberWidget", attr: "basis"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.TaxCode", "XV.TaxCodeWorkspace");
+  
+  // ..........................................................
+  // TAX CLASS
+  //
+
+  enyo.kind({
+    name: "XV.TaxClassWorkspace",
+    kind: "XV.Workspace",
+    title: "_taxClass".loc(),
+    model: "XM.TaxClass",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.NumberWidget", attr: "sequence"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.TaxClass", "XV.TaxClassWorkspace");
+  
+  // ..........................................................
+  // TAX TYPE
+  //
+
+  enyo.kind({
+    name: "XV.TaxTypeWorkspace",
+    kind: "XV.Workspace",
+    title: "_taxType".loc(),
+    model: "XM.TaxType",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.CheckboxWidget", attr: "isSystem"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.TaxType", "XV.TaxTypeWorkspace");
+  
+  // ..........................................................
+  // TAX ZONE
+  //
+
+  enyo.kind({
+    name: "XV.TaxZoneWorkspace",
+    kind: "XV.Workspace",
+    title: "_taxZone".loc(),
+    model: "XM.TaxZone",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.TaxZone", "XV.TaxZoneWorkspace");
+  
+  // ..........................................................
+  // TERMS
+  //
+
+  enyo.kind({
+    name: "XV.TermsWorkspace",
+    kind: "XV.Workspace",
+    title: "_terms".loc(),
+    model: "XM.Terms",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.TermsTypePicker", attr: "termsType"},
+            {kind: "XV.NumberWidget", attr: "dueDays"},
+            {kind: "XV.NumberWidget", attr: "discountDays"},
+            {kind: "XV.NumberWidget", attr: "cutOffDay"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.Terms", "XV.TermsWorkspace");
 
   // ..........................................................
   // TO DO

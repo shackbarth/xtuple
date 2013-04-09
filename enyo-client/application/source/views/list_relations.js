@@ -88,6 +88,32 @@ trailing:true white:true*/
       return true;
     }
   });
+  
+  
+  // ..........................................................
+  // CUSTOMER GROUP CUSTOMER
+  //
+
+  enyo.kind({
+    name: "XV.CustomerGroupCustomerListRelations",
+    kind: "XV.ListRelations",
+    orderBy: [
+      {attribute: "customer.number"}
+    ],
+    parentKey: "customerGroup",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableRows", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "customer.number"},
+              {kind: "XV.ListAttr", attr: "customer.name", fit: true, classes: "right"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  });
 
   // ..........................................................
   // CUSTOMER SHIPTO

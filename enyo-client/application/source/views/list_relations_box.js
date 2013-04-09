@@ -17,6 +17,18 @@ trailing:true white:true*/
     listRelations: "XV.ContactListRelations",
     searchList: "XV.ContactList"
   });
+  
+  // ..........................................................
+  // CUSTOMER GROUP CUSTOMER
+  //
+
+  enyo.kind({
+    name: "XV.CustomerGroupCustomerBox",
+    kind: "XV.ListRelationsBox",
+    title: "_customers".loc(),
+    parentKey: "customerGroup",
+    listRelations: "XV.CustomerGroupCustomerListRelations"
+  });
 
   // ..........................................................
   // INCIDENT HISTORY
