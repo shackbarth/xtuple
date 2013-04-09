@@ -21,8 +21,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     refresh,
     runOrmInstaller,
     select,
-    submit,
-    testConnection;
+    submit;
 
   // When ran from the maintenance route, we already have XT.dataSource.
   // When ran from the installer, we need to included it after X.options is set.
@@ -32,12 +31,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   X.db = XT.dataSource;
 
+  /**
+    Prepares the orm for insertion into the database by cleaning out all the junk
+    that we attached to it for the sake of these calculations.
+   */
   cleanse = function (orm) {
     var ret = _.clone(orm);
     delete ret.undefinedDependencies;
     delete ret.failedDependencies;
     delete ret.filename;
-    delete ret.missingDependencies;
     delete ret.enabled;
     delete ret.dependencies;
 
@@ -50,12 +52,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return ret;
   };
 
-  submit = function (socket, orm, queue, ack, isExtension) {
+  /**
+    Here is the function that actually installs the ORM!
+   */
+  submit = function (data, orm, queue, ack, isExtension) {
     //console.log("submit", arguments);
     var query, extensions, context, extensionList = [], namespace, type;
     context = orm.context;
     namespace = orm.nameSpace;
-    extensions = socket.extensions;
+    extensions = data.extensions;
     type = orm.type;
 
     if (!isExtension) {
@@ -88,7 +93,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     query = "select xt.install_orm('%@')".f(X.json(cleanse(orm)));
 
-    X.db.query(query, socket.databaseOptions, _.bind(function (err, res) {
+    X.db.query(query, data.databaseOptions, _.bind(function (err, res) {
       var c = extensionList.length;
       if (err) {
         console.log("Error: " + err.message);
@@ -103,70 +108,87 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }
       }
 
-      if (!isExtension) socket.installed.push(orm);
+      if (!isExtension) data.installed.push(orm);
       if (c > 0) {
-        submit.call(this, socket, extensionList.shift(), queue, ack, true);
+        submit.call(this, data, extensionList.shift(), queue, ack, true);
       } else if (isExtension) {
-        // this is the one part I'm worried about SMH
         --c;
         if (!extensionList.length) {
-          installQueue.call(this, socket, ack, queue);
+          installQueue.call(this, data, ack, queue);
         } else {
-          submit.call(this, socket, extensionList.shift(), queue, ack, true);
+          submit.call(this, data, extensionList.shift(), queue, ack, true);
         }
       } else {
-        installQueue.call(this, socket, ack, queue);
+        installQueue.call(this, data, ack, queue);
       }
     }, this));
   };
 
-  installQueue = function (socket, ack, queue) {
-    //console.log("install queue", arguments);
-    var installed = socket.installed,
-      orms = socket.orms,
+
+  /**
+    Iterates recursively down the queue of orms to install.
+    Initially called with a queue in no particular order.
+    However, we do know the dependencies of each orm.
+
+    @param data
+    @param data.installed {Array} Array of ORMs (as JSON) that have already been installed
+    @param ack {Function} callback function to be eventually called to return out of this
+      whole installer
+   */
+  installQueue = function (data, ack, queue) {
+    var installed = data.installed,
+      orms = data.orms,
       orm, dependencies = [];
     if (!queue || queue.length === 0) {
       // this is the actual callback! The first arg is an error, which is null if
       // we've made it this far. The second arg is an array of all the orm names
       // that have been installed.
-      return ack(null, _.map(socket.installed, function (orm) {
+      return ack(null, _.map(data.installed, function (orm) {
         return orm.type;
       }));
     }
     orm = queue.shift();
 
     if (installed.indexOf(orm) !== -1) {
-      return installQueue.call(this, socket, ack, queue);
+      return installQueue.call(this, data, ack, queue);
     }
+    //
+    // Dependencies of this orm need to be installed before this orm.
+    //
     if (orm.dependencies) {
       _.each(orm.dependencies, function (dependency) {
         var d = orms[dependency.nameSpace][dependency.type];
         if (!installed.contains(d)) {
+          // only install dependencies that have not already been installed
           dependencies.push(d);
         }
       });
       if (dependencies.length > 0) {
         dependencies.push(orm);
         dependencies = dependencies.concat(queue);
-        return installQueue.call(this, socket, ack, dependencies);
+        return installQueue.call(this, data, ack, dependencies);
+        // do NOT install this orm right now! We'll get to it when the time is right.
       }
     }
 
-    submit.call(this, socket, orm, queue, ack);
+    submit.call(this, data, orm, queue, ack);
   };
 
-  testConnection = function (socket, ack, options, err, res) {
-    if (err) return ack(false);
-    socket.databaseOptions = options;
-    ack(true);
-  };
+  /**
+    Parse a json file and return the json.
+    @param {String} path
 
+    @returns {Object}
+   */
   parseFile = function (path) {
     try {
       return X.json(_fs.readFileSync(path, "utf8"), true);
     } catch (err) { return {isError: true, message: err.message, file: path}; }
   };
 
+  /**
+    Recurse into the file structure to parse the json files.
+   */
   dive = function (path, root) {
     var files = X.directoryFiles(path, {fullPath: true}), stat, isTop, ret, content, errors = [];
     isTop = root ? false: true;
@@ -191,13 +213,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
   };
 
-  dependenciesFor = function (socket, orm, dependencies) {
+  /**
+    Adds a dependencies array to the orm.
+   */
+  dependenciesFor = function (data, orm, dependencies) {
     var properties, extensions, namespace, orms, dep;
     dependencies = dependencies ? dependencies : orm.dependencies ? orm.dependencies : (orm.dependencies = []);
     properties = orm.properties || [];
     extensions = orm.extensions || [];
-    orms = socket.orms;
-    if (!orm.missingDependencies) { orm.missingDependencies = []; }
+    orms = data.orms;
     _.each(properties, function (property) {
       var which, type, ns;
       if (property.toOne || property.toMany) {
@@ -213,40 +237,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
     _.each(extensions, function (extension) {
       if (!extension.nameSpace) extension.nameSpace = orm.nameSpace;
-      dependenciesFor(socket, extension, dependencies);
-    });
-    namespace = orm.table.match(/^(.*)\./);
-    _.each(dependencies, function (dependency) {
-      var ns, type;
-      ns = orms[dependency.nameSpace];
-      type = ns[dependency.type];
-      if (X.none(type)) {
-        orm.missingDependencies.push("%@.%@".f(dependency.nameSpace, dependency.type));
-      }
+      dependenciesFor(data, extension, dependencies);
     });
   };
 
-  calculateDependencies = function (socket) {
-    var orms = socket.orms;
-    _.each(orms, function (namespace) {
-      _.each(_.keys(namespace), function (name) {
-        var orm = namespace[name];
-        dependenciesFor(socket, orm);
-      });
-    });
-    _.each(orms, function (namespace) {
-      _.each(_.keys(namespace), function (name) {
-        var orm = namespace[name];
-        orm.enabled = checkDependencies(socket, orm);
-      });
-    });
-  };
-
-  checkDependencies = function (socket, orm) {
+  /**
+    Not sure what this does.
+   */
+  checkDependencies = function (data, orm) {
     var enabled = true, dependencies = orm.dependencies, found, orms;
     if (X.typeOf(orm.enabled) !== X.T_UNDEFINED) return orm.enabled;
     if (!dependencies || dependencies.length <= 0) return enabled;
-    orms = socket.orms;
+    orms = data.orms;
     _.each(dependencies, function (dependency) {
       found = orms[dependency.nameSpace][dependency.type];
       if (X.none(found)) {
@@ -255,7 +257,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         enabled = false;
         return;
       }
-      if (!checkDependencies(socket, found)) {
+      if (!checkDependencies(data, found)) {
         if (!orm.failedDependencies) { orm.failedDependencies = []; }
         orm.failedDependencies.push("%@.%@".f(found.nameSpace, found.type));
         enabled = false;
@@ -265,6 +267,32 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return enabled;
   };
 
+  /**
+    For each ORM, calculates that ORMs dependencies
+   */
+  calculateDependencies = function (data) {
+    var orms = data.orms;
+    _.each(orms, function (namespace) {
+      _.each(_.keys(namespace), function (name) {
+        var orm = namespace[name];
+        dependenciesFor(data, orm);
+      });
+    });
+
+    _.each(orms, function (namespace) {
+      _.each(_.keys(namespace), function (name) {
+        var orm = namespace[name];
+        orm.enabled = checkDependencies(data, orm);
+      });
+    });
+  };
+
+  /**
+    Checks to see if the orm is already installed, using the global
+    existing variable. Note that existing is populated from xt.orm,
+    and assumes that xt.orm is in sync with the actual views that
+    are created from the orm records.
+   */
   findExisting = function (nameSpace, type) {
     return _.find(existing, function (orm) {
       return orm.namespace === nameSpace && orm.type === type;
@@ -272,23 +300,55 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
 
-  install = function (socket, ack) {
-    var valid = [], installer = _.bind(installQueue, this, socket, ack), orms;
-    orms = socket.orms;
+  install = function (data, ack) {
+    var valid = [], installer = _.bind(installQueue, this, data, ack), orms;
+    orms = data.orms;
     _.each(orms, function (namespace) {
       _.each(namespace, function (orm) {
         if (orm.enabled) valid.push(orm);
       });
     });
-    socket.installed = [];
+    data.installed = [];
     _.each(existing, function (orm) {
-      socket.installed.push();
+      data.installed.push(orm);
     });
     installer(valid);
   };
 
-  select =  function (socket, options, ack) {
-    var key, callback, creds = {};
+  /*
+    Puts the options into the data object and runs the clearing sql call.
+    The clearing sql call: we get into trouble when there are orms "registered"
+    with a row in the xt.orm table, but without an actual view defined. This
+    happens if some other trigger cascade-deletes a view. Generally speaking
+    these triggers don't know to delete the related xt.orm row. Because we
+    frequently use the presence of a row as a proxy for the presence of the
+    view, it's very dangerous if these fall out of sync. This sql call
+    erases any xt.orm row that has no view. Assumption: the views will always
+    be in the xm namespace.
+
+    The clearing sql call is also useful as a verification that the db is
+    connected. In an earlier incarnation this was just a useless/harmless
+    placeholder call.
+  */
+  select =  function (data, options, ack) {
+    var key, callback, creds = {},
+      clearingSql = "delete from xt.orm  " +
+        "where orm_id in ( " +
+        "select orm_id from xt.orm  " +
+        "left join ( " +
+        "select replace(relname, '_', '') as viewName " +
+        "from pg_class c   " +
+        "join pg_namespace n on (c.relnamespace=n.oid)  " +
+        "where nspname like 'xm' " +
+        ") views on lower(orm_type) = viewName " +
+        "where viewName is null " +
+        ")",
+      testConnection = function (data, ack, options, err, res) {
+        if (err) return ack(false);
+        data.databaseOptions = options;
+        ack(true);
+      };
+
     for (key in options) {
       if (!options.hasOwnProperty(key)) continue;
       if (options[key] === "") return ack(false);
@@ -300,12 +360,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     creds.password = options.password;
     creds.database = options.organization;
 
-    callback = _.bind(testConnection, this, socket, ack, creds);
+    callback = _.bind(testConnection, this, data, ack, creds);
 
-    X.db.query("select * from pg_class limit 1", creds, callback);
+    X.db.query(clearingSql, creds, callback);
   };
 
-  refresh = function (socket, options, ack) {
+  /**
+    Parses the orms from their files.
+    Also looks at all the orms currently "registered" in the
+    the XT.Orm table and calculates dependencies
+   */
+  refresh = function (data, options, ack) {
     options = options || {};
     if (typeof options === 'function') { ack = options; }
     var path = _path.join(X.basePath, options.path || X.options.orm.defaultPath),
@@ -378,17 +443,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         });
       });
 
-      socket.orms = orms;
-      socket.extensions = extensions;
+      data.orms = orms;
+      data.extensions = extensions;
 
-      calculateDependencies.call(this, socket);
+      calculateDependencies.call(this, data);
       ack(orms);
     };
     _.bind(callback, this);
-    X.db.query(sql, socket.databaseOptions, callback);
+    X.db.query(sql, data.databaseOptions, callback);
   };
 
-  runOrmInstaller = function (creds, path, callback) {
+  /**
+    Entry point for installer. Chains together call to select, then refresh, then install.
+   */
+  exports.run = runOrmInstaller = function (creds, path, callback) {
     if (!callback) {
       callback = function () {
         console.log("all done");
@@ -396,14 +464,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       };
     }
 
-    var socket = {databaseOptions: creds};
-    select(socket, creds, function () {
-      refresh(socket, {path: path}, function () {
-        install(socket, callback);
+    var data = {databaseOptions: creds};
+    select(data, creds, function () {
+      refresh(data, {path: path}, function () {
+        install(data, callback);
       });
     });
   };
-
-  exports.run = runOrmInstaller;
 
 }());
