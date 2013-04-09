@@ -76,7 +76,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     var queryForDataCallback = function (result) {
       var recordType = requestDetails.query ? requestDetails.query.recordType : requestDetails.recordType,
-        modelName = recordType.suffix().replace("ListItem", "List").replace("Relation", "List");
+        modelName = recordType.suffix().replace("ListItem", "").replace("Relation", "");
 
       if (result.isError) {
         res.send(result);
@@ -97,16 +97,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             query: JSON.stringify(requestDetails.query),
             locale: JSON.stringify(requestDetails.locale),
             data: JSON.stringify(result.data),
+            schema: schema,
             created: new Date()
           },
           success = function () {
             var biUrl = X.options.datasource.biUrl || "",
-              fileName = modelName + ".prpt",
+              fileName = modelName + "List.prpt",
               redirectUrl = biUrl + "&name=" + fileName + "&dataKey=" + randomKey;
 
             if (requestDetails.locale && requestDetails.locale.culture) {
               res.set("Accept-Language", requestDetails.locale.culture);
             }
+            // step 4: redirect to the report tool
             res.redirect(redirectUrl);
           },
           error = function (model, err, options) {
@@ -117,6 +119,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             });
           };
 
+        // step 3: save to the bicache table
         tempDataModel.save(attrs, {
           success: success,
           error: error,
@@ -124,9 +127,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         });
       }
 
-      X.database.query("dev", "select xt.getSchema('XM', 'Contact');", saveBiCache);
+      // step 2: get the schema
+      X.database.query(req.session.passport.user.organization,
+        "select xt.getSchema('%@', '%@');".f(recordType.substring(0, 2), modelName), saveBiCache);
     };
 
+    // step 1: get the data
     queryForData(req.session, requestDetails, queryForDataCallback);
   };
 

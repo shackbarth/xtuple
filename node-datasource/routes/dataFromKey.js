@@ -19,6 +19,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       res.send(JSON.stringify({
         data: JSON.parse(model.get("data")),
         locale: JSON.parse(model.get("locale")),
+        schema: JSON.parse(model.get("schema")),
         query: JSON.parse(model.get("query"))
       }));
 

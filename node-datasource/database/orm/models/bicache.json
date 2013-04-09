@@ -29,6 +29,13 @@
        }
      },
      {
+       "name": "schema",
+       "attr": {
+         "type": "String",
+         "column": "bicache_schema"
+       }
+     },
+     {
        "name": "data",
        "attr": {
          "type": "String",

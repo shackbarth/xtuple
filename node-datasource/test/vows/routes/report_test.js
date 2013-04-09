@@ -63,8 +63,12 @@ var vows = require('vows'),
             assert.ok(results[0].language);
           },
           'which will give us the user locale info': function (error, topic) {
-            var results = JSON.parse(topic.browser.text("body")).locale;
-            assert.isNumber(results.currencyScale);
+            var result = JSON.parse(topic.browser.text("body")).locale;
+            assert.isNumber(result.currencyScale);
+          },
+          'which will give us the schema': function (error, topic) {
+            var result = JSON.parse(topic.browser.text("body")).schema;
+            assert.equal(result.table, "locale");
           }
         }
       }
@@ -116,8 +120,12 @@ var vows = require('vows'),
             assert.ok(result.language);
           },
           'which will give us the user locale info': function (error, topic) {
-            var results = JSON.parse(topic.browser.text("body")).locale;
-            assert.isNumber(results.currencyScale);
+            var result = JSON.parse(topic.browser.text("body")).locale;
+            assert.isNumber(result.currencyScale);
+          },
+          'which will give us the schema': function (error, topic) {
+            var result = JSON.parse(topic.browser.text("body")).schema;
+            assert.equal(result.table, "locale");
           }
         }
       }
