@@ -952,14 +952,14 @@
       {
         "name": "basePrice",
         "attr": {
-          "type": "Money",
+          "type": "SalesPrice",
           "column": "base_price"
         }
       },
       {
         "name": "customerPrice",
         "attr": {
-          "type": "Money",
+          "type": "SalesPrice",
           "column": "quitem_custprice"
         }
       },
@@ -973,7 +973,7 @@
       {
         "name": "price",
         "attr": {
-          "type": "Money",
+          "type": "SalesPrice",
           "column": "quitem_price"
         }
       },
@@ -1043,7 +1043,7 @@
       {
         "name": "extendedPrice",
         "attr": {
-          "type": "Money",
+          "type": "ExtendedPrice",
           "column": "ext_price"
         }
       },
