@@ -328,7 +328,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "externalReference"},
             {kind: "XV.AddressWidget", attr: "address"},
-            //{kind: "XV.CurrencyWidget", attr: "currency"},  this is still a WIP
+            {kind: "XV.CurrencyWidget", attr: "currency"},
             {kind: "XV.InputWidget", attr: "county"},
             {kind: "XV.AccountWidget", attr: "account"}
           ]}
