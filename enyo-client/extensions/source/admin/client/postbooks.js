@@ -17,7 +17,8 @@ trailing:true white:true*/
         {name: "userList", kind: "XV.UserList"},
         {name: "organizationList", kind: "XV.OrganizationList"},
         {name: "extensionList", kind: "XV.ExtensionList"},
-        {name: "databaseServerList", kind: "XV.DatabaseServerList"}
+        {name: "databaseServerList", kind: "XV.DatabaseServerList"},
+        {name: "campaignList", kind: "XV.CampaignList"}
       ]
     };
     XT.app.$.postbooks.insertModule(module, 2);
