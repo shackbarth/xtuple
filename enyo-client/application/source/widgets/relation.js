@@ -223,12 +223,9 @@ regexp:true, undef:true, trailing:true, white:true */
         menuItem = inEvent.originator,
         list = this.getList(),
         model = this.getValue(),
-        K = model.getClass(),
-        status = model.get("status"),
-        id = model ? model.id : null,
-        workspace = status === K.PROSPECT_STATUS ?
-          'XV.ProspectWorkspace' : 'XV.CustomerWorkspace',
+        K, status, id, workspace,
         callback;
+
       switch (menuItem.name)
       {
       case 'searchItem':
@@ -242,6 +239,11 @@ regexp:true, undef:true, trailing:true, white:true */
         });
         break;
       case 'openItem':
+        K = model.getClass();
+        status = model.get("status");
+        id = model ? model.id : null;
+        workspace = status === K.PROSPECT_STATUS ? 'XV.ProspectWorkspace' : 'XV.CustomerWorkspace';
+
         this.doWorkspace({
           workspace: workspace,
           id: id,

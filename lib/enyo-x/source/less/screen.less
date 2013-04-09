@@ -1,6 +1,7 @@
 /* LESS version of screen.scss file previously in client
 
-  To compile to .css: lessc screen.less > ../stylesheets/screen.css
+  To compile to .css: 
+  lessc screen.less > ../stylesheets/screen.css
   Use -compress for a compressed .css with no comments
 
 */
@@ -215,6 +216,10 @@ body {
   }
 }
 
+.xv-version-label {
+  padding: 10px;
+}
+
 /* Pullout */
 .slim-datewidget($labelVisibility, $pickerVisibility: visible) {
   .xv-input-decorator {
@@ -288,6 +293,18 @@ body {
 .pullout-toolbar {
   padding-top: 4px;
   text-align: center;
+}
+
+#app_pullout_container,
+#app_pullout_help,
+#app_pullout_help_helpPage {
+ height: 100%;
+}
+
+#app_pullout_help_helpPage {
+  border: none;
+  height: 100%;
+  width: 100%;
 }
 
 /*

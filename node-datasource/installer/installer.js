@@ -1,12 +1,25 @@
 #!/usr/bin/env node
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true */
+/*global X:true, XT:true, _:true */
+
+_ = require("underscore");
+
+require('../xt/foundation/foundation');
+require('../xt/database/database');
+
+if (typeof XT === 'undefined') {
+  XT = {};
+}
+
+if (!X.options) {
+  X.options = {};
+  X.options.datasource = {};
+}
 
 (function () {
   "use strict";
-  var orm = require('./orm'),
-    argv = process.argv,
+  var argv = process.argv,
     credentials = {},
     path = argv[argv.indexOf("--path") + 1];
 
@@ -26,6 +39,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   } else {
     credentials.password = "";
   }
+
+  // Use pgWorker.
+  if (argv.indexOf("-w") > -1) {
+    X.log("Using a seperate pgWorker process.");
+    X.options.datasource.pgWorker = true;
+  } else {
+    X.warn("Not using pgWorker process.");
+    X.warn("Use '-w' command line flag to enable it if you want to.");
+  }
+
+  // Require orm after X.options setting.
+  var orm = require('./orm');
 
   orm.run(credentials, path);
 }());

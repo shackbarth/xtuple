@@ -32,6 +32,17 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // CAMPAIGN
+  //
+
+  enyo.kind({
+    name: "XV.CampaignWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.CampaignRelationCollection",
+    list: "XV.CampaignList"
+  });
+
+  // ..........................................................
   // DATABASE SERVER
   //
 
