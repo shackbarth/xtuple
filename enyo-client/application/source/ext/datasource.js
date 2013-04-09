@@ -2,7 +2,7 @@
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, XM:true, io:true, Backbone:true, _:true, console:true, enyo:true
-  document:true, relocate:true, setTimeout:true*/
+  document:true, setTimeout:true*/
 
 (function () {
   "use strict";
@@ -370,7 +370,7 @@ white:true*/
       this._sock.on("connect_failed", function (err) {
         // This app has not even started yet. Don't bother with the popup because it won't work.
         XT.log("AUTHENTICATION INVALID: ", err);
-        relocate();
+        XT.session.logout();
         return;
       });
 

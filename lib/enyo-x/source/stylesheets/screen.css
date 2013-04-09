@@ -208,6 +208,9 @@ body {
   padding-left: 10px;
   float: right;
 }
+.xv-version-label {
+  padding: 10px;
+}
 /* Pullout */
 .slim-datewidget($labelVisibility, $pickerVisibility: visible) .xv-input-decorator {
   padding: 0;
@@ -285,6 +288,16 @@ body {
 .pullout-toolbar {
   padding-top: 4px;
   text-align: center;
+}
+#app_pullout_container,
+#app_pullout_help,
+#app_pullout_help_helpPage {
+  height: 100%;
+}
+#app_pullout_help_helpPage {
+  border: none;
+  height: 100%;
+  width: 100%;
 }
 /*
   XV Views

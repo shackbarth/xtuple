@@ -30,8 +30,6 @@ X = {};
   X.url          = require("url");
   X.crypto       = require("crypto");
   X.bcrypt       = require("bcrypt");
-
-  X.connect      = require("connect");
   X.pg           = require("pg").native;
 
   /**
