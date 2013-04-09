@@ -13,19 +13,16 @@ trailing:true white:true*/
     name: "XV.CustomerGroupCustomerListRelations",
     kind: "XV.ListRelations",
     orderBy: [
-      {attribute: "name"}
+      {attribute: "customer.number"}
     ],
-    parentKey: "customer",
+    parentKey: "customerGroup",
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableRows", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "name"},
-              {kind: "XV.ListAttr", attr: "created", fit: true, classes: "right"}
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "description"}
+              {kind: "XV.ListAttr", attr: "customer.number"},
+              {kind: "XV.ListAttr", attr: "customer.name", fit: true, classes: "right"}
             ]}
           ]}
         ]}

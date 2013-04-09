@@ -53,10 +53,10 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "short",
             components: [
-            {kind: "XV.ListAttr", attr: "name", isKey: true}
+            {kind: "XV.ListAttr", attr: "customer.number", isKey: true}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "description"}
+            {kind: "XV.ListAttr", attr: "customer.name"}
           ]}
         ]}
       ]}

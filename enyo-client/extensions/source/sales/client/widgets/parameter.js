@@ -28,8 +28,8 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_customerGroupCustomer".loc()},
-      {name: "name", label: "_name".loc(), attr: "name"},
-      {name: "description", label: "_description".loc(), attr: "description"}
+      {name: "number", label: "_number".loc(), attr: "customer.number"},
+      {name: "name", label: "_name".loc(), attr: "customer.name"}
     ]
   });
   
