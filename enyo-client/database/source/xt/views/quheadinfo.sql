@@ -1,15 +1,24 @@
-drop view if exists xt.quheadinfo cascade;
+DO $$
+  var dropSql = "drop view if exists xt.quheadinfo cascade;";
+  var sql = "create or replace view xt.quheadinfo as " +
+  "select quhead.*, " +
+    "xt.quote_schedule_date(quhead) as schedule_date, " +
+    "xt.quote_freight_weight(quhead) as freight_weight, " +
+    "xt.quote_subtotal(quhead) as subtotal, " +
+    "xt.quote_tax_total(quhead) as tax_total, " +
+    "xt.quote_total(quhead) as total, " +
+    "xt.quote_margin(quhead) as margin " +
+  "from quhead; ";
 
-create or replace view xt.quheadinfo as
+  try {
+    plv8.execute(sql);
+  } catch (error) {
+    /* let's cascade-drop the view and try again */
+    plv8.execute(dropSql);
+    plv8.execute(sql);
+  }
 
-  select quhead.*,
-    xt.quote_schedule_date(quhead) as schedule_date,
-    xt.quote_freight_weight(quhead) as freight_weight,
-    xt.quote_subtotal(quhead) as subtotal,
-    xt.quote_tax_total(quhead) as tax_total,
-    xt.quote_total(quhead) as total,
-    xt.quote_margin(quhead) as margin
-  from quhead;
+$$ language plv8;
           
 revoke all on xt.quheadinfo from public;
 grant all on table xt.quheadinfo to group xtrole;
