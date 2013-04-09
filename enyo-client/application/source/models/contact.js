@@ -28,7 +28,6 @@ white:true*/
     @class
 
     @extends XM.Document
-    @extends XM.AddressCheckMixin
   */
   XM.Contact = XM.Document.extend({
     /** @scope XM.Contact.prototype */
@@ -75,13 +74,10 @@ white:true*/
     }
 
   });
-  
+
   XM.Contact.used = function (id, options) {
     return XT.dataSource.dispatch('XM.Contact', 'used', id, options);
   };
-
-  // Add mixin
-  XM.Contact = XM.Contact.extend(XM.AddressCheckMixin);
 
   /**
     @class
@@ -226,7 +222,7 @@ white:true*/
     editableModel: 'XM.Contact'
 
   });
-  
+
   /**
     @class
 
