@@ -100,9 +100,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             fileName = modelName + ".prpt",
             redirectUrl = biUrl + "&name=" + fileName + "&dataKey=" + randomKey;
 
-          if (requestDetails.locale && requestDetails.locale.get("culture")) {
-            console.log("setting accept language to ", requestDetails.locale.get("culture"));
-            res.set("Accept-Language", requestDetails.locale.get("culture"));
+          if (requestDetails.locale && requestDetails.locale.culture) {
+            res.set("Accept-Language", requestDetails.locale.culture);
           }
           res.redirect(redirectUrl);
         },
