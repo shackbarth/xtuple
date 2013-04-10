@@ -8,13 +8,16 @@ var fs = require('fs'),
 (function () {
   "use strict";
 
-  var buildExtension = function (extensionQueue, callback) {
-    var ext;
-    var recurse = function (err, stdout, stderr) {
+  var buildExtension, extensions, finish;
+
+  buildExtension = function (extensionQueue, callback) {
+    var ext, recurse;
+
+    recurse = function (err, stdout, stderr) {
       if (err) {
         console.log("Error building enyo app", err);
       }
-      console.log("ext is done", ext);
+      console.log(ext, "extension has been built");
 
       // move the built extension into its proper directory
       fs.mkdirSync("./builds/" + ext);
@@ -39,13 +42,13 @@ var fs = require('fs'),
     exec("./tools/deploy.sh", recurse);
   };
 
-  var sourcePath = "./source",
-    extensions = fs.readdirSync(sourcePath),
-    finish = function () {
-      fs.unlinkSync("./package.js");
-      console.log("all done");
-    };
+  extensions = fs.readdirSync("./source");
 
-    buildExtension(extensions, finish);
+  finish = function () {
+    fs.unlinkSync("./package.js");
+    console.log("all done");
+  };
+
+  buildExtension(extensions, finish);
 
 }());
