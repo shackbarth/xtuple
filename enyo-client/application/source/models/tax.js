@@ -33,6 +33,22 @@ white:true*/
     editableModel: 'XM.TaxClass'
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Document
+  */
+  XM.TaxAssignment = XM.Document.extend({
+    /** @scope XM.TaxAssignment */
+
+    recordType: 'XM.TaxAssignment',
+    
+    requiredAttributes: [
+      "tax"
+    ]
+
+  });
 
   /**
     @class
