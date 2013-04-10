@@ -30,6 +30,8 @@
 \i xt/functions/install_js.sql;
 \i xt/functions/install_orm.sql;
 \i xt/functions/is_date.sql;
+\i xt/functions/not_any_numeric.sql;
+\i xt/functions/not_any_text.sql;
 \i xt/functions/raise_exception.sql;
 \i xt/functions/retrieve_record.sql;
 \i xt/functions/show_search_path.sql;
@@ -44,6 +46,8 @@
 \i xt/operators/any_text.sql;
 \i xt/operators/begins_with.sql;
 \i xt/operators/ends_with.sql;
+\i xt/operators/not_any_numeric.sql;
+\i xt/operators/not_any_text.sql;
 \i xt/operators/text_gt_date.sql;
 \i xt/operators/text_lt_date.sql;
 
