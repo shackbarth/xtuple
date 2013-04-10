@@ -101,7 +101,8 @@ white:true*/
       var model = this.getValue(),
         quoteLine = model.collection.quoteLine,
         itemIsSold = quoteLine.getValue("itemSite.item.isSold"),
-        note = itemIsSold ? Globalize.format( model.get("price"), "c" ) : "";
+        price = model.get("price") !== undefined ? model.get("price") : "",
+        note = itemIsSold ? Globalize.format( price, "c" ) : "";
 
       this.$.combobox.setNote(note);
     },
@@ -145,6 +146,9 @@ white:true*/
 
       // set the selected value of the combobox
       this.$.combobox.setValue(value, {silent: true});
+
+      // display the price if we already have it
+      this.priceChanged();
 
       // bind the price label to the price attribute on the model
       this.getValue().on("change:price", this.priceChanged, this);

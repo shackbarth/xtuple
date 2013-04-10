@@ -22,6 +22,10 @@ _ = require("underscore");
   require("./xt");
 
   // Loop through files and load the dependencies.
+  // Apes the enyo package process
+  // TODO: it would be nice to use a more standardized way
+  // of loading our libraries (tools and backbone-x) here
+  // in node.
   X.relativeDependsPath = "";
   X.depends = function () {
     var dir = X.relativeDependsPath,

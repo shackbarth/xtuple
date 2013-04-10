@@ -372,6 +372,20 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'code'}
     ]
   });
+  
+  // ..........................................................
+  // TAX CLASS
+  //
+
+  enyo.kind({
+    name: "XV.TaxClassPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.taxClasses",
+    nameAttribute: "code",
+    orderBy: [
+      {attribute: 'code'}
+    ]
+  });
 
   // ..........................................................
   // TAX ZONE

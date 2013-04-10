@@ -69,27 +69,6 @@ X = {};
     return _.values(obj);
   };
 
-  X.relativeDependsPath = "";
-  /**
-    For traversing dependency package files.
-  */
-  X.depends = function () {
-    var dir = this.relativeDependsPath,
-      files = X.$A(arguments),
-      pathBeforeRecursion;
-
-    _.each(files, function (file) {
-      if (_fs.statSync(_path.join(dir, file)).isDirectory()) {
-        pathBeforeRecursion = X.relativeDependsPath;
-        X.relativeDependsPath = _path.join(dir, file);
-        X.depends("package.js");
-        X.relativeDependsPath = pathBeforeRecursion;
-      } else {
-        require(_path.join(dir, file));
-      }
-    });
-  };
-
   /**
     Adds a function to X. Used internally.
 
