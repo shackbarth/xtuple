@@ -1,7 +1,7 @@
 /*jshint bitwise:false, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true */
+/*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true, Globalize:true */
 
 (function () {
 
@@ -27,7 +27,56 @@ trailing:true white:true*/
     kind: "XV.ListRelationsBox",
     title: "_customers".loc(),
     parentKey: "customerGroup",
-    listRelations: "XV.CustomerGroupCustomerListRelations"
+    canOpen: false,
+    searchList: "XV.CustomerList",
+    listRelations: "XV.CustomerGroupCustomerListRelations",
+    updateButtons: function () {
+      this.$.attachButton.setDisabled(false);
+    },
+    attachItem: function () {
+      var list = this.$.list,
+        parent = list.getParent(),
+        searchList = this.getSearchList(),
+        ids = [],
+        inEvent,
+
+        // Callback to handle selection...
+        callback = function (selectedModel) {
+          var model = new XM.CustomerGroupCustomer(null, {isNew: true});
+          model.set("customer", selectedModel);
+          parent.get("customers").add(model);
+        };
+        
+      _.each(parent.get("customers").models, function (customer) {
+        ids.push(customer.getValue("customer.id"));
+      });
+
+      // Open a customer search screen excluding customers already selected
+      inEvent = {
+        list: searchList,
+        callback: callback
+      };
+      if (ids.length) {
+        inEvent.conditions = [{
+          attribute: "id",
+          operator: "NOT ANY",
+          value: ids
+        }];
+      }
+      this.doSearch(inEvent);
+    },
+    detachItem: function () {
+      var list = this.$.list,
+        index = list.getFirstSelected(),
+        model = list.getModel(index);
+
+      model.destroy();
+      list.lengthChanged();
+    },
+    selectionChanged: function (inSender, inEvent) {
+      var index = this.$.list.getFirstSelected();
+      this.$.detachButton.setDisabled(!index);
+    }
   });
 
   // ..........................................................
