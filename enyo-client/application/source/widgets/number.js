@@ -261,10 +261,9 @@ regexp:true, undef:true, trailing:true, white:true */
           if (attribute === "localValue" || attribute === "baseValue") {
             if (fromUser) {
               this.setLocalValue(newValue);
-            } else if (this.getLocalMode()) { // this value is in local, don't do any conversions
+            } if (this.getLocalMode()) { // this value is in local, don't do any conversions
               this.setLocalValue(newValue);
               this.$.input.setValue(newValue);
-              
             } else { // this value is in base, have to convert to local before setting
               this.setBaseValue(newValue);
               this.setLocal();
@@ -274,6 +273,9 @@ regexp:true, undef:true, trailing:true, white:true */
             // that's all the workspace needs to know about the originator
             inEvent = { value: newValue, originator: {attr: this.getAmountAttr() }};
             if (!options.silent) { this.doValueChange(inEvent); }
+            if (this.getLocalMode()) {
+              this.setBase(inEvent);
+            }
           } else if (attribute === "currency") {
             oldValue = this.$.picker.value;
             if (newValue && oldValue !== newValue) {
