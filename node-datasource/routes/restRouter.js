@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true */
+/*global X:true, _:true */
 
 (function () {
   "use strict";
@@ -40,46 +40,39 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     if (!model) {
       return next(new Error("Invalid REST Request."));
     } else {
-      switch(req.method) {
-        case "DELETE":
-          // Deletes the specified resource.
-          // TODO - call delete method.
-          return res.send('REST API DELETE call to model: ' + model);
-          break;
-        case "GET":
-          // Requests a representation of the specified resource.
-          // TODO - call get method.
-          return res.send('REST API GET call to model: ' + model);
-          break;
-        case "HEAD":
-          // Asks for the response identical to the one that would correspond to a GET request, but without the response body.
-          // This is useful for retrieving meta-information written in response headers, without having to transport the entire content.
-          // TODO - call head method.
-          return res.send(); // HEAD doesn't send a body.
-          break;
-        case "OPTIONS":
-          // Returns the HTTP methods that the server supports for specified URL.
-          // This can be used to check the functionality of a web server by requesting '*' instead of a specific resource.
-          // TODO - call options method.
-          return res.send('REST API OPTIONS call to model: ' + model);
-          break;
-        case "PATCH":
-          // Is used to apply partial modifications to a resource.
-          // TODO - call patch method.
-          return res.send('REST API PATCH call to model: ' + model);
-          break;
-        case "POST":
-          // Requests that the server accept the entity enclosed in the request as a new subordinate of the web resource identified by the URI.
-          // TODO - call post method.
-          return res.send('REST API POST call to model: ' + model);
-          break;
-        case "PUT":
-          // Requests that the enclosed entity be stored under the supplied URI.
-          // TODO - call put method.
-          return res.send('REST API PUT call to model: ' + model);
-          break;
-        default:
-          return next(new Error("Invalid REST Request."));
+      switch (req.method) {
+      case "DELETE":
+        // Deletes the specified resource.
+        // TODO - call delete method.
+        return res.send('REST API DELETE call to model: ' + model);
+      case "GET":
+        // Requests a representation of the specified resource.
+        // TODO - call get method.
+        return res.send('REST API GET call to model: ' + model);
+      case "HEAD":
+        // Asks for the response identical to the one that would correspond to a GET request, but without the response body.
+        // This is useful for retrieving meta-information written in response headers, without having to transport the entire content.
+        // TODO - call head method.
+        return res.send(); // HEAD doesn't send a body.
+      case "OPTIONS":
+        // Returns the HTTP methods that the server supports for specified URL.
+        // This can be used to check the functionality of a web server by requesting '*' instead of a specific resource.
+        // TODO - call options method.
+        return res.send('REST API OPTIONS call to model: ' + model);
+      case "PATCH":
+        // Is used to apply partial modifications to a resource.
+        // TODO - call patch method.
+        return res.send('REST API PATCH call to model: ' + model);
+      case "POST":
+        // Requests that the server accept the entity enclosed in the request as a new subordinate of the web resource identified by the URI.
+        // TODO - call post method.
+        return res.send('REST API POST call to model: ' + model);
+      case "PUT":
+        // Requests that the enclosed entity be stored under the supplied URI.
+        // TODO - call put method.
+        return res.send('REST API does not support PUT calls at this time.');
+      default:
+        return next(new Error("Invalid REST Request."));
       }
     }
 
