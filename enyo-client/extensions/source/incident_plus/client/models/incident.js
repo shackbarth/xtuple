@@ -14,7 +14,6 @@ white:true*/
       bindEvents: function () {
         init.apply(this, arguments);
         this.on('change:project', this.projectDidChange);
-        this.on('statusChange', this.statusDidChange);
       },
 
       projectDidChange: function () {
@@ -38,6 +37,8 @@ white:true*/
         load of the model.
        */
       statusDidChange: function (model, status) {
+        XM.Document.prototype.statusDidChange.apply(this, arguments);
+
         var project = this.get('project');
 
         if (model.isReady()) {
