@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "ClassCode",
     "table": "classcode",
+    "isRest": true,
     "lockable": true,
     "idSequenceName": "classcode_classcode_id_seq",
     "comment": "Class Code Map",
