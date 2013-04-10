@@ -370,7 +370,7 @@ white:true*/
       this._sock.on("connect_failed", function (err) {
         // This app has not even started yet. Don't bother with the popup because it won't work.
         XT.log("AUTHENTICATION INVALID: ", err);
-        XT.session.logout();
+        XT.logout();
         return;
       });
 
@@ -390,7 +390,7 @@ white:true*/
           style: "text-align: center;",
           components: [
             {content: "_sessionTimedOut".loc()},
-            {kind: "onyx.Button", content: "_ok".loc(), tap: function () { XT.session.logout(); }}
+            {kind: "onyx.Button", content: "_ok".loc(), tap: function () { XT.logout(); }}
           ]
         });
         p.show();
