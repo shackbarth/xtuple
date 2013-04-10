@@ -106,8 +106,8 @@ regexp:true, undef:true, trailing:true, white:true */
       
       // set the "mode" of this widget, whether or not it directly saves the local
       // value to the model, or if it converts it to and from the base value.
+      this.setLocalMode(_.has(this.attr, "localValue"));
       if (_.has(this.attr, "localValue")) {
-        this.setLocalMode(true);
         this.setAmountAttr(this.attr.localValue);
       } else {
         this.setAmountAttr(this.attr.baseValue);
@@ -183,9 +183,9 @@ regexp:true, undef:true, trailing:true, white:true */
           }
         };
         that.$.picker.value.toBase(amount, that.getEffective(), options);
-      } else {
-        that.setModelAmount(null);
+      } else { // amount is null
         that.setBaseValue(null);
+        this.$.baseAmountLabel.setContent(null);
       }
     },
 
@@ -261,7 +261,7 @@ regexp:true, undef:true, trailing:true, white:true */
           if (attribute === "localValue" || attribute === "baseValue") {
             if (fromUser) {
               this.setLocalValue(newValue);
-            } if (this.getLocalMode()) { // this value is in local, don't do any conversions
+            } else if (this.getLocalMode()) { // this value is in local, don't do any conversions
               this.setLocalValue(newValue);
               this.$.input.setValue(newValue);
             } else { // this value is in base, have to convert to local before setting
