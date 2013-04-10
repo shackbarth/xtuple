@@ -417,6 +417,20 @@ white:true*/
     documentKey: 'name'
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.CustomerGroupCustomer = XM.Model.extend({
+    /** @scope XM.CustomerGroupCustomer.prototype */
+
+    recordType: 'XM.CustomerGroupCustomer',
+
+    documentKey: 'name'
+
+  });
 
   /**
     @class
@@ -689,6 +703,18 @@ white:true*/
     /** @scope XM.CustomerTypeCollection.prototype */
 
     model: XM.CustomerType
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.CustomerGroupCustomerCollection = XM.Collection.extend({
+    /** @scope XM.CustomerGroupCustomerCollection.prototype */
+
+    model: XM.CustomerGroupCustomer
 
   });
 
