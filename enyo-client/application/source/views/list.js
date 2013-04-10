@@ -1139,7 +1139,6 @@ trailing:true white:true*/
 
   XV.registerModelList("XM.SiteRelation", "XV.SiteList");
 
-
   // ..........................................................
   // TO DO
   //

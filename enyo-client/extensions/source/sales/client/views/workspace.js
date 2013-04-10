@@ -309,6 +309,31 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.ShipZone", "XV.ShipZoneWorkspace");
   
   // ..........................................................
+  // TAX ASSIGNMENT
+  //
+
+  enyo.kind({
+    name: "XV.TaxAssignmentWorkspace",
+    kind: "XV.Workspace",
+    title: "_taxAssignment".loc(),
+    model: "XM.TaxAssignment",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.TaxAssignment", "XV.TaxAssignmentWorkspace");
+  
+  // ..........................................................
   // TAX AUTHORITY
   //
 

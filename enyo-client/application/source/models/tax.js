@@ -147,8 +147,20 @@ white:true*/
 
     @extends XM.Collection
   */
+  XM.TaxAssignmentCollection = XM.Collection.extend({
+    /** @scope XM.TaxAssignmentCollection.prototype */
+
+    model: XM.TaxAssignment
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
   XM.TaxAuthorityCollection = XM.Collection.extend({
-    /** @scope XM.TaxCodeCollection.prototype */
+    /** @scope XM.TaxAuthorityCollection.prototype */
 
     model: XM.TaxAuthority
 
