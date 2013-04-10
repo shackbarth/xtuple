@@ -1284,8 +1284,7 @@ trailing:true white:true*/
               {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
                 {kind: "FittableRows", components: [
                   {kind: "XV.CurrencyPicker", attr: "currency"},
-                  {kind: "XV.MoneyWidget", attr:
-                    {localValue: "margin", currency: "currency"},
+                  {kind: "XV.MoneyWidget", attr: {localValue: "margin", currency: "currency"},
                     label: "_margin".loc(), currencyShowing: false,
                     effective: "quoteDate"},
                   {kind: "XV.WeightWidget", attr: "freightWeight"}
@@ -1348,7 +1347,7 @@ trailing:true white:true*/
       if (inEvent.originator.name === 'customerWidget') {
         this.customerChanged();
       }
-      if (inEvent.originator.name == 'currencyPicker') {
+      if (inEvent.originator.name === 'currencyPicker') {
         this.$.lineItemsPanel.render();
       }
     },
@@ -1414,14 +1413,14 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "detailGroup",
             classes: "in-panel", fit: true, components: [
             {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.standardCost", currency: "quote.currency"},
-              label: "_standardCost".loc(), effective: "quote.quoteDate"},  
-            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.averageCost", currency: "quote.currency"},
+              label: "_standardCost".loc(), effective: "quote.quoteDate"},
+            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.averageCost", currency: "quote.currency"},
               label: "_averageCost".loc(), effective: "quote.quoteDate"},
             {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.listCost", currency: "quote.currency"},
               label: "_listCost".loc(), effective: "quote.quoteDate"},
             {kind: "XV.PercentWidget", attr: "listCostMarkup"},
             {kind: "XV.MoneyWidget", attr: {localValue: "itemSite.item.listPrice", currency: "quote.currency"},
-              label: "_listPrice".loc(), effective: "quote.quoteDate", scale: XT.SALES_PRICE_SCALE},  
+              label: "_listPrice".loc(), effective: "quote.quoteDate", scale: XT.SALES_PRICE_SCALE},
             {kind: "XV.PercentWidget", attr: "listPriceDiscount"},
             {kind: "XV.PercentWidget", attr: "profit"},
             {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
