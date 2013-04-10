@@ -324,12 +324,14 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
-            
+              {kind: "XV.TaxCodePicker", label: "_taxCode".loc(), attr: "tax"},
+              {kind: "XV.TaxZonePicker", label: "_taxZone".loc(), attr: "taxZone"},
+              {kind: "XV.TaxTypePicker", label: "_taxType".loc(), attr: "taxType"}
+            ]}
           ]}
         ]}
-      ]}
-    ]
-  });
+      ]
+    });
 
   XV.registerModelWorkspace("XM.TaxAssignment", "XV.TaxAssignmentWorkspace");
   

@@ -402,16 +402,29 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
-  // TAX ZONE
+  // TAX CODE
   //
 
   enyo.kind({
-    name: "XV.TaxAuthorityPicker",
+    name: "XV.TaxCodePicker",
     kind: "XV.PickerWidget",
-    collection: "XM.taxAuthorities",
-    nameAttribute: "number",
+    collection: "XM.taxCodes",
+    nameAttribute: "code",
     orderBy: [
-      {attribute: 'number'}
+      {attribute: 'code'}
+    ]
+  });
+  
+  // ..........................................................
+  // TAX TYPE
+  //
+
+  enyo.kind({
+    name: "XV.TaxTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.taxTypes",
+    orderBy: [
+      {attribute: 'name'}
     ]
   });
 
@@ -494,19 +507,6 @@ regexp:true, undef:true, trailing:true, white:true */
     nameAttribute: "code",
     orderBy: [
       {attribute: 'code'}
-    ]
-  });
-
-  // ..........................................................
-  // TAX TYPE
-  //
-
-  enyo.kind({
-    name: "XV.TaxTypePicker",
-    kind: "XV.PickerWidget",
-    collection: "XM.taxTypes",
-    orderBy: [
-      {attribute: 'name'}
     ]
   });
 

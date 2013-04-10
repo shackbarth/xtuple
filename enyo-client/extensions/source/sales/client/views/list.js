@@ -205,7 +205,6 @@ trailing:true white:true*/
             {kind: "XV.ListAttr", attr: "tax.code", isKey: true}
           ]},
           {kind: "XV.ListColumn", classes: "short", components: [
-            {kind: "XV.ListAttr", attr: "taxZone.code"},
             {kind: "XV.ListAttr", attr: "taxType.name"}
           ]}
         ]}

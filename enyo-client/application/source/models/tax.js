@@ -37,9 +37,9 @@ white:true*/
   /**
     @class
 
-    @extends XM.Document
+    @extends XM.Model
   */
-  XM.TaxAssignment = XM.Document.extend({
+  XM.TaxAssignment = XM.Model.extend({
     /** @scope XM.TaxAssignment */
 
     recordType: 'XM.TaxAssignment',
