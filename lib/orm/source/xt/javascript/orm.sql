@@ -79,7 +79,7 @@ select xt.install_js('XT','Orm','xtuple', $$
       if(oldOrm.isExtension !== isExtension) throw new Error("Can not change extension state for " + nameSpace + '.' + type);
       sql = 'update xt.orm set ' +
             ' orm_json = $1, ' +
-            ' orm_seq = $2 ' +
+            ' orm_seq = $2, ' +
             ' orm_rest = $3 ' +
             'where orm_id = $4';
       plv8.execute(sql, [json, sequence, isRest, oldOrm.id]);
