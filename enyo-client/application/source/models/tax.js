@@ -5,6 +5,34 @@ white:true*/
 
 (function () {
   "use strict";
+  
+  /**
+    @class
+
+    @extends XM.AccountDocument
+  */
+  XM.TaxClass = XM.AccountDocument.extend({
+    /** @scope XM.TaxClass.prototype */
+
+    recordType: 'XM.TaxClass'
+
+  });
+
+  XM.TaxClass = XM.TaxClass.extend(XM.AddressCheckMixin);
+  
+  /**
+    @class
+
+    @extends XM.AccountDocument
+  */
+  XM.TaxClassRelation = XM.Info.extend({
+    /** @scope XM.TaxClassRelation.prototype */
+
+    recordType: 'XM.TaxClassRelation',
+
+    editableModel: 'XM.TaxClass'
+
+  });
 
   /**
     @class
@@ -15,7 +43,7 @@ white:true*/
     /** @scope XM.TaxAuthority.prototype */
 
     recordType: 'XM.TaxAuthority',
-    
+
     defaults: function () {
       return {
         currency: XT.baseCurrency()
@@ -23,8 +51,6 @@ white:true*/
     }
 
   });
-  
-  XM.TaxAuthority = XM.TaxAuthority.extend(XM.AddressCheckMixin);
 
   /**
     @class
@@ -35,11 +61,11 @@ white:true*/
     /** @scope XM.TaxAuthorityRelation.prototype */
 
     recordType: 'XM.TaxAuthorityRelation',
-    
+
     editableModel: 'XM.TaxAuthority'
 
   });
-  
+
   /**
     @class
 
@@ -49,23 +75,23 @@ white:true*/
     /** @scope XM.TaxZone.prototype */
 
     recordType: 'XM.TaxZone',
-    
+
     documentKey: 'code'
 
   });
-  
+
   /**
     @class
-    
+
     @extends XM.Model
   */
   XM.TaxRegistration = XM.Model.extend({
     /** @scope XM.TaxRegistration */
-    
+
     recordType: 'XM.TaxRegistration'
-    
+
   });
-  
+
   /**
     @class
 
@@ -75,13 +101,13 @@ white:true*/
     /** @scope XM.TaxCode.prototype */
 
     recordType: 'XM.TaxCode',
-    
+
     documentKey: 'code',
-    
+
     enforceUpperKey: false
 
   });
-  
+
   /**
     @class
 
@@ -91,15 +117,15 @@ white:true*/
     /** @scope XM.TaxType.prototype */
 
     recordType: 'XM.TaxType',
-    
+
     documentKey: 'name'
 
   });
-  
+
   // ..........................................................
   // COLLECTIONS
   //
- 
+
   /**
     @class
 
@@ -111,8 +137,19 @@ white:true*/
     model: XM.TaxAuthority
 
   });
- 
   
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.TaxClassCollection = XM.Collection.extend({
+    /** @scope XM.TaxCodeCollection.prototype */
+
+    model: XM.TaxClass
+
+  });
+
   /**
     @class
 
@@ -124,7 +161,7 @@ white:true*/
     model: XM.TaxCode
 
   });
-  
+
   /**
     @class
 

@@ -23,7 +23,7 @@ select xt.install_js('XT','Session','xtuple', $$
             + 'coalesce(locale_extprice_scale, 2) as "extendedPriceScale", '
             + 'coalesce(locale_cost_scale, 4) as "costScale", '
             + 'coalesce(locale_qty_scale, 2) as "quantityScale", '
-            + 'coalesce(locale_qtyper_scale, 6) as "qunatityPerScale", '
+            + 'coalesce(locale_qtyper_scale, 6) as "quantityPerScale", '
             + 'coalesce(locale_uomratio_scale, 6) as "unitRatioScale", '
             + 'coalesce(locale_percent_scale, 2) as "percentScale", '
             + 'coalesce(locale_weight_scale, 2) as "weightScale" '

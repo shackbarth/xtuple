@@ -36,6 +36,36 @@ trailing:true white:true*/
   XV.registerModelList("XM.CustomerGroupRelation", "XV.CustomerGroupList");
   
   // ..........................................................
+  // CUSTOMER GROUP CUSTOMER
+  //
+
+  enyo.kind({
+    name: "XV.CustomerGroupCustomerList",
+    kind: "XV.List",
+    label: "_customers".loc(),
+    collection: "XM.CustomerGroupCustomerCollection",
+    parameterWidget: "XV.CustomerGroupCustomerListParameters",
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "customer.number", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "customer.name"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.CustomerGroupCustomerRelation", "XV.CustomerGroupCustomerList");
+  
+  // ..........................................................
   // FREIGHT CLASS
   //
 
@@ -154,6 +184,156 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.ShipZoneRelation", "XV.ShipZoneList");
+  
+  // ..........................................................
+  // TAX AUTHORITY
+  //
+
+  enyo.kind({
+    name: "XV.TaxAuthorityList",
+    kind: "XV.List",
+    label: "_taxAuthority".loc(),
+    collection: "XM.TaxAuthorityCollection",
+    parameterWidget: "XV.TaxAuthorityListParameters",
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "number", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "name"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.TaxAuthorityRelation", "XV.TaxAuthorityList");
+  
+  // ..........................................................
+  // TAX CODE
+  //
+
+  enyo.kind({
+    name: "XV.TaxCodeList",
+    kind: "XV.List",
+    label: "_taxCode".loc(),
+    collection: "XM.TaxCodeCollection",
+    parameterWidget: "XV.TaxCodeListParameters",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "code", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.TaxCodeRelation", "XV.TaxCodeList");
+  
+  // ..........................................................
+  // TAX CLASS
+  //
+
+  enyo.kind({
+    name: "XV.TaxClassList",
+    kind: "XV.List",
+    label: "_taxClass".loc(),
+    collection: "XM.TaxClassCollection",
+    parameterWidget: "XV.TaxClassListParameters",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "code", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.TaxClassRelation", "XV.TaxClassList");
+  
+  // ..........................................................
+  // TAX TYPE
+  //
+
+  enyo.kind({
+    name: "XV.TaxTypeList",
+    kind: "XV.List",
+    label: "_taxType".loc(),
+    collection: "XM.TaxTypeCollection",
+    parameterWidget: "XV.TaxTypeListParameters",
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "name", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.TaxTypeRelation", "XV.TaxTypeList");
+  
+  // ..........................................................
+  // TAX ZONE
+  //
+
+  enyo.kind({
+    name: "XV.TaxZoneList",
+    kind: "XV.List",
+    label: "_taxZone".loc(),
+    collection: "XM.TaxZoneCollection",
+    parameterWidget: "XV.TaxZoneListParameters",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "code", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.TaxZoneRelation", "XV.TaxZoneList");
   
   // ..........................................................
   // TERMS

@@ -25,12 +25,10 @@ XT = typeof XT !== 'undefined' ? XT : {};
   };
   */
   XT.setVersion = function (version) {
-    var navigator = XT.app.$.postbooks.$.navigator;
-    navigator.createComponent({
-      container: navigator.$.gearMenu,
-      content: "_version".loc() + " " + version,
-      classes: "xv-version-label"
-    });
+    var aboutVersionLabel = XT.app.$.postbooks.$.navigator.$.aboutVersion,
+      versionText = "_version".loc() + " " + version;
+
+    aboutVersionLabel.setContent(versionText);
   };
 
 }());

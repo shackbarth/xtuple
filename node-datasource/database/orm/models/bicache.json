@@ -22,6 +22,20 @@
        }
      },
      {
+       "name": "locale",
+       "attr": {
+         "type": "String",
+         "column": "bicache_locale"
+       }
+     },
+     {
+       "name": "schema",
+       "attr": {
+         "type": "String",
+         "column": "bicache_schema"
+       }
+     },
+     {
        "name": "data",
        "attr": {
          "type": "String",
