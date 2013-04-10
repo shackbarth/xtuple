@@ -59,7 +59,8 @@ regexp:true, undef:true, trailing:true, white:true */
       effective: null,
       currencyDisabled: false,
       currencyShowing: true,
-      localMode: true
+      localMode: true,
+      amountAttr: null
     },
     handlers: {
       onValueChange: "valueChanged" // intercepts events from the picker or the field
@@ -105,7 +106,12 @@ regexp:true, undef:true, trailing:true, white:true */
       
       // set the "mode" of this widget, whether or not it directly saves the local
       // value to the model, or if it converts it to and from the base value.
-      this.setLocalMode(_.has(this.attr, "localValue"));
+      if (_.has(this.attr, "localValue")) {
+        this.setLocalMode(true);
+        this.setAmountAttr(this.attr.localValue);
+      } else {
+        this.setAmountAttr(this.attr.baseValue);
+      }
     },
 
     effectiveChanged: function () {
@@ -148,7 +154,6 @@ regexp:true, undef:true, trailing:true, white:true */
           // swap this base price into the event instead of the local price.
           // we do not want to tell the model about the local price.
           // otherwise, it will want to know about local.
-
           if (fromPicker) {
             // bubble up the change to the picker
             inEvent.transformed = true;
@@ -156,21 +161,19 @@ regexp:true, undef:true, trailing:true, white:true */
             that.doValueChange(inEvent);
 
             // also bubble up the transformed change to the amount field
-            if (this.getLocalMode()) {
+            if (that.getLocalMode()) {
               secondEvent.value = amount;
-              amountAttr = that.attr.localValue;
             } else {
               secondEvent.value = basePrice;
-              amountAttr = that.attr.baseValue;
               
             }
-            secondEvent.originator = { attr: amountAttr };
+            secondEvent.originator = { attr: that.getAmountAttr() };
             that.doValueChange(secondEvent);
 
           } else {
             // it was the amount field that was changed.
             // only bubble up the change to the amount field
-            if (this.getLocalMode()) {
+            if (that.getLocalMode()) {
               inEvent.value = amount;
             } else {
               inEvent.value = basePrice;
@@ -237,7 +240,6 @@ regexp:true, undef:true, trailing:true, white:true */
     setValue: function (value, options) {
       var oldValue,
         inEvent,
-        amountAttr,
         fromUser = false,
         newValue;
         
@@ -260,18 +262,17 @@ regexp:true, undef:true, trailing:true, white:true */
             if (fromUser) {
               this.setLocalValue(newValue);
             } else if (this.getLocalMode()) { // this value is in local, don't do any conversions
-              amountAttr = this.attr.localValue;
               this.setLocalValue(newValue);
               this.$.input.setValue(newValue);
+              
             } else { // this value is in base, have to convert to local before setting
-              amountAttr = this.attr.baseValue;
               this.setBaseValue(newValue);
               this.setLocal();
             }
             // the subwidget does not know its own attr, but we know what
             // it is because it's stored in our attr hash. substitute it.
             // that's all the workspace needs to know about the originator
-            inEvent = { value: newValue, originator: {attr: amountAttr }};
+            inEvent = { value: newValue, originator: {attr: this.getAmountAttr() }};
             if (!options.silent) { this.doValueChange(inEvent); }
           } else if (attribute === "currency") {
             oldValue = this.$.picker.value;
