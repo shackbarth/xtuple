@@ -33,6 +33,22 @@ white:true*/
     editableModel: 'XM.TaxClass'
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.TaxAssignment = XM.Model.extend({
+    /** @scope XM.TaxAssignment */
+
+    recordType: 'XM.TaxAssignment',
+    
+    requiredAttributes: [
+      "tax"
+    ]
+
+  });
 
   /**
     @class
@@ -118,7 +134,11 @@ white:true*/
 
     recordType: 'XM.TaxType',
 
-    documentKey: 'name'
+    documentKey: 'name',
+    
+    readOnlyAttributes: [
+      "isSystem"
+    ]
 
   });
 
@@ -131,8 +151,20 @@ white:true*/
 
     @extends XM.Collection
   */
+  XM.TaxAssignmentCollection = XM.Collection.extend({
+    /** @scope XM.TaxAssignmentCollection.prototype */
+
+    model: XM.TaxAssignment
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
   XM.TaxAuthorityCollection = XM.Collection.extend({
-    /** @scope XM.TaxCodeCollection.prototype */
+    /** @scope XM.TaxAuthorityCollection.prototype */
 
     model: XM.TaxAuthority
 

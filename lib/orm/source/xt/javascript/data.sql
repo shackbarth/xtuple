@@ -104,6 +104,14 @@ select xt.install_js('XT','Data','xtuple', $$
               cnt++;
             }
             break;
+          case 'NOT ANY':
+            op = '!<@';
+            for (c = 0; c < param.value.length; c++) {
+              ret.parameters.push(param.value[c]);
+              param.value[c] = '$' + cnt;
+              cnt++;
+            }
+            break;
           default:
             plv8.elog(ERROR, 'Invalid operator: ' + op);
           };
@@ -144,7 +152,7 @@ select xt.install_js('XT','Data','xtuple', $$
             clauses.push(clause);
  
           /* Array comparisons handle another way */
-          } else if (op === '<@') {
+          } else if (op === '<@' || op === '!<@') {
             clause = param.attribute + ' ' + op + ' ARRAY[' + param.value.join(',') + ']';
             clauses.push(clause);
 
