@@ -6,7 +6,7 @@ trailing:true white:true*/
 (function () {
 
   XT.extensions.incidentPlus.initPickers = function () {
-  
+
     // ..........................................................
     // PROJECT VERSION
     //
