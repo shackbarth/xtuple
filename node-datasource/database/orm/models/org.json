@@ -313,7 +313,7 @@
     ],
     "isSystem": true
   },
-    {
+  {
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "OrganizationExtension",
