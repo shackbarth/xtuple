@@ -921,7 +921,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.AccountWidget", attr: "account"},
             {kind: "XV.ContactWidget", attr: "contact"},
-            {kind: "XV.MoneyWidget", attr: {amount: "amount", currency: "currency"}, effective: new Date(),
+            {kind: "XV.MoneyWidget", attr: {localValue: "amount", currency: "currency"},
               label: "_amount".loc()},
             {kind: "XV.PercentWidget", attr: "probability"},
             {kind: "onyx.GroupboxHeader", content: "_status".loc()},
@@ -1336,31 +1336,30 @@ trailing:true white:true*/
               {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
                 {kind: "FittableRows", components: [
                   {kind: "XV.CurrencyPicker", attr: "currency"},
-                  {kind: "XV.MoneyWidget", attr:
-                    {amount: "margin", currency: "currency"},
+                  {kind: "XV.MoneyWidget", attr: {localValue: "margin", currency: "currency"},
                     label: "_margin".loc(), currencyShowing: false,
                     effective: "quoteDate"},
                   {kind: "XV.WeightWidget", attr: "freightWeight"}
                 ]},
                 {kind: "FittableRows", components: [
                   {kind: "XV.MoneyWidget", attr:
-                    {amount: "subtotal", currency: "currency"},
+                    {localValue: "subtotal", currency: "currency"},
                     label: "_subtotal".loc(), currencyShowing: false,
                     effective: "quoteDate"},
                   {kind: "XV.MoneyWidget", attr:
-                    {amount: "miscCharge", currency: "currency"},
+                    {localValue: "miscCharge", currency: "currency"},
                     label: "_miscCharge".loc(), currencyShowing: false,
                     effective: "quoteDate"},
                   {kind: "XV.MoneyWidget", attr:
-                    {amount: "freight", currency: "currency"},
+                    {localValue: "freight", currency: "currency"},
                     label: "_freight".loc(), currencyShowing: false,
                     effective: "quoteDate"},
                   {kind: "XV.MoneyWidget", attr:
-                    {amount: "taxTotal", currency: "currency"},
+                    {localValue: "taxTotal", currency: "currency"},
                     label: "_tax".loc(), currencyShowing: false,
                     effective: "quoteDate"},
                   {kind: "XV.MoneyWidget", attr:
-                    {amount: "total", currency: "currency"},
+                    {localValue: "total", currency: "currency"},
                     label: "_total".loc(), currencyShowing: false,
                     effective: "quoteDate"}
                 ]}
@@ -1444,13 +1443,12 @@ trailing:true white:true*/
               attr: "quantityUnit"},
             {kind: "XV.PercentWidget", name: "discount", attr: "discount"},
             {kind: "XV.MoneyWidget", attr:
-              {amount: "price", currency: "quote.currency"},
+              {localValue: "price", currency: "quote.currency"},
               label: "_price".loc(), currencyDisabled: true,
               effective: "quote.quoteDate", scale: XT.SALES_PRICE_SCALE},
             {kind: "XV.UnitPicker", name: "priceUnitPicker",
               attr: "priceUnit"},
-            {kind: "XV.MoneyWidget", attr:
-              {amount: "extendedPrice", currency: "quote.currency"},
+            {kind: "XV.MoneyWidget", attr: {localValue: "extendedPrice", currency: "quote.currency"},
               label: "_extendedPrice".loc(), currencyDisabled: true,
               effective: "quote.quoteDate", scale: XT.EXTENDED_PRICE_SCALE},
             {kind: "onyx.GroupboxHeader", content: "_delivery".loc()},
@@ -1466,15 +1464,15 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_costs".loc()},
           {kind: "XV.ScrollableGroupbox", name: "detailGroup",
             classes: "in-panel", fit: true, components: [
-            {kind: "XV.CostWidget", attr: "itemSite.item.standardCost",
-              label: "_standardCost".loc()},
-            {kind: "XV.CostWidget", attr: "itemSite.averageCost",
-              label: "_averageCost".loc()},
-            {kind: "XV.CostWidget", attr: "itemSite.item.listCost",
-              label: "_listCost".loc()},
+            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.standardCost", currency: "quote.currency"},
+              label: "_standardCost".loc(), effective: "quote.quoteDate"},
+            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.averageCost", currency: "quote.currency"},
+              label: "_averageCost".loc(), effective: "quote.quoteDate"},
+            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.listCost", currency: "quote.currency"},
+              label: "_listCost".loc(), effective: "quote.quoteDate"},
             {kind: "XV.PercentWidget", attr: "listCostMarkup"},
-            {kind: "XV.SalesPriceWidget", attr: "itemSite.item.listPrice",
-              label: "_listPrice".loc()},
+            {kind: "XV.MoneyWidget", attr: {localValue: "listPrice", currency: "quote.currency"},
+              label: "_listPrice".loc(), effective: "quote.quoteDate", scale: XT.SALES_PRICE_SCALE},
             {kind: "XV.PercentWidget", attr: "listPriceDiscount"},
             {kind: "XV.PercentWidget", attr: "profit"},
             {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
