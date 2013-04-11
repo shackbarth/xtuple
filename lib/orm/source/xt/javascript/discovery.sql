@@ -114,14 +114,13 @@ select xt.install_js('XT','Discovery','xtuple', $$
       }
     }
 
-    /* Schema section.
-    discovery.schemas = XT.Discovery.getORMSchemas();
+    /* Schema section. */
+    discovery.schemas = XT.Discovery.getORMSchemas(orms);
 
     if (!discovery.schemas) {
       return false;
     }
 
-    */
 
     /* Resources section. */
 
@@ -166,7 +165,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
   XT.Discovery.getIsRestORMs = function() {
 
     /* TODO - Do we need to include "XM" in the propName? */
-    var sql = "select orm_type from xt.orm where orm_rest group by orm_namespace, orm_type order by orm_namespace, orm_type",
+    var sql = "select orm_namespace, orm_type from xt.orm where orm_rest group by orm_namespace, orm_type order by orm_namespace, orm_type",
         orms = plv8.execute(sql);
 
     if (!orms.length) {
@@ -179,10 +178,8 @@ select xt.install_js('XT','Discovery','xtuple', $$
   /*
    * Helper function to get a JSON-Schema for all ORM Models.
    */
-  XT.Discovery.getORMSchemas = function() {
-    var sql = "select orm_namespace, orm_type from xt.orm group by orm_namespace, orm_type order by orm_namespace, orm_type",
-        orms = plv8.execute(sql),
-        schema = {};
+  XT.Discovery.getORMSchemas = function(orms) {
+    var schema = {};
 
     if (!orms.length) {
       return false;
@@ -192,7 +189,32 @@ select xt.install_js('XT','Discovery','xtuple', $$
     for (var i = 0; i < orms.length; i++) {
       /* TODO - Do we need to include "XM" in the propName? */
       var propName = orms[i].orm_type;
+
+      /* Get parent ORM */
       schema[propName] = XT.Schema.getProperties({"nameSpace": orms[i].orm_namespace, "type": orms[i].orm_type});
+
+      if (!schema[propName] || !schema[propName].properties) {
+        return false;
+      }
+
+      /* Drill down through schema and get all $ref schemas. */
+      for (var prop in schema[propName].properties) {
+        var childProp = schema[propName].properties[prop];
+
+        if (childProp) {
+          if (childProp.items && childProp.items["$ref"]){
+            var childOrm = childProp.items["$ref"];
+          } else if (childProp["$ref"]){
+            var childOrm = childProp["$ref"];
+          }
+
+          /* Only get this child schema if we don't already have it. */
+          if (childOrm && !schema[childOrm]) {
+            /* Recusing into children. */
+            schema = XT.extend(schema, XT.Discovery.getORMSchemas([{ "orm_namespace": "XM", "orm_type": childOrm }]));
+          }
+        }
+      }
     }
 
     return schema;
