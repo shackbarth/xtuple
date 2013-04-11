@@ -1419,7 +1419,7 @@ trailing:true white:true*/
             {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.listCost", currency: "quote.currency"},
               label: "_listCost".loc(), effective: "quote.quoteDate"},
             {kind: "XV.PercentWidget", attr: "listCostMarkup"},
-            {kind: "XV.MoneyWidget", attr: {localValue: "itemSite.item.listPrice", currency: "quote.currency"},
+            {kind: "XV.MoneyWidget", attr: {localValue: "listPrice", currency: "quote.currency"},
               label: "_listPrice".loc(), effective: "quote.quoteDate", scale: XT.SALES_PRICE_SCALE},
             {kind: "XV.PercentWidget", attr: "listPriceDiscount"},
             {kind: "XV.PercentWidget", attr: "profit"},

@@ -114,12 +114,6 @@ regexp:true, undef:true, trailing:true, white:true */
       }
     },
 
-    effectiveChanged: function () {
-      this.setBasePanelShowing();
-      // TODO: fix this
-      //this.setLocal();
-    },
-
     /**
       Sets visibility of base panel. This panel is shown if there is an effective date and currency
         and the currency is not currently base.
