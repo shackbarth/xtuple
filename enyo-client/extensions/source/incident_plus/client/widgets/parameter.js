@@ -27,11 +27,11 @@ trailing:true white:true*/
     memoize = proto.memoize;
     proto.memoize = function (inSender, inEvent) {
       memoize.apply(this, arguments);
-      if (inEvent.originator.name === 'projectWidget') {
+      if (inEvent.originator.name === 'project') {
         this.projectChanged();
       }
     };
-    proto.memoize = function () {
+    proto.projectChanged = function () {
       var project = this.$.project.getValue();
       this.$.foundIn.$.input.setProject(project);
       this.$.fixedIn.$.input.setProject(project);
