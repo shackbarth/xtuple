@@ -76,7 +76,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     var queryForDataCallback = function (result) {
       var recordType = requestDetails.query ? requestDetails.query.recordType : requestDetails.recordType,
-        modelName = recordType.suffix().replace("ListItem", "").replace("Relation", "");
+        modelName = recordType.suffix().replace("ListItem", "").replace("Relation", ""),
+        fileName = recordType.suffix().replace("ListItem", "List").replace("Relation", "List") + ".prpt";
 
       if (result.isError) {
         res.send(result);
@@ -102,7 +103,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           },
           success = function () {
             var biUrl = X.options.datasource.biUrl || "",
-              fileName = modelName + "List.prpt",
               redirectUrl = biUrl + "&name=" + fileName + "&dataKey=" + randomKey;
 
             if (requestDetails.locale && requestDetails.locale.culture) {
