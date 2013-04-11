@@ -313,48 +313,6 @@
     ],
     "isSystem": true
   },
-    {
-    "context": "xtuple",
-    "nameSpace": "XM",
-    "type": "OrganizationExtension",
-    "table": "xt.orgext",
-    "idSequenceName": "orgext_orgext_id_seq",
-    "comment": "Organization Extension Map",
-    "privileges": {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-    "properties": [
-     {
-       "name": "id",
-       "attr": {
-         "type": "Number",
-         "column": "orgext_id",
-         "isPrimaryKey": true
-       }
-     },
-     {
-       "name": "organization",
-       "attr": {
-         "type": "String",
-         "column": "orgext_org_name"
-       }
-     },
-     {
-       "name": "extension",
-       "toOne": {
-         "isNested": true,
-         "type": "Extension",
-         "column": "orgext_ext_id"
-       }
-     }
-    ],
-    "isSystem": true
-  },
   {
     "context": "xtuple",
     "nameSpace": "XM",
