@@ -318,7 +318,7 @@
     "nameSpace": "XM",
     "type": "Campaign",
     "table": "xt.cmpg",
-    "idSequenceName": "orgext_orgext_id_seq",
+    "idSequenceName": "cmpg_cmpg_id_seq",
     "comment": "Campaign Map",
     "privileges": {
       "all": {
@@ -380,7 +380,7 @@
     "nameSpace": "XM",
     "type": "CampaignRelation",
     "table": "xt.cmpg",
-    "idSequenceName": "orgext_orgext_id_seq",
+    "idSequenceName": "cmpg_cmpg_id_seq",
     "comment": "Campaign Relation Map",
     "privileges": {
       "all": {
