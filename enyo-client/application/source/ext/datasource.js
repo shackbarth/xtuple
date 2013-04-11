@@ -33,7 +33,7 @@ white:true*/
           param.value = param.value.toJSON();
 
         // Format record if applicable
-        } else if (_.isObject(param.value)) {
+        } else if (_.isObject(param.value) && !_.isArray(param.value)) {
           param.value = param.value.id;
         }
 
