@@ -23,9 +23,12 @@ select xt.install_js('XT','Schema','xtuple', $$
   XT.Schema.columnInfo = function(ormSchemaTable, ormColumn) {
     var schema,
         table,
+        func,
         schemaTable,
         sql,
+        funcSql,
         res,
+        funcRes,
         ret = {};
 
     /* Get the schema and table from the ORM table property. */
@@ -36,6 +39,30 @@ select xt.install_js('XT','Schema','xtuple', $$
     } else {
       schema = schemaTable[0];
       table = schemaTable[1];
+    }
+
+    /* Check if this is a function and not a table. */
+    if (table.indexOf("(") !== -1) {
+      /* Extract just the function name from table. */
+      func = table.substring(0,table.indexOf("("));
+
+      /* Look up the "RETURNS SETOF" type. */
+      funcSql = 'select ' +
+                  'type_udt_schema, ' +
+                  'type_udt_name ' +
+                'from information_schema.routines ' +
+                'where 1=1 ' +
+                  'and specific_schema = $1 ' +
+                  'and routine_name = $2; ';
+
+      funcRes = plv8.execute(funcSql, [schema, func]);
+
+      if (funcRes.length === 1) {
+        /* Name of the schema that the return data type of the function is defined in */
+        schema = funcRes[0].type_udt_schema;
+        /* Name of the return data type of the function. */
+        table = funcRes[0].type_udt_name;
+      }
     }
 
     /* Query to get column's PostgreSQL datatype and other schema info. */
@@ -246,7 +273,9 @@ select xt.install_js('XT','Schema','xtuple', $$
 
         /* Get column's PostgreSQL datatype info. */
         schemaColumnInfo = XT.Schema.columnInfo(schemaTable, column);
-        if (!schemaColumnInfo) return false;
+        if (!schemaColumnInfo) {
+          return false;
+        }
 
         /* Loop through the returned schemaColumnInfo properties and add them. */
         for (var attrname in schemaColumnInfo) {
@@ -296,7 +325,9 @@ select xt.install_js('XT','Schema','xtuple', $$
     }
 
     /* If this ORM has no column properties, we have an empty object, return false. */
-    if (!ret.properties || !Object.keys(ret.properties).length > 0) return false;
+    if (!ret.properties || !Object.keys(ret.properties).length > 0) {
+      return false;
+    }
 
     /* return the results */
     return ret;
