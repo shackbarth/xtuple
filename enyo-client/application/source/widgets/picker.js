@@ -85,6 +85,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.currencies",
     nameAttribute: "abbreviation",
+    showNone: false,
     orderBy: [
       {attribute: 'abbreviation'}
     ]
