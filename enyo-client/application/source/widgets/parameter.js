@@ -177,6 +177,34 @@ trailing:true white:true*/
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
     ]
   });
+  
+  // ..........................................................
+  // CUSTOMER GROUP
+  //
+
+  enyo.kind({
+    name: "XV.CustomerGroupListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_customerGroup".loc()},
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "description", label: "_description", attr: "description"}
+    ]
+  });
+  
+  // ..........................................................
+  // FREIGHT CLASS
+  //
+
+  enyo.kind({
+    name: "XV.FreightClassListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_freightClass".loc()},
+      {name: "code", label: "_code".loc(), attr: "code"},
+      {name: "description", label: "_description", attr: "description"}
+    ]
+  });
 
   // ..........................................................
   // CUSTOMER SHIPTO
@@ -650,6 +678,61 @@ trailing:true white:true*/
         defaultKind: "XV.DateWidget"}
     ]
   });
+  
+  // ..........................................................
+  // SALE TYPE
+  //
+
+  enyo.kind({
+    name: "XV.SaleTypeListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {kind: "onyx.GroupboxHeader", content: "_saleTypes".loc()},
+      {name: "code", label: "_code".loc(), attr: "code"},
+      {name: "description", label: "_description", attr: "description"}
+    ]
+  });
+  
+  // ..........................................................
+  // SALES REP
+  //
+
+  enyo.kind({
+    name: "XV.SalesRepListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {kind: "onyx.GroupboxHeader", content: "_salesRep".loc()},
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "commission", label: "_commission".loc(), attr: "commission"}
+    ]
+  });
 
   // ..........................................................
   // SITE
@@ -678,6 +761,20 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // SHIP ZONE
+  //
+
+  enyo.kind({
+    name: "XV.ShipZoneListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_shipZones".loc()},
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "description", label: "_description", attr: "description"}
+    ]
+  });
+
+  // ..........................................................
   // SITE TYPE
   //
 
@@ -687,6 +784,91 @@ trailing:true white:true*/
     components: [
       {kind: "onyx.GroupboxHeader", content: "_siteType".loc()},
       {name: "name", label: "_name".loc(), attr: "name"}
+    ]
+  });
+  
+  // ..........................................................
+  // TAX AUTHORITY
+  //
+
+  enyo.kind({
+    name: "XV.TaxAuthorityListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_taxAuthority".loc()},
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "name", label: "_name".loc(), attr: "name"}
+    ]
+  });
+
+
+  // ..........................................................
+  // TAX CODE
+  //
+
+  enyo.kind({
+    name: "XV.TaxCodeListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_taxCode".loc()},
+      {name: "code", label: "_code".loc(), attr: "code"},
+      {name: "description", label: "_description", attr: "description"}
+    ]
+  });
+  
+  // ..........................................................
+  // TAX CLASS
+  //
+
+  enyo.kind({
+    name: "XV.TaxClassListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_taxClass".loc()},
+      {name: "code", label: "_code".loc(), attr: "code"},
+      {name: "description", label: "_description", attr: "description"}
+    ]
+  });
+  
+  // ..........................................................
+  // TAX TYPE
+  //
+
+  enyo.kind({
+    name: "XV.TaxTypeListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_taxType".loc()},
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "description", label: "_description", attr: "description"}
+    ]
+  });
+  
+  // ..........................................................
+  // TAX ZONE
+  //
+
+  enyo.kind({
+    name: "XV.TaxZoneListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_taxZone".loc()},
+      {name: "code", label: "_code".loc(), attr: "code"},
+      {name: "description", label: "_description", attr: "description"}
+    ]
+  });
+  
+  // ..........................................................
+  // TERMS
+  //
+
+  enyo.kind({
+    name: "XV.TermsListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_Terms".loc()},
+      {name: "code", label: "_code".loc(), attr: "code"},
+      {name: "description", label: "_description", attr: "description"}
     ]
   });
 

@@ -2,6 +2,54 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "TaxAssignment",
+    "table": "taxass",
+    "idSequenceName": "taxass_taxass_id_seq",
+    "comment": "Tax Assignment Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainTaxAssignments",
+        "read": "ViewTaxAssignments",
+        "update": "MaintainTaxAssignments",
+        "delete": "MaintainTaxAssignments"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "taxass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "taxZone",
+        "toOne": {
+          "type": "TaxZone",
+          "column": "taxass_taxzone_id"
+        }
+      },
+      {
+        "name": "taxType",
+        "toOne": {
+          "type": "TaxType",
+          "column": "taxass_taxtype_id"
+        }
+      },
+      {
+        "name": "tax",
+        "toOne": {
+          "type": "TaxCode",
+          "column": "taxass_tax_id"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "TaxAuthority",
     "table": "taxauth",
     "idSequenceName": "taxauth_taxauth_id_seq",
