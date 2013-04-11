@@ -134,7 +134,11 @@ white:true*/
 
     recordType: 'XM.TaxType',
 
-    documentKey: 'name'
+    documentKey: 'name',
+    
+    readOnlyAttributes: [
+      "isSystem"
+    ]
 
   });
 

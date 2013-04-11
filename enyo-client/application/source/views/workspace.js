@@ -1648,6 +1648,33 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.State", "XV.StateWorkspace");
+  
+  // ..........................................................
+  // TAX ASSIGNMENT
+  //
+
+  enyo.kind({
+    name: "XV.TaxAssignmentWorkspace",
+    kind: "XV.Workspace",
+    title: "_taxAssignment".loc(),
+    model: "XM.TaxAssignment",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+              {kind: "XV.TaxCodePicker", label: "_taxCode".loc(), attr: "tax"},
+              {kind: "XV.TaxZonePicker", label: "_taxZone".loc(), attr: "taxZone"},
+              {kind: "XV.TaxTypePicker", label: "_taxType".loc(), attr: "taxType"}
+            ]}
+          ]}
+        ]}
+      ]
+    });
+
+  XV.registerModelWorkspace("XM.TaxAssignment", "XV.TaxAssignmentWorkspace");
 
   // ..........................................................
   // TAX AUTHORITY
@@ -1707,7 +1734,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.TaxClassPicker", attr: "class", label: "_taxClass".loc()},
             {kind: "XV.TaxAuthorityPicker", attr: "authority", label: "_taxAuthority".loc()},
-            {kind: "XV.NumberWidget", attr: "basis"}
+            {kind: "XV.TaxCodePicker", attr: "basis"}
           ]}
         ]}
       ]}
