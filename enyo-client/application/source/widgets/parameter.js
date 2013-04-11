@@ -788,6 +788,21 @@ trailing:true white:true*/
   });
   
   // ..........................................................
+  // TAX ASSIGNMENT
+  //
+
+  enyo.kind({
+    name: "XV.TaxAssignmentListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_taxAssignment".loc()},
+      {name: "tax", label: "_tax".loc(), attr: "tax"},
+      {name: "taxZone", label: "_taxZone".loc(), attr: "taxZone"},
+      {name: "taxType", label: "_taxType".loc(), attr: "taxType"}
+    ]
+  });
+  
+  // ..........................................................
   // TAX AUTHORITY
   //
 

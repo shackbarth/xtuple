@@ -128,6 +128,7 @@ white:true*/
   XT.cacheCollection("XM.sources", "XM.SourceCollection");
   XT.cacheCollection("XM.states", "XM.StateCollection", "abbreviation");
   XT.cacheCollection("XM.taxAuthorities", "XM.TaxAuthorityCollection");
+  XT.cacheCollection("XM.taxClasses", "XM.TaxClassCollection");
   XT.cacheCollection("XM.taxTypes", "XM.TaxTypeCollection", "name");
   XT.cacheCollection("XM.taxZones", "XM.TaxZoneCollection");
   XT.cacheCollection("XM.taxCodes", "XM.TaxCodeCollection");

@@ -368,9 +368,9 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.TaxAuthorityPicker",
     kind: "XV.PickerWidget",
     collection: "XM.taxAuthorities",
-    nameAttribute: "code",
+    nameAttribute: "number",
     orderBy: [
-      {attribute: 'code'}
+      {attribute: 'number'}
     ]
   });
   
