@@ -141,8 +141,12 @@ white:true*/
         isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : false;
 
       // Handle case of prospect that has no free form settings
-      isFreeFormBillto = isFreeFormBillto === undefined ? true : isFreeFormBillto;
-      isFreeFormShipto = isFreeFormShipto === undefined ? true : isFreeFormShipto;
+      if (isFreeFormBillto !== false) {
+        isFreeFormBillto = true;
+      }
+      if (isFreeFormShipto !== false) {
+        isFreeFormShipto = true;
+      }
 
       this.setReadOnly("lineItems", !customer);
 
