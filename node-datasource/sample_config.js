@@ -63,6 +63,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     required: [
       "lib/ext/database",
       "lib/ext/datasource",
+      "lib/ext/smtpTransport",
       "lib/ext/models"
     ]
   };
