@@ -919,7 +919,8 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Object} options - support options are context and silentError
       @param {Object} [options.context] context
       @param {Boolean} [options.silentError=false] Silence errors
-      @param {Boolean} [options.toOneNested=true] To One relationships are nested by default
+      @param {Boolean} [options.obtainLock=false] Obtain a lock on the record
+      @param {Boolean} [options.toOneNested=false] To One relationships are not nested by default
       @returns Object
     */
     retrieveRecord: function(recordType, id, encryptionKey, options) {
@@ -927,7 +928,8 @@ select xt.install_js('XT','Data','xtuple', $$
       var nameSpace = recordType.beforeDot(), 
         type = recordType.afterDot(),
         map = XT.Orm.fetch(nameSpace, type),
-        ret, sql, pkey = XT.Orm.primaryKey(map),
+        ret,
+        sql, pkey = XT.Orm.primaryKey(map),
         context = options.context,
         join = "",
         rawId = id,
@@ -966,7 +968,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
       sql = 'select "{table}".* from {schema}.{table} {join} where "{table}"."{primaryKey}" = {id};'
             .replace(/{schema}/, nameSpace.decamelize())
-            .replace(/{table}/g, (options.toOneNested === false ? "_" : "") + type.decamelize())
+            .replace(/{table}/g, (options.toOneNested ? "" : "_") + type.decamelize())
             .replace(/{join}/, join)
             .replace(/{primaryKey}/, pkey)
             .replace(/{id}/, id);
@@ -990,14 +992,12 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       /* obtain lock if required */
-      if (ret && map.lockable) {
+      if (ret && options.obtainLock && map.lockable) {
         ret.lock = this.tryLock(map.table, id, XT.username, options);
       }
 
-      ret = ret || {};
-
       /* return the results */
-      return ret;
+      return ret || {};
     },
 
     /**
