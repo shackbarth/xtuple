@@ -10,29 +10,29 @@ create or replace function xt.record_did_change() returns trigger as $$
    sql,
    pkey;
 
-   if (TG_OP === 'UPDATE') {
-     /* find the primary key */
-     sql = 'select pg_attribute.attname as key ' +
-           'from pg_attribute, pg_class ' +
-           'where pg_class.relnamespace = (' +
-           ' select oid ' +
-           ' from pg_namespace ' +
-           ' where pg_namespace.nspname = $1) ' +
-           '  and pg_class.oid in ( ' +
-           '    select indexrelid ' +
-           '    from pg_index ' +
-           '    where indisprimary = true ' +
-           '      and indrelid in ( ' +
-           '        select oid ' +
-           '        from pg_class ' + 
-           '        where lower(relname) = $2)) ' +
-           ' and pg_attribute.attrelid = pg_class.oid ' +
-           ' and pg_attribute.attisdropped = false ';
-     qry = plv8.execute(sql, [TG_TABLE_SCHEMA, TG_TABLE_NAME]);
-     if (qry.length === 0) { throw "No primary key on table " + table; };
-     if (qry.length > 1) { throw "Compound primary keys not supported for " + table; };
-     pkey = qry[0].key;
+   /* find the primary key */
+   sql = 'select pg_attribute.attname as key ' +
+         'from pg_attribute, pg_class ' +
+         'where pg_class.relnamespace = (' +
+         ' select oid ' +
+         ' from pg_namespace ' +
+         ' where pg_namespace.nspname = $1) ' +
+         '  and pg_class.oid in ( ' +
+         '    select indexrelid ' +
+         '    from pg_index ' +
+         '    where indisprimary = true ' +
+         '      and indrelid in ( ' +
+         '        select oid ' +
+         '        from pg_class ' + 
+         '        where lower(relname) = $2)) ' +
+         ' and pg_attribute.attrelid = pg_class.oid ' +
+         ' and pg_attribute.attisdropped = false ';
+   qry = plv8.execute(sql, [TG_TABLE_SCHEMA, TG_TABLE_NAME]);
+   if (qry.length === 0) { throw "No primary key on table " + table; };
+   if (qry.length > 1) { throw "Compound primary keys not supported for " + table; };
+   pkey = qry[0].key;
 
+   if (TG_OP === 'UPDATE') {
      /* find a version record, if found increment */
      sql = 'select ver_id, ver_version from xt.ver where ver_table_oid = $1 and ver_record_id = $2;';
      qry = plv8.execute(sql, [oid, NEW[pkey]]);
