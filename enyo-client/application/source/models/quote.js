@@ -786,8 +786,9 @@ white:true*/
       error = XM.Document.prototype.validate.apply(this, arguments);
       if (error) { return error; }
 
-      if (!customer.get("isFreeFormShipto") && !shipto) {
-        params.attr = "_shipto".loc();
+      if (!customer.get("isFreeFormShipto") && !shipto && customer.get("status") !== "P") {
+        // we need a shipto unless the customer allows free-form, or is a prospect
+        params.attr = "_shipTo".loc();
         return XT.Error.clone('xt1004', { params: params });
       }
 
@@ -1562,7 +1563,7 @@ white:true*/
     },
 
     /** @private
-      This sholud only be called by `calculatePrice`.
+      This should only be called by `calculatePrice`.
     */
     _calculatePrice: function () {
       var K = this.getClass(),
