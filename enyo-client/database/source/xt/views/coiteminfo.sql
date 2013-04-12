@@ -48,10 +48,7 @@ insert into coitem (
   coitem_price_invuomratio,
   coitem_promdate,
   coitem_taxtype_id,
-  coitem_itemsrc_id,
-  coitem_pricemode,
-  coitem_order_warehous_id,
-  coitem_item_id
+  coitem_pricemode
 ) select
   new.coitem_id,
   new.coitem_cohead_id,
@@ -72,13 +69,8 @@ insert into coitem (
   new.coitem_price_invuomratio,
   new.coitem_promdate,
   new.coitem_taxtype_id,
-  new.coitem_itemsrc_id,
   new.coitem_pricemode,
-  warehous_id,
-  item_id
 from itemsite
-  join item on item_id=itemsite_item_id
-  join whsinfo on warehous_id=itemsite_warehous_id
 where itemsite_id=new.coitem_itemsite_id;
 
 create or replace rule "_UPDATE" as on update to xt.coiteminfo do instead
@@ -101,7 +93,6 @@ update coitem set
   coitem_price_invuomratio=new.coitem_price_invuomratio,
   coitem_promdate=new.coitem_promdate,
   coitem_taxtype_id=new.coitem_taxtype_id,
-  coitem_itemsrc_id=new.coitem_itemsrc_id,
   coitem_pricemode=new.coitem_pricemode
 where coitem_id = old.coitem_id;
 
