@@ -319,7 +319,7 @@
         "name": "tax",
         "toOne": {
           "type": "TaxCode",
-          "column": "taxrate_tax_id",
+          "column": "taxrate_tax_id"
         }
       },
       {
@@ -333,7 +333,7 @@
         "name": "currency",
         "toOne": {
           "type": "Currency",
-          "column": "taxrate_curr_id",
+          "column": "taxrate_curr_id"
         }
       },
       {

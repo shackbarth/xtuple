@@ -95,6 +95,27 @@ white:true*/
     documentKey: 'code'
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.TaxRate = XM.Model.extend({
+    /** @scope XM.TaxRate */
+
+    recordType: 'XM.TaxRate',
+    
+    requiredAttributes: [
+      "tax",
+      "percent",
+      "currency",
+      "amount",
+      "effectiveDate",
+      "expirationDate"
+    ]
+
+  });
 
   /**
     @class
