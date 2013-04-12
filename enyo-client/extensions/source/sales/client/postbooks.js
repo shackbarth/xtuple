@@ -26,6 +26,7 @@ trailing:true white:true*/
       {name: "taxAuthorityList", kind: "XV.TaxAuthorityList"},
       {name: "taxCodeList", kind: "XV.TaxCodeList"},
       {name: "taxClassList", kind: "XV.TaxClassList"},
+      {name: "taxRateList", kind: "XV.TaxRateList"},
       {name: "taxTypeList", kind: "XV.TaxTypeList"},
       {name: "taxZoneList", kind: "XV.TaxZoneList"},
       {name: "termsList", kind: "XV.TermsList"},

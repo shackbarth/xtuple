@@ -226,6 +226,18 @@ white:true*/
     model: XM.TaxType
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.TaxRateCollection = XM.Collection.extend({
+    /** @scope XM.TaxRateCollection.prototype */
+
+    model: XM.TaxRate
+
+  });
 
   /**
     @class

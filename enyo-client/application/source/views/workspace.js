@@ -1767,6 +1767,36 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.TaxClass", "XV.TaxClassWorkspace");
+  
+  // ..........................................................
+  // TAX RATE
+  //
+
+  enyo.kind({
+    name: "XV.TaxRateWorkspace",
+    kind: "XV.Workspace",
+    title: "_taxRate".loc(),
+    model: "XM.TaxRate",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+              {kind: "XV.TaxCodePicker", label: "_taxCode".loc(), attr: "tax"},
+              {kind: "XV.NumberWidget", label: "_percent".loc(), attr: "percent", scale: XT.PERCENT_SCALE},
+              {kind: "XV.CurrencyWidget", label: "_currency".loc(), attr: "currency"},
+              {kind: "XV.NumberWidget", label: "_amount".loc(), attr: "amount", scale: XT.MONEY_SCALE},
+              {kind: "XV.DateWidget", label: "_effective".loc(), attr: "effectiveDate"},
+              {kind: "XV.DateWidget", label: "_expires".loc(), attr: "expirationDate"}
+            ]}
+          ]}
+        ]}
+      ]
+    });
+
+  XV.registerModelWorkspace("XM.TaxRate", "XV.TaxRateWorkspace");
 
   // ..........................................................
   // TAX TYPE
