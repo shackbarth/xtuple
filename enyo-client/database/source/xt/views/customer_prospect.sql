@@ -13,7 +13,7 @@ DO $$
   "union " + 
   "select prospect_id as id, prospect_active as active, prospect_number as number, " + 
     "prospect_name as name, null as type, prospect_cntct_id as contact, null as cust_ffshipto, " + 
-    "null as cust_ffbillto, null as cust_curr_id, null as cust_terms_id, " + 
+    "null as cust_ffbillto, basecurrid() as cust_curr_id, null as cust_terms_id, " + 
     "null as cust_creditstatus, prospect_salesrep_id as salesrep_id, null as cust_commprcnt, " + 
     "null as cust_discntprcnt, null as taxzone_id, null as cust_shipchrg_id, " + 
     "prospect_comments as comments, prospect_warehous_id as site, null as default_shipto_id, " + 
