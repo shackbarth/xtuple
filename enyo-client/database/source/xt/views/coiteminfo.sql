@@ -30,7 +30,7 @@ create or replace rule "_INSERT" as on insert to xt.coiteminfo do instead
 
 insert into coitem (
   coitem_id,
-  coitem_quhead_id,
+  coitem_cohead_id,
   coitem_linenumber,
   coitem_itemsite_id,
   coitem_scheddate,
@@ -40,7 +40,6 @@ insert into coitem (
   coitem_custprice,
   coitem_memo,
   coitem_custpn,
-  coitem_createorder,
   coitem_prcost,
   coitem_imported,
   coitem_qty_uom_id,
@@ -49,14 +48,13 @@ insert into coitem (
   coitem_price_invuomratio,
   coitem_promdate,
   coitem_taxtype_id,
-  coitem_dropship,
   coitem_itemsrc_id,
   coitem_pricemode,
   coitem_order_warehous_id,
   coitem_item_id
 ) select
   new.coitem_id,
-  new.coitem_quhead_id,
+  new.coitem_cohead_id,
   new.coitem_linenumber,
   new.coitem_itemsite_id,
   new.coitem_scheddate,
@@ -66,7 +64,6 @@ insert into coitem (
   new.coitem_custprice,
   new.coitem_memo,
   new.coitem_custpn,
-  new.coitem_createorder,
   new.coitem_prcost,
   new.coitem_imported,
   new.coitem_qty_uom_id,
@@ -75,7 +72,6 @@ insert into coitem (
   new.coitem_price_invuomratio,
   new.coitem_promdate,
   new.coitem_taxtype_id,
-  new.coitem_dropship,
   new.coitem_itemsrc_id,
   new.coitem_pricemode,
   warehous_id,
@@ -89,7 +85,7 @@ create or replace rule "_UPDATE" as on update to xt.coiteminfo do instead
 
 update coitem set
   coitem_id=new.coitem_id,
-  coitem_quhead_id=new.coitem_quhead_id,
+  coitem_cohead_id=new.coitem_cohead_id,
   coitem_linenumber=new.coitem_linenumber,
   coitem_scheddate=new.coitem_scheddate,
   coitem_qtyord=new.coitem_qtyord,
@@ -97,7 +93,6 @@ update coitem set
   coitem_custprice=new.coitem_custprice,
   coitem_memo=new.coitem_memo,
   coitem_custpn=new.coitem_custpn,
-  coitem_createorder=new.coitem_createorder,
   coitem_prcost=new.coitem_prcost,
   coitem_imported=new.coitem_imported,
   coitem_qty_uom_id=new.coitem_qty_uom_id,
@@ -106,7 +101,6 @@ update coitem set
   coitem_price_invuomratio=new.coitem_price_invuomratio,
   coitem_promdate=new.coitem_promdate,
   coitem_taxtype_id=new.coitem_taxtype_id,
-  coitem_dropship=new.coitem_dropship,
   coitem_itemsrc_id=new.coitem_itemsrc_id,
   coitem_pricemode=new.coitem_pricemode
 where coitem_id = old.coitem_id;
