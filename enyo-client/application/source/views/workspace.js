@@ -1393,14 +1393,13 @@ trailing:true white:true*/
         isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : true;
       this.$.copyAddressButton.setDisabled(!isFreeFormShipto);
       this.customerChanged();
+      // re-render the summary panel
+      this.$.lineItemsPanel.render();
     },
     controlValueChanged: function (inSender, inEvent) {
       this.inherited(arguments);
       if (inEvent.originator.name === 'customerWidget') {
         this.customerChanged();
-      }
-      if (inEvent.originator.name === 'currencyPicker') {
-        this.$.lineItemsPanel.render();
       }
     },
     copyBilltoToShipto: function () {
