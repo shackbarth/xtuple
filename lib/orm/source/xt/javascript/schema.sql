@@ -1,25 +1,25 @@
 select xt.install_js('XT','Schema','xtuple', $$
 
   /**
-    @class
-
-    The XT.Schema class includes all functions necessary to return a JSON-Schema
-    (http://tools.ietf.org/html/draft-zyp-json-schema-03) for the ORMs.
-  */
+   * @class
+   *
+   * The XT.Schema class includes all functions necessary to return a JSON-Schema
+   * (http://tools.ietf.org/html/draft-zyp-json-schema-03) for the ORMs.
+   */
 
   XT.Schema = {};
 
   XT.Schema.isDispatchable = true;
 
   /**
-    Return a JSON-Schema property object that MAY include type, format, required
-    minimum/maximum number, minLength/maxLength string based on a column's
-    PostgreSQL information_schema.columns record.
-
-    @param {String} An ORM's "table" property formated like "schema.table" or "table".
-    @param {String} Am ORM's properties' "column" attibute  formatted like "column_name".
-    @returns {Object}
-  */
+   * Return a JSON-Schema property object that MAY include type, format, required
+   * minimum/maximum number, minLength/maxLength string based on a column's
+   * PostgreSQL information_schema.columns record.
+   *
+   * @param {String} An ORM's "table" property formated like "schema.table" or "table".
+   * @param {String} An ORM's properties' "column" attibute  formatted like "column_name".
+   * @returns {Object}
+   */
   XT.Schema.columnInfo = function(ormSchemaTable, ormColumn) {
     var schema,
         table,
@@ -58,7 +58,7 @@ select xt.install_js('XT','Schema','xtuple', $$
       funcRes = plv8.execute(funcSql, [schema, func]);
 
       if (funcRes.length === 1) {
-        /* Name of the schema that the return data type of the function is defined in */
+        /* Name of the schema that the return data type of the function is defined in. */
         schema = funcRes[0].type_udt_schema;
         /* Name of the return data type of the function. */
         table = funcRes[0].type_udt_name;
@@ -232,12 +232,12 @@ select xt.install_js('XT','Schema','xtuple', $$
   }
 
   /**
-    Return a JSON-Schema for an ORM to be used for an API Discovery Service
-    resource's "properties".
-
-    @param {Object} An ORM object or a basic one with just orm.nameSpace and orm.type.
-    @returns {Object}
-  */
+   * Return a JSON-Schema for an ORM to be used for an API Discovery Service
+   * resource's "properties".
+   *
+   * @param {Object} An ORM object or a basic one with just orm.nameSpace and orm.type.
+   * @returns {Object}
+   */
   XT.Schema.getProperties = function(orm) {
     /* Load ORM if this function was called with just orm.nameSpace and orm.type. */
     orm = orm.properties ? orm : XT.Orm.fetch(orm.nameSpace, orm.type);
@@ -334,11 +334,11 @@ select xt.install_js('XT','Schema','xtuple', $$
   }
 
   /**
-    Return an array of requiredAttributes or columns that can not be NULL for an ORM.
-
-    @param {Object} An ORM object or a basic one with just orm.nameSpace and orm.type.
-    @returns {Array}
-  */
+   * Return an array of requiredAttributes or columns that can not be NULL for an ORM.
+   *
+   * @param {Object} An ORM object or a basic one with just orm.nameSpace and orm.type.
+   * @returns {Array}
+   */
   XT.Schema.getRequiredAttributes = function(orm) {
     /* Load ORM if this function was called with just orm.nameSpace and orm.type. */
     orm = orm.properties ? orm : XT.Orm.fetch(orm.nameSpace, orm.type);
