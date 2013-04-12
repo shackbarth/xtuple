@@ -59,6 +59,8 @@ white:true*/
     /** @scope XM.TaxAuthority.prototype */
 
     recordType: 'XM.TaxAuthority',
+    
+    documentKey: 'number',
 
     defaults: function () {
       return {

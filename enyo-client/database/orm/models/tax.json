@@ -53,6 +53,7 @@
     "type": "TaxAuthority",
     "table": "taxauth",
     "idSequenceName": "taxauth_taxauth_id_seq",
+    "orderSequence": "CRMAccountNumber",
     "comment": "Tax Authority Map",
     "privileges": {
       "all": {
