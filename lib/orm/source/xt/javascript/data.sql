@@ -929,7 +929,9 @@ select xt.install_js('XT','Data','xtuple', $$
         type = recordType.afterDot(),
         map = XT.Orm.fetch(nameSpace, type),
         ret,
-        sql, pkey = XT.Orm.primaryKey(map),
+        sql,
+        ver,
+        pkey = XT.Orm.primaryKey(map),
         context = options.context,
         join = "",
         rawId = id,
@@ -965,16 +967,26 @@ select xt.install_js('XT','Data','xtuple', $$
           throw new Error("Access Denied.");
         }
       }
-
-      sql = 'select "{table}".* from {schema}.{table} {join} where "{table}"."{primaryKey}" = {id};'
+   plv8.elog(NOTICE, 'table = ', this.getTableOid(map.table));
+      /* version sql */
+      ver = 'coalesce((' +
+            'select ver_version ' +
+            'from xt.ver ' +
+            'where ver_table_oid = {oid} ' +
+            ' and ver_record_id = {id} '+
+            '),0) as version';
+               plv8.elog(NOTICE, 'ver = ', ver);
+      sql = 'select "{table}".*,{version} from {schema}.{table} {join} where "{table}"."{primaryKey}" = {id};'
             .replace(/{schema}/, nameSpace.decamelize())
+            .replace(/{version}/, ver)
+            .replace(/{oid}/, this.getTableOid(map.table))
             .replace(/{table}/g, (options.toOneNested ? "" : "_") + type.decamelize())
             .replace(/{join}/, join)
             .replace(/{primaryKey}/, pkey)
-            .replace(/{id}/, id);
+            .replace(/{id}/g, id);
 
       /* query the map */
-      if(DEBUG) plv8.elog(NOTICE, 'sql = ', sql);
+      if (DEBUG) plv8.elog(NOTICE, 'sql = ', sql);
       ret = plv8.execute(sql)[0];
 
       if (!context) {
