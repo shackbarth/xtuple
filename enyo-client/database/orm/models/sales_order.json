@@ -110,13 +110,6 @@
         }
       },
       {
-        "name": "expireDate",
-        "attr": {
-          "type": "Date",
-          "column": "cohead_expire"
-        }
-      },
-      {
         "name": "billtoName",
         "attr": {
           "type": "String",
@@ -1031,13 +1024,6 @@
         "attr": {
           "type": "UnitRatio",
           "column": "coitem_price_invuomratio"
-        }
-      },
-      {
-        "name": "priceMode",
-        "attr": {
-          "type": "String",
-          "column": "coitem_pricemode"
         }
       },
       {
