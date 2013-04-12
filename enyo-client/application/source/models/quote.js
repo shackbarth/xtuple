@@ -1052,6 +1052,11 @@ white:true*/
         price = this.get("price"),
         options = {};
 
+      if (parent.getValue("customer.status") === "P") {
+        // XXX workaround
+        currency = XT.baseCurrency();
+      }
+
       options.success = function (basePrice) {
         var K = that.getClass(),
           priceMode = that.get("priceMode"),
