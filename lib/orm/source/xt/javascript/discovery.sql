@@ -12,7 +12,83 @@ select xt.install_js('XT','Discovery','xtuple', $$
   XT.Discovery.isDispatchable = true;
 
   /**
-   * Return a API Discovery document for this database's ORM where isRest = true.
+   * Return an API Discovery List for this database's ORM where isRest = true.
+   *
+   * @param {String} Optional. An orm_type name like "Contact". If null you get all of them.
+   * @param {String} Optional. The rootUrl path of the API. e.g. "https://www.example.com/"
+   * @returns {Object}
+   */
+  XT.Discovery.getList = function(orm, rootUrl) {
+    var list = {},
+        master = {},
+        org = plv8.execute("select current_database()"),
+        orms = XT.Discovery.getIsRestORMs(orm),
+        rootUrl = rootUrl || "{rootUrl}",
+        version = "v1alpha1";
+
+    if (org.length !== 1) {
+      return false;
+    } else {
+      org = org[0].current_database;
+    }
+
+    if (!orms) {
+      return false;
+    }
+
+    list.kind = "discovery#directoryList";
+    list.discoveryVersion = version;
+    list.items = [];
+
+    /* Loop through exposed ORM models and build list items. */
+    for (var i = 0; i < orms.length; i++) {
+      var item = {},
+          ormType = orms[i].orm_type,
+          ormTypeHyphen = ormType.camelToHyphen();
+
+      item.kind = "discovery#directoryItem";
+      item.id = org + "." + ormTypeHyphen + ":" + version;
+      item.name = org + "." + ormTypeHyphen;
+      item.version = version;
+      item.title = "xTuple ERP REST API for " + ormType + " business objects.";
+      item.description = "Lets you get and manipulate xTuple ERP " + ormType + " business objects.";
+      item.discoveryRestUrl = rootUrl + "discovery/" + version + "/apis/" + org + "/" + ormTypeHyphen + "/" + version + "/rest";
+      item.discoveryLink = "./apis/" + org + "/" + ormTypeHyphen + "/" + version + "/rest";
+      item.icons = {
+        "x16": rootUrl + "assets/api/" + ormTypeHyphen + "-16.png",
+        "x32": rootUrl + "assets/api/" + ormTypeHyphen + "-32.png"
+      };
+      item.documentationLink = "https://dev.xtuple.com/" + ormTypeHyphen; /* TODO - What should this be? */
+      item.preferred = true; /* TODO - Change this as we add new versions. */
+
+      list.items[i] = item;
+    }
+
+    if (!orm) {
+      /* Add master item that includes all ORM models in one Discovery Document. */
+      master.kind = "discovery#directoryItem";
+      master.id = org + ":" + version;
+      master.name = org;
+      master.version = version;
+      master.title = "xTuple ERP REST API all business objects.";
+      master.description = "Lets you get and manipulate all xTuple ERP business objects.";
+      master.discoveryRestUrl = rootUrl + "discovery/" + version + "/apis/" + org + "/" + version + "/rest";
+      master.discoveryLink = "./apis/" + org + "/" + version + "/rest";
+      master.icons = {
+        "x16": rootUrl + "assets/api/api-16.png",
+        "x32": rootUrl + "assets/api/api-32.png"
+      };
+      master.documentationLink = "https://dev.xtuple.com/"; /* TODO - What should this be? */
+      master.preferred = true; /* TODO - Change this as we add new versions. */
+
+      list.items.unshift(master);
+    }
+
+    return list;
+  }
+
+  /**
+   * Return an API Discovery document for this database's ORM where isRest = true.
    *
    * @param {String} Optional. An orm_type name like "Contact".
    * @param {String} Optional. The rootUrl path of the API. e.g. "https://www.example.com/"
@@ -44,18 +120,18 @@ select xt.install_js('XT','Discovery','xtuple', $$
     discovery.etag = "";
 
     discovery.discoveryVersion = version; /* TODO - Move this to v1 for release. */
-    discovery.id = org + ":" + version;
-    discovery.name = org;
+    discovery.id = org + (orm ? "." + orm.camelToHyphen() : "") + ":" + version;
+    discovery.name = org + (orm ? "." + orm.camelToHyphen() : "");
     discovery.version = version;
     discovery.revision = XT.Discovery.getDate();
-    discovery.title = "xTuple ERP REST API",
-    discovery.description = "Lets you get and manipulate xTuple ERP business objects.",
-    discovery.icons = { /* TODO - Get org's icons or set a token to be replaced when this discovery document is sent. */
-      "x16": "{iconx16}",
-      "x32": "{iconx32}"
+    discovery.title = "xTuple ERP REST API for " + (orm ? orm : "all") + " business objects.";
+    discovery.description = "Lets you get and manipulate xTuple ERP " + (orm ? orm + " " : "") + "business objects.";
+    discovery.icons = {
+      "x16": rootUrl + "assets/api/" + (orm ? orm.camelToHyphen() : "api") + "-16.png",
+      "x32": rootUrl + "assets/api/" + (orm ? orm.camelToHyphen() : "api") + "-32.png"
     };
-    discovery.documentationLink = "https://dev.xtuple.com"; /* TODO - What should this be? */
-    discovery.protocol = "rest",
+    discovery.documentationLink = "https://dev.xtuple.com/" + (orm ? orm.camelToHyphen() : ""); /* TODO - What should this be? */
+    discovery.protocol = "rest";
     discovery.baseUrl = rootUrl + "api/" + version + "/";
     discovery.basePath = "/api/" + version + "/";
     discovery.rootUrl = rootUrl;
