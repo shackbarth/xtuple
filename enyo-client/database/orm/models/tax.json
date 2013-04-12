@@ -294,6 +294,75 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "TaxRate",
+    "table": "taxrate",
+    "idSequenceName": "taxrate_taxrate_id_seq",
+    "comment": "Tax Rate Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainTaxRates",
+        "read": true,
+        "update": "MaintainTaxRates",
+        "delete": "MaintainTaxRates"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "taxrate_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "tax",
+        "toOne": {
+          "type": "TaxCode",
+          "column": "taxrate_tax_id",
+        }
+      },
+      {
+        "name": "percent",
+        "attr": {
+          "type": "Number",
+          "column": "taxrate_percent"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "taxrate_curr_id",
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Number",
+          "column": "taxrate_amount"
+        }
+      },
+      {
+        "name": "effectiveDate",
+        "attr": {
+          "type": "Date",
+          "column": "taxrate_effective"
+        }
+      },
+      {
+        "name": "expirationDate",
+        "attr": {
+          "type": "Date",
+          "column": "taxrate_expires"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "TaxType",
     "table": "taxtype",
     "idSequenceName": "taxtype_taxtype_id_seq",
