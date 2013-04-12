@@ -408,6 +408,8 @@ var lang = XT.stringsFor("en_US", {
   "_replyTo": "Reply To",
   "_resolution": "Resolution",
   "_roles": "Roles",
+  "_salesOrder": "Sales Order",
+  "_salesOrderDate": "Sales Order Date",
   "_salesRep": "Sales Reps",
   "_saleType": "Sale Type",
   "_saleTypes": "Sale Types",

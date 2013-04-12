@@ -1163,6 +1163,45 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.QuoteRelation", "XV.QuoteList");
+  
+  // ..........................................................
+  // SALES ORDER
+  //
+
+  enyo.kind({
+    name: "XV.SalesOrderList",
+    kind: "XV.List",
+    label: "_salesOrder".loc(),
+    collection: "XM.SalesOrderListItemCollection",
+    parameterWidget: "XV.SalesOrderListParameters",
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true},
+              // TODO: more stuff here
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "customer.name"},
+            ]}
+          ]},
+          {kind: "XV.ListColumn", classes: "second", components: [
+            {kind: "XV.ListAttr", attr: "shiptoName", classes: "italic"},
+            {kind: "XV.ListAttr", attr: "shiptoAddress1.formatShort"}
+          ]},
+          {kind: "XV.ListColumn", classes: "descr", fit: true, components: [
+          // TODO : put stuff here
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderList");
 
   // ..........................................................
   // SALE TYPE

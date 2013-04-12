@@ -1488,6 +1488,85 @@ trailing:true white:true*/
   });
 
   enyo.kind(quoteLineItem);
+  
+  // ..........................................................
+  // SALES ORDER
+  //
+
+  enyo.kind({
+    name: "XV.SalesOrderWorkspace",
+    kind: "XV.Workspace",
+    title: "_salesOrder".loc(),
+    model: "XM.SalesOrder",
+    allowPrint: true,
+    printOnSaveSetting: "DefaultPrintSOOnSave",
+    headerAttrs: ["number", "-", "billtoName"],
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.DateWidget", attr: "orderDate"},
+            {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
+            {kind: "XV.CustomerProspectWidget", attr: "customer",
+              showAddress: true, label: "_customer".loc(),
+              nameAttribute: ""},
+            {kind: "XV.AddressFieldsWidget", attr:
+              {name: "billtoName", line1: "billtoAddress1",
+                line2: "billtoAddress2", line3: "billtoAddress3",
+                city: "billtoCity", state: "billtoState",
+                postalCode: "billtoPostalCode", country: "billtoCountry"}
+            },
+            {classes: "xv-button-section", components: [
+              {kind: "onyx.Button", content: "_copyToShipTo".loc(),
+                name: "copyAddressButton",
+                ontap: "copyBilltoToShipto",
+                style: "margin: 4px;"}
+            ]},
+            {kind: "XV.ContactWidget", attr: "billtoContact",
+              name: "billtoContact"},
+            {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
+            {kind: "XV.CustomerShiptoWidget", attr: "shipto",
+              showAddress: true, label: "_number".loc(),
+              nameAttribute: ""},
+            {kind: "XV.AddressFieldsWidget",
+              disabled: true,
+              attr: {name: "shiptoName", line1: "shiptoAddress1",
+                line2: "shiptoAddress2", line3: "shiptoAddress3",
+                city: "shiptoCity", state: "shiptoState",
+                postalCode: "shiptoPostalCode", country: "shiptoCountry"}
+            },
+            {kind: "XV.ContactWidget", attr: "shiptoContact",
+              name: "shiptoContact"},
+            {kind: "onyx.GroupboxHeader", content: "_shipping".loc()},
+            {kind: "XV.SitePicker", attr: "site"},
+            {kind: "XV.DateWidget", attr: "packDate"},
+            {kind: "XV.InputWidget", attr: "fob"},
+            {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber",
+             label: "_custPO".loc()},
+            {kind: "XV.ShipViaCombobox", attr: "shipVia"},
+            {kind: "XV.ShipZonePicker", attr: "shipZone"},
+            {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
+            {kind: "XV.TermsPicker", attr: "terms"},
+            {kind: "XV.SalesRepPicker", attr: "salesRep"},
+            {kind: "XV.PercentWidget", attr: "commission"},
+            {kind: "XV.TaxZonePicker", attr: "taxZone"},
+            {kind: "XV.SaleTypePicker", attr: "saleType"},
+            {kind: "onyx.GroupboxHeader", content: "_orderNotes".loc()},
+            {kind: "XV.TextArea", attr: "orderNotes", fit: true},
+            {kind: "onyx.GroupboxHeader", content: "_shippingNotes".loc()},
+            {kind: "XV.TextArea", attr: "shipNotes", fit: true}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.SalesOrderRelation", "XV.SalesOrderWorkspace");
+  XV.registerModelWorkspace("XM.SalesOrderListItem", "XV.SalesOrderWorkspace");
 
   // ..........................................................
   // SALES REP

@@ -680,6 +680,31 @@ trailing:true white:true*/
   });
   
   // ..........................................................
+  // SALES ORDER
+  //
+
+  enyo.kind({
+    name: "XV.SalesOrderListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_salesOrder".loc()},
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "salesRep", attr: "salesRep", label: "_salesRep".loc(), defaultKind: "XV.SalesRepPicker"},
+      {kind: "onyx.GroupboxHeader", content: "_customer".loc()},
+        {name: "customer", attr: "customer", label: "_customer".loc(), defaultKind: "XV.CustomerProspectWidget"},
+      {kind: "onyx.GroupboxHeader", content: "_salesOrderDate".loc()}, 
+      {name: "createdFromDate", label: "_fromDate".loc(),
+         filterLabel: "_salesOrderDate".loc() + " " + "_fromDate".loc(),
+         attr: "orderDate", operator: ">=",
+         defaultKind: "XV.DateWidget"},
+         {name: "createdToDate", label: "_toDate".loc(),
+         filterLabel: "_salesOrderDate".loc() + " " + "_toDate".loc(),
+         attr: "orderDate", operator: "<=",
+         defaultKind: "XV.DateWidget"}
+    ]
+  });
+  
+  // ..........................................................
   // SALE TYPE
   //
 
