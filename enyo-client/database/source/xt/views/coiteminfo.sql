@@ -11,7 +11,8 @@ DO $$
     "xt.co_line_profit(coitem) as profit, " +
     "xt.co_line_tax(coitem) as tax " +
   "from coitem " +
-    "left join item on coitem_item_id=item_id; ";
+    "left join itemsite on coitem_itemsite_id=itemsite_id " +
+    "left join item on itemsite_item_id=item_id; ";
 
   try {
     plv8.execute(sql);
@@ -56,7 +57,7 @@ insert into coitem (
   new.coitem_itemsite_id,
   new.coitem_scheddate,
   new.coitem_qtyord,
-  stdcost(item_id),
+  stdcost(itemsite_item_id),
   new.coitem_price,
   new.coitem_custprice,
   new.coitem_memo,
@@ -69,7 +70,7 @@ insert into coitem (
   new.coitem_price_invuomratio,
   new.coitem_promdate,
   new.coitem_taxtype_id,
-  new.coitem_pricemode,
+  new.coitem_pricemode
 from itemsite
 where itemsite_id=new.coitem_itemsite_id;
 

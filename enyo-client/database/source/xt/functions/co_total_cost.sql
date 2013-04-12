@@ -1,5 +1,5 @@
-create or replace function xt.quote_total_cost(quhead) returns numeric stable as $$
-  select coalesce(sum(round((quitem_qtyord * quitem_qty_invuomratio) * currtocurr(basecurrId(), $1.quhead_curr_id, quitem_unitcost, $1.quhead_quotedate),2)),0)
-  from quitem
-  where (quitem_quhead_id=$1.quhead_id);
+create or replace function xt.co_total_cost(cohead) returns numeric stable as $$
+  select coalesce(sum(round((coitem_qtyord * coitem_qty_invuomratio) * currtocurr(basecurrId(), $1.cohead_curr_id, coitem_unitcost, $1.cohead_orderdate),2)),0)
+  from coitem
+  where (coitem_cohead_id=$1.cohead_id);
 $$ language sql
