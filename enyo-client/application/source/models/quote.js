@@ -1118,6 +1118,11 @@ white:true*/
         customer = parent ? parent.get("customer") : false,
         currency = parent ? parent.get("currency") :false;
 
+      if (parent.getValue("customer.status") === "P") {
+        // XXX workaround
+        currency = XT.baseCurrency();
+      }
+
       // If no parent, don't bother
       if (!parent) { return; }
 
@@ -1157,6 +1162,11 @@ white:true*/
         currency = parent ? parent.get("currency") : false,
         that = this,
         options = {};
+
+      if (parent.getValue("customer.status") === "P") {
+        // XXX workaround
+        currency = XT.baseCurrency();
+      }
 
       if (price) {
         if (standardCost) {
@@ -1612,6 +1622,11 @@ white:true*/
       parentDate = parent.get(parent.documentDateKey);
       customer = parent.get("customer");
       currency = parent.get("currency");
+
+      if (parent.getValue("customer.status") === "P") {
+        // XXX workaround
+        currency = XT.baseCurrency();
+      }
 
       // If we already have a request pending we need to indicate
       // when that is done to start over because something has changed.
