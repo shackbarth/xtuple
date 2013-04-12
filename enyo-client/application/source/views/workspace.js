@@ -514,7 +514,7 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.CustomerRelation", "XV.CustomerWorkspace");
   XV.registerModelWorkspace("XM.CustomerListItem", "XV.CustomerWorkspace");
   XV.registerModelWorkspace("XM.CustomerProspectListItem", "XV.CustomerWorkspace");
-
+  
   // ..........................................................
   // CUSTOMER GROUP
   //
@@ -541,7 +541,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.CustomerGroup", "XV.CustomerGroupWorkspace");
-
+  
   // ..........................................................
   // CUSTOMER TYPE
   //
@@ -617,7 +617,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.FileRelation", "XV.FileWorkspace");
-
+  
   // ..........................................................
   // FREIGHT CLASS
   //
@@ -1393,14 +1393,13 @@ trailing:true white:true*/
         isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : true;
       this.$.copyAddressButton.setDisabled(!isFreeFormShipto);
       this.customerChanged();
+      // re-render the summary panel
+      this.$.lineItemsPanel.render();
     },
     controlValueChanged: function (inSender, inEvent) {
       this.inherited(arguments);
       if (inEvent.originator.name === 'customerWidget') {
         this.customerChanged();
-      }
-      if (inEvent.originator.name === 'currencyPicker') {
-        this.$.lineItemsPanel.render();
       }
     },
     copyBilltoToShipto: function () {
@@ -1516,7 +1515,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.SalesRep", "XV.SalesRepWorkspace");
-
+  
   // ..........................................................
   // SALE TYPE
   //
@@ -1542,7 +1541,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.SaleType", "XV.SaleTypeWorkspace");
-
+  
   // ..........................................................
   // SHIP ZONE
   //
@@ -1646,7 +1645,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.State", "XV.StateWorkspace");
-
+  
   // ..........................................................
   // TAX ASSIGNMENT
   //
@@ -1710,8 +1709,8 @@ trailing:true white:true*/
   hash = enyo.mixin(hash, XV.WorkspaceAddressMixin);
   enyo.kind(hash);
 
-  XV.registerModelWorkspace("XM.TaxAuthority", "XV.TaxAuthorityWorkspace");
-
+  XV.registerModelWorkspace("XM.TaxAuthorityRelation", "XV.TaxAuthorityWorkspace");
+  
   // ..........................................................
   // TAX CODE
   //
@@ -1740,7 +1739,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.TaxCode", "XV.TaxCodeWorkspace");
-
+  
   // ..........................................................
   // TAX CLASS
   //
@@ -1767,7 +1766,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.TaxClass", "XV.TaxClassWorkspace");
-
+  
   // ..........................................................
   // TAX TYPE
   //
@@ -1794,7 +1793,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.TaxType", "XV.TaxTypeWorkspace");
-
+  
   // ..........................................................
   // TAX ZONE
   //
@@ -1820,7 +1819,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.TaxZone", "XV.TaxZoneWorkspace");
-
+  
   // ..........................................................
   // TERMS
   //
