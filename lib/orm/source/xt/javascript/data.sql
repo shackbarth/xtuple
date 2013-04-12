@@ -913,10 +913,13 @@ select xt.install_js('XT','Data','xtuple', $$
       value: The value of the primary key.
       relation: The name of the attribute on the recordType to which this record is related.
       
-      @param {String} namespace qualified record type
-      @param {Number} record id
-      @param {String} encryption key
+      @param {String} Namespace qualified record type
+      @param {Number} Record id
+      @param {String} Encryption key
       @param {Object} options - support options are context and silentError
+      @param {Object} [options.context] context
+      @param {Boolean} [options.silentError=false] Silence errors
+      @param {Boolean} [options.toOneNested=true] To One relationships are nested by default
       @returns Object
     */
     retrieveRecord: function(recordType, id, encryptionKey, options) {
@@ -963,7 +966,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
       sql = 'select "{table}".* from {schema}.{table} {join} where "{table}"."{primaryKey}" = {id};'
             .replace(/{schema}/, nameSpace.decamelize())
-            .replace(/{table}/g, type.decamelize())
+            .replace(/{table}/g, (options.toOneNested === false ? "_" : "") + type.decamelize())
             .replace(/{join}/, join)
             .replace(/{primaryKey}/, pkey)
             .replace(/{id}/, id);

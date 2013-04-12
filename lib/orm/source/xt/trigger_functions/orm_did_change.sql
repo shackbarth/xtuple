@@ -24,6 +24,7 @@ create or replace function xt.orm_did_change() returns trigger as $$
     nsp = views[n].beforeDot();
     rel = views[n].afterDot();
     plv8.execute("drop view if exists " + nsp + "." + rel);
+    plv8.execute("drop view if exists " + nsp + "._" + rel);
   }
 
   /* Determine whether to rebuild */ 
