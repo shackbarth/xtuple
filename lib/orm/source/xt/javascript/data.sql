@@ -1055,7 +1055,7 @@ select xt.install_js('XT','Data','xtuple', $$
          namespace = table.beforeDot(); 
          table = table.afterDot();
       }
-      return plv8.execute(sql, [table, namespace])[0].oid;
+      return plv8.execute(sql, [table, namespace])[0].oid - 0;
     },
 
     /**

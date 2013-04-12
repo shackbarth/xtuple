@@ -41,6 +41,7 @@
 
 -- xt trigger functions
 \i xt/trigger_functions/orm_did_change.sql
+\i xt/trigger_functions/record_did_change.sql
 
 -- xt operators
 \i xt/operators/any_numeric.sql;
@@ -62,6 +63,7 @@
 \i xt/tables/userrole.sql
 \i xt/tables/userrolepriv.sql
 \i xt/tables/useruserrole.sql
+\i xt/tables/ver.sql
 
 -- xt javascript
 \i xt/javascript/data.sql;
