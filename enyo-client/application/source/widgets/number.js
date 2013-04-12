@@ -317,10 +317,18 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.Number",
     scale: XT.PERCENT_SCALE,
     validate: function (value) {
-      return value && _.isNumber(value) ? value / 100 : null;
+      // this takes the string from the input field and parses it (including understanding commas, which isNaN cannot)
+      // if it cannot parse the value, it returns NaN
+      value = Globalize.parseFloat(value);
+      // use isNaN here because parseFloat could return NaN
+      // if you pass NaN into _.isNumber, it will misleadingly return true
+      // only bad string and null/undefined cases do we want to fail validation
+      return !isNaN(value) ? value / 100 : null;
     },
     valueChanged: function (value) {
-      value = !_.isNaN(value) ? value * 100 : value;
+      // can use _.isNaN with falsy check here because value may be a number string and
+      // the zero value is the same in both conditions
+      value = value && !_.isNaN(value) ? value * 100 : value;
       XV.Number.prototype.valueChanged.call(this, value);
     }
   });
@@ -330,10 +338,12 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.NumberWidget",
     scale: XT.PERCENT_SCALE,
     validate: function (value) {
-      return value && !_.isNaN(value) ? value / 100 : null;
+      return !isNaN(value) ? value / 100 : null;
     },
     valueChanged: function (value) {
-      value = !_.isNaN(value) ? value * 100 : value;
+      // can use _.isNaN with falsy check here because value may be a number string and
+      // the zero value is the same in both conditions
+      value = value && !_.isNaN(value) ? value * 100 : value;
       XV.NumberWidget.prototype.valueChanged.call(this, value);
     }
   });
