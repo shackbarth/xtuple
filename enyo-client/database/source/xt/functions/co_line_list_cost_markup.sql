@@ -1,10 +1,10 @@
-create or replace function xt.quote_line_list_cost_markup(quitem) returns numeric stable as $$
+create or replace function xt.co_line_list_cost_markup(coitem) returns numeric stable as $$
   select
     case
-      when $1.quitem_custprice = 0 then null
-      else round(1.0 - (currtobase(quhead_curr_id, $1.quitem_price, quhead_quotedate) / item_listprice),6)
+      when $1.coitem_custprice = 0 then null
+      else round(1.0 - (currtobase(cohead_curr_id, $1.coitem_price, cohead_orderdate) / item_listprice),6)
     end
-  from item, quhead
-  where item_id=$1.quitem_item_id
-   and quhead_id=$1.quitem_quhead_id;
+  from item, cohead
+  where item_id=$1.coitem_item_id
+   and cohead_id=$1.coitem_cohead_id;
 $$ language sql
