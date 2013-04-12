@@ -73,6 +73,8 @@
 -- xt views
 
 \i xt/views/doc.sql;
+\i xt/views/coheadinfo.sql;
+\i xt/views/coiteminfo.sql;
 \i xt/views/crmacctaddr.sql;
 \i xt/views/crmacctcomment.sql;
 \i xt/views/customer_prospect.sql;
