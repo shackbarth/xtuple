@@ -967,7 +967,7 @@ select xt.install_js('XT','Data','xtuple', $$
           throw new Error("Access Denied.");
         }
       }
-   plv8.elog(NOTICE, 'table = ', this.getTableOid(map.table));
+
       /* version sql */
       ver = 'coalesce((' +
             'select ver_version ' +
@@ -975,7 +975,6 @@ select xt.install_js('XT','Data','xtuple', $$
             'where ver_table_oid = {oid} ' +
             ' and ver_record_id = {id} '+
             '),0) as version';
-               plv8.elog(NOTICE, 'ver = ', ver);
       sql = 'select "{table}".*,{version} from {schema}.{table} {join} where "{table}"."{primaryKey}" = {id};'
             .replace(/{schema}/, nameSpace.decamelize())
             .replace(/{version}/, ver)
