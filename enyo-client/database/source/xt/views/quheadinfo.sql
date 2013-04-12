@@ -23,7 +23,7 @@ $$ language plv8;
 revoke all on xt.quheadinfo from public;
 grant all on table xt.quheadinfo to group xtrole;
 
-create or replace rule "_INSERT" as on insert to xt.quheadinfo do instead
+create or replace rule "_INSERT" as on insert to xt.quheadinfo do instead (
 
 insert into quhead (
   quhead_id,
@@ -162,8 +162,10 @@ insert into quhead (
   new.quhead_saletype_id,
   new.quhead_shipzone_id
 );
+select xt.update_version('public', 'quhead', new.quhead_id, 'INSERT'); 
+);
 
-create or replace rule "_UPDATE" as on update to xt.quheadinfo do instead
+create or replace rule "_UPDATE" as on update to xt.quheadinfo do instead (
 
 update quhead set
   quhead_number = new.quhead_number,
@@ -233,7 +235,12 @@ update quhead set
   quhead_saletype_id = new.quhead_saletype_id,
   quhead_shipzone_id = quhead_shipzone_id
 where quhead_id = old.quhead_id;
+select xt.update_version('public', 'quhead', new.quhead_id, 'UPDATE'); 
+);
 
-create or replace rule "_DELETE" as on delete to xt.quheadinfo do instead
+create or replace rule "_DELETE" as on delete to xt.quheadinfo do instead (
 
 select deletequote(old.quhead_id);
+select xt.update_version('public', 'quhead', old.quhead_id, 'DELETE'); 
+
+);
