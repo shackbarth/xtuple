@@ -1709,7 +1709,7 @@ trailing:true white:true*/
   hash = enyo.mixin(hash, XV.WorkspaceAddressMixin);
   enyo.kind(hash);
 
-  XV.registerModelWorkspace("XM.TaxAuthorityRelation", "XV.TaxAuthorityWorkspace");
+  XV.registerModelWorkspace("XM.TaxAuthority", "XV.TaxAuthorityWorkspace");
 
   // ..........................................................
   // TAX CODE
