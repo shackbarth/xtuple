@@ -289,8 +289,6 @@ select xt.install_js('XT','Orm','xtuple', $$
       for (i = 0; i < props.length; i++) {
         alias = props[i].name;
         if(DEBUG) plv8.elog(NOTICE, 'processing property ->', props[i].name);
-        if(props[i].name === 'version') throw new Error("Can not use 'version' as a property name.");
-        if(props[i].name === 'lock') throw new Error("Can not use 'lock' as a property name.");
 
         /* process attributes */
         if (props[i].attr || props[i].toOne) {

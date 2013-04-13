@@ -925,12 +925,15 @@ select xt.install_js('XT','Data','xtuple', $$
     */
     retrieveRecord: function(recordType, id, encryptionKey, options) {
       options = options || {};
+      options.obtainLock = options.obtainLock === undefined ? false : options.obtainLock;
       var nameSpace = recordType.beforeDot(), 
         type = recordType.afterDot(),
         map = XT.Orm.fetch(nameSpace, type),
-        ret,
+        ret = {
+          type: type,
+          id: id
+        },
         sql,
-        ver,
         pkey = XT.Orm.primaryKey(map),
         context = options.context,
         join = "",
@@ -969,24 +972,29 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       /* version sql */
-      ver = 'coalesce((' +
-            'select ver_version ' +
-            'from xt.ver ' +
-            'where ver_table_oid = {oid} ' +
-            ' and ver_record_id = {id} '+
-            '),0) as version';
-      sql = 'select "{table}".*,{version} from {schema}.{table} {join} where "{table}"."{primaryKey}" = {id};'
-            .replace(/{schema}/, nameSpace.decamelize())
-            .replace(/{version}/, ver)
+      sql = 'select coalesce((select ver_version from xt.ver where ver_table_oid = {oid} and ver_record_id = {id}), 0) as version; '
             .replace(/{oid}/, this.getTableOid(map.table))
+            .replace(/{id}/, id);
+
+      if (DEBUG) plv8.elog(NOTICE, 'ver sql = ', sql);
+      ret.version = plv8.execute(sql)[0].version;
+
+      /* obtain lock if required */
+      if (map.lockable) {
+        ret.lock = this.tryLock(map.table, id, XT.username, options);
+      }
+
+      /* data sql */
+      sql = 'select "{table}".* from {schema}.{table} {join} where "{table}"."{primaryKey}" = {id};'
+            .replace(/{schema}/, nameSpace.decamelize())
             .replace(/{table}/g, (options.toOneNested ? "" : "_") + type.decamelize())
             .replace(/{join}/, join)
             .replace(/{primaryKey}/, pkey)
-            .replace(/{id}/g, id);
-
+            .replace(/{id}/, id);
+            
       /* query the map */
-      if (DEBUG) plv8.elog(NOTICE, 'sql = ', sql);
-      ret = plv8.execute(sql)[0];
+      if (DEBUG) plv8.elog(NOTICE, 'data sql = ', sql);
+      ret.data = plv8.execute(sql)[0];
 
       if (!context) {
         /* check privileges again, this time against record specific criteria where applicable */
@@ -999,12 +1007,7 @@ select xt.install_js('XT','Data','xtuple', $$
         }
         
         /* decrypt result where applicable */
-        ret = this.decrypt(nameSpace, type, ret, encryptionKey);
-      }
-
-      /* obtain lock if required */
-      if (ret && options.obtainLock && map.lockable) {
-        ret.lock = this.tryLock(map.table, id, XT.username, options);
+        ret.data = this.decrypt(nameSpace, type, ret.data, encryptionKey);
       }
 
       /* return the results */
@@ -1066,7 +1069,11 @@ select xt.install_js('XT','Data','xtuple', $$
 
       @param {String | Number} Table name or oid
       @param {Number} Record id
-      @param {Object} Options: timeout, pid, key
+      @param {Object} Options
+      @param {Number} [options.timeout=30]
+      @param {Number} [options.pid] Process id
+      @param {Number} [options.key] Key
+      @param {Boolean} [options.obtainLock=true] If false, only checks for existing lock
     */
     tryLock: function (table, id, options) {
       options = options ? options : {};
@@ -1133,7 +1140,7 @@ select xt.install_js('XT','Data','xtuple', $$
             username: lock.lock_username,
             effective: lock.lock_effective
           }
-        }
+        } else if (options.obtainLock !== false) { return; }
       }
 
       if (DEBUG) plv8.elog(NOTICE, "Creating lock."); 
