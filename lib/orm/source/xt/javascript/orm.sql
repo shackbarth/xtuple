@@ -105,7 +105,7 @@ select xt.install_js('XT','Orm','xtuple', $$
             "where (classid='pg_rewrite'::regclass) " +
             " and (refclassid='pg_class'::regclass) " +
             ' and (refobjid::regclass::text in ($1,$2)) ' +
-            " and (nspname || '.' || relname not in ($1,$2)) ";
+            " and (nspname || '.' || relname not in ($1,$2));";
     rec = plv8.execute(sql, [view, quoted]);
 
     /*  Loop through view dependencies */
@@ -255,7 +255,8 @@ select xt.install_js('XT','Orm','xtuple', $$
       base = orm,
       viewName = orm.nameSpace.decamelize() + '.' + orm.type.decamelize(),
       altViewName = orm.nameSpace.decamelize() + '._' + orm.type.decamelize(),
-      processOrm;
+      processOrm,
+      res;
 
     // ..........................................................
     // METHODS
@@ -282,7 +283,9 @@ select xt.install_js('XT','Orm','xtuple', $$
         value,
         conditions,
         altconditions,
-        join;
+        join,
+        schemaName,
+        tableName;
       for (i = 0; i < props.length; i++) {
         alias = props[i].name;
         if(DEBUG) plv8.elog(NOTICE, 'processing property ->', props[i].name);
@@ -515,5 +518,23 @@ select xt.install_js('XT','Orm','xtuple', $$
     query = 'grant all on {view} to xtrole'
             .replace('{view}', altViewName);
     plv8.execute(query);
+
+    /* If applicable, add a trigger to the table to keep version number updated */
+    if (orm.isNestedOnly !== true &&
+       (orm.privileges && orm.privileges.all && orm.privileges.all.create !== false ||
+        orm.privileges && orm.privileges.all && orm.privileges.all.update !== false ||
+        orm.privileges && orm.privileges.all && orm.privileges.all.delete !== false)) {
+      query = 'select * from pg_tables where schemaname = $1 and tablename = $2';
+      schemaName = orm.table.indexOf(".") === -1 ? 'public' : orm.table.beforeDot();
+      tableName = orm.table.indexOf(".") === -1 ? orm.table : orm.table.afterDot(); 
+      res = plv8.execute(query, [schemaName, tableName]);
+      if (res.length) {
+        query = 'drop trigger if exists {tableName}_did_change on {table};' +
+                'create trigger {tableName}_did_change after insert or update or delete on {table} for each row execute procedure xt.record_did_change();';
+        query =  query.replace(/{tableName}/g, tableName)
+                      .replace(/{table}/g, orm.table);
+        plv8.execute(query);
+      }
+    } 
   };
 $$ );
