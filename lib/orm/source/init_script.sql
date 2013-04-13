@@ -38,7 +38,6 @@
 \i xt/functions/show_search_path.sql;
 \i xt/functions/text_gt_date.sql;
 \i xt/functions/text_lt_date.sql;
-\i xt/functions/update_version.sql;
 
 -- xt trigger functions
 \i xt/trigger_functions/orm_did_change.sql
