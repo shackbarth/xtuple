@@ -18,7 +18,7 @@ var getReleaseNotes = function (projectId, versionName) {
         _.each(results.models, function (incident) {
           var verb = incident.getValue("category.name") === "Bugs" ? "Fixed" : "Implemented";
           var incidentNumber = incident.get("number");
-          var link = "http://xtuple.com/issues/" + incidentNumber;
+          var link = "http://www.xtuple.org/xtincident/view/bugs/" + incidentNumber;
           console.log("- " + verb)
           console.log("  issue #[" + incidentNumber + "](" + link + ")");
           console.log("  _" + incident.get("description") + "_");
