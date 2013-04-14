@@ -930,6 +930,7 @@ select xt.install_js('XT','Data','xtuple', $$
         type = recordType.afterDot(),
         map = XT.Orm.fetch(nameSpace, type),
         ret = {
+          nameSpace: nameSpace,
           type: type,
           id: id
         },

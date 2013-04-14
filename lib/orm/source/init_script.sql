@@ -32,6 +32,7 @@
 \i xt/functions/is_date.sql;
 \i xt/functions/not_any_numeric.sql;
 \i xt/functions/not_any_text.sql;
+\i xt/functions/patch.sql;
 \i xt/functions/raise_exception.sql;
 \i xt/functions/retrieve_record.sql;
 \i xt/functions/schema.sql;
@@ -67,6 +68,7 @@
 
 -- xt javascript
 \i xt/javascript/data.sql;
+\i xt/javascript/jsonpatch.sql;
 \i xt/javascript/orm.sql;
 \i xt/javascript/session.sql;
 \i xt/javascript/schema.sql;
