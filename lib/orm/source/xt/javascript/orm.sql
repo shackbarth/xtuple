@@ -284,7 +284,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         conditions,
         altconditions,
         join,
-        versionTable,
+        lockTable,
         schemaName,
         tableName;
       for (i = 0; i < props.length; i++) {
@@ -533,15 +533,15 @@ select xt.install_js('XT','Orm','xtuple', $$
         orm.privileges && orm.privileges.all && orm.privileges.all.update !== false ||
         orm.privileges && orm.privileges.all && orm.privileges.all.delete !== false)) {
       query = 'select * from pg_tables where schemaname = $1 and tablename = $2';
-      versionTable = orm.versionTable || orm.table,
-      schemaName = versionTable.indexOf(".") === -1 ? 'public' : versionTable.beforeDot();
-      tableName = versionTable.indexOf(".") === -1 ? versionTable : versionTable.afterDot(); 
+      lockTable = orm.lockTable || orm.table;
+      schemaName = lockTable.indexOf(".") === -1 ? 'public' : lockTable.beforeDot();
+      tableName = lockTable.indexOf(".") === -1 ? lockTable : lockTable.afterDot(); 
       res = plv8.execute(query, [schemaName, tableName]);
       if (res.length) {
         query = 'drop trigger if exists {tableName}_did_change on {table};' +
                 'create trigger {tableName}_did_change after insert or update or delete on {table} for each row execute procedure xt.record_did_change();';
         query =  query.replace(/{tableName}/g, tableName)
-                      .replace(/{table}/g, orm.table);
+                      .replace(/{table}/g, lockTable);
         plv8.execute(query);
       }
     } 
