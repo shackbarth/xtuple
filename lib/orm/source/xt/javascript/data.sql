@@ -449,21 +449,20 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {String} name space qualified record type
       @param {Object} data object
     */
-    commitRecord: function (key, value, encryptionKey) {
-      var nameSpace = key.beforeDot().camelize().toUpperCase(),
-        type = key.afterDot().classify(),
-        hasAccess = this.checkPrivileges(nameSpace, type, value, false);
+    commitRecord: function (value) {
+      var hasAccess = this.checkPrivileges(value.nameSpace, value.type, value.data, false),
+        data = value.data;
       
       if(!hasAccess) throw new Error("Access Denied.");    
-      if(value && value.dataState) {
-        if(value.dataState === this.CREATED_STATE) { 
-          this.createRecord(key, value, encryptionKey);
+      if(data && data.dataState) {
+        if(data.dataState === this.CREATED_STATE) { 
+          this.createRecord(value);
         }
-        else if(value.dataState === this.UPDATED_STATE) { 
-          this.updateRecord(key, value, encryptionKey);
+        else if(data.dataState === this.UPDATED_STATE) { 
+          this.updateRecord(value);
         }
-        else if(value.dataState === this.DELETED_STATE) { 
-          this.deleteRecord(key, value); 
+        else if(data.dataState === this.DELETED_STATE) { 
+          this.deleteRecord(value); 
         }
       }
     },
@@ -474,15 +473,15 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {String} Name space qualified record type
       @param {Object} Record
     */
-    createRecord: function (key, value, encryptionKey) {
-      var orm = XT.Orm.fetch(key.beforeDot(), key.afterDot()),
-        sql = this.prepareInsert(orm, value),
+    createRecord: function (value) {
+      var orm = XT.Orm.fetch(value.nameSpace, value.type),
+        sql = this.prepareInsert(orm, value.data),
         i;
         
       /* handle extensions on the same table */
       for (i = 0; i < orm.extensions.length; i++) {
         if (orm.extensions[i].table === orm.table) {
-          sql = this.prepareInsert(orm.extensions[i], value, sql);
+          sql = this.prepareInsert(orm.extensions[i], value.data, sql);
         }
       }
 
@@ -493,13 +492,13 @@ select xt.install_js('XT','Data','xtuple', $$
       for (i = 0; i < orm.extensions.length; i++) {
         if (orm.extensions[i].table !== orm.table && 
            !orm.extensions[i].isChild) {
-          sql = this.prepareInsert(orm.extensions[i], value);
+          sql = this.prepareInsert(orm.extensions[i], value.data);
           plv8.execute(sql.statement, sql.values); 
         }
       }
 
       /* okay, now lets handle arrays */
-      this.commitArrays(orm, value);
+      this.commitArrays(orm, value.data);
     },
 
    /**
@@ -606,19 +605,25 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {String} Name space qualified record type
       @param {Object} Record
     */
-    updateRecord: function(key, value, encryptionKey) {
-      var orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
-        sql = this.prepareUpdate(orm, value),
+    updateRecord: function(value) {
+      var orm = XT.Orm.fetch(value.nameSpace, value.type),
+        sql = this.prepareUpdate(orm, value.data),
         pkey = XT.Orm.primaryKey(orm),
-        lockKey = value.lock && value.lock.key ? value.lock.key : false,
         lock,
+        lockKey = value.lock && value.lock.key ? lock.key : false,
+        lockTable = orm.lockTable || orm.table,
         ext,
         rows,
         i;
 
-      /* Test for lock */
+      /* test for optimistic lock */
+      if (value.version !== this.getVersion(orm, value.id)) {
+        plv8.elog(ERROR, "The version being updated is not current.")
+      }
+
+      /* test for pessimistic lock */
       if (orm.lockable) {
-        lock = this.tryLock(orm.table, value[pkey], {key: lockKey});
+        lock = this.tryLock(lockTable, value[pkey], {key: lockKey});
         if (!lock.key) {
           plv8.elog(ERROR, "Can not obtain a lock on the record.");
         }
@@ -627,7 +632,7 @@ select xt.install_js('XT','Data','xtuple', $$
       /* handle extensions on the same table */
       for (i = 0; i < orm.extensions.length; i++) {
         if (orm.extensions[i].table === orm.table) {
-          sql = this.prepareUpdate(orm.extensions[i], value, sql);
+          sql = this.prepareUpdate(orm.extensions[i], value.data, sql);
         }
       }
 
@@ -656,11 +661,11 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       /* okay, now lets handle arrays */
-      this.commitArrays(orm, value);
+      this.commitArrays(orm, value.data);
 
       /* release any lock */
       if (orm.lockable) {
-        this.releaseLock({table: orm.table, id: value[pkey]});
+        this.releaseLock({table: lockTable, id: value[pkey]});
       }
     },
 
@@ -759,11 +764,13 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {String} name space qualified record type
       @param {Object} the record to be committed
     */
-    deleteRecord: function(key, value) {
-      var record = XT.decamelize(value), sql = '',
-        orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
+    deleteRecord: function(value) {
+      var record = value.data,
+        sql = '',
+        orm = XT.Orm.fetch(value.nameSpace, value.type),
         nameKey = XT.Orm.primaryKey(orm),
         lockKey = value.lock && value.lock.key ? value.lock.key : false,
+        lockTable = orm.lockTable || orm.table,
         sql,
         columnKey,
         prop,
@@ -773,9 +780,14 @@ select xt.install_js('XT','Data','xtuple', $$
         ext,
         i;
 
-      /* Test for lock */
+      /* test for optimistic lock */
+      if (value.version !== this.getVersion(orm, value.id)) {
+        plv8.elog(ERROR, "The version being patched is not current.")
+      }
+      
+      /* test for pessemistic lock */
       if (orm.lockable) {
-        lock = this.tryLock(orm.table, value[nameKey], {key: lockKey});
+        lock = this.tryLock(lockTable, value[nameKey], {key: lockKey});
         if (!lock.key) {
           plv8.elog(ERROR, "Can not obtain a lock on the record.");
         }
@@ -818,7 +830,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
       /* release any lock */
       if (orm.lockable) {
-        this.releaseLock({table: orm.table, id: value[nameKey]});
+        this.releaseLock({table: lockTable, id: value.id});
       }
     },
 
@@ -851,6 +863,40 @@ select xt.install_js('XT','Data','xtuple', $$
         }
       }
       return record;
+    },
+
+    /**
+      Get the oid for a given table name.
+
+      @param {String} table name
+      @returns {Number}
+    */
+    getTableOid: function (table) {
+      var namespace = "public", /* default assumed if no dot in name */
+       sql = "select pg_class.oid::integer as oid " + 
+             "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " + 
+             "where relname = $1 and nspname = $2";
+      name = table.toLowerCase(); /* be generous */ 
+      if (table.indexOf(".") > 0) {
+         namespace = table.beforeDot(); 
+         table = table.afterDot();
+      }
+      return plv8.execute(sql, [table, namespace])[0].oid - 0;
+    },
+
+    /**
+      Returns the current version of a record.
+      
+      @param {Object} Orm
+      @param {Number|String} Record id
+    */
+    getVersion: function (orm, id) {
+      var sql = 'select coalesce((select ver_version from xt.ver where ver_table_oid = {oid} and ver_record_id = {id}), 0) as version; '
+            .replace(/{oid}/, this.getTableOid(orm.lockTable || orm.table))
+            .replace(/{id}/, id);
+
+      if (DEBUG) plv8.elog(NOTICE, 'ver sql = ', sql);
+      return plv8.execute(sql)[0].version;
     },
 
     /**
@@ -929,6 +975,7 @@ select xt.install_js('XT','Data','xtuple', $$
       var nameSpace = recordType.beforeDot(), 
         type = recordType.afterDot(),
         map = XT.Orm.fetch(nameSpace, type),
+        lockTable = map.lockTable || table,
         ret = {
           nameSpace: nameSpace,
           type: type,
@@ -972,17 +1019,11 @@ select xt.install_js('XT','Data','xtuple', $$
         }
       }
 
-      /* version sql */
-      sql = 'select coalesce((select ver_version from xt.ver where ver_table_oid = {oid} and ver_record_id = {id}), 0) as version; '
-            .replace(/{oid}/, this.getTableOid(map.table))
-            .replace(/{id}/, id);
-
-      if (DEBUG) plv8.elog(NOTICE, 'ver sql = ', sql);
-      ret.version = plv8.execute(sql)[0].version;
+      ret.version = this.getVersion(map, id);
 
       /* obtain lock if required */
       if (map.lockable) {
-        ret.lock = this.tryLock(map.table, id, XT.username, options);
+        ret.lock = this.tryLock(lockTable, id, XT.username, options);
       }
 
       /* data sql */
@@ -1041,25 +1082,6 @@ select xt.install_js('XT','Data','xtuple', $$
         else { ret[prop] = qry[i].value; }
       }
       return ret;
-    },
-
-    /**
-      Get the oid for a given table name.
-
-      @param {String} table name
-      @returns {Number}
-    */
-    getTableOid: function (table) {
-      var namespace = "public", /* default assumed if no dot in name */
-       sql = "select pg_class.oid::integer as oid " + 
-             "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " + 
-             "where relname = $1 and nspname = $2";
-      name = table.toLowerCase(); /* be generous */ 
-      if (table.indexOf(".") > 0) {
-         namespace = table.beforeDot(); 
-         table = table.afterDot();
-      }
-      return plv8.execute(sql, [table, namespace])[0].oid - 0;
     },
 
     /**
