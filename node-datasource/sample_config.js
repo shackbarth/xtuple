@@ -7,11 +7,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   module.exports = {
     processName: "node-datasource",
-    debugging: true,
     allowMultipleInstances: true,
     requireDatabase: true,
     enhancedAuthKey: "xTuple",
     datasource: {
+      debugging: false,
       sessionTimeout: 60,
       requireCache: true,
       pgPoolSize: 15,
@@ -63,6 +63,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     required: [
       "lib/ext/database",
       "lib/ext/datasource",
+      "lib/ext/smtpTransport",
       "lib/ext/models"
     ]
   };

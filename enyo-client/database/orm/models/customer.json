@@ -88,7 +88,7 @@
       {
         "name": "commission",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "cust_commprcnt"
         }
       },
@@ -130,7 +130,7 @@
       {
         "name": "discount",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "cust_discntprcnt"
         }
       },
@@ -633,7 +633,7 @@
       {
         "name": "commission",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "shipto_commission"
         }
       },
@@ -1124,7 +1124,7 @@
       {
         "name": "commission",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "shipto_commission"
         }
       },
@@ -1305,14 +1305,14 @@
       {
         "name": "commission",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "cust_commprcnt"
         }
       },
       {
         "name": "discount",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "cust_discntprcnt"
         }
       },
@@ -1557,6 +1557,15 @@
           "type": "Number",
           "column": "custgrp_descrip"
         }
+      },
+      {
+        "name": "customers",
+        "toMany": {
+          "isNested": true,
+          "type": "CustomerGroupCustomer",
+          "column": "custgrp_id",
+          "inverse": "customerGroup"
+        }
       }
     ],
     "isSystem": true
@@ -1693,14 +1702,14 @@
       {
         "name": "commission",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "cust_commprcnt"
         }
       },
       {
         "name": "discount",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "cust_discntprcnt"
         }
       },
