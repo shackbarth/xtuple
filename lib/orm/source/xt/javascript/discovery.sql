@@ -175,30 +175,8 @@ select xt.install_js('XT','Discovery','xtuple', $$
     /*
      * Auth section.
      */
-    discovery.auth = {
-      "oauth2": {
-        "scopes": {}
-      }
-    };
+    discovery.auth = XT.Discovery.getAuth(orm, rootUrl);
 
-    /* Set base full access scope. */
-    discovery.auth.oauth2.scopes[rootUrl + "auth/" + org] = {
-      "description": "Full access to all '" + org + "' resources"
-    }
-
-    /* Loop through exposed ORM models and build scopes. */
-    for (var i = 0; i < orms.length; i++) {
-      var ormType = orms[i].orm_type,
-          ormTypeHyphen = ormType.camelToHyphen();
-
-      /* TODO - Do we need to include "XM" in the name? */
-      discovery.auth.oauth2.scopes[rootUrl + "auth/" + org + "/" + ormTypeHyphen] = {
-        "description": "Manage " + orms[i].orm_type + " resources"
-      }
-      discovery.auth.oauth2.scopes[rootUrl + "auth/" + org + "/" + ormTypeHyphen + ".readonly"] = {
-        "description": "View " + orms[i].orm_type + " resources"
-      }
-    }
 
     /*
      * Schema section.
@@ -224,6 +202,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
     /* Sort schema properties alphabetically. */
     discovery.schemas = XT.Discovery.sortObject(schemas);
 
+
     /*
      * Resources section.
      */
@@ -241,15 +220,71 @@ select xt.install_js('XT','Discovery','xtuple', $$
       discovery.resources[ormType].methods.patch.parameters[ormTypeHyphen + "-id"] = primKeyProp;
     }
 
+
     /* return the results */
     return discovery;
   }
 
 
   /**
+   * Return an API Discovery document's Auth section for this database's ORM where isRest = true.
+   * This function allows you get the Auth section much faster than the full getDiscovery() above.
+   *
+   * @param {String} Optional. An orm_type name like "Contact".
+   * @param {String} Optional. The rootUrl path of the API. e.g. "https://www.example.com/"
+   * @returns {Object}
+   */
+  XT.Discovery.getAuth = function(orm, rootUrl) {
+    var auth = {},
+      org = plv8.execute("select current_database()"),
+      orms = XT.Discovery.getIsRestORMs(orm),
+      rootUrl = rootUrl || "{rootUrl}";
+
+
+    if (org.length !== 1) {
+      return false;
+    } else {
+      org = org[0].current_database;
+    }
+
+    if (!orms) {
+      return false;
+    }
+
+    auth = {
+      "oauth2": {
+        "scopes": {}
+      }
+    };
+
+    /* Set base full access scope. */
+    auth.oauth2.scopes[rootUrl + "auth/" + org] = {
+      "description": "Full access to all '" + org + "' resources"
+    }
+
+    /* Loop through exposed ORM models and build scopes. */
+    for (var i = 0; i < orms.length; i++) {
+      var ormType = orms[i].orm_type,
+          ormTypeHyphen = ormType.camelToHyphen();
+
+      /* TODO - Do we need to include "XM" in the name? */
+      auth.oauth2.scopes[rootUrl + "auth/" + org + "/" + ormTypeHyphen] = {
+        "description": "Manage " + orms[i].orm_type + " resources"
+      }
+      auth.oauth2.scopes[rootUrl + "auth/" + org + "/" + ormTypeHyphen + ".readonly"] = {
+        "description": "View " + orms[i].orm_type + " resources"
+      }
+
+    }
+
+    return auth;
+  }
+
+
+  /**
    * Return an API Discovery document's Resources section for this database's ORM where isRest = true.
-   * This function allows you get the Resources section much faster than the full getDiscovery above.
-   * To make it after, the JSON-Schema is skipped, so primKeyProp will be blank.
+   * This function allows you get the Resources section much faster than the full getDiscovery() above.
+   * To make it faster, the JSON-Schema is skipped, so method's parameter's primKeyProp will be blank.
    *
    * @param {String} Optional. An orm_type name like "Contact".
    * @param {String} Optional. The rootUrl path of the API. e.g. "https://www.example.com/"
