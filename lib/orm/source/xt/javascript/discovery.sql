@@ -227,33 +227,76 @@ select xt.install_js('XT','Discovery','xtuple', $$
     /*
      * Resources section.
      */
-    discovery.resources = {};
+    discovery.resources = XT.Discovery.getResources(orm, rootUrl);
 
-    /* Loop through exposed ORM models and build resources. */
+    /* Loop through resources and add JSON-Schema primKeyProp for methods that need it. */
     for (var i = 0; i < orms.length; i++) {
       var ormType = orms[i].orm_type,
           ormTypeHyphen = ormType.camelToHyphen(),
           primKeyProp = XT.Discovery.getPrimaryKeyProps(discovery.schemas[ormType]);
 
-      discovery.resources[ormType] = {};
-      discovery.resources[ormType].methods = {};
+      discovery.resources[ormType].methods.delete.parameters[ormTypeHyphen + "-id"] = primKeyProp;
+      discovery.resources[ormType].methods.get.parameters[ormTypeHyphen + "-id"] = primKeyProp;
+      discovery.resources[ormType].methods.head.parameters[ormTypeHyphen + "-id"] = primKeyProp;
+      discovery.resources[ormType].methods.patch.parameters[ormTypeHyphen + "-id"] = primKeyProp;
+    }
+
+    /* return the results */
+    return discovery;
+  }
+
+
+  /**
+   * Return an API Discovery document's Resources section for this database's ORM where isRest = true.
+   * This function allows you get the Resources section much faster than the full getDiscovery above.
+   * To make it after, the JSON-Schema is skipped, so primKeyProp will be blank.
+   *
+   * @param {String} Optional. An orm_type name like "Contact".
+   * @param {String} Optional. The rootUrl path of the API. e.g. "https://www.example.com/"
+   * @returns {Object}
+   */
+  XT.Discovery.getResources = function(orm, rootUrl) {
+    var resources = {},
+      org = plv8.execute("select current_database()"),
+      orms = XT.Discovery.getIsRestORMs(orm),
+      rootUrl = rootUrl || "{rootUrl}";
+
+
+    if (org.length !== 1) {
+      return false;
+    } else {
+      org = org[0].current_database;
+    }
+
+    if (!orms) {
+      return false;
+    }
+
+    /* Loop through exposed ORM models and build resources. */
+    for (var i = 0; i < orms.length; i++) {
+      var ormType = orms[i].orm_type,
+          ormTypeHyphen = ormType.camelToHyphen(),
+          primKeyProp = {};
+
+      resources[ormType] = {};
+      resources[ormType].methods = {};
 
       /*
        * delete
        */
-      discovery.resources[ormType].methods.delete = {
+      resources[ormType].methods.delete = {
         "id": ormTypeHyphen + "-id.delete",
         "path": ormTypeHyphen + "/{" + ormTypeHyphen + "-id}",
         "httpMethod": "DELETE",
         "description": "Deletes a single " + ormType + " record.",
       };
 
-      discovery.resources[ormType].methods.delete.parameters = {};
-      discovery.resources[ormType].methods.delete.parameters[ormTypeHyphen + "-id"] = primKeyProp;
+      resources[ormType].methods.delete.parameters = {};
+      resources[ormType].methods.delete.parameters[ormTypeHyphen + "-id"] = primKeyProp;
 
-      discovery.resources[ormType].methods.delete.parameterOrder = [ormTypeHyphen + "-id"];
+      resources[ormType].methods.delete.parameterOrder = [ormTypeHyphen + "-id"];
 
-      discovery.resources[ormType].methods.delete.scopes = [
+      resources[ormType].methods.delete.scopes = [
         rootUrl + "auth/" + org,
         rootUrl + "auth/" + org + "/" + ormTypeHyphen
       ];
@@ -261,23 +304,23 @@ select xt.install_js('XT','Discovery','xtuple', $$
       /*
        * get
        */
-      discovery.resources[ormType].methods.get = {
+      resources[ormType].methods.get = {
         "id": ormTypeHyphen + "-id.get",
         "path": ormTypeHyphen + "/{" + ormTypeHyphen + "-id}",
         "httpMethod": "GET",
         "description": "Gets a single " + ormType + " record.",
       };
 
-      discovery.resources[ormType].methods.get.parameters = {};
-      discovery.resources[ormType].methods.get.parameters[ormTypeHyphen + "-id"] = primKeyProp;
+      resources[ormType].methods.get.parameters = {};
+      resources[ormType].methods.get.parameters[ormTypeHyphen + "-id"] = primKeyProp;
 
-      discovery.resources[ormType].methods.get.parameterOrder = [ormTypeHyphen + "-id"];
+      resources[ormType].methods.get.parameterOrder = [ormTypeHyphen + "-id"];
 
-      discovery.resources[ormType].methods.get.response = {
+      resources[ormType].methods.get.response = {
         "ref$": ormType
       };
 
-      discovery.resources[ormType].methods.get.scopes = [
+      resources[ormType].methods.get.scopes = [
         rootUrl + "auth/" + org,
         rootUrl + "auth/" + org + "/" + ormTypeHyphen,
         rootUrl + "auth/" + org + "/" + ormTypeHyphen + ".readonly"
@@ -286,19 +329,19 @@ select xt.install_js('XT','Discovery','xtuple', $$
       /*
        * head
        */
-      discovery.resources[ormType].methods.head = {
+      resources[ormType].methods.head = {
         "id": ormTypeHyphen + "-id.head",
         "path": ormTypeHyphen + "/{" + ormTypeHyphen + "-id}",
         "httpMethod": "HEAD",
         "description": "Returns the HTTP Header as if you made a GET request for a single " + ormType + " record, but will not return any response body.",
       };
 
-      discovery.resources[ormType].methods.head.parameters = {};
-      discovery.resources[ormType].methods.head.parameters[ormTypeHyphen + "-id"] = primKeyProp;
+      resources[ormType].methods.head.parameters = {};
+      resources[ormType].methods.head.parameters[ormTypeHyphen + "-id"] = primKeyProp;
 
-      discovery.resources[ormType].methods.head.parameterOrder = [ormTypeHyphen + "-id"];
+      resources[ormType].methods.head.parameterOrder = [ormTypeHyphen + "-id"];
 
-      discovery.resources[ormType].methods.head.scopes = [
+      resources[ormType].methods.head.scopes = [
         rootUrl + "auth/" + org,
         rootUrl + "auth/" + org + "/" + ormTypeHyphen,
         rootUrl + "auth/" + org + "/" + ormTypeHyphen + ".readonly"
@@ -307,22 +350,22 @@ select xt.install_js('XT','Discovery','xtuple', $$
       /*
        * insert
        */
-      discovery.resources[ormType].methods.insert = {
+      resources[ormType].methods.insert = {
         "id": ormTypeHyphen + "-id.insert",
         "path": ormTypeHyphen,
         "httpMethod": "POST",
         "description": "Add a single " + ormType + " record.",
       };
 
-      discovery.resources[ormType].methods.insert.request = {
+      resources[ormType].methods.insert.request = {
         "ref$": ormType
       };
 
-      discovery.resources[ormType].methods.insert.response = {
+      resources[ormType].methods.insert.response = {
         "ref$": ormType
       };
 
-      discovery.resources[ormType].methods.insert.scopes = [
+      resources[ormType].methods.insert.scopes = [
         rootUrl + "auth/" + org,
         rootUrl + "auth/" + org + "/" + ormTypeHyphen
       ];
@@ -330,14 +373,14 @@ select xt.install_js('XT','Discovery','xtuple', $$
       /*
        * list
        */
-      discovery.resources[ormType].methods.list = {
+      resources[ormType].methods.list = {
         "id": ormTypeHyphen + "-id.list",
         "path": ormTypeHyphen,
         "httpMethod": "GET",
         "description": "Returns a list of " + ormType + " records.",
       };
 
-      discovery.resources[ormType].methods.list.parameters = {
+      resources[ormType].methods.list.parameters = {
         "maxResults": {
           "type": "integer",
           "description": "Maximum number of entries returned on one result page. Optional.",
@@ -357,11 +400,11 @@ select xt.install_js('XT','Discovery','xtuple', $$
         }
       };
 
-      discovery.resources[ormType].methods.list.response = {
+      resources[ormType].methods.list.response = {
         "ref$": ormType + "ListItem"
       };
 
-      discovery.resources[ormType].methods.list.scopes = [
+      resources[ormType].methods.list.scopes = [
         rootUrl + "auth/" + org,
         rootUrl + "auth/" + org + "/" + ormTypeHyphen,
         rootUrl + "auth/" + org + "/" + ormTypeHyphen + ".readonly"
@@ -370,14 +413,14 @@ select xt.install_js('XT','Discovery','xtuple', $$
       /*
        * listhead
        */
-      discovery.resources[ormType].methods.listhead = {
+      resources[ormType].methods.listhead = {
         "id": ormTypeHyphen + "-id.listhead",
         "path": ormTypeHyphen,
         "httpMethod": "HEAD",
         "description": "Returns the HTTP Header as if you made a GET request for a list of " + ormType + " records, but will not return any response body.",
       };
 
-      discovery.resources[ormType].methods.listhead.parameters = {
+      resources[ormType].methods.listhead.parameters = {
         "maxResults": {
           "type": "integer",
           "description": "Maximum number of entries returned on one result page. Optional.",
@@ -397,7 +440,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
         }
       };
 
-      discovery.resources[ormType].methods.listhead.scopes = [
+      resources[ormType].methods.listhead.scopes = [
         rootUrl + "auth/" + org,
         rootUrl + "auth/" + org + "/" + ormTypeHyphen,
         rootUrl + "auth/" + org + "/" + ormTypeHyphen + ".readonly"
@@ -406,34 +449,33 @@ select xt.install_js('XT','Discovery','xtuple', $$
       /*
        * patch
        */
-      discovery.resources[ormType].methods.patch = {
+      resources[ormType].methods.patch = {
         "id": ormTypeHyphen + "-id.patch",
         "path": ormTypeHyphen + "/{" + ormTypeHyphen + "-id}",
         "httpMethod": "PATCH",
         "description": "Modifies a single " + ormType + " record. This method supports JSON-Patch semantics.",
       };
 
-      discovery.resources[ormType].methods.patch.parameters = {};
-      discovery.resources[ormType].methods.patch.parameters[ormTypeHyphen + "-id"] = primKeyProp;
+      resources[ormType].methods.patch.parameters = {};
+      resources[ormType].methods.patch.parameters[ormTypeHyphen + "-id"] = primKeyProp;
 
-      discovery.resources[ormType].methods.patch.parameterOrder = [ormTypeHyphen + "-id"];
+      resources[ormType].methods.patch.parameterOrder = [ormTypeHyphen + "-id"];
 
-      discovery.resources[ormType].methods.patch.request = {
+      resources[ormType].methods.patch.request = {
         "ref$": ormType
       };
 
-      discovery.resources[ormType].methods.patch.response = {
+      resources[ormType].methods.patch.response = {
         "ref$": ormType
       };
 
-      discovery.resources[ormType].methods.patch.scopes = [
+      resources[ormType].methods.patch.scopes = [
         rootUrl + "auth/" + org,
         rootUrl + "auth/" + org + "/" + ormTypeHyphen
       ];
     }
 
-    /* return the results */
-    return discovery;
+    return resources;
   }
 
 
@@ -491,6 +533,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
     for (key = 0; key < arr.length; key++) {
         sorted[arr[key]] = obj[arr[key]];
     }
+
     return sorted;
   }
 
