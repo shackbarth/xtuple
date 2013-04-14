@@ -73,16 +73,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return X.String.camelize.apply(this, arguments);
     },
 
+    camelToHyphen: function () {
+      return X.String.camelToHyphen.apply(this, arguments);
+    },
+
     decamelize: function () {
       return X.String.decamelize.apply(this, arguments);
     },
 
     d: function () {
       return X.String.decamelize.apply(this, arguments);
-    },
-
-    camelToHyphen: function () {
-      return X.String.camelToHyphen.apply(this, arguments);
     },
 
     escape: function () {

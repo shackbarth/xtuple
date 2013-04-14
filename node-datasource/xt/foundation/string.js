@@ -67,6 +67,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return str.charAt(0).toLowerCase() + str.slice(1);
     },
 
+    camelToHyphen: function () {
+      return this.toString().replace(decamel, "$1-$2").toLowerCase();
+    },
+
     decamelize: function () {
       return this.toString().replace(decamel, "$1_$2").toLowerCase();
     },

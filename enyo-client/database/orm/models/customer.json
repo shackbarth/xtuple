@@ -1760,7 +1760,7 @@
         "name": "customerType",
         "attr": {
           "type": "Number",
-          "column": "type" 
+          "column": "type"
         }
       },
       {
