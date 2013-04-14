@@ -2,6 +2,8 @@ create or replace function xt.orm_did_change() returns trigger as $$
 
   var view,
     views = [],
+    versionTable,
+    tableName,
     i = 1,
     sql,
     res,
@@ -75,8 +77,11 @@ create or replace function xt.orm_did_change() returns trigger as $$
   /* Finish up */
   if (TG_OP === 'DELETE') {
     orm = JSON.parse(OLD.orm_json);
-    sql = 'drop trigger if exists {table}_did_change on {table};'
-          .replace(/{table}/g, orm.table.afterDot());
+    versionTable = orm.versionTable || orm.table;
+    tableName =  versionTable.indexOf(".") === -1 ? versionTable : versionTable.afterDot(); 
+    sql = 'drop trigger if exists {tableName}_did_change on {table};'
+          .replace(/{tableName}/, tableName)
+          .replace(/{table}/, versionTable);
     plv8.execute(sql);
     return OLD;
   }

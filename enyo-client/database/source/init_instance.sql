@@ -123,7 +123,6 @@
 \i public/tables/grppriv.sql;
 \i public/tables/itemsite.sql;
 \i public/tables/pkghead.sql;
-\i public/tables/quhead.sql
 \i public/tables/usrgrp.sql;
 \i public/tables/usrpref.sql;
 \i public/tables/usrpriv.sql;

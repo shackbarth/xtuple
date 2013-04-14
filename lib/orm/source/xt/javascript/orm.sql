@@ -284,6 +284,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         conditions,
         altconditions,
         join,
+        versionTable,
         schemaName,
         tableName;
       for (i = 0; i < props.length; i++) {
@@ -532,8 +533,9 @@ select xt.install_js('XT','Orm','xtuple', $$
         orm.privileges && orm.privileges.all && orm.privileges.all.update !== false ||
         orm.privileges && orm.privileges.all && orm.privileges.all.delete !== false)) {
       query = 'select * from pg_tables where schemaname = $1 and tablename = $2';
-      schemaName = orm.table.indexOf(".") === -1 ? 'public' : orm.table.beforeDot();
-      tableName = orm.table.indexOf(".") === -1 ? orm.table : orm.table.afterDot(); 
+      versionTable = orm.versionTable || orm.table,
+      schemaName = versionTable.indexOf(".") === -1 ? 'public' : versionTable.beforeDot();
+      tableName = versionTable.indexOf(".") === -1 ? versionTable : versionTable.afterDot(); 
       res = plv8.execute(query, [schemaName, tableName]);
       if (res.length) {
         query = 'drop trigger if exists {tableName}_did_change on {table};' +
