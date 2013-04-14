@@ -289,6 +289,7 @@ select xt.install_js('XT','Orm','xtuple', $$
       for (i = 0; i < props.length; i++) {
         alias = props[i].name;
         if(DEBUG) plv8.elog(NOTICE, 'processing property ->', props[i].name);
+        if(props[i].name === 'dataState') throw new Error("Can not use 'dataState' as a property name.");
 
         /* process attributes */
         if (props[i].attr || props[i].toOne) {
@@ -337,6 +338,14 @@ select xt.install_js('XT','Orm','xtuple', $$
 
           /* handle the default non-nested case */
           if (props[i].toOne.isNested === true) {
+            table = base.nameSpace.decamelize() + '._' + toOne.type.decamelize();
+            conditions = '"_' + type + '"."' + inverse + '" = ' + tblAlias + '.' + toOne.column;
+            col = '({select}) as "{alias}"';
+            col = col.replace('{select}',
+             SELECT.replace('{columns}', '"_' + type + '"')
+                   .replace('{table}',  table)
+                   .replace('{conditions}', conditions))
+                   .replace('{alias}', alias);
             altcols.push(col);
           }
         }
