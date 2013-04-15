@@ -126,6 +126,7 @@ Simplest possible usage:
               XT = browser.window.XT;
               XV = browser.window.XV;
               XZ.browser = browser;
+              XZ.host = host;
 
               XT.log = function (message) {
                 // log if verbose mode or if the log is an error
