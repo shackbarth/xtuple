@@ -408,18 +408,23 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Object} Orm     
       @param {Object} Record
     */
-    commitArrays: function (orm, record) {
+    commitArrays: function (orm, record, encryptionKey) {
       var prop,
-        ormp;
+        ormp,
+        values;
       for(prop in record) {
         ormp = XT.Orm.getProperty(orm, prop);
 
         /* if the property is an array of objects they must be records so commit them */
         if (ormp.toMany && ormp.toMany.isNested) {
-            var key = orm.nameSpace + '.' + ormp.toMany.type,
-                values = record[prop]; 
+          values = record[prop];
           for (var i = 0; i < values.length; i++) {
-            this.commitRecord(key, values[i], false);
+            this.commitRecord({
+              nameSpace: orm.nameSpace,
+              type: ormp.toMany.type,
+              data: values[i],
+              encryptionKey: encryptionKey
+            });
           }
         }
       }   
@@ -444,44 +449,59 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-      Commit a record to the database 
+      Commit a record to the database. The record must conform to the object hiearchy as defined by the
+      record's `ORM` definition. Each object in the tree must include state information on a reserved property
+      called `dataState`. Valid values are `create`, `update` and `delete`. Objects with other dataState values including
+      `undefined` will be ignored. State values can be added using `XT.jsonpatch.updateState(obj, state)`.
 
-      @param {String} name space qualified record type
-      @param {Object} data object
+      @seealso XT.jsonpatch.updateState
+      @param {Object} Options
+      @param {String} [options.nameSpace] Namespace. Required.
+      @param {String} [options.type] Type. Required.
+      @param {Object} [options.data] The data payload to be processed. Required
+      @param {Number} [options.version] Record version for optimistic locking.
+      @param {Number} [options.lock] Lock information for pessemistic locking.
+      @param {String} [options.encryptionKey] Encryption key.
     */
-    commitRecord: function (value) {
-      var hasAccess = this.checkPrivileges(value.nameSpace, value.type, value.data, false),
-        data = value.data;
+    commitRecord: function (options) {
+      var data = options.data,
+        dataState = data ? data.dataState : false,
+        hasAccess = this.checkPrivileges(options.nameSpace, options.type, data, false);
       
-      if(!hasAccess) throw new Error("Access Denied.");    
-      if(data && data.dataState) {
-        if(data.dataState === this.CREATED_STATE) { 
-          this.createRecord(value);
-        }
-        else if(data.dataState === this.UPDATED_STATE) { 
-          this.updateRecord(value);
-        }
-        else if(data.dataState === this.DELETED_STATE) { 
-          this.deleteRecord(value); 
-        }
+      if(!hasAccess) throw new Error("Access Denied.");
+      switch (dataState)
+      {  
+        case (this.CREATED_STATE):
+          this.createRecord(options);
+          break;
+        case (this.UPDATED_STATE): 
+          this.updateRecord(options);
+          break;
+        case (this.DELETED_STATE): 
+          this.deleteRecord(options);
       }
     },
 
     /**
       Commit insert to the database 
 
-      @param {String} Name space qualified record type
-      @param {Object} Record
+      @param {Object} Options
+      @param {String} [options.nameSpace] Namespace. Required.
+      @param {String} [options.type] Type. Required.
+      @param {Object} [options.data] The data payload to be processed. Required.
+      @param {String} [options.encryptionKey] Encryption key.
     */
-    createRecord: function (value) {
-      var orm = XT.Orm.fetch(value.nameSpace, value.type),
-        sql = this.prepareInsert(orm, value.data),
+    createRecord: function (options) {
+      var orm = XT.Orm.fetch(options.nameSpace, options.type),
+        encryptionKey = options.encryptionKey,
+        data = options.data,
+        sql = this.prepareInsert(orm, data, null, encryptionKey),
         i;
-        
+
       /* handle extensions on the same table */
       for (i = 0; i < orm.extensions.length; i++) {
         if (orm.extensions[i].table === orm.table) {
-          sql = this.prepareInsert(orm.extensions[i], value.data, sql);
+          sql = this.prepareInsert(orm.extensions[i], data, sql, encryptionKey);
         }
       }
 
@@ -492,13 +512,13 @@ select xt.install_js('XT','Data','xtuple', $$
       for (i = 0; i < orm.extensions.length; i++) {
         if (orm.extensions[i].table !== orm.table && 
            !orm.extensions[i].isChild) {
-          sql = this.prepareInsert(orm.extensions[i], value.data);
+          sql = this.prepareInsert(orm.extensions[i], data, null, encryptionKey);
           plv8.execute(sql.statement, sql.values); 
         }
       }
 
       /* okay, now lets handle arrays */
-      this.commitArrays(orm, value.data);
+      this.commitArrays(orm, data, encryptionKey);
     },
 
    /**
@@ -512,9 +532,10 @@ select xt.install_js('XT','Data','xtuple', $$
      @params {Object} Orm
      @params {Object} Record
      @params {Object} Params - optional
+     @params {String} Encryption Key
      @returns {Object}
    */
-    prepareInsert: function (orm, record, params) {
+    prepareInsert: function (orm, record, params, encryptionKey) {
       var count,
         column,
         columns,
@@ -602,28 +623,37 @@ select xt.install_js('XT','Data','xtuple', $$
     /**
       Commit update to the database 
 
-      @param {String} Name space qualified record type
-      @param {Object} Record
+      @param {Object} Options
+      @param {String} [options.nameSpace] Namespace. Required.
+      @param {String} [options.type] Type. Required.
+      @param {Object} [options.data] The data payload to be processed. Required.
+      @param {Number} [options.version] Record version for optimistic locking.
+      @param {Number} [options.lock] Lock information for pessemistic locking.
+      @param {String} [options.encryptionKey] Encryption key.
     */
-    updateRecord: function(value) {
-      var orm = XT.Orm.fetch(value.nameSpace, value.type),
-        sql = this.prepareUpdate(orm, value.data),
+    updateRecord: function(options) {
+      var orm = XT.Orm.fetch(options.nameSpace, options.type),
+        encryptionKey = options.encryptionKey,
+        data = options.data,
+        sql = this.prepareUpdate(orm, data, null, encryptionKey),
         pkey = XT.Orm.primaryKey(orm),
+        id = data[pkey],
         lock,
-        lockKey = value.lock && value.lock.key ? lock.key : false,
+        lockKey = options.lock && options.lock.key ? lock.key : false,
         lockTable = orm.lockTable || orm.table,
+        version = this.getVersion(orm, id),
         ext,
         rows,
         i;
 
       /* test for optimistic lock */
-      if (value.version !== this.getVersion(orm, value.id)) {
+      if (version && options.version !== version) {
         plv8.elog(ERROR, "The version being updated is not current.")
       }
 
       /* test for pessimistic lock */
       if (orm.lockable) {
-        lock = this.tryLock(lockTable, value[pkey], {key: lockKey});
+        lock = this.tryLock(lockTable, id, {key: lockKey});
         if (!lock.key) {
           plv8.elog(ERROR, "Can not obtain a lock on the record.");
         }
@@ -632,7 +662,7 @@ select xt.install_js('XT','Data','xtuple', $$
       /* handle extensions on the same table */
       for (i = 0; i < orm.extensions.length; i++) {
         if (orm.extensions[i].table === orm.table) {
-          sql = this.prepareUpdate(orm.extensions[i], value.data, sql);
+          sql = this.prepareUpdate(orm.extensions[i], data, sql, encryptionKey);
         }
       }
 
@@ -649,23 +679,23 @@ select xt.install_js('XT','Data','xtuple', $$
           sql = 'select ' + ext.relations[0].column + ' from ' + ext.table +
                 ' where ' + ext.relations[0].column + ' = $1;';
           
-          if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql, value[pkey]); }
-          rows = plv8.execute(sql, [value[pkey]]);
+          if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql, data[pkey]); }
+          rows = plv8.execute(sql, [data[pkey]]);
           if (rows.length) {
-            sql = this.prepareUpdate(ext, value);
+            sql = this.prepareUpdate(ext, value, null, encryptionKey);
           } else {
-            sql = this.prepareInsert(ext, value);
+            sql = this.prepareInsert(ext, value, null, encryptionKey);
           }
           plv8.execute(sql.statement, sql.values); 
         }
       }
 
       /* okay, now lets handle arrays */
-      this.commitArrays(orm, value.data);
+      this.commitArrays(orm, data, encryptionKey);
 
       /* release any lock */
       if (orm.lockable) {
-        this.releaseLock({table: lockTable, id: value[pkey]});
+        this.releaseLock({table: lockTable, id: id});
       }
     },
 
@@ -682,7 +712,7 @@ select xt.install_js('XT','Data','xtuple', $$
      @params {Object} Params - optional
      @returns {Object}
    */
-    prepareUpdate: function (orm, record, params) {
+    prepareUpdate: function (orm, record, params, encryptionKey) {
       var count, 
         pkey,
         columnKey,
@@ -761,33 +791,39 @@ select xt.install_js('XT','Data','xtuple', $$
     /**
       Commit deletion to the database 
 
-      @param {String} name space qualified record type
-      @param {Object} the record to be committed
+      @param {Object} Options
+      @param {String} [options.nameSpace] Namespace. Required.
+      @param {String} [options.type] Type. Required.
+      @param {Object} [options.data] The data payload to be processed. Required.
+      @param {Number} [options.version] Record id version for optimistic locking.
+      @param {Number} [options.lock] Lock information for pessemistic locking.
     */
-    deleteRecord: function(value) {
-      var record = value.data,
+    deleteRecord: function(options) {
+      var data = options.data,
         sql = '',
-        orm = XT.Orm.fetch(value.nameSpace, value.type),
-        nameKey = XT.Orm.primaryKey(orm),
-        lockKey = value.lock && value.lock.key ? value.lock.key : false,
+        orm = XT.Orm.fetch(options.nameSpace, options.type),
+        pkey = XT.Orm.primaryKey(orm),
+        id = data[pkey],
+        lockKey = options.lock && options.lock.key ? options.lock.key : false,
         lockTable = orm.lockTable || orm.table,
+        version = this.getVersion(orm, id),
         sql,
         columnKey,
         prop,
         ormp,
-        childKey,
+        childOptions,
         values,
         ext,
         i;
 
       /* test for optimistic lock */
-      if (value.version !== this.getVersion(orm, value.id)) {
+      if (version && version !== options.version) {
         plv8.elog(ERROR, "The version being patched is not current.")
       }
       
       /* test for pessemistic lock */
       if (orm.lockable) {
-        lock = this.tryLock(lockTable, value[nameKey], {key: lockKey});
+        lock = this.tryLock(lockTable, id, {key: lockKey});
         if (!lock.key) {
           plv8.elog(ERROR, "Can not obtain a lock on the record.");
         }
@@ -799,10 +835,14 @@ select xt.install_js('XT','Data','xtuple', $$
 
        /* if the property is an array of objects they must be records so delete them */
        if (ormp.toMany && ormp.toMany.isNested) {
-         childKey = key.beforeDot() + '.' + ormp.toMany.type,
-         values = record[prop]; 
+         childOptions = {
+           nameSpace: key.beforeDot(),
+           type: ormp.toMany.type,
+           data: values[i]
+         }
+         values = data[prop]; 
          for (i = 0; i < values.length; i++) {
-            this.deleteRecord(childKey, values[i]);
+           this.deleteRecord(childOptions);
          }
        }
      }   
@@ -815,7 +855,7 @@ select xt.install_js('XT','Data','xtuple', $$
          columnKey = ext.relations[0].column;
          nameKey = ext.relations[0].inverse;     
          sql = 'delete from '+ ext.table + ' where ' + columnKey + ' = $1;';
-         plv8.execute(sql, [record[nameKey]]);
+         plv8.execute(sql, [id]);
        }
      }
 
@@ -823,14 +863,14 @@ select xt.install_js('XT','Data','xtuple', $$
       nameKey = XT.Orm.primaryKey(orm),
       columnKey = XT.Orm.primaryKey(orm, true);
       sql = 'delete from '+ orm.table + ' where ' + columnKey + ' = $1;';
-      if(DEBUG) plv8.elog(NOTICE, 'sql =', sql,  record[nameKey]);
+      if(DEBUG) plv8.elog(NOTICE, 'sql =', sql,  id);
       
       /* commit the record */
-      plv8.execute(sql, [record[nameKey]]); 
+      plv8.execute(sql, [id]); 
 
       /* release any lock */
       if (orm.lockable) {
-        this.releaseLock({table: lockTable, id: value.id});
+        this.releaseLock({table: lockTable, id: id});
       }
     },
 
@@ -891,6 +931,7 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Number|String} Record id
     */
     getVersion: function (orm, id) {
+      if (!orm.lockable) { return; }
       var sql = 'select coalesce((select ver_version from xt.ver where ver_table_oid = {oid} and ver_record_id = {id}), 0) as version; '
             .replace(/{oid}/, this.getTableOid(orm.lockTable || orm.table))
             .replace(/{id}/, id);
@@ -1024,7 +1065,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
       /* obtain lock if required */
       if (map.lockable) {
-        ret.lock = this.tryLock(lockTable, id, XT.username, options);
+        ret.lock = this.tryLock(lockTable, id, options);
       }
 
       /* data sql */
@@ -1164,9 +1205,11 @@ select xt.install_js('XT','Data','xtuple', $$
             username: lock.lock_username,
             effective: lock.lock_effective
           }
-        } else if (options.obtainLock !== false) { return; }
+        }
       }
 
+      if (options.obtainLock === false) { return; }
+      
       if (DEBUG) plv8.elog(NOTICE, "Creating lock."); 
 
       if (pid) {
