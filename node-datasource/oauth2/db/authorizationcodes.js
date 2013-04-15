@@ -28,7 +28,7 @@ exports.find = function (code, done) {
     return done(null, res.models[0]);
   };
 
-  options.error = function (res, err) {
+  options.error = function (err, res) {
     if (err.code === 'xt1007') {
       // XXX should "result not found" really be an error?
       return done(null, null);
@@ -87,7 +87,7 @@ exports.save = function (code, clientID, redirectURI, userID, scope, done) {
   saveOptions.success = function (model) {
     return done(null);
   };
-  saveOptions.error = function (model, err) {
+  saveOptions.error = function (err, model) {
     return done && done(err);
   };
 
