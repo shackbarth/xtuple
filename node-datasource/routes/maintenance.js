@@ -29,8 +29,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   /**
-   * The ORM installer commands need to be run sequentially. We create an array of the commands that
-   * we have to run and then use recursion to do them one at a time here.
+    The commands need to be run sequentially. We've already created an array of the
+    commands that we have to run and then use recursion to do them one at a time here.
+
+    Note that the psql commands and the orm commands are in the same array, so we
+    have to figure out which kind of a command it is before we act on it.
    */
   var runCommands = function (commandArray, respObject, masterCallback) {
     var command,
@@ -43,7 +46,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return;
     }
 
+    // regard! our next command
     command = commandArray.shift();
+
+    //
+    // ... but what kind of command is it?
+    //
 
     if (command.ormCreds) {
       // this command is an ORM command
@@ -78,6 +86,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
   };
 
+  /**
+    We keep track in memory of which installs are currently being run. This
+    function checks the pre-existing locks and, if there are none, sets a lock
+    and gives a go-ahead.
+
+    @param {String} org The name of the organization that is being installed.
+      Falsey if the request is to run all organzations.
+
+    @returns {Boolean} true if you get the lock and can run, false if someone
+      already has a lock and you should not run.
+   */
   var addLock = function (org) {
     var now = new Date().getTime(),
       timeoutInMinutes = 5,
@@ -274,8 +293,21 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }); // end loop of organizations
 
         //
-        // We've gotten all of the commands into arrays. First sort them by
-        // the appropriate load order, then run through them all.
+        // We've gotten all of the commands into arrays. Note that both
+        // the orm commands and the psql commands are housed in the same
+        // array. An easy way to tell which command is which is to see
+        // if the object has an ormCreds attribute.
+        //
+        // We want to sort the commands by three criteria:
+        // -First sort them by organization. We want to run all the commands
+        //   for an organization before we move on to the next
+        // -Second sort by command type. We want to run all the psql commands
+        //   before we run any of the orm commands (for that org)
+        // -Third sort by the load order, which will put the extensions in the
+        //  right order.
+        //
+        // We use a very sneaky trick to have our comparator consider each of
+        // these fields in turn, which is to return an array.
         //
         commandArray = _.sortBy(commandArray, function (obj) {
           var isOrm = !!obj.ormCreds;
