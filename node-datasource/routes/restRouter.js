@@ -5,35 +5,52 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
-  exports.router = function (req, res, next) {
+  var routes = require('./routes');
+
+  var getIsRestORMs = function (req, res, next) {
+    var callback = {},
+        payload = {},
+        session = {};
+
+    callback = function (result) {
+      if (result.isError) {
+        return next(new Error("Invalid Request."));
+      }
+
+      routeCall(req, res, next, result.data);
+    };
+
+    payload.className = "XT.Discovery";
+    payload.functionName = "getIsRestORMs";
+    payload.isJSON = true;
+
+    // Dummy up session.
+    session.passport = {
+      "user": {
+        "id": req.user.get("user"),
+        "username": req.user.get("username"),
+        "organization": req.user.get("name")
+      }
+    };
+
+    routes.dispatchEngine(payload, session, callback);
+  };
+
+  var routeCall = function (req, res, next, orms) {
     var id,
-        model,
-        relation,
-        relid;
+        model;
 
     //  Get the model id from this req URI.
     if (req.params.model && req.params.id) {
       id = req.params.id;
     }
 
-    // TODO - May not need relations at all.
-    // Get the relation id from this req URI.
-    if (req.params.model && req.params.id && req.params.relation && req.params.relid) {
-      relid = req.params.relid;
-    }
-
-    _.each(req.authInfo.orm, function (value, key, list) {
+    _.each(orms, function (value, key, list) {
       // Find the matching model from this req URI.
       if (req.params.model && value && value.orm_namespace && value.orm_type
         && req.params.model === value.orm_type.camelToHyphen()) {
-        model = value.orm_namespace + "." + value.orm_type;
-      }
-
-      // TODO - May not need relations at all.
-      // Find the matching relation model from this req URI.
-      if (req.params.model && req.params.id && req.params.relation && value && value.orm_namespace
-        && value.orm_type && req.params.relation === value.orm_type.camelToHyphen()) {
-        relation = value.orm_namespace + "." + value.orm_type;
+        // TODO - Do we need to include "XM" in the name?
+        model = value.orm_type;
       }
     });
 
@@ -75,9 +92,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return next(new Error("Invalid REST Request."));
       }
     }
-
-    //res.send('OAuth 2.0 Server');
-    //res.json({ id: req.user.id, name: req.user.get("properName"), scope: req.authInfo.scope });
   };
+
+  exports.router = [getIsRestORMs];
 
 }());

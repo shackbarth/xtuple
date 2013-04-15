@@ -38,6 +38,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     redirector = require('./redirector'),
     report = require('./report'),
     resetPassword = require('./resetPassword'),
+    restDiscovery = require('./restDiscovery'),
     restRouter = require('./restRouter'),
     syncUser = require('./syncUser');
 
@@ -64,6 +65,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   //
   // REST API Routes
+  exports.restDiscoveryList = [
+    restDiscovery.list];
+  exports.restDiscoveryGetRest = [
+    restDiscovery.getRest];
   exports.restRouter = [
     passport.authenticate('bearer', { session: false }),
     restRouter.router];
