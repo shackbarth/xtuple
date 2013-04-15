@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, XM:true, console:true*/
+/*global X:true, XM:true, _:true, console:true*/
 
 /**
  * Module dependencies.
@@ -163,20 +163,42 @@ passport.use(new BearerStrategy(
       }
 
       var tokenUser = token.get("user"),
-          tokenScope = JSON.parse(token.get("scope"));
+          tokenScope = JSON.parse(token.get("scope")),
+          scopeErr = false,
+          scopeOrg = null;
 
       // If this is a JWT access token, "user" is empty. Try to load the "delegate"
       if (!tokenUser) {
         tokenUser = token.get("delegate");
       }
 
-// TODO - If there are multiple scopes, they should only relate to one org.
-// e.g. [dev.contact, dev.customer, dev.salesorder.readonly] can all be distilled to the "dev" org.
-// TODO - Extract a single org from the scopes.
-      tokenScope = tokenScope[0];
+      // If there are multiple scopes, they should only relate to one org.
+      // e.g. [dev.contact, dev.customer, dev.salesorder.readonly] can all be
+      // distilled to the "dev" org. Extract a single org from the scopes.
+      _.each(tokenScope, function (value, key, list) {
+        var scopeParts = value.split(".");
+
+        // TODO - A client should be able to get a token for a userinfo REST call but
+        // not have a selected org. This would allow a client not to specify an
+        // org scope and then receive an error that includes the URI to call to
+        // get a user's scope/org list: 'https://mobile.xtuple.com/auth/userinfo.xxx'
+        if (!scopeOrg && (scopeParts[0] !== 'userinfo')) {
+          // Get the first part of the scope, which should be the "org".
+          // e.g. "toytruck" from "toytruck.contact.readonly"
+          scopeOrg = scopeParts[0];
+        } else if ((scopeParts[0] !== 'userinfo') && (scopeOrg !== scopeParts[0])) {
+          // After the first loop, make sure all the other scopes have the same org.
+          // One of the scopes does not match.
+          scopeErr = new Error("Invalide Request");
+        }
+      });
+
+      if (scopeErr) {
+        return done(scopeErr);
+      }
 
       if (tokenUser) {
-        db.users.findByUserOrg(tokenUser, tokenScope, function (err, userOrg) {
+        db.users.findByUserOrg(tokenUser, scopeOrg, function (err, userOrg) {
           if (err) { return done(err); }
           if (!userOrg) { return done(null, false); }
 
