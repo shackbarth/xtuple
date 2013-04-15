@@ -1179,30 +1179,46 @@ trailing:true white:true*/
     ]},
     components: [
       {kind: "XV.ListItem", components: [
-        {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true},
-              // TODO: more stuff here
-            ]},
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "customer.name"},
-            ]}
+         {kind: "FittableColumns", components: [
+           {kind: "XV.ListColumn", classes: "first", components: [
+             {kind: "FittableColumns", components: [
+               {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true}
+             ]},
+             {kind: "FittableColumns", components: [
+               {kind: "XV.ListAttr", attr: "customer.name"},
+             ]}
+           ]},
+          {kind: "XV.ListColumn", classes: "second", components: [
+            {kind: "XV.ListAttr", attr: "billtoName", classes: "italic"},
+            {kind: "XV.ListAttr", attr: "billtoAddress1.formatShort"}
           ]},
           {kind: "XV.ListColumn", classes: "second", components: [
             {kind: "XV.ListAttr", attr: "shiptoName", classes: "italic"},
             {kind: "XV.ListAttr", attr: "shiptoAddress1.formatShort"}
           ]},
-          {kind: "XV.ListColumn", classes: "descr", fit: true, components: [
-          // TODO : put stuff here
-          ]}
+          {kind: "XV.ListColumn", classes: "second", components: [
+            {kind: "XV.ListAttr", attr: "shipVia"}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "scheduleDate"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "total", formatter: "formatPrice", classes: "right"}
+            ]}
+          ]}  
         ]}
       ]}
-    ]
+    ],
+    formatPrice: function (value, view, model) {
+      var currency = model ? model.get("currency") : false,
+        scale = XT.session.locale.attributes.salesPriceScale;
+      return currency ? currency.format(value, scale) : "";
+    }
   });
 
   XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderList");
-
+  
   // ..........................................................
   // SALE TYPE
   //

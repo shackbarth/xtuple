@@ -1285,6 +1285,13 @@
          }
       },
       {
+        "name": "scheduleDate",
+        "attr": {
+          "type": "Date",
+          "column": "schedule_date"
+        }
+      },
+      {
         "name": "orderDate",
         "attr": {
           "type": "Date",
@@ -1331,6 +1338,20 @@
         "attr": {
           "type": "String",
           "column": "cohead_shiptoaddress1"
+        }
+      },
+      {
+        "name": "billtoName",
+        "attr": {
+          "type": "String",
+          "column": "cohead_billtoname"
+        }
+      },
+      {
+        "name": "billtoAddress1",
+        "attr": {
+          "type": "String",
+          "column": "cohead_billtoaddress1"
         }
       }
     ],
