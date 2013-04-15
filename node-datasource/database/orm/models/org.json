@@ -161,6 +161,15 @@
        }
      },
      {
+       "name": "campaign",
+       "toOne": {
+         "type": "Campaign",
+         "column": "org_cmpg_id",
+         "isNested": true,
+         "inverse": "id"
+       }
+     },
+     {
        "name": "description",
        "attr": {
          "type": "String",
@@ -186,6 +195,41 @@
        "attr": {
          "type": "Number",
          "column": "org_licenses"
+       }
+     },
+     {
+       "name": "createdDate",
+       "attr": {
+         "type": "Date",
+         "column": "org_dbcreated"
+       }
+     },
+     {
+       "name": "expirationDate",
+       "attr": {
+         "type": "Date",
+         "column": "org_dbexpire"
+       }
+     },
+     {
+       "name": "source",
+       "attr": {
+         "type": "String",
+         "column": "org_src"
+       }
+     },
+     {
+       "name": "ipAddress",
+       "attr": {
+         "type": "String",
+         "column": "org_ip"
+       }
+     },
+     {
+       "name": "isFreeTrial",
+       "attr": {
+         "type": "Boolean",
+         "column": "org_free_trial"
        }
      },
      {
@@ -306,6 +350,109 @@
          "isNested": true,
          "type": "Extension",
          "column": "orgext_ext_id"
+       }
+     }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Campaign",
+    "table": "xt.cmpg",
+    "idSequenceName": "cmpg_cmpg_id_seq",
+    "comment": "Campaign Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainCampaigns",
+        "read": "ViewCampaigns",
+        "update": "MaintainCampaigns",
+        "delete": "MaintainCampaigns"
+      }
+    },
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "cmpg_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "number",
+       "attr": {
+         "type": "String",
+         "column": "cmpg_number"
+       }
+     },
+     {
+       "name": "effectiveDate",
+       "attr": {
+         "type": "Date",
+         "column": "cmpg_effective"
+       }
+     },
+     {
+       "name": "expirationDate",
+       "attr": {
+         "type": "Date",
+         "column": "cmpg_expires"
+       }
+     },
+     {
+       "name": "description",
+       "attr": {
+         "type": "String",
+         "column": "cmpg_descrip"
+       }
+     },
+     {
+       "name": "notes",
+       "attr": {
+         "type": "String",
+         "column": "cmpg_note"
+       }
+     }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "CampaignRelation",
+    "table": "xt.cmpg",
+    "idSequenceName": "cmpg_cmpg_id_seq",
+    "comment": "Campaign Relation Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "cmpg_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "number",
+       "attr": {
+         "type": "String",
+         "column": "cmpg_number"
+       }
+     },
+     {
+       "name": "description",
+       "attr": {
+         "type": "String",
+         "column": "cmpg_descrip"
        }
      }
     ],

@@ -53,4 +53,29 @@ trailing:true white:true*/
     kind: "XV.NameDescriptionList"
   });
 
+  // ..........................................................
+  // CAMPAIGN
+  //
+
+  enyo.kind({
+    name: "XV.CampaignList",
+    kind: "XV.List",
+    label: "_campaigns".loc(),
+    collection: "XM.CampaignRelationCollection",
+    parameterWidget: "XV.CampaignParameters",
+    query: {orderBy: [
+      {attribute: 'id'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", components: [
+            {kind: "XV.ListAttr", attr: "number", isKey: true},
+            {kind: "XV.ListAttr", attr: "description"},
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
 }());
