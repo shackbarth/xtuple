@@ -422,6 +422,41 @@
         }
       },
       {
+        "name": "shipCharge",
+        "toOne": {
+          "type": "ShipCharge",
+          "column": "cohead_shipchrg_id"
+        }
+      },
+      {
+        "name": "holdType",
+        "attr": {
+          "type": "String",
+          "column": "cohead_holdtype"
+        }
+      },
+      {
+        "name": "wasQuote",
+        "attr": {
+          "type": "Boolean",
+          "column": "cohead_wasquote"
+        }
+      },
+      {
+        "name": "shipComplete",
+        "attr": {
+          "type": "Boolean",
+          "column": "cohead_shipcomplete"
+        }
+      },
+      {
+        "name": "quoteNumber",
+        "attr": {
+          "type": "String",
+          "column": "cohead_quote_number"
+        }
+      },
+      {
         "name": "margin",
         "attr": {
           "type": "Number",
@@ -1053,6 +1088,34 @@
         "attr": {
           "type": "String",
           "column": "tax"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "coitem_status"
+        }
+      },
+      {
+        "name": "substituteItem",
+        "toOne": {
+          "type": "Item",
+          "column": "coitem_substitute_item_id"
+        }
+      },
+      {
+        "name": "subnumber",
+        "attr": {
+          "type": "Number",
+          "column": "coitem_subnumber"
+        }
+      },
+      {
+        "name": "firm",
+        "attr": {
+          "type": "Boolean",
+          "column": "coitem_firm"
         }
       },
       {
