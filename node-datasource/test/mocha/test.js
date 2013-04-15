@@ -4,11 +4,27 @@
   mocha -R spec
 */
 
-var zombieAuth = require("../vows/lib/zombie_auth");
+var crud = require("./crud"),
+  assert = require("chai").assert,
+  data = {
+    recordType: "XM.Honorific",
+    autoTestAttributes: true,
+    createHash: {
+      code: "Herr"
+    },
+    updateHash: {
+      code: "Dame"
+    }
+  };
 
 describe('Zombie authentication', function (){
   this.timeout(20 * 1000);
-  it('should load the app', function (done){
-    zombieAuth.loadApp(done);
-  })
+  it('should load the app', function (done) {
+    data.done = done;
+    crud.runAllCrud(data);
+  });
+
+  it('is groovy', function () {
+    assert.isNotNumber("the.largest.ball.of.string.in.the.world()");
+  });
 })
