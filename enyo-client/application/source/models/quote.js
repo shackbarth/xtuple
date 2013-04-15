@@ -26,16 +26,8 @@ white:true*/
     @class
 
     @extends XM.Document
-    @extends XM.QuoteMixin
   */
-  XM.Quote = XM.Document.extend({
-    /** @scope XM.Quote.prototype */
-
-    recordType: 'XM.Quote',
-
-    numberPolicySetting: 'QUNumberGeneration',
-
-    documentDateKey: "quoteDate",
+  XM.SalesOrderBase = XM.Document.extend(/** @lends XM.SalesOrderBase.prototype */{
 
     freightDetail: undefined,
 
@@ -43,33 +35,36 @@ white:true*/
 
     defaults: function () {
       var K = this.getClass(),
-        settings = XT.session.settings;
-      return {
-        quoteDate: new Date(),
-        status: K.OPEN_STATUS,
-        saleType: XM.saleTypes.at(0),
-        calculateFreight: settings.get("CalculateFreight"),
-        margin: 0,
-        subtotal: 0,
-        taxTotal: 0,
-        freight: 0,
-        miscCharge: 0,
-        total: 0,
-        site: XT.defaultSite()
-      };
+        settings = XT.session.settings,
+        returnObj = {
+          status: K.OPEN_STATUS,
+          saleType: XM.saleTypes.at(0),
+          calculateFreight: settings.get("CalculateFreight"),
+          margin: 0,
+          subtotal: 0,
+          taxTotal: 0,
+          freight: 0,
+          miscCharge: 0,
+          total: 0,
+          site: XT.defaultSite()
+        };
+
+      // the name of this field is different for different business objects
+      returnObj[this.documentDateKey] = new Date();
+
+      return returnObj;
     },
 
     requiredAttributes: [
       "calculateFreight",
       "customer",
-      "quoteDate",
       "salesRep",
       "terms"
     ],
 
     readOnlyAttributes: [
       "freightWeight",
-      "getQuoteStatusString",
+      "getQuoteStatusString", // XXX abstract this
       "lineItems",
       "margin",
       "miscCharge",
@@ -180,6 +175,7 @@ white:true*/
       XM.Document.prototype.initialize.apply(this, arguments);
       this.freightDetail = [];
       this.freightTaxDetail = [];
+      this.requiredAttributes.push(documentDateKey);
     },
 
     /**
@@ -534,7 +530,7 @@ white:true*/
     },
 
     /**
-      Fetch the next quote number. Need a special over-ride here because of peculiar
+      Fetch the next number. Need a special over-ride here because of peculiar
       behavior of quote numbering different from all other generated numbers.
     */
     fetchNumber: function () {
@@ -548,7 +544,7 @@ white:true*/
           that.setReadOnly(that.documentKey);
         }
       };
-      this.dispatch('XM.Quote', 'fetchNumber', null, options);
+      this.dispatch(this.recordType, 'fetchNumber', null, options);
       return this;
     },
 
@@ -624,11 +620,11 @@ white:true*/
     },
 
     /**
-      Release the current quote number. Need a special over-ride here because of peculiar
+      Release the current number. Need a special over-ride here because of peculiar
       behavior of quote numbering different from all other generated numbers.
     */
     releaseNumber: function () {
-      this.dispatch('XM.Quote', 'releaseNumber', this.get("number"));
+      this.dispatch(this.recordType, 'releaseNumber', this.get("number"));
       return this;
     },
 
@@ -886,6 +882,29 @@ white:true*/
 
   });
 
+
+  /**
+    @class
+
+    @extends XM.SalesOrderBase
+    @extends XM.QuoteMixin
+  */
+  XM.Quote = XM.SalesOrderBase.extend(/** @lends XM.Quote.prototype */{
+
+    recordType: 'XM.Quote',
+
+    numberPolicySetting: 'QUNumberGeneration',
+
+    documentDateKey: "quoteDate",
+
+    /**
+      Initialize
+    initialize: function (attributes, options) {
+      XM.SalesOrderBase.prototype.initialize.apply(this, arguments);
+    }
+    */
+  });
+
   // ..........................................................
   // CLASS METHODS
   //
@@ -922,12 +941,22 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SalesOrderLineBase
   */
-  XM.QuoteLine = XM.Model.extend({
-    /** @scope XM.QuoteLine.prototype */
+  XM.QuoteLine = XM.SalesOrderLineBase.extend(/** @lends XM.QuoteLine.prototype */{
 
     recordType: 'XM.QuoteLine',
+
+    parentKey: "quote"
+
+  },
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.SalesOrderLineBase = XM.Model.extend(/** @scope XM.SalesOrderLineBase.prototype */{
 
     sellingUnits: undefined,
 
@@ -951,7 +980,7 @@ white:true*/
       this.on("change:price", this.priceDidChange);
       this.on('change:quantity', this.quantityDidChange);
       this.on('change:priceUnit', this.priceUnitDidChange);
-      this.on('change:quote', this.parentDidChange);
+      this.on('change:' + this.parentKey, this.parentDidChange);
       this.on('change:taxType', this.calculateTax);
       this.on('change:quantityUnit', this.quantityUnitDidChange);
       this.on('change:scheduleDate', this.scheduleDateDidChange);
@@ -984,6 +1013,8 @@ white:true*/
       }
 
       this.sellingUnits = new XM.UnitCollection();
+
+      this.requiredAttributes.push(this.parentKey);
     },
 
     readOnlyAttributes: [
@@ -1003,7 +1034,6 @@ white:true*/
     requiredAttributes: [
       "customerPrice",
       "itemSite",
-      "quote",
       "lineNumber",
       "quantity",
       "quantityUnit",

@@ -5,6 +5,7 @@
     "type": "SalesOrder",
     "table": "xt.coheadinfo",
     "lockable": true,
+    "lockTable": "cohead",
     "idSequenceName": "cohead_cohead_id_seq",
     "comment": "Sales Order Map",
     "privileges": {

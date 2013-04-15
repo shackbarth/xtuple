@@ -8,23 +8,24 @@ white:true*/
   /**
     @class
 
-    @extends XM.Document
+    @extends XM.SalesOrderBase
   */
-  XM.SalesOrder = XM.Document.extend(/** @lends XM.SalesOrder.prototype */{
+  XM.SalesOrder = XM.SalesOrderBase.extend(/** @lends XM.SalesOrder.prototype */{
 
     recordType: 'XM.SalesOrder'
 
   });
 
-
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SalesOrderLineBase
   */
-  XM.SalesOrderLine = XM.Model.extend(/** @lends XM.SalesOrderLine.prototype */{
+  XM.SalesOrderLine = XM.SalesOrderLineBase.extend(/** @lends XM.SalesOrderLine.prototype */{
 
-    recordType: 'XM.SalesOrderLine'
+    recordType: 'XM.SalesOrderLine',
+
+    parentKey: 'salesOrder'
 
   });
 
