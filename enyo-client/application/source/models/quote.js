@@ -7,15 +7,15 @@ white:true*/
   "use strict";
 
   /**
-    Mixin for shared quote function.
+    Mixin for shared quote or sales order functions.
   */
-  XM.QuoteMixin = {
+  XM.SalesOrderBaseMixin = {
     /**
-    Returns quote status as a localized string.
+    Returns quote or sales order status as a localized string.
 
     @returns {String}
     */
-    getQuoteStatusString: function () {
+    getOrderStatusString: function () {
       var K = XM.Quote,
         status = this.get("status");
       return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
@@ -64,7 +64,7 @@ white:true*/
 
     readOnlyAttributes: [
       "freightWeight",
-      "getQuoteStatusString", // XXX abstract this
+      "getOrderStatusString",
       "lineItems",
       "margin",
       "miscCharge",
@@ -175,7 +175,7 @@ white:true*/
       XM.Document.prototype.initialize.apply(this, arguments);
       this.freightDetail = [];
       this.freightTaxDetail = [];
-      this.requiredAttributes.push(documentDateKey);
+      this.requiredAttributes.push(this.documentDateKey);
     },
 
     /**
@@ -881,36 +881,12 @@ white:true*/
     }
 
   });
-
-
-  /**
-    @class
-
-    @extends XM.SalesOrderBase
-    @extends XM.QuoteMixin
-  */
-  XM.Quote = XM.SalesOrderBase.extend(/** @lends XM.Quote.prototype */{
-
-    recordType: 'XM.Quote',
-
-    numberPolicySetting: 'QUNumberGeneration',
-
-    documentDateKey: "quoteDate",
-
-    /**
-      Initialize
-    initialize: function (attributes, options) {
-      XM.SalesOrderBase.prototype.initialize.apply(this, arguments);
-    }
-    */
-  });
+  XM.SalesOrderBase = XM.SalesOrderBase.extend(XM.SalesOrderBaseMixin);
 
   // ..........................................................
   // CLASS METHODS
   //
-
-  XM.Quote = XM.Quote.extend(XM.QuoteMixin);
-  _.extend(XM.Quote, /** @lends XM.QuoteLine# */{
+  _.extend(XM.SalesOrderBase, /** @lends XM.SalesOrderBase# */{
 
     // ..........................................................
     // CONSTANTS
@@ -941,22 +917,26 @@ white:true*/
   /**
     @class
 
-    @extends XM.SalesOrderLineBase
+    @extends XM.SalesOrderBase
+    @extends XM.SalesOrderBaseMixin
   */
-  XM.QuoteLine = XM.SalesOrderLineBase.extend(/** @lends XM.QuoteLine.prototype */{
+  XM.Quote = XM.SalesOrderBase.extend(/** @lends XM.Quote.prototype */{
 
-    recordType: 'XM.QuoteLine',
+    recordType: 'XM.Quote',
 
-    parentKey: "quote"
+    numberPolicySetting: 'QUNumberGeneration',
 
-  },
+    documentDateKey: "quoteDate"
+
+  });
+
 
   /**
     @class
 
     @extends XM.Model
   */
-  XM.SalesOrderLineBase = XM.Model.extend(/** @scope XM.SalesOrderLineBase.prototype */{
+  XM.SalesOrderLineBase = XM.Model.extend(/** @lends XM.SalesOrderLineBase.prototype */{
 
     sellingUnits: undefined,
 
@@ -1717,6 +1697,21 @@ white:true*/
     }
 
   });
+  XM.SalesOrderLineBase = XM.SalesOrderLineBase.extend(XM.SalesOrderBaseMixin);
+
+
+  /**
+    @class
+
+    @extends XM.SalesOrderLineBase
+  */
+  XM.QuoteLine = XM.SalesOrderLineBase.extend(/** @lends XM.QuoteLine.prototype */{
+
+    recordType: 'XM.QuoteLine',
+
+    parentKey: "quote"
+
+  });
 
   // ..........................................................
   // CLASS METHODS
@@ -1887,9 +1882,8 @@ white:true*/
 
     @returns {String}
     */
-    getQuoteStatusString: function () {
-      var K = XM.Quote,
-        status = this.get("status");
+    getOrderStatusString: function () {
+      var K = XM.SalesOrderBase, status = this.get("status");
       return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
     }
 
