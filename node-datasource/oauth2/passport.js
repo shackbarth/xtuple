@@ -162,28 +162,26 @@ passport.use(new BearerStrategy(
         return done(new Error("Access token has expired."));
       }
 
-      var tokenUser = token.get("user");
+      var tokenUser = token.get("user"),
+          tokenScope = JSON.parse(token.get("scope"));
 
       // If this is a JWT access token, "user" is empty. Try to load the "delegate"
       if (!tokenUser) {
         tokenUser = token.get("delegate");
       }
 
+// TODO - If there are multiple scopes, they should only relate to one org.
+// e.g. [dev.contact, dev.customer, dev.salesorder.readonly] can all be distilled to the "dev" org.
+// TODO - Extract a single org from the scopes.
+      tokenScope = tokenScope[0];
+
       if (tokenUser) {
-        db.users.findByUsername(token.get("user"), function (err, user) {
+        db.users.findByUserOrg(tokenUser, tokenScope, function (err, userOrg) {
           if (err) { return done(err); }
-          if (!user) { return done(null, false); }
+          if (!userOrg) { return done(null, false); }
 
-          var scopes = token.get("scope"),
-            sql = 'select orm_namespace, orm_type from xt.orm group by orm_namespace, orm_type;',
-            ormCallback = function (ormErr, orms) {
-              if (ormErr) { return done(ormErr); }
-
-              var info = {};
-
-              info = { scope: scopes, orm: orms.rows };
-              done(null, user, info);
-            };
+          var info = {},
+              scopes = token.get("scope");
 
           try {
             scopes = JSON.parse(scopes);
@@ -191,11 +189,8 @@ passport.use(new BearerStrategy(
             if (!Array.isArray(scopes)) { scopes = [ scopes ]; }
           }
 
-          // Get ORM models for this org.
-// TODO - If there are multiple scopes, they should only relate to one org.
-// e.g. [dev.contact, dev.customer, dev.salesorder.readonly] can all be distilled to the "dev" org.
-// TODO - Extract a single org from the scopes.
-          X.database.query(scopes[0], sql, ormCallback);
+          info = { scope: scopes };
+          done(null, userOrg, info);
         });
       } else {
         return done(null, false);
