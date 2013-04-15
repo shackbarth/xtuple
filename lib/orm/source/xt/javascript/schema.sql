@@ -261,7 +261,6 @@ select xt.install_js('XT','Schema','xtuple', $$
     orm = orm.properties ? orm : XT.Orm.fetch(orm.nameSpace, orm.type);
 
     var schemaTable = orm.table,
-        column,
         columns = [],
         schemaColumnInfo = {},
         ret = {};
@@ -288,8 +287,7 @@ select xt.install_js('XT','Schema','xtuple', $$
 
       /* Basic property */
       if (orm.properties[i].attr && orm.properties[i].attr.column) {
-        column = orm.properties[i].attr.column;
-        columns.push(column);
+        columns.push(orm.properties[i].attr.column);
 
         /* Add required override based off of ORM's property. */
         if (orm.properties[i].attr.required) {
@@ -366,9 +364,9 @@ select xt.install_js('XT','Schema','xtuple', $$
     orm = orm.properties ? orm : XT.Orm.fetch(orm.nameSpace, orm.type);
 
     var schemaTable = orm.table,
-      column,
-      schemaColumnInfo = {},
-      ret = [];
+        columns = [],
+        schemaColumnInfo = {},
+        ret = [];
 
     if (!orm.properties) return false;
 
@@ -377,16 +375,7 @@ select xt.install_js('XT','Schema','xtuple', $$
 
       /* Basic property */
       if (orm.properties[i].attr && orm.properties[i].attr.column) {
-        column = orm.properties[i].attr.column;
-
-        /* Get column's PostgreSQL datatype info. */
-        schemaColumnInfo = XT.Schema.columnInfo(schemaTable, column);
-        if (!schemaColumnInfo) return false;
-
-        /* Get required from the returned schemaColumnInfo properties. */
-        if (schemaColumnInfo.required) {
-          ret.push(orm.properties[i].name);
-        }
+        columns.push(orm.properties[i].attr.column);
 
         /* Add required override based off of ORM's property. */
         if (orm.properties[i].attr.required) {
@@ -411,6 +400,19 @@ select xt.install_js('XT','Schema','xtuple', $$
       else {
         /* You broke it. We should not be here. */
         throw new Error("Invalid ORM property. Unable to generate requiredAttributes from this ORM.");
+      }
+    }
+
+    /* Get required from the returned schemaColumnInfo properties. */
+    var schemaColumnInfo = XT.Schema.columnInfo(schemaTable, columns);
+
+    for (var i = 0; i < orm.properties.length; i++) {
+      /* Basic properties only. */
+      if (orm.properties[i].attr && orm.properties[i].attr.column) {
+        /* Get required from the returned schemaColumnInfo attributes. */
+        if (schemaColumnInfo[orm.properties[i].attr.column].required) {
+          ret.push(orm.properties[i].name);
+        }
       }
     }
 
