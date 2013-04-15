@@ -5,39 +5,43 @@
     @param {String} [dataHash.username] Username. Required.
     @param {String} [dataHash.nameSpace] Namespace. Required.
     @param {String} [dataHash.type] Type. Required.
-    @param {Object} [dataHash.patches] Array of patches to be processed. Required
+    @param {String} [dataHash.id] Id. If not provided, one will be created automatically.
+    @param {Object} [dataHash.data] Data payload representing record(s) to create. Required
     @param {Number} [dataHash.version] Record version for optimistic locking. Required.
     @param {Number} [dataHash.lock] Lock information for pessemistic locking.
     @param {String} [dataHash.encryptionKey] Encryption key.
 */
-create or replace function xt.patch(data_hash text) returns text as $$
+create or replace function xt.post(data_hash text) returns text as $$
 
   var dataHash = JSON.parse(data_hash),
     data = Object.create(XT.Data),
-    options = JSON.parse(JSON.stringify(dataHash)),
+    orm = XT.Orm.fetch(dataHash.nameSpace, dataHash.type),
+    pkey = XT.Orm.primaryKey(orm),
     prettyPrint = dataHash.prettyPrint ? 2 : null,
+    prv = JSON.parse(JSON.stringify(dataHash.data)),
+    sql = "select nextval('" + orm.idSequenceName + "');",
     observer,
-    prv,
     rec,
     ret;
 
   if (dataHash.username) { XT.username = dataHash.username; }
 
-  /* get the current version of the record */
-  rec = data.retrieveRecord(dataHash);
-  prv = JSON.parse(JSON.stringify(rec.data));
+  /* set status */
+  XT.jsonpatch.updateState(dataHash.data, "create");
 
-  /* apply the patch */
-  if (!XT.jsonpatch.apply(rec.data, dataHash.patches, true)) {
-    plv8.elog(ERROR, 'Malformed patch document');
+  /* set id if not provided */
+  if (!dataHash.id) {
+    dataHash.id = dataHash.data[pkey] || plv8.execute(sql)[0].nextval;
   }
-  options.data = rec.data;
 
+  if (!dataHash.data[pkey]) {
+    dataHash.data[pkey] = dataHash.id;
+  }
+  
   /* commit the record */
-  data.commitRecord(options);
+  data.commitRecord(dataHash);
 
   /* calculate a patch of the modifed version */
-  XT.jsonpatch.apply(prv, dataHash.data);
   observer = XT.jsonpatch.observe(prv);
   ret = data.retrieveRecord(dataHash);
   observer.object = ret.data;
@@ -53,14 +57,15 @@ $$ language plv8;
 
 /*
 select xt.js_init();
-select xt.patch('{
+select xt.post('{
   "username": "admin",
   "nameSpace":"XM",
-  "type": "Quote",
-  "id": 351,
-  "version": 15,
-  "data" : [{"op":"replace","path":"/status","value":"C"}],
+  "type": "Contact",
+  "data" : {
+    "number": "10009",
+    "firstName": "Bob",
+    "lastName": "Marley"
+  },
   "prettyPrint": true
-  }'
-);
+}');
 */
