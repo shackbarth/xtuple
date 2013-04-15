@@ -549,7 +549,7 @@ select xt.install_js('XT','Data','xtuple', $$
         toOneProp,
         toOneVal,
         i,
-        value;
+        val;
       params = params || { 
         table: "", 
         columns: [], 
@@ -577,7 +577,8 @@ select xt.install_js('XT','Data','xtuple', $$
         ormp = orm.properties[i];
         prop = ormp.name;
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
-        type = attr.type;
+        type = attr.type,
+        val = ormp.toOne && record[prop] ? record[prop][ormp.toOne.inverse || 'id'] : record[prop];
 
         /* handle fixed values */
         if (attr.value) {
@@ -592,10 +593,10 @@ select xt.install_js('XT','Data','xtuple', $$
 
           if (attr.isEncrypted) {
             if (encryptionKey) {
-              record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
+              val = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
                              .replace(/{value}/, record[prop])
                              .replace(/{encryptionKey}/, encryptionKey);
-              params.values.push(record[prop]);
+              params.values.push(val);
               params.expressions.push('$' + count);
               count++;
             } else { 
@@ -603,11 +604,11 @@ select xt.install_js('XT','Data','xtuple', $$
             }
           /* Unfortuantely dates aren't handled correctly by parameters */
           } else if (attr.type === 'Date') {
-            params.expressions.push("'" + record[prop] + "'");
+            params.expressions.push("'" + val + "'");
           } else { 
             params.expressions.push('$' + count);
             count++;
-            params.values.push(record[prop]);
+            params.values.push(val);
           }
         }
       }
@@ -726,7 +727,8 @@ select xt.install_js('XT','Data','xtuple', $$
         toOneKey,
         toOneProp,
         toOneVal,
-        keyValue;
+        keyValue,
+        val;
       params = params || { 
         table: "", 
         expressions: [],
@@ -751,16 +753,17 @@ select xt.install_js('XT','Data','xtuple', $$
         prop = ormp.name;
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
-        qprop = '"' + attr.column + '"';
+        qprop = '"' + attr.column + '"',
+        val = ormp.toOne && record[prop] ? record[prop][ormp.toOne.inverse || 'id'] : record[prop];
 
-        if (record[prop] !== undefined && !ormp.toMany) {
+        if (val !== undefined && !ormp.toMany) {
           /* handle encryption if applicable */
           if(attr.isEncrypted) {
             if(encryptionKey) {
-              record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
-                             .replace(/{value}/, record[prop])
+              val = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
+                             .replace(/{value}/, val)
                              .replace(/{encryptionKey}/, encryptionKey);
-              params.values.push(record[prop]);
+              params.values.push(val);
               params.expressions.push(qprop.concat(" = ", "$", count));
               count++;
             } else {
@@ -768,12 +771,12 @@ select xt.install_js('XT','Data','xtuple', $$
             }
           } else if (ormp.name !== pkey) {
             /* Unfortuantely dates and nulls aren't handled correctly by parameters */
-            if (record[prop] === null) {
+            if (val === null) {
               params.expressions.push(qprop.concat(' = null'));
-            } else if (attr.type === 'Date') {
-              params.expressions.push(qprop.concat(" = '" + record[prop] + "'"));
+            } else if (val instanceof Date) {
+              params.expressions.push(qprop.concat(" = '" + JSON.stringify(val) + "'"));
             } else {
-              params.values.push(record[prop]);
+              params.values.push(val);
               params.expressions.push(qprop.concat(" = ", "$", count));
               count++;
             }
