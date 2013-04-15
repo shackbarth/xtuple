@@ -25,6 +25,7 @@
 \i xt/functions/ends_with.sql;
 \i xt/functions/execute_query.sql;
 \i xt/functions/fetch.sql;
+\i xt/functions/get.sql;
 \i xt/functions/get_id.sql;
 \i xt/functions/js_init.sql;
 \i xt/functions/install_js.sql;

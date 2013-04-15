@@ -951,31 +951,32 @@ select xt.install_js('XT','Data','xtuple', $$
       Retreives a record from the database. If the user does not have appropriate privileges an
       error will be thrown unless the `silentError` option is passed.
 
-      If `context` is passed as an option then a record will only be returned if it exists in the context record,
-      which itself must be accessible by the effective user. Context is an object that requires the following
-      properties.
+      If `context` is passed as an option then a record will only be returned if it exists in the context (parent)
+      record which itself must be accessible by the effective user.
 
-      recordType: The namespace qualifed object name the record exists in. 
-      value: The value of the primary key.
-      relation: The name of the attribute on the recordType to which this record is related.
-      
-      @param {String} Namespace qualified record type
-      @param {Number} Record id
-      @param {String} Encryption key
-      @param {Object} options - support options are context and silentError
-      @param {Object} [options.context] context
+      @param {Object} options
+      @param {String} [options.nameSpace] Namespace. Required.
+      @param {String} [options.type] Type. Required.
+      @param {Number} [options.id] Record id. Required.
+      @param {String} [options.encryptionKey] Encryption key
       @param {Boolean} [options.silentError=false] Silence errors
       @param {Boolean} [options.obtainLock=false] Obtain a lock on the record
-      @param {Boolean} [options.toOneNested=false] To One relationships are not nested by default
+      @param {Boolean} [options.toOneNested=false] If true, show nested records on `toOne` relationships by default where `isNested` is not specificially indicated in the orm.
+      @param {Object} [options.context] Context
+      @param {String} [options.context.nameSpace] Context namespace.
+      @param {String} [options.context.type] The type of context object. 
+      @param {String} [options.context.value] The value of the context's primary key.
+      @param {String} [options.context.relation] The name of the attribute on the type to which this record is related.
       @returns Object
     */
-    retrieveRecord: function(recordType, id, encryptionKey, options) {
-      options = options || {};
+    retrieveRecord: function(options) {
       options.obtainLock = options.obtainLock === undefined ? false : options.obtainLock;
-      var nameSpace = recordType.beforeDot(), 
-        type = recordType.afterDot(),
+      var nameSpace = options.nameSpace,
+        type = options.type,
+        id = options.id,
+        encryptionKey = options.encryptionKey,
         map = XT.Orm.fetch(nameSpace, type),
-        lockTable = map.lockTable || table,
+        lockTable = map.lockTable || map.table,
         ret = {
           nameSpace: nameSpace,
           type: type,
@@ -987,15 +988,15 @@ select xt.install_js('XT','Data','xtuple', $$
         join = "",
         rawId = id,
         params = {};
-      if(!pkey) throw new Error('No primary key found for {recordType}'.replace(/{recordType}/, recordType));
+      if(!pkey) throw new Error('No primary key found for {nameSpace}.{type}'.replace(/{nameSpace}/, nameSpace).replace(/{type}/, type));
       if (XT.typeOf(id) === 'string') {
         id = "'" + id + "'";
       }
 
       /* Context means search for this record inside another */
       if (context) {
-        context.nameSpace = context.recordType.beforeDot();
-        context.type = context.recordType.afterDot()
+        context.nameSpace = context.nameSpace || context.recordType.beforeDot();
+        context.type = context.type || context.recordType.afterDot()
         context.map = XT.Orm.fetch(context.nameSpace, context.type);
         context.prop = XT.Orm.getProperty(context.map, context.relation);
         context.fkey = context.prop.toMany.inverse;
