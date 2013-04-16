@@ -1549,10 +1549,11 @@ trailing:true white:true*/
         // TODO: Add this just for sales order
           // {kind: "XV.DateWidget", attr: "salesOrderDate"},
           // {kind: "XV.DateWidget", attr: "expireDate"},
-          // {kind: "XV.InputWidget", attr: "getQuoteStatusString",
-          //   label: "_status".loc()},
           if (e.kind === "Panels") {
             e.createComponents([
+                {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel", components: [
+                  {kind: "XV.SalesOrderLineItemBox", attr: "lineItems", fit: true}
+                ]},
                 {kind: "XV.SalesOrderCommentBox", attr: "comments"},
                 {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
               ], {owner: that});
@@ -1565,6 +1566,17 @@ trailing:true white:true*/
 
   XV.registerModelWorkspace("XM.SalesOrderRelation", "XV.SalesOrderWorkspace");
   XV.registerModelWorkspace("XM.SalesOrderListItem", "XV.SalesOrderWorkspace");
+  
+  // ..........................................................
+  // SALES TOTAL PANEL
+  //
+  enyo.kind({
+    name: "XV.SalesTotalsPanel",
+    kind: "FittableRows", 
+    fit: true,
+    components: [
+    ]
+  });  
 
   // ..........................................................
   // SALES REP

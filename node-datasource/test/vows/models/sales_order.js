@@ -14,7 +14,6 @@ var XVOWS = XVOWS || {};
       autoTestAttributes: true,
       createHash: {
         number: "Milky Way"
-        //["id", "number", "customer", "orderDate", "packDate", "scheduleDate", "terms", "salesRep", "commission", "taxZone", "site", "saleType", "status", "billtoName", "billtoAddress1", "billtoAddress2", "billtoAddress3", "billtoCity", "billtoState", "billtoCountry", "billtoPostalCode", "billtoContact", "billtoContactHonorific", "billtoContactFirstName", "billtoContactMiddleName", "billtoContactLastName", "billtoContactSuffix", "billtoContactPhone", "billtoContactTitle", "billtoContactFax", "billtoContactEmail", "shipto", "shiptoName", "shiptoAddress1", "shiptoAddress2", "shiptoAddress3", "shiptoCity", "shiptoState", "shiptoCountry", "shiptoPostalCode", "shiptoContact", "shiptoContactHonorific", "shiptoContactFirstName", "shiptoContactMiddleName", "shiptoContactLastName", "shiptoContactSuffix", "shiptoContactPhone", "shiptoContactTitle", "shiptoContactFax", "shiptoContactEmail", "orderNotes", "shipNotes", "fob", "shipVia", "currency", "calculateFreight", "shipZone", "margin", "freightWeight", "subtotal", "taxTotal", "miscCharge", "freight", "total", "lineItems", "comments", "files", "accounts", "contacts", "urls", "items", "type", "dataState", "lock"]
       },
       updateHash: {
         number: "Milky Way"

@@ -351,5 +351,39 @@ trailing:true white:true*/
       return true;
     }
   });
+  
+  enyo.kind({
+    name: "XV.SalesOrderLineItemBox",
+    kind: "XV.QuoteLineItemBox",
+    editor: "XV.SalesOrderLineItemEditor",
+    parentKey: "salesOrder",
+    listRelations: "XV.SalesOrderLineItemListRelations",
+
+    create: function () {
+      this.inherited(arguments);
+    },
+
+    launchWorkspace: function (inSender, inEvent) {
+      var index = Number(this.$.list.getFirstSelected());
+      this.doChildWorkspace({
+        workspace: "XV.SalesOrderLineWorkspace",
+        collection: this.getValue(),
+        index: index,
+        listRelations: this.$.list
+      });
+      return true;
+    }
+  });
+  
+  enyo.kind({
+    name: "XV.SalesOrderLineItemEditor",
+    kind: "XV.RelationsEditor",
+    components: [
+      {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+      classes: "in-panel", style: "border-right: #aaa 1px solid;", components: [
+      // TODO: this is temporary as a placeholder
+      ]}
+    ]
+  });
 
 }());
