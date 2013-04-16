@@ -1,5 +1,5 @@
 /**
-    Procedure for applying patches to the database per http://tools.ietf.org/html/rfc6902
+    Procedure for creating a new record in the database.
     
     @param {Text} Data hash that can parsed into a JavaScript object.
     @param {String} [dataHash.username] Username. Required.
@@ -21,7 +21,6 @@ create or replace function xt.post(data_hash text) returns text as $$
     prv = JSON.parse(JSON.stringify(dataHash.data)),
     sql = "select nextval('" + orm.idSequenceName + "');",
     observer,
-    rec,
     ret;
 
   if (dataHash.username) { XT.username = dataHash.username; }
@@ -61,6 +60,7 @@ select xt.post('{
   "username": "admin",
   "nameSpace":"XM",
   "type": "Contact",
+  "id": 10,
   "data" : {
     "number": "10009",
     "firstName": "Bob",

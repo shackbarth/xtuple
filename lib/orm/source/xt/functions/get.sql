@@ -21,7 +21,7 @@ select xt.get('{
   "username": "admin",
   "nameSpace":"XM",
   "type": "Contact",
-  "id": 1,
+  "id": 10,
   "prettyPrint": true
   }'
 );
