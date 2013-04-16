@@ -49,7 +49,7 @@ var _ = require("underscore"),
         data.model.set(options.key, model, {silent: true});
         objectsFetched++;
         if (objectsFetched === objectsToFetch) {
-          callback(null, data);
+          callback();
         }
       },
       fetchError = function () {
@@ -57,7 +57,7 @@ var _ = require("underscore"),
         // proceed anyway.
         objectsFetched++;
         if (objectsFetched === objectsToFetch) {
-          callback(null, data);
+          callback();
         }
       };
     _.each(data.createHash, function (value, key) {
@@ -102,6 +102,11 @@ var _ = require("underscore"),
       timeoutId,
       model = data.model,
       auto_regex = XM.Document.AUTO_NUMBER + "|" + XM.Document.AUTO_OVERRIDE_NUMBER,
+      assertAndCallback = function () {
+        assert.equal(data.model.getStatusString(), 'READY_NEW');
+        assert.isNumber(data.model.id);
+        callback();
+      },
       modelCallback = function (model, value) {
         if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
           // Check that the AUTO...NUMBER property has been set.
@@ -109,16 +114,12 @@ var _ = require("underscore"),
             clearTimeout(timeoutId);
             model.off('change:' + model.documentKey, modelCallback);
             model.off('change:id', modelCallback);
-            assert.equal(data.model.getStatusString(), 'READY_NEW');
-            assert.isNumber(data.model.id);
-            callback(null, data);
+            assertAndCallback();
           }
         } else {
           clearTimeout(timeoutId);
           model.off('change:id', modelCallback);
-          assert.equal(data.model.getStatusString(), 'READY_NEW');
-          assert.isNumber(data.model.id);
-          callback(null, data);
+          assertAndCallback();
         }
       };
 
@@ -132,7 +133,7 @@ var _ = require("underscore"),
     // If we don't hear back, keep going
     timeoutId = setTimeout(function () {
       assert.fail("timeout was reached on create", "");
-      callback(null, data);
+      callback();
     }, exports.waitTime);
   };
 
@@ -157,21 +158,22 @@ var _ = require("underscore"),
           assert.equal(data.model.getStatusString(), 'READY_CLEAN');
           testAttributes(data);
 
-          callback(null, data);
+          callback();
         }
       };
     model.on('statusChange', modelCallback);
     model.save(null, {
       error: function (model, error, options) {
+        clearTimeout(timeoutId);
         assert.fail(JSON.stringify(error) || "Unspecified error", "");
-        callback(JSON.stringify(error));
+        callback();
       }
     });
 
     // If we don't hear back, keep going
     timeoutId = setTimeout(function () {
       assert.fail("timeout was reached on save", "");
-      callback(null, data);
+      callback();
     }, exports.waitTime);
   };
 
@@ -204,10 +206,10 @@ var _ = require("underscore"),
           clearTimeout(timeoutId);
           model.off('statusChange', modelCallback);
           assert.equal(data.model.getStatusString(), 'DESTROYED_CLEAN');
-          callback(null, data);
+          callback();
         } else if (status === K.ERROR) {
           assert.fail(data.model.lastError || "Unspecified error on delete", "");
-          callback(data.model.lastError || "Unspecified error");
+          callback();
         }
       };
     model.on('statusChange', modelCallback);
@@ -216,7 +218,7 @@ var _ = require("underscore"),
     // If we don't hear back, keep going
     timeoutId = setTimeout(function () {
       assert.fail("timeout was reached on delete", "");
-      callback(null, data);
+      callback();
     }, exports.waitTime);
   };
 
