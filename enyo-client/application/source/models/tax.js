@@ -5,21 +5,21 @@ white:true*/
 
 (function () {
   "use strict";
-  
+
   /**
     @class
 
     @extends XM.AccountDocument
   */
-  XM.TaxClass = XM.AccountDocument.extend({
+  XM.TaxClass = XM.Document.extend({
     /** @scope XM.TaxClass.prototype */
 
-    recordType: 'XM.TaxClass'
+    recordType: 'XM.TaxClass',
+
+    documentKey: 'code'
 
   });
 
-  XM.TaxClass = XM.TaxClass.extend(XM.AddressCheckMixin);
-  
   /**
     @class
 
@@ -33,7 +33,7 @@ white:true*/
     editableModel: 'XM.TaxClass'
 
   });
-  
+
   /**
     @class
 
@@ -43,7 +43,7 @@ white:true*/
     /** @scope XM.TaxAssignment */
 
     recordType: 'XM.TaxAssignment',
-    
+
     requiredAttributes: [
       "tax"
     ]
@@ -135,7 +135,7 @@ white:true*/
     recordType: 'XM.TaxType',
 
     documentKey: 'name',
-    
+
     readOnlyAttributes: [
       "isSystem"
     ]
@@ -169,7 +169,7 @@ white:true*/
     model: XM.TaxAuthority
 
   });
-  
+
   /**
     @class
 
