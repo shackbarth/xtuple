@@ -7,5 +7,4 @@ For a full description of how to install this project, please visit:
 
 http://www.xtuple.org/developer-zone/mobile-web/setup-environment
 
-Release notes are 
-[here](RELEASE.md).
+View the [Release notes](RELEASE.md) to see a change log.
