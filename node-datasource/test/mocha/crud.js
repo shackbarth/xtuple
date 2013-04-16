@@ -38,17 +38,66 @@ var _ = require("underscore"),
   };
 
   /**
+    We allow the test to use a shorthand mock for these submodels, and
+    flesh them out here. This is very very clever.
+   */
+  var fleshOutModels = function (data, callback) {
+    var objectsToFetch = 0,
+      objectsFetched = 0,
+      fetchSuccess = function (model, response, options) {
+        // swap in this model for the mock
+        data.model.set(options.key, model, {silent: true});
+        objectsFetched++;
+        if (objectsFetched === objectsToFetch) {
+          callback(null, data);
+        }
+      },
+      fetchError = function () {
+        console.log("Error fleshing out mock models", JSON.stringify(arguments));
+        // proceed anyway.
+        objectsFetched++;
+        if (objectsFetched === objectsToFetch) {
+          callback(null, data);
+        }
+      };
+    _.each(data.createHash, function (value, key) {
+      if (typeof value === 'object') {
+        var fetchObject = {
+            success: fetchSuccess,
+            error: fetchError,
+            key: key
+          },
+          relatedModel,
+          relatedModelName = _.find(data.model.relations, function (relation) {
+            return relation.key === key;
+          }).relatedModel;
+
+        relatedModel = new XM[relatedModelName.substring(3)]();
+        fetchObject[relatedModel.idAttribute] = value.id;
+        relatedModel.fetch(fetchObject);
+        objectsToFetch++;
+      }
+    })
+    // if there are no models to substitute we won't be doing this whole fetching
+    // rigamorole.
+    if (objectsToFetch === 0) {
+      data.model.set(data.createHash);
+      callback();
+    }
+  };
+
+  /**
     Creates a working model and automatically checks state
     is `READY_NEW` and a valid `id` immediately afterward.
 
     Note: This function assumes the `id` is fetched automatically.
     For models with manually created ids such as 'XM.UserAccount',
-    create a topic manually.
+    do this part manually.
 
-    @param {Object} Data
-    @param {Object} Vows
+    @param {Object} data
+    @param {Function} callback
   */
-  var create = exports.create = function (data, callback, vows) {
+  var create = exports.create = function (data, callback) {
     var that = this,
       timeoutId,
       model = data.model,
@@ -91,10 +140,10 @@ var _ = require("underscore"),
     Saves the working model and automatically checks state
     is `READY_CLEAN` immediately afterward.
 
-    @param {Object} Data
-    @param {Object} Vows
+    @param {Object} data
+    @param {Function} callback
   */
-  var save = exports.save = function (data, callback, vows) {
+  var save = exports.save = function (data, callback) {
     var that = this,
       timeoutId,
       model = data.model,
@@ -114,7 +163,7 @@ var _ = require("underscore"),
     model.on('statusChange', modelCallback);
     model.save(null, {
       error: function (model, error, options) {
-        assert.fail(JSON.stringify(error), "");
+        assert.fail(JSON.stringify(error) || "Unspecified error", "");
         callback(JSON.stringify(error));
       }
     });
@@ -128,24 +177,23 @@ var _ = require("underscore"),
 
 
   /**
-    Check before updating the working model that the state is `READY_CLEAN`.
+    Unclear if we need to support this moving forward
 
-    @param {Object} Data
-    @param {Object} Vows
+    @param {Object} data
   */
-  var update = exports.update = function (data, callback, vows) {
+  var update = exports.update = function (data) {
     data.updated = true;
     return data;
   };
 
   /**
-    Destorys the working model and automatically checks state
+    Destroys the working model and automatically checks state
     is `DESTROYED_CLEAN` immediately afterward.
 
-    @param {Data}
-    @param {Object} Vows
+    @param {Object} data
+    @param {Object} callback
   */
-  var destroy = exports.destroy = function (data, callback, vows) {
+  var destroy = exports.destroy = function (data, callback) {
     var that = this,
       timeoutId,
       model = data.model,
@@ -179,126 +227,29 @@ var _ = require("underscore"),
   var runAllCrud = exports.runAllCrud = function (data) {
 
     var runCrud = function () {
-      var createCallback = function () {
-        var saveCallback = function () {
-          var secondSaveCallback = function () {
-            destroy(data, data.done);
+      var fleshCallback = function () {
+        var createCallback = function () {
+          var saveCallback = function () {
+            var secondSaveCallback = function () {
+              destroy(data, data.done);
+            }
+            update(data);
+            data.model.set(data.updateHash);
+            testAttributes(data);
+            save(data, secondSaveCallback);
           }
-          update(data);
-          data.model.set(data.updateHash);
-          testAttributes(data);
-          save(data, secondSaveCallback);
-        }
-
-
-        save(data, saveCallback);
-
+          save(data, saveCallback);
+        };
+        create(data, createCallback);
       };
-
-
       data.model = new XM[data.recordType.substring(3)]();
       assert.equal(data.model.recordType, data.recordType);
 
       data.model.set(data.createHash);
-      // TODO: flesh out mock models
-      create(data, createCallback);
-
+      fleshOutModels(data, fleshCallback);
     };
-
-
-
-
-
 
     zombieAuth.loadApp({callback: runCrud, verbose: true});
-
-
   };
-  /*
-    var context = {
-      topic: function () {
-        var that = this,
-          callback = function () {
-            data.model = new XM[data.recordType.substring(3)]();
-            that.callback(null, data);
-          };
-      },
-      'Verify the record type is correct': function (data) {
-        assert.equal(data.model.recordType, data.recordType);
-      },
-      'We can create a model ': create(data, {
-        '-> Set values to the model': {
-          topic: function (data) {
-            // allow the test to use a shorthand mock for these submodels, and
-            // flesh them out here. This is very very clever.
-
-            var that = this,
-              objectsToFetch = 0,
-              objectsFetched = 0,
-              fetchSuccess = function (model, response, options) {
-                // swap in this model for the mock
-                data.model.set(options.key, model, {silent: true});
-                objectsFetched++;
-                if (objectsFetched === objectsToFetch) {
-                  that.callback(null, data);
-                }
-              },
-              fetchError = function () {
-                console.log("Error fleshing out mock models", JSON.stringify(arguments));
-                // proceed anyway.
-                objectsFetched++;
-                if (objectsFetched === objectsToFetch) {
-                  that.callback(null, data);
-                }
-              };
-            _.each(data.createHash, function (value, key) {
-              if (typeof value === 'object') {
-                var fetchObject = {
-                    success: fetchSuccess,
-                    error: fetchError,
-                    key: key
-                  },
-                  relatedModel,
-                  relatedModelName = _.find(data.model.relations, function (relation) {
-                    return relation.key === key;
-                  }).relatedModel;
-
-                relatedModel = new XM[relatedModelName.substring(3)]();
-                fetchObject[relatedModel.idAttribute] = value.id;
-                relatedModel.fetch(fetchObject);
-                objectsToFetch++;
-              }
-            })
-            // if there are no models to substitute we won't be doing this whole callback
-            // rigamorole.
-            if (objectsToFetch === 0) {
-              data.model.set(data.createHash);
-              return data;
-            }
-          },
-          // create vows
-          'Verify the last error is null': function (data) {
-            assert.isNull(data.model.lastError);
-          },
-          '-> Save the model': save(data, {
-            'We can update the model ': update(data, {
-              '-> Set values': {
-                topic: function () {
-                  data.model.set(data.updateHash);
-                  return data;
-                },
-                '-> Commit to the model': save(data, {
-                  'destroy': destroy(data)
-                })
-              }
-            })
-          })
-        }
-      })
-    };
-    return context;
-  };
-*/
-
 
 }());
