@@ -1273,7 +1273,14 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "number"},
+            // TODO: remove this for sales order
+            {kind: "XV.DateWidget", attr: "quoteDate"},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
+            // TODO: remove for sales order
+            {kind: "XV.DateWidget", attr: "expireDate"},
+            // TODO: remove for sales order
+            {kind: "XV.InputWidget", attr: "getQuoteStatusString",
+              label: "_status".loc()},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
             {kind: "XV.CustomerProspectWidget", attr: "customer",
               showAddress: true, label: "_customer".loc(),
