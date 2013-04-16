@@ -1,3 +1,14 @@
+/**
+    Procedure for retrieving data from the server;
+    
+    @param {Text} Data hash that can parsed into a JavaScript object.
+    @param {String} [dataHash.username] Username. Required.
+    @param {String} [dataHash.nameSpace] Namespace. Required.
+    @param {String} [dataHash.type] Type. Required.
+    @param {Object} [dataHash.id] Array Record Id. Required
+    @param {Number} [dataHash.obtainLock] Obtain a pessimistic lock on the record.
+    @param {String} [dataHash.encryptionKey] Encryption key.
+*/
 create or replace function xt.get(data_hash text) returns text as $$
 
   var dataHash = JSON.parse(data_hash),
