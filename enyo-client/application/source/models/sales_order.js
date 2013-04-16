@@ -12,7 +12,9 @@ white:true*/
   */
   XM.SalesOrder = XM.SalesOrderBase.extend(/** @lends XM.SalesOrder.prototype */{
 
-    recordType: 'XM.SalesOrder'
+    recordType: 'XM.SalesOrder',
+
+    documentDateKey: "orderDate"
 
   });
 

@@ -13,14 +13,34 @@
   */
 
   var zombieAuth = require("../../vows/lib/zombie_auth"),
-    assert = require("chai").assert;
+    crud = require("../lib/crud"),
+    assert = require("chai").assert,
+    data = {
+      recordType: "XM.SalesOrder",
+      autoTestAttributes: true,
+      createHash: {
+        calculateFreight: true,
+        number: "NUMBER" + Math.random(),
+        customer: { id: 97 },
+        terms: { id: 42 },
+        salesRep: { id: 31 }
+      },
+      createCallback: function (next) {
+        console.log("Extra creating first!");
+        data.model.set("wasQuote", false);
+        next();
+      },
+      updateHash: {
+        code: "Dame" + Math.random()
+      }
+    };
 
   describe('Sales order', function (){
-    this.timeout(20 * 1000);
-    it('should load up the app', function (done) {
-      zombieAuth.loadApp({callback: done, verbose: false});
+    this.timeout(10 * 1000);
+    it('should perform all the crud operations', function (done) {
+      crud.runAllCrud(data, done);
     });
-
+/*
     it('should take the defaults from the customer', function (done) {
       var terms = new XM.Terms(),
         customer = new XM.CustomerProspectRelation(),
@@ -38,5 +58,6 @@
       salesOrder.on('change:id', initCallback);
       salesOrder.initialize(null, {isNew: true});
     });
+    */
   })
 }());

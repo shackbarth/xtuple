@@ -11,7 +11,7 @@ var _ = require("underscore"),
 (function () {
   "use strict";
 
-  var waitTime = exports.waitTime = 10000;
+  var waitTime = exports.waitTime = 5000;
 
   var testAttributes = function (data) {
     if (!data.autoTestAttributes) {
@@ -63,6 +63,7 @@ var _ = require("underscore"),
       };
     _.each(data.createHash, function (value, key) {
       if (typeof value === 'object') {
+        // if it's an object we want to set on the model, flesh it out
         var fetchObject = {
             success: fetchSuccess,
             error: fetchError,
@@ -77,6 +78,9 @@ var _ = require("underscore"),
         fetchObject[relatedModel.idAttribute] = value.id;
         relatedModel.fetch(fetchObject);
         objectsToFetch++;
+      } else {
+        // otherwise it's easy to set the value on the model
+        data.model.set(key, value);
       }
     })
     // if there are no models to substitute we won't be doing this whole fetching
@@ -162,6 +166,8 @@ var _ = require("underscore"),
           callback();
         }
       };
+
+    assert.equal(JSON.stringify(model.validate(model.attributes)), undefined);
     model.on('statusChange', modelCallback);
     model.save(null, {
       error: function (model, error, options) {
@@ -230,12 +236,18 @@ var _ = require("underscore"),
     tested with a single function
    */
   var runAllCrud = exports.runAllCrud = function (data, done) {
+    var tempCreateCallback;
+
 
     var runCrud = function () {
       var fleshCallback = function () {
         var createCallback = function () {
+          console.log("create callback");
+
           var saveCallback = function () {
+            console.log("save callback");
             var secondSaveCallback = function () {
+              console.log("save2 callback");
 
               // Step 8: delete the model from the database
               destroy(data, done);
@@ -253,6 +265,11 @@ var _ = require("underscore"),
         };
 
         // Step 4: initialize the model to get the ID from the database
+        if (data.createCallback) {
+          console.log("override specified");
+          tempCreateCallback = createCallback;
+          createCallback = data.createCallback(tempCreateCallback);
+        }
         create(data, createCallback);
       };
 
@@ -265,7 +282,7 @@ var _ = require("underscore"),
     };
 
     // Step 1: load the environment with Zombie
-    zombieAuth.loadApp({callback: runCrud, verbose: false});
+    zombieAuth.loadApp({callback: runCrud, verbose: true});
   };
 
 }());

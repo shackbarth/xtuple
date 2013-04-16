@@ -175,6 +175,10 @@ white:true*/
       XM.Document.prototype.initialize.apply(this, arguments);
       this.freightDetail = [];
       this.freightTaxDetail = [];
+
+      if (!this.documentDateKey) {
+        console.log("Error: model needs a documentDateKey");
+      }
       this.requiredAttributes.push(this.documentDateKey);
     },
 
