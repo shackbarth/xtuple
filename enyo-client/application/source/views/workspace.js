@@ -1489,14 +1489,12 @@ trailing:true white:true*/
   enyo.kind(quoteLineItem);
   
   // ..........................................................
-  // SALES ORDER
+  // SALES ORDER BASE
   //
-
+  
   enyo.kind({
-    name: "XV.SalesOrderWorkspace",
+    name: "XV.SalesOrderBase",
     kind: "XV.Workspace",
-    title: "_salesOrder".loc(),
-    model: "XM.SalesOrder",
     allowPrint: true,
     printOnSaveSetting: "DefaultPrintSOOnSave",
     headerAttrs: ["number", "-", "billtoName"],
@@ -1508,7 +1506,9 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "number"},
+            // TODO: this is sales order
             {kind: "XV.DateWidget", attr: "orderDate"},
+            {kind: "XV.DateWidget", attr: "scheduleDate"},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
             {kind: "XV.CustomerProspectWidget", attr: "customer",
               showAddress: true, label: "_customer".loc(),
@@ -1559,9 +1559,61 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_shippingNotes".loc()},
             {kind: "XV.TextArea", attr: "shipNotes", fit: true}
           ]}
-        ]}
+        ]},
+        // TODO: this belongs to Sales Order
+        {kind: "XV.SalesOrderCommentBox", attr: "comments"},
+        {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
       ]}
-    ]
+    ],
+    customerChanged: function () {
+      var customer = this.$.customerProspectWidget.getValue(),
+        id = customer ? customer.get("account") : -1;
+      this.$.billtoContact.addParameter({attribute: "account", value: id}, true);
+      this.$.shiptoContact.addParameter({attribute: "account", value: id}, true);
+      if (customer) {
+        this.$.customerShiptoWidget.setDisabled(false);
+        this.$.customerShiptoWidget.addParameter({
+          attribute: "customer",
+          value: customer.id
+        });
+      } else {
+        this.$.customerShiptoWidget.setDisabled(true);
+      }
+    },
+    attributesChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      var model = this.getValue(),
+        customer = model ? model.get("customer") : false,
+        isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : true;
+      this.$.copyAddressButton.setDisabled(!isFreeFormShipto);
+      this.customerChanged();
+      // re-render the summary panel
+      //this.$.lineItemsPanel.render();
+    },
+    controlValueChanged: function (inSender, inEvent) {
+      this.inherited(arguments);
+      if (inEvent.originator.name === 'customerWidget') {
+        this.customerChanged();
+      }
+    },
+    copyBilltoToShipto: function () {
+      this.getValue().copyBilltoToShipto();
+    }
+  });
+  
+  // ..........................................................
+  // SALES ORDER
+  //
+
+  enyo.kind({
+    name: "XV.SalesOrderWorkspace",
+    kind: "XV.SalesOrderBase",
+    title: "_salesOrder".loc(),
+    model: "XM.SalesOrder",
+    // component array: add order date, status, line item box, comments, documents
+    create: function () {
+      this.inherited(arguments);
+    }
   });
 
   XV.registerModelWorkspace("XM.SalesOrderRelation", "XV.SalesOrderWorkspace");
