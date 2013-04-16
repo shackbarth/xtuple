@@ -31,17 +31,22 @@
       zombieAuth.loadApp({callback: done, verbose: false});
     });
 
-    it('should take the defaults from the customer', function () {
+    it('should take the defaults from the customer', function (done) {
       var terms = new XM.Terms(),
-        customer = new XM.Customer(),
-        salesOrder = new XM.SalesOrder();
+        customer = new XM.CustomerProspectRelation(),
+        salesOrder = new XM.SalesOrder(),
+        initCallback = function () {
+          terms.set({code: "COD"});
+          customer.set({terms: terms, billtoContact: "Bob"});
+          salesOrder.set({customer: customer});
+          assert.equal(salesOrder.getValue("terms.code"), "COD");
+          done();
+        };
 
-      terms.set({code: "COD"});
-      customer.set({terms: terms});
-      salesOrder.set({customer: customer});
+      salesOrder.on('change:id', initCallback);
+      salesOrder.initialize(null, {isNew: true});
 
 
-      assert.equal(salesOrder.getValue("terms.code", "COO");
 
     });
   })
