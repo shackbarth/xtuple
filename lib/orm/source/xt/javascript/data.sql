@@ -4,25 +4,25 @@ select xt.install_js('XT','Data','xtuple', $$
     @class
 
     The XT.Data class includes all functions necessary to process data source requests against the database.
-    It should be instantiated as an object against which its funtion calls are made. This class enforces privilege 
+    It should be instantiated as an object against which its funtion calls are made. This class enforces privilege
     control and as such is not and should not be dispatchable.
   */
-  
+
   XT.Data = {
 
     ARRAY_TYPE: "A",
     COMPOSITE_TYPE: "C",
     DATE_TYPE: "D",
     STRING_TYPE: "S",
-  
+
     CREATED_STATE: 'create',
     READ_STATE: "read",
     UPDATED_STATE: 'update',
     DELETED_STATE: 'delete',
 
-    /** 
+    /**
       Build a SQL `where` clause based on privileges for name space and type,
-      and conditions and parameters passed. 
+      and conditions and parameters passed.
 
       @seealso fetch
 
@@ -50,7 +50,6 @@ select xt.install_js('XT','Data','xtuple', $$
         c,
         cnt = 1,
         ret = {},
-        conds = [],
         list = [],
         prop;
 
@@ -61,10 +60,10 @@ select xt.install_js('XT','Data','xtuple', $$
       if (orm.isNestedOnly) { plv8.elog(ERROR, 'Access Denied'); }
       if ((privileges &&
          (!privileges.all || (privileges.all &&
-         (!this.checkPrivilege(privileges.all.read) && 
+         (!this.checkPrivilege(privileges.all.read) &&
           !this.checkPrivilege(privileges.all.update)))) &&
            privileges.personal &&
-          (this.checkPrivilege(privileges.personal.read) || 
+          (this.checkPrivilege(privileges.personal.read) ||
            this.checkPrivilege(privileges.personal.update)))) {
         parameters.push({
           attribute: privileges.personal.properties,
@@ -114,7 +113,7 @@ select xt.install_js('XT','Data','xtuple', $$
             break;
           default:
             plv8.elog(ERROR, 'Invalid operator: ' + op);
-          };
+          }
 
           /* Handle characteristics. This is very specific to xTuple,
              and highly dependant on certain table structures and naming conventions,
@@ -124,7 +123,7 @@ select xt.install_js('XT','Data','xtuple', $$
             if (op === '<@') {
               param.value = ' ARRAY[' + param.value.join(',') + ']';
             }
-            
+
             /* Booleans are stored as strings */
             if (param.value === true) {
               param.value = 't';
@@ -140,17 +139,17 @@ select xt.install_js('XT','Data','xtuple', $$
                      '  select {column}' +
                      '  from {table}' +
                      '    join char on (char_id=characteristic)' +
-                     '  where' + 
+                     '  where' +
                      '    char_name = \'{name}\' and' +
                      '    "value" {operator} \'{value}\'' +
                      ')';
-            clause = clause.replace(/{column}/, prop.toMany.inverse)
-                     .replace(/{table}/, orm.nameSpace.toLowerCase() + "." + prop.toMany.type.decamelize())
-                     .replace(/{name}/, param.attribute)
-                     .replace(/{operator}/, op)
-                     .replace(/{value}/, param.value);
+            clause = clause.replace("{column}", prop.toMany.inverse)
+                     .replace("{table}", orm.nameSpace.toLowerCase() + "." + prop.toMany.type.decamelize())
+                     .replace("{name}", param.attribute)
+                     .replace("{operator}", op)
+                     .replace("{value}", param.value);
             clauses.push(clause);
- 
+
           /* Array comparisons handle another way */
           } else if (op === '<@' || op === '!<@') {
             clause = param.attribute + ' ' + op + ' ARRAY[' + param.value.join(',') + ']';
@@ -162,7 +161,7 @@ select xt.install_js('XT','Data','xtuple', $$
               param.attribute = [param.attribute];
             }
 
-            for (c = 0; c < param.attribute.length; c++) {       
+            for (c = 0; c < param.attribute.length; c++) {
               /* handle paths if applicable */
               if (param.attribute[c].indexOf('.') > -1) {
                 parts = param.attribute[c].split('.');
@@ -170,7 +169,7 @@ select xt.install_js('XT','Data','xtuple', $$
                 attr = "";
                 for (n = 0; n < parts.length; n++) {
                   /* validate attribute */
-                  prop = XT.Orm.getProperty(childOrm, parts[n])
+                  prop = XT.Orm.getProperty(childOrm, parts[n]);
                   if (!prop) {
                     plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[n]);
                   }
@@ -229,7 +228,7 @@ select xt.install_js('XT','Data','xtuple', $$
               attr += '"' + parts[n] + '"';
               if (n < parts.length - 1) {
                 attr = "(" + attr + ").";
-                orm = XT.Orm.fetch(nameSpace, prop.toOne.type); 
+                orm = XT.Orm.fetch(nameSpace, prop.toOne.type);
               }
             }
             orm = prevOrm;
@@ -243,7 +242,7 @@ select xt.install_js('XT','Data','xtuple', $$
           }
           if (orderBy[i].isEmpty) {
             attr = "length(" + attr + ")=0";
-          }       
+          }
           if (orderBy[i].descending) {
             attr += " desc";
           }
@@ -268,7 +267,7 @@ select xt.install_js('XT','Data','xtuple', $$
         res,
         sql;
       if (typeof privilege === 'string') {
-        
+
         if (!this._granted) { this._granted = {}; }
         if (this._granted[privilege] !== undefined) { return this._granted[privilege]; }
 
@@ -285,13 +284,13 @@ select xt.install_js('XT','Data','xtuple', $$
                '  ) userrolepriv on (userrolepriv_priv_id=priv_id) ' +
                'where priv_name = $2';
 
-        for(i = 1; i < privArray.length; i++) {
+        for (i = 1; i < privArray.length; i++) {
           sql = sql + ' or priv_name = $' + (i + 2);
         }
         sql = sql + ";";
         /* cleverness: the query parameters are just the priv array with the username tacked on front */
         privArray.unshift(XT.username);
-        res = plv8.execute(sql, privArray),
+        res = plv8.execute(sql, privArray);
         ret = res.length ? res[0].granted : false;
         /* memoize */
         this._granted[privilege] = ret;
@@ -299,10 +298,10 @@ select xt.install_js('XT','Data','xtuple', $$
       if (DEBUG) { plv8.elog(NOTICE, 'Privilege check for "' + XT.username + '" on "' + privilege + '" returns ' + ret); }
       return ret;
     },
-  
+
     /**
       Validate whether user has read access to data. If a record is passed, check personal privileges of
-      that record. 
+      that record.
 
       @param {String} name space
       @param {String} type name
@@ -311,57 +310,62 @@ select xt.install_js('XT','Data','xtuple', $$
       @returns {Boolean}
     */
     checkPrivileges: function (nameSpace, type, record, isTopLevel) {
-      var isTopLevel = isTopLevel !== false ? true : false,
-          isGrantedAll = true,
-          isGrantedPersonal = false,
-          map = XT.Orm.fetch(nameSpace, type),
-          privileges = map.privileges,
-          committing = record ? record.dataState !== this.READ_STATE : false;
-          action =  record && record.dataState === this.CREATED_STATE ? 'create' : 
-                    record && record.dataState === this.DELETED_STATE ? 'delete' :
-                    record && record.dataState === this.UPDATED_STATE ? 'update' : 'read';
+      isTopLevel = isTopLevel !== false ? true : false;
+      var isGrantedAll = true,
+        isGrantedPersonal = false,
+        map = XT.Orm.fetch(nameSpace, type),
+        privileges = map.privileges,
+        committing = record ? record.dataState !== this.READ_STATE : false,
+        action =  record && record.dataState === this.CREATED_STATE ? 'create' :
+                  record && record.dataState === this.DELETED_STATE ? 'delete' :
+                  record && record.dataState === this.UPDATED_STATE ? 'update' : 'read';
 
       /* if there is no ORM, this isn't a table data type so no check required */
-      if (DEBUG) plv8.elog(NOTICE, 'orm is ->', JSON.stringify(map));    
-      if(!map) return true;
-      
+      if (DEBUG) { plv8.elog(NOTICE, 'orm is ->', JSON.stringify(map)); }
+      if (!map) { return true; }
+
       /* can not access 'nested only' records directly */
-      if(DEBUG) plv8.elog(NOTICE, 'is top level ->', isTopLevel, 'is nested ->', map.isNestedOnly);    
-      if(isTopLevel && map.isNestedOnly) return false
-        
+      if (DEBUG) { plv8.elog(NOTICE, 'is top level ->', isTopLevel, 'is nested ->', map.isNestedOnly); }
+      if (isTopLevel && map.isNestedOnly) { return false; }
+
       /* check privileges - first do we have access to anything? */
-      if(privileges) { 
-        if(DEBUG) plv8.elog(NOTICE, 'privileges found');      
-        if(committing) {
-          if(DEBUG) plv8.elog(NOTICE, 'is committing');
-          
+      if (privileges) {
+        if (DEBUG) { plv8.elog(NOTICE, 'privileges found'); }
+        if (committing) {
+          if (DEBUG) { plv8.elog(NOTICE, 'is committing'); }
+
           /* check if user has 'all' read privileges */
           isGrantedAll = privileges.all ? this.checkPrivilege(privileges.all[action]) : false;
 
           /* otherwise check for 'personal' read privileges */
-          if(!isGrantedAll) isGrantedPersonal =  privileges.personal ? this.checkPrivilege(privileges.personal[action]) : false;
+          if (!isGrantedAll) {
+            isGrantedPersonal =  privileges.personal ?
+              this.checkPrivilege(privileges.personal[action]) : false;
+          }
         } else {
-          if(DEBUG) plv8.elog(NOTICE, 'is NOT committing');
-          
+          if (DEBUG) { plv8.elog(NOTICE, 'is NOT committing'); }
+
           /* check if user has 'all' read privileges */
-          isGrantedAll = privileges.all ? 
-                         this.checkPrivilege(privileges.all.read) || 
+          isGrantedAll = privileges.all ?
+                         this.checkPrivilege(privileges.all.read) ||
                          this.checkPrivilege(privileges.all.update) : false;
 
           /* otherwise check for 'personal' read privileges */
-          if(!isGrantedAll) isGrantedPersonal =  privileges.personal ? 
-                                                 this.checkPrivilege(privileges.personal.read) || 
-                                                 this.checkPrivilege(privileges.personal.update) : false;
+          if (!isGrantedAll) {
+            isGrantedPersonal =  privileges.personal ?
+              this.checkPrivilege(privileges.personal.read) ||
+              this.checkPrivilege(privileges.personal.update) : false;
+          }
         }
       }
-      
+
       /* if we're checknig an actual record and only have personal privileges, see if the record allows access */
-      if(record && !isGrantedAll && isGrantedPersonal) {
-        if(DEBUG) plv8.elog(NOTICE, 'checking record level personal privileges');    
+      if (record && !isGrantedAll && isGrantedPersonal) {
+        if (DEBUG) { plv8.elog(NOTICE, 'checking record level personal privileges'); }
         var that = this,
 
         /* shared checker function that checks 'personal' properties for access rights */
-        checkPersonal = function(record) {
+        checkPersonal = function (record) {
           var i = 0,
             isGranted = false,
             props = privileges.personal.properties,
@@ -379,50 +383,57 @@ select xt.install_js('XT','Data','xtuple', $$
               }
               return ret.toLowerCase();
             };
-          while(!isGranted && i < props.length) {
+          while (!isGranted && i < props.length) {
             var prop = props[i];
             isGranted = get(record, prop) === XT.username;
             i++;
           }
           return isGranted;
-        }
-        
+        };
+
         /* if committing we need to ensure the record in its previous state is editable by this user */
-        if(committing && (action === 'update' || action === 'delete')) {
+        if (committing && (action === 'update' || action === 'delete')) {
           var pkey = XT.Orm.primaryKey(map),
               old = this.retrieveRecord(nameSpace + '.' + type, record[pkey]);
           isGrantedPersonal = checkPersonal(old);
-          
+
         /* ...otherwise check personal privileges on the record passed */
-        } else if(action === 'read') {
+        } else if (action === 'read') {
           isGrantedPersonal = checkPersonal(record);
         }
       }
-      if(DEBUG) plv8.elog(NOTICE, 'is granted all ->', isGrantedAll, 'is granted personal ->', isGrantedPersonal);  
+      if (DEBUG) {
+        plv8.elog(NOTICE, 'is granted all ->', isGrantedAll, 'is granted personal ->', isGrantedPersonal);
+      }
       return isGrantedAll || isGrantedPersonal;
     },
-    
-    /**
-      Commit array columns with their own statements 
 
-      @param {Object} Orm     
+    /**
+      Commit array columns with their own statements
+
+      @param {Object} Orm
       @param {Object} Record
     */
-    commitArrays: function (orm, record) {
+    commitArrays: function (orm, record, encryptionKey) {
       var prop,
-        ormp;
-      for(prop in record) {
+        ormp,
+        values;
+      for (prop in record) {
         ormp = XT.Orm.getProperty(orm, prop);
 
         /* if the property is an array of objects they must be records so commit them */
         if (ormp.toMany && ormp.toMany.isNested) {
-            var key = orm.nameSpace + '.' + ormp.toMany.type,
-                values = record[prop]; 
+          values = record[prop];
           for (var i = 0; i < values.length; i++) {
-            this.commitRecord(key, values[i], false);
+            this.commitRecord({
+              nameSpace: orm.nameSpace,
+              type: ormp.toMany.type,
+              data: values[i],
+              encryptionKey: encryptionKey
+            });
           }
         }
-      }   
+      }
     },
 
     /**
@@ -435,71 +446,85 @@ select xt.install_js('XT','Data','xtuple', $$
       var key,
         value;
       for (key in metrics) {
-        value = metrics[key];      
-        if(typeof value === 'boolean') value = value ? 't' : 'f';
-        else if(typeof value === 'number') value = value.toString();    
+        value = metrics[key];
+        if (typeof value === 'boolean') { value = value ? 't' : 'f'; }
+        else if (typeof value === 'number') { value = value.toString(); }
         plv8.execute('select setMetric($1,$2)', [key, value]);
       }
       return true;
     },
 
     /**
-      Commit a record to the database 
+      Commit a record to the database. The record must conform to the object hiearchy as defined by the
+      record's `ORM` definition. Each object in the tree must include state information on a reserved property
+      called `dataState`. Valid values are `create`, `update` and `delete`. Objects with other dataState values including
+      `undefined` will be ignored. State values can be added using `XT.jsonpatch.updateState(obj, state)`.
 
-      @param {String} name space qualified record type
-      @param {Object} data object
+      @seealso XT.jsonpatch.updateState
+      @param {Object} Options
+      @param {String} [options.nameSpace] Namespace. Required.
+      @param {String} [options.type] Type. Required.
+      @param {Object} [options.data] The data payload to be processed. Required
+      @param {Number} [options.version] Record version for optimistic locking.
+      @param {Number} [options.lock] Lock information for pessemistic locking.
+      @param {String} [options.encryptionKey] Encryption key.
     */
-    commitRecord: function (key, value, encryptionKey) {
-      var nameSpace = key.beforeDot().camelize().toUpperCase(),
-        type = key.afterDot().classify(),
-        hasAccess = this.checkPrivileges(nameSpace, type, value, false);
-      
-      if(!hasAccess) throw new Error("Access Denied.");    
-      if(value && value.dataState) {
-        if(value.dataState === this.CREATED_STATE) { 
-          this.createRecord(key, value, encryptionKey);
-        }
-        else if(value.dataState === this.UPDATED_STATE) { 
-          this.updateRecord(key, value, encryptionKey);
-        }
-        else if(value.dataState === this.DELETED_STATE) { 
-          this.deleteRecord(key, value); 
-        }
+    commitRecord: function (options) {
+      var data = options.data,
+        dataState = data ? data.dataState : false,
+        hasAccess = this.checkPrivileges(options.nameSpace, options.type, data, false);
+
+      if (!hasAccess) { throw new Error("Access Denied."); }
+      switch (dataState)
+      {
+      case (this.CREATED_STATE):
+        this.createRecord(options);
+        break;
+      case (this.UPDATED_STATE):
+        this.updateRecord(options);
+        break;
+      case (this.DELETED_STATE):
+        this.deleteRecord(options);
       }
     },
 
     /**
-      Commit insert to the database 
+      Commit insert to the database
 
-      @param {String} Name space qualified record type
-      @param {Object} Record
+      @param {Object} Options
+      @param {String} [options.nameSpace] Namespace. Required.
+      @param {String} [options.type] Type. Required.
+      @param {Object} [options.data] The data payload to be processed. Required.
+      @param {String} [options.encryptionKey] Encryption key.
     */
-    createRecord: function (key, value, encryptionKey) {
-      var orm = XT.Orm.fetch(key.beforeDot(), key.afterDot()),
-        sql = this.prepareInsert(orm, value),
+    createRecord: function (options) {
+      var orm = XT.Orm.fetch(options.nameSpace, options.type),
+        encryptionKey = options.encryptionKey,
+        data = options.data,
+        sql = this.prepareInsert(orm, data, null, encryptionKey),
         i;
-        
+
       /* handle extensions on the same table */
       for (i = 0; i < orm.extensions.length; i++) {
         if (orm.extensions[i].table === orm.table) {
-          sql = this.prepareInsert(orm.extensions[i], value, sql);
+          sql = this.prepareInsert(orm.extensions[i], data, sql, encryptionKey);
         }
       }
 
       /* commit the base record */
-      plv8.execute(sql.statement, sql.values); 
+      plv8.execute(sql.statement, sql.values);
 
       /* handle extensions on other tables */
       for (i = 0; i < orm.extensions.length; i++) {
-        if (orm.extensions[i].table !== orm.table && 
+        if (orm.extensions[i].table !== orm.table &&
            !orm.extensions[i].isChild) {
-          sql = this.prepareInsert(orm.extensions[i], value);
-          plv8.execute(sql.statement, sql.values); 
+          sql = this.prepareInsert(orm.extensions[i], data, null, encryptionKey);
+          plv8.execute(sql.statement, sql.values);
         }
       }
 
       /* okay, now lets handle arrays */
-      this.commitArrays(orm, value);
+      this.commitArrays(orm, data, encryptionKey);
     },
 
    /**
@@ -513,29 +538,24 @@ select xt.install_js('XT','Data','xtuple', $$
      @params {Object} Orm
      @params {Object} Record
      @params {Object} Params - optional
+     @params {String} Encryption Key
      @returns {Object}
    */
-    prepareInsert: function (orm, record, params) {
+    prepareInsert: function (orm, record, params, encryptionKey) {
       var count,
-        column,
         columns,
-        expressions,
         ormp,
         prop,
         attr,
         type,
-        toOneOrm,
-        toOneKey,
-        toOneProp,
-        toOneVal,
         i,
-        value;
-      params = params || { 
-        table: "", 
-        columns: [], 
+        val;
+      params = params || {
+        table: "",
+        columns: [],
         expressions: [],
         values: []
-      }
+      };
       params.table = orm.table;
       count = params.values.length + 1;
 
@@ -546,8 +566,8 @@ select xt.install_js('XT','Data','xtuple', $$
           if (!params.columns.contains(column)) {
             params.columns.push(column);
             params.values.push(record[orm.relations[i].inverse]);
-            params.expressions.push('$' +count);
-            count++
+            params.expressions.push('$' + count);
+            count++;
           }
         }
       }
@@ -558,13 +578,14 @@ select xt.install_js('XT','Data','xtuple', $$
         prop = ormp.name;
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
+        val = ormp.toOne && record[prop] ? record[prop][ormp.toOne.inverse || 'id'] : record[prop];
 
         /* handle fixed values */
         if (attr.value) {
           params.columns.push('"' + attr.column + '"');
-          params.expressions.push('$' +count);
+          params.expressions.push('$' + count);
           params.values.push(attr.value);
-          count++
+          count++;
 
         /* handle passed values */
         } else if (record[prop] !== undefined && record[prop] !== null && !ormp.toMany) {
@@ -572,22 +593,22 @@ select xt.install_js('XT','Data','xtuple', $$
 
           if (attr.isEncrypted) {
             if (encryptionKey) {
-              record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
-                             .replace(/{value}/, record[prop])
-                             .replace(/{encryptionKey}/, encryptionKey);
-              params.values.push(record[prop]);
+              val = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
+                             .replace("{value}", record[prop])
+                             .replace("{encryptionKey}", encryptionKey);
+              params.values.push(val);
               params.expressions.push('$' + count);
               count++;
-            } else { 
+            } else {
               throw new Error("No encryption key provided.");
             }
           /* Unfortuantely dates aren't handled correctly by parameters */
           } else if (attr.type === 'Date') {
-            params.expressions.push("'" + record[prop] + "'");
-          } else { 
+            params.expressions.push("'" + val + "'");
+          } else {
             params.expressions.push('$' + count);
             count++;
-            params.values.push(record[prop]);
+            params.values.push(val);
           }
         }
       }
@@ -601,66 +622,81 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-      Commit update to the database 
+      Commit update to the database
 
-      @param {String} Name space qualified record type
-      @param {Object} Record
+      @param {Object} Options
+      @param {String} [options.nameSpace] Namespace. Required.
+      @param {String} [options.type] Type. Required.
+      @param {Object} [options.data] The data payload to be processed. Required.
+      @param {Number} [options.version] Record version for optimistic locking.
+      @param {Number} [options.lock] Lock information for pessemistic locking.
+      @param {String} [options.encryptionKey] Encryption key.
     */
-    updateRecord: function(key, value, encryptionKey) {
-      var orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
-        sql = this.prepareUpdate(orm, value),
+    updateRecord: function (options) {
+      var orm = XT.Orm.fetch(options.nameSpace, options.type),
+        encryptionKey = options.encryptionKey,
+        data = options.data,
+        sql = this.prepareUpdate(orm, data, null, encryptionKey),
         pkey = XT.Orm.primaryKey(orm),
-        lockKey = value.lock && value.lock.key ? value.lock.key : false,
+        id = data[pkey],
         lock,
+        lockKey = options.lock && options.lock.key ? lock.key : false,
+        lockTable = orm.lockTable || orm.table,
+        version = this.getVersion(orm, id),
         ext,
         rows,
         i;
 
-      /* Test for lock */
+      /* test for optimistic lock */
+      if (version && options.version !== version) {
+        plv8.elog(ERROR, "The version being updated is not current.");
+      }
+
+      /* test for pessimistic lock */
       if (orm.lockable) {
-        lock = this.tryLock(orm.table, value[pkey], {key: lockKey});
+        lock = this.tryLock(lockTable, id, {key: lockKey});
         if (!lock.key) {
           plv8.elog(ERROR, "Can not obtain a lock on the record.");
         }
       }
-        
+
       /* handle extensions on the same table */
       for (i = 0; i < orm.extensions.length; i++) {
         if (orm.extensions[i].table === orm.table) {
-          sql = this.prepareUpdate(orm.extensions[i], value, sql);
+          sql = this.prepareUpdate(orm.extensions[i], data, sql, encryptionKey);
         }
       }
 
       /* commit the base record */
-      plv8.execute(sql.statement, sql.values); 
+      plv8.execute(sql.statement, sql.values);
 
       /* handle extensions on other tables */
       for (i = 0; i < orm.extensions.length; i++) {
         ext = orm.extensions[i];
-        if (ext.table !== orm.table && 
+        if (ext.table !== orm.table &&
            !ext.isChild) {
-           
+
           /* Determine whether to insert or update */
           sql = 'select ' + ext.relations[0].column + ' from ' + ext.table +
                 ' where ' + ext.relations[0].column + ' = $1;';
-          
-          if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql, value[pkey]); }
-          rows = plv8.execute(sql, [value[pkey]]);
+
+          if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql, data[pkey]); }
+          rows = plv8.execute(sql, [data[pkey]]);
           if (rows.length) {
-            sql = this.prepareUpdate(ext, value);
+            sql = this.prepareUpdate(ext, value, null, encryptionKey);
           } else {
-            sql = this.prepareInsert(ext, value);
+            sql = this.prepareInsert(ext, value, null, encryptionKey);
           }
-          plv8.execute(sql.statement, sql.values); 
+          plv8.execute(sql.statement, sql.values);
         }
       }
 
       /* okay, now lets handle arrays */
-      this.commitArrays(orm, value);
+      this.commitArrays(orm, data, encryptionKey);
 
       /* release any lock */
       if (orm.lockable) {
-        this.releaseLock({table: orm.table, id: value[pkey]});
+        this.releaseLock({table: lockTable, id: id});
       }
     },
 
@@ -677,26 +713,23 @@ select xt.install_js('XT','Data','xtuple', $$
      @params {Object} Params - optional
      @returns {Object}
    */
-    prepareUpdate: function (orm, record, params) {
-      var count, 
+    prepareUpdate: function (orm, record, params, encryptionKey) {
+      var count,
         pkey,
         columnKey,
-        expressions, 
+        expressions,
         prop,
         ormp,
         attr,
         type,
         qprop,
-        toOneOrm,
-        toOneKey,
-        toOneProp,
-        toOneVal,
-        keyValue;
-      params = params || { 
-        table: "", 
+        keyValue,
+        val;
+      params = params || {
+        table: "",
         expressions: [],
         values: []
-      }
+      };
       params.table = orm.table;
       count = params.values.length + 1;
 
@@ -717,15 +750,16 @@ select xt.install_js('XT','Data','xtuple', $$
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
         qprop = '"' + attr.column + '"';
+        val = ormp.toOne && record[prop] ? record[prop][ormp.toOne.inverse || 'id'] : record[prop];
 
-        if (record[prop] !== undefined && !ormp.toMany) {
+        if (val !== undefined && !ormp.toMany) {
           /* handle encryption if applicable */
-          if(attr.isEncrypted) {
-            if(encryptionKey) {
-              record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
-                             .replace(/{value}/, record[prop])
-                             .replace(/{encryptionKey}/, encryptionKey);
-              params.values.push(record[prop]);
+          if (attr.isEncrypted) {
+            if (encryptionKey) {
+              val = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
+                             .replace("{value}", val)
+                             .replace("{encryptionKey}", encryptionKey);
+              params.values.push(val);
               params.expressions.push(qprop.concat(" = ", "$", count));
               count++;
             } else {
@@ -733,12 +767,12 @@ select xt.install_js('XT','Data','xtuple', $$
             }
           } else if (ormp.name !== pkey) {
             /* Unfortuantely dates and nulls aren't handled correctly by parameters */
-            if (record[prop] === null) {
+            if (val === null) {
               params.expressions.push(qprop.concat(' = null'));
-            } else if (attr.type === 'Date') {
-              params.expressions.push(qprop.concat(" = '" + record[prop] + "'"));
+            } else if (val instanceof Date) {
+              params.expressions.push(qprop.concat(" = '" + JSON.stringify(val) + "'"));
             } else {
-              params.values.push(record[prop]);
+              params.values.push(val);
               params.expressions.push(qprop.concat(" = ", "$", count));
               count++;
             }
@@ -754,103 +788,152 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-      Commit deletion to the database 
+      Commit deletion to the database
 
-      @param {String} name space qualified record type
-      @param {Object} the record to be committed
+      @param {Object} Options
+      @param {String} [options.nameSpace] Namespace. Required.
+      @param {String} [options.type] Type. Required.
+      @param {Object} [options.data] The data payload to be processed. Required.
+      @param {Number} [options.version] Record id version for optimistic locking.
+      @param {Number} [options.lock] Lock information for pessemistic locking.
     */
-    deleteRecord: function(key, value) {
-      var record = XT.decamelize(value), sql = '',
-        orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
-        nameKey = XT.Orm.primaryKey(orm),
-        lockKey = value.lock && value.lock.key ? value.lock.key : false,
-        sql,
+    deleteRecord: function (options) {
+      var data = options.data,
+        sql = '',
+        orm = XT.Orm.fetch(options.nameSpace, options.type),
+        pkey = XT.Orm.primaryKey(orm),
+        id = data[pkey],
+        lockKey = options.lock && options.lock.key ? options.lock.key : false,
+        lockTable = orm.lockTable || orm.table,
+        version = this.getVersion(orm, id),
         columnKey,
         prop,
         ormp,
-        childKey,
         values,
         ext,
         i;
 
-      /* Test for lock */
+      /* test for optimistic lock */
+      if (version && version !== options.version) {
+        plv8.elog(ERROR, "The version being patched is not current.");
+      }
+
+      /* test for pessemistic lock */
       if (orm.lockable) {
-        lock = this.tryLock(orm.table, value[nameKey], {key: lockKey});
+        lock = this.tryLock(lockTable, id, {key: lockKey});
         if (!lock.key) {
           plv8.elog(ERROR, "Can not obtain a lock on the record.");
         }
       }
-          
+
       /* Delete children first */
-     for (prop in record) {
-       ormp = XT.Orm.getProperty(orm, prop);
+      for (prop in data) {
+        ormp = XT.Orm.getProperty(orm, prop);
 
-       /* if the property is an array of objects they must be records so delete them */
-       if (ormp.toMany && ormp.toMany.isNested) {
-         childKey = key.beforeDot() + '.' + ormp.toMany.type,
-         values = record[prop]; 
-         for (i = 0; i < values.length; i++) {
-            this.deleteRecord(childKey, values[i]);
-         }
-       }
-     }   
+        /* if the property is an array of objects they must be records so delete them */
+        if (ormp.toMany && ormp.toMany.isNested) {
+          values = data[prop];
+          for (i = 0; i < values.length; i++) {
+            this.deleteRecord({
+              nameSpace: options.nameSpace,
+              type: ormp.toMany.type,
+              data: values[i]
+            });
+          }
+        }
+      }
 
-     /* Next delete from extension tables */
-     for (i = 0; i < orm.extensions.length; i++) {
-       ext = orm.extensions[i];
-       if (ext.table !== orm.table &&
-           !ext.isChild) {
-         columnKey = ext.relations[0].column;
-         nameKey = ext.relations[0].inverse;     
-         sql = 'delete from '+ ext.table + ' where ' + columnKey + ' = $1;';
-         plv8.execute(sql, [record[nameKey]]);
-       }
-     }
+      /* Next delete from extension tables */
+      for (i = 0; i < orm.extensions.length; i++) {
+        ext = orm.extensions[i];
+        if (ext.table !== orm.table &&
+            !ext.isChild) {
+          columnKey = ext.relations[0].column;
+          nameKey = ext.relations[0].inverse;
+          sql = 'delete from ' + ext.table + ' where ' + columnKey + ' = $1;';
+          plv8.execute(sql, [id]);
+        }
+      }
 
       /* Now delete the top */
-      nameKey = XT.Orm.primaryKey(orm),
+      nameKey = XT.Orm.primaryKey(orm);
       columnKey = XT.Orm.primaryKey(orm, true);
-      sql = 'delete from '+ orm.table + ' where ' + columnKey + ' = $1;';
-      if(DEBUG) plv8.elog(NOTICE, 'sql =', sql,  record[nameKey]);
-      
+      sql = 'delete from ' + orm.table + ' where ' + columnKey + ' = $1;';
+      if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql,  id); }
+
       /* commit the record */
-      plv8.execute(sql, [record[nameKey]]); 
+      plv8.execute(sql, [id]);
 
       /* release any lock */
       if (orm.lockable) {
-        this.releaseLock({table: orm.table, id: value[nameKey]});
+        this.releaseLock({table: lockTable, id: id});
       }
     },
 
-    /** 
+    /**
       Decrypts properties where applicable.
 
       @param {String} name space
       @param {String} type
       @param {Object} record
       @param {Object} encryption key
-      @returns {Object} 
+      @returns {Object}
     */
     decrypt: function (nameSpace, type, record, encryptionKey) {
       var orm = XT.Orm.fetch(nameSpace, type);
-      for(var prop in record) {
+      for (var prop in record) {
         var ormp = XT.Orm.getProperty(orm, prop.camelize());
 
         /* decrypt property if applicable */
-        if(ormp && ormp.attr && ormp.attr.isEncrypted) {
-          if(encryptionKey) {
+        if (ormp && ormp.attr && ormp.attr.isEncrypted) {
+          if (encryptionKey) {
             sql = "select formatbytea(decrypt(setbytea($1), setbytea($2), 'bf')) as result";
             record[prop] = plv8.execute(sql, [record[prop], encryptionKey])[0].result;
           } else {
-            record[prop] = '**********'
+            record[prop] = '**********';
           }
-            
+
         /* check recursively */
         } else if (ormp.toMany && ormp.toMany.isNested) {
           this.decrypt(nameSpace, ormp.toMany.type, record[prop][i]);
         }
       }
       return record;
+    },
+
+    /**
+      Get the oid for a given table name.
+
+      @param {String} table name
+      @returns {Number}
+    */
+    getTableOid: function (table) {
+      var namespace = "public", /* default assumed if no dot in name */
+       sql = "select pg_class.oid::integer as oid " +
+             "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " +
+             "where relname = $1 and nspname = $2";
+      name = table.toLowerCase(); /* be generous */
+      if (table.indexOf(".") > 0) {
+        namespace = table.beforeDot();
+        table = table.afterDot();
+      }
+      return plv8.execute(sql, [table, namespace])[0].oid - 0;
+    },
+
+    /**
+      Returns the current version of a record.
+
+      @param {Object} Orm
+      @param {Number|String} Record id
+    */
+    getVersion: function (orm, id) {
+      if (!orm.lockable) { return; }
+      var sql = 'select coalesce((select ver_version from xt.ver where ver_table_oid = {oid} and ver_record_id = {id}), 0) as version; '
+            .replace("{oid}", this.getTableOid(orm.lockTable || orm.table))
+            .replace("{id}", id);
+
+      if (DEBUG) { plv8.elog(NOTICE, 'ver sql = ', sql); }
+      return plv8.execute(sql)[0].version;
     },
 
     /**
@@ -872,10 +955,7 @@ select xt.install_js('XT','Data','xtuple', $$
         limit = rowLimit ? 'limit ' + rowLimit : '',
         offset = rowOffset ? 'offset ' + rowOffset : '',
         recs = null,
-        prop,
         i,
-        n,
-        attr,
         parts,
         clause = this.buildClause(nameSpace, type, parameters, orderBy),
         sql = 'select * from {table} where {key} in ' +
@@ -884,7 +964,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
 
       /* validate - don't bother running the query if the user has no privileges */
-      if(!this.checkPrivileges(nameSpace, type)) { return []; };
+      if (!this.checkPrivileges(nameSpace, type)) { return []; }
 
       /* query the model */
       sql = sql.replace(/{table}/g, table)
@@ -893,10 +973,10 @@ select xt.install_js('XT','Data','xtuple', $$
                .replace(/{orderBy}/g, clause.orderBy)
                .replace('{limit}', limit)
                .replace('{offset}', offset);
-      if(DEBUG) { plv8.elog(NOTICE, 'sql = ', sql); }
+      if (DEBUG) { plv8.elog(NOTICE, 'sql = ', sql); }
       recs = plv8.execute(sql, clause.parameters);
-      for (var i = 0; i < recs.length; i++) {  	
-        recs[i] = this.decrypt(nameSpace, type, recs[i]);	  	
+      for (i = 0; i < recs.length; i++) {
+        recs[i] = this.decrypt(nameSpace, type, recs[i]);
       }
       return recs;
     },
@@ -905,39 +985,55 @@ select xt.install_js('XT','Data','xtuple', $$
       Retreives a record from the database. If the user does not have appropriate privileges an
       error will be thrown unless the `silentError` option is passed.
 
-      If `context` is passed as an option then a record will only be returned if it exists in the context record,
-      which itself must be accessible by the effective user. Context is an object that requires the following
-      properties.
+      If `context` is passed as an option then a record will only be returned if it exists in the context (parent)
+      record which itself must be accessible by the effective user.
 
-      recordType: The namespace qualifed object name the record exists in. 
-      value: The value of the primary key.
-      relation: The name of the attribute on the recordType to which this record is related.
-      
-      @param {String} namespace qualified record type
-      @param {Number} record id
-      @param {String} encryption key
-      @param {Object} options - support options are context and silentError
+      @param {Object} options
+      @param {String} [options.nameSpace] Namespace. Required.
+      @param {String} [options.type] Type. Required.
+      @param {Number} [options.id] Record id. Required.
+      @param {String} [options.encryptionKey] Encryption key
+      @param {Boolean} [options.silentError=false] Silence errors
+      @param {Boolean} [options.obtainLock=false] Obtain a lock on the record
+      @param {Boolean} [options.toOneNested=false] If true, show nested records on `toOne` relationships by default where `isNested` is not specificially indicated in the orm.
+      @param {Object} [options.context] Context
+      @param {String} [options.context.nameSpace] Context namespace.
+      @param {String} [options.context.type] The type of context object.
+      @param {String} [options.context.value] The value of the context's primary key.
+      @param {String} [options.context.relation] The name of the attribute on the type to which this record is related.
       @returns Object
     */
-    retrieveRecord: function(recordType, id, encryptionKey, options) {
-      options = options || {};
-      var nameSpace = recordType.beforeDot(), 
-        type = recordType.afterDot(),
+    retrieveRecord: function (options) {
+      options.obtainLock = options.obtainLock === undefined ? false : options.obtainLock;
+      var nameSpace = options.nameSpace,
+        type = options.type,
+        id = options.id,
+        encryptionKey = options.encryptionKey,
         map = XT.Orm.fetch(nameSpace, type),
-        ret, sql, pkey = XT.Orm.primaryKey(map),
+        lockTable = map.lockTable || map.table,
+        ret = {
+          nameSpace: nameSpace,
+          type: type,
+          id: id
+        },
+        sql,
+        pkey = XT.Orm.primaryKey(map),
         context = options.context,
         join = "",
-        rawId = id,
         params = {};
-      if(!pkey) throw new Error('No primary key found for {recordType}'.replace(/{recordType}/, recordType));
+      if(!pkey) {
+        throw new Error('No primary key found for {nameSpace}.{type}'
+                        .replace("{nameSpace}", nameSpace)
+                        .replace("{type}", type));
+      }
       if (XT.typeOf(id) === 'string') {
         id = "'" + id + "'";
       }
 
       /* Context means search for this record inside another */
       if (context) {
-        context.nameSpace = context.recordType.beforeDot();
-        context.type = context.recordType.afterDot()
+        context.nameSpace = context.nameSpace || context.recordType.beforeDot();
+        context.type = context.type || context.recordType.afterDot()
         context.map = XT.Orm.fetch(context.nameSpace, context.type);
         context.prop = XT.Orm.getProperty(context.map, context.relation);
         context.fkey = context.prop.toMany.inverse;
@@ -949,7 +1045,7 @@ select xt.install_js('XT','Data','xtuple', $$
                    .replace(/{table1}/, context.type.decamelize())
                    .replace(/{pkey}/, context.pkey)
                    .replace(/{table2}/, type.decamelize())
-                   .replace(/{fkey}/, context.fkey);   
+                   .replace(/{fkey}/, context.fkey);
       }
 
       /* validate - don't bother running the query if the user has no privileges */
@@ -961,16 +1057,24 @@ select xt.install_js('XT','Data','xtuple', $$
         }
       }
 
+      ret.version = this.getVersion(map, id);
+
+      /* obtain lock if required */
+      if (map.lockable) {
+        ret.lock = this.tryLock(lockTable, id, options);
+      }
+
+      /* data sql */
       sql = 'select "{table}".* from {schema}.{table} {join} where "{table}"."{primaryKey}" = {id};'
             .replace(/{schema}/, nameSpace.decamelize())
-            .replace(/{table}/g, type.decamelize())
+            .replace(/{table}/g, (options.toOneNested ? "" : "_") + type.decamelize())
             .replace(/{join}/, join)
             .replace(/{primaryKey}/, pkey)
             .replace(/{id}/, id);
 
       /* query the map */
-      if(DEBUG) plv8.elog(NOTICE, 'sql = ', sql);
-      ret = plv8.execute(sql)[0];
+      if (DEBUG) plv8.elog(NOTICE, 'data sql = ', sql);
+      ret.data = plv8.execute(sql)[0];
 
       if (!context) {
         /* check privileges again, this time against record specific criteria where applicable */
@@ -981,27 +1085,20 @@ select xt.install_js('XT','Data','xtuple', $$
             throw new Error("Access Denied.");
           }
         }
-        
+
         /* decrypt result where applicable */
-        ret = this.decrypt(nameSpace, type, ret, encryptionKey);
+        ret.data = this.decrypt(nameSpace, type, ret.data, encryptionKey);
       }
-
-      /* obtain lock if required */
-      if (ret && map.lockable) {
-        ret.lock = this.tryLock(map.table, id, XT.username, options);
-      }
-
-      ret = ret || {};
 
       /* return the results */
-      return ret;
+      return ret || {};
     },
 
     /**
       Returns a array of key value pairs of metric settings that correspond with an array of passed keys.
-      
+
       @param {Array} array of metric names
-      @returns {Array} 
+      @returns {Array}
     */
     retrieveMetrics: function (keys) {
       var sql = 'select metric_name as setting, metric_value as value '
@@ -1009,7 +1106,7 @@ select xt.install_js('XT','Data','xtuple', $$
               + 'where metric_name in ({keys})',
         qry,
         ret = {},
-        prop; 
+        prop;
       for (var i = 0; i < keys.length; i++) keys[i] = "'" + keys[i] + "'";
       sql = sql.replace(/{keys}/, keys.join(','));
       qry =  plv8.execute(sql);
@@ -1026,25 +1123,6 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-      Get the oid for a given table name.
-
-      @param {String} table name
-      @returns {Number}
-    */
-    getTableOid: function (table) {
-      var namespace = "public", /* default assumed if no dot in name */
-       sql = "select pg_class.oid::integer as oid " + 
-             "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " + 
-             "where relname = $1 and nspname = $2";
-      name = table.toLowerCase(); /* be generous */ 
-      if (table.indexOf(".") > 0) {
-         namespace = table.beforeDot(); 
-         table = table.afterDot();
-      }
-      return plv8.execute(sql, [table, namespace])[0].oid;
-    },
-
-    /**
       Creates and returns a lock for a given table. Defaults to a time based lock of 30 seconds
       unless aternate timeout option or process id (pid) is passed. If a pid is passed, the lock
       is considered infinite as long as the pid is valid. If a previous lock key is passed and it is
@@ -1052,7 +1130,11 @@ select xt.install_js('XT','Data','xtuple', $$
 
       @param {String | Number} Table name or oid
       @param {Number} Record id
-      @param {Object} Options: timeout, pid, key
+      @param {Object} Options
+      @param {Number} [options.timeout=30]
+      @param {Number} [options.pid] Process id
+      @param {Number} [options.key] Key
+      @param {Boolean} [options.obtainLock=true] If false, only checks for existing lock
     */
     tryLock: function (table, id, options) {
       options = options ? options : {};
@@ -1066,7 +1148,7 @@ select xt.install_js('XT','Data','xtuple', $$
         deleteSql = "delete from xt.lock where lock_id = $1;",
         selectSql = "select * " +
                     "from xt.lock " +
-                    "where lock_table_oid = $1 " + 
+                    "where lock_table_oid = $1 " +
                     " and lock_record_id = $2;",
         insertSqlPid = "insert into xt.lock (lock_table_oid, lock_record_id, lock_username, lock_pid) " +
                      "values ($1, $2, $3, $4) returning lock_id, lock_effective;",
@@ -1084,7 +1166,7 @@ select xt.install_js('XT','Data','xtuple', $$
       /* If passed a table name, look up the oid */
       oid = typeof table === "string" ? this.getTableOid(table) : table;
 
-      if (DEBUG) plv8.elog(NOTICE, "Trying lock table", oid, id); 
+      if (DEBUG) plv8.elog(NOTICE, "Trying lock table", oid, id);
 
       /* See if there are existing lock(s) for this record */
       query = plv8.execute(selectSql, [oid, id]);
@@ -1097,7 +1179,7 @@ select xt.install_js('XT','Data','xtuple', $$
           /* See if we are confirming our own lock */
           if (options.key && options.key === lock.lock_id) {
             /* Go on and we'll get a new lock */
-          
+
           /* Make sure if they are pid locks users is still connected */
           } else if (lock.lock_pid) {
             pcheck = plv8.execute(pidSql, [lock.lock_username, lock.lock_pid]);
@@ -1107,14 +1189,14 @@ select xt.install_js('XT','Data','xtuple', $$
             if (DEBUG) { plv8.elog(NOTICE, "Lock found", lockExp > expires, lockExp, expires); }
             if (lockExp > expires) { break; } /* valid lock */
           }
-          
+
           /* Delete invalid or expired lock */
           plv8.execute(deleteSql, [lock.lock_id]);
           lock = undefined;
         }
 
         if (lock) {
-          if (DEBUG) plv8.elog(NOTICE, "Lock found", lock.lock_username); 
+          if (DEBUG) plv8.elog(NOTICE, "Lock found", lock.lock_username);
           return {
             username: lock.lock_username,
             effective: lock.lock_effective
@@ -1122,7 +1204,9 @@ select xt.install_js('XT','Data','xtuple', $$
         }
       }
 
-      if (DEBUG) plv8.elog(NOTICE, "Creating lock."); 
+      if (options.obtainLock === false) { return; }
+
+      if (DEBUG) plv8.elog(NOTICE, "Creating lock.");
 
       if (pid) {
         lock = plv8.execute(insertSqlPid, [oid, id, username, pid])[0];
@@ -1132,8 +1216,8 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       if (DEBUG) { plv8.elog(NOTICE, "Lock returned is", lock.lock_id); }
-     
-      return { 
+
+      return {
         username: username,
         effective: lock.lock_effective,
         key: lock.lock_id
@@ -1154,7 +1238,7 @@ select xt.install_js('XT','Data','xtuple', $$
         plv8.execute(sqlKey, [options.key]);
       } else {
         oid = typeof options.table === "string" ? this.getTableOid(options.table) : options.table;
-        
+
         if (DEBUG) { plv8.elog(NOTICE, oid, options.id, username); }
         plv8.execute(sqlUsr, [oid, options.id, username]);
       }
@@ -1181,7 +1265,7 @@ select xt.install_js('XT','Data','xtuple', $$
       if (query.length) {
         plv8.execute(updateSql, [expires, key]);
         return true;
-      } 
+      }
 
       return false;
     }

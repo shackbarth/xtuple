@@ -107,7 +107,7 @@ select xt.install_js('XT','Orm','xtuple', $$
             "where (classid='pg_rewrite'::regclass) " +
             " and (refclassid='pg_class'::regclass) " +
             ' and (refobjid::regclass::text in ($1,$2)) ' +
-            " and (nspname || '.' || relname not in ($1,$2)) ";
+            " and (nspname || '.' || relname not in ($1,$2));";
     rec = plv8.execute(sql, [view, quoted]);
 
     /*  Loop through view dependencies */
@@ -247,6 +247,8 @@ select xt.install_js('XT','Orm','xtuple', $$
     /* constants */
     var SELECT = 'select {columns} from {table} where {conditions}',
       cols = [],
+      cols = [],
+      altcols = [],
       tbls = [],
       tbl = 1 - 0,
       clauses = [],
@@ -255,7 +257,9 @@ select xt.install_js('XT','Orm','xtuple', $$
       query = '',
       base = orm,
       viewName = orm.nameSpace.decamelize() + '.' + orm.type.decamelize(),
-      processOrm;
+      altViewName = orm.nameSpace.decamelize() + '._' + orm.type.decamelize(),
+      processOrm,
+      res;
 
     // ..........................................................
     // METHODS
@@ -272,6 +276,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         alias,
         toOne,
         table,
+        alttable,
         type,
         inverse,
         iorm,
@@ -280,22 +285,33 @@ select xt.install_js('XT','Orm','xtuple', $$
         isVisible,
         value,
         conditions,
-        join;
+        altconditions,
+        join,
+        lockTable,
+        schemaName,
+        tableName;
       for (i = 0; i < props.length; i++) {
         alias = props[i].name;
         if(DEBUG) plv8.elog(NOTICE, 'processing property ->', props[i].name);
         if(props[i].name === 'dataState') throw new Error("Can not use 'dataState' as a property name.");
 
         /* process attributes */
-        if(props[i].attr || (props[i].toOne && props[i].toOne.isNested === false)) {
-          if(DEBUG) plv8.elog(NOTICE, 'building attribute');
+        if (props[i].attr || props[i].toOne) {
+          if (DEBUG) plv8.elog(NOTICE, 'building attribute');
           attr = props[i].attr ? props[i].attr : props[i].toOne;
           isVisible = attr.value ? false : true;
-          if(!attr.type) throw new Error('No type was defined on property ' + props[i].name);
-          if(isVisible) {
+          if (!attr.type) throw new Error('No type was defined on property ' + props[i].name);
+          if (isVisible) {
             col = tblAlias + '.' + attr.column;
             col = col.concat(' as "', alias, '"');
-            cols.push(col);
+            if (props[i].attr || props[i].toOne.isNested === false) {
+              cols.push(col);
+            }
+
+            /* handle the default non-nested case */
+            if (props[i].attr || props[i].toOne.isNested === undefined) {
+              altcols.push(col);
+            }
           }
 
           /* handle fixed value */
@@ -306,7 +322,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         }
 
         /* process toOne  */
-        if(props[i].toOne && props[i].toOne.isNested !== false) {
+        if (props[i].toOne && props[i].toOne.isNested !== false) {
           toOne = props[i].toOne;
           table = base.nameSpace.decamelize() + '.' + toOne.type.decamelize();
           type = table.afterDot();
@@ -323,6 +339,19 @@ select xt.install_js('XT','Orm','xtuple', $$
                    .replace('{conditions}', conditions))
                    .replace('{alias}', alias);
           cols.push(col);
+
+          /* handle the default non-nested case */
+          if (props[i].toOne.isNested === true) {
+            table = base.nameSpace.decamelize() + '._' + toOne.type.decamelize();
+            conditions = '"_' + type + '"."' + inverse + '" = ' + tblAlias + '.' + toOne.column;
+            col = '({select}) as "{alias}"';
+            col = col.replace('{select}',
+             SELECT.replace('{columns}', '"_' + type + '"')
+                   .replace('{table}',  table)
+                   .replace('{conditions}', conditions))
+                   .replace('{alias}', alias);
+            altcols.push(col);
+          }
         }
 
         /* process toMany */
@@ -331,6 +360,7 @@ select xt.install_js('XT','Orm','xtuple', $$
          if(!props[i].toMany.type) throw new Error('No type was defined on property ' + props[i].name);
            toMany = props[i].toMany;
            table = base.nameSpace + '.' + toMany.type.decamelize();
+           alttable = base.nameSpace + '._' + toMany.type.decamelize();
            type = toMany.type.decamelize();
            column = toMany.isNested ? type : XT.Orm.primaryKey(XT.Orm.fetch(base.nameSpace, toMany.type));
            iorm = XT.Orm.fetch(base.nameSpace, toMany.type);
@@ -341,8 +371,10 @@ select xt.install_js('XT','Orm','xtuple', $$
           ormp = XT.Orm.getProperty(iorm, inverse);
           if(ormp && ormp.toOne && ormp.toOne.isNested) {
             conditions = toMany.column ? '(' + type + '."' + inverse + '").id = ' + tblAlias + '.' + toMany.column : 'true';
+            altconditions = toMany.column ? '(_' + type + '."' + inverse + '").id = ' + tblAlias + '.' + toMany.column : 'true';
           } else {
             conditions = toMany.column ? type + '."' + inverse + '" = ' + tblAlias + '.' + toMany.column : 'true';
+            altconditions = toMany.column ? "_" + type + '."' + inverse + '" = ' + tblAlias + '.' + toMany.column : 'true';
           }
 
           /* build select */
@@ -352,6 +384,15 @@ select xt.install_js('XT','Orm','xtuple', $$
                    .replace('{conditions}', conditions))
                    .replace('{alias}', alias);
           cols.push(col);
+
+          /* same for alternate view */
+          col = 'array({select}) as "{alias}"';
+          col = col.replace('{select}',
+             SELECT.replace('{columns}', toMany.isNested ? "_" + column : column)
+                   .replace('{table}', alttable)
+                   .replace('{conditions}', altconditions))
+                   .replace('{alias}', alias);
+          altcols.push(col);
         }
       }
 
@@ -403,11 +444,6 @@ select xt.install_js('XT','Orm','xtuple', $$
       /* base orm */
       } else {
         if(DEBUG) plv8.elog(NOTICE, 'process base CRUD');
-
-       /* add static values */
-       cols.push("'" + orm.type + "' as \"type\"");
-       cols.push("'read' as \"dataState\"");
-       if (orm.lockable) { cols.push("null as \"lock\""); }
 
         /* table */
         clauses = clauses.concat(ormClauses);
@@ -470,5 +506,47 @@ select xt.install_js('XT','Orm','xtuple', $$
     query = 'grant all on {view} to xtrole'
             .replace('{view}', viewName);
     plv8.execute(query);
+
+    /* This is the alternate view where the default toOne behavior is non-nested */
+
+    /* Build query to create the new alternate view */
+    query = 'create view {name} as select {columns} from {tables} {where} {order};'
+            .replace('{name}', altViewName)
+            .replace('{columns}', altcols.join(', '))
+            .replace('{tables}', tbls.join(' '))
+            .replace('{where}', clauses.length ? 'where ' + clauses.join(' and ') : '')
+            .replace('{order}', orderBy.length ? 'order by ' + orderBy.join(' , ') : '');
+    if(DEBUG) plv8.elog(NOTICE, 'query', query);
+    plv8.execute(query);
+
+    /* Add comment */
+    query = "comment on view {name} is '{comments}'"
+            .replace('{name}', altViewName)
+            .replace('{comments}', comments);
+    plv8.execute(query);
+
+    /* Grant access to xtrole */
+    query = 'grant all on {view} to xtrole'
+            .replace('{view}', altViewName);
+    plv8.execute(query);
+
+    /* If applicable, add a trigger to the table to keep version number updated */
+    if (orm.isNestedOnly !== true &&
+       (orm.privileges && orm.privileges.all && orm.privileges.all.create !== false ||
+        orm.privileges && orm.privileges.all && orm.privileges.all.update !== false ||
+        orm.privileges && orm.privileges.all && orm.privileges.all.delete !== false)) {
+      query = 'select * from pg_tables where schemaname = $1 and tablename = $2';
+      lockTable = orm.lockTable || orm.table;
+      schemaName = lockTable.indexOf(".") === -1 ? 'public' : lockTable.beforeDot();
+      tableName = lockTable.indexOf(".") === -1 ? lockTable : lockTable.afterDot();
+      res = plv8.execute(query, [schemaName, tableName]);
+      if (res.length) {
+        query = 'drop trigger if exists {tableName}_did_change on {table};' +
+                'create trigger {tableName}_did_change after insert or update or delete on {table} for each row execute procedure xt.record_did_change();';
+        query =  query.replace(/{tableName}/g, tableName)
+                      .replace(/{table}/g, lockTable);
+        plv8.execute(query);
+      }
+    }
   };
 $$ );

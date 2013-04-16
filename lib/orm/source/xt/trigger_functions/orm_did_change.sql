@@ -1,6 +1,13 @@
 create or replace function xt.orm_did_change() returns trigger as $$
 
-  var view, views = [], i = 1, res, n;
+  var view,
+    views = [],
+    lockTable,
+    tableName,
+    i = 1,
+    sql,
+    res,
+    n;
 
 
   /* Don't bother updating if nothing has changed */
@@ -24,6 +31,9 @@ create or replace function xt.orm_did_change() returns trigger as $$
     nsp = views[n].beforeDot();
     rel = views[n].afterDot();
     plv8.execute("drop view if exists " + nsp + "." + rel);
+    if (rel.indexOf("_") !== 0) {
+      plv8.execute("drop view if exists " + nsp + "._" + rel);
+    }
   }
 
   /* Determine whether to rebuild */ 
@@ -56,15 +66,26 @@ create or replace function xt.orm_did_change() returns trigger as $$
     for(var i = 0; i < views.length; i++) {
       var nameSpace = views[i].beforeDot().camelize().toUpperCase(),
           type = views[i].afterDot().classify(),
-          orm = XT.Orm.fetch(nameSpace, type, true);
-          
-      XT.Orm.createView(orm);
+          orm;
+      if (type.indexOf("_") !== 0) { 
+        orm = XT.Orm.fetch(nameSpace, type, true);
+        XT.Orm.createView(orm);
+      }
     }
   }
 
   /* Finish up */
-  if(TG_OP === 'DELETE') return OLD;
-  
+  if (TG_OP === 'DELETE') {
+    orm = JSON.parse(OLD.orm_json);
+    lockTable = orm.lockTable || orm.table;
+    tableName =  lockTable.indexOf(".") === -1 ? lockTable : lockTable.afterDot(); 
+    sql = 'drop trigger if exists {tableName}_did_change on {table};'
+          .replace(/{tableName}/, tableName)
+          .replace(/{table}/, lockTable);
+    plv8.execute(sql);
+    return OLD;
+  }
+
   return NEW;
 
 $$ language plv8;

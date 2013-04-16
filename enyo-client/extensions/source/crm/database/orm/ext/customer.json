@@ -24,7 +24,6 @@
      {
         "name": "contactRelations",
         "toMany": {
-          "isNested": true,
           "type": "CustomerContactRelation",
           "column": "crmacct_id",
           "inverse": "account"
@@ -33,7 +32,6 @@
       {
         "name": "incidentRelations",
         "toMany": {
-          "isNested": true,
           "type": "CustomerIncidentRelation",
           "column": "crmacct_id",
           "inverse": "account"
@@ -42,7 +40,6 @@
       {
         "name": "opportunityRelations",
         "toMany": {
-          "isNested": true,
           "type": "CustomerOpportunityRelation",
           "column": "crmacct_id",
           "inverse": "account"
@@ -51,7 +48,6 @@
       {
         "name": "toDoRelations",
         "toMany": {
-          "isNested": true,
           "type": "CustomerToDoRelation",
           "column": "crmacct_id",
           "inverse": "account"
