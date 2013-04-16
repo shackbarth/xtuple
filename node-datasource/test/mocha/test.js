@@ -10,10 +10,10 @@ var crud = require("./crud"),
     recordType: "XM.Honorific",
     autoTestAttributes: true,
     createHash: {
-      code: "Herr"
+      code: "Herr" + Math.random()
     },
     updateHash: {
-      code: "Dame"
+      code: "Dame" + Math.random()
     }
   };
 
@@ -24,7 +24,4 @@ describe('Zombie authentication', function (){
     crud.runAllCrud(data);
   });
 
-  it('is groovy', function () {
-    assert.isNotNumber("the.largest.ball.of.string.in.the.world()");
-  });
 })

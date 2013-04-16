@@ -13,6 +13,30 @@ var _ = require("underscore"),
 
   exports.waitTime = 10000;
 
+  var testAttributes = function (data) {
+    if (!data.autoTestAttributes) {
+      return;
+    }
+    var hashToTest = data.updated ? _.extend(data.createHash, data.updateHash) : data.createHash;
+    _.each(hashToTest, function (value, key) {
+      // depending on how we represent sub-objects, we want to verify them in different ways
+      if (typeof (data.model.get(key)) === 'object' && typeof value === 'object') {
+        // if the data is a model and the test hash looks like {contact: {id: 7}}
+        assert.equal(data.model.get(key).id, value.id);
+      } else if (key === data.model.documentKey &&
+          data.model.enforceUpperKey === true) {
+          // this is the document key, so it should have been made upper case
+        assert.equal(data.model.get(key), value.toUpperCase());
+      } else if (typeof (data.model.get(key)) === 'object' && typeof value === 'number') {
+        // if the data is a model and the test hash looks like {contact: 7}
+        assert.equal(data.model.get(key).id, value);
+      } else {
+        // default case, such as comparing strings to strings etc.
+        assert.equal(data.model.get(key), value);
+      }
+    });
+  };
+
   /**
     Creates a working model and automatically checks state
     is `READY_NEW` and a valid `id` immediately afterward.
@@ -36,16 +60,20 @@ var _ = require("underscore"),
             clearTimeout(timeoutId);
             model.off('change:' + model.documentKey, modelCallback);
             model.off('change:id', modelCallback);
+            assert.equal(data.model.getStatusString(), 'READY_NEW');
+            assert.isNumber(data.model.id);
             callback(null, data);
           }
         } else {
           clearTimeout(timeoutId);
           model.off('change:id', modelCallback);
+          assert.equal(data.model.getStatusString(), 'READY_NEW');
+          assert.isNumber(data.model.id);
           callback(null, data);
         }
       };
 
-    model.on('change:id', callback);
+    model.on('change:id', modelCallback);
     // Add an event handler when using a model with an AUTO...NUMBER.
     if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
       model.on('change:' + model.documentKey, modelCallback);
@@ -54,7 +82,7 @@ var _ = require("underscore"),
 
     // If we don't hear back, keep going
     timeoutId = setTimeout(function () {
-      console.log("timeout was reached");
+      assert.fail("timeout was reached on create", "");
       callback(null, data);
     }, exports.waitTime);
   };
@@ -66,68 +94,38 @@ var _ = require("underscore"),
     @param {Object} Data
     @param {Object} Vows
   */
-  var save = exports.save = function (data, vows) {
-    vows = vows || {};
-    var context = {
-      topic: function () {
-        var that = this,
-          timeoutId,
-          model = data.model,
-          callback = function () {
-            var status = model.getStatus(),
-              K = XM.Model;
-            if (status === K.READY_CLEAN) {
-              clearTimeout(timeoutId);
-              model.off('statusChange', callback);
-              that.callback(null, data);
-            }
-          };
-        model.on('statusChange', callback);
-        model.save(null, {
-          error: function (model, error, options) {
-            that.callback(JSON.stringify(error));
-          }
-        });
+  var save = exports.save = function (data, callback, vows) {
+    var that = this,
+      timeoutId,
+      model = data.model,
+      modelCallback = function () {
+        var status = model.getStatus(),
+          K = XM.Model;
+        if (status === K.READY_CLEAN) {
+          clearTimeout(timeoutId);
+          model.off('statusChange', modelCallback);
 
-        // If we don't hear back, keep going
-        timeoutId = setTimeout(function () {
-          console.log("timeout was reached");
-          that.callback(null, data);
-        }, exports.waitTime);
-      },
-      'Save was successful': function (error, data) {
-        assert.equal(error, null);
-        assert.equal(data.model.getStatusString(), 'READY_CLEAN');
-      },
-      'And the values are as we set them': function (error, data) {
-        if (!data.autoTestAttributes) {
-          return;
+          assert.equal(data.model.getStatusString(), 'READY_CLEAN');
+          testAttributes(data);
+
+          callback(null, data);
         }
-        var hashToTest = data.updated ? _.extend(data.createHash, data.updateHash) : data.createHash;
-        _.each(hashToTest, function (value, key) {
-          // depending on how we represent sub-objects, we want to verify them in different ways
-          if (typeof (data.model.get(key)) === 'object' && typeof value === 'object') {
-            // if the data is a model and the test hash looks like {contact: {id: 7}}
-            assert.equal(data.model.get(key).id, value.id);
-          } else if (key === data.model.documentKey &&
-              data.model.enforceUpperKey === true) {
-              // this is the document key, so it should have been made upper case
-            assert.equal(data.model.get(key), value.toUpperCase());
-          } else if (typeof (data.model.get(key)) === 'object' && typeof value === 'number') {
-            // if the data is a model and the test hash looks like {contact: 7}
-            assert.equal(data.model.get(key).id, value);
-          } else {
-            // default case, such as comparing strings to strings etc.
-            assert.equal(data.model.get(key), value);
-          }
-        });
+      };
+    model.on('statusChange', modelCallback);
+    model.save(null, {
+      error: function (model, error, options) {
+        assert.fail(JSON.stringify(error), "");
+        callback(JSON.stringify(error));
       }
-    };
+    });
 
-    // Add in any other passed vows
-    _.extend(context, vows);
-    return context;
+    // If we don't hear back, keep going
+    timeoutId = setTimeout(function () {
+      assert.fail("timeout was reached on save", "");
+      callback(null, data);
+    }, exports.waitTime);
   };
+
 
   /**
     Check before updating the working model that the state is `READY_CLEAN`.
@@ -135,21 +133,9 @@ var _ = require("underscore"),
     @param {Object} Data
     @param {Object} Vows
   */
-  var update = exports.update = function (data, vows) {
-    vows = vows || {};
-    var context = {
-      topic: function () {
-        data.updated = true;
-        return data;
-      },
-      'Status is `READY_CLEAN`': function (data) {
-        assert.equal(data.model.getStatusString(), 'READY_CLEAN');
-      }
-    };
-
-    // Add in any other passed vows
-    _.extend(context, vows);
-    return context;
+  var update = exports.update = function (data, callback, vows) {
+    data.updated = true;
+    return data;
   };
 
   /**
@@ -159,41 +145,31 @@ var _ = require("underscore"),
     @param {Data}
     @param {Object} Vows
   */
-  var destroy = exports.destroy = function (data, vows) {
-    vows = vows || {};
-    var context = {
-      topic: function () {
-        var that = this,
-          timeoutId,
-          model = data.model,
-          callback = function () {
-            var status = model.getStatus(),
-              K = XM.Model;
-            if (status === K.DESTROYED_CLEAN) {
-              clearTimeout(timeoutId);
-              model.off('statusChange', callback);
-              that.callback(null, data);
-            } else if (status === K.ERROR) {
-              that.callback(data.model.lastError || "Unspecified error");
-            }
-          };
-        model.on('statusChange', callback);
-        model.destroy();
+  var destroy = exports.destroy = function (data, callback, vows) {
+    var that = this,
+      timeoutId,
+      model = data.model,
+      modelCallback = function () {
+        var status = model.getStatus(),
+          K = XM.Model;
+        if (status === K.DESTROYED_CLEAN) {
+          clearTimeout(timeoutId);
+          model.off('statusChange', modelCallback);
+          assert.equal(data.model.getStatusString(), 'DESTROYED_CLEAN');
+          callback(null, data);
+        } else if (status === K.ERROR) {
+          assert.fail(data.model.lastError || "Unspecified error on delete", "");
+          callback(data.model.lastError || "Unspecified error");
+        }
+      };
+    model.on('statusChange', modelCallback);
+    model.destroy();
 
-        // If we don't hear back, keep going
-        timeoutId = setTimeout(function () {
-          console.log("timeout was reached");
-          that.callback(null, data);
-        }, exports.waitTime);
-      },
-      'Status is `DESTROYED_CLEAN`': function (error, data) {
-        assert.equal(error, null);
-        assert.equal(data.model.getStatusString(), 'DESTROYED_CLEAN');
-      }
-    };
-    // Add in any other passed vows
-    _.extend(context, vows);
-    return context;
+    // If we don't hear back, keep going
+    timeoutId = setTimeout(function () {
+      assert.fail("timeout was reached on delete", "");
+      callback(null, data);
+    }, exports.waitTime);
   };
 
   /**
@@ -203,27 +179,41 @@ var _ = require("underscore"),
   var runAllCrud = exports.runAllCrud = function (data) {
 
     var runCrud = function () {
+      var createCallback = function () {
+        var saveCallback = function () {
+          var secondSaveCallback = function () {
+            destroy(data, data.done);
+          }
+          update(data);
+          data.model.set(data.updateHash);
+          testAttributes(data);
+          save(data, secondSaveCallback);
+        }
+
+
+        save(data, saveCallback);
+
+      };
+
+
       data.model = new XM[data.recordType.substring(3)]();
       assert.equal(data.model.recordType, data.recordType);
 
+      data.model.set(data.createHash);
       // TODO: flesh out mock models
       create(data, createCallback);
 
-
-      data.done();
-
-
-    }
+    };
 
 
 
 
 
 
-    zombieAuth.loadApp({callback: runCrud, verbose: false});
+    zombieAuth.loadApp({callback: runCrud, verbose: true});
 
 
-  }
+  };
   /*
     var context = {
       topic: function () {
