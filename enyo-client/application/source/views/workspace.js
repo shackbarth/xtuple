@@ -1539,8 +1539,11 @@ trailing:true white:true*/
     build: function () {
       var that = this;
       this.getComponents().forEach(function (e, i) {
-        // TODO: fields for Sales Order
-        //{kind: "XV.DateWidget", attr: "orderDate"},
+        // TODO: Add this just for sales order
+          // {kind: "XV.DateWidget", attr: "salesOrderDate"},
+          // {kind: "XV.DateWidget", attr: "expireDate"},
+          // {kind: "XV.InputWidget", attr: "getQuoteStatusString",
+          //   label: "_status".loc()},
           if (e.kind === "Panels") {
             e.createComponents([
                 {kind: "XV.SalesOrderCommentBox", attr: "comments"},
