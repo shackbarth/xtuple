@@ -11,7 +11,7 @@ var _ = require("underscore"),
 (function () {
   "use strict";
 
-  exports.waitTime = 10000;
+  var waitTime = exports.waitTime = 10000;
 
   var testAttributes = function (data) {
     if (!data.autoTestAttributes) {
@@ -39,9 +39,10 @@ var _ = require("underscore"),
 
   /**
     We allow the test to use a shorthand mock for these submodels, and
-    flesh them out here. This is very very clever.
+    flesh them out here. This is very very clever. If no mocks are
+    specified, we just do a simple model.set.
    */
-  var fleshOutModels = function (data, callback) {
+  var putTestDataIntoModel = function (data, callback) {
     var objectsToFetch = 0,
       objectsFetched = 0,
       fetchSuccess = function (model, response, options) {
@@ -134,7 +135,7 @@ var _ = require("underscore"),
     timeoutId = setTimeout(function () {
       assert.fail("timeout was reached on create", "");
       callback();
-    }, exports.waitTime);
+    }, waitTime);
   };
 
   /**
@@ -174,18 +175,19 @@ var _ = require("underscore"),
     timeoutId = setTimeout(function () {
       assert.fail("timeout was reached on save", "");
       callback();
-    }, exports.waitTime);
+    }, waitTime);
   };
 
 
   /**
-    Unclear if we need to support this moving forward
+    Set the model with the updated data and verify that they're updated.
 
     @param {Object} data
   */
   var update = exports.update = function (data) {
+    data.model.set(data.updateHash);
     data.updated = true;
-    return data;
+    testAttributes(data);
   };
 
   /**
@@ -206,12 +208,14 @@ var _ = require("underscore"),
           clearTimeout(timeoutId);
           model.off('statusChange', modelCallback);
           assert.equal(data.model.getStatusString(), 'DESTROYED_CLEAN');
+          console.log("This is it");
           callback();
         } else if (status === K.ERROR) {
           assert.fail(data.model.lastError || "Unspecified error on delete", "");
           callback();
         }
       };
+
     model.on('statusChange', modelCallback);
     model.destroy();
 
@@ -219,39 +223,50 @@ var _ = require("underscore"),
     timeoutId = setTimeout(function () {
       assert.fail("timeout was reached on delete", "");
       callback();
-    }, exports.waitTime);
+    }, waitTime);
   };
 
   /**
     String all CRUD tests together so that simple models can be
     tested with a single function
    */
-  var runAllCrud = exports.runAllCrud = function (data) {
+  var runAllCrud = exports.runAllCrud = function (data, done) {
 
     var runCrud = function () {
       var fleshCallback = function () {
         var createCallback = function () {
           var saveCallback = function () {
             var secondSaveCallback = function () {
-              destroy(data, data.done);
+
+              // Step 8: delete the model from the database
+              destroy(data, done);
             }
+
+            // Step 6: set the model with updated data
             update(data);
-            data.model.set(data.updateHash);
-            testAttributes(data);
+
+            // Step 7: save the updated model to the database
             save(data, secondSaveCallback);
           }
+
+          // Step 5: save the data to the database
           save(data, saveCallback);
         };
+
+        // Step 4: initialize the model to get the ID from the database
         create(data, createCallback);
       };
+
+      // Step 2: create the model per the record type specified
       data.model = new XM[data.recordType.substring(3)]();
       assert.equal(data.model.recordType, data.recordType);
 
-      data.model.set(data.createHash);
-      fleshOutModels(data, fleshCallback);
+      // Step 3: set the model with our createData
+      putTestDataIntoModel(data, fleshCallback);
     };
 
-    zombieAuth.loadApp({callback: runCrud, verbose: true});
+    // Step 1: load the environment with Zombie
+    zombieAuth.loadApp({callback: runCrud, verbose: false});
   };
 
 }());
