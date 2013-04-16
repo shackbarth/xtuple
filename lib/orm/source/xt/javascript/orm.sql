@@ -54,6 +54,7 @@ select xt.install_js('XT','Orm','xtuple', $$
       oldJson,
       oldOrm,
       isExtension,
+      isRest = newJson.isRest ? newJson.isRest : false,
       sequence,
       nameSpace = newJson.nameSpace,
       type = newJson.type,
@@ -78,12 +79,13 @@ select xt.install_js('XT','Orm','xtuple', $$
       if(oldOrm.isExtension !== isExtension) throw new Error("Can not change extension state for " + nameSpace + '.' + type);
       sql = 'update xt.orm set ' +
             ' orm_json = $1, ' +
-            ' orm_seq = $2 ' +
-            'where orm_id = $3';
-      plv8.execute(sql, [json, sequence, oldOrm.id]);
+            ' orm_seq = $2, ' +
+            ' orm_rest = $3 ' +
+            'where orm_id = $4';
+      plv8.execute(sql, [json, sequence, isRest, oldOrm.id]);
     } else {
-      sql = 'insert into xt.orm ( orm_namespace, orm_type, orm_context, orm_json, orm_seq, orm_ext ) values ($1, $2, $3, $4, $5, $6)';
-      plv8.execute(sql, [nameSpace, type, context, json, sequence, isExtension]);
+      sql = 'insert into xt.orm ( orm_namespace, orm_type, orm_context, orm_json, orm_seq, orm_ext, orm_rest ) values ($1, $2, $3, $4, $5, $6, $7)';
+      plv8.execute(sql, [nameSpace, type, context, json, sequence, isExtension, isRest]);
     }
   };
 
@@ -244,7 +246,7 @@ select xt.install_js('XT','Orm','xtuple', $$
   XT.Orm.createView = function (orm) {
     /* constants */
     var SELECT = 'select {columns} from {table} where {conditions}',
-      cols = [], 
+      cols = [],
       altcols = [],
       tbls = [],
       tbl = 1 - 0,
@@ -304,7 +306,7 @@ select xt.install_js('XT','Orm','xtuple', $$
             if (props[i].attr || props[i].toOne.isNested === false) {
               cols.push(col);
             }
-            
+
             /* handle the default non-nested case */
             if (props[i].attr || props[i].toOne.isNested === undefined) {
               altcols.push(col);
@@ -381,7 +383,7 @@ select xt.install_js('XT','Orm','xtuple', $$
                    .replace('{conditions}', conditions))
                    .replace('{alias}', alias);
           cols.push(col);
-          
+
           /* same for alternate view */
           col = 'array({select}) as "{alias}"';
           col = col.replace('{select}',
@@ -535,7 +537,7 @@ select xt.install_js('XT','Orm','xtuple', $$
       query = 'select * from pg_tables where schemaname = $1 and tablename = $2';
       lockTable = orm.lockTable || orm.table;
       schemaName = lockTable.indexOf(".") === -1 ? 'public' : lockTable.beforeDot();
-      tableName = lockTable.indexOf(".") === -1 ? lockTable : lockTable.afterDot(); 
+      tableName = lockTable.indexOf(".") === -1 ? lockTable : lockTable.afterDot();
       res = plv8.execute(query, [schemaName, tableName]);
       if (res.length) {
         query = 'drop trigger if exists {tableName}_did_change on {table};' +
@@ -544,6 +546,6 @@ select xt.install_js('XT','Orm','xtuple', $$
                       .replace(/{table}/g, lockTable);
         plv8.execute(query);
       }
-    } 
+    }
   };
 $$ );

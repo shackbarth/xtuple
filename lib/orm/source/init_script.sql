@@ -75,6 +75,7 @@
 \i xt/javascript/orm.sql;
 \i xt/javascript/session.sql;
 \i xt/javascript/schema.sql;
+\i xt/javascript/discovery.sql;
 
 -- [ END ] xt
 
