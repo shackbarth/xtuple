@@ -90,15 +90,15 @@ white:true*/
     },
 
     /*
-    Returns a single record.
+    Server request
 
-    @param {String} record type
-    @param {Number} id
+    @param {Object} model
+    @param {String} method
+    @param {Object} payload
     @param {Object} options
     */
-    retrieveRecord: function (model, options) {
+    request: function (model, method, payload, options) {
       var that = this,
-        payload = {},
         complete = function (response) {
           var params = {}, error;
 
@@ -127,56 +127,10 @@ white:true*/
           }
         };
 
-      payload.requestType = 'retrieveRecord';
-      payload.recordType = model.recordType;
-      payload.id = options.id || model.id;
-      payload.databaseType = options.databaseType;
-      payload.options = { context: options.context };
-
       return XT.Request
-               .handle("function/retrieveRecord")
+               .handle(method)
                .notify(complete)
-               .send(payload);
-    },
-
-    /*
-    Commit a single record.
-
-    @param {XM.Model} model
-    @param {Object} options
-    */
-    commitRecord: function (model, options) {
-      var that = this,
-        payload = {},
-        complete = function (response) {
-          var params = {}, error;
-
-          // Handle error
-          if (response.isError) {
-            if (options && options.error) {
-              params.error = response.message;
-              error = XT.Error.clone('xt1001', { params: params });
-              options.error.call(that, error);
-            }
-            return;
-          }
-
-          if (options && options.success) {
-            options.success.call(that, model, response.data, options);
-          }
-        };
-
-      payload.requestType = 'commitRecord';
-      payload.recordType = model.recordType;
-      payload.binaryField = model.binaryField; // see issue 18661
-      payload.requery = options.requery;
-      payload.databaseType = options.databaseType;
-      payload.dataHash = model.changeSet();
-
-      return XT.Request
-               .handle("function/commitRecord")
-               .notify(complete)
-               .send(payload);
+               .send(JSON.stringify(payload));
     },
 
     /*

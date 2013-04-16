@@ -229,15 +229,14 @@ white:true*/
     },
 
     /*
-    Returns a single record.
+    Request for data processing action
 
     @param {String} record type
     @param {Number} id
     @param {Object} options
     */
-    retrieveRecord: function (model, options) {
+    request: function (model, method, payload, options) {
       var that = this,
-        payload = {},
         conn = X.options.globalDatabase,
         query,
         complete = function (err, response) {
@@ -252,7 +251,7 @@ white:true*/
             }
             return;
           }
-          dataHash = JSON.parse(response.rows[0].retrieve_record);
+          dataHash = JSON.parse(response.rows[0].request);
 
           // Handle no data as error
           if (_.isEmpty(dataHash)) {
@@ -269,54 +268,9 @@ white:true*/
           }
         };
 
-      payload.recordType = model.recordType;
-      payload.id = options.id || model.id;
-      payload.options = { context: options.context };
       payload.username = options.username;
       payload = JSON.stringify(payload);
-      query = "select xt.retrieve_record('%@')".f(payload);
-      //X.log(query);
-      this.query(query, conn, complete);
-      return true;
-    },
-
-    /*
-    Commit a single record.
-
-    @param {XM.Model} model
-    @param {Object} options
-    */
-    commitRecord: function (model, options) {
-      var that = this,
-        payload = {},
-        conn = X.options.globalDatabase,
-        query,
-        complete = function (err, response) {
-          var dataHash, params = {}, error;
-          //console.log("complete ", err, response);
-          // Handle error
-          if (err) {
-            if (options && options.error) {
-              params.error = err;
-              error = XT.Error.clone('xt1001', { params: params });
-              options.error.call(that, error);
-            }
-            return;
-          }
-
-          // Handle ok or complete hash response
-          dataHash = JSON.parse(response.rows[0].commit_record);
-          if (options && options.success) {
-            options.success.call(that, model, dataHash, options);
-          }
-        };
-
-      payload.recordType = model.recordType;
-      payload.requery = options.requery;
-      payload.dataHash = model.changeSet();
-      payload.username = options.username;
-      payload = JSON.stringify(payload);
-      query = "select xt.commit_record($$%@$$)".f(payload);
+      query = "select xt.retrieve_record('%@') as request".f(payload);
       //X.log(query);
       this.query(query, conn, complete);
       return true;
