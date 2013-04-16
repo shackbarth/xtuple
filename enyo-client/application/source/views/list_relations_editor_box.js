@@ -282,13 +282,13 @@ trailing:true white:true*/
         {kind: "XV.PercentWidget", name: "discount", attr: "discount",
           label: "_discount".loc()},
         {kind: "XV.MoneyWidget", attr:
-          {amount: "price", currency: "quote.currency"},
+          {localValue: "price", currency: "quote.currency"},
           label: "_price".loc(), currencyDisabled: true,
           effective: "quote.quoteDate", scale: XT.SALES_PRICE_SCALE},
         {kind: "XV.UnitPicker", attr: "priceUnit",
           name: "priceUnitPicker"},
         {kind: "XV.MoneyWidget", attr:
-          {amount: "extendedPrice", currency: "quote.currency"},
+          {localValue: "extendedPrice", currency: "quote.currency"},
           label: "_extendedPrice".loc(), currencyDisabled: true,
           effective: "quote.quoteDate", scale: XT.EXTENDED_PRICE_SCALE},
         {kind: "XV.DateWidget", attr: "scheduleDate"},

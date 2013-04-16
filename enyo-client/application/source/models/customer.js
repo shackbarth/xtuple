@@ -409,7 +409,7 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.CustomerGroup = XM.Model.extend({
+  XM.CustomerGroup = XM.Document.extend({
     /** @scope XM.CustomerGroup.prototype */
 
     recordType: 'XM.CustomerGroup',
@@ -426,9 +426,7 @@ white:true*/
   XM.CustomerGroupCustomer = XM.Model.extend({
     /** @scope XM.CustomerGroupCustomer.prototype */
 
-    recordType: 'XM.CustomerGroupCustomer',
-
-    documentKey: 'name'
+    recordType: 'XM.CustomerGroupCustomer'
 
   });
 
@@ -441,6 +439,10 @@ white:true*/
     /** @scope XM.CustomerShipto.prototype */
 
     recordType: 'XM.CustomerShipto',
+    
+    defaults: {
+      isActive: true
+    },
 
     requiredAttributes: [
       "isActive",
@@ -456,6 +458,7 @@ white:true*/
       XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on('change:customer', this.customerDidChange);
       this.on('change:salesRep', this.salesRepDidChange);
+      this.on('change:isDefault', this.isDefaultDidChange);
     },
 
     customerDidChange: function (model, value, options) {
@@ -494,6 +497,18 @@ white:true*/
         this.set("shipVia", customer.get("shipVia"));
         this.set("shipCharge", customer.get("shipCharge"));
       }
+    },
+    
+    isDefaultDidChange: function () {
+      if (!this.get("isDefault")) { return; }
+      var customer = this.get("customer"),
+        shiptos = customer.get("shiptos"),
+        that = this;
+      _.each(shiptos.models, function (shipto) {
+        if (shipto.id !== that.id && shipto.get("isDefault")) {
+          shipto.set("isDefault", false);
+        }
+      });
     },
 
     salesRepDidChange: function () {
