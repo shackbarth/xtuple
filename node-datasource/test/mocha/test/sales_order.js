@@ -21,21 +21,42 @@
       createHash: {
         calculateFreight: true,
         number: "NUMBER" + Math.random(),
-        customer: { id: 97 },
+        customer: { id: 95 }, // TTOYS
         terms: { id: 42 },
         salesRep: { id: 31 }
       },
       setCallback: function (next) {
-        console.log("Extra creating first!");
-        data.model.set("wasQuote", false);
-        next();
+        var lineItem = new XM.SalesOrderLine(),
+          itemSite = new XM.ItemSite(),
+          modelFetched = function () {
+            if (lineItem.id && itemSite.id) {
+              var unitUpdated = function () {
+                lineItem.set({quantity: 5});
+
+                data.model.get("lineItems").add(lineItem);
+                console.log(JSON.stringify(lineItem.toJSON()));
+                console.log(JSON.stringify(lineItem.validate(lineItem.attributes)));
+                assert.equal(JSON.stringify(lineItem.validate(lineItem.attributes)), undefined);
+                next();
+
+              };
+
+              // changing the item site will trigger a change which will ultimately change the priceUnitRatio
+              lineItem.on("change:priceUnitRatio", unitUpdated);
+              lineItem.set({itemSite: itemSite});
+            }
+          };
+
+        itemSite.fetch({id: 303 /* BTRUCK WH1 */, success: modelFetched});
+        lineItem.on("change:id", modelFetched);
+        lineItem.initialize(null, {isNew: true});
       },
       updateHash: {
         code: "Dame" + Math.random()
       }
     };
 
-  describe('Sales order', function (){
+  describe('Sales order', function () {
     this.timeout(10 * 1000);
     it('should perform all the crud operations', function (done) {
       crud.runAllCrud(data, done);
@@ -59,5 +80,5 @@
       salesOrder.initialize(null, {isNew: true});
     });
     */
-  })
+  });
 }());

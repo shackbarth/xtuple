@@ -1063,6 +1063,13 @@
         }
       },
       {
+        "name": "priceMode",
+        "attr": {
+          "type": "String",
+          "column": "coitem_pricemode"
+        }
+      },
+      {
         "name": "extendedPrice",
         "attr": {
           "type": "ExtendedPrice",

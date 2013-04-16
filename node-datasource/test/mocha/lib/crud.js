@@ -255,9 +255,7 @@ var _ = require("underscore"),
       var setCallback = function () {
         var createCallback = function () {
           var saveCallback = function () {
-            console.log("save callback");
             var secondSaveCallback = function () {
-              console.log("save2 callback");
 
               // Step 8: delete the model from the database
               destroy(data, done);
