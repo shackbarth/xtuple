@@ -42,7 +42,7 @@ var _ = require("underscore"),
     flesh them out here. This is very very clever. If no mocks are
     specified, we just do a simple model.set.
    */
-  var putTestDataIntoModel = function (data, callback) {
+  var setModel = function (data, callback) {
     var objectsToFetch = 0,
       objectsFetched = 0,
       fetchSuccess = function (model, response, options) {
@@ -240,10 +240,8 @@ var _ = require("underscore"),
 
 
     var runCrud = function () {
-      var fleshCallback = function () {
+      var setCallback = function () {
         var createCallback = function () {
-          console.log("create callback");
-
           var saveCallback = function () {
             console.log("save callback");
             var secondSaveCallback = function () {
@@ -268,7 +266,9 @@ var _ = require("underscore"),
         if (data.createCallback) {
           console.log("override specified");
           tempCreateCallback = createCallback;
-          createCallback = data.createCallback(tempCreateCallback);
+          createCallback = function () {
+            data.createCallback(tempCreateCallback);
+          }
         }
         create(data, createCallback);
       };
@@ -278,7 +278,7 @@ var _ = require("underscore"),
       assert.equal(data.model.recordType, data.recordType);
 
       // Step 3: set the model with our createData
-      putTestDataIntoModel(data, fleshCallback);
+      setModel(data, setCallback);
     };
 
     // Step 1: load the environment with Zombie
