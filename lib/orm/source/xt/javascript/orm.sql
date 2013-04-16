@@ -247,7 +247,6 @@ select xt.install_js('XT','Orm','xtuple', $$
     /* constants */
     var SELECT = 'select {columns} from {table} where {conditions}',
       cols = [],
-      cols = [],
       altcols = [],
       tbls = [],
       tbl = 1 - 0,
