@@ -130,7 +130,7 @@ white:true*/
       return XT.Request
                .handle(method)
                .notify(complete)
-               .send(payload);
+               .send(JSON.stringify(payload));
     },
 
     /*
