@@ -13,17 +13,7 @@
   */
 
   var zombieAuth = require("../../vows/lib/zombie_auth"),
-    assert = require("chai").assert,
-    data = {
-      recordType: "XM.Honorific",
-      autoTestAttributes: true,
-      createHash: {
-        code: "Herr" + Math.random()
-      },
-      updateHash: {
-        code: "Dame" + Math.random()
-      }
-    };
+    assert = require("chai").assert;
 
   describe('Sales order', function (){
     this.timeout(20 * 1000);
@@ -39,15 +29,14 @@
           terms.set({code: "COD"});
           customer.set({terms: terms, billtoContact: "Bob"});
           salesOrder.set({customer: customer});
+
+          // customer.terms.code gets copied to terms.code
           assert.equal(salesOrder.getValue("terms.code"), "COD");
           done();
         };
 
       salesOrder.on('change:id', initCallback);
       salesOrder.initialize(null, {isNew: true});
-
-
-
     });
   })
 }());
