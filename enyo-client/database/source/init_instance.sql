@@ -7,7 +7,7 @@
 
 -- [ END ] initdb
 --\i drop_xm_views.sql;
---\i delete_system_orms.sql; 
+--\i delete_system_orms.sql;
 
 -- [ START ] xt
 
