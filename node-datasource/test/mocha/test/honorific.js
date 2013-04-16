@@ -12,7 +12,7 @@
     mocha -R spec
   */
 
-  var crud = require("./crud"),
+  var crud = require("../lib/crud"),
     assert = require("chai").assert,
     data = {
       recordType: "XM.Honorific",

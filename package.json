@@ -31,9 +31,10 @@
     "underscore":"1.4.x"
   },
   "devDependencies": {
-    "zombie":"1.4.1",
-    "chai":"1.5.0",
-    "vows":"0.7.0"
+    "chai":"1.5.x",
+    "mocha":"1.9.x",
+    "zombie":"1.4.x",
+    "vows":"0.7.x"
   },
   "optionalDependencies": {},
   "engines": {
