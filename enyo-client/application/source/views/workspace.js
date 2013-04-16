@@ -1252,14 +1252,16 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.ProspectListItem", "XV.ProspectWorkspace");
 
   // ..........................................................
-  // QUOTE
+  // SALES ORDER BASE
   //
-
+  
+  /**
+    This is the base kind for Quote and Sales order. This should include all common components
+    and functions.
+  */
   enyo.kind({
-    name: "XV.QuoteWorkspace",
+    name: "XV.SalesOrderBase",
     kind: "XV.Workspace",
-    title: "_quote".loc(),
-    model: "XM.Quote",
     allowPrint: true,
     printOnSaveSetting: "DefaultPrintSOOnSave",
     headerAttrs: ["number", "-", "billtoName"],
@@ -1271,11 +1273,7 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "number"},
-            {kind: "XV.DateWidget", attr: "quoteDate"},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
-            {kind: "XV.DateWidget", attr: "expireDate"},
-            {kind: "XV.InputWidget", attr: "getQuoteStatusString",
-              label: "_status".loc()},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
             {kind: "XV.CustomerProspectWidget", attr: "customer",
               showAddress: true, label: "_customer".loc(),
@@ -1326,49 +1324,7 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_shippingNotes".loc()},
             {kind: "XV.TextArea", attr: "shipNotes", fit: true}
           ]}
-        ]},
-        {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel", components: [
-          {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true},
-          // Quote Summary Panel
-          {kind: "FittableRows", fit: true, name: "totalGroup", components: [
-            {kind: "XV.Groupbox", components: [
-              {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
-              {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
-                {kind: "FittableRows", components: [
-                  {kind: "XV.CurrencyPicker", attr: "currency"},
-                  {kind: "XV.MoneyWidget", attr: {localValue: "margin", currency: "currency"},
-                    label: "_margin".loc(), currencyShowing: false,
-                    effective: "quoteDate"},
-                  {kind: "XV.WeightWidget", attr: "freightWeight"}
-                ]},
-                {kind: "FittableRows", components: [
-                  {kind: "XV.MoneyWidget", attr:
-                    {localValue: "subtotal", currency: "currency"},
-                    label: "_subtotal".loc(), currencyShowing: false,
-                    effective: "quoteDate"},
-                  {kind: "XV.MoneyWidget", attr:
-                    {localValue: "miscCharge", currency: "currency"},
-                    label: "_miscCharge".loc(), currencyShowing: false,
-                    effective: "quoteDate"},
-                  {kind: "XV.MoneyWidget", attr:
-                    {localValue: "freight", currency: "currency"},
-                    label: "_freight".loc(), currencyShowing: false,
-                    effective: "quoteDate"},
-                  {kind: "XV.MoneyWidget", attr:
-                    {localValue: "taxTotal", currency: "currency"},
-                    label: "_tax".loc(), currencyShowing: false,
-                    effective: "quoteDate"},
-                  {kind: "XV.MoneyWidget", attr:
-                    {localValue: "total", currency: "currency"},
-                    label: "_total".loc(), currencyShowing: false,
-                    effective: "quoteDate"}
-                ]}
-              ]}
-            ]}
-          ]}
-        ]},
-        {kind: "XV.QuoteCommentBox", attr: "comments"},
-        {kind: "XV.QuoteDocumentsBox", attr: "documents"}
+        ]}
       ]}
     ],
     customerChanged: function () {
@@ -1394,7 +1350,9 @@ trailing:true white:true*/
       this.$.copyAddressButton.setDisabled(!isFreeFormShipto);
       this.customerChanged();
       // re-render the summary panel
-      this.$.lineItemsPanel.render();
+      if (this.$.lineItemsPanel) {
+        this.$.lineItemsPanel.render();
+      }
     },
     controlValueChanged: function (inSender, inEvent) {
       this.inherited(arguments);
@@ -1407,9 +1365,83 @@ trailing:true white:true*/
     }
   });
 
+  // ..........................................................
+  // QUOTE
+  //
+  enyo.kind({
+    name: "XV.QuoteWorkspace",
+    kind: "XV.SalesOrderBase",
+    title: "_quote".loc(),
+    model: "XM.Quote",
+    create: function () {
+      this.inherited(arguments);
+      this.build();
+    },
+    /**
+      Loops through the components array of the parent kind and inserts the addtional components where they should be rendered.
+    */
+    build: function () {
+      var that = this;
+      // TODO: Add this just for quote
+        // {kind: "XV.DateWidget", attr: "quoteDate"},
+        // {kind: "XV.DateWidget", attr: "expireDate"},
+        // {kind: "XV.InputWidget", attr: "getQuoteStatusString",
+        //   label: "_status".loc()},
+      this.getComponents().forEach(function (e, i) {
+          if (e.kind === "Panels") {
+            e.createComponents([
+              {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel", components: [
+                {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true},
+                // Quote Summary Panel
+                {kind: "FittableRows", fit: true, name: "totalGroup", components: [
+                  {kind: "XV.Groupbox", components: [
+                    {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
+                    {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
+                      {kind: "FittableRows", components: [
+                        {kind: "XV.CurrencyPicker", attr: "currency"},
+                        {kind: "XV.MoneyWidget", attr: {localValue: "margin", currency: "currency"},
+                         label: "_margin".loc(), currencyShowing: false,
+                         effective: "quoteDate"},
+                        {kind: "XV.WeightWidget", attr: "freightWeight"}
+                      ]},
+                      {kind: "FittableRows", components: [
+                        {kind: "XV.MoneyWidget", attr:
+                         {localValue: "subtotal", currency: "currency"},
+                         label: "_subtotal".loc(), currencyShowing: false,
+                         effective: "quoteDate"},
+                        {kind: "XV.MoneyWidget", attr:
+                         {localValue: "miscCharge", currency: "currency"},
+                         label: "_miscCharge".loc(), currencyShowing: false,
+                         effective: "quoteDate"},
+                        {kind: "XV.MoneyWidget", attr:
+                         {localValue: "freight", currency: "currency"},
+                         label: "_freight".loc(), currencyShowing: false,
+                         effective: "quoteDate"},
+                        {kind: "XV.MoneyWidget", attr:
+                         {localValue: "taxTotal", currency: "currency"},
+                         label: "_tax".loc(), currencyShowing: false,
+                         effective: "quoteDate"},
+                        {kind: "XV.MoneyWidget", attr:
+                         {localValue: "total", currency: "currency"},
+                         label: "_total".loc(), currencyShowing: false,
+                         effective: "quoteDate"}
+                      ]}
+                    ]}
+                  ]}
+                ]}
+              ]},
+              {kind: "XV.QuoteCommentBox", attr: "comments"},
+              {kind: "XV.QuoteDocumentsBox", attr: "documents"}
+            ], {owner: that});
+            // we already did what we needed to do here, no sense continuing the loop
+            return false;            
+          }
+        });
+    }
+  });
+
   XV.registerModelWorkspace("XM.QuoteRelation", "XV.QuoteWorkspace");
   XV.registerModelWorkspace("XM.QuoteListItem", "XV.QuoteWorkspace");
-
 
   // ..........................................................
   // QUOTE LINE ITEM
@@ -1487,120 +1519,7 @@ trailing:true white:true*/
   });
 
   enyo.kind(quoteLineItem);
-  
-  // ..........................................................
-  // SALES ORDER BASE
-  //
-  
-  enyo.kind({
-    name: "XV.SalesOrderBase",
-    kind: "XV.Workspace",
-    allowPrint: true,
-    printOnSaveSetting: "DefaultPrintSOOnSave",
-    headerAttrs: ["number", "-", "billtoName"],
-    components: [
-      {kind: "Panels", arrangerKind: "CarouselArranger",
-        fit: true, components: [
-        {kind: "XV.Groupbox", name: "mainPanel", components: [
-          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
-            classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "number"},
-            // TODO: this is sales order
-            {kind: "XV.DateWidget", attr: "orderDate"},
-            {kind: "XV.DateWidget", attr: "scheduleDate"},
-            {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
-            {kind: "XV.CustomerProspectWidget", attr: "customer",
-              showAddress: true, label: "_customer".loc(),
-              nameAttribute: ""},
-            {kind: "XV.AddressFieldsWidget", attr:
-              {name: "billtoName", line1: "billtoAddress1",
-                line2: "billtoAddress2", line3: "billtoAddress3",
-                city: "billtoCity", state: "billtoState",
-                postalCode: "billtoPostalCode", country: "billtoCountry"}
-            },
-            {classes: "xv-button-section", components: [
-              {kind: "onyx.Button", content: "_copyToShipTo".loc(),
-                name: "copyAddressButton",
-                ontap: "copyBilltoToShipto",
-                style: "margin: 4px;"}
-            ]},
-            {kind: "XV.ContactWidget", attr: "billtoContact",
-              name: "billtoContact"},
-            {kind: "onyx.GroupboxHeader", content: "_shipTo".loc()},
-            {kind: "XV.CustomerShiptoWidget", attr: "shipto",
-              showAddress: true, label: "_number".loc(),
-              nameAttribute: ""},
-            {kind: "XV.AddressFieldsWidget",
-              disabled: true,
-              attr: {name: "shiptoName", line1: "shiptoAddress1",
-                line2: "shiptoAddress2", line3: "shiptoAddress3",
-                city: "shiptoCity", state: "shiptoState",
-                postalCode: "shiptoPostalCode", country: "shiptoCountry"}
-            },
-            {kind: "XV.ContactWidget", attr: "shiptoContact",
-              name: "shiptoContact"},
-            {kind: "onyx.GroupboxHeader", content: "_shipping".loc()},
-            {kind: "XV.SitePicker", attr: "site"},
-            {kind: "XV.DateWidget", attr: "packDate"},
-            {kind: "XV.InputWidget", attr: "fob"},
-            {kind: "XV.InputWidget", attr: "customerPurchaseOrderNumber",
-             label: "_custPO".loc()},
-            {kind: "XV.ShipViaCombobox", attr: "shipVia"},
-            {kind: "XV.ShipZonePicker", attr: "shipZone"},
-            {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
-            {kind: "XV.TermsPicker", attr: "terms"},
-            {kind: "XV.SalesRepPicker", attr: "salesRep"},
-            {kind: "XV.PercentWidget", attr: "commission"},
-            {kind: "XV.TaxZonePicker", attr: "taxZone"},
-            {kind: "XV.SaleTypePicker", attr: "saleType"},
-            {kind: "onyx.GroupboxHeader", content: "_orderNotes".loc()},
-            {kind: "XV.TextArea", attr: "orderNotes", fit: true},
-            {kind: "onyx.GroupboxHeader", content: "_shippingNotes".loc()},
-            {kind: "XV.TextArea", attr: "shipNotes", fit: true}
-          ]}
-        ]},
-        // TODO: this belongs to Sales Order
-        {kind: "XV.SalesOrderCommentBox", attr: "comments"},
-        {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
-      ]}
-    ],
-    customerChanged: function () {
-      var customer = this.$.customerProspectWidget.getValue(),
-        id = customer ? customer.get("account") : -1;
-      this.$.billtoContact.addParameter({attribute: "account", value: id}, true);
-      this.$.shiptoContact.addParameter({attribute: "account", value: id}, true);
-      if (customer) {
-        this.$.customerShiptoWidget.setDisabled(false);
-        this.$.customerShiptoWidget.addParameter({
-          attribute: "customer",
-          value: customer.id
-        });
-      } else {
-        this.$.customerShiptoWidget.setDisabled(true);
-      }
-    },
-    attributesChanged: function (inSender, inEvent) {
-      this.inherited(arguments);
-      var model = this.getValue(),
-        customer = model ? model.get("customer") : false,
-        isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : true;
-      this.$.copyAddressButton.setDisabled(!isFreeFormShipto);
-      this.customerChanged();
-      // re-render the summary panel
-      //this.$.lineItemsPanel.render();
-    },
-    controlValueChanged: function (inSender, inEvent) {
-      this.inherited(arguments);
-      if (inEvent.originator.name === 'customerWidget') {
-        this.customerChanged();
-      }
-    },
-    copyBilltoToShipto: function () {
-      this.getValue().copyBilltoToShipto();
-    }
-  });
-  
+
   // ..........................................................
   // SALES ORDER
   //
@@ -1610,9 +1529,27 @@ trailing:true white:true*/
     kind: "XV.SalesOrderBase",
     title: "_salesOrder".loc(),
     model: "XM.SalesOrder",
-    // component array: add order date, status, line item box, comments, documents
     create: function () {
       this.inherited(arguments);
+      this.build();
+    },
+    /**
+      Loops through the components array of the parent kind and inserts the addtional components where they should be rendered.
+    */
+    build: function () {
+      var that = this;
+      this.getComponents().forEach(function (e, i) {
+        // TODO: fields for Sales Order
+        //{kind: "XV.DateWidget", attr: "orderDate"},
+          if (e.kind === "Panels") {
+            e.createComponents([
+                {kind: "XV.SalesOrderCommentBox", attr: "comments"},
+                {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
+              ], {owner: that});
+            // we already did what we needed to do here, no sense continuing the loop
+            return false;
+          }
+        });
     }
   });
 
