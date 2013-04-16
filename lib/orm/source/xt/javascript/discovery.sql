@@ -602,7 +602,8 @@ select xt.install_js('XT','Discovery','xtuple', $$
   /*
    * Helper function to get a JSON-Schema for ORM Models.
    *
-   * @param {String} An array of orm objects name like [{"orm_namespace": "XM", "orm_type":"Contact"}].
+   * @param {Array} An array of orm objects name like [{"orm_namespace": "XM", "orm_type":"Contact"}].
+   * @param {Object} Optional. A schema object to add schemas too.
    * @returns {Object}
    */
   XT.Discovery.getORMSchemas = function(orms, schemas) {
