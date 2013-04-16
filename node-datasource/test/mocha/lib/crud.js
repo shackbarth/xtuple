@@ -236,7 +236,19 @@ var _ = require("underscore"),
     tested with a single function
    */
   var runAllCrud = exports.runAllCrud = function (data, done) {
-    var tempCreateCallback;
+
+    // very clever: we allow testmakers to define their own custom
+    // callbacks in their data object. If data.setCallback is set,
+    // then what we do is, instead of:
+    // 1. Run the set operation
+    // 2: Run the default set callback (which moves on to the next step)
+    //
+    // it will do this instead:
+    // 1. Run the set operation
+    // 2. Run the user's custom set callback
+    // 3: Run the default set callback (which moves on to the next step)
+
+    var tempSetCallback, tempCreateCallback;
 
 
     var runCrud = function () {
@@ -264,7 +276,6 @@ var _ = require("underscore"),
 
         // Step 4: initialize the model to get the ID from the database
         if (data.createCallback) {
-          console.log("override specified");
           tempCreateCallback = createCallback;
           createCallback = function () {
             data.createCallback(tempCreateCallback);
@@ -278,6 +289,12 @@ var _ = require("underscore"),
       assert.equal(data.model.recordType, data.recordType);
 
       // Step 3: set the model with our createData
+      if (data.setCallback) {
+        tempSetCallback = setCallback;
+        setCallback = function () {
+          data.setCallback(tempSetCallback);
+        }
+      }
       setModel(data, setCallback);
     };
 

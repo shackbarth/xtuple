@@ -25,7 +25,7 @@
         terms: { id: 42 },
         salesRep: { id: 31 }
       },
-      createCallback: function (next) {
+      setCallback: function (next) {
         console.log("Extra creating first!");
         data.model.set("wasQuote", false);
         next();
