@@ -302,7 +302,7 @@ white:true*/
                   }
                 }
               };
-            that.dispatch(that.recordType, "freightDetail", params, dispOptions);
+            that.dispatch("XM.Quote", "freightDetail", params, dispOptions); // XXX can we really re-use this database dispatch code?
           });
           return this;
         }
@@ -336,7 +336,7 @@ white:true*/
           that.freightTaxDetail = resp;
           that._calculateTotals();
         };
-        this.dispatch(this.recordType, "taxDetail", params, dispOptions);
+        this.dispatch("XM.Quote", "taxDetail", params, dispOptions); // XXX can we reuse this db code?
       }
       return this;
     },
