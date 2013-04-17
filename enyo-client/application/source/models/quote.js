@@ -6,6 +6,98 @@ white:true*/
 (function () {
   "use strict";
 
+
+
+
+  // ..........................................................
+  // PRIVATE
+  //
+
+  /** @private
+
+    Function that actually does the calculation work
+  */
+  var _calculateTotals = function (model) {
+    var miscCharge = model.get("miscCharge") || 0.0,
+      freight = model.get("freight") || 0.0,
+      scale = XT.MONEY_SCALE,
+      add = XT.math.add,
+      substract = XT.math.subtract,
+      subtotals = [],
+      taxDetails = [],
+      costs = [],
+      weights = [],
+      subtotal,
+      freightWeight,
+      taxTotal = 0.0,
+      costTotal,
+      total,
+      margin,
+      taxCodes;
+
+    // Collect line item detail
+    _.each(model.get('lineItems').models, function (lineItem) {
+      var extPrice = lineItem.get('extendedPrice') || 0,
+        quantity = lineItem.get("quantity") || 0,
+        standardCost = lineItem.getValue("itemSite.item.standardCost") || 0,
+        item = lineItem.getValue("itemSite.item"),
+        prodWeight = item ? item.get("productWeight") : 0,
+        packWeight = item ? item.get("packageWeight") : 0,
+        itemWeight = item ? add(prodWeight, packWeight, XT.WEIGHT_SCALE) : 0,
+        quantityUnitRatio = lineItem.get("quantityUnitRatio"),
+        grossWeight = itemWeight * quantity * quantityUnitRatio;
+
+      weights.push(grossWeight);
+      subtotals.push(extPrice);
+      costs.push(quantity * standardCost);
+      taxDetails = taxDetails.concat(lineItem.taxDetail);
+    });
+
+    // Add freight taxes to the mix
+    taxDetails = taxDetails.concat(model.freightTaxDetail);
+
+    // Total taxes
+    // First group amounts by tax code
+    taxCodes = _.groupBy(taxDetails, function (detail) {
+      return detail.taxCode.id;
+    });
+
+    // Loop through each tax code group and subtotal
+    _.each(taxCodes, function (group) {
+      var taxes = [],
+        subtotal;
+
+      // Collect array of taxes
+      _.each(group, function (detail) {
+        taxes.push(detail.tax);
+      });
+
+      // Subtotal first to make sure we round by subtotal
+      subtotal = add(taxes, 6);
+
+      // Now add to tax grand total
+      taxTotal = add(taxTotal, subtotal, scale);
+    });
+
+    // Totaling calculations
+    freightWeight = add(weights, XT.WEIGHT_SCALE);
+    subtotal = add(subtotals, scale);
+    costTotal = add(costs, scale);
+    margin = substract(subtotal, costTotal, scale);
+    subtotals = subtotals.concat([miscCharge, freight, taxTotal]);
+    total = add(subtotals, scale);
+
+    // Set values
+    model.set("freightWeight", freightWeight);
+    model.set("subtotal", subtotal);
+    model.set("taxTotal", taxTotal);
+    model.set("total", total);
+    model.set("margin", margin);
+  };
+
+
+
+
   /**
     Mixin for shared quote or sales order functions.
   */
@@ -311,7 +403,7 @@ white:true*/
       }
 
       // Default if we couldn't calculate
-      this._calculateTotals();
+      _calculateTotals(this);
       return this;
     },
 
@@ -336,7 +428,7 @@ white:true*/
         params = [taxZoneId, taxTypeId, effective, currency.id, amount];
         dispOptions.success = function (resp) {
           that.freightTaxDetail = resp;
-          that._calculateTotals();
+          _calculateTotals(that);
         };
         this.dispatch("XM.Quote", "taxDetail", params, dispOptions); // XXX can we reuse this db code?
       }
@@ -382,7 +474,7 @@ white:true*/
       if (calculateFreight && calcFreight !== false) {
         this.calculateFreight();
       } else {
-        this._calculateTotals();
+        _calculateTotals(this);
       }
       return this;
     },
@@ -803,92 +895,6 @@ white:true*/
       }
 
       return;
-    },
-
-    // ..........................................................
-    // PRIVATE
-    //
-
-    /** @private
-
-      Function that actually does the calculation work
-    */
-    _calculateTotals: function () {
-      var miscCharge = this.get("miscCharge") || 0.0,
-        freight = this.get("freight") || 0.0,
-        scale = XT.MONEY_SCALE,
-        add = XT.math.add,
-        substract = XT.math.subtract,
-        subtotals = [],
-        taxDetails = [],
-        costs = [],
-        weights = [],
-        subtotal,
-        freightWeight,
-        taxTotal = 0.0,
-        costTotal,
-        total,
-        margin,
-        taxCodes;
-
-      // Collect line item detail
-      _.each(this.get('lineItems').models, function (lineItem) {
-        var extPrice = lineItem.get('extendedPrice') || 0,
-          quantity = lineItem.get("quantity") || 0,
-          standardCost = lineItem.getValue("itemSite.item.standardCost") || 0,
-          item = lineItem.getValue("itemSite.item"),
-          prodWeight = item ? item.get("productWeight") : 0,
-          packWeight = item ? item.get("packageWeight") : 0,
-          itemWeight = item ? add(prodWeight, packWeight, XT.WEIGHT_SCALE) : 0,
-          quantityUnitRatio = lineItem.get("quantityUnitRatio"),
-          grossWeight = itemWeight * quantity * quantityUnitRatio;
-
-        weights.push(grossWeight);
-        subtotals.push(extPrice);
-        costs.push(quantity * standardCost);
-        taxDetails = taxDetails.concat(lineItem.taxDetail);
-      });
-
-      // Add freight taxes to the mix
-      taxDetails = taxDetails.concat(this.freightTaxDetail);
-
-      // Total taxes
-      // First group amounts by tax code
-      taxCodes = _.groupBy(taxDetails, function (detail) {
-        return detail.taxCode.id;
-      });
-
-      // Loop through each tax code group and subtotal
-      _.each(taxCodes, function (group) {
-        var taxes = [],
-          subtotal;
-
-        // Collect array of taxes
-        _.each(group, function (detail) {
-          taxes.push(detail.tax);
-        });
-
-        // Subtotal first to make sure we round by subtotal
-        subtotal = add(taxes, 6);
-
-        // Now add to tax grand total
-        taxTotal = add(taxTotal, subtotal, scale);
-      });
-
-      // Totaling calculations
-      freightWeight = add(weights, XT.WEIGHT_SCALE);
-      subtotal = add(subtotals, scale);
-      costTotal = add(costs, scale);
-      margin = substract(subtotal, costTotal, scale);
-      subtotals = subtotals.concat([miscCharge, freight, taxTotal]);
-      total = add(subtotals, scale);
-
-      // Set values
-      this.set("freightWeight", freightWeight);
-      this.set("subtotal", subtotal);
-      this.set("taxTotal", taxTotal);
-      this.set("total", total);
-      this.set("margin", margin);
     }
 
   });
