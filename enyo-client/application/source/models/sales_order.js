@@ -16,6 +16,9 @@ white:true*/
 
     documentDateKey: "orderDate",
 
+    /**
+      Add wasQuote as required field
+     */
     initialize: function (attributes, options) {
       XM.SalesOrderBase.prototype.initialize.apply(this, arguments);
 
@@ -38,6 +41,9 @@ white:true*/
 
     lineCharacteristicRecordType: "XM.SalesOrderLineCharacteristic",
 
+    /**
+      Add firm and subnumber as required fields
+     */
     initialize: function (attributes, options) {
       var reqAttrs = ["firm", "subnumber"],
         that = this;
@@ -51,6 +57,9 @@ white:true*/
       });
     },
 
+    /**
+      Add defaults for firm and subnumber.
+     */
     defaults: function () {
       var defaults = XM.SalesOrderLineBase.prototype.defaults.apply(this, arguments);
 

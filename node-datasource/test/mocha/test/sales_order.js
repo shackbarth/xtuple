@@ -26,6 +26,10 @@
         salesRep: { id: 32 },
         wasQuote: true
       },
+      /**
+        An extra bit of work we have to do after the createHash fields are set:
+        create a valid line item.
+       */
       setCallback: function (next) {
         var lineItem = new XM.SalesOrderLine(),
           itemSite = new XM.ItemSiteRelation(),
@@ -33,27 +37,20 @@
             if (lineItem.id && itemSite.id) {
               var unitUpdated = function () {
 
-                //if (lineItem.get("price") && lineItem.get("customerPrice")) {
-                console.log(arguments);
-                console.log(JSON.stringify(lineItem.validate(lineItem.attributes)), undefined);
-                lineItem.set({priceMode: "D"});
-                if (lineItem.validate(lineItem.attributes) === undefined) {
-                  console.log(lineItem.getStatusString());
+                // make sure all the fields we need to save successfully have been calculated
+                if (lineItem.get("price") &&
+                    lineItem.get("customerPrice") &&
+                    lineItem.get("profit") &&
+                    lineItem.get("tax") &&
+                    lineItem.get("listPriceDiscount")) {
 
-                  if (data.model.getStatusString() === "READY_CLEAN") {
-                    lineItem.off("all", unitUpdated);
-                  }
-                  //assert.equal(JSON.stringify(lineItem.validate(lineItem.attributes)), undefined);
-                  console.log(lineItem.get("customerPrice"));
-                  console.log(lineItem.get("price"));
+                  lineItem.off("all", unitUpdated);
                   next();
                 }
               };
 
               // changing the item site will trigger a change which will ultimately change these three
               // fields. run the callback when they all have been set
-              //lineItem.on("change:priceUnitRatio", unitUpdated);
-              //lineItem.on("change:quantityUnit", unitUpdated);
               lineItem.on("all", unitUpdated); // XXX do better than this
               data.model.get("lineItems").add(lineItem);
               lineItem.set({quantity: 7});
@@ -74,7 +71,7 @@
     it('should perform all the crud operations', function (done) {
       crud.runAllCrud(data, done);
     });
-/*
+
     it('should take the defaults from the customer', function (done) {
       var terms = new XM.Terms(),
         customer = new XM.CustomerProspectRelation(),
@@ -92,6 +89,5 @@
       salesOrder.on('change:id', initCallback);
       salesOrder.initialize(null, {isNew: true});
     });
-    */
   });
 }());

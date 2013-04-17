@@ -144,7 +144,8 @@ var _ = require("underscore"),
 
   /**
     Saves the working model and automatically checks state
-    is `READY_CLEAN` immediately afterward.
+    is `READY_CLEAN` immediately afterward. Used by the C and
+    the U parts of CRUD.
 
     @param {Object} data
     @param {Function} callback
@@ -272,7 +273,7 @@ var _ = require("underscore"),
           save(data, saveCallback);
         };
 
-        // Step 3: set the model with our createData
+        // Step 4: set the model with our createData hash
         if (data.setCallback) {
           tempSetCallback = setCallback;
           setCallback = function () {
@@ -286,14 +287,14 @@ var _ = require("underscore"),
       data.model = new XM[data.recordType.substring(3)]();
       assert.equal(data.model.recordType, data.recordType);
 
-        // Step 4: initialize the model to get the ID from the database
-        if (data.initCallback) {
-          tempInitCallback = initCallback;
-          initCallback = function () {
-            data.initCallback(tempInitCallback);
-          }
+      // Step 3: initialize the model to get the ID from the database
+      if (data.initCallback) {
+        tempInitCallback = initCallback;
+        initCallback = function () {
+          data.initCallback(tempInitCallback);
         }
-        init(data, initCallback);
+      }
+      init(data, initCallback);
     };
 
     // Step 1: load the environment with Zombie

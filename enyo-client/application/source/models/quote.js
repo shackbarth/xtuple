@@ -952,7 +952,7 @@ white:true*/
       var allowASAP = XT.session.settings.get("AllowASAPShipSchedules");
       return {
         quantityUnitRatio: 1,
-        priceMode: XM.QuoteLine.DISCOUNT_MODE,
+        priceMode: XM.SalesOrderLineBase.DISCOUNT_MODE,
         priceUnitRatio: 1,
         scheduleDate: allowASAP ? new Date() : undefined
       };
@@ -1355,6 +1355,8 @@ white:true*/
       itemCharAttrs = _.pluck(item.get("characteristics").models, "attributes");
       charTypes = _.unique(_.pluck(itemCharAttrs, "characteristic"));
       _.each(charTypes, function (char) {
+        // lineCharacteristicRecordType is different for SalesOrder and Quote
+        // and is defined as a string in those models
         var quoteLineChar = new XM[that.lineCharacteristicRecordType.suffix()](null, {isNew: true}),
           defaultChar = _.find(itemCharAttrs, function (attrs) {
             return attrs.isDefault === true &&
@@ -1725,7 +1727,7 @@ white:true*/
   // CLASS METHODS
   //
 
-  _.extend(XM.QuoteLine, /** @lends XM.QuoteLine# */{
+  _.extend(XM.SalesOrderLineBase, /** @lends XM.QuoteLine# */{
 
     // ..........................................................
     // CONSTANTS
