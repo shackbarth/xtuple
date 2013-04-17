@@ -1216,7 +1216,7 @@ white:true*/
           }
           that.recalculateParent(false);
         };
-        this.dispatch(recordType, "taxDetail", params, options);
+        this.dispatch("XM.Quote", "taxDetail", params, options); // XXX can we re-use this code?
       } else {
         this.set("tax", 0);
       }

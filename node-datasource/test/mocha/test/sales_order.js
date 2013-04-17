@@ -24,7 +24,7 @@
         customer: { id: 95 }, // TTOYS
         terms: { id: 42 },
         salesRep: { id: 31 },
-        wasQuote: true // TODO: this needs to be made a required field on the model
+        wasQuote: true
       },
       setCallback: function (next) {
         var lineItem = new XM.SalesOrderLine(),
@@ -36,7 +36,7 @@
                 if (lineItem.get("price") && lineItem.get("customerPrice")) {
                   console.log(lineItem.getStatusString());
 
-                  lineItem.off("all", unitUpdated);
+                  //lineItem.off("all", unitUpdated);
                   //assert.equal(JSON.stringify(lineItem.validate(lineItem.attributes)), undefined);
                   console.log(lineItem.get("customerPrice"));
                   console.log(lineItem.get("price"));
