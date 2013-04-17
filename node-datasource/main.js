@@ -554,7 +554,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   // TODO
   socket.on('delete', function (data, callback) {
     ensureLoggedIn(function (session) {
-      routes.get(data.payload, session, callback);
+      routes.deleteEngine(data.payload, session, callback);
     }, data && data.payload);
   });
 
@@ -570,7 +570,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   // TODO
   socket.on('patch', function (data, callback) {
     ensureLoggedIn(function (session) {
-      routes.get(data.payload, session, callback);
+      routes.patchEngine(data.payload, session, callback);
     }, data && data.payload);
   });
 
@@ -578,7 +578,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   // TODO
   socket.on('post', function (data, callback) {
     ensureLoggedIn(function (session) {
-      routes.get(data.payload, session, callback);
+      routes.postEngine(data.payload, session, callback);
     }, data && data.payload);
   });
 
