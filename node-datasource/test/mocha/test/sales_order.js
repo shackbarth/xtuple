@@ -31,18 +31,29 @@
           modelFetched = function () {
             if (lineItem.id && itemSite.id) {
               var unitUpdated = function () {
-                lineItem.set({quantity: 5});
+                console.log(lineItem.getParent());
+                console.log(lineItem.get("quantityUnit"));
+                console.log(lineItem.get("priceUnit"));
 
-                data.model.get("lineItems").add(lineItem);
-                console.log(JSON.stringify(lineItem.toJSON()));
-                console.log(JSON.stringify(lineItem.validate(lineItem.attributes)));
-                assert.equal(JSON.stringify(lineItem.validate(lineItem.attributes)), undefined);
-                next();
+                if (lineItem.getParent() && lineItem.get("quantity") && lineItem.get("priceUnit")) {
+                  console.log(lineItem.getStatusString());
+                  console.log(JSON.stringify(lineItem.toJSON()));
 
+                  console.log(JSON.stringify(itemSite.get("item").toJSON()));
+                  console.log(JSON.stringify(lineItem.toJSON()));
+                  console.log(JSON.stringify(lineItem.validate(lineItem.attributes)));
+                  assert.equal(JSON.stringify(lineItem.validate(lineItem.attributes)), undefined);
+                  next();
+                }
               };
 
-              // changing the item site will trigger a change which will ultimately change the priceUnitRatio
+              // changing the item site will trigger a change which will ultimately change these three
+              // fields. run the callback when they all have been set
               lineItem.on("change:priceUnitRatio", unitUpdated);
+              lineItem.on("change:quantityUnit", unitUpdated);
+              lineItem.on("change:priceUnit", unitUpdated);
+              data.model.get("lineItems").add(lineItem);
+              lineItem.set({quantity: 7});
               lineItem.set({itemSite: itemSite});
             }
           };
