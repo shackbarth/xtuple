@@ -144,8 +144,8 @@ var _ = require("underscore"),
 
   /**
     Saves the working model and automatically checks state
-    is `READY_CLEAN` immediately afterward. Used by the C and
-    the U parts of CRUD.
+    is `READY_CLEAN` immediately afterward. Used by the Create and
+    the Update parts of CRUD.
 
     @param {Object} data
     @param {Function} callback

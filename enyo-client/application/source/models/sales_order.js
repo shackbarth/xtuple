@@ -14,6 +14,8 @@ white:true*/
 
     recordType: 'XM.SalesOrder',
 
+    numberPolicySetting: 'CONumberGeneration',
+
     documentDateKey: "orderDate",
 
     /**

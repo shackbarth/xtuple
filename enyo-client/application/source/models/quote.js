@@ -550,7 +550,8 @@ white:true*/
           that.setReadOnly(that.documentKey);
         }
       };
-      this.dispatch(this.recordType, 'fetchNumber', null, options);
+      // quote has its own very special dispatch function for fetchNumber
+      this.dispatch(this.fetchNumberDispatchModel || 'XM.Model', 'fetchNumber', this.recordType, options);
       return this;
     },
 
@@ -630,7 +631,11 @@ white:true*/
       behavior of quote numbering different from all other generated numbers.
     */
     releaseNumber: function () {
-      this.dispatch(this.recordType, 'releaseNumber', this.get("number"));
+      // quote has its own very special dispatch function for fetchNumber and releaseNumber
+      this.dispatch(
+        this.fetchNumberDispatchModel || 'XM.Model',
+        'releaseNumber',
+        [this.recordType, this.get("number")]);
       return this;
     },
 
@@ -931,6 +936,9 @@ white:true*/
     recordType: 'XM.Quote',
 
     numberPolicySetting: 'QUNumberGeneration',
+
+    // quote has its own very special dispatch function for fetchNumber
+    fetchNumberDispatchModel: "XM.Quote",
 
     documentDateKey: "quoteDate"
 

@@ -96,7 +96,7 @@ select xt.install_js('XM','Quote','xtuple', $$
     @param {String} Number
     @returns Number
   */
-  XM.Quote.releaseNumber = function (num) {
+  XM.Quote.releaseNumber = function (recordType, num) {
     return plv8.execute("select releasequnumber($1) as result", [num])[0].result;
   };
   
