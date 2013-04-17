@@ -66,6 +66,84 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   /**
+    Does all the work to delete.
+    Can be called by websockets, or the express route (below), or REST, etc.
+   */
+  var deleteEngine = function (payload, session, callback) {
+    var options;
+
+    if (payload && payload.databaseType === 'global') {
+      // Run this query against the global database.
+      options = createGlobalOptions(payload, session.passport.user.id, callback);
+      XT.dataSource.request(null, 'delete', payload, options);
+
+    } else {
+      // Run this query against an instance database.
+      queryInstanceDatabase("select xt.delete('%@')", "delete", payload, session, callback);
+    }
+  };
+  exports.deleteEngine = deleteEngine;
+
+  /**
+    Does all the work to get.
+    Can be called by websockets, or the express route (below), or REST, etc.
+   */
+  var getEngine = function (payload, session, callback) {
+    var options;
+
+    if (payload && payload.databaseType === 'global') {
+      // Run this query against the global database.
+      options = createGlobalOptions(payload, session.passport.user.id, callback);
+      XT.dataSource.request(null, 'get', payload, options);
+
+    } else {
+      // Run this query against an instance database.
+      queryInstanceDatabase("select xt.get('%@')", "get", payload, session, callback);
+    }
+  };
+  exports.getEngine = getEngine;
+
+  /**
+    Does all the work to patch.
+    Can be called by websockets, or the express route (below), or REST, etc.
+   */
+  var patchEngine = function (payload, session, callback) {
+    var options;
+
+    if (payload && payload.databaseType === 'global') {
+      // Run this query against the global database.
+      options = createGlobalOptions(payload, session.passport.user.id, callback);
+      XT.dataSource.request(null, 'patch', payload, options);
+
+    } else {
+      // Run this query against an instance database.
+      queryInstanceDatabase("select xt.patch('%@')", "patch", payload, session, callback);
+    }
+  };
+  exports.patchEngine = patchEngine;
+
+  /**
+    Does all the work to post.
+    Can be called by websockets, or the express route (below), or REST, etc.
+   */
+  var postEngine = function (payload, session, callback) {
+    var options;
+
+    if (payload && payload.databaseType === 'global') {
+      // Run this query against the global database.
+      options = createGlobalOptions(payload, session.passport.user.id, callback);
+      XT.dataSource.request(null, 'post', payload, options);
+
+    } else {
+      // Run this query against an instance database.
+      queryInstanceDatabase("select xt.post('%@')", "post", payload, session, callback);
+    }
+  };
+  exports.postEngine = postEngine;
+
+// TODO - Remove old routes below.
+
+  /**
     Does all the work of commit.
     Can be called by websockets, or the express route (below), or REST, etc.
    */
@@ -173,6 +251,36 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
     engineFunction(req.query, req.session, callback);
   };
+
+  /**
+    Accesses the deleteEngine (above) for a request a la Express
+   */
+  exports.delete = function (req, res) {
+    routeAdapter(req, res, deleteEngine);
+  };
+
+  /**
+    Accesses the getEngine (above) for a request a la Express
+   */
+  exports.get = function (req, res) {
+    routeAdapter(req, res, getEngine);
+  };
+
+  /**
+    Accesses the patchEngine (above) for a request a la Express
+   */
+  exports.patch = function (req, res) {
+    routeAdapter(req, res, patchEngine);
+  };
+
+  /**
+    Accesses the postEngine (above) for a request a la Express
+   */
+  exports.post = function (req, res) {
+    routeAdapter(req, res, postEngine);
+  };
+
+// TODO - Remvoe the old routes
 
   /**
     Accesses the commitEngine (above) for a request a la Express

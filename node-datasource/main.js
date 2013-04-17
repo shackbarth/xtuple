@@ -551,6 +551,40 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   });
 
   // To run this from the client:
+  // TODO
+  socket.on('delete', function (data, callback) {
+    ensureLoggedIn(function (session) {
+      routes.get(data.payload, session, callback);
+    }, data && data.payload);
+  });
+
+  // To run this from the client:
+  // TODO
+  socket.on('get', function (data, callback) {
+    ensureLoggedIn(function (session) {
+      routes.get(data.payload, session, callback);
+    }, data && data.payload);
+  });
+
+  // To run this from the client:
+  // TODO
+  socket.on('patch', function (data, callback) {
+    ensureLoggedIn(function (session) {
+      routes.get(data.payload, session, callback);
+    }, data && data.payload);
+  });
+
+  // To run this from the client:
+  // TODO
+  socket.on('post', function (data, callback) {
+    ensureLoggedIn(function (session) {
+      routes.get(data.payload, session, callback);
+    }, data && data.payload);
+  });
+
+  // TODO - Remvoe old routes below.
+
+  // To run this from the client:
   // XT.dataSource.retrieveRecord("XM.State", 2, {"id":2,"cascade":true,"databaseType":"instance"});
   socket.on('function/retrieveRecord', function (data, callback) {
     ensureLoggedIn(function (session) {
