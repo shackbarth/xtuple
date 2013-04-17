@@ -27,37 +27,46 @@
       },
       setCallback: function (next) {
         var lineItem = new XM.SalesOrderLine(),
-          itemSite = new XM.ItemSite(),
+          itemSite = new XM.ItemSiteRelation(),
+          unit = new XM.Unit(),
           modelFetched = function () {
-            if (lineItem.id && itemSite.id) {
+            console.log(lineItem.getStatusString(), itemSite.id);
+            if (lineItem.id && itemSite.id && unit.id) {
               var unitUpdated = function () {
-                console.log(lineItem.getParent());
-                console.log(lineItem.get("quantityUnit"));
-                console.log(lineItem.get("priceUnit"));
+                //console.log(lineItem.getParent());
+                //console.log(lineItem.get("quantityUnit"));
+                //console.log(lineItem.get("priceUnit"));
 
-                if (lineItem.getParent() && lineItem.get("quantity") && lineItem.get("priceUnit")) {
+                if (lineItem.getParent() && lineItem.get("quantity") && lineItem.get("customerPrice")) {
                   console.log(lineItem.getStatusString());
-                  console.log(JSON.stringify(lineItem.toJSON()));
+                  //console.log(JSON.stringify(lineItem.toJSON()));
 
-                  console.log(JSON.stringify(itemSite.get("item").toJSON()));
-                  console.log(JSON.stringify(lineItem.toJSON()));
-                  console.log(JSON.stringify(lineItem.validate(lineItem.attributes)));
-                  assert.equal(JSON.stringify(lineItem.validate(lineItem.attributes)), undefined);
+                  //console.log(JSON.stringify(itemSite.get("item").toJSON()));
+                  //console.log(JSON.stringify(lineItem.toJSON()));
+                  //console.log(JSON.stringify(lineItem.validate(lineItem.attributes)));
+                  //assert.equal(JSON.stringify(lineItem.validate(lineItem.attributes)), undefined);
                   next();
                 }
               };
 
               // changing the item site will trigger a change which will ultimately change these three
               // fields. run the callback when they all have been set
-              lineItem.on("change:priceUnitRatio", unitUpdated);
-              lineItem.on("change:quantityUnit", unitUpdated);
-              lineItem.on("change:priceUnit", unitUpdated);
+              //lineItem.on("change:priceUnitRatio", unitUpdated);
+              //lineItem.on("change:quantityUnit", unitUpdated);
+              lineItem.on("all", unitUpdated);
               data.model.get("lineItems").add(lineItem);
               lineItem.set({quantity: 7});
+              console.log("item site", JSON.stringify(itemSite.get("item").toJSON()));
+              console.log("item site", JSON.stringify(itemSite.getValue("item").toJSON()));
               lineItem.set({itemSite: itemSite});
+              console.log("item site on line", JSON.stringify(lineItem.getValue("itemSite").recordType));
+              //lineItem.set({quantityUnit: unit});
+              //lineItem.set({priceUnit: unit});
+              //lineItem.set({priceUnitRatio: 30});
+              lineItem.calculatePrice();
             }
           };
-
+        unit.fetch({id: 4 /* EA */, success: modelFetched})
         itemSite.fetch({id: 303 /* BTRUCK WH1 */, success: modelFetched});
         lineItem.on("change:id", modelFetched);
         lineItem.initialize(null, {isNew: true});

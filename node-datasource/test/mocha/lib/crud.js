@@ -47,7 +47,7 @@ var _ = require("underscore"),
       objectsFetched = 0,
       fetchSuccess = function (model, response, options) {
         // swap in this model for the mock
-        data.model.set(options.key, model, {silent: true});
+        data.model.set(options.key, model);
         objectsFetched++;
         if (objectsFetched === objectsToFetch) {
           callback();
@@ -92,7 +92,7 @@ var _ = require("underscore"),
   };
 
   /**
-    Creates a working model and automatically checks state
+    Initializes a working model and automatically checks state
     is `READY_NEW` and a valid `id` immediately afterward.
 
     Note: This function assumes the `id` is fetched automatically.
@@ -102,7 +102,7 @@ var _ = require("underscore"),
     @param {Object} data
     @param {Function} callback
   */
-  var create = exports.create = function (data, callback) {
+  var init = exports.init = function (data, callback) {
     var that = this,
       timeoutId,
       model = data.model,
@@ -252,8 +252,8 @@ var _ = require("underscore"),
 
 
     var runCrud = function () {
-      var setCallback = function () {
-        var createCallback = function () {
+      var initCallback = function () {
+        var setCallback = function () {
           var saveCallback = function () {
             var secondSaveCallback = function () {
 
@@ -272,28 +272,28 @@ var _ = require("underscore"),
           save(data, saveCallback);
         };
 
-        // Step 4: initialize the model to get the ID from the database
-        if (data.createCallback) {
-          tempCreateCallback = createCallback;
-          createCallback = function () {
-            data.createCallback(tempCreateCallback);
+        // Step 3: set the model with our createData
+        if (data.setCallback) {
+          tempSetCallback = setCallback;
+          setCallback = function () {
+            data.setCallback(tempSetCallback);
           }
         }
-        create(data, createCallback);
+        setModel(data, setCallback);
       };
 
       // Step 2: create the model per the record type specified
       data.model = new XM[data.recordType.substring(3)]();
       assert.equal(data.model.recordType, data.recordType);
 
-      // Step 3: set the model with our createData
-      if (data.setCallback) {
-        tempSetCallback = setCallback;
-        setCallback = function () {
-          data.setCallback(tempSetCallback);
+        // Step 4: initialize the model to get the ID from the database
+        if (data.initCallback) {
+          tempInitCallback = initCallback;
+          initCallback = function () {
+            data.initCallback(tempInitCallback);
+          }
         }
-      }
-      setModel(data, setCallback);
+        init(data, initCallback);
     };
 
     // Step 1: load the environment with Zombie
