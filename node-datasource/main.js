@@ -12,10 +12,7 @@ jsonpatch = require("json-patch");
   "use strict";
 
   var options = require("./lib/options"),
-    schema = false,
-    privs = false,
-    schemaOptions = {},
-    privsOptions = {};
+    sessionOptions = {};
 
   /**
    * Include the X framework.
@@ -68,17 +65,11 @@ jsonpatch = require("json-patch");
   // Set the options.
   X.setup(options);
 
-  schemaOptions.success = function () {
-    schema = true;
-  };
-  privsOptions.success = function () {
-    privs = true;
-  };
-  privsOptions.username = X.options.globalDatabase.nodeUsername;
+  sessionOptions.username = X.options.globalDatabase.nodeUsername;
 
   XT.session = Object.create(XT.Session);
-  XT.session.loadSessionObjects(XT.session.SCHEMA, schemaOptions);
-  XT.session.loadSessionObjects(XT.session.PRIVILEGES, privsOptions);
+  XT.session.loadSessionObjects(XT.session.SCHEMA, sessionOptions);
+  XT.session.loadSessionObjects(XT.session.PRIVILEGES, sessionOptions);
 
 }());
 

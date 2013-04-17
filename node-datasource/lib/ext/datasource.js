@@ -270,7 +270,9 @@ white:true*/
 
       payload.username = options.username;
       payload = JSON.stringify(payload);
-      query = "select xt.retrieve_record('%@') as request".f(payload);
+      query = "select xt.{method}({payload}) as request"
+              .replace("{method}", method)
+              .replace("{payload}");
       //X.log(query);
       this.query(query, conn, complete);
       return true;

@@ -95,9 +95,7 @@ select xt.install_js('XT','Session','xtuple', $$
     @param {String} Schema name
     @returns {Hash}
   */
-  XT.Session.schema = function(schema, refresh) {
-  
-    if (!refresh && this._schema) { return this._schema };
+  XT.Session.schema = function(schema) {
     var sql = 'select c.relname as "type", ' +
               '  attname as "column", ' +
               '  typcategory as "category" ' +
@@ -106,7 +104,7 @@ select xt.install_js('XT','Session','xtuple', $$
               '  join pg_attribute a on a.attrelid = c.oid ' +
               '  join pg_type t on a.atttypid = t.oid ' +
               'where n.nspname = $1 ' +
-              " and c.relname not like '\_%\'" + /* exclude "private" views */
+              " and c.relname not like '\\_%' " + /* exclude "private" views */
               'order by c.relname, attnum',
       recs = plv8.execute(sql, [ schema ]),
       type,
@@ -228,8 +226,7 @@ select xt.install_js('XT','Session','xtuple', $$
       }
     }
 
-    this._schema = JSON.stringify(result);
-    return this._schema;
+    return JSON.stringify(result);
   }
   
 $$ );
