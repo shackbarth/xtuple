@@ -270,7 +270,6 @@ module.exports = function (connect) {
           }
         };
         saveOptions.error = function (model, err) {
-          var that = this;
           // This shouldn't happen. How did we get here? Log trace.
           console.trace("XM.SessionStore save error. This shouldn't happen.");
 
