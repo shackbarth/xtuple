@@ -252,6 +252,15 @@ white:true*/
             return;
           }
           dataHash = JSON.parse(response.rows[0].request);
+          
+          // Handle no data as error
+          if (method === "get" && _.isEmpty(dataHash.data)) {
+            if (options && options.error) {
+              error = XT.Error.clone('xt1007');
+              options.error.call(model, error);
+            }
+            return;
+          }
 
           // Handle no data as error
           if (_.isEmpty(dataHash)) {
