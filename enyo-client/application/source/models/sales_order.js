@@ -14,8 +14,15 @@ white:true*/
 
     recordType: 'XM.SalesOrder',
 
-    documentDateKey: "orderDate"
+    documentDateKey: "orderDate",
 
+    initialize: function (attributes, options) {
+      XM.SalesOrderBase.prototype.initialize.apply(this, arguments);
+
+      if (!_.contains(this.requiredAttributes, "wasQuote")) {
+        this.requiredAttributes.push("wasQuote");
+      }
+    }
   });
 
   /**

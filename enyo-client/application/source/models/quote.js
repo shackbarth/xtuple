@@ -179,7 +179,9 @@ white:true*/
       if (!this.documentDateKey) {
         console.log("Error: model needs a documentDateKey");
       }
-      this.requiredAttributes.push(this.documentDateKey);
+      if (!_.contains(this.requiredAttributes, this.documentDateKey)) {
+        this.requiredAttributes.push(this.documentDateKey);
+      }
     },
 
     /**

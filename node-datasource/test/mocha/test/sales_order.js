@@ -30,13 +30,13 @@
         var lineItem = new XM.SalesOrderLine(),
           itemSite = new XM.ItemSiteRelation(),
           modelFetched = function () {
-            console.log(lineItem.getStatusString(), itemSite.id);
             if (lineItem.id && itemSite.id) {
               var unitUpdated = function () {
 
                 if (lineItem.get("price") && lineItem.get("customerPrice")) {
                   console.log(lineItem.getStatusString());
 
+                  lineItem.off("all", unitUpdated);
                   //assert.equal(JSON.stringify(lineItem.validate(lineItem.attributes)), undefined);
                   console.log(lineItem.get("customerPrice"));
                   console.log(lineItem.get("price"));
