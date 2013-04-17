@@ -1074,7 +1074,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
       /* query the map */
       if (DEBUG) plv8.elog(NOTICE, 'data sql = ', sql);
-      ret.data = plv8.execute(sql)[0];
+      ret.data = plv8.execute(sql)[0] || {};
 
       if (!context) {
         /* check privileges again, this time against record specific criteria where applicable */
