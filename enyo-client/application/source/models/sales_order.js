@@ -34,8 +34,31 @@ white:true*/
 
     recordType: 'XM.SalesOrderLine',
 
-    parentKey: 'salesOrder'
+    parentKey: 'salesOrder',
 
+    lineCharacteristicRecordType: "XM.SalesOrderLineCharacteristic",
+
+    initialize: function (attributes, options) {
+      var reqAttrs = ["firm", "subnumber"],
+        that = this;
+
+      XM.SalesOrderLineBase.prototype.initialize.apply(this, arguments);
+
+      _.each(reqAttrs, function (attr) {
+        if (!_.contains(this.requiredAttributes, attr)) {
+          that.requiredAttributes.push(attr);
+        }
+      });
+    },
+
+    defaults: function () {
+      var defaults = XM.SalesOrderLineBase.prototype.defaults.apply(this, arguments);
+
+      defaults.firm = false;
+      defaults.subnumber = 0;
+
+      return defaults;
+    }
   });
 
 

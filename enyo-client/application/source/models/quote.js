@@ -1355,7 +1355,7 @@ white:true*/
       itemCharAttrs = _.pluck(item.get("characteristics").models, "attributes");
       charTypes = _.unique(_.pluck(itemCharAttrs, "characteristic"));
       _.each(charTypes, function (char) {
-        var quoteLineChar = new XM.QuoteLineCharacteristic(null, {isNew: true}),
+        var quoteLineChar = new XM[that.lineCharacteristicRecordType.suffix()](null, {isNew: true}),
           defaultChar = _.find(itemCharAttrs, function (attrs) {
             return attrs.isDefault === true &&
               attrs.characteristic.id === char.id;
@@ -1715,7 +1715,9 @@ white:true*/
 
     recordType: 'XM.QuoteLine',
 
-    parentKey: "quote"
+    parentKey: "quote",
+
+    lineCharacteristicRecordType: "XM.QuoteLineCharacteristic"
 
   });
 

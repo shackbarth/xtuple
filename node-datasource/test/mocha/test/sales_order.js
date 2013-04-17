@@ -23,7 +23,7 @@
         number: "NUMBER" + Math.random(),
         customer: { id: 95 }, // TTOYS
         terms: { id: 42 },
-        salesRep: { id: 31 },
+        salesRep: { id: 32 },
         wasQuote: true
       },
       setCallback: function (next) {
@@ -33,14 +33,19 @@
             if (lineItem.id && itemSite.id) {
               var unitUpdated = function () {
 
-                if (lineItem.get("price") && lineItem.get("customerPrice")) {
+                //if (lineItem.get("price") && lineItem.get("customerPrice")) {
+                console.log(arguments);
+                console.log(JSON.stringify(lineItem.validate(lineItem.attributes)), undefined);
+                lineItem.set({priceMode: "D"});
+                if (lineItem.validate(lineItem.attributes) === undefined) {
                   console.log(lineItem.getStatusString());
 
-                  //lineItem.off("all", unitUpdated);
+                  if (data.model.getStatusString() === "READY_CLEAN") {
+                    lineItem.off("all", unitUpdated);
+                  }
                   //assert.equal(JSON.stringify(lineItem.validate(lineItem.attributes)), undefined);
                   console.log(lineItem.get("customerPrice"));
                   console.log(lineItem.get("price"));
-                  lineItem.set({priceMode: "D"});
                   next();
                 }
               };
@@ -60,7 +65,7 @@
         lineItem.initialize(null, {isNew: true});
       },
       updateHash: {
-        code: "Dame" + Math.random()
+        wasQuote: false
       }
     };
 
