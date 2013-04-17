@@ -342,7 +342,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.CustomerRelation", "XV.CustomerList");
-  
+
   // ..........................................................
   // CUSTOMER GROUP
   //
@@ -412,11 +412,11 @@ trailing:true white:true*/
     ]
   });
   XV.registerModelList("XM.CustomerShiptoRelation", "XV.CustomerShiptoList");
-  
+
   // ..........................................................
   // CUSTOMER TYPE LIST
   //
-  
+
   enyo.kind({
     name: "XV.CustomerTypeList",
     kind: "XV.List",
@@ -521,7 +521,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.FileRelation", "XV.FileList");
-  
+
   // ..........................................................
   // FREIGHT CLASS
   //
@@ -1163,7 +1163,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.QuoteRelation", "XV.QuoteList");
-  
+
   // ..........................................................
   // SALE TYPE
   //
@@ -1191,9 +1191,9 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   XV.registerModelList("XM.SaleTypeRelation", "XV.SaleTypeList");
-  
+
   // ..........................................................
   // SALES REP
   //
@@ -1288,7 +1288,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.ShipZoneRelation", "XV.ShipZoneList");
-  
+
   // ..........................................................
   // TAX ASSIGNMENT
   //
@@ -1315,7 +1315,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   // ..........................................................
   // TAX AUTHORITY
   //
@@ -1345,7 +1345,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.TaxAuthorityRelation", "XV.TaxAuthorityList");
-  
+
   // ..........................................................
   // TAX CODE
   //
@@ -1375,7 +1375,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.TaxCodeRelation", "XV.TaxCodeList");
-  
+
   // ..........................................................
   // TAX CLASS
   //
@@ -1405,7 +1405,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.TaxClassRelation", "XV.TaxClassList");
-  
+
   // ..........................................................
   // TAX TYPE
   //
@@ -1435,7 +1435,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.TaxTypeRelation", "XV.TaxTypeList");
-  
+
   // ..........................................................
   // TAX ZONE
   //
@@ -1465,7 +1465,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.TaxZoneRelation", "XV.TaxZoneList");
-  
+
   // ..........................................................
   // TERMS
   //
