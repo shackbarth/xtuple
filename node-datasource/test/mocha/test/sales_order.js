@@ -20,7 +20,6 @@
       autoTestAttributes: true,
       createHash: {
         calculateFreight: true,
-        //number: "NUMBER" + Math.random(),
         customer: { id: 95 }, // TTOYS
         terms: { id: 42 },
         salesRep: { id: 32 },

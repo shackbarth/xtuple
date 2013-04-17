@@ -523,7 +523,7 @@ white:true*/
                   }
                 }
               };
-            that.dispatch("XM.Quote", "freightDetail", params, dispOptions); // XXX can we really re-use this database dispatch code?
+            that.dispatch("XM.Sales", "freightDetail", params, dispOptions);
           });
           return this;
         }
@@ -557,7 +557,7 @@ white:true*/
           that.freightTaxDetail = resp;
           _calculateTotals(that);
         };
-        this.dispatch("XM.Quote", "taxDetail", params, dispOptions); // XXX can we reuse this db code?
+        this.dispatch("XM.Tax", "taxDetail", params, dispOptions);
       }
       return this;
     },
@@ -1357,7 +1357,7 @@ white:true*/
           }
           that.recalculateParent(false);
         };
-        this.dispatch("XM.Quote", "taxDetail", params, options); // XXX can we re-use this code?
+        this.dispatch("XM.Tax", "taxDetail", params, options);
       } else {
         this.set("tax", 0);
       }
