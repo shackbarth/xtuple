@@ -96,6 +96,133 @@ white:true*/
   };
 
 
+  /** @private
+    This should only be called by `calculatePrice`.
+  */
+  var _calculatePrice = function (model) {
+    var K = model.getClass(),
+      item = model.getValue("itemSite.item"),
+      characteristics = model.get("characteristics"),
+      isConfigured = item ? item.get("isConfigured") : false,
+      counter = isConfigured ? characteristics.length + 1 : 1,
+      priceUnit = model.get("priceUnit"),
+      asOf = model.priceAsOfDate(),
+      quantity = model.get("quantity"),
+      quantityUnit = model.get("quantityUnit"),
+      readOnlyCache = model.isReadOnly("price"),
+      parent = model.getParent(),
+      prices = [],
+      itemOptions = {},
+      charOptions = {},
+      parentDate,
+      customer,
+      currency,
+
+      // Set price after we have item and all characteristics prices
+      setPrice = function () {
+        // Allow editing again if we could before
+        model.setReadOnly("price", readOnlyCache);
+
+        // If price was requested before this response,
+        // then bail out and start over
+        if (model._invalidPriceRequest) {
+          delete model._invalidPriceRequest;
+          delete model._pendingPriceRequest;
+          _calculatePrice(model);
+          return;
+        }
+
+        var totalPrice = XT.math.add(prices, XT.SALES_PRICE_SCALE);
+        model.set("customerPrice", totalPrice);
+        if (model._updatePrice) {
+          model.off("price", model.priceDidChange);
+          model.set("price", totalPrice);
+          model.on("price", model.priceDidChange);
+          model.priceDidChange();
+        }
+      };
+
+    parentDate = parent.get(parent.documentDateKey);
+    customer = parent.get("customer");
+    currency = parent.get("currency");
+
+    // If we already have a request pending we need to indicate
+    // when that is done to start over because something has changed.
+    if (model._pendingPriceRequest) {
+      if (!model._invalidPriceRequest) {
+        model._invalidPriceRequest = true;
+      }
+      return;
+    }
+
+    // Don't allow user editing of price until we hear back from the server
+    model.setReadOnly("price", true);
+
+    // Get the item price
+    itemOptions.asOf = asOf;
+    itemOptions.currency = currency;
+    itemOptions.effective = parentDate;
+    itemOptions.error = function (err) {
+      model.trigger("invalid", err);
+    };
+
+    charOptions = _.clone(itemOptions); // Some params are shared
+
+    itemOptions.quantityUnit = quantityUnit;
+    itemOptions.priceUnit = priceUnit;
+    itemOptions.success = function (resp) {
+      var priceMode;
+
+      // Handle no price found scenario
+      if (resp.price === -9999 && !model._invalidPriceRequest) {
+        counter = -1;
+        model.notify("_noPriceFound".loc(), { type: K.WARNING });
+        if (model._updatePrice) {
+          model.unset("customerPrice");
+          model.unset("price");
+        }
+        if (model.hasChanges("quantity")) {
+          model.unset("quantity");
+        } else {
+          model.unset("scheduleDate");
+        }
+
+      // Handle normal scenario
+      } else {
+        counter--;
+        if (!model._invalidPriceRequest) {
+          priceMode = (resp.type === "N" ||
+                       resp.type === "D" ||
+                       resp.type === "P") ? K.DISCOUNT_MODE : K.MARKUP_MODE;
+          model.set("priceMode", priceMode);
+          model.set("basePrice", resp.price);
+          prices.push(resp.price);
+        }
+        if (!counter) { setPrice(); }
+      }
+    };
+    itemOptions.error = function (err) {
+      model.trigger("error", err);
+    };
+    customer.itemPrice(item, quantity, itemOptions);
+
+    // Get characteristic prices
+    if (isConfigured) {
+      _.each(characteristics.models, function (char) {
+        var characteristic = char.get("characteristic"),
+          value = char.get("value");
+        charOptions.success = function (price) {
+          counter--;
+          if (!model._invalidPriceRequest) {
+            char.set("price", price);
+            prices.push(price);
+          }
+          if (!counter) { setPrice(); }
+        };
+        customer.characteristicPrice(item, characteristic, value, quantity, charOptions);
+      });
+    }
+  }
 
 
   /**
@@ -1163,13 +1290,13 @@ white:true*/
               type: K.QUESTION,
               callback: function (answer) {
                 that._updatePrice = answer;
-                that._calculatePrice();
+                _calculatePrice(that);
               }
             });
             return this;
           }
         }
-        this._calculatePrice();
+        _calculatePrice(this);
       }
       return this;
     },
@@ -1587,136 +1714,8 @@ white:true*/
       }
 
       return XM.Document.prototype.validate.apply(this, arguments);
-    },
-
-    /** @private
-      This sholud only be called by `calculatePrice`.
-    */
-    _calculatePrice: function () {
-      var K = this.getClass(),
-        that = this,
-        item = this.getValue("itemSite.item"),
-        characteristics = this.get("characteristics"),
-        isConfigured = item ? item.get("isConfigured") : false,
-        counter = isConfigured ? characteristics.length + 1 : 1,
-        priceUnit = this.get("priceUnit"),
-        asOf = this.priceAsOfDate(),
-        quantity = this.get("quantity"),
-        quantityUnit = this.get("quantityUnit"),
-        readOnlyCache = this.isReadOnly("price"),
-        parent = this.getParent(),
-        prices = [],
-        itemOptions = {},
-        charOptions = {},
-        parentDate,
-        customer,
-        currency,
-
-        // Set price after we have item and all characteristics prices
-        setPrice = function () {
-          // Allow editing again if we could before
-          that.setReadOnly("price", readOnlyCache);
-
-          // If price was requested before this response,
-          // then bail out and start over
-          if (that._invalidPriceRequest) {
-            delete that._invalidPriceRequest;
-            delete that._pendingPriceRequest;
-            that._calculatePrice();
-            return;
-          }
-
-          var totalPrice = XT.math.add(prices, XT.SALES_PRICE_SCALE);
-          that.set("customerPrice", totalPrice);
-          if (that._updatePrice) {
-            that.off("price", that.priceDidChange);
-            that.set("price", totalPrice);
-            that.on("price", that.priceDidChange);
-            that.priceDidChange();
-          }
-        };
-
-      parentDate = parent.get(parent.documentDateKey);
-      customer = parent.get("customer");
-      currency = parent.get("currency");
-
-      // If we already have a request pending we need to indicate
-      // when that is done to start over because something has changed.
-      if (this._pendingPriceRequest) {
-        if (!this._invalidPriceRequest) {
-          this._invalidPriceRequest = true;
-        }
-        return;
-      }
-
-      // Don't allow user editing of price until we hear back from the server
-      this.setReadOnly("price", true);
-
-      // Get the item price
-      itemOptions.asOf = asOf;
-      itemOptions.currency = currency;
-      itemOptions.effective = parentDate;
-      itemOptions.error = function (err) {
-        that.trigger("invalid", err);
-      };
-
-      charOptions = _.clone(itemOptions); // Some params are shared
-
-      itemOptions.quantityUnit = quantityUnit;
-      itemOptions.priceUnit = priceUnit;
-      itemOptions.success = function (resp) {
-        var priceMode;
-
-        // Handle no price found scenario
-        if (resp.price === -9999 && !that._invalidPriceRequest) {
-          counter = -1;
-          that.notify("_noPriceFound".loc(), { type: K.WARNING });
-          if (that._updatePrice) {
-            that.unset("customerPrice");
-            that.unset("price");
-          }
-          if (that.hasChanges("quantity")) {
-            that.unset("quantity");
-          } else {
-            that.unset("scheduleDate");
-          }
-
-        // Handle normal scenario
-        } else {
-          counter--;
-          if (!that._invalidPriceRequest) {
-            priceMode = (resp.type === "N" ||
-                         resp.type === "D" ||
-                         resp.type === "P") ? K.DISCOUNT_MODE : K.MARKUP_MODE;
-            that.set("priceMode", priceMode);
-            that.set("basePrice", resp.price);
-            prices.push(resp.price);
-          }
-          if (!counter) { setPrice(); }
-        }
-      };
-      itemOptions.error = function (err) {
-        that.trigger("error", err);
-      };
-      customer.itemPrice(item, quantity, itemOptions);
-
-      // Get characteristic prices
-      if (isConfigured) {
-        _.each(characteristics.models, function (char) {
-          var characteristic = char.get("characteristic"),
-            value = char.get("value");
-          charOptions.success = function (price) {
-            counter--;
-            if (!that._invalidPriceRequest) {
-              char.set("price", price);
-              prices.push(price);
-            }
-            if (!counter) { setPrice(); }
-          };
-          customer.characteristicPrice(item, characteristic, value, quantity, charOptions);
-        });
-      }
     }
+
 
   });
   XM.SalesOrderLineBase = XM.SalesOrderLineBase.extend(XM.SalesOrderBaseMixin);
