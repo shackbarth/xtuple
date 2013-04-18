@@ -254,11 +254,8 @@ var _ = require("underscore"),
 
     var runCrud = function () {
       var initCallback = function () {
-        console.log("initcb");
         var setCallback = function () {
-        console.log("setcb");
           var saveCallback = function () {
-        console.log("savecb");
             var secondSaveCallback = function () {
 
               // Step 8: delete the model from the database
@@ -280,7 +277,7 @@ var _ = require("underscore"),
         if (data.setCallback) {
           tempSetCallback = setCallback;
           setCallback = function () {
-            data.setCallback(tempSetCallback);
+            data.setCallback(data, tempSetCallback);
           }
         }
         setModel(data, setCallback);
@@ -294,14 +291,14 @@ var _ = require("underscore"),
       if (data.initCallback) {
         tempInitCallback = initCallback;
         initCallback = function () {
-          data.initCallback(tempInitCallback);
+          data.initCallback(data, tempInitCallback);
         }
       }
       init(data, initCallback);
     };
 
     // Step 1: load the environment with Zombie
-    zombieAuth.loadApp({callback: runCrud, verbose: true});
+    zombieAuth.loadApp({callback: runCrud, verbose: false});
   };
 
 }());

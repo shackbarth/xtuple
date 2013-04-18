@@ -193,7 +193,7 @@ white:true*/
         if (!model._invalidPriceRequest) {
           priceMode = (resp.type === "N" ||
                        resp.type === "D" ||
-                       resp.type === "P") ? K.DISCOUNT_MODE : K.MARKUP_MODE;
+                       resp.type === "P") ? XM.SalesOrderLineBase.DISCOUNT_MODE : XM.SalesOrderLineBase.MARKUP_MODE;
           model.set("priceMode", priceMode);
           model.set("basePrice", resp.price);
           prices.push(resp.price);
