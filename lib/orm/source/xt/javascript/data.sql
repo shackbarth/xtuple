@@ -683,9 +683,9 @@ select xt.install_js('XT','Data','xtuple', $$
           if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql, data[pkey]); }
           rows = plv8.execute(sql, [data[pkey]]);
           if (rows.length) {
-            sql = this.prepareUpdate(ext, value, null, encryptionKey);
+            sql = this.prepareUpdate(ext, data, null, encryptionKey);
           } else {
-            sql = this.prepareInsert(ext, value, null, encryptionKey);
+            sql = this.prepareInsert(ext, data, null, encryptionKey);
           }
           plv8.execute(sql.statement, sql.values);
         }
