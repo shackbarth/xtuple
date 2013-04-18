@@ -1266,21 +1266,17 @@ trailing:true white:true*/
     printOnSaveSetting: "DefaultPrintSOOnSave",
     headerAttrs: ["number", "-", "billtoName"],
     components: [
-      {kind: "Panels", arrangerKind: "CarouselArranger",
+      {kind: "Panels", name: "salesPanels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "number"},
-            // TODO: remove this for sales order
-            {kind: "XV.DateWidget", attr: "quoteDate"},
-            {kind: "XV.DateWidget", attr: "scheduleDate"},
-            // TODO: remove for sales order
-            {kind: "XV.DateWidget", attr: "expireDate"},
-            // TODO: remove for sales order
-            {kind: "XV.InputWidget", attr: "getQuoteStatusString",
-              label: "_status".loc()},
+            {name: "datePanel", components: [
+              {kind: "XV.DateWidget", name: "dateField", attr: "", label: "_orderDate".loc()},
+              {kind: "XV.DateWidget", attr: "scheduleDate"}
+            ]},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
             {kind: "XV.CustomerProspectWidget", attr: "customer",
               showAddress: true, label: "_customer".loc(),
@@ -1334,6 +1330,12 @@ trailing:true white:true*/
         ]}
       ]}
     ],
+    create: function () {
+      this.inherited(arguments);
+      // set the date attribute to the documentDateKey
+      var dateAttr = this.value.documentDateKey;
+      this.$.dateField.setAttr(dateAttr);
+    },
     customerChanged: function () {
       var customer = this.$.customerProspectWidget.getValue(),
         id = customer ? customer.get("account") : -1;
@@ -1388,62 +1390,54 @@ trailing:true white:true*/
       Loops through the components array of the parent kind and inserts the addtional components where they should be rendered.
     */
     build: function () {
-      var that = this;
-      // TODO: Add this just for quote
-        // {kind: "XV.DateWidget", attr: "quoteDate"},
-        // {kind: "XV.DateWidget", attr: "expireDate"},
-        // {kind: "XV.InputWidget", attr: "getQuoteStatusString",
-        //   label: "_status".loc()},
-      this.getComponents().forEach(function (e, i) {
-          if (e.kind === "Panels") {
-            e.createComponents([
-              {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel", components: [
-                {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true},
-                // Quote Summary Panel
-                {kind: "FittableRows", fit: true, name: "totalGroup", components: [
-                  {kind: "XV.Groupbox", components: [
-                    {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
-                    {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
-                      {kind: "FittableRows", components: [
-                        {kind: "XV.CurrencyPicker", attr: "currency"},
-                        {kind: "XV.MoneyWidget", attr: {localValue: "margin", currency: "currency"},
-                         label: "_margin".loc(), currencyShowing: false,
-                         effective: "quoteDate"},
-                        {kind: "XV.WeightWidget", attr: "freightWeight"}
-                      ]},
-                      {kind: "FittableRows", components: [
-                        {kind: "XV.MoneyWidget", attr:
-                         {localValue: "subtotal", currency: "currency"},
-                         label: "_subtotal".loc(), currencyShowing: false,
-                         effective: "quoteDate"},
-                        {kind: "XV.MoneyWidget", attr:
-                         {localValue: "miscCharge", currency: "currency"},
-                         label: "_miscCharge".loc(), currencyShowing: false,
-                         effective: "quoteDate"},
-                        {kind: "XV.MoneyWidget", attr:
-                         {localValue: "freight", currency: "currency"},
-                         label: "_freight".loc(), currencyShowing: false,
-                         effective: "quoteDate"},
-                        {kind: "XV.MoneyWidget", attr:
-                         {localValue: "taxTotal", currency: "currency"},
-                         label: "_tax".loc(), currencyShowing: false,
-                         effective: "quoteDate"},
-                        {kind: "XV.MoneyWidget", attr:
-                         {localValue: "total", currency: "currency"},
-                         label: "_total".loc(), currencyShowing: false,
-                         effective: "quoteDate"}
-                      ]}
-                    ]}
+      this.$.datePanel.createComponents([
+        {kind: "XV.DateWidget", attr: "expireDate"},
+        {kind: "XV.InputWidget", attr: "getQuoteStatusString", label: "_status".loc()}
+      ], {owner: this});
+      this.$.salesPanels.createComponents([
+          {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel", components: [
+            {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true},
+            // Quote Summary Panel
+            {kind: "FittableRows", fit: true, name: "totalGroup", components: [
+              {kind: "XV.Groupbox", components: [
+                {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
+                {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
+                  {kind: "FittableRows", components: [
+                    {kind: "XV.CurrencyPicker", attr: "currency"},
+                    {kind: "XV.MoneyWidget", attr: {localValue: "margin", currency: "currency"},
+                     label: "_margin".loc(), currencyShowing: false,
+                     effective: "quoteDate"},
+                    {kind: "XV.WeightWidget", attr: "freightWeight"}
+                  ]},
+                  {kind: "FittableRows", components: [
+                    {kind: "XV.MoneyWidget", attr:
+                     {localValue: "subtotal", currency: "currency"},
+                     label: "_subtotal".loc(), currencyShowing: false,
+                     effective: "quoteDate"},
+                    {kind: "XV.MoneyWidget", attr:
+                     {localValue: "miscCharge", currency: "currency"},
+                     label: "_miscCharge".loc(), currencyShowing: false,
+                     effective: "quoteDate"},
+                    {kind: "XV.MoneyWidget", attr:
+                     {localValue: "freight", currency: "currency"},
+                     label: "_freight".loc(), currencyShowing: false,
+                     effective: "quoteDate"},
+                    {kind: "XV.MoneyWidget", attr:
+                     {localValue: "taxTotal", currency: "currency"},
+                     label: "_tax".loc(), currencyShowing: false,
+                     effective: "quoteDate"},
+                    {kind: "XV.MoneyWidget", attr:
+                     {localValue: "total", currency: "currency"},
+                     label: "_total".loc(), currencyShowing: false,
+                     effective: "quoteDate"}
                   ]}
                 ]}
-              ]},
-              {kind: "XV.QuoteCommentBox", attr: "comments"},
-              {kind: "XV.QuoteDocumentsBox", attr: "documents"}
-            ], {owner: that});
-            // we already did what we needed to do here, no sense continuing the loop
-            return false;            
-          }
-        });
+              ]}
+            ]}
+          ]},
+          {kind: "XV.QuoteCommentBox", attr: "comments"},
+          {kind: "XV.QuoteDocumentsBox", attr: "documents"}
+        ], {owner: this});
     }
   });
 
@@ -1544,40 +1538,23 @@ trailing:true white:true*/
       Loops through the components array of the parent kind and inserts the addtional components where they should be rendered.
     */
     build: function () {
-      var that = this;
-      this.getComponents().forEach(function (e, i) {
-        // TODO: Add this just for sales order
-          // {kind: "XV.DateWidget", attr: "salesOrderDate"},
-          // {kind: "XV.DateWidget", attr: "expireDate"},
-          if (e.kind === "Panels") {
-            e.createComponents([
-                {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel", components: [
-                  {kind: "XV.SalesOrderLineItemBox", attr: "lineItems", fit: true}
-                ]},
-                {kind: "XV.SalesOrderCommentBox", attr: "comments"},
-                {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
-              ], {owner: that});
-            // we already did what we needed to do here, no sense continuing the loop
-            return false;
-          }
-        });
+      // TODO: Put Sales Order Status here
+      // this.$.datePanel.createComponents([
+      //   {kind: "XV.InputWidget", attr: "getSalesOrderStatusString", label: "_status".loc()
+      //   }], {owner: this});
+      this.$.salesPanels.createComponents([
+          {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel", components: [
+            {kind: "XV.SalesOrderLineItemBox", attr: "lineItems", fit: true}
+          ]},
+          {kind: "XV.SalesOrderCommentBox", attr: "comments"},
+          {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
+        ], {owner: this});
     }
   });
 
   XV.registerModelWorkspace("XM.SalesOrderRelation", "XV.SalesOrderWorkspace");
   XV.registerModelWorkspace("XM.SalesOrderListItem", "XV.SalesOrderWorkspace");
   
-  // ..........................................................
-  // SALES TOTAL PANEL
-  //
-  enyo.kind({
-    name: "XV.SalesTotalsPanel",
-    kind: "FittableRows", 
-    fit: true,
-    components: [
-    ]
-  });  
-
   // ..........................................................
   // SALES REP
   //
