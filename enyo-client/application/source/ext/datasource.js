@@ -100,7 +100,10 @@ white:true*/
     request: function (model, method, payload, options) {
       var that = this,
         complete = function (response) {
-          var params = {}, error;
+          var dataHash,
+            params = {},
+            error,
+            attrs;
 
           // Handle error
           if (response.isError) {
@@ -112,6 +115,8 @@ white:true*/
             return;
           }
           
+          dataHash = JSON.parse(response.rows[0].request);
+          
           // Handle no data as error
           if (method === "get" && _.isEmpty(dataHash.data)) {
             if (options && options.error) {
@@ -121,18 +126,20 @@ white:true*/
             return;
           }
 
-          // Handle no data as error
-          if (_.isEmpty(response.data)) {
-            if (options && options.error) {
-              error = XT.Error.clone('xt1007');
-              options.error.call(that, error);
-            }
-            return;
-          }
-
           // Handle success
           if (options && options.success) {
-            options.success.call(that, model, response.data, options);
+            if (dataHash.patches) {
+              attrs = model ?
+                XM.jsonpatch.apply(model.toJSON(), dataHash.patches) :
+                dataHash.patches;
+            } else {
+              attrs = dataHash.data;
+            }
+            if (model) {
+              model.lock = dataHash.lock;
+              model.version = dataHash.version;
+            }
+            options.success.call(that, model, attrs, options);
           }
         };
 
