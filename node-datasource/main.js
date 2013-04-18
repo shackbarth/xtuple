@@ -2,7 +2,7 @@
 
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, Backbone:true, _:true, XM:true, XT:true*/
+/*global X:true, Backbone:true, _:true, XM:true, XT:true, jsonpatch:true*/
 
 Backbone = require("backbone");
 _ = require("underscore");
@@ -459,11 +459,11 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
       }
 
       // All requests get a session. Make sure the session is authenticated.
-      if (!session || !session.passport || !session.passport.user
-        || !session.passport.user.id
-        || !session.passport.user.organization
-        || !session.passport.user.username
-        || !session.cookie || !session.cookie.expires) {
+      if (!session || !session.passport || !session.passport.user ||
+        !session.passport.user.id ||
+        !session.passport.user.organization ||
+        !session.passport.user.username ||
+        !session.cookie || !session.cookie.expires) {
 
         destroySession(handshakeData.sessionID, session);
 
@@ -494,11 +494,11 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
               current;
 
           // All requests get a session. Make sure the session is authenticated.
-          if (err || !session || !session.passport || !session.passport.user
-            || !session.passport.user.id
-            || !session.passport.user.organization
-            || !session.passport.user.username
-            || !session.cookie || !session.cookie.expires) {
+          if (err || !session || !session.passport || !session.passport.user ||
+              !session.passport.user.id ||
+              !session.passport.user.organization ||
+              !session.passport.user.username ||
+              !session.cookie || !session.cookie.expires) {
 
             return destroySession(socket.handshake.sessionID, session);
           }
@@ -542,7 +542,6 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   });
 
   // To run this from the client:
-  // TODO
   socket.on('delete', function (data, callback) {
     ensureLoggedIn(function (session) {
       routes.deleteEngine(data.payload, session, callback);
@@ -550,15 +549,13 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   });
 
   // To run this from the client:
-  // TODO
   socket.on('get', function (data, callback) {
     ensureLoggedIn(function (session) {
-      routes.get(data.payload, session, callback);
+      routes.getEngine(data.payload, session, callback);
     }, data && data.payload);
   });
 
   // To run this from the client:
-  // TODO
   socket.on('patch', function (data, callback) {
     ensureLoggedIn(function (session) {
       routes.patchEngine(data.payload, session, callback);
@@ -566,20 +563,9 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   });
 
   // To run this from the client:
-  // TODO
   socket.on('post', function (data, callback) {
     ensureLoggedIn(function (session) {
       routes.postEngine(data.payload, session, callback);
-    }, data && data.payload);
-  });
-
-  // TODO - Remvoe old routes below.
-
-  // To run this from the client:
-  // XT.dataSource.retrieveRecord("XM.State", 2, {"id":2,"cascade":true,"databaseType":"instance"});
-  socket.on('function/retrieveRecord', function (data, callback) {
-    ensureLoggedIn(function (session) {
-      routes.retrieveEngine(data.payload, session, callback);
     }, data && data.payload);
   });
 
@@ -596,16 +582,6 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   socket.on('function/dispatch', function (data, callback) {
     ensureLoggedIn(function (session) {
       routes.dispatchEngine(data.payload, session, callback);
-    }, data && data.payload);
-  });
-
-  // To run this from the client:
-  // ???
-  // TODO: The first argument to XT.dataSource.commit() is a model and therefore a bit tough to mock
-  // XXX untested
-  socket.on('function/commitRecord', function (data, callback) {
-    ensureLoggedIn(function (session) {
-      routes.commitEngine(data.payload, session, callback);
     }, data && data.payload);
   });
 

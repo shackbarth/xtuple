@@ -115,7 +115,7 @@ white:true*/
             return;
           }
           
-          dataHash = JSON.parse(response.rows[0].request);
+          dataHash = response.data;
           
           // Handle no data as error
           if (method === "get" && _.isEmpty(dataHash.data)) {
@@ -146,7 +146,7 @@ white:true*/
       return XT.Request
                .handle(method)
                .notify(complete)
-               .send(JSON.stringify(payload));
+               .send(payload);
     },
 
     /*
