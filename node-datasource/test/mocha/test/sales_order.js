@@ -30,6 +30,7 @@
         create a valid line item.
        */
       setCallback: function (next) {
+        console.log("hoo");
         var lineItem = new XM.SalesOrderLine(),
           itemSite = new XM.ItemSiteRelation(),
           modelFetched = function () {
@@ -67,10 +68,16 @@
 
   describe('Sales order', function () {
     this.timeout(10 * 1000);
-    it('should perform all the crud operations', function (done) {
+    //it('should perform all the crud operations', function (done) {
+    //  crud.runAllCrud(data, done);
+    //});
+
+    it('should perform all the crud operations on quote', function (done) {
+      data.recordType = "XM.Quote";
+      data.createHash.wasQuote = undefined;
       crud.runAllCrud(data, done);
     });
-
+/*
     it('should take the defaults from the customer', function (done) {
       var terms = new XM.Terms(),
         customer = new XM.CustomerProspectRelation(),
@@ -88,5 +95,6 @@
       salesOrder.on('change:id', initCallback);
       salesOrder.initialize(null, {isNew: true});
     });
+    */
   });
 }());

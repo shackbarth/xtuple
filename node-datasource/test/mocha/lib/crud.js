@@ -254,8 +254,11 @@ var _ = require("underscore"),
 
     var runCrud = function () {
       var initCallback = function () {
+        console.log("initcb");
         var setCallback = function () {
+        console.log("setcb");
           var saveCallback = function () {
+        console.log("savecb");
             var secondSaveCallback = function () {
 
               // Step 8: delete the model from the database
