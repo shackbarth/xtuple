@@ -1373,7 +1373,7 @@ trailing:true white:true*/
       this.getValue().copyBilltoToShipto();
     }
   });
-
+  
   // ..........................................................
   // QUOTE
   //
@@ -1447,7 +1447,6 @@ trailing:true white:true*/
   // ..........................................................
   // QUOTE LINE ITEM
   //
-
   var quoteLineItem = enyo.mixin(XV.QuoteLineMixin, {
     name: "XV.QuoteLineWorkspace",
     kind: "XV.Workspace",
@@ -1544,7 +1543,44 @@ trailing:true white:true*/
       //   }], {owner: this});
       this.$.salesPanels.createComponents([
           {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel", components: [
-            {kind: "XV.SalesOrderLineItemBox", attr: "lineItems", fit: true}
+            {kind: "XV.SalesOrderLineItemBox", attr: "lineItems", fit: true},
+            // Quote Summary Panel
+            {kind: "FittableRows", fit: true, name: "totalGroup", components: [
+              {kind: "XV.Groupbox", components: [
+                {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
+                {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
+                  {kind: "FittableRows", components: [
+                    {kind: "XV.CurrencyPicker", attr: "currency"},
+                    {kind: "XV.MoneyWidget", attr: {localValue: "margin", currency: "currency"},
+                     label: "_margin".loc(), currencyShowing: false,
+                     effective: "quoteDate"},
+                    {kind: "XV.WeightWidget", attr: "freightWeight"}
+                  ]},
+                  {kind: "FittableRows", components: [
+                    {kind: "XV.MoneyWidget", attr:
+                     {localValue: "subtotal", currency: "currency"},
+                     label: "_subtotal".loc(), currencyShowing: false,
+                     effective: "quoteDate"},
+                    {kind: "XV.MoneyWidget", attr:
+                     {localValue: "miscCharge", currency: "currency"},
+                     label: "_miscCharge".loc(), currencyShowing: false,
+                     effective: "quoteDate"},
+                    {kind: "XV.MoneyWidget", attr:
+                     {localValue: "freight", currency: "currency"},
+                     label: "_freight".loc(), currencyShowing: false,
+                     effective: "quoteDate"},
+                    {kind: "XV.MoneyWidget", attr:
+                     {localValue: "taxTotal", currency: "currency"},
+                     label: "_tax".loc(), currencyShowing: false,
+                     effective: "quoteDate"},
+                    {kind: "XV.MoneyWidget", attr:
+                     {localValue: "total", currency: "currency"},
+                     label: "_total".loc(), currencyShowing: false,
+                     effective: "quoteDate"}
+                  ]}
+                ]}
+              ]}
+            ]}
           ]},
           {kind: "XV.SalesOrderCommentBox", attr: "comments"},
           {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
