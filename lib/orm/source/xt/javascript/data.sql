@@ -640,7 +640,7 @@ select xt.install_js('XT','Data','xtuple', $$
         pkey = XT.Orm.primaryKey(orm),
         id = data[pkey],
         lock,
-        lockKey = options.lock && options.lock.key ? lock.key : false,
+        lockKey = options.lock && options.lock.key ? options.lock.key : false,
         lockTable = orm.lockTable || orm.table,
         version = this.getVersion(orm, id),
         ext,
