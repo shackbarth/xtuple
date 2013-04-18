@@ -54,6 +54,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   //
   // Data-passthrough routes
   //
+
+  exports.delete = [ensureLogin, data.delete];
+  exports.deleteEngine = data.deleteEngine;
+  exports.get = [ensureLogin, data.get];
+  exports.getEngine = data.getEngine;
+  exports.patch = [ensureLogin, data.patch];
+  exports.patchEngine = data.patchEngine;
+  exports.post = [ensureLogin, data.post];
+  exports.postEngine = data.postEngine;
+
+// TODO - Delete old routes below.
   exports.commit = [ensureLogin, data.commit];
   exports.commitEngine = data.commitEngine;
   exports.fetch = [ensureLogin, data.fetch];
