@@ -65,24 +65,23 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.postEngine = data.postEngine;
 
 // TODO - Delete old routes below.
-  exports.commit = [ensureLogin, data.commit];
-  exports.commitEngine = data.commitEngine;
   exports.fetch = [ensureLogin, data.fetch];
   exports.fetchEngine = data.fetchEngine;
   exports.dispatch = [ensureLogin, data.dispatch];
   exports.dispatchEngine = data.dispatchEngine;
-  exports.retrieve = [ensureLogin, data.retrieve];
-  exports.retrieveEngine = data.retrieveEngine;
 
   //
   // REST API Routes
   exports.restDiscoveryList = [
-    restDiscovery.list];
+    restDiscovery.list
+  ];
   exports.restDiscoveryGetRest = [
-    restDiscovery.getRest];
+    restDiscovery.getRest
+  ];
   exports.restRouter = [
     passport.authenticate('bearer', { session: false }),
-    restRouter.router];
+    restRouter.router
+  ];
 
   //
   // Custom routes

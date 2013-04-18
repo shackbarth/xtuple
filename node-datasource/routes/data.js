@@ -79,7 +79,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     } else {
       // Run this query against an instance database.
-      queryInstanceDatabase("select xt.delete('%@')", "delete", payload, session, callback);
+      queryInstanceDatabase("select xt.delete($$%@$$)", "delete", payload, session, callback);
     }
   };
   exports.deleteEngine = deleteEngine;
@@ -98,7 +98,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     } else {
       // Run this query against an instance database.
-      queryInstanceDatabase("select xt.get('%@')", "get", payload, session, callback);
+      queryInstanceDatabase("select xt.get($$%@$$)", "get", payload, session, callback);
     }
   };
   exports.getEngine = getEngine;
@@ -117,7 +117,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     } else {
       // Run this query against an instance database.
-      queryInstanceDatabase("select xt.patch('%@')", "patch", payload, session, callback);
+      queryInstanceDatabase("select xt.patch($$%@$$)", "patch", payload, session, callback);
     }
   };
   exports.patchEngine = patchEngine;
@@ -127,32 +127,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Can be called by websockets, or the express route (below), or REST, etc.
    */
   var postEngine = function (payload, session, callback) {
-    var options;
-
-    if (payload && payload.databaseType === 'global') {
-      // Run this query against the global database.
-      options = createGlobalOptions(payload, session.passport.user.id, callback);
-      XT.dataSource.request(null, 'post', payload, options);
-
-    } else {
-      // Run this query against an instance database.
-      queryInstanceDatabase("select xt.post('%@')", "post", payload, session, callback);
-    }
-  };
-  exports.postEngine = postEngine;
-
-// TODO - Remove old routes below.
-
-  /**
-    Does all the work of commit.
-    Can be called by websockets, or the express route (below), or REST, etc.
-   */
-  var commitEngine = function (payload, session, callback) {
-    var binaryField = payload.binaryField,
+    var binaryField = payload.data.binaryField,
       buffer,
       binaryData,
       options;
-
+    
     // We need to convert js binary into pg hex (see the file route for
     // the opposite conversion). See issue #18661
     if (binaryField) {
@@ -165,21 +144,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     if (payload && payload.databaseType === 'global') {
       // Run this query against the global database.
       options = createGlobalOptions(payload, session.passport.user.id, callback);
-      if (!payload.dataHash) {
-        callback({message: "Invalid Commit"});
-        return;
-      }
-      // Passing payload through, but trick dataSource into thinking it's a Model:
-      payload.changeSet = function () { return payload.dataHash; };
-      options.force = true;
-      XT.dataSource.commitRecord(payload, options);
+      XT.dataSource.request(null, 'post', payload, options);
 
     } else {
       // Run this query against an instance database.
-      queryInstanceDatabase("select xt.commit_record($$%@$$)", "commit_record", payload, session, callback);
+      queryInstanceDatabase("select xt.post($$%@$$)", "post", payload, session, callback);
     }
   };
-  exports.commitEngine = commitEngine;
+  exports.postEngine = postEngine;
+
+// TODO - Remove old routes below.
 
   /**
     Does all the work of dispatch.
@@ -217,25 +191,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
   };
   exports.fetchEngine = fetchEngine;
-
-  /**
-    Does all the work of retrieve.
-    Can be called by websockets, or the express route (below), or REST, etc.
-   */
-  var retrieveEngine = function (payload, session, callback) {
-    var options;
-
-    if (payload && payload.databaseType === 'global') {
-      // run this query against the global database
-      options = createGlobalOptions(payload, session.passport.user.id, callback);
-      XT.dataSource.retrieveRecord(payload, options);
-
-    } else {
-      // run this query against an instance database
-      queryInstanceDatabase("select xt.retrieve_record('%@')", "retrieve_record", payload, session, callback);
-    }
-  };
-  exports.retrieveEngine = retrieveEngine;
 
   /**
     The adaptation of express routes to engine functions is the same for all four operations,
@@ -283,13 +238,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 // TODO - Remvoe the old routes
 
   /**
-    Accesses the commitEngine (above) for a request a la Express
-   */
-  exports.commit = function (req, res) {
-    routeAdapter(req, res, commitEngine);
-  };
-
-  /**
     Accesses the dispatchEngine (above) for a request a la Express
    */
   exports.dispatch = function (req, res) {
@@ -301,13 +249,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
    */
   exports.fetch = function (req, res) {
     routeAdapter(req, res, fetchEngine);
-  };
-
-  /**
-    Accesses the retrieveEngine (above) for a request a la Express
-   */
-  exports.retrieve = function (req, res) {
-    routeAdapter(req, res, retrieveEngine);
   };
 
 }());
