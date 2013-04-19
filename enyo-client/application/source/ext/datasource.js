@@ -129,9 +129,12 @@ white:true*/
           // Handle success
           if (options && options.success) {
             if (dataHash.patches) {
-              attrs = model ?
-                XM.jsonpatch.apply(model.toJSON(), dataHash.patches) :
-                dataHash.patches;
+              if (model) {
+                attrs = model.toJSON({includeNested: true});
+                XM.jsonpatch.apply(attrs, dataHash.patches);
+              } else {
+                attrs = dataHash.patches;
+              }
             } else {
               attrs = dataHash.data;
             }

@@ -38,7 +38,7 @@ create or replace function xt.patch(data_hash text) returns text as $$
   data.commitRecord(options);
 
   /* calculate a patch of the modifed version */
-  XT.jsonpatch.apply(prv, dataHash.data);
+  XT.jsonpatch.apply(prv, dataHash.patches);
   observer = XT.jsonpatch.observe(prv);
   ret = data.retrieveRecord(dataHash);
   observer.object = ret.data;
