@@ -1280,6 +1280,7 @@ trailing:true white:true*/
               {kind: "XV.DateWidget", name: "dateField", attr: "", label: "_orderDate".loc()},
               {kind: "XV.DateWidget", attr: "scheduleDate"}
             ]},
+            {kind: "XV.InputWidget", attr: "getOrderStatusString", label: "_status".loc()},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
             {kind: "XV.CustomerProspectWidget", attr: "customer",
               showAddress: true, label: "_customer".loc(),
@@ -1392,8 +1393,7 @@ trailing:true white:true*/
     */
     build: function () {
       this.$.datePanel.createComponents([
-        {kind: "XV.DateWidget", attr: "expireDate"},
-        {kind: "XV.InputWidget", attr: "getQuoteStatusString", label: "_status".loc()}
+        {kind: "XV.DateWidget", attr: "expireDate"}
       ], {owner: this});
       this.$.salesPanels.createComponents([
           {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel", components: [
@@ -1569,10 +1569,6 @@ trailing:true white:true*/
       Loops through the components array of the parent kind and inserts the addtional components where they should be rendered.
     */
     build: function () {
-      // TODO: Put Sales Order Status here
-      // this.$.datePanel.createComponents([
-      //   {kind: "XV.InputWidget", attr: "getSalesOrderStatusString", label: "_status".loc()
-      //   }], {owner: this});
       this.$.salesPanels.createComponents([
           {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel", components: [
             {kind: "XV.SalesOrderLineItemBox", attr: "lineItems", fit: true},

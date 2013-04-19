@@ -177,17 +177,6 @@ white:true*/
 
     editableModel: 'XM.SalesOrder'
 
-    /**
-    Returns quote status as a localized string.
-
-    @returns {String}
-    getSalesOrderStatusString: function () {
-      var K = XM.SalesOrder,
-        status = this.get("status");
-      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
-    }
-    */
-
   });
 
   /**
