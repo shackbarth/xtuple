@@ -41,6 +41,13 @@
         }
       },
       {
+        "name": "customerPurchaseOrderNumber",
+        "attr": {
+          "type": "String",
+          "column": "cohead_custponumber"
+         }
+      },
+      {
         "name": "orderDate",
         "attr": {
           "type": "Date",
