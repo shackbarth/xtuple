@@ -175,6 +175,9 @@ trailing:true white:true*/
   // LINE ITEMS
   //
   
+  /**
+    This is the parent LineItem Mixin for both the Quote and SalesOrder.
+  */
   XV.LineMixin = {
     /**
      When the model changes, check the priceMode field to see if it is in
@@ -223,7 +226,7 @@ trailing:true white:true*/
   };
   
   /**
-    Mixin to share common line functionality
+    Mixin for Quote Specific Line functions
   */
   XV.QuoteLineMixin = {
     create: function () {
@@ -273,8 +276,8 @@ trailing:true white:true*/
   };
   
   /**
-     Mixin to share common line functionality
-   */
+    Mixin for Sales Order Specific Line functions
+  */
    XV.SalesOrderLineMixin = {
      create: function () {
        this.inherited(arguments);
@@ -322,6 +325,10 @@ trailing:true white:true*/
      }
    };
   
+   /**
+     This is the parent line editor. It mixes in the base line functionality
+     for both 
+   */
   var lineEditor = enyo.mixin(XV.LineMixin, {
     name: "XV.BaseLineItemEditor",
     kind: "XV.RelationsEditor",

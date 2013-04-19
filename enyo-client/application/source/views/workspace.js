@@ -1362,9 +1362,7 @@ trailing:true white:true*/
       this.$.copyAddressButton.setDisabled(!isFreeFormShipto);
       this.customerChanged();
       // re-render the summary panel
-      if (this.$.lineItemsPanel) {
-        this.$.lineItemsPanel.render();
-      }
+      this.$.lineItemsPanel.render();
     },
     controlValueChanged: function (inSender, inEvent) {
       this.inherited(arguments);
