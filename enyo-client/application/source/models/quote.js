@@ -1505,7 +1505,7 @@ white:true*/
           });
         quoteLineChar.set("characteristic", char);
         quoteLineChar.set("value", defaultChar ? defaultChar.value : "");
-        quoteLineChar.on("change:value", that.calculatePrice);
+        quoteLineChar.on("change:value", that.calculatePrice, that);
         characteristics.add(quoteLineChar);
       });
 
