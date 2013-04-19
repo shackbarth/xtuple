@@ -267,6 +267,7 @@ select xt.install_js('XT','Schema','xtuple', $$
 
     if (!orm.properties) return false;
 
+    /* TODO - This may not work if extensions have basic props and not toMany or toOne. */
     if (orm.extensions.length > 0) {
       /* Loop through the ORM extensions and add their properties into main properties. */
       for (var i = 0; i < orm.extensions.length; i++) {
