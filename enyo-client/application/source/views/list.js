@@ -1171,7 +1171,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.SalesOrderList",
     kind: "XV.List",
-    label: "_salesOrder".loc(),
+    label: "_salesOrders".loc(),
     collection: "XM.SalesOrderListItemCollection",
     parameterWidget: "XV.SalesOrderListParameters",
     query: {orderBy: [
