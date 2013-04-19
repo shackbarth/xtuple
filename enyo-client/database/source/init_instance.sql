@@ -1,6 +1,8 @@
 -- [ START ] initdb
 
 -- run core orm scripts
+\i delete_system_orms.sql;
+
 \cd ../../../lib/orm/source;
 \i init_script.sql;
 \cd ../../../enyo-client/database/source;
@@ -132,4 +134,6 @@
 -- xtbatch (TODO: This should be moved elsewhere)
 \i create_xtbatch_schema.sql;
 \i xtbatch/tables/batch.sql
+
+\i update_version.sql;
 
