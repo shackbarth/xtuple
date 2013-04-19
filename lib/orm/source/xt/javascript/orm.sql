@@ -245,7 +245,7 @@ select xt.install_js('XT','Orm','xtuple', $$
   */
   XT.Orm.createView = function (orm) {
     /* constants */
-    var SELECT = 'select {columns} from {table} where {conditions}',
+    var SELECT = 'select {columns} from {table} where {conditions} {order}',
       cols = [],
       altcols = [],
       tbls = [],
@@ -288,7 +288,9 @@ select xt.install_js('XT','Orm','xtuple', $$
         join,
         lockTable,
         schemaName,
-        tableName;
+        tableName,
+        pkey,
+        orderBy;
       for (i = 0; i < props.length; i++) {
         alias = props[i].name;
         if(DEBUG) plv8.elog(NOTICE, 'processing property ->', props[i].name);
@@ -336,7 +338,8 @@ select xt.install_js('XT','Orm','xtuple', $$
              SELECT.replace('{columns}', '"' + type + '"')
                    .replace('{table}',  table)
                    .replace('{conditions}', conditions))
-                   .replace('{alias}', alias);
+                   .replace('{alias}', alias)
+                   .replace('{order}', '');
           cols.push(col);
 
           /* handle the default non-nested case */
@@ -348,27 +351,30 @@ select xt.install_js('XT','Orm','xtuple', $$
              SELECT.replace('{columns}', '"_' + type + '"')
                    .replace('{table}',  table)
                    .replace('{conditions}', conditions))
-                   .replace('{alias}', alias);
+                   .replace('{alias}', alias)
+                   .replace('{order}', '');
             altcols.push(col);
           }
         }
 
         /* process toMany */
-        if(props[i].toMany) {
+        if (props[i].toMany) {
           if(DEBUG) plv8.elog(NOTICE, 'building toMany');
-         if(!props[i].toMany.type) throw new Error('No type was defined on property ' + props[i].name);
+         if (!props[i].toMany.type) throw new Error('No type was defined on property ' + props[i].name);
            toMany = props[i].toMany;
            table = base.nameSpace + '.' + toMany.type.decamelize();
            alttable = base.nameSpace + '._' + toMany.type.decamelize();
            type = toMany.type.decamelize();
-           column = toMany.isNested ? type : XT.Orm.primaryKey(XT.Orm.fetch(base.nameSpace, toMany.type));
            iorm = XT.Orm.fetch(base.nameSpace, toMany.type);
-           col = 'array({select}) as "{alias}"';
+           pkey = XT.Orm.primaryKey(iorm);
+           column = toMany.isNested ? type : pkey;
+           col = 'array({select}) as "{alias}"',
+           orderBy = 'order by ' + pkey;
 
            /* handle inverse */
           inverse = toMany.inverse ? toMany.inverse.camelize() : 'id';
           ormp = XT.Orm.getProperty(iorm, inverse);
-          if(ormp && ormp.toOne && ormp.toOne.isNested) {
+          if (ormp && ormp.toOne && ormp.toOne.isNested) {
             conditions = toMany.column ? '(' + type + '."' + inverse + '").id = ' + tblAlias + '.' + toMany.column : 'true';
             altconditions = toMany.column ? '(_' + type + '."' + inverse + '").id = ' + tblAlias + '.' + toMany.column : 'true';
           } else {
@@ -381,7 +387,8 @@ select xt.install_js('XT','Orm','xtuple', $$
              SELECT.replace('{columns}', column)
                    .replace('{table}', table)
                    .replace('{conditions}', conditions))
-                   .replace('{alias}', alias);
+                   .replace('{alias}', alias)
+                   .replace('{order}', orderBy);
           cols.push(col);
 
           /* same for alternate view */
@@ -390,7 +397,8 @@ select xt.install_js('XT','Orm','xtuple', $$
              SELECT.replace('{columns}', toMany.isNested ? "_" + column : column)
                    .replace('{table}', alttable)
                    .replace('{conditions}', altconditions))
-                   .replace('{alias}', alias);
+                   .replace('{alias}', alias)
+                   .replace('{order}', orderBy);
           altcols.push(col);
         }
       }
@@ -515,7 +523,7 @@ select xt.install_js('XT','Orm','xtuple', $$
             .replace('{tables}', tbls.join(' '))
             .replace('{where}', clauses.length ? 'where ' + clauses.join(' and ') : '')
             .replace('{order}', orderBy.length ? 'order by ' + orderBy.join(' , ') : '');
-    if(DEBUG) plv8.elog(NOTICE, 'query', query);
+    if (DEBUG) plv8.elog(NOTICE, 'query', query);
     plv8.execute(query);
 
     /* Add comment */
