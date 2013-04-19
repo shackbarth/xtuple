@@ -104,6 +104,15 @@ create or replace function xt.js_init() returns void as $$
   };
 
   /**
+     Change a camel case string to snake case.
+
+     @returns {String} The argument modified
+  */
+  String.prototype.camelToHyphen = function() {
+    return this.replace((/([a-z])([A-Z])/g), '$1-$2').toLowerCase();
+  }
+
+  /**
      Converts the string into a class name. This method will camelize
      your string and then capitalize the first letter.
 
@@ -154,6 +163,22 @@ create or replace function xt.js_init() returns void as $$
       }
     }
     else if(typeof obj === "string") return obj.camelize();
+    return ret;
+  }
+
+  /**
+    Change camel case property names in an object to hyphen case.
+     Only changes immediate properties, it is not recursive.
+
+     @param {Object | String} The object to decamelize
+     @returns {Object | String} The argument modified
+  */
+  XT.camelToHyphen = function(obj) {
+    var ret = {};
+    if(typeof obj === "object") {
+      for(var prop in obj) ret[prop.camelToHyphen()] = obj[prop];
+    }
+    else if(typeof obj === "string") return obj.camelToHyphen();
     return ret;
   }
 

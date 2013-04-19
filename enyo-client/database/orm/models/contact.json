@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Contact",
     "table": "cntct",
+    "isRest": true,
     "lockable": true,
     "idSequenceName": "cntct_cntct_id_seq",
     "orderSequence": "ContactNumber",

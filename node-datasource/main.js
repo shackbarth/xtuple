@@ -334,7 +334,15 @@ app.get('/dialog/authorize', oauth2.authorization);
 app.post('/dialog/authorize/decision', oauth2.decision);
 app.post('/oauth/token', oauth2.token);
 
+app.get('/discovery/v1alpha1/apis/:org/v1alpha1/rest', routes.restDiscoveryGetRest);
+app.get('/discovery/v1alpha1/apis/:org/:model/v1alpha1/rest', routes.restDiscoveryGetRest);
+app.get('/discovery/v1alpha1/apis/:org', routes.restDiscoveryList);
+
 app.get('/api/userinfo', user.info);
+
+app.all('/api/v1alpha1/:model/:id', routes.restRouter);
+app.all('/api/v1alpha1/:model', routes.restRouter);
+app.all('/api/v1alpha1/*', routes.restRouter);
 
 app.get('/', routes.loginForm);
 app.post('/login', routes.login);

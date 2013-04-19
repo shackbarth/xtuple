@@ -59,6 +59,8 @@ white:true*/
     /** @scope XM.TaxAuthority.prototype */
 
     recordType: 'XM.TaxAuthority',
+    
+    documentKey: 'number',
 
     defaults: function () {
       return {
@@ -93,6 +95,27 @@ white:true*/
     recordType: 'XM.TaxZone',
 
     documentKey: 'code'
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.TaxRate = XM.Model.extend({
+    /** @scope XM.TaxRate */
+
+    recordType: 'XM.TaxRate',
+    
+    requiredAttributes: [
+      "tax",
+      "percent",
+      "currency",
+      "amount",
+      "effectiveDate",
+      "expirationDate"
+    ]
 
   });
 
@@ -203,6 +226,18 @@ white:true*/
     /** @scope XM.TaxTypeCollection.prototype */
 
     model: XM.TaxType
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.TaxRateCollection = XM.Collection.extend({
+    /** @scope XM.TaxRateCollection.prototype */
+
+    model: XM.TaxRate
 
   });
 

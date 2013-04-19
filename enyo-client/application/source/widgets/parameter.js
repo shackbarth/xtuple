@@ -846,6 +846,20 @@ trailing:true white:true*/
   });
   
   // ..........................................................
+  // TAX RATE
+  //
+
+  enyo.kind({
+    name: "XV.TaxRateListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_taxRate".loc()},
+      {name: "tax", label: "_tax".loc(), attr: "tax.code"},
+      {name: "percent", label: "_percent".loc(), attr: "percent"}
+    ]
+  });
+  
+  // ..........................................................
   // TAX TYPE
   //
 

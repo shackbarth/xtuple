@@ -88,6 +88,7 @@
     "nameSpace": "XM",
     "type": "Item",
     "table": "item",
+    "isRest": true,
     "lockable": true,
     "idSequenceName": "item_item_id_seq",
     "comment": "Item Map",
