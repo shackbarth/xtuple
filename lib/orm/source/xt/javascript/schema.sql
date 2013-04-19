@@ -267,6 +267,17 @@ select xt.install_js('XT','Schema','xtuple', $$
 
     if (!orm.properties) return false;
 
+    if (orm.extensions.length > 0) {
+      /* Loop through the ORM extensions and add their properties into main properties. */
+      for (var i = 0; i < orm.extensions.length; i++) {
+        for (var j = 0; j < orm.extensions[i].properties.length; j++) {
+          var propLength = orm.properties.length;
+
+          orm.properties[propLength] = orm.extensions[i].properties[j];
+        }
+      }
+    }
+
     /* Loop through the ORM properties and get the columns. */
     for (var i = 0; i < orm.properties.length; i++) {
       if (!ret.properties) {
