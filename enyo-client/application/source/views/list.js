@@ -1100,21 +1100,11 @@ trailing:true white:true*/
     convertProspect: function (inSender, inEvent) {
       var index = inEvent.index,
         collection = this.getValue(),
-        imodel = collection.at(index),
-        model = imodel,
-        options = {},
-        that = this,
-        Klass;
+        prospectModel = collection.at(index),
+        modelId = prospectModel.id,
+        customerModel = XM.Customer.findOrCreate({id: modelId});
 
-      if (imodel instanceof XM.Info) {
-        Klass = XT.getObjectByName(model.editableModel);
-        model = Klass.findOrCreate({id: imodel.id});
-      }
-
-      options.success = function (result) {
-        console.log("success!", result);
-      };
-      model.convert(options);
+      customerModel.convertFromProspect(modelId);
     },
     sendMail: function (inSender, inEvent) {
       var model = this.getModel(inEvent.index),
