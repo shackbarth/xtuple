@@ -1066,6 +1066,7 @@ trailing:true white:true*/
     kind: "XV.List",
     label: "_prospects".loc(),
     collection: "XM.ProspectRelationCollection",
+    gearActions: ["convert"],
     query: {orderBy: [
       {attribute: 'number'}
     ]},
