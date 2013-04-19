@@ -8,24 +8,68 @@ white:true*/
   /**
     @class
 
-    @extends XM.Document
+    @extends XM.SalesOrderBase
   */
-  XM.SalesOrder = XM.Document.extend(/** @lends XM.SalesOrder.prototype */{
+  XM.SalesOrder = XM.SalesOrderBase.extend(/** @lends XM.SalesOrder.prototype */{
 
-    recordType: 'XM.SalesOrder'
+    recordType: 'XM.SalesOrder',
 
+    numberPolicySetting: 'CONumberGeneration',
+
+    documentDateKey: "orderDate",
+
+    /**
+      Add wasQuote as required field
+     */
+    initialize: function (attributes, options) {
+      XM.SalesOrderBase.prototype.initialize.apply(this, arguments);
+
+      if (!_.contains(this.requiredAttributes, "wasQuote")) {
+        this.requiredAttributes.push("wasQuote");
+      }
+    }
   });
-
 
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SalesOrderLineBase
   */
-  XM.SalesOrderLine = XM.Model.extend(/** @lends XM.SalesOrderLine.prototype */{
+  XM.SalesOrderLine = XM.SalesOrderLineBase.extend(/** @lends XM.SalesOrderLine.prototype */{
 
-    recordType: 'XM.SalesOrderLine'
+    recordType: 'XM.SalesOrderLine',
 
+    parentKey: 'salesOrder',
+
+    lineCharacteristicRecordType: "XM.SalesOrderLineCharacteristic",
+
+    /**
+      Add firm and subnumber as required fields
+     */
+    initialize: function (attributes, options) {
+      var reqAttrs = ["firm", "subnumber"],
+        that = this;
+
+      XM.SalesOrderLineBase.prototype.initialize.apply(this, arguments);
+
+      _.each(reqAttrs, function (attr) {
+        if (!_.contains(this.requiredAttributes, attr)) {
+          that.requiredAttributes.push(attr);
+        }
+      });
+    },
+
+    /**
+      Add defaults for firm and subnumber.
+     */
+    defaults: function () {
+      var defaults = XM.SalesOrderLineBase.prototype.defaults.apply(this, arguments);
+
+      defaults.firm = false;
+      defaults.subnumber = 0;
+
+      return defaults;
+    }
   });
 
 
