@@ -1066,6 +1066,9 @@ trailing:true white:true*/
     kind: "XV.List",
     label: "_prospects".loc(),
     collection: "XM.ProspectRelationCollection",
+    handlers: {
+      onConvertItem: "convertProspect"
+    },
     gearActions: ["convert"],
     query: {orderBy: [
       {attribute: 'number'}
@@ -1094,6 +1097,25 @@ trailing:true white:true*/
         ]}
       ]}
     ],
+    convertProspect: function (inSender, inEvent) {
+      var index = inEvent.index,
+        collection = this.getValue(),
+        imodel = collection.at(index),
+        model = imodel,
+        options = {},
+        that = this,
+        Klass;
+
+      if (imodel instanceof XM.Info) {
+        Klass = XT.getObjectByName(model.editableModel);
+        model = Klass.findOrCreate({id: imodel.id});
+      }
+
+      options.success = function (result) {
+        console.log("success!", result);
+      };
+      model.convert(options);
+    },
     sendMail: function (inSender, inEvent) {
       var model = this.getModel(inEvent.index),
         email = model ? model.getValue('contact.primaryEmail') : null,
