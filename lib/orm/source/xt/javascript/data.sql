@@ -578,7 +578,8 @@ select xt.install_js('XT','Data','xtuple', $$
         prop = ormp.name;
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
-        val = ormp.toOne && record[prop] ? record[prop][ormp.toOne.inverse || 'id'] : record[prop];
+        val = ormp.toOne && record[prop] instanceof Object ?
+          record[prop][ormp.toOne.inverse || 'id'] : record[prop];
 
         /* handle fixed values */
         if (attr.value) {
@@ -588,7 +589,7 @@ select xt.install_js('XT','Data','xtuple', $$
           count++;
 
         /* handle passed values */
-        } else if (record[prop] !== undefined && record[prop] !== null && !ormp.toMany) {
+        } else if (val !== undefined && val !== null && !ormp.toMany) {
           params.columns.push('"' + attr.column + '"');
 
           if (attr.isEncrypted) {
@@ -617,7 +618,8 @@ select xt.install_js('XT','Data','xtuple', $$
       columns = params.columns.join(', ');
       expressions = params.expressions.join(', ');
       params.statement = 'insert into ' + params.table + ' (' + columns + ') values (' + expressions + ')';
-      if (DEBUG) { plv8.elog(NOTICE, 'sql =', params.statement); }
+      if (DEBUG) { plv8.elog(NOTICE, 'sql =', params.statement);}
+      if (DEBUG) { plv8.elog(NOTICE, 'values =', JSON.stringify(params.values));}
       return params;
     },
 
