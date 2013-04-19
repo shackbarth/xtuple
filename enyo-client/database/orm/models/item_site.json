@@ -46,6 +46,7 @@
     "nameSpace": "XM",
     "type": "ItemSite",
     "table": "itemsite",
+    "isRest": true,
     "lockable": true,
     "idSequenceName": "itemsite_itemsite_id_seq",
     "comment": "Itemsite Map",

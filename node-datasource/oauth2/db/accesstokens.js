@@ -18,7 +18,7 @@ exports.findByAccessToken = function (key, done) {
     return done(null, res.models[0]);
   };
 
-  options.error = function (res, err) {
+  options.error = function (err, res) {
     if (err.code === 'xt1007') {
       // XXX should "result not found" really be an error?
       return done(null, null);
@@ -51,7 +51,7 @@ exports.findByRefreshToken = function (key, done) {
     return done(null, res.models[0]);
   };
 
-  options.error = function (res, err) {
+  options.error = function (err, res) {
     if (err.code === 'xt1007') {
       // XXX should "result not found" really be an error?
       return done(null, null);

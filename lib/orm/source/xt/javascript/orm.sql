@@ -54,6 +54,7 @@ select xt.install_js('XT','Orm','xtuple', $$
       oldJson,
       oldOrm,
       isExtension,
+      isRest = newJson.isRest ? newJson.isRest : false,
       sequence,
       nameSpace = newJson.nameSpace,
       type = newJson.type,
@@ -78,12 +79,13 @@ select xt.install_js('XT','Orm','xtuple', $$
       if(oldOrm.isExtension !== isExtension) throw new Error("Can not change extension state for " + nameSpace + '.' + type);
       sql = 'update xt.orm set ' +
             ' orm_json = $1, ' +
-            ' orm_seq = $2 ' +
-            'where orm_id = $3';
-      plv8.execute(sql, [json, sequence, oldOrm.id]);
+            ' orm_seq = $2, ' +
+            ' orm_rest = $3 ' +
+            'where orm_id = $4';
+      plv8.execute(sql, [json, sequence, isRest, oldOrm.id]);
     } else {
-      sql = 'insert into xt.orm ( orm_namespace, orm_type, orm_context, orm_json, orm_seq, orm_ext ) values ($1, $2, $3, $4, $5, $6)';
-      plv8.execute(sql, [nameSpace, type, context, json, sequence, isExtension]);
+      sql = 'insert into xt.orm ( orm_namespace, orm_type, orm_context, orm_json, orm_seq, orm_ext, orm_rest ) values ($1, $2, $3, $4, $5, $6, $7)';
+      plv8.execute(sql, [nameSpace, type, context, json, sequence, isExtension, isRest]);
     }
   };
 
@@ -244,7 +246,7 @@ select xt.install_js('XT','Orm','xtuple', $$
   XT.Orm.createView = function (orm) {
     /* constants */
     var SELECT = 'select {columns} from {table} where {conditions}',
-      cols = [], 
+      cols = [],
       tbls = [],
       tbl = 1 - 0,
       clauses = [],

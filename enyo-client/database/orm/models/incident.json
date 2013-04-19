@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Incident",
     "table": "incdt",
+    "isRest": true,
     "lockable": true,
     "idSequenceName": "incdt_incdt_id_seq",
     "orderSequence": "IncidentNumber",
