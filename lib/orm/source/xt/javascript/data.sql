@@ -578,7 +578,8 @@ select xt.install_js('XT','Data','xtuple', $$
         prop = ormp.name;
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
-        val = ormp.toOne && record[prop] ? record[prop][ormp.toOne.inverse || 'id'] : record[prop];
+        val = ormp.toOne && record[prop] instanceof Object ?
+          record[prop][ormp.toOne.inverse || 'id'] : record[prop];
 
         /* handle fixed values */
         if (attr.value) {
@@ -588,7 +589,7 @@ select xt.install_js('XT','Data','xtuple', $$
           count++;
 
         /* handle passed values */
-        } else if (record[prop] !== undefined && record[prop] !== null && !ormp.toMany) {
+        } else if (val !== undefined && val !== null && !ormp.toMany) {
           params.columns.push('"' + attr.column + '"');
 
           if (attr.isEncrypted) {
@@ -617,7 +618,8 @@ select xt.install_js('XT','Data','xtuple', $$
       columns = params.columns.join(', ');
       expressions = params.expressions.join(', ');
       params.statement = 'insert into ' + params.table + ' (' + columns + ') values (' + expressions + ')';
-      if (DEBUG) { plv8.elog(NOTICE, 'sql =', params.statement); }
+      if (DEBUG) { plv8.elog(NOTICE, 'sql =', params.statement);}
+      if (DEBUG) { plv8.elog(NOTICE, 'values =', JSON.stringify(params.values));}
       return params;
     },
 
@@ -640,7 +642,7 @@ select xt.install_js('XT','Data','xtuple', $$
         pkey = XT.Orm.primaryKey(orm),
         id = data[pkey],
         lock,
-        lockKey = options.lock && options.lock.key ? lock.key : false,
+        lockKey = options.lock && options.lock.key ? options.lock.key : false,
         lockTable = orm.lockTable || orm.table,
         version = this.getVersion(orm, id),
         ext,
@@ -683,9 +685,9 @@ select xt.install_js('XT','Data','xtuple', $$
           if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql, data[pkey]); }
           rows = plv8.execute(sql, [data[pkey]]);
           if (rows.length) {
-            sql = this.prepareUpdate(ext, value, null, encryptionKey);
+            sql = this.prepareUpdate(ext, data, null, encryptionKey);
           } else {
-            sql = this.prepareInsert(ext, value, null, encryptionKey);
+            sql = this.prepareInsert(ext, data, null, encryptionKey);
           }
           plv8.execute(sql.statement, sql.values);
         }
