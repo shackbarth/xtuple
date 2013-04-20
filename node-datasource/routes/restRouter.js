@@ -38,7 +38,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   var routeCall = function (req, res, next, orms) {
     var id,
-        model;
+        model,
+        payload = {},
+        session = {},
+        callback = function (resp, err) {
+          if (err) {
+            // TODO - Better error handling.
+            return res.send(500, {data: err});
+          } else {
+            return res.send(resp.data.data);
+          }
+        };
 
     //  Get the model id from this req URI.
     if (req.params.model && req.params.id) {
@@ -65,7 +75,25 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       case "GET":
         // Requests a representation of the specified resource.
         // TODO - call get method.
-        return res.send('REST API GET call to model: ' + model);
+
+        payload.nameSpace = "XM";
+        payload.type = model,
+        payload.id = id - 0; // TODO get rootURL
+
+        // Dummy up session.
+        // TODO - get user and org from token.
+        session.passport = {
+          "user": {
+            "id": req.user.get("user"),
+            "username": req.user.get("username"),
+            "organization": req.user.get("name")
+          }
+        };
+
+        routes.getEngine(payload, session, callback);
+
+        //return res.send('REST API GET call to model: ' + model);
+        break;
       case "HEAD":
         // Asks for the response identical to the one that would correspond to a GET request, but without the response body.
         // This is useful for retrieving meta-information written in response headers, without having to transport the entire content.

@@ -268,7 +268,7 @@ module.exports = function (connect) {
             done && done();
           }
         };
-        saveOptions.error = function (model, err) {
+        saveOptions.error = function (model, saveErr) {
           // This shouldn't happen. How did we get here? Log trace.
           console.trace("XM.SessionStore save error. This shouldn't happen.");
 
@@ -283,7 +283,7 @@ module.exports = function (connect) {
                 // TODO - This might throw an error because our err object does not includes a stack.
                 // https://github.com/senchalabs/connect/blob/master/lib/middleware/errorHandler.js#L48
                 // MemoryStore destroyed, move along.
-                done && done(that.err);
+                done && done(saveErr);
               }
             });
           } else {

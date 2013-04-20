@@ -6,6 +6,8 @@
 \cd ../../../node-datasource/database/source;
 
 -- [ END ] initdb
+--\i drop_global_xm_views.sql;
+--\i delete_global_orms.sql;
 
 -- [ START ] xt
 
