@@ -949,21 +949,26 @@ select xt.install_js('XT','Data','xtuple', $$
     /**
       Fetch an array of records from the database.
 
-      @param {String} record type
-      @param {Array} parameters
-      @param {Array} order by - optional
-      @param {Number} row limit - optional
-      @param {Number} row offset - optional
+      @param {Object} Options
+      @param {String} [dataHash.nameSpace] Namespace. Required.
+      @param {String} [dataHash.type] Type. Required.
+      @param {Array} [dataHash.parameters] Parameters
+      @param {Array} [dataHash.orderBy] Order by - optional
+      @param {Number} [dataHash.rowLimit] Row limit - optional
+      @param {Number} [dataHash.rowOffset] Row offset - optional
       @returns Array
     */
-    fetch: function (recordType, parameters, orderBy, rowLimit, rowOffset) {
-      var nameSpace = recordType.beforeDot(),
-        type = recordType.afterDot(),
+    fetch: function (options) {
+      var query = options.query,
+        nameSpace = options.nameSpace,
+        type = options.type,
+        orderBy = query.orderBy,
+        parameters = query.parameters,
         table = (nameSpace + '."' + type + '"').decamelize(),
         orm = XT.Orm.fetch(nameSpace, type),
         key = XT.Orm.primaryKey(orm),
-        limit = rowLimit ? 'limit ' + rowLimit : '',
-        offset = rowOffset ? 'offset ' + rowOffset : '',
+        limit = query.rowLimit ? 'limit ' + query.rowLimit : '',
+        offset = query.rowOffset ? 'offset ' + query.rowOffset : '',
         recs = null,
         i,
         parts,
@@ -1004,7 +1009,6 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Number} [options.id] Record id. Required.
       @param {String} [options.encryptionKey] Encryption key
       @param {Boolean} [options.silentError=false] Silence errors
-      @param {Boolean} [options.obtainLock=false] Obtain a lock on the record
       @param {Boolean} [options.toOneNested=false] If true, show nested records on `toOne` relationships by default where `isNested` is not specificially indicated in the orm.
       @param {Object} [options.context] Context
       @param {String} [options.context.nameSpace] Context namespace.
@@ -1014,7 +1018,8 @@ select xt.install_js('XT','Data','xtuple', $$
       @returns Object
     */
     retrieveRecord: function (options) {
-      options.obtainLock = options.obtainLock === undefined ? false : options.obtainLock;
+      options = options ? options : {};
+      options.obtainLock = false;
       var nameSpace = options.nameSpace,
         type = options.type,
         id = options.id,
