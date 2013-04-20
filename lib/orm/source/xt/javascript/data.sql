@@ -752,7 +752,7 @@ select xt.install_js('XT','Data','xtuple', $$
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
         qprop = '"' + attr.column + '"';
-        val = ormp.toOne && record[prop] ? record[prop][ormp.toOne.inverse || 'id'] : record[prop];
+        val = ormp.toOne && record[prop] instanceof Object ? record[prop][ormp.toOne.inverse || 'id'] : record[prop];
 
         if (val !== undefined && !ormp.toMany) {
           /* handle encryption if applicable */
