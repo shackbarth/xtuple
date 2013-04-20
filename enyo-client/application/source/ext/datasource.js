@@ -140,7 +140,7 @@ white:true*/
             }
             if (model) {
               model.lock = dataHash.lock;
-              model.version = dataHash.version;
+              model.etag = dataHash.etag;
             }
             options.success.call(that, model, attrs, options);
           }

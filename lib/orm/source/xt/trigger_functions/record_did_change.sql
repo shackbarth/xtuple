@@ -34,11 +34,11 @@ create or replace function xt.record_did_change() returns trigger as $$
 
    if (TG_OP === 'UPDATE') {
      /* find a version record, if found increment */
-     sql = 'select ver_id, ver_version from xt.ver where ver_table_oid = $1 and ver_record_id = $2;';
+     sql = 'select ver_id from xt.ver where ver_table_oid = $1 and ver_record_id = $2;';
      qry = plv8.execute(sql, [oid, NEW[pkey]]);
      if (qry.length) {
-       sql = 'update xt.ver set ver_version = $1 where ver_id = $2;';
-       plv8.execute(sql, [qry[0].ver_version + 1, qry[0].ver_id - 0]);
+       sql = 'update xt.ver set ver_etag = $1::uuid where ver_id = $2;';
+       plv8.execute(sql, [ XT.generateUUID(), qry[0].ver_id - 0]);
      } else {
        insert = true;
      }
@@ -46,8 +46,8 @@ create or replace function xt.record_did_change() returns trigger as $$
 
    /* create a new version record if applicable */
    if (insert) {
-     sql = 'insert into xt.ver (ver_table_oid, ver_record_id, ver_version) values ($1, $2, 1);'
-     plv8.execute(sql, [oid, NEW[pkey]]);
+     sql = 'insert into xt.ver (ver_table_oid, ver_record_id, ver_etag::uuid) values ($1, $2, $3);'
+     plv8.execute(sql, [oid, NEW[pkey], XT.generateUUID()]);
 
    /* delete version record if applicable */
    } else if (TG_OP === 'DELETE') {

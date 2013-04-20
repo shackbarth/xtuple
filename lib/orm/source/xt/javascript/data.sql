@@ -465,7 +465,7 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {String} [options.nameSpace] Namespace. Required.
       @param {String} [options.type] Type. Required.
       @param {Object} [options.data] The data payload to be processed. Required
-      @param {Number} [options.version] Record version for optimistic locking.
+      @param {Number} [options.etag] Record version for optimistic locking.
       @param {Number} [options.lock] Lock information for pessemistic locking.
       @param {String} [options.encryptionKey] Encryption key.
     */
@@ -630,7 +630,7 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {String} [options.nameSpace] Namespace. Required.
       @param {String} [options.type] Type. Required.
       @param {Object} [options.data] The data payload to be processed. Required.
-      @param {Number} [options.version] Record version for optimistic locking.
+      @param {Number} [options.etag] Record version for optimistic locking.
       @param {Number} [options.lock] Lock information for pessemistic locking.
       @param {String} [options.encryptionKey] Encryption key.
     */
@@ -644,13 +644,13 @@ select xt.install_js('XT','Data','xtuple', $$
         lock,
         lockKey = options.lock && options.lock.key ? options.lock.key : false,
         lockTable = orm.lockTable || orm.table,
-        version = this.getVersion(orm, id),
+        etag = this.getVersion(orm, id),
         ext,
         rows,
         i;
 
       /* test for optimistic lock */
-      if (version && options.version !== version) {
+      if (etag && options.etag !== etag) {
         plv8.elog(ERROR, "The version being updated is not current.");
       }
 
@@ -796,7 +796,7 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {String} [options.nameSpace] Namespace. Required.
       @param {String} [options.type] Type. Required.
       @param {Object} [options.data] The data payload to be processed. Required.
-      @param {Number} [options.version] Record id version for optimistic locking.
+      @param {Number} [options.etag] Record id version for optimistic locking.
       @param {Number} [options.lock] Lock information for pessemistic locking.
     */
     deleteRecord: function (options) {
@@ -807,7 +807,7 @@ select xt.install_js('XT','Data','xtuple', $$
         id = data[pkey],
         lockKey = options.lock && options.lock.key ? options.lock.key : false,
         lockTable = orm.lockTable || orm.table,
-        version = this.getVersion(orm, id),
+        etag = this.getVersion(orm, id),
         columnKey,
         prop,
         ormp,
@@ -816,7 +816,7 @@ select xt.install_js('XT','Data','xtuple', $$
         i;
 
       /* test for optimistic lock */
-      if (version && version !== options.version) {
+      if (etag && etag !== options.etag) {
         plv8.elog(ERROR, "The version being patched is not current.");
       }
 
@@ -930,12 +930,20 @@ select xt.install_js('XT','Data','xtuple', $$
     */
     getVersion: function (orm, id) {
       if (!orm.lockable) { return; }
-      var sql = 'select coalesce((select ver_version from xt.ver where ver_table_oid = {oid} and ver_record_id = {id}), 0) as version; '
-            .replace("{oid}", this.getTableOid(orm.lockTable || orm.table))
-            .replace("{id}", id);
-
+      var oid = this.getTableOid(orm.lockTable || orm.table),
+        sql = 'select ver_etag from xt.ver where ver_table_oid = {oid} and ver_record_id = {id};'
+              .replace("{oid}", oid)
+              .replace("{id}", id),
+        etag = plv8.execute(sql)[0].ver_etag;
+      
+      if (!etag) {
+        etag = XT.generateUUID();
+        sql = 'insert into xt.ver (ver_table_oid, ver_record_id, ver_etag::uuid) values ($1, $2, $3);'
+        plv8.execute(sql, [oid, id, etag]);
+      }
+      
       if (DEBUG) { plv8.elog(NOTICE, 'ver sql = ', sql); }
-      return plv8.execute(sql)[0].version;
+      return etag;
     },
 
     /**
@@ -1059,7 +1067,7 @@ select xt.install_js('XT','Data','xtuple', $$
         }
       }
 
-      ret.version = this.getVersion(map, id);
+      ret.etag = this.getVersion(map, id);
 
       /* obtain lock if required */
       if (map.lockable) {
