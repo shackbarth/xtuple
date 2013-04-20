@@ -55,7 +55,11 @@ module.exports = function (connect) {
       // TODO - options could be used to only load parital dataset of recently active sessions.
       // It could also be used to help process/server syncing if we move to something like Redis.
 
-      var fetchOptions = {};
+      var fetchOptions = {},
+        payload = {
+          nameSpace: "XM",
+          type: "SessionStore"
+        };
 
       fetchOptions.success = function (sessionstore) {
         var sid,
@@ -95,14 +99,9 @@ module.exports = function (connect) {
       //sessionsCollection.fetch(fetchOptions);
 
       // Fetch all records from XM.SessionStore and load them into the Express MemoryStore.
-      fetchOptions.query = {
-        requestType: "fetch",
-        recordType: "XM.SessionStore"
-      };
-
       // fetchOptions.username = GLOBAL_USERNAME; // TODO
       fetchOptions.username = 'node';
-      XT.dataSource.fetch(null, fetchOptions);
+      XT.dataSource.request(null, "get", payload, fetchOptions);
     };
 
     // Loops through the sessions, find the ones that are expired and sends that session data

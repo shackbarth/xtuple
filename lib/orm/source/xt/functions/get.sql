@@ -20,7 +20,7 @@ create or replace function xt.get(data_hash text) returns text as $$
 
   if (dataHash.id) {
     ret = data.retrieveRecord(dataHash);
-  } else if (dataHash.query) {
+  } else {
     ret = data.fetch(dataHash);
   }
 

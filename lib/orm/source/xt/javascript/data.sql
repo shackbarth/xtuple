@@ -959,9 +959,9 @@ select xt.install_js('XT','Data','xtuple', $$
       @returns Array
     */
     fetch: function (options) {
-      var query = options.query,
-        nameSpace = options.nameSpace,
+      var nameSpace = options.nameSpace,
         type = options.type,
+        query = options.query || {},
         orderBy = query.orderBy,
         parameters = query.parameters,
         table = (nameSpace + '."' + type + '"').decamelize(),
@@ -969,7 +969,10 @@ select xt.install_js('XT','Data','xtuple', $$
         key = XT.Orm.primaryKey(orm),
         limit = query.rowLimit ? 'limit ' + query.rowLimit : '',
         offset = query.rowOffset ? 'offset ' + query.rowOffset : '',
-        recs = null,
+        ret = {
+          nameSpace: nameSpace,
+          type: type
+        },
         i,
         parts,
         clause = this.buildClause(nameSpace, type, parameters, orderBy),
@@ -989,11 +992,11 @@ select xt.install_js('XT','Data','xtuple', $$
                .replace('{limit}', limit)
                .replace('{offset}', offset);
       if (DEBUG) { plv8.elog(NOTICE, 'sql = ', sql); }
-      recs = plv8.execute(sql, clause.parameters);
-      for (i = 0; i < recs.length; i++) {
-        recs[i] = this.decrypt(nameSpace, type, recs[i]);
+      ret.data = plv8.execute(sql, clause.parameters) || [];
+      for (i = 0; i < ret.data.length; i++) {
+        ret.data[i] = this.decrypt(nameSpace, type, ret.data[i]);
       }
-      return recs;
+      return ret;
     },
 
     /**

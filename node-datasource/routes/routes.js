@@ -65,8 +65,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.postEngine = data.postEngine;
 
 // TODO - Delete old routes below.
-  exports.fetch = [ensureLogin, data.fetch];
-  exports.fetchEngine = data.fetchEngine;
   exports.dispatch = [ensureLogin, data.dispatch];
   exports.dispatchEngine = data.dispatchEngine;
 

@@ -174,25 +174,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.dispatchEngine = dispatchEngine;
 
   /**
-    Does all the work of fetch.
-    Can be called by websockets, or the express route (below), or REST, etc.
-   */
-  var fetchEngine = function (payload, session, callback) {
-    var options;
-
-    if (payload && payload.databaseType === 'global') {
-      // run this query against the global database
-      options = createGlobalOptions(payload, session.passport.user.id, callback);
-      XT.dataSource.fetch([], options);
-
-    } else {
-      // run this query against an instance database
-      queryInstanceDatabase("select xt.fetch('%@')", "fetch", payload, session, callback);
-    }
-  };
-  exports.fetchEngine = fetchEngine;
-
-  /**
     The adaptation of express routes to engine functions is the same for all four operations,
     so we centralize the code here:
    */

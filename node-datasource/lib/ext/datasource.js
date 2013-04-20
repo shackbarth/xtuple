@@ -148,94 +148,14 @@ white:true*/
     },
 
     /*
-    Returns a record array based on a query.
+    Server request
 
-    @param {Object} query
+    @param {Object} model or collection
+    @param {String} method
+    @param {Object} payload
     @param {Object} options
     */
-    fetch: function (collection, options) {
-      options = options ? _.clone(options) : {};
-      var that = this,
-        payload = {},
-        parameters = options.query.parameters,
-        prop,
-        conn = X.options.globalDatabase,
-        query,
-        complete = function (err, response) {
-          var dataHash, params = {}, error;
-
-          // Handle error
-          if (err) {
-            if (options && options.error) {
-              params.error = err.message;
-              error = XT.Error.clone('xt1001', { params: params });
-              options.error.call(that, error);
-            }
-            return;
-          }
-
-          // Handle success
-          dataHash = JSON.parse(response.rows[0].fetch);
-          if (options && options.success) {
-            if (collection) {
-              options.success.call(that, collection, dataHash, options);
-            // Support for legacy code
-            } else {
-              options.success.call(that, dataHash);
-            }
-          }
-        };
-
-
-      // Helper function to convert parameters to data source friendly formats
-      var format = function (param) {
-        var recordType = options.query.recordType,
-          klass = recordType ? Backbone.Relational.store.getObjectByName(recordType) : null,
-          relations = klass ? klass.prototype.relations : [],
-          relation = _.find(relations, function (rel) {
-            return rel.key === param.attribute;
-          }),
-          idAttribute;
-
-        // Format date if applicable
-        if (param.value instanceof Date) {
-          param.value = param.value.toJSON();
-
-        // Format record if applicable
-        } else if (param.value instanceof XM.Model) {
-          param.value = param.value.id;
-        }
-
-        // Format attribute if it's `HasOne` relation
-        if (relation && relation.type === Backbone.HasOne && relation.isNested) {
-          klass = Backbone.Relational.store.getObjectByName(relation.relatedModel);
-          idAttribute = klass.prototype.idAttribute;
-          param.attribute = param.attribute + '.' + idAttribute;
-        }
-
-      };
-
-      for (prop in parameters) {
-        format(parameters[prop]);
-      }
-
-      payload.query = options.query;
-      payload.username = options.username;
-      payload = JSON.stringify(payload);
-      query = "select xt.fetch('%@')".f(payload);
-      //X.log(query);
-      this.query(query, conn, complete);
-      return true;
-    },
-
-    /*
-    Request for data processing action
-
-    @param {String} record type
-    @param {Number} id
-    @param {Object} options
-    */
-    request: function (model, method, payload, options) {
+    request: function (obj, method, payload, options) {
       var that = this,
         conn = X.options.globalDatabase,
         query,
@@ -258,10 +178,11 @@ white:true*/
           dataHash = JSON.parse(response.rows[0].request);
           
           // Handle no data as error
-          if (method === "get" && _.isEmpty(dataHash.data)) {
+          if (method === "get" && options.id &&
+            _.isEmpty(dataHash.data)) {
             if (options && options.error) {
               error = XT.Error.clone('xt1007');
-              options.error.call(model, error);
+              options.error.call(obj, error);
             }
             return;
           }
@@ -269,17 +190,17 @@ white:true*/
           // Handle success
           if (options && options.success) {
             if (dataHash.patches) {
-                attrs = model ?
-                  XM.jsonpatch.apply(model.toJSON(), dataHash.patches) :
+                attrs = obj ?
+                  XM.jsonpatch.apply(obj.toJSON(), dataHash.patches) :
                   dataHash.patches;
             } else {
               attrs = dataHash.data;
             }
-            if (model) {
-              model.lock = dataHash.lock;
-              model.etag = dataHash.etag;
+            if (obj) {
+              obj.lock = dataHash.lock;
+              obj.etag = dataHash.etag;
             }
-            options.success.call(that, model, attrs, options);
+            options.success.call(that, obj, attrs, options);
           }
         };
 

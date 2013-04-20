@@ -570,14 +570,6 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   });
 
   // To run this from client:
-  // XT.dataSource.fetch({"query":{"orderBy":[{"attribute":"code"}],"recordType":"XM.Honorific"},"force":true,"parse":true,"databaseType":"instance"});
-  socket.on('function/fetch', function (data, callback) {
-    ensureLoggedIn(function (session) {
-      routes.fetchEngine(data.payload, session, callback);
-    }, data && data.payload);
-  });
-
-  // To run this from client:
   // XT.dataSource.dispatch("XT.Session", "settings", null, {success: function () {console.log(arguments);}, error: function () {console.log(arguments);}});
   socket.on('function/dispatch', function (data, callback) {
     ensureLoggedIn(function (session) {
