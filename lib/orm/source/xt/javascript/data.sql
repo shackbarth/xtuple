@@ -1086,7 +1086,7 @@ select xt.install_js('XT','Data','xtuple', $$
       /* data sql */
       sql = 'select "{table}".* from {schema}.{table} {join} where "{table}"."{primaryKey}" = {id};'
             .replace(/{schema}/, nameSpace.decamelize())
-            .replace(/{table}/g, (options.toOneNested ? "" : "_") + type.decamelize())
+            .replace(/{table}/g, (options.toOneNested ? "_" : "") + type.decamelize())
             .replace(/{join}/, join)
             .replace(/{primaryKey}/, pkey)
             .replace(/{id}/, id);

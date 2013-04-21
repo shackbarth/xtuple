@@ -305,12 +305,14 @@ select xt.install_js('XT','Orm','xtuple', $$
           if (isVisible) {
             col = tblAlias + '.' + attr.column;
             col = col.concat(' as "', alias, '"');
-            if (props[i].attr || props[i].toOne.isNested === false) {
-              cols.push(col);
-            }
 
             /* handle the default non-nested case */
             if (props[i].attr || props[i].toOne.isNested === undefined) {
+              cols.push(col);
+            }
+            
+            /* handle the all nested case */
+            if (props[i].attr || props[i].toOne.isNested === false) {
               altcols.push(col);
             }
           }
@@ -333,28 +335,28 @@ select xt.install_js('XT','Orm','xtuple', $$
           if(DEBUG) { plv8.elog(NOTICE, 'building toOne'); }
           conditions = '"' + type + '"."' + inverse + '" = ' + tblAlias + '.' + toOne.column;
 
-          /* build select */
-          col = col.replace('{select}',
-             SELECT.replace('{columns}', '"' + type + '"')
-                   .replace('{table}',  table)
-                   .replace('{conditions}', conditions))
-                   .replace('{alias}', alias)
-                   .replace('{order}', '');
-          cols.push(col);
-
           /* handle the default non-nested case */
           if (props[i].toOne.isNested === true) {
-            table = base.nameSpace.decamelize() + '._' + toOne.type.decamelize();
-            conditions = '"_' + type + '"."' + inverse + '" = ' + tblAlias + '.' + toOne.column;
-            col = '({select}) as "{alias}"';
             col = col.replace('{select}',
+               SELECT.replace('{columns}', '"' + type + '"')
+                     .replace('{table}',  table)
+                     .replace('{conditions}', conditions))
+                     .replace('{alias}', alias)
+                     .replace('{order}', '');
+            cols.push(col);
+          }
+
+          /* build select for nested only */
+          table = base.nameSpace.decamelize() + '._' + toOne.type.decamelize();
+          conditions = '"_' + type + '"."' + inverse + '" = ' + tblAlias + '.' + toOne.column;
+          col = '({select}) as "{alias}"';
+          col = col.replace('{select}',
              SELECT.replace('{columns}', '"_' + type + '"')
                    .replace('{table}',  table)
                    .replace('{conditions}', conditions))
                    .replace('{alias}', alias)
                    .replace('{order}', '');
-            altcols.push(col);
-          }
+          altcols.push(col);
         }
 
         /* process toMany */
