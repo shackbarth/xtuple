@@ -9,28 +9,14 @@ white:true*/
   /**
     @class
 
-    @extends XM.AccountDocument
+    @extends XM.Document
   */
-  XM.TaxClass = XM.AccountDocument.extend({
+  XM.TaxClass = XM.Document.extend({
     /** @scope XM.TaxClass.prototype */
 
-    recordType: 'XM.TaxClass'
-
-  });
-
-  XM.TaxClass = XM.TaxClass.extend(XM.AddressCheckMixin);
-  
-  /**
-    @class
-
-    @extends XM.AccountDocument
-  */
-  XM.TaxClassRelation = XM.Info.extend({
-    /** @scope XM.TaxClassRelation.prototype */
-
-    recordType: 'XM.TaxClassRelation',
-
-    editableModel: 'XM.TaxClass'
+    recordType: 'XM.TaxClass',
+    
+    documentKey: "code"
 
   });
   
