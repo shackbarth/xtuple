@@ -934,11 +934,12 @@ select xt.install_js('XT','Data','xtuple', $$
         sql = 'select ver_etag from xt.ver where ver_table_oid = {oid} and ver_record_id = {id};'
               .replace("{oid}", oid)
               .replace("{id}", id),
-        etag = plv8.execute(sql)[0].ver_etag;
+        res = plv8.execute(sql),
+        etag = res.length ? res[0].ver_etag : false;
       
       if (!etag) {
         etag = XT.generateUUID();
-        sql = 'insert into xt.ver (ver_table_oid, ver_record_id, ver_etag::uuid) values ($1, $2, $3);'
+        sql = 'insert into xt.ver (ver_table_oid, ver_record_id, ver_etag) values ($1, $2, $3::uuid);'
         plv8.execute(sql, [oid, id, etag]);
       }
       

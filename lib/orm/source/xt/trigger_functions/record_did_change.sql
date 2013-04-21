@@ -46,7 +46,7 @@ create or replace function xt.record_did_change() returns trigger as $$
 
    /* create a new version record if applicable */
    if (insert) {
-     sql = 'insert into xt.ver (ver_table_oid, ver_record_id, ver_etag::uuid) values ($1, $2, $3);'
+     sql = 'insert into xt.ver (ver_table_oid, ver_record_id, ver_etag) values ($1, $2, $3::uuid);'
      plv8.execute(sql, [oid, NEW[pkey], XT.generateUUID()]);
 
    /* delete version record if applicable */
