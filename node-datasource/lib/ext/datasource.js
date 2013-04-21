@@ -202,7 +202,6 @@ white:true*/
               attrs = dataHash.data;
             }
             if (obj) {
-              obj.lock = dataHash.lock;
               obj.etag = dataHash.etag;
             }
             options.success.call(that, obj, attrs, options);
