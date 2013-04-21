@@ -23,6 +23,7 @@ white:true*/
     */
     request: function (obj, method, payload, options) {
       var that = this,
+        isDispatch = _.isObject(payload.dispatch),
         complete = function (response) {
           var dataHash,
             params = {},
@@ -53,6 +54,10 @@ white:true*/
 
           // Handle success
           if (options && options.success) {
+            if (isDispatch) {
+              options.success(dataHash, options);
+              return;
+            }
             if (dataHash.patches) {
               if (obj) {
                 attrs = obj.toJSON({includeNested: true});
@@ -73,49 +78,6 @@ white:true*/
 
       return XT.Request
                .handle(method)
-               .notify(complete)
-               .send(payload);
-    },
-
-    /*
-    Dispatch a server side function call to the datasource.
-
-    @param {String} class name
-    @param {String} function name
-    @param {Object} parameters
-    @param {Function} success callback
-    @param {Function} error callback
-    */
-    dispatch: function (name, func, params, options) {
-      var that = this,
-        payload = {
-          requestType: 'dispatch',
-          className: name,
-          functionName: func,
-          parameters: params
-        },
-        complete = function (response) {
-          var params = {}, error;
-
-          // handle error
-          if (response.isError) {
-            if (options && options.error) {
-              params.error = response.message;
-              error = XT.Error.clone('xt1001', { params: params });
-              options.error.call(that, error);
-            }
-            return;
-          }
-
-          if (options && options.success) {
-            options.success.call(that, response.data, options);
-          }
-        };
-
-      payload.automatedRefresh = options.automatedRefresh;
-      payload.databaseType = options.databaseType;
-      return XT.Request
-               .handle('function/dispatch')
                .notify(complete)
                .send(payload);
     },

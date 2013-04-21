@@ -158,6 +158,7 @@ white:true*/
     request: function (obj, method, payload, options) {
       var that = this,
         conn = X.options.globalDatabase,
+        isDispatch = _.isObject(payload.dispatch),
         query,
         complete = function (err, response) {
           var dataHash,
@@ -189,6 +190,10 @@ white:true*/
 
           // Handle success
           if (options && options.success) {
+            if (isDispatch) {
+              options.success(dataHash, options);
+              return;
+            }
             if (dataHash.patches) {
                 attrs = obj ?
                   XM.jsonpatch.apply(obj.toJSON(), dataHash.patches) :
@@ -209,56 +214,6 @@ white:true*/
       query = "select xt.{method}($${payload}$$) as request"
               .replace("{method}", method)
               .replace("{payload}", payload);
-      //X.log(query);
-      this.query(query, conn, complete);
-      return true;
-    },
-
-    /*
-    Dispatch a server side function call to the datasource.
-
-    @param {String} class name
-    @param {String} function name
-    @param {Object} parameters
-    @param {Object} options
-    @param {Function} options.success callback
-    @param {Function} options.error callback
-    */
-    dispatch: function (name, func, params, options) {
-      var that = this,
-        conn = X.options.globalDatabase,
-        query,
-        payload = {
-          className: name,
-          functionName: func,
-          parameters: params,
-          username: options.username
-        },
-        complete = function (err, response) {
-          var dataHash, params = {}, error;
-
-          // handle error
-          if (err) {
-            if (options && options.error) {
-              params.error = err;
-              error = XT.Error.clone('xt1001', { params: params });
-              options.error.call(that, error);
-            }
-            return;
-          }
-
-          // handle success
-          if (options && options.success) {
-            try {
-              dataHash = JSON.parse(response.rows[0].dispatch);
-            } catch (err) {
-              dataHash = response.rows[0].dispatch;
-            }
-            options.success.call(that, dataHash, options);
-          }
-        };
-      payload = JSON.stringify(payload);
-      query = "select xt.dispatch('%@')".f(payload);
       //X.log(query);
       this.query(query, conn, complete);
       return true;

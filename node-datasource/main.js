@@ -569,14 +569,6 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
     }, data && data.payload);
   });
 
-  // To run this from client:
-  // XT.dataSource.dispatch("XT.Session", "settings", null, {success: function () {console.log(arguments);}, error: function () {console.log(arguments);}});
-  socket.on('function/dispatch', function (data, callback) {
-    ensureLoggedIn(function (session) {
-      routes.dispatchEngine(data.payload, session, callback);
-    }, data && data.payload);
-  });
-
   // Tell the client it's connected.
   socket.emit("ok");
 });

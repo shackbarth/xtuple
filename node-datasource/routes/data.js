@@ -5,7 +5,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
-  // All of the "big 4" routes are in here: commit, dispatch, fetch, and retrieve
+  // All of the "big 4" routes are in here: get, post, patch and delete
   // They all share a lot of similar code so I've broken out the functions createGlobalOptions
   // and queryInstanceDatabase to reuse code.
 
@@ -47,7 +47,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         if (err) {
           callback({isError: true, error: err, message: err.message, description: err.message});
         } else if (res && res.rows && res.rows.length > 0) {
-          // the data comes back in an awkward res.rows[0].dispatch form,
+          // the data comes back in an awkward res.rows[0].request form,
           // and we want to normalize that here so that the data is in response.data
           try {
             data = JSON.parse(res.rows[0][functionName]);
@@ -127,7 +127,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Can be called by websockets, or the express route (below), or REST, etc.
    */
   var postEngine = function (payload, session, callback) {
-    var binaryField = payload.data.binaryField,
+    var binaryField = payload.data && payload.data.binaryField,
       buffer,
       binaryData,
       options;
@@ -152,26 +152,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
   };
   exports.postEngine = postEngine;
-
-// TODO - Remove old routes below.
-
-  /**
-    Does all the work of dispatch.
-    Can be called by websockets, or the express route (below), or REST, etc.
-   */
-  var dispatchEngine = function (payload, session, callback) {
-    var options;
-    if (payload && payload.databaseType === 'global') {
-      // Run this query against the global database.
-      options = createGlobalOptions(payload, session.passport.user.id, callback, false);
-      XT.dataSource.dispatch(payload.className, payload.functionName, payload.parameters, options);
-
-    } else {
-      // Run this query against an instance database.
-      queryInstanceDatabase("select xt.dispatch('%@')", "dispatch", payload, session, callback);
-    }
-  };
-  exports.dispatchEngine = dispatchEngine;
 
   /**
     The adaptation of express routes to engine functions is the same for all four operations,
@@ -214,22 +194,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
    */
   exports.post = function (req, res) {
     routeAdapter(req, res, postEngine);
-  };
-
-// TODO - Remvoe the old routes
-
-  /**
-    Accesses the dispatchEngine (above) for a request a la Express
-   */
-  exports.dispatch = function (req, res) {
-    routeAdapter(req, res, dispatchEngine);
-  };
-
-  /**
-    Accesses the fetchEngine (above) for a request a la Express
-   */
-  exports.fetch = function (req, res) {
-    routeAdapter(req, res, fetchEngine);
   };
 
 }());

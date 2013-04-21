@@ -64,10 +64,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.post = [ensureLogin, data.post];
   exports.postEngine = data.postEngine;
 
-// TODO - Delete old routes below.
-  exports.dispatch = [ensureLogin, data.dispatch];
-  exports.dispatchEngine = data.dispatchEngine;
-
   //
   // REST API Routes
   exports.restDiscoveryList = [

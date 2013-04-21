@@ -33,9 +33,8 @@ white:true*/
     */
     findExisting: function (key, value, options) {
       if (this._converted) { return this; }
-      var params = [ key, value, this.id || -1 ],
-        dataSource = options.dataSource || XT.dataSource;
-      dataSource.dispatch('XM.Account', 'findExisting', params, options);
+      var params = [ key, value, this.id || -1 ];
+      XM.ModelMixin.dispatch('XM.Account', 'findExisting', params, options);
       return this;
     }
     
@@ -91,7 +90,7 @@ white:true*/
   });
   
   XM.Account.used = function (id, options) {
-    return XT.dataSource.dispatch('XM.Account', 'used', id, options);
+    return XM.ModelMixin.dispatch('XM.Account', 'used', id, options);
   };
 
   /**

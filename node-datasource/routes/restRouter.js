@@ -20,9 +20,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       routeCall(req, res, next, result.data);
     };
 
-    payload.className = "XT.Discovery";
-    payload.functionName = "getIsRestORMs";
-    payload.isJSON = true;
+    payload.nameSpace = "XT";
+    payload.type = "Discovery";
+    payload.dispatch = {
+      functionName: "getIsRestORMs",
+      isJSON: true
+    };
 
     // Dummy up session.
     session.passport = {
@@ -33,7 +36,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     };
 
-    routes.dispatchEngine(payload, session, callback);
+    routes.postEngine(payload, session, callback);
   };
 
   var routeCall = function (req, res, next, orms) {
@@ -57,8 +60,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     _.each(orms, function (value, key, list) {
       // Find the matching model from this req URI.
-      if (req.params.model && value && value.orm_namespace && value.orm_type
-        && req.params.model === value.orm_type.camelToHyphen()) {
+      if (req.params.model && value && value.orm_namespace && value.orm_type &&
+          req.params.model === value.orm_type.camelToHyphen()) {
         // TODO - Do we need to include "XM" in the name?
         model = value.orm_type;
       }
@@ -77,7 +80,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         // TODO - call get method.
 
         payload.nameSpace = "XM";
-        payload.type = model,
+        payload.type = model;
         payload.id = id - 0; // TODO get rootURL
 
         // Dummy up session.
