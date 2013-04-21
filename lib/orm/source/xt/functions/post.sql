@@ -79,7 +79,7 @@ create or replace function xt.post(data_hash text) returns text as $$
     }
 
     ret = obj.isDispatchable ? method() : false;
-    ret = dataHash.isJSON ? JSON.stringify(ret, null, prettyPrint) : ret;
+    ret = dispatch.isJSON ? JSON.stringify(ret, null, prettyPrint) : ret;
   }
 
   /* Unset XT.username so it isn't cached for future queries. */
