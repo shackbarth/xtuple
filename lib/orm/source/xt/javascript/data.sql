@@ -1013,7 +1013,6 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Number} [options.id] Record id. Required.
       @param {String} [options.encryptionKey] Encryption key
       @param {Boolean} [options.silentError=false] Silence errors
-      @param {Boolean} [options.toOneNested=false] If true, show nested records on `toOne` relationships by default where `isNested` is not specificially indicated in the orm.
       @param {Object} [options.context] Context
       @param {String} [options.context.nameSpace] Context namespace.
       @param {String} [options.context.type] The type of context object.
@@ -1086,7 +1085,7 @@ select xt.install_js('XT','Data','xtuple', $$
       /* data sql */
       sql = 'select "{table}".* from {schema}.{table} {join} where "{table}"."{primaryKey}" = {id};'
             .replace(/{schema}/, nameSpace.decamelize())
-            .replace(/{table}/g, (options.toOneNested ? "_" : "") + type.decamelize())
+            .replace(/{table}/g, type.decamelize())
             .replace(/{join}/, join)
             .replace(/{primaryKey}/, pkey)
             .replace(/{id}/, id);

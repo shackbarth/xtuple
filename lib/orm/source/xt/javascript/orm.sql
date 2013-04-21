@@ -247,7 +247,6 @@ select xt.install_js('XT','Orm','xtuple', $$
     /* constants */
     var SELECT = 'select {columns} from {table} where {conditions} {order}',
       cols = [],
-      altcols = [],
       tbls = [],
       tbl = 1 - 0,
       clauses = [],
@@ -256,7 +255,6 @@ select xt.install_js('XT','Orm','xtuple', $$
       query = '',
       base = orm,
       viewName = orm.nameSpace.decamelize() + '.' + orm.type.decamelize(),
-      altViewName = orm.nameSpace.decamelize() + '._' + orm.type.decamelize(),
       processOrm,
       res;
 
@@ -275,7 +273,6 @@ select xt.install_js('XT','Orm','xtuple', $$
         alias,
         toOne,
         table,
-        alttable,
         type,
         inverse,
         iorm,
@@ -284,7 +281,6 @@ select xt.install_js('XT','Orm','xtuple', $$
         isVisible,
         value,
         conditions,
-        altconditions,
         join,
         lockTable,
         schemaName,
@@ -309,11 +305,6 @@ select xt.install_js('XT','Orm','xtuple', $$
             /* handle the default non-nested case */
             if (props[i].attr || props[i].toOne.isNested === undefined) {
               cols.push(col);
-            }
-            
-            /* handle the all nested case */
-            if (props[i].attr || props[i].toOne.isNested === false) {
-              altcols.push(col);
             }
           }
 
@@ -345,18 +336,6 @@ select xt.install_js('XT','Orm','xtuple', $$
                      .replace('{order}', '');
             cols.push(col);
           }
-
-          /* build select for nested only */
-          table = base.nameSpace.decamelize() + '._' + toOne.type.decamelize();
-          conditions = '"_' + type + '"."' + inverse + '" = ' + tblAlias + '.' + toOne.column;
-          col = '({select}) as "{alias}"';
-          col = col.replace('{select}',
-             SELECT.replace('{columns}', '"_' + type + '"')
-                   .replace('{table}',  table)
-                   .replace('{conditions}', conditions))
-                   .replace('{alias}', alias)
-                   .replace('{order}', '');
-          altcols.push(col);
         }
 
         /* process toMany */
@@ -365,7 +344,6 @@ select xt.install_js('XT','Orm','xtuple', $$
          if (!props[i].toMany.type) throw new Error('No type was defined on property ' + props[i].name);
            toMany = props[i].toMany;
            table = base.nameSpace + '.' + toMany.type.decamelize();
-           alttable = base.nameSpace + '._' + toMany.type.decamelize();
            type = toMany.type.decamelize();
            iorm = XT.Orm.fetch(base.nameSpace, toMany.type);
            pkey = XT.Orm.primaryKey(iorm);
@@ -378,10 +356,8 @@ select xt.install_js('XT','Orm','xtuple', $$
           ormp = XT.Orm.getProperty(iorm, inverse);
           if (ormp && ormp.toOne && ormp.toOne.isNested) {
             conditions = toMany.column ? '(' + type + '."' + inverse + '").id = ' + tblAlias + '.' + toMany.column : 'true';
-            altconditions = toMany.column ? '(_' + type + '."' + inverse + '").id = ' + tblAlias + '.' + toMany.column : 'true';
           } else {
             conditions = toMany.column ? type + '."' + inverse + '" = ' + tblAlias + '.' + toMany.column : 'true';
-            altconditions = toMany.column ? "_" + type + '."' + inverse + '" = ' + tblAlias + '.' + toMany.column : 'true';
           }
 
           /* build select */
@@ -392,16 +368,6 @@ select xt.install_js('XT','Orm','xtuple', $$
                    .replace('{alias}', alias)
                    .replace('{order}', orderBy);
           cols.push(col);
-
-          /* same for alternate view */
-          col = 'array({select}) as "{alias}"';
-          col = col.replace('{select}',
-             SELECT.replace('{columns}', toMany.isNested ? "_" + column : column)
-                   .replace('{table}', alttable)
-                   .replace('{conditions}', altconditions))
-                   .replace('{alias}', alias)
-                   .replace('{order}', orderBy);
-          altcols.push(col);
         }
       }
 
@@ -514,29 +480,6 @@ select xt.install_js('XT','Orm','xtuple', $$
     /* Grant access to xtrole */
     query = 'grant all on {view} to xtrole'
             .replace('{view}', viewName);
-    plv8.execute(query);
-
-    /* This is the alternate view where the default toOne behavior is non-nested */
-
-    /* Build query to create the new alternate view */
-    query = 'create view {name} as select {columns} from {tables} {where} {order};'
-            .replace('{name}', altViewName)
-            .replace('{columns}', altcols.join(', '))
-            .replace('{tables}', tbls.join(' '))
-            .replace('{where}', clauses.length ? 'where ' + clauses.join(' and ') : '')
-            .replace('{order}', orderBy.length ? 'order by ' + orderBy.join(' , ') : '');
-    if (DEBUG) plv8.elog(NOTICE, 'query', query);
-    plv8.execute(query);
-
-    /* Add comment */
-    query = "comment on view {name} is '{comments}'"
-            .replace('{name}', altViewName)
-            .replace('{comments}', comments);
-    plv8.execute(query);
-
-    /* Grant access to xtrole */
-    query = 'grant all on {view} to xtrole'
-            .replace('{view}', altViewName);
     plv8.execute(query);
 
     /* If applicable, add a trigger to the table to keep version number updated */

@@ -31,9 +31,6 @@ create or replace function xt.orm_did_change() returns trigger as $$
     nsp = views[n].beforeDot();
     rel = views[n].afterDot();
     plv8.execute("drop view if exists " + nsp + "." + rel);
-    if (rel.indexOf("_") !== 0) {
-      plv8.execute("drop view if exists " + nsp + "._" + rel);
-    }
   }
 
   /* Determine whether to rebuild */ 
@@ -67,10 +64,8 @@ create or replace function xt.orm_did_change() returns trigger as $$
       var nameSpace = views[i].beforeDot().camelize().toUpperCase(),
           type = views[i].afterDot().classify(),
           orm;
-      if (type.indexOf("_") !== 0) { 
-        orm = XT.Orm.fetch(nameSpace, type, true);
-        XT.Orm.createView(orm);
-      }
+      orm = XT.Orm.fetch(nameSpace, type, true);
+      XT.Orm.createView(orm);
     }
   }
 
