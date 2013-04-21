@@ -129,8 +129,8 @@
         "properties": [
           {
             "name": "account",
-            "toOne": {
-              "type": "AccountRelation",
+            "attr": {
+              "type": "Number",
               "column": "crmacct_id"
             }
           }
