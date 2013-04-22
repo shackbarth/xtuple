@@ -687,20 +687,36 @@ trailing:true white:true*/
     name: "XV.SalesOrderListParameters",
     kind: "XV.ParameterWidget",
     components: [
-      {kind: "onyx.GroupboxHeader", content: "_salesOrder".loc()},
+      {kind: "onyx.GroupboxHeader", content: "_quote".loc()},
+      {name: "showClosed", label: "_showClosed".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '!=',
+              value: 'C'
+            };
+          }
+          return param;
+        }
+      },
       {name: "number", label: "_number".loc(), attr: "number"},
       {name: "salesRep", attr: "salesRep", label: "_salesRep".loc(), defaultKind: "XV.SalesRepPicker"},
       {kind: "onyx.GroupboxHeader", content: "_customer".loc()},
-        {name: "customer", attr: "customer", label: "_customer".loc(), defaultKind: "XV.CustomerProspectWidget"},
-      {kind: "onyx.GroupboxHeader", content: "_salesOrderDate".loc()}, 
+      {name: "customer", attr: "customer", label: "_customer".loc(), defaultKind: "XV.CustomerProspectWidget"},
+      {name: "customerType", attr: "customer.customerType", label: "_customerType".loc(), defaultKind: "XV.CustomerTypePicker"},
+      {name: "customerPurchaseOrderNumber", attr: "customerPurchaseOrderNumber",
+        label: "_custPO".loc()},
+      {kind: "onyx.GroupboxHeader", content: "_salesOrderDate".loc()},
       {name: "createdFromDate", label: "_fromDate".loc(),
-         filterLabel: "_salesOrderDate".loc() + " " + "_fromDate".loc(),
-         attr: "orderDate", operator: ">=",
-         defaultKind: "XV.DateWidget"},
-         {name: "createdToDate", label: "_toDate".loc(),
-         filterLabel: "_salesOrderDate".loc() + " " + "_toDate".loc(),
-         attr: "orderDate", operator: "<=",
-         defaultKind: "XV.DateWidget"}
+        filterLabel: "_salesOrderDate".loc() + " " + "_fromDate".loc(),
+        attr: "orderDate", operator: ">=",
+        defaultKind: "XV.DateWidget"},
+      {name: "createdToDate", label: "_toDate".loc(),
+        filterLabel: "_orderDate".loc() + " " + "_toDate".loc(),
+        attr: "orderDate", operator: "<=",
+        defaultKind: "XV.DateWidget"}
     ]
   });
   
