@@ -6,7 +6,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   var exec = require('child_process').exec,
-    path = require('path'),
+    fs = require('fs'),
     ormInstaller = require('../installer/orm');
 
   /**
@@ -29,59 +29,74 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   /**
-   * The ORM installer commands need to be run sequentially. We create an array of the commands that
-   * we have to run and then use recursion to do them one at a time here.
+    The commands need to be run sequentially. We've already created an array of the
+    commands that we have to run and then use recursion to do them one at a time here.
+
+    Note that the psql commands and the orm commands are in the same array, so we
+    have to figure out which kind of a command it is before we act on it.
    */
-  var runOrmCommands = function (ormArray, respObject, orgCallback) {
-    var ormCommand,
-      ormCallback;
-
-    // exit strategy
-    if (ormArray.length === 0) {
-      orgCallback(respObject);
-      return;
-    }
-
-    ormCommand = ormArray.shift();
-    ormCallback = function (error, stdout) {
-      // log any relevant information from the orm exec call
-      X.log("ORM command returned. " + ormArray.length + " left");
-      logAll(respObject, stdout, null, error);
-
-      // recurse down an ever-shortening array
-      runOrmCommands(ormArray, respObject, orgCallback);
-    };
-
-    X.log("Running ORM command: ", ormCommand);
-    respObject.commandLog.push("Installing orms: " + ormCommand.ormDir);
-    ormInstaller.run(ormCommand.ormCreds, ormCommand.ormDir, ormCallback);
-  };
-
-  var runPsqlCommands = function (psqlArray, ormArray, respObject, orgCallback) {
-    var psqlCommand,
+  var runCommands = function (commandArray, respObject, masterCallback) {
+    var command,
+      ormCallback,
       psqlCallback;
 
-    // exit strategy: work thrpugh the orm array
-    if (psqlArray.length === 0) {
-      runOrmCommands(ormArray, respObject, orgCallback);
+    // exit strategy
+    if (commandArray.length === 0) {
+      masterCallback(respObject);
       return;
     }
 
-    psqlCommand = psqlArray.shift();
-    psqlCallback = function (error, stdout, stderr) {
-      // log any relevant information from the orm exec call
-      X.log("command returned. " + psqlArray.length + " left");
-      logAll(respObject, stdout, stderr, error);
+    // regard! our next command
+    command = commandArray.shift();
 
-      // recurse down an ever-shortening array
-      runPsqlCommands(psqlArray, ormArray, respObject, orgCallback);
-    };
+    //
+    // ... but what kind of command is it?
+    //
 
-    X.log("Running command: ", psqlCommand);
-    respObject.commandLog.push("Running pqsl command: " + psqlCommand);
-    exec(psqlCommand, psqlCallback);
+    if (command.ormCreds) {
+      // this command is an ORM command
+      ormCallback = function (error, stdout) {
+        // log any relevant information from the orm exec call
+        X.log("ORM command returned. " + commandArray.length + " left");
+        logAll(respObject, stdout, null, error);
+
+        // recurse down an ever-shortening array
+        runCommands(commandArray, respObject, masterCallback);
+      };
+
+      X.log("Running ORM command: ", command);
+      respObject.commandLog.push("Installing orms on " + command.orgName + ": " + command.ormDir);
+      ormInstaller.run(command.ormCreds, command.ormDir, ormCallback);
+
+
+    } else {
+      // this command is a psql command
+      psqlCallback = function (error, stdout, stderr) {
+        // log any relevant information from the orm exec call
+        X.log("command returned. " + commandArray.length + " left");
+        logAll(respObject, stdout, stderr, error);
+
+        // recurse down an ever-shortening array
+        runCommands(commandArray, respObject, masterCallback);
+      };
+
+      X.log("Running command: ", command);
+      respObject.commandLog.push("Running pqsl command: " + command.psqlCommand);
+      exec(command.psqlCommand, psqlCallback);
+    }
   };
 
+  /**
+    We keep track in memory of which installs are currently being run. This
+    function checks the pre-existing locks and, if there are none, sets a lock
+    and gives a go-ahead.
+
+    @param {String} org The name of the organization that is being installed.
+      Falsey if the request is to run all organzations.
+
+    @returns {Boolean} true if you get the lock and can run, false if someone
+      already has a lock and you should not run.
+   */
   var addLock = function (org) {
     var now = new Date().getTime(),
       timeoutInMinutes = 5,
@@ -131,10 +146,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 
     var respObject = {commandLog: [], log: [], errorLog: []},
-      // TODO: run each organization's commands in parallel
-      psqlArray = [],
-      ormArray = [],
-      orgCallback = function (respObj) {
+      commandArray = [],
+      masterCallback = function (respObj) {
         X.log("Maintenance is complete", JSON.stringify(respObj.commandLog));
         releaseLock(args.organization);
         res.send(JSON.stringify({data: respObj}));
@@ -195,8 +208,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               " -r " + psqlDir +
               " -x " + xTupleDbDir;
 
-            psqlArray.push({
-              command: "(cd %@ && exec ./%@)".f(initInstanceDbDir, initInstanceDbCommand),
+            commandArray.push({
+              psqlCommand: "(cd %@ && exec ./%@)".f(initInstanceDbDir, initInstanceDbCommand),
+              orgName: orgName,
               loadOrder: -9999
             });
           }
@@ -205,8 +219,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             // the user wants us to run the core init script and install the core orms as well
             // might as well do this for newly initialized dbs as well
             X.log("Processing core: ", orgName);
-            psqlArray.push({command: "(cd %@ && exec %@)".f(coreScriptDir, corePsqlCommand), loadOrder: -9990});
-            ormArray.push({ormCreds: ormCreds, ormDir: coreOrmDir, loadOrder: -9990});
+            commandArray.push({
+              psqlCommand: "(cd %@ && exec %@)".f(coreScriptDir, corePsqlCommand),
+              orgName: orgName,
+              loadOrder: -9990
+            });
+            commandArray.push({
+              ormCreds: ormCreds,
+              ormDir: coreOrmDir,
+              orgName: orgName,
+              loadOrder: -9990
+            });
           }
 
           _.each(org.extensions, function (ext) {
@@ -247,14 +270,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             //
             // Build psql command array
             //
-            psqlArray.push({command: execCommand, loadOrder: extLoadOrder});
+            commandArray.push({
+              psqlCommand: execCommand,
+              orgName: orgName,
+              loadOrder: extLoadOrder
+            });
 
             //
             // Build orm command array
             //
-            // XXX use fs.existsSync in node 0.8 instead of path.existsSync
-            if (path.existsSync(ormDir)) {
-              ormArray.push({ormCreds: ormCreds, ormDir: ormDir, loadOrder: extLoadOrder});
+            if (fs.existsSync(ormDir)) {
+              commandArray.push({
+                ormCreds: ormCreds,
+                ormDir: ormDir,
+                orgName: orgName,
+                loadOrder: extLoadOrder
+              });
             }
           });
 
@@ -262,20 +293,27 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }); // end loop of organizations
 
         //
-        // We've gotten all of the commands into arrays. First sort them by
-        // the appropriate load order, then run through them all.
+        // We've gotten all of the commands into arrays. Note that both
+        // the orm commands and the psql commands are housed in the same
+        // array. An easy way to tell which command is which is to see
+        // if the object has an ormCreds attribute.
         //
-        psqlArray = _.sortBy(psqlArray, function (obj) {
-          return obj.loadOrder;
+        // We want to sort the commands by three criteria:
+        // -First sort them by organization. We want to run all the commands
+        //   for an organization before we move on to the next
+        // -Second sort by command type. We want to run all the psql commands
+        //   before we run any of the orm commands (for that org)
+        // -Third sort by the load order, which will put the extensions in the
+        //  right order.
+        //
+        // We use a very sneaky trick to have our comparator consider each of
+        // these fields in turn, which is to return an array.
+        //
+        commandArray = _.sortBy(commandArray, function (obj) {
+          var isOrm = !!obj.ormCreds;
+          return [obj.orgName, isOrm, obj.loadOrder];
         });
-        // don't need the load order anymore
-        psqlArray = _.map(psqlArray, function (obj) {
-          return obj.command;
-        });
-        ormArray = _.sortBy(ormArray, function (obj) {
-          return obj.loadOrder;
-        });
-        runPsqlCommands(psqlArray, ormArray, respObject, orgCallback);
+        runCommands(commandArray, respObject, masterCallback);
       },
       fetchError = function (model, error) {
         respObject.isError = true;
