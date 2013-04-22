@@ -15,6 +15,8 @@ white:true*/
     /** @scope XM.SalesRep.prototype */
 
     recordType: 'XM.SalesRep',
+    
+    documentKey: 'number',
 
     defaults: {
       isActive: true,
