@@ -5,7 +5,7 @@ white:true*/
 
 (function () {
   "use strict";
-  
+
   /**
     @class
 
@@ -19,7 +19,7 @@ white:true*/
     documentKey: "code"
 
   });
-  
+
   /**
     @class
 
@@ -29,7 +29,7 @@ white:true*/
     /** @scope XM.TaxAssignment */
 
     recordType: 'XM.TaxAssignment',
-    
+
     requiredAttributes: [
       "tax"
     ]
@@ -144,7 +144,7 @@ white:true*/
     recordType: 'XM.TaxType',
 
     documentKey: 'name',
-    
+
     readOnlyAttributes: [
       "isSystem"
     ]
@@ -178,7 +178,7 @@ white:true*/
     model: XM.TaxAuthority
 
   });
-  
+
   /**
     @class
 
