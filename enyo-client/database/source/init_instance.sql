@@ -16,6 +16,21 @@
 -- xt functions
 \i xt/functions/add_priv.sql;
 \i xt/functions/average_cost.sql;
+\i xt/functions/co_line_base_price.sql;
+\i xt/functions/co_line_customer_discount.sql;
+\i xt/functions/co_line_list_cost_markup.sql;
+\i xt/functions/co_line_extended_price.sql;
+\i xt/functions/co_line_profit.sql;
+\i xt/functions/co_line_list_price.sql;
+\i xt/functions/co_line_list_price_discount.sql;
+\i xt/functions/co_line_tax.sql;
+\i xt/functions/co_freight_weight.sql;
+\i xt/functions/co_schedule_date.sql;
+\i xt/functions/co_subtotal.sql;
+\i xt/functions/co_tax_total.sql;
+\i xt/functions/co_total.sql;
+\i xt/functions/co_total_cost.sql;
+\i xt/functions/co_margin.sql;
 \i xt/functions/cntctmerge.sql;
 \i xt/functions/cntctrestore.sql;
 \i xt/functions/createuser.sql;
@@ -75,6 +90,8 @@
 -- xt views
 
 \i xt/views/doc.sql;
+\i xt/views/coheadinfo.sql;
+\i xt/views/coiteminfo.sql;
 \i xt/views/crmacctaddr.sql;
 \i xt/views/crmacctcomment.sql;
 \i xt/views/customer_prospect.sql;
@@ -112,6 +129,7 @@
 \i xm/javascript/project.sql;
 \i xm/javascript/quote.sql;
 \i xm/javascript/sales.sql;
+\i xm/javascript/tax.sql;
 \i xm/javascript/to_do.sql;
 -- [ END ] xm
 
