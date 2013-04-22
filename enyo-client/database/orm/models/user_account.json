@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Language",
     "table": "lang",
+    "isRest": true,
     "idSequenceName": "lang_lang_id_seq",
     "comment": "Language Map",
     "privileges": {

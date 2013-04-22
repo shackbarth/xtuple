@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Employee",
     "table": "emp",
+    "isRest": true,
     "lockable": true,
     "idSequenceName": "emp_emp_id_seq",
     "orderSequence": "CRMAccountNumber",
