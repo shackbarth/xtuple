@@ -1336,9 +1336,6 @@ trailing:true white:true*/
     ],
     create: function () {
       this.inherited(arguments);
-      // set the date attribute to the documentDateKey
-      this.setOrderDate(this.value.documentDateKey);
-      this.$.dateField.setAttr(this.getOrderDate());
     },
     customerChanged: function () {
       var customer = this.$.customerProspectWidget.getValue(),
@@ -1360,6 +1357,11 @@ trailing:true white:true*/
       var model = this.getValue(),
         customer = model ? model.get("customer") : false,
         isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : true;
+      
+      // set the date attribute to the documentDateKey
+      this.setOrderDate(this.value.documentDateKey);
+      this.$.dateField.setAttr(this.getOrderDate());  
+        
       this.$.copyAddressButton.setDisabled(!isFreeFormShipto);
       this.customerChanged();
       // re-render the summary panel
