@@ -11,6 +11,7 @@ select xt.add_column('orm','orm_namespace', 'text', E'not null');
 select xt.add_column('orm','orm_type', 'text', 'not null');
 select xt.add_column('orm','orm_context', 'text', 'not null');
 select xt.add_column('orm','orm_ext', 'bool', 'not null default false');
+select xt.add_column('orm','orm_rest', 'bool', 'not null default false', 'xt', 'Indicates if the ORM is exposed in the REST API. Should only be set on root parent models, not their children.');
 select xt.add_column('orm','orm_seq', 'integer', 'not null default 0');
 select xt.add_column('orm','orm_active', 'boolean', 'not null default true');
 select xt.add_constraint('orm','orm_orm_namespace_orm_type_orm_context', 'unique(orm_namespace, orm_type, orm_context)');

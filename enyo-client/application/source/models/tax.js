@@ -5,21 +5,21 @@ white:true*/
 
 (function () {
   "use strict";
-  
+
   /**
     @class
 
     @extends XM.AccountDocument
   */
-  XM.TaxClass = XM.AccountDocument.extend({
+  XM.TaxClass = XM.Document.extend({
     /** @scope XM.TaxClass.prototype */
 
-    recordType: 'XM.TaxClass'
+    recordType: 'XM.TaxClass',
+
+    documentKey: 'code'
 
   });
 
-  XM.TaxClass = XM.TaxClass.extend(XM.AddressCheckMixin);
-  
   /**
     @class
 
@@ -33,7 +33,7 @@ white:true*/
     editableModel: 'XM.TaxClass'
 
   });
-  
+
   /**
     @class
 
@@ -43,7 +43,7 @@ white:true*/
     /** @scope XM.TaxAssignment */
 
     recordType: 'XM.TaxAssignment',
-    
+
     requiredAttributes: [
       "tax"
     ]
@@ -59,6 +59,8 @@ white:true*/
     /** @scope XM.TaxAuthority.prototype */
 
     recordType: 'XM.TaxAuthority',
+    
+    documentKey: 'number',
 
     defaults: function () {
       return {
@@ -93,6 +95,27 @@ white:true*/
     recordType: 'XM.TaxZone',
 
     documentKey: 'code'
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.TaxRate = XM.Model.extend({
+    /** @scope XM.TaxRate */
+
+    recordType: 'XM.TaxRate',
+    
+    requiredAttributes: [
+      "tax",
+      "percent",
+      "currency",
+      "amount",
+      "effectiveDate",
+      "expirationDate"
+    ]
 
   });
 
@@ -135,7 +158,7 @@ white:true*/
     recordType: 'XM.TaxType',
 
     documentKey: 'name',
-    
+
     readOnlyAttributes: [
       "isSystem"
     ]
@@ -169,7 +192,7 @@ white:true*/
     model: XM.TaxAuthority
 
   });
-  
+
   /**
     @class
 
@@ -203,6 +226,18 @@ white:true*/
     /** @scope XM.TaxTypeCollection.prototype */
 
     model: XM.TaxType
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.TaxRateCollection = XM.Collection.extend({
+    /** @scope XM.TaxRateCollection.prototype */
+
+    model: XM.TaxRate
 
   });
 

@@ -459,6 +459,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.run = runOrmInstaller = function (creds, path, callback) {
     if (!callback) {
       callback = function () {
+// TODO - Call stored procedure to generate cached REST API Discovery Document.
         console.log("all done");
         process.exit(0);
       };

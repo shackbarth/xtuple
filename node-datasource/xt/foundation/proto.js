@@ -6,16 +6,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   X.proto = {};
-  
+
   require("./string");
   require("./function");
-  
+
   X.mixin(Array.prototype, {
     contains: function (needle) {
       return (this.indexOf(needle) > -1);
     }
   });
-  
+
   X.mixin(Function.prototype, {
     property: function () {
       return X.Function.property(this);
@@ -27,7 +27,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return this;
     }
   });
-  
+
   X.mixin(String.prototype, {
     format: function () {
       return X.String.format.apply(this, arguments);
@@ -72,7 +72,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     c: function () {
       return X.String.camelize.apply(this, arguments);
     },
- 
+
+    camelToHyphen: function () {
+      return X.String.camelToHyphen.apply(this, arguments);
+    },
+
     decamelize: function () {
       return X.String.decamelize.apply(this, arguments);
     },
@@ -80,7 +84,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     d: function () {
       return X.String.decamelize.apply(this, arguments);
     },
-    
+
     escape: function () {
       return X.String.escape.call(this);
     }
