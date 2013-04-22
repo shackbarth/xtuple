@@ -6,16 +6,235 @@ white:true*/
 (function () {
   "use strict";
 
-  /**
-    Mixin for shared quote function.
+
+
+
+  // ..........................................................
+  // PRIVATE
+  //
+
+  /** @private
+
+    Function that actually does the calculation work
   */
-  XM.QuoteMixin = {
+  var _calculateTotals = function (model) {
+    var miscCharge = model.get("miscCharge") || 0.0,
+      freight = model.get("freight") || 0.0,
+      scale = XT.MONEY_SCALE,
+      add = XT.math.add,
+      substract = XT.math.subtract,
+      subtotals = [],
+      taxDetails = [],
+      costs = [],
+      weights = [],
+      subtotal,
+      freightWeight,
+      taxTotal = 0.0,
+      costTotal,
+      total,
+      margin,
+      taxCodes;
+
+    // Collect line item detail
+    _.each(model.get('lineItems').models, function (lineItem) {
+      var extPrice = lineItem.get('extendedPrice') || 0,
+        quantity = lineItem.get("quantity") || 0,
+        standardCost = lineItem.getValue("itemSite.item.standardCost") || 0,
+        item = lineItem.getValue("itemSite.item"),
+        prodWeight = item ? item.get("productWeight") : 0,
+        packWeight = item ? item.get("packageWeight") : 0,
+        itemWeight = item ? add(prodWeight, packWeight, XT.WEIGHT_SCALE) : 0,
+        quantityUnitRatio = lineItem.get("quantityUnitRatio"),
+        grossWeight = itemWeight * quantity * quantityUnitRatio;
+
+      weights.push(grossWeight);
+      subtotals.push(extPrice);
+      costs.push(quantity * standardCost);
+      taxDetails = taxDetails.concat(lineItem.taxDetail);
+    });
+
+    // Add freight taxes to the mix
+    taxDetails = taxDetails.concat(model.freightTaxDetail);
+
+    // Total taxes
+    // First group amounts by tax code
+    taxCodes = _.groupBy(taxDetails, function (detail) {
+      return detail.taxCode.id;
+    });
+
+    // Loop through each tax code group and subtotal
+    _.each(taxCodes, function (group) {
+      var taxes = [],
+        subtotal;
+
+      // Collect array of taxes
+      _.each(group, function (detail) {
+        taxes.push(detail.tax);
+      });
+
+      // Subtotal first to make sure we round by subtotal
+      subtotal = add(taxes, 6);
+
+      // Now add to tax grand total
+      taxTotal = add(taxTotal, subtotal, scale);
+    });
+
+    // Totaling calculations
+    freightWeight = add(weights, XT.WEIGHT_SCALE);
+    subtotal = add(subtotals, scale);
+    costTotal = add(costs, scale);
+    margin = substract(subtotal, costTotal, scale);
+    subtotals = subtotals.concat([miscCharge, freight, taxTotal]);
+    total = add(subtotals, scale);
+
+    // Set values
+    model.set("freightWeight", freightWeight);
+    model.set("subtotal", subtotal);
+    model.set("taxTotal", taxTotal);
+    model.set("total", total);
+    model.set("margin", margin);
+  };
+
+
+  /** @private
+    This should only be called by `calculatePrice`.
+  */
+  var _calculatePrice = function (model) {
+    var K = model.getClass(),
+      item = model.getValue("itemSite.item"),
+      characteristics = model.get("characteristics"),
+      isConfigured = item ? item.get("isConfigured") : false,
+      counter = isConfigured ? characteristics.length + 1 : 1,
+      priceUnit = model.get("priceUnit"),
+      asOf = model.priceAsOfDate(),
+      quantity = model.get("quantity"),
+      quantityUnit = model.get("quantityUnit"),
+      readOnlyCache = model.isReadOnly("price"),
+      parent = model.getParent(),
+      prices = [],
+      itemOptions = {},
+      charOptions = {},
+      parentDate,
+      customer,
+      currency,
+
+      // Set price after we have item and all characteristics prices
+      setPrice = function () {
+        // Allow editing again if we could before
+        model.setReadOnly("price", readOnlyCache);
+
+        // If price was requested before this response,
+        // then bail out and start over
+        if (model._invalidPriceRequest) {
+          delete model._invalidPriceRequest;
+          delete model._pendingPriceRequest;
+          _calculatePrice(model);
+          return;
+        }
+
+        var totalPrice = XT.math.add(prices, XT.SALES_PRICE_SCALE);
+        model.set("customerPrice", totalPrice);
+        if (model._updatePrice) {
+          model.off("price", model.priceDidChange);
+          model.set("price", totalPrice);
+          model.on("price", model.priceDidChange);
+          model.priceDidChange();
+        }
+      };
+
+    parentDate = parent.get(parent.documentDateKey);
+    customer = parent.get("customer");
+    currency = parent.get("currency");
+
+    // If we already have a request pending we need to indicate
+    // when that is done to start over because something has changed.
+    if (model._pendingPriceRequest) {
+      if (!model._invalidPriceRequest) {
+        model._invalidPriceRequest = true;
+      }
+      return;
+    }
+
+    // Don't allow user editing of price until we hear back from the server
+    model.setReadOnly("price", true);
+
+    // Get the item price
+    itemOptions.asOf = asOf;
+    itemOptions.currency = currency;
+    itemOptions.effective = parentDate;
+    itemOptions.error = function (err) {
+      model.trigger("invalid", err);
+    };
+
+    charOptions = _.clone(itemOptions); // Some params are shared
+
+    itemOptions.quantityUnit = quantityUnit;
+    itemOptions.priceUnit = priceUnit;
+    itemOptions.success = function (resp) {
+      var priceMode;
+
+      // Handle no price found scenario
+      if (resp.price === -9999 && !model._invalidPriceRequest) {
+        counter = -1;
+        model.notify("_noPriceFound".loc(), { type: K.WARNING });
+        if (model._updatePrice) {
+          model.unset("customerPrice");
+          model.unset("price");
+        }
+        if (model.hasChanges("quantity")) {
+          model.unset("quantity");
+        } else {
+          model.unset("scheduleDate");
+        }
+
+      // Handle normal scenario
+      } else {
+        counter--;
+        if (!model._invalidPriceRequest) {
+          priceMode = (resp.type === "N" ||
+                       resp.type === "D" ||
+                       resp.type === "P") ? XM.SalesOrderLineBase.DISCOUNT_MODE : XM.SalesOrderLineBase.MARKUP_MODE;
+          model.set("priceMode", priceMode);
+          model.set("basePrice", resp.price);
+          prices.push(resp.price);
+        }
+        if (!counter) { setPrice(); }
+      }
+    };
+    itemOptions.error = function (err) {
+      model.trigger("error", err);
+    };
+    customer.itemPrice(item, quantity, itemOptions);
+
+    // Get characteristic prices
+    if (isConfigured) {
+      _.each(characteristics.models, function (char) {
+        var characteristic = char.get("characteristic"),
+          value = char.get("value");
+        charOptions.success = function (price) {
+          counter--;
+          if (!model._invalidPriceRequest) {
+            char.set("price", price);
+            prices.push(price);
+          }
+          if (!counter) { setPrice(); }
+        };
+        customer.characteristicPrice(item, characteristic, value, quantity, charOptions);
+      });
+    }
+  }
+
+
+  /**
+    Mixin for shared quote or sales order functions.
+  */
+  XM.SalesOrderBaseMixin = {
     /**
-    Returns quote status as a localized string.
+    Returns quote or sales order status as a localized string.
 
     @returns {String}
     */
-    getQuoteStatusString: function () {
+    getOrderStatusString: function () {
       var K = XM.Quote,
         status = this.get("status");
       return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
@@ -26,16 +245,8 @@ white:true*/
     @class
 
     @extends XM.Document
-    @extends XM.QuoteMixin
   */
-  XM.Quote = XM.Document.extend({
-    /** @scope XM.Quote.prototype */
-
-    recordType: 'XM.Quote',
-
-    numberPolicySetting: 'QUNumberGeneration',
-
-    documentDateKey: "quoteDate",
+  XM.SalesOrderBase = XM.Document.extend(/** @lends XM.SalesOrderBase.prototype */{
 
     freightDetail: undefined,
 
@@ -43,33 +254,36 @@ white:true*/
 
     defaults: function () {
       var K = this.getClass(),
-        settings = XT.session.settings;
-      return {
-        quoteDate: new Date(),
-        status: K.OPEN_STATUS,
-        saleType: XM.saleTypes.at(0),
-        calculateFreight: settings.get("CalculateFreight"),
-        margin: 0,
-        subtotal: 0,
-        taxTotal: 0,
-        freight: 0,
-        miscCharge: 0,
-        total: 0,
-        site: XT.defaultSite()
-      };
+        settings = XT.session.settings,
+        returnObj = {
+          status: K.OPEN_STATUS,
+          saleType: XM.saleTypes.at(0),
+          calculateFreight: settings.get("CalculateFreight"),
+          margin: 0,
+          subtotal: 0,
+          taxTotal: 0,
+          freight: 0,
+          miscCharge: 0,
+          total: 0,
+          site: XT.defaultSite()
+        };
+
+      // the name of this field is different for different business objects
+      returnObj[this.documentDateKey] = new Date();
+
+      return returnObj;
     },
 
     requiredAttributes: [
       "calculateFreight",
       "customer",
-      "quoteDate",
       "salesRep",
       "terms"
     ],
 
     readOnlyAttributes: [
       "freightWeight",
-      "getQuoteStatusString",
+      "getOrderStatusString",
       "lineItems",
       "margin",
       "miscCharge",
@@ -184,6 +398,13 @@ white:true*/
       XM.Document.prototype.initialize.apply(this, arguments);
       this.freightDetail = [];
       this.freightTaxDetail = [];
+
+      if (!this.documentDateKey) {
+        console.log("Error: model needs a documentDateKey");
+      }
+      if (!_.contains(this.requiredAttributes, this.documentDateKey)) {
+        this.requiredAttributes.push(this.documentDateKey);
+      }
     },
 
     /**
@@ -306,14 +527,14 @@ white:true*/
                   }
                 }
               };
-            that.dispatch(that.recordType, "freightDetail", params, dispOptions);
+            that.dispatch("XM.Sales", "freightDetail", params, dispOptions);
           });
           return this;
         }
       }
 
       // Default if we couldn't calculate
-      this._calculateTotals();
+      _calculateTotals(this);
       return this;
     },
 
@@ -338,9 +559,9 @@ white:true*/
         params = [taxZoneId, taxTypeId, effective, currency.id, amount];
         dispOptions.success = function (resp) {
           that.freightTaxDetail = resp;
-          that._calculateTotals();
+          _calculateTotals(that);
         };
-        this.dispatch(this.recordType, "taxDetail", params, dispOptions);
+        this.dispatch("XM.Tax", "taxDetail", params, dispOptions);
       }
       return this;
     },
@@ -384,7 +605,7 @@ white:true*/
       if (calculateFreight && calcFreight !== false) {
         this.calculateFreight();
       } else {
-        this._calculateTotals();
+        _calculateTotals(this);
       }
       return this;
     },
@@ -538,7 +759,7 @@ white:true*/
     },
 
     /**
-      Fetch the next quote number. Need a special over-ride here because of peculiar
+      Fetch the next number. Need a special over-ride here because of peculiar
       behavior of quote numbering different from all other generated numbers.
     */
     fetchNumber: function () {
@@ -552,7 +773,8 @@ white:true*/
           that.setReadOnly(that.documentKey);
         }
       };
-      this.dispatch('XM.Quote', 'fetchNumber', null, options);
+      // quote has its own very special dispatch function for fetchNumber
+      this.dispatch(this.fetchNumberDispatchModel || 'XM.Model', 'fetchNumber', this.recordType, options);
       return this;
     },
 
@@ -628,11 +850,15 @@ white:true*/
     },
 
     /**
-      Release the current quote number. Need a special over-ride here because of peculiar
+      Release the current number. Need a special over-ride here because of peculiar
       behavior of quote numbering different from all other generated numbers.
     */
     releaseNumber: function () {
-      this.dispatch('XM.Quote', 'releaseNumber', this.get("number"));
+      // quote has its own very special dispatch function for fetchNumber and releaseNumber
+      this.dispatch(
+        this.fetchNumberDispatchModel || 'XM.Model',
+        'releaseNumber',
+        [this.recordType, this.get("number")]);
       return this;
     },
 
@@ -801,102 +1027,15 @@ white:true*/
       }
 
       return;
-    },
-
-    // ..........................................................
-    // PRIVATE
-    //
-
-    /** @private
-
-      Function that actually does the calculation work
-    */
-    _calculateTotals: function () {
-      var miscCharge = this.get("miscCharge") || 0.0,
-        freight = this.get("freight") || 0.0,
-        scale = XT.MONEY_SCALE,
-        add = XT.math.add,
-        substract = XT.math.subtract,
-        subtotals = [],
-        taxDetails = [],
-        costs = [],
-        weights = [],
-        subtotal,
-        freightWeight,
-        taxTotal = 0.0,
-        costTotal,
-        total,
-        margin,
-        taxCodes;
-
-      // Collect line item detail
-      _.each(this.get('lineItems').models, function (lineItem) {
-        var extPrice = lineItem.get('extendedPrice') || 0,
-          quantity = lineItem.get("quantity") || 0,
-          standardCost = lineItem.getValue("itemSite.item.standardCost") || 0,
-          item = lineItem.getValue("itemSite.item"),
-          prodWeight = item ? item.get("productWeight") : 0,
-          packWeight = item ? item.get("packageWeight") : 0,
-          itemWeight = item ? add(prodWeight, packWeight, XT.WEIGHT_SCALE) : 0,
-          quantityUnitRatio = lineItem.get("quantityUnitRatio"),
-          grossWeight = itemWeight * quantity * quantityUnitRatio;
-
-        weights.push(grossWeight);
-        subtotals.push(extPrice);
-        costs.push(quantity * standardCost);
-        taxDetails = taxDetails.concat(lineItem.taxDetail);
-      });
-
-      // Add freight taxes to the mix
-      taxDetails = taxDetails.concat(this.freightTaxDetail);
-
-      // Total taxes
-      // First group amounts by tax code
-      taxCodes = _.groupBy(taxDetails, function (detail) {
-        return detail.taxCode.id;
-      });
-
-      // Loop through each tax code group and subtotal
-      _.each(taxCodes, function (group) {
-        var taxes = [],
-          subtotal;
-
-        // Collect array of taxes
-        _.each(group, function (detail) {
-          taxes.push(detail.tax);
-        });
-
-        // Subtotal first to make sure we round by subtotal
-        subtotal = add(taxes, 6);
-
-        // Now add to tax grand total
-        taxTotal = add(taxTotal, subtotal, scale);
-      });
-
-      // Totaling calculations
-      freightWeight = add(weights, XT.WEIGHT_SCALE);
-      subtotal = add(subtotals, scale);
-      costTotal = add(costs, scale);
-      margin = substract(subtotal, costTotal, scale);
-      subtotals = subtotals.concat([miscCharge, freight, taxTotal]);
-      total = add(subtotals, scale);
-
-      // Set values
-      this.set("freightWeight", freightWeight);
-      this.set("subtotal", subtotal);
-      this.set("taxTotal", taxTotal);
-      this.set("total", total);
-      this.set("margin", margin);
     }
 
   });
+  XM.SalesOrderBase = XM.SalesOrderBase.extend(XM.SalesOrderBaseMixin);
 
   // ..........................................................
   // CLASS METHODS
   //
-
-  XM.Quote = XM.Quote.extend(XM.QuoteMixin);
-  _.extend(XM.Quote, /** @lends XM.QuoteLine# */{
+  _.extend(XM.SalesOrderBase, /** @lends XM.SalesOrderBase# */{
 
     // ..........................................................
     // CONSTANTS
@@ -927,12 +1066,29 @@ white:true*/
   /**
     @class
 
+    @extends XM.SalesOrderBase
+    @extends XM.SalesOrderBaseMixin
+  */
+  XM.Quote = XM.SalesOrderBase.extend(/** @lends XM.Quote.prototype */{
+
+    recordType: 'XM.Quote',
+
+    numberPolicySetting: 'QUNumberGeneration',
+
+    // quote has its own very special dispatch function for fetchNumber
+    fetchNumberDispatchModel: "XM.Quote",
+
+    documentDateKey: "quoteDate"
+
+  });
+
+
+  /**
+    @class
+
     @extends XM.Model
   */
-  XM.QuoteLine = XM.Model.extend({
-    /** @scope XM.QuoteLine.prototype */
-
-    recordType: 'XM.QuoteLine',
+  XM.SalesOrderLineBase = XM.Model.extend(/** @lends XM.SalesOrderLineBase.prototype */{
 
     sellingUnits: undefined,
 
@@ -942,7 +1098,7 @@ white:true*/
       var allowASAP = XT.session.settings.get("AllowASAPShipSchedules");
       return {
         quantityUnitRatio: 1,
-        priceMode: XM.QuoteLine.DISCOUNT_MODE,
+        priceMode: XM.SalesOrderLineBase.DISCOUNT_MODE,
         priceUnitRatio: 1,
         scheduleDate: allowASAP ? new Date() : undefined
       };
@@ -956,7 +1112,7 @@ white:true*/
       this.on("change:price", this.priceDidChange);
       this.on('change:quantity', this.quantityDidChange);
       this.on('change:priceUnit', this.priceUnitDidChange);
-      this.on('change:quote', this.parentDidChange);
+      this.on('change:' + this.parentKey, this.parentDidChange);
       this.on('change:taxType', this.calculateTax);
       this.on('change:quantityUnit', this.quantityUnitDidChange);
       this.on('change:scheduleDate', this.scheduleDateDidChange);
@@ -989,6 +1145,8 @@ white:true*/
       }
 
       this.sellingUnits = new XM.UnitCollection();
+
+      this.requiredAttributes.push(this.parentKey);
     },
 
     readOnlyAttributes: [
@@ -1008,7 +1166,6 @@ white:true*/
     requiredAttributes: [
       "customerPrice",
       "itemSite",
-      "quote",
       "lineNumber",
       "quantity",
       "quantityUnit",
@@ -1138,13 +1295,13 @@ white:true*/
               type: K.QUESTION,
               callback: function (answer) {
                 that._updatePrice = answer;
-                that._calculatePrice();
+                _calculatePrice(that);
               }
             });
             return this;
           }
         }
-        this._calculatePrice();
+        _calculatePrice(this);
       }
       return this;
     },
@@ -1205,7 +1362,7 @@ white:true*/
           }
           that.recalculateParent(false);
         };
-        this.dispatch(recordType, "taxDetail", params, options);
+        this.dispatch("XM.Tax", "taxDetail", params, options);
       } else {
         this.set("tax", 0);
       }
@@ -1344,7 +1501,9 @@ white:true*/
       itemCharAttrs = _.pluck(item.get("characteristics").models, "attributes");
       charTypes = _.unique(_.pluck(itemCharAttrs, "characteristic"));
       _.each(charTypes, function (char) {
-        var quoteLineChar = new XM.QuoteLineCharacteristic(null, {isNew: true}),
+        // lineCharacteristicRecordType is different for SalesOrder and Quote
+        // and is defined as a string in those models
+        var quoteLineChar = new XM[that.lineCharacteristicRecordType.suffix()](null, {isNew: true}),
           defaultChar = _.find(itemCharAttrs, function (attrs) {
             return attrs.isDefault === true &&
               attrs.characteristic.id === char.id;
@@ -1560,136 +1719,25 @@ white:true*/
       }
 
       return XM.Document.prototype.validate.apply(this, arguments);
-    },
-
-    /** @private
-      This should only be called by `calculatePrice`.
-    */
-    _calculatePrice: function () {
-      var K = this.getClass(),
-        that = this,
-        item = this.getValue("itemSite.item"),
-        characteristics = this.get("characteristics"),
-        isConfigured = item ? item.get("isConfigured") : false,
-        counter = isConfigured ? characteristics.length + 1 : 1,
-        priceUnit = this.get("priceUnit"),
-        asOf = this.priceAsOfDate(),
-        quantity = this.get("quantity"),
-        quantityUnit = this.get("quantityUnit"),
-        readOnlyCache = this.isReadOnly("price"),
-        parent = this.getParent(),
-        prices = [],
-        itemOptions = {},
-        charOptions = {},
-        parentDate,
-        customer,
-        currency,
-
-        // Set price after we have item and all characteristics prices
-        setPrice = function () {
-          // Allow editing again if we could before
-          that.setReadOnly("price", readOnlyCache);
-
-          // If price was requested before this response,
-          // then bail out and start over
-          if (that._invalidPriceRequest) {
-            delete that._invalidPriceRequest;
-            delete that._pendingPriceRequest;
-            that._calculatePrice();
-            return;
-          }
-
-          var totalPrice = XT.math.add(prices, XT.SALES_PRICE_SCALE);
-          that.set("customerPrice", totalPrice);
-          if (that._updatePrice) {
-            that.off("price", that.priceDidChange);
-            that.set("price", totalPrice);
-            that.on("price", that.priceDidChange);
-            that.priceDidChange();
-          }
-        };
-
-      parentDate = parent.get(parent.documentDateKey);
-      customer = parent.get("customer");
-      currency = parent.get("currency");
-
-      // If we already have a request pending we need to indicate
-      // when that is done to start over because something has changed.
-      if (this._pendingPriceRequest) {
-        if (!this._invalidPriceRequest) {
-          this._invalidPriceRequest = true;
-        }
-        return;
-      }
-
-      // Don't allow user editing of price until we hear back from the server
-      this.setReadOnly("price", true);
-
-      // Get the item price
-      itemOptions.asOf = asOf;
-      itemOptions.currency = currency;
-      itemOptions.effective = parentDate;
-      itemOptions.error = function (err) {
-        that.trigger("invalid", err);
-      };
-
-      charOptions = _.clone(itemOptions); // Some params are shared
-
-      itemOptions.quantityUnit = quantityUnit;
-      itemOptions.priceUnit = priceUnit;
-      itemOptions.success = function (resp) {
-        var priceMode;
-
-        // Handle no price found scenario
-        if (resp.price === -9999 && !that._invalidPriceRequest) {
-          counter = -1;
-          that.notify("_noPriceFound".loc(), { type: K.WARNING });
-          if (that._updatePrice) {
-            that.unset("customerPrice");
-            that.unset("price");
-          }
-          if (that.hasChanges("quantity")) {
-            that.unset("quantity");
-          } else {
-            that.unset("scheduleDate");
-          }
-
-        // Handle normal scenario
-        } else {
-          counter--;
-          if (!that._invalidPriceRequest) {
-            priceMode = (resp.type === "N" ||
-                         resp.type === "D" ||
-                         resp.type === "P") ? K.DISCOUNT_MODE : K.MARKUP_MODE;
-            that.set("priceMode", priceMode);
-            that.set("basePrice", resp.price);
-            prices.push(resp.price);
-          }
-          if (!counter) { setPrice(); }
-        }
-      };
-      itemOptions.error = function (err) {
-        that.trigger("error", err);
-      };
-      customer.itemPrice(item, quantity, itemOptions);
-
-      // Get characteristic prices
-      if (isConfigured) {
-        _.each(characteristics.models, function (char) {
-          var characteristic = char.get("characteristic"),
-            value = char.get("value");
-          charOptions.success = function (price) {
-            counter--;
-            if (!that._invalidPriceRequest) {
-              char.set("price", price);
-              prices.push(price);
-            }
-            if (!counter) { setPrice(); }
-          };
-          customer.characteristicPrice(item, characteristic, value, quantity, charOptions);
-        });
-      }
     }
+
+
+  });
+  XM.SalesOrderLineBase = XM.SalesOrderLineBase.extend(XM.SalesOrderBaseMixin);
+
+
+  /**
+    @class
+
+    @extends XM.SalesOrderLineBase
+  */
+  XM.QuoteLine = XM.SalesOrderLineBase.extend(/** @lends XM.QuoteLine.prototype */{
+
+    recordType: 'XM.QuoteLine',
+
+    parentKey: "quote",
+
+    lineCharacteristicRecordType: "XM.QuoteLineCharacteristic"
 
   });
 
@@ -1697,7 +1745,7 @@ white:true*/
   // CLASS METHODS
   //
 
-  _.extend(XM.QuoteLine, /** @lends XM.QuoteLine# */{
+  _.extend(XM.SalesOrderLineBase, /** @lends XM.QuoteLine# */{
 
     // ..........................................................
     // CONSTANTS
@@ -1862,9 +1910,8 @@ white:true*/
 
     @returns {String}
     */
-    getQuoteStatusString: function () {
-      var K = XM.Quote,
-        status = this.get("status");
+    getOrderStatusString: function () {
+      var K = XM.SalesOrderBase, status = this.get("status");
       return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
     }
 
