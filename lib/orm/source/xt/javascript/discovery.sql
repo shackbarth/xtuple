@@ -356,7 +356,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
       resources[ormType].methods.get.parameterOrder = [ormTypeHyphen + "-id"];
 
       resources[ormType].methods.get.response = {
-        "ref$": ormType
+        "$ref": ormType
       };
 
       resources[ormType].methods.get.scopes = [
@@ -397,11 +397,11 @@ select xt.install_js('XT','Discovery','xtuple', $$
       };
 
       resources[ormType].methods.insert.request = {
-        "ref$": ormType
+        "$ref": ormType
       };
 
       resources[ormType].methods.insert.response = {
-        "ref$": ormType
+        "$ref": ormType
       };
 
       resources[ormType].methods.insert.scopes = [
@@ -440,7 +440,7 @@ select xt.install_js('XT','Discovery','xtuple', $$
       };
 
       resources[ormType].methods.list.response = {
-        "ref$": listModel
+        "$ref": listModel
       };
 
       resources[ormType].methods.list.scopes = [
@@ -501,11 +501,11 @@ select xt.install_js('XT','Discovery','xtuple', $$
       resources[ormType].methods.patch.parameterOrder = [ormTypeHyphen + "-id"];
 
       resources[ormType].methods.patch.request = {
-        "ref$": ormType
+        "$ref": ormType
       };
 
       resources[ormType].methods.patch.response = {
-        "ref$": ormType
+        "$ref": ormType
       };
 
       resources[ormType].methods.patch.scopes = [
