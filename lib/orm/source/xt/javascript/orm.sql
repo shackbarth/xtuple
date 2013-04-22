@@ -134,20 +134,34 @@ select xt.install_js('XT','Orm','xtuple', $$
 
     @param {String} name space
     @param {String} type
-    @param {Boolean} indicate whether to force a refresh of the orm cached result
+    @param {Object} options
+    @param {Boolean} [options.refresh=false] Indicate whether to force a refresh of the orm cached result.
+    @param {Boolean} [options.silentError=false] Silence errors and return false instead.
     @returns {Object}
   */
-  XT.Orm.fetch = function(nameSpace, type, refresh) {
-    if(!this._maps) this._maps = [];
-    var ret,
-      recordType = nameSpace + '.'+ type,
-      res = refresh ? null : this._maps.findProperty('recordType', recordType),
+  XT.Orm.fetch = function(nameSpace, type, options) {
+    var db = XT.currentDb(),
+      ext,
       i,
-      sql,
+      options = options || {},
       orm,
-      ext;
-    if(res) ret = res.map;
-    else {
+      ret,
+      recordType = nameSpace + '.'+ type,
+      res,
+      sql;
+
+    if (!this._maps) {
+      this._maps = {};
+    }
+    if (!this._maps[db]) {
+      this._maps[db] = [];
+    }
+
+    res = options.refresh ? null : this._maps[db].findProperty('recordType', recordType);
+
+    if (res) {
+      ret = res.map;
+    } else {
      /* get base */
       sql = 'select orm_json as json ' +
                 'from xt.orm ' +
@@ -157,7 +171,11 @@ select xt.install_js('XT','Orm','xtuple', $$
                 ' and orm_active ';
       res = plv8.execute(sql, [ nameSpace, type ]);
       if(!res.length) {
-        plv8.elog(ERROR, "No orm found for " + nameSpace + "." + type);
+        if (options.silentError) {
+          return false;
+        } else {
+          plv8.elog(ERROR, "No orm found for " + nameSpace + "." + type);
+        }
       }
       ret = JSON.parse(res[0].json);
 
@@ -186,7 +204,7 @@ select xt.install_js('XT','Orm','xtuple', $$
       }
 
       /* cache the result so we don't requery needlessly */
-      this._maps.push({ "recordType": recordType, "map": ret});
+      this._maps[db].push({ "recordType": recordType, "map": ret});
     }
     return ret;
   };
