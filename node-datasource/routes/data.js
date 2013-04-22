@@ -5,7 +5,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
-  // All of the "big 4" routes are in here: commit, dispatch, fetch, and retrieve
+  // All of the "big 4" routes are in here: get, post, patch and delete
   // They all share a lot of similar code so I've broken out the functions createGlobalOptions
   // and queryInstanceDatabase to reuse code.
 
@@ -47,7 +47,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         if (err) {
           callback({isError: true, error: err, message: err.message, description: err.message});
         } else if (res && res.rows && res.rows.length > 0) {
-          // the data comes back in an awkward res.rows[0].dispatch form,
+          // the data comes back in an awkward res.rows[0].request form,
           // and we want to normalize that here so that the data is in response.data
           try {
             data = JSON.parse(res.rows[0][functionName]);
@@ -66,15 +66,72 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   /**
-    Does all the work of commit.
+    Does all the work to delete.
     Can be called by websockets, or the express route (below), or REST, etc.
    */
-  var commitEngine = function (payload, session, callback) {
-    var binaryField = payload.binaryField,
+  var deleteEngine = function (payload, session, callback) {
+    var options;
+
+    if (payload && payload.databaseType === 'global') {
+      // Run this query against the global database.
+      options = createGlobalOptions(payload, session.passport.user.id, callback);
+      XT.dataSource.request(null, 'delete', payload, options);
+
+    } else {
+      // Run this query against an instance database.
+      queryInstanceDatabase("select xt.delete($$%@$$)", "delete", payload, session, callback);
+    }
+  };
+  exports.deleteEngine = deleteEngine;
+
+  /**
+    Does all the work to get.
+    Can be called by websockets, or the express route (below), or REST, etc.
+   */
+  var getEngine = function (payload, session, callback) {
+    var options;
+
+    if (payload && payload.databaseType === 'global') {
+      // Run this query against the global database.
+      options = createGlobalOptions(payload, session.passport.user.id, callback);
+      XT.dataSource.request(null, 'get', payload, options);
+
+    } else {
+      // Run this query against an instance database.
+      queryInstanceDatabase("select xt.get($$%@$$)", "get", payload, session, callback);
+    }
+  };
+  exports.getEngine = getEngine;
+
+  /**
+    Does all the work to patch.
+    Can be called by websockets, or the express route (below), or REST, etc.
+   */
+  var patchEngine = function (payload, session, callback) {
+    var options;
+
+    if (payload && payload.databaseType === 'global') {
+      // Run this query against the global database.
+      options = createGlobalOptions(payload, session.passport.user.id, callback);
+      XT.dataSource.request(null, 'patch', payload, options);
+
+    } else {
+      // Run this query against an instance database.
+      queryInstanceDatabase("select xt.patch($$%@$$)", "patch", payload, session, callback);
+    }
+  };
+  exports.patchEngine = patchEngine;
+
+  /**
+    Does all the work to post.
+    Can be called by websockets, or the express route (below), or REST, etc.
+   */
+  var postEngine = function (payload, session, callback) {
+    var binaryField = payload.data && payload.data.binaryField,
       buffer,
       binaryData,
       options;
-
+    
     // We need to convert js binary into pg hex (see the file route for
     // the opposite conversion). See issue #18661
     if (binaryField) {
@@ -87,77 +144,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     if (payload && payload.databaseType === 'global') {
       // Run this query against the global database.
       options = createGlobalOptions(payload, session.passport.user.id, callback);
-      if (!payload.dataHash) {
-        callback({message: "Invalid Commit"});
-        return;
-      }
-      // Passing payload through, but trick dataSource into thinking it's a Model:
-      payload.changeSet = function () { return payload.dataHash; };
-      options.force = true;
-      XT.dataSource.commitRecord(payload, options);
+      XT.dataSource.request(null, 'post', payload, options);
 
     } else {
       // Run this query against an instance database.
-      queryInstanceDatabase("select xt.commit_record($$%@$$)", "commit_record", payload, session, callback);
+      queryInstanceDatabase("select xt.post($$%@$$)", "post", payload, session, callback);
     }
   };
-  exports.commitEngine = commitEngine;
-
-  /**
-    Does all the work of dispatch.
-    Can be called by websockets, or the express route (below), or REST, etc.
-   */
-  var dispatchEngine = function (payload, session, callback) {
-    var options;
-    if (payload && payload.databaseType === 'global') {
-      // Run this query against the global database.
-      options = createGlobalOptions(payload, session.passport.user.id, callback, false);
-      XT.dataSource.dispatch(payload.className, payload.functionName, payload.parameters, options);
-
-    } else {
-      // Run this query against an instance database.
-      queryInstanceDatabase("select xt.dispatch('%@')", "dispatch", payload, session, callback);
-    }
-  };
-  exports.dispatchEngine = dispatchEngine;
-
-  /**
-    Does all the work of fetch.
-    Can be called by websockets, or the express route (below), or REST, etc.
-   */
-  var fetchEngine = function (payload, session, callback) {
-    var options;
-
-    if (payload && payload.databaseType === 'global') {
-      // run this query against the global database
-      options = createGlobalOptions(payload, session.passport.user.id, callback);
-      XT.dataSource.fetch([], options);
-
-    } else {
-      // run this query against an instance database
-      queryInstanceDatabase("select xt.fetch('%@')", "fetch", payload, session, callback);
-    }
-  };
-  exports.fetchEngine = fetchEngine;
-
-  /**
-    Does all the work of retrieve.
-    Can be called by websockets, or the express route (below), or REST, etc.
-   */
-  var retrieveEngine = function (payload, session, callback) {
-    var options;
-
-    if (payload && payload.databaseType === 'global') {
-      // run this query against the global database
-      options = createGlobalOptions(payload, session.passport.user.id, callback);
-      XT.dataSource.retrieveRecord(payload, options);
-
-    } else {
-      // run this query against an instance database
-      queryInstanceDatabase("select xt.retrieve_record('%@')", "retrieve_record", payload, session, callback);
-    }
-  };
-  exports.retrieveEngine = retrieveEngine;
+  exports.postEngine = postEngine;
 
   /**
     The adaptation of express routes to engine functions is the same for all four operations,
@@ -175,31 +169,31 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   /**
-    Accesses the commitEngine (above) for a request a la Express
+    Accesses the deleteEngine (above) for a request a la Express
    */
-  exports.commit = function (req, res) {
-    routeAdapter(req, res, commitEngine);
+  exports.delete = function (req, res) {
+    routeAdapter(req, res, deleteEngine);
   };
 
   /**
-    Accesses the dispatchEngine (above) for a request a la Express
+    Accesses the getEngine (above) for a request a la Express
    */
-  exports.dispatch = function (req, res) {
-    routeAdapter(req, res, dispatchEngine);
+  exports.get = function (req, res) {
+    routeAdapter(req, res, getEngine);
   };
 
   /**
-    Accesses the fetchEngine (above) for a request a la Express
+    Accesses the patchEngine (above) for a request a la Express
    */
-  exports.fetch = function (req, res) {
-    routeAdapter(req, res, fetchEngine);
+  exports.patch = function (req, res) {
+    routeAdapter(req, res, patchEngine);
   };
 
   /**
-    Accesses the retrieveEngine (above) for a request a la Express
+    Accesses the postEngine (above) for a request a la Express
    */
-  exports.retrieve = function (req, res) {
-    routeAdapter(req, res, retrieveEngine);
+  exports.post = function (req, res) {
+    routeAdapter(req, res, postEngine);
   };
 
 }());

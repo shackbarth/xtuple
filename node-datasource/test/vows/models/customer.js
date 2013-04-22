@@ -108,25 +108,40 @@ var XVOWS = XVOWS || {};
     })
   }).addBatch({
     'DESTROY': crud.destroy(data, {
-      '-> Set values': {
+      '-> Destroy the Customer': {
         //Destroy the customer.  When that is successful, destroy the account
-        'customer destroyed': function (data) {
-          assert.isTrue(data.model.getStatus() === XM.Model.DESTROYED_CLEAN);
+        'Customer destroyed': function (data) {
+          assert.equal(data.model.getStatusString(), 'DESTROYED_CLEAN');
         },
-        topic: function () {
-          var that = this,
-            fetchOptionsAccnt = {};
-        
-          fetchOptionsAccnt.id = deleteData.accntId;
-        
-          fetchOptionsAccnt.success = function () {
-            var destroyOptionsAccnt = {};
-            destroyOptionsAccnt.success = function () {
-              that.callback(null, data);
+        '-> Destroy the Account': {
+          topic: function () {
+            var that = this,
+              account = deleteData.accountModel,
+              fetchOptionsAccnt = {},
+              destroyAccount;
+
+            fetchOptionsAccnt.id = deleteData.accntId;
+
+            destroyAccount = function () {
+              if (account.getStatus() === XM.Model.READY_CLEAN) {
+                var accountDestroyed = function () {
+                    if (account.getStatus() === XM.Model.DESTROYED_CLEAN) {
+                      account.off("statusChange", accountDestroyed);
+                      that.callback(null, account);
+                    }
+                  };
+
+                account.off("statusChange", destroyAccount);
+                account.on("statusChange", accountDestroyed);
+                account.destroy();
+              }
             };
-            deleteData.accountModel.destroy(destroyOptionsAccnt);
-          };
-          deleteData.accountModel.fetch(fetchOptionsAccnt);
+            account.on("statusChange", destroyAccount);
+            account.fetch(fetchOptionsAccnt);
+          },
+          'Account destroyed': function (account) {
+            assert.equal(account.getStatusString(), 'DESTROYED_CLEAN');
+          }
         }
       }
     })
