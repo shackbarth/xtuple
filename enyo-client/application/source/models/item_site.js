@@ -279,7 +279,7 @@ white:true*/
         params = omit(params, "effectiveDate");
       }
       options.query.parameters = params;
-      XT.dataSource.formatParameters("XM.ItemSite", options.query.parameters);
+      XM.Collection.formatParameters("XM.ItemSite", options.query.parameters);
 
       // Dispatch the query
       success = options.success;
@@ -287,7 +287,7 @@ white:true*/
         that.reset(data);
         if (success) { success(data); }
       };
-      XT.dataSource.dispatch("XM.ItemSite", "itemsForCustomer",
+      XM.ModelMixin.dispatch("XM.ItemSite", "itemsForCustomer",
         [customerId, shiptoId, effectiveDate, options.query], options);
 
     } else {

@@ -10,7 +10,7 @@
     "privileges": {
       "all": {
         "create": "MaintainSaleTypes",
-        "read": "ViewSalesTypes",
+        "read": true,
         "update": "MaintainSaleTypes",
         "delete": "MaintainSaleTypes"
       }

@@ -260,12 +260,30 @@ select xt.install_js('XT','Schema','xtuple', $$
     /* Load ORM if this function was called with just orm.nameSpace and orm.type. */
     orm = orm.properties ? orm : XT.Orm.fetch(orm.nameSpace, orm.type);
 
-    var schemaTable = orm.table,
-        columns = [],
+    var columns = [],
+        ext = {},
+        extTables = [],
+        ret = {},
         schemaColumnInfo = {},
-        ret = {};
+        schemaTable = orm.table;
 
     if (!orm.properties) return false;
+
+    if (orm.extensions.length > 0) {
+      /* Loop through the ORM extensions and add their properties into main properties. */
+      for (var i = 0; i < orm.extensions.length; i++) {
+        for (var j = 0; j < orm.extensions[i].properties.length; j++) {
+          var propLength = orm.properties.length;
+
+          orm.properties[propLength] = orm.extensions[i].properties[j];
+
+          /* Set extTable property to be used to get extension table column properties. */
+          if (orm.extensions[i].table !== schemaTable) {
+            orm.properties[propLength].extTable = orm.extensions[i].table;
+          }
+        }
+      }
+    }
 
     /* Loop through the ORM properties and get the columns. */
     for (var i = 0; i < orm.properties.length; i++) {
@@ -287,7 +305,15 @@ select xt.install_js('XT','Schema','xtuple', $$
 
       /* Basic property */
       if (orm.properties[i].attr && orm.properties[i].attr.column) {
-        columns.push(orm.properties[i].attr.column);
+        if (orm.properties[i].extTable) {
+          /* Build ext object to be used to get extension table column properties. */
+          if (!ext[orm.properties[i].extTable]) {
+            ext[orm.properties[i].extTable] = [];
+          }
+          ext[orm.properties[i].extTable].push(orm.properties[i].attr.column);
+        } else {
+          columns.push(orm.properties[i].attr.column);
+        }
 
         /* Add required override based off of ORM's property. */
         if (orm.properties[i].attr.required) {
@@ -333,6 +359,11 @@ select xt.install_js('XT','Schema','xtuple', $$
 
     /* Assign column attributes. */
     var schemaColumnInfo = XT.Schema.columnInfo(schemaTable, columns);
+
+    /* Add in extension table column properties. */
+    for (var tableName in ext) {
+      schemaColumnInfo = XT.extend(schemaColumnInfo, XT.Schema.columnInfo(tableName, ext[tableName]));
+    }
 
     for (var i = 0; i < orm.properties.length; i++) {
       /* Basic properties only. */

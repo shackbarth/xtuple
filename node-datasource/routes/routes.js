@@ -54,24 +54,28 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   //
   // Data-passthrough routes
   //
-  exports.commit = [ensureLogin, data.commit];
-  exports.commitEngine = data.commitEngine;
-  exports.fetch = [ensureLogin, data.fetch];
-  exports.fetchEngine = data.fetchEngine;
-  exports.dispatch = [ensureLogin, data.dispatch];
-  exports.dispatchEngine = data.dispatchEngine;
-  exports.retrieve = [ensureLogin, data.retrieve];
-  exports.retrieveEngine = data.retrieveEngine;
+
+  exports.delete = [ensureLogin, data.delete];
+  exports.deleteEngine = data.deleteEngine;
+  exports.get = [ensureLogin, data.get];
+  exports.getEngine = data.getEngine;
+  exports.patch = [ensureLogin, data.patch];
+  exports.patchEngine = data.patchEngine;
+  exports.post = [ensureLogin, data.post];
+  exports.postEngine = data.postEngine;
 
   //
   // REST API Routes
   exports.restDiscoveryList = [
-    restDiscovery.list];
+    restDiscovery.list
+  ];
   exports.restDiscoveryGetRest = [
-    restDiscovery.getRest];
+    restDiscovery.getRest
+  ];
   exports.restRouter = [
     passport.authenticate('bearer', { session: false }),
-    restRouter.router];
+    restRouter.router
+  ];
 
   //
   // Custom routes

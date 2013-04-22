@@ -76,7 +76,7 @@ white:true*/
   });
 
   XM.Contact.used = function (id, options) {
-    return XT.dataSource.dispatch('XM.Contact', 'used', id, options);
+    return XM.ModelMixin.dispatch('XM.Contact', 'used', id, options);
   };
 
   /**

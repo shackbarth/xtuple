@@ -5,6 +5,7 @@
     "type": "Quote",
     "table": "xt.quheadinfo",
     "lockable": true,
+    "lockTable": "quhead",
     "idSequenceName": "quhead_quhead_id_seq",
     "comment": "Quote Map",
     "privileges": {

@@ -69,7 +69,7 @@ white:true*/
       @returns Receiver
     */
     useCount: function (options) {
-      XT.dataSource.dispatch('XM.Address', 'useCount', this.id, options);
+      this.dispatch('XM.Address', 'useCount', this.id, options);
       return this;
     },
 
@@ -200,7 +200,7 @@ white:true*/
           postalcode: postalcode,
           country: country
         };
-      XT.dataSource.dispatch('XM.Address', 'findExisting', params, options);
+      XM.ModelMixin.dispatch('XM.Address', 'findExisting', params, options);
       return this;
     },
 
