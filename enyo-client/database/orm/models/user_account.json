@@ -116,7 +116,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "locale_code"
+          "column": "locale_code",
+          "isNaturalKey":true
         }
       },
       {
@@ -488,7 +489,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "grp_name"
+          "column": "grp_name",
+          "isNaturalKey":true
         }
       },
       {

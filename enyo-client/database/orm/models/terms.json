@@ -29,7 +29,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "terms_code"
+          "column": "terms_code",
+          "isNaturalKey":true
         }
       },
       {

@@ -14,7 +14,7 @@
         "read": "ViewSalesOrders",
         "update": "MaintainSalesOrders",
         "delete": "MaintainSalesOrders"
-      }   
+      }
     },
     "properties": [
       {
@@ -29,7 +29,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "cohead_number"
+          "column": "cohead_number",
+          "isNaturalKey":true
         }
       },
       {
@@ -476,7 +477,7 @@
           "type": "Number",
           "column": "subtotal"
         }
-      }, 
+      },
       {
         "name": "taxTotal",
         "attr": {
@@ -497,14 +498,14 @@
           "type": "Number",
           "column": "cohead_freight"
         }
-      },   
+      },
       {
         "name": "total",
         "attr": {
           "type": "Number",
           "column": "total"
         }
-      },  
+      },
       {
         "name": "lineItems",
         "toMany": {
@@ -687,9 +688,9 @@
         "attr": {
           "type": "String",
           "column": "comment_text"
-        } 
+        }
       },
-      { 
+      {
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
@@ -1330,7 +1331,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "cohead_number"
+          "column": "cohead_number",
+          "isNaturalKey":true
         }
       },
       {
@@ -1435,7 +1437,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "cohead_number"
+          "column": "cohead_number",
+          "isNaturalKey":true
         }
       },
       {

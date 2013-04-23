@@ -27,7 +27,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "cmnttype_name"
+          "column": "cmnttype_name",
+          "isNaturalKey": true
         }
       },
       {
@@ -147,7 +148,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "source_name"
+          "column": "source_name",
+          "isNaturalKey": true
         }
       },
       {

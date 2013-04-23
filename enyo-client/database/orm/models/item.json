@@ -115,7 +115,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "item_number"
+          "column": "item_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -768,7 +769,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "item_number"
+          "column": "item_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -937,7 +939,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "item_number"
+          "column": "item_number",
+          "isNaturalKey": true
         }
       },
       {

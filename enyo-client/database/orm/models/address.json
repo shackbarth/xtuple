@@ -30,7 +30,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "addr_number"
+          "column": "addr_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -288,7 +289,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "addr_number"
+          "column": "addr_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -381,7 +383,8 @@
         "attr": {
           "type": "String",
           "column": "country_abbr",
-          "required": true
+          "required": true,
+          "isNaturalKey": true
         }
       },
       {

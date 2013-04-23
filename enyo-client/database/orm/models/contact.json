@@ -39,7 +39,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "cntct_number"
+          "column": "cntct_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -279,7 +280,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "cntct_number"
+          "column": "cntct_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -1314,7 +1316,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "hnfc_code"
+          "column": "hnfc_code",
+          "isNaturalKey": true
         }
       }
     ],

@@ -30,7 +30,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "emp_number"
+          "column": "emp_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -177,7 +178,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "emp_number"
+          "column": "emp_number",
+          "isNaturalKey": true
         }
       },
       {

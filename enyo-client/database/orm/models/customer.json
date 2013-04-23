@@ -30,7 +30,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "cust_number"
+          "column": "cust_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -1082,7 +1083,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "shipto_num"
+          "column": "shipto_num",
+          "isNaturalKey": true
         }
       },
       {
@@ -1196,7 +1198,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "custtype_code"
+          "column": "custtype_code",
+          "isNaturalKey": true
         }
       },
       {
@@ -1236,7 +1239,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "cust_number"
+          "column": "cust_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -1465,7 +1469,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "shipvia_code"
+          "column": "shipvia_code",
+          "isNaturalKey": true
         }
       },
       {
@@ -1507,7 +1512,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "shipzone_name"
+          "column": "shipzone_name",
+          "isNaturalKey": true
         }
       },
       {
@@ -1633,7 +1639,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "number"
+          "column": "number",
+          "isNaturalKey": true
         }
       },
       {
@@ -1802,7 +1809,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "number"
+          "column": "number",
+          "isNaturalKey": true
         }
       },
       {

@@ -28,7 +28,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "char_name"
+          "column": "char_name",
+          "isNaturalKey": true
         }
       },
       {

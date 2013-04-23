@@ -40,7 +40,8 @@
         "name": "number",
         "attr": {
           "type": "Number",
-          "column": "incdt_number"
+          "column": "incdt_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -465,7 +466,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "incdtcat_name"
+          "column": "incdtcat_name",
+          "isNaturalKey": true
         }
       },
       {
@@ -982,7 +984,8 @@
         "name": "number",
         "attr": {
           "type": "Number",
-          "column": "incdt_number"
+          "column": "incdt_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -1078,7 +1081,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "incdt_number"
+          "column": "incdt_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -1370,7 +1374,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "incdtresolution_name"
+          "column": "incdtresolution_name",
+          "isNaturalKey": true
         }
       },
       {
@@ -1420,7 +1425,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "incdtseverity_name"
+          "column": "incdtseverity_name",
+          "isNaturalKey": true
         }
       },
       {
@@ -1535,7 +1541,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "emlprofile_name"
+          "column": "emlprofile_name",
+          "isNaturalKey": true
         }
       },
       {

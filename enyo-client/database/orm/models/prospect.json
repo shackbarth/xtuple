@@ -29,7 +29,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "prospect_number"
+          "column": "prospect_number",
+          "isNaturalKey":true
         }
       },
       {
@@ -127,7 +128,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "prospect_number"
+          "column": "prospect_number",
+          "isNaturalKey":true
         }
       },
       {

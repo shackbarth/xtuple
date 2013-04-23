@@ -28,7 +28,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "expcat_code"
+          "column": "expcat_code",
+          "isNaturalKey": true
         }
       },
       {

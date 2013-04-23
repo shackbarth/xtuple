@@ -14,7 +14,7 @@
         "read": "ViewQuotes",
         "update": "MaintainQuotes",
         "delete": "MaintainQuotes"
-      }   
+      }
     },
     "properties": [
       {
@@ -29,7 +29,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "quhead_number"
+          "column": "quhead_number",
+          "isNaturalKey":true
         }
       },
       {
@@ -448,7 +449,7 @@
           "type": "Number",
           "column": "subtotal"
         }
-      }, 
+      },
       {
         "name": "taxTotal",
         "attr": {
@@ -469,14 +470,14 @@
           "type": "Number",
           "column": "quhead_freight"
         }
-      },   
+      },
       {
         "name": "total",
         "attr": {
           "type": "Number",
           "column": "total"
         }
-      },  
+      },
       {
         "name": "lineItems",
         "toMany": {
@@ -659,9 +660,9 @@
         "attr": {
           "type": "String",
           "column": "comment_text"
-        } 
+        }
       },
-      { 
+      {
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
@@ -1274,7 +1275,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "quhead_number"
+          "column": "quhead_number",
+          "isNaturalKey":true
         }
       },
       {
@@ -1386,7 +1388,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "quhead_number"
+          "column": "quhead_number",
+          "isNaturalKey":true
         }
       },
       {

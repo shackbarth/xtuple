@@ -76,7 +76,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "taxauth_code"
+          "column": "taxauth_code",
+          "isNaturalKey":true
         }
       },
       {
@@ -168,7 +169,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "taxauth_code"
+          "column": "taxauth_code",
+          "isNaturalKey":true
         }
       },
       {
@@ -210,7 +212,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "taxclass_code"
+          "column": "taxclass_code",
+          "isNaturalKey":true
         }
       },
       {
@@ -389,7 +392,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "taxtype_name"
+          "column": "taxtype_name",
+          "isNaturalKey":true
         }
       },
       {
@@ -437,7 +441,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "taxzone_code"
+          "column": "taxzone_code",
+          "isNaturalKey":true
         }
       },
       {

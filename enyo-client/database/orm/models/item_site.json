@@ -28,7 +28,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "costcat_code"
+          "column": "costcat_code",
+          "isNaturalKey":true
         }
       },
       {
@@ -390,7 +391,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "plancode_code"
+          "column": "plancode_code",
+          "isNaturalKey":true
         }
       },
       {

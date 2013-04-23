@@ -39,7 +39,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "ophead_number"
+          "column": "ophead_number",
+          "isNaturalKey":true
         }
       },
       {
@@ -684,7 +685,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "ophead_number"
+          "column": "ophead_number",
+          "isNaturalKey":true
         }
       },
       {
@@ -787,7 +789,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "ophead_number"
+          "column": "ophead_number",
+          "isNaturalKey":true
         }
       },
       {
@@ -1067,7 +1070,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "opsource_name"
+          "column": "opsource_name",
+          "isNaturalKey":true
         }
       },
       {
@@ -1109,7 +1113,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "opstage_name"
+          "column": "opstage_name",
+          "isNaturalKey":true
         }
       },
       {
@@ -1159,7 +1164,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "optype_name"
+          "column": "optype_name",
+          "isNaturalKey":true
         }
       },
       {
