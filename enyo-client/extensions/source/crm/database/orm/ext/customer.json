@@ -243,7 +243,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "ophead_number"
+          "column": "ophead_number",
+          "isNaturalKey":true
         }
       },
       {
@@ -464,7 +465,8 @@
         "name": "number",
         "attr": {
           "type": "Number",
-          "column": "incdt_number"
+          "column": "incdt_number",
+          "isNaturalKey":true
         }
       },
       {
