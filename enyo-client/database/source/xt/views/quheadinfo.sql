@@ -23,7 +23,7 @@ $$ language plv8;
 revoke all on xt.quheadinfo from public;
 grant all on table xt.quheadinfo to group xtrole;
 
-create or replace rule "_INSERT" as on insert to xt.quheadinfo do instead
+create or replace rule "_INSERT" as on insert to xt.quheadinfo do instead 
 
 insert into quhead (
   quhead_id,

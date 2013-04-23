@@ -29,10 +29,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       model = req.query.name.camelize().capitalize();
     }
 
-    payload.className = "XT.Discovery";
-    payload.functionName = "getList";
-    payload.isJSON = true;
-    payload.parameters = [model, "https://mobile.xtuple.com/"]; // TODO get rootURL
+    payload.nameSpace = "XT";
+    payload.type = "Discovery";
+    payload.dispatch = {
+      functionName: "getList",
+      isJSON: true,
+      parameters: [model, "https://mobile.xtuple.com/"] // TODO get rootURL
+    };
 
     // Dummy up session. This is a public call.
     session.passport = {
@@ -43,7 +46,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     };
 
-    routes.dispatchEngine(payload, session, callback);
+    routes.postEngine(payload, session, callback);
   };
 
   exports.getRest = function (req, res, next) {
@@ -68,10 +71,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       model = req.params.model.camelize().capitalize();
     }
 
-    payload.className = "XT.Discovery";
-    payload.functionName = "getDiscovery";
-    payload.isJSON = true;
-    payload.parameters = [model, "https://mobile.xtuple.com/"]; // TODO get rootURL
+    payload.nameSpace = "XT";
+    payload.type = "Discovery";
+    payload.dispatch = {
+      functionName: "getDiscovery",
+      isJSON: true,
+      parameters: [model, "https://mobile.xtuple.com/"] // TODO get rootURL
+    };
 
     // Dummy up session. This is a public call.
     session.passport = {
@@ -82,7 +88,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     };
 
-    routes.dispatchEngine(payload, session, callback);
+    routes.postEngine(payload, session, callback);
   };
 
 }());

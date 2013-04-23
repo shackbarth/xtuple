@@ -16,6 +16,7 @@
     "connect-flash":"0.1.x",
     "ejs": "0.8.x",
     "express": "3.1.x",
+    "json-patch": "git://github.com/xtuple/JSON-Patch.git",
     "nodemailer":"0.3.x",
     "oauth2orize": "0.1.x",
     "oauth2orize-jwt-bearer": "0.1.x",
@@ -31,8 +32,10 @@
     "underscore":"1.4.x"
   },
   "devDependencies": {
-    "zombie":"1.4.1",
-    "vows":"0.7.0"
+    "chai":"1.5.x",
+    "mocha":"1.9.x",
+    "zombie":"1.4.x",
+    "vows":"0.7.x"
   },
   "optionalDependencies": {},
   "engines": {

@@ -9,28 +9,14 @@ white:true*/
   /**
     @class
 
-    @extends XM.AccountDocument
+    @extends XM.Document
   */
   XM.TaxClass = XM.Document.extend({
     /** @scope XM.TaxClass.prototype */
 
     recordType: 'XM.TaxClass',
-
-    documentKey: 'code'
-
-  });
-
-  /**
-    @class
-
-    @extends XM.AccountDocument
-  */
-  XM.TaxClassRelation = XM.Info.extend({
-    /** @scope XM.TaxClassRelation.prototype */
-
-    recordType: 'XM.TaxClassRelation',
-
-    editableModel: 'XM.TaxClass'
+    
+    documentKey: "code"
 
   });
 

@@ -55,7 +55,11 @@ module.exports = function (connect) {
       // TODO - options could be used to only load parital dataset of recently active sessions.
       // It could also be used to help process/server syncing if we move to something like Redis.
 
-      var fetchOptions = {};
+      var fetchOptions = {},
+        payload = {
+          nameSpace: "XM",
+          type: "SessionStore"
+        };
 
       fetchOptions.success = function (sessionstore) {
         var sid,
@@ -95,14 +99,9 @@ module.exports = function (connect) {
       //sessionsCollection.fetch(fetchOptions);
 
       // Fetch all records from XM.SessionStore and load them into the Express MemoryStore.
-      fetchOptions.query = {
-        requestType: "fetch",
-        recordType: "XM.SessionStore"
-      };
-
       // fetchOptions.username = GLOBAL_USERNAME; // TODO
       fetchOptions.username = 'node';
-      XT.dataSource.fetch(null, fetchOptions);
+      XT.dataSource.request(null, "get", payload, fetchOptions);
     };
 
     // Loops through the sessions, find the ones that are expired and sends that session data
@@ -269,8 +268,7 @@ module.exports = function (connect) {
             done && done();
           }
         };
-        saveOptions.error = function (model, err) {
-          var that = this;
+        saveOptions.error = function (model, saveErr) {
           // This shouldn't happen. How did we get here? Log trace.
           console.trace("XM.SessionStore save error. This shouldn't happen.");
 
@@ -285,7 +283,7 @@ module.exports = function (connect) {
                 // TODO - This might throw an error because our err object does not includes a stack.
                 // https://github.com/senchalabs/connect/blob/master/lib/middleware/errorHandler.js#L48
                 // MemoryStore destroyed, move along.
-                done && done(that.err);
+                done && done(saveErr);
               }
             });
           } else {
