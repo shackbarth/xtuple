@@ -94,11 +94,5 @@ white:true*/
     kind: "XV.CommentBox",
     model: "XM.SalesOrderComment"
   });
-  
-  enyo.kind({
-    name: "XV.SalesOrderLineCommentBox",
-    kind: "XV.CommentBox",
-    model: "XM.SalesOrderLineComment"
-  });
 
 }());
