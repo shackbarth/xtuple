@@ -1347,7 +1347,7 @@ trailing:true white:true*/
                    effective: ""},
                   {kind: "XV.WeightWidget", attr: "freightWeight"}
                 ]},
-                {kind: "FittableRows", name: "summaryColumnTwo",components: [
+                {kind: "FittableRows", name: "summaryColumnTwo", components: [
                   {kind: "XV.MoneyWidget", attr:
                    {localValue: "subtotal", currency: "currency"},
                    label: "_subtotal".loc(), currencyShowing: false,
@@ -1404,8 +1404,8 @@ trailing:true white:true*/
       this.$.dateField.setAttr(this.getOrderDate());
       // Loop through the components and set the effective date information for the Money widgets
       this.getComponents().forEach(function (e) {
-        if (e.kind === "XV.MoneyWidget") {
-          e.getEffective() ? e.setEffective(this.getOrderDate()) : false;
+        if (e.kind === "XV.MoneyWidget" && e.getEffective()) {
+          e.setEffective(this.getOrderDate());
         }
       });
         
@@ -1580,18 +1580,18 @@ trailing:true white:true*/
     build: function () {
       this.$.datePanel.createComponents([
         {kind: "XV.CheckboxWidget", attr: "shipComplete"}
-        ], {owner: this});
+      ], {owner: this});
       this.$.shippingPanel.createComponents([
         {kind: "XV.ShippingChargePicker", attr: "shipCharge"}
-        ], {owner: this});
+      ], {owner: this});
       this.$.settingsPanel.createComponents([
         {kind: "XV.HoldTypePicker", attr: "holdType"}
-        ], {owner: this});  
+      ], {owner: this});
       this.$.salesPanels.createComponents([
           {kind: "XV.SalesOrderCommentBox", attr: "comments"},
           {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
-        ], {owner: this});
-      // TODO: add "At Shipping" and "Balance" to this.$.summaryColumnTwo  
+      ], {owner: this});
+      // TODO: add "At Shipping" and "Balance" to this.$.summaryColumnTwo
     }
   });
 
