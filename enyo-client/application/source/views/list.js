@@ -1163,7 +1163,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.QuoteRelation", "XV.QuoteList");
-  
+
   // ..........................................................
   // SALES ORDER
   //
@@ -1179,15 +1179,15 @@ trailing:true white:true*/
     ]},
     components: [
       {kind: "XV.ListItem", components: [
-         {kind: "FittableColumns", components: [
-           {kind: "XV.ListColumn", classes: "first", components: [
-             {kind: "FittableColumns", components: [
-               {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true}
-             ]},
-             {kind: "FittableColumns", components: [
-               {kind: "XV.ListAttr", attr: "customer.name"},
-             ]}
-           ]},
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "customer.name"}
+            ]}
+          ]},
           {kind: "XV.ListColumn", classes: "second", components: [
             {kind: "XV.ListAttr", attr: "billtoName", classes: "italic"},
             {kind: "XV.ListAttr", attr: "billtoAddress1.formatShort"}
@@ -1206,7 +1206,7 @@ trailing:true white:true*/
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "total", formatter: "formatPrice", classes: "right"}
             ]}
-          ]}  
+          ]}
         ]}
       ]}
     ],
@@ -1218,7 +1218,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderList");
-  
+
   // ..........................................................
   // SALE TYPE
   //
@@ -1460,7 +1460,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.TaxClassRelation", "XV.TaxClassList");
-  
+
   // ..........................................................
   // TAX RATE
   //

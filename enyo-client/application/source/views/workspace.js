@@ -1254,7 +1254,7 @@ trailing:true white:true*/
   // ..........................................................
   // SALES ORDER BASE
   //
-  
+
   /**
     This is the base kind for Quote and Sales order. This should include all common components
     and functions.
@@ -1398,7 +1398,7 @@ trailing:true white:true*/
       var model = this.getValue(),
         customer = model ? model.get("customer") : false,
         isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : true;
-      
+
       // set the date attribute to the documentDateKey
       this.setOrderDate(this.value.documentDateKey);
       this.$.dateField.setAttr(this.getOrderDate());
@@ -1408,7 +1408,7 @@ trailing:true white:true*/
           e.setEffective(this.getOrderDate());
         }
       });
-        
+
       this.$.copyAddressButton.setDisabled(!isFreeFormShipto);
       this.customerChanged();
       // re-render the summary panel
@@ -1424,7 +1424,7 @@ trailing:true white:true*/
       this.getValue().copyBilltoToShipto();
     }
   });
-  
+
   // ..........................................................
   // QUOTE
   //
@@ -1529,7 +1529,7 @@ trailing:true white:true*/
     ]
   });
   enyo.kind(lineItem);
-  
+
   // ..........................................................
   // QUOTE LINE ITEM
   //
@@ -1545,7 +1545,7 @@ trailing:true white:true*/
     }
   });
   enyo.kind(quoteLineItem);
-  
+
   // ..........................................................
   // QUOTE LINE ITEM
   //
@@ -1590,14 +1590,14 @@ trailing:true white:true*/
       this.$.salesPanels.createComponents([
           {kind: "XV.SalesOrderCommentBox", attr: "comments"},
           {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
-      ], {owner: this});
+        ], {owner: this});
       // TODO: add "At Shipping" and "Balance" to this.$.summaryColumnTwo
     }
   });
 
   XV.registerModelWorkspace("XM.SalesOrderRelation", "XV.SalesOrderWorkspace");
   XV.registerModelWorkspace("XM.SalesOrderListItem", "XV.SalesOrderWorkspace");
-  
+
   // ..........................................................
   // SALES REP
   //
@@ -1876,7 +1876,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.TaxClass", "XV.TaxClassWorkspace");
-  
+
   // ..........................................................
   // TAX RATE
   //

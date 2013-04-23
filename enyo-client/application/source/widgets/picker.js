@@ -122,7 +122,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.HoldTypePicker",
     kind: "XV.PickerWidget",
-    collection: "XM.holdTypes",
+    collection: "XM.holdTypes"
   });
 
   // ..........................................................
