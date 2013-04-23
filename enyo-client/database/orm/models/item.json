@@ -28,7 +28,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "classcode_code"
+          "column": "classcode_code",
+          "isNaturalKey": true
         }
       },
       {
@@ -70,7 +71,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "freightclass_code"
+          "column": "freightclass_code",
+          "isNaturalKey": true
         }
       },
       {
@@ -1301,7 +1303,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "prodcat_code"
+          "column": "prodcat_code",
+          "isNaturalKey": true
         }
       },
       {
@@ -1343,7 +1346,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "uom_name"
+          "column": "uom_name",
+          "isNaturalKey": true
         }
       },
       {

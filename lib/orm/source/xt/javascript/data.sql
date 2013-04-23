@@ -549,7 +549,10 @@ select xt.install_js('XT','Data','xtuple', $$
         attr,
         type,
         i,
-        val;
+        iorm,
+        nkey,
+        val,
+        exp;
       params = params || {
         table: "",
         columns: [],
@@ -578,8 +581,10 @@ select xt.install_js('XT','Data','xtuple', $$
         prop = ormp.name;
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
+        iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false,
+        nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
         val = ormp.toOne && record[prop] instanceof Object ?
-          record[prop][ormp.toOne.inverse || 'id'] : record[prop];
+          record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
 
         /* handle fixed values */
         if (attr.value) {
@@ -595,8 +600,8 @@ select xt.install_js('XT','Data','xtuple', $$
           if (attr.isEncrypted) {
             if (encryptionKey) {
               val = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
-                             .replace("{value}", record[prop])
-                             .replace("{encryptionKey}", encryptionKey);
+                    .replace("{value}", record[prop])
+                    .replace("{encryptionKey}", encryptionKey);
               params.values.push(val);
               params.expressions.push('$' + count);
               count++;
@@ -607,7 +612,16 @@ select xt.install_js('XT','Data','xtuple', $$
           } else if (attr.type === 'Date') {
             params.expressions.push("'" + val + "'");
           } else {
-            params.expressions.push('$' + count);
+            if (ormp.toOne && nkey) {
+              exp = "(select {pkey} from {table} where {nkey} = {param})"
+                    .replace("{pkey}", XT.Orm.primaryKey(iorm, true))
+                    .replace("{table}", iorm.table)
+                    .replace("{nkey}", nkey)
+                    .replace("{param}", '$' + count)
+              params.expressions.push(exp);
+            } else {
+              params.expressions.push('$' + count);
+            }
             count++;
             params.values.push(val);
           }
@@ -726,7 +740,10 @@ select xt.install_js('XT','Data','xtuple', $$
         type,
         qprop,
         keyValue,
-        val;
+        iorm,
+        key,
+        val,
+        exp;
       params = params || {
         table: "",
         expressions: [],
@@ -751,8 +768,11 @@ select xt.install_js('XT','Data','xtuple', $$
         prop = ormp.name;
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
+        iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false,
+        nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
         qprop = '"' + attr.column + '"';
-        val = ormp.toOne && record[prop] instanceof Object ? record[prop][ormp.toOne.inverse || 'id'] : record[prop];
+        val = ormp.toOne && record[prop] instanceof Object ?
+          record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
 
         if (val !== undefined && !ormp.toMany) {
           /* handle encryption if applicable */
@@ -774,8 +794,17 @@ select xt.install_js('XT','Data','xtuple', $$
             } else if (val instanceof Date) {
               params.expressions.push(qprop.concat(" = '" + JSON.stringify(val) + "'"));
             } else {
+              if (ormp.toOne && nkey) {
+                exp = " = (select {pkey} from {table} where {nkey} = {param})"
+                      .replace("{pkey}", XT.Orm.primaryKey(iorm, true))
+                      .replace("{table}", iorm.table)
+                      .replace("{nkey}", nkey)
+                      .replace("{param}", '$' + count)
+                params.expressions.push(qprop.concat(exp));
+              } else {
+                params.expressions.push(qprop.concat(" = ", "$", count));
+              }
               params.values.push(val);
-              params.expressions.push(qprop.concat(" = ", "$", count));
               count++;
             }
           }

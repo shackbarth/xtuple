@@ -125,12 +125,13 @@ select xt.install_js('XT','Session','xtuple', $$
         var relations = result[type]['relations'],
           child = XT.Orm.fetch(schema.toUpperCase(), value.toOne.type),
           pkey = XT.Orm.primaryKey(child),
+          nkey = XT.Orm.naturalKey(child),
           rel = {
             type: "Backbone.HasOne",
             key: value.name,
             relatedModel: schema.toUpperCase() + '.' + value.toOne.type
           };
-        rel.includeInJSON = pkey;
+        rel.includeInJSON = nkey || pkey;
         if(value.toOne.isNested) {
           rel.isNested = true;
         }
@@ -150,7 +151,7 @@ select xt.install_js('XT','Session','xtuple', $$
             }
           };
         if (!value.toMany.isNested) {
-          rel.includeInJSON = pkey;
+          rel.includeInJSON = false;
         } else {
           rel.isNested = true;
         }
@@ -194,7 +195,7 @@ select xt.install_js('XT','Session','xtuple', $$
           plv8.elog(NOTICE, 'Fetching schema ' + schema.toUpperCase() + '.' + type);
         }
         orm = XT.Orm.fetch(schema.toUpperCase(), type);
-       
+        result[type]['idAttribute'] = XT.Orm.naturalKey(orm) || XT.Orm.primaryKey(orm);
         result[type]['relations'] = [];
         processProperties(orm);
         processPrivileges(orm);
