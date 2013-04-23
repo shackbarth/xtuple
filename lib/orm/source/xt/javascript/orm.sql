@@ -210,6 +210,26 @@ select xt.install_js('XT','Orm','xtuple', $$
   };
 
   /**
+    Returns the natural key name as designated in an ORM map.
+    If column is true, returns the column name.
+
+    @param {Object} ORM
+    @param {Boolean} Get column - default false.
+    @returns String
+  */
+  XT.Orm.naturalKey = function (orm, getColumn) {
+    var i,
+      prop;
+    /* find primary key */
+    for (i = 0; i < orm.properties.length; i++) {
+      var prop = orm.properties[i];
+      if(prop.attr && prop.attr.isNaturalKey)
+        return getColumn ? prop.attr.column : prop.name;
+    }
+    return false;
+  };
+
+  /**
     Returns the primary key name as designated in an ORM map.
     If column is true, returns the column name.
 
@@ -218,12 +238,13 @@ select xt.install_js('XT','Orm','xtuple', $$
     @returns String
   */
   XT.Orm.primaryKey = function (orm, getColumn) {
-    var i;
+    var i,
+      prop;
     /* find primary key */
     for (i = 0; i < orm.properties.length; i++) {
-      if(orm.properties[i].attr &&
-         orm.properties[i].attr.isPrimaryKey)
-        return getColumn ? orm.properties[i].attr.column : orm.properties[i].name;
+      var prop = orm.properties[i];
+      if(prop.attr && prop.attr.isPrimaryKey)
+        return getColumn ? prop.attr.column : prop.name;
     }
     return false;
   };
@@ -285,6 +306,8 @@ select xt.install_js('XT','Orm','xtuple', $$
       var props = orm.properties ? orm.properties : [],
         tblAlias = orm.table === base.table ? 't1' : 't' + tbl,
         ormClauses = [],
+        Orm = XT.Orm,
+        prop,
         i,
         n,
         col,
@@ -304,24 +327,30 @@ select xt.install_js('XT','Orm','xtuple', $$
         schemaName,
         tableName,
         pkey,
+        nkey,
         orderBy;
+
+      /* process properties */
       for (i = 0; i < props.length; i++) {
-        alias = props[i].name;
-        if(DEBUG) plv8.elog(NOTICE, 'processing property ->', props[i].name);
-        if(props[i].name === 'dataState') throw new Error("Can not use 'dataState' as a property name.");
+        prop = props[i];
+        nkey = prop.toOne ? Orm.naturalKey(Orm.fetch(orm.nameSpace, prop.toOne.type)) : false,
+        alias = prop.name;
+        if(DEBUG) plv8.elog(NOTICE, 'processing property ->', prop.name);
+        if(prop.name === 'dataState') throw new Error("Can not use 'dataState' as a property name.");
 
         /* process attributes */
-        if (props[i].attr || props[i].toOne) {
+        if (prop.attr || prop.toOne) {
           if (DEBUG) plv8.elog(NOTICE, 'building attribute');
-          attr = props[i].attr ? props[i].attr : props[i].toOne;
+          attr = prop.attr ? prop.attr : prop.toOne;
           isVisible = attr.value ? false : true;
-          if (!attr.type) throw new Error('No type was defined on property ' + props[i].name);
+          if (!attr.type) throw new Error('No type was defined on property ' + prop.name);
           if (isVisible) {
             col = tblAlias + '.' + attr.column;
             col = col.concat(' as "', alias, '"');
 
-            /* handle the default non-nested case */
-            if (props[i].attr || props[i].toOne.isNested === undefined) {
+            /* handle the value */
+            if (prop.attr ||
+               (prop.toOne.isNested === undefined && !nkey)) {
               cols.push(col);
             }
           }
@@ -334,20 +363,21 @@ select xt.install_js('XT','Orm','xtuple', $$
         }
 
         /* process toOne  */
-        if (props[i].toOne && props[i].toOne.isNested !== false) {
-          toOne = props[i].toOne;
+        if (prop.toOne &&
+           (prop.toOne.isNested !== false || nkey)) {
+          toOne = prop.toOne;
           table = base.nameSpace.decamelize() + '.' + toOne.type.decamelize();
           type = table.afterDot();
           inverse = toOne.inverse ? toOne.inverse.camelize() : 'id';
           col = '({select}) as "{alias}"';
-          if(!type) { throw new Error('No type was defined on property ' + props[i].name); }
+          if(!type) { throw new Error('No type was defined on property ' + prop.name); }
           if(DEBUG) { plv8.elog(NOTICE, 'building toOne'); }
           conditions = '"' + type + '"."' + inverse + '" = ' + tblAlias + '.' + toOne.column;
 
-          /* handle the default non-nested case */
-          if (props[i].toOne.isNested === true) {
+          /* handle the nested and natural key cases */
+          if (prop.toOne.isNested === true || nkey) {
             col = col.replace('{select}',
-               SELECT.replace('{columns}', '"' + type + '"')
+               SELECT.replace('{columns}',  prop.toOne.isNested ? '"' + type + '"' : nkey)
                      .replace('{table}',  table)
                      .replace('{conditions}', conditions))
                      .replace('{alias}', alias)
@@ -357,21 +387,21 @@ select xt.install_js('XT','Orm','xtuple', $$
         }
 
         /* process toMany */
-        if (props[i].toMany) {
+        if (prop.toMany) {
           if(DEBUG) plv8.elog(NOTICE, 'building toMany');
-         if (!props[i].toMany.type) throw new Error('No type was defined on property ' + props[i].name);
-           toMany = props[i].toMany;
+         if (!prop.toMany.type) throw new Error('No type was defined on property ' + prop.name);
+           toMany = prop.toMany;
            table = base.nameSpace + '.' + toMany.type.decamelize();
            type = toMany.type.decamelize();
-           iorm = XT.Orm.fetch(base.nameSpace, toMany.type);
-           pkey = XT.Orm.primaryKey(iorm);
+           iorm = Orm.fetch(base.nameSpace, toMany.type);
+           pkey = Orm.primaryKey(iorm);
            column = toMany.isNested ? type : pkey;
            col = 'array({select}) as "{alias}"',
            orderBy = 'order by ' + pkey;
 
            /* handle inverse */
           inverse = toMany.inverse ? toMany.inverse.camelize() : 'id';
-          ormp = XT.Orm.getProperty(iorm, inverse);
+          ormp = Orm.getProperty(iorm, inverse);
           if (ormp && ormp.toOne && ormp.toOne.isNested) {
             conditions = toMany.column ? '(' + type + '."' + inverse + '").id = ' + tblAlias + '.' + toMany.column : 'true';
           } else {

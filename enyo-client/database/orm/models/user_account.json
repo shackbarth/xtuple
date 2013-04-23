@@ -299,7 +299,8 @@
         "attr": {
           "type": "String",
           "column": "useracct_username",
-          "isPrimaryKey": true
+          "isPrimaryKey": true,
+          "isNaturalKey": true
         }
       },
       {
@@ -387,7 +388,8 @@
         "attr": {
           "type": "String",
           "column": "useracct_username",
-          "isPrimaryKey": true
+          "isPrimaryKey": true,
+          "isNaturalKey": true
         }
       },
       {
