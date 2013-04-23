@@ -1276,10 +1276,9 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "number"},
-            {name: "datePanel", components: [
-              {kind: "XV.DateWidget", name: "dateField", attr: "", label: "_orderDate".loc()},
-              {kind: "XV.DateWidget", attr: "scheduleDate"}
-            ]},
+            {kind: "XV.DateWidget", name: "dateField", attr: "", label: "_orderDate".loc()},
+            {kind: "XV.DateWidget", attr: "scheduleDate"},
+            {name: "datePanel"},
             {kind: "XV.InputWidget", attr: "getOrderStatusString", label: "_status".loc()},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
             {kind: "XV.CustomerProspectWidget", attr: "customer",
@@ -1320,12 +1319,14 @@ trailing:true white:true*/
              label: "_custPO".loc()},
             {kind: "XV.ShipViaCombobox", attr: "shipVia"},
             {kind: "XV.ShipZonePicker", attr: "shipZone"},
+            {name: "shippingPanel"},
             {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
             {kind: "XV.TermsPicker", attr: "terms"},
             {kind: "XV.SalesRepPicker", attr: "salesRep"},
             {kind: "XV.PercentWidget", attr: "commission"},
             {kind: "XV.TaxZonePicker", attr: "taxZone"},
             {kind: "XV.SaleTypePicker", attr: "saleType"},
+            {name: "settingsPanel"},
             {kind: "onyx.GroupboxHeader", content: "_orderNotes".loc()},
             {kind: "XV.TextArea", attr: "orderNotes", fit: true},
             {kind: "onyx.GroupboxHeader", content: "_shippingNotes".loc()},
@@ -1577,11 +1578,20 @@ trailing:true white:true*/
       Inserts additional components where they should be rendered.
     */
     build: function () {
+      this.$.datePanel.createComponents([
+        {kind: "XV.CheckboxWidget", attr: "shipComplete"}
+        ], {owner: this});
+      this.$.shippingPanel.createComponents([
+        {kind: "XV.ShippingChargePicker", attr: "shipCharge"}
+        ], {owner: this});
+      this.$.settingsPanel.createComponents([
+        {kind: "XV.HoldTypePicker", attr: "holdType"}
+        ], {owner: this});  
       this.$.salesPanels.createComponents([
-        // TODO: add "At Shipping" and "Balance" to this.$.summaryColumnTwo
           {kind: "XV.SalesOrderCommentBox", attr: "comments"},
           {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
         ], {owner: this});
+      // TODO: add "At Shipping" and "Balance" to this.$.summaryColumnTwo  
     }
   });
 
