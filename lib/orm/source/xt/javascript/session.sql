@@ -95,9 +95,7 @@ select xt.install_js('XT','Session','xtuple', $$
     @param {String} Schema name
     @returns {Hash}
   */
-  XT.Session.schema = function(schema, refresh) {
-  
-    if (!refresh && this._schema) { return this._schema };
+  XT.Session.schema = function(schema) {
     var sql = 'select c.relname as "type", ' +
               '  attname as "column", ' +
               '  typcategory as "category" ' +
@@ -227,8 +225,7 @@ select xt.install_js('XT','Session','xtuple', $$
       }
     }
 
-    this._schema = JSON.stringify(result);
-    return this._schema;
+    return JSON.stringify(result);
   }
   
 $$ );

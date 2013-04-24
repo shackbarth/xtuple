@@ -39,9 +39,33 @@ select xt.install_js('XM','Model','xtuple', $$
   },
 
   /**
-    Renew a record lock. Defaults to renewal of 30 seconds.
+    Obtain a pessemistic record lock. Defaults to timeout of 30 seconds.
 
-    @param {Number} key
+    @param {String} Namespace
+    @param {String} Type
+    @param {String|Number} Id
+    @param {String} etag
+    @param {Object} Options: timeout
+  */
+  XM.Model.obtainLock = function (nameSpace, type, id, etag, options) {
+    var orm = XT.Orm.fetch(nameSpace, type),
+       data = Object.create(XT.Data),
+       lockTable = orm.lockTable || orm.table,
+       pkey = XT.Orm.primaryKey(orm),
+       rec = data.retrieveRecord({
+         nameSpace: nameSpace,
+         type: type,
+         id: id
+       });
+    if (!rec || !rec.data) { throw "Record for requested lock not found." }
+    if (rec.etag !== etag) { return false; }
+    return data.tryLock(lockTable, rec.data[pkey]);
+  }
+
+  /**
+    Renew a record lock. Defaults to timeout of 30 seconds.
+
+    @param {Number} Key
     @param {Object} Options: timeout
   */
   XM.Model.renewLock = function (key, options) {

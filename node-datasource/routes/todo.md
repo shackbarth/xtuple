@@ -2,10 +2,7 @@ DONE
 auth.js
 selection.js -- merged into auth.js and renamed scope
 logout.js -- in auth.js
-fetch.js -- in data.js
-dispatch.js -- in data.js
 commit.js -- in data.js
-retrieve.js -- in data.js
 extensions.js
 session -- this is done as a pure functor in main.js
 maintenance.js

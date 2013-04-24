@@ -15,6 +15,7 @@ enyo.depends(
   "project.js",
   "prospect.js",
   "quote.js",
+  "sales_order.js",
   "sales_rep.js",
   "sale_type.js",
   "site.js",

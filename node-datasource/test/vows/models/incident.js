@@ -23,7 +23,7 @@ var XVOWS = XVOWS || {};
   };
 
   data.updateHash = {
-    updated: today
+    description: "Incident Updated"
   };
 
   vows.describe('XM.Incident CRUD test').addBatch({
@@ -98,8 +98,6 @@ var XVOWS = XVOWS || {};
         '-> Commit to an Incident': crud.save(data)
       }
     })
-  }).addBatch({
-    'We can DESTROY an Incident Model': crud.destroy(data)
   }).export(module);
   
 }());

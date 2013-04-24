@@ -12,7 +12,7 @@ create or replace function xt.js_init() returns void as $$
     @param {Any}
     @returns Boolean
   */
-  Array.prototype.contains = function(item) {
+  Array.prototype.contains = function (item) {
     var i = this.length;
     while (i--) {
       if (this[i] === item) {
@@ -28,7 +28,7 @@ create or replace function xt.js_init() returns void as $$
     @param {Any}
     @returns Any
   */
-  Array.prototype.indexOf = function(item) {
+  Array.prototype.indexOf = function (item) {
     var i = this.length;
     while (i--) {
       if (this[i] === item) {
@@ -44,8 +44,8 @@ create or replace function xt.js_init() returns void as $$
     @param {Any}
     @returns Any
   */
-  Array.prototype.remove = function(item) {
-    return this.contains(item) ? this.splice(this.indexOf(item),1) : false;
+  Array.prototype.remove = function (item) {
+    return this.contains(item) ? this.splice(this.indexOf(item), 1) : false;
   }
 
   /**
@@ -55,12 +55,12 @@ create or replace function xt.js_init() returns void as $$
      @param {Any} value to search for
      @param Object item found or null
   */
-  Array.prototype.findProperty = function(key, value) {
-    for(var i = 0; i < this.length; i++) {
-      for(var prop in this[i]) {
-        if(prop === key &&
-           this[i][prop] === value) {
-             return this[i];
+  Array.prototype.findProperty = function (key, value) {
+    for (var i = 0; i < this.length; i++) {
+      for (var prop in this[i]) {
+        if (prop === key &&
+            this[i][prop] === value) {
+          return this[i];
         }
       }
     }
@@ -68,23 +68,37 @@ create or replace function xt.js_init() returns void as $$
   }
 
   /**
+    Curry function
+  */
+  Function.prototype.curry = function() {
+    if (arguments.length < 1) {
+        return this; /* nothing to curry with - return function */
+    }
+    var __method = this,
+      args = arguments[0];
+    return function () {
+      return __method.apply(this, args.concat(Array.prototype.slice.call(arguments)));
+    }
+  }
+
+  /**
     Return the text after the first dot.
   */
-  String.prototype.afterDot = function() {
+  String.prototype.afterDot = function () {
     return this.replace(/\w+\./i, '');
   }
 
   /**
     Return the text before the first dot.
   */
-  String.prototype.beforeDot = function() {
+  String.prototype.beforeDot = function () {
     return this.replace(/\.\w+/i, '');
   }
 
   /**
      Trim whitespace from a string.
   */
-  String.prototype.trim = function() {
+  String.prototype.trim = function () {
     return this.replace(/^\s+|\s+$/g,"");
   }
 
@@ -93,15 +107,24 @@ create or replace function xt.js_init() returns void as $$
 
      @returns {String}
   */
-  String.prototype.camelize = function() {
+  String.prototype.camelize = function () {
     var self = this,
         ret = self.replace( (/([\s|\-|\_|\n])([^\s|\-|\_|\n]?)/g), function(self, separater, character) {
           return character ? character.toUpperCase() : '';
     });
     var first = ret.charAt(0),
-        lower = first.toLowerCase();
+      lower = first.toLowerCase();
     return first !== lower ? lower + ret.slice(1) : ret;
   };
+
+  /**
+     Change a camel case string to snake case.
+
+     @returns {String} The argument modified
+  */
+  String.prototype.camelToHyphen = function () {
+    return this.replace((/([a-z])([A-Z])/g), '$1-$2').toLowerCase();
+  }
 
   /**
      Converts the string into a class name. This method will camelize
@@ -109,8 +132,8 @@ create or replace function xt.js_init() returns void as $$
 
      @returns {String}
   */
-  String.prototype.classify = function() {
-    return this.slice(0,1).toUpperCase() + this.slice(1).camelize();
+  String.prototype.classify = function () {
+    return this.slice(0, 1).toUpperCase() + this.slice(1).camelize();
   }
 
   /**
@@ -118,7 +141,7 @@ create or replace function xt.js_init() returns void as $$
 
      @returns {String} The argument modified
   */
-  String.prototype.decamelize = function() {
+  String.prototype.decamelize = function () {
     return this.replace((/([a-z])([A-Z])/g), '$1_$2').toLowerCase();
   }
 
@@ -128,7 +151,7 @@ create or replace function xt.js_init() returns void as $$
 
      @returns {String} The argument modified
   */
-  String.prototype.humanize = function() {
+  String.prototype.humanize = function () {
     var spaced = this.replace((/([a-z])([A-Z])/g), '$1 $2');
     return human = spaced.charAt(0).toUpperCase() + spaced.slice(1);
   }
@@ -158,6 +181,22 @@ create or replace function xt.js_init() returns void as $$
   }
 
   /**
+    Change camel case property names in an object to hyphen case.
+     Only changes immediate properties, it is not recursive.
+
+     @param {Object | String} The object to decamelize
+     @returns {Object | String} The argument modified
+  */
+  XT.camelToHyphen = function(obj) {
+    var ret = {};
+    if(typeof obj === "object") {
+      for(var prop in obj) ret[prop.camelToHyphen()] = obj[prop];
+    }
+    else if(typeof obj === "string") return obj.camelToHyphen();
+    return ret;
+  }
+
+  /**
     Change camel case property names in an object to snake case.
      Only changes immediate properties, it is not recursive.
 
@@ -172,6 +211,27 @@ create or replace function xt.js_init() returns void as $$
     else if(typeof obj === "string") return obj.decamelize();
     return ret;
   }
+
+  /**
+    Return a universally unique identifier.
+
+    We're using this solution:
+    http://stackoverflow.com/a/8809472/251019
+    From here:
+    http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
+  
+    @return {String}
+  */
+  XT.generateUUID = function () {
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = (d + Math.random() * 16) % 16 | 0;
+      d = Math.floor(d / 16);
+      return (c === 'x' ? r : (r&0x7|0x8)).toString(16);
+    });
+
+    return uuid;
+  };
 
   /**
     Extended version of javascript 'typeof' that also recognizes arrays

@@ -16,8 +16,8 @@ var XVOWS = XVOWS || {};
     deleteData = {};
 
   data.createHash = {
-    code: "TESTTAXAUTH",
-    name: "Thom Yorke"
+    number: "TAXAUTH3",
+    name: "TAXAUTH NAME"
   };
 
   data.updateHash = {
@@ -64,7 +64,7 @@ var XVOWS = XVOWS || {};
     'UPDATE ': crud.update(data, {
       '-> Set values': {
         topic: function () {
-          deleteData.accntId = data.model.get("account").get("id");
+          deleteData.accntId = data.model.get("account");
           deleteData.accountModel = new XM.Account();
           data.model.set(data.updateHash);
           return data;
@@ -77,25 +77,40 @@ var XVOWS = XVOWS || {};
     })
   }).addBatch({
     'DESTROY': crud.destroy(data, {
-      '-> Set values': {
+      '-> Destroy the Tax Authority': {
         //Destroy the tax authority.  When that is successful, destroy the account
-        'tax authority destroyed': function (data) {
-          assert.isTrue(data.model.getStatus() === XM.Model.DESTROYED_CLEAN);
+        'Tax Authority destroyed': function (data) {
+          assert.equal(data.model.getStatusString(), 'DESTROYED_CLEAN');
         },
-        topic: function () {
-          var that = this,
-            fetchOptionsAccnt = {};
-        
-          fetchOptionsAccnt.id = deleteData.accntId;
-        
-          fetchOptionsAccnt.success = function () {
-            var destroyOptionsAccnt = {};
-            destroyOptionsAccnt.success = function () {
-              that.callback(null, data);
+        '-> Destroy the Account': {
+          topic: function () {
+            var that = this,
+              account = deleteData.accountModel,
+              fetchOptionsAccnt = {},
+              destroyAccount;
+
+            fetchOptionsAccnt.id = deleteData.accntId;
+
+            destroyAccount = function () {
+              if (account.getStatus() === XM.Model.READY_CLEAN) {
+                var accountDestroyed = function () {
+                    if (account.getStatus() === XM.Model.DESTROYED_CLEAN) {
+                      account.off("statusChange", accountDestroyed);
+                      that.callback(null, account);
+                    }
+                  };
+
+                account.off("statusChange", destroyAccount);
+                account.on("statusChange", accountDestroyed);
+                account.destroy();
+              }
             };
-            deleteData.accountModel.destroy(destroyOptionsAccnt);
-          };
-          deleteData.accountModel.fetch(fetchOptionsAccnt);
+            account.on("statusChange", destroyAccount);
+            account.fetch(fetchOptionsAccnt);
+          },
+          'Account destroyed': function (account) {
+            assert.equal(account.getStatusString(), 'DESTROYED_CLEAN');
+          }
         }
       }
     })

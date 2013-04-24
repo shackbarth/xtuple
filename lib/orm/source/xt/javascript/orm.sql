@@ -54,6 +54,7 @@ select xt.install_js('XT','Orm','xtuple', $$
       oldJson,
       oldOrm,
       isExtension,
+      isRest = newJson.isRest ? newJson.isRest : false,
       sequence,
       nameSpace = newJson.nameSpace,
       type = newJson.type,
@@ -78,12 +79,13 @@ select xt.install_js('XT','Orm','xtuple', $$
       if(oldOrm.isExtension !== isExtension) throw new Error("Can not change extension state for " + nameSpace + '.' + type);
       sql = 'update xt.orm set ' +
             ' orm_json = $1, ' +
-            ' orm_seq = $2 ' +
-            'where orm_id = $3';
-      plv8.execute(sql, [json, sequence, oldOrm.id]);
+            ' orm_seq = $2, ' +
+            ' orm_rest = $3 ' +
+            'where orm_id = $4';
+      plv8.execute(sql, [json, sequence, isRest, oldOrm.id]);
     } else {
-      sql = 'insert into xt.orm ( orm_namespace, orm_type, orm_context, orm_json, orm_seq, orm_ext ) values ($1, $2, $3, $4, $5, $6)';
-      plv8.execute(sql, [nameSpace, type, context, json, sequence, isExtension]);
+      sql = 'insert into xt.orm ( orm_namespace, orm_type, orm_context, orm_json, orm_seq, orm_ext, orm_rest ) values ($1, $2, $3, $4, $5, $6, $7)';
+      plv8.execute(sql, [nameSpace, type, context, json, sequence, isExtension, isRest]);
     }
   };
 
@@ -105,7 +107,7 @@ select xt.install_js('XT','Orm','xtuple', $$
             "where (classid='pg_rewrite'::regclass) " +
             " and (refclassid='pg_class'::regclass) " +
             ' and (refobjid::regclass::text in ($1,$2)) ' +
-            " and (nspname || '.' || relname not in ($1,$2)) ";
+            " and (nspname || '.' || relname not in ($1,$2));";
     rec = plv8.execute(sql, [view, quoted]);
 
     /*  Loop through view dependencies */
@@ -243,8 +245,8 @@ select xt.install_js('XT','Orm','xtuple', $$
   */
   XT.Orm.createView = function (orm) {
     /* constants */
-    var SELECT = 'select {columns} from {table} where {conditions}',
-      cols = [], 
+    var SELECT = 'select {columns} from {table} where {conditions} {order}',
+      cols = [],
       tbls = [],
       tbl = 1 - 0,
       clauses = [],
@@ -253,7 +255,8 @@ select xt.install_js('XT','Orm','xtuple', $$
       query = '',
       base = orm,
       viewName = orm.nameSpace.decamelize() + '.' + orm.type.decamelize(),
-      processOrm;
+      processOrm,
+      res;
 
     // ..........................................................
     // METHODS
@@ -278,22 +281,31 @@ select xt.install_js('XT','Orm','xtuple', $$
         isVisible,
         value,
         conditions,
-        join;
+        join,
+        lockTable,
+        schemaName,
+        tableName,
+        pkey,
+        orderBy;
       for (i = 0; i < props.length; i++) {
         alias = props[i].name;
         if(DEBUG) plv8.elog(NOTICE, 'processing property ->', props[i].name);
         if(props[i].name === 'dataState') throw new Error("Can not use 'dataState' as a property name.");
 
         /* process attributes */
-        if(props[i].attr || (props[i].toOne && props[i].toOne.isNested === false)) {
-          if(DEBUG) plv8.elog(NOTICE, 'building attribute');
+        if (props[i].attr || props[i].toOne) {
+          if (DEBUG) plv8.elog(NOTICE, 'building attribute');
           attr = props[i].attr ? props[i].attr : props[i].toOne;
           isVisible = attr.value ? false : true;
-          if(!attr.type) throw new Error('No type was defined on property ' + props[i].name);
-          if(isVisible) {
+          if (!attr.type) throw new Error('No type was defined on property ' + props[i].name);
+          if (isVisible) {
             col = tblAlias + '.' + attr.column;
             col = col.concat(' as "', alias, '"');
-            cols.push(col);
+
+            /* handle the default non-nested case */
+            if (props[i].attr || props[i].toOne.isNested === undefined) {
+              cols.push(col);
+            }
           }
 
           /* handle fixed value */
@@ -304,7 +316,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         }
 
         /* process toOne  */
-        if(props[i].toOne && props[i].toOne.isNested !== false) {
+        if (props[i].toOne && props[i].toOne.isNested !== false) {
           toOne = props[i].toOne;
           table = base.nameSpace.decamelize() + '.' + toOne.type.decamelize();
           type = table.afterDot();
@@ -314,30 +326,35 @@ select xt.install_js('XT','Orm','xtuple', $$
           if(DEBUG) { plv8.elog(NOTICE, 'building toOne'); }
           conditions = '"' + type + '"."' + inverse + '" = ' + tblAlias + '.' + toOne.column;
 
-          /* build select */
-          col = col.replace('{select}',
-             SELECT.replace('{columns}', '"' + type + '"')
-                   .replace('{table}',  table)
-                   .replace('{conditions}', conditions))
-                   .replace('{alias}', alias);
-          cols.push(col);
+          /* handle the default non-nested case */
+          if (props[i].toOne.isNested === true) {
+            col = col.replace('{select}',
+               SELECT.replace('{columns}', '"' + type + '"')
+                     .replace('{table}',  table)
+                     .replace('{conditions}', conditions))
+                     .replace('{alias}', alias)
+                     .replace('{order}', '');
+            cols.push(col);
+          }
         }
 
         /* process toMany */
-        if(props[i].toMany) {
+        if (props[i].toMany) {
           if(DEBUG) plv8.elog(NOTICE, 'building toMany');
-         if(!props[i].toMany.type) throw new Error('No type was defined on property ' + props[i].name);
+         if (!props[i].toMany.type) throw new Error('No type was defined on property ' + props[i].name);
            toMany = props[i].toMany;
            table = base.nameSpace + '.' + toMany.type.decamelize();
            type = toMany.type.decamelize();
-           column = toMany.isNested ? type : XT.Orm.primaryKey(XT.Orm.fetch(base.nameSpace, toMany.type));
            iorm = XT.Orm.fetch(base.nameSpace, toMany.type);
-           col = 'array({select}) as "{alias}"';
+           pkey = XT.Orm.primaryKey(iorm);
+           column = toMany.isNested ? type : pkey;
+           col = 'array({select}) as "{alias}"',
+           orderBy = 'order by ' + pkey;
 
            /* handle inverse */
           inverse = toMany.inverse ? toMany.inverse.camelize() : 'id';
           ormp = XT.Orm.getProperty(iorm, inverse);
-          if(ormp && ormp.toOne && ormp.toOne.isNested) {
+          if (ormp && ormp.toOne && ormp.toOne.isNested) {
             conditions = toMany.column ? '(' + type + '."' + inverse + '").id = ' + tblAlias + '.' + toMany.column : 'true';
           } else {
             conditions = toMany.column ? type + '."' + inverse + '" = ' + tblAlias + '.' + toMany.column : 'true';
@@ -348,7 +365,8 @@ select xt.install_js('XT','Orm','xtuple', $$
              SELECT.replace('{columns}', column)
                    .replace('{table}', table)
                    .replace('{conditions}', conditions))
-                   .replace('{alias}', alias);
+                   .replace('{alias}', alias)
+                   .replace('{order}', orderBy);
           cols.push(col);
         }
       }
@@ -401,11 +419,6 @@ select xt.install_js('XT','Orm','xtuple', $$
       /* base orm */
       } else {
         if(DEBUG) plv8.elog(NOTICE, 'process base CRUD');
-
-       /* add static values */
-       cols.push("'" + orm.type + "' as \"type\"");
-       cols.push("'read' as \"dataState\"");
-       if (orm.lockable) { cols.push("null as \"lock\""); }
 
         /* table */
         clauses = clauses.concat(ormClauses);
@@ -468,5 +481,24 @@ select xt.install_js('XT','Orm','xtuple', $$
     query = 'grant all on {view} to xtrole'
             .replace('{view}', viewName);
     plv8.execute(query);
+
+    /* If applicable, add a trigger to the table to keep version number updated */
+    if (orm.isNestedOnly !== true &&
+       (orm.privileges && orm.privileges.all && orm.privileges.all.create !== false ||
+        orm.privileges && orm.privileges.all && orm.privileges.all.update !== false ||
+        orm.privileges && orm.privileges.all && orm.privileges.all.delete !== false)) {
+      query = 'select * from pg_tables where schemaname = $1 and tablename = $2';
+      lockTable = orm.lockTable || orm.table;
+      schemaName = lockTable.indexOf(".") === -1 ? 'public' : lockTable.beforeDot();
+      tableName = lockTable.indexOf(".") === -1 ? lockTable : lockTable.afterDot();
+      res = plv8.execute(query, [schemaName, tableName]);
+      if (res.length) {
+        query = 'drop trigger if exists {tableName}_did_change on {table};' +
+                'create trigger {tableName}_did_change after insert or update or delete on {table} for each row execute procedure xt.record_did_change();';
+        query =  query.replace(/{tableName}/g, tableName)
+                      .replace(/{table}/g, lockTable);
+        plv8.execute(query);
+      }
+    }
   };
 $$ );
