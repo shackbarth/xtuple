@@ -31,12 +31,18 @@ select xt.install_js('XM','DatabaseInformation','xtuple', $$
    @param {Object} settings
    @returns {Boolean}
   */
-  XM.DatabaseInformation.commitSettings = function(settings) {
-    var options = XM.DatabaseInformation.options.slice(0),
+  XM.DatabaseInformation.commitSettings = function(patches) {
+    var settings, options = XM.DatabaseInformation.options.slice(0),
         data = Object.create(XT.Data), metrics = {};
 
     /* check privileges */
     if(!data.checkPrivilege('ConfigDatabaseInfo')) throw new Error('Access Denied');
+
+    /* Compose our commit settings by applying the patch to what we already have */
+    settings = JSON.parse(XM.DatabaseInformation.settings());
+    if (!XT.jsonpatch.apply(settings, patches)) {
+      plv8.elog(NOTICE, 'Malformed patch document');
+    }
 
     /* remove read only settings */
     options.remove('Application');
