@@ -102,6 +102,7 @@
 \i xt/views/prjinfo.sql;
 \i xt/views/quheadinfo.sql;
 \i xt/views/quiteminfo.sql;
+\i xt/views/site.sql;
 \i xt/views/todoiteminfo.sql;
 \i xt/views/usr.sql;
 
@@ -138,6 +139,7 @@
 \i public/functions/geteffectivextuser.sql
 
 \i public/tables/comment.sql
+\i public/tables/docass.sql
 \i public/tables/grp.sql;
 \i public/tables/grppriv.sql;
 \i public/tables/itemsite.sql;

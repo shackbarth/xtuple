@@ -3,7 +3,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "Site",
-    "table": "site()",
+    "table": "xt.site",
     "isRest": true,
     "lockable": true,
     "idSequenceName": "warehous_warehous_id_seq",
@@ -193,7 +193,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "SiteListItem",
-    "table": "site()",
+    "table": "xt.site",
     "idSequenceName": "warehous_warehous_id_seq",
     "comment": "Site Info Map",
     "privileges": {
@@ -249,7 +249,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "SiteRelation",
-    "table": "site()",
+    "table": "xt.site",
     "idSequenceName": "warehous_warehous_id_seq",
     "comment": "Site Info Map",
     "privileges": {

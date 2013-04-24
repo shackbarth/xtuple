@@ -340,20 +340,53 @@ select xt.install_js('XT','Orm','xtuple', $$
 
         /* process attributes */
         if (prop.attr || prop.toOne) {
-          if (DEBUG) plv8.elog(NOTICE, 'building attribute');
           attr = prop.attr ? prop.attr : prop.toOne;
+          if (DEBUG) plv8.elog(NOTICE, 'building attribute', prop.name, attr.column);
           isVisible = attr.value ? false : true;
           if (!attr.type) throw new Error('No type was defined on property ' + prop.name);
           if (isVisible) {
             col = tblAlias + '.' + attr.column;
             col = col.concat(' as "', alias, '"');
 
-            /* If the column is obj_uuid and it's not there, create it
+            /* If the column is `obj_uuid` and it's not there, create it.
                This violates our rule to not touch the source schema, but otherwise
-               we risk lots of bugs, or a big performance hit on all the joins that
-               would be required if uuid where in a single table */
+               we risk a big performance hit on all the joins that
+               would be required if uuid where in a single table */ 
             if (attr.column  === "obj_uuid") {
-              
+              query = "select count(a.attname) " +
+                      "from pg_class c, pg_namespace n, pg_attribute a, pg_type t " +
+                      "where c.relname = $1 " +
+                      " and n.nspname = $2 " +
+                      " and n.oid = c.relnamespace " +
+                      " and a.attnum > 0 " +
+                      " and a.attname = 'obj_uuid' " +
+                      " and a.attrelid = c.oid " +
+                      " and a.atttypid = t.oid; ";
+              schemaName = orm.table.indexOf(".") === -1 ? 'public' : orm.table.beforeDot();
+              tableName = orm.table.indexOf(".") === -1 ? orm.table : orm.table.afterDot();
+              if (DEBUG) { plv8.elog(NOTICE, 'Check obj_uuid query', query, tableName, schemaName); }
+              res = plv8.execute(query, [tableName, schemaName]);
+
+              if (!res[0].count) {
+                /* make sure this isn't a view */
+                query = "select relkind " +
+                        "from pg_class c, pg_namespace n " +
+                        "where c.relname = $1 " +
+                        " and n.nspname = $2 " +
+                        " and n.oid = c.relnamespace;"
+                if (DEBUG) { plv8.elog(NOTICE, 'Check obj table query', query, tableName, schemaName); }
+                res = plv8.execute(query, [tableName, schemaName]);
+                if (res[0].relkind !== 'r') {
+                  plv8.elog(ERROR, "Can not add obj_uuid field because {table} is not a table.".replace("{table}", orm.table));
+                }
+
+                /* looks good. add the column */
+                query = "alter table {table} add column obj_uuid uuid default xt.generateUUID()::uuid;".replace("{table}", orm.table);
+                if (DEBUG) { plv8.elog(NOTICE, 'Add obj_uuid:', query); }
+                plv8.execute(query);
+                query = "comment on column {table}.obj_uuid is 'Added by xt the web-mobile package.'".replace("{table}", orm.table);
+                plv8.execute(query);
+              }
             }
 
             
@@ -379,8 +412,8 @@ select xt.install_js('XT','Orm','xtuple', $$
           type = table.afterDot();
           inverse = toOne.inverse ? toOne.inverse.camelize() : 'id';
           col = '({select}) as "{alias}"';
-          if(!type) { throw new Error('No type was defined on property ' + prop.name); }
-          if(DEBUG) { plv8.elog(NOTICE, 'building toOne'); }
+          if (!type) { throw new Error('No type was defined on property ' + prop.name); }
+          if (DEBUG) { plv8.elog(NOTICE, 'building toOne'); }
           conditions = '"' + type + '"."' + inverse + '" = ' + tblAlias + '.' + toOne.column;
 
           /* handle the nested and natural key cases */
@@ -540,6 +573,9 @@ select xt.install_js('XT','Orm','xtuple', $$
     plv8.execute(query);
 
     /* clean up triggers that we may or may not want to be there */
+    lockTable = orm.lockTable || orm.table;
+    schemaName = lockTable.indexOf(".") === -1 ? 'public' : lockTable.beforeDot();
+    tableName = lockTable.indexOf(".") === -1 ? lockTable : lockTable.afterDot();
     query = 'drop trigger if exists {tableName}_did_change on {table};'
     query =  query.replace(/{tableName}/g, tableName)
                   .replace(/{table}/g, lockTable);
@@ -548,9 +584,6 @@ select xt.install_js('XT','Orm','xtuple', $$
     /* If applicable, add a trigger to the table to keep version number updated */
     if (orm.lockable) {
       query = 'select * from pg_tables where schemaname = $1 and tablename = $2';
-      lockTable = orm.lockTable || orm.table;
-      schemaName = lockTable.indexOf(".") === -1 ? 'public' : lockTable.beforeDot();
-      tableName = lockTable.indexOf(".") === -1 ? lockTable : lockTable.afterDot();
       res = plv8.execute(query, [schemaName, tableName]);
       if (res.length) {
         query = 'create trigger {tableName}_did_change after insert or update or delete on {table} for each row execute procedure xt.record_did_change();';
