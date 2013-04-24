@@ -417,7 +417,7 @@ white:true*/
     documentKey: 'name'
 
   });
-  
+
   /**
     @class
 
@@ -705,7 +705,7 @@ white:true*/
     model: XM.CustomerType
 
   });
-  
+
   /**
     @class
 
@@ -753,7 +753,7 @@ white:true*/
     model: XM.ShipZone
 
   });
-  
+
   /**
     @class
 
