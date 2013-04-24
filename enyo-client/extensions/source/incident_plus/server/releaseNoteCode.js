@@ -11,7 +11,7 @@ var getReleaseNotes = function (projectId, versionName) {
         recordType: "XM.IncidentListItem",
         parameters: [
           {attribute: "project", operator:"", isCharacteristic: false, value: project},
-          {attribute: "foundIn", operator:"", isCharacteristic: false, value: version}
+          {attribute: "fixedIn", operator:"", isCharacteristic: false, value: version}
         ]
       },
       success: function (results) {
