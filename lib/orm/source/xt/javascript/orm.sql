@@ -348,7 +348,16 @@ select xt.install_js('XT','Orm','xtuple', $$
             col = tblAlias + '.' + attr.column;
             col = col.concat(' as "', alias, '"');
 
-            /* handle the value */
+            /* If the column is obj_uuid and it's not there, create it
+               This violates our rule to not touch the source schema, but otherwise
+               we risk lots of bugs, or a big performance hit on all the joins that
+               would be required if uuid where in a single table */
+            if (attr.column  === "obj_uuid") {
+              
+            }
+
+            
+            /* handle the attribute */
             if (prop.attr ||
                (prop.toOne.isNested === undefined && !nkey)) {
               cols.push(col);
@@ -530,19 +539,21 @@ select xt.install_js('XT','Orm','xtuple', $$
             .replace('{view}', viewName);
     plv8.execute(query);
 
+    /* clean up triggers that we may or may not want to be there */
+    query = 'drop trigger if exists {tableName}_did_change on {table};'
+    query =  query.replace(/{tableName}/g, tableName)
+                  .replace(/{table}/g, lockTable);
+    plv8.execute(query);
+        
     /* If applicable, add a trigger to the table to keep version number updated */
-    if (orm.isNestedOnly !== true &&
-       (orm.privileges && orm.privileges.all && orm.privileges.all.create !== false ||
-        orm.privileges && orm.privileges.all && orm.privileges.all.update !== false ||
-        orm.privileges && orm.privileges.all && orm.privileges.all.delete !== false)) {
+    if (orm.lockable) {
       query = 'select * from pg_tables where schemaname = $1 and tablename = $2';
       lockTable = orm.lockTable || orm.table;
       schemaName = lockTable.indexOf(".") === -1 ? 'public' : lockTable.beforeDot();
       tableName = lockTable.indexOf(".") === -1 ? lockTable : lockTable.afterDot();
       res = plv8.execute(query, [schemaName, tableName]);
       if (res.length) {
-        query = 'drop trigger if exists {tableName}_did_change on {table};' +
-                'create trigger {tableName}_did_change after insert or update or delete on {table} for each row execute procedure xt.record_did_change();';
+        query = 'create trigger {tableName}_did_change after insert or update or delete on {table} for each row execute procedure xt.record_did_change();';
         query =  query.replace(/{tableName}/g, tableName)
                       .replace(/{table}/g, lockTable);
         plv8.execute(query);
