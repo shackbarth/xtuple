@@ -11,8 +11,7 @@ Critical deployment changes
   will have to put this file back in yourself. You can fill it with any long string you want.
 * You need to implement npm changes, config.js changes, and the deletion of a global table as documented
   [here](https://github.com/xtuple/xtuple/pull/224).
-* You will need to make a [change to plv8](https://github.com/davecramer/plv8-xt/commit/bb40a1ecd33752585d9a622e01aeadbd63436a83)
-  for the app to work correctly.
+* We are now running on [our own fork of plv8](https://github.com/xtuple/plv8).
 
 
 Features and bugs

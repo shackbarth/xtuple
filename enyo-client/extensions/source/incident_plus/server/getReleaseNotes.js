@@ -24,8 +24,9 @@ var fs = require('fs');
   // file at the end of every sprint.
   var version = JSON.parse(fs.readFileSync("../../../../../package.json")).version;
   var pertinentProjectId = 675; // TODO: abstract this
+  var versionPrefix = "xt-mobile "; // TODO: abstract this
 
   console.log(code.toString());
-  console.log("getReleaseNotes(" + pertinentProjectId + ",\"" + version + "\");");
+  console.log("getReleaseNotes(" + pertinentProjectId + ",\"" + versionPrefix + version + "\");");
 
 }());
