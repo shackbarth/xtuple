@@ -35,6 +35,8 @@ select xt.install_js('XM','Model','xtuple', $$
         seq = map.orderSequence,
         sql = 'select fetchNextNumber($1) as result';
 
+    /**  if the order sequence name in orderseq is not found in the ORM
+      throw an error */
     if (seq) {
       return plv8.execute(sql, [seq])[0].result;
     } else {
