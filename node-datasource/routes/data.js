@@ -131,7 +131,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       buffer,
       binaryData,
       options;
-    
+
     // We need to convert js binary into pg hex (see the file route for
     // the opposite conversion). See issue #18661
     if (binaryField) {
@@ -143,7 +143,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     if (payload && payload.databaseType === 'global') {
       // Run this query against the global database.
-      options = createGlobalOptions(payload, session.passport.user.id, callback);
+      options = createGlobalOptions(payload, session.passport.user.id, callback, false);
       XT.dataSource.request(null, 'post', payload, options);
 
     } else {

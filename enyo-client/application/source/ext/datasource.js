@@ -39,9 +39,9 @@ white:true*/
             }
             return;
           }
-          
+
           dataHash = response.data;
-          
+
           // Handle no data on a single record retrieve as error
           if (method === "get" && options.id &&
             _.isEmpty(dataHash.data)) {
@@ -66,7 +66,10 @@ white:true*/
                 attrs = dataHash.patches;
               }
             } else {
-              attrs = dataHash.data;
+              // TODO: unify the response formatting on the server side
+              // notably, data from the global DB come back is response.data
+              // and not response.data.data
+              attrs = dataHash.data ? dataHash.data : dataHash;
             }
             if (obj instanceof Backbone.Model) {
               obj.etag = dataHash.etag;
