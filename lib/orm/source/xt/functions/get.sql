@@ -54,7 +54,7 @@ select xt.get('{
 select xt.get($${
   "username": "admin",
   "nameSpace":"XM",
-  "type":"ContactRelation",
+  "type":"ContactListItem",
   "query":{
     "parameters":[
       {
@@ -73,7 +73,7 @@ select xt.get($${
 select xt.get($${
   "username": "admin",
   "nameSpace":"XM",
-  "type":"ContactRelation",
+  "type":"ContactListItem",
   "query":{
     "parameters":[
       {

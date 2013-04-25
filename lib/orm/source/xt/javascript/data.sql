@@ -1026,6 +1026,9 @@ select xt.install_js('XT','Data','xtuple', $$
       for (i = 0; i < ret.data.length; i++) {
         ret.data[i] = this.decrypt(nameSpace, type, ret.data[i]);
       }
+
+      this.removeKeys(nameSpace, type, ret.data);
+      
       return ret;
     },
 
@@ -1157,32 +1160,41 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-      Remove primary and foreign keys from the data so it looks like a pure JavaScript object.
-      Only removes the primary key if a natural key has been specified.
-    **/
+      Remove primary and foreign keys from the data so it is represented as a pure JavaScript object.
+      Only removes the primary key if a natural key has been specified in the ORM.
+
+      @param {String} Namespace
+      @param {String} Type
+      @param {Object|Array} Data
+    */
     removeKeys: function (nameSpace, type, data) {
+      if (XT.typeOf(data) !== "array") { data = [data]; }
       var orm = XT.Orm.fetch(nameSpace, type),
         pkey = XT.Orm.primaryKey(orm),
         nkey = XT.Orm.naturalKey(orm),
         props = orm.properties,
+        item,
         prop,
         val,
+        c,
         i,
         n;
-      if (nkey) { delete data[pkey]; }
-      for (i = 0; i < props.length; i++) {
-        prop = props[i];
-        if (prop.toOne && prop.toOne.isNested && data[prop.name]) {
-          this.removeKeys(nameSpace, prop.toOne.type, data[prop.name]);
-        } else if (prop.toMany && prop.toMany.isNested) {
-          for (n = 0; n < data[prop.name].length; n++) {
-            val = data[prop.name][n];
-            delete val[prop.toMany.inverse];
-            this.removeKeys(nameSpace, prop.toMany.type, val);
+      for (c = 0; c < data.length; c++) {
+        item = data[c];
+        if (nkey) { delete item[pkey]; }
+        for (i = 0; i < props.length; i++) {
+          prop = props[i];
+          if (prop.toOne && prop.toOne.isNested && item[prop.name]) {
+            this.removeKeys(nameSpace, prop.toOne.type, item[prop.name]);
+          } else if (prop.toMany && prop.toMany.isNested) {
+            for (n = 0; n < item[prop.name].length; n++) {
+              val = item[prop.name][n];
+              delete val[prop.toMany.inverse];
+              this.removeKeys(nameSpace, prop.toMany.type, val);
+            }
           }
         }
       }
-      
     },
 
     /**
