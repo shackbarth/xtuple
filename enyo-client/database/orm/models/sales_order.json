@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "SalesOrder",
     "table": "xt.coheadinfo",
+    "idSequenceName": "cohead_cohead_id_seq",
     "lockable": true,
     "lockTable": "cohead",
     "comment": "Sales Order Map",
@@ -576,6 +577,7 @@
     "nameSpace": "XM",
     "type": "SalesOrderAccount",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Sales Order Account Map",
     "privileges": {
       "all": {
@@ -649,6 +651,7 @@
     "nameSpace": "XM",
     "type": "SalesOrderComment",
     "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
     "comment": "Sales Order Comment Map",
     "privileges": {
       "all": {
@@ -740,6 +743,7 @@
     "nameSpace": "XM",
     "type": "SalesOrderContact",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Sales Order Contact Map",
     "privileges": {
       "all": {
@@ -813,6 +817,7 @@
     "nameSpace": "XM",
     "type": "SalesOrderFile",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Sales Order File Map",
     "privileges": {
       "all": {
@@ -886,6 +891,7 @@
     "nameSpace": "XM",
     "type": "SalesOrderItem",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Sales Order Item Map",
     "privileges": {
       "all": {
@@ -959,6 +965,7 @@
     "nameSpace": "XM",
     "type": "SalesOrderLine",
     "table": "xt.coiteminfo",
+    "idSequenceName": "coitem_coitem_id_seq",
     "comment": "Sales Order Line Item Map",
     "privileges": {
       "all": {
@@ -1207,6 +1214,7 @@
     "nameSpace": "XM",
     "type": "SalesOrderLineCharacteristic",
     "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
     "comment": "Sales Order Line Characteristic Map",
     "privileges": {
       "all": {
@@ -1279,6 +1287,7 @@
     "nameSpace": "XM",
     "type": "SalesOrderLineComment",
     "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
     "comment": "Sales Order Line Comment Map",
     "privileges": {
       "all": {
@@ -1531,6 +1540,7 @@
     "nameSpace": "XM",
     "type": "SalesOrderUrl",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Sales Order Url Map",
     "privileges": {
       "all": {

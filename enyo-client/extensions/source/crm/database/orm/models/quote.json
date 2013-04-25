@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "QuoteIncident",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Quote Incident Map",
     "privileges": {
       "all": {
@@ -77,6 +78,7 @@
     "nameSpace": "XM",
     "type": "QuoteOpportunity",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Quote Opportunity Map",
     "privileges": {
       "all": {
@@ -150,6 +152,7 @@
     "nameSpace": "XM",
     "type": "QuoteToDo",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Quote ToDo Map",
     "privileges": {
       "all": {

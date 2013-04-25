@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Currency",
     "table": "curr_symbol",
+    "idSequenceName": "curr_symbol_curr_id_seq",
     "lockable": true,
     "comment": "Currency Map",
     "privileges": {
@@ -69,6 +70,7 @@
     "nameSpace": "XM",
     "type": "CurrencyRate",
     "table": "curr_rate",
+    "idSequenceName": "curr_rate_curr_id_seq",
     "comment": "Currency Map",
     "privileges": {
       "all": {

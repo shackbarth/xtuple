@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "ItemCustomer",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Item Customer Map",
     "privileges": {
       "all": {

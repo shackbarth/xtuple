@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "IncidentCustomer",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Customer Map",
     "privileges": {
       "all": {

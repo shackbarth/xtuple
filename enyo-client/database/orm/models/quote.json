@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Quote",
     "table": "xt.quheadinfo",
+    "idSequenceName": "quhead_quhead_id_seq",
     "lockable": true,
     "lockTable": "quhead",
     "comment": "Quote Map",
@@ -548,6 +549,7 @@
     "nameSpace": "XM",
     "type": "QuoteAccount",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Quote Account Map",
     "canUpdate": false,
     "properties": [
@@ -614,6 +616,7 @@
     "nameSpace": "XM",
     "type": "QuoteComment",
     "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
     "comment": "Quote Comment Map",
     "privileges": {
       "all": {
@@ -705,6 +708,7 @@
     "nameSpace": "XM",
     "type": "QuoteContact",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Quote Contact Map",
     "privileges": {
       "all": {
@@ -778,6 +782,7 @@
     "nameSpace": "XM",
     "type": "QuoteFile",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Quote File Map",
     "privileges": {
       "all": {
@@ -851,6 +856,7 @@
     "nameSpace": "XM",
     "type": "QuoteItem",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Quote Item Map",
     "privileges": {
       "all": {
@@ -924,6 +930,7 @@
     "nameSpace": "XM",
     "type": "QuoteLine",
     "table": "xt.quiteminfo",
+    "idSequenceName": "quitem_quitem_id_seq",
     "comment": "Quote Line Item Map",
     "privileges": {
       "all": {
@@ -1144,6 +1151,7 @@
     "nameSpace": "XM",
     "type": "QuoteLineCharacteristic",
     "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
     "comment": "Quote Line Characteristic Map",
     "privileges": {
       "all": {
@@ -1216,6 +1224,7 @@
     "nameSpace": "XM",
     "type": "QuoteLineComment",
     "table": "comment",
+    "idSequenceName": "comment_comment__id_seq",
     "comment": "Quote Line Comment Map",
     "privileges": {
       "all": {
@@ -1475,6 +1484,7 @@
     "nameSpace": "XM",
     "type": "QuoteUrl",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Quote Url Map",
     "privileges": {
       "all": {

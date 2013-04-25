@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "CostCategory",
     "table": "costcat",
+    "idSequenceName": "costcat_costcat_id_seq",
     "lockable": true,
     "comment": "Cost Category Map",
     "privileges": {
@@ -46,6 +47,7 @@
     "nameSpace": "XM",
     "type": "ItemSite",
     "table": "itemsite",
+    "idSequenceName": "itemsite_itemsite_id_seq",
     "isRest": true,
     "lockable": true,
     "comment": "Itemsite Map",
@@ -140,6 +142,7 @@
     "nameSpace": "XM",
     "type": "ItemSiteComment",
     "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
     "comment": "Item Site Comment Map",
     "privileges": {
       "all": {
@@ -394,6 +397,7 @@
     "nameSpace": "XM",
     "type": "PlannerCode",
     "table": "plancode",
+    "idSequenceName": "plancode_plancode_id_seq",
     "lockable": true,
     "comment": "Planner Code Map",
     "privileges": {

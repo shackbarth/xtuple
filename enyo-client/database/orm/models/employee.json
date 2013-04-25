@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Employee",
     "table": "emp",
+    "idSequenceName": "emp_emp_id_seq",
     "isRest": true,
     "lockable": true,
     "orderSequence": "CRMAccountNumber",
@@ -218,6 +219,7 @@
     "nameSpace": "XM",
     "type": "EmployeeComment",
     "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
     "comment": "Employee Comment Map",
     "privileges": {
       "all": {
@@ -310,6 +312,7 @@
     "nameSpace": "XM",
     "type": "EmployeeCharacteristic",
     "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
     "comment": "Employee Characteristic Map",
     "privileges": {
       "all": {

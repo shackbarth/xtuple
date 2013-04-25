@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Address",
     "table": "addr",
+    "idSequenceName": "addr_addr_id_seq",
     "isRest": true,
     "lockable": true,
     "orderSequence": "AddressNumber",
@@ -123,6 +124,7 @@
     "nameSpace": "XM",
     "type": "AddressCharacteristic",
     "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
     "comment": "Address Characteristic Map",
     "privileges": {
       "all": {
@@ -187,6 +189,7 @@
     "nameSpace": "XM",
     "type": "AddressComment",
     "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
     "comment": "Address Comment Map",
     "privileges": {
       "all": {
@@ -278,6 +281,7 @@
     "nameSpace": "XM",
     "type": "AddressInfo",
     "table": "addr",
+    "idSequenceName": "addr_addr_id_seq",
     "lockable": true,
     "orderSequence": "AddressNumber",
     "comment": "Address Info Map",
@@ -370,6 +374,7 @@
     "nameSpace": "XM",
     "type": "Country",
     "table": "country",
+    "idSequenceName": "country_country_id_seq",
     "isRest": true,
     "lockable": true,
     "comment": "Country Map",
@@ -444,6 +449,7 @@
     "nameSpace": "XM",
     "type": "State",
     "table": "state",
+    "idSequenceName": "state_state_id_seq",
     "isRest": true,
     "lockable": true,
     "comment": "State Map",

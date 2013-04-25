@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Language",
     "table": "lang",
+    "idSequenceName": "lang_lang_id_seq",
     "isRest": true,
     "comment": "Language Map",
     "privileges": {
@@ -94,6 +95,7 @@
     "nameSpace": "XM",
     "type": "Locale",
     "table": "locale",
+    "idSequenceName": "locale_locale_id_seq",
     "comment": "Locale Map",
     "privileges": {
       "all": {
@@ -422,6 +424,7 @@
     "nameSpace": "XM",
     "type": "UserAccountPrivilegeAssignment",
     "table": "usrpriv",
+    "idSequenceName": "usrpriv_usrpriv_id_seq",
     "comment": "User Account Privilege Assignment Map",
     "privileges": {
       "all": {
@@ -473,6 +476,7 @@
     "nameSpace": "XM",
     "type": "UserAccountRole",
     "table": "grp",
+    "idSequenceName": "grp_grp_id_seq",
     "comment": "User Account Role Map",
     "privileges": {
       "all": {
@@ -574,6 +578,7 @@
     "nameSpace": "XM",
     "type": "UserAccountRolePrivilegeAssignment",
     "table": "grppriv",
+    "idSequenceName": "grppriv_grppriv_id_seq",
     "comment": "User Account Role Privilege Assignment Map",
     "privileges": {
       "all": {
@@ -623,6 +628,7 @@
     "nameSpace": "XM",
     "type": "UserAccountUserAccountRoleAssignment",
     "table": "usrgrp",
+    "idSequenceName": "usrgrp_usrgrp_id_seq",
     "comment": "User User Role Assignment Map",
     "privileges": {
       "all": {

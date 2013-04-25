@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Opportunity",
     "table": "ophead",
+    "idSequenceName": "ophead_ophead_id_seq",
     "lockable": true,
     "orderSequence": "OpportunityNumber",
     "comment": "Opportunity Map",
@@ -261,6 +262,7 @@
     "nameSpace": "XM",
     "type": "OpportunityAccount",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity Account Map",
     "canUpdate": false,
     "properties": [
@@ -327,6 +329,7 @@
     "nameSpace": "XM",
     "type": "OpportunityCharacteristic",
     "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
     "comment": "Opportunity Characteristic Map",
     "privileges": {
       "all": {
@@ -457,6 +460,7 @@
     "nameSpace": "XM",
     "type": "OpportunityComment",
     "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
     "comment": "Opportunity Comment Map",
     "privileges": {
       "all": {
@@ -549,6 +553,7 @@
     "nameSpace": "XM",
     "type": "OpportunityContact",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "privileges": {
       "all": {
         "create": true,
@@ -621,6 +626,7 @@
     "nameSpace": "XM",
     "type": "OpportunityFile",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity File Map",
     "privileges": {
       "all": {
@@ -955,6 +961,7 @@
     "nameSpace": "XM",
     "type": "OpportunityItem",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity Item Map",
     "privileges": {
       "all": {
@@ -1028,6 +1035,7 @@
     "nameSpace": "XM",
     "type": "OpportunityOpportunity",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity Item Map",
     "privileges": {
       "all": {
@@ -1101,6 +1109,7 @@
     "nameSpace": "XM",
     "type": "OpportunitySource",
     "table": "opsource",
+    "idSequenceName": "opsource_opsource_id_seq",
     "lockable": true,
     "comment": "Opportunity Source Map",
     "privileges": {
@@ -1143,6 +1152,7 @@
     "nameSpace": "XM",
     "type": "OpportunityStage",
     "table": "opstage",
+    "idSequenceName": "opstage_opstage_id_seq",
     "lockable": true,
     "comment": "Opportunity Stage Map",
     "privileges": {
@@ -1193,6 +1203,7 @@
     "nameSpace": "XM",
     "type": "OpportunityType",
     "table": "optype",
+    "idSequenceName": "optype_optype_id_seq",
     "lockable": true,
     "comment": "Opportunity Type Map",
     "privileges": {
@@ -1235,6 +1246,7 @@
     "nameSpace": "XM",
     "type": "OpportunityUrl",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity Url Map",
     "privileges": {
       "all": {

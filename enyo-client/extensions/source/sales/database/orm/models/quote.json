@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "QuoteCustomer",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Quote Customer Map",
     "privileges": {
       "all": {

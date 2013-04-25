@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "ToDo",
     "table": "todoitem",
+    "idSequenceName": "todoitem_todoitem_id_seq",
     "isRest": true,
     "lockable": true,
     "comment": "ToDo Map",
@@ -229,6 +230,7 @@
     "nameSpace": "XM",
     "type": "ToDoAccount",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo Account Map",
     "privileges": {
       "all": {
@@ -302,6 +304,7 @@
     "nameSpace": "XM",
     "type": "ToDoAlarm",
     "table": "alarm",
+    "idSequenceName": "alarm_alarm_id_seq",
     "orderSequence": "AlarmNumber",
     "comment": "ToDo Alarm Map",
     "privileges": {
@@ -416,6 +419,7 @@
     "nameSpace": "XM",
     "type": "ToDoComment",
     "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
     "comment": "ToDo Comment Map",
     "privileges": {
       "all": {
@@ -508,6 +512,7 @@
     "nameSpace": "XM",
     "type": "ToDoContact",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo Contact Map",
     "privileges": {
       "all": {
@@ -581,6 +586,7 @@
     "nameSpace": "XM",
     "type": "ToDoFile",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo File Map",
     "privileges": {
       "all": {
@@ -915,6 +921,7 @@
     "nameSpace": "XM",
     "type": "ToDoItem",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo Item Map",
     "privileges": {
       "all": {
@@ -988,6 +995,7 @@
     "nameSpace": "XM",
     "type": "ToDoRecurrence",
     "table": "recur",
+    "idSequenceName": "recur_recur_id_seq",
     "comment": "To Do Recurrence Map",
     "privileges": {
       "all": {
@@ -1073,6 +1081,7 @@
     "nameSpace": "XM",
     "type": "ToDoToDo",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo ToDo Map",
     "privileges": {
       "all": {
@@ -1146,6 +1155,7 @@
     "nameSpace": "XM",
     "type": "ToDoUrl",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo Url Map",
     "privileges": {
       "all": {

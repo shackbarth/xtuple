@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Characteristic",
     "table": "char",
+    "idSequenceName": "char_char_id_seq",
     "lockable": true,
     "comment": "Characteristic Map",
     "privileges": {
@@ -123,6 +124,7 @@
     "nameSpace": "XM",
     "type": "CharacteristicOption",
     "table": "charopt",
+    "idSequenceName": "charopt_charopt_id_seq",
     "comment": "Characteristic Option Map",
     "privileges": {
       "all": {

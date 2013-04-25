@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "QuoteProject",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Quote Project Map",
     "privileges": {
       "all": {

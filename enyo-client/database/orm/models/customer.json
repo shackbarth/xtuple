@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Customer",
     "table": "custinfo",
+    "idSequenceName": "cust_cust_id_seq",
     "isRest": true,
     "lockable": true,
     "orderSequence": "CRMAccountNumber",
@@ -340,6 +341,7 @@
     "nameSpace": "XM",
     "type": "CustomerCharacteristic",
     "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
     "comment": "Customer Characteristic Map",
     "privileges": {
       "all": {
@@ -405,6 +407,7 @@
     "nameSpace": "XM",
     "type": "CustomerComment",
     "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
     "comment": "Customer Comment Map",
     "canDelete": false,
     "privileges": {
@@ -498,6 +501,7 @@
     "nameSpace": "XM",
     "type": "CustomerTaxRegistration",
     "table": "taxreg",
+    "idSequenceName": "taxreg_taxreg_id_seq",
     "comment": "Tax Registration Map",
     "privileges": {
       "all": {
@@ -591,6 +595,7 @@
     "nameSpace": "XM",
     "type": "CustomerShipto",
     "table": "shiptoinfo",
+    "idSequenceName": "shipto_shipto_id_seq",
     "comment": "Customer Shipto Map",
     "privileges": {
       "all": {
@@ -733,6 +738,7 @@
     "nameSpace": "XM",
     "type": "CustomerAccount",
     "table": "xt.cust_doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Customer Account Map",
     "privileges": {
       "all": {
@@ -798,6 +804,7 @@
     "nameSpace": "XM",
     "type": "CustomerContact",
     "table": "xt.cust_doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Customer Contact Map",
     "privileges": {
       "all": {
@@ -863,6 +870,7 @@
     "nameSpace": "XM",
     "type": "CustomerFile",
     "table": "xt.cust_doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Customer File Map",
     "privileges": {
       "all": {
@@ -928,6 +936,7 @@
     "nameSpace": "XM",
     "type": "CustomerItem",
     "table": "xt.cust_doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Customer Item Map",
     "privileges": {
       "all": {
@@ -993,6 +1002,7 @@
     "nameSpace": "XM",
     "type": "CustomerUrl",
     "table": "xt.cust_doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Customer Url Map",
     "privileges": {
       "all": {
@@ -1058,6 +1068,7 @@
     "nameSpace": "XM",
     "type": "CustomerCustomer",
     "table": "xt.cust_doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Customer Customer Map",
     "privileges": {
       "all": {
@@ -1250,6 +1261,7 @@
     "nameSpace": "XM",
     "type": "CustomerType",
     "table": "custtype",
+    "idSequenceName": "custtype_custtype_id_seq",
     "lockable": true,
     "comment": "Vendor Type Map",
     "privileges": {
@@ -1471,6 +1483,7 @@
     "nameSpace": "XM",
     "type": "ShipCharge",
     "table": "shipchrg",
+    "idSequenceName": "shpchrg_shpchrg_id_seq",
     "lockable": true,
     "comment": "Ship Charge Map",
     "privileges": {
@@ -1520,6 +1533,7 @@
     "nameSpace": "XM",
     "type": "ShipVia",
     "table": "shipvia",
+    "idSequenceName": "shipvia_shipvia_id_seq",
     "lockable": true,
     "comment": "Ship Via Map",
     "privileges": {
@@ -1562,6 +1576,7 @@
     "nameSpace": "XM",
     "type": "ShipZone",
     "table": "shipzone",
+    "idSequenceName": "shipzone_ship_zone_id_seq",
     "lockable": true,
     "comment": "Ship Zone Map",
     "privileges": {
@@ -1604,6 +1619,7 @@
     "nameSpace": "XM",
     "type": "CustomerGroup",
     "table": "custgrp",
+    "idSequenceName": "custgrp_custgrp_id_seq",
     "lockable": true,
     "comment": "Customer Group Map",
     "priveleges": {
@@ -1655,6 +1671,7 @@
     "nameSpace": "XM",
     "type": "CustomerGroupCustomer",
     "table": "custgrpitem",
+    "idSequenceName": "custgrpitem_custgrpitem_id_seq",
     "comment": "Customer Group Customer Map",
     "properties": [
       {

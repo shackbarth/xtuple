@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Site",
     "table": "xt.site",
+    "idSequenceName": "warehous_warehous_id_seq",
     "isRest": true,
     "lockable": true,
     "comment": "Site Map",
@@ -108,6 +109,7 @@
     "nameSpace": "XM",
     "type": "SiteComment",
     "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
     "comment": "Site Comment Map",
     "privileges": {
       "all": {
@@ -310,6 +312,7 @@
     "nameSpace": "XM",
     "type": "SiteType",
     "table": "sitetype",
+    "idSequenceName": "sitetype_sitetype_id_seq",
     "lockable": true,
     "comment": "Site Type Map",
     "privileges": {

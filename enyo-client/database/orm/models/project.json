@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Project",
     "table": "prj",
+    "idSequenceName": "prj_prj_id_seq",
     "isRest": true,
     "lockable": true,
     "comment": "Project Map",
@@ -217,6 +218,7 @@
     "nameSpace": "XM",
     "type": "ProjectAccount",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Project Account Map",
     "privileges": {
       "all": {
@@ -290,6 +292,7 @@
     "nameSpace": "XM",
     "type": "ProjectComment",
     "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
     "comment": "Project Comment Map",
     "privileges": {
       "all": {
@@ -382,6 +385,7 @@
     "nameSpace": "XM",
     "type": "ProjectContact",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Project Contact Map",
     "privileges": {
       "all": {
@@ -455,6 +459,7 @@
     "nameSpace": "XM",
     "type": "ProjectFile",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Project File Map",
     "privileges": {
       "all": {
@@ -787,6 +792,7 @@
     "nameSpace": "XM",
     "type": "ProjectItem",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Project Item Map",
     "privileges": {
       "all": {
@@ -860,6 +866,7 @@
     "nameSpace": "XM",
     "type": "ProjectProject",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Project Project Map",
     "privileges": {
       "all": {
@@ -933,6 +940,7 @@
     "nameSpace": "XM",
     "type": "ProjectRecurrence",
     "table": "recur",
+    "idSequenceName": "recur_recur_id_seq",
     "comment": "Project Recurrence Map",
     "privileges": {
       "all": {
@@ -1018,6 +1026,7 @@
     "nameSpace": "XM",
     "type": "ProjectTask",
     "table": "prjtask",
+    "idSequenceName": "prjtask_prjtask_id_seq",
     "comment": "Project Task Map",
     "privileges": {
       "all": {
@@ -1386,6 +1395,7 @@
     "nameSpace": "XM",
     "type": "ProjectTaskAlarm",
     "table": "alarm",
+    "idSequenceName": "alarm_alarm_id_seq",
     "orderSequence": "AlarmNumber",
     "comment": "Project Task Alarm Map",
     "privileges": {
@@ -1500,6 +1510,7 @@
     "nameSpace": "XM",
     "type": "ProjectTaskComment",
     "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
     "comment": "Project Task Comment Map",
     "privileges": {
       "all": {
@@ -1592,6 +1603,7 @@
     "nameSpace": "XM",
     "type": "ProjectUrl",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Project Url Map",
     "privileges": {
       "all": {

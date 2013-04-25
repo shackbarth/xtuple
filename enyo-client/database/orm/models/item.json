@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "ClassCode",
     "table": "classcode",
+    "idSequenceName": "classcode_classcode_id_seq",
     "lockable": true,
     "comment": "Class Code Map",
     "privileges": {
@@ -46,6 +47,7 @@
     "nameSpace": "XM",
     "type": "FreightClass",
     "table": "freightclass",
+    "idSequenceName": "freightclass_freightclass_id_seq",
     "lockable": true,
     "comment": "Freight Class Map",
     "privileges": {
@@ -88,6 +90,7 @@
     "nameSpace": "XM",
     "type": "Item",
     "table": "item",
+    "idSequenceName": "item_item_id_seq",
     "isRest": true,
     "lockable": true,
     "comment": "Item Map",
@@ -328,6 +331,7 @@
     "nameSpace": "XM",
     "type": "ItemAccount",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Item Account Map",
     "privileges": {
       "all": {
@@ -401,6 +405,7 @@
     "nameSpace": "XM",
     "type": "ItemAlias",
     "table": "itemalias",
+    "idSequenceName": "itemalias_itemalias_id_seq",
     "comment": "Item Alias Map",
     "privileges": {
       "all": {
@@ -478,6 +483,7 @@
     "nameSpace": "XM",
     "type": "ItemCharacteristic",
     "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
     "comment": "Item Characteristic Map",
     "privileges": {
       "all": {
@@ -557,6 +563,7 @@
     "nameSpace": "XM",
     "type": "ItemComment",
     "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
     "comment": "Item Comment Map",
     "privileges": {
       "all": {
@@ -649,6 +656,7 @@
     "nameSpace": "XM",
     "type": "ItemContact",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Item Contact Map",
     "privileges": {
       "all": {
@@ -722,6 +730,7 @@
     "nameSpace": "XM",
     "type": "ItemFile",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Item File Map",
     "privileges": {
       "all": {
@@ -1214,6 +1223,7 @@
     "nameSpace": "XM",
     "type": "ItemItem",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Item Item Map",
     "privileges": {
       "all": {
@@ -1287,6 +1297,7 @@
     "nameSpace": "XM",
     "type": "ItemUrl",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Item Url Map",
     "privileges": {
       "all": {
@@ -1360,6 +1371,7 @@
     "nameSpace": "XM",
     "type": "ProductCategory",
     "table": "prodcat",
+    "idSequenceName": "prodcat_prodcat_id_seq",
     "lockable": true,
     "comment": "Product Category Map",
     "privileges": {
@@ -1402,6 +1414,7 @@
     "nameSpace": "XM",
     "type": "Unit",
     "table": "uom",
+    "idSequenceName": "uom_uom_id_seq",
     "lockable": true,
     "comment": "Unit Map",
     "privileges": {

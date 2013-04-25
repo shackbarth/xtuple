@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "File",
     "table": "file",
+    "idSequenceName": "file_file_id_seq",
     "lockable": true,
     "comment": "File Map",
     "privileges": {

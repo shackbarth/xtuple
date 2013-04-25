@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Contact",
     "table": "cntct",
+    "idSequenceName": "cntct_cntct_id_seq",
     "isRest": true,
     "lockable": true,
     "orderSequence": "ContactNumber",
@@ -246,6 +247,7 @@
     "nameSpace": "XM",
     "type": "ContactInfo",
     "table": "cntct",
+    "idSequenceName": "cntct_cntct_id_seq",
     "orderSequence": "ContactNumber",
     "comment": "Contact Info Map",
     "privileges": {
@@ -407,6 +409,7 @@
     "nameSpace": "XM",
     "type": "ContactAccount",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact Account Map",
     "privileges": {
       "all": {
@@ -480,6 +483,7 @@
     "nameSpace": "XM",
     "type": "ContactCharacteristic",
     "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
     "comment": "Contact Characteristic Map",
     "privileges": {
       "all": {
@@ -610,6 +614,7 @@
     "nameSpace": "XM",
     "type": "ContactComment",
     "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
     "comment": "Contact Comment Map",
     "privileges": {
       "all": {
@@ -702,6 +707,7 @@
     "nameSpace": "XM",
     "type": "ContactContact",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact Contact Map",
     "privileges": {
       "all": {
@@ -775,6 +781,7 @@
     "nameSpace": "XM",
     "type": "ContactEmail",
     "table": "cntcteml",
+    "idSequenceName": "cntcteml_cntcteml_id_seq",
     "comment": "Contact Email Map",
     "privileges": {
       "all": {
@@ -824,6 +831,7 @@
     "nameSpace": "XM",
     "type": "ContactFile",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact File Map",
     "privileges": {
       "all": {
@@ -1223,6 +1231,7 @@
     "nameSpace": "XM",
     "type": "ContactItem",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact Item Map",
     "privileges": {
       "all": {
@@ -1296,6 +1305,7 @@
     "nameSpace": "XM",
     "type": "ContactUrl",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact Url Map",
     "privileges": {
       "all": {
@@ -1369,6 +1379,7 @@
     "nameSpace": "XM",
     "type": "Honorific",
     "table": "hnfc",
+    "idSequenceName": "hnfc_hnfc_id_seq",
     "lockable": true,
     "comment": "Honorific Map",
     "privileges": {

@@ -6,6 +6,7 @@
     "table":"crmacct",
     "isRest":true,
     "lockable":true,
+    "idSequenceName": "crmacct_crmacct_id_seq",
     "orderSequence":"CRMAccountNumber",
     "comment":"Account Map",
     "privileges":{
@@ -239,6 +240,7 @@
     "nameSpace":"XM",
     "type":"AccountAccount",
     "table":"xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment":"Account Account Map",
     "privileges":{
       "all":{
@@ -409,6 +411,7 @@
     "nameSpace":"XM",
     "type":"AccountCharacteristic",
     "table":"charass",
+    "idSequenceName": "charass_charass_id_seq",
     "comment":"Account Characteristic Map",
     "privileges":{
       "all":{
@@ -539,6 +542,7 @@
     "nameSpace":"XM",
     "type":"AccountComment",
     "table":"xt.crmacctcomment",
+    "idSequenceName": "comment_comment_id_seq",
     "comment":"Account Comment Map",
     "privileges":{
       "all":{
@@ -623,6 +627,7 @@
     "nameSpace":"XM",
     "type":"AccountContact",
     "table":"xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment":"Account Contact Map",
     "privileges":{
       "all":{
@@ -696,6 +701,7 @@
     "nameSpace":"XM",
     "type":"AccountFile",
     "table":"xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment":"Account File Map",
     "privileges":{
       "all":{
@@ -919,6 +925,7 @@
     "nameSpace":"XM",
     "type":"AccountIncident",
     "table":"xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment":"Account Incident Map",
     "privileges":{
       "all":{
@@ -992,6 +999,7 @@
     "nameSpace":"XM",
     "type":"AccountItem",
     "table":"xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment":"Account Item Map",
     "privileges":{
       "all":{
@@ -1065,6 +1073,7 @@
     "nameSpace":"XM",
     "type":"AccountUrl",
     "table":"xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment":"Account Url Map",
     "privileges":{
       "all":{

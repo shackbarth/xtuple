@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "Incident",
     "table": "incdt",
+    "idSequenceName": "incdt_incdt_id_seq",
     "isRest": true,
     "lockable": true,
     "orderSequence": "IncidentNumber",
@@ -268,6 +269,7 @@
     "nameSpace": "XM",
     "type": "IncidentAccount",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Account Map",
     "canUpdate": false,
     "properties": [
@@ -334,6 +336,7 @@
     "nameSpace": "XM",
     "type": "IncidentAlarm",
     "table": "alarm",
+    "idSequenceName": "alarm_alarm_id_seq",
     "orderSequence": "AlarmNumber",
     "comment": "Incident Alarm Map",
     "privileges": {
@@ -448,6 +451,7 @@
     "nameSpace": "XM",
     "type": "IncidentCategory",
     "table": "incdtcat",
+    "idSequenceName": "incdtcat_incdtcat_id_seq",
     "lockable": true,
     "comment": "Incident Category Map",
     "privileges": {
@@ -517,6 +521,7 @@
     "nameSpace": "XM",
     "type": "IncidentCharacteristic",
     "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
     "comment": "Incident Characteristic Map",
     "privileges": {
       "all": {
@@ -647,6 +652,7 @@
     "nameSpace": "XM",
     "type": "IncidentComment",
     "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
     "comment": "Incident Comment Map",
     "privileges": {
       "all": {
@@ -739,6 +745,7 @@
     "nameSpace": "XM",
     "type": "IncidentContact",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Contact Map",
     "privileges": {
       "all": {
@@ -812,6 +819,7 @@
     "nameSpace": "XM",
     "type": "IncidentFile",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident File Map",
     "privileges": {
       "all": {
@@ -940,6 +948,7 @@
     "nameSpace": "XM",
     "type": "IncidentIncident",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Incident Map",
     "privileges": {
       "all": {
@@ -1267,6 +1276,7 @@
     "nameSpace": "XM",
     "type": "IncidentItem",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Item Map",
     "privileges": {
       "all": {
@@ -1340,6 +1350,7 @@
     "nameSpace": "XM",
     "type": "IncidentRecurrence",
     "table": "recur",
+    "idSequenceName": "recur_recur_id_seq",
     "comment": "Incident Recurrence Map",
     "privileges": {
       "all": {
@@ -1425,6 +1436,7 @@
     "nameSpace": "XM",
     "type": "IncidentResolution",
     "table": "incdtresolution",
+    "idSequenceName": "incdtresolution_incdtresolution_id_seq",
     "lockable": true,
     "comment": "Incident Resolution Map",
     "privileges": {
@@ -1475,6 +1487,7 @@
     "nameSpace": "XM",
     "type": "IncidentSeverity",
     "table": "incdtseverity",
+    "idSequenceName": "incdtseverity_incdtseverity_id_seq",
     "lockable": true,
     "comment": "Incident Severity Map",
     "privileges": {
@@ -1525,6 +1538,7 @@
     "nameSpace": "XM",
     "type": "IncidentUrl",
     "table": "xt.doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Url Map",
     "privileges": {
       "all": {
@@ -1598,6 +1612,7 @@
     "nameSpace": "XM",
     "type": "IncidentEmailProfile",
     "table": "xt.incdtemlprofile",
+    "idSequenceName": "incdtemlprofile_incdtemlprofile_id_seq",
     "comment": "Incident Email Profile Map",
     "privileges": {
       "all": {
