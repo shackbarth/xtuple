@@ -196,6 +196,7 @@ select xt.install_js('XT','Session','xtuple', $$
         }
         orm = XT.Orm.fetch(schema.toUpperCase(), type);
         result[type]['idAttribute'] = XT.Orm.naturalKey(orm) || XT.Orm.primaryKey(orm);
+        result[type]['lockable'] = orm.lockable || false;
         result[type]['relations'] = [];
         processProperties(orm);
         processPrivileges(orm);
