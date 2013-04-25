@@ -177,9 +177,9 @@ white:true*/
             }
             return;
           }
-          
+
           dataHash = JSON.parse(response.rows[0].request);
-          
+
           // Handle no data as error
           if (method === "get" && options.id &&
             _.isEmpty(dataHash.data)) {
@@ -197,7 +197,7 @@ white:true*/
               return;
             }
             if (dataHash.patches) {
-                attrs = obj ?
+              attrs = obj ?
                   XM.jsonpatch.apply(obj.toJSON(), dataHash.patches) :
                   dataHash.patches;
             } else {
