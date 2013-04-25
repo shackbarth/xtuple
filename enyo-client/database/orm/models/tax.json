@@ -264,7 +264,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "tax_code"
+          "column": "tax_code",
+          "isNaturalKey": true
         }
       },
       {

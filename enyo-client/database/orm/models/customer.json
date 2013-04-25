@@ -1494,7 +1494,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "shipchrg_name"
+          "column": "shipchrg_name",
+          "isNaturalKey": true
         }
       },
       {
@@ -1626,7 +1627,8 @@
         "name": "name",
         "attr":	{
           "type": "String",
-          "column": "custgrp_name"
+          "column": "custgrp_name",
+          "isNaturalKey": true
         }
       },
       {

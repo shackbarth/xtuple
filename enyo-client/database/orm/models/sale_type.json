@@ -27,7 +27,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "saletype_code"
+          "column": "saletype_code",
+          "isNaturalKey": true
         }
       },
       {

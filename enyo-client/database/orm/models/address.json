@@ -476,7 +476,8 @@
         "attr": {
           "type": "String",
           "column": "state_abbr",
-          "required": true
+          "required": true,
+          "isNaturalKey": true
         }
       },
       {

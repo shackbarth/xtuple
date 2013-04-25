@@ -89,6 +89,14 @@
         }
       },
       {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "cntct_number",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "isActive",
         "attr": {
           "type": "Boolean",
@@ -341,6 +349,14 @@
           "type": "Number",
           "column": "todoitem_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid"
+          "isNaturalKey": true
         }
       },
       {

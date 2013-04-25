@@ -925,6 +925,14 @@
         }
       },
       {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "cntct_number",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "isActive",
         "attr": {
           "type": "Boolean",
@@ -1082,6 +1090,14 @@
           "type": "Number",
           "column": "cntct_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "cntct_number",
+          "isNaturalKey": true
         }
       },
       {
