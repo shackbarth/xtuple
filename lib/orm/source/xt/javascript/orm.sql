@@ -351,7 +351,7 @@ select xt.install_js('XT','Orm','xtuple', $$
             /* If the column is `obj_uuid` and it's not there, create it.
                This violates our rule to not touch the source schema, but otherwise
                we risk a big performance hit on all the joins that
-               would be required if uuid where in a single table */ 
+               would be required if uuid were in another table */ 
             if (attr.column  === "obj_uuid") {
               query = "select count(a.attname) " +
                       "from pg_class c, pg_namespace n, pg_attribute a, pg_type t " +
@@ -388,7 +388,6 @@ select xt.install_js('XT','Orm','xtuple', $$
                 plv8.execute(query);
               }
             }
-
             
             /* handle the attribute */
             if (prop.attr ||
@@ -430,16 +429,17 @@ select xt.install_js('XT','Orm','xtuple', $$
 
         /* process toMany */
         if (prop.toMany) {
-          if(DEBUG) plv8.elog(NOTICE, 'building toMany');
-         if (!prop.toMany.type) throw new Error('No type was defined on property ' + prop.name);
-           toMany = prop.toMany;
-           table = base.nameSpace + '.' + toMany.type.decamelize();
-           type = toMany.type.decamelize();
-           iorm = Orm.fetch(base.nameSpace, toMany.type);
-           pkey = Orm.primaryKey(iorm);
-           column = toMany.isNested ? type : pkey;
-           col = 'array({select}) as "{alias}"',
-           orderBy = 'order by ' + pkey;
+          if (DEBUG) plv8.elog(NOTICE, 'building toMany');
+          if (!prop.toMany.type) { throw new Error('No type was defined on property ' + prop.name); }
+          toMany = prop.toMany;
+          table = base.nameSpace + '.' + toMany.type.decamelize();
+          type = toMany.type.decamelize();
+          iorm = Orm.fetch(base.nameSpace, toMany.type);
+          pkey = Orm.primaryKey(iorm);
+          nkey = Orm.naturalKey(iorm);
+          column = toMany.isNested ? type : nkey;
+          col = 'array({select}) as "{alias}"',
+          orderBy = 'order by ' + pkey;
 
            /* handle inverse */
           inverse = toMany.inverse ? toMany.inverse.camelize() : 'id';

@@ -138,16 +138,20 @@
 -- public
 \i public/functions/geteffectivextuser.sql
 
+\i public/tables/coitem.sql
 \i public/tables/comment.sql
 \i public/tables/docass.sql
 \i public/tables/grp.sql;
 \i public/tables/grppriv.sql;
+\i public/tables/incdt.sql
 \i public/tables/itemsite.sql;
 \i public/tables/pkghead.sql;
+\i public/tables/quitem.sql
 \i public/tables/usrgrp.sql;
 \i public/tables/usrpref.sql;
 \i public/tables/usrpriv.sql;
 \i public/tables/schemaord.sql;
+\i public/tables/todoitem.sql
 -- [ END ] public
 
 -- xtbatch (TODO: This should be moved elsewhere)

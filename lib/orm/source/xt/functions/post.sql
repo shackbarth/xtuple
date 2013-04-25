@@ -38,14 +38,13 @@ create or replace function xt.post(data_hash text) returns text as $$
     orm = XT.Orm.fetch(dataHash.nameSpace, dataHash.type);
     pkey = XT.Orm.primaryKey(orm);
     prv = JSON.parse(JSON.stringify(dataHash.data));
-    sql = "select nextval('" + orm.idSequenceName + "');";
     
     /* set status */
     XT.jsonpatch.updateState(dataHash.data, "create");
 
     /* set id if not provided */
     if (!dataHash.id) {
-      dataHash.id = dataHash.data[pkey] || plv8.execute(sql)[0].nextval;
+      plv8.elog(ERROR, "A unique id must be provided");
     }
 
     if (!dataHash.data[pkey]) {

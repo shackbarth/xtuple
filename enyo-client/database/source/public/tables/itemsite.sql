@@ -26,4 +26,5 @@ alter table public.itemsite alter column itemsite_autoabcclass set default false
 alter table public.itemsite alter column itemsite_costmethod set default 'N';
 alter table public.itemsite alter column itemsite_value set default 0;
 alter table public.itemsite alter column itemsite_planning_type set default 'N';
+select xt.add_column('docass','obj_uuid', 'uuid', 'default xt.generateUUID()::uuid', 'public');
 

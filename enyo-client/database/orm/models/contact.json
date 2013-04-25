@@ -6,7 +6,6 @@
     "table": "cntct",
     "isRest": true,
     "lockable": true,
-    "idSequenceName": "cntct_cntct_id_seq",
     "orderSequence": "ContactNumber",
     "comment": "Contact Map",
     "privileges": {
@@ -247,7 +246,6 @@
     "nameSpace": "XM",
     "type": "ContactInfo",
     "table": "cntct",
-    "idSequenceName": "cntct_cntct_id_seq",
     "orderSequence": "ContactNumber",
     "comment": "Contact Info Map",
     "privileges": {
@@ -409,7 +407,6 @@
     "nameSpace": "XM",
     "type": "ContactAccount",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact Account Map",
     "privileges": {
       "all": {
@@ -426,6 +423,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -475,7 +480,6 @@
     "nameSpace": "XM",
     "type": "ContactCharacteristic",
     "table": "charass",
-    "idSequenceName": "charass_charass_id_seq",
     "comment": "Contact Characteristic Map",
     "privileges": {
       "all": {
@@ -492,6 +496,14 @@
           "type": "Number",
           "column": "charass_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -533,7 +545,6 @@
     "nameSpace": "XM",
     "type": "ContactListItemCharacteristic",
     "table": "charass",
-    "idSequenceName": "charass_charass_id_seq",
     "comment": "Contact List Item Characteristic Map",
     "privileges": {
       "all": {
@@ -550,6 +561,14 @@
           "type": "Number",
           "column": "charass_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -591,7 +610,6 @@
     "nameSpace": "XM",
     "type": "ContactComment",
     "table": "comment",
-    "idSequenceName": "comment_comment_id_seq",
     "comment": "Contact Comment Map",
     "privileges": {
       "all": {
@@ -614,6 +632,14 @@
           "type": "Number",
           "column": "comment_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -676,7 +702,6 @@
     "nameSpace": "XM",
     "type": "ContactContact",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact Contact Map",
     "privileges": {
       "all": {
@@ -693,6 +718,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -742,7 +775,6 @@
     "nameSpace": "XM",
     "type": "ContactEmail",
     "table": "cntcteml",
-    "idSequenceName": "cntcteml_cntcteml_id_seq",
     "comment": "Contact Email Map",
     "privileges": {
       "all": {
@@ -759,6 +791,14 @@
           "type": "Number",
           "column": "cntcteml_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -784,7 +824,6 @@
     "nameSpace": "XM",
     "type": "ContactFile",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact File Map",
     "privileges": {
       "all": {
@@ -801,6 +840,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1160,7 +1207,6 @@
     "nameSpace": "XM",
     "type": "ContactItem",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact Item Map",
     "privileges": {
       "all": {
@@ -1177,6 +1223,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1226,7 +1280,6 @@
     "nameSpace": "XM",
     "type": "ContactUrl",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact Url Map",
     "privileges": {
       "all": {
@@ -1243,6 +1296,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1293,7 +1354,6 @@
     "type": "Honorific",
     "table": "hnfc",
     "lockable": true,
-    "idSequenceName": "hnfc_hnfc_id_seq",
     "comment": "Honorific Map",
     "privileges": {
       "all": {

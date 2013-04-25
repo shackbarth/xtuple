@@ -42,6 +42,15 @@ select xt.get('{
   }'
 );
 
+select xt.get('{
+  "username": "admin",
+  "nameSpace":"XM",
+  "type": "Customer",
+  "id": "TTOYS",
+  "prettyPrint": true
+  }'
+);
+
 select xt.get($${
   "username": "admin",
   "nameSpace":"XM",

@@ -5,7 +5,6 @@
     "type": "Opportunity",
     "table": "ophead",
     "lockable": true,
-    "idSequenceName": "ophead_ophead_id_seq",
     "orderSequence": "OpportunityNumber",
     "comment": "Opportunity Map",
     "privileges": {
@@ -262,7 +261,6 @@
     "nameSpace": "XM",
     "type": "OpportunityAccount",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity Account Map",
     "canUpdate": false,
     "properties": [
@@ -272,6 +270,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -321,7 +327,6 @@
     "nameSpace": "XM",
     "type": "OpportunityCharacteristic",
     "table": "charass",
-    "idSequenceName": "charass_charass_id_seq",
     "comment": "Opportunity Characteristic Map",
     "privileges": {
       "all": {
@@ -338,6 +343,14 @@
           "type": "Number",
           "column": "charass_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -379,7 +392,6 @@
     "nameSpace": "XM",
     "type": "OpportunityListItemCharacteristic",
     "table": "charass",
-    "idSequenceName": "charass_charass_id_seq",
     "comment": "Opportunity List Item Characteristic Map",
     "privileges": {
       "all": {
@@ -396,6 +408,14 @@
           "type": "Number",
           "column": "charass_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -437,7 +457,6 @@
     "nameSpace": "XM",
     "type": "OpportunityComment",
     "table": "comment",
-    "idSequenceName": "comment_comment_id_seq",
     "comment": "Opportunity Comment Map",
     "privileges": {
       "all": {
@@ -460,6 +479,14 @@
           "type": "Number",
           "column": "comment_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -522,7 +549,6 @@
     "nameSpace": "XM",
     "type": "OpportunityContact",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "privileges": {
       "all": {
         "create": true,
@@ -538,6 +564,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -587,7 +621,6 @@
     "nameSpace": "XM",
     "type": "OpportunityFile",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity File Map",
     "privileges": {
       "all": {
@@ -604,6 +637,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -914,7 +955,6 @@
     "nameSpace": "XM",
     "type": "OpportunityItem",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity Item Map",
     "privileges": {
       "all": {
@@ -931,6 +971,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -980,7 +1028,6 @@
     "nameSpace": "XM",
     "type": "OpportunityOpportunity",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity Item Map",
     "privileges": {
       "all": {
@@ -997,6 +1044,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1047,7 +1102,6 @@
     "type": "OpportunitySource",
     "table": "opsource",
     "lockable": true,
-    "idSequenceName": "opsource_opsource_id_seq",
     "comment": "Opportunity Source Map",
     "privileges": {
       "all": {
@@ -1090,7 +1144,6 @@
     "type": "OpportunityStage",
     "table": "opstage",
     "lockable": true,
-    "idSequenceName": "opstage_opstage_id_seq",
     "comment": "Opportunity Stage Map",
     "privileges": {
       "all": {
@@ -1141,7 +1194,6 @@
     "type": "OpportunityType",
     "table": "optype",
     "lockable": true,
-    "idSequenceName": "optype_optype_id_seq",
     "comment": "Opportunity Type Map",
     "privileges": {
       "all": {
@@ -1183,7 +1235,6 @@
     "nameSpace": "XM",
     "type": "OpportunityUrl",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity Url Map",
     "privileges": {
       "all": {
@@ -1200,6 +1251,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {

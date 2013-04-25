@@ -5,7 +5,6 @@
     "type": "ClassCode",
     "table": "classcode",
     "lockable": true,
-    "idSequenceName": "classcode_classcode_id_seq",
     "comment": "Class Code Map",
     "privileges": {
       "all": {
@@ -48,7 +47,6 @@
     "type": "FreightClass",
     "table": "freightclass",
     "lockable": true,
-    "idSequenceName": "freightclass_freightclass_id_seq",
     "comment": "Freight Class Map",
     "privileges": {
       "all": {
@@ -92,7 +90,6 @@
     "table": "item",
     "isRest": true,
     "lockable": true,
-    "idSequenceName": "item_item_id_seq",
     "comment": "Item Map",
     "privileges": {
       "all": {
@@ -261,6 +258,15 @@
         }
       },
       {
+        "name": "sites",
+        "toMany": {
+          "type": "ItemSite",
+          "column": "item_id",
+          "inverse": "item",
+          "isNested": true
+        }
+      },
+      {
         "name": "accounts",
         "toMany": {
           "type": "ContactAccount",
@@ -322,7 +328,6 @@
     "nameSpace": "XM",
     "type": "ItemAccount",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Item Account Map",
     "privileges": {
       "all": {
@@ -339,6 +344,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -388,7 +401,6 @@
     "nameSpace": "XM",
     "type": "ItemAlias",
     "table": "itemalias",
-    "idSequenceName": "itemalias_itemalias_id_seq",
     "comment": "Item Alias Map",
     "privileges": {
       "all": {
@@ -405,6 +417,14 @@
           "type": "Number",
           "column": "itemalias_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -458,7 +478,6 @@
     "nameSpace": "XM",
     "type": "ItemCharacteristic",
     "table": "charass",
-    "idSequenceName": "charass_charass_id_seq",
     "comment": "Item Characteristic Map",
     "privileges": {
       "all": {
@@ -475,6 +494,14 @@
           "type": "Number",
           "column": "charass_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -530,7 +557,6 @@
     "nameSpace": "XM",
     "type": "ItemComment",
     "table": "comment",
-    "idSequenceName": "comment_comment_id_seq",
     "comment": "Item Comment Map",
     "privileges": {
       "all": {
@@ -553,6 +579,14 @@
           "type": "Number",
           "column": "comment_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -615,7 +649,6 @@
     "nameSpace": "XM",
     "type": "ItemContact",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Item Contact Map",
     "privileges": {
       "all": {
@@ -632,6 +665,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -681,7 +722,6 @@
     "nameSpace": "XM",
     "type": "ItemFile",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Item File Map",
     "privileges": {
       "all": {
@@ -698,6 +738,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -870,6 +918,14 @@
           "type": "String",
           "column": "charass_target_type",
           "value": "I"
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1098,6 +1154,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "targetType",
         "attr": {
           "type": "String",
@@ -1150,7 +1214,6 @@
     "nameSpace": "XM",
     "type": "ItemItem",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Item Item Map",
     "privileges": {
       "all": {
@@ -1167,6 +1230,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1216,7 +1287,6 @@
     "nameSpace": "XM",
     "type": "ItemUrl",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Item Url Map",
     "privileges": {
       "all": {
@@ -1233,6 +1303,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1283,7 +1361,6 @@
     "type": "ProductCategory",
     "table": "prodcat",
     "lockable": true,
-    "idSequenceName": "prodcat_prodcat_id_seq",
     "comment": "Product Category Map",
     "privileges": {
       "all": {
@@ -1326,7 +1403,6 @@
     "type": "Unit",
     "table": "uom",
     "lockable": true,
-    "idSequenceName": "uom_uom_id_seq",
     "comment": "Unit Map",
     "privileges": {
       "all": {

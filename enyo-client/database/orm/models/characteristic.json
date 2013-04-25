@@ -5,7 +5,6 @@
     "type": "Characteristic",
     "table": "char",
     "lockable": true,
-    "idSequenceName": "char_char_id_seq",
     "comment": "Characteristic Map",
     "privileges": {
       "all": {
@@ -124,7 +123,6 @@
     "nameSpace": "XM",
     "type": "CharacteristicOption",
     "table": "charopt",
-    "idSequenceName": "charopt_charopt_id_seq",
     "comment": "Characteristic Option Map",
     "privileges": {
       "all": {
@@ -141,6 +139,14 @@
           "type": "Number",
           "column": "charopt_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {

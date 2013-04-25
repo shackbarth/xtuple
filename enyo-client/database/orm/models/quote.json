@@ -6,7 +6,6 @@
     "table": "xt.quheadinfo",
     "lockable": true,
     "lockTable": "quhead",
-    "idSequenceName": "quhead_quhead_id_seq",
     "comment": "Quote Map",
     "privileges": {
       "all": {
@@ -549,7 +548,6 @@
     "nameSpace": "XM",
     "type": "QuoteAccount",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Quote Account Map",
     "canUpdate": false,
     "properties": [
@@ -559,6 +557,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -608,7 +614,6 @@
     "nameSpace": "XM",
     "type": "QuoteComment",
     "table": "comment",
-    "idSequenceName": "quhead_quhead_id_seq",
     "comment": "Quote Comment Map",
     "privileges": {
       "all": {
@@ -631,6 +636,14 @@
           "type": "Number",
           "column": "comment_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -692,7 +705,6 @@
     "nameSpace": "XM",
     "type": "QuoteContact",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Quote Contact Map",
     "privileges": {
       "all": {
@@ -709,6 +721,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -758,7 +778,6 @@
     "nameSpace": "XM",
     "type": "QuoteFile",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Quote File Map",
     "privileges": {
       "all": {
@@ -775,6 +794,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -824,7 +851,6 @@
     "nameSpace": "XM",
     "type": "QuoteItem",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Quote Item Map",
     "privileges": {
       "all": {
@@ -841,6 +867,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -890,7 +924,6 @@
     "nameSpace": "XM",
     "type": "QuoteLine",
     "table": "xt.quiteminfo",
-    "idSequenceName": "quitem_quitem_id_seq",
     "comment": "Quote Line Item Map",
     "privileges": {
       "all": {
@@ -907,6 +940,14 @@
           "type": "Number",
           "column": "quitem_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1103,7 +1144,6 @@
     "nameSpace": "XM",
     "type": "QuoteLineCharacteristic",
     "table": "charass",
-    "idSequenceName": "charass_charass_id_seq",
     "comment": "Quote Line Characteristic Map",
     "privileges": {
       "all": {
@@ -1120,6 +1160,14 @@
           "type": "Number",
           "column": "charass_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1168,7 +1216,6 @@
     "nameSpace": "XM",
     "type": "QuoteLineComment",
     "table": "comment",
-    "idSequenceName": "comment_comment_id_seq",
     "comment": "Quote Line Comment Map",
     "privileges": {
       "all": {
@@ -1191,6 +1238,14 @@
           "type": "Number",
           "column": "comment_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1365,7 +1420,6 @@
     "nameSpace": "XM",
     "type": "QuoteRelation",
     "table": "quhead",
-    "idSequenceName": "quhead_quhead_id_seq",
     "comment": "Quote Relation Map",
     "privileges": {
       "all": {
@@ -1421,7 +1475,6 @@
     "nameSpace": "XM",
     "type": "QuoteUrl",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Quote Url Map",
     "privileges": {
       "all": {
@@ -1438,6 +1491,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {

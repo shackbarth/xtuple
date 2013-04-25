@@ -5,7 +5,6 @@
     "type": "SaleType",
     "table": "saletype",
     "lockable": true,
-    "idSequenceName": "saletype_saletype_id_seq",
     "comment": "Sale Type Map",
     "privileges": {
       "all": {

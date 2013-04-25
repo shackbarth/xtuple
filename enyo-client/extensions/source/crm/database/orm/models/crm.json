@@ -4,7 +4,6 @@
     "nameSpace": "XM",
     "type": "AccountOpportunity",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Account Opportunity Map",
     "privileges": {
       "all": {
@@ -21,6 +20,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -70,7 +77,6 @@
     "nameSpace": "XM",
     "type": "AccountToDo",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident To Do Map",
     "privileges": {
       "all": {
@@ -87,6 +93,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -136,7 +150,6 @@
     "nameSpace": "XM",
     "type": "ContactIncident",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact Incident Map",
     "privileges": {
       "all": {
@@ -153,6 +166,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -202,7 +223,6 @@
     "nameSpace": "XM",
     "type": "ContactOpportunity",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact Opportunity Map",
     "privileges": {
       "all": {
@@ -219,6 +239,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -268,7 +296,6 @@
     "nameSpace": "XM",
     "type": "ContactToDo",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident To Do Map",
     "privileges": {
       "all": {
@@ -285,6 +312,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -334,7 +369,6 @@
     "nameSpace": "XM",
     "type": "IncidentOpportunity",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Opportunity Map",
     "privileges": {
       "all": {
@@ -351,6 +385,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -400,7 +442,6 @@
     "nameSpace": "XM",
     "type": "IncidentToDo",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident To Do Map",
     "privileges": {
       "all": {
@@ -417,6 +458,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -466,7 +515,6 @@
     "nameSpace": "XM",
     "type": "OpportunityIncident",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity Incident Map",
     "privileges": {
       "all": {
@@ -483,6 +531,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -532,7 +588,6 @@
     "nameSpace": "XM",
     "type": "OpportunityToDo",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity ToDo Map",
     "privileges": {
       "all": {
@@ -549,6 +604,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -598,7 +661,6 @@
     "nameSpace": "XM",
     "type": "ToDoIncident",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo Incident Map",
     "privileges": {
       "all": {
@@ -615,6 +677,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -664,7 +734,6 @@
     "nameSpace": "XM",
     "type": "ToDoOpportunity",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo Opportunity Map",
     "privileges": {
       "all": {
@@ -681,6 +750,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {

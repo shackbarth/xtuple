@@ -6,7 +6,6 @@
     "table": "terms",
     "isRest": true,
     "lockable": true,
-    "idSequenceName": "terms_terms_id_seq",
     "comment": "Terms Map",
     "privileges": {
       "all": {

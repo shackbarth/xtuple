@@ -4,7 +4,6 @@
     "nameSpace": "XM",
     "type": "AccountProject",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Account Project Map",
     "privileges": {
       "all": {
@@ -21,6 +20,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -70,7 +77,6 @@
     "nameSpace": "XM",
     "type": "ContactProject",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact Project Map",
     "privileges": {
       "all": {
@@ -87,6 +93,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -136,7 +150,6 @@
     "nameSpace": "XM",
     "type": "IncidentProject",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Project Map",
     "privileges": {
       "all": {
@@ -153,6 +166,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -202,7 +223,6 @@
     "nameSpace": "XM",
     "type": "OpportunityProject",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity Project Map",
     "privileges": {
       "all": {
@@ -219,6 +239,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -268,7 +296,6 @@
     "nameSpace": "XM",
     "type": "ProjectIncident",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Project Incident Map",
     "privileges": {
       "all": {
@@ -285,6 +312,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -334,7 +369,6 @@
     "nameSpace": "XM",
     "type": "ProjectOpportunity",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Project Opportunity Map",
     "privileges": {
       "all": {
@@ -351,6 +385,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -400,7 +442,6 @@
     "nameSpace": "XM",
     "type": "ProjectToDo",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Project To Do Map",
     "privileges": {
       "all": {
@@ -417,6 +458,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -466,7 +515,6 @@
     "nameSpace": "XM",
     "type": "ToDoProject",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo Project Map",
     "privileges": {
       "all": {
@@ -483,6 +531,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {

@@ -5,7 +5,6 @@
     "type": "SalesRep",
     "table": "salesrep",
     "lockable": true,
-    "idSequenceName": "salesrep_salesrep_id_seq",
     "orderSequence": "CRMAccountNumber",
     "comment": "Sales Rep Map",
     "privileges": {

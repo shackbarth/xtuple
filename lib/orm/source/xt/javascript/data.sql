@@ -1065,17 +1065,30 @@ select xt.install_js('XT','Data','xtuple', $$
         },
         sql,
         pkey = XT.Orm.primaryKey(map),
+        pcol = XT.Orm.primaryKey(map, true),
+        ncol = XT.Orm.naturalKey(map, true),
         context = options.context,
         join = "",
         params = {};
-      if(!pkey) {
-        throw new Error('No primary key found for {nameSpace}.{type}'
+      if (!pkey) {
+        throw new Error('No key found for {nameSpace}.{type}'
                         .replace("{nameSpace}", nameSpace)
                         .replace("{type}", type));
       }
+
+      if (ncol) {
+        sql = "select {pcol} as id from {table} where {ncol} = $1"
+              .replace("{pcol}", pcol)
+              .replace("{table}", map.table)
+              .replace("{ncol}", ncol);
+        if (DEBUG) { plv8.elog(NOTICE, 'find key sql = ', sql); }
+        id = plv8.execute(sql, [id])[0].id;
+      } 
+
       if (XT.typeOf(id) === 'string') {
         id = "'" + id + "'";
       }
+      
 
       /* Context means search for this record inside another */
       if (context) {

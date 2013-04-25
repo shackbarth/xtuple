@@ -5,7 +5,6 @@
     "type": "Prospect",
     "table": "prospect",
     "lockable": true,
-    "idSequenceName": "cust_cust_id_seq",
     "orderSequence": "CRMAccountNumber",
     "comment": "Prospect Map",
     "privileges": {

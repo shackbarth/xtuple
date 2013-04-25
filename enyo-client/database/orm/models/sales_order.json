@@ -6,7 +6,6 @@
     "table": "xt.coheadinfo",
     "lockable": true,
     "lockTable": "cohead",
-    "idSequenceName": "cohead_cohead_id_seq",
     "comment": "Sales Order Map",
     "privileges": {
       "all": {
@@ -577,9 +576,15 @@
     "nameSpace": "XM",
     "type": "SalesOrderAccount",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Sales Order Account Map",
-    "canUpdate": false,
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
     "properties": [
       {
         "name": "id",
@@ -587,6 +592,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -636,7 +649,6 @@
     "nameSpace": "XM",
     "type": "SalesOrderComment",
     "table": "comment",
-    "idSequenceName": "cohead_cohead_id_seq",
     "comment": "Sales Order Comment Map",
     "privileges": {
       "all": {
@@ -659,6 +671,14 @@
           "type": "Number",
           "column": "comment_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -720,7 +740,6 @@
     "nameSpace": "XM",
     "type": "SalesOrderContact",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Sales Order Contact Map",
     "privileges": {
       "all": {
@@ -737,6 +756,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -786,7 +813,6 @@
     "nameSpace": "XM",
     "type": "SalesOrderFile",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Sales Order File Map",
     "privileges": {
       "all": {
@@ -803,6 +829,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -852,7 +886,6 @@
     "nameSpace": "XM",
     "type": "SalesOrderItem",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Sales Order Item Map",
     "privileges": {
       "all": {
@@ -869,6 +902,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -918,7 +959,6 @@
     "nameSpace": "XM",
     "type": "SalesOrderLine",
     "table": "xt.coiteminfo",
-    "idSequenceName": "coitem_coitem_id_seq",
     "comment": "Sales Order Line Item Map",
     "privileges": {
       "all": {
@@ -935,6 +975,14 @@
           "type": "Number",
           "column": "coitem_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1159,7 +1207,6 @@
     "nameSpace": "XM",
     "type": "SalesOrderLineCharacteristic",
     "table": "charass",
-    "idSequenceName": "charass_charass_id_seq",
     "comment": "Sales Order Line Characteristic Map",
     "privileges": {
       "all": {
@@ -1176,6 +1223,14 @@
           "type": "Number",
           "column": "charass_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1224,7 +1279,6 @@
     "nameSpace": "XM",
     "type": "SalesOrderLineComment",
     "table": "comment",
-    "idSequenceName": "comment_comment_id_seq",
     "comment": "Sales Order Line Comment Map",
     "privileges": {
       "all": {
@@ -1247,6 +1301,14 @@
           "type": "Number",
           "column": "comment_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1414,7 +1476,6 @@
     "nameSpace": "XM",
     "type": "SalesOrderRelation",
     "table": "cohead",
-    "idSequenceName": "cohead_cohead_id_seq",
     "comment": "Sales Order Relation Map",
     "privileges": {
       "all": {
@@ -1470,7 +1531,6 @@
     "nameSpace": "XM",
     "type": "SalesOrderUrl",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Sales Order Url Map",
     "privileges": {
       "all": {
@@ -1487,6 +1547,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {

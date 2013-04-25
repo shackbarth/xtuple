@@ -5,7 +5,6 @@
     "type": "Currency",
     "table": "curr_symbol",
     "lockable": true,
-    "idSequenceName": "curr_symbol_curr_id_seq",
     "comment": "Currency Map",
     "privileges": {
       "all": {
@@ -52,6 +51,15 @@
           "type": "Boolean",
           "column": "curr_base"
         }
+      },
+      {
+        "name": "rates",
+        "attr": {
+          "type": "CurrencyRates",
+          "column": "curr_id",
+          "inverse": "currency",
+          "isNested": true
+        }
       }
     ],
     "isSystem": true
@@ -61,7 +69,6 @@
     "nameSpace": "XM",
     "type": "CurrencyRate",
     "table": "curr_rate",
-    "idSequenceName": "curr_rate_curr_id_seq",
     "comment": "Currency Map",
     "privileges": {
       "all": {
@@ -78,6 +85,14 @@
           "type": "Number",
           "column": "curr_rate_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {

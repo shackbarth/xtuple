@@ -6,7 +6,6 @@
     "table": "addr",
     "isRest": true,
     "lockable": true,
-    "idSequenceName": "addr_addr_id_seq",
     "orderSequence": "AddressNumber",
     "comment": "Address Map",
     "privileges": {
@@ -143,6 +142,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "targetType",
         "attr": {
           "type": "String",
@@ -180,7 +187,6 @@
     "nameSpace": "XM",
     "type": "AddressComment",
     "table": "comment",
-    "idSequenceName": "comment_comment_id_seq",
     "comment": "Address Comment Map",
     "privileges": {
       "all": {
@@ -203,6 +209,14 @@
           "type": "Number",
           "column": "comment_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -265,7 +279,6 @@
     "type": "AddressInfo",
     "table": "addr",
     "lockable": true,
-    "idSequenceName": "addr_addr_id_seq",
     "orderSequence": "AddressNumber",
     "comment": "Address Info Map",
     "privileges": {
@@ -359,7 +372,6 @@
     "table": "country",
     "isRest": true,
     "lockable": true,
-    "idSequenceName": "country_country_id_seq",
     "comment": "Country Map",
     "privileges": {
       "all": {
@@ -434,7 +446,6 @@
     "table": "state",
     "isRest": true,
     "lockable": true,
-    "idSequenceName": "state_state_id_seq",
     "comment": "State Map",
     "privileges": {
       "all": {

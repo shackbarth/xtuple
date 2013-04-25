@@ -1,0 +1,1 @@
+select xt.add_column('coitem','obj_uuid', 'uuid', 'default xt.generateUUID()::uuid', 'public');

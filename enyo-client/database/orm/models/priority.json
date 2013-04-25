@@ -5,7 +5,6 @@
     "type": "Priority",
     "table": "incdtpriority",
     "lockable": true,
-    "idSequenceName": "incdtpriority_incdtpriority_id_seq",
     "comment": "Priority Map",
     "privileges": {
       "all": {

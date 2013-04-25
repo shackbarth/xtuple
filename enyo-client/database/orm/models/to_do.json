@@ -6,7 +6,6 @@
     "table": "todoitem",
     "isRest": true,
     "lockable": true,
-    "idSequenceName": "todoitem_todoitem_id_seq",
     "comment": "ToDo Map",
     "privileges": {
       "all": {
@@ -33,6 +32,14 @@
           "type": "Number",
           "column": "todoitem_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -222,7 +229,6 @@
     "nameSpace": "XM",
     "type": "ToDoAccount",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo Account Map",
     "privileges": {
       "all": {
@@ -239,6 +245,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -288,7 +302,6 @@
     "nameSpace": "XM",
     "type": "ToDoAlarm",
     "table": "alarm",
-    "idSequenceName": "alarm_alarm_id_seq",
     "orderSequence": "AlarmNumber",
     "comment": "ToDo Alarm Map",
     "privileges": {
@@ -306,6 +319,14 @@
           "type": "Number",
           "column": "alarm_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -395,7 +416,6 @@
     "nameSpace": "XM",
     "type": "ToDoComment",
     "table": "comment",
-    "idSequenceName": "comment_comment_id_seq",
     "comment": "ToDo Comment Map",
     "privileges": {
       "all": {
@@ -418,6 +438,14 @@
           "type": "Number",
           "column": "comment_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -480,7 +508,6 @@
     "nameSpace": "XM",
     "type": "ToDoContact",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo Contact Map",
     "privileges": {
       "all": {
@@ -497,6 +524,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -546,7 +581,6 @@
     "nameSpace": "XM",
     "type": "ToDoFile",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo File Map",
     "privileges": {
       "all": {
@@ -563,6 +597,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -638,6 +680,14 @@
           "type": "Number",
           "column": "todoitem_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -759,6 +809,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "name",
         "attr": {
           "type": "String",
@@ -857,7 +915,6 @@
     "nameSpace": "XM",
     "type": "ToDoItem",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo Item Map",
     "privileges": {
       "all": {
@@ -874,6 +931,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -923,7 +988,6 @@
     "nameSpace": "XM",
     "type": "ToDoRecurrence",
     "table": "recur",
-    "idSequenceName": "recur_recur_id_seq",
     "comment": "To Do Recurrence Map",
     "privileges": {
       "all": {
@@ -940,6 +1004,14 @@
           "type": "Number",
           "column": "recur_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1001,7 +1073,6 @@
     "nameSpace": "XM",
     "type": "ToDoToDo",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo ToDo Map",
     "privileges": {
       "all": {
@@ -1018,6 +1089,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1067,7 +1146,6 @@
     "nameSpace": "XM",
     "type": "ToDoUrl",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo Url Map",
     "privileges": {
       "all": {
@@ -1084,6 +1162,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {

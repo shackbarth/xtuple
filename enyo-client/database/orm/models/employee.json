@@ -6,7 +6,6 @@
     "table": "emp",
     "isRest": true,
     "lockable": true,
-    "idSequenceName": "emp_emp_id_seq",
     "orderSequence": "CRMAccountNumber",
     "comment": "Employee Map",
     "privileges": {
@@ -27,11 +26,18 @@
         }
       },
       {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "emp_code",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "emp_number",
-          "isNaturalKey": true
+          "column": "emp_number"
         }
       },
       {
@@ -212,7 +218,6 @@
     "nameSpace": "XM",
     "type": "EmployeeComment",
     "table": "comment",
-    "idSequenceName": "comment_comment_id_seq",
     "comment": "Employee Comment Map",
     "privileges": {
       "all": {
@@ -235,6 +240,14 @@
           "type": "Number",
           "column": "comment_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -297,7 +310,6 @@
     "nameSpace": "XM",
     "type": "EmployeeCharacteristic",
     "table": "charass",
-    "idSequenceName": "charass_charass_id_seq",
     "comment": "Employee Characteristic Map",
     "privileges": {
       "all": {
@@ -314,6 +326,14 @@
           "type": "Number",
           "column": "charass_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {

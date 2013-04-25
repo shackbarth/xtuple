@@ -6,7 +6,6 @@
     "table": "incdt",
     "isRest": true,
     "lockable": true,
-    "idSequenceName": "incdt_incdt_id_seq",
     "orderSequence": "IncidentNumber",
     "comment": "Incident Map",
     "privileges": {
@@ -269,7 +268,6 @@
     "nameSpace": "XM",
     "type": "IncidentAccount",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Account Map",
     "canUpdate": false,
     "properties": [
@@ -279,6 +277,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -328,7 +334,6 @@
     "nameSpace": "XM",
     "type": "IncidentAlarm",
     "table": "alarm",
-    "idSequenceName": "alarm_alarm_id_seq",
     "orderSequence": "AlarmNumber",
     "comment": "Incident Alarm Map",
     "privileges": {
@@ -346,6 +351,14 @@
           "type": "Number",
           "column": "alarm_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -436,7 +449,6 @@
     "type": "IncidentCategory",
     "table": "incdtcat",
     "lockable": true,
-    "idSequenceName": "incdtcat_incdtcat_id_seq",
     "comment": "Incident Category Map",
     "privileges": {
       "all": {
@@ -505,7 +517,6 @@
     "nameSpace": "XM",
     "type": "IncidentCharacteristic",
     "table": "charass",
-    "idSequenceName": "charass_charass_id_seq",
     "comment": "Incident Characteristic Map",
     "privileges": {
       "all": {
@@ -522,6 +533,14 @@
           "type": "Number",
           "column": "charass_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -563,7 +582,6 @@
     "nameSpace": "XM",
     "type": "IncidentListItemCharacteristic",
     "table": "charass",
-    "idSequenceName": "charass_charass_id_seq",
     "comment": "Incident List Item Characteristic Map",
     "privileges": {
       "all": {
@@ -580,6 +598,14 @@
           "type": "Number",
           "column": "charass_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -621,7 +647,6 @@
     "nameSpace": "XM",
     "type": "IncidentComment",
     "table": "comment",
-    "idSequenceName": "comment_comment_id_seq",
     "comment": "Incident Comment Map",
     "privileges": {
       "all": {
@@ -644,6 +669,14 @@
           "type": "Number",
           "column": "comment_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -706,7 +739,6 @@
     "nameSpace": "XM",
     "type": "IncidentContact",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Contact Map",
     "privileges": {
       "all": {
@@ -723,6 +755,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -772,7 +812,6 @@
     "nameSpace": "XM",
     "type": "IncidentFile",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident File Map",
     "privileges": {
       "all": {
@@ -789,6 +828,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -838,7 +885,6 @@
     "nameSpace": "XM",
     "type": "IncidentHistory",
     "table": "incdthist",
-    "idSequenceName": "incdthist_incdthist_id_seq",
     "comment": "Incident History Map",
     "properties": [
       {
@@ -847,6 +893,14 @@
           "type": "Number",
           "column": "incdthist_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -886,7 +940,6 @@
     "nameSpace": "XM",
     "type": "IncidentIncident",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Incident Map",
     "privileges": {
       "all": {
@@ -903,6 +956,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1206,7 +1267,6 @@
     "nameSpace": "XM",
     "type": "IncidentItem",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Item Map",
     "privileges": {
       "all": {
@@ -1223,6 +1283,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1272,7 +1340,6 @@
     "nameSpace": "XM",
     "type": "IncidentRecurrence",
     "table": "recur",
-    "idSequenceName": "recur_recur_id_seq",
     "comment": "Incident Recurrence Map",
     "privileges": {
       "all": {
@@ -1289,6 +1356,14 @@
           "type": "Number",
           "column": "recur_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1351,7 +1426,6 @@
     "type": "IncidentResolution",
     "table": "incdtresolution",
     "lockable": true,
-    "idSequenceName": "incdtresolution_incdtresolution_id_seq",
     "comment": "Incident Resolution Map",
     "privileges": {
       "all": {
@@ -1402,7 +1476,6 @@
     "type": "IncidentSeverity",
     "table": "incdtseverity",
     "lockable": true,
-    "idSequenceName": "incdtseverity_incdtseverity_id_seq",
     "comment": "Incident Severity Map",
     "privileges": {
       "all": {
@@ -1452,7 +1525,6 @@
     "nameSpace": "XM",
     "type": "IncidentUrl",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Url Map",
     "privileges": {
       "all": {
@@ -1469,6 +1541,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1518,7 +1598,6 @@
     "nameSpace": "XM",
     "type": "IncidentEmailProfile",
     "table": "xt.incdtemlprofile",
-    "idSequenceName": "emlprofile_emlprofile_id_seq",
     "comment": "Incident Email Profile Map",
     "privileges": {
       "all": {

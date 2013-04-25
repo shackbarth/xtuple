@@ -5,7 +5,6 @@
     "type": "LedgerAccount",
     "table": "accnt",
     "lockable": true,
-    "idSequenceName": "accnt_accnt_id_seq",
     "comment": "Ledger Account Map",
     "privileges": {
       "all": {
@@ -22,6 +21,14 @@
           "type": "Number",
           "column": "accnt_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -118,6 +125,14 @@
           "type": "Number",
           "column": "accnt_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {

@@ -4,7 +4,6 @@
     "nameSpace": "XM",
     "type": "ProjectVersion",
     "table": "xtincdtpls.prjver",
-    "idSequenceName": "xtincdtpls.prjver_prjver_id_seq",
     "comment": "Project Version Map",
     "properties": [
       {
@@ -13,6 +12,14 @@
           "type": "Number",
           "column": "prjver_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {

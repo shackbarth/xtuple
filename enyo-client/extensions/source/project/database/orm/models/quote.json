@@ -4,7 +4,6 @@
     "nameSpace": "XM",
     "type": "QuoteProject",
     "table": "xt.doc",
-    "idSequenceName": "docass_docass_id_seq",
     "comment": "Quote Project Map",
     "privileges": {
       "all": {
@@ -21,6 +20,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
