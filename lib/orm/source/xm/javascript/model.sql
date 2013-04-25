@@ -53,18 +53,19 @@ select xt.install_js('XM','Model','xtuple', $$
        lockTable = orm.lockTable || orm.table,
        pkey = XT.Orm.primaryKey(orm),
        nkey = XT.Orm.naturalKey(orm),
-       rec;
+       rec,
+       pid;
 
     /* if the model uses a natural key, get the primary key value */
-    id = nkey ? data.getId(orm, id) : id;
     rec = data.retrieveRecord({
       nameSpace: nameSpace,
       type: type,
       id: id
     });
+    pid = nkey ? data.getId(orm, id) : id;
     if (!rec || !rec.data) { throw "Record for requested lock not found." }
     if (rec.etag !== etag) { return false; }
-    return data.tryLock(lockTable, rec.data[pkey]);
+    return data.tryLock(lockTable, pid);
   }
 
   /**
@@ -116,9 +117,9 @@ select xt.install_js('XM','Model','xtuple', $$
         type = recordType.afterDot(),
         map = XT.Orm.fetch(nameSpace, type),
         table = recordType.decamelize(),
-        pKey = XT.Orm.primaryKey(map),
-        sql = 'select "{primaryKey}" as id from {table} where "{userKey}"::text=$1::text and "{primaryKey}" != $2'
-              .replace(/{primaryKey}/g, pKey)
+        key = XT.Orm.naturalKey(map) || XT.Orm.primaryKey(map),
+        sql = 'select "{primaryKey}" as id from {table} where "{userKey}"::text=$1::text and "{key}" != $2'
+              .replace(/{key}/g, key)
               .replace(/{table}/, table)
               .replace(/{userKey}/, key)
               .replace(/{value}/, value)
@@ -137,6 +138,8 @@ select xt.install_js('XM','Model','xtuple', $$
     var nameSpace = recordType.beforeDot(),
       type = recordType.afterDot(),
       map = XT.Orm.fetch(nameSpace, type),
+      data = Object.create(XT.Data),
+      nkey = XT.Orm.naturalKey(map),
       tableName = map.table,
       tableSuffix = tableName.indexOf('.') ? tableName.afterDot() : tableName,
       sql,
@@ -146,6 +149,8 @@ select xt.install_js('XM','Model','xtuple', $$
       attr,
       seq,
       tableName;
+
+   if (nkey) { id = data.getId(map, id); }
       
     /* Determine where this record is used by analyzing foreign key linkages */
     sql = "select pg_namespace.nspname AS schemaname, " +

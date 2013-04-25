@@ -295,6 +295,8 @@ select xt.install_js('XT','Orm','xtuple', $$
       base = orm,
       viewName = orm.nameSpace.decamelize() + '.' + orm.type.decamelize(),
       processOrm,
+      schemaName,
+      tableName,
       res;
 
     // ..........................................................
