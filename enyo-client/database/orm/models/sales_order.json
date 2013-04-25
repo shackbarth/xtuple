@@ -7,6 +7,7 @@
     "lockable": true,
     "lockTable": "cohead",
     "idSequenceName": "cohead_cohead_id_seq",
+    "orderSequence": "SoNumber",
     "comment": "Sales Order Map",
     "privileges": {
       "all": {
