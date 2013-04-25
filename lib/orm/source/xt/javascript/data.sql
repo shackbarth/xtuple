@@ -1150,8 +1150,39 @@ select xt.install_js('XT','Data','xtuple', $$
         ret.data = this.decrypt(nameSpace, type, ret.data, encryptionKey);
       }
 
+      if (!options.includeKeys) {
+        this.removeKeys(nameSpace, type, ret.data);
+      }
+
       /* return the results */
       return ret || {};
+    },
+
+    /**
+      Remove primary and foreign keys from the data so it looks like a pure JavaScript object.
+    **/
+    removeKeys: function (nameSpace, type, data) {
+      var orm = XT.Orm.fetch(nameSpace, type),
+        pkey = XT.Orm.primaryKey(orm),
+        props = orm.properties,
+        prop,
+        val,
+        i,
+        n;
+      delete data[pkey];
+      for (i = 0; i < props.length; i++) {
+        prop = props[i];
+        if (prop.toOne && prop.toOne.isNested && data[prop.name]) {
+          this.removeKeys(nameSpace, prop.toOne.type, data[prop.name]);
+        } else if (prop.toMany && prop.toMany.isNested) {
+          for (n = 0; n < data[prop.name].length; n++) {
+            val = data[prop.name][n];
+            delete val[prop.toMany.inverse];
+            this.removeKeys(nameSpace, prop.toMany.type, val);
+          }
+        }
+      }
+      
     },
 
     /**
