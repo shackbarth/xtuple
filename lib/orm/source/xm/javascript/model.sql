@@ -1,18 +1,18 @@
 select xt.install_js('XM','Model','xtuple', $$
-  /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
+  /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple.
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
   XM.Model = {};
-  
+
   XM.Model.isDispatchable = true;
 
-  /** 
-    Pass in a record type and get the next id for that type 
+  /**
+    Pass in a record type and get the next id for that type
 
     @param {String} record type
     @returns Number
   */
-  XM.Model.fetchId = function(recordType) { 
+  XM.Model.fetchId = function(recordType) {
     var nameSpace = recordType.beforeDot(),
         type = recordType.afterDot(),
         map = XT.Orm.fetch(nameSpace, type),
@@ -23,7 +23,7 @@ select xt.install_js('XM','Model','xtuple', $$
   }
 
   /**
-    Pass in a record type and get the next id for that type 
+    Pass in a record type and get the next id for that type
 
     @param {String} record type
     @returns Number
@@ -35,7 +35,11 @@ select xt.install_js('XM','Model','xtuple', $$
         seq = map.orderSequence,
         sql = 'select fetchNextNumber($1) as result';
 
-    return seq ? plv8.execute(sql, [seq])[0].result : false;
+    if (seq) {
+      return plv8.execute(sql, [seq])[0].result;
+    } else {
+      plv8.elog(ERROR, "orderSequence is not defined in the ORM");
+    }
   },
 
   /**
@@ -82,7 +86,7 @@ select xt.install_js('XM','Model','xtuple', $$
   }
 
   /**
-    Release a number back into the sequence pool for a given type. 
+    Release a number back into the sequence pool for a given type.
 
     @param {String} record type
     @param {Number} number
@@ -141,11 +145,11 @@ select xt.install_js('XM','Model','xtuple', $$
       attr,
       seq,
       tableName;
-      
+
     /* Determine where this record is used by analyzing foreign key linkages */
     sql = "select pg_namespace.nspname AS schemaname, " +
           "con.relname AS tablename, " +
-          "conkey AS seq, " + 
+          "conkey AS seq, " +
           "conrelid AS class_id " +
           "from pg_constraint, pg_class f, pg_class con, pg_namespace " +
           "where confrelid=f.oid " +
@@ -157,7 +161,7 @@ select xt.install_js('XM','Model','xtuple', $$
     for (i = 0; i < fkeys.length; i++) {
       /* Validate */
 
-      sql = "select attname " + 
+      sql = "select attname " +
             "from pg_attribute, pg_class " +
             "where ((attrelid=pg_class.oid) " +
             " and (pg_class.oid = $1) " +
@@ -177,6 +181,6 @@ select xt.install_js('XM','Model','xtuple', $$
 
     return false
   }
-  
+
 $$ );
 
