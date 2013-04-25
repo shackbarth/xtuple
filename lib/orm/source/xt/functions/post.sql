@@ -37,6 +37,7 @@ create or replace function xt.post(data_hash text) returns text as $$
     data = Object.create(XT.Data)
     orm = XT.Orm.fetch(dataHash.nameSpace, dataHash.type);
     pkey = XT.Orm.primaryKey(orm);
+    nkey = XT.Orm.naturalKey(orm);
     prv = JSON.parse(JSON.stringify(dataHash.data));
     
     /* set status */
@@ -44,11 +45,15 @@ create or replace function xt.post(data_hash text) returns text as $$
 
     /* set id if not provided */
     if (!dataHash.id) {
-      plv8.elog(ERROR, "A unique id must be provided");
-    }
-
-    if (!dataHash.data[pkey]) {
-      dataHash.data[pkey] = dataHash.id;
+      if (nkey) {
+        if (dataHash.data[nkey] || nkey === 'uuid') {
+          dataHash.id = dataHash.data[nkey] || XT.generateUUID();
+        } else {
+          plv8.elog(ERROR, "A unique id must be provided");
+        }
+      } else {
+        dataHash.id = dataHash.data[pkey] || plv8.execute(sql)[0].nextval;
+      }
     }
   
     /* commit the record */
