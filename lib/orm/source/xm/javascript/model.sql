@@ -52,11 +52,16 @@ select xt.install_js('XM','Model','xtuple', $$
        data = Object.create(XT.Data),
        lockTable = orm.lockTable || orm.table,
        pkey = XT.Orm.primaryKey(orm),
-       rec = data.retrieveRecord({
-         nameSpace: nameSpace,
-         type: type,
-         id: id
-       });
+       nkey = XT.Orm.naturalKey(orm),
+       rec;
+
+    /* if the model uses a natural key, get the primary key value */
+    id = nkey ? data.getId(orm, id) : id;
+    rec = data.retrieveRecord({
+      nameSpace: nameSpace,
+      type: type,
+      id: id
+    });
     if (!rec || !rec.data) { throw "Record for requested lock not found." }
     if (rec.etag !== etag) { return false; }
     return data.tryLock(lockTable, rec.data[pkey]);

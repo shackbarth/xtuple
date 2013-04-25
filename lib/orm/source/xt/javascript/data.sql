@@ -952,6 +952,24 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
+      Get the primary key id for an object based on a passed in natural key.
+
+      @param {String} Namespace
+      @param {String} Type
+      @param {String} Natural key value
+    */
+    getId: function (orm, value) {
+      var pcol = XT.Orm.primaryKey(orm, true),
+        ncol = XT.Orm.naturalKey(orm, true),
+        sql = "select {pcol} as id from {table} where {ncol} = $1"
+              .replace("{pcol}", pcol)
+              .replace("{table}", orm.table)
+              .replace("{ncol}", ncol);
+        if (DEBUG) { plv8.elog(NOTICE, 'find pkey id sql = ', sql, value); }
+      return plv8.execute(sql, [value])[0].id;
+    },
+
+    /**
       Returns the current version of a record.
 
       @param {Object} Orm
@@ -1068,8 +1086,7 @@ select xt.install_js('XT','Data','xtuple', $$
         },
         sql,
         pkey = XT.Orm.primaryKey(map),
-        pcol = XT.Orm.primaryKey(map, true),
-        ncol = XT.Orm.naturalKey(map, true),
+        nkey = XT.Orm.naturalKey(map),
         context = options.context,
         join = "",
         params = {};
@@ -1079,13 +1096,9 @@ select xt.install_js('XT','Data','xtuple', $$
                         .replace("{type}", type));
       }
 
-      if (ncol) {
-        sql = "select {pcol} as id from {table} where {ncol} = $1"
-              .replace("{pcol}", pcol)
-              .replace("{table}", map.table)
-              .replace("{ncol}", ncol);
-        if (DEBUG) { plv8.elog(NOTICE, 'find key sql = ', sql); }
-        id = plv8.execute(sql, [id])[0].id;
+      /* If this object uses a natural key, go get the primary key id */
+      if (nkey) {
+        id = this.getId(map, id);
       } 
 
       if (XT.typeOf(id) === 'string') {
