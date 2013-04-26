@@ -1,7 +1,3 @@
-DO $$
-  if (!plv8.XT) { plv8.execute('select xt.js_init();'); }
-$$ language plv8;
-
 /**
     Generate a universally unique identifier.
     

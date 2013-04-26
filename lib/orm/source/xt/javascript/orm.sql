@@ -383,7 +383,7 @@ select xt.install_js('XT','Orm','xtuple', $$
                 }
 
                 /* looks good. add the column */
-                query = "alter table {table} add column obj_uuid text default xt.generateUUID();".replace("{table}", orm.table);
+                query = "alter table {table} add column obj_uuid text default xt.generate_uuid();".replace("{table}", orm.table);
                 if (DEBUG) { plv8.elog(NOTICE, 'Add obj_uuid:', query); }
                 plv8.execute(query);
                 query = "comment on column {table}.obj_uuid is 'Added by xt the web-mobile package.'".replace("{table}", orm.table);

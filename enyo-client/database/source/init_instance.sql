@@ -7,14 +7,14 @@
 \i init_script.sql;
 \cd ../../../enyo-client/database/source;
 
+select xt.js_init();
+
 -- [ END ] initdb
 \i delete_system_orms.sql;
 
 -- [ START ] public
 
 -- public
-\i public/functions/geteffectivextuser.sql
-
 \i public/tables/comment.sql
 \i public/tables/coitem.sql
 \i public/tables/docass.sql

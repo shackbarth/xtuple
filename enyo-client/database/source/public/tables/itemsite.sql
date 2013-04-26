@@ -28,5 +28,5 @@ alter table public.itemsite alter column itemsite_value set default 0;
 alter table public.itemsite alter column itemsite_planning_type set default 'N';
 
 -- add uuid column here because there are views that need this
-select xt.add_column('itemsite','obj_uuid', 'text', 'default xt.generateUUID()', 'public');
+select xt.add_column('itemsite','obj_uuid', 'text', 'default xt.generate_uuid()', 'public');
 
