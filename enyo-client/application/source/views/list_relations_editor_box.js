@@ -231,8 +231,7 @@ trailing:true white:true*/
     Mixin for Quote Specific Line functions
   */
   XV.QuoteLineMixin = {
-    create: function () {
-      this.inherited(arguments);
+    build: function () {
       this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
       
       // Loop through the components and set the specific attribute information for the Money widgets
@@ -281,8 +280,7 @@ trailing:true white:true*/
     Mixin for Sales Order Specific Line functions
   */
    XV.SalesOrderLineMixin = {
-     create: function () {
-       this.inherited(arguments);
+     build: function () {
        this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
        
        // Loop through the components and set the specific attribute information for the Money widgets
@@ -373,13 +371,21 @@ trailing:true white:true*/
   
   var quoteLineEditor = enyo.mixin(XV.QuoteLineMixin, {
     name: "XV.QuoteLineItemEditor",
-    kind: "XV.BaseLineItemEditor"
+    kind: "XV.BaseLineItemEditor",
+    create: function () {
+      this.inherited(arguments);
+      this.build();
+    }
   });
   enyo.kind(quoteLineEditor);
   
   var salesOrderLineEditor = enyo.mixin(XV.SalesOrderLineMixin, {
     name: "XV.SalesOrderLineItemEditor",
-    kind: "XV.BaseLineItemEditor"
+    kind: "XV.BaseLineItemEditor",
+    create: function () {
+      this.inherited(arguments);
+      this.build();
+    }
   });
   enyo.kind(salesOrderLineEditor);  
 
