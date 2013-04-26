@@ -542,7 +542,8 @@ select xt.install_js('XT','Data','xtuple', $$
      @returns {Object}
    */
     prepareInsert: function (orm, record, params, encryptionKey) {
-      var count,
+      var pkey = XT.Orm.primaryKey(orm),
+        count,
         columns,
         ormp,
         prop,
@@ -561,6 +562,11 @@ select xt.install_js('XT','Data','xtuple', $$
       };
       params.table = orm.table;
       count = params.values.length + 1;
+
+      /* if no primary key, then create one */
+      if (!record[pkey]) {
+        record[pkey] = plv8.execute("select nextval($1) as id", [orm.idSequenceName])[0].id;
+      }
 
       /* if extension handle key */
       if (orm.relations) {
@@ -833,7 +839,8 @@ select xt.install_js('XT','Data','xtuple', $$
         sql = '',
         orm = XT.Orm.fetch(options.nameSpace, options.type),
         pkey = XT.Orm.primaryKey(orm),
-        id = data[pkey],
+        nkey = XT.Orm.naturalKey(orm),
+        id = nkey ? this.getId(orm, data[nkey]) : data[pkey],
         lockKey = options.lock && options.lock.key ? options.lock.key : false,
         lockTable = orm.lockTable || orm.table,
         etag = this.getVersion(orm, id),
@@ -1110,7 +1117,7 @@ select xt.install_js('XT','Data','xtuple', $$
       if (context) {
         context.nameSpace = context.nameSpace || context.recordType.beforeDot();
         context.type = context.type || context.recordType.afterDot()
-        context.map = XT.Orm.fetch(context.nameSpace, context.type);
+        context.map = XT.Orm.fetych(context.nameSpace, context.type);
         context.prop = XT.Orm.getProperty(context.map, context.relation);
         context.fkey = context.prop.toMany.inverse;
         context.pkey = XT.Orm.primaryKey(context.map);
@@ -1166,7 +1173,9 @@ select xt.install_js('XT','Data','xtuple', $$
         ret.data = this.decrypt(nameSpace, type, ret.data, encryptionKey);
       }
 
-      this.removeKeys(nameSpace, type, ret.data);
+      if (!options.includeKeys) {
+        this.removeKeys(nameSpace, type, ret.data);
+      }
 
       /* return the results */
       return ret || {};

@@ -99,6 +99,19 @@ select xt.post('{
   "username": "admin",
   "nameSpace":"XM",
   "type": "Contact",
+  "id": "99999",
+  "data" : {
+    "number": "99999",
+    "firstName": "Bob",
+    "lastName": "Marley"
+  },
+  "prettyPrint": true
+}');
+
+select xt.post('{
+  "username": "admin",
+  "nameSpace":"XM",
+  "type": "Contact",
   "id": 10,
   "data" : {
     "number": "10009",

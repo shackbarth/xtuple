@@ -25,7 +25,7 @@ create or replace function xt.patch(data_hash text) returns text as $$
   if (dataHash.username) { XT.username = dataHash.username; }
 
   /* get the current version of the record */
-  rec = data.retrieveRecord(dataHash);
+  rec = data.retrieveRecord(dataHash, {includeKeys: true});
   prv = JSON.parse(JSON.stringify(rec.data));
 
   /* apply the patch */

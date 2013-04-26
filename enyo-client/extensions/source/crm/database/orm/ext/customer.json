@@ -355,7 +355,7 @@
         "name": "uuid",
         "attr": {
           "type": "String",
-          "column": "obj_uuid"
+          "column": "obj_uuid",
           "isNaturalKey": true
         }
       },
