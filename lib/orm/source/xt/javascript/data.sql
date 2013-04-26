@@ -1212,7 +1212,7 @@ select xt.install_js('XT','Data','xtuple', $$
         n;
       for (c = 0; c < data.length; c++) {
         item = data[c];
-        if (nkey) { delete item[pkey]; }
+        if (nkey && nkey !== pkey) { delete item[pkey]; }
         for (i = 0; i < props.length; i++) {
           prop = props[i];
           if (prop.toOne && prop.toOne.isNested && item[prop.name]) {
