@@ -27,7 +27,7 @@ DO $$
   if (update) {
     sql = "select viewname from pg_views where schemaname = 'xm';"
     result = plv8.execute(sql);
-    for (i = 0; i < result.length; i++) { 
+    for (i = 0; i < result.length; i++) {
       viewname = result[i].viewname;
       plv8.execute('drop view if exists xm.' + viewname + ' cascade;');
     }

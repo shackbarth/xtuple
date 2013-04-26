@@ -82,5 +82,17 @@ white:true*/
     kind: "XV.CommentBox",
     model: "XM.QuoteLineComment"
   });
+  
+  enyo.kind({
+    name: "XV.SalesOrderLineCommentBox",
+    kind: "XV.CommentBox",
+    model: "XM.SalesOrderLineComment"
+  });
+  
+  enyo.kind({
+    name: "XV.SalesOrderCommentBox",
+    kind: "XV.CommentBox",
+    model: "XM.SalesOrderComment"
+  });
 
 }());

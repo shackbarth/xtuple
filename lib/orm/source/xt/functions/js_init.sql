@@ -197,6 +197,13 @@ create or replace function xt.js_init() returns void as $$
   }
 
   /**
+   * Get current_database().
+   */
+  XT.currentDb = function() {
+    return plv8.execute("select current_database() as db;")[0].db;
+  }
+
+  /**
     Change camel case property names in an object to snake case.
      Only changes immediate properties, it is not recursive.
 
@@ -219,7 +226,7 @@ create or replace function xt.js_init() returns void as $$
     http://stackoverflow.com/a/8809472/251019
     From here:
     http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
-  
+
     @return {String}
   */
   XT.generateUUID = function () {

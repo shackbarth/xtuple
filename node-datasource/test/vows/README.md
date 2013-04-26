@@ -5,9 +5,9 @@ We use vows with zombie to test our models, kinds, and routes programmatically.
 
 To install vows globally:
 
-    install npm vows -g
+    npm install vows -g
 
-Login credentials should stored in the gitignored file: 
+Login credentials should stored in the gitignored file:
 shared/loginData.js
 
 You'll want to copy the sample in the same directory and update the values appropriately.
@@ -18,17 +18,17 @@ enyo-client/application/tools directory and do:
 
     sudo bash deploy.sh
 
-cd back to the node-datsource/test/vows directory
+cd back to the node-datasource/test/vows directory
 To run a test, do:
-  
+
     vows models/your_file.js
-    
+
 To see more detail:
 
     vows models/your_file.js --spec
-    
+
 To run all tests in the folder:
-    
+
     vows models/*
 
 This is a work in progress. At the moment, there is at least one proof-of-concept

@@ -239,7 +239,7 @@ regexp:true, undef:true, trailing:true, white:true */
         
       // supports how this function is used by the base class.
       // assume if we get a number, that means the localValue or baseValue
-      if (_.isNumber(value)) {
+      if (!isNaN(value)) {
         fromUser = true;
         if (this.getLocalMode()) {
           value = {localValue: value};
@@ -251,7 +251,7 @@ regexp:true, undef:true, trailing:true, white:true */
       options = options || {};
       for (var attribute in value) {
         if (value.hasOwnProperty(attribute)) {
-          newValue = value[attribute];
+          newValue = value[attribute] ? value[attribute] : 0; // if this value is falsy, make it zero
           if (attribute === "localValue" || attribute === "baseValue") {
             if (fromUser) {
               this.setLocalValue(newValue);
