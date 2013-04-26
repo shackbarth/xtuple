@@ -20,7 +20,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     to fit with the native callback of X.database.
    */
   var queryDatabase = exports.queryDatabase = function (functionName, payload, session, callback) {
-    console.log("payload is", JSON.stringify(payload));
     var query,
       org,
       queryString ="select xt.%@($$%@$$)",
