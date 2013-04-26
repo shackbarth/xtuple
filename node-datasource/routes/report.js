@@ -13,8 +13,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   var queryForData = function (session, query, callback) {
     var userId = session.passport.user.username,
-      userQueryPayload = '{"requestType":"retrieveRecord","recordType":"XM.UserAccountRelation","id":"%@"}'.f(userId),
-      userQuery = "select xt.retrieve_record('%@')".f(userQueryPayload);
+      userQueryPayload = '{"nameSpace":"XM","type":"UserAccountRelation","id":"%@"}'.f(userId),
+      userQuery = "select xt.get('%@')".f(userQueryPayload);
 
     // first make sure that the user has permissions to export to CSV
     // (can't trust the client)
@@ -26,20 +26,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return;
       }
 
-      retrievedRecord = JSON.parse(res.rows[0].retrieve_record);
+      retrievedRecord = JSON.parse(res.rows[0].get);
       if (retrievedRecord.disableExport) {
         // nice try, asshole.
         callback("Stop trying to hack into our database", null);
         return;
       }
 
-      if (query.id) {
-        // this is a request for a single record
-        data.retrieveEngine(query, session, callback);
-      } else {
-        // this is a request for multiple records
-        data.fetchEngine(query, session, callback);
-      }
+      data.queryDatabase("get", query, session, callback);
     });
   };
   exports.queryForData = queryForData;
@@ -75,9 +69,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     bicacheCollection.fetch(fetchOptions);
 
     var queryForDataCallback = function (result) {
-      var recordType = requestDetails.query ? requestDetails.query.recordType : requestDetails.recordType,
-        modelName = recordType.suffix().replace("ListItem", "").replace("Relation", ""),
-        fileName = recordType.suffix().replace("ListItem", "List").replace("Relation", "List") + ".prpt";
+      var type = requestDetails.type,
+        modelName, fileName;
+
+      if (!type) {
+        res.send({isError: true, message: "You must pass a type"});
+        return;
+      }
+      modelName = type.replace("ListItem", "").replace("Relation", "");
+      fileName = type.replace("ListItem", "List").replace("Relation", "List") + ".prpt";
 
       if (result.isError) {
         res.send(result);
@@ -129,7 +129,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       // step 2: get the schema
       X.database.query(req.session.passport.user.organization,
-        "select xt.getSchema('%@', '%@');".f(recordType.substring(0, 2), modelName), saveBiCache);
+        "select xt.getSchema('%@', '%@');".f(requestDetails.nameSpace, modelName), saveBiCache);
     };
 
     // step 1: get the data
