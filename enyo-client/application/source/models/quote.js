@@ -36,7 +36,7 @@ white:true*/
       taxCodes;
 
     // Collect line item detail
-    _.each(model.get('lineItems').models, function (lineItem) {
+    var forEachCalcFunction = function (lineItem) {
       var extPrice = lineItem.get('extendedPrice') || 0,
         quantity = lineItem.get("quantity") || 0,
         standardCost = lineItem.getValue("itemSite.item.standardCost") || 0,
@@ -51,7 +51,9 @@ white:true*/
       subtotals.push(extPrice);
       costs.push(quantity * standardCost);
       taxDetails = taxDetails.concat(lineItem.taxDetail);
-    });
+    };
+    
+    _.each(model.get('lineItems').models, forEachCalcFunction);
 
     // Add freight taxes to the mix
     taxDetails = taxDetails.concat(model.freightTaxDetail);
