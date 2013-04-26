@@ -1547,7 +1547,7 @@ trailing:true white:true*/
   enyo.kind(quoteLineItem);
 
   // ..........................................................
-  // QUOTE LINE ITEM
+  // SALES ORDER LINE ITEM
   //
   var salesOrderLineItem = enyo.mixin(XV.SalesOrderLineMixin, {
     name: "XV.SalesOrderLineWorkspace",
@@ -1591,7 +1591,6 @@ trailing:true white:true*/
           {kind: "XV.SalesOrderCommentBox", attr: "comments"},
           {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
         ], {owner: this});
-      // TODO: add "At Shipping" and "Balance" to this.$.summaryColumnTwo
     }
   });
 
