@@ -179,21 +179,21 @@ trailing:true white:true*/
     This is the parent LineItem Mixin for both the Quote and SalesOrder.
   */
   XV.LineMixin = {
-    // /**
-    //  When the model changes, check the priceMode field to see if it is in
-    //    Discount or Markup mode and change the label accordingly.
-    // */
-    // attributesChanged: function (model, options) {
-    //   XV.EditorMixin.attributesChanged.apply(this, arguments);
-    //   var pm = model.get("priceMode");
-    //   if (this.$.discount) {
-    //     if (pm === "N" || pm === "D" || pm === "P") { // discount
-    //       this.$.discount.setLabel("_discount".loc());
-    //     } else { // markup
-    //       this.$.discount.setLabel("_markup".loc());
-    //     }
-    //   }
-    // },
+    /**
+     When the model changes, check the priceMode field to see if it is in
+       Discount or Markup mode and change the label accordingly.
+    */
+    attributesChanged: function (model, options) {
+      XV.EditorMixin.attributesChanged.apply(this, arguments);
+      var pm = model.get("priceMode");
+      if (this.$.discount) {
+        if (pm === "N" || pm === "D" || pm === "P") { // discount
+          this.$.discount.setLabel("_discount".loc());
+        } else { // markup
+          this.$.discount.setLabel("_markup".loc());
+        }
+      }
+    },
     changeItemSiteParameter: function (attr, param, isParent) {
       param = param ? param : attr;
       isParent = _.isBoolean(isParent) ? isParent : true;
@@ -231,21 +231,8 @@ trailing:true white:true*/
     Mixin for Quote Specific Line functions
   */
   XV.QuoteLineMixin = {
-    /**
-     When the model changes, check the priceMode field to see if it is in
-       Discount or Markup mode and change the label accordingly.
-    */
-    attributesChanged: function (model, options) {
-      XV.EditorMixin.attributesChanged.apply(this, arguments);
-      var pm = model.get("priceMode");
-      if (this.$.discount) {
-        if (pm === "N" || pm === "D" || pm === "P") { // discount
-          this.$.discount.setLabel("_discount".loc());
-        } else { // markup
-          this.$.discount.setLabel("_markup".loc());
-        }
-      }
-      
+    create: function () {
+      this.inherited(arguments);
       this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
       
       // Loop through the components and set the specific attribute information for the Money widgets
@@ -256,7 +243,6 @@ trailing:true white:true*/
         }
       });
     },
-    
     quoteDateChanged: function () {
       this.changeItemSiteParameter("quoteDate", "effectiveDate");
     },
@@ -295,28 +281,15 @@ trailing:true white:true*/
     Mixin for Sales Order Specific Line functions
   */
    XV.SalesOrderLineMixin = {
-     /**
-      When the model changes, check the priceMode field to see if it is in
-        Discount or Markup mode and change the label accordingly.
-     */
-     attributesChanged: function (model, options) {
-       XV.EditorMixin.attributesChanged.apply(this, arguments);
-       var pm = model.get("priceMode");
-       if (this.$.discount) {
-         if (pm === "N" || pm === "D" || pm === "P") { // discount
-           this.$.discount.setLabel("_discount".loc());
-         } else { // markup
-           this.$.discount.setLabel("_markup".loc());
-         }
-       }
-
+     create: function () {
+       this.inherited(arguments);
        this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
 
        // Loop through the components and set the specific attribute information for the Money widgets
        this.getComponents().forEach(function (e) {
          if (e.kind === "XV.MoneyWidget") {
-           e.attr.currency = "salesOrder.currency";
-           e.getEffective() ? e.setEffective("salesOrder.orderDate") : false;
+           e.attr.currency = "quote.currency";
+           e.getEffective() ? e.setEffective("quote.quoteDate") : false;
          }
        });
      },
