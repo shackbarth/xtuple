@@ -186,10 +186,12 @@ trailing:true white:true*/
     attributesChanged: function (model, options) {
       XV.EditorMixin.attributesChanged.apply(this, arguments);
       var pm = model.get("priceMode");
-      if (pm === "N" || pm === "D" || pm === "P") { // discount
-        this.$.discount.setLabel("_discount".loc());
-      } else { // markup
-        this.$.discount.setLabel("_markup".loc());
+      if (this.$.discount) {
+        if (pm === "N" || pm === "D" || pm === "P") { // discount
+          this.$.discount.setLabel("_discount".loc());
+        } else { // markup
+          this.$.discount.setLabel("_markup".loc());
+        }
       }
     },
     changeItemSiteParameter: function (attr, param, isParent) {
@@ -350,13 +352,13 @@ trailing:true white:true*/
         {kind: "XV.PercentWidget", name: "discount", attr: "discount",
           label: "_discount".loc()},
         {kind: "XV.MoneyWidget", attr:
-          {localValue: "price", currency: "quote.currency"},
+          {localValue: "price", currency: ""},
           label: "_price".loc(), currencyDisabled: true,
           effective: "quote.quoteDate", scale: XT.SALES_PRICE_SCALE},
         {kind: "XV.UnitPicker", attr: "priceUnit",
           name: "priceUnitPicker"},
         {kind: "XV.MoneyWidget", attr:
-          {localValue: "extendedPrice", currency: "quote.currency"},
+          {localValue: "extendedPrice", currency: ""},
           label: "_extendedPrice".loc(), currencyDisabled: true,
           effective: "quote.quoteDate", scale: XT.EXTENDED_PRICE_SCALE},
         {kind: "XV.DateWidget", attr: "scheduleDate"},

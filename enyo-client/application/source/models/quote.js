@@ -1218,7 +1218,8 @@ white:true*/
           attrs = {
             discount: undefined,
             listPriceDiscount: undefined,
-            listCostMarkup: undefined
+            listCostMarkup: undefined,
+            listPrice: listPrice
           };
 
         if (price === 0) {
