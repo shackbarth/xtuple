@@ -66,7 +66,7 @@ white:true*/
       //   var worker = require('child_process').fork(__dirname + '/pgworker.js');
       //   this.workers.push(worker);
 
-      //   worker.on('message', function(m) {
+      //   worker.on('message', function (m) {
       //     var callback = that.callbacks[m.id];
       //     delete that.callbacks[m.id];
 
@@ -108,7 +108,7 @@ white:true*/
         // worker.send({id: this.requestNum, query: query, options: options, conString: str});
       } else {
         // uncomment this to see the query against the instance database
-        //console.log(query);
+        // console.log(query);
         X.pg.connect(str, _.bind(this.connected, this, query, options, callback));
       }
     },

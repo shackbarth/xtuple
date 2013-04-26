@@ -54,7 +54,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   //
   // Data-passthrough routes
   //
-
   exports.queryDatabase = data.queryDatabase;
   exports.delete = [ensureLogin, data.delete];
   exports.get = [ensureLogin, data.get];

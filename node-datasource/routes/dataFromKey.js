@@ -15,9 +15,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       tempDataModel = new XM.BiCache({key: dataKey});
 
     tempDataModel.fetch({success: function (model, result) {
+      if (!model.get("data")) {
+        res.send({isError: true, message: "Data not found"});
+        return;
+      }
       res.setHeader("Content-Type", "application/json");
       res.send(JSON.stringify({
-        data: JSON.parse(model.get("data")),
+        data: JSON.parse(model.get("data")).data,
         locale: JSON.parse(model.get("locale")),
         schema: JSON.parse(model.get("schema")),
         query: JSON.parse(model.get("query"))
