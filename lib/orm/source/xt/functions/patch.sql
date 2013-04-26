@@ -15,6 +15,8 @@ create or replace function xt.patch(data_hash text) returns text as $$
 
   var dataHash = JSON.parse(data_hash),
     data = Object.create(XT.Data),
+    orm = XT.Orm.fetch(dataHash.nameSpace, dataHash.type),
+    idKey = XT.Orm.naturalKey(orm) || XT.Orm.primaryKey(orm), 
     options = JSON.parse(JSON.stringify(dataHash)),
     patches = options.patches,
     prettyPrint = dataHash.prettyPrint ? 2 : null,
@@ -43,6 +45,7 @@ create or replace function xt.patch(data_hash text) returns text as $$
   XT.jsonpatch.apply(prv.data, patches);
   observer = XT.jsonpatch.observe(prv.data);
   dataHash.includeKeys = false;
+  dataHash.id = prv.data[idKey];
   ret = data.retrieveRecord(dataHash);
   observer.object = ret.data;
   delete ret.data;
