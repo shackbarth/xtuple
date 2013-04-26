@@ -66,10 +66,7 @@ white:true*/
                 attrs = dataHash.patches;
               }
             } else {
-              // TODO: unify the response formatting on the server side
-              // notably, data from the global DB come back is response.data
-              // and not response.data.data
-              attrs = dataHash.data ? dataHash.data : dataHash;
+              attrs = dataHash.data;
             }
             if (obj instanceof Backbone.Model) {
               obj.etag = dataHash.etag;
