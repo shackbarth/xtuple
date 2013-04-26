@@ -1435,7 +1435,7 @@ trailing:true white:true*/
     ]
   });
 
-  XV.registerModelList("XM.TaxAuthorityRelation", "XV.TaxAuthorityList");
+  //XV.registerModelList("XM.TaxAuthorityRelation", "XV.TaxAuthorityList");
 
   // ..........................................................
   // TAX CODE

@@ -1820,7 +1820,8 @@ trailing:true white:true*/
   enyo.kind(hash);
 
   XV.registerModelWorkspace("XM.TaxAuthority", "XV.TaxAuthorityWorkspace");
-
+  XV.registerModelWorkspace("XM.TaxAuthorityRelation", "XV.TaxAuthorityWorkspace");
+  
   // ..........................................................
   // TAX CODE
   //
