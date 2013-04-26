@@ -161,4 +161,22 @@ white:true*/
     XM.termsTypes.add(termsType);
   }
   
+  // Hold Type
+  var holdTypeJson = [
+    { id: "C", name: "_credit".loc() },
+    { id: "S", name: "_shipping".loc() },
+    { id: "P", name: "_packing".loc() },
+    { id: "R", name: "_return".loc() }
+  ];
+  XM.HoldTypeModel = Backbone.Model.extend({
+  });
+  XM.HoldTypeCollection = Backbone.Collection.extend({
+    model: XM.HoldTypeModel
+  });
+  XM.holdTypes = new XM.HoldTypeCollection();
+  for (i = 0; i < holdTypeJson.length; i++) {
+    var holdType = new XM.HoldTypeModel(holdTypeJson[i]);
+    XM.holdTypes.add(holdType);
+  }
+  
 }());

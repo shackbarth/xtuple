@@ -107,6 +107,8 @@ white:true*/
         // }
         // worker.send({id: this.requestNum, query: query, options: options, conString: str});
       } else {
+        // uncomment this to see the query against the instance database
+        //console.log(query);
         X.pg.connect(str, _.bind(this.connected, this, query, options, callback));
       }
     },
@@ -175,9 +177,9 @@ white:true*/
             }
             return;
           }
-          
+
           dataHash = JSON.parse(response.rows[0].request);
-          
+
           // Handle no data as error
           if (method === "get" && options.id &&
             _.isEmpty(dataHash.data)) {
@@ -195,7 +197,7 @@ white:true*/
               return;
             }
             if (dataHash.patches) {
-                attrs = obj ?
+              attrs = obj ?
                   XM.jsonpatch.apply(obj.toJSON(), dataHash.patches) :
                   dataHash.patches;
             } else {
@@ -213,6 +215,7 @@ white:true*/
       query = "select xt.{method}($${payload}$$) as request"
               .replace("{method}", method)
               .replace("{payload}", payload);
+      // uncomment this to see the query against the global database
       //X.log(query);
       this.query(query, conn, complete);
       return true;

@@ -27,6 +27,17 @@ white:true*/
       if (!_.contains(this.requiredAttributes, "wasQuote")) {
         this.requiredAttributes.push("wasQuote");
       }
+    },
+    
+    /**
+      Add default for wasQuote.
+     */
+    defaults: function () {
+      var defaults = XM.SalesOrderBase.prototype.defaults.apply(this, arguments);
+
+      defaults.wasQuote = false;
+
+      return defaults;
     }
   });
 
@@ -60,7 +71,7 @@ white:true*/
     },
 
     /**
-      Add defaults for firm and subnumber.
+      Add defaults for firm, and subnumber.
      */
     defaults: function () {
       var defaults = XM.SalesOrderLineBase.prototype.defaults.apply(this, arguments);
@@ -176,17 +187,6 @@ white:true*/
     recordType: 'XM.SalesOrderListItem',
 
     editableModel: 'XM.SalesOrder'
-
-    /**
-    Returns quote status as a localized string.
-
-    @returns {String}
-    getSalesOrderStatusString: function () {
-      var K = XM.SalesOrder,
-        status = this.get("status");
-      return status === K.OPEN_STATUS ? "_open".loc() : "_closed".loc();
-    }
-    */
 
   });
 

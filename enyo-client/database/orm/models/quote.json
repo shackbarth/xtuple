@@ -41,6 +41,13 @@
         }
       },
       {
+        "name": "customerPurchaseOrderNumber",
+        "attr": {
+          "type": "String",
+          "column": "quhead_custponumber"
+         }
+      },
+      {
         "name": "quoteDate",
         "attr": {
           "type": "Date",
