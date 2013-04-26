@@ -23,7 +23,8 @@ create or replace function xt.delete(data_hash text) returns boolean as $$
   if (dataHash.username) { XT.username = dataHash.username; }
 
   /* get the current version of the record */
-  rec = data.retrieveRecord(dataHash, {includeKeys:true});
+  dataHash.includeKeys = true;
+  rec = data.retrieveRecord(dataHash);
   if (!rec.data) { plv8.elog(ERROR, "Record not found"); };
   dataHash.data = rec.data;
 

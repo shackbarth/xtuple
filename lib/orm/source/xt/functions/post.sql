@@ -103,7 +103,31 @@ select xt.post('{
   "data" : {
     "number": "99999",
     "firstName": "Bob",
-    "lastName": "Marley"
+    "lastName": "Marley",
+    "email":[
+      {
+        "uuid": "f4477339-1fa9-498e-b597-6c939c1898ab",
+        "email": "frankf@ttoys.com"
+      }
+    ],
+    "comments": [
+      {
+        "uuid": "f4477779-1fa9-498e-b597-6c939c1898ab",
+        "commentType": "General",
+        "text": "This is a test.",
+        "isPublic": false,
+        "created": "2013-04-26T12:57:41.939Z",
+        "createdBy": "admin"
+      },
+      {
+        "uuid": "cb5a834a-b816-480c-ab17-0637a999b517",
+        "commentType": "ChangeLog",
+        "text": "This is another test.",
+        "isPublic": false,
+        "created": "2013-04-26T12:57:57.896Z",
+        "createdBy": "admin"
+      }
+    ]
   },
   "prettyPrint": true
 }');

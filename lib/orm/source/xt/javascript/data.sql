@@ -415,20 +415,29 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Object} Record
     */
     commitArrays: function (orm, record, encryptionKey) {
-      var prop,
+      var pkey = XT.Orm.primaryKey(orm),
+        id = record[pkey],
+        fkey,
+        prop,
         ormp,
-        values;
+        values,
+        val;
       for (prop in record) {
         ormp = XT.Orm.getProperty(orm, prop);
 
         /* if the property is an array of objects they must be records so commit them */
         if (ormp.toMany && ormp.toMany.isNested) {
+          fkey = ormp.toMany.inverse;
           values = record[prop];
           for (var i = 0; i < values.length; i++) {
+            val = values[i];
+            
+            /* populate the parent key into the foreign key field if it's absent */
+            if (!val[fkey]) { val[fkey] = id; }
             this.commitRecord({
               nameSpace: orm.nameSpace,
               type: ormp.toMany.type,
-              data: values[i],
+              data: val,
               encryptionKey: encryptionKey
             });
           }
