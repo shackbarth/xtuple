@@ -118,7 +118,7 @@ select xt.install_js('XM','Model','xtuple', $$
         map = XT.Orm.fetch(nameSpace, type),
         table = recordType.decamelize(),
         key = XT.Orm.naturalKey(map) || XT.Orm.primaryKey(map),
-        sql = 'select "{primaryKey}" as id from {table} where "{userKey}"::text=$1::text and "{key}" != $2'
+        sql = 'select "{key}" as id from {table} where "{userKey}"::text=$1::text and "{key}" != $2'
               .replace(/{key}/g, key)
               .replace(/{table}/, table)
               .replace(/{userKey}/, key)
