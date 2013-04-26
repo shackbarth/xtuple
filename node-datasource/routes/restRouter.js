@@ -36,7 +36,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     };
 
-    routes.postEngine(payload, session, callback);
+    routes.queryDatabase("post", payload, session, callback);
   };
 
   var routeCall = function (req, res, next, orms) {
@@ -93,7 +93,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           }
         };
 
-        routes.getEngine(payload, session, callback);
+        routes.queryDatabase("get", payload, session, callback);
 
         //return res.send('REST API GET call to model: ' + model);
         break;

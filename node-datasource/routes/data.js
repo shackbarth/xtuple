@@ -19,10 +19,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     very similar for all four operations. We have to massage the client-expected callback
     to fit with the native callback of X.database.
    */
-  var queryDatabase = function (queryString, functionName, payload, session, callback) {
+  var queryDatabase = exports.queryDatabase = function (functionName, payload, session, callback) {
     var query,
       org,
+      queryString ="select xt.%@($$%@$$)",
       isGlobal = payload && payload.databaseType === 'global',
+      binaryField = payload.data && payload.data.binaryField,
+      buffer,
+      binaryData,
       adaptorCallback = function (err, res) {
         var data;
 
@@ -45,60 +49,24 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     payload.username = isGlobal ? session.passport.user.id : session.passport.user.username;
     org = isGlobal ? X.options.globalDatabase.database : session.passport.user.organization;
 
-    query = queryString.f(JSON.stringify(payload));
-    X.database.query(org, query, adaptorCallback);
-  };
-
-  /**
-    Does all the work to delete.
-    Can be called by websockets, or the express route (below), or REST, etc.
-   */
-  var deleteEngine = exports.deleteEngine = function (payload, session, callback) {
-    queryDatabase("select xt.delete($$%@$$)", "delete", payload, session, callback);
-  };
-
-  /**
-    Does all the work to get.
-    Can be called by websockets, or the express route (below), or REST, etc.
-   */
-  var getEngine = exports.getEngine = function (payload, session, callback) {
-    queryDatabase("select xt.get($$%@$$)", "get", payload, session, callback);
-  };
-
-  /**
-    Does all the work to patch.
-    Can be called by websockets, or the express route (below), or REST, etc.
-   */
-  var patchEngine = exports.patchEngine = function (payload, session, callback) {
-    queryDatabase("select xt.patch($$%@$$)", "patch", payload, session, callback);
-  };
-
-  /**
-    Does all the work to post.
-    Can be called by websockets, or the express route (below), or REST, etc.
-   */
-  var postEngine = exports.postEngine = function (payload, session, callback) {
-    var binaryField = payload.data && payload.data.binaryField,
-      buffer,
-      binaryData;
-
     // We need to convert js binary into pg hex (see the file route for
     // the opposite conversion). See issue #18661
-    if (binaryField) {
+    if (functionName === 'post' && binaryField) {
       binaryData = payload.dataHash[binaryField];
       buffer = new Buffer(binaryData, "binary"); // XXX uhoh: binary is deprecated but necessary here
       binaryData = '\\x' + buffer.toString("hex");
       payload.dataHash[binaryField] = binaryData;
     }
 
-    queryDatabase("select xt.post($$%@$$)", "post", payload, session, callback);
+    query = queryString.f(functionName, JSON.stringify(payload));
+    X.database.query(org, query, adaptorCallback);
   };
 
   /**
     The adaptation of express routes to engine functions is the same for all four operations,
     so we centralize the code here:
    */
-  var routeAdapter = function (req, res, engineFunction) {
+  var routeAdapter = function (req, res, functionName) {
     var callback = function (err, resp) {
       if (err) {
         res.send(500, {data: err});
@@ -106,35 +74,35 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         res.send({data: resp});
       }
     };
-    engineFunction(req.query, req.session, callback);
+    queryDatabase(functionName, req.query, req.session, callback);
   };
 
   /**
-    Accesses the deleteEngine (above) for a request a la Express
+    Accesses queryDatabase (above) for a request a la Express
    */
   exports.delete = function (req, res) {
-    routeAdapter(req, res, deleteEngine);
+    routeAdapter(req, res, "delete");
   };
 
   /**
-    Accesses the getEngine (above) for a request a la Express
+    Accesses queryDatabase (above) for a request a la Express
    */
   exports.get = function (req, res) {
-    routeAdapter(req, res, getEngine);
+    routeAdapter(req, res, "get");
   };
 
   /**
-    Accesses the patchEngine (above) for a request a la Express
+    Accesses queryDatabase (above) for a request a la Express
    */
   exports.patch = function (req, res) {
-    routeAdapter(req, res, patchEngine);
+    routeAdapter(req, res, "patch");
   };
 
   /**
-    Accesses the postEngine (above) for a request a la Express
+    Accesses queryDatabase (above) for a request a la Express
    */
   exports.post = function (req, res) {
-    routeAdapter(req, res, postEngine);
+    routeAdapter(req, res, "post");
   };
 
 }());
