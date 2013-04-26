@@ -1612,7 +1612,7 @@
     "nameSpace": "XM",
     "type": "IncidentEmailProfile",
     "table": "xt.incdtemlprofile",
-    "idSequenceName": "incdtemlprofile_incdtemlprofile_id_seq",
+    "idSequenceName": "emlprofile_emlprofile_id_seq",
     "comment": "Incident Email Profile Map",
     "privileges": {
       "all": {

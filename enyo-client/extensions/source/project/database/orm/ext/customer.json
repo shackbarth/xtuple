@@ -4,6 +4,7 @@
     "nameSpace": "XM",
     "type": "CustomerProject",
     "table": "xt.cust_doc",
+    "idSequenceName": "docass_docass_id_seq",
     "comment": "Customer Project Map",
     "privileges": {
       "all": {

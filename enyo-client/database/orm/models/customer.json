@@ -1483,8 +1483,8 @@
     "nameSpace": "XM",
     "type": "ShipCharge",
     "table": "shipchrg",
-    "idSequenceName": "shpchrg_shpchrg_id_seq",
     "lockable": true,
+    "idSequenceName": "shipchrg_shipchrg_id_seq",
     "comment": "Ship Charge Map",
     "privileges": {
       "all": {
@@ -1576,8 +1576,8 @@
     "nameSpace": "XM",
     "type": "ShipZone",
     "table": "shipzone",
-    "idSequenceName": "shipzone_ship_zone_id_seq",
     "lockable": true,
+    "idSequenceName": "shipzone_shipzone_id_seq",
     "comment": "Ship Zone Map",
     "privileges": {
       "all": {

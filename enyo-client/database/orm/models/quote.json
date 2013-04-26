@@ -1224,7 +1224,7 @@
     "nameSpace": "XM",
     "type": "QuoteLineComment",
     "table": "comment",
-    "idSequenceName": "comment_comment__id_seq",
+    "idSequenceName": "comment_comment_id_seq",
     "comment": "Quote Line Comment Map",
     "privileges": {
       "all": {
