@@ -71,26 +71,27 @@ white:true*/
       is made by default if a new record is added.
    */
   XT.cacheCollection = function (cacheName, collectionName, orderAttribute) {
-    var orderBy;
+    var orderBy,
+      Coll = Backbone.Relational.store.getObjectByName(collectionName),
+      cachePrefix = cacheName.prefix(),
+      cacheSuffix = cacheName.suffix(),
+      cache;
 
-    cacheName = cacheName.suffix(); // strip off the XM
-    collectionName = collectionName.suffix(); // strip off the XM
-
-    if (XM[cacheName]) {
+    if (window[cachePrefix][cacheSuffix]) {
       // the cache already exists. Do not re-fetch
       // this might happen legitimately if multiple extensions declare a need
       // for the same cache.
       return;
     }
 
-    XM[cacheName] = new XM[collectionName]();
+    cache = window[cachePrefix][cacheSuffix] = new Coll();
     XT.StartupTasks.push({
       taskName: "Load " + cacheName,
       task: function () {
         var orderBy,
           options = {};
 
-        options.success = _.bind(this.didCompleteCache, this, XM[cacheName]);
+        options.success = _.bind(this.didCompleteCache, this, cache);
         if (typeof orderAttribute === "string") {
           orderBy = _.map(orderAttribute.split(" "), function (s) {
             return {attribute: s};
@@ -98,7 +99,7 @@ white:true*/
           options.query = {orderBy: orderBy};
 
           // set the comparator on the collection
-          XM[collectionName].prototype.comparator = function (model) {
+          Coll.prototype.comparator = function (model) {
             var attrs = orderAttribute.split(" ");
 
             if (attrs.length === 1) {
@@ -111,7 +112,7 @@ white:true*/
           options.query = {};
         }
 
-        XM[cacheName].fetch(options);
+        cache.fetch(options);
       }
     });
   };
