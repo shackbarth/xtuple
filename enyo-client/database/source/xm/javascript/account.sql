@@ -14,9 +14,9 @@ select xt.install_js('XM','Account','xtuple', $$
       /* use result.crmacct_id to get the crmacct_id column.  the result of the query will be an array so get the 1st result */
       
     var res,
-        retVal,
-        row,
-        sql = "select * from crmacct where crmacct_id = $1";
+      retVal,
+      row,
+      sql = "select * from crmacct where crmacct_number = $1";
         
     res = XM.Model.findExisting("XM.Account", key, value, id);
     
@@ -49,7 +49,7 @@ select xt.install_js('XM','Account','xtuple', $$
 	" and crmacct_taxauth_id is null" +
 	" and crmacct_vend_id is null" +
 	" and crmacct_usr_username is null) as result " +
-	"from crmacct where crmacct_id = $1",
+	"from crmacct where crmacct_number = $1",
       res = plv8.execute(sql, [id])[0].result;
      return res ? XM.Model.used('XM.Account', id) : true;
   }
