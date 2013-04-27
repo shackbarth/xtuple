@@ -7,7 +7,7 @@ select xt.install_js('XM','Customer','xtuple', $$
   XM.Customer.isDispatchable = true;
 
   /**
-    Determin whether a customer can purchase a given item
+    Determine whether a customer can purchase a given item
 
     @param {Number} Customer id
     @param {Number} Item id
@@ -54,11 +54,17 @@ select xt.install_js('XM','Customer','xtuple', $$
     };
     if(err) { plv8.elog(ERROR, err + " is required.") }
 
-    quantityUnitId = options.quantityUnitId || plv8.execute("select item_inv_uom_id as result from item where item_id = $1;", [itemId])[0].result,
-    priceUnitId = options.priceUnitId || plv8.execute("select item_price_uom_id as result from item where item_id = $1;", [itemId])[0].result,
-    currencyId = options.currencyId || plv8.execute("select basecurrid() as result")[0].result,
-    effective = options.effective ? new Date(options.effective) : today,
-    asOf = options.asOf ? new Date(options.asOf) : today,
+    quantityUnitId = options.quantityUnitId ?
+       XT.Data.getId(XT.Orm.fetch('XM', 'Unit', options.quantityUnitId)) :
+       plv8.execute("select item_inv_uom_id as result from item where item_id = $1;", [itemId])[0].result; 
+    priceUnitId = options.priceUnitId ?
+      XT.Data.getId(XT.Orm.fetch('XM', 'Unit', options.quantityUnitId)) :
+      plv8.execute("select item_price_uom_id as result from item where item_id = $1;", [itemId])[0].result;
+    currencyId = options.currencyId ?
+      XT.Data.getId(XT.Orm.fetch('XM', 'Currency', options.currencyId)) :
+      lplv8.execute("select basecurrid() as result")[0].result;
+    effective = options.effective ? new Date(options.effective) : today;
+    asOf = options.asOf ? new Date(options.asOf) : today;
     result = plv8.execute(sql, [itemId, customerId, shiptoId, quantity, quantityUnitId, priceUnitId, currencyId, effective, asOf])[0].result;
 
     result = { price: result.itemprice_price, type: result.itemprice_type };
@@ -80,7 +86,7 @@ select xt.install_js('XM','Customer','xtuple', $$
     options = options || {};
     var sql = "select itemcharprice(item_id, char_id, $3, cust_id, $5, $6, $7, $8::date, $9::date) as result;" +
               "from item, custinfo, char " +
-              "where item_number = $1 and char_name = $2 and cust_number = $3;";
+              "where item_number = $1 and char_name = $2 and cust_number = $4;";
       today = new Date(),
       shiptoId = options.shiptoId || -1,
       currencyId,
@@ -100,9 +106,11 @@ select xt.install_js('XM','Customer','xtuple', $$
     };
     if(err) { plv8.elog(ERROR, err + " is required.") }
 
-    currencyId = options.currencyId || plv8.execute("select basecurrid() as result")[0].result,
-    effective = options.effective ? new Date(options.effective) : today,
-    asOf = options.asOf ? new Date(options.asOf) : today,
+    currencyId = options.currencyId ?
+      XT.Data.getId(XT.Orm.fetch('XM', 'Currency', options.currencyId)) :
+      lplv8.execute("select basecurrid() as result")[0].result;
+    effective = options.effective ? new Date(options.effective) : today;
+    asOf = options.asOf ? new Date(options.asOf) : today;
     result = plv8.execute(sql, [itemId, characteristicId, value, customerId, shiptoId, quantity, currencyId, effective, asOf])[0].result;
 
     return result; 

@@ -19,9 +19,10 @@ select xt.install_js('XM','item_site','xtuple', $$
     @returns {Array}
    */
   XM.ItemSite.itemsForCustomer = function (customerId, shiptoId, effectiveDate, query) {
-    query = query || {};
-    shiptoId = shiptoId || -1;
+    customerId = XT.Data.getId(XT.Orm.fetch('XM', 'Customer'), customerId);
+    shiptoId = shiptoId ? XT.Data.getId(XT.Orm.fetch('XM', 'CustomerShipto'), shiptoId) : -1;
     effectiveDate = effectiveDate || new Date();
+    query = query || {};
     var limit = query.rowLimit ? 'limit ' + query.rowLimit : '',
       offset = query.rowOffset ? 'offset ' + query.rowOffset : '',
       clause = XT.Data.buildClause("XM", "ItemSite", query.parameters, query.orderBy),
