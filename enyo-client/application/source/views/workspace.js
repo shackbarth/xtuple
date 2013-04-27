@@ -1252,30 +1252,34 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.ProspectListItem", "XV.ProspectWorkspace");
 
   // ..........................................................
-  // QUOTE
+  // SALES ORDER BASE
   //
 
+  /**
+    This is the base kind for Quote and Sales order. This should include all common components
+    and functions.
+  */
   enyo.kind({
-    name: "XV.QuoteWorkspace",
+    name: "XV.SalesOrderBase",
     kind: "XV.Workspace",
-    title: "_quote".loc(),
-    model: "XM.Quote",
     allowPrint: true,
     printOnSaveSetting: "DefaultPrintSOOnSave",
     headerAttrs: ["number", "-", "billtoName"],
+    published: {
+      orderDate: null
+    },
     components: [
-      {kind: "Panels", arrangerKind: "CarouselArranger",
+      {kind: "Panels", name: "salesPanels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "number"},
-            {kind: "XV.DateWidget", attr: "quoteDate"},
+            {kind: "XV.DateWidget", name: "dateField", attr: "", label: "_orderDate".loc()},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
-            {kind: "XV.DateWidget", attr: "expireDate"},
-            {kind: "XV.InputWidget", attr: "getQuoteStatusString",
-              label: "_status".loc()},
+            {name: "datePanel"},
+            {kind: "XV.InputWidget", attr: "getOrderStatusString", label: "_status".loc()},
             {kind: "onyx.GroupboxHeader", content: "_billTo".loc()},
             {kind: "XV.CustomerProspectWidget", attr: "customer",
               showAddress: true, label: "_customer".loc(),
@@ -1315,62 +1319,26 @@ trailing:true white:true*/
              label: "_custPO".loc()},
             {kind: "XV.ShipViaCombobox", attr: "shipVia"},
             {kind: "XV.ShipZonePicker", attr: "shipZone"},
+            {name: "shippingPanel"},
             {kind: "onyx.GroupboxHeader", content: "_settings".loc()},
             {kind: "XV.TermsPicker", attr: "terms"},
             {kind: "XV.SalesRepPicker", attr: "salesRep"},
             {kind: "XV.PercentWidget", attr: "commission"},
             {kind: "XV.TaxZonePicker", attr: "taxZone"},
             {kind: "XV.SaleTypePicker", attr: "saleType"},
+            {name: "settingsPanel"},
             {kind: "onyx.GroupboxHeader", content: "_orderNotes".loc()},
             {kind: "XV.TextArea", attr: "orderNotes", fit: true},
             {kind: "onyx.GroupboxHeader", content: "_shippingNotes".loc()},
             {kind: "XV.TextArea", attr: "shipNotes", fit: true}
           ]}
         ]},
-        {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel", components: [
-          {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true},
-          // Quote Summary Panel
-          {kind: "FittableRows", fit: true, name: "totalGroup", components: [
-            {kind: "XV.Groupbox", components: [
-              {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
-              {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
-                {kind: "FittableRows", components: [
-                  {kind: "XV.CurrencyPicker", attr: "currency"},
-                  {kind: "XV.MoneyWidget", attr: {localValue: "margin", currency: "currency"},
-                    label: "_margin".loc(), currencyShowing: false,
-                    effective: "quoteDate"},
-                  {kind: "XV.WeightWidget", attr: "freightWeight"}
-                ]},
-                {kind: "FittableRows", components: [
-                  {kind: "XV.MoneyWidget", attr:
-                    {localValue: "subtotal", currency: "currency"},
-                    label: "_subtotal".loc(), currencyShowing: false,
-                    effective: "quoteDate"},
-                  {kind: "XV.MoneyWidget", attr:
-                    {localValue: "miscCharge", currency: "currency"},
-                    label: "_miscCharge".loc(), currencyShowing: false,
-                    effective: "quoteDate"},
-                  {kind: "XV.MoneyWidget", attr:
-                    {localValue: "freight", currency: "currency"},
-                    label: "_freight".loc(), currencyShowing: false,
-                    effective: "quoteDate"},
-                  {kind: "XV.MoneyWidget", attr:
-                    {localValue: "taxTotal", currency: "currency"},
-                    label: "_tax".loc(), currencyShowing: false,
-                    effective: "quoteDate"},
-                  {kind: "XV.MoneyWidget", attr:
-                    {localValue: "total", currency: "currency"},
-                    label: "_total".loc(), currencyShowing: false,
-                    effective: "quoteDate"}
-                ]}
-              ]}
-            ]}
-          ]}
-        ]},
-        {kind: "XV.QuoteCommentBox", attr: "comments"},
-        {kind: "XV.QuoteDocumentsBox", attr: "documents"}
+        {kind: "FittableRows", title: "_lineItems".loc(), name: "lineItemsPanel"}
       ]}
     ],
+    create: function () {
+      this.inherited(arguments);
+    },
     customerChanged: function () {
       var customer = this.$.customerProspectWidget.getValue(),
         id = customer ? customer.get("account") : -1;
@@ -1391,6 +1359,17 @@ trailing:true white:true*/
       var model = this.getValue(),
         customer = model ? model.get("customer") : false,
         isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : true;
+
+      // set the date attribute to the documentDateKey
+      this.setOrderDate(this.value.documentDateKey);
+      this.$.dateField.setAttr(this.getOrderDate());
+      // Loop through the components and set the effective date information for the Money widgets
+      this.getComponents().forEach(function (e) {
+        if (e.kind === "XV.MoneyWidget" && e.getEffective()) {
+          e.setEffective(this.getOrderDate());
+        }
+      });
+
       this.$.copyAddressButton.setDisabled(!isFreeFormShipto);
       this.customerChanged();
       // re-render the summary panel
@@ -1407,22 +1386,89 @@ trailing:true white:true*/
     }
   });
 
+  // ..........................................................
+  // QUOTE
+  //
+  enyo.kind({
+    name: "XV.QuoteWorkspace",
+    kind: "XV.SalesOrderBase",
+    title: "_quote".loc(),
+    model: "XM.Quote",
+    create: function () {
+      this.inherited(arguments);
+      this.build();
+    },
+    /**
+      Loops through the components array of the parent kind and inserts the addtional components where they should be rendered.
+    */
+    build: function () {
+      this.$.datePanel.createComponents([
+        {kind: "XV.DateWidget", attr: "expireDate"}
+      ], {owner: this});
+      this.$.salesPanels.createComponents([
+          {kind: "XV.QuoteCommentBox", attr: "comments"},
+          {kind: "XV.QuoteDocumentsBox", attr: "documents"}
+        ], {owner: this});
+      this.$.lineItemsPanel.createComponents([
+            // Line Item Box
+        {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true},
+        // Summary Panel
+        {kind: "FittableRows", fit: true, name: "totalGroup", components: [
+          {kind: "XV.Groupbox", components: [
+            {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
+            {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
+              {kind: "FittableRows", name: "summaryColumnOne", components: [
+                {kind: "XV.CurrencyPicker", attr: "currency"},
+                {kind: "XV.MoneyWidget", attr: {localValue: "margin", currency: "currency"},
+                 label: "_margin".loc(), currencyShowing: false,
+                 effective: ""},
+                {kind: "XV.WeightWidget", attr: "freightWeight"}
+              ]},
+              {kind: "FittableRows", name: "summaryColumnTwo", components: [
+                {kind: "XV.MoneyWidget", attr:
+                 {localValue: "subtotal", currency: "currency"},
+                 label: "_subtotal".loc(), currencyShowing: false,
+                 effective: ""},
+                {kind: "XV.MoneyWidget", attr:
+                 {localValue: "miscCharge", currency: "currency"},
+                 label: "_miscCharge".loc(), currencyShowing: false,
+                 effective: ""},
+                {kind: "XV.MoneyWidget", attr:
+                 {localValue: "freight", currency: "currency"},
+                 label: "_freight".loc(), currencyShowing: false,
+                 effective: ""},
+                {kind: "XV.MoneyWidget", attr:
+                 {localValue: "taxTotal", currency: "currency"},
+                 label: "_tax".loc(), currencyShowing: false,
+                 effective: ""},
+                {kind: "XV.MoneyWidget", attr:
+                 {localValue: "total", currency: "currency"},
+                 label: "_total".loc(), currencyShowing: false,
+                 effective: ""}
+              ]}
+            ]}
+          ]}
+        ]}
+      ], {owner: this});
+    }
+  });
+
   XV.registerModelWorkspace("XM.QuoteRelation", "XV.QuoteWorkspace");
   XV.registerModelWorkspace("XM.QuoteListItem", "XV.QuoteWorkspace");
 
-
   // ..........................................................
-  // QUOTE LINE ITEM
+  // LINE ITEM
   //
-
-  var quoteLineItem = enyo.mixin(XV.QuoteLineMixin, {
-    name: "XV.QuoteLineWorkspace",
+  var lineItem = enyo.mixin(XV.LineMixin, {
+    name: "XV.BaseLineWorkspace",
     kind: "XV.Workspace",
-    title: "_quoteLine".loc(),
-    model: "XM.QuoteLine",
+    published: {
+      orderDate: null,
+      currency: null
+    },
     modelAmnesty: true,
     components: [
-      {kind: "Panels", arrangerKind: "CarouselArranger",
+      {kind: "Panels", name: "salesLinePanels", arrangerKind: "CarouselArranger",
         fit: true, components: [
         {kind: "XV.Groupbox", name: "mainPanel", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
@@ -1442,14 +1488,14 @@ trailing:true white:true*/
               attr: "quantityUnit"},
             {kind: "XV.PercentWidget", name: "discount", attr: "discount"},
             {kind: "XV.MoneyWidget", attr:
-              {localValue: "price", currency: "quote.currency"},
+              {localValue: "price", currency: ""},
               label: "_price".loc(), currencyDisabled: true,
-              effective: "quote.quoteDate", scale: XT.SALES_PRICE_SCALE},
+              effective: "", scale: XT.SALES_PRICE_SCALE},
             {kind: "XV.UnitPicker", name: "priceUnitPicker",
               attr: "priceUnit"},
-            {kind: "XV.MoneyWidget", attr: {localValue: "extendedPrice", currency: "quote.currency"},
+            {kind: "XV.MoneyWidget", attr: {localValue: "extendedPrice", currency: ""},
               label: "_extendedPrice".loc(), currencyDisabled: true,
-              effective: "quote.quoteDate", scale: XT.EXTENDED_PRICE_SCALE},
+              effective: "", scale: XT.EXTENDED_PRICE_SCALE},
             {kind: "onyx.GroupboxHeader", content: "_delivery".loc()},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
             {kind: "XV.DateWidget", attr: "promiseDate", showing: false,
@@ -1463,15 +1509,15 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_costs".loc()},
           {kind: "XV.ScrollableGroupbox", name: "detailGroup",
             classes: "in-panel", fit: true, components: [
-            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.standardCost", currency: "quote.currency"},
-              label: "_standardCost".loc(), effective: "quote.quoteDate"},
-            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.averageCost", currency: "quote.currency"},
-              label: "_averageCost".loc(), effective: "quote.quoteDate"},
-            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.listCost", currency: "quote.currency"},
-              label: "_listCost".loc(), effective: "quote.quoteDate"},
+            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.standardCost", currency: ""},
+              label: "_standardCost".loc(), effective: ""},
+            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.averageCost", currency: ""},
+              label: "_averageCost".loc(), effective: ""},
+            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.listCost", currency: ""},
+              label: "_listCost".loc(), effective: ""},
             {kind: "XV.PercentWidget", attr: "listCostMarkup"},
-            {kind: "XV.MoneyWidget", attr: {localValue: "listPrice", currency: "quote.currency"},
-              label: "_listPrice".loc(), effective: "quote.quoteDate", scale: XT.SALES_PRICE_SCALE},
+            {kind: "XV.MoneyWidget", attr: {localValue: "listPrice", currency: ""},
+              label: "_listPrice".loc(), effective: "", scale: XT.SALES_PRICE_SCALE},
             {kind: "XV.PercentWidget", attr: "listPriceDiscount"},
             {kind: "XV.PercentWidget", attr: "profit"},
             {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
@@ -1480,13 +1526,119 @@ trailing:true white:true*/
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
-        ]},
-        {kind: "XV.QuoteLineCommentBox", attr: "comments"}
+        ]}
       ]}
     ]
   });
+  enyo.kind(lineItem);
 
+  // ..........................................................
+  // QUOTE LINE ITEM
+  //
+  var quoteLineItem = enyo.mixin(XV.QuoteLineMixin, {
+    name: "XV.QuoteLineWorkspace",
+    kind: "XV.BaseLineWorkspace",
+    title: "_quoteLine".loc(),
+    model: "XM.QuoteLine",
+    create: function () {
+      this.inherited(arguments);
+      // Add the Comment Box for Quote to Panels
+      this.$.salesLinePanels.createComponents([{kind: "XV.QuoteLineCommentBox", attr: "comments"}], {owner: this});
+    }
+  });
   enyo.kind(quoteLineItem);
+
+  // ..........................................................
+  // SALES ORDER LINE ITEM
+  //
+  var salesOrderLineItem = enyo.mixin(XV.SalesOrderLineMixin, {
+    name: "XV.SalesOrderLineWorkspace",
+    kind: "XV.BaseLineWorkspace",
+    title: "_salesOrderLine".loc(),
+    model: "XM.SalesOrderLine",
+    create: function () {
+      this.inherited(arguments);
+      this.$.salesLinePanels.createComponents([{kind: "XV.SalesOrderLineCommentBox", attr: "comments"}], {owner: this});
+    }
+  });
+  enyo.kind(salesOrderLineItem);
+
+  // ..........................................................
+  // SALES ORDER
+  //
+
+  enyo.kind({
+    name: "XV.SalesOrderWorkspace",
+    kind: "XV.SalesOrderBase",
+    title: "_salesOrder".loc(),
+    model: "XM.SalesOrder",
+    create: function () {
+      this.inherited(arguments);
+      this.build();
+    },
+    /**
+      Inserts additional components where they should be rendered.
+    */
+    build: function () {
+      this.$.datePanel.createComponents([
+        {kind: "XV.CheckboxWidget", attr: "shipComplete"}
+      ], {owner: this});
+      this.$.shippingPanel.createComponents([
+        {kind: "XV.ShippingChargePicker", attr: "shipCharge"}
+      ], {owner: this});
+      this.$.settingsPanel.createComponents([
+        {kind: "XV.HoldTypePicker", attr: "holdType"}
+      ], {owner: this});
+      this.$.salesPanels.createComponents([
+          {kind: "XV.SalesOrderCommentBox", attr: "comments"},
+          {kind: "XV.SalesOrderDocumentsBox", attr: "documents"}
+        ], {owner: this});
+      this.$.lineItemsPanel.createComponents([
+        // Line Item Box
+        {kind: "XV.SalesOrderLineItemBox", attr: "lineItems", fit: true},
+        // Summary Panel
+        {kind: "FittableRows", fit: true, name: "totalGroup", components: [
+          {kind: "XV.Groupbox", components: [
+            {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
+            {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
+              {kind: "FittableRows", name: "summaryColumnOne", components: [
+                {kind: "XV.CurrencyPicker", attr: "currency"},
+                {kind: "XV.MoneyWidget", attr: {localValue: "margin", currency: "currency"},
+                 label: "_margin".loc(), currencyShowing: false,
+                 effective: ""},
+                {kind: "XV.WeightWidget", attr: "freightWeight"}
+              ]},
+              {kind: "FittableRows", name: "summaryColumnTwo", components: [
+                {kind: "XV.MoneyWidget", attr:
+                 {localValue: "subtotal", currency: "currency"},
+                 label: "_subtotal".loc(), currencyShowing: false,
+                 effective: ""},
+                {kind: "XV.MoneyWidget", attr:
+                 {localValue: "miscCharge", currency: "currency"},
+                 label: "_miscCharge".loc(), currencyShowing: false,
+                 effective: ""},
+                {kind: "XV.MoneyWidget", attr:
+                 {localValue: "freight", currency: "currency"},
+                 label: "_freight".loc(), currencyShowing: false,
+                 effective: ""},
+                {kind: "XV.MoneyWidget", attr:
+                 {localValue: "taxTotal", currency: "currency"},
+                 label: "_tax".loc(), currencyShowing: false,
+                 effective: ""},
+                {kind: "XV.MoneyWidget", attr:
+                 {localValue: "total", currency: "currency"},
+                 label: "_total".loc(), currencyShowing: false,
+                 effective: ""}
+              ]}
+            ]}
+          ]}
+        ]}
+      ], {owner: this});        
+    }
+  });
+
+  XV.registerModelWorkspace("XM.SalesOrderRelation", "XV.SalesOrderWorkspace");
+  XV.registerModelWorkspace("XM.SalesOrderListItem", "XV.SalesOrderWorkspace");
 
   // ..........................................................
   // SALES REP
@@ -1766,7 +1918,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.TaxClass", "XV.TaxClassWorkspace");
-  
+
   // ..........................................................
   // TAX RATE
   //

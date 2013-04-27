@@ -154,7 +154,7 @@ select xt.install_js('XM','Sales','xtuple', $$
     ret.NextInvoiceNumber = plv8.execute(sql, ['InvcNumber'])[0].value;
     
     ret = XT.extend(ret, data.retrieveMetrics(keys));
-    
+
     return JSON.stringify(ret);
   }
   
@@ -165,12 +165,18 @@ select xt.install_js('XM','Sales','xtuple', $$
    @param {Object} settings
    @returns {Boolean}
   */
-  XM.Sales.commitSettings = function(settings) {
-    var sql, options = XM.Sales.options.slice(0),
+  XM.Sales.commitSettings = function(patches) {
+    var sql, settings, options = XM.Sales.options.slice(0),
         data = Object.create(XT.Data), metrics = {};
         
     /* check privileges */
     if(!data.checkPrivilege('ConfigureSO')) throw new Error('Access Denied');
+
+    /* Compose our commit settings by applying the patch to what we already have */
+    settings = JSON.parse(XM.Sales.settings());
+    if (!XT.jsonpatch.apply(settings, patches)) {
+      plv8.elog(NOTICE, 'Malformed patch document');
+    }
 
     /* update numbers */
     if(settings['NextSalesOrderNumber']) {

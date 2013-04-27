@@ -114,6 +114,16 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.creditStatuses"
   });
+  
+  // ..........................................................
+  // HOLD TYPE
+  //
+
+  enyo.kind({
+    name: "XV.HoldTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.holdTypes"
+  });
 
   // ..........................................................
   // INCIDENT EMAIL PROFILE

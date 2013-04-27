@@ -21,12 +21,13 @@ var lang = XT.stringsFor("en_US", {
   "_allowFreeFormShiptos": "Allow Free Form Ship-Tos",
   "_autoAllocateCreditMemos": "Allocate Credit Memos to New Sales Order on Save",
   "_autoSelectForBilling": "Check 'Select for Billing' option on Ship Order",
-  "_customerDefaults": "Customer Defaults",
-  "_customerTypes": "Customer Types",
+  "_convert": "Convert",
   "_creditControl": "Credit Control",
   "_creditMemo": "Credit Memo",
   "_current": "Current",
   "_currentDate": "Current Date",
+  "_customerDefaults": "Customer Defaults",
+  "_customerTypes": "Customer Types",
   "_cutOffDay": "Cutoff Day",
   "_dateControl": "Date Control",
   "_disableSalesOrderPriceOverride": "Disallow Override of Sale Price on Sales Order",
@@ -62,7 +63,4 @@ var lang = XT.stringsFor("en_US", {
   "_update": "Update",
   "_useCalculatedFreightPricing": "Use calculated Freight values by default",
   "_usePromiseDates": "Enable Promise Dates"
-
-
-
 });

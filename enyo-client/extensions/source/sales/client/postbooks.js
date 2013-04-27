@@ -54,7 +54,8 @@ trailing:true white:true*/
       panels: [
         {name: "customerList", kind: "XV.CustomerList"},
         {name: "prospectList", kind: "XV.ProspectList"},
-        {name: "quoteList", kind: "XV.QuoteList"}
+        {name: "quoteList", kind: "XV.QuoteList"},
+        {name: "salesOrderList", kind: "XV.SalesOrderList"}
       ]
     };
     XT.app.$.postbooks.insertModule(module, 2);

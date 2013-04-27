@@ -4,9 +4,10 @@
     "nameSpace": "XM",
     "type": "SalesOrder",
     "table": "xt.coheadinfo",
-    "idSequenceName": "cohead_cohead_id_seq",
     "lockable": true,
     "lockTable": "cohead",
+    "idSequenceName": "cohead_cohead_id_seq",
+    "orderSequence": "SoNumber",
     "comment": "Sales Order Map",
     "privileges": {
       "all": {
@@ -40,6 +41,13 @@
           "type": "CustomerProspectRelation",
           "column": "cohead_cust_id"
         }
+      },
+      {
+        "name": "customerPurchaseOrderNumber",
+        "attr": {
+          "type": "String",
+          "column": "cohead_custponumber"
+         }
       },
       {
         "name": "orderDate",
@@ -1429,6 +1437,13 @@
          }
       },
       {
+        "name": "scheduleDate",
+        "attr": {
+          "type": "Date",
+          "column": "schedule_date"
+        }
+      },
+      {
         "name": "orderDate",
         "attr": {
           "type": "Date",
@@ -1475,6 +1490,20 @@
         "attr": {
           "type": "String",
           "column": "cohead_shiptoaddress1"
+        }
+      },
+      {
+        "name": "billtoName",
+        "attr": {
+          "type": "String",
+          "column": "cohead_billtoname"
+        }
+      },
+      {
+        "name": "billtoAddress1",
+        "attr": {
+          "type": "String",
+          "column": "cohead_billtoaddress1"
         }
       }
     ],

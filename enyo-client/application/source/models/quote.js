@@ -1218,7 +1218,8 @@ white:true*/
           attrs = {
             discount: undefined,
             listPriceDiscount: undefined,
-            listCostMarkup: undefined
+            listCostMarkup: undefined,
+            listPrice: listPrice
           };
 
         if (price === 0) {
@@ -1510,7 +1511,7 @@ white:true*/
           });
         quoteLineChar.set("characteristic", char);
         quoteLineChar.set("value", defaultChar ? defaultChar.value : "");
-        quoteLineChar.on("change:value", that.calculatePrice);
+        quoteLineChar.on("change:value", that.calculatePrice, that);
         characteristics.add(quoteLineChar);
       });
 
