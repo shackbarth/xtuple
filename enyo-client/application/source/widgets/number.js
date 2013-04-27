@@ -239,7 +239,7 @@ regexp:true, undef:true, trailing:true, white:true */
         
       // supports how this function is used by the base class.
       // assume if we get a number, that means the localValue or baseValue
-      if (_.isNumber(value)) {
+      if (!isNaN(value)) {
         fromUser = true;
         if (this.getLocalMode()) {
           value = {localValue: value};
@@ -251,7 +251,7 @@ regexp:true, undef:true, trailing:true, white:true */
       options = options || {};
       for (var attribute in value) {
         if (value.hasOwnProperty(attribute)) {
-          newValue = value[attribute];
+          newValue = value[attribute] ? value[attribute] : 0; // if this value is falsy, make it zero
           if (attribute === "localValue" || attribute === "baseValue") {
             if (fromUser) {
               this.setLocalValue(newValue);
@@ -317,10 +317,19 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.Number",
     scale: XT.PERCENT_SCALE,
     validate: function (value) {
-      return value && _.isNumber(value) ? value / 100 : null;
+      // this takes the string from the input field and parses it (including understanding commas, which isNaN cannot)
+      // if it cannot parse the value, it returns NaN
+      value = Globalize.parseFloat(value);
+      // use isNaN here because parseFloat could return NaN
+      // if you pass NaN into _.isNumber, it will misleadingly return true
+      // only bad string and null/undefined cases do we want to fail validation
+      return !isNaN(value) ? value / 100 : false;
     },
     valueChanged: function (value) {
-      value = !_.isNaN(value) ? value * 100 : value;
+      // use isNaN here because this value may be a number string and _isNaN requires
+      // a separate falsy check.
+      // In this case, it is ok for 0 to fall to the true case, just not null or a bad string
+      value = !isNaN(value) ? value * 100 : value;
       XV.Number.prototype.valueChanged.call(this, value);
     }
   });
@@ -330,10 +339,19 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.NumberWidget",
     scale: XT.PERCENT_SCALE,
     validate: function (value) {
-      return value && !_.isNaN(value) ? value / 100 : null;
+      // this takes the string from the input field and parses it (including understanding commas, which isNaN cannot)
+      // if it cannot parse the value, it returns NaN
+      value = Globalize.parseFloat(value);
+      // use isNaN here because parseFloat could return NaN
+      // if you pass NaN into _.isNumber, it will misleadingly return true
+      // only bad string and null/undefined cases do we want to fail validation
+      return !isNaN(value) ? value / 100 : false;
     },
     valueChanged: function (value) {
-      value = !_.isNaN(value) ? value * 100 : value;
+      // use isNaN here because this value may be a number string and _isNaN requires
+      // a separate falsy check.
+      // In this case, it is ok for 0 to fall to the true case, just not null or a bad string
+      value = !isNaN(value) ? value * 100 : value;
       XV.NumberWidget.prototype.valueChanged.call(this, value);
     }
   });

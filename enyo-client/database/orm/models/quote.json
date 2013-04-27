@@ -5,6 +5,7 @@
     "type": "Quote",
     "table": "xt.quheadinfo",
     "lockable": true,
+    "lockTable": "quhead",
     "idSequenceName": "quhead_quhead_id_seq",
     "comment": "Quote Map",
     "privileges": {
@@ -38,6 +39,13 @@
           "type": "CustomerProspectRelation",
           "column": "quhead_cust_id"
         }
+      },
+      {
+        "name": "customerPurchaseOrderNumber",
+        "attr": {
+          "type": "String",
+          "column": "quhead_custponumber"
+         }
       },
       {
         "name": "quoteDate",
@@ -925,7 +933,8 @@
         "name": "itemSite",
         "toOne": {
           "type": "ItemSiteRelation",
-          "column": "quitem_itemsite_id"
+          "column": "quitem_itemsite_id",
+          "isNested": true
         }
       },
       {

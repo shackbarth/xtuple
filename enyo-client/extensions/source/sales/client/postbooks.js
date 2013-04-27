@@ -26,6 +26,7 @@ trailing:true white:true*/
       {name: "taxAuthorityList", kind: "XV.TaxAuthorityList"},
       {name: "taxCodeList", kind: "XV.TaxCodeList"},
       {name: "taxClassList", kind: "XV.TaxClassList"},
+      {name: "taxRateList", kind: "XV.TaxRateList"},
       {name: "taxTypeList", kind: "XV.TaxTypeList"},
       {name: "taxZoneList", kind: "XV.TaxZoneList"},
       {name: "termsList", kind: "XV.TermsList"},
@@ -53,7 +54,8 @@ trailing:true white:true*/
       panels: [
         {name: "customerList", kind: "XV.CustomerList"},
         {name: "prospectList", kind: "XV.ProspectList"},
-        {name: "quoteList", kind: "XV.QuoteList"}
+        {name: "quoteList", kind: "XV.QuoteList"},
+        {name: "salesOrderList", kind: "XV.SalesOrderList"}
       ]
     };
     XT.app.$.postbooks.insertModule(module, 2);
@@ -64,6 +66,7 @@ trailing:true white:true*/
       "MaintainTaxAssignments",
       "MaintainTaxClasses",
       "MaintainTaxCodes",
+      "MaintainTaxRates",
       "MaintainTaxReconciliations",
       "MaintainTaxRegistrations",
       "MaintainTaxTypes",
@@ -71,6 +74,7 @@ trailing:true white:true*/
       "ViewTaxAssignments",
       "ViewTaxClasses",
       "ViewTaxCodes",
+      "ViewTaxRates",
       "ViewTaxReconciliations",
       "ViewTaxRegistrations",
       "ViewTaxTypes",

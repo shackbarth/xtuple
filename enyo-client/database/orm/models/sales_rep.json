@@ -6,6 +6,7 @@
     "table": "salesrep",
     "lockable": true,
     "idSequenceName": "salesrep_salesrep_id_seq",
+    "orderSequence": "CRMAccountNumber",
     "comment": "Sales Rep Map",
     "privileges": {
       "all": {
@@ -67,7 +68,7 @@
         "properties": [
           {
             "name": "account",
-            "toOne": {
+            "attr": {
               "type": "AccountRelation",
               "column": "crmacct_id"
             }

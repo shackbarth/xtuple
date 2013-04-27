@@ -464,5 +464,15 @@ trailing:true white:true*/
       return Globalize.format(value, "n" + scale);
     }
   });
+  
+  // ..........................................................
+  // SALES ORDER LINE ITEM
+  //
+
+  enyo.kind({
+    name: "XV.SalesOrderLineItemListRelations",
+    kind: "XV.QuoteLineItemListRelations",
+    parentKey: "salesOrder"
+  });
 
 }());

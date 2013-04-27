@@ -13,52 +13,22 @@ white:true*/
     //datasourcePort: 443,
     isConnected: false,
 
-    /**
-      Helper function to convert parameters to data source friendly formats
-
-      @param {String} Record Type
-      @param {Object} Query parameters
-    */
-    formatParameters: function (recordType, params) {
-      _.each(params, function (param) {
-        var klass = recordType ? XT.getObjectByName(recordType) : null,
-          relations = klass ? klass.prototype.relations : [],
-          relation = _.find(relations, function (rel) {
-            return rel.key === param.attribute;
-          }),
-          idAttribute;
-
-        // Format date if applicable
-        if (param.value instanceof Date) {
-          param.value = param.value.toJSON();
-
-        // Format record if applicable
-        } else if (_.isObject(param.value) && !_.isArray(param.value)) {
-          param.value = param.value.id;
-        }
-
-        // Format attribute if it's `HasOne` relation
-        if (relation && relation.type === Backbone.HasOne) { // && relation.isNested) { TODO: Re-add this if we get nonNested back?
-          klass = XT.getObjectByName(relation.relatedModel);
-          idAttribute = klass.prototype.idAttribute;
-          param.attribute = param.attribute + '.' + idAttribute;
-        }
-      });
-    },
-
     /*
-    Returns a record array based on a query.
+    Server request
 
-    @param {Object} query
+    @param {Object} model or collection
+    @param {String} method
+    @param {Object} payload
     @param {Object} options
     */
-    fetch: function (collection, options) {
-      options = options ? _.clone(options) : {};
+    request: function (obj, method, payload, options) {
       var that = this,
-        payload = {},
-        parameters = options.query.parameters,
+        isDispatch = _.isObject(payload.dispatch),
         complete = function (response) {
-          var params = {}, error;
+          var dataHash,
+            params = {},
+            error,
+            attrs;
 
           // Handle error
           if (response.isError) {
@@ -70,154 +40,43 @@ white:true*/
             return;
           }
 
-          if (options && options.success) {
-            options.success.call(that, collection, response.data, options);
-          }
-        };
+          dataHash = response.data;
 
-      if (parameters && parameters.length) {
-        this.formatParameters(options.query.recordType, parameters);
-      }
-
-      payload.requestType = 'fetch';
-      payload.query = options.query;
-      payload.databaseType = options.databaseType;
-
-      return XT.Request
-               .handle("function/fetch")
-               .notify(complete)
-               .send(payload);
-    },
-
-    /*
-    Returns a single record.
-
-    @param {String} record type
-    @param {Number} id
-    @param {Object} options
-    */
-    retrieveRecord: function (model, options) {
-      var that = this,
-        payload = {},
-        complete = function (response) {
-          var params = {}, error;
-
-          // Handle error
-          if (response.isError) {
-            if (options && options.error) {
-              params.error = response.message;
-              error = XT.Error.clone('xt1001', { params: params });
-              options.error.call(that, error);
-            }
-            return;
-          }
-
-          // Handle no data as error
-          if (_.isEmpty(response.data)) {
+          // Handle no data on a single record retrieve as error
+          if (method === "get" && options.id &&
+            _.isEmpty(dataHash.data)) {
             if (options && options.error) {
               error = XT.Error.clone('xt1007');
-              options.error.call(that, error);
+              options.error.call(obj, error);
             }
             return;
           }
 
           // Handle success
           if (options && options.success) {
-            options.success.call(that, model, response.data, options);
-          }
-        };
-
-      payload.requestType = 'retrieveRecord';
-      payload.recordType = model.recordType;
-      payload.id = options.id || model.id;
-      payload.databaseType = options.databaseType;
-      payload.options = { context: options.context };
-
-      return XT.Request
-               .handle("function/retrieveRecord")
-               .notify(complete)
-               .send(payload);
-    },
-
-    /*
-    Commit a single record.
-
-    @param {XM.Model} model
-    @param {Object} options
-    */
-    commitRecord: function (model, options) {
-      var that = this,
-        payload = {},
-        complete = function (response) {
-          var params = {}, error;
-
-          // Handle error
-          if (response.isError) {
-            if (options && options.error) {
-              params.error = response.message;
-              error = XT.Error.clone('xt1001', { params: params });
-              options.error.call(that, error);
+            if (isDispatch) {
+              options.success(dataHash, options);
+              return;
             }
-            return;
-          }
-
-          if (options && options.success) {
-            options.success.call(that, model, response.data, options);
-          }
-        };
-
-      payload.requestType = 'commitRecord';
-      payload.recordType = model.recordType;
-      payload.binaryField = model.binaryField; // see issue 18661
-      payload.requery = options.requery;
-      payload.databaseType = options.databaseType;
-      payload.dataHash = model.changeSet();
-
-      return XT.Request
-               .handle("function/commitRecord")
-               .notify(complete)
-               .send(payload);
-    },
-
-    /*
-    Dispatch a server side function call to the datasource.
-
-    @param {String} class name
-    @param {String} function name
-    @param {Object} parameters
-    @param {Function} success callback
-    @param {Function} error callback
-    */
-    dispatch: function (name, func, params, options) {
-      var that = this,
-        payload = {
-          requestType: 'dispatch',
-          className: name,
-          functionName: func,
-          parameters: params
-        },
-        complete = function (response) {
-          var params = {}, error;
-
-          // handle error
-          if (response.isError) {
-            if (options && options.error) {
-              params.error = response.message;
-              error = XT.Error.clone('xt1001', { params: params });
-              options.error.call(that, error);
+            if (dataHash.patches) {
+              if (obj) {
+                attrs = obj.toJSON({includeNested: true});
+                XM.jsonpatch.apply(attrs, dataHash.patches);
+              } else {
+                attrs = dataHash.patches;
+              }
+            } else {
+              attrs = dataHash.data;
             }
-            return;
-          }
-
-          if (options && options.success) {
-            options.success.call(that, response.data, options);
+            if (obj instanceof Backbone.Model) {
+              obj.etag = dataHash.etag;
+            }
+            options.success.call(that, obj, attrs, options);
           }
         };
 
-      payload.automatedRefresh = options.automatedRefresh;
-      payload.databaseType = options.databaseType;
       return XT.Request
-               .handle('function/dispatch')
+               .handle(method)
                .notify(complete)
                .send(payload);
     },

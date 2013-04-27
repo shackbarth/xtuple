@@ -1066,6 +1066,13 @@ trailing:true white:true*/
     kind: "XV.List",
     label: "_prospects".loc(),
     collection: "XM.ProspectRelationCollection",
+    events: {
+      onWorkspace: ""
+    },
+    handlers: {
+      onConvertItem: "convertProspect"
+    },
+    gearActions: ["convert"],
     query: {orderBy: [
       {attribute: 'number'}
     ]},
@@ -1093,6 +1100,35 @@ trailing:true white:true*/
         ]}
       ]}
     ],
+    /**
+      Convert the prospect from the list into a customer model. The way we
+      do this is to open a customer workspace and then call the model method
+      convertFromProspect AFTER the workspace is initialized. That way
+      the view and the model get bound together correctly. The user will have
+      to fill out some customer-specific fields, and when they save a new
+      customer will be created.
+     */
+    convertProspect: function (inSender, inEvent) {
+      var that = this,
+        modelStatusChanged,
+        index = inEvent.index,
+        collection = this.getValue(),
+        prospectModel = collection.at(index),
+        modelId = prospectModel.id,
+        success = function () {
+          this.getValue().convertFromProspect(modelId);
+        };
+
+      this.doWorkspace({
+        workspace: "XV.CustomerWorkspace",
+        attributes: {
+          name: prospectModel.get("name"),
+          number: prospectModel.get("number")
+        },
+        success: success,
+        allowNew: false
+      });
+    },
     sendMail: function (inSender, inEvent) {
       var model = this.getModel(inEvent.index),
         email = model ? model.getValue('contact.primaryEmail') : null,
@@ -1163,6 +1199,61 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.QuoteRelation", "XV.QuoteList");
+
+  // ..........................................................
+  // SALES ORDER
+  //
+
+  enyo.kind({
+    name: "XV.SalesOrderList",
+    kind: "XV.List",
+    label: "_salesOrders".loc(),
+    collection: "XM.SalesOrderListItemCollection",
+    parameterWidget: "XV.SalesOrderListParameters",
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", isKey: true, fit: true}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "customer.name"}
+            ]}
+          ]},
+          {kind: "XV.ListColumn", classes: "second", components: [
+            {kind: "XV.ListAttr", attr: "billtoName", classes: "italic"},
+            {kind: "XV.ListAttr", attr: "billtoAddress1.formatShort"}
+          ]},
+          {kind: "XV.ListColumn", classes: "second", components: [
+            {kind: "XV.ListAttr", attr: "shiptoName", classes: "italic"},
+            {kind: "XV.ListAttr", attr: "shiptoAddress1.formatShort"}
+          ]},
+          {kind: "XV.ListColumn", classes: "second", components: [
+            {kind: "XV.ListAttr", attr: "shipVia"}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "scheduleDate"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "total", formatter: "formatPrice", classes: "right"}
+            ]}
+          ]}
+        ]}
+      ]}
+    ],
+    formatPrice: function (value, view, model) {
+      var currency = model ? model.get("currency") : false,
+        scale = XT.session.locale.attributes.salesPriceScale;
+      return currency ? currency.format(value, scale) : "";
+    }
+  });
+
+  XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderList");
 
   // ..........................................................
   // SALE TYPE
@@ -1344,8 +1435,6 @@ trailing:true white:true*/
     ]
   });
 
-  XV.registerModelList("XM.TaxAuthorityRelation", "XV.TaxAuthorityList");
-
   // ..........................................................
   // TAX CODE
   //
@@ -1405,6 +1494,33 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.TaxClassRelation", "XV.TaxClassList");
+
+  // ..........................................................
+  // TAX RATE
+  //
+
+  enyo.kind({
+    name: "XV.TaxRateList",
+    kind: "XV.List",
+    label: "_taxRate".loc(),
+    collection: "XM.TaxRateCollection",
+    parameterWidget: "XV.TaxRateListParameters",
+    query: {orderBy: [
+      {attribute: 'tax.code'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short", components: [
+            {kind: "XV.ListAttr", attr: "tax.code", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "short", components: [
+            {kind: "XV.ListAttr", attr: "percent"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
 
   // ..........................................................
   // TAX TYPE

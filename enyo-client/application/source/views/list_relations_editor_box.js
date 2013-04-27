@@ -172,17 +172,13 @@ trailing:true white:true*/
   });
 
   // ..........................................................
-  // QUOTE LINE ITEMS
+  // LINE ITEMS
   //
   
   /**
-    Mixin to share common quote line functionality
+    This is the parent LineItem Mixin for both the Quote and SalesOrder.
   */
-  XV.QuoteLineMixin = {
-    create: function () {
-      this.inherited(arguments);
-      this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
-    },
+  XV.LineMixin = {
     /**
      When the model changes, check the priceMode field to see if it is in
        Discount or Markup mode and change the label accordingly.
@@ -190,10 +186,12 @@ trailing:true white:true*/
     attributesChanged: function (model, options) {
       XV.EditorMixin.attributesChanged.apply(this, arguments);
       var pm = model.get("priceMode");
-      if (pm === "N" || pm === "D" || pm === "P") { // discount
-        this.$.discount.setLabel("_discount".loc());
-      } else { // markup
-        this.$.discount.setLabel("_markup".loc());
+      if (this.$.discount) {
+        if (pm === "N" || pm === "D" || pm === "P") { // discount
+          this.$.discount.setLabel("_discount".loc());
+        } else { // markup
+          this.$.discount.setLabel("_markup".loc());
+        }
       }
     },
     changeItemSiteParameter: function (attr, param, isParent) {
@@ -217,6 +215,33 @@ trailing:true white:true*/
     },
     scheduleDateChanged: function () {
       this.changeItemSiteParameter("scheduleDate", "effectiveDate", false);
+    },
+    valueChanged: function () {
+      this.inherited(arguments);
+      var model = this.getValue(),
+        sellingUnits = model ? model.sellingUnits : false;
+      if (sellingUnits) {
+        this.$.quantityUnitPicker.setCollection(sellingUnits);
+        this.$.priceUnitPicker.setCollection(sellingUnits);
+      }
+    }
+  };
+  
+  /**
+    Mixin for Quote Specific Line functions
+  */
+  XV.QuoteLineMixin = {
+    create: function () {
+      this.inherited(arguments);
+      this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
+      
+      // Loop through the components and set the specific attribute information for the Money widgets
+      this.getComponents().forEach(function (e) {
+        if (e.kind === "XV.MoneyWidget") {
+          e.attr.currency = "quote.currency";
+          e.getEffective() ? e.setEffective("quote.quoteDate") : false;
+        }
+      });
     },
     quoteDateChanged: function () {
       this.changeItemSiteParameter("quoteDate", "effectiveDate");
@@ -249,20 +274,65 @@ trailing:true white:true*/
       }
       this.changeItemSiteParameter("customer");
       this.changeItemSiteParameter("shipto");
-    },
-    valueChanged: function () {
-      this.inherited(arguments);
-      var model = this.getValue(),
-        sellingUnits = model ? model.sellingUnits : false;
-      if (sellingUnits) {
-        this.$.quantityUnitPicker.setCollection(sellingUnits);
-        this.$.priceUnitPicker.setCollection(sellingUnits);
-      }
     }
   };
   
-  var quoteLineItem = enyo.mixin(XV.QuoteLineMixin, {
-    name: "XV.QuoteLineItemEditor",
+  /**
+    Mixin for Sales Order Specific Line functions
+  */
+   XV.SalesOrderLineMixin = {
+     create: function () {
+       this.inherited(arguments);
+       this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
+
+       // Loop through the components and set the specific attribute information for the Money widgets
+       this.getComponents().forEach(function (e) {
+         if (e.kind === "XV.MoneyWidget") {
+           e.attr.currency = "quote.currency";
+           e.getEffective() ? e.setEffective("quote.quoteDate") : false;
+         }
+       });
+     },
+     salesOrderDateChanged: function () {
+       this.changeItemSiteParameter("orderDate", "effectiveDate");
+     },
+     setValue: function (value) {
+       var parent,
+        site,
+        effectivePolicy = XT.session.settings.get("soPriceEffective");
+       // Remove any old bindings
+       if (this.value) {
+         parent = value.getParent();
+         parent.off("change:shipto", this.shiptoChanged, this);
+         parent.off("change:orderDate", this.salesOrderDateChanged, this);
+         this.value.off("change:scheduleDate", this.scheduleDateChanged, this);
+       }
+       XV.EditorMixin.setValue.apply(this, arguments);
+       // Add new bindings
+       if (this.value) {
+         parent = value.getParent();
+         parent.on("change:shipto", this.shiptoChanged, this);
+         if (effectivePolicy === "OrderDate") {
+           parent.on("change:orderDate", this.salesOrderDateChanged, this);
+           this.changeItemSiteParameter("orderDate", "effectiveDate");
+         } else if (effectivePolicy === "ScheduleDate") {
+           this.value.on("change:scheduleDate", this.scheduleDateChanged, this);
+           this.changeItemSiteParameter("scheduleDate", "effectiveDate");
+         }
+         site = parent ? parent.get("site") : false;
+         if (site) { this.$.itemSiteWidget.setSelectedSite(site); }
+       }
+       this.changeItemSiteParameter("customer");
+       this.changeItemSiteParameter("shipto");
+     }
+   };
+  
+   /**
+     This is the parent line editor. It mixes in the base line functionality
+     for both 
+   */
+  var lineEditor = enyo.mixin(XV.LineMixin, {
+    name: "XV.BaseLineItemEditor",
     kind: "XV.RelationsEditor",
     components: [
       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
@@ -282,13 +352,13 @@ trailing:true white:true*/
         {kind: "XV.PercentWidget", name: "discount", attr: "discount",
           label: "_discount".loc()},
         {kind: "XV.MoneyWidget", attr:
-          {localValue: "price", currency: "quote.currency"},
+          {localValue: "price", currency: ""},
           label: "_price".loc(), currencyDisabled: true,
           effective: "quote.quoteDate", scale: XT.SALES_PRICE_SCALE},
         {kind: "XV.UnitPicker", attr: "priceUnit",
           name: "priceUnitPicker"},
         {kind: "XV.MoneyWidget", attr:
-          {localValue: "extendedPrice", currency: "quote.currency"},
+          {localValue: "extendedPrice", currency: ""},
           label: "_extendedPrice".loc(), currencyDisabled: true,
           effective: "quote.quoteDate", scale: XT.EXTENDED_PRICE_SCALE},
         {kind: "XV.DateWidget", attr: "scheduleDate"},
@@ -299,8 +369,19 @@ trailing:true white:true*/
       ]}
     ]
   });
+  enyo.kind(lineEditor);
   
-  enyo.kind(quoteLineItem);
+  var quoteLineEditor = enyo.mixin(XV.QuoteLineMixin, {
+    name: "XV.QuoteLineItemEditor",
+    kind: "XV.BaseLineItemEditor"
+  });
+  enyo.kind(quoteLineEditor);
+  
+  var salesOrderLineEditor = enyo.mixin(XV.SalesOrderLineMixin, {
+    name: "XV.SalesOrderLineItemEditor",
+    kind: "XV.BaseLineItemEditor"
+  });
+  enyo.kind(salesOrderLineEditor);  
 
   enyo.kind({
     name: "XV.QuoteLineItemBox",
@@ -344,6 +425,29 @@ trailing:true white:true*/
       var index = Number(this.$.list.getFirstSelected());
       this.doChildWorkspace({
         workspace: "XV.QuoteLineWorkspace",
+        collection: this.getValue(),
+        index: index,
+        listRelations: this.$.list
+      });
+      return true;
+    }
+  });
+  
+  enyo.kind({
+    name: "XV.SalesOrderLineItemBox",
+    kind: "XV.QuoteLineItemBox",
+    editor: "XV.SalesOrderLineItemEditor",
+    parentKey: "salesOrder",
+    listRelations: "XV.SalesOrderLineItemListRelations",
+
+    create: function () {
+      this.inherited(arguments);
+    },
+
+    launchWorkspace: function (inSender, inEvent) {
+      var index = Number(this.$.list.getFirstSelected());
+      this.doChildWorkspace({
+        workspace: "XV.SalesOrderLineWorkspace",
         collection: this.getValue(),
         index: index,
         listRelations: this.$.list

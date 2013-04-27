@@ -34,9 +34,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     dataFromKey = require('./dataFromKey'),
     file = require('./file'),
     maintenance = require('./maintenance'),
+    passport = require('passport'),
     redirector = require('./redirector'),
     report = require('./report'),
     resetPassword = require('./resetPassword'),
+    restDiscovery = require('./restDiscovery'),
+    restRouter = require('./restRouter'),
     syncUser = require('./syncUser');
 
   //
@@ -51,15 +54,24 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   //
   // Data-passthrough routes
   //
+  exports.queryDatabase = data.queryDatabase;
+  exports.delete = [ensureLogin, data.delete];
+  exports.get = [ensureLogin, data.get];
+  exports.patch = [ensureLogin, data.patch];
+  exports.post = [ensureLogin, data.post];
+
   //
-  exports.commit = [ensureLogin, data.commit];
-  exports.commitEngine = data.commitEngine;
-  exports.fetch = [ensureLogin, data.fetch];
-  exports.fetchEngine = data.fetchEngine;
-  exports.dispatch = [ensureLogin, data.dispatch];
-  exports.dispatchEngine = data.dispatchEngine;
-  exports.retrieve = [ensureLogin, data.retrieve];
-  exports.retrieveEngine = data.retrieveEngine;
+  // REST API Routes
+  exports.restDiscoveryList = [
+    restDiscovery.list
+  ];
+  exports.restDiscoveryGetRest = [
+    restDiscovery.getRest
+  ];
+  exports.restRouter = [
+    passport.authenticate('bearer', { session: false }),
+    restRouter.router
+  ];
 
   //
   // Custom routes

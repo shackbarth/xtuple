@@ -680,6 +680,47 @@ trailing:true white:true*/
   });
   
   // ..........................................................
+  // SALES ORDER
+  //
+
+  enyo.kind({
+    name: "XV.SalesOrderListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_quote".loc()},
+      {name: "showClosed", label: "_showClosed".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '!=',
+              value: 'C'
+            };
+          }
+          return param;
+        }
+      },
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "salesRep", attr: "salesRep", label: "_salesRep".loc(), defaultKind: "XV.SalesRepPicker"},
+      {kind: "onyx.GroupboxHeader", content: "_customer".loc()},
+      {name: "customer", attr: "customer", label: "_customer".loc(), defaultKind: "XV.CustomerProspectWidget"},
+      {name: "customerType", attr: "customer.customerType", label: "_customerType".loc(), defaultKind: "XV.CustomerTypePicker"},
+      {name: "customerPurchaseOrderNumber", attr: "customerPurchaseOrderNumber",
+        label: "_custPO".loc()},
+      {kind: "onyx.GroupboxHeader", content: "_salesOrderDate".loc()},
+      {name: "createdFromDate", label: "_fromDate".loc(),
+        filterLabel: "_salesOrderDate".loc() + " " + "_fromDate".loc(),
+        attr: "orderDate", operator: ">=",
+        defaultKind: "XV.DateWidget"},
+      {name: "createdToDate", label: "_toDate".loc(),
+        filterLabel: "_orderDate".loc() + " " + "_toDate".loc(),
+        attr: "orderDate", operator: "<=",
+        defaultKind: "XV.DateWidget"}
+    ]
+  });
+  
+  // ..........................................................
   // SALE TYPE
   //
 
@@ -842,6 +883,20 @@ trailing:true white:true*/
       {kind: "onyx.GroupboxHeader", content: "_taxClass".loc()},
       {name: "code", label: "_code".loc(), attr: "code"},
       {name: "description", label: "_description", attr: "description"}
+    ]
+  });
+  
+  // ..........................................................
+  // TAX RATE
+  //
+
+  enyo.kind({
+    name: "XV.TaxRateListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_taxRate".loc()},
+      {name: "tax", label: "_tax".loc(), attr: "tax.code"},
+      {name: "percent", label: "_percent".loc(), attr: "percent"}
     ]
   });
   

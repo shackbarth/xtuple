@@ -99,8 +99,8 @@ white:true*/
      */
     priceChanged: function () {
       var model = this.getValue(),
-        quoteLine = model.collection.quoteLine,
-        itemIsSold = quoteLine.getValue("itemSite.item.isSold"),
+        line = model.collection.quoteLine ? model.collection.quoteLine : model.collection.salesOrderLine,
+        itemIsSold = line.getValue("itemSite.item.isSold"),
         price = model.get("price") !== undefined ? model.get("price") : "",
         note = itemIsSold ? Globalize.format( price, "c" ) : "";
 
@@ -121,12 +121,12 @@ white:true*/
      */
     valueChanged: function (inSender, inEvent) {
       var model = this.getValue(),
-        value = model.get('value'),
         characteristic = model.getValue('characteristic'),
         characteristicId = characteristic.get('id'),
         characteristicName = characteristic.get('name'),
-        quoteLine = model.collection.quoteLine,
-        allItemCharacteristics = quoteLine.getValue("itemSite.item.characteristics"),
+        // this could be quoteLine or a salesOrderLine
+        line = model.collection.quoteLine ? model.collection.quoteLine : model.collection.salesOrderLine,
+        allItemCharacteristics = line.getValue("itemSite.item.characteristics"),
         // filter for only the models of the appropriate characteristic
         // allItemCharacteristics may be "", in which case we want an empty array
         // we can use this underscore method in backbone but it unfortunately
@@ -136,7 +136,7 @@ white:true*/
         }) : [],
         // so we have to make it a collection here
         relevantItemCharacteristics = new XM.CharacteristicCollection(relevantArray),
-        itemIsSold = quoteLine.getValue("itemSite.item.isSold");
+        itemIsSold = line.getValue("itemSite.item.isSold");
 
       // pass the backing collection to the combobox
       this.$.combobox.setCollection(relevantItemCharacteristics);
@@ -145,7 +145,7 @@ white:true*/
       this.$.combobox.setLabel(characteristicName);
 
       // set the selected value of the combobox
-      this.$.combobox.setValue(value, {silent: true});
+      this.$.combobox.setValue(model.get('value'), {silent: true});
 
       // display the price if we already have it
       this.priceChanged();

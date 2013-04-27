@@ -1,6 +1,7 @@
 /* LESS version of screen.scss file previously in client
 
-  To compile to .css: lessc screen.less > ../stylesheets/screen.css
+  To compile to .css: 
+  lessc screen.less > ../stylesheets/screen.css
   Use -compress for a compressed .css with no comments
 
 */
@@ -378,7 +379,7 @@ body {
   display: inline-block;
   vertical-align: middle;
 }
-.xv-list-delete-button {
+.xv-list-gear-icon-button {
   float: right;
   display: none;
   margin-top: -4px;

@@ -95,19 +95,21 @@ select xt.install_js('XT','Session','xtuple', $$
     @param {String} Schema name
     @returns {Hash}
   */
-  XT.Session.schema = function(schema, refresh) {
-  
-    if (!refresh && this._schema) { return this._schema };
+  XT.Session.schema = function() {
     var sql = 'select c.relname as "type", ' +
               '  attname as "column", ' +
-              '  typcategory as "category" ' +
+              '  typcategory as "category", ' +
+              '  n.nspname as "schema" ' +
               'from pg_class c' +
               '  join pg_namespace n on n.oid = c.relnamespace' +
               '  join pg_attribute a on a.attrelid = c.oid ' +
               '  join pg_type t on a.atttypid = t.oid ' +
-              'where n.nspname = $1 ' +
+              'where n.nspname in ( ' +
+              ' select distinct lower(orm_namespace) from XT.Orm ' +
+              ') ' + 
               'order by c.relname, attnum',
-      recs = plv8.execute(sql, [ schema ]),
+      schema,
+      recs = plv8.execute(sql),
       type,
       prev = '',
       name,
@@ -123,7 +125,7 @@ select xt.install_js('XT','Session','xtuple', $$
       filterToMany = function (value) {
         return value.toMany;
       },
-      addToOne = function (value) {
+      addToOne = function (value, schema) {
         var relations = result[type]['relations'],
           child = XT.Orm.fetch(schema.toUpperCase(), value.toOne.type),
           pkey = XT.Orm.primaryKey(child),
@@ -138,7 +140,7 @@ select xt.install_js('XT','Session','xtuple', $$
         }
         relations.push(rel);
       },
-      addToMany = function (value) {
+      addToMany = function (value, schema) {
         var relations = result[type]['relations'], 
           child = XT.Orm.fetch(schema.toUpperCase(), value.toMany.type),
           pkey = XT.Orm.primaryKey(child),
@@ -158,35 +160,40 @@ select xt.install_js('XT','Session','xtuple', $$
         }
         relations.push(rel);
       },
-      processProperties = function (orm) {
+      processProperties = function (orm, schema) {
         var n;
         if (orm.properties && orm.properties.length) {
           /* To One */
           props = orm.properties.filter(filterToOne);
-          props.forEach(addToOne);
+          props.forEach(function(prop) {
+            addToOne(prop, schema);
+          });
  
           /* To Many */
           props = orm.properties.filter(filterToMany);
-          props.forEach(addToMany);
+          props.forEach(function(prop) {
+            addToMany(prop, schema)
+          });
         }
 
         /* extensions */
         if (orm.extensions && orm.extensions.length) {
           for (n = 0; n < orm.extensions.length; n++) {
-            processProperties(orm.extensions[n]);
+            processProperties(orm.extensions[n], schema);
           }
         }
       },
       processPrivileges = function (orm) {
         if (orm.privileges) {
-	   result[type]['privileges'] = orm.privileges;
-	}
+          result[type]['privileges'] = orm.privileges;
+        }
       };
 
     /* Loop through each field and add to the object */
     for (i = 0; i < recs.length; i++) {
       type = recs[i].type.classify();
       name = recs[i].column;
+      schema = recs[i].schema;
       if (type !== prev) {
         result[type] = {};
         result[type].columns = [];
@@ -198,7 +205,7 @@ select xt.install_js('XT','Session','xtuple', $$
         orm = XT.Orm.fetch(schema.toUpperCase(), type);
        
         result[type]['relations'] = [];
-        processProperties(orm);
+        processProperties(orm, schema);
         processPrivileges(orm);
       }
       column = { 
@@ -227,8 +234,7 @@ select xt.install_js('XT','Session','xtuple', $$
       }
     }
 
-    this._schema = JSON.stringify(result);
-    return this._schema;
+    return JSON.stringify(result);
   }
   
 $$ );

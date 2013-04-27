@@ -22,7 +22,7 @@ white:true*/
     },
     segments: ["Roles"],
     translateLabels: false,
-    totalCollectionName: "UserAccountRoleCollection",
+    totalCollectionName: "XM.UserAccountRoleCollection",
     type: "userAccountRole",
     /**
      * The extra quirk handled here is that when a role is assigned to
@@ -74,9 +74,9 @@ white:true*/
     published: {
       idsFromRoles: null
     },
-    cacheName: "privileges",
+    cacheName: "XM.privileges",
     segments: [],
-    totalCollectionName: "PrivilegeCollection",
+    totalCollectionName: "XM.PrivilegeCollection",
     type: "privilege",
     /**
       The available privileges will be dynamically populated based on the modules
@@ -197,7 +197,7 @@ white:true*/
     kind: "XV.AssignmentBox",
     segments: [],
     translateLabels: false,
-    totalCollectionName: "PrivilegeCollection",
+    totalCollectionName: "XM.PrivilegeCollection",
     type: "privilege",
     /**
       The available privileges will be dynamically populated based on the modules

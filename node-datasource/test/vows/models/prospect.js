@@ -13,7 +13,7 @@ var XVOWS = XVOWS || {};
     crud = require('../lib/crud');
 
   var data = {},
-    extra = {};
+    deleteData = {};
 
   data.createHash = {
     number: "SHOWERBEER",
@@ -54,7 +54,6 @@ var XVOWS = XVOWS || {};
   }).addBatch({
     'We can READ the Prospect Model': {
       topic: function () {
-        extra.accountId = data.model.get('account');
         return data;
       },
       'Verify the Last Error is null': function (data) {
@@ -66,44 +65,49 @@ var XVOWS = XVOWS || {};
       '-> Set values to the Prospect': {
         topic: function () {
           data.model.set(data.updateHash);
-          extra.accountId = data.model.get('account');
+          deleteData.accntId = data.model.get("account");
+          deleteData.accountModel = new XM.Account();
           return data;
         },
         '-> Commit the Prospect': crud.save(data)
       }
     })
   }).addBatch({
-    'We can DESTROY a Prospect Model': crud.destroy(data, {
-      '-> Destroy the Prospect account': {
-        //Destroy the prospect.  When that is successful, destroy the account
-        'When the prospect is destroyed': function (data) {
-          assert.isTrue(data.model.getStatus() === XM.Model.DESTROYED_CLEAN);
+    'DESTROY': crud.destroy(data, {
+      '-> Destroy the Prospect': {
+        //Destroy the propect.  When that is successful, destroy the account
+        'Customer destroyed': function (data) {
+          assert.equal(data.model.getStatusString(), 'DESTROYED_CLEAN');
         },
-        topic: function () {
-          var that = this,
-            fetchOptions = {};
-            
-          extra.accountModel = new XM.Account();
-            
-          fetchOptions.id = extra.accountId;
-          
-          fetchOptions.success = function () {
-            var destroyOptions = {};
-            destroyOptions.success = function () {
-              that.callback(null, data);
+        '-> Destroy the Account': {
+          topic: function () {
+            var that = this,
+              account = deleteData.accountModel,
+              fetchOptionsAccnt = {},
+              destroyAccount;
+
+            fetchOptionsAccnt.id = deleteData.accntId;
+
+            destroyAccount = function () {
+              if (account.getStatus() === XM.Model.READY_CLEAN) {
+                var accountDestroyed = function () {
+                    if (account.getStatus() === XM.Model.DESTROYED_CLEAN) {
+                      account.off("statusChange", accountDestroyed);
+                      that.callback(null, account);
+                    }
+                  };
+
+                account.off("statusChange", destroyAccount);
+                account.on("statusChange", accountDestroyed);
+                account.destroy();
+              }
             };
-            destroyOptions.error = function () {
-              that.callback("Error destroying the newly created account.");
-            };
-            extra.accountModel.destroy(destroyOptions);
-          };
-          fetchOptions.error = function () {
-            that.callback("Error fetching the newly created account.");
-          };
-          extra.accountModel.fetch(fetchOptions);
-        },
-        'We will account destroyed': function (data) {
-          assert.isTrue(extra.accountModel.getStatus() === XM.Model.DESTROYED_CLEAN);
+            account.on("statusChange", destroyAccount);
+            account.fetch(fetchOptionsAccnt);
+          },
+          'Account destroyed': function (account) {
+            assert.equal(account.getStatusString(), 'DESTROYED_CLEAN');
+          }
         }
       }
     })

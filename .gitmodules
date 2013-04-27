@@ -34,3 +34,6 @@
 [submodule "lib/tools/lib/underscore"]
 	path = lib/tools/lib/underscore
 	url = https://github.com/documentcloud/underscore.git
+[submodule "lib/backbone-x/lib/JSON-Patch"]
+	path = lib/backbone-x/lib/JSON-Patch
+	url = git@github.com:xtuple/JSON-Patch.git
