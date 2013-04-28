@@ -1072,7 +1072,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ContactRelation",
-    "table": "cntct",
+    "table": "xt.cntctinfo",
     "comment": "Contact Relation Map",
     "privileges": {
       "all": {
@@ -1198,32 +1198,19 @@
       {
         "name": "account",
         "attr": {
-          "type": "Number",
-          "column": "cntct_crmacct_id"
+          "type": "String",
+          "column": "crmacct_number"
+        }
+      },
+      {
+        "name": "accountParent",
+        "attr": {
+          "type": "String",
+          "column": "crmacct_parent_number"
         }
       }
     ],
-    "extensions": [
-      {
-        "table": "crmacct",
-        "nameSpace": "XM",
-        "relations": [
-          {
-            "column": "crmacct_id",
-            "inverse": "account"
-          }
-        ],
-        "properties": [
-          {
-            "name": "accountParent",
-            "attr": {
-              "type": "Number",
-              "column": "crmacct_parent_id"
-            }
-          }
-        ]
-      }
-    ],
+    "extensions": [],
     "isSystem": true
   },
   {

@@ -105,7 +105,7 @@
         "name":"contactRelations",
         "toMany":{
           "type":"ContactRelation",
-          "column":"crmacct_id",
+          "column":"crmacct_number",
           "inverse":"account"
         }
       },
