@@ -1100,15 +1100,15 @@
       {
         "name": "account",
         "attr": {
-          "type": "Number",
-          "column": "incdt_crmacct_id"
+          "type": "String",
+          "column": "crmacct_number"
         }
       },
       {
         "name": "contact",
         "attr": {
-          "type": "Number",
-          "column": "incdt_cntct_id"
+          "type": "String",
+          "column": "cntct_number"
         }
       }
     ],

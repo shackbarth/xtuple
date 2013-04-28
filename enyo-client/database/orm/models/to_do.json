@@ -720,8 +720,8 @@
       {
         "name": "contact",
         "attr": {
-          "type": "Number",
-          "column": "todoitem_cntct_id"
+          "type": "String",
+          "column": "cntct_number"
         }
       },
       {
@@ -759,8 +759,8 @@
       {
         "name": "account",
         "attr": {
-          "type": "Number",
-          "column": "todoitem_crmacct_id"
+          "type": "String",
+          "column": "crmacct_number"
         }
       },
       {
