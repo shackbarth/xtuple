@@ -17,15 +17,15 @@
      {
         "name": "account",
         "attr": {
-         "type": "Number",
-         "column": "crmacct_id"
+         "type": "String",
+         "column": "crmacct_number"
         }
      },
      {
         "name": "contactRelations",
         "toMany": {
           "type": "CustomerContactRelation",
-          "column": "crmacct_id",
+          "column": "crmacct_number",
           "inverse": "account"
         }
       },
@@ -33,7 +33,7 @@
         "name": "incidentRelations",
         "toMany": {
           "type": "CustomerIncidentRelation",
-          "column": "crmacct_id",
+          "column": "crmacct_number",
           "inverse": "account"
         }
       },
@@ -41,7 +41,7 @@
         "name": "opportunityRelations",
         "toMany": {
           "type": "CustomerOpportunityRelation",
-          "column": "crmacct_id",
+          "column": "crmacct_number",
           "inverse": "account"
         }
       },
@@ -49,7 +49,7 @@
         "name": "toDoRelations",
         "toMany": {
           "type": "CustomerToDoRelation",
-          "column": "crmacct_id",
+          "column": "crmacct_number",
           "inverse": "account"
         }
       }
@@ -60,7 +60,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "CustomerContactRelation",
-    "table": "cntct",
+    "table": "xt.cntctinfo",
     "comment": "Customer Contact Relation Map",
     "privileges": {
       "all": {
@@ -186,32 +186,19 @@
       {
         "name": "account",
         "attr": {
-          "type": "Number",
-          "column": "cntct_crmacct_id"
+          "type": "String",
+          "column": "crmacct_number"
+        }
+      },
+      {
+        "name": "accountParent",
+        "attr": {
+          "type": "String",
+          "column": "crmacct_parent_number"
         }
       }
     ],
-    "extensions": [
-      {
-        "table": "crmacct",
-        "nameSpace": "XM",
-        "relations": [
-          {
-            "column": "crmacct_id",
-            "inverse": "account"
-          }
-        ],
-        "properties": [
-          {
-            "name": "accountParent",
-            "toOne": {
-              "type": "AccountRelation",
-              "column": "crmacct_parent_id"
-            }
-          }
-        ]
-      }
-    ],
+    "extensions": [],
     "isSystem": true
   },
   {
@@ -304,15 +291,15 @@
       {
         "name": "account",
         "attr": {
-          "type": "Number",
-          "column": "ophead_crmacct_id"
+          "type": "String",
+          "column": "crmacct_number"
         }
       },
       {
         "name": "contact",
         "attr": {
-          "type": "Number",
-          "column": "ophead_cntct_id"
+          "type": "String",
+          "column": "cntct_number"
         }
       }
     ],
@@ -383,8 +370,8 @@
       {
         "name": "contact",
         "attr": {
-          "type": "Number",
-          "column": "todoitem_cntct_id"
+          "type": "String",
+          "column": "cntct_number"
         }
       },
       {
@@ -422,8 +409,8 @@
       {
         "name": "account",
         "attr": {
-          "type": "Number",
-          "column": "todoitem_crmacct_id"
+          "type": "String",
+          "column": "crmacct_number"
         }
       },
       {
@@ -527,15 +514,15 @@
       {
         "name": "account",
         "attr": {
-          "type": "Number",
-          "column": "incdt_crmacct_id"
+          "type": "String",
+          "column": "crmacct_number"
         }
       },
       {
         "name": "contact",
         "attr": {
-          "type": "Number",
-          "column": "incdt_cntct_id"
+          "type": "String",
+          "column": "cntct_number"
         }
       }
     ],
