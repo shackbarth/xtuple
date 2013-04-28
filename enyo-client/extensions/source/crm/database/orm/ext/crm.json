@@ -43,7 +43,7 @@
         "name": "opportunityRelations",
         "toMany": {
           "type": "OpportunityRelation",
-          "column": "crmacct_id",
+          "column": "crmacct_number",
           "inverse": "account"
         }
       },
@@ -112,7 +112,7 @@
         "name": "opportunityRelations",
         "toMany": {
           "type": "OpportunityRelation",
-          "column": "cntct_id",
+          "column": "cntct_number",
           "inverse": "contact"
         }
       },
