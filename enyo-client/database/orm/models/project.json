@@ -532,7 +532,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ProjectRelation",
-    "table": "prj",
+    "table": "xt.prjinfo",
     "comment": "Project Relation Map",
     "privileges": {
       "all": {
@@ -611,15 +611,15 @@
       {
         "name": "account",
         "attr": {
-          "type": "Number",
-          "column": "prj_crmacct_id"
+          "type": "String",
+          "column": "crmacct_number"
         }
       },
       {
         "name": "contact",
         "attr": {
-          "type": "Number",
-          "column": "prj_cntct_id"
+          "type": "String",
+          "column": "cntct_number"
         }
       }
     ],
