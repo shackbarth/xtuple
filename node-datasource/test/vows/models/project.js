@@ -116,30 +116,18 @@
       },
       '-> add comment to a Project': {
         topic: function (data) {
-          var that = this,
-            timeoutId,
-            comment = new XM.ProjectComment(),
-            callback = function () {
-              clearTimeout(timeoutId);
-              comment.off('change:id', callback);
-              that.callback(null, comment);
-            };
+          var comment = new XM.ProjectComment();
 
           // Must add comment to the project first then initialize
           data.model.get('comments').add(comment);
-          comment.on('change:id', callback);
           comment.initialize(null, {isNew: true});
-
-          // If we don't hear back, keep going
-          timeoutId = setTimeout(function () {
-            that.callback(null, comment);
-          }, 5000); // five seconds
+          this.callback(null, comment);
         },
         'Verify the Project Comment Status is READY_NEW': function (comment) {
           assert.equal(comment.getStatusString(), 'READY_NEW');
         },
         'Verify the Project Comment id is valid': function (comment) {
-          assert.isNumber(comment.id);
+          assert.isString(comment.id);
         },
         '-> Set and Save comment to a Project': {
           topic: function (comment) {
@@ -193,30 +181,18 @@
       },
       '-> add task to Project Model': {
         topic: function (data) {
-          var that = this,
-            timeoutId,
-            task = new XM.ProjectTask(),
-            callback = function () {
-              clearTimeout(timeoutId);
-              task.off('change:id', callback);
-              that.callback(null, task);
-            };
+          var task = new XM.ProjectTask();
 
           // Must add task to the project first then initialize
           data.model.get('tasks').add(task);
-          task.on('change:id', callback);
           task.initialize(null, {isNew: true});
-
-          // If we don't hear back, keep going
-          timeoutId = setTimeout(function () {
-            that.callback(null, task);
-          }, 5000); // five seconds
+          this.callback(null, task);
         },
         'Verify the Project Task Status is READY_NEW': function (task) {
           assert.equal(task.getStatusString(), 'READY_NEW');
         },
         'Verify the Project Task id is valid': function (task) {
-          assert.isNumber(task.id);
+          assert.isString(task.id);
         },
         '-> Set and Save task to Project': {
           topic: function (task) {
