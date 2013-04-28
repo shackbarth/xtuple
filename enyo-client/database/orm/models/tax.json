@@ -141,7 +141,7 @@
             "name": "account",
             "attr": {
               "type": "Number",
-              "column": "crmacct_id"
+              "column": "crmacct_number"
             }
           }
         ],
