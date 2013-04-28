@@ -76,7 +76,7 @@ var XVOWS = XVOWS || {};
     'DESTROY': crud.destroy(data, {
       '-> Destroy the Prospect': {
         //Destroy the propect.  When that is successful, destroy the account
-        'Customer destroyed': function (data) {
+        'Prospect destroyed': function (data) {
           assert.equal(data.model.getStatusString(), 'DESTROYED_CLEAN');
         },
         '-> Destroy the Account': {

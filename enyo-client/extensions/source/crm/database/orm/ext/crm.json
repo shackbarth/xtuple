@@ -146,8 +146,8 @@
      {
         "name": "account",
         "attr": {
-         "type": "Number",
-         "column": "crmacct_id"
+         "type": "String",
+         "column": "crmacct_number"
         }
      }
     ],
