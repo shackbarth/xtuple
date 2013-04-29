@@ -55,8 +55,8 @@ var XVOWS = XVOWS || {};
       topic: function () {
         return data;
       },
-      'Verify the Ship Zone ID is a number': function (data) {
-        assert.isNumber(data.model.id);
+      'Verify the Ship Zone ID is a string': function (data) {
+        assert.isString(data.model.id);
       },
       'Verify the Ship Zone Name is `TESTSHIPZONE`': function (data) {
         assert.equal(data.model.get('name'), data.createHash.name);

@@ -56,8 +56,8 @@ var XVOWS = XVOWS || {};
       topic: function () {
         return data;
       },
-      'ID is a number': function (data) {
-        assert.isNumber(data.model.id);
+      'ID is a string': function (data) {
+        assert.isString(data.model.id);
       },
       'Five equals five.': function (data) {
         assert.equal(5, 5);

@@ -4,8 +4,9 @@
     "nameSpace": "XM",
     "type": "Address",
     "table": "addr",
-    "lockable": true,
     "idSequenceName": "addr_addr_id_seq",
+    "isRest": true,
+    "lockable": true,
     "orderSequence": "AddressNumber",
     "comment": "Address Map",
     "privileges": {
@@ -29,7 +30,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "addr_number"
+          "column": "addr_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -122,6 +124,7 @@
     "nameSpace": "XM",
     "type": "AddressCharacteristic",
     "table": "charass",
+    "idSequenceName": "charass_charass_id_seq",
     "comment": "Address Characteristic Map",
     "privileges": {
       "all": {
@@ -138,6 +141,14 @@
           "type": "Number",
           "column": "charass_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -204,6 +215,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -262,8 +281,8 @@
     "nameSpace": "XM",
     "type": "AddressInfo",
     "table": "addr",
-    "lockable": true,
     "idSequenceName": "addr_addr_id_seq",
+    "lockable": true,
     "orderSequence": "AddressNumber",
     "comment": "Address Info Map",
     "privileges": {
@@ -287,7 +306,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "addr_number"
+          "column": "addr_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -354,8 +374,9 @@
     "nameSpace": "XM",
     "type": "Country",
     "table": "country",
-    "lockable": true,
     "idSequenceName": "country_country_id_seq",
+    "isRest": true,
+    "lockable": true,
     "comment": "Country Map",
     "privileges": {
       "all": {
@@ -379,7 +400,8 @@
         "attr": {
           "type": "String",
           "column": "country_abbr",
-          "required": true
+          "required": true,
+          "isNaturalKey": true
         }
       },
       {
@@ -427,8 +449,9 @@
     "nameSpace": "XM",
     "type": "State",
     "table": "state",
-    "lockable": true,
     "idSequenceName": "state_state_id_seq",
+    "isRest": true,
+    "lockable": true,
     "comment": "State Map",
     "privileges": {
       "all": {
@@ -459,7 +482,8 @@
         "attr": {
           "type": "String",
           "column": "state_abbr",
-          "required": true
+          "required": true,
+          "isNaturalKey": true
         }
       },
       {

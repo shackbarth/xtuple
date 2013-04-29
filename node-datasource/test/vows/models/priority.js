@@ -81,8 +81,8 @@ var XVOWS = XVOWS || {};
       topic: function () {
         return data;
       },
-      'Verify the ID is a number': function (data) {
-        assert.isNumber(data.model.id);
+      'Verify the ID is a string': function (data) {
+        assert.isString(data.model.id);
       },
       'Verify the Name is from createHash': function (data) {
         assert.equal(data.model.get('name'), data.createHash.name);

@@ -37,19 +37,23 @@ create or replace function xt.post(data_hash text) returns text as $$
     data = Object.create(XT.Data)
     orm = XT.Orm.fetch(dataHash.nameSpace, dataHash.type);
     pkey = XT.Orm.primaryKey(orm);
+    nkey = XT.Orm.naturalKey(orm);
     prv = JSON.parse(JSON.stringify(dataHash.data));
-    sql = "select nextval('" + orm.idSequenceName + "');";
     
     /* set status */
     XT.jsonpatch.updateState(dataHash.data, "create");
 
     /* set id if not provided */
     if (!dataHash.id) {
-      dataHash.id = dataHash.data[pkey] || plv8.execute(sql)[0].nextval;
-    }
-
-    if (!dataHash.data[pkey]) {
-      dataHash.data[pkey] = dataHash.id;
+      if (nkey) {
+        if (dataHash.data[nkey] || nkey === 'uuid') {
+          dataHash.id = dataHash.data[nkey] || XT.generateUUID();
+        } else {
+          plv8.elog(ERROR, "A unique id must be provided");
+        }
+      } else {
+        dataHash.id = dataHash.data[pkey] || plv8.execute(sql)[0].nextval;
+      }
     }
   
     /* commit the record */
@@ -91,6 +95,43 @@ $$ language plv8;
 
 /*
 select xt.js_init();
+select xt.post('{
+  "username": "admin",
+  "nameSpace":"XM",
+  "type": "Contact",
+  "id": "99999",
+  "data" : {
+    "number": "99999",
+    "firstName": "Bob",
+    "lastName": "Marley",
+    "email":[
+      {
+        "uuid": "f4477339-1fa9-498e-b597-6c939c1898ab",
+        "email": "frankf@ttoys.com"
+      }
+    ],
+    "comments": [
+      {
+        "uuid": "f4477779-1fa9-498e-b597-6c939c1898ab",
+        "commentType": "General",
+        "text": "This is a test.",
+        "isPublic": false,
+        "created": "2013-04-26T12:57:41.939Z",
+        "createdBy": "admin"
+      },
+      {
+        "uuid": "cb5a834a-b816-480c-ab17-0637a999b517",
+        "commentType": "ChangeLog",
+        "text": "This is another test.",
+        "isPublic": false,
+        "created": "2013-04-26T12:57:57.896Z",
+        "createdBy": "admin"
+      }
+    ]
+  },
+  "prettyPrint": true
+}');
+
 select xt.post('{
   "username": "admin",
   "nameSpace":"XM",
