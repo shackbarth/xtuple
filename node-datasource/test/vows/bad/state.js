@@ -15,10 +15,10 @@ var XVOWS = XVOWS || {};
       createHash: {
         name: "Milky Way",
         abbreviation: "MW",
-        country: 214  //arbitrary number, must match actual country_id
+        country: 'AU' //arbitrary number, must match actual country_id
       },
       updateHash: {
-        abbreviation: "XY"
+        name: "Zone"
       }
     };
 

@@ -19,9 +19,9 @@ var XVOWS = XVOWS || {};
       id: 1
     },
     name: 'Mike',
-    opportunityStage: { id: 1 },
-    opportunitySource: { id: 1 },
-    opportunityType: { id: 1 }
+    opportunityStage: { id: 'RECEIVED' },
+    opportunitySource: { id: 'INTERNAL' },
+    opportunityType: { id: 'PRODUCT' }
   };
 
   data.updateHash = {

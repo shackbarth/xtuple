@@ -27,7 +27,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "cmnttype_name"
+          "column": "cmnttype_name",
+          "isNaturalKey": true
         }
       },
       {
@@ -96,6 +97,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "commentType",
         "attr": {
           "type": "Number",
@@ -147,7 +156,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "source_name"
+          "column": "source_name",
+          "isNaturalKey": true
         }
       },
       {

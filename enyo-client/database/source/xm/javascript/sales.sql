@@ -67,9 +67,9 @@ select xt.install_js('XM','Sales','xtuple', $$
    @returns Array 
   */
   XM.Sales.freightDetail = function(customerId, shiptoId, shipZoneId, orderDate, shipVia, currencyId, siteId, freightClassId, weight) {
-    var sql1 = "select custtype_id, custtype_code from custinfo join custtype on custtype_id=cust_custtype_id where cust_id=$1;",
-      sql2 = "select shipto_num from shiptoinfo where shipto_id=$1;",
-      sql3 = "select currconcat($1) as currabbr;",
+    var sql1 = "select custtype_id, custtype_code from custinfo join custtype on custtype_id=cust_custtype_id where cust_number=$1;",
+      sql2 = "select shipto_num from shiptoinfo where obj_uuid=$1;",
+      sql3 = "select currconcat(curr_id) as currabbr from curr_symbol where curr_abbr = $1;",
       sql4 = "select * from calculatefreightdetail($1, $2, $3, $4::integer, $5::integer, $6, $7::date, $8, $9, $10, $11, $12::integer, $13::numeric);",
       customerTypeId,
       customerTypeCode,
@@ -100,6 +100,14 @@ select xt.install_js('XM','Sales','xtuple', $$
     query = plv8.execute(sql3, [currencyId]);
     if (!query.length) { plv8.elog(ERROR, "Invalid Currency") };
     currencyAbbreviation = query[0].currabbr;
+
+    /* resolve natural keys to primary keys */
+    customerId = XT.Data.getId(XT.Orm.fetch('XM', 'Customer'), customerId);
+    shiptoId = shiptoId ? XT.Data.getId(XT.Orm.fetch('XM', 'CustomerShipto'), shiptoId) : shiptoId;
+    shipZoneId = shipZoneId ? XT.Data.getId(XT.Orm.fetch('XM', 'ShipZone'), shipZoneId) : shipZoneId;
+    currencyId = options.currencyId ?
+      XT.Data.getId(XT.Orm.fetch('XM', 'Currency', options.currencyId)) :
+      lplv8.execute("select basecurrid() as result")[0].result;
 
     /* Get the data */
     query = plv8.execute(sql4, [customerId, customerTypeId, customerTypeCode,

@@ -37,7 +37,16 @@ select xt.get('{
   "username": "admin",
   "nameSpace":"XM",
   "type": "Contact",
-  "id": 10,
+  "id": "99999",
+  "prettyPrint": true
+  }'
+);
+
+select xt.get('{
+  "username": "admin",
+  "nameSpace":"XM",
+  "type": "Customer",
+  "id": "TTOYS",
   "prettyPrint": true
   }'
 );
@@ -45,7 +54,7 @@ select xt.get('{
 select xt.get($${
   "username": "admin",
   "nameSpace":"XM",
-  "type":"ContactRelation",
+  "type":"ContactListItem",
   "query":{
     "parameters":[
       {
@@ -64,7 +73,7 @@ select xt.get($${
 select xt.get($${
   "username": "admin",
   "nameSpace":"XM",
-  "type":"ContactRelation",
+  "type":"ContactListItem",
   "query":{
     "parameters":[
       {

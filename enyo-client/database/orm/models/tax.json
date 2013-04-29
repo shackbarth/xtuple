@@ -24,6 +24,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "taxZone",
         "toOne": {
           "type": "TaxZone",
@@ -76,7 +84,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "taxauth_code"
+          "column": "taxauth_code",
+          "isNaturalKey":true
         }
       },
       {
@@ -132,7 +141,7 @@
             "name": "account",
             "attr": {
               "type": "Number",
-              "column": "crmacct_id"
+              "column": "crmacct_number"
             }
           }
         ],
@@ -145,7 +154,6 @@
     "nameSpace": "XM",
     "type": "TaxAuthorityRelation",
     "table": "taxauth",
-    "idSequenceName": "taxauth_taxauth_id_seq",
     "comment": "Tax Authority Relation",
     "privileges": {
       "all": {
@@ -168,7 +176,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "taxauth_code"
+          "column": "taxauth_code",
+          "isNaturalKey":true
         }
       },
       {
@@ -210,7 +219,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "taxclass_code"
+          "column": "taxclass_code",
+          "isNaturalKey":true
         }
       },
       {
@@ -258,7 +268,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "tax_code"
+          "column": "tax_code",
+          "isNaturalKey": true
         }
       },
       {
@@ -314,6 +325,14 @@
           "type": "Number",
           "column": "taxrate_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -389,7 +408,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "taxtype_name"
+          "column": "taxtype_name",
+          "isNaturalKey":true
         }
       },
       {
@@ -437,7 +457,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "taxzone_code"
+          "column": "taxzone_code",
+          "isNaturalKey":true
         }
       },
       {

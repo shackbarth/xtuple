@@ -4,8 +4,8 @@
     "nameSpace": "XM",
     "type": "SalesRep",
     "table": "salesrep",
-    "lockable": true,
     "idSequenceName": "salesrep_salesrep_id_seq",
+    "lockable": true,
     "orderSequence": "CRMAccountNumber",
     "comment": "Sales Rep Map",
     "privileges": {
@@ -29,7 +29,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "salesrep_number"
+          "column": "salesrep_number",
+          "isNaturalKey":true
         }
       },
       {
@@ -69,8 +70,8 @@
           {
             "name": "account",
             "attr": {
-              "type": "AccountRelation",
-              "column": "crmacct_id"
+              "type": "String",
+              "column": "crmacct_number"
             }
           }
         ],
