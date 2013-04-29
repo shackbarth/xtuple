@@ -4,8 +4,8 @@
     "nameSpace": "XM",
     "type": "SaleType",
     "table": "saletype",
-    "lockable": true,
     "idSequenceName": "saletype_saletype_id_seq",
+    "lockable": true,
     "comment": "Sale Type Map",
     "privileges": {
       "all": {
@@ -28,7 +28,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "saletype_code"
+          "column": "saletype_code",
+          "isNaturalKey": true
         }
       },
       {

@@ -44,7 +44,7 @@ var XVOWS = XVOWS || {};
       topic: function () {
         var that = this,
           callback = function () {
-            var prefSite = XM.sites.get(35);
+            var prefSite = XM.sites.get('WH1');
             data.createHash.preferredSite = prefSite; //this has to be set here because XM.sites hasn't loaded yet
             data.model = new XM.Customer();
             that.callback(null, data);
@@ -62,7 +62,7 @@ var XVOWS = XVOWS || {};
           var that = this,
             fetchOptions = {},
             rep = new XM.SalesRep();
-          fetchOptions.id = 30;
+          fetchOptions.id = 'JSMITH';
           fetchOptions.success = function () {
             data.model.set('salesRep', rep);
           };
@@ -84,8 +84,8 @@ var XVOWS = XVOWS || {};
       topic: function () {
         return data;
       },
-      'ID is a number': function (data) {
-        assert.isNumber(data.model.id);
+      'ID is a string': function (data) {
+        assert.isString(data.model.id);
       },
       'Number is `TESTCUSTOMER`': function (data) {
         assert.equal(data.model.get('number'), data.createHash.number);

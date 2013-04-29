@@ -34,11 +34,11 @@ var XVOWS = XVOWS || {};
             data.model = new XM.Incident();
             //account fetch
             var accntFetchOptions = {};
-            accntFetchOptions.id = 1;
+            accntFetchOptions.id = 'TTOYS';
             accntFetchOptions.success = function (resp) {
               //console.log("account fetch success");
               var cntctFetchOptions = {};
-              cntctFetchOptions.id = 1;
+              cntctFetchOptions.id = '1';
               cntctFetchOptions.success = function (resp) {
                 //console.log("contact fetch success");
                 that.callback(null, data);

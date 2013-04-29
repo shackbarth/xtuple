@@ -4,8 +4,8 @@
     "nameSpace": "XM",
     "type": "ExpenseCategory",
     "table": "expcat",
-    "lockable": true,
     "idSequenceName": "expcat_expcat_id_seq",
+    "lockable": true,
     "comment": "Expense Category Map",
     "privileges": {
       "all": {
@@ -28,7 +28,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "expcat_code"
+          "column": "expcat_code",
+          "isNaturalKey": true
         }
       },
       {

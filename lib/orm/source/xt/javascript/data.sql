@@ -415,20 +415,29 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Object} Record
     */
     commitArrays: function (orm, record, encryptionKey) {
-      var prop,
+      var pkey = XT.Orm.primaryKey(orm),
+        id = record[pkey],
+        fkey,
+        prop,
         ormp,
-        values;
+        values,
+        val;
       for (prop in record) {
         ormp = XT.Orm.getProperty(orm, prop);
 
         /* if the property is an array of objects they must be records so commit them */
         if (ormp.toMany && ormp.toMany.isNested) {
+          fkey = ormp.toMany.inverse;
           values = record[prop];
           for (var i = 0; i < values.length; i++) {
+            val = values[i];
+            
+            /* populate the parent key into the foreign key field if it's absent */
+            if (!val[fkey]) { val[fkey] = id; }
             this.commitRecord({
               nameSpace: orm.nameSpace,
               type: ormp.toMany.type,
-              data: values[i],
+              data: val,
               encryptionKey: encryptionKey
             });
           }
@@ -542,14 +551,18 @@ select xt.install_js('XT','Data','xtuple', $$
      @returns {Object}
    */
     prepareInsert: function (orm, record, params, encryptionKey) {
-      var count,
+      var pkey = XT.Orm.primaryKey(orm),
+        count,
         columns,
         ormp,
         prop,
         attr,
         type,
         i,
-        val;
+        iorm,
+        nkey,
+        val,
+        exp;
       params = params || {
         table: "",
         columns: [],
@@ -558,6 +571,11 @@ select xt.install_js('XT','Data','xtuple', $$
       };
       params.table = orm.table;
       count = params.values.length + 1;
+
+      /* if no primary key, then create one */
+      if (!record[pkey]) {
+        record[pkey] = plv8.execute("select nextval($1) as id", [orm.idSequenceName])[0].id;
+      }
 
       /* if extension handle key */
       if (orm.relations) {
@@ -578,8 +596,10 @@ select xt.install_js('XT','Data','xtuple', $$
         prop = ormp.name;
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
+        iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false,
+        nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
         val = ormp.toOne && record[prop] instanceof Object ?
-          record[prop][ormp.toOne.inverse || 'id'] : record[prop];
+          record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
 
         /* handle fixed values */
         if (attr.value) {
@@ -595,8 +615,8 @@ select xt.install_js('XT','Data','xtuple', $$
           if (attr.isEncrypted) {
             if (encryptionKey) {
               val = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
-                             .replace("{value}", record[prop])
-                             .replace("{encryptionKey}", encryptionKey);
+                    .replace("{value}", record[prop])
+                    .replace("{encryptionKey}", encryptionKey);
               params.values.push(val);
               params.expressions.push('$' + count);
               count++;
@@ -607,7 +627,16 @@ select xt.install_js('XT','Data','xtuple', $$
           } else if (attr.type === 'Date') {
             params.expressions.push("'" + val + "'");
           } else {
-            params.expressions.push('$' + count);
+            if (ormp.toOne && nkey) {
+              exp = "(select {pkey} from {table} where {nkey} = {param})"
+                    .replace("{pkey}", XT.Orm.primaryKey(iorm, true))
+                    .replace("{table}", iorm.table)
+                    .replace("{nkey}", nkey)
+                    .replace("{param}", '$' + count)
+              params.expressions.push(exp);
+            } else {
+              params.expressions.push('$' + count);
+            }
             count++;
             params.values.push(val);
           }
@@ -726,7 +755,10 @@ select xt.install_js('XT','Data','xtuple', $$
         type,
         qprop,
         keyValue,
-        val;
+        iorm,
+        key,
+        val,
+        exp;
       params = params || {
         table: "",
         expressions: [],
@@ -751,8 +783,11 @@ select xt.install_js('XT','Data','xtuple', $$
         prop = ormp.name;
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
+        iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false,
+        nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
         qprop = '"' + attr.column + '"';
-        val = ormp.toOne && record[prop] instanceof Object ? record[prop][ormp.toOne.inverse || 'id'] : record[prop];
+        val = ormp.toOne && record[prop] instanceof Object ?
+          record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
 
         if (val !== undefined && !ormp.toMany) {
           /* handle encryption if applicable */
@@ -774,8 +809,17 @@ select xt.install_js('XT','Data','xtuple', $$
             } else if (val instanceof Date) {
               params.expressions.push(qprop.concat(" = '" + JSON.stringify(val) + "'"));
             } else {
+              if (ormp.toOne && nkey) {
+                exp = " = (select {pkey} from {table} where {nkey} = {param})"
+                      .replace("{pkey}", XT.Orm.primaryKey(iorm, true))
+                      .replace("{table}", iorm.table)
+                      .replace("{nkey}", nkey)
+                      .replace("{param}", '$' + count)
+                params.expressions.push(qprop.concat(exp));
+              } else {
+                params.expressions.push(qprop.concat(" = ", "$", count));
+              }
               params.values.push(val);
-              params.expressions.push(qprop.concat(" = ", "$", count));
               count++;
             }
           }
@@ -804,7 +848,8 @@ select xt.install_js('XT','Data','xtuple', $$
         sql = '',
         orm = XT.Orm.fetch(options.nameSpace, options.type),
         pkey = XT.Orm.primaryKey(orm),
-        id = data[pkey],
+        nkey = XT.Orm.naturalKey(orm),
+        id = nkey ? this.getId(orm, data[nkey]) : data[pkey],
         lockKey = options.lock && options.lock.key ? options.lock.key : false,
         lockTable = orm.lockTable || orm.table,
         etag = this.getVersion(orm, id),
@@ -923,6 +968,24 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
+      Get the primary key id for an object based on a passed in natural key.
+
+      @param {String} Namespace
+      @param {String} Type
+      @param {String} Natural key value
+    */
+    getId: function (orm, value) {
+      var pcol = XT.Orm.primaryKey(orm, true),
+        ncol = XT.Orm.naturalKey(orm, true),
+        sql = "select {pcol} as id from {table} where {ncol} = $1"
+              .replace("{pcol}", pcol)
+              .replace("{table}", orm.table)
+              .replace("{ncol}", ncol);
+        if (DEBUG) { plv8.elog(NOTICE, 'find pkey id sql = ', sql, value); }
+      return plv8.execute(sql, [value])[0].id;
+    },
+
+    /**
       Returns the current version of a record.
 
       @param {Object} Orm
@@ -997,6 +1060,9 @@ select xt.install_js('XT','Data','xtuple', $$
       for (i = 0; i < ret.data.length; i++) {
         ret.data[i] = this.decrypt(nameSpace, type, ret.data[i]);
       }
+
+      this.removeKeys(nameSpace, type, ret.data);
+      
       return ret;
     },
 
@@ -1036,23 +1102,31 @@ select xt.install_js('XT','Data','xtuple', $$
         },
         sql,
         pkey = XT.Orm.primaryKey(map),
+        nkey = XT.Orm.naturalKey(map),
         context = options.context,
         join = "",
         params = {};
-      if(!pkey) {
-        throw new Error('No primary key found for {nameSpace}.{type}'
+      if (!pkey) {
+        throw new Error('No key found for {nameSpace}.{type}'
                         .replace("{nameSpace}", nameSpace)
                         .replace("{type}", type));
       }
+
+      /* If this object uses a natural key, go get the primary key id */
+      if (nkey) {
+        id = this.getId(map, id);
+      } 
+
       if (XT.typeOf(id) === 'string') {
         id = "'" + id + "'";
       }
+      
 
       /* Context means search for this record inside another */
       if (context) {
         context.nameSpace = context.nameSpace || context.recordType.beforeDot();
         context.type = context.type || context.recordType.afterDot()
-        context.map = XT.Orm.fetch(context.nameSpace, context.type);
+        context.map = XT.Orm.fetych(context.nameSpace, context.type);
         context.prop = XT.Orm.getProperty(context.map, context.relation);
         context.fkey = context.prop.toMany.inverse;
         context.pkey = XT.Orm.primaryKey(context.map);
@@ -1108,8 +1182,50 @@ select xt.install_js('XT','Data','xtuple', $$
         ret.data = this.decrypt(nameSpace, type, ret.data, encryptionKey);
       }
 
+      if (!options.includeKeys) {
+        this.removeKeys(nameSpace, type, ret.data);
+      }
+
       /* return the results */
       return ret || {};
+    },
+
+    /**
+      Remove primary and foreign keys from the data so it is represented as a pure JavaScript object.
+      Only removes the primary key if a natural key has been specified in the ORM.
+
+      @param {String} Namespace
+      @param {String} Type
+      @param {Object|Array} Data
+    */
+    removeKeys: function (nameSpace, type, data) {
+      if (XT.typeOf(data) !== "array") { data = [data]; }
+      var orm = XT.Orm.fetch(nameSpace, type),
+        pkey = XT.Orm.primaryKey(orm),
+        nkey = XT.Orm.naturalKey(orm),
+        props = orm.properties,
+        item,
+        prop,
+        val,
+        c,
+        i,
+        n;
+      for (c = 0; c < data.length; c++) {
+        item = data[c];
+        if (nkey && nkey !== pkey) { delete item[pkey]; }
+        for (i = 0; i < props.length; i++) {
+          prop = props[i];
+          if (prop.toOne && prop.toOne.isNested && item[prop.name]) {
+            this.removeKeys(nameSpace, prop.toOne.type, item[prop.name]);
+          } else if (prop.toMany && prop.toMany.isNested) {
+            for (n = 0; n < item[prop.name].length; n++) {
+              val = item[prop.name][n];
+              delete val[prop.toMany.inverse];
+              this.removeKeys(nameSpace, prop.toMany.type, val);
+            }
+          }
+        }
+      }
     },
 
     /**

@@ -35,7 +35,7 @@ var _ = require("underscore"),
           callback = function (model, value) {
             if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
               // Check that the AUTO...NUMBER property has been set.
-              if (model.get(model.documentKey) && model.id) {
+              if (model.get(model.documentKey)) {
                 clearTimeout(timeoutId);
                 model.off('change:' + model.documentKey, callback);
                 model.off('change:id', callback);
@@ -43,12 +43,10 @@ var _ = require("underscore"),
               }
             } else {
               clearTimeout(timeoutId);
-              model.off('change:id', callback);
               that.callback(null, data);
             }
           };
 
-        model.on('change:id', callback);
         // Add an event handler when using a model with an AUTO...NUMBER.
         if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
           model.on('change:' + model.documentKey, callback);
@@ -60,12 +58,14 @@ var _ = require("underscore"),
           console.log("timeout was reached");
           that.callback(null, data);
         }, exports.waitTime);
+        
+        callback(model);
       },
       'Status is `READY_NEW`': function (error, data) {
         assert.equal(data.model.getStatusString(), 'READY_NEW');
       },
       'ID is valid': function (error, data) {
-        assert.isNumber(data.model.id);
+        assert.isNotNull(data.model.id);
       }
     };
 
@@ -270,7 +270,7 @@ var _ = require("underscore"),
                 relatedModel.fetch(fetchObject);
                 objectsToFetch++;
               }
-            })
+            });
             // if there are no models to substitute we won't be doing this whole callback
             // rigamorole.
             if (objectsToFetch === 0) {

@@ -55,8 +55,8 @@ var XVOWS = XVOWS || {};
       topic: function () {
         return data;
       },
-      'Ship Via ID is a number': function (data) {
-        assert.isNumber(data.model.id);
+      'Ship Via ID is a string': function (data) {
+        assert.isString(data.model.id);
       },
       'Ship Via Code is `TESTSHIPVIA`': function (data) {
         assert.equal(data.model.get('code'), data.createHash.code);

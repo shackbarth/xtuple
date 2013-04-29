@@ -210,6 +210,26 @@ select xt.install_js('XT','Orm','xtuple', $$
   };
 
   /**
+    Returns the natural key name as designated in an ORM map.
+    If column is true, returns the column name.
+
+    @param {Object} ORM
+    @param {Boolean} Get column - default false.
+    @returns String
+  */
+  XT.Orm.naturalKey = function (orm, getColumn) {
+    var i,
+      prop;
+    /* find primary key */
+    for (i = 0; i < orm.properties.length; i++) {
+      var prop = orm.properties[i];
+      if(prop.attr && prop.attr.isNaturalKey)
+        return getColumn ? prop.attr.column : prop.name;
+    }
+    return false;
+  };
+
+  /**
     Returns the primary key name as designated in an ORM map.
     If column is true, returns the column name.
 
@@ -218,12 +238,13 @@ select xt.install_js('XT','Orm','xtuple', $$
     @returns String
   */
   XT.Orm.primaryKey = function (orm, getColumn) {
-    var i;
+    var i,
+      prop;
     /* find primary key */
     for (i = 0; i < orm.properties.length; i++) {
-      if(orm.properties[i].attr &&
-         orm.properties[i].attr.isPrimaryKey)
-        return getColumn ? orm.properties[i].attr.column : orm.properties[i].name;
+      var prop = orm.properties[i];
+      if(prop.attr && prop.attr.isPrimaryKey)
+        return getColumn ? prop.attr.column : prop.name;
     }
     return false;
   };
@@ -274,6 +295,8 @@ select xt.install_js('XT','Orm','xtuple', $$
       base = orm,
       viewName = orm.nameSpace.decamelize() + '.' + orm.type.decamelize(),
       processOrm,
+      schemaName,
+      tableName,
       res;
 
     // ..........................................................
@@ -285,6 +308,8 @@ select xt.install_js('XT','Orm','xtuple', $$
       var props = orm.properties ? orm.properties : [],
         tblAlias = orm.table === base.table ? 't1' : 't' + tbl,
         ormClauses = [],
+        Orm = XT.Orm,
+        prop,
         i,
         n,
         col,
@@ -304,24 +329,71 @@ select xt.install_js('XT','Orm','xtuple', $$
         schemaName,
         tableName,
         pkey,
+        nkey,
         orderBy;
+
+      /* process properties */
       for (i = 0; i < props.length; i++) {
-        alias = props[i].name;
-        if(DEBUG) plv8.elog(NOTICE, 'processing property ->', props[i].name);
-        if(props[i].name === 'dataState') throw new Error("Can not use 'dataState' as a property name.");
+        prop = props[i];
+        nkey = prop.toOne ? Orm.naturalKey(Orm.fetch(orm.nameSpace, prop.toOne.type)) : false,
+        alias = prop.name;
+        if(DEBUG) plv8.elog(NOTICE, 'processing property ->', prop.name);
+        if(prop.name === 'dataState') throw new Error("Can not use 'dataState' as a property name.");
 
         /* process attributes */
-        if (props[i].attr || props[i].toOne) {
-          if (DEBUG) plv8.elog(NOTICE, 'building attribute');
-          attr = props[i].attr ? props[i].attr : props[i].toOne;
+        if (prop.attr || prop.toOne) {
+          attr = prop.attr ? prop.attr : prop.toOne;
+          if (DEBUG) plv8.elog(NOTICE, 'building attribute', prop.name, attr.column);
           isVisible = attr.value ? false : true;
-          if (!attr.type) throw new Error('No type was defined on property ' + props[i].name);
+          if (!attr.type) throw new Error('No type was defined on property ' + prop.name);
           if (isVisible) {
             col = tblAlias + '.' + attr.column;
             col = col.concat(' as "', alias, '"');
 
-            /* handle the default non-nested case */
-            if (props[i].attr || props[i].toOne.isNested === undefined) {
+            /* If the column is `obj_uuid` and it's not there, create it.
+               This violates our rule to not touch the source schema, but otherwise
+               we risk a big performance hit on all the joins that
+               would be required if uuid were in another table */ 
+            if (attr.column  === "obj_uuid") {
+              query = "select count(a.attname) " +
+                      "from pg_class c, pg_namespace n, pg_attribute a, pg_type t " +
+                      "where c.relname = $1 " +
+                      " and n.nspname = $2 " +
+                      " and n.oid = c.relnamespace " +
+                      " and a.attnum > 0 " +
+                      " and a.attname = 'obj_uuid' " +
+                      " and a.attrelid = c.oid " +
+                      " and a.atttypid = t.oid; ";
+              schemaName = orm.table.indexOf(".") === -1 ? 'public' : orm.table.beforeDot();
+              tableName = orm.table.indexOf(".") === -1 ? orm.table : orm.table.afterDot();
+              if (DEBUG) { plv8.elog(NOTICE, 'Check obj_uuid query', query, tableName, schemaName); }
+              res = plv8.execute(query, [tableName, schemaName]);
+
+              if (!res[0].count) {
+                /* make sure this isn't a view */
+                query = "select relkind " +
+                        "from pg_class c, pg_namespace n " +
+                        "where c.relname = $1 " +
+                        " and n.nspname = $2 " +
+                        " and n.oid = c.relnamespace;"
+                if (DEBUG) { plv8.elog(NOTICE, 'Check obj table query', query, tableName, schemaName); }
+                res = plv8.execute(query, [tableName, schemaName]);
+                if (res[0].relkind !== 'r') {
+                  plv8.elog(ERROR, "Can not add obj_uuid field because {table} is not a table.".replace("{table}", orm.table));
+                }
+
+                /* looks good. add the column */
+                query = "alter table {table} add column obj_uuid text default xt.generate_uuid();".replace("{table}", orm.table);
+                if (DEBUG) { plv8.elog(NOTICE, 'Add obj_uuid:', query); }
+                plv8.execute(query);
+                query = "comment on column {table}.obj_uuid is 'Added by xt the web-mobile package.'".replace("{table}", orm.table);
+                plv8.execute(query);
+              }
+            }
+            
+            /* handle the attribute */
+            if (prop.attr ||
+               (prop.toOne.isNested === undefined && !nkey)) {
               cols.push(col);
             }
           }
@@ -334,20 +406,21 @@ select xt.install_js('XT','Orm','xtuple', $$
         }
 
         /* process toOne  */
-        if (props[i].toOne && props[i].toOne.isNested !== false) {
-          toOne = props[i].toOne;
+        if (prop.toOne &&
+           (prop.toOne.isNested !== false || nkey)) {
+          toOne = prop.toOne;
           table = base.nameSpace.decamelize() + '.' + toOne.type.decamelize();
           type = table.afterDot();
           inverse = toOne.inverse ? toOne.inverse.camelize() : 'id';
           col = '({select}) as "{alias}"';
-          if(!type) { throw new Error('No type was defined on property ' + props[i].name); }
-          if(DEBUG) { plv8.elog(NOTICE, 'building toOne'); }
+          if (!type) { throw new Error('No type was defined on property ' + prop.name); }
+          if (DEBUG) { plv8.elog(NOTICE, 'building toOne'); }
           conditions = '"' + type + '"."' + inverse + '" = ' + tblAlias + '.' + toOne.column;
 
-          /* handle the default non-nested case */
-          if (props[i].toOne.isNested === true) {
+          /* handle the nested and natural key cases */
+          if (prop.toOne.isNested === true || nkey) {
             col = col.replace('{select}',
-               SELECT.replace('{columns}', '"' + type + '"')
+               SELECT.replace('{columns}',  prop.toOne.isNested ? '"' + type + '"' : nkey)
                      .replace('{table}',  table)
                      .replace('{conditions}', conditions))
                      .replace('{alias}', alias)
@@ -357,21 +430,22 @@ select xt.install_js('XT','Orm','xtuple', $$
         }
 
         /* process toMany */
-        if (props[i].toMany) {
-          if(DEBUG) plv8.elog(NOTICE, 'building toMany');
-         if (!props[i].toMany.type) throw new Error('No type was defined on property ' + props[i].name);
-           toMany = props[i].toMany;
-           table = base.nameSpace + '.' + toMany.type.decamelize();
-           type = toMany.type.decamelize();
-           iorm = XT.Orm.fetch(base.nameSpace, toMany.type);
-           pkey = XT.Orm.primaryKey(iorm);
-           column = toMany.isNested ? type : pkey;
-           col = 'array({select}) as "{alias}"',
-           orderBy = 'order by ' + pkey;
+        if (prop.toMany) {
+          if (DEBUG) plv8.elog(NOTICE, 'building toMany');
+          if (!prop.toMany.type) { throw new Error('No type was defined on property ' + prop.name); }
+          toMany = prop.toMany;
+          table = base.nameSpace + '.' + toMany.type.decamelize();
+          type = toMany.type.decamelize();
+          iorm = Orm.fetch(base.nameSpace, toMany.type);
+          pkey = Orm.primaryKey(iorm);
+          nkey = Orm.naturalKey(iorm);
+          column = toMany.isNested ? type : nkey;
+          col = 'array({select}) as "{alias}"',
+          orderBy = 'order by ' + pkey;
 
            /* handle inverse */
           inverse = toMany.inverse ? toMany.inverse.camelize() : 'id';
-          ormp = XT.Orm.getProperty(iorm, inverse);
+          ormp = Orm.getProperty(iorm, inverse);
           if (ormp && ormp.toOne && ormp.toOne.isNested) {
             conditions = toMany.column ? '(' + type + '."' + inverse + '").id = ' + tblAlias + '.' + toMany.column : 'true';
           } else {
@@ -500,19 +574,21 @@ select xt.install_js('XT','Orm','xtuple', $$
             .replace('{view}', viewName);
     plv8.execute(query);
 
+    /* clean up triggers that we may or may not want to be there */
+    lockTable = orm.lockTable || orm.table;
+    schemaName = lockTable.indexOf(".") === -1 ? 'public' : lockTable.beforeDot();
+    tableName = lockTable.indexOf(".") === -1 ? lockTable : lockTable.afterDot();
+    query = 'drop trigger if exists {tableName}_did_change on {table};'
+    query =  query.replace(/{tableName}/g, tableName)
+                  .replace(/{table}/g, lockTable);
+    plv8.execute(query);
+        
     /* If applicable, add a trigger to the table to keep version number updated */
-    if (orm.isNestedOnly !== true &&
-       (orm.privileges && orm.privileges.all && orm.privileges.all.create !== false ||
-        orm.privileges && orm.privileges.all && orm.privileges.all.update !== false ||
-        orm.privileges && orm.privileges.all && orm.privileges.all.delete !== false)) {
+    if (orm.lockable) {
       query = 'select * from pg_tables where schemaname = $1 and tablename = $2';
-      lockTable = orm.lockTable || orm.table;
-      schemaName = lockTable.indexOf(".") === -1 ? 'public' : lockTable.beforeDot();
-      tableName = lockTable.indexOf(".") === -1 ? lockTable : lockTable.afterDot();
       res = plv8.execute(query, [schemaName, tableName]);
       if (res.length) {
-        query = 'drop trigger if exists {tableName}_did_change on {table};' +
-                'create trigger {tableName}_did_change after insert or update or delete on {table} for each row execute procedure xt.record_did_change();';
+        query = 'create trigger {tableName}_did_change after insert or update or delete on {table} for each row execute procedure xt.record_did_change();';
         query =  query.replace(/{tableName}/g, tableName)
                       .replace(/{table}/g, lockTable);
         plv8.execute(query);

@@ -15,7 +15,7 @@
         "read": "ViewSalesOrders",
         "update": "MaintainSalesOrders",
         "delete": "MaintainSalesOrders"
-      }   
+      }
     },
     "properties": [
       {
@@ -30,7 +30,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "cohead_number"
+          "column": "cohead_number",
+          "isNaturalKey":true
         }
       },
       {
@@ -484,7 +485,7 @@
           "type": "Number",
           "column": "subtotal"
         }
-      }, 
+      },
       {
         "name": "taxTotal",
         "attr": {
@@ -505,14 +506,14 @@
           "type": "Number",
           "column": "cohead_freight"
         }
-      },   
+      },
       {
         "name": "total",
         "attr": {
           "type": "Number",
           "column": "total"
         }
-      },  
+      },
       {
         "name": "lineItems",
         "toMany": {
@@ -586,7 +587,14 @@
     "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Sales Order Account Map",
-    "canUpdate": false,
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
     "properties": [
       {
         "name": "id",
@@ -594,6 +602,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -643,7 +659,7 @@
     "nameSpace": "XM",
     "type": "SalesOrderComment",
     "table": "comment",
-    "idSequenceName": "cohead_cohead_id_seq",
+    "idSequenceName": "comment_comment_id_seq",
     "comment": "Sales Order Comment Map",
     "privileges": {
       "all": {
@@ -666,6 +682,14 @@
           "type": "Number",
           "column": "comment_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -695,9 +719,9 @@
         "attr": {
           "type": "String",
           "column": "comment_text"
-        } 
+        }
       },
-      { 
+      {
         "name": "isPublic",
         "attr": {
           "type": "Boolean",
@@ -744,6 +768,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -813,6 +845,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -879,6 +919,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -942,6 +990,14 @@
           "type": "Number",
           "column": "coitem_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1186,6 +1242,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "targetType",
         "attr": {
           "type": "String",
@@ -1254,6 +1318,14 @@
           "type": "Number",
           "column": "comment_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1338,7 +1410,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "cohead_number"
+          "column": "cohead_number",
+          "isNaturalKey":true
         }
       },
       {
@@ -1441,7 +1514,6 @@
     "nameSpace": "XM",
     "type": "SalesOrderRelation",
     "table": "cohead",
-    "idSequenceName": "cohead_cohead_id_seq",
     "comment": "Sales Order Relation Map",
     "privileges": {
       "all": {
@@ -1464,7 +1536,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "cohead_number"
+          "column": "cohead_number",
+          "isNaturalKey":true
         }
       },
       {
@@ -1513,6 +1586,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {

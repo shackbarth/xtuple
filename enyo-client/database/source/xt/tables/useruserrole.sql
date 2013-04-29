@@ -1,6 +1,6 @@
 
 insert into xt.useruserrole
-select *
+select src.usrgrp_id, usrgrp_grp_id, usrgrp_username
 from usrgrp src
 where not exists (
   select chk.useruserrole_id

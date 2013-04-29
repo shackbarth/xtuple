@@ -23,6 +23,7 @@ create or replace function xt.delete(data_hash text) returns boolean as $$
   if (dataHash.username) { XT.username = dataHash.username; }
 
   /* get the current version of the record */
+  dataHash.includeKeys = true;
   rec = data.retrieveRecord(dataHash);
   if (!rec.data) { plv8.elog(ERROR, "Record not found"); };
   dataHash.data = rec.data;
@@ -46,8 +47,8 @@ select xt.delete('{
   "username": "admin",
   "nameSpace":"XM",
   "type": "Contact",
-  "id": 10,
-  "version": 2,
+  "id": "99999",
+  "etag": "e5b73834-492d-47b1-89a2-10b354b8f5e3",
   "prettyPrint": true
 }');
 */

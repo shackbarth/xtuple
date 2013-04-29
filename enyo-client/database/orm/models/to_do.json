@@ -4,9 +4,9 @@
     "nameSpace": "XM",
     "type": "ToDo",
     "table": "todoitem",
+    "idSequenceName": "todoitem_todoitem_id_seq",
     "isRest": true,
     "lockable": true,
-    "idSequenceName": "todoitem_todoitem_id_seq",
     "comment": "ToDo Map",
     "privileges": {
       "all": {
@@ -33,6 +33,14 @@
           "type": "Number",
           "column": "todoitem_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -242,6 +250,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -306,6 +322,14 @@
           "type": "Number",
           "column": "alarm_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -421,6 +445,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -500,6 +532,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -563,6 +603,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -641,6 +689,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "name",
         "attr": {
           "type": "String",
@@ -664,8 +720,8 @@
       {
         "name": "contact",
         "attr": {
-          "type": "Number",
-          "column": "todoitem_cntct_id"
+          "type": "String",
+          "column": "cntct_number"
         }
       },
       {
@@ -703,8 +759,8 @@
       {
         "name": "account",
         "attr": {
-          "type": "Number",
-          "column": "todoitem_crmacct_id"
+          "type": "String",
+          "column": "crmacct_number"
         }
       },
       {
@@ -756,6 +812,14 @@
           "type": "Number",
           "column": "todoitem_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -877,6 +941,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -940,6 +1012,14 @@
           "type": "Number",
           "column": "recur_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1021,6 +1101,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -1084,6 +1172,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {

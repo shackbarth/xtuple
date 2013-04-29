@@ -1,9 +1,12 @@
 DO $$
   var dropSql = "drop view if exists xt.opheadinfo cascade;";
   var sql = "create or replace view xt.opheadinfo as  " +
-   "select ophead.*, coalesce(incdtpriority_order, 99999) as priority_order " +
+   "select ophead.*, coalesce(incdtpriority_order, 99999) as priority_order, " +
+   "  crmacct_number, cntct_number " +
    "from ophead " +
-     "left join incdtpriority on (ophead_priority_id=incdtpriority_id); ";
+   "  join crmacct on crmacct_id=ophead_crmacct_id" +
+   "  join cntct on cntct_id=ophead_cntct_id" +
+   "  left join incdtpriority on (ophead_priority_id=incdtpriority_id); ";
 
   try {
     plv8.execute(sql);

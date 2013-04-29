@@ -4,8 +4,8 @@
     "nameSpace": "XM",
     "type": "ClassCode",
     "table": "classcode",
-    "lockable": true,
     "idSequenceName": "classcode_classcode_id_seq",
+    "lockable": true,
     "comment": "Class Code Map",
     "privileges": {
       "all": {
@@ -28,7 +28,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "classcode_code"
+          "column": "classcode_code",
+          "isNaturalKey": true
         }
       },
       {
@@ -46,8 +47,8 @@
     "nameSpace": "XM",
     "type": "FreightClass",
     "table": "freightclass",
-    "lockable": true,
     "idSequenceName": "freightclass_freightclass_id_seq",
+    "lockable": true,
     "comment": "Freight Class Map",
     "privileges": {
       "all": {
@@ -70,7 +71,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "freightclass_code"
+          "column": "freightclass_code",
+          "isNaturalKey": true
         }
       },
       {
@@ -88,9 +90,9 @@
     "nameSpace": "XM",
     "type": "Item",
     "table": "item",
+    "idSequenceName": "item_item_id_seq",
     "isRest": true,
     "lockable": true,
-    "idSequenceName": "item_item_id_seq",
     "comment": "Item Map",
     "privileges": {
       "all": {
@@ -113,7 +115,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "item_number"
+          "column": "item_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -258,6 +261,15 @@
         }
       },
       {
+        "name": "sites",
+        "toMany": {
+          "type": "ItemSite",
+          "column": "item_id",
+          "inverse": "item",
+          "isNested": true
+        }
+      },
+      {
         "name": "accounts",
         "toMany": {
           "type": "ContactAccount",
@@ -339,6 +351,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -402,6 +422,14 @@
           "type": "Number",
           "column": "itemalias_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -472,6 +500,14 @@
           "type": "Number",
           "column": "charass_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -550,6 +586,14 @@
           "type": "Number",
           "column": "comment_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -632,6 +676,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -695,6 +747,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -766,7 +826,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "item_number"
+          "column": "item_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -869,6 +930,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "item",
         "attr": {
           "type": "Number",
@@ -935,7 +1004,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "item_number"
+          "column": "item_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -1093,6 +1163,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "targetType",
         "attr": {
           "type": "String",
@@ -1165,6 +1243,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -1231,6 +1317,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -1277,8 +1371,8 @@
     "nameSpace": "XM",
     "type": "ProductCategory",
     "table": "prodcat",
-    "lockable": true,
     "idSequenceName": "prodcat_prodcat_id_seq",
+    "lockable": true,
     "comment": "Product Category Map",
     "privileges": {
       "all": {
@@ -1301,7 +1395,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "prodcat_code"
+          "column": "prodcat_code",
+          "isNaturalKey": true
         }
       },
       {
@@ -1319,8 +1414,8 @@
     "nameSpace": "XM",
     "type": "Unit",
     "table": "uom",
-    "lockable": true,
     "idSequenceName": "uom_uom_id_seq",
+    "lockable": true,
     "comment": "Unit Map",
     "privileges": {
       "all": {
@@ -1343,7 +1438,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "uom_name"
+          "column": "uom_name",
+          "isNaturalKey": true
         }
       },
       {

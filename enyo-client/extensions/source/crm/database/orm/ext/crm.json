@@ -35,7 +35,7 @@
         "name": "incidentRelations",
         "toMany": {
           "type": "IncidentRelation",
-          "column": "crmacct_id",
+          "column": "crmacct_number",
           "inverse": "account"
         }
       },
@@ -43,7 +43,7 @@
         "name": "opportunityRelations",
         "toMany": {
           "type": "OpportunityRelation",
-          "column": "crmacct_id",
+          "column": "crmacct_number",
           "inverse": "account"
         }
       },
@@ -51,7 +51,7 @@
         "name": "toDoRelations",
         "toMany": {
           "type": "ToDoRelation",
-          "column": "crmacct_id",
+          "column": "crmacct_number",
           "inverse": "account"
         }
       }
@@ -104,7 +104,7 @@
         "name": "incidentRelations",
         "toMany": {
           "type": "IncidentRelation",
-          "column": "cntct_id",
+          "column": "cntct_number",
           "inverse": "contact"
         }
       },
@@ -112,7 +112,7 @@
         "name": "opportunityRelations",
         "toMany": {
           "type": "OpportunityRelation",
-          "column": "cntct_id",
+          "column": "cntct_number",
           "inverse": "contact"
         }
       },
@@ -120,7 +120,7 @@
         "name": "toDoRelations",
         "toMany": {
           "type": "ToDoRelation",
-          "column": "cntct_id",
+          "column": "cntct_number",
           "inverse": "contact"
         }
       }
@@ -146,8 +146,8 @@
      {
         "name": "account",
         "attr": {
-         "type": "Number",
-         "column": "crmacct_id"
+         "type": "String",
+         "column": "crmacct_number"
         }
      }
     ],
