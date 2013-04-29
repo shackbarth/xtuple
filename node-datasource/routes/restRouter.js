@@ -36,7 +36,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     };
 
-    routes.postEngine(payload, session, callback);
+    routes.queryDatabase("post", payload, session, callback);
   };
 
   var getResources = function (req, res, next, orms) {
@@ -127,12 +127,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           payload.type = model;
           payload.id = id - 0;
 
-          routes.getEngine(payload, session, callback);
+          routes.queryDatabase("get", payload, session, callback);
         } else { // This is a list request.
           payload.type = resources[model].methods.list.response["$ref"];
           payload.query = {};
 
-          routes.getEngine(payload, session, callback);
+          routes.queryDatabase("get", payload, session, callback);
         }
 
         break;

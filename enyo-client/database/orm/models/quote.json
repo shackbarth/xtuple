@@ -982,7 +982,8 @@
         "name": "itemSite",
         "toOne": {
           "type": "ItemSiteRelation",
-          "column": "quitem_itemsite_id"
+          "column": "quitem_itemsite_id",
+          "isNested": true
         }
       },
       {

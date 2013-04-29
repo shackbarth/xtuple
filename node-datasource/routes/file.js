@@ -5,7 +5,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
-  var retrieveEngine = require('./data').retrieveEngine;
+  var queryDatabase = require('./data').queryDatabase;
   // /file?recordType=XM.File&id=40
 
   /**
@@ -24,11 +24,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
 
     queryPayload = {
-      recordType: recordType,
+      nameSpace: recordType.substring(0, recordType.indexOf('.')), // TODO: use prefix
+      type: recordType.suffix(),
       id: Number(recordId)
     };
 
-    retrieveEngine(queryPayload, req.session, function (result) {
+    queryDatabase("get", queryPayload, req.session, function (result) {
       var content, data, filename, extension, isBinaryEncoding, buffer;
 
       if (result.isError) {
@@ -43,8 +44,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         // pg represents bytea data as hex. For text data (like a csv file)
         // we need to read to a buffer and then convert to utf-8. For binary
         // data we can just send the buffer itself as data.
+
+        if (typeof content.data !== 'string') {
+          res.send({isError: true, message: "You need to set your postgres binary encoding to hex"});
+          return;
+        }
+
         //
         // The first two characters of the data from pg is \x and must be ignored
+        //
         buffer = new Buffer(content.data.substring(2), "hex");
         data = isBinaryEncoding ? buffer : buffer.toString("utf-8");
 

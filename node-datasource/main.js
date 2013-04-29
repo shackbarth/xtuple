@@ -544,28 +544,28 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   // To run this from the client:
   socket.on('delete', function (data, callback) {
     ensureLoggedIn(function (session) {
-      routes.deleteEngine(data.payload, session, callback);
+      routes.queryDatabase("delete", data.payload, session, callback);
     }, data && data.payload);
   });
 
   // To run this from the client:
   socket.on('get', function (data, callback) {
     ensureLoggedIn(function (session) {
-      routes.getEngine(data.payload, session, callback);
+      routes.queryDatabase("get", data.payload, session, callback);
     }, data && data.payload);
   });
 
   // To run this from the client:
   socket.on('patch', function (data, callback) {
     ensureLoggedIn(function (session) {
-      routes.patchEngine(data.payload, session, callback);
+      routes.queryDatabase("patch", data.payload, session, callback);
     }, data && data.payload);
   });
 
   // To run this from the client:
   socket.on('post', function (data, callback) {
     ensureLoggedIn(function (session) {
-      routes.postEngine(data.payload, session, callback);
+      routes.queryDatabase("post", data.payload, session, callback);
     }, data && data.payload);
   });
 
