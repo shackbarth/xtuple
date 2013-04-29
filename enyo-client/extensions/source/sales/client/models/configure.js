@@ -12,8 +12,7 @@ white:true*/
 
       @extends XM.Settings
     */
-    XM.Sales = XM.Settings.extend(
-      /** @scope XM.Crm.Settings.prototype */ {
+    XM.Sales = XM.Settings.extend(/** @lends XM.Sales.Settings.prototype */ {
 
       recordType: 'XM.Sales',
 
