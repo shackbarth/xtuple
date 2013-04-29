@@ -442,10 +442,6 @@ trailing:true white:true*/
     parentKey: "salesOrder",
     listRelations: "XV.SalesOrderLineItemListRelations",
 
-    create: function () {
-      this.inherited(arguments);
-    },
-
     launchWorkspace: function (inSender, inEvent) {
       var index = Number(this.$.list.getFirstSelected());
       this.doChildWorkspace({

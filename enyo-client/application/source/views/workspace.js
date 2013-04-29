@@ -1338,6 +1338,7 @@ trailing:true white:true*/
     ],
     create: function () {
       this.inherited(arguments);
+      this.build();
     },
     customerChanged: function () {
       var customer = this.$.customerProspectWidget.getValue(),
@@ -1396,7 +1397,7 @@ trailing:true white:true*/
     model: "XM.Quote",
     create: function () {
       this.inherited(arguments);
-      this.build();
+      this.titleChanged();
     },
     /**
       Loops through the components array of the parent kind and inserts the addtional components where they should be rendered.
@@ -1574,7 +1575,7 @@ trailing:true white:true*/
     model: "XM.SalesOrder",
     create: function () {
       this.inherited(arguments);
-      this.build();
+      this.titleChanged();
     },
     /**
       Inserts additional components where they should be rendered.
