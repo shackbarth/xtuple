@@ -25,10 +25,10 @@
         }
       },
       {
-        "name": "uuid",
+        "name": "name",
         "attr": {
           "type": "String",
-          "column": "obj_uuid",
+          "column": "accnt_name",
           "isNaturalKey": true
         }
       },

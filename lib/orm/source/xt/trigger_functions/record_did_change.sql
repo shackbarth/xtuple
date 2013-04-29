@@ -32,12 +32,6 @@ create or replace function xt.record_did_change() returns trigger as $$
    if (qry.length > 1) { throw "Compound primary keys not supported for " + table; };
    pkey = qry[0].key;
 
-   if(typeof NEW[pkey] === 'string') {
-     /* Quickfix pending John's long-term fix */
-     /* plv8.elog(NOTICE, "Must not try to insert a string PK into xt.ver"); */
-     return;
-   }
-
    if (TG_OP === 'UPDATE') {
      /* find a version record, if found increment */
      sql = 'select ver_id from xt.ver where ver_table_oid = $1 and ver_record_id = $2;';

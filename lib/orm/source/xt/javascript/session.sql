@@ -107,6 +107,7 @@ select xt.install_js('XT','Session','xtuple', $$
               'where n.nspname in ( ' +
               ' select distinct lower(orm_namespace) from XT.Orm ' +
               ') ' + 
+              'and relkind = \'v\' ' +
               'order by c.relname, attnum',
       schema,
       recs = plv8.execute(sql),
