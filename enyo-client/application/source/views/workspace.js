@@ -1633,7 +1633,7 @@ trailing:true white:true*/
             ]}
           ]}
         ]}
-      ], {owner: this});        
+      ], {owner: this});
     }
   });
 

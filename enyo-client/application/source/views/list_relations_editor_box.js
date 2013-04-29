@@ -174,7 +174,7 @@ trailing:true white:true*/
   // ..........................................................
   // LINE ITEMS
   //
-  
+
   /**
     This is the parent LineItem Mixin for both the Quote and SalesOrder.
   */
@@ -226,7 +226,7 @@ trailing:true white:true*/
       }
     }
   };
-  
+
   /**
     Mixin for Quote Specific Line functions
   */
@@ -234,12 +234,14 @@ trailing:true white:true*/
     create: function () {
       this.inherited(arguments);
       this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
-      
+
       // Loop through the components and set the specific attribute information for the Money widgets
       this.getComponents().forEach(function (e) {
         if (e.kind === "XV.MoneyWidget") {
           e.attr.currency = "quote.currency";
-          e.getEffective() ? e.setEffective("quote.quoteDate") : false;
+          if (e.getEffective()) {
+            e.setEffective("quote.quoteDate");
+          }
         }
       });
     },
@@ -276,60 +278,60 @@ trailing:true white:true*/
       this.changeItemSiteParameter("shipto");
     }
   };
-  
+
   /**
     Mixin for Sales Order Specific Line functions
   */
-   XV.SalesOrderLineMixin = {
-     create: function () {
-       this.inherited(arguments);
-       this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
+  XV.SalesOrderLineMixin = {
+    create: function () {
+      this.inherited(arguments);
+      this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
 
-       // Loop through the components and set the specific attribute information for the Money widgets
-       this.getComponents().forEach(function (e) {
-         if (e.kind === "XV.MoneyWidget") {
-           e.attr.currency = "quote.currency";
-           e.getEffective() ? e.setEffective("quote.quoteDate") : false;
-         }
-       });
-     },
-     salesOrderDateChanged: function () {
-       this.changeItemSiteParameter("orderDate", "effectiveDate");
-     },
-     setValue: function (value) {
-       var parent,
-        site,
-        effectivePolicy = XT.session.settings.get("soPriceEffective");
-       // Remove any old bindings
-       if (this.value) {
-         parent = value.getParent();
-         parent.off("change:shipto", this.shiptoChanged, this);
-         parent.off("change:orderDate", this.salesOrderDateChanged, this);
-         this.value.off("change:scheduleDate", this.scheduleDateChanged, this);
-       }
-       XV.EditorMixin.setValue.apply(this, arguments);
-       // Add new bindings
-       if (this.value) {
-         parent = value.getParent();
-         parent.on("change:shipto", this.shiptoChanged, this);
-         if (effectivePolicy === "OrderDate") {
-           parent.on("change:orderDate", this.salesOrderDateChanged, this);
-           this.changeItemSiteParameter("orderDate", "effectiveDate");
-         } else if (effectivePolicy === "ScheduleDate") {
-           this.value.on("change:scheduleDate", this.scheduleDateChanged, this);
-           this.changeItemSiteParameter("scheduleDate", "effectiveDate");
-         }
-         site = parent ? parent.get("site") : false;
-         if (site) { this.$.itemSiteWidget.setSelectedSite(site); }
-       }
-       this.changeItemSiteParameter("customer");
-       this.changeItemSiteParameter("shipto");
-     }
-   };
-  
+      // Loop through the components and set the specific attribute information for the Money widgets
+      this.getComponents().forEach(function (e) {
+        if (e.kind === "XV.MoneyWidget") {
+          e.attr.currency = "quote.currency";
+          if (e.getEffective()) {
+            e.setEffective("quote.quoteDate");
+          }
+        }
+      });
+    },
+    salesOrderDateChanged: function () {
+      this.changeItemSiteParameter("orderDate", "effectiveDate");
+    },
+    setValue: function (value) {
+      var parent, site, effectivePolicy = XT.session.settings.get("soPriceEffective");
+           // Remove any old bindings
+      if (this.value) {
+        parent = value.getParent();
+        parent.off("change:shipto", this.shiptoChanged, this);
+        parent.off("change:orderDate", this.salesOrderDateChanged, this);
+        this.value.off("change:scheduleDate", this.scheduleDateChanged, this);
+      }
+      XV.EditorMixin.setValue.apply(this, arguments);
+      // Add new bindings
+      if (this.value) {
+        parent = value.getParent();
+        parent.on("change:shipto", this.shiptoChanged, this);
+        if (effectivePolicy === "OrderDate") {
+          parent.on("change:orderDate", this.salesOrderDateChanged, this);
+          this.changeItemSiteParameter("orderDate", "effectiveDate");
+        } else if (effectivePolicy === "ScheduleDate") {
+          this.value.on("change:scheduleDate", this.scheduleDateChanged, this);
+          this.changeItemSiteParameter("scheduleDate", "effectiveDate");
+        }
+        site = parent ? parent.get("site") : false;
+        if (site) { this.$.itemSiteWidget.setSelectedSite(site); }
+      }
+      this.changeItemSiteParameter("customer");
+      this.changeItemSiteParameter("shipto");
+    }
+  };
+
    /**
      This is the parent line editor. It mixes in the base line functionality
-     for both 
+     for both
    */
   var lineEditor = enyo.mixin(XV.LineMixin, {
     name: "XV.BaseLineItemEditor",
@@ -370,18 +372,18 @@ trailing:true white:true*/
     ]
   });
   enyo.kind(lineEditor);
-  
+
   var quoteLineEditor = enyo.mixin(XV.QuoteLineMixin, {
     name: "XV.QuoteLineItemEditor",
     kind: "XV.BaseLineItemEditor"
   });
   enyo.kind(quoteLineEditor);
-  
+
   var salesOrderLineEditor = enyo.mixin(XV.SalesOrderLineMixin, {
     name: "XV.SalesOrderLineItemEditor",
     kind: "XV.BaseLineItemEditor"
   });
-  enyo.kind(salesOrderLineEditor);  
+  enyo.kind(salesOrderLineEditor);
 
   enyo.kind({
     name: "XV.QuoteLineItemBox",
@@ -432,7 +434,7 @@ trailing:true white:true*/
       return true;
     }
   });
-  
+
   enyo.kind({
     name: "XV.SalesOrderLineItemBox",
     kind: "XV.QuoteLineItemBox",
