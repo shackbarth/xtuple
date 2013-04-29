@@ -7,7 +7,11 @@ select xt.install_js('XM','Contact','xtuple', $$
   XM.Contact.isDispatchable = true,
   
   XM.Contact.merge = function(sourceContactId, targetContactId, purge) {
-    var err;
+    var err,
+      sql = "select cntctmerge(src.cntct_id, tgt.cntct_id, $3) AS result " +
+            "from cntct src, cntct tgt " +
+            "where src.cntct_number = $1 " +
+            " and tgt.cntct_number = $2;";
 
     if (!data.checkPrivilege("MergeContacts")) { 
       err = "Access denied."
@@ -19,14 +23,14 @@ select xt.install_js('XM','Contact','xtuple', $$
       err = "Not defined";
     }
     if(!err) {
-      return plv8.execute("select cntctmerge($1,$2,$3) AS result;", [sourceContactId, targetContactId, purge])[0].result;
+      return plv8.execute(sql, [sourceContactId, targetContactId, purge])[0].result;
     }
     throw new Error(err);
   }
 
   XM.Contact.restore = function(mergeContactId) {
     var ret,
-      sql,
+      sql = "select cntctrestore(cntct_id) AS result from cntct where cntct_number = $1;"
       err,
       data = Object.create(XT.Data);
 
@@ -36,13 +40,13 @@ select xt.install_js('XM','Contact','xtuple', $$
        err = "Not defined";
      }
      if(!err) {
-       return plv8.execute("select cntctrestore($1) AS result;", [mergeContactId])[0].result;
+       return plv8.execute(sql, [mergeContactId])[0].result;
      }
      throw new Error(err);
   }
 
   XM.Contact.used = function(id) {
-    return plv8.execute("select cntctused($1) AS result;", [id])[0].result;
+    return plv8.execute("select cntctused(cntct_id) AS result from cntct where cntct_number = $1;", [id])[0].result;
   }
 
 $$ );

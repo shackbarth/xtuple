@@ -1,4 +1,15 @@
-1.3.3 (2013/04)
+1.3.4 (2013/04)
+===============
+
+Critical deployment changes
+---------------------------
+* Anybody who wants to work in the admin console will have to add global into their org
+  table. You can do this through the admin console, but do it before you upgrade! You
+  do not need to associate the org with your user.
+
+
+
+1.3.3 (2013/04/18)
 ===============
 
 Critical deployment changes

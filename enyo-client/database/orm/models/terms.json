@@ -4,8 +4,9 @@
     "nameSpace": "XM",
     "type": "Terms",
     "table": "terms",
-    "lockable": true,
     "idSequenceName": "terms_terms_id_seq",
+    "isRest": true,
+    "lockable": true,
     "comment": "Terms Map",
     "privileges": {
       "all": {
@@ -28,7 +29,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "terms_code"
+          "column": "terms_code",
+          "isNaturalKey":true
         }
       },
       {

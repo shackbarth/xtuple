@@ -1,6 +1,6 @@
 
 insert into xt.userrolepriv
-select src.*
+select src.grppriv_id, grppriv_grp_id, grppriv_priv_id
 from grppriv src
   join priv on priv_id=grppriv_priv_id
 where not exists (

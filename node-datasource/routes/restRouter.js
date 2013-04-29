@@ -17,7 +17,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return next(new Error("Invalid Request."));
       }
 
-      routeCall(req, res, next, result.data);
+      getResources(req, res, next, result.data);
     };
 
     payload.nameSpace = "XT";
@@ -36,10 +36,44 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     };
 
+    routes.queryDatabase("post", payload, session, callback);
+  };
+
+  var getResources = function (req, res, next, orms) {
+    var callback = {},
+        payload = {},
+        rootUrl = req.protocol + "://" + req.host + "/",
+        session = {};
+
+    callback = function (result) {
+      if (result.isError) {
+        return next(new Error("Invalid Request."));
+      }
+
+      routeCall(req, res, next, orms, result.data);
+    };
+
+    payload.nameSpace = "XT";
+    payload.type = "Discovery";
+    payload.dispatch = {
+      functionName: "getResources",
+      isJSON: true,
+      parameters: [null, rootUrl]
+    };
+
+    // Dummy up session.
+    session.passport = {
+      "user": {
+        "id": req.user.get("user"),
+        "username": req.user.get("username"),
+        "organization": req.user.get("name")
+      }
+    };
+
     routes.postEngine(payload, session, callback);
   };
 
-  var routeCall = function (req, res, next, orms) {
+  var routeCall = function (req, res, next, orms, resources) {
     var id,
         model,
         payload = {},
@@ -77,14 +111,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return res.send('REST API DELETE call to model: ' + model);
       case "GET":
         // Requests a representation of the specified resource.
-        // TODO - call get method.
-
-        payload.nameSpace = "XM";
-        payload.type = model;
-        payload.id = id - 0; // TODO get rootURL
 
         // Dummy up session.
-        // TODO - get user and org from token.
         session.passport = {
           "user": {
             "id": req.user.get("user"),
@@ -93,9 +121,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           }
         };
 
-        routes.getEngine(payload, session, callback);
+        payload.nameSpace = "XM";
 
-        //return res.send('REST API GET call to model: ' + model);
+        if (req.params.id) { // This is a single resource request.
+          payload.type = model;
+          payload.id = id - 0;
+
+          routes.queryDatabase("get", payload, session, callback);
+        } else { // This is a list request.
+          payload.type = resources[model].methods.list.response["$ref"];
+          payload.query = {};
+
+          routes.queryDatabase("get", payload, session, callback);
+        }
+
         break;
       case "HEAD":
         // Asks for the response identical to the one that would correspond to a GET request, but without the response body.

@@ -258,7 +258,8 @@ select xt.install_js('XT','Schema','xtuple', $$
    */
   XT.Schema.getProperties = function(orm) {
     /* Load ORM if this function was called with just orm.nameSpace and orm.type. */
-    orm = orm.properties ? orm : XT.Orm.fetch(orm.nameSpace, orm.type);
+    orm = orm.properties ? orm : XT.Orm.fetch(orm.nameSpace, orm.type, {"silentError": true});
+    if (!orm || !orm.properties) return false;
 
     var columns = [],
         ext = {},
@@ -266,8 +267,6 @@ select xt.install_js('XT','Schema','xtuple', $$
         ret = {},
         schemaColumnInfo = {},
         schemaTable = orm.table;
-
-    if (!orm.properties) return false;
 
     if (orm.extensions.length > 0) {
       /* Loop through the ORM extensions and add their properties into main properties. */

@@ -7,7 +7,8 @@ DO $$
     "docass_source_id as source_id, " +
     "docass_target_type as target_type, " +
     "docass_target_id as target_id, " +
-    "docass_purpose as purpose " +
+    "docass_purpose as purpose, " +
+    "obj_uuid " +
    "from docass " +
    "union all " +
    /* (inverse) */
@@ -21,7 +22,8 @@ DO $$
      "when docass_purpose = 'A' then 'C' " +
      "when docass_purpose = 'C' then 'A' " +
      "else docass_purpose " +
-    "end as purpose " +
+    "end as purpose, " +
+    "obj_uuid " +
    "from public.docass; ";
 
   try {
