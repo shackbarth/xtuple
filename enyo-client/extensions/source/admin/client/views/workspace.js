@@ -112,6 +112,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.Campaign", "XV.CampaignWorkspace");
+  XV.registerModelWorkspace("XM.CampaignRelation", "XV.CampaignWorkspace");
 
   // ..........................................................
   // DATABASE SERVER

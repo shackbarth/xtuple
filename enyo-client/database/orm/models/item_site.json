@@ -4,8 +4,8 @@
     "nameSpace": "XM",
     "type": "CostCategory",
     "table": "costcat",
-    "lockable": true,
     "idSequenceName": "costcat_costcat_id_seq",
+    "lockable": true,
     "comment": "Cost Category Map",
     "privileges": {
       "all": {
@@ -28,7 +28,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "costcat_code"
+          "column": "costcat_code",
+          "isNaturalKey":true
         }
       },
       {
@@ -46,9 +47,9 @@
     "nameSpace": "XM",
     "type": "ItemSite",
     "table": "itemsite",
+    "idSequenceName": "itemsite_itemsite_id_seq",
     "isRest": true,
     "lockable": true,
-    "idSequenceName": "itemsite_itemsite_id_seq",
     "comment": "Itemsite Map",
     "privileges": {
       "all": {
@@ -68,9 +69,17 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "item",
-        "toOne": {
-          "type": "ItemRelation",
+        "attr": {
+          "type": "Number",
           "column": "itemsite_item_id"
         }
       },
@@ -159,6 +168,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -217,7 +234,6 @@
     "nameSpace": "XM",
     "type": "ItemSiteListItem",
     "table": "itemsite",
-    "idSequenceName": "itemsite_itemsite_id_seq",
     "comment": "Itemsite List Item Map",
     "privileges": {
       "all": {
@@ -234,6 +250,14 @@
           "type": "Number",
           "column": "itemsite_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -288,7 +312,6 @@
     "nameSpace": "XM",
     "type": "ItemSiteRelation",
     "table": "xt.itemsiteinfo",
-    "idSequenceName": "itemsite_itemsite_id_seq",
     "comment": "Itemsite Relation Map",
     "privileges": {
       "all": {
@@ -305,6 +328,14 @@
           "type": "Number",
           "column": "itemsite_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -366,8 +397,8 @@
     "nameSpace": "XM",
     "type": "PlannerCode",
     "table": "plancode",
-    "lockable": true,
     "idSequenceName": "plancode_plancode_id_seq",
+    "lockable": true,
     "comment": "Planner Code Map",
     "privileges": {
       "all": {
@@ -390,7 +421,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "plancode_code"
+          "column": "plancode_code",
+          "isNaturalKey":true
         }
       },
       {

@@ -13,16 +13,16 @@ select xt.install_js('XM','ToDo','xtuple', $$
    @returns {Number}
   */
   XM.ToDo.createRecurring = function(toDoId) {
-    var sql = "select createrecurringitems({id}, 'TODO') as result;"
-              .replace(/{id}/, toDoId === undefined ? null : toDoId),
-        data = Object.create(XT.Data),
-        err;
+    var sql1 = "select createrecurringitems(todoitem_id, 'TODO') as result from todoitem where obj_uuid = $1;",
+      sql2 = "select createrecurringitems(null, 'TODO');",
+      data = Object.create(XT.Data),
+      err;
 
     if(!data.checkPrivilege('MaintainAllToDoItems') && !data.checkPrivilege('MaintainPersonalToDoItems'))
       err = "Access Denied.";
 
     if(!err) {
-      return plv8.execute(sql)[0].result;
+      return plv8.execute(toDoId ? sql1 : sql2)[0].result;
     }
 
     throw new Error(err);

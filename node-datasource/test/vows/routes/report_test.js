@@ -22,7 +22,7 @@ var vows = require('vows'),
           var that = this,
             // XXX using the Locale business object, of all the options, is confusing because
             // we are also verifying the user's locale information.
-            url = XZ.host + "/report?details={%22query%22:{%22recordType%22:%22XM.Locale%22}," +
+            url = XZ.host + "/report?details={%22query%22:{},%22nameSpace%22:%22XM%22,%22type%22:%22Locale%22," +
               "%22locale%22:{%22currencyScale%22:5}}",
             // turn the zombie callback into the vows callback per the befuddling vows requirements
             callbackAdapter = function (err, browser, status) {
@@ -84,7 +84,7 @@ var vows = require('vows'),
             callbackAdapter = function (err, browser, status) {
               that.callback(null, {browser: browser});
             },
-            url = XZ.host + "/report?details={%22recordType%22:%22XM.Locale%22,%22id%22:3," +
+            url = XZ.host + "/report?details={%22nameSpace%22:%22XM%22,%22type%22:%22Locale%22,%22id%22:3," +
               "%22locale%22:{%22currencyScale%22:5}}";
 
           XZ.browser.visit(url, {debug: false}, callbackAdapter);

@@ -7,7 +7,8 @@ DO $$
     "    crmacct_cust_id as source_id," +
     "    docass_target_type as target_type," +
     "    docass_target_id as target_id," +
-    "    docass_purpose as purpose" +
+    "    docass_purpose as purpose," +
+    "    obj_uuid " +
     "   from docass, crmacct" +
     "   where docass_source_type = 'CRMA'" +
     "     and crmacct_id = docass_source_id" +
@@ -23,7 +24,8 @@ DO $$
     "     when docass_purpose = 'A' then 'C'" +
     "     when docass_purpose = 'C' then 'A'" +
     "     else docass_purpose" +
-    "    end as purpose" +
+    "    end as purpose," +
+    "   obj_uuid " +
     "   from docass, crmacct" +
     "   where docass_target_type = 'CRMA'" +
     "     and crmacct_id = docass_target_id" +
@@ -39,7 +41,8 @@ DO $$
     "     when docass_purpose = 'A' then 'C'" +
     "     when docass_purpose = 'C' then 'A'" +
     "     else docass_purpose" +
-    "    end as purpose" +
+    "    end as purpose," +
+    "   obj_uuid " +
     "   from docass" +
     "   where docass_target_type = 'C';";
   try {
@@ -66,14 +69,16 @@ insert into public.docass (
   docass_source_type,
   docass_target_id,
   docass_target_type,
-  docass_purpose )
+  docass_purpose,
+  obj_uuid )
 select
   new.id,
   crmacct_id,
   'CRMA',
   new.target_id,
   new.target_type,
-  new.purpose
+  new.purpose,
+  new.obj_uuid
 from crmacct
 where crmacct_cust_id = NEW.source_id;
   

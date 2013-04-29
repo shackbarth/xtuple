@@ -46,7 +46,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     };
 
-    routes.postEngine(payload, session, callback);
+    routes.queryDatabase("post", payload, session, callback);
   };
 
   exports.getRest = function (req, res, next) {
@@ -88,7 +88,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     };
 
-    routes.postEngine(payload, session, callback);
+    routes.queryDatabase("post", payload, session, callback);
   };
 
 }());

@@ -4,8 +4,8 @@
     "nameSpace": "XM",
     "type": "Characteristic",
     "table": "char",
-    "lockable": true,
     "idSequenceName": "char_char_id_seq",
+    "lockable": true,
     "comment": "Characteristic Map",
     "privileges": {
       "all": {
@@ -28,7 +28,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "char_name"
+          "column": "char_name",
+          "isNaturalKey": true
         }
       },
       {
@@ -140,6 +141,14 @@
           "type": "Number",
           "column": "charopt_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {

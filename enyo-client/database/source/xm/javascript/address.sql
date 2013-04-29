@@ -38,7 +38,7 @@ select xt.install_js('XM','Address','xtuple', $$
   @returns {Number}
   */
   XM.Address.useCount = function(id) {
-    return plv8.execute('select addrUseCount($1) as result', [id])[0].result;
+    return plv8.execute('select addrUseCount(addr_number) as result from addr where addr_number = $1;', [id])[0].result;
   }
 
 $$ );

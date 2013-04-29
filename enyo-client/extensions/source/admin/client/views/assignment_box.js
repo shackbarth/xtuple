@@ -14,7 +14,7 @@ white:true*/
     kind: "XV.AssignmentBox",
     segments: ["Extensions"],
     translateLabels: false,
-    totalCollectionName: "ExtensionCollection",
+    totalCollectionName: "XM.ExtensionCollection",
     type: "extension",
     /**
      * Returns a model specific to this AssignmentBox.
@@ -39,7 +39,7 @@ white:true*/
     kind: "XV.AssignmentBox",
     segments: ["Privileges"],
     translateLabels: false,
-    totalCollectionName: "GlobalPrivilegeCollection",
+    totalCollectionName: "XM.GlobalPrivilegeCollection",
     type: "privilege",
     /**
      * Returns a model specific to this AssignmentBox.

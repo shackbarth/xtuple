@@ -13,16 +13,16 @@ select xt.install_js('XM','Incident','xtuple', $$
    @returns {Number}
   */
   XM.Incident.createRecurring = function(incidentId) {
-    var sql = "select createrecurringitems({id}, 'INCDT') as result;"
-              .replace(/{id}/, incidentId === undefined ? null : incidentId),
-        data = Object.create(XT.Data),
-        err;
+    var sql1 = "select createrecurringitems(incdt_id, 'INCDT') as result from incident where incident_number = $1;",
+      sql2 = "select createrecurringitems(null, 'INCDT');",
+      data = Object.create(XT.Data),
+      err;
 
     if(!data.checkPrivilege('MaintainAllIncidents') && !data.checkPrivilege('MaintainPersonalIncidents'))
       err = "Access Denied.";
 
     if(!err) {
-      return plv8.execute(sql)[0].result;
+      return plv8.execute(incidentId ? sql1 : sql2)[0].result;
     }
 
     throw new Error(err);

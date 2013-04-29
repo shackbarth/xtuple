@@ -1,6 +1,6 @@
 
 insert into xt.userpriv 
-select src.*
+select src.usrpriv_id, src.usrpriv_priv_id, src.usrpriv_username
 from usrpriv src
   join priv on priv_id=usrpriv_priv_id
 where not exists (

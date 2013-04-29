@@ -39,9 +39,9 @@ white:true*/
             }
             return;
           }
-          
+
           dataHash = response.data;
-          
+
           // Handle no data on a single record retrieve as error
           if (method === "get" && options.id &&
             _.isEmpty(dataHash.data)) {
