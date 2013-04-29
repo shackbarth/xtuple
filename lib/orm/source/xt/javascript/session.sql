@@ -112,6 +112,7 @@ select xt.install_js('XT','Session','xtuple', $$
       schema,
       recs = plv8.execute(sql),
       type,
+      qualifiedType, /* ns.type */
       prev = '',
       name,
       column,
@@ -127,7 +128,7 @@ select xt.install_js('XT','Session','xtuple', $$
         return value.toMany;
       },
       addToOne = function (value, schema) {
-        var relations = result[type]['relations'],
+        var relations = result[qualifiedType]['relations'],
           child = XT.Orm.fetch(schema.toUpperCase(), value.toOne.type),
           pkey = XT.Orm.primaryKey(child),
           nkey = XT.Orm.naturalKey(child),
@@ -143,7 +144,7 @@ select xt.install_js('XT','Session','xtuple', $$
         relations.push(rel);
       },
       addToMany = function (value, schema) {
-        var relations = result[type]['relations'], 
+        var relations = result[qualifiedType]['relations'], 
           child = XT.Orm.fetch(schema.toUpperCase(), value.toMany.type),
           pkey = XT.Orm.primaryKey(child),
           inverse = value.toMany.inverse ? value.toMany.inverse.camelize() : undefined;
@@ -187,7 +188,7 @@ select xt.install_js('XT','Session','xtuple', $$
       },
       processPrivileges = function (orm) {
         if (orm.privileges) {
-          result[type]['privileges'] = orm.privileges;
+          result[qualifiedType]['privileges'] = orm.privileges;
         }
       };
 
@@ -196,18 +197,19 @@ select xt.install_js('XT','Session','xtuple', $$
       type = recs[i].type.classify();
       name = recs[i].column;
       schema = recs[i].schema;
+      qualifiedType = schema + "." + name;
       if (type !== prev) {
-        result[type] = {};
-        result[type].columns = [];
+        result[qualifiedType] = {};
+        result[qualifiedType].columns = [];
         
         /* Add relations and privileges from the orm*/
         if (DEBUG) { 
           plv8.elog(NOTICE, 'Fetching schema ' + schema.toUpperCase() + '.' + type);
         }
         orm = XT.Orm.fetch(schema.toUpperCase(), type);
-        result[type]['idAttribute'] = XT.Orm.naturalKey(orm) || XT.Orm.primaryKey(orm);
-        result[type]['lockable'] = orm.lockable || false;
-        result[type]['relations'] = [];
+        result[qualifiedType]['idAttribute'] = XT.Orm.naturalKey(orm) || XT.Orm.primaryKey(orm);
+        result[qualifiedType]['lockable'] = orm.lockable || false;
+        result[qualifiedType]['relations'] = [];
         processProperties(orm, schema);
         processPrivileges(orm);
       }
@@ -215,7 +217,7 @@ select xt.install_js('XT','Session','xtuple', $$
         name: name,
         category: recs[i].category
       }
-      result[type]['columns'].push(column);
+      result[qualifiedType]['columns'].push(column);
       prev = type;
     }
 
@@ -225,14 +227,14 @@ select xt.install_js('XT','Session','xtuple', $$
           XM[type].options &&
           XT.typeOf(XM[type].options) === 'array') {
         options = XM[type].options;
-        result[type] = {};
-        result[type].columns = [];
+        result["XM." + type] = {};
+        result["XM." + type].columns = [];
         for (i = 0; i < options.length; i++) {
           column = { 
             name: options[i],
             category: 'X'
           }
-          result[type].columns.push(column);
+          result["XM." + type].columns.push(column);
         }
       }
     }
