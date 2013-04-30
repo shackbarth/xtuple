@@ -68,8 +68,7 @@ trailing:true white:true*/
       {attribute: 'country'},
       {attribute: 'state'},
       {attribute: 'city'},
-      {attribute: 'line1'},
-      {attribute: 'id', numeric: true}
+      {attribute: 'line1'}
     ]},
     parameterWidget: "XV.AddressListParameters",
     components: [
@@ -183,8 +182,7 @@ trailing:true white:true*/
     query: {orderBy: [
       {attribute: 'lastName'},
       {attribute: 'firstName'},
-      {attribute: 'primaryEmail'},
-      {attribute: 'id', numeric: true}
+      {attribute: 'primaryEmail'}
     ]},
     parameterWidget: "XV.ContactListParameters",
     components: [
@@ -1625,8 +1623,7 @@ trailing:true white:true*/
     query: {orderBy: [
       {attribute: 'priorityOrder'},
       {attribute: 'dueDate'},
-      {attribute: 'name'},
-      {attribute: 'id', numeric: true}
+      {attribute: 'name'}
     ]},
     components: [
       {kind: "XV.ListItem", components: [
