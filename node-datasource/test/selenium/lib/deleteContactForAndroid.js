@@ -23,6 +23,9 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.elementByXPath(contactObj.Obj.deleteContactItem_xpath, function (err, itemEl) {
   browser.clickElement(itemEl, function () {
   utils.pause(6000, function () {
+  browser.elementByXPath(contactObj.readObj1.deleteContactGearIcon_xpath,function (err,gearEl) {
+  browser.clickElement(gearEl, function () {
+  utils.pause(2000,function () {
   browser.elementByXPath(contactObj.Obj.deleteContactButton_xpath, function (err, el34) {
   browser.clickElement(el34, function () {
   utils.pause(2000, function () {
@@ -40,7 +43,7 @@ regexp:true, strict:true, trailing:true, white:false*/
   }
   utils.pause(2000, function () {
   callback(browser, test);
-  });});});});});});});});});});});});});});});});});});});});});};
+  });});});});});});});});});});});});});});});});});});});});});});});});};
 }());
 
 

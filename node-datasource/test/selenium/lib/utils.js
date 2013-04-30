@@ -59,7 +59,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
   //-----pause the execution --
   exports.pause = function (milliseconds, callback) {
-    console.log("waiting to load...");
+    //console.log("waiting to load...");
     setTimeout(callback, milliseconds);
   };
   //------- wait For Displayed -----

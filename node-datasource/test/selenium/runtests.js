@@ -30,9 +30,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     });
   });
 
-  sldriver.on('command', function (meth, path) {
+  /*sldriver.on('command', function (meth, path) {
     console.log(' > \x1b[33m%s\x1b[0m: %s', meth, path);
-  });
+  });*/
   module.exports = {
     'chrome on Windows 7' : function (test1) {
       console.log('starting first test on chrome');
