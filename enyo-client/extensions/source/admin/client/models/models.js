@@ -69,9 +69,12 @@ white:true*/
 
     recordType: 'XM.Campaign',
 
-    databaseType: 'global'
+    databaseType: 'global',
+
+    autoFetchId: true
 
   });
+
   /**
     @class
 
@@ -83,7 +86,9 @@ white:true*/
 
     editableModel: 'XM.Campaign',
 
-    databaseType: 'global'
+    databaseType: 'global',
+
+    autoFetchId: true
 
   });
 
@@ -126,7 +131,8 @@ white:true*/
     requiredAttributes: [
       "isActive",
       "licenses",
-      "group"
+      "group",
+      "databaseServer"
     ],
 
     /**
@@ -173,7 +179,9 @@ white:true*/
 
     recordType: 'XM.OrganizationExtension',
 
-    databaseType: 'global'
+    databaseType: 'global',
+
+    autoFetchId: true
 
   });
 
@@ -192,20 +200,6 @@ white:true*/
     databaseType: 'global',
 
     autoFetchId: false
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.SessionOrganization = XM.Model.extend({
-    /** @scope XM.SessionOrganization.prototype */
-
-    recordType: 'XM.SessionOrganization',
-
-    databaseType: 'global'
 
   });
 
@@ -339,6 +333,8 @@ white:true*/
   XM.UserOrganization = XM.Model.extend({
     /** @scope XM.UserOrganization.prototype */
 
+    autoFetchId: true,
+
     recordType: 'XM.UserOrganization',
 
     databaseType: 'global',
@@ -383,7 +379,9 @@ white:true*/
 
     recordType: 'XM.UserGlobalPrivilegeAssignment',
 
-    databaseType: 'global'
+    databaseType: 'global',
+
+    autoFetchId: true
 
   });
 
@@ -391,7 +389,9 @@ white:true*/
 
     recordType: 'XM.OrganizationExtension',
 
-    databaseType: 'global'
+    databaseType: 'global',
+
+    autoFetchId: true
 
   });
 
