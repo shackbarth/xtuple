@@ -182,6 +182,9 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.clickElement(el31, function () {
   utils.results('**** Deleting the contact ****');
   utils.pause(6000, function () {
+  browser.elementByXPath(contactObj.readObj1.deleteContactGearIcon_xpath,function (err,gearEl) {
+  browser.clickElement(gearEl, function () {
+  utils.pause(2000,function () {
   browser.elementByXPath(contactObj.readObj1.deleteContactButton_xpath, function (err, el34) {
   browser.clickElement(el34, function () {
   utils.pause(2000, function () {
@@ -201,7 +204,7 @@ regexp:true, strict:true, trailing:true, white:false*/
     callback(browser, test);
   });
   });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});
-  });});});});});});});});});});});});});});};/*});});});});});});});});});});});});});});});});};*/
+  });});});});});});});});});});});});});});});});});};/*});});});});});});});});});});});});});});});});};*/
 }());
 
 

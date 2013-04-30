@@ -50,8 +50,9 @@ exports.Obj = {
   contactsHeading_xpath : ".//*[@id='app_postbooks_navigator_rightLabel'][contains(text(),'Contacts')]",
   readContact_xpath : ".//*[@id='app_postbooks_navigator_contentPanels_contactList_listAttr'][contains(text(),'" ,
   deleteContactItem_xpath : ".//*[@id='app_postbooks_navigator_contentPanels_contactList_listItem']",
-  deleteContactButton_xpath : ".//*[@id='app_postbooks_navigator_contentPanels_contactList_listItem_deleteButton']",
-  deleteOkButton_xpath: ".//*[@id='app_postbooks_navigator_button6']"
+  deleteContactGearIcon_xpath : ".//*[@id='app_postbooks_navigator_contentPanels_contactList_listItem_gearIconButton']",
+  deleteContactButton_xpath : ".//*[@id='app_postbooks_navigator_listItemMenu_delete']']",
+  deleteOkButton_xpath: ".//*[@id='app_postbooks_notifyYes']"
 } 
 exports.readObj1 = {
   crmlink_xpath : "//div[contains(text(),'CRM')]",
@@ -100,6 +101,7 @@ exports.readObj1 = {
   contactsHeading_xpath : ".//*[@id='app_postbooks_navigator_rightLabel'][contains(text(),'Contacts')]",
   newToolBar_xpath : ".//*[@id='app_postbooks_navigator_contentToolbar_iconButton']",
   deleteContactItem_xpath : ".//*[@id='app_postbooks_navigator_contentPanels_contactList_listItem']",
-  deleteContactButton_xpath : ".//*[@id='app_postbooks_navigator_contentPanels_contactList_listItem_deleteButton']",
-  deleteOkButton_xpath: ".//*[@id='app_postbooks_navigator_button6']"
+  deleteContactGearIcon_xpath : ".//*[@id='app_postbooks_navigator_contentPanels_contactList_listItem_gearIconButton']",
+  deleteContactButton_xpath : ".//*[@id='app_postbooks_navigator_listItemMenu_delete']",
+  deleteOkButton_xpath: ".//*[@id='app_postbooks_notifyYes']"
 } 
