@@ -1126,7 +1126,7 @@ select xt.install_js('XT','Data','xtuple', $$
       if (context) {
         context.nameSpace = context.nameSpace || context.recordType.beforeDot();
         context.type = context.type || context.recordType.afterDot()
-        context.map = XT.Orm.fetych(context.nameSpace, context.type);
+        context.map = XT.Orm.fetch(context.nameSpace, context.type);
         context.prop = XT.Orm.getProperty(context.map, context.relation);
         context.fkey = context.prop.toMany.inverse;
         context.pkey = XT.Orm.primaryKey(context.map);
