@@ -95,7 +95,7 @@ select xt.install_js('XT','Session','xtuple', $$
     @param {String} Schema name
     @returns {Hash}
   */
-  XT.Session.schema = function() {
+  XT.Session.schema = function(schema) {
     var sql = 'select c.relname as "type", ' +
               '  attname as "column", ' +
               '  typcategory as "category", ' +
@@ -104,15 +104,11 @@ select xt.install_js('XT','Session','xtuple', $$
               '  join pg_namespace n on n.oid = c.relnamespace' +
               '  join pg_attribute a on a.attrelid = c.oid ' +
               '  join pg_type t on a.atttypid = t.oid ' +
-              'where n.nspname in ( ' +
-              ' select distinct lower(orm_namespace) from XT.Orm ' +
-              ') ' + 
+              'where n.nspname = $1 ' +
               'and relkind = \'v\' ' +
               'order by c.relname, attnum',
-      schema,
-      recs = plv8.execute(sql),
+      recs = plv8.execute(sql, [schema]),
       type,
-      qualifiedType, /* ns.type */
       prev = '',
       name,
       column,
@@ -128,7 +124,7 @@ select xt.install_js('XT','Session','xtuple', $$
         return value.toMany;
       },
       addToOne = function (value, schema) {
-        var relations = result[qualifiedType]['relations'],
+        var relations = result[type]['relations'],
           child = XT.Orm.fetch(schema.toUpperCase(), value.toOne.type),
           pkey = XT.Orm.primaryKey(child),
           nkey = XT.Orm.naturalKey(child),
@@ -144,7 +140,7 @@ select xt.install_js('XT','Session','xtuple', $$
         relations.push(rel);
       },
       addToMany = function (value, schema) {
-        var relations = result[qualifiedType]['relations'], 
+        var relations = result[type]['relations'], 
           child = XT.Orm.fetch(schema.toUpperCase(), value.toMany.type),
           pkey = XT.Orm.primaryKey(child),
           inverse = value.toMany.inverse ? value.toMany.inverse.camelize() : undefined;
@@ -188,7 +184,7 @@ select xt.install_js('XT','Session','xtuple', $$
       },
       processPrivileges = function (orm) {
         if (orm.privileges) {
-          result[qualifiedType]['privileges'] = orm.privileges;
+          result[type]['privileges'] = orm.privileges;
         }
       };
 
@@ -197,19 +193,18 @@ select xt.install_js('XT','Session','xtuple', $$
       type = recs[i].type.classify();
       name = recs[i].column;
       schema = recs[i].schema;
-      qualifiedType = schema + "." + name;
       if (type !== prev) {
-        result[qualifiedType] = {};
-        result[qualifiedType].columns = [];
+        result[type] = {};
+        result[type].columns = [];
         
         /* Add relations and privileges from the orm*/
         if (DEBUG) { 
           plv8.elog(NOTICE, 'Fetching schema ' + schema.toUpperCase() + '.' + type);
         }
         orm = XT.Orm.fetch(schema.toUpperCase(), type);
-        result[qualifiedType]['idAttribute'] = XT.Orm.naturalKey(orm) || XT.Orm.primaryKey(orm);
-        result[qualifiedType]['lockable'] = orm.lockable || false;
-        result[qualifiedType]['relations'] = [];
+        result[type]['idAttribute'] = XT.Orm.naturalKey(orm) || XT.Orm.primaryKey(orm);
+        result[type]['lockable'] = orm.lockable || false;
+        result[type]['relations'] = [];
         processProperties(orm, schema);
         processPrivileges(orm);
       }
@@ -217,7 +212,7 @@ select xt.install_js('XT','Session','xtuple', $$
         name: name,
         category: recs[i].category
       }
-      result[qualifiedType]['columns'].push(column);
+      result[type]['columns'].push(column);
       prev = type;
     }
 
@@ -227,14 +222,14 @@ select xt.install_js('XT','Session','xtuple', $$
           XM[type].options &&
           XT.typeOf(XM[type].options) === 'array') {
         options = XM[type].options;
-        result["XM." + type] = {};
-        result["XM." + type].columns = [];
+        result[type] = {};
+        result[type].columns = [];
         for (i = 0; i < options.length; i++) {
           column = { 
             name: options[i],
             category: 'X'
           }
-          result["XM." + type].columns.push(column);
+          result[type].columns.push(column);
         }
       }
     }
