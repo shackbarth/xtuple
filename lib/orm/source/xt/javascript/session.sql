@@ -217,19 +217,21 @@ select xt.install_js('XT','Session','xtuple', $$
     }
 
     /* Handle configuration settings */
-    for (type in XM) {
-      if (XM.hasOwnProperty(type) &&
-          XM[type].options &&
-          XT.typeOf(XM[type].options) === 'array') {
-        options = XM[type].options;
-        result[type] = {};
-        result[type].columns = [];
-        for (i = 0; i < options.length; i++) {
-          column = { 
-            name: options[i],
-            category: 'X'
+    if (schema === 'xm') {
+      for (type in XM) {
+        if (XM.hasOwnProperty(type) &&
+            XM[type].options &&
+            XT.typeOf(XM[type].options) === 'array') {
+          options = XM[type].options;
+          result[type] = {};
+          result[type].columns = [];
+          for (i = 0; i < options.length; i++) {
+            column = { 
+              name: options[i],
+              category: 'X'
+            }
+            result[type].columns.push(column);
           }
-          result[type].columns.push(column);
         }
       }
     }
