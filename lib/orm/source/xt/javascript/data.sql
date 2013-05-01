@@ -1129,7 +1129,7 @@ select xt.install_js('XT','Data','xtuple', $$
         context.map = XT.Orm.fetch(context.nameSpace, context.type);
         context.prop = XT.Orm.getProperty(context.map, context.relation);
         context.fkey = context.prop.toMany.inverse;
-        context.pkey = XT.Orm.primaryKey(context.map);
+        context.pkey = XT.Orm.naturalKey(context.map) || XT.Orm.primaryKey(context.map);
         params.attribute = context.pkey;
         params.value = context.value;
         join = 'join {recordType} on ({table1}."{pkey}"={table2}."{fkey}")';
