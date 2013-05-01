@@ -1,27 +1,15 @@
-DO $$
-  var dropSql = "drop view if exists xt.coheadinfo cascade;";
-  var sql = "create or replace view xt.coheadinfo as " +
-  "select cohead.*, " +
-    "xt.co_schedule_date(cohead) as schedule_date, " +
-    "xt.co_freight_weight(cohead) as freight_weight, " +
-    "xt.co_subtotal(cohead) as subtotal, " +
-    "xt.co_tax_total(cohead) as tax_total, " +
-    "xt.co_total(cohead) as total, " +
-    "xt.co_margin(cohead) as margin " +
-  "from cohead; ";
+select xt.create_view('xt.coheadinfo', $$
 
-  try {
-    plv8.execute(sql);
-  } catch (error) {
-    /* let's cascade-drop the view and try again */
-    plv8.execute(dropSql);
-    plv8.execute(sql);
-  }
+select cohead.*, 
+  xt.co_schedule_date(cohead) as schedule_date,
+  xt.co_freight_weight(cohead) as freight_weight,
+  xt.co_subtotal(cohead) as subtotal,
+  xt.co_tax_total(cohead) as tax_total,
+  xt.co_total(cohead) as total,
+  xt.co_margin(cohead) as margin
+from cohead;
 
-$$ language plv8;
-          
-revoke all on xt.coheadinfo from public;
-grant all on table xt.coheadinfo to group xtrole;
+$$, false);
 
 create or replace rule "_INSERT" as on insert to xt.coheadinfo do instead
 

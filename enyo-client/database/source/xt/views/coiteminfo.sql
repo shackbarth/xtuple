@@ -1,31 +1,19 @@
-DO $$
-  var dropSql = "drop view if exists xt.coiteminfo cascade;";
-  var sql = "create or replace view xt.coiteminfo as " +
-  "select coitem.*, " +
-    "xt.co_line_base_price(coitem) as base_price, " +
-    "xt.co_line_list_cost_markup(coitem) as list_cost_markup, " +
-    "xt.co_line_list_price(coitem) as list_price, " +
-    "xt.co_line_list_price_discount(coitem) as list_price_discount, " +
-    "xt.co_line_customer_discount(coitem) as cust_discount, " +
-    "xt.co_line_extended_price(coitem) as ext_price, " +
-    "xt.co_line_profit(coitem) as profit, " +
-    "xt.co_line_tax(coitem) as tax " +
-  "from coitem " +
-    "left join itemsite on coitem_itemsite_id=itemsite_id " +
-    "left join item on itemsite_item_id=item_id; ";
+select xt.create_view('xt.coiteminfo', $$
 
-  try {
-    plv8.execute(sql);
-  } catch (error) {
-    /* let's cascade-drop the view and try again */
-    plv8.execute(dropSql);
-    plv8.execute(sql);
-  }
+select coitem.*,
+  xt.co_line_base_price(coitem) as base_price,
+  xt.co_line_list_cost_markup(coitem) as list_cost_markup,
+  xt.co_line_list_price(coitem) as list_price,
+  xt.co_line_list_price_discount(coitem) as list_price_discount,
+  xt.co_line_customer_discount(coitem) as cust_discount,
+  xt.co_line_extended_price(coitem) as ext_price, 
+  xt.co_line_profit(coitem) as profit,
+  xt.co_line_tax(coitem) as tax
+from coitem
+  left join itemsite on coitem_itemsite_id=itemsite_id 
+  left join item on itemsite_item_id=item_id;
 
-$$ language plv8;
-          
-revoke all on xt.coiteminfo from public;
-grant all on table xt.coiteminfo to group xtrole;
+$$, false);
 
 create or replace rule "_INSERT" as on insert to xt.coiteminfo do instead
 
