@@ -923,7 +923,7 @@ trailing:true white:true*/
             {kind: "XV.ContactWidget", attr: "contact"},
             {kind: "XV.MoneyWidget", attr: {localValue: "amount", currency: "currency"},
               label: "_amount".loc()},
-            {kind: "XV.PercentWidget", attr: "probability"},
+            {kind: "XV.NumberWidget", attr: "probability"},
             {kind: "onyx.GroupboxHeader", content: "_status".loc()},
             {kind: "XV.OpportunityStagePicker", attr: "opportunityStage",
               label: "_stage".loc()},
