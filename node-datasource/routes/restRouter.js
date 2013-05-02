@@ -82,6 +82,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           if (err) {
             // TODO - Better error handling.
             return res.send(500, {data: err});
+          } else if (resp.error) {
+            // TODO - Better error handling.
+            return res.send(500, {data: resp.error});
           } else {
             return res.send(resp.data.data);
           }

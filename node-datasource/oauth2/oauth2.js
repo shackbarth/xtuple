@@ -457,6 +457,9 @@ exports.authorization = [
       // For security purposes, we check that redirectURI provided
       // by the client matches one registered with the server.
       _.each(client.get("redirectURIs"), function (value, key, list) {
+// TODO - When adding the UI interface to allow redirectURI to be saved to the DB,
+// we need to check and make sure they are https URIs.
+
         // Check if the requested redirectURI is in approved client.redirectURIs.
         if (value.redirectURI && value.redirectURI === redirectURI) {
           matches = true;
