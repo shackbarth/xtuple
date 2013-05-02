@@ -1217,7 +1217,7 @@ select xt.install_js('XT','Data','xtuple', $$
           prop = props[i];
           if (prop.toOne && prop.toOne.isNested && item[prop.name]) {
             this.removeKeys(nameSpace, prop.toOne.type, item[prop.name]);
-          } else if (prop.toMany && prop.toMany.isNested) {
+          } else if (prop.toMany && prop.toMany.isNested && item[prop.name]) {
             for (n = 0; n < item[prop.name].length; n++) {
               val = item[prop.name][n];
               delete val[prop.toMany.inverse];
