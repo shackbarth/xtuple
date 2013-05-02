@@ -344,7 +344,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         if (prop.attr || prop.toOne) {
           attr = prop.attr ? prop.attr : prop.toOne;
           if (DEBUG) plv8.elog(NOTICE, 'building attribute', prop.name, attr.column);
-          isVisible = attr.value ? false : true;
+          isVisible = attr.value === undefined ? true : false;
           if (!attr.type) throw new Error('No type was defined on property ' + prop.name);
           if (isVisible) {
             col = tblAlias + '.' + attr.column;

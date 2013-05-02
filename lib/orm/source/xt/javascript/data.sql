@@ -602,7 +602,7 @@ select xt.install_js('XT','Data','xtuple', $$
           record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
 
         /* handle fixed values */
-        if (attr.value) {
+        if (attr.value !== undefined) {
           params.columns.push('"' + attr.column + '"');
           params.expressions.push('$' + count);
           params.values.push(attr.value);
