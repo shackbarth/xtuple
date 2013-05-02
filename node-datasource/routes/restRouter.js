@@ -128,7 +128,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         if (req.params.id) { // This is a single resource request.
           payload.type = model;
-          payload.id = id - 0;
+          payload.id = id + "";
 
           routes.queryDatabase("get", payload, session, callback);
         } else { // This is a list request.
