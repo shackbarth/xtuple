@@ -22,7 +22,7 @@ var _ = require("underscore"),
       // depending on how we represent sub-objects, we want to verify them in different ways
       if (typeof (data.model.get(key)) === 'object' && typeof value === 'object') {
         // if the data is a model and the test hash looks like {contact: {id: 7}}
-        assert.equal(data.model.get(key).id, value.id);
+        assert.equal(data.model.get(key).id, value[data.model.get(key).idAttribute]);
       } else if (key === data.model.documentKey &&
           data.model.enforceUpperKey === true) {
           // this is the document key, so it should have been made upper case
