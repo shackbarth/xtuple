@@ -745,92 +745,103 @@ select xt.install_js('XT','Data','xtuple', $$
      @returns {Object}
    */
     prepareUpdate: function (orm, record, params, encryptionKey) {
-      var count,
-        pkey,
-        columnKey,
-        expressions,
-        prop,
-        ormp,
-        attr,
-        type,
-        qprop,
-        keyValue,
-        iorm,
-        key,
-        val,
-        exp;
-      params = params || {
-        table: "",
-        expressions: [],
-        values: []
-      };
-      params.table = orm.table;
-      count = params.values.length + 1;
+      try {
+        var attr,
+          columnKey,
+          count,
+          exp,
+          expressions,
+          iorm,
+          key,
+          keyValue,
+          ormp,
+          pkey,
+          prop,
+          qprop,
+          query,
+          type,
+          val;
 
-      if (orm.relations) {
-        /* extension */
-        pkey = orm.relations[0].inverse;
-        columnKey = orm.relations[0].column;
-      } else {
-        /* base */
-        pkey = XT.Orm.primaryKey(orm);
-        columnKey = XT.Orm.primaryKey(orm, true);
-      }
+        params = params || {
+          table: "",
+          expressions: [],
+          values: []
+        };
+        params.table = orm.table;
+        count = params.values.length + 1;
 
-      /* build up the content for update of this record */
-      for (i = 0; i < orm.properties.length; i++) {
-        ormp = orm.properties[i];
-        prop = ormp.name;
-        attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
-        type = attr.type;
-        iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false,
-        nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
-        qprop = '"' + attr.column + '"';
-        val = ormp.toOne && record[prop] instanceof Object ?
-          record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
+        if (orm.relations) {
+          /* Extension. */
+          pkey = orm.relations[0].inverse;
+          columnKey = orm.relations[0].column;
+        } else {
+          /* Base. */
+          pkey = XT.Orm.primaryKey(orm);
+          columnKey = XT.Orm.primaryKey(orm, true);
+        }
 
-        if (val !== undefined && !ormp.toMany) {
-          /* handle encryption if applicable */
-          if (attr.isEncrypted) {
-            if (encryptionKey) {
-              val = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
-                             .replace("{value}", val)
-                             .replace("{encryptionKey}", encryptionKey);
-              params.values.push(val);
-              params.expressions.push(qprop.concat(" = ", "$", count));
-              count++;
-            } else {
-              throw new Error("No encryption key provided.");
-            }
-          } else if (ormp.name !== pkey) {
-            /* Unfortuantely dates and nulls aren't handled correctly by parameters */
-            if (val === null) {
-              params.expressions.push(qprop.concat(' = null'));
-            } else if (val instanceof Date) {
-              params.expressions.push(qprop.concat(" = '" + JSON.stringify(val) + "'"));
-            } else {
-              if (ormp.toOne && nkey) {
-                exp = " = (select {pkey} from {table} where {nkey} = {param})"
-                      .replace("{pkey}", XT.Orm.primaryKey(iorm, true))
-                      .replace("{table}", iorm.table)
-                      .replace("{nkey}", nkey)
-                      .replace("{param}", '$' + count)
-                params.expressions.push(qprop.concat(exp));
-              } else {
+        /* Build up the content for update of this record. */
+        for (i = 0; i < orm.properties.length; i++) {
+          ormp = orm.properties[i];
+          prop = ormp.name;
+          attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
+          type = attr.type;
+          iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false,
+          nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
+          qprop = '"' + attr.column + '"';
+          val = ormp.toOne && record[prop] instanceof Object ?
+            record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
+
+          if (val !== undefined && !ormp.toMany) {
+            /* Handle encryption if applicable. */
+            if (attr.isEncrypted) {
+              if (encryptionKey) {
+                val = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
+                               .replace("{value}", val)
+                               .replace("{encryptionKey}", encryptionKey);
+                params.values.push(val);
                 params.expressions.push(qprop.concat(" = ", "$", count));
+                count++;
+              } else {
+// TODO - Improve error handling.
+                throw new Error("No encryption key provided.");
               }
-              params.values.push(val);
-              count++;
+            } else if (ormp.name !== pkey) {
+              /* Unfortuantely dates and nulls aren't handled correctly by parameters. */
+              if (val === null) {
+                params.expressions.push(qprop.concat(' = null'));
+              } else if (val instanceof Date) {
+                params.expressions.push(qprop.concat(" = '" + JSON.stringify(val) + "'"));
+              } else {
+                if (ormp.toOne && nkey) {
+                  exp = " = (select {pkey} from {table} where {nkey} = {param})"
+                        .replace("{pkey}", XT.Orm.primaryKey(iorm, true))
+                        .replace("{table}", iorm.table)
+                        .replace("{nkey}", nkey)
+                        .replace("{param}", '$' + count)
+                  params.expressions.push(qprop.concat(exp));
+                } else {
+                  params.expressions.push(qprop.concat(" = ", "$", count));
+                }
+                params.values.push(val);
+                count++;
+              }
             }
           }
         }
+
+        keyValue = typeof record[pkey] === 'string' ? "'" + record[pkey] + "'" : record[pkey];
+        expressions = params.expressions.join(', ');
+        query = 'update %1$I set ' + expressions + ' where ' + columnKey + ' = ' + keyValue + ';';
+        params.statement = 'update ' + params.table + ' set ' + expressions + ' where ' + columnKey + ' = ' + keyValue + ';';
+
+        if (DEBUG) { plv8.elog(NOTICE, 'sql =', params.statement); }
+        if (DEBUG) { plv8.elog(NOTICE, 'values =', params.values); }
+
+        return params;
+      } catch (err) {
+        XT.error(err, arguments);
       }
-      keyValue = typeof record[pkey] === 'string' ? "'" + record[pkey] + "'" : record[pkey];
-      expressions = params.expressions.join(', ');
-      params.statement = 'update ' + params.table + ' set ' + expressions + ' where ' + columnKey + ' = ' + keyValue + ';';
-      if (DEBUG) { plv8.elog(NOTICE, 'sql =', params.statement); }
-      if (DEBUG) { plv8.elog(NOTICE, 'values =', params.values); }
-      return params;
     },
 
     /**
@@ -864,6 +875,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
         /* Test for optimistic lock. */
         if (etag && etag !== options.etag) {
+// TODO - Improve error handling.
           plv8.elog(ERROR, "The version being patched is not current.");
         }
 
@@ -871,6 +883,7 @@ select xt.install_js('XT','Data','xtuple', $$
         if (orm.lockable) {
           lock = this.tryLock(lockTable, id, {key: lockKey});
           if (!lock.key) {
+// TODO - Improve error handling.
             plv8.elog(ERROR, "Can not obtain a lock on the record.");
           }
         }
@@ -901,6 +914,8 @@ select xt.install_js('XT','Data','xtuple', $$
             nameKey = ext.relations[0].inverse;
             query = 'delete from %1$I where %2$I = $1';
             sql = XT.format(query, [ext.table, columnKey]);
+
+            if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql,  id); }
             plv8.execute(sql, [id]);
           }
         }
@@ -910,9 +925,9 @@ select xt.install_js('XT','Data','xtuple', $$
         columnKey = XT.Orm.primaryKey(orm, true);
         query = 'delete from %1$I where %2$I = $1';
         sql = XT.format(query, [orm.table, columnKey]);
-        if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql,  id); }
 
         /* Commit the record.*/
+        if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql,  id); }
         plv8.execute(sql, [id]);
 
         /* Release any lock. */
@@ -945,6 +960,8 @@ select xt.install_js('XT','Data','xtuple', $$
             if (encryptionKey) {
               sql = "select formatbytea(decrypt(setbytea($1), setbytea($2), 'bf')) as result";
 // TODO - Handle not found error.
+
+              if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql, [record[prop], encryptionKey]); }
               record[prop] = plv8.execute(sql, [record[prop], encryptionKey])[0].result;
             } else {
               record[prop] = '**********';
@@ -982,6 +999,8 @@ select xt.install_js('XT','Data','xtuple', $$
         }
 
 // TODO - Handle not found error.
+
+        if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql, [table, namespace]); }
         return plv8.execute(sql, [table, namespace])[0].oid - 0;
       } catch (err) {
         XT.error(err, arguments);
@@ -1002,9 +1021,9 @@ select xt.install_js('XT','Data','xtuple', $$
           query = "select %1$I as id from %2$I where %3$I = $1",
           sql = XT.format(query, [pcol, orm.table, ncol]);
 
-        if (DEBUG) { plv8.elog(NOTICE, 'find pkey id sql = ', sql, value); }
-
 // TODO - Handle not found error.
+
+        if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql, [value]); }
         return plv8.execute(sql, [value])[0].id;
       } catch (err) {
         XT.error(err, arguments);
@@ -1022,19 +1041,22 @@ select xt.install_js('XT','Data','xtuple', $$
         if (!orm.lockable) { return; }
 
         var oid = this.getTableOid(orm.lockTable || orm.table),
-          query = 'select ver_etag from xt.ver where ver_table_oid = %1$I and ver_record_id = $1'
-          sql = XT.format(query, [oid]),
-          res = plv8.execute(sql, [id]),
-          etag = res.length ? res[0].ver_etag : false;
+          sql = 'select ver_etag from xt.ver where ver_table_oid = $1 and ver_record_id = $2;',
+          res,
+          etag;
+
+        if (DEBUG) { plv8.elog(NOTICE, 'ver sql = ', sql, [oid, id]); }
+        res = plv8.execute(sql, [oid, id]);
+        etag = res.length ? res[0].ver_etag : false;
 
         if (!etag) {
           etag = XT.generateUUID();
-          sql = 'insert into xt.ver (ver_table_oid, ver_record_id, ver_etag) values ($1, $2, $3::uuid);'
+          sql = 'insert into xt.ver (ver_table_oid, ver_record_id, ver_etag) values ($1, $2, $3::uuid);';
 // TODO - Handle insert error.
+
+          if (DEBUG) { plv8.elog(NOTICE, 'ver sql = ', sql, [oid, id, etag]); }
           plv8.execute(sql, [oid, id, etag]);
         }
-
-        if (DEBUG) { plv8.elog(NOTICE, 'ver sql = ', sql); }
 
         return etag;
       } catch (err) {
