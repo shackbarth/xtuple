@@ -17,6 +17,7 @@ var lang = XT.stringsFor("en_US", {
   // Models
   // ********
 
+  "_asset": "Asset",
   "_assigned": "Assigned",
   "_automatic": "Automatic",
   "_automaticOverride": "Override Allowed",
@@ -26,14 +27,18 @@ var lang = XT.stringsFor("en_US", {
   "_concept": "Concept",
   "_confirmed": "Confirmed",
   "_database": "Database",
+  "_equity": "Equity",
+  "_expense": "Expense",
   "_feedback": "Feedback",
   "_individual": "Individual",
   "_information": "Information",
   "_inProcess": "In Process",
+  "_liability": "Liability",
   "_manual": "Manual",
   "_new": "New",
   "_organization": "Organization",
   "_resolved": "Resolved",
+  "_revenue": "Revenue",
 
   // ********
   // Labels
@@ -189,6 +194,8 @@ var lang = XT.stringsFor("en_US", {
   "_errorColor": "Error Color",
   "_eventRecipient": "Event Recipient",
   "_excludeProspects": "Exclude Prospects",
+  "_expenseCategories": "Expense Categories",
+  "_expenseCategory": "Expense Category",
   "_expenses": "Expenses",
   "_expiredColor": "Expired Color",
   "_expires": "Expires",
@@ -285,6 +292,8 @@ var lang = XT.stringsFor("en_US", {
   "_language": "Language",
   "_lastName": "Last Name",
   "_latestComment": "Latest Comment",
+  "_ledgerAccount": "Ledger Account",
+  "_ledgerAccounts": "Ledger Accounts",
   "_limitToList": "Limit to List",
   "_line1": "Line1",
   "_line2": "Line2",

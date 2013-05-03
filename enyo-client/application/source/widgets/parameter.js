@@ -430,6 +430,66 @@ trailing:true white:true*/
       {name: "plannerCodePattern", label: "_code".loc(), attr: "plannerCode.code"}
     ]
   });
+  
+  // ..........................................................
+  // LEDGER ACCOUNT
+  //
+
+  enyo.kind({
+    name: "XV.LedgerAccountListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_ledgerAccount".loc()},
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "description", label: "_description".loc(), attr: "description"},
+      {kind: "onyx.GroupboxHeader", content: "_accountType".loc()},
+      {name: "isAsset", label: "_asset".loc(), defaultKind: "XV.CheckboxWidget"},
+      {name: "isLiability", label: "_liability".loc(), defaultKind: "XV.CheckboxWidget"},
+      {name: "isRevenue", label: "_revenue".loc(), defaultKind: "XV.CheckboxWidget"},
+      {name: "isExpense", label: "_expense".loc(), defaultKind: "XV.CheckboxWidget"},
+      {name: "isEquity", label: "_equity".loc(), defaultKind: "XV.CheckboxWidget"}
+    ],
+    getParameters: function () {
+      var params = this.inherited(arguments),
+        param = {},
+        value = [];
+      if (this.$.isAsset.getValue()) {
+        value.push(XM.LedgerAccount.ASSET);
+      }
+      if (this.$.isLiability.getValue()) {
+        value.push(XM.LedgerAccount.LIABILITY);
+      }
+      if (this.$.isRevenue.getValue()) {
+        value.push(XM.LedgerAccount.REVENUE);
+      }
+      if (this.$.isExpense.getValue()) {
+        value.push(XM.LedgerAccount.EXPENSE);
+      }
+      if (this.$.isEquity.getValue()) {
+        value.push(XM.LedgerAccount.EQUITY);
+      }
+      if (value.length) {
+        param.attribute = "accountType";
+        param.operator = "ANY";
+        param.value = value;
+        params.push(param);
+      }
+      return params;
+    }
+  });
 
   // ..........................................................
   // OPPORTUNITY

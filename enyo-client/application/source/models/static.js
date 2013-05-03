@@ -94,6 +94,25 @@ white:true*/
     XM.incidentStatuses.add(incidentStatus);
   }
   
+  // Ledger Account Type
+  var ledgerAccountTypeJson = [
+    { id: "A", name: "_asset".loc() },
+    { id: "L", name: "_liability".loc() },
+    { id: "R", name: "_revenue".loc() },
+    { id: "E", name: "_expense".loc() },
+    { id: "Q", name: "_equity".loc() }
+  ];
+  XM.LedgerAccountTypeModel = Backbone.Model.extend({
+  });
+  XM.LedgerAccountTypeCollection = Backbone.Collection.extend({
+    model: XM.LedgerAccountTypeModel
+  });
+  XM.ledgerAccountTypes = new XM.LedgerAccountTypeCollection();
+  for (i = 0; i < ledgerAccountTypeJson.length; i++) {
+    var ledgerAccountType = new XM.LedgerAccountTypeModel(accountTypeJson[i]);
+    XM.ledgerAccountTypes.add(ledgerAccountType);
+  }
+  
   // Number Policy
   var numberPolicyJson = [
     { id: "M", name: "_manual".loc() },

@@ -152,7 +152,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
           /* Array comparisons handle another way */
           } else if (op === '<@' || op === '!<@') {
-            clause = param.attribute + ' ' + op + ' ARRAY[' + param.value.join(',') + ']';
+            clause = '"' + param.attribute + '" ' + op + ' ARRAY[' + param.value.join(',') + ']';
             clauses.push(clause);
 
           /* Everything else handle another */

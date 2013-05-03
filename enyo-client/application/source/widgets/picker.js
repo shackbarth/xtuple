@@ -114,7 +114,18 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.creditStatuses"
   });
-  
+
+  // ..........................................................
+  // EXPENSE CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.ExpenseCategoryPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.expenseCategories",
+    nameAttribute: "code"
+  });
+
   // ..........................................................
   // HOLD TYPE
   //
@@ -383,7 +394,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'number'}
     ]
   });
-  
+
   // ..........................................................
   // TAX CLASS
   //
@@ -425,7 +436,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'code'}
     ]
   });
-  
+
   // ..........................................................
   // TAX TYPE
   //
@@ -452,7 +463,7 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'code'}
     ]
   });
-  
+
   // ..........................................................
   // TERMS TYPE
   //
