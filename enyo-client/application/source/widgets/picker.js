@@ -199,6 +199,16 @@ regexp:true, undef:true, trailing:true, white:true */
     collection: "XM.incidentStatuses",
     valueAttribute: "id"
   });
+  
+  // ..........................................................
+  // LEDGER ACCOUNT TYPE
+  //
+
+  enyo.kind({
+    name: "XV.LedgerAccountTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.ledgerAccountTypes"
+  });
 
   // ..........................................................
   // LOCALE

@@ -498,6 +498,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.RelationWidget",
     collection: "XM.LedgerAccountRelationCollection",
     list: "XV.LedgerAccountList",
+    keyAttribute: "name",
     nameAttribute: "description"
   });
 
