@@ -1,6 +1,6 @@
-create or replace function xt.js_init() returns void as $$
+create or replace function xt.js_init(debug boolean) returns void as $$
 
-  DEBUG = false;
+  DEBUG = debug ? debug : false;
 
   // ..........................................................
   // METHODS
