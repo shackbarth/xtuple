@@ -967,6 +967,7 @@ select xt.install_js('XT','Data','xtuple', $$
           table = table.afterDot();
         }
 
+// TODO - Handle not found error.
         return plv8.execute(sql, [table, namespace])[0].oid - 0;
       } catch (err) {
         XT.error(err, arguments);
