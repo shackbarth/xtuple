@@ -264,7 +264,7 @@ create or replace function xt.js_init() returns void as $$
       /* Pass 'string' to format() as the first parameter. */
       args.unshift(string);
 
-      string = plv8.execute(query + "--asdf", args)[0].format;
+      string = plv8.execute(query, args)[0].format;
 
       return string;
     } catch (err) {
