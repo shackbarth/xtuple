@@ -431,7 +431,7 @@ select xt.install_js('XT','Data','xtuple', $$
           values = record[prop];
           for (var i = 0; i < values.length; i++) {
             val = values[i];
-            
+
             /* populate the parent key into the foreign key field if it's absent */
             if (!val[fkey]) { val[fkey] = id; }
             this.commitRecord({
@@ -975,14 +975,18 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {String} Natural key value
     */
     getId: function (orm, value) {
-      var pcol = XT.Orm.primaryKey(orm, true),
-        ncol = XT.Orm.naturalKey(orm, true),
-        sql = "select {pcol} as id from {table} where {ncol} = $1"
-              .replace("{pcol}", pcol)
-              .replace("{table}", orm.table)
-              .replace("{ncol}", ncol);
+      try {
+        var pcol = XT.Orm.primaryKey(orm, true),
+          ncol = XT.Orm.naturalKey(orm, true),
+          query = "select %1$I as id from %2$I where %3$I = $1",
+          sql = XT.format(query, [pcol, orm.table, ncol]);
+
         if (DEBUG) { plv8.elog(NOTICE, 'find pkey id sql = ', sql, value); }
-      return plv8.execute(sql, [value])[0].id;
+
+        return plv8.execute(sql, [value])[0].id;
+      } catch (err) {
+        XT.error(err, arguments);
+      }
     },
 
     /**
@@ -999,13 +1003,13 @@ select xt.install_js('XT','Data','xtuple', $$
               .replace("{id}", id),
         res = plv8.execute(sql),
         etag = res.length ? res[0].ver_etag : false;
-      
+
       if (!etag) {
         etag = XT.generateUUID();
         sql = 'insert into xt.ver (ver_table_oid, ver_record_id, ver_etag) values ($1, $2, $3::uuid);'
         plv8.execute(sql, [oid, id, etag]);
       }
-      
+
       if (DEBUG) { plv8.elog(NOTICE, 'ver sql = ', sql); }
       return etag;
     },
@@ -1062,7 +1066,7 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       this.removeKeys(nameSpace, type, ret.data);
-      
+
       return ret;
     },
 
@@ -1115,12 +1119,12 @@ select xt.install_js('XT','Data','xtuple', $$
       /* If this object uses a natural key, go get the primary key id */
       if (nkey) {
         id = this.getId(map, id);
-      } 
+      }
 
       if (XT.typeOf(id) === 'string') {
         id = "'" + id + "'";
       }
-      
+
 
       /* Context means search for this record inside another */
       if (context) {
