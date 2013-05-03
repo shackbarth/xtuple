@@ -955,16 +955,22 @@ select xt.install_js('XT','Data','xtuple', $$
       @returns {Number}
     */
     getTableOid: function (table) {
-      var namespace = "public", /* default assumed if no dot in name */
-       sql = "select pg_class.oid::integer as oid " +
-             "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " +
-             "where relname = $1 and nspname = $2";
-      name = table.toLowerCase(); /* be generous */
-      if (table.indexOf(".") > 0) {
-        namespace = table.beforeDot();
-        table = table.afterDot();
+      try {
+        var namespace = "public", /* default assumed if no dot in name */
+          sql = "select pg_class.oid::integer as oid " +
+               "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " +
+               "where relname = $1 and nspname = $2",
+          name = table.toLowerCase(); /* be generous */
+
+        if (table.indexOf(".") > 0) {
+          namespace = table.beforeDot();
+          table = table.afterDot();
+        }
+
+        return plv8.execute(sql, [table, namespace])[0].oid - 0;
+      } catch (err) {
+        XT.error(err, arguments);
       }
-      return plv8.execute(sql, [table, namespace])[0].oid - 0;
     },
 
     /**
