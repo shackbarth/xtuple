@@ -220,6 +220,59 @@ create or replace function xt.js_init() returns void as $$
   }
 
   /**
+   * Warp plv8's elog ERROR to include a stack trace and function arguments.
+   *
+   * @param {Object} The caught error object from a try/catch.
+   * @param {Array} Javascript's arguments array for the function throwing the error.
+   */
+  XT.error = function (error, args) {
+    plv8.elog(ERROR, error.stack, "\n", "Called with arguments = ", JSON.stringify(args, null, 2));
+  }
+
+  /**
+   * Wrap PostgreSQL's format() function to format SQL Injection safe queires or general strings.
+   * http://www.postgresql.org/docs/9.1/interactive/functions-string.html#FUNCTIONS-STRING-OTHER
+   *
+   * Example: var query = XT.format("select * from %I", ["cntct"]);
+   *  Returns: 'select * from cntct'
+   * Example: var query = XT.format("select %1$I.* from %2$I.%1$I {join} where %1$I.%3$I = $1", ["contact", "xm", "id"]);
+   *  Returns: 'select contact.* from xm.contact {join} where contact.number = $1'
+   *
+   * SQL Injection attemp:
+   * Example: var query = XT.format("SELECT * FROM %I", ["cntct; select * from pg_roles; --"]);
+   * Safely escaped/quoted query:
+   *  Returns: 'SELECT * FROM "cntct; select * from pg_roles; --"'
+   *
+   * @param {String} The string with format tokens to replace.
+   * @param {Array} An array of replacement strings.
+   * @returns {String} Safely escaped string with tokens replaced.
+   */
+  XT.format = function (string, args) {
+    try {
+      if (typeof string !== 'string' || XT.typeOf(args) !== 'array' || !args.length) {
+        return false;
+      }
+
+      var query = "select format($1",
+          params = "";
+
+      for(var i = 0; i < args.length; i++) {
+        params = params + ", $" + (i + 2);
+      }
+      query = query + params + ")";
+
+      /* Pass 'string' to format() as the first parameter. */
+      args.unshift(string);
+
+      string = plv8.execute(query + "--asdf", args)[0].format;
+
+      return string;
+    } catch (err) {
+      XT.error(err, arguments);
+    }
+  };
+
+  /**
     Return a universally unique identifier.
 
     We're using this solution:
