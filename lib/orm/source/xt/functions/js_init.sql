@@ -1,4 +1,4 @@
-create or replace function xt.js_init(debug boolean) returns void as $$
+create or replace function xt.js_init(debug boolean DEFAULT false) returns void as $$
 
   DEBUG = debug ? debug : false;
 
@@ -220,13 +220,35 @@ create or replace function xt.js_init(debug boolean) returns void as $$
   }
 
   /**
-   * Warp plv8's elog ERROR to include a stack trace and function arguments.
+   * Wrap plv8's elog ERROR to include a stack trace and function arguments.
    *
    * @param {Object} The caught error object from a try/catch.
    * @param {Array} Javascript's arguments array for the function throwing the error.
    */
   XT.error = function (error, args) {
-    plv8.elog(ERROR, error.stack, "\n", "Called with arguments = ", JSON.stringify(args, null, 2));
+    var message = error.stack + "\n" + "Call args=",
+        len = 975 - message.length, /* Minus 15 for "ERROR:  Error: ". */
+        params = "",
+        avglen = len / args.length;
+
+    /* Total error message size in plv8 is 1000 characters. */
+    /* Take the remaining length and split it up evening amung the args. */
+    for(var i = 0; i < args.length; i++) {
+      var strg = JSON.stringify(args[i], null, 2);
+
+      params = params + "\n[" + i + "]=";
+
+      if (strg.length < (avglen - 15)) { /* Minus 15 for "[i]= ...trimmed". */
+        params = params + strg;
+      } else {
+        params = params + strg.substring(0, avglen - 15) + "...trimmed";
+      }
+
+      // TODO - This assumes all args are the same length.
+      // We could do some calc to maximize the trim per variable arg length.
+    }
+
+    plv8.elog(ERROR, message, params);
   }
 
   /**
