@@ -983,6 +983,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
         if (DEBUG) { plv8.elog(NOTICE, 'find pkey id sql = ', sql, value); }
 
+// TODO - Handle not found error.
         return plv8.execute(sql, [value])[0].id;
       } catch (err) {
         XT.error(err, arguments);
@@ -996,22 +997,28 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Number|String} Record id
     */
     getVersion: function (orm, id) {
-      if (!orm.lockable) { return; }
-      var oid = this.getTableOid(orm.lockTable || orm.table),
-        sql = 'select ver_etag from xt.ver where ver_table_oid = {oid} and ver_record_id = {id};'
-              .replace("{oid}", oid)
-              .replace("{id}", id),
-        res = plv8.execute(sql),
-        etag = res.length ? res[0].ver_etag : false;
+      try {
+        if (!orm.lockable) { return; }
 
-      if (!etag) {
-        etag = XT.generateUUID();
-        sql = 'insert into xt.ver (ver_table_oid, ver_record_id, ver_etag) values ($1, $2, $3::uuid);'
-        plv8.execute(sql, [oid, id, etag]);
+        var oid = this.getTableOid(orm.lockTable || orm.table),
+          query = 'select ver_etag from xt.ver where ver_table_oid = %1$I and ver_record_id = $1'
+          sql = XT.format(query, [oid]),
+          res = plv8.execute(sql, [id]),
+          etag = res.length ? res[0].ver_etag : false;
+
+        if (!etag) {
+          etag = XT.generateUUID();
+          sql = 'insert into xt.ver (ver_table_oid, ver_record_id, ver_etag) values ($1, $2, $3::uuid);'
+// TODO - Handle insert error.
+          plv8.execute(sql, [oid, id, etag]);
+        }
+
+        if (DEBUG) { plv8.elog(NOTICE, 'ver sql = ', sql); }
+
+        return etag;
+      } catch (err) {
+        XT.error(err, arguments);
       }
-
-      if (DEBUG) { plv8.elog(NOTICE, 'ver sql = ', sql); }
-      return etag;
     },
 
     /**
