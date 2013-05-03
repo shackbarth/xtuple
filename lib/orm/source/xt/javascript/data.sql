@@ -927,25 +927,32 @@ select xt.install_js('XT','Data','xtuple', $$
       @returns {Object}
     */
     decrypt: function (nameSpace, type, record, encryptionKey) {
-      var orm = XT.Orm.fetch(nameSpace, type);
-      for (var prop in record) {
-        var ormp = XT.Orm.getProperty(orm, prop.camelize());
+      try {
+        var orm = XT.Orm.fetch(nameSpace, type);
 
-        /* decrypt property if applicable */
-        if (ormp && ormp.attr && ormp.attr.isEncrypted) {
-          if (encryptionKey) {
-            sql = "select formatbytea(decrypt(setbytea($1), setbytea($2), 'bf')) as result";
-            record[prop] = plv8.execute(sql, [record[prop], encryptionKey])[0].result;
-          } else {
-            record[prop] = '**********';
+        for (var prop in record) {
+          var ormp = XT.Orm.getProperty(orm, prop.camelize());
+
+          /* Decrypt property if applicable. */
+          if (ormp && ormp.attr && ormp.attr.isEncrypted) {
+            if (encryptionKey) {
+              sql = "select formatbytea(decrypt(setbytea($1), setbytea($2), 'bf')) as result";
+// TODO - Handle not found error.
+              record[prop] = plv8.execute(sql, [record[prop], encryptionKey])[0].result;
+            } else {
+              record[prop] = '**********';
+            }
+
+          /* Check recursively. */
+          } else if (ormp.toMany && ormp.toMany.isNested) {
+            this.decrypt(nameSpace, ormp.toMany.type, record[prop][i]);
           }
-
-        /* check recursively */
-        } else if (ormp.toMany && ormp.toMany.isNested) {
-          this.decrypt(nameSpace, ormp.toMany.type, record[prop][i]);
         }
+
+        return record;
+      } catch (err) {
+        XT.error(err, arguments);
       }
-      return record;
     },
 
     /**
