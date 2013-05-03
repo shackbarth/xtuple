@@ -14,7 +14,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     the client.
    */
   var logAll = function (respObject, stdout, stderr, error) {
-    if (X.options.datasource.verboseMaintenanceLogging) {
+    if (X.options.datasource.debugging) {
       X.log(stdout);
     }
     respObject.log.push(stdout);
