@@ -103,7 +103,7 @@ regexp:true, undef:true, trailing:true, white:true */
       // this is for styling of the picker since the PickerWidget has a built in
       // input decorator
       this.$.picker.$.inputWrapper.removeClass("onyx-input-decorator");
-      
+
       // set the "mode" of this widget, whether or not it directly saves the local
       // value to the model, or if it converts it to and from the base value.
       this.setLocalMode(_.has(this.attr, "localValue"));
@@ -159,7 +159,7 @@ regexp:true, undef:true, trailing:true, white:true */
               secondEvent.value = amount;
             } else {
               secondEvent.value = basePrice;
-              
+
             }
             secondEvent.originator = { attr: that.getAmountAttr() };
             that.doValueChange(secondEvent);
@@ -236,7 +236,7 @@ regexp:true, undef:true, trailing:true, white:true */
         inEvent,
         fromUser = false,
         newValue;
-        
+
       // supports how this function is used by the base class.
       // assume if we get a number, that means the localValue or baseValue
       if (!isNaN(value)) {
