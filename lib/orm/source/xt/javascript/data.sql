@@ -844,76 +844,83 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Number} [options.lock] Lock information for pessemistic locking.
     */
     deleteRecord: function (options) {
-      var data = options.data,
-        sql = '',
-        orm = XT.Orm.fetch(options.nameSpace, options.type),
-        pkey = XT.Orm.primaryKey(orm),
-        nkey = XT.Orm.naturalKey(orm),
-        id = nkey ? this.getId(orm, data[nkey]) : data[pkey],
-        lockKey = options.lock && options.lock.key ? options.lock.key : false,
-        lockTable = orm.lockTable || orm.table,
-        etag = this.getVersion(orm, id),
-        columnKey,
-        prop,
-        ormp,
-        values,
-        ext,
-        i;
+      try {
+        var data = options.data,
+          query = '',
+          sql = '',
+          orm = XT.Orm.fetch(options.nameSpace, options.type),
+          pkey = XT.Orm.primaryKey(orm),
+          nkey = XT.Orm.naturalKey(orm),
+          id = nkey ? this.getId(orm, data[nkey]) : data[pkey],
+          lockKey = options.lock && options.lock.key ? options.lock.key : false,
+          lockTable = orm.lockTable || orm.table,
+          etag = this.getVersion(orm, id),
+          columnKey,
+          prop,
+          ormp,
+          values,
+          ext,
+          i;
 
-      /* test for optimistic lock */
-      if (etag && etag !== options.etag) {
-        plv8.elog(ERROR, "The version being patched is not current.");
-      }
-
-      /* test for pessemistic lock */
-      if (orm.lockable) {
-        lock = this.tryLock(lockTable, id, {key: lockKey});
-        if (!lock.key) {
-          plv8.elog(ERROR, "Can not obtain a lock on the record.");
+        /* Test for optimistic lock. */
+        if (etag && etag !== options.etag) {
+          plv8.elog(ERROR, "The version being patched is not current.");
         }
-      }
 
-      /* Delete children first */
-      for (prop in data) {
-        ormp = XT.Orm.getProperty(orm, prop);
-
-        /* if the property is an array of objects they must be records so delete them */
-        if (ormp.toMany && ormp.toMany.isNested) {
-          values = data[prop];
-          for (i = 0; i < values.length; i++) {
-            this.deleteRecord({
-              nameSpace: options.nameSpace,
-              type: ormp.toMany.type,
-              data: values[i]
-            });
+        /* Test for pessemistic lock. */
+        if (orm.lockable) {
+          lock = this.tryLock(lockTable, id, {key: lockKey});
+          if (!lock.key) {
+            plv8.elog(ERROR, "Can not obtain a lock on the record.");
           }
         }
-      }
 
-      /* Next delete from extension tables */
-      for (i = 0; i < orm.extensions.length; i++) {
-        ext = orm.extensions[i];
-        if (ext.table !== orm.table &&
-            !ext.isChild) {
-          columnKey = ext.relations[0].column;
-          nameKey = ext.relations[0].inverse;
-          sql = 'delete from ' + ext.table + ' where ' + columnKey + ' = $1;';
-          plv8.execute(sql, [id]);
+        /* Delete children first. */
+        for (prop in data) {
+          ormp = XT.Orm.getProperty(orm, prop);
+
+          /* If the property is an array of objects they must be records so delete them. */
+          if (ormp.toMany && ormp.toMany.isNested) {
+            values = data[prop];
+            for (i = 0; i < values.length; i++) {
+              this.deleteRecord({
+                nameSpace: options.nameSpace,
+                type: ormp.toMany.type,
+                data: values[i]
+              });
+            }
+          }
         }
-      }
 
-      /* Now delete the top */
-      nameKey = XT.Orm.primaryKey(orm);
-      columnKey = XT.Orm.primaryKey(orm, true);
-      sql = 'delete from ' + orm.table + ' where ' + columnKey + ' = $1;';
-      if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql,  id); }
+        /* Next delete from extension tables. */
+        for (i = 0; i < orm.extensions.length; i++) {
+          ext = orm.extensions[i];
+          if (ext.table !== orm.table &&
+              !ext.isChild) {
+            columnKey = ext.relations[0].column;
+            nameKey = ext.relations[0].inverse;
+            query = 'delete from %1$I where %2$I = $1';
+            sql = XT.format(query, [ext.table, columnKey]);
+            plv8.execute(sql, [id]);
+          }
+        }
 
-      /* commit the record */
-      plv8.execute(sql, [id]);
+        /* Now delete the top. */
+        nameKey = XT.Orm.primaryKey(orm);
+        columnKey = XT.Orm.primaryKey(orm, true);
+        query = 'delete from %1$I where %2$I = $1';
+        sql = XT.format(query, [orm.table, columnKey]);
+        if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql,  id); }
 
-      /* release any lock */
-      if (orm.lockable) {
-        this.releaseLock({table: lockTable, id: id});
+        /* Commit the record.*/
+        plv8.execute(sql, [id]);
+
+        /* Release any lock. */
+        if (orm.lockable) {
+          this.releaseLock({table: lockTable, id: id});
+        }
+      } catch (err) {
+        XT.error(err, arguments);
       }
     },
 
