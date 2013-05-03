@@ -21,7 +21,7 @@ var _ = require("underscore"),
     _.each(hashToTest, function (value, key) {
       // depending on how we represent sub-objects, we want to verify them in different ways
       if (typeof (data.model.get(key)) === 'object' && typeof value === 'object') {
-        // if the data is a model and the test hash looks like {contact: {id: 7}}
+        // if the data is a model and the test hash looks like {account: {number: "1000"}}
         assert.equal(data.model.get(key).id, value[data.model.get(key).idAttribute]);
       } else if (key === data.model.documentKey &&
           data.model.enforceUpperKey === true) {
