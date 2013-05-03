@@ -54,7 +54,6 @@ var _ = require("underscore"),
         }
       },
       fetchError = function () {
-        console.log("Error fleshing out mock models", JSON.stringify(arguments));
         // proceed anyway.
         objectsFetched++;
         if (objectsFetched === objectsToFetch) {
@@ -75,7 +74,7 @@ var _ = require("underscore"),
           }).relatedModel;
 
         relatedModel = new XM[relatedModelName.substring(3)]();
-        fetchObject[relatedModel.idAttribute] = value.id;
+        fetchObject.id = value[relatedModel.idAttribute];
         relatedModel.fetch(fetchObject);
         objectsToFetch++;
       } else {
@@ -109,16 +108,15 @@ var _ = require("underscore"),
       auto_regex = XM.Document.AUTO_NUMBER + "|" + XM.Document.AUTO_OVERRIDE_NUMBER,
       assertAndCallback = function () {
         assert.equal(data.model.getStatusString(), 'READY_NEW');
-        assert.isNumber(data.model.id);
+        assert.isNotNull(data.model.id);
         callback();
       },
       modelCallback = function (model, value) {
         if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
           // Check that the AUTO...NUMBER property has been set.
-          if (model.get(model.documentKey) && model.id) {
+          if (model.get(model.documentKey)) {
             clearTimeout(timeoutId);
             model.off('change:' + model.documentKey, modelCallback);
-            model.off('change:id', modelCallback);
             assertAndCallback();
           }
         } else {
@@ -128,7 +126,6 @@ var _ = require("underscore"),
         }
       };
 
-    model.on('change:id', modelCallback);
     // Add an event handler when using a model with an AUTO...NUMBER.
     if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
       model.on('change:' + model.documentKey, modelCallback);
@@ -140,6 +137,8 @@ var _ = require("underscore"),
       assert.fail("timeout was reached on create", "");
       callback();
     }, waitTime);
+
+    callback(model);
   };
 
   /**
