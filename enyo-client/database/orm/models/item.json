@@ -261,15 +261,6 @@
         }
       },
       {
-        "name": "sites",
-        "toMany": {
-          "type": "ItemSite",
-          "column": "item_id",
-          "inverse": "item",
-          "isNested": true
-        }
-      },
-      {
         "name": "accounts",
         "toMany": {
           "type": "ContactAccount",
