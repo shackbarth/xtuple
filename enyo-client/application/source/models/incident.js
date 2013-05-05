@@ -154,13 +154,12 @@ white:true*/
 
     numberPolicy: XM.Document.AUTO_NUMBER,
 
-    keyIsString: false,
-
     defaults: function () {
       return {
         owner: XM.currentUser,
         status: XM.Incident.NEW,
-        isPublic: XT.session.getSettings().get("IncidentPublicDefault")
+        isPublic: XT.session.getSettings().get("IncidentPublicDefault"),
+        created: new Date()
       };
     },
 
@@ -168,6 +167,7 @@ white:true*/
       "account",
       "category",
       "contact",
+      "created",
       "description",
       "status"
     ],
