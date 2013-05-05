@@ -864,6 +864,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "description1"},
             {kind: "XV.InputWidget", attr: "description2"},
             {kind: "XV.UnitPicker", attr: "inventoryUnit"},
+            {kind: "XV.ItemTypePicker", attr: "itemType"},
             {kind: "XV.ClassCodePicker", attr: "classCode"},
             {kind: "XV.CheckboxWidget", attr: "isFractional"},
             {kind: "onyx.GroupboxHeader", content: "_product".loc()},

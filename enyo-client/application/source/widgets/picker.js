@@ -201,6 +201,17 @@ regexp:true, undef:true, trailing:true, white:true */
   });
   
   // ..........................................................
+  // ITEM TYPE
+  //
+
+  enyo.kind({
+    name: "XV.ItemTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.itemTypes",
+    valueAttribute: "id"
+  });
+  
+  // ..........................................................
   // LEDGER ACCOUNT TYPE
   //
 

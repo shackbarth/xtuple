@@ -24,7 +24,7 @@ white:true*/
     var accountType = new XM.AccountTypeModel(accountTypeJson[i]);
     XM.accountTypes.add(accountType);
   }
-  
+
   // Configuration
   var configurationJson = {
     model: "XM.databaseInformation",
@@ -41,7 +41,7 @@ white:true*/
   XM.configurations = new XM.ConfigurationCollection();
   var configuration = new XM.ConfigurationModel(configurationJson);
   XM.configurations.add(configuration);
-  
+
   // Balance Methods
   var balanceMethodJson = [
     { id: "B", name: "_balanceForward".loc() },
@@ -57,7 +57,7 @@ white:true*/
     var balanceMethod = new XM.BalanceMethodModel(balanceMethodJson[i]);
     XM.balanceMethods.add(balanceMethod);
   }
-  
+
   // Credit Status
   var creditStatusJson = [
     { id: "G", name: "_goodStanding".loc() },
@@ -74,7 +74,7 @@ white:true*/
     var creditStatus = new XM.CreditStatusModel(creditStatusJson[i]);
     XM.creditStatuses.add(creditStatus);
   }
-  
+
   // Incident Status (TODO: There is actually already a table for this one...)
   var incidentStatusJson = [
     { id: "N", name: "_new".loc() },
@@ -93,7 +93,32 @@ white:true*/
     var incidentStatus = new XM.IncidentStatusModel(incidentStatusJson[i]);
     XM.incidentStatuses.add(incidentStatus);
   }
-  
+
+  // Item type
+  var K = XM.Item;
+  var itemTypeJson = [
+    { id: K.REFERENCE, name: "_reference".loc() },
+    { id: K.MANUFACTURED, name: "_manufactured".loc() },
+    { id: K.PURCHASED, name: "_purchased".loc() },
+    { id: K.KIT, name: "_kit".loc() },
+    { id: K.PHANTOM, name: "_phantom".loc() },
+    { id: K.OUTSIDE_PROCESS, name: "_outsideProcess".loc() },
+    { id: K.COSTING, name: "_costing".loc() },
+    { id: K.PLANNING, name: "_planning".loc() },
+    { id: K.BREEDER, name: "_breeder".loc() },
+    { id: K.CO_PRODUCT, name: "_coProduct".loc() },
+    { id: K.BY_PRODUCT, name: "_byProduct".loc() }
+  ];
+  XM.ItemTypeModel = Backbone.Model.extend();
+  XM.ItemTypeCollection = Backbone.Collection.extend({
+    model: XM.ItemTypeModel
+  });
+  XM.itemTypes = new XM.ItemTypeCollection();
+  for (i = 0; i < itemTypeJson.length; i++) {
+    var itemType = new XM.ItemTypeModel(itemTypeJson[i]);
+    XM.itemTypes.add(itemType);
+  }
+
   // Ledger Account Type
   var ledgerAccountTypeJson = [
     { id: "A", name: "_asset".loc() },
@@ -112,7 +137,7 @@ white:true*/
     var ledgerAccountType = new XM.LedgerAccountTypeModel(accountTypeJson[i]);
     XM.ledgerAccountTypes.add(ledgerAccountType);
   }
-  
+
   // Number Policy
   var numberPolicyJson = [
     { id: "M", name: "_manual".loc() },
@@ -129,7 +154,7 @@ white:true*/
     var numberPolicy = new XM.NumberPolicyModel(numberPolicyJson[i]);
     XM.numberPolicies.add(numberPolicy);
   }
-  
+
   // Project Status
   var projectStatusJson = [
     { id: "P", name: "_concept".loc() },
@@ -146,7 +171,7 @@ white:true*/
     var projectStatus = new XM.ProjectStatusModel(projectStatusJson[i]);
     XM.projectStatuses.add(projectStatus);
   }
-  
+
   // Characteristic Type
   var characteristicTypeJson = [
     { id: 0, name: "_text".loc() },
@@ -163,7 +188,7 @@ white:true*/
     var characteristicType = new XM.CharacteristicTypeModel(characteristicTypeJson[i]);
     XM.characteristicTypes.add(characteristicType);
   }
-  
+
   // Terms Type
   var termsTypeJson = [
     { id: "D", name: "_days".loc() },
@@ -179,7 +204,7 @@ white:true*/
     var termsType = new XM.TermsTypeModel(termsTypeJson[i]);
     XM.termsTypes.add(termsType);
   }
-  
+
   // Hold Type
   var holdTypeJson = [
     { id: "C", name: "_credit".loc() },
@@ -197,5 +222,5 @@ white:true*/
     var holdType = new XM.HoldTypeModel(holdTypeJson[i]);
     XM.holdTypes.add(holdType);
   }
-  
+
 }());

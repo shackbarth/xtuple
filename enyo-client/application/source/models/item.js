@@ -184,6 +184,7 @@ white:true*/
         isActive: true,
         isFractional: false,
         isSold: true,
+        itemType: XM.Item.MANUFACTURED,
         listPrice: 0,
         productCategory: XM.emptyProductCategory
       };
@@ -195,6 +196,7 @@ white:true*/
       "isActive",
       "isFractional",
       "isSold",
+      "itemType",
       "listPrice",
       "priceUnit",
       "productCategory"
@@ -246,6 +248,132 @@ white:true*/
 
   // Add in item mixin
   XM.Item = XM.Item.extend(XM.ItemMixin);
+
+
+  _.extend(XM.Incident, {
+    /** @scope XM.Incident */
+
+    /**
+      Reference item.
+
+      @static
+      @constant
+      @type String
+      @default R
+    */
+    REFERENCE: 'R',
+
+    /**
+      Manufactured item.
+
+      @static
+      @constant
+      @type String
+      @default M
+    */
+    MANUFACTURED: 'M',
+
+    /**
+      Purchased item
+
+      @static
+      @constant
+      @type String
+      @default P
+    */
+    PURCHASED: 'P',
+
+    /**
+      Tooling item.
+
+      @static
+      @constant
+      @type String
+      @default T
+    */
+    TOOLING: 'T',
+
+    /**
+      Phantom item.
+
+      @static
+      @constant
+      @type String
+      @default F
+    */
+    PHANTOM: 'F',
+
+    /**
+      Costing item.
+
+      @static
+      @constant
+      @type String
+      @default S
+    */
+    COSTING: 'S',
+
+    /**
+      Outside process item.
+
+      @static
+      @constant
+      @type String
+      @default O
+    */
+    OUTSIDE_PROCESS: 'O',
+
+    /**
+      Planning item.
+
+      @static
+      @constant
+      @type String
+      @default L
+    */
+    PLANNING: 'L',
+
+    /**
+      Kit item.
+
+      @static
+      @constant
+      @type String
+      @default K
+    */
+    KIT: 'K',
+
+    /**
+      Outside process item.
+
+      @static
+      @constant
+      @type String
+      @default O
+    */
+    BREEDER: 'B',
+
+    /**
+      Co-product.
+
+      @static
+      @constant
+      @type String
+      @default C
+    */
+    CO_PRODUCT: 'C',
+
+    /**
+      By-product.
+
+      @static
+      @constant
+      @type String
+      @default Y
+    */
+    BY_PRODUCT: 'C'
+
+  });
 
   /**
     @class

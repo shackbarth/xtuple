@@ -141,6 +141,13 @@
         }
       },
       {
+        "name": "itemType",
+        "attr": {
+          "type": "String",
+          "column": "item_type"
+        }
+      },
+      {
         "name": "classCode",
         "toOne": {
           "type": "ClassCode",
@@ -843,6 +850,13 @@
         }
       },
       {
+        "name": "itemType",
+        "attr": {
+          "type": "String",
+          "column": "item_type"
+        }
+      },
+      {
         "name": "classCode",
         "toOne": {
           "type": "ClassCode",
@@ -1018,6 +1032,13 @@
         "attr": {
           "type": "String",
           "column": "item_descrip2"
+        }
+      },
+      {
+        "name": "itemType",
+        "attr": {
+          "type": "String",
+          "column": "item_type"
         }
       },
       {
