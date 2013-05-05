@@ -76,13 +76,14 @@ white:true*/
   }
 
   // Incident Status (TODO: There is actually already a table for this one...)
+  var K = XM.Incident;
   var incidentStatusJson = [
-    { id: "N", name: "_new".loc() },
-    { id: "F", name: "_feedback".loc() },
-    { id: "C", name: "_confirmed".loc() },
-    { id: "A", name: "_assigned".loc() },
-    { id: "R", name: "_resolved".loc() },
-    { id: "L", name: "_closed".loc() }
+    { id: K.NEW, name: "_new".loc() },
+    { id: K.FEEDBACK, name: "_feedback".loc() },
+    { id: K.CONFIRMED, name: "_confirmed".loc() },
+    { id: K.ASSIGNED, name: "_assigned".loc() },
+    { id: K.RESOLVED, name: "_resolved".loc() },
+    { id: K.CLOSED, name: "_closed".loc() }
   ];
   XM.IncidentStatusModel = Backbone.Model.extend();
   XM.IncidentStatusCollection = Backbone.Collection.extend({
@@ -95,7 +96,7 @@ white:true*/
   }
 
   // Item type
-  var K = XM.Item;
+  K = XM.Item;
   var itemTypeJson = [
     { id: K.REFERENCE, name: "_reference".loc() },
     { id: K.MANUFACTURED, name: "_manufactured".loc() },
@@ -120,12 +121,13 @@ white:true*/
   }
 
   // Ledger Account Type
+  K = XM.LedgerAccount;
   var ledgerAccountTypeJson = [
-    { id: "A", name: "_asset".loc() },
-    { id: "L", name: "_liability".loc() },
-    { id: "R", name: "_revenue".loc() },
-    { id: "E", name: "_expense".loc() },
-    { id: "Q", name: "_equity".loc() }
+    { id: K.ASSET, name: "_asset".loc() },
+    { id: K.LIABILITY, name: "_liability".loc() },
+    { id: K.REVENUE, name: "_revenue".loc() },
+    { id: K.EXPENSE, name: "_expense".loc() },
+    { id: K.EQUITY, name: "_equity".loc() }
   ];
   XM.LedgerAccountTypeModel = Backbone.Model.extend({
   });
@@ -139,10 +141,11 @@ white:true*/
   }
 
   // Number Policy
+  K = XM.Document;
   var numberPolicyJson = [
-    { id: "M", name: "_manual".loc() },
-    { id: "A", name: "_automatic".loc() },
-    { id: "O", name: "_automaticOverride".loc() }
+    { id: K.MANUAL_NUMBER, name: "_manual".loc() },
+    { id: K.AUTO_NUMBER, name: "_automatic".loc() },
+    { id: K.AUTO_OVERRIDE_NUMBER, name: "_automaticOverride".loc() }
   ];
   XM.NumberPolicyModel = Backbone.Model.extend({
   });
@@ -157,9 +160,9 @@ white:true*/
 
   // Project Status
   var projectStatusJson = [
-    { id: "P", name: "_concept".loc() },
-    { id: "O", name: "_inProcess".loc() },
-    { id: "C", name: "_completed".loc() }
+    { id: K.CONCEPT, name: "_concept".loc() },
+    { id: K.IN_PROCESS, name: "_inProcess".loc() },
+    { id: K.COMPLETED, name: "_completed".loc() }
   ];
   XM.ProjectStatusModel = Backbone.Model.extend({
   });
@@ -173,10 +176,11 @@ white:true*/
   }
 
   // Characteristic Type
+  K = XM.Characteristic;
   var characteristicTypeJson = [
-    { id: 0, name: "_text".loc() },
-    { id: 1, name: "_list".loc() },
-    { id: 2, name: "_date".loc() }
+    { id: K.TEXT, name: "_text".loc() },
+    { id: K.LIST, name: "_list".loc() },
+    { id: K.DATE, name: "_date".loc() }
   ];
   XM.CharacteristicTypeModel = Backbone.Model.extend({
   });

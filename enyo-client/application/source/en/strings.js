@@ -278,6 +278,7 @@ var lang = XT.stringsFor("en_US", {
   "_isItems": "Items",
   "_isMessage": "Message",
   "_isOpportunities": "Opportunities",
+  "_isPicklist": "Picklist",
   "_isPosted": "Posted",
   "_isPrinted": "Printed",
   "_isPublic": "Public",

@@ -210,6 +210,7 @@ white:true*/
       XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on('change:inventoryUnit', this.inventoryUnitDidChange);
       this.on('change:isSold', this.isSoldDidChange);
+      this.on('change:itemType', this.itemTypeDidChange);
       this.on('statusChange', this.isSoldDidChange);
     },
 
@@ -225,6 +226,93 @@ white:true*/
         this.setReadOnly('priceUnit', isNotSold);
         this.setReadOnly('listPrice', isNotSold);
       }
+    },
+    
+    itemTypeDidChange: function () {
+      var K = XM.Item,
+        itemType = this.get("itemType"),
+        pickList = false,
+        sold = false,
+        weight = false,
+        config = false,
+        purchased = false,
+        freight   = false;
+      this.setReadOnly("configured");
+      switch (itemType)
+      {
+      case K.PURCHASED:
+        pickList = true;
+        sold = true;
+        weight = true;
+        purchased = true;
+        freight = true;
+        break;
+      case K.MANUFACTURED:
+        pickList = true;
+        sold = true;
+        weight = true;
+        config = true;
+        purchased = true;
+        freight  = true;
+        break;
+      case K.BREEDER:
+        purchased = true;
+        freight  = true;
+        break;
+      case K.CO_PRODUCT:
+        pickList = true;
+        sold = true;
+        weight = true;
+        freight = true;
+        break;
+      case K.BY_PRODUCT:
+        pickList = true;
+        sold = true;
+        weight = true;
+        freight  = true;
+        break;
+      case K.REFERENCE:
+        sold = true;
+        weight = true;
+        freight  = true;
+        config   = true;
+        break;
+      case K.TOOLING:
+        pickList = true;
+        weight = true;
+        freight = true;
+        purchased = true;
+        sold = true;
+        break;
+      case K.OUTSIDE_PROCESS:
+        purchased = true;
+        freight  = true;
+        break;
+      case K.KIT:
+        sold = true;
+        weight   = true;
+        this.set("isFractional", false);
+      }
+      this.setReadOnly("isFractional", itemType === K.KIT);
+      //TODO: Set unit conversions read only if kit
+
+      this.setReadOnly("isConfigured", !config);
+      if (!config) { this.set("isConfigured", false); }
+
+      this.set("isPicklist", pickList);
+      this.setReadOnly("isPicklist", !pickList);
+
+      this.set("isSold", sold);
+
+      this.setReadOnly("productWeight", !weight);
+      this.setReadOnly("packageWeight", !weight);
+
+      this.setReadOnly("freightClass", !freight);
+
+      // TODO: if not purchased or privs, set sources to read only
+      // privs = ViewItemSources or MaintainItemSources
+      
+      // TODO: Check inventory situation if changing to non-inventory type
     },
 
     statusDidChange: function () {
@@ -250,8 +338,8 @@ white:true*/
   XM.Item = XM.Item.extend(XM.ItemMixin);
 
 
-  _.extend(XM.Incident, {
-    /** @scope XM.Incident */
+  _.extend(XM.Item, {
+    /** @scope XM.Item */
 
     /**
       Reference item.

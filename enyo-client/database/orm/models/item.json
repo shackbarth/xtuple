@@ -178,6 +178,13 @@
         }
       },
       {
+        "name": "isPicklist",
+        "attr": {
+          "type": "Boolean",
+          "column": "item_picklist"
+        }
+      },
+      {
         "name": "notes",
         "attr": {
           "type": "String",

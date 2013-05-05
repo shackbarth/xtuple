@@ -208,7 +208,8 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.ItemTypePicker",
     kind: "XV.PickerWidget",
     collection: "XM.itemTypes",
-    valueAttribute: "id"
+    valueAttribute: "id",
+    showNone: false
   });
   
   // ..........................................................
