@@ -273,7 +273,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "Incident",
-    "table": "incdt",
+    "table": "xt.incdtxt",
     "isExtension": true,
     "comment": "Extended by Crm",
     "relations": [

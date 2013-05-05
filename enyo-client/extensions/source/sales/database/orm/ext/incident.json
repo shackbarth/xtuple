@@ -3,7 +3,7 @@
     "context": "sales",
     "nameSpace": "XM",
     "type": "Incident",
-    "table": "incdt",
+    "table": "xt.incdtxt",
     "isExtension": true,
     "comment": "Extended by Sales",
     "relations": [
