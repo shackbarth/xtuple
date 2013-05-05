@@ -878,6 +878,13 @@
         }
       },
       {
+        "name": "isFractional",
+        "attr": {
+          "type": "Boolean",
+          "column": "item_fractional"
+        }
+      },
+      {
         "name": "isSold",
         "attr": {
           "type": "Boolean",
@@ -896,6 +903,20 @@
         "attr": {
           "type": "String",
           "column": "item_upccode"
+        }
+      },
+      {
+        "name": "listPrice",
+        "attr": {
+          "type": "String",
+          "column": "item_listprice"
+        }
+      },
+      {
+        "name": "priceUnit",
+        "toOne": {
+          "type": "Unit",
+          "column": "item_price_uom_id"
         }
       },
       {

@@ -746,28 +746,50 @@ trailing:true white:true*/
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", isKey: true},
-              {kind: "XV.ListAttr", attr: "unit.name", fit: true,
+              {kind: "XV.ListAttr", attr: "inventoryUnit.name", fit: true,
                 classes: "right"}
             ]},
-            {kind: "XV.ListAttr", attr: "description1"}
+            {kind: "XV.ListAttr", formatter: "formatDescription"}
           ]},
           {kind: "XV.ListColumn", classes: "second",
             components: [
-            {kind: "XV.ListAttr", attr: "classCode.code", classes: "italic"},
-            {kind: "XV.ListAttr", attr: "productCategory.code"}
+            {kind: "XV.ListAttr", attr: "getItemTypeString", classes: "italic"},
+            {kind: "XV.ListAttr", attr: "classCode.code"}
+          ]},
+          {kind: "XV.ListColumn", classes: "third", components: [
+            {kind: "XV.ListAttr", attr: "listPrice", formatter: "formatPrice"},
+            {kind: "XV.ListAttr", attr: "isFractional", formatter: "formatFractional"}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "isActive", formatter: "formatActive"},
-            {kind: "XV.ListAttr", attr: "isSold", formatter: "formatSold"}
+            {kind: "XV.ListAttr", attr: "priceUnit.name", formatter: "formatPriceUnit"},
+            {kind: "XV.ListAttr", attr: "productCategory.code"}
           ]}
         ]}
       ]}
     ],
-    formatActive: function (value, view, model) {
-      return value ? "_active".loc() : "";
+    formatFractional: function (value, view, model) {
+      return value ? "_fractional".loc() : "";
     },
-    formatSold: function (value, view, model) {
-      return value ? "_sold".loc() : "";
+    formatPrice: function (value, view, model) {
+      var sold = model.get("isSold");
+      if (XT.session.privileges.get("ViewListPrices") && sold) {
+        var scale = XT.session.locale.attributes.salesPriceScale;
+        return Globalize.format(value, "c" + scale);
+      }
+      view.addRemoveClass("placeholder", true);
+      if (!sold) {
+        return "_notSold".loc();
+      }
+      return "--";
+    },
+    formatPriceUnit: function (value, view, model) {
+      if (XT.session.privileges.get("ViewListPrices") && model.get("isSold")) {
+        return value;
+      }
+      return "";
+    },
+    formatDescription: function (value, view, model) {
+      return (model.get("description1") || "") + " - " + (model.get("description2") || "");
     }
   });
 

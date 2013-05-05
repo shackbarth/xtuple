@@ -377,6 +377,8 @@ trailing:true white:true*/
       },
       {name: "number", label: "_number".loc(), attr: "number"},
       {name: "description", label: "_description".loc(), attr: ["description1", "description2"]},
+      {name: "itemType", label: "_type".loc(), attr: "itemType",
+        defaultKind: "XV.ItemTypePicker"},
       {name: "classCode", label: "_classCode".loc(), attr: "classCode",
         defaultKind: "XV.ClassCodePicker"},
       {name: "category", label: "_category".loc(), attr: "productCategory",

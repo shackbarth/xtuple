@@ -98,14 +98,15 @@ white:true*/
   // Item type
   K = XM.Item;
   var itemTypeJson = [
-    { id: K.REFERENCE, name: "_reference".loc() },
-    { id: K.MANUFACTURED, name: "_manufactured".loc() },
     { id: K.PURCHASED, name: "_purchased".loc() },
-    { id: K.KIT, name: "_kit".loc() },
+    { id: K.MANUFACTURED, name: "_manufactured".loc() },
     { id: K.PHANTOM, name: "_phantom".loc() },
-    { id: K.OUTSIDE_PROCESS, name: "_outsideProcess".loc() },
+    { id: K.REFERENCE, name: "_reference".loc() },
     { id: K.COSTING, name: "_costing".loc() },
+    { id: K.TOOLING, name: "_tooling".loc() },
+    { id: K.OUTSIDE_PROCESS, name: "_outsideProcess".loc() },
     { id: K.PLANNING, name: "_planning".loc() },
+    { id: K.KIT, name: "_kit".loc() },
     { id: K.BREEDER, name: "_breeder".loc() },
     { id: K.CO_PRODUCT, name: "_coProduct".loc() },
     { id: K.BY_PRODUCT, name: "_byProduct".loc() }

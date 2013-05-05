@@ -10,6 +10,45 @@ white:true*/
     Mixin for item classes
   */
   XM.ItemMixin = {
+    
+    /**
+    Returns item type as a localized string.
+
+    @returns {String}
+    */
+    getItemTypeString: function () {
+      var K = XM.Item,
+        itemType = this.get('itemType');
+      switch (itemType)
+      {
+      case K.PURCHASED:
+        return '_purchased'.loc();
+      case K.MANUFACTURED:
+        return '_manufactured'.loc();
+      case K.PHANTOM:
+        return '_phantom'.loc();
+      case K.COSTING:
+        return '_costing'.loc();
+      case K.REFERENCE:
+        return '_reference'.loc();
+      case K.PLANNING:
+        return '_planning'.loc();
+      case K.OUTSIDE_PROCESS:
+        return '_outsideProcess'.loc();
+      case K.TOOLING:
+        return '_tooling'.loc();
+      case K.KIT:
+        return '_kit'.loc();
+      case K.BREEDER:
+        return '_breeder'.loc();
+      case K.CO_PRODUCT:
+        return '_coProduct'.loc();
+      case K.BY_PRODUCT:
+        return '_byProduct'.loc();
+      }
+      return '_error'.loc();
+    },
+    
     /**
       Requests on array of material issue units from the server.
 
@@ -184,7 +223,7 @@ white:true*/
         isActive: true,
         isFractional: false,
         isSold: true,
-        itemType: XM.Item.MANUFACTURED,
+        itemType: XM.Item.PURCHASED,
         listPrice: 0,
         productCategory: XM.emptyProductCategory
       };
@@ -476,6 +515,8 @@ white:true*/
     editableModel: 'XM.Item'
 
   });
+  
+  XM.ItemListItem = XM.ItemListItem.extend(XM.ItemMixin);
 
   /**
     @class
