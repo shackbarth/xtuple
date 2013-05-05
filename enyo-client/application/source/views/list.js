@@ -789,7 +789,10 @@ trailing:true white:true*/
       return "";
     },
     formatDescription: function (value, view, model) {
-      return (model.get("description1") || "") + " - " + (model.get("description2") || "");
+      var descrip1 = model.get("description1") || "",
+        descrip2 = model.get("description2") || "",
+        sep = descrip2 ? " - " : "";
+      return descrip1 + sep + descrip2;
     }
   });
 
