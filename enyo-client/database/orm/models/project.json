@@ -731,6 +731,7 @@
      {
        "name": "project",
        "toOne": {
+         "isNested": true,
          "type": "ProjectRelation",
          "column": "prjtask_prj_id"
        }

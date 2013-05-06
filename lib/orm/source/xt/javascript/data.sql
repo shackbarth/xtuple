@@ -475,7 +475,7 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {String} [options.type] Type. Required.
       @param {Object} [options.data] The data payload to be processed. Required
       @param {Number} [options.etag] Record version for optimistic locking.
-      @param {Number} [options.lock] Lock information for pessemistic locking.
+      @param {Object} [options.lock] Lock information for pessemistic locking.
       @param {Boolean} [options.superUser=false] If true ignore privilege checking.
       @param {String} [options.encryptionKey] Encryption key.
     */
@@ -662,7 +662,7 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {String} [options.type] Type. Required.
       @param {Object} [options.data] The data payload to be processed. Required.
       @param {Number} [options.etag] Record version for optimistic locking.
-      @param {Number} [options.lock] Lock information for pessemistic locking.
+      @param {Object} [options.lock] Lock information for pessemistic locking.
       @param {String} [options.encryptionKey] Encryption key.
     */
     updateRecord: function (options) {
