@@ -227,12 +227,12 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
    */
   XT.error = function (error, args) {
     var message = error.stack + "\n" + "Call args=",
-        len = 975 - message.length, /* Minus 15 for "ERROR:  Error: ". */
+        len = 990, /* Minus 15 for "ERROR:  Error: ". */
         params = "",
         avglen = len / args.length;
 
     /* Total error message size in plv8 is 1000 characters. */
-    /* Take the remaining length and split it up evening amung the args. */
+    /* Take the length and split it up evening amung the args. */
     for(var i = 0; i < args.length; i++) {
       var strg = JSON.stringify(args[i] || 'null', null, 2);
 
@@ -248,7 +248,15 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
       // We could do some calc to maximize the trim per variable arg length.
     }
 
-    plv8.elog(ERROR, message, params);
+    if (DEBUG) {
+      /* This can give you some more info if the error will not fit. */
+      plv8.elog(WARNING, message.substring(0, 965));
+      plv8.elog(WARNING, params.substring(0, 990));
+    }
+
+    /* Some times the stack trace can eat up the full 1000 char message. */
+    /* The params will not print. Do a hard trim to 965 so something prints. */
+    plv8.elog(ERROR, (message + params).substring(0, 965));
   }
 
   /**
