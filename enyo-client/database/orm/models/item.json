@@ -203,7 +203,7 @@
         "toOne": {
           "type": "ProductCategory",
           "column": "item_prodcat_id",
-          "required": true
+          "nullValue": -1
         }
       },
       {

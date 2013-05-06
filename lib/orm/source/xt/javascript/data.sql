@@ -642,6 +642,11 @@ select xt.install_js('XT','Data','xtuple', $$
             count++;
             params.values.push(val);
           }
+        /* Handle null value if applicable */
+        } else if ((val == undefined || val === null) && attr.nullValue ) {
+          params.expressions.push('$' + count);
+          count++;
+          params.values.push(ormp.nullValue);    
         }
       }
 
@@ -807,7 +812,13 @@ select xt.install_js('XT','Data','xtuple', $$
           } else if (ormp.name !== pkey) {
             /* Unfortuantely dates and nulls aren't handled correctly by parameters */
             if (val === null) {
-              params.expressions.push(qprop.concat(' = null'));
+              if (attr.nullValue) {
+                params.expressions.push(qprop.concat(' = $' + count));
+                params.values.push(attr.nullValue);
+                count++;
+              } else {
+                params.expressions.push(qprop.concat(' = null'));
+              }
             } else if (val instanceof Date) {
               params.expressions.push(qprop.concat(" = '" + JSON.stringify(val) + "'"));
             } else {
