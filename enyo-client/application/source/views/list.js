@@ -1082,16 +1082,15 @@ trailing:true white:true*/
   XV.registerModelList("XM.ProjectRelation", "XV.ProjectList");
 
   enyo.kind({
-    name: "XV.ProjectTaskList",
+    name: "XV.TaskList",
     kind: "XV.List",
-    label: "_projectTasks".loc(),
-    collection: "XM.ProjectTaskListItemCollection",
+    label: "_tasks".loc(),
+    collection: "XM.TaskListItemCollection",
     query: {orderBy: [
       {attribute: 'dueDate'},
       {attribute: 'number'}
     ]},
     parameterWidget: "XV.ProjectTaskListParameters",
-    canAddNew: false,
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
