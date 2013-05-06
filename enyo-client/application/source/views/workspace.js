@@ -567,7 +567,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.CustomerType", "XV.CustomerTypeWorkspace");
-  
+
   // ..........................................................
   // CLASS CODE
   //
@@ -1152,11 +1152,11 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.ProjectListItem", "XV.ProjectWorkspace");
 
   enyo.kind({
-    name: "XV.ProjectTaskWorkspace",
+    name: "XV.TaskWorkspace",
     kind: "XV.Workspace",
-    title: "_projectTask".loc(),
+    title: "_task".loc(),
     headerAttrs: ["number", "-", "name"],
-    model: "XM.ProjectTask",
+    model: "XM.Task",
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         classes: "xv-top-panel", fit: true, components: [
@@ -1164,6 +1164,7 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
+            {kind: "XV.ProjectWidget", attr: "project"},
             {kind: "XV.InputWidget", attr: "number"},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.ProjectStatusPicker", attr: "status"},
@@ -1194,8 +1195,8 @@ trailing:true white:true*/
     ]
   });
 
-  XV.registerModelWorkspace("XM.ProjectTask", "XV.ProjectTaskWorkspace");
-  XV.registerModelWorkspace("XM.ProjectTaskListItem", "XV.ProjectTaskWorkspace");
+  XV.registerModelWorkspace("XM.Task", "XV.TaskWorkspace");
+  XV.registerModelWorkspace("XM.TaskListItem", "XV.TaskWorkspace");
 
   // ..........................................................
   // PROSPECT
