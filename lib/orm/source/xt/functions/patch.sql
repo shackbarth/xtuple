@@ -25,6 +25,7 @@ create or replace function xt.patch(data_hash text) returns text as $$
     rec,
     ret;
 
+  dataHash.superUser = false;
   if (dataHash.username) { XT.username = dataHash.username; }
 
   /* get the current version of the record */

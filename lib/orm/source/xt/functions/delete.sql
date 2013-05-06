@@ -20,6 +20,7 @@ create or replace function xt.delete(data_hash text) returns boolean as $$
     rec,
     ret;
 
+  dataHash.superUser = false;
   if (dataHash.username) { XT.username = dataHash.username; }
 
   /* get the current version of the record */
