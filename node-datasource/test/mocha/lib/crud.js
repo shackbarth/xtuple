@@ -17,7 +17,7 @@ var _ = require("underscore"),
     if (!data.autoTestAttributes) {
       return;
     }
-    var hashToTest = data.updated ? _.extend(data.createHash, data.updateHash) : data.createHash;
+    var hashToTest = data.updated ? _.extend(JSON.parse(JSON.stringify(data.createHash)), data.updateHash) : data.createHash;
     _.each(hashToTest, function (value, key) {
       // depending on how we represent sub-objects, we want to verify them in different ways
       if (typeof (data.model.get(key)) === 'object' && typeof value === 'object') {
@@ -258,17 +258,21 @@ var _ = require("underscore"),
             var secondSaveCallback = function () {
 
               // Step 8: delete the model from the database
+              if (data.verbose) { console.log("destroy model", data.recordType); }
               destroy(data, done);
             }
 
             // Step 6: set the model with updated data
+            if (data.verbose) { console.log("update model", data.recordType); }
             update(data);
 
             // Step 7: save the updated model to the database
+            if (data.verbose) { console.log("save updated model", data.recordType); }
             save(data, secondSaveCallback);
           }
 
           // Step 5: save the data to the database
+          if (data.verbose) { console.log("save model", data.recordType); }
           save(data, saveCallback);
         };
 
@@ -279,10 +283,13 @@ var _ = require("underscore"),
             data.setCallback(data, tempSetCallback);
           }
         }
+        if (data.verbose) { console.log("set model", data.recordType); }
+        data.updated = false;
         setModel(data, setCallback);
       };
 
       // Step 2: create the model per the record type specified
+      if (data.verbose) { console.log("create model", data.recordType); }
       data.model = new XM[data.recordType.substring(3)]();
       assert.equal(data.model.recordType, data.recordType);
 
@@ -293,11 +300,12 @@ var _ = require("underscore"),
           data.initCallback(data, tempInitCallback);
         }
       }
+      if (data.verbose) { console.log("init model", data.recordType); }
       init(data, initCallback);
     };
 
     // Step 1: load the environment with Zombie
-    zombieAuth.loadApp({callback: runCrud, verbose: false});
+    zombieAuth.loadApp({callback: runCrud, verbose: data.verbose});
   };
 
 }());
