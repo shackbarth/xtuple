@@ -234,7 +234,7 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     /* Total error message size in plv8 is 1000 characters. */
     /* Take the remaining length and split it up evening amung the args. */
     for(var i = 0; i < args.length; i++) {
-      var strg = JSON.stringify(args[i], null, 2);
+      var strg = JSON.stringify(args[i] || 'null', null, 2);
 
       params = params + "\n[" + i + "]=";
 
@@ -286,7 +286,14 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
       /* Pass 'string' to format() as the first parameter. */
       args.unshift(string);
 
+      if (DEBUG) {
+        plv8.elog(NOTICE, 'sql =', query);
+        plv8.elog(NOTICE, 'args =', JSON.stringify(args, null, 2));
+      }
       string = plv8.execute(query, args)[0].format;
+
+      /* Remove 'string' from args to prevent reference errors. */
+      args.shift();
 
       return string;
     } catch (err) {
