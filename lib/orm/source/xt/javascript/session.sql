@@ -95,7 +95,7 @@ select xt.install_js('XT','Session','xtuple', $$
     @param {String} Schema name
     @returns {Hash}
   */
-  XT.Session.schema = function() {
+  XT.Session.schema = function(schema) {
     var sql = 'select c.relname as "type", ' +
               '  attname as "column", ' +
               '  typcategory as "category", ' +
@@ -104,13 +104,10 @@ select xt.install_js('XT','Session','xtuple', $$
               '  join pg_namespace n on n.oid = c.relnamespace' +
               '  join pg_attribute a on a.attrelid = c.oid ' +
               '  join pg_type t on a.atttypid = t.oid ' +
-              'where n.nspname in ( ' +
-              ' select distinct lower(orm_namespace) from XT.Orm ' +
-              ') ' + 
+              'where n.nspname = $1 ' +
               'and relkind = \'v\' ' +
               'order by c.relname, attnum',
-      schema,
-      recs = plv8.execute(sql),
+      recs = plv8.execute(sql, [schema]),
       type,
       prev = '',
       name,
@@ -220,19 +217,21 @@ select xt.install_js('XT','Session','xtuple', $$
     }
 
     /* Handle configuration settings */
-    for (type in XM) {
-      if (XM.hasOwnProperty(type) &&
-          XM[type].options &&
-          XT.typeOf(XM[type].options) === 'array') {
-        options = XM[type].options;
-        result[type] = {};
-        result[type].columns = [];
-        for (i = 0; i < options.length; i++) {
-          column = { 
-            name: options[i],
-            category: 'X'
+    if (schema === 'xm') {
+      for (type in XM) {
+        if (XM.hasOwnProperty(type) &&
+            XM[type].options &&
+            XT.typeOf(XM[type].options) === 'array') {
+          options = XM[type].options;
+          result[type] = {};
+          result[type].columns = [];
+          for (i = 0; i < options.length; i++) {
+            column = { 
+              name: options[i],
+              category: 'X'
+            }
+            result[type].columns.push(column);
           }
-          result[type].columns.push(column);
         }
       }
     }

@@ -950,8 +950,8 @@ trailing:true white:true*/
             {kind: "XV.AccountWidget", attr: "account"},
             {kind: "XV.ContactWidget", attr: "contact"},
             {kind: "XV.MoneyWidget", attr: {localValue: "amount", currency: "currency"},
-              label: "_amount".loc()},
-            {kind: "XV.PercentWidget", attr: "probability"},
+              label: "_amount".loc(), effective: new Date()},
+            {kind: "XV.NumberWidget", attr: "probability"},
             {kind: "onyx.GroupboxHeader", content: "_status".loc()},
             {kind: "XV.OpportunityStagePicker", attr: "opportunityStage",
               label: "_stage".loc()},
@@ -1892,7 +1892,7 @@ trailing:true white:true*/
 
   XV.registerModelWorkspace("XM.TaxAuthority", "XV.TaxAuthorityWorkspace");
   XV.registerModelWorkspace("XM.TaxAuthorityRelation", "XV.TaxAuthorityWorkspace");
-  
+
   // ..........................................................
   // TAX CODE
   //

@@ -3,7 +3,7 @@ select xt.create_view('xt.opheadinfo', $$
      crmacct_number, cntct_number  
    from ophead  
      join crmacct on crmacct_id=ophead_crmacct_id 
-     join cntct on cntct_id=ophead_cntct_id 
+     left join cntct on cntct_id=ophead_cntct_id 
      left join incdtpriority on (ophead_priority_id=incdtpriority_id);
 $$);
 

@@ -57,9 +57,9 @@
       autoTestAttributes: true,
       createHash: {
         calculateFreight: true,
-        customer: { id: 95 }, // TTOYS
-        terms: { id: 42 },
-        salesRep: { id: 32 },
+        customer: { number: "TTOYS" },
+        terms: { code: "COD" },
+        salesRep: { number: "2000" },
         wasQuote: true
       },
       /**
@@ -76,9 +76,9 @@
       autoTestAttributes: true,
       createHash: {
         calculateFreight: true,
-        customer: { id: 95 }, // TTOYS
-        terms: { id: 42 },
-        salesRep: { id: 32 },
+        customer: { number: "TTOYS" },
+        terms: { code: "COD" },
+        salesRep: { number: "2000" },
       },
       /**
         An extra bit of work we have to do after the createHash fields are set:
@@ -110,7 +110,7 @@
           done();
         };
 
-      salesOrder.on('change:id', initCallback);
+      salesOrder.on('change:number', initCallback);
       salesOrder.initialize(null, {isNew: true});
     });
   });
@@ -135,7 +135,7 @@
           done();
         };
 
-      quote.on('change:id', initCallback);
+      quote.on('change:number', initCallback);
       quote.initialize(null, {isNew: true});
     });
   });

@@ -120,7 +120,7 @@ trailing:true white:true*/
       {name: "postalCode", label: "_postalCode".loc(), attr: "address.postalCode"},
       {name: "country", label: "_country".loc(), attr: "address.country"},
       {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-      {name: "account", label: "_account".loc(), attr: ["account.id", "accountParent"], defaultKind: "XV.AccountWidget"},
+      {name: "account", label: "_account".loc(), attr: ["account.number", "accountParent"], defaultKind: "XV.AccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_userAccount".loc()},
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
     ]
@@ -172,12 +172,12 @@ trailing:true white:true*/
       {name: "postalCode", label: "_postalCode".loc(), attr: "address.postalCode"},
       {name: "country", label: "_country".loc(), attr: "address.country"},
       {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-      {name: "account", label: "_account".loc(), attr: ["account.id", "accountParent"], defaultKind: "XV.AccountWidget"},
+      {name: "account", label: "_account".loc(), attr: ["account", "accountParent"], defaultKind: "XV.AccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_userAccount".loc()},
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
     ]
   });
-  
+
   // ..........................................................
   // CUSTOMER GROUP
   //
@@ -191,7 +191,7 @@ trailing:true white:true*/
       {name: "description", label: "_description", attr: "description"}
     ]
   });
-  
+
   // ..........................................................
   // FREIGHT CLASS
   //
@@ -221,7 +221,7 @@ trailing:true white:true*/
       {name: "name", label: "_name".loc(), attr: "name"}
     ]
   });
-  
+
   // ..........................................................
   // FILE
   //
@@ -710,7 +710,7 @@ trailing:true white:true*/
         defaultKind: "XV.DateWidget"}
     ]
   });
-  
+
   // ..........................................................
   // SALES ORDER
   //
@@ -751,7 +751,7 @@ trailing:true white:true*/
         defaultKind: "XV.DateWidget"}
     ]
   });
-  
+
   // ..........................................................
   // SALE TYPE
   //
@@ -778,7 +778,7 @@ trailing:true white:true*/
       {name: "description", label: "_description", attr: "description"}
     ]
   });
-  
+
   // ..........................................................
   // SALES REP
   //
@@ -859,7 +859,7 @@ trailing:true white:true*/
       {name: "name", label: "_name".loc(), attr: "name"}
     ]
   });
-  
+
   // ..........................................................
   // TAX ASSIGNMENT
   //
@@ -874,7 +874,7 @@ trailing:true white:true*/
       {name: "taxType", label: "_taxType".loc(), attr: "taxType"}
     ]
   });
-  
+
   // ..........................................................
   // TAX AUTHORITY
   //
@@ -903,7 +903,7 @@ trailing:true white:true*/
       {name: "description", label: "_description", attr: "description"}
     ]
   });
-  
+
   // ..........................................................
   // TAX CLASS
   //
@@ -917,7 +917,7 @@ trailing:true white:true*/
       {name: "description", label: "_description", attr: "description"}
     ]
   });
-  
+
   // ..........................................................
   // TAX RATE
   //
@@ -931,7 +931,7 @@ trailing:true white:true*/
       {name: "percent", label: "_percent".loc(), attr: "percent"}
     ]
   });
-  
+
   // ..........................................................
   // TAX TYPE
   //
@@ -945,7 +945,7 @@ trailing:true white:true*/
       {name: "description", label: "_description", attr: "description"}
     ]
   });
-  
+
   // ..........................................................
   // TAX ZONE
   //
@@ -959,7 +959,7 @@ trailing:true white:true*/
       {name: "description", label: "_description", attr: "description"}
     ]
   });
-  
+
   // ..........................................................
   // TERMS
   //
