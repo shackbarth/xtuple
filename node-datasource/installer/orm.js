@@ -339,7 +339,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         "select replace(relname, '_', '') as viewName " +
         "from pg_class c   " +
         "join pg_namespace n on (c.relnamespace=n.oid)  " +
-        "where nspname like 'xm' " +
+        "where nspname in (select distinct lower(orm_namespace) from xt.orm) " +
         ") views on lower(orm_type) = viewName " +
         "where viewName is null " +
         ")",
