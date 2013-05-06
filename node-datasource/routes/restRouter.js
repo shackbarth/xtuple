@@ -70,7 +70,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     };
 
-    routes.postEngine(payload, session, callback);
+    routes.queryDatabase("post", payload, session, callback);
   };
 
   var routeCall = function (req, res, next, orms, resources) {
@@ -82,6 +82,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           if (err) {
             // TODO - Better error handling.
             return res.send(500, {data: err});
+          } else if (resp.error) {
+            // TODO - Better error handling.
+            return res.send(500, {data: resp.error});
           } else {
             return res.send(resp.data.data);
           }
@@ -125,7 +128,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         if (req.params.id) { // This is a single resource request.
           payload.type = model;
-          payload.id = id - 0;
+          payload.id = id + "";
 
           routes.queryDatabase("get", payload, session, callback);
         } else { // This is a list request.

@@ -139,17 +139,20 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Document
   */
-  XM.State = XM.Model.extend({
+  XM.State = XM.Document.extend({
     /** @scope XM.State.prototype */
 
     recordType: 'XM.State',
+    
+    documentKey: "abbreviation",
+    
+    enforceUpperKey: false,
 
     requiredAttributes: [
-      "abbreviation",
-      "country",
-      "name"
+      "name",
+      "country"
     ]
 
   });

@@ -79,6 +79,7 @@ regexp:true, strict:true, trailing:true, white:false */
   browser.elementByXPath(readContactObj, function (err, contactEl) {
   browser.isDisplayed(contactEl, function (err, displayed) {
   if (displayed) {
+  console.log('Contact Saved');
   test.ok(displayed, 'contact saved');
   callback(browser,test);
   }
