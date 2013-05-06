@@ -904,7 +904,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ContactListItem",
-    "table": "cntct",
+    "table": "xt.cntctinfo",
     "comment": "Contact List Item Map",
     "privileges": {
       "all": {
@@ -1043,29 +1043,16 @@
           "inverse": "contact",
           "isNested": true
         }
-      }
-    ],
-    "extensions": [
+      },
       {
-        "table": "crmacct",
-        "nameSpace": "XM",
-        "relations": [
-          {
-            "column": "crmacct_id",
-            "inverse": "account"
-          }
-        ],
-        "properties": [
-          {
-            "name": "accountParent",
-            "attr": {
-              "type": "Number",
-              "column": "crmacct_parent_id"
-            }
-          }
-        ]
+        "name": "accountParent",
+        "attr": {
+          "type": "String",
+          "column": "crmacct_parent_number"
+        }
       }
     ],
+    "extensions": [],
     "isSystem": true
   },
   {

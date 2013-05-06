@@ -1,4 +1,4 @@
-1.3.4 (2013/04)
+1.3.4 (2013/05)
 ===============
 
 Critical deployment changes
@@ -7,6 +7,59 @@ Critical deployment changes
   table. You can do this through the admin console, but do it before you upgrade! You
   do not need to associate the org with your user.
 
+Features and bugs
+-----------------
+- Fixed
+  issue #[20169](http://www.xtuple.org/xtincident/view/bugs/20169)
+  _etag versions not working with usr and org string pkeys_
+- Implemented
+  issue #[18716](http://www.xtuple.org/xtincident/view/bugs/18716)
+  _REST - Create helper functions needed to generate API Directory list and Discovery Documents_
+- Implemented
+  issue #[19304](http://www.xtuple.org/xtincident/view/bugs/19304)
+  _REST - Add route generator for resource end points_
+- Fixed
+  issue #[19870](http://www.xtuple.org/xtincident/view/bugs/19870)
+  _Unable to attach a contact related to a CRM Account under Documents widget of an accounts screen_
+- Fixed
+  issue #[19905](http://www.xtuple.org/xtincident/view/bugs/19905)
+  _Documents attached under the document widget of a record are not displayed on selecting to reopen the record_
+- Fixed
+  issue #[20214](http://www.xtuple.org/xtincident/view/bugs/20214)
+  _incorrect login brings up error screen_
+- Fixed
+  issue #[20235](http://www.xtuple.org/xtincident/view/bugs/20235)
+  _Selecting to enter the address for a contact displays an error message in the console_
+- Fixed
+  issue #[20205](http://www.xtuple.org/xtincident/view/bugs/20205)
+  _Select Organization for a User - "ID is required" Error_
+- Fixed
+  issue #[20184](http://www.xtuple.org/xtincident/view/bugs/20184)
+  _List lazy-loading problem_
+- Fixed
+  issue #[19953](http://www.xtuple.org/xtincident/view/bugs/19953)
+  _Cannot use a prospect to save a quote_
+- Fixed
+  issue #[19973](http://www.xtuple.org/xtincident/view/bugs/19973)
+  _percent widget is broken_
+- Fixed
+  issue #[20026](http://www.xtuple.org/xtincident/view/bugs/20026)
+  _*Irrelevant behavior is observed on selecting to assign Tax Authority/Sales Rep role to a CRM account_
+- Implemented
+  issue #[20154](http://www.xtuple.org/xtincident/view/bugs/20154)
+  _Add support for natural keys on orms_
+- Fixed
+  issue #[20066](http://www.xtuple.org/xtincident/view/bugs/20066)
+  _*Irrelevant dialog is displayed on selecting to save a Tax Class_
+- Implemented
+  issue #[20044](http://www.xtuple.org/xtincident/view/bugs/20044)
+  _Add support JSON Patch_
+- Implemented
+  issue #[20052](http://www.xtuple.org/xtincident/view/bugs/20052)
+  _Tax rate ORM, model, and views need to be added_
+- Implemented
+  issue #[20054](http://www.xtuple.org/xtincident/view/bugs/20054)
+  _installer should work atomically on one org at a time_
 
 
 1.3.3 (2013/04/18)

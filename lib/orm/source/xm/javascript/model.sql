@@ -123,16 +123,20 @@ select xt.install_js('XM','Model','xtuple', $$
         type = recordType.afterDot(),
         map = XT.Orm.fetch(nameSpace, type),
         table = recordType.decamelize(),
-        key = XT.Orm.naturalKey(map) || XT.Orm.primaryKey(map),
-        sql = 'select "{key}" as id from {table} where "{userKey}"::text=$1::text and "{key}" != $2'
-              .replace(/{key}/g, key)
+        okey = XT.Orm.naturalKey(map) || XT.Orm.primaryKey(map),
+        sql = 'select "{key}" as id from {table} where "{userKey}"::text=$1::text'
+              .replace(/{key}/, okey)
               .replace(/{table}/, table)
-              .replace(/{userKey}/, key)
-              .replace(/{value}/, value)
-              .replace(/{id}/, id),
+              .replace(/{userKey}/, key),
         result;
-        if (DEBUG) { plv8.elog(NOTICE, sql); }
-        result = plv8.execute(sql, [value, id])[0];
+        if (id) {
+          sql += " and " + okey + " != $2";
+          if (DEBUG) { plv8.elog(NOTICE, sql); }
+          result = plv8.execute(sql, [value, id])[0];
+        } else {
+          if (DEBUG) { plv8.elog(NOTICE, sql); }
+          result = plv8.execute(sql, [value])[0];
+        }
 
     return result ? result.id : 0;
   }
