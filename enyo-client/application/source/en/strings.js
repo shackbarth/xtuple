@@ -492,6 +492,7 @@ var lang = XT.stringsFor("en_US", {
   "_target": "Target",
   "_targetClose": "Target Close",
   "_targetType": "Target Type",
+  "_task": "Task",
   "_tasks": "Tasks",
   "_tax": "Tax",
   "_taxCode": "Tax Code",
