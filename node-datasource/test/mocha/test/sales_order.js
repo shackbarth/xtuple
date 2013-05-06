@@ -21,8 +21,10 @@
       var lineItem = new XM[lineRecordType.substring(3)](),
         itemSite = new XM.ItemSiteRelation(),
         modelFetched = function () {
-          if (lineItem.id && itemSite.id) {
+          if (lineItem.isReady() && itemSite.isReady()) {
             var unitUpdated = function () {
+              //console.log("unit updated", arguments);
+              //console.log(lineItem.get("price"), lineItem.get("customerPrice"), lineItem.get("profit"), lineItem.get("tax"), lineItem.get("listPriceDiscount"));
               // make sure all the fields we need to save successfully have been calculated
               if (lineItem.get("price") &&
                   lineItem.get("customerPrice") &&
@@ -30,6 +32,7 @@
                   lineItem.get("tax") &&
                   lineItem.get("listPriceDiscount")) {
 
+                //console.log("ready to move on");
                 lineItem.off("all", unitUpdated);
                 next();
               }
@@ -43,8 +46,9 @@
             lineItem.set({itemSite: itemSite});
           }
         };
-      itemSite.fetch({id: 303 /* BTRUCK WH1 */, success: modelFetched});
-      lineItem.on("change:id", modelFetched);
+      itemSite.on("statusChange", modelFetched);
+      itemSite.fetch({uuid: "ddbd5ae8-064e-41e1-91f6-5de054953fa3" /* BTRUCK WH1 */});
+      lineItem.on("statusChange", modelFetched);
       lineItem.initialize(null, {isNew: true});
     };
   };
