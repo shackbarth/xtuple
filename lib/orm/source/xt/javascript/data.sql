@@ -32,226 +32,230 @@ select xt.install_js('XT','Data','xtuple', $$
       @returns {Object}
     */
     buildClause: function (nameSpace, type, parameters, orderBy) {
-      parameters = parameters || [];
-      var orm = XT.Orm.fetch(nameSpace, type),
-        privileges = orm.privileges,
-        param,
-        childOrm,
-        prevOrm,
-        clause,
-        orClause,
-        clauses = [],
-        attr,
-        parts,
-        op,
-        arg,
-        i,
-        n,
-        c,
-        cnt = 1,
-        ret = {},
-        list = [],
-        prop;
+      try {
+        parameters = parameters || [];
+        var orm = XT.Orm.fetch(nameSpace, type),
+          privileges = orm.privileges,
+          param,
+          childOrm,
+          prevOrm,
+          clause,
+          orClause,
+          clauses = [],
+          attr,
+          parts,
+          op,
+          arg,
+          i,
+          n,
+          c,
+          cnt = 1,
+          ret = {},
+          list = [],
+          prop;
 
-      ret.conditions = "";
-      ret.parameters = [];
+        ret.conditions = "";
+        ret.parameters = [];
 
-      /* handle privileges */
-      if (orm.isNestedOnly) { plv8.elog(ERROR, 'Access Denied'); }
-      if ((privileges &&
-         (!privileges.all || (privileges.all &&
-         (!this.checkPrivilege(privileges.all.read) &&
-          !this.checkPrivilege(privileges.all.update)))) &&
-           privileges.personal &&
-          (this.checkPrivilege(privileges.personal.read) ||
-           this.checkPrivilege(privileges.personal.update)))) {
-        parameters.push({
-          attribute: privileges.personal.properties,
-          isLower: true,
-          value: XT.username
-        });
-      }
+        /* Handle privileges. */
+        if (orm.isNestedOnly) { plv8.elog(ERROR, 'Access Denied'); }
+        if ((privileges &&
+           (!privileges.all || (privileges.all &&
+           (!this.checkPrivilege(privileges.all.read) &&
+            !this.checkPrivilege(privileges.all.update)))) &&
+             privileges.personal &&
+            (this.checkPrivilege(privileges.personal.read) ||
+             this.checkPrivilege(privileges.personal.update)))) {
+          parameters.push({
+            attribute: privileges.personal.properties,
+            isLower: true,
+            value: XT.username
+          });
+        }
 
-      /* handle parameters */
-      if (parameters.length) {
-        for (i = 0; i < parameters.length; i++) {
-          orClause = [];
-          param = parameters[i];
-          op = param.operator || '=';
-          switch (op) {
-          case '=':
-          case '>':
-          case '<':
-          case '>=':
-          case '<=':
-          case '!=':
-            break;
-          case 'BEGINS_WITH':
-            op = '~^';
-            break;
-          case 'ENDS_WITH':
-            op = '~?';
-            break;
-          case 'MATCHES':
-            op = '~*';
-            break;
-          case 'ANY':
-            op = '<@';
-            for (c = 0; c < param.value.length; c++) {
-              ret.parameters.push(param.value[c]);
-              param.value[c] = '$' + cnt;
-              cnt++;
-            }
-            break;
-          case 'NOT ANY':
-            op = '!<@';
-            for (c = 0; c < param.value.length; c++) {
-              ret.parameters.push(param.value[c]);
-              param.value[c] = '$' + cnt;
-              cnt++;
-            }
-            break;
-          default:
-            plv8.elog(ERROR, 'Invalid operator: ' + op);
-          }
-
-          /* Handle characteristics. This is very specific to xTuple,
-             and highly dependant on certain table structures and naming conventions,
-             but otherwise way too much work to refactor in an abstract manner right now */
-          if (param.isCharacteristic) {
-            /* Handle array */
-            if (op === '<@') {
-              param.value = ' ARRAY[' + param.value.join(',') + ']';
+        /* Handle parameters. */
+        if (parameters.length) {
+          for (i = 0; i < parameters.length; i++) {
+            orClause = [];
+            param = parameters[i];
+            op = param.operator || '=';
+            switch (op) {
+            case '=':
+            case '>':
+            case '<':
+            case '>=':
+            case '<=':
+            case '!=':
+              break;
+            case 'BEGINS_WITH':
+              op = '~^';
+              break;
+            case 'ENDS_WITH':
+              op = '~?';
+              break;
+            case 'MATCHES':
+              op = '~*';
+              break;
+            case 'ANY':
+              op = '<@';
+              for (c = 0; c < param.value.length; c++) {
+                ret.parameters.push(param.value[c]);
+                param.value[c] = '$' + cnt;
+                cnt++;
+              }
+              break;
+            case 'NOT ANY':
+              op = '!<@';
+              for (c = 0; c < param.value.length; c++) {
+                ret.parameters.push(param.value[c]);
+                param.value[c] = '$' + cnt;
+                cnt++;
+              }
+              break;
+            default:
+              plv8.elog(ERROR, 'Invalid operator: ' + op);
             }
 
-            /* Booleans are stored as strings */
-            if (param.value === true) {
-              param.value = 't';
-            } else if (param.value === false) {
-              param.value = 'f';
-            }
+            /* Handle characteristics. This is very specific to xTuple,
+               and highly dependant on certain table structures and naming conventions,
+               but otherwise way too much work to refactor in an abstract manner right now. */
+            if (param.isCharacteristic) {
+              /* Handle array. */
+              if (op === '<@') {
+                param.value = ' ARRAY[' + param.value.join(',') + ']';
+              }
 
-            /* Yeah, it depends on a property called 'charectristics'... */
-            prop = XT.Orm.getProperty(orm, 'characteristics');
+              /* Booleans are stored as strings. */
+              if (param.value === true) {
+                param.value = 't';
+              } else if (param.value === false) {
+                param.value = 'f';
+              }
 
-            /* Build the clause */
-            clause = '"id" in (' +
-                     '  select {column}' +
-                     '  from {table}' +
-                     '    join char on (char_id=characteristic)' +
-                     '  where' +
-                     '    char_name = \'{name}\' and' +
-                     '    "value" {operator} \'{value}\'' +
-                     ')';
-            clause = clause.replace("{column}", prop.toMany.inverse)
-                     .replace("{table}", orm.nameSpace.toLowerCase() + "." + prop.toMany.type.decamelize())
-                     .replace("{name}", param.attribute)
-                     .replace("{operator}", op)
-                     .replace("{value}", param.value);
-            clauses.push(clause);
+              /* Yeah, it depends on a property called 'charectristics'... */
+              prop = XT.Orm.getProperty(orm, 'characteristics');
 
-          /* Array comparisons handle another way */
-          } else if (op === '<@' || op === '!<@') {
-            clause = param.attribute + ' ' + op + ' ARRAY[' + param.value.join(',') + ']';
-            clauses.push(clause);
+              /* Build the clause. */
+              clause = '"id" in (' +
+                       '  select {column}' +
+                       '  from {table}' +
+                       '    join char on (char_id=characteristic)' +
+                       '  where' +
+                       '    char_name = \'{name}\' and' +
+                       '    "value" {operator} \'{value}\'' +
+                       ')';
+              clause = clause.replace("{column}", prop.toMany.inverse)
+                       .replace("{table}", orm.nameSpace.toLowerCase() + "." + prop.toMany.type.decamelize())
+                       .replace("{name}", param.attribute)
+                       .replace("{operator}", op)
+                       .replace("{value}", param.value);
+              clauses.push(clause);
 
-          /* Everything else handle another */
-          } else {
-            if (XT.typeOf(param.attribute) !== 'array') {
-              param.attribute = [param.attribute];
-            }
+            /* Array comparisons handle another way. */
+            } else if (op === '<@' || op === '!<@') {
+              clause = param.attribute + ' ' + op + ' ARRAY[' + param.value.join(',') + ']';
+              clauses.push(clause);
 
-            for (c = 0; c < param.attribute.length; c++) {
-              /* handle paths if applicable */
-              if (param.attribute[c].indexOf('.') > -1) {
-                parts = param.attribute[c].split('.');
-                childOrm = orm;
-                attr = "";
-                for (n = 0; n < parts.length; n++) {
-                  /* validate attribute */
-                  prop = XT.Orm.getProperty(childOrm, parts[n]);
+            /* Everything else handle another. */
+            } else {
+              if (XT.typeOf(param.attribute) !== 'array') {
+                param.attribute = [param.attribute];
+              }
+
+              for (c = 0; c < param.attribute.length; c++) {
+                /* Handle paths if applicable. */
+                if (param.attribute[c].indexOf('.') > -1) {
+                  parts = param.attribute[c].split('.');
+                  childOrm = orm;
+                  attr = "";
+                  for (n = 0; n < parts.length; n++) {
+                    /* validate attribute */
+                    prop = XT.Orm.getProperty(childOrm, parts[n]);
+                    if (!prop) {
+                      plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[n]);
+                    }
+
+                    /* build path */
+                    attr += '"' + parts[n] + '"';
+                    if (n < parts.length - 1) {
+                      attr = "(" + attr + ").";
+                      childOrm = XT.Orm.fetch(nameSpace, prop.toOne.type);
+                    } else if (param.isLower) {
+                      attr = "lower(" + attr + ")";
+                    }
+                  }
+                } else {
+                  /* Validate attribute. */
+                  prop = XT.Orm.getProperty(orm, param.attribute[c]);
                   if (!prop) {
-                    plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[n]);
+                    plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
                   }
-
-                  /* build path */
-                  attr += '"' + parts[n] + '"';
-                  if (n < parts.length - 1) {
-                    attr = "(" + attr + ").";
-                    childOrm = XT.Orm.fetch(nameSpace, prop.toOne.type);
-                  } else if (param.isLower) {
-                    attr = "lower(" + attr + ")";
-                  }
+                  attr = '"' + param.attribute[c] + '"';
                 }
-              } else {
-                /* validate attribute */
-                prop = XT.Orm.getProperty(orm, param.attribute[c]);
+
+                arg = '$' + cnt;
+                if (prop.attr && prop.attr.type === 'Date') { arg += '::date'; }
+
+                clause = [];
+                clause.push(attr);
+                clause.push(op);
+                clause.push(arg);
+                if (parameters[i].includeNull) {
+                  clause.push(' or ' + attr + 'is null');
+                }
+                orClause.push(clause.join(''));
+              }
+              clauses.push('(' + orClause.join(' or ') + ')');
+              cnt++;
+              ret.parameters.push(param.value);
+            }
+          }
+        }
+        ret.conditions = (clauses.length ? '(' + clauses.join(' and ') + ')' : ret.conditions) || true;
+
+        /* Massage ordeBy with quoted identifiers. */
+        if (orderBy) {
+          for (i = 0; i < orderBy.length; i++) {
+            /* Handle path case. */
+            if (orderBy[i].attribute.indexOf('.') > -1) {
+              attr = "";
+              parts = orderBy[i].attribute.split('.');
+              prevOrm = orm;
+              for (n = 0; n < parts.length; n++) {
+                prop = XT.Orm.getProperty(orm, parts[n]);
                 if (!prop) {
-                  plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
+                  plv8.elog(ERROR, 'Attribute not found in map: ' + parts[n]);
                 }
-                attr = '"' + param.attribute[c] + '"';
+                attr += '"' + parts[n] + '"';
+                if (n < parts.length - 1) {
+                  attr = "(" + attr + ").";
+                  orm = XT.Orm.fetch(nameSpace, prop.toOne.type);
+                }
               }
-
-              arg = '$' + cnt;
-              if (prop.attr && prop.attr.type === 'Date') { arg += '::date'; }
-
-              clause = [];
-              clause.push(attr);
-              clause.push(op);
-              clause.push(arg);
-              if (parameters[i].includeNull) {
-                clause.push(' or ' + attr + 'is null');
-              }
-              orClause.push(clause.join(''));
-            }
-            clauses.push('(' + orClause.join(' or ') + ')');
-            cnt++;
-            ret.parameters.push(param.value);
-          }
-        }
-      }
-      ret.conditions = (clauses.length ? '(' + clauses.join(' and ') + ')' : ret.conditions) || true;
-
-      /* Massage ordeBy with quoted identifiers */
-      if (orderBy) {
-        for (i = 0; i < orderBy.length; i++) {
-          /* handle path case */
-          if (orderBy[i].attribute.indexOf('.') > -1) {
-            attr = "";
-            parts = orderBy[i].attribute.split('.');
-            prevOrm = orm;
-            for (n = 0; n < parts.length; n++) {
-              prop = XT.Orm.getProperty(orm, parts[n]);
+              orm = prevOrm;
+            /* Normal case. */
+            } else {
+              prop = XT.Orm.getProperty(orm, orderBy[i].attribute);
               if (!prop) {
-                plv8.elog(ERROR, 'Attribute not found in map: ' + parts[n]);
+                plv8.elog(ERROR, 'Attribute not found in map: ' + orderBy[i].attribute);
               }
-              attr += '"' + parts[n] + '"';
-              if (n < parts.length - 1) {
-                attr = "(" + attr + ").";
-                orm = XT.Orm.fetch(nameSpace, prop.toOne.type);
-              }
+              attr = '"' + orderBy[i].attribute + '"';
             }
-            orm = prevOrm;
-          /* normal case */
-          } else {
-            prop = XT.Orm.getProperty(orm, orderBy[i].attribute);
-            if (!prop) {
-              plv8.elog(ERROR, 'Attribute not found in map: ' + orderBy[i].attribute);
+            if (orderBy[i].isEmpty) {
+              attr = "length(" + attr + ")=0";
             }
-            attr = '"' + orderBy[i].attribute + '"';
+            if (orderBy[i].descending) {
+              attr += " desc";
+            }
+            list.push(attr);
           }
-          if (orderBy[i].isEmpty) {
-            attr = "length(" + attr + ")=0";
-          }
-          if (orderBy[i].descending) {
-            attr += " desc";
-          }
-          list.push(attr);
         }
-      }
-      ret.orderBy = list.length ? 'order by ' + list.join(',') : '';
+        ret.orderBy = list.length ? 'order by ' + list.join(',') : '';
 
-      return ret;
+        return ret;
+      } catch (err) {
+        XT.error(err, arguments);
+      }
     },
 
     /**
@@ -261,42 +265,55 @@ select xt.install_js('XT','Data','xtuple', $$
       @returns {Boolean}
     */
     checkPrivilege: function (privilege) {
-      var privArray,
-        ret = privilege,
-        i,
-        res,
-        sql;
-      if (typeof privilege === 'string') {
+      try {
+        var privArray,
+          ret = privilege,
+          i,
+          res,
+          sql;
+        if (typeof privilege === 'string') {
 
-        if (!this._granted) { this._granted = {}; }
-        if (this._granted[privilege] !== undefined) { return this._granted[privilege]; }
+          if (!this._granted) { this._granted = {}; }
+          if (this._granted[privilege] !== undefined) { return this._granted[privilege]; }
 
-        /* The privilege name is allowed to be a set of space-delimited privileges */
-        /* If a user has any of the applicable privileges then they get access */
-        privArray = privilege.split(" ");
-        sql = 'select coalesce(userpriv_priv_id, userrolepriv_priv_id, -1) > 0 as granted ' +
-               'from xt.priv ' +
-               'left join xt.userpriv on (priv_id=userpriv_priv_id) and (userpriv_username=$1) ' +
-               'left join ( ' +
-               '  select distinct userrolepriv_priv_id ' +
-               '  from xt.userrolepriv ' +
-               '    join xt.useruserrole on (userrolepriv_userrole_id=useruserrole_userrole_id) and (useruserrole_username=$1) ' +
-               '  ) userrolepriv on (userrolepriv_priv_id=priv_id) ' +
-               'where priv_name = $2';
+          /* The privilege name is allowed to be a set of space-delimited privileges */
+          /* If a user has any of the applicable privileges then they get access */
+          privArray = privilege.split(" ");
+          sql = 'select coalesce(userpriv_priv_id, userrolepriv_priv_id, -1) > 0 as granted ' +
+                 'from xt.priv ' +
+                 'left join xt.userpriv on (priv_id=userpriv_priv_id) and (userpriv_username=$1) ' +
+                 'left join ( ' +
+                 '  select distinct userrolepriv_priv_id ' +
+                 '  from xt.userrolepriv ' +
+                 '    join xt.useruserrole on (userrolepriv_userrole_id=useruserrole_userrole_id) and (useruserrole_username=$1) ' +
+                 '  ) userrolepriv on (userrolepriv_priv_id=priv_id) ' +
+                 'where priv_name = $2';
 
-        for (i = 1; i < privArray.length; i++) {
-          sql = sql + ' or priv_name = $' + (i + 2);
+          for (i = 1; i < privArray.length; i++) {
+            sql = sql + ' or priv_name = $' + (i + 2);
+          }
+          sql = sql + ";";
+
+          /* Cleverness: the query parameters are just the priv array with the username tacked on front. */
+          privArray.unshift(XT.username);
+
+          if (DEBUG) {
+            plv8.elog(NOTICE, 'commitMetrics sql =', sql);
+            plv8.elog(NOTICE, 'commitMetrics values =', privArray);
+          }
+          res = plv8.execute(sql, privArray);
+          ret = res.length ? res[0].granted : false;
+
+          /* Memoize. */
+          this._granted[privilege] = ret;
         }
-        sql = sql + ";";
-        /* cleverness: the query parameters are just the priv array with the username tacked on front */
-        privArray.unshift(XT.username);
-        res = plv8.execute(sql, privArray);
-        ret = res.length ? res[0].granted : false;
-        /* memoize */
-        this._granted[privilege] = ret;
+
+        if (DEBUG) { plv8.elog(NOTICE, 'Privilege check for "' + XT.username + '" on "' + privilege + '" returns ' + ret); }
+
+        return ret;
+      } catch (err) {
+        XT.error(err, arguments);
       }
-      if (DEBUG) { plv8.elog(NOTICE, 'Privilege check for "' + XT.username + '" on "' + privilege + '" returns ' + ret); }
-      return ret;
     },
 
     /**
@@ -310,102 +327,107 @@ select xt.install_js('XT','Data','xtuple', $$
       @returns {Boolean}
     */
     checkPrivileges: function (nameSpace, type, record, isTopLevel) {
-      isTopLevel = isTopLevel !== false ? true : false;
-      var isGrantedAll = true,
-        isGrantedPersonal = false,
-        map = XT.Orm.fetch(nameSpace, type),
-        privileges = map.privileges,
-        committing = record ? record.dataState !== this.READ_STATE : false,
-        action =  record && record.dataState === this.CREATED_STATE ? 'create' :
-                  record && record.dataState === this.DELETED_STATE ? 'delete' :
-                  record && record.dataState === this.UPDATED_STATE ? 'update' : 'read';
+      try {
+        isTopLevel = isTopLevel !== false ? true : false;
+        var isGrantedAll = true,
+          isGrantedPersonal = false,
+          map = XT.Orm.fetch(nameSpace, type),
+          privileges = map.privileges,
+          committing = record ? record.dataState !== this.READ_STATE : false,
+          action =  record && record.dataState === this.CREATED_STATE ? 'create' :
+                    record && record.dataState === this.DELETED_STATE ? 'delete' :
+                    record && record.dataState === this.UPDATED_STATE ? 'update' : 'read';
 
-      /* if there is no ORM, this isn't a table data type so no check required */
-      if (DEBUG) { plv8.elog(NOTICE, 'orm is ->', JSON.stringify(map)); }
-      if (!map) { return true; }
+        /* If there is no ORM, this isn't a table data type so no check required. */
+        if (DEBUG) { plv8.elog(NOTICE, 'orm is ->', JSON.stringify(map)); }
+        if (!map) { return true; }
 
-      /* can not access 'nested only' records directly */
-      if (DEBUG) { plv8.elog(NOTICE, 'is top level ->', isTopLevel, 'is nested ->', map.isNestedOnly); }
-      if (isTopLevel && map.isNestedOnly) { return false; }
+        /* Can not access 'nested only' records directly. */
+        if (DEBUG) { plv8.elog(NOTICE, 'is top level ->', isTopLevel, 'is nested ->', map.isNestedOnly); }
+        if (isTopLevel && map.isNestedOnly) { return false; }
 
-      /* check privileges - first do we have access to anything? */
-      if (privileges) {
-        if (DEBUG) { plv8.elog(NOTICE, 'privileges found'); }
-        if (committing) {
-          if (DEBUG) { plv8.elog(NOTICE, 'is committing'); }
+        /* Check privileges - first do we have access to anything? */
+        if (privileges) {
+          if (DEBUG) { plv8.elog(NOTICE, 'privileges found'); }
+          if (committing) {
+            if (DEBUG) { plv8.elog(NOTICE, 'is committing'); }
 
-          /* check if user has 'all' read privileges */
-          isGrantedAll = privileges.all ? this.checkPrivilege(privileges.all[action]) : false;
+            /* Check if user has 'all' read privileges. */
+            isGrantedAll = privileges.all ? this.checkPrivilege(privileges.all[action]) : false;
 
-          /* otherwise check for 'personal' read privileges */
-          if (!isGrantedAll) {
-            isGrantedPersonal =  privileges.personal ?
-              this.checkPrivilege(privileges.personal[action]) : false;
-          }
-        } else {
-          if (DEBUG) { plv8.elog(NOTICE, 'is NOT committing'); }
+            /* Otherwise check for 'personal' read privileges. */
+            if (!isGrantedAll) {
+              isGrantedPersonal =  privileges.personal ?
+                this.checkPrivilege(privileges.personal[action]) : false;
+            }
+          } else {
+            if (DEBUG) { plv8.elog(NOTICE, 'is NOT committing'); }
 
-          /* check if user has 'all' read privileges */
-          isGrantedAll = privileges.all ?
-                         this.checkPrivilege(privileges.all.read) ||
-                         this.checkPrivilege(privileges.all.update) : false;
+            /* Check if user has 'all' read privileges. */
+            isGrantedAll = privileges.all ?
+                           this.checkPrivilege(privileges.all.read) ||
+                           this.checkPrivilege(privileges.all.update) : false;
 
-          /* otherwise check for 'personal' read privileges */
-          if (!isGrantedAll) {
-            isGrantedPersonal =  privileges.personal ?
-              this.checkPrivilege(privileges.personal.read) ||
-              this.checkPrivilege(privileges.personal.update) : false;
+            /* Otherwise check for 'personal' read privileges. */
+            if (!isGrantedAll) {
+              isGrantedPersonal =  privileges.personal ?
+                this.checkPrivilege(privileges.personal.read) ||
+                this.checkPrivilege(privileges.personal.update) : false;
+            }
           }
         }
-      }
 
-      /* if we're checknig an actual record and only have personal privileges, see if the record allows access */
-      if (record && !isGrantedAll && isGrantedPersonal) {
-        if (DEBUG) { plv8.elog(NOTICE, 'checking record level personal privileges'); }
-        var that = this,
+        /* If we're checknig an actual record and only have personal privileges, */
+        /* see if the record allows access. */
+        if (record && !isGrantedAll && isGrantedPersonal) {
+          if (DEBUG) { plv8.elog(NOTICE, 'checking record level personal privileges'); }
+          var that = this,
 
-        /* shared checker function that checks 'personal' properties for access rights */
-        checkPersonal = function (record) {
-          var i = 0,
-            isGranted = false,
-            props = privileges.personal.properties,
-            get = function (obj, target) {
-              var parts = target.split("."),
-                ret,
-                part,
-                idx;
-              for (idx = 0; idx < parts.length; idx++) {
-                part = parts[idx];
-                ret = ret ? ret[part] : obj[part];
-                if (ret === null || ret === undefined) {
-                  return null;
+          /* Shared checker function that checks 'personal' properties for access rights. */
+          checkPersonal = function (record) {
+            var i = 0,
+              isGranted = false,
+              props = privileges.personal.properties,
+              get = function (obj, target) {
+                var parts = target.split("."),
+                  ret,
+                  part,
+                  idx;
+                for (idx = 0; idx < parts.length; idx++) {
+                  part = parts[idx];
+                  ret = ret ? ret[part] : obj[part];
+                  if (ret === null || ret === undefined) {
+                    return null;
+                  }
                 }
-              }
-              return ret.toLowerCase();
-            };
-          while (!isGranted && i < props.length) {
-            var prop = props[i];
-            isGranted = get(record, prop) === XT.username;
-            i++;
+                return ret.toLowerCase();
+              };
+            while (!isGranted && i < props.length) {
+              var prop = props[i];
+              isGranted = get(record, prop) === XT.username;
+              i++;
+            }
+            return isGranted;
+          };
+
+          /* If committing we need to ensure the record in its previous state is editable by this user. */
+          if (committing && (action === 'update' || action === 'delete')) {
+            var pkey = XT.Orm.primaryKey(map),
+                old = this.retrieveRecord(nameSpace + '.' + type, record[pkey]);
+            isGrantedPersonal = checkPersonal(old);
+
+          /* Otherwise check personal privileges on the record passed. */
+          } else if (action === 'read') {
+            isGrantedPersonal = checkPersonal(record);
           }
-          return isGranted;
-        };
-
-        /* if committing we need to ensure the record in its previous state is editable by this user */
-        if (committing && (action === 'update' || action === 'delete')) {
-          var pkey = XT.Orm.primaryKey(map),
-              old = this.retrieveRecord(nameSpace + '.' + type, record[pkey]);
-          isGrantedPersonal = checkPersonal(old);
-
-        /* ...otherwise check personal privileges on the record passed */
-        } else if (action === 'read') {
-          isGrantedPersonal = checkPersonal(record);
         }
+        if (DEBUG) {
+          plv8.elog(NOTICE, 'is granted all ->', isGrantedAll, 'is granted personal ->', isGrantedPersonal);
+        }
+        return isGrantedAll || isGrantedPersonal;
+      } catch (err) {
+        XT.error(err, arguments);
       }
-      if (DEBUG) {
-        plv8.elog(NOTICE, 'is granted all ->', isGrantedAll, 'is granted personal ->', isGrantedPersonal);
-      }
-      return isGrantedAll || isGrantedPersonal;
     },
 
     /**
@@ -415,33 +437,40 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Object} Record
     */
     commitArrays: function (orm, record, encryptionKey) {
-      var pkey = XT.Orm.primaryKey(orm),
-        id = record[pkey],
-        fkey,
-        prop,
-        ormp,
-        values,
-        val;
-      for (prop in record) {
-        ormp = XT.Orm.getProperty(orm, prop);
+      try {
+        var pkey = XT.Orm.primaryKey(orm),
+          id = record[pkey],
+          fkey,
+          prop,
+          ormp,
+          values,
+          val;
 
-        /* if the property is an array of objects they must be records so commit them */
-        if (ormp.toMany && ormp.toMany.isNested) {
-          fkey = ormp.toMany.inverse;
-          values = record[prop];
-          for (var i = 0; i < values.length; i++) {
-            val = values[i];
+        for (prop in record) {
+          ormp = XT.Orm.getProperty(orm, prop);
 
-            /* populate the parent key into the foreign key field if it's absent */
-            if (!val[fkey]) { val[fkey] = id; }
-            this.commitRecord({
-              nameSpace: orm.nameSpace,
-              type: ormp.toMany.type,
-              data: val,
-              encryptionKey: encryptionKey
-            });
+          /* If the property is an array of objects they must be records so commit them. */
+          if (ormp.toMany && ormp.toMany.isNested) {
+            fkey = ormp.toMany.inverse;
+            values = record[prop];
+
+            for (var i = 0; i < values.length; i++) {
+              val = values[i];
+
+              /* Populate the parent key into the foreign key field if it's absent. */
+              if (!val[fkey]) { val[fkey] = id; }
+
+              this.commitRecord({
+                nameSpace: orm.nameSpace,
+                type: ormp.toMany.type,
+                data: val,
+                encryptionKey: encryptionKey
+              });
+            }
           }
         }
+      } catch (err) {
+        XT.error(err, arguments);
       }
     },
 
@@ -452,15 +481,30 @@ select xt.install_js('XT','Data','xtuple', $$
       @returns Boolean
     */
     commitMetrics: function (metrics) {
-      var key,
-        value;
-      for (key in metrics) {
-        value = metrics[key];
-        if (typeof value === 'boolean') { value = value ? 't' : 'f'; }
-        else if (typeof value === 'number') { value = value.toString(); }
-        plv8.execute('select setMetric($1,$2)', [key, value]);
+      try {
+        var key,
+          sql = 'select setMetric($1,$2)',
+          value;
+
+        for (key in metrics) {
+          value = metrics[key];
+          if (typeof value === 'boolean') {
+            value = value ? 't' : 'f';
+          } else if (typeof value === 'number') {
+            value = value.toString();
+          }
+
+          if (DEBUG) {
+            plv8.elog(NOTICE, 'commitMetrics sql =', sql);
+            plv8.elog(NOTICE, 'commitMetrics values =', [key, value]);
+          }
+          plv8.execute(sql, [key, value]);
+        }
+
+        return true;
+      } catch (err) {
+        XT.error(err, arguments);
       }
-      return true;
     },
 
     /**
@@ -479,21 +523,25 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {String} [options.encryptionKey] Encryption key.
     */
     commitRecord: function (options) {
-      var data = options.data,
-        dataState = data ? data.dataState : false,
-        hasAccess = this.checkPrivileges(options.nameSpace, options.type, data, false);
+      try {
+        var data = options.data,
+          dataState = data ? data.dataState : false,
+          hasAccess = this.checkPrivileges(options.nameSpace, options.type, data, false);
 
-      if (!hasAccess) { throw new Error("Access Denied."); }
-      switch (dataState)
-      {
-      case (this.CREATED_STATE):
-        this.createRecord(options);
-        break;
-      case (this.UPDATED_STATE):
-        this.updateRecord(options);
-        break;
-      case (this.DELETED_STATE):
-        this.deleteRecord(options);
+        if (!hasAccess) { throw new Error("Access Denied."); }
+        switch (dataState)
+        {
+        case (this.CREATED_STATE):
+          this.createRecord(options);
+          break;
+        case (this.UPDATED_STATE):
+          this.updateRecord(options);
+          break;
+        case (this.DELETED_STATE):
+          this.deleteRecord(options);
+        }
+      } catch (err) {
+        XT.error(err, arguments);
       }
     },
 
@@ -507,33 +555,43 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {String} [options.encryptionKey] Encryption key.
     */
     createRecord: function (options) {
-      var orm = XT.Orm.fetch(options.nameSpace, options.type),
-        encryptionKey = options.encryptionKey,
-        data = options.data,
-        sql = this.prepareInsert(orm, data, null, encryptionKey),
-        i;
+      try {
+        var orm = XT.Orm.fetch(options.nameSpace, options.type),
+          encryptionKey = options.encryptionKey,
+          data = options.data,
+          sql = this.prepareInsert(orm, data, null, encryptionKey),
+          i;
 
-      /* handle extensions on the same table */
-      for (i = 0; i < orm.extensions.length; i++) {
-        if (orm.extensions[i].table === orm.table) {
-          sql = this.prepareInsert(orm.extensions[i], data, sql, encryptionKey);
+        /* Handle extensions on the same table. */
+        for (i = 0; i < orm.extensions.length; i++) {
+          if (orm.extensions[i].table === orm.table) {
+            sql = this.prepareInsert(orm.extensions[i], data, sql, encryptionKey);
+          }
         }
-      }
 
-      /* commit the base record */
-      plv8.execute(sql.statement, sql.values);
-
-      /* handle extensions on other tables */
-      for (i = 0; i < orm.extensions.length; i++) {
-        if (orm.extensions[i].table !== orm.table &&
-           !orm.extensions[i].isChild) {
-          sql = this.prepareInsert(orm.extensions[i], data, null, encryptionKey);
-          plv8.execute(sql.statement, sql.values);
+        /* Commit the base record. */
+        if (DEBUG) {
+          plv8.elog(NOTICE, 'createRecord sql =', sql.statement);
+          plv8.elog(NOTICE, 'createRecord values =', [sql.values]);
         }
-      }
+        plv8.execute(sql.statement, sql.values);
 
-      /* okay, now lets handle arrays */
-      this.commitArrays(orm, data, encryptionKey);
+        /* Handle extensions on other tables. */
+        for (i = 0; i < orm.extensions.length; i++) {
+          if (orm.extensions[i].table !== orm.table &&
+             !orm.extensions[i].isChild) {
+            sql = this.prepareInsert(orm.extensions[i], data, null, encryptionKey);
+
+            if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql.statement, [sql.values]);}
+            plv8.execute(sql.statement, sql.values);
+          }
+        }
+
+        /* Okay, now lets handle arrays. */
+        this.commitArrays(orm, data, encryptionKey);
+      } catch (err) {
+        XT.error(err, arguments);
+      }
     },
 
    /**
@@ -551,105 +609,139 @@ select xt.install_js('XT','Data','xtuple', $$
      @returns {Object}
    */
     prepareInsert: function (orm, record, params, encryptionKey) {
-      var pkey = XT.Orm.primaryKey(orm),
-        count,
-        columns,
-        ormp,
-        prop,
-        attr,
-        type,
-        i,
-        iorm,
-        nkey,
-        val,
-        exp;
-      params = params || {
-        table: "",
-        columns: [],
-        expressions: [],
-        values: []
-      };
-      params.table = orm.table;
-      count = params.values.length + 1;
+      try {
+        var attr,
+          columns,
+          count,
+          encryptQuery,
+          encryptSql,
+          exp,
+          i,
+          iorm,
+          nkey,
+          ormp,
+          pkey = XT.Orm.primaryKey(orm),
+          prop,
+          query,
+          toOneQuery,
+          toOneSql,
+          type,
+          val,
 
-      /* if no primary key, then create one */
-      if (!record[pkey]) {
-        record[pkey] = plv8.execute("select nextval($1) as id", [orm.idSequenceName])[0].id;
-      }
+        params = params || {
+          table: "",
+          columns: [],
+          expressions: [],
+          identifiers: [],
+          values: []
+        };
+        params.table = orm.table;
+        count = params.values.length + 1;
 
-      /* if extension handle key */
-      if (orm.relations) {
-        for (i = 0; i < orm.relations.length; i++) {
-          column = '"' + orm.relations[i].column + '"';
-          if (!params.columns.contains(column)) {
-            params.columns.push(column);
-            params.values.push(record[orm.relations[i].inverse]);
-            params.expressions.push('$' + count);
-            count++;
-          }
+        /* If no primary key, then create one. */
+        if (!record[pkey]) {
+          record[pkey] = plv8.execute("select nextval($1) as id", [orm.idSequenceName])[0].id;
         }
-      }
 
-      /* build up the content for insert of this record */
-      for (i = 0; i < orm.properties.length; i++) {
-        ormp = orm.properties[i];
-        prop = ormp.name;
-        attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
-        type = attr.type;
-        iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false,
-        nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
-        val = ormp.toOne && record[prop] instanceof Object ?
-          record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
-
-        /* handle fixed values */
-        if (attr.value) {
-          params.columns.push('"' + attr.column + '"');
-          params.expressions.push('$' + count);
-          params.values.push(attr.value);
-          count++;
-
-        /* handle passed values */
-        } else if (val !== undefined && val !== null && !ormp.toMany) {
-          params.columns.push('"' + attr.column + '"');
-
-          if (attr.isEncrypted) {
-            if (encryptionKey) {
-              val = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
-                    .replace("{value}", record[prop])
-                    .replace("{encryptionKey}", encryptionKey);
-              params.values.push(val);
+        /* If extension handle key. */
+        if (orm.relations) {
+          for (i = 0; i < orm.relations.length; i++) {
+            if (!params.columns.contains(column)) {
+              params.columns.push("%" + count + "$I");
+              params.values.push(record[orm.relations[i].inverse]);
               params.expressions.push('$' + count);
+              params.identifiers.push(orm.relations[i].column);
               count++;
-            } else {
-              throw new Error("No encryption key provided.");
             }
-          /* Unfortuantely dates aren't handled correctly by parameters */
-          } else if (attr.type === 'Date') {
-            params.expressions.push("'" + val + "'");
-          } else {
-            if (ormp.toOne && nkey) {
-              exp = "(select {pkey} from {table} where {nkey} = {param})"
-                    .replace("{pkey}", XT.Orm.primaryKey(iorm, true))
-                    .replace("{table}", iorm.table)
-                    .replace("{nkey}", nkey)
-                    .replace("{param}", '$' + count)
-              params.expressions.push(exp);
-            } else {
-              params.expressions.push('$' + count);
-            }
-            count++;
-            params.values.push(val);
           }
         }
-      }
 
-      /* Build the insert statement */
-      columns = params.columns.join(', ');
-      expressions = params.expressions.join(', ');
-      params.statement = 'insert into ' + params.table + ' (' + columns + ') values (' + expressions + ')';
-      if (DEBUG) { plv8.elog(NOTICE, 'sql =', params.statement);}
-      if (DEBUG) { plv8.elog(NOTICE, 'values =', JSON.stringify(params.values));}
-      return params;
+        /* Build up the content for insert of this record. */
+        for (i = 0; i < orm.properties.length; i++) {
+          ormp = orm.properties[i];
+          prop = ormp.name;
+          attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
+          type = attr.type;
+          iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false,
+          nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
+          val = ormp.toOne && record[prop] instanceof Object ?
+            record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
+
+          /* Handle fixed values. */
+          if (attr.value) {
+            params.columns.push("%" + count + "$I");
+            params.expressions.push('$' + count);
+            params.values.push(attr.value);
+            params.identifiers.push(attr.column);
+            count++;
+
+          /* Handle passed values. */
+          } else if (val !== undefined && val !== null && !ormp.toMany) {
+            if (attr.isEncrypted) {
+              if (encryptionKey) {
+
+                encryptQuery = "select encrypt(setbytea(%1$L), setbytea(%2$L), %3$L)";
+                encryptSql = XT.format(encryptQuery, [record[prop], encryptionKey, 'bf']);
+                val = "(" + encryptSql + ")";
+
+                params.values.push(val);
+                params.identifiers.push(attr.column);
+                params.expressions.push("$" + count);
+                count++;
+              } else {
+                throw new Error("No encryption key provided.");
+              }
+            } else {
+              if (ormp.toOne && nkey) {
+                if (iorm.table.indexOf(".") > 0) {
+                  toOneQuery = "select %1$I from %2$I.%3$I where %4$I = $" + count;
+                  toOneSql = XT.format(toOneQuery, [
+                      XT.Orm.primaryKey(iorm, true),
+                      iorm.table.beforeDot(),
+                      iorm.table.afterDot(),
+                      nkey
+                    ]);
+                } else {
+                  toOneQuery = "select %1$I from %2$I where %3$I = $" + count;
+                  toOneSql = XT.format(toOneQuery, [
+                      XT.Orm.primaryKey(iorm, true),
+                      iorm.table,
+                      nkey
+                    ]);
+                }
+
+                exp = "(" + toOneSql + ")";
+                params.expressions.push(exp);
+              } else {
+                params.expressions.push('$' + count);
+              }
+
+              params.columns.push("%" + count + "$I");
+              params.values.push(val);
+              params.identifiers.push(attr.column);
+              count++;
+            }
+          }
+        }
+
+        /* Build the insert statement */
+        columns = params.columns.join(', ');
+        columns = XT.format(columns, params.identifiers);
+        expressions = params.expressions.join(', ');
+        expressions = XT.format(expressions, params.identifiers);
+        query = 'insert into %1$I (' + columns + ') values (' + expressions + ')';
+
+        params.statement = XT.format(query, [params.table]);
+
+        if (DEBUG) {
+          plv8.elog(NOTICE, 'sql =', params.statement);
+          plv8.elog(NOTICE, 'values =', params.values);
+        }
+
+        return params;
+      } catch (err) {
+        XT.error(err, arguments);
+      }
     },
 
     /**
@@ -706,9 +798,11 @@ select xt.install_js('XT','Data','xtuple', $$
         sql.values.push(id);
 
         /* Commit the base record. */
-        if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql.statement); }
-        if (DEBUG) { plv8.elog(NOTICE, 'values =', sql.values); }
-        plv8.execute(sql.statement, sql.values);
+        if (DEBUG) {
+          plv8.elog(NOTICE, 'sql =', sql.statement);
+          plv8.elog(NOTICE, 'values =', sql.values);
+        }
+        var test = plv8.execute(sql.statement, sql.values);
 
         /* Handle extensions on other tables. */
         for (i = 0; i < orm.extensions.length; i++) {
@@ -738,8 +832,10 @@ select xt.install_js('XT','Data','xtuple', $$
               sql = this.prepareInsert(ext, data, null, encryptionKey);
             }
 
-            if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql.statement); }
-            if (DEBUG) { plv8.elog(NOTICE, 'values =', sql.values); }
+            if (DEBUG) {
+              plv8.elog(NOTICE, 'sql =', sql.statement);
+              plv8.elog(NOTICE, 'values =', sql.values);
+            }
             plv8.execute(sql.statement, sql.values);
           }
         }
@@ -830,7 +926,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
                 params.values.push(val);
                 params.identifiers.push(attr.column);
-                params.expressions.push("%" + count + "$I = $", count);
+                params.expressions.push("%" + count + "$I = $" + count);
                 count++;
               } else {
 // TODO - Improve error handling.
@@ -850,7 +946,8 @@ select xt.install_js('XT','Data','xtuple', $$
                   toOneQuery = "select %1$I from %2$I where %3$I = $" + count;
                   toOneSql = XT.format(toOneQuery, [
                       XT.Orm.primaryKey(iorm, true),
-                      iorm.table, nkey
+                      iorm.table,
+                      nkey
                     ]);
                 }
 
@@ -867,6 +964,7 @@ select xt.install_js('XT','Data','xtuple', $$
           }
         }
 
+        /* Build the update statement */
         expressions = params.expressions.join(', ');
         expressions = XT.format(expressions, params.identifiers);
         query = 'update %1$I set ' + expressions + ' where %2$I = $' + count + ';';
@@ -1039,6 +1137,7 @@ select xt.install_js('XT','Data','xtuple', $$
 // TODO - Handle not found error.
 
         if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql, [table, namespace]); }
+
         return plv8.execute(sql, [table, namespace])[0].oid - 0;
       } catch (err) {
         XT.error(err, arguments);
@@ -1062,6 +1161,7 @@ select xt.install_js('XT','Data','xtuple', $$
 // TODO - Handle not found error.
 
         if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql, [value]); }
+
         return plv8.execute(sql, [value])[0].id;
       } catch (err) {
         XT.error(err, arguments);
