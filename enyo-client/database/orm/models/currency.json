@@ -52,15 +52,6 @@
           "type": "Boolean",
           "column": "curr_base"
         }
-      },
-      {
-        "name": "rates",
-        "attr": {
-          "type": "CurrencyRates",
-          "column": "curr_id",
-          "inverse": "currency",
-          "isNested": true
-        }
       }
     ],
     "isSystem": true
@@ -99,8 +90,8 @@
       },
       {
         "name": "currency",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+          "type": "Currency",
           "column": "curr_id"
         }
       },
