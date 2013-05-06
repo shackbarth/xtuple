@@ -1,4 +1,4 @@
-select xt.create_view('xt.coheadinfo', $$
+select xt.create_view('xt.doc', $$
 
    select  
     docass_id as id,  
