@@ -664,70 +664,95 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {String} [options.encryptionKey] Encryption key.
     */
     updateRecord: function (options) {
-      var orm = XT.Orm.fetch(options.nameSpace, options.type),
-        encryptionKey = options.encryptionKey,
-        data = options.data,
-        sql = this.prepareUpdate(orm, data, null, encryptionKey),
-        pkey = XT.Orm.primaryKey(orm),
-        id = data[pkey],
-        lock,
-        lockKey = options.lock && options.lock.key ? options.lock.key : false,
-        lockTable = orm.lockTable || orm.table,
-        etag = this.getVersion(orm, id),
-        ext,
-        rows,
-        i;
+      try {
+        var orm = XT.Orm.fetch(options.nameSpace, options.type),
+          encryptionKey = options.encryptionKey,
+          data = options.data,
+          sql = this.prepareUpdate(orm, data, null, encryptionKey),
+          pkey = XT.Orm.primaryKey(orm),
+          iORuQuery,
+          iORuSql,
+          id = data[pkey],
+          lock,
+          lockKey = options.lock && options.lock.key ? options.lock.key : false,
+          lockTable = orm.lockTable || orm.table,
+          etag = this.getVersion(orm, id),
+          ext,
+          rows,
+          i;
 
-      /* test for optimistic lock */
-      if (etag && options.etag !== etag) {
-        plv8.elog(ERROR, "The version being updated is not current.");
-      }
-
-      /* test for pessimistic lock */
-      if (orm.lockable) {
-        lock = this.tryLock(lockTable, id, {key: lockKey});
-        if (!lock.key) {
-          plv8.elog(ERROR, "Can not obtain a lock on the record.");
+        /* Test for optimistic lock. */
+        if (etag && options.etag !== etag) {
+// TODO - Improve error handling.
+          plv8.elog(ERROR, "The version being updated is not current.");
         }
-      }
 
-      /* handle extensions on the same table */
-      for (i = 0; i < orm.extensions.length; i++) {
-        if (orm.extensions[i].table === orm.table) {
-          sql = this.prepareUpdate(orm.extensions[i], data, sql, encryptionKey);
-        }
-      }
-
-      /* commit the base record */
-      plv8.execute(sql.statement, sql.values);
-
-      /* handle extensions on other tables */
-      for (i = 0; i < orm.extensions.length; i++) {
-        ext = orm.extensions[i];
-        if (ext.table !== orm.table &&
-           !ext.isChild) {
-
-          /* Determine whether to insert or update */
-          sql = 'select ' + ext.relations[0].column + ' from ' + ext.table +
-                ' where ' + ext.relations[0].column + ' = $1;';
-
-          if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql, data[pkey]); }
-          rows = plv8.execute(sql, [data[pkey]]);
-          if (rows.length) {
-            sql = this.prepareUpdate(ext, data, null, encryptionKey);
-          } else {
-            sql = this.prepareInsert(ext, data, null, encryptionKey);
+        /* Test for pessimistic lock. */
+        if (orm.lockable) {
+          lock = this.tryLock(lockTable, id, {key: lockKey});
+          if (!lock.key) {
+// TODO - Improve error handling.
+            plv8.elog(ERROR, "Can not obtain a lock on the record.");
           }
-          plv8.execute(sql.statement, sql.values);
         }
-      }
 
-      /* okay, now lets handle arrays */
-      this.commitArrays(orm, data, encryptionKey);
+        /* Handle extensions on the same table. */
+        for (i = 0; i < orm.extensions.length; i++) {
+          if (orm.extensions[i].table === orm.table) {
+            sql = this.prepareUpdate(orm.extensions[i], data, sql, encryptionKey);
+          }
+        }
 
-      /* release any lock */
-      if (orm.lockable) {
-        this.releaseLock({table: lockTable, id: id});
+        sql.values.push(id);
+
+        /* Commit the base record. */
+        if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql.statement); }
+        if (DEBUG) { plv8.elog(NOTICE, 'values =', sql.values); }
+        plv8.execute(sql.statement, sql.values);
+
+        /* Handle extensions on other tables. */
+        for (i = 0; i < orm.extensions.length; i++) {
+          ext = orm.extensions[i];
+          if (ext.table !== orm.table &&
+             !ext.isChild) {
+
+            /* Determine whether to insert or update. */
+            if (iorm.table.indexOf(".") > 0) {
+              iORuQuery = "select %1$I from %2$I.%3$I where %1$I = $1;";
+              iORuSql = XT.format(iORuQuery, [
+                  ext.relations[0].column,
+                  ext.table.beforeDot(),
+                  ext.table.afterDot()
+                ]);
+            } else {
+              iORuQuery = "select %1$I from %2$I where %1$I = $1;";
+              iORuSql = XT.format(iORuQuery, [ext.relations[0].column, ext.table]);
+            }
+
+            if (DEBUG) { plv8.elog(NOTICE, 'sql =', iORuSql, data[pkey]); }
+            rows = plv8.execute(iORuSql, [data[pkey]]);
+
+            if (rows.length) {
+              sql = this.prepareUpdate(ext, data, null, encryptionKey);
+            } else {
+              sql = this.prepareInsert(ext, data, null, encryptionKey);
+            }
+
+            if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql.statement); }
+            if (DEBUG) { plv8.elog(NOTICE, 'values =', sql.values); }
+            plv8.execute(sql.statement, sql.values);
+          }
+        }
+
+        /* Okay, now lets handle arrays. */
+        this.commitArrays(orm, data, encryptionKey);
+
+        /* Release any lock. */
+        if (orm.lockable) {
+          this.releaseLock({table: lockTable, id: id});
+        }
+      } catch (err) {
+        XT.error(err, arguments);
       }
     },
 
@@ -749,6 +774,8 @@ select xt.install_js('XT','Data','xtuple', $$
         var attr,
           columnKey,
           count,
+          encryptQuery,
+          encryptSql,
           exp,
           expressions,
           iorm,
@@ -757,14 +784,16 @@ select xt.install_js('XT','Data','xtuple', $$
           ormp,
           pkey,
           prop,
-          qprop,
           query,
+          toOneQuery,
+          toOneSql,
           type,
           val;
 
         params = params || {
           table: "",
           expressions: [],
+          identifiers: [],
           values: []
         };
         params.table = orm.table;
@@ -786,9 +815,8 @@ select xt.install_js('XT','Data','xtuple', $$
           prop = ormp.name;
           attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
           type = attr.type;
-          iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false,
+          iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false;
           nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
-          qprop = '"' + attr.column + '"';
           val = ormp.toOne && record[prop] instanceof Object ?
             record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
 
@@ -796,44 +824,54 @@ select xt.install_js('XT','Data','xtuple', $$
             /* Handle encryption if applicable. */
             if (attr.isEncrypted) {
               if (encryptionKey) {
-                val = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
-                               .replace("{value}", val)
-                               .replace("{encryptionKey}", encryptionKey);
+                encryptQuery = "select encrypt(setbytea(%1$L), setbytea(%2$L), %3$L)";
+                encryptSql = XT.format(encryptQuery, [val, encryptionKey, 'bf']);
+                val = "(" + encryptSql + ")";
+
                 params.values.push(val);
-                params.expressions.push(qprop.concat(" = ", "$", count));
+                params.identifiers.push(attr.column);
+                params.expressions.push("%" + count + "$I = $", count);
                 count++;
               } else {
 // TODO - Improve error handling.
                 throw new Error("No encryption key provided.");
               }
             } else if (ormp.name !== pkey) {
-              /* Unfortuantely dates and nulls aren't handled correctly by parameters. */
-              if (val === null) {
-                params.expressions.push(qprop.concat(' = null'));
-              } else if (val instanceof Date) {
-                params.expressions.push(qprop.concat(" = '" + JSON.stringify(val) + "'"));
-              } else {
-                if (ormp.toOne && nkey) {
-                  exp = " = (select {pkey} from {table} where {nkey} = {param})"
-                        .replace("{pkey}", XT.Orm.primaryKey(iorm, true))
-                        .replace("{table}", iorm.table)
-                        .replace("{nkey}", nkey)
-                        .replace("{param}", '$' + count)
-                  params.expressions.push(qprop.concat(exp));
+              if (ormp.toOne && nkey) {
+                if (iorm.table.indexOf(".") > 0) {
+                  toOneQuery = "select %1$I from %2$I.%3$I where %4$I = $" + count;
+                  toOneSql = XT.format(toOneQuery, [
+                      XT.Orm.primaryKey(iorm, true),
+                      iorm.table.beforeDot(),
+                      iorm.table.afterDot(),
+                      nkey
+                    ]);
                 } else {
-                  params.expressions.push(qprop.concat(" = ", "$", count));
+                  toOneQuery = "select %1$I from %2$I where %3$I = $" + count;
+                  toOneSql = XT.format(toOneQuery, [
+                      XT.Orm.primaryKey(iorm, true),
+                      iorm.table, nkey
+                    ]);
                 }
-                params.values.push(val);
-                count++;
+
+                exp = "%" + count + "$I = (" + toOneSql + ")";
+                params.expressions.push(exp);
+              } else {
+                params.expressions.push("%" + count + "$I = $" + count);
               }
+
+              params.values.push(val);
+              params.identifiers.push(attr.column);
+              count++;
             }
           }
         }
 
-        keyValue = typeof record[pkey] === 'string' ? "'" + record[pkey] + "'" : record[pkey];
         expressions = params.expressions.join(', ');
-        query = 'update %1$I set ' + expressions + ' where ' + columnKey + ' = ' + keyValue + ';';
-        params.statement = 'update ' + params.table + ' set ' + expressions + ' where ' + columnKey + ' = ' + keyValue + ';';
+        expressions = XT.format(expressions, params.identifiers);
+        query = 'update %1$I set ' + expressions + ' where %2$I = $' + count + ';';
+
+        params.statement = XT.format(query, [params.table, columnKey]);
 
         if (DEBUG) { plv8.elog(NOTICE, 'sql =', params.statement); }
         if (DEBUG) { plv8.elog(NOTICE, 'values =', params.values); }
