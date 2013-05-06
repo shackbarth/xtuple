@@ -567,6 +567,32 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.CustomerType", "XV.CustomerTypeWorkspace");
+  
+  // ..........................................................
+  // CLASS CODE
+  //
+
+  enyo.kind({
+    name: "XV.ExpenseCategoryWorkspace",
+    kind: "XV.Workspace",
+    title: "_expenseCategory".loc(),
+    model: "XM.ExpenseCategory",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.ExpenseCategory", "XV.ExpenseCategoryWorkspace");
 
   // ..........................................................
   // FILE
@@ -837,9 +863,11 @@ trailing:true white:true*/
             {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.InputWidget", attr: "description1"},
             {kind: "XV.InputWidget", attr: "description2"},
-            {kind: "XV.UnitPicker", attr: "inventoryUnit"},
+            {kind: "XV.ItemTypePicker", attr: "itemType", showNone: false},
             {kind: "XV.ClassCodePicker", attr: "classCode"},
+            {kind: "XV.UnitPicker", attr: "inventoryUnit"},
             {kind: "XV.CheckboxWidget", attr: "isFractional"},
+            {kind: "XV.CheckboxWidget", attr: "isPicklist"},
             {kind: "onyx.GroupboxHeader", content: "_product".loc()},
             {kind: "XV.CheckboxWidget", attr: "isSold"},
             {kind: "XV.ProductCategoryPicker", attr: "productCategory",

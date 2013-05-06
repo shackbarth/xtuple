@@ -129,18 +129,18 @@
         }
       },
       {
-        "name": "uuid",
+        "name": "name",
         "attr": {
           "type": "String",
-          "column": "obj_uuid",
+          "column": "accnt_name",
           "isNaturalKey": true
         }
       },
       {
-        "name": "name",
+        "name": "isActive",
         "attr": {
-          "type": "String",
-          "column": "accnt_name"
+          "type": "Boolean",
+          "column": "accnt_active"
         }
       },
       {

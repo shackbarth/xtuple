@@ -141,6 +141,13 @@
         }
       },
       {
+        "name": "itemType",
+        "attr": {
+          "type": "String",
+          "column": "item_type"
+        }
+      },
+      {
         "name": "classCode",
         "toOne": {
           "type": "ClassCode",
@@ -168,6 +175,13 @@
         "attr": {
           "type": "Boolean",
           "column": "item_config"
+        }
+      },
+      {
+        "name": "isPicklist",
+        "attr": {
+          "type": "Boolean",
+          "column": "item_picklist"
         }
       },
       {
@@ -255,15 +269,6 @@
         "name": "characteristics",
         "toMany": {
           "type": "ItemCharacteristic",
-          "column": "item_id",
-          "inverse": "item",
-          "isNested": true
-        }
-      },
-      {
-        "name": "sites",
-        "toMany": {
-          "type": "ItemSite",
           "column": "item_id",
           "inverse": "item",
           "isNested": true
@@ -852,6 +857,13 @@
         }
       },
       {
+        "name": "itemType",
+        "attr": {
+          "type": "String",
+          "column": "item_type"
+        }
+      },
+      {
         "name": "classCode",
         "toOne": {
           "type": "ClassCode",
@@ -863,6 +875,13 @@
         "toOne": {
           "type": "Unit",
           "column": "item_inv_uom_id"
+        }
+      },
+      {
+        "name": "isFractional",
+        "attr": {
+          "type": "Boolean",
+          "column": "item_fractional"
         }
       },
       {
@@ -884,6 +903,20 @@
         "attr": {
           "type": "String",
           "column": "item_upccode"
+        }
+      },
+      {
+        "name": "listPrice",
+        "attr": {
+          "type": "String",
+          "column": "item_listprice"
+        }
+      },
+      {
+        "name": "priceUnit",
+        "toOne": {
+          "type": "Unit",
+          "column": "item_price_uom_id"
         }
       },
       {
@@ -1027,6 +1060,13 @@
         "attr": {
           "type": "String",
           "column": "item_descrip2"
+        }
+      },
+      {
+        "name": "itemType",
+        "attr": {
+          "type": "String",
+          "column": "item_type"
         }
       },
       {

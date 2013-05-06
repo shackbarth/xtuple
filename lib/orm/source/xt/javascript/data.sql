@@ -152,7 +152,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
           /* Array comparisons handle another way */
           } else if (op === '<@' || op === '!<@') {
-            clause = param.attribute + ' ' + op + ' ARRAY[' + param.value.join(',') + ']';
+            clause = '"' + param.attribute + '" ' + op + ' ARRAY[' + param.value.join(',') + ']';
             clauses.push(clause);
 
           /* Everything else handle another */
@@ -476,12 +476,14 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Object} [options.data] The data payload to be processed. Required
       @param {Number} [options.etag] Record version for optimistic locking.
       @param {Number} [options.lock] Lock information for pessemistic locking.
+      @param {Boolean} [options.superUser=false] If true ignore privilege checking.
       @param {String} [options.encryptionKey] Encryption key.
     */
     commitRecord: function (options) {
       var data = options.data,
         dataState = data ? data.dataState : false,
-        hasAccess = this.checkPrivileges(options.nameSpace, options.type, data, false);
+        hasAccess = options.superUser ||
+          this.checkPrivileges(options.nameSpace, options.type, data, false);
 
       if (!hasAccess) { throw new Error("Access Denied."); }
       switch (dataState)
@@ -602,7 +604,7 @@ select xt.install_js('XT','Data','xtuple', $$
           record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
 
         /* handle fixed values */
-        if (attr.value) {
+        if (attr.value !== undefined) {
           params.columns.push('"' + attr.column + '"');
           params.expressions.push('$' + count);
           params.values.push(attr.value);
@@ -1077,6 +1079,7 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {String} [options.nameSpace] Namespace. Required.
       @param {String} [options.type] Type. Required.
       @param {Number} [options.id] Record id. Required.
+      @param {Boolean} [options.superUser=false] If true ignore privilege checking.
       @param {String} [options.encryptionKey] Encryption key
       @param {Boolean} [options.silentError=false] Silence errors
       @param {Object} [options.context] Context
@@ -1126,10 +1129,10 @@ select xt.install_js('XT','Data','xtuple', $$
       if (context) {
         context.nameSpace = context.nameSpace || context.recordType.beforeDot();
         context.type = context.type || context.recordType.afterDot()
-        context.map = XT.Orm.fetych(context.nameSpace, context.type);
+        context.map = XT.Orm.fetch(context.nameSpace, context.type);
         context.prop = XT.Orm.getProperty(context.map, context.relation);
         context.fkey = context.prop.toMany.inverse;
-        context.pkey = XT.Orm.primaryKey(context.map);
+        context.pkey = XT.Orm.naturalKey(context.map) || XT.Orm.primaryKey(context.map);
         params.attribute = context.pkey;
         params.value = context.value;
         join = 'join {recordType} on ({table1}."{pkey}"={table2}."{fkey}")';
@@ -1141,7 +1144,7 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       /* validate - don't bother running the query if the user has no privileges */
-      if(!context && !this.checkPrivileges(nameSpace, type)) {
+      if(!options.superUser && !context && !this.checkPrivileges(nameSpace, type)) {
         if (options.silentError) {
           return false;
         } else {
@@ -1170,7 +1173,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
       if (!context) {
         /* check privileges again, this time against record specific criteria where applicable */
-        if(!this.checkPrivileges(nameSpace, type, ret)) {
+        if(!options.superUser && !this.checkPrivileges(nameSpace, type, ret)) {
           if (options.silentError) {
             return false;
           } else {

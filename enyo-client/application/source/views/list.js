@@ -491,6 +491,33 @@ trailing:true white:true*/
   XV.registerModelList("XM.EmployeeRelation", "XV.EmployeeList");
 
   // ..........................................................
+  // EXPENSE CATEGORY
+  //
+
+  enyo.kind({
+    name: "XV.ExpenseCategoryList",
+    kind: "XV.List",
+    label: "_expenseCategories".loc(),
+    collection: "XM.ExpenseCategoryCollection",
+    query: {orderBy: [
+      {attribute: 'code'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "code", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
   // FILE
   //
 
@@ -719,28 +746,53 @@ trailing:true white:true*/
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.ListAttr", attr: "number", isKey: true},
-              {kind: "XV.ListAttr", attr: "unit.name", fit: true,
+              {kind: "XV.ListAttr", attr: "inventoryUnit.name", fit: true,
                 classes: "right"}
             ]},
-            {kind: "XV.ListAttr", attr: "description1"}
+            {kind: "XV.ListAttr", formatter: "formatDescription"}
           ]},
           {kind: "XV.ListColumn", classes: "second",
             components: [
-            {kind: "XV.ListAttr", attr: "classCode.code", classes: "italic"},
-            {kind: "XV.ListAttr", attr: "productCategory.code"}
+            {kind: "XV.ListAttr", attr: "getItemTypeString", classes: "italic"},
+            {kind: "XV.ListAttr", attr: "classCode.code"}
+          ]},
+          {kind: "XV.ListColumn", classes: "third", components: [
+            {kind: "XV.ListAttr", attr: "listPrice", formatter: "formatPrice"},
+            {kind: "XV.ListAttr", attr: "isFractional", formatter: "formatFractional"}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.ListAttr", attr: "isActive", formatter: "formatActive"},
-            {kind: "XV.ListAttr", attr: "isSold", formatter: "formatSold"}
+            {kind: "XV.ListAttr", attr: "priceUnit.name", formatter: "formatPriceUnit"},
+            {kind: "XV.ListAttr", attr: "productCategory.code"}
           ]}
         ]}
       ]}
     ],
-    formatActive: function (value, view, model) {
-      return value ? "_active".loc() : "";
+    formatFractional: function (value, view, model) {
+      return value ? "_fractional".loc() : "";
     },
-    formatSold: function (value, view, model) {
-      return value ? "_sold".loc() : "";
+    formatPrice: function (value, view, model) {
+      var sold = model.get("isSold");
+      if (XT.session.privileges.get("ViewListPrices") && sold) {
+        var scale = XT.session.locale.attributes.salesPriceScale;
+        return Globalize.format(value, "c" + scale);
+      }
+      view.addRemoveClass("placeholder", true);
+      if (!sold) {
+        return "_notSold".loc();
+      }
+      return "--";
+    },
+    formatPriceUnit: function (value, view, model) {
+      if (XT.session.privileges.get("ViewListPrices") && model.get("isSold")) {
+        return value;
+      }
+      return "";
+    },
+    formatDescription: function (value, view, model) {
+      var descrip1 = model.get("description1") || "",
+        descrip2 = model.get("description2") || "",
+        sep = descrip2 ? " - " : "";
+      return descrip1 + sep + descrip2;
     }
   });
 
@@ -786,6 +838,42 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.ItemSiteRelation", "XV.ItemSiteList");
+
+  // ..........................................................
+  // LEDGER ACCOUNT
+  //
+
+  enyo.kind({
+    name: "XV.LedgerAccountList",
+    kind: "XV.List",
+    label: "_ledgerAccounts".loc(),
+    collection: "XM.LedgerAccountRelationCollection",
+    query: {orderBy: [
+      {attribute: 'name'}
+    ]},
+    parameterWidget: "XV.LedgerAccountListParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "name", isKey: true},
+              {kind: "XV.ListAttr", attr: "getAccountTypeString", fit: true,
+                classes: "right"}
+            ]},
+            {kind: "XV.ListAttr", attr: "description"}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "externalReference"},
+            {kind: "XV.ListAttr", attr: "isActive", formatter: "formatActive"}
+          ]}
+        ]}
+      ]}
+    ],
+    formatActive: function (value, view, model) {
+      return value ? "" : "_inactive".loc();
+    }
+  });
 
   // ..........................................................
   // OPPORTUNITY
@@ -1107,9 +1195,7 @@ trailing:true white:true*/
       customer will be created.
      */
     convertProspect: function (inSender, inEvent) {
-      var that = this,
-        modelStatusChanged,
-        index = inEvent.index,
+      var index = inEvent.index,
         collection = this.getValue(),
         prospectModel = collection.at(index),
         modelId = prospectModel.id,

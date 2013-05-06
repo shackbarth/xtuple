@@ -377,6 +377,8 @@ trailing:true white:true*/
       },
       {name: "number", label: "_number".loc(), attr: "number"},
       {name: "description", label: "_description".loc(), attr: ["description1", "description2"]},
+      {name: "itemType", label: "_type".loc(), attr: "itemType",
+        defaultKind: "XV.ItemTypePicker"},
       {name: "classCode", label: "_classCode".loc(), attr: "classCode",
         defaultKind: "XV.ClassCodePicker"},
       {name: "category", label: "_category".loc(), attr: "productCategory",
@@ -429,6 +431,36 @@ trailing:true white:true*/
         defaultKind: "XV.PlannerCodePicker"},
       {name: "plannerCodePattern", label: "_code".loc(), attr: "plannerCode.code"}
     ]
+  });
+  
+  // ..........................................................
+  // LEDGER ACCOUNT
+  //
+
+  enyo.kind({
+    name: "XV.LedgerAccountListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_ledgerAccount".loc()},
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "description", label: "_description".loc(), attr: "description"},
+      {name: "accountType", label: "_type".loc(), attr: "accountType",
+        defaultKind: "XV.LedgerAccountTypePicker"}
+    ]
+    
   });
 
   // ..........................................................
