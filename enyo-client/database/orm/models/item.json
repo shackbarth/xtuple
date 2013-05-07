@@ -323,8 +323,7 @@
         "name": "itemSites",
         "toMany": {
           "type": "ItemSiteRelation",
-          "column": "item_id",
-          "isNested": "true"
+          "column": "item_id"
         }
       }
     ],
