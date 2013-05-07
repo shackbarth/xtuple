@@ -924,7 +924,7 @@ white:true*/
 
           // Loop through each item and see if we can sell on
           // requested date
-          _.each(lineItems, function (line) {
+          _.each(lineItems.models, function (line) {
             var item = line.getValue("itemSite.item");
             id = line.id;
             customer.canPurchase(item, scheduleDate, custOptions);
