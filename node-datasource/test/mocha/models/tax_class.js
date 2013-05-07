@@ -13,13 +13,15 @@ var crud = require('../lib/crud'),
 		zombieAuth = require('../../vows/lib/zombie_auth'),
 
     data = {
-    recordType: "XM.Address",
+    recordType: "XM.TaxClass",
     autoTestAttributes: true,
     createHash: {
-      line1: "123 Main St"
+      code: "TC Code",
+			description: "Tax Class Code",
+			sequence: "998"
     },
     updateHash: {
-      line1: "456 Main St"
+      description: "updated descrip"
     }
   };
 
@@ -28,41 +30,41 @@ var crud = require('../lib/crud'),
 
 var timeout = 20 * 1000;
 
-describe.skip('Address CRUD Test', function () {
+describe.skip('Tax Class CRUD Test', function () {
     this.timeout(20 * 1000);
     it('should perform all the crud operations', function (done) {
       crud.runAllCrud(data, done);
     });
   });
 
-describe('Address CRUD Test', function () {
+describe('Tax Class CRUD Test', function () {
 	  before(function (done){
         this.timeout(timeout);
 			  zombieAuth.loadApp(done);
 			});
 
-			it('should be able to Initialize an XM.Address Model', function(){
-				data.model = new XM.Address();
+			it('should be able to Initialize an XM.TaxClass Model', function(){
+				data.model = new XM.TaxClass();
 				expect(data.model).to.exist;
-				assert.equal(data.model.recordType, 'XM.Address', 'INIT Value should be XM.Address');
+				assert.equal(data.model.recordType, 'XM.TaxClass', 'INIT Value should be XM.Address');
 			});
 
-			it.skip('should create an XM.Address Model', function(){
+			it.skip('should create an XM.TaxClass Model', function(){
 				data.model.set(data.createHash);
 				crud.save(data)
 			});
 
-			it.skip('should read an XM.Address Model', function(){
-				assert.equal(data.model.get('line1'), data.createHash.line1, 'Model Code READ Value is equal')
+			it.skip('should read an XM.TaxClass Model', function(){
+				assert.equal(data.model.get('code'), data.createHash.code, 'Model Code READ Value is equal')
 			});
 
-			it.skip('should update an XM.Address Model', function(){
+			it.skip('should update an XM.TaxClass Model', function(){
 				data.model.set(data.updateHash);
 				crud.save(data)
-				assert.equal(data.model.get('line1'), data.updateHash.line1, 'Model Code UPDATE Value is equal')
+				assert.equal(data.model.get('description'), data.updateHash.description, 'Model Code UPDATE Value is equal')
 			});
 
-			it('should delete an XM.Address Model', function(){
+			it('should delete an XM.TaxClass Model', function(){
 				crud.destroy(data)
 			});
 
