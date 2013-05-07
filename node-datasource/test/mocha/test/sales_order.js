@@ -18,23 +18,22 @@
    */
   var getSetCallback = function (lineRecordType) {
     return function (data, next) {
-      var lineItem = new XM[lineRecordType.substring(3)](),
+
+      var movedOn = false,
+        lineItem = new XM[lineRecordType.substring(3)](),
         itemSite = new XM.ItemSiteRelation(),
         modelFetched = function () {
           if (lineItem.isReady() && itemSite.isReady()) {
             var unitUpdated = function () {
-              //console.log("unit updated", arguments);
-              //console.log(lineItem.get("price"), lineItem.get("customerPrice"), lineItem.get("profit"), lineItem.get("tax"), lineItem.get("listPriceDiscount"));
               // make sure all the fields we need to save successfully have been calculated
               if (lineItem.get("price") &&
-                  lineItem.get("customerPrice") &&
-                  lineItem.get("profit") &&
-                  lineItem.get("tax") &&
-                  lineItem.get("listPriceDiscount")) {
+                  lineItem.get("customerPrice")) {
 
-                //console.log("ready to move on");
-                lineItem.off("all", unitUpdated);
-                next();
+                //lineItem.off("all", unitUpdated);
+                if (!movedOn) {
+                  movedOn = true;
+                  next();
+                }
               }
             };
 
@@ -42,12 +41,13 @@
             // fields. run the callback when they all have been set
             lineItem.on("all", unitUpdated); // XXX do better than this
             data.model.get("lineItems").add(lineItem);
+            data.model.set({currency: XM.currencies.models[0]}); // XXX shouldn't be necessary
             lineItem.set({quantity: 7});
             lineItem.set({itemSite: itemSite});
           }
         };
       itemSite.on("statusChange", modelFetched);
-      itemSite.fetch({uuid: "ddbd5ae8-064e-41e1-91f6-5de054953fa3" /* BTRUCK WH1 */});
+      itemSite.fetch({uuid: "ddbd5ae8-064e-41e1-91f6-5de054953fa3" /* BTRUCK1 WH1 */});
       lineItem.on("statusChange", modelFetched);
       lineItem.initialize(null, {isNew: true});
     };
@@ -95,7 +95,7 @@
     };
 
   describe('Sales order', function () {
-    this.timeout(10 * 1000);
+    this.timeout(15 * 1000);
     it('should perform all the crud operations', function (done) {
       crud.runAllCrud(salesOrderData, done);
     });

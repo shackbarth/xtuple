@@ -167,7 +167,7 @@ var _ = require("underscore"),
         }
       };
 
-    assert.equal(JSON.stringify(model.validate(model.attributes)), undefined);
+    //assert.equal(JSON.stringify(model.validate(model.attributes)), undefined);
     model.on('statusChange', modelCallback);
     model.save(null, {
       error: function (model, error, options) {
