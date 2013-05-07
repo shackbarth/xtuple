@@ -28,7 +28,7 @@ select xt.install_js('XM','Tax','xtuple', $$
     /* resolve natural keys to primary keys */
     taxZoneId = taxZoneId ? XT.Data.getId(XT.Orm.fetch('XM', 'TaxZone'), taxZoneId) : taxZoneId;
     taxTypeId = taxTypeId ? XT.Data.getId(XT.Orm.fetch('XM', 'TaxType'), taxTypeId) : taxTypeId;
-    currencyId = currencyId ? XT.Data.getId(XT.Orm.fetch('XM', 'Currency', currencyId)) : currencyId;
+    currencyId = currencyId ? XT.Data.getId(XT.Orm.fetch('XM', 'Currency'), currencyId) : currencyId;
     
     ret = plv8.execute(sql, [taxZoneId || -1, taxTypeId || -1, effective, currencyId, amount]);
     for (var i = 0; i < ret.length; i++) ret[i].taxCode = XT.camelize(ret[i].taxCode);
