@@ -171,18 +171,6 @@ white:true*/
   });
 
   /**
-    @instance
-
-    Dummy product category for setting -1 values.
-  */
-  XM.emptyProductCategory = new XM.ProductCategory({
-    /** @scope XM.emptyProductCategory */
-    id: -1,
-    code: 'EMPTY',
-    description: 'Use for indicating no product category'
-  });
-
-  /**
     @class
 
     @extends XM.Document
@@ -203,6 +191,14 @@ white:true*/
     ]
 
   });
+  
+  /** @private */
+  var _isSoldDidChange = function () {
+    var isNotSold = !(this.get('isSold') || false);
+    this.setReadOnly('productCategory', isNotSold);
+    this.setReadOnly('priceUnit', isNotSold);
+    this.setReadOnly('listPrice', isNotSold);
+  };
 
   /**
     @class
@@ -224,8 +220,7 @@ white:true*/
         isFractional: false,
         isSold: true,
         itemType: XM.Item.PURCHASED,
-        listPrice: 0,
-        productCategory: XM.emptyProductCategory
+        listPrice: 0
       };
     },
 
@@ -237,8 +232,7 @@ white:true*/
       "isSold",
       "itemType",
       "listPrice",
-      "priceUnit",
-      "productCategory"
+      "priceUnit"
     ],
 
     // ..........................................................
@@ -250,7 +244,6 @@ white:true*/
       this.on('change:inventoryUnit', this.inventoryUnitDidChange);
       this.on('change:isSold', this.isSoldDidChange);
       this.on('change:itemType', this.itemTypeDidChange);
-      this.on('statusChange', this.isSoldDidChange);
     },
 
     inventoryUnitDidChange: function (model, value, options) {
@@ -258,13 +251,11 @@ white:true*/
     },
 
     isSoldDidChange: function () {
-      var K = XM.Model,
-        isNotSold = !(this.get('isSold') || false);
-      if (this.getStatus() & K.READY) {
-        this.setReadOnly('productCategory', isNotSold);
-        this.setReadOnly('priceUnit', isNotSold);
-        this.setReadOnly('listPrice', isNotSold);
+      if (!(this.get('isSold') || false)) {
+        this.unset('productCategory');
+        this.set('listPrice', 0);
       }
+      _isSoldDidChange.apply(this);
     },
     
     itemTypeDidChange: function () {
@@ -359,13 +350,14 @@ white:true*/
       if (this.getStatus() === K.READY_CLEAN) {
         this.setReadOnly('number');
         this.setReadOnly('inventoryUnit');
+        _isSoldDidChange.apply(this);
       }
     },
 
     validate: function () {
       var isSold = this.get('isSold'),
         productCategory = this.get('productCategory');
-      if (isSold && (productCategory.id || -1) === -1) {
+      if (isSold && !productCategory) {
         return XT.Error.clone('xt2005');
       }
       return XM.Document.prototype.validate.apply(this, arguments);
