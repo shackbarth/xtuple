@@ -211,6 +211,13 @@ white:true*/
 
           // Define the results handler
           fetchOptions.success = function () {
+            
+            // Remove from active requests
+            _activeRequests = _.filter(_activeRequests, function (request) {
+              return request.currency.id !== that.id ||
+                XT.date.compareDate(asOf, request.asOf) !== 0;
+            });
+            
             // If no results report an error
             if (!rates.length) {
               if (options.error) {
@@ -335,6 +342,13 @@ white:true*/
 
           // Define the results handler
           fetchOptions.success = function () {
+            
+            // Remove from active requests
+            _activeRequests = _.filter(_activeRequests, function (request) {
+              return request.currency.id !== that.id ||
+                XT.date.compareDate(asOf, request.asOf) !== 0;
+            });
+            
             // If no results report an error
             if (!rates.length) {
               if (options.error) {
