@@ -47,7 +47,6 @@ white:true*/
     },
 
     requiredAttributes: [
-      "id",
       "plannerCode",
       "costCategory"
     ],
