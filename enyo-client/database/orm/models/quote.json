@@ -100,7 +100,7 @@
       {
         "name": "site",
         "toOne": {
-          "type": "SiteRelation",
+          "type": "Site",
           "column": "quhead_warehous_id"
         }
       },

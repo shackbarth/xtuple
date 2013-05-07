@@ -329,7 +329,8 @@
         "name": "preferredSite",
         "toOne": {
           "type": "SiteRelation",
-          "column": "cust_preferred_warehous_id"
+          "column": "cust_preferred_warehous_id",
+          "nullValue": -1
         }
       }
     ],
@@ -1842,8 +1843,9 @@
       {
         "name": "preferredSite",
         "toOne": {
-          "type": "SiteRelation",
-          "column": "site"
+          "type": "Site",
+          "column": "site",
+          "nullValue": -1
         }
       },
       {
