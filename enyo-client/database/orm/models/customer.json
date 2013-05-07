@@ -1843,8 +1843,9 @@
       {
         "name": "preferredSite",
         "toOne": {
-          "type": "SiteRelation",
-          "column": "site"
+          "type": "Site",
+          "column": "site",
+          "nullValue": -1
         }
       },
       {
