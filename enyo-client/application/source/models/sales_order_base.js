@@ -267,7 +267,7 @@ white:true*/
           freight: 0,
           miscCharge: 0,
           total: 0,
-          site: XT.defaultSite()
+          site: XT.defaultSite().toJSON()
         };
 
       // the name of this field is different for different business objects
