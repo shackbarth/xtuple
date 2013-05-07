@@ -19,7 +19,7 @@ white:true*/
 
     recordType: 'XM.Currency',
 
-    documentKey: 'name',
+    documentKey: 'abbreviation',
 
     enforceUpperKey: false,
 
@@ -28,7 +28,6 @@ white:true*/
     },
 
     requiredAttributes: [
-      'abbreviation',
       'isBase',
       'name',
       'symbol'
@@ -38,25 +37,25 @@ white:true*/
     // METHODS
     //
 
-    abbreviationDidChange: function (model, value, options) {
+    nameDidChange: function (model, value, options) {
       var that = this,
         checkOptions = {};
 
       checkOptions.success = function (resp) {
         var err, params = {};
         if (resp) {
-          params.attr = "_abbreviation".loc();
+          params.attr = "_name".loc();
           params.value = value;
           err = XT.Error.clone('xt1008', { params: params });
           that.trigger('error', that, err, options);
         }
       };
-      this.findExisting('abbreviation', value, checkOptions);
+      this.findExisting('name', value, checkOptions);
     },
 
     bindEvents: function () {
       XM.Document.prototype.bindEvents.apply(this, arguments);
-      this.on('change:abbreviation', this.abbreviationDidChange);
+      this.on('change:name', this.nameDidChange);
     },
 
     /**
