@@ -130,7 +130,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
 
     localValueChanged: function () {
-      this.$.input.setValue(this.getLocalValue(), {silent: true});
+      this.valueChanged(this.getLocalValue()); // forward to XV.Number default for formatting
       this.recalculate();
     },
     
