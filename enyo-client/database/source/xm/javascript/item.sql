@@ -47,7 +47,7 @@ select xt.install_js('XM','item','xtuple', $$
   XM.Item.taxType = function(itemId, taxZoneId) {
     var sql = 'select getItemTaxType(item_id, $2::integer) as "taxType" from item where item_number = $1;';
     if (taxZoneId) {
-      taxZoneId = XT.Data.getId(XT.Orm('XM','TaxZone'), taxZoneId);
+      taxZoneId = XT.Data.getId(XT.Orm.fetch('XM','TaxZone'), taxZoneId);
     }
     return plv8.execute(sql, [itemId, taxZoneId])[0].taxType || 0;
   }

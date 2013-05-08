@@ -241,7 +241,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "ToDoRelation",
-    "table": "todoitem",
+    "table": "xt.todoiteminfo",
     "isExtension": true,
     "comment": "Extended by Crm",
     "relations": [
@@ -254,15 +254,15 @@
       {
         "name": "incident",
         "attr": {
-          "type": "Number",
-          "column": "todoitem_incdt_id"
+          "type": "String",
+          "column": "incdt_number"
         }
       },
       {
         "name": "opportunity",
         "attr": {
-          "type": "Number",
-          "column": "todoitem_ophead_id"
+          "type": "String",
+          "column": "ophead_number"
         }
       }
     ],
@@ -381,15 +381,7 @@
         "name": "toDoRelations",
         "toMany": {
           "type": "ToDoRelation",
-          "column": "ophead_id",
-          "inverse": "opportunity"
-        }
-      },
-      {
-        "name": "quoteRelations",
-        "toMany": {
-          "type": "QuoteRelation",
-          "column": "ophead_id",
+          "column": "ophead_number",
           "inverse": "opportunity"
         }
       }
