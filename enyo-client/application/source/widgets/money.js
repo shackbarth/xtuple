@@ -97,73 +97,8 @@ regexp:true, undef:true, trailing:true, white:true */
       this.setLocalMode(_.has(this.getAttr(), "localValue"));
     },
 
-    /**
-      Converts the local value to the base amount and bubbles that value in a new event
-     */
-    calculateBase: function () {
-      var localValue = this.getLocalValue(),
-        currency = this.getCurrency(),
-        effective = this.getEffective(),
-        showing = _.isDate(effective) && currency && !currency.get("isBase"),
-        options = {},
-        that = this,
-        i;
-
-      if (!currency || !effective) { return; }
-      
-      // Keep track of requests, we'll ignore stale ones
-      this._counter = _.isNumber(this._counter) ? this._counter + 1 : 0;
-      i = this._counter;
-
-      if (_.isNumber(localValue)) {
-        options.success = function (baseValue) {
-          // I only smell freshness
-          if (i < that._counter) { return; }
-          that.setBaseValue(baseValue);
-        };
-        currency.toBase(localValue, effective, options);
-      } else { // amount is null
-        that.setBaseValue(null);
-      }
-
-      this.$.basePanel.setShowing(showing);
-    },
-
-    /**
-      Converts the base value to the local value and sets this value in the widget
-     */
-    calculateLocal: function () {
-      var baseValue = this.getBaseValue(),
-        effective = this.getEffective(),
-        currency = this.getCurrency(),
-        options = {},
-        that = this,
-        i;
-        
-      if (!currency || !effective) { return; }
-
-       // Keep track of requests, we'll ignore stale ones
-      this._counter = _.isNumber(this._counter) ? this._counter + 1 : 0;
-      i = this._counter;
-
-      if (currency.get("isBase")) {
-        // we're at base, so just set the fields with the base value we have
-        this.setLocalValue(baseValue);
-      } else {
-        if (_.isNumber(baseValue)) {
-          options.success = function (localValue) {
-            // I only smell freshness
-            if (i < that._counter) { return; }
-            that.setLocalValue(localValue);
-          };
-          options.error = function (err) {
-            console.log("error");
-          };
-          currency.fromBase(baseValue, effective, options);
-        }
-      }
-      
-      this.$.basePanel.setShowing(false);
+    clear: function (options) {
+      this.setValue({localValue: null}, options);
     },
 
     currencyChanged: function () {
@@ -200,19 +135,47 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     
     recalculate: function () {
-      if (this.getLocalMode()) {
-        this.calculateBase();
-      } else {
-        this.calulateLocal();
+      var localMode = this.getLocalMode(),
+        value = localMode ? this.getLocalValue() : this.getBaseValue(),
+        request = localMode ? "toBase" : "fromBase",
+        setter = localMode ? "setBaseValue" : "setLocalValue",
+        currency = this.getCurrency(),
+        effective = this.getEffective(),
+        showing = localMode && _.isDate(effective) && currency &&
+          !currency.get("isBase"),
+        options = {},
+        that = this,
+        i;
+
+      if (!currency || !effective) { return; }
+      
+      // Keep track of requests, we'll ignore stale ones
+      this._counter = _.isNumber(this._counter) ? this._counter + 1 : 0;
+      i = this._counter;
+
+      if (_.isNumber(value)) {
+        if (currency.get("isBase")) {
+         // we're at base, so just set the fields with the base value we have
+          this[setter](value);
+        } else {
+          options.success = function (calcValue) {
+            // I only smell freshness
+            if (i < that._counter) { return; }
+            that[setter](calcValue);
+          };
+          currency[request](value, effective, options);
+        }
+      } else { // amount is null
+        that[setter](null);
       }
+
+      this.$.basePanel.setShowing(showing);
     },
 
     /**
       This setValue function handles a value which is an
       object potentially consisting of multiple key/value pairs for the
-      amount and currency controls. It will typically be called this
-      way by the workspace, with silent:true, and in this case it
-      has to appropriately propagate the values to the widgets.
+      amount and currency controls.
 
       @param {Object} Value
       @param {Object} [value.currency] Currency
