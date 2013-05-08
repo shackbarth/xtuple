@@ -356,11 +356,11 @@ app.get('/syncUser', routes.syncUser);
 // Set up the other servers we run on different ports.
 var unexposedServer = express();
 unexposedServer.get('/maintenance', routes.maintenanceLocalhost);
-unexposedServer.listen(442);
+unexposedServer.listen(X.options.datasource.maintenancePort);
 
 var redirectServer = express();
 redirectServer.get(/.*/, routes.redirect); // RegEx for "everything"
-redirectServer.listen(80);
+redirectServer.listen(X.options.datasource.redirectPort);
 
 /**
  * Start the express server. This is the NEW way.
