@@ -335,8 +335,7 @@ trailing:true white:true*/
      This is the parent line editor. It mixes in the base line functionality
      for both
    */
-  var lineEditor = enyo.mixin(XV.LineMixin, {
-    name: "XV.BaseLineItemEditor",
+  var lineEditor = {
     kind: "XV.RelationsEditor",
     components: [
       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
@@ -372,19 +371,17 @@ trailing:true white:true*/
         {kind: "XV.TextArea", attr: "notes", fit: true}
       ]}
     ]
-  });
-  enyo.kind(lineEditor);
+  };
+  enyo.mixin(lineEditor, XV.LineMixin);
 
-  var quoteLineEditor = enyo.mixin(XV.QuoteLineMixin, {
-    name: "XV.QuoteLineItemEditor",
-    kind: "XV.BaseLineItemEditor"
-  });
+  var quoteLineEditor = {name: "XV.QuoteLineItemEditor"};
+  enyo.mixin(quoteLineEditor, lineEditor);
+  enyo.mixin(quoteLineEditor, XV.QuoteLineMixin);
   enyo.kind(quoteLineEditor);
 
-  var salesOrderLineEditor = enyo.mixin(XV.SalesOrderLineMixin, {
-    name: "XV.SalesOrderLineItemEditor",
-    kind: "XV.BaseLineItemEditor"
-  });
+  var salesOrderLineEditor = {name: "XV.SalesOrderLineItemEditor"};
+  enyo.mixin(salesOrderLineEditor, lineEditor);
+  enyo.mixin(salesOrderLineEditor, XV.SalesOrderLineMixin);
   enyo.kind(salesOrderLineEditor);
 
   enyo.kind({
