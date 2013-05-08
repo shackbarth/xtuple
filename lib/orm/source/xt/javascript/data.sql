@@ -41,7 +41,12 @@ select xt.install_js('XT','Data','xtuple', $$
           prevOrm,
           clause,
           orClause,
+          orClause2,
           clauses = [],
+          clauses2 = [],
+          identifiers = [],
+          pcount,
+          params = [],
           attr,
           parts,
           op,
@@ -49,7 +54,7 @@ select xt.install_js('XT','Data','xtuple', $$
           i,
           n,
           c,
-          cnt = 1,
+          count = 1,
           ret = {},
           list = [],
           prop;
@@ -75,8 +80,9 @@ select xt.install_js('XT','Data','xtuple', $$
 
         /* Handle parameters. */
         if (parameters.length) {
-          for (i = 0; i < parameters.length; i++) {
+          for (var i = 0; i < parameters.length; i++) {
             orClause = [];
+            orClause2 = [];
             param = parameters[i];
             op = param.operator || '=';
             switch (op) {
@@ -98,18 +104,18 @@ select xt.install_js('XT','Data','xtuple', $$
               break;
             case 'ANY':
               op = '<@';
-              for (c = 0; c < param.value.length; c++) {
+              for (var c = 0; c < param.value.length; c++) {
                 ret.parameters.push(param.value[c]);
-                param.value[c] = '$' + cnt;
-                cnt++;
+                param.value[c] = '$' + count;
+                count++;
               }
               break;
             case 'NOT ANY':
               op = '!<@';
-              for (c = 0; c < param.value.length; c++) {
+              for (var c = 0; c < param.value.length; c++) {
                 ret.parameters.push(param.value[c]);
-                param.value[c] = '$' + cnt;
-                cnt++;
+                param.value[c] = '$' + count;
+                count++;
               }
               break;
             default:
@@ -153,6 +159,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
             /* Array comparisons handle another way. */
             } else if (op === '<@' || op === '!<@') {
+              plv8.elog(WARNING, 'NOT ANY: ', JSON.stringify(parameters));
               clause = param.attribute + ' ' + op + ' ARRAY[' + param.value.join(',') + ']';
               clauses.push(clause);
 
@@ -162,26 +169,33 @@ select xt.install_js('XT','Data','xtuple', $$
                 param.attribute = [param.attribute];
               }
 
-              for (c = 0; c < param.attribute.length; c++) {
+              for (var c = 0; c < param.attribute.length; c++) {
                 /* Handle paths if applicable. */
                 if (param.attribute[c].indexOf('.') > -1) {
                   parts = param.attribute[c].split('.');
                   childOrm = orm;
                   attr = "";
-                  for (n = 0; n < parts.length; n++) {
-                    /* validate attribute */
+                  params.push("");
+                  pcount = params.length - 1;
+                  for (var n = 0; n < parts.length; n++) {
+                    /* Validate attribute. */
                     prop = XT.Orm.getProperty(childOrm, parts[n]);
                     if (!prop) {
                       plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[n]);
                     }
 
-                    /* build path */
+                    /* Build path. e.g. ((%1$I).%2$I).%3$I */
                     attr += '"' + parts[n] + '"';
+                    identifiers.push(parts[n]);
+                    params[pcount] += "%" + identifiers.length + "$I";
+
                     if (n < parts.length - 1) {
                       attr = "(" + attr + ").";
+                      params[pcount] = "(" + params[pcount] + ").";
                       childOrm = XT.Orm.fetch(nameSpace, prop.toOne.type);
                     } else if (param.isLower) {
                       attr = "lower(" + attr + ")";
+                      params[pcount] = "lower(" + params[pcount] + ")";
                     }
                   }
                 } else {
@@ -191,37 +205,57 @@ select xt.install_js('XT','Data','xtuple', $$
                     plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
                   }
                   attr = '"' + param.attribute[c] + '"';
+                  identifiers.push(param.attribute[c]);
+                  params.push("%" + identifiers.length + "$I");
+                  pcount = params.length - 1;
                 }
 
-                arg = '$' + cnt;
+                arg = '$' + count;
                 if (prop.attr && prop.attr.type === 'Date') { arg += '::date'; }
 
                 clause = [];
                 clause.push(attr);
                 clause.push(op);
                 clause.push(arg);
+
+                /* Add optional is null caluse. */
                 if (parameters[i].includeNull) {
+                  /* e.g. %1$I = $1 or %1$I is null */
                   clause.push(' or ' + attr + 'is null');
+                  params[pcount] = params[pcount] + " " + op + ' $' + count + ' or ' + params[pcount] + ' is null';
+                } else {
+                  /* e.g. %1$I = $1 */
+                  params[pcount] += " " + op + ' $' + count;
                 }
+
                 orClause.push(clause.join(''));
+                orClause2.push(params[pcount]);
               }
+
               clauses.push('(' + orClause.join(' or ') + ')');
-              cnt++;
+              clauses2.push('(' + orClause2.join(' or ') + ')');
+              count++;
               ret.parameters.push(param.value);
             }
           }
         }
+        plv8.elog(NOTICE, 'params: ' + JSON.stringify(params).substring(0, 965));
+        plv8.elog(NOTICE, 'identifiers: ' + JSON.stringify(identifiers).substring(0, 965));
+        plv8.elog(NOTICE, 'clauses: ' + JSON.stringify(clauses).substring(0, 965));
+        plv8.elog(NOTICE, 'clauses2: ' + JSON.stringify(clauses2).substring(0, 965));
         ret.conditions = (clauses.length ? '(' + clauses.join(' and ') + ')' : ret.conditions) || true;
+        ret.conditions2 = (clauses.length ? '(' + XT.format(clauses2.join(' and '), identifiers) + ')' : ret.conditions) || true;
+        plv8.elog(NOTICE, 'conditions2: ' + JSON.stringify(ret.conditions2).substring(0, 965));
 
         /* Massage ordeBy with quoted identifiers. */
         if (orderBy) {
-          for (i = 0; i < orderBy.length; i++) {
+          for (var i = 0; i < orderBy.length; i++) {
             /* Handle path case. */
             if (orderBy[i].attribute.indexOf('.') > -1) {
               attr = "";
               parts = orderBy[i].attribute.split('.');
               prevOrm = orm;
-              for (n = 0; n < parts.length; n++) {
+              for (var n = 0; n < parts.length; n++) {
                 prop = XT.Orm.getProperty(orm, parts[n]);
                 if (!prop) {
                   plv8.elog(ERROR, 'Attribute not found in map: ' + parts[n]);
@@ -251,6 +285,8 @@ select xt.install_js('XT','Data','xtuple', $$
           }
         }
         ret.orderBy = list.length ? 'order by ' + list.join(',') : '';
+
+        plv8.elog(NOTICE, 'buildClause: ' + JSON.stringify(ret).substring(0, 965));
 
         return ret;
       } catch (err) {
@@ -289,7 +325,7 @@ select xt.install_js('XT','Data','xtuple', $$
                  '  ) userrolepriv on (userrolepriv_priv_id=priv_id) ' +
                  'where priv_name = $2';
 
-          for (i = 1; i < privArray.length; i++) {
+          for (var i = 1; i < privArray.length; i++) {
             sql = sql + ' or priv_name = $' + (i + 2);
           }
           sql = sql + ";";
@@ -298,8 +334,8 @@ select xt.install_js('XT','Data','xtuple', $$
           privArray.unshift(XT.username);
 
           if (DEBUG) {
-            plv8.elog(NOTICE, 'commitMetrics sql =', sql);
-            plv8.elog(NOTICE, 'commitMetrics values =', privArray);
+            plv8.elog(NOTICE, 'checkPrivilege sql =', sql);
+            plv8.elog(NOTICE, 'checkPrivilege values =', privArray);
           }
           res = plv8.execute(sql, privArray);
           ret = res.length ? res[0].granted : false;
@@ -393,7 +429,7 @@ select xt.install_js('XT','Data','xtuple', $$
                   ret,
                   part,
                   idx;
-                for (idx = 0; idx < parts.length; idx++) {
+                for (var idx = 0; idx < parts.length; idx++) {
                   part = parts[idx];
                   ret = ret ? ret[part] : obj[part];
                   if (ret === null || ret === undefined) {
@@ -563,7 +599,7 @@ select xt.install_js('XT','Data','xtuple', $$
           i;
 
         /* Handle extensions on the same table. */
-        for (i = 0; i < orm.extensions.length; i++) {
+        for (var i = 0; i < orm.extensions.length; i++) {
           if (orm.extensions[i].table === orm.table) {
             sql = this.prepareInsert(orm.extensions[i], data, sql, encryptionKey);
           }
@@ -577,7 +613,7 @@ select xt.install_js('XT','Data','xtuple', $$
         plv8.execute(sql.statement, sql.values);
 
         /* Handle extensions on other tables. */
-        for (i = 0; i < orm.extensions.length; i++) {
+        for (var i = 0; i < orm.extensions.length; i++) {
           if (orm.extensions[i].table !== orm.table &&
              !orm.extensions[i].isChild) {
             sql = this.prepareInsert(orm.extensions[i], data, null, encryptionKey);
@@ -645,7 +681,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
         /* If extension handle key. */
         if (orm.relations) {
-          for (i = 0; i < orm.relations.length; i++) {
+          for (var i = 0; i < orm.relations.length; i++) {
             if (!params.columns.contains(column)) {
               params.columns.push("%" + count + "$I");
               params.values.push(record[orm.relations[i].inverse]);
@@ -657,7 +693,7 @@ select xt.install_js('XT','Data','xtuple', $$
         }
 
         /* Build up the content for insert of this record. */
-        for (i = 0; i < orm.properties.length; i++) {
+        for (var i = 0; i < orm.properties.length; i++) {
           ormp = orm.properties[i];
           prop = ormp.name;
           attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
@@ -789,7 +825,7 @@ select xt.install_js('XT','Data','xtuple', $$
         }
 
         /* Handle extensions on the same table. */
-        for (i = 0; i < orm.extensions.length; i++) {
+        for (var i = 0; i < orm.extensions.length; i++) {
           if (orm.extensions[i].table === orm.table) {
             sql = this.prepareUpdate(orm.extensions[i], data, sql, encryptionKey);
           }
@@ -805,7 +841,7 @@ select xt.install_js('XT','Data','xtuple', $$
         var test = plv8.execute(sql.statement, sql.values);
 
         /* Handle extensions on other tables. */
-        for (i = 0; i < orm.extensions.length; i++) {
+        for (var i = 0; i < orm.extensions.length; i++) {
           ext = orm.extensions[i];
           if (ext.table !== orm.table &&
              !ext.isChild) {
@@ -906,7 +942,7 @@ select xt.install_js('XT','Data','xtuple', $$
         }
 
         /* Build up the content for update of this record. */
-        for (i = 0; i < orm.properties.length; i++) {
+        for (var i = 0; i < orm.properties.length; i++) {
           ormp = orm.properties[i];
           prop = ormp.name;
           attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
@@ -1031,7 +1067,7 @@ select xt.install_js('XT','Data','xtuple', $$
           /* If the property is an array of objects they must be records so delete them. */
           if (ormp.toMany && ormp.toMany.isNested) {
             values = data[prop];
-            for (i = 0; i < values.length; i++) {
+            for (var i = 0; i < values.length; i++) {
               this.deleteRecord({
                 nameSpace: options.nameSpace,
                 type: ormp.toMany.type,
@@ -1042,7 +1078,7 @@ select xt.install_js('XT','Data','xtuple', $$
         }
 
         /* Next delete from extension tables. */
-        for (i = 0; i < orm.extensions.length; i++) {
+        for (var i = 0; i < orm.extensions.length; i++) {
           ext = orm.extensions[i];
           if (ext.table !== orm.table &&
               !ext.isChild) {
@@ -1088,7 +1124,7 @@ select xt.install_js('XT','Data','xtuple', $$
       try {
         var orm = XT.Orm.fetch(nameSpace, type);
 
-        for (var prop in record) {
+        for (prop in record) {
           var ormp = XT.Orm.getProperty(orm, prop.camelize());
 
           /* Decrypt property if applicable. */
@@ -1155,8 +1191,18 @@ select xt.install_js('XT','Data','xtuple', $$
       try {
         var pcol = XT.Orm.primaryKey(orm, true),
           ncol = XT.Orm.naturalKey(orm, true),
-          query = "select %1$I as id from %2$I where %3$I = $1",
+          query,
+          sql;
+
+        if (orm.table.indexOf(".") > 0) {
+          namespace = orm.table.beforeDot();
+          table = orm.table.afterDot();
+          query = "select %1$I as id from %2$I.%3$I where %4$I = $1";
+          sql = XT.format(query, [pcol, namespace, table, ncol]);
+        } else {
+          query = "select %1$I as id from %2$I where %3$I = $1";
           sql = XT.format(query, [pcol, orm.table, ncol]);
+        }
 
 // TODO - Handle not found error.
 
@@ -1249,7 +1295,7 @@ select xt.install_js('XT','Data','xtuple', $$
                .replace('{offset}', offset);
       if (DEBUG) { plv8.elog(NOTICE, 'sql = ', sql); }
       ret.data = plv8.execute(sql, clause.parameters) || [];
-      for (i = 0; i < ret.data.length; i++) {
+      for (var i = 0; i < ret.data.length; i++) {
         ret.data[i] = this.decrypt(nameSpace, type, ret.data[i]);
       }
 
@@ -1402,15 +1448,15 @@ select xt.install_js('XT','Data','xtuple', $$
         c,
         i,
         n;
-      for (c = 0; c < data.length; c++) {
+      for (var c = 0; c < data.length; c++) {
         item = data[c];
         if (nkey && nkey !== pkey) { delete item[pkey]; }
-        for (i = 0; i < props.length; i++) {
+        for (var i = 0; i < props.length; i++) {
           prop = props[i];
           if (prop.toOne && prop.toOne.isNested && item[prop.name]) {
             this.removeKeys(nameSpace, prop.toOne.type, item[prop.name]);
           } else if (prop.toMany && prop.toMany.isNested && item[prop.name]) {
-            for (n = 0; n < item[prop.name].length; n++) {
+            for (var n = 0; n < item[prop.name].length; n++) {
               val = item[prop.name][n];
               delete val[prop.toMany.inverse];
               this.removeKeys(nameSpace, prop.toMany.type, val);
@@ -1433,7 +1479,9 @@ select xt.install_js('XT','Data','xtuple', $$
         qry,
         ret = {},
         prop;
-      for (var i = 0; i < keys.length; i++) keys[i] = "'" + keys[i] + "'";
+      for (var i = 0; i < keys.length; i++) {
+        keys[i] = "'" + keys[i] + "'";
+      }
       sql = sql.replace(/{keys}/, keys.join(','));
       qry =  plv8.execute(sql);
 
