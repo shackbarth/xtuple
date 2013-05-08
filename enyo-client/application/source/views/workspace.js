@@ -949,8 +949,9 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.AccountWidget", attr: "account"},
             {kind: "XV.ContactWidget", attr: "contact"},
-            {kind: "XV.MoneyWidget", attr: {localValue: "amount", currency: "currency"},
-              label: "_amount".loc(), effective: new Date()},
+            {kind: "XV.MoneyWidget",
+              attr: {localValue: "amount", currency: "currency"},
+              label: "_amount".loc()},
             {kind: "XV.NumberWidget", attr: "probability"},
             {kind: "onyx.GroupboxHeader", content: "_status".loc()},
             {kind: "XV.OpportunityStagePicker", attr: "opportunityStage",
@@ -1295,7 +1296,8 @@ trailing:true white:true*/
     printOnSaveSetting: "DefaultPrintSOOnSave",
     headerAttrs: ["number", "-", "billtoName"],
     published: {
-      orderDate: null
+      effectiveLabel: "_orderDate".loc(),
+      effectiveKey: "orderDate"
     },
     components: [
       {kind: "Panels", name: "salesPanels", arrangerKind: "CarouselArranger",
@@ -1367,7 +1369,16 @@ trailing:true white:true*/
     ],
     create: function () {
       this.inherited(arguments);
+      var effectiveKey = this.getEffectiveKey();
       this.build();
+      this.$.dateField.setLabel(this.getEffectiveLabel());
+      this.$.dateField.setAttr(effectiveKey);
+      this.getComponents().forEach(function (ctl) {
+        if (ctl.kind === "XV.MoneyWidget") {
+          ctl.setAttr(effectiveKey);
+        }
+      });
+      this.titleChanged();
     },
     customerChanged: function () {
       var customer = this.$.customerProspectWidget.getValue(),
@@ -1389,16 +1400,6 @@ trailing:true white:true*/
       var model = this.getValue(),
         customer = model ? model.get("customer") : false,
         isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : true;
-
-      // set the date attribute to the documentDateKey
-      this.setOrderDate(this.value.documentDateKey);
-      this.$.dateField.setAttr(this.getOrderDate());
-      // Loop through the components and set the effective date information for the Money widgets
-      this.getComponents().forEach(function (e) {
-        if (e.kind === "XV.MoneyWidget" && e.getEffective()) {
-          e.setEffective(this.getOrderDate());
-        }
-      });
 
       this.$.copyAddressButton.setDisabled(!isFreeFormShipto);
       this.customerChanged();
@@ -1424,12 +1425,11 @@ trailing:true white:true*/
     kind: "XV.SalesOrderBase",
     title: "_quote".loc(),
     model: "XM.Quote",
-    create: function () {
-      this.inherited(arguments);
-      this.titleChanged();
-    },
+    effectiveLabel: "_quoteDate".loc(),
+    effectiveKey: "quoteDate",
     /**
-      Loops through the components array of the parent kind and inserts the addtional components where they should be rendered.
+      Loops through the components array of the parent kind and inserts the addtional
+      components where they should be rendered.
     */
     build: function () {
       this.$.datePanel.createComponents([
@@ -1440,7 +1440,7 @@ trailing:true white:true*/
           {kind: "XV.QuoteDocumentsBox", attr: "documents"}
         ], {owner: this});
       this.$.lineItemsPanel.createComponents([
-            // Line Item Box
+         // Line Item Box
         {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true},
         // Summary Panel
         {kind: "FittableRows", fit: true, name: "totalGroup", components: [
@@ -1450,31 +1450,25 @@ trailing:true white:true*/
               {kind: "FittableRows", name: "summaryColumnOne", components: [
                 {kind: "XV.CurrencyPicker", attr: "currency"},
                 {kind: "XV.MoneyWidget", attr: {localValue: "margin", currency: "currency"},
-                 label: "_margin".loc(), currencyShowing: false,
-                 effective: ""},
+                 label: "_margin".loc(), currencyShowing: false},
                 {kind: "XV.WeightWidget", attr: "freightWeight"}
               ]},
               {kind: "FittableRows", name: "summaryColumnTwo", components: [
-                {kind: "XV.MoneyWidget", attr:
-                 {localValue: "subtotal", currency: "currency"},
-                 label: "_subtotal".loc(), currencyShowing: false,
-                 effective: ""},
-                {kind: "XV.MoneyWidget", attr:
-                 {localValue: "miscCharge", currency: "currency"},
-                 label: "_miscCharge".loc(), currencyShowing: false,
-                 effective: ""},
-                {kind: "XV.MoneyWidget", attr:
-                 {localValue: "freight", currency: "currency"},
-                 label: "_freight".loc(), currencyShowing: false,
-                 effective: ""},
-                {kind: "XV.MoneyWidget", attr:
-                 {localValue: "taxTotal", currency: "currency"},
-                 label: "_tax".loc(), currencyShowing: false,
-                 effective: ""},
-                {kind: "XV.MoneyWidget", attr:
-                 {localValue: "total", currency: "currency"},
-                 label: "_total".loc(), currencyShowing: false,
-                 effective: ""}
+                {kind: "XV.MoneyWidget",
+                 attr: {localValue: "subtotal", currency: "currency"},
+                 label: "_subtotal".loc(), currencyShowing: false},
+                {kind: "XV.MoneyWidget",
+                  attr: {localValue: "miscCharge", currency: "currency"},
+                 label: "_miscCharge".loc(), currencyShowing: false},
+                {kind: "XV.MoneyWidget",
+                  attr: {localValue: "freight", currency: "currency"},
+                 label: "_freight".loc(), currencyShowing: false},
+                {kind: "XV.MoneyWidget",
+                 attr: {localValue: "taxTotal", currency: "currency"},
+                 label: "_tax".loc(), currencyShowing: false},
+                {kind: "XV.MoneyWidget",
+                 attr: {localValue: "total", currency: "currency"},
+                 label: "_total".loc(), currencyShowing: false}
               ]}
             ]}
           ]}
@@ -1489,12 +1483,12 @@ trailing:true white:true*/
   // ..........................................................
   // LINE ITEM
   //
-  var lineItem = enyo.mixin(XV.LineMixin, {
-    name: "XV.BaseLineWorkspace",
+  var lineItem = {
     kind: "XV.Workspace",
     published: {
-      orderDate: null,
-      currency: null
+      effectiveKey: null,
+      currencyKey: null,
+      commentBox: null
     },
     modelAmnesty: true,
     components: [
@@ -1517,15 +1511,15 @@ trailing:true white:true*/
             {kind: "XV.UnitPicker", name: "quantityUnitPicker",
               attr: "quantityUnit"},
             {kind: "XV.PercentWidget", name: "discount", attr: "discount"},
-            {kind: "XV.MoneyWidget", attr:
-              {localValue: "price", currency: ""},
+            {kind: "XV.MoneyWidget",
+              attr: {localValue: "price"},
               label: "_price".loc(), currencyDisabled: true,
-              effective: "", scale: XT.SALES_PRICE_SCALE},
+              scale: XT.SALES_PRICE_SCALE},
             {kind: "XV.UnitPicker", name: "priceUnitPicker",
               attr: "priceUnit"},
-            {kind: "XV.MoneyWidget", attr: {localValue: "extendedPrice", currency: ""},
+            {kind: "XV.MoneyWidget", attr: {localValue: "extendedPrice"},
               label: "_extendedPrice".loc(), currencyDisabled: true,
-              effective: "", scale: XT.EXTENDED_PRICE_SCALE},
+              scale: XT.EXTENDED_PRICE_SCALE},
             {kind: "onyx.GroupboxHeader", content: "_delivery".loc()},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
             {kind: "XV.DateWidget", attr: "promiseDate", showing: false,
@@ -1539,15 +1533,15 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_costs".loc()},
           {kind: "XV.ScrollableGroupbox", name: "detailGroup",
             classes: "in-panel", fit: true, components: [
-            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.standardCost", currency: ""},
-              label: "_standardCost".loc(), effective: ""},
-            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.averageCost", currency: ""},
-              label: "_averageCost".loc(), effective: ""},
-            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.listCost", currency: ""},
-              label: "_listCost".loc(), effective: ""},
+            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.standardCost"},
+              label: "_standardCost".loc()},
+            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.averageCost"},
+              label: "_averageCost".loc()},
+            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.listCost"},
+              label: "_listCost".loc()},
             {kind: "XV.PercentWidget", attr: "listCostMarkup"},
-            {kind: "XV.MoneyWidget", attr: {localValue: "listPrice", currency: ""},
-              label: "_listPrice".loc(), effective: "", scale: XT.SALES_PRICE_SCALE},
+            {kind: "XV.MoneyWidget", attr: {baseValue: "item.listPrice"},
+              label: "_listPrice".loc(), scale: XT.SALES_PRICE_SCALE},
             {kind: "XV.PercentWidget", attr: "listPriceDiscount"},
             {kind: "XV.PercentWidget", attr: "profit"},
             {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
@@ -1558,39 +1552,58 @@ trailing:true white:true*/
           ]}
         ]}
       ]}
-    ]
-  });
-  enyo.kind(lineItem);
+    ],
+    create: function () {
+      this.inherited(arguments);
+      var effectiveKey = this.getEffectiveKey(),
+        currencyKey = this.getCurrencyKey,
+        comments = this.getCommentBox();
+      
+      // Show/Hide promise date
+      this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
+      
+      // Set currency and effective attributes on money widgets
+      this.getComponents().forEach(function (ctl) {
+        if (ctl.kind === "XV.MoneyWidget") {
+          ctl.setAttr(currencyKey);
+          ctl.setAttr(effectiveKey);
+        }
+      });
+      
+      // Add the Comment Box to Panels
+      this.$.salesLinePanels.createComponents([comments], {owner: this});
+    }
+  };
+  enyo.mixin(lineItem, XV.LineMixin);
 
   // ..........................................................
   // QUOTE LINE ITEM
   //
-  var quoteLineItem = enyo.mixin(XV.QuoteLineMixin, {
+  var quoteLineItem = {
     name: "XV.QuoteLineWorkspace",
-    kind: "XV.BaseLineWorkspace",
     title: "_quoteLine".loc(),
     model: "XM.QuoteLine",
-    create: function () {
-      this.inherited(arguments);
-      // Add the Comment Box for Quote to Panels
-      this.$.salesLinePanels.createComponents([{kind: "XV.QuoteLineCommentBox", attr: "comments"}], {owner: this});
-    }
-  });
+    currencyKey: "quote.currency",
+    effectiveKey: "quote.quoteDate",
+    commentBox: {kind: "XV.QuoteLineCommentBox", attr: "comments"}
+  };
+  enyo.mixin(quoteLineItem, XV.QuoteLineMixin);
+  enyo.mixin(quoteLineItem, lineItem);
   enyo.kind(quoteLineItem);
 
   // ..........................................................
   // SALES ORDER LINE ITEM
   //
-  var salesOrderLineItem = enyo.mixin(XV.SalesOrderLineMixin, {
+  var salesOrderLineItem = {
     name: "XV.SalesOrderLineWorkspace",
-    kind: "XV.BaseLineWorkspace",
     title: "_salesOrderLine".loc(),
     model: "XM.SalesOrderLine",
-    create: function () {
-      this.inherited(arguments);
-      this.$.salesLinePanels.createComponents([{kind: "XV.SalesOrderLineCommentBox", attr: "comments"}], {owner: this});
-    }
-  });
+    currencyKey: "salesOrder.currency",
+    effectiveKey: "salesOrder.orderDate",
+    commentBox: {kind: "XV.SalesOrderLineCommentBox", attr: "comments"}
+  };
+  enyo.mixin(salesOrderLineItem, XV.SalesOrderLineMixin);
+  enyo.mixin(salesOrderLineItem, lineItem);
   enyo.kind(salesOrderLineItem);
 
   // ..........................................................
@@ -1602,10 +1615,6 @@ trailing:true white:true*/
     kind: "XV.SalesOrderBase",
     title: "_salesOrder".loc(),
     model: "XM.SalesOrder",
-    create: function () {
-      this.inherited(arguments);
-      this.titleChanged();
-    },
     /**
       Inserts additional components where they should be rendered.
     */
@@ -1630,35 +1639,31 @@ trailing:true white:true*/
         {kind: "FittableRows", fit: true, name: "totalGroup", components: [
           {kind: "XV.Groupbox", components: [
             {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
-            {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
+            {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel",
+              components: [
               {kind: "FittableRows", name: "summaryColumnOne", components: [
                 {kind: "XV.CurrencyPicker", attr: "currency"},
-                {kind: "XV.MoneyWidget", attr: {localValue: "margin", currency: "currency"},
-                 label: "_margin".loc(), currencyShowing: false,
-                 effective: ""},
+                {kind: "XV.MoneyWidget",
+                  attr: {localValue: "margin", currency: "currency"},
+                  label: "_margin".loc(), currencyShowing: false},
                 {kind: "XV.WeightWidget", attr: "freightWeight"}
               ]},
               {kind: "FittableRows", name: "summaryColumnTwo", components: [
                 {kind: "XV.MoneyWidget", attr:
                  {localValue: "subtotal", currency: "currency"},
-                 label: "_subtotal".loc(), currencyShowing: false,
-                 effective: ""},
+                 label: "_subtotal".loc(), currencyShowing: false},
                 {kind: "XV.MoneyWidget", attr:
                  {localValue: "miscCharge", currency: "currency"},
-                 label: "_miscCharge".loc(), currencyShowing: false,
-                 effective: ""},
+                 label: "_miscCharge".loc(), currencyShowing: false},
                 {kind: "XV.MoneyWidget", attr:
                  {localValue: "freight", currency: "currency"},
-                 label: "_freight".loc(), currencyShowing: false,
-                 effective: ""},
+                 label: "_freight".loc(), currencyShowing: false},
                 {kind: "XV.MoneyWidget", attr:
                  {localValue: "taxTotal", currency: "currency"},
-                 label: "_tax".loc(), currencyShowing: false,
-                 effective: ""},
+                 label: "_tax".loc(), currencyShowing: false},
                 {kind: "XV.MoneyWidget", attr:
                  {localValue: "total", currency: "currency"},
-                 label: "_total".loc(), currencyShowing: false,
-                 effective: ""}
+                 label: "_total".loc(), currencyShowing: false}
               ]}
             ]}
           ]}
@@ -1966,7 +1971,7 @@ trailing:true white:true*/
             classes: "in-panel", components: [
               {kind: "XV.TaxCodePicker", label: "_taxCode".loc(), attr: "tax"},
               {kind: "XV.NumberWidget", label: "_percent".loc(), attr: "percent", scale: XT.PERCENT_SCALE},
-              {kind: "XV.MoneyWidget", label: "_currency".loc(), attr: "currency"},
+              {kind: "XV.CurrencyWidget", label: "_currency".loc(), attr: "currency"},
               {kind: "XV.NumberWidget", label: "_amount".loc(), attr: "amount", scale: XT.MONEY_SCALE},
               {kind: "XV.DateWidget", label: "_effective".loc(), attr: "effectiveDate"},
               {kind: "XV.DateWidget", label: "_expires".loc(), attr: "expirationDate"}
