@@ -28,8 +28,7 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "curr_name",
-          "isNaturalKey": true
+          "column": "curr_name"
         }
       },
       {
@@ -43,7 +42,8 @@
         "name": "abbreviation",
         "attr": {
           "type": "String",
-          "column": "curr_abbr"
+          "column": "curr_abbr",
+          "isNaturalKey": true
         }
       },
       {

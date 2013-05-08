@@ -5,8 +5,10 @@ select xt.create_view('xt.quheadinfo', $$
     xt.quote_subtotal(quhead) as subtotal,  
     xt.quote_tax_total(quhead) as tax_total,  
     xt.quote_total(quhead) as total,  
-    xt.quote_margin(quhead) as margin  
-  from quhead;
+    xt.quote_margin(quhead) as margin,
+    ophead_number 
+  from quhead
+    left join ophead on ophead_id = quhead_ophead_id;
 $$, false);
 
 create or replace rule "_INSERT" as on insert to xt.quheadinfo do instead 
