@@ -224,7 +224,7 @@ white:true*/
         customer.characteristicPrice(item, characteristic, value, quantity, charOptions);
       });
     }
-  }
+  };
 
 
   /**
@@ -402,7 +402,7 @@ white:true*/
       this.freightTaxDetail = [];
 
       if (!this.documentDateKey) {
-        console.log("Error: model needs a documentDateKey");
+        XT.log("Error: model needs a documentDateKey");
       }
       if (!_.contains(this.requiredAttributes, this.documentDateKey)) {
         this.requiredAttributes.push(this.documentDateKey);
@@ -602,9 +602,10 @@ white:true*/
       @returns {Object} Receiver
     */
     calculateTotals: function (calcFreight) {
-      var calculateFreight = this.get("calculateFreight");
+      var calculateFreight = this.get("calculateFreight"),
+        isProspect = this.getValue("customer.status") === XM.CustomerProspectRelation.PROSPECT_STATUS;
 
-      if (calculateFreight && calcFreight !== false) {
+      if (calculateFreight && calcFreight !== false && !isProspect) {
         this.calculateFreight();
       } else {
         _calculateTotals(this);
@@ -1268,6 +1269,12 @@ white:true*/
           priceUnit && priceUnitRatio &&
           this.priceAsOfDate()) {
 
+        // Prospects always get the list price
+        if (customer.getValue("status") === XM.CustomerProspectRelation.PROSPECT_STATUS) {
+          this.set("price", item.get("listPrice"));
+          this.set("customerPrice", item.get("listPrice"));
+          return;
+        }
         // Determine whether updating net price or only customer price
         if (editing) {
           if (!force &&

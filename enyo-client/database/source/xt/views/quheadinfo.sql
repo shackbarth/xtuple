@@ -6,8 +6,10 @@ select xt.create_view('xt.quheadinfo', $$
     xt.quote_tax_total(quhead) as tax_total,  
     xt.quote_total(quhead) as total,  
     xt.quote_margin(quhead) as margin,
-    ophead_number 
+    ophead_number,
+    customer_prospect.number as cust_number 
   from quhead
+    left join xt.customer_prospect on customer_prospect.id = quhead_cust_id
     left join ophead on ophead_id = quhead_ophead_id;
 $$, false);
 

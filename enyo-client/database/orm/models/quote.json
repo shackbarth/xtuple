@@ -1467,7 +1467,7 @@
         "name": "customer",
         "attr": {
           "type": "Number",
-          "column": "quhead_cust_id"
+          "column": "cust_number"
         }
       },
       {
