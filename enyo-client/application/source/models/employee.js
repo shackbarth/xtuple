@@ -69,6 +69,23 @@ white:true*/
     descriptionKey: "name"
 
   });
+  
+  /**
+    @class
+    Used inside employee relation as reference to prevent recursion.
+
+    @extends XM.Info
+  */
+  XM.EmployeeEmployeeRelation = XM.Info.extend({
+    /** @scope XM.EmployeeRelation.prototype */
+
+    recordType: 'XM.EmployeeEmployeeRelation',
+
+    editableModel: 'XM.Employee',
+
+    descriptionKey: "name"
+
+  });
 
   // ..........................................................
   // COLLECTIONS

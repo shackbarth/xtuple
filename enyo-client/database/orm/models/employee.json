@@ -210,6 +210,71 @@
           "type": "ContactRelation",
           "column": "emp_cntct_id"
         }
+      },
+      {
+        "name": "manager",
+        "toOne": {
+          "isNested": true,
+          "type": "EmployeeEmployeeRelation",
+          "column": "emp_mgr_emp_id",
+          "inverse": "id"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "EmployeeEmployeeRelation",
+    "table": "emp",
+    "comment": "Employee Employee Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "emp_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "emp_code",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "emp_name"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "emp_active"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "emp_cntct_id"
+        }
       }
     ],
     "isSystem": true
