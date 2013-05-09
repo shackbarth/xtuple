@@ -134,7 +134,7 @@ trailing:true white:true*/
     name: "XV.CostCategoryListParameters",
     kind: "XV.ParameterWidget",
     components: [
-      {kind: "onyx.GroupboxHeader", content: "_CostCategory".loc()},
+      {kind: "onyx.GroupboxHeader", content: "_costCategory".loc()},
       {name: "code", label: "_code".loc(), attr: "code"}
     ]
   });
@@ -188,7 +188,7 @@ trailing:true white:true*/
     components: [
       {kind: "onyx.GroupboxHeader", content: "_customerGroup".loc()},
       {name: "name", label: "_name".loc(), attr: "name"},
-      {name: "description", label: "_description", attr: "description"}
+      {name: "description", label: "_description".loc(), attr: "description"}
     ]
   });
 
@@ -202,7 +202,7 @@ trailing:true white:true*/
     components: [
       {kind: "onyx.GroupboxHeader", content: "_freightClass".loc()},
       {name: "code", label: "_code".loc(), attr: "code"},
-      {name: "description", label: "_description", attr: "description"}
+      {name: "description", label: "_description".loc(), attr: "description"}
     ]
   });
 
@@ -775,7 +775,7 @@ trailing:true white:true*/
       },
       {kind: "onyx.GroupboxHeader", content: "_saleTypes".loc()},
       {name: "code", label: "_code".loc(), attr: "code"},
-      {name: "description", label: "_description", attr: "description"}
+      {name: "description", label: "_description".loc(), attr: "description"}
     ]
   });
 
@@ -843,7 +843,7 @@ trailing:true white:true*/
     components: [
       {kind: "onyx.GroupboxHeader", content: "_shipZones".loc()},
       {name: "name", label: "_name".loc(), attr: "name"},
-      {name: "description", label: "_description", attr: "description"}
+      {name: "description", label: "_description".loc(), attr: "description"}
     ]
   });
 
@@ -900,7 +900,7 @@ trailing:true white:true*/
     components: [
       {kind: "onyx.GroupboxHeader", content: "_taxCode".loc()},
       {name: "code", label: "_code".loc(), attr: "code"},
-      {name: "description", label: "_description", attr: "description"}
+      {name: "description", label: "_description".loc(), attr: "description"}
     ]
   });
 
@@ -914,7 +914,7 @@ trailing:true white:true*/
     components: [
       {kind: "onyx.GroupboxHeader", content: "_taxClass".loc()},
       {name: "code", label: "_code".loc(), attr: "code"},
-      {name: "description", label: "_description", attr: "description"}
+      {name: "description", label: "_description".loc(), attr: "description"}
     ]
   });
 
@@ -942,7 +942,7 @@ trailing:true white:true*/
     components: [
       {kind: "onyx.GroupboxHeader", content: "_taxType".loc()},
       {name: "name", label: "_name".loc(), attr: "name"},
-      {name: "description", label: "_description", attr: "description"}
+      {name: "description", label: "_description".loc(), attr: "description"}
     ]
   });
 
@@ -956,7 +956,7 @@ trailing:true white:true*/
     components: [
       {kind: "onyx.GroupboxHeader", content: "_taxZone".loc()},
       {name: "code", label: "_code".loc(), attr: "code"},
-      {name: "description", label: "_description", attr: "description"}
+      {name: "description", label: "_description".loc(), attr: "description"}
     ]
   });
 
@@ -968,9 +968,9 @@ trailing:true white:true*/
     name: "XV.TermsListParameters",
     kind: "XV.ParameterWidget",
     components: [
-      {kind: "onyx.GroupboxHeader", content: "_Terms".loc()},
+      {kind: "onyx.GroupboxHeader", content: "_terms".loc()},
       {name: "code", label: "_code".loc(), attr: "code"},
-      {name: "description", label: "_description", attr: "description"}
+      {name: "description", label: "_description".loc(), attr: "description"}
     ]
   });
 
