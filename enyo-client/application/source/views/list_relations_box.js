@@ -58,7 +58,7 @@ trailing:true white:true*/
       };
       if (ids.length) {
         inEvent.conditions = [{
-          attribute: "id",
+          attribute: "number",
           operator: "NOT ANY",
           value: ids
         }];
