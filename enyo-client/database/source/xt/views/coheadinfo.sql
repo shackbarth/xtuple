@@ -6,8 +6,12 @@ select cohead.*,
   xt.co_subtotal(cohead) as subtotal,
   xt.co_tax_total(cohead) as tax_total,
   xt.co_total(cohead) as total,
-  xt.co_margin(cohead) as margin
-from cohead;
+  xt.co_margin(cohead) as margin,
+    ophead_number,
+    cust_number 
+  from cohead
+    left join cust on cust_id = cohead_cust_id
+    left join ophead on ophead_id = cohead_ophead_id;
 
 $$, false);
 

@@ -166,7 +166,8 @@ trailing:true white:true*/
     //
 
     extensions = [
-      {kind: "XV.OpportunityQuoteListRelationsBox", container: "panels", attr: "quoteRelations"}
+      {kind: "XV.OpportunityQuoteListRelationsBox", container: "panels", attr: "quoteRelations"},
+      {kind: "XV.OpportunitySalesOrderListRelationsBox", container: "panels", attr: "salesOrderRelations"}
     ];
 
     XV.appendExtension("XV.OpportunityWorkspace", extensions);
