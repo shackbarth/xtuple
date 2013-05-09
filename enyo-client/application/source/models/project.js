@@ -569,6 +569,20 @@ white:true*/
     }
     
   });
+  
+  /**
+    @class
+
+    @extends XM.Comment
+  */
+  XM.TaskComment = XM.Comment.extend({
+    /** @scope XM.ProjectTaskComment.prototype */
+
+    recordType: 'XM.TaskComment',
+
+    sourceName: 'TA'
+
+  });
 
   /**
     @class
