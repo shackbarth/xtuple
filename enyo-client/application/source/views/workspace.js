@@ -1375,7 +1375,7 @@ trailing:true white:true*/
       this.$.dateField.setAttr(effectiveKey);
       this.getComponents().forEach(function (ctl) {
         if (ctl.kind === "XV.MoneyWidget") {
-          ctl.setAttr(effectiveKey);
+          ctl.getAttr().effective = effectiveKey; // append this property onto the object
         }
       });
       this.titleChanged();
@@ -1558,10 +1558,10 @@ trailing:true white:true*/
       var effectiveKey = this.getEffectiveKey(),
         currencyKey = this.getCurrencyKey,
         comments = this.getCommentBox();
-      
+
       // Show/Hide promise date
       this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
-      
+
       // Set currency and effective attributes on money widgets
       this.getComponents().forEach(function (ctl) {
         if (ctl.kind === "XV.MoneyWidget") {
@@ -1569,7 +1569,7 @@ trailing:true white:true*/
           ctl.setAttr(effectiveKey);
         }
       });
-      
+
       // Add the Comment Box to Panels
       this.$.salesLinePanels.createComponents([comments], {owner: this});
     }
