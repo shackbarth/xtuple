@@ -515,7 +515,7 @@
         "toMany": {
           "type": "UserAccountRolePrivilegeAssignment",
           "column": "grp_id",
-          "inverse": "user_account_role",
+          "inverse": "userAccountRole",
           "isNested": true
         }
       }
@@ -565,7 +565,7 @@
         "toMany": {
           "type": "UserAccountRolePrivilegeAssignment",
           "column": "grp_id",
-          "inverse": "user_account_role",
+          "inverse": "userAccountRole",
           "isNested": true
         }
       }
