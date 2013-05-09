@@ -160,6 +160,7 @@ white:true*/
   }
 
   // Project Status
+  K = XM.Project;
   var projectStatusJson = [
     { id: K.CONCEPT, name: "_concept".loc() },
     { id: K.IN_PROCESS, name: "_inProcess".loc() },
