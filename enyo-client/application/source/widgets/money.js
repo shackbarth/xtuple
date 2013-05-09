@@ -63,7 +63,8 @@ regexp:true, undef:true, trailing:true, white:true */
       if (localMode) {
         baseValue = this.getBaseValue();
         scale = this.getScale();
-        content = baseValue || baseValue === 0 ? Globalize.format(baseValue, "n" + scale) : "";
+        content = baseValue || baseValue === 0 ?
+          Globalize.format(baseValue, "n" + scale) : "";
         this.$.baseAmountLabel.setContent(content);
       } else {
         this.recalculate();

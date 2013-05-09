@@ -603,7 +603,7 @@ select xt.install_js('XT','Data','xtuple', $$
         nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
         val = ormp.toOne && record[prop] instanceof Object ?
           record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
-
+plv8.elog(NOTICE, prop);
         /* handle fixed values */
         if (attr.value !== undefined) {
           params.columns.push('"' + attr.column + '"');
@@ -645,9 +645,10 @@ select xt.install_js('XT','Data','xtuple', $$
           }
         /* Handle null value if applicable */
         } else if ((val == undefined || val === null) && attr.nullValue ) {
+          params.columns.push('"' + attr.column + '"');
           params.expressions.push('$' + count);
           count++;
-          params.values.push(ormp.nullValue);    
+          params.values.push(attr.nullValue);
         }
       }
 
