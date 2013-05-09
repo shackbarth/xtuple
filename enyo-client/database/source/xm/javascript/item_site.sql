@@ -19,7 +19,7 @@ select xt.install_js('XM','item_site','xtuple', $$
     @returns {Array}
    */
   XM.ItemSite.itemsForCustomer = function (customerId, shiptoId, effectiveDate, query) {
-    customerId = XT.Data.getId(XT.Orm.fetch('XM', 'Customer'), customerId);
+    customerId = XT.Data.getId(XT.Orm.fetch('XM', 'CustomerProspectRelation'), customerId);
     shiptoId = shiptoId ? XT.Data.getId(XT.Orm.fetch('XM', 'CustomerShipto'), shiptoId) : -1;
     effectiveDate = effectiveDate || new Date();
     query = query || {};
