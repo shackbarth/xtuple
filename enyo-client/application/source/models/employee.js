@@ -16,6 +16,8 @@ white:true*/
 
     recordType: 'XM.Employee',
 
+    documentKey: "code",
+
     defaults: {
       isActive: true
     },

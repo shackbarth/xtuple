@@ -264,8 +264,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.CustomerShiptoWidget",
     kind: "XV.RelationWidget",
     collection: "XM.CustomerShiptoRelationCollection",
-    list: "XV.CustomerShiptoList",
-    filterRestrictionType: ["customer"]
+    list: "XV.CustomerShiptoList"
   });
 
 
@@ -277,7 +276,8 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.EmployeeWidget",
     kind: "XV.RelationWidget",
     collection: "XM.EmployeeRelationCollection",
-    list: "XV.EmployeeList"
+    list: "XV.EmployeeList",
+    keyAttribute: "code"
   });
 
   // ..........................................................
