@@ -40,13 +40,16 @@ select xt.install_js('XT','Data','xtuple', $$
           childOrm,
           prevOrm,
           clause,
+          charSql,
           orClause,
           orClause2,
           clauses = [],
           clauses2 = [],
           identifiers = [],
+          orderByIdentifiers = [],
           pcount,
           params = [],
+          orderByParams = [],
           attr,
           parts,
           op,
@@ -57,6 +60,7 @@ select xt.install_js('XT','Data','xtuple', $$
           count = 1,
           ret = {},
           list = [],
+          list2 = [],
           prop;
 
         ret.conditions = "";
@@ -145,7 +149,7 @@ select xt.install_js('XT','Data','xtuple', $$
               clause = '"id" in (' +
                        '  select {column}' +
                        '  from {table}' +
-                       '    join char on (char_id=characteristic)' +
+                       '    join char on (char_name = characteristic)' +
                        '  where' +
                        '    char_name = \'{name}\' and' +
                        '    "value" {operator} \'{value}\'' +
@@ -157,11 +161,37 @@ select xt.install_js('XT','Data','xtuple', $$
                        .replace("{value}", param.value);
               clauses.push(clause);
 
-            /* Array comparisons handle another way. */
+              plv8.elog(NOTICE, 'clause: ' + clause);
+
+              identifiers.push(prop.toMany.inverse);
+              identifiers.push(orm.nameSpace.toLowerCase());
+              identifiers.push(prop.toMany.type.decamelize());
+              identifiers.push(param.attribute);
+              identifiers.push(param.value);
+
+              charSql = 'id in (' +
+                        '  select %' + (identifiers.length - 4) + '$I '+
+                        '  from %' + (identifiers.length - 3) + '$I.%' + (identifiers.length - 2) + '$I ' +
+                        '    join char on (char_name = characteristic)' +
+                        '  where 1=1 ' +
+                        /* Note: Not using $i for these. L = literal here. These is not an identifiers. */
+                        '    and char_name = %' + (identifiers.length - 1) + '$L ' +
+                        '    and value ' + op + ' %' + (identifiers.length) + '$L ' +
+                        ')';
+
+              clauses2.push(charSql);
+
+              plv8.elog(NOTICE, 'charSql: ' + charSql);
+
+            /* Array comparisons handle another way. e.g. %1$I !<@ ARRAY[$1,$2] */
             } else if (op === '<@' || op === '!<@') {
-              plv8.elog(WARNING, 'NOT ANY: ', JSON.stringify(parameters));
               clause = param.attribute + ' ' + op + ' ARRAY[' + param.value.join(',') + ']';
               clauses.push(clause);
+
+              identifiers.push(param.attribute);
+              params.push("%" + identifiers.length + "$I " + op + ' ARRAY[' + param.value.join(',') + ']');
+              pcount = params.length - 1;
+              clauses2.push(params[pcount]);
 
             /* Everything else handle another. */
             } else {
@@ -244,7 +274,7 @@ select xt.install_js('XT','Data','xtuple', $$
         plv8.elog(NOTICE, 'clauses: ' + JSON.stringify(clauses).substring(0, 965));
         plv8.elog(NOTICE, 'clauses2: ' + JSON.stringify(clauses2).substring(0, 965));
         ret.conditions = (clauses.length ? '(' + clauses.join(' and ') + ')' : ret.conditions) || true;
-        ret.conditions2 = (clauses.length ? '(' + XT.format(clauses2.join(' and '), identifiers) + ')' : ret.conditions) || true;
+        ret.conditions2 = (clauses2.length ? '(' + XT.format(clauses2.join(' and '), identifiers) + ')' : ret.conditions) || true;
         plv8.elog(NOTICE, 'conditions2: ' + JSON.stringify(ret.conditions2).substring(0, 965));
 
         /* Massage ordeBy with quoted identifiers. */
@@ -255,14 +285,21 @@ select xt.install_js('XT','Data','xtuple', $$
               attr = "";
               parts = orderBy[i].attribute.split('.');
               prevOrm = orm;
+              orderByParams.push("");
+              pcount = orderByParams.length - 1;
+
               for (var n = 0; n < parts.length; n++) {
                 prop = XT.Orm.getProperty(orm, parts[n]);
                 if (!prop) {
                   plv8.elog(ERROR, 'Attribute not found in map: ' + parts[n]);
                 }
                 attr += '"' + parts[n] + '"';
+                orderByIdentifiers.push(parts[n]);
+                orderByParams[pcount] += "%" + orderByIdentifiers.length + "$I";
+
                 if (n < parts.length - 1) {
                   attr = "(" + attr + ").";
+                  orderByParams[pcount] = "(" + orderByParams[pcount] + ").";
                   orm = XT.Orm.fetch(nameSpace, prop.toOne.type);
                 }
               }
@@ -274,17 +311,26 @@ select xt.install_js('XT','Data','xtuple', $$
                 plv8.elog(ERROR, 'Attribute not found in map: ' + orderBy[i].attribute);
               }
               attr = '"' + orderBy[i].attribute + '"';
+              orderByIdentifiers.push(orderBy[i].attribute);
+              orderByParams.push("%" + orderByIdentifiers.length + "$I");
+              pcount = orderByParams.length - 1;
             }
+
             if (orderBy[i].isEmpty) {
               attr = "length(" + attr + ")=0";
+              orderByParams[pcount] = "length(" + orderByParams[pcount] + ")=0";
             }
             if (orderBy[i].descending) {
               attr += " desc";
+              orderByParams[pcount] += " desc";
             }
+
             list.push(attr);
+            list2.push(orderByParams[pcount])
           }
         }
         ret.orderBy = list.length ? 'order by ' + list.join(',') : '';
+        ret.orderBy2 = list.length ? XT.format('order by ' + list2.join(','), orderByIdentifiers) : '';
 
         plv8.elog(NOTICE, 'buildClause: ' + JSON.stringify(ret).substring(0, 965));
 
