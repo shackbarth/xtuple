@@ -602,7 +602,7 @@ select xt.install_js('XT','Data','xtuple', $$
         nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
         val = ormp.toOne && record[prop] instanceof Object ?
           record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
-plv8.elog(NOTICE, prop);
+
         /* handle fixed values */
         if (attr.value !== undefined) {
           params.columns.push('"' + attr.column + '"');
