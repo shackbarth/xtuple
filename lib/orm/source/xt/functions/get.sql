@@ -204,4 +204,22 @@ select xt.get('{
   }'
 );
 
+select xt.get('{
+  "username": "admin",
+  "nameSpace":"XM",
+  "type": "Customer",
+  "query":{
+    "parameters":[
+      {
+        "isCharacteristic": true,
+        "attribute": "CUST-VOLUME",
+        "operator": "=",
+        "value": "> 50,000"
+      }
+    ]
+  },
+  "prettyPrint": true
+  }'
+);
+
 */
