@@ -246,20 +246,7 @@ trailing:true white:true*/
     characteristicsRole: 'isIncidents',
     components: [
       {kind: "onyx.GroupboxHeader", content: "_incident".loc()},
-      {name: "number", label: "_number".loc(), attr: "number",
-        getParameter: function () {
-          var param,
-            value = this.getValue() - 0;
-          if (value && _.isNumber(value)) {
-            param = {
-              attribute: this.getAttr(),
-              operator: '=',
-              value: value
-            };
-          }
-          return param;
-        }
-      },
+      {name: "number", label: "_number".loc(), attr: "number"},
       {name: "description", label: "_description".loc(), attr: "description"},
       {name: "category", label: "_category".loc(), attr: "category",
         defaultKind: "XV.IncidentCategoryPicker"},
