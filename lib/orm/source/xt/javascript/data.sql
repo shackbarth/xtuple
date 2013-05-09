@@ -39,28 +39,22 @@ select xt.install_js('XT','Data','xtuple', $$
           param,
           childOrm,
           prevOrm,
-          clause,
           charSql,
           orClause,
-          orClause2,
           clauses = [],
-          clauses2 = [],
           identifiers = [],
           orderByIdentifiers = [],
           pcount,
           params = [],
           orderByParams = [],
-          attr,
           parts,
           op,
-          arg,
           i,
           n,
           c,
           count = 1,
           ret = {},
           list = [],
-          list2 = [],
           prop;
 
         ret.conditions = "";
@@ -86,7 +80,6 @@ select xt.install_js('XT','Data','xtuple', $$
         if (parameters.length) {
           for (var i = 0; i < parameters.length; i++) {
             orClause = [];
-            orClause2 = [];
             param = parameters[i];
             op = param.operator || '=';
             switch (op) {
@@ -145,24 +138,7 @@ select xt.install_js('XT','Data','xtuple', $$
               /* Yeah, it depends on a property called 'charectristics'... */
               prop = XT.Orm.getProperty(orm, 'characteristics');
 
-              /* Build the clause. */
-              clause = '"id" in (' +
-                       '  select {column}' +
-                       '  from {table}' +
-                       '    join char on (char_name = characteristic)' +
-                       '  where' +
-                       '    char_name = \'{name}\' and' +
-                       '    "value" {operator} \'{value}\'' +
-                       ')';
-              clause = clause.replace("{column}", prop.toMany.inverse)
-                       .replace("{table}", orm.nameSpace.toLowerCase() + "." + prop.toMany.type.decamelize())
-                       .replace("{name}", param.attribute)
-                       .replace("{operator}", op)
-                       .replace("{value}", param.value);
-              clauses.push(clause);
-
-              plv8.elog(NOTICE, 'clause: ' + clause);
-
+              /* Build the characteristics query clause. */
               identifiers.push(prop.toMany.inverse);
               identifiers.push(orm.nameSpace.toLowerCase());
               identifiers.push(prop.toMany.type.decamelize());
@@ -179,19 +155,14 @@ select xt.install_js('XT','Data','xtuple', $$
                         '    and value ' + op + ' %' + (identifiers.length) + '$L ' +
                         ')';
 
-              clauses2.push(charSql);
-
-              plv8.elog(NOTICE, 'charSql: ' + charSql);
+              clauses.push(charSql);
 
             /* Array comparisons handle another way. e.g. %1$I !<@ ARRAY[$1,$2] */
             } else if (op === '<@' || op === '!<@') {
-              clause = param.attribute + ' ' + op + ' ARRAY[' + param.value.join(',') + ']';
-              clauses.push(clause);
-
               identifiers.push(param.attribute);
               params.push("%" + identifiers.length + "$I " + op + ' ARRAY[' + param.value.join(',') + ']');
               pcount = params.length - 1;
-              clauses2.push(params[pcount]);
+              clauses.push(params[pcount]);
 
             /* Everything else handle another. */
             } else {
@@ -204,7 +175,6 @@ select xt.install_js('XT','Data','xtuple', $$
                 if (param.attribute[c].indexOf('.') > -1) {
                   parts = param.attribute[c].split('.');
                   childOrm = orm;
-                  attr = "";
                   params.push("");
                   pcount = params.length - 1;
                   for (var n = 0; n < parts.length; n++) {
@@ -215,16 +185,13 @@ select xt.install_js('XT','Data','xtuple', $$
                     }
 
                     /* Build path. e.g. ((%1$I).%2$I).%3$I */
-                    attr += '"' + parts[n] + '"';
                     identifiers.push(parts[n]);
                     params[pcount] += "%" + identifiers.length + "$I";
 
                     if (n < parts.length - 1) {
-                      attr = "(" + attr + ").";
                       params[pcount] = "(" + params[pcount] + ").";
                       childOrm = XT.Orm.fetch(nameSpace, prop.toOne.type);
                     } else if (param.isLower) {
-                      attr = "lower(" + attr + ")";
                       params[pcount] = "lower(" + params[pcount] + ")";
                     }
                   }
@@ -234,55 +201,37 @@ select xt.install_js('XT','Data','xtuple', $$
                   if (!prop) {
                     plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
                   }
-                  attr = '"' + param.attribute[c] + '"';
                   identifiers.push(param.attribute[c]);
                   params.push("%" + identifiers.length + "$I");
                   pcount = params.length - 1;
                 }
 
-                arg = '$' + count;
-                if (prop.attr && prop.attr.type === 'Date') { arg += '::date'; }
-
-                clause = [];
-                clause.push(attr);
-                clause.push(op);
-                clause.push(arg);
-
                 /* Add optional is null caluse. */
                 if (parameters[i].includeNull) {
                   /* e.g. %1$I = $1 or %1$I is null */
-                  clause.push(' or ' + attr + 'is null');
                   params[pcount] = params[pcount] + " " + op + ' $' + count + ' or ' + params[pcount] + ' is null';
                 } else {
                   /* e.g. %1$I = $1 */
                   params[pcount] += " " + op + ' $' + count;
                 }
 
-                orClause.push(clause.join(''));
-                orClause2.push(params[pcount]);
+                orClause.push(params[pcount]);
               }
 
               clauses.push('(' + orClause.join(' or ') + ')');
-              clauses2.push('(' + orClause2.join(' or ') + ')');
               count++;
               ret.parameters.push(param.value);
             }
           }
         }
-        plv8.elog(NOTICE, 'params: ' + JSON.stringify(params).substring(0, 965));
-        plv8.elog(NOTICE, 'identifiers: ' + JSON.stringify(identifiers).substring(0, 965));
-        plv8.elog(NOTICE, 'clauses: ' + JSON.stringify(clauses).substring(0, 965));
-        plv8.elog(NOTICE, 'clauses2: ' + JSON.stringify(clauses2).substring(0, 965));
-        ret.conditions = (clauses.length ? '(' + clauses.join(' and ') + ')' : ret.conditions) || true;
-        ret.conditions2 = (clauses2.length ? '(' + XT.format(clauses2.join(' and '), identifiers) + ')' : ret.conditions) || true;
-        plv8.elog(NOTICE, 'conditions2: ' + JSON.stringify(ret.conditions2).substring(0, 965));
+
+        ret.conditions = (clauses.length ? '(' + XT.format(clauses.join(' and '), identifiers) + ')' : ret.conditions) || true;
 
         /* Massage ordeBy with quoted identifiers. */
         if (orderBy) {
           for (var i = 0; i < orderBy.length; i++) {
             /* Handle path case. */
             if (orderBy[i].attribute.indexOf('.') > -1) {
-              attr = "";
               parts = orderBy[i].attribute.split('.');
               prevOrm = orm;
               orderByParams.push("");
@@ -293,12 +242,10 @@ select xt.install_js('XT','Data','xtuple', $$
                 if (!prop) {
                   plv8.elog(ERROR, 'Attribute not found in map: ' + parts[n]);
                 }
-                attr += '"' + parts[n] + '"';
                 orderByIdentifiers.push(parts[n]);
                 orderByParams[pcount] += "%" + orderByIdentifiers.length + "$I";
 
                 if (n < parts.length - 1) {
-                  attr = "(" + attr + ").";
                   orderByParams[pcount] = "(" + orderByParams[pcount] + ").";
                   orm = XT.Orm.fetch(nameSpace, prop.toOne.type);
                 }
@@ -310,29 +257,23 @@ select xt.install_js('XT','Data','xtuple', $$
               if (!prop) {
                 plv8.elog(ERROR, 'Attribute not found in map: ' + orderBy[i].attribute);
               }
-              attr = '"' + orderBy[i].attribute + '"';
               orderByIdentifiers.push(orderBy[i].attribute);
               orderByParams.push("%" + orderByIdentifiers.length + "$I");
               pcount = orderByParams.length - 1;
             }
 
             if (orderBy[i].isEmpty) {
-              attr = "length(" + attr + ")=0";
               orderByParams[pcount] = "length(" + orderByParams[pcount] + ")=0";
             }
             if (orderBy[i].descending) {
-              attr += " desc";
               orderByParams[pcount] += " desc";
             }
 
-            list.push(attr);
-            list2.push(orderByParams[pcount])
+            list.push(orderByParams[pcount])
           }
         }
-        ret.orderBy = list.length ? 'order by ' + list.join(',') : '';
-        ret.orderBy2 = list.length ? XT.format('order by ' + list2.join(','), orderByIdentifiers) : '';
 
-        plv8.elog(NOTICE, 'buildClause: ' + JSON.stringify(ret).substring(0, 965));
+        ret.orderBy = list.length ? XT.format('order by ' + list.join(','), orderByIdentifiers) : '';
 
         return ret;
       } catch (err) {
@@ -1307,47 +1248,53 @@ select xt.install_js('XT','Data','xtuple', $$
       @returns Array
     */
     fetch: function (options) {
-      var nameSpace = options.nameSpace,
-        type = options.type,
-        query = options.query || {},
-        orderBy = query.orderBy,
-        parameters = query.parameters,
-        table = (nameSpace + '."' + type + '"').decamelize(),
-        orm = XT.Orm.fetch(nameSpace, type),
-        key = XT.Orm.primaryKey(orm),
-        limit = query.rowLimit ? 'limit ' + query.rowLimit : '',
-        offset = query.rowOffset ? 'offset ' + query.rowOffset : '',
-        ret = {
-          nameSpace: nameSpace,
-          type: type
-        },
-        i,
-        parts,
-        clause = this.buildClause(nameSpace, type, parameters, orderBy),
-        sql = 'select * from {table} where {key} in ' +
-              '(select {key} from {table} where {conditions} {orderBy} {limit} {offset}) ' +
-              '{orderBy}';
+      try {
+        var nameSpace = options.nameSpace,
+          type = options.type,
+          query = options.query || {},
+          orderBy = query.orderBy,
+          parameters = query.parameters,
+          orm = XT.Orm.fetch(nameSpace, type),
+          key = XT.Orm.primaryKey(orm),
+          limit = query.rowLimit ? XT.format('limit %1$L', [query.rowLimit]) : '',
+          offset = query.rowOffset ? XT.format('offset %1$L', [query.rowOffset]) : '',
+          ret = {
+            nameSpace: nameSpace,
+            type: type
+          },
+          i,
+          parts,
+          clause = this.buildClause(nameSpace, type, parameters, orderBy),
+          sql = 'select * from %1$I.%2$I where %3$I in ' +
+                '(select %3$I from %1$I.%2$I where {conditions} {orderBy} {limit} {offset}) ' +
+                '{orderBy}';
 
+        /* Validate - don't bother running the query if the user has no privileges. */
+        if (!this.checkPrivileges(nameSpace, type)) { return []; }
 
-      /* validate - don't bother running the query if the user has no privileges */
-      if (!this.checkPrivileges(nameSpace, type)) { return []; }
+        /* Query the model. */
+        sql = XT.format(sql, [nameSpace.decamelize(), type.decamelize(), key]);
+        sql = sql.replace('{conditions}', clause.conditions)
+                 .replace(/{orderBy}/g, clause.orderBy)
+                 .replace('{limit}', limit)
+                 .replace('{offset}', offset);
 
-      /* query the model */
-      sql = sql.replace(/{table}/g, table)
-               .replace(/{key}/g, key)
-               .replace('{conditions}', clause.conditions)
-               .replace(/{orderBy}/g, clause.orderBy)
-               .replace('{limit}', limit)
-               .replace('{offset}', offset);
-      if (DEBUG) { plv8.elog(NOTICE, 'sql = ', sql); }
-      ret.data = plv8.execute(sql, clause.parameters) || [];
-      for (var i = 0; i < ret.data.length; i++) {
-        ret.data[i] = this.decrypt(nameSpace, type, ret.data[i]);
+        if (DEBUG) {
+          plv8.elog(NOTICE, 'sql = ', sql);
+          plv8.elog(NOTICE, 'values = ', clause.parameters);
+        }
+        ret.data = plv8.execute(sql, clause.parameters) || [];
+
+        for (var i = 0; i < ret.data.length; i++) {
+          ret.data[i] = this.decrypt(nameSpace, type, ret.data[i]);
+        }
+
+        this.removeKeys(nameSpace, type, ret.data);
+
+        return ret;
+      } catch (err) {
+        XT.error(err, arguments);
       }
-
-      this.removeKeys(nameSpace, type, ret.data);
-
-      return ret;
     },
 
     /**
