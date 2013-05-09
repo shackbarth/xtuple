@@ -27,7 +27,7 @@ trailing:true white:true*/
       label: "_project".loc(),
       panels: [
         {name: "projectList", kind: "XV.ProjectList"},
-        {name: "projectTaskList", kind: "XV.ProjectTaskList"}
+        {name: "taskList", kind: "XV.TaskList"}
       ]
     };
     XT.app.$.postbooks.insertModule(module, 2);

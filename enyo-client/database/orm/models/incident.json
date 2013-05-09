@@ -3,7 +3,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "Incident",
-    "table": "incdt",
+    "table": "xt.incdtxt",
     "idSequenceName": "incdt_incdt_id_seq",
     "isRest": true,
     "lockable": true,

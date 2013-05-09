@@ -101,7 +101,7 @@
       {
         "name": "site",
         "toOne": {
-          "type": "SiteRelation",
+          "type": "Site",
           "column": "cohead_warehous_id"
         }
       },

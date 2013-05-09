@@ -490,6 +490,19 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // LEDGER ACCOUNT
+  //
+
+  enyo.kind({
+    name: "XV.LedgerAccountWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.LedgerAccountRelationCollection",
+    list: "XV.LedgerAccountList",
+    keyAttribute: "name",
+    nameAttribute: "description"
+  });
+
+  // ..........................................................
   // OPPORTUNITY
   //
 
@@ -497,6 +510,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.OpportunityWidget",
     kind: "XV.RelationWidget",
     collection: "XM.OpportunityRelationCollection",
+    keyAttribute: "name",
     list: "XV.OpportunityList"
   });
 

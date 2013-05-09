@@ -111,6 +111,7 @@ select xt.js_init();
 \i xt/views/customer_prospect.sql;
 \i xt/views/cust_doc.sql;
 \i xt/views/incdtinfo.sql;
+\i xt/views/incdtxt.sql;
 \i xt/views/iteminfo.sql;
 \i xt/views/itemsiteinfo.sql;
 \i xt/views/opheadinfo.sql;

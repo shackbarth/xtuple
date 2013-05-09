@@ -107,8 +107,9 @@ white:true*/
         // }
         // worker.send({id: this.requestNum, query: query, options: options, conString: str});
       } else {
-        // uncomment this to see the query against the instance database
-        // console.log(query);
+        if (X.options.datasource.debugging) {
+          console.log(query);
+        }
         X.pg.connect(str, _.bind(this.connected, this, query, options, callback));
       }
     },

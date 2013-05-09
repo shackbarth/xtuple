@@ -47,7 +47,6 @@ white:true*/
     },
 
     requiredAttributes: [
-      "id",
       "plannerCode",
       "costCategory"
     ],
@@ -279,7 +278,7 @@ white:true*/
         params = omit(params, "effectiveDate");
       }
       options.query.parameters = params;
-      XM.Collection.formatParameters("XM.ItemSite", options.query.parameters);
+      XM.Collection.formatParameters("XM.ItemSiteListItem", options.query.parameters);
 
       // Dispatch the query
       success = options.success;

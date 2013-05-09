@@ -21,12 +21,12 @@ exports.findByUsername = function (username, done) {
   };
 
   options.error = function (err, res) {
-    if (err.code === 'xt1007') {
+    if (res.code === 'xt1007') {
       // XXX should "result not found" really be an error?
       done(null, false);
     } else {
       X.log("Error authenticating user", arguments);
-      done(err);
+      done(res);
     }
   };
 
