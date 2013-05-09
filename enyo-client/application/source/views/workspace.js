@@ -1191,7 +1191,7 @@ trailing:true white:true*/
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
         ]},
-        {kind: "XV.ProjectTaskCommentBox", attr: "comments"}
+        {kind: "XV.TaskCommentBox", attr: "comments"}
       ]}
     ]
   });
