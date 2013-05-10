@@ -1,12 +1,12 @@
 select xt.install_js('XT','Data','xtuple', $$
 
   /**
-    @class
-
-    The XT.Data class includes all functions necessary to process data source requests against the database.
-    It should be instantiated as an object against which its funtion calls are made. This class enforces privilege
-    control and as such is not and should not be dispatchable.
-  */
+   * @class
+   *
+   * The XT.Data class includes all functions necessary to process data source requests against the database.
+   * It should be instantiated as an object against which its funtion calls are made. This class enforces privilege
+   * control and as such is not and should not be dispatchable.
+   */
 
   XT.Data = {
 
@@ -21,41 +21,39 @@ select xt.install_js('XT','Data','xtuple', $$
     DELETED_STATE: 'delete',
 
     /**
-      Build a SQL `where` clause based on privileges for name space and type,
-      and conditions and parameters passed.
-
-      @seealso fetch
-
-      @param {String} Name space
-      @param {String} Type
-      @param {Array} Parameters - optional
-      @returns {Object}
-    */
+     * Build a SQL `where` clause based on privileges for name space and type,
+     * and conditions and parameters passed.
+     *
+     * @seealso fetch
+     *
+     * @param {String} Name space
+     * @param {String} Type
+     * @param {Array} Parameters - optional
+     * @returns {Object}
+     */
     buildClause: function (nameSpace, type, parameters, orderBy) {
       try {
         parameters = parameters || [];
-        var orm = XT.Orm.fetch(nameSpace, type),
-          privileges = orm.privileges,
-          param,
+
+        var charSql,
           childOrm,
-          prevOrm,
-          charSql,
-          orClause,
           clauses = [],
-          identifiers = [],
-          orderByIdentifiers = [],
-          pcount,
-          params = [],
-          orderByParams = [],
-          parts,
-          op,
-          i,
-          n,
-          c,
           count = 1,
-          ret = {},
+          identifiers = [],
           list = [],
-          prop;
+          op,
+          orClause,
+          orderByIdentifiers = [],
+          orderByParams = [],
+          orm = XT.Orm.fetch(nameSpace, type),
+          param,
+          params = [],
+          parts,
+          pcount,
+          prevOrm,
+          privileges = orm.privileges,
+          prop,
+          ret = {};
 
         ret.conditions = "";
         ret.parameters = [];
@@ -282,20 +280,20 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-      Queries whether the current user has been granted the privilege passed.
-
-      @param {String} privilege
-      @returns {Boolean}
-    */
+     * Queries whether the current user has been granted the privilege passed.
+     *
+     * @param {String} privilege
+     * @returns {Boolean}
+     */
     checkPrivilege: function (privilege) {
       try {
-        var privArray,
-          ret = privilege,
-          i,
+        var i,
+          privArray,
           res,
+          ret = privilege,
           sql;
-        if (typeof privilege === 'string') {
 
+        if (typeof privilege === 'string') {
           if (!this._granted) { this._granted = {}; }
           if (this._granted[privilege] !== undefined) { return this._granted[privilege]; }
 
@@ -340,26 +338,28 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-      Validate whether user has read access to data. If a record is passed, check personal privileges of
-      that record.
-
-      @param {String} name space
-      @param {String} type name
-      @param {Object} record - optional
-      @param {Boolean} is top level, default is true
-      @returns {Boolean}
-    */
+     * Validate whether user has read access to data. If a record is passed, check personal privileges of
+     * that record.
+     *
+     * @param {String} name space
+     * @param {String} type name
+     * @param {Object} record - optional
+     * @param {Boolean} is top level, default is true
+     * @returns {Boolean}
+     */
     checkPrivileges: function (nameSpace, type, record, isTopLevel) {
       try {
         isTopLevel = isTopLevel !== false ? true : false;
-        var isGrantedAll = true,
+
+        var action =  record && record.dataState === this.CREATED_STATE ? 'create' :
+                    record && record.dataState === this.DELETED_STATE ? 'delete' :
+                    record && record.dataState === this.UPDATED_STATE ? 'update' : 'read',
+          committing = record ? record.dataState !== this.READ_STATE : false,
+          isGrantedAll = true,
           isGrantedPersonal = false,
           map = XT.Orm.fetch(nameSpace, type),
-          privileges = map.privileges,
-          committing = record ? record.dataState !== this.READ_STATE : false,
-          action =  record && record.dataState === this.CREATED_STATE ? 'create' :
-                    record && record.dataState === this.DELETED_STATE ? 'delete' :
-                    record && record.dataState === this.UPDATED_STATE ? 'update' : 'read';
+          privileges = map.privileges;
+
 
         /* If there is no ORM, this isn't a table data type so no check required. */
         if (DEBUG) { plv8.elog(NOTICE, 'orm is ->', JSON.stringify(map)); }
@@ -412,10 +412,11 @@ select xt.install_js('XT','Data','xtuple', $$
               isGranted = false,
               props = privileges.personal.properties,
               get = function (obj, target) {
-                var parts = target.split("."),
-                  ret,
+                var idx,
                   part,
-                  idx;
+                  parts = target.split("."),
+                  ret;
+
                 for (var idx = 0; idx < parts.length; idx++) {
                   part = parts[idx];
                   ret = ret ? ret[part] : obj[part];
@@ -423,13 +424,16 @@ select xt.install_js('XT','Data','xtuple', $$
                     return null;
                   }
                 }
+
                 return ret.toLowerCase();
               };
+
             while (!isGranted && i < props.length) {
               var prop = props[i];
               isGranted = get(record, prop) === XT.username;
               i++;
             }
+
             return isGranted;
           };
 
@@ -444,9 +448,11 @@ select xt.install_js('XT','Data','xtuple', $$
             isGrantedPersonal = checkPersonal(record);
           }
         }
+
         if (DEBUG) {
           plv8.elog(NOTICE, 'is granted all ->', isGrantedAll, 'is granted personal ->', isGrantedPersonal);
         }
+
         return isGrantedAll || isGrantedPersonal;
       } catch (err) {
         XT.error(err, arguments);
@@ -454,20 +460,20 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-      Commit array columns with their own statements
-
-      @param {Object} Orm
-      @param {Object} Record
-    */
+     * Commit array columns with their own statements
+     *
+     * @param {Object} Orm
+     * @param {Object} Record
+     */
     commitArrays: function (orm, record, encryptionKey) {
       try {
         var pkey = XT.Orm.primaryKey(orm),
-          id = record[pkey],
           fkey,
-          prop,
+          id = record[pkey],
           ormp,
-          values,
-          val;
+          prop,
+          val,
+          values;
 
         for (prop in record) {
           ormp = XT.Orm.getProperty(orm, prop);
@@ -498,11 +504,11 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-      Commit metrics that have changed to the database.
-
-      @param {Object} metrics
-      @returns Boolean
-    */
+     * Commit metrics that have changed to the database.
+     *
+     * @param {Object} metrics
+     * @returns Boolean
+     */
     commitMetrics: function (metrics) {
       try {
         var key,
@@ -531,20 +537,20 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-      Commit a record to the database. The record must conform to the object hiearchy as defined by the
-      record's `ORM` definition. Each object in the tree must include state information on a reserved property
-      called `dataState`. Valid values are `create`, `update` and `delete`. Objects with other dataState values including
-      `undefined` will be ignored. State values can be added using `XT.jsonpatch.updateState(obj, state)`.
-
-      @seealso XT.jsonpatch.updateState
-      @param {Object} Options
-      @param {String} [options.nameSpace] Namespace. Required.
-      @param {String} [options.type] Type. Required.
-      @param {Object} [options.data] The data payload to be processed. Required
-      @param {Number} [options.etag] Record version for optimistic locking.
-      @param {Number} [options.lock] Lock information for pessemistic locking.
-      @param {String} [options.encryptionKey] Encryption key.
-    */
+     * Commit a record to the database. The record must conform to the object hiearchy as defined by the
+     * record's `ORM` definition. Each object in the tree must include state information on a reserved property
+     * called `dataState`. Valid values are `create`, `update` and `delete`. Objects with other dataState values including
+     * `undefined` will be ignored. State values can be added using `XT.jsonpatch.updateState(obj, state)`.
+     *
+     * @seealso XT.jsonpatch.updateState
+     * @param {Object} Options
+     * @param {String} [options.nameSpace] Namespace. Required.
+     * @param {String} [options.type] Type. Required.
+     * @param {Object} [options.data] The data payload to be processed. Required
+     * @param {Number} [options.etag] Record version for optimistic locking.
+     * @param {Number} [options.lock] Lock information for pessemistic locking.
+     * @param {String} [options.encryptionKey] Encryption key.
+     */
     commitRecord: function (options) {
       try {
         var data = options.data,
@@ -569,21 +575,21 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-      Commit insert to the database
-
-      @param {Object} Options
-      @param {String} [options.nameSpace] Namespace. Required.
-      @param {String} [options.type] Type. Required.
-      @param {Object} [options.data] The data payload to be processed. Required.
-      @param {String} [options.encryptionKey] Encryption key.
-    */
+     * Commit insert to the database
+     *
+     * @param {Object} Options
+     * @param {String} [options.nameSpace] Namespace. Required.
+     * @param {String} [options.type] Type. Required.
+     * @param {Object} [options.data] The data payload to be processed. Required.
+     * @param {String} [options.encryptionKey] Encryption key.
+     */
     createRecord: function (options) {
       try {
-        var orm = XT.Orm.fetch(options.nameSpace, options.type),
+        var data = options.data,
           encryptionKey = options.encryptionKey,
-          data = options.data,
-          sql = this.prepareInsert(orm, data, null, encryptionKey),
-          i;
+          i,
+          orm = XT.Orm.fetch(options.nameSpace, options.type),
+          sql = this.prepareInsert(orm, data, null, encryptionKey);
 
         /* Handle extensions on the same table. */
         for (var i = 0; i < orm.extensions.length; i++) {
@@ -595,7 +601,7 @@ select xt.install_js('XT','Data','xtuple', $$
         /* Commit the base record. */
         if (DEBUG) {
           plv8.elog(NOTICE, 'createRecord sql =', sql.statement);
-          plv8.elog(NOTICE, 'createRecord values =', [sql.values]);
+          plv8.elog(NOTICE, 'createRecord values =', sql.values);
         }
         plv8.execute(sql.statement, sql.values);
 
@@ -605,7 +611,10 @@ select xt.install_js('XT','Data','xtuple', $$
              !orm.extensions[i].isChild) {
             sql = this.prepareInsert(orm.extensions[i], data, null, encryptionKey);
 
-            if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql.statement, [sql.values]);}
+            if (DEBUG) {
+              plv8.elog(NOTICE, 'createRecord sql =', sql.statement);
+              plv8.elog(NOTICE, 'createRecord values =', sql.values);
+            }
             plv8.execute(sql.statement, sql.values);
           }
         }
@@ -617,20 +626,20 @@ select xt.install_js('XT','Data','xtuple', $$
       }
     },
 
-   /**
-     Use an orm object and a record and build an insert statement. It
-     returns an object with a table name string, columns array, expressions
-     array and insert statement string that can be executed.
-
-     The optional params object includes objects columns, expressions
-     that can be cumulatively added to the result.
-
-     @params {Object} Orm
-     @params {Object} Record
-     @params {Object} Params - optional
-     @params {String} Encryption Key
-     @returns {Object}
-   */
+    /**
+     * Use an orm object and a record and build an insert statement. It
+     * returns an object with a table name string, columns array, expressions
+     * array and insert statement string that can be executed.
+     *
+     * The optional params object includes objects columns, expressions
+     * that can be cumulatively added to the result.
+     *
+     * @params {Object} Orm
+     * @params {Object} Record
+     * @params {Object} Params - optional
+     * @params {String} Encryption Key
+     * @returns {Object}
+     */
     prepareInsert: function (orm, record, params, encryptionKey) {
       try {
         var attr,
@@ -641,15 +650,18 @@ select xt.install_js('XT','Data','xtuple', $$
           exp,
           i,
           iorm,
+          namespace,
           nkey,
           ormp,
           pkey = XT.Orm.primaryKey(orm),
           prop,
           query,
+          sql = "select nextval($1) as id",
+          table,
           toOneQuery,
           toOneSql,
           type,
-          val,
+          val;
 
         params = params || {
           table: "",
@@ -663,7 +675,11 @@ select xt.install_js('XT','Data','xtuple', $$
 
         /* If no primary key, then create one. */
         if (!record[pkey]) {
-          record[pkey] = plv8.execute("select nextval($1) as id", [orm.idSequenceName])[0].id;
+          if (DEBUG) {
+            plv8.elog(NOTICE, 'prepareInsert sql =', sql);
+            plv8.elog(NOTICE, 'prepareInsert values =', [orm.idSequenceName]);
+          }
+          record[pkey] = plv8.execute(sql, [orm.idSequenceName])[0].id;
         }
 
         /* If extension handle key. */
@@ -752,13 +768,20 @@ select xt.install_js('XT','Data','xtuple', $$
         columns = XT.format(columns, params.identifiers);
         expressions = params.expressions.join(', ');
         expressions = XT.format(expressions, params.identifiers);
-        query = 'insert into %1$I (' + columns + ') values (' + expressions + ')';
 
-        params.statement = XT.format(query, [params.table]);
+        if (params.table.indexOf(".") > 0) {
+          namespace = params.table.beforeDot();
+          table = params.table.afterDot();
+          query = 'insert into %1$I.%2$I (' + columns + ') values (' + expressions + ')';
+          params.statement = XT.format(query, [namespace, table]);
+        } else {
+          query = 'insert into %1$I (' + columns + ') values (' + expressions + ')';
+          params.statement = XT.format(query, [params.table]);
+        }
 
         if (DEBUG) {
-          plv8.elog(NOTICE, 'sql =', params.statement);
-          plv8.elog(NOTICE, 'values =', params.values);
+          plv8.elog(NOTICE, 'prepareInsert statement =', params.statement);
+          plv8.elog(NOTICE, 'prepareInsert values =', params.values);
         }
 
         return params;
@@ -768,33 +791,33 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-      Commit update to the database
-
-      @param {Object} Options
-      @param {String} [options.nameSpace] Namespace. Required.
-      @param {String} [options.type] Type. Required.
-      @param {Object} [options.data] The data payload to be processed. Required.
-      @param {Number} [options.etag] Record version for optimistic locking.
-      @param {Number} [options.lock] Lock information for pessemistic locking.
-      @param {String} [options.encryptionKey] Encryption key.
-    */
+     * Commit update to the database
+     *
+     * @param {Object} Options
+     * @param {String} [options.nameSpace] Namespace. Required.
+     * @param {String} [options.type] Type. Required.
+     * @param {Object} [options.data] The data payload to be processed. Required.
+     * @param {Number} [options.etag] Record version for optimistic locking.
+     * @param {Number} [options.lock] Lock information for pessemistic locking.
+     * @param {String} [options.encryptionKey] Encryption key.
+     */
     updateRecord: function (options) {
       try {
-        var orm = XT.Orm.fetch(options.nameSpace, options.type),
+        var data = options.data,
           encryptionKey = options.encryptionKey,
-          data = options.data,
-          sql = this.prepareUpdate(orm, data, null, encryptionKey),
+          orm = XT.Orm.fetch(options.nameSpace, options.type),
           pkey = XT.Orm.primaryKey(orm),
+          id = data[pkey],
+          ext,
+          etag = this.getVersion(orm, id),
+          i,
           iORuQuery,
           iORuSql,
-          id = data[pkey],
           lock,
           lockKey = options.lock && options.lock.key ? options.lock.key : false,
           lockTable = orm.lockTable || orm.table,
-          etag = this.getVersion(orm, id),
-          ext,
           rows,
-          i;
+          sql = this.prepareUpdate(orm, data, null, encryptionKey);
 
         /* Test for optimistic lock. */
         if (etag && options.etag !== etag) {
@@ -822,8 +845,8 @@ select xt.install_js('XT','Data','xtuple', $$
 
         /* Commit the base record. */
         if (DEBUG) {
-          plv8.elog(NOTICE, 'sql =', sql.statement);
-          plv8.elog(NOTICE, 'values =', sql.values);
+          plv8.elog(NOTICE, 'updateRecord sql =', sql.statement);
+          plv8.elog(NOTICE, 'updateRecord values =', sql.values);
         }
         var test = plv8.execute(sql.statement, sql.values);
 
@@ -846,7 +869,10 @@ select xt.install_js('XT','Data','xtuple', $$
               iORuSql = XT.format(iORuQuery, [ext.relations[0].column, ext.table]);
             }
 
-            if (DEBUG) { plv8.elog(NOTICE, 'sql =', iORuSql, data[pkey]); }
+            if (DEBUG) {
+              plv8.elog(NOTICE, 'updateRecord sql =', iORuSql);
+              plv8.elog(NOTICE, 'updateRecord values =', [data[pkey]]);
+            }
             rows = plv8.execute(iORuSql, [data[pkey]]);
 
             if (rows.length) {
@@ -856,8 +882,8 @@ select xt.install_js('XT','Data','xtuple', $$
             }
 
             if (DEBUG) {
-              plv8.elog(NOTICE, 'sql =', sql.statement);
-              plv8.elog(NOTICE, 'values =', sql.values);
+              plv8.elog(NOTICE, 'updateRecord sql =', sql.statement);
+              plv8.elog(NOTICE, 'updateRecord values =', sql.values);
             }
             plv8.execute(sql.statement, sql.values);
           }
@@ -876,18 +902,18 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-     Use an orm object and a record and build an update statement. It
-     returns an object with a table name string, expressions array and
-     insert statement string that can be executed.
-
-     The optional params object includes objects columns, expressions
-     that can be cumulatively added to the result.
-
-     @params {Object} Orm
-     @params {Object} Record
-     @params {Object} Params - optional
-     @returns {Object}
-   */
+     * Use an orm object and a record and build an update statement. It
+     * returns an object with a table name string, expressions array and
+     * insert statement string that can be executed.
+     *
+     * The optional params object includes objects columns, expressions
+     * that can be cumulatively added to the result.
+     *
+     * @params {Object} Orm
+     * @params {Object} Record
+     * @params {Object} Params - optional
+     * @returns {Object}
+     */
     prepareUpdate: function (orm, record, params, encryptionKey) {
       try {
         var attr,
@@ -900,10 +926,12 @@ select xt.install_js('XT','Data','xtuple', $$
           iorm,
           key,
           keyValue,
+          namespace,
           ormp,
           pkey,
           prop,
           query,
+          table,
           toOneQuery,
           toOneSql,
           type,
@@ -990,12 +1018,21 @@ select xt.install_js('XT','Data','xtuple', $$
         /* Build the update statement */
         expressions = params.expressions.join(', ');
         expressions = XT.format(expressions, params.identifiers);
-        query = 'update %1$I set ' + expressions + ' where %2$I = $' + count + ';';
 
-        params.statement = XT.format(query, [params.table, columnKey]);
+        if (params.table.indexOf(".") > 0) {
+          namespace = params.table.beforeDot();
+          table = params.table.afterDot();
+          query = 'update %1$I.%2$I set ' + expressions + ' where %3$I = $' + count + ';';
+          params.statement = XT.format(query, [namespace, table, columnKey]);
+        } else {
+          query = 'update %1$I set ' + expressions + ' where %2$I = $' + count + ';';
+          params.statement = XT.format(query, [params.table, columnKey]);
+        }
 
-        if (DEBUG) { plv8.elog(NOTICE, 'sql =', params.statement); }
-        if (DEBUG) { plv8.elog(NOTICE, 'values =', params.values); }
+        if (DEBUG) {
+          plv8.elog(NOTICE, 'prepareUpdate statement =', params.statement);
+          plv8.elog(NOTICE, 'prepareUpdate values =', params.values);
+        }
 
         return params;
       } catch (err) {
@@ -1004,15 +1041,15 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-      Commit deletion to the database
-
-      @param {Object} Options
-      @param {String} [options.nameSpace] Namespace. Required.
-      @param {String} [options.type] Type. Required.
-      @param {Object} [options.data] The data payload to be processed. Required.
-      @param {Number} [options.etag] Record id version for optimistic locking.
-      @param {Number} [options.lock] Lock information for pessemistic locking.
-    */
+     * Commit deletion to the database
+     *
+     * @param {Object} Options
+     * @param {String} [options.nameSpace] Namespace. Required.
+     * @param {String} [options.type] Type. Required.
+     * @param {Object} [options.data] The data payload to be processed. Required.
+     * @param {Number} [options.etag] Record id version for optimistic locking.
+     * @param {Number} [options.lock] Lock information for pessemistic locking.
+     */
     deleteRecord: function (options) {
       try {
         var data = options.data,
@@ -1074,7 +1111,10 @@ select xt.install_js('XT','Data','xtuple', $$
             query = 'delete from %1$I where %2$I = $1';
             sql = XT.format(query, [ext.table, columnKey]);
 
-            if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql,  id); }
+            if (DEBUG) {
+              plv8.elog(NOTICE, 'deleteRecord sql =', sql);
+              plv8.elog(NOTICE, 'deleteRecord values =',  [id]);
+            }
             plv8.execute(sql, [id]);
           }
         }
@@ -1086,7 +1126,10 @@ select xt.install_js('XT','Data','xtuple', $$
         sql = XT.format(query, [orm.table, columnKey]);
 
         /* Commit the record.*/
-        if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql,  id); }
+        if (DEBUG) {
+          plv8.elog(NOTICE, 'deleteRecord sql =', sql);
+          plv8.elog(NOTICE, 'deleteRecord values =', [id]);
+        }
         plv8.execute(sql, [id]);
 
         /* Release any lock. */
@@ -1099,14 +1142,14 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-      Decrypts properties where applicable.
-
-      @param {String} name space
-      @param {String} type
-      @param {Object} record
-      @param {Object} encryption key
-      @returns {Object}
-    */
+     * Decrypts properties where applicable.
+     *
+     * @param {String} name space
+     * @param {String} type
+     * @param {Object} record
+     * @param {Object} encryption key
+     * @returns {Object}
+     */
     decrypt: function (nameSpace, type, record, encryptionKey) {
       try {
         var orm = XT.Orm.fetch(nameSpace, type);
@@ -1120,7 +1163,10 @@ select xt.install_js('XT','Data','xtuple', $$
               sql = "select formatbytea(decrypt(setbytea($1), setbytea($2), 'bf')) as result";
 // TODO - Handle not found error.
 
-              if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql, [record[prop], encryptionKey]); }
+              if (DEBUG) {
+                plv8.elog(NOTICE, 'decrypt sql =', sql);
+                plv8.elog(NOTICE, 'decrypt values =', [record[prop], encryptionKey]);
+              }
               record[prop] = plv8.execute(sql, [record[prop], encryptionKey])[0].result;
             } else {
               record[prop] = '**********';
@@ -1139,45 +1185,50 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-      Get the oid for a given table name.
-
-      @param {String} table name
-      @returns {Number}
-    */
+     * Get the oid for a given table name.
+     *
+     * @param {String} table name
+     * @returns {Number}
+     */
     getTableOid: function (table) {
       try {
-        var namespace = "public", /* default assumed if no dot in name */
+        var name = table.toLowerCase(), /* be generous */
+          namespace = "public", /* default assumed if no dot in name */
+          ret,
           sql = "select pg_class.oid::integer as oid " +
                "from pg_class join pg_namespace on relnamespace = pg_namespace.oid " +
-               "where relname = $1 and nspname = $2",
-          name = table.toLowerCase(); /* be generous */
+               "where relname = $1 and nspname = $2";
 
         if (table.indexOf(".") > 0) {
           namespace = table.beforeDot();
           table = table.afterDot();
         }
 
+        if (DEBUG) {
+          plv8.elog(NOTICE, 'getTableOid sql =', sql);
+          plv8.elog(NOTICE, 'getTableOid values =', [table, namespace]);
+        }
+        ret = plv8.execute(sql, [table, namespace])[0].oid - 0;
+
 // TODO - Handle not found error.
 
-        if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql, [table, namespace]); }
-
-        return plv8.execute(sql, [table, namespace])[0].oid - 0;
+        return ret;
       } catch (err) {
         XT.error(err, arguments);
       }
     },
 
     /**
-      Get the primary key id for an object based on a passed in natural key.
-
-      @param {String} Namespace
-      @param {String} Type
-      @param {String} Natural key value
-    */
+     * Get the primary key id for an object based on a passed in natural key.
+     *
+     * @param {String} Namespace
+     * @param {String} Type
+     * @param {String} Natural key value
+     */
     getId: function (orm, value) {
       try {
-        var pcol = XT.Orm.primaryKey(orm, true),
-          ncol = XT.Orm.naturalKey(orm, true),
+        var ncol = XT.Orm.naturalKey(orm, true),
+          pcol = XT.Orm.primaryKey(orm, true),
           query,
           sql;
 
@@ -1193,7 +1244,10 @@ select xt.install_js('XT','Data','xtuple', $$
 
 // TODO - Handle not found error.
 
-        if (DEBUG) { plv8.elog(NOTICE, 'sql =', sql, [value]); }
+        if (DEBUG) {
+          plv8.elog(NOTICE, 'getId sql =', sql);
+          plv8.elog(NOTICE, 'getId values =', [value]);
+        }
 
         return plv8.execute(sql, [value])[0].id;
       } catch (err) {
@@ -1202,21 +1256,24 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-      Returns the current version of a record.
-
-      @param {Object} Orm
-      @param {Number|String} Record id
-    */
+     * Returns the current version of a record.
+     *
+     * @param {Object} Orm
+     * @param {Number|String} Record id
+     */
     getVersion: function (orm, id) {
       try {
         if (!orm.lockable) { return; }
 
-        var oid = this.getTableOid(orm.lockTable || orm.table),
-          sql = 'select ver_etag from xt.ver where ver_table_oid = $1 and ver_record_id = $2;',
+        var etag,
+          oid = this.getTableOid(orm.lockTable || orm.table),
           res,
-          etag;
+          sql = 'select ver_etag from xt.ver where ver_table_oid = $1 and ver_record_id = $2;';
 
-        if (DEBUG) { plv8.elog(NOTICE, 'ver sql = ', sql, [oid, id]); }
+        if (DEBUG) {
+          plv8.elog(NOTICE, 'getVersion sql = ', sql);
+          plv8.elog(NOTICE, 'getVersion values = ', [oid, id]);
+        }
         res = plv8.execute(sql, [oid, id]);
         etag = res.length ? res[0].ver_etag : false;
 
@@ -1225,7 +1282,10 @@ select xt.install_js('XT','Data','xtuple', $$
           sql = 'insert into xt.ver (ver_table_oid, ver_record_id, ver_etag) values ($1, $2, $3::uuid);';
 // TODO - Handle insert error.
 
-          if (DEBUG) { plv8.elog(NOTICE, 'ver sql = ', sql, [oid, id, etag]); }
+          if (DEBUG) {
+            plv8.elog(NOTICE, 'getVersion sql = ', sql);
+            plv8.elog(NOTICE, 'getVersion values = ', [oid, id, etag]);
+          }
           plv8.execute(sql, [oid, id, etag]);
         }
 
@@ -1236,35 +1296,35 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-      Fetch an array of records from the database.
-
-      @param {Object} Options
-      @param {String} [dataHash.nameSpace] Namespace. Required.
-      @param {String} [dataHash.type] Type. Required.
-      @param {Array} [dataHash.parameters] Parameters
-      @param {Array} [dataHash.orderBy] Order by - optional
-      @param {Number} [dataHash.rowLimit] Row limit - optional
-      @param {Number} [dataHash.rowOffset] Row offset - optional
-      @returns Array
-    */
+     * Fetch an array of records from the database.
+     *
+     * @param {Object} Options
+     * @param {String} [dataHash.nameSpace] Namespace. Required.
+     * @param {String} [dataHash.type] Type. Required.
+     * @param {Array} [dataHash.parameters] Parameters
+     * @param {Array} [dataHash.orderBy] Order by - optional
+     * @param {Number} [dataHash.rowLimit] Row limit - optional
+     * @param {Number} [dataHash.rowOffset] Row offset - optional
+     * @returns Array
+     */
     fetch: function (options) {
       try {
         var nameSpace = options.nameSpace,
           type = options.type,
           query = options.query || {},
           orderBy = query.orderBy,
-          parameters = query.parameters,
           orm = XT.Orm.fetch(nameSpace, type),
+          parameters = query.parameters,
+          clause = this.buildClause(nameSpace, type, parameters, orderBy),
+          i,
           key = XT.Orm.primaryKey(orm),
           limit = query.rowLimit ? XT.format('limit %1$L', [query.rowLimit]) : '',
           offset = query.rowOffset ? XT.format('offset %1$L', [query.rowOffset]) : '',
+          parts,
           ret = {
             nameSpace: nameSpace,
             type: type
           },
-          i,
-          parts,
-          clause = this.buildClause(nameSpace, type, parameters, orderBy),
           sql = 'select * from %1$I.%2$I where %3$I in ' +
                 '(select %3$I from %1$I.%2$I where {conditions} {orderBy} {limit} {offset}) ' +
                 '{orderBy}';
@@ -1280,8 +1340,8 @@ select xt.install_js('XT','Data','xtuple', $$
                  .replace('{offset}', offset);
 
         if (DEBUG) {
-          plv8.elog(NOTICE, 'sql = ', sql);
-          plv8.elog(NOTICE, 'values = ', clause.parameters);
+          plv8.elog(NOTICE, 'fetch sql = ', sql);
+          plv8.elog(NOTICE, 'fetch values = ', clause.parameters);
         }
         ret.data = plv8.execute(sql, clause.parameters) || [];
 
@@ -1298,110 +1358,82 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-      Retreives a record from the database. If the user does not have appropriate privileges an
-      error will be thrown unless the `silentError` option is passed.
-
-      If `context` is passed as an option then a record will only be returned if it exists in the context (parent)
-      record which itself must be accessible by the effective user.
-
-      @param {Object} options
-      @param {String} [options.nameSpace] Namespace. Required.
-      @param {String} [options.type] Type. Required.
-      @param {Number} [options.id] Record id. Required.
-      @param {String} [options.encryptionKey] Encryption key
-      @param {Boolean} [options.silentError=false] Silence errors
-      @param {Object} [options.context] Context
-      @param {String} [options.context.nameSpace] Context namespace.
-      @param {String} [options.context.type] The type of context object.
-      @param {String} [options.context.value] The value of the context's primary key.
-      @param {String} [options.context.relation] The name of the attribute on the type to which this record is related.
-      @returns Object
-    */
+     * Retreives a record from the database. If the user does not have appropriate privileges an
+     * error will be thrown unless the `silentError` option is passed.
+     *
+     * If `context` is passed as an option then a record will only be returned if it exists in the context (parent)
+     * record which itself must be accessible by the effective user.
+     *
+     * @param {Object} options
+     * @param {String} [options.nameSpace] Namespace. Required.
+     * @param {String} [options.type] Type. Required.
+     * @param {Number} [options.id] Record id. Required.
+     * @param {String} [options.encryptionKey] Encryption key
+     * @param {Boolean} [options.silentError=false] Silence errors
+     * @param {Object} [options.context] Context
+     * @param {String} [options.context.nameSpace] Context namespace.
+     * @param {String} [options.context.type] The type of context object.
+     * @param {String} [options.context.value] The value of the context's primary key.
+     * @param {String} [options.context.relation] The name of the attribute on the type to which this record is related.
+     * @returns Object
+     */
     retrieveRecord: function (options) {
-      options = options ? options : {};
-      options.obtainLock = false;
-      var nameSpace = options.nameSpace,
-        type = options.type,
-        id = options.id,
-        encryptionKey = options.encryptionKey,
-        map = XT.Orm.fetch(nameSpace, type),
-        lockTable = map.lockTable || map.table,
-        ret = {
-          nameSpace: nameSpace,
-          type: type,
-          id: id
-        },
-        sql,
-        pkey = XT.Orm.primaryKey(map),
-        nkey = XT.Orm.naturalKey(map),
-        context = options.context,
-        join = "",
-        params = {};
-      if (!pkey) {
-        throw new Error('No key found for {nameSpace}.{type}'
-                        .replace("{nameSpace}", nameSpace)
-                        .replace("{type}", type));
-      }
+      try {
+        options = options ? options : {};
+        options.obtainLock = false;
 
-      /* If this object uses a natural key, go get the primary key id */
-      if (nkey) {
-        id = this.getId(map, id);
-      }
+        var id = options.id,
+          nameSpace = options.nameSpace,
+          type = options.type,
+          map = XT.Orm.fetch(nameSpace, type),
+          context = options.context,
+          encryptionKey = options.encryptionKey,
+          join = "",
+          lockTable = map.lockTable || map.table,
+          nkey = XT.Orm.naturalKey(map),
+          params = {},
+          pkey = XT.Orm.primaryKey(map),
+          ret = {
+            nameSpace: nameSpace,
+            type: type,
+            id: id
+          },
+          sql;
 
-      if (XT.typeOf(id) === 'string') {
-        id = "'" + id + "'";
-      }
-
-
-      /* Context means search for this record inside another */
-      if (context) {
-        context.nameSpace = context.nameSpace || context.recordType.beforeDot();
-        context.type = context.type || context.recordType.afterDot()
-        context.map = XT.Orm.fetych(context.nameSpace, context.type);
-        context.prop = XT.Orm.getProperty(context.map, context.relation);
-        context.fkey = context.prop.toMany.inverse;
-        context.pkey = XT.Orm.primaryKey(context.map);
-        params.attribute = context.pkey;
-        params.value = context.value;
-        join = 'join {recordType} on ({table1}."{pkey}"={table2}."{fkey}")';
-        join = join.replace(/{recordType}/, context.recordType.decamelize())
-                   .replace(/{table1}/, context.type.decamelize())
-                   .replace(/{pkey}/, context.pkey)
-                   .replace(/{table2}/, type.decamelize())
-                   .replace(/{fkey}/, context.fkey);
-      }
-
-      /* validate - don't bother running the query if the user has no privileges */
-      if(!context && !this.checkPrivileges(nameSpace, type)) {
-        if (options.silentError) {
-          return false;
-        } else {
-          throw new Error("Access Denied.");
+        if (!pkey) {
+          throw new Error('No key found for {nameSpace}.{type}'
+                          .replace("{nameSpace}", nameSpace)
+                          .replace("{type}", type));
         }
-      }
 
-      ret.etag = this.getVersion(map, id);
+        /* If this object uses a natural key, go get the primary key id. */
+        if (nkey) {
+          id = this.getId(map, id);
+        }
 
-      /* obtain lock if required */
-      if (map.lockable) {
-        ret.lock = this.tryLock(lockTable, id, options);
-      }
+        /* Context means search for this record inside another. */
+        if (context) {
+          context.nameSpace = context.nameSpace || context.recordType.beforeDot();
+          context.type = context.type || context.recordType.afterDot()
+          context.map = XT.Orm.fetych(context.nameSpace, context.type);
+          context.prop = XT.Orm.getProperty(context.map, context.relation);
+          context.fkey = context.prop.toMany.inverse;
+          context.pkey = XT.Orm.primaryKey(context.map);
+          params.attribute = context.pkey;
+          params.value = context.value;
 
-      /* data sql */
-      sql = 'select "{table}".* from {schema}.{table} {join} where "{table}"."{primaryKey}" = {id};'
-            .replace(/{schema}/, nameSpace.decamelize())
-            .replace(/{table}/g, type.decamelize())
-            .replace(/{join}/, join)
-            .replace(/{primaryKey}/, pkey)
-            .replace(/{id}/, id);
+          join = 'join %1$I on (%2$I.%3$I = %4$I.%5$I)';
+          join = XT.format(join, [
+              context.recordType.decamelize(),
+              context.type.decamelize(),
+              context.pkey,
+              type.decamelize(),
+              context.fkey
+            ]);
+        }
 
-      /* query the map */
-      if (DEBUG) plv8.elog(NOTICE, 'data sql = ', sql);
-      ret.data = plv8.execute(sql)[0] || {};
-
-      if (!context) {
-        /* check privileges again, this time against record specific criteria where applicable */
-        if(!this.checkPrivileges(nameSpace, type, ret)) {
+        /* Validate - don't bother running the query if the user has no privileges. */
+        if(!context && !this.checkPrivileges(nameSpace, type)) {
           if (options.silentError) {
             return false;
           } else {
@@ -1409,232 +1441,333 @@ select xt.install_js('XT','Data','xtuple', $$
           }
         }
 
-        /* decrypt result where applicable */
-        ret.data = this.decrypt(nameSpace, type, ret.data, encryptionKey);
-      }
+        ret.etag = this.getVersion(map, id);
 
-      if (!options.includeKeys) {
-        this.removeKeys(nameSpace, type, ret.data);
-      }
+        /* Obtain lock if required. */
+        if (map.lockable) {
+          ret.lock = this.tryLock(lockTable, id, options);
+        }
 
-      /* return the results */
-      return ret || {};
+        /* Data sql. */
+        sql = 'select %1$I.* from %2$I.%1$I {join} where %1$I.%3$I = $1;';
+        sql = sql.replace(/{join}/, join);
+        sql = XT.format(sql, [type.decamelize(), nameSpace.decamelize(), pkey]);
+
+        /* Query the map. */
+        if (DEBUG) {
+          plv8.elog(NOTICE, 'retrieveRecord sql = ', sql);
+          plv8.elog(NOTICE, 'retrieveRecord values = ', [id]);
+        }
+        ret.data = plv8.execute(sql, [id])[0] || {};
+
+        if (!context) {
+          /* Check privileges again, this time against record specific criteria where applicable. */
+          if(!this.checkPrivileges(nameSpace, type, ret)) {
+            if (options.silentError) {
+              return false;
+            } else {
+              throw new Error("Access Denied.");
+            }
+          }
+
+          /* Decrypt result where applicable. */
+          ret.data = this.decrypt(nameSpace, type, ret.data, encryptionKey);
+        }
+
+        if (!options.includeKeys) {
+          this.removeKeys(nameSpace, type, ret.data);
+        }
+
+        /* Return the results. */
+        return ret || {};
+      } catch (err) {
+        XT.error(err, arguments);
+      }
     },
 
     /**
-      Remove primary and foreign keys from the data so it is represented as a pure JavaScript object.
-      Only removes the primary key if a natural key has been specified in the ORM.
-
-      @param {String} Namespace
-      @param {String} Type
-      @param {Object|Array} Data
-    */
+     *  Remove primary and foreign keys from the data so it is represented as a pure JavaScript object.
+     * Only removes the primary key if a natural key has been specified in the ORM.
+     *
+     * @param {String} Namespace
+     * @param {String} Type
+     * @param {Object|Array} Data
+     */
     removeKeys: function (nameSpace, type, data) {
-      if (XT.typeOf(data) !== "array") { data = [data]; }
-      var orm = XT.Orm.fetch(nameSpace, type),
-        pkey = XT.Orm.primaryKey(orm),
-        nkey = XT.Orm.naturalKey(orm),
-        props = orm.properties,
-        item,
-        prop,
-        val,
-        c,
-        i,
-        n;
-      for (var c = 0; c < data.length; c++) {
-        item = data[c];
-        if (nkey && nkey !== pkey) { delete item[pkey]; }
-        for (var i = 0; i < props.length; i++) {
-          prop = props[i];
-          if (prop.toOne && prop.toOne.isNested && item[prop.name]) {
-            this.removeKeys(nameSpace, prop.toOne.type, item[prop.name]);
-          } else if (prop.toMany && prop.toMany.isNested && item[prop.name]) {
-            for (var n = 0; n < item[prop.name].length; n++) {
-              val = item[prop.name][n];
-              delete val[prop.toMany.inverse];
-              this.removeKeys(nameSpace, prop.toMany.type, val);
+      try {
+        if (XT.typeOf(data) !== "array") { data = [data]; }
+        var orm = XT.Orm.fetch(nameSpace, type),
+          c,
+          i,
+          item,
+          n,
+          pkey = XT.Orm.primaryKey(orm),
+          props = orm.properties,
+          nkey = XT.Orm.naturalKey(orm),
+          prop,
+          val;
+
+        for (var c = 0; c < data.length; c++) {
+          item = data[c];
+          if (nkey && nkey !== pkey) { delete item[pkey]; }
+
+          for (var i = 0; i < props.length; i++) {
+            prop = props[i];
+
+            if (prop.toOne && prop.toOne.isNested && item[prop.name]) {
+              this.removeKeys(nameSpace, prop.toOne.type, item[prop.name]);
+            } else if (prop.toMany && prop.toMany.isNested && item[prop.name]) {
+              for (var n = 0; n < item[prop.name].length; n++) {
+                val = item[prop.name][n];
+                delete val[prop.toMany.inverse];
+                this.removeKeys(nameSpace, prop.toMany.type, val);
+              }
             }
           }
         }
+      } catch (err) {
+        XT.error(err, arguments);
       }
     },
 
     /**
-      Returns a array of key value pairs of metric settings that correspond with an array of passed keys.
-
-      @param {Array} array of metric names
-      @returns {Array}
-    */
+     * Returns a array of key value pairs of metric settings that correspond with an array of passed keys.
+     *
+     * @param {Array} array of metric names
+     * @returns {Array}
+     */
     retrieveMetrics: function (keys) {
-      var sql = 'select metric_name as setting, metric_value as value '
+      try {
+        var literals = [],
+          prop,
+          qry,
+          ret = {},
+          sql = 'select metric_name as setting, metric_value as value '
               + 'from metric '
-              + 'where metric_name in ({keys})',
-        qry,
-        ret = {},
-        prop;
-      for (var i = 0; i < keys.length; i++) {
-        keys[i] = "'" + keys[i] + "'";
-      }
-      sql = sql.replace(/{keys}/, keys.join(','));
-      qry =  plv8.execute(sql);
+              + 'where metric_name in ({literals})';
 
-      /* recast where applicable */
-      for (var i = 0; i < qry.length; i++) {
-        prop = qry[i].setting;
-        if(qry[i].value === 't') { ret[prop] = true; }
-        else if(qry[i].value === 'f') { ret[prop] = false }
-        else if(!isNaN(qry[i].value)) { ret[prop] = qry[i].value - 0; }
-        else { ret[prop] = qry[i].value; }
+        for (var i = 0; i < keys.length; i++) {
+          literals[i] = "%" + (i + 1) + "$L";
+        }
+
+        sql = sql.replace(/{literals}/, literals.join(','));
+        sql = XT.format(sql, keys)
+
+        if (DEBUG) {
+          plv8.elog(WARNING, "retrieveMetrics sql = ", sql);
+        }
+        qry = plv8.execute(sql);
+
+        /* Recast where applicable. */
+        for (var i = 0; i < qry.length; i++) {
+          prop = qry[i].setting;
+          if(qry[i].value === 't') { ret[prop] = true; }
+          else if(qry[i].value === 'f') { ret[prop] = false }
+          else if(!isNaN(qry[i].value)) { ret[prop] = qry[i].value - 0; }
+          else { ret[prop] = qry[i].value; }
+        }
+
+        return ret;
+      } catch (err) {
+        XT.error(err, arguments);
       }
-      return ret;
     },
 
     /**
-      Creates and returns a lock for a given table. Defaults to a time based lock of 30 seconds
-      unless aternate timeout option or process id (pid) is passed. If a pid is passed, the lock
-      is considered infinite as long as the pid is valid. If a previous lock key is passed and it is
-      valid, a new lock will be granted.
-
-      @param {String | Number} Table name or oid
-      @param {Number} Record id
-      @param {Object} Options
-      @param {Number} [options.timeout=30]
-      @param {Number} [options.pid] Process id
-      @param {Number} [options.key] Key
-      @param {Boolean} [options.obtainLock=true] If false, only checks for existing lock
-    */
+     * Creates and returns a lock for a given table. Defaults to a time based lock of 30 seconds
+     * unless aternate timeout option or process id (pid) is passed. If a pid is passed, the lock
+     * is considered infinite as long as the pid is valid. If a previous lock key is passed and it is
+     * valid, a new lock will be granted.
+     *
+     * @param {String | Number} Table name or oid
+     * @param {Number} Record id
+     * @param {Object} Options
+     * @param {Number} [options.timeout=30]
+     * @param {Number} [options.pid] Process id
+     * @param {Number} [options.key] Key
+     * @param {Boolean} [options.obtainLock=true] If false, only checks for existing lock
+     */
     tryLock: function (table, id, options) {
-      options = options ? options : {};
-      var pid = options.pid || null,
-        username = XT.username,
-        pidSql = "select usename, procpid " +
-                 "from pg_stat_activity " +
-                 "where datname=current_database() " +
-                 " and usename=$1 " +
-                 " and procpid=$2;",
-        deleteSql = "delete from xt.lock where lock_id = $1;",
-        selectSql = "select * " +
-                    "from xt.lock " +
-                    "where lock_table_oid = $1 " +
-                    " and lock_record_id = $2;",
-        insertSqlPid = "insert into xt.lock (lock_table_oid, lock_record_id, lock_username, lock_pid) " +
-                     "values ($1, $2, $3, $4) returning lock_id, lock_effective;",
-        insertSqlExp = "insert into xt.lock (lock_table_oid, lock_record_id, lock_username, lock_expires) " +
-                     "values ($1, $2, $3, $4) returning lock_id, lock_effective;",
-        timeout = options.timeout || 30,
-        expires = new Date(),
-        oid,
-        query,
-        i,
-        lock,
-        lockExp,
-        pcheck;
+      try {
+        options = options ? options : {};
 
-      /* If passed a table name, look up the oid */
-      oid = typeof table === "string" ? this.getTableOid(table) : table;
+        var deleteSql = "delete from xt.lock where lock_id = $1;",
+          timeout = options.timeout || 30,
+          expires = new Date(),
+          i,
+          insertSqlExp = "insert into xt.lock (lock_table_oid, lock_record_id, lock_username, lock_expires) " +
+                         "values ($1, $2, $3, $4) returning lock_id, lock_effective;",
+          insertSqlPid = "insert into xt.lock (lock_table_oid, lock_record_id, lock_username, lock_pid) " +
+                         "values ($1, $2, $3, $4) returning lock_id, lock_effective;",
+          lock,
+          lockExp,
+          oid,
+          pcheck,
+          pid = options.pid || null,
+          pidSql = "select usename, procpid " +
+                   "from pg_stat_activity " +
+                   "where datname=current_database() " +
+                   " and usename=$1 " +
+                   " and procpid=$2;",
+          query,
+          selectSql = "select * " +
+                      "from xt.lock " +
+                      "where lock_table_oid = $1 " +
+                      " and lock_record_id = $2;",
+          username = XT.username;
 
-      if (DEBUG) plv8.elog(NOTICE, "Trying lock table", oid, id);
+        /* If passed a table name, look up the oid. */
+        oid = typeof table === "string" ? this.getTableOid(table) : table;
 
-      /* See if there are existing lock(s) for this record */
-      query = plv8.execute(selectSql, [oid, id]);
+        if (DEBUG) plv8.elog(NOTICE, "Trying lock table", oid, id);
 
-      /* Validate result */
-      if (query.length > 0) {
-        while (query.length) {
-          lock = query.shift();
+        /* See if there are existing lock(s) for this record. */
+        if (DEBUG) {
+          plv8.elog(NOTICE, 'tryLock sql = ', selectSql);
+          plv8.elog(NOTICE, 'tryLock values = ', [oid, id]);
+        }
+        query = plv8.execute(selectSql, [oid, id]);
 
-          /* See if we are confirming our own lock */
-          if (options.key && options.key === lock.lock_id) {
-            /* Go on and we'll get a new lock */
+        /* Validate result */
+        if (query.length > 0) {
+          while (query.length) {
+            lock = query.shift();
 
-          /* Make sure if they are pid locks users is still connected */
-          } else if (lock.lock_pid) {
-            pcheck = plv8.execute(pidSql, [lock.lock_username, lock.lock_pid]);
-            if (pcheck.length) { break; } /* valid lock */
-          } else {
-            lockExp = new Date(lock.lock_expires);
-            if (DEBUG) { plv8.elog(NOTICE, "Lock found", lockExp > expires, lockExp, expires); }
-            if (lockExp > expires) { break; } /* valid lock */
+            /* See if we are confirming our own lock. */
+            if (options.key && options.key === lock.lock_id) {
+              /* Go on and we'll get a new lock. */
+
+            /* Make sure if they are pid locks users is still connected. */
+            } else if (lock.lock_pid) {
+              if (DEBUG) {
+                plv8.elog(NOTICE, 'tryLock sql = ', pidSql);
+                plv8.elog(NOTICE, 'tryLock values = ', [lock.lock_username, lock.lock_pid]);
+              }
+              pcheck = plv8.execute(pidSql, [lock.lock_username, lock.lock_pid]);
+              if (pcheck.length) { break; } /* valid lock */
+            } else {
+              lockExp = new Date(lock.lock_expires);
+              if (DEBUG) { plv8.elog(NOTICE, "Lock found", lockExp > expires, lockExp, expires); }
+              if (lockExp > expires) { break; } /* valid lock */
+            }
+
+            /* Delete invalid or expired lock. */
+            if (DEBUG) {
+              plv8.elog(NOTICE, 'tryLock sql = ', deleteSql);
+              plv8.elog(NOTICE, 'tryLock values = ', [lock.lock_id]);
+            }
+            plv8.execute(deleteSql, [lock.lock_id]);
+            lock = undefined;
           }
 
-          /* Delete invalid or expired lock */
-          plv8.execute(deleteSql, [lock.lock_id]);
-          lock = undefined;
-        }
+          if (lock) {
+            if (DEBUG) plv8.elog(NOTICE, "Lock found", lock.lock_username);
 
-        if (lock) {
-          if (DEBUG) plv8.elog(NOTICE, "Lock found", lock.lock_username);
-          return {
-            username: lock.lock_username,
-            effective: lock.lock_effective
+            return {
+              username: lock.lock_username,
+              effective: lock.lock_effective
+            }
           }
         }
-      }
 
-      if (options.obtainLock === false) { return; }
+        if (options.obtainLock === false) { return; }
 
-      if (DEBUG) plv8.elog(NOTICE, "Creating lock.");
+        if (DEBUG) { plv8.elog(NOTICE, "Creating lock."); }
+        if (DEBUG) { plv8.elog(NOTICE, 'tryLock sql = ', insertSqlPid); }
 
-      if (pid) {
-        lock = plv8.execute(insertSqlPid, [oid, id, username, pid])[0];
-      } else {
-        expires = new Date(expires.setSeconds(expires.getSeconds() + timeout));
-        lock = plv8.execute(insertSqlExp, [oid, id, username, expires])[0];
-      }
+        if (pid) {
+          if (DEBUG) { plv8.elog(NOTICE, 'tryLock values = ', [oid, id, username, pid]); }
+          lock = plv8.execute(insertSqlPid, [oid, id, username, pid])[0];
+        } else {
+          expires = new Date(expires.setSeconds(expires.getSeconds() + timeout));
+          if (DEBUG) { plv8.elog(NOTICE, 'tryLock values = ', [oid, id, username, expires]); }
+          lock = plv8.execute(insertSqlExp, [oid, id, username, expires])[0];
+        }
 
-      if (DEBUG) { plv8.elog(NOTICE, "Lock returned is", lock.lock_id); }
+        if (DEBUG) { plv8.elog(NOTICE, "Lock returned is", lock.lock_id); }
 
-      return {
-        username: username,
-        effective: lock.lock_effective,
-        key: lock.lock_id
+        return {
+          username: username,
+          effective: lock.lock_effective,
+          key: lock.lock_id
+        }
+      } catch (err) {
+        XT.error(err, arguments);
       }
     },
 
     /**
-      Release a lock. Pass either options with a key, or table, id and username.
-
-      @param {Object} Options: key or table and id
-    */
+     * Release a lock. Pass either options with a key, or table, id and username.
+     *
+     * @param {Object} Options: key or table and id
+     */
     releaseLock: function (options) {
-      var oid,
-        username = XT.username,
-        sqlKey = 'delete from xt.lock where lock_id = $1;',
-        sqlUsr = 'delete from xt.lock where lock_table_oid = $1 and lock_record_id = $2 and lock_username = $3;';
-      if (options.key) {
-        plv8.execute(sqlKey, [options.key]);
-      } else {
-        oid = typeof options.table === "string" ? this.getTableOid(options.table) : options.table;
+      try {
+        var oid,
+          sqlKey = 'delete from xt.lock where lock_id = $1;',
+          sqlUsr = 'delete from xt.lock where lock_table_oid = $1 and lock_record_id = $2 and lock_username = $3;',
+          username = XT.username;
 
-        if (DEBUG) { plv8.elog(NOTICE, oid, options.id, username); }
-        plv8.execute(sqlUsr, [oid, options.id, username]);
+        if (options.key) {
+          if (DEBUG) {
+            plv8.elog(NOTICE, 'releaseLock sql = ', sqlKey);
+            plv8.elog(NOTICE, 'releaseLock values = ', [options.key]);
+          }
+          plv8.execute(sqlKey, [options.key]);
+        } else {
+          oid = typeof options.table === "string" ? this.getTableOid(options.table) : options.table;
+
+          if (DEBUG) {
+            plv8.elog(NOTICE, 'releaseLock sql = ', sqlUsr);
+            plv8.elog(NOTICE, 'releaseLock values = ', [oid, options.id, username]);
+          }
+          plv8.execute(sqlUsr, [oid, options.id, username]);
+        }
+
+        return true;
+      } catch (err) {
+        XT.error(err, arguments);
       }
-      return true;
     },
 
     /**
-      Renew a lock. Defaults to rewing the lock for 30 seconds.
-
-      @param {Number} Key
-      @params {Object} Options: timeout
-      @returns {Date} New expiration or false.
-    */
+     * Renew a lock. Defaults to rewing the lock for 30 seconds.
+     *
+     * @param {Number} Key
+     * @params {Object} Options: timeout
+     * @returns {Date} New expiration or false.
+     */
     renewLock: function (key, options) {
-      var timeout = options && options.timeout ? options.timeout : 30,
-        expires = new Date(),
-        selectSql = "select * from xt.lock where lock_id = $1;",
-        updateSql = "update xt.lock set lock_expires = $1 where lock_id = $2;",
-        query;
+      try {
+        var expires = new Date(),
+          query,
+          selectSql = "select * from xt.lock where lock_id = $1;",
+          timeout = options && options.timeout ? options.timeout : 30,
+          updateSql = "update xt.lock set lock_expires = $1 where lock_id = $2;";
 
-      if (typeof key !== "number") { return false; }
-      expires = new Date(expires.setSeconds(expires.getSeconds() + timeout));
-      query = plv8.execute(selectSql, [key]);
-      if (query.length) {
-        plv8.execute(updateSql, [expires, key]);
-        return true;
+        if (typeof key !== "number") { return false; }
+        expires = new Date(expires.setSeconds(expires.getSeconds() + timeout));
+
+        if (DEBUG) {
+          plv8.elog(NOTICE, 'renewLock sql = ', selectSql);
+          plv8.elog(NOTICE, 'renewLock values = ', [key]);
+        }
+        query = plv8.execute(selectSql, [key]);
+
+        if (query.length) {
+          if (DEBUG) {
+            plv8.elog(NOTICE, 'renewLock sql = ', updateSql);
+            plv8.elog(NOTICE, 'renewLock values = ', [expires, key]);
+          }
+          plv8.execute(updateSql, [expires, key]);
+
+          return true;
+        }
+
+        return false;
+      } catch (err) {
+        XT.error(err, arguments);
       }
-
-      return false;
     }
   }
 
