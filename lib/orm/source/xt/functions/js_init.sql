@@ -1,3 +1,5 @@
+drop function if exists xt.js_init();
+
 create or replace function xt.js_init(debug boolean DEFAULT false) returns void as $$
 
   DEBUG = debug ? debug : false;
@@ -226,9 +228,9 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
    * @param {Array} Javascript's arguments array for the function throwing the error.
    */
   XT.error = function (error, args) {
-    var message = error.stack + "\n" + "Call args=",
+    var message = error.stack + "\n",
         len = 990, /* Minus 15 for "ERROR:  Error: ". */
-        params = "",
+        params = "Error call args= \n",
         avglen = len / args.length;
 
     /* Total error message size in plv8 is 1000 characters. */
@@ -250,13 +252,12 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
 
     if (DEBUG) {
       /* This can give you some more info if the error will not fit. */
-      plv8.elog(WARNING, message.substring(0, 965));
-      plv8.elog(WARNING, params.substring(0, 990));
+      plv8.elog(WARNING, params.substring(0, 900));
     }
 
     /* Some times the stack trace can eat up the full 1000 char message. */
-    /* The params will not print. Do a hard trim to 965 so something prints. */
-    plv8.elog(ERROR, (message + params).substring(0, 965));
+    /* Do a hard trim to 900 so something prints. */
+    plv8.elog(ERROR, message.substring(0, 900));
   }
 
   /**
