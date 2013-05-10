@@ -1164,7 +1164,10 @@ trailing:true white:true*/
       onConvertItem: "convertProspect"
     },
     actions: [
-      {name: "convert"}
+      {
+        name: "convert",
+        notify: true
+      }
     ],
     query: {orderBy: [
       {attribute: 'number'}
