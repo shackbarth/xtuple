@@ -1,6 +1,6 @@
 /* LESS version of screen.scss file previously in client
 
-  To compile to .css: 
+  To compile to .css:
   lessc screen.less > ../stylesheets/screen.css
   Use -compress for a compressed .css with no comments
 
@@ -671,10 +671,17 @@ body {
   padding-bottom: 2px;
 
   .onyx-input-decorator {
-    width: 95px;
+    width: 120px;
+    text-align: right;
+    padding: 6px 6px 8px 6px;
+    input {
+      width: 100%;
+    }
   }
   .xv-picker {
-    width: 95px;
+    width: 65px;
+    text-align: center;
+    padding: 8px 10px;
   }
 }
 

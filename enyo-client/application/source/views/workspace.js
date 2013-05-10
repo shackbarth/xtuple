@@ -77,7 +77,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "description"},
             // these order fields are integers, so setting a maxlength
             // to prevent exceeding integer's max value
-            {kind: "XV.NumberWidget", attr: "order", maxlength: 9, formatting: false} 
+            {kind: "XV.NumberWidget", attr: "order", maxlength: 9, formatting: false}
           ]}
         ]}
       ]}
