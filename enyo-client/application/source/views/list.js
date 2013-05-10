@@ -1163,7 +1163,7 @@ trailing:true white:true*/
     handlers: {
       onConvertItem: "convertProspect"
     },
-    gearActions: ["convert"],
+    actions: ["convert"],
     query: {orderBy: [
       {attribute: 'number'}
     ]},
