@@ -9,7 +9,31 @@ white:true*/
   /**
     @class
 
-    @extends XT.AccountDocument
+    @extends XM.Document
+  */
+  XM.Department = XM.Document.extend({
+    /** @scope XM.Department.prototype */
+
+    recordType: 'XM.Department'
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Document
+  */
+  XM.Shift = XM.Document.extend({
+    /** @scope XM.Shift.prototype */
+
+    recordType: 'XM.Shift'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.AccountDocument
   */
   XM.Employee = XM.AccountDocument.extend({
     /** @scope XM.Employee.prototype */
@@ -27,6 +51,86 @@ white:true*/
     ]
 
   });
+
+  /** @class
+  
+  A hash of constants related to wage types and periods.
+  
+  */
+  XM.Wage = {
+    /** @scope XM.Wage */
+
+    /**
+      Salaried type.
+
+      @static
+      @constant
+      @type String
+      @default S
+    */
+    SALARIED: 'S',
+
+    /**
+      Hourly period or type.
+
+      @static
+      @constant
+      @type String
+      @default H
+    */
+    HOURLY: 'H',
+
+    /**
+      Daily period.
+
+      @static
+      @constant
+      @type String
+      @default D
+    */
+    DAILY: 'D',
+
+    /**
+      Weekly period.
+
+      @static
+      @constant
+      @type String
+      @default W
+    */
+    WEEKLY: 'W',
+
+    /**
+      Bi-weekly period.
+
+      @static
+      @constant
+      @type String
+      @default BW
+    */
+    BI_WEEKLY: 'BW',
+
+    /**
+      Monthly period.
+
+      @static
+      @constant
+      @type String
+      @default M
+    */
+    MONTHLY: 'M',
+
+    /**
+      Annually period.
+
+      @static
+      @constant
+      @type String
+      @default L
+    */
+    ANNUALLY: 'Y'
+
+  };
 
   /**
     @class
@@ -69,7 +173,7 @@ white:true*/
     descriptionKey: "name"
 
   });
-  
+
   /**
     @class
     Used inside employee relation as reference to prevent recursion.
@@ -90,6 +194,30 @@ white:true*/
   // ..........................................................
   // COLLECTIONS
   //
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.DepartmentCollection = XM.Collection.extend({
+    /** @scope XM.DepartmentCollection.prototype */
+
+    model: XM.Department
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.ShiftCollection = XM.Collection.extend({
+    /** @scope XM.ShiftCollection.prototype */
+
+    model: XM.Shift
+
+  });
 
   /**
     @class

@@ -2,6 +2,94 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "Department",
+    "table": "dept",
+    "idSequenceName": "dept_dept_id_seq",
+    "isRest": true,
+    "lockable": true,
+    "comment": "Department Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainDepartments",
+        "read": true,
+        "update": "MaintainDepartments",
+        "delete": "MaintainDepartments"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "dept_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "dept_number",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "dept_name"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Shift",
+    "table": "shift",
+    "idSequenceName": "shift_shift_id_seq",
+    "isRest": true,
+    "lockable": true,
+    "comment": "Shift Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainShifts",
+        "read": true,
+        "update": "MaintainShifts",
+        "delete": "MaintainShifts"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "shift_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "shift_number",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "shift_name"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "Employee",
     "table": "emp",
     "idSequenceName": "emp_emp_id_seq",
@@ -59,7 +147,7 @@
         "name": "contact",
         "toOne": {
           "isNested": true,
-          "type": "ContactInfo",
+          "type": "ContactRelation",
           "column": "emp_cntct_id"
         }
       },
@@ -86,6 +174,20 @@
           "type": "EmployeeRelation",
           "column": "emp_mgr_emp_id",
           "inverse": "id"
+        }
+      },
+      {
+        "name": "department",
+        "toOne": {
+          "type": "Department",
+          "column": "emp_dept_id"
+        }
+      },
+      {
+        "name": "shift",
+        "toOne": {
+          "type": "Shift",
+          "column": "emp_shift_id"
         }
       },
       {
@@ -218,6 +320,20 @@
           "type": "EmployeeEmployeeRelation",
           "column": "emp_mgr_emp_id",
           "inverse": "id"
+        }
+      },
+      {
+        "name": "department",
+        "toOne": {
+          "type": "Department",
+          "column": "emp_dept_id"
+        }
+      },
+      {
+        "name": "shift",
+        "toOne": {
+          "type": "Shift",
+          "column": "emp_shift_id"
         }
       }
     ],

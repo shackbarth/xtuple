@@ -593,6 +593,136 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.ExpenseCategory", "XV.ExpenseCategoryWorkspace");
+  
+  // ..........................................................
+  // DEPARTMENT
+  //
+
+  enyo.kind({
+    name: "XV.DepartmentWorkspace",
+    kind: "XV.Workspace",
+    title: "_department".loc(),
+    model: "XM.Department",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.InputWidget", attr: "name"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.Department", "XV.DepartmentWorkspace");
+  
+  // ..........................................................
+  // EMPLOYEE
+  //
+
+  enyo.kind({
+    name: "XV.EmployeeWorkspace",
+    kind: "XV.Workspace",
+    title: "_employee".loc(),
+    model: "XM.Employee",
+    allowPrint: false,
+    headerAttrs: ["number", "-", "name"],
+    handlers: {
+      onError: "errorNotify"
+    },
+    published: {
+      existingId: ""
+    },
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
+            {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
+            {kind: "XV.ContactWidget", attr: "contact",
+              showAddress: true, label: "_name".loc()},
+            {kind: "XV.EmployeeCharacteristicsWidget", attr: "characteristics"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes"}
+          ]}
+        ]},
+        {kind: "XV.Groupbox", name: "detailPanel", title: "_detail".loc(),
+          components: [
+          {kind: "onyx.GroupboxHeader", content: "_detail".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "detailGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.DateWidget", attr: "startDate"},
+            {kind: "XV.SitePicker", attr: "site"},
+            {kind: "XV.DepartmentPicker", attr: "department"},
+            {kind: "XV.EmployeeWidget", attr: "manager"},
+            {kind: "XV.ShiftPicker", attr: "shift"},
+            {kind: "onyx.GroupboxHeader", content: "_financials".loc()},
+            {kind: "XV.WageTypePicker", attr: "wageType"},
+            {kind: "XV.MoneyWidget",
+              attr: {localValue: "wage", currency: "wageCurrency"},
+              currencyDisabled: true},
+            {kind: "XV.WagePeriodPicker", attr: "wagePeriod", label: "_period".loc()},
+            {kind: "XV.MoneyWidget",
+              attr: {localValue: "billingRate", currency: "billingCurrency"},
+              currencyDisabled: true},
+            {kind: "XV.WagePeriodPicker", attr: "billingPeriod", label: "_period".loc()}
+          ]}
+        ]},
+        {kind: "XV.EmployeeCommentBox", attr: "comments"}
+      ]},
+      {kind: "onyx.Popup", name: "findExistingAccountPopup", centered: true,
+        modal: true, floating: true, scrim: true, onShow: "popupShown",
+        onHide: "popupHidden", components: [
+        {content: "_employeeExistsAccount".loc()},
+        {name: "whatToDo", content: "_convertAccountEmployee".loc()},
+        {tag: "br"},
+        {kind: "onyx.Button", name: "convert", content: "_ok".loc(), ontap: "accountConvert",
+          classes: "onyx-blue xv-popup-button"},
+        {kind: "onyx.Button", name: "cancel", content: "_cancel".loc(), ontap: "accountCancel",
+          classes: "xv-popup-button"}
+      ]}
+    ],
+    accountConvert: function (inEvent) {
+      this.value.convertFromAccount(this.existingId);
+      this._popupDone = true;
+      this.$.findExistingAccountPopup.hide();
+    },
+    errorNotify: function (inSender, inEvent) {
+      // Handle customer existing as prospect
+      if (inEvent.error.code === 'xt1008') {
+        var type = inEvent.error.params.response.type;
+        this.existingId = inEvent.error.params.response.id;
+        if (type === 'A') { // Existing Account
+          this._popupDone = false;
+          this.$.findExistingAccountPopup.show();
+          return true;
+        }
+      }
+    },
+    accountCancel: function () {
+      this._popupDone = true;
+      this.$.findExistingAccountPopup.hide();
+    },
+    popupHidden: function () {
+      if (!this._popupDone) {
+        this.$.findExistingAccountPopup.show();
+        return true;
+      }
+    }
+  });
+
+  XV.registerModelWorkspace("XM.EmployeeRelation", "XV.EmployeeWorkspace");
+  XV.registerModelWorkspace("XM.EmployeeListItem", "XV.EmployeeWorkspace");
 
   // ..........................................................
   // FILE
@@ -1728,6 +1858,32 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.SaleType", "XV.SaleTypeWorkspace");
+  
+  // ..........................................................
+  // SHIFT
+  //
+
+  enyo.kind({
+    name: "XV.ShiftWorkspace",
+    kind: "XV.Workspace",
+    title: "_shift".loc(),
+    model: "XM.Shift",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.InputWidget", attr: "name"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.Shift", "XV.ShiftWorkspace");
 
   // ..........................................................
   // SHIP ZONE
@@ -2289,6 +2445,7 @@ trailing:true white:true*/
             {kind: "XV.ToggleButtonWidget", attr: "isIncidents", label: "_incident".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isItems", label: "_item".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isOpportunities", label: "_opportunity".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isEmployees", label: "_employees".loc()},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true},
             {name: "advancedPanel", showing: false, components: [

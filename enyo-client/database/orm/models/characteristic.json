@@ -114,7 +114,15 @@
           "column": "char_items",
           "required": true
         }
-      }
+      },
+      {
+        "name": "isEmployees",
+        "attr": {
+          "type": "Boolean",
+          "column": "char_employees",
+          "required": true
+        }
+      },
     ],
     "isSystem": true,
     "extensions": []

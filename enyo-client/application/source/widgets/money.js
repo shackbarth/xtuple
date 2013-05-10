@@ -125,6 +125,16 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.input.setDisabled(disabled);
       this.$.picker.setDisabled(disabled || currencyDisabled);
     },
+    
+    /**
+    @todo Document the labelChanged method.
+    */
+    labelChanged: function () {
+      var attr = this.getAttr(),
+        valueAttr = attr.localValue || attr.baseValue;
+      var label = (this.getLabel() || ("_" + valueAttr || "").loc());
+      this.$.label.setContent(label + ":");
+    },
 
     effectiveChanged: function () {
       this.recalculate();

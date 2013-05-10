@@ -191,6 +191,49 @@ trailing:true white:true*/
       {name: "description", label: "_description", attr: "description"}
     ]
   });
+  
+  // ..........................................................
+  // EMPLOYEE
+  //
+
+  enyo.kind({
+    name: "XV.EmployeeListParameters",
+    kind: "XV.ParameterWidget",
+    characteristicsRole: 'isEmployees',
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_account".loc()},
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {name: "code", label: "_code".loc(), attr: "code"},
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {kind: "onyx.GroupboxHeader", content: "_detail".loc()},
+      {name: "manager", label: "_manager".loc(), attr: "manager", defaultKind: "XV.EmployeeWidget"},
+      {name: "department", label: "_department".loc(), attr: "department", defaultKind: "XV.DepartmentPicker"},
+      {name: "shift", label: "_shift".loc(), attr: "shift", defaultKind: "XV.ShiftPicker"},
+      {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
+      {name: "contact", label: "_contact".loc(), attr: "contact.name"},
+      {name: "primaryEmail", label: "_primaryEmail".loc(), attr: "contact.primaryEmail"},
+      {name: "phone", label: "_phone".loc(), attr: ["primaryContact.phone", "contact.alternate", "contact.fax"]},
+      {kind: "onyx.GroupboxHeader", content: "_address".loc()},
+      {name: "street", label: "_street".loc(), attr: ["primaryContact.address.line1", "contact.address.line2", "contact.address.line3"]},
+      {name: "city", label: "_city".loc(), attr: "contact.address.city"},
+      {name: "postalCode", label: "_postalCode".loc(), attr: "contact.address.postalCode"},
+      {name: "state", label: "_state".loc(), attr: "contact.address.state"},
+      {name: "country", label: "_country".loc(), attr: "cntact.address.country"}
+    ]
+  });
 
   // ..........................................................
   // FREIGHT CLASS
