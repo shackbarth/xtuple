@@ -222,36 +222,40 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
   }
 
   /**
-   * Wrap plv8's elog ERROR to include a stack trace and function arguments.
+   * Wrap plv8's elog ERROR to include a stack trace and function arguments when debugging.
    *
    * @param {Object} The caught error object from a try/catch.
    * @param {Array} Javascript's arguments array for the function throwing the error.
    */
   XT.error = function (error, args) {
     var message = error.stack + "\n",
-        len = 990, /* Minus 15 for "ERROR:  Error: ". */
-        params = "Error call args= \n",
-        avglen = len / args.length;
-
-    /* Total error message size in plv8 is 1000 characters. */
-    /* Take the length and split it up evening amung the args. */
-    for(var i = 0; i < args.length; i++) {
-      var strg = JSON.stringify(args[i] || 'null', null, 2);
-
-      params = params + "\n[" + i + "]=";
-
-      if (strg.length < (avglen - 15)) { /* Minus 15 for "[i]= ...trimmed". */
-        params = params + strg;
-      } else {
-        params = params + strg.substring(0, avglen - 15) + "...trimmed";
-      }
-
-      // TODO - This assumes all args are the same length.
-      // We could do some calc to maximize the trim per variable arg length.
-    }
+        len,
+        params,
+        avglen;
 
     if (DEBUG) {
-      /* This can give you some more info if the error will not fit. */
+      len = 950;
+      params = "Error call args= \n";
+      avglen = len / args.length;
+
+      /* Total error message size in plv8 is 1000 characters. */
+      /* Take the length and split it up evening amung the args. */
+      for(var i = 0; i < args.length; i++) {
+        var strg = JSON.stringify(args[i] || 'null', null, 2);
+
+        params = params + "\n[" + i + "]=";
+
+        if (strg.length < (avglen - 15)) { /* Minus 15 for "[i]= ...trimmed". */
+          params = params + strg;
+        } else {
+          params = params + strg.substring(0, avglen - 15) + "...trimmed";
+        }
+
+        // TODO - This assumes all args are the same length.
+        // We could do some calc to maximize the trim per variable arg length.
+      }
+
+      /* This can give you some more info on how the function was called. */
       plv8.elog(WARNING, params.substring(0, 900));
     }
 
