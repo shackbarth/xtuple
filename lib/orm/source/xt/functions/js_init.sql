@@ -4,6 +4,11 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
 
   DEBUG = debug ? debug : false;
 
+  if (plv8.version !== '1.3.0'){
+    plv8.elog(ERROR, 'plv8 version 1.3.0 required. This version is = ', plv8.version);
+  }
+
+
   // ..........................................................
   // METHODS
   //
