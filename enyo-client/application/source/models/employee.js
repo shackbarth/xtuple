@@ -41,13 +41,28 @@ white:true*/
     recordType: 'XM.Employee',
 
     documentKey: "code",
+    
+    conversionMap: {
+      name: "name",
+      primaryContact: "contact"
+    },
 
-    defaults: {
-      isActive: true
+    defaults: function () {
+      var hourly = XM.Wage.HOURLY;
+      return {
+        isActive: true,
+        wageType: hourly,
+        wagePeriod: hourly,
+        billingPeriod: hourly
+      };
     },
 
     requiredAttributes: [
-      "isActive"
+      "isActive",
+      "number",
+      "wageType",
+      "wagePeriod",
+      "billingPeriod"
     ]
 
   });

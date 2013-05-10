@@ -46,7 +46,9 @@ white:true*/
 
     recordType: 'XM.TaxAuthority',
     
-    documentKey: 'number',
+    requiredAttributes: [],
+    
+    documentKey: 'code',
 
     defaults: function () {
       return {

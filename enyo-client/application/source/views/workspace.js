@@ -58,6 +58,45 @@ trailing:true white:true*/
       return model ? model.get('account') : undefined;
     }
   };
+  
+  /**
+    Abstract workspace to be used for objects that are attached to models subclassed from `AccountDocument`.
+    Must be subclassed.
+  */
+  enyo.kind({
+    name: "XV.AccountDocumentWorkspace",
+    kind: "XV.Workspace",
+    handlers: {
+      onError: "errorNotify"
+    },
+    published: {
+      existingId: ""
+    },
+    accountConvert: function (inEvent) {
+      this.value.convertFromAccount(this.existingId);
+      this._popupDone = true;
+      this.$.findExistingAccountPopup.hide();
+    },
+    errorNotify: function (inSender, inEvent) {
+      // Handle existing
+      if (inEvent.error.code === 'xt1008') {
+        this.existingId = inEvent.error.params.response.id;
+        this._popupDone = false;
+        this.$.findExistingAccountPopup.show();
+        return true;
+      }
+    },
+    accountCancel: function () {
+      this._popupDone = true;
+      this.$.findExistingAccountPopup.hide();
+    },
+    popupHidden: function () {
+      if (!this._popupDone) {
+        this.$.findExistingAccountPopup.show();
+        return true;
+      }
+    }
+  });
 
   // ..........................................................
   // BASE CLASS
@@ -483,14 +522,14 @@ trailing:true white:true*/
         this.existingId = inEvent.error.params.response.id;
         if (type === 'P') { // Prospect
           this._popupDone = false;
-          this.$.exists.setContent("_customerExistsProspect".loc());
+          this.$.exists.setContent("_prospectExists".loc());
           this.$.whatToDo.setContent("_convertProspect".loc());
           this.$.ok.type = "prospect";
           this.$.findExistingCustomerPopup.show();
           return true;
         } else if (type === 'A') { // Existing Account
           this._popupDone = false;
-          this.$.exists.setContent("_customerExistsAccount".loc());
+          this.$.exists.setContent("_accountExists".loc());
           this.$.whatToDo.setContent("_convertAccount".loc());
           this.$.ok.type = "account";
           this.$.findExistingCustomerPopup.show();
@@ -626,17 +665,11 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.EmployeeWorkspace",
-    kind: "XV.Workspace",
+    kind: "XV.AccountDocumentWorkspace",
     title: "_employee".loc(),
     model: "XM.Employee",
     allowPrint: false,
     headerAttrs: ["number", "-", "name"],
-    handlers: {
-      onError: "errorNotify"
-    },
-    published: {
-      existingId: ""
-    },
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -683,7 +716,7 @@ trailing:true white:true*/
       {kind: "onyx.Popup", name: "findExistingAccountPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",
         onHide: "popupHidden", components: [
-        {content: "_employeeExistsAccount".loc()},
+        {content: "_accountExists".loc()},
         {name: "whatToDo", content: "_convertAccountEmployee".loc()},
         {tag: "br"},
         {kind: "onyx.Button", name: "convert", content: "_ok".loc(), ontap: "accountConvert",
@@ -691,34 +724,7 @@ trailing:true white:true*/
         {kind: "onyx.Button", name: "cancel", content: "_cancel".loc(), ontap: "accountCancel",
           classes: "xv-popup-button"}
       ]}
-    ],
-    accountConvert: function (inEvent) {
-      this.value.convertFromAccount(this.existingId);
-      this._popupDone = true;
-      this.$.findExistingAccountPopup.hide();
-    },
-    errorNotify: function (inSender, inEvent) {
-      // Handle customer existing as prospect
-      if (inEvent.error.code === 'xt1008') {
-        var type = inEvent.error.params.response.type;
-        this.existingId = inEvent.error.params.response.id;
-        if (type === 'A') { // Existing Account
-          this._popupDone = false;
-          this.$.findExistingAccountPopup.show();
-          return true;
-        }
-      }
-    },
-    accountCancel: function () {
-      this._popupDone = true;
-      this.$.findExistingAccountPopup.hide();
-    },
-    popupHidden: function () {
-      if (!this._popupDone) {
-        this.$.findExistingAccountPopup.show();
-        return true;
-      }
-    }
+    ]
   });
 
   XV.registerModelWorkspace("XM.EmployeeRelation", "XV.EmployeeWorkspace");
@@ -1335,17 +1341,11 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.ProspectWorkspace",
-    kind: "XV.Workspace",
+    kind: "XV.AccountDocumentWorkspace",
     title: "_prospect".loc(),
     model: "XM.Prospect",
     allowPrint: true,
     headerAttrs: ["number", "-", "name"],
-    handlers: {
-      onError: "errorNotify"
-    },
-    published: {
-      existingId: ""
-    },
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -1370,7 +1370,7 @@ trailing:true white:true*/
       {kind: "onyx.Popup", name: "findExistingAccountPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",
         onHide: "popupHidden", components: [
-        {content: "_customerExistsAccount".loc()},
+        {content: "_accountExists".loc()},
         {name: "whatToDo", content: "_convertAccountProspect".loc()},
         {tag: "br"},
         {kind: "onyx.Button", name: "convert", content: "_ok".loc(), ontap: "accountConvert",
@@ -1378,34 +1378,7 @@ trailing:true white:true*/
         {kind: "onyx.Button", name: "cancel", content: "_cancel".loc(), ontap: "accountCancel",
           classes: "xv-popup-button"}
       ]}
-    ],
-    accountConvert: function (inEvent) {
-      this.value.convertFromAccount(this.existingId);
-      this._popupDone = true;
-      this.$.findExistingAccountPopup.hide();
-    },
-    errorNotify: function (inSender, inEvent) {
-      // Handle customer existing as prospect
-      if (inEvent.error.code === 'xt1008') {
-        var type = inEvent.error.params.response.type;
-        this.existingId = inEvent.error.params.response.id;
-        if (type === 'A') { // Existing Account
-          this._popupDone = false;
-          this.$.findExistingAccountPopup.show();
-          return true;
-        }
-      }
-    },
-    accountCancel: function () {
-      this._popupDone = true;
-      this.$.findExistingAccountPopup.hide();
-    },
-    popupHidden: function () {
-      if (!this._popupDone) {
-        this.$.findExistingAccountPopup.show();
-        return true;
-      }
-    }
+    ]
   });
 
   XV.registerModelWorkspace("XM.ProspectRelation", "XV.ProspectWorkspace");
@@ -1811,7 +1784,7 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.SalesRepWorkspace",
-    kind: "XV.Workspace",
+    kind: "XV.AccountDocumentWorkspace",
     title: "_salesRep".loc(),
     model: "XM.SalesRep",
     components: [
@@ -1827,6 +1800,17 @@ trailing:true white:true*/
             {kind: "XV.PercentWidget", attr: "commission"}
           ]}
         ]}
+      ]},
+      {kind: "onyx.Popup", name: "findExistingAccountPopup", centered: true,
+        modal: true, floating: true, scrim: true, onShow: "popupShown",
+        onHide: "popupHidden", components: [
+        {content: "_accountExists".loc()},
+        {name: "whatToDo", content: "_convertAccountSalesRep".loc()},
+        {tag: "br"},
+        {kind: "onyx.Button", name: "convert", content: "_ok".loc(), ontap: "accountConvert",
+          classes: "onyx-blue xv-popup-button"},
+        {kind: "onyx.Button", name: "cancel", content: "_cancel".loc(), ontap: "accountCancel",
+          classes: "xv-popup-button"}
       ]}
     ]
   });
@@ -2020,10 +2004,10 @@ trailing:true white:true*/
 
   hash = {
     name: "XV.TaxAuthorityWorkspace",
-    kind: "XV.Workspace",
+    kind: "XV.AccountDocumentWorkspace",
     title: "_taxAuthority".loc(),
     model: "XM.TaxAuthority",
-    headerAttrs: ["number", "-", "name"],
+    headerAttrs: ["code", "-", "name"],
     handlers: {
       onError: "errorNotify"
     },
@@ -2034,7 +2018,7 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.InputWidget", attr: "code"},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "externalReference"},
             {kind: "XV.CurrencyPicker", attr: "currency"},
@@ -2043,6 +2027,17 @@ trailing:true white:true*/
             {kind: "XV.AddressWidget", attr: "address"}
           ]}
         ]}
+      ]},
+      {kind: "onyx.Popup", name: "findExistingAccountPopup", centered: true,
+        modal: true, floating: true, scrim: true, onShow: "popupShown",
+        onHide: "popupHidden", components: [
+        {content: "_accountExists".loc()},
+        {name: "whatToDo", content: "_convertAccountTaxAuthority".loc()},
+        {tag: "br"},
+        {kind: "onyx.Button", name: "convert", content: "_ok".loc(), ontap: "accountConvert",
+          classes: "onyx-blue xv-popup-button"},
+        {kind: "onyx.Button", name: "cancel", content: "_cancel".loc(), ontap: "accountCancel",
+          classes: "xv-popup-button"}
       ]}
     ]
   };

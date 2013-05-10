@@ -1561,14 +1561,14 @@ trailing:true white:true*/
     collection: "XM.TaxAuthorityCollection",
     parameterWidget: "XV.TaxAuthorityListParameters",
     query: {orderBy: [
-      {attribute: 'name'}
+      {attribute: 'code'}
     ]},
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "short",
             components: [
-            {kind: "XV.ListAttr", attr: "number", isKey: true}
+            {kind: "XV.ListAttr", attr: "code", isKey: true}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "name"}

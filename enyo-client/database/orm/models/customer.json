@@ -547,8 +547,7 @@
       {
         "name": "taxAuthority",
         "toOne": {
-          "isNested": true,
-          "type": "TaxAuthorityRelation",
+          "type": "TaxAuthority",
           "column": "taxreg_taxauth_id"
         }
       },

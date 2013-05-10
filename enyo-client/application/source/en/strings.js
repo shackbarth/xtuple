@@ -668,6 +668,7 @@ var lang = XT.stringsFor("en_US", {
   // Messages
   // ********
 
+  "_accountExists": "This number is currently assigned to an Account.",
   "_assignedToRequiredAssigned": "Assigned to is required when status is 'Assigned'",
   "_attributeIsRequired": "{attr} is required.",
   "_attributeTypeMismatch": "The value of '{attr}' must be type: {type}.",
@@ -677,11 +678,12 @@ var lang = XT.stringsFor("en_US", {
   "_characteristicContextRequired": "You must set at least one characteristic context to true.",
   "_continue?": " Do you want to continue?",
   "_convertAccount": "Convert this Account to a Customer?",
+  "_convertAccountEmployee": "Convert this Account to an Employee?",
   "_convertAccountProspect": "Convert this Account to a Prospect?",
+  "_convertAccountSalesRep": "Convert this Account to a SalesRep?",
+  "_convertAccountTaxAuthority": "Convert this Account to a Tax Authority?",
   "_convertProspect": "Convert this Prospect to a Customer?",
   "_customerExists": "A customer with this number already exists.",
-  "_customerExistsAccount": "This number is currently assigned to an Account.",
-  "_customerExistsProspect": "This number is currently assigned to a Prospect.",
   "_customerOrProspect": "Would you like to create a new Customer or a new Prospect?",
   "_datasourceError": "Data source error: {error}",
   "_duplicateValues": "Duplicate values are not allowed.",
@@ -695,6 +697,7 @@ var lang = XT.stringsFor("en_US", {
   "_noReschedule": "No Items can be rescheduled because there are no valid price schedules for the date entered.",
   "_partialReschedule": "Some exclusive items may not be rescheduled because there is no valid price schedule for the date entered.",
   "_productCategoryRequiredOnSold": "A Product Category is required for sold items.",
+  "_prospectExists": "This number is currently assigned to a Prospect.",
   "_recalculateAll?": "Do you want to recalculate all prices line items, taxes, and freight ?",
   "_recursiveParentDisallowed": "Record is not allowed to reference itself as the parent.",
   "_recordNotFound": "Record not found.",

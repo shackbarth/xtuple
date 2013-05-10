@@ -927,7 +927,7 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_taxAuthority".loc()},
-      {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "code", label: "_code".loc(), attr: "code"},
       {name: "name", label: "_name".loc(), attr: "name"}
     ]
   });

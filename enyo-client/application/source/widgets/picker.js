@@ -430,9 +430,9 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.TaxAuthorityPicker",
     kind: "XV.PickerWidget",
     collection: "XM.taxAuthorities",
-    nameAttribute: "number",
+    nameAttribute: "code",
     orderBy: [
-      {attribute: 'number'}
+      {attribute: 'code'}
     ]
   });
 
@@ -581,6 +581,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.WageTypePicker",
     kind: "XV.PickerWidget",
     collection: "XM.wageTypes",
+    showNone: false,
     valueAttribute: "id"
   });
   
@@ -592,6 +593,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.WagePeriodPicker",
     kind: "XV.PickerWidget",
     collection: "XM.wagePeriods",
+    showNone: false,
     valueAttribute: "id"
   });
 
