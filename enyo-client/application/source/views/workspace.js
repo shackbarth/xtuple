@@ -75,7 +75,9 @@ trailing:true white:true*/
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
-            {kind: "XV.NumberWidget", attr: "order"}
+            // these order fields are integers, so setting a maxlength
+            // to prevent exceeding integer's max value
+            {kind: "XV.NumberWidget", attr: "order", maxlength: 9} 
           ]}
         ]}
       ]}
