@@ -30,6 +30,7 @@ create or replace function xt.post(data_hash text) returns text as $$
     args,
     method;
 
+  dataHash.superUser = false;
   if (dataHash.username) { XT.username = dataHash.username; }
 
   /* if there's data then commit it */

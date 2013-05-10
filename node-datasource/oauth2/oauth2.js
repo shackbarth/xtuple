@@ -281,7 +281,7 @@ server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(functio
 
   verifier.update(data);
 
-  if (verifier.verify(pub, utils.base64urlDecode(signature), 'base64')) {
+  if (verifier.verify(pub, utils.base64urlUnescape(signature), 'base64')) {
     var accessToken = utils.generateUUID(),
         accesshash,
         decodedHeader = JSON.parse(utils.base64urlDecode(header)),

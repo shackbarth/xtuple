@@ -31,4 +31,18 @@
       crud.runAllCrud(data, done);
     });
   })
+
+  describe('Honorific crud test', function (){
+    this.timeout(20 * 1000);
+    it('should perform all the crud operations', function (done) {
+      crud.runAllCrud(data, done);
+    });
+  })
+
+  describe('Honorific crud test', function (){
+    this.timeout(20 * 1000);
+    it('should perform all the crud operations', function (done) {
+      crud.runAllCrud(data, done);
+    });
+  })
 }());

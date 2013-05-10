@@ -264,8 +264,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.CustomerShiptoWidget",
     kind: "XV.RelationWidget",
     collection: "XM.CustomerShiptoRelationCollection",
-    list: "XV.CustomerShiptoList",
-    filterRestrictionType: ["customer"]
+    list: "XV.CustomerShiptoList"
   });
 
 
@@ -277,7 +276,8 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.EmployeeWidget",
     kind: "XV.RelationWidget",
     collection: "XM.EmployeeRelationCollection",
-    list: "XV.EmployeeList"
+    list: "XV.EmployeeList",
+    keyAttribute: "code"
   });
 
   // ..........................................................
@@ -490,6 +490,19 @@ regexp:true, undef:true, trailing:true, white:true */
   });
 
   // ..........................................................
+  // LEDGER ACCOUNT
+  //
+
+  enyo.kind({
+    name: "XV.LedgerAccountWidget",
+    kind: "XV.RelationWidget",
+    collection: "XM.LedgerAccountRelationCollection",
+    list: "XV.LedgerAccountList",
+    keyAttribute: "name",
+    nameAttribute: "description"
+  });
+
+  // ..........................................................
   // OPPORTUNITY
   //
 
@@ -497,6 +510,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.OpportunityWidget",
     kind: "XV.RelationWidget",
     collection: "XM.OpportunityRelationCollection",
+    keyAttribute: "name",
     list: "XV.OpportunityList"
   });
 

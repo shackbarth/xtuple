@@ -122,7 +122,7 @@ white:true*/
     valueChanged: function (inSender, inEvent) {
       var model = this.getValue(),
         characteristic = model.getValue('characteristic'),
-        characteristicId = characteristic.get('id'),
+        characteristicId = characteristic.id,
         characteristicName = characteristic.get('name'),
         // this could be quoteLine or a salesOrderLine
         line = model.collection.quoteLine ? model.collection.quoteLine : model.collection.salesOrderLine,

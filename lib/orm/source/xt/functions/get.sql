@@ -16,6 +16,7 @@ create or replace function xt.get(data_hash text) returns text as $$
       prettyPrint = dataHash.prettyPrint ? 2 : null,
       ret;
 
+  dataHash.superUser = false;
   if (dataHash.username) { XT.username = dataHash.username; }
 
   if (dataHash.id) {

@@ -120,7 +120,7 @@ trailing:true white:true*/
       {name: "postalCode", label: "_postalCode".loc(), attr: "address.postalCode"},
       {name: "country", label: "_country".loc(), attr: "address.country"},
       {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-      {name: "account", label: "_account".loc(), attr: ["account.id", "accountParent"], defaultKind: "XV.AccountWidget"},
+      {name: "account", label: "_account".loc(), attr: ["account.number", "accountParent"], defaultKind: "XV.AccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_userAccount".loc()},
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
     ]
@@ -134,7 +134,7 @@ trailing:true white:true*/
     name: "XV.CostCategoryListParameters",
     kind: "XV.ParameterWidget",
     components: [
-      {kind: "onyx.GroupboxHeader", content: "_CostCategory".loc()},
+      {kind: "onyx.GroupboxHeader", content: "_costCategory".loc()},
       {name: "code", label: "_code".loc(), attr: "code"}
     ]
   });
@@ -172,12 +172,12 @@ trailing:true white:true*/
       {name: "postalCode", label: "_postalCode".loc(), attr: "address.postalCode"},
       {name: "country", label: "_country".loc(), attr: "address.country"},
       {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-      {name: "account", label: "_account".loc(), attr: ["account.id", "accountParent"], defaultKind: "XV.AccountWidget"},
+      {name: "account", label: "_account".loc(), attr: ["account", "accountParent"], defaultKind: "XV.AccountWidget"},
       {kind: "onyx.GroupboxHeader", content: "_userAccount".loc()},
       {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
     ]
   });
-  
+
   // ..........................................................
   // CUSTOMER GROUP
   //
@@ -188,10 +188,10 @@ trailing:true white:true*/
     components: [
       {kind: "onyx.GroupboxHeader", content: "_customerGroup".loc()},
       {name: "name", label: "_name".loc(), attr: "name"},
-      {name: "description", label: "_description", attr: "description"}
+      {name: "description", label: "_description".loc(), attr: "description"}
     ]
   });
-  
+
   // ..........................................................
   // FREIGHT CLASS
   //
@@ -202,7 +202,7 @@ trailing:true white:true*/
     components: [
       {kind: "onyx.GroupboxHeader", content: "_freightClass".loc()},
       {name: "code", label: "_code".loc(), attr: "code"},
-      {name: "description", label: "_description", attr: "description"}
+      {name: "description", label: "_description".loc(), attr: "description"}
     ]
   });
 
@@ -221,7 +221,7 @@ trailing:true white:true*/
       {name: "name", label: "_name".loc(), attr: "name"}
     ]
   });
-  
+
   // ..........................................................
   // FILE
   //
@@ -246,20 +246,7 @@ trailing:true white:true*/
     characteristicsRole: 'isIncidents',
     components: [
       {kind: "onyx.GroupboxHeader", content: "_incident".loc()},
-      {name: "number", label: "_number".loc(), attr: "number",
-        getParameter: function () {
-          var param,
-            value = this.getValue() - 0;
-          if (value && _.isNumber(value)) {
-            param = {
-              attribute: this.getAttr(),
-              operator: '=',
-              value: value
-            };
-          }
-          return param;
-        }
-      },
+      {name: "number", label: "_number".loc(), attr: "number"},
       {name: "description", label: "_description".loc(), attr: "description"},
       {name: "category", label: "_category".loc(), attr: "category",
         defaultKind: "XV.IncidentCategoryPicker"},
@@ -377,6 +364,8 @@ trailing:true white:true*/
       },
       {name: "number", label: "_number".loc(), attr: "number"},
       {name: "description", label: "_description".loc(), attr: ["description1", "description2"]},
+      {name: "itemType", label: "_type".loc(), attr: "itemType",
+        defaultKind: "XV.ItemTypePicker"},
       {name: "classCode", label: "_classCode".loc(), attr: "classCode",
         defaultKind: "XV.ClassCodePicker"},
       {name: "category", label: "_category".loc(), attr: "productCategory",
@@ -429,6 +418,36 @@ trailing:true white:true*/
         defaultKind: "XV.PlannerCodePicker"},
       {name: "plannerCodePattern", label: "_code".loc(), attr: "plannerCode.code"}
     ]
+  });
+  
+  // ..........................................................
+  // LEDGER ACCOUNT
+  //
+
+  enyo.kind({
+    name: "XV.LedgerAccountListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_ledgerAccount".loc()},
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "description", label: "_description".loc(), attr: "description"},
+      {name: "accountType", label: "_type".loc(), attr: "accountType",
+        defaultKind: "XV.LedgerAccountTypePicker"}
+    ]
+    
   });
 
   // ..........................................................
@@ -678,7 +697,7 @@ trailing:true white:true*/
         defaultKind: "XV.DateWidget"}
     ]
   });
-  
+
   // ..........................................................
   // SALES ORDER
   //
@@ -719,7 +738,7 @@ trailing:true white:true*/
         defaultKind: "XV.DateWidget"}
     ]
   });
-  
+
   // ..........................................................
   // SALE TYPE
   //
@@ -743,10 +762,10 @@ trailing:true white:true*/
       },
       {kind: "onyx.GroupboxHeader", content: "_saleTypes".loc()},
       {name: "code", label: "_code".loc(), attr: "code"},
-      {name: "description", label: "_description", attr: "description"}
+      {name: "description", label: "_description".loc(), attr: "description"}
     ]
   });
-  
+
   // ..........................................................
   // SALES REP
   //
@@ -811,7 +830,7 @@ trailing:true white:true*/
     components: [
       {kind: "onyx.GroupboxHeader", content: "_shipZones".loc()},
       {name: "name", label: "_name".loc(), attr: "name"},
-      {name: "description", label: "_description", attr: "description"}
+      {name: "description", label: "_description".loc(), attr: "description"}
     ]
   });
 
@@ -827,7 +846,7 @@ trailing:true white:true*/
       {name: "name", label: "_name".loc(), attr: "name"}
     ]
   });
-  
+
   // ..........................................................
   // TAX ASSIGNMENT
   //
@@ -842,7 +861,7 @@ trailing:true white:true*/
       {name: "taxType", label: "_taxType".loc(), attr: "taxType"}
     ]
   });
-  
+
   // ..........................................................
   // TAX AUTHORITY
   //
@@ -868,10 +887,10 @@ trailing:true white:true*/
     components: [
       {kind: "onyx.GroupboxHeader", content: "_taxCode".loc()},
       {name: "code", label: "_code".loc(), attr: "code"},
-      {name: "description", label: "_description", attr: "description"}
+      {name: "description", label: "_description".loc(), attr: "description"}
     ]
   });
-  
+
   // ..........................................................
   // TAX CLASS
   //
@@ -882,10 +901,10 @@ trailing:true white:true*/
     components: [
       {kind: "onyx.GroupboxHeader", content: "_taxClass".loc()},
       {name: "code", label: "_code".loc(), attr: "code"},
-      {name: "description", label: "_description", attr: "description"}
+      {name: "description", label: "_description".loc(), attr: "description"}
     ]
   });
-  
+
   // ..........................................................
   // TAX RATE
   //
@@ -899,7 +918,7 @@ trailing:true white:true*/
       {name: "percent", label: "_percent".loc(), attr: "percent"}
     ]
   });
-  
+
   // ..........................................................
   // TAX TYPE
   //
@@ -910,10 +929,10 @@ trailing:true white:true*/
     components: [
       {kind: "onyx.GroupboxHeader", content: "_taxType".loc()},
       {name: "name", label: "_name".loc(), attr: "name"},
-      {name: "description", label: "_description", attr: "description"}
+      {name: "description", label: "_description".loc(), attr: "description"}
     ]
   });
-  
+
   // ..........................................................
   // TAX ZONE
   //
@@ -924,10 +943,10 @@ trailing:true white:true*/
     components: [
       {kind: "onyx.GroupboxHeader", content: "_taxZone".loc()},
       {name: "code", label: "_code".loc(), attr: "code"},
-      {name: "description", label: "_description", attr: "description"}
+      {name: "description", label: "_description".loc(), attr: "description"}
     ]
   });
-  
+
   // ..........................................................
   // TERMS
   //
@@ -936,9 +955,9 @@ trailing:true white:true*/
     name: "XV.TermsListParameters",
     kind: "XV.ParameterWidget",
     components: [
-      {kind: "onyx.GroupboxHeader", content: "_Terms".loc()},
+      {kind: "onyx.GroupboxHeader", content: "_terms".loc()},
       {name: "code", label: "_code".loc(), attr: "code"},
-      {name: "description", label: "_description", attr: "description"}
+      {name: "description", label: "_description".loc(), attr: "description"}
     ]
   });
 

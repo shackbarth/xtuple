@@ -57,6 +57,31 @@
     "isSystem": true
   },
   {
+    "context": "crm",
+    "nameSpace": "XM",
+    "type": "CustomerRelation",
+    "table": "crmacct",
+    "isExtension": true,
+    "isChild": true,
+    "comment": "Extended by Crm",
+    "relations": [
+      {
+        "column": "crmacct_cust_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "account",
+        "attr": {
+         "type": "String",
+         "column": "crmacct_number"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "CustomerContactRelation",

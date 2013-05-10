@@ -621,7 +621,142 @@
           "type": "String",
           "column": "cntct_number"
         }
-      }
+      },
+      {
+       "name": "tasks",
+       "toMany": {
+         "isNested": true,
+         "type": "ProjectTaskRelation",
+         "column": "prj_id",
+         "inverse": "project"
+       }
+     }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ProjectTaskRelation",
+    "table": "prjtask",
+    "comment": "Project Task Relation Map",
+    "privileges": {
+     "all": {
+       "create": false,
+       "read": true,
+       "update": false,
+       "delete": false
+     }
+    },
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "prjtask_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "uuid",
+       "attr": {
+         "type": "String",
+         "column": "obj_uuid",
+         "isNaturalKey": true
+       }
+     },
+     {
+       "name": "project",
+       "attr": {
+         "type": "Number",
+         "column": "prjtask_prj_id"
+       }
+     },
+     {
+       "name": "number",
+       "attr": {
+         "type": "String",
+         "column": "prjtask_number"
+       }
+     },
+     {
+       "name": "name",
+       "attr": {
+         "type": "String",
+         "column": "prjtask_name"
+       }
+     },
+     {
+       "name": "status",
+       "attr": {
+         "type": "status",
+         "column": "prjtask_status"
+       }
+     }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "TaskRelation",
+    "table": "prjtask",
+    "comment": "Project Task Relation Map",
+    "privileges": {
+     "all": {
+       "create": false,
+       "read": true,
+       "update": false,
+       "delete": false
+     }
+    },
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "prjtask_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "uuid",
+       "attr": {
+         "type": "String",
+         "column": "obj_uuid",
+         "isNaturalKey": true
+       }
+     },
+     {
+       "name": "project",
+       "toOne": {
+         "isNested": true,
+         "type": "ProjectRelation",
+         "column": "prjtask_prj_id"
+       }
+     },
+     {
+       "name": "number",
+       "attr": {
+         "type": "String",
+         "column": "prjtask_number"
+       }
+     },
+     {
+       "name": "name",
+       "attr": {
+         "type": "String",
+         "column": "prjtask_name"
+       }
+     },
+     {
+       "name": "status",
+       "attr": {
+         "type": "status",
+         "column": "prjtask_status"
+       }
+     }
     ],
     "isSystem": true
   },
@@ -1227,12 +1362,274 @@
         "nameSpace": "XM"
       }
     ],
+    "isNestedOnly": true,
     "isSystem": true
   },
   {
     "context": "xtuple",
     "nameSpace": "XM",
-    "type": "ProjectTaskListItem",
+    "type": "Task",
+    "table": "prjtask",
+    "lockable": true,
+    "idSequenceName": "prjtask_prjtask_id_seq",
+    "comment": "Task Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainAllProjects",
+        "read": "ViewAllProjects",
+        "update": "MaintainAllProjects",
+        "delete": "MaintainAllProjects"
+      },
+      "personal": {
+        "create": "MaintainPersonalProjects",
+        "read": "ViewPersonalProjects",
+        "update": "MaintainPersonalProjects",
+        "delete": "MaintainPersonalProjects",
+        "properties": [
+          "owner.username",
+          "assignedTo.username",
+          "projectOwner.username",
+          "projectAssignedTo.username"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "prjtask_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "prjtask_number"
+        }
+      },
+      {
+        "name": "project",
+        "toOne": {
+          "isNested": true,
+          "type": "ProjectRelation",
+          "column": "prjtask_prj_id"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "prjtask_name"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "prjtask_descrip"
+        }
+      },
+      {
+        "name": "status",
+        "attr": {
+          "type": "String",
+          "column": "prjtask_status"
+        }
+      },
+      {
+        "name": "budgetedHours",
+        "attr": {
+          "type": "Number",
+          "column": "prjtask_hours_budget"
+        }
+      },
+      {
+        "name": "actualHours",
+        "attr": {
+          "type": "Number",
+          "column": "prjtask_hours_actual"
+        }
+      },
+      {
+        "name": "budgetedExpenses",
+        "attr": {
+          "type": "Number",
+          "column": "prjtask_exp_budget"
+        }
+      },
+      {
+        "name": "actualExpenses",
+        "attr": {
+          "type": "Number",
+          "column": "prjtask_exp_actual"
+        }
+      },
+      {
+        "name": "startDate",
+        "attr": {
+          "type": "Date",
+          "column": "prjtask_start_date"
+        }
+      },
+      {
+        "name": "dueDate",
+        "attr": {
+          "type": "Date",
+          "column": "prjtask_due_date",
+          "required": true
+        }
+      },
+      {
+        "name": "assignDate",
+        "attr": {
+          "type": "Date",
+          "column": "prjtask_assigned_date"
+        }
+      },
+      {
+        "name": "completeDate",
+        "attr": {
+          "type": "Date",
+          "column": "prjtask_completed_date"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "prjtask_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountRelation",
+          "column": "prjtask_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "comments",
+        "toMany": {
+          "isNested": true,
+          "type": "TaskComment",
+          "column": "prjtask_id",
+          "inverse": "task"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "TaskComment",
+    "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
+    "comment": "Task Comment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": "EditOthersComments",
+        "delete": false
+      },
+      "personal": {
+        "update": "EditOwnComments",
+        "properties": [
+          "createdBy"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "comment_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "comment_source",
+          "value": "TA"
+        }
+      },
+      {
+        "name": "task",
+        "attr": {
+          "type": "Number",
+          "column": "comment_source_id"
+        }
+      },
+      {
+        "name": "commentType",
+        "toOne": {
+          "type": "CommentType",
+          "column": "comment_cmnttype_id",
+          "required": true
+        }
+      },
+      {
+        "name": "text",
+        "attr": {
+          "type": "String",
+          "column": "comment_text"
+        }
+      },
+      {
+        "name": "isPublic",
+        "attr": {
+          "type": "Boolean",
+          "column": "comment_public"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "comment_date"
+        }
+      },
+      {
+        "name": "createdBy",
+        "attr": {
+          "type": "String",
+          "column": "comment_user"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "TaskListItem",
     "table": "prjtask",
     "comment": "Project Task List Item Map",
     "privileges": {

@@ -18,20 +18,22 @@
    */
   var getSetCallback = function (lineRecordType) {
     return function (data, next) {
-      var lineItem = new XM[lineRecordType.substring(3)](),
+
+      var movedOn = false,
+        lineItem = new XM[lineRecordType.substring(3)](),
         itemSite = new XM.ItemSiteRelation(),
         modelFetched = function () {
-          if (lineItem.id && itemSite.id) {
+          if (lineItem.isReady() && itemSite.isReady()) {
             var unitUpdated = function () {
               // make sure all the fields we need to save successfully have been calculated
               if (lineItem.get("price") &&
-                  lineItem.get("customerPrice") &&
-                  lineItem.get("profit") &&
-                  lineItem.get("tax") &&
-                  lineItem.get("listPriceDiscount")) {
+                  lineItem.get("customerPrice")) {
 
-                lineItem.off("all", unitUpdated);
-                next();
+                //lineItem.off("all", unitUpdated);
+                if (!movedOn) {
+                  movedOn = true;
+                  next();
+                }
               }
             };
 
@@ -39,12 +41,14 @@
             // fields. run the callback when they all have been set
             lineItem.on("all", unitUpdated); // XXX do better than this
             data.model.get("lineItems").add(lineItem);
+            data.model.set({currency: XM.currencies.models[0]}); // XXX shouldn't be necessary
             lineItem.set({quantity: 7});
             lineItem.set({itemSite: itemSite});
           }
         };
-      itemSite.fetch({id: 303 /* BTRUCK WH1 */, success: modelFetched});
-      lineItem.on("change:id", modelFetched);
+      itemSite.on("statusChange", modelFetched);
+      itemSite.fetch({uuid: "ddbd5ae8-064e-41e1-91f6-5de054953fa3" /* BTRUCK1 WH1 */});
+      lineItem.on("statusChange", modelFetched);
       lineItem.initialize(null, {isNew: true});
     };
   };
@@ -57,9 +61,9 @@
       autoTestAttributes: true,
       createHash: {
         calculateFreight: true,
-        customer: { id: 95 }, // TTOYS
-        terms: { id: 42 },
-        salesRep: { id: 32 },
+        customer: { number: "TTOYS" },
+        terms: { code: "COD" },
+        salesRep: { number: "2000" },
         wasQuote: true
       },
       /**
@@ -76,9 +80,9 @@
       autoTestAttributes: true,
       createHash: {
         calculateFreight: true,
-        customer: { id: 95 }, // TTOYS
-        terms: { id: 42 },
-        salesRep: { id: 32 },
+        customer: { number: "TTOYS" },
+        terms: { code: "COD" },
+        salesRep: { number: "2000" },
       },
       /**
         An extra bit of work we have to do after the createHash fields are set:
@@ -91,7 +95,7 @@
     };
 
   describe('Sales order', function () {
-    this.timeout(10 * 1000);
+    this.timeout(15 * 1000);
     it('should perform all the crud operations', function (done) {
       crud.runAllCrud(salesOrderData, done);
     });
@@ -110,7 +114,7 @@
           done();
         };
 
-      salesOrder.on('change:id', initCallback);
+      salesOrder.on('change:number', initCallback);
       salesOrder.initialize(null, {isNew: true});
     });
   });
@@ -135,7 +139,7 @@
           done();
         };
 
-      quote.on('change:id', initCallback);
+      quote.on('change:number', initCallback);
       quote.initialize(null, {isNew: true});
     });
   });

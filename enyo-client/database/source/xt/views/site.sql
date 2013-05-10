@@ -1,21 +1,6 @@
-DO $$
-  var dropSql = "drop view if exists xt.site cascade;";
-  var sql = "create or replace view xt.site as " +
-  "select * " +
-  "from site(); ";
-
-  try {
-    plv8.execute(sql);
-  } catch (error) {
-    /* let's cascade-drop the view and try again */
-    plv8.execute(dropSql);
-    plv8.execute(sql);
-  }
-
-$$ language plv8;
-          
-revoke all on xt.site from public;
-grant all on table xt.site to group xtrole;
+select xt.create_view('xt.site', $$
+  select * from site();
+$$, false);
 
 create or replace rule "_INSERT" as on insert to xt.site do instead
 
