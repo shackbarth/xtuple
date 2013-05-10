@@ -1162,6 +1162,13 @@ trailing:true white:true*/
     },
     actions: [
       {
+        name: "delete",
+        prerequisite: "canDestroy",
+        notify: true,
+        notifyMessage: "_confirmDelete".loc() + " " + "_confirmAction".loc(),
+        method: "destroy"
+      },
+      {
         name: "convert",
         notify: true,
         method: "convertProspect"
