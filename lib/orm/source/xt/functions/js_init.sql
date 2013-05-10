@@ -300,8 +300,8 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
       args.unshift(string);
 
       if (DEBUG) {
-        plv8.elog(NOTICE, 'sql =', query);
-        plv8.elog(NOTICE, 'args =', JSON.stringify(args, null, 2));
+        plv8.elog(NOTICE, 'XT.format sql =', query);
+        plv8.elog(NOTICE, 'XT.format args =', JSON.stringify(args, null, 2));
       }
       string = plv8.execute(query, args)[0].format;
 
