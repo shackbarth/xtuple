@@ -36,7 +36,7 @@ describe.skip('ToDo CRUD Test', function () {
     });
   });
 
-describe.skip('ToDo CRUD Test', function () {
+describe('ToDo CRUD Test', function () {
 	  before(function (done){
         this.timeout(timeout);
 			  zombieAuth.loadApp(done);
@@ -48,16 +48,16 @@ describe.skip('ToDo CRUD Test', function () {
 				assert.equal(data.model.recordType, 'XM.ToDo', 'INIT Value should be XM.ToDo');
 			});
 
-			it('should create an XM.ToDo Model', function(){
+			it.skip('should create an XM.ToDo Model', function(){
 				data.model.set(data.createHash);
 				crud.save(data)
 			});
 
-			it('should read an XM.ToDo Model', function(){
+			it.skip('should read an XM.ToDo Model', function(){
 				assert.equal(data.model.get('name'), data.createHash.name, 'Model Code READ Value is equal')
 			});
 
-			it('should update an XM.ToDo Model', function(){
+			it.skip('should update an XM.ToDo Model', function(){
 				data.model.set(data.updateHash);
 				crud.save(data)
 				assert.equal(data.model.get('name'), data.updateHash.name, 'Model Code UPDATE Value is equal')
