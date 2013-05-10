@@ -1163,7 +1163,9 @@ trailing:true white:true*/
     handlers: {
       onConvertItem: "convertProspect"
     },
-    actions: ["convert"],
+    actions: [
+      {name: "convert"}
+    ],
     query: {orderBy: [
       {attribute: 'number'}
     ]},
