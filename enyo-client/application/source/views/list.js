@@ -1160,20 +1160,10 @@ trailing:true white:true*/
     events: {
       onWorkspace: ""
     },
-    actions: [
-      {
-        name: "delete",
-        prerequisite: "canDestroy",
-        notify: true,
-        notifyMessage: "_confirmDelete".loc() + " " + "_confirmAction".loc(),
-        method: "destroy"
-      },
-      {
-        name: "convert",
-        notify: true,
-        method: "convertProspect"
-      }
-    ],
+    actions: [{
+      name: "convert",
+      method: "convertProspect"
+    }],
     query: {orderBy: [
       {attribute: 'number'}
     ]},
