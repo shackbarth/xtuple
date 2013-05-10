@@ -1160,14 +1160,11 @@ trailing:true white:true*/
     events: {
       onWorkspace: ""
     },
-    handlers: {
-      onConvertItem: "convertProspect"
-    },
     actions: [
       {
         name: "convert",
         notify: true,
-        method: this.convertProspect
+        method: "convertProspect"
       }
     ],
     query: {orderBy: [
@@ -1205,11 +1202,9 @@ trailing:true white:true*/
       to fill out some customer-specific fields, and when they save a new
       customer will be created.
      */
-    convertProspect: function (inSender, inEvent) {
-      var index = inEvent.index,
-        collection = this.getValue(),
-        prospectModel = collection.at(index),
-        modelId = prospectModel.id,
+    convertProspect: function (inEvent) {
+      var model = inEvent.model,
+        modelId = model.id,
         success = function () {
           this.getValue().convertFromProspect(modelId);
         };
@@ -1217,8 +1212,8 @@ trailing:true white:true*/
       this.doWorkspace({
         workspace: "XV.CustomerWorkspace",
         attributes: {
-          name: prospectModel.get("name"),
-          number: prospectModel.get("number")
+          name: model.get("name"),
+          number: model.get("number")
         },
         success: success,
         allowNew: false
