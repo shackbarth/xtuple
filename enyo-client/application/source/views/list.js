@@ -1162,7 +1162,8 @@ trailing:true white:true*/
     },
     actions: [{
       name: "convert",
-      method: "convertProspect"
+      method: "convertProspect",
+      isViewMethod: true
     }],
     query: {orderBy: [
       {attribute: 'number'}
