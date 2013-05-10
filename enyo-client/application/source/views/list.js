@@ -1166,7 +1166,8 @@ trailing:true white:true*/
     actions: [
       {
         name: "convert",
-        notify: true
+        notify: true,
+        method: this.convertProspect
       }
     ],
     query: {orderBy: [
