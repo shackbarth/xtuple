@@ -284,6 +284,7 @@ var lang = XT.stringsFor("en_US", {
   "_isContacts": "Contacts",
   "_isDefault": "Default",
   "_isDeleted": "Deleted",
+  "_isEmployees": "Employees",
   "_isEvent": "Event",
   "_isFractional": "Fractional",
   "_isIncidents": "Incidents",
