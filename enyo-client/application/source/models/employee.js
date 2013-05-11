@@ -51,18 +51,22 @@ white:true*/
       var hourly = XM.Wage.HOURLY;
       return {
         isActive: true,
+        wage: 0,
         wageType: hourly,
         wagePeriod: hourly,
-        billingPeriod: hourly
+        billingPeriod: hourly,
+        billingRate: 0
       };
     },
 
     requiredAttributes: [
       "isActive",
       "number",
+      "wage",
       "wageType",
       "wagePeriod",
-      "billingPeriod"
+      "billingPeriod",
+      "billingRate"
     ]
 
   });
