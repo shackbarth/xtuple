@@ -626,7 +626,7 @@
     "type": "EmployeeGroupEmployee",
     "table": "empgrpitem",
     "idSequenceName": "empgrpitem_empgrpitem_id_seq",
-    "comment": "Customer Group Customer Map",
+    "comment": "Employee Group Employee Map",
     "properties": [
       {
         "name": "id",
@@ -652,10 +652,10 @@
         }
       },
       {
-        "name": "customer",
+        "name": "employee",
         "toOne":	{
           "isNested": true,
-          "type": "CustomerRelation",
+          "type": "EmployeeRelation",
           "column": "empgrpitem_emp_id"
         }
       }

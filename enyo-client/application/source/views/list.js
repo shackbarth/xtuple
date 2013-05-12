@@ -535,7 +535,7 @@ trailing:true white:true*/
     parameterWidget: "XV.EmployeeGroupListParameters"
   });
 
-  XV.registerModelList("XM.CustomerGroupRelation", "XV.CustomerGroupList");
+  XV.registerModelList("XM.EmployeeGroupRelation", "XV.EmployeeGroupList");
 
   // ..........................................................
   // EXPENSE CATEGORY

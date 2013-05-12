@@ -230,7 +230,7 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.EmployeeGroupCustomer = XM.Model.extend({
+  XM.EmployeeGroupEmployee = XM.Model.extend({
     /** @scope XM.EmployeeGroupEmployee.prototype */
 
     recordType: 'XM.EmployeeGroupEmployee'
@@ -274,6 +274,18 @@ white:true*/
     /** @scope XM.EmployeeRelationCollection.prototype */
 
     model: XM.EmployeeRelation
+
+  });
+  
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.EmployeeGroupCollection = XM.Collection.extend({
+    /** @scope XM.EmployeeGroupCollection.prototype */
+
+    model: XM.EmployeeGroup
 
   });
 
