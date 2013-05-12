@@ -106,8 +106,8 @@ trailing:true white:true*/
         {kind: "FittableRows", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "customer.number"},
-              {kind: "XV.ListAttr", attr: "customer.name", fit: true, classes: "right"}
+              {kind: "XV.ListAttr", attr: "customer.number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "customer.name", fit: true}
             ]}
           ]}
         ]}
