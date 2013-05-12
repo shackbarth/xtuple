@@ -566,7 +566,7 @@ body {
 }
 .xv-groupbox .xv-relationwidget input,
 .xv-groupbox .xv-datewidget input {
-  width: 80%;
+  width: 75%;
 }
 .xv-groupbox.in-panel > *:first-child {
   border-top-color: #aaaaaa;
