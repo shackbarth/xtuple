@@ -224,7 +224,7 @@ white:true*/
         customer.characteristicPrice(item, characteristic, value, quantity, charOptions);
       });
     }
-  }
+  };
 
 
   /**
@@ -402,7 +402,7 @@ white:true*/
       this.freightTaxDetail = [];
 
       if (!this.documentDateKey) {
-        console.log("Error: model needs a documentDateKey");
+        XT.log("Error: model needs a documentDateKey");
       }
       if (!_.contains(this.requiredAttributes, this.documentDateKey)) {
         this.requiredAttributes.push(this.documentDateKey);
@@ -602,9 +602,10 @@ white:true*/
       @returns {Object} Receiver
     */
     calculateTotals: function (calcFreight) {
-      var calculateFreight = this.get("calculateFreight");
+      var calculateFreight = this.get("calculateFreight"),
+        isProspect = this.getValue("customer.status") === XM.CustomerProspectRelation.PROSPECT_STATUS;
 
-      if (calculateFreight && calcFreight !== false) {
+      if (calculateFreight && calcFreight !== false && !isProspect) {
         this.calculateFreight();
       } else {
         _calculateTotals(this);
@@ -792,8 +793,8 @@ white:true*/
         message,
         options = {};
       options.type = XM.Model.QUESTION;
-      options.callback = function (answer) {
-        if (answer) {
+      options.callback = function (response) {
+        if (response.answer) {
           that.set("calculateFreight", !calculateFreight);
         } else {
           that.off('change:freight', that.freightDidChange);
@@ -829,8 +830,8 @@ white:true*/
         lineItems = this.get("lineItems"),
         msg = "_recalculateAll?".loc(),
         options = {
-          callback: function (answer) {
-            if (answer) {
+          callback: function (response) {
+            if (response.answer) {
               _.each(that.get("lineItems").models, function (lineItem) {
                 lineItem.calculatePrice(true);
               });
@@ -878,7 +879,7 @@ white:true*/
 
       // Confirm the user really wants to reschedule, then check whether all lines
       // can be updated to the requested schedule date
-      options.callback = function (answer) {
+      options.callback = function (response) {
         var counter = lineItems.length,
           custOptions = {},
           results = [],
@@ -889,7 +890,7 @@ white:true*/
             });
           };
 
-        if (answer) {
+        if (response.answer) {
           // Callback for each check
           custOptions.succes = function (canPurchase) {
             counter--;
@@ -902,8 +903,8 @@ white:true*/
               // If partial, then ask if they only want to reschedule partial
               if (results.length && results.length !== lineItems.length) {
                 message = "_partialReschedule".loc() + "_continue?".loc();
-                options.callback = function (answer) {
-                  if (answer) { reschedule(results); }
+                options.callback = function (response) {
+                  if (response.answer) { reschedule(results); }
 
                   // Recalculate the date because some lines may not have changed
                   that.calculateScheduleDate();
@@ -1268,6 +1269,12 @@ white:true*/
           priceUnit && priceUnitRatio &&
           this.priceAsOfDate()) {
 
+        // Prospects always get the list price
+        if (customer.getValue("status") === XM.CustomerProspectRelation.PROSPECT_STATUS) {
+          this.set("price", item.get("listPrice"));
+          this.set("customerPrice", item.get("listPrice"));
+          return;
+        }
         // Determine whether updating net price or only customer price
         if (editing) {
           if (!force &&

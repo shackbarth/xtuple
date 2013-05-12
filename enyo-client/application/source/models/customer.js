@@ -243,7 +243,7 @@ white:true*/
         that.set("preferredSite", prospect.get("site"));
         that.set("taxZone", prospect.get("taxZone"));
         that.setReadOnly("id", false);
-        that.set("id", prospect.get("id"));
+        that.set("id", prospect.id);
         that.setReadOnly("id", true);
         that.revertStatus();
         that.checkConflicts = false;
@@ -420,7 +420,7 @@ white:true*/
     /** @scope XM.CustomerShipto.prototype */
 
     recordType: 'XM.CustomerShipto',
-    
+
     defaults: {
       isActive: true
     },
@@ -479,7 +479,7 @@ white:true*/
         this.set("shipCharge", customer.get("shipCharge"));
       }
     },
-    
+
     isDefaultDidChange: function () {
       if (!this.get("isDefault")) { return; }
       var customer = this.get("customer"),

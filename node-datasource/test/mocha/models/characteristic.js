@@ -13,15 +13,14 @@ var crud = require('../lib/crud'),
 		zombieAuth = require('../../vows/lib/zombie_auth'),
 
    data = {
-      recordType: "XM.IncidentSeverity",
+      recordType: "XM.Characteristic",
       autoTestAttributes: true,
       createHash: {
-        description: "test account",
-        name: "test IncidentSeverity",
-				order: 10
+        name: "A test Characteristic",
+				isItems: true					
       },
       updateHash: {
-        order: 20
+        name: "updated characteristic"
       }
     };
 
@@ -29,41 +28,41 @@ var crud = require('../lib/crud'),
 
 var timeout = 20 * 1000;
 
-describe.skip('IncidentSeverity CRUD Test', function () {
+describe.skip('Characteristic CRUD Test', function () {
     this.timeout(20 * 1000);
     it('should perform all the crud operations', function (done) {
       crud.runAllCrud(data, done);
     });
   });
 
-describe('IncidentSeverity CRUD Test', function () {
+describe('Characteristic CRUD Test', function () {
 	  before(function (done){
         this.timeout(timeout);
 			  zombieAuth.loadApp(done);
 			});
 
-			it('should be able to Initialize an XM.IncidentSeverity Model', function(){
-				data.model = new XM.IncidentSeverity();
+			it('should be able to Initialize an XM.Characteristic Model', function(){
+				data.model = new XM.Characteristic();
 				expect(data.model).to.exist;
-				assert.equal(data.model.recordType, 'XM.IncidentSeverity', 'INIT Value should be XM.IncidentSeverity');
+				assert.equal(data.model.recordType, 'XM.Characteristic', 'INIT Value should be XM.Characteristic');
 			});
 
-			it('should create an XM.IncidentSeverity Model', function(){
+			it('should create an XM.Characteristic Model', function(){
 				data.model.set(data.createHash);
 				crud.save(data)
 			});
 
-			it('should read an XM.IncidentSeverity Model', function(){
+			it('should read an XM.Characteristic Model', function(){
 				assert.equal(data.model.get('name'), data.createHash.name, 'Model Code READ Value is equal')
 			});
 
-			it('should update an XM.IncidentSeverity Model', function(){
+			it('should update an XM.Characteristic Model', function(){
 				data.model.set(data.updateHash);
 				crud.save(data)
-				assert.equal(data.model.get('order'), data.updateHash.order, 'Model Code UPDATE Value is equal')
+				assert.equal(data.model.get('name'), data.updateHash.name, 'Model Code UPDATE Value is equal')
 			});
 
-			it('should delete an XM.IncidentSeverity Model', function(){
+			it('should delete an XM.Characteristic Model', function(){
 				crud.destroy(data)
 			});
 

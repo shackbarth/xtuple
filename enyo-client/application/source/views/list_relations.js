@@ -88,8 +88,8 @@ trailing:true white:true*/
       return true;
     }
   });
-  
-  
+
+
   // ..........................................................
   // CUSTOMER GROUP CUSTOMER
   //
@@ -331,7 +331,7 @@ trailing:true white:true*/
     name: "XV.OpportunityQuoteListRelations",
     kind: "XV.ListRelations",
     orderBy: [
-      {attribute: 'id', descending: true}
+      {attribute: 'number', descending: true}
     ],
     parentKey: "opportunity",
     components: [
@@ -349,39 +349,14 @@ trailing:true white:true*/
   });
 
   // ..........................................................
-  // CUSTOMER QUOTE
+  // CUSTOMER/PROSPECT QUOTE/SALESORDER
   //
 
   enyo.kind({
     name: "XV.CustomerQuoteListRelations",
     kind: "XV.ListRelations",
     orderBy: [
-      {attribute: 'id', descending: true}
-    ],
-    parentKey: "customer",
-    components: [
-      {kind: "XV.ListItem", components: [
-        {kind: "FittableColumns", components: [
-          {kind: "XV.ListColumn", classes: "first", components: [
-            {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
-              {kind: "XV.ListAttr", attr: "shipVia", classes: "right"}
-            ]}
-          ]}
-        ]}
-      ]}
-    ]
-  });
-
-  // ..........................................................
-  // PROSPECT QUOTE
-  //
-
-  enyo.kind({
-    name: "XV.ProspectQuoteListRelations",
-    kind: "XV.ListRelations",
-    orderBy: [
-      {attribute: 'id', descending: true}
+      {attribute: 'number', descending: true}
     ],
     parentKey: "customer",
     components: [
@@ -464,7 +439,7 @@ trailing:true white:true*/
       return Globalize.format(value, "n" + scale);
     }
   });
-  
+
   // ..........................................................
   // SALES ORDER LINE ITEM
   //

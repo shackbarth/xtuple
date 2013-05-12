@@ -1,3 +1,17 @@
+
+Critical deployment changes
+---------------------------
+* add redirectPort and maintenancePort to config.js, see sample_config.js
+
+
+Features and bugs
+----------------
+
+- Implemented
+  issue #[20295](http://www.xtuple.org/xtincident/view/bugs/20295)
+  move all ports into config.js, added redirectPort and maintenancePort to sample_config.js 
+
+
 1.3.4 (2013/05)
 ===============
 
