@@ -713,7 +713,8 @@ trailing:true white:true*/
             {kind: "XV.WagePeriodPicker", attr: "billingPeriod", label: "_period".loc()}
           ]}
         ]},
-        {kind: "XV.EmployeeCommentBox", attr: "comments"}
+        {kind: "XV.EmployeeCommentBox", attr: "comments"},
+        {kind: "XV.EmployeeGroupGroupBox", attr: "groups"}
       ]},
       {kind: "onyx.Popup", name: "findExistingAccountPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",

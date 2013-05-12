@@ -236,6 +236,18 @@ white:true*/
     recordType: 'XM.EmployeeGroupEmployee'
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.EmployeeGroupGroup = XM.Model.extend({
+    /** @scope XM.EmployeeGroupGroup.prototype */
+
+    recordType: 'XM.EmployeeGroupGroup'
+
+  });
 
   // ..........................................................
   // COLLECTIONS

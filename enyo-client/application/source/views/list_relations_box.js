@@ -45,6 +45,20 @@ trailing:true white:true*/
     searchList: "XV.EmployeeList",
     listRelations: "XV.EmployeeGroupEmployeeListRelations"
   });
+  
+  // ..........................................................
+  // EMPLOYEE GROUP GROUP
+  //
+
+  enyo.kind({
+    name: "XV.EmployeeGroupGroupBox",
+    kind: "XV.ListGroupRelationsBox",
+    title: "_groups".loc(),
+    parentKey: "employee",
+    groupItemKey: "employeeGroup",
+    searchList: "XV.EmployeeGroupList",
+    listRelations: "XV.EmployeeGroupGroupListRelations"
+  });
 
   // ..........................................................
   // INCIDENT HISTORY

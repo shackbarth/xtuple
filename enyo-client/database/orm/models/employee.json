@@ -263,6 +263,14 @@
           "column": "emp_id",
           "inverse": "employee"
         }
+      },
+      {
+        "name": "groups",
+        "toMany": {
+          "type": "EmployeeGroupGroup",
+          "column": "emp_id",
+          "inverse": "employee"
+        }
       }
     ],
     "isSystem": true
@@ -656,6 +664,49 @@
         "toOne":	{
           "isNested": true,
           "type": "EmployeeRelation",
+          "column": "empgrpitem_emp_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "EmployeeGroupGroup",
+    "table": "empgrpitem",
+    "idSequenceName": "empgrpitem_empgrpitem_id_seq",
+    "comment": "Employee Group Group Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr":	{
+          "type": "Number",
+          "column": "empgrpitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "employeeGroup",
+        "toOne": {
+          "isNested": true,
+          "type": "EmployeeGroup",
+          "column": "empgrpitem_empgrp_id"
+        }
+      },
+      {
+        "name": "employee",
+        "attr":	{
+          "type": "Number",
           "column": "empgrpitem_emp_id"
         }
       }

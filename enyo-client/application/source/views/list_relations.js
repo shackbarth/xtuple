@@ -169,6 +169,31 @@ trailing:true white:true*/
       ]}
     ]
   });
+  
+  // ..........................................................
+  // EMPLOYEE GROUP GROUP
+  //
+
+  enyo.kind({
+    name: "XV.EmployeeGroupGroupListRelations",
+    kind: "XV.ListRelations",
+    orderBy: [
+      {attribute: "employeeGroup.name"}
+    ],
+    parentKey: "employee",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableRows", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "employeeGroup.name", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "employeeGroup.description", fit: true}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  });
 
   // ..........................................................
   // TAX REGISTRATION
