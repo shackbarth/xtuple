@@ -17,7 +17,7 @@ trailing:true white:true*/
     listRelations: "XV.ContactListRelations",
     searchList: "XV.ContactList"
   });
-  
+
   // ..........................................................
   // CUSTOMER GROUP CUSTOMER
   //
@@ -46,7 +46,7 @@ trailing:true white:true*/
           model.set("customer", selectedModel);
           parent.get("customers").add(model);
         };
-        
+
       _.each(parent.get("customers").models, function (customer) {
         ids.push(customer.getValue("customer.id"));
       });
@@ -106,6 +106,19 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // OPPORTUNITY SALES ORDER
+  //
+
+  enyo.kind({
+    name: "XV.OpportunitySalesOrderListRelationsBox",
+    kind: "XV.ListRelationsBox",
+    title: "_salesOrders".loc(),
+    parentKey: "opportunity",
+    listRelations: "XV.OpportunityQuoteListRelations", // not a bug
+    searchList: "XV.SalesOrderList"
+  });
+
+  // ..........................................................
   // CUSTOMER QUOTE
   //
 
@@ -119,6 +132,19 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // CUSTOMER SALES ORDER
+  //
+
+  enyo.kind({
+    name: "XV.CustomerSalesOrderListRelationsBox",
+    kind: "XV.ListRelationsBox",
+    title: "_salesOrders".loc(),
+    parentKey: "customer",
+    listRelations: "XV.CustomerQuoteListRelations", // not a bug
+    searchList: "XV.SalesOrderList"
+  });
+
+  // ..........................................................
   // PROSPECT QUOTE
   //
 
@@ -126,8 +152,8 @@ trailing:true white:true*/
     name: "XV.ProspectQuoteListRelationsBox",
     kind: "XV.ListRelationsBox",
     title: "_quotes".loc(),
-    parentKey: "customer",
-    listRelations: "XV.ProspectQuoteListRelations",
+    parentKey: "customer", // not a bug
+    listRelations: "XV.CustomerQuoteListRelations", // not a bug
     searchList: "XV.QuoteList"
   });
 
