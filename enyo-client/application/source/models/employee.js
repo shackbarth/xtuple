@@ -209,6 +209,33 @@ white:true*/
     descriptionKey: "name"
 
   });
+  
+  
+  /**
+    @class
+
+    @extends XM.Document
+  */
+  XM.EmployeeGroup = XM.Document.extend({
+    /** @scope XM.EmployeeGroup.prototype */
+
+    recordType: 'XM.EmployeeGroup',
+
+    documentKey: 'name'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.EmployeeGroupCustomer = XM.Model.extend({
+    /** @scope XM.EmployeeGroupEmployee.prototype */
+
+    recordType: 'XM.EmployeeGroupEmployee'
+
+  });
 
   // ..........................................................
   // COLLECTIONS

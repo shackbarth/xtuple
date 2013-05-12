@@ -567,5 +567,100 @@
     ],
     "isNestedOnly": true,
     "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "EmployeeGroup",
+    "table": "empgrp",
+    "idSequenceName": "empgrp_empgrp_id_seq",
+    "lockable": true,
+    "comment": "Employee Group Map",
+    "priveleges": {
+      "all": {
+          "create": "MaintainEmployeeGroups",
+        "read": "ViewEmployeeGroups",
+        "update": "MaintainEmployeeGroups",
+        "delete": "MaintainEmployeeGroups"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr":	{
+          "type": "Number",
+          "column": "empgrp_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr":	{
+          "type": "String",
+          "column": "empgrp_name",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "description",
+        "attr":	{
+          "type": "Number",
+          "column": "empgrp_descrip"
+        }
+      },
+      {
+        "name": "employees",
+        "toMany": {
+          "isNested": true,
+          "type": "EmployeeGroupEmployee",
+          "column": "empgrp_id",
+          "inverse": "employeeGroup"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "EmployeeGroupEmployee",
+    "table": "empgrpitem",
+    "idSequenceName": "empgrpitem_empgrpitem_id_seq",
+    "comment": "Customer Group Customer Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr":	{
+          "type": "Number",
+          "column": "empgrpitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "employeeGroup",
+        "attr": {
+          "type": "Number",
+          "column": "empgrpitem_empgrp_id"
+        }
+      },
+      {
+        "name": "customer",
+        "toOne":	{
+          "isNested": true,
+          "type": "CustomerRelation",
+          "column": "empgrpitem_emp_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
   }
 ]

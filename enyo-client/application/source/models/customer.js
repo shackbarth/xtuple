@@ -388,7 +388,7 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Document
   */
   XM.CustomerGroup = XM.Document.extend({
     /** @scope XM.CustomerGroup.prototype */

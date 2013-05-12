@@ -197,6 +197,8 @@ var lang = XT.stringsFor("en_US", {
   "_emailProfile": "Email Profile",
   "_emphasisColor": "Emphasis Color",
   "_employee": "Employee",
+  "_employeeGroup": "Employee Group",
+  "_employeeGroups": "Employee Groups",
   "_employees": "Employees",
   "_end": "End",
   "_endBalance": "End Balance",

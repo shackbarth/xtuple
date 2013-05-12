@@ -522,6 +522,20 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.EmployeeRelation", "XV.EmployeeList");
+  
+  // ..........................................................
+  // EMPLOYEE GROUP
+  //
+
+  enyo.kind({
+    name: "XV.EmployeeGroupList",
+    kind: "XV.CustomerGroupList",
+    label: "_employeeGroup".loc(),
+    collection: "XM.EmployeeGroupCollection",
+    parameterWidget: "XV.EmployeeGroupListParameters"
+  });
+
+  XV.registerModelList("XM.CustomerGroupRelation", "XV.CustomerGroupList");
 
   // ..........................................................
   // EXPENSE CATEGORY

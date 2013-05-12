@@ -729,6 +729,33 @@ trailing:true white:true*/
 
   XV.registerModelWorkspace("XM.EmployeeRelation", "XV.EmployeeWorkspace");
   XV.registerModelWorkspace("XM.EmployeeListItem", "XV.EmployeeWorkspace");
+  
+  // ..........................................................
+  // EMPLOYEE GROUP
+  //
+
+  enyo.kind({
+    name: "XV.EmployeeGroupWorkspace",
+    kind: "XV.Workspace",
+    title: "_employeeGroup".loc(),
+    model: "XM.EmployeeGroup",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]},
+        {kind: "XV.EmployeeGroupEmployeeBox", attr: "employees"}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.EmployeeGroup", "XV.EmployeeGroupWorkspace");
 
   // ..........................................................
   // FILE

@@ -234,6 +234,20 @@ trailing:true white:true*/
       {name: "country", label: "_country".loc(), attr: "cntact.address.country"}
     ]
   });
+  
+  // ..........................................................
+  // EMPLOYEE GROUP
+  //
+
+  enyo.kind({
+    name: "XV.EmployeeGroupListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_employeeGroup".loc()},
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "description", label: "_description", attr: "description"}
+    ]
+  });
 
   // ..........................................................
   // FREIGHT CLASS
