@@ -20,6 +20,14 @@
           "column": "cust_number",
           "inverse": "customer"
         }
+      },
+      {
+        "name": "salesOrderRelations",
+        "toMany": {
+          "type": "SalesOrderRelation",
+          "column": "cust_number",
+          "inverse": "customer"
+        }
       }
     ],
     "sequence": 0,

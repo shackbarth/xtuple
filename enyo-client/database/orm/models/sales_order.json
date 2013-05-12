@@ -1513,7 +1513,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "SalesOrderRelation",
-    "table": "cohead",
+    "table": "xt.coheadinfo",
     "comment": "Sales Order Relation Map",
     "privileges": {
       "all": {
@@ -1544,7 +1544,7 @@
         "name": "customer",
         "attr": {
           "type": "Number",
-          "column": "cohead_cust_id"
+          "column": "cust_number"
         }
       },
       {
@@ -1558,7 +1558,7 @@
         "name": "opportunity",
         "attr": {
           "type": "Number",
-          "column": "cohead_ophead_id"
+          "column": "ophead_number"
         }
       }
     ],

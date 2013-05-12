@@ -254,6 +254,11 @@ body {
   width: 320px;
   background: #dddddd;
 }
+.pullout .xv-groupbox {
+  min-width: 300px;
+  padding: 8px 0 8px 5px;
+  margin: 0;
+}
 .pullout-shadow {
   position: absolute;
   height: 100%;

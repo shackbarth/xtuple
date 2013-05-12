@@ -1852,7 +1852,7 @@
         "name": "defaultShipto",
         "toOne": {
           "isNested": true,
-          "type": "CustomerShipto",
+          "type": "CustomerShiptoRelation",
           "column": "default_shipto_id"
         }
       },
