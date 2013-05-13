@@ -100,6 +100,39 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "UserOrganization",
+    "table": "xt.useracctorg",
+    "idSequenceName": "useracctorg_useracctorg_id_seq",
+    "comment": "User Organization Map",
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "useracctorg_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "user",
+       "attr": {
+         "type": "Number",
+         "column": "useracctorg_useracct_id"
+       }
+     },
+     {
+       "name": "org",
+       "attr": {
+         "type": "Number",
+         "column": "useracctorg_org_id"
+       }
+     }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "Extension",
     "table": "xt.ext",
     "idSequenceName": "xt.ext_ext_id_seq",

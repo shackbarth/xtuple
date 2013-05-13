@@ -335,6 +335,13 @@
         }
       },
       {
+        "name": "password",
+        "attr": {
+          "type": "String",
+          "column": "useracct_password"
+        }
+      },
+      {
         "name": "disableExport",
         "attr": {
           "type": "Boolean",
@@ -365,6 +372,15 @@
           "type": "UserAccountUserAccountRoleAssignment",
           "inverse": "userAccount",
           "isNested": true
+        }
+      },
+      {
+        "name": "organizations",
+        "toMany": {
+          "isNested": true,
+          "type": "UserOrganization",
+          "column": "useracct_id",
+          "inverse": "user"
         }
       }
     ],

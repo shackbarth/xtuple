@@ -17,6 +17,7 @@ exports.findByUsername = function (username, done) {
     options = {};
 
   options.success = function (res) {
+    console.log("success fetching");
     done(null, res);
   };
 
@@ -36,7 +37,9 @@ exports.findByUsername = function (username, done) {
   // The user under whose authority the query is run.
   options.username = X.options.globalDatabase.nodeUsername;
 
+  console.log("fetching");
   user.fetch(options);
+
 };
 
 exports.findByUserOrg = function (username, org, done) {

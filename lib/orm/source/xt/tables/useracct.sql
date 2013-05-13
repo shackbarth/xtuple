@@ -1,7 +1,7 @@
 -- table definition
 select xt.create_table('useracct', 'xt');
-select xt.add_column('useracct', 'useracct_id', 'integer', 'primary key');
-select xt.add_column('useracct', 'useracct_username', 'text', 'unique');
+select xt.add_column('useracct', 'useracct_id', 'integer', 'unique');
+select xt.add_column('useracct', 'useracct_username', 'text', 'primary key');
 select xt.add_column('useracct', 'useracct_password', 'text');
 select xt.add_column('useracct', 'useracct_active', 'boolean');
 select xt.add_column('useracct', 'useracct_propername', 'text');
