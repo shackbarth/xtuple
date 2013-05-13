@@ -78,13 +78,19 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     Curry function
   */
   Function.prototype.curry = function() {
-    if (arguments.length < 1) {
-        return this; /* nothing to curry with - return function */
-    }
-    var __method = this,
-      args = arguments[0];
-    return function () {
-      return __method.apply(this, args.concat(Array.prototype.slice.call(arguments)));
+    try {
+      if (arguments.length < 1) {
+          return this; /* nothing to curry with - return function */
+      }
+
+      var __method = this,
+        args = arguments[0];
+
+      return function () {
+        return __method.apply(this, args.concat(Array.prototype.slice.call(arguments)));
+      }
+    } catch (err) {
+      XT.error(err, arguments);
     }
   }
 
