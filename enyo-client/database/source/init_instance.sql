@@ -93,6 +93,16 @@ select xt.js_init();
 \i xt/tables/userrolepriv.sql
 \i xt/tables/useruserrole.sql
 
+\i xt/tables/ext.sql
+\i xt/tables/org.sql
+\i xt/tables/orgext.sql
+\i xt/tables/sessionstore.sql
+\i xt/tables/useracctorg.sql
+\i xt/tables/oa2client.sql
+\i xt/tables/oa2clientredirs.sql
+\i xt/tables/oa2token.sql
+\i xt/tables/bicache.sql
+
 -- xt javascript
 \i xt/javascript/init.sql;
 
