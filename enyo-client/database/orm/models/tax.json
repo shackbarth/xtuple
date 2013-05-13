@@ -81,7 +81,7 @@
         }
       },
       {
-        "name": "number",
+        "name": "code",
         "attr": {
           "type": "String",
           "column": "taxauth_code",
@@ -173,7 +173,7 @@
         }
       },
       {
-        "name": "number",
+        "name": "code",
         "attr": {
           "type": "String",
           "column": "taxauth_code",

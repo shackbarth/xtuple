@@ -100,6 +100,12 @@ white:true*/
     /** @scope XM.Customer.prototype */
 
     recordType: 'XM.Customer',
+    
+    conversionMap: {
+      name: "name",
+      primaryContact: "contact",
+      secondaryContact: "correspondenceContact"
+    },
 
     defaults: function () {
       var settings = XT.session.getSettings();
@@ -216,31 +222,6 @@ white:true*/
           this.setReadOnly("customerType", true);
         }
       }
-    },
-
-    /**
-      Creates a new account model and fetches based on the given ID.
-      Takes attributes from the account model and gives them to this customer model.
-    */
-    convertFromAccount: function (id) {
-      var account = new XM.Account(),
-          fetchOptions = {},
-          that = this;
-
-      fetchOptions.id = id;
-
-      fetchOptions.success = function (resp) {
-        that.set("name", account.get("name"));
-        that.set("billingContact", account.get("primaryContact"));
-        that.set("correspondenceContact", account.get("secondaryContact"));
-        that.revertStatus();
-        that._checkConflicts = false;
-      };
-      fetchOptions.error = function (resp) {
-        XT.log("Fetch failed in convertFromAccount");
-      };
-      this.setStatus(XM.Model.BUSY_FETCHING);
-      account.fetch(fetchOptions);
     },
 
     /**
@@ -407,7 +388,7 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Document
   */
   XM.CustomerGroup = XM.Document.extend({
     /** @scope XM.CustomerGroup.prototype */

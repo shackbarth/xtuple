@@ -106,8 +106,8 @@ trailing:true white:true*/
         {kind: "FittableRows", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "customer.number"},
-              {kind: "XV.ListAttr", attr: "customer.name", fit: true, classes: "right"}
+              {kind: "XV.ListAttr", attr: "customer.number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "customer.name", fit: true}
             ]}
           ]}
         ]}
@@ -139,6 +139,56 @@ trailing:true white:true*/
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "contact.name", classes: "italic"},
             {kind: "XV.ListAttr", attr: "address.formatShort"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+  
+  // ..........................................................
+  // EMPLOYEE GROUP EMPLOYEE
+  //
+
+  enyo.kind({
+    name: "XV.EmployeeGroupEmployeeListRelations",
+    kind: "XV.ListRelations",
+    orderBy: [
+      {attribute: "employee.code"}
+    ],
+    parentKey: "employeeGroup",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableRows", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "employee.code", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "employee.name", fit: true}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+  
+  // ..........................................................
+  // EMPLOYEE GROUP GROUP
+  //
+
+  enyo.kind({
+    name: "XV.EmployeeGroupGroupListRelations",
+    kind: "XV.ListRelations",
+    orderBy: [
+      {attribute: "employeeGroup.name"}
+    ],
+    parentKey: "employee",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableRows", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "employeeGroup.name", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "employeeGroup.description", fit: true}
+            ]}
           ]}
         ]}
       ]}
