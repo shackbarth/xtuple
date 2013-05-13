@@ -36,11 +36,9 @@ Features and bugs
 - Implemented
   issue #[20295](http://www.xtuple.org/xtincident/view/bugs/20295)
   move all ports into config.js, added redirectPort and maintenancePort to sample_config.js
-
 - Fixed
   issue #[20266](http://www.xtuple.org/xtincident/view/bugs/20266)
   SQL Injection exploit in XT.Data
-
 - Implemented parts of
   issue #[20264](http://www.xtuple.org/xtincident/view/bugs/20264)
   REST - Refactor error handling in the database layer
