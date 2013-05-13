@@ -793,8 +793,8 @@ white:true*/
         message,
         options = {};
       options.type = XM.Model.QUESTION;
-      options.callback = function (answer) {
-        if (answer) {
+      options.callback = function (response) {
+        if (response.answer) {
           that.set("calculateFreight", !calculateFreight);
         } else {
           that.off('change:freight', that.freightDidChange);
@@ -830,8 +830,8 @@ white:true*/
         lineItems = this.get("lineItems"),
         msg = "_recalculateAll?".loc(),
         options = {
-          callback: function (answer) {
-            if (answer) {
+          callback: function (response) {
+            if (response.answer) {
               _.each(that.get("lineItems").models, function (lineItem) {
                 lineItem.calculatePrice(true);
               });
@@ -879,7 +879,7 @@ white:true*/
 
       // Confirm the user really wants to reschedule, then check whether all lines
       // can be updated to the requested schedule date
-      options.callback = function (answer) {
+      options.callback = function (response) {
         var counter = lineItems.length,
           custOptions = {},
           results = [],
@@ -890,7 +890,7 @@ white:true*/
             });
           };
 
-        if (answer) {
+        if (response.answer) {
           // Callback for each check
           custOptions.succes = function (canPurchase) {
             counter--;
@@ -903,8 +903,8 @@ white:true*/
               // If partial, then ask if they only want to reschedule partial
               if (results.length && results.length !== lineItems.length) {
                 message = "_partialReschedule".loc() + "_continue?".loc();
-                options.callback = function (answer) {
-                  if (answer) { reschedule(results); }
+                options.callback = function (response) {
+                  if (response.answer) { reschedule(results); }
 
                   // Recalculate the date because some lines may not have changed
                   that.calculateScheduleDate();

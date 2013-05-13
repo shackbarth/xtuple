@@ -28,6 +28,7 @@ regexp:true, undef:true, trailing:true, white:true */
     keyAttribute: "name",
     nameAttribute: "jobTitle",
     descripAttribute: "phone",
+    classes: "xv-relationwidget",
     published: {
       showAddress: false
     },
