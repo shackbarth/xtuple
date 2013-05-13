@@ -5,9 +5,11 @@ regexp:true, strict:true, trailing:true, white:false*/
   "use strict";
   var contactData = require('./contactData.js'),
   contactObj = require('./contactObj.js'),
+  readContactObj,
   utils = require('./utils.js');
-  exports.createContact = function (browser,callback) {
-  utils.pause(10000, function () {
+  exports.createContact = function (browser, test, fname, callback) {
+  readContactObj = contactObj.readObj1.readContact_xpath + fname +  "')]";
+  utils.pause(40000, function () {
   utils.results('*****Creating a New Contact*****');
   browser.elementByXPath(contactObj.Obj.crmlink_xpath, function (err, el1) {
   browser.clickElement(el1, function () {
@@ -24,7 +26,7 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.elementByXPath(contactObj.Obj.overview_xpath, function (err, overviewEl) {
   browser.clickElement(overviewEl, function () {
   browser.elementByXPath(contactObj.Obj.cfname_xpath, function (err, el4) {
-  browser.type(el4, contactData.VARIABLES.contact_fname + '\uE004', function () {
+  browser.type(el4, fname + '\uE004', function () {
   utils.pause(2000, function () {
   browser.elementByXPath(contactObj.Obj.cmname_xpath, function (err, el5) {
   browser.type(el5, contactData.VARIABLES.contact_mname + '\uE004', function () {
@@ -53,9 +55,15 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.type(el13,contactData.VARIABLES.contact_bday, function () {
   browser.elementByXPath(contactObj.Obj.cnotes_xpath, function (err, el14) {
   browser.type(el14, contactData.VARIABLES.contact_notes, function () {
+  utils.pause(2000,function () {//--
+  browser.elementByXPath(contactObj.Obj.cowner_xpath, function (err, el16) {
+  browser.clear(el16, function () {
+  utils.pause(2000,function () {
+  browser.type(el16, contactData.VARIABLES.contact_owner, function (err) {
+  browser.type(el16, '\uE004', function () {
+  utils.pause(2000,function () { //--
   browser.elementByXPath(contactObj.Obj.caccount_xpath, function (err, el15) {
   browser.type(el15, contactData.VARIABLES.contact_account + '\uE004', function () {
-  utils.pause(2000, function () {
   browser.elementByXPathOrNull(contactObj.Obj.saveToolBar_xpath, function (err, toolbarEl) {
   browser.clickElement(toolbarEl, function () {
   browser.elementByXPath(contactObj.Obj.savebutton_xpath, function (err, el17) {
@@ -65,7 +73,7 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.clickElement(toolBarEl, function () {
   utils.pause(4000, function () {
   browser.elementByXPath(contactObj.readObj1.searchField_xpath, function (err,el27) {
-  browser.type(el27,contactData.VARIABLES.contact_fname, function () { //------ Enters the contact first name in the search field and hits 'Refresh' button
+  browser.type(el27, fname, function () {
   utils.pause(2000, function () {
   browser.elementByXPath(contactObj.readObj1.refreshButton_xpath, function (err, el26) {
   browser.clickElement(el26, function () {
@@ -73,23 +81,24 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.elementByXPath(contactObj.readObj1.newToolBar_xpath, function (err, toolBarEl) {
   browser.clickElement(toolBarEl, function () {
   utils.pause(20000, function () {
-  browser.waitForVisibleByXPath(contactObj.readObj1.readContact_xpath, 60000, function () {
-  browser.elementByXPath(contactObj.readObj1.readContact_xpath, function (err,contactEl) {
+  browser.waitForVisibleByXPath(readContactObj, 60000, function () {
+  browser.elementByXPath(readContactObj, function (err,contactEl) {
   browser.isDisplayed(contactEl, function (err, displayed) {
   if (displayed) {
-    utils.results('contact saved');
+  console.log('Contact Saved');
+  test.ok(displayed, 'contact saved');
+  callback(browser,test);
   }
   else {
-    utils.results('contact not saved');
-    process.nextTick(function () {utils.pause(1000, function () {
-    browser.quit();
-    utils.pause(1000, function () {
-    process.exit(1);
-    });
-    });});
+  test.ok(false, 'contact not saved');
+  setTimeout(function () {
+  browser.quit();
+  setTimeout(function () {
+  test.done();
+  },2000);
+  },2000);
   }
-  callback(browser);
   });});});});});});});});});});});});
   });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});
-  });});});});});});});});});});});});});});});});});});});});});});});});});});};
+  });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});};
 }());

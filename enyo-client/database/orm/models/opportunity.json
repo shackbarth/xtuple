@@ -4,8 +4,8 @@
     "nameSpace": "XM",
     "type": "Opportunity",
     "table": "ophead",
-    "lockable": true,
     "idSequenceName": "ophead_ophead_id_seq",
+    "lockable": true,
     "orderSequence": "OpportunityNumber",
     "comment": "Opportunity Map",
     "privileges": {
@@ -39,7 +39,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "ophead_number"
+          "column": "ophead_number",
+          "isNaturalKey":true
         }
       },
       {
@@ -108,7 +109,7 @@
       {
         "name": "amount",
         "attr": {
-          "type": "Number",
+          "type": "Money",
           "column": "ophead_amount"
         }
       },
@@ -122,7 +123,7 @@
       {
         "name": "probability",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "ophead_probability_prcnt"
         }
       },
@@ -274,6 +275,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -340,6 +349,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "targetType",
         "attr": {
           "type": "String",
@@ -378,7 +395,6 @@
     "nameSpace": "XM",
     "type": "OpportunityListItemCharacteristic",
     "table": "charass",
-    "idSequenceName": "charass_charass_id_seq",
     "comment": "Opportunity List Item Characteristic Map",
     "privileges": {
       "all": {
@@ -395,6 +411,14 @@
           "type": "Number",
           "column": "charass_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -459,6 +483,14 @@
           "type": "Number",
           "column": "comment_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -540,6 +572,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -603,6 +643,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -684,7 +732,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "ophead_number"
+          "column": "ophead_number",
+          "isNaturalKey":true
         }
       },
       {
@@ -736,15 +785,15 @@
       {
         "name": "account",
         "attr": {
-          "type": "Number",
-          "column": "ophead_crmacct_id"
+          "type": "String",
+          "column": "crmacct_number"
         }
       },
       {
         "name": "contact",
         "attr": {
-          "type": "Number",
-          "column": "ophead_cntct_id"
+          "type": "String",
+          "column": "cntct_number"
         }
       }
     ],
@@ -787,7 +836,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "ophead_number"
+          "column": "ophead_number",
+          "isNaturalKey":true
         }
       },
       {
@@ -874,6 +924,20 @@
         }
       },
       {
+        "name": "amount",
+        "attr": {
+          "type": "Money",
+          "column": "ophead_amount"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "ophead_curr_id"
+        }
+      },
+      {
         "name": "priorityOrder",
         "attr": {
           "type": "Number",
@@ -914,6 +978,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -983,6 +1055,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -1029,8 +1109,8 @@
     "nameSpace": "XM",
     "type": "OpportunitySource",
     "table": "opsource",
-    "lockable": true,
     "idSequenceName": "opsource_opsource_id_seq",
+    "lockable": true,
     "comment": "Opportunity Source Map",
     "privileges": {
       "all": {
@@ -1053,7 +1133,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "opsource_name"
+          "column": "opsource_name",
+          "isNaturalKey":true
         }
       },
       {
@@ -1071,8 +1152,8 @@
     "nameSpace": "XM",
     "type": "OpportunityStage",
     "table": "opstage",
-    "lockable": true,
     "idSequenceName": "opstage_opstage_id_seq",
+    "lockable": true,
     "comment": "Opportunity Stage Map",
     "privileges": {
       "all": {
@@ -1095,7 +1176,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "opstage_name"
+          "column": "opstage_name",
+          "isNaturalKey":true
         }
       },
       {
@@ -1121,8 +1203,8 @@
     "nameSpace": "XM",
     "type": "OpportunityType",
     "table": "optype",
-    "lockable": true,
     "idSequenceName": "optype_optype_id_seq",
+    "lockable": true,
     "comment": "Opportunity Type Map",
     "privileges": {
       "all": {
@@ -1145,7 +1227,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "optype_name"
+          "column": "optype_name",
+          "isNaturalKey":true
         }
       },
       {
@@ -1180,6 +1263,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {

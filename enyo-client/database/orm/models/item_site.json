@@ -4,8 +4,8 @@
     "nameSpace": "XM",
     "type": "CostCategory",
     "table": "costcat",
-    "lockable": true,
     "idSequenceName": "costcat_costcat_id_seq",
+    "lockable": true,
     "comment": "Cost Category Map",
     "privileges": {
       "all": {
@@ -28,7 +28,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "costcat_code"
+          "column": "costcat_code",
+          "isNaturalKey":true
         }
       },
       {
@@ -46,8 +47,9 @@
     "nameSpace": "XM",
     "type": "ItemSite",
     "table": "itemsite",
-    "lockable": true,
     "idSequenceName": "itemsite_itemsite_id_seq",
+    "isRest": true,
+    "lockable": true,
     "comment": "Itemsite Map",
     "privileges": {
       "all": {
@@ -64,6 +66,14 @@
           "type": "Number",
           "column": "itemsite_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -85,6 +95,13 @@
         "attr": {
           "type": "Boolean",
           "column": "itemsite_active"
+        }
+      },
+      {
+        "name": "isSold",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_sold"
         }
       },
       {
@@ -151,6 +168,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -209,7 +234,6 @@
     "nameSpace": "XM",
     "type": "ItemSiteListItem",
     "table": "itemsite",
-    "idSequenceName": "itemsite_itemsite_id_seq",
     "comment": "Itemsite List Item Map",
     "privileges": {
       "all": {
@@ -226,6 +250,14 @@
           "type": "Number",
           "column": "itemsite_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -252,6 +284,13 @@
         }
       },
       {
+        "name": "isSold",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_sold"
+        }
+      },
+      {
         "name": "plannerCode",
         "toOne": {
           "type": "PlannerCode",
@@ -272,15 +311,14 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ItemSiteRelation",
-    "table": "itemsite",
-    "idSequenceName": "itemsite_itemsite_id_seq",
+    "table": "xt.itemsiteinfo",
     "comment": "Itemsite Relation Map",
     "privileges": {
       "all": {
-        "create": "MaintainItemSites",
-        "read": "ViewItemSites",
-        "update": "MaintainItemSites",
-        "delete": "MaintainItemSites"
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
       }
     },
     "properties": [
@@ -293,10 +331,25 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "isActive",
         "attr": {
           "type": "Boolean",
           "column": "itemsite_active"
+        }
+      },
+      {
+        "name": "isSold",
+        "attr": {
+          "type": "Boolean",
+          "column": "itemsite_sold"
         }
       },
       {
@@ -314,6 +367,27 @@
           "column": "itemsite_warehous_id",
           "isNested": true
         }
+      },
+      {
+        "name": "costCategory",
+        "toOne": {
+          "type": "CostCategory",
+          "column": "itemsite_costcat_id"
+        }
+      },
+      {
+        "name": "plannerCode",
+        "toOne": {
+          "type": "PlannerCode",
+          "column": "itemsite_plancode_id"
+        }
+      },
+      {
+        "name": "averageCost",
+        "attr": {
+          "type": "Number",
+          "column": "avg_cost"
+        }
       }
     ],
     "isSystem": true
@@ -323,8 +397,8 @@
     "nameSpace": "XM",
     "type": "PlannerCode",
     "table": "plancode",
-    "lockable": true,
     "idSequenceName": "plancode_plancode_id_seq",
+    "lockable": true,
     "comment": "Planner Code Map",
     "privileges": {
       "all": {
@@ -347,7 +421,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "plancode_code"
+          "column": "plancode_code",
+          "isNaturalKey":true
         }
       },
       {

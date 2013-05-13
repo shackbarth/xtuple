@@ -1,18 +1,19 @@
-drop view if exists xt.quheadinfo cascade;
+select xt.create_view('xt.quheadinfo', $$
+  select quhead.*,  
+    xt.quote_schedule_date(quhead) as schedule_date,  
+    xt.quote_freight_weight(quhead) as freight_weight,  
+    xt.quote_subtotal(quhead) as subtotal,  
+    xt.quote_tax_total(quhead) as tax_total,  
+    xt.quote_total(quhead) as total,  
+    xt.quote_margin(quhead) as margin,
+    ophead_number,
+    customer_prospect.number as cust_number 
+  from quhead
+    left join xt.customer_prospect on customer_prospect.id = quhead_cust_id
+    left join ophead on ophead_id = quhead_ophead_id;
+$$, false);
 
-create or replace view xt.quheadinfo as
-
-  select quhead.*,
-    xt.quote_schedule_date(quhead) as schedule_date,
-    xt.quote_subtotal(quhead) as subtotal,
-    xt.quote_tax_total(quhead) as tax_total,
-    xt.quote_total(quhead) as total
-  from quhead;
-          
-revoke all on xt.quheadinfo from public;
-grant all on table xt.quheadinfo to group xtrole;
-
-create or replace rule "_INSERT" as on insert to xt.quheadinfo do instead
+create or replace rule "_INSERT" as on insert to xt.quheadinfo do instead 
 
 insert into quhead (
   quhead_id,
@@ -225,4 +226,4 @@ where quhead_id = old.quhead_id;
 
 create or replace rule "_DELETE" as on delete to xt.quheadinfo do instead
 
-delete from quhead where quhead_id = old.quhead_id;
+select deletequote(old.quhead_id);

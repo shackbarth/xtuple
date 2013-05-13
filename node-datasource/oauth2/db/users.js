@@ -12,6 +12,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 */
 exports.findByUsername = function (username, done) {
   "use strict";
+
   var user = new XM.User(),
     options = {};
 
@@ -19,13 +20,13 @@ exports.findByUsername = function (username, done) {
     done(null, res);
   };
 
-  options.error = function (res, err) {
-    if (err.code === 'xt1007') {
+  options.error = function (err, res) {
+    if (res.code === 'xt1007') {
       // XXX should "result not found" really be an error?
       done(null, false);
     } else {
       X.log("Error authenticating user", arguments);
-      done(err);
+      done(res);
     }
   };
 
@@ -36,6 +37,42 @@ exports.findByUsername = function (username, done) {
   options.username = X.options.globalDatabase.nodeUsername;
 
   user.fetch(options);
+};
+
+exports.findByUserOrg = function (username, org, done) {
+  "use strict";
+
+  var userOrg = new XM.UserOrganizationCollection(),
+      options = {};
+
+  options.success = function (res) {
+    if (res.models.length !== 1) {
+      var message = "Error fetching User Organization.";
+      X.log(message);
+      return done(null, null);
+    }
+
+    return done(null, res.models[0]);
+  };
+
+  options.error = function (err, res) {
+    if (err.code === 'xt1007') {
+      // XXX should "result not found" really be an error?
+      return done(null, null);
+    } else {
+      var message = "Error fetching User Organization.";
+      X.log(message);
+      return done(new Error(message));
+    }
+  };
+
+  options.query = {};
+  options.query.parameters = [
+    {attribute: "user", value: username},
+    {attribute: "name", value: org}
+  ];
+
+  userOrg.fetch(options);
 };
 
 

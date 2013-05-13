@@ -16,30 +16,63 @@ white:true*/
   XM.AccountDocument = XM.Document.extend({
     /** @scope XM.AccountDocument.prototype */
 
+    conversionMap: {
+      name: "name"
+    },
+
     numberPolicySetting: 'CRMAccountNumberGeneration',
 
     requiredAttributes: [
       "number"
     ],
-    
-    /**
-      Return a matching record id for a passed user `key` and `value`. If none
-      found, returns zero.
 
-      @param {String} Property to search on, typically a user key
+    /**
+      Creates a new account model and fetches based on the given ID.
+      Takes attributes from the account model and gives them to the new model.
+    */
+    convertFromAccount: function (id) {
+      var account = new XM.Account(),
+          fetchOptions = {},
+          that = this;
+
+      fetchOptions.id = id;
+      fetchOptions.obtainLock = false;
+
+      fetchOptions.success = function (resp) {
+        var prop,
+          map = that.conversionMap;
+        for (prop in map) {
+          if (map.hasOwnProperty(prop)) {
+            that.set(map[prop], account.get(prop));
+          }
+        }
+        that.revertStatus();
+        that.checkConflicts = false;
+      };
+      fetchOptions.error = function (resp) {
+        XT.log("Fetch failed in convertFromAccount");
+      };
+      this.setStatus(XM.Model.BUSY_FETCHING);
+      account.fetch(fetchOptions);
+    },
+
+    /**
+      Return a matching record id for a passed `value`. Overload
+      of `XM.Model.findExisting` such that it only searches on
+      the AccountDocument number field against Account records.
+
+      @param {String} Key - Ignored
       @param {String} Value to search for
       @param {Object} Options
       @returns {Object} Receiver
     */
     findExisting: function (key, value, options) {
       if (this._converted) { return this; }
-      var params = [ key, value, this.id || -1 ],
-        dataSource = options.dataSource || XT.dataSource;
-      dataSource.dispatch('XM.Account', 'findExisting', params, options);
-      XT.log("XM.Account.findExisting");
+      var params = [ "number", value ];
+      XM.ModelMixin.dispatch('XM.Account', 'findExisting', params, options);
       return this;
     }
-    
+
   });
 
   /**
@@ -66,11 +99,12 @@ white:true*/
       "number",
       "name"
     ],
-    
+
     /**
       An informational array of attributes that are considered "roles" in the application.
     */
     roleAttributes: [
+      "employee",
       "salesRep",
       "taxAuthority",
       "userAccount",
@@ -82,16 +116,17 @@ white:true*/
     // METHODS
     //
 
-    validateEdit: function (attributes) {
+    validate: function (attributes) {
       if (attributes.parent && attributes.parent.id === this.id) {
         return XT.Error.clone('xt2006');
       }
+      return XM.Document.prototype.validate.apply(this, arguments);
     }
 
   });
-  
+
   XM.Account.used = function (id, options) {
-    return XT.dataSource.dispatch('XM.Account', 'used', id, options);
+    return XM.ModelMixin.dispatch('XM.Account', 'used', id, options);
   };
 
   /**
@@ -259,7 +294,7 @@ white:true*/
     recordType: 'XM.AccountListItemCharacteristic'
 
   });
-  
+
   /**
     @class
 

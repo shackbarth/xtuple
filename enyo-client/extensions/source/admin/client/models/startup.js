@@ -7,16 +7,7 @@ white:true*/
   "use strict";
 
   XT.extensions.admin.initStartup = function () {
-    XT.StartupTasks.push({
-      taskName: "loadOrganizations",
-      task: function () {
-        var options = {
-          success: _.bind(this.didComplete, this)
-        };
-        XM.organizations = new XM.OrganizationCollection();
-        XM.organizations.fetch(options);
-      }
-    });
+    XT.cacheCollection("XM.organizations", "XM.OrganizationCollection");
   };
 
 }());

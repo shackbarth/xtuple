@@ -51,7 +51,7 @@
         "name": "projectRelations",
         "toMany": {
           "type": "ProjectRelation",
-          "column": "crmacct_id",
+          "column": "crmacct_number",
           "inverse": "account"
         }
       }
@@ -86,7 +86,7 @@
         "name": "projectRelations",
         "toMany": {
           "type": "ProjectRelation",
-          "column": "cntct_id",
+          "column": "cntct_number",
           "inverse": "contact"
         }
       }
@@ -98,7 +98,7 @@
     "context": "project",
     "nameSpace": "XM",
     "type": "Incident",
-    "table": "incdt",
+    "table": "xt.incdtxt",
     "isExtension": true,
     "comment": "Extended by Project",
     "relations": [

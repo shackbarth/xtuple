@@ -2,20 +2,17 @@
 
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, Backbone:true, _:true, XM:true, XT:true*/
+/*global X:true, Backbone:true, _:true, XM:true, XT:true, jsonpatch:true*/
 
 Backbone = require("backbone");
 _ = require("underscore");
+jsonpatch = require("json-patch");
 
 (function () {
   "use strict";
 
   var options = require("./lib/options"),
-    schema = false,
-    privs = false,
-    sessionObjectLoaded,
-    schemaOptions = {},
-    privsOptions = {};
+    sessionOptions = {};
 
   /**
    * Include the X framework.
@@ -23,6 +20,10 @@ _ = require("underscore");
   require("./xt");
 
   // Loop through files and load the dependencies.
+  // Apes the enyo package process
+  // TODO: it would be nice to use a more standardized way
+  // of loading our libraries (tools and backbone-x) here
+  // in node.
   X.relativeDependsPath = "";
   X.depends = function () {
     var dir = X.relativeDependsPath,
@@ -61,38 +62,28 @@ _ = require("underscore");
   // Make absolutely sure we're going to start.
   options.autoStart = true;
 
-  //X.debugging = true;
-
-  // Set the options and start the servers the OLD way.
+  // Set the options.
   X.setup(options);
 
-
-  // Initiate the internal session.
-  sessionObjectLoaded = function () {
-    if (schema && privs) {
-      // Start polling for expired user sessions and delete the records.
-      X.cachePollingInterval = setInterval(X.Session.pollCache, 10000);
-      X.addCleanupTask(function () {
-        clearInterval(X.cachePollingInterval);
-      });
-    }
-  };
-  schemaOptions.success = function () {
-    schema = true;
-    sessionObjectLoaded();
-  };
-  privsOptions.success = function () {
-    privs = true;
-    sessionObjectLoaded();
-  };
-  privsOptions.username = X.options.globalDatabase.nodeUsername;
+  sessionOptions.username = X.options.globalDatabase.nodeUsername;
 
   XT.session = Object.create(XT.Session);
-  XT.session.loadSessionObjects(XT.session.SCHEMA, schemaOptions);
-  XT.session.loadSessionObjects(XT.session.PRIVILEGES, privsOptions);
+  XT.session.loadSessionObjects(XT.session.SCHEMA, sessionOptions);
+  XT.session.loadSessionObjects(XT.session.PRIVILEGES, sessionOptions);
 
 }());
 
+
+/**
+  Grab the version number from the package.json file.
+ */
+
+var packageJson = X.fs.readFileSync("../package.json");
+try {
+  X.version = JSON.parse(packageJson).version;
+} catch (error) {
+
+}
 
 /**
  * Module dependencies.
@@ -104,6 +95,12 @@ var express = require('express'),
     routes = require('./routes/routes'),
     socketio = require('socket.io'),
     user = require('./oauth2/user');
+
+// TODO - for testing. remove...
+//http://stackoverflow.com/questions/13091037/node-js-heap-snapshots-and-google-chrome-snapshot-viewer
+//var heapdump = require("heapdump");
+// Use it!: https://github.com/c4milo/node-webkit-agent
+//var agent = require('webkit-devtools-agent');
 
 /**
  * ###################################################
@@ -223,8 +220,68 @@ var app = express(),
   //MemoryStore = express.session.MemoryStore,
   XTPGStore = require('./oauth2/db/connect-xt-pg')(express),
   io,
-  sessionStore = new XTPGStore({ hybridCache: true });
-  //sessionStore = new MemoryStore();
+  //sessionStore = new MemoryStore(),
+  sessionStore = new XTPGStore({ hybridCache: X.options.datasource.requireCache || false }),
+  Session = require('express/node_modules/connect/lib/middleware/session').Session,
+  Cookie = require('express/node_modules/connect/lib/middleware/session/cookie'),
+  cookie = require('express/node_modules/cookie'),
+  privateSalt = X.fs.readFileSync(X.options.datasource.saltFile).toString() || 'somesecret';
+
+// Conditionally load express.session(). REST API endpoints using OAuth tokens do not get sessions.
+var conditionalExpressSession = function (req, res, next) {
+  "use strict";
+
+  // REST API endpoints start with "/api" in their path.
+  if ((/^\/api/i).test(req.path)) {
+    next();
+  } else {
+    // Instead of doing app.use(express.session()) we call the package directly
+    // which returns a function (req, res, next) we can call to do the same thing.
+    var init_session = express.session({
+        store: sessionStore,
+        secret: privateSalt,
+        // See cookie stomp above for more details on how this session cookie works.
+        cookie: {
+          path: '/',
+          httpOnly: true,
+          secure: true,
+          maxAge: (X.options.datasource.sessionTimeout * 60 * 1000) || 3600000
+        }
+      });
+
+    init_session(req, res, next);
+  }
+};
+
+// Conditionally load passport.session(). REST API endpoints using OAuth tokens do not get sessions.
+var conditionalPassportSession = function (req, res, next) {
+  "use strict";
+
+  // REST API endpoints start with "/api" in their path.
+  if ((/^\/api/i).test(req.path)) {
+    next();
+  } else {
+    // Instead of doing app.use(passport.session())
+    var init_passportSessions = passport.session();
+
+    init_passportSessions(req, res, next);
+  }
+};
+
+// flash() requires sessions, so it has to be loaded conditionally.
+var conditionalFlash = function (req, res, next) {
+  "use strict";
+
+  // REST API endpoints start with "/api" in their path.
+  if ((/^\/api/i).test(req.path)) {
+    next();
+  } else {
+    // Instead of doing app.use(flash())
+    var init_flash = flash();
+
+    init_flash(req, res, next);
+  }
+};
 
 app.configure(function () {
   "use strict";
@@ -233,17 +290,21 @@ app.configure(function () {
   app.use(express.compress());
   // Add a basic view engine that will render files from "views" directory.
   app.set('view engine', 'ejs');
+
   // TODO - This outputs access logs like apache2 and some other user things.
   //app.use(express.logger());
+
   app.use(express.cookieParser());
   app.use(express.bodyParser());
 
-  // See cookie stopm above for more details.
-  app.use(express.session({ store: sessionStore, secret: '.T#T@r5EkPM*N@C%9K-iPW!+T', cookie: { path: '/', httpOnly: true, secure: true, maxAge: 1800000 } }));
-
+  // Conditionally load session packages. Based off these examples:
+  // http://stackoverflow.com/questions/9348505/avoiding-image-logging-in-express-js/9351428#9351428
+  // http://stackoverflow.com/questions/13516898/disable-csrf-validation-for-some-requests-on-express
+  app.use(conditionalExpressSession);
   app.use(passport.initialize());
-  app.use(passport.session());
-  app.use(flash());
+  app.use(conditionalPassportSession);
+  app.use(conditionalFlash);
+
   app.use(app.router);
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
@@ -265,7 +326,15 @@ app.get('/dialog/authorize', oauth2.authorization);
 app.post('/dialog/authorize/decision', oauth2.decision);
 app.post('/oauth/token', oauth2.token);
 
+app.get('/discovery/v1alpha1/apis/:org/v1alpha1/rest', routes.restDiscoveryGetRest);
+app.get('/discovery/v1alpha1/apis/:org/:model/v1alpha1/rest', routes.restDiscoveryGetRest);
+app.get('/discovery/v1alpha1/apis/:org', routes.restDiscoveryList);
+
 app.get('/api/userinfo', user.info);
+
+app.all('/api/v1alpha1/:model/:id', routes.restRouter);
+app.all('/api/v1alpha1/:model', routes.restRouter);
+app.all('/api/v1alpha1/*', routes.restRouter);
 
 app.get('/', routes.loginForm);
 app.post('/login', routes.login);
@@ -284,15 +353,14 @@ app.get('/report', routes.report);
 app.get('/resetPassword', routes.resetPassword);
 app.get('/syncUser', routes.syncUser);
 
-
 // Set up the other servers we run on different ports.
 var unexposedServer = express();
 unexposedServer.get('/maintenance', routes.maintenanceLocalhost);
-unexposedServer.listen(442);
+unexposedServer.listen(X.options.datasource.maintenancePort);
 
 var redirectServer = express();
 redirectServer.get(/.*/, routes.redirect); // RegEx for "everything"
-redirectServer.listen(80);
+redirectServer.listen(X.options.datasource.redirectPort);
 
 /**
  * Start the express server. This is the NEW way.
@@ -375,8 +443,6 @@ io.configure(function () {
 io.of('/clientsock').authorization(function (handshakeData, callback) {
   "use strict";
 
-  var cookie = require('express/node_modules/cookie');
-
   if (handshakeData.headers.cookie) {
     handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
 
@@ -385,7 +451,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
     }
 
     // Add sessionID so we can use it to check for valid sessions on each request below.
-    handshakeData.sessionID = parseSignedCookie(handshakeData.cookie['connect.sid'], '.T#T@r5EkPM*N@C%9K-iPW!+T');
+    handshakeData.sessionID = parseSignedCookie(handshakeData.cookie['connect.sid'], privateSalt);
 
     sessionStore.get(handshakeData.sessionID, function (err, session) {
       if (err) {
@@ -393,20 +459,17 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
       }
 
       // All requests get a session. Make sure the session is authenticated.
-      if (!session || !session.passport || !session.passport.user
-        || !session.passport.user.id
-        || !session.passport.user.organization
-        || !session.passport.user.username
-        || !session.cookie || !session.cookie.expires) {
+      if (!session || !session.passport || !session.passport.user ||
+        !session.passport.user.id ||
+        !session.passport.user.organization ||
+        !session.passport.user.username ||
+        !session.cookie || !session.cookie.expires) {
 
         destroySession(handshakeData.sessionID, session);
 
         // Not an error exactly, but the cookie is invalid. The user probably logged off.
         return callback(null, false);
       }
-
-      var Session = require('express/node_modules/connect/lib/middleware/session').Session,
-          Cookie = require('express/node_modules/connect/lib/middleware/session/cookie');
 
       // Prep the cookie and create a session object so we can touch() it on each request below.
       session.cookie.expires = new Date(session.cookie.expires);
@@ -431,11 +494,11 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
               current;
 
           // All requests get a session. Make sure the session is authenticated.
-          if (err || !session || !session.passport || !session.passport.user
-            || !session.passport.user.id
-            || !session.passport.user.organization
-            || !session.passport.user.username
-            || !session.cookie || !session.cookie.expires) {
+          if (err || !session || !session.passport || !session.passport.user ||
+              !session.passport.user.id ||
+              !session.passport.user.organization ||
+              !session.passport.user.username ||
+              !session.cookie || !session.cookie.expires) {
 
             return destroySession(socket.handshake.sessionID, session);
           }
@@ -469,41 +532,40 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   // ???
   socket.on('session', function (data, callback) {
     ensureLoggedIn(function (session) {
-      callback({data: session.passport.user, code: 1});
+      callback({
+        data: session.passport.user,
+        code: 1,
+        debugging: X.options.datasource.debugging,
+        version: X.version
+      });
     }, data && data.payload);
   });
 
   // To run this from the client:
-  // XT.dataSource.retrieveRecord("XM.State", 2, {"id":2,"cascade":true,"databaseType":"instance"});
-  socket.on('function/retrieveRecord', function (data, callback) {
+  socket.on('delete', function (data, callback) {
     ensureLoggedIn(function (session) {
-      routes.retrieveEngine(data.payload, session, callback);
-    }, data && data.payload);
-  });
-
-  // To run this from client:
-  // XT.dataSource.fetch({"query":{"orderBy":[{"attribute":"code"}],"recordType":"XM.Honorific"},"force":true,"parse":true,"databaseType":"instance"});
-  socket.on('function/fetch', function (data, callback) {
-    ensureLoggedIn(function (session) {
-      routes.fetchEngine(data.payload, session, callback);
-    }, data && data.payload);
-  });
-
-  // To run this from client:
-  // XT.dataSource.dispatch("XT.Session", "settings", null, {success: function () {console.log(arguments);}, error: function () {console.log(arguments);}});
-  socket.on('function/dispatch', function (data, callback) {
-    ensureLoggedIn(function (session) {
-      routes.dispatchEngine(data.payload, session, callback);
+      routes.queryDatabase("delete", data.payload, session, callback);
     }, data && data.payload);
   });
 
   // To run this from the client:
-  // ???
-  // TODO: The first argument to XT.dataSource.commit() is a model and therefore a bit tough to mock
-  // XXX untested
-  socket.on('function/commitRecord', function (data, callback) {
+  socket.on('get', function (data, callback) {
     ensureLoggedIn(function (session) {
-      routes.commitEngine(data.payload, session, callback);
+      routes.queryDatabase("get", data.payload, session, callback);
+    }, data && data.payload);
+  });
+
+  // To run this from the client:
+  socket.on('patch', function (data, callback) {
+    ensureLoggedIn(function (session) {
+      routes.queryDatabase("patch", data.payload, session, callback);
+    }, data && data.payload);
+  });
+
+  // To run this from the client:
+  socket.on('post', function (data, callback) {
+    ensureLoggedIn(function (session) {
+      routes.queryDatabase("post", data.payload, session, callback);
     }, data && data.payload);
   });
 

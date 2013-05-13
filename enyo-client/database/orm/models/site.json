@@ -3,10 +3,11 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "Site",
-    "table": "whsinfo",
-    "lockable": true,
+    "table": "xt.site",
     "idSequenceName": "warehous_warehous_id_seq",
-    "comment": "Site Info Map",
+    "isRest": true,
+    "lockable": true,
+    "comment": "Site Map",
     "privileges": {
       "all": {
         "create": "MaintainWarehouses",
@@ -28,7 +29,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "warehous_code"
+          "column": "warehous_code",
+          "isNaturalKey":true
         }
       },
       {
@@ -84,13 +86,6 @@
         }
       },
       {
-        "name": "shipVia",
-        "attr": {
-          "type": "String",
-          "column": "warehous_shipvia_id"
-        }
-      },
-      {
         "name": "notes",
         "attr": {
           "type": "String",
@@ -137,6 +132,14 @@
           "type": "Number",
           "column": "comment_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -198,8 +201,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "SiteListItem",
-    "table": "whsinfo",
-    "idSequenceName": "warehous_warehous_id_seq",
+    "table": "xt.site",
     "comment": "Site Info Map",
     "privileges": {
       "all": {
@@ -222,7 +224,8 @@
         "name": "code",
         "attr": {
           "type": "SiteRelation",
-          "column": "warehous_code"
+          "column": "warehous_code",
+          "isNaturalKey":true
         }
       },
       {
@@ -253,8 +256,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "SiteRelation",
-    "table": "whsinfo",
-    "idSequenceName": "warehous_warehous_id_seq",
+    "table": "xt.site",
     "comment": "Site Info Map",
     "privileges": {
       "all": {
@@ -277,7 +279,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "warehous_code"
+          "column": "warehous_code",
+          "isNaturalKey":true
         }
       },
       {
@@ -293,6 +296,13 @@
           "type": "Boolean",
           "column": "warehous_active"
         }
+      },
+      {
+        "name": "fob",
+        "attr": {
+          "type": "String",
+          "column": "warehous_fob"
+        }
       }
     ],
     "isSystem": true
@@ -302,8 +312,8 @@
     "nameSpace": "XM",
     "type": "SiteType",
     "table": "sitetype",
-    "lockable": true,
     "idSequenceName": "sitetype_sitetype_id_seq",
+    "lockable": true,
     "comment": "Site Type Map",
     "privileges": {
       "all": {
@@ -326,7 +336,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "sitetype_name"
+          "column": "sitetype_name",
+          "isNaturalKey":true
         }
       },
       {

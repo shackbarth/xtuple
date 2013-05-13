@@ -7,18 +7,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   module.exports = {
     processName: "node-datasource",
-    debugging: true,
     allowMultipleInstances: true,
     requireDatabase: true,
-    requireServer: true,
-    requireCache: true,
-    functorsDirectory: "./lib/functors",
-    routesDirectory: "./lib/routes",
-    routersDirectory: "./lib/routers",
     enhancedAuthKey: "xTuple",
     datasource: {
-      sessionTimeout: 15,
+      debugging: false,
+      sessionTimeout: 60,
+      requireCache: true,
+      pgPoolSize: 15,
+      pgWorker: false,
       bindAddress: "localhost",
+      redirectPort: 80,
+      maintenancePort: 442,
       port: 443,
       keyFile: "./lib/private/key.pem",
       certFile: "./lib/private/server.crt",
@@ -54,9 +54,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // servers, etc.
       location: "NA"
     },
-    administratorInterface: {
-      port: 9090
-    },
     globalDatabase: {
       hostname: "localhost",
       port: 5432,
@@ -66,11 +63,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       nodeUsername: "node"
     },
     required: [
-      "lib/ext/session",
       "lib/ext/database",
-      "lib/ext/router",
-      "lib/servers",
       "lib/ext/datasource",
+      "lib/ext/smtpTransport",
       "lib/ext/models"
     ]
   };

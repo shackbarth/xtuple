@@ -4,8 +4,8 @@
     "nameSpace": "XM",
     "type": "ClassCode",
     "table": "classcode",
-    "lockable": true,
     "idSequenceName": "classcode_classcode_id_seq",
+    "lockable": true,
     "comment": "Class Code Map",
     "privileges": {
       "all": {
@@ -28,7 +28,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "classcode_code"
+          "column": "classcode_code",
+          "isNaturalKey": true
         }
       },
       {
@@ -44,10 +45,54 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "FreightClass",
+    "table": "freightclass",
+    "idSequenceName": "freightclass_freightclass_id_seq",
+    "lockable": true,
+    "comment": "Freight Class Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainFreightClasses",
+        "read": true,
+        "update": "MaintainFreightClasses",
+        "delete": "MaintainFreightClasses"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "freightclass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "freightclass_code",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "freightclass_descrip"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "Item",
     "table": "item",
-    "lockable": true,
     "idSequenceName": "item_item_id_seq",
+    "isRest": true,
+    "lockable": true,
     "comment": "Item Map",
     "privileges": {
       "all": {
@@ -70,7 +115,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "item_number"
+          "column": "item_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -92,6 +138,13 @@
         "attr": {
           "type": "String",
           "column": "item_descrip2"
+        }
+      },
+      {
+        "name": "itemType",
+        "attr": {
+          "type": "String",
+          "column": "item_type"
         }
       },
       {
@@ -118,6 +171,20 @@
         }
       },
       {
+        "name": "isConfigured",
+        "attr": {
+          "type": "Boolean",
+          "column": "item_config"
+        }
+      },
+      {
+        "name": "isPicklist",
+        "attr": {
+          "type": "Boolean",
+          "column": "item_picklist"
+        }
+      },
+      {
         "name": "notes",
         "attr": {
           "type": "String",
@@ -136,7 +203,21 @@
         "toOne": {
           "type": "ProductCategory",
           "column": "item_prodcat_id",
-          "required": true
+          "nullValue": -1
+        }
+      },
+      {
+        "name": "freightClass",
+        "toOne": {
+          "type": "FreightClass",
+          "column": "item_freightclass_id"
+        }
+      },
+      {
+        "name": "barcode",
+        "attr": {
+          "type": "String",
+          "column": "item_upccode"
         }
       },
       {
@@ -144,6 +225,13 @@
         "attr": {
           "type": "Number",
           "column": "item_listprice"
+        }
+      },
+      {
+        "name": "listCost",
+        "attr": {
+          "type": "Number",
+          "column": "item_listcost"
         }
       },
       {
@@ -155,10 +243,17 @@
         }
       },
       {
-        "name": "extendedDescription",
+        "name": "productWeight",
         "attr": {
-          "type": "String",
-          "column": "item_extdescrip"
+          "type": "Number",
+          "column": "item_prodweight"
+        }
+      },
+      {
+        "name": "packageWeight",
+        "attr": {
+          "type": "Number",
+          "column": "item_packweight"
         }
       },
       {
@@ -228,8 +323,7 @@
         "name": "itemSites",
         "toMany": {
           "type": "ItemSiteRelation",
-          "column": "item_id",
-          "isNested": "true"
+          "column": "item_id"
         }
       }
     ],
@@ -258,6 +352,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -324,6 +426,14 @@
           "type": "Number",
           "column": "itemalias_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -397,6 +507,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "targetType",
         "attr": {
           "type": "String",
@@ -424,6 +542,20 @@
         "attr": {
           "type": "String",
           "column": "charass_value"
+        }
+      },
+      {
+        "name": "isDefault",
+        "attr": {
+          "type": "Boolean",
+          "column": "charass_default"
+        }
+      },
+      {
+        "name": "price",
+        "attr": {
+          "type": "Number",
+          "column": "charass_price"
         }
       }
     ],
@@ -458,6 +590,14 @@
           "type": "Number",
           "column": "comment_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -540,6 +680,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -603,6 +751,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -674,7 +830,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "item_number"
+          "column": "item_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -696,6 +853,13 @@
         "attr": {
           "type": "String",
           "column": "item_descrip2"
+        }
+      },
+      {
+        "name": "itemType",
+        "attr": {
+          "type": "String",
+          "column": "item_type"
         }
       },
       {
@@ -703,81 +867,6 @@
         "toOne": {
           "type": "ClassCode",
           "column": "item_classcode_id"
-        }
-      },
-      {
-        "name": "inventoryUnit",
-        "toOne": {
-          "type": "Unit",
-          "column": "item_inv_uom_id"
-        }
-      },
-      {
-        "name": "isSold",
-        "attr": {
-          "type": "Boolean",
-          "column": "item_sold"
-        }
-      },
-      {
-        "name": "productCategory",
-        "toOne": {
-          "type": "ProductCategory",
-          "column": "item_prodcat_id"
-        }
-      }
-    ],
-    "isSystem": true
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
-    "type": "ItemRelation",
-    "table": "item",
-    "comment": "Item Relation Map",
-    "privileges": {
-      "all": {
-        "create": false,
-        "read": true,
-        "update": false,
-        "delete": false
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "item_id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "number",
-        "attr": {
-          "type": "String",
-          "column": "item_number"
-        }
-      },
-      {
-        "name": "isActive",
-        "attr": {
-          "type": "Boolean",
-          "column": "item_active"
-        }
-      },
-      {
-        "name": "description1",
-        "attr": {
-          "type": "String",
-          "column": "item_descrip1"
-        }
-      },
-      {
-        "name": "description2",
-        "attr": {
-          "type": "String",
-          "column": "item_descrip2"
         }
       },
       {
@@ -802,9 +891,23 @@
         }
       },
       {
+        "name": "productCategory",
+        "toOne": {
+          "type": "ProductCategory",
+          "column": "item_prodcat_id"
+        }
+      },
+      {
+        "name": "barcode",
+        "attr": {
+          "type": "String",
+          "column": "item_upccode"
+        }
+      },
+      {
         "name": "listPrice",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "item_listprice"
         }
       },
@@ -814,8 +917,344 @@
           "type": "Unit",
           "column": "item_price_uom_id"
         }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "type": "ItemListItemCharacteristic",
+          "column": "item_id",
+          "inverse": "item",
+          "isNested": true
+        }
       }
     ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemListItemCharacteristic",
+    "table": "charass",
+    "comment": "Item List Item Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "I"
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "item",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      },
+      {
+        "name": "isDefault",
+        "attr": {
+          "type": "Boolean",
+          "column": "charass_default"
+        }
+      },
+      {
+        "name": "price",
+        "attr": {
+          "type": "Number",
+          "column": "charass_price"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemRelation",
+    "table": "xt.iteminfo",
+    "comment": "Item Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "item_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "item_number",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "item_active"
+        }
+      },
+      {
+        "name": "description1",
+        "attr": {
+          "type": "String",
+          "column": "item_descrip1"
+        }
+      },
+      {
+        "name": "description2",
+        "attr": {
+          "type": "String",
+          "column": "item_descrip2"
+        }
+      },
+      {
+        "name": "itemType",
+        "attr": {
+          "type": "String",
+          "column": "item_type"
+        }
+      },
+      {
+        "name": "inventoryUnit",
+        "toOne": {
+          "type": "Unit",
+          "column": "item_inv_uom_id"
+        }
+      },
+      {
+        "name": "isFractional",
+        "attr": {
+          "type": "Boolean",
+          "column": "item_fractional"
+        }
+      },
+      {
+        "name": "classCode",
+        "toOne": {
+          "type": "ClassCode",
+          "column": "item_classcode_id"
+        }
+      },
+      {
+        "name": "isSold",
+        "attr": {
+          "type": "Boolean",
+          "column": "item_sold"
+        }
+      },
+      {
+        "name": "isConfigured",
+        "attr": {
+          "type": "Number",
+          "column": "item_config"
+        }
+      },
+      {
+        "name": "freightClass",
+        "toOne": {
+          "type": "FreightClass",
+          "column": "item_freightclass_id"
+        }
+      },
+      {
+        "name": "barcode",
+        "attr": {
+          "type": "String",
+          "column": "item_upccode"
+        }
+      },
+      {
+        "name": "listPrice",
+        "attr": {
+          "type": "Number",
+          "column": "item_listprice"
+        }
+      },
+      {
+        "name": "standardCost",
+        "attr": {
+          "type": "Number",
+          "column": "std_cost"
+        }
+      },
+      {
+        "name": "listCost",
+        "attr": {
+          "type": "Number",
+          "column": "item_listcost"
+        }
+      },
+      {
+        "name": "priceUnit",
+        "toOne": {
+          "type": "Unit",
+          "column": "item_price_uom_id"
+        }
+      },
+      {
+        "name": "priceUnitRatio",
+        "attr": {
+          "type": "Number",
+          "column": "inv_price_ratio"
+        }
+      },
+      {
+        "name": "productWeight",
+        "attr": {
+          "type": "Number",
+          "column": "item_prodweight"
+        }
+      },
+      {
+        "name": "packageWeight",
+        "attr": {
+          "type": "Number",
+          "column": "item_packweight"
+        }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "type": "ItemRelationCharacteristic",
+          "column": "item_id",
+          "inverse": "item",
+          "isNested": true
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "ItemRelationCharacteristic",
+    "table": "charass",
+    "comment": "Item Relation Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "charass_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "charass_target_type",
+          "value": "I"
+        }
+      },
+      {
+        "name": "item",
+        "attr": {
+          "type": "Number",
+          "column": "charass_target_id"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "charass_char_id",
+          "required": true
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "charass_value"
+        }
+      },
+      {
+        "name": "isDefault",
+        "attr": {
+          "type": "Boolean",
+          "column": "charass_default"
+        }
+      },
+      {
+        "name": "price",
+        "attr": {
+          "type": "Number",
+          "column": "charass_price"
+        }
+      }
+    ],
+    "isNestedOnly": true,
     "isSystem": true
   },
   {
@@ -840,6 +1279,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -909,6 +1356,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -955,8 +1410,8 @@
     "nameSpace": "XM",
     "type": "ProductCategory",
     "table": "prodcat",
-    "lockable": true,
     "idSequenceName": "prodcat_prodcat_id_seq",
+    "lockable": true,
     "comment": "Product Category Map",
     "privileges": {
       "all": {
@@ -979,7 +1434,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "prodcat_code"
+          "column": "prodcat_code",
+          "isNaturalKey": true
         }
       },
       {
@@ -997,8 +1453,8 @@
     "nameSpace": "XM",
     "type": "Unit",
     "table": "uom",
-    "lockable": true,
     "idSequenceName": "uom_uom_id_seq",
+    "lockable": true,
     "comment": "Unit Map",
     "privileges": {
       "all": {
@@ -1021,7 +1477,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "uom_name"
+          "column": "uom_name",
+          "isNaturalKey": true
         }
       },
       {

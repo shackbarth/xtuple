@@ -19,17 +19,17 @@
   var data = {};
   
   data.createHash = {
-    number: 'crud_test',
-    name: 'Test CRUD operations',
+    number: 'crud_project',
+    name: 'Test CRUD Project operations',
     dueDate: dueDate
   };
 
   data.updateHash = {
-    name: 'Test Update operation'
+    name: 'Test Update Project operation'
   };
 
   vows.describe('XM.Project CRUD test').addBatch({
-    'INITIALIZE ': {
+    'We can INITIALIZE a Project Model ': {
       topic: function () {
         var that = this,
           callback = function () {
@@ -38,110 +38,98 @@
           };
         zombieAuth.loadApp(callback);
       },
-      'The record type is XM.Project': function (data) {
+      'Verify the record type is XM.Project': function (data) {
         assert.equal(data.model.recordType, "XM.Project");
       }
     }
   }).addBatch({
-    'CREATE ': crud.create(data, {
-      '-> Set values': {
+    'We can CREATE a Project Model ': crud.create(data, {
+      '-> Set values of a Project': {
         topic: function (data) {
           data.model.set(data.createHash);
           return data;
         },
-        'Last Error is null': function (data) {
+        'Verify the Last Error is null': function (data) {
           assert.isNull(data.model.lastError);
         },
-        '-> Save': crud.save(data)
+        '-> Save the Project': crud.save(data)
       }
     })
   }).addBatch({
-    'CHECKS PARAMETERS ': {
+    'We can CHECK PARAMETERS of a Project Model ': {
       topic: function () {
         return data;
       },
-      'Last Error is null': function (model) {
-        assert.isNull(model.lastError);
+      'Verify the Last Error is null': function (model) {
+        assert.isTrue(_.isEmpty(model.lastError));
       },
-      '-> `requiredAttributes`': {
+      '-> `requiredAttributes of a Project': {
         topic: function () {
           return data;
         },
-        'Name is required': function (data) {
+        'Name is required in a Project': function (data) {
           assert.isTrue(_.contains(data.model.requiredAttributes, "name"));
         },
-        'Due date is required': function (data) {
+        'Due date is required in a Project': function (data) {
           assert.isTrue(_.contains(data.model.requiredAttributes, "dueDate"));
         }
       }
     }
   }).addBatch({
-    'READ': {
+    'We can READ a Project Model': {
       topic: function () {
         return data;
       },
-      'Number is `CRUD_TEST`': function (data) {
-        assert.equal(data.model.get('number'), 'CRUD_TEST'); // Was capitalized!
+      'Project Number is `CRUD_TEST`': function (data) {
+        assert.equal(data.model.get('number'), data.createHash.number.toUpperCase()); // Was capitalized!
       },
-      'Name is `Test CRUD operations`': function (data) {
-        assert.equal(data.model.get('name'), 'Test CRUD operations');
+      'Project Name is `Test CRUD operations`': function (data) {
+        assert.equal(data.model.get('name'), data.createHash.name);
       }
     }
   }).addBatch({
-    'UPDATE ': crud.update(data, {
-      '-> Set values': {
+    'We can UPDATE a Project Model ': crud.update(data, {
+      '-> Set values of a Project': {
         topic: function () {
           data.model.set(data.updateHash);
           return data;
         },
-        'Last Error is null': function (data) {
+        'Verify the Last Error is null': function (data) {
           assert.isNull(data.model.lastError);
         },
-        'Name is "Test Update operation"': function (data) {
-          assert.equal(data.model.get('name'), 'Test Update operation');
+        'Project Name is "Test Update operation"': function (data) {
+          assert.equal(data.model.get('name'), data.updateHash.name);
         },
-        'Status is `READY_DIRTY`': function (data) {
+        'Project Status is `READY_DIRTY`': function (data) {
           assert.equal(data.model.getStatusString(), 'READY_DIRTY');
         },
-        '-> Commit': crud.save(data)
+        '-> Commit a Project': crud.save(data)
       }
     })
   }).addBatch({
-    'COMMENT ': {
+    'We can COMMENT to a Project ': {
       topic: function () {
         return data;
       },
-      'Last Error is null': function (data) {
+      'Verify the Last Error is null': function (data) {
         assert.isNull(data.model.lastError);
       },
-      '-> add comment': {
+      '-> add comment to a Project': {
         topic: function (data) {
-          var that = this,
-            timeoutId,
-            comment = new XM.ProjectComment(),
-            callback = function () {
-              clearTimeout(timeoutId);
-              comment.off('change:id', callback);
-              that.callback(null, comment);
-            };
+          var comment = new XM.ProjectComment();
 
           // Must add comment to the project first then initialize
           data.model.get('comments').add(comment);
-          comment.on('change:id', callback);
           comment.initialize(null, {isNew: true});
-
-          // If we don't hear back, keep going
-          timeoutId = setTimeout(function () {
-            that.callback(null, comment);
-          }, 5000); // five seconds
+          this.callback(null, comment);
         },
-        'Comment Status is READY_NEW': function (comment) {
+        'Verify the Project Comment Status is READY_NEW': function (comment) {
           assert.equal(comment.getStatusString(), 'READY_NEW');
         },
-        'Comment id is valid': function (comment) {
-          assert.isNumber(comment.id);
+        'Verify the Project Comment id is valid': function (comment) {
+          assert.isString(comment.id);
         },
-        '-> Set and Save comment': {
+        '-> Set and Save comment to a Project': {
           topic: function (comment) {
             var that = this,
               timeoutId,
@@ -173,10 +161,10 @@
               that.callback(null, model);
             }, crud.waitTime);
           },
-          'Status is READY_CLEAN': function (model) {
+          'Verify Project Status is READY_CLEAN': function (model) {
             assert.equal(model.getStatusString(), 'READY_CLEAN');
           },
-          'Last Error is null': function (model) {
+          'Verify the Last Error is null': function (model) {
             assert.isNull(model.lastError);
           }
         }
@@ -184,41 +172,29 @@
     }
   })
   .addBatch({
-    'TASK': {
+    'We can have a TASK to a Project Model': {
       topic: function () {
         return data;
       },
-      'Last Error is null': function (data) {
+      'Verify the Last Error is null': function (data) {
         assert.isNull(data.model.lastError);
       },
-      '-> add task': {
+      '-> add task to Project Model': {
         topic: function (data) {
-          var that = this,
-            timeoutId,
-            task = new XM.ProjectTask(),
-            callback = function () {
-              clearTimeout(timeoutId);
-              task.off('change:id', callback);
-              that.callback(null, task);
-            };
+          var task = new XM.ProjectTask();
 
           // Must add task to the project first then initialize
           data.model.get('tasks').add(task);
-          task.on('change:id', callback);
           task.initialize(null, {isNew: true});
-
-          // If we don't hear back, keep going
-          timeoutId = setTimeout(function () {
-            that.callback(null, task);
-          }, 5000); // five seconds
+          this.callback(null, task);
         },
-        'Task Status is READY_NEW': function (task) {
+        'Verify the Project Task Status is READY_NEW': function (task) {
           assert.equal(task.getStatusString(), 'READY_NEW');
         },
-        'Task id is valid': function (task) {
-          assert.isNumber(task.id);
+        'Verify the Project Task id is valid': function (task) {
+          assert.isString(task.id);
         },
-        '-> Set and Save task': {
+        '-> Set and Save task to Project': {
           topic: function (task) {
             var that = this,
               timeoutId,
@@ -245,17 +221,17 @@
               that.callback(null, model);
             }, crud.waitTime);
           },
-          'Status is READY_CLEAN': function (model) {
+          'Verify the Project Status is READY_CLEAN': function (model) {
             assert.equal(model.getStatusString(), 'READY_CLEAN');
           },
-          'Last Error is null': function (model) {
+          'Verify the Project Last Error is null': function (model) {
             assert.isNull(model.lastError);
           }
         }
       }
     }
   }).addBatch({
-    'DESTROY': crud.destroy(data)
+    'We can DESTROY a Project Model': crud.destroy(data)
   }).export(module);
   
 }());

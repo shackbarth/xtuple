@@ -4,8 +4,9 @@
     "nameSpace": "XM",
     "type": "Contact",
     "table": "cntct",
-    "lockable": true,
     "idSequenceName": "cntct_cntct_id_seq",
+    "isRest": true,
+    "lockable": true,
     "orderSequence": "ContactNumber",
     "comment": "Contact Map",
     "privileges": {
@@ -38,7 +39,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "cntct_number"
+          "column": "cntct_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -278,7 +280,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "cntct_number"
+          "column": "cntct_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -426,6 +429,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -492,6 +503,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "targetType",
         "attr": {
           "type": "String",
@@ -530,7 +549,6 @@
     "nameSpace": "XM",
     "type": "ContactListItemCharacteristic",
     "table": "charass",
-    "idSequenceName": "charass_charass_id_seq",
     "comment": "Contact List Item Characteristic Map",
     "privileges": {
       "all": {
@@ -547,6 +565,14 @@
           "type": "Number",
           "column": "charass_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -611,6 +637,14 @@
           "type": "Number",
           "column": "comment_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -693,6 +727,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -759,6 +801,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "contact",
         "attr": {
           "type": "Number",
@@ -798,6 +848,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -846,7 +904,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ContactListItem",
-    "table": "cntct",
+    "table": "xt.cntctinfo",
     "comment": "Contact List Item Map",
     "privileges": {
       "all": {
@@ -872,6 +930,14 @@
           "type": "Number",
           "column": "cntct_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "cntct_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -977,36 +1043,23 @@
           "inverse": "contact",
           "isNested": true
         }
-      }
-    ],
-    "extensions": [
+      },
       {
-        "table": "crmacct",
-        "nameSpace": "XM",
-        "relations": [
-          {
-            "column": "crmacct_id",
-            "inverse": "account"
-          }
-        ],
-        "properties": [
-          {
-            "name": "accountParent",
-            "toOne": {
-              "type": "AccountRelation",
-              "column": "crmacct_parent_id"
-            }
-          }
-        ]
+        "name": "accountParent",
+        "attr": {
+          "type": "String",
+          "column": "crmacct_parent_number"
+        }
       }
     ],
+    "extensions": [],
     "isSystem": true
   },
   {
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ContactRelation",
-    "table": "cntct",
+    "table": "xt.cntctinfo",
     "comment": "Contact Relation Map",
     "privileges": {
       "all": {
@@ -1032,6 +1085,14 @@
           "type": "Number",
           "column": "cntct_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "cntct_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -1124,32 +1185,19 @@
       {
         "name": "account",
         "attr": {
-          "type": "Number",
-          "column": "cntct_crmacct_id"
+          "type": "String",
+          "column": "crmacct_number"
+        }
+      },
+      {
+        "name": "accountParent",
+        "attr": {
+          "type": "String",
+          "column": "crmacct_parent_number"
         }
       }
     ],
-    "extensions": [
-      {
-        "table": "crmacct",
-        "nameSpace": "XM",
-        "relations": [
-          {
-            "column": "crmacct_id",
-            "inverse": "account"
-          }
-        ],
-        "properties": [
-          {
-            "name": "accountParent",
-            "toOne": {
-              "type": "AccountRelation",
-              "column": "crmacct_parent_id"
-            }
-          }
-        ]
-      }
-    ],
+    "extensions": [],
     "isSystem": true
   },
   {
@@ -1174,6 +1222,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1243,6 +1299,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "sourceType",
         "attr": {
           "type": "String",
@@ -1289,8 +1353,8 @@
     "nameSpace": "XM",
     "type": "Honorific",
     "table": "hnfc",
-    "lockable": true,
     "idSequenceName": "hnfc_hnfc_id_seq",
+    "lockable": true,
     "comment": "Honorific Map",
     "privileges": {
       "all": {
@@ -1313,7 +1377,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "hnfc_code"
+          "column": "hnfc_code",
+          "isNaturalKey": true
         }
       }
     ],

@@ -84,6 +84,37 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.User", "XV.UserWorkspace");
 
   // ..........................................................
+  // CAMPAIGN
+  //
+
+  enyo.kind({
+    name: "XV.CampaignWorkspace",
+    kind: "XV.Workspace",
+    title: "_campaign".loc(),
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.InputWidget", attr: "description"},
+            {kind: "XV.DateWidget", attr: "effectiveDate"},
+            {kind: "XV.DateWidget", attr: "expirationDate"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes", fit: true}
+          ]}
+        ]}
+      ]}
+    ],
+    model: "XM.Campaign"
+  });
+
+  XV.registerModelWorkspace("XM.Campaign", "XV.CampaignWorkspace");
+  XV.registerModelWorkspace("XM.CampaignRelation", "XV.CampaignWorkspace");
+
+  // ..........................................................
   // DATABASE SERVER
   //
 
@@ -134,7 +165,14 @@ trailing:true white:true*/
             {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.InputWidget", attr: "group"},
             {kind: "XV.NumberWidget", attr: "licenses"},
-            {kind: "XV.DatabaseServerWidget", attr: "databaseServer"}
+            {kind: "XV.DatabaseServerWidget", attr: "databaseServer"},
+            {kind: "onyx.GroupboxHeader", content: "_attributes".loc()},
+            {kind: "XV.CampaignWidget", attr: "campaign"},
+            {kind: "XV.DateWidget", attr: "createdDate"},
+            {kind: "XV.DateWidget", attr: "expirationDate"},
+            {kind: "XV.InputWidget", attr: "source"},
+            {kind: "XV.InputWidget", attr: "ipAddress"},
+            {kind: "XV.CheckboxWidget", attr: "isFreeTrial"}
           ]}
         ]},
         {kind: "XV.Groupbox", name: "extensionPanel", classes: "xv-assignment-box",
@@ -203,7 +241,7 @@ trailing:true white:true*/
           // not a new organization, but some updates to extensions. Run maintenance
           // on the extensions that have just been added
           newExtensionIds = _.map(newExtensions, function (ext) {
-            return ext.get("extension").get("id");
+            return ext.get("extension").id;
           });
           model.runMaintenance(newExtensionIds);
         }

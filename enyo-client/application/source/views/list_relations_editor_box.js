@@ -118,12 +118,10 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.TaxRegistrationBox",
     kind: "XV.ListRelationsEditorBox",
-    classes: "xv-short-relations-box",
     title: "_taxRegistration".loc(),
     editor: "XV.TaxRegistrationEditor",
     parentKey: "customer",
-    listRelations: "XV.TaxRegistrationListRelations",
-    fitButtons: false
+    listRelations: "XV.TaxRegistrationListRelations"
   });
 
   // ..........................................................
@@ -174,53 +172,285 @@ trailing:true white:true*/
   });
 
   // ..........................................................
-  // QUOTE LINE ITEMS
+  // LINE ITEMS
   //
-  enyo.kind({
-    name: "XV.QuoteLineItemEditor",
-    kind: "XV.RelationsEditor",
-    events: {
-      onChildWorkspace: ""
+
+  /**
+    This is the parent LineItem Mixin for both the Quote and SalesOrder.
+  */
+  XV.LineMixin = {
+    /**
+     When the model changes, check the priceMode field to see if it is in
+       Discount or Markup mode and change the label accordingly.
+    */
+    attributesChanged: function (model, options) {
+      XV.EditorMixin.attributesChanged.apply(this, arguments);
+      var pm = model.get("priceMode");
+      if (this.$.discount) {
+        if (pm === "N" || pm === "D" || pm === "P") { // discount
+          this.$.discount.setLabel("_discount".loc());
+        } else { // markup
+          this.$.discount.setLabel("_markup".loc());
+        }
+      }
     },
+    changeItemSiteParameter: function (attr, param, isParent) {
+      param = param ? param : attr;
+      isParent = _.isBoolean(isParent) ? isParent : true;
+      var model = this.getValue(),
+       parent = model ? model.getParent() : false,
+       value = isParent && parent ? parent.get(attr) :
+         (model ? model.get(attr) : false);
+      if (value) {
+        this.$.itemSiteWidget.addParameter({
+          attribute: param,
+          value: value
+        });
+      } else {
+        this.$.itemSiteWidget.removeParameter(param);
+      }
+    },
+    shiptoChanged: function () {
+      this.changeItemSiteParameter("shipto");
+    },
+    scheduleDateChanged: function () {
+      this.changeItemSiteParameter("scheduleDate", "effectiveDate", false);
+    },
+    valueChanged: function () {
+      this.inherited(arguments);
+      var model = this.getValue(),
+        sellingUnits = model ? model.sellingUnits : false;
+      if (sellingUnits) {
+        this.$.quantityUnitPicker.setCollection(sellingUnits);
+        this.$.priceUnitPicker.setCollection(sellingUnits);
+      }
+    }
+  };
+
+  /**
+    Mixin for Quote Specific Line functions
+  */
+  XV.QuoteLineMixin = {
+    create: function () {
+      this.inherited(arguments);
+      this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
+
+      // Loop through the components and set the specific attribute information for the Money widgets
+      this.getComponents().forEach(function (e) {
+        if (e.kind === "XV.MoneyWidget") {
+          e.attr.currency = "quote.currency";
+          if (e.getEffective()) {
+            e.setEffective("quote.quoteDate");
+          }
+        }
+      });
+    },
+    quoteDateChanged: function () {
+      this.changeItemSiteParameter("quoteDate", "effectiveDate");
+    },
+    setValue: function (value) {
+      var parent,
+       site,
+       effectivePolicy = XT.session.settings.get("soPriceEffective");
+      // Remove any old bindings
+      if (this.value) {
+        parent = value.getParent();
+        parent.off("change:shipto", this.shiptoChanged, this);
+        parent.off("change:quoteDate", this.quoteDateChanged, this);
+        this.value.off("change:scheduleDate", this.scheduleDateChanged, this);
+      }
+      XV.EditorMixin.setValue.apply(this, arguments);
+      // Add new bindings
+      if (this.value) {
+        parent = value.getParent();
+        parent.on("change:shipto", this.shiptoChanged, this);
+        if (effectivePolicy === "OrderDate") {
+          parent.on("change:quoteDate", this.quoteDateChanged, this);
+          this.changeItemSiteParameter("quoteDate", "effectiveDate");
+        } else if (effectivePolicy === "ScheduleDate") {
+          this.value.on("change:scheduleDate", this.scheduleDateChanged, this);
+          this.changeItemSiteParameter("scheduleDate", "effectiveDate");
+        }
+        site = parent ? parent.get("site") : false;
+        if (site) { this.$.itemSiteWidget.setSelectedSite(site); }
+      }
+      this.changeItemSiteParameter("customer");
+      this.changeItemSiteParameter("shipto");
+    }
+  };
+
+  /**
+    Mixin for Sales Order Specific Line functions
+  */
+  XV.SalesOrderLineMixin = {
+    create: function () {
+      this.inherited(arguments);
+      this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
+
+      // Loop through the components and set the specific attribute information for the Money widgets
+      this.getComponents().forEach(function (e) {
+        if (e.kind === "XV.MoneyWidget") {
+          e.attr.currency = "quote.currency";
+          if (e.getEffective()) {
+            e.setEffective("quote.quoteDate");
+          }
+        }
+      });
+    },
+    salesOrderDateChanged: function () {
+      this.changeItemSiteParameter("orderDate", "effectiveDate");
+    },
+    setValue: function (value) {
+      var parent, site, effectivePolicy = XT.session.settings.get("soPriceEffective");
+           // Remove any old bindings
+      if (this.value) {
+        parent = value.getParent();
+        parent.off("change:shipto", this.shiptoChanged, this);
+        parent.off("change:orderDate", this.salesOrderDateChanged, this);
+        this.value.off("change:scheduleDate", this.scheduleDateChanged, this);
+      }
+      XV.EditorMixin.setValue.apply(this, arguments);
+      // Add new bindings
+      if (this.value) {
+        parent = value.getParent();
+        parent.on("change:shipto", this.shiptoChanged, this);
+        if (effectivePolicy === "OrderDate") {
+          parent.on("change:orderDate", this.salesOrderDateChanged, this);
+          this.changeItemSiteParameter("orderDate", "effectiveDate");
+        } else if (effectivePolicy === "ScheduleDate") {
+          this.value.on("change:scheduleDate", this.scheduleDateChanged, this);
+          this.changeItemSiteParameter("scheduleDate", "effectiveDate");
+        }
+        site = parent ? parent.get("site") : false;
+        if (site) {
+          this.$.itemSiteWidget.setSelectedSite(site);
+        }
+      }
+      this.changeItemSiteParameter("customer");
+      this.changeItemSiteParameter("shipto");
+    }
+  };
+
+   /**
+     This is the parent line editor. It mixes in the base line functionality
+     for both
+   */
+  var lineEditor = {
+    kind: "XV.RelationsEditor",
     components: [
       {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
         classes: "in-panel", components: [
-        {kind: "XV.InputWidget", attr: "lineNumber"},
-        {kind: "XV.ItemWidget", attr: "item"},
-        {kind: "XV.SitePicker", attr: "site"},
-        {kind: "XV.InputWidget", attr: "customerPartNumber"},
-        {kind: "XV.NumberWidget", attr: "quantity"},
-        {kind: "XV.UnitWidget", attr: "quantityUnit"},
-        {kind: "XV.NumberWidget", attr: "quantityShip"},
-        {kind: "XV.PercentWidget", attr: "discount"},
-        {kind: "XV.MoneyWidget", attr: {amount: "unitCost", currency: "currency"},
-          label: "_unitPrice".loc(), currencyDisabled: true},
-        {kind: "XV.UnitWidget", attr: "priceUnit"},
-        {kind: "XV.NumberWidget", attr: "extended", label: "_extendedPrice".loc()},
+        {kind: "XV.NumberWidget", attr: "lineNumber"},
+        {kind: "XV.ItemSiteWidget", attr: "itemSite",
+          name: "itemSiteWidget",
+          query: {parameters: [
+          {attribute: "item.isSold", value: true},
+          {attribute: "item.isActive", value: true},
+          {attribute: "isSold", value: true},
+          {attribute: "isActive", value: true}
+        ]}},
+        {kind: "XV.QuantityWidget", attr: "quantity"},
+        {kind: "XV.UnitPicker", attr: "quantityUnit",
+          name: "quantityUnitPicker"},
+        {kind: "XV.PercentWidget", name: "discount", attr: "discount",
+          label: "_discount".loc()},
+        {kind: "XV.MoneyWidget", attr:
+          {localValue: "price", currency: ""},
+          label: "_price".loc(), currencyDisabled: true,
+          effective: "quote.quoteDate", scale: XT.SALES_PRICE_SCALE},
+        {kind: "XV.UnitPicker", attr: "priceUnit",
+          name: "priceUnitPicker"},
+        {kind: "XV.MoneyWidget", attr:
+          {localValue: "extendedPrice", currency: ""},
+          label: "_extendedPrice".loc(), currencyDisabled: true,
+          effective: "quote.quoteDate", scale: XT.EXTENDED_PRICE_SCALE},
         {kind: "XV.DateWidget", attr: "scheduleDate"},
-        {kind: "XV.DateWidget", attr: "promiseDate"},
+        {kind: "XV.DateWidget", name: "promiseDate", attr: "promiseDate",
+          showing: false},
         {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
-        {kind: "XV.TextArea", attr: "memo", fit: true},
-        {kind: "onyx.GroupboxHeader", content: "_advanced".loc()},
-        {kind: "onyx.Button", ontap: "launchWorkspace", content: "_advanced".loc()}
+        {kind: "XV.TextArea", attr: "notes", fit: true}
       ]}
-    ],
-    launchWorkspace: function (inSender, inEvent) {
-      var id = this.getValue().id;
-      this.doChildWorkspace({workspace: "XV.QuoteLineWorkspace", id: id});
-      return true;
-    }
-  });
+    ]
+  };
+  enyo.mixin(lineEditor, XV.LineMixin);
+
+  var quoteLineEditor = {name: "XV.QuoteLineItemEditor"};
+  enyo.mixin(quoteLineEditor, lineEditor);
+  enyo.mixin(quoteLineEditor, XV.QuoteLineMixin);
+  enyo.kind(quoteLineEditor);
+
+  var salesOrderLineEditor = {name: "XV.SalesOrderLineItemEditor"};
+  enyo.mixin(salesOrderLineEditor, lineEditor);
+  enyo.mixin(salesOrderLineEditor, XV.SalesOrderLineMixin);
+  enyo.kind(salesOrderLineEditor);
 
   enyo.kind({
     name: "XV.QuoteLineItemBox",
     kind: "XV.ListRelationsEditorBox",
     classes: "xv-list-relations-box",
+    events: {
+      onChildWorkspace: ""
+    },
     title: "_lineItems".loc(),
     editor: "XV.QuoteLineItemEditor",
     parentKey: "quote",
     listRelations: "XV.QuoteLineItemListRelations",
-    fitButtons: false
+    fitButtons: false,
+
+    create: function () {
+      this.inherited(arguments);
+      this.createComponent({
+        kind: "onyx.Button",
+        content: "_expand".loc(),
+        name: "expandButton",
+        ontap: "launchWorkspace",
+        classes: "xv-groupbox-button-right",
+        container: this.$.navigationButtonPanel
+      });
+    },
+
+    disabledChanged: function () {
+      this.inherited(arguments);
+      this.$.expandButton.setDisabled(this.getDisabled());
+    },
+    /**
+    Set the current model into the List Relation and the Summary Editor Panel
+    */
+    valueChanged: function () {
+      this.inherited(arguments);
+      // change the styling of the last button to make room for the new button
+      this.$.doneButton.setClasses("xv-groupbox-button-center");
+    },
+
+    launchWorkspace: function (inSender, inEvent) {
+      var index = Number(this.$.list.getFirstSelected());
+      this.doChildWorkspace({
+        workspace: "XV.QuoteLineWorkspace",
+        collection: this.getValue(),
+        index: index,
+        listRelations: this.$.list
+      });
+      return true;
+    }
+  });
+
+  enyo.kind({
+    name: "XV.SalesOrderLineItemBox",
+    kind: "XV.QuoteLineItemBox",
+    editor: "XV.SalesOrderLineItemEditor",
+    parentKey: "salesOrder",
+    listRelations: "XV.SalesOrderLineItemListRelations",
+
+    launchWorkspace: function (inSender, inEvent) {
+      var index = Number(this.$.list.getFirstSelected());
+      this.doChildWorkspace({
+        workspace: "XV.SalesOrderLineWorkspace",
+        collection: this.getValue(),
+        index: index,
+        listRelations: this.$.list
+      });
+      return true;
+    }
   });
 
 }());

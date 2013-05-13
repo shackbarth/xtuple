@@ -4,10 +4,10 @@ enyo.depends(
   "../lib/backbone-x",
   "../lib/enyo-x",
   "en",
+  "ext",
   "models",
   "widgets",
   "views",
   "startup.js",
-  "app.js",
-  "ext"
+  "app.js"
 );

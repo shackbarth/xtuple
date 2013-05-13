@@ -1,18 +1,18 @@
 select xt.install_js('XM','Model','xtuple', $$
-  /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
+  /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple.
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
   XM.Model = {};
-  
+
   XM.Model.isDispatchable = true;
 
-  /** 
-    Pass in a record type and get the next id for that type 
+  /**
+    Pass in a record type and get the next id for that type
 
     @param {String} record type
     @returns Number
   */
-  XM.Model.fetchId = function(recordType) { 
+  XM.Model.fetchId = function(recordType) {
     var nameSpace = recordType.beforeDot(),
         type = recordType.afterDot(),
         map = XT.Orm.fetch(nameSpace, type),
@@ -23,7 +23,7 @@ select xt.install_js('XM','Model','xtuple', $$
   }
 
   /**
-    Pass in a record type and get the next id for that type 
+    Pass in a record type and get the next id for that type
 
     @param {String} record type
     @returns Number
@@ -35,13 +35,49 @@ select xt.install_js('XM','Model','xtuple', $$
         seq = map.orderSequence,
         sql = 'select fetchNextNumber($1) as result';
 
-    return seq ? plv8.execute(sql, [seq])[0].result : false;
+    /**  if the order sequence name in orderseq is not found in the ORM
+      throw an error */
+    if (seq) {
+      return plv8.execute(sql, [seq])[0].result;
+    } else {
+      plv8.elog(ERROR, "orderSequence is not defined in the ORM");
+    }
   },
 
   /**
-    Renew a record lock. Defaults to renewal of 30 seconds.
+    Obtain a pessemistic record lock. Defaults to timeout of 30 seconds.
 
-    @param {Number} key
+    @param {String} Namespace
+    @param {String} Type
+    @param {String|Number} Id
+    @param {String} etag
+    @param {Object} Options: timeout
+  */
+  XM.Model.obtainLock = function (nameSpace, type, id, etag, options) {
+    var orm = XT.Orm.fetch(nameSpace, type),
+       data = Object.create(XT.Data),
+       lockTable = orm.lockTable || orm.table,
+       pkey = XT.Orm.primaryKey(orm),
+       nkey = XT.Orm.naturalKey(orm),
+       rec,
+       pid;
+
+    /* if the model uses a natural key, get the primary key value */
+    rec = data.retrieveRecord({
+      nameSpace: nameSpace,
+      type: type,
+      id: id
+    });
+    pid = nkey ? data.getId(orm, id) : id;
+    if (!rec || !rec.data) { throw "Record for requested lock not found." }
+    if (rec.etag !== etag) { return false; }
+    return data.tryLock(lockTable, pid);
+  }
+
+  /**
+    Renew a record lock. Defaults to timeout of 30 seconds.
+
+    @param {Number} Key
     @param {Object} Options: timeout
   */
   XM.Model.renewLock = function (key, options) {
@@ -58,7 +94,7 @@ select xt.install_js('XM','Model','xtuple', $$
   }
 
   /**
-    Release a number back into the sequence pool for a given type. 
+    Release a number back into the sequence pool for a given type.
 
     @param {String} record type
     @param {Number} number
@@ -87,16 +123,20 @@ select xt.install_js('XM','Model','xtuple', $$
         type = recordType.afterDot(),
         map = XT.Orm.fetch(nameSpace, type),
         table = recordType.decamelize(),
-        pKey = XT.Orm.primaryKey(map),
-        sql = 'select "{primaryKey}" as id from {table} where "{userKey}"::text=$1::text and "{primaryKey}" != $2'
-              .replace(/{primaryKey}/g, pKey)
+        okey = XT.Orm.naturalKey(map) || XT.Orm.primaryKey(map),
+        sql = 'select "{key}" as id from {table} where "{userKey}"::text=$1::text'
+              .replace(/{key}/, okey)
               .replace(/{table}/, table)
-              .replace(/{userKey}/, key)
-              .replace(/{value}/, value)
-              .replace(/{id}/, id),
+              .replace(/{userKey}/, key),
         result;
-        if (DEBUG) { plv8.elog(NOTICE, sql); }
-        result = plv8.execute(sql, [value, id])[0];
+        if (id) {
+          sql += " and " + okey + " != $2";
+          if (DEBUG) { plv8.elog(NOTICE, sql); }
+          result = plv8.execute(sql, [value, id])[0];
+        } else {
+          if (DEBUG) { plv8.elog(NOTICE, sql); }
+          result = plv8.execute(sql, [value])[0];
+        }
 
     return result ? result.id : 0;
   }
@@ -108,6 +148,8 @@ select xt.install_js('XM','Model','xtuple', $$
     var nameSpace = recordType.beforeDot(),
       type = recordType.afterDot(),
       map = XT.Orm.fetch(nameSpace, type),
+      data = Object.create(XT.Data),
+      nkey = XT.Orm.naturalKey(map),
       tableName = map.table,
       tableSuffix = tableName.indexOf('.') ? tableName.afterDot() : tableName,
       sql,
@@ -117,11 +159,13 @@ select xt.install_js('XM','Model','xtuple', $$
       attr,
       seq,
       tableName;
-      
+
+   if (nkey) { id = data.getId(map, id); }
+
     /* Determine where this record is used by analyzing foreign key linkages */
     sql = "select pg_namespace.nspname AS schemaname, " +
           "con.relname AS tablename, " +
-          "conkey AS seq, " + 
+          "conkey AS seq, " +
           "conrelid AS class_id " +
           "from pg_constraint, pg_class f, pg_class con, pg_namespace " +
           "where confrelid=f.oid " +
@@ -133,7 +177,7 @@ select xt.install_js('XM','Model','xtuple', $$
     for (i = 0; i < fkeys.length; i++) {
       /* Validate */
 
-      sql = "select attname " + 
+      sql = "select attname " +
             "from pg_attribute, pg_class " +
             "where ((attrelid=pg_class.oid) " +
             " and (pg_class.oid = $1) " +
@@ -153,6 +197,6 @@ select xt.install_js('XM','Model','xtuple', $$
 
     return false
   }
-  
+
 $$ );
 

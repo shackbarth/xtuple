@@ -5,13 +5,14 @@ white:true*/
 setTimeout:true, clearTimeout: true, exports: true */
 
 var _ = require("underscore"),
+  zombieAuth = require("./zombie_auth"),
   assert = require("assert");
 
 (function () {
   "use strict";
 
   exports.waitTime = 10000;
-  
+
   /**
     Creates a working model and automatically checks state
     is `READY_NEW` and a valid `id` immediately afterward.
@@ -23,7 +24,7 @@ var _ = require("underscore"),
     @param {Object} Data
     @param {Object} Vows
   */
-  exports.create = function (data, vows) {
+  var create = exports.create = function (data, vows) {
     vows = vows || {};
     var context = {
       topic: function () {
@@ -34,7 +35,7 @@ var _ = require("underscore"),
           callback = function (model, value) {
             if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
               // Check that the AUTO...NUMBER property has been set.
-              if (model.get(model.documentKey) && model.id) {
+              if (model.get(model.documentKey)) {
                 clearTimeout(timeoutId);
                 model.off('change:' + model.documentKey, callback);
                 model.off('change:id', callback);
@@ -42,12 +43,10 @@ var _ = require("underscore"),
               }
             } else {
               clearTimeout(timeoutId);
-              model.off('change:id', callback);
               that.callback(null, data);
             }
           };
 
-        model.on('change:id', callback);
         // Add an event handler when using a model with an AUTO...NUMBER.
         if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
           model.on('change:' + model.documentKey, callback);
@@ -59,12 +58,14 @@ var _ = require("underscore"),
           console.log("timeout was reached");
           that.callback(null, data);
         }, exports.waitTime);
+        
+        callback(model);
       },
-      'Status is `READY_NEW`': function (data) {
+      'Status is `READY_NEW`': function (error, data) {
         assert.equal(data.model.getStatusString(), 'READY_NEW');
       },
-      'ID is valid': function (data) {
-        assert.isNumber(data.model.id);
+      'ID is valid': function (error, data) {
+        assert.isNotNull(data.model.id);
       }
     };
 
@@ -80,7 +81,7 @@ var _ = require("underscore"),
     @param {Object} Data
     @param {Object} Vows
   */
-  exports.save = function (data, vows) {
+  var save = exports.save = function (data, vows) {
     vows = vows || {};
     var context = {
       topic: function () {
@@ -97,7 +98,11 @@ var _ = require("underscore"),
             }
           };
         model.on('statusChange', callback);
-        model.save();
+        model.save(null, {
+          error: function (model, error, options) {
+            that.callback(JSON.stringify(error));
+          }
+        });
 
         // If we don't hear back, keep going
         timeoutId = setTimeout(function () {
@@ -105,8 +110,32 @@ var _ = require("underscore"),
           that.callback(null, data);
         }, exports.waitTime);
       },
-      'Status is `READY_CLEAN`': function (data) {
+      'Save was successful': function (error, data) {
+        assert.equal(error, null);
         assert.equal(data.model.getStatusString(), 'READY_CLEAN');
+      },
+      'And the values are as we set them': function (error, data) {
+        if (!data.autoTestAttributes) {
+          return;
+        }
+        var hashToTest = data.updated ? _.extend(data.createHash, data.updateHash) : data.createHash;
+        _.each(hashToTest, function (value, key) {
+          // depending on how we represent sub-objects, we want to verify them in different ways
+          if (typeof (data.model.get(key)) === 'object' && typeof value === 'object') {
+            // if the data is a model and the test hash looks like {contact: {id: 7}}
+            assert.equal(data.model.get(key).id, value.id);
+          } else if (key === data.model.documentKey &&
+              data.model.enforceUpperKey === true) {
+              // this is the document key, so it should have been made upper case
+            assert.equal(data.model.get(key), value.toUpperCase());
+          } else if (typeof (data.model.get(key)) === 'object' && typeof value === 'number') {
+            // if the data is a model and the test hash looks like {contact: 7}
+            assert.equal(data.model.get(key).id, value);
+          } else {
+            // default case, such as comparing strings to strings etc.
+            assert.equal(data.model.get(key), value);
+          }
+        });
       }
     };
 
@@ -121,10 +150,11 @@ var _ = require("underscore"),
     @param {Object} Data
     @param {Object} Vows
   */
-  exports.update = function (data, vows) {
+  var update = exports.update = function (data, vows) {
     vows = vows || {};
     var context = {
       topic: function () {
+        data.updated = true;
         return data;
       },
       'Status is `READY_CLEAN`': function (data) {
@@ -144,7 +174,7 @@ var _ = require("underscore"),
     @param {Data}
     @param {Object} Vows
   */
-  exports.destroy = function (data, vows) {
+  var destroy = exports.destroy = function (data, vows) {
     vows = vows || {};
     var context = {
       topic: function () {
@@ -158,6 +188,8 @@ var _ = require("underscore"),
               clearTimeout(timeoutId);
               model.off('statusChange', callback);
               that.callback(null, data);
+            } else if (status === K.ERROR) {
+              that.callback(data.model.lastError || "Unspecified error");
             }
           };
         model.on('statusChange', callback);
@@ -169,7 +201,8 @@ var _ = require("underscore"),
           that.callback(null, data);
         }, exports.waitTime);
       },
-      'Status is `DESTROYED_CLEAN`': function (data) {
+      'Status is `DESTROYED_CLEAN`': function (error, data) {
+        assert.equal(error, null);
         assert.equal(data.model.getStatusString(), 'DESTROYED_CLEAN');
       }
     };
@@ -177,5 +210,97 @@ var _ = require("underscore"),
     _.extend(context, vows);
     return context;
   };
-  
+
+  /**
+    String all CRUD tests together so that simple models can be
+    tested with a single function
+   */
+  var runAllCrud = exports.runAllCrud = function (data) {
+    var context = {
+      topic: function () {
+        var that = this,
+          callback = function () {
+            data.model = new XM[data.recordType.substring(3)]();
+            that.callback(null, data);
+          };
+        zombieAuth.loadApp({callback: callback, verbose: false});
+      },
+      'Verify the record type is correct': function (data) {
+        assert.equal(data.model.recordType, data.recordType);
+      },
+      'We can create a model ': create(data, {
+        '-> Set values to the model': {
+          topic: function (data) {
+            // allow the test to use a shorthand mock for these submodels, and
+            // flesh them out here. This is very very clever.
+
+            var that = this,
+              objectsToFetch = 0,
+              objectsFetched = 0,
+              fetchSuccess = function (model, response, options) {
+                // swap in this model for the mock
+                data.model.set(options.key, model, {silent: true});
+                objectsFetched++;
+                if (objectsFetched === objectsToFetch) {
+                  that.callback(null, data);
+                }
+              },
+              fetchError = function () {
+                console.log("Error fleshing out mock models", JSON.stringify(arguments));
+                // proceed anyway.
+                objectsFetched++;
+                if (objectsFetched === objectsToFetch) {
+                  that.callback(null, data);
+                }
+              };
+            _.each(data.createHash, function (value, key) {
+              if (typeof value === 'object') {
+                var fetchObject = {
+                    success: fetchSuccess,
+                    error: fetchError,
+                    key: key
+                  },
+                  relatedModel,
+                  relatedModelName = _.find(data.model.relations, function (relation) {
+                    return relation.key === key;
+                  }).relatedModel;
+
+                relatedModel = new XM[relatedModelName.substring(3)]();
+                fetchObject[relatedModel.idAttribute] = value.id;
+                relatedModel.fetch(fetchObject);
+                objectsToFetch++;
+              }
+            });
+            // if there are no models to substitute we won't be doing this whole callback
+            // rigamorole.
+            if (objectsToFetch === 0) {
+              data.model.set(data.createHash);
+              return data;
+            }
+          },
+          // create vows
+          'Verify the last error is null': function (data) {
+            assert.isNull(data.model.lastError);
+          },
+          '-> Save the model': save(data, {
+            'We can update the model ': update(data, {
+              '-> Set values': {
+                topic: function () {
+                  data.model.set(data.updateHash);
+                  return data;
+                },
+                '-> Commit to the model': save(data, {
+                  'destroy': destroy(data)
+                })
+              }
+            })
+          })
+        }
+      })
+    };
+    return context;
+  };
+
+
+
 }());

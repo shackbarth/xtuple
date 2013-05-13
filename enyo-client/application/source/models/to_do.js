@@ -70,6 +70,16 @@ white:true*/
     // ..........................................................
     // METHODS
     //
+    
+    bindEvents: function () {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
+      this.on('change:startDate change:completeDate', this.toDoStatusDidChange);
+      this.on('change:status', this.toDoDidChange);
+      this.on('changeStatus', this.toDoDidChange);
+
+      // Bind document assignments
+      this.bindDocuments();
+    },
 
     /**
       This is the source of data for the user three-way status interface where
@@ -82,16 +92,6 @@ white:true*/
       return this._status || K.NEITHER;
     },
 
-    initialize: function () {
-      XM.Model.prototype.initialize.apply(this, arguments);
-      this.on('change:startDate change:completeDate', this.toDoStatusDidChange);
-      this.on('change:status', this.toDoDidChange);
-      this.on('changeStatus', this.toDoDidChange);
-
-      // Bind document assignments
-      this.bindDocuments();
-    },
-
     toDoDidChange: function () {
       this.setToDoStatusProxy(this.get('status'));
     },
@@ -101,13 +101,11 @@ white:true*/
       which can be one of five options.
     */
     toDoStatusDidChange: function (model, value, options) {
-      var status = this.getStatus(),
-        proxy = this.getToDoStatusProxy(),
+      var proxy = this.getToDoStatusProxy(),
         startDate = this.get('startDate'),
         completeDate = this.get('completeDate'),
         K = XM.ToDo,
         attrStatus = K.NEITHER;
-      if ((options && options.force) || !(status & XM.Model.READY)) { return; }
 
       // Set the `status` attribute with appropriate value
       if (completeDate) {

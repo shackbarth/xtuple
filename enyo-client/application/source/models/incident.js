@@ -154,13 +154,12 @@ white:true*/
 
     numberPolicy: XM.Document.AUTO_NUMBER,
 
-    keyIsString: false,
-
     defaults: function () {
       return {
         owner: XM.currentUser,
         status: XM.Incident.NEW,
-        isPublic: XT.session.getSettings().get("IncidentPublicDefault")
+        isPublic: XT.session.getSettings().get("IncidentPublicDefault"),
+        created: new Date()
       };
     },
 
@@ -168,6 +167,7 @@ white:true*/
       "account",
       "category",
       "contact",
+      "created",
       "description",
       "status"
     ],
@@ -176,24 +176,21 @@ white:true*/
     // METHODS
     //
 
-    initialize: function () {
-      XM.Document.prototype.initialize.apply(this, arguments);
+    bindEvents: function () {
+      XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on('change:assignedTo', this.assignedToDidChange);
     },
 
     assignedToDidChange: function (model, value, options) {
-      var status = this.getStatus(),
-        I = XM.Incident,
-        K = XM.Model;
-      if ((options && options.force) || !(status & K.READY)) { return; }
-      if (value) { this.set('status', I.ASSIGNED); }
+      if (value) { this.set('status', XM.Incident.ASSIGNED); }
     },
 
-    validateSave: function () {
+    validate: function () {
       var K = XM.Incident;
       if (this.get('status') === K.ASSIGNED && !this.get('assignedTo')) {
         return XT.Error.clone('xt2001');
       }
+      return XM.Document.prototype.validate.apply(this, arguments);
     },
 
     save: function (key, value, options) {

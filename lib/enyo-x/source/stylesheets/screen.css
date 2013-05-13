@@ -1,11 +1,12 @@
-/* LESS version of screen.scss file previously in client 
+/* LESS version of screen.scss file previously in client
 
-	To compile to .css: lessc screen.less > ../stylesheets/screen.css
-	Use -compress for a compressed .css with no comments
+  To compile to .css:
+  lessc screen.less > ../stylesheets/screen.css
+  Use -compress for a compressed .css with no comments
 
 */
 /*
-	These variables will show in css as their hex values
+  These variables will show in css as their hex values
 */
 /* Helper classes for css3 */
 .clearfix {
@@ -37,6 +38,7 @@
 }
 body {
   font-family: "arial", "arial black";
+  font-size: 100%;
 }
 .bggrad {
   /* Radial Gradient */
@@ -207,6 +209,9 @@ body {
   padding-left: 10px;
   float: right;
 }
+.xv-version-label {
+  padding: 10px;
+}
 /* Pullout */
 .slim-datewidget($labelVisibility, $pickerVisibility: visible) .xv-input-decorator {
   padding: 0;
@@ -223,9 +228,9 @@ body {
   width: 90px;
   vertical-align: top;
 }
-/* 
-	Media query for responsive design. This adapts to smaller
-	displays.
+/*
+  Media query for responsive design. This adapts to smaller
+  displays.
 */
 @media (max-width: 480px) {
   .pullout-menu {
@@ -249,13 +254,18 @@ body {
   width: 320px;
   background: #dddddd;
 }
+.pullout .xv-groupbox {
+  min-width: 300px;
+  padding: 8px 0 8px 5px;
+  margin: 0;
+}
 .pullout-shadow {
   position: absolute;
   height: 100%;
   width: 20px;
   right: -20px;
   /** this is weird and indicates the REAL need to change the
-	    whatever the css system is...this relative path is different... **/
+      whatever the css system is...this relative path is different... **/
 
   background: url("../../assets/sliding-shadow.png") repeat-y;
   background-size: 20px 2px;
@@ -285,8 +295,18 @@ body {
   padding-top: 4px;
   text-align: center;
 }
+#app_pullout_container,
+#app_pullout_help,
+#app_pullout_help_helpPage {
+  height: 100%;
+}
+#app_pullout_help_helpPage {
+  border: none;
+  height: 100%;
+  width: 100%;
+}
 /*
-	XV Views
+  XV Views
 */
 /* List */
 .xv-list {
@@ -313,19 +333,22 @@ body {
   color: #8d8d8d;
 }
 .xv-list .xv-list-item .xv-list-column.short {
-  width: 150px;
+  width: 9em;
 }
 .xv-list .xv-list-item .xv-list-column.first {
-  width: 300px;
+  width: 19em;
 }
 .xv-list .xv-list-item .xv-list-column.second {
-  width: 165px;
+  width: 10em;
 }
 .xv-list .xv-list-item .xv-list-column.third {
-  width: 75px;
+  width: 4.5em;
 }
 .xv-list .xv-list-item .xv-list-column.money {
-  width: 85px;
+  width: 5em;
+}
+.xv-list .xv-list-item .xv-list-column.descr {
+  width: 15.56em;
 }
 .xv-list .xv-list-item.item-selected {
   background: #226b9a url(../../assets/item-hilite.png) repeat-x bottom;
@@ -361,14 +384,14 @@ body {
   display: inline-block;
   vertical-align: middle;
 }
-.xv-list-delete-button {
+.xv-list-gear-icon-button {
   float: right;
   display: none;
   margin-top: -4px;
 }
 .xv-list-attr {
   padding: 5px;
-  font-size: 13px;
+  font-size: .8em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -378,7 +401,7 @@ body {
 .xv-list-attr.header {
   padding: 4px;
   background: #8d8d8d;
-  font-size: 11px;
+  font-size: .7em;
   font-weight: bold;
   text-transform: uppercase;
   color: #ffffff;
@@ -514,7 +537,7 @@ body {
   overflow: hidden;
 }
 .xv-comment-box .xv-comment-box-textblock.disabled {
-  opacity: 0.6;
+  color: #696969;
 }
 .xv-comment-box blockquote {
   margin: 0 15px 10px 15px;
@@ -538,8 +561,12 @@ body {
 .xv-groupbox.panel {
   min-width: 330px;
 }
-.xv-groupbox .onyx-input-decorator > input {
-  width: 80%;
+.xv-groupbox .onyx-input-decorator {
+  border: 0;
+}
+.xv-groupbox .xv-relationwidget input,
+.xv-groupbox .xv-datewidget input {
+  width: 75%;
 }
 .xv-groupbox.in-panel > *:first-child {
   border-top-color: #aaaaaa;
@@ -617,11 +644,6 @@ body {
 
   background: #555555 url(../../images/gradient.png) repeat-x 0 10px;
 }
-.xv-groupbox .onyx-input-decorator {
-  /* This resets the border for this element */
-
-  border: 0;
-}
 .xv-groupbox > .onyx-input-decorator {
   border-color: #aaaaaa;
   border-width: 0 1px 1px 1px;
@@ -638,10 +660,17 @@ body {
   padding-bottom: 2px;
 }
 .xv-groupbox .xv-moneywidget .onyx-input-decorator {
-  width: 100px;
+  width: 120px;
+  padding: 6px 6px 8px 6px;
+}
+.xv-groupbox .xv-moneywidget .onyx-input-decorator input {
+  width: 100%;
+  text-align: right;
 }
 .xv-groupbox .xv-moneywidget .xv-picker {
-  width: 95px;
+  width: 65px;
+  text-align: center;
+  padding: 8px 10px;
 }
 .xv-groupbox > .onyx-input-decorator:first-child {
   border-width: 1px;
@@ -728,9 +757,8 @@ body {
   border-bottom-right-radius: 4px;
 }
 /*
-	XV Widgets
+  XV Widgets
 */
-/* AddressWidget.scss */
 .xv-addresswidget {
   background-color: #ffffff;
   padding: 4px;
@@ -743,6 +771,9 @@ body {
 .xv-addresswidget .xv-addresswidget-viewer.placeholder {
   font-style: italic;
   color: #93a1a1;
+}
+.xv-addresswidget .xv-addresswidget-viewer.disabled {
+  color: #696969;
 }
 .xv-addresswidget-input-decorator {
   background: #ffffff;
@@ -775,6 +806,11 @@ body {
 .xv-addresswidget-buttons {
   margin-top: 4px;
 }
+.xv-button-section {
+  margin-top: 4px;
+  margin: 0;
+  background-color: #555555;
+}
 .xv-addresswidget-editor-header {
   padding: 4px;
 }
@@ -796,6 +832,9 @@ body {
   left: -200px;
   top: 15px;
 }
+.xv-completer-sidecar {
+  color: #93a1a1;
+}
 .xv-relationwidget-column.left {
   padding-right: 18px;
   color: #000;
@@ -816,7 +855,7 @@ body {
   max-width: 325px;
 }
 .xv-relationwidget-description.disabled {
-  opacity: 0.4;
+  color: #696969;
 }
 .xv-relationwidget-description.label {
   text-indent: 0;
@@ -839,7 +878,7 @@ body {
 }
 /* ListRelationsBox */
 .xv-list-relations-box.panel {
-  width: 675px;
+  width: 625px;
 }
 .xv-short-relations-box.panel {
   width: 500px;
@@ -863,6 +902,10 @@ body {
 .xv-combobox-icon {
   margin-left: 4px;
   display: inline-block;
+}
+.xv-combobox-note {
+  padding: 14px 3px 8px 3px;
+  text-align: left;
 }
 /* Picker */
 .onyx-picker .onyx-menu-item {
@@ -924,9 +967,38 @@ body {
   color: #696969;
 }
 .xv-button-bar .onyx-button {
+  /* TODO: center buttons, spacing in between (margin: auto on bar) */
+
   margin: 0 40px 0 40px;
 }
 /* This is for styling the moved items in the more toolbar*/
 .xv-toolbar-moved {
   width: 220px;
+}
+.xv-totals-panel {
+  padding: 0;
+  background-color: #ffffff;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.xv-totals-panel .onyx-input,
+.xv-totals-panel .onyx-button {
+  font-size: 13px;
+}
+.xv-totals-panel .xv-label,
+.xv-totals-panel .onyx-input-decorator {
+  padding: 3px;
+}
+.xv-totals-panel .xv-label,
+.xv-totals-panel .xv-picker-label {
+  width: 110px;
+}
+/* This is to style the base currency labels to look like the inputs */
+.xv-money-label {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
+}
+.xv-money-label .currency {
+  text-align: center;
 }

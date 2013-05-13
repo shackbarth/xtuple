@@ -37,6 +37,16 @@ var XVOWS = XVOWS || {};
           topic.setValue(4.6);
           assert.equal(topic.getValue(), 5);
         },
+        'rounding up to pennies': function (topic) {
+          topic.setScale(2);
+          topic.setValue(15.499);
+          assert.equal(topic.getValue(), 15.50);
+        },
+        'rounding down to pennies': function (topic) {
+          topic.setScale(2);
+          topic.setValue(15.494);
+          assert.equal(topic.getValue(), 15.49);
+        },
         'which ignores the empty string': function (topic) {
           topic.setValue('');
           assert.equal(topic.getValue(), null);
@@ -48,7 +58,16 @@ var XVOWS = XVOWS || {};
         'which accepts zero': function (topic) {
           topic.setValue(0);
           assert.equal(topic.getValue(), 0);
-        }
+        },
+        'divide by zero': function (topic){
+                topic.setValue(1/0);
+                assert.equal(topic.getValue(), Infinity);
+        },
+        'divide zero by zero': function (topic){
+                topic.setValue(0/0);
+                assert.isNaN(topic.getValue());
+    		}
+
         // TODO: this test fails and it's unclear if that's by design or not
         //'which accepts strings that look like numbers': function (topic) {
         //  topic.setValue('7');

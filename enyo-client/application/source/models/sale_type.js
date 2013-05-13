@@ -13,6 +13,8 @@ white:true*/
   */
   XM.SaleType = XM.Document.extend({
     /** @scope XM.SaleType.prototype */
+    
+    documentKey: 'code',
 
     recordType: 'XM.SaleType'
     
@@ -30,7 +32,7 @@ white:true*/
   XM.SaleTypeCollection = XM.Collection.extend({
     /** @scope XM.SaleTypeCollection.prototype */
 
-    model: XM.SaleTye
+    model: XM.SaleType
 
   });
 

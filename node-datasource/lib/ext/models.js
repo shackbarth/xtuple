@@ -9,9 +9,9 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
-  XM.DatabaseServer = XM.Model.extend({
+  XM.DatabaseServer = XM.SimpleModel.extend({
     /** @scope XM.DatabaseServer.prototype */
 
     recordType: 'XM.DatabaseServer',
@@ -27,9 +27,9 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
-  XM.Datasource = XM.Model.extend({
+  XM.Datasource = XM.SimpleModel.extend({
     /** @scope XM.Datasource.prototype */
 
     recordType: 'XM.Datasource',
@@ -45,9 +45,9 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
-  XM.Extension = XM.Model.extend({
+  XM.Extension = XM.SimpleModel.extend({
     /** @scope XM.Extension.prototype */
 
     recordType: 'XM.Extension',
@@ -59,9 +59,51 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
-  XM.Organization = XM.Model.extend({
+  XM.Oauth2client = XM.SimpleModel.extend({
+    /** @scope XM.Organization.prototype */
+
+    recordType: 'XM.Oauth2client',
+
+    databaseType: 'global'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.SimpleModel
+  */
+  XM.Oauth2clientRedirs = XM.SimpleModel.extend({
+    /** @scope XM.Organization.prototype */
+
+    recordType: 'XM.Oauth2clientRedirs',
+
+    databaseType: 'global'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.SimpleModel
+  */
+  XM.Oauth2token = XM.SimpleModel.extend({
+    /** @scope XM.Organization.prototype */
+
+    recordType: 'XM.Oauth2token',
+
+    databaseType: 'global'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.SimpleModel
+  */
+  XM.Organization = XM.SimpleModel.extend({
     /** @scope XM.Organization.prototype */
 
     recordType: 'XM.Organization',
@@ -77,9 +119,9 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
-  XM.OrganizationExtension = XM.Model.extend({
+  XM.OrganizationExtension = XM.SimpleModel.extend({
     /** @scope XM.OrganizationExtension.prototype */
 
     recordType: 'XM.OrganizationExtension',
@@ -92,9 +134,9 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
-  XM.Session = XM.Model.extend({
+  XM.Session = XM.SimpleModel.extend({
     /** @scope XM.Session.prototype */
 
     recordType: 'XM.Session',
@@ -110,9 +152,9 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
-  XM.SessionOrganization = XM.Model.extend({
+  XM.SessionOrganization = XM.SimpleModel.extend({
     /** @scope XM.SessionOrganization.prototype */
 
     recordType: 'XM.SessionOrganization',
@@ -124,9 +166,9 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
-  XM.SessionStore = XM.Model.extend({
+  XM.SessionStore = XM.SimpleModel.extend({
     /** @scope XM.SessionStore.prototype */
 
     recordType: 'XM.SessionStore',
@@ -142,9 +184,9 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
-  XM.User = XM.Model.extend({
+  XM.User = XM.SimpleModel.extend({
     /** @scope XM.User.prototype */
 
     recordType: 'XM.User',
@@ -158,9 +200,9 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
-  XM.UserOrganization = XM.Model.extend({
+  XM.UserOrganization = XM.SimpleModel.extend({
     /** @scope XM.UserOrganization.prototype */
 
     recordType: 'XM.UserOrganization',
@@ -172,9 +214,9 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
-  XM.GlobalPrivilege = XM.Model.extend(/** @lends XM.GlobalPrivilege.prototype */{
+  XM.GlobalPrivilege = XM.SimpleModel.extend(/** @lends XM.GlobalPrivilege.prototype */{
 
     recordType: 'XM.GlobalPrivilege',
 
@@ -185,9 +227,9 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
-  XM.UserGlobalPrivilegeAssignment = XM.Model.extend(/** @lends XM.UserGlobalPrivilegeAssignment.prototype */{
+  XM.UserGlobalPrivilegeAssignment = XM.SimpleModel.extend(/** @lends XM.UserGlobalPrivilegeAssignment.prototype */{
 
     recordType: 'XM.UserGlobalPrivilegeAssignment',
 
@@ -198,9 +240,9 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.SimpleModel
   */
-  XM.BiCache = XM.Model.extend(/** @lends XM.BiCache.prototype */{
+  XM.BiCache = XM.SimpleModel.extend(/** @lends XM.BiCache.prototype */{
 
     recordType: 'XM.BiCache',
 
@@ -236,6 +278,41 @@ white:true*/
     /** @scope XM.DatasourceCollection.prototype */
 
     model: XM.DatabaseServer
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.Oauth2clientCollection = XM.Collection.extend({
+    /** @scope XM.OrganizationCollection.prototype */
+
+    model: XM.Oauth2client
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.Oauth2clientRedirsCollection = XM.Collection.extend({
+    /** @scope XM.OrganizationCollection.prototype */
+
+    model: XM.Oauth2clientRedirs
+
+  });
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.Oauth2tokenCollection = XM.Collection.extend({
+    /** @scope XM.OrganizationCollection.prototype */
+
+    model: XM.Oauth2token
+
   });
 
   /**

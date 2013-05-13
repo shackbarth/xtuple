@@ -163,10 +163,15 @@ white:true*/
       "locale"
     ],
     
+    bindEvents: function () {
+      XM.Document.prototype.bindEvents.apply(this, arguments);
+      this.on('statusChange', this.statusChanged);
+      this.on('change:username', this.usernameChanged);
+      this.statusChanged();
+    },
+    
     documentKeyDidChange: function (model, value, options) {
-      var K = XM.Model,
-        that = this,
-        status = this.getStatus(),
+      var that = this,
         lower = this.get("username").toLowerCase();
       options = options || {};
 
@@ -174,8 +179,6 @@ white:true*/
         this.set("username", lower, options);
         return;
       }
-
-      if (options.force || !(status & K.READY)) { return; }
 
       // Check for conflicts
       if (this.checkConflicts && value && this.isDirty() && !this._number) {
@@ -194,13 +197,6 @@ white:true*/
     
     findExisting: function (key, value, options) {
       XM.Account.findExisting("number", value.toUpperCase(), options);
-    },
-
-    initialize: function (attributes, options) {
-      XM.Document.prototype.initialize.apply(this, arguments);
-      this.on('statusChange', this.statusChanged);
-      this.on('change:username', this.usernameChanged);
-      this.statusChanged();
     },
     
     usernameChanged: function () {

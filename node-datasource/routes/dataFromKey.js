@@ -12,26 +12,21 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.dataFromKey = function (req, res) {
 
     var dataKey = (req.query && req.query.dataKey) || -1,
-      tempDataModel = XM.BiCache.findOrCreate(dataKey) || new XM.BiCache({key: dataKey});
+      tempDataModel = new XM.BiCache({key: dataKey});
 
     tempDataModel.fetch({success: function (model, result) {
+      if (!model.get("data")) {
+        res.send({isError: true, message: "Data not found"});
+        return;
+      }
       res.setHeader("Content-Type", "application/json");
       res.send(JSON.stringify({
-        data: JSON.parse(model.get("data")),
+        data: JSON.parse(model.get("data")).data,
+        locale: JSON.parse(model.get("locale")),
+        schema: JSON.parse(model.get("schema")),
         query: JSON.parse(model.get("query"))
       }));
 
-      // this message will self-destruct in 1 second...
-      // TODO: makes more sense to sweep out old records. We'll have
-      // to do that anyway.
-      //model.destroy({
-      //  success: function () {
-      //    console.log("destroy success")
-      //  },
-      //  error: function () {
-      //    console.log("destroy error")
-      //  }
-      //});
     }, error: function (model, err) {
       console.log("error", model);
       if (err.code === 'xt1007') {

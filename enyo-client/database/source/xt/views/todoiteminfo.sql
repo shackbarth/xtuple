@@ -1,23 +1,10 @@
-drop view if exists xt.todoiteminfo cascade;
-
-create or replace view xt.todoiteminfo as 
-
-   select todoitem.*, coalesce(incdtpriority_order, 99999) as priority_order
-   from todoitem
-     left join incdtpriority on (todoitem_priority_id=incdtpriority_id);
-
-grant all on table xt.todoiteminfo to xtrole;
-
--- insert rules
-
-create or replace rule "_CREATE" as on insert to xt.todoiteminfo
-  do instead nothing;
-
-
-create or replace rule "_UPDATE" as on update to xt.todoiteminfo
-  do instead nothing;
-
-
-create or replace rule "_DELETE" as on delete to xt.todoiteminfo
-  do instead nothing;
-  
+select xt.create_view('xt.todoiteminfo', $$
+   select todoitem.*, coalesce(incdtpriority_order, 99999) as priority_order,  
+     crmacct_number, cntct_number, incdt_number, ophead_number
+   from todoitem  
+     left join incdtpriority on todoitem_priority_id=incdtpriority_id  
+     left join crmacct on crmacct_id = todoitem_crmacct_id  
+     left join cntct on cntct_id = todoitem_cntct_id
+     left join incdt on incdt_id = todoitem_incdt_id
+     left join ophead on ophead_id = todoitem_ophead_id
+$$);

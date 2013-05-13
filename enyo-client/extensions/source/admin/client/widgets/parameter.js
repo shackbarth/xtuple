@@ -6,6 +6,34 @@ trailing:true white:true*/
 (function () {
 
   // ..........................................................
+  // CAMPAIGN
+  //
+
+  enyo.kind({
+    name: "XV.CampaignParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_campaign".loc()},
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "description", label: "_description".loc(), attr: "description"}
+    ]
+  });
+
+  // ..........................................................
+  // DATABASE SERVER
+  //
+
+  enyo.kind({
+    name: "XV.DatabaseServerParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_databaseServer".loc()},
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "description", label: "_description".loc(), attr: "description"}
+    ]
+  });
+
+  // ..........................................................
   // ORGANIZATION
   //
 

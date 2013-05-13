@@ -1,37 +1,70 @@
 -- [ START ] initdb
 
 -- run core orm scripts
+\i delete_system_orms.sql;
+
 \cd ../../../lib/orm/source;
 \i init_script.sql;
 \cd ../../../enyo-client/database/source;
 
--- delete system orms
-\i drop_xm_views.sql;
-\i delete_system_orms.sql;
+select xt.js_init();
 
 -- [ END ] initdb
+\i delete_system_orms.sql;
+
+-- [ START ] public
+
+-- public
+\i public/tables/comment.sql
+\i public/tables/coitem.sql
+\i public/tables/docass.sql
+\i public/tables/incdt.sql
+\i public/tables/itemsite.sql;
+\i public/tables/quitem.sql
+\i public/tables/todoitem.sql
+-- [ END ] public
 
 -- [ START ] xt
 
 -- xt functions
 \i xt/functions/add_priv.sql;
+\i xt/functions/average_cost.sql;
+\i xt/functions/co_line_base_price.sql;
+\i xt/functions/co_line_customer_discount.sql;
+\i xt/functions/co_line_list_cost_markup.sql;
+\i xt/functions/co_line_extended_price.sql;
+\i xt/functions/co_line_profit.sql;
+\i xt/functions/co_line_list_price.sql;
+\i xt/functions/co_line_list_price_discount.sql;
+\i xt/functions/co_line_tax.sql;
+\i xt/functions/co_freight_weight.sql;
+\i xt/functions/co_schedule_date.sql;
+\i xt/functions/co_subtotal.sql;
+\i xt/functions/co_tax_total.sql;
+\i xt/functions/co_total.sql;
+\i xt/functions/co_total_cost.sql;
+\i xt/functions/co_margin.sql;
 \i xt/functions/cntctmerge.sql;
 \i xt/functions/cntctrestore.sql;
 \i xt/functions/createuser.sql;
 \i xt/functions/install_guiscript.sql;
 \i xt/functions/mergecrmaccts.sql;
 \i xt/functions/pg_advisory_unlock.sql;
+\i xt/functions/quote_line_base_price.sql;
 \i xt/functions/quote_line_customer_discount.sql;
 \i xt/functions/quote_line_list_cost_markup.sql;
 \i xt/functions/quote_line_extended_price.sql;
-\i xt/functions/quote_line_line_profit.sql;
+\i xt/functions/quote_line_profit.sql;
 \i xt/functions/quote_line_list_price.sql;
 \i xt/functions/quote_line_list_price_discount.sql;
 \i xt/functions/quote_line_tax.sql;
+\i xt/functions/quote_freight_weight.sql;
 \i xt/functions/quote_schedule_date.sql;
 \i xt/functions/quote_subtotal.sql;
 \i xt/functions/quote_tax_total.sql;
 \i xt/functions/quote_total.sql;
+\i xt/functions/quote_total_cost.sql;
+\i xt/functions/quote_margin.sql;
 \i xt/functions/trylock.sql;
 \i xt/functions/undomerge.sql;
 \i xt/functions/user_account_sync.sql
@@ -70,15 +103,22 @@
 -- xt views
 
 \i xt/views/doc.sql;
+\i xt/views/cntctinfo.sql;
+\i xt/views/coheadinfo.sql;
+\i xt/views/coiteminfo.sql;
 \i xt/views/crmacctaddr.sql;
 \i xt/views/crmacctcomment.sql;
 \i xt/views/customer_prospect.sql;
 \i xt/views/cust_doc.sql;
 \i xt/views/incdtinfo.sql;
+\i xt/views/incdtxt.sql;
+\i xt/views/iteminfo.sql;
+\i xt/views/itemsiteinfo.sql;
 \i xt/views/opheadinfo.sql;
 \i xt/views/prjinfo.sql;
 \i xt/views/quheadinfo.sql;
 \i xt/views/quiteminfo.sql;
+\i xt/views/site.sql;
 \i xt/views/todoiteminfo.sql;
 \i xt/views/usr.sql;
 
@@ -100,8 +140,12 @@
 \i xm/javascript/customer.sql;
 \i xm/javascript/database_information.sql;
 \i xm/javascript/incident.sql;
+\i xm/javascript/item.sql;
+\i xm/javascript/item_site.sql;
 \i xm/javascript/project.sql;
 \i xm/javascript/quote.sql;
+\i xm/javascript/sales.sql;
+\i xm/javascript/tax.sql;
 \i xm/javascript/to_do.sql;
 -- [ END ] xm
 
@@ -110,10 +154,9 @@
 -- public
 \i public/functions/geteffectivextuser.sql
 
-\i public/tables/comment.sql
+\i public/tables/comment_trigger.sql
 \i public/tables/grp.sql;
 \i public/tables/grppriv.sql;
-\i public/tables/itemsite.sql;
 \i public/tables/pkghead.sql;
 \i public/tables/usrgrp.sql;
 \i public/tables/usrpref.sql;
@@ -125,3 +168,4 @@
 \i create_xtbatch_schema.sql;
 \i xtbatch/tables/batch.sql
 
+\i update_version.sql;

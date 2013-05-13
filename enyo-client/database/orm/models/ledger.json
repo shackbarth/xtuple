@@ -4,8 +4,8 @@
     "nameSpace": "XM",
     "type": "LedgerAccount",
     "table": "accnt",
-    "lockable": true,
     "idSequenceName": "accnt_accnt_id_seq",
+    "lockable": true,
     "comment": "Ledger Account Map",
     "privileges": {
       "all": {
@@ -22,6 +22,14 @@
           "type": "Number",
           "column": "accnt_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "accnt_name",
+          "isNaturalKey": true
         }
       },
       {
@@ -124,7 +132,15 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "accnt_name"
+          "column": "accnt_name",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "accnt_active"
         }
       },
       {

@@ -19,13 +19,12 @@ white:true*/
     // ..........................................................
     // METHODS
     //
-
     /**
       Set default country if applicable.
     */
     initialize: function (attributes, options) {
       XM.Document.prototype.initialize.apply(this, arguments);
-      if (options && options.isNew) {
+      if (options && options.isNew && !this.get('country')) {
         var settings = XT.session ? XT.session.getSettings() : null,
           country = settings ? settings.get('DefaultAddressCountry') : null;
         if (country) { this.set('country', country); }
@@ -52,6 +51,16 @@ white:true*/
       return XM.Address.formatShort(this);
     },
 
+    isAllEmpty: function () {
+      return !this.get("line1") &&
+        !this.get("line2") &&
+        !this.get("line3") &&
+        !this.get("city") &&
+        !this.get("state") &&
+        !this.get("postalCode") &&
+        !this.get("country");
+    },
+
     /**
       Success response returns an integer from the server indicating how many times the address
       is used by other records.
@@ -60,17 +69,16 @@ white:true*/
       @returns Receiver
     */
     useCount: function (options) {
-      console.log("XM.Address.useCount for: " + this.id);
-      XT.dataSource.dispatch('XM.Address', 'useCount', this.id, options);
+      this.dispatch('XM.Address', 'useCount', this.id, options);
       return this;
     },
 
-    validateEdit: function (attributes, options) {
+    validate: function (attributes, options) {
       var settings = XT.session.getSettings(),
         strict = settings.get('StrictAddressCountry'),
         country = attributes.country,
         found;
-        
+
       // Validate country if setting says to do so
       if (country && strict) {
         found = _.find(XM.countries.models, function (c) {
@@ -80,186 +88,9 @@ white:true*/
           return XT.Error.clone('xt2008');
         }
       }
+      return XM.Document.prototype.validate.apply(this, arguments);
     }
 
-  };
-
-  /**
-    @class
-
-    Use this mixin on models that include an editable address. It will set the
-    parent model status appropriately if the address is edited, and will
-    perform address processing on the parent including:
-      * Initialize: A new address will be created with each new parent.
-      * Save first: The address will be saved first, and only on successful save
-        will the parent save.
-      * Check Empty: Address will set to null if empty on save.
-      * Find Existing: Search for an identical address on the server.
-        If found it will be used automatically.
-      * Check Use Count: Check if the address is used elsewhere.
-
-    If it is determined the address on a parent model has been edited and is being
-    used by other records an error will be thrown unless the appropriate option is
-    passed to instruct the model how to handle it. The options are:
-      * XM.Address.CHANGE_ONE: Create a new address for the parent model so only it
-        is affected by the edits.
-      * XM.Address.CHANGE_ALL: Save changes to the original address so all
-        records that reference that address are affected.
-
-    Example:
-      m.save(null, {address: XM.Address.CHANGE_ONE});
-  */
-  XM.AddressCheckMixin = {
-    addressChanged: function () {
-      var address = this.get('address'),
-        addressStatus = address ? address.getStatus() : false,
-        status = this.getStatus(),
-        K = XM.Model;
-      if (addressStatus === K.READY_DIRTY &&
-          status === K.READY_CLEAN) {
-        this.setStatus(K.READY_DIRTY);
-      }
-    },
-
-    didChange: function () {
-      var address,
-        that = this;
-      XM.Document.prototype.didChange.apply(this, arguments);
-      if (this.changed.address) {
-        address = this.previous('address');
-        if (address) {
-          address.off('change', this.addressChanged, that);
-        }
-        address = this.get('address');
-        if (address) {
-          address.on('change', this.addressChanged, that);
-        }
-      }
-    },
-
-    destroy: function () {
-      var address = this.get('address');
-      if (address.isNew()) { address.releaseNumber(); }
-      XM.Document.prototype.destroy.apply(this, arguments);
-    },
-
-    initialize: function (attributes, options) {
-      XM.Document.prototype.initialize.apply(this, arguments);
-      if (options && options.isNew && this.get('address') === null) {
-        this.set('address', new XM.AddressInfo(null, {isNew: true}));
-      }
-    },
-
-    save: function (key, value, options) {
-      var model = this,
-        address = this.get("address"),
-        addressStatus = address ? address.getStatus() : false,
-        maxUse = this.isNew() ? 0 : 1,
-        addressOptions = {},
-        findExistingOptions = {},
-        useCountOptions = {},
-        isValid = this.isValid(),
-        K = XM.Model;
-
-      // Perform address checks if warranted
-      if (isValid && address && addressStatus !== K.READY_CLEAN) {
-        // Handle both `"key", value` and `{key: value}` -style arguments.
-        if (_.isObject(key) || _.isEmpty(key)) {
-          options = value ? _.clone(value) : {};
-        } else {
-          options = options ? _.clone(options) : {};
-        }
-
-        // Callback: call save on the original again
-        addressOptions.success = function (resp) {
-          XM.Document.prototype.save.call(model, key, value, options);
-        };
-
-        // If the address is empty set it to null
-        if (address.isEmpty()) {
-          if (address.isNew()) { address.releaseNumber(); }
-          this.set('address', null);
-
-        // If dirty, see if this address already exists
-        } else if (address.isDirty() && !options.existingChecked) {
-          // Callback: call save on the original again
-          findExistingOptions.success = function (resp) {
-            // If found, set the address with found id
-            if (resp) {
-              address.set('id', resp, {force: true}); // Id is all that matters...
-              address.status = K.READY_CLEAN; // So we don't come back here
-            }
-
-            // Try saving again
-            options.existingChecked = true;
-            if (_.isObject(key) || _.isEmpty(key)) { value = options; }
-            model.save(key, value, options);
-          };
-          XM.Address.findExisting(address.get('line1'),
-                                  address.get('line2'),
-                                  address.get('line3'),
-                                  address.get('city'),
-                                  address.get('state'),
-                                  address.get('postalCode'),
-                                  address.get('country'),
-                                  findExistingOptions);
-          return;
-
-        // If it is new, save it first
-        } else if (address.isNew()) {
-          address.save(null, addressOptions);
-          return;
-
-        // If it has changed, check to see if used elsewhere
-        } else if (address.isDirty()) {
-          // Callback: define what to do after use count check
-          useCountOptions.success = function (resp) {
-            var error,
-              K = XM.Address,
-              callback,
-              newAddress;
-            // If address is used then we need to handle that
-            if (resp > maxUse) {
-              // If no address option passed, then error
-              if (!_.isNumber(options.address)) {
-                error = XT.Error.clone('xt2007');
-                model.trigger('error', model, error, options);
-                return;
-
-              // `CHANGE_ONE` is always the fallback as it's the safest
-              } else if (options.address !== K.CHANGE_ALL) {
-                // Callback after successfull copy
-                // Only proceed when we have both an id and number from the server
-                callback = function () {
-                  var id = newAddress.id,
-                    number = newAddress.get('number');
-                  if (id && number) {
-                    newAddress.off('change:id change:number', callback);
-                    model.set('address', newAddress);
-                    newAddress.save(null, addressOptions);
-                  }
-                };
-                newAddress = address.copy();
-                newAddress.on('change:id change:number', callback);
-                callback(); // In case the data was here before event handlers could respond
-                return;
-              }
-            }
-
-            // No problem so save the address and original model after that
-            address.save(null, addressOptions);
-          };
-
-          // Perform the check: find out how many places this address is used
-          address.useCount(useCountOptions);
-          return;
-        }
-      }
-
-      // No problem with address, just save the record
-      // If record was invalid, this will bubble up the error
-      XM.Document.prototype.save.call(model, key, value, options);
-    }
   };
 
   /**
@@ -284,7 +115,7 @@ white:true*/
     // METHODS
     //
 
-    validateEdit: function (attributes) {
+    validate: function (attributes) {
       var params = {};
 
       if (attributes.abbreviation &&
@@ -300,6 +131,7 @@ white:true*/
         params.length = "3";
         return XT.Error.clone('xt1006', { params: params });
       }
+      return XM.Document.prototype.validate.apply(this, arguments);
     }
 
   });
@@ -307,17 +139,20 @@ white:true*/
   /**
     @class
 
-    @extends XM.Model
+    @extends XM.Document
   */
-  XM.State = XM.Model.extend({
+  XM.State = XM.Document.extend({
     /** @scope XM.State.prototype */
 
     recordType: 'XM.State',
+    
+    documentKey: "abbreviation",
+    
+    enforceUpperKey: false,
 
     requiredAttributes: [
-      "abbreviation",
-      "country",
-      "name"
+      "name",
+      "country"
     ]
 
   });
@@ -368,8 +203,7 @@ white:true*/
           postalcode: postalcode,
           country: country
         };
-      XT.dataSource.dispatch('XM.Address', 'findExisting', params, options);
-      console.log("XM.Address.findExisting");
+      XM.ModelMixin.dispatch('XM.Address', 'findExisting', params, options);
       return this;
     },
 

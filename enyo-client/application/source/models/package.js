@@ -1,5 +1,4 @@
-var depends = (typeof enyo !== 'undefined') ? enyo.depends : X.depends;
-depends(
+enyo.depends(
   "account.js",
   "address.js",
   "configure.js",
@@ -7,16 +6,21 @@ depends(
   "currency.js",
   "customer.js",
   "employee.js",
+  "expense_category.js",
   "file.js",
   "incident.js",
   "item.js",
   "item_site.js",
+  "ledger_account.js",
   "opportunity.js",
   "priority.js",
   "project.js",
   "prospect.js",
+  "sales_order_base.js",
   "quote.js",
+  "sales_order.js",
   "sales_rep.js",
+  "sale_type.js",
   "site.js",
   "static.js",
   "tax.js",

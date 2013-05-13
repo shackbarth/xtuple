@@ -4,8 +4,9 @@
     "nameSpace": "XM",
     "type": "Customer",
     "table": "custinfo",
-    "lockable": true,
     "idSequenceName": "cust_cust_id_seq",
+    "isRest": true,
+    "lockable": true,
     "orderSequence": "CRMAccountNumber",
     "comment": "Customer Map",
     "privileges": {
@@ -29,7 +30,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "cust_number"
+          "column": "cust_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -88,7 +90,7 @@
       {
         "name": "commission",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "cust_commprcnt"
         }
       },
@@ -130,7 +132,7 @@
       {
         "name": "discount",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "cust_discntprcnt"
         }
       },
@@ -322,6 +324,14 @@
           "column": "cust_id",
           "inverse": "source"
         }
+      },
+      {
+        "name": "preferredSite",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "cust_preferred_warehous_id",
+          "nullValue": -1
+        }
       }
     ],
     "extensions": [],
@@ -349,6 +359,14 @@
           "type": "Number",
           "column": "charass_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -414,6 +432,14 @@
           "type": "Number",
           "column": "comment_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -496,6 +522,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "customer",
         "attr": {
           "type": "Customer",
@@ -513,8 +547,7 @@
       {
         "name": "taxAuthority",
         "toOne": {
-          "isNested": true,
-          "type": "TaxAuthorityRelation",
+          "type": "TaxAuthority",
           "column": "taxreg_taxauth_id"
         }
       },
@@ -582,6 +615,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "customer",
         "attr": {
           "type": "Customer",
@@ -626,7 +667,7 @@
       {
         "name": "commission",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "shipto_commission"
         }
       },
@@ -717,6 +758,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "source",
         "attr": {
           "type": "Number",
@@ -772,6 +821,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -833,6 +890,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "source",
         "attr": {
           "type": "Number",
@@ -888,6 +953,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -949,6 +1022,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "source",
         "attr": {
           "type": "Number",
@@ -1004,6 +1085,14 @@
           "type": "Number",
           "column": "id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1064,6 +1153,14 @@
         }
       },
       {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
         "name": "customer",
         "toOne": {
           "type": "Customer",
@@ -1117,7 +1214,7 @@
       {
         "name": "commission",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "shipto_commission"
         }
       },
@@ -1141,6 +1238,20 @@
           "type": "String",
           "column": "shipto_shipvia"
         }
+      },
+      {
+        "name": "shipZone",
+        "toOne": {
+          "type": "ShipZone",
+          "column": "shipto_shipzone_id"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "shipto_shipcomments"
+        }
       }
     ],
     "isSystem": true
@@ -1150,8 +1261,8 @@
     "nameSpace": "XM",
     "type": "CustomerType",
     "table": "custtype",
-    "lockable": true,
     "idSequenceName": "custtype_custtype_id_seq",
+    "lockable": true,
     "comment": "Vendor Type Map",
     "privileges": {
       "all": {
@@ -1174,7 +1285,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "custtype_code"
+          "column": "custtype_code",
+          "isNaturalKey": true
         }
       },
       {
@@ -1214,7 +1326,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "cust_number"
+          "column": "cust_number",
+          "isNaturalKey": true
         }
       },
       {
@@ -1284,14 +1397,14 @@
       {
         "name": "commission",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "cust_commprcnt"
         }
       },
       {
         "name": "discount",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "cust_discntprcnt"
         }
       },
@@ -1303,10 +1416,24 @@
         }
       },
       {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "cust_shipvia"
+        }
+      },
+      {
         "name": "shipCharge",
         "toOne": {
           "type": "ShipCharge",
           "column": "cust_shipchrg_id"
+        }
+      },
+      {
+        "name": "preferredSite",
+        "toOne": {
+          "type": "SiteRelation",
+          "column": "cust_preferred_warehous_id"
         }
       }
     ],
@@ -1380,7 +1507,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "shipchrg_name"
+          "column": "shipchrg_name",
+          "isNaturalKey": true
         }
       },
       {
@@ -1405,8 +1533,8 @@
     "nameSpace": "XM",
     "type": "ShipVia",
     "table": "shipvia",
-    "lockable": true,
     "idSequenceName": "shipvia_shipvia_id_seq",
+    "lockable": true,
     "comment": "Ship Via Map",
     "privileges": {
       "all": {
@@ -1429,7 +1557,8 @@
         "name": "code",
         "attr": {
           "type": "String",
-          "column": "shipvia_code"
+          "column": "shipvia_code",
+          "isNaturalKey": true
         }
       },
       {
@@ -1471,7 +1600,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "shipzone_name"
+          "column": "shipzone_name",
+          "isNaturalKey": true
         }
       },
       {
@@ -1489,8 +1619,8 @@
     "nameSpace": "XM",
     "type": "CustomerGroup",
     "table": "custgrp",
-    "lockable": true,
     "idSequenceName": "custgrp_custgrp_id_seq",
+    "lockable": true,
     "comment": "Customer Group Map",
     "priveleges": {
       "all": {
@@ -1513,7 +1643,8 @@
         "name": "name",
         "attr":	{
           "type": "String",
-          "column": "custgrp_name"
+          "column": "custgrp_name",
+          "isNaturalKey": true
         }
       },
       {
@@ -1549,6 +1680,14 @@
           "type": "Number",
           "column": "custgrpitem_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -1597,7 +1736,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "number"
+          "column": "number",
+          "isNaturalKey": true
         }
       },
       {
@@ -1667,14 +1807,14 @@
       {
         "name": "commission",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "cust_commprcnt"
         }
       },
       {
         "name": "discount",
         "attr": {
-          "type": "Number",
+          "type": "Percent",
           "column": "cust_discntprcnt"
         }
       },
@@ -1686,6 +1826,13 @@
         }
       },
       {
+        "name": "shipVia",
+        "attr": {
+          "type": "String",
+          "column": "cust_shipvia"
+        }
+      },
+      {
         "name": "shipCharge",
         "toOne": {
           "type": "ShipCharge",
@@ -1693,10 +1840,18 @@
         }
       },
       {
+        "name": "preferredSite",
+        "toOne": {
+          "type": "Site",
+          "column": "site",
+          "nullValue": -1
+        }
+      },
+      {
         "name": "defaultShipto",
         "toOne": {
           "isNested": true,
-          "type": "CustomerShipto",
+          "type": "CustomerShiptoRelation",
           "column": "default_shipto_id"
         }
       },
@@ -1705,6 +1860,20 @@
         "attr": {
           "type": "String",
           "column": "status"
+        }
+      },
+      {
+        "name": "customerType",
+        "attr": {
+          "type": "Number",
+          "column": "type"
+        }
+      },
+      {
+        "name": "account",
+        "attr": {
+          "type": "Number",
+          "column": "crmacct_id"
         }
       }
     ],
@@ -1738,7 +1907,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "number"
+          "column": "number",
+          "isNaturalKey": true
         }
       },
       {
@@ -1768,6 +1938,13 @@
         "attr": {
           "type": "String",
           "column": "status"
+        }
+      },
+      {
+        "name": "customerType",
+        "attr": {
+          "type": "Number",
+          "column": "type"
         }
       }
     ],

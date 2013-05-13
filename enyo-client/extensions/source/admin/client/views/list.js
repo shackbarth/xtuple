@@ -32,7 +32,8 @@ trailing:true white:true*/
   //
   enyo.kind({
     name: "XV.DatabaseServerList",
-    kind: "XV.NameDescriptionList"
+    kind: "XV.NameDescriptionList",
+    parameterWidget: "XV.DatabaseServerParameters"
   });
 
   // ..........................................................
@@ -50,6 +51,31 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ExtensionList",
     kind: "XV.NameDescriptionList"
+  });
+
+  // ..........................................................
+  // CAMPAIGN
+  //
+
+  enyo.kind({
+    name: "XV.CampaignList",
+    kind: "XV.List",
+    label: "_campaigns".loc(),
+    collection: "XM.CampaignRelationCollection",
+    parameterWidget: "XV.CampaignParameters",
+    query: {orderBy: [
+      {attribute: 'id'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", components: [
+            {kind: "XV.ListAttr", attr: "number", isKey: true},
+            {kind: "XV.ListAttr", attr: "description"},
+          ]}
+        ]}
+      ]}
+    ]
   });
 
 }());

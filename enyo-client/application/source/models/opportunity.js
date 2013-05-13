@@ -88,17 +88,15 @@ white:true*/
     // METHODS
     //
 
-    initialize: function () {
-      XM.Document.prototype.initialize.apply(this, arguments);
+    bindEvents: function () {
+      XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on('change:assignedTo', this.assignedToDidChange);
     },
 
     assignedToDidChange: function (model, value, options) {
-      var status = this.getStatus(),
-        K = XM.Model,
-        assignedTo,
+      var assignedTo,
         assignDate;
-      if ((options && options.force) || !(status & K.READY)) { return; }
+      if (this.isNotRead()) { return; }
 
       // Set the assign date if it hasn't been already
       assignedTo = this.get('assignedTo');

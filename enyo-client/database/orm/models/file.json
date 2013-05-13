@@ -4,8 +4,8 @@
     "nameSpace": "XM",
     "type": "File",
     "table": "file",
-    "lockable": true,
     "idSequenceName": "file_file_id_seq",
+    "lockable": true,
     "comment": "File Map",
     "privileges": {
       "all": {
@@ -22,6 +22,14 @@
           "type": "Number",
           "column": "file_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {
@@ -70,6 +78,14 @@
           "type": "Number",
           "column": "file_id",
           "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
         }
       },
       {

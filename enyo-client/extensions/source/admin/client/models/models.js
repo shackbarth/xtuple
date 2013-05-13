@@ -60,6 +60,37 @@ white:true*/
 
   });
 
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.Campaign = XM.Document.extend(/** @lends XM.Campaign.prototype */{
+
+    recordType: 'XM.Campaign',
+
+    databaseType: 'global',
+
+    autoFetchId: true
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.CampaignRelation = XM.Info.extend(/** @lends XM.Campaign.prototype */{
+
+    recordType: 'XM.CampaignRelation',
+
+    editableModel: 'XM.Campaign',
+
+    databaseType: 'global',
+
+    autoFetchId: true
+
+  });
 
   /**
     @class
@@ -100,7 +131,8 @@ white:true*/
     requiredAttributes: [
       "isActive",
       "licenses",
-      "group"
+      "group",
+      "databaseServer"
     ],
 
     /**
@@ -147,7 +179,9 @@ white:true*/
 
     recordType: 'XM.OrganizationExtension',
 
-    databaseType: 'global'
+    databaseType: 'global',
+
+    autoFetchId: true
 
   });
 
@@ -166,20 +200,6 @@ white:true*/
     databaseType: 'global',
 
     autoFetchId: false
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Model
-  */
-  XM.SessionOrganization = XM.Model.extend({
-    /** @scope XM.SessionOrganization.prototype */
-
-    recordType: 'XM.SessionOrganization',
-
-    databaseType: 'global'
 
   });
 
@@ -313,6 +333,8 @@ white:true*/
   XM.UserOrganization = XM.Model.extend({
     /** @scope XM.UserOrganization.prototype */
 
+    autoFetchId: true,
+
     recordType: 'XM.UserOrganization',
 
     databaseType: 'global',
@@ -322,8 +344,8 @@ white:true*/
       "username"
     ],
 
-    initialize: function (attributes, options) {
-      XM.Model.prototype.initialize.apply(this, arguments);
+    bindEvents: function (attributes, options) {
+      XM.Model.prototype.bindEvents.apply(this, arguments);
       this.on("change:user", this.userDidChange);
     },
 
@@ -357,7 +379,9 @@ white:true*/
 
     recordType: 'XM.UserGlobalPrivilegeAssignment',
 
-    databaseType: 'global'
+    databaseType: 'global',
+
+    autoFetchId: true
 
   });
 
@@ -365,7 +389,9 @@ white:true*/
 
     recordType: 'XM.OrganizationExtension',
 
-    databaseType: 'global'
+    databaseType: 'global',
+
+    autoFetchId: true
 
   });
 
@@ -464,6 +490,28 @@ white:true*/
   XM.ExtensionCollection = XM.Collection.extend(/** @lends XM.SessionCollection.prototype */{
 
     model: XM.Extension
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.CampaignCollection = XM.Collection.extend(/** @lends XM.CampaignCollection.prototype */{
+
+    model: XM.Campaign
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Collection
+  */
+  XM.CampaignRelationCollection = XM.Collection.extend(/** @lends XM.CampaignRelationCollection.prototype */{
+
+    model: XM.CampaignRelation
 
   });
 

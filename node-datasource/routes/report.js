@@ -13,8 +13,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   var queryForData = function (session, query, callback) {
     var userId = session.passport.user.username,
-      userQueryPayload = '{"requestType":"retrieveRecord","recordType":"XM.UserAccountRelation","id":"%@"}'.f(userId),
-      userQuery = "select xt.retrieve_record('%@')".f(userQueryPayload);
+      userQueryPayload = '{"nameSpace":"XM","type":"UserAccountRelation","id":"%@"}'.f(userId),
+      userQuery = "select xt.get('%@')".f(userQueryPayload);
 
     // first make sure that the user has permissions to export to CSV
     // (can't trust the client)
@@ -26,20 +26,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return;
       }
 
-      retrievedRecord = JSON.parse(res.rows[0].retrieve_record);
+      retrievedRecord = JSON.parse(res.rows[0].get);
       if (retrievedRecord.disableExport) {
         // nice try, asshole.
         callback("Stop trying to hack into our database", null);
         return;
       }
 
-      if (query.id) {
-        // this is a request for a single record
-        data.retrieveEngine(query, session, callback);
-      } else {
-        // this is a request for multiple records
-        data.fetchEngine(query, session, callback);
-      }
+      data.queryDatabase("get", query, session, callback);
     });
   };
   exports.queryForData = queryForData;
@@ -62,9 +56,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         that are older than the number of hours set in the hourLifespan variable. */
     fetchOptions.success = function () {
       for (var i = 0; i < bicacheCollection.length; i++) {
-        date = bicacheCollection.models[i].get("created");
-        date = date.getTime();
-        dateDifference = currentDate - date;
+        date = new Date(bicacheCollection.models[i].get("created"));
+        dateDifference = currentDate - date.getTime();
         if (dateDifference > (1000 * 60 * 60 * hourLifespan)) {
           bicacheCollection.models[i].destroy();
         }
@@ -75,43 +68,72 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     };
     bicacheCollection.fetch(fetchOptions);
 
-    queryForData(req.session, requestDetails, function (result) {
+    var queryForDataCallback = function (result) {
+      var type = requestDetails.type,
+        modelName, fileName;
+
+      if (!type) {
+        res.send({isError: true, message: "You must pass a type"});
+        return;
+      }
+      modelName = type.replace("ListItem", "").replace("Relation", "");
+      fileName = type.replace("ListItem", "List").replace("Relation", "List") + ".prpt";
+
       if (result.isError) {
         res.send(result);
         return;
       }
-      // thanks http://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
-      var randomKey = Math.random().toString(36).substr(2, 15),
-        tempDataModel = new XM.BiCache(null, {isNew: true}),
 
-        attrs = {
-          key: randomKey,
-          // TODO: this will be null for a single-record request. Then again, I don't know if we
-          // need to describe the query on such requests, or how we should describe them.
-          // requestDetails.recordType and requestDetails.id are the two pieces of information
-          query: JSON.stringify(requestDetails.query),
-          data: JSON.stringify(result.data),
-          created: new Date()
-        },
-        success = function () {
-          var biUrl = X.options.datasource.biUrl || "",
-            recordType = requestDetails.query ? requestDetails.query.recordType : requestDetails.recordType,
-            modelName = recordType.suffix().replace("ListItem", "List").replace("Relation", "List"),
-            fileName = modelName + ".prpt",
-            redirectUrl = biUrl + "&name=" + fileName + "&dataKey=" + randomKey;
+      var saveBiCache = function (err, schemaResult) {
+        var schema = schemaResult && schemaResult.rows.length && schemaResult.rows[0].getschema;
 
-          res.redirect(redirectUrl);
-        },
-        error = function (model, err, options) {
-          res.send({
-            isError: true,
-            error: err,
-            message: err.params && err.params.error && err.params.error.message
-          });
-        };
+        // thanks http://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
+        var randomKey = Math.random().toString(36).substr(2, 15),
+          tempDataModel = new XM.BiCache(null, {isNew: true}),
+          attrs = {
+            key: randomKey,
+            // TODO: this will be null for a single-record request. Then again, I don't know if we
+            // need to describe the query on such requests, or how we should describe them.
+            // requestDetails.recordType and requestDetails.id are the two pieces of information
+            query: JSON.stringify(requestDetails.query),
+            locale: JSON.stringify(requestDetails.locale),
+            data: JSON.stringify(result.data),
+            schema: schema,
+            created: new Date()
+          },
+          success = function () {
+            var biUrl = X.options.datasource.biUrl || "",
+              redirectUrl = biUrl + "&name=" + fileName + "&dataKey=" + randomKey;
 
-      tempDataModel.save(attrs, {success: success, error: error});
-    });
+            if (requestDetails.locale && requestDetails.locale.culture) {
+              res.set("Accept-Language", requestDetails.locale.culture);
+            }
+            // step 4: redirect to the report tool
+            res.redirect(redirectUrl);
+          },
+          error = function (model, err, options) {
+            res.send({
+              isError: true,
+              error: err,
+              message: err.params && err.params.error && err.params.error.message
+            });
+          };
+
+        // step 3: save to the bicache table
+        tempDataModel.save(attrs, {
+          success: success,
+          error: error,
+          username: X.options.globalDatabase.nodeUsername
+        });
+      }
+
+      // step 2: get the schema
+      X.database.query(req.session.passport.user.organization,
+        "select xt.getSchema('%@', '%@');".f(requestDetails.nameSpace, modelName), saveBiCache);
+    };
+
+    // step 1: get the data
+    queryForData(req.session, requestDetails, queryForDataCallback);
   };
 
 }());

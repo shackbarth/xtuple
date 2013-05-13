@@ -1,32 +1,33 @@
 /* LESS version of screen.scss file previously in client
 
-	To compile to .css: lessc screen.less > ../stylesheets/screen.css
-	Use -compress for a compressed .css with no comments
+  To compile to .css:
+  lessc screen.less > ../stylesheets/screen.css
+  Use -compress for a compressed .css with no comments
 
 */
 
 /*
-	These variables will show in css as their hex values
+  These variables will show in css as their hex values
 */
 @highlight  : #d6f1ff;
 @orange     : #f60;
-@bright-orange	:	#f49200;
-@sky-blue 	: #9cf;
+@bright-orange  :  #f49200;
+@sky-blue   : #9cf;
 @slate-blue : #226b9a;
-@light-blue	:	#35a8ee;
-@blue				:	#0000ff;
-@silver			:	#aaa;
-@smoke 			: #ddd;
-@gray 			: #8d8d8d;
-@med-gray		:	#999;
-@charcoal		: #555;
-@dim-gray		: #696969;
-@dark-gray	:	#333;
-@blue-gray	: #93a1a1;
-@near-black	: #0e0e0e;
+@light-blue  :  #35a8ee;
+@blue        :  #0000ff;
+@silver      :  #aaa;
+@smoke       : #ddd;
+@gray       : #8d8d8d;
+@med-gray    :  #999;
+@charcoal    : #555;
+@dim-gray    : #696969;
+@dark-gray  :  #333;
+@blue-gray  : #93a1a1;
+@near-black  : #0e0e0e;
 @white      : #fff;
-@red				:	#c51616;
-@bright-red	:	#ff0000;
+@red        :  #c51616;
+@bright-red  :  #ff0000;
 
 
 /* Helper classes for css3 */
@@ -34,32 +35,33 @@
 
 body {
   font-family: "arial", "arial black";
+  font-size: 100%;
 }
 
 .bggrad {
-	/* Radial Gradient */
-	#gradient > .radial(@dim-gray, @dark-gray);
+  /* Radial Gradient */
+  #gradient > .radial(@dim-gray, @dark-gray);
   background-color: @med-gray;
 }
 
 .app > * {
-	width: 320px;
-	.box-shadow(-4px -4px 4px rgba(0,0,0,0.3));
-	background: @charcoal;
+  width: 320px;
+  .box-shadow(-4px -4px 4px rgba(0,0,0,0.3));
+  background: @charcoal;
 }
 
 .panels > * {
-	border: 2px solid @dark-gray;
-	font-size: 5em;
+  border: 2px solid @dark-gray;
+  font-size: 5em;
 }
 
 .wide > * {
-	min-width: 50%;
+  min-width: 50%;
 }
 
 .developer-ui-container {
   .box-shadow(#333 4px 4px 10px -4px);
-	.border-top-right-radius(10px);
+  .border-top-right-radius(10px);
   top: 100px;
   left: 0;
   position: absolute;
@@ -87,33 +89,33 @@ body {
 }
 
 .item {
-	background-color: @dark-gray;
-	border-bottom: 1px solid @near-black;
-	position: relative;
-	padding: 16px 12px;
+  background-color: @dark-gray;
+  border-bottom: 1px solid @near-black;
+  position: relative;
+  padding: 16px 12px;
 }
 
 .item.onyx-selected {
-	background-color: @slate-blue;
+  background-color: @slate-blue;
 }
 
 .onyx-button.save {
-	background-color: @light-blue;
+  background-color: @light-blue;
 }
 
 .left {
-	color: @white;
+  color: @white;
 }
 
 .right-float {
-	float: right;
-	display: block;
+  float: right;
+  display: block;
 }
 
 .left-float {
-	float: left;
-	display: block;
-	margin-right: 3px;
+  float: left;
+  display: block;
+  margin-right: 3px;
 }
 
 // XXX hack here (and in other places that reference issue 18397)
@@ -180,19 +182,19 @@ body {
 .xv-startup-panel {
   .xv-startup-divider {
     width: 70%;
-		margin: 0 auto 8px auto;
+    margin: 0 auto 8px auto;
     top: 200px;
     position: relative;
-  	color: @bright-orange;
-  	text-transform: uppercase;
-  	font-family: Segoe UI, Prelude Medium, Helvetica, Verdana, sans-serif;
-  	font-size: 14px;
-  	font-weight: bold;
-		border: none;
+    color: @bright-orange;
+    text-transform: uppercase;
+    font-family: Segoe UI, Prelude Medium, Helvetica, Verdana, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
   }
   .xv-startup-progress {
     width: 70%;
-		margin: 0 auto 0 auto;
+    margin: 0 auto 0 auto;
     top: 200px;
     position: relative;
   }
@@ -206,12 +208,16 @@ body {
     padding: 5px;
   }
   .onyx-button {
-		margin: 0 auto 0 auto;
+    margin: 0 auto 0 auto;
   }
   .onyx-input {
     padding-left: 10px;
     float: right;
   }
+}
+
+.xv-version-label {
+  padding: 10px;
 }
 
 /* Pullout */
@@ -234,63 +240,80 @@ body {
 }
 
 /*
-	Media query for responsive design. This adapts to smaller
-	displays.
+  Media query for responsive design. This adapts to smaller
+  displays.
 */
 @media (max-width: 480px) {
-	.pullout-menu {
-		display: block;
-		margin: 0;
-	}
-	.app-panels > * {
+  .pullout-menu {
+    display: block;
+    margin: 0;
+  }
+  .app-panels > * {
        min-width: 100%;
        max-width: 100%;
    }
 }
 
 .xv-pullout-header {
-	text-align: center;
-	padding: 10px 0;
+  text-align: center;
+  padding: 10px 0;
 }
 
 .pullout {
-	position: absolute;
-	top: 57px;
-	left: 0;
-	bottom: 0;
-	width: 320px;
-	background: @smoke;
+  position: absolute;
+  top: 57px;
+  left: 0;
+  bottom: 0;
+  width: 320px;
+  background: @smoke;
+  .xv-groupbox {
+    min-width: 300px;
+    padding: 8px 0 8px 5px;
+    margin: 0;
+  }
 }
 
 .pullout-shadow {
-	position: absolute;
-	height: 100%;
-	width: 20px;
-	right: -20px;
-	/** this is weird and indicates the REAL need to change the
-	    whatever the css system is...this relative path is different... **/
-	background: url("../../assets/sliding-shadow.png") repeat-y;
-	background-size: 20px 2px;
+  position: absolute;
+  height: 100%;
+  width: 20px;
+  right: -20px;
+  /** this is weird and indicates the REAL need to change the
+      whatever the css system is...this relative path is different... **/
+  background: url("../../assets/sliding-shadow.png") repeat-y;
+  background-size: 20px 2px;
 }
 
 .pullout-grabbutton {
-	position: absolute;
-	height: 54px;
-	width: 50px;
-	bottom: 20px;
-	right: -46px;
-	.border-radius-all(0, 10px, 10px, 0);
-	background-color: @smoke;
-	box-shadow: 4px 4px 4px rgba(0,0,0,0.3);
+  position: absolute;
+  height: 54px;
+  width: 50px;
+  bottom: 20px;
+  right: -46px;
+  .border-radius-all(0, 10px, 10px, 0);
+  background-color: @smoke;
+  box-shadow: 4px 4px 4px rgba(0,0,0,0.3);
 }
 
 .pullout-toolbar {
-	padding-top: 4px;
-	text-align: center;
+  padding-top: 4px;
+  text-align: center;
+}
+
+#app_pullout_container,
+#app_pullout_help,
+#app_pullout_help_helpPage {
+ height: 100%;
+}
+
+#app_pullout_help_helpPage {
+  border: none;
+  height: 100%;
+  width: 100%;
 }
 
 /*
-	XV Views
+  XV Views
 */
 
 /* List */
@@ -319,24 +342,27 @@ body {
     }
     .xv-list-column {
       &.short {
-        width: 150px;
+        width: 9em;
       }
       &.first {
-        width: 300px;
+        width: 19em;
       }
       &.second {
-        width: 165px;
+        width: 10em;
       }
       &.third {
-        width: 75px;
+        width: 4.5em;
       }
       &.money {
-        width: 85px;
+        width: 5em;
+      }
+      &.descr {
+        width: 15.56em;
       }
     }
     &.item-selected {
-			background: @slate-blue url(../../assets/item-hilite.png) repeat-x bottom;
-			.xv-list-attr {
+      background: @slate-blue url(../../assets/item-hilite.png) repeat-x bottom;
+      .xv-list-attr {
         color: @white;
         background: none;
         &.placeholder {
@@ -353,8 +379,8 @@ body {
           background: @sky-blue;
         }
       }
-			.xv-list-column {
-			  .xv-list-attr {
+      .xv-list-column {
+        .xv-list-attr {
           color: @white;
           background: none;
           &.placeholder {
@@ -372,11 +398,11 @@ body {
 }
 
 .xv-list-item > * {
-	display: inline-block;
-	vertical-align: middle;
+  display: inline-block;
+  vertical-align: middle;
 }
 
-.xv-list-delete-button {
+.xv-list-gear-icon-button {
   float: right;
   display: none;
   margin-top: -4px;
@@ -384,7 +410,7 @@ body {
 
 .xv-list-attr {
   padding: 5px;
-  font-size: 13px;
+  font-size: .8em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -393,10 +419,10 @@ body {
   &.header {
     padding: 4px;
     background: @gray;
-    font-size: 11px;
-  	font-weight: bold;
-  	text-transform: uppercase;
-  	color: @white;
+    font-size: .7em;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: @white;
   }
   &.right {
     position: absolute;
@@ -508,7 +534,7 @@ body {
 }
 
 .xv-negative {
-	color: @red;
+  color: @red;
 }
 
 .xv-assignment-box {
@@ -545,14 +571,14 @@ body {
     font-size: small;
     overflow: hidden;
     &.disabled {
-      opacity: 0.6;
+      color: @dim-gray;
     }
   }
-	/* Resets the margin/padding value for blockquote tag in comments */
-	blockquote {
-		margin: 0 15px 10px 15px;
-		padding: 0;
-	}
+  /* Resets the margin/padding value for blockquote tag in comments */
+  blockquote {
+    margin: 0 15px 10px 15px;
+    padding: 0;
+  }
 }
 
 /* Groupbox.css */
@@ -563,39 +589,44 @@ body {
   &.editor {
     min-width: 250px;
     padding: 0;
-		margin: 0;
+    margin: 0;
   }
   &.in-panel {
-		padding: 0;
-		margin: 0;
-	}
+    padding: 0;
+    margin: 0;
+  }
   &.panel {
     min-width: 330px;
   }
-	.onyx-input-decorator > input {
-    width: 80%;
+  .onyx-input-decorator {
+    border: 0;
+  }
+  .xv-relationwidget, .xv-datewidget {
+    input {
+      width: 75%;
+    }
   }
 }
 
 .xv-groupbox.in-panel > *:first-child {
-	border-top-color: @silver;
-	border-top: none;
-	border-width: 1px;
-	.border-radius(0);
+  border-top-color: @silver;
+  border-top: none;
+  border-width: 1px;
+  .border-radius(0);
 }
 
 .xv-groupbox.in-panel > *:last-child {
-	.border-radius(0);
-	border-bottom: none;
+  .border-radius(0);
+  border-bottom: none;
 }
 
 .xv-groupbox > * {
-	display: block;
-	border: 1px @silver solid;
-	border-top-width: 0;
-	/* reset styles that make 'item' look bad if they happen to be there */
-	.border-radius(0);
-	margin: 0;
+  display: block;
+  border: 1px @silver solid;
+  border-top-width: 0;
+  /* reset styles that make 'item' look bad if they happen to be there */
+  .border-radius(0);
+  margin: 0;
 }
 
 .xv-groupbox > .in-panel .editor-field {
@@ -603,41 +634,36 @@ body {
 }
 
 .xv-groupbox > *:first-child {
-	border-top-color: @silver;
-	border-width: 1px;
-	.border-radius-all(4px, 4px, 0, 0);
+  border-top-color: @silver;
+  border-width: 1px;
+  .border-radius-all(4px, 4px, 0, 0);
 }
 
 .xv-groupbox > *:last-child {
-	.border-radius-all(0, 0, 4px, 4px);
+  .border-radius-all(0, 0, 4px, 4px);
 }
 
 .xv-groupbox > *:first-child:last-child {
-	.border-radius(4px);
+  .border-radius(4px);
 }
 
 .xv-groupbox-header {
-	padding: 5px 10px;
-	color: @white;
-	font-family: Segoe UI, Neue Helvetica, Helvectica, Arial, sans-serif;
-	font-size: 14px;
-	font-weight: bold;
-	text-transform: uppercase;
-	background-color: @dark-gray;
-	border: none;
-	/* This image doesn't exist */
-	background: @charcoal url(../../images/gradient.png) repeat-x 0 10px;
-}
-
-.xv-groupbox .onyx-input-decorator {
-	/* This resets the border for this element */
-	border: 0;
+  padding: 5px 10px;
+  color: @white;
+  font-family: Segoe UI, Neue Helvetica, Helvectica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  background-color: @dark-gray;
+  border: none;
+  /* This image doesn't exist */
+  background: @charcoal url(../../images/gradient.png) repeat-x 0 10px;
 }
 
 .xv-groupbox > .onyx-input-decorator {
-	border-color: @silver;
-	border-width: 0 1px 1px 1px;
-	.border-radius(4px);
+  border-color: @silver;
+  border-width: 0 1px 1px 1px;
+  .border-radius(4px);
 }
 
 .xv-groupbox .xv-inputwidget {
@@ -650,47 +676,53 @@ body {
   padding-bottom: 2px;
 
   .onyx-input-decorator {
-    width: 100px;
+    width: 120px;
+    padding: 6px 6px 8px 6px;
+    input {
+      width: 100%;
+      text-align: right;
+    }
   }
   .xv-picker {
-    width: 95px;
+    width: 65px;
+    text-align: center;
+    padding: 8px 10px;
   }
 }
 
 .xv-groupbox > .onyx-input-decorator:first-child {
-	border-width: 1px;
-	.border-radius-all(4px, 4px, 0, 0);
+  border-width: 1px;
+  .border-radius-all(4px, 4px, 0, 0);
 }
 
 .xv-groupbox > .onyx-input-decorator:last-child {
-	.border-radius-all(0, 0, 4px, 4px);
+  .border-radius-all(0, 0, 4px, 4px);
 }
 
 .xv-groupbox > .onyx-input-decorator:first-child:last-child {
-	.border-radius(4px);
+  .border-radius(4px);
 }
 
 .xv-groupbox-buttons {
-	border: none;
-	.xv-groupbox-button-single {
-		.border-radius-all(0, 0, 4px, 4px);
-	}
-	.xv-groupbox-button-center {
-		.border-radius(0);
-	}
-	.xv-groupbox-button-left {
-  	.border-radius-all(0, 0, 0, 4px);
-	}
-	.xv-groupbox-button-right {
-  	.border-radius-all(0, 0, 4px, 0);
-	}
+  border: none;
+  .xv-groupbox-button-single {
+    .border-radius-all(0, 0, 4px, 4px);
+  }
+  .xv-groupbox-button-center {
+    .border-radius(0);
+  }
+  .xv-groupbox-button-left {
+    .border-radius-all(0, 0, 0, 4px);
+  }
+  .xv-groupbox-button-right {
+    .border-radius-all(0, 0, 4px, 0);
+  }
 }
 
 /*
-	XV Widgets
+  XV Widgets
 */
 
-/* AddressWidget.scss */
 .xv-addresswidget {
   background-color: @white;
   padding: 4px;
@@ -701,6 +733,9 @@ body {
     &.placeholder {
       font-style: italic;
       color: @blue-gray;
+    }
+    &.disabled {
+      color: @dim-gray;
     }
   }
 }
@@ -719,11 +754,11 @@ body {
   display: block;
   margin: 4px;
   width: 80%;
-	padding-right: 0;
-	.xv-combobox-input {
-	  width: 80%;
-	}
-	.xv-combobox {
+  padding-right: 0;
+  .xv-combobox-input {
+    width: 80%;
+  }
+  .xv-combobox {
     padding: 0;
     width: 100%;
   }
@@ -739,6 +774,12 @@ body {
 
 .xv-addresswidget-buttons {
   margin-top: 4px;
+}
+
+.xv-button-section {
+  .xv-addresswidget-buttons;
+  margin: 0;
+  background-color: @charcoal;
 }
 
 .xv-addresswidget-editor-header {
@@ -766,6 +807,10 @@ body {
   top: 15px;
 }
 
+.xv-completer-sidecar {
+  color: @blue-gray;
+}
+
 .xv-relationwidget-column {
   &.left {
     padding-right: 18px;
@@ -789,7 +834,7 @@ body {
   padding-bottom: 4px;
   max-width: 325px;
   &.disabled {
-    opacity: 0.4;
+    color: @dim-gray;
   }
   &.label {
     text-indent: 0;
@@ -808,7 +853,7 @@ body {
 .xv-relations-editor-box {
   .xv-groupbox {
     margin-right: 0;
-		padding: 0;
+    padding: 0;
     border: none;
   }
   &.panel {
@@ -819,7 +864,7 @@ body {
 /* ListRelationsBox */
 .xv-list-relations-box {
   &.panel {
-    width: 675px;
+    width: 625px;
   }
 }
 
@@ -852,6 +897,11 @@ body {
   display: inline-block;
 }
 
+.xv-combobox-note {
+  padding: 14px 3px 8px 3px;
+  text-align: left;
+}
+
 /* Picker */
 .onyx-picker .onyx-menu-item {
   text-align: left;
@@ -877,13 +927,13 @@ body {
 
 .xv-decorated-label {
   width: 130px;
-	padding: 14px 8px 8px 8px;
+  padding: 14px 8px 8px 8px;
   text-align: right;
 }
 
 .xv-picker-label {
   width: 130px;
-	padding: 18px 8px 8px 8px;
+  padding: 18px 8px 8px 8px;
   text-align: right;
   color: black;
 }
@@ -893,13 +943,13 @@ body {
   height: 100%;
   min-height: 100px;
   margin: 6px;
-	border: #ddd 2px solid;
-	color: black;
+  border: #ddd 2px solid;
+  color: black;
 }
 
 .xv-documents-picker-label {
   width: 85px;
-	padding: 16px 8px 8px 8px;
+  padding: 16px 8px 8px 8px;
   text-align: right;
 }
 
@@ -909,12 +959,12 @@ body {
 }
 
 .xv-half-check {
-	background:
-		transparent
-		url("../../assets/checkbox.png")
-		no-repeat
-		0 -96px
-		scroll;
+  background:
+    transparent
+    url("../../assets/checkbox.png")
+    no-repeat
+    0 -96px
+    scroll;
 }
 
 .xv-textarea {
@@ -932,12 +982,41 @@ body {
 
 .xv-button-bar {
   .onyx-button {
-		// TODO: center buttons, spacing in between (margin: auto on bar)
-		margin: 0 40px 0 40px;
+    /* TODO: center buttons, spacing in between (margin: auto on bar) */
+    margin: 0 40px 0 40px;
   }
 }
 
 /* This is for styling the moved items in the more toolbar*/
 .xv-toolbar-moved {
-	width: 220px;
+  width: 220px;
+}
+
+.xv-totals-panel {
+  padding: 0;
+  background-color: @white;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  .onyx-input, .onyx-button {
+    font-size: 13px;
+  }
+}
+
+.xv-totals-panel {
+  .xv-label, .onyx-input-decorator {
+    padding: 3px;
+  }
+  .xv-label, .xv-picker-label {
+    width: 110px;
+  }
+}
+
+/* This is to style the base currency labels to look like the inputs */
+.xv-money-label {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
+  .currency {
+    text-align: center;
+  }
 }

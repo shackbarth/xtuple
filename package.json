@@ -1,0 +1,46 @@
+{
+  "author": "xTuple <dev@xtuple.com>",
+  "name": "xtuple",
+  "description": "xTuple Enterprise Resource Planning Mobile-Web client",
+  "version": "1.3.4",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xtuple/xtuple.git"
+  },
+  "dependencies": {
+    "backbone":"0.9.10",
+    "backbone-relational": "0.8.0",
+    "bcrypt": "0.7.x",
+    "colors":"0.6.x",
+    "connect-ensure-login": "0.1.x",
+    "connect-flash":"0.1.x",
+    "ejs": "0.8.x",
+    "express": "3.1.x",
+    "json-patch": "git://github.com/xtuple/JSON-Patch.git",
+    "nodemailer":"0.3.x",
+    "oauth2orize": "0.1.x",
+    "oauth2orize-jwt-bearer": "0.1.x",
+    "passport": "0.1.x",
+    "passport-http": "0.2.x",
+    "passport-http-bearer": "0.2.x",
+    "passport-local": "0.1.x",
+    "passport-oauth2-client-password": "0.1.x",
+    "passport-oauth2-jwt-bearer": "0.1.x",
+    "pg":"0.14.x",
+    "request":"2.14.x",
+    "socket.io":"0.9.x",
+    "underscore":"1.4.x"
+  },
+  "devDependencies": {
+    "chai":"1.5.x",
+    "mocha":"1.9.x",
+    "zombie":"1.4.x",
+    "vows":"0.7.x"
+  },
+  "optionalDependencies": {},
+  "engines": {
+    "node": "0.8.x"
+  },
+  "main": "node-datasource/main.js",
+  "scripts": {}
+}
