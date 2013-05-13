@@ -9,7 +9,7 @@ Critical deployment changes
 
 > Date:   Wed Feb 20 00:10:56 2013 -0800
 
-  To find your your plv8 version:
+  To find your current plv8 version:
 
       cd ~/plv8js
       git log -1
