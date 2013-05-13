@@ -2,7 +2,7 @@
 
 select xt.create_table('oa2token');
 select xt.add_column('oa2token','oa2token_id', 'serial', 'primary key', 'xt', 'oa2token table primary key.');
-select xt.add_column('oa2token','oa2token_usr_id', 'text', 'references xt.usr (usr_id) on delete cascade', 'xt', 'Indicates the usr_id this token exchange is for.');
+select xt.add_column('oa2token','oa2token_useracct_id', 'integer', 'references xt.useracct (useracct_id) on delete cascade', 'xt', 'Indicates the useracct_id this token exchange is for.');
 select xt.add_column('oa2token','oa2token_client_id', 'text', 'not null references xt.oa2client (oa2client_client_id) on delete cascade', 'xt', 'Indicates the client that is making the request.');
 select xt.add_column('oa2token','oa2token_redirect_uri', 'text', '', 'xt', 'Determines where the response is sent.');
 select xt.add_column('oa2token','oa2token_scope', 'text', 'not null', 'xt', 'Indicates the xTuple org access your application is requesting.');
@@ -19,6 +19,6 @@ select xt.add_column('oa2token','oa2token_access_issued', 'timestamp', '', 'xt',
 select xt.add_column('oa2token','oa2token_access_expires', 'timestamp', '', 'xt', 'The datetime that the access token expires.');
 select xt.add_column('oa2token','oa2token_token_type', 'text', 'not null', 'xt', 'Indicates the type of token returned. At this time, this field will always have the value Bearer.');
 select xt.add_column('oa2token','oa2token_access_type', 'text', '', 'xt', 'Indicates if a web_server needs to access an API when the user is not present.');
-select xt.add_column('oa2token','oa2token_delegate', 'text', 'references xt.usr (usr_id) on delete cascade', 'xt', 'usr_id for which a service_account is requesting delegated access as.');
+select xt.add_column('oa2token','oa2token_delegate', 'integer', 'references xt.useracct (useracct_id) on delete cascade', 'xt', 'useracct_id for which a service_account is requesting delegated access as.');
 
 comment on table xt.oa2token is 'Defines global OAuth 2.0 server token storage.';

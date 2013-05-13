@@ -9,8 +9,7 @@
 
 \i xt/tables/sessionstore.sql
 
-\i xt/tables/usr.sql
-\i xt/tables/usrorg.sql
+\i xt/tables/useracctorg.sql
 
 \i xt/tables/oa2client.sql
 \i xt/tables/oa2clientredirs.sql
@@ -24,6 +23,6 @@
 --select xt.add_priv('MaintainExtensions', 'Can Maintain Extensions', 'MaintainExtensions', 'Admin', 'admin', 'Admin');
 --select xt.add_priv('ViewExtensions', 'Can View Extensions', 'ViewExtensions', 'Admin', 'admin', 'Admin');
 
-\i xt/node_user.sql
+--\i xt/node_user.sql
 
 -- [ END ] xt
