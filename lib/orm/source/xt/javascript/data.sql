@@ -888,6 +888,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
             if (rows.length) {
               sql = this.prepareUpdate(ext, data, null, encryptionKey);
+              sql.values.push(id);
             } else {
               sql = this.prepareInsert(ext, data, null, encryptionKey);
             }
