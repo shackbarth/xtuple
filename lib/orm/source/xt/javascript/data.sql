@@ -1069,21 +1069,23 @@ select xt.install_js('XT','Data','xtuple', $$
     deleteRecord: function (options) {
       try {
         var data = options.data,
-          query = '',
-          sql = '',
           orm = XT.Orm.fetch(options.nameSpace, options.type),
           pkey = XT.Orm.primaryKey(orm),
           nkey = XT.Orm.naturalKey(orm),
           id = nkey ? this.getId(orm, data[nkey]) : data[pkey],
+          columnKey,
+          etag = this.getVersion(orm, id),
+          ext,
+          i,
           lockKey = options.lock && options.lock.key ? options.lock.key : false,
           lockTable = orm.lockTable || orm.table,
-          etag = this.getVersion(orm, id),
-          columnKey,
+          namespace,
           prop,
           ormp,
-          values,
-          ext,
-          i;
+          query = '',
+          sql = '',
+          table,
+          values;
 
         /* Test for optimistic lock. */
         if (etag && etag !== options.etag) {
@@ -1124,8 +1126,16 @@ select xt.install_js('XT','Data','xtuple', $$
               !ext.isChild) {
             columnKey = ext.relations[0].column;
             nameKey = ext.relations[0].inverse;
-            query = 'delete from %1$I where %2$I = $1';
-            sql = XT.format(query, [ext.table, columnKey]);
+
+            if (ext.table.indexOf(".") > 0) {
+              namespace = ext.table.beforeDot();
+              table = ext.table.afterDot();
+              query = 'delete from %1$I.%2$I where %3$I = $1';
+              sql = XT.format(query, [namespace, table, columnKey]);
+            } else {
+              query = 'delete from %1$I where %2$I = $1';
+              sql = XT.format(query, [ext.table, columnKey]);
+            }
 
             if (DEBUG) {
               plv8.elog(NOTICE, 'deleteRecord sql =', sql);
@@ -1138,8 +1148,16 @@ select xt.install_js('XT','Data','xtuple', $$
         /* Now delete the top. */
         nameKey = XT.Orm.primaryKey(orm);
         columnKey = XT.Orm.primaryKey(orm, true);
-        query = 'delete from %1$I where %2$I = $1';
-        sql = XT.format(query, [orm.table, columnKey]);
+
+        if (orm.table.indexOf(".") > 0) {
+          namespace = orm.table.beforeDot();
+          table = orm.table.afterDot();
+          query = 'delete from %1$I.%2$I where %3$I = $1';
+          sql = XT.format(query, [namespace, table, columnKey]);
+        } else {
+          query = 'delete from %1$I where %2$I = $1';
+          sql = XT.format(query, [orm.table, columnKey]);
+        }
 
         /* Commit the record.*/
         if (DEBUG) {
