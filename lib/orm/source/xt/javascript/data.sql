@@ -868,7 +868,7 @@ select xt.install_js('XT','Data','xtuple', $$
              !ext.isChild) {
 
             /* Determine whether to insert or update. */
-            if (iorm.table.indexOf(".") > 0) {
+            if (ext.table.indexOf(".") > 0) {
               iORuQuery = "select %1$I from %2$I.%3$I where %1$I = $1;";
               iORuSql = XT.format(iORuQuery, [
                   ext.relations[0].column,
@@ -1245,6 +1245,7 @@ select xt.install_js('XT','Data','xtuple', $$
         var ncol = XT.Orm.naturalKey(orm, true),
           pcol = XT.Orm.primaryKey(orm, true),
           query,
+          ret,
           sql;
 
         if (orm.table.indexOf(".") > 0) {
@@ -1264,7 +1265,9 @@ select xt.install_js('XT','Data','xtuple', $$
           plv8.elog(NOTICE, 'getId values =', [value]);
         }
 
-        return plv8.execute(sql, [value])[0].id;
+        ret = plv8.execute(sql, [value])[0].id;
+
+        return ret;
       } catch (err) {
         XT.error(err, arguments);
       }
