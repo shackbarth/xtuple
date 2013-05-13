@@ -688,7 +688,8 @@ select xt.install_js('XT','Data','xtuple', $$
         /* If extension handle key. */
         if (orm.relations) {
           for (var i = 0; i < orm.relations.length; i++) {
-            if (!params.columns.contains(column)) {
+            column = orm.relations[i].column;
+            if (!params.identifiers.contains(column)) {
               params.columns.push("%" + count + "$I");
               params.values.push(record[orm.relations[i].inverse]);
               params.expressions.push('$' + count);

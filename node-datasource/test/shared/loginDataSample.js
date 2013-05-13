@@ -1,4 +1,4 @@
-//----- Data for login function ----- 
+//----- Data for login function -----
 exports.data = {
 	webaddress : '',
 	username : '', //------- Enter the xTuple username
