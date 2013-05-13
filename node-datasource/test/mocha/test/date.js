@@ -8,21 +8,32 @@
 
   var zombieAuth = require("../../vows/lib/zombie_auth"),
     assert = require("chai").assert;
-
-  describe('Test Date Widget', function () {
-    this.timeout(20 * 1000);
-    it('a text date should return a date', function (done) {
-      var testTextDate = function () {
-        var K = enyo.kind({kind: XV.Date});
+    
+  describe('Date Widget', function () {
+    this.timeout(10 * 1000);
+    var K;
+    
+    before(function (done) {
+      // setup for the date widget
+      var initializeDate = function () {
+        K = enyo.kind({kind: XV.Date});
         K = new K();
-
-        assert.isNull(null);
-        assert.isFalse(K.textToDate("TEST"));
         
         done();
       };
       
-      zombieAuth.loadApp(testTextDate);
+      zombieAuth.loadApp(initializeDate);
     });
-  });
+    
+    describe('Test Text to Date', function () {
+      // Test known bad dates
+      it('Test bad date', function () {
+          assert.isFalse(K.textToDate("********"));
+          assert.isFalse(K.textToDate("TEST"));
+      });
+      
+    });
+    
+  }); 
+
 }());
