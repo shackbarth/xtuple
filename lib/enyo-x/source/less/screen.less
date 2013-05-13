@@ -598,8 +598,13 @@ body {
   &.panel {
     min-width: 330px;
   }
-  .onyx-input-decorator > input {
-    width: 80%;
+  .onyx-input-decorator {
+    border: 0;
+  }
+  .xv-relationwidget, .xv-datewidget {
+    input {
+      width: 75%;
+    }
   }
 }
 
@@ -655,11 +660,6 @@ body {
   background: @charcoal url(../../images/gradient.png) repeat-x 0 10px;
 }
 
-.xv-groupbox .onyx-input-decorator {
-  /* This resets the border for this element */
-  border: 0;
-}
-
 .xv-groupbox > .onyx-input-decorator {
   border-color: @silver;
   border-width: 0 1px 1px 1px;
@@ -676,10 +676,17 @@ body {
   padding-bottom: 2px;
 
   .onyx-input-decorator {
-    width: 95px;
+    width: 120px;
+    padding: 6px 6px 8px 6px;
+    input {
+      width: 100%;
+      text-align: right;
+    }
   }
   .xv-picker {
-    width: 95px;
+    width: 65px;
+    text-align: center;
+    padding: 8px 10px;
   }
 }
 
@@ -716,7 +723,6 @@ body {
   XV Widgets
 */
 
-/* AddressWidget.scss */
 .xv-addresswidget {
   background-color: @white;
   padding: 4px;
