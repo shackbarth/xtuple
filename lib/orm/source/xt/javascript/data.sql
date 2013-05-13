@@ -994,17 +994,9 @@ select xt.install_js('XT','Data','xtuple', $$
                 throw new Error("No encryption key provided.");
               }
             } else if (ormp.name !== pkey) {
-//              if (val === null && attr.nullValue) {
-//                params.values.push(attr.nullValue);
-//                params.expressions.push("%" + count + "$I = $" + count);
-              if (val === null) {
-                if (attr.nullValue) {
-                  params.values.push(attr.nullValue);
-                  params.expressions.push("%" + count + "$I = $" + count);
-                } else {
-                  params.values.push(null); /* Adding null to keep $i count correct though it will not be used. */
-                  params.expressions.push("%" + count + "$I = null");
-                }
+              if (val === null && attr.nullValue) {
+                params.values.push(attr.nullValue);
+                params.expressions.push("%" + count + "$I = $" + count);
               } else if (ormp.toOne && nkey) {
                 if (iorm.table.indexOf(".") > 0) {
                   toOneQuery = "select %1$I from %2$I.%3$I where %4$I = $" + count;
