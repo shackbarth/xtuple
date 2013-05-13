@@ -75,7 +75,9 @@ trailing:true white:true*/
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
-            {kind: "XV.NumberWidget", attr: "order"}
+            // these order fields are integers, so setting a maxlength
+            // to prevent exceeding integer's max value
+            {kind: "XV.NumberWidget", attr: "order", maxlength: 9, formatting: false}
           ]}
         ]}
       ]}
@@ -1178,14 +1180,14 @@ trailing:true white:true*/
             {kind: "XV.DateWidget", attr: "completeDate"},
             {kind: "onyx.GroupboxHeader", content: "_hours".loc()},
             {kind: "XV.QuantityWidget", attr: "budgetedHours",
-              label: "_budgeted".loc()},
+              label: "_budgeted".loc(), maxlength: 12},
             {kind: "XV.QuantityWidget", attr: "actualHours",
-              label: "_actual".loc()},
+              label: "_actual".loc(), maxlength: 12},
             {kind: "onyx.GroupboxHeader", content: "_expenses".loc()},
             {kind: "XV.NumberWidget", attr: "budgetedExpenses", scale: XT.MONEY_SCALE,
-              label: "_budgeted".loc()},
+              label: "_budgeted".loc(), maxlength: 12},
             {kind: "XV.NumberWidget", attr: "actualExpenses", scale: XT.MONEY_SCALE,
-              label: "_actual".loc()},
+              label: "_actual".loc(), maxlength: 12},
             {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
             {kind: "XV.UserAccountWidget", attr: "owner"},
             {kind: "XV.UserAccountWidget", attr: "assignedTo"},
