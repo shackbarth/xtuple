@@ -1,7 +1,8 @@
 -- table definition
 
 select xt.create_table('org');
-select xt.add_column('org','org_name', 'text', 'primary key');
+select xt.add_column('org','org_id', 'serial', 'primary key');
+select xt.add_column('org','org_name', 'text');
 select xt.add_column('org','org_descrip', 'text');
 select xt.add_column('org','org_cloud', 'text');
 select xt.add_column('org','org_licenses', 'integer');
