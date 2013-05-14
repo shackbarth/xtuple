@@ -11,30 +11,33 @@
     
   describe('Date Widget', function () {
     this.timeout(10 * 1000);
-    var K;
+    var K, newDate = new Date();
     
     before(function (done) {
       // setup for the date widget
       var initializeDate = function () {
         K = enyo.kind({kind: XV.Date});
         K = new K();
-        
         done();
       };
       
       zombieAuth.loadApp(initializeDate);
     });
     
+    // reset the date before each test
+    beforeEach(function () {
+      newDate = new Date();
+    });
+    
     describe('Test Text to Date', function () {
-      var newDate = new Date();
-      
       // Test known bad dates
       it('Test just plain bad date', function () {
         assert.isFalse(K.textToDate("********"));
         assert.isFalse(K.textToDate("BEWARE. I AM BAD."));
         assert.isFalse(K.textToDate("%"));
-        // This is a bug!! Oh noes!!
-        //assert.isFalse(K.textToDate("%123"));
+        assert.isFalse(K.textToDate("%123"));
+        assert.isFalse(K.textToDate("/////"));
+        assert.isFalse(K.textToDate("1234"));
       });
       
       // Test entering "#" and a number to get x days in the year
@@ -60,7 +63,7 @@
         assert.isFalse(K.textToDate("#*"));
       });
       
-      // Testing entering "+" and "-" and a number to means days from or before now
+      // Testing entering "+" and a number to mean days from now
       it('Test adding days using +', function () {
         var daysOffset, millisecondOffset = function (offset) {
           return offset * 24 * 60 * 60 * 1000;
@@ -69,14 +72,10 @@
         daysOffset = 20;
         newDate.setTime(newDate.getTime() + millisecondOffset(daysOffset));
         assert.notStrictEqual(K.textToDate("+" + daysOffset), newDate);
-        newDate.setTime(newDate.getTime() - millisecondOffset(daysOffset));
-        assert.notStrictEqual(K.textToDate("-" + daysOffset), newDate);
         
         daysOffset = 40;
         newDate.setTime(newDate.getTime() + millisecondOffset(daysOffset));
         assert.notStrictEqual(K.textToDate("+" + daysOffset), newDate);
-        newDate.setTime(newDate.getTime() + millisecondOffset(daysOffset));
-        assert.notStrictEqual(K.textToDate("-" + daysOffset), newDate);
         
         // zomg so far into the future
         daysOffset = 999999999993453;
@@ -86,6 +85,27 @@
         assert.isFalse(K.textToDate("+tt"));
         assert.isFalse(K.textToDate("+"));
         assert.isFalse(K.textToDate("+*"));
+      });
+      
+      // Testing entering "-" and a number to mean days before now
+      it('Test subtracting days using -', function () {
+        var daysOffset, millisecondOffset = function (offset) {
+          return offset * 24 * 60 * 60 * 1000;
+        };
+        
+        daysOffset = 20;
+        newDate.setTime(newDate.getTime() - millisecondOffset(daysOffset));
+        assert.notStrictEqual(K.textToDate("-" + daysOffset), newDate);
+        
+        daysOffset = 40;
+        newDate.setTime(newDate.getTime() - millisecondOffset(daysOffset));
+        assert.notStrictEqual(K.textToDate("-" + daysOffset), newDate);
+        
+        // zomg so far into the past
+        daysOffset = 999999999993453;
+        newDate.setTime(newDate.getTime() - millisecondOffset(daysOffset));
+        assert.notStrictEqual(K.textToDate("-" + daysOffset), newDate);
+        
         assert.isFalse(K.textToDate("-tt"));
         assert.isFalse(K.textToDate("-"));
         assert.isFalse(K.textToDate("-*"));
@@ -95,6 +115,21 @@
       it('Test that 0 is today', function () {
         newDate = K.applyTimezoneOffset(newDate);
         assert.notStrictEqual(K.textToDate("0"), newDate);
+      });
+      
+      it('Test that a number alone is a day of the month', function () {
+        var day = "6";
+        assert.notStrictEqual(K.textToDate(day), newDate.setDate(day));
+        day = "20";
+        assert.notStrictEqual(K.textToDate(day), newDate.setDate(day));
+      });
+      
+      it('Test that a number alone will not exceed the last day of the month', function () {
+        var day = "1000";
+        assert.equal(K.textToDate(day).getMonth(), newDate.getMonth());
+        newDate.setMonth(newDate.getMonth() + 1);
+        newDate.setDate(0);
+        assert.notStrictEqual(K.textToDate(day), newDate);
       });
     });
   });
