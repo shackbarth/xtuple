@@ -12,8 +12,8 @@ regexp:true, strict:true, trailing:true, white:false */
   readContactObj = contactObj.readObj1.readContact_xpath + fname +  "')]";
   utils.results('*****Creating a New Contact*****');
   utils.pause(60000, function () {
-  browser.windowHandle(function (err, win) {
-  browser.maximize(win, function () {
+  //browser.windowHandle(function (err, win) {
+  //browser.maximize(win, function () {
   utils.pause(4000, function () {
   browser.elementByXPath(contactObj.Obj.crmlink_xpath, function (err,el1) {
   browser.clickElement(el1, function () {
@@ -50,7 +50,8 @@ regexp:true, strict:true, trailing:true, white:false */
   browser.clickElement(el7, function () {
   browser.waitForElementByXPath(contactObj.Obj.addressLine1_xpath, 4000, function () {
   browser.elementByXPath(contactObj.Obj.addressLine1_xpath, function (err, el8) {
-  browser.type(el8,contactData.VARIABLES.contact_addressLine1, function () {
+  //browser.type(el8,contactData.VARIABLES.contact_addressLine1, function () {
+  browser.type(el8, fname, function () {
   browser.elementByXPath(contactObj.Obj.countryLine_xpath, function (err, celement) {
   browser.clear(celement, function () {
   browser.type(celement,contactData.VARIABLES.contact_country, function () {
@@ -69,8 +70,8 @@ regexp:true, strict:true, trailing:true, white:false */
   browser.elementByXPath(contactObj.Obj.charecinput_xpath, function (err, el13) {
   browser.type(el13,contactData.VARIABLES.contact_bday, function () {
   utils.pause(2000,function () {
-  browser.elementByXPath(contactObj.Obj.email_xpath, function (err, el10) {
-  browser.type(el10, contactData.VARIABLES.contact_email + "\uE007", function () {
+  //browser.elementByXPath(contactObj.Obj.email_xpath, function (err, el10) {
+  //browser.type(el10, contactData.VARIABLES.contact_email + "\uE007", function () {
   utils.pause(2000,function () {
   browser.elementByXPathOrNull(contactObj.Obj.saveToolBar_xpath, function (err, toolbarEl) {
   browser.clickElement(toolbarEl, function () {
@@ -101,7 +102,8 @@ regexp:true, strict:true, trailing:true, white:false */
   },2000);
   },2000);
   }
-  });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});
+  //});});});});
+  });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});
   });});});});});});});});});});});});});});});});});});});});});});});};
 }());
 
