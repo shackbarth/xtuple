@@ -16,7 +16,7 @@ var XVOWS = XVOWS || {};
     deleteData = {};
 
   data.createHash = {
-    number: "TAXAUTH3",
+    code: "TAXAUTH3",
     name: "TAXAUTH NAME"
   };
 
