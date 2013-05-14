@@ -63,7 +63,6 @@
 \i xt/tables/js.sql
 \i xt/tables/lock.sql
 \i xt/tables/orm.sql
-\i xt/tables/useracct.sql
 \i xt/tables/ver.sql
 
 -- xt javascript

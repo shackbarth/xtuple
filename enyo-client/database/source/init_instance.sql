@@ -84,17 +84,13 @@ select xt.js_init();
 \i xt/tables/pkgscript.sql
 \i xt/tables/pkguiform.sql
 \i xt/tables/priv.sql
-\i xt/tables/useracct.sql
 \i xt/tables/userpriv.sql
 \i xt/tables/userrole.sql
 \i xt/tables/userrolepriv.sql
 \i xt/tables/useruserrole.sql
 
 \i xt/tables/ext.sql
-\i xt/tables/org.sql
-\i xt/tables/orgext.sql
 \i xt/tables/sessionstore.sql
-\i xt/tables/useracctorg.sql
 \i xt/tables/oa2client.sql
 \i xt/tables/oa2clientredirs.sql
 \i xt/tables/oa2token.sql
@@ -123,7 +119,6 @@ select xt.js_init();
 \i xt/views/quiteminfo.sql;
 \i xt/views/site.sql;
 \i xt/views/todoiteminfo.sql;
-\i xt/views/usr.sql;
 
 -- xt guiscripts
 

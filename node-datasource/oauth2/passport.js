@@ -6,7 +6,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
  * Module dependencies.
  */
 var passport = require('passport'),
-    LocalStrategy = require('passport-local').Strategy,
+    Backbone = require('backbone'),
+    LocalStrategy = require('./local-strategy'),
     BasicStrategy = require('passport-http').BasicStrategy,
     ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy,
     ClientJWTBearerStrategy = require('passport-oauth2-jwt-bearer').Strategy,
@@ -27,9 +28,25 @@ passport.use(new LocalStrategy(
     usernameField: 'id',
     passwordField: 'password'
   },
-  function (username, password, done) {
+  function (username, password, database, done) {
     "use strict";
+    var options = {user: username, password: password, port: 5432, hostname: "localhost", database: database};
+    var conString = X.database.conString(options);
+    var model;
 
+    console.log("here");
+    XT.dataSource.query("select relname from pg_class limit 1;", options, function (error, res) {
+      if (error) {
+        // authentication failure
+        return done(null, false);
+      } else {
+        // authentication success
+        model = new Backbone.Model();
+        model.set({id: username})
+        return done(null, model);
+      }
+    });
+    /*
     db.users.findByUsername(username, function (err, user) {
       if (err) { return done(err); }
       if (!user) {
@@ -40,6 +57,7 @@ passport.use(new LocalStrategy(
       }
       return done(null, user);
     });
+    */
   }
 ));
 
