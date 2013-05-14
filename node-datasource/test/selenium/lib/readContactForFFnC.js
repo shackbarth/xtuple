@@ -58,7 +58,8 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.clickElement(el7, function () {
   browser.elementByXPath(contactObj.readObj1.addressLine1_xpath, function (err, el8) {
   browser.getValue(el8, function (err,value) {
-  if (value === contactData.VARIABLES.contact_addressLine1) {
+  //if (value === contactData.VARIABLES.contact_addressLine1) {
+  if (value === fname) {
   utils.results('PASS: Address Line verified');
   }
   else {

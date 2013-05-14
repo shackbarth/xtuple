@@ -45,7 +45,8 @@ regexp:true, strict:true, trailing:true, white:false */
   browser.clickElement(el7, function (err) {
   browser.waitForElementByXPath(contactObj.Obj.addressLine1_xpath, 4000, function (err) {
   browser.elementByXPath(contactObj.Obj.addressLine1_xpath, function (err, el8) {
-  browser.type(el8,contactData.VARIABLES.contact_addressLine1, function (err) {
+  //browser.type(el8,contactData.VARIABLES.contact_addressLine1, function (err) {
+  browser.type(el8,fname, function (err) {
   browser.elementByXPath(contactObj.Obj.addressDoneButton_xpath, function (err, doneEl) {
   browser.clickElement(doneEl, function (err) {
   browser.elementByXPath(contactObj.Obj.jobtitle_xpath, function (err,el9) {

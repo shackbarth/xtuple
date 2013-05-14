@@ -37,7 +37,8 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.clickElement(el7, function () {
   browser.waitForElementByXPath(contactObj.Obj.addressLine1_xpath, 4000, function () {
   browser.elementByXPath(contactObj.Obj.addressLine1_xpath, function (err, el8) {
-  browser.type(el8,contactData.VARIABLES.contact_addressLine1, function () {
+  //browser.type(el8,contactData.VARIABLES.contact_addressLine1, function () {
+  browser.type(el8, fname, function () {
   browser.elementByXPath(contactObj.Obj.addressLine2_xpath, function (err, addrLine2) {
   browser.type(addrLine2, ' ', function () {
   browser.elementByXPath(contactObj.Obj.addressDoneButton_xpath, function (err, doneEl) {
