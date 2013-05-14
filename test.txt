@@ -1,0 +1,1611 @@
+DO
+CREATE EXTENSION
+DO
+DO
+DROP FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+DROP FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+DROP FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+DROP FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+DROP FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+DROP OPERATOR
+CREATE OPERATOR
+DROP OPERATOR
+CREATE OPERATOR
+DROP OPERATOR
+CREATE OPERATOR
+DROP OPERATOR
+CREATE OPERATOR
+DROP OPERATOR
+CREATE OPERATOR
+DROP OPERATOR
+CREATE OPERATOR
+DROP OPERATOR
+CREATE OPERATOR
+DROP OPERATOR
+CREATE OPERATOR
+ create_table 
+--------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_constraint 
+----------------
+ f
+(1 row)
+
+COMMENT
+ create_table 
+--------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_index 
+-----------
+ f
+(1 row)
+
+COMMENT
+GRANT
+GRANT
+ create_table 
+--------------
+ f
+(1 row)
+
+DROP TRIGGER
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_constraint 
+----------------
+ f
+(1 row)
+
+COMMENT
+CREATE TRIGGER
+ create_table 
+--------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_constraint 
+----------------
+ f
+(1 row)
+
+COMMENT
+GRANT
+GRANT
+ install_js 
+------------
+ 
+(1 row)
+
+ install_js 
+------------
+ 
+(1 row)
+
+ install_js 
+------------
+ 
+(1 row)
+
+ install_js 
+------------
+ 
+(1 row)
+
+ install_js 
+------------
+ 
+(1 row)
+
+ install_js 
+------------
+ 
+(1 row)
+
+ install_js 
+------------
+ 
+(1 row)
+
+ js_init 
+---------
+ 
+(1 row)
+
+DO
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+ create_table 
+--------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+COMMENT
+ create_table 
+--------------
+ f
+(1 row)
+
+ add_constraint 
+----------------
+ f
+(1 row)
+
+ add_constraint 
+----------------
+ f
+(1 row)
+
+COMMENT
+ add_priv 
+----------
+ f
+(1 row)
+
+ create_table 
+--------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+COMMENT
+ create_table 
+--------------
+ f
+(1 row)
+
+ create_table 
+--------------
+ f
+(1 row)
+
+ create_table 
+--------------
+ f
+(1 row)
+
+ create_table 
+--------------
+ f
+(1 row)
+
+ create_table 
+--------------
+ f
+(1 row)
+
+ create_table 
+--------------
+ f
+(1 row)
+
+ create_table 
+--------------
+ f
+(1 row)
+
+ create_table 
+--------------
+ f
+(1 row)
+
+INSERT 0 0
+UPDATE 533
+DO
+INSERT 0 0
+INSERT 0 0
+INSERT 0 0
+INSERT 0 0
+ create_table 
+--------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+COMMENT
+ create_table 
+--------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+COMMENT
+ create_table 
+--------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+COMMENT
+ create_table 
+--------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_constraint 
+----------------
+ f
+(1 row)
+
+COMMENT
+ create_table 
+--------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+COMMENT
+ create_table 
+--------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+COMMENT
+ install_js 
+------------
+ 
+(1 row)
+
+ create_view 
+-------------
+ t
+(1 row)
+
+CREATE RULE
+CREATE RULE
+CREATE RULE
+ create_view 
+-------------
+ t
+(1 row)
+
+ create_view 
+-------------
+ t
+(1 row)
+
+CREATE RULE
+CREATE RULE
+CREATE RULE
+ create_view 
+-------------
+ t
+(1 row)
+
+CREATE RULE
+CREATE RULE
+CREATE RULE
+CREATE VIEW
+GRANT
+ create_view 
+-------------
+ t
+(1 row)
+
+CREATE RULE
+CREATE RULE
+CREATE RULE
+ create_view 
+-------------
+ t
+(1 row)
+
+ create_view 
+-------------
+ t
+(1 row)
+
+CREATE RULE
+CREATE RULE
+CREATE RULE
+ create_view 
+-------------
+ t
+(1 row)
+
+DO
+REVOKE
+GRANT
+CREATE RULE
+CREATE RULE
+CREATE RULE
+ create_view 
+-------------
+ t
+(1 row)
+
+ create_view 
+-------------
+ t
+(1 row)
+
+ create_view 
+-------------
+ t
+(1 row)
+
+ create_view 
+-------------
+ t
+(1 row)
+
+ create_view 
+-------------
+ t
+(1 row)
+
+CREATE RULE
+CREATE RULE
+CREATE RULE
+ create_view 
+-------------
+ t
+(1 row)
+
+CREATE RULE
+CREATE RULE
+CREATE RULE
+ create_view 
+-------------
+ t
+(1 row)
+
+CREATE RULE
+CREATE RULE
+CREATE RULE
+ create_view 
+-------------
+ t
+(1 row)
+
+ install_guiscript 
+-------------------
+ t
+(1 row)
+
+ install_guiscript 
+-------------------
+ t
+(1 row)
+
+ install_guiscript 
+-------------------
+ t
+(1 row)
+
+ install_js 
+------------
+ 
+(1 row)
+
+ install_js 
+------------
+ 
+(1 row)
+
+ install_js 
+------------
+ 
+(1 row)
+
+ install_js 
+------------
+ 
+(1 row)
+
+ install_js 
+------------
+ 
+(1 row)
+
+ install_js 
+------------
+ 
+(1 row)
+
+ install_js 
+------------
+ 
+(1 row)
+
+ install_js 
+------------
+ 
+(1 row)
+
+ install_js 
+------------
+ 
+(1 row)
+
+ install_js 
+------------
+ 
+(1 row)
+
+ install_js 
+------------
+ 
+(1 row)
+
+ install_js 
+------------
+ 
+(1 row)
+
+ install_js 
+------------
+ 
+(1 row)
+
+ install_js 
+------------
+ 
+(1 row)
+
+CREATE FUNCTION
+ dropifexists 
+--------------
+            1
+(1 row)
+
+CREATE TRIGGER
+DO
+DELETE 2
+INSERT 0 1
+INSERT 0 1
+DO
+ create_table 
+--------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+UPDATE 1
+DO
+ add_priv 
+----------
+ f
+(1 row)
+
+ add_priv 
+----------
+ f
+(1 row)
+
+ add_priv 
+----------
+ f
+(1 row)
+
+DO
+CREATE FUNCTION
+ create_table 
+--------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_primary_key 
+-----------------
+ f
+(1 row)
+
+ add_constraint 
+----------------
+ f
+(1 row)
+
+COMMENT
+ create_table 
+--------------
+ f
+(1 row)
+
+DROP TRIGGER
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_column 
+------------
+ f
+(1 row)
+
+ add_primary_key 
+-----------------
+ f
+(1 row)
+
+ add_constraint 
+----------------
+ f
+(1 row)
+
+ add_constraint 
+----------------
+ f
+(1 row)
+
+ add_constraint 
+----------------
+ f
+(1 row)
+
+COMMENT
+CREATE TRIGGER
+ add_priv 
+----------
+ f
+(1 row)
+
+[33m<<WARN 2013-05-14T18:49:10.125Z>> [39m[33mNot using pgWorker process.[39m
+[33m<<WARN 2013-05-14T18:49:10.126Z>> [39m[33mUse '-w' command line flag to enable it if you want to.[39m
+installing XM.ClassCode
+installing XM.FreightClass
+installing XM.Item
+installing XM.ItemAccount
+installing XM.ItemAlias
+installing XM.ItemCharacteristic
+installing XM.ItemComment
+installing XM.ItemContact
+installing XM.ItemFile
+installing XM.ItemListItem
+installing XM.ItemListItemCharacteristic
+installing XM.ItemRelation
+installing XM.ItemRelationCharacteristic
+installing XM.ItemItem
+installing XM.ItemUrl
+installing XM.ProductCategory
+installing XM.Unit
+installing XM.SaleType
+installing XM.SalesRep
+installing XM.Incident
+installing XM.IncidentAccount
+installing XM.IncidentAlarm
+installing XM.IncidentCategory
+installing XM.IncidentCharacteristic
+installing XM.IncidentListItemCharacteristic
+installing XM.IncidentComment
+installing XM.IncidentContact
+installing XM.IncidentFile
+installing XM.IncidentHistory
+installing XM.IncidentIncident
+installing XM.IncidentRelation
+installing XM.IncidentListItem
+installing XM.IncidentItem
+installing XM.IncidentRecurrence
+installing XM.IncidentResolution
+installing XM.IncidentSeverity
+installing XM.IncidentUrl
+installing XM.IncidentEmailProfile
+installing XM.CostCategory
+installing XM.ItemSite
+installing XM.ItemSiteComment
+installing XM.ItemSiteListItem
+installing XM.ItemSiteRelation
+installing XM.PlannerCode
+installing XM.Opportunity
+installing XM.OpportunityAccount
+installing XM.OpportunityCharacteristic
+installing XM.OpportunityListItemCharacteristic
+installing XM.OpportunityComment
+installing XM.OpportunityContact
+installing XM.OpportunityFile
+installing XM.OpportunityRelation
+installing XM.OpportunityListItem
+installing XM.OpportunityItem
+installing XM.OpportunityOpportunity
+installing XM.OpportunitySource
+installing XM.OpportunityStage
+installing XM.OpportunityType
+installing XM.OpportunityUrl
+installing XM.SessionStore
+installing XM.Department
+installing XM.Shift
+installing XM.Employee
+installing XM.EmployeeRelation
+installing XM.EmployeeEmployeeRelation
+installing XM.EmployeeComment
+installing XM.EmployeeCharacteristic
+installing XM.EmployeeGroup
+installing XM.EmployeeGroupEmployee
+installing XM.EmployeeGroupGroup
+installing XM.ToDo
+installing XM.ToDoAccount
+installing XM.ToDoAlarm
+installing XM.ToDoComment
+installing XM.ToDoContact
+installing XM.ToDoFile
+installing XM.ToDoRelation
+installing XM.ToDoListItem
+installing XM.ToDoItem
+installing XM.ToDoRecurrence
+installing XM.ToDoToDo
+installing XM.ToDoUrl
+installing XM.Language
+installing XM.Privilege
+installing XM.Locale
+installing XM.UserAccount
+installing XM.User
+installing XM.UserAccountRelation
+installing XM.UserAccountPrivilegeAssignment
+installing XM.UserAccountRole
+installing XM.UserAccountRoleRelation
+installing XM.UserAccountRolePrivilegeAssignment
+installing XM.UserAccountUserAccountRoleAssignment
+installing XM.Oauth2client
+installing XM.Oauth2clientRedirs
+installing XM.Oauth2token
+installing XM.SalesOrder
+installing XM.SalesOrderAccount
+installing XM.SalesOrderComment
+installing XM.SalesOrderContact
+installing XM.SalesOrderFile
+installing XM.SalesOrderItem
+installing XM.SalesOrderLine
+installing XM.SalesOrderLineCharacteristic
+installing XM.SalesOrderLineComment
+installing XM.SalesOrderListItem
+installing XM.SalesOrderRelation
+installing XM.SalesOrderUrl
+installing XM.Terms
+installing XM.Account
+installing XM.AccountAccount
+installing XM.AccountAddressListItem
+installing XM.AccountCharacteristic
+installing XM.AccountListItemCharacteristic
+installing XM.AccountComment
+installing XM.AccountContact
+installing XM.AccountFile
+installing XM.AccountRelation
+installing XM.AccountListItem
+installing XM.AccountIncident
+installing XM.AccountItem
+installing XM.AccountUrl
+installing XM.Url
+installing XM.Prospect
+installing XM.ProspectRelation
+installing XM.Address
+installing XM.AddressCharacteristic
+installing XM.AddressComment
+installing XM.AddressInfo
+installing XM.Country
+installing XM.State
+installing XM.CommentType
+installing XM.CommentTypeSource
+installing XM.Source
+installing XM.File
+installing XM.FileRelation
+installing XM.Customer
+installing XM.CustomerCharacteristic
+installing XM.CustomerComment
+installing XM.CustomerTaxRegistration
+installing XM.CustomerShipto
+installing XM.CustomerAccount
+installing XM.CustomerContact
+installing XM.CustomerFile
+installing XM.CustomerItem
+installing XM.CustomerUrl
+installing XM.CustomerCustomer
+installing XM.CustomerShiptoRelation
+installing XM.CustomerType
+installing XM.CustomerRelation
+installing XM.ShipCharge
+installing XM.ShipVia
+installing XM.ShipZone
+installing XM.CustomerGroup
+installing XM.CustomerGroupCustomer
+installing XM.CustomerProspectRelation
+installing XM.CustomerProspectListItem
+installing XM.Extension
+installing XM.Project
+installing XM.ProjectAccount
+installing XM.ProjectComment
+installing XM.ProjectContact
+installing XM.ProjectFile
+installing XM.ProjectRelation
+installing XM.ProjectTaskRelation
+installing XM.TaskRelation
+installing XM.ProjectListItem
+installing XM.ProjectItem
+installing XM.ProjectProject
+installing XM.ProjectRecurrence
+installing XM.ProjectTask
+installing XM.Task
+installing XM.TaskComment
+installing XM.TaskListItem
+installing XM.ProjectTaskAlarm
+installing XM.ProjectTaskComment
+installing XM.ProjectUrl
+installing XM.TaxAssignment
+installing XM.TaxAuthority
+installing XM.TaxAuthorityRelation
+installing XM.TaxClass
+installing XM.TaxCode
+installing XM.TaxRate
+installing XM.TaxType
+installing XM.TaxZone
+installing XM.Priority
+installing XM.LedgerAccount
+installing XM.LedgerAccountRelation
+installing XM.ExpenseCategory
+installing XM.Quote
+installing XM.QuoteAccount
+installing XM.QuoteComment
+installing XM.QuoteContact
+installing XM.QuoteFile
+installing XM.QuoteItem
+installing XM.QuoteLine
+installing XM.QuoteLineCharacteristic
+installing XM.QuoteLineComment
+installing XM.QuoteListItem
+installing XM.QuoteRelation
+installing XM.QuoteUrl
+installing XM.Contact
+installing XM.ContactInfo
+installing XM.ContactAccount
+installing XM.ContactCharacteristic
+installing XM.ContactListItemCharacteristic
+installing XM.ContactComment
+installing XM.ContactContact
+installing XM.ContactEmail
+installing XM.ContactFile
+installing XM.ContactListItem
+installing XM.ContactRelation
+installing XM.ContactItem
+installing XM.ContactUrl
+installing XM.Honorific
+installing XM.BiCache
+installing XM.Currency
+installing XM.CurrencyRate
+installing XM.Characteristic
+installing XM.CharacteristicOption
+installing XM.Site
+installing XM.SiteComment
+installing XM.SiteListItem
+installing XM.SiteRelation
+installing XM.SiteType
+all done
+[33m<<WARN 2013-05-14T18:49:13.044Z>> [39m[33mNot using pgWorker process.[39m
+[33m<<WARN 2013-05-14T18:49:13.045Z>> [39m[33mUse '-w' command line flag to enable it if you want to.[39m
+installing XM.CustomerContactRelation
+installing XM.CustomerOpportunityRelation
+installing XM.CustomerToDoRelation
+installing XM.CustomerIncidentRelation
+installing XM.AccountOpportunity
+installing XM.AccountToDo
+installing XM.ContactIncident
+installing XM.ContactOpportunity
+installing XM.ContactToDo
+installing XM.IncidentOpportunity
+installing XM.IncidentToDo
+installing XM.OpportunityIncident
+installing XM.OpportunityToDo
+installing XM.ToDoIncident
+installing XM.ToDoOpportunity
+installing XM.QuoteIncident
+installing XM.QuoteOpportunity
+installing XM.QuoteToDo
+installing XM.Customer
+installing (extension crm) XM.Customer
+installing XM.CustomerRelation
+installing (extension crm) XM.CustomerRelation
+installing XM.Account
+installing (extension crm) XM.Account
+installing XM.Contact
+installing (extension crm) XM.Contact
+installing XM.Prospect
+installing (extension crm) XM.Prospect
+installing XM.ToDo
+installing (extension crm) XM.ToDo
+installing XM.ToDoListItem
+installing (extension crm) XM.ToDoListItem
+installing XM.ToDoRelation
+installing (extension crm) XM.ToDoRelation
+installing XM.Incident
+installing (extension crm) XM.Incident
+installing XM.Characteristic
+installing (extension crm) XM.Characteristic
+installing XM.Opportunity
+installing (extension crm) XM.Opportunity
+installing XM.Quote
+installing (extension crm) XM.Quote
+all done
+[33m<<WARN 2013-05-14T18:49:14.000Z>> [39m[33mNot using pgWorker process.[39m
+[33m<<WARN 2013-05-14T18:49:14.002Z>> [39m[33mUse '-w' command line flag to enable it if you want to.[39m
+installing XM.CustomerProject
+installing XM.AccountProject
+installing XM.ContactProject
+installing XM.IncidentProject
+installing XM.OpportunityProject
+installing XM.ProjectIncident
+installing XM.ProjectOpportunity
+installing XM.ProjectToDo
+installing XM.ToDoProject
+installing XM.QuoteProject
+installing XM.Customer
+installing (extension project) XM.Customer
+installing XM.IncidentRelation
+installing (extension project) XM.IncidentRelation
+installing XM.Account
+installing (extension project) XM.Account
+installing XM.Contact
+installing (extension project) XM.Contact
+installing XM.Incident
+installing (extension project) XM.Incident
+installing XM.IncidentListItem
+installing (extension project) XM.IncidentListItem
+installing XM.Opportunity
+installing (extension project) XM.Opportunity
+installing XM.Project
+installing (extension project) XM.Project
+installing XM.ToDo
+installing (extension project) XM.ToDo
+installing XM.Quote
+installing (extension project) XM.Quote
+all done
+[33m<<WARN 2013-05-14T18:49:14.612Z>> [39m[33mNot using pgWorker process.[39m
+[33m<<WARN 2013-05-14T18:49:14.613Z>> [39m[33mUse '-w' command line flag to enable it if you want to.[39m
+installing XM.ItemCustomer
+installing XM.IncidentCustomer
+installing XM.OpportunityCustomer
+installing XM.ToDoCustomer
+installing XM.AccountCustomer
+installing XM.ProjectCustomer
+installing XM.QuoteCustomer
+installing XM.ContactCustomer
+installing XM.Item
+installing (extension sales) XM.Item
+installing XM.Incident
+installing (extension sales) XM.Incident
+installing XM.ItemSite
+installing (extension sales) XM.ItemSite
+installing XM.Opportunity
+installing (extension sales) XM.Opportunity
+installing XM.ToDo
+installing (extension sales) XM.ToDo
+installing XM.Account
+installing (extension sales) XM.Account
+installing XM.Prospect
+installing (extension sales) XM.Prospect
+installing XM.Customer
+installing (extension sales) XM.Customer
+installing XM.Project
+installing (extension sales) XM.Project
+installing XM.Quote
+installing (extension sales) XM.Quote
+installing XM.Contact
+installing (extension sales) XM.Contact
+all done
+[33m<<WARN 2013-05-14T18:49:15.212Z>> [39m[33mNot using pgWorker process.[39m
+[33m<<WARN 2013-05-14T18:49:15.213Z>> [39m[33mUse '-w' command line flag to enable it if you want to.[39m
+installing XM.ProjectVersion
+installing XM.Incident
+installing (extension incident_plus) XM.Incident
+installing XM.IncidentListItem
+installing (extension incident_plus) XM.IncidentListItem
+installing XM.Project
+installing (extension incident_plus) XM.Project
+all done
