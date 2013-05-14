@@ -26,41 +26,62 @@
     });
     
     describe('Test Text to Date', function () {
+      var newDate = new Date();
+      
       // Test known bad dates
       it('Test just plain bad date', function () {
         assert.isFalse(K.textToDate("********"));
         assert.isFalse(K.textToDate("BEWARE. I AM BAD."));
       });
       
+      // Test entering "#" and a number to get x days in the year
       it('Test day of the year using #', function () {
-        var days = 20, newDate = new Date();
+        var days, daysFromStart = function (days) {
+          newDate = new Date(newDate.getFullYear(), 0, days, 0, 0, 0, 0);
+          newDate = K.applyTimezoneOffset(newDate);
+        };
         
-        newDate = new Date(newDate.getFullYear(), 0, 20, 0, 0, 0, 0);
-        newDate = K.applyTimezoneOffset(newDate);
-        assert.notStrictEqual(K.textToDate("#20"), newDate);
-        
-        newDate = new Date(newDate.getFullYear(), 0, 65, 0, 0, 0, 0);
-        newDate = K.applyTimezoneOffset(newDate);
-        assert.notStrictEqual(K.textToDate("#65"), newDate);
-        
+        days = 20;
+        assert.notStrictEqual(K.textToDate("#" + days), daysFromStart(days));
+        days = 65;
+        assert.notStrictEqual(K.textToDate("#" + days), daysFromStart(days));
         // really, really big one!
-        newDate = new Date(newDate.getFullYear(), 0, 600000000, 0, 0, 0, 0);
-        newDate = K.applyTimezoneOffset(newDate);
-        assert.notStrictEqual(K.textToDate("#600000000"), newDate);
-        
+        days = 66666666666666765;
+        assert.notStrictEqual(K.textToDate("#" + days), daysFromStart(days));
         // and it works backward!
-        newDate = new Date(newDate.getFullYear(), 0, -40, 0, 0, 0, 0);
-        newDate = K.applyTimezoneOffset(newDate);
-        assert.notStrictEqual(K.textToDate("#-40"), newDate);
+        days = -67;
+        assert.notStrictEqual(K.textToDate("#" + days), daysFromStart(days));
         
         assert.isFalse(K.textToDate("#tt"));
-        // This is a bug. Both of these should return false!
-        //assert.isFalse(K.textToDate("#"));
-        //assert.isFalse(K.textToDate("#*"));
+        assert.isFalse(K.textToDate("#"));
+        assert.isFalse(K.textToDate("#*"));
       });
       
+      // Testing entering "+" and a number to means days from now
+      it('Test adding days using +', function () {
+        var daysOffset, millisecondOffset = function (offset) {
+          return offset * 24 * 60 * 60 * 1000;
+        };
+        
+        daysOffset = 20;
+        newDate.setTime(newDate.getTime() + millisecondOffset(daysOffset));
+        assert.notStrictEqual(K.textToDate("+20"), newDate);
+        
+        daysOffset = 40;
+        newDate.setTime(newDate.getTime() + millisecondOffset(daysOffset));
+        assert.notStrictEqual(K.textToDate("+40"), newDate);
+        
+        assert.isFalse(K.textToDate("+tt"));
+        assert.isFalse(K.textToDate("+"));
+        assert.isFalse(K.textToDate("+*"));
+      });
+      
+      // Test entering "#" as today's date
+      it('Test that 0 is today', function () {
+        newDate = K.applyTimezoneOffset(newDate);
+        assert.notStrictEqual(K.textToDate("0"), newDate);
+      });
     });
-    
-  }); 
+  });
 
 }());
