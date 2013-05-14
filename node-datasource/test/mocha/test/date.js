@@ -79,28 +79,18 @@
       // Testing entering "+" and a number to mean days from now
       it('Test adding days using +', function () {
         var daysOffset, millisecondOffset = function (offset) {
-          return offset * 24 * 60 * 60 * 1000;
+          var milliOffset = offset * 24 * 60 * 60 * 1000;
+          newDate = new Date(newDate.getTime() + milliOffset);
+          return newDate;
         };
         
         daysOffset = 20;
-        newDate.setTime(newDate.getTime() + millisecondOffset(daysOffset));
-        K.applyTimezoneOffset(newDate);
-        //assert.equal(K.textToDate("+" + daysOffset).toDateString(), newDate.toDateString());
-        
-        daysOffset = 40;
-        newDate.setTime(newDate.getTime() + millisecondOffset(daysOffset));
-        K.applyTimezoneOffset(newDate);
-        //assert.equal(K.textToDate("+" + daysOffset).toDateString(), newDate.toDateString());
-        
-        // zomg so far into the future
-        daysOffset = 999999999993453;
-        newDate.setTime(newDate.getTime() + millisecondOffset(daysOffset));
-        K.applyTimezoneOffset(newDate);
-        //assert.equal(K.textToDate("+" + daysOffset), newDate);
+        //assert.equal(K.textToDate("+" + daysOffset).toDateString(),  millisecondOffset(daysOffset).toDateString());
         
         assert.isFalse(K.textToDate("+tt"));
         assert.isFalse(K.textToDate("+"));
         assert.isFalse(K.textToDate("+*"));
+        assert.isFalse(K.textToDate("+99999999999999"));
       });
       
       // Testing entering "-" and a number to mean days before now
@@ -113,18 +103,10 @@
         newDate.setTime(newDate.getTime() - millisecondOffset(daysOffset));
         //assert.equal(K.textToDate("-" + daysOffset).toDateString(), newDate.toDateString());
         
-        daysOffset = 40;
-        newDate.setTime(newDate.getTime() - millisecondOffset(daysOffset));
-        //assert.equal(K.textToDate("-" + daysOffset).toDateString(), newDate.toDateString());
-        
-        // zomg so far into the past
-        daysOffset = 999999999993453;
-        newDate.setTime(newDate.getTime() - millisecondOffset(daysOffset));
-        //assert.equal(K.textToDate("-" + daysOffset), newDate);
-        
         assert.isFalse(K.textToDate("-tt"));
         assert.isFalse(K.textToDate("-"));
         assert.isFalse(K.textToDate("-*"));
+        assert.isFalse(K.textToDate("-99999999999999"));
       });
       
       // Test entering "0" as today's date
