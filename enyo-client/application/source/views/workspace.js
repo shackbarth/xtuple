@@ -58,6 +58,45 @@ trailing:true white:true*/
       return model ? model.get('account') : undefined;
     }
   };
+  
+  /**
+    Abstract workspace to be used for objects that are attached to models subclassed from `AccountDocument`.
+    Must be subclassed.
+  */
+  enyo.kind({
+    name: "XV.AccountDocumentWorkspace",
+    kind: "XV.Workspace",
+    handlers: {
+      onError: "errorNotify"
+    },
+    published: {
+      existingId: ""
+    },
+    accountConvert: function (inEvent) {
+      this.value.convertFromAccount(this.existingId);
+      this._popupDone = true;
+      this.$.findExistingAccountPopup.hide();
+    },
+    errorNotify: function (inSender, inEvent) {
+      // Handle existing
+      if (inEvent.error.code === 'xt1008') {
+        this.existingId = inEvent.error.params.response.id;
+        this._popupDone = false;
+        this.$.findExistingAccountPopup.show();
+        return true;
+      }
+    },
+    accountCancel: function () {
+      this._popupDone = true;
+      this.$.findExistingAccountPopup.hide();
+    },
+    popupHidden: function () {
+      if (!this._popupDone) {
+        this.$.findExistingAccountPopup.show();
+        return true;
+      }
+    }
+  });
 
   // ..........................................................
   // BASE CLASS
@@ -75,7 +114,9 @@ trailing:true white:true*/
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
-            {kind: "XV.NumberWidget", attr: "order"}
+            // these order fields are integers, so setting a maxlength
+            // to prevent exceeding integer's max value
+            {kind: "XV.NumberWidget", attr: "order", maxlength: 9, formatting: false}
           ]}
         ]}
       ]}
@@ -450,11 +491,13 @@ trailing:true white:true*/
           ]}
         ]},
         {kind: "XV.CustomerQuoteListRelationsBox", attr: "quoteRelations"},
+        {kind: "XV.CustomerSalesOrderListRelationsBox", attr: "salesOrderRelations"},
         {kind: "XV.CustomerShipToBox", attr: "shiptos"},
         {kind: "XV.CustomerCommentBox", attr: "comments"},
         {kind: "XV.TaxRegistrationBox", attr: "taxRegistration"},
         {kind: "XV.CustomerDocumentsBox", attr: "documents"}
       ]},
+      // TODO: move this to notify system
       {kind: "onyx.Popup", name: "findExistingCustomerPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",
         onHide: "popupHidden", components: [
@@ -483,14 +526,14 @@ trailing:true white:true*/
         this.existingId = inEvent.error.params.response.id;
         if (type === 'P') { // Prospect
           this._popupDone = false;
-          this.$.exists.setContent("_customerExistsProspect".loc());
+          this.$.exists.setContent("_prospectExists".loc());
           this.$.whatToDo.setContent("_convertProspect".loc());
           this.$.ok.type = "prospect";
           this.$.findExistingCustomerPopup.show();
           return true;
         } else if (type === 'A') { // Existing Account
           this._popupDone = false;
-          this.$.exists.setContent("_customerExistsAccount".loc());
+          this.$.exists.setContent("_accountExists".loc());
           this.$.whatToDo.setContent("_convertAccount".loc());
           this.$.ok.type = "account";
           this.$.findExistingCustomerPopup.show();
@@ -567,6 +610,157 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.CustomerType", "XV.CustomerTypeWorkspace");
+
+  // ..........................................................
+  // CLASS CODE
+  //
+
+  enyo.kind({
+    name: "XV.ExpenseCategoryWorkspace",
+    kind: "XV.Workspace",
+    title: "_expenseCategory".loc(),
+    model: "XM.ExpenseCategory",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.ExpenseCategory", "XV.ExpenseCategoryWorkspace");
+  
+  // ..........................................................
+  // DEPARTMENT
+  //
+
+  enyo.kind({
+    name: "XV.DepartmentWorkspace",
+    kind: "XV.Workspace",
+    title: "_department".loc(),
+    model: "XM.Department",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.InputWidget", attr: "name"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.Department", "XV.DepartmentWorkspace");
+  
+  // ..........................................................
+  // EMPLOYEE
+  //
+
+  enyo.kind({
+    name: "XV.EmployeeWorkspace",
+    kind: "XV.AccountDocumentWorkspace",
+    title: "_employee".loc(),
+    model: "XM.Employee",
+    allowPrint: false,
+    headerAttrs: ["number", "-", "name"],
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "code"},
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
+            {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
+            {kind: "XV.ContactWidget", attr: "contact",
+              showAddress: true, label: "_name".loc()},
+            {kind: "XV.EmployeeCharacteristicsWidget", attr: "characteristics"},
+            {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
+            {kind: "XV.TextArea", attr: "notes"}
+          ]}
+        ]},
+        {kind: "XV.Groupbox", name: "detailPanel", title: "_detail".loc(),
+          components: [
+          {kind: "onyx.GroupboxHeader", content: "_detail".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "detailGroup", fit: true,
+            classes: "in-panel", components: [
+            {kind: "XV.DateWidget", attr: "startDate"},
+            {kind: "XV.SitePicker", attr: "site"},
+            {kind: "XV.DepartmentPicker", attr: "department"},
+            {kind: "XV.EmployeeWidget", attr: "manager"},
+            {kind: "XV.ShiftPicker", attr: "shift"},
+            {kind: "onyx.GroupboxHeader", content: "_financials".loc()},
+            {kind: "XV.WageTypePicker", attr: "wageType"},
+            {kind: "XV.MoneyWidget",
+              attr: {localValue: "wage", currency: "wageCurrency"},
+              currencyDisabled: true},
+            {kind: "XV.WagePeriodPicker", attr: "wagePeriod", label: "_period".loc()},
+            {kind: "XV.MoneyWidget",
+              attr: {localValue: "billingRate", currency: "billingCurrency"},
+              currencyDisabled: true},
+            {kind: "XV.WagePeriodPicker", attr: "billingPeriod", label: "_period".loc()}
+          ]}
+        ]},
+        {kind: "XV.EmployeeCommentBox", attr: "comments"},
+        {kind: "XV.EmployeeGroupGroupBox", attr: "groups"}
+      ]},
+      {kind: "onyx.Popup", name: "findExistingAccountPopup", centered: true,
+        modal: true, floating: true, scrim: true, onShow: "popupShown",
+        onHide: "popupHidden", components: [
+        {content: "_accountExists".loc()},
+        {name: "whatToDo", content: "_convertAccountEmployee".loc()},
+        {tag: "br"},
+        {kind: "onyx.Button", name: "convert", content: "_ok".loc(), ontap: "accountConvert",
+          classes: "onyx-blue xv-popup-button"},
+        {kind: "onyx.Button", name: "cancel", content: "_cancel".loc(), ontap: "accountCancel",
+          classes: "xv-popup-button"}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.EmployeeRelation", "XV.EmployeeWorkspace");
+  XV.registerModelWorkspace("XM.EmployeeListItem", "XV.EmployeeWorkspace");
+  
+  // ..........................................................
+  // EMPLOYEE GROUP
+  //
+
+  enyo.kind({
+    name: "XV.EmployeeGroupWorkspace",
+    kind: "XV.Workspace",
+    title: "_employeeGroup".loc(),
+    model: "XM.EmployeeGroup",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "name"},
+            {kind: "XV.InputWidget", attr: "description"}
+          ]}
+        ]},
+        {kind: "XV.EmployeeGroupEmployeeBox", attr: "employees"}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.EmployeeGroup", "XV.EmployeeGroupWorkspace");
 
   // ..........................................................
   // FILE
@@ -837,9 +1031,11 @@ trailing:true white:true*/
             {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.InputWidget", attr: "description1"},
             {kind: "XV.InputWidget", attr: "description2"},
-            {kind: "XV.UnitPicker", attr: "inventoryUnit"},
+            {kind: "XV.ItemTypePicker", attr: "itemType", showNone: false},
             {kind: "XV.ClassCodePicker", attr: "classCode"},
+            {kind: "XV.UnitPicker", attr: "inventoryUnit"},
             {kind: "XV.CheckboxWidget", attr: "isFractional"},
+            {kind: "XV.CheckboxWidget", attr: "isPicklist"},
             {kind: "onyx.GroupboxHeader", content: "_product".loc()},
             {kind: "XV.CheckboxWidget", attr: "isSold"},
             {kind: "XV.ProductCategoryPicker", attr: "productCategory",
@@ -921,7 +1117,8 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.AccountWidget", attr: "account"},
             {kind: "XV.ContactWidget", attr: "contact"},
-            {kind: "XV.MoneyWidget", attr: {localValue: "amount", currency: "currency"},
+            {kind: "XV.MoneyWidget",
+              attr: {localValue: "amount", currency: "currency"},
               label: "_amount".loc()},
             {kind: "XV.NumberWidget", attr: "probability"},
             {kind: "onyx.GroupboxHeader", content: "_status".loc()},
@@ -1124,11 +1321,11 @@ trailing:true white:true*/
   XV.registerModelWorkspace("XM.ProjectListItem", "XV.ProjectWorkspace");
 
   enyo.kind({
-    name: "XV.ProjectTaskWorkspace",
+    name: "XV.TaskWorkspace",
     kind: "XV.Workspace",
-    title: "_projectTask".loc(),
+    title: "_task".loc(),
     headerAttrs: ["number", "-", "name"],
-    model: "XM.ProjectTask",
+    model: "XM.Task",
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         classes: "xv-top-panel", fit: true, components: [
@@ -1136,6 +1333,7 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
+            {kind: "XV.ProjectWidget", attr: "project"},
             {kind: "XV.InputWidget", attr: "number"},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.ProjectStatusPicker", attr: "status"},
@@ -1146,14 +1344,14 @@ trailing:true white:true*/
             {kind: "XV.DateWidget", attr: "completeDate"},
             {kind: "onyx.GroupboxHeader", content: "_hours".loc()},
             {kind: "XV.QuantityWidget", attr: "budgetedHours",
-              label: "_budgeted".loc()},
+              label: "_budgeted".loc(), maxlength: 12},
             {kind: "XV.QuantityWidget", attr: "actualHours",
-              label: "_actual".loc()},
+              label: "_actual".loc(), maxlength: 12},
             {kind: "onyx.GroupboxHeader", content: "_expenses".loc()},
             {kind: "XV.NumberWidget", attr: "budgetedExpenses", scale: XT.MONEY_SCALE,
-              label: "_budgeted".loc()},
+              label: "_budgeted".loc(), maxlength: 12},
             {kind: "XV.NumberWidget", attr: "actualExpenses", scale: XT.MONEY_SCALE,
-              label: "_actual".loc()},
+              label: "_actual".loc(), maxlength: 12},
             {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
             {kind: "XV.UserAccountWidget", attr: "owner"},
             {kind: "XV.UserAccountWidget", attr: "assignedTo"},
@@ -1161,13 +1359,13 @@ trailing:true white:true*/
             {kind: "XV.TextArea", attr: "notes", fit: true}
           ]}
         ]},
-        {kind: "XV.ProjectTaskCommentBox", attr: "comments"}
+        {kind: "XV.TaskCommentBox", attr: "comments"}
       ]}
     ]
   });
 
-  XV.registerModelWorkspace("XM.ProjectTask", "XV.ProjectTaskWorkspace");
-  XV.registerModelWorkspace("XM.ProjectTaskListItem", "XV.ProjectTaskWorkspace");
+  XV.registerModelWorkspace("XM.Task", "XV.TaskWorkspace");
+  XV.registerModelWorkspace("XM.TaskListItem", "XV.TaskWorkspace");
 
   // ..........................................................
   // PROSPECT
@@ -1175,17 +1373,11 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.ProspectWorkspace",
-    kind: "XV.Workspace",
+    kind: "XV.AccountDocumentWorkspace",
     title: "_prospect".loc(),
     model: "XM.Prospect",
     allowPrint: true,
     headerAttrs: ["number", "-", "name"],
-    handlers: {
-      onError: "errorNotify"
-    },
-    published: {
-      existingId: ""
-    },
     components: [
       {kind: "Panels", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -1207,10 +1399,11 @@ trailing:true white:true*/
         ]},
         {kind: "XV.ProspectQuoteListRelationsBox", attr: "quoteRelations"}
       ]},
+      // TODO: use standard notify mechanism
       {kind: "onyx.Popup", name: "findExistingAccountPopup", centered: true,
         modal: true, floating: true, scrim: true, onShow: "popupShown",
         onHide: "popupHidden", components: [
-        {content: "_customerExistsAccount".loc()},
+        {content: "_accountExists".loc()},
         {name: "whatToDo", content: "_convertAccountProspect".loc()},
         {tag: "br"},
         {kind: "onyx.Button", name: "convert", content: "_ok".loc(), ontap: "accountConvert",
@@ -1218,34 +1411,7 @@ trailing:true white:true*/
         {kind: "onyx.Button", name: "cancel", content: "_cancel".loc(), ontap: "accountCancel",
           classes: "xv-popup-button"}
       ]}
-    ],
-    accountConvert: function (inEvent) {
-      this.value.convertFromAccount(this.existingId);
-      this._popupDone = true;
-      this.$.findExistingAccountPopup.hide();
-    },
-    errorNotify: function (inSender, inEvent) {
-      // Handle customer existing as prospect
-      if (inEvent.error.code === 'xt1008') {
-        var type = inEvent.error.params.response.type;
-        this.existingId = inEvent.error.params.response.id;
-        if (type === 'A') { // Existing Account
-          this._popupDone = false;
-          this.$.findExistingAccountPopup.show();
-          return true;
-        }
-      }
-    },
-    accountCancel: function () {
-      this._popupDone = true;
-      this.$.findExistingAccountPopup.hide();
-    },
-    popupHidden: function () {
-      if (!this._popupDone) {
-        this.$.findExistingAccountPopup.show();
-        return true;
-      }
-    }
+    ]
   });
 
   XV.registerModelWorkspace("XM.ProspectRelation", "XV.ProspectWorkspace");
@@ -1266,7 +1432,8 @@ trailing:true white:true*/
     printOnSaveSetting: "DefaultPrintSOOnSave",
     headerAttrs: ["number", "-", "billtoName"],
     published: {
-      orderDate: null
+      effectiveLabel: "_orderDate".loc(),
+      effectiveKey: "orderDate"
     },
     components: [
       {kind: "Panels", name: "salesPanels", arrangerKind: "CarouselArranger",
@@ -1338,7 +1505,16 @@ trailing:true white:true*/
     ],
     create: function () {
       this.inherited(arguments);
+      var effectiveKey = this.getEffectiveKey();
       this.build();
+      this.$.dateField.setLabel(this.getEffectiveLabel());
+      this.$.dateField.setAttr(effectiveKey);
+      this.getComponents().forEach(function (ctl) {
+        if (ctl.kind === "XV.MoneyWidget") {
+          ctl.getAttr().effective = effectiveKey; // append this property onto the object
+        }
+      });
+      this.titleChanged();
     },
     customerChanged: function () {
       var customer = this.$.customerProspectWidget.getValue(),
@@ -1360,16 +1536,6 @@ trailing:true white:true*/
       var model = this.getValue(),
         customer = model ? model.get("customer") : false,
         isFreeFormShipto = customer ? customer.get("isFreeFormShipto") : true;
-
-      // set the date attribute to the documentDateKey
-      this.setOrderDate(this.value.documentDateKey);
-      this.$.dateField.setAttr(this.getOrderDate());
-      // Loop through the components and set the effective date information for the Money widgets
-      this.getComponents().forEach(function (e) {
-        if (e.kind === "XV.MoneyWidget" && e.getEffective()) {
-          e.setEffective(this.getOrderDate());
-        }
-      });
 
       this.$.copyAddressButton.setDisabled(!isFreeFormShipto);
       this.customerChanged();
@@ -1395,12 +1561,11 @@ trailing:true white:true*/
     kind: "XV.SalesOrderBase",
     title: "_quote".loc(),
     model: "XM.Quote",
-    create: function () {
-      this.inherited(arguments);
-      this.titleChanged();
-    },
+    effectiveLabel: "_quoteDate".loc(),
+    effectiveKey: "quoteDate",
     /**
-      Loops through the components array of the parent kind and inserts the addtional components where they should be rendered.
+      Loops through the components array of the parent kind and inserts the addtional
+      components where they should be rendered.
     */
     build: function () {
       this.$.datePanel.createComponents([
@@ -1411,7 +1576,7 @@ trailing:true white:true*/
           {kind: "XV.QuoteDocumentsBox", attr: "documents"}
         ], {owner: this});
       this.$.lineItemsPanel.createComponents([
-            // Line Item Box
+         // Line Item Box
         {kind: "XV.QuoteLineItemBox", attr: "lineItems", fit: true},
         // Summary Panel
         {kind: "FittableRows", fit: true, name: "totalGroup", components: [
@@ -1421,31 +1586,25 @@ trailing:true white:true*/
               {kind: "FittableRows", name: "summaryColumnOne", components: [
                 {kind: "XV.CurrencyPicker", attr: "currency"},
                 {kind: "XV.MoneyWidget", attr: {localValue: "margin", currency: "currency"},
-                 label: "_margin".loc(), currencyShowing: false,
-                 effective: ""},
+                 label: "_margin".loc(), currencyShowing: false},
                 {kind: "XV.WeightWidget", attr: "freightWeight"}
               ]},
               {kind: "FittableRows", name: "summaryColumnTwo", components: [
-                {kind: "XV.MoneyWidget", attr:
-                 {localValue: "subtotal", currency: "currency"},
-                 label: "_subtotal".loc(), currencyShowing: false,
-                 effective: ""},
-                {kind: "XV.MoneyWidget", attr:
-                 {localValue: "miscCharge", currency: "currency"},
-                 label: "_miscCharge".loc(), currencyShowing: false,
-                 effective: ""},
-                {kind: "XV.MoneyWidget", attr:
-                 {localValue: "freight", currency: "currency"},
-                 label: "_freight".loc(), currencyShowing: false,
-                 effective: ""},
-                {kind: "XV.MoneyWidget", attr:
-                 {localValue: "taxTotal", currency: "currency"},
-                 label: "_tax".loc(), currencyShowing: false,
-                 effective: ""},
-                {kind: "XV.MoneyWidget", attr:
-                 {localValue: "total", currency: "currency"},
-                 label: "_total".loc(), currencyShowing: false,
-                 effective: ""}
+                {kind: "XV.MoneyWidget",
+                 attr: {localValue: "subtotal", currency: "currency"},
+                 label: "_subtotal".loc(), currencyShowing: false},
+                {kind: "XV.MoneyWidget",
+                  attr: {localValue: "miscCharge", currency: "currency"},
+                 label: "_miscCharge".loc(), currencyShowing: false},
+                {kind: "XV.MoneyWidget",
+                  attr: {localValue: "freight", currency: "currency"},
+                 label: "_freight".loc(), currencyShowing: false},
+                {kind: "XV.MoneyWidget",
+                 attr: {localValue: "taxTotal", currency: "currency"},
+                 label: "_tax".loc(), currencyShowing: false},
+                {kind: "XV.MoneyWidget",
+                 attr: {localValue: "total", currency: "currency"},
+                 label: "_total".loc(), currencyShowing: false}
               ]}
             ]}
           ]}
@@ -1460,12 +1619,12 @@ trailing:true white:true*/
   // ..........................................................
   // LINE ITEM
   //
-  var lineItem = enyo.mixin(XV.LineMixin, {
-    name: "XV.BaseLineWorkspace",
+  var lineItem = {
     kind: "XV.Workspace",
     published: {
-      orderDate: null,
-      currency: null
+      effectiveKey: null,
+      currencyKey: null,
+      commentBox: null
     },
     modelAmnesty: true,
     components: [
@@ -1488,15 +1647,15 @@ trailing:true white:true*/
             {kind: "XV.UnitPicker", name: "quantityUnitPicker",
               attr: "quantityUnit"},
             {kind: "XV.PercentWidget", name: "discount", attr: "discount"},
-            {kind: "XV.MoneyWidget", attr:
-              {localValue: "price", currency: ""},
+            {kind: "XV.MoneyWidget",
+              attr: {localValue: "price"},
               label: "_price".loc(), currencyDisabled: true,
-              effective: "", scale: XT.SALES_PRICE_SCALE},
+              scale: XT.SALES_PRICE_SCALE},
             {kind: "XV.UnitPicker", name: "priceUnitPicker",
               attr: "priceUnit"},
-            {kind: "XV.MoneyWidget", attr: {localValue: "extendedPrice", currency: ""},
+            {kind: "XV.MoneyWidget", attr: {localValue: "extendedPrice"},
               label: "_extendedPrice".loc(), currencyDisabled: true,
-              effective: "", scale: XT.EXTENDED_PRICE_SCALE},
+              scale: XT.EXTENDED_PRICE_SCALE},
             {kind: "onyx.GroupboxHeader", content: "_delivery".loc()},
             {kind: "XV.DateWidget", attr: "scheduleDate"},
             {kind: "XV.DateWidget", attr: "promiseDate", showing: false,
@@ -1510,15 +1669,15 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_costs".loc()},
           {kind: "XV.ScrollableGroupbox", name: "detailGroup",
             classes: "in-panel", fit: true, components: [
-            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.standardCost", currency: ""},
-              label: "_standardCost".loc(), effective: ""},
-            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.averageCost", currency: ""},
-              label: "_averageCost".loc(), effective: ""},
-            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.listCost", currency: ""},
-              label: "_listCost".loc(), effective: ""},
+            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.standardCost"},
+              label: "_standardCost".loc()},
+            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.averageCost"},
+              label: "_averageCost".loc()},
+            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.listCost"},
+              label: "_listCost".loc()},
             {kind: "XV.PercentWidget", attr: "listCostMarkup"},
-            {kind: "XV.MoneyWidget", attr: {localValue: "listPrice", currency: ""},
-              label: "_listPrice".loc(), effective: "", scale: XT.SALES_PRICE_SCALE},
+            {kind: "XV.MoneyWidget", attr: {baseValue: "item.listPrice"},
+              label: "_listPrice".loc(), scale: XT.SALES_PRICE_SCALE},
             {kind: "XV.PercentWidget", attr: "listPriceDiscount"},
             {kind: "XV.PercentWidget", attr: "profit"},
             {kind: "onyx.GroupboxHeader", content: "_tax".loc()},
@@ -1529,39 +1688,58 @@ trailing:true white:true*/
           ]}
         ]}
       ]}
-    ]
-  });
-  enyo.kind(lineItem);
+    ],
+    create: function () {
+      this.inherited(arguments);
+      var effectiveKey = this.getEffectiveKey(),
+        currencyKey = this.getCurrencyKey,
+        comments = this.getCommentBox();
+
+      // Show/Hide promise date
+      this.$.promiseDate.setShowing(XT.session.settings.get("UsePromiseDate"));
+
+      // Set currency and effective attributes on money widgets
+      this.getComponents().forEach(function (ctl) {
+        if (ctl.kind === "XV.MoneyWidget") {
+          ctl.setAttr(currencyKey);
+          ctl.setAttr(effectiveKey);
+        }
+      });
+
+      // Add the Comment Box to Panels
+      this.$.salesLinePanels.createComponents([comments], {owner: this});
+    }
+  };
+  enyo.mixin(lineItem, XV.LineMixin);
 
   // ..........................................................
   // QUOTE LINE ITEM
   //
-  var quoteLineItem = enyo.mixin(XV.QuoteLineMixin, {
+  var quoteLineItem = {
     name: "XV.QuoteLineWorkspace",
-    kind: "XV.BaseLineWorkspace",
     title: "_quoteLine".loc(),
     model: "XM.QuoteLine",
-    create: function () {
-      this.inherited(arguments);
-      // Add the Comment Box for Quote to Panels
-      this.$.salesLinePanels.createComponents([{kind: "XV.QuoteLineCommentBox", attr: "comments"}], {owner: this});
-    }
-  });
+    currencyKey: "quote.currency",
+    effectiveKey: "quote.quoteDate",
+    commentBox: {kind: "XV.QuoteLineCommentBox", attr: "comments"}
+  };
+  enyo.mixin(quoteLineItem, XV.QuoteLineMixin);
+  enyo.mixin(quoteLineItem, lineItem);
   enyo.kind(quoteLineItem);
 
   // ..........................................................
   // SALES ORDER LINE ITEM
   //
-  var salesOrderLineItem = enyo.mixin(XV.SalesOrderLineMixin, {
+  var salesOrderLineItem = {
     name: "XV.SalesOrderLineWorkspace",
-    kind: "XV.BaseLineWorkspace",
     title: "_salesOrderLine".loc(),
     model: "XM.SalesOrderLine",
-    create: function () {
-      this.inherited(arguments);
-      this.$.salesLinePanels.createComponents([{kind: "XV.SalesOrderLineCommentBox", attr: "comments"}], {owner: this});
-    }
-  });
+    currencyKey: "salesOrder.currency",
+    effectiveKey: "salesOrder.orderDate",
+    commentBox: {kind: "XV.SalesOrderLineCommentBox", attr: "comments"}
+  };
+  enyo.mixin(salesOrderLineItem, XV.SalesOrderLineMixin);
+  enyo.mixin(salesOrderLineItem, lineItem);
   enyo.kind(salesOrderLineItem);
 
   // ..........................................................
@@ -1573,10 +1751,6 @@ trailing:true white:true*/
     kind: "XV.SalesOrderBase",
     title: "_salesOrder".loc(),
     model: "XM.SalesOrder",
-    create: function () {
-      this.inherited(arguments);
-      this.titleChanged();
-    },
     /**
       Inserts additional components where they should be rendered.
     */
@@ -1601,35 +1775,31 @@ trailing:true white:true*/
         {kind: "FittableRows", fit: true, name: "totalGroup", components: [
           {kind: "XV.Groupbox", components: [
             {kind: "onyx.GroupboxHeader", content: "_summary".loc()},
-            {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel", components: [
+            {kind: "FittableColumns", name: "totalBox", classes: "xv-totals-panel",
+              components: [
               {kind: "FittableRows", name: "summaryColumnOne", components: [
                 {kind: "XV.CurrencyPicker", attr: "currency"},
-                {kind: "XV.MoneyWidget", attr: {localValue: "margin", currency: "currency"},
-                 label: "_margin".loc(), currencyShowing: false,
-                 effective: ""},
+                {kind: "XV.MoneyWidget",
+                  attr: {localValue: "margin", currency: "currency"},
+                  label: "_margin".loc(), currencyShowing: false},
                 {kind: "XV.WeightWidget", attr: "freightWeight"}
               ]},
               {kind: "FittableRows", name: "summaryColumnTwo", components: [
                 {kind: "XV.MoneyWidget", attr:
                  {localValue: "subtotal", currency: "currency"},
-                 label: "_subtotal".loc(), currencyShowing: false,
-                 effective: ""},
+                 label: "_subtotal".loc(), currencyShowing: false},
                 {kind: "XV.MoneyWidget", attr:
                  {localValue: "miscCharge", currency: "currency"},
-                 label: "_miscCharge".loc(), currencyShowing: false,
-                 effective: ""},
+                 label: "_miscCharge".loc(), currencyShowing: false},
                 {kind: "XV.MoneyWidget", attr:
                  {localValue: "freight", currency: "currency"},
-                 label: "_freight".loc(), currencyShowing: false,
-                 effective: ""},
+                 label: "_freight".loc(), currencyShowing: false},
                 {kind: "XV.MoneyWidget", attr:
                  {localValue: "taxTotal", currency: "currency"},
-                 label: "_tax".loc(), currencyShowing: false,
-                 effective: ""},
+                 label: "_tax".loc(), currencyShowing: false},
                 {kind: "XV.MoneyWidget", attr:
                  {localValue: "total", currency: "currency"},
-                 label: "_total".loc(), currencyShowing: false,
-                 effective: ""}
+                 label: "_total".loc(), currencyShowing: false}
               ]}
             ]}
           ]}
@@ -1647,7 +1817,7 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.SalesRepWorkspace",
-    kind: "XV.Workspace",
+    kind: "XV.AccountDocumentWorkspace",
     title: "_salesRep".loc(),
     model: "XM.SalesRep",
     components: [
@@ -1663,6 +1833,17 @@ trailing:true white:true*/
             {kind: "XV.PercentWidget", attr: "commission"}
           ]}
         ]}
+      ]},
+      {kind: "onyx.Popup", name: "findExistingAccountPopup", centered: true,
+        modal: true, floating: true, scrim: true, onShow: "popupShown",
+        onHide: "popupHidden", components: [
+        {content: "_accountExists".loc()},
+        {name: "whatToDo", content: "_convertAccountSalesRep".loc()},
+        {tag: "br"},
+        {kind: "onyx.Button", name: "convert", content: "_ok".loc(), ontap: "accountConvert",
+          classes: "onyx-blue xv-popup-button"},
+        {kind: "onyx.Button", name: "cancel", content: "_cancel".loc(), ontap: "accountCancel",
+          classes: "xv-popup-button"}
       ]}
     ]
   });
@@ -1694,6 +1875,32 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.SaleType", "XV.SaleTypeWorkspace");
+  
+  // ..........................................................
+  // SHIFT
+  //
+
+  enyo.kind({
+    name: "XV.ShiftWorkspace",
+    kind: "XV.Workspace",
+    title: "_shift".loc(),
+    model: "XM.Shift",
+    components: [
+      {kind: "Panels", arrangerKind: "CarouselArranger",
+        fit: true, components: [
+        {kind: "XV.Groupbox", name: "mainPanel", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.ScrollableGroupbox", name: "mainGroup",
+            classes: "in-panel", components: [
+            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.InputWidget", attr: "name"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  XV.registerModelWorkspace("XM.Shift", "XV.ShiftWorkspace");
 
   // ..........................................................
   // SHIP ZONE
@@ -1754,10 +1961,8 @@ trailing:true white:true*/
     ]
   });
 
-  // TODO: The site workspace won't work until the default GL trigger is
-  // taken out of the database-side code. Uncomment these once that's done:
-  //XV.registerModelWorkspace("XM.SiteRelation", "XV.SiteWorkspace");
-  //XV.registerModelWorkspace("XM.SiteListItem", "XV.SiteWorkspace");
+  XV.registerModelWorkspace("XM.SiteRelation", "XV.SiteWorkspace");
+  XV.registerModelWorkspace("XM.SiteListItem", "XV.SiteWorkspace");
 
   // ..........................................................
   // SITE TYPE
@@ -1832,10 +2037,10 @@ trailing:true white:true*/
 
   hash = {
     name: "XV.TaxAuthorityWorkspace",
-    kind: "XV.Workspace",
+    kind: "XV.AccountDocumentWorkspace",
     title: "_taxAuthority".loc(),
     model: "XM.TaxAuthority",
-    headerAttrs: ["number", "-", "name"],
+    headerAttrs: ["code", "-", "name"],
     handlers: {
       onError: "errorNotify"
     },
@@ -1846,7 +2051,7 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.ScrollableGroupbox", name: "mainGroup", fit: true,
             classes: "in-panel", components: [
-            {kind: "XV.InputWidget", attr: "number"},
+            {kind: "XV.InputWidget", attr: "code"},
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "externalReference"},
             {kind: "XV.CurrencyPicker", attr: "currency"},
@@ -1855,6 +2060,17 @@ trailing:true white:true*/
             {kind: "XV.AddressWidget", attr: "address"}
           ]}
         ]}
+      ]},
+      {kind: "onyx.Popup", name: "findExistingAccountPopup", centered: true,
+        modal: true, floating: true, scrim: true, onShow: "popupShown",
+        onHide: "popupHidden", components: [
+        {content: "_accountExists".loc()},
+        {name: "whatToDo", content: "_convertAccountTaxAuthority".loc()},
+        {tag: "br"},
+        {kind: "onyx.Button", name: "convert", content: "_ok".loc(), ontap: "accountConvert",
+          classes: "onyx-blue xv-popup-button"},
+        {kind: "onyx.Button", name: "cancel", content: "_cancel".loc(), ontap: "accountCancel",
+          classes: "xv-popup-button"}
       ]}
     ]
   };
@@ -1864,7 +2080,7 @@ trailing:true white:true*/
 
   XV.registerModelWorkspace("XM.TaxAuthority", "XV.TaxAuthorityWorkspace");
   XV.registerModelWorkspace("XM.TaxAuthorityRelation", "XV.TaxAuthorityWorkspace");
-  
+
   // ..........................................................
   // TAX CODE
   //
@@ -1939,7 +2155,7 @@ trailing:true white:true*/
             classes: "in-panel", components: [
               {kind: "XV.TaxCodePicker", label: "_taxCode".loc(), attr: "tax"},
               {kind: "XV.NumberWidget", label: "_percent".loc(), attr: "percent", scale: XT.PERCENT_SCALE},
-              {kind: "XV.MoneyWidget", label: "_currency".loc(), attr: "currency"},
+              {kind: "XV.CurrencyWidget", label: "_currency".loc(), attr: "currency"},
               {kind: "XV.NumberWidget", label: "_amount".loc(), attr: "amount", scale: XT.MONEY_SCALE},
               {kind: "XV.DateWidget", label: "_effective".loc(), attr: "effectiveDate"},
               {kind: "XV.DateWidget", label: "_expires".loc(), attr: "expirationDate"}
@@ -2257,6 +2473,7 @@ trailing:true white:true*/
             {kind: "XV.ToggleButtonWidget", attr: "isIncidents", label: "_incident".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isItems", label: "_item".loc()},
             {kind: "XV.ToggleButtonWidget", attr: "isOpportunities", label: "_opportunity".loc()},
+            {kind: "XV.ToggleButtonWidget", attr: "isEmployees", label: "_employees".loc()},
             {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
             {kind: "XV.TextArea", attr: "notes", fit: true},
             {name: "advancedPanel", showing: false, components: [

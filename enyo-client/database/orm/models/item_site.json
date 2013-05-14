@@ -78,8 +78,8 @@
       },
       {
         "name": "item",
-        "attr": {
-          "type": "Number",
+        "toOne": {
+          "type": "ItemRelation",
           "column": "itemsite_item_id"
         }
       },

@@ -241,7 +241,7 @@ trailing:true white:true*/
           // not a new organization, but some updates to extensions. Run maintenance
           // on the extensions that have just been added
           newExtensionIds = _.map(newExtensions, function (ext) {
-            return ext.get("extension").get("id");
+            return ext.get("extension").id;
           });
           model.runMaintenance(newExtensionIds);
         }

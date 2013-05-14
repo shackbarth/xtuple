@@ -139,7 +139,7 @@ var XVOWS = XVOWS || {};
               };
 
             notifyObj.model.on('statusChange', callbackAdaptor);
-            notifyObj.callback(true);
+            notifyObj.callback({answer: true});
           },
           'then we just save the model with the new value': function (error, topic) {
             assert.equal(topic.getStatusString(), "READY_CLEAN");
@@ -188,7 +188,7 @@ var XVOWS = XVOWS || {};
               };
 
             notifyObj.model.on('statusChange', callbackAdaptor);
-            notifyObj.callback(false); // false = do not change all. change one.
+            notifyObj.callback({answer: false}); // false = do not change all. change one.
           },
           'then the old model should have been reset to its original value': function (error, topic) {
             var model = topic.model;

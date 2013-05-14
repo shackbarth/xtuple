@@ -1,6 +1,6 @@
 /**
     Procedure for retrieving data from the server;
-    
+
     @param {Text} Data hash that can parsed into a JavaScript object.
     @param {String} [dataHash.username] Username. Required.
     @param {String} [dataHash.nameSpace] Namespace. Required.
@@ -16,6 +16,7 @@ create or replace function xt.get(data_hash text) returns text as $$
       prettyPrint = dataHash.prettyPrint ? 2 : null,
       ret;
 
+  dataHash.superUser = false;
   if (dataHash.username) { XT.username = dataHash.username; }
 
   if (dataHash.id) {
@@ -183,5 +184,43 @@ select xt.get($${
   },
   "prettyPrint": true
 }$$);
+
+select xt.get('{
+  "username": "admin",
+  "nameSpace":"XM",
+  "type": "CustomerRelation",
+  "query":{
+    "parameters":[
+      {
+        "attribute":"number",
+        "operator": "NOT ANY",
+        "value": [
+          "TTOYS",
+          "VCOL"
+         ]
+      }
+    ]
+  },
+  "prettyPrint": true
+  }'
+);
+
+select xt.get('{
+  "username": "admin",
+  "nameSpace":"XM",
+  "type": "Customer",
+  "query":{
+    "parameters":[
+      {
+        "isCharacteristic": true,
+        "attribute": "CUST-VOLUME",
+        "operator": "=",
+        "value": "> 50,000"
+      }
+    ]
+  },
+  "prettyPrint": true
+  }'
+);
 
 */

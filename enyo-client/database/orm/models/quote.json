@@ -100,7 +100,7 @@
       {
         "name": "site",
         "toOne": {
-          "type": "SiteRelation",
+          "type": "Site",
           "column": "quhead_warehous_id"
         }
       },
@@ -1436,7 +1436,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "QuoteRelation",
-    "table": "quhead",
+    "table": "xt.quheadinfo",
     "comment": "Quote Relation Map",
     "privileges": {
       "all": {
@@ -1467,7 +1467,7 @@
         "name": "customer",
         "attr": {
           "type": "Number",
-          "column": "quhead_cust_id"
+          "column": "cust_number"
         }
       },
       {
@@ -1481,7 +1481,7 @@
         "name": "opportunity",
         "attr": {
           "type": "Number",
-          "column": "quhead_ophead_id"
+          "column": "ophead_number"
         }
       }
     ],

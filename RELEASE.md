@@ -1,4 +1,49 @@
-1.3.4 (2013/04)
+
+Critical deployment changes
+---------------------------
+* add redirectPort and maintenancePort to config.js, see sample_config.js
+* Changed XT.Data's handling of Dates and nulls to work with current version of plv8
+  that doesn't require any special handling. You need to be on this plv8 version:
+
+> commit d75184e00e08e97bc8caba6c9677f8f375a051aa
+
+> Date:   Wed Feb 20 00:10:56 2013 -0800
+
+  To find your current plv8 version:
+
+      cd ~/plv8js
+      git log -1
+
+  To move to that plv8 from your current:
+
+      mv plv8js plv8js-old
+      git clone https://code.google.com/p/plv8js/
+      cd plv8js
+      git checkout d75184e00e08e97bc8caba6c9677f8f375a051aa
+      # Make sure this is the path to your V8 source:
+      make V8_SRCDIR=/home/dev/v8
+      sudo make install
+      # Restart PostgreSQL Server
+      sudo /etc/init.d/postgresql restart
+
+  To test if your plv8 is working correctly, try adding a comment to an Account or Contact.
+  See if you get any errors in your browsers Javascript Console and make sure the comment saves.
+
+
+Features and bugs
+----------------
+
+- Implemented
+  issue #[20295](http://www.xtuple.org/xtincident/view/bugs/20295)
+  move all ports into config.js, added redirectPort and maintenancePort to sample_config.js
+- Fixed
+  issue #[20266](http://www.xtuple.org/xtincident/view/bugs/20266)
+  SQL Injection exploit in XT.Data
+- Implemented parts of
+  issue #[20264](http://www.xtuple.org/xtincident/view/bugs/20264)
+  REST - Refactor error handling in the database layer
+
+1.3.4 (2013/05)
 ===============
 
 Critical deployment changes
@@ -7,6 +52,59 @@ Critical deployment changes
   table. You can do this through the admin console, but do it before you upgrade! You
   do not need to associate the org with your user.
 
+Features and bugs
+-----------------
+- Fixed
+  issue #[20169](http://www.xtuple.org/xtincident/view/bugs/20169)
+  _etag versions not working with usr and org string pkeys_
+- Implemented
+  issue #[18716](http://www.xtuple.org/xtincident/view/bugs/18716)
+  _REST - Create helper functions needed to generate API Directory list and Discovery Documents_
+- Implemented
+  issue #[19304](http://www.xtuple.org/xtincident/view/bugs/19304)
+  _REST - Add route generator for resource end points_
+- Fixed
+  issue #[19870](http://www.xtuple.org/xtincident/view/bugs/19870)
+  _Unable to attach a contact related to a CRM Account under Documents widget of an accounts screen_
+- Fixed
+  issue #[19905](http://www.xtuple.org/xtincident/view/bugs/19905)
+  _Documents attached under the document widget of a record are not displayed on selecting to reopen the record_
+- Fixed
+  issue #[20214](http://www.xtuple.org/xtincident/view/bugs/20214)
+  _incorrect login brings up error screen_
+- Fixed
+  issue #[20235](http://www.xtuple.org/xtincident/view/bugs/20235)
+  _Selecting to enter the address for a contact displays an error message in the console_
+- Fixed
+  issue #[20205](http://www.xtuple.org/xtincident/view/bugs/20205)
+  _Select Organization for a User - "ID is required" Error_
+- Fixed
+  issue #[20184](http://www.xtuple.org/xtincident/view/bugs/20184)
+  _List lazy-loading problem_
+- Fixed
+  issue #[19953](http://www.xtuple.org/xtincident/view/bugs/19953)
+  _Cannot use a prospect to save a quote_
+- Fixed
+  issue #[19973](http://www.xtuple.org/xtincident/view/bugs/19973)
+  _percent widget is broken_
+- Fixed
+  issue #[20026](http://www.xtuple.org/xtincident/view/bugs/20026)
+  _*Irrelevant behavior is observed on selecting to assign Tax Authority/Sales Rep role to a CRM account_
+- Implemented
+  issue #[20154](http://www.xtuple.org/xtincident/view/bugs/20154)
+  _Add support for natural keys on orms_
+- Fixed
+  issue #[20066](http://www.xtuple.org/xtincident/view/bugs/20066)
+  _*Irrelevant dialog is displayed on selecting to save a Tax Class_
+- Implemented
+  issue #[20044](http://www.xtuple.org/xtincident/view/bugs/20044)
+  _Add support JSON Patch_
+- Implemented
+  issue #[20052](http://www.xtuple.org/xtincident/view/bugs/20052)
+  _Tax rate ORM, model, and views need to be added_
+- Implemented
+  issue #[20054](http://www.xtuple.org/xtincident/view/bugs/20054)
+  _installer should work atomically on one org at a time_
 
 
 1.3.3 (2013/04/18)
@@ -14,9 +112,9 @@ Critical deployment changes
 
 Critical deployment changes
 ---------------------------
-* You need to add 
+* You need to add
   <code>"lib/ext/smtpTransport"</code>
-  as a requirement in your config.js. See 
+  as a requirement in your config.js. See
   [sample_config.js](https://github.com/xtuple/xtuple/blob/master/node-datasource/sample_config.js) for details.
 * We removed node-datasource/lib/private/salt.txt from version control. You
   will have to put this file back in yourself. You can fill it with any long string you want.

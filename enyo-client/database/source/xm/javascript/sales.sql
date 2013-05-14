@@ -71,6 +71,7 @@ select xt.install_js('XM','Sales','xtuple', $$
       sql2 = "select shipto_num from shiptoinfo where obj_uuid=$1;",
       sql3 = "select currconcat(curr_id) as currabbr from curr_symbol where curr_abbr = $1;",
       sql4 = "select * from calculatefreightdetail($1, $2, $3, $4::integer, $5::integer, $6, $7::date, $8, $9, $10, $11, $12::integer, $13::numeric);",
+      sqlParams,
       customerTypeId,
       customerTypeCode,
       currencyAbbreviation,
@@ -91,6 +92,7 @@ select xt.install_js('XM','Sales','xtuple', $$
       query = plv8.execute(sql2, [shiptoId]);
       if (!query.length) { plv8.elog(ERROR, "Invalid Shipto") };
       shiptoNumber = query[0].shipto_num;
+      shiptoId = XT.Data.getId(XT.Orm.fetch('XM', 'CustomerShipto'), shiptoId);
     } else {
       shiptoId = -1;
       shiptoNumber = "";
@@ -103,16 +105,19 @@ select xt.install_js('XM','Sales','xtuple', $$
 
     /* resolve natural keys to primary keys */
     customerId = XT.Data.getId(XT.Orm.fetch('XM', 'Customer'), customerId);
-    shiptoId = shiptoId ? XT.Data.getId(XT.Orm.fetch('XM', 'CustomerShipto'), shiptoId) : shiptoId;
     shipZoneId = shipZoneId ? XT.Data.getId(XT.Orm.fetch('XM', 'ShipZone'), shipZoneId) : shipZoneId;
-    currencyId = options.currencyId ?
-      XT.Data.getId(XT.Orm.fetch('XM', 'Currency', options.currencyId)) :
-      lplv8.execute("select basecurrid() as result")[0].result;
+    freightClassId = freightClassId ? XT.Data.getId(XT.Orm.fetch('XM', 'FreightClass'), freightClassId) : freightClassId;
+    siteId = siteId ? XT.Data.getId(XT.Orm.fetch('XM', 'Site'), siteId) : siteId;
+    currencyId = currencyId ?
+      XT.Data.getId(XT.Orm.fetch('XM', 'Currency'), currencyId) :
+      plv8.execute("select basecurrid() as result")[0].result;
 
     /* Get the data */
-    query = plv8.execute(sql4, [customerId, customerTypeId, customerTypeCode,
+    sqlParams = [customerId, customerTypeId, customerTypeCode,
       shiptoId, shipZoneId, shiptoNumber, orderDate, shipVia, currencyId, currencyAbbreviation,
-      siteId, freightClassId, weight]);
+      siteId, freightClassId, weight];
+    if(DEBUG) { plv8.elog(NOTICE, sql4, sqlParams); }
+    query = plv8.execute(sql4, sqlParams);
 
     /* Finally, map to JavaScript friendly names */
     for (i = 0; i < query.length; i++) {

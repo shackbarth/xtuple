@@ -1,0 +1,36 @@
+[ 
+  {
+    "context": "sales",
+    "nameSpace": "XM",
+    "type": "Customer",
+    "table": "custinfo",
+    "isExtension": true,
+    "comment": "Extended by Sales",
+    "relations": [
+      {
+        "column": "cust_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "quoteRelations",
+        "toMany": {
+          "type": "QuoteRelation",
+          "column": "cust_number",
+          "inverse": "customer"
+        }
+      },
+      {
+        "name": "salesOrderRelations",
+        "toMany": {
+          "type": "SalesOrderRelation",
+          "column": "cust_number",
+          "inverse": "customer"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  } 
+]

@@ -21,6 +21,7 @@
 \i xt/functions/begins_with.sql;
 \i xt/functions/commit_record.sql;
 \i xt/functions/create_table.sql;
+\i xt/functions/create_view.sql;
 \i xt/functions/delete.sql;
 \i xt/functions/dispatch.sql;
 \i xt/functions/ends_with.sql;

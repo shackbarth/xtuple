@@ -54,24 +54,30 @@ select xt.install_js('XM','Model','xtuple', $$
     @param {Object} Options: timeout
   */
   XM.Model.obtainLock = function (nameSpace, type, id, etag, options) {
-    var orm = XT.Orm.fetch(nameSpace, type),
-       data = Object.create(XT.Data),
-       lockTable = orm.lockTable || orm.table,
-       pkey = XT.Orm.primaryKey(orm),
-       nkey = XT.Orm.naturalKey(orm),
-       rec,
-       pid;
+    try {
+      var orm = XT.Orm.fetch(nameSpace, type),
+         data = Object.create(XT.Data),
+         lockTable = orm.lockTable || orm.table,
+         pkey = XT.Orm.primaryKey(orm),
+         nkey = XT.Orm.naturalKey(orm),
+         rec,
+         pid;
 
-    /* if the model uses a natural key, get the primary key value */
-    rec = data.retrieveRecord({
-      nameSpace: nameSpace,
-      type: type,
-      id: id
-    });
-    pid = nkey ? data.getId(orm, id) : id;
-    if (!rec || !rec.data) { throw "Record for requested lock not found." }
-    if (rec.etag !== etag) { return false; }
-    return data.tryLock(lockTable, pid);
+      /* if the model uses a natural key, get the primary key value */
+      rec = data.retrieveRecord({
+        nameSpace: nameSpace,
+        type: type,
+        id: id
+      });
+      pid = nkey ? data.getId(orm, id) : id;
+
+      if (!rec || !rec.data) { throw "Record for requested lock not found." }
+      if (rec.etag !== etag) { return false; }
+
+      return data.tryLock(lockTable, pid);
+    } catch (err) {
+      XT.error(err, arguments);
+    }
   }
 
   /**
@@ -123,16 +129,20 @@ select xt.install_js('XM','Model','xtuple', $$
         type = recordType.afterDot(),
         map = XT.Orm.fetch(nameSpace, type),
         table = recordType.decamelize(),
-        key = XT.Orm.naturalKey(map) || XT.Orm.primaryKey(map),
-        sql = 'select "{key}" as id from {table} where "{userKey}"::text=$1::text and "{key}" != $2'
-              .replace(/{key}/g, key)
+        okey = XT.Orm.naturalKey(map) || XT.Orm.primaryKey(map),
+        sql = 'select "{key}" as id from {table} where "{userKey}"::text=$1::text'
+              .replace(/{key}/, okey)
               .replace(/{table}/, table)
-              .replace(/{userKey}/, key)
-              .replace(/{value}/, value)
-              .replace(/{id}/, id),
+              .replace(/{userKey}/, key),
         result;
-        if (DEBUG) { plv8.elog(NOTICE, sql); }
-        result = plv8.execute(sql, [value, id])[0];
+        if (id) {
+          sql += " and " + okey + " != $2";
+          if (DEBUG) { plv8.elog(NOTICE, sql); }
+          result = plv8.execute(sql, [value, id])[0];
+        } else {
+          if (DEBUG) { plv8.elog(NOTICE, sql); }
+          result = plv8.execute(sql, [value])[0];
+        }
 
     return result ? result.id : 0;
   }

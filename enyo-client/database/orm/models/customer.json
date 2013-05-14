@@ -329,7 +329,8 @@
         "name": "preferredSite",
         "toOne": {
           "type": "SiteRelation",
-          "column": "cust_preferred_warehous_id"
+          "column": "cust_preferred_warehous_id",
+          "nullValue": -1
         }
       }
     ],
@@ -546,8 +547,7 @@
       {
         "name": "taxAuthority",
         "toOne": {
-          "isNested": true,
-          "type": "TaxAuthorityRelation",
+          "type": "TaxAuthority",
           "column": "taxreg_taxauth_id"
         }
       },
@@ -1842,15 +1842,16 @@
       {
         "name": "preferredSite",
         "toOne": {
-          "type": "SiteRelation",
-          "column": "site"
+          "type": "Site",
+          "column": "site",
+          "nullValue": -1
         }
       },
       {
         "name": "defaultShipto",
         "toOne": {
           "isNested": true,
-          "type": "CustomerShipto",
+          "type": "CustomerShiptoRelation",
           "column": "default_shipto_id"
         }
       },
