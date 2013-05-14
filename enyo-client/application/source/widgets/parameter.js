@@ -146,9 +146,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.CustomerListParameters",
     kind: "XV.ParameterWidget",
-    characteristicsRole: 'isContacts',
     components: [
-      {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
+      {kind: "onyx.GroupboxHeader", content: "_customer".loc()},
       {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
         getParameter: function () {
           var param;
@@ -162,19 +161,17 @@ trailing:true white:true*/
           return param;
         }
       },
+      {name: "number", label: "_number".loc(), attr: "number"},
       {name: "name", label: "_name".loc(), attr: "name"},
-      {name: "primaryEmail", label: "_primaryEmail".loc(), attr: "primaryEmail"},
-      {name: "phone", label: "_phone".loc(), attr: ["phone", "alternate", "fax"]},
+      {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
+      {name: "primaryEmail", label: "_primaryEmail".loc(), attr: "billingContact.primaryEmail"},
+      {name: "phone", label: "_phone".loc(), attr: ["billingContact.phone", "billingContact.alternate", "billingContact.fax"]},
       {kind: "onyx.GroupboxHeader", content: "_address".loc()},
-      {name: "street", label: "_street".loc(), attr: ["address.line1", "address.line2", "address.line3"]},
-      {name: "city", label: "_city".loc(), attr: "address.city"},
-      {name: "state", label: "_state".loc(), attr: "address.state"},
-      {name: "postalCode", label: "_postalCode".loc(), attr: "address.postalCode"},
-      {name: "country", label: "_country".loc(), attr: "address.country"},
-      {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-      {name: "account", label: "_account".loc(), attr: ["account", "accountParent"], defaultKind: "XV.AccountWidget"},
-      {kind: "onyx.GroupboxHeader", content: "_userAccount".loc()},
-      {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
+      {name: "street", label: "_street".loc(), attr: ["billingContact.address.line1", "billingContact.address.line2", "billingContact.address.line3"]},
+      {name: "city", label: "_city".loc(), attr: "billingContact.address.city"},
+      {name: "state", label: "_state".loc(), attr: "billingContact.address.state"},
+      {name: "postalCode", label: "_postalCode".loc(), attr: "billingContact.address.postalCode"},
+      {name: "country", label: "_country".loc(), attr: "billingContact.address.country"}
     ]
   });
 
@@ -189,6 +186,63 @@ trailing:true white:true*/
       {kind: "onyx.GroupboxHeader", content: "_customerGroup".loc()},
       {name: "name", label: "_name".loc(), attr: "name"},
       {name: "description", label: "_description".loc(), attr: "description"}
+    ]
+  });
+  
+  // ..........................................................
+  // EMPLOYEE
+  //
+
+  enyo.kind({
+    name: "XV.EmployeeListParameters",
+    kind: "XV.ParameterWidget",
+    characteristicsRole: 'isEmployees',
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_account".loc()},
+      {name: "isActive", attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {name: "code", label: "_code".loc(), attr: "code"},
+      {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {kind: "onyx.GroupboxHeader", content: "_detail".loc()},
+      {name: "manager", label: "_manager".loc(), attr: "manager", defaultKind: "XV.EmployeeWidget"},
+      {name: "department", label: "_department".loc(), attr: "department", defaultKind: "XV.DepartmentPicker"},
+      {name: "shift", label: "_shift".loc(), attr: "shift", defaultKind: "XV.ShiftPicker"},
+      {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
+      {name: "contact", label: "_contact".loc(), attr: "contact.name"},
+      {name: "primaryEmail", label: "_primaryEmail".loc(), attr: "contact.primaryEmail"},
+      {name: "phone", label: "_phone".loc(), attr: ["primaryContact.phone", "contact.alternate", "contact.fax"]},
+      {kind: "onyx.GroupboxHeader", content: "_address".loc()},
+      {name: "street", label: "_street".loc(), attr: ["primaryContact.address.line1", "contact.address.line2", "contact.address.line3"]},
+      {name: "city", label: "_city".loc(), attr: "contact.address.city"},
+      {name: "postalCode", label: "_postalCode".loc(), attr: "contact.address.postalCode"},
+      {name: "state", label: "_state".loc(), attr: "contact.address.state"},
+      {name: "country", label: "_country".loc(), attr: "cntact.address.country"}
+    ]
+  });
+  
+  // ..........................................................
+  // EMPLOYEE GROUP
+  //
+
+  enyo.kind({
+    name: "XV.EmployeeGroupListParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_employeeGroup".loc()},
+      {name: "name", label: "_name".loc(), attr: "name"},
+      {name: "description", label: "_description", attr: "description"}
     ]
   });
 
@@ -419,7 +473,7 @@ trailing:true white:true*/
       {name: "plannerCodePattern", label: "_code".loc(), attr: "plannerCode.code"}
     ]
   });
-  
+
   // ..........................................................
   // LEDGER ACCOUNT
   //
@@ -447,7 +501,7 @@ trailing:true white:true*/
       {name: "accountType", label: "_type".loc(), attr: "accountType",
         defaultKind: "XV.LedgerAccountTypePicker"}
     ]
-    
+
   });
 
   // ..........................................................
@@ -614,19 +668,17 @@ trailing:true white:true*/
           return param;
         }
       },
+      {name: "number", label: "_number".loc(), attr: "number"},
       {name: "name", label: "_name".loc(), attr: "name"},
-      {name: "primaryEmail", label: "_primaryEmail".loc(), attr: "primaryEmail"},
-      {name: "phone", label: "_phone".loc(), attr: ["phone", "alternate", "fax"]},
+      {kind: "onyx.GroupboxHeader", content: "_contact".loc()},
+      {name: "primaryEmail", label: "_primaryEmail".loc(), attr: "contact.primaryEmail"},
+      {name: "phone", label: "_phone".loc(), attr: ["contact.phone", "contact.alternate", "contact.fax"]},
       {kind: "onyx.GroupboxHeader", content: "_address".loc()},
-      {name: "street", label: "_street".loc(), attr: ["address.line1", "address.line2", "address.line3"]},
-      {name: "city", label: "_city".loc(), attr: "address.city"},
-      {name: "state", label: "_state".loc(), attr: "address.state"},
-      {name: "postalCode", label: "_postalCode".loc(), attr: "address.postalCode"},
-      {name: "country", label: "_country".loc(), attr: "address.country"},
-      {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
-      {name: "account", label: "_account".loc(), attr: ["account.id", "accountParent"], defaultKind: "XV.AccountWidget"},
-      {kind: "onyx.GroupboxHeader", content: "_userAccount".loc()},
-      {name: "owner", label: "_owner".loc(), attr: "owner", defaultKind: "XV.UserAccountWidget"}
+      {name: "street", label: "_street".loc(), attr: ["contact.address.line1", "contact.address.line2", "contact.address.line3"]},
+      {name: "city", label: "_city".loc(), attr: "contact.address.city"},
+      {name: "state", label: "_state".loc(), attr: "contact.address.state"},
+      {name: "postalCode", label: "_postalCode".loc(), attr: "contact.address.postalCode"},
+      {name: "country", label: "_country".loc(), attr: "contact.address.country"}
     ]
   });
 
@@ -871,7 +923,7 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {kind: "onyx.GroupboxHeader", content: "_taxAuthority".loc()},
-      {name: "number", label: "_number".loc(), attr: "number"},
+      {name: "code", label: "_code".loc(), attr: "code"},
       {name: "name", label: "_name".loc(), attr: "name"}
     ]
   });

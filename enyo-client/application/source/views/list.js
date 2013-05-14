@@ -447,6 +447,33 @@ trailing:true white:true*/
   XV.registerModelList("XM.CustomerType", "XV.CustomerTypeList");
 
   // ..........................................................
+  // DEPARTMENT
+  //
+
+  enyo.kind({
+    name: "XV.DepartmentList",
+    kind: "XV.List",
+    label: "_departments".loc(),
+    collection: "XM.DepartmentCollection",
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "number", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "name"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
   // EMPLOYEE
   //
 
@@ -456,7 +483,7 @@ trailing:true white:true*/
     label: "_employees".loc(),
     collection: "XM.EmployeeRelationCollection",
     query: {orderBy: [
-      {attribute: 'number'}
+      {attribute: 'code'}
     ]},
     parameterWidget: "XV.EmployeeListParameters",
     components: [
@@ -464,7 +491,7 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "number", isKey: true},
+              {kind: "XV.ListAttr", attr: "code", isKey: true},
               {kind: "XV.ListAttr", attr: "contact.phone", fit: true,
                 classes: "right"}
             ]},
@@ -495,6 +522,20 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.EmployeeRelation", "XV.EmployeeList");
+  
+  // ..........................................................
+  // EMPLOYEE GROUP
+  //
+
+  enyo.kind({
+    name: "XV.EmployeeGroupList",
+    kind: "XV.CustomerGroupList",
+    label: "_employeeGroup".loc(),
+    collection: "XM.EmployeeGroupCollection",
+    parameterWidget: "XV.EmployeeGroupListParameters"
+  });
+
+  XV.registerModelList("XM.EmployeeGroupRelation", "XV.EmployeeGroupList");
 
   // ..........................................................
   // EXPENSE CATEGORY
@@ -1437,6 +1478,33 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.SiteRelation", "XV.SiteList");
+  
+  // ..........................................................
+  // SHIFT
+  //
+
+  enyo.kind({
+    name: "XV.ShiftList",
+    kind: "XV.List",
+    label: "_shifts".loc(),
+    collection: "XM.ShiftCollection",
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "short",
+            components: [
+            {kind: "XV.ListAttr", attr: "number", isKey: true}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "name"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
 
   // ..........................................................
   // SHIP ZONE
@@ -1506,14 +1574,14 @@ trailing:true white:true*/
     collection: "XM.TaxAuthorityCollection",
     parameterWidget: "XV.TaxAuthorityListParameters",
     query: {orderBy: [
-      {attribute: 'name'}
+      {attribute: 'code'}
     ]},
     components: [
       {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "short",
             components: [
-            {kind: "XV.ListAttr", attr: "number", isKey: true}
+            {kind: "XV.ListAttr", attr: "code", isKey: true}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
             {kind: "XV.ListAttr", attr: "name"}

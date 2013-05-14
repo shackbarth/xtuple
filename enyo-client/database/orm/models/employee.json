@@ -2,6 +2,94 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "Department",
+    "table": "dept",
+    "idSequenceName": "dept_dept_id_seq",
+    "isRest": true,
+    "lockable": true,
+    "comment": "Department Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainDepartments",
+        "read": true,
+        "update": "MaintainDepartments",
+        "delete": "MaintainDepartments"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "dept_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "dept_number",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "dept_name"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Shift",
+    "table": "shift",
+    "idSequenceName": "shift_shift_id_seq",
+    "isRest": true,
+    "lockable": true,
+    "comment": "Shift Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainShifts",
+        "read": true,
+        "update": "MaintainShifts",
+        "delete": "MaintainShifts"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "shift_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "shift_number",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "shift_name"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "Employee",
     "table": "emp",
     "idSequenceName": "emp_emp_id_seq",
@@ -59,7 +147,7 @@
         "name": "contact",
         "toOne": {
           "isNested": true,
-          "type": "ContactInfo",
+          "type": "ContactRelation",
           "column": "emp_cntct_id"
         }
       },
@@ -68,6 +156,13 @@
         "attr": {
           "type": "Date",
           "column": "emp_startdate"
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "Site",
+          "column": "emp_warehous_id"
         }
       },
       {
@@ -86,6 +181,20 @@
           "type": "EmployeeRelation",
           "column": "emp_mgr_emp_id",
           "inverse": "id"
+        }
+      },
+      {
+        "name": "department",
+        "toOne": {
+          "type": "Department",
+          "column": "emp_dept_id"
+        }
+      },
+      {
+        "name": "shift",
+        "toOne": {
+          "type": "Shift",
+          "column": "emp_shift_id"
         }
       },
       {
@@ -154,6 +263,14 @@
           "column": "emp_id",
           "inverse": "employee"
         }
+      },
+      {
+        "name": "groups",
+        "toMany": {
+          "type": "EmployeeGroupGroup",
+          "column": "emp_id",
+          "inverse": "employee"
+        }
       }
     ],
     "isSystem": true
@@ -164,6 +281,92 @@
     "type": "EmployeeRelation",
     "table": "emp",
     "comment": "Employee Relation Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "emp_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "code",
+        "attr": {
+          "type": "String",
+          "column": "emp_code",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "emp_name"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "emp_active"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactRelation",
+          "column": "emp_cntct_id"
+        }
+      },
+      {
+        "name": "manager",
+        "toOne": {
+          "isNested": true,
+          "type": "EmployeeEmployeeRelation",
+          "column": "emp_mgr_emp_id",
+          "inverse": "id"
+        }
+      },
+      {
+        "name": "department",
+        "toOne": {
+          "type": "Department",
+          "column": "emp_dept_id"
+        }
+      },
+      {
+        "name": "shift",
+        "toOne": {
+          "type": "Shift",
+          "column": "emp_shift_id"
+        }
+      },
+      {
+        "name": "site",
+        "toOne": {
+          "type": "Site",
+          "column": "emp_warehous_id"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "EmployeeEmployeeRelation",
+    "table": "emp",
+    "comment": "Employee Employee Relation Map",
     "privileges": {
       "all": {
         "create": false,
@@ -367,6 +570,144 @@
         "attr": {
           "type": "String",
           "column": "charass_value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "EmployeeGroup",
+    "table": "empgrp",
+    "idSequenceName": "empgrp_empgrp_id_seq",
+    "lockable": true,
+    "comment": "Employee Group Map",
+    "priveleges": {
+      "all": {
+          "create": "MaintainEmployeeGroups",
+        "read": "ViewEmployeeGroups",
+        "update": "MaintainEmployeeGroups",
+        "delete": "MaintainEmployeeGroups"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr":	{
+          "type": "Number",
+          "column": "empgrp_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr":	{
+          "type": "String",
+          "column": "empgrp_name",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "description",
+        "attr":	{
+          "type": "Number",
+          "column": "empgrp_descrip"
+        }
+      },
+      {
+        "name": "employees",
+        "toMany": {
+          "isNested": true,
+          "type": "EmployeeGroupEmployee",
+          "column": "empgrp_id",
+          "inverse": "employeeGroup"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "EmployeeGroupEmployee",
+    "table": "empgrpitem",
+    "idSequenceName": "empgrpitem_empgrpitem_id_seq",
+    "comment": "Employee Group Employee Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr":	{
+          "type": "Number",
+          "column": "empgrpitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "employeeGroup",
+        "attr": {
+          "type": "Number",
+          "column": "empgrpitem_empgrp_id"
+        }
+      },
+      {
+        "name": "employee",
+        "toOne":	{
+          "isNested": true,
+          "type": "EmployeeRelation",
+          "column": "empgrpitem_emp_id"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "EmployeeGroupGroup",
+    "table": "empgrpitem",
+    "idSequenceName": "empgrpitem_empgrpitem_id_seq",
+    "comment": "Employee Group Group Map",
+    "properties": [
+      {
+        "name": "id",
+        "attr":	{
+          "type": "Number",
+          "column": "empgrpitem_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "uuid",
+        "attr": {
+          "type": "String",
+          "column": "obj_uuid",
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "employeeGroup",
+        "toOne": {
+          "isNested": true,
+          "type": "EmployeeGroup",
+          "column": "empgrpitem_empgrp_id"
+        }
+      },
+      {
+        "name": "employee",
+        "attr":	{
+          "type": "Number",
+          "column": "empgrpitem_emp_id"
         }
       }
     ],

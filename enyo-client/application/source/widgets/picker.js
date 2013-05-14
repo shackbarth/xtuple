@@ -114,6 +114,16 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.creditStatuses"
   });
+  
+  // ..........................................................
+  // DEPARTMENT
+  //
+
+  enyo.kind({
+    name: "XV.DepartmentPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.departments"
+  });
 
   // ..........................................................
   // EXPENSE CATEGORY
@@ -208,7 +218,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.ItemTypePicker",
     kind: "XV.PickerWidget",
     collection: "XM.itemTypes",
-    valueAttribute: "id",
+    valueAttribute: "id"
   });
   
   // ..........................................................
@@ -401,6 +411,16 @@ regexp:true, undef:true, trailing:true, white:true */
       {attribute: 'code'}
     ]
   });
+  
+  // ..........................................................
+  // SHIFT
+  //
+
+  enyo.kind({
+    name: "XV.ShiftPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.shifts"
+  });
 
   // ..........................................................
   // TAX AUTHORITY
@@ -410,9 +430,9 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.TaxAuthorityPicker",
     kind: "XV.PickerWidget",
     collection: "XM.taxAuthorities",
-    nameAttribute: "number",
+    nameAttribute: "code",
     orderBy: [
-      {attribute: 'number'}
+      {attribute: 'code'}
     ]
   });
 
@@ -551,6 +571,30 @@ regexp:true, undef:true, trailing:true, white:true */
     orderBy: [
       {attribute: 'code'}
     ]
+  });
+  
+  // ..........................................................
+  // WAGE TYPE
+  //
+
+  enyo.kind({
+    name: "XV.WageTypePicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.wageTypes",
+    showNone: false,
+    valueAttribute: "id"
+  });
+  
+  // ..........................................................
+  // WAGE PERIOD
+  //
+
+  enyo.kind({
+    name: "XV.WagePeriodPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.wagePeriods",
+    showNone: false,
+    valueAttribute: "id"
   });
 
 }());
