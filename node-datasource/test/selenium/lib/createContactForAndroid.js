@@ -45,8 +45,8 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.clickElement(doneEl, function () {
   browser.elementByXPath(contactObj.Obj.jobtitle_xpath, function (err,el9) {
   browser.type(el9,contactData.VARIABLES.contact_jobtitle, function () {
-  browser.elementByXPath(contactObj.Obj.email_xpath, function (err, el10) {
-  browser.type(el10, contactData.VARIABLES.contact_email, function () {
+ // browser.elementByXPath(contactObj.Obj.email_xpath, function (err, el10) {
+ // browser.type(el10, contactData.VARIABLES.contact_email, function () {
   browser.elementByXPath(contactObj.Obj.phone_xpath, function (err, el11) {
   browser.type(el11, contactData.VARIABLES.contact_phone, function () {
   browser.elementByXPath(contactObj.Obj.charecnew_xpath, function (err,el12) {
@@ -99,7 +99,8 @@ regexp:true, strict:true, trailing:true, white:false*/
   },2000);
   },2000);
   }
-  });});});});});});});});});});});});
+  //});});
+  });});});});});});});});});});
   });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});
   });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});};
 }());
