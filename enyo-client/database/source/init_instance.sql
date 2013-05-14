@@ -171,3 +171,4 @@ select xt.js_init();
 \i xtbatch/tables/batch.sql
 
 \i update_version.sql;
+\i xt/default_org.sql;
