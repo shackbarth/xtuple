@@ -547,8 +547,7 @@
       {
         "name": "taxAuthority",
         "toOne": {
-          "isNested": true,
-          "type": "TaxAuthorityRelation",
+          "type": "TaxAuthority",
           "column": "taxreg_taxauth_id"
         }
       },
@@ -1852,7 +1851,7 @@
         "name": "defaultShipto",
         "toOne": {
           "isNested": true,
-          "type": "CustomerShipto",
+          "type": "CustomerShiptoRelation",
           "column": "default_shipto_id"
         }
       },

@@ -1,39 +1,39 @@
 [submodule "enyo-client/application/enyo"]
-	path = enyo-client/application/enyo
-	url = https://github.com/enyojs/enyo.git
+  path = enyo-client/application/enyo
+  url = https://github.com/enyojs/enyo.git
 [submodule "lib/onyx"]
-	path = lib/onyx
-	url = https://github.com/enyojs/onyx.git
+  path = lib/onyx
+  url = https://github.com/enyojs/onyx.git
 [submodule "lib/layout"]
-	path = lib/layout
-	url = https://github.com/enyojs/layout.git
+  path = lib/layout
+  url = https://github.com/enyojs/layout.git
 [submodule "enyo-client/extensions/enyo"]
-	path = enyo-client/extensions/enyo
-	url = https://github.com/enyojs/enyo.git
+  path = enyo-client/extensions/enyo
+  url = https://github.com/enyojs/enyo.git
 [submodule "lib/enyo-x/lib/gts-plugins"]
-	path = lib/enyo-x/lib/gts-plugins
-	url = https://bitbucket.org/GlitchTechScience/gts-plugins.git
+  path = lib/enyo-x/lib/gts-plugins
+  url = https://bitbucket.org/GlitchTechScience/gts-plugins.git
 [submodule "lib/enyo-x/enyo"]
-	path = lib/enyo-x/enyo
-	url = https://github.com/enyojs/enyo.git
+  path = lib/enyo-x/enyo
+  url = https://github.com/enyojs/enyo.git
 [submodule "lib/enyo-x/lib/onyx"]
-	path = lib/enyo-x/lib/onyx
-	url = https://github.com/enyojs/onyx.git
+  path = lib/enyo-x/lib/onyx
+  url = https://github.com/enyojs/onyx.git
 [submodule "lib/enyo-x/lib/layout"]
-	path = lib/enyo-x/lib/layout
-	url = https://github.com/enyojs/layout.git
+  path = lib/enyo-x/lib/layout
+  url = https://github.com/enyojs/layout.git
 [submodule "lib/backbone-x/lib/backbone"]
-	path = lib/backbone-x/lib/backbone
-	url = https://github.com/documentcloud/backbone.git
+  path = lib/backbone-x/lib/backbone
+  url = https://github.com/documentcloud/backbone.git
 [submodule "lib/backbone-x/lib/Backbone-relational"]
-	path = lib/backbone-x/lib/Backbone-relational
-	url = https://github.com/PaulUithol/Backbone-relational.git
+  path = lib/backbone-x/lib/Backbone-relational
+  url = https://github.com/PaulUithol/Backbone-relational.git
 [submodule "lib/tools/lib/globalize"]
-	path = lib/tools/lib/globalize
-	url = https://github.com/jquery/globalize.git
+  path = lib/tools/lib/globalize
+  url = https://github.com/jquery/globalize.git
 [submodule "lib/tools/lib/underscore"]
-	path = lib/tools/lib/underscore
-	url = https://github.com/documentcloud/underscore.git
+  path = lib/tools/lib/underscore
+  url = https://github.com/documentcloud/underscore.git
 [submodule "lib/backbone-x/lib/JSON-Patch"]
-	path = lib/backbone-x/lib/JSON-Patch
-	url = git@github.com:xtuple/JSON-Patch.git
+  path = lib/backbone-x/lib/JSON-Patch
+  url = https://github.com/xtuple/JSON-Patch.git
