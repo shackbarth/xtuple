@@ -46,7 +46,6 @@ select xt.js_init();
 \i xt/functions/co_margin.sql;
 \i xt/functions/cntctmerge.sql;
 \i xt/functions/cntctrestore.sql;
-\i xt/functions/createuser.sql;
 \i xt/functions/install_guiscript.sql;
 \i xt/functions/mergecrmaccts.sql;
 \i xt/functions/pg_advisory_unlock.sql;
@@ -67,12 +66,10 @@ select xt.js_init();
 \i xt/functions/quote_margin.sql;
 \i xt/functions/trylock.sql;
 \i xt/functions/undomerge.sql;
-\i xt/functions/user_account_sync.sql
 
 -- xt trigger functions
 \i xt/trigger_functions/comment_did_change.sql
-\i xt/trigger_functions/useracct_did_change.sql
-\i xt/trigger_functions/usrpref_did_change.sql
+\i xt/trigger_functions/usr_did_change.sql
 
 -- xt tables
 \i xt/tables/emlprofile.sql
@@ -162,7 +159,6 @@ select xt.js_init();
 
 \i public/tables/comment_trigger.sql
 \i public/tables/pkghead.sql;
-\i public/tables/usrpref.sql;
 \i public/tables/schemaord.sql;
 -- [ END ] public
 
