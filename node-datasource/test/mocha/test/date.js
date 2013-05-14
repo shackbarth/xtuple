@@ -32,6 +32,9 @@
       it('Test just plain bad date', function () {
         assert.isFalse(K.textToDate("********"));
         assert.isFalse(K.textToDate("BEWARE. I AM BAD."));
+        assert.isFalse(K.textToDate("%"));
+        // This is a bug!! Oh noes!!
+        //assert.isFalse(K.textToDate("%123"));
       });
       
       // Test entering "#" and a number to get x days in the year
@@ -57,7 +60,7 @@
         assert.isFalse(K.textToDate("#*"));
       });
       
-      // Testing entering "+" and a number to means days from now
+      // Testing entering "+" and "-" and a number to means days from or before now
       it('Test adding days using +', function () {
         var daysOffset, millisecondOffset = function (offset) {
           return offset * 24 * 60 * 60 * 1000;
@@ -65,15 +68,27 @@
         
         daysOffset = 20;
         newDate.setTime(newDate.getTime() + millisecondOffset(daysOffset));
-        assert.notStrictEqual(K.textToDate("+20"), newDate);
+        assert.notStrictEqual(K.textToDate("+" + daysOffset), newDate);
+        newDate.setTime(newDate.getTime() - millisecondOffset(daysOffset));
+        assert.notStrictEqual(K.textToDate("-" + daysOffset), newDate);
         
         daysOffset = 40;
         newDate.setTime(newDate.getTime() + millisecondOffset(daysOffset));
-        assert.notStrictEqual(K.textToDate("+40"), newDate);
+        assert.notStrictEqual(K.textToDate("+" + daysOffset), newDate);
+        newDate.setTime(newDate.getTime() + millisecondOffset(daysOffset));
+        assert.notStrictEqual(K.textToDate("-" + daysOffset), newDate);
+        
+        // zomg so far into the future
+        daysOffset = 999999999993453;
+        newDate.setTime(newDate.getTime() + millisecondOffset(daysOffset));
+        assert.notStrictEqual(K.textToDate("+" + daysOffset), newDate);
         
         assert.isFalse(K.textToDate("+tt"));
         assert.isFalse(K.textToDate("+"));
         assert.isFalse(K.textToDate("+*"));
+        assert.isFalse(K.textToDate("-tt"));
+        assert.isFalse(K.textToDate("-"));
+        assert.isFalse(K.textToDate("-*"));
       });
       
       // Test entering "#" as today's date
