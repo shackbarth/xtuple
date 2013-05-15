@@ -143,6 +143,18 @@ white:true*/
           console.log("Database Error! Last query was: ", that.activeQuery);
           console.log("Database Error! DB message was: ", msg);
         });
+
+        client.connection.on('notice', function (msg) {
+          if (msg && msg.message) {
+            if (msg.severity === 'NOTICE') {
+              console.log("Database notice Message: ", msg.message);
+            } else if (msg.severity === 'INFO') {
+              console.log("Database info Message: ", msg.message);
+            } else if (msg.severity === 'WARNING') {
+              console.log("Database warning Message: ", msg.message);
+            }
+          }
+        });
       }
 
       if (!client.hasRunInit) {
