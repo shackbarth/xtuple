@@ -15,7 +15,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     //passport.authenticate('local', { successReturnToOrRedirect: '/login/scope', failureRedirect: '/', failureFlash: 'Invalid username or password.' }),
     passport.authenticate('local', { failureRedirect: '/', failureFlash: 'Invalid username or password.' }),
     function (req, res, next) {
-      exports.scopeForm(req, res, next);
+
+      if (req && req.session && req.session.passport && req.session.passport.user && req.session.passport.user.organization) {
+        res.redirect('/client');
+        //next();
+      } else {
+        exports.scopeForm(req, res, next);
+      }
     }
   ];
 

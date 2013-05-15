@@ -30,11 +30,15 @@ passport.use(new LocalStrategy(
   },
   function (username, password, database, done) {
     "use strict";
-    var options = {user: username, password: password, port: 5432, hostname: "localhost", database: database};
-    var conString = X.database.conString(options);
+    var options = {
+      user: username,
+      password: password,
+      port: X.options.globalDatabase.port,
+      hostname: X.options.globalDatabase.hostname,
+      database: database
+    };
     var model;
 
-    console.log("here");
     XT.dataSource.query("select relname from pg_class limit 1;", options, function (error, res) {
       if (error) {
         // authentication failure
@@ -42,7 +46,7 @@ passport.use(new LocalStrategy(
       } else {
         // authentication success
         model = new Backbone.Model();
-        model.set({id: username})
+        model.set({id: username, organization: database, singleTenant: true})
         return done(null, model);
       }
     });
@@ -72,6 +76,10 @@ passport.serializeUser(function (user, done) {
   var passportUser = {};
 
   passportUser.id = user.get("id");
+  if (user.get("singleTenant")) {
+    passportUser.username = user.get("id");
+    passportUser.organization = user.get("organization");
+  }
   done(null, passportUser);
 });
 
@@ -82,6 +90,11 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(function (passportUser, done) {
   "use strict";
 
+  // XXX should there be real authentication happening here?
+  var model = new Backbone.Model();
+  model.set({id: passportUser.id, singleTenant: true})
+  return done(null, model);
+  /*
   db.users.findByUsername(passportUser.id, function (err, user) {
     if (err) { return done(err); }
     if (!user) {
@@ -89,6 +102,7 @@ passport.deserializeUser(function (passportUser, done) {
     }
     return done(null, user);
   });
+  */
 });
 
 
