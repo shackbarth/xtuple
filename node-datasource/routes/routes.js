@@ -39,8 +39,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     report = require('./report'),
     resetPassword = require('./resetPassword'),
     restDiscovery = require('./restDiscovery'),
-    restRouter = require('./restRouter'),
-    syncUser = require('./syncUser');
+    restRouter = require('./restRouter');
 
   //
   // Authentication-related routes
@@ -90,6 +89,5 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.redirect = redirector.redirect;
   exports.report = [ensureLogin, report.report];
   exports.resetPassword = [ensureLogin, resetPassword.resetPassword];
-  exports.syncUser = [ensureLogin, syncUser.syncUser];
 
 }());

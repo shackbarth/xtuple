@@ -351,7 +351,6 @@ app.get('/file', routes.file);
 app.get('/maintenance', routes.maintenance);
 app.get('/report', routes.report);
 app.get('/resetPassword', routes.resetPassword);
-app.get('/syncUser', routes.syncUser);
 
 // Set up the other servers we run on different ports.
 var unexposedServer = express();
