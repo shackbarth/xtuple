@@ -132,7 +132,7 @@ white:true*/
     // ..........................................................
     // METHODS
     //
-    
+
     bindEvents: function () {
       XM.ProjectBase.prototype.bindEvents.apply(this, arguments);
       this.on('add:tasks remove:tasks', this.tasksDidChange);
@@ -316,7 +316,7 @@ white:true*/
     recordType: 'XM.ProjectTask',
 
     enforceUpperKey: false,
-    
+
     requiredAttributes: [
       "project",
       "number",
@@ -324,7 +324,7 @@ white:true*/
       "name",
       "dueDate"
     ],
-    
+
     /**
       Add project as a required field
      */
@@ -545,11 +545,11 @@ white:true*/
   */
   XM.ProjectTaskRelation = XM.Info.extend({
     /** @scope XM.Task.prototype */
-    
+
     recordType: 'XM.ProjectTaskRelation',
-    
+
     editableModel: 'XM.ProjectTask'
-    
+
   });
 
   /**
@@ -569,7 +569,7 @@ white:true*/
 
   XM.ProjectListItem = XM.ProjectListItem.extend(XM.ProjectStatus);
 
-    
+
   /**
     @class
 
@@ -577,18 +577,18 @@ white:true*/
   */
   XM.Task = XM.ProjectTask.extend({
     /** @scope XM.Task.prototype */
-    
+
     recordType: 'XM.Task',
-    
+
     statusDidChange: function () {
       XM.ProjectTask.prototype.statusDidChange.apply(this, arguments);
       if (this.getStatus() === XM.Model.READY_CLEAN) {
         this.setReadOnly("project");
       }
     }
-    
+
   });
-  
+
   /**
     @class
 
