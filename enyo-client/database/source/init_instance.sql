@@ -165,3 +165,4 @@ select xt.js_init();
 
 \i update_version.sql;
 \i xt/default_org.sql;
+\i drop_deprecated.sql;

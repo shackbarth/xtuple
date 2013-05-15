@@ -73,13 +73,6 @@
         }
       },
       {
-        "name": "group",
-        "attr": {
-          "type": "String",
-          "column": "priv_group"
-        }
-      },
-      {
         "name": "name",
         "attr": {
           "type": "String",
