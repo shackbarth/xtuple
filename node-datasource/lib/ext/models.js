@@ -182,22 +182,9 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.OrganizationCollection = XM.Collection.extend({
-    /** @scope XM.OrganizationCollection.prototype */
+  XM.ExtensionCollection = XM.Collection.extend(/** @lends XM.ExtensionCollection.prototype */{
 
-    model: XM.Organization
-
-  });
-
-  /**
-    @class
-
-    @extends XM.Collection
-  */
-  XM.UserOrganizationCollection = XM.Collection.extend({
-    /** @scope XM.UserOrganizationCollection.prototype */
-
-    model: XM.UserOrganization
+    model: XM.Extension
 
   });
 

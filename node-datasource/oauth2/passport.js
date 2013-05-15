@@ -90,7 +90,7 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(function (passportUser, done) {
   "use strict";
 
-  // XXX should there be real authentication happening here?
+  // XXX I bet that real authentication should be happening here
   var model = new Backbone.Model();
   model.set({id: passportUser.id, singleTenant: true})
   return done(null, model);
