@@ -131,8 +131,6 @@ white:true*/
 
     recordType: 'XM.BiCache',
 
-    databaseType: 'global',
-
     idAttribute: 'key'
 
   });
