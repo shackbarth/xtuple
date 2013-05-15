@@ -155,6 +155,8 @@ select xt.js_init();
 \i public/tables/comment_trigger.sql
 \i public/tables/pkghead.sql;
 \i public/tables/schemaord.sql;
+
+\i public/views/usr.sql;
 -- [ END ] public
 
 -- xtbatch (TODO: This should be moved elsewhere)

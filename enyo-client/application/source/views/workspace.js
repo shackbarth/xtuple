@@ -58,7 +58,7 @@ trailing:true white:true*/
       return model ? model.get('account') : undefined;
     }
   };
-  
+
   /**
     Abstract workspace to be used for objects that are attached to models subclassed from `AccountDocument`.
     Must be subclassed.
@@ -636,7 +636,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.ExpenseCategory", "XV.ExpenseCategoryWorkspace");
-  
+
   // ..........................................................
   // DEPARTMENT
   //
@@ -662,7 +662,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.Department", "XV.DepartmentWorkspace");
-  
+
   // ..........................................................
   // EMPLOYEE
   //
@@ -734,7 +734,7 @@ trailing:true white:true*/
 
   XV.registerModelWorkspace("XM.EmployeeRelation", "XV.EmployeeWorkspace");
   XV.registerModelWorkspace("XM.EmployeeListItem", "XV.EmployeeWorkspace");
-  
+
   // ..........................................................
   // EMPLOYEE GROUP
   //
@@ -1875,7 +1875,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.SaleType", "XV.SaleTypeWorkspace");
-  
+
   // ..........................................................
   // SHIFT
   //
@@ -2376,7 +2376,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "properName"},
             {kind: "XV.InputWidget", attr: "initials"},
             {kind: "XV.InputWidget", attr: "email"},
-            {kind: "XV.CheckboxWidget", attr: "disableExport"},
+            //{kind: "XV.CheckboxWidget", attr: "disableExport"},
             // normally I'd put classes: "xv-assignment-box" into the container of the assignmentbox,
             // but there is no such container here. Maybe some CSS work to be done now that assignmentbox
             // is the thing inside the thing instead of the thing and the container all together.
