@@ -321,6 +321,7 @@ select xt.install_js('XT','Data','xtuple', $$
                   record && record.dataState === this.UPDATED_STATE ? 'update' : 'read';
 
       /* if there is no ORM, this isn't a table data type so no check required */
+      if (DEBUG) { plv8.elog(NOTICE, 'orm type is ->', map.type); }
       if (DEBUG) { plv8.elog(NOTICE, 'orm is ->', JSON.stringify(map)); }
       if (!map) { return true; }
 
@@ -330,7 +331,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
       /* check privileges - first do we have access to anything? */
       if (privileges) {
-        if (DEBUG) { plv8.elog(NOTICE, 'privileges found'); }
+        if (DEBUG) { plv8.elog(NOTICE, 'privileges found', JSON.stringify(privileges)); }
         if (committing) {
           if (DEBUG) { plv8.elog(NOTICE, 'is committing'); }
 
