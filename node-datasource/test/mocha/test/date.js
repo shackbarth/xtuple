@@ -11,7 +11,7 @@
     
   describe('Date Widget', function () {
     this.timeout(10 * 1000);
-    var K, newDate = new Date();
+    var K, newDate;
     
     before(function (done) {
       // setup for the date widget
@@ -67,10 +67,6 @@
         days = 9999999;
         assert.equal(K.textToDate("#" + days).toDateString(), daysFromStart(days).toDateString());
         
-        // and it works backward!
-        days = -67;
-        assert.equal(K.textToDate("#" + days).toDateString(), daysFromStart(days).toDateString());
-        
         assert.isFalse(K.textToDate("#tt"));
         assert.isFalse(K.textToDate("#"));
         assert.isFalse(K.textToDate("#*"));
@@ -81,11 +77,12 @@
         var daysOffset, millisecondOffset = function (offset) {
           var milliOffset = offset * 24 * 60 * 60 * 1000;
           newDate = new Date(newDate.getTime() + milliOffset);
+          newDate = K.applyTimezoneOffset(newDate);
           return newDate;
         };
         
         daysOffset = 20;
-        //assert.equal(K.textToDate("+" + daysOffset).toDateString(),  millisecondOffset(daysOffset).toDateString());
+        assert.equal(K.textToDate("+" + daysOffset).toDateString(),  millisecondOffset(daysOffset).toDateString());
         
         assert.isFalse(K.textToDate("+tt"));
         assert.isFalse(K.textToDate("+"));
@@ -96,12 +93,14 @@
       // Testing entering "-" and a number to mean days before now
       it('Test subtracting days using -', function () {
         var daysOffset, millisecondOffset = function (offset) {
-          return offset * 24 * 60 * 60 * 1000;
+          var milliOffset = offset * 24 * 60 * 60 * 1000;
+          newDate = new Date(newDate.getTime() - milliOffset);
+          newDate = K.applyTimezoneOffset(newDate);
+          return newDate;
         };
         
         daysOffset = 20;
-        newDate.setTime(newDate.getTime() - millisecondOffset(daysOffset));
-        //assert.equal(K.textToDate("-" + daysOffset).toDateString(), newDate.toDateString());
+        assert.equal(K.textToDate("-" + daysOffset).toDateString(),  millisecondOffset(daysOffset).toDateString());
         
         assert.isFalse(K.textToDate("-tt"));
         assert.isFalse(K.textToDate("-"));
