@@ -312,10 +312,10 @@
     "comment": "Tax Rate Map",
     "privileges": {
       "all": {
-        "create": "MaintainTaxCodes",
+        "create": "MaintainTaxRates",
         "read": true,
-        "update": "MaintainTaxCodes",
-        "delete": "MaintainTaxCodes"
+        "update": "MaintainTaxRates",
+        "delete": "MaintainTaxRates"
       }
     },
     "properties": [
