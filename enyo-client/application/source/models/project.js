@@ -316,6 +316,25 @@ white:true*/
     recordType: 'XM.ProjectTask',
 
     enforceUpperKey: false,
+    
+    requiredAttributes: [
+      "project",
+      "number",
+      "status",
+      "name",
+      "dueDate"
+    ],
+    
+    /**
+      Add project as a required field
+     */
+    initialize: function (attributes, options) {
+      XM.ProjectBase.prototype.initialize.apply(this, arguments);
+
+      if (!_.contains(this.requiredAttributes, "project")) {
+        this.requiredAttributes.push("project");
+      }
+    },
 
     defaults: function () {
       var result = XM.ProjectBase.prototype.defaults.call(this);
