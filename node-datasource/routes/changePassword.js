@@ -56,7 +56,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     password end can enter a new one of their choice.
    */
   exports.changePassword = function (req, res) {
-    var nodeUsername = X.options.globalDatabase.nodeUsername,
+    var adminUser = X.options.databaseServer.adminUser,
       args = req.query,
       // the id to change is not taken from the client but from the session on the server
       id = req.session.passport.user.id,
@@ -82,7 +82,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             res.send({data: {message: "Password change successful!"}});
           };
 
-        // the actual edit will be made under the authority of the node user
+        // the actual edit will be made under the authority of the admin user
 
         if (collection.length === 0) {
           // You should not get here.
@@ -102,7 +102,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             success: updateSuccess,
             error: updateError,
             force: true,
-            username: nodeUsername
+            username: adminUser
           });
 
           // Update postgres user passwords
@@ -115,7 +115,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
 
     // Verify that the user entered their password correctly by searching for them in the DB
-    coll.fetch({query: fetchQuery, success: fetchSuccess, error: fetchError, username: nodeUsername});
+    coll.fetch({query: fetchQuery, success: fetchSuccess, error: fetchError, username: adminUser});
   };
 
 }());

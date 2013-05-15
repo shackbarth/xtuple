@@ -33,8 +33,8 @@ passport.use(new LocalStrategy(
     var options = {
       user: username,
       password: password,
-      port: X.options.globalDatabase.port,
-      hostname: X.options.globalDatabase.hostname,
+      port: X.options.databaseServer.port,
+      hostname: X.options.databaseServer.hostname,
       database: database
     };
     var model;

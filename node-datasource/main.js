@@ -65,7 +65,7 @@ jsonpatch = require("json-patch");
   // Set the options.
   X.setup(options);
 
-  sessionOptions.username = X.options.globalDatabase.nodeUsername;
+  sessionOptions.username = X.options.databaseServer.adminUser;
 
   XT.session = Object.create(XT.Session);
   XT.session.loadSessionObjects(XT.session.SCHEMA, sessionOptions);

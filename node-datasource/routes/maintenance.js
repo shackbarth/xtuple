@@ -367,8 +367,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     if (host === "localhost:442") {
       // users accessing this route through the unexposed server don't have to
-      // get authenticated. Do the fetch under the node user authority.
-      install(res, args, X.options.globalDatabase.nodeUsername);
+      // get authenticated. Do the fetch under the admin user authority.
+      install(res, args, X.options.databaseServer.adminUser);
       return;
     }
 

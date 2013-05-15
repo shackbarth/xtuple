@@ -274,14 +274,14 @@ select xt.install_js('XT','Data','xtuple', $$
         /* The privilege name is allowed to be a set of space-delimited privileges */
         /* If a user has any of the applicable privileges then they get access */
         privArray = privilege.split(" ");
-        sql = 'select coalesce(userpriv_priv_id, userrolepriv_priv_id, -1) > 0 as granted ' +
-               'from xt.priv ' +
-               'left join xt.userpriv on (priv_id=userpriv_priv_id) and (userpriv_username=$1) ' +
+        sql = 'select coalesce(usrpriv_priv_id, grppriv_priv_id, -1) > 0 as granted ' +
+               'from priv ' +
+               'left join usrpriv on (priv_id=usrpriv_priv_id) and (usrpriv_username=$1) ' +
                'left join ( ' +
-               '  select distinct userrolepriv_priv_id ' +
-               '  from xt.userrolepriv ' +
-               '    join xt.useruserrole on (userrolepriv_userrole_id=useruserrole_userrole_id) and (useruserrole_username=$1) ' +
-               '  ) userrolepriv on (userrolepriv_priv_id=priv_id) ' +
+               '  select distinct grppriv_priv_id ' +
+               '  from grppriv ' +
+               '    join usrgrp on (grppriv_grp_id=usrgrp_grp_id) and (usrgrp_username=$1) ' +
+               '  ) grppriv on (grppriv_priv_id=priv_id) ' +
                'where priv_name = $2';
 
         for (i = 1; i < privArray.length; i++) {

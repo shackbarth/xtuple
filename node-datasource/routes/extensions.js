@@ -12,6 +12,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     console.log("extensions");
     var extensionCollection = new XM.ExtensionCollection(),
       fetchError = function (err) {
+        console.log("ext fetch error", err);
         res.send({isError: true, message: "Error fetching extensions"});
       },
       fetchSuccess = function (collection, result) {
@@ -28,12 +29,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         res.send({data: extensions});
       };
 
-    // Fetch the organization to get their extensions. Fetch under the authority of node
+    // Fetch the organization to get their extensions. Fetch under the authority of admin
     // or else most users would not be able to load their own extensions.
     extensionCollection.fetch({
       success: fetchSuccess,
       error: fetchError,
-      username: X.options.globalDatabase.nodeUsername
+      username: X.options.databaseServer.adminUser
     });
   };
 }());

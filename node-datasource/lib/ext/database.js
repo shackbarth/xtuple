@@ -14,11 +14,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   X.database = X.Database.create(/** @lends X.database */{
     query: function (organization, dbQuery, done) {
       var options = {
-        user: X.options.globalDatabase.user,
-        hostname: X.options.globalDatabase.hostname,
-        port: X.options.globalDatabase.port,
+        user: X.options.databaseServer.adminUser,
+        hostname: X.options.databaseServer.hostname,
+        port: X.options.databaseServer.port,
         database: organization,
-        password: X.options.globalDatabase.password
+        password: X.options.databaseServer.password
       };
       XT.dataSource.query(dbQuery, options, done);
     }
