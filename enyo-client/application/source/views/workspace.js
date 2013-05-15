@@ -2155,9 +2155,8 @@ trailing:true white:true*/
             classes: "in-panel", components: [
               {kind: "XV.TaxCodePicker", label: "_taxCode".loc(), attr: "tax"},
               {kind: "XV.NumberWidget", label: "_percent".loc(), attr: "percent", scale: XT.PERCENT_SCALE},
-              {kind: "XV.MoneyWidget",
-                attr: {localValue: "amount", currency: "currency", effective: "effectiveDate"},
-                label: "_currency".loc()},
+              {kind: "XV.MoneyWidget", attr: {localValue: "amount", currency: "currency",
+                effective: "effectiveDate"}, label: "_currency".loc()},
               {kind: "XV.DateWidget", label: "_effective".loc(), attr: "effectiveDate"},
               {kind: "XV.DateWidget", label: "_expires".loc(), attr: "expirationDate"}
             ]}
