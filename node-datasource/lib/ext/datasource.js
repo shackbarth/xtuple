@@ -217,8 +217,11 @@ white:true*/
               .replace("{method}", method)
               .replace("{payload}", payload);
       if (X.options.datasource.debugging) {
-        X.log("model query", query);
+        X.log("Query from model: ", query);
       }
+
+      conn.database = "dev"; // XXX FIXME this has to come from req.session.passport.user.organization
+
       this.query(query, conn, complete);
       return true;
     }

@@ -137,7 +137,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     options.id = userId;
 
     // The user under whose authority the query is run.
-    options.username = X.options.databaseServer.adminUser;
+    options.username = X.options.databaseServer.user;
 
     // Verify that the org is valid for the user.
     user.fetch(options);

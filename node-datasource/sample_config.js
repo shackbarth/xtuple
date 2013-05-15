@@ -57,10 +57,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     databaseServer: {
       hostname: "localhost",
       port: 5432,
-      database: "dev",
-      organization: "dev",
       user: "admin",
-      adminUser: "admin",
       password: "admin"
     },
     databases: [{

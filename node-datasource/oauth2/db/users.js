@@ -34,7 +34,7 @@ exports.findByUsername = function (username, done) {
   options.id = username;
 
   // The user under whose authority the query is run.
-  options.username = X.options.databaseServer.adminUser;
+  options.username = X.options.databaseServer.user;
 
   user.fetch(options);
 };
@@ -113,8 +113,8 @@ exports.findByUserOrg = function (username, org, done) {
 
       options.id = data.id;
       options.password = data.md5pass;
-      options.username = X.options.databaseServer.adminUser;
-      saveOptions.username = X.options.databaseServer.adminUser;
+      options.username = X.options.databaseServer.user;
+      saveOptions.username = X.options.databaseServer.user;
 
       // Reload the user so we have access privs.
       user.fetch(options);

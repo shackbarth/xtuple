@@ -123,7 +123,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         tempDataModel.save(attrs, {
           success: success,
           error: error,
-          username: X.options.databaseServer.adminUser
+          username: X.options.databaseServer.user
         });
       }
 

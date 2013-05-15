@@ -14,7 +14,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   X.database = X.Database.create(/** @lends X.database */{
     query: function (organization, dbQuery, done) {
       var options = {
-        user: X.options.databaseServer.adminUser,
+        user: X.options.databaseServer.user,
         hostname: X.options.databaseServer.hostname,
         port: X.options.databaseServer.port,
         database: organization,

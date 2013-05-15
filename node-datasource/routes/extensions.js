@@ -34,7 +34,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     extensionCollection.fetch({
       success: fetchSuccess,
       error: fetchError,
-      username: X.options.databaseServer.adminUser
+      username: X.options.databaseServer.user
     });
   };
 }());
