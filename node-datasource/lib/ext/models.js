@@ -12,7 +12,6 @@ white:true*/
     @extends XM.SimpleModel
   */
   XM.Extension = XM.SimpleModel.extend({
-    /** @scope XM.Extension.prototype */
 
     recordType: 'XM.Extension'
 
@@ -24,7 +23,6 @@ white:true*/
     @extends XM.SimpleModel
   */
   XM.Oauth2client = XM.SimpleModel.extend({
-    /** @scope XM.Organization.prototype */
 
     recordType: 'XM.Oauth2client'
 
@@ -36,7 +34,6 @@ white:true*/
     @extends XM.SimpleModel
   */
   XM.Oauth2clientRedirs = XM.SimpleModel.extend({
-    /** @scope XM.Organization.prototype */
 
     recordType: 'XM.Oauth2clientRedirs'
 
@@ -48,37 +45,8 @@ white:true*/
     @extends XM.SimpleModel
   */
   XM.Oauth2token = XM.SimpleModel.extend({
-    /** @scope XM.Organization.prototype */
 
     recordType: 'XM.Oauth2token'
-
-  });
-
-  /**
-    @class
-
-    @extends XM.SimpleModel
-  */
-  XM.Organization = XM.SimpleModel.extend({
-    /** @scope XM.Organization.prototype */
-
-    recordType: 'XM.Organization',
-
-    idAttribute: 'name',
-
-    autoFetchId: false
-
-  });
-
-  /**
-    @class
-
-    @extends XM.SimpleModel
-  */
-  XM.OrganizationExtension = XM.SimpleModel.extend({
-    /** @scope XM.OrganizationExtension.prototype */
-
-    recordType: 'XM.OrganizationExtension'
 
   });
 
@@ -110,17 +78,6 @@ white:true*/
 
   });
 
-  /**
-    @class
-
-    @extends XM.SimpleModel
-  */
-  XM.UserOrganization = XM.SimpleModel.extend({
-    /** @scope XM.UserOrganization.prototype */
-
-    recordType: 'XM.UserOrganization'
-
-  });
 
   /**
     @class
@@ -146,7 +103,6 @@ white:true*/
     @extends XM.Collection
   */
   XM.Oauth2clientCollection = XM.Collection.extend({
-    /** @scope XM.OrganizationCollection.prototype */
 
     model: XM.Oauth2client
 
@@ -158,7 +114,6 @@ white:true*/
     @extends XM.Collection
   */
   XM.Oauth2clientRedirsCollection = XM.Collection.extend({
-    /** @scope XM.OrganizationCollection.prototype */
 
     model: XM.Oauth2clientRedirs
 
@@ -169,7 +124,6 @@ white:true*/
     @extends XM.Collection
   */
   XM.Oauth2tokenCollection = XM.Collection.extend({
-    /** @scope XM.OrganizationCollection.prototype */
 
     model: XM.Oauth2token
 

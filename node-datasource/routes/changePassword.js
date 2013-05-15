@@ -65,7 +65,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       coll = new XM.UserCollection(),
       user,
       fetchError = function (err) {
-        res.semd({isError: true, message: "No user exists by that ID"});
+        res.send({isError: true, message: "No user exists by that ID"});
       },
       fetchQuery = {
         "parameters": [
