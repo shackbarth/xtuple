@@ -34,7 +34,7 @@ create or replace function xt.orm_did_change() returns trigger as $$
       dropSql = "drop view if exists " + nsp + "." + rel;
 
       if (DEBUG) {
-        plv8.elog(NOTICE, 'xt.orm_did_change sql = ', dropSql);
+        XT.debug('xt.orm_did_change sql = ', dropSql);
       }
       plv8.execute(dropSql);
     }
@@ -85,7 +85,7 @@ create or replace function xt.orm_did_change() returns trigger as $$
             .replace(/{table}/, lockTable);
 
       if (DEBUG) {
-        plv8.elog(NOTICE, 'xt.orm_did_change sql = ', sql);
+        XT.debug('xt.orm_did_change sql = ', sql);
       }
       plv8.execute(sql);
 

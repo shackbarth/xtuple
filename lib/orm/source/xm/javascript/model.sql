@@ -63,13 +63,18 @@ select xt.install_js('XM','Model','xtuple', $$
          rec,
          pid;
 
-      /* if the model uses a natural key, get the primary key value */
+      /* If the model uses a natural key, get the primary key value. */
       rec = data.retrieveRecord({
         nameSpace: nameSpace,
         type: type,
         id: id
       });
+
       pid = nkey ? data.getId(orm, id) : id;
+      if (!pid) {
+// TODO - Send not found message back.
+        return false;
+      }
 
       if (!rec || !rec.data) { throw "Record for requested lock not found." }
       if (rec.etag !== etag) { return false; }
@@ -137,10 +142,10 @@ select xt.install_js('XM','Model','xtuple', $$
         result;
         if (id) {
           sql += " and " + okey + " != $2";
-          if (DEBUG) { plv8.elog(NOTICE, sql); }
+          if (DEBUG) { XT.debug('XM.Model.findExisting sql = ', sql); }
           result = plv8.execute(sql, [value, id])[0];
         } else {
-          if (DEBUG) { plv8.elog(NOTICE, sql); }
+          if (DEBUG) { XT.debug('XM.Model.findExisting sql = ', sql); }
           result = plv8.execute(sql, [value])[0];
         }
 
@@ -151,58 +156,67 @@ select xt.install_js('XM','Model','xtuple', $$
     Return whether a model is referenced by another table.
   */
   XM.Model.used = function(recordType, id) {
-    var nameSpace = recordType.beforeDot(),
-      type = recordType.afterDot(),
-      map = XT.Orm.fetch(nameSpace, type),
-      data = Object.create(XT.Data),
-      nkey = XT.Orm.naturalKey(map),
-      tableName = map.table,
-      tableSuffix = tableName.indexOf('.') ? tableName.afterDot() : tableName,
-      sql,
-      fkeys,
-      uses,
-      i,
-      attr,
-      seq,
-      tableName;
+    try {
+      var nameSpace = recordType.beforeDot(),
+        type = recordType.afterDot(),
+        map = XT.Orm.fetch(nameSpace, type),
+        data = Object.create(XT.Data),
+        nkey = XT.Orm.naturalKey(map),
+        tableName = map.table,
+        tableSuffix = tableName.indexOf('.') ? tableName.afterDot() : tableName,
+        sql,
+        fkeys,
+        uses,
+        i,
+        attr,
+        seq,
+        tableName;
 
-   if (nkey) { id = data.getId(map, id); }
+      if (nkey) {
+        id = data.getId(map, id);
+        if (!id) {
+          /* Throw an error here because returning false is a valid use case. */
+          plv8.elog(ERROR, "Can not find primary key.");
+        }
+      }
 
-    /* Determine where this record is used by analyzing foreign key linkages */
-    sql = "select pg_namespace.nspname AS schemaname, " +
-          "con.relname AS tablename, " +
-          "conkey AS seq, " +
-          "conrelid AS class_id " +
-          "from pg_constraint, pg_class f, pg_class con, pg_namespace " +
-          "where confrelid=f.oid " +
-          "and conrelid=con.oid " +
-          "and f.relname = $1 " +
-          "and con.relnamespace=pg_namespace.oid; "
-    fkeys = plv8.execute(sql, [tableSuffix]);
-    if (DEBUG) { plv8.elog(NOTICE, 'keys:' ,fkeys.length) }
-    for (i = 0; i < fkeys.length; i++) {
-      /* Validate */
+      /* Determine where this record is used by analyzing foreign key linkages */
+      sql = "select pg_namespace.nspname AS schemaname, " +
+            "con.relname AS tablename, " +
+            "conkey AS seq, " +
+            "conrelid AS class_id " +
+            "from pg_constraint, pg_class f, pg_class con, pg_namespace " +
+            "where confrelid=f.oid " +
+            "and conrelid=con.oid " +
+            "and f.relname = $1 " +
+            "and con.relnamespace=pg_namespace.oid; "
+      fkeys = plv8.execute(sql, [tableSuffix]);
+      if (DEBUG) { XT.debug('XM.Model.used keys:' , fkeys.length) }
+      for (i = 0; i < fkeys.length; i++) {
+        /* Validate */
 
-      sql = "select attname " +
-            "from pg_attribute, pg_class " +
-            "where ((attrelid=pg_class.oid) " +
-            " and (pg_class.oid = $1) " +
-            " and (attnum = $2)); ";
+        sql = "select attname " +
+              "from pg_attribute, pg_class " +
+              "where ((attrelid=pg_class.oid) " +
+              " and (pg_class.oid = $1) " +
+              " and (attnum = $2)); ";
 
-      classId = fkeys[i].class_id;
-      seq =  fkeys[i].seq[0];
-      tableName = fkeys[i].schemaname + '.' + fkeys[i].tablename;
-      if (DEBUG) { plv8.elog(NOTICE, 'vars:', classId, seq, tableName) }
-      attr = plv8.execute(sql, [classId, seq])[0].attname;
+        classId = fkeys[i].class_id;
+        seq =  fkeys[i].seq[0];
+        tableName = fkeys[i].schemaname + '.' + fkeys[i].tablename;
+        if (DEBUG) { XT.debug('XM.Model.used vars:', [classId, seq, tableName]) }
+        attr = plv8.execute(sql, [classId, seq])[0].attname;
 
-      /* See if there are dependencies */
-      sql = 'select * from ' + tableName + ' where ' + attr + ' = $1 limit 1;'
-      uses = plv8.execute(sql, [id]);
-      if (uses.length) { return true; }
+        /* See if there are dependencies */
+        sql = 'select * from ' + tableName + ' where ' + attr + ' = $1 limit 1;'
+        uses = plv8.execute(sql, [id]);
+        if (uses.length) { return true; }
+      }
+
+      return false
+    } catch (err) {
+      XT.error(err, arguments);
     }
-
-    return false
   }
-
 $$ );
 

@@ -1,16 +1,16 @@
 select xt.install_js('XT','Session','xtuple', $$
-  /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
+  /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple.
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
   XT.Session = {};
-  
+
   XT.Session.isDispatchable = true;
 
-  /** 
+  /**
     Returns a hash of key, value pairs of locale properties and their selections for the effective user.
 
     @returns {hash}
-  */ 
+  */
   XT.Session.locale = function() {
     var sql = 'select '
             + 'locale_id as "id", '
@@ -31,7 +31,7 @@ select xt.install_js('XT','Session','xtuple', $$
             + 'join xt.usr on usr_locale_id = locale_id '
             + 'left join lang on locale_lang_id = lang_id '
             + 'left join country on locale_country_id = country_id '
-            + 'where usr_username = $1 ', 
+            + 'where usr_username = $1 ',
     rec = plv8.execute(sql, [ XT.username ])[0];
 
     /* determine culture */
@@ -49,11 +49,11 @@ select xt.install_js('XT','Session','xtuple', $$
     return JSON.stringify(rec);
   }
 
-  /** 
+  /**
     Returns a hash of key, value pairs of settings and values for the effective user.
 
     @returns {hash}
-  */ 
+  */
   XT.Session.settings = function() {
     var settings = {},
       type;
@@ -69,11 +69,11 @@ select xt.install_js('XT','Session','xtuple', $$
     return JSON.stringify(settings);
   }
 
-  /** 
+  /**
     Returns a hash of key, value pairs of privileges and their granted state for the effective user.
 
     @returns {Hash}
-  */ 
+  */
   XT.Session.privileges = function() {
     var sql = 'select priv_name as "privilege", ' +
               'coalesce(userpriv_priv_id, userrolepriv_priv_id, -1) > 0 as "isGranted" ' +
@@ -140,7 +140,7 @@ select xt.install_js('XT','Session','xtuple', $$
         relations.push(rel);
       },
       addToMany = function (value, schema) {
-        var relations = result[type]['relations'], 
+        var relations = result[type]['relations'],
           child = XT.Orm.fetch(schema.toUpperCase(), value.toMany.type),
           pkey = XT.Orm.primaryKey(child),
           inverse = value.toMany.inverse ? value.toMany.inverse.camelize() : undefined;
@@ -167,7 +167,7 @@ select xt.install_js('XT','Session','xtuple', $$
           props.forEach(function(prop) {
             addToOne(prop, schema);
           });
- 
+
           /* To Many */
           props = orm.properties.filter(filterToMany);
           props.forEach(function(prop) {
@@ -196,10 +196,10 @@ select xt.install_js('XT','Session','xtuple', $$
       if (type !== prev) {
         result[type] = {};
         result[type].columns = [];
-        
+
         /* Add relations and privileges from the orm*/
-        if (DEBUG) { 
-          plv8.elog(NOTICE, 'Fetching schema ' + schema.toUpperCase() + '.' + type);
+        if (DEBUG) {
+          XT.debug('Fetching schema ' + schema.toUpperCase() + '.' + type);
         }
         orm = XT.Orm.fetch(schema.toUpperCase(), type);
         result[type]['idAttribute'] = XT.Orm.naturalKey(orm) || XT.Orm.primaryKey(orm);
@@ -208,7 +208,7 @@ select xt.install_js('XT','Session','xtuple', $$
         processProperties(orm, schema);
         processPrivileges(orm);
       }
-      column = { 
+      column = {
         name: name,
         category: recs[i].category
       }
@@ -226,7 +226,7 @@ select xt.install_js('XT','Session','xtuple', $$
           result[type] = {};
           result[type].columns = [];
           for (i = 0; i < options.length; i++) {
-            column = { 
+            column = {
               name: options[i],
               category: 'X'
             }
@@ -238,6 +238,6 @@ select xt.install_js('XT','Session','xtuple', $$
 
     return JSON.stringify(result);
   }
-  
+
 $$ );
 

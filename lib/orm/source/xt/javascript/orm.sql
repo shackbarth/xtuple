@@ -75,8 +75,8 @@ select xt.install_js('XT','Orm','xtuple', $$
             ' and orm_context = $3';
 
       if (DEBUG) {
-        plv8.elog(NOTICE, 'install sql = ', sql);
-        plv8.elog(NOTICE, 'install values = ', [nameSpace, type, context]);
+        XT.debug('install sql = ', sql);
+        XT.debug('install values = ', [nameSpace, type, context]);
       }
       oldOrm = plv8.execute(sql, [nameSpace, type, context])[0];
 
@@ -95,16 +95,16 @@ select xt.install_js('XT','Orm','xtuple', $$
               'where orm_id = $4';
 
         if (DEBUG) {
-          plv8.elog(NOTICE, 'install sql = ', sql);
-          plv8.elog(NOTICE, 'install values = ', [json, sequence, isRest, oldOrm.id]);
+          XT.debug('install sql = ', sql);
+          XT.debug('install values = ', [json, sequence, isRest, oldOrm.id]);
         }
         plv8.execute(sql, [json, sequence, isRest, oldOrm.id]);
       } else {
         sql = 'insert into xt.orm ( orm_namespace, orm_type, orm_context, orm_json, orm_seq, orm_ext, orm_rest ) values ($1, $2, $3, $4, $5, $6, $7)';
 
         if (DEBUG) {
-          plv8.elog(NOTICE, 'install sql = ', sql);
-          plv8.elog(NOTICE, 'install values = ', [nameSpace, type, context, json, sequence, isExtension, isRest]);
+          XT.debug('install sql = ', sql);
+          XT.debug('install values = ', [nameSpace, type, context, json, sequence, isExtension, isRest]);
         }
         plv8.execute(sql, [nameSpace, type, context, json, sequence, isExtension, isRest]);
       }
@@ -135,8 +135,8 @@ select xt.install_js('XT','Orm','xtuple', $$
               " and (nspname || '.' || relname not in ($1,$2));";
 
       if (DEBUG) {
-        plv8.elog(NOTICE, 'viewDependencies sql = ', sql);
-        plv8.elog(NOTICE, 'viewDependencies values = ', [view, quoted]);
+        XT.debug('viewDependencies sql = ', sql);
+        XT.debug('viewDependencies values = ', [view, quoted]);
       }
       rec = plv8.execute(sql, [view, quoted]);
 
@@ -205,8 +205,8 @@ select xt.install_js('XT','Orm','xtuple', $$
                   ' and orm_active ';
 
         if (DEBUG) {
-          plv8.elog(NOTICE, 'fetch sql = ', sql);
-          plv8.elog(NOTICE, 'fetch values = ', [nameSpace, type]);
+          XT.debug('fetch sql = ', sql);
+          XT.debug('fetch values = ', [nameSpace, type]);
         }
         res = plv8.execute(sql, [nameSpace, type]);
 
@@ -230,8 +230,8 @@ select xt.install_js('XT','Orm','xtuple', $$
               'order by orm_seq';
 
         if (DEBUG) {
-          plv8.elog(NOTICE, 'fetch sql = ', sql);
-          plv8.elog(NOTICE, 'fetch values = ', [nameSpace, type]);
+          XT.debug('fetch sql = ', sql);
+          XT.debug('fetch values = ', [nameSpace, type]);
         }
         res = plv8.execute(sql, [nameSpace, type]);
 
@@ -405,13 +405,13 @@ select xt.install_js('XT','Orm','xtuple', $$
           prop = props[i];
           nkey = prop.toOne ? Orm.naturalKey(Orm.fetch(orm.nameSpace, prop.toOne.type)) : false,
           alias = prop.name;
-          if(DEBUG) plv8.elog(NOTICE, 'processing property ->', prop.name);
+          if(DEBUG) XT.debug('processing property ->', prop.name);
           if(prop.name === 'dataState') throw new Error("Can not use 'dataState' as a property name.");
 
           /* process attributes */
           if (prop.attr || prop.toOne) {
             attr = prop.attr ? prop.attr : prop.toOne;
-            if (DEBUG) plv8.elog(NOTICE, 'building attribute', prop.name, attr.column);
+            if (DEBUG) XT.debug('building attribute', [prop.name, attr.column]);
             isVisible = attr.value === undefined ? true : false;
             if (!attr.type) throw new Error('No type was defined on property ' + prop.name);
             if (isVisible) {
@@ -436,8 +436,8 @@ select xt.install_js('XT','Orm','xtuple', $$
                 tableName = orm.table.indexOf(".") === -1 ? orm.table : orm.table.afterDot();
 
                 if (DEBUG) {
-                  plv8.elog(NOTICE, 'createView check obj_uuid sql = ', query);
-                  plv8.elog(NOTICE, 'createView values = ', [tableName, schemaName]);
+                  XT.debug('createView check obj_uuid sql = ', query);
+                  XT.debug('createView values = ', [tableName, schemaName]);
                 }
                 res = plv8.execute(query, [tableName, schemaName]);
 
@@ -450,8 +450,8 @@ select xt.install_js('XT','Orm','xtuple', $$
                           " and n.oid = c.relnamespace;"
 
                   if (DEBUG) {
-                    plv8.elog(NOTICE, 'createView check obj table sql = ', query);
-                    plv8.elog(NOTICE, 'createView values = ', [tableName, schemaName]);
+                    XT.debug('createView check obj table sql = ', query);
+                    XT.debug('createView values = ', [tableName, schemaName]);
                   }
                   res = plv8.execute(query, [tableName, schemaName]);
 
@@ -463,7 +463,7 @@ select xt.install_js('XT','Orm','xtuple', $$
                   query = "alter table {table} add column obj_uuid text default xt.generate_uuid();".replace("{table}", orm.table);
 
                   if (DEBUG) {
-                    plv8.elog(NOTICE, 'createView add obj_uuid sql = ', query);
+                    XT.debug('createView add obj_uuid sql = ', query);
                   }
                   plv8.execute(query);
 
@@ -495,7 +495,7 @@ select xt.install_js('XT','Orm','xtuple', $$
             inverse = toOne.inverse ? toOne.inverse.camelize() : 'id';
             col = '({select}) as "{alias}"';
             if (!type) { throw new Error('No type was defined on property ' + prop.name); }
-            if (DEBUG) { plv8.elog(NOTICE, 'building toOne'); }
+            if (DEBUG) { XT.debug('building toOne'); }
             conditions = '"' + type + '"."' + inverse + '" = ' + tblAlias + '.' + toOne.column;
 
             /* handle the nested and natural key cases */
@@ -512,7 +512,7 @@ select xt.install_js('XT','Orm','xtuple', $$
 
           /* process toMany */
           if (prop.toMany) {
-            if (DEBUG) plv8.elog(NOTICE, 'building toMany');
+            if (DEBUG) XT.debug('building toMany');
             if (!prop.toMany.type) { throw new Error('No type was defined on property ' + prop.name); }
             toMany = prop.toMany;
             table = base.nameSpace + '.' + toMany.type.decamelize();
@@ -546,7 +546,7 @@ select xt.install_js('XT','Orm','xtuple', $$
 
         /* process extension */
         if(orm.isExtension) {
-          if(DEBUG) plv8.elog(NOTICE, 'process extension');
+          if(DEBUG) XT.debug('process extension');
 
           /* process relations (if different table) */
           if(orm.table !== base.table) {
@@ -575,7 +575,7 @@ select xt.install_js('XT','Orm','xtuple', $$
 
           /* build rules */
           conditions = [];
-          if (DEBUG) { plv8.elog(NOTICE, 'process extension relations'); }
+          if (DEBUG) { XT.debug('process extension relations'); }
           if (!orm.relations) { throw new Error("Extension must have at least one relation defined."); }
           for (i = 0; i < orm.relations.length; i++) {
             rel = orm.relations[i];
@@ -591,7 +591,7 @@ select xt.install_js('XT','Orm','xtuple', $$
 
         /* base orm */
         } else {
-          if(DEBUG) plv8.elog(NOTICE, 'process base CRUD');
+          if(DEBUG) XT.debug('process base CRUD');
 
           /* table */
           clauses = clauses.concat(ormClauses);
@@ -599,7 +599,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         }
 
         /* process and add order by array */
-        if (DEBUG) plv8.elog(NOTICE, 'process base order array');
+        if (DEBUG) XT.debug('process base order array');
         if (orm.order) {
           for (i = 0; i < orm.order.length; i++) {
             if (orm.order[i].indexOf('.') === -1) {
@@ -614,7 +614,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         tbl++;
 
         /* add extensions */
-        if (DEBUG) plv8.elog(NOTICE, 'process base extensions');
+        if (DEBUG) XT.debug('process base extensions');
         if (orm.extensions) {
           for (i = 0; i < orm.extensions.length; i++) {
             var ext = orm.extensions[i];
@@ -643,7 +643,7 @@ select xt.install_js('XT','Orm','xtuple', $$
               .replace('{order}', orderBy.length ? 'order by ' + orderBy.join(' , ') : '');
 
       if (DEBUG) {
-        plv8.elog(NOTICE, 'createView sql = ', query);
+        XT.debug('createView sql = ', query);
       }
       plv8.execute(query);
 
@@ -658,7 +658,7 @@ select xt.install_js('XT','Orm','xtuple', $$
               .replace('{view}', viewName);
 
       if (DEBUG) {
-        plv8.elog(NOTICE, 'createView grant sql = ', query);
+        XT.debug('createView grant sql = ', query);
       }
       plv8.execute(query);
 
@@ -671,7 +671,7 @@ select xt.install_js('XT','Orm','xtuple', $$
                     .replace(/{table}/g, lockTable);
 
       if (DEBUG) {
-        plv8.elog(NOTICE, 'createView drop trigger sql = ', query);
+        XT.debug('createView drop trigger sql = ', query);
       }
       plv8.execute(query);
 
@@ -685,7 +685,7 @@ select xt.install_js('XT','Orm','xtuple', $$
                         .replace(/{table}/g, lockTable);
 
           if (DEBUG) {
-            plv8.elog(NOTICE, 'createView create trigger sql = ', query);
+            XT.debug('createView create trigger sql = ', query);
           }
           plv8.execute(query);
         }
