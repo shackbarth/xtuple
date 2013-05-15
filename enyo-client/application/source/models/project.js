@@ -317,14 +317,6 @@ white:true*/
 
     enforceUpperKey: false,
 
-    requiredAttributes: [
-      "project",
-      "number",
-      "status",
-      "name",
-      "dueDate"
-    ],
-
     /**
       Add project as a required field
      */
