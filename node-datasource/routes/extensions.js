@@ -9,20 +9,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Returns a list of extensions associated with an organization.
    */
   exports.extensions = function (req, res) {
-    console.log("extensions");
     var extensionCollection = new XM.ExtensionCollection(),
       fetchError = function (err) {
-        console.log("ext fetch error", err);
+        X.log("Extension fetch error", err);
         res.send({isError: true, message: "Error fetching extensions"});
       },
       fetchSuccess = function (collection, result) {
-
         var extensions = _.map(collection.models, function (ext) {
+
           return {
-            name: ext.name,
-            location: ext.location,
-            loadOrder: ext.loadOrder,
-            privilegeName: ext.privilegeName
+            name: ext.get("name"),
+            location: ext.get("location"),
+            loadOrder: ext.get("loadOrder"),
+            privilegeName: ext.get("privilegeName")
           };
         });
 

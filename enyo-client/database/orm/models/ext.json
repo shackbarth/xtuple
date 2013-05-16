@@ -8,10 +8,10 @@
     "comment": "Extension Map",
     "privileges": {
       "all": {
-        "create": "MaintainExtensions",
-        "read": "ViewExtensions",
-        "update": "MaintainExtensions",
-        "delete": "MaintainExtensions"
+        "create": "SystemControl",
+        "read": true,
+        "update": "SystemControl",
+        "delete": "SystemControl"
       }
     },
     "properties": [
@@ -49,13 +49,6 @@
        "attr": {
          "type": "String",
          "column": "ext_notes"
-       }
-     },
-     {
-       "name": "privilegeName",
-       "attr": {
-         "type": "String",
-         "column": "ext_priv_name"
        }
      },
      {
