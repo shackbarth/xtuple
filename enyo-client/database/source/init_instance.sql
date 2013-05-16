@@ -46,7 +46,6 @@ select xt.js_init();
 \i xt/functions/co_margin.sql;
 \i xt/functions/cntctmerge.sql;
 \i xt/functions/cntctrestore.sql;
-\i xt/functions/createuser.sql;
 \i xt/functions/install_guiscript.sql;
 \i xt/functions/mergecrmaccts.sql;
 \i xt/functions/pg_advisory_unlock.sql;
@@ -67,16 +66,10 @@ select xt.js_init();
 \i xt/functions/quote_margin.sql;
 \i xt/functions/trylock.sql;
 \i xt/functions/undomerge.sql;
-\i xt/functions/user_account_sync.sql
 
 -- xt trigger functions
 \i xt/trigger_functions/comment_did_change.sql
-\i xt/trigger_functions/useracct_did_change.sql
-\i xt/trigger_functions/grp_did_change.sql
-\i xt/trigger_functions/grppriv_did_change.sql
-\i xt/trigger_functions/usrgrp_did_change.sql
-\i xt/trigger_functions/usrpriv_did_change.sql
-\i xt/trigger_functions/usrpref_did_change.sql
+\i xt/trigger_functions/usr_did_change.sql
 
 -- xt tables
 \i xt/tables/emlprofile.sql
@@ -91,11 +84,17 @@ select xt.js_init();
 \i xt/tables/pkgscript.sql
 \i xt/tables/pkguiform.sql
 \i xt/tables/priv.sql
-\i xt/tables/useracct.sql
 \i xt/tables/userpriv.sql
 \i xt/tables/userrole.sql
 \i xt/tables/userrolepriv.sql
 \i xt/tables/useruserrole.sql
+
+\i xt/tables/ext.sql
+\i xt/tables/sessionstore.sql
+\i xt/tables/oa2client.sql
+\i xt/tables/oa2clientredirs.sql
+\i xt/tables/oa2token.sql
+\i xt/tables/bicache.sql
 
 -- xt javascript
 \i xt/javascript/init.sql;
@@ -120,7 +119,6 @@ select xt.js_init();
 \i xt/views/quiteminfo.sql;
 \i xt/views/site.sql;
 \i xt/views/todoiteminfo.sql;
-\i xt/views/usr.sql;
 
 -- xt guiscripts
 
@@ -155,13 +153,10 @@ select xt.js_init();
 \i public/functions/geteffectivextuser.sql
 
 \i public/tables/comment_trigger.sql
-\i public/tables/grp.sql;
-\i public/tables/grppriv.sql;
 \i public/tables/pkghead.sql;
-\i public/tables/usrgrp.sql;
-\i public/tables/usrpref.sql;
-\i public/tables/usrpriv.sql;
 \i public/tables/schemaord.sql;
+
+\i public/views/usr.sql;
 -- [ END ] public
 
 -- xtbatch (TODO: This should be moved elsewhere)
@@ -169,3 +164,5 @@ select xt.js_init();
 \i xtbatch/tables/batch.sql
 
 \i update_version.sql;
+\i xt/default_org.sql;
+\i drop_deprecated.sql;

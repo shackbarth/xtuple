@@ -65,7 +65,7 @@ jsonpatch = require("json-patch");
   // Set the options.
   X.setup(options);
 
-  sessionOptions.username = X.options.globalDatabase.nodeUsername;
+  sessionOptions.username = X.options.databaseServer.user;
 
   XT.session = Object.create(XT.Session);
   XT.session.loadSessionObjects(XT.session.SCHEMA, sessionOptions);
@@ -351,7 +351,6 @@ app.get('/file', routes.file);
 app.get('/maintenance', routes.maintenance);
 app.get('/report', routes.report);
 app.get('/resetPassword', routes.resetPassword);
-app.get('/syncUser', routes.syncUser);
 
 // Set up the other servers we run on different ports.
 var unexposedServer = express();

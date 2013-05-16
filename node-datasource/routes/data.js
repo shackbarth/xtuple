@@ -22,8 +22,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var queryDatabase = exports.queryDatabase = function (functionName, payload, session, callback) {
     var query,
       org,
-      queryString ="select xt.%@($$%@$$)",
-      isGlobal = payload && payload.databaseType === 'global',
+      queryString = "select xt.%@($$%@$$)",
       binaryField = payload.data && payload.data.binaryField,
       buffer,
       binaryData,
@@ -46,8 +45,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }
       };
 
-    payload.username = isGlobal ? session.passport.user.id : session.passport.user.username;
-    org = isGlobal ? X.options.globalDatabase.database : session.passport.user.organization;
+    payload.username = session.passport.user.username;
+    org = session.passport.user.organization;
 
     // We need to convert js binary into pg hex (see the file route for
     // the opposite conversion). See issue #18661

@@ -15,7 +15,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     //passport.authenticate('local', { successReturnToOrRedirect: '/login/scope', failureRedirect: '/', failureFlash: 'Invalid username or password.' }),
     passport.authenticate('local', { failureRedirect: '/', failureFlash: 'Invalid username or password.' }),
     function (req, res, next) {
-      exports.scopeForm(req, res, next);
+
+      if (req && req.session && req.session.passport && req.session.passport.user && req.session.passport.user.organization) {
+        res.redirect('/client');
+        //next();
+      } else {
+        exports.scopeForm(req, res, next);
+      }
     }
   ];
 
@@ -131,7 +137,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     options.id = userId;
 
     // The user under whose authority the query is run.
-    options.username = X.options.globalDatabase.nodeUsername;
+    options.username = X.options.databaseServer.user;
 
     // Verify that the org is valid for the user.
     user.fetch(options);

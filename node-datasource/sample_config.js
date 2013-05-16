@@ -54,14 +54,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // servers, etc.
       location: "NA"
     },
-    globalDatabase: {
+    databaseServer: {
       hostname: "localhost",
       port: 5432,
-      database: "global",
       user: "admin",
-      password: "admin",
-      nodeUsername: "node"
+      password: "admin"
     },
+    databases: [{
+      database: "dev"
+    }],
     required: [
       "lib/ext/database",
       "lib/ext/datasource",
