@@ -221,7 +221,7 @@ white:true*/
         privilege: privilegeModel,
         // XXX bad practice to use this field
         // we could get it by having the workspace inject it into us
-        userAccountRole: this.getAssignedCollection().user_account_role
+        userAccountRole: this.getAssignedCollection().userAccountRole
       }, {isNew: true});
     }
   };

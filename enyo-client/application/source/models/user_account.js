@@ -143,7 +143,7 @@ white:true*/
     /** @scope XM.UserAccount.prototype */
 
     idAttribute: 'username',
-    
+
     nameAttribute: "properName",
 
     recordType: 'XM.UserAccount',
@@ -151,25 +151,25 @@ white:true*/
     documentKey: 'username',
 
     enforceUpperKey: false,
-    
+
     autoFetchId: false,
 
-    defaults: {
-      disableExport: false
-    },
+    //defaults: {
+    //  disableExport: false
+    //},
 
     requiredAttributes: [
-      "disableExport",
+      //"disableExport",
       "locale"
     ],
-    
+
     bindEvents: function () {
       XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on('statusChange', this.statusChanged);
       this.on('change:username', this.usernameChanged);
       this.statusChanged();
     },
-    
+
     documentKeyDidChange: function (model, value, options) {
       var that = this,
         lower = this.get("username").toLowerCase();
@@ -194,11 +194,11 @@ white:true*/
         this.findExisting("number", value, options);
       }
     },
-    
+
     findExisting: function (key, value, options) {
       XM.Account.findExisting("number", value.toUpperCase(), options);
     },
-    
+
     usernameChanged: function () {
       var username = this.get('username');
       if (username) {

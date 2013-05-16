@@ -28,7 +28,7 @@ select xt.install_js('XT','Session','xtuple', $$
             + 'coalesce(locale_percent_scale, 2) as "percentScale", '
             + 'coalesce(locale_weight_scale, 2) as "weightScale" '
             + 'from locale '
-            + 'join xt.usr on usr_locale_id = locale_id '
+            + 'join usr on usr_locale_id = locale_id '
             + 'left join lang on locale_lang_id = lang_id '
             + 'left join country on locale_country_id = country_id '
             + 'where usr_username = $1 ', 
@@ -76,14 +76,14 @@ select xt.install_js('XT','Session','xtuple', $$
   */ 
   XT.Session.privileges = function() {
     var sql = 'select priv_name as "privilege", ' +
-              'coalesce(userpriv_priv_id, userrolepriv_priv_id, -1) > 0 as "isGranted" ' +
-              'from xt.priv ' +
-              'left join xt.userpriv on (priv_id=userpriv_priv_id) and (userpriv_username=$1) ' +
+              'coalesce(usrpriv_priv_id, grppriv_priv_id, -1) > 0 as "isGranted" ' +
+              'from priv ' +
+              'left join usrpriv on (priv_id=usrpriv_priv_id) and (usrpriv_username=$1) ' +
               'left join ( ' +
-              '  select distinct userrolepriv_priv_id ' +
-              'from xt.userrolepriv ' +
-              'join xt.useruserrole on (userrolepriv_userrole_id=useruserrole_userrole_id) and (useruserrole_username=$1) ' +
-              ') userrolepriv on (userrolepriv_priv_id=priv_id); '
+              '  select distinct grppriv_priv_id ' +
+              'from grppriv ' +
+              'join usrgrp on (grppriv_grp_id=usrgrp_grp_id) and (usrgrp_username=$1) ' +
+              ') grppriv on (grppriv_priv_id=priv_id); '
       rec = plv8.execute(sql, [ XT.username ] );
 
     return rec.length ? JSON.stringify(rec) : '{}';

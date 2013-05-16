@@ -53,7 +53,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "Privilege",
-    "table": "xt.priv",
+    "table": "priv",
     "comment": "Privilege Map",
     "privileges": {
       "all": {
@@ -70,13 +70,6 @@
           "type": "Number",
           "column": "priv_id",
           "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "group",
-        "attr": {
-          "type": "String",
-          "column": "priv_group"
         }
       },
       {
@@ -286,7 +279,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "UserAccount",
-    "table": "xt.useracct",
+    "table": "usr",
     "comment": "User Account Map",
     "privileges": {
       "all": {
@@ -301,7 +294,7 @@
         "name": "username",
         "attr": {
           "type": "String",
-          "column": "useracct_username",
+          "column": "usr_username",
           "isPrimaryKey": true,
           "isNaturalKey": true
         }
@@ -310,42 +303,34 @@
         "name": "properName",
         "attr": {
           "type": "String",
-          "column": "useracct_propername"
+          "column": "usr_propername"
         }
       },
       {
         "name": "initials",
         "attr": {
           "type": "String",
-          "column": "useracct_initials"
+          "column": "usr_initials"
         }
       },
       {
         "name": "email",
         "attr": {
           "type": "String",
-          "column": "useracct_email"
+          "column": "usr_email"
         }
       },
       {
         "name": "locale",
         "toOne": {
           "type": "Locale",
-          "column": "useracct_locale_id"
-        }
-      },
-      {
-        "name": "disableExport",
-        "attr": {
-          "type": "Boolean",
-          "column": "useracct_disable_export",
-          "required": true
+          "column": "usr_locale_id"
         }
       },
       {
         "name": "grantedPrivileges",
         "toMany": {
-          "column": "useracct_username",
+          "column": "usr_username",
           "type": "UserAccountPrivilegeAssignment",
           "inverse": "userAccount",
           "isNested": true
@@ -361,7 +346,7 @@
       {
         "name": "grantedUserAccountRoles",
         "toMany": {
-          "column": "useracct_username",
+          "column": "usr_username",
           "type": "UserAccountUserAccountRoleAssignment",
           "inverse": "userAccount",
           "isNested": true
@@ -374,8 +359,64 @@
   {
     "context": "xtuple",
     "nameSpace": "XM",
+    "type": "User",
+    "table": "usr",
+    "comment": "User Map",
+    "privileges": {
+      "all": {
+        "create": "SystemControl",
+        "read": "SystemControl",
+        "update": "SystemControl",
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "username",
+        "attr": {
+          "type": "String",
+          "column": "usr_username",
+          "isPrimaryKey": true,
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "properName",
+        "attr": {
+          "type": "String",
+          "column": "usr_propername"
+        }
+      },
+      {
+        "name": "initials",
+        "attr": {
+          "type": "String",
+          "column": "usr_initials"
+        }
+      },
+      {
+        "name": "email",
+        "attr": {
+          "type": "String",
+          "column": "usr_email"
+        }
+      },
+      {
+        "name": "locale",
+        "toOne": {
+          "type": "Locale",
+          "column": "usr_locale_id"
+        }
+      }
+    ],
+    "isSystem": true,
+    "sourceCode": "U"
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
     "type": "UserAccountRelation",
-    "table": "xt.useracct",
+    "table": "usr",
     "comment": "User Account Relation Map",
     "privileges": {
       "all": {
@@ -390,7 +431,7 @@
         "name": "username",
         "attr": {
           "type": "String",
-          "column": "useracct_username",
+          "column": "usr_username",
           "isPrimaryKey": true,
           "isNaturalKey": true
         }
@@ -399,21 +440,14 @@
         "name": "propername",
         "attr": {
           "type": "String",
-          "column": "useracct_propername"
+          "column": "usr_propername"
         }
       },
       {
         "name": "email",
         "attr": {
           "type": "String",
-          "column": "useracct_email"
-        }
-      },
-      {
-        "name": "disableExport",
-        "attr": {
-          "type": "Boolean",
-          "column": "useracct_disable_export"
+          "column": "usr_email"
         }
       }
     ],
@@ -515,7 +549,7 @@
         "toMany": {
           "type": "UserAccountRolePrivilegeAssignment",
           "column": "grp_id",
-          "inverse": "user_account_role",
+          "inverse": "userAccountRole",
           "isNested": true
         }
       }
@@ -565,7 +599,7 @@
         "toMany": {
           "type": "UserAccountRolePrivilegeAssignment",
           "column": "grp_id",
-          "inverse": "user_account_role",
+          "inverse": "userAccountRole",
           "isNested": true
         }
       }

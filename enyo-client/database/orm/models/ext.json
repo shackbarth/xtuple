@@ -1,0 +1,71 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Extension",
+    "table": "xt.ext",
+    "idSequenceName": "xt.ext_ext_id_seq",
+    "comment": "Extension Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainExtensions",
+        "read": "ViewExtensions",
+        "update": "MaintainExtensions",
+        "delete": "MaintainExtensions"
+      }
+    },
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "ext_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "name",
+       "attr": {
+         "type": "String",
+         "column": "ext_name"
+       }
+     },
+     {
+       "name": "description",
+       "attr": {
+         "type": "String",
+         "column": "ext_descrip"
+       }
+     },
+     {
+       "name": "location",
+       "attr": {
+         "type": "String",
+         "column": "ext_location"
+       }
+     },
+     {
+       "name": "notes",
+       "attr": {
+         "type": "String",
+         "column": "ext_notes"
+       }
+     },
+     {
+       "name": "privilegeName",
+       "attr": {
+         "type": "String",
+         "column": "ext_priv_name"
+       }
+     },
+     {
+       "name": "loadOrder",
+       "attr": {
+         "type": "Number",
+         "column": "ext_load_order"
+       }
+     }
+    ],
+    "isSystem": true
+  }
+]
