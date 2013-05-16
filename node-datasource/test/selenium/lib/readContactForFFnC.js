@@ -58,7 +58,8 @@ regexp:true, strict:true, trailing:true, white:false*/
   browser.clickElement(el7, function () {
   browser.elementByXPath(contactObj.readObj1.addressLine1_xpath, function (err, el8) {
   browser.getValue(el8, function (err,value) {
-  if (value === contactData.VARIABLES.contact_addressLine1) {
+  //if (value === contactData.VARIABLES.contact_addressLine1) {
+  if (value === fname) {
   utils.results('PASS: Address Line verified');
   }
   else {
@@ -76,7 +77,7 @@ regexp:true, strict:true, trailing:true, white:false*/
   utils.results('FAIL: Job Title incorrect');
   fcount++;
   }
-  browser.elementByXPath(contactObj.readObj1.email_xpath, function (err, el11) {
+  /*browser.elementByXPath(contactObj.readObj1.email_xpath, function (err, el11) {
   browser.getValue(el11, function (err, value) {
   if (value === contactData.VARIABLES.contact_email) {
   utils.results('PASS: Email verified');
@@ -84,7 +85,7 @@ regexp:true, strict:true, trailing:true, white:false*/
   else {
   utils.results('FAIL: Email incorrect');
   fcount++;
-  }
+  }*/
   browser.elementByXPath(contactObj.readObj1.phone_xpath, function (err, el11) {
   browser.getValue(el11, function (err, value) {
   if (value === contactData.VARIABLES.contact_phone) {
@@ -204,7 +205,8 @@ regexp:true, strict:true, trailing:true, white:false*/
   }
   utils.pause(2000,function () {
   callback(browser, test);
-  });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});
+  //});});
+  });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});
   });});});});});});});});});});});});});});});});});});});});});});});});});});});});});};
 }());
 
