@@ -660,17 +660,22 @@ body {
   padding-bottom: 2px;
 }
 .xv-groupbox .xv-moneywidget .onyx-input-decorator {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
   width: 120px;
-  padding: 6px 6px 8px 6px;
+  padding: 6px 10px 8px 6px;
 }
-.xv-groupbox .xv-moneywidget .onyx-input-decorator input {
+.xv-groupbox .xv-moneywidget .onyx-input-decorator input,
+.xv-groupbox .xv-moneywidget .onyx-input-decorator .xv-money-label {
   width: 100%;
   text-align: right;
+}
+.xv-groupbox .xv-moneywidget .onyx-input-decorator .xv-currency-label {
+  width: 65px;
 }
 .xv-groupbox .xv-moneywidget .xv-picker {
   width: 65px;
   text-align: center;
-  padding: 8px 10px;
+  padding: 10px;
 }
 .xv-groupbox > .onyx-input-decorator:first-child {
   border-width: 1px;
@@ -994,11 +999,4 @@ body {
 .xv-totals-panel .xv-label,
 .xv-totals-panel .xv-picker-label {
   width: 110px;
-}
-/* This is to style the base currency labels to look like the inputs */
-.xv-money-label {
-  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
-}
-.xv-money-label .currency {
-  text-align: center;
 }
