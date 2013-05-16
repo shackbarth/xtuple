@@ -1,39 +1,43 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>xTuple Login</title>
-		<link rel="shortcut icon" href="/assets/favicon.ico" />
-		<!-- -->
-		<meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
-		<meta name="apple-mobile-web-app-capable" content="yes"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-	</head>
-	<body class="enyo-unselectable">
+  <head>
+    <title>xTuple Login</title>
+    <link rel="shortcut icon" href="/assets/favicon.ico" />
+    <!-- -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  </head>
+  <body class="enyo-unselectable">
 
-	<style type="text/css" media="all">
-	<% include login/stylesheets/screen.css %>
-	</style>
+  <style type="text/css" media="all">
+  <% include login/stylesheets/screen.css %>
+  </style>
 
-	<section id="login" class="enyo-fit enyo-clip">
-		<header id="header">
-			<img draggable="false" id="header_image" src="assets/logo.png">
-		</header>
-		<section class="enyo-panels enyo-arranger enyo-arranger-fit enyo-panels-fit-narrow" id="main">
-			<div style="transform: translateZ(0px); opacity: 1;" id="form-fields">
-				<form action="/login" method="post">
-					<div class="login-label" id="form-fields_idLabel">Username</div>
-					<input class="enyo-input login-input" id="form-fields_id" name="id" placeholder="Username">
-					<div class="login-label" id="form-fields_passwordLabel">Password</div>
-					<input class="enyo-input login-input" id="form-fields_password" placeholder="Password" name="password" type="password">
-					<div class="login-label" id="form-fields_databaseLabel">Database</div>
-					<input class="enyo-input login-input" id="form-fields_database" placeholder="Database" name="database">
-					<input class="enyo-tool-decorator onyx-button enyo-unselectable login-button" name="submit" id="form-fields_loginButton" type="submit" value="Sign In"/>
-				</form>
-			</div>
-		</section>
+  <section id="login" class="enyo-fit enyo-clip">
+    <header id="header">
+      <img draggable="false" id="header_image" src="assets/logo.png">
+    </header>
+    <section class="enyo-panels enyo-arranger enyo-arranger-fit enyo-panels-fit-narrow" id="main">
+      <div style="transform: translateZ(0px); opacity: 1;" id="form-fields">
+        <form action="/login" method="post">
+          <div class="login-label" id="form-fields_idLabel">Username</div>
+          <input class="enyo-input login-input" id="form-fields_id" name="id" placeholder="Username">
+          <div class="login-label" id="form-fields_passwordLabel">Password</div>
+          <input class="enyo-input login-input" id="form-fields_password" placeholder="Password" name="password" type="password">
+          <div class="login-label" id="form-fields_databaseLabel">Database</div>
+          <select class="enyo-input login-input" id="form-fields_database" name="database">
+          <% for(var i = 0; i < databases.length; i++) { %>
+            <option value="<%= databases[i] %>"><%= databases[i] %></option>
+          <% } %>
+          </select>
+          <input class="enyo-tool-decorator onyx-button enyo-unselectable login-button" name="submit" id="form-fields_loginButton" type="submit" value="Sign In"/>
+        </form>
+      </div>
+    </section>
     <% for(var i = 0; i < message.length; i++) { %>
       <label class="login-message-box error"><%= message[i] %></label>
     <% } %>
-	</section>
-	</body>
+  </section>
+  </body>
 </html>

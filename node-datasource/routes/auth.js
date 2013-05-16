@@ -13,7 +13,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
    */
   exports.login = [
     //passport.authenticate('local', { successReturnToOrRedirect: '/login/scope', failureRedirect: '/', failureFlash: 'Invalid username or password.' }),
-    passport.authenticate('local', { failureRedirect: '/', failureFlash: 'Invalid username or password.' }),
+    passport.authenticate('local', { failureRedirect: '/?login=fail' }),
     function (req, res, next) {
 
       if (req && req.session && req.session.passport && req.session.passport.user && req.session.passport.user.organization) {
@@ -29,7 +29,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Renders the login form
    */
   exports.loginForm = function (req, res) {
-    res.render('login', { message: req.flash('error') });
+    var message = [];
+
+    if (req.query && req.query.login && req.query.login === 'fail') {
+      message = ["Invalid username or password."];
+    }
+
+    res.render('login', { message: message, databases: X.options.datasource.databases });
   };
 
   /**
