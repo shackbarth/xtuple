@@ -192,6 +192,13 @@
         }
       },
       {
+        "name": "extendedDescription",
+        "attr": {
+          "type": "String",
+          "column": "item_extdescrip"
+        }
+      },
+      {
         "name": "isSold",
         "attr": {
           "type": "Boolean",
