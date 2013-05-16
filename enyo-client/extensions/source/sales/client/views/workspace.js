@@ -50,7 +50,7 @@ trailing:true white:true*/
               {kind: "XV.NumberPolicyPicker", attr: "CONumberGeneration",
                 label: "_number".loc() + " " + "_policy".loc()},
               {kind: "XV.NumberWidget", attr: "NextSalesOrderNumber",
-                label: "_nextNumber".loc()},
+                label: "_nextNumber".loc(), formatting: false},
               {kind: "XV.ToggleButtonWidget", attr: "DefaultPrintSOOnSave",
                 label: "_printOnSave".loc()},
 
@@ -58,7 +58,7 @@ trailing:true white:true*/
               {kind: "XV.NumberPolicyPicker", attr: "QUNumberGeneration",
                 label: "_number".loc() + " " + "_policy".loc()},
               {kind: "XV.NumberWidget", attr: "NextQuoteNumber",
-                label: "_nextNumber".loc()},
+                label: "_nextNumber".loc(), formatting: false},
               {kind: "XV.ToggleButtonWidget", attr: "ShowQuotesAfterSO",
                 label: "_showQuotesAfterConverted".loc()},
 
@@ -66,13 +66,13 @@ trailing:true white:true*/
               {kind: "XV.NumberPolicyPicker", attr: "CMNumberGeneration",
                 label: "_number".loc() + " " + "_policy".loc()},
               {kind: "XV.NumberWidget", attr: "NextCreditMemoNumber",
-                label: "_nextNumber".loc()},
+                label: "_nextNumber".loc(), formatting: false},
 
               {kind: "onyx.GroupboxHeader", content: "_invoice".loc()},
               {kind: "XV.NumberPolicyPicker", attr: "InvcNumberGeneration",
                 label: "_number".loc() + " " + "_policy".loc()},
               {kind: "XV.NumberWidget", attr: "NextInvoiceNumber",
-                label: "_nextNumber".loc()},
+                label: "_nextNumber".loc(), formatting: false},
               // Not bothering to define a kind
               {kind: "XV.PickerWidget", attr: "InvoiceDateSource",
                 label: "_invoiceDateSource".loc(), collection: "XM.invoiceDateSources"},
