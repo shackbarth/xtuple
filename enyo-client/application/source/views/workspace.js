@@ -58,7 +58,7 @@ trailing:true white:true*/
       return model ? model.get('account') : undefined;
     }
   };
-  
+
   /**
     Abstract workspace to be used for objects that are attached to models subclassed from `AccountDocument`.
     Must be subclassed.
@@ -636,7 +636,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.ExpenseCategory", "XV.ExpenseCategoryWorkspace");
-  
+
   // ..........................................................
   // DEPARTMENT
   //
@@ -662,7 +662,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.Department", "XV.DepartmentWorkspace");
-  
+
   // ..........................................................
   // EMPLOYEE
   //
@@ -734,7 +734,7 @@ trailing:true white:true*/
 
   XV.registerModelWorkspace("XM.EmployeeRelation", "XV.EmployeeWorkspace");
   XV.registerModelWorkspace("XM.EmployeeListItem", "XV.EmployeeWorkspace");
-  
+
   // ..........................................................
   // EMPLOYEE GROUP
   //
@@ -1344,14 +1344,14 @@ trailing:true white:true*/
             {kind: "XV.DateWidget", attr: "completeDate"},
             {kind: "onyx.GroupboxHeader", content: "_hours".loc()},
             {kind: "XV.QuantityWidget", attr: "budgetedHours",
-              label: "_budgeted".loc(), maxlength: 12},
+             label: "_budgeted".loc()},
             {kind: "XV.QuantityWidget", attr: "actualHours",
-              label: "_actual".loc(), maxlength: 12},
+             label: "_actual".loc()},
             {kind: "onyx.GroupboxHeader", content: "_expenses".loc()},
-            {kind: "XV.NumberWidget", attr: "budgetedExpenses", scale: XT.MONEY_SCALE,
-              label: "_budgeted".loc(), maxlength: 12},
-            {kind: "XV.NumberWidget", attr: "actualExpenses", scale: XT.MONEY_SCALE,
-              label: "_actual".loc(), maxlength: 12},
+            {kind: "XV.MoneyWidget", attr: {localValue: "budgetedExpenses"},
+             label: "_budgeted".loc(), currencyShowing: false},
+            {kind: "XV.MoneyWidget", attr: {localValue: "actualExpenses"},
+             label: "_actual".loc(), currencyShowing: false},
             {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
             {kind: "XV.UserAccountWidget", attr: "owner"},
             {kind: "XV.UserAccountWidget", attr: "assignedTo"},
@@ -1875,7 +1875,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.SaleType", "XV.SaleTypeWorkspace");
-  
+
   // ..........................................................
   // SHIFT
   //
