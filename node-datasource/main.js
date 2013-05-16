@@ -549,6 +549,7 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   });
 
   // To run this from the client:
+  // XT.dataSource.request(m = new XM.Contact(), "get", {nameSpace: "XM", type: "Contact", id: "1"}, {propagate: true, parse: true, success: function () {console.log("success", arguments)}, error: function () {console.log("error", arguments);}});
   socket.on('get', function (data, callback) {
     ensureLoggedIn(function (session) {
       routes.queryDatabase("get", data.payload, session, callback);
