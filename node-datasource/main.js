@@ -237,6 +237,10 @@ var conditionalExpressSession = function (req, res, next) {
     // Instead of doing app.use(express.session()) we call the package directly
     // which returns a function (req, res, next) we can call to do the same thing.
     var init_session = express.session({
+        key: (function () {
+          // TODO - Dynamically name the cookie after the database.
+          return 'connect.sid';
+        }()),
         store: sessionStore,
         secret: privateSalt,
         // See cookie stomp above for more details on how this session cookie works.
