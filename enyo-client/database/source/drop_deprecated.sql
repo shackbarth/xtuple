@@ -15,6 +15,7 @@ DROP FUNCTION IF EXISTS xt.createuser(text, boolean);
 DROP FUNCTION IF EXISTS xt.user_account_sync(text);
 DROP TRIGGER IF EXISTS grp_did_change on public.grp;
 DROP TRIGGER IF EXISTS grppriv_did_change on public.grppriv;
+DROP TRIGGER IF EXISTS usrpref_did_change on usrpref;
 --DROP TRIGGER IF EXISTS useracct_did_change on xt.useracct;
 --DROP TRIGGER IF EXISTS usrgrp_did_change on xt.usrgrp;
 --DROP TRIGGER IF EXISTS usrpref_did_change on xt.usrpref;

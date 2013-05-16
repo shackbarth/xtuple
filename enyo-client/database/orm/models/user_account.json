@@ -79,6 +79,13 @@
           "column": "priv_name",
           "isNaturalKey": true
         }
+      },
+      {
+        "name": "module",
+        "attr": {
+          "type": "String",
+          "column": "priv_module"
+        }
       }
     ],
     "isSystem": true
