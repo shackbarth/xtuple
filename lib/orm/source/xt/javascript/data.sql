@@ -320,8 +320,8 @@ select xt.install_js('XT','Data','xtuple', $$
           privArray.unshift(XT.username);
 
           if (DEBUG) {
-            plv8.elog(NOTICE, 'checkPrivilege sql =', sql);
-            plv8.elog(NOTICE, 'checkPrivilege values =', privArray);
+            XT.debug('checkPrivilege sql =', sql);
+            XT.debug('checkPrivilege values =', privArray);
           }
           res = plv8.execute(sql, privArray);
           ret = res.length ? res[0].granted : false;
@@ -330,7 +330,7 @@ select xt.install_js('XT','Data','xtuple', $$
           this._granted[privilege] = ret;
         }
 
-        if (DEBUG) { plv8.elog(NOTICE, 'Privilege check for "' + XT.username + '" on "' + privilege + '" returns ' + ret); }
+        if (DEBUG) { XT.debug('Privilege check for "' + XT.username + '" on "' + privilege + '" returns ' + ret); }
 
         return ret;
       } catch (err) {
@@ -363,18 +363,21 @@ select xt.install_js('XT','Data','xtuple', $$
 
 
         /* If there is no ORM, this isn't a table data type so no check required. */
-        if (DEBUG) { plv8.elog(NOTICE, 'orm is ->', JSON.stringify(map)); }
+        if (DEBUG) { XT.debug('orm is ->', map); }
         if (!map) { return true; }
 
         /* Can not access 'nested only' records directly. */
-        if (DEBUG) { plv8.elog(NOTICE, 'is top level ->', isTopLevel, 'is nested ->', map.isNestedOnly); }
+        if (DEBUG) {
+          XT.debug('is top level ->', isTopLevel);
+          XT.debug('is nested ->', map.isNestedOnly);
+        }
         if (isTopLevel && map.isNestedOnly) { return false; }
 
         /* Check privileges - first do we have access to anything? */
         if (privileges) {
-          if (DEBUG) { plv8.elog(NOTICE, 'privileges found'); }
+          if (DEBUG) { XT.debug('privileges found'); }
           if (committing) {
-            if (DEBUG) { plv8.elog(NOTICE, 'is committing'); }
+            if (DEBUG) { XT.debug('is committing'); }
 
             /* Check if user has 'all' read privileges. */
             isGrantedAll = privileges.all ? this.checkPrivilege(privileges.all[action]) : false;
@@ -385,7 +388,7 @@ select xt.install_js('XT','Data','xtuple', $$
                 this.checkPrivilege(privileges.personal[action]) : false;
             }
           } else {
-            if (DEBUG) { plv8.elog(NOTICE, 'is NOT committing'); }
+            if (DEBUG) { XT.debug('is NOT committing'); }
 
             /* Check if user has 'all' read privileges. */
             isGrantedAll = privileges.all ?
@@ -404,7 +407,7 @@ select xt.install_js('XT','Data','xtuple', $$
         /* If we're checknig an actual record and only have personal privileges, */
         /* see if the record allows access. */
         if (record && !isGrantedAll && isGrantedPersonal) {
-          if (DEBUG) { plv8.elog(NOTICE, 'checking record level personal privileges'); }
+          if (DEBUG) { XT.debug('checking record level personal privileges'); }
           var that = this,
 
           /* Shared checker function that checks 'personal' properties for access rights. */
@@ -451,7 +454,8 @@ select xt.install_js('XT','Data','xtuple', $$
         }
 
         if (DEBUG) {
-          plv8.elog(NOTICE, 'is granted all ->', isGrantedAll, 'is granted personal ->', isGrantedPersonal);
+          XT.debug('is granted all ->', isGrantedAll);
+          XT.debug('is granted personal ->', isGrantedPersonal);
         }
 
         return isGrantedAll || isGrantedPersonal;
@@ -525,8 +529,8 @@ select xt.install_js('XT','Data','xtuple', $$
           }
 
           if (DEBUG) {
-            plv8.elog(NOTICE, 'commitMetrics sql =', sql);
-            plv8.elog(NOTICE, 'commitMetrics values =', [key, value]);
+            XT.debug('commitMetrics sql =', sql);
+            XT.debug('commitMetrics values =', [key, value]);
           }
           plv8.execute(sql, [key, value]);
         }
@@ -603,8 +607,8 @@ select xt.install_js('XT','Data','xtuple', $$
 
         /* Commit the base record. */
         if (DEBUG) {
-          plv8.elog(NOTICE, 'createRecord sql =', sql.statement);
-          plv8.elog(NOTICE, 'createRecord values =', sql.values);
+          XT.debug('createRecord sql =', sql.statement);
+          XT.debug('createRecord values =', sql.values);
         }
         plv8.execute(sql.statement, sql.values);
 
@@ -615,8 +619,8 @@ select xt.install_js('XT','Data','xtuple', $$
             sql = this.prepareInsert(orm.extensions[i], data, null, encryptionKey);
 
             if (DEBUG) {
-              plv8.elog(NOTICE, 'createRecord sql =', sql.statement);
-              plv8.elog(NOTICE, 'createRecord values =', sql.values);
+              XT.debug('createRecord sql =', sql.statement);
+              XT.debug('createRecord values =', sql.values);
             }
             plv8.execute(sql.statement, sql.values);
           }
@@ -679,8 +683,8 @@ select xt.install_js('XT','Data','xtuple', $$
         /* If no primary key, then create one. */
         if (!record[pkey]) {
           if (DEBUG) {
-            plv8.elog(NOTICE, 'prepareInsert sql =', sql);
-            plv8.elog(NOTICE, 'prepareInsert values =', [orm.idSequenceName]);
+            XT.debug('prepareInsert sql =', sql);
+            XT.debug('prepareInsert values =', [orm.idSequenceName]);
           }
           record[pkey] = plv8.execute(sql, [orm.idSequenceName])[0].id;
         }
@@ -791,8 +795,8 @@ select xt.install_js('XT','Data','xtuple', $$
         }
 
         if (DEBUG) {
-          plv8.elog(NOTICE, 'prepareInsert statement =', params.statement);
-          plv8.elog(NOTICE, 'prepareInsert values =', params.values);
+          XT.debug('prepareInsert statement =', params.statement);
+          XT.debug('prepareInsert values =', params.values);
         }
 
         return params;
@@ -856,8 +860,8 @@ select xt.install_js('XT','Data','xtuple', $$
 
         /* Commit the base record. */
         if (DEBUG) {
-          plv8.elog(NOTICE, 'updateRecord sql =', sql.statement);
-          plv8.elog(NOTICE, 'updateRecord values =', sql.values);
+          XT.debug('updateRecord sql =', sql.statement);
+          XT.debug('updateRecord values =', sql.values);
         }
         var test = plv8.execute(sql.statement, sql.values);
 
@@ -881,8 +885,8 @@ select xt.install_js('XT','Data','xtuple', $$
             }
 
             if (DEBUG) {
-              plv8.elog(NOTICE, 'updateRecord sql =', iORuSql);
-              plv8.elog(NOTICE, 'updateRecord values =', [data[pkey]]);
+              XT.debug('updateRecord sql =', iORuSql);
+              XT.debug('updateRecord values =', [data[pkey]]);
             }
             rows = plv8.execute(iORuSql, [data[pkey]]);
 
@@ -894,8 +898,8 @@ select xt.install_js('XT','Data','xtuple', $$
             }
 
             if (DEBUG) {
-              plv8.elog(NOTICE, 'updateRecord sql =', sql.statement);
-              plv8.elog(NOTICE, 'updateRecord values =', sql.values);
+              XT.debug('updateRecord sql =', sql.statement);
+              XT.debug('updateRecord values =', sql.values);
             }
             plv8.execute(sql.statement, sql.values);
           }
@@ -1046,8 +1050,8 @@ select xt.install_js('XT','Data','xtuple', $$
         }
 
         if (DEBUG) {
-          plv8.elog(NOTICE, 'prepareUpdate statement =', params.statement);
-          plv8.elog(NOTICE, 'prepareUpdate values =', params.values);
+          XT.debug('prepareUpdate statement =', params.statement);
+          XT.debug('prepareUpdate values =', params.values);
         }
 
         return params;
@@ -1069,16 +1073,16 @@ select xt.install_js('XT','Data','xtuple', $$
     deleteRecord: function (options) {
       try {
         var data = options.data,
-          orm = XT.Orm.fetch(options.nameSpace, options.type),
-          pkey = XT.Orm.primaryKey(orm),
-          nkey = XT.Orm.naturalKey(orm),
-          id = nkey ? this.getId(orm, data[nkey]) : data[pkey],
+          orm = XT.Orm.fetch(options.nameSpace, options.type, {silentError: true}),
+          pkey,
+          nkey,
+          id,
           columnKey,
-          etag = this.getVersion(orm, id),
+          etag,
           ext,
           i,
           lockKey = options.lock && options.lock.key ? options.lock.key : false,
-          lockTable = orm.lockTable || orm.table,
+          lockTable,
           namespace,
           prop,
           ormp,
@@ -1087,18 +1091,41 @@ select xt.install_js('XT','Data','xtuple', $$
           table,
           values;
 
+        /* Set variables or return false with message. */
+        if (!orm) {
+// TODO - Send not found message back.
+          return false;
+        }
+
+        pkey = XT.Orm.primaryKey(orm);
+        nkey = XT.Orm.naturalKey(orm);
+        lockTable = orm.lockTable || orm.table;
+        if (!pkey || !nkey) {
+// TODO - Send not found message back.
+          return false;
+        }
+
+        id = nkey ? this.getId(orm, data[nkey]) : data[pkey];
+        if (!id) {
+// TODO - Send not found message back.
+          return false;
+        }
+
         /* Test for optimistic lock. */
+        etag = this.getVersion(orm, id);
         if (etag && etag !== options.etag) {
-// TODO - Improve error handling.
-          plv8.elog(ERROR, "The version being patched is not current.");
+// TODO - Send not found message back.
+          return false;
+          //plv8.elog(ERROR, "The version being patched is not current.");
         }
 
         /* Test for pessemistic lock. */
         if (orm.lockable) {
           lock = this.tryLock(lockTable, id, {key: lockKey});
           if (!lock.key) {
-// TODO - Improve error handling.
-            plv8.elog(ERROR, "Can not obtain a lock on the record.");
+// TODO - Send not found message back.
+            return false;
+            //plv8.elog(ERROR, "Can not obtain a lock on the record.");
           }
         }
 
@@ -1138,8 +1165,8 @@ select xt.install_js('XT','Data','xtuple', $$
             }
 
             if (DEBUG) {
-              plv8.elog(NOTICE, 'deleteRecord sql =', sql);
-              plv8.elog(NOTICE, 'deleteRecord values =',  [id]);
+              XT.debug('deleteRecord sql =', sql);
+              XT.debug('deleteRecord values =',  [id]);
             }
             plv8.execute(sql, [id]);
           }
@@ -1161,8 +1188,8 @@ select xt.install_js('XT','Data','xtuple', $$
 
         /* Commit the record.*/
         if (DEBUG) {
-          plv8.elog(NOTICE, 'deleteRecord sql =', sql);
-          plv8.elog(NOTICE, 'deleteRecord values =', [id]);
+          XT.debug('deleteRecord sql =', sql);
+          XT.debug('deleteRecord values =', [id]);
         }
         plv8.execute(sql, [id]);
 
@@ -1198,8 +1225,8 @@ select xt.install_js('XT','Data','xtuple', $$
 // TODO - Handle not found error.
 
               if (DEBUG) {
-                plv8.elog(NOTICE, 'decrypt sql =', sql);
-                plv8.elog(NOTICE, 'decrypt values =', [record[prop], encryptionKey]);
+                XT.debug('decrypt sql =', sql);
+                XT.debug('decrypt values =', [record[prop], encryptionKey]);
               }
               record[prop] = plv8.execute(sql, [record[prop], encryptionKey])[0].result;
             } else {
@@ -1239,8 +1266,8 @@ select xt.install_js('XT','Data','xtuple', $$
         }
 
         if (DEBUG) {
-          plv8.elog(NOTICE, 'getTableOid sql =', sql);
-          plv8.elog(NOTICE, 'getTableOid values =', [table, namespace]);
+          XT.debug('getTableOid sql =', sql);
+          XT.debug('getTableOid values =', [table, namespace]);
         }
         ret = plv8.execute(sql, [table, namespace])[0].oid - 0;
 
@@ -1261,7 +1288,8 @@ select xt.install_js('XT','Data','xtuple', $$
      */
     getId: function (orm, value) {
       try {
-        var ncol = XT.Orm.naturalKey(orm, true),
+        var handled,
+          ncol = XT.Orm.naturalKey(orm, true),
           pcol = XT.Orm.primaryKey(orm, true),
           query,
           ret,
@@ -1277,18 +1305,22 @@ select xt.install_js('XT','Data','xtuple', $$
           sql = XT.format(query, [pcol, orm.table, ncol]);
         }
 
-// TODO - Handle not found error.
-
         if (DEBUG) {
-          plv8.elog(NOTICE, 'getId sql =', sql);
-          plv8.elog(NOTICE, 'getId values =', [value]);
+          XT.debug('getId sql =', sql);
+          XT.debug('getId values =', [value]);
         }
 
-        ret = plv8.execute(sql, [value])[0].id;
+        ret = plv8.execute(sql, [value])
 
-        return ret;
+        if(ret.length) {
+          return ret[0].id;
+        } else {
+// TODO - Send not found message back.
+          //plv8.elog(ERROR, handled = XT.message('NOTICE', 400, 'shit happens'));
+          throw new Error(handled = XT.message('NOTICE', 400, 'shit happens'));
+        }
       } catch (err) {
-        XT.error(err, arguments);
+        XT.error(err, arguments, handled);
       }
     },
 
@@ -1308,8 +1340,8 @@ select xt.install_js('XT','Data','xtuple', $$
           sql = 'select ver_etag from xt.ver where ver_table_oid = $1 and ver_record_id = $2;';
 
         if (DEBUG) {
-          plv8.elog(NOTICE, 'getVersion sql = ', sql);
-          plv8.elog(NOTICE, 'getVersion values = ', [oid, id]);
+          XT.debug('getVersion sql = ', sql);
+          XT.debug('getVersion values = ', [oid, id]);
         }
         res = plv8.execute(sql, [oid, id]);
         etag = res.length ? res[0].ver_etag : false;
@@ -1320,8 +1352,8 @@ select xt.install_js('XT','Data','xtuple', $$
 // TODO - Handle insert error.
 
           if (DEBUG) {
-            plv8.elog(NOTICE, 'getVersion sql = ', sql);
-            plv8.elog(NOTICE, 'getVersion values = ', [oid, id, etag]);
+            XT.debug('getVersion sql = ', sql);
+            XT.debug('getVersion values = ', [oid, id, etag]);
           }
           plv8.execute(sql, [oid, id, etag]);
         }
@@ -1377,8 +1409,8 @@ select xt.install_js('XT','Data','xtuple', $$
                  .replace('{offset}', offset);
 
         if (DEBUG) {
-          plv8.elog(NOTICE, 'fetch sql = ', sql);
-          plv8.elog(NOTICE, 'fetch values = ', clause.parameters);
+          XT.debug('fetch sql = ', sql);
+          XT.debug('fetch values = ', clause.parameters);
         }
         ret.data = plv8.execute(sql, clause.parameters) || [];
 
@@ -1416,6 +1448,7 @@ select xt.install_js('XT','Data','xtuple', $$
      * @returns Object
      */
     retrieveRecord: function (options) {
+      var handled;
       try {
         options = options ? options : {};
         options.obtainLock = false;
@@ -1447,6 +1480,9 @@ select xt.install_js('XT','Data','xtuple', $$
         /* If this object uses a natural key, go get the primary key id. */
         if (nkey) {
           id = this.getId(map, id);
+          if (!id) {
+            return false;
+          }
         }
 
         /* Context means search for this record inside another. */
@@ -1493,8 +1529,8 @@ select xt.install_js('XT','Data','xtuple', $$
 
         /* Query the map. */
         if (DEBUG) {
-          plv8.elog(NOTICE, 'retrieveRecord sql = ', sql);
-          plv8.elog(NOTICE, 'retrieveRecord values = ', [id]);
+          XT.debug('retrieveRecord sql = ', sql);
+          XT.debug('retrieveRecord values = ', [id]);
         }
         ret.data = plv8.execute(sql, [id])[0] || {};
 
@@ -1519,7 +1555,7 @@ select xt.install_js('XT','Data','xtuple', $$
         /* Return the results. */
         return ret || {};
       } catch (err) {
-        XT.error(err, arguments);
+        XT.error(err, arguments, handled);
       }
     },
 
@@ -1657,12 +1693,12 @@ select xt.install_js('XT','Data','xtuple', $$
         /* If passed a table name, look up the oid. */
         oid = typeof table === "string" ? this.getTableOid(table) : table;
 
-        if (DEBUG) plv8.elog(NOTICE, "Trying lock table", oid, id);
+        if (DEBUG) XT.debug("Trying lock table", [oid, id]);
 
         /* See if there are existing lock(s) for this record. */
         if (DEBUG) {
-          plv8.elog(NOTICE, 'tryLock sql = ', selectSql);
-          plv8.elog(NOTICE, 'tryLock values = ', [oid, id]);
+          XT.debug('tryLock sql = ', selectSql);
+          XT.debug('tryLock values = ', [oid, id]);
         }
         query = plv8.execute(selectSql, [oid, id]);
 
@@ -1678,28 +1714,28 @@ select xt.install_js('XT','Data','xtuple', $$
             /* Make sure if they are pid locks users is still connected. */
             } else if (lock.lock_pid) {
               if (DEBUG) {
-                plv8.elog(NOTICE, 'tryLock sql = ', pidSql);
-                plv8.elog(NOTICE, 'tryLock values = ', [lock.lock_username, lock.lock_pid]);
+                XT.debug('tryLock sql = ', pidSql);
+                XT.debug('tryLock values = ', [lock.lock_username, lock.lock_pid]);
               }
               pcheck = plv8.execute(pidSql, [lock.lock_username, lock.lock_pid]);
               if (pcheck.length) { break; } /* valid lock */
             } else {
               lockExp = new Date(lock.lock_expires);
-              if (DEBUG) { plv8.elog(NOTICE, "Lock found", lockExp > expires, lockExp, expires); }
+              if (DEBUG) { XT.debug("Lock found", [lockExp > expires, lockExp, expires]); }
               if (lockExp > expires) { break; } /* valid lock */
             }
 
             /* Delete invalid or expired lock. */
             if (DEBUG) {
-              plv8.elog(NOTICE, 'tryLock sql = ', deleteSql);
-              plv8.elog(NOTICE, 'tryLock values = ', [lock.lock_id]);
+              XT.debug('tryLock sql = ', deleteSql);
+              XT.debug('tryLock values = ', [lock.lock_id]);
             }
             plv8.execute(deleteSql, [lock.lock_id]);
             lock = undefined;
           }
 
           if (lock) {
-            if (DEBUG) plv8.elog(NOTICE, "Lock found", lock.lock_username);
+            if (DEBUG) XT.debug("Lock found", lock.lock_username);
 
             return {
               username: lock.lock_username,
@@ -1710,19 +1746,19 @@ select xt.install_js('XT','Data','xtuple', $$
 
         if (options.obtainLock === false) { return; }
 
-        if (DEBUG) { plv8.elog(NOTICE, "Creating lock."); }
-        if (DEBUG) { plv8.elog(NOTICE, 'tryLock sql = ', insertSqlPid); }
+        if (DEBUG) { XT.debug("Creating lock."); }
+        if (DEBUG) { XT.debug('tryLock sql = ', insertSqlPid); }
 
         if (pid) {
-          if (DEBUG) { plv8.elog(NOTICE, 'tryLock values = ', [oid, id, username, pid]); }
+          if (DEBUG) { XT.debug('tryLock values = ', [oid, id, username, pid]); }
           lock = plv8.execute(insertSqlPid, [oid, id, username, pid])[0];
         } else {
           expires = new Date(expires.setSeconds(expires.getSeconds() + timeout));
-          if (DEBUG) { plv8.elog(NOTICE, 'tryLock values = ', [oid, id, username, expires]); }
+          if (DEBUG) { XT.debug('tryLock values = ', [oid, id, username, expires]); }
           lock = plv8.execute(insertSqlExp, [oid, id, username, expires])[0];
         }
 
-        if (DEBUG) { plv8.elog(NOTICE, "Lock returned is", lock.lock_id); }
+        if (DEBUG) { XT.debug("Lock returned is", lock.lock_id); }
 
         return {
           username: username,
@@ -1748,16 +1784,16 @@ select xt.install_js('XT','Data','xtuple', $$
 
         if (options.key) {
           if (DEBUG) {
-            plv8.elog(NOTICE, 'releaseLock sql = ', sqlKey);
-            plv8.elog(NOTICE, 'releaseLock values = ', [options.key]);
+            XT.debug('releaseLock sql = ', sqlKey);
+            XT.debug('releaseLock values = ', [options.key]);
           }
           plv8.execute(sqlKey, [options.key]);
         } else {
           oid = typeof options.table === "string" ? this.getTableOid(options.table) : options.table;
 
           if (DEBUG) {
-            plv8.elog(NOTICE, 'releaseLock sql = ', sqlUsr);
-            plv8.elog(NOTICE, 'releaseLock values = ', [oid, options.id, username]);
+            XT.debug('releaseLock sql = ', sqlUsr);
+            XT.debug('releaseLock values = ', [oid, options.id, username]);
           }
           plv8.execute(sqlUsr, [oid, options.id, username]);
         }
@@ -1787,15 +1823,15 @@ select xt.install_js('XT','Data','xtuple', $$
         expires = new Date(expires.setSeconds(expires.getSeconds() + timeout));
 
         if (DEBUG) {
-          plv8.elog(NOTICE, 'renewLock sql = ', selectSql);
-          plv8.elog(NOTICE, 'renewLock values = ', [key]);
+          XT.debug('renewLock sql = ', selectSql);
+          XT.debug('renewLock values = ', [key]);
         }
         query = plv8.execute(selectSql, [key]);
 
         if (query.length) {
           if (DEBUG) {
-            plv8.elog(NOTICE, 'renewLock sql = ', updateSql);
-            plv8.elog(NOTICE, 'renewLock values = ', [expires, key]);
+            XT.debug('renewLock sql = ', updateSql);
+            XT.debug('renewLock values = ', [expires, key]);
           }
           plv8.execute(updateSql, [expires, key]);
 

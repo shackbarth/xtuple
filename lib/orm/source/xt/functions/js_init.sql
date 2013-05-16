@@ -217,6 +217,31 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
   }
 
   /**
+   * Wrap plv8's elog DEBUG1.
+   *
+   * For debug messages to show up, you need to set your postgresql.conf to:
+   * client_min_messages = debug1
+   *
+   * @param {String} Debug message of where you are at, what you are doing or what's in args.
+   * @param {Object|Array} The data you want logged.
+   */
+  XT.debug = function(msg, args) {
+    var message = '';
+
+    msg = typeof msg === 'string' ? msg || 'debug data = ' : 'debug data = ';
+    args = args || null;
+
+    if (args) {
+      message = JSON.stringify(args, null, 2);
+    }
+
+    // TODO, this could be changed to "LOG" and you would need to set: client_min_messages = log
+    // Then you would not get any of the "RAISE DEBUG;" messages from the PL/pgSQL code.
+    /* Do a hard trim to 900 so something prints. */
+    plv8.elog(DEBUG1, (msg + message).substring(0, 900));
+  }
+
+  /**
     Change camel case property names in an object to snake case.
      Only changes immediate properties, it is not recursive.
 
@@ -237,8 +262,9 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
    *
    * @param {Object} The caught error object from a try/catch.
    * @param {Array} Javascript's arguments array for the function throwing the error.
+   * @param {Boolean|String} Set flag to indicate the error was handled.
    */
-  XT.error = function (error, args) {
+  XT.error = function (error, args, handled) {
     var message = error.stack + "\n",
         len,
         params,
@@ -246,7 +272,7 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
 
     if (DEBUG) {
       len = 950;
-      params = "Error call args= \n";
+      params = "XT.error call args= \n";
       avglen = len / args.length;
 
       /* Total error message size in plv8 is 1000 characters. */
@@ -267,12 +293,19 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
       }
 
       /* This can give you some more info on how the function was called. */
-      plv8.elog(WARNING, params.substring(0, 900));
+      XT.debug(params.substring(0, 900));
     }
 
-    /* Some times the stack trace can eat up the full 1000 char message. */
-    /* Do a hard trim to 900 so something prints. */
-    plv8.elog(ERROR, message.substring(0, 900));
+    if (handled) {
+      /* This error was handled and a message sent to the client. Those massages are*/
+      /* generic HTTP codes. Send the stack trace with detailed info on what happened. */
+      XT.debug(message);
+      plv8.elog(ERROR);
+    } else {
+      /* Some times the stack trace can eat up the full 1000 char message. */
+      /* Do a hard trim to 900 so something prints. */
+      plv8.elog(ERROR, message.substring(0, 900));
+    }
   }
 
   /**
@@ -311,8 +344,8 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
       args.unshift(string);
 
       if (DEBUG) {
-        plv8.elog(NOTICE, 'XT.format sql =', query);
-        plv8.elog(NOTICE, 'XT.format args =', JSON.stringify(args, null, 2));
+        XT.debug('XT.format sql =', query);
+        XT.debug('XT.format args =', args);
       }
       string = plv8.execute(query, args)[0].format;
 
@@ -345,6 +378,13 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
 
     return uuid;
   };
+
+  XT.message = function (level, code, msg) {
+    var message = {code: code, msg: msg};
+
+    plv8.elog(INFO, JSON.stringify(message));
+    return 'Handled by XT.message';
+  }
 
   /**
     Extended version of javascript 'typeof' that also recognizes arrays
@@ -404,7 +444,7 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     res = plv8.execute(sql);
     if(res.length) {
       for(var i = 0; i < res.length; i++) {
-        if(DEBUG) plv8.elog(NOTICE, 'loading javascript for type->', res[i].js_type);
+        if(DEBUG) XT.debug('loading javascript for type->', res[i].js_type);
 
         eval(res[i].javascript);
       }

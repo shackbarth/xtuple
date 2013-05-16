@@ -28,7 +28,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       buffer,
       binaryData,
       adaptorCallback = function (err, res) {
-        var data;
+        var data,
+            msg;
 
         if (err) {
           callback({isError: true, error: err, message: err.message, description: err.message});
@@ -40,7 +41,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           } catch (error) {
             data = {isError: true, message: "Cannot parse data"};
           }
-          callback({data: data});
+          try {
+            msg = JSON.parse(res.msg);
+          } catch (error) {
+            msg = {isError: true, message: "Cannot parse msg"};
+          }
+          callback({data: data, message: msg, debug: res.debug});
         } else {
           callback({isError: true, message: "No results"});
         }

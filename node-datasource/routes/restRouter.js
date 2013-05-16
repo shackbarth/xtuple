@@ -86,7 +86,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             // TODO - Better error handling.
             return res.send(500, {data: resp.error});
           } else {
-            return res.send(resp.data.data);
+            //return res.send(resp.data.data);
+            return res.json(resp);
           }
         };
 

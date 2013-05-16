@@ -147,11 +147,14 @@ white:true*/
         client.connection.on('notice', function (msg) {
           if (msg && msg.message) {
             if (msg.severity === 'NOTICE') {
-              console.log("Database notice Message: ", msg.message);
+              that.msg = msg.message;
             } else if (msg.severity === 'INFO') {
-              console.log("Database info Message: ", msg.message);
+              that.msg = msg.message;
             } else if (msg.severity === 'WARNING') {
+              that.msg = msg.message;
               console.log("Database warning Message: ", msg.message);
+            } else if (msg.severity === 'DEBUG') {
+              that.debug = msg.message;
             }
           }
         });
@@ -169,6 +172,18 @@ white:true*/
 
           // Release the client from the pool.
           done();
+
+          if (that.msg) {
+            result.msg = that.msg;
+          }
+          if (that.debug) {
+            if (result) {
+              result.debug = that.debug;
+            } else {
+              console.log("result = ", JSON.stringify(result));
+              console.log("error = ", JSON.stringify(err));
+            }
+          }
 
           // Call the call back.
           callback(err, result);
