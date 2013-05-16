@@ -317,28 +317,6 @@ white:true*/
 
     enforceUpperKey: false,
 
-    /**
-      Add project as a required field
-     */
-    initialize: function (attributes, options) {
-      XM.ProjectBase.prototype.initialize.apply(this, arguments);
-
-      if (!_.contains(this.requiredAttributes, "project")) {
-        this.requiredAttributes.push("project");
-      }
-    },
-
-    defaults: function () {
-      var result = XM.ProjectBase.prototype.defaults.call(this);
-      _.extend(result, {
-        actualExpenses: 0,
-        actualHours: 0,
-        budgetedExpenses: 0,
-        budgetedHours: 0
-      });
-      return result;
-    },
-
     // ..........................................................
     // METHODS
     //
