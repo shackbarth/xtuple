@@ -64,6 +64,7 @@ select xt.js_init();
 \i xt/functions/quote_total.sql;
 \i xt/functions/quote_total_cost.sql;
 \i xt/functions/quote_margin.sql;
+\i xt/functions/register_extension.sql;
 \i xt/functions/trylock.sql;
 \i xt/functions/undomerge.sql;
 
@@ -166,3 +167,8 @@ select xt.js_init();
 \i update_version.sql;
 \i xt/default_org.sql;
 \i drop_deprecated.sql;
+
+-- register core extensions
+\i ../../extensions/source/crm/database/source/register.sql
+\i ../../extensions/source/project/database/source/register.sql
+\i ../../extensions/source/sales/database/source/register.sql

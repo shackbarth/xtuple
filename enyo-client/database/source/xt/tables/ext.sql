@@ -6,7 +6,6 @@ select xt.add_column('ext','ext_name', 'text');
 select xt.add_column('ext','ext_descrip', 'text');
 select xt.add_column('ext','ext_location', 'text');
 select xt.add_column('ext','ext_notes', 'text');
-select xt.add_column('ext','ext_priv_name', 'text');
 select xt.add_column('ext','ext_load_order', 'integer', 'not null default 99999');
 
 comment on table xt.ext is 'Extensions';

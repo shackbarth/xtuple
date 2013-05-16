@@ -243,9 +243,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             }
 
             var extLoc = ext.extension.location;
-            if (extLoc === '/public-extensions') {
-              // reverse-compatibility requires us to honor the path '/public-extensions'
-              // even if that's not the actual path anymore.
+            if (extLoc === '/core-extensions') {
+              // we must honor the path '/core-extensions' because that's the datasource mapping
               extLoc = '/enyo-client/extensions';
             } else if (extLoc === '/private-extensions') {
               // likewise with /private-extensions

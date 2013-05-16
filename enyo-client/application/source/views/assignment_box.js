@@ -115,6 +115,7 @@ white:true*/
 
       if ((!roles || roles.length === 0) && this.getAssignedCollection().models.length === 0) {
         // if there are no models in this collection then there are no IDs to map
+        this.setIdsFromRoles([]);
         return;
       }
       var grantedRoles = roles && roles.length > 0 ? roles :
@@ -132,7 +133,7 @@ white:true*/
 
             var privilege = model.get("privilege");
             if (privilege) {
-              return privilege.get("id");
+              return privilege.id;
             } else {
               return null;
             }
@@ -163,7 +164,7 @@ white:true*/
     },
     applyPostCheckFormatting: function (checkbox, model) {
       // we support the model coming in as the privilege itself or as the privilege assignment
-      var id = model.get("privilege") ? model.get("privilege").get("id") : model.get("id");
+      var id = model.get("privilege") ? model.get("privilege").id : model.id;
       this.undercheckCheckbox(checkbox, _.indexOf(this.getIdsFromRoles(), id) >= 0);
     },
 

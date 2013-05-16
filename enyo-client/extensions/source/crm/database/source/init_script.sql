@@ -1,5 +1,5 @@
 -- [ START ] xt
 
-\i priv.sql
+\i register.sql
 
 -- [ END ] xt
