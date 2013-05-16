@@ -676,17 +676,21 @@ body {
   padding-bottom: 2px;
 
   .onyx-input-decorator {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
     width: 120px;
-    padding: 6px 6px 8px 6px;
-    input {
+    padding: 6px 10px 8px 6px;
+    input, .xv-money-label {
       width: 100%;
       text-align: right;
+    }
+    .xv-currency-label {
+      width: 65px;
     }
   }
   .xv-picker {
     width: 65px;
     text-align: center;
-    padding: 8px 10px;
+    padding: 10px;
   }
 }
 
@@ -1010,13 +1014,5 @@ body {
   }
   .xv-label, .xv-picker-label {
     width: 110px;
-  }
-}
-
-/* This is to style the base currency labels to look like the inputs */
-.xv-money-label {
-  font-family: "Lucida Sans Unicode", "Lucida Grande", arial, sans-serif;
-  .currency {
-    text-align: center;
   }
 }

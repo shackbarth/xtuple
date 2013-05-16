@@ -49,7 +49,7 @@ regexp:true, undef:true, trailing:true, white:true */
         ]},
         {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
           components: [
-          {name: "baseCurrencyLabel", classes: "xv-money-label, currency"}
+          {name: "baseCurrencyLabel", classes: "xv-currency-label"}
         ]}
       ]}
     ],
