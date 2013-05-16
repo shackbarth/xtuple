@@ -317,6 +317,17 @@ white:true*/
 
     enforceUpperKey: false,
 
+    defaults: function () {
+      var result = XM.ProjectBase.prototype.defaults.call(this);
+      _.extend(result, {
+        actualExpenses: 0,
+        actualHours: 0,
+        budgetedExpenses: 0,
+        budgetedHours: 0
+      });
+      return result;
+    },
+
     // ..........................................................
     // METHODS
     //
