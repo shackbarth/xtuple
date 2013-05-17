@@ -84,13 +84,9 @@ select xt.js_init();
 \i xt/tables/pkgreport.sql
 \i xt/tables/pkgscript.sql
 \i xt/tables/pkguiform.sql
-\i xt/tables/priv.sql
-\i xt/tables/userpriv.sql
-\i xt/tables/userrole.sql
-\i xt/tables/userrolepriv.sql
-\i xt/tables/useruserrole.sql
 
 \i xt/tables/ext.sql
+\i xt/tables/usrext.sql
 \i xt/tables/sessionstore.sql
 \i xt/tables/oa2client.sql
 \i xt/tables/oa2clientredirs.sql
@@ -165,7 +161,7 @@ select xt.js_init();
 \i xtbatch/tables/batch.sql
 
 \i update_version.sql;
-\i xt/default_org.sql;
+\i priv.sql;
 \i drop_deprecated.sql;
 
 -- register core extensions
