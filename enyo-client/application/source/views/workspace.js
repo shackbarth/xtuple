@@ -2380,8 +2380,10 @@ trailing:true white:true*/
             // normally I'd put classes: "xv-assignment-box" into the container of the assignmentbox,
             // but there is no such container here. Maybe some CSS work to be done now that assignmentbox
             // is the thing inside the thing instead of the thing and the container all together.
+            {kind: "onyx.GroupboxHeader", content: "_extensions".loc()},
+            {kind: "XV.UserAccountExtensionAssignmentBox", attr: "grantedExtensions", name: "grantedExtensions" },
             {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
-            {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles", name: "grantedRoles" }
+            {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles", name: "grantedRoles" },
           ]}
         ]},
         {kind: "XV.Groupbox", name: "privilegePanel", classes: "xv-assignment-box",

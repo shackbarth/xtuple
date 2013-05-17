@@ -1,11 +1,46 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true
 white:true*/
-/*global enyo:true, XM:true, XV:true, _:true */
+/*global enyo:true, XM:true, XV:true, XT:true, _:true */
 
 /** @module XV */
 
 (function () {
+
+  //
+  // USER ACCOUNT EXTENSION
+  //
+
+  /**
+   * Manages the assignment of extensions to user accounts.
+   *
+   * @class
+   * @alias XV.UserAccountExtensionAssignmentBox
+   * @extends XV.AssignmentBox
+   */
+  enyo.kind(/* @lends XV.UserAccountExtensionAssignmentBox */{
+    name: "XV.UserAccountExtensionAssignmentBox",
+    kind: "XV.AssignmentBox",
+    segments: ["Extensions"],
+    translateLabels: false,
+    totalCollectionName: "XM.ExtensionCollection",
+    type: "extension",
+    /**
+     * Returns a model specific to this AssignmentBox.
+     *
+     * @override
+     * @return {XM.UserAccountExtension}
+     */
+    getAssignmentModel: function (extension) {
+      return new XM.UserAccountExtension({
+        extension: extension
+      }, {isNew: true});
+    }
+  });
+
+  //
+  // USER ACCOUNT ROLE
+  //
 
   /**
    * Manages the assignment of roles to user accounts.
@@ -49,6 +84,10 @@ white:true*/
     }
   };
   enyo.kind(userAccountRoleAssignmentBox);
+
+  //
+  // USER ACCOUNT PRIVILEGE
+  //
 
   /**
    * Manages the assignment of privileges to user accounts. This is a complicated case
@@ -185,6 +224,11 @@ white:true*/
     }
   };
   enyo.kind(userAccountPrivilegeAssignmentBox);
+
+
+  //
+  // USER ACCOUNT ROLE PRIVILEGE
+  //
 
   /**
    * Manages the assignment of privileges to roles.

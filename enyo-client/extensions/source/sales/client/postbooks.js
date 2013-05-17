@@ -61,7 +61,6 @@ trailing:true white:true*/
     XT.app.$.postbooks.insertModule(module, 2);
 
     relevantPrivileges = [
-      "AccessSalesExtension",
       "ConfigureSO",
       "MaintainTaxAssignments",
       "MaintainTaxClasses",
@@ -93,5 +92,19 @@ trailing:true white:true*/
       "ViewSaleTypes"
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
+
+
+
+
+  // TODO
+  // Define our core relevant privileges somewhere in the core
+  //
+  var relevantPrivileges = [
+    "SystemControl",
+    "MaintainUsers"
+  ]
+  XT.session.addRelevantPrivileges("core", relevantPrivileges);
+
+
   };
 }());

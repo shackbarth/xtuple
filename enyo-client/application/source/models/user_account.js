@@ -85,6 +85,28 @@ white:true*/
 
     @extends XM.Model
   */
+  XM.Extension = XM.Model.extend(/** @lends XM.UserAccountExtension.prototype */{
+
+    recordType: 'XM.Extension'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.UserAccountExtension = XM.Model.extend(/** @lends XM.UserAccountExtension.prototype */{
+
+    recordType: 'XM.UserAccountExtension'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
   XM.Privilege = XM.Model.extend({
     /** @scope XM.Privilege.prototype */
 
@@ -290,6 +312,28 @@ white:true*/
    /** @scope XM.LocaleCollection.prototype */
 
     model: XM.Locale
+
+  });
+
+  /**
+   @class
+
+   @extends XM.Collection
+  */
+  XM.ExtensionCollection = XM.Collection.extend(/** @lends XM.ExtensionCollection.prototype */{
+
+    model: XM.Extension
+
+  });
+
+  /**
+   @class
+
+   @extends XM.Collection
+  */
+  XM.UserAccountExtensionCollection = XM.Collection.extend(/** @lends XM.UserAccountExtensionCollection.prototype */{
+
+    model: XM.UserAccountExtension
 
   });
 
