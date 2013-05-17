@@ -52,7 +52,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       // human-friendly location identifier for various cloud, physical
       // servers, etc.
-      location: "NA"
+      location: "NA",
+      // Add each database to the array.
+      databases: ["dev"]
     },
     databaseServer: {
       hostname: "localhost",
@@ -60,9 +62,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       user: "admin",
       password: "admin"
     },
-    databases: [{
-      database: "dev"
-    }],
     required: [
       "lib/ext/database",
       "lib/ext/datasource",

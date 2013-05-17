@@ -89,7 +89,6 @@ try {
  * Module dependencies.
  */
 var express = require('express'),
-    flash = require('connect-flash'),
     passport = require('passport'),
     oauth2 = require('./oauth2/oauth2'),
     routes = require('./routes/routes'),
@@ -232,12 +231,16 @@ var conditionalExpressSession = function (req, res, next) {
   "use strict";
 
   // REST API endpoints start with "/api" in their path.
-  if ((/^\/api/i).test(req.path)) {
+  if ((/^\/api/i).test(req.path) || (/^\/assets/i).test(req.path) || req.path === "/") {
     next();
   } else {
     // Instead of doing app.use(express.session()) we call the package directly
     // which returns a function (req, res, next) we can call to do the same thing.
     var init_session = express.session({
+        key: (function () {
+          // TODO - Dynamically name the cookie after the database.
+          return 'connect.sid';
+        }()),
         store: sessionStore,
         secret: privateSalt,
         // See cookie stomp above for more details on how this session cookie works.
@@ -268,21 +271,6 @@ var conditionalPassportSession = function (req, res, next) {
   }
 };
 
-// flash() requires sessions, so it has to be loaded conditionally.
-var conditionalFlash = function (req, res, next) {
-  "use strict";
-
-  // REST API endpoints start with "/api" in their path.
-  if ((/^\/api/i).test(req.path)) {
-    next();
-  } else {
-    // Instead of doing app.use(flash())
-    var init_flash = flash();
-
-    init_flash(req, res, next);
-  }
-};
-
 app.configure(function () {
   "use strict";
 
@@ -303,7 +291,6 @@ app.configure(function () {
   app.use(conditionalExpressSession);
   app.use(passport.initialize());
   app.use(conditionalPassportSession);
-  app.use(conditionalFlash);
 
   app.use(app.router);
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
