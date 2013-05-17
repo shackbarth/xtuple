@@ -2272,6 +2272,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.PriorityPicker", attr: "priority"},
+            {kind: "XV.ToDoStatusPicker", attr: "status"},
             {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
             {kind: "XV.DateWidget", attr: "dueDate"},
             {kind: "XV.DateWidget", attr: "startDate"},

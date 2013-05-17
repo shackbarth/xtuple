@@ -263,5 +263,25 @@ white:true*/
     var wagePeriod = new XM.WagePeriodModel(wagePeriodJson[i]);
     XM.wagePeriods.add(wagePeriod);
   }
+  
+  // ToDo Status
+  K = XM.ToDo;
+  var toDoStatusJson = [
+    { id: XM.ToDo.PENDING, name: "_pending".loc() },
+    { id: K.DEFFERED, name: "_deferred".loc() },
+    { id: K.NEITHER, name: "_neither".loc() },
+    { id: K.IN_PROCESS, name: "_inProcess".loc() },
+    { id: K.COMPLETED, name: "_completed".loc() }
+  ];
+  XM.ToDoStatusModel = Backbone.Model.extend({
+  });
+  XM.ToDoStatusCollection = Backbone.Collection.extend({
+    model: XM.ToDoStatusModel
+  });
+  XM.toDoStatuses = new XM.ToDoStatusCollection();
+  for (i = 0; i < toDoStatusJson.length; i++) {
+    var toDoStatus = new XM.ToDoStatusModel(toDoStatusJson[i]);
+    XM.toDoStatuses.add(toDoStatus);
+  }
 
 }());

@@ -104,6 +104,7 @@ white:true*/
       var proxy = this.getToDoStatusProxy(),
         startDate = this.get('startDate'),
         completeDate = this.get('completeDate'),
+        date = new Date().toISOString(),
         K = XM.ToDo,
         attrStatus = K.NEITHER;
 
@@ -114,7 +115,10 @@ white:true*/
       } else if (proxy === K.DEFERRED) {
         attrStatus = K.DEFERRED;
       } else if (proxy === K.PENDING) {
-        attrStatus = K.PENDING;
+        attrStatus = K.PENDING; 
+      } else if (proxy === K.COMPLETED) {
+        this.set('completeDate', date);
+        attrStatus = K.COMPLETED;
       } else if (startDate) {
         attrStatus = K.IN_PROCESS;
       }
@@ -130,7 +134,7 @@ white:true*/
     setToDoStatusProxy: function (value) {
       var K = XM.ToDo;
       if (value === this._status) { return this; }
-      if (value === K.PENDING || value === K.DEFERRED) {
+      if (value === K.PENDING || value === K.DEFERRED || value === K.COMPLETED) {
         this._status = value;
       } else {
         if (this._status === K.NEITHER) { return this; }
