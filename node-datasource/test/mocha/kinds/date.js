@@ -36,7 +36,8 @@
         assert.isFalse(K.textToDate("BEWARE. I AM BAD."));
         assert.isFalse(K.textToDate("%"));
         assert.isFalse(K.textToDate("%123"));
-        assert.isFalse(K.textToDate("/////"));
+        assert.isFalse(K.textToDate("1234*"));
+         assert.isFalse(K.textToDate("///"));
       });
       
       // Test known good dates
@@ -44,6 +45,8 @@
         assert.ok(K.textToDate("2/2/2004"));
         assert.ok(K.textToDate("2-10-10"));
         assert.ok(K.textToDate("2000-08-08"));
+        // test the Date ISO String
+        assert.ok(K.textToDate(newDate.toISOString()));
       });
       
       // Test entering "#" and a number to get x days in the year
