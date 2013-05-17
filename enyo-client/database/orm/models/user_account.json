@@ -380,9 +380,9 @@
     "comment": "User Map",
     "privileges": {
       "all": {
-        "create": "SystemControl",
-        "read": "SystemControl",
-        "update": "SystemControl",
+        "create": "MaintainUsers",
+        "read": "MaintainUsers",
+        "update": "MaintainUsers",
         "delete": false
       }
     },

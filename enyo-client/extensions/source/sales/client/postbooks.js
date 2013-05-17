@@ -93,18 +93,5 @@ trailing:true white:true*/
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
 
-
-
-
-  // TODO
-  // Define our core relevant privileges somewhere in the core
-  //
-  var relevantPrivileges = [
-    "SystemControl",
-    "MaintainUsers"
-  ]
-  XT.session.addRelevantPrivileges("core", relevantPrivileges);
-
-
   };
 }());

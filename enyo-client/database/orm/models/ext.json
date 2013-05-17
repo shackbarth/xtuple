@@ -8,10 +8,10 @@
     "comment": "Extension Map",
     "privileges": {
       "all": {
-        "create": true,
+        "create": "MaintainExtensions",
         "read": true,
-        "update": true,
-        "delete": true
+        "update": "MaintainExtensions",
+        "delete": "MaintainExtensions"
       }
     },
     "properties": [
@@ -70,10 +70,10 @@
     "comment": "Extension Map",
     "privileges": {
       "all": {
-        "create": true,
+        "create": "MaintainExtensions",
         "read": true,
-        "update": true,
-        "delete": true
+        "update": "MaintainExtensions",
+        "delete": "MaintainExtensions"
       }
     },
     "properties": [

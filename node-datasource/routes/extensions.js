@@ -16,7 +16,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       },
       fetchSuccess = function (collection, result) {
         var user = _.find(collection.models, function (obj) {
-          console.log(obj.get("username"), req.session.passport.user.username);
           return obj.get("username") === req.session.passport.user.username;
         });
         var extensions = _.map(user.get("grantedExtensions"), function (ext) {
