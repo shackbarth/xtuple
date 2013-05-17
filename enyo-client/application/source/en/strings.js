@@ -216,6 +216,7 @@ var lang = XT.stringsFor("en_US", {
   "_expires": "Expires",
   "_expireDate": "Expire Date",
   "_extended": "Extended",
+  "_extensions": "Extensions",
   "_extendedPrice": "Extended Price",
   "_extendedDescription": "Extended Description",
   "_extendedPriceScale": "Extended Price Scale",
