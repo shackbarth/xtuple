@@ -24,7 +24,7 @@ create or replace function xt.create_view(view_name text, select_text text, read
 
   plv8.execute("grant all on table " + view_name + " to xtrole;");
 
-  /* remove any previously misnamed views */
+  /* remove any previously misnamed rules */
   plv8.execute("drop rule if exists _create on " + view_name);
   plv8.execute("drop rule if exists _update on " + view_name);
   plv8.execute("drop rule if exists _delete on " + view_name);
