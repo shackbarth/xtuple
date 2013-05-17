@@ -58,7 +58,7 @@ trailing:true white:true*/
       return model ? model.get('account') : undefined;
     }
   };
-  
+
   /**
     Abstract workspace to be used for objects that are attached to models subclassed from `AccountDocument`.
     Must be subclassed.
@@ -636,7 +636,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.ExpenseCategory", "XV.ExpenseCategoryWorkspace");
-  
+
   // ..........................................................
   // DEPARTMENT
   //
@@ -662,7 +662,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.Department", "XV.DepartmentWorkspace");
-  
+
   // ..........................................................
   // EMPLOYEE
   //
@@ -734,7 +734,7 @@ trailing:true white:true*/
 
   XV.registerModelWorkspace("XM.EmployeeRelation", "XV.EmployeeWorkspace");
   XV.registerModelWorkspace("XM.EmployeeListItem", "XV.EmployeeWorkspace");
-  
+
   // ..........................................................
   // EMPLOYEE GROUP
   //
@@ -1875,7 +1875,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.SaleType", "XV.SaleTypeWorkspace");
-  
+
   // ..........................................................
   // SHIFT
   //
@@ -2155,8 +2155,8 @@ trailing:true white:true*/
             classes: "in-panel", components: [
               {kind: "XV.TaxCodePicker", label: "_taxCode".loc(), attr: "tax"},
               {kind: "XV.NumberWidget", label: "_percent".loc(), attr: "percent", scale: XT.PERCENT_SCALE},
-              {kind: "XV.CurrencyWidget", label: "_currency".loc(), attr: "currency"},
-              {kind: "XV.NumberWidget", label: "_amount".loc(), attr: "amount", scale: XT.MONEY_SCALE},
+              {kind: "XV.MoneyWidget", attr: {localValue: "amount", currency: "currency",
+                effective: "effectiveDate"}, label: "_amount".loc()},
               {kind: "XV.DateWidget", label: "_effective".loc(), attr: "effectiveDate"},
               {kind: "XV.DateWidget", label: "_expires".loc(), attr: "expirationDate"}
             ]}
