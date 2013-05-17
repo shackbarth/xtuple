@@ -29,7 +29,7 @@ $$, false);
 
 -- insert rules
 
-create or replace rule _CREATE as on insert to xt.doc
+create or replace rule "_CREATE" as on insert to xt.doc
   do instead 
 
 insert into public.docass (
@@ -49,12 +49,12 @@ values (
   
 -- update rule
 
-create or replace rule _UPDATE as on update to xt.doc
+create or replace rule "_UPDATE" as on update to xt.doc
   do instead nothing;
 
 -- delete rules
 
-create or replace rule _DELETE as on delete to xt.doc
+create or replace rule "_DELETE" as on delete to xt.doc
   do instead 
 
 delete from public.docass 
