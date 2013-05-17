@@ -423,6 +423,15 @@
           "type": "Locale",
           "column": "usr_locale_id"
         }
+      },
+      {
+        "name": "grantedExtensions",
+        "toMany": {
+          "column": "usr_username",
+          "type": "UserAccountExtension",
+          "inverse": "userAccount",
+          "isNested": true
+        }
       }
     ],
     "isSystem": true,

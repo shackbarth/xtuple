@@ -104,7 +104,8 @@
        "name": "extension",
        "toOne": {
          "type": "Extension",
-         "column": "usrext_ext_id"
+         "column": "usrext_ext_id",
+         "isNested": true
        }
      }
     ],

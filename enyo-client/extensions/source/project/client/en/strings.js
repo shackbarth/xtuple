@@ -17,6 +17,5 @@ var lang = XT.stringsFor("en_US", {
   // Labels
   // ********
 
-  "_accessProjectExtension": "Access Project Extension"
 
 });

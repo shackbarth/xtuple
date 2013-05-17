@@ -2,6 +2,7 @@
 
 -- run core orm scripts
 \i delete_system_orms.sql;
+\i drop_deprecated.sql;
 
 \cd ../../../lib/orm/source;
 \i init_script.sql;
@@ -157,5 +158,4 @@ select xt.js_init();
 
 \i update_version.sql;
 \i priv.sql;
-\i drop_deprecated.sql;
 
