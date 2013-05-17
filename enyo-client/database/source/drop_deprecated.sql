@@ -21,3 +21,5 @@ DROP TRIGGER IF EXISTS usrpref_did_change on usrpref;
 --DROP TRIGGER IF EXISTS usrgrp_did_change on xt.usrgrp;
 --DROP TRIGGER IF EXISTS usrpref_did_change on xt.usrpref;
 --DROP TRIGGER IF EXISTS usrpriv_did_change on xt.usrpriv;
+
+delete from xt.pkgscript where script_name in ('user', 'users', 'userPreferences');

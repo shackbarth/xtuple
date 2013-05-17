@@ -117,11 +117,6 @@ select xt.js_init();
 \i xt/views/site.sql;
 \i xt/views/todoiteminfo.sql;
 
--- xt guiscripts
-
-\i xt/guiscripts/user.sql;
-\i xt/guiscripts/users.sql;
-\i xt/guiscripts/userPreferences.sql;
 
 -- [ END ] xt
 
