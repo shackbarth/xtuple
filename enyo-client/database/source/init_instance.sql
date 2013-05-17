@@ -159,7 +159,3 @@ select xt.js_init();
 \i priv.sql;
 \i drop_deprecated.sql;
 
--- register core extensions
-\i ../../extensions/source/crm/database/source/register.sql
-\i ../../extensions/source/project/database/source/register.sql
-\i ../../extensions/source/sales/database/source/register.sql

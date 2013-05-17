@@ -60,5 +60,46 @@
      }
     ],
     "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "UserAccountExtension",
+    "table": "xt.usrext",
+    "idSequenceName": "xt.usrext_usrext_id_seq",
+    "comment": "Extension Map",
+    "privileges": {
+      "all": {
+        "create": "SystemControl",
+        "read": true,
+        "update": "SystemControl",
+        "delete": "SystemControl"
+      }
+    },
+    "properties": [
+     {
+       "name": "id",
+       "attr": {
+         "type": "Number",
+         "column": "usrext_id",
+         "isPrimaryKey": true
+       }
+     },
+     {
+       "name": "userAccount",
+       "attr": {
+         "type": "String",
+         "column": "usrext_usr_username"
+       }
+     },
+     {
+       "name": "extension",
+       "attr": {
+         "type": "Number",
+         "column": "usrext_ext_id"
+       }
+     }
+    ],
+    "isSystem": true
   }
 ]
