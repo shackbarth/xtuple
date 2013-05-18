@@ -124,6 +124,9 @@ white:true*/
      * instead of starting node with the debugger running: "sudo node --debug-brk main.js".
     */
     connected: function (query, options, callback, err, client, done, ranInit) {
+      // WARNING!!! If you make any changes here, please update pgworker.js as well.
+      var that = this;
+
       if (err) {
         issue(X.warning("Failed to connect to database: " +
           "{hostname}:{port}/{database} => %@".f(options, err.message)));
@@ -133,14 +136,25 @@ white:true*/
 
       if (ranInit === true) {
         client.hasRunInit = true;
+
+        // Register error handler to log errors.
+        // TODO - Not sure if setting that.activeQuery below is getting the right query here.
+        client.connection.on('error', function (msg) {
+          console.log("Database Error! Last query was: ", that.activeQuery);
+          console.log("Database Error! DB message was: ", msg);
+        });
       }
 
       if (!client.hasRunInit) {
         client.query("set plv8.start_proc = \"xt.js_init\";", _.bind(
           this.connected, this, query, options, callback, err, client, done, true));
       } else {
-
         client.query(query, function (err, result) {
+          if (err) {
+            // Set activeQuery for error event handler above.
+            that.activeQuery = client.activeQuery ? client.activeQuery.text : 'unknown. See PostgreSQL log.';
+          }
+
           // Release the client from the pool.
           done();
 
