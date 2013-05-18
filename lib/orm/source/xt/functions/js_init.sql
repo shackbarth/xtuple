@@ -1,6 +1,13 @@
-create or replace function xt.js_init() returns void as $$
+drop function if exists xt.js_init();
 
-  DEBUG = false;
+create or replace function xt.js_init(debug boolean DEFAULT false) returns void as $$
+
+  DEBUG = debug ? debug : false;
+
+  if (plv8.version !== '1.3.0'){
+    plv8.elog(ERROR, 'plv8 version 1.3.0 required. This version is = ', plv8.version);
+  }
+
 
   // ..........................................................
   // METHODS
@@ -71,13 +78,19 @@ create or replace function xt.js_init() returns void as $$
     Curry function
   */
   Function.prototype.curry = function() {
-    if (arguments.length < 1) {
-        return this; /* nothing to curry with - return function */
-    }
-    var __method = this,
-      args = arguments[0];
-    return function () {
-      return __method.apply(this, args.concat(Array.prototype.slice.call(arguments)));
+    try {
+      if (arguments.length < 1) {
+          return this; /* nothing to curry with - return function */
+      }
+
+      var __method = this,
+        args = arguments[0];
+
+      return function () {
+        return __method.apply(this, args.concat(Array.prototype.slice.call(arguments)));
+      }
+    } catch (err) {
+      XT.error(err, arguments);
     }
   }
 
@@ -218,6 +231,99 @@ create or replace function xt.js_init() returns void as $$
     else if(typeof obj === "string") return obj.decamelize();
     return ret;
   }
+
+  /**
+   * Wrap plv8's elog ERROR to include a stack trace and function arguments when debugging.
+   *
+   * @param {Object} The caught error object from a try/catch.
+   * @param {Array} Javascript's arguments array for the function throwing the error.
+   */
+  XT.error = function (error, args) {
+    var message = error.stack + "\n",
+        len,
+        params,
+        avglen;
+
+    if (DEBUG) {
+      len = 950;
+      params = "Error call args= \n";
+      avglen = len / args.length;
+
+      /* Total error message size in plv8 is 1000 characters. */
+      /* Take the length and split it up evening amung the args. */
+      for(var i = 0; i < args.length; i++) {
+        var strg = JSON.stringify(args[i] || 'null', null, 2);
+
+        params = params + "\n[" + i + "]=";
+
+        if (strg.length < (avglen - 15)) { /* Minus 15 for "[i]= ...trimmed". */
+          params = params + strg;
+        } else {
+          params = params + strg.substring(0, avglen - 15) + "...trimmed";
+        }
+
+        // TODO - This assumes all args are the same length.
+        // We could do some calc to maximize the trim per variable arg length.
+      }
+
+      /* This can give you some more info on how the function was called. */
+      plv8.elog(WARNING, params.substring(0, 900));
+    }
+
+    /* Some times the stack trace can eat up the full 1000 char message. */
+    /* Do a hard trim to 900 so something prints. */
+    plv8.elog(ERROR, message.substring(0, 900));
+  }
+
+  /**
+   * Wrap PostgreSQL's format() function to format SQL Injection safe queires or general strings.
+   * http://www.postgresql.org/docs/9.1/interactive/functions-string.html#FUNCTIONS-STRING-OTHER
+   *
+   * Example: var query = XT.format("select * from %I", ["cntct"]);
+   *  Returns: 'select * from cntct'
+   * Example: var query = XT.format("select %1$I.* from %2$I.%1$I {join} where %1$I.%3$I = $1", ["contact", "xm", "id"]);
+   *  Returns: 'select contact.* from xm.contact {join} where contact.number = $1'
+   *
+   * SQL Injection attemp:
+   * Example: var query = XT.format("SELECT * FROM %I", ["cntct; select * from pg_roles; --"]);
+   * Safely escaped/quoted query:
+   *  Returns: 'SELECT * FROM "cntct; select * from pg_roles; --"'
+   *
+   * @param {String} The string with format tokens to replace.
+   * @param {Array} An array of replacement strings.
+   * @returns {String} Safely escaped string with tokens replaced.
+   */
+  XT.format = function (string, args) {
+    try {
+      if (typeof string !== 'string' || XT.typeOf(args) !== 'array' || !args.length) {
+        return false;
+      }
+
+      var query = "select format($1",
+          params = "";
+
+      for(var i = 0; i < args.length; i++) {
+        params = params + ", $" + (i + 2);
+      }
+      query = query + params + ")";
+
+      /* Pass 'string' to format() as the first parameter. */
+      args.unshift(string);
+
+      if (DEBUG) {
+        plv8.elog(NOTICE, 'XT.format sql =', query);
+        plv8.elog(NOTICE, 'XT.format args =', JSON.stringify(args, null, 2));
+      }
+      string = plv8.execute(query, args)[0].format;
+
+      /* Remove 'string' from args to prevent reference errors. */
+      args.shift();
+
+      return string;
+    } catch (err) {
+      XT.error(err, arguments);
+    }
+  };
 
   /**
     Return a universally unique identifier.
