@@ -87,7 +87,11 @@ white:true*/
 
       @returns {String}
     */
-    getToDoStatusProxy: function () {
+    getToDoStatusProxy: function (value) {
+      if (value) {
+        this.set("status", value);
+        return value;
+      }
       var K = XM.ToDo;
       return this._status || K.NEITHER;
     },
