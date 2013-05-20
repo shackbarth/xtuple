@@ -2,7 +2,7 @@ select xt.create_view('xt.coiteminfo', $$
 
 select coitem.*,
   xt.co_line_base_price(coitem) as base_price,
-  xt.co_line_list_cost_markup(coitem) as list_cost_markup,
+  xt.co_line_markup(coitem) as markup,
   xt.co_line_list_price(coitem) as list_price,
   xt.co_line_list_price_discount(coitem) as list_price_discount,
   xt.co_line_customer_discount(coitem) as cust_discount,

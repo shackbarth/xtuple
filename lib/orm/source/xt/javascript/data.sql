@@ -1,4 +1,4 @@
-select xt.install_js('XT','Data','xtuple', $$
+﻿select xt.install_js('XT','Data','xtuple', $$
 
   /**
    * @class
@@ -1460,9 +1460,10 @@ select xt.install_js('XT','Data','xtuple', $$
           params.attribute = context.pkey;
           params.value = context.value;
 
-          join = 'join %1$I on (%2$I.%3$I = %4$I.%5$I)';
+          join = 'join %1$I.%2$I on (%3$I.%4$I = %5$I.%6$I)';
           join = XT.format(join, [
-              context.recordType.decamelize(),
+              context.recordType.beforeDot().decamelize(),
+              context.recordType.afterDot().decamelize(),
               context.type.decamelize(),
               context.pkey,
               type.decamelize(),
