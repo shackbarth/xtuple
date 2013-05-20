@@ -2372,8 +2372,9 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "username"},
-            {kind: "XV.InputWidget", attr: "password"},
-            {kind: "XV.InputWidget", name: "passwordCheck", label: "_reEnterPassword".loc(), onchange: "passwordCheckDidChange"},
+            {kind: "XV.InputWidget", type: "password", attr: "password"},
+            {kind: "XV.InputWidget", type: "password", name: "passwordCheck",
+              label: "_reEnterPassword".loc()},
             {kind: "XV.LocalePicker", attr: "locale"},
             {kind: "XV.InputWidget", attr: "properName"},
             {kind: "XV.InputWidget", attr: "initials"},
