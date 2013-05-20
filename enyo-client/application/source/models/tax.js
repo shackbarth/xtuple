@@ -112,19 +112,11 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.TaxRegistration = XM.Document.extend({
+  XM.TaxRegistration = XM.Model.extend({
     /** @scope XM.TaxRegistration */
 
-    recordType: 'XM.TaxRegistration',
-    
-    validate: function () {
-      var effectiveDate = this.get("effective"),
-        expireDate = this.get("expires");
-      if (effectiveDate) {
-        return XT.Error.clone('xt2001');
-      }
-      return XM.Document.prototype.validate.apply(this, arguments);
-    }
+    recordType: 'XM.TaxRegistration'
+
   });
 
   /**

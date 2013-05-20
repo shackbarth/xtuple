@@ -259,6 +259,31 @@ white:true*/
       var salesRep = this.get('salesRep');
       if (!salesRep) { return; }
       this.set('commission', salesRep.get('commission'));
+    },
+    
+    /**
+      In the Customer Tax Registrations, the effective date
+      cannot be before the expires date.
+    */
+    validate: function () {
+      var error, params = {},
+        taxReg = this.get("taxRegistration");
+        
+      error = XM.AccountDocument.prototype.validate.apply(this, arguments);
+      if (error) { return error; }
+          
+      if (taxReg.length) {
+        _.each(taxReg.models, function (t) {
+          if (XT.date.compareDate(t.get("effective"), t.get("expires")) === 1) {
+            params.start = "_effective".loc();
+            params.end = "_expires".loc();
+            error = XT.Error.clone('xt2015', { params: params });
+            return false;
+          }
+        });
+      }
+      
+      return error;
     }
 
   });
@@ -378,10 +403,19 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.CustomerTaxRegistration = XM.Model.extend({
+  XM.CustomerTaxRegistration = XM.Document.extend({
     /** @scope XM.CustomerTaxRegistration.prototype */
 
     recordType: 'XM.CustomerTaxRegistration'
+    
+    // validate: function () {
+    //   var effectiveDate = this.get("effective"),
+    //     expireDate = this.get("expires");
+    //   if (effectiveDate > expireDate) {
+    //     return XT.Error.clone('xt2001');
+    //   }
+    //   return XM.Document.prototype.validate.apply(this, arguments);
+    // }
 
   });
 
