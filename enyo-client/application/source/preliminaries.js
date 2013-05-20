@@ -14,7 +14,7 @@ XT = typeof XT !== 'undefined' ? XT : {};
       // delete window.onbeforeunload; // doesn't work
       window.onbeforeunload = undefined;
     }
-    window.location = "/logout";
+    window.location = "/" + window.location.pathname.split("/")[1] + "/logout";
   };
 
   XT.setVersion = function (version) {

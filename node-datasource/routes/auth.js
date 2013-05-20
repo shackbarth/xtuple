@@ -17,7 +17,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     function (req, res, next) {
 
       if (req && req.session && req.session.passport && req.session.passport.user && req.session.passport.user.organization) {
-        res.redirect('/client');
+        res.redirect("/" + req.session.passport.user.organization + '/app');
         //next();
       } else {
         exports.scopeForm(req, res, next);
@@ -52,7 +52,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       req.session.destroy(function () {});
     }
 
-    res.clearCookie('connect.sid');
+    if (req.path.split("/")[1]) {
+      res.clearCookie(req.path.split("/")[1] + ".sid");
+    }
 
     req.logout();
     res.redirect('/');
@@ -82,11 +84,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }
 
         X.log("User %@ has no business trying to log in to organization %@.".f(userId, selectedOrg));
-        res.redirect('/logout');
+        res.redirect('/' + selectedOrg + '/logout');
         return;
       } else if (response.length > 1) {
         X.log("More than one User: %@ exists.".f(userId));
-        res.redirect('/logout');
+        res.redirect('/' + selectedOrg + '/logout');
         return;
       }
 
@@ -109,7 +111,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       if (!userOrg || !userName) {
         // This shouldn't happen.
         X.log("User %@ has no business trying to log in to organization %@.".f(userId, selectedOrg));
-        res.redirect('/logout');
+        res.redirect('/' + selectedOrg + '/logout');
         return;
       }
 
@@ -134,7 +136,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     options.error = function (model, error) {
       X.log("userorg fetch error", error);
-      res.redirect('/logout');
+      res.redirect('/' + selectedOrg + '/logout');
       return;
     };
 

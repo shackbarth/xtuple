@@ -31,8 +31,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     userCollection.fetch({
       success: fetchSuccess,
       error: fetchError,
-      //id: req.session.passport.user.username,
-      username: X.options.databaseServer.user
+      username: X.options.databaseServer.user,
+      database: req.session.passport.user.organization
     });
   };
 }());

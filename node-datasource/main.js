@@ -93,6 +93,8 @@ var express = require('express'),
     oauth2 = require('./oauth2/oauth2'),
     routes = require('./routes/routes'),
     socketio = require('socket.io'),
+    url = require('url'),
+    utils = require('./oauth2/utils'),
     user = require('./oauth2/user');
 
 // TODO - for testing. remove...
@@ -230,17 +232,30 @@ var app = express(),
 var conditionalExpressSession = function (req, res, next) {
   "use strict";
 
+  var key;
+
   // REST API endpoints start with "/api" in their path.
+  // The 'assets' folder and login page are sessionless.
   if ((/^\/api/i).test(req.path) || (/^\/assets/i).test(req.path) || req.path === "/") {
     next();
   } else {
+    if (req.path === "/login") {
+      // TODO - Add check against X.options database array
+      key = req.body.database + ".sid";
+    } else if (req.path.split("/")[1]) {
+      key = req.path.split("/")[1] + ".sid";
+    } else {
+      // TODO - Dynamically name the cookie after the database.
+      console.log("### FIX ME ### setting cookie name to 'connect.sid' for path = ", JSON.stringify(req.path));
+      console.log("### FIX ME ### cookie name should match database name!!!");
+      console.trace("### At this location ###");
+      key = 'connect.sid';
+    }
+
     // Instead of doing app.use(express.session()) we call the package directly
     // which returns a function (req, res, next) we can call to do the same thing.
     var init_session = express.session({
-        key: (function () {
-          // TODO - Dynamically name the cookie after the database.
-          return 'connect.sid';
-        }()),
+        key: key,
         store: sessionStore,
         secret: privateSalt,
         // See cookie stomp above for more details on how this session cookie works.
@@ -249,6 +264,11 @@ var conditionalExpressSession = function (req, res, next) {
           httpOnly: true,
           secure: true,
           maxAge: (X.options.datasource.sessionTimeout * 60 * 1000) || 3600000
+        },
+        sessionIDgen: function () {
+          // TODO: Stomp on connect's sessionID generate.
+          // https://github.com/senchalabs/connect/issues/641
+          return key.split(".")[0] + "." + utils.generateUUID();
         }
       });
 
@@ -261,7 +281,8 @@ var conditionalPassportSession = function (req, res, next) {
   "use strict";
 
   // REST API endpoints start with "/api" in their path.
-  if ((/^\/api/i).test(req.path)) {
+  // The 'assets' folder and login page are sessionless.
+  if ((/^\/api/i).test(req.path) || (/^\/assets/i).test(req.path) || req.path === "/") {
     next();
   } else {
     // Instead of doing app.use(passport.session())
@@ -304,10 +325,19 @@ require('./oauth2/passport');
 /**
  * Setup HTTP routes and handlers.
  */
+var that = this;
+app.get('/:org/app', function (req, res, next) {
+  res.render('app', { org: "instance" });
+});
+app.get('/:org/debug', function (req, res, next) {
+  res.render('debug', { org: "instance" });
+});
+_.each(X.options.datasource.databases, function (orgValue, orgKey, orgList) {
+  app.use("/" + orgValue + '/client', express.static('../enyo-client/application', { maxAge: 86400000 }));
+  app.use("/" + orgValue + '/core-extensions', express.static('../enyo-client/extensions', { maxAge: 86400000 }));
+  app.use("/" + orgValue + '/private-extensions', express.static('../../private-extensions', { maxAge: 86400000 }));
+});
 app.use('/assets', express.static('views/login/assets', { maxAge: 86400000 }));
-app.use('/client', express.static('../enyo-client/application', { maxAge: 86400000 }));
-app.use('/core-extensions', express.static('../enyo-client/extensions', { maxAge: 86400000 }));
-app.use('/private-extensions', express.static('../../private-extensions', { maxAge: 86400000 }));
 
 app.get('/dialog/authorize', oauth2.authorization);
 app.post('/dialog/authorize/decision', oauth2.decision);
@@ -327,17 +357,17 @@ app.get('/', routes.loginForm);
 app.post('/login', routes.login);
 app.get('/login/scope', routes.scopeForm);
 app.post('/login/scopeSubmit', routes.scope);
-app.get('/logout', routes.logout);
+app.get('/:org/logout', routes.logout);
 
-app.all('/changePassword', routes.changePassword);
-app.all('/dataFromKey', routes.dataFromKey);
-app.all('/email', routes.email);
-app.all('/export', routes.exxport);
-app.all('/extensions', routes.extensions);
-app.get('/file', routes.file);
-app.get('/maintenance', routes.maintenance);
-app.get('/report', routes.report);
-app.get('/resetPassword', routes.resetPassword);
+app.all('/:org/changePassword', routes.changePassword);
+app.all('/:org/dataFromKey', routes.dataFromKey);
+app.all('/:org/email', routes.email);
+app.all('/:org/export', routes.exxport);
+app.all('/:org/extensions', routes.extensions);
+app.get('/:org/file', routes.file);
+app.get('/:org/maintenance', routes.maintenance);
+app.get('/:org/report', routes.report);
+app.get('/:org/resetPassword', routes.resetPassword);
 
 // Set up the other servers we run on different ports.
 var unexposedServer = express();
@@ -429,15 +459,23 @@ io.configure(function () {
 io.of('/clientsock').authorization(function (handshakeData, callback) {
   "use strict";
 
+  var key;
+
   if (handshakeData.headers.cookie) {
     handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
 
-    if (!handshakeData.cookie['connect.sid']) {
+    if (!handshakeData.headers.referer || !url.parse(handshakeData.headers.referer).path.split("/")[1]) {
+      return callback(null, false);
+    }
+
+    key = url.parse(handshakeData.headers.referer).path.split("/")[1];
+
+    if (!handshakeData.cookie[key + '.sid']) {
       return callback(null, false);
     }
 
     // Add sessionID so we can use it to check for valid sessions on each request below.
-    handshakeData.sessionID = parseSignedCookie(handshakeData.cookie['connect.sid'], privateSalt);
+    handshakeData.sessionID = parseSignedCookie(handshakeData.cookie[key + '.sid'], privateSalt);
 
     sessionStore.get(handshakeData.sessionID, function (err, session) {
       if (err) {

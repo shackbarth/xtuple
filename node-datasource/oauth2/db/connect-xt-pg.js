@@ -2,7 +2,7 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, XM:true, XT:true, console:true, _:true*/
 
-/*!
+/**
  * Connect - xTuple - PostgreSQL Store
  *
  * connect-xt-pg is a PostgreSQL session store that uses xTuple's glabal database
@@ -61,12 +61,12 @@ module.exports = function (connect) {
           type: "SessionStore"
         };
 
-      fetchOptions.success = function (sessionstore) {
+      fetchOptions.success = function (obj, sessionstore, opts) {
         var sid,
             sess;
 
         // Flush any sessions before reloading it.
-        self.sessions = {};
+        self.sessions[options.database] = {};
 
         _.each(sessionstore, function (model, id, collection) {
           sid = model.id;
@@ -77,7 +77,7 @@ module.exports = function (connect) {
             MemoryStore.set(sid, sess, function () {});
           }
 
-          self.sessions[sid] = sess;
+          self.sessions[options.database][sid] = sess;
         });
 
         // Now that sessions are loaded, we'll call the callback that was waiting for them.
@@ -101,6 +101,7 @@ module.exports = function (connect) {
       // Fetch all records from XM.SessionStore and load them into the Express MemoryStore.
       // fetchOptions.username = GLOBAL_USERNAME; // TODO
       fetchOptions.username = 'node';
+      fetchOptions.database = options.database;
       XT.dataSource.request(null, "get", payload, fetchOptions);
     };
 
@@ -108,28 +109,36 @@ module.exports = function (connect) {
     // to the callback function. This allows us to expire session from code that has access to
     // stuff like socket.io in main.js.
     this.expireSessions = function (callback) {
-      this.loadSessions(null, function (err) {
-        if (err) {
-          return;
-        }
 
-        _.each(self.sessions, function (val, key, list) {
-          var expires = new Date(val.cookie.expires),
-              now = new Date();
-
-          if ((expires - now) <= 0) {
-            //X.debug("Session: ", key, " expired ", (expires - now));
-            callback(key, val);
-          } else {
-            //X.debug("Session: ", key, " expires in ", (expires - now));
+      _.each(X.options.datasource.databases, function (dbval, dbkey, dblist) {
+        self.loadSessions({database: dbval}, function (err) {
+          if (err) {
+            return;
           }
+
+          _.each(X.options.datasource.databases, function (dbval, dbkey, dblist) {
+            _.each(self.sessions[dbval], function (val, key, list) {
+              var expires = new Date(val.cookie.expires),
+                  now = new Date();
+
+              if ((expires - now) <= 0) {
+                //X.debug("Session: ", key, " expired ", (expires - now));
+                callback(key, val);
+              } else {
+                //X.debug("Session: ", key, " expires in ", (expires - now));
+              }
+            });
+          });
         });
       });
     };
 
     X.log("SessionStore using hybridCache = ", this.hybridCache);
+
     // Prime this.sessions and MemoryCache on initialization.
-    this.loadSessions();
+    _.each(X.options.datasource.databases, function (dbval, dbkey, dblist) {
+      self.loadSessions({database: dbval});
+    });
   }
 
   /**
@@ -159,6 +168,8 @@ module.exports = function (connect) {
 
         sessionStore = new XM.SessionStore();
         fetchOptions.id = sid;
+//TODO - This might break.
+        fetchOptions.database = sid.split(".")[0].split(":")[1];
 
         fetchOptions.success = function (model) {
           // We have a matching session store cookie
@@ -295,6 +306,9 @@ module.exports = function (connect) {
         };
 
         fetchOptions.id = sid;
+//TODO - This might break.
+        fetchOptions.database = sid.split(".")[0].split(":")[1];
+        saveOptions.database = fetchOptions.database;
 
         fetchOptions.success = function (model, resp) {
           // Fetch found this session, update it and save.
@@ -383,10 +397,15 @@ module.exports = function (connect) {
       sid = this.prefix + sid;
       sessionStore = new XM.SessionStore();
       fetchOptions.id = sid;
+//TODO - This might break.
+      fetchOptions.database = sid.split(".")[0].split(":")[1];
 
       fetchOptions.success = function (model) {
+        var destroyOptions = {};
+
+        destroyOptions.database = fetchOptions.database;
         // Delete this session from the db store.
-        model.destroy();
+        model.destroy(destroyOptions);
 
         if (that.hybridCache) {
           // Delete this session from the MemoryStore as well.
@@ -437,18 +456,20 @@ module.exports = function (connect) {
    * @api public
    */
   XTPGStore.prototype.all = function (fn) {
-    this.loadSessions(null, function (err) {
-      if (err) {
-        return fn(err);
-      }
+    _.each(X.options.datasource.databases, function (dbval, dbkey, dblist) {
+      self.loadSessions({database: dbval}, function (err) {
+        if (err) {
+          return fn(err);
+        }
 
-      var arr = [],
-          keys = Object.keys(this.sessions);
+        var arr = [],
+            keys = Object.keys(this.sessions[dbval]);
 
-      for (var i = 0, len = keys.length; i < len; ++i) {
-        arr.push(this.sessions[keys[i]]);
-      }
-      fn(null, arr);
+        for (var i = 0, len = keys.length; i < len; ++i) {
+          arr.push(this.sessions[dbval][keys[i]]);
+        }
+        fn(null, arr);
+      });
     });
   };
 
@@ -459,12 +480,14 @@ module.exports = function (connect) {
    * @api public
    */
   XTPGStore.prototype.length = function (fn) {
-    this.loadSessions(null, function (err) {
-      if (err) {
-        return fn(err);
-      }
+    _.each(X.options.datasource.databases, function (dbval, dbkey, dblist) {
+      self.loadSessions({database: dbval}, function (err) {
+        if (err) {
+          return fn(err);
+        }
 
-      fn(null, Object.keys(this.sessions).length);
+        fn(null, Object.keys(this.sessions[dbval]).length);
+      });
     });
   };
 
