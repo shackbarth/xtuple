@@ -9,9 +9,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     processName: "node-datasource",
     allowMultipleInstances: true,
     requireDatabase: true,
-    enhancedAuthKey: "xTuple",
     datasource: {
       debugging: false,
+      enhancedAuthKey: "xTuple",
       sessionTimeout: 60,
       requireCache: true,
       pgPoolSize: 15,
