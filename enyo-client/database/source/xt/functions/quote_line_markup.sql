@@ -1,4 +1,4 @@
-create or replace function xt.quote_line_list_cost_markup(quitem) returns numeric stable as $$
+create or replace function xt.quote_line_markup(quitem) returns numeric stable as $$
   select
     case
       when $1.quitem_custprice = 0 then null

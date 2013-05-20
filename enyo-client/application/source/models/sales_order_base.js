@@ -1138,7 +1138,7 @@ white:true*/
       "extendedPrice",
       "inventoryQuantityUnitRatio",
       "lineNumber",
-      "listCostMarkup",
+      "markup",
       "listPriceDiscount",
       "priceMode",
       "priceUnitRatio",
@@ -1197,25 +1197,25 @@ white:true*/
         var K = that.getClass(),
           priceMode = that.get("priceMode"),
           customerPrice = that.get("customerPrice"),
-          listCost = that.getValue("itemSite.item.listCost"),
+          wholesalePrice = that.getValue("itemSite.item.wholesalePrice"),
           listPrice = that.getValue("itemSite.item.listPrice"),
           attrs = {
             discount: undefined,
             listPriceDiscount: undefined,
-            listCostMarkup: undefined,
+            markup: undefined,
             listPrice: listPrice
           };
 
         if (price === 0) {
           attrs.discount = priceMode === K.MARKUP_MODE ? 0 : 1;
           attrs.listPriceDiscount = 1;
-          attrs.listCostMarkup = 0;
+          attrs.markup = 0;
         } else {
           if (listPrice) {
             attrs.listPriceDiscount = XT.toPercent(1 - basePrice / listPrice);
           }
-          if (listCost) {
-            attrs.listCostMarkup = XT.toPercent(basePrice / listCost - 1);
+          if (wholesalePrice) {
+            attrs.markup = XT.toPercent(basePrice / wholesalePrice - 1);
           }
           if (customerPrice) {
             attrs.discount = priceMode === K.MARKUP_MODE ?

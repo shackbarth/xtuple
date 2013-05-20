@@ -1,7 +1,7 @@
 select xt.create_view('xt.quiteminfo', $$
   select quitem.*,  
     xt.quote_line_base_price(quitem) as base_price,  
-    xt.quote_line_list_cost_markup(quitem) as list_cost_markup,  
+    xt.quote_line_markup(quitem) as markup,  
     xt.quote_line_list_price(quitem) as list_price,  
     xt.quote_line_list_price_discount(quitem) as list_price_discount,  
     xt.quote_line_customer_discount(quitem) as cust_discount,  
