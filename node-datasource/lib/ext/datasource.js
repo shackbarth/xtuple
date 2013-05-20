@@ -220,7 +220,14 @@ white:true*/
         X.log("Query from model: ", query);
       }
 
-      conn.database = "dev"; // XXX FIXME this has to come from req.session.passport.user.organization
+      if (options.database) {
+        conn.database = options.database;
+      } else {
+        console.log("### FIX ME ### calling XT.dataSource.request with payload = ", JSON.stringify(payload));
+        console.log("### FIX ME ### call needs to set database in options!!!");
+        console.trace("### At this location ###");
+        conn.database = X.options.datasource.databases[0]; // XXX FIXME this has to come from req.session.passport.user.organization
+      }
 
       this.query(query, conn, complete);
       return true;

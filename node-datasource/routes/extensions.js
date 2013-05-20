@@ -33,7 +33,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     extensionCollection.fetch({
       success: fetchSuccess,
       error: fetchError,
-      username: X.options.databaseServer.user
+      username: X.options.databaseServer.user,
+      database: req.session.passport.user.organization
     });
   };
 }());
