@@ -184,7 +184,7 @@ white:true*/
     */
     getExtensionList: function (options) {
       var ajax = new enyo.Ajax({
-          url: "/extensions",
+          url: "/" + window.location.pathname.split("/")[1] + "/extensions",
           success: options ? options.success : undefined,
           error: options ? options.error : undefined
         });
