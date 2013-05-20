@@ -100,7 +100,7 @@ white:true*/
     /** @scope XM.Customer.prototype */
 
     recordType: 'XM.Customer',
-    
+
     conversionMap: {
       name: "name",
       primaryContact: "contact",
@@ -260,18 +260,18 @@ white:true*/
       if (!salesRep) { return; }
       this.set('commission', salesRep.get('commission'));
     },
-    
+
     /**
       In the Customer Tax Registrations, the effective date
-      cannot be before the expires date.
+      cannot be prior to the expires date.
     */
     validate: function () {
       var error, params = {},
         taxReg = this.get("taxRegistration");
-        
+
       error = XM.AccountDocument.prototype.validate.apply(this, arguments);
       if (error) { return error; }
-          
+
       if (taxReg.length) {
         _.each(taxReg.models, function (t) {
           if (XT.date.compareDate(t.get("effective"), t.get("expires")) === 1) {
@@ -282,7 +282,7 @@ white:true*/
           }
         });
       }
-      
+
       return error;
     }
 
@@ -403,19 +403,10 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.CustomerTaxRegistration = XM.Document.extend({
+  XM.CustomerTaxRegistration = XM.Model.extend({
     /** @scope XM.CustomerTaxRegistration.prototype */
 
     recordType: 'XM.CustomerTaxRegistration'
-    
-    // validate: function () {
-    //   var effectiveDate = this.get("effective"),
-    //     expireDate = this.get("expires");
-    //   if (effectiveDate > expireDate) {
-    //     return XT.Error.clone('xt2001');
-    //   }
-    //   return XM.Document.prototype.validate.apply(this, arguments);
-    // }
 
   });
 
