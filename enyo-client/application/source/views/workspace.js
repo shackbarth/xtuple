@@ -2372,6 +2372,8 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "username"},
+            {kind: "XV.InputWidget", attr: "password"},
+            {kind: "XV.InputWidget", name: "passwordCheck", label: "_reEnterPassword".loc(), onchange: "passwordCheckDidChange"},
             {kind: "XV.LocalePicker", attr: "locale"},
             {kind: "XV.InputWidget", attr: "properName"},
             {kind: "XV.InputWidget", attr: "initials"},
@@ -2393,6 +2395,17 @@ trailing:true white:true*/
         ]}
       ]}
     ],
+    /**
+      The passwordCheck field is not on the model. Pipe to a hidden field.
+     */
+    controlValueChanged: function (inSender, inEvent) {
+      if (inEvent.originator.name === 'passwordCheck') {
+        this.value._passwordCheck = inEvent.originator.value;
+        return true;
+      }
+      this.inherited(arguments);
+    },
+
     /**
       Inject awareness of privileges earned by role into the privilege box when prompted
      */

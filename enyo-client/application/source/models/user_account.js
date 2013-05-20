@@ -239,7 +239,22 @@ white:true*/
       if (status === K.READY_NEW) {
         this.setReadOnly('username', false);
       }
+    },
+
+    validate: function (attributes, options) {
+      if ((this.get("password") || this._passwordCheck) &&
+          this.get("password") !== this._passwordCheck) {
+        // password mismatch
+        return XT.Error.clone('xt2016');
+      }
+
+      // clear out passwordCheck, so as not to upset the model validation
+      delete this.attributes.passwordCheck;
+      delete attributes.passwordCheck;
+
+      return XM.Model.prototype.validate.call(this, attributes, options);
     }
+
   });
 
   /**
