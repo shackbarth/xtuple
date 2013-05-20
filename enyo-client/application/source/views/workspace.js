@@ -2372,6 +2372,9 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "username"},
+            {kind: "XV.InputWidget", type: "password", attr: "password"},
+            {kind: "XV.InputWidget", type: "password", name: "passwordCheck",
+              label: "_reEnterPassword".loc()},
             {kind: "XV.LocalePicker", attr: "locale"},
             {kind: "XV.InputWidget", attr: "properName"},
             {kind: "XV.InputWidget", attr: "initials"},
@@ -2380,8 +2383,10 @@ trailing:true white:true*/
             // normally I'd put classes: "xv-assignment-box" into the container of the assignmentbox,
             // but there is no such container here. Maybe some CSS work to be done now that assignmentbox
             // is the thing inside the thing instead of the thing and the container all together.
+            {kind: "onyx.GroupboxHeader", content: "_extensions".loc()},
+            {kind: "XV.UserAccountExtensionAssignmentBox", attr: "grantedExtensions", name: "grantedExtensions" },
             {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
-            {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles", name: "grantedRoles" }
+            {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles", name: "grantedRoles" },
           ]}
         ]},
         {kind: "XV.Groupbox", name: "privilegePanel", classes: "xv-assignment-box",
@@ -2391,6 +2396,17 @@ trailing:true white:true*/
         ]}
       ]}
     ],
+    /**
+      The passwordCheck field is not on the model. Pipe to a hidden field.
+     */
+    controlValueChanged: function (inSender, inEvent) {
+      if (inEvent.originator.name === 'passwordCheck') {
+        this.value._passwordCheck = inEvent.originator.value;
+        return true;
+      }
+      this.inherited(arguments);
+    },
+
     /**
       Inject awareness of privileges earned by role into the privilege box when prompted
      */

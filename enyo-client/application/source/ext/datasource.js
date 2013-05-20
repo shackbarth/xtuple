@@ -93,7 +93,7 @@ white:true*/
           id: id
         },
         ajax = new enyo.Ajax({
-          url: "/resetPassword",
+          url: "/" + window.location.pathname.split("/")[1] + "/resetPassword",
           success: options ? options.success : undefined,
           error: options ? options.error : undefined
         });
@@ -120,7 +120,7 @@ white:true*/
           newPassword: params.newPassword
         },
         ajax = new enyo.Ajax({
-          url: "/changePassword",
+          url: "/" + window.location.pathname.split("/")[1] + "/changePassword",
           success: options ? options.success : undefined,
           error: options ? options.error : undefined
         });
@@ -184,7 +184,7 @@ white:true*/
     */
     getExtensionList: function (options) {
       var ajax = new enyo.Ajax({
-          url: "/extensions",
+          url: "/" + window.location.pathname.split("/")[1] + "/extensions",
           success: options ? options.success : undefined,
           error: options ? options.error : undefined
         });

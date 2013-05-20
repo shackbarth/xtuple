@@ -1,3 +1,3 @@
 -- add necessary privs
 
-select xt.add_priv('SystemControl', 'Maintain user management tables', 'System', 'System');
+select xt.add_priv('MaintainExtensions', 'Maintain extensions', 'System', 'System');

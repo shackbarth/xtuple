@@ -4,26 +4,10 @@ create or replace function xt.usr_did_change() returns trigger as $$
 
  var sql = "select setUserPreference('" + NEW.usr_username + "', '{name}', $1)";
  if (TG_OP === 'INSERT') {
-   /* Set a unique id. Some ids come from pg_user oid, so there could be overlap */
-   var sql1 = "select nextval('usr_usr_id_seq') as sequence;",
-     sql2 = "select useracct_id from usr where usr_id = $1;",
-     sql3 = "update usr set usr_id = $1 where usr_username = $2;",
-     sql4 = "update usr set usr_username = $1 where usr_username = $2;",
-     id = NEW.usr_id,
-     res;
-   while (!id) {
-     id = plv8.execute(sql1)[0].sequence;
-     res = plv8.execute(sql2, [ id ]);
-     if (res.length) { 
-       id = undefined;
-     } else {
-       plv8.execute(sql3, [ id, NEW.usr_username ]);
-     }
-   }
- 
-   if (NEW.useracct_username !== NEW.usr_username.toLowerCase()) {
-     plv8.execute(sql4, [ NEW.usr_username.toLowerCase(), NEW.usr_username ]);
-   }
+   /* XXX FIXME TODO: use XT.format */
+   /* https://github.com/xtuple/xtuple/blob/master/lib/orm/source/xt/functions/js_init.sql#L282 */
+   var sqlInsert = "create user " + NEW.usr_username.toLowerCase();
+   plv8.execute(sqlInsert);
  }
 
  /* Avoid recursive behavior by only updating from one side */

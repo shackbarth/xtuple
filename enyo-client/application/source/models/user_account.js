@@ -85,6 +85,28 @@ white:true*/
 
     @extends XM.Model
   */
+  XM.Extension = XM.Model.extend(/** @lends XM.UserAccountExtension.prototype */{
+
+    recordType: 'XM.Extension'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.UserAccountExtension = XM.Model.extend(/** @lends XM.UserAccountExtension.prototype */{
+
+    recordType: 'XM.UserAccountExtension'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
   XM.Privilege = XM.Model.extend({
     /** @scope XM.Privilege.prototype */
 
@@ -206,6 +228,44 @@ white:true*/
       }
     },
 
+    // two-step: change the password if necessary
+    save: function (key, value, options) {
+      var that = this,
+        success,
+        password = this.get("password"),
+        isNew = this.isNew();
+
+      if (!password) {
+        return XM.Document.prototype.save.call(this, key, value, options);
+      }
+
+      // Handle both `"key", value` and `{key: value}` -style arguments.
+      if (_.isObject(key) || _.isEmpty(key)) {
+        options = value;
+      }
+      options = options ? _.clone(options) : {};
+
+      success = options.success;
+      options.success = function (model, resp, options) {
+        var resetOptions = {
+          isNew: isNew,
+          newPassword: password
+        };
+
+        XT.dataSource.resetPassword(model.id, resetOptions);
+        if (success) { success(model, resp, options); }
+      };
+
+
+      // Handle both `"key", value` and `{key: value}` -style arguments.
+      if (_.isObject(key) || _.isEmpty(key)) {
+        value = options;
+      }
+
+      XM.Document.prototype.save.call(this, key, value, options);
+
+    },
+
     /**
      * The username attribute must be editable for a new entry. This overrides
      * the fact that model sets username as readOnly by virtue of its being
@@ -217,7 +277,29 @@ white:true*/
       if (status === K.READY_NEW) {
         this.setReadOnly('username', false);
       }
+    },
+
+    validate: function (attributes, options) {
+      var isNew = this.isNew();
+
+      if ((this.get("password") || this._passwordCheck) &&
+          this.get("password") !== this._passwordCheck) {
+        // password mismatch
+        return XT.Error.clone('xt2016');
+
+      } else if (!this.get("password") && isNew) {
+        // new user accounts need to have a password set
+
+        return XT.Error.clone('xt1004', { params: {attr: "_password".loc()} });
+      }
+
+      // clear out passwordCheck, so as not to upset the model validation
+      delete this.attributes.passwordCheck;
+      delete attributes.passwordCheck;
+
+      return XM.Model.prototype.validate.call(this, attributes, options);
     }
+
   });
 
   /**
@@ -290,6 +372,28 @@ white:true*/
    /** @scope XM.LocaleCollection.prototype */
 
     model: XM.Locale
+
+  });
+
+  /**
+   @class
+
+   @extends XM.Collection
+  */
+  XM.ExtensionCollection = XM.Collection.extend(/** @lends XM.ExtensionCollection.prototype */{
+
+    model: XM.Extension
+
+  });
+
+  /**
+   @class
+
+   @extends XM.Collection
+  */
+  XM.UserAccountExtensionCollection = XM.Collection.extend(/** @lends XM.UserAccountExtensionCollection.prototype */{
+
+    model: XM.UserAccountExtension
 
   });
 

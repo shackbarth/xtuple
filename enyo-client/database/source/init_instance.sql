@@ -2,6 +2,7 @@
 
 -- run core orm scripts
 \i delete_system_orms.sql;
+\i drop_deprecated.sql;
 
 \cd ../../../lib/orm/source;
 \i init_script.sql;
@@ -117,11 +118,6 @@ select xt.js_init();
 \i xt/views/site.sql;
 \i xt/views/todoiteminfo.sql;
 
--- xt guiscripts
-
-\i xt/guiscripts/user.sql;
-\i xt/guiscripts/users.sql;
-\i xt/guiscripts/userPreferences.sql;
 
 -- [ END ] xt
 
@@ -162,9 +158,4 @@ select xt.js_init();
 
 \i update_version.sql;
 \i priv.sql;
-\i drop_deprecated.sql;
 
--- register core extensions
-\i ../../extensions/source/crm/database/source/register.sql
-\i ../../extensions/source/project/database/source/register.sql
-\i ../../extensions/source/sales/database/source/register.sql

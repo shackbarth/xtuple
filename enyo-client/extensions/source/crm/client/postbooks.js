@@ -61,7 +61,6 @@ trailing:true white:true*/
     XT.app.$.postbooks.insertModule(module, 1);
 
     relevantPrivileges = [
-      "AccessCRMExtension",
       "CreateNewCurrency",
       "MaintainCurrencies",
       "MaintainCurrencyRates",
@@ -116,7 +115,6 @@ trailing:true white:true*/
       "MaintainCommentTypes",
       "MaintainCountries",
       "MaintainStates",
-      "MaintainUsers",
       "ViewEmailProfiles",
       "MaintainEmailProfiles"
     ];

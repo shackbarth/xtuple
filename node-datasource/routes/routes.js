@@ -33,11 +33,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     data = require('./data'),
     dataFromKey = require('./dataFromKey'),
     file = require('./file'),
-    maintenance = require('./maintenance'),
     passport = require('passport'),
     redirector = require('./redirector'),
     report = require('./report'),
-    resetPassword = require('./resetPassword'),
     restDiscovery = require('./restDiscovery'),
     restRouter = require('./restRouter');
 
@@ -81,13 +79,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.exxport = [ensureLogin, exxport.exxport];
   exports.extensions = [ensureLogin, extensions.extensions];
   exports.file = [ensureLogin, file.file];
-  // the maintenance route as accessible by the app has login restrictions.
-  exports.maintenance = [ensureLogin, maintenance.maintenance];
-  // the maintenance route as accessible through the unexposed server has
-  // no login restrictions. This is for ease of serverside scripting.
-  exports.maintenanceLocalhost = maintenance.maintenance;
   exports.redirect = redirector.redirect;
   exports.report = [ensureLogin, report.report];
-  exports.resetPassword = [ensureLogin, resetPassword.resetPassword];
+  exports.resetPassword = [ensureLogin, changePassword.resetPassword];
 
 }());

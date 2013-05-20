@@ -307,6 +307,13 @@
         }
       },
       {
+        "name": "password",
+        "attr": {
+          "type": "String",
+          "column": "usr_passwd"
+        }
+      },
+      {
         "name": "properName",
         "attr": {
           "type": "String",
@@ -358,6 +365,15 @@
           "inverse": "userAccount",
           "isNested": true
         }
+      },
+      {
+        "name": "grantedExtensions",
+        "toMany": {
+          "column": "usr_username",
+          "type": "UserAccountExtension",
+          "inverse": "userAccount",
+          "isNested": true
+        }
       }
     ],
     "isSystem": true,
@@ -371,9 +387,9 @@
     "comment": "User Map",
     "privileges": {
       "all": {
-        "create": "SystemControl",
-        "read": "SystemControl",
-        "update": "SystemControl",
+        "create": "MaintainUsers",
+        "read": "MaintainUsers",
+        "update": "MaintainUsers",
         "delete": false
       }
     },
@@ -413,6 +429,15 @@
         "toOne": {
           "type": "Locale",
           "column": "usr_locale_id"
+        }
+      },
+      {
+        "name": "grantedExtensions",
+        "toMany": {
+          "column": "usr_username",
+          "type": "UserAccountExtension",
+          "inverse": "userAccount",
+          "isNested": true
         }
       }
     ],
