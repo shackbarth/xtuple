@@ -370,9 +370,8 @@ app.get('/:org/report', routes.report);
 app.get('/:org/resetPassword', routes.resetPassword);
 
 // Set up the other servers we run on different ports.
-var unexposedServer = express();
-unexposedServer.get('/maintenance', routes.maintenanceLocalhost);
-unexposedServer.listen(X.options.datasource.maintenancePort);
+//var unexposedServer = express();
+//unexposedServer.listen(X.options.datasource.maintenancePort);
 
 var redirectServer = express();
 redirectServer.get(/.*/, routes.redirect); // RegEx for "everything"

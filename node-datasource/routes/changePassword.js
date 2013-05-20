@@ -6,31 +6,32 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
 
-  var setPassword = function (user, password, callback) {
+  var setPassword = function (username, password, organization, callback) {
     var dbPassword, md5, query, salt, sql;
 
     // Encrypt password using Enhanced Authentication technique
     salt = X.options.datasource.enhancedAuthKey || "xTuple",
     md5 = X.crypto.createHash('md5'),
     sql = 'alter user "{username}" with password \'{password}\';';
-    md5.update(req.query.newPassword + salt + username, 'utf8');
+    md5.update(password + salt + username, 'utf8');
     dbPassword = md5.digest('hex');
 
     query = sql.replace("{username}", username)
                .replace("{password}", dbPassword);
-    X.database.query(req.session.passport.user.organization, query, callback);
+    X.database.query(organization, query, callback);
   };
 
   // https://localhost/changePassword?oldPassword=password1&newPassword=password2
   exports.changePassword = function (req, res) {
     var testSql = "select relname from pg_class limit 1;",
       username = req.session.passport.user.username,
+      organization = req.session.passport.user.organization,
       options = {
         user: username,
         password: req.query.oldPassword,
         port: X.options.databaseServer.port,
         hostname: X.options.databaseServer.hostname,
-        database: req.session.passport.user.organization
+        database: organization
       };
 
     XT.dataSource.query(testSql, options, function (error, result) {
@@ -40,7 +41,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         res.send({isError: true, message: "Invalid password"});
       } else {
         // authentication success
-        setPassword(username, req.query.newPassword, function () {
+        setPassword(username, req.query.newPassword, organization, function () {
           res.send({data: {message: "Password change successful!"}});
         });
       }
@@ -54,7 +55,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.resetPassword = function (req, res) {
     // the fetch and edit will be made under the authority of the requesting user
     var requester = req.session.passport.user.id,
+      user,
       fetchSuccess,
+      organization = req.session.passport.user.organization,
       fetchError = function (err) {
         X.log("Cannot load user to reset password. You are probably a hacker.");
         res.send({isError: true, message: "No user exists by that ID"});
@@ -65,13 +68,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return;
     }
 
+    user = new XM.User({id: req.query.id});
     fetchSuccess = function () {
       // Update postgres user passwords
-      setPassword(req.query.id, req.query.newPassword, function () {
+      setPassword(req.query.id, req.query.newPassword, organization, function () {
         res.send({data: {message: "Password change successful!"}});
       });
     };
 
-    user.fetch({success: fetchSuccess, error: fetchError, username: requester});
+    user.fetch({
+      success: fetchSuccess,
+      error: fetchError,
+      database: req.session.passport.user.organization,
+      username: requester
+    });
   };
 }());

@@ -251,7 +251,7 @@ white:true*/
           isNew: isNew,
           newPassword: password
         };
-        console.log("The default save request has been run", resetOptions);
+
         XT.dataSource.resetPassword(model.id, resetOptions);
         if (success) { success(model, resp, options); }
       };
