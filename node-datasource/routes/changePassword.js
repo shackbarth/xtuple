@@ -35,7 +35,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       };
 
     XT.dataSource.query(testSql, options, function (error, result) {
-
       if (error) {
         // authentication failure
         res.send({isError: true, message: "Invalid password"});

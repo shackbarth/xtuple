@@ -50,18 +50,6 @@ passport.use(new LocalStrategy(
         return done(null, model);
       }
     });
-    /*
-    db.users.findByUsername(username, function (err, user) {
-      if (err) { return done(err); }
-      if (!user) {
-        return done(null, false);
-      }
-      if (!X.bcrypt.compareSync(password, user.get('password'))) {
-        return done(null, false);
-      }
-      return done(null, user);
-    });
-    */
   }
 ));
 
@@ -90,19 +78,9 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(function (passportUser, done) {
   "use strict";
 
-  // XXX I bet that real authentication should be happening here
   var model = new Backbone.Model();
   model.set({id: passportUser.id, singleTenant: true})
   return done(null, model);
-  /*
-  db.users.findByUsername(passportUser.id, function (err, user) {
-    if (err) { return done(err); }
-    if (!user) {
-      return done(null, false);
-    }
-    return done(null, user);
-  });
-  */
 });
 
 
