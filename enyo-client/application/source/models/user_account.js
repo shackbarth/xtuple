@@ -280,10 +280,17 @@ white:true*/
     },
 
     validate: function (attributes, options) {
+      var isNew = this.isNew();
+
       if ((this.get("password") || this._passwordCheck) &&
           this.get("password") !== this._passwordCheck) {
         // password mismatch
         return XT.Error.clone('xt2016');
+
+      } else if (!this.get("password") && isNew) {
+        // new user accounts need to have a password set
+
+        return XT.Error.clone('xt1004', { params: {attr: "_password".loc()} });
       }
 
       // clear out passwordCheck, so as not to upset the model validation
