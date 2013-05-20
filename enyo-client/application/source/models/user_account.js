@@ -228,6 +228,44 @@ white:true*/
       }
     },
 
+    // two-step: change the password if necessary
+    save: function (key, value, options) {
+      var that = this,
+        success,
+        password = this.get("password"),
+        isNew = this.isNew();
+
+      if (!password) {
+        return XM.Document.prototype.save.call(this, key, value, options);
+      }
+
+      // Handle both `"key", value` and `{key: value}` -style arguments.
+      if (_.isObject(key) || _.isEmpty(key)) {
+        options = value;
+      }
+      options = options ? _.clone(options) : {};
+
+      success = options.success;
+      options.success = function (model, resp, options) {
+        var resetOptions = {
+          isNew: isNew,
+          newPassword: password
+        };
+        console.log("The default save request has been run", resetOptions);
+        XT.dataSource.resetPassword(model.id, resetOptions);
+        if (success) { success(model, resp, options); }
+      };
+
+
+      // Handle both `"key", value` and `{key: value}` -style arguments.
+      if (_.isObject(key) || _.isEmpty(key)) {
+        value = options;
+      }
+
+      XM.Document.prototype.save.call(this, key, value, options);
+
+    },
+
     /**
      * The username attribute must be editable for a new entry. This overrides
      * the fact that model sets username as readOnly by virtue of its being

@@ -6,7 +6,7 @@ create or replace function xt.usr_did_change() returns trigger as $$
  if (TG_OP === 'INSERT') {
    /* Set a unique id. Some ids come from pg_user oid, so there could be overlap */
    var sql1 = "select nextval('usr_usr_id_seq') as sequence;",
-     sql2 = "select useracct_id from usr where usr_id = $1;",
+     sql2 = "select usr_id from usr where usr_username = $1;",
      sql3 = "update usr set usr_id = $1 where usr_username = $2;",
      sql4 = "update usr set usr_username = $1 where usr_username = $2;",
      id = NEW.usr_id,
