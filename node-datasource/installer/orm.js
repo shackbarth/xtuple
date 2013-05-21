@@ -255,12 +255,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         if (!orm.undefinedDependencies) { orm.undefinedDependencies = []; }
         orm.undefinedDependencies.push("%@.%@".f(dependency.namespace, dependency.type));
         enabled = false;
+        console.log("Cannot install", orm.type, "because of dependency failure", dependency);
         return;
       }
       if (!checkDependencies(data, found)) {
         if (!orm.failedDependencies) { orm.failedDependencies = []; }
         orm.failedDependencies.push("%@.%@".f(found.nameSpace, found.type));
         enabled = false;
+        console.log("Cannot install", orm.type, "because of dependency failure", dependency);
         return;
       }
     });
