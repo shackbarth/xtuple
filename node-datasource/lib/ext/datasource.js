@@ -216,9 +216,10 @@ white:true*/
       query = "select xt.{method}($${payload}$$) as request"
               .replace("{method}", method)
               .replace("{payload}", payload);
-      if (X.options.datasource.debugging) {
-        X.log("Query from model: ", query);
-      }
+
+      //if (X.options.datasource.debugging) {
+      //  X.log("Query from model: ", query);
+      //}
 
       if (options.database) {
         conn.database = options.database;

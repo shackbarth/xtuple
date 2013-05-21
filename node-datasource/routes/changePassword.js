@@ -5,43 +5,74 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
+  /*
+    Encrypt password using Enhanced Authentication technique
+   */
+  X.applyEnhancedAuth = function (username, password) {
+    var md5, salt;
 
-  var setPassword = function (username, password, organization, callback) {
-    var dbPassword, md5, query, salt, sql;
-
-    // Encrypt password using Enhanced Authentication technique
     salt = X.options.datasource.enhancedAuthKey || "xTuple",
     md5 = X.crypto.createHash('md5'),
-    sql = 'alter user "{username}" with password \'{password}\';';
     md5.update(password + salt + username, 'utf8');
-    dbPassword = md5.digest('hex');
+    return md5.digest('hex');
+  };
+
+  var setPassword = function (username, password, organization, useEnhancedAuth, callback) {
+    var query, sql;
+
+    if (useEnhancedAuth) {
+      password = X.applyEnhancedAuth(username, password);
+    }
+
+    sql = 'alter user "{username}" with password \'{password}\';';
 
     query = sql.replace("{username}", username)
-               .replace("{password}", dbPassword);
+               .replace("{password}", password);
     X.database.query(organization, query, callback);
   };
 
   // https://localhost/changePassword?oldPassword=password1&newPassword=password2
   exports.changePassword = function (req, res) {
-    var testSql = "select relname from pg_class limit 1;",
-      username = req.session.passport.user.username,
+    var model = new XM.User(),
       organization = req.session.passport.user.organization,
-      options = {
-        user: username,
-        password: req.query.oldPassword,
-        port: X.options.databaseServer.port,
-        hostname: X.options.databaseServer.hostname,
-        database: organization
+      username = req.session.passport.user.username,
+      error = function () {
+        console.log("change password error", arguments);
       };
 
-    XT.dataSource.query(testSql, options, function (error, result) {
-      if (error) {
-        // authentication failure
-        res.send({isError: true, message: "Invalid password"});
-      } else {
-        // authentication success
-        setPassword(username, req.query.newPassword, organization, function () {
-          res.send({data: {message: "Password change successful!"}});
+    // we need to first fetch the user to see if they use enhanced auth
+    model.fetch({
+      id: username,
+      error: error,
+      username: X.options.databaseServer.user,
+      database: organization,
+      success: function (model, results, options) {
+        var testSql = "select relname from pg_class limit 1;",
+          useEnhancedAuth = model.get("useEnhancedAuth"),
+          password = req.query.oldPassword,
+          options = {
+            user: username,
+            port: X.options.databaseServer.port,
+            hostname: X.options.databaseServer.hostname,
+            database: organization
+          };
+
+        if (useEnhancedAuth) {
+          password = X.applyEnhancedAuth(username, password);
+        }
+        options.password = password;
+
+        // the test sql will verify their old password
+        XT.dataSource.query(testSql, options, function (error, result) {
+          if (error) {
+            // authentication failure
+            res.send({isError: true, message: "Invalid password"});
+          } else {
+            // authentication success
+            setPassword(username, req.query.newPassword, organization, useEnhancedAuth, function () {
+              res.send({data: {message: "Password change successful!"}});
+            });
+          }
         });
       }
     });
@@ -67,15 +98,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return;
     }
 
-    user = new XM.User({id: req.query.id});
-    fetchSuccess = function () {
-      // Update postgres user passwords
-      setPassword(req.query.id, req.query.newPassword, organization, function () {
+    user = new XM.User();
+    fetchSuccess = function (model) {
+      var useEnhancedAuth = model.get("useEnhancedAuth");
+      setPassword(req.query.id, req.query.newPassword, organization, useEnhancedAuth, function () {
         res.send({data: {message: "Password change successful!"}});
       });
     };
 
     user.fetch({
+      id: req.query.id,
       success: fetchSuccess,
       error: fetchError,
       database: req.session.passport.user.organization,

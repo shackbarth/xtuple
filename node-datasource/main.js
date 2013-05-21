@@ -7,6 +7,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 Backbone = require("backbone");
 _ = require("underscore");
 jsonpatch = require("json-patch");
+SYS = {};
 
 (function () {
   "use strict";
@@ -69,6 +70,7 @@ jsonpatch = require("json-patch");
   sessionOptions.database = X.options.datasource.databases[0];
 
   XT.session = Object.create(XT.Session);
+  XT.session.schemas.SYS = false;
   XT.session.loadSessionObjects(XT.session.SCHEMA, sessionOptions);
   XT.session.loadSessionObjects(XT.session.PRIVILEGES, sessionOptions);
 

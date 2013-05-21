@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, XM:true, console:true*/
+/*global X:true, SYS:true, console:true*/
 
 /**
  * Find an matching client by id in the database.
@@ -11,7 +11,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 exports.find = function (id, done) {
   "use strict";
 
-  var client = new XM.Oauth2clientCollection(),
+  var client = new SYS.Oauth2clientCollection(),
       options = {};
 
   options.success = function (res) {
@@ -50,7 +50,7 @@ exports.find = function (id, done) {
 exports.findByClientId = function (clientID, database, done) {
   "use strict";
 
-  var client = new XM.Oauth2clientCollection(),
+  var client = new SYS.Oauth2clientCollection(),
       options = {};
 
   options.success = function (res) {

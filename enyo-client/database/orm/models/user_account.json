@@ -286,7 +286,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "UserAccount",
-    "table": "usr",
+    "table": "xt.usrinfo",
     "comment": "User Account Map",
     "privileges": {
       "all": {
@@ -318,6 +318,13 @@
         "attr": {
           "type": "String",
           "column": "usr_propername"
+        }
+      },
+      {
+        "name": "useEnhancedAuth",
+        "attr": {
+          "type": "Boolean",
+          "column": "usr_enhancedauth"
         }
       },
       {
@@ -383,7 +390,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "User",
-    "table": "usr",
+    "table": "xt.usrinfo",
     "comment": "User Map",
     "privileges": {
       "all": {
@@ -408,6 +415,13 @@
         "attr": {
           "type": "String",
           "column": "usr_propername"
+        }
+      },
+      {
+        "name": "useEnhancedAuth",
+        "attr": {
+          "type": "Boolean",
+          "column": "usr_enhancedauth"
         }
       },
       {
