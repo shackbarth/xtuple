@@ -55,10 +55,10 @@ white:true*/
 
     @extends XM.SimpleModel
   */
-  XM.SessionStore = XM.SimpleModel.extend({
-    /** @scope XM.SessionStore.prototype */
+  SYS.SessionStore = XM.SimpleModel.extend({
+    /** @scope SYS.SessionStore.prototype */
 
-    recordType: 'XM.SessionStore',
+    recordType: 'SYS.SessionStore',
 
     idAttribute: 'id',
 

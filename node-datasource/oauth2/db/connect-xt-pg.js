@@ -50,7 +50,7 @@ module.exports = function (connect) {
     this.hybridCache = null == options.hybridCache ? false : options.hybridCache;
     this.sessions = {};
 
-    // Load all the data from XM.SessionStore into the Express MemoryStore for caching.
+    // Load all the data from SYS.SessionStore into the Express MemoryStore for caching.
     this.loadSessions = function (options, callback) {
       // TODO - options could be used to only load parital dataset of recently active sessions.
       // It could also be used to help process/server syncing if we move to something like Redis.
@@ -95,10 +95,10 @@ module.exports = function (connect) {
       };
 
       // TODO - This is REALLY SLOW if there are 10,000 sessions in the table and we use collection.fetch().
-      // var sessionsCollection = new XM.SessionStoreCollection();
+      // var sessionsCollection = new SYS.SessionStoreCollection();
       //sessionsCollection.fetch(fetchOptions);
 
-      // Fetch all records from XM.SessionStore and load them into the Express MemoryStore.
+      // Fetch all records from SYS.SessionStore and load them into the Express MemoryStore.
       // fetchOptions.username = GLOBAL_USERNAME; // TODO
       fetchOptions.username = 'node';
       fetchOptions.database = options.database;
@@ -166,7 +166,7 @@ module.exports = function (connect) {
             result,
             sessionStore = {};
 
-        sessionStore = new XM.SessionStore();
+        sessionStore = new SYS.SessionStore();
         fetchOptions.id = sid;
 //TODO - This might break.
         fetchOptions.database = sid.split(".")[0].split(":")[1];
@@ -177,7 +177,7 @@ module.exports = function (connect) {
           // TODO - update lastModified time to extend timeout?
           // Doing this will complicate things with a hybridCache MemoryStore.
           // Do we really need to set that here for just in XM.Session and have CleanupTask
-          // clean up XM.SessionStore on timeouts?
+          // clean up SYS.SessionStore on timeouts?
           //model.set("lastModified", new Date().getTime());
           //model.save(null, saveOptions);
 
@@ -259,7 +259,7 @@ module.exports = function (connect) {
             sessionAttributes = {},
             sessionStore = {};
 
-        sessionStore = new XM.SessionStore();
+        sessionStore = new SYS.SessionStore();
 
         saveOptions.success = function (model) {
           if (that.hybridCache) {
@@ -281,7 +281,7 @@ module.exports = function (connect) {
         };
         saveOptions.error = function (model, saveErr) {
           // This shouldn't happen. How did we get here? Log trace.
-          console.trace("XM.SessionStore save error. This shouldn't happen.");
+          console.trace("SYS.SessionStore save error. This shouldn't happen.");
 
           if (that.hybridCache) {
             // Delete any match in MemoryStore.
@@ -334,14 +334,14 @@ module.exports = function (connect) {
               done && done();
             }
           } else if (model.getStatusString() === "READY_DIRTY") {
-            // Try to save XM.SessionStore to database.
+            // Try to save SYS.SessionStore to database.
             model.save(null, saveOptions);
           }
         };
         fetchOptions.error = function (model, err) {
           // Fetch did not find this session, initialize new and save.
-          // Create new XM.SessionStore object.
-          sessionStore = new XM.SessionStore();
+          // Create new SYS.SessionStore object.
+          sessionStore = new SYS.SessionStore();
           // TODO - Is this redundant?  Can I just call model.initialize...???
           sessionStore.initialize(null, {isNew: true});
 
@@ -350,7 +350,7 @@ module.exports = function (connect) {
             session: sess
           };
 
-          // Try to save XM.SessionStore to database.
+          // Try to save SYS.SessionStore to database.
           sessionStore.save(sessionAttributes, saveOptions);
         };
 
@@ -395,7 +395,7 @@ module.exports = function (connect) {
           that = this;
 
       sid = this.prefix + sid;
-      sessionStore = new XM.SessionStore();
+      sessionStore = new SYS.SessionStore();
       fetchOptions.id = sid;
 //TODO - This might break.
       fetchOptions.database = sid.split(".")[0].split(":")[1];

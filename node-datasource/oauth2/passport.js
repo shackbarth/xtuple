@@ -55,7 +55,7 @@ passport.use(new LocalStrategy(
 
 
 /**
- * Set Session Cookie to be returned to the XTPGStore as XM.SessionStore and
+ * Set Session Cookie to be returned to the XTPGStore as SYS.SessionStore and
  * persist as a valid session to XM.Session in the database.
  */
 passport.serializeUser(function (user, done) {

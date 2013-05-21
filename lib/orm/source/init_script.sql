@@ -6,6 +6,7 @@
 -- create schemas
 \i create_xt_schema.sql;
 \i create_xm_schema.sql;
+\i create_sys_schema.sql;
 
 -- [ END ] initdb
 
