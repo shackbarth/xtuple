@@ -286,7 +286,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "UserAccount",
-    "table": "usr",
+    "table": "xt.usrinfo",
     "comment": "User Account Map",
     "privileges": {
       "all": {
@@ -383,7 +383,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "User",
-    "table": "usr",
+    "table": "xt.usrinfo",
     "comment": "User Map",
     "privileges": {
       "all": {
