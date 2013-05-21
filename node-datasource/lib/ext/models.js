@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
-/*global XT:true, XM:true, Backbone:true, _:true */
+/*global SYS:true, XM:true, Backbone:true, _:true */
 
 (function () {
   "use strict";
@@ -11,9 +11,9 @@ white:true*/
 
     @extends XM.SimpleModel
   */
-  XM.Extension = XM.SimpleModel.extend({
+  SYS.Extension = XM.SimpleModel.extend({
 
-    recordType: 'XM.Extension'
+    recordType: 'SYS.Extension'
 
   });
 
@@ -71,10 +71,10 @@ white:true*/
 
     @extends XM.SimpleModel
   */
-  XM.User = XM.SimpleModel.extend({
-    /** @scope XM.User.prototype */
+  SYS.User = XM.SimpleModel.extend({
+    /** @scope SYS.User.prototype */
 
-    recordType: 'XM.User'
+    recordType: 'SYS.User'
 
   });
 
@@ -134,9 +134,9 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.ExtensionCollection = XM.Collection.extend(/** @lends XM.ExtensionCollection.prototype */{
+  SYS.ExtensionCollection = XM.Collection.extend(/** @lends SYS.ExtensionCollection.prototype */{
 
-    model: XM.Extension
+    model: SYS.Extension
 
   });
 
@@ -145,10 +145,10 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.UserCollection = XM.Collection.extend({
-    /** @scope XM.UserCollection.prototype */
+  SYS.UserCollection = XM.Collection.extend({
+    /** @scope SYS.UserCollection.prototype */
 
-    model: XM.User
+    model: SYS.User
 
   });
 

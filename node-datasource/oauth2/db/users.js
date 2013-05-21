@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, XM:true, console:true*/
+/*global X:true, SYS:true, XM:true, console:true*/
 
 /*
   Beware that we don't actually verify the password here. We
@@ -13,7 +13,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 exports.findByUsername = function (username, done) {
   "use strict";
 
-  var user = new XM.User(),
+  var user = new SYS.User(),
     options = {};
 
   options.success = function (res) {
@@ -39,6 +39,7 @@ exports.findByUsername = function (username, done) {
   user.fetch(options);
 };
 
+/* broken by 20254
 exports.findByUserOrg = function (username, org, done) {
   "use strict";
 
@@ -74,7 +75,7 @@ exports.findByUserOrg = function (username, org, done) {
 
   userOrg.fetch(options);
 };
-
+*/
 
 
     // TODO We might want to use this again in order to increase the
