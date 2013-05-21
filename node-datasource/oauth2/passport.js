@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, XM:true, _:true, console:true*/
+/*global X:true, XM:true, XT:true, _:true, console:true*/
 
 /**
  * Module dependencies.
@@ -30,24 +30,40 @@ passport.use(new LocalStrategy(
   },
   function (username, password, database, done) {
     "use strict";
-    var options = {
-      user: username,
-      password: password,
-      port: X.options.databaseServer.port,
-      hostname: X.options.databaseServer.hostname,
-      database: database
-    };
-    var model;
+    var model = new XM.User(),
+      error = function () {
+        console.log("error", arguments);
+      };
 
-    XT.dataSource.query("select relname from pg_class limit 1;", options, function (error, res) {
-      if (error) {
-        // authentication failure
-        return done(null, false);
-      } else {
-        // authentication success
-        model = new Backbone.Model();
-        model.set({id: username, organization: database, singleTenant: true})
-        return done(null, model);
+    model.fetch({
+      id: username,
+      error: error,
+      username: X.options.databaseServer.user,
+      database: database,
+      success: function (model, results, options) {
+        var options = {
+          user: username,
+          port: X.options.databaseServer.port,
+          hostname: X.options.databaseServer.hostname,
+          database: database
+        };
+
+        if (model.get("useEnhancedAuth")) {
+          password = X.applyEnhancedAuth(username, password);
+        }
+        options.password = password;
+
+        XT.dataSource.query("select relname from pg_class limit 1;", options, function (error, res) {
+          if (error) {
+            // authentication failure
+            return done(null, false);
+          } else {
+            // authentication success
+            model = new Backbone.Model();
+            model.set({id: username, organization: database, singleTenant: true});
+            return done(null, model);
+          }
+        });
       }
     });
   }
@@ -79,7 +95,7 @@ passport.deserializeUser(function (passportUser, done) {
   "use strict";
 
   var model = new Backbone.Model();
-  model.set({id: passportUser.id, singleTenant: true})
+  model.set({id: passportUser.id, singleTenant: true});
   return done(null, model);
 });
 
