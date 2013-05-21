@@ -300,9 +300,9 @@ _.each(X.options.datasource.databases, function (orgValue, orgKey, orgList) {
 });
 app.use('/assets', express.static('views/login/assets', { maxAge: 86400000 }));
 
-app.get('/dialog/authorize', oauth2.authorization);
-app.post('/dialog/authorize/decision', oauth2.decision);
-app.post('/oauth/token', oauth2.token);
+app.get('/:org/dialog/authorize', oauth2.authorization);
+app.post('/:org/dialog/authorize/decision', oauth2.decision);
+app.post('/:org/oauth/token', oauth2.token);
 
 app.get('/discovery/v1alpha1/apis/:org/v1alpha1/rest', routes.restDiscoveryGetRest);
 app.get('/discovery/v1alpha1/apis/:org/:model/v1alpha1/rest', routes.restDiscoveryGetRest);

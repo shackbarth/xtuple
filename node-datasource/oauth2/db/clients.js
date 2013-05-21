@@ -47,7 +47,7 @@ exports.find = function (id, done) {
  * @param {string} OAuth 2.0 client ID.
  * @param {Function} Function to call the move along.
  */
-exports.findByClientId = function (clientID, done) {
+exports.findByClientId = function (clientID, database, done) {
   "use strict";
 
   var client = new XM.Oauth2clientCollection(),
@@ -76,6 +76,7 @@ exports.findByClientId = function (clientID, done) {
 
   options.query = {};
   options.query.parameters = [{attribute: "clientID", value: clientID}];
+  options.database = database;
 
   client.fetch(options);
 };

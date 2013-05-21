@@ -448,7 +448,11 @@ exports.authorization = [
   server.authorization(function (clientID, redirectURI, scope, type, done) {
     "use strict";
 
-    db.clients.findByClientId(clientID, function (err, client) {
+    // Get the org from the scope URI e.g. 'dev' from: 'https://mobile.xtuple.com/auth/dev'
+    scope = url.parse(scope[0], true);
+    var scopeOrg = scope.path.match(/\/auth\/(.*)/)[1] || null;
+
+    db.clients.findByClientId(clientID, scopeOrg, function (err, client) {
       if (err) { return done(err); }
       if (!client) { return done(null, false); }
 

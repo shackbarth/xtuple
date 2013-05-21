@@ -16,7 +16,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     passport.authenticate('local', { failureRedirect: '/?login=fail' }),
     function (req, res, next) {
 
-      if (req && req.session && req.session.passport && req.session.passport.user && req.session.passport.user.organization) {
+      if (req && req.session && !req.session.oauth2 && req.session.passport && req.session.passport.user && req.session.passport.user.organization) {
         res.redirect("/" + req.session.passport.user.organization + '/app');
         //next();
       } else {
@@ -146,6 +146,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     // The user under whose authority the query is run.
     options.username = X.options.databaseServer.user;
+    options.database = selectedOrg;
 
     // Verify that the org is valid for the user.
     user.fetch(options);
