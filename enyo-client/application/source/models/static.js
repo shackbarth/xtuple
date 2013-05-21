@@ -267,11 +267,9 @@ white:true*/
   // ToDo Status
   K = XM.ToDo;
   var toDoStatusJson = [
-    { id: XM.ToDo.PENDING, name: "_pending".loc() },
-    { id: K.DEFFERED, name: "_deferred".loc() },
+    { id: K.PENDING, name: "_pending".loc() },
+    { id: K.DEFERRED, name: "_deferred".loc() },
     { id: K.NEITHER, name: "_neither".loc() }
-    // { id: K.IN_PROCESS, name: "_inProcess".loc() },
-    // { id: K.COMPLETED, name: "_completed".loc() }
   ];
   XM.ToDoStatusModel = Backbone.Model.extend({
   });

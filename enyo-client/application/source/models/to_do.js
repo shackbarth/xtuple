@@ -88,9 +88,14 @@ white:true*/
       @returns {String}
     */
     getToDoStatusProxy: function () {
-      var K = XM.ToDo;
-      this.toDoDidChange();
-      return this._status || K.NEITHER;
+      var K = XM.ToDo,
+        value = this.get("status");
+      if (this._status) {
+        return this._status;
+      } else if (value === K.PENDING || value === K.DEFERRED) {
+        return value;
+      } 
+      return K.NEITHER;
     },
 
     toDoDidChange: function () {
@@ -138,7 +143,7 @@ white:true*/
         this._status = K.NEITHER;
       }
       this.toDoStatusDidChange();
-      return this;
+      return this._status;
     }
 
   });
