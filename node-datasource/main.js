@@ -120,7 +120,18 @@ var express = require('express'),
   We are stomping on that method with our own special business logic.
   The ensureLoggedIn function will not need to be changed, because that calls this.
  */
-require('http').IncomingMessage.prototype.isAuthenticated = require('./stomps/is_authenticated').isAuthenticated;
+require('http').IncomingMessage.prototype.isAuthenticated = function () {
+  "use strict";
+
+  var creds = this.session.passport.user;
+
+  if (creds && creds.id && creds.username && creds.organization) {
+    return true;
+  } else {
+    destroySession(this.sessionID, this.session);
+    return false;
+  }
+};
 
 // Stomping on express/connect's Cookie.prototype to only update the expires property
 // once a minute. Otherwise it's hit on every session check. This cuts down on chatter.
