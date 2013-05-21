@@ -22,10 +22,6 @@ white:true*/
 
     numberPolicySetting: 'CRMAccountNumberGeneration',
 
-    requiredAttributes: [
-      "number"
-    ],
-
     /**
       Creates a new account model and fetches based on the given ID.
       Takes attributes from the account model and gives them to the new model.
@@ -92,13 +88,6 @@ white:true*/
         accountType: 'O'
       };
     },
-
-    requiredAttributes: [
-      "accountType",
-      "isActive",
-      "number",
-      "name"
-    ],
 
     /**
       An informational array of attributes that are considered "roles" in the application.

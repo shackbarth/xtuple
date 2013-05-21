@@ -27,12 +27,6 @@ white:true*/
       isBase: false
     },
 
-    requiredAttributes: [
-      'isBase',
-      'name',
-      'symbol'
-    ],
-
     // ..........................................................
     // METHODS
     //

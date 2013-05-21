@@ -28,11 +28,7 @@ white:true*/
   XM.TaxAssignment = XM.Model.extend({
     /** @scope XM.TaxAssignment */
 
-    recordType: 'XM.TaxAssignment',
-
-    requiredAttributes: [
-      "tax"
-    ]
+    recordType: 'XM.TaxAssignment'
 
   });
 
@@ -45,10 +41,6 @@ white:true*/
     /** @scope XM.TaxAuthority.prototype */
 
     recordType: 'XM.TaxAuthority',
-    
-    requiredAttributes: [
-      "name"
-    ],
     
     documentKey: 'code',
 
@@ -96,16 +88,7 @@ white:true*/
   XM.TaxRate = XM.Model.extend({
     /** @scope XM.TaxRate */
 
-    recordType: 'XM.TaxRate',
-    
-    requiredAttributes: [
-      "tax",
-      "percent",
-      "currency",
-      "amount",
-      "effectiveDate",
-      "expirationDate"
-    ]
+    recordType: 'XM.TaxRate'
 
   });
 

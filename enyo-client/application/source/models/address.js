@@ -105,12 +105,6 @@ white:true*/
 
     documentKey: "abbreviation",
 
-    requiredAttributes: [
-      "name",
-      "currencyAbbreviation",
-      "name"
-    ],
-
     // ..........................................................
     // METHODS
     //
@@ -148,12 +142,7 @@ white:true*/
     
     documentKey: "abbreviation",
     
-    enforceUpperKey: false,
-
-    requiredAttributes: [
-      "name",
-      "country"
-    ]
+    enforceUpperKey: false
 
   });
 

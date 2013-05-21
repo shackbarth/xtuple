@@ -46,11 +46,6 @@ white:true*/
       isActive: true
     },
 
-    requiredAttributes: [
-      "plannerCode",
-      "costCategory"
-    ],
-
     /**
       Users must not be able to set the site except for new itemsites
      */

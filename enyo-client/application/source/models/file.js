@@ -16,12 +16,8 @@ white:true*/
 
     recordType: 'XM.File',
 
-    binaryField: 'data', // see issue 18661
+    binaryField: 'data' // see issue 18661
 
-    requiredAttributes: [
-      "name",
-      "description"
-    ]
   });
 
   /**

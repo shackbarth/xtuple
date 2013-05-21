@@ -17,17 +17,6 @@ white:true*/
     numberPolicySetting: 'CONumberGeneration',
 
     documentDateKey: "orderDate",
-
-    /**
-      Add wasQuote as required field
-     */
-    initialize: function (attributes, options) {
-      XM.SalesOrderBase.prototype.initialize.apply(this, arguments);
-
-      if (!_.contains(this.requiredAttributes, "wasQuote")) {
-        this.requiredAttributes.push("wasQuote");
-      }
-    },
     
     /**
       Add default for wasQuote.
@@ -53,22 +42,6 @@ white:true*/
     parentKey: 'salesOrder',
 
     lineCharacteristicRecordType: "XM.SalesOrderLineCharacteristic",
-
-    /**
-      Add firm and subnumber as required fields
-     */
-    initialize: function (attributes, options) {
-      var reqAttrs = ["firm", "subnumber"],
-        that = this;
-
-      XM.SalesOrderLineBase.prototype.initialize.apply(this, arguments);
-
-      _.each(reqAttrs, function (attr) {
-        if (!_.contains(this.requiredAttributes, attr)) {
-          that.requiredAttributes.push(attr);
-        }
-      });
-    },
 
     /**
       Add defaults for firm, and subnumber.

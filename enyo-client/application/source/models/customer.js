@@ -138,27 +138,6 @@ white:true*/
       "blanketPurchaseOrders"
     ],
 
-    requiredAttributes: [
-      "isActive",
-      "name",
-      "number",
-      "customerType",
-      "terms",
-      "salesRep",
-      "backorder",
-      "partialShip",
-      "discount",
-      "balanceMethod",
-      "isFreeFormShipto",
-      "blanketPurchaseOrders",
-      "shipCharge",
-      "creditStatus",
-      "isFreeFormBillto",
-      "usesPurchaseOrders",
-      "autoUpdateStatus",
-      "autoHoldOrders"
-    ],
-
     // ..........................................................
     // METHODS
     //
@@ -449,12 +428,6 @@ white:true*/
     defaults: {
       isActive: true
     },
-
-    requiredAttributes: [
-      "isActive",
-      "name",
-      "number"
-    ],
 
     // ..........................................................
     // METHODS

@@ -56,27 +56,7 @@ white:true*/
       unitRatioScale: 6,
       warningColor: "",
       weightScale: 2
-    },
-
-    requiredAttributes: [
-      "altEmphasisColor",
-      "costScale",
-      "currencyScale",
-      "description",
-      "emphasisColor",
-      "errorColor",
-      "expiredColor",
-      "extendedPriceScale",
-      "futureColor",
-      "percentScale",
-      "purchasePriceScale",
-      "quantityPerScale",
-      "quantityScale",
-      "salesPriceScale",
-      "unitRatioScale",
-      "warningColor",
-      "weightScale"
-    ]
+    }
 
   });
 
@@ -157,11 +137,6 @@ white:true*/
     defaults: {
       disableExport: false
     },
-
-    requiredAttributes: [
-      "disableExport",
-      "locale"
-    ],
     
     bindEvents: function () {
       XM.Document.prototype.bindEvents.apply(this, arguments);
@@ -228,12 +203,7 @@ white:true*/
   XM.UserAccountPrivilegeAssignment = XM.Model.extend({
     /** @scope XM.UserAccountPrivilegeAssignment.prototype */
 
-    recordType: 'XM.UserAccountPrivilegeAssignment',
-
-    requiredAttributes: [
-      "userAccount",
-      "privilege"
-    ]
+    recordType: 'XM.UserAccountPrivilegeAssignment'
 
   });
 

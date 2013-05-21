@@ -24,10 +24,6 @@ white:true*/
       order: 0
     },
 
-    requiredAttributes: [
-      "order"
-    ],
-
     orderAttribute: {
       orderBy: [{
         attribute: "order"
@@ -54,10 +50,6 @@ white:true*/
       order: 0
     },
 
-    requiredAttributes: [
-      "order"
-    ],
-
     orderAttribute: {
       orderBy: [{
         attribute: "order"
@@ -82,10 +74,6 @@ white:true*/
     defaults: {
       order: 0
     },
-
-    requiredAttributes: [
-      "order"
-    ],
 
     orderAttribute: {
       orderBy: [{
@@ -162,15 +150,6 @@ white:true*/
         created: new Date()
       };
     },
-
-    requiredAttributes: [
-      "account",
-      "category",
-      "contact",
-      "created",
-      "description",
-      "status"
-    ],
 
     // ..........................................................
     // METHODS

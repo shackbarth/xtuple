@@ -34,11 +34,7 @@ white:true*/
 
     defaults: {
       deactivate: false
-    },
-
-    requiredAttributes: [
-      "deactivate"
-    ]
+    }
 
   });
 
@@ -74,15 +70,6 @@ white:true*/
         isActive: true
       };
     },
-
-    requiredAttributes: [
-      "account",
-      "name",
-      "isActive",
-      "opportunityStage",
-      "opportunitySource",
-      "opportunityType"
-    ],
 
     // ..........................................................
     // METHODS

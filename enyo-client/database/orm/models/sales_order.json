@@ -55,7 +55,8 @@
         "name": "orderDate",
         "attr": {
           "type": "Date",
-          "column": "cohead_orderdate"
+          "column": "cohead_orderdate",
+          "required": true
         }
       },
       {
@@ -454,7 +455,8 @@
         "name": "wasQuote",
         "attr": {
           "type": "Boolean",
-          "column": "cohead_wasquote"
+          "column": "cohead_wasquote",
+          "required": true
         }
       },
       {
@@ -1011,7 +1013,8 @@
         "name": "salesOrder",
         "attr": {
           "type": "Number",
-          "column": "coitem_cohead_id"
+          "column": "coitem_cohead_id",
+          "required": true
         }
       },
       {
@@ -1197,14 +1200,16 @@
         "name": "subnumber",
         "attr": {
           "type": "Number",
-          "column": "coitem_subnumber"
+          "column": "coitem_subnumber",
+          "required": true
         }
       },
       {
         "name": "firm",
         "attr": {
           "type": "Boolean",
-          "column": "coitem_firm"
+          "column": "coitem_firm",
+          "required": true
         }
       },
       {

@@ -62,11 +62,6 @@ white:true*/
       };
     },
 
-    requiredAttributes: [
-      "dueDate",
-      "name"
-    ],
-
     // ..........................................................
     // METHODS
     //

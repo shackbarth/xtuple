@@ -53,7 +53,8 @@
         "name": "quoteDate",
         "attr": {
           "type": "Date",
-          "column": "quhead_quotedate"
+          "column": "quhead_quotedate",
+          "required": true
         }
       },
       {
@@ -974,7 +975,8 @@
         "name": "quote",
         "attr": {
           "type": "Number",
-          "column": "quitem_quhead_id"
+          "column": "quitem_quhead_id",
+          "required": true
         }
       },
       {

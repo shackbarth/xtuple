@@ -87,11 +87,7 @@ white:true*/
   XM.ContactEmail = XM.Model.extend({
     /** @scope XM.ContactEmail.prototype */
 
-    recordType: 'XM.ContactEmail',
-
-    requiredAttributes: [
-      "email"
-    ]
+    recordType: 'XM.ContactEmail'
 
   });
 
