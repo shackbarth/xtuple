@@ -30,7 +30,7 @@ passport.use(new LocalStrategy(
   },
   function (username, password, database, done) {
     "use strict";
-    var model = new XM.User(),
+    var model = new SYS.User(),
       error = function () {
         console.log("error", arguments);
       };

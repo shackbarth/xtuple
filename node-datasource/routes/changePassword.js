@@ -33,7 +33,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   // https://localhost/changePassword?oldPassword=password1&newPassword=password2
   exports.changePassword = function (req, res) {
-    var model = new XM.User(),
+    var model = new SYS.User(),
       organization = req.session.passport.user.organization,
       username = req.session.passport.user.username,
       error = function () {

@@ -52,13 +52,6 @@
         }
       },
       {
-        "name": "locale",
-        "toOne": {
-          "type": "Locale",
-          "column": "usr_locale_id"
-        }
-      },
-      {
         "name": "grantedExtensions",
         "toMany": {
           "column": "usr_username",
