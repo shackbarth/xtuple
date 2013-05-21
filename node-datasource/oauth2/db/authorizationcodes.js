@@ -8,7 +8,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
  * @param {string} Auth code send from a client.
  * @param {Function} Function to call the move along.
  */
-exports.find = function (code, done) {
+exports.find = function (code, database, done) {
   "use strict";
 
   var authCode = new SYS.Oauth2tokenCollection(),
@@ -38,6 +38,8 @@ exports.find = function (code, done) {
       return done(new Error(message));
     }
   };
+
+  options.database = database;
 
   // Fetch the collection looking for a matching authCode.
   options.query = {};
@@ -90,10 +92,11 @@ exports.save = function (code, clientID, redirectURI, userID, scope, done) {
   saveOptions.error = function (err, model) {
     return done && done(err);
   };
+  saveOptions.database = scope[0];
 
   // Register on change of id callback to know when the model is initialized.
   authCode.on('change:id', initCallback);
 
   // Initialize the model.
-  authCode.initialize(null, {isNew: true});
+  authCode.initialize(null, {isNew: true, database: saveOptions.database});
 };

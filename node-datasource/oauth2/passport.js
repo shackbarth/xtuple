@@ -112,7 +112,10 @@ passport.deserializeUser(function (passportUser, done) {
  * the specification, in practice it is quite common.
  */
 passport.use(new BasicStrategy(
-  function (username, password, done) {
+  {
+    passReqToCallback: true
+  },
+  function (req, username, password, done) {
     "use strict";
 
     db.clients.findByClientId(username, function (err, client) {
@@ -124,8 +127,13 @@ passport.use(new BasicStrategy(
   }
 ));
 
+// TODO: Waiting for merge...
+// https://github.com/jaredhanson/passport-oauth2-client-password/pull/1
 passport.use(new ClientPasswordStrategy(
-  function (clientId, clientSecret, done) {
+  {
+    passReqToCallback: true
+  },
+  function (req, clientId, clientSecret, done) {
     "use strict";
 
     db.clients.findByClientId(clientId, function (err, client) {
@@ -168,7 +176,10 @@ passport.use(new ClientJWTBearerStrategy(
  * the authorizing user.
  */
 passport.use(new BearerStrategy(
-  function (accessToken, done) {
+  {
+    passReqToCallback: true
+  },
+  function (req, accessToken, done) {
     "use strict";
 
     // Best practice is to use a random salt in each hash. Since we need to query the
@@ -224,9 +235,9 @@ passport.use(new BearerStrategy(
       }
 
       if (tokenUser) {
-        db.users.findByUserOrg(tokenUser, scopeOrg, function (err, userOrg) {
+        db.users.findByUsername(tokenUser, scopeOrg, function (err, user) {
           if (err) { return done(err); }
-          if (!userOrg) { return done(null, false); }
+          if (!user) { return done(null, false); }
 
           var info = {},
               scopes = token.get("scope");
@@ -238,7 +249,7 @@ passport.use(new BearerStrategy(
           }
 
           info = { scope: scopes };
-          done(null, userOrg, info);
+          done(null, user, info);
         });
       } else {
         return done(null, false);

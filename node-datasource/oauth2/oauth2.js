@@ -34,15 +34,15 @@ var server = oauth2orize.createServer();
 server.serializeClient(function (client, done) {
   "use strict";
 
-  return done(null, client.id);
+  return done(null, client);
 });
 
-server.deserializeClient(function (id, done) {
+server.deserializeClient(function (client, done) {
   "use strict";
 
-  db.clients.find(id, function (err, client) {
+  db.clients.find(client, function (err, foundClient) {
     if (err) { return done(err); }
-    return done(null, client);
+    return done(null, foundClient);
   });
 });
 
@@ -112,9 +112,10 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
 
   // bcrypt the code before looking for a matching hash.
   var salt = '$2a$10$' + client.get("clientID").substring(0, 22),
-      codehash = X.bcrypt.hashSync(code, salt);
+      codehash = X.bcrypt.hashSync(code, salt),
+      database = client.get("clientID").split(".")[0];
 
-  db.authorizationCodes.find(codehash, function (err, authCode) {
+  db.authorizationCodes.find(codehash, database, function (err, authCode) {
     if (err) { return done(err); }
     if (!authCode) { return done(null, false); }
     if (client.get("clientID") !== authCode.get("clientID")) { return done(new Error("Invalid clientID.")); }
@@ -166,6 +167,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
     saveOptions.error = function (model, err) {
       return done && done(err);
     };
+    saveOptions.database = database;
 
     // Set model values and save.
     authCode.set("state", "Token Issued");
@@ -452,7 +454,7 @@ exports.authorization = [
     scope = url.parse(scope[0], true);
     var scopeOrg = scope.path.match(/\/auth\/(.*)/)[1] || null;
 
-    db.clients.findByClientId(clientID, scopeOrg, function (err, client) {
+    db.clients.findByClientId(clientID, function (err, client) {
       if (err) { return done(err); }
       if (!client) { return done(null, false); }
 
