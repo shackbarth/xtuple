@@ -732,6 +732,13 @@
         }
       },
       {
+        "name": "statusProxy",
+        "attr": {
+          "type": "String",
+          "column": "statusProxy"
+        }
+      },
+      {
         "name": "isActive",
         "attr": {
           "type": "Boolean",

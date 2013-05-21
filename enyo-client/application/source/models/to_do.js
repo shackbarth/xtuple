@@ -73,33 +73,9 @@ white:true*/
     
     bindEvents: function () {
       XM.Model.prototype.bindEvents.apply(this, arguments);
-      this.on('change:startDate change:completeDate', this.toDoStatusDidChange);
-      this.on('change:status', this.toDoDidChange);
-      this.on('changeStatus', this.toDoDidChange);
-
+      this.on('change:startDate change:completeDate change:statusProxy', this.toDoStatusDidChange);
       // Bind document assignments
       this.bindDocuments();
-    },
-
-    /**
-      This is the source of data for the user three-way status interface where
-      the only possible status options are `PENDING`, `DEFERRED` and `NEITHER`.
-
-      @returns {String}
-    */
-    getToDoStatusProxy: function () {
-      var K = XM.ToDo,
-        value = this.get("status");
-      if (this._status) {
-        return this._status;
-      } else if (value === K.PENDING || value === K.DEFERRED) {
-        return value;
-      } 
-      return K.NEITHER;
-    },
-
-    toDoDidChange: function () {
-      this.setToDoStatusProxy(this.get('status'));
     },
 
     /**
@@ -107,7 +83,7 @@ white:true*/
       which can be one of five options.
     */
     toDoStatusDidChange: function (model, value, options) {
-      var proxy = this.getToDoStatusProxy(),
+      var proxy = this.get("statusProxy"),
         startDate = this.get('startDate'),
         completeDate = this.get('completeDate'),
         K = XM.ToDo,
@@ -125,25 +101,6 @@ white:true*/
         attrStatus = K.IN_PROCESS;
       }
       this.set('status', attrStatus);
-    },
-
-    /**
-      Set the three-way status option.
-
-      @param {String} Value
-      @returns Receiver
-    */
-    setToDoStatusProxy: function (value) {
-      var K = XM.ToDo;
-      if (value === this._status) { return this; }
-      if (value === K.PENDING || value === K.DEFERRED) {
-        this._status = value;
-      } else {
-        if (this._status === K.NEITHER) { return this; }
-        this._status = K.NEITHER;
-      }
-      this.toDoStatusDidChange();
-      return this._status;
     }
 
   });
