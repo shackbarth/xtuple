@@ -2,7 +2,7 @@
 <p><b><%= client %></b> is requesting access to your account on the <b><%= scope %></b> database.</p>
 <p>Do you approve?</p>
 
-<form action="/dialog/authorize/decision" method="post">
+<form action="/<%= scope %>/dialog/authorize/decision" method="post">
   <input name="transaction_id" type="hidden" value="<%= transactionID %>">
   <div>
   <input type="submit" value="Allow" id="allow">
