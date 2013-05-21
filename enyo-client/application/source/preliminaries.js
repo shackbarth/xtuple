@@ -24,4 +24,8 @@ XT = typeof XT !== 'undefined' ? XT : {};
     aboutVersionLabel.setContent(versionText);
   };
 
+  XT.getOrganizationPath = function () {
+    return "/" + window.location.pathname.split("/")[1];
+  };
+
 }());

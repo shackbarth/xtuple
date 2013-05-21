@@ -322,14 +322,14 @@ app.get('/login/scope', routes.scopeForm);
 app.post('/login/scopeSubmit', routes.scope);
 app.get('/:org/logout', routes.logout);
 
-app.all('/:org/changePassword', routes.changePassword);
-app.all('/:org/dataFromKey', routes.dataFromKey);
+app.all('/:org/change-password', routes.changePassword);
+app.all('/:org/data-from-key', routes.dataFromKey);
 app.all('/:org/email', routes.email);
 app.all('/:org/export', routes.exxport);
 app.all('/:org/extensions', routes.extensions);
 app.get('/:org/file', routes.file);
 app.get('/:org/report', routes.report);
-app.get('/:org/resetPassword', routes.resetPassword);
+app.get('/:org/reset-password', routes.resetPassword);
 
 // Set up the other servers we run on different ports.
 //var unexposedServer = express();

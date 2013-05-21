@@ -11,7 +11,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
    */
   exports.dataFromKey = function (req, res) {
 
-    var dataKey = (req.query && req.query.dataKey) || -1,
+    var dataKey = (req.query && req.query.datakey) || -1,
       tempDataModel = new SYS.BiCache({key: dataKey});
 
     tempDataModel.fetch({success: function (model, result) {
