@@ -109,7 +109,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       //});
 
       //if (!userOrg || !userName) {
-      if (!response.id) {
+      if (!response.get("username")) {
         // This shouldn't happen.
         X.log("User %@ has no business trying to log in to organization %@.".f(userId, selectedOrg));
         res.redirect('/' + selectedOrg + '/logout');
@@ -117,8 +117,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
 
       //req.session.passport.user.globalPrivileges = privs;
-      req.session.passport.user.organization = selectedOrg;
-      req.session.passport.user.username = response.id;
+      req.session.passport.user.organization = response.get("organization");
+      req.session.passport.user.username = response.get("username");
 
 // TODO - req.oauth probably isn't enough here, but it's working 2013-03-15...
       // If this is an OAuth 2.0 login with only 1 org.
