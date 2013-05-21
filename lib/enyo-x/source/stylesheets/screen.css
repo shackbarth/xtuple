@@ -267,7 +267,7 @@ body {
   /** this is weird and indicates the REAL need to change the
       whatever the css system is...this relative path is different... **/
 
-  background: url("../../assets/sliding-shadow.png") repeat-y;
+  background: url(../../../../../../assets/sliding-shadow.png) repeat-y;
   background-size: 20px 2px;
 }
 .pullout-grabbutton {
@@ -351,7 +351,7 @@ body {
   width: 15.56em;
 }
 .xv-list .xv-list-item.item-selected {
-  background: #226b9a url(../../assets/item-hilite.png) repeat-x bottom;
+  background: #226b9a url(../../../../../../assets/item-hilite.png) repeat-x bottom;
 }
 .xv-list .xv-list-item.item-selected .xv-list-attr {
   color: #ffffff;
@@ -960,7 +960,7 @@ body {
   margin: 6px;
 }
 .xv-half-check {
-  background: transparent url("../../assets/checkbox.png") no-repeat 0 -96px scroll;
+  background: transparent url(../../../../../../assets/checkbox.png) no-repeat 0 -96px scroll;
 }
 .xv-textarea {
   background-color: #ffffff;
