@@ -321,6 +321,13 @@
         }
       },
       {
+        "name": "useEnhancedAuth",
+        "attr": {
+          "type": "Boolean",
+          "column": "usr_enhancedauth"
+        }
+      },
+      {
         "name": "initials",
         "attr": {
           "type": "String",
@@ -408,6 +415,13 @@
         "attr": {
           "type": "String",
           "column": "usr_propername"
+        }
+      },
+      {
+        "name": "useEnhancedAuth",
+        "attr": {
+          "type": "Boolean",
+          "column": "usr_enhancedauth"
         }
       },
       {
