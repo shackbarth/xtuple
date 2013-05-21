@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X: true, XM:true */
+/*global X: true, XM:true, SYS: true */
 
 (function () {
   "use strict";
@@ -41,7 +41,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.report = function (req, res) {
     var requestDetails = JSON.parse(req.query.details);
 
-    var bicacheCollection = new XM.BiCacheCollection(),
+    var bicacheCollection = new SYS.BiCacheCollection(),
         fetchOptions = {},
         date,
         hourLifespan = 24,
@@ -89,7 +89,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         // thanks http://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
         var randomKey = Math.random().toString(36).substr(2, 15),
-          tempDataModel = new XM.BiCache(null, {isNew: true}),
+          tempDataModel = new SYS.BiCache(null, {isNew: true}),
           attrs = {
             key: randomKey,
             // TODO: this will be null for a single-record request. Then again, I don't know if we
@@ -125,7 +125,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           error: error,
           username: X.options.databaseServer.user
         });
-      }
+      };
 
       // step 2: get the schema
       X.database.query(req.session.passport.user.organization,

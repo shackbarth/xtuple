@@ -57,7 +57,7 @@ module.exports = function (connect) {
 
       var fetchOptions = {},
         payload = {
-          nameSpace: "XM",
+          nameSpace: "SYS",
           type: "SessionStore"
         };
 

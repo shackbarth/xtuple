@@ -22,20 +22,9 @@ white:true*/
 
     @extends XM.SimpleModel
   */
-  XM.Oauth2client = XM.SimpleModel.extend({
+  SYS.Oauth2client = XM.SimpleModel.extend({
 
-    recordType: 'XM.Oauth2client'
-
-  });
-
-  /**
-    @class
-
-    @extends XM.SimpleModel
-  */
-  XM.Oauth2clientRedirs = XM.SimpleModel.extend({
-
-    recordType: 'XM.Oauth2clientRedirs'
+    recordType: 'SYS.Oauth2client'
 
   });
 
@@ -44,9 +33,20 @@ white:true*/
 
     @extends XM.SimpleModel
   */
-  XM.Oauth2token = XM.SimpleModel.extend({
+  SYS.Oauth2clientRedirs = XM.SimpleModel.extend({
 
-    recordType: 'XM.Oauth2token'
+    recordType: 'SYS.Oauth2clientRedirs'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.SimpleModel
+  */
+  SYS.Oauth2token = XM.SimpleModel.extend({
+
+    recordType: 'SYS.Oauth2token'
 
   });
 
@@ -74,7 +74,7 @@ white:true*/
   XM.User = XM.SimpleModel.extend({
     /** @scope XM.User.prototype */
 
-    recordType: 'XM.UserAccount'
+    recordType: 'XM.User'
 
   });
 
@@ -84,9 +84,9 @@ white:true*/
 
     @extends XM.SimpleModel
   */
-  XM.BiCache = XM.SimpleModel.extend(/** @lends XM.BiCache.prototype */{
+  SYS.BiCache = XM.SimpleModel.extend(/** @lends SYS.BiCache.prototype */{
 
-    recordType: 'XM.BiCache',
+    recordType: 'SYS.BiCache',
 
     idAttribute: 'key'
 
@@ -102,9 +102,9 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.Oauth2clientCollection = XM.Collection.extend({
+  SYS.Oauth2clientCollection = XM.Collection.extend({
 
-    model: XM.Oauth2client
+    model: SYS.Oauth2client
 
   });
 
@@ -113,9 +113,9 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.Oauth2clientRedirsCollection = XM.Collection.extend({
+  SYS.Oauth2clientRedirsCollection = XM.Collection.extend({
 
-    model: XM.Oauth2clientRedirs
+    model: SYS.Oauth2clientRedirs
 
   });
   /**
@@ -123,9 +123,9 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.Oauth2tokenCollection = XM.Collection.extend({
+  SYS.Oauth2tokenCollection = XM.Collection.extend({
 
-    model: XM.Oauth2token
+    model: SYS.Oauth2token
 
   });
 
@@ -157,10 +157,10 @@ white:true*/
 
     @extends XM.Collection
   */
-  XM.BiCacheCollection = XM.Collection.extend({
-    /** @scope XM.BiCacheCollection.prototype */
+  SYS.BiCacheCollection = XM.Collection.extend({
+    /** @scope SYS.BiCacheCollection.prototype */
 
-    model: XM.BiCache
+    model: SYS.BiCache
 
   });
 }());

@@ -1,7 +1,7 @@
 [
   {
     "context": "xtuple",
-    "nameSpace": "XM",
+    "nameSpace": "SYS",
     "type": "Oauth2client",
     "table": "xt.oa2client",
     "idSequenceName": "oa2client_oa2client_id_seq",
@@ -120,7 +120,7 @@
   },
   {
     "context": "xtuple",
-    "nameSpace": "XM",
+    "nameSpace": "SYS",
     "type": "Oauth2clientRedirs",
     "table": "xt.oa2clientredirs",
     "idSequenceName": "oa2clientredirs_oa2clientredirs_id_seq",
@@ -153,7 +153,7 @@
   },
   {
     "context": "xtuple",
-    "nameSpace": "XM",
+    "nameSpace": "SYS",
     "type": "Oauth2token",
     "table": "xt.oa2token",
     "idSequenceName": "oa2token_oa2token_id_seq",

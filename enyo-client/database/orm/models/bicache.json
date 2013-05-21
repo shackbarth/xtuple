@@ -1,7 +1,7 @@
 [
   {
     "context": "xtuple",
-    "nameSpace": "XM",
+    "nameSpace": "SYS",
     "type": "BiCache",
     "table": "xt.bicache",
     "comment": "BI Cache Map",
