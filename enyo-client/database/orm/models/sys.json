@@ -1,0 +1,74 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "SYS",
+    "type": "User",
+    "table": "xt.usrinfo",
+    "comment": "User Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainUsers",
+        "read": "MaintainUsers",
+        "update": "MaintainUsers",
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "username",
+        "attr": {
+          "type": "String",
+          "column": "usr_username",
+          "isPrimaryKey": true,
+          "isNaturalKey": true
+        }
+      },
+      {
+        "name": "properName",
+        "attr": {
+          "type": "String",
+          "column": "usr_propername"
+        }
+      },
+      {
+        "name": "useEnhancedAuth",
+        "attr": {
+          "type": "Boolean",
+          "column": "usr_enhancedauth"
+        }
+      },
+      {
+        "name": "initials",
+        "attr": {
+          "type": "String",
+          "column": "usr_initials"
+        }
+      },
+      {
+        "name": "email",
+        "attr": {
+          "type": "String",
+          "column": "usr_email"
+        }
+      },
+      {
+        "name": "organization",
+        "attr": {
+          "type": "String",
+          "column": "usr_org"
+        }
+      },
+      {
+        "name": "grantedExtensions",
+        "toMany": {
+          "column": "usr_username",
+          "type": "UserExtension",
+          "inverse": "user",
+          "isNested": true
+        }
+      }
+    ],
+    "isSystem": true,
+    "sourceCode": "U"
+  }
+]

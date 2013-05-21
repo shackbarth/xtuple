@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, _:true, XM:true */
+/*global X:true, _:true, SYS:true */
 
 (function () {
   "use strict";
@@ -68,7 +68,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.scope = function (req, res, next) {
     var userId = req.session.passport.user.id,
       selectedOrg = req.body.org,
-      user = new XM.User(),
+      user = new SYS.User(),
       options = {};
 
     options.success = function (response) {
