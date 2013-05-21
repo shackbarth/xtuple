@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, XM:true, XT:true, _:true */
+/*global X:true, SYS:true, XT:true, _:true */
 
 (function () {
   "use strict";
@@ -67,7 +67,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return;
     }
 
-    user = new XM.User({id: req.query.id});
+    user = new SYS.User({id: req.query.id});
     fetchSuccess = function () {
       // Update postgres user passwords
       setPassword(req.query.id, req.query.newPassword, organization, function () {

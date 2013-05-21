@@ -9,7 +9,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Returns a list of extensions associated with an organization.
    */
   exports.extensions = function (req, res) {
-    var userCollection = new XM.UserCollection(),
+    var userCollection = new SYS.UserCollection(),
       fetchError = function (err) {
         X.log("Extension fetch error", err);
         res.send({isError: true, message: "Error fetching extensions"});
