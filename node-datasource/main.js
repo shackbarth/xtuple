@@ -66,6 +66,7 @@ jsonpatch = require("json-patch");
   X.setup(options);
 
   sessionOptions.username = X.options.databaseServer.user;
+  sessionOptions.database = X.options.datasource.databases[0];
 
   XT.session = Object.create(XT.Session);
   XT.session.loadSessionObjects(XT.session.SCHEMA, sessionOptions);
@@ -276,10 +277,10 @@ require('./oauth2/passport');
  */
 var that = this;
 app.get('/:org/app', function (req, res, next) {
-  res.render('app', { org: "instance" });
+  res.render('app', { org: req.session.passport.user.organization });
 });
 app.get('/:org/debug', function (req, res, next) {
-  res.render('debug', { org: "instance" });
+  res.render('debug', { org: req.session.passport.user.organization });
 });
 _.each(X.options.datasource.databases, function (orgValue, orgKey, orgList) {
   app.use("/" + orgValue + '/client', express.static('../enyo-client/application', { maxAge: 86400000 }));
@@ -314,14 +315,12 @@ app.all('/:org/email', routes.email);
 app.all('/:org/export', routes.exxport);
 app.all('/:org/extensions', routes.extensions);
 app.get('/:org/file', routes.file);
-app.get('/:org/maintenance', routes.maintenance);
 app.get('/:org/report', routes.report);
 app.get('/:org/resetPassword', routes.resetPassword);
 
 // Set up the other servers we run on different ports.
-var unexposedServer = express();
-unexposedServer.get('/maintenance', routes.maintenanceLocalhost);
-unexposedServer.listen(X.options.datasource.maintenancePort);
+//var unexposedServer = express();
+//unexposedServer.listen(X.options.datasource.maintenancePort);
 
 var redirectServer = express();
 redirectServer.get(/.*/, routes.redirect); // RegEx for "everything"
