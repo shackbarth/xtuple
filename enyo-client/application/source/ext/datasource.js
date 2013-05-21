@@ -90,7 +90,8 @@ white:true*/
     */
     resetPassword: function (id, options) {
       var payload = {
-          id: id
+          id: id,
+          newPassword: options.newPassword
         },
         ajax = new enyo.Ajax({
           url: "/" + window.location.pathname.split("/")[1] + "/resetPassword",

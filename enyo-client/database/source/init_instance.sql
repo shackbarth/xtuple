@@ -117,6 +117,7 @@ select xt.js_init();
 \i xt/views/quiteminfo.sql;
 \i xt/views/site.sql;
 \i xt/views/todoiteminfo.sql;
+\i xt/views/usrinfo.sql;
 
 
 -- [ END ] xt
@@ -149,7 +150,6 @@ select xt.js_init();
 \i public/tables/pkghead.sql;
 \i public/tables/schemaord.sql;
 
-\i public/views/usr.sql;
 -- [ END ] public
 
 -- xtbatch (TODO: This should be moved elsewhere)

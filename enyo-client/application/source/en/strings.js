@@ -551,6 +551,7 @@ var lang = XT.stringsFor("en_US", {
   "_url": "Link",
   "_urls": "Links",
   "_useDescription": "Use Description",
+  "_useEnhancedAuth": "Use Enhanced Authentication",
   "_userAccount": "User Account",
   "_userAccounts": "User Accounts",
   "_userAccountRole": "User Account Role",

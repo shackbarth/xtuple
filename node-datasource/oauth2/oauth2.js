@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, XM:true, _:true, console:true*/
+/*global X:true, SYS:true, _:true, console:true*/
 
 /**
  * Module dependencies.
@@ -290,7 +290,7 @@ server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(functio
         saveOptions = {},
         today = new Date(),
         expires = new Date(today.getTime() + (60 * 60 * 1000)), // One hour from now.
-        token = new XM.Oauth2token();
+        token = new SYS.Oauth2token();
 
     // Verify JWT was formed correctly.
     if (!decodedHeader || !decodedHeader.alg || !decodedHeader.typ) {

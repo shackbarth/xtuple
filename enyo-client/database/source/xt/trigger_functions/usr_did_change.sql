@@ -18,6 +18,7 @@ create or replace function xt.usr_did_change() returns trigger as $$
    plv8.execute(sql.replace("{name}", 'initials'), [NEW.usr_initials]);
    plv8.execute(sql.replace("{name}", 'locale_id'), [NEW.usr_locale_id + ""]);
    plv8.execute(sql.replace("{name}", 'active'), [NEW.usr_active ? 't' : 'f'] );
+   plv8.execute(sql.replace("{name}", 'UseEnhancedAuth'), [NEW.usr_enhancedauth ? 't' : 'f'] );
    XT.UserPreferencesUpdating = false;
  }
   

@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, XM:true, console:true*/
+/*global X:true, SYS:true, console:true*/
 
 /**
  * Find an issued auth code in the database.
@@ -11,7 +11,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 exports.find = function (code, done) {
   "use strict";
 
-  var authCode = new XM.Oauth2tokenCollection(),
+  var authCode = new SYS.Oauth2tokenCollection(),
       options = {};
 
   options.success = function (res) {
@@ -24,7 +24,7 @@ exports.find = function (code, done) {
       return done(new Error(message));
     }
 
-    // Send that XM.Oauth2token model along.
+    // Send that SYS.Oauth2token model along.
     return done(null, res.models[0]);
   };
 
@@ -58,7 +58,7 @@ exports.find = function (code, done) {
 exports.save = function (code, clientID, redirectURI, userID, scope, done) {
   "use strict";
 
-  var authCode = new XM.Oauth2token(),
+  var authCode = new SYS.Oauth2token(),
       saveOptions = {},
       today = new Date(),
       expires = new Date(today.getTime() + (10 * 60 * 1000)), // 10 minutes from now.

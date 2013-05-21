@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true */
+/*global X:true, SYS: true */
 
 (function () {
   "use strict";
@@ -12,7 +12,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.dataFromKey = function (req, res) {
 
     var dataKey = (req.query && req.query.dataKey) || -1,
-      tempDataModel = new XM.BiCache({key: dataKey});
+      tempDataModel = new SYS.BiCache({key: dataKey});
 
     tempDataModel.fetch({success: function (model, result) {
       if (!model.get("data")) {

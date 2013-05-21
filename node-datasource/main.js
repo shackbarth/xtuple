@@ -7,6 +7,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 Backbone = require("backbone");
 _ = require("underscore");
 jsonpatch = require("json-patch");
+SYS = {};
 
 (function () {
   "use strict";
@@ -69,6 +70,7 @@ jsonpatch = require("json-patch");
   sessionOptions.database = X.options.datasource.databases[0];
 
   XT.session = Object.create(XT.Session);
+  XT.session.schemas.SYS = false;
   XT.session.loadSessionObjects(XT.session.SCHEMA, sessionOptions);
   XT.session.loadSessionObjects(XT.session.PRIVILEGES, sessionOptions);
 
@@ -136,61 +138,21 @@ require('http').IncomingMessage.prototype.isAuthenticated = function () {
 // Stomping on express/connect's Cookie.prototype to only update the expires property
 // once a minute. Otherwise it's hit on every session check. This cuts down on chatter.
 // See more details here: https://github.com/senchalabs/connect/issues/670
-require('express/node_modules/connect/lib/middleware/session/cookie').prototype.__defineSetter__("expires", function (date) {
-  "use strict";
-
-  if (date === null || this._expires === null) {
-    // Initialize "this._expires" when creating a new cookie.
-    this._expires = date;
-    this.originalMaxAge = this.maxAge;
-  } else if (date instanceof Date) {
-    // This captures a certain "set" call we are interested in.
-    var expiresDate;
-
-    if (typeof this._expires === 'string') {
-      expiresDate = new Date(this._expires);
-    }
-
-    if (this._expires instanceof Date) {
-      expiresDate = this._expires;
-    }
-
-    // If the difference between the new time, "date", and the old time, "this._expires",
-    // is more than 1 minute, then we update it which updates the db and cache magically.
-    // OR if they match, we need to update "this._expires" so it's a instanceof Date.
-    //console.log("updates in: ", 60000 - (date - expiresDate));
-    if ((date - expiresDate > 60000) || (JSON.stringify(date) === JSON.stringify(expiresDate))) {
-      //console.log("expires updated: ", date - expiresDate);
-      this._expires = date;
-      this.originalMaxAge = this.maxAge;
-    }
-  }
-});
+require('express/node_modules/connect/lib/middleware/session/cookie').prototype.__defineSetter__("expires", require('./stomps/expires').expires);
 
 // Stomp on Express's cookie serialize() to not send an "expires" value to the browser.
 // This makes the browser cooke a "session" cookie that will never expire and only
 // gets removed when the user closes the browser. We still set express.session.cookie.maxAge
 // below so our persisted session gets an expires value, but not the browser cookie.
 // See this issue for more details: https://github.com/senchalabs/connect/issues/328
-require('express/node_modules/cookie').serialize = function (name, val, opt) {
-  "use strict";
+require('express/node_modules/cookie').serialize = require('./stomps/cookie').serialize;
 
-  // Need to add encode here for the stomp to work.
-  var encode = encodeURIComponent;
-
-  var pairs = [name + '=' + encode(val)];
-  opt = opt || {};
-
-  if (opt.maxAge) pairs.push('Max-Age=' + opt.maxAge);
-  if (opt.domain) pairs.push('Domain=' + opt.domain);
-  if (opt.path) pairs.push('Path=' + opt.path);
-  // TODO - Override here, skip this.
-  //if (opt.expires) pairs.push('Expires=' + opt.expires.toUTCString());
-  if (opt.httpOnly) pairs.push('HttpOnly');
-  if (opt.secure) pairs.push('Secure');
-
-  return pairs.join('; ');
-};
+// Stomp on Connect's session.
+// https://github.com/senchalabs/connect/issues/641
+function stompSessionLoad(){ return require('./stomps/session'); }
+require('express/node_modules/connect').middleware.__defineGetter__('session', stompSessionLoad);
+require('express/node_modules/connect').__defineGetter__('session', stompSessionLoad);
+require('express').__defineGetter__('session', stompSessionLoad);
 
 /**
  * ###################################################
