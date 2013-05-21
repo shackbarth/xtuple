@@ -289,8 +289,12 @@ white:true*/
 
       } else if (!this.get("password") && isNew) {
         // new user accounts need to have a password set
-
         return XT.Error.clone('xt1004', { params: {attr: "_password".loc()} });
+
+      } else if (!this.get("password") && this.get("useEnhancedAuth") !== this._cache.useEnhancedAuth) {
+        // if they toggle enhanced auth, then they need to set a new password
+        return XT.Error.clone('xt1004', { params: {attr: "_password".loc()} });
+
       }
 
       // clear out passwordCheck, so as not to upset the model validation
