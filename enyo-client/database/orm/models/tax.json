@@ -49,7 +49,8 @@
         "name": "tax",
         "toOne": {
           "type": "TaxCode",
-          "column": "taxass_tax_id"
+          "column": "taxass_tax_id",
+          "required": true
         }
       }
     ],
@@ -85,14 +86,16 @@
         "attr": {
           "type": "String",
           "column": "taxauth_code",
-          "isNaturalKey":true
+          "isNaturalKey":true,
+          "required": true
         }
       },
       {
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "taxauth_name"
+          "column": "taxauth_name",
+          "required": true
         }
       },
       {
@@ -339,42 +342,48 @@
         "name": "tax",
         "toOne": {
           "type": "TaxCode",
-          "column": "taxrate_tax_id"
+          "column": "taxrate_tax_id",
+          "required": true
         }
       },
       {
         "name": "percent",
         "attr": {
           "type": "Number",
-          "column": "taxrate_percent"
+          "column": "taxrate_percent",
+          "required": true
         }
       },
       {
         "name": "currency",
         "toOne": {
           "type": "Currency",
-          "column": "taxrate_curr_id"
+          "column": "taxrate_curr_id",
+          "required": true
         }
       },
       {
         "name": "amount",
         "attr": {
           "type": "Number",
-          "column": "taxrate_amount"
+          "column": "taxrate_amount",
+          "required": true
         }
       },
       {
         "name": "effectiveDate",
         "attr": {
           "type": "Date",
-          "column": "taxrate_effective"
+          "column": "taxrate_effective",
+          "required": true
         }
       },
       {
         "name": "expirationDate",
         "attr": {
           "type": "Date",
-          "column": "taxrate_expires"
+          "column": "taxrate_expires",
+          "required": true
         }
       }
     ],

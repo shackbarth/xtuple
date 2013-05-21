@@ -30,7 +30,8 @@
         "attr": {
           "type": "String",
           "column": "dept_number",
-          "isNaturalKey": true
+          "isNaturalKey": true,
+          "required": true
         }
       },
       {
@@ -74,7 +75,8 @@
         "attr": {
           "type": "String",
           "column": "shift_number",
-          "isNaturalKey": true
+          "isNaturalKey": true,
+          "required": true
         }
       },
       {
@@ -119,14 +121,16 @@
         "attr": {
           "type": "String",
           "column": "emp_code",
-          "isNaturalKey": true
+          "isNaturalKey": true,
+          "required": true
         }
       },
       {
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "emp_number"
+          "column": "emp_number",
+          "required": true
         }
       },
       {
@@ -140,7 +144,8 @@
         "name": "isActive",
         "attr": {
           "type": "Boolean",
-          "column": "emp_active"
+          "column": "emp_active",
+          "required": true
         }
       },
       {
@@ -201,14 +206,16 @@
         "name": "wageType",
         "attr": {
           "type": "String",
-          "column": "emp_wage_type"
+          "column": "emp_wage_type",
+          "required": true
         }
       },
       {
         "name": "wage",
         "attr": {
           "type": "Number",
-          "column": "emp_wage"
+          "column": "emp_wage",
+          "required": true
         }
       },
       {
@@ -222,21 +229,24 @@
         "name": "wagePeriod",
         "attr": {
           "type": "String",
-          "column": "emp_wage_period"
+          "column": "emp_wage_period",
+          "required": true
         }
       },
       {
         "name": "billingRate",
         "attr": {
           "type": "Number",
-          "column": "emp_extrate"
+          "column": "emp_extrate",
+          "required": true
         }
       },
       {
         "name": "billingPeriod",
         "attr": {
           "type": "String",
-          "column": "emp_extrate_period"
+          "column": "emp_extrate_period",
+          "required": true
         }
       },
       {

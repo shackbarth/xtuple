@@ -28,7 +28,8 @@
         "attr": {
           "type": "String",
           "column": "cmnttype_name",
-          "isNaturalKey": true
+          "isNaturalKey": true,
+          "required": true
         }
       },
       {
@@ -49,7 +50,8 @@
         "name": "commentsEditable",
         "attr": {
           "type": "Boolean",
-          "column": "cmnttype_editable"
+          "column": "cmnttype_editable",
+          "required": true
         }
       },
       {

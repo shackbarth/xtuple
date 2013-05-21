@@ -819,7 +819,8 @@
         "name": "email",
         "attr": {
           "type": "String",
-          "column": "cntcteml_email"
+          "column": "cntcteml_email",
+          "required": true
         }
       }
     ],

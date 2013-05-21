@@ -31,7 +31,8 @@
         "attr": {
           "type": "String",
           "column": "cohead_number",
-          "isNaturalKey":true
+          "isNaturalKey":true,
+          "required": true
         }
       },
       {
@@ -39,7 +40,8 @@
         "toOne": {
           "isNested": true,
           "type": "CustomerProspectRelation",
-          "column": "cohead_cust_id"
+          "column": "cohead_cust_id",
+          "required": true
         }
       },
       {
@@ -74,14 +76,16 @@
         "name": "terms",
         "toOne": {
           "type": "Terms",
-          "column": "cohead_terms_id"
+          "column": "cohead_terms_id",
+          "required": true
         }
       },
       {
         "name": "salesRep",
         "toOne": {
           "type": "SalesRep",
-          "column": "cohead_salesrep_id"
+          "column": "cohead_salesrep_id",
+          "required": true
         }
       },
       {
@@ -413,14 +417,16 @@
         "name": "currency",
         "toOne": {
           "type": "Currency",
-          "column": "cohead_curr_id"
+          "column": "cohead_curr_id",
+          "required": true
         }
       },
       {
         "name": "calculateFreight",
         "attr": {
           "type": "Boolean",
-          "column": "cohead_calcfreight"
+          "column": "cohead_calcfreight",
+          "required": true
         }
       },
       {
@@ -711,7 +717,8 @@
         "name": "commentType",
         "toOne": {
           "type": "CommentType",
-          "column": "comment_cmnttype_id"
+          "column": "comment_cmnttype_id",
+          "required": true
         }
       },
       {
@@ -1011,35 +1018,40 @@
         "name": "lineNumber",
         "attr": {
           "type": "Number",
-          "column": "coitem_linenumber"
+          "column": "coitem_linenumber",
+          "required": true
         }
       },
       {
         "name": "itemSite",
         "toOne": {
           "type": "ItemSiteRelation",
-          "column": "coitem_itemsite_id"
+          "column": "coitem_itemsite_id",
+          "required": true
         }
       },
       {
         "name": "quantity",
         "attr": {
           "type": "Quantity",
-          "column": "coitem_qtyord"
+          "column": "coitem_qtyord",
+          "required": true
         }
       },
       {
         "name": "quantityUnit",
         "toOne": {
           "type": "Unit",
-          "column": "coitem_qty_uom_id"
+          "column": "coitem_qty_uom_id",
+          "required": true
         }
       },
       {
         "name": "quantityUnitRatio",
         "attr": {
           "type": "UnitRatio",
-          "column": "coitem_qty_invuomratio"
+          "column": "coitem_qty_invuomratio",
+          "required": true
         }
       },
       {
@@ -1053,7 +1065,8 @@
         "name": "customerPrice",
         "attr": {
           "type": "SalesPrice",
-          "column": "coitem_custprice"
+          "column": "coitem_custprice",
+          "required": true
         }
       },
       {
@@ -1067,14 +1080,16 @@
         "name": "price",
         "attr": {
           "type": "SalesPrice",
-          "column": "coitem_price"
+          "column": "coitem_price",
+          "required": true
         }
       },
       {
         "name": "scheduleDate",
         "attr": {
           "type": "Date",
-          "column": "coitem_scheddate"
+          "column": "coitem_scheddate",
+          "required": true
         }
       },
       {
@@ -1116,21 +1131,24 @@
         "name": "priceUnit",
         "toOne": {
           "type": "Unit",
-          "column": "coitem_price_uom_id"
+          "column": "coitem_price_uom_id",
+          "required": true
         }
       },
       {
         "name": "priceUnitRatio",
         "attr": {
           "type": "UnitRatio",
-          "column": "coitem_price_invuomratio"
+          "column": "coitem_price_invuomratio",
+          "required": true
         }
       },
       {
         "name": "priceMode",
         "attr": {
           "type": "String",
-          "column": "coitem_pricemode"
+          "column": "coitem_pricemode",
+          "required": true
         }
       },
       {

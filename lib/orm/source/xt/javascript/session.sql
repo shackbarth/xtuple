@@ -1,4 +1,4 @@
-select xt.install_js('XT','Session','xtuple', $$
+﻿select xt.install_js('XT','Session','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -161,10 +161,22 @@ select xt.install_js('XT','Session','xtuple', $$
       },
       processProperties = function (orm, schema) {
         var n;
+        required = result[type]['requiredAttributes']
         if (orm.properties && orm.properties.length) {
+          /* Required */
+          props = orm.properties;
+          props.forEach(function(prop) {
+            if (prop.attr && prop.attr.required) {
+              required.push(prop.name);
+            }
+          });
+          
           /* To One */
           props = orm.properties.filter(filterToOne);
           props.forEach(function(prop) {
+            if (prop.toOne.required) {
+              required.push(prop.name);
+            }
             addToOne(prop, schema);
           });
  
@@ -196,6 +208,7 @@ select xt.install_js('XT','Session','xtuple', $$
       if (type !== prev) {
         result[type] = {};
         result[type].columns = [];
+        result[type].requiredAttributes = [];
         
         /* Add relations and privileges from the orm*/
         if (DEBUG) { 

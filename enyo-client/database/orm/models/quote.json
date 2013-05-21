@@ -38,7 +38,8 @@
         "toOne": {
           "isNested": true,
           "type": "CustomerProspectRelation",
-          "column": "quhead_cust_id"
+          "column": "quhead_cust_id",
+          "required": true
         }
       },
       {
@@ -73,14 +74,16 @@
         "name": "terms",
         "toOne": {
           "type": "Terms",
-          "column": "quhead_terms_id"
+          "column": "quhead_terms_id",
+          "required": true
         }
       },
       {
         "name": "salesRep",
         "toOne": {
           "type": "SalesRep",
-          "column": "quhead_salesrep_id"
+          "column": "quhead_salesrep_id",
+          "required": true
         }
       },
       {
@@ -426,7 +429,8 @@
         "name": "calculateFreight",
         "attr": {
           "type": "Boolean",
-          "column": "quhead_calcfreight"
+          "column": "quhead_calcfreight",
+          "required": true
         }
       },
       {
@@ -500,7 +504,8 @@
           "isNested": true,
           "type": "QuoteComment",
           "column": "quhead_id",
-          "inverse": "source"
+          "inverse": "source",
+          "required": true
         }
       },
       {
@@ -675,7 +680,8 @@
         "name": "commentType",
         "toOne": {
           "type": "CommentType",
-          "column": "comment_cmnttype_id"
+          "column": "comment_cmnttype_id",
+          "required": true
         }
       },
       {
@@ -975,7 +981,8 @@
         "name": "lineNumber",
         "attr": {
           "type": "Number",
-          "column": "quitem_linenumber"
+          "column": "quitem_linenumber",
+          "required": true
         }
       },
       {
@@ -983,28 +990,32 @@
         "toOne": {
           "type": "ItemSiteRelation",
           "column": "quitem_itemsite_id",
-          "isNested": true
+          "isNested": true,
+          "required": true
         }
       },
       {
         "name": "quantity",
         "attr": {
           "type": "Quantity",
-          "column": "quitem_qtyord"
+          "column": "quitem_qtyord",
+          "required": true
         }
       },
       {
         "name": "quantityUnit",
         "toOne": {
           "type": "Unit",
-          "column": "quitem_qty_uom_id"
+          "column": "quitem_qty_uom_id",
+          "required": true
         }
       },
       {
         "name": "quantityUnitRatio",
         "attr": {
           "type": "UnitRatio",
-          "column": "quitem_qty_invuomratio"
+          "column": "quitem_qty_invuomratio",
+          "required": true
         }
       },
       {
@@ -1018,7 +1029,8 @@
         "name": "customerPrice",
         "attr": {
           "type": "SalesPrice",
-          "column": "quitem_custprice"
+          "column": "quitem_custprice",
+          "required": true
         }
       },
       {
@@ -1032,14 +1044,16 @@
         "name": "price",
         "attr": {
           "type": "SalesPrice",
-          "column": "quitem_price"
+          "column": "quitem_price",
+          "required": true
         }
       },
       {
         "name": "scheduleDate",
         "attr": {
           "type": "Date",
-          "column": "quitem_scheddate"
+          "column": "quitem_scheddate",
+          "required": true
         }
       },
       {
@@ -1081,21 +1095,24 @@
         "name": "priceUnit",
         "toOne": {
           "type": "Unit",
-          "column": "quitem_price_uom_id"
+          "column": "quitem_price_uom_id",
+          "required": true
         }
       },
       {
         "name": "priceUnitRatio",
         "attr": {
           "type": "UnitRatio",
-          "column": "quitem_price_invuomratio"
+          "column": "quitem_price_invuomratio",
+          "required": true
         }
       },
       {
         "name": "priceMode",
         "attr": {
           "type": "String",
-          "column": "quitem_pricemode"
+          "column": "quitem_pricemode",
+          "required": true
         }
       },
       {

@@ -40,7 +40,8 @@
         "attr":{
           "type":"String",
           "column":"crmacct_number",
-          "isNaturalKey":true
+          "isNaturalKey":true,
+          "required": true
         }
       },
       {

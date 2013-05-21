@@ -30,14 +30,16 @@
         "attr": {
           "type": "String",
           "column": "prospect_number",
-          "isNaturalKey":true
+          "isNaturalKey":true,
+          "required": true
         }
       },
       {
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "prospect_name"
+          "column": "prospect_name",
+          "required": true
         }
       },
       {
@@ -93,7 +95,8 @@
             "name": "isActive",
             "attr": {
               "type": "Boolean",
-              "column": "crmacct_active"
+              "column": "crmacct_active",
+              "required": true
             }
           }
         ]

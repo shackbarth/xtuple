@@ -29,7 +29,8 @@
         "attr": {
           "type": "String",
           "column": "lang_name",
-          "isNaturalKey": true
+          "isNaturalKey": true,
+          "required": true
         }
       },
       {
@@ -331,7 +332,8 @@
         "name": "locale",
         "toOne": {
           "type": "Locale",
-          "column": "useracct_locale_id"
+          "column": "useracct_locale_id",
+          "required": true
         }
       },
       {

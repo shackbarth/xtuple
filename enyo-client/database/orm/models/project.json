@@ -40,14 +40,16 @@
         "attr": {
           "type": "String",
           "column": "prj_number",
-          "isNaturalKey":true
+          "isNaturalKey":true,
+          "required": true
         }
       },
       {
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "prj_name"
+          "column": "prj_name",
+          "required": true
         }
       },
       {
@@ -115,7 +117,8 @@
         "name": "status",
         "attr": {
           "type": "String",
-          "column": "prj_status"
+          "column": "prj_status",
+          "required": true
         }
       },
       {
@@ -1204,21 +1207,24 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "prjtask_number"
+          "column": "prjtask_number",
+          "required": true
         }
       },
       {
         "name": "project",
         "attr": {
           "type": "Number",
-          "column": "prjtask_prj_id"
+          "column": "prjtask_prj_id",
+          "required": true
         }
       },
       {
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "prjtask_name"
+          "column": "prjtask_name",
+          "required": true
         }
       },
       {
@@ -1232,7 +1238,8 @@
         "name": "status",
         "attr": {
           "type": "String",
-          "column": "prjtask_status"
+          "column": "prjtask_status",
+          "required": true
         }
       },
       {
@@ -1414,7 +1421,8 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "prjtask_number"
+          "column": "prjtask_number",
+          "required": true
         }
       },
       {
@@ -1422,14 +1430,16 @@
         "toOne": {
           "isNested": true,
           "type": "ProjectRelation",
-          "column": "prjtask_prj_id"
+          "column": "prjtask_prj_id",
+          "required": true
         }
       },
       {
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "prjtask_name"
+          "column": "prjtask_name",
+          "required": true
         }
       },
       {
@@ -1443,7 +1453,8 @@
         "name": "status",
         "attr": {
           "type": "String",
-          "column": "prjtask_status"
+          "column": "prjtask_status",
+          "required": true
         }
       },
       {

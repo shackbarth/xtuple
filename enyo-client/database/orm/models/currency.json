@@ -28,14 +28,16 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "curr_name"
+          "column": "curr_name",
+          "required": true
         }
       },
       {
         "name": "symbol",
         "attr": {
           "type": "String",
-          "column": "curr_symbol"
+          "column": "curr_symbol",
+          "required": true
         }
       },
       {
@@ -50,7 +52,8 @@
         "name": "isBase",
         "attr": {
           "type": "Boolean",
-          "column": "curr_base"
+          "column": "curr_base",
+          "required": true
         }
       }
     ],

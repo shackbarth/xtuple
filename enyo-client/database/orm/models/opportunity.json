@@ -40,14 +40,16 @@
         "attr": {
           "type": "String",
           "column": "ophead_number",
-          "isNaturalKey":true
+          "isNaturalKey":true,
+          "required": true
         }
       },
       {
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "ophead_name"
+          "column": "ophead_name",
+          "required": true
         }
       },
       {

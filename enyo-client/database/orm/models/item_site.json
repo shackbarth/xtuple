@@ -29,7 +29,8 @@
         "attr": {
           "type": "String",
           "column": "costcat_code",
-          "isNaturalKey":true
+          "isNaturalKey":true,
+          "required": true
         }
       },
       {
@@ -80,14 +81,16 @@
         "name": "item",
         "toOne": {
           "type": "ItemRelation",
-          "column": "itemsite_item_id"
+          "column": "itemsite_item_id",
+          "required": true
         }
       },
       {
         "name": "site",
         "toOne": {
           "type": "SiteRelation",
-          "column": "itemsite_warehous_id"
+          "column": "itemsite_warehous_id",
+          "required": true
         }
       },
       {
@@ -108,14 +111,16 @@
         "name": "plannerCode",
         "toOne": {
           "type": "PlannerCode",
-          "column": "itemsite_plancode_id"
+          "column": "itemsite_plancode_id",
+          "required": true
         }
       },
       {
         "name": "costCategory",
         "toOne": {
           "type": "CostCategory",
-          "column": "itemsite_costcat_id"
+          "column": "itemsite_costcat_id",
+          "required": true
         }
       },
       {
@@ -194,7 +199,8 @@
         "name": "commentType",
         "toOne": {
           "type": "CommentType",
-          "column": "comment_cmnttype_id"
+          "column": "comment_cmnttype_id",
+          "required": true
         }
       },
       {
