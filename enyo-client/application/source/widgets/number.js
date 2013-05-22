@@ -107,12 +107,14 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.Quantity",
     kind: "XV.Number",
+    maxlength: 12,
     scale: XT.QTY_SCALE
   });
 
   enyo.kind({
     name: "XV.QuantityWidget",
     kind: "XV.NumberWidget",
+    maxlength: 12,
     scale: XT.QTY_SCALE
   });
 

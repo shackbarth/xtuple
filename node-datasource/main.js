@@ -302,19 +302,19 @@ _.each(X.options.datasource.databases, function (orgValue, orgKey, orgList) {
 });
 app.use('/assets', express.static('views/login/assets', { maxAge: 86400000 }));
 
-app.get('/dialog/authorize', oauth2.authorization);
-app.post('/dialog/authorize/decision', oauth2.decision);
-app.post('/oauth/token', oauth2.token);
+app.get('/:org/dialog/authorize', oauth2.authorization);
+app.post('/:org/dialog/authorize/decision', oauth2.decision);
+app.post('/:org/oauth/token', oauth2.token);
 
-app.get('/discovery/v1alpha1/apis/:org/v1alpha1/rest', routes.restDiscoveryGetRest);
-app.get('/discovery/v1alpha1/apis/:org/:model/v1alpha1/rest', routes.restDiscoveryGetRest);
-app.get('/discovery/v1alpha1/apis/:org', routes.restDiscoveryList);
+app.get('/:org/discovery/v1alpha1/apis/v1alpha1/rest', routes.restDiscoveryGetRest);
+app.get('/:org/discovery/v1alpha1/apis/:model/v1alpha1/rest', routes.restDiscoveryGetRest);
+app.get('/:org/discovery/v1alpha1/apis', routes.restDiscoveryList);
 
-app.get('/api/userinfo', user.info);
+app.get('/:org/api/userinfo', user.info);
 
-app.all('/api/v1alpha1/:model/:id', routes.restRouter);
-app.all('/api/v1alpha1/:model', routes.restRouter);
-app.all('/api/v1alpha1/*', routes.restRouter);
+app.all('/:org/api/v1alpha1/:model/:id', routes.restRouter);
+app.all('/:org/api/v1alpha1/:model', routes.restRouter);
+app.all('/:org/api/v1alpha1/*', routes.restRouter);
 
 app.get('/', routes.loginForm);
 app.post('/login', routes.login);
@@ -322,14 +322,14 @@ app.get('/login/scope', routes.scopeForm);
 app.post('/login/scopeSubmit', routes.scope);
 app.get('/:org/logout', routes.logout);
 
-app.all('/:org/changePassword', routes.changePassword);
-app.all('/:org/dataFromKey', routes.dataFromKey);
+app.all('/:org/change-password', routes.changePassword);
+app.all('/:org/data-from-key', routes.dataFromKey);
 app.all('/:org/email', routes.email);
 app.all('/:org/export', routes.exxport);
 app.all('/:org/extensions', routes.extensions);
 app.get('/:org/file', routes.file);
 app.get('/:org/report', routes.report);
-app.get('/:org/resetPassword', routes.resetPassword);
+app.get('/:org/reset-password', routes.resetPassword);
 
 // Set up the other servers we run on different ports.
 //var unexposedServer = express();
@@ -346,6 +346,11 @@ redirectServer.listen(X.options.datasource.redirectPort);
 // That can cause it to crash at startup.
 // Need a way to get everything loaded BEFORE we start listening.  Might just move this to the end...
 io = socketio.listen(server.listen(X.options.datasource.port));
+
+X.log("node-datasource started on port: ", X.options.datasource.port);
+X.log("redirectServer started on port: ", X.options.datasource.redirectPort);
+X.log("Databases accessible from this server: \n", JSON.stringify(X.options.datasource.databases, null, 2));
+
 
 /**
  * Destroy a single session.
@@ -425,11 +430,15 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   if (handshakeData.headers.cookie) {
     handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
 
-    if (!handshakeData.headers.referer || !url.parse(handshakeData.headers.referer).path.split("/")[1]) {
+    if (handshakeData.headers.referer && url.parse(handshakeData.headers.referer).path.split("/")[1]) {
+      key = url.parse(handshakeData.headers.referer).path.split("/")[1];
+    } else if (X.options.datasource.testDatabase) {
+      // for some reason zombie doesn't send the referrer in the socketio call
+      key = X.options.datasource.testDatabase;
+    } else {
       return callback(null, false);
     }
 
-    key = url.parse(handshakeData.headers.referer).path.split("/")[1];
 
     if (!handshakeData.cookie[key + '.sid']) {
       return callback(null, false);

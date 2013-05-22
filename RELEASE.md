@@ -1,25 +1,55 @@
+1.3.5 (2013/05)
+===============
 
 Critical deployment changes
 ---------------------------
-* add redirectPort and maintenancePort to config.js, see sample_config.js
+* Add redirectPort and maintenancePort to config.js, see sample_config.js
+* To run tests you will need to add the test database to the login_data.js
+  file, per the conventions in sample_login_data.js. Note also the new
+  snake_case filename convention. You will also need to add this database
+  name to your config.js file under datasource.testDatabase.
+* Changed XT.Data's handling of Dates and nulls to work with current version of plv8
+  that doesn't require any special handling. You need to be on this plv8 version:
 
+> commit d75184e00e08e97bc8caba6c9677f8f375a051aa
+
+> Date:   Wed Feb 20 00:10:56 2013 -0800
+
+  To find your current plv8 version:
+
+      cd ~/plv8js
+      git log -1
+
+  To move to that plv8 from your current:
+
+      mv plv8js plv8js-old
+      git clone https://code.google.com/p/plv8js/
+      cd plv8js
+      git checkout d75184e00e08e97bc8caba6c9677f8f375a051aa
+      # Make sure this is the path to your V8 source:
+      make V8_SRCDIR=/home/dev/v8
+      sudo make install
+      # Restart PostgreSQL Server
+      sudo /etc/init.d/postgresql restart
+
+  To test if your plv8 is working correctly, try adding a comment to an Account or Contact.
+  See if you get any errors in your browsers Javascript Console and make sure the comment saves.
 
 Features and bugs
 ----------------
 
 - Implemented
   issue #[20295](http://www.xtuple.org/xtincident/view/bugs/20295)
-  move all ports into config.js, added redirectPort and maintenancePort to sample_config.js 
+  move all ports into config.js, added redirectPort and maintenancePort to sample_config.js
+- Fixed
+  issue #[20266](http://www.xtuple.org/xtincident/view/bugs/20266)
+  SQL Injection exploit in XT.Data
+- Implemented parts of
+  issue #[20264](http://www.xtuple.org/xtincident/view/bugs/20264)
+  REST - Refactor error handling in the database layer
 
-
-1.3.4 (2013/05)
+1.3.4 (2013/05/06)
 ===============
-
-Critical deployment changes
----------------------------
-* Anybody who wants to work in the admin console will have to add global into their org
-  table. You can do this through the admin console, but do it before you upgrade! You
-  do not need to associate the org with your user.
 
 Features and bugs
 -----------------
@@ -81,9 +111,9 @@ Features and bugs
 
 Critical deployment changes
 ---------------------------
-* You need to add 
+* You need to add
   <code>"lib/ext/smtpTransport"</code>
-  as a requirement in your config.js. See 
+  as a requirement in your config.js. See
   [sample_config.js](https://github.com/xtuple/xtuple/blob/master/node-datasource/sample_config.js) for details.
 * We removed node-datasource/lib/private/salt.txt from version control. You
   will have to put this file back in yourself. You can fill it with any long string you want.

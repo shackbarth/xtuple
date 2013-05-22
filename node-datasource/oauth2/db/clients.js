@@ -8,7 +8,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
  * @param {string} Database client id field.
  * @param {Function} Function to call the move along.
  */
-exports.find = function (id, done) {
+exports.find = function (sentClient, done) {
   "use strict";
 
   var client = new SYS.Oauth2clientCollection(),
@@ -34,9 +34,10 @@ exports.find = function (id, done) {
       return done(new Error(message));
     }
   };
+  options.database = sentClient.organization;
 
   options.query = {};
-  options.query.parameters = [{attribute: "id", value: id}];
+  options.query.parameters = [{attribute: "id", value: sentClient.id}];
 
   client.fetch(options);
 };
@@ -47,7 +48,7 @@ exports.find = function (id, done) {
  * @param {string} OAuth 2.0 client ID.
  * @param {Function} Function to call the move along.
  */
-exports.findByClientId = function (clientID, done) {
+exports.findByClientId = function (clientID, database, done) {
   "use strict";
 
   var client = new SYS.Oauth2clientCollection(),
@@ -76,6 +77,7 @@ exports.findByClientId = function (clientID, done) {
 
   options.query = {};
   options.query.parameters = [{attribute: "clientID", value: clientID}];
+  options.database = database;
 
   client.fetch(options);
 };

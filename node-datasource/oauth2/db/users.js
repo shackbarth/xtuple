@@ -10,7 +10,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   Note also that I'm assuming all users are off their
   old MD5 passwords by now.
 */
-exports.findByUsername = function (username, done) {
+exports.findByUsername = function (username, database, done) {
   "use strict";
 
   var user = new SYS.User(),
@@ -35,6 +35,7 @@ exports.findByUsername = function (username, done) {
 
   // The user under whose authority the query is run.
   options.username = X.options.databaseServer.user;
+  options.database = database;
 
   user.fetch(options);
 };

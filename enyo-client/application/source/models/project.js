@@ -132,7 +132,7 @@ white:true*/
     // ..........................................................
     // METHODS
     //
-    
+
     bindEvents: function () {
       XM.ProjectBase.prototype.bindEvents.apply(this, arguments);
       this.on('add:tasks remove:tasks', this.tasksDidChange);
@@ -316,6 +316,15 @@ white:true*/
     recordType: 'XM.ProjectTask',
 
     enforceUpperKey: false,
+
+    /**
+      Add required project field to the existing requiredAttributes
+      fields array inherited from ProjectBase.
+     */
+    initialize: function (attributes, options) {
+      XM.ProjectBase.prototype.initialize.apply(this, arguments);
+      this.requiredAttributes.push("project");
+    },
 
     defaults: function () {
       var result = XM.ProjectBase.prototype.defaults.call(this);
@@ -526,11 +535,11 @@ white:true*/
   */
   XM.ProjectTaskRelation = XM.Info.extend({
     /** @scope XM.Task.prototype */
-    
+
     recordType: 'XM.ProjectTaskRelation',
-    
+
     editableModel: 'XM.ProjectTask'
-    
+
   });
 
   /**
@@ -550,7 +559,7 @@ white:true*/
 
   XM.ProjectListItem = XM.ProjectListItem.extend(XM.ProjectStatus);
 
-    
+
   /**
     @class
 
@@ -558,18 +567,18 @@ white:true*/
   */
   XM.Task = XM.ProjectTask.extend({
     /** @scope XM.Task.prototype */
-    
+
     recordType: 'XM.Task',
-    
+
     statusDidChange: function () {
       XM.ProjectTask.prototype.statusDidChange.apply(this, arguments);
       if (this.getStatus() === XM.Model.READY_CLEAN) {
         this.setReadOnly("project");
       }
     }
-    
+
   });
-  
+
   /**
     @class
 

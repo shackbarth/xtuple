@@ -52,6 +52,13 @@
         }
       },
       {
+        "name": "organization",
+        "attr": {
+          "type": "String",
+          "column": "usr_org"
+        }
+      },
+      {
         "name": "grantedExtensions",
         "toMany": {
           "column": "usr_username",

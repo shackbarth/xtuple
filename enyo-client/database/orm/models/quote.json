@@ -1050,10 +1050,10 @@
         }
       },
       {
-        "name": "listCostMarkup",
+        "name": "markup",
         "attr": {
           "type": "Percent",
-          "column": "list_cost_markup"
+          "column": "markup"
         }
       },
       {

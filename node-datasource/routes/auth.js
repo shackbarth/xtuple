@@ -16,7 +16,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     passport.authenticate('local', { failureRedirect: '/?login=fail' }),
     function (req, res, next) {
 
-      if (req && req.session && req.session.passport && req.session.passport.user && req.session.passport.user.organization) {
+      if (req && req.session && !req.session.oauth2 && req.session.passport && req.session.passport.user && req.session.passport.user.organization) {
         res.redirect("/" + req.session.passport.user.organization + '/app');
         //next();
       } else {
@@ -97,27 +97,28 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // Update the session store row to add the org choice and username.
       // Note: Updating this object magically persists the data into the SessionStore table.
 
-      privs = _.map(response.get("privileges"), function (privAss) {
-        return privAss.privilege.name;
-      });
+      //privs = _.map(response.get("privileges"), function (privAss) {
+      //  return privAss.privilege.name;
+      //});
 
-      _.each(response.get('organizations'), function (orgValue, orgKey, orgList) {
-        if (orgValue.name === selectedOrg) {
-          userOrg = orgValue.name;
-          userName = orgValue.username;
-        }
-      });
+      //_.each(response.get('organizations'), function (orgValue, orgKey, orgList) {
+      //  if (orgValue.name === selectedOrg) {
+      //    userOrg = orgValue.name;
+      //    userName = orgValue.username;
+      //  }
+      //});
 
-      if (!userOrg || !userName) {
+      //if (!userOrg || !userName) {
+      if (!response.get("username")) {
         // This shouldn't happen.
         X.log("User %@ has no business trying to log in to organization %@.".f(userId, selectedOrg));
         res.redirect('/' + selectedOrg + '/logout');
         return;
       }
 
-      req.session.passport.user.globalPrivileges = privs;
-      req.session.passport.user.organization = userOrg;
-      req.session.passport.user.username = userName;
+      //req.session.passport.user.globalPrivileges = privs;
+      req.session.passport.user.organization = response.get("organization");
+      req.session.passport.user.username = response.get("username");
 
 // TODO - req.oauth probably isn't enough here, but it's working 2013-03-15...
       // If this is an OAuth 2.0 login with only 1 org.
@@ -146,6 +147,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     // The user under whose authority the query is run.
     options.username = X.options.databaseServer.user;
+    options.database = selectedOrg;
 
     // Verify that the org is valid for the user.
     user.fetch(options);

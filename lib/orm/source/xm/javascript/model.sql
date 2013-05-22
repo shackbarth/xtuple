@@ -54,24 +54,30 @@ select xt.install_js('XM','Model','xtuple', $$
     @param {Object} Options: timeout
   */
   XM.Model.obtainLock = function (nameSpace, type, id, etag, options) {
-    var orm = XT.Orm.fetch(nameSpace, type),
-       data = Object.create(XT.Data),
-       lockTable = orm.lockTable || orm.table,
-       pkey = XT.Orm.primaryKey(orm),
-       nkey = XT.Orm.naturalKey(orm),
-       rec,
-       pid;
+    try {
+      var orm = XT.Orm.fetch(nameSpace, type),
+         data = Object.create(XT.Data),
+         lockTable = orm.lockTable || orm.table,
+         pkey = XT.Orm.primaryKey(orm),
+         nkey = XT.Orm.naturalKey(orm),
+         rec,
+         pid;
 
-    /* if the model uses a natural key, get the primary key value */
-    rec = data.retrieveRecord({
-      nameSpace: nameSpace,
-      type: type,
-      id: id
-    });
-    pid = nkey ? data.getId(orm, id) : id;
-    if (!rec || !rec.data) { throw "Record for requested lock not found." }
-    if (rec.etag !== etag) { return false; }
-    return data.tryLock(lockTable, pid);
+      /* if the model uses a natural key, get the primary key value */
+      rec = data.retrieveRecord({
+        nameSpace: nameSpace,
+        type: type,
+        id: id
+      });
+      pid = nkey ? data.getId(orm, id) : id;
+
+      if (!rec || !rec.data) { throw "Record for requested lock not found." }
+      if (rec.etag !== etag) { return false; }
+
+      return data.tryLock(lockTable, pid);
+    } catch (err) {
+      XT.error(err, arguments);
+    }
   }
 
   /**

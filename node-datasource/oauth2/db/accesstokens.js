@@ -2,7 +2,7 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global X:true, SYS:true, console:true*/
 
-exports.findByAccessToken = function (key, done) {
+exports.findByAccessToken = function (key, database, done) {
   "use strict";
 
   var code = new SYS.Oauth2tokenCollection(),
@@ -29,13 +29,15 @@ exports.findByAccessToken = function (key, done) {
     }
   };
 
+  options.database = database;
+
   options.query = {};
   options.query.parameters = [{attribute: "accessToken", value: key}];
 
   code.fetch(options);
 };
 
-exports.findByRefreshToken = function (key, done) {
+exports.findByRefreshToken = function (key, database, done) {
   "use strict";
 
   var code = new SYS.Oauth2tokenCollection(),
@@ -61,6 +63,8 @@ exports.findByRefreshToken = function (key, done) {
       return done(new Error(message));
     }
   };
+
+  options.database = database;
 
   options.query = {};
   options.query.parameters = [{attribute: "refreshToken", value: key}];

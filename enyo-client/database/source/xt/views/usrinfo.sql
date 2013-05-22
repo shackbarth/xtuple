@@ -52,6 +52,7 @@ COALESCE(( SELECT usrpref.usrpref_value
   FROM usrpref
   WHERE usrpref.usrpref_username = pg_user.usename::text AND usrpref.usrpref_name = 'email'::text), ''::text
 ) AS usr_email, 
+current_database() as usr_org,
 COALESCE(( SELECT usrpref.usrpref_value
   FROM usrpref
   WHERE usrpref.usrpref_username = pg_user.usename::text AND usrpref.usrpref_name = 'window'::text), ''::text
