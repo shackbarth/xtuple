@@ -306,15 +306,15 @@ app.get('/:org/dialog/authorize', oauth2.authorization);
 app.post('/:org/dialog/authorize/decision', oauth2.decision);
 app.post('/:org/oauth/token', oauth2.token);
 
-app.get('/discovery/v1alpha1/apis/:org/v1alpha1/rest', routes.restDiscoveryGetRest);
-app.get('/discovery/v1alpha1/apis/:org/:model/v1alpha1/rest', routes.restDiscoveryGetRest);
-app.get('/discovery/v1alpha1/apis/:org', routes.restDiscoveryList);
+app.get('/:org/discovery/v1alpha1/apis/v1alpha1/rest', routes.restDiscoveryGetRest);
+app.get('/:org/discovery/v1alpha1/apis/:model/v1alpha1/rest', routes.restDiscoveryGetRest);
+app.get('/:org/discovery/v1alpha1/apis', routes.restDiscoveryList);
 
-app.get('/api/userinfo', user.info);
+app.get('/:org/api/userinfo', user.info);
 
-app.all('/api/v1alpha1/:model/:id', routes.restRouter);
-app.all('/api/v1alpha1/:model', routes.restRouter);
-app.all('/api/v1alpha1/*', routes.restRouter);
+app.all('/:org/api/v1alpha1/:model/:id', routes.restRouter);
+app.all('/:org/api/v1alpha1/:model', routes.restRouter);
+app.all('/:org/api/v1alpha1/*', routes.restRouter);
 
 app.get('/', routes.loginForm);
 app.post('/login', routes.login);
