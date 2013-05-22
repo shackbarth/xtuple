@@ -1,25 +1,20 @@
-
-Critical deployment changes
----------------------------
-* add redirectPort and maintenancePort to config.js, see sample_config.js
-
-
-Features and bugs
-----------------
-
-- Implemented
-  issue #[20295](http://www.xtuple.org/xtincident/view/bugs/20295)
-  move all ports into config.js, added redirectPort and maintenancePort to sample_config.js 
-
-
-1.3.4 (2013/05)
+1.3.5 (2013/05)
 ===============
 
 Critical deployment changes
 ---------------------------
-* Anybody who wants to work in the admin console will have to add global into their org
-  table. You can do this through the admin console, but do it before you upgrade! You
-  do not need to associate the org with your user.
+* Add redirectPort and maintenancePort to config.js, see sample_config.js
+* To run tests you will need to add the test database to the login_data.js
+  file, per the conventions in sample_login_data.js. Note also the new
+  snake_case filename convention. You will also need to add this database
+  name to your config.js file under datasource.testDatabase.
+
+Features and bugs
+----------------
+
+
+1.3.4 (2013/05/06)
+===============
 
 Features and bugs
 -----------------

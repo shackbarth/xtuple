@@ -161,7 +161,7 @@ white:true*/
     */
     sendEmail: function (payload, options) {
       var ajax = new enyo.Ajax({
-          url: "/email",
+          url: XT.getOrganizationPath() + "/email",
           success: options ? options.success : undefined,
           error: options ? options.error : undefined
         });
