@@ -92,13 +92,12 @@ white:true*/
       // Set the `status` attribute with appropriate value
       if (completeDate) {
         attrStatus = K.COMPLETED;
-        this.setToDoStatusProxy(K.NEITHER);
-      } else if (proxy === K.DEFERRED) {
-        attrStatus = K.DEFERRED;
-      } else if (proxy === K.PENDING) {
-        attrStatus = K.PENDING;
+        this.set("statusProxy", K.NEITHER);
+      } else if (proxy === K.DEFERRED || proxy === K.PENDING) {
+        attrStatus = proxy;
       } else if (startDate) {
         attrStatus = K.IN_PROCESS;
+        this.set("statusProxy", K.NEITHER);
       }
       this.set('status', attrStatus);
     }
