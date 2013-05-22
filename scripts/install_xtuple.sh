@@ -73,7 +73,6 @@ while getopts ":icbpgnh-:" opt; do
 	 echo "This script must be run with sudo."
 	 echo ""
 	 echo "To install everything, just do sudo ./install_xtuple.sh"
-	 echo "Everything will go in /usr/local/src/xtuple"
 	 echo ""
 	 echo -e "  -b\t\t"
 	 echo -e "  -c\t\t"
@@ -104,13 +103,6 @@ then
 	POSTGRES=
 	GRAB=
 	INIT=
-fi
-
-if [ $CLONE ]
-then
-	echo "Make sure you have created a github account and have forked the xTuple repos."
-	echo "Also make sure you have uploaded your ssh key to your github."
-	read -p "Github username: " USERNAME ERRS
 fi
 
 install_packages() {
@@ -159,44 +151,6 @@ clone_repo() {
 		echo "Found /usr/src/v8"
 	fi
 	
-	cd /home/$SUDO_USER
-	# the user should have cloned their fork, not xtuple's
-	if [ -d xtuple ]
-	then
-		echo "Found xtuple directory in /home/$SUDO_USER"
-		cd xtuple
-		
-		git status 2>1 > /dev/null
-		if [ $? -ne 0 ]
-		then
-			echo "Error: xtuple directory is not a git repo."
-		fi
-		
-		if [ -z "$(git remote -v | grep git://github.com/xtuple/xtuple.git)" ]
-		then
-			echo "Adding xtuple remote"
-			su $SUDO_USER -c "git remote add xtuple git://github.com/xtuple/xtuple.git"
-		fi
-		if [ $XT_VERSION ]
-		then
-			echo "Checking out $XT_VERSION"
-			su $SUDO_USER -c "git checkout $XT_VERSION"
-		fi
-	elif [ $USERNAME ]
-	then
-		echo "Did not find xtuple directory in /home/$SUDO_USER."
-		echo "Cloning git://github.com/$USERNAME/xtuple.git"
-		su $SUDO_USER -c "git clone git://github.com/$USERNAME/xtuple.git"
-		su $SUDO_USER -c "git remote add xtuple git://github.com/xtuple/xtuple.git"
-		if [ $XT_VERSION ]
-		then
-			echo "Checking out $XT_VERSION"
-			su $SUDO_USER -c "git checkout $XT_VERSION"
-		fi
-	else
-		echo "ERROR: username not set. NOT cloning any user fork."
-		return 2
-	fi
 }
 
 # Build dependencies
@@ -416,7 +370,6 @@ setup_postgres() {
 	psql -q -U postgres -f 'init.sql'
 
 	createdb -U postgres -O admin dev
-	createdb -U postgres -O admin global 
 
 	pg_restore -U postgres -d dev postbooks_demo-$NEWESTVERSION.backup
 
@@ -425,22 +378,12 @@ setup_postgres() {
 	cd $XT_DIR/enyo-client/database/source/
 	psql -U admin -d dev -p 5432 -h localhost -f "init_instance.sql"
 
-	cd $XT_DIR/node-datasource/database/source/
-	psql -U admin -d global -p 5432 -h localhost -f "init_global.sql"
-
-	cd $XT_DIR/enyo-client/extensions/source/admin/database/source
-	psql -U admin -d dev -p 5432 -h localhost -f "init_script.sql"
 	cd $XT_DIR/enyo-client/extensions/source/crm/database/source
-	psql -U admin -d dev -p 5432 -h localhost -f "init_script.sql"
-	cd $XT_DIR/enyo-client/extensions/source/incident_plus/database/source
 	psql -U admin -d dev -p 5432 -h localhost -f "init_script.sql"
 	cd $XT_DIR/enyo-client/extensions/source/project/database/source
 	psql -U admin -d dev -p 5432 -h localhost -f "init_script.sql"
 	cd $XT_DIR/enyo-client/extensions/source/sales/database/source
 	psql -U admin -d dev -p 5432 -h localhost -f "init_script.sql"
-
-	#cd $BASEDIR/private-extensions/source/connect/database/source
-	#psql -U admin -d dev -p 5432 -h localhost -f "init_script.sql"
 }
 
 # Pull submodules
@@ -461,11 +404,9 @@ pull_modules() {
 	
 	rm -f debug.js
 	echo "enyo.depends(" > debug.js
-	echo "  '/public-extensions/source/project/client/package.js'," >> debug.js
-	echo "  '/public-extensions/source/crm/client/package.js'," >> debug.js
-	echo "  '/public-extensions/source/admin/client/package.js'," >> debug.js
-	echo "  '/public-extensions/source/incident_plus/client/package.js'," >> debug.js
-	echo "  '/public-extensions/source/sales/client/package.js'" >> debug.js
+	echo "  '/core-extensions/source/project/client/package.js'," >> debug.js
+	echo "  '/core-extensions/source/crm/client/package.js'," >> debug.js
+	echo "  '/core-extensions/source/sales/client/package.js'" >> debug.js
 	echo ");" >> debug.js
 }
 
@@ -482,43 +423,35 @@ init_everythings() {
 	echo ""
 	echo "######################################################"
 	echo "######################################################"
-	echo "Running the ORM installer on the databases"
+	echo "Running the ORM installer on the database"
 	echo "######################################################"
 	echo "######################################################"
 	echo ""
 	
 	cd $XT_DIR/node-datasource/installer/
 	./installer.js -cli -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/database/orm/
-	./installer.js -cli -h localhost -d global -u admin -p 5432 -P admin --path ../database/orm/
 	./installer.js -cli -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/crm/database/orm
-	./installer.js -cli -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/incident_plus/database/orm
 	./installer.js -cli -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/project/database/orm
 	./installer.js -cli -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/sales/database/orm
-	#./installer.js -cli -h localhost -d dev -u admin -p 5432 -P admin --path ../../../private-extensions/source/connect/database/orm/
 	
 	echo ""
 	echo "######################################################"
 	echo "######################################################"
-	echo "Adding user and organization to the databases"
+	echo "Setting properties of admin user"
 	echo "######################################################"
 	echo "######################################################"
 	echo ""
 
-	psql -U postgres global -c "INSERT INTO xt.dbserver (dbserver_name, dbserver_hostname, dbserver_port, dbserver_password, dbserver_username) VALUES ('localhost', 'localhost', 5432, 'admin', 'admin');"
-	psql -U postgres global -c "INSERT INTO xt.org (org_name, org_dbserver_name, org_licenses, org_active) VALUES ('dev', 'localhost', 10, True);"
-	psql -U postgres global -c "INSERT INTO xt.org (org_name, org_dbserver_name, org_licenses, org_active) VALUES ('global', 'localhost', 10, True);"
-	psql -U postgres global -c "INSERT INTO xt.usrorg (usrorg_usr_id, usrorg_org_name, usrorg_username) VALUES ('admin', 'dev', 'admin');"
 
-	psql -U postgres global -c "INSERT INTO xt.ext (ext_name, ext_descrip, ext_location, ext_priv_name) VALUES ('admin', 'Administration extension', '/public-extensions', 'AccessAdminExtension');"
-
-	psql -U postgres global -c "INSERT INTO xt.orgext (orgext_org_name, orgext_ext_id) SELECT 'dev', ext_id from xt.ext WHERE ext_name = 'admin';"
-	psql -U postgres global -c "UPDATE xt.usr SET usr_password='\$2a\$10\$orE6aDt4lAOkS0eLZPer5OVCYOrVOpiRGhVa3uyueRvW4Mh4BLGeW' WHERE usr_id='admin';"
+	psql -U postgres dev -c "insert into usrpriv (usrpriv_username, usrpriv_priv_id) select 'admin', priv_id from priv where priv_name like 'MaintainExtensions';";
+	psql -U postgres dev -c "UPDATE xt.usr SET usr_password='\$2a\$10\$orE6aDt4lAOkS0eLZPer5OVCYOrVOpiRGhVa3uyueRvW4Mh4BLGeW' WHERE usr_id='admin';"
+    psql -U postgres dev -c "insert into usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from ext;"
 
 	cd $XT_DIR/node-datasource
 	cat sample_config.js | sed 's/bindAddress: "localhost",/bindAddress: "0.0.0.0",/' > config.js
 
 	echo ""
-	echo "Databaes are now setup..."
+	echo "The database is now set up..."
 	echo ""
 	
 	mkdir -p $XT_DIR/node-datasource/lib/private
