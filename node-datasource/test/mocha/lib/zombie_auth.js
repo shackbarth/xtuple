@@ -91,7 +91,7 @@ Simplest possible usage:
       return;
     }
 
-    zombie.visit(host, {debug: false}, function (e, browser) {
+    zombie.visit(host, {debug: verboseMode}, function (e, browser) {
       //
       // This is the login screen
       //
