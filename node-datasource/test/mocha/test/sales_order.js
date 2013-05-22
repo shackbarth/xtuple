@@ -53,7 +53,7 @@
     };
   };
 
-  var zombieAuth = require("../../vows/lib/zombie_auth"),
+  var zombieAuth = require("../lib/zombie_auth"),
     crud = require("../lib/crud"),
     assert = require("chai").assert,
     salesOrderData = {
