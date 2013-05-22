@@ -975,14 +975,6 @@
     "table": "xt.coiteminfo",
     "idSequenceName": "coitem_coitem_id_seq",
     "comment": "Sales Order Line Item Map",
-    "privileges": {
-      "all": {
-        "create": "MaintainSalesOrders",
-        "read": "ViewSalesOrders",
-        "update": "MaintainSalesOrders",
-        "delete": "MaintainSalesOrders"
-      }
-    },
     "properties": [
       {
         "name": "id",
@@ -1215,7 +1207,8 @@
         }
       }
     ],
-    "isSystem": true
+    "isSystem": true,
+    "isNestedOnly": true
   },
   {
     "context": "xtuple",
