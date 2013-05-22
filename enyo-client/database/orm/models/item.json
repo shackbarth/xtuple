@@ -235,7 +235,7 @@
         }
       },
       {
-        "name": "listCost",
+        "name": "wholesalePrice",
         "attr": {
           "type": "Number",
           "column": "item_listcost"
@@ -1139,7 +1139,7 @@
         }
       },
       {
-        "name": "listCost",
+        "name": "wholesalePrice",
         "attr": {
           "type": "Number",
           "column": "item_listcost"

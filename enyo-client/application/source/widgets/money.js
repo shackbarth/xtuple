@@ -30,6 +30,7 @@ regexp:true, undef:true, trailing:true, white:true */
     handlers: {
       onValueChange: "pickerChanged" // intercept picker events
     },
+    maxlength: 12,
     components: [
       {kind: "FittableColumns", components: [
         {name: "label", content: "", classes: "xv-label"},

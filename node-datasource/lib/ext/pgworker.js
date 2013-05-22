@@ -2,7 +2,7 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global issue:true */
 
-var pg = require('pg').native;
+var pg = require('pg');
 var _ = require("underscore");
 
 pg.defaults.poolIdleTimeout = 10000;
@@ -11,15 +11,27 @@ pg.defaults.poolIdleTimeout = 10000;
  * Connected.
  */
 var connected = function (query, options, id, err, client, done, ranInit) {
+  // WARNING!!! If you make any changes here, please update datasource.js as well.
   "use strict";
 
+  var that = this;
+
   if (err) {
+    issue(X.warning("Failed to connect to database: " +
+      "{hostname}:{port}/{database} => %@".f(options, err.message)));
     done();
     return process.send({err: err, id: id, options: options});
   }
 
   if (ranInit === true) {
     client.hasRunInit = true;
+
+    // Register error handler to log errors.
+    // TODO - Not sure if setting that.activeQuery below is getting the right query here.
+    client.connection.on('error', function (msg) {
+      console.log("Database Error! Last query was: ", that.activeQuery);
+      console.log("Database Error! DB message was: ", msg);
+    });
   }
 
   if (!client.hasRunInit) {
@@ -27,6 +39,11 @@ var connected = function (query, options, id, err, client, done, ranInit) {
       connected, this, query, options, id, err, client, done, true));
   } else {
     client.query(query, function (err, result) {
+      if (err) {
+        // Set activeQuery for error event handler above.
+        that.activeQuery = client.activeQuery ? client.activeQuery.text : 'unknown. See PostgreSQL log.';
+      }
+
       // Release the client from the pool.
       done();
 
