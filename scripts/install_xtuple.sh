@@ -5,7 +5,7 @@ RUN_DIR=$(pwd)
 BASEDIR=/usr/local/src
 if [ $SUDO_USER ]
 then
-	XT_DIR=/home/$SUDO_USER/xtuple
+	XT_DIR=$RUN_DIR/..
 else
 	echo "Must run with sudo, not as root."
 	exit -1
