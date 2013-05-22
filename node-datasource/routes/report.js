@@ -95,7 +95,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         // thanks http://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript
         var randomKey = Math.random().toString(36).substr(2, 15),
-          tempDataModel = new SYS.BiCache(null, {isNew: true}),
+          tempDataModel = new SYS.BiCache(null, {isNew: true, database: req.session.passport.user.organization}),
           attrs = {
             key: randomKey,
             // TODO: this will be null for a single-record request. Then again, I don't know if we
