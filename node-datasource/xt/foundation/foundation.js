@@ -30,7 +30,7 @@ X = {};
   X.url          = require("url");
   X.crypto       = require("crypto");
   X.bcrypt       = require("bcrypt");
-  X.pg           = require("pg").native;
+  X.pg           = require("pg");
 
   /**
    Returns the global X

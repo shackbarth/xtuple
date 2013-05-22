@@ -13,7 +13,8 @@ var passport = require('passport'),
     ClientJWTBearerStrategy = require('passport-oauth2-jwt-bearer').Strategy,
     BearerStrategy = require('passport-http-bearer').Strategy,
     db = require('./db'),
-    privateSalt = X.fs.readFileSync(X.options.datasource.saltFile).toString();
+    privateSalt = X.fs.readFileSync(X.options.datasource.saltFile).toString(),
+    url = require('url');
 
 
 /**
@@ -118,7 +119,9 @@ passport.use(new BasicStrategy(
   function (req, username, password, done) {
     "use strict";
 
-    db.clients.findByClientId(username, function (err, client) {
+    var database = url.parse(req.url).path.split("/")[1];
+
+    db.clients.findByClientId(username, database, function (err, client) {
       if (err) { return done(err); }
       if (!client) { return done(null, false); }
       if (client.get("clientSecret") !== password) { return done(null, false); }
@@ -136,7 +139,9 @@ passport.use(new ClientPasswordStrategy(
   function (req, clientId, clientSecret, done) {
     "use strict";
 
-    db.clients.findByClientId(clientId, function (err, client) {
+    var database = url.parse(req.url).path.split("/")[1];
+
+    db.clients.findByClientId(clientId, database, function (err, client) {
       if (err) { return done(err); }
       if (!client) { return done(null, false); }
       if (client.get("clientSecret") !== clientSecret) { return done(null, false); }
@@ -156,10 +161,15 @@ passport.use(new ClientPasswordStrategy(
  * client and pass it along to the exhange middleware for full validation.
  */
 passport.use(new ClientJWTBearerStrategy(
-  function (claimSetIss, done) {
+  {
+    passReqToCallback: true
+  },
+  function (req, claimSetIss, done) {
     "use strict";
 
-    db.clients.findByClientId(claimSetIss, function (err, client) {
+    var database = url.parse(req.url).path.split("/")[1];
+
+    db.clients.findByClientId(claimSetIss, database, function (err, client) {
       if (err) { return done(err); }
       if (!client) { return done(null, false); }
       return done(null, client);
@@ -188,9 +198,10 @@ passport.use(new BearerStrategy(
     // That could take a lot of CPU if there are 1000's of accessToken. Instead, we will
     // not use any salt for this hash. An accessToken is only valid for 1 hour so the
     // risk of cracking the SHA1 hash in that time is small.
-    var accesshash = X.crypto.createHash('sha1').update(privateSalt + accessToken).digest("hex");
+    var accesshash = X.crypto.createHash('sha1').update(privateSalt + accessToken).digest("hex"),
+        database = url.parse(req.url).path.split("/")[1];
 
-    db.accessTokens.findByAccessToken(accesshash, function (err, token) {
+    db.accessTokens.findByAccessToken(accesshash, database, function (err, token) {
       if (err) { return done(err); }
       if (!token) { return done(null, false); }
 

@@ -326,15 +326,13 @@ var lang = XT.stringsFor("en_US", {
   "_lineNumber": "Line Number",
   "_lines": "Lines",
   "_list" : "List",
-  "_listCost" : "List Cost",
-  "_listCostMarkup" : "List Cost Markup",
   "_listPrice": "List Price",
   "_listPriceDiscount": "List Price Discount",
   "_locale": "Locale",
   "_login": "Login",
   "_logout": "Logout",
-  "_manager": "Manager",
   "_lotSerial": "Lot/Serial",
+  "_manager": "Manager",
   "_mainAddress": "Main Address",
   "_manufactured": "Manufactured",
   "_margin": "Margin",
@@ -568,6 +566,7 @@ var lang = XT.stringsFor("en_US", {
   "_web": "Web",
   "_webAddress": "Web Address",
   "_welcome": "Welcome",
+  "_wholesalePrice": "Wholesale Price",
   "_xtuplePostbooks": "PostBooks",
 
   // ********
@@ -712,5 +711,6 @@ var lang = XT.stringsFor("en_US", {
   "_updateFractional": "The quantity ordered and unit of measure selected will result in a fractional inventory qty for this item. This item does not allow fractional quantities; the quantity will be updated accordingly.",
   "_updatePrice?": "You have changed the price basis, do you want to update the Price?",
   "_valueExists": "Record with {attr} of '{value}' already exists.",
-  "_whatToDo": "What would you like to do?"
+  "_whatToDo": "What would you like to do?",
+  "_endPriorToStart" : "{start} Date must be prior to {end} Date."
 });

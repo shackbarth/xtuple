@@ -44,6 +44,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     setValue: function (value, options) {
       this.inherited(arguments);
+      options = options || {};
       var isRelation = this.isRelation(),
         that = this,
         color = "black",
@@ -70,7 +71,7 @@ regexp:true, undef:true, trailing:true, white:true */
       this.setDisabled(enabled);
       
       // Automatically open a workspace to set up a record for this role if necessary
-      if (input && isRelation && !value) {
+      if (input && isRelation && !value && !options.silent) {
         model = this.getOwner().getValue();
         relation = model.getRelation(this.getAttr());
         recordType = relation.relatedModel.prototype.recordType;

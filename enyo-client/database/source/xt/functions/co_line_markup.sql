@@ -1,4 +1,4 @@
-create or replace function xt.co_line_list_cost_markup(coitem) returns numeric stable as $$
+create or replace function xt.co_line_markup(coitem) returns numeric stable as $$
   select
     case
       when $1.coitem_custprice = 0 then null

@@ -46,7 +46,9 @@ white:true*/
 
     recordType: 'XM.TaxAuthority',
     
-    requiredAttributes: [],
+    requiredAttributes: [
+      "name"
+    ],
     
     documentKey: 'code',
 

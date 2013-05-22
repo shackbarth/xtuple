@@ -50,42 +50,66 @@ select xt.install_js('XT','Orm','xtuple', $$
    @param {String} orm definition
   */
   XT.Orm.install = function(json) {
-    var newJson = JSON.parse(json),
-      oldJson,
-      oldOrm,
-      isExtension,
-      isRest = newJson.isRest ? newJson.isRest : false,
-      sequence,
-      nameSpace = newJson.nameSpace,
-      type = newJson.type,
-      context = newJson.context,
-      sql;
-    if(!nameSpace) throw new Error("A name space is required");
-    if(!type) throw new Error("A type is required");
-    if(!context) throw new Error("A context is required");
-    sql = 'select orm_id as "id", ' +
-          '  orm_json as "json", ' +
-          '  orm_ext as "isExtension" ' +
-          'from xt.orm ' +
-          'where orm_namespace = $1 ' +
-          ' and orm_type = $2 ' +
-          ' and orm_context = $3';
-    oldOrm = plv8.execute(sql, [nameSpace, type, context])[0];
-    sequence = newJson.sequence ? newJson.sequence : 0;
-    isExtension = newJson.isExtension ? true : false;
-    if(oldOrm) {
-      oldJson = JSON.parse(oldOrm.json);
-      if(oldJson.isSystem && !newJson.isSystem) throw new Error("A system map already exists for" + nameSpace + '.' + type);
-      if(oldOrm.isExtension !== isExtension) throw new Error("Can not change extension state for " + nameSpace + '.' + type);
-      sql = 'update xt.orm set ' +
-            ' orm_json = $1, ' +
-            ' orm_seq = $2, ' +
-            ' orm_rest = $3 ' +
-            'where orm_id = $4';
-      plv8.execute(sql, [json, sequence, isRest, oldOrm.id]);
-    } else {
-      sql = 'insert into xt.orm ( orm_namespace, orm_type, orm_context, orm_json, orm_seq, orm_ext, orm_rest ) values ($1, $2, $3, $4, $5, $6, $7)';
-      plv8.execute(sql, [nameSpace, type, context, json, sequence, isExtension, isRest]);
+    try {
+      var newJson = JSON.parse(json),
+        oldJson,
+        oldOrm,
+        isExtension,
+        isRest = newJson.isRest ? newJson.isRest : false,
+        sequence,
+        nameSpace = newJson.nameSpace,
+        type = newJson.type,
+        context = newJson.context,
+        sql;
+
+      if(!nameSpace) throw new Error("A name space is required");
+      if(!type) throw new Error("A type is required");
+      if(!context) throw new Error("A context is required");
+
+      sql = 'select orm_id as "id", ' +
+            '  orm_json as "json", ' +
+            '  orm_ext as "isExtension" ' +
+            'from xt.orm ' +
+            'where orm_namespace = $1 ' +
+            ' and orm_type = $2 ' +
+            ' and orm_context = $3';
+
+      if (DEBUG) {
+        plv8.elog(NOTICE, 'install sql = ', sql);
+        plv8.elog(NOTICE, 'install values = ', [nameSpace, type, context]);
+      }
+      oldOrm = plv8.execute(sql, [nameSpace, type, context])[0];
+
+      sequence = newJson.sequence ? newJson.sequence : 0;
+      isExtension = newJson.isExtension ? true : false;
+
+      if(oldOrm) {
+        oldJson = JSON.parse(oldOrm.json);
+        if(oldJson.isSystem && !newJson.isSystem) throw new Error("A system map already exists for" + nameSpace + '.' + type);
+        if(oldOrm.isExtension !== isExtension) throw new Error("Can not change extension state for " + nameSpace + '.' + type);
+
+        sql = 'update xt.orm set ' +
+              ' orm_json = $1, ' +
+              ' orm_seq = $2, ' +
+              ' orm_rest = $3 ' +
+              'where orm_id = $4';
+
+        if (DEBUG) {
+          plv8.elog(NOTICE, 'install sql = ', sql);
+          plv8.elog(NOTICE, 'install values = ', [json, sequence, isRest, oldOrm.id]);
+        }
+        plv8.execute(sql, [json, sequence, isRest, oldOrm.id]);
+      } else {
+        sql = 'insert into xt.orm ( orm_namespace, orm_type, orm_context, orm_json, orm_seq, orm_ext, orm_rest ) values ($1, $2, $3, $4, $5, $6, $7)';
+
+        if (DEBUG) {
+          plv8.elog(NOTICE, 'install sql = ', sql);
+          plv8.elog(NOTICE, 'install values = ', [nameSpace, type, context, json, sequence, isExtension, isRest]);
+        }
+        plv8.execute(sql, [nameSpace, type, context, json, sequence, isExtension, isRest]);
+      }
+    } catch (err) {
+      XT.error(err, arguments);
     }
   };
 
@@ -96,37 +120,46 @@ select xt.install_js('XT','Orm','xtuple', $$
     @returns Array
   */
   XT.Orm.viewDependencies = function(view) {
-    var rec, viewNames = [],
-      nsp = view.beforeDot(),
-      quoted = view.replace(".", '."') + '"';
-      sql = 'select distinct relname::text as "viewName" ' +
-            'from pg_depend ' +
-            'join pg_rewrite on (pg_rewrite.oid=objid) ' +
-            'join pg_class c on (c.oid=ev_class) ' +
-            'join pg_namespace n on (c.relnamespace=n.oid) ' +
-            "where (classid='pg_rewrite'::regclass) " +
-            " and (refclassid='pg_class'::regclass) " +
-            ' and (refobjid::regclass::text in ($1,$2)) ' +
-            " and (nspname || '.' || relname not in ($1,$2));";
-    rec = plv8.execute(sql, [view, quoted]);
+    try {
+      var rec, viewNames = [],
+        nsp = view.beforeDot(),
+        quoted = view.replace(".", '."') + '"';
+        sql = 'select distinct relname::text as "viewName" ' +
+              'from pg_depend ' +
+              'join pg_rewrite on (pg_rewrite.oid=objid) ' +
+              'join pg_class c on (c.oid=ev_class) ' +
+              'join pg_namespace n on (c.relnamespace=n.oid) ' +
+              "where (classid='pg_rewrite'::regclass) " +
+              " and (refclassid='pg_class'::regclass) " +
+              ' and (refobjid::regclass::text in ($1,$2)) ' +
+              " and (nspname || '.' || relname not in ($1,$2));";
 
-    /*  Loop through view dependencies */
-    for(var i = 0; i < rec.length; i++) {
-      var viewName = rec[i].viewName,
-          res = XT.Orm.viewDependencies(nsp + '.' + viewName);
-      for(var r = 0; r < res.length; r++) {
-        if(viewNames.contains(res[r])) {
-          viewNames.splice(viewNames.indexOf(res[r]), 1);
-        }
-        viewNames.push(res[r]);
+      if (DEBUG) {
+        plv8.elog(NOTICE, 'viewDependencies sql = ', sql);
+        plv8.elog(NOTICE, 'viewDependencies values = ', [view, quoted]);
       }
+      rec = plv8.execute(sql, [view, quoted]);
+
+      /*  Loop through view dependencies */
+      for(var i = 0; i < rec.length; i++) {
+        var viewName = rec[i].viewName,
+            res = XT.Orm.viewDependencies(nsp + '.' + viewName);
+        for(var r = 0; r < res.length; r++) {
+          if(viewNames.contains(res[r])) {
+            viewNames.splice(viewNames.indexOf(res[r]), 1);
+          }
+          viewNames.push(res[r]);
+        }
+      }
+
+      /* If the view we're on isnt already in the array, prepend the dependency */
+      if(!viewNames.contains(view)) viewNames.unshift(view);
+
+      /* Return the dependencies */
+      return viewNames;
+    } catch (err) {
+      XT.error(err, arguments);
     }
-
-    /* If the view we're on isnt already in the array, prepend the dependency */
-    if(!viewNames.contains(view)) viewNames.unshift(view);
-
-    /* Return the dependencies */
-    return viewNames;
   };
 
   /**
@@ -140,73 +173,89 @@ select xt.install_js('XT','Orm','xtuple', $$
     @returns {Object}
   */
   XT.Orm.fetch = function(nameSpace, type, options) {
-    var db = XT.currentDb(),
-      ext,
-      i,
-      options = options || {},
-      orm,
-      ret,
-      recordType = nameSpace + '.'+ type,
-      res,
-      sql;
+    try {
+      var db = XT.currentDb(),
+        ext,
+        i,
+        options = options || {},
+        orm,
+        ret,
+        recordType = nameSpace + '.'+ type,
+        res,
+        sql;
 
-    if (!this._maps) {
-      this._maps = {};
-    }
-    if (!this._maps[db]) {
-      this._maps[db] = [];
-    }
+      if (!this._maps) {
+        this._maps = {};
+      }
+      if (!this._maps[db]) {
+        this._maps[db] = [];
+      }
 
-    res = options.refresh ? null : this._maps[db].findProperty('recordType', recordType);
+      res = options.refresh ? null : this._maps[db].findProperty('recordType', recordType);
 
-    if (res) {
-      ret = res.map;
-    } else {
-     /* get base */
-      sql = 'select orm_json as json ' +
-                'from xt.orm ' +
-                'where orm_namespace=$1' +
-                ' and orm_type=$2' +
-                ' and not orm_ext ' +
-                ' and orm_active ';
-      res = plv8.execute(sql, [ nameSpace, type ]);
-      if(!res.length) {
-        if (options.silentError) {
-          return false;
-        } else {
-          plv8.elog(ERROR, "No orm found for " + nameSpace + "." + type);
+      if (res) {
+        ret = res.map;
+      } else {
+       /* get base */
+        sql = 'select orm_json as json ' +
+                  'from xt.orm ' +
+                  'where orm_namespace=$1' +
+                  ' and orm_type=$2' +
+                  ' and not orm_ext ' +
+                  ' and orm_active ';
+
+        if (DEBUG) {
+          plv8.elog(NOTICE, 'fetch sql = ', sql);
+          plv8.elog(NOTICE, 'fetch values = ', [nameSpace, type]);
         }
-      }
-      ret = JSON.parse(res[0].json);
+        res = plv8.execute(sql, [nameSpace, type]);
 
-      /* get extensions and merge them into the base */
-      if (!ret.extensions) ret.extensions = [];
-      sql = 'select orm_json as json ' +
-            'from xt.orm ' +
-            'where orm_namespace=$1' +
-            ' and orm_type=$2' +
-            ' and orm_ext ' +
-            ' and orm_active ' +
-            'order by orm_seq';
-      res = plv8.execute(sql, [ nameSpace, type ]);
-      for (i = 0; i < res.length; i++) {
-        orm = JSON.parse(res[i].json);
-        ext = {};
-        ext.context = orm.context;
-        ext.comment = orm.comment;
-        ext.nameSpace = nameSpace;
-        ext.table = orm.table;
-        ext.isChild = orm.isChild;
-        ext.relations = orm.relations;
-        ext.properties = orm.properties;
-        ext.order = orm.order;
-        ret.extensions.push(ext);
-      }
+        if(!res.length) {
+          if (options.silentError) {
+            return false;
+          } else {
+            plv8.elog(ERROR, "No orm found for " + nameSpace + "." + type);
+          }
+        }
+        ret = JSON.parse(res[0].json);
 
-      /* cache the result so we don't requery needlessly */
-      this._maps[db].push({ "recordType": recordType, "map": ret});
+        /* get extensions and merge them into the base */
+        if (!ret.extensions) ret.extensions = [];
+        sql = 'select orm_json as json ' +
+              'from xt.orm ' +
+              'where orm_namespace=$1' +
+              ' and orm_type=$2' +
+              ' and orm_ext ' +
+              ' and orm_active ' +
+              'order by orm_seq';
+
+        if (DEBUG) {
+          plv8.elog(NOTICE, 'fetch sql = ', sql);
+          plv8.elog(NOTICE, 'fetch values = ', [nameSpace, type]);
+        }
+        res = plv8.execute(sql, [nameSpace, type]);
+
+        for (i = 0; i < res.length; i++) {
+          orm = JSON.parse(res[i].json);
+          ext = {};
+          ext.context = orm.context;
+          ext.comment = orm.comment;
+          ext.nameSpace = nameSpace;
+          ext.table = orm.table;
+          ext.isChild = orm.isChild;
+          ext.relations = orm.relations;
+          ext.properties = orm.properties;
+          ext.order = orm.order;
+          ret.extensions.push(ext);
+        }
+
+        /* cache the result so we don't requery needlessly */
+        this._maps[db].push({ "recordType": recordType, "map": ret});
+      }
+      return ret;
+    } catch (err) {
+      XT.error(err, arguments);
     }
-    return ret;
   };
 
   /**
@@ -218,15 +267,21 @@ select xt.install_js('XT','Orm','xtuple', $$
     @returns String
   */
   XT.Orm.naturalKey = function (orm, getColumn) {
-    var i,
-      prop;
-    /* find primary key */
-    for (i = 0; i < orm.properties.length; i++) {
-      var prop = orm.properties[i];
-      if(prop.attr && prop.attr.isNaturalKey)
-        return getColumn ? prop.attr.column : prop.name;
+    try {
+      var i,
+        prop;
+
+      /* find primary key */
+      for (i = 0; i < orm.properties.length; i++) {
+        var prop = orm.properties[i];
+        if(prop.attr && prop.attr.isNaturalKey)
+          return getColumn ? prop.attr.column : prop.name;
+      }
+
+      return false;
+    } catch (err) {
+      XT.error(err, arguments);
     }
-    return false;
   };
 
   /**
@@ -238,15 +293,21 @@ select xt.install_js('XT','Orm','xtuple', $$
     @returns String
   */
   XT.Orm.primaryKey = function (orm, getColumn) {
-    var i,
-      prop;
-    /* find primary key */
-    for (i = 0; i < orm.properties.length; i++) {
-      var prop = orm.properties[i];
-      if(prop.attr && prop.attr.isPrimaryKey)
-        return getColumn ? prop.attr.column : prop.name;
+    try {
+      var i,
+        prop;
+
+      /* find primary key */
+      for (i = 0; i < orm.properties.length; i++) {
+        var prop = orm.properties[i];
+        if(prop.attr && prop.attr.isPrimaryKey)
+          return getColumn ? prop.attr.column : prop.name;
+      }
+
+      return false;
+    } catch (err) {
+      XT.error(err, arguments);
     }
-    return false;
   };
 
   /**
@@ -257,24 +318,30 @@ select xt.install_js('XT','Orm','xtuple', $$
     @returns Object
   */
   XT.Orm.getProperty = function (orm, property) {
-    var i,
-      ret;
-    /* look for property on the first level */
-    if (orm) {
-      for (i = 0; i < orm.properties.length; i++) {
-        if(orm.properties[i].name === property)
-          return orm.properties[i];
-      }
+    try {
+      var i,
+        ret;
 
-      /* look recursively for property on extensions */
-      if(orm.extensions) {
-        for (i = 0; i < orm.extensions.length; i++) {
-          ret = XT.Orm.getProperty(orm.extensions[i], property);
-          if(ret) return ret;
+      /* look for property on the first level */
+      if (orm) {
+        for (i = 0; i < orm.properties.length; i++) {
+          if(orm.properties[i].name === property)
+            return orm.properties[i];
+        }
+
+        /* look recursively for property on extensions */
+        if(orm.extensions) {
+          for (i = 0; i < orm.extensions.length; i++) {
+            ret = XT.Orm.getProperty(orm.extensions[i], property);
+            if(ret) return ret;
+          }
         }
       }
+
+      return false;
+    } catch (err) {
+      XT.error(err, arguments);
     }
-    return false;
   };
 
   /**
@@ -283,316 +350,348 @@ select xt.install_js('XT','Orm','xtuple', $$
     @param {Object} orm
   */
   XT.Orm.createView = function (orm) {
-    /* constants */
-    var SELECT = 'select {columns} from {table} where {conditions} {order}',
-      cols = [],
-      tbls = [],
-      tbl = 1 - 0,
-      clauses = [],
-      orderBy = [],
-      comments = 'System view generated by object relation maps: WARNING! Do not make changes, add rules or dependencies directly to this view!',
-      query = '',
-      base = orm,
-      viewName = orm.nameSpace.decamelize() + '.' + orm.type.decamelize(),
-      processOrm,
-      schemaName,
-      tableName,
-      res;
-
-    // ..........................................................
-    // METHODS
-    //
-
-    /* internal function for processing orm and its extensions recursively */
-    processOrm = function(orm) {
-      var props = orm.properties ? orm.properties : [],
-        tblAlias = orm.table === base.table ? 't1' : 't' + tbl,
-        ormClauses = [],
-        Orm = XT.Orm,
-        prop,
-        i,
-        n,
-        col,
-        alias,
-        toOne,
-        table,
-        type,
-        inverse,
-        iorm,
-        ormp,
-        attr,
-        isVisible,
-        value,
-        conditions,
-        join,
-        lockTable,
+    try {
+      /* constants */
+      var SELECT = 'select {columns} from {table} where {conditions} {order}',
+        cols = [],
+        tbls = [],
+        tbl = 1 - 0,
+        clauses = [],
+        orderBy = [],
+        comments = 'System view generated by object relation maps: WARNING! Do not make changes, add rules or dependencies directly to this view!',
+        query = '',
+        base = orm,
+        viewName = orm.nameSpace.decamelize() + '.' + orm.type.decamelize(),
+        processOrm,
         schemaName,
         tableName,
-        pkey,
-        nkey,
-        orderBy;
+        res;
 
-      /* process properties */
-      for (i = 0; i < props.length; i++) {
-        prop = props[i];
-        nkey = prop.toOne ? Orm.naturalKey(Orm.fetch(orm.nameSpace, prop.toOne.type)) : false,
-        alias = prop.name;
-        if(DEBUG) plv8.elog(NOTICE, 'processing property ->', prop.name);
-        if(prop.name === 'dataState') throw new Error("Can not use 'dataState' as a property name.");
+      // ..........................................................
+      // METHODS
+      //
 
-        /* process attributes */
-        if (prop.attr || prop.toOne) {
-          attr = prop.attr ? prop.attr : prop.toOne;
-          if (DEBUG) plv8.elog(NOTICE, 'building attribute', prop.name, attr.column);
-          isVisible = attr.value === undefined ? true : false;
-          if (!attr.type) throw new Error('No type was defined on property ' + prop.name);
-          if (isVisible) {
-            col = tblAlias + '.' + attr.column;
-            col = col.concat(' as "', alias, '"');
+      /* internal function for processing orm and its extensions recursively */
+      processOrm = function(orm) {
+        var props = orm.properties ? orm.properties : [],
+          tblAlias = orm.table === base.table ? 't1' : 't' + tbl,
+          ormClauses = [],
+          Orm = XT.Orm,
+          prop,
+          i,
+          n,
+          col,
+          alias,
+          toOne,
+          table,
+          type,
+          inverse,
+          iorm,
+          ormp,
+          attr,
+          isVisible,
+          value,
+          conditions,
+          join,
+          lockTable,
+          schemaName,
+          tableName,
+          pkey,
+          nkey,
+          orderBy;
 
-            /* If the column is `obj_uuid` and it's not there, create it.
-               This violates our rule to not touch the source schema, but otherwise
-               we risk a big performance hit on all the joins that
-               would be required if uuid were in another table */ 
-            if (attr.column  === "obj_uuid") {
-              query = "select count(a.attname) " +
-                      "from pg_class c, pg_namespace n, pg_attribute a, pg_type t " +
-                      "where c.relname = $1 " +
-                      " and n.nspname = $2 " +
-                      " and n.oid = c.relnamespace " +
-                      " and a.attnum > 0 " +
-                      " and a.attname = 'obj_uuid' " +
-                      " and a.attrelid = c.oid " +
-                      " and a.atttypid = t.oid; ";
-              schemaName = orm.table.indexOf(".") === -1 ? 'public' : orm.table.beforeDot();
-              tableName = orm.table.indexOf(".") === -1 ? orm.table : orm.table.afterDot();
-              if (DEBUG) { plv8.elog(NOTICE, 'Check obj_uuid query', query, tableName, schemaName); }
-              res = plv8.execute(query, [tableName, schemaName]);
+        /* process properties */
+        for (i = 0; i < props.length; i++) {
+          prop = props[i];
+          nkey = prop.toOne ? Orm.naturalKey(Orm.fetch(orm.nameSpace, prop.toOne.type)) : false,
+          alias = prop.name;
+          if(DEBUG) plv8.elog(NOTICE, 'processing property ->', prop.name);
+          if(prop.name === 'dataState') throw new Error("Can not use 'dataState' as a property name.");
 
-              if (!res[0].count) {
-                /* make sure this isn't a view */
-                query = "select relkind " +
-                        "from pg_class c, pg_namespace n " +
+          /* process attributes */
+          if (prop.attr || prop.toOne) {
+            attr = prop.attr ? prop.attr : prop.toOne;
+            if (DEBUG) plv8.elog(NOTICE, 'building attribute', prop.name, attr.column);
+            isVisible = attr.value === undefined ? true : false;
+            if (!attr.type) throw new Error('No type was defined on property ' + prop.name);
+            if (isVisible) {
+              col = tblAlias + '.' + attr.column;
+              col = col.concat(' as "', alias, '"');
+
+              /* If the column is `obj_uuid` and it's not there, create it.
+                 This violates our rule to not touch the source schema, but otherwise
+                 we risk a big performance hit on all the joins that
+                 would be required if uuid were in another table */
+              if (attr.column  === "obj_uuid") {
+                query = "select count(a.attname) " +
+                        "from pg_class c, pg_namespace n, pg_attribute a, pg_type t " +
                         "where c.relname = $1 " +
                         " and n.nspname = $2 " +
-                        " and n.oid = c.relnamespace;"
-                if (DEBUG) { plv8.elog(NOTICE, 'Check obj table query', query, tableName, schemaName); }
-                res = plv8.execute(query, [tableName, schemaName]);
-                if (res[0].relkind !== 'r') {
-                  plv8.elog(ERROR, "Can not add obj_uuid field because {table} is not a table.".replace("{table}", orm.table));
-                }
+                        " and n.oid = c.relnamespace " +
+                        " and a.attnum > 0 " +
+                        " and a.attname = 'obj_uuid' " +
+                        " and a.attrelid = c.oid " +
+                        " and a.atttypid = t.oid; ";
+                schemaName = orm.table.indexOf(".") === -1 ? 'public' : orm.table.beforeDot();
+                tableName = orm.table.indexOf(".") === -1 ? orm.table : orm.table.afterDot();
 
-                /* looks good. add the column */
-                query = "alter table {table} add column obj_uuid text default xt.generate_uuid();".replace("{table}", orm.table);
-                if (DEBUG) { plv8.elog(NOTICE, 'Add obj_uuid:', query); }
-                plv8.execute(query);
-                query = "comment on column {table}.obj_uuid is 'Added by xt the web-mobile package.'".replace("{table}", orm.table);
-                plv8.execute(query);
+                if (DEBUG) {
+                  plv8.elog(NOTICE, 'createView check obj_uuid sql = ', query);
+                  plv8.elog(NOTICE, 'createView values = ', [tableName, schemaName]);
+                }
+                res = plv8.execute(query, [tableName, schemaName]);
+
+                if (!res[0].count) {
+                  /* make sure this isn't a view */
+                  query = "select relkind " +
+                          "from pg_class c, pg_namespace n " +
+                          "where c.relname = $1 " +
+                          " and n.nspname = $2 " +
+                          " and n.oid = c.relnamespace;"
+
+                  if (DEBUG) {
+                    plv8.elog(NOTICE, 'createView check obj table sql = ', query);
+                    plv8.elog(NOTICE, 'createView values = ', [tableName, schemaName]);
+                  }
+                  res = plv8.execute(query, [tableName, schemaName]);
+
+                  if (res[0].relkind !== 'r') {
+                    plv8.elog(ERROR, "Can not add obj_uuid field because {table} is not a table.".replace("{table}", orm.table));
+                  }
+
+                  /* looks good. add the column */
+                  query = "alter table {table} add column obj_uuid text default xt.generate_uuid();".replace("{table}", orm.table);
+
+                  if (DEBUG) {
+                    plv8.elog(NOTICE, 'createView add obj_uuid sql = ', query);
+                  }
+                  plv8.execute(query);
+
+                  query = "comment on column {table}.obj_uuid is 'Added by xt the web-mobile package.'".replace("{table}", orm.table);
+                  plv8.execute(query);
+                }
+              }
+
+              /* handle the attribute */
+              if (prop.attr ||
+                 (prop.toOne.isNested === undefined && !nkey)) {
+                cols.push(col);
               }
             }
-            
-            /* handle the attribute */
-            if (prop.attr ||
-               (prop.toOne.isNested === undefined && !nkey)) {
+
+            /* handle fixed value */
+            if (attr.value !== undefined) {
+              value = isNaN(attr.value - 0) ? "'" + attr.value + "'" : attr.value;
+              ormClauses.push('"' + attr.column + '" = ' + value);
+            }
+          }
+
+          /* process toOne  */
+          if (prop.toOne &&
+             (prop.toOne.isNested !== false || nkey)) {
+            toOne = prop.toOne;
+            table = base.nameSpace.decamelize() + '.' + toOne.type.decamelize();
+            type = table.afterDot();
+            inverse = toOne.inverse ? toOne.inverse.camelize() : 'id';
+            col = '({select}) as "{alias}"';
+            if (!type) { throw new Error('No type was defined on property ' + prop.name); }
+            if (DEBUG) { plv8.elog(NOTICE, 'building toOne'); }
+            conditions = '"' + type + '"."' + inverse + '" = ' + tblAlias + '.' + toOne.column;
+
+            /* handle the nested and natural key cases */
+            if (prop.toOne.isNested === true || nkey) {
+              col = col.replace('{select}',
+                 SELECT.replace('{columns}',  prop.toOne.isNested ? '"' + type + '"' : nkey)
+                       .replace('{table}',  table)
+                       .replace('{conditions}', conditions))
+                       .replace('{alias}', alias)
+                       .replace('{order}', '');
               cols.push(col);
             }
           }
 
-          /* handle fixed value */
-          if (attr.value !== undefined) {
-            value = isNaN(attr.value - 0) ? "'" + attr.value + "'" : attr.value;
-            ormClauses.push('"' + attr.column + '" = ' + value);
-          }
-        }
+          /* process toMany */
+          if (prop.toMany) {
+            if (DEBUG) plv8.elog(NOTICE, 'building toMany');
+            if (!prop.toMany.type) { throw new Error('No type was defined on property ' + prop.name); }
+            toMany = prop.toMany;
+            table = base.nameSpace + '.' + toMany.type.decamelize();
+            type = toMany.type.decamelize();
+            iorm = Orm.fetch(base.nameSpace, toMany.type);
+            pkey = Orm.primaryKey(iorm);
+            nkey = Orm.naturalKey(iorm);
+            column = toMany.isNested ? type : nkey;
+            col = 'array({select}) as "{alias}"',
+            orderBy = 'order by ' + pkey;
 
-        /* process toOne  */
-        if (prop.toOne &&
-           (prop.toOne.isNested !== false || nkey)) {
-          toOne = prop.toOne;
-          table = base.nameSpace.decamelize() + '.' + toOne.type.decamelize();
-          type = table.afterDot();
-          inverse = toOne.inverse ? toOne.inverse.camelize() : 'id';
-          col = '({select}) as "{alias}"';
-          if (!type) { throw new Error('No type was defined on property ' + prop.name); }
-          if (DEBUG) { plv8.elog(NOTICE, 'building toOne'); }
-          conditions = '"' + type + '"."' + inverse + '" = ' + tblAlias + '.' + toOne.column;
+             /* handle inverse */
+            inverse = toMany.inverse ? toMany.inverse.camelize() : 'id';
+            ormp = Orm.getProperty(iorm, inverse);
+            if (ormp && ormp.toOne && ormp.toOne.isNested) {
+              conditions = toMany.column ? '(' + type + '."' + inverse + '").id = ' + tblAlias + '.' + toMany.column : 'true';
+            } else {
+              conditions = toMany.column ? type + '."' + inverse + '" = ' + tblAlias + '.' + toMany.column : 'true';
+            }
 
-          /* handle the nested and natural key cases */
-          if (prop.toOne.isNested === true || nkey) {
+            /* build select */
             col = col.replace('{select}',
-               SELECT.replace('{columns}',  prop.toOne.isNested ? '"' + type + '"' : nkey)
-                     .replace('{table}',  table)
+               SELECT.replace('{columns}', column)
+                     .replace('{table}', table)
                      .replace('{conditions}', conditions))
                      .replace('{alias}', alias)
-                     .replace('{order}', '');
+                     .replace('{order}', orderBy);
             cols.push(col);
           }
         }
 
-        /* process toMany */
-        if (prop.toMany) {
-          if (DEBUG) plv8.elog(NOTICE, 'building toMany');
-          if (!prop.toMany.type) { throw new Error('No type was defined on property ' + prop.name); }
-          toMany = prop.toMany;
-          table = base.nameSpace + '.' + toMany.type.decamelize();
-          type = toMany.type.decamelize();
-          iorm = Orm.fetch(base.nameSpace, toMany.type);
-          pkey = Orm.primaryKey(iorm);
-          nkey = Orm.naturalKey(iorm);
-          column = toMany.isNested ? type : nkey;
-          col = 'array({select}) as "{alias}"',
-          orderBy = 'order by ' + pkey;
+        /* process extension */
+        if(orm.isExtension) {
+          if(DEBUG) plv8.elog(NOTICE, 'process extension');
 
-           /* handle inverse */
-          inverse = toMany.inverse ? toMany.inverse.camelize() : 'id';
-          ormp = Orm.getProperty(iorm, inverse);
-          if (ormp && ormp.toOne && ormp.toOne.isNested) {
-            conditions = toMany.column ? '(' + type + '."' + inverse + '").id = ' + tblAlias + '.' + toMany.column : 'true';
-          } else {
-            conditions = toMany.column ? type + '."' + inverse + '" = ' + tblAlias + '.' + toMany.column : 'true';
-          }
-
-          /* build select */
-          col = col.replace('{select}',
-             SELECT.replace('{columns}', column)
-                   .replace('{table}', table)
-                   .replace('{conditions}', conditions))
-                   .replace('{alias}', alias)
-                   .replace('{order}', orderBy);
-          cols.push(col);
-        }
-      }
-
-      /* process extension */
-      if(orm.isExtension) {
-        if(DEBUG) plv8.elog(NOTICE, 'process extension');
-
-        /* process relations (if different table) */
-        if(orm.table !== base.table) {
-          if(orm.relations) {
-            join = orm.isChild ? ' join ' : ' left join ';
-            conditions = [];
-            join = join.concat(orm.table, ' ', tblAlias, ' on ');
-            for (i = 0; i < orm.relations.length; i++) {
-              rel = orm.relations[i];
-              inverse = rel.inverse ? rel.inverse : 'id';
-              for (n = 0; n < base.properties.length; n++) {
-                if(base.properties[n].name === inverse) {
-                  var obj = base.properties[n].attr ? base.properties[n].attr : base.properties[n].toOne;
-                  value = 't1.' + obj.column;
-                  break;
+          /* process relations (if different table) */
+          if(orm.table !== base.table) {
+            if(orm.relations) {
+              join = orm.isChild ? ' join ' : ' left join ';
+              conditions = [];
+              join = join.concat(orm.table, ' ', tblAlias, ' on ');
+              for (i = 0; i < orm.relations.length; i++) {
+                rel = orm.relations[i];
+                inverse = rel.inverse ? rel.inverse : 'id';
+                for (n = 0; n < base.properties.length; n++) {
+                  if(base.properties[n].name === inverse) {
+                    var obj = base.properties[n].attr ? base.properties[n].attr : base.properties[n].toOne;
+                    value = 't1.' + obj.column;
+                    break;
+                  }
                 }
+                condition = tblAlias + '.' + rel.column + ' = ' + value;
+                conditions.push(condition);
               }
-              condition = tblAlias + '.' + rel.column + ' = ' + value;
-              conditions.push(condition);
+              conditions = conditions.concat(ormClauses);
+              join = join.concat(conditions.join(' and '));
+              tbls.push(join);
             }
-            conditions = conditions.concat(ormClauses);
-            join = join.concat(conditions.join(' and '));
-            tbls.push(join);
+          }
+
+          /* build rules */
+          conditions = [];
+          if (DEBUG) { plv8.elog(NOTICE, 'process extension relations'); }
+          if (!orm.relations) { throw new Error("Extension must have at least one relation defined."); }
+          for (i = 0; i < orm.relations.length; i++) {
+            rel = orm.relations[i];
+            if(rel.value) {
+              value = isNaN(rel.value - 0) ? "'" + rel.value + "'" : rel.value;
+            } else if (rel.inverse) {
+              value = '{state}.' + rel.inverse;
+            } else {
+              value = '{state}.id';
+            }
+            conditions.push(rel.column + ' = ' + value);
+          }
+
+        /* base orm */
+        } else {
+          if(DEBUG) plv8.elog(NOTICE, 'process base CRUD');
+
+          /* table */
+          clauses = clauses.concat(ormClauses);
+          tbls.unshift(orm.table + ' ' + tblAlias);
+        }
+
+        /* process and add order by array */
+        if (DEBUG) plv8.elog(NOTICE, 'process base order array');
+        if (orm.order) {
+          for (i = 0; i < orm.order.length; i++) {
+            if (orm.order[i].indexOf('.') === -1) {
+              orm.order[i] = tblAlias + "." + orm.order[i];
+            } else {
+              orm.order[i] = orm.order[i].replace(RegExp(orm.table + "."), tblAlias + ".");
+            }
+            orderBy.push(orm.order[i]);
           }
         }
+        if(orm.comment) comments = comments.concat('\n', orm.comment);
+        tbl++;
 
-        /* build rules */
-        conditions = [];
-        if (DEBUG) { plv8.elog(NOTICE, 'process extension relations'); }
-        if (!orm.relations) { throw new Error("Extension must have at least one relation defined."); }
-        for (i = 0; i < orm.relations.length; i++) {
-          rel = orm.relations[i];
-          if(rel.value) {
-            value = isNaN(rel.value - 0) ? "'" + rel.value + "'" : rel.value;
-          } else if (rel.inverse) {
-            value = '{state}.' + rel.inverse;
-          } else {
-            value = '{state}.id';
+        /* add extensions */
+        if (DEBUG) plv8.elog(NOTICE, 'process base extensions');
+        if (orm.extensions) {
+          for (i = 0; i < orm.extensions.length; i++) {
+            var ext = orm.extensions[i];
+            ext.isExtension = true;
+            processOrm(ext);
           }
-          conditions.push(rel.column + ' = ' + value);
         }
+      };
 
-      /* base orm */
-      } else {
-        if(DEBUG) plv8.elog(NOTICE, 'process base CRUD');
+      // ..........................................................
+      // PROCESS
+      //
 
-        /* table */
-        clauses = clauses.concat(ormClauses);
-        tbls.unshift(orm.table + ' ' + tblAlias);
+      /* do the heavy lifting here. This recursively processes extensions */
+      processOrm(orm);
+
+      /* Validate colums */
+      if(!cols.length) { throw new Error('There must be at least one column defined on the map.'); }
+
+      /* Build query to create the new view */
+      query = 'create view {name} as select {columns} from {tables} {where} {order};'
+              .replace('{name}', viewName)
+              .replace('{columns}', cols.join(', '))
+              .replace('{tables}', tbls.join(' '))
+              .replace('{where}', clauses.length ? 'where ' + clauses.join(' and ') : '')
+              .replace('{order}', orderBy.length ? 'order by ' + orderBy.join(' , ') : '');
+
+      if (DEBUG) {
+        plv8.elog(NOTICE, 'createView sql = ', query);
       }
+      plv8.execute(query);
 
-      /* process and add order by array */
-      if (DEBUG) plv8.elog(NOTICE, 'process base order array');
-      if (orm.order) {
-        for (i = 0; i < orm.order.length; i++) {
-          if (orm.order[i].indexOf('.') === -1) {
-            orm.order[i] = tblAlias + "." + orm.order[i];
-          } else {
-            orm.order[i] = orm.order[i].replace(RegExp(orm.table + "."), tblAlias + ".");
+      /* Add comment */
+      query = "comment on view {name} is '{comments}'"
+              .replace('{name}', viewName)
+              .replace('{comments}', comments);
+      plv8.execute(query);
+
+      /* Grant access to xtrole */
+      query = 'grant all on {view} to xtrole'
+              .replace('{view}', viewName);
+
+      if (DEBUG) {
+        plv8.elog(NOTICE, 'createView grant sql = ', query);
+      }
+      plv8.execute(query);
+
+      /* clean up triggers that we may or may not want to be there */
+      lockTable = orm.lockTable || orm.table;
+      schemaName = lockTable.indexOf(".") === -1 ? 'public' : lockTable.beforeDot();
+      tableName = lockTable.indexOf(".") === -1 ? lockTable : lockTable.afterDot();
+      query = 'drop trigger if exists {tableName}_did_change on {table};'
+      query =  query.replace(/{tableName}/g, tableName)
+                    .replace(/{table}/g, lockTable);
+
+      if (DEBUG) {
+        plv8.elog(NOTICE, 'createView drop trigger sql = ', query);
+      }
+      plv8.execute(query);
+
+      /* If applicable, add a trigger to the table to keep version number updated */
+      if (orm.lockable) {
+        query = 'select * from pg_tables where schemaname = $1 and tablename = $2';
+        res = plv8.execute(query, [schemaName, tableName]);
+        if (res.length) {
+          query = 'create trigger {tableName}_did_change after insert or update or delete on {table} for each row execute procedure xt.record_did_change();';
+          query =  query.replace(/{tableName}/g, tableName)
+                        .replace(/{table}/g, lockTable);
+
+          if (DEBUG) {
+            plv8.elog(NOTICE, 'createView create trigger sql = ', query);
           }
-          orderBy.push(orm.order[i]);
+          plv8.execute(query);
         }
       }
-      if(orm.comment) comments = comments.concat('\n', orm.comment);
-      tbl++;
-
-      /* add extensions */
-      if (DEBUG) plv8.elog(NOTICE, 'process base extensions');
-      if (orm.extensions) {
-        for (i = 0; i < orm.extensions.length; i++) {
-          var ext = orm.extensions[i];
-          ext.isExtension = true;
-          processOrm(ext);
-        }
-      }
-    };
-
-    // ..........................................................
-    // PROCESS
-    //
-
-    /* do the heavy lifting here. This recursively processes extensions */
-    processOrm(orm);
-
-    /* Validate colums */
-    if(!cols.length) { throw new Error('There must be at least one column defined on the map.'); }
-
-    /* Build query to create the new view */
-    query = 'create view {name} as select {columns} from {tables} {where} {order};'
-            .replace('{name}', viewName)
-            .replace('{columns}', cols.join(', '))
-            .replace('{tables}', tbls.join(' '))
-            .replace('{where}', clauses.length ? 'where ' + clauses.join(' and ') : '')
-            .replace('{order}', orderBy.length ? 'order by ' + orderBy.join(' , ') : '');
-    if(DEBUG) plv8.elog(NOTICE, 'query', query);
-    plv8.execute(query);
-
-    /* Add comment */
-    query = "comment on view {name} is '{comments}'"
-            .replace('{name}', viewName)
-            .replace('{comments}', comments);
-    plv8.execute(query);
-
-    /* Grant access to xtrole */
-    query = 'grant all on {view} to xtrole'
-            .replace('{view}', viewName);
-    plv8.execute(query);
-
-    /* clean up triggers that we may or may not want to be there */
-    lockTable = orm.lockTable || orm.table;
-    schemaName = lockTable.indexOf(".") === -1 ? 'public' : lockTable.beforeDot();
-    tableName = lockTable.indexOf(".") === -1 ? lockTable : lockTable.afterDot();
-    query = 'drop trigger if exists {tableName}_did_change on {table};'
-    query =  query.replace(/{tableName}/g, tableName)
-                  .replace(/{table}/g, lockTable);
-    plv8.execute(query);
-        
-    /* If applicable, add a trigger to the table to keep version number updated */
-    if (orm.lockable) {
-      query = 'select * from pg_tables where schemaname = $1 and tablename = $2';
-      res = plv8.execute(query, [schemaName, tableName]);
-      if (res.length) {
-        query = 'create trigger {tableName}_did_change after insert or update or delete on {table} for each row execute procedure xt.record_did_change();';
-        query =  query.replace(/{tableName}/g, tableName)
-                      .replace(/{table}/g, lockTable);
-        plv8.execute(query);
-      }
+    } catch (err) {
+      XT.error(err, arguments);
     }
   };
 $$ );
