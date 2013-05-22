@@ -199,7 +199,7 @@ var conditionalExpressSession = function (req, res, next) {
 
   // REST API endpoints start with "/api" in their path.
   // The 'assets' folder and login page are sessionless.
-  if ((/^\/api/i).test(req.path) || (/^\/assets/i).test(req.path) || req.path === "/") {
+  if ((/^api/i).test(req.path.split("/")[2]) || (/^\/assets/i).test(req.path) || req.path === "/") {
     next();
   } else {
     if (req.path === "/login") {
@@ -245,7 +245,7 @@ var conditionalPassportSession = function (req, res, next) {
 
   // REST API endpoints start with "/api" in their path.
   // The 'assets' folder and login page are sessionless.
-  if ((/^\/api/i).test(req.path) || (/^\/assets/i).test(req.path) || req.path === "/") {
+  if ((/^api/i).test(req.path.split("/")[2]) || (/^\/assets/i).test(req.path) || req.path === "/") {
     next();
   } else {
     // Instead of doing app.use(passport.session())

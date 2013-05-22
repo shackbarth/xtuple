@@ -321,27 +321,16 @@ server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(functio
 
     // Validate decodedClaimSet.prn user and scopes.
     if (client.get("delegatedAccess") && decodedClaimSet.prn) {
-      db.users.findByUsername(decodedClaimSet.prn, client.get("organizations"), function (err, user) {
+      db.users.findByUsername(decodedClaimSet.prn, client.get("organization"), function (err, user) {
         if (err) { return done(new Error("Invalid JWT delegate user.")); }
         if (!user) { return done(null, false); }
 
-        var organizations = [],
-            separator = ' ',
+        var separator = ' ',
             jwtScopes = decodedClaimSet.scope.split(separator),
             scope,
             scopes = [];
 
         if (!Array.isArray(jwtScopes)) { jwtScopes = [ jwtScopes ]; }
-
-        try {
-          // Get user's orgs.
-          organizations = _.map(user.get("organizations"), function (org) {
-            return org.name;
-          });
-        } catch (error) {
-          // Prevent unauthorized access.
-          return done(new Error("Invalid JWT delegate user."));
-        }
 
         // Loop through the scope URIs and convert them to org names.
         _.each(jwtScopes, function (scopeValue, scopeKey, scopeList) {
@@ -351,12 +340,9 @@ server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(functio
           scope = url.parse(scopeValue, true);
           scopeOrg = scope.path.match(/\/auth\/(.*)/)[1] || null;
 
-          // Loop through the user's org and make sure the requested scope is valid.
-          _.each(organizations, function (orgValue, orgKey, orgList) {
-            if (orgValue === scopeOrg) {
-              scopes[scopeKey] = scopeOrg;
-            }
-          });
+          if (user.get("organization") === scopeOrg) {
+            scopes[scopeKey] = scopeOrg;
+          }
         });
 
         if (scopes.length < 1) {
@@ -399,7 +385,7 @@ server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(functio
               accessExpires: expires,
               tokenType: "bearer",
               accessType: "offline",
-              delegate: user.get("id")
+              delegate: user.get("username")
             };
 
             // Try to save access token data to the database.
