@@ -65,7 +65,6 @@ insert into todoitem (
 create or replace rule "_UPDATE" as on update to xt.todoiteminfo do instead
 
 update todoitem set
-
   todoitem_id=new.todoitem_id,
   todoitem_name=new.todoitem_name,
   todoitem_description=new.todoitem_description,
@@ -86,7 +85,6 @@ update todoitem set
   todoitem_username=new.todoitem_username,
   todoitem_recurring_todoitem_id=new.todoitem_recurring_todoitem_id,
   todoitem_cntct_id=new.todoitem_cntct_id
-
 where todoitem_id = old.todoitem_id;
 
 create or replace rule "_DELETE" as on delete to xt.todoiteminfo do instead
