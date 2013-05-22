@@ -329,7 +329,6 @@ setup_postgres() {
 	echo ""
 	echo "Dropping old databases if they already exist..."
 	echo ""
-	dropdb -U postgres global
 	dropdb -U postgres dev
 	
 	cd $BASEDIR/postgres
@@ -402,7 +401,8 @@ pull_modules() {
 	fi
 	npm install
 	
-	rm -f debug.js
+	cd enyo-client/extensions
+    rm -f debug.js
 	echo "enyo.depends(" > debug.js
 	echo "  '/core-extensions/source/project/client/package.js'," >> debug.js
 	echo "  '/core-extensions/source/crm/client/package.js'," >> debug.js
