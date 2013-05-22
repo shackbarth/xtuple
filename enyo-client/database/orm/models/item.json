@@ -1136,6 +1136,9 @@
         "attr": {
           "type": "Number",
           "column": "std_cost"
+        },
+        "privileges": {
+          "read": "ViewCosts MaintainCosts"
         }
       },
       {

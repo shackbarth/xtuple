@@ -146,6 +146,10 @@
           "type": "UserAccountRelation",
           "column": "todoitem_username",
           "inverse": "username"
+        },
+        "privileges": {
+          "create": "MaintainAllToDoItems MaintainPersonalToDoItems",
+          "update": "ReassignToDoItems"
         }
       },
       {

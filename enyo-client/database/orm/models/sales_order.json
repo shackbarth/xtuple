@@ -470,6 +470,9 @@
         "attr": {
           "type": "Number",
           "column": "margin"
+        },
+        "privileges": {
+          "read": "ShowMarginsOnSalesOrder"
         }
       },
       {
@@ -1053,7 +1056,11 @@
         "name": "customerPrice",
         "attr": {
           "type": "SalesPrice",
-          "column": "coitem_custprice"
+          "column": "coitem_custprice",
+          "required": true
+        },
+        "privileges": {
+          "edit": "OverridePrice"
         }
       },
       {
@@ -1067,7 +1074,11 @@
         "name": "price",
         "attr": {
           "type": "SalesPrice",
-          "column": "coitem_price"
+          "column": "coitem_price",
+          "required": true
+        },
+        "privileges": {
+          "edit": "OverridePrice"
         }
       },
       {

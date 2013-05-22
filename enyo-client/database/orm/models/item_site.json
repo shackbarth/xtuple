@@ -387,6 +387,9 @@
         "attr": {
           "type": "Number",
           "column": "avg_cost"
+        },
+        "privileges": {
+          "read": "ViewCosts MaintainCosts"
         }
       }
     ],
