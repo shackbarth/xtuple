@@ -373,7 +373,7 @@
 
         /* Check privileges - first do we have access to anything? */
         if (privileges) {
-          if (DEBUG) { plv8.elog(NOTICE, 'privileges found', JSON.stringify(privileges))); }
+          if (DEBUG) { plv8.elog(NOTICE, 'privileges found', JSON.stringify(privileges)); }
           if (committing) {
             if (DEBUG) { plv8.elog(NOTICE, 'is committing'); }
 
