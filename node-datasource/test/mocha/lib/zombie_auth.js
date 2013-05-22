@@ -130,6 +130,7 @@ Simplest possible usage:
               XV = browser.window.XV;
               XZ.browser = browser;
               XZ.host = host;
+              XZ.database = database;
 
               XT.log = function (message) {
                 // log if verbose mode or if the log is an error

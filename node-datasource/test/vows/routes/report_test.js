@@ -4,7 +4,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 var vows = require('vows'),
   assert = require('assert'),
-  zombieAuth = require('../lib/zombie_auth');
+  zombieAuth = require('../../mocha/lib/zombie_auth');
 
 (function () {
   "use strict";
@@ -22,7 +22,8 @@ var vows = require('vows'),
           var that = this,
             // XXX using the Locale business object, of all the options, is confusing because
             // we are also verifying the user's locale information.
-            url = XZ.host + "/report?details={%22query%22:{},%22nameSpace%22:%22XM%22,%22type%22:%22Locale%22," +
+            url = XZ.host + "/" + XZ.database +
+              "/report?details={%22query%22:{},%22nameSpace%22:%22XM%22,%22type%22:%22Locale%22," +
               "%22locale%22:{%22currencyScale%22:5}}",
             // turn the zombie callback into the vows callback per the befuddling vows requirements
             callbackAdapter = function (err, browser, status) {
@@ -43,14 +44,14 @@ var vows = require('vows'),
                 that.callback(null, {browser: browser});
               },
               redirectUrl = topic.browser.location.href,
-              dataKey = redirectUrl.substring(redirectUrl.indexOf('dataKey') + 8),
+              dataKey = redirectUrl.substring(redirectUrl.indexOf('datakey') + 8),
               url;
 
             if (dataKey.indexOf("&") > 0) {
               // allow for future cases where there are more args after the data key
               dataKey = dataKey.substring(0, dataKey.indexOf("&"));
             }
-            url = XZ.host + "/dataFromKey?dataKey=" + dataKey;
+            url = XZ.host + "/" + XZ.database + "/data-from-key?datakey=" + dataKey;
 
             topic.browser.visit(url, {debug: false}, callbackAdapter);
           },
@@ -84,16 +85,15 @@ var vows = require('vows'),
             callbackAdapter = function (err, browser, status) {
               that.callback(null, {browser: browser});
             },
-            url = XZ.host + "/report?details={%22nameSpace%22:%22XM%22,%22type%22:%22Locale%22,%22id%22:3," +
+            url = XZ.host + "/" + XZ.database +
+              "/report?details={%22nameSpace%22:%22XM%22,%22type%22:%22Locale%22,%22id%22:%22Default%22," +
               "%22locale%22:{%22currencyScale%22:5}}";
-
           XZ.browser.visit(url, {debug: false}, callbackAdapter);
         },
         'should return ok': function (error, topic) {
           assert.ok(topic.browser.success);
         },
-        'should go to maxhammer': function (error, topic) {
-          assert.equal(topic.browser.location.host, "maxhammer.xtuple.com:8080");
+        'should go to Pentaho': function (error, topic) {
           assert.equal(topic.browser.text("title"), "Report Web Viewer"); // that's pentaho's title
         },
         'should generate a data key which we can ask about': {
@@ -103,14 +103,14 @@ var vows = require('vows'),
                 that.callback(null, {browser: browser});
               },
               redirectUrl = topic.browser.location.href,
-              dataKey = redirectUrl.substring(redirectUrl.indexOf('dataKey') + 8),
+              dataKey = redirectUrl.substring(redirectUrl.indexOf('datakey') + 8),
               url;
 
             if (dataKey.indexOf("&") > 0) {
               // allow for future cases where there are more args after the data key
               dataKey = dataKey.substring(0, dataKey.indexOf("&"));
             }
-            url = XZ.host + "/dataFromKey?dataKey=" + dataKey;
+            url = XZ.host + "/" + XZ.database + "/data-from-key?datakey=" + dataKey;
 
             topic.browser.visit(url, {debug: false}, callbackAdapter);
           },
