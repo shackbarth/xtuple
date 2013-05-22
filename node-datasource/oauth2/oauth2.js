@@ -385,7 +385,7 @@ server.exchange('urn:ietf:params:oauth:grant-type:jwt-bearer', jwtBearer(functio
               accessExpires: expires,
               tokenType: "bearer",
               accessType: "offline",
-              delegate: user.get("id")
+              delegate: user.get("username")
             };
 
             // Try to save access token data to the database.
