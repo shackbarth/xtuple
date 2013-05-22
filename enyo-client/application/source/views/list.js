@@ -522,7 +522,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.EmployeeRelation", "XV.EmployeeList");
-  
+
   // ..........................................................
   // EMPLOYEE GROUP
   //
@@ -1478,7 +1478,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelList("XM.SiteRelation", "XV.SiteList");
-  
+
   // ..........................................................
   // SHIFT
   //
@@ -1662,7 +1662,7 @@ trailing:true white:true*/
     collection: "XM.TaxRateCollection",
     parameterWidget: "XV.TaxRateListParameters",
     query: {orderBy: [
-      {attribute: 'tax.code'}
+      {attribute: 'tax'}
     ]},
     components: [
       {kind: "XV.ListItem", components: [

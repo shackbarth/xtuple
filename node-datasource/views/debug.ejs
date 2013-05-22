@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>xTuple</title>
+    <link rel="shortcut icon" href="/assets/favicon.ico" />
+    <!-- -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <!-- enyo (debug) -->
+    <script src="/socket.io/socket.io.js" type="text/javascript"></script>
+    <script src="/<%= org %>/client/enyo/enyo.js"></script>
+    <!-- application (debug) -->
+    <script src="/<%= org %>/client/source/package.js" type="text/javascript"></script>
+    <script src="/<%= org %>/core-extensions/debug.js" type="text/javascript"></script>
+  </head>
+  <body class="enyo-unselectable">
+    <script>
+      new App().start();
+    </script>
+  </body>
+</html>

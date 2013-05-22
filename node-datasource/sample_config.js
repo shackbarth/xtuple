@@ -9,9 +9,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     processName: "node-datasource",
     allowMultipleInstances: true,
     requireDatabase: true,
-    enhancedAuthKey: "xTuple",
     datasource: {
       debugging: false,
+      enhancedAuthKey: "xTuple",
       sessionTimeout: 60,
       requireCache: true,
       pgPoolSize: 15,
@@ -52,15 +52,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       // human-friendly location identifier for various cloud, physical
       // servers, etc.
-      location: "NA"
+      location: "NA",
+      // Add each database to the array.
+      databases: ["dev"]
     },
-    globalDatabase: {
+    databaseServer: {
       hostname: "localhost",
       port: 5432,
-      database: "global",
       user: "admin",
-      password: "admin",
-      nodeUsername: "node"
+      password: "admin"
     },
     required: [
       "lib/ext/database",

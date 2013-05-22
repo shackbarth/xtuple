@@ -45,13 +45,14 @@ regexp:true, strict:true, trailing:true, white:false */
   browser.clickElement(el7, function (err) {
   browser.waitForElementByXPath(contactObj.Obj.addressLine1_xpath, 4000, function (err) {
   browser.elementByXPath(contactObj.Obj.addressLine1_xpath, function (err, el8) {
-  browser.type(el8,contactData.VARIABLES.contact_addressLine1, function (err) {
+  //browser.type(el8,contactData.VARIABLES.contact_addressLine1, function (err) {
+  browser.type(el8,fname, function (err) {
   browser.elementByXPath(contactObj.Obj.addressDoneButton_xpath, function (err, doneEl) {
   browser.clickElement(doneEl, function (err) {
   browser.elementByXPath(contactObj.Obj.jobtitle_xpath, function (err,el9) {
   browser.type(el9,contactData.VARIABLES.contact_jobtitle, function (err) {
-  browser.elementByXPath(contactObj.Obj.email_xpath, function (err, el10) {
-  browser.type(el10, contactData.VARIABLES.contact_email, function (err) {
+  //browser.elementByXPath(contactObj.Obj.email_xpath, function (err, el10) {
+  //browser.type(el10, contactData.VARIABLES.contact_email, function (err) {
   browser.elementByXPath(contactObj.Obj.phone_xpath, function (err, el11) {
   browser.type(el11, contactData.VARIABLES.contact_phone, function (err) {
   browser.elementByXPath(contactObj.Obj.cnotes_xpath, function (err, el14) {
@@ -92,6 +93,7 @@ regexp:true, strict:true, trailing:true, white:false */
   },2000);
   },2000);
   }
-  });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});
+  //});});
+  });});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});});
   });});});});});});});});});});});});});};
 }());

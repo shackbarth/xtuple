@@ -30,6 +30,7 @@ regexp:true, undef:true, trailing:true, white:true */
     handlers: {
       onValueChange: "pickerChanged" // intercept picker events
     },
+    maxlength: 12,
     components: [
       {kind: "FittableColumns", components: [
         {name: "label", content: "", classes: "xv-label"},
@@ -49,7 +50,7 @@ regexp:true, undef:true, trailing:true, white:true */
         ]},
         {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
           components: [
-          {name: "baseCurrencyLabel", classes: "xv-money-label, currency"}
+          {name: "baseCurrencyLabel", classes: "xv-currency-label"}
         ]}
       ]}
     ],

@@ -58,7 +58,7 @@ trailing:true white:true*/
       return model ? model.get('account') : undefined;
     }
   };
-  
+
   /**
     Abstract workspace to be used for objects that are attached to models subclassed from `AccountDocument`.
     Must be subclassed.
@@ -636,7 +636,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.ExpenseCategory", "XV.ExpenseCategoryWorkspace");
-  
+
   // ..........................................................
   // DEPARTMENT
   //
@@ -662,7 +662,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.Department", "XV.DepartmentWorkspace");
-  
+
   // ..........................................................
   // EMPLOYEE
   //
@@ -734,7 +734,7 @@ trailing:true white:true*/
 
   XV.registerModelWorkspace("XM.EmployeeRelation", "XV.EmployeeWorkspace");
   XV.registerModelWorkspace("XM.EmployeeListItem", "XV.EmployeeWorkspace");
-  
+
   // ..........................................................
   // EMPLOYEE GROUP
   //
@@ -1344,14 +1344,14 @@ trailing:true white:true*/
             {kind: "XV.DateWidget", attr: "completeDate"},
             {kind: "onyx.GroupboxHeader", content: "_hours".loc()},
             {kind: "XV.QuantityWidget", attr: "budgetedHours",
-              label: "_budgeted".loc(), maxlength: 12},
+             label: "_budgeted".loc()},
             {kind: "XV.QuantityWidget", attr: "actualHours",
-              label: "_actual".loc(), maxlength: 12},
+             label: "_actual".loc()},
             {kind: "onyx.GroupboxHeader", content: "_expenses".loc()},
-            {kind: "XV.NumberWidget", attr: "budgetedExpenses", scale: XT.MONEY_SCALE,
-              label: "_budgeted".loc(), maxlength: 12},
-            {kind: "XV.NumberWidget", attr: "actualExpenses", scale: XT.MONEY_SCALE,
-              label: "_actual".loc(), maxlength: 12},
+            {kind: "XV.MoneyWidget", attr: {localValue: "budgetedExpenses"},
+             label: "_budgeted".loc(), currencyShowing: false},
+            {kind: "XV.MoneyWidget", attr: {localValue: "actualExpenses"},
+             label: "_actual".loc(), currencyShowing: false},
             {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
             {kind: "XV.UserAccountWidget", attr: "owner"},
             {kind: "XV.UserAccountWidget", attr: "assignedTo"},
@@ -1673,9 +1673,9 @@ trailing:true white:true*/
               label: "_standardCost".loc()},
             {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.averageCost"},
               label: "_averageCost".loc()},
-            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.listCost"},
-              label: "_listCost".loc()},
-            {kind: "XV.PercentWidget", attr: "listCostMarkup"},
+            {kind: "XV.MoneyWidget", attr: {baseValue: "itemSite.item.wholesalePrice"},
+              label: "_wholesalePrice".loc()},
+            {kind: "XV.PercentWidget", attr: "markup"},
             {kind: "XV.MoneyWidget", attr: {baseValue: "item.listPrice"},
               label: "_listPrice".loc(), scale: XT.SALES_PRICE_SCALE},
             {kind: "XV.PercentWidget", attr: "listPriceDiscount"},
@@ -1875,7 +1875,7 @@ trailing:true white:true*/
   });
 
   XV.registerModelWorkspace("XM.SaleType", "XV.SaleTypeWorkspace");
-  
+
   // ..........................................................
   // SHIFT
   //
@@ -2155,8 +2155,8 @@ trailing:true white:true*/
             classes: "in-panel", components: [
               {kind: "XV.TaxCodePicker", label: "_taxCode".loc(), attr: "tax"},
               {kind: "XV.NumberWidget", label: "_percent".loc(), attr: "percent", scale: XT.PERCENT_SCALE},
-              {kind: "XV.CurrencyWidget", label: "_currency".loc(), attr: "currency"},
-              {kind: "XV.NumberWidget", label: "_amount".loc(), attr: "amount", scale: XT.MONEY_SCALE},
+              {kind: "XV.MoneyWidget", attr: {localValue: "amount", currency: "currency",
+                effective: "effectiveDate"}, label: "_amount".loc()},
               {kind: "XV.DateWidget", label: "_effective".loc(), attr: "effectiveDate"},
               {kind: "XV.DateWidget", label: "_expires".loc(), attr: "expirationDate"}
             ]}
@@ -2372,16 +2372,22 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "username"},
+            {kind: "XV.InputWidget", type: "password", attr: "password"},
+            {kind: "XV.InputWidget", type: "password", name: "passwordCheck",
+              label: "_reEnterPassword".loc()},
             {kind: "XV.LocalePicker", attr: "locale"},
             {kind: "XV.InputWidget", attr: "properName"},
             {kind: "XV.InputWidget", attr: "initials"},
             {kind: "XV.InputWidget", attr: "email"},
-            {kind: "XV.CheckboxWidget", attr: "disableExport"},
+            {kind: "XV.CheckboxWidget", attr: "useEnhancedAuth"},
+            //{kind: "XV.CheckboxWidget", attr: "disableExport"},
             // normally I'd put classes: "xv-assignment-box" into the container of the assignmentbox,
             // but there is no such container here. Maybe some CSS work to be done now that assignmentbox
             // is the thing inside the thing instead of the thing and the container all together.
+            {kind: "onyx.GroupboxHeader", content: "_extensions".loc()},
+            {kind: "XV.UserAccountExtensionAssignmentBox", attr: "grantedExtensions", name: "grantedExtensions" },
             {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
-            {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles", name: "grantedRoles" }
+            {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles", name: "grantedRoles" },
           ]}
         ]},
         {kind: "XV.Groupbox", name: "privilegePanel", classes: "xv-assignment-box",
@@ -2391,6 +2397,17 @@ trailing:true white:true*/
         ]}
       ]}
     ],
+    /**
+      The passwordCheck field is not on the model. Pipe to a hidden field.
+     */
+    controlValueChanged: function (inSender, inEvent) {
+      if (inEvent.originator.name === 'passwordCheck') {
+        this.value._passwordCheck = inEvent.originator.value;
+        return true;
+      }
+      this.inherited(arguments);
+    },
+
     /**
       Inject awareness of privileges earned by role into the privilege box when prompted
      */

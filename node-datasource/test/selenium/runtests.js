@@ -36,27 +36,27 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   module.exports = {
     'chrome on Windows 7' : function (test1) {
       console.log('starting first test on chrome');
-      starttest(desiredcaps.caps[0], 'user1', test1);
+      starttest(desiredcaps.caps[0], 'uname1', test1);
     },
     'Firefox on Windows 8' : function (test2) {
       console.log('starting second test on firefox');
-      starttest(desiredcaps.caps[1], 'user2', test2);
+      starttest(desiredcaps.caps[1], 'uname2', test2);
     },
     'Android on linux' : function (test3) {
       console.log('starting third test on Android');
-      starttest(desiredcaps.caps[2], 'user3', test3);
+      starttest(desiredcaps.caps[2], 'uname3', test3);
     },
     'iPhone on Mac 10.6' : function (test4) {
       console.log('starting test on iPhone');
-      starttest(desiredcaps.caps[3], 'user4', test4);
-    },
+      starttest(desiredcaps.caps[3], 'uname4', test4);
+    },/*
     'Safari on Mac 10.6' : function (test5) {
       console.log('starting test on Safari');
-      starttest(desiredcaps.caps[4], 'user5', test5);
-    },
-    'Firefox on Linux' : function (test6) {
-      console.log('starting test on Firefox on linux');
-      starttest(desiredcaps.caps[5], 'user6', test6);
+      starttest(desiredcaps.caps[4], 'uname5', test5);
+    },*/
+    'Chrome on Linux' : function (test6) {
+      console.log('starting test on chrome on linux');
+      starttest(desiredcaps.caps[5], 'uname6', test6);
     }
   };
   var starttest = function (caps, fname, test) {
