@@ -404,9 +404,9 @@ pull_modules() {
 	cd enyo-client/extensions
     rm -f debug.js
 	echo "enyo.depends(" > debug.js
-	echo "  '/core-extensions/source/project/client/package.js'," >> debug.js
-	echo "  '/core-extensions/source/crm/client/package.js'," >> debug.js
-	echo "  '/core-extensions/source/sales/client/package.js'" >> debug.js
+	echo "//  '/core-extensions/source/project/client/package.js'," >> debug.js
+	echo "//  '/core-extensions/source/crm/client/package.js'," >> debug.js
+	echo "//  '/core-extensions/source/sales/client/package.js'" >> debug.js
 	echo ");" >> debug.js
 }
 
@@ -444,8 +444,7 @@ init_everythings() {
 
 
 	psql -U postgres dev -c "insert into usrpriv (usrpriv_username, usrpriv_priv_id) select 'admin', priv_id from priv where priv_name like 'MaintainExtensions';";
-	psql -U postgres dev -c "UPDATE xt.usr SET usr_password='\$2a\$10\$orE6aDt4lAOkS0eLZPer5OVCYOrVOpiRGhVa3uyueRvW4Mh4BLGeW' WHERE usr_id='admin';"
-    psql -U postgres dev -c "insert into usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from ext;"
+    psql -U postgres dev -c "insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext;"
 
 	cd $XT_DIR/node-datasource
 	cat sample_config.js | sed 's/bindAddress: "localhost",/bindAddress: "0.0.0.0",/' > config.js
