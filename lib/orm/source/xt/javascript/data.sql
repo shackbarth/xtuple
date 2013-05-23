@@ -1314,7 +1314,7 @@
           XT.debug('getId values =', [value]);
         }
 
-        ret = plv8.execute(sql, [value])
+        ret = plv8.execute(sql, [value]);
 
         if(ret.length) {
           return ret[0].id;
@@ -1633,7 +1633,7 @@
         sql = XT.format(sql, keys)
 
         if (DEBUG) {
-          plv8.elog(WARNING, "retrieveMetrics sql = ", sql);
+          XT.debug('retrieveMetrics sql = ', sql);
         }
         qry = plv8.execute(sql);
 
