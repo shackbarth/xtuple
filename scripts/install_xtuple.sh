@@ -400,14 +400,6 @@ pull_modules() {
 		return 2
 	fi
 	npm install
-	
-	cd enyo-client/extensions
-    rm -f debug.js
-	echo "enyo.depends(" > debug.js
-	echo "//  '/core-extensions/source/project/client/package.js'," >> debug.js
-	echo "//  '/core-extensions/source/crm/client/package.js'," >> debug.js
-	echo "//  '/core-extensions/source/sales/client/package.js'" >> debug.js
-	echo ");" >> debug.js
 }
 
 init_everythings() {
