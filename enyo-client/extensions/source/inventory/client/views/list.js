@@ -15,49 +15,38 @@ trailing:true white:true*/
     label: "_salesOrderLineListItem".loc(),
     collection: "XM.SalesOrderLineListItemCollection",
     query: {orderBy: [
-	{attribute: 'lineNumber'}
+	{attribute: 'salesOrder'}
       ]},
     components: [
-      {name: "divider", content: "hello"}, //now I need to go to XV.List and find setupItem and figure out how to get to the data I want to populate into the header and put it in a var (below in the temp area). Then rename the temp below to setupItem. 
       {kind: "XV.ListItem", components: [
-	{kind: "FittableColumns", components: [
-	  {kind: "XV.ListColumn", classes: "short", components: [
-	    {kind: "XV.ListAttr", attr: "salesOrder", isKey: true},
-	    {kind: "XV.ListAttr", attr: "lineNumber"}
+	{kind: "FittableRows", components: [
+	  {kind: "FittableColumns", name: "header", headerAttr: "salesOrder", components: [
+	    {kind: "XV.ListColumn", classes: "header", components: [		  
+	      {kind: "XV.ListAttr", attr: "salesOrder"}
+	    ]},
+	    {kind: "XV.ListColumn", classes: "header", components: [	
+	      {kind: "XV.ListAttr", attr: "scheduledDate"}  
+	    ]}	
 	  ]},
-	  {kind: "XV.ListColumn", classes: "second", components: [
-	    {kind: "XV.ListAttr", attr: "itemSite.item.description1"},
-	    {kind: "XV.ListAttr", attr: "quantity"}
+	  {kind: "FittableColumns", components: [
+	    {kind: "XV.ListColumn", classes: "short", components: [
+	      {kind: "XV.ListAttr", attr: "salesOrder", isKey: true},
+	      {kind: "XV.ListAttr", attr: "lineNumber"}
+	    ]},
+	    {kind: "XV.ListColumn", classes: "second", components: [
+	      {kind: "XV.ListAttr", attr: "itemSite.item.description1"},
+	      {kind: "XV.ListAttr", attr: "quantity"}
+	    ]},
+	    {kind: "XV.ListColumn", classes: "second", components:[
+	      {kind: "XV.ListAttr", attr: "price"},
+	      {kind: "XV.ListAttr", attr: "priceUnit.name"}
+	    ]}
 	  ]},
-	  {kind: "XV.ListColumn", classes: "second", components:[
-	    {kind: "XV.ListAttr", attr: "price"},
-	    {kind: "XV.ListAttr", attr: "priceUnit.name"}
-	  ]}
+	  {kind: "XV.ListColumn", name: "footer", footerAttr: "salesOrder", components: [
+	    {kind: "XV.ListAttr", classes: "footer", attr: "salesOrder"}
+	  ]} 
 	]}
       ]}
-    ],
-/*    rendered: function() {
-      this.inherited(arguments);
-      this.populateList();
-    },
-*/// this is from the enyo sample not sure if I need it
-    temp: function(inSender, inEvent) {
-      var i = inEvent.index;
-	var data = this.filter ? this.filtered : this.db;
-	var item = data[i];
-	// content
-	this.$.item.setContact(item);
-	// selection
-	this.$.item.setSelected(inSender.isSelected(i));
-	// divider
-	if (!this.hideDivider) {
-	  var d = item.name[0];
-	  var prev = data[i-1];
-	  var showd = d != (prev && prev.name[0]);
-	  this.$.divider.setContent(d);
-	  this.$.divider.canGenerate = showd;
-	  this.$.item.applyStyle("border-top", showd ? "none" : null);
-	}
-    }
+    ]
   });
 }());
