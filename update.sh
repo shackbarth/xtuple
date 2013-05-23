@@ -75,7 +75,7 @@ sleep 10
 # TODO: update DBs
 
 # build extensions
-cd ../enyo-client/extensions
+cd enyo-client/extensions
 ./tools/buildExtensions.sh
 
 # deploy enyo client
