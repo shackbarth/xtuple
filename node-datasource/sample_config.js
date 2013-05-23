@@ -11,6 +11,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     requireDatabase: true,
     datasource: {
       debugging: false,
+      debugDatabase: false,
       enhancedAuthKey: "xTuple",
       sessionTimeout: 60,
       requireCache: true,
