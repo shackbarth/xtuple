@@ -72,15 +72,7 @@ sleep 10
 monit start node
 sleep 10
 
-# update global db
-cd node-datasource/database/source
-psql -U admin  -h $HOST global -f init_global.sql
-cd ../../installer
-./installer.js -h $HOST -d global -u admin -p 5432 -P admin --path ../database/orm
-
-# update instance dbs
-cd ..
-node runMaintenance.js
+# TODO: update DBs
 
 # build extensions
 cd ../enyo-client/extensions
