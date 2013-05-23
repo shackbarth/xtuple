@@ -10,7 +10,7 @@
     assert = require("chai").assert;
 
   describe('Date Widget', function () {
-    this.timeout(10 * 1000);
+    this.timeout(45 * 1000);
     var K, newDate;
 
     before(function (done) {

@@ -5,3 +5,4 @@
 *.deb
 node_modules
 npm-debug.log
+scripts/private
