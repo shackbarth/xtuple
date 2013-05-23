@@ -617,6 +617,7 @@ var lang = XT.stringsFor("en_US", {
   "_maintainCurrencies": "Maintain Currencies",
   "_maintainCurrencyRates": "Maintain Currency Rates",
   "_maintainCustomerGroups": "Maintain Customer Groups",
+  "_maintainExtensions": "Maintain Extensions",
   "_maintainFreightClasses": "Maintain Freight Classes",
   "_maintainImages": "Maintain Images",
   "_maintainItemMasters": "Maintain Item Masters",
