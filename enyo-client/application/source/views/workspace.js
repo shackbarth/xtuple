@@ -2272,6 +2272,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", attr: "name"},
             {kind: "XV.InputWidget", attr: "description"},
             {kind: "XV.PriorityPicker", attr: "priority"},
+            {kind: "XV.ToDoStatusPicker", label: "_status".loc(), attr: "statusProxy"},
             {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
             {kind: "XV.DateWidget", attr: "dueDate"},
             {kind: "XV.DateWidget", attr: "startDate"},
@@ -2292,10 +2293,8 @@ trailing:true white:true*/
       ]}
     ]
   };
-
   toDoHash = enyo.mixin(toDoHash, XV.accountNotifyContactMixin);
   enyo.kind(toDoHash);
-
   XV.registerModelWorkspace("XM.ToDoRelation", "XV.ToDoWorkspace");
   XV.registerModelWorkspace("XM.ToDoListItem", "XV.ToDoWorkspace");
 

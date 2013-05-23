@@ -91,7 +91,7 @@ white:true*/
         date,
         K = XM.Project;
       if (this.isDirty()) {
-        date = new Date().toISOString();
+        date = new Date();
         if (status === K.IN_PROCESS && !this.get('assignDate')) {
           this.set('assignDate', date);
         } else if (status === K.COMPLETED && !this.get('completeDate')) {

@@ -3,7 +3,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ToDo",
-    "table": "todoitem",
+    "table": "xt.todoiteminfo",
     "idSequenceName": "todoitem_todoitem_id_seq",
     "isRest": true,
     "lockable": true,
@@ -78,6 +78,13 @@
         "attr": {
           "type": "String",
           "column": "todoitem_status"
+        }
+      },
+      {
+        "name": "statusProxy",
+        "attr": {
+          "type": "String",
+          "column": "status_proxy"
         }
       },
       {
