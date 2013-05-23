@@ -10,7 +10,7 @@
 var crud = require('../lib/crud'),
 		assert = require('chai').assert,
 		expect = require('chai').expect,
-		zombieAuth = require('../../vows/lib/zombie_auth'),
+		zombieAuth = require('../lib/zombie_auth'),
 
    data = {
       recordType: "XM.TaxAssignment",
@@ -42,28 +42,28 @@ describe('TaxAssignment CRUD Test', function () {
 			  zombieAuth.loadApp(done);
 			});
 
-			it('should be able to Initialize an XM.TaxAssignment Model', function(){
+			it('should be able to Initialize an XM.TaxAssignment Model', function (){
 				data.model = new XM.TaxAssignment();
 				expect(data.model).to.exist;
 				assert.equal(data.model.recordType, 'XM.TaxAssignment', 'INIT Value should be XM.TaxAssignment');
 			});
 
-			it.skip('should create an XM.TaxAssignment Model', function(){
+			it.skip('should create an XM.TaxAssignment Model', function (){
 				data.model.set(data.createHash);
 				crud.save(data)
 			});
 
-			it.skip('should read an XM.TaxAssignment Model', function(){
+			it.skip('should read an XM.TaxAssignment Model', function (){
 				assert.equal(data.model.get('name'), data.createHash.name, 'Model Code READ Value is equal')
 			});
 
-			it.skip('should update an XM.TaxAssignment Model', function(){
+			it.skip('should update an XM.TaxAssignment Model', function (){
 				data.model.set(data.updateHash);
 				crud.save(data)
 				assert.equal(data.model.get('number'), data.updateHash.number, 'Model Code UPDATE Value is equal')
 			});
 
-			it('should delete an XM.TaxAssignment Model', function(){
+			it('should delete an XM.TaxAssignment Model', function (){
 				crud.destroy(data)
 			});
 

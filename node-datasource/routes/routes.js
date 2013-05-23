@@ -26,21 +26,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // be defined in such a way as to chain these types of functions together in an array.
     ensureLogin = require('connect-ensure-login').ensureLoggedIn(logoutPath),
     auth = require('./auth'),
-    changePassword = require('./changePassword'),
+    changePassword = require('./change_password'),
     email = require('./email'),
     exxport = require('./export'),
     extensions = require('./extensions'),
     data = require('./data'),
-    dataFromKey = require('./dataFromKey'),
+    dataFromKey = require('./data_from_key'),
     file = require('./file'),
-    maintenance = require('./maintenance'),
     passport = require('passport'),
     redirector = require('./redirector'),
     report = require('./report'),
-    resetPassword = require('./resetPassword'),
     restDiscovery = require('./restDiscovery'),
-    restRouter = require('./restRouter'),
-    syncUser = require('./syncUser');
+    restRouter = require('./restRouter');
 
   //
   // Authentication-related routes
@@ -82,14 +79,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.exxport = [ensureLogin, exxport.exxport];
   exports.extensions = [ensureLogin, extensions.extensions];
   exports.file = [ensureLogin, file.file];
-  // the maintenance route as accessible by the app has login restrictions.
-  exports.maintenance = [ensureLogin, maintenance.maintenance];
-  // the maintenance route as accessible through the unexposed server has
-  // no login restrictions. This is for ease of serverside scripting.
-  exports.maintenanceLocalhost = maintenance.maintenance;
   exports.redirect = redirector.redirect;
   exports.report = [ensureLogin, report.report];
-  exports.resetPassword = [ensureLogin, resetPassword.resetPassword];
-  exports.syncUser = [ensureLogin, syncUser.syncUser];
+  exports.resetPassword = [ensureLogin, changePassword.resetPassword];
 
 }());

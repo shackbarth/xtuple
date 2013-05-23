@@ -53,6 +53,7 @@ Simplest possible usage:
 
     var username = options.username,
       password = options.password,
+      database = options.database,
       host = options.host,
       callback = options.callback,
       verboseMode = options.verbose,
@@ -68,14 +69,15 @@ Simplest possible usage:
 
     if (!username || !password) {
       try {
-        loginData = require('../../shared/loginData');
+        loginData = require('../../shared/login_data');
       } catch (err) {
-        console.log("Make sure you put your login credentials in the /test/shared/loginData.js file");
+        console.log("Make sure you put your login credentials in the /test/shared/login_data.js file");
         process.exit(1);
       }
 
       username = loginData.data.username;
       password = loginData.data.pwd;
+      database = loginData.data.org;
       host = loginData.data.webaddress;
     }
     host = host || "https://localhost:443";
@@ -89,13 +91,14 @@ Simplest possible usage:
       return;
     }
 
-    zombie.visit(host, {debug: false}, function (e, browser) {
+    zombie.visit(host, {debug: verboseMode}, function (e, browser) {
       //
       // This is the login screen
       //
       browser
         .fill('id', username)
         .fill('password', password)
+        .select('database', database)
         .pressButton('submit', function () {
 
           //
@@ -127,6 +130,7 @@ Simplest possible usage:
               XV = browser.window.XV;
               XZ.browser = browser;
               XZ.host = host;
+              XZ.database = database;
 
               XT.log = function (message) {
                 // log if verbose mode or if the log is an error

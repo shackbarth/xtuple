@@ -17,7 +17,7 @@ var connected = function (query, options, id, err, client, done, ranInit) {
   var that = this;
 
   if (err) {
-    issue(X.warning("Failed to connect to database: " +
+    issue(console.log("Failed to connect to database: " +
       "{hostname}:{port}/{database} => %@".f(options, err.message)));
     done();
     return process.send({err: err, id: id, options: options});
