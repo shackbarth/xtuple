@@ -22,7 +22,7 @@ Simplest possible usage:
 (function () {
   "use strict";
 
-  var secondsToWait = 20;
+  var secondsToWait = 40;
 
   /**
     Loads up the xTuple environment and makes the global variables globally available.
