@@ -444,7 +444,7 @@ init_everythings() {
 
 
 	psql -U postgres dev -c "insert into usrpriv (usrpriv_username, usrpriv_priv_id) select 'admin', priv_id from priv where priv_name like 'MaintainExtensions';";
-    psql -U postgres dev -c "insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from ext;"
+    psql -U postgres dev -c "insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext;"
 
 	cd $XT_DIR/node-datasource
 	cat sample_config.js | sed 's/bindAddress: "localhost",/bindAddress: "0.0.0.0",/' > config.js
