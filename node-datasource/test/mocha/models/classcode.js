@@ -6,7 +6,7 @@
 var crud = require('../lib/crud'),
 assert = require('chai').assert,
 expect = require('chai').expect,
-zombieAuth = require('../../vows/lib/zombie_auth'),
+zombieAuth = require('../lib/zombie_auth'),
 
 data = {
     recordType : "XM.ClassCode",
@@ -35,28 +35,28 @@ describe('Class Code CRUD Test', function () {
 			  zombieAuth.loadApp(done);
 			});
 
-			it('should be able to Initialize an XM.ClassCode Model', function(){
+			it('should be able to Initialize an XM.ClassCode Model', function (){
 				data.model = new XM.ClassCode();
 				expect(data.model).to.exist;
 				assert.equal(data.model.recordType, 'XM.ClassCode', 'INIT Value should be XM.ClassCode');
 			});
 
-			it('should create an XM.ClassCode Model', function(){
+			it('should create an XM.ClassCode Model', function (){
 				data.model.set(data.createHash);
 				crud.save(data)
 			});
 
-			it('should read an XM.ClassCode Model', function(){
+			it('should read an XM.ClassCode Model', function (){
 				assert.equal(data.model.get('code'), data.createHash.code, 'Model Code READ Value is equal')
 			});
 
-			it('should update an XM.ClassCode Model', function(){
+			it('should update an XM.ClassCode Model', function (){
 				data.model.set(data.updateHash);
 				crud.save(data)
 				assert.equal(data.model.get('description'), data.updateHash.description, 'Model Code UPDATE Value is equal')
 			});
 
-			it('should delete an XM.ClassCode Model', function(){
+			it('should delete an XM.ClassCode Model', function (){
 				crud.destroy(data)
 			});
 

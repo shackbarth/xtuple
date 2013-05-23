@@ -108,7 +108,7 @@ white:true*/
         // worker.send({id: this.requestNum, query: query, options: options, conString: str});
       } else {
         if (X.options.datasource.debugging) {
-          console.log(query);
+          X.log(query);
         }
         X.pg.connect(str, _.bind(this.connected, this, query, options, callback));
       }
@@ -174,7 +174,7 @@ white:true*/
     */
     request: function (obj, method, payload, options) {
       var that = this,
-        conn = X.options.globalDatabase,
+        conn = X.options.databaseServer,
         isDispatch = _.isObject(payload.dispatch),
         query,
         complete = function (err, response) {
@@ -230,8 +230,20 @@ white:true*/
       query = "select xt.{method}($${payload}$$) as request"
               .replace("{method}", method)
               .replace("{payload}", payload);
-      // uncomment this to see the query against the global database
-      //X.log(query);
+
+      //if (X.options.datasource.debugging) {
+      //  X.log("Query from model: ", query);
+      //}
+
+      if (options.database) {
+        conn.database = options.database;
+      } else {
+        console.log("### FIX ME ### calling XT.dataSource.request with payload = ", JSON.stringify(payload));
+        console.log("### FIX ME ### call needs to set database in options!!!");
+        console.trace("### At this location ###");
+        conn.database = X.options.datasource.databases[0]; // XXX FIXME this has to come from req.session.passport.user.organization
+      }
+
       this.query(query, conn, complete);
       return true;
     }

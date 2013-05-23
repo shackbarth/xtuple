@@ -1,7 +1,13 @@
+1.3.5 (2013/05)
+===============
 
 Critical deployment changes
 ---------------------------
-* add redirectPort and maintenancePort to config.js, see sample_config.js
+* Add redirectPort and maintenancePort to config.js, see sample_config.js
+* To run tests you will need to add the test database to the login_data.js
+  file, per the conventions in sample_login_data.js. Note also the new
+  snake_case filename convention. You will also need to add this database
+  name to your config.js file under datasource.testDatabase.
 * Changed XT.Data's handling of Dates and nulls to work with current version of plv8
   that doesn't require any special handling. You need to be on this plv8 version:
 
@@ -29,7 +35,6 @@ Critical deployment changes
   To test if your plv8 is working correctly, try adding a comment to an Account or Contact.
   See if you get any errors in your browsers Javascript Console and make sure the comment saves.
 
-
 Features and bugs
 ----------------
 
@@ -43,14 +48,8 @@ Features and bugs
   issue #[20264](http://www.xtuple.org/xtincident/view/bugs/20264)
   REST - Refactor error handling in the database layer
 
-1.3.4 (2013/05)
+1.3.4 (2013/05/06)
 ===============
-
-Critical deployment changes
----------------------------
-* Anybody who wants to work in the admin console will have to add global into their org
-  table. You can do this through the admin console, but do it before you upgrade! You
-  do not need to associate the org with your user.
 
 Features and bugs
 -----------------
