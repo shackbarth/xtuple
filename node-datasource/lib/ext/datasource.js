@@ -147,7 +147,7 @@ white:true*/
         client.connection.on('error', function (msg) {
           if (msg.message === "unhandledError") {
             X.err("Database Error! ", msg.message + " Please fix this!!!");
-            _.each(that.debug, function (message) {
+            _.each(client.debug, function (message) {
               X.err("Database Error! DB message was: ", message);
             });
             X.err("Database Error! Last query was: ", that.activeQuery);
