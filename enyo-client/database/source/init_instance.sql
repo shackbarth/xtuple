@@ -19,10 +19,12 @@ select xt.js_init();
 \i public/tables/comment.sql
 \i public/tables/coitem.sql
 \i public/tables/docass.sql
+\i public/tables/grppriv.sql
 \i public/tables/incdt.sql
 \i public/tables/itemsite.sql;
 \i public/tables/quitem.sql
 \i public/tables/todoitem.sql
+\i public/tables/usrpriv.sql
 -- [ END ] public
 
 -- [ START ] xt
