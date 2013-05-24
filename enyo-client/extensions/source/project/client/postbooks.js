@@ -33,7 +33,6 @@ trailing:true white:true*/
     XT.app.$.postbooks.insertModule(module, 2);
 
     relevantPrivileges = [
-      "AccessProjectExtension",
       "MaintainAddresses",
       "MaintainAllContacts",
       "MaintainAllCRMAccounts",
@@ -67,7 +66,6 @@ trailing:true white:true*/
       "MaintainCommentTypes",
       "MaintainCountries",
       "MaintainStates",
-      "MaintainUsers"
     ];
     XT.session.addRelevantPrivileges(module.name, relevantPrivileges);
   };

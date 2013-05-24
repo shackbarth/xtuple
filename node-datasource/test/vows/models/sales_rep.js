@@ -10,7 +10,7 @@ var XVOWS = XVOWS || {};
 
   var vows = require("vows"),
     assert = require("assert"),
-    zombieAuth = require("../lib/zombie_auth"),
+    zombieAuth = require("../../mocha/lib/zombie_auth"),
     crud = require('../lib/crud');
 
   var data = {},
@@ -89,9 +89,9 @@ var XVOWS = XVOWS || {};
               account = deleteData.accountModel,
               fetchOptionsAccnt = {},
               destroyAccount;
-        
+
             fetchOptionsAccnt.id = deleteData.accntId;
-        
+
             destroyAccount = function () {
               if (account.getStatus() === XM.Model.READY_CLEAN) {
                 var accountDestroyed = function () {
@@ -116,5 +116,5 @@ var XVOWS = XVOWS || {};
       }
     })
   }).export(module);
-  
+
 }());

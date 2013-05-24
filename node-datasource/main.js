@@ -7,6 +7,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 Backbone = require("backbone");
 _ = require("underscore");
 jsonpatch = require("json-patch");
+SYS = {};
 
 (function () {
   "use strict";
@@ -65,9 +66,11 @@ jsonpatch = require("json-patch");
   // Set the options.
   X.setup(options);
 
-  sessionOptions.username = X.options.globalDatabase.nodeUsername;
+  sessionOptions.username = X.options.databaseServer.user;
+  sessionOptions.database = X.options.datasource.databases[0];
 
   XT.session = Object.create(XT.Session);
+  XT.session.schemas.SYS = false;
   XT.session.loadSessionObjects(XT.session.SCHEMA, sessionOptions);
   XT.session.loadSessionObjects(XT.session.PRIVILEGES, sessionOptions);
 
@@ -89,11 +92,12 @@ try {
  * Module dependencies.
  */
 var express = require('express'),
-    flash = require('connect-flash'),
     passport = require('passport'),
     oauth2 = require('./oauth2/oauth2'),
     routes = require('./routes/routes'),
     socketio = require('socket.io'),
+    url = require('url'),
+    utils = require('./oauth2/utils'),
     user = require('./oauth2/user');
 
 // TODO - for testing. remove...
@@ -134,61 +138,21 @@ require('http').IncomingMessage.prototype.isAuthenticated = function () {
 // Stomping on express/connect's Cookie.prototype to only update the expires property
 // once a minute. Otherwise it's hit on every session check. This cuts down on chatter.
 // See more details here: https://github.com/senchalabs/connect/issues/670
-require('express/node_modules/connect/lib/middleware/session/cookie').prototype.__defineSetter__("expires", function (date) {
-  "use strict";
-
-  if (date === null || this._expires === null) {
-    // Initialize "this._expires" when creating a new cookie.
-    this._expires = date;
-    this.originalMaxAge = this.maxAge;
-  } else if (date instanceof Date) {
-    // This captures a certain "set" call we are interested in.
-    var expiresDate;
-
-    if (typeof this._expires === 'string') {
-      expiresDate = new Date(this._expires);
-    }
-
-    if (this._expires instanceof Date) {
-      expiresDate = this._expires;
-    }
-
-    // If the difference between the new time, "date", and the old time, "this._expires",
-    // is more than 1 minute, then we update it which updates the db and cache magically.
-    // OR if they match, we need to update "this._expires" so it's a instanceof Date.
-    //console.log("updates in: ", 60000 - (date - expiresDate));
-    if ((date - expiresDate > 60000) || (JSON.stringify(date) === JSON.stringify(expiresDate))) {
-      //console.log("expires updated: ", date - expiresDate);
-      this._expires = date;
-      this.originalMaxAge = this.maxAge;
-    }
-  }
-});
+require('express/node_modules/connect/lib/middleware/session/cookie').prototype.__defineSetter__("expires", require('./stomps/expires').expires);
 
 // Stomp on Express's cookie serialize() to not send an "expires" value to the browser.
 // This makes the browser cooke a "session" cookie that will never expire and only
 // gets removed when the user closes the browser. We still set express.session.cookie.maxAge
 // below so our persisted session gets an expires value, but not the browser cookie.
 // See this issue for more details: https://github.com/senchalabs/connect/issues/328
-require('express/node_modules/cookie').serialize = function (name, val, opt) {
-  "use strict";
+require('express/node_modules/cookie').serialize = require('./stomps/cookie').serialize;
 
-  // Need to add encode here for the stomp to work.
-  var encode = encodeURIComponent;
-
-  var pairs = [name + '=' + encode(val)];
-  opt = opt || {};
-
-  if (opt.maxAge) pairs.push('Max-Age=' + opt.maxAge);
-  if (opt.domain) pairs.push('Domain=' + opt.domain);
-  if (opt.path) pairs.push('Path=' + opt.path);
-  // TODO - Override here, skip this.
-  //if (opt.expires) pairs.push('Expires=' + opt.expires.toUTCString());
-  if (opt.httpOnly) pairs.push('HttpOnly');
-  if (opt.secure) pairs.push('Secure');
-
-  return pairs.join('; ');
-};
+// Stomp on Connect's session.
+// https://github.com/senchalabs/connect/issues/641
+function stompSessionLoad(){ return require('./stomps/session'); }
+require('express/node_modules/connect').middleware.__defineGetter__('session', stompSessionLoad);
+require('express/node_modules/connect').__defineGetter__('session', stompSessionLoad);
+require('express').__defineGetter__('session', stompSessionLoad);
 
 /**
  * ###################################################
@@ -231,13 +195,30 @@ var app = express(),
 var conditionalExpressSession = function (req, res, next) {
   "use strict";
 
+  var key;
+
   // REST API endpoints start with "/api" in their path.
-  if ((/^\/api/i).test(req.path)) {
+  // The 'assets' folder and login page are sessionless.
+  if ((/^api/i).test(req.path.split("/")[2]) || (/^\/assets/i).test(req.path) || req.path === "/") {
     next();
   } else {
+    if (req.path === "/login") {
+      // TODO - Add check against X.options database array
+      key = req.body.database + ".sid";
+    } else if (req.path.split("/")[1]) {
+      key = req.path.split("/")[1] + ".sid";
+    } else {
+      // TODO - Dynamically name the cookie after the database.
+      console.log("### FIX ME ### setting cookie name to 'connect.sid' for path = ", JSON.stringify(req.path));
+      console.log("### FIX ME ### cookie name should match database name!!!");
+      console.trace("### At this location ###");
+      key = 'connect.sid';
+    }
+
     // Instead of doing app.use(express.session()) we call the package directly
     // which returns a function (req, res, next) we can call to do the same thing.
     var init_session = express.session({
+        key: key,
         store: sessionStore,
         secret: privateSalt,
         // See cookie stomp above for more details on how this session cookie works.
@@ -246,6 +227,11 @@ var conditionalExpressSession = function (req, res, next) {
           httpOnly: true,
           secure: true,
           maxAge: (X.options.datasource.sessionTimeout * 60 * 1000) || 3600000
+        },
+        sessionIDgen: function () {
+          // TODO: Stomp on connect's sessionID generate.
+          // https://github.com/senchalabs/connect/issues/641
+          return key.split(".")[0] + "." + utils.generateUUID();
         }
       });
 
@@ -258,28 +244,14 @@ var conditionalPassportSession = function (req, res, next) {
   "use strict";
 
   // REST API endpoints start with "/api" in their path.
-  if ((/^\/api/i).test(req.path)) {
+  // The 'assets' folder and login page are sessionless.
+  if ((/^api/i).test(req.path.split("/")[2]) || (/^\/assets/i).test(req.path) || req.path === "/") {
     next();
   } else {
     // Instead of doing app.use(passport.session())
     var init_passportSessions = passport.session();
 
     init_passportSessions(req, res, next);
-  }
-};
-
-// flash() requires sessions, so it has to be loaded conditionally.
-var conditionalFlash = function (req, res, next) {
-  "use strict";
-
-  // REST API endpoints start with "/api" in their path.
-  if ((/^\/api/i).test(req.path)) {
-    next();
-  } else {
-    // Instead of doing app.use(flash())
-    var init_flash = flash();
-
-    init_flash(req, res, next);
   }
 };
 
@@ -303,7 +275,6 @@ app.configure(function () {
   app.use(conditionalExpressSession);
   app.use(passport.initialize());
   app.use(conditionalPassportSession);
-  app.use(conditionalFlash);
 
   app.use(app.router);
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
@@ -317,46 +288,52 @@ require('./oauth2/passport');
 /**
  * Setup HTTP routes and handlers.
  */
+var that = this;
+app.get('/:org/app', function (req, res, next) {
+  res.render('app', { org: req.session.passport.user.organization });
+});
+app.get('/:org/debug', function (req, res, next) {
+  res.render('debug', { org: req.session.passport.user.organization });
+});
+_.each(X.options.datasource.databases, function (orgValue, orgKey, orgList) {
+  app.use("/" + orgValue + '/client', express.static('../enyo-client/application', { maxAge: 86400000 }));
+  app.use("/" + orgValue + '/core-extensions', express.static('../enyo-client/extensions', { maxAge: 86400000 }));
+  app.use("/" + orgValue + '/private-extensions', express.static('../../private-extensions', { maxAge: 86400000 }));
+});
 app.use('/assets', express.static('views/login/assets', { maxAge: 86400000 }));
-app.use('/client', express.static('../enyo-client/application', { maxAge: 86400000 }));
-app.use('/public-extensions', express.static('../enyo-client/extensions', { maxAge: 86400000 }));
-app.use('/private-extensions', express.static('../../private-extensions', { maxAge: 86400000 }));
 
-app.get('/dialog/authorize', oauth2.authorization);
-app.post('/dialog/authorize/decision', oauth2.decision);
-app.post('/oauth/token', oauth2.token);
+app.get('/:org/dialog/authorize', oauth2.authorization);
+app.post('/:org/dialog/authorize/decision', oauth2.decision);
+app.post('/:org/oauth/token', oauth2.token);
 
-app.get('/discovery/v1alpha1/apis/:org/v1alpha1/rest', routes.restDiscoveryGetRest);
-app.get('/discovery/v1alpha1/apis/:org/:model/v1alpha1/rest', routes.restDiscoveryGetRest);
-app.get('/discovery/v1alpha1/apis/:org', routes.restDiscoveryList);
+app.get('/:org/discovery/v1alpha1/apis/v1alpha1/rest', routes.restDiscoveryGetRest);
+app.get('/:org/discovery/v1alpha1/apis/:model/v1alpha1/rest', routes.restDiscoveryGetRest);
+app.get('/:org/discovery/v1alpha1/apis', routes.restDiscoveryList);
 
-app.get('/api/userinfo', user.info);
+app.get('/:org/api/userinfo', user.info);
 
-app.all('/api/v1alpha1/:model/:id', routes.restRouter);
-app.all('/api/v1alpha1/:model', routes.restRouter);
-app.all('/api/v1alpha1/*', routes.restRouter);
+app.all('/:org/api/v1alpha1/:model/:id', routes.restRouter);
+app.all('/:org/api/v1alpha1/:model', routes.restRouter);
+app.all('/:org/api/v1alpha1/*', routes.restRouter);
 
 app.get('/', routes.loginForm);
 app.post('/login', routes.login);
 app.get('/login/scope', routes.scopeForm);
 app.post('/login/scopeSubmit', routes.scope);
-app.get('/logout', routes.logout);
+app.get('/:org/logout', routes.logout);
 
-app.all('/changePassword', routes.changePassword);
-app.all('/dataFromKey', routes.dataFromKey);
-app.all('/email', routes.email);
-app.all('/export', routes.exxport);
-app.all('/extensions', routes.extensions);
-app.get('/file', routes.file);
-app.get('/maintenance', routes.maintenance);
-app.get('/report', routes.report);
-app.get('/resetPassword', routes.resetPassword);
-app.get('/syncUser', routes.syncUser);
+app.all('/:org/change-password', routes.changePassword);
+app.all('/:org/data-from-key', routes.dataFromKey);
+app.all('/:org/email', routes.email);
+app.all('/:org/export', routes.exxport);
+app.all('/:org/extensions', routes.extensions);
+app.get('/:org/file', routes.file);
+app.get('/:org/report', routes.report);
+app.get('/:org/reset-password', routes.resetPassword);
 
 // Set up the other servers we run on different ports.
-var unexposedServer = express();
-unexposedServer.get('/maintenance', routes.maintenanceLocalhost);
-unexposedServer.listen(X.options.datasource.maintenancePort);
+//var unexposedServer = express();
+//unexposedServer.listen(X.options.datasource.maintenancePort);
 
 var redirectServer = express();
 redirectServer.get(/.*/, routes.redirect); // RegEx for "everything"
@@ -369,6 +346,11 @@ redirectServer.listen(X.options.datasource.redirectPort);
 // That can cause it to crash at startup.
 // Need a way to get everything loaded BEFORE we start listening.  Might just move this to the end...
 io = socketio.listen(server.listen(X.options.datasource.port));
+
+X.log("node-datasource started on port: ", X.options.datasource.port);
+X.log("redirectServer started on port: ", X.options.datasource.redirectPort);
+X.log("Databases accessible from this server: \n", JSON.stringify(X.options.datasource.databases, null, 2));
+
 
 /**
  * Destroy a single session.
@@ -443,15 +425,27 @@ io.configure(function () {
 io.of('/clientsock').authorization(function (handshakeData, callback) {
   "use strict";
 
+  var key;
+
   if (handshakeData.headers.cookie) {
     handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
 
-    if (!handshakeData.cookie['connect.sid']) {
+    if (handshakeData.headers.referer && url.parse(handshakeData.headers.referer).path.split("/")[1]) {
+      key = url.parse(handshakeData.headers.referer).path.split("/")[1];
+    } else if (X.options.datasource.testDatabase) {
+      // for some reason zombie doesn't send the referrer in the socketio call
+      key = X.options.datasource.testDatabase;
+    } else {
+      return callback(null, false);
+    }
+
+
+    if (!handshakeData.cookie[key + '.sid']) {
       return callback(null, false);
     }
 
     // Add sessionID so we can use it to check for valid sessions on each request below.
-    handshakeData.sessionID = parseSignedCookie(handshakeData.cookie['connect.sid'], privateSalt);
+    handshakeData.sessionID = parseSignedCookie(handshakeData.cookie[key + '.sid'], privateSalt);
 
     sessionStore.get(handshakeData.sessionID, function (err, session) {
       if (err) {

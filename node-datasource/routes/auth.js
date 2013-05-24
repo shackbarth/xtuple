@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, _:true, XM:true */
+/*global X:true, _:true, SYS:true */
 
 (function () {
   "use strict";
@@ -13,9 +13,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
    */
   exports.login = [
     //passport.authenticate('local', { successReturnToOrRedirect: '/login/scope', failureRedirect: '/', failureFlash: 'Invalid username or password.' }),
-    passport.authenticate('local', { failureRedirect: '/', failureFlash: 'Invalid username or password.' }),
+    passport.authenticate('local', { failureRedirect: '/?login=fail' }),
     function (req, res, next) {
-      exports.scopeForm(req, res, next);
+
+      if (req && req.session && !req.session.oauth2 && req.session.passport && req.session.passport.user && req.session.passport.user.organization) {
+        res.redirect("/" + req.session.passport.user.organization + '/app');
+        //next();
+      } else {
+        exports.scopeForm(req, res, next);
+      }
     }
   ];
 
@@ -23,7 +29,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Renders the login form
    */
   exports.loginForm = function (req, res) {
-    res.render('login', { message: req.flash('error') });
+    var message = [];
+
+    if (req.query && req.query.login && req.query.login === 'fail') {
+      message = ["Invalid username or password."];
+    }
+
+    res.render('login', { message: message, databases: X.options.datasource.databases });
   };
 
   /**
@@ -40,7 +52,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       req.session.destroy(function () {});
     }
 
-    res.clearCookie('connect.sid');
+    if (req.path.split("/")[1]) {
+      res.clearCookie(req.path.split("/")[1] + ".sid");
+    }
 
     req.logout();
     res.redirect('/');
@@ -54,7 +68,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   exports.scope = function (req, res, next) {
     var userId = req.session.passport.user.id,
       selectedOrg = req.body.org,
-      user = new XM.User(),
+      user = new SYS.User(),
       options = {};
 
     options.success = function (response) {
@@ -70,11 +84,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }
 
         X.log("User %@ has no business trying to log in to organization %@.".f(userId, selectedOrg));
-        res.redirect('/logout');
+        res.redirect('/' + selectedOrg + '/logout');
         return;
       } else if (response.length > 1) {
         X.log("More than one User: %@ exists.".f(userId));
-        res.redirect('/logout');
+        res.redirect('/' + selectedOrg + '/logout');
         return;
       }
 
@@ -83,27 +97,28 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // Update the session store row to add the org choice and username.
       // Note: Updating this object magically persists the data into the SessionStore table.
 
-      privs = _.map(response.get("privileges"), function (privAss) {
-        return privAss.privilege.name;
-      });
+      //privs = _.map(response.get("privileges"), function (privAss) {
+      //  return privAss.privilege.name;
+      //});
 
-      _.each(response.get('organizations'), function (orgValue, orgKey, orgList) {
-        if (orgValue.name === selectedOrg) {
-          userOrg = orgValue.name;
-          userName = orgValue.username;
-        }
-      });
+      //_.each(response.get('organizations'), function (orgValue, orgKey, orgList) {
+      //  if (orgValue.name === selectedOrg) {
+      //    userOrg = orgValue.name;
+      //    userName = orgValue.username;
+      //  }
+      //});
 
-      if (!userOrg || !userName) {
+      //if (!userOrg || !userName) {
+      if (!response.get("username")) {
         // This shouldn't happen.
         X.log("User %@ has no business trying to log in to organization %@.".f(userId, selectedOrg));
-        res.redirect('/logout');
+        res.redirect('/' + selectedOrg + '/logout');
         return;
       }
 
-      req.session.passport.user.globalPrivileges = privs;
-      req.session.passport.user.organization = userOrg;
-      req.session.passport.user.username = userName;
+      //req.session.passport.user.globalPrivileges = privs;
+      req.session.passport.user.organization = response.get("organization");
+      req.session.passport.user.username = response.get("username");
 
 // TODO - req.oauth probably isn't enough here, but it's working 2013-03-15...
       // If this is an OAuth 2.0 login with only 1 org.
@@ -122,7 +137,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     options.error = function (model, error) {
       X.log("userorg fetch error", error);
-      res.redirect('/logout');
+      res.redirect('/' + selectedOrg + '/logout');
       return;
     };
 
@@ -131,7 +146,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     options.id = userId;
 
     // The user under whose authority the query is run.
-    options.username = X.options.globalDatabase.nodeUsername;
+    options.username = X.options.databaseServer.user;
+    options.database = selectedOrg;
 
     // Verify that the org is valid for the user.
     user.fetch(options);

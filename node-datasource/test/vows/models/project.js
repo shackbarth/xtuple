@@ -9,7 +9,7 @@
   var vows = require("vows"),
     assert = require("assert"),
     _ = require("underscore"),
-    zombieAuth = require("../lib/zombie_auth"),
+    zombieAuth = require("../../mocha/lib/zombie_auth"),
     crud = require('../lib/crud'),
     dueDate = new Date(),
     commentType;
@@ -17,7 +17,7 @@
   dueDate.setDate(dueDate.getDate() + 30);
 
   var data = {};
-  
+
   data.createHash = {
     number: 'crud_project',
     name: 'Test CRUD Project operations',
@@ -143,12 +143,12 @@
                   that.callback(null, model);
                 }
               };
-              
+
             // Get the comment type id from it's name.
             commentType = _.find(XM.commentTypes.models, function (item) {
               return item.get('name') === 'General';
             });
-              
+
             comment.set({
               commentType: commentType,
               text: 'My first comment'
@@ -233,5 +233,5 @@
   }).addBatch({
     'We can DESTROY a Project Model': crud.destroy(data)
   }).export(module);
-  
+
 }());

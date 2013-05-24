@@ -10,7 +10,7 @@
 var crud = require('../lib/crud'),
 		assert = require('chai').assert,
 		expect = require('chai').expect,
-		zombieAuth = require('../../vows/lib/zombie_auth'),
+		zombieAuth = require('../lib/zombie_auth'),
 
    data = {
       recordType: "XM.IncidentResolution",
@@ -42,28 +42,28 @@ describe('IncidentResolution CRUD Test', function () {
 			  zombieAuth.loadApp(done);
 			});
 
-			it('should be able to Initialize an XM.IncidentResolution Model', function(){
+			it('should be able to Initialize an XM.IncidentResolution Model', function (){
 				data.model = new XM.IncidentResolution();
 				expect(data.model).to.exist;
 				assert.equal(data.model.recordType, 'XM.IncidentResolution', 'INIT Value should be XM.IncidentResolution');
 			});
 
-			it('should create an XM.IncidentResolution Model', function(){
+			it('should create an XM.IncidentResolution Model', function (){
 				data.model.set(data.createHash);
 				crud.save(data)
 			});
 
-			it('should read an XM.IncidentResolution Model', function(){
+			it('should read an XM.IncidentResolution Model', function (){
 				assert.equal(data.model.get('name'), data.createHash.name, 'Model Code READ Value is equal')
 			});
 
-			it('should update an XM.IncidentResolution Model', function(){
+			it('should update an XM.IncidentResolution Model', function (){
 				data.model.set(data.updateHash);
 				crud.save(data)
 				assert.equal(data.model.get('order'), data.updateHash.order, 'Model Code UPDATE Value is equal')
 			});
 
-			it('should delete an XM.IncidentResolution Model', function(){
+			it('should delete an XM.IncidentResolution Model', function (){
 				crud.destroy(data)
 			});
 

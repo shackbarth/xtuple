@@ -15,7 +15,6 @@ var lang = XT.stringsFor("en_US", {
 
   "_acceptsBackOrders": "Accepts Back Orders",
   "_acceptsPartialShipments": "Accepts Partial Shipments",
-  "_accessSalesExtension": "Access Sales Extension",
   "_allowASAPShipSchedules": "Allow ASAP Schedule Dates",
   "_allowDiscounts": "Allow Price Discounts",
   "_allowFreeFormShiptos": "Allow Free Form Ship-Tos",

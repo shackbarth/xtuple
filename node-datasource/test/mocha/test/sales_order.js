@@ -7,13 +7,6 @@
   "use strict";
 
   /**
-    Usage:
-    cd node-datasource/test/mocha
-    mocha -R spec ./test/sales_order.js
-  */
-
-
-  /**
     Useful for any model that uses XM.SalesOrderLineBase
    */
   var getSetCallback = function (lineRecordType) {
@@ -47,18 +40,19 @@
           }
         };
       itemSite.on("statusChange", modelFetched);
-      itemSite.fetch({uuid: "ddbd5ae8-064e-41e1-91f6-5de054953fa3" /* BTRUCK1 WH1 */});
+      itemSite.fetch({uuid: "d4b9a61f-f53c-4679-f9c4-bc9057823964" /* BTRUCK1 WH1 */}); // XXX this is fragile
       lineItem.on("statusChange", modelFetched);
       lineItem.initialize(null, {isNew: true});
     };
   };
 
-  var zombieAuth = require("../../vows/lib/zombie_auth"),
+  var zombieAuth = require("../lib/zombie_auth"),
     crud = require("../lib/crud"),
     assert = require("chai").assert,
     salesOrderData = {
       recordType: "XM.SalesOrder",
       autoTestAttributes: true,
+      verbose: true,
       createHash: {
         calculateFreight: true,
         customer: { number: "TTOYS" },

@@ -9,7 +9,7 @@ var XVOWS = XVOWS || {};
 
   var vows = require("vows"),
     assert = require("assert"),
-    zombieAuth = require("../lib/zombie_auth"),
+    zombieAuth = require("../../mocha/lib/zombie_auth"),
     crud = require('../lib/crud');
 
   var data = {},
@@ -115,5 +115,5 @@ var XVOWS = XVOWS || {};
       }
     })
   }).export(module);
-  
+
 }());

@@ -65,6 +65,28 @@ white:true*/
 
     @extends XM.Model
   */
+  XM.Extension = XM.Model.extend(/** @lends XM.UserAccountExtension.prototype */{
+
+    recordType: 'XM.Extension'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
+  XM.UserAccountExtension = XM.Model.extend(/** @lends XM.UserAccountExtension.prototype */{
+
+    recordType: 'XM.UserAccountExtension'
+
+  });
+
+  /**
+    @class
+
+    @extends XM.Model
+  */
   XM.Privilege = XM.Model.extend({
     /** @scope XM.Privilege.prototype */
 
@@ -123,7 +145,7 @@ white:true*/
     /** @scope XM.UserAccount.prototype */
 
     idAttribute: 'username',
-    
+
     nameAttribute: "properName",
 
     recordType: 'XM.UserAccount',
@@ -131,20 +153,20 @@ white:true*/
     documentKey: 'username',
 
     enforceUpperKey: false,
-    
+
     autoFetchId: false,
 
-    defaults: {
-      disableExport: false
-    },
-    
+    //defaults: {
+    //  disableExport: false
+    //},
+
     bindEvents: function () {
       XM.Document.prototype.bindEvents.apply(this, arguments);
       this.on('statusChange', this.statusChanged);
       this.on('change:username', this.usernameChanged);
       this.statusChanged();
     },
-    
+
     documentKeyDidChange: function (model, value, options) {
       var that = this,
         lower = this.get("username").toLowerCase();
@@ -169,16 +191,54 @@ white:true*/
         this.findExisting("number", value, options);
       }
     },
-    
+
     findExisting: function (key, value, options) {
       XM.Account.findExisting("number", value.toUpperCase(), options);
     },
-    
+
     usernameChanged: function () {
       var username = this.get('username');
       if (username) {
         this.set('username', username.toLowerCase());
       }
+    },
+
+    // two-step: change the password if necessary
+    save: function (key, value, options) {
+      var that = this,
+        success,
+        password = this.get("password"),
+        isNew = this.isNew();
+
+      if (!password) {
+        return XM.Document.prototype.save.call(this, key, value, options);
+      }
+
+      // Handle both `"key", value` and `{key: value}` -style arguments.
+      if (_.isObject(key) || _.isEmpty(key)) {
+        options = value;
+      }
+      options = options ? _.clone(options) : {};
+
+      success = options.success;
+      options.success = function (model, resp, options) {
+        var resetOptions = {
+          isNew: isNew,
+          newPassword: password
+        };
+
+        XT.dataSource.resetPassword(model.id, resetOptions);
+        if (success) { success(model, resp, options); }
+      };
+
+
+      // Handle both `"key", value` and `{key: value}` -style arguments.
+      if (_.isObject(key) || _.isEmpty(key)) {
+        value = options;
+      }
+
+      XM.Document.prototype.save.call(this, key, value, options);
+
     },
 
     /**
@@ -192,7 +252,33 @@ white:true*/
       if (status === K.READY_NEW) {
         this.setReadOnly('username', false);
       }
+    },
+
+    validate: function (attributes, options) {
+      var isNew = this.isNew();
+
+      if ((this.get("password") || this._passwordCheck) &&
+          this.get("password") !== this._passwordCheck) {
+        // password mismatch
+        return XT.Error.clone('xt2016');
+
+      } else if (!this.get("password") && isNew) {
+        // new user accounts need to have a password set
+        return XT.Error.clone('xt1004', { params: {attr: "_password".loc()} });
+
+      } else if (!this.get("password") && this.get("useEnhancedAuth") !== this._cache.useEnhancedAuth) {
+        // if they toggle enhanced auth, then they need to set a new password
+        return XT.Error.clone('xt1004', { params: {attr: "_password".loc()} });
+
+      }
+
+      // clear out passwordCheck, so as not to upset the model validation
+      delete this.attributes.passwordCheck;
+      delete attributes.passwordCheck;
+
+      return XM.Model.prototype.validate.call(this, attributes, options);
     }
+
   });
 
   /**
@@ -260,6 +346,28 @@ white:true*/
    /** @scope XM.LocaleCollection.prototype */
 
     model: XM.Locale
+
+  });
+
+  /**
+   @class
+
+   @extends XM.Collection
+  */
+  XM.ExtensionCollection = XM.Collection.extend(/** @lends XM.ExtensionCollection.prototype */{
+
+    model: XM.Extension
+
+  });
+
+  /**
+   @class
+
+   @extends XM.Collection
+  */
+  XM.UserAccountExtensionCollection = XM.Collection.extend(/** @lends XM.UserAccountExtensionCollection.prototype */{
+
+    model: XM.UserAccountExtension
 
   });
 
