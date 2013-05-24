@@ -40,7 +40,6 @@
 \i xt/functions/post.sql;
 \i xt/functions/patch.sql;
 \i xt/functions/raise_exception.sql;
-\i xt/functions/raise_fatal.sql;
 \i xt/functions/retrieve_record.sql;
 \i xt/functions/schema.sql;
 \i xt/functions/show_search_path.sql;
