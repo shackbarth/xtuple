@@ -328,6 +328,13 @@
         }
       },
       {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "usr_active"
+        }
+      },
+      {
         "name": "initials",
         "attr": {
           "type": "String",
@@ -422,6 +429,13 @@
         "attr": {
           "type": "String",
           "column": "usr_propername"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "usr_active"
         }
       },
       {
