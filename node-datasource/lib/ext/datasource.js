@@ -96,6 +96,7 @@ white:true*/
 
         this.callbacks[this.requestNum] = callback;
         // Single worker version.
+        options.debugDatabase = X.options.datasource.debugDatabase;
         this.worker.send({id: this.requestNum, query: query, options: options, conString: str, poolSize: this.poolSize});
 
         // NOTE: Round robin benchmarks are slower then the above single pgworker code.
@@ -105,6 +106,7 @@ white:true*/
         // if (this.nextWorker === this.workers.length) {
         //   this.nextWorker = 0;
         // }
+        // options.debugDatabase = X.options.datasource.debugDatabase;
         // worker.send({id: this.requestNum, query: query, options: options, conString: str});
       } else {
         if (X.options.datasource.debugging) {
