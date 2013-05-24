@@ -407,7 +407,7 @@ setup_postgres() {
 
 	log "######################################################"
 	log "######################################################"
-	log "Setup databases"
+	log "Setup database"
 	log "######################################################"
 	log "######################################################"
 	log ""
@@ -415,7 +415,6 @@ setup_postgres() {
 	psql -q -U postgres -f 'init.sql' 2>1 | tee -a $LOG_FILE
 
 	createdb -U postgres -O admin dev 2>1 | tee -a $LOG_FILE
-	createdb -U postgres -O admin global  2>1 | tee -a $LOG_FILE
 
 	pg_restore -U postgres -d dev postbooks_demo-$NEWESTVERSION.backup 2>1 | tee -a $LOG_FILE
 
