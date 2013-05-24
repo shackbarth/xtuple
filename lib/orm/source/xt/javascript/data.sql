@@ -838,7 +838,7 @@
         XT.debug('updateRecord sql =', sql.statement);
         XT.debug('updateRecord values =', sql.values);
       }
-      var test = plv8.execute(sql.statement, sql.values);
+      plv8.execute(sql.statement, sql.values);
 
       /* Handle extensions on other tables. */
       for (var i = 0; i < orm.extensions.length; i++) {
@@ -977,6 +977,8 @@
                 params.expressions.push("%" + count + "$I = $" + count);
               } else if (attr.required) {
                 plv8.elog(ERROR, "Attribute " + ormp.name + " is required.");
+              } else {
+                throw new handleError("Shouldn't get here", 501);
               }
             } else if (ormp.toOne && nkey) {
               if (iorm.table.indexOf(".") > 0) {
