@@ -35,7 +35,7 @@ var connected = function (query, options, id, err, client, done, ranInit) {
       if (msg.message === "unhandledError") {
         console.log("Database Error! ", msg.message + " Please fix this!!!");
         _.each(client.debug, function (message) {
-          X.err("Database Error! DB message was: ", message);
+          console.log("Database Error! DB message was: ", message);
         });
         console.log("Database Error! Last query was: ", that.activeQuery);
         console.log("Database Error! DB name = ", options.database);
