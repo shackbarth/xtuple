@@ -1,6 +1,6 @@
 /**
     Procedure for creating a new record or dispatching a JavaScript function in the database.
-    
+
     @param {Text} Data hash that can parsed into a JavaScript object.
     @param {String} [dataHash.username] Username. Required.
     @param {String} [dataHash.nameSpace] Namespace. Required.
@@ -13,84 +13,87 @@
     @param {Any} [dataHash.dispatch.parameters] One or many parameters to pass to the function call.
 */
 create or replace function xt.post(data_hash text) returns text as $$
+  try {
+    var dataHash = JSON.parse(data_hash),
+      prettyPrint = dataHash.prettyPrint ? 2 : null,
+      dispatch = dataHash.dispatch,
+      data,
+      orm,
+      pkey,
+      prv,
+      sql,
+      observer,
+      ret,
+      obj,
+      f,
+      params,
+      args,
+      method;
 
-  var dataHash = JSON.parse(data_hash),
-    prettyPrint = dataHash.prettyPrint ? 2 : null,
-    dispatch = dataHash.dispatch,
-    data,
-    orm,
-    pkey,
-    prv,
-    sql,
-    observer,
-    ret,
-    obj,
-    f,
-    params,
-    args,
-    method;
+    dataHash.superUser = false;
+    if (dataHash.username) { XT.username = dataHash.username; }
 
-  dataHash.superUser = false;
-  if (dataHash.username) { XT.username = dataHash.username; }
+    /* if there's data then commit it */
+    if (dataHash.data) {
+      data = Object.create(XT.Data)
+      orm = XT.Orm.fetch(dataHash.nameSpace, dataHash.type);
+      pkey = XT.Orm.primaryKey(orm);
+      nkey = XT.Orm.naturalKey(orm);
+      prv = JSON.parse(JSON.stringify(dataHash.data));
 
-  /* if there's data then commit it */
-  if (dataHash.data) {
-    data = Object.create(XT.Data)
-    orm = XT.Orm.fetch(dataHash.nameSpace, dataHash.type);
-    pkey = XT.Orm.primaryKey(orm);
-    nkey = XT.Orm.naturalKey(orm);
-    prv = JSON.parse(JSON.stringify(dataHash.data));
-    
-    /* set status */
-    XT.jsonpatch.updateState(dataHash.data, "create");
+      /* set status */
+      XT.jsonpatch.updateState(dataHash.data, "create");
 
-    /* set id if not provided */
-    if (!dataHash.id) {
-      if (nkey) {
-        if (dataHash.data[nkey] || nkey === 'uuid') {
-          dataHash.id = dataHash.data[nkey] || XT.generateUUID();
+      /* set id if not provided */
+      if (!dataHash.id) {
+        if (nkey) {
+          if (dataHash.data[nkey] || nkey === 'uuid') {
+            dataHash.id = dataHash.data[nkey] || XT.generateUUID();
+          } else {
+            plv8.elog(ERROR, "A unique id must be provided");
+          }
         } else {
-          plv8.elog(ERROR, "A unique id must be provided");
+          dataHash.id = dataHash.data[pkey] || plv8.execute(sql)[0].nextval;
         }
-      } else {
-        dataHash.id = dataHash.data[pkey] || plv8.execute(sql)[0].nextval;
       }
+
+      /* commit the record */
+      data.commitRecord(dataHash);
+
+      /* calculate a patch of the modifed version */
+      observer = XT.jsonpatch.observe(prv);
+      ret = data.retrieveRecord(dataHash);
+      observer.object = ret.data;
+      delete ret.data;
+      ret.patches = XT.jsonpatch.generate(observer);
+      ret = JSON.stringify(ret, null, prettyPrint);
+
+    /* if it's a function dispatch call then execute it */
+    } else if (dispatch) {
+      obj = plv8[dataHash.nameSpace][dataHash.type];
+      f = dispatch.functionName;
+      params = dispatch.parameters;
+      args = params instanceof Array ? params : [params];
+
+      if (obj[f]) {
+        method = obj[f].curry(args);
+      } else {
+        XT.username = undefined;
+        throw new Error('Function ' + dataHash.nameSpace +
+           '.' + dataHash.type + '.' + f + ' not found.');
+      }
+
+      ret = obj.isDispatchable ? method() : false;
+      ret = dispatch.isJSON ? JSON.stringify(ret, null, prettyPrint) : ret;
     }
-  
-    /* commit the record */
-    data.commitRecord(dataHash);
 
-    /* calculate a patch of the modifed version */
-    observer = XT.jsonpatch.observe(prv);
-    ret = data.retrieveRecord(dataHash);
-    observer.object = ret.data;
-    delete ret.data;
-    ret.patches = XT.jsonpatch.generate(observer);
-    ret = JSON.stringify(ret, null, prettyPrint);
+    /* Unset XT.username so it isn't cached for future queries. */
+    XT.username = undefined;
 
-  /* if it's a function dispatch call then execute it */
-  } else if (dispatch) {
-    obj = plv8[dataHash.nameSpace][dataHash.type];
-    f = dispatch.functionName;
-    params = dispatch.parameters;
-    args = params instanceof Array ? params : [params];
-    
-    if (obj[f]) {
-      method = obj[f].curry(args);
-    } else {
-      XT.username = undefined;
-      throw new Error('Function ' + dataHash.nameSpace +
-         '.' + dataHash.type + '.' + f + ' not found.');
-    }
-
-    ret = obj.isDispatchable ? method() : false;
-    ret = dispatch.isJSON ? JSON.stringify(ret, null, prettyPrint) : ret;
+    return ret;
+  } catch (err) {
+    XT.error(err);
   }
-
-  /* Unset XT.username so it isn't cached for future queries. */
-  XT.username = undefined;
-
-  return ret;
 
 $$ language plv8;
 
@@ -153,7 +156,7 @@ select xt.post($${
   "dispatch": {
     "functionName":"findExisting",
     "parameters": {
-      "type": "Address", 
+      "type": "Address",
       "line1":"Tremendous Toys Inc.",
       "line2":"101 Toys Place",
       "line3":"",
