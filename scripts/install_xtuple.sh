@@ -473,7 +473,7 @@ init_everythings() {
 	./installer.js -cli -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/crm/database/orm 2>1 | tee -a $LOG_FILE
 	./installer.js -cli -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/project/database/orm 2>1 | tee -a $LOG_FILE
 	./installer.js -cli -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/sales/database/orm 2>1 | tee -a $LOG_FILE
-	
+
 	log ""
 	log "######################################################"
 	log "######################################################"
@@ -482,10 +482,10 @@ init_everythings() {
 	log "######################################################"
 	log ""
 
-	psql -U postgres dev -c "insert into usrpriv (usrpriv_username, usrpriv_priv_id) select 'admin', priv_id from priv where priv_name like 'MaintainExtensions';" 2>1 | tee -a $LOG_FILE
 	psql -U postgres dev -c "insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext;" 2>1 | tee -a $LOG_FILE
   
 	cdir $XT_DIR/node-datasource
+
 	cat sample_config.js | sed 's/bindAddress: "localhost",/bindAddress: "0.0.0.0",/' > config.js
 	log "Configured node-datasource"
 
