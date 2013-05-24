@@ -19,10 +19,12 @@ select xt.js_init();
 \i public/tables/comment.sql
 \i public/tables/coitem.sql
 \i public/tables/docass.sql
+\i public/tables/grppriv.sql
 \i public/tables/incdt.sql
 \i public/tables/itemsite.sql;
 \i public/tables/quitem.sql
 \i public/tables/todoitem.sql
+\i public/tables/usrpriv.sql
 -- [ END ] public
 
 -- [ START ] xt
@@ -47,6 +49,7 @@ select xt.js_init();
 \i xt/functions/co_margin.sql;
 \i xt/functions/cntctmerge.sql;
 \i xt/functions/cntctrestore.sql;
+\i xt/functions/geteffectivextuser.sql
 \i xt/functions/install_guiscript.sql;
 \i xt/functions/mergecrmaccts.sql;
 \i xt/functions/pg_advisory_unlock.sql;
@@ -144,8 +147,6 @@ select xt.js_init();
 -- [ START ] public
 
 -- public
-\i public/functions/geteffectivextuser.sql
-
 \i public/tables/comment_trigger.sql
 \i public/tables/pkghead.sql;
 \i public/tables/schemaord.sql;

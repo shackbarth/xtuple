@@ -430,11 +430,15 @@ io.of('/clientsock').authorization(function (handshakeData, callback) {
   if (handshakeData.headers.cookie) {
     handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
 
-    if (!handshakeData.headers.referer || !url.parse(handshakeData.headers.referer).path.split("/")[1]) {
+    if (handshakeData.headers.referer && url.parse(handshakeData.headers.referer).path.split("/")[1]) {
+      key = url.parse(handshakeData.headers.referer).path.split("/")[1];
+    } else if (X.options.datasource.testDatabase) {
+      // for some reason zombie doesn't send the referrer in the socketio call
+      key = X.options.datasource.testDatabase;
+    } else {
       return callback(null, false);
     }
 
-    key = url.parse(handshakeData.headers.referer).path.split("/")[1];
 
     if (!handshakeData.cookie[key + '.sid']) {
       return callback(null, false);

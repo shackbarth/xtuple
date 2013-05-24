@@ -49,7 +49,7 @@
     };
   };
 
-  var zombieAuth = require("../../vows/lib/zombie_auth"),
+  var zombieAuth = require("../lib/zombie_auth"),
     crud = require("../lib/crud"),
     assert = require("chai").assert,
     salesOrderData = {
@@ -112,39 +112,39 @@
         it.skip('Order Number will default with the next available number', function (){
           console.log(XT.dataSource.dispatch("XM.Sales", 'settings', "XM.Sales", {
             success:
-              function(result){result.NextQuoteNumber;
+              function (result){result.NextQuoteNumber;
               //console.log("RESULTS: " + result.NextQuoteNumber);
             }})
           );
           //console.log("NUMBER: " + quote.getValue("number"));
         });
 
-        it('Order Date will default to the current date',function(){
+        it('Order Date will default to the current date',function (){
           var date = new Date();
           assert.equal(quote.getValue("quoteDate").toString('dddd, MMMM ,yyyy')
             , date.toString('dddd, MMMM ,yyyy'));
         });
 
-        it('Site will default to the Site Master', function(){
+        it('Site will default to the Site Master', function (){
           //console.log("CODE: " + quote.get("site").attributes.get("code"));
           var defaultSite = XT.defaultSite();
           //console.log("CODE: " + defaultSite.attributes.code);
           assert.equal(quote.get("site").attributes.get("code"), defaultSite.attributes.code);
         });
 
-        it('Sale Type will default to the Sales Order Setup', function(){
+        it('Sale Type will default to the Sales Order Setup', function (){
           var salesType = XM.saleTypes.at(0);
           //console.log("salesType: " + salesType.attributes.code);
-          //console.log("CODE: " + quote.get("saleType").attributes.code);        
+          //console.log("CODE: " + quote.get("saleType").attributes.code);
           assert.equal(quote.get("saleType").attributes.code, salesType.attributes.code);
-          
+
         });
 
-        it('Quote Status will default to Open', function(){
+        it('Quote Status will default to Open', function (){
           assert.equal(quote.getValue("status"), 'O');
         });
-        
-        it.skip('Currency will default to Base Currency', function(){
+
+        it.skip('Currency will default to Base Currency', function (){
           console.log("CURRENCY: " + quote.get("currency"));
         });
 
@@ -168,8 +168,8 @@
               taxZone.set({code: "AlphaZone"});
               shipVia.set({code: "UPSVia"});
               shipZone.set({code: "MidWest"});
-              customer.set({terms: terms, 
-                            taxZone: taxZone, 
+              customer.set({terms: terms,
+                            taxZone: taxZone,
                             shipVia: shipVia,
                             defaultShipto.shipZone: shipZone,
                             billtoContact: "Bob"});
@@ -186,22 +186,22 @@
         zombieAuth.loadApp(takeTheDefaults);
       });
       describe('Validate Defaults', function () {
-        it('Terms will populate with the Customers Terms', function(){
+        it('Terms will populate with the Customers Terms', function (){
           assert.equal(quote.getValue("terms.code"), "COD");
         });
 
-        it('Tax Zone will populate with the Customers Tax Zone', function(){
+        it('Tax Zone will populate with the Customers Tax Zone', function (){
           assert.equal(quote.getValue("taxZone.code"), "AlphaZone");
         });
         it('Bill-To will populate with the Customers');
         it('Ship-To will populate with the Customers');
         it('Bill-To Contact will populate with the Customers');
         it('Ship-To Contact will populate with the Customers');
-        it('Ship Via will populate with the Customers preferred Ship Via', function(){
+        it('Ship Via will populate with the Customers preferred Ship Via', function (){
           assert.equal(quote.getValue("shipVia.code"), "UPSVia");
         });
-        it.('Shipping Zone will populate with the Customers preferred Shipping Zone', function(){
-          assert.equal(quote.getValue("defaultShipto.shipZone.code"), "MidWest");          
+        it.('Shipping Zone will populate with the Customers preferred Shipping Zone', function (){
+          assert.equal(quote.getValue("defaultShipto.shipZone.code"), "MidWest");
         });
         it('Shipping Notes will populate with Customers Shipping Notes');
         it('New Line Item will be Active');

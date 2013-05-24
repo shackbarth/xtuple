@@ -5,7 +5,7 @@ white:true*/
 setTimeout:true, clearTimeout: true, exports: true */
 
 var _ = require("underscore"),
-  zombieAuth = require("../../vows/lib/zombie_auth"),
+  zombieAuth = require("./zombie_auth"),
   assert = require("chai").assert;
 
 (function () {

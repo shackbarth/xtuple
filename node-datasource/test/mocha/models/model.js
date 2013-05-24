@@ -6,7 +6,7 @@
 (function () {
   "use strict";
 
-  var zombieAuth = require("../../vows/lib/zombie_auth"),
+  var zombieAuth = require("../lib/zombie_auth"),
     assert = require("chai").assert;
 
   describe('Model read-only recursion', function (){

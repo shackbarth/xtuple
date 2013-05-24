@@ -29,14 +29,16 @@
         "attr": {
           "type": "String",
           "column": "char_name",
-          "isNaturalKey": true
+          "isNaturalKey": true,
+          "required": true
         }
       },
       {
         "name": "characteristicType",
         "attr": {
           "type": "Number",
-          "column": "char_type"
+          "column": "char_type",
+          "required": true
         }
       },
       {
@@ -51,7 +53,8 @@
         "name": "order",
         "attr": {
           "type": "Number",
-          "column": "char_order"
+          "column": "char_order",
+          "required": true
         }
       },
       {
@@ -177,7 +180,8 @@
         "name": "order",
         "attr": {
           "type": "Number",
-          "column": "charopt_order"
+          "column": "charopt_order",
+          "required": true
         }
       }
     ],

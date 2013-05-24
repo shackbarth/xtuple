@@ -55,7 +55,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // servers, etc.
       location: "NA",
       // Add each database to the array.
-      databases: ["dev"]
+      databases: ["dev"],
+      testDatabase: "" // this must remain empty for production datasources
     },
     databaseServer: {
       hostname: "localhost",

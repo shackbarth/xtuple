@@ -4,3 +4,4 @@
 *.swp
 /*.DS_Store
 .DS_Store
+debug.js

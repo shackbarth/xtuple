@@ -240,4 +240,3 @@ select xt.install_js('XT','Session','xtuple', $$
   }
 
 $$ );
-

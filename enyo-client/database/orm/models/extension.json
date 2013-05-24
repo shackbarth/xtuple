@@ -8,10 +8,10 @@
     "comment": "Extension Map",
     "privileges": {
       "all": {
-        "create": "MaintainExtensions",
+        "create": false,
         "read": true,
-        "update": "MaintainExtensions",
-        "delete": "MaintainExtensions"
+        "update": false,
+        "delete": false
       }
     },
     "properties": [
@@ -68,14 +68,6 @@
     "table": "xt.usrext",
     "idSequenceName": "xt.usrext_usrext_id_seq",
     "comment": "Extension Map",
-    "privileges": {
-      "all": {
-        "create": "MaintainExtensions",
-        "read": true,
-        "update": "MaintainExtensions",
-        "delete": "MaintainExtensions"
-      }
-    },
     "properties": [
      {
        "name": "id",
@@ -109,6 +101,7 @@
        }
      }
     ],
+    "isNestedOnly": true,
     "isSystem": true
   },
   {
@@ -120,10 +113,10 @@
     "comment": "Extension Map",
     "privileges": {
       "all": {
-        "create": "MaintainExtensions",
+        "create": false,
         "read": true,
-        "update": "MaintainExtensions",
-        "delete": "MaintainExtensions"
+        "update": false,
+        "delete": false
       }
     },
     "properties": [
@@ -180,14 +173,6 @@
     "table": "xt.usrext",
     "idSequenceName": "xt.usrext_usrext_id_seq",
     "comment": "Extension Map",
-    "privileges": {
-      "all": {
-        "create": "MaintainExtensions",
-        "read": true,
-        "update": "MaintainExtensions",
-        "delete": "MaintainExtensions"
-      }
-    },
     "properties": [
      {
        "name": "id",
@@ -221,6 +206,7 @@
        }
      }
     ],
+    "isNestedOnly": true,
     "isSystem": true
   }
 ]
