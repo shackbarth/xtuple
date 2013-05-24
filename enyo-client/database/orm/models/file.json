@@ -36,14 +36,16 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "file_title"
+          "column": "file_title",
+          "required": true
         }
       },
       {
         "name": "description",
         "attr": {
           "type": "String",
-          "column": "file_descrip"
+          "column": "file_descrip",
+          "required": true
         }
       },
       {

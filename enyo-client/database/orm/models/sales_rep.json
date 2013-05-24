@@ -30,14 +30,16 @@
         "attr": {
           "type": "String",
           "column": "salesrep_number",
-          "isNaturalKey":true
+          "isNaturalKey":true,
+          "required": true
         }
       },
       {
         "name": "isActive",
         "attr": {
           "type": "Boolean",
-          "column": "salesrep_active"
+          "column": "salesrep_active",
+          "required": true
         }
       },
       {
