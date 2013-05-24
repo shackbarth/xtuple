@@ -54,35 +54,31 @@ select xt.install_js('XM','Model','xtuple', $$
     @param {Object} Options: timeout
   */
   XM.Model.obtainLock = function (nameSpace, type, id, etag, options) {
-    try {
-      var orm = XT.Orm.fetch(nameSpace, type),
-         data = Object.create(XT.Data),
-         lockTable = orm.lockTable || orm.table,
-         pkey = XT.Orm.primaryKey(orm),
-         nkey = XT.Orm.naturalKey(orm),
-         rec,
-         pid;
+    var orm = XT.Orm.fetch(nameSpace, type),
+       data = Object.create(XT.Data),
+       lockTable = orm.lockTable || orm.table,
+       pkey = XT.Orm.primaryKey(orm),
+       nkey = XT.Orm.naturalKey(orm),
+       rec,
+       pid;
 
-      /* If the model uses a natural key, get the primary key value. */
-      rec = data.retrieveRecord({
-        nameSpace: nameSpace,
-        type: type,
-        id: id
-      });
+    /* If the model uses a natural key, get the primary key value. */
+    rec = data.retrieveRecord({
+      nameSpace: nameSpace,
+      type: type,
+      id: id
+    });
 
-      pid = nkey ? data.getId(orm, id) : id;
-      if (!pid) {
+    pid = nkey ? data.getId(orm, id) : id;
+    if (!pid) {
 // TODO - Send not found message back.
-        return false;
-      }
-
-      if (!rec || !rec.data) { throw "Record for requested lock not found." }
-      if (rec.etag !== etag) { return false; }
-
-      return data.tryLock(lockTable, pid);
-    } catch (err) {
-      XT.error(err, arguments);
+      return false;
     }
+
+    if (!rec || !rec.data) { throw "Record for requested lock not found." }
+    if (rec.etag !== etag) { return false; }
+
+    return data.tryLock(lockTable, pid);
   }
 
   /**
@@ -156,67 +152,63 @@ select xt.install_js('XM','Model','xtuple', $$
     Return whether a model is referenced by another table.
   */
   XM.Model.used = function(recordType, id) {
-    try {
-      var nameSpace = recordType.beforeDot(),
-        type = recordType.afterDot(),
-        map = XT.Orm.fetch(nameSpace, type),
-        data = Object.create(XT.Data),
-        nkey = XT.Orm.naturalKey(map),
-        tableName = map.table,
-        tableSuffix = tableName.indexOf('.') ? tableName.afterDot() : tableName,
-        sql,
-        fkeys,
-        uses,
-        i,
-        attr,
-        seq,
-        tableName;
+    var nameSpace = recordType.beforeDot(),
+      type = recordType.afterDot(),
+      map = XT.Orm.fetch(nameSpace, type),
+      data = Object.create(XT.Data),
+      nkey = XT.Orm.naturalKey(map),
+      tableName = map.table,
+      tableSuffix = tableName.indexOf('.') ? tableName.afterDot() : tableName,
+      sql,
+      fkeys,
+      uses,
+      i,
+      attr,
+      seq,
+      tableName;
 
-      if (nkey) {
-        id = data.getId(map, id);
-        if (!id) {
-          /* Throw an error here because returning false is a valid use case. */
-          plv8.elog(ERROR, "Can not find primary key.");
-        }
+    if (nkey) {
+      id = data.getId(map, id);
+      if (!id) {
+        /* Throw an error here because returning false is a valid use case. */
+        plv8.elog(ERROR, "Can not find primary key.");
       }
-
-      /* Determine where this record is used by analyzing foreign key linkages */
-      sql = "select pg_namespace.nspname AS schemaname, " +
-            "con.relname AS tablename, " +
-            "conkey AS seq, " +
-            "conrelid AS class_id " +
-            "from pg_constraint, pg_class f, pg_class con, pg_namespace " +
-            "where confrelid=f.oid " +
-            "and conrelid=con.oid " +
-            "and f.relname = $1 " +
-            "and con.relnamespace=pg_namespace.oid; "
-      fkeys = plv8.execute(sql, [tableSuffix]);
-      if (DEBUG) { XT.debug('XM.Model.used keys:' , fkeys.length) }
-      for (i = 0; i < fkeys.length; i++) {
-        /* Validate */
-
-        sql = "select attname " +
-              "from pg_attribute, pg_class " +
-              "where ((attrelid=pg_class.oid) " +
-              " and (pg_class.oid = $1) " +
-              " and (attnum = $2)); ";
-
-        classId = fkeys[i].class_id;
-        seq =  fkeys[i].seq[0];
-        tableName = fkeys[i].schemaname + '.' + fkeys[i].tablename;
-        if (DEBUG) { XT.debug('XM.Model.used vars:', [classId, seq, tableName]) }
-        attr = plv8.execute(sql, [classId, seq])[0].attname;
-
-        /* See if there are dependencies */
-        sql = 'select * from ' + tableName + ' where ' + attr + ' = $1 limit 1;'
-        uses = plv8.execute(sql, [id]);
-        if (uses.length) { return true; }
-      }
-
-      return false
-    } catch (err) {
-      XT.error(err, arguments);
     }
+
+    /* Determine where this record is used by analyzing foreign key linkages */
+    sql = "select pg_namespace.nspname AS schemaname, " +
+          "con.relname AS tablename, " +
+          "conkey AS seq, " +
+          "conrelid AS class_id " +
+          "from pg_constraint, pg_class f, pg_class con, pg_namespace " +
+          "where confrelid=f.oid " +
+          "and conrelid=con.oid " +
+          "and f.relname = $1 " +
+          "and con.relnamespace=pg_namespace.oid; "
+    fkeys = plv8.execute(sql, [tableSuffix]);
+    if (DEBUG) { XT.debug('XM.Model.used keys:' , fkeys.length) }
+    for (i = 0; i < fkeys.length; i++) {
+      /* Validate */
+
+      sql = "select attname " +
+            "from pg_attribute, pg_class " +
+            "where ((attrelid=pg_class.oid) " +
+            " and (pg_class.oid = $1) " +
+            " and (attnum = $2)); ";
+
+      classId = fkeys[i].class_id;
+      seq =  fkeys[i].seq[0];
+      tableName = fkeys[i].schemaname + '.' + fkeys[i].tablename;
+      if (DEBUG) { XT.debug('XM.Model.used vars:', [classId, seq, tableName]) }
+      attr = plv8.execute(sql, [classId, seq])[0].attname;
+
+      /* See if there are dependencies */
+      sql = 'select * from ' + tableName + ' where ' + attr + ' = $1 limit 1;'
+      uses = plv8.execute(sql, [id]);
+      if (uses.length) { return true; }
+    }
+
+    return false
   }
 $$ );
 

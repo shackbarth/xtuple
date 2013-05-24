@@ -78,19 +78,15 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     Curry function
   */
   Function.prototype.curry = function() {
-    try {
-      if (arguments.length < 1) {
-          return this; /* nothing to curry with - return function */
-      }
+    if (arguments.length < 1) {
+        return this; /* nothing to curry with - return function */
+    }
 
-      var __method = this,
-        args = arguments[0];
+    var __method = this,
+      args = arguments[0];
 
-      return function () {
-        return __method.apply(this, args.concat(Array.prototype.slice.call(arguments)));
-      }
-    } catch (err) {
-      XT.error(err, arguments);
+    return function () {
+      return __method.apply(this, args.concat(Array.prototype.slice.call(arguments)));
     }
   }
 
@@ -331,35 +327,31 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
    * @returns {String} Safely escaped string with tokens replaced.
    */
   XT.format = function (string, args) {
-    try {
-      if (typeof string !== 'string' || XT.typeOf(args) !== 'array' || !args.length) {
-        return false;
-      }
-
-      var query = "select format($1",
-          params = "";
-
-      for(var i = 0; i < args.length; i++) {
-        params = params + ", $" + (i + 2);
-      }
-      query = query + params + ")";
-
-      /* Pass 'string' to format() as the first parameter. */
-      args.unshift(string);
-
-      if (DEBUG) {
-        XT.debug('XT.format sql =', query);
-        XT.debug('XT.format args =', args);
-      }
-      string = plv8.execute(query, args)[0].format;
-
-      /* Remove 'string' from args to prevent reference errors. */
-      args.shift();
-
-      return string;
-    } catch (err) {
-      XT.error(err, arguments);
+    if (typeof string !== 'string' || XT.typeOf(args) !== 'array' || !args.length) {
+      return false;
     }
+
+    var query = "select format($1",
+        params = "";
+
+    for(var i = 0; i < args.length; i++) {
+      params = params + ", $" + (i + 2);
+    }
+    query = query + params + ")";
+
+    /* Pass 'string' to format() as the first parameter. */
+    args.unshift(string);
+
+    if (DEBUG) {
+      XT.debug('XT.format sql =', query);
+      XT.debug('XT.format args =', args);
+    }
+    string = plv8.execute(query, args)[0].format;
+
+    /* Remove 'string' from args to prevent reference errors. */
+    args.shift();
+
+    return string;
   };
 
   /**
