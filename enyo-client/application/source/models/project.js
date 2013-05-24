@@ -60,13 +60,6 @@ white:true*/
       return result;
     },
 
-    requiredAttributes: [
-      "number",
-      "status",
-      "name",
-      "dueDate"
-    ],
-
     // ..........................................................
     // METHODS
     //
@@ -316,15 +309,6 @@ white:true*/
     recordType: 'XM.ProjectTask',
 
     enforceUpperKey: false,
-
-    /**
-      Add required project field to the existing requiredAttributes
-      fields array inherited from ProjectBase.
-     */
-    initialize: function (attributes, options) {
-      XM.ProjectBase.prototype.initialize.apply(this, arguments);
-      this.requiredAttributes.push("project");
-    },
 
     defaults: function () {
       var result = XM.ProjectBase.prototype.defaults.call(this);

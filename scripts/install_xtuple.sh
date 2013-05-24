@@ -459,9 +459,16 @@ pull_modules() {
     echo "  suname: '', //-------enter the sauce labs username" >> login_data.js
     echo "  sakey: '' //------enter the sauce labs access key" >> login_data.js
     echo "}" >> login_data.js
-    cdir ../../..
-    
 	log "Created testing login_data.js"
+
+	cdir ../../../enyo-client/extensions
+    rm -f debug.js
+    echo "enyo.depends(" > debug.js
+    echo "  '/dev/core-extensions/source/project/client/package.js'," >> debug.js
+    echo "  '/dev/core-extensions/source/crm/client/package.js'," >> debug.js
+    echo "  '/dev/core-extensions/source/sales/client/package.js'" >> debug.js
+    echo ");" >> debug.js
+	log "Created debug.js"
 }
 
 init_everythings() {
@@ -496,7 +503,7 @@ init_everythings() {
 	log "######################################################"
 	log ""
 
-	psql -U postgres dev -c "insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext;" 2>1 | tee -a $LOG_FILE
+	psql -U postgres dev -c "select xt.js_init(); insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext where ext_location = '/core-extensions';" 2>1 | tee -a $LOG_FILE
   
 	cdir $XT_DIR/node-datasource
 

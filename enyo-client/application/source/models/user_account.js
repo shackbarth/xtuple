@@ -55,27 +55,7 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       unitRatioScale: 6,
       warningColor: "",
       weightScale: 2
-    },
-
-    requiredAttributes: [
-      "altEmphasisColor",
-      "costScale",
-      "currencyScale",
-      "description",
-      "emphasisColor",
-      "errorColor",
-      "expiredColor",
-      "extendedPriceScale",
-      "futureColor",
-      "percentScale",
-      "purchasePriceScale",
-      "quantityPerScale",
-      "quantityScale",
-      "salesPriceScale",
-      "unitRatioScale",
-      "warningColor",
-      "weightScale"
-    ]
+    }
 
   });
 
@@ -179,11 +159,6 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
       // disableExport: false,
       isActive: true
     },
-
-    requiredAttributes: [
-      //"disableExport",
-      "locale"
-    ],
 
     bindEvents: function () {
       XM.Document.prototype.bindEvents.apply(this, arguments);
@@ -314,12 +289,7 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
   XM.UserAccountPrivilegeAssignment = XM.Model.extend({
     /** @scope XM.UserAccountPrivilegeAssignment.prototype */
 
-    recordType: 'XM.UserAccountPrivilegeAssignment',
-
-    requiredAttributes: [
-      "userAccount",
-      "privilege"
-    ]
+    recordType: 'XM.UserAccountPrivilegeAssignment'
 
   });
 
