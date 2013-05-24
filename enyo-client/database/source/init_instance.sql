@@ -47,6 +47,7 @@ select xt.js_init();
 \i xt/functions/co_margin.sql;
 \i xt/functions/cntctmerge.sql;
 \i xt/functions/cntctrestore.sql;
+\i xt/functions/geteffectivextuser.sql
 \i xt/functions/install_guiscript.sql;
 \i xt/functions/mergecrmaccts.sql;
 \i xt/functions/pg_advisory_unlock.sql;
@@ -144,8 +145,6 @@ select xt.js_init();
 -- [ START ] public
 
 -- public
-\i public/functions/geteffectivextuser.sql
-
 \i public/tables/comment_trigger.sql
 \i public/tables/pkghead.sql;
 \i public/tables/schemaord.sql;
