@@ -77,7 +77,7 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
   /**
     Curry function
   */
-  Function.prototype.curry = function() {
+  Function.prototype.curry = function () {
     if (arguments.length < 1) {
         return this; /* nothing to curry with - return function */
     }
@@ -89,6 +89,15 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
       return __method.apply(this, args.concat(Array.prototype.slice.call(arguments)));
     }
   }
+
+  handleError = function (message, code) {
+    var err = new Error();
+    this.stack = err.stack;
+    this.name = "handleError";
+    this.message = (message || "");
+    this.code = code || null;
+  }
+  handleError.prototype = new Error();
 
   /**
     Return the text after the first dot.
@@ -260,51 +269,21 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
    * @param {Array} Javascript's arguments array for the function throwing the error.
    * @param {Boolean|String} Set flag to indicate the error was handled.
    */
-  XT.error = function (error, args, handled) {
-    var message = error.stack + "\n",
-        len,
-        params,
-        avglen;
+  XT.error = function (error) {
+    var message = error.stack + "\n";
 
-    if (DEBUG) {
-      len = 950;
-      params = "XT.error call args= \n";
-      avglen = len / args.length;
-
-      /* Total error message size in plv8 is 1000 characters. */
-      /* Take the length and split it up evening amung the args. */
-      for(var i = 0; i < args.length; i++) {
-        var strg = JSON.stringify(args[i] || 'null', null, 2);
-
-        params = params + "\n[" + i + "]=";
-
-        if (strg.length < (avglen - 15)) { /* Minus 15 for "[i]= ...trimmed". */
-          params = params + strg;
-        } else {
-          params = params + strg.substring(0, avglen - 15) + "...trimmed";
-        }
-
-        // TODO - This assumes all args are the same length.
-        // We could do some calc to maximize the trim per variable arg length.
-      }
-
-      /* This can give you some more info on how the function was called. */
-      XT.debug(params.substring(0, 900));
-    }
-
-    if (handled) {
+    if (error.name === "handleError") {
       /* This error was handled and a message sent to the client. Those massages are*/
       /* generic HTTP codes. Send the stack trace with detailed info on what happened. */
       XT.debug(message);
-//TODO - throw custom error.
-      plv8.elog(ERROR);
+      XT.message(error.code, error.message)
+      throw "handledError";
     } else {
       /* Some times the stack trace can eat up the full 1000 char message. */
       /* Do a hard trim to 900 so something prints. */
-      plv8.elog(ERROR, message.substring(0, 900));
-//TODO - throw custom error.
-      //plv8.elog(ERROR, "Throwing FATAL Error. Please fix this!!!");
-      //throw "myCustomError";
+      XT.message(500, "Internal Server Error");
+      plv8.elog(WARNING, message.substring(0, 900));
+      throw "unhandledError";
     }
   }
 
@@ -375,10 +354,10 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     return uuid;
   };
 
-  XT.message = function (level, code, msg) {
-    var message = {code: code, msg: msg};
+  XT.message = function (code, message) {
+    var msg = {code: code, message: message};
 
-    plv8.elog(INFO, JSON.stringify(message));
+    plv8.elog(INFO, JSON.stringify(msg));
     return 'Handled by XT.message';
   }
 
