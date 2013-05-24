@@ -90,14 +90,14 @@ white:true*/
       var status = this.get('status'),
         date,
         K = XM.Project;
-      if (this.isDirty()) {
+      //if (this.isDirty()) {
         date = new Date();
         if (status === K.IN_PROCESS && !this.get('assignDate')) {
           this.set('assignDate', date);
         } else if (status === K.COMPLETED && !this.get('completeDate')) {
           this.set('completeDate', date);
         }
-      }
+      //}
     }
 
   });
