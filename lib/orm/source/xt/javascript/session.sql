@@ -1,5 +1,5 @@
 select xt.install_js('XT','Session','xtuple', $$
-  /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple.
+  /* Copyright (c) 1999-2013 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
   XT.Session = {};
@@ -193,22 +193,41 @@ select xt.install_js('XT','Session','xtuple', $$
             for (n = 0; n < orm.extensions.length; n++) {
               processProperties(orm.extensions[n], schema);
             }
-          }
-        },
-        processPrivileges = function (orm) {
-          if (orm.privileges) {
-            result[type]['privileges'] = orm.privileges;
-          }
-        };
-
-      /* Loop through each field and add to the object */
-      for (i = 0; i < recs.length; i++) {
-        type = recs[i].type.classify();
-        name = recs[i].column;
-        schema = recs[i].schema;
-        if (type !== prev) {
-          result[type] = {};
-          result[type].columns = [];
+          };
+        if (!value.toMany.isNested) {
+          rel.includeInJSON = false;
+        } else {
+          rel.isNested = true;
+        }
+        relations.push(rel);
+      },
+      processProperties = function (orm, schema) {
+        var n;
+        required = result[type]['requiredAttributes']
+        if (orm.properties && orm.properties.length) {
+          /* Required */
+          props = orm.properties;
+          props.forEach(function(prop) {
+            if (prop.attr && prop.attr.required) {
+              required.push(prop.name);
+            }
+          });
+          
+          /* To One */
+          props = orm.properties.filter(filterToOne);
+          props.forEach(function(prop) {
+            if (prop.toOne.required) {
+              required.push(prop.name);
+            }
+            addToOne(prop, schema);
+          });
+ 
+          /* To Many */
+          props = orm.properties.filter(filterToMany);
+          props.forEach(function(prop) {
+            addToMany(prop, schema)
+          });
+        }
 
           /* Add relations and privileges from the orm*/
           if (DEBUG) {
@@ -225,8 +244,32 @@ select xt.install_js('XT','Session','xtuple', $$
           name: name,
           category: recs[i].category
         }
-        result[type]['columns'].push(column);
-        prev = type;
+      };
+
+    /* Loop through each field and add to the object */
+    for (i = 0; i < recs.length; i++) {
+      type = recs[i].type.classify();
+      name = recs[i].column;
+      schema = recs[i].schema;
+      if (type !== prev) {
+        result[type] = {};
+        result[type].columns = [];
+        result[type].requiredAttributes = [];
+        
+        /* Add relations and privileges from the orm*/
+        if (DEBUG) { 
+          plv8.elog(NOTICE, 'Fetching schema ' + schema.toUpperCase() + '.' + type);
+        }
+        orm = XT.Orm.fetch(schema.toUpperCase(), type);
+        result[type]['idAttribute'] = XT.Orm.naturalKey(orm) || XT.Orm.primaryKey(orm);
+        result[type]['lockable'] = orm.lockable || false;
+        result[type]['relations'] = [];
+        processProperties(orm, schema);
+        processPrivileges(orm);
+      }
+      column = { 
+        name: name,
+        category: recs[i].category
       }
 
       /* Handle configuration settings */

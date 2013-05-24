@@ -96,7 +96,8 @@
         "name": "status",
         "attr": {
           "type": "String",
-          "column": "incdt_status"
+          "column": "incdt_status",
+          "required": true
         }
       },
       {
@@ -159,7 +160,8 @@
         "name": "created",
         "attr": {
           "type": "Date",
-          "column": "incdt_timestamp"
+          "column": "incdt_timestamp",
+          "required": true
         }
       },
       {

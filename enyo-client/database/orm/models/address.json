@@ -474,7 +474,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "state_name"
+          "column": "state_name",
+          "required": true
         }
       },
       {
