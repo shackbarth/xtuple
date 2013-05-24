@@ -1265,9 +1265,7 @@
       if(ret.length) {
         return ret[0].id;
       } else {
-// TODO - Send not found message back.
-        //plv8.elog(ERROR, XT.message('NOTICE', 400, 'shit happens'));
-        throw new Error(XT.message('NOTICE', 400, 'shit happens'));
+        throw new handleError("Not Found", 400);
       }
     },
 
