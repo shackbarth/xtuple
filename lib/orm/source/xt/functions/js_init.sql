@@ -300,11 +300,15 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
       /* This error was handled and a message sent to the client. Those massages are*/
       /* generic HTTP codes. Send the stack trace with detailed info on what happened. */
       XT.debug(message);
+//TODO - throw custom error.
       plv8.elog(ERROR);
     } else {
       /* Some times the stack trace can eat up the full 1000 char message. */
       /* Do a hard trim to 900 so something prints. */
       plv8.elog(ERROR, message.substring(0, 900));
+//TODO - throw custom error.
+      //plv8.elog(ERROR, "Throwing FATAL Error. Please fix this!!!");
+      //throw "myCustomError";
     }
   }
 
