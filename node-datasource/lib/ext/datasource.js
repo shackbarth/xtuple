@@ -127,6 +127,9 @@ white:true*/
       // WARNING!!! If you make any changes here, please update pgworker.js as well.
       var that = this;
 
+      this.msg = [];
+      this.debug = [];
+
       if (err) {
         issue(X.warning("Failed to connect to database: " +
           "{hostname}:{port}/{database} => %@".f(options, err.message)));
@@ -140,28 +143,39 @@ white:true*/
         // Register error handler to log errors.
         // TODO - Not sure if setting that.activeQuery below is getting the right query here.
         client.connection.on('error', function (msg) {
-          console.log("Database Error! Last query was: ", that.activeQuery);
-          console.log("Database Error! DB message was: ", msg);
+          //if (msg.severity === 'FATAL') {
+          if (msg.severity) {
+            X.err("Database Error! ", msg.description || "Throwing FATAL Error. Please fix this!!!");
+            _.each(msg.msg, function (message) {
+              X.err("Database Error! DB message was: ", message);
+            });
+            X.err("Database Error! Last query was: ", that.activeQuery);
+            X.err("Database Error! DB name = ", options.database);
+          }
         });
 
         client.connection.on('notice', function (msg) {
           if (msg && msg.message) {
             if (msg.severity === 'NOTICE') {
-              that.msg = msg.message;
+              that.msg.push(msg.message);
+              //console.log("Database notice Message: ", msg.message);
             } else if (msg.severity === 'INFO') {
-              that.msg = msg.message;
+              that.msg.push(msg.message);
+              //console.log("Database info Message: ", msg.message);
             } else if (msg.severity === 'WARNING') {
-              that.msg = msg.message;
-              console.log("Database warning Message: ", msg.message);
+              that.msg.push(msg.message);
+              //console.log("Database warning Message: ", msg.message);
             } else if (msg.severity === 'DEBUG') {
-              that.debug = msg.message;
+              that.debug.push(msg.message);
+              console.log("Database debug Message: ", msg.message);
             }
           }
         });
       }
 
       if (!client.hasRunInit) {
-        client.query("set plv8.start_proc = \"xt.js_init\";", _.bind(
+        //client.query("set plv8.start_proc = \"xt.js_init\";", _.bind(
+        client.query("select xt.js_init(" + X.options.datasource.debugDatabase + ");", _.bind(
           this.connected, this, query, options, callback, err, client, done, true));
       } else {
         client.query(query, function (err, result) {
@@ -173,15 +187,24 @@ white:true*/
           // Release the client from the pool.
           done();
 
-          if (that.msg) {
-            result.msg = that.msg;
+          if (that.msg && that.msg.length) {
+            if (result) {
+              result.msg = that.msg;
+            } else if (err) {
+              err.msg = that.msg;
+            } else {
+              console.log("### FIX ME ### No result or err returned for query. This shouldn't happen.");
+              console.trace("### At this location ###");
+            }
           }
-          if (that.debug) {
+          if (that.debug && that.debug.length) {
             if (result) {
               result.debug = that.debug;
+            } else if (err) {
+              err.debug = that.debug;
             } else {
-              console.log("result = ", JSON.stringify(result));
-              console.log("error = ", JSON.stringify(err));
+              console.log("### FIX ME ### No result or err returned for query. This shouldn't happen.");
+              console.trace("### At this location ###");
             }
           }
 
