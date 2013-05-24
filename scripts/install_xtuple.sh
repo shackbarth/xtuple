@@ -489,7 +489,7 @@ init_everythings() {
 	log "######################################################"
 	log ""
 
-	psql -U postgres dev -c "insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext;" 2>1 | tee -a $LOG_FILE
+	psql -U postgres dev -c "select xt.js_init(); insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext where ext_location = '/core-extensions';" 2>1 | tee -a $LOG_FILE
   
 	cdir $XT_DIR/node-datasource
 
