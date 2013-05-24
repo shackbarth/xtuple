@@ -447,7 +447,21 @@ pull_modules() {
 		return 2
 	fi
 	npm install 2>1 | tee -a $LOG_FILE
-	log "Created debug.js"
+	npm install -g mocha 2>1 | tee -a $LOG_FILE
+
+    cdir node-datasource/test/shared
+    rm -f login_data.js
+    echo "exports.data = {" >> login_data.js
+    echo "  webaddress: ''," >> login_data.js
+    echo "  username: 'admin', //------- Enter the xTuple username" >> login_data.js
+    echo "  pwd: 'admin', //------ enter the password here" >> login_data.js
+    echo "  org: 'dev', //------ enter the database name here" >> login_data.js
+    echo "  suname: '', //-------enter the sauce labs username" >> login_data.js
+    echo "  sakey: '' //------enter the sauce labs access key" >> login_data.js
+    echo "}" >> login_data.js
+    cdir ../../..
+    
+	log "Created testing login_data.js"
 }
 
 init_everythings() {
@@ -469,10 +483,10 @@ init_everythings() {
 	log ""
 	
 	cdir $XT_DIR/node-datasource/installer/
-	./installer.js -cli -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/database/orm/ 2>1 | tee -a $LOG_FILE
-	./installer.js -cli -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/crm/database/orm 2>1 | tee -a $LOG_FILE
-	./installer.js -cli -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/project/database/orm 2>1 | tee -a $LOG_FILE
-	./installer.js -cli -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/sales/database/orm 2>1 | tee -a $LOG_FILE
+	./installer.js -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/database/orm/ 2>1 | tee -a $LOG_FILE
+	./installer.js -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/crm/database/orm 2>1 | tee -a $LOG_FILE
+	./installer.js -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/project/database/orm 2>1 | tee -a $LOG_FILE
+	./installer.js -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/sales/database/orm 2>1 | tee -a $LOG_FILE
 
 	log ""
 	log "######################################################"
@@ -486,7 +500,7 @@ init_everythings() {
   
 	cdir $XT_DIR/node-datasource
 
-	cat sample_config.js | sed 's/bindAddress: "localhost",/bindAddress: "0.0.0.0",/' > config.js
+	cat sample_config.js | sed 's/bindAddress: "localhost",/bindAddress: "0.0.0.0",/' | sed 's/testDatabase: "dev" // this must remain empty for production datasources/testDatabase: "dev" // this must remain empty for production datasources/' > config.js
 	log "Configured node-datasource"
 
 	log ""
