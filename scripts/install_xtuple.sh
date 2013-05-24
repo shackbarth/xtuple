@@ -1,16 +1,37 @@
-RUNALL=true
-WORKAROUND=true
-XT_VERSION=
 RUN_DIR=$(pwd)
+LOG_FILE=$RUN_DIR/install.log
+mv $LOG_FILE $LOG_FILE.old
+log() {
+	echo $@
+	echo $@ >> $LOG_FILE
+}
+
+varlog() {
+	log $(eval "echo $1 = \$$1")
+}
+
+cdir() {
+	cd $1
+	log "Changing directory to $1"
+}
+
+RUNALL=true
+XT_VERSION=
+NODE_VERSION=
+varlog RUN_DIR
 BASEDIR=/usr/local/src
+varlog BASEDIR
+LIBS_ONLY=
 if [ $SUDO_USER ]
 then
 	XT_DIR=$RUN_DIR/..
+	varlog XT_DIR
 else
-	echo "Must run with sudo, not as root."
+	log "Must run with sudo, not as root."
 	exit -1
 fi
 XTUPLE_REPO='mobile-repo.xtuple.com'
+varlog XTUPLE_REPO
 
 while getopts ":icbpgnh-:" opt; do
   case $opt in
@@ -40,7 +61,7 @@ while getopts ":icbpgnh-:" opt; do
       GRAB=true
 	 if [ -z "$SUDO_USER" ]
 	 then
-		echo "Must run with sudo, not as root."
+		log "Must run with sudo, not as root."
 		return 1
 	 fi
       ;;
@@ -50,7 +71,7 @@ while getopts ":icbpgnh-:" opt; do
       INIT=true
 	 if [ -z "$SUDO_USER" ]
 	 then
-		echo "Must run with sudo, not as root."
+		log "Must run with sudo, not as root."
 		return 1
 	 fi
       ;;
@@ -58,14 +79,15 @@ while getopts ":icbpgnh-:" opt; do
       # Checkout a specific version of the xTuple repo
 	 XT_VERSION=$OPTARG
 	 ;;
-    W)
-      # Don't use the ugly workarounds
-      WORKAROUND=
-      ;;
     init)
       # only for initializing a fresh debian package install
       RUNALL=
 	 USERINIT=true
+	 ;;
+    node)
+      # select the version to use for nodejs
+	 NODE_VERSION=$OPTARG
+	 varlog NODE_VERSION
 	 ;;
     h)
       echo "Usage: install_xtuple [OPTION]"
@@ -73,6 +95,7 @@ while getopts ":icbpgnh-:" opt; do
 	 echo "This script must be run with sudo."
 	 echo ""
 	 echo "To install everything, just do sudo ./install_xtuple.sh"
+	 echo "Everything will go in /usr/local/src/xtuple"
 	 echo ""
 	 echo -e "  -b\t\t"
 	 echo -e "  -c\t\t"
@@ -105,9 +128,16 @@ then
 	INIT=
 fi
 
+if [ -z "$NODE_VERSION" ]
+then
+	NODE_VERSION=0.8.22-1_amd64
+	varlog NODE_VERSION
+fi
+
 install_packages() {
-	apt-get -q update &&
-	apt-get -q -y install vim git subversion build-essential postgresql-9.1 postgresql-contrib postgresql-server-dev-9.1
+	apt-get -q update 2>1 | tee -a $LOG_FILE
+	apt-get -q -y install vim git subversion build-essential postgresql-9.1 postgresql-contrib postgresql-server-dev-9.1 2>1 | tee -a $LOG_FILE
+	log "apt-get returned $?"
 }
 
 # Use only if running from a debian package install for the first time
@@ -135,22 +165,35 @@ clone_repo() {
 		return 1
 	fi
 	
-	cd $BASEDIR
+	cdir $BASEDIR
 	if [ ! -d plv8js ]
 	then
-		echo "Cloning https://code.google.com/p/plv8js/"
-		git clone https://code.google.com/p/plv8js/
+		log "Cloning https://code.google.com/p/plv8js/"
+		git clone https://code.google.com/p/plv8js/ 2>1 | tee -a $LOG_FILE
 	else
-		echo "Found /usr/src/plv8js"
+		log "Found /usr/src/plv8js"
 	fi
 	if [ ! -d v8 ]
 	then
-		echo "Cloning git://github.com/v8/v8.git"
-		git clone git://github.com/v8/v8.git
+		log "Cloning git://github.com/v8/v8.git"
+		git clone git://github.com/v8/v8.git 2>1 | tee -a $LOG_FILE
 	else
-		echo "Found /usr/src/v8"
+		log "Found /usr/src/v8"
 	fi
 	
+	cdir $XT_DIR
+	# add remote
+	if [ -z "$(git remote -v | grep xtuple/xtuple.git)" ]
+	then
+		log "Adding xtuple remote"
+		su $SUDO_USER -c "git remote add --track master xtuple https://github.com/xtuple/xtuple.git"
+	fi
+	
+	if [ $XT_VERSION ]
+	then
+		log "Checking out $XT_VERSION"
+		su $SUDO_USER -c "git checkout $XT_VERSION" 2>1 | tee -a $LOG_FILE
+	fi
 }
 
 # Build dependencies
@@ -162,140 +205,143 @@ build_deps() {
 	# 4. if not, compile from source
 	# the source should be cloned whether we need to compile or not
 	
-	cd $RUN_DIR
+	cdir $RUN_DIR
 	
-	echo "Checking if nodejs is installed"
+	log "Checking if nodejs is installed"
 	dpkg -s nodejs 2>1 > /dev/null
 	if [ $? -eq 0 ]
 	then
-		echo "nodejs is installed."
+		log "nodejs is installed."
 	else
-		echo "nodejs is not installed"
+		log "nodejs is not installed"
 		
-		echo "Looking for nodejs_0.8.22-1_amd64.deb in $(pwd)"
-		if [ ! -f nodejs_0.8.22-1_amd64.deb ]
+		log "Looking for nodejs_$NODE_VERSION.deb in $(pwd)"
+		if [ ! -f nodejs_$NODE_VERSION.deb ]
 		then
-			echo "File not found. Attempting to download http://$XTUPLE_REPO/nodejs_0.8.22-1_amd64.deb"
-			wget -q http://$XTUPLE_REPO/nodejs_0.8.22-1_amd64.deb && wait
+			log "File not found. Attempting to download http://$XTUPLE_REPO/nodejs_$NODE_VERSION.deb"
+			wget -q http://$XTUPLE_REPO/nodejs_$NODE_VERSION.deb && wait
 
 			if [ $? -ne 0 ]
 			then
-				echo "Error occured while downloading ($?)"
-				echo "Compiling from source"
+				log "Error occured while downloading ($?)"
+				log "Compiling from source"
 				mkdir $XT_DIR/install
-				cd $XT_DIR/install
+				cdir $XT_DIR/install
 
-				apt-get -q update
-				apt-get -q -y install git cdbs curl devscripts debhelper dh-buildinfo zlib1g-dev
+				apt-get -q update 2>1 | tee -a $LOG_FILE
+				apt-get -q -y install git cdbs curl devscripts debhelper dh-buildinfo zlib1g-dev 2>1 | tee -a $LOG_FILE
 
-				git clone git://github.com/mark-webster/node-debian.git
-				cd node-debian
-				./build.sh clean 0.8.22
-				./build.sh 0.8.22
-				echo "Installing $XT_DIR/install/node-debian/nodejs_0.8.22-1_amd64.deb"
-				dpkg -i $XT_DIR/install/node-debian/nodejs_0.8.22-1_amd64.deb
+				git clone git://github.com/mark-webster/node-debian.git 2>1 | tee -a $LOG_FILE
+				cdir node-debian
+				./build.sh clean $(log $NODE_VERSION | grep -o "0\.[0-9]\.[0-9]*") 2>1 | tee -a $LOG_FILE
+				./build.sh $(log $NODE_VERSION | grep -o "0\.[0-9]\.[0-9]*") 2>1 | tee -a $LOG_FILE
+				log "Installing $XT_DIR/install/node-debian/nodejs_$NODE_VERSION.deb"
+				dpkg -i $XT_DIR/install/node-debian/nodejs_$NODE_VERSION.deb 2>1 | tee -a $LOG_FILE
+			else
+				log "Installing nodejs_$NODE_VERSION.deb"
+				dpkg -i nodejs_$NODE_VERSION.deb 2>1 | tee -a $LOG_FILE
 			fi
 		else
-			echo "Installing nodejs_0.8.22-1_amd64.deb"
-			dpkg -i nodejs_0.8.22-1_amd64.deb
+			log "Installing nodejs_$NODE_VERSION.deb"
+			dpkg -i nodejs_$NODE_VERSION.deb 2>1 | tee -a $LOG_FILE
 		fi
 	fi
 	
-	cd $RUN_DIR
-	echo "Checking if v8 or xtuple-mobileweb-lib is installed."
+	cdir $RUN_DIR
+	log "Checking if v8 or xtuple-mobileweb-lib is installed."
 	dpkg -s xtuple-mobileweb-lib 2>1 > /dev/null
 	if [ $? -eq 0 ]
 	then
-		echo "xtuple-mobileweb-lib is installed."
+		log "xtuple-mobileweb-lib is installed."
 	else
-		echo "Looking for xtuple-mobileweb-lib in $(pwd)"
+		log "Looking for xtuple-mobileweb-lib in $(pwd)"
 		XTUPLE_LIB_DEB=$(ls | grep xtuple-mobileweb-lib | head -1)
 		if [ $XTUPLE_LIB_DEB ]
 		then
-			echo "Installing xtuple-mobileweb-lib"
-			dpkg -i $XTUPLE_LIB_DEB
+			log "Installing xtuple-mobileweb-lib"
+			dpkg -i $XTUPLE_LIB_DEB 2>1 | tee -a $LOG_FILE
 		else
-			echo "Package not found."
+			log "Package not found."
 			
-			echo "Attempting to download http://$XTUPLE_REPO/xtuple-mobileweb-lib_1.3.4-0_amd64.deb"
+			log "Attempting to download http://$XTUPLE_REPO/xtuple-mobileweb-lib_1.3.4-0_amd64.deb"
 			wget -q http://$XTUPLE_REPO/xtuple-mobileweb-lib_1.3.4-0_amd64.deb && wait
 			if [ $? -ne 0 ]
 			then
-				echo "Error occured while downloading ($?)"
+				log "Error occured while downloading ($?)"
 			
-				echo "Checking if libv8 is installed"
+				log "Checking if libv8 is installed"
 				dpkg -s libv8 2>1 > /dev/null
 				if [ $? -eq 0 ]
 				then
-					echo "libv8 is installed"
+					log "libv8 is installed"
 				else
-					echo "libv8 is not installed."
+					log "libv8 is not installed."
 					
-					echo "Looking for libv8-3.16.5_3.16.5-1_amd64.deb in $(pwd)"
+					log "Looking for libv8-3.16.5_3.16.5-1_amd64.deb in $(pwd)"
 					if [ -f libv8-3.16.5_3.16.5-1_amd64.deb ]
 					then
-						echo "Installing libv8-3.16.5_3.16.5-1_amd64.deb"
-						dpkg -i libv8-3.16.5_3.16.5-1_amd64.deb
+						log "Installing libv8-3.16.5_3.16.5-1_amd64.deb"
+						dpkg -i libv8-3.16.5_3.16.5-1_amd64.deb 2>1 | tee -a $LOG_FILE
 					else
-						echo "File not found."
-						echo "Attempting to download http://$XTUPLE_REPO/libv8-3.16.5_3.16.5-1_amd64.deb"
+						log "File not found."
+						log "Attempting to download http://$XTUPLE_REPO/libv8-3.16.5_3.16.5-1_amd64.deb"
 						
 						wget -q http://$XTUPLE_REPO/libv8-3.16.5_3.16.5-1_amd64.deb && wait
 						if [ $? -ne 0 ]
 						then
-							echo "Error occured while downloading ($?)"
-							echo "Compiling from source."
+							log "Error occured while downloading ($?)"
+							log "Compiling from source."
 			
-							cd $BASEDIR/v8
-							git checkout 3.16.5
+							cdir $BASEDIR/v8
+							git checkout 3.16.5 2>1 | tee -a $LOG_FILE
 			
-							make dependencies
+							make dependencies 2>1 | tee -a $LOG_FILE
 			
-							make library=shared native
-							echo "Installing library."
+							make library=shared native 2>1 | tee -a $LOG_FILE
+							log "Installing library."
 							cp $BASEDIR/v8/out/native/lib.target/libv8.so /usr/lib/ #root
 						else
-							echo "Installing libv8-3.16.5_3.16.5-1_amd64.deb"
-							dpkg -i libv8-3.16.5_3.16.5-1_amd64.deb
+							log "Installing libv8-3.16.5_3.16.5-1_amd64.deb"
+							dpkg -i libv8-3.16.5_3.16.5-1_amd64.deb 2>1 | tee -a $LOG_FILE
 						fi
 					fi
 				fi
 				
-				cd $RUN_DIR
-				echo "Checking if plv8js is installed."
+				cdir $RUN_DIR
+				log "Checking if plv8js is installed."
 				dpkg -s postgresql-9.1-plv8 2>1 > /dev/null
 				if [ $? -eq 0 ]
 				then
-					echo "plv8js is installed"
+					log "plv8js is installed"
 				else
-					echo "plv8js is not installed"
+					log "plv8js is not installed"
 					
-					echo "Looking for postgresql-9.1-plv8_1.4.0-1_amd64.deb in $(pwd)"
+					log "Looking for postgresql-9.1-plv8_1.4.0-1_amd64.deb in $(pwd)"
 					if [ ! -f postgresql-9.1-plv8_1.4.0-1_amd64.deb ]
 					then
-						echo "File not found."
-						echo "Attempting to download http://$XTUPLE_REPO/postgresql-9.1-plv8_1.4.0-1_amd64.deb"
+						log "File not found."
+						log "Attempting to download http://$XTUPLE_REPO/postgresql-9.1-plv8_1.4.0-1_amd64.deb"
 						wget -q http://$XTUPLE_REPO/postgresql-9.1-plv8_1.4.0-1_amd64.deb && wait
 
 						if [ $? -ne 0 ]
 						then
-							echo "Error occured while downloading ($?)"
-							echo "Compiling from source"
-							cd $BASEDIR/plv8
-							make V8_SRCDIR=../v8 CPLUS_INCLUDE_PATH=../v8/include
+							log "Error occured while downloading ($?)"
+							log "Compiling from source"
+							cdir $BASEDIR/plv8
+							make V8_SRCDIR=../v8 CPLUS_INCLUDE_PATH=../v8/include 2>1 | tee -a $LOG_FILE
 							if [ $? -ne 0 ]
 							then
 								return 1
 							fi
-							echo "Installing plv8js."
-							make install
+							log "Installing plv8js."
+							make install 2>1 | tee -a $LOG_FILE
 						else
-							echo "Installing postgresql-9.1-plv8_1.4.0-1_amd64.deb"
-							dpkg -i postgresql-9.1-plv8_1.4.0-1_amd64.deb
+							log "Installing postgresql-9.1-plv8_1.4.0-1_amd64.deb"
+							dpkg -i postgresql-9.1-plv8_1.4.0-1_amd64.deb 2>1 | tee -a $LOG_FILE
 						fi
 					else
-						echo "Installing postgresql-9.1-plv8_1.4.0-1_amd64.deb"
-						dpkg -i postgresql-9.1-plv8_1.4.0-1_amd64.deb
+						log "Installing postgresql-9.1-plv8_1.4.0-1_amd64.deb"
+						dpkg -i postgresql-9.1-plv8_1.4.0-1_amd64.deb 2>1 | tee -a $LOG_FILE
 					fi
 				fi
 			fi
@@ -326,12 +372,12 @@ setup_postgres() {
 
 	service postgresql restart
 	
-	echo ""
-	echo "Dropping old databases if they already exist..."
-	echo ""
+	log ""
+	log "Dropping old databases if they already exist..."
+	log ""
 	dropdb -U postgres dev
 	
-	cd $BASEDIR/postgres
+	cdir $BASEDIR/postgres
 	wget http://sourceforge.net/api/file/index/project-id/196195/mtime/desc/limit/200/rss
 	wait
 	NEWESTVERSION=$(cat rss | grep -o /03%20PostBooks-databases/4.[0-9].[0-9]/postbooks_demo-4.[0-9].[0-9].backup/download | grep -o 4.[0-9].[0-9] | head -1)
@@ -340,9 +386,9 @@ setup_postgres() {
 	if [ -z "$NEWESTVERSION" ]
 	then
 		NEWESTVERSION="4.0.3"
-		echo "######################################################"
-		echo "Couldn't find the latest version. Using $NEWESTVERSION instead."
-		echo "######################################################"
+		log "######################################################"
+		log "Couldn't find the latest version. Using $NEWESTVERSION instead."
+		log "######################################################"
 	fi
 
 	if [ ! -f postbooks_demo-$NEWESTVERSION.backup ]
@@ -352,44 +398,44 @@ setup_postgres() {
 		wait
 		if [ ! -f postbooks_demo-$NEWESTVERSION.backup ]
 		then
-			echo "Failed to download files from sourceforge."
-			echo "Download the postbooks demo database and init.sql from sourceforge into"
-			echo "$BASEDIR/postgres then run 'install_xtuple -pn' to finish installing this package."
+			log "Failed to download files from sourceforge."
+			log "Download the postbooks demo database and init.sql from sourceforge into"
+			log "$BASEDIR/postgres then run 'install_xtuple -pn' to finish installing this package."
 			return 3
 		fi
 	fi
 
-	echo "######################################################"
-	echo "######################################################"
-	echo "Setup databases"
-	echo "######################################################"
-	echo "######################################################"
-	echo ""
+	log "######################################################"
+	log "######################################################"
+	log "Setup database"
+	log "######################################################"
+	log "######################################################"
+	log ""
 
-	psql -q -U postgres -f 'init.sql'
+	psql -q -U postgres -f 'init.sql' 2>1 | tee -a $LOG_FILE
 
-	createdb -U postgres -O admin dev
+	createdb -U postgres -O admin dev 2>1 | tee -a $LOG_FILE
 
-	pg_restore -U postgres -d dev postbooks_demo-$NEWESTVERSION.backup
+	pg_restore -U postgres -d dev postbooks_demo-$NEWESTVERSION.backup 2>1 | tee -a $LOG_FILE
 
-	psql -U postgres dev -c "CREATE EXTENSION plv8"
+	psql -U postgres dev -c "CREATE EXTENSION plv8" 2>1 | tee -a $LOG_FILE
 	
-	cd $XT_DIR/enyo-client/database/source/
-	psql -U admin -d dev -p 5432 -h localhost -f "init_instance.sql"
+	cdir $XT_DIR/enyo-client/database/source/
+	psql -U admin -d dev -p 5432 -h localhost -f "init_instance.sql" 2>1 | tee -a $LOG_FILE
 
-	cd $XT_DIR/enyo-client/extensions/source/crm/database/source
-	psql -U admin -d dev -p 5432 -h localhost -f "init_script.sql"
-	cd $XT_DIR/enyo-client/extensions/source/project/database/source
-	psql -U admin -d dev -p 5432 -h localhost -f "init_script.sql"
-	cd $XT_DIR/enyo-client/extensions/source/sales/database/source
-	psql -U admin -d dev -p 5432 -h localhost -f "init_script.sql"
+	cdir $XT_DIR/enyo-client/extensions/source/crm/database/source
+	psql -U admin -d dev -p 5432 -h localhost -f "init_script.sql" 2>1 | tee -a $LOG_FILE
+	cdir $XT_DIR/enyo-client/extensions/source/project/database/source
+	psql -U admin -d dev -p 5432 -h localhost -f "init_script.sql" 2>1 | tee -a $LOG_FILE
+	cdir $XT_DIR/enyo-client/extensions/source/sales/database/source
+	psql -U admin -d dev -p 5432 -h localhost -f "init_script.sql" 2>1 | tee -a $LOG_FILE
 }
 
 # Pull submodules
 
 pull_modules() { 
-	cd $XT_DIR
-	git submodule update --init --recursive
+	cdir $XT_DIR
+	git submodule update --init --recursive 2>1 | tee -a $LOG_FILE
 	if [ $? -ne 0 ]
 	then
 		return 1
@@ -397,87 +443,93 @@ pull_modules() {
 
 	if [ -z $(which npm) ]
 	then
+		log "Couldn't find npm"
 		return 2
 	fi
-	npm install
+	npm install 2>1 | tee -a $LOG_FILE
+	log "Created debug.js"
 }
 
 init_everythings() {
-	cd $XT_DIR/enyo-client/extensions
-	./tools/buildExtensions.sh
+	cdir $XT_DIR/enyo-client/extensions
+	./tools/buildExtensions.sh 2>1 | tee -a $LOG_FILE
 	
 	# deploy enyo client
-	cd ../application
+	cdir ../application
 	rm -rf deploy
-	cd tools
-	./deploy.sh 
+	cdir tools
+	./deploy.sh 2>1 | tee -a $LOG_FILE
 	
-	echo ""
-	echo "######################################################"
-	echo "######################################################"
-	echo "Running the ORM installer on the database"
-	echo "######################################################"
-	echo "######################################################"
-	echo ""
+	log ""
+	log "######################################################"
+	log "######################################################"
+	log "Running the ORM installer on the database"
+	log "######################################################"
+	log "######################################################"
+	log ""
 	
-	cd $XT_DIR/node-datasource/installer/
-	./installer.js -cli -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/database/orm/
-	./installer.js -cli -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/crm/database/orm
-	./installer.js -cli -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/project/database/orm
-	./installer.js -cli -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/sales/database/orm
-	
-	echo ""
-	echo "######################################################"
-	echo "######################################################"
-	echo "Setting properties of admin user"
-	echo "######################################################"
-	echo "######################################################"
-	echo ""
+	cdir $XT_DIR/node-datasource/installer/
+	./installer.js -cli -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/database/orm/ 2>1 | tee -a $LOG_FILE
+	./installer.js -cli -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/crm/database/orm 2>1 | tee -a $LOG_FILE
+	./installer.js -cli -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/project/database/orm 2>1 | tee -a $LOG_FILE
+	./installer.js -cli -h localhost -d dev -u admin -p 5432 -P admin --path ../../enyo-client/extensions/source/sales/database/orm 2>1 | tee -a $LOG_FILE
 
-  psql -U postgres dev -c "insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext;"
+	log ""
+	log "######################################################"
+	log "######################################################"
+	log "Setting properties of admin user"
+	log "######################################################"
+	log "######################################################"
+	log ""
 
-	cd $XT_DIR/node-datasource
+	psql -U postgres dev -c "insert into xt.usrext (usrext_usr_username, usrext_ext_id) select 'admin', ext_id from xt.ext;" 2>1 | tee -a $LOG_FILE
+  
+	cdir $XT_DIR/node-datasource
+
 	cat sample_config.js | sed 's/bindAddress: "localhost",/bindAddress: "0.0.0.0",/' > config.js
+	log "Configured node-datasource"
 
-	echo ""
-	echo "The database is now set up..."
-	echo ""
+	log ""
+	log "The database is now set up..."
+	log ""
 	
 	mkdir -p $XT_DIR/node-datasource/lib/private
-	cd $XT_DIR/node-datasource/lib/private
+	cdir $XT_DIR/node-datasource/lib/private
 	cat /dev/urandom | tr -dc '0-9a-zA-Z!@#$%^&*_+-'| head -c 64 > salt.txt
-	openssl genrsa -des3 -out server.key -passout pass:xtuple 1024 &&
-	openssl rsa -in server.key -passin pass:xtuple -out key.pem -passout pass:xtuple &&
-	openssl req -batch -new -key key.pem -out server.csr &&
-	openssl x509 -req -days 365 -in server.csr -signkey key.pem -out server.crt
+	log "Created salt"
+	openssl genrsa -des3 -out server.key -passout pass:xtuple 1024 2>1 | tee -a $LOG_FILE
+	openssl rsa -in server.key -passin pass:xtuple -out key.pem -passout pass:xtuple 2>1 | tee -a $LOG_FILE
+	openssl req -batch -new -key key.pem -out server.csr 2>1 | tee -a $LOG_FILE
+	openssl x509 -req -days 365 -in server.csr -signkey key.pem -out server.crt 2>1 | tee -a $LOG_FILE
 	if [ $? -ne 0 ]
 	then
-		echo ""
-		echo "######################################################"
-		echo "Failed to generate server certificate in $XT_DIR/node-datasource/lib/private"
-		echo "######################################################"
+		log ""
+		log "######################################################"
+		log "Failed to generate server certificate in $XT_DIR/node-datasource/lib/private"
+		log "######################################################"
+		return 3
 	fi
 	
-	echo ""
-	echo "######################################################"
-	echo "######################################################"
-	echo "You can login to the database and mobile client with:"
-	echo "username: admin"
-	echo "password: admin"
-	echo "######################################################"
-	echo "######################################################"
-	echo ""
-	echo "Installation now finished."
-	echo ""
-	echo "Run the following commands to start the datasource:"
-	echo ""
+	log ""
+	log "######################################################"
+	log "######################################################"
+	log "You can login to the database and mobile client with:"
+	log "username: admin"
+	log "password: admin"
+	log "######################################################"
+	log "######################################################"
+	log ""
+	log "Installation now finished."
+	log ""
+	log "Run the following commands to start the datasource:"
+	log ""
 	if [ $USERNAME ]
 	then
-		echo "cd ~/xtuple/node-datasource"
-		echo "sudo node main.js"
+		log "cd ~/xtuple/node-datasource"
+		log "sudo node main.js"
 	else
-		echo "cd /usr/local/src/xtuple/node-datasource/"
-		echo "sudo node main.js"
+		log "cd /usr/local/src/xtuple/node-datasource/"
+		log "sudo node main.js"
 	fi
 }
 
@@ -488,34 +540,38 @@ fi
 
 if [ $INSTALL ]
 then
+	log "## install_packages ##"
 	install_packages
-	if [ $? -ne 0 ]
-	then
-		exit 1
-	fi
+	log "## install_packages returned $? ##"
 fi
 
 if [ $CLONE ]
 then
+	log "## clone_repo ##"
 	clone_repo
+	log "## clone_repo returned $? ##"
 	if [ $? -eq 2 ]
 	then
-		echo "Tried URL: git://github.com/$USERNAME/xtuple.git"
+		log "Tried URL: git://github.com/$USERNAME/xtuple.git"
 		exit 2
 	fi
 fi
 if [ $BUILD ]
 then
+	log "## build_repo ##"
 	build_deps
+	log "## build_repo returned $? ##"
 	if [ $? -ne 0 ]
 	then
-		echo "plv8 failed to build. Try fiddling with it manually." 1>&2
+		log "plv8 failed to build. Try fiddling with it manually." 1>&2
 		exit 3
 	fi
 fi
 if [ $POSTGRES ]
 then
+	log "## setup_postgres ##"
 	setup_postgres
+	log "## setup_postgres returned $? ##"
 	if [ $? -ne 0 ]
 	then
 		exit 4
@@ -523,24 +579,28 @@ then
 fi
 if [ $GRAB ]
 then
+	log "## pull_modules ##"
 	pull_modules
+	log "## pull_modules returned $? ##"
 	if [ $? -eq 1 ]
 	then
-		echo "Updating the submodules failed.  Hopefully this doesn't happen."
+		log "Updating the submodules failed.  Hopefully this doesn't happen."
 		exit 5
 	fi
 	if [ $? -eq 2 ]
 	then
-		echo "npm executable not found.  Check if node compiled and installed properly. Deb file should exist in /usr/local/src/node-debian"
+		log "npm executable not found.  Check if node compiled and installed properly. Deb file should exist in /usr/local/src/node-debian"
 	fi
 fi
 if [ $INIT ]
 then
+	log "## init_everythings ##"
 	init_everythings
+	log "## init_everythings returned $? ##"
 	if [ $? -ne 0 ]
 	then
-		echo "."
+		log "bad."
 	fi
 fi
 
-echo "All Done!"
+log "All Done!"
