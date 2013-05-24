@@ -20,7 +20,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     to fit with the native callback of X.database.
    */
   var queryDatabase = exports.queryDatabase = function (functionName, payload, session, callback) {
-    var query,
+    var exposedFunctions = ["delete", "get", "patch", "post"],
+      query,
       org,
       queryString = "select xt.%@($$%@$$)",
       binaryField = payload.data && payload.data.binaryField,
@@ -53,6 +54,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     payload.username = session.passport.user.username;
     org = session.passport.user.organization;
+
+    // Make sure functionName is one of the exposed functions.
+    if (exposedFunctions.indexOf(functionName) === -1) {
+      X.err("Invalid call to unexposed database function: ", functionName);
+      callback(true);
+    }
 
     // We need to convert js binary into pg hex (see the file route for
     // the opposite conversion). See issue #18661
