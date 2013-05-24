@@ -38,6 +38,7 @@ create or replace function xt.delete(data_hash text) returns boolean as $$
     /* Unset XT.username so it isn't cached for future queries. */
     XT.username = undefined;
 
+    XT.message(204, "No Content");
     return true;
   } catch (err) {
     XT.error(err);

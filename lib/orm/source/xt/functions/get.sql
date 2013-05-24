@@ -30,6 +30,7 @@ create or replace function xt.get(data_hash text) returns text as $$
     XT.username = undefined;
 
     /* return the results */
+    XT.message(200, "OK");
     return JSON.stringify(ret, null, prettyPrint);
   } catch (err) {
     XT.error(err);

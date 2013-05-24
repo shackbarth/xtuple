@@ -55,6 +55,7 @@ create or replace function xt.patch(data_hash text) returns text as $$
     /* Unset XT.username so it isn't cached for future queries. */
     XT.username = undefined;
 
+    XT.message(200, "OK");
     return JSON.stringify(ret, null, prettyPrint);
   } catch (err) {
     XT.error(err);
