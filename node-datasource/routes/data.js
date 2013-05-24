@@ -29,26 +29,33 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       binaryData,
       adaptorCallback = function (err, res) {
         var data,
-            msg;
+            status;
 
         if (err) {
-          callback({isError: true, error: err, description: err.message});
+          callback({
+            isError: true,
+            description: err.message,
+            debug: err.debug || null,
+            status: err.status || {code: 500, message: "Internal Server Error" }
+          });
         } else if (res && res.rows && res.rows.length > 0) {
           // the data comes back in an awkward res.rows[0].request form,
           // and we want to normalize that here so that the data is in response.data
           try {
             data = JSON.parse(res.rows[0][functionName]);
           } catch (error) {
-            data = {isError: true, msg: "Cannot parse data"};
+            data = {isError: true, status: "Cannot parse data"};
           }
-          try {
-            msg = JSON.parse(res.msg);
-          } catch (error) {
-            msg = {isError: true, msg: "Cannot parse msg"};
-          }
-          callback({data: data, msg: msg, debug: res.debug});
+          callback({
+            data: data,
+            status: res.status,
+            debug: res.debug
+          });
         } else {
-          callback({isError: true, msg: "No results"});
+          callback({
+            isError: true,
+            status: res.status || {code: 500, message: "Internal Server Error"}
+          });
         }
       };
 

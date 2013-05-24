@@ -127,8 +127,8 @@ white:true*/
       // WARNING!!! If you make any changes here, please update pgworker.js as well.
       var that = this;
 
-      this.msg = [];
-      this.debug = [];
+      client.status = [];
+      client.debug = [];
 
       if (err) {
         issue(X.warning("Failed to connect to database: " +
@@ -143,10 +143,9 @@ white:true*/
         // Register error handler to log errors.
         // TODO - Not sure if setting that.activeQuery below is getting the right query here.
         client.connection.on('error', function (msg) {
-          //if (msg.severity === 'FATAL') {
-          if (msg.severity) {
-            X.err("Database Error! ", msg.description || "Throwing FATAL Error. Please fix this!!!");
-            _.each(msg.msg, function (message) {
+          if (msg.message === "unhandledError") {
+            X.err("Database Error! ", msg.message + " Please fix this!!!");
+            _.each(that.debug, function (message) {
               X.err("Database Error! DB message was: ", message);
             });
             X.err("Database Error! Last query was: ", that.activeQuery);
@@ -157,17 +156,17 @@ white:true*/
         client.connection.on('notice', function (msg) {
           if (msg && msg.message) {
             if (msg.severity === 'NOTICE') {
-              that.msg.push(msg.message);
+              client.status.push(msg.message);
               //console.log("Database notice Message: ", msg.message);
             } else if (msg.severity === 'INFO') {
-              that.msg.push(msg.message);
+              client.status.push(msg.message);
               //console.log("Database info Message: ", msg.message);
             } else if (msg.severity === 'WARNING') {
-              that.msg.push(msg.message);
+              client.debug.push(msg.message);
               //console.log("Database warning Message: ", msg.message);
             } else if (msg.severity === 'DEBUG') {
-              that.debug.push(msg.message);
-              console.log("Database debug Message: ", msg.message);
+              client.debug.push(msg.message);
+              //console.log("Database debug Message: ", msg.message);
             }
           }
         });
@@ -184,29 +183,36 @@ white:true*/
             that.activeQuery = client.activeQuery ? client.activeQuery.text : 'unknown. See PostgreSQL log.';
           }
 
+          if (client.status && client.status.length) {
+            if (result) {
+              result.status = JSON.parse(client.status[0]);
+            } else if (err) {
+              err.status = JSON.parse(client.status[0]);
+            } else {
+              console.log("### FIX ME ### No result or err returned for query. This shouldn't happen.");
+              console.trace("### At this location ###");
+            }
+
+            if (client.status.length > 1) {
+              console.log("### FIX ME ### Database is returning more than 1 message status. This shouldn't happen.");
+              console.log("### FIX ME ### Status is: ", JSON.stringify(client.status));
+              console.log("### FIX ME ### Query was: ", client.activeQuery ? client.activeQuery.text : 'unknown. See PostgreSQL log.');
+              console.trace("### At this location ###");
+            }
+          }
+          if (client.debug && client.debug.length) {
+            if (result) {
+              result.debug = client.debug;
+            } else if (err) {
+              err.debug = client.debug;
+            } else {
+              console.log("### FIX ME ### No result or err returned for query. This shouldn't happen.");
+              console.trace("### At this location ###");
+            }
+          }
+
           // Release the client from the pool.
           done();
-
-          if (that.msg && that.msg.length) {
-            if (result) {
-              result.msg = that.msg;
-            } else if (err) {
-              err.msg = that.msg;
-            } else {
-              console.log("### FIX ME ### No result or err returned for query. This shouldn't happen.");
-              console.trace("### At this location ###");
-            }
-          }
-          if (that.debug && that.debug.length) {
-            if (result) {
-              result.debug = that.debug;
-            } else if (err) {
-              err.debug = that.debug;
-            } else {
-              console.log("### FIX ME ### No result or err returned for query. This shouldn't happen.");
-              console.trace("### At this location ###");
-            }
-          }
 
           // Call the call back.
           callback(err, result);
