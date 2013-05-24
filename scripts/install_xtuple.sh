@@ -447,6 +447,13 @@ pull_modules() {
 		return 2
 	fi
 	npm install 2>1 | tee -a $LOG_FILE
+	cd enyo-client/extensions
+    rm -f debug.js
+    echo "enyo.depends(" > debug.js
+    echo "  '/dev/core-extensions/source/project/client/package.js'," >> debug.js
+    echo "  '/dev/core-extensions/source/crm/client/package.js'," >> debug.js
+    echo "  '/dev/core-extensions/source/sales/client/package.js'" >> debug.js
+    echo ");" >> debug.js
 	log "Created debug.js"
 }
 
