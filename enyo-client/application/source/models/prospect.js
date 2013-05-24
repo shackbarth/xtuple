@@ -23,11 +23,7 @@ white:true*/
 
     defaults: {
       isActive: true
-    },
-
-    requiredAttributes: [
-      "isActive"
-    ]
+    }
 
   });
 

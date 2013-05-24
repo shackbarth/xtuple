@@ -57,17 +57,7 @@ white:true*/
         billingPeriod: hourly,
         billingRate: 0
       };
-    },
-
-    requiredAttributes: [
-      "isActive",
-      "number",
-      "wage",
-      "wageType",
-      "wagePeriod",
-      "billingPeriod",
-      "billingRate"
-    ]
+    }
 
   });
 

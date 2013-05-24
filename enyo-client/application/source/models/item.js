@@ -184,11 +184,7 @@ white:true*/
 
     defaults: {
       isItemWeight: false
-    },
-
-    requiredAttributes: [
-      "isItemWeight"
-    ]
+    }
 
   });
   
@@ -223,17 +219,6 @@ white:true*/
         listPrice: 0
       };
     },
-
-    requiredAttributes: [
-      "classCode",
-      "inventoryUnit",
-      "isActive",
-      "isFractional",
-      "isSold",
-      "itemType",
-      "listPrice",
-      "priceUnit"
-    ],
 
     // ..........................................................
     // METHODS
