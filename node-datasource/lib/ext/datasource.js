@@ -96,6 +96,7 @@ white:true*/
 
         this.callbacks[this.requestNum] = callback;
         // Single worker version.
+        options.debugDatabase = X.options.datasource.debugDatabase;
         this.worker.send({id: this.requestNum, query: query, options: options, conString: str, poolSize: this.poolSize});
 
         // NOTE: Round robin benchmarks are slower then the above single pgworker code.
@@ -105,6 +106,7 @@ white:true*/
         // if (this.nextWorker === this.workers.length) {
         //   this.nextWorker = 0;
         // }
+        // options.debugDatabase = X.options.datasource.debugDatabase;
         // worker.send({id: this.requestNum, query: query, options: options, conString: str});
       } else {
         if (X.options.datasource.debugging) {
@@ -127,6 +129,9 @@ white:true*/
       // WARNING!!! If you make any changes here, please update pgworker.js as well.
       var that = this;
 
+      client.status = [];
+      client.debug = [];
+
       if (err) {
         issue(X.warning("Failed to connect to database: " +
           "{hostname}:{port}/{database} => %@".f(options, err.message)));
@@ -140,19 +145,72 @@ white:true*/
         // Register error handler to log errors.
         // TODO - Not sure if setting that.activeQuery below is getting the right query here.
         client.connection.on('error', function (msg) {
-          console.log("Database Error! Last query was: ", that.activeQuery);
-          console.log("Database Error! DB message was: ", msg);
+          if (msg.message === "unhandledError") {
+            X.err("Database Error! ", msg.message + " Please fix this!!!");
+            _.each(client.debug, function (message) {
+              X.err("Database Error! DB message was: ", message);
+            });
+            X.err("Database Error! Last query was: ", that.activeQuery);
+            X.err("Database Error! DB name = ", options.database);
+          }
+        });
+
+        client.connection.on('notice', function (msg) {
+          if (msg && msg.message) {
+            if (msg.severity === 'NOTICE') {
+              client.status.push(msg.message);
+              //console.log("Database notice Message: ", msg.message);
+            } else if (msg.severity === 'INFO') {
+              client.status.push(msg.message);
+              //console.log("Database info Message: ", msg.message);
+            } else if (msg.severity === 'WARNING') {
+              client.debug.push(msg.message);
+              //console.log("Database warning Message: ", msg.message);
+            } else if (msg.severity === 'DEBUG') {
+              client.debug.push(msg.message);
+              //console.log("Database debug Message: ", msg.message);
+            }
+          }
         });
       }
 
       if (!client.hasRunInit) {
-        client.query("set plv8.start_proc = \"xt.js_init\";", _.bind(
+        //client.query("set plv8.start_proc = \"xt.js_init\";", _.bind(
+        client.query("select xt.js_init(" + X.options.datasource.debugDatabase + ");", _.bind(
           this.connected, this, query, options, callback, err, client, done, true));
       } else {
         client.query(query, function (err, result) {
           if (err) {
             // Set activeQuery for error event handler above.
             that.activeQuery = client.activeQuery ? client.activeQuery.text : 'unknown. See PostgreSQL log.';
+          }
+
+          if (client.status && client.status.length) {
+            if (result) {
+              result.status = JSON.parse(client.status[0]);
+            } else if (err) {
+              err.status = JSON.parse(client.status[0]);
+            } else {
+              console.log("### FIX ME ### No result or err returned for query. This shouldn't happen.");
+              console.trace("### At this location ###");
+            }
+
+            if (client.status.length > 1) {
+              console.log("### FIX ME ### Database is returning more than 1 message status. This shouldn't happen.");
+              console.log("### FIX ME ### Status is: ", JSON.stringify(client.status));
+              console.log("### FIX ME ### Query was: ", client.activeQuery ? client.activeQuery.text : 'unknown. See PostgreSQL log.');
+              console.trace("### At this location ###");
+            }
+          }
+          if (client.debug && client.debug.length) {
+            if (result) {
+              result.debug = client.debug;
+            } else if (err) {
+              err.debug = client.debug;
+            } else {
+              console.log("### FIX ME ### No result or err returned for query. This shouldn't happen.");
+              console.trace("### At this location ###");
+            }
           }
 
           // Release the client from the pool.
