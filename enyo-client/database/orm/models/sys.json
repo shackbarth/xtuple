@@ -38,6 +38,13 @@
         }
       },
       {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "usr_active"
+        }
+      },
+      {
         "name": "initials",
         "attr": {
           "type": "String",

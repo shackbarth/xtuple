@@ -1,6 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
-white:true*/
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
 (function () {
@@ -156,9 +155,10 @@ white:true*/
 
     autoFetchId: false,
 
-    //defaults: {
-    //  disableExport: false
-    //},
+    defaults: {
+      // disableExport: false,
+      isActive: true
+    },
 
     bindEvents: function () {
       XM.Document.prototype.bindEvents.apply(this, arguments);

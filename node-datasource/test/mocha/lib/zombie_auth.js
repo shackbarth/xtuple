@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true, XM:true, XV: true */
+/*global XT:true, XM:true, XV:true, XZ:true, enyo:true */
 
 // global objects
 enyo = {};
@@ -30,10 +30,8 @@ Simplest possible usage:
     The first three options are optional, but if omitted then the login data should be
     available in the /test/shared/loginData.js file.
 
-    There are two important limitations to this code at the moment. First, the client-side
-    app must be built. (Going in through debug.html won't work). Second, you have to
-    use a user who is only associated with one organization. Both of these limitations
-    should be fixed when we get a chance.
+    There is one important limitation to this code at the moment: the client-side
+    app must be built. (Going in through debug.html won't work).
 
     @param {Object} options
     @param {String} options.username
@@ -101,12 +99,9 @@ Simplest possible usage:
         .select('database', database)
         .pressButton('submit', function () {
 
-          //
-          // We skip the scope screen because we're using a user that only has one org
-          // XXX this limitation should be fixed, to allow a test on users with >1 org
-
           // Note: make sure the app is built
           // XXX this limitation should be fixed, to allow testing off of debug.html
+          // it's possible that Zombie 2.0 will get this right.
 
           //
           // Plan to give up after a set time

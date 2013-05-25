@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, XM:true, XT:true, _:true, console:true*/
+/*global X:true, XM:true, SYS:true, XT:true, _:true, console:true*/
 
 /**
  * Module dependencies.
@@ -41,7 +41,12 @@ passport.use(new LocalStrategy(
       error: error,
       username: X.options.databaseServer.user,
       database: database,
-      success: function (model, results, options) {
+      success: function (model, results, successOptions) {
+        // inactive users cannot get in
+        if (!model.get("isActive")) {
+          return done(null, false);
+        }
+
         var options = {
           user: username,
           port: X.options.databaseServer.port,
