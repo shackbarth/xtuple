@@ -14,7 +14,7 @@ select xt.install_js('XM','Address','xtuple', $$
   */
   XM.Address.findExisting = function(address) {
     var resp,
-        sql = "select addr_id as id "
+        sql = "select addr_number as id "
             + "from addr "
             + "where ((coalesce(upper(addr_line1),'') = coalesce(upper($1),'')) "
             + "and (coalesce(upper(addr_line2),'') = coalesce(upper($2),'')) "
