@@ -15,22 +15,28 @@ trailing:true white:true*/
     label: "_salesOrderLineListItem".loc(),
     collection: "XM.SalesOrderLineListItemCollection",
     query: {orderBy: [
-	{attribute: 'salesOrder'}
+	{attribute: 'salesOrder.number'}
       ]},
     components: [
       {kind: "XV.ListItem", components: [
 	{kind: "FittableRows", components: [
-	  {kind: "FittableColumns", name: "header", headerAttr: "salesOrder", components: [
-	    {kind: "XV.ListColumn", classes: "header", components: [		  
-	      {kind: "XV.ListAttr", attr: "salesOrder"}
-	    ]},
-	    {kind: "XV.ListColumn", classes: "header", components: [	
-	      {kind: "XV.ListAttr", attr: "scheduledDate"}  
-	    ]}	
+	  {kind: "FittableColumns", name: "header", headerAttr: "salesOrder.number", components: [
+	    {kind: "XV.ListColumn", classes: "short", components: [		  
+	      {kind: "XV.ListAttr", attr: "salesOrder.number"}
+	    ]}, 
+	    {kind: "XV.ListColumn", classes: "second", components: [	
+	      {kind: "XV.ListAttr", attr: "salesOrder.customer.name"}  
+	    ]},	
+	    {kind: "XV.ListColumn", classes: "second", components: [	
+	      {kind: "XV.ListAttr", attr: "scheduleDate"}
+	    ]},  
+	    {kind: "XV.ListColumn", classes: "second", components: [	
+	      {kind: "XV.ListAttr", attr: "salesOrder.total"}
+	    ]}
 	  ]},
 	  {kind: "FittableColumns", components: [
 	    {kind: "XV.ListColumn", classes: "short", components: [
-	      {kind: "XV.ListAttr", attr: "salesOrder", isKey: true},
+	      {kind: "XV.ListAttr", attr: "salesOrder.number", isKey: true},
 	      {kind: "XV.ListAttr", attr: "lineNumber"}
 	    ]},
 	    {kind: "XV.ListColumn", classes: "second", components: [
@@ -42,8 +48,8 @@ trailing:true white:true*/
 	      {kind: "XV.ListAttr", attr: "priceUnit.name"}
 	    ]}
 	  ]},
-	  {kind: "XV.ListColumn", name: "footer", footerAttr: "salesOrder", components: [
-	    {kind: "XV.ListAttr", classes: "footer", attr: "salesOrder"}
+	  {kind: "XV.ListColumn", name: "footer", footerAttr: "salesOrder.number", components: [
+	    {kind: "XV.ListAttr", classes: "footer", attr: "salesOrder.number"}
 	  ]} 
 	]}
       ]}

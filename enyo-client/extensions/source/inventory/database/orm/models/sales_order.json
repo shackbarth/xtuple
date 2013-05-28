@@ -1,4 +1,4 @@
-{  
+[  
   {
     "context": "xtuple",
     "nameSpace": "XM",
@@ -32,7 +32,7 @@
         }
       },
       {
-        "name": "salesOrder",
+        "name": "ralesOrder",
         "attr": {
           "type": "Number",
           "column": "coitem_cohead_id"
@@ -248,6 +248,6 @@
       }
     ],
     "isSystem": true
-  },
-}
+  }
+]
 
