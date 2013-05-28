@@ -176,7 +176,7 @@ white:true*/
 
       if (!client.hasRunInit) {
         //client.query("set plv8.start_proc = \"xt.js_init\";", _.bind(
-        client.query("select xt.js_init(" + X.options.datasource.debugDatabase + ");", _.bind(
+        client.query("select xt.js_init(" + (X.options.datasource.debugDatabase || false) + ");", _.bind(
           this.connected, this, query, options, callback, err, client, done, true));
       } else {
         client.query(query, function (err, result) {
@@ -187,19 +187,32 @@ white:true*/
 
           if (client.status && client.status.length) {
             if (result) {
-              result.status = JSON.parse(client.status[0]);
+              try {
+                result.status = JSON.parse(client.status[0]);
+              } catch (error) {
+                // Move on, no status message to set. We only want JSON messages here.
+              }
             } else if (err) {
-              err.status = JSON.parse(client.status[0]);
+              try {
+                err.status = JSON.parse(client.status[0]);
+              } catch (error) {
+                // Move on, no status message to set. We only want JSON messages here.
+              }
             } else {
               console.log("### FIX ME ### No result or err returned for query. This shouldn't happen.");
               console.trace("### At this location ###");
             }
 
             if (client.status.length > 1) {
-              console.log("### FIX ME ### Database is returning more than 1 message status. This shouldn't happen.");
-              console.log("### FIX ME ### Status is: ", JSON.stringify(client.status));
-              console.log("### FIX ME ### Query was: ", client.activeQuery ? client.activeQuery.text : 'unknown. See PostgreSQL log.');
-              console.trace("### At this location ###");
+              try {
+                JSON.parse(client.status);
+                console.log("### FIX ME ### Database is returning more than 1 message status. This shouldn't happen.");
+                console.log("### FIX ME ### Status is: ", JSON.stringify(client.status));
+                console.log("### FIX ME ### Query was: ", client.activeQuery ? client.activeQuery.text : 'unknown. See PostgreSQL log.');
+                console.trace("### At this location ###");
+              } catch (error) {
+                // Move on, no status message to set. We only want JSON messages here.
+              }
             }
           }
           if (client.debug && client.debug.length) {
