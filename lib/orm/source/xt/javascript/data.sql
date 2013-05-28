@@ -1,4 +1,4 @@
-﻿select xt.install_js('XT','Data','xtuple', $$
+select xt.install_js('XT','Data','xtuple', $$
 
   /**
    * @class
@@ -972,13 +972,11 @@
             }
           } else if (ormp.name !== pkey) {
             if (val === null) {
-              if (attr.nullValue) {
-                params.values.push(attr.nullValue);
-                params.expressions.push("%" + count + "$I = $" + count);
-              } else if (attr.required) {
+              if (attr.required) {
                 plv8.elog(ERROR, "Attribute " + ormp.name + " is required.");
               } else {
-                throw new handleError("Shouldn't get here", 501);
+                params.values.push(attr.nullValue || null);
+                params.expressions.push("%" + count + "$I = $" + count);
               }
             } else if (ormp.toOne && nkey) {
               if (iorm.table.indexOf(".") > 0) {
