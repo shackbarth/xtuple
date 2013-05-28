@@ -77,22 +77,27 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
   /**
     Curry function
   */
-  Function.prototype.curry = function() {
-    try {
-      if (arguments.length < 1) {
-          return this; /* nothing to curry with - return function */
-      }
+  Function.prototype.curry = function () {
+    if (arguments.length < 1) {
+        return this; /* nothing to curry with - return function */
+    }
 
-      var __method = this,
-        args = arguments[0];
+    var __method = this,
+      args = arguments[0];
 
-      return function () {
-        return __method.apply(this, args.concat(Array.prototype.slice.call(arguments)));
-      }
-    } catch (err) {
-      XT.error(err, arguments);
+    return function () {
+      return __method.apply(this, args.concat(Array.prototype.slice.call(arguments)));
     }
   }
+
+  handleError = function (message, code) {
+    var err = new Error();
+    this.stack = err.stack;
+    this.name = "handleError";
+    this.message = (message || "");
+    this.code = code || null;
+  }
+  handleError.prototype = new Error();
 
   /**
     Return the text after the first dot.
@@ -217,6 +222,31 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
   }
 
   /**
+   * Wrap plv8's elog DEBUG1.
+   *
+   * For debug messages to show up, you need to set your postgresql.conf to:
+   * client_min_messages = debug1
+   *
+   * @param {String} Debug message of where you are at, what you are doing or what's in args.
+   * @param {Object|Array} The data you want logged.
+   */
+  XT.debug = function(msg, args) {
+    var message = '';
+
+    msg = typeof msg === 'string' ? msg || 'debug data = ' : 'debug data = ';
+    args = args || null;
+
+    if (args) {
+      message = JSON.stringify(args, null, 2);
+    }
+
+    // TODO, this could be changed to "LOG" and you would need to set: client_min_messages = log
+    // Then you would not get any of the "RAISE DEBUG;" messages from the PL/pgSQL code.
+    /* Do a hard trim to 900 so something prints. */
+    plv8.elog(DEBUG1, (msg + message).substring(0, 900));
+  }
+
+  /**
     Change camel case property names in an object to snake case.
      Only changes immediate properties, it is not recursive.
 
@@ -237,42 +267,24 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
    *
    * @param {Object} The caught error object from a try/catch.
    * @param {Array} Javascript's arguments array for the function throwing the error.
+   * @param {Boolean|String} Set flag to indicate the error was handled.
    */
-  XT.error = function (error, args) {
-    var message = error.stack + "\n",
-        len,
-        params,
-        avglen;
+  XT.error = function (error) {
+    var message = error.stack + "\n";
 
-    if (DEBUG) {
-      len = 950;
-      params = "Error call args= \n";
-      avglen = len / args.length;
-
-      /* Total error message size in plv8 is 1000 characters. */
-      /* Take the length and split it up evening amung the args. */
-      for(var i = 0; i < args.length; i++) {
-        var strg = JSON.stringify(args[i] || 'null', null, 2);
-
-        params = params + "\n[" + i + "]=";
-
-        if (strg.length < (avglen - 15)) { /* Minus 15 for "[i]= ...trimmed". */
-          params = params + strg;
-        } else {
-          params = params + strg.substring(0, avglen - 15) + "...trimmed";
-        }
-
-        // TODO - This assumes all args are the same length.
-        // We could do some calc to maximize the trim per variable arg length.
-      }
-
-      /* This can give you some more info on how the function was called. */
-      plv8.elog(WARNING, params.substring(0, 900));
+    if (error.name === "handleError") {
+      /* This error was handled and a message sent to the client. Those massages are*/
+      /* generic HTTP codes. Send the stack trace with detailed info on what happened. */
+      XT.debug(message);
+      XT.message(error.code, error.message)
+      throw "handledError";
+    } else {
+      /* Some times the stack trace can eat up the full 1000 char message. */
+      /* Do a hard trim to 900 so something prints. */
+      XT.message(500, "Internal Server Error");
+      plv8.elog(WARNING, message.substring(0, 900));
+      throw "unhandledError";
     }
-
-    /* Some times the stack trace can eat up the full 1000 char message. */
-    /* Do a hard trim to 900 so something prints. */
-    plv8.elog(ERROR, message.substring(0, 900));
   }
 
   /**
@@ -294,35 +306,31 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
    * @returns {String} Safely escaped string with tokens replaced.
    */
   XT.format = function (string, args) {
-    try {
-      if (typeof string !== 'string' || XT.typeOf(args) !== 'array' || !args.length) {
-        return false;
-      }
-
-      var query = "select format($1",
-          params = "";
-
-      for(var i = 0; i < args.length; i++) {
-        params = params + ", $" + (i + 2);
-      }
-      query = query + params + ")";
-
-      /* Pass 'string' to format() as the first parameter. */
-      args.unshift(string);
-
-      if (DEBUG) {
-        plv8.elog(NOTICE, 'XT.format sql =', query);
-        plv8.elog(NOTICE, 'XT.format args =', JSON.stringify(args, null, 2));
-      }
-      string = plv8.execute(query, args)[0].format;
-
-      /* Remove 'string' from args to prevent reference errors. */
-      args.shift();
-
-      return string;
-    } catch (err) {
-      XT.error(err, arguments);
+    if (typeof string !== 'string' || XT.typeOf(args) !== 'array' || !args.length) {
+      return false;
     }
+
+    var query = "select format($1",
+        params = "";
+
+    for(var i = 0; i < args.length; i++) {
+      params = params + ", $" + (i + 2);
+    }
+    query = query + params + ")";
+
+    /* Pass 'string' to format() as the first parameter. */
+    args.unshift(string);
+
+    if (DEBUG) {
+      XT.debug('XT.format sql =', query);
+      XT.debug('XT.format args =', args);
+    }
+    string = plv8.execute(query, args)[0].format;
+
+    /* Remove 'string' from args to prevent reference errors. */
+    args.shift();
+
+    return string;
   };
 
   /**
@@ -345,6 +353,13 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
 
     return uuid;
   };
+
+  XT.message = function (code, message) {
+    var msg = {code: code, message: message};
+
+    plv8.elog(INFO, JSON.stringify(msg));
+    return 'Handled by XT.message';
+  }
 
   /**
     Extended version of javascript 'typeof' that also recognizes arrays
@@ -404,7 +419,7 @@ create or replace function xt.js_init(debug boolean DEFAULT false) returns void 
     res = plv8.execute(sql);
     if(res.length) {
       for(var i = 0; i < res.length; i++) {
-        if(DEBUG) plv8.elog(NOTICE, 'loading javascript for type->', res[i].js_type);
+        if(DEBUG) XT.debug('loading javascript for type->', res[i].js_type);
 
         eval(res[i].javascript);
       }

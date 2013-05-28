@@ -20,33 +20,53 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     to fit with the native callback of X.database.
    */
   var queryDatabase = exports.queryDatabase = function (functionName, payload, session, callback) {
-    var query,
+    var exposedFunctions = ["delete", "get", "patch", "post"],
+      query,
       org,
       queryString = "select xt.%@($$%@$$)",
       binaryField = payload.data && payload.data.binaryField,
       buffer,
       binaryData,
       adaptorCallback = function (err, res) {
-        var data;
+        var data,
+            status;
 
         if (err) {
-          callback({isError: true, error: err, message: err.message, description: err.message});
+          callback({
+            isError: true,
+            description: err.message,
+            debug: err.debug || null,
+            status: err.status || {code: 500, message: "Internal Server Error" }
+          });
         } else if (res && res.rows && res.rows.length > 0) {
           // the data comes back in an awkward res.rows[0].request form,
           // and we want to normalize that here so that the data is in response.data
           try {
             data = JSON.parse(res.rows[0][functionName]);
           } catch (error) {
-            data = {isError: true, message: "Cannot parse data"};
+            data = {isError: true, status: "Cannot parse data"};
           }
-          callback({data: data});
+          callback({
+            data: data,
+            status: res.status,
+            debug: res.debug
+          });
         } else {
-          callback({isError: true, message: "No results"});
+          callback({
+            isError: true,
+            status: res.status || {code: 500, message: "Internal Server Error"}
+          });
         }
       };
 
     payload.username = session.passport.user.username;
     org = session.passport.user.organization;
+
+    // Make sure functionName is one of the exposed functions.
+    if (exposedFunctions.indexOf(functionName) === -1) {
+      X.err("Invalid call to unexposed database function: ", functionName);
+      callback(true);
+    }
 
     // We need to convert js binary into pg hex (see the file route for
     // the opposite conversion). See issue #18661

@@ -1,6 +1,5 @@
-/*jshint bitwise:false, indent:2, curly:true eqeqeq:true, immed:true,
-latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true white:true*/
+/*jshint bitwise:false, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
 /*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true, window:true */
 
 (function () {
@@ -2375,6 +2374,7 @@ trailing:true white:true*/
             {kind: "XV.InputWidget", type: "password", name: "passwordCheck",
               label: "_reEnterPassword".loc()},
             {kind: "XV.LocalePicker", attr: "locale"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.InputWidget", attr: "properName"},
             {kind: "XV.InputWidget", attr: "initials"},
             {kind: "XV.InputWidget", attr: "email"},
