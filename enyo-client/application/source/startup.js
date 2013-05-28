@@ -23,7 +23,6 @@ white:true*/
         success: _.bind(this.didComplete, this)
       };
       var relevantPrivileges = [
-        "MaintainExtensions",
         "MaintainUsers"
       ];
       XT.session.addRelevantPrivileges("core", relevantPrivileges);
