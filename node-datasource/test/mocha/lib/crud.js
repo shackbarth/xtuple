@@ -1,5 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, _:true, console:true, XM:true, Backbone:true, require:true, assert:true,
 setTimeout:true, clearTimeout: true, exports: true */
@@ -55,6 +55,9 @@ var _ = require("underscore"),
       },
       fetchError = function () {
         // proceed anyway.
+        if (data.verbose) {
+          console.log("Fetch error", arguments);
+        }
         objectsFetched++;
         if (objectsFetched === objectsToFetch) {
           callback();
@@ -81,7 +84,8 @@ var _ = require("underscore"),
         // otherwise it's easy to set the value on the model
         data.model.set(key, value);
       }
-    })
+    });
+
     // if there are no models to substitute we won't be doing this whole fetching
     // rigamorole.
     if (objectsToFetch === 0) {
@@ -248,10 +252,9 @@ var _ = require("underscore"),
     // 2. Run the user's custom set callback
     // 3: Run the default set callback (which moves on to the next step)
 
-    var tempSetCallback, tempCreateCallback;
+    var tempSetCallback, tempCreateCallback, tempInitCallback;
 
-
-        var runCrud = function () {
+    var runCrud = function () {
       var initCallback = function () {
         var setCallback = function () {
           var saveCallback = function () {
@@ -260,7 +263,7 @@ var _ = require("underscore"),
               // Step 8: delete the model from the database
               if (data.verbose) { console.log("destroy model", data.recordType); }
               destroy(data, done);
-            }
+            };
 
             // Step 6: set the model with updated data
             if (data.verbose) { console.log("update model", data.recordType); }
@@ -269,7 +272,7 @@ var _ = require("underscore"),
             // Step 7: save the updated model to the database
             if (data.verbose) { console.log("save updated model", data.recordType); }
             save(data, secondSaveCallback);
-          }
+          };
 
           // Step 5: save the data to the database
           if (data.verbose) { console.log("save model", data.recordType); }
@@ -281,7 +284,7 @@ var _ = require("underscore"),
           tempSetCallback = setCallback;
           setCallback = function () {
             data.setCallback(data, tempSetCallback);
-          }
+          };
         }
         if (data.verbose) { console.log("set model", data.recordType); }
         data.updated = false;
@@ -298,7 +301,7 @@ var _ = require("underscore"),
         tempInitCallback = initCallback;
         initCallback = function () {
           data.initCallback(data, tempInitCallback);
-        }
+        };
       }
       if (data.verbose) { console.log("init model", data.recordType); }
       init(data, initCallback);

@@ -1,7 +1,7 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*global XT:true, XM:true, XV:true, process:true, module:true, require:true */
+/*global XT:true, XM:true, XV:true, process:true, module:true, require:true, describe:true, it:true */
 
 (function () {
   "use strict";
@@ -13,7 +13,7 @@
       autoTestAttributes: true,
       createHash: {
         name: "BigOne" + Math.random(),
-        account: { number: "1000"},
+        account: { number: "XPPI"},
         opportunityStage: { name: "QUOTE" },
         opportunitySource: { name: "INTERNAL" },
         opportunityType: { name: "DESIGN" }
@@ -23,10 +23,11 @@
       }
     };
 
-  describe('Opportunity crud test', function (){
+  describe('Opportunity crud test', function () {
     this.timeout(20 * 1000);
     it('should perform all the crud operations', function (done) {
       crud.runAllCrud(data, done);
     });
-  })
+  });
+
 }());
