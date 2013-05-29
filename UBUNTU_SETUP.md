@@ -1,7 +1,7 @@
 Setting up an Ubuntu virtual machine
 ====================================
 
-These are instructions for creating a baseline Ubuntu machine that has the software loaded that is helpful for doing development work. 
+These are instructions for creating a baseline Ubuntu machine that has the software loaded that is helpful for doing development work. If you plan on using the Ubuntu desktop to do file editing and other work, it is recommended you allocate at least 2GB of RAM (the more the better). If you only plan on using it as a server, you can get away with as little as 1GB.
 
 ###Creating a Baseline Virtual Machine
 
@@ -47,7 +47,7 @@ If you already run Linux on your workstation, your distribution may have Virtual
 
 ##Optimizing your virtual machine
 
-Below are optional instructions for optimizing the VM for development. Yes, we could have made a vm that has all this for you, but this is much more fun. Plus you'll know what you have when you're done.
+Below are _optional_ instructions to optimize the VM for actually doing development. Yes, we could have made a VM that has all this for you, but this is much more fun. Plus you can pick and choose what you want and you'll know what you have when you're done.
 
 First you'll want to set up quick access to the terminal. Click on the Dash Home icon in the upper left. Search for "Terminal" and drag the terminal icon to the left launch bar. Click it to open the terminal.
 
@@ -68,6 +68,10 @@ From the VirtualBox menu system, select Devices > Install Guest Additions. Insid
 
 Right-click on the gear icon in the upper right corner of the Linux desktop > System Settings > Brightness and Lock. Turn off Lock, turn off the screen saver, and turn off requiring your password when waking from suspend.
 
+#Postbooks
+
+The Postbooks desktop client can be helpful as a point of reference. A debian installation is in the works and will be available and documented here shortly.
+
 #PG Admin
 
 This is a useful graphical interface for interacting with the Postgresql database
@@ -78,16 +82,75 @@ From Dash Home, drag the pgAdmin icon to your launch bar.
 
 #Chrome
 
-Our preferred web browser because it has excellent built-in debugging tools. You have to actually download it, however:
+Chrome is our preferred web browser because it has excellent built-in debugging tools. If you look in the Ubuntu Software Center you'll find Chromium which is similar, but noticably inferior to Chrome. We suggest sticking with Chrome. You have to actually download it manually, however:
 
 https://www.google.com/intl/en/chrome
 
-From Dash Home, drag the Chrom icon to your launch bar. Note that if you look in the Ubuntu package repository you'll find Chromium which is similar, but noticably inferior to Chrome.
+Follow the website instructions for downloading and installing Chrome. From Dash Home search for and drag the Chrome icon to your launch bar. 
 
 #Sublime with JSHint installed
 
-This is a nice text editor. It's free, but also also badgerware that will prompt you to pay a nominal purchase registration fee that is worthwhile for the feature set it offers. What is most important here is installing the JSHint add-on which an enormous help for debugging and conforming to xTuple style guidelines. You can get JSHint for a number of other popular editors as well including VIM for those of you who are command line junkies. If you're that kind of dev, though, you probably never bothered with anything on this page.
+This is a nice text editor for coding. It's free, but also also badgerware that will prompt you to pay a nominal purchase fee that is worthwhile for the feature set it offers. What is most important here is installing the [JSHint](http://www.jshint.com/about/) add-on package which is an enormous help for debugging JavaScript and conforming to xTuple style guidelines. You can get JSHint for a number of other popular editors as well including VIM for those of you who are command line junkies. Follow these instructions to get Sublime set up with a shortcut on the desktop and JS Hint installed.
+
+Go to the [Sublime website](http://www.sublimetext.com/) and download the application. From the terminal where Sublime is downloaded we'll extract the file and get it setup to launch from the command line:
+
+    cd home/xtuple/Downloads
+    tar xf Sublime\ Text\ 2.0.1\ x64.tar.bz2
+    sudo mv Sublime\ Text\ 2 /opt/
+    sudo ln -s /opt/Sublime\ Text\ 2/sublime_text /usr/bin/sublime
+
+You'll probably also want to be able to launch it from the desktop. The following command will launch sublime with a new desktop configuration file:
+
+    sudo sublime /usr/share/applications/sublime.desktop
+
+    [Desktop Entry]
+    Version=1.0
+    Name=Sublime Text 2
+    # Only KDE 4 seems to use GenericName, so we reuse the KDE strings.
+    # From Ubuntu's language-pack-kde-XX-base packages, version 9.04-20090413.
+    GenericName=Text Editor
+
+    Exec=sublime
+    Terminal=false
+    Icon=/opt/Sublime Text 2/Icon/48x48/sublime_text.png
+    Type=Application
+    Categories=TextEditor;IDE;Development
+    X-Ayatana-Desktop-Shortcuts=NewWindow
+
+    [NewWindow Shortcut Group]
+    Name=New Window
+    Exec=sublime -n
+    TargetEnvironment=Unity
+
+Save the file, right click on the Sublime icon in the launcher and select "Lock to Launcher."
+
+If you want to make Sublime the default editor for your files:
+
+  sudo sublime /usr/share/applications/defaults.list
+
+Find and replace all occurences of *gedit.desktop* with *sublime.desktop*.
+
+Finally, change your indentation preferences to conform to xTuple style guidelines. On the bottom footer bar of the screen where it says `Spaces: 4` click and select `Indent Using Spaces` and `Tab width 2`.
+
+#Install JSHint on Sublime
+
+First you need to install package manager on Sublime:
+
+  * Click the Preferences > Browse Packages… menu entry
+  * Browse up a folder and then into the Installed Packages folder
+  * Download Package [Control.sublime-package](https://sublime.wbond.net/Package%20Control.sublime-package) and copy it into the Installed Packages directory
+  * Restart Sublime Text
+
+Next, install the JSHint for node from the Terminal:
+
+    npm install -g jshint
+
+Install the packgae from Sublime:
+
+  * `control`-`shift`-`p`
+  * type `install p`, select `Package Control: Install Package`
+  * type `jshint`, select `JSHint`
 
 
-#Postbooks
+
 
