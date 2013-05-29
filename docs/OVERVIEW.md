@@ -1,6 +1,6 @@
 ##xTuple Web-Mobile client
 
-The xTuple web client uses JavaScript in all layers including the database, the web service and application layer. This platform is designed to be fully extensible and customizable without changing any core code. Below is a short overview of the major technologies in the xTuple web-mobile stack:
+The xTuple web client uses JavaScript in all layers including the database, the web service and application layer. This platform is designed to be fully extensible and customizable without changing any core code. Below is a short overview of the major technologies used in the xTuple web-mobile stack:
 
 ![xTuple Stack](/js_arch.png "xTuple Architecture")
 
