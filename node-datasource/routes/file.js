@@ -24,9 +24,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
 
     queryPayload = {
-      nameSpace: recordType.substring(0, recordType.indexOf('.')), // TODO: use prefix
+      nameSpace: recordType.prefix(),
       type: recordType.suffix(),
-      id: Number(recordId)
+      id: recordId
     };
 
     queryDatabase("get", queryPayload, req.session, function (result) {
@@ -35,27 +35,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       if (result.isError) {
         res.send(result);
       } else {
-        content = result.data;
+        content = result.data.data;
 
         filename = content.description;
         extension = filename ? filename.substring(filename.lastIndexOf('.') + 1) : '';
         isBinaryEncoding = extension !== 'txt' && extension !== 'csv';
 
-        // pg represents bytea data as hex. For text data (like a csv file)
-        // we need to read to a buffer and then convert to utf-8. For binary
-        // data we can just send the buffer itself as data.
-
-        if (typeof content.data !== 'string') {
-          res.send({isError: true, message: "You need to set your postgres binary encoding to hex"});
-          return;
-        }
-
         //
-        // The first two characters of the data from pg is \x and must be ignored
+        // The data comes back as binary. Put it in a buffer and convert to
+        // utf-8 if it is text data
         //
-        buffer = new Buffer(content.data.substring(2), "hex");
+        buffer = new Buffer(content.data);
         data = isBinaryEncoding ? buffer : buffer.toString("utf-8");
 
+        console.log("filename", filename);
         res.attachment(filename);
         res.send(data);
       }
