@@ -6,13 +6,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   var queryDatabase = require('./data').queryDatabase;
-  // /file?recordType=XM.File&id=40
+  // https://localhost/dev/file?recordType=XM.File&id=18e0573f-a08f-4016-ab4d-6205f2c89f77
 
   /**
     Used to serve up files to the client. Uses res.attachment to prompt browser to
     save the file.
    */
-  var handle = function (req, res) {
+  exports.file = function (req, res) {
     var args = req.query,
       recordType = args.recordType,
       recordId = args.id,
@@ -48,12 +48,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         buffer = new Buffer(content.data);
         data = isBinaryEncoding ? buffer : buffer.toString("utf-8");
 
-        console.log("filename", filename);
         res.attachment(filename);
         res.send(data);
       }
     });
   };
-
-  exports.file = handle;
 }());
