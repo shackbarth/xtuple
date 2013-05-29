@@ -13,7 +13,7 @@ var assert = require("chai").assert,
     Test the Report route
   */
   describe('Pentaho report route', function (done) {
-    this.timeout(10 * 1000);
+    this.timeout(20 * 1000);
 
     before(function (done) {
       zombieAuth.loadApp(done);
@@ -33,7 +33,6 @@ var assert = require("chai").assert,
             url;
 
           assert.ok(browser.success);
-          assert.equal(browser.text("title"), "Report Web Viewer"); // that's pentaho's title
 
           if (dataKey.indexOf("&") > 0) {
             // allow for future cases where there are more args after the data key
@@ -68,7 +67,6 @@ var assert = require("chai").assert,
             url;
 
           assert.ok(browser.success);
-          assert.equal(browser.text("title"), "Report Web Viewer"); // that's pentaho's title
 
           if (dataKey.indexOf("&") > 0) {
             // allow for future cases where there are more args after the data key
