@@ -1,15 +1,56 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, describe:true, it:true, before:true */
+/*global X:true, XT:true, _:true, describe:true, it:true, before:true */
 
+XT = {};
+_ = require("underscore");
 
 var assert = require("chai").assert,
+  fileRoute = require("../../../routes/file"),
   dataRoute = require("../../../routes/data");
 
 require("../../../xt");
+require("../../../../lib/tools/source/foundation");
+require("../../../../lib/tools/source/ext/string");
+require("../../../../lib/tools/source/ext/proto/string");
 
 (function () {
   "use strict";
+
+  describe('The File route', function () {
+
+    it('should transform binary data', function (done) {
+      // mock the request
+      var req = {
+          query: {recordType: "XM.File", id: "mockymock"},
+          session: {passport: {user: {}}}
+        },
+        // mock the response object
+        mockData = "here is my mock data",
+        buffer = new Buffer(mockData),
+        res = {
+          send: function (result) {
+            assert.isUndefined(result.isError);
+            // this is the real thing that we're testing: that the
+            // result comes back clean just as it was put in
+            assert.equal(result, mockData);
+            done();
+          },
+          attachment: function () {}
+        },
+        // mock the call to the database
+        queryFunction = function (org, query, callback) {
+          // "I'm pg and I'm returning some data"
+          var result = "{\"data\":{\"description\":\"foo.txt\",\"data\":\"" + buffer + "\"}}";
+          callback(null, {rows: [{get: result}]});
+        };
+
+      // inject our mock query into the global variable
+      X.database = {query: queryFunction};
+
+      fileRoute.file(req, res);
+    });
+  });
 
   /**
     Test the transformation of binary data in the post route
