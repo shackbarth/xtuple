@@ -140,7 +140,7 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
 
     @extends XM.Document
   */
-  XM.UserAccount = XM.Document.extend({
+  XM.UserAccount = XM.AccountDocument.extend({
     /** @scope XM.UserAccount.prototype */
 
     idAttribute: 'username',
