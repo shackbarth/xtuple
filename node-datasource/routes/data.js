@@ -24,7 +24,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       query,
       org,
       queryString = "select xt.%@($$%@$$)",
-      binaryField = payload.data && payload.data.binaryField,
+      binaryField = payload.binaryField,
       buffer,
       binaryData,
       adaptorCallback = function (err, res) {
@@ -71,10 +71,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // We need to convert js binary into pg hex (see the file route for
     // the opposite conversion). See issue #18661
     if (functionName === 'post' && binaryField) {
-      binaryData = payload.dataHash[binaryField];
+      binaryData = payload.data[binaryField];
       buffer = new Buffer(binaryData, "binary"); // XXX uhoh: binary is deprecated but necessary here
       binaryData = '\\x' + buffer.toString("hex");
-      payload.dataHash[binaryField] = binaryData;
+      payload.data[binaryField] = binaryData;
     }
 
     query = queryString.f(functionName, JSON.stringify(payload));
