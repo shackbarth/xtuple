@@ -1,9 +1,9 @@
 Setting up an Ubuntu virtual machine
 ====================================
 
-These are instructions for creating a baseline Ubuntu machine that has the software loaded that is helpful for doing development work. If you plan on using the Ubuntu desktop to do file editing and other work, it is recommended you allocate at least 2GB of RAM (the more the better). If you only plan on using it as a server, you can get away with as little as 1GB.
+These are instructions for creating a baseline Ubuntu machine with software loaded that is helpful for doing development work directly on the machine. If you plan on using the Ubuntu desktop to do file editing and other work, it is recommended you allocate at least 2GB of RAM (the more the better). If you only plan on using it as a server, you can get away with as little as 1GB.
 
-###Creating a Baseline Virtual Machine
+#Creating a Baseline Virtual Machine
 
 ##Download and install VirtualBox.
 
@@ -45,13 +45,13 @@ If you already run Linux on your workstation, your distribution may have Virtual
  - When the installer asks you to reboot, do so. The rebooting process may ask you to eject the disk from the CD/DVD drive. Hover over the circular disk icon near the lower-right-hand edge of the VM window. If it reports the drive as Empty, just click on the window and hit the Enter key. If the drive is not empty, right click on the icon, eject the .iso file from the virtual drive, then click in the window and hit the Enter key.
  - After the VM reboots let the Update Manager upgrade the software that's installed and reboot again if necessary
 
-##Optimizing your virtual machine
+#Optimizing your virtual machine
 
 Below are _optional_ instructions to optimize the VM for actually doing development. Yes, we could have made a VM that has all this for you, but this is much more fun. Plus you can pick and choose what you want and you'll know what you have when you're done.
 
 First you'll want to set up quick access to the terminal. Click on the Dash Home icon in the upper left. Search for "Terminal" and drag the terminal icon to the left launch bar. Click it to open the terminal.
 
-#Update Ubuntu
+##Update Ubuntu
 
 These steps may be especially helpful if you want full screen mode to work correctly on your hardware.
 
@@ -64,15 +64,11 @@ From the terminal:
 
 From the VirtualBox menu system, select Devices > Install Guest Additions. Inside the Ubuntu VM, click Run in the dialog box that appears. When the process is done, eject the VirtualBox Additions disk image.
 
-#User Settings
+##User Settings
 
 Right-click on the gear icon in the upper right corner of the Linux desktop > System Settings > Brightness and Lock. Turn off Lock, turn off the screen saver, and turn off requiring your password when waking from suspend.
 
-#Postbooks
-
-The Postbooks desktop client can be helpful as a point of reference. A debian installation is in the works and will be available and documented here shortly.
-
-#PG Admin
+##PG Admin
 
 This is a useful graphical interface for interacting with the Postgresql database
 
@@ -80,7 +76,7 @@ This is a useful graphical interface for interacting with the Postgresql databas
 
 From Dash Home, drag the pgAdmin icon to your launch bar.
 
-#Chrome
+##Chrome
 
 Chrome is our preferred web browser because it has excellent built-in debugging tools. If you look in the Ubuntu Software Center you'll find Chromium which is similar, but noticably inferior to Chrome. We suggest sticking with Chrome. You have to actually download it manually, however:
 
@@ -88,7 +84,7 @@ https://www.google.com/intl/en/chrome
 
 Follow the website instructions for downloading and installing Chrome. From Dash Home search for and drag the Chrome icon to your launch bar. 
 
-#Sublime with JSHint installed
+##Sublime with JSHint installed
 
 This is a nice text editor for coding. It's free, but also also badgerware that will prompt you to pay a nominal purchase fee that is worthwhile for the feature set it offers. What is most important here is installing the [JSHint](http://www.jshint.com/about/) add-on package which is an enormous help for debugging JavaScript and conforming to xTuple style guidelines. You can get JSHint for a number of other popular editors as well including VIM for those of you who are command line junkies. Follow these instructions to get Sublime set up with a shortcut on the desktop and JS Hint installed.
 
@@ -132,7 +128,7 @@ Find and replace all occurences of *gedit.desktop* with *sublime.desktop*.
 
 Finally, change your indentation preferences to conform to xTuple style guidelines. On the bottom footer bar of the screen where it says `Spaces: 4` click and select `Indent Using Spaces` and `Tab width 2`.
 
-#Install JSHint on Sublime
+###Install JSHint on Sublime
 
 First you need to install package manager on Sublime:
 
