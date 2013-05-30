@@ -68,7 +68,13 @@ The cat command shows the public key that was just generated. Copy this text, st
 
 In your web browser, navigate to your home page on GitHub. Click on Edit Your Profile. Select SSH Keys from the list on the left. Click Add SSH Key. Give this SSH key a title, such as "xTuple Mobile Dev VM", then paste the public key into the Key field. Finally click the Add key button. GitHub will verify your password just to make sure it's you at the keyboard.
 
-You can run the install script as described on the main project [README](https://github.com/xtuple/xtuple/blob/master/README.md).
+Now clone the code from your fork into a local directory:
+
+  mkdir src
+  cd src
+  git clone git@github.com:{yourusername}/xtuple.git
+
+You can now run the install script as described on the main project [README](https://github.com/xtuple/xtuple/blob/master/README.md).
 
 #Optimizing your virtual machine
 
