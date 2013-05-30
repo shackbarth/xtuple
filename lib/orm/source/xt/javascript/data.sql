@@ -581,6 +581,7 @@
       for (var i = 0; i < orm.extensions.length; i++) {
         if (orm.extensions[i].table === orm.table) {
           sql = this.prepareInsert(orm.extensions[i], data, sql, encryptionKey);
+          XT.debug('*** RESULT of prepare ***', sql);
         }
       }
 
@@ -591,17 +592,19 @@
       }
       plv8.execute(sql.statement, sql.values);
 
+
       /* Handle extensions on other tables. */
       for (var i = 0; i < orm.extensions.length; i++) {
         if (orm.extensions[i].table !== orm.table &&
            !orm.extensions[i].isChild) {
           sql = this.prepareInsert(orm.extensions[i], data, null, encryptionKey);
+          XT.debug('*** RESULT of prepare ***', sql);
 
           if (DEBUG) {
             XT.debug('createRecord sql =', sql.statement);
             XT.debug('createRecord values =', sql.values);
           }
-          plv8.execute(sql.statement, sql.values);
+	  plv8.execute(sql.statement, sql.values);
         }
       }
 
@@ -676,14 +679,13 @@
             count++;
           }
         }
-        XT.debug('**** EXPRESSIONS for relations ***', params.expressions);
       }
 
       /* Build up the content for insert of this record. */
       for (var i = 0; i < orm.properties.length; i++) {
         ormp = orm.properties[i];
         prop = ormp.name;
-        XT.debug('**** ORM NAME ****', prop);
+        
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
         iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false,
@@ -706,7 +708,6 @@
               encryptQuery = "select encrypt(setbytea(%1$L), setbytea(%2$L), %3$L)";
               encryptSql = XT.format(encryptQuery, [record[prop], encryptionKey, 'bf']);
               val = "(" + encryptSql + ")";
-
               params.values.push(val);
               params.identifiers.push(attr.column);
               params.expressions.push("$" + count);
@@ -732,7 +733,6 @@
                     nkey
                   ]);
               }
-
               exp = "(" + toOneSql + ")";
               params.expressions.push(exp);
             } else {
@@ -759,7 +759,6 @@
       }
 
       /* Build the insert statement */
-      XT.debug('**** INSERT COLUMNS **', params.columns);
       columns = params.columns.join(', ');
       columns = XT.format(columns, params.identifiers);
       expressions = params.expressions.join(', ');
@@ -781,6 +780,8 @@
         XT.debug('prepareInsert values =', params.values);
       }
 
+      XT.debug('**** END PREPARE ***', true);
+			
       return params;
     },
 
@@ -928,9 +929,9 @@
         toOneQuery,
         toOneSql,
         type,
-        val;
+        val,
+        isValidSql = false;
         
-
       params = params || {
         table: "",
         expressions: [],
@@ -942,7 +943,6 @@
 
       if (orm.relations) {
         /* Extension. */
-        XT.debug('THIS IS AN EXTENSION', true);
         pkey = orm.relations[0].inverse;
         columnKey = orm.relations[0].column;
       } else {
@@ -950,14 +950,11 @@
         pkey = XT.Orm.primaryKey(orm);
         columnKey = XT.Orm.primaryKey(orm, true);
       }
-
-	XT.debug('PROPERTIES IN ORM', orm.properties);
 	
       /* Build up the content for update of this record. */
       for (var i = 0; i < orm.properties.length; i++) {
         ormp = orm.properties[i];
         prop = ormp.name;
-        XT.debug('**** ORM name *****', prop);
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
         iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false;
@@ -976,9 +973,10 @@
               params.values.push(val);
               params.identifiers.push(attr.column);
               params.expressions.push("%" + count + "$I = $" + count);
+              isValidSql = true;
               count++;
             } else {
-// TODO - Improve error handling.
+	      // TODO - Improve error handling.
               throw new Error("No encryption key provided.");
             }
           } else if (ormp.name !== pkey) {
@@ -1014,8 +1012,8 @@
               params.values.push(val);
               params.expressions.push("%" + count + "$I = $" + count);
             }
-
             params.identifiers.push(attr.column);
+            isValidSql = true;
             count++;
           }
         }
@@ -1025,10 +1023,8 @@
       expressions = params.expressions.join(', ');
       expressions = XT.format(expressions, params.identifiers);
 
-XT.debug('***** EXPRESSIONS ******', expressions);
-XT.debug('**** IDENTIFIERS *****', params.identifiers);
-
-      if (expressions) {
+      // do not send an invalid sql statement
+      if (!isValidSql) { return params; }
        	
       if (params.table.indexOf(".") > 0) {
         namespace = params.table.beforeDot();
@@ -1038,8 +1034,6 @@ XT.debug('**** IDENTIFIERS *****', params.identifiers);
       } else {
         query = 'update %1$I set ' + expressions + ' where %2$I = $' + count + ';';
         params.statement = XT.format(query, [params.table, columnKey]);
-      }
-
       }
 
       if (DEBUG) {
