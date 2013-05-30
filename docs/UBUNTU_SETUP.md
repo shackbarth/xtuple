@@ -1,7 +1,7 @@
 Setting up an Ubuntu virtual machine
 ====================================
 
-These are instructions for creating a baseline Ubuntu machine with software loaded that is helpful for doing development work directly on the machine. If you plan on using the Ubuntu desktop to do file editing and other work, it is recommended you allocate at least 2GB of RAM (the more the better). If you only plan on using it as a server, you can get away with as little as 1GB.
+These are instructions for creating a baseline Ubuntu machine with software loaded that is helpful for doing xTuple mobile-web development work directly on the machine. It assumes you are starting with no experience with Linux or github. If you plan on using the Ubuntu desktop to do file editing and other work, it is recommended you allocate at least 2GB of RAM (the more the better). If you only plan on using it as a server, you can get away with as little as 1GB.
 
 ##Download and install VirtualBox.
 
@@ -43,7 +43,32 @@ If you already run Linux on your workstation, your distribution may have Virtual
  - When the installer asks you to reboot, do so. The rebooting process may ask you to eject the disk from the CD/DVD drive. Hover over the circular disk icon near the lower-right-hand edge of the VM window. If it reports the drive as Empty, just click on the window and hit the Enter key. If the drive is not empty, right click on the icon, eject the .iso file from the virtual drive, then click in the window and hit the Enter key.
  - After the VM reboots let the Update Manager upgrade the software that's installed and reboot again if necessary
 
-Now that Ubuntu is successfully installed, you can run the install script as described on the main project [README](https://github.com/xtuple/xtuple/blob/master/README.md).
+##Get xTuple code base
+
+First install git from the terminal:
+
+    sudo git apt-install git
+
+The xTuple mobile web client files are maintained on github.com. You will need an account there to execute the following steps:
+
+  * Log in to github.com
+  * Navigate to the xTuple project: https://github.com/xtuple/
+  * Fork the client repository:
+    * Click on client
+    * Click on Fork in the upper right-hand corner of the browser window
+    * Click the Fork to your-username button
+
+Create an SSH keypair so GitHub can authenticate your push requests:
+
+    xtuple$ ssh-keygen # this isn't extremely secure but it'll do
+    xtuple$ cat ~/.ssh/id_rsa.pub
+    ssh-rsa AAA[...about 200 more characters]...M8n8/B xtuple@mobiledevvm
+
+The cat command shows the public key that was just generated. Copy this text, starting with the ssh-rsa at the beginning and ending with the xtuple@mobiledevvm at the end (select and either right-click > Copy or Control-Shift-C in the Linux Terminal window).
+
+In your web browser, navigate to your home page on GitHub. Click on Edit Your Profile. Select SSH Keys from the list on the left. Click Add SSH Key. Give this SSH key a title, such as "xTuple Mobile Dev VM", then paste the public key into the Key field. Finally click the Add key button. GitHub will verify your password just to make sure it's you at the keyboard.
+
+You can run the install script as described on the main project [README](https://github.com/xtuple/xtuple/blob/master/README.md).
 
 #Optimizing your virtual machine
 
