@@ -1,4 +1,4 @@
-select xt.install_js('XT','Data','xtuple', $$
+﻿select xt.install_js('XT','Data','xtuple', $$
 
   /**
    * @class
@@ -923,6 +923,7 @@ select xt.install_js('XT','Data','xtuple', $$
         toOneSql,
         type,
         val;
+        
 
       params = params || {
         table: "",
@@ -935,14 +936,18 @@ select xt.install_js('XT','Data','xtuple', $$
 
       if (orm.relations) {
         /* Extension. */
+        XT.debug('THIS IS AN EXTENSION', true);
         pkey = orm.relations[0].inverse;
         columnKey = orm.relations[0].column;
       } else {
         /* Base. */
+        XT.debug('THIS IS BASE', true);
         pkey = XT.Orm.primaryKey(orm);
         columnKey = XT.Orm.primaryKey(orm, true);
       }
 
+	XT.debug('PROPERTIES IN ORM', orm.properties);
+	
       /* Build up the content for update of this record. */
       for (var i = 0; i < orm.properties.length; i++) {
         ormp = orm.properties[i];
@@ -1011,8 +1016,12 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       /* Build the update statement */
+ XT.debug('*****PARAMS.Expressions', params.expressions);     
       expressions = params.expressions.join(', ');
       expressions = XT.format(expressions, params.identifiers);
+
+XT.debug('***** EXPRESSIONS ******', expressions);
+XT.debug('**** IDENTIFIERS *****', params.identifiers);
 
       if (params.table.indexOf(".") > 0) {
         namespace = params.table.beforeDot();
@@ -1023,6 +1032,8 @@ select xt.install_js('XT','Data','xtuple', $$
         query = 'update %1$I set ' + expressions + ' where %2$I = $' + count + ';';
         params.statement = XT.format(query, [params.table, columnKey]);
       }
+
+	XT.debug('*******QUERY********', query);
 
       if (DEBUG) {
         XT.debug('prepareUpdate statement =', params.statement);
