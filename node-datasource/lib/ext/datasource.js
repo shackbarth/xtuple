@@ -1,7 +1,7 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, io:true, Backbone:true, _:true, X:true */
+/*global XT:true, console:true, issue:true, require:true, XM:true, io:true, Backbone:true, _:true, X:true */
 
 (function () {
   "use strict";
@@ -129,15 +129,15 @@ white:true*/
       // WARNING!!! If you make any changes here, please update pgworker.js as well.
       var that = this;
 
-      client.status = [];
-      client.debug = [];
-
       if (err) {
         issue(X.warning("Failed to connect to database: " +
           "{hostname}:{port}/{database} => %@".f(options, err.message)));
         done();
         return callback(err);
       }
+
+      client.status = [];
+      client.debug = [];
 
       if (ranInit === true) {
         client.hasRunInit = true;

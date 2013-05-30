@@ -1,4 +1,4 @@
-/*jshint node:true, bitwise:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
+/*jshint node:true, bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global issue:true */
 
@@ -16,15 +16,15 @@ var connected = function (query, options, id, err, client, done, ranInit) {
 
   var that = this;
 
-  client.status = [];
-  client.debug = [];
-
   if (err) {
     issue(console.log("pgWorker Failed to connect to database: " +
       "{hostname}:{port}/{database} => %@".f(options, err.message)));
     done();
     return process.send({err: err, id: id, options: options});
   }
+
+  client.status = [];
+  client.debug = [];
 
   if (ranInit === true) {
     client.hasRunInit = true;
