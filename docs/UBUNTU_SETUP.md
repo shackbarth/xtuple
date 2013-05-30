@@ -3,8 +3,6 @@ Setting up an Ubuntu virtual machine
 
 These are instructions for creating a baseline Ubuntu machine with software loaded that is helpful for doing development work directly on the machine. If you plan on using the Ubuntu desktop to do file editing and other work, it is recommended you allocate at least 2GB of RAM (the more the better). If you only plan on using it as a server, you can get away with as little as 1GB.
 
-#Creating a Baseline Virtual Machine
-
 ##Download and install VirtualBox.
 
 If you already run Linux on your workstation, your distribution may have VirtualBox packages which you can install with your package manager. Otherwise you can get and install VirtualBox as follows:
@@ -44,6 +42,8 @@ If you already run Linux on your workstation, your distribution may have Virtual
  - Answer whatever questions the Ubuntu installer asks. Since this isn't expected to be a secure production environment and the VM is intended to be shared, set the username/password pair to xtuple/xtuple and select "Log in automatically". Individual developers can change the password later if necessary.
  - When the installer asks you to reboot, do so. The rebooting process may ask you to eject the disk from the CD/DVD drive. Hover over the circular disk icon near the lower-right-hand edge of the VM window. If it reports the drive as Empty, just click on the window and hit the Enter key. If the drive is not empty, right click on the icon, eject the .iso file from the virtual drive, then click in the window and hit the Enter key.
  - After the VM reboots let the Update Manager upgrade the software that's installed and reboot again if necessary
+
+Now that Ubuntu is successfully installed, you can run the install script as described on the main project [README](https://github.com/xtuple/xtuple/blob/master/README.md).
 
 #Optimizing your virtual machine
 
