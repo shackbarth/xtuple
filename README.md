@@ -30,6 +30,6 @@ View the [Release Notes](RELEASE.md) to see a change log.
 
 ### Additional Resources
 
-  * [Setting up an Ubuntu Virtual Machine](https://github.com/jrogelstad/xtuple/blob/master/docs/UBUNTU_SETUP.md)
+  * [Setting up an Ubuntu Virtual Machine](https://github.com/xtuple/xtuple/blob/master/docs/UBUNTU_SETUP.md)
   * [Architectural Overview](https://github.com/xtuple/xtuple/blob/master/docs/OVERVIEW.md)
   * [Building an Extension Tutorial](https://github.com/xtuple/xtuple-extensions/blob/master/docs/TUTORIAL.md)
