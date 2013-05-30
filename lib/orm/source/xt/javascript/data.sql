@@ -676,19 +676,21 @@
             count++;
           }
         }
+        XT.debug('**** EXPRESSIONS for relations ***', params.expressions);
       }
 
       /* Build up the content for insert of this record. */
       for (var i = 0; i < orm.properties.length; i++) {
         ormp = orm.properties[i];
         prop = ormp.name;
+        XT.debug('**** ORM NAME ****', prop);
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
         iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false,
         nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
         val = ormp.toOne && record[prop] instanceof Object ?
           record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
-
+          
         /* Handle fixed values. */
         if (attr.value !== undefined) {
           params.columns.push("%" + count + "$I");
@@ -696,12 +698,11 @@
           params.values.push(attr.value);
           params.identifiers.push(attr.column);
           count++;
-
+        
         /* Handle passed values. */
         } else if (val !== undefined && val !== null && !ormp.toMany) {
           if (attr.isEncrypted) {
             if (encryptionKey) {
-
               encryptQuery = "select encrypt(setbytea(%1$L), setbytea(%2$L), %3$L)";
               encryptSql = XT.format(encryptQuery, [record[prop], encryptionKey, 'bf']);
               val = "(" + encryptSql + ")";
@@ -758,10 +759,12 @@
       }
 
       /* Build the insert statement */
+      XT.debug('**** INSERT COLUMNS **', params.columns);
       columns = params.columns.join(', ');
       columns = XT.format(columns, params.identifiers);
       expressions = params.expressions.join(', ');
       expressions = XT.format(expressions, params.identifiers);
+      XT.debug('***** INSERT EXPRESSIONS ****', expressions);
 
       if (params.table.indexOf(".") > 0) {
         namespace = params.table.beforeDot();
@@ -876,7 +879,10 @@
             XT.debug('updateRecord sql =', sql.statement);
             XT.debug('updateRecord values =', sql.values);
           }
-          plv8.execute(sql.statement, sql.values);
+
+          if (sql.statement) {
+	    plv8.execute(sql.statement, sql.values);
+	  }	
         }
       }
 
@@ -941,7 +947,6 @@
         columnKey = orm.relations[0].column;
       } else {
         /* Base. */
-        XT.debug('THIS IS BASE', true);
         pkey = XT.Orm.primaryKey(orm);
         columnKey = XT.Orm.primaryKey(orm, true);
       }
@@ -952,13 +957,14 @@
       for (var i = 0; i < orm.properties.length; i++) {
         ormp = orm.properties[i];
         prop = ormp.name;
+        XT.debug('**** ORM name *****', prop);
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
         iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false;
         nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
         val = ormp.toOne && record[prop] instanceof Object ?
           record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
-
+          
         if (val !== undefined && !ormp.toMany) {
           /* Handle encryption if applicable. */
           if (attr.isEncrypted) {
@@ -1015,14 +1021,15 @@
         }
       }
 
-      /* Build the update statement */
- XT.debug('*****PARAMS.Expressions', params.expressions);     
+      /* Build the update statement */     
       expressions = params.expressions.join(', ');
       expressions = XT.format(expressions, params.identifiers);
 
 XT.debug('***** EXPRESSIONS ******', expressions);
 XT.debug('**** IDENTIFIERS *****', params.identifiers);
 
+      if (expressions) {
+       	
       if (params.table.indexOf(".") > 0) {
         namespace = params.table.beforeDot();
         table = params.table.afterDot();
@@ -1033,7 +1040,7 @@ XT.debug('**** IDENTIFIERS *****', params.identifiers);
         params.statement = XT.format(query, [params.table, columnKey]);
       }
 
-	XT.debug('*******QUERY********', query);
+      }
 
       if (DEBUG) {
         XT.debug('prepareUpdate statement =', params.statement);
