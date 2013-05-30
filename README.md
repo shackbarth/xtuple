@@ -18,7 +18,7 @@ and clone it into your preferred source directory. Then run:
 This will take a while. Then, to start the datasource, run
 
     cd ../node-datasource
-    sudo./main.js
+    sudo ./main.js
 
 Launch your localbrowser and navigate to the address `localhost`. Default username and password are 'admin'.
 
