@@ -586,9 +586,10 @@
 
       /* Commit the base record. */
       if (DEBUG) {
+        XT.debug('createRecord sql =', sql.statement);
         XT.debug('createRecord values =', sql.values);
       }
-      
+
       if (sql.statement) {
 	plv8.execute(sql.statement, sql.values);
       }
