@@ -6,7 +6,7 @@ create or replace function xt.usr_did_change() returns trigger as $$
  if (TG_OP === 'INSERT') {
    /* XXX FIXME TODO: use XT.format */
    /* https://github.com/xtuple/xtuple/blob/master/lib/orm/source/xt/functions/js_init.sql#L282 */
-   var sqlInsert = "create user " + NEW.usr_username.toLowerCase();
+   var sqlInsert = "select createuser(" + NEW.usr_username.toLowerCase() + ", false);";
    plv8.execute(sqlInsert);
  }
 
@@ -18,7 +18,7 @@ create or replace function xt.usr_did_change() returns trigger as $$
    plv8.execute(sql.replace("{name}", 'initials'), [NEW.usr_initials]);
    plv8.execute(sql.replace("{name}", 'locale_id'), [NEW.usr_locale_id + ""]);
    plv8.execute(sql.replace("{name}", 'active'), [NEW.usr_active ? 't' : 'f'] );
-   plv8.execute(sql.replace("{name}", 'UseEnhancedAuth'), [NEW.usr_enhancedauth ? 't' : 'f'] );
+   plv8.execute(sql.replace("{name}", 'UseEnhancedAuthentication'), [NEW.usr_enhancedauth ? 't' : 'f'] );
    XT.UserPreferencesUpdating = false;
  }
   
