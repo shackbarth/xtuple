@@ -9,10 +9,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Redirect to https keeping the same url otherwise
    */
   exports.redirect = function (req, res) {
-    if (X.options.datasource.port === '443') {
-      res.redirect("https://" + req.header('host') + req.url);
+    var host = req.header('host');
+    if (host.indexOf(':') >= 0) {
+      // strip off the port number from the host name
+      host = host.substring(0, host.indexOf(':'));
+    }
+
+    if (X.options.datasource.port === 443) {
+      res.redirect("https://" + host + req.url);
     } else {
-      res.redirect("https://" + req.header('host') + ":" + X.options.datasource.port + req.url);
+      res.redirect("https://" + host + ":" + X.options.datasource.port + req.url);
     }
   };
 
