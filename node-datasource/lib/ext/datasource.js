@@ -138,7 +138,8 @@ Backbone:true, _:true, X:true, __dirname:true */
     */
     connected: function (query, options, callback, err, client, done, ranInit) {
       // WARNING!!! If you make any changes here, please update pgworker.js as well.
-      var that = this;
+      var that = this,
+        queryCallback;
 
       if (err) {
         issue(X.warning("Failed to connect to database: " +
@@ -190,7 +191,7 @@ Backbone:true, _:true, X:true, __dirname:true */
         client.query("select xt.js_init(" + (X.options.datasource.debugDatabase || false) + ");", _.bind(
           this.connected, this, query, options, callback, err, client, done, true));
       } else {
-        client.query(query, function (err, result) {
+        queryCallback = function (err, result) {
           if (err) {
             // Set activeQuery for error event handler above.
             that.activeQuery = client.activeQuery ? client.activeQuery.text : 'unknown. See PostgreSQL log.';
@@ -242,7 +243,15 @@ Backbone:true, _:true, X:true, __dirname:true */
 
           // Call the call back.
           callback(err, result);
-        });
+        };
+
+        // node-postgres supports parameters as a second argument. These will be options.parameters
+        // if they're there.
+        if (options.parameters) {
+          client.query(query, options.parameters, queryCallback);
+        } else {
+          client.query(query, queryCallback);
+        }
       }
     },
 
