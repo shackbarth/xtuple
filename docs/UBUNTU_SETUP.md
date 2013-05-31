@@ -155,7 +155,7 @@ Right click on the Sublime icon in the launcher and select "Lock to Launcher."
 
 If you want to make Sublime the default editor for your files:
 
-  sudo sublime /usr/share/applications/defaults.list
+    sudo sublime /usr/share/applications/defaults.list
 
 Find and replace all occurences of *gedit.desktop* with *sublime.desktop*.
 
