@@ -4,11 +4,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 (function () {
   "use strict";
-
   /**
-    We've stored report data in a temporary table with a key. Return the data to anyone who has the
-    appropriate key.
-   */
+  @name XV.DataFromKey
+  @class XV.DataFromKey
+  We've stored report data in a temporary table with a key. Return the data to anyone who has the
+  appropriate key.
+  */ 
   exports.dataFromKey = function (req, res) {
 
     var dataKey = (req.query && req.query.datakey) || -1,
