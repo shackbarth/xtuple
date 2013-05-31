@@ -11,8 +11,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   X.applyEnhancedAuth = function (username, password) {
     var md5, salt;
 
-    salt = X.options.datasource.enhancedAuthKey || "xTuple",
-    md5 = X.crypto.createHash('md5'),
+    salt = X.options.datasource.enhancedAuthKey || "xTuple";
+    md5 = X.crypto.createHash('md5');
     md5.update(password + salt + username, 'utf8');
     return md5.digest('hex');
   };
@@ -46,7 +46,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       error: error,
       username: X.options.databaseServer.user,
       database: organization,
-      success: function (model, results, options) {
+      success: function (model, results, successOptions) {
         var testSql = "select relname from pg_class limit 1;",
           useEnhancedAuth = model.get("useEnhancedAuth"),
           password = req.query.oldPassword,
