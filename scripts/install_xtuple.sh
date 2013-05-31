@@ -507,7 +507,7 @@ init_everythings() {
   
 	cdir $XT_DIR/node-datasource
 
-	cat sample_config.js | sed 's/bindAddress: "localhost",/bindAddress: "0.0.0.0",/' | sed 's/testDatabase: "dev" // this must remain empty for production datasources/testDatabase: "dev" // this must remain empty for production datasources/' > config.js
+	cat sample_config.js | sed 's/bindAddress: "localhost",/bindAddress: "0.0.0.0",/' | sed 's/testDatabase: "dev"/testDatabase: "dev"/' > config.js
 	log "Configured node-datasource"
 
 	log ""
