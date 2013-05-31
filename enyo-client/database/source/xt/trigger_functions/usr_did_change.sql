@@ -1,4 +1,4 @@
-create or replace function xt.usr_did_change() returns trigger as $$
+﻿create or replace function xt.usr_did_change() returns trigger as $$
 /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
    See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -6,7 +6,7 @@ create or replace function xt.usr_did_change() returns trigger as $$
  if (TG_OP === 'INSERT') {
    /* XXX FIXME TODO: use XT.format */
    /* https://github.com/xtuple/xtuple/blob/master/lib/orm/source/xt/functions/js_init.sql#L282 */
-   var sqlInsert = "select createuser(" + NEW.usr_username.toLowerCase() + ", false);";
+   var sqlInsert = "select createuser('" + NEW.usr_username.toLowerCase() + "', false);";
    plv8.execute(sqlInsert);
  }
 
