@@ -45,7 +45,9 @@ If you already run Linux on your workstation, your distribution may have Virtual
 
 ##Get xTuple code base
 
-First install git from the terminal:
+You'll want to set up quick access to the terminal. Click on the Dash Home icon in the upper left. Search for "Terminal" and drag the terminal icon to the left launch bar. Click it to open the terminal.
+
+Now install git from the terminal:
 
     sudo git apt-install git
 
@@ -79,8 +81,6 @@ You can now run the install script as described on the main project [README](htt
 #Optimizing your virtual machine
 
 Below are _optional_ instructions to optimize the VM for actually doing development. Yes, we could have made a VM that has all this for you, but this is much more fun. Plus you can pick and choose what you want and you'll know what you have when you're done.
-
-First you'll want to set up quick access to the terminal. Click on the Dash Home icon in the upper left. Search for "Terminal" and drag the terminal icon to the left launch bar. Click it to open the terminal.
 
 ##Update Ubuntu
 
