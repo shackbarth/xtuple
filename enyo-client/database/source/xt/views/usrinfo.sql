@@ -29,7 +29,7 @@ COALESCE(( SELECT
   ELSE false
   END AS "case"
   FROM usrpref
-  WHERE usrpref.usrpref_username = pg_user.usename::text AND usrpref.usrpref_name = 'UseEnhancedAuth'::text), false
+  WHERE usrpref.usrpref_username = pg_user.usename::text AND usrpref.usrpref_name = 'UseEnhancedAuthentication'::text), false
 ) AS usr_enhancedAuth,
 COALESCE(( SELECT
   CASE
