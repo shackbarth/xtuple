@@ -91,7 +91,6 @@ From the terminal:
 	sudo apt-get update
 	sudo apt-get upgrade
 	sudo apt-get install dkms
-	sudo apt-get install build-essentials
 
 From the VirtualBox menu system, select Devices > Install Guest Additions. Inside the Ubuntu VM, click Run in the dialog box that appears. When the process is done, eject the VirtualBox Additions disk image.
 
