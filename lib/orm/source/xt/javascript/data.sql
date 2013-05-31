@@ -591,7 +591,7 @@
       }
 
       if (sql.statement) {
-	plv8.execute(sql.statement, sql.values);
+	      plv8.execute(sql.statement, sql.values);
       }
 
       /* Handle extensions on other tables. */
@@ -605,9 +605,9 @@
             XT.debug('createRecord values =', sql.values);
           }
 
-          if (sql.statement) {
-	   plv8.execute(sql.statement, sql.values);
-	  } 
+      if (sql.statement) {
+	      plv8.execute(sql.statement, sql.values);
+	    } 
         }
       }
 
@@ -767,7 +767,7 @@
       }
 	
       if (!isValidSql) {
-	return false;
+	      return false;
       }
 
       /* Build the insert statement */
@@ -824,7 +824,7 @@
 
       /* Test for optimistic lock. */
       if (etag && options.etag !== etag) {
-// TODO - Improve error handling.
+      // TODO - Improve error handling.
         plv8.elog(ERROR, "The version being updated is not current.");
       }
 
@@ -832,7 +832,7 @@
       if (orm.lockable) {
         lock = this.tryLock(lockTable, id, {key: lockKey});
         if (!lock.key) {
-// TODO - Improve error handling.
+          // TODO - Improve error handling.
           plv8.elog(ERROR, "Can not obtain a lock on the record.");
         }
       }
@@ -891,8 +891,8 @@
           }
 
           if (sql.statement) {
-	    plv8.execute(sql.statement, sql.values);
-	  }	
+	          plv8.execute(sql.statement, sql.values);
+	        }	
         }
       }
 
@@ -985,7 +985,7 @@
               isValidSql = true;
               count++;
             } else {
-	      // TODO - Improve error handling.
+	            // TODO - Improve error handling.
               throw new Error("No encryption key provided.");
             }
           } else if (ormp.name !== pkey) {
@@ -1085,7 +1085,7 @@
 
       /* Set variables or return false with message. */
       if (!orm) {
-// TODO - Send not found message back.
+        // TODO - Send not found message back.
         return false;
       }
 
@@ -1093,20 +1093,20 @@
       nkey = XT.Orm.naturalKey(orm);
       lockTable = orm.lockTable || orm.table;
       if (!pkey || !nkey) {
-// TODO - Send not found message back.
+        // TODO - Send not found message back.
         return false;
       }
 
       id = nkey ? this.getId(orm, data[nkey]) : data[pkey];
       if (!id) {
-// TODO - Send not found message back.
+        // TODO - Send not found message back.
         return false;
       }
 
       /* Test for optimistic lock. */
       etag = this.getVersion(orm, id);
       if (etag && etag !== options.etag) {
-// TODO - Send not found message back.
+        // TODO - Send not found message back.
         return false;
         //plv8.elog(ERROR, "The version being patched is not current.");
       }
@@ -1115,7 +1115,7 @@
       if (orm.lockable) {
         lock = this.tryLock(lockTable, id, {key: lockKey});
         if (!lock.key) {
-// TODO - Send not found message back.
+          // TODO - Send not found message back.
           return false;
           //plv8.elog(ERROR, "Can not obtain a lock on the record.");
         }
@@ -1210,7 +1210,7 @@
         if (ormp && ormp.attr && ormp.attr.isEncrypted) {
           if (encryptionKey) {
             sql = "select formatbytea(decrypt(setbytea($1), setbytea($2), 'bf')) as result";
-// TODO - Handle not found error.
+            // TODO - Handle not found error.
 
             if (DEBUG) {
               XT.debug('decrypt sql =', sql);
@@ -1255,7 +1255,7 @@
       }
       ret = plv8.execute(sql, [table, namespace])[0].oid - 0;
 
-// TODO - Handle not found error.
+      // TODO - Handle not found error.
 
       return ret;
     },
@@ -1322,7 +1322,7 @@
       if (!etag) {
         etag = XT.generateUUID();
         sql = 'insert into xt.ver (ver_table_oid, ver_record_id, ver_etag) values ($1, $2, $3::uuid);';
-// TODO - Handle insert error.
+        // TODO - Handle insert error.
 
         if (DEBUG) {
           XT.debug('getVersion sql = ', sql);
