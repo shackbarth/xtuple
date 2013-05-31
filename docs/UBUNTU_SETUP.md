@@ -130,6 +130,8 @@ You'll probably also want to be able to launch it from the desktop. The followin
 
     sudo sublime /usr/share/applications/sublime.desktop
 
+This will start sublime with a new desktop configuration file. Paste the contents below in the file and save.
+
     [Desktop Entry]
     Version=1.0
     Name=Sublime Text 2
@@ -149,7 +151,7 @@ You'll probably also want to be able to launch it from the desktop. The followin
     Exec=sublime -n
     TargetEnvironment=Unity
 
-Save the file, right click on the Sublime icon in the launcher and select "Lock to Launcher."
+Right click on the Sublime icon in the launcher and select "Lock to Launcher."
 
 If you want to make Sublime the default editor for your files:
 
