@@ -790,7 +790,7 @@
         XT.debug('prepareInsert statement =', params.statement);
         XT.debug('prepareInsert values =', params.values);
       }
-			
+
       return params;
     },
 
@@ -959,7 +959,7 @@
         pkey = XT.Orm.primaryKey(orm);
         columnKey = XT.Orm.primaryKey(orm, true);
       }
-	
+      
       /* Build up the content for update of this record. */
       for (var i = 0; i < orm.properties.length; i++) {
         ormp = orm.properties[i];
