@@ -345,6 +345,16 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.PickerWidget",
     collection: "XM.projectStatuses"
   });
+  
+  // ..........................................................
+  // TODO STATUS
+  //
+
+  enyo.kind({
+    name: "XV.ToDoStatusPicker",
+    kind: "XV.PickerWidget",
+    collection: "XM.toDoStatuses"
+  });
 
   // ..........................................................
   // SALES REP
