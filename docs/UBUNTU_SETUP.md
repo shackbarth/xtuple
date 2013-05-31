@@ -45,7 +45,9 @@ If you already run Linux on your workstation, your distribution may have Virtual
 
 ##Get xTuple code base
 
-First install git from the terminal:
+You'll want to set up quick access to the terminal. Click on the Dash Home icon in the upper left. Search for "Terminal" and drag the terminal icon to the left launch bar. Click it to open the terminal.
+
+Now install git from the terminal:
 
     sudo git apt-install git
 
@@ -70,17 +72,15 @@ In your web browser, navigate to your home page on GitHub. Click on Edit Your Pr
 
 Now clone the code from your fork into a local directory:
 
-  mkdir src
-  cd src
-  git clone git@github.com:{yourusername}/xtuple.git
+    mkdir src
+    cd src
+    git clone git@github.com:{yourusername}/xtuple.git
 
 You can now run the install script as described on the main project [README](https://github.com/xtuple/xtuple/blob/master/README.md).
 
 #Optimizing your virtual machine
 
 Below are _optional_ instructions to optimize the VM for actually doing development. Yes, we could have made a VM that has all this for you, but this is much more fun. Plus you can pick and choose what you want and you'll know what you have when you're done.
-
-First you'll want to set up quick access to the terminal. Click on the Dash Home icon in the upper left. Search for "Terminal" and drag the terminal icon to the left launch bar. Click it to open the terminal.
 
 ##Update Ubuntu
 
@@ -91,7 +91,6 @@ From the terminal:
 	sudo apt-get update
 	sudo apt-get upgrade
 	sudo apt-get install dkms
-	sudo apt-get install build-essentials
 
 From the VirtualBox menu system, select Devices > Install Guest Additions. Inside the Ubuntu VM, click Run in the dialog box that appears. When the process is done, eject the VirtualBox Additions disk image.
 
@@ -130,6 +129,8 @@ You'll probably also want to be able to launch it from the desktop. The followin
 
     sudo sublime /usr/share/applications/sublime.desktop
 
+This will start sublime with a new desktop configuration file. Paste the contents below in the file and save.
+
     [Desktop Entry]
     Version=1.0
     Name=Sublime Text 2
@@ -149,11 +150,11 @@ You'll probably also want to be able to launch it from the desktop. The followin
     Exec=sublime -n
     TargetEnvironment=Unity
 
-Save the file, right click on the Sublime icon in the launcher and select "Lock to Launcher."
+Right click on the Sublime icon in the launcher and select "Lock to Launcher."
 
 If you want to make Sublime the default editor for your files:
 
-  sudo sublime /usr/share/applications/defaults.list
+    sudo sublime /usr/share/applications/defaults.list
 
 Find and replace all occurences of *gedit.desktop* with *sublime.desktop*.
 
