@@ -299,6 +299,7 @@ _.each(X.options.datasource.databases, function (orgValue, orgKey, orgList) {
   app.use("/" + orgValue + '/client', express.static('../enyo-client/application', { maxAge: 86400000 }));
   app.use("/" + orgValue + '/core-extensions', express.static('../enyo-client/extensions', { maxAge: 86400000 }));
   app.use("/" + orgValue + '/private-extensions', express.static('../../private-extensions', { maxAge: 86400000 }));
+  app.use("/" + orgValue + '/xtuple-extensions', express.static('../../xtuple-extensions', { maxAge: 86400000 }));
 });
 app.use('/assets', express.static('views/login/assets', { maxAge: 86400000 }));
 
