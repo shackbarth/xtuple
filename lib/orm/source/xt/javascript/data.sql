@@ -581,30 +581,32 @@
       for (var i = 0; i < orm.extensions.length; i++) {
         if (orm.extensions[i].table === orm.table) {
           sql = this.prepareInsert(orm.extensions[i], data, sql, encryptionKey);
-          XT.debug('*** RESULT of prepare ***', sql);
         }
       }
 
       /* Commit the base record. */
       if (DEBUG) {
-        XT.debug('createRecord sql =', sql.statement);
         XT.debug('createRecord values =', sql.values);
       }
-      plv8.execute(sql.statement, sql.values);
-
+      
+      if (sql.statement) {
+	plv8.execute(sql.statement, sql.values);
+      }
 
       /* Handle extensions on other tables. */
       for (var i = 0; i < orm.extensions.length; i++) {
         if (orm.extensions[i].table !== orm.table &&
            !orm.extensions[i].isChild) {
           sql = this.prepareInsert(orm.extensions[i], data, null, encryptionKey);
-          XT.debug('*** RESULT of prepare ***', sql);
 
           if (DEBUG) {
             XT.debug('createRecord sql =', sql.statement);
             XT.debug('createRecord values =', sql.values);
           }
-	  plv8.execute(sql.statement, sql.values);
+
+          if (sql.statement) {
+	   plv8.execute(sql.statement, sql.values);
+	  } 
         }
       }
 
@@ -646,7 +648,8 @@
         toOneQuery,
         toOneSql,
         type,
-        val;
+        val,
+        isValidSql = false;
 
       params = params || {
         table: "",
@@ -691,7 +694,7 @@
         iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false,
         nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
         val = ormp.toOne && record[prop] instanceof Object ?
-          record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
+          record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];  
           
         /* Handle fixed values. */
         if (attr.value !== undefined) {
@@ -699,6 +702,7 @@
           params.expressions.push('$' + count);
           params.values.push(attr.value);
           params.identifiers.push(attr.column);
+          isValidSql = true;
           count++;
         
         /* Handle passed values. */
@@ -711,6 +715,7 @@
               params.values.push(val);
               params.identifiers.push(attr.column);
               params.expressions.push("$" + count);
+              isValidSql = true;
               count++;
             } else {
               throw new Error("No encryption key provided.");
@@ -742,6 +747,7 @@
             params.columns.push("%" + count + "$I");
             params.values.push(val);
             params.identifiers.push(attr.column);
+            isValidSql = true;
             count++;
           }
         /* Handle null value if applicable. */
@@ -751,11 +757,16 @@
             params.values.push(ormp.nullValue);
             params.identifiers.push(attr.column);
             params.expressions.push('$' + count);
+            isValidSql = true;
             count++;
           } else if (attr.required) {
             plv8.elog(ERROR, "Attribute " + ormp.name + " is required.");
           }
         }
+      }
+	
+      if (!isValidSql) {
+	return false;
       }
 
       /* Build the insert statement */
@@ -763,7 +774,6 @@
       columns = XT.format(columns, params.identifiers);
       expressions = params.expressions.join(', ');
       expressions = XT.format(expressions, params.identifiers);
-      XT.debug('***** INSERT EXPRESSIONS ****', expressions);
 
       if (params.table.indexOf(".") > 0) {
         namespace = params.table.beforeDot();
@@ -779,8 +789,6 @@
         XT.debug('prepareInsert statement =', params.statement);
         XT.debug('prepareInsert values =', params.values);
       }
-
-      XT.debug('**** END PREPARE ***', true);
 			
       return params;
     },
@@ -1285,7 +1293,7 @@
       if(ret.length) {
         return ret[0].id;
       } else {
-        throw new handleError("Not Found", 400);
+        throw new handleError("Natural Key Not Found", 400);
       }
     },
 

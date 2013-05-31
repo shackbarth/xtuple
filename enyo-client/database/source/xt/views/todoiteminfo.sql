@@ -35,7 +35,8 @@ insert into todoitem (
   todoitem_priority_id,
   todoitem_username,
   todoitem_recurring_todoitem_id,
-  todoitem_cntct_id
+  todoitem_cntct_id,
+  obj_uuid
 ) values (
   new.todoitem_id,
   new.todoitem_name,
@@ -54,7 +55,8 @@ insert into todoitem (
   new.todoitem_priority_id,
   new.todoitem_username,
   new.todoitem_recurring_todoitem_id,
-  new.todoitem_cntct_id
+  new.todoitem_cntct_id,
+  new.obj_uuid
 );
 
 create or replace rule "_UPDATE" as on update to xt.todoiteminfo do instead
