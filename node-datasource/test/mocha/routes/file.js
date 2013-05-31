@@ -36,7 +36,10 @@ require("../../../../lib/tools/source/ext/proto/string");
             assert.equal(result, mockData);
             done();
           },
-          attachment: function () {}
+          attachment: function (filename) {
+            // make sure that we name the file correctly
+            assert.equal(filename, "foo.txt");
+          }
         },
         // mock the call to the database
         queryFunction = function (org, query, callback) {
