@@ -1,7 +1,8 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, console:true, issue:true, require:true, XM:true, io:true, Backbone:true, _:true, X:true */
+/*global XT:true, console:true, issue:true, require:true, XM:true, io:true,
+Backbone:true, _:true, X:true, __dirname:true */
 
 (function () {
   "use strict";
@@ -9,6 +10,16 @@ white:true*/
   XT.dataSource = X.Database.create({
     requestNum: 0,
     callbacks: {},
+
+    getAdminCredentials: function (organization) {
+      return {
+        user: X.options.databaseServer.user,
+        hostname: X.options.databaseServer.hostname,
+        port: X.options.databaseServer.port,
+        database: organization,
+        password: X.options.databaseServer.password
+      };
+    },
 
     /**
      * Initializes database by setting the default pool size

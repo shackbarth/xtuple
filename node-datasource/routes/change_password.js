@@ -18,7 +18,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   var setPassword = function (username, password, organization, useEnhancedAuth, callback) {
-    var query, sql;
+    var query, queryOptions, sql;
 
     if (useEnhancedAuth) {
       password = X.applyEnhancedAuth(username, password);
@@ -28,7 +28,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     query = sql.replace("{username}", username)
                .replace("{password}", password);
-    X.database.query(organization, query, callback);
+
+    queryOptions = XT.dataSource.getAdminCredentials(organization);
+    XT.dataSource.query(query, queryOptions, callback);
   };
 
   // https://localhost/changePassword?oldPassword=password1&newPassword=password2

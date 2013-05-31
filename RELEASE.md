@@ -1,3 +1,11 @@
+1.3.6 (2013/05)
+===============
+
+Critical deployment changes
+---------------------------
+* The `required` section of the node-datasource `config.js` file is no longer necessary.
+
+
 1.3.5 (2013/05)
 ===============
 
