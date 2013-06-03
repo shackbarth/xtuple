@@ -1,7 +1,8 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, console:true, issue:true, require:true, XM:true, io:true, Backbone:true, _:true, X:true */
+/*global XT:true, console:true, issue:true, require:true, XM:true, io:true,
+Backbone:true, _:true, X:true, __dirname:true */
 
 (function () {
   "use strict";
@@ -9,6 +10,16 @@ white:true*/
   XT.dataSource = X.Database.create({
     requestNum: 0,
     callbacks: {},
+
+    getAdminCredentials: function (organization) {
+      return {
+        user: X.options.databaseServer.user,
+        hostname: X.options.databaseServer.hostname,
+        port: X.options.databaseServer.port,
+        database: organization,
+        password: X.options.databaseServer.password
+      };
+    },
 
     /**
      * Initializes database by setting the default pool size
@@ -127,7 +138,8 @@ white:true*/
     */
     connected: function (query, options, callback, err, client, done, ranInit) {
       // WARNING!!! If you make any changes here, please update pgworker.js as well.
-      var that = this;
+      var that = this,
+        queryCallback;
 
       if (err) {
         issue(X.warning("Failed to connect to database: " +
@@ -179,7 +191,7 @@ white:true*/
         client.query("select xt.js_init(" + (X.options.datasource.debugDatabase || false) + ");", _.bind(
           this.connected, this, query, options, callback, err, client, done, true));
       } else {
-        client.query(query, function (err, result) {
+        queryCallback = function (err, result) {
           if (err) {
             // Set activeQuery for error event handler above.
             that.activeQuery = client.activeQuery ? client.activeQuery.text : 'unknown. See PostgreSQL log.';
@@ -231,7 +243,15 @@ white:true*/
 
           // Call the call back.
           callback(err, result);
-        });
+        };
+
+        // node-postgres supports parameters as a second argument. These will be options.parameters
+        // if they're there.
+        if (options.parameters) {
+          client.query(query, options.parameters, queryCallback);
+        } else {
+          client.query(query, queryCallback);
+        }
       }
     },
 

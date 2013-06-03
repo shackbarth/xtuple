@@ -63,12 +63,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       port: 5432,
       user: "admin",
       password: "admin"
-    },
-    required: [
-      "lib/ext/database",
-      "lib/ext/datasource",
-      "lib/ext/smtpTransport",
-      "lib/ext/models"
-    ]
+    }
   };
 }());
