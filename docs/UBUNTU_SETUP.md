@@ -173,7 +173,7 @@ Next, install the JSHint for node from the Terminal:
 
     npm install -g jshint
 
-Install the packgae from Sublime:
+Install the package from Sublime:
 
   * `control`-`shift`-`p`
   * type `install p`, select `Package Control: Install Package`

@@ -6,7 +6,7 @@ xTuple Enterprise Resource Planning Mobile-Web client
 
 ### Installing this project
 
-This project is meant to run on Ubuntu 12.04. It is best if you do
+The install script for this project is Debian based and tested to run on Ubuntu 12.04. It is best if you do
 not already have postgres installed on your machine.
 
 To install this project, first fork this repo onto your own github account
