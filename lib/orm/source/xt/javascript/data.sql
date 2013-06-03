@@ -1366,7 +1366,7 @@
         ret.data[i] = this.decrypt(nameSpace, type, ret.data[i]);
       }
 
-      this.removeKeys(nameSpace, type, ret.data);
+      this.sanitize(nameSpace, type, ret.data, options);
 
       return ret;
     },
