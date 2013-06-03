@@ -1,8 +1,11 @@
-drop function if exists xt.change_password(text, text);
+drop function if exists xt.change_password(text);
 
-create or replace function xt.change_password(username text, password text) returns boolean volatile as $$
-
-  var escapedSql = XT.format('alter user "%I" with password %L', [username, password]);
+create or replace function xt.change_password(creds text) returns boolean volatile as $$
+  var parsedObj = JSON.parse(creds),
+    username = parsedObj.username,
+    password = parsedObj.password,
+    escapedSql = XT.format('alter user "%I" with password %L', [username, password]);
+  
   plv8.execute(escapedSql);
 
   return true;
