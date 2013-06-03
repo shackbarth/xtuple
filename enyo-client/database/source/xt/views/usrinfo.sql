@@ -9,7 +9,15 @@ COALESCE(( SELECT
   END AS "case"
   FROM usrpref
   WHERE usrpref.usrpref_username = usr.usr_username::text AND usrpref.usrpref_name = 'UseEnhancedAuthentication'::text), false
-) AS usr_enhancedAuth
+) AS usr_enhancedauth,
+COALESCE(( SELECT
+  CASE
+  WHEN usrpref.usrpref_value = 't'::text THEN true
+  ELSE false
+  END AS "case"
+  FROM usrpref
+  WHERE usrpref.usrpref_username = usr.usr_username::text AND usrpref.usrpref_name = 'DisableExportContents'::text), false
+) AS usr_disable_export
 FROM usr;
 
 $$, false);
