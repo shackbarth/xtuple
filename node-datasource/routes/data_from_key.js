@@ -27,14 +27,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         query: JSON.parse(model.get("query"))
       }));
 
-    }, error: function (model, err) {
+    },
+    error: function (model, err) {
       console.log("error", model);
       if (err.code === 'xt1007') {
         res.send({isError: true, message: "Record not found"});
       } else {
         res.send({isError: true, message: "Error"});
       }
-    }});
+    },
+    database: req.session.passport.user.organization});
   };
 
 }());

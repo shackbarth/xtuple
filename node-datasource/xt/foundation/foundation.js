@@ -298,12 +298,6 @@ X = {};
       if (wasReady) return;
       while (queue.length > 0) (queue.shift())();
       X.runQueue = null;
-
-      // now run any of the require statements...
-      required = X.required || [];
-      while (required.length) {
-        require(_path.join(X.basePath, required.shift()));
-      }
     },
 
     get: function () {

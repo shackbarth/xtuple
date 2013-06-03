@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X: true, XM:true, SYS: true */
+/*global X:true, XT:true, XM:true, SYS:true */
 
 (function () {
   "use strict";
@@ -14,23 +14,25 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var queryForData = function (session, query, callback) {
 
     var userId = session.passport.user.username,
-      userQueryPayload = '{"nameSpace":"XM","type":"UserAccountRelation","id":"%@"}'.f(userId),
-      userQuery = "select xt.get('%@')".f(userQueryPayload);
+      adminUser = X.options.databaseServer.user, // execute this query as admin
+      userQueryPayload = '{"nameSpace":"SYS","type":"User","id":"%@","username":"%@"}'
+        .f(userId, adminUser),
+      userQuery = "select xt.get('%@')".f(userQueryPayload),
+      queryOptions = XT.dataSource.getAdminCredentials(session.passport.user.organization);
 
     // first make sure that the user has permissions to export to CSV
     // (can't trust the client)
-    XT.dataSource.query(session.passport.user.organization, userQuery, function (err, res) {
+    XT.dataSource.query(userQuery, queryOptions, function (err, res) {
       var retrievedRecord;
-
       if (err || !res || res.rowCount < 1) {
-        callback("Error verifying user permissions", null);
+        callback({isError: true, message: "Error verifying user permissions"});
         return;
       }
 
       retrievedRecord = JSON.parse(res.rows[0].get);
-      if (retrievedRecord.disableExport) {
+      if (retrievedRecord.data.disableExport) {
         // nice try, asshole.
-        callback("Stop trying to hack into our database", null);
+        callback({isError: true, message: "Stop trying to hack into our database"});
         return;
       }
 
@@ -72,9 +74,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     var queryForDataCallback = function (result) {
       var type = requestDetails.type,
-        modelName, fileName;
+        modelName,
+        queryOptions,
+        fileName;
 
-      if (!type) {
+      if (result.isError) {
+        res.send(result);
+        return;
+
+      } else if (!type) {
         res.send({isError: true, message: "You must pass a type"});
         return;
       }
@@ -130,8 +138,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       };
 
       // step 2: get the schema
-      X.database.query(req.session.passport.user.organization,
-        "select xt.getSchema('%@', '%@');".f(requestDetails.nameSpace, modelName), saveBiCache);
+      queryOptions = XT.dataSource.getAdminCredentials(req.session.passport.user.organization);
+      XT.dataSource.query("select xt.getSchema('%@', '%@');".f(requestDetails.nameSpace, modelName),
+        queryOptions,
+        saveBiCache);
     };
 
     // step 1: get the data
