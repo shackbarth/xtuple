@@ -64,7 +64,15 @@ var fs = require('fs'),
   // then build the core and the core extensions
   //
   argv = process.argv;
-  if (argv.indexOf("-e") >= 0) {
+  if (argv.indexOf("-h") >= 0) {
+    console.log("Usage:");
+    console.log("sudo ./build_client.js");
+    console.log("  will build the core and the core extensions");
+    console.log("sudo ./build_client.js -e path/to/ext");
+    console.log("  will build the extension at that path");
+    console.log("  e.g. sudo ./build_client -e ../../private-extensions/source/ppm");
+    return;
+  } else if (argv.indexOf("-e") >= 0) {
     // the user has specified a particular extension
     // regex: remove trailing slash if present
     specifiedDir = argv[argv.indexOf("-e") + 1].replace(/\/$/, "");
