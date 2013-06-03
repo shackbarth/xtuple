@@ -13,33 +13,29 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
   var queryForData = function (session, query, callback) {
 
-    // Enforcement of disableExport was scrapped during issue #20254.
-    // Bringing it back is issue #20373.
-
-
-    //var userId = session.passport.user.username,
-    //  userQueryPayload = '{"nameSpace":"XM","type":"UserAccountRelation","id":"%@"}'.f(userId),
-    //  userQuery = "select xt.get('%@')".f(userQueryPayload);
+    var userId = session.passport.user.username,
+      userQueryPayload = '{"nameSpace":"XM","type":"UserAccountRelation","id":"%@"}'.f(userId),
+      userQuery = "select xt.get('%@')".f(userQueryPayload);
 
     // first make sure that the user has permissions to export to CSV
     // (can't trust the client)
-    //X.database.query(session.passport.user.organization, userQuery, function (err, res) {
-    //  var retrievedRecord;
+    XT.dataSource.query(session.passport.user.organization, userQuery, function (err, res) {
+      var retrievedRecord;
 
-    //  if (err || !res || res.rowCount < 1) {
-    //    callback("Error verifying user permissions", null);
-    //    return;
-    //  }
+      if (err || !res || res.rowCount < 1) {
+        callback("Error verifying user permissions", null);
+        return;
+      }
 
-    //  retrievedRecord = JSON.parse(res.rows[0].get);
-    //  if (retrievedRecord.disableExport) {
+      retrievedRecord = JSON.parse(res.rows[0].get);
+      if (retrievedRecord.disableExport) {
         // nice try, asshole.
-    //    callback("Stop trying to hack into our database", null);
-    //    return;
-    //  }
+        callback("Stop trying to hack into our database", null);
+        return;
+      }
 
-    data.queryDatabase("get", query, session, callback);
-    //});
+      data.queryDatabase("get", query, session, callback);
+    });
   };
   exports.queryForData = queryForData;
 
