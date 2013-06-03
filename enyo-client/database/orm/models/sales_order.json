@@ -15,6 +15,14 @@
         "read": "ViewSalesOrders",
         "update": "MaintainSalesOrders",
         "delete": "MaintainSalesOrders"
+      },
+      "attribute": {
+        "read": {
+          "privilege": "ShowMarginsOnSalesOrder",
+          "properties": [
+            "margin"
+          ]
+        }
       }
     },
     "properties": [
@@ -478,9 +486,6 @@
         "attr": {
           "type": "Number",
           "column": "margin"
-        },
-        "privileges": {
-          "read": "ShowMarginsOnSalesOrder"
         }
       },
       {
@@ -993,6 +998,15 @@
         "read": "ViewSalesOrders",
         "update": "MaintainSalesOrders",
         "delete": "MaintainSalesOrders"
+      },
+      "attribute": {
+        "edit": {
+          "privilege": "OverridePrice",
+          "properties": [
+            "customerPrice",
+            "price"
+          ]
+        }
       }
     },
     "properties": [
@@ -1073,9 +1087,6 @@
           "type": "SalesPrice",
           "column": "coitem_custprice",
           "required": true
-        },
-        "privileges": {
-          "edit": "OverridePrice"
         }
       },
       {
@@ -1091,9 +1102,6 @@
           "type": "SalesPrice",
           "column": "coitem_price",
           "required": true
-        },
-        "privileges": {
-          "edit": "OverridePrice"
         }
       },
       {

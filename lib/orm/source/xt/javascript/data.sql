@@ -1517,6 +1517,8 @@
         pkey = XT.Orm.primaryKey(orm),
         nkey = XT.Orm.naturalKey(orm),
         props = orm.properties,
+        readPriv = orm.privileges && orm.privileges.attribute && orm.privileges.attribute.read ?
+          orm.privileges.attribute.read : false,
         inclKeys = options.inclKeys,
         superUser = options.superUser,
         c,
@@ -1536,8 +1538,8 @@
           prop = props[i];
 
           /* Remove unprivileged attribute if applicable */
-          if (!superUser && prop.privileges && prop.privileges.read &&
-              !checkPrivilege(prop.privileges.read)) {
+          if (!superUser && readPriv && readPriv.indexOf(prop.name) != -1 &&
+              !checkPrivilege(readPriv.privilege)) {
             delete item[prop.name];
           }
 
