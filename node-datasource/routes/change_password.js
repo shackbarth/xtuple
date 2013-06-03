@@ -23,13 +23,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     if (useEnhancedAuth) {
       password = X.applyEnhancedAuth(username, password);
     }
-
-    // var sql = 'alter user "{username}" with password \'{password}\';';
-    //query = sql.replace("{username}", username)
-    //           .replace("{password}", password);
-    query = 'alter user ' + username + ' with password $1;';
+    query = "select xt.change_password('" + username + "', '" + password + "');";
     queryOptions = XT.dataSource.getAdminCredentials(organization);
-    queryOptions.parameters = [password];
     XT.dataSource.query(query, queryOptions, callback);
   };
 
