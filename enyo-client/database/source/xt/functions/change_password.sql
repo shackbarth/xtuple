@@ -4,7 +4,7 @@ create or replace function xt.change_password(creds text) returns boolean volati
   var parsedObj = JSON.parse(creds),
     username = parsedObj.username,
     password = parsedObj.password,
-    escapedSql = XT.format('alter user "%I" with password %L', [username, password]);
+    escapedSql = XT.format('alter user %I with password %L', [username, password]);
   
   plv8.execute(escapedSql);
 
