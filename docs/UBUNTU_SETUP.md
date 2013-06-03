@@ -92,7 +92,7 @@ From the terminal:
 	sudo apt-get upgrade
 	sudo apt-get install dkms
 
-From the VirtualBox menu system, select Devices > Install Guest Additions. Inside the Ubuntu VM, click Run in the dialog box that appears. When the process is done, eject the VirtualBox Additions disk image.
+From the VirtualBox menu system, select Devices > Install Guest Additions. Inside the Ubuntu VM, click Run in the dialog box that appears. When the process is done, eject the VirtualBox Additions disk image and reboot the machine.
 
 ##User Settings
 
