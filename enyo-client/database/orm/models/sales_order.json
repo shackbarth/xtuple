@@ -17,7 +17,7 @@
         "delete": "MaintainSalesOrders"
       },
       "attribute": {
-        "read": {
+        "view": {
           "privilege": "ShowMarginsOnSalesOrder",
           "properties": [
             "margin"

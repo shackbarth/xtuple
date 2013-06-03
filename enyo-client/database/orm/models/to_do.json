@@ -24,6 +24,14 @@
           "owner.username",
           "assignedTo.username"
         ]
+      },
+      "attribute": {
+        "edit": {
+          "privilege": "ReassignToDoItems",
+          "properties": [
+            "assignedTo"
+          ]
+        }
       }
     },
     "properties": [
@@ -147,10 +155,6 @@
           "type": "UserAccountRelation",
           "column": "todoitem_username",
           "inverse": "username"
-        },
-        "privileges": {
-          "create": "MaintainAllToDoItems MaintainPersonalToDoItems",
-          "update": "ReassignToDoItems"
         }
       },
       {
