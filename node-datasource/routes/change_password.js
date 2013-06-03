@@ -18,12 +18,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   var setPassword = function (username, password, organization, useEnhancedAuth, callback) {
-    var query, queryOptions;
+    var query, queryArg, queryOptions;
 
     if (useEnhancedAuth) {
       password = X.applyEnhancedAuth(username, password);
     }
-    query = "select xt.change_password('" + username + "', '" + password + "');";
+    queryArg = {
+      username: username,
+      password: password
+    };
+    query = "select xt.change_password($$%@$$);".f(JSON.stringify(queryArg));
+
     queryOptions = XT.dataSource.getAdminCredentials(organization);
     XT.dataSource.query(query, queryOptions, callback);
   };
