@@ -15,20 +15,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   // Sorry for the indirection.
 
   /**
-<<<<<<< HEAD
-    @name Data
-    @class Data
     To query the instance database we pass in a query string to X.database in a way that's
-=======
-    To query the instance database we pass in a query string to XT.dataSource in a way that's
->>>>>>> XTUPLE/dev-1-3-6
     very similar for all four operations. We have to massage the client-expected callback
-    to fit with the native callback of XT.dataSource.
+    to fit with the native callback of X.database.
    */
-  var queryDatabase = exports.queryDatabase = function (/** @lends Data# */functionName, payload, session, callback) {
+  var queryDatabase = exports.queryDatabase = function (functionName, payload, session, callback) {
     var exposedFunctions = ["delete", "get", "patch", "post"],
       query,
-      queryOptions,
       org,
       queryString = "select xt.%@($$%@$$)",
       binaryField = payload.binaryField,
@@ -85,12 +78,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
 
     query = queryString.f(functionName, JSON.stringify(payload));
-    queryOptions = XT.dataSource.getAdminCredentials(org);
-    XT.dataSource.query(query, queryOptions, adaptorCallback);
+    X.database.query(org, query, adaptorCallback);
   };
 
-    // The adaptation of express routes to engine functions is the same for all four operations,
-    // so we centralize the code here:
+  /**
+    The adaptation of express routes to engine functions is the same for all four operations,
+    so we centralize the code here:
+   */
   var routeAdapter = function (req, res, functionName) {
     var callback = function (err, resp) {
       if (err) {
@@ -102,14 +96,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     queryDatabase(functionName, req.query, req.session, callback);
   };
 
-    //..................................................
-    // METHODS
-    //
-
   /**
     Accesses queryDatabase (above) for a request a la Express
    */
-  exports.delete = function (/** @lends Data# */req, res) {
+  exports.delete = function (req, res) {
     routeAdapter(req, res, "delete");
   };
 
