@@ -80,7 +80,8 @@ var fs = require('fs'),
   //
   finish = function () {
     fs.unlinkSync("package.js");
-    fs.unlinkSync(rootDir + "/enyo");
+
+    //fs.unlinkSync(rootDir + "/enyo"); // TODO: extensions/enyo should be a deletable symlink
     rimraf("./build", function () {
       rimraf("./deploy", function () {
         console.log("all done");
