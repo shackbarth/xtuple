@@ -11,7 +11,9 @@ var fs = require('fs'),
 (function () {
   "use strict";
 
-  var argv, buildExtension, rootDir, specifiedDir, extensions, finish;
+  var argv, buildExtension, rootDir, specifiedDir, extensions, finish,
+    coreExtDir = __dirname + "/../enyo-client/extensions/source/",
+    buildCore = false;
 
   //
   // Recurse down the array of the extensions to be built
@@ -25,7 +27,7 @@ var fs = require('fs'),
       if (err) {
         console.log("Error building enyo app", err);
       }
-      console.log(extDir, "extension has been built");
+      console.log(extName, "extension has been built");
 
       // move the built extension into its proper directory
       buildDir = extDir.replace('/source/', '/builds/');
@@ -58,7 +60,8 @@ var fs = require('fs'),
   };
 
   //
-  // Determine which extensions we want to build
+  // Determine which extensions we want to build. If there is no -e flag,
+  // then build the core and the core extensions
   //
   argv = process.argv;
   if (argv.indexOf("-e") >= 0) {
@@ -68,11 +71,19 @@ var fs = require('fs'),
     extensions = [specifiedDir];
   } else {
     // add the core extensions
-    // TODO: rmrf with node, remove buildExtensions.sh, move to /scripts directory
-    // this isn't complete for 1.3.5, so users should continue to use the old script
-    console.log("You need to specify an extension with -e followed by the path to the extension");
-    process.exit(1);
-    extensions = fs.readdirSync("./source");
+    buildCore = true;
+    // get the core extension directory names
+    extensions = fs.readdirSync(coreExtDir);
+    // actually we want these with a full path
+    extensions = _.map(extensions, function (name) {
+      return coreExtDir + name;
+    });
+    // TODO: get rid of xtuple-extensions/scripts/buildExtensions
+
+    // TODO: once we move people off of enyo-client/extensions/buildExtensions.sh, we can:
+    //   -remove buildExtensions.sh and nodeBuildExtensions.js
+    //   -remove the enyo submodule in that directory and use a temporary symlink
+
   }
 
   //
@@ -81,7 +92,7 @@ var fs = require('fs'),
   finish = function () {
     fs.unlinkSync("package.js");
 
-    //fs.unlinkSync(rootDir + "/enyo"); // TODO: extensions/enyo should be a deletable symlink
+    //fs.unlinkSync(rootDir + "/enyo"); // TODO
     rimraf("./build", function () {
       rimraf("./deploy", function () {
         console.log("all done");
@@ -108,6 +119,15 @@ var fs = require('fs'),
   //
   // Go do it.
   //
-  buildExtension(extensions, finish);
+  if (buildCore) {
+    // if we want to build the core extensions, then first build the core itself
+    exec(__dirname + "/../enyo-client/application/tools/deploy.sh", function () {
+      console.log("xTuple core has been built");
+      buildExtension(extensions, finish);
+    });
+
+  } else {
+    buildExtension(extensions, finish);
+  }
 
 }());
