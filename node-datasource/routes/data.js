@@ -15,15 +15,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   // Sorry for the indirection.
 
   /**
+<<<<<<< HEAD
     @name Data
     @class Data
     To query the instance database we pass in a query string to X.database in a way that's
+=======
+    To query the instance database we pass in a query string to XT.dataSource in a way that's
+>>>>>>> XTUPLE/dev-1-3-6
     very similar for all four operations. We have to massage the client-expected callback
-    to fit with the native callback of X.database.
+    to fit with the native callback of XT.dataSource.
    */
   var queryDatabase = exports.queryDatabase = function (/** @lends Data# */functionName, payload, session, callback) {
     var exposedFunctions = ["delete", "get", "patch", "post"],
       query,
+      queryOptions,
       org,
       queryString = "select xt.%@($$%@$$)",
       binaryField = payload.binaryField,
@@ -80,7 +85,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
 
     query = queryString.f(functionName, JSON.stringify(payload));
-    X.database.query(org, query, adaptorCallback);
+    queryOptions = XT.dataSource.getAdminCredentials(org);
+    XT.dataSource.query(query, queryOptions, adaptorCallback);
   };
 
     // The adaptation of express routes to engine functions is the same for all four operations,

@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X: true, XM:true, SYS: true */
+/*global X:true, XT:true, XM:true, SYS:true */
 
 (function () {
   "use strict";
@@ -23,7 +23,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     // first make sure that the user has permissions to export to CSV
     // (can't trust the client)
-    //X.database.query(session.passport.user.organization, userQuery, function (err, res) {
+    //var queryOptions = XT.dataSource.getAdminCredentials(session.passport.user.organization);
+    //XT.dataSource.query(userQuery, queryOptions, function (err, res) {
     //  var retrievedRecord;
 
     //  if (err || !res || res.rowCount < 1) {
@@ -76,7 +77,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     var queryForDataCallback = function (result) {
       var type = requestDetails.type,
-        modelName, fileName;
+        modelName,
+        queryOptions,
+        fileName;
 
       if (!type) {
         res.send({isError: true, message: "You must pass a type"});
@@ -134,8 +137,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       };
 
       // step 2: get the schema
-      X.database.query(req.session.passport.user.organization,
-        "select xt.getSchema('%@', '%@');".f(requestDetails.nameSpace, modelName), saveBiCache);
+      queryOptions = XT.dataSource.getAdminCredentials(req.session.passport.user.organization);
+      XT.dataSource.query("select xt.getSchema('%@', '%@');".f(requestDetails.nameSpace, modelName),
+        queryOptions,
+        saveBiCache);
     };
 
     // step 1: get the data

@@ -21,7 +21,7 @@ If you already run Linux on your workstation, your distribution may have Virtual
  - If the website asks for a donation, decide whether to contribute or not now, take me to the download
  - Remember where the download process puts the Ubuntu .iso file
 
-##Installl Ubuntu
+##Install Ubuntu
 
  Start VirtualBox to create the new VM. You'll need to mount the Ubuntu .iso file as the boot device when the VM first starts up. Along the way, VirtualBox will ask you to set some basic parameters for the VM. Make sure to allocate enough disk space, as this is harder to adjust later than some of the other features of the VM. Take the following steps after VirtualBox starts:
 
@@ -173,7 +173,7 @@ Next, install the JSHint for node from the Terminal:
 
     npm install -g jshint
 
-Install the packgae from Sublime:
+Install the package from Sublime:
 
   * `control`-`shift`-`p`
   * type `install p`, select `Package Control: Install Package`
