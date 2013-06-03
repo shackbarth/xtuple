@@ -192,6 +192,7 @@ Backbone:true, _:true, X:true, __dirname:true */
           this.connected, this, query, options, callback, err, client, done, true));
       } else {
         queryCallback = function (err, result) {
+          console.log("error", err);
           if (err) {
             // Set activeQuery for error event handler above.
             that.activeQuery = client.activeQuery ? client.activeQuery.text : 'unknown. See PostgreSQL log.';
@@ -248,6 +249,7 @@ Backbone:true, _:true, X:true, __dirname:true */
         // node-postgres supports parameters as a second argument. These will be options.parameters
         // if they're there.
         if (options.parameters) {
+          console.log("using parameters", query, options.parameters);
           client.query(query, options.parameters, queryCallback);
         } else {
           client.query(query, queryCallback);

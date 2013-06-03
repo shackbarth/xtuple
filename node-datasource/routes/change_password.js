@@ -18,18 +18,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
 
   var setPassword = function (username, password, organization, useEnhancedAuth, callback) {
-    var query, queryOptions, sql;
+    var query, queryOptions;
 
     if (useEnhancedAuth) {
       password = X.applyEnhancedAuth(username, password);
     }
 
-    sql = 'alter user "{username}" with password \'{password}\';';
-
-    query = sql.replace("{username}", username)
-               .replace("{password}", password);
-
+    // var sql = 'alter user "{username}" with password \'{password}\';';
+    //query = sql.replace("{username}", username)
+    //           .replace("{password}", password);
+    query = 'alter user ' + username + ' with password $1;';
     queryOptions = XT.dataSource.getAdminCredentials(organization);
+    queryOptions.parameters = [password];
     XT.dataSource.query(query, queryOptions, callback);
   };
 
