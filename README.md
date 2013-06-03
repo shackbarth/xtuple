@@ -12,7 +12,7 @@ not already have postgres installed on your machine.
 To install this project, first fork this repo onto your own github account and clone it into your preferred source directory. We recommend checking out the latest tagged release, but if you want to just checkout the lastest code you can skip this next step. Find and checkout the latest tag with the following:
 
     git remote add XTUPLE git://github.com/xtuple/xtuple.git
-    git fetch
+    git fetch XTUPLE
     git describe --abbrev=0 // This should output the latest tag number
     git checkout {tag} // Enter output of the previous line in {tag}
 
