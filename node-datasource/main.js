@@ -2,7 +2,7 @@
 
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global X:true, Backbone:true, _:true, XM:true, XT:true, jsonpatch:true*/
+/*global X:true, Backbone:true, _:true, XM:true, XT:true, SYS:true, jsonpatch:true*/
 
 Backbone = require("backbone");
 _ = require("underscore");
@@ -43,6 +43,7 @@ SYS = {};
     });
   };
 
+
   // Load other xTuple libraries using X.depends above.
   require("backbone-relational");
   X.relativeDependsPath = X.path.join(X.basePath, "../lib/tools/source");
@@ -65,6 +66,11 @@ SYS = {};
 
   // Set the options.
   X.setup(options);
+
+  // load some more required files
+  require("./lib/ext/datasource");
+  require("./lib/ext/models");
+  require("./lib/ext/smtp_transport");
 
   sessionOptions.username = X.options.databaseServer.user;
   sessionOptions.database = X.options.datasource.databases[0];
@@ -149,7 +155,7 @@ require('express/node_modules/cookie').serialize = require('./stomps/cookie').se
 
 // Stomp on Connect's session.
 // https://github.com/senchalabs/connect/issues/641
-function stompSessionLoad(){ return require('./stomps/session'); }
+function stompSessionLoad() { return require('./stomps/session'); }
 require('express/node_modules/connect').middleware.__defineGetter__('session', stompSessionLoad);
 require('express/node_modules/connect').__defineGetter__('session', stompSessionLoad);
 require('express').__defineGetter__('session', stompSessionLoad);

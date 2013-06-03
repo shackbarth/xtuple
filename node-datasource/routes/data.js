@@ -15,13 +15,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   // Sorry for the indirection.
 
   /**
-    To query the instance database we pass in a query string to X.database in a way that's
+    To query the instance database we pass in a query string to XT.dataSource in a way that's
     very similar for all four operations. We have to massage the client-expected callback
-    to fit with the native callback of X.database.
+    to fit with the native callback of XT.dataSource.
    */
   var queryDatabase = exports.queryDatabase = function (functionName, payload, session, callback) {
     var exposedFunctions = ["delete", "get", "patch", "post"],
       query,
+      queryOptions,
       org,
       queryString = "select xt.%@($$%@$$)",
       binaryField = payload.binaryField,
@@ -78,7 +79,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
 
     query = queryString.f(functionName, JSON.stringify(payload));
-    X.database.query(org, query, adaptorCallback);
+    queryOptions = XT.dataSource.getAdminCredentials(org);
+    XT.dataSource.query(query, queryOptions, adaptorCallback);
   };
 
   /**
