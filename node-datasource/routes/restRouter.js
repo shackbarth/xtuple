@@ -30,9 +30,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // Dummy up session.
     session.passport = {
       "user": {
-        "id": req.user.get("user"),
+        "id": req.user.get("username"),
         "username": req.user.get("username"),
-        "organization": req.user.get("name")
+        "organization": req.user.get("organization")
       }
     };
 
@@ -64,9 +64,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // Dummy up session.
     session.passport = {
       "user": {
-        "id": req.user.get("user"),
+        "id": req.user.get("username"),
         "username": req.user.get("username"),
-        "organization": req.user.get("name")
+        "organization": req.user.get("organization")
       }
     };
 
@@ -86,7 +86,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             // TODO - Better error handling.
             return res.send(500, {data: resp.error});
           } else {
-            return res.send(resp.data.data);
+            //return res.send(resp.data.data);
+            return res.json(resp);
           }
         };
 
@@ -118,9 +119,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         // Dummy up session.
         session.passport = {
           "user": {
-            "id": req.user.get("user"),
+            "id": req.user.get("username"),
             "username": req.user.get("username"),
-            "organization": req.user.get("name")
+            "organization": req.user.get("organization")
           }
         };
 

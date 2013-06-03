@@ -90,10 +90,11 @@ white:true*/
     */
     resetPassword: function (id, options) {
       var payload = {
-          id: id
+          id: id,
+          newPassword: options.newPassword
         },
         ajax = new enyo.Ajax({
-          url: "/resetPassword",
+          url: XT.getOrganizationPath() + "/reset-password",
           success: options ? options.success : undefined,
           error: options ? options.error : undefined
         });
@@ -120,7 +121,7 @@ white:true*/
           newPassword: params.newPassword
         },
         ajax = new enyo.Ajax({
-          url: "/changePassword",
+          url: XT.getOrganizationPath() + "/change-password",
           success: options ? options.success : undefined,
           error: options ? options.error : undefined
         });
@@ -160,7 +161,7 @@ white:true*/
     */
     sendEmail: function (payload, options) {
       var ajax = new enyo.Ajax({
-          url: "/email",
+          url: XT.getOrganizationPath() + "/email",
           success: options ? options.success : undefined,
           error: options ? options.error : undefined
         });
@@ -184,7 +185,7 @@ white:true*/
     */
     getExtensionList: function (options) {
       var ajax = new enyo.Ajax({
-          url: "/extensions",
+          url: XT.getOrganizationPath() + "/extensions",
           success: options ? options.success : undefined,
           error: options ? options.error : undefined
         });

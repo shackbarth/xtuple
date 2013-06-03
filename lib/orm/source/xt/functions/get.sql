@@ -10,26 +10,31 @@
     @param {String} [dataHash.encryptionKey] Encryption key.
 */
 create or replace function xt.get(data_hash text) returns text as $$
+  try {
+    var handled = null;
+    var dataHash = JSON.parse(data_hash),
+        data = Object.create(XT.Data),
+        prettyPrint = dataHash.prettyPrint ? 2 : null,
+        ret;
 
-  var dataHash = JSON.parse(data_hash),
-      data = Object.create(XT.Data),
-      prettyPrint = dataHash.prettyPrint ? 2 : null,
-      ret;
+    dataHash.superUser = false;
+    if (dataHash.username) { XT.username = dataHash.username; }
 
-  dataHash.superUser = false;
-  if (dataHash.username) { XT.username = dataHash.username; }
+    if (dataHash.id) {
+      ret = data.retrieveRecord(dataHash);
+    } else {
+      ret = data.fetch(dataHash);
+    }
 
-  if (dataHash.id) {
-    ret = data.retrieveRecord(dataHash);
-  } else {
-    ret = data.fetch(dataHash);
+    /* Unset XT.username so it isn't cached for future queries. */
+    XT.username = undefined;
+
+    /* return the results */
+    XT.message(200, "OK");
+    return JSON.stringify(ret, null, prettyPrint);
+  } catch (err) {
+    XT.error(err);
   }
-
-  /* Unset XT.username so it isn't cached for future queries. */
-  XT.username = undefined;
-
-  /* return the results */
-  return JSON.stringify(ret, null, prettyPrint);
 
 $$ language plv8;
 /*

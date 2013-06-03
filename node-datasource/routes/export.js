@@ -120,18 +120,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       } else {
         var resultAsCsv,
           filename = "export",
-          recordType;
+          type;
         try {
           // try to name the file after the record type
-          recordType = requestDetails.query.recordType;
+          type = requestDetails.query.type;
           // suffix() would be better than substring() but doesn't exist here yet
-          filename = recordType.substring(3).replace("ListItem", "Export");
+          filename = type.replace("ListItem", "Export");
 
         } catch (error) {
           // "export" will have to do.
         }
 
-        resultAsCsv = jsonToCsv(result.data);
+        resultAsCsv = jsonToCsv(result.data.data);
         res.attachment(filename + ".csv");
         res.send(resultAsCsv);
       }

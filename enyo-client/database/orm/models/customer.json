@@ -31,28 +31,32 @@
         "attr": {
           "type": "String",
           "column": "cust_number",
-          "isNaturalKey": true
+          "isNaturalKey": true,
+          "required": true
         }
       },
       {
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "cust_name"
+          "column": "cust_name",
+          "required": true
         }
       },
       {
         "name": "customerType",
         "toOne": {
           "type": "CustomerType",
-          "column": "cust_custtype_id"
+          "column": "cust_custtype_id",
+          "required": true
         }
       },
       {
         "name": "isActive",
         "attr": {
           "type": "Boolean",
-          "column": "cust_active"
+          "column": "cust_active",
+          "required": true
         }
       },
       {
@@ -84,7 +88,8 @@
         "name": "salesRep",
         "toOne": {
           "type": "SalesRep",
-          "column": "cust_salesrep_id"
+          "column": "cust_salesrep_id",
+          "required": true
         }
       },
       {
@@ -105,35 +110,40 @@
         "name": "shipCharge",
         "toOne": {
           "type": "ShipCharge",
-          "column": "cust_shipchrg_id"
+          "column": "cust_shipchrg_id",
+          "required": true
         }
       },
       {
         "name": "isFreeFormShipto",
         "attr": {
           "type": "Boolean",
-          "column": "cust_ffshipto"
+          "column": "cust_ffshipto",
+          "required": true
         }
       },
       {
         "name": "isFreeFormBillto",
         "attr": {
           "type": "Boolean",
-          "column": "cust_ffbillto"
+          "column": "cust_ffbillto",
+          "required": true
         }
       },
       {
         "name": "terms",
         "toOne": {
           "type": "Terms",
-          "column": "cust_terms_id"
+          "column": "cust_terms_id",
+          "required": true
         }
       },
       {
         "name": "discount",
         "attr": {
           "type": "Percent",
-          "column": "cust_discntprcnt"
+          "column": "cust_discntprcnt",
+          "required": true
         }
       },
       {
@@ -148,14 +158,16 @@
         "name": "creditStatus",
         "attr": {
           "type": "String",
-          "column": "cust_creditstatus"
+          "column": "cust_creditstatus",
+          "required": true
         }
       },
       {
         "name": "balanceMethod",
         "attr": {
           "type": "String",
-          "column": "cust_balmethod"
+          "column": "cust_balmethod",
+          "required": true
         }
       },
       {
@@ -233,42 +245,48 @@
         "name": "backorder",
         "attr": {
           "type": "Boolean",
-          "column": "cust_backorder"
+          "column": "cust_backorder",
+          "required": true
         }
       },
       {
         "name": "partialShip",
         "attr": {
           "type": "Boolean",
-          "column": "cust_partialship"
+          "column": "cust_partialship",
+          "required": true
         }
       },
       {
         "name": "blanketPurchaseOrders",
         "attr": {
           "type": "Boolean",
-          "column": "cust_blanketpos"
+          "column": "cust_blanketpos",
+          "required": true
         }
       },
       {
         "name": "usesPurchaseOrders",
         "attr": {
           "type": "Boolean",
-          "column": "cust_usespos"
+          "column": "cust_usespos",
+          "required": true
         }
       },
       {
         "name": "autoUpdateStatus",
         "attr": {
           "type": "Boolean",
-          "column": "cust_autoupdatestatus"
+          "column": "cust_autoupdatestatus",
+          "required": true
         }
       },
       {
         "name": "autoHoldOrders",
         "attr": {
           "type": "Boolean",
-          "column": "cust_autoholdorders"
+          "column": "cust_autoholdorders",
+          "required": true
         }
       },
       {
@@ -633,21 +651,24 @@
         "name": "number",
         "attr": {
           "type": "String",
-          "column": "shipto_num"
+          "column": "shipto_num",
+          "required": true
         }
       },
       {
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "shipto_name"
+          "column": "shipto_name",
+          "required": true
         }
       },
       {
         "name": "isActive",
         "attr": {
           "type": "Boolean",
-          "column": "shipto_active"
+          "column": "shipto_active",
+          "required": true
         }
       },
       {
@@ -696,7 +717,8 @@
         "name": "shipCharge",
         "toOne": {
           "type": "ShipCharge",
-          "column": "shipto_shipchrg_id"
+          "column": "shipto_shipchrg_id",
+          "required": true
         }
       },
       {
@@ -1384,7 +1406,8 @@
         "name": "creditStatus",
         "attr": {
           "type": "String",
-          "column": "cust_creditstatus"
+          "column": "cust_creditstatus",
+          "required": true
         }
       },
       {
@@ -1773,7 +1796,8 @@
         "name": "isFreeFormBillto",
         "attr": {
           "type": "Boolean",
-          "column": "cust_ffbillto"
+          "column": "cust_ffbillto",
+          "required": true
         }
       },
       {

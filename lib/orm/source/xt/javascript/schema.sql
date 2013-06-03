@@ -204,6 +204,9 @@ select xt.install_js('XT','Schema','xtuple', $$
           ret[res[i].column_name].minimum = "-92233720368547758.08";
           ret[res[i].column_name].maximum = "92233720368547758.07";
           break;
+        case "name":
+          ret[res[i].column_name].type = "string";
+          break;
         case "serial":
           ret[res[i].column_name].type = "integer";
           ret[res[i].column_name].format = "uint32";

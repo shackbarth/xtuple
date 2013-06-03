@@ -5,7 +5,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
   var webdriver = require('wd'),
     login = require('./lib/login.js'),
-    loginData = require('../shared/loginData.js'),
+    loginData = require('../shared/login_data.js'),
     createContact_FFnC = require('./lib/createContactForFFnC.js'),
     createContact_Android = require('./lib/createContactForAndroid.js'),
     createContact_lowRes = require('./lib/createContactForFFonWin8.js'),

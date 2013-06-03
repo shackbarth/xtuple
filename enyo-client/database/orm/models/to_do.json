@@ -47,7 +47,8 @@
         "name": "name",
         "attr": {
           "type": "String",
-          "column": "todoitem_name"
+          "column": "todoitem_name",
+          "required": true
         }
       },
       {

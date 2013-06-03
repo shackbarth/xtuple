@@ -276,13 +276,6 @@ white:true*/
       return returnObj;
     },
 
-    requiredAttributes: [
-      "calculateFreight",
-      "customer",
-      "salesRep",
-      "terms"
-    ],
-
     readOnlyAttributes: [
       "freightWeight",
       "getOrderStatusString",
@@ -400,13 +393,6 @@ white:true*/
       XM.Document.prototype.initialize.apply(this, arguments);
       this.freightDetail = [];
       this.freightTaxDetail = [];
-
-      if (!this.documentDateKey) {
-        XT.log("Error: model needs a documentDateKey");
-      }
-      if (!_.contains(this.requiredAttributes, this.documentDateKey)) {
-        this.requiredAttributes.push(this.documentDateKey);
-      }
     },
 
     /**
@@ -1129,8 +1115,6 @@ white:true*/
       }
 
       this.sellingUnits = new XM.UnitCollection();
-
-      this.requiredAttributes.push(this.parentKey);
     },
 
     readOnlyAttributes: [
@@ -1145,20 +1129,6 @@ white:true*/
       "profit",
       "site",
       "tax"
-    ],
-
-    requiredAttributes: [
-      "customerPrice",
-      "itemSite",
-      "lineNumber",
-      "quantity",
-      "quantityUnit",
-      "quantityUnitRatio",
-      "price",
-      "priceMode",
-      "priceUnit",
-      "priceUnitRatio",
-      "scheduleDate"
     ],
 
     /**

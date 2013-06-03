@@ -7,7 +7,7 @@ var XVOWS = XVOWS || {};
 (function () {
   "use strict";
 
-  var zombieAuth = require("../lib/zombie_auth"),
+  var zombieAuth = require("../../mocha/lib/zombie_auth"),
     vows = require("vows"),
     assert = require("assert");
 

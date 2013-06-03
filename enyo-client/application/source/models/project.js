@@ -60,13 +60,6 @@ white:true*/
       return result;
     },
 
-    requiredAttributes: [
-      "number",
-      "status",
-      "name",
-      "dueDate"
-    ],
-
     // ..........................................................
     // METHODS
     //
@@ -88,15 +81,11 @@ white:true*/
     */
     projectStatusDidChange: function () {
       var status = this.get('status'),
-        date,
-        K = XM.Project;
-      if (this.isDirty()) {
-        date = new Date().toISOString();
-        if (status === K.IN_PROCESS && !this.get('assignDate')) {
-          this.set('assignDate', date);
-        } else if (status === K.COMPLETED && !this.get('completeDate')) {
-          this.set('completeDate', date);
-        }
+	date = new Date(), K = XM.Project;
+      if (status === K.IN_PROCESS && !this.get('assignDate')) {
+      	this.set('assignDate', date);
+      } else if (status === K.COMPLETED && !this.get('completeDate')) {
+        this.set('completeDate', date);
       }
     }
 
@@ -316,15 +305,6 @@ white:true*/
     recordType: 'XM.ProjectTask',
 
     enforceUpperKey: false,
-
-    /**
-      Add required project field to the existing requiredAttributes
-      fields array inherited from ProjectBase.
-     */
-    initialize: function (attributes, options) {
-      XM.ProjectBase.prototype.initialize.apply(this, arguments);
-      this.requiredAttributes.push("project");
-    },
 
     defaults: function () {
       var result = XM.ProjectBase.prototype.defaults.call(this);

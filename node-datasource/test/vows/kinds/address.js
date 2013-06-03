@@ -9,7 +9,7 @@ var XVOWS = XVOWS || {};
 
   var vows = require("vows"),
     assert = require("assert"),
-    zombieAuth = require("../lib/zombie_auth"),
+    zombieAuth = require("../../mocha/lib/zombie_auth"),
     crud = require('../lib/crud');
 
   var data = {
@@ -46,7 +46,7 @@ var XVOWS = XVOWS || {};
             that.callback(err);
           };
 
-        model.fetch({id: 41, success: success, error: error});
+        model.fetch({id: "39", success: success, error: error}); // Ungargasse
       },
       'if we save without changing it': {
         topic: function (widget) {
@@ -76,7 +76,7 @@ var XVOWS = XVOWS || {};
             that.callback(err);
           };
 
-        model.fetch({id: 10, success: success, error: error});
+        model.fetch({id: "10", success: success, error: error}); // TestAddress
       },
       'and change and save it': {
         topic: function (widget) {
@@ -93,7 +93,7 @@ var XVOWS = XVOWS || {};
         },
         'we simply update that address': function (error, topic) {
           assert.equal(topic.getValue().get("line1").substring(0, 11), "TestAddress");
-          assert.equal(topic.getValue().id, 10);
+          assert.equal(topic.getValue().id, "10");
           assert.equal(topic.getValue().getStatusString(), "READY_CLEAN");
         }
       }
@@ -112,7 +112,7 @@ var XVOWS = XVOWS || {};
             that.callback(err);
           };
 
-        model.fetch({id: 3, success: success, error: error});
+        model.fetch({id: "3", success: success, error: error}); // Xtreme toys AR
       },
       'and change and save it': {
         topic: function (widget) {
@@ -143,7 +143,7 @@ var XVOWS = XVOWS || {};
           },
           'then we just save the model with the new value': function (error, topic) {
             assert.equal(topic.getStatusString(), "READY_CLEAN");
-            assert.equal(topic.id, 3);
+            assert.equal(topic.id, "3");
             assert.equal(topic.get("line1").substring(0, 11), "TestAddress");
           }
         }
@@ -163,7 +163,7 @@ var XVOWS = XVOWS || {};
             that.callback(err);
           };
 
-        model.fetch({id: 6, success: success, error: error});
+        model.fetch({id: "6", success: success, error: error}); // Bedrijvenzone
       },
       'and change and save it': {
         topic: function (widget) {
@@ -194,7 +194,7 @@ var XVOWS = XVOWS || {};
             var model = topic.model;
 
             assert.equal(model.getStatusString(), "READY_CLEAN");
-            assert.equal(model.id, 6);
+            assert.equal(model.id, "6");
             assert.equal(model.get("line1").substring(0, 13), "Bedrijvenzone");
           },
           'we wait a sec': {
@@ -206,7 +206,7 @@ var XVOWS = XVOWS || {};
             },
             'and the widget will now be backed by a new model with the updated information': function (error, topic) {
               assert.equal(topic.getStatusString(), "READY_CLEAN");
-              assert.notEqual(topic.id, 6);
+              assert.notEqual(topic.id, "6");
               assert.equal(topic.get("line1").substring(0, 11), "TestAddress");
             }
           }

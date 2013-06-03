@@ -9,37 +9,30 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     Returns a list of extensions associated with an organization.
    */
   exports.extensions = function (req, res) {
-    var organizationName = req.session.passport.user.organization,
-      organization = new XM.Organization(),
+    var userCollection = new SYS.UserCollection(),
       fetchError = function (err) {
-        res.send({isError: true, message: "Error fetching organization"});
+        X.log("Extension fetch error", err);
+        res.send({isError: true, message: "Error fetching extensions"});
       },
-      fetchSuccess = function (model, result) {
-        var extensions = _.map(model.get("extensions"), function (orgext) {
-          var ext = orgext.extension,
-              extDetails = {};
-
-          extDetails = {
-            name: ext.name,
-            location: ext.location,
-            loadOrder: ext.loadOrder,
-            privilegeName: ext.privilegeName
-          };
-          return extDetails;
+      fetchSuccess = function (collection, result) {
+        var user = _.find(collection.models, function (obj) {
+          return obj.get("username") === req.session.passport.user.username;
+        });
+        var extensions = _.map(user.get("grantedExtensions"), function (ext) {
+          return ext.extension;
         });
 
-        // XXX temp until we get everything on the same port
-        //res.header("Access-Control-Allow-Origin", "*");
         res.send({data: extensions});
       };
 
-    // Fetch the organization to get their extensions. Fetch under the authority of node
+    // Fetch under the authority of admin
     // or else most users would not be able to load their own extensions.
-    organization.fetch({
-      id: organizationName,
+    // TODO: just fetch the model instead of the whole collection
+    userCollection.fetch({
       success: fetchSuccess,
       error: fetchError,
-      username: X.options.globalDatabase.nodeUsername
+      username: X.options.databaseServer.user,
+      database: req.session.passport.user.organization
     });
   };
 }());

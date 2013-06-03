@@ -1,6 +1,5 @@
-/*jshint bitwise:false, indent:2, curly:true eqeqeq:true, immed:true,
-latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true white:true*/
+/*jshint bitwise:false, indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, trailing:true, white:true*/
 /*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true, window:true */
 
 (function () {
@@ -2372,16 +2371,23 @@ trailing:true white:true*/
           {kind: "XV.ScrollableGroupbox", name: "mainGroup",
             classes: "in-panel", components: [
             {kind: "XV.InputWidget", attr: "username"},
+            {kind: "XV.InputWidget", type: "password", attr: "password"},
+            {kind: "XV.InputWidget", type: "password", name: "passwordCheck",
+              label: "_reEnterPassword".loc()},
             {kind: "XV.LocalePicker", attr: "locale"},
+            {kind: "XV.CheckboxWidget", attr: "isActive"},
             {kind: "XV.InputWidget", attr: "properName"},
             {kind: "XV.InputWidget", attr: "initials"},
             {kind: "XV.InputWidget", attr: "email"},
-            {kind: "XV.CheckboxWidget", attr: "disableExport"},
+            {kind: "XV.CheckboxWidget", attr: "useEnhancedAuth"},
+            //{kind: "XV.CheckboxWidget", attr: "disableExport"},
             // normally I'd put classes: "xv-assignment-box" into the container of the assignmentbox,
             // but there is no such container here. Maybe some CSS work to be done now that assignmentbox
             // is the thing inside the thing instead of the thing and the container all together.
+            {kind: "onyx.GroupboxHeader", content: "_extensions".loc()},
+            {kind: "XV.UserAccountExtensionAssignmentBox", attr: "grantedExtensions", name: "grantedExtensions" },
             {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
-            {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles", name: "grantedRoles" }
+            {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles", name: "grantedRoles" },
           ]}
         ]},
         {kind: "XV.Groupbox", name: "privilegePanel", classes: "xv-assignment-box",
@@ -2391,6 +2397,17 @@ trailing:true white:true*/
         ]}
       ]}
     ],
+    /**
+      The passwordCheck field is not on the model. Pipe to a hidden field.
+     */
+    controlValueChanged: function (inSender, inEvent) {
+      if (inEvent.originator.name === 'passwordCheck') {
+        this.value._passwordCheck = inEvent.originator.value;
+        return true;
+      }
+      this.inherited(arguments);
+    },
+
     /**
       Inject awareness of privileges earned by role into the privilege box when prompted
      */

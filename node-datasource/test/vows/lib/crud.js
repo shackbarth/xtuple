@@ -5,7 +5,7 @@ white:true*/
 setTimeout:true, clearTimeout: true, exports: true */
 
 var _ = require("underscore"),
-  zombieAuth = require("./zombie_auth"),
+  zombieAuth = require("../../mocha/lib/zombie_auth"),
   assert = require("assert");
 
 (function () {
@@ -58,7 +58,7 @@ var _ = require("underscore"),
           console.log("timeout was reached");
           that.callback(null, data);
         }, exports.waitTime);
-        
+
         callback(model);
       },
       'Status is `READY_NEW`': function (error, data) {
