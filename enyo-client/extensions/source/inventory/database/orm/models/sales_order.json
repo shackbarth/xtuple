@@ -76,6 +76,13 @@
         }
       },
       {
+        "name": "quantityShipped",
+        "attr": {
+          "type": "QuantityShipped",
+          "column": "coitem_qtyshipped"
+        }
+      },      
+      {
         "name": "basePrice",
         "attr": {
           "type": "SalesPrice",

@@ -22,13 +22,16 @@ trailing:true white:true*/
 	{kind: "FittableRows", components: [
 	  {kind: "FittableColumns", name: "header", classes: "header, bold", headerAttr: "salesOrder.number", components: [
 	    {kind: "XV.ListColumn", classes: "header, short", components: [		  
-	      {kind: "XV.ListAttr", attr: "salesOrder.number"}
+	      {kind: "XV.ListAttr", attr: "salesOrder.number", isKey: true}
 	    ]}, 
 	    {kind: "XV.ListColumn", classes: "header, second, bold", components: [	
 	      {kind: "XV.ListAttr", attr: "salesOrder.customer.name"}  
-	    ]},	
+	    ]},
 	    {kind: "XV.ListColumn", classes: "header, second, bold", components: [	
-	      {kind: "XV.ListAttr", attr: "scheduleDate"}
+	      {kind: "XV.ListAttr", attr: "salesOrder.orderDate"}  
+	    ]},		
+	    {kind: "XV.ListColumn", classes: "header, second, bold", components: [	
+	      {kind: "XV.ListAttr", attr: "salesOrder.scheduleDate"}
 	    ]},  
 	    {kind: "XV.ListColumn", classes: "header, second, bold", components: [	
 	      {kind: "XV.ListAttr", attr: "salesOrder.total"}
@@ -36,26 +39,39 @@ trailing:true white:true*/
 	  ]},
 	  {kind: "FittableColumns", components: [
 	    {kind: "XV.ListColumn", classes: "short", components: [
-	      {kind: "XV.ListAttr", attr: "salesOrder.number", isKey: true},
 	      {kind: "XV.ListAttr", attr: "lineNumber"}
 	    ]},
 	    {kind: "XV.ListColumn", classes: "second", components: [
-	      {kind: "XV.ListAttr", attr: "itemSite.item.description1"},
-	      {kind: "XV.ListAttr", attr: "quantity"}
+	      {kind: "XV.ListAttr", attr: "itemSite.item.number"},
+	      {kind: "XV.ListAttr", attr: "itemSite.item.description1"}
 	    ]},
-	    {kind: "XV.ListColumn", classes: "second", components:[
-	      {kind: "XV.ListAttr", attr: "price"},
+	    {kind: "XV.ListColumn", classes: "second", components: [
+	      {kind: "XV.ListAttr", attr: "salesOrder.orderDate"},
+	      {kind: "XV.ListAttr", attr: "scheduleDate"}
+	    ]},
+	    {kind: "XV.ListColumn", classes: "second", components: [
+      	      {kind: "XV.ListAttr", attr: "quantity"},
+	      {kind: "XV.ListAttr", attr: "quantityUnit.name"}
+	    ]},
+	    {kind: "XV.ListColumn", classes: "second", components: [
+	      {kind: "XV.ListAttr", attr: "quantityShipped"}
+	    ]},
+	    {kind: "XV.ListColumn", classes: "second", components: [
+	      {kind: "XV.ListAttr", attr: "price", formatter: "formatPrice"},
 	      {kind: "XV.ListAttr", attr: "priceUnit.name"}
+	    ]},
+	    {kind: "XV.ListColumn", components: [
+	      {kind: "XV.ListAttr", attr: "extendedPrice", formatter: "formatPrice", classes: "right"}
 	    ]}
-	  ]} /**,
-	  {kind: "FittableColumns", name: "footer", headerAttr: "salesOrder.number", components: [
-	    {kind: "XV.ListColumn", classes: "short", components: [		  
-	      {kind: "XV.ListAttr", attr: "salesOrder.number"}
-	    ]}
-	  ]} */ //we can wait on a footer for now - plus, in my opinion, everything can go in a header. 
+	  ]}  
 	]}
       ]}
-    ]
+    ],
+    formatPrice: function (value, view, model) {
+      var currency = model ? model.get("currency") : false,
+        scale = XT.session.locale.attributes.salesPriceScale;
+      return currency ? currency.format(value, scale) : "";
+    }
   });
 
   XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");
