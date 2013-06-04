@@ -32,10 +32,11 @@
         }
       },
       {
-        "name": "ralesOrder",
-        "attr": {
-          "type": "Number",
-          "column": "coitem_cohead_id"
+        "name": "salesOrder",
+        "toOne": {
+          "type": "SalesOrderListItem",
+          "column": "coitem_cohead_id",
+	  "isNested": true
         }
       },
       {

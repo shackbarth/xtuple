@@ -20,17 +20,17 @@ trailing:true white:true*/
     components: [
       {kind: "XV.ListItem", components: [
 	{kind: "FittableRows", components: [
-	  {kind: "FittableColumns", name: "header", headerAttr: "salesOrder.number", components: [
-	    {kind: "XV.ListColumn", classes: "short", components: [		  
+	  {kind: "FittableColumns", name: "header", classes: "header, bold", headerAttr: "salesOrder.number", components: [
+	    {kind: "XV.ListColumn", classes: "header, short", components: [		  
 	      {kind: "XV.ListAttr", attr: "salesOrder.number"}
 	    ]}, 
-	    {kind: "XV.ListColumn", classes: "second", components: [	
+	    {kind: "XV.ListColumn", classes: "header, second, bold", components: [	
 	      {kind: "XV.ListAttr", attr: "salesOrder.customer.name"}  
 	    ]},	
-	    {kind: "XV.ListColumn", classes: "second", components: [	
+	    {kind: "XV.ListColumn", classes: "header, second, bold", components: [	
 	      {kind: "XV.ListAttr", attr: "scheduleDate"}
 	    ]},  
-	    {kind: "XV.ListColumn", classes: "second", components: [	
+	    {kind: "XV.ListColumn", classes: "header, second, bold", components: [	
 	      {kind: "XV.ListAttr", attr: "salesOrder.total"}
 	    ]}
 	  ]},
@@ -47,12 +47,17 @@ trailing:true white:true*/
 	      {kind: "XV.ListAttr", attr: "price"},
 	      {kind: "XV.ListAttr", attr: "priceUnit.name"}
 	    ]}
-	  ]},
-	  {kind: "XV.ListColumn", name: "footer", footerAttr: "salesOrder.number", components: [
-	    {kind: "XV.ListAttr", classes: "footer", attr: "salesOrder.number"}
-	  ]} 
+	  ]} /**,
+	  {kind: "FittableColumns", name: "footer", headerAttr: "salesOrder.number", components: [
+	    {kind: "XV.ListColumn", classes: "short", components: [		  
+	      {kind: "XV.ListAttr", attr: "salesOrder.number"}
+	    ]}
+	  ]} */ //we can wait on a footer for now - plus, in my opinion, everything can go in a header. 
 	]}
       ]}
     ]
   });
+
+  XV.registerModelList("XM.SalesOrderRelation", "XV.SalesOrderLineListItem");
+
 }());

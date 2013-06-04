@@ -8,7 +8,7 @@
 
     recordType: 'XM.SalesOrderLineListItem',
 
-    parentKey: 'salesOrder',
+    parentKey: 'salesOrder.number',
 
     lineCharacteristicRecordType: "XM.SalesOrderLineCharacteristic"
   
