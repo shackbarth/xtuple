@@ -1511,7 +1511,7 @@
      */
     sanitize: function (nameSpace, type, data, options) {
       options = options || {};
-      if (!options.includeKeys && !options.superUser) { return; }
+      if (options.includeKeys && !options.superUser) { return; }
       if (XT.typeOf(data) !== "array") { data = [data]; }
       var orm = XT.Orm.fetch(nameSpace, type),
         pkey = XT.Orm.primaryKey(orm),
@@ -1527,7 +1527,6 @@
         n,
         prop,
         val;
-
       for (var c = 0; c < data.length; c++) {
         item = data[c];
 
@@ -1538,8 +1537,9 @@
           prop = props[i];
 
           /* Remove unprivileged attribute if applicable */
-          if (!superUser && viewPriv && viewPriv.indexOf(prop.name) != -1 &&
-              !checkPrivilege(viewPriv.privilege)) {
+          if (!superUser && viewPriv && viewPriv.properties &&
+            viewPriv.properties.indexOf(prop.name) != -1 &&
+            !this.checkPrivilege(viewPriv.privilege)) {
             delete item[prop.name];
           }
 
