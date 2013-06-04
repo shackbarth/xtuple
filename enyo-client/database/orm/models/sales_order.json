@@ -1045,6 +1045,7 @@
       {
         "name": "itemSite",
         "toOne": {
+          "isNested": true,
           "type": "ItemSiteRelation",
           "column": "coitem_itemsite_id",
           "required": true
