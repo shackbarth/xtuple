@@ -36,6 +36,7 @@ select xt.js_init();
 \i xt/functions/co_line_profit.sql;
 \i xt/functions/co_line_list_price.sql;
 \i xt/functions/co_line_list_price_discount.sql;
+\i xt/functions/co_line_ship_balance.sql;
 \i xt/functions/co_line_tax.sql;
 \i xt/functions/co_freight_weight.sql;
 \i xt/functions/co_schedule_date.sql;

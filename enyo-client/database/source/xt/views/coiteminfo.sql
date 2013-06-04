@@ -8,7 +8,8 @@ select coitem.*,
   xt.co_line_customer_discount(coitem) as cust_discount,
   xt.co_line_extended_price(coitem) as ext_price, 
   xt.co_line_profit(coitem) as profit,
-  xt.co_line_tax(coitem) as tax
+  xt.co_line_tax(coitem) as tax,
+  xt.co_line_ship_balance(coitem) as ship_balance
 from coitem
   left join itemsite on coitem_itemsite_id=itemsite_id 
   left join item on itemsite_item_id=item_id;

@@ -57,6 +57,9 @@ trailing:true white:true*/
 	      {kind: "XV.ListAttr", attr: "quantityShipped"}
 	    ]},
 	    {kind: "XV.ListColumn", classes: "second", components: [
+	      {kind: "XV.ListAttr", attr: "shipBalance"}
+	    ]},
+	    {kind: "XV.ListColumn", classes: "second", components: [
 	      {kind: "XV.ListAttr", attr: "price", formatter: "formatPrice"},
 	      {kind: "XV.ListAttr", attr: "priceUnit.name"}
 	    ]},
@@ -68,7 +71,7 @@ trailing:true white:true*/
       ]}
     ],
     formatPrice: function (value, view, model) {
-      var currency = model ? model.get("currency") : false,
+      var currency = model ? model.getValue("salesOrder.currency") : false,
         scale = XT.session.locale.attributes.salesPriceScale;
       return currency ? currency.format(value, scale) : "";
     }

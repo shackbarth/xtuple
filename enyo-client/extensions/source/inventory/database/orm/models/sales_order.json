@@ -57,7 +57,7 @@
       {
         "name": "quantity",
         "attr": {
-          "type": "Quantity",
+          "type": "Number",
           "column": "coitem_qtyord"
         }
       },
@@ -71,28 +71,35 @@
       {
         "name": "quantityUnitRatio",
         "attr": {
-          "type": "UnitRatio",
+          "type": "Number",
           "column": "coitem_qty_invuomratio"
         }
       },
       {
         "name": "quantityShipped",
         "attr": {
-          "type": "QuantityShipped",
+          "type": "Number",
           "column": "coitem_qtyshipped"
         }
-      },      
+      }, 
+      {
+        "name": "shipBalance",
+        "attr": {
+          "type": "Number",
+          "column": "ship_balance"
+        }
+      },          
       {
         "name": "basePrice",
         "attr": {
-          "type": "SalesPrice",
+          "type": "Number",
           "column": "base_price"
         }
       },
       {
         "name": "customerPrice",
         "attr": {
-          "type": "SalesPrice",
+          "type": "Number",
           "column": "coitem_custprice"
         }
       },
@@ -106,7 +113,7 @@
       {
         "name": "price",
         "attr": {
-          "type": "SalesPrice",
+          "type": "Number",
           "column": "coitem_price"
         }
       },
@@ -134,7 +141,7 @@
       {
         "name": "listPrice",
         "attr": {
-          "type": "Money",
+          "type": "Number",
           "column": "list_price"
         }
       },
@@ -162,7 +169,7 @@
       {
         "name": "priceUnitRatio",
         "attr": {
-          "type": "UnitRatio",
+          "type": "Number",
           "column": "coitem_price_invuomratio"
         }
       },
@@ -176,7 +183,7 @@
       {
         "name": "extendedPrice",
         "attr": {
-          "type": "ExtendedPrice",
+          "type": "Number",
           "column": "ext_price"
         }
       },
