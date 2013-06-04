@@ -43,6 +43,10 @@
               // these ones doesn't need to be backed by a collection
               return;
             }
+            if (!_.contains(['TaxAssignmentList'], key)) {
+              // these ones doesn't need to be backed by a collection
+              return;
+            }
 
             // create the list
             child = master.createComponent({
@@ -67,20 +71,35 @@
               return attr;
             });
 
+            // the query attribute counts as an attribute
+            attrs.push(child.getQuery().orderBy[0].attribute);
+
+
+
             // make sure that attrs with paths are for nested relations
             _.each(attrs, function (attr) {
-              var prefix, relation;
+              var prefix, relation, cacheName;
 
               if (attr.indexOf('.') >= 0) {
+                // TODO: we could do more checking if there are two dots
                 prefix = XT.String.prefix(attr);
+
+                console.log(key, prefix);
 
                 relation = _.find(relations, function (rel) {
                   return rel.key === prefix;
                 });
                 assert.isDefined(relation, "The " + recordType +
                   " schema needs the relation " + prefix);
-                assert.isTrue(relation.isNested, "The " + recordType +
-                  " schema needs the relation " + prefix + " to be nested");
+
+                // TODO: it has to be in the cache or nested.
+                //console.log(relation);
+                //cacheName = XT.String.decamelize(XT.String.suffix(relation.relatedModel));
+                //console.log(cacheName); // ARGH pluralize
+                //if (!XM[cacheName]) {
+                  assert.isTrue(relation.isNested, "The " + recordType +
+                    " schema needs the relation " + prefix + " to be nested");
+                //}
               }
             });
 

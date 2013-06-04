@@ -1,6 +1,6 @@
-/*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
+/*jshint bitwise:true, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true white:true*/
+trailing:true, white:true*/
 /*global XT:true, XM:true, XV:true, _:true, window: true, enyo:true, Globalize:true*/
 
 (function () {
@@ -385,7 +385,30 @@ trailing:true white:true*/
     name: "XV.CustomerProspectList",
     kind: "XV.CustomerList",
     label: "_customerProspect".loc(),
-    collection: "XM.CustomerProspectListItemCollection"
+    collection: "XM.CustomerProspectListItemCollection",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", isKey: true},
+              {kind: "XV.ListAttr", attr: "contact.phone", fit: true,
+                classes: "right"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "name"},
+              {kind: "XV.ListAttr", attr: "contact.primaryEmail",
+                ontap: "sendMail", classes: "right hyperlink"}
+            ]}
+          ]},
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "contact.name", classes: "italic",
+              placeholder: "_noContact".loc()},
+            {kind: "XV.ListAttr", attr: "contact.address.formatShort"}
+          ]}
+        ]}
+      ]}
+    ],
   });
 
   XV.registerModelList("XM.CustomerProspectRelation", "XV.CustomerProspectList");
