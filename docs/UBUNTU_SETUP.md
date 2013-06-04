@@ -1,7 +1,7 @@
 Setting up an Ubuntu virtual machine
 ====================================
 
-These are instructions for creating a baseline Ubuntu machine with software loaded that is helpful for doing xTuple mobile-web development work directly on the machine. It assumes you are starting with no experience with Linux or github. If you plan on using the Ubuntu desktop to do file editing and other work, it is recommended you allocate at least 2GB of RAM (the more the better). If you only plan on using it as a server, you can get away with as little as 1GB.
+These are instructions for creating a baseline 64 bit Ubuntu machine with software loaded that is helpful for doing xTuple mobile-web development work directly on the machine. It assumes you are starting with no experience with Linux or github. If you plan on using the Ubuntu desktop to do file editing and other work, it is recommended you allocate at least 2GB of RAM (the more the better). If you only plan on using it as a server, you can get away with as little as 1GB.
 
 ##Download and install VirtualBox.
 
@@ -16,7 +16,7 @@ If you already run Linux on your workstation, your distribution may have Virtual
 
  - Go to www.ubuntu.com/download
  - Click on Ubuntu Desktop
- - For "Choose your flavour", select 64 bit unless your workstation has a 32 bit CPU
+ - For "Choose your flavour", select 64 bit
  - Click on Get Ubuntu 12.04 LTS
  - If the website asks for a donation, decide whether to contribute or not now, take me to the download
  - Remember where the download process puts the Ubuntu .iso file
@@ -29,7 +29,7 @@ If you already run Linux on your workstation, your distribution may have Virtual
  - Go through the Create Virtual Machine wizard and use the following settings:
   * Name: Pick a name that will help you distinguish this VM from others like it
   * Type: Linux
-  * Version: Ubuntu
+  * Version: Ubuntu 64 bit
   * Memory: 2064 MB (if your workstation can't spare that much, better consider buying more memory)
  - Create a virtual hard drive
   * Select the VDI file type and make it Dynamically allocated
@@ -92,7 +92,7 @@ From the terminal:
 	sudo apt-get upgrade
 	sudo apt-get install dkms
 
-From the VirtualBox menu system, select Devices > Install Guest Additions. Inside the Ubuntu VM, click Run in the dialog box that appears. When the process is done, eject the VirtualBox Additions disk image.
+From the VirtualBox menu system, select Devices > Install Guest Additions. Inside the Ubuntu VM, click Run in the dialog box that appears. When the process is done, eject the VirtualBox Additions disk image and reboot the machine.
 
 ##User Settings
 
@@ -179,6 +179,10 @@ Install the package from Sublime:
   * type `install p`, select `Package Control: Install Package`
   * type `jshint`, select `JSHint`
 
+**Note:** The `control`-`j`/`alt`-`j` shortcut changes the Build System on the current file to JSHint, then Builds to run JSHint on the file and output any errors for jumping to within the file. You could alternatively set the Build System to Automatic and `command`-`b`/`control`-`b`/`F7`, but only on files that end with .js.
 
+###Run JSHint on save
+
+Install [SublimeOnSaveBuild](https://github.com/alexnj/SublimeOnSaveBuild)
 
 
