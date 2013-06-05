@@ -117,6 +117,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     queryForData(req.session, requestDetails, function (result) {
       if (result.isError) {
         res.send(result);
+        return;
       } else {
         var resultAsCsv,
           filename = "export",
