@@ -1,6 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, trailing:true
-white:true*/
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, trailing:true*/
 /*global enyo:true, XM:true, XV:true, XT:true, _:true */
 
 /** @module XV */
@@ -138,6 +137,26 @@ white:true*/
         privilege: privilegeModel,
         userAccount: this.getAssignedCollection().userAccount
       }, {isNew: true});
+    },
+    /**
+      Look in XT.session.privilegeSegments to see how to group the models.
+      If no match is found, return the group instead.
+     */
+    getModelSegment: function (name, group) {
+      var returnVal;
+      _.each(XT.session.privilegeSegments, function (obj, key) {
+        _.each(obj, function (title) {
+          if (title === name) {
+            returnVal = key;
+            return;
+          }
+        });
+        if (returnVal) {
+          // we've found it. No need to continue.
+          return;
+        }
+      });
+      return returnVal || group;
     },
     /**
      * The extra spice in here is that we have to account for all of the
