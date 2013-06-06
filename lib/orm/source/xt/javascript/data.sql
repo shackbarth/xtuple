@@ -1039,7 +1039,8 @@ select xt.install_js('XT','Data','xtuple', $$
      * @param {String} [options.nameSpace] Namespace. Required.
      * @param {String} [options.type] Type. Required.
      * @param {Object} [options.data] The data payload to be processed. Required.
-     * @param {Number} [options.etag] Record id version for optimistic locking.
+     * @param {Number} [options.etag] Optional record id version for optimistic locking.
+     *  If set and version does not match, delete will fail.
      * @param {Number} [options.lock] Lock information for pessemistic locking.
      */
     deleteRecord: function (options) {
@@ -1064,39 +1065,32 @@ select xt.install_js('XT','Data','xtuple', $$
 
       /* Set variables or return false with message. */
       if (!orm) {
-// TODO - Send not found message back.
-        return false;
+        throw new handleError("Not Found", 404);
       }
 
       pkey = XT.Orm.primaryKey(orm);
       nkey = XT.Orm.naturalKey(orm);
       lockTable = orm.lockTable || orm.table;
       if (!pkey || !nkey) {
-// TODO - Send not found message back.
-        return false;
+        throw new handleError("Not Found", 404);
       }
 
       id = nkey ? this.getId(orm, data[nkey]) : data[pkey];
       if (!id) {
-// TODO - Send not found message back.
-        return false;
+        throw new handleError("Not Found", 404);
       }
 
-      /* Test for optimistic lock. */
+      /* Test for optional optimistic lock. */
       etag = this.getVersion(orm, id);
-      if (etag && etag !== options.etag) {
-// TODO - Send not found message back.
-        return false;
-        //plv8.elog(ERROR, "The version being patched is not current.");
+      if (etag && options.etag && etag !== options.etag) {
+        throw new handleError("Precondition Required", 428);
       }
 
       /* Test for pessemistic lock. */
       if (orm.lockable) {
         lock = this.tryLock(lockTable, id, {key: lockKey});
         if (!lock.key) {
-// TODO - Send not found message back.
-          return false;
-          //plv8.elog(ERROR, "Can not obtain a lock on the record.");
+          throw new handleError("Conflict", 409);
         }
       }
 
@@ -1273,7 +1267,7 @@ select xt.install_js('XT','Data','xtuple', $$
       if(ret.length) {
         return ret[0].id;
       } else {
-        throw new handleError("Not Found", 400);
+        throw new handleError("Not Found", 404);
       }
     },
 
