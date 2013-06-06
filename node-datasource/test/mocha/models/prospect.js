@@ -4,33 +4,33 @@
 /*global XT:true, XM:true, XV:true, process:true, module:true, require:true */
 
 var crud = require('../lib/crud'),
-		assert = require('chai').assert,
-		expect = require('chai').expect,
-		zombieAuth = require('../lib/zombie_auth'),
+    assert = require('chai').assert,
+    expect = require('chai').expect,
+    zombieAuth = require('../lib/zombie_auth'),
     deleteData = {},
     data = {
     recordType: "XM.Prospect",
     autoTestAttributes: true,
-    createHash:{
+    createHash : {
       number: "Prospect1",
       name: "Prospect name"
     },
-    updateHash:{
-    name: "Updated"
+    updateHash: {
+      name: "Updated"
     }
   },
   timeout = 120 * 1000;
 describe('Prospect CRUD Test', function () {
-  before(function (done){
+  before(function (done) {
       this.timeout(timeout);
       zombieAuth.loadApp(done);
-  });
-  it('Should be able to initialize XM.Prospect Model', function() {
+    });
+  it('Should be able to initialize XM.Prospect Model', function () {
     data.model = new XM.Prospect();
     expect(data.model).to.exist;
     assert.equal(data.model.recordType, 'XM.Prospect', 'INIT Value should be XM.Prospect');
   });
-	it('should create an XM.Prospect Model', function (){
+  it('should create an XM.Prospect Model', function (){
     data.model.set(data.createHash);
     crud.save(data)
   });
@@ -63,7 +63,6 @@ describe('Prospect CRUD Test', function () {
           var accountDestroyed = function () {
               if (account.getStatus() === XM.Model.DESTROYED_CLEAN) {
                 account.off("statusChange", accountDestroyed);
-                that.callback(null, account);
               }
             };
 
