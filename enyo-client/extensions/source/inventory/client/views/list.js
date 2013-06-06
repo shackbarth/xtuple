@@ -12,37 +12,39 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.SalesOrderLineListItem",
     kind: "XV.List",
-    label: "_salesOrderLineListItem".loc(),
+    label: "_backlog".loc(),
     collection: "XM.SalesOrderLineListItemCollection",
     query: {orderBy: [
-	{attribute: 'salesOrder.number'}
+	{attribute: 'salesOrder.number'},
+	{attribute: 'lineNumber', formatter: "lineNumber"}
       ]},
     components: [
       {kind: "XV.ListItem", components: [
 	{kind: "FittableRows", components: [
-	  {kind: "FittableColumns", name: "header", classes: "header, bold", headerAttr: "salesOrder.number", components: [
-	    {kind: "XV.ListColumn", classes: "header, short", components: [		  
-	      {kind: "XV.ListAttr", attr: "salesOrder.number", isKey: true}
+	  {kind: "FittableColumns", name: "header", classes: "header", headerAttr: "salesOrder.number", components: [
+	    {kind: "XV.ListColumn", classes: "short", components: [		  
+	      {kind: "XV.ListAttr", attr: "salesOrder.number", isKey: true, classes: "header"}
 	    ]}, 
-	    {kind: "XV.ListColumn", classes: "header, second, bold", components: [	
-	      {kind: "XV.ListAttr", attr: "salesOrder.customer.name"}  
+	    {kind: "XV.ListColumn", classes: "first", components: [	
+	      {kind: "XV.ListAttr", attr: "salesOrder.customer.name", classes: "header"}  
 	    ]},
-	    {kind: "XV.ListColumn", classes: "header, second, bold", components: [	
-	      {kind: "XV.ListAttr", attr: "salesOrder.orderDate"}  
-	    ]},		
-	    {kind: "XV.ListColumn", classes: "header, second, bold", components: [	
-	      {kind: "XV.ListAttr", attr: "salesOrder.scheduleDate"}
+	    {kind: "XV.ListColumn", classes: "second", components: [	
+	      {kind: "XV.ListAttr", attr: "salesOrder.shiptoName", classes: "header"}  
+	    ]},
+	    {kind: "XV.ListColumn", classes: "second", components: [	
+	      {kind: "XV.ListAttr", attr: "salesOrder.scheduleDate", classes: "header"}
 	    ]},  
-	    {kind: "XV.ListColumn", classes: "header, second, bold", components: [	
-	      {kind: "XV.ListAttr", attr: "salesOrder.total"}
+	    {kind: "XV.ListColumn", classes: "right", components: [	
+	      {kind: "XV.ListAttr", attr: "salesOrder.total", formatter: "formatPrice", classes: "header"}
 	    ]}
 	  ]},
 	  {kind: "FittableColumns", components: [
 	    {kind: "XV.ListColumn", classes: "short", components: [
-	      {kind: "XV.ListAttr", attr: "lineNumber"}
+	      {kind: "XV.ListAttr", attr: "lineNumber",
+		formatter: "formatLineNumber"}
 	    ]},
 	    {kind: "XV.ListColumn", classes: "second", components: [
-	      {kind: "XV.ListAttr", attr: "itemSite.item.number"},
+	      {kind: "XV.ListAttr", attr: "itemSite.item.number", classes: "bold"},
 	      {kind: "XV.ListAttr", attr: "itemSite.item.description1"}
 	    ]},
 	    {kind: "XV.ListColumn", classes: "second", components: [
@@ -57,7 +59,7 @@ trailing:true white:true*/
 	      {kind: "XV.ListAttr", attr: "quantityShipped"}
 	    ]},
 	    {kind: "XV.ListColumn", classes: "second", components: [
-	      {kind: "XV.ListAttr", attr: "shipBalance"}
+	      {kind: "XV.ListAttr", attr: "shipBalance", classes: "bold"}
 	    ]},
 	    {kind: "XV.ListColumn", classes: "second", components: [
 	      {kind: "XV.ListAttr", attr: "price", formatter: "formatPrice"},
@@ -74,6 +76,16 @@ trailing:true white:true*/
       var currency = model ? model.getValue("salesOrder.currency") : false,
         scale = XT.session.locale.attributes.salesPriceScale;
       return currency ? currency.format(value, scale) : "";
+    },
+    formatLineNumber: function (value, view, model) {
+      var lineNumber = model.get("lineNumber"),
+        subnumber = model.get("subnumber");
+      if (subnumber == 0) {
+        value = lineNumber;
+      } else {
+        value = lineNumber + "." + subnumber;
+      }
+      return value; 
     }
   });
 

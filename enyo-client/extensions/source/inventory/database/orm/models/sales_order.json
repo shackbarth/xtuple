@@ -42,7 +42,7 @@
       {
         "name": "lineNumber",
         "attr": {
-          "type": "Number",
+          "type": "String",
           "column": "coitem_linenumber"
         }
       },

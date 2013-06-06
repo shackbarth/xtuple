@@ -12,5 +12,6 @@
 //
 
 var lang = XT.stringsFor("en_US", {
-  "_salesOrderLineListItem": "SO Line Items"
+  "_backlog": "Backlog",
+  "_inventory": "Inventory"
 });
