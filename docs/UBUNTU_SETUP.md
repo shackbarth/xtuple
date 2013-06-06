@@ -182,12 +182,6 @@ Install the package from Sublime:
 ###Other Helpful Sublime Packages
 
 * AllAutocomplete - Allows autocompletion across all open files. Default Sublime autocomplete is only within the current file
-=======
-**Note:** The `control`-`j`/`alt`-`j` shortcut changes the Build System on the current file to JSHint, then Builds to run JSHint on the file and output any errors for jumping to within the file. You could alternatively set the Build System to Automatic and `command`-`b`/`control`-`b`/`F7`, but only on files that end with .js.
-
-###Run JSHint on save
-
-Install [SublimeOnSaveBuild](https://github.com/alexnj/SublimeOnSaveBuild)
 
 * TrailingSpaces - Strips annoying trailing whitespace from files
 
