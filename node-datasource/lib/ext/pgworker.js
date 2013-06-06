@@ -32,7 +32,7 @@ var connected = function (query, options, id, err, client, done, ranInit) {
     // Register error handler to log errors.
     // TODO - Not sure if setting that.activeQuery below is getting the right query here.
     client.connection.on('error', function (msg) {
-      if (msg.message === "unhandledError") {
+      if (msg.message !== "handledError") {
         console.log("Database Error! ", msg.message + " Please fix this!!!");
         _.each(client.debug, function (message) {
           console.log("Database Error! DB message was: ", message);
