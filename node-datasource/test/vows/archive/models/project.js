@@ -123,7 +123,7 @@
           comment.initialize(null, {isNew: true});
           this.callback(null, comment);
         },
-        'Verify the Project Comment Status is READY_NEW': function (comment) {
+        'Verify thle Project Comment Status is READY_NEW': function (comment) {
           assert.equal(comment.getStatusString(), 'READY_NEW');
         },
         'Verify the Project Comment id is valid': function (comment) {
@@ -165,7 +165,7 @@
             assert.equal(model.getStatusString(), 'READY_CLEAN');
           },
           'Verify the Last Error is null': function (model) {
-            assert.isNull(model.lastError);
+            assert.isNull(model.lastError);l
           }
         }
       }
