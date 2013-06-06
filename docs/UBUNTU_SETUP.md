@@ -185,4 +185,24 @@ Install the package from Sublime:
 
 Install [SublimeOnSaveBuild](https://github.com/alexnj/SublimeOnSaveBuild)
 
+## Qt Client
 
+If you are interested in building the Qt C++ based desktop client you'll need to install the Qt development tools:
+
+    sudo apt-get install libxtst-dev libqt4-qmake libqt4-sql-psql libqt4-sql-odbc
+    
+Then fork the following repositories qt-client, openrpt, csvimp, xtlib. Next clone and build the application.
+
+    cd /home/xtuple/src
+    git clone git@github.com:{yourname}/qt-client
+    git clone git@github.com:{yourname}/openrpt
+    git clone git@github.com:{yourname}/csvimp
+    git clone git@github.com:{yourname}/xtlib
+    cd openrpt
+    qmake
+    make
+    cd ../qt-client
+    qmake
+    make
+
+Now you can run the Qt client.
