@@ -187,22 +187,23 @@ Install [SublimeOnSaveBuild](https://github.com/alexnj/SublimeOnSaveBuild)
 
 ## Qt Client
 
-If you are interested in building the Qt C++ based desktop client you'll need to install the Qt development tools:
+If you are interested in building xTuple's [Qt](http://qt-project.org) C++ based desktop client you'll need to install the Qt development tools:
 
     sudo apt-get install libxtst-dev libqt4-qmake libqt4-sql-psql libqt4-sql-odbc
-    
-Then fork the following repositories qt-client, openrpt, csvimp, xtlib. Next clone and build the application.
+
+Fork the xTuple repository [qt-client](https://github.com/xtuple/qt-client). Next clone and build the application:
 
     cd /home/xtuple/src
     git clone git@github.com:{yourname}/qt-client
-    git clone git@github.com:{yourname}/openrpt
-    git clone git@github.com:{yourname}/csvimp
-    git clone git@github.com:{yourname}/xtlib
+    cd qt-client
+    git submodule update --init
     cd openrpt
     qmake
     make
-    cd ../qt-client
+    cd ..
     qmake
     make
 
 Now you can run the Qt client.
+
+    ./bin/xtuple
