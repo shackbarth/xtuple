@@ -607,7 +607,7 @@
 
       if (sql.statement) {
 	      plv8.execute(sql.statement, sql.values);
-	    } 
+	    }
         }
       }
 
@@ -689,14 +689,14 @@
       for (var i = 0; i < orm.properties.length; i++) {
         ormp = orm.properties[i];
         prop = ormp.name;
-        
+
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
         iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false,
         nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
         val = ormp.toOne && record[prop] instanceof Object ?
-          record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];  
-          
+          record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
+
         /* Handle fixed values. */
         if (attr.value !== undefined) {
           params.columns.push("%" + count + "$I");
@@ -705,7 +705,7 @@
           params.identifiers.push(attr.column);
           isValidSql = true;
           count++;
-        
+
         /* Handle passed values. */
         } else if (val !== undefined && val !== null && !ormp.toMany) {
           if (attr.isEncrypted) {
@@ -765,7 +765,7 @@
           }
         }
       }
-	
+
       if (!isValidSql) {
 	      return false;
       }
@@ -892,7 +892,7 @@
 
           if (sql.statement) {
 	          plv8.execute(sql.statement, sql.values);
-	        }	
+	        }
         }
       }
 
@@ -940,7 +940,7 @@
         type,
         val,
         isValidSql = false;
-        
+
       params = params || {
         table: "",
         expressions: [],
@@ -959,7 +959,7 @@
         pkey = XT.Orm.primaryKey(orm);
         columnKey = XT.Orm.primaryKey(orm, true);
       }
-      
+
       /* Build up the content for update of this record. */
       for (var i = 0; i < orm.properties.length; i++) {
         ormp = orm.properties[i];
@@ -970,7 +970,7 @@
         nkey = iorm ? XT.Orm.naturalKey(iorm, true) : false;
         val = ormp.toOne && record[prop] instanceof Object ?
           record[prop][nkey || ormp.toOne.inverse || 'id'] : record[prop];
-          
+
         if (val !== undefined && !ormp.toMany) {
           /* Handle encryption if applicable. */
           if (attr.isEncrypted) {
@@ -1028,13 +1028,13 @@
         }
       }
 
-      /* Build the update statement */     
+      /* Build the update statement */
       expressions = params.expressions.join(', ');
       expressions = XT.format(expressions, params.identifiers);
 
       // do not send an invalid sql statement
       if (!isValidSql) { return params; }
-       	
+
       if (params.table.indexOf(".") > 0) {
         namespace = params.table.beforeDot();
         table = params.table.afterDot();
@@ -1060,7 +1060,8 @@
      * @param {String} [options.nameSpace] Namespace. Required.
      * @param {String} [options.type] Type. Required.
      * @param {Object} [options.data] The data payload to be processed. Required.
-     * @param {Number} [options.etag] Record id version for optimistic locking.
+     * @param {Number} [options.etag] Optional record id version for optimistic locking.
+     *  If set and version does not match, delete will fail.
      * @param {Number} [options.lock] Lock information for pessemistic locking.
      */
     deleteRecord: function (options) {
@@ -1085,39 +1086,32 @@
 
       /* Set variables or return false with message. */
       if (!orm) {
-        // TODO - Send not found message back.
-        return false;
+        throw new handleError("Not Found", 404);
       }
 
       pkey = XT.Orm.primaryKey(orm);
       nkey = XT.Orm.naturalKey(orm);
       lockTable = orm.lockTable || orm.table;
       if (!pkey || !nkey) {
-        // TODO - Send not found message back.
-        return false;
+        throw new handleError("Not Found", 404);
       }
 
       id = nkey ? this.getId(orm, data[nkey]) : data[pkey];
       if (!id) {
-        // TODO - Send not found message back.
-        return false;
+        throw new handleError("Not Found", 404);
       }
 
-      /* Test for optimistic lock. */
+      /* Test for optional optimistic lock. */
       etag = this.getVersion(orm, id);
-      if (etag && etag !== options.etag) {
-        // TODO - Send not found message back.
-        return false;
-        //plv8.elog(ERROR, "The version being patched is not current.");
+      if (etag && options.etag && etag !== options.etag) {
+        throw new handleError("Precondition Required", 428);
       }
 
       /* Test for pessemistic lock. */
       if (orm.lockable) {
         lock = this.tryLock(lockTable, id, {key: lockKey});
         if (!lock.key) {
-          // TODO - Send not found message back.
-          return false;
-          //plv8.elog(ERROR, "Can not obtain a lock on the record.");
+          throw new handleError("Conflict", 409);
         }
       }
 
@@ -1294,7 +1288,7 @@
       if(ret.length) {
         return ret[0].id;
       } else {
-        throw new handleError("Natural Key Not Found", 400);
+        throw new handleError("Not Found", 404);
       }
     },
 

@@ -163,7 +163,7 @@ Backbone:true, _:true, X:true, __dirname:true */
         // Register error handler to log errors.
         // TODO - Not sure if setting that.activeQuery below is getting the right query here.
         client.connection.on('error', function (msg) {
-          if (msg.message === "unhandledError") {
+          if (msg.message !== "handledError") {
             X.err("Database Error! ", msg.message + " Please fix this!!!");
             _.each(client.debug, function (message) {
               X.err("Database Error! DB message was: ", message);
