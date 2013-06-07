@@ -125,7 +125,7 @@ var connected = function (query, options, id, err, client, done, ranInit) {
 process.on('message', function (message) {
   "use strict";
 
-  var conString = message.conString,
+  var creds = message.creds,
       id = message.id,
       options = message.options,
       poolSize = message.poolSize,
@@ -133,5 +133,5 @@ process.on('message', function (message) {
 
   pg.defaults.poolSize = poolSize;
 
-  pg.connect(conString, _.bind(connected, this, query, options, id));
+  pg.connect(creds, _.bind(connected, this, query, options, id));
 });

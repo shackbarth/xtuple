@@ -89,7 +89,13 @@ white:true*/
       @param {Function} callback
      */
     query: function (query, options, callback) {
-      var str = this.conString(_.clone(options));
+      var creds = {
+            "user": options.user,
+            "port": options.port,
+            "host": options.hostname,
+            "database": options.database,
+            "password": options.password
+          };
 
       if (X.options && X.options.datasource && X.options.datasource.pgWorker) {
         this.requestNum += 1;
@@ -97,7 +103,7 @@ white:true*/
         this.callbacks[this.requestNum] = callback;
         // Single worker version.
         options.debugDatabase = X.options.datasource.debugDatabase;
-        this.worker.send({id: this.requestNum, query: query, options: options, conString: str, poolSize: this.poolSize});
+        this.worker.send({id: this.requestNum, query: query, options: options, creds: creds, poolSize: this.poolSize});
 
         // NOTE: Round robin benchmarks are slower then the above single pgworker code.
         // Round robin workers version. This might be useful in the future.
@@ -107,12 +113,12 @@ white:true*/
         //   this.nextWorker = 0;
         // }
         // options.debugDatabase = X.options.datasource.debugDatabase;
-        // worker.send({id: this.requestNum, query: query, options: options, conString: str});
+        // worker.send({id: this.requestNum, query: query, options: options, creds: creds});
       } else {
         if (X.options.datasource.debugging) {
           X.log(query);
         }
-        X.pg.connect(str, _.bind(this.connected, this, query, options, callback));
+        X.pg.connect(creds, _.bind(this.connected, this, query, options, callback));
       }
     },
 
