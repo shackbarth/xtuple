@@ -34,9 +34,15 @@ trailing:true white:true*/
 	    {kind: "XV.ListColumn", classes: "second", components: [	
 	      {kind: "XV.ListAttr", attr: "salesOrder.scheduleDate", classes: "header"}
 	    ]},  
-	    {kind: "XV.ListColumn", classes: "right", components: [	
+	    {kind: "XV.ListColumn", classes: "second", components: [
+	      {kind: "XV.ListAttr", attr: "salesOrder.salesRep.name", classes: "header"}
+	    ]},  	    
+	    {kind: "XV.ListColumn", classes: "second", components: [	
 	      {kind: "XV.ListAttr", attr: "salesOrder.total", formatter: "formatPrice", classes: "header"}
-	    ]}
+	    ]},
+	    {kind: "XV.ListColumn", classes: "last", components: [
+	      {classes: "header"}
+	    ]}  
 	  ]},
 	  {kind: "FittableColumns", components: [
 	    {kind: "XV.ListColumn", classes: "short", components: [
