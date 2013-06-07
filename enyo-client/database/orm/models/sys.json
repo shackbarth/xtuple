@@ -38,6 +38,13 @@
         }
       },
       {
+        "name": "disableExport",
+        "attr": {
+          "type": "Boolean",
+          "column": "usr_disable_export"
+        }
+      },
+      {
         "name": "isActive",
         "attr": {
           "type": "Boolean",

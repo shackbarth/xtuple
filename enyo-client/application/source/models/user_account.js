@@ -156,7 +156,7 @@ newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true, wh
     autoFetchId: false,
 
     defaults: {
-      // disableExport: false,
+      disableExport: false,
       isActive: true
     },
 

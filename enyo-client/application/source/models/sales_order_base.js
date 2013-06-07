@@ -13,9 +13,9 @@ white:true*/
   // PRIVATE
   //
 
-  /** @private
-
+  /** 
     Function that actually does the calculation work
+    @private
   */
   var _calculateTotals = function (model) {
     var miscCharge = model.get("miscCharge") || 0.0,
@@ -98,8 +98,9 @@ white:true*/
   };
 
 
-  /** @private
+  /**
     This should only be called by `calculatePrice`.
+    @private
   */
   var _calculatePrice = function (model) {
     var K = model.getClass(),

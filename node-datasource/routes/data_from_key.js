@@ -4,11 +4,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 (function () {
   "use strict";
-
   /**
-    We've stored report data in a temporary table with a key. Return the data to anyone who has the
-    appropriate key.
-   */
+  @name XV.DataFromKey
+  @class XV.DataFromKey
+  We've stored report data in a temporary table with a key. Return the data to anyone who has the
+  appropriate key.
+  */ 
   exports.dataFromKey = function (req, res) {
 
     var dataKey = (req.query && req.query.datakey) || -1,
@@ -27,14 +28,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         query: JSON.parse(model.get("query"))
       }));
 
-    }, error: function (model, err) {
+    },
+    error: function (model, err) {
       console.log("error", model);
       if (err.code === 'xt1007') {
         res.send({isError: true, message: "Record not found"});
       } else {
         res.send({isError: true, message: "Error"});
       }
-    }});
+    },
+    database: req.session.passport.user.organization});
   };
 
 }());

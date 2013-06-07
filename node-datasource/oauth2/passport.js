@@ -32,8 +32,9 @@ passport.use(new LocalStrategy(
   function (username, password, database, done) {
     "use strict";
     var model = new SYS.User(),
-      error = function () {
-        console.log("error", arguments);
+      error = function (model, error) {
+        // authentication failure
+        return done(null, false);
       };
 
     model.fetch({

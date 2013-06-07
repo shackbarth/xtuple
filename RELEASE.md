@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 1.3.6 (2013/06/06)
+=======
+<<<<<<< HEAD
+1.3.6 (2013/05)
+>>>>>>> dev-1-3-6
 ===============
 
 Critical deployment changes
@@ -11,6 +16,7 @@ Features and bugs
   Remove print menus and buttons until Pentaho service available on cloud deployment.
 
 1.3.5 (2013/05/31)
+>>>>>>> xtuple
 ===============
 
 Critical deployment changes

@@ -7,3 +7,5 @@ rm -rf builds
 mkdir builds
 
 node ./tools/nodeBuildExtensions.js
+
+echo 'This script is deprecated. Please use sudo ./build_client.js from xtuple/scripts instead' 

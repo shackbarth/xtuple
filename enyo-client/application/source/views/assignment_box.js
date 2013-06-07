@@ -143,6 +143,26 @@ white:true*/
       return model;
     },
     /**
+      Look in XT.session.privilegeSegments to see how to group the models.
+      If no match is found, return the group instead.
+     */
+    getModelSegment: function (name, group) {
+      var returnVal;
+      _.each(XT.session.privilegeSegments, function (obj, key) {
+        _.each(obj, function (title) {
+          if (title === name) {
+            returnVal = key;
+            return;
+          }
+        });
+        if (returnVal) {
+          // we've found it. No need to continue.
+          return;
+        }
+      });
+      return returnVal || group;
+    },
+    /**
      * The extra spice in here is that we have to account for all of the
      * privileges that were granted on behalf of a role. We generated that
      * (published) array here, and use it later.
