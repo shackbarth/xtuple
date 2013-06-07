@@ -138,7 +138,7 @@ var _ = require("underscore"),
 
     // If we don't hear back, keep going
     timeoutId = setTimeout(function () {
-      assert.fail("timeout was reached on create", "");
+      assert.fail("timeout was reached on create " + data.recordType, "");
       callback();
     }, waitTime);
 
@@ -183,7 +183,7 @@ var _ = require("underscore"),
 
     // If we don't hear back, keep going
     timeoutId = setTimeout(function () {
-      assert.fail("timeout was reached on save", "");
+      assert.fail("timeout was reached on save " + data.recordType, "");
       callback();
     }, waitTime);
   };
@@ -230,7 +230,7 @@ var _ = require("underscore"),
 
     // If we don't hear back, keep going
     timeoutId = setTimeout(function () {
-      assert.fail("timeout was reached on delete", "");
+      assert.fail("timeout was reached on delete " + data.recordType, "");
       callback();
     }, waitTime);
   };

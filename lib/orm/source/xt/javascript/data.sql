@@ -1,4 +1,4 @@
-select xt.install_js('XT','Data','xtuple', $$
+﻿select xt.install_js('XT','Data','xtuple', $$
 
   /**
    * @class
@@ -589,7 +589,10 @@ select xt.install_js('XT','Data','xtuple', $$
         XT.debug('createRecord sql =', sql.statement);
         XT.debug('createRecord values =', sql.values);
       }
-      plv8.execute(sql.statement, sql.values);
+
+      if (sql.statement) {
+	      plv8.execute(sql.statement, sql.values);
+      }
 
       /* Handle extensions on other tables. */
       for (var i = 0; i < orm.extensions.length; i++) {
@@ -601,7 +604,10 @@ select xt.install_js('XT','Data','xtuple', $$
             XT.debug('createRecord sql =', sql.statement);
             XT.debug('createRecord values =', sql.values);
           }
-          plv8.execute(sql.statement, sql.values);
+
+      if (sql.statement) {
+	      plv8.execute(sql.statement, sql.values);
+	    }
         }
       }
 
@@ -643,7 +649,8 @@ select xt.install_js('XT','Data','xtuple', $$
         toOneQuery,
         toOneSql,
         type,
-        val;
+        val,
+        isValidSql = false;
 
       params = params || {
         table: "",
@@ -682,6 +689,7 @@ select xt.install_js('XT','Data','xtuple', $$
       for (var i = 0; i < orm.properties.length; i++) {
         ormp = orm.properties[i];
         prop = ormp.name;
+
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
         iorm = ormp.toOne ? XT.Orm.fetch(orm.nameSpace, ormp.toOne.type) : false,
@@ -695,20 +703,20 @@ select xt.install_js('XT','Data','xtuple', $$
           params.expressions.push('$' + count);
           params.values.push(attr.value);
           params.identifiers.push(attr.column);
+          isValidSql = true;
           count++;
 
         /* Handle passed values. */
         } else if (val !== undefined && val !== null && !ormp.toMany) {
           if (attr.isEncrypted) {
             if (encryptionKey) {
-
               encryptQuery = "select encrypt(setbytea(%1$L), setbytea(%2$L), %3$L)";
               encryptSql = XT.format(encryptQuery, [record[prop], encryptionKey, 'bf']);
               val = "(" + encryptSql + ")";
-
               params.values.push(val);
               params.identifiers.push(attr.column);
               params.expressions.push("$" + count);
+              isValidSql = true;
               count++;
             } else {
               throw new Error("No encryption key provided.");
@@ -731,7 +739,6 @@ select xt.install_js('XT','Data','xtuple', $$
                     nkey
                   ]);
               }
-
               exp = "(" + toOneSql + ")";
               params.expressions.push(exp);
             } else {
@@ -741,6 +748,7 @@ select xt.install_js('XT','Data','xtuple', $$
             params.columns.push("%" + count + "$I");
             params.values.push(val);
             params.identifiers.push(attr.column);
+            isValidSql = true;
             count++;
           }
         /* Handle null value if applicable. */
@@ -750,11 +758,16 @@ select xt.install_js('XT','Data','xtuple', $$
             params.values.push(ormp.nullValue);
             params.identifiers.push(attr.column);
             params.expressions.push('$' + count);
+            isValidSql = true;
             count++;
           } else if (attr.required) {
             plv8.elog(ERROR, "Attribute " + ormp.name + " is required.");
           }
         }
+      }
+
+      if (!isValidSql) {
+	      return false;
       }
 
       /* Build the insert statement */
@@ -811,7 +824,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
       /* Test for optimistic lock. */
       if (etag && options.etag !== etag) {
-// TODO - Improve error handling.
+      // TODO - Improve error handling.
         plv8.elog(ERROR, "The version being updated is not current.");
       }
 
@@ -819,7 +832,7 @@ select xt.install_js('XT','Data','xtuple', $$
       if (orm.lockable) {
         lock = this.tryLock(lockTable, id, {key: lockKey});
         if (!lock.key) {
-// TODO - Improve error handling.
+          // TODO - Improve error handling.
           plv8.elog(ERROR, "Can not obtain a lock on the record.");
         }
       }
@@ -876,7 +889,10 @@ select xt.install_js('XT','Data','xtuple', $$
             XT.debug('updateRecord sql =', sql.statement);
             XT.debug('updateRecord values =', sql.values);
           }
-          plv8.execute(sql.statement, sql.values);
+
+          if (sql.statement) {
+	          plv8.execute(sql.statement, sql.values);
+	        }
         }
       }
 
@@ -922,7 +938,8 @@ select xt.install_js('XT','Data','xtuple', $$
         toOneQuery,
         toOneSql,
         type,
-        val;
+        val,
+        isValidSql = false;
 
       params = params || {
         table: "",
@@ -965,9 +982,10 @@ select xt.install_js('XT','Data','xtuple', $$
               params.values.push(val);
               params.identifiers.push(attr.column);
               params.expressions.push("%" + count + "$I = $" + count);
+              isValidSql = true;
               count++;
             } else {
-// TODO - Improve error handling.
+	            // TODO - Improve error handling.
               throw new Error("No encryption key provided.");
             }
           } else if (ormp.name !== pkey) {
@@ -1003,8 +1021,8 @@ select xt.install_js('XT','Data','xtuple', $$
               params.values.push(val);
               params.expressions.push("%" + count + "$I = $" + count);
             }
-
             params.identifiers.push(attr.column);
+            isValidSql = true;
             count++;
           }
         }
@@ -1013,6 +1031,9 @@ select xt.install_js('XT','Data','xtuple', $$
       /* Build the update statement */
       expressions = params.expressions.join(', ');
       expressions = XT.format(expressions, params.identifiers);
+
+      // do not send an invalid sql statement
+      if (!isValidSql) { return params; }
 
       if (params.table.indexOf(".") > 0) {
         namespace = params.table.beforeDot();
@@ -1183,7 +1204,7 @@ select xt.install_js('XT','Data','xtuple', $$
         if (ormp && ormp.attr && ormp.attr.isEncrypted) {
           if (encryptionKey) {
             sql = "select formatbytea(decrypt(setbytea($1), setbytea($2), 'bf')) as result";
-// TODO - Handle not found error.
+            // TODO - Handle not found error.
 
             if (DEBUG) {
               XT.debug('decrypt sql =', sql);
@@ -1228,7 +1249,7 @@ select xt.install_js('XT','Data','xtuple', $$
       }
       ret = plv8.execute(sql, [table, namespace])[0].oid - 0;
 
-// TODO - Handle not found error.
+      // TODO - Handle not found error.
 
       return ret;
     },
@@ -1295,7 +1316,7 @@ select xt.install_js('XT','Data','xtuple', $$
       if (!etag) {
         etag = XT.generateUUID();
         sql = 'insert into xt.ver (ver_table_oid, ver_record_id, ver_etag) values ($1, $2, $3::uuid);';
-// TODO - Handle insert error.
+        // TODO - Handle insert error.
 
         if (DEBUG) {
           XT.debug('getVersion sql = ', sql);

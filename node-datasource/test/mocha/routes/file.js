@@ -36,17 +36,22 @@ require("../../../../lib/tools/source/ext/proto/string");
             assert.equal(result, mockData);
             done();
           },
-          attachment: function () {}
+          attachment: function (filename) {
+            // make sure that we name the file correctly
+            assert.equal(filename, "foo.txt");
+          }
         },
         // mock the call to the database
-        queryFunction = function (org, query, callback) {
+        queryFunction = function (query, options, callback) {
           // "I'm pg and I'm returning some data"
           var result = "{\"data\":{\"description\":\"foo.txt\",\"data\":\"" + buffer + "\"}}";
           callback(null, {rows: [{get: result}]});
         };
 
       // inject our mock query into the global variable
-      X.database = {query: queryFunction};
+      XT.dataSource = {query: queryFunction, getAdminCredentials: function () {
+        return {};
+      }};
 
       fileRoute.file(req, res);
     });
@@ -68,7 +73,7 @@ require("../../../../lib/tools/source/ext/proto/string");
         // mock the session
         session = {passport: {user: {username: "admin"}}},
         // mocking the call to the database
-        queryFunction = function (org, query, callback) {
+        queryFunction = function (query, options, callback) {
           var queryObj = JSON.parse(query.substring(query.indexOf('($$') + 3, query.indexOf('$$)')));
           // make sure that the route has transformed this data to binary
           assert.equal(queryObj.data.binField, "\\x666c657267");
@@ -80,8 +85,10 @@ require("../../../../lib/tools/source/ext/proto/string");
           done();
         };
 
-      // inject the mock into the global variable
-      X.database = {query: queryFunction};
+      // inject our mock query into the global variable
+      XT.dataSource = {query: queryFunction, getAdminCredentials: function () {
+        return {};
+      }};
 
       dataRoute.queryDatabase("post", payload, session, adaptorCallback);
     });

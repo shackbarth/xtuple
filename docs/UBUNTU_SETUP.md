@@ -112,11 +112,11 @@ Chrome is our preferred web browser because it has excellent built-in debugging 
 
 https://www.google.com/intl/en/chrome
 
-Follow the website instructions for downloading and installing Chrome. From Dash Home search for and drag the Chrome icon to your launch bar. 
+Follow the website instructions for downloading and installing Chrome. From Dash Home search for and drag the Chrome icon to your launch bar.
 
 ##Sublime with JSHint installed
 
-This is a nice text editor for coding. It's free, but also also badgerware that will prompt you to pay a nominal purchase fee that is worthwhile for the feature set it offers. What is most important here is installing the [JSHint](http://www.jshint.com/about/) add-on package which is an enormous help for debugging JavaScript and conforming to xTuple style guidelines. You can get JSHint for a number of other popular editors as well including VIM for those of you who are command line junkies. Follow these instructions to get Sublime set up with a shortcut on the desktop and JS Hint installed.
+This is a nice text editor for coding. It's free, but also badgerware that will prompt you to pay a nominal purchase fee that is worthwhile for the feature set it offers. What is most important here is installing the [JSHint](http://www.jshint.com/about/) add-on package which is an enormous help for debugging JavaScript and conforming to xTuple style guidelines. You can get JSHint for a number of other popular editors as well including VIM for those of you who are command line junkies. Follow these instructions to get Sublime set up with a shortcut on the desktop and JS Hint installed.
 
 Go to the [Sublime website](http://www.sublimetext.com/) and download the application. From the terminal where Sublime is downloaded we'll extract the file and get it setup to launch from the command line:
 
@@ -179,10 +179,16 @@ Install the package from Sublime:
   * type `install p`, select `Package Control: Install Package`
   * type `jshint`, select `JSHint`
 
-**Note:** The `control`-`j`/`alt`-`j` shortcut changes the Build System on the current file to JSHint, then Builds to run JSHint on the file and output any errors for jumping to within the file. You could alternatively set the Build System to Automatic and `command`-`b`/`control`-`b`/`F7`, but only on files that end with .js.
+###Other Helpful Sublime Packages
 
-###Run JSHint on save
+* AllAutocomplete - Allows autocompletion across all open files. Default Sublime autocomplete is only within the current file
 
-Install [SublimeOnSaveBuild](https://github.com/alexnj/SublimeOnSaveBuild)
+* TrailingSpaces - Strips annoying trailing whitespace from files
 
+* Git - Git blame/branch/diff support
 
+Follow the same steps as installing the JSHint package:
+
+  * `control`-`shift`-`p`
+  * type `install p`, select `Package Control: Install Package`
+  * type the name of the package and select from the list
