@@ -1381,7 +1381,7 @@
         ret.data[i] = this.decrypt(nameSpace, type, ret.data[i]);
       }
 
-      this.removeKeys(nameSpace, type, ret.data);
+      this.sanitize(nameSpace, type, ret.data, options);
 
       return ret;
     },
@@ -1507,49 +1507,67 @@
         ret.data = this.decrypt(nameSpace, type, ret.data, encryptionKey);
       }
 
-      if (!options.includeKeys) {
-        this.removeKeys(nameSpace, type, ret.data);
-      }
+      this.sanitize(nameSpace, type, ret.data, options);
 
       /* Return the results. */
       return ret || {};
     },
 
     /**
-     *  Remove primary and foreign keys from the data so it is represented as a pure JavaScript object.
-     * Only removes the primary key if a natural key has been specified in the ORM.
+     *  Remove unprivileged attributes, primary and foreign keys from the data. 
+     *  Only removes the primary key if a natural key has been specified in the ORM.
      *
      * @param {String} Namespace
      * @param {String} Type
      * @param {Object|Array} Data
+     * @param {Object} Options
+     * @param {Boolean} [options.includeKeys=false] Do not remove primary and foreign keys.
+     * @param {Boolean} [options.superUser=false] Do not remove unprivileged attributes.
      */
-    removeKeys: function (nameSpace, type, data) {
+    sanitize: function (nameSpace, type, data, options) {
+      options = options || {};
+      if (options.includeKeys && !options.superUser) { return; }
       if (XT.typeOf(data) !== "array") { data = [data]; }
       var orm = XT.Orm.fetch(nameSpace, type),
+        pkey = XT.Orm.primaryKey(orm),
+        nkey = XT.Orm.naturalKey(orm),
+        props = orm.properties,
+        viewPriv = orm.privileges && orm.privileges.attribute && orm.privileges.attribute.view ?
+          orm.privileges.attribute.view : false,
+        inclKeys = options.inclKeys,
+        superUser = options.superUser,
         c,
         i,
         item,
         n,
-        pkey = XT.Orm.primaryKey(orm),
-        props = orm.properties,
-        nkey = XT.Orm.naturalKey(orm),
         prop,
         val;
-
       for (var c = 0; c < data.length; c++) {
         item = data[c];
-        if (nkey && nkey !== pkey) { delete item[pkey]; }
+
+        /* Remove primary key if applicable */
+        if (!inclKeys && nkey && nkey !== pkey) { delete item[pkey]; }
 
         for (var i = 0; i < props.length; i++) {
           prop = props[i];
 
+          /* Remove unprivileged attribute if applicable */
+          if (!superUser && viewPriv && viewPriv.properties &&
+            viewPriv.properties.indexOf(prop.name) != -1 &&
+            !this.checkPrivilege(viewPriv.privilege)) {
+            delete item[prop.name];
+          }
+
+          /* Handle composite types */
           if (prop.toOne && prop.toOne.isNested && item[prop.name]) {
-            this.removeKeys(nameSpace, prop.toOne.type, item[prop.name]);
+            this.sanitize(nameSpace, prop.toOne.type, item[prop.name], options);
           } else if (prop.toMany && prop.toMany.isNested && item[prop.name]) {
             for (var n = 0; n < item[prop.name].length; n++) {
               val = item[prop.name][n];
-              delete val[prop.toMany.inverse];
-              this.removeKeys(nameSpace, prop.toMany.type, val);
+                
+              /* Remove foreign key if applicable */
+              if (!inclKeys) { delete val[prop.toMany.inverse]; }
+              this.sanitize(nameSpace, prop.toMany.type, val, options);
             }
           }
         }

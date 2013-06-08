@@ -1,14 +1,20 @@
 <<<<<<< HEAD
+1.3.6 (2013/06/06)
+=======
+<<<<<<< HEAD
 1.3.6 (2013/05)
+>>>>>>> dev-1-3-6
 ===============
 
 Critical deployment changes
 ---------------------------
-* The `required` section of the node-datasource `config.js` file is no longer necessary.
+* Fix critical user login problem
 
+Features and bugs
+----------------
+* issue #[20505](http://www.xtuple.org/xtincident/view/bugs/20505)
+  Remove print menus and buttons until Pentaho service available on cloud deployment.
 
-1.3.5 (2013/05)
-=======
 1.3.5 (2013/05/31)
 >>>>>>> xtuple
 ===============

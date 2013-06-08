@@ -1,5 +1,6 @@
 /*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, trailing:true*/
+newcap:true, noarg:true, regexp:true, undef:true, trailing:true,
+white:true*/
 /*global enyo:true, XM:true, XV:true, XT:true, _:true */
 
 /** @module XV */
@@ -17,7 +18,8 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true*/
    * @alias XV.UserAccountExtensionAssignmentBox
    * @extends XV.AssignmentBox
    */
-  enyo.kind(/* @lends XV.UserAccountExtensionAssignmentBox */{
+  enyo.kind(
+    /* @lends XV.UserAccountExtensionAssignmentBox */{
     name: "XV.UserAccountExtensionAssignmentBox",
     kind: "XV.AssignmentBox",
     segments: ["Extensions"],
@@ -77,9 +79,9 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true*/
      * @return {XM.UserAccountUserAccountRoleAssignment}
      */
     getAssignmentModel: function (roleModel) {
-      return new XM.UserAccountUserAccountRoleAssignment({
-        userAccountRole: roleModel
-      }, {isNew: true});
+      var model = new XM.UserAccountUserAccountRoleAssignment(null, {isNew: true});
+      model.set("userAccountRole", roleModel);
+      return model;
     }
   };
   enyo.kind(userAccountRoleAssignmentBox);
@@ -133,10 +135,12 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true*/
      * @return {XM.UserAccountPrivilegeAssignment}
      */
     getAssignmentModel: function (privilegeModel) {
-      return new XM.UserAccountPrivilegeAssignment({
+      var model = new XM.UserAccountPrivilegeAssignment(null, {isNew: true});
+      model.set({
         privilege: privilegeModel,
         userAccount: this.getAssignedCollection().userAccount
-      }, {isNew: true});
+      });
+      return model;
     },
     /**
       Look in XT.session.privilegeSegments to see how to group the models.
