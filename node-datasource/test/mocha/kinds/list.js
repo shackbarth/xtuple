@@ -43,10 +43,9 @@
               // these ones doesn't need to be backed by a collection
               return;
             }
-            if (!_.contains(['TaxAssignmentList'], key)) {
-              // these ones doesn't need to be backed by a collection
-              return;
-            }
+            //if (!_.contains(['TaxAssignmentList'], key)) {
+            //  return;
+            //}
 
             // create the list
             child = master.createComponent({
@@ -92,14 +91,12 @@
                 assert.isDefined(relation, "The " + recordType +
                   " schema needs the relation " + prefix);
 
-                // TODO: it has to be in the cache or nested.
-                //console.log(relation);
-                //cacheName = XT.String.decamelize(XT.String.suffix(relation.relatedModel));
-                //console.log(cacheName); // ARGH pluralize
-                //if (!XM[cacheName]) {
-                  assert.isTrue(relation.isNested, "The " + recordType +
-                    " schema needs the relation " + prefix + " to be nested");
-                //}
+                cacheName = XV.getCache(relation.relatedModel);
+                if (!cacheName && !relation.isNested) {
+                  assert.fail(1, 0, "The " + recordType +
+                    " schema needs the relation " + prefix + " to be nested or the model " +
+                    relation.relatedModel + " needs to be cached");
+                }
               }
             });
 

@@ -1329,7 +1329,7 @@ trailing:true, white:true*/
           ]},
           {kind: "XV.ListColumn", classes: "second", components: [
             {kind: "XV.ListAttr", attr: "shiptoName", classes: "italic"},
-            {kind: "XV.ListAttr", attr: "shiptoAddress1.formatShort"}
+            {kind: "XV.ListAttr", attr: "shiptoAddress1"}
           ]},
           {kind: "XV.ListColumn", classes: "descr", fit: true, components: [
             {kind: "XV.ListAttr", attr: "orderNotes"}
@@ -1378,11 +1378,11 @@ trailing:true, white:true*/
           ]},
           {kind: "XV.ListColumn", classes: "second", components: [
             {kind: "XV.ListAttr", attr: "billtoName", classes: "italic"},
-            {kind: "XV.ListAttr", attr: "billtoAddress1.formatShort"}
+            {kind: "XV.ListAttr", attr: "billtoAddress1"}
           ]},
           {kind: "XV.ListColumn", classes: "second", components: [
             {kind: "XV.ListAttr", attr: "shiptoName", classes: "italic"},
-            {kind: "XV.ListAttr", attr: "shiptoAddress1.formatShort"}
+            {kind: "XV.ListAttr", attr: "shiptoAddress1"}
           ]},
           {kind: "XV.ListColumn", classes: "second", components: [
             {kind: "XV.ListAttr", attr: "shipVia"}
@@ -1488,13 +1488,8 @@ trailing:true, white:true*/
               {kind: "XV.ListAttr", attr: "code", isKey: true},
               {kind: "XV.ListAttr", attr: "description", fit: true, classes: "right"}
             ]},
-            {kind: "XV.ListAttr", attr: "item.description1"}
+            {kind: "XV.ListAttr", attr: "siteType.description"}
           ]},
-          {kind: "XV.ListColumn", classes: "second",
-            components: [
-            {kind: "XV.ListAttr", attr: "site.code", classes: "bold"},
-            {kind: "XV.ListAttr", attr: "site.description"}
-          ]}
         ]}
       ]}
     ]

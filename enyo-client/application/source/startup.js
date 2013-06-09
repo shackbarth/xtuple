@@ -1,7 +1,7 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
-/*global XT:true, XM:true, Backbone:true, _:true, console:true */
+/*global XT:true, XM:true, XV:true, Backbone:true, _:true, console:true */
 
 (function () {
   "use strict";
@@ -94,7 +94,7 @@ white:true*/
         var orderBy,
           options = {};
 
-        options.success = _.bind(this.didCompleteCache, this, cache);
+        options.success = _.bind(this.didCompleteCache, this, cache, cacheName);
         if (typeof orderAttribute === "string") {
           orderBy = _.map(orderAttribute.split(" "), function (s) {
             return {attribute: s};
@@ -161,6 +161,7 @@ white:true*/
           XM.baseCurrency = _.find(XM.currencies.models, function (currency) {
             return currency.get("isBase");
           });
+          XV.registerModelCache("XM.Currency", "XM.currencies");
           this.didComplete();
         }, this)
       };
