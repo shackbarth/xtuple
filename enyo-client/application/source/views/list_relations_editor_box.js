@@ -1,6 +1,6 @@
-/*jshint bitwise:false, indent:2, curly:true eqeqeq:true, immed:true,
+/*jshint bitwise:false, indent:2, curly:true, eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
-trailing:true white:true*/
+trailing:true, white:true*/
 /*global XV:true, XM:true, _:true, Backbone:true, enyo:true, XT:true */
 
 (function () {
@@ -290,9 +290,9 @@ trailing:true white:true*/
       // Loop through the components and set the specific attribute information for the Money widgets
       this.getComponents().forEach(function (e) {
         if (e.kind === "XV.MoneyWidget") {
-          e.attr.currency = "quote.currency";
+          e.attr.currency = "order.currency";
           if (e.getEffective()) {
-            e.setEffective("quote.quoteDate");
+            e.setEffective("order.orderDate");
           }
         }
       });

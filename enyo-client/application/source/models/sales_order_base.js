@@ -1,5 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true,
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true */
 
@@ -13,9 +13,9 @@ white:true*/
   // PRIVATE
   //
 
-  /** @private
-
+  /** 
     Function that actually does the calculation work
+    @private
   */
   var _calculateTotals = function (model) {
     var miscCharge = model.get("miscCharge") || 0.0,
@@ -98,8 +98,9 @@ white:true*/
   };
 
 
-  /** @private
+  /**
     This should only be called by `calculatePrice`.
+    @private
   */
   var _calculatePrice = function (model) {
     var K = model.getClass(),
@@ -986,6 +987,7 @@ white:true*/
       var status = this.getStatus();
       if (status === XM.Model.READY_CLEAN) {
         this.setReadOnly(["number", "customer"], true);
+        this.lineItemsDidChange();
         this.applyCustomerSettings();
       }
     },

@@ -1,5 +1,5 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
-newcap:true, noarg:true, regexp:true, undef:true, trailing:true
+/*jshint indent:2, curly:true, eqeqeq:true, immed:true, latedef:true,
+newcap:true, noarg:true, regexp:true, undef:true, trailing:true,
 white:true*/
 /*global enyo:true, XM:true, XV:true, XT:true, _:true */
 
@@ -18,7 +18,8 @@ white:true*/
    * @alias XV.UserAccountExtensionAssignmentBox
    * @extends XV.AssignmentBox
    */
-  enyo.kind(/* @lends XV.UserAccountExtensionAssignmentBox */{
+  enyo.kind(
+    /* @lends XV.UserAccountExtensionAssignmentBox */{
     name: "XV.UserAccountExtensionAssignmentBox",
     kind: "XV.AssignmentBox",
     segments: ["Extensions"],
@@ -78,9 +79,9 @@ white:true*/
      * @return {XM.UserAccountUserAccountRoleAssignment}
      */
     getAssignmentModel: function (roleModel) {
-      return new XM.UserAccountUserAccountRoleAssignment({
-        userAccountRole: roleModel
-      }, {isNew: true});
+      var model = new XM.UserAccountUserAccountRoleAssignment(null, {isNew: true});
+      model.set("userAccountRole", roleModel);
+      return model;
     }
   };
   enyo.kind(userAccountRoleAssignmentBox);
@@ -134,10 +135,32 @@ white:true*/
      * @return {XM.UserAccountPrivilegeAssignment}
      */
     getAssignmentModel: function (privilegeModel) {
-      return new XM.UserAccountPrivilegeAssignment({
+      var model = new XM.UserAccountPrivilegeAssignment(null, {isNew: true});
+      model.set({
         privilege: privilegeModel,
         userAccount: this.getAssignedCollection().userAccount
-      }, {isNew: true});
+      });
+      return model;
+    },
+    /**
+      Look in XT.session.privilegeSegments to see how to group the models.
+      If no match is found, return the group instead.
+     */
+    getModelSegment: function (name, group) {
+      var returnVal;
+      _.each(XT.session.privilegeSegments, function (obj, key) {
+        _.each(obj, function (title) {
+          if (title === name) {
+            returnVal = key;
+            return;
+          }
+        });
+        if (returnVal) {
+          // we've found it. No need to continue.
+          return;
+        }
+      });
+      return returnVal || group;
     },
     /**
      * The extra spice in here is that we have to account for all of the
